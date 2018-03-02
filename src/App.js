@@ -3,9 +3,8 @@ import { Form, Field } from 'react-final-form'
 import Safe from '../gnosis-safe-contracts/build/contracts/GnosisSafe.json'
 import getWeb3, { promisify } from './utils/getWeb3'
 import contract from 'truffle-contract'
-import './css/oswald.css'
-import './css/open-sans.css'
-import './css/pure-min.css'
+import Header from './components/Header'
+import PageFrame from './components/PageFrame'
 import './App.css'
 
 class App extends Component {
@@ -69,10 +68,8 @@ class App extends Component {
 
     return (
       <div className="App">
-        <nav className="navbar pure-menu pure-menu-horizontal">
-            <a href="#" className="pure-menu-heading pure-menu-link">Gnosis Multisig 2.0</a>
-        </nav>
-        <main className="container">
+        <Header />
+        <PageFrame>
           <Form
             onSubmit={this.onCallSafeContractSubmit}
             render={({ handleSubmit, pristine, invalid }) => (
@@ -105,7 +102,7 @@ class App extends Component {
                 </form>
               )}
             />
-        </main>
+          </PageFrame>
       </div>
     );
   }
