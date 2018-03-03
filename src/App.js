@@ -1,10 +1,12 @@
+import Button from 'material-ui/Button';
 import React, { Component } from 'react'
 import { Form, Field } from 'react-final-form'
 import Safe from '../gnosis-safe-contracts/build/contracts/GnosisSafe.json'
 import getWeb3, { promisify } from './utils/getWeb3'
 import contract from 'truffle-contract'
-import Header from './components/Header'
-import PageFrame from './components/PageFrame'
+import TextField from './components/forms/TextField'
+import Page from './components/layout/Page'
+import PageFrame from './components/layout/PageFrame'
 import './App.css'
 
 class App extends Component {
@@ -67,8 +69,7 @@ class App extends Component {
     const { safeAddress, funds } = this.state
 
     return (
-      <div className="App">
-        <Header />
+      <Page>
         <PageFrame>
           <Form
             onSubmit={this.onCallSafeContractSubmit}
@@ -76,34 +77,35 @@ class App extends Component {
               <form onSubmit={handleSubmit}>
                 <h2>Create a new Safe instance for testing purposes</h2>
                 <div>
-                  <button style={{ marginLeft: '10px', border: '1px solid #ccc' }} type="submit">
+                  <Button variant="raised" color="primary" type="submit">
                     Create Safe
-                  </button>
+                  </Button>
                 </div> 
               </form>
-            )} />
-            <Form
-              onSubmit={this.onAddFunds}
-              render={({ handleSubmit, pristine, invalid }) => (
-                <form onSubmit={handleSubmit}>
-                  <h2>Add Funds to the safe</h2>
-                  <div style={{ margin: '10px 0px'}}>
-                    <label style={{ marginRight: '10px' }}>{safeAddress ? safeAddress : 'Not safe detected'}</label>
-                  </div>
-                  { safeAddress && <div>
-                    <Field name="funds" component="input" placeholder="ETH to add" />
-                    <button style={{ marginLeft: '10px', border: '1px solid #ccc' }} type="submit" disabled={ !safeAddress || pristine || invalid}>
-                      Add funds
-                    </button>
-                  </div> }
-                  { safeAddress && <div style={{ margin: '10px 0px'}}>
-                    Total funds in this safe: { funds ? funds : 0 } ETH
-                  </div> }
-                </form>
-              )}
-            />
+            )}
+          />
+          <Form
+            onSubmit={this.onAddFunds}
+            render={({ handleSubmit, pristine, invalid }) => (
+              <form onSubmit={handleSubmit}>
+                <h2>Add Funds to the safe</h2>
+                <div style={{ margin: '10px 0px'}}>
+                  <label style={{ marginRight: '10px' }}>{safeAddress ? safeAddress : 'Not safe detected'}</label>
+                </div>
+                { safeAddress && <div>
+                  <Field name="funds" component={TextField} type="text" placeholder="ETH to add" />
+                  <Button type="submit" disabled={ !safeAddress || pristine || invalid}>
+                    Add funds
+                  </Button>
+                </div> }
+                { safeAddress && <div style={{ margin: '15px 0px'}}>
+                  Total funds in this safe: { funds ? funds : 0 } ETH
+                </div> }
+              </form>
+            )}
+          />
           </PageFrame>
-      </div>
+      </Page>
     );
   }
 }

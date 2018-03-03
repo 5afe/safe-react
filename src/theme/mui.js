@@ -6,7 +6,7 @@ const palette = {
     main: '#1798cc',
   },
   secondary: {
-    main: '#F6F9FC',
+    main: '#6b7c93',
   },
   error: red,
   contrastThreshold: 3,
