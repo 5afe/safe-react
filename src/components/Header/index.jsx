@@ -1,8 +1,8 @@
 import React from 'react'
-import './index.css'
+import styles from './index.css';
 
 const Header = () => (
-  <header className="header">
+  <header className={styles.header}>
     <h1>GNOSIS DAPP BOILERPLATE</h1>
     <div>Multisig 2.0</div>
   </header>

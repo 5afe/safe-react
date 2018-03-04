@@ -1,8 +1,8 @@
 import React from 'react'
-import './index.css'
+import styles from './index.css';
 
 const PageFrame = ({ children }) => (
-  <main className="container">
+  <main className={styles.container}>
     { children }
   </main>
 )

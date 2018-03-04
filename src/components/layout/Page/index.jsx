@@ -1,9 +1,9 @@
 import React from 'react'
 import Header from '../../Header'
-import './index.css'
+import styles from './index.css';
 
 const Page = ({children}) => (
-  <div className="page">
+  <div className={styles.page}>
     <Header />
     {children}
   </div>
