@@ -136,7 +136,7 @@ module.exports = {
       },
       {
         test: /\.css$/,
-        loader: 'style-loader!css-loader?importLoaders=1!postcss&modules=true&localIdentName=[name]__[local]___[hash:base64:5]'
+        loader: 'style!css?importLoaders=1&modules=true&localIdentName=[name]__[local]___[hash:base64:5]!postcss'
       },
       // "postcss" loader applies autoprefixer to our CSS.
       // "css" loader resolves paths in CSS and adds assets as dependencies.
