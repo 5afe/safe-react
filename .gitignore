@@ -1,4 +1,5 @@
 node_modules/
 build/
+build_webpack/
 build/contracts/
 truffle-config.js

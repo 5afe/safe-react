@@ -113,6 +113,7 @@ module.exports = {
           /\.html$/,
           /\.(js|jsx)$/,
           /\.css$/,
+          /\.scss$/,
           /\.json$/,
           /\.woff$/,
           /\.woff2$/,
@@ -138,8 +139,8 @@ module.exports = {
         }
       },
       {
-        test: /\.css$/,
-        loader: 'style!css?importLoaders=1&modules=true&minimize=true&localIdentName=[name]__[local]___[hash:base64:5]!postcss?sourceMap'
+        test: /\.(scss|css)$/,
+        loader: 'style!css?importLoaders=1&modules=true&minimize=false&localIdentName=[name]__[local]___[hash:base64:5]!postcss?sourceMap'
       },
       // "postcss" loader applies autoprefixer to our CSS.
       // "css" loader resolves paths in CSS and adds assets as dependencies.

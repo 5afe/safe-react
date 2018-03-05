@@ -1,4 +1,5 @@
 var autoprefixer = require('autoprefixer');
+var cssvars = require('postcss-simple-vars');
 var webpack = require('webpack');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
@@ -8,7 +9,7 @@ var url = require('url');
 var paths = require('./paths');
 var getClientEnvironment = require('./env');
 
-
+var cssvariables = require(paths.appSrc + '/theme/variables');
 
 function ensureSlash(path, needsSlash) {
   var hasSlash = path.endsWith('/');
@@ -116,6 +117,7 @@ module.exports = {
           /\.html$/,
           /\.(js|jsx)$/,
           /\.css$/,
+          /\.scss$/,
           /\.json$/,
           /\.woff$/,
           /\.woff2$/,
@@ -146,8 +148,8 @@ module.exports = {
       // use the "style" loader inside the async code so CSS from them won't be
       // in the main CSS file.
       {
-        test: /\.css$/,
-        loader: ExtractTextPlugin.extract('style', 'css?importLoaders=1!postcss')
+        test: /\.(scss|css)$/,
+        loader: ExtractTextPlugin.extract('style', 'css?importLoaders=1&modules=true&minimize=false!postcss?sourceMap')
         // Note: this won't work without `new ExtractTextPlugin()` in `plugins`.
       },
       // JSON is not enabled by default in Webpack but both Node and Browserify
@@ -199,6 +201,12 @@ module.exports = {
           'Firefox ESR',
           'not ie < 9', // React doesn't support IE8 anyway
         ]
+      }),
+      cssvars({
+        variables: function () {
+            return Object.assign({}, cssvariables);
+        },
+        silent: true
       }),
     ];
   },

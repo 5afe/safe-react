@@ -7,7 +7,7 @@ import contract from 'truffle-contract'
 import TextField from './components/forms/TextField'
 import Page from './components/layout/Page'
 import PageFrame from './components/layout/PageFrame'
-import './App.css'
+import './App.scss'
 
 class App extends Component {
   constructor(props) {
