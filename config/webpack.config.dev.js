@@ -1,4 +1,5 @@
 var autoprefixer = require('autoprefixer');
+var cssvars = require('postcss-simple-vars');
 var webpack = require('webpack');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 var CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin');
@@ -18,6 +19,8 @@ var publicPath = '/';
 var publicUrl = '';
 // Get environment variables to inject into our app.
 var env = getClientEnvironment(publicUrl);
+
+var cssvariables = require(paths.appSrc + '/theme/variables');
 
 // This is the development configuration.
 // It is focused on developer experience and fast rebuilds.
@@ -136,7 +139,7 @@ module.exports = {
       },
       {
         test: /\.css$/,
-        loader: 'style!css?importLoaders=1&modules=true&localIdentName=[name]__[local]___[hash:base64:5]!postcss'
+        loader: 'style!css?importLoaders=1&modules=true&minimize=true&localIdentName=[name]__[local]___[hash:base64:5]!postcss?sourceMap'
       },
       // "postcss" loader applies autoprefixer to our CSS.
       // "css" loader resolves paths in CSS and adds assets as dependencies.
@@ -206,6 +209,12 @@ module.exports = {
           'Firefox ESR',
           'not ie < 9', // React doesn't support IE8 anyway
         ]
+      }),
+      cssvars({
+        variables: function () {
+            return Object.assign({}, cssvariables);
+        },
+        silent: false
       }),
     ];
   },

@@ -1,6 +1,6 @@
 body {
   font-family: 'Montserrat', sans-serif;
-  color: #6b7c93;
+  color: $(secondary);
   background-color: #f0f1f3;
 }
 
