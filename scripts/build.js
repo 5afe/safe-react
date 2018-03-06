@@ -56,7 +56,7 @@ function getDifferenceLabel(currentSize, previousSize) {
 // This lets us display how much they changed later.
 recursive(paths.appBuild, (err, fileNames) => {
   var previousSizeMap = (fileNames || [])
-    .filter(fileName => /\.(js|css)$/.test(fileName))
+    .filter(fileName => /\.(js|jsx|css|scss)$/.test(fileName))
     .reduce((memo, fileName) => {
       var contents = fs.readFileSync(fileName);
       var key = removeFileNameHash(fileName);
@@ -78,7 +78,7 @@ recursive(paths.appBuild, (err, fileNames) => {
 // Print a detailed summary of build files.
 function printFileSizes(stats, previousSizeMap) {
   var assets = stats.toJson().assets
-    .filter(asset => /\.(js|css)$/.test(asset.name))
+    .filter(asset => /\.(js|jsx|css|scss)$/.test(asset.name))
     .map(asset => {
       var fileContents = fs.readFileSync(paths.appBuild + '/' + asset.name);
       var size = gzipSize(fileContents);

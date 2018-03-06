@@ -6,6 +6,8 @@ const HtmlWebPackPlugin = require("html-webpack-plugin");
 const paths = require('./paths');
 const getClientEnvironment = require('./env');
 
+const publicPath = '/';
+
 // `publicUrl` we will provide it to our app
 // as %PUBLIC_URL% in `index.html` and `process.env.PUBLIC_URL` in JavaScript.
 // Omit trailing slash as %PUBLIC_PATH%/xyz looks better than %PUBLIC_PATH%xyz.
@@ -36,6 +38,18 @@ module.exports = {
   devtool: 'cheap-module-source-map',
   resolve: { 
     extensions: ['.js', '.json', '.jsx'],
+  },
+  output: {
+    // Next line is not used in dev but WebpackDevServer crashes without it:
+    path: paths.appBuild,
+    // Add /* filename */ comments to generated require()s in the output.
+    pathinfo: true,
+    // This does not produce a real file. It's just the virtual path that is
+    // served by WebpackDevServer in development. This is the JS bundle
+    // containing code from all our entry points, and the Webpack runtime.
+    filename: 'static/js/bundle.js',
+    // This is the URL that app is served from. We use "/" in development.
+    publicPath: publicPath
   },  
   module: {
     rules: [
