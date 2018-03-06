@@ -1,0 +1,16 @@
+{
+  "presets": [
+    "@babel/react",
+    [
+      "@babel/env",
+      {
+        "forceAllTransforms": true
+      }
+    ],
+    "@babel/stage-0"
+  ],
+  "plugins": [
+    "transform-es3-member-expression-literals",
+    "transform-es3-property-literals"
+  ]
+}
