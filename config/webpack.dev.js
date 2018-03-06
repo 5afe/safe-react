@@ -1,7 +1,17 @@
 const autoprefixer = require('autoprefixer');
 const cssvars = require('postcss-simple-vars');
+const webpack = require('webpack');
 const HtmlWebPackPlugin = require("html-webpack-plugin");
+
 const paths = require('./paths');
+const getClientEnvironment = require('./env');
+
+// `publicUrl` we will provide it to our app
+// as %PUBLIC_URL% in `index.html` and `process.env.PUBLIC_URL` in JavaScript.
+// Omit trailing slash as %PUBLIC_PATH%/xyz looks better than %PUBLIC_PATH%xyz.
+var publicUrl = '';
+// Get environment variables to inject into our app.
+var env = getClientEnvironment(publicUrl);
 
 const cssvariables = require(paths.appSrc + '/theme/variables');
 
@@ -71,7 +81,8 @@ module.exports = {
   plugins: [
     new HtmlWebPackPlugin({
       template: paths.appHtml,
-      filename: "./index.html"
-    })
+    }),
+    new webpack.DefinePlugin(env),
+    new webpack.HotModuleReplacementPlugin(),
   ]
 };

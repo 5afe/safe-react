@@ -6,8 +6,9 @@
     "test": "test"
   },
   "scripts": {
-    "start": "webpack --mode development --config config/webpack.dev.js",
-    "build": "webpack --mode production --config config/webpack.dev.js"
+    "start": "node scripts/start.js",
+    "build": "node scripts/build.js",
+    "test": "node scripts/test.js --env=jsdom"
   },
   "repository": {
     "type": "git",
@@ -36,6 +37,7 @@
     "postcss-loader": "^2.1.1",
     "postcss-simple-vars": "^4.1.0",
     "react": "^16.2.0",
+    "react-dev-utils": "^5.0.0",
     "react-dom": "^16.2.0",
     "style-loader": "^0.20.2",
     "truffle-contract": "^3.0.4",
