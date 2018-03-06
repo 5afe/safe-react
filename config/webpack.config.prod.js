@@ -2,6 +2,7 @@ const autoprefixer = require('autoprefixer');
 const cssvars = require('postcss-simple-vars');
 const webpack = require('webpack');
 
+const UglifyJSPlugin = require('uglifyjs-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const ManifestPlugin = require('webpack-manifest-plugin');
@@ -74,8 +75,40 @@ module.exports = {
   // You can exclude the *.map files from the build during deployment.
   devtool: 'source-map',
   // In production, we only want to load the polyfills and the app code.
+  optimization: {
+    minimizer: [
+      // we specify a custom UglifyJsPlugin here to get source maps in production
+      new UglifyJSPlugin({
+        uglifyOptions: {
+          output: {
+            comments: false
+          },
+          compress: {
+            unsafe_comps: true,
+            properties: true,
+            keep_fargs: false,
+            pure_getters: true,
+            collapse_vars: true,
+            warnings: false,
+            sequences: true,
+            dead_code: true,
+            drop_debugger: true,
+            comparisons: true,
+            conditionals: true,
+            evaluate: true,
+            booleans: true,
+            loops: true,
+            unused: true,
+            hoist_funs: true,
+            if_return: true,
+            join_vars: true,
+            drop_console: true
+          }
+        }
+      })
+    ]
+  },
   entry: [
-    "babel-polyfill",
     require.resolve('./polyfills'),
     paths.appIndexJs
   ],
@@ -107,7 +140,7 @@ module.exports = {
     rules: [
       {
         test: /\.(js|jsx)$/,
-        exclude: /node_modules/,
+        include: paths.appSrc,
         use: {
           loader: "babel-loader"
         }
@@ -134,20 +167,6 @@ module.exports = {
             },
           ],
         })
-      },
-      // JSON is not enabled by default in Webpack but both Node and Browserify
-      // allow it implicitly so we also enable it.
-      {
-        test: /\.json$/,
-        loader: 'json-loader'
-      },
-      // "file" loader for svg
-      {
-        test: /\.svg$/,
-        loader: 'file-loader',
-        query: {
-          name: 'static/media/[name].[hash:8].[ext]'
-        }
       },
     ]
   },
