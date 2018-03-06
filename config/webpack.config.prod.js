@@ -1,3 +1,4 @@
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const autoprefixer = require('autoprefixer');
 const cssvars = require('postcss-simple-vars');
 const webpack = require('webpack');
@@ -71,6 +72,19 @@ module.exports = {
   mode: 'production',
   // Don't attempt to continue if there are any errors.
   bail: true,
+  optimization: {
+    splitChunks: {
+      cacheGroups: {
+        vendor: {
+          test: /node_modules/,
+          name: "vendor",
+          chunks: "all",
+          enforce: true,
+          minSize: 1
+        }
+      }
+    }
+  },
   entry: [
     require.resolve('./polyfills'),
     paths.appIndexJs
@@ -163,7 +177,8 @@ module.exports = {
     // having to parse `index.html`.
     new ManifestPlugin({
       fileName: 'asset-manifest.json'
-    })
+    }),
+    // new BundleAnalyzerPlugin()
   ],
   // Some libraries import Node modules but don't use them in the browser.
   // Tell Webpack to provide empty mocks for them so importing them works.
