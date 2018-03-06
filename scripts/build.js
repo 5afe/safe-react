@@ -32,7 +32,7 @@ if (!checkRequiredFiles([paths.appHtml, paths.appIndexJs])) {
 function removeFileNameHash(fileName) {
   return fileName
     .replace(paths.appBuild, '')
-    .replace(/\/?(.*)(\.\w+)(\.js|\.css)/, (match, p1, p2, p3) => p1 + p3);
+    .replace(/\/?(.*)(\.\w+)(\.js|\.css|\.jsx|\.scss)/, (match, p1, p2, p3) => p1 + p3);
 }
 
 // Input: 1024, 2048

@@ -71,43 +71,6 @@ module.exports = {
   mode: 'production',
   // Don't attempt to continue if there are any errors.
   bail: true,
-  // We generate sourcemaps in production. This is slow but gives good results.
-  // You can exclude the *.map files from the build during deployment.
-  devtool: 'source-map',
-  // In production, we only want to load the polyfills and the app code.
-  optimization: {
-    minimizer: [
-      // we specify a custom UglifyJsPlugin here to get source maps in production
-      new UglifyJSPlugin({
-        uglifyOptions: {
-          output: {
-            comments: false
-          },
-          compress: {
-            unsafe_comps: true,
-            properties: true,
-            keep_fargs: false,
-            pure_getters: true,
-            collapse_vars: true,
-            warnings: false,
-            sequences: true,
-            dead_code: true,
-            drop_debugger: true,
-            comparisons: true,
-            conditionals: true,
-            evaluate: true,
-            booleans: true,
-            loops: true,
-            unused: true,
-            hoist_funs: true,
-            if_return: true,
-            join_vars: true,
-            drop_console: true
-          }
-        }
-      })
-    ]
-  },
   entry: [
     require.resolve('./polyfills'),
     paths.appIndexJs
