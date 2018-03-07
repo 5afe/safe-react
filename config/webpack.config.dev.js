@@ -35,7 +35,7 @@ const postcssPlugins = [
 ];
 
 module.exports = {
-  devtool: 'cheap-module-source-map',
+  devtool: 'eval-source-map',
   mode: 'development',
   entry: [
     "babel-polyfill",
@@ -64,11 +64,6 @@ module.exports = {
     // some tools, although we do not recommend using it, see:
     // https://github.com/facebookincubator/create-react-app/issues/290
     extensions: ['.js', '.json', '.jsx'],
-    alias: {
-      // Support React Native Web
-      // https://www.smashingmagazine.com/2016/08/a-glimpse-into-the-future-with-react-native-for-web/
-      'react-native': 'react-native-web'
-    }
   },
   output: {
     // Next line is not used in dev but WebpackDevServer crashes without it:
@@ -117,7 +112,7 @@ module.exports = {
         use: [
           {
             loader: "html-loader",
-            options: { minimize: true }
+            options: { minimize: false }
           }
         ]
       }
@@ -129,5 +124,12 @@ module.exports = {
     }),
     new webpack.DefinePlugin(env),
     new webpack.HotModuleReplacementPlugin(),
-  ]
+  ],
+  // Some libraries import Node modules but don't use them in the browser.
+  // Tell Webpack to provide empty mocks for them so importing them works.
+  node: {
+    fs: 'empty',
+    net: 'empty',
+    tls: 'empty'
+  }
 };
