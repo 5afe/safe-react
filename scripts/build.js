@@ -32,7 +32,7 @@ if (!checkRequiredFiles([paths.appHtml, paths.appIndexJs])) {
 function removeFileNameHash(fileName) {
   return fileName
     .replace(paths.appBuild, '')
-    .replace(/\/?(.*)(\.\w+)(\.js|\.css)/, (match, p1, p2, p3) => p1 + p3);
+    .replace(/\/?(.*)(\.\w+)(\.js|\.css|\.jsx|\.scss)/, (match, p1, p2, p3) => p1 + p3);
 }
 
 // Input: 1024, 2048
@@ -56,7 +56,7 @@ function getDifferenceLabel(currentSize, previousSize) {
 // This lets us display how much they changed later.
 recursive(paths.appBuild, (err, fileNames) => {
   var previousSizeMap = (fileNames || [])
-    .filter(fileName => /\.(js|css)$/.test(fileName))
+    .filter(fileName => /\.(js|jsx|css|scss)$/.test(fileName))
     .reduce((memo, fileName) => {
       var contents = fs.readFileSync(fileName);
       var key = removeFileNameHash(fileName);
@@ -78,7 +78,7 @@ recursive(paths.appBuild, (err, fileNames) => {
 // Print a detailed summary of build files.
 function printFileSizes(stats, previousSizeMap) {
   var assets = stats.toJson().assets
-    .filter(asset => /\.(js|css)$/.test(asset.name))
+    .filter(asset => /\.(js|jsx|css|scss)$/.test(asset.name))
     .map(asset => {
       var fileContents = fs.readFileSync(paths.appBuild + '/' + asset.name);
       var size = gzipSize(fileContents);

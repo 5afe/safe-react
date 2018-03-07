@@ -1,5 +1,5 @@
 import React from 'react'
-import {default as MuiTextField } from 'material-ui/TextField'
+import { default as MuiTextField } from 'material-ui/TextField'
 
 const TextField = ({
   input: { name, onChange, value, ...restInput },
