@@ -58,7 +58,12 @@ module.exports = {
     // initialization, it doesn't blow up the WebpackDevServer client, and
     // changing JS code would still trigger a refresh.
   ],
-  resolve: { 
+  resolve: {
+    modules: [
+      paths.appSrc,
+      'node_modules',
+      paths.appContracts,
+    ], 
     // These are the reasonable defaults supported by the Node ecosystem.
     // We also include JSX as a common component filename extension to support
     // some tools, although we do not recommend using it, see:
