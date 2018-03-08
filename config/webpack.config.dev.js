@@ -58,12 +58,21 @@ module.exports = {
     // initialization, it doesn't blow up the WebpackDevServer client, and
     // changing JS code would still trigger a refresh.
   ],
-  resolve: { 
+  resolve: {
+    modules: [
+      paths.appSrc,
+      'node_modules',
+      paths.appContracts,
+    ], 
     // These are the reasonable defaults supported by the Node ecosystem.
     // We also include JSX as a common component filename extension to support
     // some tools, although we do not recommend using it, see:
     // https://github.com/facebookincubator/create-react-app/issues/290
     extensions: ['.js', '.json', '.jsx'],
+    alias: {
+      '~': paths.appSrc,
+      '#': paths.appContracts,
+    }
   },
   output: {
     // Next line is not used in dev but WebpackDevServer crashes without it:

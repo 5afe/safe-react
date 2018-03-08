@@ -23,6 +23,7 @@
   "devDependencies": {
     "@babel/cli": "^7.0.0-beta.40",
     "@babel/core": "^7.0.0-beta.40",
+    "@babel/plugin-syntax-dynamic-import": "^7.0.0-beta.40",
     "@babel/polyfill": "^7.0.0-beta.40",
     "@babel/preset-env": "^7.0.0-beta.40",
     "@babel/preset-react": "^7.0.0-beta.40",
@@ -62,7 +63,9 @@
     "final-form": "^4.2.1",
     "material-ui": "^1.0.0-beta.35",
     "material-ui-icons": "^1.0.0-beta.35",
-    "react-final-form": "^3.1.2"
+    "react-final-form": "^3.1.2",
+    "react-loadable": "^5.3.1",
+    "react-router-dom": "^4.2.2"
   },
   "jest": {
     "collectCoverageFrom": [
@@ -87,6 +90,8 @@
       "[/\\\\]node_modules[/\\\\].+\\.(js|jsx)$"
     ],
     "moduleNameMapper": {
+      "~(.*)$": "<rootDir>/src/$1",
+      "#(.*)$": "<rootDir>/gnosis-safe-contracts/build/contracts/$1",
       "^react-native$": "react-native-web"
     },
     "moduleFileExtensions": [
