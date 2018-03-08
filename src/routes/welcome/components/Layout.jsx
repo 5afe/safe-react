@@ -1,12 +1,12 @@
 import Button from 'material-ui/Button';
 import React, { Component } from 'react'
 import { Form, Field } from 'react-final-form'
-import Safe from 'contracts/GnosisSafe.json'
-import getWeb3, { promisify } from 'utils/getWeb3'
 import contract from 'truffle-contract'
-import TextField from 'components/forms/TextField'
-import Page from 'components/layout/Page'
-import PageFrame from 'components/layout/PageFrame'
+import TextField from '~/components/forms/TextField'
+import Page from '~/components/layout/Page'
+import PageFrame from '~/components/layout/PageFrame'
+import getWeb3, { promisify } from '~/utils/getWeb3'
+import Safe from '#/GnosisSafe.json'
 import './App.scss'
 
 class App extends Component {

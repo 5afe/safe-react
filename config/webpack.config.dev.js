@@ -69,6 +69,10 @@ module.exports = {
     // some tools, although we do not recommend using it, see:
     // https://github.com/facebookincubator/create-react-app/issues/290
     extensions: ['.js', '.json', '.jsx'],
+    alias: {
+      '~': paths.appSrc,
+      '#': paths.appContracts,
+    }
   },
   output: {
     // Next line is not used in dev but WebpackDevServer crashes without it:

@@ -38,7 +38,7 @@ module.exports = {
   appIndexJs: resolveApp('src/index.js'),
   appPackageJson: resolveApp('package.json'),
   appSrc: resolveApp('src'),
-  appContracts: resolveApp('gnosis-safe-contracts/build'),
+  appContracts: resolveApp('gnosis-safe-contracts/build/contracts'),
   yarnLockFile: resolveApp('yarn.lock'),
   testsSetup: resolveApp('src/setupTests.js'),
   appNodeModules: resolveApp('node_modules'),

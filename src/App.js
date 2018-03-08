@@ -1,6 +1,6 @@
 import React from 'react'
 import { BrowserRouter, Switch, Redirect, Route } from 'react-router-dom'
-import Welcome from 'routes/welcome/components/Layout'
+import Welcome from '~/routes/welcome/components/Layout'
 
 const AppRoutes = () => (
   <Switch>

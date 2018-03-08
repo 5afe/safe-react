@@ -1,8 +1,8 @@
+import { MuiThemeProvider } from 'material-ui/styles'
 import React from 'react'
 import ReactDOM from 'react-dom'
+import theme from '~/theme/mui'
 import App from './App'
-import { MuiThemeProvider } from 'material-ui/styles';
-import theme from './theme/mui'
 
 const Root = () => (
   <MuiThemeProvider theme={theme}>
