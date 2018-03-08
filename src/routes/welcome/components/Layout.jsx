@@ -1,6 +1,7 @@
 import Button from 'material-ui/Button';
 import React, { Component } from 'react'
 import { Form, Field } from 'react-final-form'
+import { Link } from 'react-router-dom'
 import contract from 'truffle-contract'
 import TextField from '~/components/forms/TextField'
 import Page from '~/components/layout/Page'
@@ -104,6 +105,11 @@ class App extends Component {
               </form>
             )}
           />
+          <Link to="/transactions">
+            <Button variant="raised" color="primary">
+              Go to transactions
+            </Button>
+          </Link>
           </PageFrame>
       </Page>
     );
