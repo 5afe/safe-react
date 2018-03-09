@@ -20,7 +20,6 @@ then
   then
     DEPLOY_SUBDOMAIN_UNFORMATTED_LIST+=(release-${TRAVIS_PULL_REQUEST}-pr)
   else
-  then
     DEPLOY_SUBDOMAIN_UNFORMATTED_LIST+=(staging-${TRAVIS_PULL_REQUEST}-pr)
   fi
 elif [ -n "${TRAVIS_TAG// }" ] #TAG is not empty
