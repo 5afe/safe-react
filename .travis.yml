@@ -10,5 +10,11 @@ before_script:
   - cd gnosis-safe-contracts
   - truffle compile && cd ..
 after_success:
+  - |
+    if [ ${TRAVIS_BRANCH} = "master" ]; then
+      export NODE_ENV=production;
+    else
+      export NODE_ENV=development;
+    fi
   - chmod ugo+x ./config/deploy/deploy.sh
   - ./config/deploy/deploy.sh

@@ -10,6 +10,8 @@ REPO_NAME=${REPO_SLUG_ARRAY[1]}
 
 DEPLOY_PATH=../../build_webpack
 
+echo "Deploy Path: ${DEPLOY_PATH}"
+
 DEPLOY_SUBDOMAIN_UNFORMATTED_LIST=()
 
 if [ "$TRAVIS_PULL_REQUEST" != "false" ]
@@ -17,12 +19,9 @@ then
   if [ "$NODE_ENV" == "production" ]
   then
     DEPLOY_SUBDOMAIN_UNFORMATTED_LIST+=(release-${TRAVIS_PULL_REQUEST}-pr)
-  elif [ "$NODE_ENV" == "staging" ]
+  else
   then
     DEPLOY_SUBDOMAIN_UNFORMATTED_LIST+=(staging-${TRAVIS_PULL_REQUEST}-pr)
-  elif [ "$NODE_ENV" == "test" ]
-  then
-    DEPLOY_SUBDOMAIN_UNFORMATTED_LIST+=(${TRAVIS_PULL_REQUEST}-pr)
   fi
 elif [ -n "${TRAVIS_TAG// }" ] #TAG is not empty
 then
@@ -46,12 +45,10 @@ then
     DEPLOY_SUBDOMAIN_UNFORMATTED_LIST+=(${TRAVIS_TAG}-tag)
   fi
 else
-  if [ "$NODE_ENV" == "test" ]
-  then
-    DEPLOY_SUBDOMAIN_UNFORMATTED_LIST+=(${TRAVIS_BRANCH}-branch)
-  fi
+  DEPLOY_SUBDOMAIN_UNFORMATTED_LIST+=(${TRAVIS_BRANCH}-branch)
 fi
 
+echo "Deploy subdomain list finsihed"
 
 for DEPLOY_SUBDOMAIN_UNFORMATTED in "${DEPLOY_SUBDOMAIN_UNFORMATTED_LIST[@]}"
 do
@@ -67,10 +64,13 @@ do
 
   DEPLOY_DOMAIN=https://${DEPLOY_SUBDOMAIN}-${REPO_NAME}-${REPO_OWNER}.surge.sh
 
+  echo "Let's deploy on surge... ${DEPLOY_PATH}"
+
   surge --project ${DEPLOY_PATH} --domain $DEPLOY_DOMAIN;
 
   if [ "$TRAVIS_PULL_REQUEST" != "false" ]
   then
+    echo "Let's update Github PR"
     # Using the Issues api instead of the PR api
     # Done so because every PR is an issue, and the issues api allows to post general comments,
     # while the PR api requires that comments are made to specific files and specific commits
