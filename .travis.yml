@@ -11,4 +11,4 @@ before_script:
   - truffle compile && cd ..
 after_success:
   - chmod ugo+x ./config/deploy/deploy.sh
-  - ././config/deploy/deploy.sh
+  - ./config/deploy/deploy.sh
