@@ -1,0 +1,9 @@
+language: node_js
+node_js:
+  - node
+  - "8"
+os:
+  - linux
+after_success:
+  - chmod ugo+x ./config/deploy/deploy.sh
+  - ././config/deploy/deploy.sh
