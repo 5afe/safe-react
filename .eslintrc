@@ -1,7 +1,10 @@
 {
-  "extends": "airbnb",
+  "extends": [
+    "airbnb",
+    "plugin:flowtype/recommended"
+  ],
   "parser": "babel-eslint",
-  "plugins": ["jest"],
+  "plugins": ["jest", "flowtype"],
   "rules": {
     "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
     "react/forbid-prop-types": [1, { "forbid": ["object", "any"] }],
@@ -25,7 +28,13 @@
     "import/prefer-default-export": 0,
     "jsx-a11y/label-has-for": 0,
     "indent": ["error", 2],
-    "no-console": ["error", { "allow": ["warn", "error"] }]
+    "no-console": ["error", { "allow": ["warn", "error"] }],
+    "flowtype/require-valid-file-annotation": [
+      2,
+      "always", {
+        "annotationStyle": "line"
+      }
+    ]
   },
   "env": {
     "jest/globals": true,

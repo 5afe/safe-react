@@ -1,6 +1,7 @@
-import { CircularProgress } from 'material-ui/Progress';
+// @flow
+import { CircularProgress } from 'material-ui/Progress'
 import React from 'react'
-import Loadable from 'react-loadable';
+import Loadable from 'react-loadable'
 import { Switch, Redirect, Route } from 'react-router-dom'
 import Welcome from './welcome/components/Layout'
 
