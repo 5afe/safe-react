@@ -130,15 +130,19 @@ function build(previousSizeMap) {
 
     console.log('Creating an optimized production build...');
     console.log('Errors are '+JSON.stringify(err));
+    console.log('Errors are MOE');
     if (err) {
+      console.log('Errors are A');
       printErrors('Failed to compile A.', [err]);
       process.exit(1);
     }
-
+    console.log('Errors are B');
     if (stats.compilation.errors.length) {
+      console.log('Errors are C');
       printErrors('Failed to compile B.', stats.compilation.errors);
       process.exit(1);
     }
+    console.log('Errors are D');
 /*
     if (process.env.CI && stats.compilation.warnings.length) {
      printErrors('Failed to compile.', stats.compilation.warnings);
