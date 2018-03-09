@@ -4,6 +4,10 @@ node_js:
   - "8"
 os:
   - linux
+before_script:
+  - git clone git@github.com:gnosis/gnosis-safe-contracts.git
+  - cd gnosis-safe-contracts
+  - truffle compile && cd ..
 after_success:
   - chmod ugo+x ./config/deploy/deploy.sh
   - ././config/deploy/deploy.sh
