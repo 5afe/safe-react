@@ -8,7 +8,7 @@ REPO_SLUG_ARRAY=(${TRAVIS_REPO_SLUG//\// })
 REPO_OWNER=${REPO_SLUG_ARRAY[0]}
 REPO_NAME=${REPO_SLUG_ARRAY[1]}
 
-DEPLOY_PATH=./build_webpack
+DEPLOY_PATH=../../build_webpack
 
 echo "Deploy Path: ${DEPLOY_PATH}"
 

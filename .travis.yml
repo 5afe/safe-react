@@ -1,6 +1,5 @@
 language: node_js
 node_js:
-  - node
   - "8"
 os:
   - linux
@@ -11,6 +10,7 @@ before_script:
   - cd gnosis-safe-contracts
   - truffle compile && cd ..
 after_success:
+  - npm run build
   - |
     if [ ${TRAVIS_BRANCH} = "master" ]; then
       export NODE_ENV=production;
