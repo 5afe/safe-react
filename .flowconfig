@@ -1,5 +1,6 @@
 [ignore]
 .*/node_modules/findup/*
+.*/flow-typed/**
 
 [include]
 <PROJECT_ROOT>/src/**
