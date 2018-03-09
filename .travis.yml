@@ -6,6 +6,7 @@ os:
   - linux
 before_script:
   - npm install -g truffle
+  - npm install -g surge
   - git clone https://github.com/gnosis/gnosis-safe-contracts.git
   - cd gnosis-safe-contracts
   - truffle compile && cd ..

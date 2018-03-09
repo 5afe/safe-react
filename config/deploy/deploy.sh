@@ -63,7 +63,8 @@ do
 
   DEPLOY_DOMAIN=https://${DEPLOY_SUBDOMAIN}-${REPO_NAME}-${REPO_OWNER}.surge.sh
 
-  echo "Let's deploy on surge... ${DEPLOY_PATH}"
+  echo "Let's deploy on surge --project... ${DEPLOY_PATH}"
+  echo "Let's deploy on surge --domain... ${DEPLOY_DOMAIN}"
 
   surge --project ${DEPLOY_PATH} --domain $DEPLOY_DOMAIN;
 
@@ -74,6 +75,7 @@ do
     # Done so because every PR is an issue, and the issues api allows to post general comments,
     # while the PR api requires that comments are made to specific files and specific commits
     GITHUB_PR_COMMENTS=https://api.github.com/repos/${TRAVIS_REPO_SLUG}/issues/${TRAVIS_PULL_REQUEST}/comments
+    echo "Updating Github PR with --> ${GITHUB_PR_COMMENTS}"
     curl -H "Authorization: token ${GITHUB_API_TOKEN}" --request POST ${GITHUB_PR_COMMENTS} --data '{"body":"Travis automatic deployment: '${DEPLOY_DOMAIN}'"}'
   fi
 done
