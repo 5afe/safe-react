@@ -123,13 +123,9 @@ function printErrors(summary, errors) {
 // Create the production build and print the deployment instructions.
 function build(previousSizeMap) {
   console.log('Creating an optimized production build...');
-  
-  console.log('Config is '+JSON.stringify(config));
-  
   webpack(config).run((err, stats) => {
 
     console.log('Creating an optimized production build...');
-    console.log('Errors are '+JSON.stringify(err));
     console.log('Errors are MOE');
     if (err) {
       console.log('Errors are A');
