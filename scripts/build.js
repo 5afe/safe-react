@@ -124,27 +124,16 @@ function printErrors(summary, errors) {
 function build(previousSizeMap) {
   console.log('Creating an optimized production build...');
   webpack(config).run((err, stats) => {
-
-    console.log('Creating an optimized production build...');
-    console.log('Errors are MOE');
     if (err) {
-      console.log('Errors are A');
       printErrors('Failed to compile A.', [err]);
       process.exit(1);
     }
-    console.log('Errors are B');
+    
     if (stats.compilation.errors.length) {
-      console.log('Errors are C');
       printErrors('Failed to compile B.', stats.compilation.errors);
       process.exit(1);
-    }
-    console.log('Errors are D');
-/*
-    if (process.env.CI && stats.compilation.warnings.length) {
-     printErrors('Failed to compile.', stats.compilation.warnings);
-     process.exit(1);
-   }
-*/
+    }    
+
     console.log(chalk.green('Compiled successfully.'));
     console.log();
 

@@ -1,4 +1,3 @@
-require('@babel/polyfill')
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
 const autoprefixer = require('autoprefixer')
 const cssvars = require('postcss-simple-vars')
