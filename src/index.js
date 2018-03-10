@@ -1,3 +1,4 @@
+import 'babel-polyfill'
 import { MuiThemeProvider } from 'material-ui/styles'
 import React from 'react'
 import ReactDOM from 'react-dom'
@@ -12,5 +13,5 @@ const Root = () => (
 
 ReactDOM.render(
   <Root />,
-  document.getElementById('root')
-);
+  document.getElementById('root'),
+)
