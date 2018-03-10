@@ -71,12 +71,18 @@ do
   if [ "$TRAVIS_PULL_REQUEST" != "false" ]
   then
     echo "Let's update Github PR"
+    #https://api.github.com/repos/gnosis/gnosis-team-safe/issues/5/comments
+
     # Using the Issues api instead of the PR api
     # Done so because every PR is an issue, and the issues api allows to post general comments,
     # while the PR api requires that comments are made to specific files and specific commits
     GITHUB_PR_COMMENTS=https://api.github.com/repos/${TRAVIS_REPO_SLUG}/issues/${TRAVIS_PULL_REQUEST}/comments
+    #/repos/:owner/:repo/pulls/:number
+    GITHUB_PR_PULL_REQUEST=https://api.github.com/repos/${TRAVIS_REPO_SLUG}/pulls/${TRAVIS_PULL_REQUEST}
     echo "Updating Github PR with --> ${GITHUB_PR_COMMENTS}"
     curl -H "Authorization: token ${GITHUB_API_TOKEN}" --request POST ${GITHUB_PR_COMMENTS} --data '{"body":"Travis automatic deployment: '${DEPLOY_DOMAIN}'"}'
+    curl -H "Authorization: token ${GITHUB_API_TOKEN}" --request POST ${GITHUB_PR_PULL_REQUEST} --data '{"body":" Updating moe Travis automatic deployment: '${DEPLOY_DOMAIN}'"}'
+    /repos/:owner/:repo/pulls/:number
   fi
 done
 
