@@ -3,3 +3,4 @@ build/
 build_webpack/
 build/contracts/
 truffle-config.js
+gnosis-safe-contracts/

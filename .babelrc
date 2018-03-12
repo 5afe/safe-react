@@ -1,0 +1,25 @@
+{
+  "presets": [
+    "@babel/react",
+    "@babel/preset-flow",
+    [
+      "@babel/env",
+      {
+        "forceAllTransforms": true
+      }
+    ],
+    "@babel/stage-0"
+  ],
+  "plugins": [
+    "@babel/plugin-syntax-dynamic-import",
+    "transform-es3-member-expression-literals",
+    "transform-es3-property-literals"
+  ],
+  "env": {
+    "test": {
+      "plugins": [
+        "dynamic-import-node"
+      ]
+    }
+  }
+}

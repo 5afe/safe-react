@@ -1,3 +1,4 @@
+/*eslint-disable*/
 // Do this as the first thing so that any code reading it knows the right env.
 process.env.NODE_ENV = 'production';
 
@@ -32,7 +33,7 @@ if (!checkRequiredFiles([paths.appHtml, paths.appIndexJs])) {
 function removeFileNameHash(fileName) {
   return fileName
     .replace(paths.appBuild, '')
-    .replace(/\/?(.*)(\.\w+)(\.js|\.css)/, (match, p1, p2, p3) => p1 + p3);
+    .replace(/\/?(.*)(\.\w+)(\.js|\.css|\.jsx|\.scss)/, (match, p1, p2, p3) => p1 + p3);
 }
 
 // Input: 1024, 2048
@@ -56,7 +57,7 @@ function getDifferenceLabel(currentSize, previousSize) {
 // This lets us display how much they changed later.
 recursive(paths.appBuild, (err, fileNames) => {
   var previousSizeMap = (fileNames || [])
-    .filter(fileName => /\.(js|css)$/.test(fileName))
+    .filter(fileName => /\.(js|jsx|css|scss)$/.test(fileName))
     .reduce((memo, fileName) => {
       var contents = fs.readFileSync(fileName);
       var key = removeFileNameHash(fileName);
@@ -78,7 +79,7 @@ recursive(paths.appBuild, (err, fileNames) => {
 // Print a detailed summary of build files.
 function printFileSizes(stats, previousSizeMap) {
   var assets = stats.toJson().assets
-    .filter(asset => /\.(js|css)$/.test(asset.name))
+    .filter(asset => /\.(js|jsx|css|scss)$/.test(asset.name))
     .map(asset => {
       var fileContents = fs.readFileSync(paths.appBuild + '/' + asset.name);
       var size = gzipSize(fileContents);
@@ -124,19 +125,14 @@ function build(previousSizeMap) {
   console.log('Creating an optimized production build...');
   webpack(config).run((err, stats) => {
     if (err) {
-      printErrors('Failed to compile.', [err]);
+      printErrors('Failed to compile A.', [err]);
       process.exit(1);
     }
-
+    
     if (stats.compilation.errors.length) {
-      printErrors('Failed to compile.', stats.compilation.errors);
+      printErrors('Failed to compile B.', stats.compilation.errors);
       process.exit(1);
-    }
-
-    if (process.env.CI && stats.compilation.warnings.length) {
-     printErrors('Failed to compile.', stats.compilation.warnings);
-     process.exit(1);
-   }
+    }    
 
     console.log(chalk.green('Compiled successfully.'));
     console.log();

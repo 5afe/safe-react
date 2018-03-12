@@ -1,0 +1,21 @@
+language: node_js
+node_js:
+  - "8"
+os:
+  - linux
+before_script:
+  - npm install -g truffle
+  - npm install -g surge
+  - git clone https://github.com/gnosis/gnosis-safe-contracts.git
+  - cd gnosis-safe-contracts
+  - truffle compile && cd ..
+after_success:
+  - npm run build
+  - |
+    if [ ${TRAVIS_BRANCH} = "master" ]; then
+      export NODE_ENV=production;
+    else
+      export NODE_ENV=development;
+    fi
+  - chmod ugo+x ./config/deploy/deploy.sh
+  - ./config/deploy/deploy.sh
