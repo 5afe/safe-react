@@ -14,5 +14,12 @@
     "@babel/plugin-syntax-dynamic-import",
     "transform-es3-member-expression-literals",
     "transform-es3-property-literals"
-  ]
+  ],
+  "env": {
+    "test": {
+      "plugins": [
+        "dynamic-import-node"
+      ]
+    }
+  }
 }

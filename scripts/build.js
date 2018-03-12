@@ -1,3 +1,4 @@
+/*eslint-disable*/
 // Do this as the first thing so that any code reading it knows the right env.
 process.env.NODE_ENV = 'production';
 
@@ -124,19 +125,14 @@ function build(previousSizeMap) {
   console.log('Creating an optimized production build...');
   webpack(config).run((err, stats) => {
     if (err) {
-      printErrors('Failed to compile.', [err]);
+      printErrors('Failed to compile A.', [err]);
       process.exit(1);
     }
-
+    
     if (stats.compilation.errors.length) {
-      printErrors('Failed to compile.', stats.compilation.errors);
+      printErrors('Failed to compile B.', stats.compilation.errors);
       process.exit(1);
-    }
-
-    if (process.env.CI && stats.compilation.warnings.length) {
-     printErrors('Failed to compile.', stats.compilation.warnings);
-     process.exit(1);
-   }
+    }    
 
     console.log(chalk.green('Compiled successfully.'));
     console.log();
