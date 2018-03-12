@@ -1,3 +1,4 @@
+/*eslint-disable*/
 const autoprefixer = require('autoprefixer');
 const cssvars = require('postcss-simple-vars');
 const webpack = require('webpack');
