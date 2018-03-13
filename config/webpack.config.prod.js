@@ -149,6 +149,16 @@ module.exports = {
           ],
         }),
       },
+      {
+        test: /\.(jpe?g|png|svg)$/i,
+        exclude: /node_modules/,
+        use: [{
+          loader: "file-loader",
+          options: {
+            name: 'img/[hash].[ext]'
+          }
+        }]
+      },
     ],
   },
   plugins: [
