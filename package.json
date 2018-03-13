@@ -11,8 +11,8 @@
     "test": "node scripts/test.js --env=jsdom",
     "precommit": "./precommit.sh",
     "flow": "flow",
-    "storybook": "NODE_ENV=development start-storybook -p 6006",
-    "build-storybook": "build-storybook"
+    "storybook": "start-storybook -p 6006",
+    "build-storybook": "build-storybook -o build_storybook"
   },
   "repository": {
     "type": "git",
