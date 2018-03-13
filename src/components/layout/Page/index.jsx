@@ -1,12 +1,15 @@
+// @flow
 import React from 'react'
-import Header from '../../Header'
-import styles from './index.scss';
+import styles from './index.scss'
 
-const Page = ({children}) => (
-  <div className={styles.page}>
-    <Header />
+type Props = {
+  children: React.Node,
+}
+
+const Page = ({ children }: Props) => (
+  <main className={styles.container}>
     {children}
-  </div>
+  </main>
 )
 
 export default Page

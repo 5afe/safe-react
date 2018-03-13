@@ -1,11 +1,13 @@
+// @flow
 import React from 'react'
-import styles from './index.scss';
+import Img from '~/components/layout/Img'
+
+const logo = require('./gnosis_logo.svg')
 
 const Header = () => (
-  <header className={styles.header}>
-    <h1>GNOSIS DAPP BOILERPLATE</h1>
-    <div>Multisig 2.0</div>
-  </header>
+  <div>
+    <Img src={logo} />
+  </div>
 )
 
 export default Header

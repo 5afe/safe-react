@@ -1,3 +1,18 @@
+body {
+  font-family: 'Montserrat', sans-serif;
+  color: $secondary;
+  background-color: #f0f1f3;
+}
+
+h1, h2, h3 {
+  font-family: 'Montserrat', sans-serif;
+}
+
+.frame {
+  margin: 20px 20px 60px 20px;
+  background-image: linear-gradient(to bottom, $primary, #1a829d, #1f5f76, #1c3f4f, $footer);
+}
+
 .container {
   margin: 0px 20px;
 }

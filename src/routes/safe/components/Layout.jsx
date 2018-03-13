@@ -26,14 +26,14 @@ class App extends Component {
   }
 
   componentWillMount() {
-    getWeb3.then(results => {
+    getWeb3.then((results) => {
       const web3 = results.web3
       this.safe.setProvider(web3.currentProvider)
-      this.setState({web3})
+      this.setState({ web3 })
     })
-    .catch(() => {
-      console.log('Error finding web3.')
-    })
+      .catch(() => {
+        console.log('Error finding web3.')
+      })
   }
 
   onCallSafeContractSubmit = async () => {
@@ -45,10 +45,10 @@ class App extends Component {
       // const transaction = await promisify(cb => web3.eth.getTransaction(transactionHash, cb))
       // console.log("Transaction" + JSON.stringify(transaction, 2, 0))
       const transactionReceipt = await promisify(cb => web3.eth.getTransactionReceipt(transactionHash, cb))
-      console.log("Transaction Receipt" + JSON.stringify(transactionReceipt, 2, 0))
-      this.setState({ safeAddress: safeInstance.address})
+      console.log(`Transaction Receipt${JSON.stringify(transactionReceipt, 2, 0)}`)
+      this.setState({ safeAddress: safeInstance.address })
     } catch (error) {
-      console.log("Error while creating the Safe")
+      console.log('Error while creating the Safe')
     }
   }
 
@@ -57,13 +57,13 @@ class App extends Component {
     try {
       const { web3, safeAddress } = this.state
       const accounts = await promisify(cb => web3.eth.getAccounts(cb))
-      const txData = {from: accounts[0], to: safeAddress, value: web3.toWei(fundsToAdd, 'ether')}
+      const txData = { from: accounts[0], to: safeAddress, value: web3.toWei(fundsToAdd, 'ether') }
       await promisify(cb => web3.eth.sendTransaction(txData, cb))
-      const funds = await promisify( cb => web3.eth.getBalance(safeAddress, cb))
+      const funds = await promisify(cb => web3.eth.getBalance(safeAddress, cb))
       const fundsInEther = funds ? web3.fromWei(funds.toNumber(), 'ether') : 0
-      this.setState({funds: fundsInEther})
+      this.setState({ funds: fundsInEther })
     } catch (error) {
-      console.log("Errog adding funds to safe" + error)
+      console.log(`Errog adding funds to safe${error}`)
     }
   }
 
@@ -82,7 +82,7 @@ class App extends Component {
                   <Button variant="raised" color="primary" type="submit">
                     Create Safe
                   </Button>
-                </div> 
+                </div>
               </form>
             )}
           />
@@ -91,17 +91,17 @@ class App extends Component {
             render={({ handleSubmit, pristine, invalid }) => (
               <form onSubmit={handleSubmit}>
                 <h2>Add Funds to the safe</h2>
-                <div style={{ margin: '10px 0px'}}>
-                  <label style={{ marginRight: '10px' }}>{safeAddress ? safeAddress : 'Not safe detected'}</label>
+                <div style={{ margin: '10px 0px' }}>
+                  <label style={{ marginRight: '10px' }}>{safeAddress || 'Not safe detected'}</label>
                 </div>
                 { safeAddress && <div>
                   <Field name="funds" component={TextField} type="text" placeholder="ETH to add" />
-                  <Button type="submit" disabled={ !safeAddress || pristine || invalid}>
+                  <Button type="submit" disabled={!safeAddress || pristine || invalid}>
                     Add funds
                   </Button>
                 </div> }
-                { safeAddress && <div style={{ margin: '15px 0px'}}>
-                  Total funds in this safe: { funds ? funds : 0 } ETH
+                { safeAddress && <div style={{ margin: '15px 0px' }}>
+                  Total funds in this safe: { funds || 0 } ETH
                 </div> }
               </form>
             )}
@@ -111,9 +111,9 @@ class App extends Component {
               Go to transactions
             </Button>
           </Link>
-          </PageFrame>
+        </PageFrame>
       </Page>
-    );
+    )
   }
 }
 
