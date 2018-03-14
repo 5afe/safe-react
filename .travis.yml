@@ -4,13 +4,17 @@ node_js:
 os:
   - linux
 before_script:
-  - npm install -g truffle
-  - npm install -g surge
+  - curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
+  - echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
+  - sudo apt-get update && sudo apt-get install yarn
+  - yarn global add truffle
+  - yarn global add surge
   - git clone https://github.com/gnosis/gnosis-safe-contracts.git
   - cd gnosis-safe-contracts
   - truffle compile && cd ..
 after_success:
-  - npm run build
+  - yarn build-storybook
+  - yarn build
   - |
     if [ ${TRAVIS_BRANCH} = "master" ]; then
       export NODE_ENV=production;
