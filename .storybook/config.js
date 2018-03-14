@@ -2,7 +2,7 @@ import { addDecorator, configure } from '@storybook/react'
 import { withKnobs } from '@storybook/addon-knobs'
 import * as React from 'react'
 import StoryRouter from 'storybook-router'
-// import 'App.scss'
+import 'App.scss'
 
 (function (global) {
     //Useful for adding data and libraries to window object.

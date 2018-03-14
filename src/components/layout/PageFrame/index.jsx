@@ -11,12 +11,14 @@ type Props = {
 }
 
 const PageFrame = ({ children }: Props) => (
-  <Block padding="xl" className={styles.frame}>
-    <Header />
-    <Page>
-      {children}
-    </Page>
-    <Footer />
+  <Block className={styles.container}>
+    <Block padding="xl" className={styles.frame}>
+      <Header />
+      <Page>
+        {children}
+      </Page>
+      <Footer />
+    </Block>
   </Block>
 )
 
