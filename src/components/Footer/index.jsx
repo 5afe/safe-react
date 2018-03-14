@@ -1,22 +1,21 @@
 // @flow
 import React from 'react'
-import { Link } from 'react-router-dom'
+import Block from '~/components/layout/Block'
+import Link from '~/components/layout/Link'
 import styles from './index.scss'
 
 const Footer = () => (
-  <footer className={styles.footer}>
-    <div>
-      <Link to="/wallet">
-        Wallet
-      </Link>
-      <Link to="/transactions">
-        Transactions
-      </Link>
-      <Link to="/settings">
-        Settings
-      </Link>
-    </div>
-  </footer>
+  <Block className={styles.footer}>
+    <Link to="/wallet">
+      Wallet
+    </Link>
+    <Link to="/transactions">
+      Transactions
+    </Link>
+    <Link to="/settings">
+      Settings
+    </Link>
+  </Block>
 )
 
 export default Footer
