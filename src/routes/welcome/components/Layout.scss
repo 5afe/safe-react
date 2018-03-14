@@ -1,0 +1,18 @@
+.safe {
+  display: grid;
+  justify-content: center;
+  grid-row-gap: $xxl;
+}
+
+.safeActions {
+  display: flex;
+  justify-content: space-around;
+}
+
+@media(max-width: $(screenXsMax)px) {
+  .safeActions {
+    grid-row-gap: $md;
+    display: grid;
+    justify-items: center;
+  }
+}
