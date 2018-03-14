@@ -1,5 +1,6 @@
 // @flow
 import React from 'react'
+import Block from '~/components/layout/Block'
 import Page from '~/components/layout/Page'
 import Footer from '~/components/Footer'
 import Header from '~/components/Header'
@@ -10,13 +11,13 @@ type Props = {
 }
 
 const PageFrame = ({ children }: Props) => (
-  <div className={styles.frame}>
+  <Block padding="xl" className={styles.frame}>
     <Header />
     <Page>
       {children}
     </Page>
     <Footer />
-  </div>
+  </Block>
 )
 
 export default PageFrame

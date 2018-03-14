@@ -10,15 +10,16 @@ type Props = {
   fullwidth?: boolean,
   bordered?: boolean,
   className?: string,
+  style?: React.object
 }
 
 class Img extends PureComponent<Props> {
   render() {
     const {
-      fullwidth, alt, bordered, className, ...props
+      fullwidth, alt, bordered, className, style, ...props
     } = this.props
 
-    return <img alt={alt} {...props} className={cx(styles.img, { fullwidth, bordered }, className)} />
+    return <img alt={alt} style={style} {...props} className={cx(styles.img, { fullwidth, bordered }, className)} />
   }
 }
 
