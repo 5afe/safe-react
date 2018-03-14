@@ -18,5 +18,6 @@ after_success:
     else
       export NODE_ENV=development;
     fi
+  - cd build_webpack/ && cp index.html 200.html && cd ..
   - chmod ugo+x ./config/deploy/deploy.sh
   - ./config/deploy/deploy.sh
