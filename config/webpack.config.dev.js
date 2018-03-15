@@ -1,3 +1,4 @@
+/*eslint-disable*/
 const autoprefixer = require('autoprefixer');
 const cssvars = require('postcss-simple-vars');
 const webpack = require('webpack');
@@ -115,7 +116,7 @@ module.exports = {
             },
           },
         ],
-    },
+      },
       {
         test: /\.html$/,
         use: [
@@ -124,7 +125,17 @@ module.exports = {
             options: { minimize: false }
           }
         ]
-      }
+      },
+      {
+        test: /\.(jpe?g|png|svg)$/i,
+        exclude: /node_modules/,
+        use: [{
+          loader: "file-loader",
+          options: {
+            name: 'img/[hash].[ext]'
+          }
+        }]
+      },
     ]
   },
   plugins: [

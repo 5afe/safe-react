@@ -1,0 +1,37 @@
+.sm {
+    margin-bottom: 17px;
+}
+
+.md {
+    margin-bottom: 42px;
+}
+
+.xl {
+    margin-bottom: 96px;
+}
+
+.xxl {
+    margin-bottom: 200px;
+}
+
+.paddingSm {
+  padding: 0 $xs;
+}
+
+.paddingMd {
+  padding: 0 $md;
+}
+
+.paddingXl {
+  padding: 0 $xl;
+}
+
+.paddingXxl {
+  padding: 0 $xxl;
+}
+
+.center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

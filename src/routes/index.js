@@ -15,9 +15,9 @@ const Transactions = Loadable({
 const Routes = () => (
   <Switch>
     <Redirect exact from="/" to="/welcome" />
-    <Route exact path='/welcome' component={Welcome} />
-    <Route exact path='/transactions' component={Transactions} />
-  </Switch>  
+    <Route exact path="/welcome" component={Welcome} />
+    <Route exact path="/transactions" component={Transactions} />
+  </Switch>
 )
 
 export default Routes
