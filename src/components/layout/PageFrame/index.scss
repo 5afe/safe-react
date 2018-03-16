@@ -1,11 +1,7 @@
 .frame {
   display: grid;
-  grid-template-rows: 50px auto 50px;
-  height: 100%;
+  grid-template-rows: auto 1fr auto;
   align-items: center;
   background-color: $tertiary;
-}
-
-.container {
   padding: $xxl;
 }
