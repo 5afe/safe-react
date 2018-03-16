@@ -13,13 +13,12 @@ import AppRoutes from '~/routes'
 import './index.scss'
 
 const history = createBrowserHistory()
-const enhancers = [
-  applyMiddleware(
-    thunk,
-    routerMiddleware(history),
-  ),
-]
-const finalCreateStore = compose(...enhancers)
+// eslint-disable-next-line
+const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
+const finalCreateStore = composeEnhancers(applyMiddleware(
+  thunk,
+  routerMiddleware(history),
+))
 
 const reducers = combineReducers({
   routing: routerReducer,
