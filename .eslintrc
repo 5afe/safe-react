@@ -39,7 +39,8 @@
       "components": [ "Link" ],
       "specialLink": [ "to", "hrefLeft", "hrefRight" ],
       "aspects": [ "noHref", "invalidHref", "preferButton" ]
-    }]
+    }],
+    "react/require-default-props": 0
   },
   "env": {
     "jest/globals": true,

@@ -1,5 +1,7 @@
+/*eslint-disable*/
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
 const autoprefixer = require('autoprefixer')
+const cssmixins = require('postcss-mixins');
 const cssvars = require('postcss-simple-vars')
 const webpack = require('webpack')
 
@@ -23,6 +25,7 @@ const postcssPlugins = [
       'not ie < 9', // React doesn't support IE8 anyway
     ],
   }),
+  cssmixins,
   cssvars({
     variables() {
       return Object.assign({}, cssvariables)
