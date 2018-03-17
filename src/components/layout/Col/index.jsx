@@ -7,6 +7,14 @@ import styles from './index.scss'
 const cx = classNames.bind(styles)
 
 type Props = {
+  start?: 'xs' | 'sm' | 'md' | 'lg',
+  center?: 'xs' | 'sm' | 'md' | 'lg',
+  end?: 'xs' | 'sm' | 'md' | 'lg',
+  top?: 'xs' | 'sm' | 'md' | 'lg',
+  middle?: 'xs' | 'sm' | 'md' | 'lg',
+  bottom?: 'xs' | 'sm' | 'md' | 'lg',
+  around?: 'xs' | 'sm' | 'md' | 'lg',
+  between?: 'xs' | 'sm' | 'md' | 'lg',
   margin?: 'sm' | 'md' | 'lg' | 'xxl',
   xs?: number | boolean,
   sm?: number | boolean,
@@ -23,11 +31,20 @@ type Props = {
 const Col = ({
   children, margin,
   xs, sm, md, lg,
+  start, center, end, top, middle, bottom, around, between,
   xsOffset, smOffset, mdOffset, lgOffset,
   ...props
 }: Props) => {
   const colClassNames = cx(
     'col',
+    capitalize(start, 'start'),
+    capitalize(center, 'center'),
+    capitalize(end, 'end'),
+    capitalize(top, 'top'),
+    capitalize(middle, 'middle'),
+    capitalize(bottom, 'bottom'),
+    capitalize(around, 'around'),
+    capitalize(between, 'between'),
     capitalize(margin, 'margin'),
     capitalize(xs, 'xs'),
     capitalize(sm, 'sm'),
