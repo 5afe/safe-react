@@ -1,5 +1,5 @@
 // @flow
-import { text } from '@storybook/addon-knobs'
+import { select } from '@storybook/addon-knobs'
 import { storiesOf } from '@storybook/react'
 import * as React from 'react'
 import Block from '~/components/layout/Block'
@@ -15,6 +15,7 @@ const FrameDecorator = story => (
 storiesOf('Components', module)
   .addDecorator(FrameDecorator)
   .add('Header', () => {
-    const provider = text('Provider', 'METAMASK')
+    // https://github.com/storybooks/storybook/tree/master/addons/knobs#select
+    const provider = select('Status by Provider', ['', 'METAMASK', 'PARITY'], 'METAMASK')
     return <Component provider={provider} />
   })
