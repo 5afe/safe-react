@@ -2,7 +2,7 @@ import { addDecorator, configure } from '@storybook/react'
 import { withKnobs } from '@storybook/addon-knobs'
 import * as React from 'react'
 import StoryRouter from 'storybook-router'
-import 'App.scss'
+import 'index.scss'
 
 (function (global) {
     //Useful for adding data and libraries to window object.
@@ -11,11 +11,14 @@ import 'App.scss'
 addDecorator(withKnobs);
 addDecorator(StoryRouter())
 
-addDecorator((story) => (
+/*
+  https://storybook.js.org/addons/introduction/
+  addDecorator((story) => (
     <div>
         { story() }
     </div>
-));
+  ));
+*/
 
 const components = require.context('../src/components', true, /\.stories\.((js|ts)x?)$/)
 const routes = require.context('../src/routes', true, /\.stories\.((js|ts)x?)$/)
