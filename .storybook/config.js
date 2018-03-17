@@ -1,7 +1,9 @@
 import { addDecorator, configure } from '@storybook/react'
 import { withKnobs } from '@storybook/addon-knobs'
+import { MuiThemeProvider } from 'material-ui/styles'
 import * as React from 'react'
 import StoryRouter from 'storybook-router'
+import theme from '~/theme/mui'
 import 'index.scss'
 
 (function (global) {
@@ -10,6 +12,13 @@ import 'index.scss'
 
 addDecorator(withKnobs);
 addDecorator(StoryRouter())
+
+// Adding Material UI Theme
+addDecorator(story => (
+  <MuiThemeProvider theme={theme}>
+    { story() }
+  </MuiThemeProvider>
+))
 
 /*
   https://storybook.js.org/addons/introduction/
