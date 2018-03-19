@@ -1,46 +1,43 @@
 // @flow
 import Web3 from 'web3'
-import type { ProviderProps } from '~/wallets/store/model/provider'
-import { promisify } from '~/utils/promisify'
 
-let web3
-export const getWeb3 = () => web3
+const getWeb3 = () => new Promise((resolve) => {
+  // Wait for loading completion to avoid race conditions with web3 injection timing.
+  window.addEventListener('load', () => {
+    let { web3 } = window
 
-const isMetamask: Function = (web3Provider): boolean => {
-  const isMetamaskConstructor = web3Provider.currentProvider.constructor.name === 'MetamaskInpageProvider'
+    if (typeof web3 !== 'undefined') {
+      // Use Mist/MetaMask's provider.
+      web3 = new Web3(web3.currentProvider)
 
-  return isMetamaskConstructor || web3Provider.currentProvider.isMetaMask
-}
+      // eslint-disable-next-line
+      console.log('Injected web3 detected.')
 
-const getAccountFrom: Function = async (web3Provider): Promise<string | null> => {
-  const accounts = await promisify(cb => web3Provider.eth.getAccounts(cb))
+      resolve({ web3 })
+    } else {
+      // Fallback to localhost if no web3 injection. We've configured this to
+      // use the development console's port by default.
+      const provider = new Web3.providers.HttpProvider('http://127.0.0.1:9545')
 
-  return accounts && accounts.length > 0 ? accounts[0] : null
-}
+      web3 = new Web3(provider)
 
-export const getProviderInfo: Function = async (): Promise<ProviderProps> => {
-  if (typeof window.web3 === 'undefined') {
-    return {
-      name: '', available: false, loaded: false, account: '',
+      // eslint-disable-next-line
+      console.log('No web3 instance injected, using Local web3.')
+
+      resolve({ web3 })
     }
-  }
+  })
+})
 
-  // Use MetaMask's provider.
-  web3 = new Web3(window.web3.currentProvider)
-  // eslint-disable-next-line
-  console.log('Injected web3 detected.')
-
-  const name = isMetamask(web3) ? 'METAMASK' : 'UNKNOWN'
-  const account = await getAccountFrom(web3)
-  const available = account !== null
-
-  return {
-    name,
-    available,
-    loaded: true,
-    account,
-  }
-}
+export const promisify = (inner: Function): Promise<any> =>
+  new Promise((resolve, reject) =>
+    inner((err, res) => {
+      if (err) {
+        reject(err)
+      } else {
+        resolve(res)
+      }
+    }))
 
 export const ensureOnce = (fn: Function): Function => {
   let executed = false
@@ -55,3 +52,5 @@ export const ensureOnce = (fn: Function): Function => {
     return response
   }
 }
+
+export default ensureOnce(getWeb3)
