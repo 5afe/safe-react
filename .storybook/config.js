@@ -1,3 +1,4 @@
+import 'babel-polyfill'
 import { addDecorator, configure } from '@storybook/react'
 import { withKnobs } from '@storybook/addon-knobs'
 import { MuiThemeProvider } from 'material-ui/styles'
