@@ -1,4 +1,4 @@
-// flow-typed signature: 318024a7a4dea0e035ea59e20055b79c
+// flow-typed signature: 4c404d083b74ba819879c2356588a835
 // flow-typed version: <<STUB>>/material-ui-icons_v^1.0.0-beta.35/flow_v0.66.0
 
 /**
@@ -1111,6 +1111,3846 @@ declare module 'material-ui-icons/Error' {
 }
 
 declare module 'material-ui-icons/ErrorOutline' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/AccessAlarm' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/AccessAlarms' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Accessibility' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Accessible' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/AccessTime' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/AccountBalance' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/AccountBalanceWallet' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/AccountBox' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/AccountCircle' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/AcUnit' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Adb' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Add' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/AddAlarm' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/AddAlert' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/AddAPhoto' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/AddBox' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/AddCircle' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/AddCircleOutline' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/AddLocation' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/AddShoppingCart' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/AddToPhotos' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/AddToQueue' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Adjust' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/AirlineSeatFlat' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/AirlineSeatFlatAngled' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/AirlineSeatIndividualSuite' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/AirlineSeatLegroomExtra' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/AirlineSeatLegroomNormal' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/AirlineSeatLegroomReduced' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/AirlineSeatReclineExtra' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/AirlineSeatReclineNormal' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/AirplanemodeActive' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/AirplanemodeInactive' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Airplay' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/AirportShuttle' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Alarm' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/AlarmAdd' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/AlarmOff' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/AlarmOn' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Album' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/AllInclusive' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/AllOut' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Android' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Announcement' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Apps' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Archive' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/ArrowBack' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/ArrowDownward' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/ArrowDropDown' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/ArrowDropDownCircle' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/ArrowDropUp' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/ArrowForward' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/ArrowUpward' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/ArtTrack' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/AspectRatio' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Assessment' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Assignment' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/AssignmentInd' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/AssignmentLate' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/AssignmentReturn' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/AssignmentReturned' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/AssignmentTurnedIn' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Assistant' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/AssistantPhoto' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/AttachFile' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Attachment' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/AttachMoney' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Audiotrack' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Autorenew' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/AvTimer' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Backspace' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Backup' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Battery20' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Battery30' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Battery50' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Battery60' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Battery80' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Battery90' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/BatteryAlert' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/BatteryCharging20' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/BatteryCharging30' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/BatteryCharging50' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/BatteryCharging60' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/BatteryCharging80' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/BatteryCharging90' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/BatteryChargingFull' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/BatteryFull' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/BatteryStd' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/BatteryUnknown' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/BeachAccess' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Beenhere' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Block' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Bluetooth' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/BluetoothAudio' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/BluetoothConnected' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/BluetoothDisabled' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/BluetoothSearching' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/BlurCircular' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/BlurLinear' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/BlurOff' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/BlurOn' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Book' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Bookmark' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/BookmarkBorder' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/BorderAll' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/BorderBottom' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/BorderClear' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/BorderColor' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/BorderHorizontal' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/BorderInner' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/BorderLeft' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/BorderOuter' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/BorderRight' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/BorderStyle' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/BorderTop' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/BorderVertical' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/BrandingWatermark' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Brightness1' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Brightness2' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Brightness3' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Brightness4' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Brightness5' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Brightness6' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Brightness7' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/BrightnessAuto' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/BrightnessHigh' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/BrightnessLow' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/BrightnessMedium' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/BrokenImage' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Brush' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/BubbleChart' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/BugReport' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Build' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/BurstMode' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Business' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/BusinessCenter' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Cached' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Cake' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Call' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/CallEnd' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/CallMade' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/CallMerge' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/CallMissed' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/CallMissedOutgoing' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/CallReceived' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/CallSplit' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/CallToAction' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Camera' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/CameraAlt' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/CameraEnhance' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/CameraFront' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/CameraRear' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/CameraRoll' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Cancel' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/CardGiftcard' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/CardMembership' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/CardTravel' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Casino' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Cast' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/CastConnected' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/CenterFocusStrong' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/CenterFocusWeak' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/ChangeHistory' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Chat' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/ChatBubble' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/ChatBubbleOutline' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Check' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/CheckBox' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/CheckBoxOutlineBlank' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/CheckCircle' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/ChevronLeft' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/ChevronRight' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/ChildCare' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/ChildFriendly' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/ChromeReaderMode' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Class' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Clear' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/ClearAll' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Close' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/ClosedCaption' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Cloud' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/CloudCircle' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/CloudDone' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/CloudDownload' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/CloudOff' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/CloudQueue' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/CloudUpload' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Code' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Collections' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/CollectionsBookmark' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Colorize' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/ColorLens' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Comment' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Compare' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/CompareArrows' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Computer' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/ConfirmationNumber' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/ContactMail' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/ContactPhone' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Contacts' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/ContentCopy' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/ContentCut' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/ContentPaste' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/ControlPoint' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/ControlPointDuplicate' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Copyright' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Create' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/CreateNewFolder' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/CreditCard' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Crop' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Crop169' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Crop32' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Crop54' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Crop75' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/CropDin' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/CropFree' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/CropLandscape' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/CropOriginal' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/CropPortrait' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/CropRotate' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/CropSquare' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Dashboard' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/DataUsage' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/DateRange' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Dehaze' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Delete' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/DeleteForever' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/DeleteSweep' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Description' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/DesktopMac' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/DesktopWindows' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Details' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/DeveloperBoard' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/DeveloperMode' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/DeviceHub' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Devices' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/DevicesOther' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/DialerSip' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Dialpad' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Directions' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/DirectionsBike' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/DirectionsBoat' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/DirectionsBus' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/DirectionsCar' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/DirectionsRailway' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/DirectionsRun' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/DirectionsSubway' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/DirectionsTransit' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/DirectionsWalk' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/DiscFull' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Dns' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Dock' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Domain' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Done' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/DoneAll' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/DoNotDisturb' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/DoNotDisturbAlt' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/DoNotDisturbOff' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/DoNotDisturbOn' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/DonutLarge' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/DonutSmall' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Drafts' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/DragHandle' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/DriveEta' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Dvr' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Edit' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/EditLocation' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Eject' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Email' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/EnhancedEncryption' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Equalizer' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Error' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/ErrorOutline' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/EuroSymbol' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Event' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/EventAvailable' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/EventBusy' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/EventNote' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/EventSeat' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/EvStation' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/ExitToApp' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/ExpandLess' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/ExpandMore' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Explicit' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Explore' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Exposure' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/ExposureNeg1' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/ExposureNeg2' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/ExposurePlus1' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/ExposurePlus2' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/ExposureZero' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Extension' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Face' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/FastForward' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/FastRewind' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Favorite' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/FavoriteBorder' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/FeaturedPlayList' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/FeaturedVideo' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Feedback' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/FiberDvr' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/FiberManualRecord' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/FiberNew' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/FiberPin' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/FiberSmartRecord' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/FileDownload' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/FileUpload' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Filter' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Filter1' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Filter2' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Filter3' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Filter4' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Filter5' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Filter6' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Filter7' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Filter8' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Filter9' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Filter9Plus' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/FilterBAndW' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/FilterCenterFocus' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/FilterDrama' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/FilterFrames' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/FilterHdr' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/FilterList' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/FilterNone' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/FilterTiltShift' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/FilterVintage' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/FindInPage' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/FindReplace' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Fingerprint' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/FirstPage' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/FitnessCenter' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Flag' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Flare' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/FlashAuto' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/FlashOff' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/FlashOn' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Flight' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/FlightLand' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/FlightTakeoff' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Flip' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/FlipToBack' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/FlipToFront' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Folder' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/FolderOpen' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/FolderShared' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/FolderSpecial' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/FontDownload' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/FormatAlignCenter' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/FormatAlignJustify' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/FormatAlignLeft' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/FormatAlignRight' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/FormatBold' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/FormatClear' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/FormatColorFill' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/FormatColorReset' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/FormatColorText' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/FormatIndentDecrease' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/FormatIndentIncrease' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/FormatItalic' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/FormatLineSpacing' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/FormatListBulleted' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/FormatListNumbered' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/FormatPaint' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/FormatQuote' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/FormatShapes' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/FormatSize' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/FormatStrikethrough' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/FormatTextdirectionLToR' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/FormatTextdirectionRToL' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/FormatUnderlined' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Forum' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Forward' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Forward10' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Forward30' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Forward5' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/FreeBreakfast' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Fullscreen' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/FullscreenExit' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Functions' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Gamepad' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Games' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Gavel' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Gesture' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/GetApp' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Gif' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/GolfCourse' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/GpsFixed' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/GpsNotFixed' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/GpsOff' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Grade' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Gradient' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Grain' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/GraphicEq' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/GridOff' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/GridOn' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Group' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/GroupAdd' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/GroupWork' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/GTranslate' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Hd' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/HdrOff' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/HdrOn' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/HdrStrong' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/HdrWeak' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Headset' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/HeadsetMic' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Healing' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Hearing' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Help' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/HelpOutline' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Highlight' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/HighlightOff' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/HighQuality' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/History' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Home' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Hotel' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/HotTub' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/HourglassEmpty' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/HourglassFull' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Http' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Https' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Image' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/ImageAspectRatio' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/ImportantDevices' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/ImportContacts' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/ImportExport' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Inbox' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/IndeterminateCheckBox' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/index' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Info' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/InfoOutline' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Input' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/InsertChart' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/InsertComment' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/InsertDriveFile' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/InsertEmoticon' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/InsertInvitation' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/InsertLink' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/InsertPhoto' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/InvertColors' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/InvertColorsOff' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Iso' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Keyboard' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/KeyboardArrowDown' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/KeyboardArrowLeft' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/KeyboardArrowRight' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/KeyboardArrowUp' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/KeyboardBackspace' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/KeyboardCapslock' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/KeyboardHide' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/KeyboardReturn' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/KeyboardTab' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/KeyboardVoice' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Kitchen' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Label' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/LabelOutline' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Landscape' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Language' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Laptop' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/LaptopChromebook' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/LaptopMac' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/LaptopWindows' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/LastPage' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Launch' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Layers' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/LayersClear' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/LeakAdd' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/LeakRemove' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Lens' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/LibraryAdd' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/LibraryBooks' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/LibraryMusic' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/LightbulbOutline' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/LinearScale' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/LineStyle' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/LineWeight' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Link' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/LinkedCamera' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/List' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/LiveHelp' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/LiveTv' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/LocalActivity' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/LocalAirport' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/LocalAtm' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/LocalBar' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/LocalCafe' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/LocalCarWash' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/LocalConvenienceStore' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/LocalDining' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/LocalDrink' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/LocalFlorist' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/LocalGasStation' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/LocalGroceryStore' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/LocalHospital' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/LocalHotel' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/LocalLaundryService' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/LocalLibrary' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/LocalMall' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/LocalMovies' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/LocalOffer' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/LocalParking' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/LocalPharmacy' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/LocalPhone' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/LocalPizza' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/LocalPlay' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/LocalPostOffice' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/LocalPrintshop' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/LocalSee' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/LocalShipping' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/LocalTaxi' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/LocationCity' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/LocationDisabled' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/LocationOff' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/LocationOn' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/LocationSearching' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Lock' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/LockOpen' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/LockOutline' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Looks' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Looks3' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Looks4' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Looks5' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Looks6' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/LooksOne' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/LooksTwo' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Loop' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Loupe' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/LowPriority' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Loyalty' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Mail' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/MailOutline' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Map' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Markunread' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/MarkunreadMailbox' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Memory' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Menu' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/MergeType' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Message' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Mic' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/MicNone' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/MicOff' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Mms' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/ModeComment' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/ModeEdit' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/MonetizationOn' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/MoneyOff' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/MonochromePhotos' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Mood' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/MoodBad' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/More' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/MoreHoriz' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/MoreVert' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Motorcycle' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Mouse' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/MoveToInbox' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Movie' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/MovieCreation' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/MovieFilter' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/MultilineChart' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/MusicNote' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/MusicVideo' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/MyLocation' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Nature' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/NaturePeople' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/NavigateBefore' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/NavigateNext' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Navigation' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/NearMe' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/NetworkCell' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/NetworkCheck' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/NetworkLocked' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/NetworkWifi' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/NewReleases' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/NextWeek' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Nfc' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/NoEncryption' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/NoSim' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Note' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/NoteAdd' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Notifications' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/NotificationsActive' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/NotificationsNone' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/NotificationsOff' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/NotificationsPaused' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/NotInterested' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/OfflinePin' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/OndemandVideo' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Opacity' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/OpenInBrowser' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/OpenInNew' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/OpenWith' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Pages' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Pageview' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Palette' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Panorama' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/PanoramaFishEye' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/PanoramaHorizontal' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/PanoramaVertical' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/PanoramaWideAngle' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/PanTool' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/PartyMode' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Pause' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/PauseCircleFilled' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/PauseCircleOutline' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Payment' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/People' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/PeopleOutline' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/PermCameraMic' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/PermContactCalendar' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/PermDataSetting' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/PermDeviceInformation' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/PermIdentity' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/PermMedia' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/PermPhoneMsg' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/PermScanWifi' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Person' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/PersonAdd' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/PersonalVideo' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/PersonOutline' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/PersonPin' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/PersonPinCircle' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Pets' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Phone' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/PhoneAndroid' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/PhoneBluetoothSpeaker' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/PhoneForwarded' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/PhoneInTalk' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/PhoneIphone' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Phonelink' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/PhonelinkErase' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/PhonelinkLock' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/PhonelinkOff' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/PhonelinkRing' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/PhonelinkSetup' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/PhoneLocked' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/PhoneMissed' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/PhonePaused' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Photo' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/PhotoAlbum' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/PhotoCamera' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/PhotoFilter' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/PhotoLibrary' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/PhotoSizeSelectActual' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/PhotoSizeSelectLarge' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/PhotoSizeSelectSmall' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/PictureAsPdf' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/PictureInPicture' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/PictureInPictureAlt' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/PieChart' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/PieChartOutlined' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/PinDrop' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Place' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/PlayArrow' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/PlayCircleFilled' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/PlayCircleOutline' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/PlayForWork' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/PlaylistAdd' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/PlaylistAddCheck' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/PlaylistPlay' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/PlusOne' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Poll' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Polymer' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Pool' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/PortableWifiOff' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Portrait' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Power' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/PowerInput' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/PowerSettingsNew' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/PregnantWoman' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/PresentToAll' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Print' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/PriorityHigh' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Public' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Publish' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/QueryBuilder' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/QuestionAnswer' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Queue' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/QueueMusic' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/QueuePlayNext' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Radio' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/RadioButtonChecked' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/RadioButtonUnchecked' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/RateReview' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Receipt' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/RecentActors' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/RecordVoiceOver' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Redeem' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Redo' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Refresh' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Remove' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/RemoveCircle' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/RemoveCircleOutline' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/RemoveFromQueue' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/RemoveRedEye' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/RemoveShoppingCart' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Reorder' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Repeat' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/RepeatOne' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Replay' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Replay10' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Replay30' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Replay5' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Reply' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/ReplyAll' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Report' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/ReportProblem' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Restaurant' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/RestaurantMenu' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Restore' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/RestorePage' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/RingVolume' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Room' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/RoomService' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Rotate90DegreesCcw' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/RotateLeft' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/RotateRight' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/RoundedCorner' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Router' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Rowing' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/RssFeed' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/RvHookup' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Satellite' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Save' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Scanner' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Schedule' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/School' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/ScreenLockLandscape' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/ScreenLockPortrait' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/ScreenLockRotation' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/ScreenRotation' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/ScreenShare' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/SdCard' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/SdStorage' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Search' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Security' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/SelectAll' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Send' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/SentimentDissatisfied' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/SentimentNeutral' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/SentimentSatisfied' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/SentimentVeryDissatisfied' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/SentimentVerySatisfied' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Settings' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/SettingsApplications' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/SettingsBackupRestore' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/SettingsBluetooth' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/SettingsBrightness' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/SettingsCell' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/SettingsEthernet' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/SettingsInputAntenna' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/SettingsInputComponent' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/SettingsInputComposite' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/SettingsInputHdmi' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/SettingsInputSvideo' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/SettingsOverscan' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/SettingsPhone' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/SettingsPower' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/SettingsRemote' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/SettingsSystemDaydream' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/SettingsVoice' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Share' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Shop' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/ShoppingBasket' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/ShoppingCart' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/ShopTwo' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/ShortText' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/ShowChart' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Shuffle' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/SignalCellular0Bar' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/SignalCellular1Bar' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/SignalCellular2Bar' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/SignalCellular3Bar' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/SignalCellular4Bar' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/SignalCellularConnectedNoInternet0Bar' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/SignalCellularConnectedNoInternet1Bar' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/SignalCellularConnectedNoInternet2Bar' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/SignalCellularConnectedNoInternet3Bar' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/SignalCellularConnectedNoInternet4Bar' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/SignalCellularNoSim' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/SignalCellularNull' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/SignalCellularOff' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/SignalWifi0Bar' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/SignalWifi1Bar' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/SignalWifi1BarLock' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/SignalWifi2Bar' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/SignalWifi2BarLock' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/SignalWifi3Bar' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/SignalWifi3BarLock' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/SignalWifi4Bar' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/SignalWifi4BarLock' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/SignalWifiOff' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/SimCard' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/SimCardAlert' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/SkipNext' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/SkipPrevious' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Slideshow' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/SlowMotionVideo' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Smartphone' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/SmokeFree' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/SmokingRooms' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Sms' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/SmsFailed' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Snooze' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Sort' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/SortByAlpha' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Spa' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/SpaceBar' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Speaker' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/SpeakerGroup' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/SpeakerNotes' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/SpeakerNotesOff' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/SpeakerPhone' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Spellcheck' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Star' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/StarBorder' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/StarHalf' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Stars' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/StayCurrentLandscape' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/StayCurrentPortrait' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/StayPrimaryLandscape' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/StayPrimaryPortrait' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Stop' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/StopScreenShare' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Storage' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Store' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/StoreMallDirectory' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Straighten' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Streetview' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/StrikethroughS' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Style' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/SubdirectoryArrowLeft' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/SubdirectoryArrowRight' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Subject' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Subscriptions' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Subtitles' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Subway' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/SupervisorAccount' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/SurroundSound' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/SwapCalls' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/SwapHoriz' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/SwapVert' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/SwapVerticalCircle' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/SwitchCamera' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/SwitchVideo' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Sync' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/SyncDisabled' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/SyncProblem' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/SystemUpdate' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/SystemUpdateAlt' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Tab' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Tablet' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/TabletAndroid' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/TabletMac' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/TabUnselected' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/TagFaces' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/TapAndPlay' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Terrain' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/TextFields' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/TextFormat' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Textsms' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Texture' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Theaters' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/ThreeDRotation' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/ThumbDown' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/ThumbsUpDown' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/ThumbUp' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Timelapse' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Timeline' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Timer' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Timer10' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Timer3' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/TimerOff' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/TimeToLeave' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Title' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Toc' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Today' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Toll' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Tonality' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/TouchApp' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Toys' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/TrackChanges' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Traffic' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Train' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Tram' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/TransferWithinAStation' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Transform' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Translate' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/TrendingDown' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/TrendingFlat' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/TrendingUp' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Tune' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/TurnedIn' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/TurnedInNot' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Tv' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Unarchive' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Undo' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/UnfoldLess' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/UnfoldMore' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Update' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Usb' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/VerifiedUser' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/VerticalAlignBottom' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/VerticalAlignCenter' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/VerticalAlignTop' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Vibration' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/VideoCall' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Videocam' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/VideocamOff' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/VideogameAsset' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/VideoLabel' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/VideoLibrary' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/ViewAgenda' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/ViewArray' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/ViewCarousel' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/ViewColumn' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/ViewComfy' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/ViewCompact' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/ViewDay' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/ViewHeadline' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/ViewList' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/ViewModule' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/ViewQuilt' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/ViewStream' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/ViewWeek' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Vignette' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Visibility' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/VisibilityOff' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/VoiceChat' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Voicemail' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/VolumeDown' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/VolumeMute' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/VolumeOff' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/VolumeUp' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/VpnKey' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/VpnLock' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Wallpaper' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Warning' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Watch' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/WatchLater' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/WbAuto' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/WbCloudy' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/WbIncandescent' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/WbIridescent' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/WbSunny' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Wc' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Web' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/WebAsset' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Weekend' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Whatshot' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Widgets' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Wifi' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/WifiLock' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/WifiTethering' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/Work' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/WrapText' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/YoutubeSearchedFor' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/ZoomIn' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/ZoomOut' {
+  declare module.exports: any;
+}
+
+declare module 'material-ui-icons/es/ZoomOutMap' {
   declare module.exports: any;
 }
 
@@ -4681,6 +8521,2886 @@ declare module 'material-ui-icons/Error.js' {
 }
 declare module 'material-ui-icons/ErrorOutline.js' {
   declare module.exports: $Exports<'material-ui-icons/ErrorOutline'>;
+}
+declare module 'material-ui-icons/es/AccessAlarm.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/AccessAlarm'>;
+}
+declare module 'material-ui-icons/es/AccessAlarms.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/AccessAlarms'>;
+}
+declare module 'material-ui-icons/es/Accessibility.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Accessibility'>;
+}
+declare module 'material-ui-icons/es/Accessible.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Accessible'>;
+}
+declare module 'material-ui-icons/es/AccessTime.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/AccessTime'>;
+}
+declare module 'material-ui-icons/es/AccountBalance.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/AccountBalance'>;
+}
+declare module 'material-ui-icons/es/AccountBalanceWallet.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/AccountBalanceWallet'>;
+}
+declare module 'material-ui-icons/es/AccountBox.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/AccountBox'>;
+}
+declare module 'material-ui-icons/es/AccountCircle.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/AccountCircle'>;
+}
+declare module 'material-ui-icons/es/AcUnit.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/AcUnit'>;
+}
+declare module 'material-ui-icons/es/Adb.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Adb'>;
+}
+declare module 'material-ui-icons/es/Add.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Add'>;
+}
+declare module 'material-ui-icons/es/AddAlarm.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/AddAlarm'>;
+}
+declare module 'material-ui-icons/es/AddAlert.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/AddAlert'>;
+}
+declare module 'material-ui-icons/es/AddAPhoto.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/AddAPhoto'>;
+}
+declare module 'material-ui-icons/es/AddBox.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/AddBox'>;
+}
+declare module 'material-ui-icons/es/AddCircle.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/AddCircle'>;
+}
+declare module 'material-ui-icons/es/AddCircleOutline.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/AddCircleOutline'>;
+}
+declare module 'material-ui-icons/es/AddLocation.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/AddLocation'>;
+}
+declare module 'material-ui-icons/es/AddShoppingCart.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/AddShoppingCart'>;
+}
+declare module 'material-ui-icons/es/AddToPhotos.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/AddToPhotos'>;
+}
+declare module 'material-ui-icons/es/AddToQueue.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/AddToQueue'>;
+}
+declare module 'material-ui-icons/es/Adjust.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Adjust'>;
+}
+declare module 'material-ui-icons/es/AirlineSeatFlat.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/AirlineSeatFlat'>;
+}
+declare module 'material-ui-icons/es/AirlineSeatFlatAngled.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/AirlineSeatFlatAngled'>;
+}
+declare module 'material-ui-icons/es/AirlineSeatIndividualSuite.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/AirlineSeatIndividualSuite'>;
+}
+declare module 'material-ui-icons/es/AirlineSeatLegroomExtra.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/AirlineSeatLegroomExtra'>;
+}
+declare module 'material-ui-icons/es/AirlineSeatLegroomNormal.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/AirlineSeatLegroomNormal'>;
+}
+declare module 'material-ui-icons/es/AirlineSeatLegroomReduced.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/AirlineSeatLegroomReduced'>;
+}
+declare module 'material-ui-icons/es/AirlineSeatReclineExtra.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/AirlineSeatReclineExtra'>;
+}
+declare module 'material-ui-icons/es/AirlineSeatReclineNormal.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/AirlineSeatReclineNormal'>;
+}
+declare module 'material-ui-icons/es/AirplanemodeActive.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/AirplanemodeActive'>;
+}
+declare module 'material-ui-icons/es/AirplanemodeInactive.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/AirplanemodeInactive'>;
+}
+declare module 'material-ui-icons/es/Airplay.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Airplay'>;
+}
+declare module 'material-ui-icons/es/AirportShuttle.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/AirportShuttle'>;
+}
+declare module 'material-ui-icons/es/Alarm.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Alarm'>;
+}
+declare module 'material-ui-icons/es/AlarmAdd.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/AlarmAdd'>;
+}
+declare module 'material-ui-icons/es/AlarmOff.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/AlarmOff'>;
+}
+declare module 'material-ui-icons/es/AlarmOn.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/AlarmOn'>;
+}
+declare module 'material-ui-icons/es/Album.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Album'>;
+}
+declare module 'material-ui-icons/es/AllInclusive.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/AllInclusive'>;
+}
+declare module 'material-ui-icons/es/AllOut.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/AllOut'>;
+}
+declare module 'material-ui-icons/es/Android.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Android'>;
+}
+declare module 'material-ui-icons/es/Announcement.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Announcement'>;
+}
+declare module 'material-ui-icons/es/Apps.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Apps'>;
+}
+declare module 'material-ui-icons/es/Archive.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Archive'>;
+}
+declare module 'material-ui-icons/es/ArrowBack.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/ArrowBack'>;
+}
+declare module 'material-ui-icons/es/ArrowDownward.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/ArrowDownward'>;
+}
+declare module 'material-ui-icons/es/ArrowDropDown.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/ArrowDropDown'>;
+}
+declare module 'material-ui-icons/es/ArrowDropDownCircle.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/ArrowDropDownCircle'>;
+}
+declare module 'material-ui-icons/es/ArrowDropUp.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/ArrowDropUp'>;
+}
+declare module 'material-ui-icons/es/ArrowForward.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/ArrowForward'>;
+}
+declare module 'material-ui-icons/es/ArrowUpward.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/ArrowUpward'>;
+}
+declare module 'material-ui-icons/es/ArtTrack.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/ArtTrack'>;
+}
+declare module 'material-ui-icons/es/AspectRatio.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/AspectRatio'>;
+}
+declare module 'material-ui-icons/es/Assessment.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Assessment'>;
+}
+declare module 'material-ui-icons/es/Assignment.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Assignment'>;
+}
+declare module 'material-ui-icons/es/AssignmentInd.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/AssignmentInd'>;
+}
+declare module 'material-ui-icons/es/AssignmentLate.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/AssignmentLate'>;
+}
+declare module 'material-ui-icons/es/AssignmentReturn.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/AssignmentReturn'>;
+}
+declare module 'material-ui-icons/es/AssignmentReturned.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/AssignmentReturned'>;
+}
+declare module 'material-ui-icons/es/AssignmentTurnedIn.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/AssignmentTurnedIn'>;
+}
+declare module 'material-ui-icons/es/Assistant.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Assistant'>;
+}
+declare module 'material-ui-icons/es/AssistantPhoto.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/AssistantPhoto'>;
+}
+declare module 'material-ui-icons/es/AttachFile.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/AttachFile'>;
+}
+declare module 'material-ui-icons/es/Attachment.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Attachment'>;
+}
+declare module 'material-ui-icons/es/AttachMoney.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/AttachMoney'>;
+}
+declare module 'material-ui-icons/es/Audiotrack.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Audiotrack'>;
+}
+declare module 'material-ui-icons/es/Autorenew.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Autorenew'>;
+}
+declare module 'material-ui-icons/es/AvTimer.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/AvTimer'>;
+}
+declare module 'material-ui-icons/es/Backspace.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Backspace'>;
+}
+declare module 'material-ui-icons/es/Backup.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Backup'>;
+}
+declare module 'material-ui-icons/es/Battery20.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Battery20'>;
+}
+declare module 'material-ui-icons/es/Battery30.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Battery30'>;
+}
+declare module 'material-ui-icons/es/Battery50.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Battery50'>;
+}
+declare module 'material-ui-icons/es/Battery60.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Battery60'>;
+}
+declare module 'material-ui-icons/es/Battery80.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Battery80'>;
+}
+declare module 'material-ui-icons/es/Battery90.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Battery90'>;
+}
+declare module 'material-ui-icons/es/BatteryAlert.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/BatteryAlert'>;
+}
+declare module 'material-ui-icons/es/BatteryCharging20.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/BatteryCharging20'>;
+}
+declare module 'material-ui-icons/es/BatteryCharging30.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/BatteryCharging30'>;
+}
+declare module 'material-ui-icons/es/BatteryCharging50.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/BatteryCharging50'>;
+}
+declare module 'material-ui-icons/es/BatteryCharging60.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/BatteryCharging60'>;
+}
+declare module 'material-ui-icons/es/BatteryCharging80.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/BatteryCharging80'>;
+}
+declare module 'material-ui-icons/es/BatteryCharging90.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/BatteryCharging90'>;
+}
+declare module 'material-ui-icons/es/BatteryChargingFull.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/BatteryChargingFull'>;
+}
+declare module 'material-ui-icons/es/BatteryFull.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/BatteryFull'>;
+}
+declare module 'material-ui-icons/es/BatteryStd.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/BatteryStd'>;
+}
+declare module 'material-ui-icons/es/BatteryUnknown.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/BatteryUnknown'>;
+}
+declare module 'material-ui-icons/es/BeachAccess.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/BeachAccess'>;
+}
+declare module 'material-ui-icons/es/Beenhere.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Beenhere'>;
+}
+declare module 'material-ui-icons/es/Block.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Block'>;
+}
+declare module 'material-ui-icons/es/Bluetooth.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Bluetooth'>;
+}
+declare module 'material-ui-icons/es/BluetoothAudio.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/BluetoothAudio'>;
+}
+declare module 'material-ui-icons/es/BluetoothConnected.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/BluetoothConnected'>;
+}
+declare module 'material-ui-icons/es/BluetoothDisabled.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/BluetoothDisabled'>;
+}
+declare module 'material-ui-icons/es/BluetoothSearching.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/BluetoothSearching'>;
+}
+declare module 'material-ui-icons/es/BlurCircular.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/BlurCircular'>;
+}
+declare module 'material-ui-icons/es/BlurLinear.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/BlurLinear'>;
+}
+declare module 'material-ui-icons/es/BlurOff.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/BlurOff'>;
+}
+declare module 'material-ui-icons/es/BlurOn.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/BlurOn'>;
+}
+declare module 'material-ui-icons/es/Book.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Book'>;
+}
+declare module 'material-ui-icons/es/Bookmark.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Bookmark'>;
+}
+declare module 'material-ui-icons/es/BookmarkBorder.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/BookmarkBorder'>;
+}
+declare module 'material-ui-icons/es/BorderAll.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/BorderAll'>;
+}
+declare module 'material-ui-icons/es/BorderBottom.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/BorderBottom'>;
+}
+declare module 'material-ui-icons/es/BorderClear.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/BorderClear'>;
+}
+declare module 'material-ui-icons/es/BorderColor.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/BorderColor'>;
+}
+declare module 'material-ui-icons/es/BorderHorizontal.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/BorderHorizontal'>;
+}
+declare module 'material-ui-icons/es/BorderInner.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/BorderInner'>;
+}
+declare module 'material-ui-icons/es/BorderLeft.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/BorderLeft'>;
+}
+declare module 'material-ui-icons/es/BorderOuter.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/BorderOuter'>;
+}
+declare module 'material-ui-icons/es/BorderRight.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/BorderRight'>;
+}
+declare module 'material-ui-icons/es/BorderStyle.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/BorderStyle'>;
+}
+declare module 'material-ui-icons/es/BorderTop.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/BorderTop'>;
+}
+declare module 'material-ui-icons/es/BorderVertical.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/BorderVertical'>;
+}
+declare module 'material-ui-icons/es/BrandingWatermark.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/BrandingWatermark'>;
+}
+declare module 'material-ui-icons/es/Brightness1.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Brightness1'>;
+}
+declare module 'material-ui-icons/es/Brightness2.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Brightness2'>;
+}
+declare module 'material-ui-icons/es/Brightness3.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Brightness3'>;
+}
+declare module 'material-ui-icons/es/Brightness4.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Brightness4'>;
+}
+declare module 'material-ui-icons/es/Brightness5.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Brightness5'>;
+}
+declare module 'material-ui-icons/es/Brightness6.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Brightness6'>;
+}
+declare module 'material-ui-icons/es/Brightness7.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Brightness7'>;
+}
+declare module 'material-ui-icons/es/BrightnessAuto.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/BrightnessAuto'>;
+}
+declare module 'material-ui-icons/es/BrightnessHigh.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/BrightnessHigh'>;
+}
+declare module 'material-ui-icons/es/BrightnessLow.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/BrightnessLow'>;
+}
+declare module 'material-ui-icons/es/BrightnessMedium.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/BrightnessMedium'>;
+}
+declare module 'material-ui-icons/es/BrokenImage.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/BrokenImage'>;
+}
+declare module 'material-ui-icons/es/Brush.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Brush'>;
+}
+declare module 'material-ui-icons/es/BubbleChart.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/BubbleChart'>;
+}
+declare module 'material-ui-icons/es/BugReport.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/BugReport'>;
+}
+declare module 'material-ui-icons/es/Build.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Build'>;
+}
+declare module 'material-ui-icons/es/BurstMode.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/BurstMode'>;
+}
+declare module 'material-ui-icons/es/Business.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Business'>;
+}
+declare module 'material-ui-icons/es/BusinessCenter.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/BusinessCenter'>;
+}
+declare module 'material-ui-icons/es/Cached.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Cached'>;
+}
+declare module 'material-ui-icons/es/Cake.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Cake'>;
+}
+declare module 'material-ui-icons/es/Call.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Call'>;
+}
+declare module 'material-ui-icons/es/CallEnd.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/CallEnd'>;
+}
+declare module 'material-ui-icons/es/CallMade.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/CallMade'>;
+}
+declare module 'material-ui-icons/es/CallMerge.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/CallMerge'>;
+}
+declare module 'material-ui-icons/es/CallMissed.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/CallMissed'>;
+}
+declare module 'material-ui-icons/es/CallMissedOutgoing.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/CallMissedOutgoing'>;
+}
+declare module 'material-ui-icons/es/CallReceived.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/CallReceived'>;
+}
+declare module 'material-ui-icons/es/CallSplit.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/CallSplit'>;
+}
+declare module 'material-ui-icons/es/CallToAction.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/CallToAction'>;
+}
+declare module 'material-ui-icons/es/Camera.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Camera'>;
+}
+declare module 'material-ui-icons/es/CameraAlt.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/CameraAlt'>;
+}
+declare module 'material-ui-icons/es/CameraEnhance.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/CameraEnhance'>;
+}
+declare module 'material-ui-icons/es/CameraFront.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/CameraFront'>;
+}
+declare module 'material-ui-icons/es/CameraRear.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/CameraRear'>;
+}
+declare module 'material-ui-icons/es/CameraRoll.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/CameraRoll'>;
+}
+declare module 'material-ui-icons/es/Cancel.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Cancel'>;
+}
+declare module 'material-ui-icons/es/CardGiftcard.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/CardGiftcard'>;
+}
+declare module 'material-ui-icons/es/CardMembership.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/CardMembership'>;
+}
+declare module 'material-ui-icons/es/CardTravel.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/CardTravel'>;
+}
+declare module 'material-ui-icons/es/Casino.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Casino'>;
+}
+declare module 'material-ui-icons/es/Cast.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Cast'>;
+}
+declare module 'material-ui-icons/es/CastConnected.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/CastConnected'>;
+}
+declare module 'material-ui-icons/es/CenterFocusStrong.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/CenterFocusStrong'>;
+}
+declare module 'material-ui-icons/es/CenterFocusWeak.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/CenterFocusWeak'>;
+}
+declare module 'material-ui-icons/es/ChangeHistory.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/ChangeHistory'>;
+}
+declare module 'material-ui-icons/es/Chat.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Chat'>;
+}
+declare module 'material-ui-icons/es/ChatBubble.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/ChatBubble'>;
+}
+declare module 'material-ui-icons/es/ChatBubbleOutline.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/ChatBubbleOutline'>;
+}
+declare module 'material-ui-icons/es/Check.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Check'>;
+}
+declare module 'material-ui-icons/es/CheckBox.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/CheckBox'>;
+}
+declare module 'material-ui-icons/es/CheckBoxOutlineBlank.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/CheckBoxOutlineBlank'>;
+}
+declare module 'material-ui-icons/es/CheckCircle.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/CheckCircle'>;
+}
+declare module 'material-ui-icons/es/ChevronLeft.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/ChevronLeft'>;
+}
+declare module 'material-ui-icons/es/ChevronRight.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/ChevronRight'>;
+}
+declare module 'material-ui-icons/es/ChildCare.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/ChildCare'>;
+}
+declare module 'material-ui-icons/es/ChildFriendly.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/ChildFriendly'>;
+}
+declare module 'material-ui-icons/es/ChromeReaderMode.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/ChromeReaderMode'>;
+}
+declare module 'material-ui-icons/es/Class.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Class'>;
+}
+declare module 'material-ui-icons/es/Clear.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Clear'>;
+}
+declare module 'material-ui-icons/es/ClearAll.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/ClearAll'>;
+}
+declare module 'material-ui-icons/es/Close.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Close'>;
+}
+declare module 'material-ui-icons/es/ClosedCaption.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/ClosedCaption'>;
+}
+declare module 'material-ui-icons/es/Cloud.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Cloud'>;
+}
+declare module 'material-ui-icons/es/CloudCircle.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/CloudCircle'>;
+}
+declare module 'material-ui-icons/es/CloudDone.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/CloudDone'>;
+}
+declare module 'material-ui-icons/es/CloudDownload.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/CloudDownload'>;
+}
+declare module 'material-ui-icons/es/CloudOff.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/CloudOff'>;
+}
+declare module 'material-ui-icons/es/CloudQueue.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/CloudQueue'>;
+}
+declare module 'material-ui-icons/es/CloudUpload.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/CloudUpload'>;
+}
+declare module 'material-ui-icons/es/Code.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Code'>;
+}
+declare module 'material-ui-icons/es/Collections.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Collections'>;
+}
+declare module 'material-ui-icons/es/CollectionsBookmark.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/CollectionsBookmark'>;
+}
+declare module 'material-ui-icons/es/Colorize.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Colorize'>;
+}
+declare module 'material-ui-icons/es/ColorLens.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/ColorLens'>;
+}
+declare module 'material-ui-icons/es/Comment.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Comment'>;
+}
+declare module 'material-ui-icons/es/Compare.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Compare'>;
+}
+declare module 'material-ui-icons/es/CompareArrows.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/CompareArrows'>;
+}
+declare module 'material-ui-icons/es/Computer.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Computer'>;
+}
+declare module 'material-ui-icons/es/ConfirmationNumber.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/ConfirmationNumber'>;
+}
+declare module 'material-ui-icons/es/ContactMail.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/ContactMail'>;
+}
+declare module 'material-ui-icons/es/ContactPhone.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/ContactPhone'>;
+}
+declare module 'material-ui-icons/es/Contacts.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Contacts'>;
+}
+declare module 'material-ui-icons/es/ContentCopy.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/ContentCopy'>;
+}
+declare module 'material-ui-icons/es/ContentCut.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/ContentCut'>;
+}
+declare module 'material-ui-icons/es/ContentPaste.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/ContentPaste'>;
+}
+declare module 'material-ui-icons/es/ControlPoint.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/ControlPoint'>;
+}
+declare module 'material-ui-icons/es/ControlPointDuplicate.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/ControlPointDuplicate'>;
+}
+declare module 'material-ui-icons/es/Copyright.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Copyright'>;
+}
+declare module 'material-ui-icons/es/Create.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Create'>;
+}
+declare module 'material-ui-icons/es/CreateNewFolder.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/CreateNewFolder'>;
+}
+declare module 'material-ui-icons/es/CreditCard.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/CreditCard'>;
+}
+declare module 'material-ui-icons/es/Crop.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Crop'>;
+}
+declare module 'material-ui-icons/es/Crop169.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Crop169'>;
+}
+declare module 'material-ui-icons/es/Crop32.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Crop32'>;
+}
+declare module 'material-ui-icons/es/Crop54.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Crop54'>;
+}
+declare module 'material-ui-icons/es/Crop75.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Crop75'>;
+}
+declare module 'material-ui-icons/es/CropDin.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/CropDin'>;
+}
+declare module 'material-ui-icons/es/CropFree.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/CropFree'>;
+}
+declare module 'material-ui-icons/es/CropLandscape.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/CropLandscape'>;
+}
+declare module 'material-ui-icons/es/CropOriginal.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/CropOriginal'>;
+}
+declare module 'material-ui-icons/es/CropPortrait.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/CropPortrait'>;
+}
+declare module 'material-ui-icons/es/CropRotate.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/CropRotate'>;
+}
+declare module 'material-ui-icons/es/CropSquare.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/CropSquare'>;
+}
+declare module 'material-ui-icons/es/Dashboard.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Dashboard'>;
+}
+declare module 'material-ui-icons/es/DataUsage.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/DataUsage'>;
+}
+declare module 'material-ui-icons/es/DateRange.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/DateRange'>;
+}
+declare module 'material-ui-icons/es/Dehaze.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Dehaze'>;
+}
+declare module 'material-ui-icons/es/Delete.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Delete'>;
+}
+declare module 'material-ui-icons/es/DeleteForever.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/DeleteForever'>;
+}
+declare module 'material-ui-icons/es/DeleteSweep.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/DeleteSweep'>;
+}
+declare module 'material-ui-icons/es/Description.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Description'>;
+}
+declare module 'material-ui-icons/es/DesktopMac.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/DesktopMac'>;
+}
+declare module 'material-ui-icons/es/DesktopWindows.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/DesktopWindows'>;
+}
+declare module 'material-ui-icons/es/Details.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Details'>;
+}
+declare module 'material-ui-icons/es/DeveloperBoard.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/DeveloperBoard'>;
+}
+declare module 'material-ui-icons/es/DeveloperMode.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/DeveloperMode'>;
+}
+declare module 'material-ui-icons/es/DeviceHub.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/DeviceHub'>;
+}
+declare module 'material-ui-icons/es/Devices.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Devices'>;
+}
+declare module 'material-ui-icons/es/DevicesOther.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/DevicesOther'>;
+}
+declare module 'material-ui-icons/es/DialerSip.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/DialerSip'>;
+}
+declare module 'material-ui-icons/es/Dialpad.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Dialpad'>;
+}
+declare module 'material-ui-icons/es/Directions.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Directions'>;
+}
+declare module 'material-ui-icons/es/DirectionsBike.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/DirectionsBike'>;
+}
+declare module 'material-ui-icons/es/DirectionsBoat.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/DirectionsBoat'>;
+}
+declare module 'material-ui-icons/es/DirectionsBus.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/DirectionsBus'>;
+}
+declare module 'material-ui-icons/es/DirectionsCar.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/DirectionsCar'>;
+}
+declare module 'material-ui-icons/es/DirectionsRailway.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/DirectionsRailway'>;
+}
+declare module 'material-ui-icons/es/DirectionsRun.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/DirectionsRun'>;
+}
+declare module 'material-ui-icons/es/DirectionsSubway.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/DirectionsSubway'>;
+}
+declare module 'material-ui-icons/es/DirectionsTransit.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/DirectionsTransit'>;
+}
+declare module 'material-ui-icons/es/DirectionsWalk.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/DirectionsWalk'>;
+}
+declare module 'material-ui-icons/es/DiscFull.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/DiscFull'>;
+}
+declare module 'material-ui-icons/es/Dns.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Dns'>;
+}
+declare module 'material-ui-icons/es/Dock.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Dock'>;
+}
+declare module 'material-ui-icons/es/Domain.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Domain'>;
+}
+declare module 'material-ui-icons/es/Done.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Done'>;
+}
+declare module 'material-ui-icons/es/DoneAll.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/DoneAll'>;
+}
+declare module 'material-ui-icons/es/DoNotDisturb.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/DoNotDisturb'>;
+}
+declare module 'material-ui-icons/es/DoNotDisturbAlt.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/DoNotDisturbAlt'>;
+}
+declare module 'material-ui-icons/es/DoNotDisturbOff.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/DoNotDisturbOff'>;
+}
+declare module 'material-ui-icons/es/DoNotDisturbOn.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/DoNotDisturbOn'>;
+}
+declare module 'material-ui-icons/es/DonutLarge.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/DonutLarge'>;
+}
+declare module 'material-ui-icons/es/DonutSmall.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/DonutSmall'>;
+}
+declare module 'material-ui-icons/es/Drafts.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Drafts'>;
+}
+declare module 'material-ui-icons/es/DragHandle.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/DragHandle'>;
+}
+declare module 'material-ui-icons/es/DriveEta.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/DriveEta'>;
+}
+declare module 'material-ui-icons/es/Dvr.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Dvr'>;
+}
+declare module 'material-ui-icons/es/Edit.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Edit'>;
+}
+declare module 'material-ui-icons/es/EditLocation.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/EditLocation'>;
+}
+declare module 'material-ui-icons/es/Eject.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Eject'>;
+}
+declare module 'material-ui-icons/es/Email.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Email'>;
+}
+declare module 'material-ui-icons/es/EnhancedEncryption.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/EnhancedEncryption'>;
+}
+declare module 'material-ui-icons/es/Equalizer.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Equalizer'>;
+}
+declare module 'material-ui-icons/es/Error.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Error'>;
+}
+declare module 'material-ui-icons/es/ErrorOutline.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/ErrorOutline'>;
+}
+declare module 'material-ui-icons/es/EuroSymbol.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/EuroSymbol'>;
+}
+declare module 'material-ui-icons/es/Event.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Event'>;
+}
+declare module 'material-ui-icons/es/EventAvailable.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/EventAvailable'>;
+}
+declare module 'material-ui-icons/es/EventBusy.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/EventBusy'>;
+}
+declare module 'material-ui-icons/es/EventNote.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/EventNote'>;
+}
+declare module 'material-ui-icons/es/EventSeat.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/EventSeat'>;
+}
+declare module 'material-ui-icons/es/EvStation.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/EvStation'>;
+}
+declare module 'material-ui-icons/es/ExitToApp.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/ExitToApp'>;
+}
+declare module 'material-ui-icons/es/ExpandLess.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/ExpandLess'>;
+}
+declare module 'material-ui-icons/es/ExpandMore.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/ExpandMore'>;
+}
+declare module 'material-ui-icons/es/Explicit.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Explicit'>;
+}
+declare module 'material-ui-icons/es/Explore.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Explore'>;
+}
+declare module 'material-ui-icons/es/Exposure.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Exposure'>;
+}
+declare module 'material-ui-icons/es/ExposureNeg1.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/ExposureNeg1'>;
+}
+declare module 'material-ui-icons/es/ExposureNeg2.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/ExposureNeg2'>;
+}
+declare module 'material-ui-icons/es/ExposurePlus1.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/ExposurePlus1'>;
+}
+declare module 'material-ui-icons/es/ExposurePlus2.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/ExposurePlus2'>;
+}
+declare module 'material-ui-icons/es/ExposureZero.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/ExposureZero'>;
+}
+declare module 'material-ui-icons/es/Extension.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Extension'>;
+}
+declare module 'material-ui-icons/es/Face.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Face'>;
+}
+declare module 'material-ui-icons/es/FastForward.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/FastForward'>;
+}
+declare module 'material-ui-icons/es/FastRewind.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/FastRewind'>;
+}
+declare module 'material-ui-icons/es/Favorite.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Favorite'>;
+}
+declare module 'material-ui-icons/es/FavoriteBorder.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/FavoriteBorder'>;
+}
+declare module 'material-ui-icons/es/FeaturedPlayList.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/FeaturedPlayList'>;
+}
+declare module 'material-ui-icons/es/FeaturedVideo.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/FeaturedVideo'>;
+}
+declare module 'material-ui-icons/es/Feedback.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Feedback'>;
+}
+declare module 'material-ui-icons/es/FiberDvr.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/FiberDvr'>;
+}
+declare module 'material-ui-icons/es/FiberManualRecord.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/FiberManualRecord'>;
+}
+declare module 'material-ui-icons/es/FiberNew.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/FiberNew'>;
+}
+declare module 'material-ui-icons/es/FiberPin.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/FiberPin'>;
+}
+declare module 'material-ui-icons/es/FiberSmartRecord.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/FiberSmartRecord'>;
+}
+declare module 'material-ui-icons/es/FileDownload.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/FileDownload'>;
+}
+declare module 'material-ui-icons/es/FileUpload.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/FileUpload'>;
+}
+declare module 'material-ui-icons/es/Filter.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Filter'>;
+}
+declare module 'material-ui-icons/es/Filter1.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Filter1'>;
+}
+declare module 'material-ui-icons/es/Filter2.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Filter2'>;
+}
+declare module 'material-ui-icons/es/Filter3.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Filter3'>;
+}
+declare module 'material-ui-icons/es/Filter4.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Filter4'>;
+}
+declare module 'material-ui-icons/es/Filter5.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Filter5'>;
+}
+declare module 'material-ui-icons/es/Filter6.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Filter6'>;
+}
+declare module 'material-ui-icons/es/Filter7.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Filter7'>;
+}
+declare module 'material-ui-icons/es/Filter8.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Filter8'>;
+}
+declare module 'material-ui-icons/es/Filter9.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Filter9'>;
+}
+declare module 'material-ui-icons/es/Filter9Plus.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Filter9Plus'>;
+}
+declare module 'material-ui-icons/es/FilterBAndW.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/FilterBAndW'>;
+}
+declare module 'material-ui-icons/es/FilterCenterFocus.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/FilterCenterFocus'>;
+}
+declare module 'material-ui-icons/es/FilterDrama.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/FilterDrama'>;
+}
+declare module 'material-ui-icons/es/FilterFrames.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/FilterFrames'>;
+}
+declare module 'material-ui-icons/es/FilterHdr.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/FilterHdr'>;
+}
+declare module 'material-ui-icons/es/FilterList.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/FilterList'>;
+}
+declare module 'material-ui-icons/es/FilterNone.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/FilterNone'>;
+}
+declare module 'material-ui-icons/es/FilterTiltShift.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/FilterTiltShift'>;
+}
+declare module 'material-ui-icons/es/FilterVintage.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/FilterVintage'>;
+}
+declare module 'material-ui-icons/es/FindInPage.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/FindInPage'>;
+}
+declare module 'material-ui-icons/es/FindReplace.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/FindReplace'>;
+}
+declare module 'material-ui-icons/es/Fingerprint.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Fingerprint'>;
+}
+declare module 'material-ui-icons/es/FirstPage.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/FirstPage'>;
+}
+declare module 'material-ui-icons/es/FitnessCenter.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/FitnessCenter'>;
+}
+declare module 'material-ui-icons/es/Flag.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Flag'>;
+}
+declare module 'material-ui-icons/es/Flare.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Flare'>;
+}
+declare module 'material-ui-icons/es/FlashAuto.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/FlashAuto'>;
+}
+declare module 'material-ui-icons/es/FlashOff.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/FlashOff'>;
+}
+declare module 'material-ui-icons/es/FlashOn.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/FlashOn'>;
+}
+declare module 'material-ui-icons/es/Flight.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Flight'>;
+}
+declare module 'material-ui-icons/es/FlightLand.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/FlightLand'>;
+}
+declare module 'material-ui-icons/es/FlightTakeoff.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/FlightTakeoff'>;
+}
+declare module 'material-ui-icons/es/Flip.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Flip'>;
+}
+declare module 'material-ui-icons/es/FlipToBack.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/FlipToBack'>;
+}
+declare module 'material-ui-icons/es/FlipToFront.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/FlipToFront'>;
+}
+declare module 'material-ui-icons/es/Folder.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Folder'>;
+}
+declare module 'material-ui-icons/es/FolderOpen.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/FolderOpen'>;
+}
+declare module 'material-ui-icons/es/FolderShared.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/FolderShared'>;
+}
+declare module 'material-ui-icons/es/FolderSpecial.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/FolderSpecial'>;
+}
+declare module 'material-ui-icons/es/FontDownload.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/FontDownload'>;
+}
+declare module 'material-ui-icons/es/FormatAlignCenter.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/FormatAlignCenter'>;
+}
+declare module 'material-ui-icons/es/FormatAlignJustify.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/FormatAlignJustify'>;
+}
+declare module 'material-ui-icons/es/FormatAlignLeft.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/FormatAlignLeft'>;
+}
+declare module 'material-ui-icons/es/FormatAlignRight.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/FormatAlignRight'>;
+}
+declare module 'material-ui-icons/es/FormatBold.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/FormatBold'>;
+}
+declare module 'material-ui-icons/es/FormatClear.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/FormatClear'>;
+}
+declare module 'material-ui-icons/es/FormatColorFill.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/FormatColorFill'>;
+}
+declare module 'material-ui-icons/es/FormatColorReset.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/FormatColorReset'>;
+}
+declare module 'material-ui-icons/es/FormatColorText.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/FormatColorText'>;
+}
+declare module 'material-ui-icons/es/FormatIndentDecrease.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/FormatIndentDecrease'>;
+}
+declare module 'material-ui-icons/es/FormatIndentIncrease.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/FormatIndentIncrease'>;
+}
+declare module 'material-ui-icons/es/FormatItalic.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/FormatItalic'>;
+}
+declare module 'material-ui-icons/es/FormatLineSpacing.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/FormatLineSpacing'>;
+}
+declare module 'material-ui-icons/es/FormatListBulleted.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/FormatListBulleted'>;
+}
+declare module 'material-ui-icons/es/FormatListNumbered.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/FormatListNumbered'>;
+}
+declare module 'material-ui-icons/es/FormatPaint.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/FormatPaint'>;
+}
+declare module 'material-ui-icons/es/FormatQuote.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/FormatQuote'>;
+}
+declare module 'material-ui-icons/es/FormatShapes.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/FormatShapes'>;
+}
+declare module 'material-ui-icons/es/FormatSize.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/FormatSize'>;
+}
+declare module 'material-ui-icons/es/FormatStrikethrough.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/FormatStrikethrough'>;
+}
+declare module 'material-ui-icons/es/FormatTextdirectionLToR.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/FormatTextdirectionLToR'>;
+}
+declare module 'material-ui-icons/es/FormatTextdirectionRToL.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/FormatTextdirectionRToL'>;
+}
+declare module 'material-ui-icons/es/FormatUnderlined.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/FormatUnderlined'>;
+}
+declare module 'material-ui-icons/es/Forum.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Forum'>;
+}
+declare module 'material-ui-icons/es/Forward.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Forward'>;
+}
+declare module 'material-ui-icons/es/Forward10.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Forward10'>;
+}
+declare module 'material-ui-icons/es/Forward30.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Forward30'>;
+}
+declare module 'material-ui-icons/es/Forward5.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Forward5'>;
+}
+declare module 'material-ui-icons/es/FreeBreakfast.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/FreeBreakfast'>;
+}
+declare module 'material-ui-icons/es/Fullscreen.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Fullscreen'>;
+}
+declare module 'material-ui-icons/es/FullscreenExit.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/FullscreenExit'>;
+}
+declare module 'material-ui-icons/es/Functions.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Functions'>;
+}
+declare module 'material-ui-icons/es/Gamepad.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Gamepad'>;
+}
+declare module 'material-ui-icons/es/Games.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Games'>;
+}
+declare module 'material-ui-icons/es/Gavel.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Gavel'>;
+}
+declare module 'material-ui-icons/es/Gesture.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Gesture'>;
+}
+declare module 'material-ui-icons/es/GetApp.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/GetApp'>;
+}
+declare module 'material-ui-icons/es/Gif.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Gif'>;
+}
+declare module 'material-ui-icons/es/GolfCourse.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/GolfCourse'>;
+}
+declare module 'material-ui-icons/es/GpsFixed.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/GpsFixed'>;
+}
+declare module 'material-ui-icons/es/GpsNotFixed.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/GpsNotFixed'>;
+}
+declare module 'material-ui-icons/es/GpsOff.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/GpsOff'>;
+}
+declare module 'material-ui-icons/es/Grade.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Grade'>;
+}
+declare module 'material-ui-icons/es/Gradient.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Gradient'>;
+}
+declare module 'material-ui-icons/es/Grain.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Grain'>;
+}
+declare module 'material-ui-icons/es/GraphicEq.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/GraphicEq'>;
+}
+declare module 'material-ui-icons/es/GridOff.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/GridOff'>;
+}
+declare module 'material-ui-icons/es/GridOn.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/GridOn'>;
+}
+declare module 'material-ui-icons/es/Group.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Group'>;
+}
+declare module 'material-ui-icons/es/GroupAdd.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/GroupAdd'>;
+}
+declare module 'material-ui-icons/es/GroupWork.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/GroupWork'>;
+}
+declare module 'material-ui-icons/es/GTranslate.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/GTranslate'>;
+}
+declare module 'material-ui-icons/es/Hd.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Hd'>;
+}
+declare module 'material-ui-icons/es/HdrOff.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/HdrOff'>;
+}
+declare module 'material-ui-icons/es/HdrOn.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/HdrOn'>;
+}
+declare module 'material-ui-icons/es/HdrStrong.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/HdrStrong'>;
+}
+declare module 'material-ui-icons/es/HdrWeak.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/HdrWeak'>;
+}
+declare module 'material-ui-icons/es/Headset.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Headset'>;
+}
+declare module 'material-ui-icons/es/HeadsetMic.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/HeadsetMic'>;
+}
+declare module 'material-ui-icons/es/Healing.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Healing'>;
+}
+declare module 'material-ui-icons/es/Hearing.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Hearing'>;
+}
+declare module 'material-ui-icons/es/Help.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Help'>;
+}
+declare module 'material-ui-icons/es/HelpOutline.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/HelpOutline'>;
+}
+declare module 'material-ui-icons/es/Highlight.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Highlight'>;
+}
+declare module 'material-ui-icons/es/HighlightOff.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/HighlightOff'>;
+}
+declare module 'material-ui-icons/es/HighQuality.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/HighQuality'>;
+}
+declare module 'material-ui-icons/es/History.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/History'>;
+}
+declare module 'material-ui-icons/es/Home.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Home'>;
+}
+declare module 'material-ui-icons/es/Hotel.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Hotel'>;
+}
+declare module 'material-ui-icons/es/HotTub.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/HotTub'>;
+}
+declare module 'material-ui-icons/es/HourglassEmpty.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/HourglassEmpty'>;
+}
+declare module 'material-ui-icons/es/HourglassFull.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/HourglassFull'>;
+}
+declare module 'material-ui-icons/es/Http.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Http'>;
+}
+declare module 'material-ui-icons/es/Https.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Https'>;
+}
+declare module 'material-ui-icons/es/Image.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Image'>;
+}
+declare module 'material-ui-icons/es/ImageAspectRatio.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/ImageAspectRatio'>;
+}
+declare module 'material-ui-icons/es/ImportantDevices.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/ImportantDevices'>;
+}
+declare module 'material-ui-icons/es/ImportContacts.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/ImportContacts'>;
+}
+declare module 'material-ui-icons/es/ImportExport.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/ImportExport'>;
+}
+declare module 'material-ui-icons/es/Inbox.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Inbox'>;
+}
+declare module 'material-ui-icons/es/IndeterminateCheckBox.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/IndeterminateCheckBox'>;
+}
+declare module 'material-ui-icons/es/index.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/index'>;
+}
+declare module 'material-ui-icons/es/Info.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Info'>;
+}
+declare module 'material-ui-icons/es/InfoOutline.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/InfoOutline'>;
+}
+declare module 'material-ui-icons/es/Input.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Input'>;
+}
+declare module 'material-ui-icons/es/InsertChart.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/InsertChart'>;
+}
+declare module 'material-ui-icons/es/InsertComment.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/InsertComment'>;
+}
+declare module 'material-ui-icons/es/InsertDriveFile.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/InsertDriveFile'>;
+}
+declare module 'material-ui-icons/es/InsertEmoticon.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/InsertEmoticon'>;
+}
+declare module 'material-ui-icons/es/InsertInvitation.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/InsertInvitation'>;
+}
+declare module 'material-ui-icons/es/InsertLink.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/InsertLink'>;
+}
+declare module 'material-ui-icons/es/InsertPhoto.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/InsertPhoto'>;
+}
+declare module 'material-ui-icons/es/InvertColors.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/InvertColors'>;
+}
+declare module 'material-ui-icons/es/InvertColorsOff.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/InvertColorsOff'>;
+}
+declare module 'material-ui-icons/es/Iso.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Iso'>;
+}
+declare module 'material-ui-icons/es/Keyboard.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Keyboard'>;
+}
+declare module 'material-ui-icons/es/KeyboardArrowDown.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/KeyboardArrowDown'>;
+}
+declare module 'material-ui-icons/es/KeyboardArrowLeft.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/KeyboardArrowLeft'>;
+}
+declare module 'material-ui-icons/es/KeyboardArrowRight.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/KeyboardArrowRight'>;
+}
+declare module 'material-ui-icons/es/KeyboardArrowUp.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/KeyboardArrowUp'>;
+}
+declare module 'material-ui-icons/es/KeyboardBackspace.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/KeyboardBackspace'>;
+}
+declare module 'material-ui-icons/es/KeyboardCapslock.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/KeyboardCapslock'>;
+}
+declare module 'material-ui-icons/es/KeyboardHide.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/KeyboardHide'>;
+}
+declare module 'material-ui-icons/es/KeyboardReturn.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/KeyboardReturn'>;
+}
+declare module 'material-ui-icons/es/KeyboardTab.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/KeyboardTab'>;
+}
+declare module 'material-ui-icons/es/KeyboardVoice.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/KeyboardVoice'>;
+}
+declare module 'material-ui-icons/es/Kitchen.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Kitchen'>;
+}
+declare module 'material-ui-icons/es/Label.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Label'>;
+}
+declare module 'material-ui-icons/es/LabelOutline.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/LabelOutline'>;
+}
+declare module 'material-ui-icons/es/Landscape.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Landscape'>;
+}
+declare module 'material-ui-icons/es/Language.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Language'>;
+}
+declare module 'material-ui-icons/es/Laptop.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Laptop'>;
+}
+declare module 'material-ui-icons/es/LaptopChromebook.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/LaptopChromebook'>;
+}
+declare module 'material-ui-icons/es/LaptopMac.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/LaptopMac'>;
+}
+declare module 'material-ui-icons/es/LaptopWindows.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/LaptopWindows'>;
+}
+declare module 'material-ui-icons/es/LastPage.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/LastPage'>;
+}
+declare module 'material-ui-icons/es/Launch.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Launch'>;
+}
+declare module 'material-ui-icons/es/Layers.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Layers'>;
+}
+declare module 'material-ui-icons/es/LayersClear.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/LayersClear'>;
+}
+declare module 'material-ui-icons/es/LeakAdd.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/LeakAdd'>;
+}
+declare module 'material-ui-icons/es/LeakRemove.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/LeakRemove'>;
+}
+declare module 'material-ui-icons/es/Lens.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Lens'>;
+}
+declare module 'material-ui-icons/es/LibraryAdd.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/LibraryAdd'>;
+}
+declare module 'material-ui-icons/es/LibraryBooks.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/LibraryBooks'>;
+}
+declare module 'material-ui-icons/es/LibraryMusic.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/LibraryMusic'>;
+}
+declare module 'material-ui-icons/es/LightbulbOutline.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/LightbulbOutline'>;
+}
+declare module 'material-ui-icons/es/LinearScale.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/LinearScale'>;
+}
+declare module 'material-ui-icons/es/LineStyle.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/LineStyle'>;
+}
+declare module 'material-ui-icons/es/LineWeight.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/LineWeight'>;
+}
+declare module 'material-ui-icons/es/Link.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Link'>;
+}
+declare module 'material-ui-icons/es/LinkedCamera.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/LinkedCamera'>;
+}
+declare module 'material-ui-icons/es/List.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/List'>;
+}
+declare module 'material-ui-icons/es/LiveHelp.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/LiveHelp'>;
+}
+declare module 'material-ui-icons/es/LiveTv.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/LiveTv'>;
+}
+declare module 'material-ui-icons/es/LocalActivity.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/LocalActivity'>;
+}
+declare module 'material-ui-icons/es/LocalAirport.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/LocalAirport'>;
+}
+declare module 'material-ui-icons/es/LocalAtm.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/LocalAtm'>;
+}
+declare module 'material-ui-icons/es/LocalBar.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/LocalBar'>;
+}
+declare module 'material-ui-icons/es/LocalCafe.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/LocalCafe'>;
+}
+declare module 'material-ui-icons/es/LocalCarWash.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/LocalCarWash'>;
+}
+declare module 'material-ui-icons/es/LocalConvenienceStore.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/LocalConvenienceStore'>;
+}
+declare module 'material-ui-icons/es/LocalDining.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/LocalDining'>;
+}
+declare module 'material-ui-icons/es/LocalDrink.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/LocalDrink'>;
+}
+declare module 'material-ui-icons/es/LocalFlorist.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/LocalFlorist'>;
+}
+declare module 'material-ui-icons/es/LocalGasStation.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/LocalGasStation'>;
+}
+declare module 'material-ui-icons/es/LocalGroceryStore.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/LocalGroceryStore'>;
+}
+declare module 'material-ui-icons/es/LocalHospital.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/LocalHospital'>;
+}
+declare module 'material-ui-icons/es/LocalHotel.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/LocalHotel'>;
+}
+declare module 'material-ui-icons/es/LocalLaundryService.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/LocalLaundryService'>;
+}
+declare module 'material-ui-icons/es/LocalLibrary.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/LocalLibrary'>;
+}
+declare module 'material-ui-icons/es/LocalMall.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/LocalMall'>;
+}
+declare module 'material-ui-icons/es/LocalMovies.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/LocalMovies'>;
+}
+declare module 'material-ui-icons/es/LocalOffer.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/LocalOffer'>;
+}
+declare module 'material-ui-icons/es/LocalParking.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/LocalParking'>;
+}
+declare module 'material-ui-icons/es/LocalPharmacy.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/LocalPharmacy'>;
+}
+declare module 'material-ui-icons/es/LocalPhone.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/LocalPhone'>;
+}
+declare module 'material-ui-icons/es/LocalPizza.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/LocalPizza'>;
+}
+declare module 'material-ui-icons/es/LocalPlay.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/LocalPlay'>;
+}
+declare module 'material-ui-icons/es/LocalPostOffice.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/LocalPostOffice'>;
+}
+declare module 'material-ui-icons/es/LocalPrintshop.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/LocalPrintshop'>;
+}
+declare module 'material-ui-icons/es/LocalSee.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/LocalSee'>;
+}
+declare module 'material-ui-icons/es/LocalShipping.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/LocalShipping'>;
+}
+declare module 'material-ui-icons/es/LocalTaxi.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/LocalTaxi'>;
+}
+declare module 'material-ui-icons/es/LocationCity.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/LocationCity'>;
+}
+declare module 'material-ui-icons/es/LocationDisabled.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/LocationDisabled'>;
+}
+declare module 'material-ui-icons/es/LocationOff.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/LocationOff'>;
+}
+declare module 'material-ui-icons/es/LocationOn.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/LocationOn'>;
+}
+declare module 'material-ui-icons/es/LocationSearching.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/LocationSearching'>;
+}
+declare module 'material-ui-icons/es/Lock.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Lock'>;
+}
+declare module 'material-ui-icons/es/LockOpen.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/LockOpen'>;
+}
+declare module 'material-ui-icons/es/LockOutline.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/LockOutline'>;
+}
+declare module 'material-ui-icons/es/Looks.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Looks'>;
+}
+declare module 'material-ui-icons/es/Looks3.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Looks3'>;
+}
+declare module 'material-ui-icons/es/Looks4.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Looks4'>;
+}
+declare module 'material-ui-icons/es/Looks5.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Looks5'>;
+}
+declare module 'material-ui-icons/es/Looks6.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Looks6'>;
+}
+declare module 'material-ui-icons/es/LooksOne.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/LooksOne'>;
+}
+declare module 'material-ui-icons/es/LooksTwo.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/LooksTwo'>;
+}
+declare module 'material-ui-icons/es/Loop.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Loop'>;
+}
+declare module 'material-ui-icons/es/Loupe.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Loupe'>;
+}
+declare module 'material-ui-icons/es/LowPriority.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/LowPriority'>;
+}
+declare module 'material-ui-icons/es/Loyalty.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Loyalty'>;
+}
+declare module 'material-ui-icons/es/Mail.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Mail'>;
+}
+declare module 'material-ui-icons/es/MailOutline.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/MailOutline'>;
+}
+declare module 'material-ui-icons/es/Map.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Map'>;
+}
+declare module 'material-ui-icons/es/Markunread.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Markunread'>;
+}
+declare module 'material-ui-icons/es/MarkunreadMailbox.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/MarkunreadMailbox'>;
+}
+declare module 'material-ui-icons/es/Memory.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Memory'>;
+}
+declare module 'material-ui-icons/es/Menu.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Menu'>;
+}
+declare module 'material-ui-icons/es/MergeType.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/MergeType'>;
+}
+declare module 'material-ui-icons/es/Message.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Message'>;
+}
+declare module 'material-ui-icons/es/Mic.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Mic'>;
+}
+declare module 'material-ui-icons/es/MicNone.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/MicNone'>;
+}
+declare module 'material-ui-icons/es/MicOff.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/MicOff'>;
+}
+declare module 'material-ui-icons/es/Mms.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Mms'>;
+}
+declare module 'material-ui-icons/es/ModeComment.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/ModeComment'>;
+}
+declare module 'material-ui-icons/es/ModeEdit.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/ModeEdit'>;
+}
+declare module 'material-ui-icons/es/MonetizationOn.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/MonetizationOn'>;
+}
+declare module 'material-ui-icons/es/MoneyOff.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/MoneyOff'>;
+}
+declare module 'material-ui-icons/es/MonochromePhotos.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/MonochromePhotos'>;
+}
+declare module 'material-ui-icons/es/Mood.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Mood'>;
+}
+declare module 'material-ui-icons/es/MoodBad.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/MoodBad'>;
+}
+declare module 'material-ui-icons/es/More.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/More'>;
+}
+declare module 'material-ui-icons/es/MoreHoriz.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/MoreHoriz'>;
+}
+declare module 'material-ui-icons/es/MoreVert.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/MoreVert'>;
+}
+declare module 'material-ui-icons/es/Motorcycle.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Motorcycle'>;
+}
+declare module 'material-ui-icons/es/Mouse.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Mouse'>;
+}
+declare module 'material-ui-icons/es/MoveToInbox.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/MoveToInbox'>;
+}
+declare module 'material-ui-icons/es/Movie.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Movie'>;
+}
+declare module 'material-ui-icons/es/MovieCreation.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/MovieCreation'>;
+}
+declare module 'material-ui-icons/es/MovieFilter.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/MovieFilter'>;
+}
+declare module 'material-ui-icons/es/MultilineChart.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/MultilineChart'>;
+}
+declare module 'material-ui-icons/es/MusicNote.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/MusicNote'>;
+}
+declare module 'material-ui-icons/es/MusicVideo.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/MusicVideo'>;
+}
+declare module 'material-ui-icons/es/MyLocation.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/MyLocation'>;
+}
+declare module 'material-ui-icons/es/Nature.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Nature'>;
+}
+declare module 'material-ui-icons/es/NaturePeople.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/NaturePeople'>;
+}
+declare module 'material-ui-icons/es/NavigateBefore.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/NavigateBefore'>;
+}
+declare module 'material-ui-icons/es/NavigateNext.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/NavigateNext'>;
+}
+declare module 'material-ui-icons/es/Navigation.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Navigation'>;
+}
+declare module 'material-ui-icons/es/NearMe.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/NearMe'>;
+}
+declare module 'material-ui-icons/es/NetworkCell.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/NetworkCell'>;
+}
+declare module 'material-ui-icons/es/NetworkCheck.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/NetworkCheck'>;
+}
+declare module 'material-ui-icons/es/NetworkLocked.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/NetworkLocked'>;
+}
+declare module 'material-ui-icons/es/NetworkWifi.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/NetworkWifi'>;
+}
+declare module 'material-ui-icons/es/NewReleases.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/NewReleases'>;
+}
+declare module 'material-ui-icons/es/NextWeek.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/NextWeek'>;
+}
+declare module 'material-ui-icons/es/Nfc.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Nfc'>;
+}
+declare module 'material-ui-icons/es/NoEncryption.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/NoEncryption'>;
+}
+declare module 'material-ui-icons/es/NoSim.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/NoSim'>;
+}
+declare module 'material-ui-icons/es/Note.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Note'>;
+}
+declare module 'material-ui-icons/es/NoteAdd.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/NoteAdd'>;
+}
+declare module 'material-ui-icons/es/Notifications.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Notifications'>;
+}
+declare module 'material-ui-icons/es/NotificationsActive.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/NotificationsActive'>;
+}
+declare module 'material-ui-icons/es/NotificationsNone.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/NotificationsNone'>;
+}
+declare module 'material-ui-icons/es/NotificationsOff.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/NotificationsOff'>;
+}
+declare module 'material-ui-icons/es/NotificationsPaused.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/NotificationsPaused'>;
+}
+declare module 'material-ui-icons/es/NotInterested.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/NotInterested'>;
+}
+declare module 'material-ui-icons/es/OfflinePin.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/OfflinePin'>;
+}
+declare module 'material-ui-icons/es/OndemandVideo.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/OndemandVideo'>;
+}
+declare module 'material-ui-icons/es/Opacity.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Opacity'>;
+}
+declare module 'material-ui-icons/es/OpenInBrowser.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/OpenInBrowser'>;
+}
+declare module 'material-ui-icons/es/OpenInNew.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/OpenInNew'>;
+}
+declare module 'material-ui-icons/es/OpenWith.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/OpenWith'>;
+}
+declare module 'material-ui-icons/es/Pages.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Pages'>;
+}
+declare module 'material-ui-icons/es/Pageview.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Pageview'>;
+}
+declare module 'material-ui-icons/es/Palette.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Palette'>;
+}
+declare module 'material-ui-icons/es/Panorama.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Panorama'>;
+}
+declare module 'material-ui-icons/es/PanoramaFishEye.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/PanoramaFishEye'>;
+}
+declare module 'material-ui-icons/es/PanoramaHorizontal.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/PanoramaHorizontal'>;
+}
+declare module 'material-ui-icons/es/PanoramaVertical.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/PanoramaVertical'>;
+}
+declare module 'material-ui-icons/es/PanoramaWideAngle.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/PanoramaWideAngle'>;
+}
+declare module 'material-ui-icons/es/PanTool.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/PanTool'>;
+}
+declare module 'material-ui-icons/es/PartyMode.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/PartyMode'>;
+}
+declare module 'material-ui-icons/es/Pause.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Pause'>;
+}
+declare module 'material-ui-icons/es/PauseCircleFilled.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/PauseCircleFilled'>;
+}
+declare module 'material-ui-icons/es/PauseCircleOutline.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/PauseCircleOutline'>;
+}
+declare module 'material-ui-icons/es/Payment.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Payment'>;
+}
+declare module 'material-ui-icons/es/People.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/People'>;
+}
+declare module 'material-ui-icons/es/PeopleOutline.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/PeopleOutline'>;
+}
+declare module 'material-ui-icons/es/PermCameraMic.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/PermCameraMic'>;
+}
+declare module 'material-ui-icons/es/PermContactCalendar.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/PermContactCalendar'>;
+}
+declare module 'material-ui-icons/es/PermDataSetting.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/PermDataSetting'>;
+}
+declare module 'material-ui-icons/es/PermDeviceInformation.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/PermDeviceInformation'>;
+}
+declare module 'material-ui-icons/es/PermIdentity.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/PermIdentity'>;
+}
+declare module 'material-ui-icons/es/PermMedia.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/PermMedia'>;
+}
+declare module 'material-ui-icons/es/PermPhoneMsg.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/PermPhoneMsg'>;
+}
+declare module 'material-ui-icons/es/PermScanWifi.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/PermScanWifi'>;
+}
+declare module 'material-ui-icons/es/Person.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Person'>;
+}
+declare module 'material-ui-icons/es/PersonAdd.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/PersonAdd'>;
+}
+declare module 'material-ui-icons/es/PersonalVideo.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/PersonalVideo'>;
+}
+declare module 'material-ui-icons/es/PersonOutline.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/PersonOutline'>;
+}
+declare module 'material-ui-icons/es/PersonPin.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/PersonPin'>;
+}
+declare module 'material-ui-icons/es/PersonPinCircle.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/PersonPinCircle'>;
+}
+declare module 'material-ui-icons/es/Pets.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Pets'>;
+}
+declare module 'material-ui-icons/es/Phone.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Phone'>;
+}
+declare module 'material-ui-icons/es/PhoneAndroid.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/PhoneAndroid'>;
+}
+declare module 'material-ui-icons/es/PhoneBluetoothSpeaker.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/PhoneBluetoothSpeaker'>;
+}
+declare module 'material-ui-icons/es/PhoneForwarded.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/PhoneForwarded'>;
+}
+declare module 'material-ui-icons/es/PhoneInTalk.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/PhoneInTalk'>;
+}
+declare module 'material-ui-icons/es/PhoneIphone.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/PhoneIphone'>;
+}
+declare module 'material-ui-icons/es/Phonelink.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Phonelink'>;
+}
+declare module 'material-ui-icons/es/PhonelinkErase.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/PhonelinkErase'>;
+}
+declare module 'material-ui-icons/es/PhonelinkLock.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/PhonelinkLock'>;
+}
+declare module 'material-ui-icons/es/PhonelinkOff.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/PhonelinkOff'>;
+}
+declare module 'material-ui-icons/es/PhonelinkRing.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/PhonelinkRing'>;
+}
+declare module 'material-ui-icons/es/PhonelinkSetup.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/PhonelinkSetup'>;
+}
+declare module 'material-ui-icons/es/PhoneLocked.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/PhoneLocked'>;
+}
+declare module 'material-ui-icons/es/PhoneMissed.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/PhoneMissed'>;
+}
+declare module 'material-ui-icons/es/PhonePaused.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/PhonePaused'>;
+}
+declare module 'material-ui-icons/es/Photo.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Photo'>;
+}
+declare module 'material-ui-icons/es/PhotoAlbum.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/PhotoAlbum'>;
+}
+declare module 'material-ui-icons/es/PhotoCamera.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/PhotoCamera'>;
+}
+declare module 'material-ui-icons/es/PhotoFilter.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/PhotoFilter'>;
+}
+declare module 'material-ui-icons/es/PhotoLibrary.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/PhotoLibrary'>;
+}
+declare module 'material-ui-icons/es/PhotoSizeSelectActual.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/PhotoSizeSelectActual'>;
+}
+declare module 'material-ui-icons/es/PhotoSizeSelectLarge.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/PhotoSizeSelectLarge'>;
+}
+declare module 'material-ui-icons/es/PhotoSizeSelectSmall.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/PhotoSizeSelectSmall'>;
+}
+declare module 'material-ui-icons/es/PictureAsPdf.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/PictureAsPdf'>;
+}
+declare module 'material-ui-icons/es/PictureInPicture.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/PictureInPicture'>;
+}
+declare module 'material-ui-icons/es/PictureInPictureAlt.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/PictureInPictureAlt'>;
+}
+declare module 'material-ui-icons/es/PieChart.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/PieChart'>;
+}
+declare module 'material-ui-icons/es/PieChartOutlined.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/PieChartOutlined'>;
+}
+declare module 'material-ui-icons/es/PinDrop.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/PinDrop'>;
+}
+declare module 'material-ui-icons/es/Place.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Place'>;
+}
+declare module 'material-ui-icons/es/PlayArrow.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/PlayArrow'>;
+}
+declare module 'material-ui-icons/es/PlayCircleFilled.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/PlayCircleFilled'>;
+}
+declare module 'material-ui-icons/es/PlayCircleOutline.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/PlayCircleOutline'>;
+}
+declare module 'material-ui-icons/es/PlayForWork.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/PlayForWork'>;
+}
+declare module 'material-ui-icons/es/PlaylistAdd.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/PlaylistAdd'>;
+}
+declare module 'material-ui-icons/es/PlaylistAddCheck.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/PlaylistAddCheck'>;
+}
+declare module 'material-ui-icons/es/PlaylistPlay.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/PlaylistPlay'>;
+}
+declare module 'material-ui-icons/es/PlusOne.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/PlusOne'>;
+}
+declare module 'material-ui-icons/es/Poll.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Poll'>;
+}
+declare module 'material-ui-icons/es/Polymer.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Polymer'>;
+}
+declare module 'material-ui-icons/es/Pool.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Pool'>;
+}
+declare module 'material-ui-icons/es/PortableWifiOff.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/PortableWifiOff'>;
+}
+declare module 'material-ui-icons/es/Portrait.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Portrait'>;
+}
+declare module 'material-ui-icons/es/Power.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Power'>;
+}
+declare module 'material-ui-icons/es/PowerInput.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/PowerInput'>;
+}
+declare module 'material-ui-icons/es/PowerSettingsNew.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/PowerSettingsNew'>;
+}
+declare module 'material-ui-icons/es/PregnantWoman.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/PregnantWoman'>;
+}
+declare module 'material-ui-icons/es/PresentToAll.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/PresentToAll'>;
+}
+declare module 'material-ui-icons/es/Print.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Print'>;
+}
+declare module 'material-ui-icons/es/PriorityHigh.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/PriorityHigh'>;
+}
+declare module 'material-ui-icons/es/Public.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Public'>;
+}
+declare module 'material-ui-icons/es/Publish.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Publish'>;
+}
+declare module 'material-ui-icons/es/QueryBuilder.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/QueryBuilder'>;
+}
+declare module 'material-ui-icons/es/QuestionAnswer.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/QuestionAnswer'>;
+}
+declare module 'material-ui-icons/es/Queue.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Queue'>;
+}
+declare module 'material-ui-icons/es/QueueMusic.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/QueueMusic'>;
+}
+declare module 'material-ui-icons/es/QueuePlayNext.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/QueuePlayNext'>;
+}
+declare module 'material-ui-icons/es/Radio.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Radio'>;
+}
+declare module 'material-ui-icons/es/RadioButtonChecked.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/RadioButtonChecked'>;
+}
+declare module 'material-ui-icons/es/RadioButtonUnchecked.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/RadioButtonUnchecked'>;
+}
+declare module 'material-ui-icons/es/RateReview.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/RateReview'>;
+}
+declare module 'material-ui-icons/es/Receipt.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Receipt'>;
+}
+declare module 'material-ui-icons/es/RecentActors.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/RecentActors'>;
+}
+declare module 'material-ui-icons/es/RecordVoiceOver.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/RecordVoiceOver'>;
+}
+declare module 'material-ui-icons/es/Redeem.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Redeem'>;
+}
+declare module 'material-ui-icons/es/Redo.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Redo'>;
+}
+declare module 'material-ui-icons/es/Refresh.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Refresh'>;
+}
+declare module 'material-ui-icons/es/Remove.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Remove'>;
+}
+declare module 'material-ui-icons/es/RemoveCircle.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/RemoveCircle'>;
+}
+declare module 'material-ui-icons/es/RemoveCircleOutline.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/RemoveCircleOutline'>;
+}
+declare module 'material-ui-icons/es/RemoveFromQueue.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/RemoveFromQueue'>;
+}
+declare module 'material-ui-icons/es/RemoveRedEye.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/RemoveRedEye'>;
+}
+declare module 'material-ui-icons/es/RemoveShoppingCart.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/RemoveShoppingCart'>;
+}
+declare module 'material-ui-icons/es/Reorder.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Reorder'>;
+}
+declare module 'material-ui-icons/es/Repeat.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Repeat'>;
+}
+declare module 'material-ui-icons/es/RepeatOne.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/RepeatOne'>;
+}
+declare module 'material-ui-icons/es/Replay.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Replay'>;
+}
+declare module 'material-ui-icons/es/Replay10.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Replay10'>;
+}
+declare module 'material-ui-icons/es/Replay30.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Replay30'>;
+}
+declare module 'material-ui-icons/es/Replay5.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Replay5'>;
+}
+declare module 'material-ui-icons/es/Reply.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Reply'>;
+}
+declare module 'material-ui-icons/es/ReplyAll.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/ReplyAll'>;
+}
+declare module 'material-ui-icons/es/Report.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Report'>;
+}
+declare module 'material-ui-icons/es/ReportProblem.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/ReportProblem'>;
+}
+declare module 'material-ui-icons/es/Restaurant.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Restaurant'>;
+}
+declare module 'material-ui-icons/es/RestaurantMenu.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/RestaurantMenu'>;
+}
+declare module 'material-ui-icons/es/Restore.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Restore'>;
+}
+declare module 'material-ui-icons/es/RestorePage.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/RestorePage'>;
+}
+declare module 'material-ui-icons/es/RingVolume.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/RingVolume'>;
+}
+declare module 'material-ui-icons/es/Room.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Room'>;
+}
+declare module 'material-ui-icons/es/RoomService.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/RoomService'>;
+}
+declare module 'material-ui-icons/es/Rotate90DegreesCcw.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Rotate90DegreesCcw'>;
+}
+declare module 'material-ui-icons/es/RotateLeft.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/RotateLeft'>;
+}
+declare module 'material-ui-icons/es/RotateRight.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/RotateRight'>;
+}
+declare module 'material-ui-icons/es/RoundedCorner.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/RoundedCorner'>;
+}
+declare module 'material-ui-icons/es/Router.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Router'>;
+}
+declare module 'material-ui-icons/es/Rowing.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Rowing'>;
+}
+declare module 'material-ui-icons/es/RssFeed.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/RssFeed'>;
+}
+declare module 'material-ui-icons/es/RvHookup.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/RvHookup'>;
+}
+declare module 'material-ui-icons/es/Satellite.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Satellite'>;
+}
+declare module 'material-ui-icons/es/Save.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Save'>;
+}
+declare module 'material-ui-icons/es/Scanner.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Scanner'>;
+}
+declare module 'material-ui-icons/es/Schedule.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Schedule'>;
+}
+declare module 'material-ui-icons/es/School.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/School'>;
+}
+declare module 'material-ui-icons/es/ScreenLockLandscape.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/ScreenLockLandscape'>;
+}
+declare module 'material-ui-icons/es/ScreenLockPortrait.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/ScreenLockPortrait'>;
+}
+declare module 'material-ui-icons/es/ScreenLockRotation.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/ScreenLockRotation'>;
+}
+declare module 'material-ui-icons/es/ScreenRotation.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/ScreenRotation'>;
+}
+declare module 'material-ui-icons/es/ScreenShare.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/ScreenShare'>;
+}
+declare module 'material-ui-icons/es/SdCard.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/SdCard'>;
+}
+declare module 'material-ui-icons/es/SdStorage.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/SdStorage'>;
+}
+declare module 'material-ui-icons/es/Search.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Search'>;
+}
+declare module 'material-ui-icons/es/Security.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Security'>;
+}
+declare module 'material-ui-icons/es/SelectAll.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/SelectAll'>;
+}
+declare module 'material-ui-icons/es/Send.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Send'>;
+}
+declare module 'material-ui-icons/es/SentimentDissatisfied.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/SentimentDissatisfied'>;
+}
+declare module 'material-ui-icons/es/SentimentNeutral.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/SentimentNeutral'>;
+}
+declare module 'material-ui-icons/es/SentimentSatisfied.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/SentimentSatisfied'>;
+}
+declare module 'material-ui-icons/es/SentimentVeryDissatisfied.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/SentimentVeryDissatisfied'>;
+}
+declare module 'material-ui-icons/es/SentimentVerySatisfied.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/SentimentVerySatisfied'>;
+}
+declare module 'material-ui-icons/es/Settings.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Settings'>;
+}
+declare module 'material-ui-icons/es/SettingsApplications.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/SettingsApplications'>;
+}
+declare module 'material-ui-icons/es/SettingsBackupRestore.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/SettingsBackupRestore'>;
+}
+declare module 'material-ui-icons/es/SettingsBluetooth.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/SettingsBluetooth'>;
+}
+declare module 'material-ui-icons/es/SettingsBrightness.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/SettingsBrightness'>;
+}
+declare module 'material-ui-icons/es/SettingsCell.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/SettingsCell'>;
+}
+declare module 'material-ui-icons/es/SettingsEthernet.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/SettingsEthernet'>;
+}
+declare module 'material-ui-icons/es/SettingsInputAntenna.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/SettingsInputAntenna'>;
+}
+declare module 'material-ui-icons/es/SettingsInputComponent.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/SettingsInputComponent'>;
+}
+declare module 'material-ui-icons/es/SettingsInputComposite.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/SettingsInputComposite'>;
+}
+declare module 'material-ui-icons/es/SettingsInputHdmi.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/SettingsInputHdmi'>;
+}
+declare module 'material-ui-icons/es/SettingsInputSvideo.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/SettingsInputSvideo'>;
+}
+declare module 'material-ui-icons/es/SettingsOverscan.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/SettingsOverscan'>;
+}
+declare module 'material-ui-icons/es/SettingsPhone.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/SettingsPhone'>;
+}
+declare module 'material-ui-icons/es/SettingsPower.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/SettingsPower'>;
+}
+declare module 'material-ui-icons/es/SettingsRemote.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/SettingsRemote'>;
+}
+declare module 'material-ui-icons/es/SettingsSystemDaydream.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/SettingsSystemDaydream'>;
+}
+declare module 'material-ui-icons/es/SettingsVoice.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/SettingsVoice'>;
+}
+declare module 'material-ui-icons/es/Share.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Share'>;
+}
+declare module 'material-ui-icons/es/Shop.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Shop'>;
+}
+declare module 'material-ui-icons/es/ShoppingBasket.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/ShoppingBasket'>;
+}
+declare module 'material-ui-icons/es/ShoppingCart.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/ShoppingCart'>;
+}
+declare module 'material-ui-icons/es/ShopTwo.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/ShopTwo'>;
+}
+declare module 'material-ui-icons/es/ShortText.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/ShortText'>;
+}
+declare module 'material-ui-icons/es/ShowChart.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/ShowChart'>;
+}
+declare module 'material-ui-icons/es/Shuffle.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Shuffle'>;
+}
+declare module 'material-ui-icons/es/SignalCellular0Bar.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/SignalCellular0Bar'>;
+}
+declare module 'material-ui-icons/es/SignalCellular1Bar.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/SignalCellular1Bar'>;
+}
+declare module 'material-ui-icons/es/SignalCellular2Bar.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/SignalCellular2Bar'>;
+}
+declare module 'material-ui-icons/es/SignalCellular3Bar.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/SignalCellular3Bar'>;
+}
+declare module 'material-ui-icons/es/SignalCellular4Bar.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/SignalCellular4Bar'>;
+}
+declare module 'material-ui-icons/es/SignalCellularConnectedNoInternet0Bar.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/SignalCellularConnectedNoInternet0Bar'>;
+}
+declare module 'material-ui-icons/es/SignalCellularConnectedNoInternet1Bar.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/SignalCellularConnectedNoInternet1Bar'>;
+}
+declare module 'material-ui-icons/es/SignalCellularConnectedNoInternet2Bar.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/SignalCellularConnectedNoInternet2Bar'>;
+}
+declare module 'material-ui-icons/es/SignalCellularConnectedNoInternet3Bar.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/SignalCellularConnectedNoInternet3Bar'>;
+}
+declare module 'material-ui-icons/es/SignalCellularConnectedNoInternet4Bar.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/SignalCellularConnectedNoInternet4Bar'>;
+}
+declare module 'material-ui-icons/es/SignalCellularNoSim.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/SignalCellularNoSim'>;
+}
+declare module 'material-ui-icons/es/SignalCellularNull.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/SignalCellularNull'>;
+}
+declare module 'material-ui-icons/es/SignalCellularOff.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/SignalCellularOff'>;
+}
+declare module 'material-ui-icons/es/SignalWifi0Bar.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/SignalWifi0Bar'>;
+}
+declare module 'material-ui-icons/es/SignalWifi1Bar.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/SignalWifi1Bar'>;
+}
+declare module 'material-ui-icons/es/SignalWifi1BarLock.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/SignalWifi1BarLock'>;
+}
+declare module 'material-ui-icons/es/SignalWifi2Bar.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/SignalWifi2Bar'>;
+}
+declare module 'material-ui-icons/es/SignalWifi2BarLock.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/SignalWifi2BarLock'>;
+}
+declare module 'material-ui-icons/es/SignalWifi3Bar.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/SignalWifi3Bar'>;
+}
+declare module 'material-ui-icons/es/SignalWifi3BarLock.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/SignalWifi3BarLock'>;
+}
+declare module 'material-ui-icons/es/SignalWifi4Bar.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/SignalWifi4Bar'>;
+}
+declare module 'material-ui-icons/es/SignalWifi4BarLock.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/SignalWifi4BarLock'>;
+}
+declare module 'material-ui-icons/es/SignalWifiOff.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/SignalWifiOff'>;
+}
+declare module 'material-ui-icons/es/SimCard.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/SimCard'>;
+}
+declare module 'material-ui-icons/es/SimCardAlert.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/SimCardAlert'>;
+}
+declare module 'material-ui-icons/es/SkipNext.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/SkipNext'>;
+}
+declare module 'material-ui-icons/es/SkipPrevious.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/SkipPrevious'>;
+}
+declare module 'material-ui-icons/es/Slideshow.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Slideshow'>;
+}
+declare module 'material-ui-icons/es/SlowMotionVideo.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/SlowMotionVideo'>;
+}
+declare module 'material-ui-icons/es/Smartphone.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Smartphone'>;
+}
+declare module 'material-ui-icons/es/SmokeFree.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/SmokeFree'>;
+}
+declare module 'material-ui-icons/es/SmokingRooms.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/SmokingRooms'>;
+}
+declare module 'material-ui-icons/es/Sms.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Sms'>;
+}
+declare module 'material-ui-icons/es/SmsFailed.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/SmsFailed'>;
+}
+declare module 'material-ui-icons/es/Snooze.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Snooze'>;
+}
+declare module 'material-ui-icons/es/Sort.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Sort'>;
+}
+declare module 'material-ui-icons/es/SortByAlpha.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/SortByAlpha'>;
+}
+declare module 'material-ui-icons/es/Spa.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Spa'>;
+}
+declare module 'material-ui-icons/es/SpaceBar.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/SpaceBar'>;
+}
+declare module 'material-ui-icons/es/Speaker.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Speaker'>;
+}
+declare module 'material-ui-icons/es/SpeakerGroup.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/SpeakerGroup'>;
+}
+declare module 'material-ui-icons/es/SpeakerNotes.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/SpeakerNotes'>;
+}
+declare module 'material-ui-icons/es/SpeakerNotesOff.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/SpeakerNotesOff'>;
+}
+declare module 'material-ui-icons/es/SpeakerPhone.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/SpeakerPhone'>;
+}
+declare module 'material-ui-icons/es/Spellcheck.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Spellcheck'>;
+}
+declare module 'material-ui-icons/es/Star.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Star'>;
+}
+declare module 'material-ui-icons/es/StarBorder.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/StarBorder'>;
+}
+declare module 'material-ui-icons/es/StarHalf.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/StarHalf'>;
+}
+declare module 'material-ui-icons/es/Stars.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Stars'>;
+}
+declare module 'material-ui-icons/es/StayCurrentLandscape.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/StayCurrentLandscape'>;
+}
+declare module 'material-ui-icons/es/StayCurrentPortrait.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/StayCurrentPortrait'>;
+}
+declare module 'material-ui-icons/es/StayPrimaryLandscape.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/StayPrimaryLandscape'>;
+}
+declare module 'material-ui-icons/es/StayPrimaryPortrait.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/StayPrimaryPortrait'>;
+}
+declare module 'material-ui-icons/es/Stop.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Stop'>;
+}
+declare module 'material-ui-icons/es/StopScreenShare.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/StopScreenShare'>;
+}
+declare module 'material-ui-icons/es/Storage.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Storage'>;
+}
+declare module 'material-ui-icons/es/Store.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Store'>;
+}
+declare module 'material-ui-icons/es/StoreMallDirectory.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/StoreMallDirectory'>;
+}
+declare module 'material-ui-icons/es/Straighten.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Straighten'>;
+}
+declare module 'material-ui-icons/es/Streetview.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Streetview'>;
+}
+declare module 'material-ui-icons/es/StrikethroughS.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/StrikethroughS'>;
+}
+declare module 'material-ui-icons/es/Style.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Style'>;
+}
+declare module 'material-ui-icons/es/SubdirectoryArrowLeft.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/SubdirectoryArrowLeft'>;
+}
+declare module 'material-ui-icons/es/SubdirectoryArrowRight.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/SubdirectoryArrowRight'>;
+}
+declare module 'material-ui-icons/es/Subject.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Subject'>;
+}
+declare module 'material-ui-icons/es/Subscriptions.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Subscriptions'>;
+}
+declare module 'material-ui-icons/es/Subtitles.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Subtitles'>;
+}
+declare module 'material-ui-icons/es/Subway.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Subway'>;
+}
+declare module 'material-ui-icons/es/SupervisorAccount.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/SupervisorAccount'>;
+}
+declare module 'material-ui-icons/es/SurroundSound.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/SurroundSound'>;
+}
+declare module 'material-ui-icons/es/SwapCalls.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/SwapCalls'>;
+}
+declare module 'material-ui-icons/es/SwapHoriz.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/SwapHoriz'>;
+}
+declare module 'material-ui-icons/es/SwapVert.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/SwapVert'>;
+}
+declare module 'material-ui-icons/es/SwapVerticalCircle.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/SwapVerticalCircle'>;
+}
+declare module 'material-ui-icons/es/SwitchCamera.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/SwitchCamera'>;
+}
+declare module 'material-ui-icons/es/SwitchVideo.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/SwitchVideo'>;
+}
+declare module 'material-ui-icons/es/Sync.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Sync'>;
+}
+declare module 'material-ui-icons/es/SyncDisabled.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/SyncDisabled'>;
+}
+declare module 'material-ui-icons/es/SyncProblem.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/SyncProblem'>;
+}
+declare module 'material-ui-icons/es/SystemUpdate.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/SystemUpdate'>;
+}
+declare module 'material-ui-icons/es/SystemUpdateAlt.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/SystemUpdateAlt'>;
+}
+declare module 'material-ui-icons/es/Tab.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Tab'>;
+}
+declare module 'material-ui-icons/es/Tablet.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Tablet'>;
+}
+declare module 'material-ui-icons/es/TabletAndroid.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/TabletAndroid'>;
+}
+declare module 'material-ui-icons/es/TabletMac.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/TabletMac'>;
+}
+declare module 'material-ui-icons/es/TabUnselected.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/TabUnselected'>;
+}
+declare module 'material-ui-icons/es/TagFaces.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/TagFaces'>;
+}
+declare module 'material-ui-icons/es/TapAndPlay.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/TapAndPlay'>;
+}
+declare module 'material-ui-icons/es/Terrain.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Terrain'>;
+}
+declare module 'material-ui-icons/es/TextFields.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/TextFields'>;
+}
+declare module 'material-ui-icons/es/TextFormat.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/TextFormat'>;
+}
+declare module 'material-ui-icons/es/Textsms.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Textsms'>;
+}
+declare module 'material-ui-icons/es/Texture.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Texture'>;
+}
+declare module 'material-ui-icons/es/Theaters.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Theaters'>;
+}
+declare module 'material-ui-icons/es/ThreeDRotation.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/ThreeDRotation'>;
+}
+declare module 'material-ui-icons/es/ThumbDown.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/ThumbDown'>;
+}
+declare module 'material-ui-icons/es/ThumbsUpDown.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/ThumbsUpDown'>;
+}
+declare module 'material-ui-icons/es/ThumbUp.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/ThumbUp'>;
+}
+declare module 'material-ui-icons/es/Timelapse.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Timelapse'>;
+}
+declare module 'material-ui-icons/es/Timeline.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Timeline'>;
+}
+declare module 'material-ui-icons/es/Timer.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Timer'>;
+}
+declare module 'material-ui-icons/es/Timer10.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Timer10'>;
+}
+declare module 'material-ui-icons/es/Timer3.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Timer3'>;
+}
+declare module 'material-ui-icons/es/TimerOff.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/TimerOff'>;
+}
+declare module 'material-ui-icons/es/TimeToLeave.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/TimeToLeave'>;
+}
+declare module 'material-ui-icons/es/Title.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Title'>;
+}
+declare module 'material-ui-icons/es/Toc.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Toc'>;
+}
+declare module 'material-ui-icons/es/Today.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Today'>;
+}
+declare module 'material-ui-icons/es/Toll.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Toll'>;
+}
+declare module 'material-ui-icons/es/Tonality.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Tonality'>;
+}
+declare module 'material-ui-icons/es/TouchApp.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/TouchApp'>;
+}
+declare module 'material-ui-icons/es/Toys.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Toys'>;
+}
+declare module 'material-ui-icons/es/TrackChanges.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/TrackChanges'>;
+}
+declare module 'material-ui-icons/es/Traffic.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Traffic'>;
+}
+declare module 'material-ui-icons/es/Train.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Train'>;
+}
+declare module 'material-ui-icons/es/Tram.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Tram'>;
+}
+declare module 'material-ui-icons/es/TransferWithinAStation.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/TransferWithinAStation'>;
+}
+declare module 'material-ui-icons/es/Transform.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Transform'>;
+}
+declare module 'material-ui-icons/es/Translate.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Translate'>;
+}
+declare module 'material-ui-icons/es/TrendingDown.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/TrendingDown'>;
+}
+declare module 'material-ui-icons/es/TrendingFlat.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/TrendingFlat'>;
+}
+declare module 'material-ui-icons/es/TrendingUp.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/TrendingUp'>;
+}
+declare module 'material-ui-icons/es/Tune.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Tune'>;
+}
+declare module 'material-ui-icons/es/TurnedIn.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/TurnedIn'>;
+}
+declare module 'material-ui-icons/es/TurnedInNot.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/TurnedInNot'>;
+}
+declare module 'material-ui-icons/es/Tv.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Tv'>;
+}
+declare module 'material-ui-icons/es/Unarchive.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Unarchive'>;
+}
+declare module 'material-ui-icons/es/Undo.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Undo'>;
+}
+declare module 'material-ui-icons/es/UnfoldLess.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/UnfoldLess'>;
+}
+declare module 'material-ui-icons/es/UnfoldMore.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/UnfoldMore'>;
+}
+declare module 'material-ui-icons/es/Update.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Update'>;
+}
+declare module 'material-ui-icons/es/Usb.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Usb'>;
+}
+declare module 'material-ui-icons/es/VerifiedUser.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/VerifiedUser'>;
+}
+declare module 'material-ui-icons/es/VerticalAlignBottom.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/VerticalAlignBottom'>;
+}
+declare module 'material-ui-icons/es/VerticalAlignCenter.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/VerticalAlignCenter'>;
+}
+declare module 'material-ui-icons/es/VerticalAlignTop.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/VerticalAlignTop'>;
+}
+declare module 'material-ui-icons/es/Vibration.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Vibration'>;
+}
+declare module 'material-ui-icons/es/VideoCall.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/VideoCall'>;
+}
+declare module 'material-ui-icons/es/Videocam.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Videocam'>;
+}
+declare module 'material-ui-icons/es/VideocamOff.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/VideocamOff'>;
+}
+declare module 'material-ui-icons/es/VideogameAsset.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/VideogameAsset'>;
+}
+declare module 'material-ui-icons/es/VideoLabel.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/VideoLabel'>;
+}
+declare module 'material-ui-icons/es/VideoLibrary.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/VideoLibrary'>;
+}
+declare module 'material-ui-icons/es/ViewAgenda.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/ViewAgenda'>;
+}
+declare module 'material-ui-icons/es/ViewArray.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/ViewArray'>;
+}
+declare module 'material-ui-icons/es/ViewCarousel.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/ViewCarousel'>;
+}
+declare module 'material-ui-icons/es/ViewColumn.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/ViewColumn'>;
+}
+declare module 'material-ui-icons/es/ViewComfy.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/ViewComfy'>;
+}
+declare module 'material-ui-icons/es/ViewCompact.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/ViewCompact'>;
+}
+declare module 'material-ui-icons/es/ViewDay.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/ViewDay'>;
+}
+declare module 'material-ui-icons/es/ViewHeadline.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/ViewHeadline'>;
+}
+declare module 'material-ui-icons/es/ViewList.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/ViewList'>;
+}
+declare module 'material-ui-icons/es/ViewModule.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/ViewModule'>;
+}
+declare module 'material-ui-icons/es/ViewQuilt.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/ViewQuilt'>;
+}
+declare module 'material-ui-icons/es/ViewStream.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/ViewStream'>;
+}
+declare module 'material-ui-icons/es/ViewWeek.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/ViewWeek'>;
+}
+declare module 'material-ui-icons/es/Vignette.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Vignette'>;
+}
+declare module 'material-ui-icons/es/Visibility.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Visibility'>;
+}
+declare module 'material-ui-icons/es/VisibilityOff.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/VisibilityOff'>;
+}
+declare module 'material-ui-icons/es/VoiceChat.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/VoiceChat'>;
+}
+declare module 'material-ui-icons/es/Voicemail.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Voicemail'>;
+}
+declare module 'material-ui-icons/es/VolumeDown.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/VolumeDown'>;
+}
+declare module 'material-ui-icons/es/VolumeMute.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/VolumeMute'>;
+}
+declare module 'material-ui-icons/es/VolumeOff.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/VolumeOff'>;
+}
+declare module 'material-ui-icons/es/VolumeUp.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/VolumeUp'>;
+}
+declare module 'material-ui-icons/es/VpnKey.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/VpnKey'>;
+}
+declare module 'material-ui-icons/es/VpnLock.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/VpnLock'>;
+}
+declare module 'material-ui-icons/es/Wallpaper.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Wallpaper'>;
+}
+declare module 'material-ui-icons/es/Warning.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Warning'>;
+}
+declare module 'material-ui-icons/es/Watch.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Watch'>;
+}
+declare module 'material-ui-icons/es/WatchLater.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/WatchLater'>;
+}
+declare module 'material-ui-icons/es/WbAuto.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/WbAuto'>;
+}
+declare module 'material-ui-icons/es/WbCloudy.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/WbCloudy'>;
+}
+declare module 'material-ui-icons/es/WbIncandescent.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/WbIncandescent'>;
+}
+declare module 'material-ui-icons/es/WbIridescent.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/WbIridescent'>;
+}
+declare module 'material-ui-icons/es/WbSunny.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/WbSunny'>;
+}
+declare module 'material-ui-icons/es/Wc.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Wc'>;
+}
+declare module 'material-ui-icons/es/Web.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Web'>;
+}
+declare module 'material-ui-icons/es/WebAsset.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/WebAsset'>;
+}
+declare module 'material-ui-icons/es/Weekend.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Weekend'>;
+}
+declare module 'material-ui-icons/es/Whatshot.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Whatshot'>;
+}
+declare module 'material-ui-icons/es/Widgets.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Widgets'>;
+}
+declare module 'material-ui-icons/es/Wifi.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Wifi'>;
+}
+declare module 'material-ui-icons/es/WifiLock.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/WifiLock'>;
+}
+declare module 'material-ui-icons/es/WifiTethering.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/WifiTethering'>;
+}
+declare module 'material-ui-icons/es/Work.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/Work'>;
+}
+declare module 'material-ui-icons/es/WrapText.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/WrapText'>;
+}
+declare module 'material-ui-icons/es/YoutubeSearchedFor.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/YoutubeSearchedFor'>;
+}
+declare module 'material-ui-icons/es/ZoomIn.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/ZoomIn'>;
+}
+declare module 'material-ui-icons/es/ZoomOut.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/ZoomOut'>;
+}
+declare module 'material-ui-icons/es/ZoomOutMap.js' {
+  declare module.exports: $Exports<'material-ui-icons/es/ZoomOutMap'>;
 }
 declare module 'material-ui-icons/EuroSymbol.js' {
   declare module.exports: $Exports<'material-ui-icons/EuroSymbol'>;

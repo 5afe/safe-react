@@ -1,4 +1,4 @@
-// flow-typed signature: 24a95d93ba3f02fcd36080150b9c4714
+// flow-typed signature: e79c3736e47e9140aa90aeea345017d5
 // flow-typed version: <<STUB>>/webpack-cli_v^2.0.8/flow_v0.66.0
 
 /**
@@ -162,10 +162,6 @@ declare module 'webpack-cli/lib/init/transformations/externals/externals' {
   declare module.exports: any;
 }
 
-declare module 'webpack-cli/lib/init/transformations/index' {
-  declare module.exports: any;
-}
-
 declare module 'webpack-cli/lib/init/transformations/mode/mode' {
   declare module.exports: any;
 }
@@ -310,6 +306,10 @@ declare module 'webpack-cli/lib/utils/hashtable' {
   declare module.exports: any;
 }
 
+declare module 'webpack-cli/lib/utils/is-local-path' {
+  declare module.exports: any;
+}
+
 declare module 'webpack-cli/lib/utils/modify-config-helper' {
   declare module.exports: any;
 }
@@ -444,9 +444,6 @@ declare module 'webpack-cli/lib/init/transformations/entry/entry.js' {
 declare module 'webpack-cli/lib/init/transformations/externals/externals.js' {
   declare module.exports: $Exports<'webpack-cli/lib/init/transformations/externals/externals'>;
 }
-declare module 'webpack-cli/lib/init/transformations/index.js' {
-  declare module.exports: $Exports<'webpack-cli/lib/init/transformations/index'>;
-}
 declare module 'webpack-cli/lib/init/transformations/mode/mode.js' {
   declare module.exports: $Exports<'webpack-cli/lib/init/transformations/mode/mode'>;
 }
@@ -554,6 +551,9 @@ declare module 'webpack-cli/lib/utils/defineTest.js' {
 }
 declare module 'webpack-cli/lib/utils/hashtable.js' {
   declare module.exports: $Exports<'webpack-cli/lib/utils/hashtable'>;
+}
+declare module 'webpack-cli/lib/utils/is-local-path.js' {
+  declare module.exports: $Exports<'webpack-cli/lib/utils/is-local-path'>;
 }
 declare module 'webpack-cli/lib/utils/modify-config-helper.js' {
   declare module.exports: $Exports<'webpack-cli/lib/utils/modify-config-helper'>;
