@@ -1,7 +1,7 @@
 // @flow
 import Web3 from 'web3'
 
-const getWeb3 = new Promise((resolve) => {
+const getWeb3 = () => new Promise((resolve) => {
   // Wait for loading completion to avoid race conditions with web3 injection timing.
   window.addEventListener('load', () => {
     let { web3 } = window
@@ -29,7 +29,7 @@ const getWeb3 = new Promise((resolve) => {
   })
 })
 
-export const promisify = inner =>
+export const promisify = (inner: Function): Promise<any> =>
   new Promise((resolve, reject) =>
     inner((err, res) => {
       if (err) {
@@ -39,4 +39,18 @@ export const promisify = inner =>
       }
     }))
 
-export default getWeb3
+export const ensureOnce = (fn: Function): Function => {
+  let executed = false
+  let response
+
+  return (...args) => {
+    if (executed) { return response }
+
+    executed = true
+    response = fn(args)
+
+    return response
+  }
+}
+
+export default ensureOnce(getWeb3)
