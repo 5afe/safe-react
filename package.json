@@ -80,6 +80,7 @@
     "redux": "^3.7.2",
     "redux-actions": "^2.3.0",
     "redux-thunk": "^2.2.0",
+    "reselect": "^3.0.1",
     "storybook-host": "^4.1.5",
     "storybook-router": "^0.3.3",
     "style-loader": "^0.20.2",
@@ -122,19 +123,13 @@
       "^(?!.*\\.(js|jsx|css|json)$)": "<rootDir>/config/jest/fileTransform.js"
     },
     "transformIgnorePatterns": [
-      "[/\\\\]node_modules[/\\\\].+\\.(js|jsx)$"
+      "[/\\\\]node_modules[/\\\\].+\\.(js|jsx)$",
+      "[/\\\\]flow-typed[/\\\\].+\\.(js|jsx)$"
     ],
     "moduleNameMapper": {
       "~(.*)$": "<rootDir>/src/$1",
       "#(.*)$": "<rootDir>/gnosis-safe-contracts/build/contracts/$1",
       "^react-native$": "react-native-web"
-    },
-    "moduleFileExtensions": [
-      "web.js",
-      "js",
-      "json",
-      "web.jsx",
-      "jsx"
-    ]
+    }
   }
 }
