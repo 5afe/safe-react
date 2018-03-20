@@ -1,7 +1,7 @@
 // @flow
 export const upperFirst = (value: string) => value.charAt(0).toUpperCase() + value.slice(1)
 
-export const capitalize = (value: string, prefix?: string) => {
+export const capitalize = (value: string, prefix: string = '') => {
   if (!value) {
     return undefined
   }
