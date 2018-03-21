@@ -1,33 +1,37 @@
 // @flow
 import Web3 from 'web3'
+import type { ProviderProps } from '~/wallets/store/model/provider'
 
-const getWeb3 = () => new Promise((resolve) => {
-  // Wait for loading completion to avoid race conditions with web3 injection timing.
-  window.addEventListener('load', () => {
-    let { web3 } = window
+let web3
+export const getWeb3 = () => web3
 
-    if (typeof web3 !== 'undefined') {
-      // Use Mist/MetaMask's provider.
-      web3 = new Web3(web3.currentProvider)
+const isMetamask: Function = (web3Provider): boolean => {
+  const isMetamaskConstructor = web3Provider.constructor.name === 'MetamaskInpageProvider'
+  return isMetamaskConstructor || web3Provider.isMetaMask
+}
 
-      // eslint-disable-next-line
-      console.log('Injected web3 detected.')
+const getAccountFrom: Function = async (web3Provider): Promise<string | null> => {
+  const accounts = await web3Provider.eth.getAccounts()
 
-      resolve({ web3 })
-    } else {
-      // Fallback to localhost if no web3 injection. We've configured this to
-      // use the development console's port by default.
-      const provider = new Web3.providers.HttpProvider('http://127.0.0.1:9545')
+  return accounts && accounts.length ? accounts[0] : null
+}
 
-      web3 = new Web3(provider)
+export const getProviderInfo: Function = (): ProviderProps => {
+  if (typeof window.web3 === 'undefined') {
+    return { name: '', available: false, loaded: false }
+  }
 
-      // eslint-disable-next-line
-      console.log('No web3 instance injected, using Local web3.')
+  // Use MetaMask's provider.
+  web3 = new Web3(window.web3.currentProvider)
+  // eslint-disable-next-line
+  console.log('Injected web3 detected.')
 
-      resolve({ web3 })
-    }
-  })
-})
+  return {
+    name: isMetamask(web3) ? 'METAMASK' : 'UNKNOWN',
+    available: getAccountFrom(web3) !== null,
+    loaded: true,
+  }
+}
 
 export const promisify = (inner: Function): Promise<any> =>
   new Promise((resolve, reject) =>
@@ -52,5 +56,3 @@ export const ensureOnce = (fn: Function): Function => {
     return response
   }
 }
-
-export default ensureOnce(getWeb3)
