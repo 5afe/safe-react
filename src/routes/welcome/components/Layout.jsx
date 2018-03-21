@@ -9,16 +9,22 @@ import styles from './Layout.scss'
 
 const vault = require('../assets/vault.svg')
 
-const Welcome = () => (
+type Props = {
+  provider: string
+}
+
+const Welcome = ({ provider }: Props) => (
   <PageFrame>
     <Block className={styles.safe}>
-      <Img src={vault} height={330} />
+      <Img alt="Safe Box" src={vault} height={330} />
       <Block className={styles.safeActions}>
-        <Link to="/transactions">
-          <Button variant="raised" color="primary">
-            Create a new Safe
-          </Button>
-        </Link>
+        { provider &&
+          <Link to="/transactions">
+            <Button variant="raised" color="primary">
+              Create a new Safe
+            </Button>
+          </Link>
+        }
         <Link to="/transactions">
           <Button variant="raised" color="primary">
             Open a Safe
