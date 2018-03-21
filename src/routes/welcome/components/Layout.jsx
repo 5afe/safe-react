@@ -19,7 +19,7 @@ const Welcome = ({ provider }: Props) => (
       <Img alt="Safe Box" src={vault} height={330} />
       <Block className={styles.safeActions}>
         { provider &&
-          <Link to="/transactions">
+          <Link to="/open">
             <Button variant="raised" color="primary">
               Create a new Safe
             </Button>

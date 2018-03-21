@@ -12,10 +12,16 @@ const Transactions = Loadable({
   loading: Loading,
 })
 
+const Open = Loadable({
+  loader: () => import('./open/Open'),
+  loading: Loading,
+})
+
 const Routes = () => (
   <Switch>
     <Redirect exact from="/" to="/welcome" />
     <Route exact path="/welcome" component={Welcome} />
+    <Route exact path="/open" component={Open} />
     <Route exact path="/transactions" component={Transactions} />
   </Switch>
 )
