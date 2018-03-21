@@ -1,0 +1,21 @@
+// @flow
+import type { Dispatch as ReduxDispatch } from 'redux'
+import { getProviderInfo } from '~/wallets/getWeb3'
+import type { ProviderProps } from '~/wallets/store/model/provider'
+import { makeProvider } from '~/wallets/store/model/provider'
+import addProvider from './addProvider'
+
+export const processProviderResponse = (dispatch: ReduxDispatch<*>, response: ProviderProps) => {
+  const { name, available, loaded } = response
+  const walletRecord = makeProvider({
+    name, available, loaded,
+  })
+
+  dispatch(addProvider(walletRecord))
+}
+
+export default () => (dispatch: ReduxDispatch<*>) => {
+  const response: ProviderProps = getProviderInfo()
+
+  processProviderResponse(dispatch, response)
+}
