@@ -8,7 +8,7 @@ import Row from '~/components/layout/Row'
 import Connected from './Connected'
 import NotConnected from './NotConnected'
 
-const logo = require('./assets/gnosis_logo.svg')
+const logo = require('../assets/gnosis_logo.svg')
 
 type Props = {
   provider: string,
