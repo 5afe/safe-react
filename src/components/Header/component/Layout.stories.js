@@ -17,5 +17,5 @@ storiesOf('Components', module)
   .add('Header', () => {
     // https://github.com/storybooks/storybook/tree/master/addons/knobs#select
     const provider = select('Status by Provider', ['', 'UNKNOWN', 'METAMASK', 'PARITY'], 'METAMASK')
-    return <Component provider={provider} reloadWallet={() => {}} />
+    return <Component provider={provider} />
   })

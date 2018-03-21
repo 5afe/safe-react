@@ -12,10 +12,11 @@ const logo = require('../assets/gnosis_logo.svg')
 
 type Props = {
   provider: string,
-  reloadWallet: Function,
 }
 
-const Header = ({ provider, reloadWallet }: Props) => (
+const reloadWallet = () => {}
+
+const Header = ({ provider }: Props) => (
   <Row>
     <Col xs={12} center="xs" sm={6} start="sm" margin="lg">
       <Img src={logo} height={40} alt="Gnosis Safe" />
