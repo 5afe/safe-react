@@ -14,8 +14,8 @@ export const processProviderResponse = (dispatch: ReduxDispatch<*>, response: Pr
   dispatch(addProvider(walletRecord))
 }
 
-export default () => (dispatch: ReduxDispatch<*>) => {
-  const response: ProviderProps = getProviderInfo()
+export default () => async (dispatch: ReduxDispatch<*>) => {
+  const response: ProviderProps = await getProviderInfo()
 
   processProviderResponse(dispatch, response)
 }
