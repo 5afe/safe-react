@@ -15,10 +15,14 @@ class Header extends React.PureComponent<Props> {
     this.props.fetchProvider()
   }
 
+  reloadWallet = () => {
+    this.props.fetchProvider()
+  }
+
   render() {
     const { provider } = this.props
     return (
-      <Layout provider={provider} />
+      <Layout provider={provider} reloadWallet={this.reloadWallet} />
     )
   }
 }
