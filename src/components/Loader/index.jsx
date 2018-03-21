@@ -3,7 +3,7 @@ import * as React from 'react'
 import { CircularProgress } from 'material-ui/Progress'
 import RefreshIcon from 'material-ui-icons/Refresh'
 import Block from '~/components/layout/Block'
-import { xs } from '~/theme/variables'
+import { xs, secondary } from '~/theme/variables'
 
 type Props = {
   callback: () => void,
@@ -15,6 +15,7 @@ type State = {
 
 const loaderStyle = {
   margin: `0px 0px 0px ${xs}`,
+  color: secondary,
 }
 
 class Loader extends React.Component<Props, State> {

@@ -4,7 +4,6 @@ import * as React from 'react'
 import { Form, Field } from 'react-final-form'
 import Block from '~/components/layout/Block'
 import TextField from '~/components/forms/TextField'
-import './App.scss'
 
 type Props = {
   onCallSafeContractSubmit: Function,
