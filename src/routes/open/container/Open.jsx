@@ -2,7 +2,6 @@
 import * as React from 'react'
 import { connect } from 'react-redux'
 import contract from 'truffle-contract'
-import Page from '~/components/layout/Page'
 import PageFrame from '~/components/layout/PageFrame'
 import { getWeb3 } from '~/wallets/getWeb3'
 import { promisify } from '~/utils/promisify'
@@ -74,19 +73,17 @@ class Open extends React.Component<Props, State> {
     const { provider } = this.props
     const { safeAddress, funds } = this.state
     return (
-      <Page>
-        <PageFrame>
-          { provider
-            ? <Layout
-              safeAddress={safeAddress}
-              onAddFunds={this.onAddFunds}
-              funds={funds}
-              onCallSafeContractSubmit={this.onCallSafeContractSubmit}
-            />
-            : <div>No metamask detected</div>
-          }
-        </PageFrame>
-      </Page>
+      <PageFrame>
+        { provider
+          ? <Layout
+            safeAddress={safeAddress}
+            onAddFunds={this.onAddFunds}
+            funds={funds}
+            onCallSafeContractSubmit={this.onCallSafeContractSubmit}
+          />
+          : <div>No metamask detected</div>
+        }
+      </PageFrame>
     )
   }
 }

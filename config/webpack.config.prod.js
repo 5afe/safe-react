@@ -75,6 +75,19 @@ module.exports = {
   mode: 'production',
   // Don't attempt to continue if there are any errors.
   bail: true,
+  optimization: {
+    splitChunks: {
+      cacheGroups: {
+        vendor: {
+          test: /node_modules/,
+          name: 'vendor',
+          chunks: 'all',
+          enforce: true,
+          minSize: 1,
+        },
+      },
+    },
+  },
   entry: [
     require.resolve('./polyfills'),
     paths.appIndexJs,
