@@ -14,7 +14,7 @@ type Props = {
 }
 
 const Welcome = ({ provider }: Props) => (
-  <PageFrame>
+  <PageFrame align="center">
     <Block className={styles.safe}>
       <Img alt="Safe Box" src={vault} height={330} />
       <Block className={styles.safeActions}>

@@ -2,6 +2,7 @@
 import Button from 'material-ui/Button'
 import * as React from 'react'
 import { Form, Field } from 'react-final-form'
+import Block from '~/components/layout/Block'
 import TextField from '~/components/forms/TextField'
 import './App.scss'
 
@@ -20,12 +21,17 @@ const Open = ({
       onSubmit={onCallSafeContractSubmit}
       render={({ handleSubmit }) => (
         <form onSubmit={handleSubmit}>
-          <h2>Create a new Safe instance for testing purposes</h2>
-          <div>
-            <Button variant="raised" color="primary" type="submit">
-              Create Safe
-            </Button>
-          </div>
+          <Block margin="md">
+            <h2>Create a new Safe instance for testing purposes</h2>
+            <Block margin="sm">
+              <Field name="name" component={TextField} type="text" placeholder="Safe name" />
+            </Block>
+            <Block margin="sm">
+              <Button variant="raised" color="primary" type="submit">
+                Create Safe
+              </Button>
+            </Block>
+          </Block>
         </form>
       )}
     />

@@ -1,7 +1,6 @@
 .frame {
   display: grid;
   grid-template-rows: auto 1fr auto;
-  align-items: center;
   background-color: $tertiary;
   padding: $xxl;
 }
