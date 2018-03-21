@@ -13,7 +13,7 @@ const Transactions = Loadable({
 })
 
 const Open = Loadable({
-  loader: () => import('./open/Open'),
+  loader: () => import('./open/container/Open'),
   loading: Loading,
 })
 

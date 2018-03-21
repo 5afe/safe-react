@@ -1,17 +1,25 @@
 // @flow
 import * as React from 'react'
+import { connect } from 'react-redux'
 import contract from 'truffle-contract'
+import Page from '~/components/layout/Page'
+import PageFrame from '~/components/layout/PageFrame'
 import { getWeb3 } from '~/wallets/getWeb3'
 import { promisify } from '~/utils/promisify'
 import Safe from '#/GnosisSafe.json'
-import Layout from './components/Layout'
+import Layout from '../components/Layout'
+import selector from './selector'
+
+type Props = {
+  provider: string,
+}
 
 type State = {
   safeAddress: string,
   funds: number,
 }
 
-class Open extends React.Component<{}, State> {
+class Open extends React.Component<Props, State> {
   constructor() {
     super()
 
@@ -63,16 +71,24 @@ class Open extends React.Component<{}, State> {
   safe: any
 
   render() {
+    const { provider } = this.props
     const { safeAddress, funds } = this.state
     return (
-      <Layout
-        safeAddress={safeAddress}
-        onAddFunds={this.onAddFunds}
-        funds={funds}
-        onCallSafeContractSubmit={this.onCallSafeContractSubmit}
-      />
+      <Page>
+        <PageFrame>
+          { provider
+            ? <Layout
+              safeAddress={safeAddress}
+              onAddFunds={this.onAddFunds}
+              funds={funds}
+              onCallSafeContractSubmit={this.onCallSafeContractSubmit}
+            />
+            : <div>No metamask detected</div>
+          }
+        </PageFrame>
+      </Page>
     )
   }
 }
 
-export default Open
+export default connect(selector)(Open)

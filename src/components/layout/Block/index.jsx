@@ -12,7 +12,7 @@ type Props = {
   margin?: Size,
   padding?: Size,
   center?: boolean,
-  children: React.Node,
+  children: React$Node,
   className?: string,
 }
 
