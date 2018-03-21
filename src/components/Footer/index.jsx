@@ -6,14 +6,8 @@ import styles from './index.scss'
 
 const Footer = () => (
   <Block className={styles.footer}>
-    <Link to="/wallet">
-      Wallet
-    </Link>
-    <Link to="/transactions">
-      Transactions
-    </Link>
-    <Link to="/settings">
-      Settings
+    <Link to="/welcome">
+      Welcome
     </Link>
   </Block>
 )

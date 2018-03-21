@@ -9,11 +9,15 @@ type Props = {
   callback: () => void,
 }
 
-const loaderStyle = {
-  margin: `0px ${xs}`,
+type State = {
+  loading: boolean,
 }
 
-class Loader extends React.Component<Props> {
+const loaderStyle = {
+  margin: `0px 0px 0px ${xs}`,
+}
+
+class Loader extends React.Component<Props, State> {
   constructor() {
     super()
 
