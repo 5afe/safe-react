@@ -8,6 +8,7 @@ import { Provider } from 'react-redux'
 import { ConnectedRouter, routerMiddleware, routerReducer } from 'react-router-redux'
 import { combineReducers, createStore, applyMiddleware, compose } from 'redux'
 import thunk from 'redux-thunk'
+import provider, { REDUCER_ID } from '~/wallets/store/reducer/provider'
 import theme from '~/theme/mui'
 import AppRoutes from '~/routes'
 import './index.scss'
@@ -22,6 +23,7 @@ const finalCreateStore = composeEnhancers(applyMiddleware(
 
 const reducers = combineReducers({
   routing: routerReducer,
+  [REDUCER_ID]: provider,
 })
 
 const store = createStore(reducers, finalCreateStore)
