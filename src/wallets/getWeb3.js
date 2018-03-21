@@ -1,22 +1,24 @@
 // @flow
 import Web3 from 'web3'
 import type { ProviderProps } from '~/wallets/store/model/provider'
+import { promisify } from '~/utils/promisify'
 
 let web3
 export const getWeb3 = () => web3
 
 const isMetamask: Function = (web3Provider): boolean => {
-  const isMetamaskConstructor = web3Provider.constructor.name === 'MetamaskInpageProvider'
-  return isMetamaskConstructor || web3Provider.isMetaMask
+  const isMetamaskConstructor = web3Provider.currentProvider.constructor.name === 'MetamaskInpageProvider'
+
+  return isMetamaskConstructor || web3Provider.currentProvider.isMetaMask
 }
 
 const getAccountFrom: Function = async (web3Provider): Promise<string | null> => {
-  const accounts = await web3Provider.eth.getAccounts()
+  const accounts = await promisify(cb => web3Provider.eth.getAccounts(cb))
 
-  return accounts && accounts.length ? accounts[0] : null
+  return accounts && accounts.length > 0 ? accounts[0] : null
 }
 
-export const getProviderInfo: Function = (): ProviderProps => {
+export const getProviderInfo: Function = async (): Promise<ProviderProps> => {
   if (typeof window.web3 === 'undefined') {
     return { name: '', available: false, loaded: false }
   }
@@ -26,22 +28,15 @@ export const getProviderInfo: Function = (): ProviderProps => {
   // eslint-disable-next-line
   console.log('Injected web3 detected.')
 
+  const name = isMetamask(web3) ? 'METAMASK' : 'UNKNOWN'
+  const available = await getAccountFrom(web3) !== null
+
   return {
-    name: isMetamask(web3) ? 'METAMASK' : 'UNKNOWN',
-    available: getAccountFrom(web3) !== null,
+    name,
+    available,
     loaded: true,
   }
 }
-
-export const promisify = (inner: Function): Promise<any> =>
-  new Promise((resolve, reject) =>
-    inner((err, res) => {
-      if (err) {
-        reject(err)
-      } else {
-        resolve(res)
-      }
-    }))
 
 export const ensureOnce = (fn: Function): Function => {
   let executed = false
