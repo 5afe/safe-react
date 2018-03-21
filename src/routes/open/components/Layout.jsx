@@ -1,9 +1,14 @@
 // @flow
 import Button from 'material-ui/Button'
 import * as React from 'react'
+<<<<<<< bc66e1af90d0700b6fe584e60d482ee73c85e77e
 import { Field } from 'react-final-form'
 import Block from '~/components/layout/Block'
 import Heading from '~/components/layout/Heading'
+=======
+import { Form, Field } from 'react-final-form'
+import Block from '~/components/layout/Block'
+>>>>>>> WA-229 Fix auto layout center in PageFrame
 import TextField from '~/components/forms/TextField'
 import GnoForm from '~/components/forms/GnoForm'
 import Name from './Name'
