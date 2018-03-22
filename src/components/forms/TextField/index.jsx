@@ -1,12 +1,15 @@
+// @flow
 import React from 'react'
-import { default as MuiTextField } from 'material-ui/TextField'
+import MuiTextField, { TextFieldProps } from 'material-ui/TextField'
 
 const TextField = ({
-  input: { name, onChange, value, ...restInput },
+  input: {
+    name, onChange, value, ...restInput
+  },
   meta,
   render,
   ...rest
-}) => (
+}: TextFieldProps) => (
   <MuiTextField
     {...rest}
     name={name}
@@ -15,6 +18,7 @@ const TextField = ({
     inputProps={restInput}
     onChange={onChange}
     value={value}
+    fullWidth
   />
 )
 
