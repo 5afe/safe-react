@@ -40,7 +40,8 @@
       "specialLink": [ "to", "hrefLeft", "hrefRight" ],
       "aspects": [ "noHref", "invalidHref", "preferButton" ]
     }],
-    "react/require-default-props": 0
+    "react/require-default-props": 0,
+    "react/no-array-index-key": 0
   },
   "env": {
     "jest/globals": true,
