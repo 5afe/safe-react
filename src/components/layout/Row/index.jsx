@@ -7,22 +7,13 @@ const cx = classNames.bind(styles)
 
 type Props = {
   className?: string,
-  children: React.Node,
+  children: React$Node,
 }
 
-const Row = ({
-  children, ...props
-}: Props) => {
-  const rowClassNames = cx(
-    'row',
-    props.className,
-  )
-
-  return (
-    <div className={rowClassNames} {...props}>
-      { children }
-    </div>
-  )
-}
+const Row = ({ children, className, ...props }: Props) => (
+  <div className={cx(styles.row, className)} {...props}>
+    { children }
+  </div>
+)
 
 export default Row

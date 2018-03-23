@@ -6,7 +6,7 @@ import styles from './index.scss'
 
 const cx = classNames.bind(styles)
 
-type Size = 'sm' | 'md' | 'xl' | 'xxl'
+type Size = 'sm' | 'md' | 'lg' | 'xl'
 
 type Props = {
   margin?: Size,

@@ -10,7 +10,7 @@ type Props = {
   fullwidth?: boolean,
   bordered?: boolean,
   className?: string,
-  style?: React.object
+  style?: React$Node
 }
 
 class Img extends PureComponent<Props> {
@@ -19,7 +19,14 @@ class Img extends PureComponent<Props> {
       fullwidth, alt, bordered, className, style, ...props
     } = this.props
 
-    return <img alt={alt} style={style} {...props} className={cx(styles.img, { fullwidth, bordered }, className)} />
+    return (
+      <img
+        alt={alt}
+        style={style}
+        {...props}
+        className={cx(styles.img, { fullwidth, bordered }, className)}
+      />
+    )
   }
 }
 

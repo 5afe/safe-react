@@ -1,0 +1,47 @@
+.heading {
+  font-weight: $regularFontWeight;
+  line-height: normal;  
+  margin: 0;
+}
+
+.h1 {
+  font-size: $(fontSizeHeadingLg)px;
+}
+
+.h2 {
+  font-size: $(fontSizeHeadingMd)px;
+}
+
+.h3 {
+  font-size: $(fontSizeHeadingSm)px;
+}
+
+.h4 {
+  font-size: $(fontSizeHeadingXs)px;
+}
+
+.center {
+  text-align: center;
+}
+
+.right {
+  text-align: right;
+}
+
+.truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.marginSm {
+    margin: 0 0 $xs 0;
+}
+
+.marginMd {
+    margin: 0 0 $md 0;
+}
+
+.marginLg {
+    margin: 0 0 $lg 0;
+}

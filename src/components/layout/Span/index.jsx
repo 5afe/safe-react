@@ -2,7 +2,7 @@
 import React, { PureComponent } from 'react'
 
 type Props = {
-  children: React.Node
+  children: React$Node
 }
 
 class Span extends PureComponent<Props> {
