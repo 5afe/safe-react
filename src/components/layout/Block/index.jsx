@@ -24,7 +24,7 @@ class Block extends PureComponent<Props> {
 
     const paddingStyle = padding ? capitalize(padding, 'padding') : undefined
     return (
-      <div className={cx(className, margin, paddingStyle, { center })} {...props}>
+      <div className={cx(className, 'block', margin, paddingStyle, { center })} {...props}>
         { children }
       </div>
     )

@@ -1,6 +1,5 @@
 // @flow
 import React from 'react'
-import Block from '~/components/layout/Block'
 import Page from '~/components/layout/Page'
 import Footer from '~/components/Footer'
 import Header from '~/components/Header'
@@ -12,13 +11,13 @@ type Props = {
 }
 
 const PageFrame = ({ children, align }: Props) => (
-  <Block className={styles.frame}>
+  <div className={styles.frame}>
     <Header />
     <Page align={align}>
       {children}
     </Page>
     <Footer />
-  </Block>
+  </div>
 )
 
 export default PageFrame
