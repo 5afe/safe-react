@@ -11,7 +11,7 @@ export const minValue = (min: number) => (value: number) => {
     return undefined
   }
 
-  return `Should be greater than ${min}`
+  return `Should be at least ${min}`
 }
 
 export const maxValue = (max: number) => (value: number) => {
