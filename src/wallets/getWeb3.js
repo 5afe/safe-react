@@ -20,7 +20,9 @@ const getAccountFrom: Function = async (web3Provider): Promise<string | null> =>
 
 export const getProviderInfo: Function = async (): Promise<ProviderProps> => {
   if (typeof window.web3 === 'undefined') {
-    return { name: '', available: false, loaded: false }
+    return {
+      name: '', available: false, loaded: false, account: '',
+    }
   }
 
   // Use MetaMask's provider.
@@ -29,12 +31,14 @@ export const getProviderInfo: Function = async (): Promise<ProviderProps> => {
   console.log('Injected web3 detected.')
 
   const name = isMetamask(web3) ? 'METAMASK' : 'UNKNOWN'
-  const available = await getAccountFrom(web3) !== null
+  const account = await getAccountFrom(web3)
+  const available = account !== null
 
   return {
     name,
     available,
     loaded: true,
+    account,
   }
 }
 
