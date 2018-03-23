@@ -24,6 +24,11 @@ class ProviderBuilder {
     return this
   }
 
+  withAccount(account: string) {
+    this.provider = this.provider.set('account', account)
+    return this
+  }
+
   get() {
     return this.provider
   }
@@ -36,18 +41,21 @@ export class ProviderFactory {
     .withName('METAMASK')
     .withLoaded(true)
     .withAvailable(true)
+    .withAccount('0xAdbfgh')
     .get()
 
   static metamaskLoaded = aProvider()
     .withName('METAMASK')
     .withLoaded(true)
     .withAvailable(false)
+    .withAccount('')
     .get()
 
   static noProvider = aProvider()
     .withName('')
     .withLoaded(false)
     .withAvailable(false)
+    .withAccount('')
     .get()
 }
 

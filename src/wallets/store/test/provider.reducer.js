@@ -24,7 +24,9 @@ const providerReducerTests = () => {
 
     it('reducer should return default Provider record when no Metamask is loaded', () => {
       // GIVEN
-      const emptyResponse: ProviderProps = { name: '', loaded: false, available: false }
+      const emptyResponse: ProviderProps = {
+        name: '', loaded: false, available: false, account: '',
+      }
 
       // WHEN
       processProviderResponse(store.dispatch, emptyResponse)
@@ -36,7 +38,9 @@ const providerReducerTests = () => {
 
     it('reducer should return avaiable with its default value when is loaded but not available', () => {
       // GIVEN
-      const metamaskLoaded: ProviderProps = { name: 'METAMASK', loaded: true, available: false }
+      const metamaskLoaded: ProviderProps = {
+        name: 'METAMASK', loaded: true, available: false, account: '',
+      }
 
       // WHEN
       processProviderResponse(store.dispatch, metamaskLoaded)
@@ -48,7 +52,9 @@ const providerReducerTests = () => {
 
     it('reducer should return metamask provider when it is loaded and available', () => {
       // GIVEN
-      const metamask: ProviderProps = { name: 'METAMASK', loaded: true, available: true }
+      const metamask: ProviderProps = {
+        name: 'METAMASK', loaded: true, available: true, account: '',
+      }
 
       // WHEN
       processProviderResponse(store.dispatch, metamask)

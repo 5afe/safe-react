@@ -1,6 +1,7 @@
 // @flow
 import providerReducerTests from './provider.reducer'
 import providerNameTests from './name.selector'
+import providerAccountTests from './account.selector'
 
 describe('Provider Test suite', () => {
   // ACTIONS AND REDUCERS
@@ -8,4 +9,6 @@ describe('Provider Test suite', () => {
 
   // PROVIDER NAME SELECTOR
   providerNameTests()
+  // PROVIDER ACCOUNT SELECTOR
+  providerAccountTests()
 })

@@ -5,6 +5,15 @@ import { REDUCER_ID } from '~/wallets/store/reducer/provider'
 
 const providerSelector = (state: any): Provider => state[REDUCER_ID]
 
+export const userAccountSelector = createSelector(
+  providerSelector,
+  (provider: Provider) => {
+    const account = provider.get('account')
+
+    return account || ''
+  },
+)
+
 export const providerNameSelector = createSelector(
   providerSelector,
   (provider: Provider) => {
