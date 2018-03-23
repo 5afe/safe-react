@@ -11,6 +11,7 @@ import selector from './selector'
 
 type Props = {
   provider: string,
+  userAccount: string,
 }
 
 type State = {
@@ -70,12 +71,13 @@ class Open extends React.Component<Props, State> {
   safe: any
 
   render() {
-    const { provider } = this.props
+    const { provider, userAccount } = this.props
     const { safeAddress, funds } = this.state
     return (
       <PageFrame>
         { provider
           ? <Layout
+            userAccount={userAccount}
             safeAddress={safeAddress}
             onAddFunds={this.onAddFunds}
             funds={funds}
