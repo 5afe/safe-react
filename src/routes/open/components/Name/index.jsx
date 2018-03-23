@@ -7,7 +7,14 @@ import Block from '~/components/layout/Block'
 
 const Name = () => (
   <Block margin="md">
-    <Field name="name" component={TextField} type="text" validate={required} placeholder="Safe name*" />
+    <Field
+      name="name"
+      component={TextField}
+      type="text"
+      validate={required}
+      placeholder="Safe name*"
+      text="Safe name"
+    />
   </Block>
 )
 

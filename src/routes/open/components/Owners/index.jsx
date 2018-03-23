@@ -23,6 +23,7 @@ const Owners = ({ numOwners }: Props) => (
         type="text"
         validate={composeValidators(required, mustBeNumber, minValue(1))}
         placeholder="Number of owners*"
+        text="Number of owners"
       />
     </Block>
     { numOwners && Number.isInteger(Number(numOwners)) && [...Array(Number(numOwners))].map((x, index) => (
@@ -37,6 +38,7 @@ const Owners = ({ numOwners }: Props) => (
                 type="text"
                 validate={required}
                 placeholder="Owner Name*"
+                text="Owner Name"
               />
             </Block>
             <Block margin="sm">
@@ -46,6 +48,7 @@ const Owners = ({ numOwners }: Props) => (
                 type="text"
                 validate={required}
                 placeholder="Owner Address*"
+                text="Owner Address"
               />
             </Block>
           </Block>

@@ -12,12 +12,13 @@ const TextField = ({
   ...rest
 }: TextFieldProps) => {
   const helperText = value ? text : undefined
+  const showError = meta.touched && !meta.valid
 
   return (
     <MuiTextField
       {...rest}
       name={name}
-      helperText={meta.touched ? meta.error : helperText}
+      helperText={showError ? meta.error : helperText}
       error={meta.error && meta.touched}
       inputProps={restInput}
       onChange={onChange}
