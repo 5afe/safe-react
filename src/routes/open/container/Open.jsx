@@ -8,6 +8,7 @@ import { promisify } from '~/utils/promisify'
 import Safe from '#/GnosisSafe.json'
 import Layout from '../components/Layout'
 import selector from './selector'
+import { getAccountsFrom, getThresholdFrom } from './safe'
 
 type Props = {
   provider: string,
@@ -48,14 +49,17 @@ class Open extends React.Component<Props, State> {
     }
   }
 
-  onCallSafeContractSubmit = async () => {
+
+  onCallSafeContractSubmit = async (values) => {
     try {
+      const { userAccount } = this.props
+      const accounts = getAccountsFrom(values)
+      const numConfirmations = getThresholdFrom(values)
+
       const web3 = getWeb3()
       this.safe.setProvider(web3.currentProvider)
 
-      const accounts = await promisify(cb => web3.eth.getAccounts(cb))
-
-      const safeInstance = await this.safe.new([accounts[0]], 1, 0, 0, { from: accounts[0], gas: '5000000' })
+      const safeInstance = await this.safe.new(accounts, numConfirmations, 0, 0, { from: userAccount, gas: '5000000' })
       const { transactionHash } = safeInstance
 
       const transactionReceipt = await promisify(cb => web3.eth.getTransactionReceipt(transactionHash, cb))
