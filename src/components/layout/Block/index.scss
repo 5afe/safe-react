@@ -4,23 +4,23 @@
 }
 
 .sm {
-    margin-bottom: 17px;
+    margin-bottom: $sm;
 }
 
 .md {
-    margin-bottom: 42px;
+    margin-bottom: $md;
+}
+
+.lg {
+    margin-bottom: $lg;
 }
 
 .xl {
-    margin-bottom: 96px;
-}
-
-.xxl {
-    margin-bottom: 200px;
+    margin-bottom: $xl;
 }
 
 .paddingSm {
-  padding-top: $xs;
+  padding-top: $sm;
 }
 
 .paddingMd {

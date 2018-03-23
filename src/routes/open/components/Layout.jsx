@@ -3,49 +3,65 @@ import Button from 'material-ui/Button'
 import * as React from 'react'
 import { Field } from 'react-final-form'
 import Block from '~/components/layout/Block'
+import Heading from '~/components/layout/Heading'
 import TextField from '~/components/forms/TextField'
 import GnoForm from '~/components/forms/GnoForm'
-import { composeValidators, minValue, mustBeNumber, required } from '~/components/forms/validator'
+import Name from './Name'
+import Owners from './Owners'
+import Confirmations from './Confirmations'
 
 type Props = {
   onCallSafeContractSubmit: Function,
   onAddFunds: Function,
   safeAddress: string,
   funds: number,
+  userAccount: string,
 }
 
+const validation = (values) => {
+  const errors = {}
+
+  if (values.owners < values.confirmations) {
+    errors.confirmations = 'Number of confirmations can not be higher than the number of owners'
+  }
+
+  return errors
+}
+
+const NewSafe = ({ values }: Object) => (
+  <Block margin="md">
+    <Heading tag="h2" margin="lg">Deploy a new Safe</Heading>
+    <Name />
+    <Owners numOwners={values.owners} />
+    <Confirmations />
+    <Block margin="xl">
+      <Button variant="raised" color="primary" type="submit">
+        Create Safe
+      </Button>
+    </Block>
+  </Block>
+)
+
+const initialValuesFrom = (userAccount: string) => ({
+  owner0Address: userAccount,
+})
+
 const Open = ({
-  funds, safeAddress, onCallSafeContractSubmit, onAddFunds,
+  funds, safeAddress, onCallSafeContractSubmit, onAddFunds, userAccount,
 }: Props) => (
   <React.Fragment>
-    <GnoForm onSubmit={onCallSafeContractSubmit} width="500">
-      { () => (
-        <Block margin="md">
-          <h2>Deploy a new Safe</h2>
-          <Block margin="sm">
-            <Field name="name" component={TextField} type="text" validate={required} placeholder="Safe name*" />
-          </Block>
-          <Block margin="sm">
-            <Field
-              name="confirmations"
-              component={TextField}
-              type="text"
-              validate={composeValidators(required, mustBeNumber, minValue(1))}
-              placeholder="Required confirmations*"
-            />
-          </Block>
-          <Block margin="sm">
-            <Button variant="raised" color="primary" type="submit">
-              Create Safe
-            </Button>
-          </Block>
-        </Block>
-      )}
+    <GnoForm
+      onSubmit={onCallSafeContractSubmit}
+      initialValues={initialValuesFrom(userAccount)}
+      width="500"
+      validation={validation}
+    >
+      { NewSafe }
     </GnoForm>
     <GnoForm onSubmit={onAddFunds} width="500">
       {(pristine, invalid) => (
         <Block margin="md">
-          <h2>Add Funds to the safe</h2>
+          <Heading tag="h2" margin="lg">Add Funds to the safe</Heading>
           <div style={{ margin: '10px 0px' }}>
             <label style={{ marginRight: '10px' }}>{safeAddress || 'Not safe detected'}</label>
           </div>
