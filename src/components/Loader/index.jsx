@@ -2,7 +2,6 @@
 import * as React from 'react'
 import { CircularProgress } from 'material-ui/Progress'
 import RefreshIcon from 'material-ui-icons/Refresh'
-import Block from '~/components/layout/Block'
 import { xs, secondary } from '~/theme/variables'
 
 type Props = {
@@ -36,11 +35,11 @@ class Loader extends React.Component<Props, State> {
     const { loading } = this.state
 
     return (
-      <Block style={loaderStyle}>
+      <div style={loaderStyle}>
         {loading
           ? <CircularProgress color="inherit" size={24} />
           : <RefreshIcon color="inherit" onClick={this.onReload} /> }
-      </Block>
+      </div>
     )
   }
 }

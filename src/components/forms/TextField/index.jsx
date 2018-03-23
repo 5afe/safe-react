@@ -8,18 +8,23 @@ const TextField = ({
   },
   meta,
   render,
+  text,
   ...rest
-}: TextFieldProps) => (
-  <MuiTextField
-    {...rest}
-    name={name}
-    helperText={meta.touched ? meta.error : undefined}
-    error={meta.error && meta.touched}
-    inputProps={restInput}
-    onChange={onChange}
-    value={value}
-    fullWidth
-  />
-)
+}: TextFieldProps) => {
+  const helperText = value ? text : undefined
+
+  return (
+    <MuiTextField
+      {...rest}
+      name={name}
+      helperText={meta.touched ? meta.error : helperText}
+      error={meta.error && meta.touched}
+      inputProps={restInput}
+      onChange={onChange}
+      value={value}
+      fullWidth
+    />
+  )
+}
 
 export default TextField
