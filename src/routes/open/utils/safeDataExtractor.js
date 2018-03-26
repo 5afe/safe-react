@@ -5,6 +5,4 @@ export const getAccountsFrom = (values: Object): string[] => {
   return accounts.map(account => values[account])
 }
 
-export const getThresholdFrom = (values: Object): number => {
-  return Number(values.confirmations)
-}
+export const getThresholdFrom = (values: Object): number => Number(values.confirmations)

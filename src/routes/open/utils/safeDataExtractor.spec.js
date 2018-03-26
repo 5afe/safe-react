@@ -1,5 +1,5 @@
 // @flow
-import { getAccountsFrom, getThresholdFrom } from './safe'
+import { getAccountsFrom, getThresholdFrom } from './safeDataExtractor'
 
 describe('Test JS', () => {
   it('return the addresses of owners', () => {
