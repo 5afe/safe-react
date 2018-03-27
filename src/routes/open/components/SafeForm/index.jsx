@@ -16,7 +16,7 @@ export const safeFieldsValidation = (values: Object) => {
   return errors
 }
 
-export default ({ values }: Object) => (
+export default () => ({ values }: Object) => (
   <Block margin="md">
     <Heading tag="h2" margin="lg">Deploy a new Safe</Heading>
     <Name />

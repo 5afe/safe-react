@@ -37,6 +37,13 @@ class GnoStepper extends React.PureComponent<Props, State> {
     }
   }
 
+  getActivePageFrom = (pages: React$Node) => {
+    const activePageProps = React.Children.toArray(pages)[this.state.page].props
+    const { children, ...props } = activePageProps
+
+    return children(props)
+  }
+
   validate = (values: Object) => {
     const activePage = React.Children.toArray(this.props.children)[
       this.state.page
@@ -44,15 +51,32 @@ class GnoStepper extends React.PureComponent<Props, State> {
     return activePage.props.validate ? activePage.props.validate(values) : {}
   }
 
+  next = (values: Object) =>
+    this.setState(state => ({
+      page: Math.min(state.page + 1, React.Children.count(this.props.children) - 1),
+      values,
+    }))
+
   previous = () =>
     this.setState(state => ({
       page: Math.max(state.page - 1, 0),
     }))
 
+  handleSubmit = (values: Object) => {
+    const { children, onSubmit } = this.props
+    const { page } = this.state
+    const isLastPage = page === React.Children.count(children) - 1
+    if (isLastPage) {
+      return onSubmit(values)
+    }
+
+    return this.next(values)
+  }
+
   render() {
-    const { steps, onSubmit, children } = this.props
+    const { steps, children } = this.props
     const { page, values } = this.state
-    const activePage = React.Children.toArray(children)[page].props.children
+    const activePage = this.getActivePageFrom(children)
 
     return (
       <React.Fragment>
@@ -64,9 +88,9 @@ class GnoStepper extends React.PureComponent<Props, State> {
           ))}
         </Stepper>
         <GnoForm
-          onSubmit={onSubmit}
+          onSubmit={this.handleSubmit}
           initialValues={values}
-          width="500"
+          width="800"
           validation={this.validate}
           render={activePage}
         >

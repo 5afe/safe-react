@@ -6,6 +6,7 @@ import contract from 'truffle-contract'
 import Stepper from '~/components/Stepper'
 import PageFrame from '~/components/layout/PageFrame'
 import { getAccountsFrom, getThresholdFrom } from '~/routes/open/utils/safeDataExtractor'
+import Confirmation from '~/routes/open/components/FormConfirmation'
 import SafeFields, { safeFieldsValidation } from '~/routes/open/components/SafeForm'
 import { getWeb3 } from '~/wallets/getWeb3'
 import { promisify } from '~/utils/promisify'
@@ -17,6 +18,11 @@ type Props = {
   userAccount: string,
 }
 
+type State = {
+  safeAddress: string,
+  safeTx: string,
+}
+
 const getSteps = () => [
   'Fill Safe Form', 'Review Information', 'Deploy it',
 ]
@@ -25,9 +31,14 @@ const initialValuesFrom = (userAccount: string) => ({
   owner0Address: userAccount,
 })
 
-class Open extends React.Component<Props> {
+class Open extends React.Component<Props, State> {
   constructor() {
     super()
+
+    this.state = {
+      safeAddress: '',
+      safeTx: '',
+    }
 
     this.safe = contract(Safe)
   }
@@ -47,7 +58,7 @@ class Open extends React.Component<Props> {
       const transactionReceipt = await promisify(cb => web3.eth.getTransactionReceipt(transactionHash, cb))
       // eslint-disable-next-line
       console.log(`Transaction Receipt${JSON.stringify(transactionReceipt)}`)
-      // this.setState({ safeAddress: safeInstance.address })
+      this.setState({ safeAddress: safeInstance.address, safeTx: transactionReceipt })
     } catch (error) {
       // eslint-disable-next-line
       console.log('Error while creating the Safe' + error)
@@ -57,8 +68,10 @@ class Open extends React.Component<Props> {
   safe: any
 
   render() {
+    const { safeAddress, safeTx } = this.state
     const { provider, userAccount } = this.props
     const steps = getSteps()
+    const initialValues = initialValuesFrom(userAccount)
 
     return (
       <PageFrame>
@@ -67,10 +80,13 @@ class Open extends React.Component<Props> {
             <Stepper
               onSubmit={this.onCallSafeContractSubmit}
               steps={steps}
-              initialValue={initialValuesFrom(userAccount)}
+              initialValues={initialValues}
             >
               <Stepper.Page validate={safeFieldsValidation}>
                 { SafeFields }
+              </Stepper.Page>
+              <Stepper.Page address={safeAddress} tx={safeTx}>
+                { Confirmation }
               </Stepper.Page>
             </Stepper>
           )
