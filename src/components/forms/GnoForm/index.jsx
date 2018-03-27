@@ -5,10 +5,11 @@ import type { FormApi } from 'react-final-form'
 
 type Props = {
   onSubmit: (values: Object, form: FormApi, callback: ?(errors: ?Object) => void) => ?Object | Promise<?Object> | void,
-  children: Function,
+  children: React$Node,
   width: string,
   validation?: (values: Object) => Object | Promise<Object>,
   initialValues?: Object,
+  render: Function,
 }
 
 const calculateWidth = (width: string): $Shape<CSSStyleDeclaration> => ({
@@ -16,7 +17,7 @@ const calculateWidth = (width: string): $Shape<CSSStyleDeclaration> => ({
 })
 
 const GnoForm = ({
-  onSubmit, validation, initialValues, children, width,
+  onSubmit, validation, initialValues, children, width, render,
 }: Props) => (
   <Form
     validate={validation}
@@ -24,7 +25,8 @@ const GnoForm = ({
     initialValues={initialValues}
     render={({ handleSubmit, ...rest }) => (
       <form onSubmit={handleSubmit} style={calculateWidth(width)}>
-        {children(rest)}
+        {render(rest)}
+        {children}
       </form>
     )}
   />
