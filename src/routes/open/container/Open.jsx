@@ -7,6 +7,7 @@ import Stepper from '~/components/Stepper'
 import PageFrame from '~/components/layout/PageFrame'
 import { getAccountsFrom, getThresholdFrom } from '~/routes/open/utils/safeDataExtractor'
 import Confirmation from '~/routes/open/components/FormConfirmation'
+import Review from '~/routes/open/components/ReviewInformation'
 import SafeFields, { safeFieldsValidation } from '~/routes/open/components/SafeForm'
 import { getWeb3 } from '~/wallets/getWeb3'
 import { promisify } from '~/utils/promisify'
@@ -84,6 +85,9 @@ class Open extends React.Component<Props, State> {
             >
               <Stepper.Page validate={safeFieldsValidation}>
                 { SafeFields }
+              </Stepper.Page>
+              <Stepper.Page address={safeAddress} tx={safeTx}>
+                { Review }
               </Stepper.Page>
               <Stepper.Page address={safeAddress} tx={safeTx}>
                 { Confirmation }
