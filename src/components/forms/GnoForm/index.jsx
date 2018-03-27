@@ -14,6 +14,7 @@ type Props = {
 
 const calculateWidth = (width: string): $Shape<CSSStyleDeclaration> => ({
   maxWidth: `${width}px`,
+  margin: '0 auto',
 })
 
 const GnoForm = ({
