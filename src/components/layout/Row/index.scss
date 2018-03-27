@@ -4,3 +4,19 @@
   flex-direction: row;
   flex-wrap: wrap;
 }
+
+.marginSm {
+  margin-bottom: $sm;
+}
+
+.marginMd {
+  margin-bottom: $md;
+}
+
+.marginLg {
+  margin-bottom: $xl;
+}
+
+.marginXl {
+  margin-bottom: $xl;
+}
