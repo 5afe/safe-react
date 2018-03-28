@@ -17,7 +17,7 @@ const Welcome = ({ provider }: Props) => (
   <PageFrame align="center">
     <Block className={styles.safe}>
       <Img alt="Safe Box" src={vault} height={330} />
-      <Block className={styles.safeActions}>
+      <Block className={styles.safeActions} margin="md">
         { provider &&
           <Link to="/open">
             <Button variant="raised" color="primary">

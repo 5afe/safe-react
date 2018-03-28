@@ -2,15 +2,16 @@
 import Stepper, { Step as FormStep, StepLabel } from 'material-ui/Stepper'
 import * as React from 'react'
 import type { FormApi } from 'react-final-form'
-import Button from '~/components/layout/Button'
 import GnoForm from '~/components/forms/GnoForm'
 import Col from '~/components/layout/Col'
 import Row from '~/components/layout/Row'
+import Controls from './Controls'
 
 export { default as Step } from './Step'
 
 type Props = {
   steps: string[],
+  finishedTransaction: boolean,
   initialValues?: Object,
   children: React$Node,
   onSubmit: (values: Object, form: FormApi, callback: ?(errors: ?Object) => void) => ?Object | Promise<?Object> | void,
@@ -74,9 +75,10 @@ class GnoStepper extends React.PureComponent<Props, State> {
   }
 
   render() {
-    const { steps, children } = this.props
+    const { steps, children, finishedTransaction } = this.props
     const { page, values } = this.state
     const activePage = this.getActivePageFrom(children)
+    const isLastPage = page === steps.length - 1
 
     return (
       <React.Fragment>
@@ -96,20 +98,12 @@ class GnoStepper extends React.PureComponent<Props, State> {
         >
           <Row align="end" margin="lg" grow>
             <Col xs={12} center="xs">
-              <Button
-                type="button"
-                disabled={page === 0}
-                onClick={this.previous}
-              >
-                Back
-              </Button>
-              <Button
-                variant="raised"
-                color="primary"
-                type="submit"
-              >
-                {page === steps.length - 1 ? 'Finish' : 'Next'}
-              </Button>
+              <Controls
+                finishedTx={finishedTransaction}
+                onPrevious={this.previous}
+                firstPage={page === 0}
+                lastPage={isLastPage}
+              />
             </Col>
           </Row>
         </GnoForm>

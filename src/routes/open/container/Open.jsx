@@ -80,13 +80,14 @@ class Open extends React.Component<Props, State> {
           ? (
             <Stepper
               onSubmit={this.onCallSafeContractSubmit}
+              finishedTransaction={!!safeAddress}
               steps={steps}
               initialValues={initialValues}
             >
               <Stepper.Page validate={safeFieldsValidation}>
                 { SafeFields }
               </Stepper.Page>
-              <Stepper.Page address={safeAddress} tx={safeTx}>
+              <Stepper.Page>
                 { Review }
               </Stepper.Page>
               <Stepper.Page address={safeAddress} tx={safeTx}>
