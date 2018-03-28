@@ -1,9 +1,9 @@
 // @flow
 import * as React from 'react'
 import classNames from 'classnames/bind'
-import * as css from './index.scss'
+import styles from './index.scss'
 
-const cx = classNames.bind(css)
+const cx = classNames.bind(styles)
 
 type Props = {
   center?: boolean,
@@ -21,7 +21,7 @@ class Paragraph extends React.PureComponent<Props> {
     } = this.props
 
     return (
-      <p className={cx(color, { bold }, { noMargin }, size, { center })} {...props}>
+      <p className={cx(styles.paragraph, { bold }, { noMargin }, size, { center })} {...props}>
         { children }
       </p>
     )

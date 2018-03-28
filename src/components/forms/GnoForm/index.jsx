@@ -13,7 +13,7 @@ type Props = {
 }
 
 const stylesBasedOn = (padding: number): $Shape<CSSStyleDeclaration> => ({
-  padding: `0 ${padding}px`,
+  padding: `0 ${padding}%`,
   display: 'flex',
   flexDirection: 'column',
   flex: '1 0 auto',

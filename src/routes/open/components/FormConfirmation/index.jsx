@@ -4,6 +4,7 @@ import { CircularProgress } from 'material-ui/Progress'
 import Block from '~/components/layout/Block'
 import Col from '~/components/layout/Col'
 import Paragraph from '~/components/layout/Paragraph'
+import Pre from '~/components/layout/Pre'
 import Row from '~/components/layout/Row'
 
 type FormProps = {
@@ -19,19 +20,21 @@ type Props = {
 const Deployment = ({ address, tx }: Props) => (
   <Block>
     <Paragraph>Deployed safe to: {address}</Paragraph>
-    <Block>
-      <pre>{JSON.stringify(tx, null, 2) }</pre>
-    </Block>
+    <Pre>
+      {JSON.stringify(tx, null, 2) }
+    </Pre>
   </Block>
 )
 
 export default ({ address, tx }: Props) => ({ values, submitting }: FormProps) => (
   <Block>
     <Row>
-      <Col xs={12} center="xs" md={6} margin="lg">
-        {JSON.stringify(values, null, 2) }
+      <Col xs={6} margin="lg">
+        <Pre>
+          {JSON.stringify(values, null, 2) }
+        </Pre>
       </Col>
-      <Col xs={12} center="xs" md={6} margin="lg">
+      <Col xs={6} margin="lg">
         { submitting
           ? <CircularProgress size={50} />
           : <Deployment address={address} tx={tx} />
