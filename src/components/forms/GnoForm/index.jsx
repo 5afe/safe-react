@@ -5,7 +5,7 @@ import type { FormApi } from 'react-final-form'
 
 type Props = {
   onSubmit: (values: Object, form: FormApi, callback: ?(errors: ?Object) => void) => ?Object | Promise<?Object> | void,
-  children: React$Node,
+  children: Function,
   padding: number,
   validation?: (values: Object) => Object | Promise<Object>,
   initialValues?: Object,
@@ -29,7 +29,7 @@ const GnoForm = ({
     render={({ handleSubmit, ...rest }) => (
       <form onSubmit={handleSubmit} style={stylesBasedOn(padding)}>
         {render(rest)}
-        {children}
+        {children(rest.submitting)}
       </form>
     )}
   />

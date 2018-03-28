@@ -4,14 +4,16 @@ import Button from '~/components/layout/Button'
 import Link from '~/components/layout/Link'
 
 type NextButtonProps = {
-  text: string
+  text: string,
+  disabled: boolean,
 }
 
-const NextButton = ({ text }: NextButtonProps) => (
+const NextButton = ({ text, disabled }: NextButtonProps) => (
   <Button
     variant="raised"
     color="primary"
     type="submit"
+    disabled={disabled}
   >
     {text}
   </Button>
@@ -19,7 +21,7 @@ const NextButton = ({ text }: NextButtonProps) => (
 
 const GoButton = () => (
   <Link to="/welcome">
-    <NextButton text="GO" />
+    <NextButton text="GO" disabled={false} />
   </Link>
 )
 
@@ -27,18 +29,21 @@ type ControlProps = {
   next: string,
   onPrevious: () => void,
   firstPage: boolean,
+  submitting: boolean,
 }
 
-const ControlButtons = ({ next, firstPage, onPrevious }: ControlProps) => (
+const ControlButtons = ({
+  next, firstPage, onPrevious, submitting,
+}: ControlProps) => (
   <React.Fragment>
     <Button
       type="button"
-      disabled={firstPage}
+      disabled={firstPage || submitting}
       onClick={onPrevious}
     >
       Back
     </Button>
-    <NextButton text={next} />
+    <NextButton text={next} disabled={submitting} />
   </React.Fragment>
 )
 
@@ -47,15 +52,17 @@ type Props = {
   onPrevious: () => void,
   firstPage: boolean,
   lastPage: boolean,
+  submitting: boolean,
 }
 
 const Controls = ({
-  finishedTx, onPrevious, firstPage, lastPage,
+  finishedTx, onPrevious, firstPage, lastPage, submitting,
 }: Props) => (
   <React.Fragment>
     { finishedTx
       ? <GoButton />
       : <ControlButtons
+        submitting={submitting}
         next={lastPage ? 'Finish' : 'Next'}
         firstPage={firstPage}
         onPrevious={onPrevious}

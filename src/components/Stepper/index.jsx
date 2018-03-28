@@ -96,16 +96,19 @@ class GnoStepper extends React.PureComponent<Props, State> {
           validation={this.validate}
           render={activePage}
         >
-          <Row align="end" margin="lg" grow>
-            <Col xs={12} center="xs">
-              <Controls
-                finishedTx={finishedTransaction}
-                onPrevious={this.previous}
-                firstPage={page === 0}
-                lastPage={isLastPage}
-              />
-            </Col>
-          </Row>
+          {(submitting: boolean) => (
+            <Row align="end" margin="lg" grow>
+              <Col xs={12} center="xs">
+                <Controls
+                  submitting={submitting}
+                  finishedTx={finishedTransaction}
+                  onPrevious={this.previous}
+                  firstPage={page === 0}
+                  lastPage={isLastPage}
+                />
+              </Col>
+            </Row>
+          )}
         </GnoForm>
       </React.Fragment>
     )
