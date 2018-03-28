@@ -90,11 +90,11 @@ class GnoStepper extends React.PureComponent<Props, State> {
         <GnoForm
           onSubmit={this.handleSubmit}
           initialValues={values}
-          width="800"
+          padding={150}
           validation={this.validate}
           render={activePage}
         >
-          <Row>
+          <Row align="end" margin="lg" grow>
             <Col xs={12} center="xs">
               <Button
                 type="button"
