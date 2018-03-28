@@ -1,6 +1,6 @@
 .page {
-  margin: 0px 30px;
-  align-self: flex-end;
+  display: flex;
+  flex-direction: column;
 }
 
 .center {

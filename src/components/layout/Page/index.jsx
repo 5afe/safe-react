@@ -11,7 +11,7 @@ type Props = {
 }
 
 const Page = ({ children, align }: Props) => (
-  <main className={cx(styles.container, align)}>
+  <main className={cx(styles.page, align)}>
     {children}
   </main>
 )
