@@ -1,14 +1,16 @@
 // @flow
 import { storiesOf } from '@storybook/react'
 import * as React from 'react'
-import { host } from 'storybook-host'
+import styles from '~/components/layout/PageFrame/index.scss'
 import Component from './index'
 
+const FrameDecorator = story => (
+  <div className={styles.frame}>
+    <div style={{ flex: '1' }} />
+    { story() }
+  </div>
+)
+
 storiesOf('Components', module)
-  .addDecorator(host({
-    title: 'Footer',
-    align: 'center',
-    height: 250,
-    width: '100%',
-  }))
+  .addDecorator(FrameDecorator)
   .add('Footer', () => <Component />)

@@ -2,14 +2,13 @@
 import { select } from '@storybook/addon-knobs'
 import { storiesOf } from '@storybook/react'
 import * as React from 'react'
-import Block from '~/components/layout/Block'
 import styles from '~/components/layout/PageFrame/index.scss'
 import Component from './Layout'
 
 const FrameDecorator = story => (
-  <Block className={styles.frame}>
+  <div className={styles.frame}>
     { story() }
-  </Block>
+  </div>
 )
 
 storiesOf('Components', module)
