@@ -2,7 +2,7 @@
 import * as React from 'react'
 import Field from '~/components/forms/Field'
 import TextField from '~/components/forms/TextField'
-import { composeValidators, minValue, mustBeNumber, required } from '~/components/forms/validator'
+import { composeValidators, minValue, mustBeNumber, mustBeEthereumAddress, required } from '~/components/forms/validator'
 import Block from '~/components/layout/Block'
 import Col from '~/components/layout/Col'
 import Heading from '~/components/layout/Heading'
@@ -46,7 +46,7 @@ const Owners = ({ numOwners }: Props) => (
                 name={`owner${index}Address`}
                 component={TextField}
                 type="text"
-                validate={required}
+                validate={composeValidators(required, mustBeEthereumAddress)}
                 placeholder="Owner Address*"
                 text="Owner Address"
               />
