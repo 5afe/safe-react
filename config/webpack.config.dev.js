@@ -1,5 +1,6 @@
 /*eslint-disable*/
 const autoprefixer = require('autoprefixer');
+const cssmixins = require('postcss-mixins');
 const cssvars = require('postcss-simple-vars');
 const webpack = require('webpack');
 const HtmlWebPackPlugin = require("html-webpack-plugin");
@@ -27,6 +28,7 @@ const postcssPlugins = [
       'not ie < 9', // React doesn't support IE8 anyway
     ]
   }),
+  cssmixins,
   cssvars({
     variables: function () {
         return Object.assign({}, cssvariables);

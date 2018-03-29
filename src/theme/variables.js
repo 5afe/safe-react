@@ -2,16 +2,26 @@
 const primary = '#1798cc'
 const secondary = '#13222b'
 const tertiary = '#f6f9fc'
+const sm = '8px'
+const md = '16px'
+const lg = '24px'
+const xl = '42px'
 
 module.exports = Object.assign({}, {
   primary,
   secondary,
   tertiary,
-  xs: '8px',
-  md: '16px',
-  xl: '24px',
-  xxl: '42px',
+  sm,
+  md,
+  lg,
+  xl,
+  fontSizeHeadingXs: 16,
+  fontSizeHeadingSm: 18,
+  fontSizeHeadingMd: 21,
+  fontSizeHeadingLg: 28,
   regularFontWeight: 400,
+  boldFontWeight: 700,
+  smallFontSize: '12px',
   regularFontSize: '14px',
   screenXs: 480,
   screenXsMax: 767,

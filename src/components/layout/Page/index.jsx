@@ -1,13 +1,17 @@
 // @flow
+import classNames from 'classnames/bind'
 import React from 'react'
 import styles from './index.scss'
 
+const cx = classNames.bind(styles)
+
 type Props = {
-  children: React.Node,
+  children: React$Node,
+  align?: 'center',
 }
 
-const Page = ({ children }: Props) => (
-  <main className={styles.container}>
+const Page = ({ children, align }: Props) => (
+  <main className={cx(styles.container, align)}>
     {children}
   </main>
 )

@@ -5,7 +5,7 @@ import styles from './index.scss'
 
 type Props = {
   to: string,
-  children: React.Node,
+  children: React$Node,
 }
 
 const GnosisLink = ({ to, children, ...props }: Props) => (

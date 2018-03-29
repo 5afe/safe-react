@@ -1,21 +1,31 @@
+// @flow
 import React from 'react'
-import { default as MuiTextField } from 'material-ui/TextField'
+import MuiTextField, { TextFieldProps } from 'material-ui/TextField'
 
 const TextField = ({
-  input: { name, onChange, value, ...restInput },
+  input: {
+    name, onChange, value, ...restInput
+  },
   meta,
   render,
+  text,
   ...rest
-}) => (
-  <MuiTextField
-    {...rest}
-    name={name}
-    helperText={meta.touched ? meta.error : undefined}
-    error={meta.error && meta.touched}
-    inputProps={restInput}
-    onChange={onChange}
-    value={value}
-  />
-)
+}: TextFieldProps) => {
+  const helperText = value ? text : undefined
+  const showError = meta.touched && !meta.valid
+
+  return (
+    <MuiTextField
+      {...rest}
+      name={name}
+      helperText={showError ? meta.error : helperText}
+      error={meta.error && meta.touched}
+      inputProps={restInput}
+      onChange={onChange}
+      value={value}
+      fullWidth
+    />
+  )
+}
 
 export default TextField

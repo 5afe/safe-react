@@ -1,0 +1,25 @@
+html, body {
+  height: 100%;
+  width: 100%;
+}
+
+body {
+  color: #1f5f76;
+  display: grid;
+  font-family: 'Montserrat', sans-serif;
+  font-size: $regularFontSize;
+  grid-template-columns:1fr;
+  grid-template-rows:1fr;
+  height: 100%;
+  margin: 0;  
+}
+
+body>div:first-child {
+  display: grid;
+  padding: $xl;
+  background-image: linear-gradient(to bottom, $primary, #1a829d, #1a829d, #1f5f76);
+}
+
+h1, h2, h3 {
+  font-family: 'Montserrat', sans-serif;
+}

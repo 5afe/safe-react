@@ -1,19 +1,30 @@
 // @flow
-import React from 'react'
-import Block from '~/components/layout/Block'
-import Img from '~/components/layout/Img'
-import { xl } from '~/theme/variables'
+import * as React from 'react'
+import { connect } from 'react-redux'
+import Layout from './component/Layout'
+import actions from './actions'
+import selector from './selector'
 
-const logo = require('./gnosis_logo.svg')
-
-const imgStyle = {
-  paddingTop: xl,
+type Props = {
+  provider: string,
+  fetchProvider: Function,
 }
 
-const Header = () => (
-  <Block>
-    <Img src={logo} style={imgStyle} height={50} />
-  </Block>
-)
+class Header extends React.PureComponent<Props> {
+  componentDidMount() {
+    this.props.fetchProvider()
+  }
 
-export default Header
+  reloadWallet = () => {
+    this.props.fetchProvider()
+  }
+
+  render() {
+    const { provider } = this.props
+    return (
+      <Layout provider={provider} reloadWallet={this.reloadWallet} />
+    )
+  }
+}
+
+export default connect(selector, actions)(Header)

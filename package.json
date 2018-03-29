@@ -65,14 +65,22 @@
     "fs-extra": "^5.0.0",
     "html-loader": "^0.5.5",
     "html-webpack-plugin": "^3.0.4",
+    "immutable": "^4.0.0-rc.9",
     "jest": "^22.4.2",
     "json-loader": "^0.5.7",
     "postcss-loader": "^2.1.1",
+    "postcss-mixins": "^6.2.0",
     "postcss-simple-vars": "^4.1.0",
     "pre-commit": "^1.2.2",
     "react": "^16.2.0",
     "react-dev-utils": "^5.0.0",
     "react-dom": "^16.2.0",
+    "react-redux": "^5.0.7",
+    "react-router-redux": "^5.0.0-alpha.9",
+    "redux": "^3.7.2",
+    "redux-actions": "^2.3.0",
+    "redux-thunk": "^2.2.0",
+    "reselect": "^3.0.1",
     "storybook-host": "^4.1.5",
     "storybook-router": "^0.3.3",
     "style-loader": "^0.20.2",
@@ -88,6 +96,7 @@
   },
   "dependencies": {
     "final-form": "^4.2.1",
+    "history": "^4.7.2",
     "material-ui": "^1.0.0-beta.35",
     "material-ui-icons": "^1.0.0-beta.35",
     "react-final-form": "^3.1.2",
@@ -114,19 +123,13 @@
       "^(?!.*\\.(js|jsx|css|json)$)": "<rootDir>/config/jest/fileTransform.js"
     },
     "transformIgnorePatterns": [
-      "[/\\\\]node_modules[/\\\\].+\\.(js|jsx)$"
+      "[/\\\\]node_modules[/\\\\].+\\.(js|jsx)$",
+      "[/\\\\]flow-typed[/\\\\].+\\.(js|jsx)$"
     ],
     "moduleNameMapper": {
       "~(.*)$": "<rootDir>/src/$1",
       "#(.*)$": "<rootDir>/gnosis-safe-contracts/build/contracts/$1",
       "^react-native$": "react-native-web"
-    },
-    "moduleFileExtensions": [
-      "web.js",
-      "js",
-      "json",
-      "web.jsx",
-      "jsx"
-    ]
+    }
   }
 }

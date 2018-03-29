@@ -1,33 +1,38 @@
+.block {
+  display: inline-block;
+  width: 100%;
+}
+
 .sm {
-    margin-bottom: 17px;
+    margin-bottom: $sm;
 }
 
 .md {
-    margin-bottom: 42px;
+    margin-bottom: $md;
+}
+
+.lg {
+    margin-bottom: $lg;
 }
 
 .xl {
-    margin-bottom: 96px;
-}
-
-.xxl {
-    margin-bottom: 200px;
+    margin-bottom: $xl;
 }
 
 .paddingSm {
-  padding: 0 $xs;
+  padding-top: $sm;
 }
 
 .paddingMd {
-  padding: 0 $md;
+  padding-top: $md;
+}
+
+.paddingLg {
+  padding-top: $lg;
 }
 
 .paddingXl {
-  padding: 0 $xl;
-}
-
-.paddingXxl {
-  padding: 0 $xxl;
+  padding-top: $xl;
 }
 
 .center {

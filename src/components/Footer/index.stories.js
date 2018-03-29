@@ -11,4 +11,4 @@ storiesOf('Components', module)
     height: 250,
     width: '100%',
   }))
-  .add('Header', () => <Component />)
+  .add('Footer', () => <Component />)

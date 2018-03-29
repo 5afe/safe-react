@@ -1,20 +1,20 @@
 // @flow
 import classNames from 'classnames/bind'
 import React, { PureComponent } from 'react'
+import { capitalize } from '~/utils/css'
 import styles from './index.scss'
 
 const cx = classNames.bind(styles)
 
-type Size = 'sm' | 'md' | 'xl' | 'xxl'
+type Size = 'sm' | 'md' | 'lg' | 'xl'
 
 type Props = {
   margin?: Size,
   padding?: Size,
   center?: boolean,
-  children: React.Node,
+  children: React$Node,
   className?: string,
 }
-const capitalize = (value: Size) => value.charAt(0).toUpperCase() + value.slice(1)
 
 class Block extends PureComponent<Props> {
   render() {
@@ -22,9 +22,9 @@ class Block extends PureComponent<Props> {
       margin, padding, center, children, className, ...props
     } = this.props
 
-    const paddingStyle = padding ? `padding${capitalize(padding)}` : undefined
+    const paddingStyle = padding ? capitalize(padding, 'padding') : undefined
     return (
-      <div className={cx(className, margin, paddingStyle, { center })} {...props}>
+      <div className={cx(className, 'block', margin, paddingStyle, { center })} {...props}>
         { children }
       </div>
     )

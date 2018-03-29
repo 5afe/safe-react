@@ -1,1 +1,2 @@
-import '@babel/polyfill';
+// @flow
+import '@babel/polyfill'
