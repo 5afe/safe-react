@@ -4,11 +4,12 @@ import { Field } from 'react-final-form'
 import TextField from '~/components/forms/TextField'
 import { composeValidators, minValue, mustBeNumber, required } from '~/components/forms/validator'
 import Block from '~/components/layout/Block'
+import { FIELD_CONFIRMATIONS } from '~/routes/open/components/fields'
 
 const Confirmations = () => (
   <Block margin="md">
     <Field
-      name="confirmations"
+      name={FIELD_CONFIRMATIONS}
       component={TextField}
       type="text"
       validate={composeValidators(

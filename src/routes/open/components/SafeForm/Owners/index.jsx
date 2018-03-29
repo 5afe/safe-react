@@ -8,6 +8,7 @@ import Col from '~/components/layout/Col'
 import Heading from '~/components/layout/Heading'
 import Row from '~/components/layout/Row'
 import Paragraph from '~/components/layout/Paragraph'
+import { FIELD_OWNERS, getOwnerNameBy, getOwnerAddressBy } from '~/routes/open/components/fields'
 
 type Props = {
   numOwners: number,
@@ -18,7 +19,7 @@ const Owners = ({ numOwners }: Props) => (
     <Heading tag="h3">Owners</Heading>
     <Block margin="sm">
       <Field
-        name="owners"
+        name={FIELD_OWNERS}
         component={TextField}
         type="text"
         validate={composeValidators(required, mustBeNumber, minValue(1))}
@@ -33,7 +34,7 @@ const Owners = ({ numOwners }: Props) => (
             <Paragraph bold>Owner Nº {index + 1}</Paragraph>
             <Block margin="sm">
               <Field
-                name={`owner${index}Name`}
+                name={getOwnerNameBy(index)}
                 component={TextField}
                 type="text"
                 validate={required}
@@ -43,7 +44,7 @@ const Owners = ({ numOwners }: Props) => (
             </Block>
             <Block margin="sm">
               <Field
-                name={`owner${index}Address`}
+                name={getOwnerAddressBy(index)}
                 component={TextField}
                 type="text"
                 validate={composeValidators(required, mustBeEthereumAddress)}

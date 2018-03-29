@@ -4,11 +4,12 @@ import Field from '~/components/forms/Field'
 import TextField from '~/components/forms/TextField'
 import { required } from '~/components/forms/validator'
 import Block from '~/components/layout/Block'
+import { FIELD_NAME } from '~/routes/open/components/fields'
 
 const Name = () => (
   <Block margin="md">
     <Field
-      name="name"
+      name={FIELD_NAME}
       component={TextField}
       type="text"
       validate={required}
