@@ -27,7 +27,7 @@ const ReviewInformation = () => ({ values }: FormProps) => {
       </Paragraph>
       <Heading tag="h3">Owners</Heading>
       { names.map((name, index) => (
-        <Row margin="md">
+        <Row key={`name${(index)}`} margin="md">
           <Col xs={11} xsOffset={1}margin="sm">
             <Block>
               <Paragraph noMargin>{name}</Paragraph>
