@@ -5,7 +5,6 @@ import { MuiThemeProvider } from 'material-ui/styles'
 import * as React from 'react'
 import { Provider } from 'react-redux'
 import StoryRouter from 'storybook-router'
-import ContextProviders from '~/components/ContextProviders'
 import { store } from '~/store'
 import theme from '~/theme/mui'
 import 'index.scss'
@@ -33,4 +32,4 @@ function loadStories() {
     routes.keys().forEach((filename) => routes(filename))
 }
 
-configure(loadStories, module);
+configure(loadStories, module)
