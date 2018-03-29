@@ -27,7 +27,7 @@ const providerReducerTests = () => {
       // GIVEN
       const address = '0x03db1a8b26d08df23337e9276a36b474510f0025'
       const formValues = {
-        [SafeFields.FIELD_NAME]: 'Adol ICO Safe ',
+        [SafeFields.FIELD_NAME]: 'Adol ICO Safe',
         [SafeFields.FIELD_CONFIRMATIONS]: 1,
         [SafeFields.FIELD_OWNERS]: 1,
         [SafeFields.getOwnerAddressBy(0)]: '0x03db1a8b26d08df23337e9276a36b474510f0023',
