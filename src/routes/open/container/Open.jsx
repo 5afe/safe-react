@@ -3,16 +3,13 @@
 import * as React from 'react'
 import { connect } from 'react-redux'
 import contract from 'truffle-contract'
-import Stepper from '~/components/Stepper'
 import PageFrame from '~/components/layout/PageFrame'
 import { getAccountsFrom, getThresholdFrom } from '~/routes/open/utils/safeDataExtractor'
-import Confirmation from '~/routes/open/components/FormConfirmation'
-import Review from '~/routes/open/components/ReviewInformation'
-import SafeFields, { safeFieldsValidation } from '~/routes/open/components/SafeForm'
 import { getWeb3 } from '~/wallets/getWeb3'
 import { promisify } from '~/utils/promisify'
 import Safe from '#/GnosisSafe.json'
 import selector from './selector'
+import Layout from '../components/Layout'
 
 type Props = {
   provider: string,
@@ -23,14 +20,6 @@ type State = {
   safeAddress: string,
   safeTx: string,
 }
-
-const getSteps = () => [
-  'Fill Safe Form', 'Review Information', 'Deploy it',
-]
-
-const initialValuesFrom = (userAccount: string) => ({
-  owner0Address: userAccount,
-})
 
 class Open extends React.Component<Props, State> {
   constructor() {
@@ -71,32 +60,16 @@ class Open extends React.Component<Props, State> {
   render() {
     const { safeAddress, safeTx } = this.state
     const { provider, userAccount } = this.props
-    const steps = getSteps()
-    const initialValues = initialValuesFrom(userAccount)
 
     return (
       <PageFrame>
-        { provider
-          ? (
-            <Stepper
-              onSubmit={this.onCallSafeContractSubmit}
-              finishedTransaction={!!safeAddress}
-              steps={steps}
-              initialValues={initialValues}
-            >
-              <Stepper.Page validate={safeFieldsValidation}>
-                { SafeFields }
-              </Stepper.Page>
-              <Stepper.Page>
-                { Review }
-              </Stepper.Page>
-              <Stepper.Page address={safeAddress} tx={safeTx}>
-                { Confirmation }
-              </Stepper.Page>
-            </Stepper>
-          )
-          : <div>No metamask detected</div>
-        }
+        <Layout
+          provider={provider}
+          userAccount={userAccount}
+          safeAddress={safeAddress}
+          safeTx={safeTx}
+          onCallSafeContractSubmit={this.onCallSafeContractSubmit}
+        />
       </PageFrame>
     )
   }
