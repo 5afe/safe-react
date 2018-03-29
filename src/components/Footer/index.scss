@@ -1,7 +1,18 @@
 .footer {
   display: grid;
-  grid-template-rows: 100%;
-  grid-template-columns: auto;
-  justify-content: end;
-  grid-column-gap: $md;
+  grid-template-columns: 1fr auto auto;
+  justify-items: end;
+}
+
+@media only screen and (max-width: $(screenXs)px) {
+  .footer {
+    grid-template-columns: none;
+    grid-template-rows: auto auto;
+    grid-row-gap: $sm;
+    justify-items: center;
+  }
+
+  .footer > a {
+    padding: 0;
+  }
 }
