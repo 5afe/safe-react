@@ -4,3 +4,33 @@
   flex-direction: row;
   flex-wrap: wrap;
 }
+.grow {
+  flex: 1 1 auto;
+}
+.marginSm {
+  margin-bottom: $sm;
+}
+
+.marginMd {
+  margin-bottom: $md;
+}
+
+.marginLg {
+  margin-bottom: $xl;
+}
+
+.marginXl {
+  margin-bottom: $xl;
+}
+
+.alignStart {
+  align-items: flex-start;
+}
+
+.alignEnd {
+  align-items: flex-end;
+}
+
+.alignCenter {
+  align-items: center;
+}

@@ -1,6 +1,7 @@
 .page {
-  margin: 0px 30px;
-  align-self: flex-end;
+  display: flex;
+  flex-direction: column;
+  flex: 1 0 auto;
 }
 
 .center {

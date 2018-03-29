@@ -1,87 +1,59 @@
 // @flow
-import Button from 'material-ui/Button'
 import * as React from 'react'
-import { Field } from 'react-final-form'
-import Block from '~/components/layout/Block'
-import Heading from '~/components/layout/Heading'
-import TextField from '~/components/forms/TextField'
-import GnoForm from '~/components/forms/GnoForm'
-import Name from './Name'
-import Owners from './Owners'
-import Confirmations from './Confirmations'
+import type { FormApi } from 'react-final-form'
+import Stepper from '~/components/Stepper'
+import Confirmation from '~/routes/open/components/FormConfirmation'
+import Review from '~/routes/open/components/ReviewInformation'
+import SafeFields, { safeFieldsValidation } from '~/routes/open/components/SafeForm'
 
-type Props = {
-  onCallSafeContractSubmit: Function,
-  onAddFunds: Function,
-  safeAddress: string,
-  funds: number,
-  userAccount: string,
-}
-
-const validation = (values) => {
-  const errors = {}
-
-  if (values.owners < values.confirmations) {
-    errors.confirmations = 'Number of confirmations can not be higher than the number of owners'
-  }
-
-  return errors
-}
-
-const NewSafe = ({ values }: Object) => (
-  <Block margin="md">
-    <Heading tag="h2" margin="lg">Deploy a new Safe</Heading>
-    <Name />
-    <Owners numOwners={values.owners} />
-    <Confirmations />
-    <Block margin="xl">
-      <Button variant="raised" color="primary" type="submit">
-        Create Safe
-      </Button>
-    </Block>
-  </Block>
-)
+const getSteps = () => [
+  'Fill Safe Form', 'Review Information', 'Deploy it',
+]
 
 const initialValuesFrom = (userAccount: string) => ({
   owner0Address: userAccount,
 })
 
-const Open = ({
-  funds, safeAddress, onCallSafeContractSubmit, onAddFunds, userAccount,
-}: Props) => (
-  <React.Fragment>
-    <GnoForm
-      onSubmit={onCallSafeContractSubmit}
-      initialValues={initialValuesFrom(userAccount)}
-      width="500"
-      validation={validation}
-    >
-      { NewSafe }
-    </GnoForm>
-    <GnoForm onSubmit={onAddFunds} width="500">
-      {(pristine, invalid) => (
-        <Block margin="md">
-          <Heading tag="h2" margin="lg">Add Funds to the safe</Heading>
-          <div style={{ margin: '10px 0px' }}>
-            <label style={{ marginRight: '10px' }}>{safeAddress || 'Not safe detected'}</label>
-          </div>
-          { safeAddress &&
-            <div>
-              <Field name="fundsToAdd" component={TextField} type="text" placeholder="ETH to add" />
-              <Button type="submit" disabled={!safeAddress || pristine || invalid}>
-                Add funds
-              </Button>
-            </div>
-          }
-          { safeAddress &&
-            <div style={{ margin: '15px 0px' }}>
-              Total funds in this safe: { funds || 0 } ETH
-            </div>
-          }
-        </Block>
-      )}
-    </GnoForm>
-  </React.Fragment>
-)
+type Props = {
+  provider: string,
+  userAccount: string,
+  safeAddress: string,
+  safeTx: string,
+  onCallSafeContractSubmit: (values: Object, form: FormApi, callback: ?(errors: ?Object) => void)
+    => ?Object | Promise<?Object> | void,
+}
 
-export default Open
+const Layout = ({
+  provider, userAccount, safeAddress, safeTx, onCallSafeContractSubmit,
+}: Props) => {
+  const steps = getSteps()
+  const initialValues = initialValuesFrom(userAccount)
+
+  return (
+    <React.Fragment>
+      { provider
+        ? (
+          <Stepper
+            onSubmit={onCallSafeContractSubmit}
+            finishedTransaction={!!safeAddress}
+            steps={steps}
+            initialValues={initialValues}
+          >
+            <Stepper.Page validate={safeFieldsValidation}>
+              { SafeFields }
+            </Stepper.Page>
+            <Stepper.Page>
+              { Review }
+            </Stepper.Page>
+            <Stepper.Page address={safeAddress} tx={safeTx}>
+              { Confirmation }
+            </Stepper.Page>
+          </Stepper>
+        )
+        : <div>No metamask detected</div>
+      }
+    </React.Fragment>
+  )
+}
+
+export default Layout

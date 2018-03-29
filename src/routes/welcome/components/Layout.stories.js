@@ -11,10 +11,15 @@ const FrameDecorator = story => (
   </div>
 )
 
-storiesOf('Components', module)
+
+storiesOf('Routes', module)
   .addDecorator(FrameDecorator)
-  .add('Header', () => {
-    // https://github.com/storybooks/storybook/tree/master/addons/knobs#select
+  .add('Welcome with Metamask connected', () => {
     const provider = select('Status by Provider', ['', 'UNKNOWN', 'METAMASK', 'PARITY'], 'METAMASK')
-    return <Component provider={provider} reloadWallet={() => {}} />
+    return (
+      <Component
+        provider={provider}
+        fetchProvider={() => { }}
+      />
+    )
   })

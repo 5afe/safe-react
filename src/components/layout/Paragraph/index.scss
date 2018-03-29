@@ -1,3 +1,8 @@
+.paragraph {
+  text-overflow: ellipsis;
+  overflow-x: inherit;  
+}
+
 .soft {
     color: #888888;
 }
@@ -24,6 +29,14 @@
 
 .sm {
   font-size: $smallFontSize;
+}
+
+.md {
+  font-size: $mediumFontSize;
+}
+
+.lg {
+  font-size: $largeFontSize;
 }
 
 .bold {

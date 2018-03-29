@@ -1,6 +1,7 @@
 .frame {
-  display: grid;
-  grid-template-rows: auto 1fr auto;
-  background-color: $tertiary;
+  display: flex;
+  flex-direction: column;
+  flex: 1 0 auto;
+  background-color: white;
   padding: $xl;
 }

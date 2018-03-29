@@ -1,7 +1,6 @@
 // @flow
 import React from 'react'
 import Block from '~/components/layout/Block'
-import PageFrame from '~/components/layout/PageFrame'
 import Img from '~/components/layout/Img'
 import Button from '~/components/layout/Button'
 import Link from '~/components/layout/Link'
@@ -14,25 +13,23 @@ type Props = {
 }
 
 const Welcome = ({ provider }: Props) => (
-  <PageFrame align="center">
-    <Block className={styles.safe}>
-      <Img alt="Safe Box" src={vault} height={330} />
-      <Block className={styles.safeActions}>
-        { provider &&
-          <Link to="/open">
-            <Button variant="raised" color="primary">
-              Create a new Safe
-            </Button>
-          </Link>
-        }
-        <Link to="/transactions">
+  <Block className={styles.safe}>
+    <Img alt="Safe Box" src={vault} height={330} />
+    <Block className={styles.safeActions} margin="md">
+      { provider &&
+        <Link to="/open">
           <Button variant="raised" color="primary">
-            Open a Safe
+            Create a new Safe
           </Button>
         </Link>
-      </Block>
+      }
+      <Link to="/transactions">
+        <Button variant="raised" color="primary">
+          Open a Safe
+        </Button>
+      </Link>
     </Block>
-  </PageFrame>
+  </Block>
 )
 
 export default Welcome

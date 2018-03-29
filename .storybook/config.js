@@ -3,7 +3,9 @@ import { addDecorator, configure } from '@storybook/react'
 import { withKnobs } from '@storybook/addon-knobs'
 import { MuiThemeProvider } from 'material-ui/styles'
 import * as React from 'react'
+import { Provider } from 'react-redux'
 import StoryRouter from 'storybook-router'
+import { store } from '~/store'
 import theme from '~/theme/mui'
 import 'index.scss'
 
@@ -14,21 +16,13 @@ import 'index.scss'
 addDecorator(withKnobs);
 addDecorator(StoryRouter())
 
-// Adding Material UI Theme
-addDecorator(story => (
-  <MuiThemeProvider theme={theme}>
-    { story() }
-  </MuiThemeProvider>
+addDecorator((story) => (
+  <Provider store={store}>
+    <MuiThemeProvider theme={theme}>
+      { story() }
+    </MuiThemeProvider>
+  </Provider>
 ))
-
-/*
-  https://storybook.js.org/addons/introduction/
-  addDecorator((story) => (
-    <div>
-        { story() }
-    </div>
-  ));
-*/
 
 const components = require.context('../src/components', true, /\.stories\.((js|ts)x?)$/)
 const routes = require.context('../src/routes', true, /\.stories\.((js|ts)x?)$/)
@@ -38,4 +32,4 @@ function loadStories() {
     routes.keys().forEach((filename) => routes(filename))
 }
 
-configure(loadStories, module);
+configure(loadStories, module)
