@@ -1,11 +1,13 @@
 // @flow
 import { createBrowserHistory } from 'history'
 import { routerMiddleware, routerReducer } from 'react-router-redux'
-import { combineReducers, createStore, applyMiddleware, compose } from 'redux'
+import { combineReducers, createStore, applyMiddleware, compose, type Reducer, type Store } from 'redux'
 import thunk from 'redux-thunk'
-import provider, { REDUCER_ID } from '~/wallets/store/reducer/provider'
+import provider, { PROVIDER_REDUCER_ID, type State as ProviderState } from '~/wallets/store/reducer/provider'
+import safe, { SAFE_REDUCER_ID, type State as SafeState } from '~/routes/safe/store/reducer/safe'
 
 export const history = createBrowserHistory()
+
 // eslint-disable-next-line
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
 const finalCreateStore = composeEnhancers(applyMiddleware(
@@ -13,9 +15,15 @@ const finalCreateStore = composeEnhancers(applyMiddleware(
   routerMiddleware(history),
 ))
 
-const reducers = combineReducers({
+export type GlobalState = {
+  providers: ProviderState,
+  safes: SafeState,
+}
+
+const reducers: Reducer<GlobalState> = combineReducers({
   routing: routerReducer,
-  [REDUCER_ID]: provider,
+  [PROVIDER_REDUCER_ID]: provider,
+  [SAFE_REDUCER_ID]: safe,
 })
 
-export const store = createStore(reducers, finalCreateStore)
+export const store: Store<GlobalState> = createStore(reducers, finalCreateStore)
