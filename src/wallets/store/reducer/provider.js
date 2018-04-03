@@ -1,11 +1,13 @@
 // @flow
-import { handleActions } from 'redux-actions'
-import { makeProvider } from '~/wallets/store/model/provider'
-import { ADD_PROVIDER } from '~/wallets/store/actions/addProvider'
+import { handleActions, type ActionType } from 'redux-actions'
+import { makeProvider, type Provider } from '~/wallets/store/model/provider'
+import addProvider, { ADD_PROVIDER } from '~/wallets/store/actions/addProvider'
 
-export const REDUCER_ID = 'providers'
+export const PROVIDER_REDUCER_ID = 'providers'
+
+export type State = Provider
 
 export default handleActions({
-  [ADD_PROVIDER]: (state, { payload }) =>
+  [ADD_PROVIDER]: (state: State, { payload }: ActionType<typeof addProvider>) =>
     makeProvider(payload),
 }, makeProvider())

@@ -1,5 +1,5 @@
 // @flow
-import { REDUCER_ID } from '~/wallets/store/reducer/provider'
+import { PROVIDER_REDUCER_ID } from '~/wallets/store/reducer/provider'
 import { userAccountSelector } from '../selectors'
 import { ProviderFactory } from './builder/index.builder'
 
@@ -7,7 +7,7 @@ const providerReducerTests = () => {
   describe('Provider Name Selector[userAccountSelector]', () => {
     it('should return empty when no provider is loaded', () => {
       // GIVEN
-      const reduxStore = { [REDUCER_ID]: ProviderFactory.noProvider }
+      const reduxStore = { [PROVIDER_REDUCER_ID]: ProviderFactory.noProvider }
 
       // WHEN
       const providerName = userAccountSelector(reduxStore)
@@ -18,7 +18,7 @@ const providerReducerTests = () => {
 
     it('should return empty when Metamask is loaded but not available', () => {
       // GIVEN
-      const reduxStore = { [REDUCER_ID]: ProviderFactory.metamaskLoaded }
+      const reduxStore = { [PROVIDER_REDUCER_ID]: ProviderFactory.metamaskLoaded }
 
       // WHEN
       const providerName = userAccountSelector(reduxStore)
@@ -29,7 +29,7 @@ const providerReducerTests = () => {
 
     it('should return account when Metamask is loaded and available', () => {
       // GIVEN
-      const reduxStore = { [REDUCER_ID]: ProviderFactory.metamaskAvailable }
+      const reduxStore = { [PROVIDER_REDUCER_ID]: ProviderFactory.metamaskAvailable }
 
       // WHEN
       const providerName = userAccountSelector(reduxStore)
