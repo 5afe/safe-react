@@ -12,17 +12,23 @@ type Props = {
   provider: string
 }
 
+type SafeProps = {
+  size?: 'small' | 'medium',
+}
+
+export const CreateSafe = ({ size }: SafeProps) => (
+  <Link to="/open">
+    <Button variant="raised" size={size || 'medium'} color="primary">
+      Create a new Safe
+    </Button>
+  </Link>
+)
+
 const Welcome = ({ provider }: Props) => (
   <Block className={styles.safe}>
     <Img alt="Safe Box" src={vault} height={330} />
     <Block className={styles.safeActions} margin="md">
-      { provider &&
-        <Link to="/open">
-          <Button variant="raised" color="primary">
-            Create a new Safe
-          </Button>
-        </Link>
-      }
+      { provider && <CreateSafe /> }
       <Link to="/transactions">
         <Button variant="raised" color="primary">
           Open a Safe
