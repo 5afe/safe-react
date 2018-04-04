@@ -3,7 +3,7 @@
 import * as React from 'react'
 import { connect } from 'react-redux'
 import contract from 'truffle-contract'
-import PageFrame from '~/components/layout/PageFrame'
+import Page from '~/components/layout/Page'
 import { getAccountsFrom, getThresholdFrom, getNamesFrom, getSafeNameFrom } from '~/routes/open/utils/safeDataExtractor'
 import { getWeb3 } from '~/wallets/getWeb3'
 import { promisify } from '~/utils/promisify'
@@ -64,7 +64,7 @@ class Open extends React.Component<Props, State> {
     const { provider, userAccount } = this.props
 
     return (
-      <PageFrame>
+      <Page>
         <Layout
           provider={provider}
           userAccount={userAccount}
@@ -72,7 +72,7 @@ class Open extends React.Component<Props, State> {
           safeTx={safeTx}
           onCallSafeContractSubmit={this.onCallSafeContractSubmit}
         />
-      </PageFrame>
+      </Page>
     )
   }
 }

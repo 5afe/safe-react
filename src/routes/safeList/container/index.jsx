@@ -2,7 +2,7 @@
 import { List } from 'immutable'
 import * as React from 'react'
 import { connect } from 'react-redux'
-import PageFrame from '~/components/layout/PageFrame'
+import Page from '~/components/layout/Page'
 import { type Safe } from '~/routes/safe/store/model/safe'
 import Layout from '../components/Layout'
 import selector from './selector'
@@ -12,9 +12,9 @@ type Props = {
 }
 
 const SafeList = ({ safes }: Props) => (
-  <PageFrame>
+  <Page overflow>
     <Layout safes={safes} />
-  </PageFrame>
+  </Page>
 )
 
 export default connect(selector)(SafeList)

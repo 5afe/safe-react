@@ -8,10 +8,11 @@ const cx = classNames.bind(styles)
 type Props = {
   children: React$Node,
   align?: 'center',
+  overflow?: boolean
 }
 
-const Page = ({ children, align }: Props) => (
-  <main className={cx(styles.page, align)}>
+const Page = ({ children, align, overflow }: Props) => (
+  <main className={cx(styles.page, align, { overflow })}>
     {children}
   </main>
 )
