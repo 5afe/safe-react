@@ -6,7 +6,7 @@ import Loader from '~/components/Loader'
 import Welcome from './welcome/container'
 
 const SafeList = Loadable({
-  loader: () => import('./safeList'),
+  loader: () => import('./safeList/container'),
   loading: Loader,
 })
 
