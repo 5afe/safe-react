@@ -1,7 +1,7 @@
 // @flow
 import { List } from 'immutable'
 import * as React from 'react'
-import Table, { TableBody, TableCell, TableHead, TableRow } from 'material-ui/Table'
+import Table, { TableBody, TableCell, TableHead, TableRow } from '~/components/layout/Table'
 import { type Safe } from '~/routes/safe/store/model/safe'
 
 type Props = {
@@ -9,7 +9,7 @@ type Props = {
 }
 
 const SafeList = ({ safes }: Props) => (
-  <Table>
+  <Table size={700}>
     <TableHead>
       <TableRow>
         <TableCell>Name</TableCell>
