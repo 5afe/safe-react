@@ -20,7 +20,7 @@ const store = new Store({
 })
 
 
-storiesOf('Routes', module)
+storiesOf('Routes /open', module)
   .addDecorator(FrameDecorator)
   .add('Open safe with all props set', () => {
     getProviderInfo()

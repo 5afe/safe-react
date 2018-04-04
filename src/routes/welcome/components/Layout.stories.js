@@ -12,7 +12,7 @@ const FrameDecorator = story => (
 )
 
 
-storiesOf('Routes', module)
+storiesOf('Routes /welcome', module)
   .addDecorator(FrameDecorator)
   .add('Welcome with Metamask connected', () => {
     const provider = select('Status by Provider', ['', 'UNKNOWN', 'METAMASK', 'PARITY'], 'METAMASK')
