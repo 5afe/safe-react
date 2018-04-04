@@ -4,7 +4,7 @@ import { createAction } from 'redux-actions'
 import { type SafeProps } from '~/routes/safe/store/model/safe'
 import { makeOwner, type Owner } from '~/routes/safe/store/model/owner'
 
-export const ADD_SAFE = 'ADD_PROVIDER'
+export const ADD_SAFE = 'ADD_SAFE'
 
 export const buildOwnersFrom = (names: string[], addresses: string[]) => {
   const owners = names.map((name: string, index: number) => makeOwner({ name, address: addresses[index] }))

@@ -22,7 +22,7 @@ const buildSafesFrom = (loadedSafes: Object): State => {
   })
 }
 
-export const defaultProps = (): State => {
+export const calculateInitialState = (): State => {
   const storedSafes = loadSafes()
 
   return storedSafes ? buildSafesFrom(storedSafes) : Map()
@@ -45,4 +45,4 @@ export default handleActions({
     saveSafes(safes.toJSON())
     return safes
   },
-}, defaultProps())
+}, Map())

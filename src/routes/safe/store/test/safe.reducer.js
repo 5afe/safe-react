@@ -1,26 +1,30 @@
 // @flow
 import { combineReducers, createStore, applyMiddleware, compose } from 'redux'
 import thunk from 'redux-thunk'
-import safeReducer, { defaultProps, SAFE_REDUCER_ID } from '~/routes/safe/store/reducer/safe'
+import safeReducer, { calculateInitialState, SAFE_REDUCER_ID } from '~/routes/safe/store/reducer/safe'
 import addSafe from '~/routes/safe/store/actions/addSafe'
 import * as SafeFields from '~/routes/open/components/fields'
 import { getAccountsFrom, getNamesFrom } from '~/routes/open/utils/safeDataExtractor'
 import { SafeFactory } from './builder/index.builder'
 
+const aStore = (initState) => {
+  const reducers = combineReducers({
+    [SAFE_REDUCER_ID]: safeReducer,
+  })
+  const middlewares = [
+    thunk,
+  ]
+  const enhancers = [
+    applyMiddleware(...middlewares),
+  ]
+  return createStore(reducers, initState, compose(...enhancers))
+}
+
 const providerReducerTests = () => {
   describe('Safe Actions[addSafe]', () => {
     let store
     beforeEach(() => {
-      const reducers = combineReducers({
-        [SAFE_REDUCER_ID]: safeReducer,
-      })
-      const middlewares = [
-        thunk,
-      ]
-      const enhancers = [
-        applyMiddleware(...middlewares),
-      ]
-      store = createStore(reducers, compose(...enhancers))
+      store = aStore()
     })
 
     it('reducer should return SafeRecord from form values', () => {
@@ -49,7 +53,7 @@ const providerReducerTests = () => {
       expect(safes.get(address)).toEqual(SafeFactory.oneOwnerSafe)
     })
 
-    it('reducer loads information from localStorage', () => {
+    it('reducer loads information from localStorage', async () => {
       // GIVEN
       const address = '0x03db1a8b26d08df23337e9276a36b474510f0025'
       const formValues = {
@@ -70,10 +74,11 @@ const providerReducerTests = () => {
         getAccountsFrom(formValues),
       ))
 
-      const safes = store.getState()[SAFE_REDUCER_ID]
+      const anotherStore = aStore({ [SAFE_REDUCER_ID]: calculateInitialState() })
+      const safes = anotherStore.getState()[SAFE_REDUCER_ID]
 
       // THEN
-      expect(defaultProps()).toEqual(safes)
+      expect(calculateInitialState()).toEqual(safes)
     })
   })
 }
