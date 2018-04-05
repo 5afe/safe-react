@@ -2,6 +2,7 @@
 import * as React from 'react'
 import Button from '~/components/layout/Button'
 import Link from '~/components/layout/Link'
+import { SAFELIST_ADDRESS } from '~/routes/routes'
 
 type NextButtonProps = {
   text: string,
@@ -20,8 +21,8 @@ const NextButton = ({ text, disabled }: NextButtonProps) => (
 )
 
 const GoButton = () => (
-  <Link to="/welcome">
-    <NextButton text="GO" disabled={false} />
+  <Link to={SAFELIST_ADDRESS}>
+    <NextButton text="VISIT SAFES" disabled={false} />
   </Link>
 )
 

@@ -4,6 +4,7 @@ import Loadable from 'react-loadable'
 import { Switch, Redirect, Route } from 'react-router-dom'
 import Loader from '~/components/Loader'
 import Welcome from './welcome/container'
+import { SAFELIST_ADDRESS, OPEN_ADDRESS, SAFE_PARAM_ADDRESS, WELCOME_ADDRESS } from './routes'
 
 const Safe = Loadable({
   loader: () => import('./safe/container'),
@@ -20,15 +21,15 @@ const Open = Loadable({
   loading: Loader,
 })
 
-export const SAFE_PARAM_ADDRESS = 'address'
+const SAFE_ADDRESS = `${SAFELIST_ADDRESS}/:${SAFE_PARAM_ADDRESS}`
 
 const Routes = () => (
   <Switch>
-    <Redirect exact from="/" to="/welcome" />
-    <Route exact path="/welcome" component={Welcome} />
-    <Route exact path="/open" component={Open} />
-    <Route exact path="/safes" component={SafeList} />
-    <Route exact path={`/safes/:${SAFE_PARAM_ADDRESS}`} component={Safe} />
+    <Redirect exact from="/" to={WELCOME_ADDRESS} />
+    <Route exact path={WELCOME_ADDRESS} component={Welcome} />
+    <Route exact path={OPEN_ADDRESS} component={Open} />
+    <Route exact path={SAFELIST_ADDRESS} component={SafeList} />
+    <Route exact path={SAFE_ADDRESS} component={Safe} />
   </Switch>
 )
 

@@ -4,6 +4,7 @@ import Block from '~/components/layout/Block'
 import Img from '~/components/layout/Img'
 import Button from '~/components/layout/Button'
 import Link from '~/components/layout/Link'
+import { OPEN_ADDRESS, SAFELIST_ADDRESS } from '~/routes/routes'
 import styles from './Layout.scss'
 
 const vault = require('../assets/vault.svg')
@@ -17,7 +18,7 @@ type SafeProps = {
 }
 
 export const CreateSafe = ({ size }: SafeProps) => (
-  <Link to="/open">
+  <Link to={OPEN_ADDRESS}>
     <Button variant="raised" size={size || 'medium'} color="primary">
       Create a new Safe
     </Button>
@@ -29,9 +30,9 @@ const Welcome = ({ provider }: Props) => (
     <Img alt="Safe Box" src={vault} height={330} />
     <Block className={styles.safeActions} margin="md">
       { provider && <CreateSafe /> }
-      <Link to="/transactions">
+      <Link to={SAFELIST_ADDRESS}>
         <Button variant="raised" color="primary">
-          Open a Safe
+          See Safe list
         </Button>
       </Link>
     </Block>

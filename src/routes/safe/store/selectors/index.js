@@ -3,7 +3,7 @@ import { Map } from 'immutable'
 import { type Match } from 'react-router-dom'
 import { createSelector, createStructuredSelector, type Selector } from 'reselect'
 import { type GlobalState } from '~/store/index'
-import { SAFE_PARAM_ADDRESS } from '~/routes'
+import { SAFE_PARAM_ADDRESS } from '~/routes/routes'
 import { type Safe } from '~/routes/safe/store/model/safe'
 import { safesMapSelector } from '~/routes/safeList/store/selectors'
 

@@ -6,6 +6,7 @@ import Col from '~/components/layout/Col'
 import Row from '~/components/layout/Row'
 import Link from '~/components/layout/Link'
 import Paragraph from '~/components/layout/Paragraph/index'
+import { OPEN_ADDRESS } from '~/routes/routes'
 
 type Props = {
   text: string
@@ -19,7 +20,7 @@ const NoSafe = ({ text }: Props) => (
       </Paragraph>
     </Col>
     <Col xs={12} center="xs" sm={10} smOffset={2} start="sm" margin="md">
-      <Link to="/open">
+      <Link to={OPEN_ADDRESS}>
         <Button variant="raised" size="small" color="primary">CREATE A NEW SAFE</Button>
       </Link>
     </Col>

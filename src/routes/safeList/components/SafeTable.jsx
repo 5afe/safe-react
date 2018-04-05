@@ -5,6 +5,7 @@ import Button from '~/components/layout/Button'
 import Link from '~/components/layout/Link'
 import Table, { TableBody, TableCell, TableHead, TableRow } from '~/components/layout/Table'
 import { type Safe } from '~/routes/safe/store/model/safe'
+import { SAFELIST_ADDRESS } from '~/routes/routes'
 
 type Props = {
   safes: List<Safe>
@@ -24,7 +25,7 @@ const SafeTable = ({ safes }: Props) => (
       {safes.map(safe => (
         <TableRow key={safe.address}>
           <TableCell>
-            <Link to={`/safes/${safe.address}`}>
+            <Link to={`${SAFELIST_ADDRESS}/${safe.address}`}>
               <Button variant="raised" size="small" color="primary">Open</Button>
             </Link>
           </TableCell>
