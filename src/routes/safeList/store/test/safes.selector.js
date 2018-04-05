@@ -5,7 +5,7 @@ import { type Safe } from '~/routes/safe/store/model/safe'
 import { SafeFactory } from '~/routes/safe/store/test/builder/index.builder'
 import { safesListSelector } from '../selectors'
 
-const providerReducerTests = () => {
+const safesListSelectorTests = () => {
   describe('Safes Selector[safesSelector]', () => {
     it('should return empty list when no safes', () => {
       // GIVEN
@@ -37,4 +37,4 @@ const providerReducerTests = () => {
   })
 }
 
-export default providerReducerTests
+export default safesListSelectorTests
