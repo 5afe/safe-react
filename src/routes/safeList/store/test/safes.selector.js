@@ -3,7 +3,7 @@ import { List, Map } from 'immutable'
 import { SAFE_REDUCER_ID } from '~/routes/safe/store/reducer/safe'
 import { type Safe } from '~/routes/safe/store/model/safe'
 import { SafeFactory } from '~/routes/safe/store/test/builder/index.builder'
-import { safesSelector } from '../selectors'
+import { safesListSelector } from '../selectors'
 
 const providerReducerTests = () => {
   describe('Safes Selector[safesSelector]', () => {
@@ -13,7 +13,7 @@ const providerReducerTests = () => {
       const emptyList = List([])
 
       // WHEN
-      const safes = safesSelector(reduxStore)
+      const safes = safesListSelector(reduxStore)
 
       // THEN
       expect(safes).toEqual(emptyList)
@@ -28,7 +28,7 @@ const providerReducerTests = () => {
       const reduxStore = { [SAFE_REDUCER_ID]: map, providers: undefined }
 
       // WHEN
-      const safes = safesSelector(reduxStore)
+      const safes = safesListSelector(reduxStore)
 
       // THEN
       expect(safes.count()).toEqual(2)

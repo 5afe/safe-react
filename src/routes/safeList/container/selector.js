@@ -1,7 +1,7 @@
 // @flow
 import { createStructuredSelector } from 'reselect'
-import { safesSelector } from '~/routes/safeList/store/selectors'
+import { safesListSelector } from '~/routes/safeList/store/selectors'
 
 export default createStructuredSelector({
-  safes: safesSelector,
+  safes: safesListSelector,
 })
