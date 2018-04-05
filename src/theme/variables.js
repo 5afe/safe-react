@@ -26,6 +26,7 @@ module.exports = Object.assign({}, {
   smallFontSize: '12px',
   mediumFontSize: '14px',
   largeFontSize: '18px',
+  extraLargeFontSize: '24px',
   screenXs: 480,
   screenXsMax: 767,
   screenSm: 768,
