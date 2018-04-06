@@ -23,3 +23,21 @@ storiesOf('Routes /welcome', module)
       />
     )
   })
+  .add('Welcome with unknown wallet', () => {
+    const provider = select('Status by Provider', ['', 'UNKNOWN', 'METAMASK', 'PARITY'], 'UNKNOWN')
+    return (
+      <Component
+        provider={provider}
+        fetchProvider={() => { }}
+      />
+    )
+  })
+  .add('Welcome without wallet connected', () => {
+    const provider = select('Status by Provider', ['', 'UNKNOWN', 'METAMASK', 'PARITY'], '')
+    return (
+      <Component
+        provider={provider}
+        fetchProvider={() => { }}
+      />
+    )
+  })

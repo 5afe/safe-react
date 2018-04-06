@@ -6,21 +6,24 @@ import { type Safe } from '~/routes/safe/store/model/safe'
 import { SafeFactory } from '~/routes/safe/store/test/builder/index.builder'
 import { safeSelector } from '../selectors'
 
+const buildMathPropsFrom = (address): Match => ({
+  params: {
+    address,
+  },
+  isExact: true,
+  path: '',
+  url: '',
+})
+
 const safeSelectorTests = () => {
   describe('Safe Selector[safeSelector]', () => {
     it('should return empty list when no safes', () => {
       // GIVEN
       const reduxStore = { [SAFE_REDUCER_ID]: Map(), providers: undefined }
-      const props: Match = {
-        match: {
-          params: {
-            address: 'fooAddress',
-          },
-        },
-      }
+      const match: Match = buildMathPropsFrom('fooAddress')
 
       // WHEN
-      const safes = safeSelector(reduxStore, props)
+      const safes = safeSelector(reduxStore, { match })
 
       // THEN
       expect(safes).toBe(undefined)
@@ -32,27 +35,14 @@ const safeSelectorTests = () => {
       map = map.set('fooAddress', SafeFactory.oneOwnerSafe)
       map = map.set('barAddress', SafeFactory.twoOwnersSafe)
 
-      const props: Match = {
-        match: {
-          params: {
-            address: 'fooAddress',
-          },
-        },
-      }
-
-      const undefProps: Match = {
-        match: {
-          params: {
-            address: 'inventedAddress',
-          },
-        },
-      }
+      const match: Match = buildMathPropsFrom('fooAddress')
+      const undefMatch: Match = buildMathPropsFrom('inventedAddress')
 
       const reduxStore = { [SAFE_REDUCER_ID]: map, providers: undefined }
 
       // WHEN
-      const oneOwnerSafe = safeSelector(reduxStore, props)
-      const undefinedSafe = safeSelector(reduxStore, undefProps)
+      const oneOwnerSafe = safeSelector(reduxStore, { match })
+      const undefinedSafe = safeSelector(reduxStore, { match: undefMatch })
 
       // THEN
       expect(oneOwnerSafe).toEqual(SafeFactory.oneOwnerSafe)

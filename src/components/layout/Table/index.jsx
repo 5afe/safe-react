@@ -6,7 +6,7 @@ export { TableBody, TableCell, TableHead, TableRow }
 
 type Props = {
   children: React$Node,
-  size: number
+  size?: number
 }
 
 const buildWidthFrom = (size: number) => ({
@@ -15,7 +15,7 @@ const buildWidthFrom = (size: number) => ({
 
 // see: https://css-tricks.com/responsive-data-tables/
 const GnoTable = ({ size, children }: Props) => {
-  const style = buildWidthFrom(size)
+  const style = size ? buildWidthFrom(size) : undefined
 
   return (
     <Table style={style}>

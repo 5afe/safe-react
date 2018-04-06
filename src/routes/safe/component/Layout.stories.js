@@ -1,6 +1,5 @@
 // @flow
 import { storiesOf } from '@storybook/react'
-import { List } from 'immutable'
 import * as React from 'react'
 import styles from '~/components/layout/PageFrame/index.scss'
 import { SafeFactory } from '~/routes/safe/store/test/builder/index.builder'
@@ -13,12 +12,13 @@ const FrameDecorator = story => (
   </div>
 )
 
-storiesOf('Routes /safes', module)
+storiesOf('Routes /safe:address', module)
   .addDecorator(FrameDecorator)
-  .add('Safe List whithout safes', () => <Component safes={List([])} />)
-  .add('Safe List whith 2 safes', () => {
-    const safes = List([SafeFactory.oneOwnerSafe, SafeFactory.twoOwnersSafe])
+  .add('Safe undefined', () => <Component safe={undefined} />)
+  .add('Safe with 2 owners', () => {
+    const safe = SafeFactory.twoOwnersSafe
+
     return (
-      <Component safes={safes} />
+      <Component safe={safe} />
     )
   })
