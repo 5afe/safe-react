@@ -5,6 +5,7 @@ os:
   - linux
 before_script:
   - yarn global add truffle
+  - cd node_modules/truffle && yarn add solc@0.4.19 && cd .. && cd ..
   - yarn global add surge
   - git clone https://github.com/gnosis/gnosis-safe-contracts.git
   - cd gnosis-safe-contracts
