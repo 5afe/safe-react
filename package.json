@@ -111,7 +111,8 @@
     "setupFiles": [
       "<rootDir>/config/webpack.config.test.js",
       "<rootDir>/config/polyfills.js",
-      "<rootDir>/config/jest/LocalStorageMock.js"
+      "<rootDir>/config/jest/LocalStorageMock.js",
+      "<rootDir>/config/jest/Web3Mock.js"
     ],
     "testMatch": [
       "<rootDir>/src/**/__tests__/**/*.js?(x)",
