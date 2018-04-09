@@ -57,7 +57,6 @@ describe('React DOM TESTS > Create Safe form', () => {
     TestUtils.Simulate.change(ownerName, { target: { value: 'Adolfo Eth Account' } })
 
     const form = TestUtils.findRenderedDOMComponentWithTag(open, 'form')
-
     // One submit per step when creating a safe
     TestUtils.Simulate.submit(form) // fill the form
     TestUtils.Simulate.submit(form) // confirming data
