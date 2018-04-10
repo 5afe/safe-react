@@ -12,7 +12,6 @@ import { getProviderInfo } from '~/wallets/getWeb3'
 import addProvider from '~/wallets/store/actions/addProvider'
 import { makeProvider } from '~/wallets/store/model/provider'
 
-
 describe('React DOM TESTS > Create Safe form', () => {
   let open
   let provider
@@ -67,6 +66,16 @@ describe('React DOM TESTS > Create Safe form', () => {
     await sleep(1500)
 
     // THEN
-    TestUtils.findRenderedDOMComponentWithClass(open, DEPLOYED_COMPONENT_ID)
+    const Deployed = TestUtils.findRenderedDOMComponentWithClass(open, DEPLOYED_COMPONENT_ID)
+
+    const addressHtml = Deployed.getElementsByTagName('p')[0].innerHTML
+    const contractAddress = addressHtml.slice(addressHtml.lastIndexOf('>') + 1)
+    const transactionHash = JSON.parse(Deployed.getElementsByTagName('pre')[0].innerHTML)
+    delete transactionHash.logsBloom
+    // eslint-disable-next-line
+    console.log('Deployed safe address is: ' + contractAddress)
+
+    // eslint-disable-next-line
+    console.log(transactionHash)
   })
 })
