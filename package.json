@@ -107,6 +107,7 @@
     "react-router-dom": "^4.2.2"
   },
   "jest": {
+    "verbose": true,
     "collectCoverageFrom": [
       "src/**/*.{js,jsx}"
     ],
