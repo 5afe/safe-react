@@ -8,7 +8,8 @@
   "scripts": {
     "start": "node scripts/start.js",
     "build": "node scripts/build.js",
-    "test": "node scripts/test.js --env=jsdom",
+    "test": "run-with-testrpc -l 40000000 'node scripts/test.js --env=jsdom'",
+    "test-local": "node scripts/test.js --env=jsdom",
     "precommit": "./precommit.sh",
     "flow": "flow",
     "storybook": "start-storybook -p 6006",
@@ -82,6 +83,7 @@
     "redux-actions": "^2.3.0",
     "redux-thunk": "^2.2.0",
     "reselect": "^3.0.1",
+    "run-with-testrpc": "^0.3.0",
     "storybook-host": "^4.1.5",
     "storybook-router": "^0.3.3",
     "style-loader": "^0.20.2",
@@ -105,12 +107,15 @@
     "react-router-dom": "^4.2.2"
   },
   "jest": {
+    "verbose": true,
     "collectCoverageFrom": [
       "src/**/*.{js,jsx}"
     ],
     "setupFiles": [
       "<rootDir>/config/webpack.config.test.js",
-      "<rootDir>/config/polyfills.js"
+      "<rootDir>/config/polyfills.js",
+      "<rootDir>/config/jest/LocalStorageMock.js",
+      "<rootDir>/config/jest/Web3Mock.js"
     ],
     "testMatch": [
       "<rootDir>/src/**/__tests__/**/*.js?(x)",

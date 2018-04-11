@@ -9,7 +9,7 @@ type Props = {
   center?: boolean,
   noMargin?: boolean,
   bold?: boolean,
-  size?: 'sm' | 'md' | 'lg',
+  size?: 'sm' | 'md' | 'lg' | 'xl',
   color?: 'soft' | 'medium' | 'dark' | 'primary',
   children: React$Node
 }

@@ -1,7 +1,7 @@
 // @flow
 import { combineReducers, createStore, applyMiddleware, compose } from 'redux'
 import thunk from 'redux-thunk'
-import providerReducer, { REDUCER_ID } from '~/wallets/store/reducer/provider'
+import providerReducer, { PROVIDER_REDUCER_ID } from '~/wallets/store/reducer/provider'
 import type { ProviderProps } from '~/wallets/store/model/provider'
 import { makeProvider } from '~/wallets/store/model/provider'
 import { processProviderResponse } from '../actions/fetchProvider'
@@ -11,7 +11,7 @@ const providerReducerTests = () => {
     let store
     beforeEach(() => {
       const reducers = combineReducers({
-        [REDUCER_ID]: providerReducer,
+        [PROVIDER_REDUCER_ID]: providerReducer,
       })
       const middlewares = [
         thunk,
@@ -30,7 +30,7 @@ const providerReducerTests = () => {
 
       // WHEN
       processProviderResponse(store.dispatch, emptyResponse)
-      const provider = store.getState()[REDUCER_ID]
+      const provider = store.getState()[PROVIDER_REDUCER_ID]
 
       // THEN
       expect(makeProvider(emptyResponse)).toEqual(provider)
@@ -44,7 +44,7 @@ const providerReducerTests = () => {
 
       // WHEN
       processProviderResponse(store.dispatch, metamaskLoaded)
-      const provider = store.getState()[REDUCER_ID]
+      const provider = store.getState()[PROVIDER_REDUCER_ID]
 
       // THEN
       expect(makeProvider(metamaskLoaded)).toEqual(provider)
@@ -58,7 +58,7 @@ const providerReducerTests = () => {
 
       // WHEN
       processProviderResponse(store.dispatch, metamask)
-      const provider = store.getState()[REDUCER_ID]
+      const provider = store.getState()[PROVIDER_REDUCER_ID]
 
       // THEN
       expect(makeProvider(metamask)).toEqual(provider)

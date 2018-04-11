@@ -17,8 +17,10 @@ type Props = {
   tx: Object,
 }
 
+export const DEPLOYED_COMPONENT_ID = 'deployedSafeComponent'
+
 const Deployment = ({ address, tx }: Props) => (
-  <Block>
+  <Block className={DEPLOYED_COMPONENT_ID}>
     <Paragraph><Bold>Deployed safe to: </Bold>{address}</Paragraph>
     <Pre>
       {JSON.stringify(tx, null, 2) }

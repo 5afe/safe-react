@@ -12,10 +12,28 @@ const FrameDecorator = story => (
 )
 
 
-storiesOf('Routes', module)
+storiesOf('Routes /welcome', module)
   .addDecorator(FrameDecorator)
   .add('Welcome with Metamask connected', () => {
     const provider = select('Status by Provider', ['', 'UNKNOWN', 'METAMASK', 'PARITY'], 'METAMASK')
+    return (
+      <Component
+        provider={provider}
+        fetchProvider={() => { }}
+      />
+    )
+  })
+  .add('Welcome with unknown wallet', () => {
+    const provider = select('Status by Provider', ['', 'UNKNOWN', 'METAMASK', 'PARITY'], 'UNKNOWN')
+    return (
+      <Component
+        provider={provider}
+        fetchProvider={() => { }}
+      />
+    )
+  })
+  .add('Welcome without wallet connected', () => {
+    const provider = select('Status by Provider', ['', 'UNKNOWN', 'METAMASK', 'PARITY'], '')
     return (
       <Component
         provider={provider}

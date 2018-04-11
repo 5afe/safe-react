@@ -12,3 +12,5 @@ export const getNamesFrom = (values: Object): string[] => {
 }
 
 export const getThresholdFrom = (values: Object): number => Number(values.confirmations)
+
+export const getSafeNameFrom = (values: Object): string => values.name
