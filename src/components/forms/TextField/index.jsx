@@ -2,6 +2,11 @@
 import React from 'react'
 import MuiTextField, { TextFieldProps } from 'material-ui/TextField'
 
+// Neded for solving a fix in Windows browsers
+const overflowStyle = {
+  overflow: 'hidden',
+}
+
 class TextField extends React.PureComponent<TextFieldProps> {
   render() {
     const {
@@ -18,6 +23,7 @@ class TextField extends React.PureComponent<TextFieldProps> {
 
     return (
       <MuiTextField
+        style={overflowStyle}
         {...rest}
         name={name}
         helperText={showError ? meta.error : helperText}
