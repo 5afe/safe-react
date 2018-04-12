@@ -3,6 +3,11 @@
 
 echo "Deployment script for gnosis-safe-team"
 
+RANGE=500
+
+number=$RANDOM
+let "number %= $RANGE"
+
 # Split on "/", ref: http://stackoverflow.com/a/5257398/689223
 REPO_SLUG_ARRAY=(${TRAVIS_REPO_SLUG//\// })
 REPO_OWNER=${REPO_SLUG_ARRAY[0]}
@@ -17,9 +22,9 @@ if [ "$TRAVIS_PULL_REQUEST" != "false" ]
 then
   if [ "$NODE_ENV" == "production" ]
   then
-    DEPLOY_SUBDOMAIN_UNFORMATTED_LIST+=(release-${TRAVIS_PULL_REQUEST}-pr)
+    DEPLOY_SUBDOMAIN_UNFORMATTED_LIST+=(release-${TRAVIS_PULL_REQUEST}-pr-${number})
   else
-    DEPLOY_SUBDOMAIN_UNFORMATTED_LIST+=(staging-${TRAVIS_PULL_REQUEST}-pr)
+    DEPLOY_SUBDOMAIN_UNFORMATTED_LIST+=(staging-${TRAVIS_PULL_REQUEST}-pr-${number})
   fi
 elif [ -n "${TRAVIS_TAG// }" ] #TAG is not empty
 then
