@@ -12,7 +12,7 @@ type Props = {
 }
 
 const SafeList = ({ safes }: Props) => (
-  <Page overflow>
+  <Page>
     <Layout safes={safes} />
   </Page>
 )
