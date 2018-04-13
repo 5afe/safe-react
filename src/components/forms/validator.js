@@ -32,5 +32,10 @@ export const mustBeEthereumAddress = (address: Field) => {
   return isAddress ? undefined : 'Address should be a valid Ethereum address'
 }
 
+export const ADDRESS_REPEATED_ERROR = 'Address already introduced'
+
+export const uniqueAddress = (addresses: string[]) => (value: string) =>
+  (addresses.includes(value) ? ADDRESS_REPEATED_ERROR : undefined)
+
 export const composeValidators = (...validators: Function[]) => (value: Field) =>
   validators.reduce((error, validator) => error || validator(value), undefined)
