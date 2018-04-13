@@ -1,5 +1,5 @@
 // @flow
-import React from 'react'
+import * as React from 'react'
 import Block from '~/components/layout/Block'
 import Img from '~/components/layout/Img'
 import Button from '~/components/layout/Button'
@@ -14,22 +14,40 @@ type Props = {
 }
 
 type SafeProps = {
+  provider: string,
   size?: 'small' | 'medium',
 }
 
-export const CreateSafe = ({ size }: SafeProps) => (
-  <Link to={OPEN_ADDRESS}>
-    <Button variant="raised" size={size || 'medium'} color="primary">
-      Create a new Safe
-    </Button>
-  </Link>
+type SafeButtonProps = {
+  disabled: boolean,
+  size?: 'small' | 'medium',
+}
+
+const SafeButton = ({ size, disabled }: SafeButtonProps) => (
+  <Button
+    variant="raised"
+    size={size || 'medium'}
+    color="primary"
+    disabled={disabled}
+  >
+    Create a new Safe
+  </Button>
 )
+export const CreateSafe = ({ size, provider }: SafeProps) => (
+  <React.Fragment>
+    { provider
+      ? <Link to={OPEN_ADDRESS}><SafeButton size={size} disabled={false} /></Link>
+      : <SafeButton size={size} disabled />
+    }
+  </React.Fragment>
+)
+
 
 const Welcome = ({ provider }: Props) => (
   <Block className={styles.safe}>
     <Img alt="Safe Box" src={vault} height={330} />
     <Block className={styles.safeActions} margin="md">
-      { provider && <CreateSafe /> }
+      <CreateSafe provider={provider} />
       <Link to={SAFELIST_ADDRESS}>
         <Button variant="raised" color="primary">
           See Safe list
