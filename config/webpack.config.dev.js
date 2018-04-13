@@ -1,4 +1,6 @@
+/*eslint-disable*/
 const autoprefixer = require('autoprefixer');
+const cssmixins = require('postcss-mixins');
 const cssvars = require('postcss-simple-vars');
 const webpack = require('webpack');
 const HtmlWebPackPlugin = require("html-webpack-plugin");
@@ -26,6 +28,7 @@ const postcssPlugins = [
       'not ie < 9', // React doesn't support IE8 anyway
     ]
   }),
+  cssmixins,
   cssvars({
     variables: function () {
         return Object.assign({}, cssvariables);
@@ -115,7 +118,7 @@ module.exports = {
             },
           },
         ],
-    },
+      },
       {
         test: /\.html$/,
         use: [
@@ -124,7 +127,17 @@ module.exports = {
             options: { minimize: false }
           }
         ]
-      }
+      },
+      {
+        test: /\.(jpe?g|png|svg)$/i,
+        exclude: /node_modules/,
+        use: [{
+          loader: "file-loader",
+          options: {
+            name: 'img/[hash].[ext]'
+          }
+        }]
+      },
     ]
   },
   plugins: [

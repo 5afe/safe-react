@@ -1,23 +1,36 @@
 // @flow
-import { CircularProgress } from 'material-ui/Progress'
 import React from 'react'
 import Loadable from 'react-loadable'
 import { Switch, Redirect, Route } from 'react-router-dom'
-import Welcome from './welcome/components/Layout'
+import Loader from '~/components/Loader'
+import Welcome from './welcome/container'
+import { SAFELIST_ADDRESS, OPEN_ADDRESS, SAFE_PARAM_ADDRESS, WELCOME_ADDRESS } from './routes'
 
-const Loading = () => <CircularProgress size={50} />
-
-const Transactions = Loadable({
-  loader: () => import('./transactions/components/Layout'),
-  loading: Loading,
+const Safe = Loadable({
+  loader: () => import('./safe/container'),
+  loading: Loader,
 })
+
+const SafeList = Loadable({
+  loader: () => import('./safeList/container'),
+  loading: Loader,
+})
+
+const Open = Loadable({
+  loader: () => import('./open/container/Open'),
+  loading: Loader,
+})
+
+const SAFE_ADDRESS = `${SAFELIST_ADDRESS}/:${SAFE_PARAM_ADDRESS}`
 
 const Routes = () => (
   <Switch>
-    <Redirect exact from="/" to="/welcome" />
-    <Route exact path='/welcome' component={Welcome} />
-    <Route exact path='/transactions' component={Transactions} />
-  </Switch>  
+    <Redirect exact from="/" to={WELCOME_ADDRESS} />
+    <Route exact path={WELCOME_ADDRESS} component={Welcome} />
+    <Route exact path={OPEN_ADDRESS} component={Open} />
+    <Route exact path={SAFELIST_ADDRESS} component={SafeList} />
+    <Route exact path={SAFE_ADDRESS} component={Safe} />
+  </Switch>
 )
 
 export default Routes

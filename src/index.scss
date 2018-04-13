@@ -1,0 +1,30 @@
+html, body {
+  height: 100%;
+  width: 100%;
+}
+
+body {
+  position: absolute;
+  bottom: 0;
+  top: 0;
+  left: 0;
+  right: 0;
+  overflow-x: hidden;
+  color: #1f5f76;
+  font-family: 'Montserrat', sans-serif;
+  font-size: $mediumFontSize;
+  margin: 0;  
+}
+
+body>div:first-child {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  min-height: calc(100% - (2 * $xl));
+  padding: $xl;
+  background-image: linear-gradient(to bottom, $primary, #1a829d, #1a829d, #1f5f76);
+}
+
+h1, h2, h3 {
+  font-family: 'Montserrat', sans-serif;
+}

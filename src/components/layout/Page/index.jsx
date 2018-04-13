@@ -1,12 +1,20 @@
+// @flow
+import classNames from 'classnames/bind'
 import React from 'react'
-import Header from '../../Header'
-import styles from './index.scss';
+import styles from './index.scss'
 
-const Page = ({children}) => (
-  <div className={styles.page}>
-    <Header />
+const cx = classNames.bind(styles)
+
+type Props = {
+  children: React$Node,
+  align?: 'center',
+  overflow?: boolean
+}
+
+const Page = ({ children, align, overflow }: Props) => (
+  <main className={cx(styles.page, align, { overflow })}>
     {children}
-  </div>
+  </main>
 )
 
 export default Page

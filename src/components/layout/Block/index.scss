@@ -1,0 +1,43 @@
+.block {
+  display: inline-block;
+  width: 100%;
+  overflow: hidden;
+}
+
+.sm {
+    margin-bottom: $sm;
+}
+
+.md {
+    margin-bottom: $md;
+}
+
+.lg {
+    margin-bottom: $lg;
+}
+
+.xl {
+    margin-bottom: $xl;
+}
+
+.paddingSm {
+  padding-top: $sm;
+}
+
+.paddingMd {
+  padding-top: $md;
+}
+
+.paddingLg {
+  padding-top: $lg;
+}
+
+.paddingXl {
+  padding-top: $xl;
+}
+
+.center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

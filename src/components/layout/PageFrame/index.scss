@@ -1,3 +1,7 @@
-.container {
-  margin: 0px 20px;
+.frame {
+  display: flex;
+  flex-direction: column;
+  flex: 1 0 auto;
+  background-color: white;
+  padding: $xl;
 }

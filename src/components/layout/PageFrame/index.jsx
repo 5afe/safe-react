@@ -1,10 +1,19 @@
+// @flow
 import React from 'react'
-import styles from './index.scss';
+import Footer from '~/components/Footer'
+import Header from '~/components/Header'
+import styles from './index.scss'
 
-const PageFrame = ({ children }) => (
-  <main className={styles.container}>
-    { children }
-  </main>
+type Props = {
+  children: React$Node,
+}
+
+const PageFrame = ({ children }: Props) => (
+  <div className={styles.frame}>
+    <Header />
+    {children}
+    <Footer />
+  </div>
 )
 
 export default PageFrame

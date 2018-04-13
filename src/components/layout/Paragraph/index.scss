@@ -1,0 +1,48 @@
+.paragraph {
+  text-overflow: ellipsis;
+  overflow-x: inherit;  
+}
+
+.soft {
+    color: #888888;
+}
+
+.medium {
+    color: #686868;
+}
+
+.dark {
+    color: black;
+}
+
+.primary {
+  color: #00a6c4;
+}
+
+.noMargin{
+    margin: 0;
+}
+
+.center {
+    text-align: center;
+}
+
+.sm {
+  font-size: $smallFontSize;
+}
+
+.md {
+  font-size: $mediumFontSize;
+}
+
+.lg {
+  font-size: $largeFontSize;
+}
+
+.lg {
+  font-size: $extraLargeFontSize;
+}
+
+.bold {
+  font-weight: bold;
+}

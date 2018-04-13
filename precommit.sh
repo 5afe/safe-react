@@ -2,7 +2,6 @@
 
 STAGED_FILES=$(git diff --cached --name-only --diff-filter=ACM | grep ".jsx\{0,1\}$")
 ESLINT="$(git rev-parse --show-toplevel)/node_modules/.bin/eslint"
-ADD_FILES_TO_COMMIT="git add ."
 
 if [[ "$STAGED_FILES" = "" ]]; then
   exit 0
@@ -38,7 +37,5 @@ if ! $PASS; then
 else
   echo -e "\033[42mCOMMIT SUCCEEDED\033[0m\n"
 fi
-
-eval $ADD_FILES_TO_COMMIT
 
 exit $?

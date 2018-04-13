@@ -1,11 +1,30 @@
-import React from 'react'
-import styles from './index.scss';
+// @flow
+import * as React from 'react'
+import { connect } from 'react-redux'
+import Layout from './component/Layout'
+import actions from './actions'
+import selector from './selector'
 
-const Header = () => (
-  <header className={styles.header}>
-    <h1>GNOSIS DAPP BOILERPLATE</h1>
-    <div>Multisig 2.0</div>
-  </header>
-)
+type Props = {
+  provider: string,
+  fetchProvider: Function,
+}
 
-export default Header
+class Header extends React.PureComponent<Props> {
+  componentDidMount() {
+    this.props.fetchProvider()
+  }
+
+  reloadWallet = () => {
+    this.props.fetchProvider()
+  }
+
+  render() {
+    const { provider } = this.props
+    return (
+      <Layout provider={provider} reloadWallet={this.reloadWallet} />
+    )
+  }
+}
+
+export default connect(selector, actions)(Header)

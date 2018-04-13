@@ -1,0 +1,14 @@
+.img {
+    max-width: 100%;
+    box-sizing: border-box;    
+}
+
+.bordered {
+    border: 1px solid #ddd;
+}
+
+.fullwidth {
+    padding: 0;
+    width: 40% !important;
+    margin: 0 60% 25px !important;
+}

@@ -8,9 +8,12 @@
   "scripts": {
     "start": "node scripts/start.js",
     "build": "node scripts/build.js",
-    "test": "node scripts/test.js --env=jsdom",
+    "test": "run-with-testrpc -l 40000000 'node scripts/test.js --env=jsdom'",
+    "test-local": "node scripts/test.js --env=jsdom",
     "precommit": "./precommit.sh",
-    "flow": "flow"
+    "flow": "flow",
+    "storybook": "start-storybook -p 6006",
+    "build-storybook": "build-storybook -o build_storybook"
   },
   "repository": {
     "type": "git",
@@ -34,13 +37,20 @@
     "@babel/preset-flow": "^7.0.0-beta.40",
     "@babel/preset-react": "^7.0.0-beta.40",
     "@babel/preset-stage-0": "^7.0.0-beta.40",
+    "@sambego/storybook-state": "^1.0.7",
+    "@storybook/addon-actions": "^3.3.15",
+    "@storybook/addon-knobs": "^3.3.15",
+    "@storybook/addon-links": "^3.3.15",
+    "@storybook/react": "^3.3.15",
     "autoprefixer": "^8.1.0",
     "babel-core": "^7.0.0-bridge.0",
-    "babel-eslint": "^7.2.3",
+    "babel-eslint": "8",
+    "babel-jest": "^22.4.1",
     "babel-loader": "^8.0.0-beta.0",
     "babel-plugin-dynamic-import-node": "^1.2.0",
     "babel-plugin-transform-es3-member-expression-literals": "^6.22.0",
     "babel-plugin-transform-es3-property-literals": "^6.22.0",
+    "classnames": "^2.2.5",
     "css-loader": "^0.28.10",
     "detect-port": "^1.2.2",
     "dotenv": "^5.0.1",
@@ -57,20 +67,31 @@
     "fs-extra": "^5.0.0",
     "html-loader": "^0.5.5",
     "html-webpack-plugin": "^3.0.4",
+    "immutable": "^4.0.0-rc.9",
     "jest": "^22.4.2",
     "json-loader": "^0.5.7",
     "postcss-loader": "^2.1.1",
+    "postcss-mixins": "^6.2.0",
     "postcss-simple-vars": "^4.1.0",
     "pre-commit": "^1.2.2",
     "react": "^16.2.0",
     "react-dev-utils": "^5.0.0",
     "react-dom": "^16.2.0",
+    "react-redux": "^5.0.7",
+    "react-router-redux": "^5.0.0-alpha.9",
+    "redux": "^3.7.2",
+    "redux-actions": "^2.3.0",
+    "redux-thunk": "^2.2.0",
+    "reselect": "^3.0.1",
+    "run-with-testrpc": "^0.3.0",
+    "storybook-host": "^4.1.5",
+    "storybook-router": "^0.3.3",
     "style-loader": "^0.20.2",
     "truffle-contract": "^1.1.8",
     "truffle-solidity-loader": "0.0.8",
     "uglifyjs-webpack-plugin": "^1.2.2",
     "web3": "0.18.4",
-    "webpack": "^4.0.0",
+    "webpack": "^4.1.1",
     "webpack-bundle-analyzer": "^2.11.1",
     "webpack-cli": "^2.0.8",
     "webpack-dev-server": "^3.1.0",
@@ -78,6 +99,7 @@
   },
   "dependencies": {
     "final-form": "^4.2.1",
+    "history": "^4.7.2",
     "material-ui": "^1.0.0-beta.35",
     "material-ui-icons": "^1.0.0-beta.35",
     "react-final-form": "^3.1.2",
@@ -85,12 +107,15 @@
     "react-router-dom": "^4.2.2"
   },
   "jest": {
+    "verbose": true,
     "collectCoverageFrom": [
       "src/**/*.{js,jsx}"
     ],
     "setupFiles": [
       "<rootDir>/config/webpack.config.test.js",
-      "<rootDir>/config/polyfills.js"
+      "<rootDir>/config/polyfills.js",
+      "<rootDir>/config/jest/LocalStorageMock.js",
+      "<rootDir>/config/jest/Web3Mock.js"
     ],
     "testMatch": [
       "<rootDir>/src/**/__tests__/**/*.js?(x)",
@@ -104,19 +129,13 @@
       "^(?!.*\\.(js|jsx|css|json)$)": "<rootDir>/config/jest/fileTransform.js"
     },
     "transformIgnorePatterns": [
-      "[/\\\\]node_modules[/\\\\].+\\.(js|jsx)$"
+      "[/\\\\]node_modules[/\\\\].+\\.(js|jsx)$",
+      "[/\\\\]flow-typed[/\\\\].+\\.(js|jsx)$"
     ],
     "moduleNameMapper": {
       "~(.*)$": "<rootDir>/src/$1",
       "#(.*)$": "<rootDir>/gnosis-safe-contracts/build/contracts/$1",
       "^react-native$": "react-native-web"
-    },
-    "moduleFileExtensions": [
-      "web.js",
-      "js",
-      "json",
-      "web.jsx",
-      "jsx"
-    ]
+    }
   }
 }
