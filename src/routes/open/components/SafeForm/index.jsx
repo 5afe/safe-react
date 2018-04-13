@@ -12,7 +12,7 @@ export const CONFIRMATIONS_ERROR = 'Number of confirmations can not be higher th
 export const safeFieldsValidation = (values: Object) => {
   const errors = {}
 
-  if (values.owners < values.confirmations) {
+  if (Number.parseInt(values.owners, 10) < Number.parseInt(values.confirmations, 10)) {
     errors.confirmations = CONFIRMATIONS_ERROR
   }
 
