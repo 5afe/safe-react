@@ -2,7 +2,15 @@
 import * as React from 'react'
 import Field from '~/components/forms/Field'
 import TextField from '~/components/forms/TextField'
-import { composeValidators, minValue, maxValue, mustBeNumber, mustBeEthereumAddress, required } from '~/components/forms/validator'
+import {
+  composeValidators,
+  minValue,
+  maxValue,
+  mustBeNumber,
+  mustBeEthereumAddress,
+  required,
+  uniqueAddress,
+} from '~/components/forms/validator'
 import Block from '~/components/layout/Block'
 import Col from '~/components/layout/Col'
 import Heading from '~/components/layout/Heading'
@@ -12,12 +20,20 @@ import { FIELD_OWNERS, getOwnerNameBy, getOwnerAddressBy } from '~/routes/open/c
 
 type Props = {
   numOwners: number,
+  otherAccounts: string[],
 }
 
 const MAX_NUMBER_OWNERS = 50
 
+const getAddressValidators = (addresses: string[], position: number) => {
+  const copy = addresses.slice()
+  copy.splice(position, 1)
+
+  return composeValidators(required, mustBeEthereumAddress, uniqueAddress(copy))
+}
+
 const Owners = (props: Props) => {
-  const { numOwners } = props
+  const { numOwners, otherAccounts } = props
   const validNumber = numOwners && Number.isInteger(Number(numOwners))
   const renderOwners = validNumber && Number(numOwners) <= MAX_NUMBER_OWNERS
 
@@ -54,7 +70,7 @@ const Owners = (props: Props) => {
                   name={getOwnerAddressBy(index)}
                   component={TextField}
                   type="text"
-                  validate={composeValidators(required, mustBeEthereumAddress)}
+                  validate={getAddressValidators(otherAccounts, index)}
                   placeholder="Owner Address*"
                   text="Owner Address"
                 />

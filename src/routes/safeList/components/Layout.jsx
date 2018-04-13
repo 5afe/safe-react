@@ -6,17 +6,18 @@ import { type Safe } from '~/routes/safe/store/model/safe'
 import SafeTable from '~/routes/safeList/components/SafeTable'
 
 type Props = {
-  safes: List<Safe>
+  safes: List<Safe>,
+  provider: string,
 }
 
-const SafeList = ({ safes }: Props) => {
+const SafeList = ({ safes, provider }: Props) => {
   const safesAvailable = safes && safes.count() > 0
 
   return (
     <React.Fragment>
       { safesAvailable
         ? <SafeTable safes={safes} />
-        : <NoSafe text="No safes created, please create a new one" />
+        : <NoSafe provider={provider} text="No safes created, please create a new one" />
       }
     </React.Fragment>
   )

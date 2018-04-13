@@ -8,12 +8,13 @@ import Layout from '../components/Layout'
 import selector from './selector'
 
 type Props = {
-  safes: List<Safe>
+  safes: List<Safe>,
+  provider: string,
 }
 
-const SafeList = ({ safes }: Props) => (
+const SafeList = ({ safes, provider }: Props) => (
   <Page>
-    <Layout safes={safes} />
+    <Layout safes={safes} provider={provider} />
   </Page>
 )
 

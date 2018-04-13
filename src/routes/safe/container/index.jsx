@@ -9,11 +9,11 @@ type Props = SelectorProps
 
 class SafeView extends React.PureComponent<Props> {
   render() {
-    const { safe } = this.props
+    const { safe, provider } = this.props
 
     return (
       <Page>
-        <Layout safe={safe} />
+        <Layout provider={provider} safe={safe} />
       </Page>
     )
   }
