@@ -15,10 +15,15 @@ const FrameDecorator = story => (
 
 storiesOf('Routes /safes', module)
   .addDecorator(FrameDecorator)
-  .add('Safe List whithout safes', () => <Component safes={List([])} />)
+  .add('Safe List whithout safes and connected', () => (
+    <Component provider="METAMASK" safes={List([])} />
+  ))
+  .add('Safe List whithout safes and NOT connected', () => (
+    <Component provider="" safes={List([])} />
+  ))
   .add('Safe List whith 2 safes', () => {
     const safes = List([SafeFactory.oneOwnerSafe, SafeFactory.twoOwnersSafe])
     return (
-      <Component safes={safes} />
+      <Component provider="METAMASK" safes={safes} />
     )
   })

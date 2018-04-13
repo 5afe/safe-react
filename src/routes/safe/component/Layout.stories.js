@@ -14,11 +14,12 @@ const FrameDecorator = story => (
 
 storiesOf('Routes /safe:address', module)
   .addDecorator(FrameDecorator)
-  .add('Safe undefined', () => <Component safe={undefined} />)
+  .add('Safe undefined being connected', () => <Component safe={undefined} provider="METAMASK" />)
+  .add('Safe undefined NOT connected', () => <Component safe={undefined} provider="" />)
   .add('Safe with 2 owners', () => {
     const safe = SafeFactory.twoOwnersSafe
 
     return (
-      <Component safe={safe} />
+      <Component safe={safe} provider="METAMASK" />
     )
   })
