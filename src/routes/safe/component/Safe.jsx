@@ -49,7 +49,7 @@ const GnoSafe = ({ safe }: SafeProps) => (
       </Paragraph>
     </Row>
     <Row margin="lg">
-      <Table>
+      <Table size={700}>
         <TableHead>
           <TableRow>
             <TableCell>Name</TableCell>

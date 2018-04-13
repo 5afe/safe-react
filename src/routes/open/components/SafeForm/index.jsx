@@ -6,11 +6,13 @@ import Name from './Name'
 import Owners from './Owners'
 import Confirmations from './Confirmations'
 
+export const CONFIRMATIONS_ERROR = 'Number of confirmations can not be higher than the number of owners'
+
 export const safeFieldsValidation = (values: Object) => {
   const errors = {}
 
   if (values.owners < values.confirmations) {
-    errors.confirmations = 'Number of confirmations can not be higher than the number of owners'
+    errors.confirmations = CONFIRMATIONS_ERROR
   }
 
   return errors

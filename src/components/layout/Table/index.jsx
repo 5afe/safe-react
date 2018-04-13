@@ -13,14 +13,20 @@ const buildWidthFrom = (size: number) => ({
   minWidth: `${size}px`,
 })
 
+const overflowStyle = {
+  overflowX: 'scroll',
+}
+
 // see: https://css-tricks.com/responsive-data-tables/
 const GnoTable = ({ size, children }: Props) => {
   const style = size ? buildWidthFrom(size) : undefined
 
   return (
-    <Table style={style}>
-      {children}
-    </Table>
+    <div style={overflowStyle}>
+      <Table style={style}>
+        {children}
+      </Table>
+    </div>
   )
 }
 

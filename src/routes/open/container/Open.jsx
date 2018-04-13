@@ -21,6 +21,20 @@ type State = {
   safeTx: string,
 }
 
+const createSafe = async (safeContract, values, userAccount, addSafe) => {
+  const accounts = getAccountsFrom(values)
+  const numConfirmations = getThresholdFrom(values)
+  const name = getSafeNameFrom(values)
+  const owners = getNamesFrom(values)
+
+  const web3 = getWeb3()
+  safeContract.setProvider(web3.currentProvider)
+
+  const safe = await safeContract.new(accounts, numConfirmations, 0, 0, { from: userAccount, gas: '5000000' })
+  addSafe(name, safe.address, numConfirmations, owners, accounts)
+  return safe
+}
+
 class Open extends React.Component<Props, State> {
   constructor() {
     super()
@@ -36,19 +50,13 @@ class Open extends React.Component<Props, State> {
   onCallSafeContractSubmit = async (values) => {
     try {
       const { userAccount, addSafe } = this.props
-      const accounts = getAccountsFrom(values)
-      const numConfirmations = getThresholdFrom(values)
-      const name = getSafeNameFrom(values)
-      const owners = getNamesFrom(values)
-
       const web3 = getWeb3()
-      this.safe.setProvider(web3.currentProvider)
 
-      const safeInstance = await this.safe.new(accounts, numConfirmations, 0, 0, { from: userAccount, gas: '5000000' })
+      const safeInstance = await createSafe(this.safe, values, userAccount, addSafe)
       const { address, transactionHash } = safeInstance
+
       const transactionReceipt = await promisify(cb => web3.eth.getTransactionReceipt(transactionHash, cb))
 
-      addSafe(name, address, numConfirmations, owners, accounts)
       this.setState({ safeAddress: address, safeTx: transactionReceipt })
     } catch (error) {
       // eslint-disable-next-line
