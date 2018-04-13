@@ -11,14 +11,16 @@ type Props = {
   padding?: 'xs' | 'sm' | 'md',
   to: string,
   children: React$Node,
+  color?: 'regular' | 'white',
   className?: string,
 }
 
 const GnosisLink = ({
-  to, children, className, padding, ...props
+  to, children, color, className, padding, ...props
 }: Props) => {
   const classes = cx(
     styles.link,
+    color || 'regular',
     padding ? capitalize(padding, 'padding') : undefined,
     className,
   )
