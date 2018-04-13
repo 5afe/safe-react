@@ -1,23 +1,23 @@
 // @flow
 import { getWeb3 } from '~/wallets/getWeb3'
 
-type Field = boolean | number | string
+type Field = boolean | string
 
 export const required = (value: Field) => (value ? undefined : 'Required')
 
 export const mustBeNumber = (value: number) =>
   (Number.isNaN(Number(value)) ? 'Must be a number' : undefined)
 
-export const minValue = (min: number) => (value: number) => {
-  if (Number.isNaN(Number(value)) || value >= min) {
+export const minValue = (min: number) => (value: string) => {
+  if (Number.isNaN(Number(value)) || Number.parseInt(value, 10) >= Number(min)) {
     return undefined
   }
 
   return `Should be at least ${min}`
 }
 
-export const maxValue = (max: number) => (value: number) => {
-  if (Number.isNaN(Number(value)) || value <= max) {
+export const maxValue = (max: number) => (value: string) => {
+  if (Number.isNaN(Number(value)) || Number.parseInt(value, 10) <= Number(max)) {
     return undefined
   }
 
