@@ -1,4 +1,5 @@
 // @flow
+import { BigNumber } from 'bignumber.js'
 import Web3 from 'web3'
 import type { ProviderProps } from '~/wallets/store/model/provider'
 import { promisify } from '~/utils/promisify'
@@ -42,16 +43,11 @@ export const getProviderInfo: Function = async (): Promise<ProviderProps> => {
   }
 }
 
-export const ensureOnce = (fn: Function): Function => {
-  let executed = false
-  let response
-
-  return (...args) => {
-    if (executed) { return response }
-
-    executed = true
-    response = fn(args)
-
-    return response
+export const getBalanceInEtherOf = async (safeAddress: string): Promise<string> => {
+  const funds: BigNumber = await promisify(cb => web3.eth.getBalance(safeAddress, cb))
+  if (!funds) {
+    return '0'
   }
+
+  return web3.fromWei(funds.toNumber(), 'ether').toString()
 }
