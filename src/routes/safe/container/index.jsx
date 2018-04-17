@@ -4,19 +4,30 @@ import { connect } from 'react-redux'
 import Page from '~/components/layout/Page'
 import Layout from '~/routes/safe/component/Layout'
 import selector, { type SelectorProps } from './selector'
+import actions, { type Actions } from './actions'
 
-type Props = SelectorProps
+class SafeView extends React.PureComponent<Actions & SelectorProps> {
+  componentDidMount() {
+    const { safe, fetchBalance } = this.props
+    if (!safe) { return }
 
-class SafeView extends React.PureComponent<Props> {
+    const safeAddress: string = safe.get('address')
+    fetchBalance(safeAddress)
+  }
+
   render() {
-    const { safe, provider } = this.props
+    const { safe, provider, balance } = this.props
 
     return (
       <Page>
-        <Layout provider={provider} safe={safe} />
+        <Layout
+          balance={balance}
+          provider={provider}
+          safe={safe}
+        />
       </Page>
     )
   }
 }
 
-export default connect(selector)(SafeView)
+export default connect(selector, actions)(SafeView)
