@@ -10,9 +10,10 @@ import { type Safe } from '~/routes/safe/store/model/safe'
 
 type SafeProps = {
   safe: Safe,
+  balance: string,
 }
 
-const GnoSafe = ({ safe }: SafeProps) => (
+const GnoSafe = ({ safe, balance }: SafeProps) => (
   <React.Fragment>
     <Row>
       <Col xs={12}>
@@ -20,6 +21,18 @@ const GnoSafe = ({ safe }: SafeProps) => (
           <Bold>{safe.name.toUpperCase()}</Bold>
         </Paragraph>
       </Col>
+    </Row>
+    <Row>
+      <Paragraph size="lg">
+        <Bold>Balance</Bold>
+      </Paragraph>
+    </Row>
+    <Row>
+      <Block>
+        <Paragraph>
+          {balance} - ETH
+        </Paragraph>
+      </Block>
     </Row>
     <Row>
       <Paragraph size="lg">
