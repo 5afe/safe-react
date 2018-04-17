@@ -1,33 +1,18 @@
 // @flow
-import * as React from 'react'
 import TestUtils from 'react-dom/test-utils'
-import Open from '~/routes/open/container/Open'
-import { Provider } from 'react-redux'
-import { ConnectedRouter } from 'react-router-redux'
+import { store } from '~/store'
 import { FIELD_NAME, FIELD_OWNERS, FIELD_CONFIRMATIONS, getOwnerNameBy, getOwnerAddressBy } from '~/routes/open/components/fields'
 import { DEPLOYED_COMPONENT_ID } from '~/routes/open/components/FormConfirmation'
-import { history, store } from '~/store'
 import { sleep } from '~/utils/timer'
 import { getProviderInfo } from '~/wallets/getWeb3'
-import addProvider from '~/wallets/store/actions/addProvider'
-import { makeProvider } from '~/wallets/store/model/provider'
+import { renderSafe } from '~/routes/safe/store/test/builder/deployedSafe.builder'
 
 describe('React DOM TESTS > Create Safe form', () => {
   let open
   let provider
   beforeEach(async () => {
-    // init app web3 instance
     provider = await getProviderInfo()
-    const walletRecord = makeProvider(provider)
-    store.dispatch(addProvider(walletRecord))
-
-    open = TestUtils.renderIntoDocument((
-      <Provider store={store}>
-        <ConnectedRouter history={history}>
-          <Open />
-        </ConnectedRouter>
-      </Provider>
-    ))
+    open = await renderSafe(store)
   })
 
   it('should create a 1 owner safe after rendering correctly the form', async () => {
