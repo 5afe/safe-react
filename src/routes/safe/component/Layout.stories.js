@@ -2,7 +2,7 @@
 import { storiesOf } from '@storybook/react'
 import * as React from 'react'
 import styles from '~/components/layout/PageFrame/index.scss'
-import { SafeFactory } from '~/routes/safe/store/test/builder/index.builder'
+import { SafeFactory } from '~/routes/safe/store/test/builder/safe.builder'
 import Component from './Layout'
 
 
