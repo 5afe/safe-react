@@ -6,14 +6,24 @@ import Layout from '~/routes/safe/component/Layout'
 import selector, { type SelectorProps } from './selector'
 import actions, { type Actions } from './actions'
 
-class SafeView extends React.PureComponent<Actions & SelectorProps> {
-  componentDidMount() {
-    const { safe, fetchBalance } = this.props
-    if (!safe) { return }
+type Props = Actions & SelectorProps
 
-    const safeAddress: string = safe.get('address')
-    fetchBalance(safeAddress)
+class SafeView extends React.PureComponent<Props> {
+  componentDidMount() {
+    this.intervalId = setInterval(() => {
+      const { safe, fetchBalance } = this.props
+      if (!safe) { return }
+
+      const safeAddress: string = safe.get('address')
+      fetchBalance(safeAddress)
+    }, 1500)
   }
+
+  componentWillUnmount() {
+    clearInterval(this.intervalId)
+  }
+
+  intervalId: IntervalID
 
   render() {
     const { safe, provider, balance } = this.props
