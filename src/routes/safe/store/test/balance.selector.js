@@ -49,11 +49,11 @@ const balanceSelectorTests = () => {
       const store = aNewStore()
 
       // WHEN
-      await store.dispatch(addBalance(safeAddress, '1'))
+      await store.dispatch(addBalance(safeAddress, '1.3456'))
       const balance = balanceSelector(store.getState(), { match })
 
       // THEN
-      expect(balance).toBe('1')
+      expect(balance).toBe('1.3456')
     })
   })
 }
