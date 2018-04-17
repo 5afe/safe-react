@@ -5,6 +5,7 @@ import { combineReducers, createStore, applyMiddleware, compose, type Reducer, t
 import thunk from 'redux-thunk'
 import provider, { PROVIDER_REDUCER_ID, type State as ProviderState } from '~/wallets/store/reducer/provider'
 import safe, { SAFE_REDUCER_ID, calculateInitialState, type State as SafeState } from '~/routes/safe/store/reducer/safe'
+import balances, { BALANCE_REDUCER_ID, type State as BalancesState } from '~/routes/safe/store/reducer/balances'
 
 export const history = createBrowserHistory()
 
@@ -18,12 +19,14 @@ const finalCreateStore = composeEnhancers(applyMiddleware(
 export type GlobalState = {
   providers: ProviderState,
   safes: SafeState,
+  balances: BalancesState,
 }
 
 const reducers: Reducer<GlobalState> = combineReducers({
   routing: routerReducer,
   [PROVIDER_REDUCER_ID]: provider,
   [SAFE_REDUCER_ID]: safe,
+  [BALANCE_REDUCER_ID]: balances,
 })
 
 const initialState = { [SAFE_REDUCER_ID]: calculateInitialState() }
