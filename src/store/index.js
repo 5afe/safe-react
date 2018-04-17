@@ -32,3 +32,5 @@ const reducers: Reducer<GlobalState> = combineReducers({
 const initialState = { [SAFE_REDUCER_ID]: calculateInitialState() }
 
 export const store: Store<GlobalState> = createStore(reducers, initialState, finalCreateStore)
+
+export const aNewStore = (): Store<GlobalState> => createStore(reducers, initialState, finalCreateStore)

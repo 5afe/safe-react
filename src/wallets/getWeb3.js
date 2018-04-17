@@ -43,7 +43,7 @@ export const getProviderInfo: Function = async (): Promise<ProviderProps> => {
   }
 }
 
-export const getBalanceInEtherOf = async (safeAddress: string): Promise<string> => {
+export const getBalanceInEtherOf = async (safeAddress: string) => {
   const funds: BigNumber = await promisify(cb => web3.eth.getBalance(safeAddress, cb))
   if (!funds) {
     return '0'

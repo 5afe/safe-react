@@ -5,7 +5,7 @@ import { type GlobalState } from '~/store/index'
 import addBalance from './addBalance'
 
 export default (safeAddress: string) => async (dispatch: ReduxDispatch<GlobalState>) => {
-  const balance: string = await getBalanceInEtherOf(safeAddress)
+  const balance = await getBalanceInEtherOf(safeAddress)
 
-  dispatch(addBalance(safeAddress, balance))
+  return dispatch(addBalance(safeAddress, balance))
 }
