@@ -3,7 +3,7 @@ import { Map } from 'immutable'
 import { type Match } from 'react-router-dom'
 import { SAFE_REDUCER_ID } from '~/routes/safe/store/reducer/safe'
 import { type Safe } from '~/routes/safe/store/model/safe'
-import { SafeFactory } from '~/routes/safe/store/test/builder/index.builder'
+import { SafeFactory } from '~/routes/safe/store/test/builder/safe.builder'
 import { safeSelector } from '../selectors'
 
 const buildMathPropsFrom = (address): Match => ({
@@ -19,7 +19,11 @@ const safeSelectorTests = () => {
   describe('Safe Selector[safeSelector]', () => {
     it('should return empty list when no safes', () => {
       // GIVEN
-      const reduxStore = { [SAFE_REDUCER_ID]: Map(), providers: undefined }
+      const reduxStore = {
+        [SAFE_REDUCER_ID]: Map(),
+        providers: undefined,
+        balances: undefined,
+      }
       const match: Match = buildMathPropsFrom('fooAddress')
 
       // WHEN
@@ -38,7 +42,11 @@ const safeSelectorTests = () => {
       const match: Match = buildMathPropsFrom('fooAddress')
       const undefMatch: Match = buildMathPropsFrom('inventedAddress')
 
-      const reduxStore = { [SAFE_REDUCER_ID]: map, providers: undefined }
+      const reduxStore = {
+        [SAFE_REDUCER_ID]: map,
+        providers: undefined,
+        balances: undefined,
+      }
 
       // WHEN
       const oneOwnerSafe = safeSelector(reduxStore, { match })

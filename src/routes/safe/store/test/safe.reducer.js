@@ -5,7 +5,7 @@ import safeReducer, { calculateInitialState, SAFE_REDUCER_ID } from '~/routes/sa
 import addSafe from '~/routes/safe/store/actions/addSafe'
 import * as SafeFields from '~/routes/open/components/fields'
 import { getAccountsFrom, getNamesFrom } from '~/routes/open/utils/safeDataExtractor'
-import { SafeFactory } from './builder/index.builder'
+import { SafeFactory } from './builder/safe.builder'
 
 const aStore = (initState) => {
   const reducers = combineReducers({

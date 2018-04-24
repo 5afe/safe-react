@@ -2,14 +2,18 @@
 import { List, Map } from 'immutable'
 import { SAFE_REDUCER_ID } from '~/routes/safe/store/reducer/safe'
 import { type Safe } from '~/routes/safe/store/model/safe'
-import { SafeFactory } from '~/routes/safe/store/test/builder/index.builder'
+import { SafeFactory } from '~/routes/safe/store/test/builder/safe.builder'
 import { safesListSelector } from '../selectors'
 
 const safesListSelectorTests = () => {
   describe('Safes Selector[safesSelector]', () => {
     it('should return empty list when no safes', () => {
       // GIVEN
-      const reduxStore = { [SAFE_REDUCER_ID]: Map(), providers: undefined }
+      const reduxStore = {
+        [SAFE_REDUCER_ID]: Map(),
+        providers: undefined,
+        balances: undefined,
+      }
       const emptyList = List([])
 
       // WHEN
@@ -25,7 +29,11 @@ const safesListSelectorTests = () => {
       map = map.set('fooAddress', SafeFactory.oneOwnerSafe)
       map = map.set('barAddress', SafeFactory.twoOwnersSafe)
 
-      const reduxStore = { [SAFE_REDUCER_ID]: map, providers: undefined }
+      const reduxStore = {
+        [SAFE_REDUCER_ID]: map,
+        providers: undefined,
+        balances: undefined,
+      }
 
       // WHEN
       const safes = safesListSelector(reduxStore)
