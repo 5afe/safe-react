@@ -1,6 +1,6 @@
 {
-  "name": "gnosis-team-safe",
-  "version": "1.0.0",
+  "name": "safe-react",
+  "version": "0.3.2",
   "description": "Allowing crypto users manage funds in a safer way",
   "directories": {
     "test": "test"
@@ -17,14 +17,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/gnosis/gnosis-team-safe"
+    "url": "https://github.com/gnosis/safe-react"
   },
   "author": "Gnosis Team",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/gnosis/gnosis-team-safe/issues"
+    "url": "https://github.com/gnosis/safe-react/issues"
   },
-  "homepage": "https://github.com/gnosis/gnosis-team-safe#readme",
+  "homepage": "https://github.com/gnosis/safe-react#readme",
   "pre-commit": [
     "precommit"
   ],
