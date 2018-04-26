@@ -1,7 +1,15 @@
 .col {
   flex: 1 1 auto;
-  display: flex;
   align-items: center;
+  display: inherit;
+}
+
+.inherit {
+  display: inherit;
+}
+
+.block {
+  display: block;
 }
 
 .marginSm {
@@ -128,11 +136,11 @@
 
 @define-mixin autoWidth $size {
   .$(size) {
-      -ms-flex-positive: 1;
-      flex-grow: 1;
-      -ms-flex-preferred-size: 0;
-      flex-basis: 0;
-      max-width: 100%;
+    -ms-flex-positive: 1;
+    flex-grow: 1;
+    -ms-flex-preferred-size: 0;
+    flex-basis: 0;
+    max-width: 100%;
   }
 }
 
