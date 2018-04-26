@@ -3,7 +3,8 @@ import * as React from 'react'
 import openHoc, { type Open } from '~/components/hoc/OpenHoc'
 import { withStyles } from 'material-ui/styles'
 import Collapse from 'material-ui/transitions/Collapse'
-import List, { ListItem, ListItemIcon, ListItemText } from 'material-ui/List'
+import ListItemText from '~/components/List/ListItemText'
+import List, { ListItem, ListItemIcon } from 'material-ui/List'
 import Avatar from 'material-ui/Avatar'
 import Group from 'material-ui-icons/Group'
 import Person from 'material-ui-icons/Person'
@@ -16,10 +17,6 @@ const styles = {
   nested: {
     paddingLeft: '40px',
   },
-  itemTextSecondary: {
-    textOverflow: 'ellipsis',
-    overflow: 'hidden',
-  },
 }
 
 type Props = Open & WithStyles & {
@@ -28,41 +25,34 @@ type Props = Open & WithStyles & {
 
 const Owners = openHoc(({
   open, toggle, owners, classes,
-}: Props) => {
-  const itemTextClasses = {
-    secondary: classes.itemTextSecondary,
-  }
-
-  return (
-    <React.Fragment>
-      <ListItem onClick={toggle}>
-        <Avatar>
-          <Group />
-        </Avatar>
-        <ListItemText primary="Owners" secondary={`${owners.size} owners`} />
-        <ListItemIcon>
-          {open ? <ExpandLess /> : <ExpandMore />}
-        </ListItemIcon>
-      </ListItem>
-      <Collapse in={open} timeout="auto" unmountOnExit>
-        <List component="div" disablePadding>
-          {owners.map(owner => (
-            <ListItem key={owner.address} button className={classes.nested}>
-              <ListItemIcon>
-                <Person />
-              </ListItemIcon>
-              <ListItemText
-                classes={itemTextClasses}
-                inset
-                primary={owner.name}
-                secondary={owner.address}
-              />
-            </ListItem>
-          ))}
-        </List>
-      </Collapse>
-    </React.Fragment>
-  )
-})
+}: Props) => (
+  <React.Fragment>
+    <ListItem onClick={toggle}>
+      <Avatar>
+        <Group />
+      </Avatar>
+      <ListItemText primary="Owners" secondary={`${owners.size} owners`} />
+      <ListItemIcon>
+        {open ? <ExpandLess /> : <ExpandMore />}
+      </ListItemIcon>
+    </ListItem>
+    <Collapse in={open} timeout="auto" unmountOnExit>
+      <List component="div" disablePadding>
+        {owners.map(owner => (
+          <ListItem key={owner.address} button className={classes.nested}>
+            <ListItemIcon>
+              <Person />
+            </ListItemIcon>
+            <ListItemText
+              cut
+              primary={owner.name}
+              secondary={owner.address}
+            />
+          </ListItem>
+        ))}
+      </List>
+    </Collapse>
+  </React.Fragment>
+))
 
 export default withStyles(styles)(Owners)
