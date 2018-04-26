@@ -104,7 +104,8 @@
     "material-ui-icons": "^1.0.0-beta.35",
     "react-final-form": "^3.1.2",
     "react-loadable": "^5.3.1",
-    "react-router-dom": "^4.2.2"
+    "react-router-dom": "^4.2.2",
+    "recompose": "^0.27.0"
   },
   "jest": {
     "verbose": true,
