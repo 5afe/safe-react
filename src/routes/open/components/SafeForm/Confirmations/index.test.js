@@ -49,7 +49,7 @@ describe('React DOM TESTS > Create Safe form', () => {
 
     // THEN
     const muiFields = TestUtils.scryRenderedComponentsWithType(open, TextField)
-    expect(5).toEqual(muiFields.length)
+    expect(6).toEqual(muiFields.length)
     const confirmationsField = muiFields[4]
 
     expect(confirmationsField.props.meta.valid).toBe(false)
@@ -64,7 +64,7 @@ describe('React DOM TESTS > Create Safe form', () => {
 
     // THEN
     const muiFields = TestUtils.scryRenderedComponentsWithType(open, TextField)
-    expect(7).toEqual(muiFields.length)
+    expect(8).toEqual(muiFields.length)
     const confirmationsField = muiFields[6]
 
     expect(confirmationsField.props.meta.valid).toBe(false)
