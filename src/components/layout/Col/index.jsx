@@ -16,6 +16,7 @@ type Props = {
   around?: 'xs' | 'sm' | 'md' | 'lg',
   between?: 'xs' | 'sm' | 'md' | 'lg',
   margin?: 'sm' | 'md' | 'lg' | 'xl',
+  layout?: 'inherit' | 'block',
   xs?: number | boolean,
   sm?: number | boolean,
   md?: number | boolean,
@@ -29,7 +30,7 @@ type Props = {
 }
 
 const Col = ({
-  children, margin,
+  children, margin, layout = 'inherit',
   xs, sm, md, lg,
   start, center, end, top, middle, bottom, around, between,
   xsOffset, smOffset, mdOffset, lgOffset,
@@ -54,6 +55,7 @@ const Col = ({
     smOffset ? capitalize(smOffset, 'smOffset') : undefined,
     mdOffset ? capitalize(mdOffset, 'mdOffset') : undefined,
     lgOffset ? capitalize(lgOffset, 'lgOffset') : undefined,
+    layout,
     props.className,
   )
 

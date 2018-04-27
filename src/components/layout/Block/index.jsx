@@ -11,7 +11,7 @@ type Size = 'sm' | 'md' | 'lg' | 'xl'
 type Props = {
   margin?: Size,
   padding?: Size,
-  center?: boolean,
+  align?: 'center' | 'right',
   children: React$Node,
   className?: string,
 }
@@ -19,12 +19,12 @@ type Props = {
 class Block extends PureComponent<Props> {
   render() {
     const {
-      margin, padding, center, children, className, ...props
+      margin, padding, align, children, className, ...props
     } = this.props
 
     const paddingStyle = padding ? capitalize(padding, 'padding') : undefined
     return (
-      <div className={cx(className, 'block', margin, paddingStyle, { center })} {...props}>
+      <div className={cx(className, 'block', margin, paddingStyle, align)} {...props}>
         { children }
       </div>
     )
