@@ -8,6 +8,7 @@ export type SafeProps = {
   address: string,
   confirmations: number,
   owners: List<Owner>,
+  dailyLimit: number,
 }
 
 export const makeSafe: RecordFactory<SafeProps> = Record({
@@ -15,6 +16,7 @@ export const makeSafe: RecordFactory<SafeProps> = Record({
   address: '',
   confirmations: 0,
   owners: List([]),
+  dailyLimit: 0,
 })
 
 export type Safe = RecordOf<SafeProps>

@@ -12,6 +12,7 @@ import Address from './Address'
 import Balance from './Balance'
 import Owners from './Owners'
 import Confirmations from './Confirmations'
+import DailyLimit from './DailyLimit'
 
 type SafeProps = {
   safe: Safe,
@@ -34,6 +35,7 @@ class GnoSafe extends React.PureComponent<SafeProps> {
             <Owners owners={safe.owners} />
             <Confirmations confirmations={safe.get('confirmations')} />
             <Address address={safe.get('address')} />
+            <DailyLimit limit={safe.get('dailyLimit')} />
           </List>
         </Col>
         <Col xs={12} center="xs" sm={8} margin="xl" layout="block">

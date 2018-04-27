@@ -15,13 +15,14 @@ export const buildOwnersFrom = (names: string[], addresses: string[]) => {
 const addSafe = createAction(
   ADD_SAFE,
   (
-    name: string, address: string, confirmations: number,
+    name: string, address: string,
+    confirmations: number, dailyLimit: number,
     ownersName: string[], ownersAddress: string[],
   ): SafeProps => {
     const owners: List<Owner> = buildOwnersFrom(ownersName, ownersAddress)
 
     return ({
-      address, name, confirmations, owners,
+      address, name, confirmations, owners, dailyLimit,
     })
   },
 )
