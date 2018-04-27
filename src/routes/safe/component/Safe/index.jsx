@@ -21,6 +21,7 @@ type SafeProps = {
 
 const listStyle = {
   width: '100%',
+  minWidth: '485px',
 }
 
 class GnoSafe extends React.PureComponent<SafeProps> {
