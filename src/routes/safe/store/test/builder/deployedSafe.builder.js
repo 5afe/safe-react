@@ -61,7 +61,7 @@ const deploySafe = async (safe: React$Component<{}>) => {
   }
 
   const transactionHash = JSON.parse(deployed.getElementsByTagName('pre')[0].innerHTML)
-  delete transactionHash.logsBloom
+  delete transactionHash.receipt.logsBloom
 
   return transactionHash
 }

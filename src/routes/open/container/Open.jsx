@@ -1,12 +1,16 @@
 // @flow
 import * as React from 'react'
 import { connect } from 'react-redux'
-import contract from 'truffle-contract'
+
 import Page from '~/components/layout/Page'
 import { getAccountsFrom, getThresholdFrom, getNamesFrom, getSafeNameFrom, getDailyLimitFrom } from '~/routes/open/utils/safeDataExtractor'
 import { getWeb3 } from '~/wallets/getWeb3'
-import { promisify } from '~/utils/promisify'
-import Safe from '#/GnosisSafe.json'
+import {
+  getCreateAddExtensionContract,
+  getCreateDailyLimitExtensionContract,
+  getCreateProxyFactoryContract,
+  getGnosisSafeContract,
+} from '~/wallets/safeContracts'
 import selector from './selector'
 import actions, { type Actions } from './actions'
 import Layout from '../components/Layout'
@@ -21,7 +25,7 @@ type State = {
   safeTx: string,
 }
 
-const createSafe = async (safeContract, values, userAccount, addSafe) => {
+const createSafe = async (values, userAccount, addSafe): State => {
   const accounts = getAccountsFrom(values)
   const numConfirmations = getThresholdFrom(values)
   const name = getSafeNameFrom(values)
@@ -29,11 +33,36 @@ const createSafe = async (safeContract, values, userAccount, addSafe) => {
   const dailyLimit = getDailyLimitFrom(values)
 
   const web3 = getWeb3()
-  safeContract.setProvider(web3.currentProvider)
+  const GnosisSafe = getGnosisSafeContract(web3)
+  const ProxyFactory = getCreateProxyFactoryContract(web3)
+  const CreateAndAddExtension = getCreateAddExtensionContract(web3)
+  const DailyLimitExtension = getCreateDailyLimitExtensionContract(web3)
 
-  const safe = await safeContract.new(accounts, numConfirmations, 0, 0, { from: userAccount, gas: '5000000' })
-  addSafe(name, safe.address, numConfirmations, dailyLimit, owners, accounts)
-  return safe
+  // Create Master Copies
+  const proxyFactory = await ProxyFactory.new({ from: userAccount, gas: '5000000' })
+  const createAndAddExtension = await CreateAndAddExtension.new({ from: userAccount, gas: '5000000' })
+
+  // Initialize safe master copy
+  const gnosisSafeMasterCopy = await GnosisSafe.new({ from: userAccount, gas: '5000000' })
+  gnosisSafeMasterCopy.setup([userAccount], 1, 0, 0, { from: userAccount, gas: '5000000' })
+
+  // Initialize extension master copy
+  const dailyLimitExtensionMasterCopy = await DailyLimitExtension.new({ from: userAccount, gas: '5000000' })
+  dailyLimitExtensionMasterCopy.setup([], [], { from: userAccount, gas: '5000000' })
+
+  // Create Gnosis Safe and Daily Limit Extension in one transactions
+  const extensionData = await dailyLimitExtensionMasterCopy.contract.setup.getData([0], [100], { from: userAccount, gas: '5000000' })
+  const proxyFactoryData = await proxyFactory.contract.createProxy.getData(dailyLimitExtensionMasterCopy.address, extensionData, { from: userAccount, gas: '5000000' })
+  const createAndAddExtensionData = createAndAddExtension.contract.createAndAddExtension.getData(proxyFactory.address, proxyFactoryData, { from: userAccount, gas: '5000000' })
+  const gnosisSafeData = await gnosisSafeMasterCopy.contract.setup.getData(accounts, numConfirmations, createAndAddExtension.address, createAndAddExtensionData, { from: userAccount, gas: '5000000' })
+  const safe = await proxyFactory.createProxy(gnosisSafeMasterCopy.address, gnosisSafeData, { from: userAccount, gas: '5000000' })
+
+  const param = safe.logs[1].args.proxy
+  const safeContract = GnosisSafe.at(param)
+
+  addSafe(name, safeContract.address, numConfirmations, dailyLimit, owners, accounts)
+
+  return { safeAddress: safeContract.address, safeTx: safe }
 }
 
 class Open extends React.Component<Props, State> {
@@ -44,28 +73,18 @@ class Open extends React.Component<Props, State> {
       safeAddress: '',
       safeTx: '',
     }
-
-    this.safe = contract(Safe)
   }
 
   onCallSafeContractSubmit = async (values) => {
     try {
       const { userAccount, addSafe } = this.props
-      const web3 = getWeb3()
-
-      const safeInstance = await createSafe(this.safe, values, userAccount, addSafe)
-      const { address, transactionHash } = safeInstance
-
-      const transactionReceipt = await promisify(cb => web3.eth.getTransactionReceipt(transactionHash, cb))
-
-      this.setState({ safeAddress: address, safeTx: transactionReceipt })
+      const safeInstance = await createSafe(values, userAccount, addSafe)
+      this.setState(safeInstance)
     } catch (error) {
       // eslint-disable-next-line
       console.log('Error while creating the Safe' + error)
     }
   }
-
-  safe: any
 
   render() {
     const { safeAddress, safeTx } = this.state
