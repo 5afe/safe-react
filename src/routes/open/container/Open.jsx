@@ -5,14 +5,9 @@ import { connect } from 'react-redux'
 import Page from '~/components/layout/Page'
 import { getAccountsFrom, getThresholdFrom, getNamesFrom, getSafeNameFrom, getDailyLimitFrom } from '~/routes/open/utils/safeDataExtractor'
 import { getWeb3 } from '~/wallets/getWeb3'
-import {
-  getCreateAddExtensionContract,
-  getCreateDailyLimitExtensionContract,
-  getCreateProxyFactoryContract,
-  getGnosisSafeContract,
-} from '~/wallets/safeContracts'
+import { getGnosisSafeContract, deploySafeContract, initContracts } from '~/wallets/safeContracts'
 import selector from './selector'
-import actions, { type Actions } from './actions'
+import actions, { type Actions, type AddSafe } from './actions'
 import Layout from '../components/Layout'
 
 type Props = Actions & {
@@ -25,7 +20,7 @@ type State = {
   safeTx: string,
 }
 
-const createSafe = async (values, userAccount, addSafe): State => {
+const createSafe = async (values: Object, userAccount: string, addSafe: AddSafe): Promise<State> => {
   const accounts = getAccountsFrom(values)
   const numConfirmations = getThresholdFrom(values)
   const name = getSafeNameFrom(values)
@@ -34,28 +29,9 @@ const createSafe = async (values, userAccount, addSafe): State => {
 
   const web3 = getWeb3()
   const GnosisSafe = getGnosisSafeContract(web3)
-  const ProxyFactory = getCreateProxyFactoryContract(web3)
-  const CreateAndAddExtension = getCreateAddExtensionContract(web3)
-  const DailyLimitExtension = getCreateDailyLimitExtensionContract(web3)
 
-  // Create Master Copies
-  const proxyFactory = await ProxyFactory.new({ from: userAccount, gas: '5000000' })
-  const createAndAddExtension = await CreateAndAddExtension.new({ from: userAccount, gas: '5000000' })
-
-  // Initialize safe master copy
-  const gnosisSafeMasterCopy = await GnosisSafe.new({ from: userAccount, gas: '5000000' })
-  gnosisSafeMasterCopy.setup([userAccount], 1, 0, 0, { from: userAccount, gas: '5000000' })
-
-  // Initialize extension master copy
-  const dailyLimitExtensionMasterCopy = await DailyLimitExtension.new({ from: userAccount, gas: '5000000' })
-  dailyLimitExtensionMasterCopy.setup([], [], { from: userAccount, gas: '5000000' })
-
-  // Create Gnosis Safe and Daily Limit Extension in one transactions
-  const extensionData = await dailyLimitExtensionMasterCopy.contract.setup.getData([0], [100], { from: userAccount, gas: '5000000' })
-  const proxyFactoryData = await proxyFactory.contract.createProxy.getData(dailyLimitExtensionMasterCopy.address, extensionData, { from: userAccount, gas: '5000000' })
-  const createAndAddExtensionData = createAndAddExtension.contract.createAndAddExtension.getData(proxyFactory.address, proxyFactoryData, { from: userAccount, gas: '5000000' })
-  const gnosisSafeData = await gnosisSafeMasterCopy.contract.setup.getData(accounts, numConfirmations, createAndAddExtension.address, createAndAddExtensionData, { from: userAccount, gas: '5000000' })
-  const safe = await proxyFactory.createProxy(gnosisSafeMasterCopy.address, gnosisSafeData, { from: userAccount, gas: '5000000' })
+  await initContracts()
+  const safe = await deploySafeContract(accounts, numConfirmations, userAccount)
 
   const param = safe.logs[1].args.proxy
   const safeContract = GnosisSafe.at(param)
