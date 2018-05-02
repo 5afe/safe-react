@@ -53,30 +53,34 @@ const createMasterCopies = async () => {
 
   // Create ProxyFactory Master Copy
   const ProxyFactory = getCreateProxyFactoryContract(web3)
-  proxyFactoryMaster = await ProxyFactory.deployed()
-  if (!proxyFactoryMaster) {
+  try {
+    proxyFactoryMaster = await ProxyFactory.deployed()
+  } catch (err) {
     proxyFactoryMaster = await ProxyFactory.new({ from: userAccount, gas: '5000000' })
   }
 
   // Create AddExtension Master Copy
   const CreateAndAddExtension = getCreateAddExtensionContract(web3)
-  createAndAddExtensionMaster = await CreateAndAddExtension.deployed()
-  if (!createAndAddExtensionMaster) {
+  try {
+    createAndAddExtensionMaster = await CreateAndAddExtension.deployed()
+  } catch (err) {
     createAndAddExtensionMaster = await CreateAndAddExtension.new({ from: userAccount, gas: '5000000' })
   }
 
   // Initialize safe master copy
   const GnosisSafe = getGnosisSafeContract(web3)
-  safeMaster = await GnosisSafe.deployed()
-  if (!safeMaster) {
+  try {
+    safeMaster = await GnosisSafe.deployed()
+  } catch (err) {
     safeMaster = await GnosisSafe.new({ from: userAccount, gas: '5000000' })
     safeMaster.setup([userAccount], 1, 0, 0, { from: userAccount, gas: '5000000' })
   }
 
   // Initialize extension master copy
   const DailyLimitExtension = getCreateDailyLimitExtensionContract(web3)
-  dailyLimitMaster = await DailyLimitExtension.deployed()
-  if (!dailyLimitMaster) {
+  try {
+    dailyLimitMaster = await DailyLimitExtension.deployed()
+  } catch (err) {
     dailyLimitMaster = await DailyLimitExtension.new({ from: userAccount, gas: '5000000' })
     dailyLimitMaster.setup([], [], { from: userAccount, gas: '5000000' })
   }
