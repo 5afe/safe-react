@@ -50,22 +50,36 @@ const createMasterCopies = async () => {
   const web3 = getWeb3()
   const accounts = await promisify(cb => web3.eth.getAccounts(cb))
   const userAccount = accounts[0]
-  const ProxyFactory = getCreateProxyFactoryContract(web3)
-  const CreateAndAddExtension = getCreateAddExtensionContract(web3)
-  const DailyLimitExtension = getCreateDailyLimitExtensionContract(web3)
 
-  // Create Master Copies
-  proxyFactoryMaster = await ProxyFactory.new({ from: userAccount, gas: '5000000' })
-  createAndAddExtensionMaster = await CreateAndAddExtension.new({ from: userAccount, gas: '5000000' })
+  // Create ProxyFactory Master Copy
+  const ProxyFactory = getCreateProxyFactoryContract(web3)
+  proxyFactoryMaster = await ProxyFactory.deployed()
+  if (!proxyFactoryMaster) {
+    proxyFactoryMaster = await ProxyFactory.new({ from: userAccount, gas: '5000000' })
+  }
+
+  // Create AddExtension Master Copy
+  const CreateAndAddExtension = getCreateAddExtensionContract(web3)
+  createAndAddExtensionMaster = await CreateAndAddExtension.deployed()
+  if (!createAndAddExtensionMaster) {
+    createAndAddExtensionMaster = await CreateAndAddExtension.new({ from: userAccount, gas: '5000000' })
+  }
 
   // Initialize safe master copy
   const GnosisSafe = getGnosisSafeContract(web3)
-  safeMaster = await GnosisSafe.new({ from: userAccount, gas: '5000000' })
-  safeMaster.setup([userAccount], 1, 0, 0, { from: userAccount, gas: '5000000' })
+  safeMaster = await GnosisSafe.deployed()
+  if (!safeMaster) {
+    safeMaster = await GnosisSafe.new({ from: userAccount, gas: '5000000' })
+    safeMaster.setup([userAccount], 1, 0, 0, { from: userAccount, gas: '5000000' })
+  }
 
   // Initialize extension master copy
-  dailyLimitMaster = await DailyLimitExtension.new({ from: userAccount, gas: '5000000' })
-  dailyLimitMaster.setup([], [], { from: userAccount, gas: '5000000' })
+  const DailyLimitExtension = getCreateDailyLimitExtensionContract(web3)
+  dailyLimitMaster = await DailyLimitExtension.deployed()
+  if (!dailyLimitMaster) {
+    dailyLimitMaster = await DailyLimitExtension.new({ from: userAccount, gas: '5000000' })
+    dailyLimitMaster.setup([], [], { from: userAccount, gas: '5000000' })
+  }
 }
 
 export const initContracts = ensureOnce(createMasterCopies)
