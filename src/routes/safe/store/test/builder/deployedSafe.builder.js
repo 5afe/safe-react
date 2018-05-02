@@ -33,6 +33,7 @@ const deploySafe = async (safe: React$Component<{}>) => {
   const fieldName = inputs[0]
   const fieldOwners = inputs[1]
   const fieldConfirmations = inputs[2]
+  const fieldDailyLimit = inputs[3]
 
   TestUtils.Simulate.change(fieldOwners, { target: { value: '1' } })
   const inputsExpanded = TestUtils.scryRenderedDOMComponentsWithTag(safe, 'input')
@@ -41,6 +42,7 @@ const deploySafe = async (safe: React$Component<{}>) => {
   TestUtils.Simulate.change(fieldName, { target: { value: 'Adolfo Safe' } })
   TestUtils.Simulate.change(fieldConfirmations, { target: { value: '1' } })
   TestUtils.Simulate.change(ownerName, { target: { value: 'Adolfo Eth Account' } })
+  TestUtils.Simulate.change(fieldDailyLimit, { target: { value: '10' } })
 
   const form = TestUtils.findRenderedDOMComponentWithTag(safe, 'form')
 

@@ -1,7 +1,14 @@
 // @flow
 import TestUtils from 'react-dom/test-utils'
 import { store } from '~/store'
-import { FIELD_NAME, FIELD_OWNERS, FIELD_CONFIRMATIONS, getOwnerNameBy, getOwnerAddressBy } from '~/routes/open/components/fields'
+import {
+  FIELD_NAME,
+  FIELD_OWNERS,
+  FIELD_CONFIRMATIONS,
+  FIELD_DAILY_LIMIT,
+  getOwnerNameBy,
+  getOwnerAddressBy,
+} from '~/routes/open/components/fields'
 import { DEPLOYED_COMPONENT_ID } from '~/routes/open/components/FormConfirmation'
 import { sleep } from '~/utils/timer'
 import { getProviderInfo } from '~/wallets/getWeb3'
@@ -26,6 +33,9 @@ describe('React DOM TESTS > Create Safe form', () => {
     const fieldConfirmations = inputs[2]
     expect(fieldConfirmations.name).toEqual(FIELD_CONFIRMATIONS)
 
+    const dailyLimitConfirmations = inputs[3]
+    expect(dailyLimitConfirmations.name).toEqual(FIELD_DAILY_LIMIT)
+
     TestUtils.Simulate.change(fieldOwners, { target: { value: '1' } })
     const inputsExpanded = TestUtils.scryRenderedDOMComponentsWithTag(open, 'input')
 
@@ -39,6 +49,7 @@ describe('React DOM TESTS > Create Safe form', () => {
     TestUtils.Simulate.change(fieldName, { target: { value: 'Adolfo Safe' } })
     TestUtils.Simulate.change(fieldConfirmations, { target: { value: '1' } })
     TestUtils.Simulate.change(ownerName, { target: { value: 'Adolfo Eth Account' } })
+    TestUtils.Simulate.change(dailyLimitConfirmations, { target: { value: '10' } })
 
     const form = TestUtils.findRenderedDOMComponentWithTag(open, 'form')
     // One submit per step when creating a safe

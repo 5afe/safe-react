@@ -8,6 +8,14 @@ export const required = (value: Field) => (value ? undefined : 'Required')
 export const mustBeNumber = (value: number) =>
   (Number.isNaN(Number(value)) ? 'Must be a number' : undefined)
 
+export const greaterThan = (min: number) => (value: string) => {
+  if (Number.isNaN(Number(value)) || Number.parseFloat(value) > Number(min)) {
+    return undefined
+  }
+
+  return `Should be greater than ${min}`
+}
+
 export const minValue = (min: number) => (value: string) => {
   if (Number.isNaN(Number(value)) || Number.parseInt(value, 10) >= Number(min)) {
     return undefined

@@ -39,7 +39,7 @@ const Owners = openHoc(({
     <Collapse in={open} timeout="auto" unmountOnExit>
       <List component="div" disablePadding>
         {owners.map(owner => (
-          <ListItem key={owner.address} button className={classes.nested}>
+          <ListItem key={owner.address} className={classes.nested}>
             <ListItemIcon>
               <Person />
             </ListItemIcon>

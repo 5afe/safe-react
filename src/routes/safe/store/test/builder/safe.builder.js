@@ -24,6 +24,11 @@ class SafeBuilder {
     return this
   }
 
+  withDailyLimit(limit: number) {
+    this.safe = this.safe.set('dailyLimit', limit)
+    return this
+  }
+
   withOwner(names: string[], adresses: string[]) {
     const owners = buildOwnersFrom(names, adresses)
     this.safe = this.safe.set('owners', owners)
@@ -42,6 +47,7 @@ export class SafeFactory {
     .withAddress('0x03db1a8b26d08df23337e9276a36b474510f0025')
     .withName('Adol ICO Safe')
     .withConfirmations(1)
+    .withDailyLimit(10)
     .withOwner(['Adol Metamask'], ['0x03db1a8b26d08df23337e9276a36b474510f0023'])
     .get()
 
