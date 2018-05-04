@@ -1,8 +1,4 @@
 node_modules/
-build/
 build_webpack/
 build_storybook/
-build/contracts/
-truffle-config.js
-gnosis-safe-contracts/
 .DS_Store

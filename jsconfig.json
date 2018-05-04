@@ -5,7 +5,7 @@
     "baseUrl": "./",
     "paths": {
       "~/*":["src/*"],
-      "@/*":["gnosis-safe-contracts/build/contracts"]
+      "@/*":["safe-contracts/build/contracts"]
     }
   },
   "exclude": [

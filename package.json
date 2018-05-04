@@ -136,7 +136,7 @@
     ],
     "moduleNameMapper": {
       "~(.*)$": "<rootDir>/src/$1",
-      "#(.*)$": "<rootDir>/gnosis-safe-contracts/build/contracts/$1",
+      "#(.*)$": "<rootDir>/safe-contracts/build/contracts/$1",
       "^react-native$": "react-native-web"
     }
   }

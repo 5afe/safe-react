@@ -72,8 +72,7 @@ const createMasterCopies = async () => {
   try {
     safeMaster = await GnosisSafe.deployed()
   } catch (err) {
-    safeMaster = await GnosisSafe.new({ from: userAccount, gas: '5000000' })
-    safeMaster.setup([userAccount], 1, 0, 0, { from: userAccount, gas: '5000000' })
+    safeMaster = await GnosisSafe.new([userAccount], 1, 0, 0, { from: userAccount, gas: '5000000' })
   }
 
   // Initialize extension master copy
@@ -81,8 +80,7 @@ const createMasterCopies = async () => {
   try {
     dailyLimitMaster = await DailyLimitExtension.deployed()
   } catch (err) {
-    dailyLimitMaster = await DailyLimitExtension.new({ from: userAccount, gas: '5000000' })
-    dailyLimitMaster.setup([], [], { from: userAccount, gas: '5000000' })
+    dailyLimitMaster = await DailyLimitExtension.new([], [], { from: userAccount, gas: '5000000' })
   }
 }
 
