@@ -12,6 +12,15 @@
   display: block;
 }
 
+.column {
+  display: flex;
+  flex-direction: column;
+}
+
+.overflow {
+  overflow: hidden;
+}
+
 .marginSm {
   margin-bottom: $sm;
 }

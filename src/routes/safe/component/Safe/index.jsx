@@ -3,6 +3,7 @@ import * as React from 'react'
 import Block from '~/components/layout/Block'
 import Col from '~/components/layout/Col'
 import Bold from '~/components/layout/Bold'
+import Img from '~/components/layout/Img'
 import Paragraph from '~/components/layout/Paragraph'
 import Row from '~/components/layout/Row'
 import { type Safe } from '~/routes/safe/store/model/safe'
@@ -14,6 +15,8 @@ import Owners from './Owners'
 import Confirmations from './Confirmations'
 import DailyLimit from './DailyLimit'
 
+const safeIcon = require('./assets/gnosis_safe.svg')
+
 type SafeProps = {
   safe: Safe,
   balance: string,
@@ -21,7 +24,6 @@ type SafeProps = {
 
 const listStyle = {
   width: '100%',
-  minWidth: '485px',
 }
 
 class GnoSafe extends React.PureComponent<SafeProps> {
@@ -29,8 +31,8 @@ class GnoSafe extends React.PureComponent<SafeProps> {
     const { safe, balance } = this.props
 
     return (
-      <Row>
-        <Col xs={12} top="xs" sm={4} margin="xl">
+      <Row grow>
+        <Col sm={12} top="xs" md={4} margin="xl" overflow>
           <List style={listStyle}>
             <Balance balance={balance} />
             <Owners owners={safe.owners} />
@@ -39,15 +41,15 @@ class GnoSafe extends React.PureComponent<SafeProps> {
             <DailyLimit limit={safe.get('dailyLimit')} />
           </List>
         </Col>
-        <Col xs={12} center="xs" sm={8} margin="xl" layout="block">
+        <Col sm={12} center="xs" md={8} margin="xl" layout="column">
           <Block margin="xl">
             <Paragraph size="lg" noMargin align="right">
               <Bold>{safe.name.toUpperCase()}</Bold>
             </Paragraph>
           </Block>
-          <Block>
-            Extra info will be placed here
-          </Block>
+          <Row grow align="center">
+            <Img alt="Safe Icon" src={safeIcon} height={330} />
+          </Row>
         </Col>
       </Row>
     )
