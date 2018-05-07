@@ -7,7 +7,8 @@ export const ensureOnce = (fn: Function): Function => {
     if (executed) { return response }
 
     executed = true
-    response = fn(args)
+    // eslint-disable-next-line
+    response = fn.apply(undefined, args)
 
     return response
   }

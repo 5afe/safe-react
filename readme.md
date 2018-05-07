@@ -14,7 +14,7 @@ What things you need to install the software and how to install them
 npm install truffle // recommended usage of -g flag
 npm install ganache-cli // recommended usage of -g flag
 npm install flow-type // recommended usage of -g flag
-git clone https://github.com/gnosis/gnosis-safe-contracts.git
+git clone https://github.com/gnosis/safe-contracts.git
 ```
 
 ### Installing
@@ -28,7 +28,7 @@ ganache-cli -b 3
 
 Start the project in the other one
 ```
-cd gnosis-safe-contracts && truffle compile && truffle migrate && cd ..
+cd safe-contracts && truffle compile && truffle migrate && cd ..
 npm install
 npm start
 ```

@@ -87,6 +87,7 @@
     "storybook-host": "^4.1.5",
     "storybook-router": "^0.3.3",
     "style-loader": "^0.20.2",
+    "truffle": "4.1.5",
     "truffle-contract": "^1.1.8",
     "truffle-solidity-loader": "0.0.8",
     "uglifyjs-webpack-plugin": "^1.2.2",
@@ -135,7 +136,7 @@
     ],
     "moduleNameMapper": {
       "~(.*)$": "<rootDir>/src/$1",
-      "#(.*)$": "<rootDir>/gnosis-safe-contracts/build/contracts/$1",
+      "#(.*)$": "<rootDir>/safe-contracts/build/contracts/$1",
       "^react-native$": "react-native-web"
     }
   }

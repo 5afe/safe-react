@@ -17,7 +17,7 @@ module.file_ext=.css
 module.file_ext=.scss
 
 module.name_mapper='^~' ->'<PROJECT_ROOT>/src'
-module.name_mapper='^#' ->'<PROJECT_ROOT>/gnosis-safe-contracts/build/contracts'
+module.name_mapper='^#' ->'<PROJECT_ROOT>/safe-contracts/build/contracts'
 module.name_mapper='.*\(.s?css\)' -> '{}'
 
 [strict]

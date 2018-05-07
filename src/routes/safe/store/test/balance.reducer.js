@@ -23,7 +23,7 @@ const balanceReducerTests = () => {
     it('reducer should return 0 to just deployed safe', async () => {
       // GIVEN
       const safeTx = await aDeployedSafe(store)
-      const address = safeTx.contractAddress
+      const address = safeTx.logs[1].args.proxy
 
       // WHEN
       await store.dispatch(fetchBalance(address))
@@ -37,7 +37,7 @@ const balanceReducerTests = () => {
     it('reducer should return 1.3456 ETH as funds to safe with 1 ETH', async () => {
       // GIVEN
       const safeTx = await aDeployedSafe(store)
-      const address = safeTx.contractAddress
+      const address = safeTx.logs[1].args.proxy
 
       // WHEN
       await addEtherTo(address, '1.3456')
