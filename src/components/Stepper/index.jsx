@@ -10,6 +10,8 @@ import Controls from './Controls'
 export { default as Step } from './Step'
 
 type Props = {
+  goTitle: string,
+  goPath: string,
   steps: string[],
   finishedTransaction: boolean,
   initialValues?: Object,
@@ -75,7 +77,9 @@ class GnoStepper extends React.PureComponent<Props, State> {
   }
 
   render() {
-    const { steps, children, finishedTransaction } = this.props
+    const {
+      steps, children, finishedTransaction, goTitle, goPath,
+    } = this.props
     const { page, values } = this.state
     const activePage = this.getActivePageFrom(children)
     const isLastPage = page === steps.length - 1
@@ -105,6 +109,8 @@ class GnoStepper extends React.PureComponent<Props, State> {
                   onPrevious={this.previous}
                   firstPage={page === 0}
                   lastPage={isLastPage}
+                  goTitle={goTitle}
+                  goPath={goPath}
                 />
               </Col>
             </Row>
