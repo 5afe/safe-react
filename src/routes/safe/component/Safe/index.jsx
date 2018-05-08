@@ -64,8 +64,10 @@ class GnoSafe extends React.PureComponent<SafeProps, State> {
               <Bold>{safe.name.toUpperCase()}</Bold>
             </Paragraph>
           </Block>
-          <Row grow align={component ? undefined : 'center'}>
-            { component || <Img alt="Safe Icon" src={safeIcon} height={330} /> }
+          <Row grow>
+            <Col sm={12} center="sm" middle={component ? undefined : 'sm'} layout="column">
+              { component || <Img alt="Safe Icon" src={safeIcon} height={330} /> }
+            </Col>
           </Row>
         </Col>
       </Row>
