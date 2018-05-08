@@ -13,10 +13,10 @@ type FormProps = {
 const Review = () => ({ values }: FormProps) => (
   <Block>
     <Heading tag="h2">Review the Withdrawn Operation</Heading>
-    <Paragraph layout="left">
+    <Paragraph align="left">
       <Bold>Destination: </Bold> {values[DESTINATION_PARAM]}
     </Paragraph>
-    <Paragraph layout="left">
+    <Paragraph align="left">
       <Bold>Value in ETH: </Bold> {values[VALUE_PARAM]}
     </Paragraph>
   </Block>
