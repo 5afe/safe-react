@@ -38,7 +38,9 @@ class GnoSafe extends React.PureComponent<SafeProps, State> {
   }
 
   onWithdrawn = () => {
-    this.setState({ component: <Withdrawn /> })
+    const { safe } = this.props
+
+    this.setState({ component: <Withdrawn safeAddress={safe.get('address')} /> })
   }
 
   render() {
@@ -47,7 +49,7 @@ class GnoSafe extends React.PureComponent<SafeProps, State> {
 
     return (
       <Row grow>
-        <Col sm={12} top="xs" md={6} margin="xl" overflow>
+        <Col sm={12} top="xs" md={5} margin="xl" overflow>
           <List style={listStyle}>
             <Balance balance={balance} />
             <Owners owners={safe.owners} />
@@ -56,7 +58,7 @@ class GnoSafe extends React.PureComponent<SafeProps, State> {
             <DailyLimit limit={safe.get('dailyLimit')} onWithdrawn={this.onWithdrawn} />
           </List>
         </Col>
-        <Col sm={12} center="xs" md={6} margin="xl" layout="column">
+        <Col sm={12} center="xs" md={7} margin="xl" layout="column">
           <Block margin="xl">
             <Paragraph size="lg" noMargin align="right">
               <Bold>{safe.name.toUpperCase()}</Bold>
@@ -71,8 +73,4 @@ class GnoSafe extends React.PureComponent<SafeProps, State> {
   }
 }
 
-/*
-        <Paragraph size="lg">
-          <Bold>{safe.name.toUpperCase()}</Bold>
-*/
 export default GnoSafe
