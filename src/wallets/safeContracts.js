@@ -44,7 +44,7 @@ const createDailyLimitExtensionContract = (web3: any) => {
 export const getGnosisSafeContract = ensureOnce(createGnosisSafeContract)
 const getCreateProxyFactoryContract = ensureOnce(createProxyFactoryContract)
 const getCreateAddExtensionContract = ensureOnce(createAddExtensionContract)
-const getCreateDailyLimitExtensionContract = ensureOnce(createDailyLimitExtensionContract)
+export const getCreateDailyLimitExtensionContract = ensureOnce(createDailyLimitExtensionContract)
 
 const createMasterCopies = async () => {
   const web3 = getWeb3()
