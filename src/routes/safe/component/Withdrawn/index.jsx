@@ -20,6 +20,8 @@ type State = {
   done: boolean,
 }
 
+export const SEE_TXS_BUTTON_TEXT = 'SEE TXS'
+
 class Withdrawn extends React.Component<Props, State> {
   state = {
     done: false,
@@ -45,7 +47,7 @@ class Withdrawn extends React.Component<Props, State> {
       <React.Fragment>
         <Stepper
           goPath={TXS_ADDRESS}
-          goTitle="SEE TXS"
+          goTitle={SEE_TXS_BUTTON_TEXT}
           onSubmit={this.onWithdrawn}
           finishedTransaction={done}
           steps={steps}

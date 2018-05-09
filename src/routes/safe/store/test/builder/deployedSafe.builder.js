@@ -42,7 +42,7 @@ const deploySafe = async (safe: React$Component<{}>) => {
   TestUtils.Simulate.change(fieldName, { target: { value: 'Adolfo Safe' } })
   TestUtils.Simulate.change(fieldConfirmations, { target: { value: '1' } })
   TestUtils.Simulate.change(ownerName, { target: { value: 'Adolfo Eth Account' } })
-  TestUtils.Simulate.change(fieldDailyLimit, { target: { value: '10' } })
+  TestUtils.Simulate.change(fieldDailyLimit, { target: { value: '0.5' } })
 
   const form = TestUtils.findRenderedDOMComponentWithTag(safe, 'form')
 
@@ -68,7 +68,7 @@ const deploySafe = async (safe: React$Component<{}>) => {
 
 export const aDeployedSafe = async (specificStore: Store<GlobalState>) => {
   const safe: React$Component<{}> = await renderSafe(specificStore)
-  const deployedSafe = deploySafe(safe)
+  const deployedSafe = await deploySafe(safe)
 
-  return deployedSafe
+  return deployedSafe.logs[1].args.proxy
 }

@@ -12,21 +12,22 @@ const withdrawn = async (values: Object, safeAddress: string, userAccount: strin
   const extensions = await gnosisSafe.getExtensions()
   const dailyAddress = extensions[0]
   const dailyLimitExtension = getCreateDailyLimitExtensionContract(web3).at(dailyAddress)
-
   if (await dailyLimitExtension.gnosisSafe() !== gnosisSafe.address) {
     throw new Error('Using an extension of different safe')
   }
+
   const destination = values[DESTINATION_PARAM]
   const value = web3.toWei(values[VALUE_PARAM], 'ether')
 
   const CALL = 0
+
   await gnosisSafe.executeExtension(
     destination,
     value,
     0,
     CALL,
     dailyLimitExtension.address,
-    { from: userAccount },
+    { from: userAccount, gas: '5000000' },
   )
 }
 

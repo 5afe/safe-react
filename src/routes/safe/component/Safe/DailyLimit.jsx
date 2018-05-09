@@ -11,6 +11,8 @@ type Props = {
   onWithdrawn: () => void,
 }
 
+export const WITHDRAWN_BUTTON_TEXT = 'Withdrawn'
+
 const DailyLimit = ({ limit, onWithdrawn }: Props) => (
   <ListItem>
     <Avatar>
@@ -22,7 +24,7 @@ const DailyLimit = ({ limit, onWithdrawn }: Props) => (
       color="primary"
       onClick={onWithdrawn}
     >
-      Withdrawn
+      {WITHDRAWN_BUTTON_TEXT}
     </Button>
   </ListItem>
 )
