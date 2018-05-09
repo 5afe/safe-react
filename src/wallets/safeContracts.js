@@ -86,9 +86,10 @@ const createMasterCopies = async () => {
 
 export const initContracts = ensureOnce(createMasterCopies)
 
-const getSafeDataBasedOn = async (accounts, numConfirmations) => {
+const getSafeDataBasedOn = async (accounts, numConfirmations, dailyLimitInEth) => {
+  const web3 = getWeb3()
   const extensionData = await dailyLimitMaster.contract.setup
-    .getData([0], [100])
+    .getData([0], [web3.toWei(dailyLimitInEth, 'ether')])
   const proxyFactoryData = await proxyFactoryMaster.contract.createProxy
     .getData(dailyLimitMaster.address, extensionData)
   const createAndAddExtensionData = createAndAddExtensionMaster.contract.createAndAddExtension
@@ -98,7 +99,12 @@ const getSafeDataBasedOn = async (accounts, numConfirmations) => {
     .getData(accounts, numConfirmations, createAndAddExtensionMaster.address, createAndAddExtensionData)
 }
 
-export const deploySafeContract = async (safeAccounts: string[], numConfirmations: number, userAccount: string) => {
-  const gnosisSafeData = await getSafeDataBasedOn(safeAccounts, numConfirmations)
+export const deploySafeContract = async (
+  safeAccounts: string[],
+  numConfirmations: number,
+  dailyLimit: number,
+  userAccount: string,
+) => {
+  const gnosisSafeData = await getSafeDataBasedOn(safeAccounts, numConfirmations, dailyLimit)
   return proxyFactoryMaster.createProxy(safeMaster.address, gnosisSafeData, { from: userAccount, gas: '5000000' })
 }

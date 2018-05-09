@@ -31,7 +31,7 @@ const createSafe = async (values: Object, userAccount: string, addSafe: AddSafe)
   const GnosisSafe = getGnosisSafeContract(web3)
 
   await initContracts()
-  const safe = await deploySafeContract(accounts, numConfirmations, userAccount)
+  const safe = await deploySafeContract(accounts, numConfirmations, dailyLimit, userAccount)
 
   const param = safe.logs[1].args.proxy
   const safeContract = GnosisSafe.at(param)
