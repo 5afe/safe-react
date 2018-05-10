@@ -10477,9 +10477,9 @@ sockjs@0.3.19:
     faye-websocket "^0.10.0"
     uuid "^3.0.1"
 
-solc@0.4.21, solc@^0.4.2:
-  version "0.4.21"
-  resolved "https://registry.yarnpkg.com/solc/-/solc-0.4.21.tgz#6a7ecd505bfa0fc268330d5de6b9ae65c8c68264"
+solc@0.4.23:
+  version "0.4.23"
+  resolved "https://registry.yarnpkg.com/solc/-/solc-0.4.23.tgz#54a0ff4015827b32fddb62c0a418b5247310a58e"
   dependencies:
     fs-extra "^0.30.0"
     memorystream "^0.3.1"
@@ -10503,6 +10503,16 @@ solc@^0.3.6:
   dependencies:
     memorystream "^0.3.1"
     require-from-string "^1.1.0"
+    yargs "^4.7.1"
+
+solc@^0.4.2:
+  version "0.4.21"
+  resolved "https://registry.yarnpkg.com/solc/-/solc-0.4.21.tgz#6a7ecd505bfa0fc268330d5de6b9ae65c8c68264"
+  dependencies:
+    fs-extra "^0.30.0"
+    memorystream "^0.3.1"
+    require-from-string "^1.1.0"
+    semver "^5.3.0"
     yargs "^4.7.1"
 
 solidity-parser@^0.1.0, solidity-parser@^0.1.1:
@@ -11252,13 +11262,13 @@ truffle-solidity-loader@0.0.8:
     truffle "^2.0.8"
     web3 "^0.17.0-alpha"
 
-truffle@4.1.5:
-  version "4.1.5"
-  resolved "https://registry.yarnpkg.com/truffle/-/truffle-4.1.5.tgz#763c8175fe5ea1ada92aa7a02eff84b4ab272f72"
+truffle@4.1.8:
+  version "4.1.8"
+  resolved "https://registry.yarnpkg.com/truffle/-/truffle-4.1.8.tgz#b0b9175e0270145999567a3f0a2337c914a23a9c"
   dependencies:
     mocha "^3.4.2"
     original-require "^1.0.1"
-    solc "0.4.21"
+    solc "0.4.23"
 
 truffle@^2.0.8:
   version "2.1.2"

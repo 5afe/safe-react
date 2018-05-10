@@ -3,10 +3,10 @@ import contract from 'truffle-contract'
 import { promisify } from '~/utils/promisify'
 import { ensureOnce } from '~/utils/singleton'
 import { getWeb3 } from '~/wallets/getWeb3'
-import GnosisSafeSol from '#/GnosisSafe.json'
+import GnosisSafeSol from '#/GnosisSafeTeamEdition.json'
 import ProxyFactorySol from '#/ProxyFactory.json'
-import CreateAndAddExtensionSol from '#/CreateAndAddExtension.json'
-import DailyLimitExtensionSol from '#/DailyLimitExtension.json'
+import CreateAndAddModule from '#/CreateAndAddModule.json'
+import DailyLimitModule from '#/DailyLimitModule.json'
 
 let proxyFactoryMaster
 let createAndAddExtensionMaster
@@ -28,17 +28,17 @@ const createProxyFactoryContract = (web3: any) => {
 }
 
 const createAddExtensionContract = (web3: any) => {
-  const createAndAddExtension = contract(CreateAndAddExtensionSol)
-  createAndAddExtension.setProvider(web3.currentProvider)
+  const createAndAddModule = contract(CreateAndAddModule)
+  createAndAddModule.setProvider(web3.currentProvider)
 
-  return createAndAddExtension
+  return createAndAddModule
 }
 
 const createDailyLimitExtensionContract = (web3: any) => {
-  const dailyLimitExtension = contract(DailyLimitExtensionSol)
-  dailyLimitExtension.setProvider(web3.currentProvider)
+  const dailyLimitModule = contract(DailyLimitModule)
+  dailyLimitModule.setProvider(web3.currentProvider)
 
-  return dailyLimitExtension
+  return dailyLimitModule
 }
 
 export const getGnosisSafeContract = ensureOnce(createGnosisSafeContract)
@@ -88,11 +88,14 @@ export const initContracts = ensureOnce(createMasterCopies)
 
 const getSafeDataBasedOn = async (accounts, numConfirmations, dailyLimitInEth) => {
   const web3 = getWeb3()
-  const extensionData = await dailyLimitMaster.contract.setup
+
+  const moduleData = await dailyLimitMaster.contract.setup
     .getData([0], [web3.toWei(dailyLimitInEth, 'ether')])
+
   const proxyFactoryData = await proxyFactoryMaster.contract.createProxy
-    .getData(dailyLimitMaster.address, extensionData)
-  const createAndAddExtensionData = createAndAddExtensionMaster.contract.createAndAddExtension
+    .getData(dailyLimitMaster.address, moduleData)
+
+  const createAndAddExtensionData = createAndAddExtensionMaster.contract.createAndAddModule
     .getData(proxyFactoryMaster.address, proxyFactoryData)
 
   return safeMaster.contract.setup
