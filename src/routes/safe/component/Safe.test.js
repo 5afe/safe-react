@@ -69,13 +69,5 @@ describe('React DOM TESTS > Withdrawn funds from safe', () => {
     const withdrawnButtons = TestUtils.scryRenderedComponentsWithType(Withdrawn, Button)
     const visitTxsButton = withdrawnButtons[0]
     expect(visitTxsButton.props.children).toEqual(SEE_TXS_BUTTON_TEXT)
-    // Add funds to the Safe
-    // Add to store the match param [address]
-    // Render safe
-    // Simulate click NEXT
-    // Simulate click FINISH
-    // Give some time
-    // find the visit txs button
-    // check the funds on the destination and safe are correct
   })
 })
