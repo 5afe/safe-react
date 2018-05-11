@@ -1,6 +1,6 @@
 // @flow
 import { makeSafe, type Safe } from '~/routes/safe/store/model/safe'
-import { buildOwnersFrom } from '~/routes/safe/store/actions'
+import { buildOwnersFrom, buildDailyLimitFrom } from '~/routes/safe/store/actions'
 
 class SafeBuilder {
   safe: Safe
@@ -25,7 +25,8 @@ class SafeBuilder {
   }
 
   withDailyLimit(limit: number) {
-    this.safe = this.safe.set('dailyLimit', limit)
+    const dailyLimit = buildDailyLimitFrom(limit)
+    this.safe = this.safe.set('dailyLimit', dailyLimit)
     return this
   }
 
