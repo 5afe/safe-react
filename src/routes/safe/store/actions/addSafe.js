@@ -1,7 +1,8 @@
 // @flow
 import { List } from 'immutable'
 import { createAction } from 'redux-actions'
-import { makeDailyLimit, type DailyLimit, type SafeProps } from '~/routes/safe/store/model/safe'
+import { makeDailyLimit, type DailyLimit } from '~/routes/safe/store/model/dailyLimit'
+import { type SafeProps } from '~/routes/safe/store/model/safe'
 import { makeOwner, type Owner } from '~/routes/safe/store/model/owner'
 
 export const ADD_SAFE = 'ADD_SAFE'

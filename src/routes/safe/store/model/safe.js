@@ -1,26 +1,15 @@
 // @flow
 import { List, Record } from 'immutable'
 import type { RecordFactory, RecordOf } from 'immutable'
+import { type DailyLimit, makeDailyLimit } from '~/routes/safe/store/model/dailyLimit'
 import type { Owner } from '~/routes/safe/store/model/owner'
-
-export type DailyLimitProps = {
-  value: number,
-  spentToday: number,
-}
-
-export const makeDailyLimit: RecordFactory<DailyLimitProps> = Record({
-  value: 0,
-  spentToday: 0,
-})
-
-export type DailyLimit = RecordOf<DailyLimitProps>
 
 export type SafeProps = {
   name: string,
   address: string,
   confirmations: number,
   owners: List<Owner>,
-  dailyLimit: number,
+  dailyLimit: DailyLimit,
 }
 
 export const makeSafe: RecordFactory<SafeProps> = Record({
