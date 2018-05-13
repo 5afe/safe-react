@@ -2,9 +2,11 @@
 import { Map, List } from 'immutable'
 import { handleActions, type ActionType } from 'redux-actions'
 import addSafe, { ADD_SAFE } from '~/routes/safe/store/actions/addSafe'
+import updateDailyLimit, { UPDATE_DAILY_LIMIT } from '~/routes/safe/store/actions/updateDailyLimit'
 import { makeOwner } from '~/routes/safe/store/model/owner'
 import { type Safe, makeSafe } from '~/routes/safe/store/model/safe'
 import { loadSafes, saveSafes } from '~/utils/localStorage'
+import { makeDailyLimit } from '~/routes/safe/store/model/dailyLimit'
 
 export const SAFE_REDUCER_ID = 'safes'
 
@@ -42,6 +44,11 @@ action: AddSafeType
 export default handleActions({
   [ADD_SAFE]: (state: State, action: ActionType<typeof addSafe>): State => {
     const safes = state.set(action.payload.address, makeSafe(action.payload))
+    saveSafes(safes.toJSON())
+    return safes
+  },
+  [UPDATE_DAILY_LIMIT]: (state: State, action: ActionType<typeof updateDailyLimit>): State => {
+    const safes = state.updateIn([action.safeAddress, 'dailyLimit'], () => makeDailyLimit(action.dailyLimit))
     saveSafes(safes.toJSON())
     return safes
   },
