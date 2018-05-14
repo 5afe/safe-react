@@ -61,7 +61,7 @@ describe('React DOM TESTS > Withdrawn funds from safe', () => {
 
     TestUtils.Simulate.submit(form) // fill the form
     TestUtils.Simulate.submit(form) // confirming data
-    await sleep(1200)
+    await sleep(4000)
 
     const safeBalance = await getBalanceInEtherOf(address)
     expect(safeBalance).toBe('0.09')

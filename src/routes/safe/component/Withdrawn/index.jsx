@@ -34,7 +34,7 @@ class Withdrawn extends React.Component<Props, State> {
     try {
       const { safeAddress, userAddress } = this.props
       await withdrawn(values, safeAddress, userAddress)
-      await sleep(5000)
+      await sleep(3500)
       this.props.fetchDailyLimit(safeAddress)
       this.setState({ done: true })
     } catch (error) {
