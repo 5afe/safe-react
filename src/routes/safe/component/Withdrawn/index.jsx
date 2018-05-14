@@ -2,7 +2,7 @@
 import * as React from 'react'
 import { connect } from 'react-redux'
 import Stepper from '~/components/Stepper'
-import { TXS_ADDRESS } from '~/routes/routes'
+import { SAFELIST_ADDRESS } from '~/routes/routes'
 import selector, { type SelectorProps } from './selector'
 import withdrawn from './withdrawn'
 import WithdrawnForm from './WithdrawnForm'
@@ -21,7 +21,7 @@ type State = {
   done: boolean,
 }
 
-export const SEE_TXS_BUTTON_TEXT = 'SEE TXS'
+export const SEE_TXS_BUTTON_TEXT = 'DONE'
 
 class Withdrawn extends React.Component<Props, State> {
   state = {
@@ -41,14 +41,14 @@ class Withdrawn extends React.Component<Props, State> {
   }
 
   render() {
-    const { dailyLimit } = this.props
+    const { dailyLimit, safeAddress } = this.props
     const { done } = this.state
     const steps = getSteps()
 
     return (
       <React.Fragment>
         <Stepper
-          goPath={TXS_ADDRESS}
+          goPath={`${SAFELIST_ADDRESS}/${safeAddress}`}
           goTitle={SEE_TXS_BUTTON_TEXT}
           onSubmit={this.onWithdrawn}
           finishedTransaction={done}
