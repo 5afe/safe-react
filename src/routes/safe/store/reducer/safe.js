@@ -47,9 +47,6 @@ export default handleActions({
     saveSafes(safes.toJSON())
     return safes
   },
-  [UPDATE_DAILY_LIMIT]: (state: State, action: ActionType<typeof updateDailyLimit>): State => {
-    const safes = state.updateIn([action.safeAddress, 'dailyLimit'], () => makeDailyLimit(action.dailyLimit))
-    saveSafes(safes.toJSON())
-    return safes
-  },
+  [UPDATE_DAILY_LIMIT]: (state: State, action: ActionType<typeof updateDailyLimit>): State =>
+    state.updateIn([action.safeAddress, 'dailyLimit'], () => makeDailyLimit(action.dailyLimit)),
 }, Map())
