@@ -48,5 +48,5 @@ export default handleActions({
     return safes
   },
   [UPDATE_DAILY_LIMIT]: (state: State, action: ActionType<typeof updateDailyLimit>): State =>
-    state.updateIn([action.safeAddress, 'dailyLimit'], () => makeDailyLimit(action.dailyLimit)),
+    state.updateIn([action.payload.safeAddress, 'dailyLimit'], () => makeDailyLimit(action.payload.dailyLimit)),
 }, Map())
