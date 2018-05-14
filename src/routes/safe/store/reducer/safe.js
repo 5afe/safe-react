@@ -19,6 +19,7 @@ const buildSafesFrom = (loadedSafes: Object): State => {
     Object.keys(loadedSafes).forEach((address) => {
       const safe = loadedSafes[address]
       safe.owners = List(safe.owners.map((owner => makeOwner(owner))))
+      safe.dailyLimit = makeDailyLimit({ value: safe.dailyLimit.value, spentToday: safe.dailyLimit.spentToday })
       return map.set(address, makeSafe(safe))
     })
   })

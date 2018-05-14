@@ -14,6 +14,7 @@ const getSteps = () => [
 
 type Props = SelectorProps & {
   safeAddress: string,
+  dailyLimit: DailyLimit,
 }
 
 type State = {
@@ -40,6 +41,7 @@ class Withdrawn extends React.Component<Props, State> {
   }
 
   render() {
+    const { dailyLimit } = this.props
     const { done } = this.state
     const steps = getSteps()
 
@@ -52,7 +54,7 @@ class Withdrawn extends React.Component<Props, State> {
           finishedTransaction={done}
           steps={steps}
         >
-          <Stepper.Page>
+          <Stepper.Page limit={dailyLimit.get('value')} spentToday={dailyLimit.get('spentToday')}>
             { WithdrawnForm }
           </Stepper.Page>
           <Stepper.Page>

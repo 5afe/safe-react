@@ -19,15 +19,35 @@ export const safeFieldsValidation = (values: Object) => {
   return errors
 }
 
-export default () => () => (
+type Props = {
+  limit: number,
+  spentToday: number,
+}
+
+export const inLimit = (limit: number, spentToday: number) => (value: string) => {
+  const amount = Number(value)
+  const max = limit - spentToday
+  if (amount <= max) {
+    return undefined
+  }
+
+  return `Should not exceed ${max} ETH (amount to reach daily limit)`
+}
+
+export default ({ limit, spentToday }: Props) => () => (
   <Block margin="md">
-    <Heading tag="h2" margin="lg">Withdrawn Funds</Heading>
+    <Heading tag="h2" margin="lg">
+      Withdrawn Funds
+    </Heading>
+    <Heading tag="h4" margin="lg">
+      {`Daily limit ${limit} ETH (spent today: ${spentToday} ETH)`}
+    </Heading>
     <Block margin="md">
       <Field
         name={VALUE_PARAM}
         component={TextField}
         type="text"
-        validate={composeValidators(required, mustBeNumber, greaterThan(0))}
+        validate={composeValidators(required, mustBeNumber, greaterThan(0), inLimit(limit, spentToday))}
         placeholder="Amount in ETH*"
         text="Amount in ETH"
       />
@@ -44,3 +64,4 @@ export default () => () => (
     </Block>
   </Block>
 )
+

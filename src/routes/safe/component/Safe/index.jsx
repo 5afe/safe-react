@@ -40,7 +40,7 @@ class GnoSafe extends React.PureComponent<SafeProps, State> {
   onWithdrawn = () => {
     const { safe } = this.props
 
-    this.setState({ component: <Withdrawn safeAddress={safe.get('address')} /> })
+    this.setState({ component: <Withdrawn safeAddress={safe.get('address')} dailyLimit={safe.get('dailyLimit')} /> })
   }
 
   render() {
@@ -55,7 +55,7 @@ class GnoSafe extends React.PureComponent<SafeProps, State> {
             <Owners owners={safe.owners} />
             <Confirmations confirmations={safe.get('confirmations')} />
             <Address address={safe.get('address')} />
-            <DailyLimit dailyLimit={safe.dailyLimit} onWithdrawn={this.onWithdrawn} />
+            <DailyLimit dailyLimit={safe.get('dailyLimit')} onWithdrawn={this.onWithdrawn} />
           </List>
         </Col>
         <Col sm={12} center="xs" md={7} margin="xl" layout="column">
