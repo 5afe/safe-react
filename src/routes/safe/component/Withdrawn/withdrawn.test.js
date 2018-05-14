@@ -24,6 +24,3 @@ describe('Safe Blockchain Test', () => {
     expect(executeWithdrawnOn(safeAddress, value)).rejects.toThrow('VM Exception while processing transaction: revert')
   })
 })
-// }
-
-// export default updateDailyLimitReducerTests

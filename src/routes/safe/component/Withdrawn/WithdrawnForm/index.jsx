@@ -5,7 +5,7 @@ import TextField from '~/components/forms/TextField'
 import { composeValidators, mustBeNumber, required, greaterThan, mustBeEthereumAddress } from '~/components/forms/validator'
 import Block from '~/components/layout/Block'
 import Heading from '~/components/layout/Heading'
-import { DESTINATION_PARAM, VALUE_PARAM } from './withdrawn'
+import { DESTINATION_PARAM, VALUE_PARAM } from '~/routes/safe/component/Withdrawn/withdrawn'
 
 export const CONFIRMATIONS_ERROR = 'Number of confirmations can not be higher than the number of owners'
 

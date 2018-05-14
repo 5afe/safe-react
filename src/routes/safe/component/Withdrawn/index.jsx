@@ -3,6 +3,8 @@ import * as React from 'react'
 import { connect } from 'react-redux'
 import Stepper from '~/components/Stepper'
 import { SAFELIST_ADDRESS } from '~/routes/routes'
+import { sleep } from '~/utils/timer'
+import actions, { type Actions } from './actions'
 import selector, { type SelectorProps } from './selector'
 import withdrawn from './withdrawn'
 import WithdrawnForm from './WithdrawnForm'
@@ -12,7 +14,7 @@ const getSteps = () => [
   'Fill Withdrawn Form', 'Review Withdrawn',
 ]
 
-type Props = SelectorProps & {
+type Props = SelectorProps & Actions & {
   safeAddress: string,
   dailyLimit: DailyLimit,
 }
@@ -32,6 +34,8 @@ class Withdrawn extends React.Component<Props, State> {
     try {
       const { safeAddress, userAddress } = this.props
       await withdrawn(values, safeAddress, userAddress)
+      await sleep(5000)
+      this.props.fetchDailyLimit(safeAddress)
       this.setState({ done: true })
     } catch (error) {
       this.setState({ done: false })
@@ -66,5 +70,5 @@ class Withdrawn extends React.Component<Props, State> {
   }
 }
 
-export default connect(selector)(Withdrawn)
+export default connect(selector, actions)(Withdrawn)
 
