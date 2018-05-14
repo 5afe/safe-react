@@ -13,8 +13,8 @@ export const buildOwnersFrom = (names: string[], addresses: string[]) => {
   return List(owners)
 }
 
-export const buildDailyLimitFrom = (dailyLimit: number): DailyLimit =>
-  makeDailyLimit({ value: dailyLimit, spentToday: 0 })
+export const buildDailyLimitFrom = (dailyLimit: number, spentToday: number = 0): DailyLimit =>
+  makeDailyLimit({ value: dailyLimit, spentToday })
 
 const addSafe = createAction(
   ADD_SAFE,

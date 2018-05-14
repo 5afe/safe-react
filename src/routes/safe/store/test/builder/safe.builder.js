@@ -24,8 +24,8 @@ class SafeBuilder {
     return this
   }
 
-  withDailyLimit(limit: number) {
-    const dailyLimit = buildDailyLimitFrom(limit)
+  withDailyLimit(limit: number, spentToday: number = 0) {
+    const dailyLimit = buildDailyLimitFrom(limit, spentToday)
     this.safe = this.safe.set('dailyLimit', dailyLimit)
     return this
   }
@@ -60,7 +60,19 @@ export class SafeFactory {
       ['Adol Metamask', 'Tobias Metamask'],
       ['0x03db1a8b26d08df23337e9276a36b474510f0023', '0x03db1a8b26d08df23337e9276a36b474510f0024'],
     )
+    .withDailyLimit(10, 1.34)
     .get()
+
+    static dailyLimitSafe = (dailyLimit: number, spentToday: number) => aSafe()
+      .withAddress('0x03db1a8b26d08df23337e9276a36b474510f0026')
+      .withName('Adol & Tobias Safe')
+      .withConfirmations(2)
+      .withOwner(
+        ['Adol Metamask', 'Tobias Metamask'],
+        ['0x03db1a8b26d08df23337e9276a36b474510f0023', '0x03db1a8b26d08df23337e9276a36b474510f0024'],
+      )
+      .withDailyLimit(dailyLimit, spentToday)
+      .get()
 }
 
 export default aSafe

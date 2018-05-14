@@ -7,22 +7,24 @@ import Button from '~/components/layout/Button'
 import ListItemText from '~/components/List/ListItemText'
 
 type Props = {
-  dailyLimit: number,
+  dailyLimit: DailyLimit,
   onWithdrawn: () => void,
 }
 
 export const WITHDRAWN_BUTTON_TEXT = 'Withdrawn'
 
-const DailyLimit = ({ dailyLimit, onWithdrawn }: Props) => {
+const DailyLimitComponent = ({ dailyLimit, onWithdrawn }: Props) => {
   const limit = dailyLimit.get('value')
-  const disabled = dailyLimit.get('todaySpent') > limit
+  const spentToday = dailyLimit.get('spentToday')
+  const disabled = spentToday >= limit
+  const text = `${limit} ETH (spent today: ${spentToday} ETH)`
 
   return (
     <ListItem>
       <Avatar>
         <NotificationsPaused />
       </Avatar>
-      <ListItemText primary="Daily Limit" secondary={`${limit} ETH`} />
+      <ListItemText primary="Daily Limit" secondary={text} />
       <Button
         variant="raised"
         color="primary"
@@ -35,4 +37,4 @@ const DailyLimit = ({ dailyLimit, onWithdrawn }: Props) => {
   )
 }
 
-export default DailyLimit
+export default DailyLimitComponent
