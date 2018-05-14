@@ -83,5 +83,5 @@ export const executeWithdrawnOn = async (safeAddress: string, value: number) => 
     [VALUE_PARAM]: `${value}`,
   }
 
-  await withdrawn(values, safeAddress, userAddress)
+  return withdrawn(values, safeAddress, userAddress)
 }

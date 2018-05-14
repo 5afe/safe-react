@@ -42,7 +42,7 @@ const withdrawn = async (values: Object, safeAddress: string, userAccount: strin
   const destination = values[DESTINATION_PARAM]
   const value = web3.toWei(values[VALUE_PARAM], 'ether')
 
-  await dailyLimitModule.executeDailyLimit(
+  return dailyLimitModule.executeDailyLimit(
     destination,
     value,
     0,
