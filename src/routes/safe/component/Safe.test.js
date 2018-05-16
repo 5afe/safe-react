@@ -6,7 +6,7 @@ import { ConnectedRouter } from 'react-router-redux'
 import Button from '~/components/layout/Button'
 import { aNewStore, history } from '~/store'
 import { addEtherTo } from '~/test/addEtherTo'
-import { aDeployedSafe } from '~/routes/safe/store/test/builder/deployedSafe.builder'
+import { aDeployedSafe, executeWithdrawnOn } from '~/routes/safe/store/test/builder/deployedSafe.builder'
 import { SAFELIST_ADDRESS } from '~/routes/routes'
 import SafeView from '~/routes/safe/component/Safe'
 import AppRoutes from '~/routes'
@@ -14,6 +14,7 @@ import { WITHDRAWN_BUTTON_TEXT } from '~/routes/safe/component/Safe/DailyLimit'
 import WithdrawnComponent, { SEE_TXS_BUTTON_TEXT } from '~/routes/safe/component/Withdrawn'
 import { getBalanceInEtherOf } from '~/wallets/getWeb3'
 import { sleep } from '~/utils/timer'
+import { getDailyLimitFrom } from '~/routes/safe/component/Withdrawn/withdrawn'
 
 describe('React DOM TESTS > Withdrawn funds from safe', () => {
   let SafeDom
@@ -60,7 +61,7 @@ describe('React DOM TESTS > Withdrawn funds from safe', () => {
 
     TestUtils.Simulate.submit(form) // fill the form
     TestUtils.Simulate.submit(form) // confirming data
-    await sleep(1200)
+    await sleep(4000)
 
     const safeBalance = await getBalanceInEtherOf(address)
     expect(safeBalance).toBe('0.09')
@@ -69,5 +70,19 @@ describe('React DOM TESTS > Withdrawn funds from safe', () => {
     const withdrawnButtons = TestUtils.scryRenderedComponentsWithType(Withdrawn, Button)
     const visitTxsButton = withdrawnButtons[0]
     expect(visitTxsButton.props.children).toEqual(SEE_TXS_BUTTON_TEXT)
+  })
+
+  it('spentToday dailyLimitModule property is updated correctly', async () => {
+    // GIVEN in beforeEach
+    // WHEN
+    await executeWithdrawnOn(address, 0.01)
+    await executeWithdrawnOn(address, 0.01)
+
+    const ethAddress = 0
+    const dailyLimit: DailyLimitProps = await getDailyLimitFrom(address, ethAddress)
+
+    // THEN
+    expect(dailyLimit.value).toBe(0.5)
+    expect(dailyLimit.spentToday).toBe(0.02)
   })
 })

@@ -59,7 +59,7 @@ describe('React DOM TESTS > Create Safe form', () => {
 
     // giving some time to the component for updating its state with safe
     // before destroying its context
-    await sleep(1500)
+    await sleep(6000)
 
     // THEN
     const deployed = TestUtils.findRenderedDOMComponentWithClass(open, DEPLOYED_COMPONENT_ID)

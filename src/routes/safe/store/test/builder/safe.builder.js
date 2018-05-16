@@ -1,6 +1,6 @@
 // @flow
 import { makeSafe, type Safe } from '~/routes/safe/store/model/safe'
-import { buildOwnersFrom } from '~/routes/safe/store/actions'
+import { buildOwnersFrom, buildDailyLimitFrom } from '~/routes/safe/store/actions'
 
 class SafeBuilder {
   safe: Safe
@@ -24,8 +24,9 @@ class SafeBuilder {
     return this
   }
 
-  withDailyLimit(limit: number) {
-    this.safe = this.safe.set('dailyLimit', limit)
+  withDailyLimit(limit: number, spentToday: number = 0) {
+    const dailyLimit = buildDailyLimitFrom(limit, spentToday)
+    this.safe = this.safe.set('dailyLimit', dailyLimit)
     return this
   }
 
@@ -59,7 +60,19 @@ export class SafeFactory {
       ['Adol Metamask', 'Tobias Metamask'],
       ['0x03db1a8b26d08df23337e9276a36b474510f0023', '0x03db1a8b26d08df23337e9276a36b474510f0024'],
     )
+    .withDailyLimit(10, 1.34)
     .get()
+
+    static dailyLimitSafe = (dailyLimit: number, spentToday: number) => aSafe()
+      .withAddress('0x03db1a8b26d08df23337e9276a36b474510f0026')
+      .withName('Adol & Tobias Safe')
+      .withConfirmations(2)
+      .withOwner(
+        ['Adol Metamask', 'Tobias Metamask'],
+        ['0x03db1a8b26d08df23337e9276a36b474510f0023', '0x03db1a8b26d08df23337e9276a36b474510f0024'],
+      )
+      .withDailyLimit(dailyLimit, spentToday)
+      .get()
 }
 
 export default aSafe

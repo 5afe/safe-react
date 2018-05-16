@@ -11,6 +11,7 @@ import { sleep } from '~/utils/timer'
 import { getProviderInfo } from '~/wallets/getWeb3'
 import addProvider from '~/wallets/store/actions/addProvider'
 import { makeProvider } from '~/wallets/store/model/provider'
+import withdrawn, { DESTINATION_PARAM, VALUE_PARAM } from '~/routes/safe/component/Withdrawn/withdrawn'
 
 export const renderSafe = async (localStore: Store<GlobalState>) => {
   const provider = await getProviderInfo()
@@ -28,7 +29,7 @@ export const renderSafe = async (localStore: Store<GlobalState>) => {
   )
 }
 
-const deploySafe = async (safe: React$Component<{}>) => {
+const deploySafe = async (safe: React$Component<{}>, dailyLimit: string) => {
   const inputs = TestUtils.scryRenderedDOMComponentsWithTag(safe, 'input')
   const fieldName = inputs[0]
   const fieldOwners = inputs[1]
@@ -42,7 +43,7 @@ const deploySafe = async (safe: React$Component<{}>) => {
   TestUtils.Simulate.change(fieldName, { target: { value: 'Adolfo Safe' } })
   TestUtils.Simulate.change(fieldConfirmations, { target: { value: '1' } })
   TestUtils.Simulate.change(ownerName, { target: { value: 'Adolfo Eth Account' } })
-  TestUtils.Simulate.change(fieldDailyLimit, { target: { value: '0.5' } })
+  TestUtils.Simulate.change(fieldDailyLimit, { target: { value: dailyLimit } })
 
   const form = TestUtils.findRenderedDOMComponentWithTag(safe, 'form')
 
@@ -52,7 +53,7 @@ const deploySafe = async (safe: React$Component<{}>) => {
 
   // giving some time to the component for updating its state with safe
   // before destroying its context
-  await sleep(1500)
+  await sleep(3500)
 
   // THEN
   const deployed = TestUtils.findRenderedDOMComponentWithClass(safe, DEPLOYED_COMPONENT_ID)
@@ -66,9 +67,21 @@ const deploySafe = async (safe: React$Component<{}>) => {
   return transactionHash
 }
 
-export const aDeployedSafe = async (specificStore: Store<GlobalState>) => {
+export const aDeployedSafe = async (specificStore: Store<GlobalState>, dailyLimit?: number = 0.5) => {
   const safe: React$Component<{}> = await renderSafe(specificStore)
-  const deployedSafe = await deploySafe(safe)
+  const deployedSafe = await deploySafe(safe, `${dailyLimit}`)
 
   return deployedSafe.logs[1].args.proxy
+}
+
+export const executeWithdrawnOn = async (safeAddress: string, value: number) => {
+  const providerInfo = await getProviderInfo()
+  const userAddress = providerInfo.account
+
+  const values = {
+    [DESTINATION_PARAM]: userAddress,
+    [VALUE_PARAM]: `${value}`,
+  }
+
+  return withdrawn(values, safeAddress, userAddress)
 }
