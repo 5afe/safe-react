@@ -4,16 +4,8 @@ import { type Match } from 'react-router-dom'
 import { SAFE_REDUCER_ID } from '~/routes/safe/store/reducer/safe'
 import { type Safe } from '~/routes/safe/store/model/safe'
 import { SafeFactory } from '~/routes/safe/store/test/builder/safe.builder'
+import { buildMathPropsFrom } from '~/test/buildReactRouterProps'
 import { safeSelector } from '../selectors'
-
-const buildMathPropsFrom = (address): Match => ({
-  params: {
-    address,
-  },
-  isExact: true,
-  path: '',
-  url: '',
-})
 
 const safeSelectorTests = () => {
   describe('Safe Selector[safeSelector]', () => {

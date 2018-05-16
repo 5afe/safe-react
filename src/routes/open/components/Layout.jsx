@@ -5,6 +5,7 @@ import Stepper from '~/components/Stepper'
 import Confirmation from '~/routes/open/components/FormConfirmation'
 import Review from '~/routes/open/components/ReviewInformation'
 import SafeFields, { safeFieldsValidation } from '~/routes/open/components/SafeForm'
+import { SAFELIST_ADDRESS } from '~/routes/routes'
 
 const getSteps = () => [
   'Fill Safe Form', 'Review Information', 'Deploy it',
@@ -34,6 +35,8 @@ const Layout = ({
       { provider
         ? (
           <Stepper
+            goPath={SAFELIST_ADDRESS}
+            goTitle="VISIT SAFES"
             onSubmit={onCallSafeContractSubmit}
             finishedTransaction={!!safeAddress}
             steps={steps}

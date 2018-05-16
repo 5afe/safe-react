@@ -1,5 +1,6 @@
 // @flow
 import Stepper, { Step as FormStep, StepLabel } from 'material-ui/Stepper'
+import { withStyles } from 'material-ui/styles'
 import * as React from 'react'
 import type { FormApi } from 'react-final-form'
 import GnoForm from '~/components/forms/GnoForm'
@@ -10,6 +11,9 @@ import Controls from './Controls'
 export { default as Step } from './Step'
 
 type Props = {
+  classes: Object,
+  goTitle: string,
+  goPath: string,
   steps: string[],
   finishedTransaction: boolean,
   initialValues?: Object,
@@ -75,14 +79,16 @@ class GnoStepper extends React.PureComponent<Props, State> {
   }
 
   render() {
-    const { steps, children, finishedTransaction } = this.props
+    const {
+      steps, children, finishedTransaction, goTitle, goPath, classes,
+    } = this.props
     const { page, values } = this.state
     const activePage = this.getActivePageFrom(children)
     const isLastPage = page === steps.length - 1
 
     return (
       <React.Fragment>
-        <Stepper activeStep={page} alternativeLabel>
+        <Stepper classes={{ root: classes.root }} activeStep={page} alternativeLabel>
           {steps.map(label => (
             <FormStep key={label}>
               <StepLabel>{label}</StepLabel>
@@ -105,6 +111,8 @@ class GnoStepper extends React.PureComponent<Props, State> {
                   onPrevious={this.previous}
                   firstPage={page === 0}
                   lastPage={isLastPage}
+                  goTitle={goTitle}
+                  goPath={goPath}
                 />
               </Col>
             </Row>
@@ -115,4 +123,10 @@ class GnoStepper extends React.PureComponent<Props, State> {
   }
 }
 
-export default GnoStepper
+const styles = {
+  root: {
+    flex: '1 1 auto',
+  },
+}
+
+export default withStyles(styles)(GnoStepper)

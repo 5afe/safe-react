@@ -30,8 +30,20 @@ storiesOf('Routes /safe:address', module)
       fetchBalance={() => {}}
     />
   ))
-  .add('Safe with 2 owners', () => {
-    const safe = SafeFactory.twoOwnersSafe
+  .add('Safe with 2 owners and 10ETH as dailyLimit', () => {
+    const safe = SafeFactory.dailyLimitSafe(10, 1.345)
+
+    return (
+      <Component
+        safe={safe}
+        provider="METAMASK"
+        balance="2"
+        fetchBalance={() => {}}
+      />
+    )
+  })
+  .add('Safe with dailyLimit reached', () => {
+    const safe = SafeFactory.dailyLimitSafe(10, 10)
 
     return (
       <Component

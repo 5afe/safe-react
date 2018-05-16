@@ -3,10 +3,10 @@ import contract from 'truffle-contract'
 import { promisify } from '~/utils/promisify'
 import { ensureOnce } from '~/utils/singleton'
 import { getWeb3 } from '~/wallets/getWeb3'
-import GnosisSafeSol from '#/GnosisSafe.json'
+import GnosisSafeSol from '#/GnosisSafeTeamEdition.json'
 import ProxyFactorySol from '#/ProxyFactory.json'
-import CreateAndAddExtensionSol from '#/CreateAndAddExtension.json'
-import DailyLimitExtensionSol from '#/DailyLimitExtension.json'
+import CreateAndAddModule from '#/CreateAndAddModule.json'
+import DailyLimitModule from '#/DailyLimitModule.json'
 
 let proxyFactoryMaster
 let createAndAddExtensionMaster
@@ -28,23 +28,23 @@ const createProxyFactoryContract = (web3: any) => {
 }
 
 const createAddExtensionContract = (web3: any) => {
-  const createAndAddExtension = contract(CreateAndAddExtensionSol)
-  createAndAddExtension.setProvider(web3.currentProvider)
+  const createAndAddModule = contract(CreateAndAddModule)
+  createAndAddModule.setProvider(web3.currentProvider)
 
-  return createAndAddExtension
+  return createAndAddModule
 }
 
 const createDailyLimitExtensionContract = (web3: any) => {
-  const dailyLimitExtension = contract(DailyLimitExtensionSol)
-  dailyLimitExtension.setProvider(web3.currentProvider)
+  const dailyLimitModule = contract(DailyLimitModule)
+  dailyLimitModule.setProvider(web3.currentProvider)
 
-  return dailyLimitExtension
+  return dailyLimitModule
 }
 
 export const getGnosisSafeContract = ensureOnce(createGnosisSafeContract)
 const getCreateProxyFactoryContract = ensureOnce(createProxyFactoryContract)
 const getCreateAddExtensionContract = ensureOnce(createAddExtensionContract)
-const getCreateDailyLimitExtensionContract = ensureOnce(createDailyLimitExtensionContract)
+export const getCreateDailyLimitExtensionContract = ensureOnce(createDailyLimitExtensionContract)
 
 const createMasterCopies = async () => {
   const web3 = getWeb3()
@@ -86,19 +86,28 @@ const createMasterCopies = async () => {
 
 export const initContracts = ensureOnce(createMasterCopies)
 
-const getSafeDataBasedOn = async (accounts, numConfirmations) => {
-  const extensionData = await dailyLimitMaster.contract.setup
-    .getData([0], [100])
+const getSafeDataBasedOn = async (accounts, numConfirmations, dailyLimitInEth) => {
+  const web3 = getWeb3()
+
+  const moduleData = await dailyLimitMaster.contract.setup
+    .getData([0], [web3.toWei(dailyLimitInEth, 'ether')])
+
   const proxyFactoryData = await proxyFactoryMaster.contract.createProxy
-    .getData(dailyLimitMaster.address, extensionData)
-  const createAndAddExtensionData = createAndAddExtensionMaster.contract.createAndAddExtension
+    .getData(dailyLimitMaster.address, moduleData)
+
+  const createAndAddExtensionData = createAndAddExtensionMaster.contract.createAndAddModule
     .getData(proxyFactoryMaster.address, proxyFactoryData)
 
   return safeMaster.contract.setup
     .getData(accounts, numConfirmations, createAndAddExtensionMaster.address, createAndAddExtensionData)
 }
 
-export const deploySafeContract = async (safeAccounts: string[], numConfirmations: number, userAccount: string) => {
-  const gnosisSafeData = await getSafeDataBasedOn(safeAccounts, numConfirmations)
+export const deploySafeContract = async (
+  safeAccounts: string[],
+  numConfirmations: number,
+  dailyLimit: number,
+  userAccount: string,
+) => {
+  const gnosisSafeData = await getSafeDataBasedOn(safeAccounts, numConfirmations, dailyLimit)
   return proxyFactoryMaster.createProxy(safeMaster.address, gnosisSafeData, { from: userAccount, gas: '5000000' })
 }

@@ -2,7 +2,6 @@
 import * as React from 'react'
 import Button from '~/components/layout/Button'
 import Link from '~/components/layout/Link'
-import { SAFELIST_ADDRESS } from '~/routes/routes'
 
 type NextButtonProps = {
   text: string,
@@ -20,9 +19,14 @@ const NextButton = ({ text, disabled }: NextButtonProps) => (
   </Button>
 )
 
-const GoButton = () => (
-  <Link to={SAFELIST_ADDRESS}>
-    <NextButton text="VISIT SAFES" disabled={false} />
+type GoProps = {
+  title: string,
+  to: string,
+}
+
+const GoButton = ({ title, to }: GoProps) => (
+  <Link to={to}>
+    <NextButton text={title} disabled={false} />
   </Link>
 )
 
@@ -54,14 +58,16 @@ type Props = {
   firstPage: boolean,
   lastPage: boolean,
   submitting: boolean,
+  goTitle: string,
+  goPath: string,
 }
 
 const Controls = ({
-  finishedTx, onPrevious, firstPage, lastPage, submitting,
+  finishedTx, onPrevious, firstPage, lastPage, submitting, goTitle, goPath,
 }: Props) => (
   <React.Fragment>
     { finishedTx
-      ? <GoButton />
+      ? <GoButton title={goTitle} to={goPath} />
       : <ControlButtons
         submitting={submitting}
         next={lastPage ? 'Finish' : 'Next'}

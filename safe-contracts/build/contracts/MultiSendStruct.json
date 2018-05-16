@@ -30,41 +30,41 @@
       "type": "function"
     }
   ],
-  "bytecode": "0x6060604052341561000f57600080fd5b6104338061001e6000396000f300606060405260043610610041576000357c0100000000000000000000000000000000000000000000000000000000900463ffffffff1680632f6fda4a14610046575b600080fd5b341561005157600080fd5b61006660046100619036906102d1565b610068565b005b60006100726100e8565b600091505b82518210156100c957828281518110151561008e57fe5b9060200190602002015190506100b18160000151826020015183604001516100ce565b15156100bc57600080fd5b8180600101925050610077565b505050565b60008060008351602085018688600019f190509392505050565b606060405190810160405280600073ffffffffffffffffffffffffffffffffffffffff16815260200160008152602001610120610126565b81525090565b602060405190810160405280600081525090565b600061014682356103c0565b905092915050565b600082601f8301126000811461016357610168565b600080fd5b50813561017c6101778261035a565b610324565b9150818183526020840193506020810190508360005b838110156101c257813586016101a88882610233565b845260208401935060208301925050600181019050610192565b5050505092915050565b600082601f830112600081146101e1576101e6565b600080fd5b5081356101fa6101f58261038b565b610324565b915080825260208301602083018583830111600181146102195761021e565b600080fd5b5061022a8382846103ea565b50505092915050565b6000606082840312600181146102485761024d565b600080fd5b506102586060610324565b905060006102688482850161013a565b600083015250602061027c848285016102bd565b602083015250604082013567ffffffffffffffff81116001811461029f576102a4565b600080fd5b506102b1848285016101cc565b60408301525092915050565b60006102c982356103e0565b905092915050565b6000602082840312600181146102e6576102eb565b600080fd5b50600082013567ffffffffffffffff8111600181146103095761030e565b600080fd5b5061031b8482850161014e565b91505092915050565b6000604051905081810181811067ffffffffffffffff8211176001811461034a5761034f565b600080fd5b508060405250919050565b600067ffffffffffffffff82116001811461037457610379565b600080fd5b50602082029050602081019050919050565b600067ffffffffffffffff8211600181146103a5576103aa565b600080fd5b50601f19601f8301169050602081019050919050565b600073ffffffffffffffffffffffffffffffffffffffff82169050919050565b6000819050919050565b828183376000838301525050505600a265627a7a72305820484c17df168e13c63e6cab3910c3609158f4993315f595b990932cc0a3f27c726c6578706572696d656e74616cf50037",
-  "deployedBytecode": "0x606060405260043610610041576000357c0100000000000000000000000000000000000000000000000000000000900463ffffffff1680632f6fda4a14610046575b600080fd5b341561005157600080fd5b61006660046100619036906102d1565b610068565b005b60006100726100e8565b600091505b82518210156100c957828281518110151561008e57fe5b9060200190602002015190506100b18160000151826020015183604001516100ce565b15156100bc57600080fd5b8180600101925050610077565b505050565b60008060008351602085018688600019f190509392505050565b606060405190810160405280600073ffffffffffffffffffffffffffffffffffffffff16815260200160008152602001610120610126565b81525090565b602060405190810160405280600081525090565b600061014682356103c0565b905092915050565b600082601f8301126000811461016357610168565b600080fd5b50813561017c6101778261035a565b610324565b9150818183526020840193506020810190508360005b838110156101c257813586016101a88882610233565b845260208401935060208301925050600181019050610192565b5050505092915050565b600082601f830112600081146101e1576101e6565b600080fd5b5081356101fa6101f58261038b565b610324565b915080825260208301602083018583830111600181146102195761021e565b600080fd5b5061022a8382846103ea565b50505092915050565b6000606082840312600181146102485761024d565b600080fd5b506102586060610324565b905060006102688482850161013a565b600083015250602061027c848285016102bd565b602083015250604082013567ffffffffffffffff81116001811461029f576102a4565b600080fd5b506102b1848285016101cc565b60408301525092915050565b60006102c982356103e0565b905092915050565b6000602082840312600181146102e6576102eb565b600080fd5b50600082013567ffffffffffffffff8111600181146103095761030e565b600080fd5b5061031b8482850161014e565b91505092915050565b6000604051905081810181811067ffffffffffffffff8211176001811461034a5761034f565b600080fd5b508060405250919050565b600067ffffffffffffffff82116001811461037457610379565b600080fd5b50602082029050602081019050919050565b600067ffffffffffffffff8211600181146103a5576103aa565b600080fd5b50601f19601f8301169050602081019050919050565b600073ffffffffffffffffffffffffffffffffffffffff82169050919050565b6000819050919050565b828183376000838301525050505600a265627a7a72305820484c17df168e13c63e6cab3910c3609158f4993315f595b990932cc0a3f27c726c6578706572696d656e74616cf50037",
-  "sourceMap": "339:772:10:-;;;;;;;;;;;;;;;;;",
-  "deployedSourceMap": "339:772:10:-;;;;;;;;;;;;;;;;;;;;;;;;581:291;;;;;;;;;;;;;;;;;;;;;;;661:9;720:30;;:::i;:::-;673:1;661:13;;657:209;680:12;:19;676:1;:23;657:209;;;753:12;766:1;753:15;;;;;;;;;;;;;;;;;;720:48;;790:64;802:11;:14;;;818:11;:17;;;837:11;:16;;;790:11;:64::i;:::-;782:73;;;;;;;;701:3;;;;;;;657:209;;;581:291;;;:::o;878:231::-;972:12;1091:1;1088;1081:4;1075:5;1068:4;1062;1058:3;1051:5;1047:2;1043:1;1039:3;1034:4;1023:70;;1009:94;;;;;:::o;339:772::-;;;;;;;;;;;;;;;;;;;;;;;;:::i;:::-;;;;;:::o;:::-;;;;;;;;;;;;;;;:::o;5:118:-1:-;;72:46;110:6;97:12;72:46;;;63:55;;57:66;;;;;175:756;;314:3;307:4;299:6;295:3;291;324:1;319:23;;;;284:58;;319:23;338:1;335;328:6;284:58;;375:6;362:12;397:105;412:89;494:6;412:89;;;397:105;;;388:114;;519:5;544:6;537:5;530:6;574:4;566:6;562:3;552:27;;596:4;591:3;587;580:21;;649:6;682:1;667:258;692:6;689:1;686:2;667:258;;;775:3;762:12;754:6;750:3;799:62;857:3;845:10;799:62;;;794:3;787:6;885:4;880:3;876;869:21;;913:4;908:3;904;897:21;;724:201;714:1;711;707:3;702:14;;667:258;;;671:14;277:654;;;;;;;;940:446;;1034:3;1027:4;1019:6;1015:3;1011;1044:1;1039:23;;;;1004:58;;1039:23;1058:1;1055;1048:6;1004:58;;1095:6;1082:12;1117:60;1132:44;1169:6;1132:44;;;1117:60;;;1108:69;;1197:6;1190:5;1183:6;1233:4;1225:6;1221:3;1266:4;1259:5;1255:3;1305;1296:6;1291:3;1287;1284:2;1315:1;1310:23;;;;1277:56;;1310:23;1329:1;1326;1319:6;1277:56;;1339:41;1373:6;1368:3;1363;1339:41;;;997:389;;;;;;;;1435:722;;1553:4;1541:9;1536:3;1532;1528;1564:1;1559:23;;;;1521:61;;1559:23;1578:1;1575;1568:6;1521:61;;1596:20;1611:4;1596:20;;;1587:29;;1664:1;1695:49;1740:3;1731:6;1720:9;1716:3;1695:49;;;1689:3;1682:5;1678:3;1671:6;1626:130;1807:2;1840:49;1885:3;1876:6;1865:9;1861:3;1840:49;;;1833:4;1826:5;1822:3;1815:6;1766:135;1979:2;1968:9;1964:3;1951:12;2007:18;1999:6;1996:2;2032:1;2027:23;;;;1989:61;;2027:23;2046:1;2043;2036:6;1989:61;;2081:54;2131:3;2122:6;2111:9;2107:3;2081:54;;;2074:4;2067:5;2063:3;2056:6;1911:236;1515:642;;;;;2164:118;;2231:46;2269:6;2256:12;2231:46;;;2222:55;;2216:66;;;;;2289:449;;2447:2;2435:9;2426:7;2422:3;2418;2456:1;2451:23;;;;2411:63;;2451:23;2470:1;2467;2460:6;2411:63;;2533:1;2522:9;2518:3;2505:12;2560:18;2552:6;2549:2;2585:1;2580:23;;;;2542:61;;2580:23;2599:1;2596;2589:6;2542:61;;2619:103;2714:7;2705:6;2694:9;2690:3;2619:103;;;2609:113;;2484:244;2405:333;;;;;2745:267;;2807:2;2801:5;2791:19;;2845:4;2837:6;2833:3;2948:6;2936:10;2933:2;2912:18;2900:10;2897:2;2894;2962:1;2957:23;;;;2887:93;;2957:23;2976:1;2973;2966:6;2887:93;;2996:10;2992:2;2985:6;2785:227;;;;;3019:294;;3207:18;3199:6;3196:2;3232:1;3227:23;;;;3189:61;;3227:23;3246:1;3243;3236:6;3189:61;;3275:4;3267:6;3263:3;3255:25;;3303:4;3297;3293:3;3285:23;;3126:187;;;;3320:265;;3463:18;3455:6;3452:2;3488:1;3483:23;;;;3445:61;;3483:23;3502:1;3499;3492:6;3445:61;;3546:4;3542:3;3535:4;3527:6;3523:3;3519;3511:41;;3575:4;3569;3565:3;3557:23;;3382:203;;;;3592:128;;3672:42;3665:5;3661:3;3650:65;;3644:76;;;;3727:79;;3796:5;3785:16;;3779:27;;;;3814:145;3895:6;3890:3;3885;3872:12;3951:1;3942:6;3937:3;3933;3926:6;3865:94;;;",
-  "source": "pragma solidity ^0.4.19;\npragma experimental ABIEncoderV2;\n\n\n/// @title Multi Send - Allows to batch multiple transactions into one.\n/// @author Nick Dodson - <nick.dodson@consensys.net>\n/// @author Gonçalo Sá - <goncalo.sa@consensys.net>\n/// @author Stefan George - <stefan@gnosis.pm>\n/// @author Richard Meissner - <richard@gnosis.pm>\ncontract MultiSendStruct {\n\n    struct Transaction {\n      address to;\n      uint256 value;\n      bytes data;\n    }\n\n    /// @dev Sends multiple transactions and reverts all if one fails.\n    /// @param transactions Encoded transactions.\n    function multiSend(Transaction[] transactions)\n        public\n    {\n        for(uint256 i = 0; i < transactions.length; i++) {\n            Transaction memory transaction = transactions[i];\n            require(executeCall(transaction.to, transaction.value, transaction.data));\n        }\n    }\n\n    function executeCall(address to, uint256 value, bytes data)\n        internal\n        returns (bool success)\n    {\n        assembly {\n            success := call(not(0), to, value, add(data, 0x20), mload(data), 0, 0)\n        }\n    }\n}\n",
+  "bytecode": "0x608060405234801561001057600080fd5b506103c6806100206000396000f300608060405260043610610041576000357c0100000000000000000000000000000000000000000000000000000000900463ffffffff1680632f6fda4a14610046575b600080fd5b34801561005257600080fd5b5061006d60048036036100689190810190610291565b61006f565b005b60006100796100ed565b600091505b82518210156100d057828281518110151561009557fe5b9060200190602002015190506100b88160000151826020015183604001516100d5565b15156100c357600080fd5b818060010192505061007e565b505050565b600080600083516020850186885af190509392505050565b606060405190810160405280600073ffffffffffffffffffffffffffffffffffffffff16815260200160008152602001606081525090565b60006101318235610353565b905092915050565b600082601f830112151561014c57600080fd5b813561015f61015a826102ff565b6102d2565b9150818183526020840193506020810190508360005b838110156101a5578135860161018b8882610205565b845260208401935060208301925050600181019050610175565b5050505092915050565b600082601f83011215156101c257600080fd5b81356101d56101d082610327565b6102d2565b915080825260208301602083018583830111156101f157600080fd5b6101fc83828461037d565b50505092915050565b60006060828403121561021757600080fd5b61022160606102d2565b9050600061023184828501610125565b60008301525060206102458482850161027d565b602083015250604082013567ffffffffffffffff81111561026557600080fd5b610271848285016101af565b60408301525092915050565b60006102898235610373565b905092915050565b6000602082840312156102a357600080fd5b600082013567ffffffffffffffff8111156102bd57600080fd5b6102c984828501610139565b91505092915050565b6000604051905081810181811067ffffffffffffffff821117156102f557600080fd5b8060405250919050565b600067ffffffffffffffff82111561031657600080fd5b602082029050602081019050919050565b600067ffffffffffffffff82111561033e57600080fd5b601f19601f8301169050602081019050919050565b600073ffffffffffffffffffffffffffffffffffffffff82169050919050565b6000819050919050565b828183376000838301525050505600a265627a7a7230582005384089695c7c77816220e122b3c45435a664207e3c979cd8b6653c05e379236c6578706572696d656e74616cf50037",
+  "deployedBytecode": "0x608060405260043610610041576000357c0100000000000000000000000000000000000000000000000000000000900463ffffffff1680632f6fda4a14610046575b600080fd5b34801561005257600080fd5b5061006d60048036036100689190810190610291565b61006f565b005b60006100796100ed565b600091505b82518210156100d057828281518110151561009557fe5b9060200190602002015190506100b88160000151826020015183604001516100d5565b15156100c357600080fd5b818060010192505061007e565b505050565b600080600083516020850186885af190509392505050565b606060405190810160405280600073ffffffffffffffffffffffffffffffffffffffff16815260200160008152602001606081525090565b60006101318235610353565b905092915050565b600082601f830112151561014c57600080fd5b813561015f61015a826102ff565b6102d2565b9150818183526020840193506020810190508360005b838110156101a5578135860161018b8882610205565b845260208401935060208301925050600181019050610175565b5050505092915050565b600082601f83011215156101c257600080fd5b81356101d56101d082610327565b6102d2565b915080825260208301602083018583830111156101f157600080fd5b6101fc83828461037d565b50505092915050565b60006060828403121561021757600080fd5b61022160606102d2565b9050600061023184828501610125565b60008301525060206102458482850161027d565b602083015250604082013567ffffffffffffffff81111561026557600080fd5b610271848285016101af565b60408301525092915050565b60006102898235610373565b905092915050565b6000602082840312156102a357600080fd5b600082013567ffffffffffffffff8111156102bd57600080fd5b6102c984828501610139565b91505092915050565b6000604051905081810181811067ffffffffffffffff821117156102f557600080fd5b8060405250919050565b600067ffffffffffffffff82111561031657600080fd5b602082029050602081019050919050565b600067ffffffffffffffff82111561033e57600080fd5b601f19601f8301169050602081019050919050565b600073ffffffffffffffffffffffffffffffffffffffff82169050919050565b6000819050919050565b828183376000838301525050505600a265627a7a7230582005384089695c7c77816220e122b3c45435a664207e3c979cd8b6653c05e379236c6578706572696d656e74616cf50037",
+  "sourceMap": "339:839:17:-;;;;8:9:-1;5:2;;;30:1;27;20:12;5:2;339:839:17;;;;;;;",
+  "deployedSourceMap": "339:839:17:-;;;;;;;;;;;;;;;;;;;;;;;;587:291;;8:9:-1;5:2;;;30:1;27;20:12;5:2;587:291:17;;;;;;;;;;;;;;;;;;;;667:9;726:30;;:::i;:::-;679:1;667:13;;663:209;686:12;:19;682:1;:23;663:209;;;759:12;772:1;759:15;;;;;;;;;;;;;;;;;;726:48;;796:64;808:11;:14;;;824:11;:17;;;843:11;:16;;;796:11;:64::i;:::-;788:73;;;;;;;;707:3;;;;;;;663:209;;;587:291;;;:::o;884:292::-;978:12;1158:1;1155;1148:4;1142:11;1135:4;1129;1125:15;1118:5;1114:2;1109:3;1104:56;1093:67;;1079:91;;;;;:::o;339:839::-;;;;;;;;;;;;;;;;;;;;;;;;;;;:::o;5:118:-1:-;;72:46;110:6;97:20;72:46;;;63:55;;57:66;;;;;175:753;;317:3;310:4;302:6;298:17;294:27;287:35;284:2;;;335:1;332;325:12;284:2;372:6;359:20;394:105;409:89;491:6;409:89;;;394:105;;;385:114;;516:5;541:6;534:5;527:21;571:4;563:6;559:17;549:27;;593:4;588:3;584:14;577:21;;646:6;679:1;664:258;689:6;686:1;683:13;664:258;;;772:3;759:17;751:6;747:30;796:62;854:3;842:10;796:62;;;791:3;784:75;882:4;877:3;873:14;866:21;;910:4;905:3;901:14;894:21;;721:201;711:1;708;704:9;699:14;;664:258;;;668:14;277:651;;;;;;;;937:432;;1034:3;1027:4;1019:6;1015:17;1011:27;1004:35;1001:2;;;1052:1;1049;1042:12;1001:2;1089:6;1076:20;1111:60;1126:44;1163:6;1126:44;;;1111:60;;;1102:69;;1191:6;1184:5;1177:21;1227:4;1219:6;1215:17;1260:4;1253:5;1249:16;1295:3;1286:6;1281:3;1277:16;1274:25;1271:2;;;1312:1;1309;1302:12;1271:2;1322:41;1356:6;1351:3;1346;1322:41;;;994:375;;;;;;;;1418:700;;1532:4;1520:9;1515:3;1511:19;1507:30;1504:2;;;1550:1;1547;1540:12;1504:2;1568:20;1583:4;1568:20;;;1559:29;;1636:1;1667:49;1712:3;1703:6;1692:9;1688:22;1667:49;;;1661:3;1654:5;1650:15;1643:74;1598:130;1779:2;1812:49;1857:3;1848:6;1837:9;1833:22;1812:49;;;1805:4;1798:5;1794:16;1787:75;1738:135;1951:2;1940:9;1936:18;1923:32;1975:18;1967:6;1964:30;1961:2;;;2007:1;2004;1997:12;1961:2;2042:54;2092:3;2083:6;2072:9;2068:22;2042:54;;;2035:4;2028:5;2024:16;2017:80;1883:225;1498:620;;;;;2125:118;;2192:46;2230:6;2217:20;2192:46;;;2183:55;;2177:66;;;;;2250:427;;2404:2;2392:9;2383:7;2379:23;2375:32;2372:2;;;2420:1;2417;2410:12;2372:2;2483:1;2472:9;2468:17;2455:31;2506:18;2498:6;2495:30;2492:2;;;2538:1;2535;2528:12;2492:2;2558:103;2653:7;2644:6;2633:9;2629:22;2558:103;;;2548:113;;2434:233;2366:311;;;;;2684:256;;2746:2;2740:9;2730:19;;2784:4;2776:6;2772:17;2883:6;2871:10;2868:22;2847:18;2835:10;2832:34;2829:62;2826:2;;;2904:1;2901;2894:12;2826:2;2924:10;2920:2;2913:22;2724:216;;;;;2947:283;;3131:18;3123:6;3120:30;3117:2;;;3163:1;3160;3153:12;3117:2;3192:4;3184:6;3180:17;3172:25;;3220:4;3214;3210:15;3202:23;;3054:176;;;;3237:254;;3376:18;3368:6;3365:30;3362:2;;;3408:1;3405;3398:12;3362:2;3452:4;3448:9;3441:4;3433:6;3429:17;3425:33;3417:41;;3481:4;3475;3471:15;3463:23;;3299:192;;;;3498:128;;3578:42;3571:5;3567:54;3556:65;;3550:76;;;;3633:79;;3702:5;3691:16;;3685:27;;;;3720:145;3801:6;3796:3;3791;3778:30;3857:1;3848:6;3843:3;3839:16;3832:27;3771:94;;;",
+  "source": "pragma solidity ^0.4.23;\npragma experimental ABIEncoderV2;\n\n\n/// @title Multi Send - Allows to batch multiple transactions into one.\n/// @author Nick Dodson - <nick.dodson@consensys.net>\n/// @author Gonçalo Sá - <goncalo.sa@consensys.net>\n/// @author Stefan George - <stefan@gnosis.pm>\n/// @author Richard Meissner - <richard@gnosis.pm>\ncontract MultiSendStruct {\n\n    struct Transaction {\n        address to;\n        uint256 value;\n        bytes data;\n    }\n\n    /// @dev Sends multiple transactions and reverts all if one fails.\n    /// @param transactions Encoded transactions.\n    function multiSend(Transaction[] transactions)\n        public\n    {\n        for(uint256 i = 0; i < transactions.length; i++) {\n            Transaction memory transaction = transactions[i];\n            require(executeCall(transaction.to, transaction.value, transaction.data));\n        }\n    }\n\n    function executeCall(address to, uint256 value, bytes data)\n        internal\n        returns (bool success)\n    {\n        // solium-disable-next-line security/no-inline-assembly\n        assembly {\n            success := call(gas, to, value, add(data, 0x20), mload(data), 0, 0)\n        }\n    }\n}\n",
   "sourcePath": "/Users/apanizo/git/gnosis/safe-contracts/contracts/libraries/MultiSendStruct.sol",
   "ast": {
     "absolutePath": "/Users/apanizo/git/gnosis/safe-contracts/contracts/libraries/MultiSendStruct.sol",
     "exportedSymbols": {
       "MultiSendStruct": [
-        2077
+        1675
       ]
     },
-    "id": 2078,
+    "id": 1676,
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 2018,
+        "id": 1616,
         "literals": [
           "solidity",
           "^",
           "0.4",
-          ".19"
+          ".23"
         ],
         "nodeType": "PragmaDirective",
-        "src": "0:24:10"
+        "src": "0:24:17"
       },
       {
-        "id": 2019,
+        "id": 1617,
         "literals": [
           "experimental",
           "ABIEncoderV2"
         ],
         "nodeType": "PragmaDirective",
-        "src": "25:33:10"
+        "src": "25:33:17"
       },
       {
         "baseContracts": [],
@@ -72,24 +72,24 @@
         "contractKind": "contract",
         "documentation": "@title Multi Send - Allows to batch multiple transactions into one.\n @author Nick Dodson - <nick.dodson@consensys.net>\n @author Gonçalo Sá - <goncalo.sa@consensys.net>\n @author Stefan George - <stefan@gnosis.pm>\n @author Richard Meissner - <richard@gnosis.pm>",
         "fullyImplemented": true,
-        "id": 2077,
+        "id": 1675,
         "linearizedBaseContracts": [
-          2077
+          1675
         ],
         "name": "MultiSendStruct",
         "nodeType": "ContractDefinition",
         "nodes": [
           {
             "canonicalName": "MultiSendStruct.Transaction",
-            "id": 2026,
+            "id": 1624,
             "members": [
               {
                 "constant": false,
-                "id": 2021,
+                "id": 1619,
                 "name": "to",
                 "nodeType": "VariableDeclaration",
-                "scope": 2026,
-                "src": "398:10:10",
+                "scope": 1624,
+                "src": "400:10:17",
                 "stateVariable": false,
                 "storageLocation": "default",
                 "typeDescriptions": {
@@ -97,10 +97,10 @@
                   "typeString": "address"
                 },
                 "typeName": {
-                  "id": 2020,
+                  "id": 1618,
                   "name": "address",
                   "nodeType": "ElementaryTypeName",
-                  "src": "398:7:10",
+                  "src": "400:7:17",
                   "typeDescriptions": {
                     "typeIdentifier": "t_address",
                     "typeString": "address"
@@ -111,11 +111,11 @@
               },
               {
                 "constant": false,
-                "id": 2023,
+                "id": 1621,
                 "name": "value",
                 "nodeType": "VariableDeclaration",
-                "scope": 2026,
-                "src": "416:13:10",
+                "scope": 1624,
+                "src": "420:13:17",
                 "stateVariable": false,
                 "storageLocation": "default",
                 "typeDescriptions": {
@@ -123,10 +123,10 @@
                   "typeString": "uint256"
                 },
                 "typeName": {
-                  "id": 2022,
+                  "id": 1620,
                   "name": "uint256",
                   "nodeType": "ElementaryTypeName",
-                  "src": "416:7:10",
+                  "src": "420:7:17",
                   "typeDescriptions": {
                     "typeIdentifier": "t_uint256",
                     "typeString": "uint256"
@@ -137,25 +137,25 @@
               },
               {
                 "constant": false,
-                "id": 2025,
+                "id": 1623,
                 "name": "data",
                 "nodeType": "VariableDeclaration",
-                "scope": 2026,
-                "src": "437:10:10",
+                "scope": 1624,
+                "src": "443:10:17",
                 "stateVariable": false,
                 "storageLocation": "default",
                 "typeDescriptions": {
                   "typeIdentifier": "t_bytes_storage_ptr",
-                  "typeString": "bytes storage pointer"
+                  "typeString": "bytes"
                 },
                 "typeName": {
-                  "id": 2024,
+                  "id": 1622,
                   "name": "bytes",
                   "nodeType": "ElementaryTypeName",
-                  "src": "437:5:10",
+                  "src": "443:5:17",
                   "typeDescriptions": {
                     "typeIdentifier": "t_bytes_storage_ptr",
-                    "typeString": "bytes storage pointer"
+                    "typeString": "bytes"
                   }
                 },
                 "value": null,
@@ -164,81 +164,81 @@
             ],
             "name": "Transaction",
             "nodeType": "StructDefinition",
-            "scope": 2077,
-            "src": "371:83:10",
+            "scope": 1675,
+            "src": "371:89:17",
             "visibility": "public"
           },
           {
             "body": {
-              "id": 2062,
+              "id": 1660,
               "nodeType": "Block",
-              "src": "647:225:10",
+              "src": "653:225:17",
               "statements": [
                 {
                   "body": {
-                    "id": 2060,
+                    "id": 1658,
                     "nodeType": "Block",
-                    "src": "706:160:10",
+                    "src": "712:160:17",
                     "statements": [
                       {
                         "assignments": [
-                          2044
+                          1642
                         ],
                         "declarations": [
                           {
                             "constant": false,
-                            "id": 2044,
+                            "id": 1642,
                             "name": "transaction",
                             "nodeType": "VariableDeclaration",
-                            "scope": 2063,
-                            "src": "720:30:10",
+                            "scope": 1661,
+                            "src": "726:30:17",
                             "stateVariable": false,
                             "storageLocation": "memory",
                             "typeDescriptions": {
-                              "typeIdentifier": "t_struct$_Transaction_$2026_memory_ptr",
-                              "typeString": "struct MultiSendStruct.Transaction memory"
+                              "typeIdentifier": "t_struct$_Transaction_$1624_memory_ptr",
+                              "typeString": "struct MultiSendStruct.Transaction"
                             },
                             "typeName": {
                               "contractScope": null,
-                              "id": 2043,
+                              "id": 1641,
                               "name": "Transaction",
                               "nodeType": "UserDefinedTypeName",
-                              "referencedDeclaration": 2026,
-                              "src": "720:11:10",
+                              "referencedDeclaration": 1624,
+                              "src": "726:11:17",
                               "typeDescriptions": {
-                                "typeIdentifier": "t_struct$_Transaction_$2026_storage_ptr",
-                                "typeString": "struct MultiSendStruct.Transaction storage pointer"
+                                "typeIdentifier": "t_struct$_Transaction_$1624_storage_ptr",
+                                "typeString": "struct MultiSendStruct.Transaction"
                               }
                             },
                             "value": null,
                             "visibility": "internal"
                           }
                         ],
-                        "id": 2048,
+                        "id": 1646,
                         "initialValue": {
                           "argumentTypes": null,
                           "baseExpression": {
                             "argumentTypes": null,
-                            "id": 2045,
+                            "id": 1643,
                             "name": "transactions",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
-                            "referencedDeclaration": 2029,
-                            "src": "753:12:10",
+                            "referencedDeclaration": 1627,
+                            "src": "759:12:17",
                             "typeDescriptions": {
-                              "typeIdentifier": "t_array$_t_struct$_Transaction_$2026_memory_$dyn_memory_ptr",
+                              "typeIdentifier": "t_array$_t_struct$_Transaction_$1624_memory_$dyn_memory_ptr",
                               "typeString": "struct MultiSendStruct.Transaction memory[] memory"
                             }
                           },
-                          "id": 2047,
+                          "id": 1645,
                           "indexExpression": {
                             "argumentTypes": null,
-                            "id": 2046,
+                            "id": 1644,
                             "name": "i",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
-                            "referencedDeclaration": 2033,
-                            "src": "766:1:10",
+                            "referencedDeclaration": 1631,
+                            "src": "772:1:17",
                             "typeDescriptions": {
                               "typeIdentifier": "t_uint256",
                               "typeString": "uint256"
@@ -249,14 +249,14 @@
                           "isPure": false,
                           "lValueRequested": false,
                           "nodeType": "IndexAccess",
-                          "src": "753:15:10",
+                          "src": "759:15:17",
                           "typeDescriptions": {
-                            "typeIdentifier": "t_struct$_Transaction_$2026_memory",
+                            "typeIdentifier": "t_struct$_Transaction_$1624_memory",
                             "typeString": "struct MultiSendStruct.Transaction memory"
                           }
                         },
                         "nodeType": "VariableDeclarationStatement",
-                        "src": "720:48:10"
+                        "src": "726:48:17"
                       },
                       {
                         "expression": {
@@ -269,26 +269,26 @@
                                   "argumentTypes": null,
                                   "expression": {
                                     "argumentTypes": null,
-                                    "id": 2051,
+                                    "id": 1649,
                                     "name": "transaction",
                                     "nodeType": "Identifier",
                                     "overloadedDeclarations": [],
-                                    "referencedDeclaration": 2044,
-                                    "src": "802:11:10",
+                                    "referencedDeclaration": 1642,
+                                    "src": "808:11:17",
                                     "typeDescriptions": {
-                                      "typeIdentifier": "t_struct$_Transaction_$2026_memory_ptr",
+                                      "typeIdentifier": "t_struct$_Transaction_$1624_memory_ptr",
                                       "typeString": "struct MultiSendStruct.Transaction memory"
                                     }
                                   },
-                                  "id": 2052,
+                                  "id": 1650,
                                   "isConstant": false,
                                   "isLValue": true,
                                   "isPure": false,
                                   "lValueRequested": false,
                                   "memberName": "to",
                                   "nodeType": "MemberAccess",
-                                  "referencedDeclaration": 2021,
-                                  "src": "802:14:10",
+                                  "referencedDeclaration": 1619,
+                                  "src": "808:14:17",
                                   "typeDescriptions": {
                                     "typeIdentifier": "t_address",
                                     "typeString": "address"
@@ -298,26 +298,26 @@
                                   "argumentTypes": null,
                                   "expression": {
                                     "argumentTypes": null,
-                                    "id": 2053,
+                                    "id": 1651,
                                     "name": "transaction",
                                     "nodeType": "Identifier",
                                     "overloadedDeclarations": [],
-                                    "referencedDeclaration": 2044,
-                                    "src": "818:11:10",
+                                    "referencedDeclaration": 1642,
+                                    "src": "824:11:17",
                                     "typeDescriptions": {
-                                      "typeIdentifier": "t_struct$_Transaction_$2026_memory_ptr",
+                                      "typeIdentifier": "t_struct$_Transaction_$1624_memory_ptr",
                                       "typeString": "struct MultiSendStruct.Transaction memory"
                                     }
                                   },
-                                  "id": 2054,
+                                  "id": 1652,
                                   "isConstant": false,
                                   "isLValue": true,
                                   "isPure": false,
                                   "lValueRequested": false,
                                   "memberName": "value",
                                   "nodeType": "MemberAccess",
-                                  "referencedDeclaration": 2023,
-                                  "src": "818:17:10",
+                                  "referencedDeclaration": 1621,
+                                  "src": "824:17:17",
                                   "typeDescriptions": {
                                     "typeIdentifier": "t_uint256",
                                     "typeString": "uint256"
@@ -327,26 +327,26 @@
                                   "argumentTypes": null,
                                   "expression": {
                                     "argumentTypes": null,
-                                    "id": 2055,
+                                    "id": 1653,
                                     "name": "transaction",
                                     "nodeType": "Identifier",
                                     "overloadedDeclarations": [],
-                                    "referencedDeclaration": 2044,
-                                    "src": "837:11:10",
+                                    "referencedDeclaration": 1642,
+                                    "src": "843:11:17",
                                     "typeDescriptions": {
-                                      "typeIdentifier": "t_struct$_Transaction_$2026_memory_ptr",
+                                      "typeIdentifier": "t_struct$_Transaction_$1624_memory_ptr",
                                       "typeString": "struct MultiSendStruct.Transaction memory"
                                     }
                                   },
-                                  "id": 2056,
+                                  "id": 1654,
                                   "isConstant": false,
                                   "isLValue": true,
                                   "isPure": false,
                                   "lValueRequested": false,
                                   "memberName": "data",
                                   "nodeType": "MemberAccess",
-                                  "referencedDeclaration": 2025,
-                                  "src": "837:16:10",
+                                  "referencedDeclaration": 1623,
+                                  "src": "843:16:17",
                                   "typeDescriptions": {
                                     "typeIdentifier": "t_bytes_memory",
                                     "typeString": "bytes memory"
@@ -368,18 +368,18 @@
                                     "typeString": "bytes memory"
                                   }
                                 ],
-                                "id": 2050,
+                                "id": 1648,
                                 "name": "executeCall",
                                 "nodeType": "Identifier",
                                 "overloadedDeclarations": [],
-                                "referencedDeclaration": 2076,
-                                "src": "790:11:10",
+                                "referencedDeclaration": 1674,
+                                "src": "796:11:17",
                                 "typeDescriptions": {
                                   "typeIdentifier": "t_function_internal_nonpayable$_t_address_$_t_uint256_$_t_bytes_memory_ptr_$returns$_t_bool_$",
                                   "typeString": "function (address,uint256,bytes memory) returns (bool)"
                                 }
                               },
-                              "id": 2057,
+                              "id": 1655,
                               "isConstant": false,
                               "isLValue": false,
                               "isPure": false,
@@ -387,7 +387,7 @@
                               "lValueRequested": false,
                               "names": [],
                               "nodeType": "FunctionCall",
-                              "src": "790:64:10",
+                              "src": "796:64:17",
                               "typeDescriptions": {
                                 "typeIdentifier": "t_bool",
                                 "typeString": "bool"
@@ -401,18 +401,21 @@
                                 "typeString": "bool"
                               }
                             ],
-                            "id": 2049,
+                            "id": 1647,
                             "name": "require",
                             "nodeType": "Identifier",
-                            "overloadedDeclarations": [],
-                            "referencedDeclaration": 2092,
-                            "src": "782:7:10",
+                            "overloadedDeclarations": [
+                              2468,
+                              2469
+                            ],
+                            "referencedDeclaration": 2468,
+                            "src": "788:7:17",
                             "typeDescriptions": {
                               "typeIdentifier": "t_function_require_pure$_t_bool_$returns$__$",
                               "typeString": "function (bool) pure"
                             }
                           },
-                          "id": 2058,
+                          "id": 1656,
                           "isConstant": false,
                           "isLValue": false,
                           "isPure": false,
@@ -420,15 +423,15 @@
                           "lValueRequested": false,
                           "names": [],
                           "nodeType": "FunctionCall",
-                          "src": "782:73:10",
+                          "src": "788:73:17",
                           "typeDescriptions": {
                             "typeIdentifier": "t_tuple$__$",
                             "typeString": "tuple()"
                           }
                         },
-                        "id": 2059,
+                        "id": 1657,
                         "nodeType": "ExpressionStatement",
-                        "src": "782:73:10"
+                        "src": "788:73:17"
                       }
                     ]
                   },
@@ -438,19 +441,19 @@
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
                     },
-                    "id": 2039,
+                    "id": 1637,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
                     "lValueRequested": false,
                     "leftExpression": {
                       "argumentTypes": null,
-                      "id": 2036,
+                      "id": 1634,
                       "name": "i",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 2033,
-                      "src": "676:1:10",
+                      "referencedDeclaration": 1631,
+                      "src": "682:1:17",
                       "typeDescriptions": {
                         "typeIdentifier": "t_uint256",
                         "typeString": "uint256"
@@ -462,18 +465,18 @@
                       "argumentTypes": null,
                       "expression": {
                         "argumentTypes": null,
-                        "id": 2037,
+                        "id": 1635,
                         "name": "transactions",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 2029,
-                        "src": "680:12:10",
+                        "referencedDeclaration": 1627,
+                        "src": "686:12:17",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_array$_t_struct$_Transaction_$2026_memory_$dyn_memory_ptr",
+                          "typeIdentifier": "t_array$_t_struct$_Transaction_$1624_memory_$dyn_memory_ptr",
                           "typeString": "struct MultiSendStruct.Transaction memory[] memory"
                         }
                       },
-                      "id": 2038,
+                      "id": 1636,
                       "isConstant": false,
                       "isLValue": false,
                       "isPure": false,
@@ -481,31 +484,31 @@
                       "memberName": "length",
                       "nodeType": "MemberAccess",
                       "referencedDeclaration": null,
-                      "src": "680:19:10",
+                      "src": "686:19:17",
                       "typeDescriptions": {
                         "typeIdentifier": "t_uint256",
                         "typeString": "uint256"
                       }
                     },
-                    "src": "676:23:10",
+                    "src": "682:23:17",
                     "typeDescriptions": {
                       "typeIdentifier": "t_bool",
                       "typeString": "bool"
                     }
                   },
-                  "id": 2061,
+                  "id": 1659,
                   "initializationExpression": {
                     "assignments": [
-                      2033
+                      1631
                     ],
                     "declarations": [
                       {
                         "constant": false,
-                        "id": 2033,
+                        "id": 1631,
                         "name": "i",
                         "nodeType": "VariableDeclaration",
-                        "scope": 2063,
-                        "src": "661:9:10",
+                        "scope": 1661,
+                        "src": "667:9:17",
                         "stateVariable": false,
                         "storageLocation": "default",
                         "typeDescriptions": {
@@ -513,10 +516,10 @@
                           "typeString": "uint256"
                         },
                         "typeName": {
-                          "id": 2032,
+                          "id": 1630,
                           "name": "uint256",
                           "nodeType": "ElementaryTypeName",
-                          "src": "661:7:10",
+                          "src": "667:7:17",
                           "typeDescriptions": {
                             "typeIdentifier": "t_uint256",
                             "typeString": "uint256"
@@ -526,18 +529,18 @@
                         "visibility": "internal"
                       }
                     ],
-                    "id": 2035,
+                    "id": 1633,
                     "initialValue": {
                       "argumentTypes": null,
                       "hexValue": "30",
-                      "id": 2034,
+                      "id": 1632,
                       "isConstant": false,
                       "isLValue": false,
                       "isPure": true,
                       "kind": "number",
                       "lValueRequested": false,
                       "nodeType": "Literal",
-                      "src": "673:1:10",
+                      "src": "679:1:17",
                       "subdenomination": null,
                       "typeDescriptions": {
                         "typeIdentifier": "t_rational_0_by_1",
@@ -546,12 +549,12 @@
                       "value": "0"
                     },
                     "nodeType": "VariableDeclarationStatement",
-                    "src": "661:13:10"
+                    "src": "667:13:17"
                   },
                   "loopExpression": {
                     "expression": {
                       "argumentTypes": null,
-                      "id": 2041,
+                      "id": 1639,
                       "isConstant": false,
                       "isLValue": false,
                       "isPure": false,
@@ -559,15 +562,15 @@
                       "nodeType": "UnaryOperation",
                       "operator": "++",
                       "prefix": false,
-                      "src": "701:3:10",
+                      "src": "707:3:17",
                       "subExpression": {
                         "argumentTypes": null,
-                        "id": 2040,
+                        "id": 1638,
                         "name": "i",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 2033,
-                        "src": "701:1:10",
+                        "referencedDeclaration": 1631,
+                        "src": "707:1:17",
                         "typeDescriptions": {
                           "typeIdentifier": "t_uint256",
                           "typeString": "uint256"
@@ -578,16 +581,17 @@
                         "typeString": "uint256"
                       }
                     },
-                    "id": 2042,
+                    "id": 1640,
                     "nodeType": "ExpressionStatement",
-                    "src": "701:3:10"
+                    "src": "707:3:17"
                   },
                   "nodeType": "ForStatement",
-                  "src": "657:209:10"
+                  "src": "663:209:17"
                 }
               ]
             },
-            "id": 2063,
+            "documentation": "@dev Sends multiple transactions and reverts all if one fails.\n @param transactions Encoded transactions.",
+            "id": 1661,
             "implemented": true,
             "isConstructor": false,
             "isDeclaredConst": false,
@@ -595,125 +599,126 @@
             "name": "multiSend",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 2030,
+              "id": 1628,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 2029,
+                  "id": 1627,
                   "name": "transactions",
                   "nodeType": "VariableDeclaration",
-                  "scope": 2063,
-                  "src": "600:26:10",
+                  "scope": 1661,
+                  "src": "606:26:17",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
-                    "typeIdentifier": "t_array$_t_struct$_Transaction_$2026_memory_$dyn_memory_ptr",
-                    "typeString": "struct MultiSendStruct.Transaction memory[] memory"
+                    "typeIdentifier": "t_array$_t_struct$_Transaction_$1624_memory_$dyn_memory_ptr",
+                    "typeString": "struct MultiSendStruct.Transaction[]"
                   },
                   "typeName": {
                     "baseType": {
                       "contractScope": null,
-                      "id": 2027,
+                      "id": 1625,
                       "name": "Transaction",
                       "nodeType": "UserDefinedTypeName",
-                      "referencedDeclaration": 2026,
-                      "src": "600:11:10",
+                      "referencedDeclaration": 1624,
+                      "src": "606:11:17",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_struct$_Transaction_$2026_storage_ptr",
-                        "typeString": "struct MultiSendStruct.Transaction storage pointer"
+                        "typeIdentifier": "t_struct$_Transaction_$1624_storage_ptr",
+                        "typeString": "struct MultiSendStruct.Transaction"
                       }
                     },
-                    "id": 2028,
+                    "id": 1626,
                     "length": null,
                     "nodeType": "ArrayTypeName",
-                    "src": "600:13:10",
+                    "src": "606:13:17",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_array$_t_struct$_Transaction_$2026_storage_$dyn_storage_ptr",
-                      "typeString": "struct MultiSendStruct.Transaction storage ref[] storage pointer"
+                      "typeIdentifier": "t_array$_t_struct$_Transaction_$1624_storage_$dyn_storage_ptr",
+                      "typeString": "struct MultiSendStruct.Transaction[]"
                     }
                   },
                   "value": null,
                   "visibility": "internal"
                 }
               ],
-              "src": "599:28:10"
+              "src": "605:28:17"
             },
             "payable": false,
             "returnParameters": {
-              "id": 2031,
+              "id": 1629,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "647:0:10"
+              "src": "653:0:17"
             },
-            "scope": 2077,
-            "src": "581:291:10",
+            "scope": 1675,
+            "src": "587:291:17",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "public"
           },
           {
             "body": {
-              "id": 2075,
+              "id": 1673,
               "nodeType": "Block",
-              "src": "990:119:10",
+              "src": "996:180:17",
               "statements": [
                 {
                   "externalReferences": [
                     {
                       "data": {
-                        "declaration": 2069,
+                        "declaration": 1667,
                         "isOffset": false,
                         "isSlot": false,
-                        "src": "1062:4:10",
+                        "src": "1148:4:17",
                         "valueSize": 1
                       }
                     },
                     {
                       "data": {
-                        "declaration": 2069,
+                        "declaration": 1667,
                         "isOffset": false,
                         "isSlot": false,
-                        "src": "1081:4:10",
+                        "src": "1129:4:17",
                         "valueSize": 1
                       }
                     },
                     {
                       "success": {
-                        "declaration": 2072,
+                        "declaration": 1670,
                         "isOffset": false,
                         "isSlot": false,
-                        "src": "1023:7:10",
+                        "src": "1093:7:17",
                         "valueSize": 1
                       }
                     },
                     {
                       "to": {
-                        "declaration": 2065,
+                        "declaration": 1663,
                         "isOffset": false,
                         "isSlot": false,
-                        "src": "1047:2:10",
+                        "src": "1114:2:17",
                         "valueSize": 1
                       }
                     },
                     {
                       "value": {
-                        "declaration": 2067,
+                        "declaration": 1665,
                         "isOffset": false,
                         "isSlot": false,
-                        "src": "1051:5:10",
+                        "src": "1118:5:17",
                         "valueSize": 1
                       }
                     }
                   ],
-                  "id": 2074,
+                  "id": 1672,
                   "nodeType": "InlineAssembly",
-                  "operations": "{\n    success := call(not(0), to, value, add(data, 0x20), mload(data), 0, 0)\n}",
-                  "src": "1000:109:10"
+                  "operations": "{\n    success := call(gas(), to, value, add(data, 0x20), mload(data), 0, 0)\n}",
+                  "src": "1070:106:17"
                 }
               ]
             },
-            "id": 2076,
+            "documentation": null,
+            "id": 1674,
             "implemented": true,
             "isConstructor": false,
             "isDeclaredConst": false,
@@ -721,16 +726,16 @@
             "name": "executeCall",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 2070,
+              "id": 1668,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 2065,
+                  "id": 1663,
                   "name": "to",
                   "nodeType": "VariableDeclaration",
-                  "scope": 2076,
-                  "src": "899:10:10",
+                  "scope": 1674,
+                  "src": "905:10:17",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -738,10 +743,10 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 2064,
+                    "id": 1662,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "899:7:10",
+                    "src": "905:7:17",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
                       "typeString": "address"
@@ -752,11 +757,11 @@
                 },
                 {
                   "constant": false,
-                  "id": 2067,
+                  "id": 1665,
                   "name": "value",
                   "nodeType": "VariableDeclaration",
-                  "scope": 2076,
-                  "src": "911:13:10",
+                  "scope": 1674,
+                  "src": "917:13:17",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -764,10 +769,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 2066,
+                    "id": 1664,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "911:7:10",
+                    "src": "917:7:17",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -778,45 +783,45 @@
                 },
                 {
                   "constant": false,
-                  "id": 2069,
+                  "id": 1667,
                   "name": "data",
                   "nodeType": "VariableDeclaration",
-                  "scope": 2076,
-                  "src": "926:10:10",
+                  "scope": 1674,
+                  "src": "932:10:17",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
                     "typeIdentifier": "t_bytes_memory_ptr",
-                    "typeString": "bytes memory"
+                    "typeString": "bytes"
                   },
                   "typeName": {
-                    "id": 2068,
+                    "id": 1666,
                     "name": "bytes",
                     "nodeType": "ElementaryTypeName",
-                    "src": "926:5:10",
+                    "src": "932:5:17",
                     "typeDescriptions": {
                       "typeIdentifier": "t_bytes_storage_ptr",
-                      "typeString": "bytes storage pointer"
+                      "typeString": "bytes"
                     }
                   },
                   "value": null,
                   "visibility": "internal"
                 }
               ],
-              "src": "898:39:10"
+              "src": "904:39:17"
             },
             "payable": false,
             "returnParameters": {
-              "id": 2073,
+              "id": 1671,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 2072,
+                  "id": 1670,
                   "name": "success",
                   "nodeType": "VariableDeclaration",
-                  "scope": 2076,
-                  "src": "972:12:10",
+                  "scope": 1674,
+                  "src": "978:12:17",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -824,10 +829,10 @@
                     "typeString": "bool"
                   },
                   "typeName": {
-                    "id": 2071,
+                    "id": 1669,
                     "name": "bool",
                     "nodeType": "ElementaryTypeName",
-                    "src": "972:4:10",
+                    "src": "978:4:17",
                     "typeDescriptions": {
                       "typeIdentifier": "t_bool",
                       "typeString": "bool"
@@ -837,50 +842,50 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "971:14:10"
+              "src": "977:14:17"
             },
-            "scope": 2077,
-            "src": "878:231:10",
+            "scope": 1675,
+            "src": "884:292:17",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "internal"
           }
         ],
-        "scope": 2078,
-        "src": "339:772:10"
+        "scope": 1676,
+        "src": "339:839:17"
       }
     ],
-    "src": "0:1112:10"
+    "src": "0:1179:17"
   },
   "legacyAST": {
     "absolutePath": "/Users/apanizo/git/gnosis/safe-contracts/contracts/libraries/MultiSendStruct.sol",
     "exportedSymbols": {
       "MultiSendStruct": [
-        2077
+        1675
       ]
     },
-    "id": 2078,
+    "id": 1676,
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 2018,
+        "id": 1616,
         "literals": [
           "solidity",
           "^",
           "0.4",
-          ".19"
+          ".23"
         ],
         "nodeType": "PragmaDirective",
-        "src": "0:24:10"
+        "src": "0:24:17"
       },
       {
-        "id": 2019,
+        "id": 1617,
         "literals": [
           "experimental",
           "ABIEncoderV2"
         ],
         "nodeType": "PragmaDirective",
-        "src": "25:33:10"
+        "src": "25:33:17"
       },
       {
         "baseContracts": [],
@@ -888,24 +893,24 @@
         "contractKind": "contract",
         "documentation": "@title Multi Send - Allows to batch multiple transactions into one.\n @author Nick Dodson - <nick.dodson@consensys.net>\n @author Gonçalo Sá - <goncalo.sa@consensys.net>\n @author Stefan George - <stefan@gnosis.pm>\n @author Richard Meissner - <richard@gnosis.pm>",
         "fullyImplemented": true,
-        "id": 2077,
+        "id": 1675,
         "linearizedBaseContracts": [
-          2077
+          1675
         ],
         "name": "MultiSendStruct",
         "nodeType": "ContractDefinition",
         "nodes": [
           {
             "canonicalName": "MultiSendStruct.Transaction",
-            "id": 2026,
+            "id": 1624,
             "members": [
               {
                 "constant": false,
-                "id": 2021,
+                "id": 1619,
                 "name": "to",
                 "nodeType": "VariableDeclaration",
-                "scope": 2026,
-                "src": "398:10:10",
+                "scope": 1624,
+                "src": "400:10:17",
                 "stateVariable": false,
                 "storageLocation": "default",
                 "typeDescriptions": {
@@ -913,10 +918,10 @@
                   "typeString": "address"
                 },
                 "typeName": {
-                  "id": 2020,
+                  "id": 1618,
                   "name": "address",
                   "nodeType": "ElementaryTypeName",
-                  "src": "398:7:10",
+                  "src": "400:7:17",
                   "typeDescriptions": {
                     "typeIdentifier": "t_address",
                     "typeString": "address"
@@ -927,11 +932,11 @@
               },
               {
                 "constant": false,
-                "id": 2023,
+                "id": 1621,
                 "name": "value",
                 "nodeType": "VariableDeclaration",
-                "scope": 2026,
-                "src": "416:13:10",
+                "scope": 1624,
+                "src": "420:13:17",
                 "stateVariable": false,
                 "storageLocation": "default",
                 "typeDescriptions": {
@@ -939,10 +944,10 @@
                   "typeString": "uint256"
                 },
                 "typeName": {
-                  "id": 2022,
+                  "id": 1620,
                   "name": "uint256",
                   "nodeType": "ElementaryTypeName",
-                  "src": "416:7:10",
+                  "src": "420:7:17",
                   "typeDescriptions": {
                     "typeIdentifier": "t_uint256",
                     "typeString": "uint256"
@@ -953,25 +958,25 @@
               },
               {
                 "constant": false,
-                "id": 2025,
+                "id": 1623,
                 "name": "data",
                 "nodeType": "VariableDeclaration",
-                "scope": 2026,
-                "src": "437:10:10",
+                "scope": 1624,
+                "src": "443:10:17",
                 "stateVariable": false,
                 "storageLocation": "default",
                 "typeDescriptions": {
                   "typeIdentifier": "t_bytes_storage_ptr",
-                  "typeString": "bytes storage pointer"
+                  "typeString": "bytes"
                 },
                 "typeName": {
-                  "id": 2024,
+                  "id": 1622,
                   "name": "bytes",
                   "nodeType": "ElementaryTypeName",
-                  "src": "437:5:10",
+                  "src": "443:5:17",
                   "typeDescriptions": {
                     "typeIdentifier": "t_bytes_storage_ptr",
-                    "typeString": "bytes storage pointer"
+                    "typeString": "bytes"
                   }
                 },
                 "value": null,
@@ -980,81 +985,81 @@
             ],
             "name": "Transaction",
             "nodeType": "StructDefinition",
-            "scope": 2077,
-            "src": "371:83:10",
+            "scope": 1675,
+            "src": "371:89:17",
             "visibility": "public"
           },
           {
             "body": {
-              "id": 2062,
+              "id": 1660,
               "nodeType": "Block",
-              "src": "647:225:10",
+              "src": "653:225:17",
               "statements": [
                 {
                   "body": {
-                    "id": 2060,
+                    "id": 1658,
                     "nodeType": "Block",
-                    "src": "706:160:10",
+                    "src": "712:160:17",
                     "statements": [
                       {
                         "assignments": [
-                          2044
+                          1642
                         ],
                         "declarations": [
                           {
                             "constant": false,
-                            "id": 2044,
+                            "id": 1642,
                             "name": "transaction",
                             "nodeType": "VariableDeclaration",
-                            "scope": 2063,
-                            "src": "720:30:10",
+                            "scope": 1661,
+                            "src": "726:30:17",
                             "stateVariable": false,
                             "storageLocation": "memory",
                             "typeDescriptions": {
-                              "typeIdentifier": "t_struct$_Transaction_$2026_memory_ptr",
-                              "typeString": "struct MultiSendStruct.Transaction memory"
+                              "typeIdentifier": "t_struct$_Transaction_$1624_memory_ptr",
+                              "typeString": "struct MultiSendStruct.Transaction"
                             },
                             "typeName": {
                               "contractScope": null,
-                              "id": 2043,
+                              "id": 1641,
                               "name": "Transaction",
                               "nodeType": "UserDefinedTypeName",
-                              "referencedDeclaration": 2026,
-                              "src": "720:11:10",
+                              "referencedDeclaration": 1624,
+                              "src": "726:11:17",
                               "typeDescriptions": {
-                                "typeIdentifier": "t_struct$_Transaction_$2026_storage_ptr",
-                                "typeString": "struct MultiSendStruct.Transaction storage pointer"
+                                "typeIdentifier": "t_struct$_Transaction_$1624_storage_ptr",
+                                "typeString": "struct MultiSendStruct.Transaction"
                               }
                             },
                             "value": null,
                             "visibility": "internal"
                           }
                         ],
-                        "id": 2048,
+                        "id": 1646,
                         "initialValue": {
                           "argumentTypes": null,
                           "baseExpression": {
                             "argumentTypes": null,
-                            "id": 2045,
+                            "id": 1643,
                             "name": "transactions",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
-                            "referencedDeclaration": 2029,
-                            "src": "753:12:10",
+                            "referencedDeclaration": 1627,
+                            "src": "759:12:17",
                             "typeDescriptions": {
-                              "typeIdentifier": "t_array$_t_struct$_Transaction_$2026_memory_$dyn_memory_ptr",
+                              "typeIdentifier": "t_array$_t_struct$_Transaction_$1624_memory_$dyn_memory_ptr",
                               "typeString": "struct MultiSendStruct.Transaction memory[] memory"
                             }
                           },
-                          "id": 2047,
+                          "id": 1645,
                           "indexExpression": {
                             "argumentTypes": null,
-                            "id": 2046,
+                            "id": 1644,
                             "name": "i",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
-                            "referencedDeclaration": 2033,
-                            "src": "766:1:10",
+                            "referencedDeclaration": 1631,
+                            "src": "772:1:17",
                             "typeDescriptions": {
                               "typeIdentifier": "t_uint256",
                               "typeString": "uint256"
@@ -1065,14 +1070,14 @@
                           "isPure": false,
                           "lValueRequested": false,
                           "nodeType": "IndexAccess",
-                          "src": "753:15:10",
+                          "src": "759:15:17",
                           "typeDescriptions": {
-                            "typeIdentifier": "t_struct$_Transaction_$2026_memory",
+                            "typeIdentifier": "t_struct$_Transaction_$1624_memory",
                             "typeString": "struct MultiSendStruct.Transaction memory"
                           }
                         },
                         "nodeType": "VariableDeclarationStatement",
-                        "src": "720:48:10"
+                        "src": "726:48:17"
                       },
                       {
                         "expression": {
@@ -1085,26 +1090,26 @@
                                   "argumentTypes": null,
                                   "expression": {
                                     "argumentTypes": null,
-                                    "id": 2051,
+                                    "id": 1649,
                                     "name": "transaction",
                                     "nodeType": "Identifier",
                                     "overloadedDeclarations": [],
-                                    "referencedDeclaration": 2044,
-                                    "src": "802:11:10",
+                                    "referencedDeclaration": 1642,
+                                    "src": "808:11:17",
                                     "typeDescriptions": {
-                                      "typeIdentifier": "t_struct$_Transaction_$2026_memory_ptr",
+                                      "typeIdentifier": "t_struct$_Transaction_$1624_memory_ptr",
                                       "typeString": "struct MultiSendStruct.Transaction memory"
                                     }
                                   },
-                                  "id": 2052,
+                                  "id": 1650,
                                   "isConstant": false,
                                   "isLValue": true,
                                   "isPure": false,
                                   "lValueRequested": false,
                                   "memberName": "to",
                                   "nodeType": "MemberAccess",
-                                  "referencedDeclaration": 2021,
-                                  "src": "802:14:10",
+                                  "referencedDeclaration": 1619,
+                                  "src": "808:14:17",
                                   "typeDescriptions": {
                                     "typeIdentifier": "t_address",
                                     "typeString": "address"
@@ -1114,26 +1119,26 @@
                                   "argumentTypes": null,
                                   "expression": {
                                     "argumentTypes": null,
-                                    "id": 2053,
+                                    "id": 1651,
                                     "name": "transaction",
                                     "nodeType": "Identifier",
                                     "overloadedDeclarations": [],
-                                    "referencedDeclaration": 2044,
-                                    "src": "818:11:10",
+                                    "referencedDeclaration": 1642,
+                                    "src": "824:11:17",
                                     "typeDescriptions": {
-                                      "typeIdentifier": "t_struct$_Transaction_$2026_memory_ptr",
+                                      "typeIdentifier": "t_struct$_Transaction_$1624_memory_ptr",
                                       "typeString": "struct MultiSendStruct.Transaction memory"
                                     }
                                   },
-                                  "id": 2054,
+                                  "id": 1652,
                                   "isConstant": false,
                                   "isLValue": true,
                                   "isPure": false,
                                   "lValueRequested": false,
                                   "memberName": "value",
                                   "nodeType": "MemberAccess",
-                                  "referencedDeclaration": 2023,
-                                  "src": "818:17:10",
+                                  "referencedDeclaration": 1621,
+                                  "src": "824:17:17",
                                   "typeDescriptions": {
                                     "typeIdentifier": "t_uint256",
                                     "typeString": "uint256"
@@ -1143,26 +1148,26 @@
                                   "argumentTypes": null,
                                   "expression": {
                                     "argumentTypes": null,
-                                    "id": 2055,
+                                    "id": 1653,
                                     "name": "transaction",
                                     "nodeType": "Identifier",
                                     "overloadedDeclarations": [],
-                                    "referencedDeclaration": 2044,
-                                    "src": "837:11:10",
+                                    "referencedDeclaration": 1642,
+                                    "src": "843:11:17",
                                     "typeDescriptions": {
-                                      "typeIdentifier": "t_struct$_Transaction_$2026_memory_ptr",
+                                      "typeIdentifier": "t_struct$_Transaction_$1624_memory_ptr",
                                       "typeString": "struct MultiSendStruct.Transaction memory"
                                     }
                                   },
-                                  "id": 2056,
+                                  "id": 1654,
                                   "isConstant": false,
                                   "isLValue": true,
                                   "isPure": false,
                                   "lValueRequested": false,
                                   "memberName": "data",
                                   "nodeType": "MemberAccess",
-                                  "referencedDeclaration": 2025,
-                                  "src": "837:16:10",
+                                  "referencedDeclaration": 1623,
+                                  "src": "843:16:17",
                                   "typeDescriptions": {
                                     "typeIdentifier": "t_bytes_memory",
                                     "typeString": "bytes memory"
@@ -1184,18 +1189,18 @@
                                     "typeString": "bytes memory"
                                   }
                                 ],
-                                "id": 2050,
+                                "id": 1648,
                                 "name": "executeCall",
                                 "nodeType": "Identifier",
                                 "overloadedDeclarations": [],
-                                "referencedDeclaration": 2076,
-                                "src": "790:11:10",
+                                "referencedDeclaration": 1674,
+                                "src": "796:11:17",
                                 "typeDescriptions": {
                                   "typeIdentifier": "t_function_internal_nonpayable$_t_address_$_t_uint256_$_t_bytes_memory_ptr_$returns$_t_bool_$",
                                   "typeString": "function (address,uint256,bytes memory) returns (bool)"
                                 }
                               },
-                              "id": 2057,
+                              "id": 1655,
                               "isConstant": false,
                               "isLValue": false,
                               "isPure": false,
@@ -1203,7 +1208,7 @@
                               "lValueRequested": false,
                               "names": [],
                               "nodeType": "FunctionCall",
-                              "src": "790:64:10",
+                              "src": "796:64:17",
                               "typeDescriptions": {
                                 "typeIdentifier": "t_bool",
                                 "typeString": "bool"
@@ -1217,18 +1222,21 @@
                                 "typeString": "bool"
                               }
                             ],
-                            "id": 2049,
+                            "id": 1647,
                             "name": "require",
                             "nodeType": "Identifier",
-                            "overloadedDeclarations": [],
-                            "referencedDeclaration": 2092,
-                            "src": "782:7:10",
+                            "overloadedDeclarations": [
+                              2468,
+                              2469
+                            ],
+                            "referencedDeclaration": 2468,
+                            "src": "788:7:17",
                             "typeDescriptions": {
                               "typeIdentifier": "t_function_require_pure$_t_bool_$returns$__$",
                               "typeString": "function (bool) pure"
                             }
                           },
-                          "id": 2058,
+                          "id": 1656,
                           "isConstant": false,
                           "isLValue": false,
                           "isPure": false,
@@ -1236,15 +1244,15 @@
                           "lValueRequested": false,
                           "names": [],
                           "nodeType": "FunctionCall",
-                          "src": "782:73:10",
+                          "src": "788:73:17",
                           "typeDescriptions": {
                             "typeIdentifier": "t_tuple$__$",
                             "typeString": "tuple()"
                           }
                         },
-                        "id": 2059,
+                        "id": 1657,
                         "nodeType": "ExpressionStatement",
-                        "src": "782:73:10"
+                        "src": "788:73:17"
                       }
                     ]
                   },
@@ -1254,19 +1262,19 @@
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
                     },
-                    "id": 2039,
+                    "id": 1637,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
                     "lValueRequested": false,
                     "leftExpression": {
                       "argumentTypes": null,
-                      "id": 2036,
+                      "id": 1634,
                       "name": "i",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 2033,
-                      "src": "676:1:10",
+                      "referencedDeclaration": 1631,
+                      "src": "682:1:17",
                       "typeDescriptions": {
                         "typeIdentifier": "t_uint256",
                         "typeString": "uint256"
@@ -1278,18 +1286,18 @@
                       "argumentTypes": null,
                       "expression": {
                         "argumentTypes": null,
-                        "id": 2037,
+                        "id": 1635,
                         "name": "transactions",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 2029,
-                        "src": "680:12:10",
+                        "referencedDeclaration": 1627,
+                        "src": "686:12:17",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_array$_t_struct$_Transaction_$2026_memory_$dyn_memory_ptr",
+                          "typeIdentifier": "t_array$_t_struct$_Transaction_$1624_memory_$dyn_memory_ptr",
                           "typeString": "struct MultiSendStruct.Transaction memory[] memory"
                         }
                       },
-                      "id": 2038,
+                      "id": 1636,
                       "isConstant": false,
                       "isLValue": false,
                       "isPure": false,
@@ -1297,31 +1305,31 @@
                       "memberName": "length",
                       "nodeType": "MemberAccess",
                       "referencedDeclaration": null,
-                      "src": "680:19:10",
+                      "src": "686:19:17",
                       "typeDescriptions": {
                         "typeIdentifier": "t_uint256",
                         "typeString": "uint256"
                       }
                     },
-                    "src": "676:23:10",
+                    "src": "682:23:17",
                     "typeDescriptions": {
                       "typeIdentifier": "t_bool",
                       "typeString": "bool"
                     }
                   },
-                  "id": 2061,
+                  "id": 1659,
                   "initializationExpression": {
                     "assignments": [
-                      2033
+                      1631
                     ],
                     "declarations": [
                       {
                         "constant": false,
-                        "id": 2033,
+                        "id": 1631,
                         "name": "i",
                         "nodeType": "VariableDeclaration",
-                        "scope": 2063,
-                        "src": "661:9:10",
+                        "scope": 1661,
+                        "src": "667:9:17",
                         "stateVariable": false,
                         "storageLocation": "default",
                         "typeDescriptions": {
@@ -1329,10 +1337,10 @@
                           "typeString": "uint256"
                         },
                         "typeName": {
-                          "id": 2032,
+                          "id": 1630,
                           "name": "uint256",
                           "nodeType": "ElementaryTypeName",
-                          "src": "661:7:10",
+                          "src": "667:7:17",
                           "typeDescriptions": {
                             "typeIdentifier": "t_uint256",
                             "typeString": "uint256"
@@ -1342,18 +1350,18 @@
                         "visibility": "internal"
                       }
                     ],
-                    "id": 2035,
+                    "id": 1633,
                     "initialValue": {
                       "argumentTypes": null,
                       "hexValue": "30",
-                      "id": 2034,
+                      "id": 1632,
                       "isConstant": false,
                       "isLValue": false,
                       "isPure": true,
                       "kind": "number",
                       "lValueRequested": false,
                       "nodeType": "Literal",
-                      "src": "673:1:10",
+                      "src": "679:1:17",
                       "subdenomination": null,
                       "typeDescriptions": {
                         "typeIdentifier": "t_rational_0_by_1",
@@ -1362,12 +1370,12 @@
                       "value": "0"
                     },
                     "nodeType": "VariableDeclarationStatement",
-                    "src": "661:13:10"
+                    "src": "667:13:17"
                   },
                   "loopExpression": {
                     "expression": {
                       "argumentTypes": null,
-                      "id": 2041,
+                      "id": 1639,
                       "isConstant": false,
                       "isLValue": false,
                       "isPure": false,
@@ -1375,15 +1383,15 @@
                       "nodeType": "UnaryOperation",
                       "operator": "++",
                       "prefix": false,
-                      "src": "701:3:10",
+                      "src": "707:3:17",
                       "subExpression": {
                         "argumentTypes": null,
-                        "id": 2040,
+                        "id": 1638,
                         "name": "i",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 2033,
-                        "src": "701:1:10",
+                        "referencedDeclaration": 1631,
+                        "src": "707:1:17",
                         "typeDescriptions": {
                           "typeIdentifier": "t_uint256",
                           "typeString": "uint256"
@@ -1394,16 +1402,17 @@
                         "typeString": "uint256"
                       }
                     },
-                    "id": 2042,
+                    "id": 1640,
                     "nodeType": "ExpressionStatement",
-                    "src": "701:3:10"
+                    "src": "707:3:17"
                   },
                   "nodeType": "ForStatement",
-                  "src": "657:209:10"
+                  "src": "663:209:17"
                 }
               ]
             },
-            "id": 2063,
+            "documentation": "@dev Sends multiple transactions and reverts all if one fails.\n @param transactions Encoded transactions.",
+            "id": 1661,
             "implemented": true,
             "isConstructor": false,
             "isDeclaredConst": false,
@@ -1411,125 +1420,126 @@
             "name": "multiSend",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 2030,
+              "id": 1628,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 2029,
+                  "id": 1627,
                   "name": "transactions",
                   "nodeType": "VariableDeclaration",
-                  "scope": 2063,
-                  "src": "600:26:10",
+                  "scope": 1661,
+                  "src": "606:26:17",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
-                    "typeIdentifier": "t_array$_t_struct$_Transaction_$2026_memory_$dyn_memory_ptr",
-                    "typeString": "struct MultiSendStruct.Transaction memory[] memory"
+                    "typeIdentifier": "t_array$_t_struct$_Transaction_$1624_memory_$dyn_memory_ptr",
+                    "typeString": "struct MultiSendStruct.Transaction[]"
                   },
                   "typeName": {
                     "baseType": {
                       "contractScope": null,
-                      "id": 2027,
+                      "id": 1625,
                       "name": "Transaction",
                       "nodeType": "UserDefinedTypeName",
-                      "referencedDeclaration": 2026,
-                      "src": "600:11:10",
+                      "referencedDeclaration": 1624,
+                      "src": "606:11:17",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_struct$_Transaction_$2026_storage_ptr",
-                        "typeString": "struct MultiSendStruct.Transaction storage pointer"
+                        "typeIdentifier": "t_struct$_Transaction_$1624_storage_ptr",
+                        "typeString": "struct MultiSendStruct.Transaction"
                       }
                     },
-                    "id": 2028,
+                    "id": 1626,
                     "length": null,
                     "nodeType": "ArrayTypeName",
-                    "src": "600:13:10",
+                    "src": "606:13:17",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_array$_t_struct$_Transaction_$2026_storage_$dyn_storage_ptr",
-                      "typeString": "struct MultiSendStruct.Transaction storage ref[] storage pointer"
+                      "typeIdentifier": "t_array$_t_struct$_Transaction_$1624_storage_$dyn_storage_ptr",
+                      "typeString": "struct MultiSendStruct.Transaction[]"
                     }
                   },
                   "value": null,
                   "visibility": "internal"
                 }
               ],
-              "src": "599:28:10"
+              "src": "605:28:17"
             },
             "payable": false,
             "returnParameters": {
-              "id": 2031,
+              "id": 1629,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "647:0:10"
+              "src": "653:0:17"
             },
-            "scope": 2077,
-            "src": "581:291:10",
+            "scope": 1675,
+            "src": "587:291:17",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "public"
           },
           {
             "body": {
-              "id": 2075,
+              "id": 1673,
               "nodeType": "Block",
-              "src": "990:119:10",
+              "src": "996:180:17",
               "statements": [
                 {
                   "externalReferences": [
                     {
                       "data": {
-                        "declaration": 2069,
+                        "declaration": 1667,
                         "isOffset": false,
                         "isSlot": false,
-                        "src": "1062:4:10",
+                        "src": "1148:4:17",
                         "valueSize": 1
                       }
                     },
                     {
                       "data": {
-                        "declaration": 2069,
+                        "declaration": 1667,
                         "isOffset": false,
                         "isSlot": false,
-                        "src": "1081:4:10",
+                        "src": "1129:4:17",
                         "valueSize": 1
                       }
                     },
                     {
                       "success": {
-                        "declaration": 2072,
+                        "declaration": 1670,
                         "isOffset": false,
                         "isSlot": false,
-                        "src": "1023:7:10",
+                        "src": "1093:7:17",
                         "valueSize": 1
                       }
                     },
                     {
                       "to": {
-                        "declaration": 2065,
+                        "declaration": 1663,
                         "isOffset": false,
                         "isSlot": false,
-                        "src": "1047:2:10",
+                        "src": "1114:2:17",
                         "valueSize": 1
                       }
                     },
                     {
                       "value": {
-                        "declaration": 2067,
+                        "declaration": 1665,
                         "isOffset": false,
                         "isSlot": false,
-                        "src": "1051:5:10",
+                        "src": "1118:5:17",
                         "valueSize": 1
                       }
                     }
                   ],
-                  "id": 2074,
+                  "id": 1672,
                   "nodeType": "InlineAssembly",
-                  "operations": "{\n    success := call(not(0), to, value, add(data, 0x20), mload(data), 0, 0)\n}",
-                  "src": "1000:109:10"
+                  "operations": "{\n    success := call(gas(), to, value, add(data, 0x20), mload(data), 0, 0)\n}",
+                  "src": "1070:106:17"
                 }
               ]
             },
-            "id": 2076,
+            "documentation": null,
+            "id": 1674,
             "implemented": true,
             "isConstructor": false,
             "isDeclaredConst": false,
@@ -1537,16 +1547,16 @@
             "name": "executeCall",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 2070,
+              "id": 1668,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 2065,
+                  "id": 1663,
                   "name": "to",
                   "nodeType": "VariableDeclaration",
-                  "scope": 2076,
-                  "src": "899:10:10",
+                  "scope": 1674,
+                  "src": "905:10:17",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -1554,10 +1564,10 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 2064,
+                    "id": 1662,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "899:7:10",
+                    "src": "905:7:17",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
                       "typeString": "address"
@@ -1568,11 +1578,11 @@
                 },
                 {
                   "constant": false,
-                  "id": 2067,
+                  "id": 1665,
                   "name": "value",
                   "nodeType": "VariableDeclaration",
-                  "scope": 2076,
-                  "src": "911:13:10",
+                  "scope": 1674,
+                  "src": "917:13:17",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -1580,10 +1590,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 2066,
+                    "id": 1664,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "911:7:10",
+                    "src": "917:7:17",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -1594,45 +1604,45 @@
                 },
                 {
                   "constant": false,
-                  "id": 2069,
+                  "id": 1667,
                   "name": "data",
                   "nodeType": "VariableDeclaration",
-                  "scope": 2076,
-                  "src": "926:10:10",
+                  "scope": 1674,
+                  "src": "932:10:17",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
                     "typeIdentifier": "t_bytes_memory_ptr",
-                    "typeString": "bytes memory"
+                    "typeString": "bytes"
                   },
                   "typeName": {
-                    "id": 2068,
+                    "id": 1666,
                     "name": "bytes",
                     "nodeType": "ElementaryTypeName",
-                    "src": "926:5:10",
+                    "src": "932:5:17",
                     "typeDescriptions": {
                       "typeIdentifier": "t_bytes_storage_ptr",
-                      "typeString": "bytes storage pointer"
+                      "typeString": "bytes"
                     }
                   },
                   "value": null,
                   "visibility": "internal"
                 }
               ],
-              "src": "898:39:10"
+              "src": "904:39:17"
             },
             "payable": false,
             "returnParameters": {
-              "id": 2073,
+              "id": 1671,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 2072,
+                  "id": 1670,
                   "name": "success",
                   "nodeType": "VariableDeclaration",
-                  "scope": 2076,
-                  "src": "972:12:10",
+                  "scope": 1674,
+                  "src": "978:12:17",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -1640,10 +1650,10 @@
                     "typeString": "bool"
                   },
                   "typeName": {
-                    "id": 2071,
+                    "id": 1669,
                     "name": "bool",
                     "nodeType": "ElementaryTypeName",
-                    "src": "972:4:10",
+                    "src": "978:4:17",
                     "typeDescriptions": {
                       "typeIdentifier": "t_bool",
                       "typeString": "bool"
@@ -1653,26 +1663,26 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "971:14:10"
+              "src": "977:14:17"
             },
-            "scope": 2077,
-            "src": "878:231:10",
+            "scope": 1675,
+            "src": "884:292:17",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "internal"
           }
         ],
-        "scope": 2078,
-        "src": "339:772:10"
+        "scope": 1676,
+        "src": "339:839:17"
       }
     ],
-    "src": "0:1112:10"
+    "src": "0:1179:17"
   },
   "compiler": {
     "name": "solc",
-    "version": "0.4.19+commit.c4cbbb05.Emscripten.clang"
+    "version": "0.4.23+commit.124ca40d.Emscripten.clang"
   },
   "networks": {},
   "schemaVersion": "2.0.0",
-  "updatedAt": "2018-05-04T10:42:18.395Z"
+  "updatedAt": "2018-05-10T10:43:07.902Z"
 }

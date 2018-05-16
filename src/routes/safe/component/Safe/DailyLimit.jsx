@@ -3,19 +3,38 @@ import * as React from 'react'
 import { ListItem } from 'material-ui/List'
 import Avatar from 'material-ui/Avatar'
 import NotificationsPaused from 'material-ui-icons/NotificationsPaused'
+import Button from '~/components/layout/Button'
 import ListItemText from '~/components/List/ListItemText'
 
 type Props = {
-  limit: number,
+  dailyLimit: DailyLimit,
+  onWithdrawn: () => void,
 }
 
-const DailyLimit = ({ limit }: Props) => (
-  <ListItem>
-    <Avatar>
-      <NotificationsPaused />
-    </Avatar>
-    <ListItemText primary="Daily Limit" secondary={`${limit} ETH`} />
-  </ListItem>
-)
+export const WITHDRAWN_BUTTON_TEXT = 'Withdrawn'
 
-export default DailyLimit
+const DailyLimitComponent = ({ dailyLimit, onWithdrawn }: Props) => {
+  const limit = dailyLimit.get('value')
+  const spentToday = dailyLimit.get('spentToday')
+  const disabled = spentToday >= limit
+  const text = `${limit} ETH (spent today: ${spentToday} ETH)`
+
+  return (
+    <ListItem>
+      <Avatar>
+        <NotificationsPaused />
+      </Avatar>
+      <ListItemText primary="Daily Limit" secondary={text} />
+      <Button
+        variant="raised"
+        color="primary"
+        onClick={onWithdrawn}
+        disabled={disabled}
+      >
+        {WITHDRAWN_BUTTON_TEXT}
+      </Button>
+    </ListItem>
+  )
+}
+
+export default DailyLimitComponent
