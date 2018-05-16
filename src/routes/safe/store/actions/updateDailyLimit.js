@@ -1,5 +1,6 @@
 // @flow
 import { createAction } from 'redux-actions'
+import { type DailyLimitProps } from '~/routes/safe/store/model/dailyLimit'
 
 export const UPDATE_DAILY_LIMIT = 'UPDATE_DAILY_LIMIT'
 
