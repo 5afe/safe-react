@@ -30,7 +30,7 @@ const Layout = ({
 }: Props) => {
   const steps = getSteps()
   const initialValues = initialValuesFrom(userAccount)
-  const finishedButton = <Stepper.FinishButton title="VISIT SAFS" component={Link} to={SAFELIST_ADDRESS} />
+  const finishedButton = <Stepper.FinishButton title="VISIT SAFES" component={Link} to={SAFELIST_ADDRESS} />
 
   return (
     <React.Fragment>

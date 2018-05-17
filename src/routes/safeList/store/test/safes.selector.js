@@ -90,6 +90,27 @@ const safesListSelectorTests = () => {
       expect(safes.count()).toEqual(2)
       expect(safes.get(0)).not.toEqual(safes.get(1))
     })
+
+    it('should return safes under owners case-insensitive', () => {
+      // GIVEN
+      let map: Map<string, Safe> = Map()
+      const userAccountUpper = walletRecord.account.toUpperCase()
+      map = map.set('fooAddress', SafeFactory.oneOwnerSafe(userAccountUpper))
+      map = map.set('barAddress', SafeFactory.twoOwnersSafe('foo', userAccountUpper))
+
+      const reduxStore = {
+        [SAFE_REDUCER_ID]: map,
+        [PROVIDER_REDUCER_ID]: walletRecord,
+        balances: undefined,
+      }
+
+      // WHEN
+      const safes = safesByOwnerSelector(reduxStore, {})
+
+      // THEN
+      expect(safes.count()).toEqual(2)
+      expect(safes.get(0)).not.toEqual(safes.get(1))
+    })
   })
 }
 
