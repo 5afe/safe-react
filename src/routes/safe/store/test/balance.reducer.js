@@ -25,7 +25,7 @@ const balanceReducerTests = () => {
       expect(balances.get(address)).toBe('0')
     })
 
-    it('reducer should return 1.3456 ETH as funds to safe with 1 ETH', async () => {
+    it('reducer should return 1.3456 ETH as funds to safe with 1.3456 ETH', async () => {
       // GIVEN
       const address = await aDeployedSafe(store)
 

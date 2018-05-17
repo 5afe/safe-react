@@ -28,8 +28,8 @@ const safeSelectorTests = () => {
     it('should return a list of size 2 when 2 safes are created', () => {
       // GIVEN
       let map: Map<string, Safe> = Map()
-      map = map.set('fooAddress', SafeFactory.oneOwnerSafe)
-      map = map.set('barAddress', SafeFactory.twoOwnersSafe)
+      map = map.set('fooAddress', SafeFactory.oneOwnerSafe())
+      map = map.set('barAddress', SafeFactory.twoOwnersSafe())
 
       const match: Match = buildMathPropsFrom('fooAddress')
       const undefMatch: Match = buildMathPropsFrom('inventedAddress')
@@ -45,7 +45,7 @@ const safeSelectorTests = () => {
       const undefinedSafe = safeSelector(reduxStore, { match: undefMatch })
 
       // THEN
-      expect(oneOwnerSafe).toEqual(SafeFactory.oneOwnerSafe)
+      expect(oneOwnerSafe).toEqual(SafeFactory.oneOwnerSafe())
       expect(undefinedSafe).toBe(undefined)
     })
   })
