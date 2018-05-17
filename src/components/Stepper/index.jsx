@@ -4,6 +4,7 @@ import { withStyles } from 'material-ui/styles'
 import * as React from 'react'
 import type { FormApi } from 'react-final-form'
 import GnoForm from '~/components/forms/GnoForm'
+import Button from '~/components/layout/Button'
 import Col from '~/components/layout/Col'
 import Row from '~/components/layout/Row'
 import Controls from './Controls'
@@ -12,12 +13,12 @@ export { default as Step } from './Step'
 
 type Props = {
   classes: Object,
-  goTitle: string,
-  goPath: string,
   steps: string[],
   finishedTransaction: boolean,
+  finishedButton: React$Node,
   initialValues?: Object,
   children: React$Node,
+  onReset?: () => void,
   onSubmit: (values: Object, form: FormApi, callback: ?(errors: ?Object) => void) => ?Object | Promise<?Object> | void,
 }
 
@@ -33,6 +34,13 @@ type PageProps = {
 class GnoStepper extends React.PureComponent<Props, State> {
   static Page = ({ children }: PageProps) => children
 
+  static FinishButton = ({
+    component, to, title, ...props
+  }) => (
+    <Button component={component} to={to} variant="raised" color="primary" {...props}>
+      {title}
+    </Button>
+  )
   constructor(props: Props) {
     super(props)
 
@@ -40,6 +48,17 @@ class GnoStepper extends React.PureComponent<Props, State> {
       page: 0,
       values: props.initialValues || {},
     }
+  }
+
+  onReset = () => {
+    const resetCallback = this.props.onReset
+    if (resetCallback) {
+      resetCallback()
+    }
+    this.setState(() => ({
+      page: 0,
+      values: this.props.initialValues || {},
+    }))
   }
 
   getActivePageFrom = (pages: React$Node) => {
@@ -80,11 +99,12 @@ class GnoStepper extends React.PureComponent<Props, State> {
 
   render() {
     const {
-      steps, children, finishedTransaction, goTitle, goPath, classes,
+      steps, children, finishedTransaction, finishedButton, classes,
     } = this.props
     const { page, values } = this.state
     const activePage = this.getActivePageFrom(children)
     const isLastPage = page === steps.length - 1
+    const finished = React.cloneElement(React.Children.only(finishedButton), { onClick: this.onReset })
 
     return (
       <React.Fragment>
@@ -108,11 +128,10 @@ class GnoStepper extends React.PureComponent<Props, State> {
                 <Controls
                   submitting={submitting}
                   finishedTx={finishedTransaction}
+                  finishedButton={finished}
                   onPrevious={this.previous}
                   firstPage={page === 0}
                   lastPage={isLastPage}
-                  goTitle={goTitle}
-                  goPath={goPath}
                 />
               </Col>
             </Row>
