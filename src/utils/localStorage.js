@@ -1,9 +1,10 @@
 // @flow
-const SAFES_KEY = 'SAFES'
+export const SAFES_KEY = 'SAFES'
+export const TX_KEY = 'TX'
 
-export const loadSafes = () => {
+export const load = (key: string) => {
   try {
-    const serializedState = localStorage.getItem(SAFES_KEY)
+    const serializedState = localStorage.getItem(key)
     if (serializedState === null) {
       return undefined
     }
