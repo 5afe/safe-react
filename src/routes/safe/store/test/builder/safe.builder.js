@@ -64,7 +64,7 @@ export class SafeFactory {
     .get()
 
     static dailyLimitSafe = (dailyLimit: number, spentToday: number) => aSafe()
-      .withAddress('0x03db1a8b26d08df23337e9276a36b474510f0026')
+      .withAddress('0x03db1a8b26d08df23337e9276a36b474510f0027')
       .withName('Adol & Tobias Safe')
       .withConfirmations(2)
       .withOwner(
