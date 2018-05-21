@@ -5,7 +5,7 @@ import addSafe, { ADD_SAFE } from '~/routes/safe/store/actions/addSafe'
 import updateDailyLimit, { UPDATE_DAILY_LIMIT } from '~/routes/safe/store/actions/updateDailyLimit'
 import { makeOwner } from '~/routes/safe/store/model/owner'
 import { type Safe, makeSafe } from '~/routes/safe/store/model/safe'
-import { loadSafes, saveSafes } from '~/utils/localStorage'
+import { load, saveSafes, SAFES_KEY } from '~/utils/localStorage'
 import { makeDailyLimit } from '~/routes/safe/store/model/dailyLimit'
 
 export const SAFE_REDUCER_ID = 'safes'
@@ -26,7 +26,7 @@ const buildSafesFrom = (loadedSafes: Object): State => {
 }
 
 export const calculateInitialState = (): State => {
-  const storedSafes = loadSafes()
+  const storedSafes = load(SAFES_KEY)
 
   return storedSafes ? buildSafesFrom(storedSafes) : Map()
 }
