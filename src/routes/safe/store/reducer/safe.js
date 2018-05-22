@@ -25,7 +25,7 @@ const buildSafesFrom = (loadedSafes: Object): State => {
   })
 }
 
-export const calculateInitialState = (): State => {
+export const safeInitialState = (): State => {
   const storedSafes = load(SAFES_KEY)
 
   return storedSafes ? buildSafesFrom(storedSafes) : Map()
