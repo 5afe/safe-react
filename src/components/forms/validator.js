@@ -17,7 +17,7 @@ export const greaterThan = (min: number) => (value: string) => {
 }
 
 export const minValue = (min: number) => (value: string) => {
-  if (Number.isNaN(Number(value)) || Number.parseInt(value, 10) >= Number(min)) {
+  if (Number.isNaN(Number(value)) || Number.parseFloat(value) >= Number(min)) {
     return undefined
   }
 
