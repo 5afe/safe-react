@@ -3,7 +3,7 @@ import { List, Map } from 'immutable'
 import { handleActions, type ActionType } from 'redux-actions'
 import addTransactions, { ADD_TRANSACTIONS } from '~/routes/safe/store/actions/addTransactions'
 import { type Transaction } from '~/routes/safe/store/model/transaction'
-import { loadSafeTransactions } from '~/routes/safe/component/Transactions/transactions'
+import { loadSafeTransactions } from '~/routes/safe/store/actions/fetchTransactions'
 
 export const TRANSACTIONS_REDUCER_ID = 'transactions'
 

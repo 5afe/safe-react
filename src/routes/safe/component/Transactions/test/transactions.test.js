@@ -1,10 +1,11 @@
 // @flow
 import { List, Map } from 'immutable'
-import { createTransaction, loadSafeTransactions } from '~/routes/safe/component/Transactions/transactions'
+import { createTransaction } from '~/routes/safe/component/Transactions/transactions'
 import { type Transaction } from '~/routes/safe/store/model/transaction'
 import { SafeFactory } from '~/routes/safe/store/test/builder/safe.builder'
 import { type Safe } from '~/routes/safe/store/model/safe'
 import { type Owner } from '~/routes/safe/store/model/owner'
+import { loadSafeTransactions } from '~/routes/safe/store/actions/fetchTransactions'
 import { testSizeOfSafesWith, testSizeOfTransactions, testTransactionFrom } from './transactionsHelper'
 
 describe('Transactions Suite', () => {
