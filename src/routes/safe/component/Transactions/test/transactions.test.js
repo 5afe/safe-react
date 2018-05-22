@@ -5,47 +5,7 @@ import { type Transaction } from '~/routes/safe/store/model/transaction'
 import { SafeFactory } from '~/routes/safe/store/test/builder/safe.builder'
 import { type Safe } from '~/routes/safe/store/model/safe'
 import { type Owner } from '~/routes/safe/store/model/owner'
-import { type Confirmation } from '~/routes/safe/store/model/confirmation'
-
-const testSizeOfSafesWith = (transactions, size) => {
-  expect(transactions).not.toBe(undefined)
-  expect(transactions).not.toBe(null)
-  expect(transactions.size).toBe(size)
-}
-
-const testSizeOfTransactions = (safeTxs, size) => {
-  if (!safeTxs) { throw new Error() }
-  expect(safeTxs.count()).toBe(size)
-  expect(safeTxs.get(0)).not.toBe(undefined)
-  expect(safeTxs.get(0)).not.toBe(null)
-}
-
-const testTransactionFrom =
-(safeTxs, pos, name, nonce, value, threshold, destination, creator, firstOwner, secondOwner) => {
-  if (!safeTxs) { throw new Error() }
-  const tx: Transaction | typeof undefined = safeTxs.get(pos)
-
-  if (!tx) { throw new Error() }
-  expect(tx.get('name')).toBe(name)
-  expect(tx.get('value')).toBe(value)
-  expect(tx.get('threshold')).toBe(threshold)
-  expect(tx.get('destination')).toBe(destination)
-  expect(tx.get('confirmations').count()).toBe(2)
-  expect(tx.get('nonce')).toBe(nonce)
-
-  const confirmations: List<Confirmation> = tx.get('confirmations')
-  const firstConfirmation: Confirmation | typeof undefined = confirmations.get(0)
-  if (!firstConfirmation) { throw new Error() }
-  expect(firstConfirmation.get('owner')).not.toBe(undefined)
-  expect(firstConfirmation.get('owner')).toEqual(firstOwner)
-  expect(firstConfirmation.get('status')).toBe(true)
-
-  const secondConfirmation: Confirmation | typeof undefined = confirmations.get(1)
-  if (!secondConfirmation) { throw new Error() }
-  expect(secondConfirmation.get('owner')).not.toBe(undefined)
-  expect(secondConfirmation.get('owner')).toEqual(secondOwner)
-  expect(secondConfirmation.get('status')).toBe(false)
-}
+import { testSizeOfSafesWith, testSizeOfTransactions, testTransactionFrom } from './transactionsHelper'
 
 describe('Transactions Suite', () => {
   let safe: Safe
@@ -89,11 +49,12 @@ describe('Transactions Suite', () => {
     // GIVEN
     const firstTxName = 'Buy butteries for project'
     const firstNonce: number = Date.now()
-    createTransaction(firstTxName, firstNonce, destination, value, 'foo', owners, '', safe.get('name'), safe.get('address'), safe.get('confirmations'))
+    const safeAddress = safe.get('address')
+    createTransaction(firstTxName, firstNonce, destination, value, 'foo', owners, '', safe.get('name'), safeAddress, safe.get('confirmations'))
 
     const secondTxName = 'Buy printers for project'
     const secondNonce: number = firstNonce + 100
-    createTransaction(secondTxName, secondNonce, destination, value, 'foo', owners, '', safe.get('name'), safe.get('address'), safe.get('confirmations'))
+    createTransaction(secondTxName, secondNonce, destination, value, 'foo', owners, '', safe.get('name'), safeAddress, safe.get('confirmations'))
 
     // WHEN
     const transactions: Map<string, List<Transaction>> = loadSafeTransactions()
@@ -101,7 +62,7 @@ describe('Transactions Suite', () => {
     // THEN
     testSizeOfSafesWith(transactions, 1)
 
-    const safeTxs: List<Transaction> | typeof undefined = transactions.get(safe.get('address'))
+    const safeTxs: List<Transaction> | typeof undefined = transactions.get(safeAddress)
     if (!safeTxs) { throw new Error() }
     testSizeOfTransactions(safeTxs, 2)
 
@@ -112,24 +73,26 @@ describe('Transactions Suite', () => {
   it('adds second confirmation to stored safe having two safes with one confirmation each', async () => {
     const txName = 'Buy batteris for Alplha project'
     const nonce = 10
-    createTransaction(txName, nonce, destination, value, 'foo', owners, '', safe.get('name'), safe.get('address'), safe.get('confirmations'))
+    const safeAddress = safe.address
+    createTransaction(txName, nonce, destination, value, 'foo', owners, '', safe.get('name'), safeAddress, safe.get('confirmations'))
 
     const secondSafe = SafeFactory.dailyLimitSafe(10, 2)
     const txSecondName = 'Buy batteris for Beta project'
     const txSecondNonce = 10
+    const secondSafeAddress = secondSafe.address
     createTransaction(
       txSecondName, txSecondNonce, destination, value, '0x03db1a8b26d08df23337e9276a36b474510f0023',
-      secondSafe.get('owners'), '', secondSafe.get('name'), secondSafe.get('address'), secondSafe.get('confirmations'),
+      secondSafe.get('owners'), '', secondSafe.get('name'), secondSafeAddress, secondSafe.get('confirmations'),
     )
 
     let transactions: Map<string, List<Transaction>> = loadSafeTransactions()
     testSizeOfSafesWith(transactions, 2)
 
-    const firstSafeTxs: List<Transaction> | typeof undefined = transactions.get(safe.get('address'))
+    const firstSafeTxs: List<Transaction> | typeof undefined = transactions.get(safeAddress)
     if (!firstSafeTxs) { throw new Error() }
     testSizeOfTransactions(firstSafeTxs, 1)
 
-    const secondSafeTxs: List<Transaction> | typeof undefined = transactions.get(secondSafe.get('address'))
+    const secondSafeTxs: List<Transaction> | typeof undefined = transactions.get(secondSafeAddress)
     if (!secondSafeTxs) { throw new Error() }
     testSizeOfTransactions(secondSafeTxs, 1)
 
@@ -145,8 +108,8 @@ describe('Transactions Suite', () => {
 
     // THEN
     testSizeOfSafesWith(transactions, 2)
-    testSizeOfTransactions(transactions.get(safe.get('address')), 2)
-    testSizeOfTransactions(transactions.get(secondSafe.get('address')), 1)
+    testSizeOfTransactions(transactions.get(safeAddress), 2)
+    testSizeOfTransactions(transactions.get(secondSafeAddress), 1)
 
     // Test 2 transactions of first safe
     testTransactionFrom(
