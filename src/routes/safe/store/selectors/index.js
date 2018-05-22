@@ -8,7 +8,7 @@ import { type Safe } from '~/routes/safe/store/model/safe'
 import { safesMapSelector } from '~/routes/safeList/store/selectors'
 import { BALANCE_REDUCER_ID } from '~/routes/safe/store/reducer/balances'
 
-type RouterProps = {
+export type RouterProps = {
   match: Match,
 }
 

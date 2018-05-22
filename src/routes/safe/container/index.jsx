@@ -6,7 +6,9 @@ import Layout from '~/routes/safe/component/Layout'
 import selector, { type SelectorProps } from './selector'
 import actions, { type Actions } from './actions'
 
-type Props = Actions & SelectorProps
+type Props = Actions & SelectorProps & {
+  granted: boolean,
+}
 
 class SafeView extends React.PureComponent<Props> {
   componentDidMount() {
@@ -31,15 +33,17 @@ class SafeView extends React.PureComponent<Props> {
   intervalId: IntervalID
 
   render() {
-    const { safe, provider, balance } = this.props
+    const {
+      safe, provider, balance, granted,
+    } = this.props
 
     return (
       <Page>
-        <Layout
+        { granted && <Layout
           balance={balance}
           provider={provider}
           safe={safe}
-        />
+        /> }
       </Page>
     )
   }
