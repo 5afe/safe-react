@@ -27,6 +27,7 @@ const grantedSelectorTests = () => {
         [SAFE_REDUCER_ID]: map,
         providers: makeProvider(provider),
         balances: undefined,
+        transactions: undefined,
       }
 
       // WHEN
@@ -47,6 +48,7 @@ const grantedSelectorTests = () => {
         [SAFE_REDUCER_ID]: map,
         providers: makeProvider(provider),
         balances: undefined,
+        transactions: undefined,
       }
 
       // WHEN

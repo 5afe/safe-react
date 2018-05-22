@@ -22,6 +22,7 @@ const safesListSelectorTests = () => {
         [PROVIDER_REDUCER_ID]: walletRecord,
         [SAFE_REDUCER_ID]: Map(),
         balances: undefined,
+        transactions: undefined,
       }
       const emptyList = List([])
 
@@ -42,6 +43,7 @@ const safesListSelectorTests = () => {
         [PROVIDER_REDUCER_ID]: walletRecord,
         [SAFE_REDUCER_ID]: map,
         balances: undefined,
+        transactions: undefined,
       }
 
       // WHEN
@@ -61,6 +63,7 @@ const safesListSelectorTests = () => {
         [PROVIDER_REDUCER_ID]: walletRecord,
         [SAFE_REDUCER_ID]: map,
         balances: undefined,
+        transactions: undefined,
       }
 
       // WHEN
@@ -81,6 +84,7 @@ const safesListSelectorTests = () => {
         [SAFE_REDUCER_ID]: map,
         [PROVIDER_REDUCER_ID]: walletRecord,
         balances: undefined,
+        transactions: undefined,
       }
 
       // WHEN
@@ -102,6 +106,7 @@ const safesListSelectorTests = () => {
         [SAFE_REDUCER_ID]: map,
         [PROVIDER_REDUCER_ID]: walletRecord,
         balances: undefined,
+        transactions: undefined,
       }
 
       // WHEN

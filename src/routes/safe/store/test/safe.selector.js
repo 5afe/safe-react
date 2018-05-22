@@ -15,6 +15,7 @@ const safeSelectorTests = () => {
         [SAFE_REDUCER_ID]: Map(),
         providers: undefined,
         balances: undefined,
+        transactions: undefined,
       }
       const match: Match = buildMathPropsFrom('fooAddress')
 
@@ -38,6 +39,7 @@ const safeSelectorTests = () => {
         [SAFE_REDUCER_ID]: map,
         providers: undefined,
         balances: undefined,
+        transactions: undefined,
       }
 
       // WHEN
