@@ -16,6 +16,7 @@ import Balance from './Balance'
 import Owners from './Owners'
 import Confirmations from './Confirmations'
 import DailyLimit from './DailyLimit'
+import MultisigTx from './MultisigTx'
 
 const safeIcon = require('./assets/gnosis_safe.svg')
 
@@ -43,6 +44,18 @@ class GnoSafe extends React.PureComponent<SafeProps, State> {
     this.setState({ component: <Withdrawn safeAddress={safe.get('address')} dailyLimit={safe.get('dailyLimit')} /> })
   }
 
+  onAddTx = () => {
+    const { safe } = this.props
+
+    this.setState({ component: <Withdrawn safeAddress={safe.get('address')} dailyLimit={safe.get('dailyLimit')} /> })
+  }
+
+  onSeeTxs = () => {
+    const { safe } = this.props
+
+    this.setState({ component: <Withdrawn safeAddress={safe.get('address')} dailyLimit={safe.get('dailyLimit')} /> })
+  }
+
   render() {
     const { safe, balance } = this.props
     const { component } = this.state
@@ -56,6 +69,7 @@ class GnoSafe extends React.PureComponent<SafeProps, State> {
             <Confirmations confirmations={safe.get('confirmations')} />
             <Address address={safe.get('address')} />
             <DailyLimit dailyLimit={safe.get('dailyLimit')} onWithdrawn={this.onWithdrawn} />
+            <MultisigTx balance={balance} onAddTx={this.onAddTx} onSeeTxs={this.onSeeTxs} />
           </List>
         </Col>
         <Col sm={12} center="xs" md={7} margin="xl" layout="column">
