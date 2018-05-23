@@ -44,21 +44,21 @@ class SafeBuilder {
 const aSafe = () => new SafeBuilder()
 
 export class SafeFactory {
-  static oneOwnerSafe = aSafe()
+  static oneOwnerSafe = (ownerAddress: string = '0x03db1a8b26d08df23337e9276a36b474510f0023') => aSafe()
     .withAddress('0x03db1a8b26d08df23337e9276a36b474510f0025')
     .withName('Adol ICO Safe')
     .withConfirmations(1)
     .withDailyLimit(10)
-    .withOwner(['Adol Metamask'], ['0x03db1a8b26d08df23337e9276a36b474510f0023'])
+    .withOwner(['Adol Metamask'], [ownerAddress])
     .get()
 
-  static twoOwnersSafe = aSafe()
+  static twoOwnersSafe = (firstOwner: string = '0x03db1a8b26d08df23337e9276a36b474510f0023', secondOwner: string = '0x03db1a8b26d08df23337e9276a36b474510f0024') => aSafe()
     .withAddress('0x03db1a8b26d08df23337e9276a36b474510f0026')
     .withName('Adol & Tobias Safe')
     .withConfirmations(2)
     .withOwner(
       ['Adol Metamask', 'Tobias Metamask'],
-      ['0x03db1a8b26d08df23337e9276a36b474510f0023', '0x03db1a8b26d08df23337e9276a36b474510f0024'],
+      [firstOwner, secondOwner],
     )
     .withDailyLimit(10, 1.34)
     .get()

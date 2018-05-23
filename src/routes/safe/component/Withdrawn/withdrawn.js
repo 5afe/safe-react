@@ -1,7 +1,7 @@
 // @flow
 import { getWeb3 } from '~/wallets/getWeb3'
 import { getGnosisSafeContract, getCreateDailyLimitExtensionContract } from '~/wallets/safeContracts'
-import { type DailyLimitProps } from '~/routes/safe/store/model/safe'
+import { type DailyLimitProps } from '~/routes/safe/store/model/dailyLimit'
 
 export const LIMIT_POSITION = 0
 export const SPENT_TODAY_POS = 1
@@ -23,7 +23,7 @@ const getDailyLimitModuleFrom = async (safeAddress) => {
   return dailyLimitModule
 }
 
-export const getDailyLimitFrom = async (safeAddress, tokenAddress): DailyLimitProps => {
+export const getDailyLimitFrom = async (safeAddress: string, tokenAddress: number): Promise<DailyLimitProps> => {
   const web3 = getWeb3()
   const dailyLimitModule = await getDailyLimitModuleFrom(safeAddress)
 

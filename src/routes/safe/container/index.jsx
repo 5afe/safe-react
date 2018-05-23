@@ -18,7 +18,10 @@ class SafeView extends React.PureComponent<Props> {
       fetchBalance(safeAddress)
     }, 1500)
 
-    this.props.fetchDailyLimit(this.props.safe.get('address'))
+    const { fetchDailyLimit, safe } = this.props
+    if (safe) {
+      fetchDailyLimit(safe.get('address'))
+    }
   }
 
   componentWillUnmount() {

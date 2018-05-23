@@ -22,7 +22,7 @@ storiesOf('Routes /safes', module)
     <Component provider="" safes={List([])} />
   ))
   .add('Safe List whith 2 safes', () => {
-    const safes = List([SafeFactory.oneOwnerSafe, SafeFactory.twoOwnersSafe])
+    const safes = List([SafeFactory.oneOwnerSafe(), SafeFactory.twoOwnersSafe()])
     return (
       <Component provider="METAMASK" safes={safes} />
     )

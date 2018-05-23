@@ -15,6 +15,7 @@ import WithdrawnComponent, { SEE_TXS_BUTTON_TEXT } from '~/routes/safe/component
 import { getBalanceInEtherOf } from '~/wallets/getWeb3'
 import { sleep } from '~/utils/timer'
 import { getDailyLimitFrom } from '~/routes/safe/component/Withdrawn/withdrawn'
+import { type DailyLimitProps } from '~/routes/safe/store/model/dailyLimit'
 
 describe('React DOM TESTS > Withdrawn funds from safe', () => {
   let SafeDom

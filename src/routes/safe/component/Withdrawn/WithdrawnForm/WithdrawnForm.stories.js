@@ -1,9 +1,9 @@
 // @flow
 import { storiesOf } from '@storybook/react'
 import * as React from 'react'
+import Stepper from '~/components/Stepper'
 import styles from '~/components/layout/PageFrame/index.scss'
-import { makeDailyLimit, type DailyLimit } from '~/routes/safe/store/model/dailyLimit'
-import Component from './index'
+import WithdrawnForm from './index'
 
 
 const FrameDecorator = story => (
@@ -14,10 +14,8 @@ const FrameDecorator = story => (
 
 storiesOf('Components', module)
   .addDecorator(FrameDecorator)
-  .add('WitdrawnForm', () => {
-    const dailyLimit: DailyLimit = makeDailyLimit({ value: 10, spentToday: 6 })
-
-    return (
-      <Component dailyLimit={dailyLimit} safeAddress="" />
-    )
-  })
+  .add('WitdrawnForm', () => (
+    <Stepper.Page>
+      { WithdrawnForm }
+    </Stepper.Page>
+  ))

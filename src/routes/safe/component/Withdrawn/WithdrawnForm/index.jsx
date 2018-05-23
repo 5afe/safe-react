@@ -34,7 +34,7 @@ export const inLimit = (limit: number, spentToday: number) => (value: string) =>
   return `Should not exceed ${max} ETH (amount to reach daily limit)`
 }
 
-export default ({ limit, spentToday }: Props) => () => (
+const WithdrawnForm = ({ limit, spentToday }: Props) => () => (
   <Block margin="md">
     <Heading tag="h2" margin="lg">
       Withdrawn Funds
@@ -65,3 +65,4 @@ export default ({ limit, spentToday }: Props) => () => (
   </Block>
 )
 
+export default WithdrawnForm

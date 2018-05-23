@@ -1,34 +1,6 @@
 // @flow
 import * as React from 'react'
 import Button from '~/components/layout/Button'
-import Link from '~/components/layout/Link'
-
-type NextButtonProps = {
-  text: string,
-  disabled: boolean,
-}
-
-const NextButton = ({ text, disabled }: NextButtonProps) => (
-  <Button
-    variant="raised"
-    color="primary"
-    type="submit"
-    disabled={disabled}
-  >
-    {text}
-  </Button>
-)
-
-type GoProps = {
-  title: string,
-  to: string,
-}
-
-const GoButton = ({ title, to }: GoProps) => (
-  <Link to={to}>
-    <NextButton text={title} disabled={false} />
-  </Link>
-)
 
 type ControlProps = {
   next: string,
@@ -48,34 +20,37 @@ const ControlButtons = ({
     >
       Back
     </Button>
-    <NextButton text={next} disabled={submitting} />
+    <Button
+      variant="raised"
+      color="primary"
+      type="submit"
+      disabled={submitting}
+    >
+      {next}
+    </Button>
   </React.Fragment>
 )
 
 type Props = {
   finishedTx: boolean,
+  finishedButton: React$Node,
   onPrevious: () => void,
   firstPage: boolean,
   lastPage: boolean,
   submitting: boolean,
-  goTitle: string,
-  goPath: string,
 }
 
 const Controls = ({
-  finishedTx, onPrevious, firstPage, lastPage, submitting, goTitle, goPath,
+  finishedTx, finishedButton, onPrevious, firstPage, lastPage, submitting,
 }: Props) => (
-  <React.Fragment>
-    { finishedTx
-      ? <GoButton title={goTitle} to={goPath} />
-      : <ControlButtons
-        submitting={submitting}
-        next={lastPage ? 'Finish' : 'Next'}
-        firstPage={firstPage}
-        onPrevious={onPrevious}
-      />
-    }
-  </React.Fragment>
+  finishedTx
+    ? <React.Fragment>{finishedButton}</React.Fragment>
+    : <ControlButtons
+      submitting={submitting}
+      next={lastPage ? 'Finish' : 'Next'}
+      firstPage={firstPage}
+      onPrevious={onPrevious}
+    />
 )
 
 export default Controls

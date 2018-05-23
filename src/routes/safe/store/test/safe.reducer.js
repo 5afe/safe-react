@@ -54,7 +54,7 @@ const providerReducerTests = () => {
       const safes = store.getState()[SAFE_REDUCER_ID]
 
       // THEN
-      expect(safes.get(address)).toEqual(SafeFactory.oneOwnerSafe)
+      expect(safes.get(address)).toEqual(SafeFactory.oneOwnerSafe())
     })
 
     it('reducer loads information from localStorage', async () => {

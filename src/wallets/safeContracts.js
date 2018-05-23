@@ -5,13 +5,30 @@ import { ensureOnce } from '~/utils/singleton'
 import { getWeb3 } from '~/wallets/getWeb3'
 import GnosisSafeSol from '#/GnosisSafeTeamEdition.json'
 import ProxyFactorySol from '#/ProxyFactory.json'
-import CreateAndAddModule from '#/CreateAndAddModule.json'
+import CreateAndAddModules from '#/CreateAndAddModules.json'
 import DailyLimitModule from '#/DailyLimitModule.json'
 
 let proxyFactoryMaster
-let createAndAddExtensionMaster
+let createAndAddModuleMaster
 let safeMaster
 let dailyLimitMaster
+
+const createModuleDataWrapper = () => {
+  const web3 = getWeb3()
+  // eslint-disable-next-line
+  return web3.eth.contract([{"constant":false,"inputs":[{"name":"data","type":"bytes"}],"name":"setup","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"}])
+}
+
+const getModuleDataWrapper = ensureOnce(createModuleDataWrapper)
+
+function createAndAddModulesData(dataArray) {
+  const ModuleDataWrapper = getModuleDataWrapper()
+
+  const mw = ModuleDataWrapper.at(1)
+  // Remove method id (10) and position of data in payload (64)
+  return dataArray.reduce((acc, data) => acc + mw.setup.getData(data).substr(74), '0x')
+}
+
 
 const createGnosisSafeContract = (web3: any) => {
   const gnosisSafe = contract(GnosisSafeSol)
@@ -28,7 +45,7 @@ const createProxyFactoryContract = (web3: any) => {
 }
 
 const createAddExtensionContract = (web3: any) => {
-  const createAndAddModule = contract(CreateAndAddModule)
+  const createAndAddModule = contract(CreateAndAddModules)
   createAndAddModule.setProvider(web3.currentProvider)
 
   return createAndAddModule
@@ -62,9 +79,9 @@ const createMasterCopies = async () => {
   // Create AddExtension Master Copy
   const CreateAndAddExtension = getCreateAddExtensionContract(web3)
   try {
-    createAndAddExtensionMaster = await CreateAndAddExtension.deployed()
+    createAndAddModuleMaster = await CreateAndAddExtension.deployed()
   } catch (err) {
-    createAndAddExtensionMaster = await CreateAndAddExtension.new({ from: userAccount, gas: '5000000' })
+    createAndAddModuleMaster = await CreateAndAddExtension.new({ from: userAccount, gas: '5000000' })
   }
 
   // Initialize safe master copy
@@ -95,11 +112,13 @@ const getSafeDataBasedOn = async (accounts, numConfirmations, dailyLimitInEth) =
   const proxyFactoryData = await proxyFactoryMaster.contract.createProxy
     .getData(dailyLimitMaster.address, moduleData)
 
-  const createAndAddExtensionData = createAndAddExtensionMaster.contract.createAndAddModule
-    .getData(proxyFactoryMaster.address, proxyFactoryData)
+  const modulesCreationData = createAndAddModulesData([proxyFactoryData])
+
+  const createAndAddModuleData = createAndAddModuleMaster.contract.createAndAddModules
+    .getData(proxyFactoryMaster.address, modulesCreationData)
 
   return safeMaster.contract.setup
-    .getData(accounts, numConfirmations, createAndAddExtensionMaster.address, createAndAddExtensionData)
+    .getData(accounts, numConfirmations, createAndAddModuleMaster.address, createAndAddModuleData)
 }
 
 export const deploySafeContract = async (

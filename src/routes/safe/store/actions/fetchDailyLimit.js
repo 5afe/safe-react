@@ -2,6 +2,7 @@
 import type { Dispatch as ReduxDispatch } from 'redux'
 import { type GlobalState } from '~/store/index'
 import { getDailyLimitFrom } from '~/routes/safe/component/Withdrawn/withdrawn'
+import { type DailyLimitProps } from '~/routes/safe/store/model/dailyLimit'
 import updateDailyLimit from './updateDailyLimit'
 
 export default (safeAddress: string) => async (dispatch: ReduxDispatch<GlobalState>) => {

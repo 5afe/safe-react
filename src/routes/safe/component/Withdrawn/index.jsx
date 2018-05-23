@@ -2,8 +2,8 @@
 import * as React from 'react'
 import { connect } from 'react-redux'
 import Stepper from '~/components/Stepper'
-import { SAFELIST_ADDRESS } from '~/routes/routes'
 import { sleep } from '~/utils/timer'
+import { type DailyLimit } from '~/routes/safe/store/model/dailyLimit'
 import actions, { type Actions } from './actions'
 import selector, { type SelectorProps } from './selector'
 import withdrawn from './withdrawn'
@@ -23,7 +23,7 @@ type State = {
   done: boolean,
 }
 
-export const SEE_TXS_BUTTON_TEXT = 'DONE'
+export const SEE_TXS_BUTTON_TEXT = 'RESET'
 
 class Withdrawn extends React.Component<Props, State> {
   state = {
@@ -44,19 +44,24 @@ class Withdrawn extends React.Component<Props, State> {
     }
   }
 
+  onReset = () => {
+    this.setState({ done: false })
+  }
+
   render() {
-    const { dailyLimit, safeAddress } = this.props
+    const { dailyLimit } = this.props
     const { done } = this.state
     const steps = getSteps()
+    const finishedButton = <Stepper.FinishButton title={SEE_TXS_BUTTON_TEXT} />
 
     return (
       <React.Fragment>
         <Stepper
-          goPath={`${SAFELIST_ADDRESS}/${safeAddress}`}
-          goTitle={SEE_TXS_BUTTON_TEXT}
-          onSubmit={this.onWithdrawn}
           finishedTransaction={done}
+          finishedButton={finishedButton}
+          onSubmit={this.onWithdrawn}
           steps={steps}
+          onReset={this.onReset}
         >
           <Stepper.Page limit={dailyLimit.get('value')} spentToday={dailyLimit.get('spentToday')}>
             { WithdrawnForm }
