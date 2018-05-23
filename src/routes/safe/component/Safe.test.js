@@ -16,6 +16,7 @@ import { getBalanceInEtherOf } from '~/wallets/getWeb3'
 import { sleep } from '~/utils/timer'
 import { getDailyLimitFrom } from '~/routes/safe/component/Withdrawn/withdrawn'
 import { type DailyLimitProps } from '~/routes/safe/store/model/dailyLimit'
+import { ADD_MULTISIG_BUTTON_TEXT } from '~/routes/safe/component/Safe/MultisigTx'
 
 describe('React DOM TESTS > Withdrawn funds from safe', () => {
   let SafeDom
@@ -26,8 +27,6 @@ describe('React DOM TESTS > Withdrawn funds from safe', () => {
     store = aNewStore()
     // deploy safe updating store
     address = await aDeployedSafe(store)
-    // add funds to safe
-    await addEtherTo(address, '0.1')
     // navigate to SAFE route
     history.push(`${SAFELIST_ADDRESS}/${address}`)
     SafeDom = TestUtils.renderIntoDocument((
@@ -40,6 +39,8 @@ describe('React DOM TESTS > Withdrawn funds from safe', () => {
   })
 
   it('should withdrawn funds under dailyLimit without needing confirmations', async () => {
+    // add funds to safe
+    await addEtherTo(address, '0.1')
     const Safe = TestUtils.findRenderedComponentWithType(SafeDom, SafeView)
 
     // $FlowFixMe
@@ -74,6 +75,9 @@ describe('React DOM TESTS > Withdrawn funds from safe', () => {
   })
 
   it('spentToday dailyLimitModule property is updated correctly', async () => {
+    // add funds to safe
+    await addEtherTo(address, '0.1')
+
     // GIVEN in beforeEach
     // WHEN
     await executeWithdrawnOn(address, 0.01)
@@ -85,5 +89,19 @@ describe('React DOM TESTS > Withdrawn funds from safe', () => {
     // THEN
     expect(dailyLimit.value).toBe(0.5)
     expect(dailyLimit.spentToday).toBe(0.02)
+  })
+
+  it('add multisig txs button disabled when balance is 0', async () => {
+    const Safe = TestUtils.findRenderedComponentWithType(SafeDom, SafeView)
+    // $FlowFixMe
+    const buttons = TestUtils.scryRenderedComponentsWithType(Safe, Button)
+    const addTxButton = buttons[1]
+    expect(addTxButton.props.children).toEqual(ADD_MULTISIG_BUTTON_TEXT)
+    expect(addTxButton.props.disabled).toBe(true)
+
+    await addEtherTo(address, '0.1')
+    await sleep(1800)
+
+    expect(addTxButton.props.disabled).toBe(false)
   })
 })
