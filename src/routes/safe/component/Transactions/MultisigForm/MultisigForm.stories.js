@@ -7,7 +7,7 @@ import MultisigForm from './index'
 
 
 const FrameDecorator = story => (
-  <div className={styles.frame}>
+  <div className={styles.frame} style={{ textAlign: 'center' }}>
     { story() }
   </div>
 )
@@ -15,7 +15,15 @@ const FrameDecorator = story => (
 storiesOf('Components', module)
   .addDecorator(FrameDecorator)
   .add('MultisigForm', () => (
-    <Stepper.Page>
-      { MultisigForm }
-    </Stepper.Page>
+    <Stepper
+      finishedTransaction={false}
+      finishedButton={<Stepper.FinishButton title="SEE TXS" />}
+      onSubmit={() => {}}
+      steps={['Multisig TX Form', 'Review TX']}
+      onReset={() => {}}
+    >
+      <Stepper.Page balance={10}>
+        { MultisigForm }
+      </Stepper.Page>
+    </Stepper>
   ))
