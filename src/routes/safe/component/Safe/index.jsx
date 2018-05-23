@@ -10,6 +10,7 @@ import { type Safe } from '~/routes/safe/store/model/safe'
 import List from 'material-ui/List'
 
 import Withdrawn from '~/routes/safe/component/Withdrawn'
+import Transactions from '~/routes/safe/component/Transactions'
 
 import Address from './Address'
 import Balance from './Balance'
@@ -45,9 +46,7 @@ class GnoSafe extends React.PureComponent<SafeProps, State> {
   }
 
   onAddTx = () => {
-    const { safe } = this.props
-
-    this.setState({ component: <Withdrawn safeAddress={safe.get('address')} dailyLimit={safe.get('dailyLimit')} /> })
+    this.setState({ component: <Transactions balance={Number(this.props.balance)} onReset={this.onSeeTxs} /> })
   }
 
   onSeeTxs = () => {

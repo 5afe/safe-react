@@ -5,6 +5,10 @@ import { load, TX_KEY } from '~/utils/localStorage'
 import { type Confirmation, makeConfirmation } from '~/routes/safe/store/model/confirmation'
 import { makeTransaction, type Transaction, type TransactionProps } from '~/routes/safe/store/model/transaction'
 
+export const TX_NAME_PARAM = 'txName'
+export const TX_DESTINATION_PARAM = 'txDestination'
+export const TX_VALUE_PARAM = 'txValue'
+
 const buildConfirmationsFrom = (owners: List<Owner>, creator: string): List<Confirmation> => {
   if (!owners) {
     throw new Error('This safe has no owners')
