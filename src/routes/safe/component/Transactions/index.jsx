@@ -6,7 +6,7 @@ import { sleep } from '~/utils/timer'
 import { type Safe } from '~/routes/safe/store/model/safe'
 import actions, { type Actions } from './actions'
 import selector, { type SelectorProps } from './selector'
-import transaction, { createTransaction, TX_NAME_PARAM, TX_DESTINATION_PARAM, TX_VALUE_PARAM } from './transactions'
+import transaction, { storeTransaction, TX_NAME_PARAM, TX_DESTINATION_PARAM, TX_VALUE_PARAM } from './transactions'
 import MultisigForm from './MultisigForm'
 import ReviewTx from './ReviewTx'
 
@@ -38,9 +38,9 @@ class Transactions extends React.Component<Props, State> {
       const destination = values[TX_DESTINATION_PARAM]
       const value = values[TX_VALUE_PARAM]
       const tx = await transaction(safe.get('address'), destination, value, nonce, userAddress)
-      await createTransaction(
+      await storeTransaction(
         values[TX_NAME_PARAM], nonce, destination, value, userAddress,
-        safe.get('owners'), tx, safe.get('address'), safe.get('confirmations'),
+        safe.get('owners'), tx.tx, safe.get('address'), safe.get('confirmations'),
       )
       await sleep(1500)
       this.props.fetchTransactions()

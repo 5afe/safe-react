@@ -23,7 +23,7 @@ const buildConfirmationsFrom = (owners: List<Owner>, creator: string): List<Conf
   return owners.map((owner: Owner) => makeConfirmation({ owner, status: owner.get('address') === creator }))
 }
 
-export const createTransaction = (
+export const storeTransaction = (
   name: string,
   nonce: number,
   destination: string,
