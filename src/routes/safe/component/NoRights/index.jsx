@@ -12,7 +12,7 @@ const NoRights = () => (
   <Row>
     <Col xs={12} center="xs" sm={10} smOffset={2} start="sm" margin="md">
       <Paragraph size="lg">
-        <Bold>You do not have rights to operate with this safe. Pleave visit the Safe List.</Bold>
+        <Bold>Impossible load Safe, check its address and ownership</Bold>
       </Paragraph>
     </Col>
     <Col xs={12} center="xs" sm={10} smOffset={2} start="sm" margin="md">

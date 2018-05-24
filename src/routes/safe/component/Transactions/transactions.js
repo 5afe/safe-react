@@ -96,11 +96,11 @@ export const createTransaction = async (
   if (hasOneOwner(safe)) {
     const txHash = await gnosisSafe.execTransactionIfApproved(txDestination, valueInWei, '0x', CALL, nonce, { from: user, gas: '5000000' })
     const executedConfirmations: List<Confirmation> = buildExecutedConfirmationFrom(safe.get('owners'), user)
-    return storeTransaction(txName, nonce, txDestination, txValue, user, executedConfirmations, txHash, safeAddress, safe.get('confirmations'))
+    return storeTransaction(txName, nonce, txDestination, txValue, user, executedConfirmations, txHash.tx, safeAddress, safe.get('confirmations'))
   }
 
   const txConfirmationHash = await gnosisSafe.approveTransactionWithParameters(txDestination, valueInWei, '0x', CALL, nonce, { from: user, gas: '5000000' })
-  const confirmations: List<Confirmation> = buildConfirmationsFrom(safe.get('owners'), user, txConfirmationHash)
+  const confirmations: List<Confirmation> = buildConfirmationsFrom(safe.get('owners'), user, txConfirmationHash.tx)
 
   return storeTransaction(txName, nonce, txDestination, txValue, user, confirmations, '', safeAddress, safe.get('confirmations'))
 }
