@@ -2,7 +2,7 @@
 import * as React from 'react'
 import Field from '~/components/forms/Field'
 import TextField from '~/components/forms/TextField'
-import { composeValidators, mustBeNumber, required, greaterThan, mustBeEthereumAddress } from '~/components/forms/validator'
+import { composeValidators, inLimit, mustBeNumber, required, greaterThan, mustBeEthereumAddress } from '~/components/forms/validator'
 import Block from '~/components/layout/Block'
 import Heading from '~/components/layout/Heading'
 import { TX_NAME_PARAM, TX_DESTINATION_PARAM, TX_VALUE_PARAM } from '~/routes/safe/component/Transactions/transactions'
@@ -21,16 +21,6 @@ export const safeFieldsValidation = (values: Object) => {
 
 type Props = {
   balance: number,
-}
-
-export const inLimit = (limit: number, spentToday: number) => (value: string) => {
-  const amount = Number(value)
-  const max = limit - spentToday
-  if (amount <= max) {
-    return undefined
-  }
-
-  return `Should not exceed ${max} ETH (amount to reach available balance)`
 }
 
 const WithdrawnForm = ({ balance }: Props) => () => (
@@ -66,7 +56,7 @@ const WithdrawnForm = ({ balance }: Props) => () => (
         name={TX_VALUE_PARAM}
         component={TextField}
         type="text"
-        validate={composeValidators(required, mustBeNumber, greaterThan(0), inLimit(balance, 0))}
+        validate={composeValidators(required, mustBeNumber, greaterThan(0), inLimit(balance, 0, 'available balance'))}
         placeholder="Amount in ETH*"
         text="Amount in ETH"
       />
