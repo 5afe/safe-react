@@ -1,11 +1,12 @@
 // @flow
 import { List, Map } from 'immutable'
-import { storeTransaction } from '~/routes/safe/component/Transactions/transactions'
+import { storeTransaction, buildConfirmationsFrom, EXECUTED_CONFIRMATION_HASH, buildExecutedConfirmationFrom } from '~/routes/safe/component/Transactions/transactions'
 import { type Transaction } from '~/routes/safe/store/model/transaction'
 import { SafeFactory } from '~/routes/safe/store/test/builder/safe.builder'
 import { type Safe } from '~/routes/safe/store/model/safe'
 import { type Owner } from '~/routes/safe/store/model/owner'
 import { loadSafeTransactions } from '~/routes/safe/store/actions/fetchTransactions'
+import { type Confirmation } from '~/routes/safe/store/model/confirmation'
 import { testSizeOfSafesWith, testSizeOfTransactions, testTransactionFrom } from './transactionsHelper'
 
 describe('Transactions Suite', () => {
@@ -31,7 +32,8 @@ describe('Transactions Suite', () => {
     // GIVEN
     const txName = 'Buy butteries for project'
     const nonce: number = 10
-    storeTransaction(txName, nonce, destination, value, 'foo', owners, '', safe.get('address'), safe.get('confirmations'))
+    const confirmations: List<Confirmation> = buildConfirmationsFrom(owners, 'foo', 'confirmationHash')
+    storeTransaction(txName, nonce, destination, value, 'foo', confirmations, '', safe.get('address'), safe.get('confirmations'))
 
     // WHEN
     const transactions: Map<string, List<Transaction>> = loadSafeTransactions()
@@ -43,7 +45,7 @@ describe('Transactions Suite', () => {
     if (!safeTransactions) { throw new Error() }
     testSizeOfTransactions(safeTransactions, 1)
 
-    testTransactionFrom(safeTransactions, 0, txName, nonce, value, 2, destination, 'foo', owners.get(0), owners.get(1))
+    testTransactionFrom(safeTransactions, 0, txName, nonce, value, 2, destination, 'foo', 'confirmationHash', owners.get(0), owners.get(1))
   })
 
   it('adds second confirmation to stored safe with one confirmation', async () => {
@@ -51,11 +53,14 @@ describe('Transactions Suite', () => {
     const firstTxName = 'Buy butteries for project'
     const firstNonce: number = Date.now()
     const safeAddress = safe.get('address')
-    storeTransaction(firstTxName, firstNonce, destination, value, 'foo', owners, '', safeAddress, safe.get('confirmations'))
+    const creator = 'foo'
+    const confirmations: List<Confirmation> = buildConfirmationsFrom(owners, creator, 'confirmationHash')
+    storeTransaction(firstTxName, firstNonce, destination, value, creator, confirmations, '', safeAddress, safe.get('confirmations'))
 
     const secondTxName = 'Buy printers for project'
     const secondNonce: number = firstNonce + 100
-    storeTransaction(secondTxName, secondNonce, destination, value, 'foo', owners, '', safeAddress, safe.get('confirmations'))
+    const secondConfirmations: List<Confirmation> = buildConfirmationsFrom(owners, creator, 'confirmationHash')
+    storeTransaction(secondTxName, secondNonce, destination, value, creator, secondConfirmations, '', safeAddress, safe.get('confirmations'))
 
     // WHEN
     const transactions: Map<string, List<Transaction>> = loadSafeTransactions()
@@ -67,23 +72,27 @@ describe('Transactions Suite', () => {
     if (!safeTxs) { throw new Error() }
     testSizeOfTransactions(safeTxs, 2)
 
-    testTransactionFrom(safeTxs, 0, firstTxName, firstNonce, value, 2, destination, 'foo', owners.get(0), owners.get(1))
-    testTransactionFrom(safeTxs, 1, secondTxName, secondNonce, value, 2, destination, 'foo', owners.get(0), owners.get(1))
+    testTransactionFrom(safeTxs, 0, firstTxName, firstNonce, value, 2, destination, 'foo', 'confirmationHash', owners.get(0), owners.get(1))
+    testTransactionFrom(safeTxs, 1, secondTxName, secondNonce, value, 2, destination, 'foo', 'confirmationHash', owners.get(0), owners.get(1))
   })
 
   it('adds second confirmation to stored safe having two safes with one confirmation each', async () => {
     const txName = 'Buy batteris for Alplha project'
     const nonce = 10
     const safeAddress = safe.address
-    storeTransaction(txName, nonce, destination, value, 'foo', owners, '', safeAddress, safe.get('confirmations'))
+    const creator = 'foo'
+    const confirmations: List<Confirmation> = buildConfirmationsFrom(owners, creator, 'confirmationHash')
+    storeTransaction(txName, nonce, destination, value, creator, confirmations, '', safeAddress, safe.get('confirmations'))
 
     const secondSafe = SafeFactory.dailyLimitSafe(10, 2)
     const txSecondName = 'Buy batteris for Beta project'
     const txSecondNonce = 10
     const secondSafeAddress = secondSafe.address
+    const secondCreator = '0x03db1a8b26d08df23337e9276a36b474510f0023'
+    const secondConfirmations: List<Confirmation> = buildConfirmationsFrom(secondSafe.get('owners'), secondCreator, 'confirmationHash')
     storeTransaction(
-      txSecondName, txSecondNonce, destination, value, '0x03db1a8b26d08df23337e9276a36b474510f0023',
-      secondSafe.get('owners'), '', secondSafeAddress, secondSafe.get('confirmations'),
+      txSecondName, txSecondNonce, destination, value, secondCreator,
+      secondConfirmations, '', secondSafeAddress, secondSafe.get('confirmations'),
     )
 
     let transactions: Map<string, List<Transaction>> = loadSafeTransactions()
@@ -100,9 +109,10 @@ describe('Transactions Suite', () => {
     // WHEN
     const txFirstName = 'Buy paper for Alplha project'
     const txFirstNonce = 11
+    const txConfirmations: List<Confirmation> = buildConfirmationsFrom(owners, creator, 'secondConfirmationHash')
     storeTransaction(
-      txFirstName, txFirstNonce, destination, value, 'foo',
-      safe.get('owners'), '', safe.get('address'), safe.get('confirmations'),
+      txFirstName, txFirstNonce, destination, value, creator,
+      txConfirmations, '', safe.get('address'), safe.get('confirmations'),
     )
 
     transactions = loadSafeTransactions()
@@ -116,19 +126,19 @@ describe('Transactions Suite', () => {
     testTransactionFrom(
       transactions.get(safe.address), 0,
       txName, nonce, value, 2, destination,
-      'foo', owners.get(0), owners.get(1),
+      'foo', 'confirmationHash', owners.get(0), owners.get(1),
     )
     testTransactionFrom(
       transactions.get(safe.address), 1,
       txFirstName, txFirstNonce, value, 2, destination,
-      'foo', owners.get(0), owners.get(1),
+      'foo', 'secondConfirmationHash', owners.get(0), owners.get(1),
     )
 
     // Test one transaction of second safe
     testTransactionFrom(
       transactions.get(secondSafe.address), 0,
       txSecondName, txSecondNonce, value, 2, destination,
-      '0x03db1a8b26d08df23337e9276a36b474510f0023', secondSafe.get('owners').get(0), secondSafe.get('owners').get(1),
+      '0x03db1a8b26d08df23337e9276a36b474510f0023', 'confirmationHash', secondSafe.get('owners').get(0), secondSafe.get('owners').get(1),
     )
   })
 
@@ -136,10 +146,12 @@ describe('Transactions Suite', () => {
     // GIVEN
     const txName = 'Buy butteries for project'
     const nonce: number = 10
-    storeTransaction(txName, nonce, destination, value, 'foo', owners, '', safe.get('address'), safe.get('confirmations'))
+    const creator = 'foo'
+    const confirmations: List<Confirmation> = buildConfirmationsFrom(owners, creator, 'confirmationHash')
+    storeTransaction(txName, nonce, destination, value, creator, confirmations, '', safe.get('address'), safe.get('confirmations'))
 
     // WHEN
-    const createTxFnc = () => storeTransaction(txName, nonce, destination, value, 'foo', owners, '', safe.get('address'), safe.get('confirmations'))
+    const createTxFnc = () => storeTransaction(txName, nonce, destination, value, creator, confirmations, '', safe.get('address'), safe.get('confirmations'))
     expect(createTxFnc).toThrow(/Transaction with same nonce/)
   })
 
@@ -147,7 +159,9 @@ describe('Transactions Suite', () => {
     // GIVEN
     const txName = 'Buy butteries for project'
     const nonce: number = 10
-    storeTransaction(txName, nonce, destination, value, 'foo', owners, '', safe.get('address'), safe.get('confirmations'))
+    const creator = 'foo'
+    const confirmations: List<Confirmation> = buildConfirmationsFrom(owners, creator, 'confirmationHash')
+    storeTransaction(txName, nonce, destination, value, creator, confirmations, '', safe.get('address'), safe.get('confirmations'))
 
     // WHEN
     const transactions: Map<string, List<Transaction>> = loadSafeTransactions()
@@ -158,12 +172,10 @@ describe('Transactions Suite', () => {
 
   it('checks the owner who creates the tx is an owner', async () => {
     // GIVEN
-    const txName = 'Buy butteries for project'
-    const nonce: number = 10
     const ownerName = 'invented'
-    const createTxFnc = () => storeTransaction(txName, nonce, destination, value, ownerName, owners, '', safe.get('address'), safe.get('confirmations'))
+    const buildConfirmationsTxFnc = () => buildConfirmationsFrom(owners, ownerName, 'confirmationHash')
 
-    expect(createTxFnc).toThrow(/The creator of the tx is not an owner/)
+    expect(buildConfirmationsTxFnc).toThrow(/The creator of the tx is not an owner/)
   })
 
   it('checks if safe has one owner transaction has been executed', async () => {
@@ -172,9 +184,42 @@ describe('Transactions Suite', () => {
     const txName = 'Buy butteries for project'
     const nonce: number = 10
     const tx = ''
-    const createTxFnc = () => storeTransaction(txName, nonce, destination, value, ownerName, oneOwnerSafe.get('owners'), tx, oneOwnerSafe.get('address'), oneOwnerSafe.get('confirmations'))
+    const confirmations: List<Confirmation> = buildExecutedConfirmationFrom(oneOwnerSafe.get('owners'), ownerName)
+    const createTxFnc = () => storeTransaction(txName, nonce, destination, value, ownerName, confirmations, tx, oneOwnerSafe.get('address'), oneOwnerSafe.get('confirmations'))
 
     expect(createTxFnc).toThrow(/The tx should be mined before storing it in safes with one owner/)
+  })
+
+  it('checks if safe has one owner transaction the confirmation list is correctly build', async () => {
+    const ownerName = 'foo'
+    const oneOwnerSafe = SafeFactory.oneOwnerSafe(ownerName)
+    const txName = 'Buy butteries for project'
+    const nonce: number = 10
+    const tx = 'validTxHash'
+    const confirmations: List<Confirmation> = buildExecutedConfirmationFrom(oneOwnerSafe.get('owners'), ownerName)
+    storeTransaction(txName, nonce, destination, value, ownerName, confirmations, tx, oneOwnerSafe.get('address'), oneOwnerSafe.get('confirmations'))
+
+    // WHEN
+    const safeTransactions: Map<string, List<Transaction>> = loadSafeTransactions()
+
+    // THEN
+    expect(safeTransactions.size).toBe(1)
+
+    const transactions: List<Transaction> | typeof undefined = safeTransactions.get(oneOwnerSafe.address)
+    if (!transactions) throw new Error()
+    expect(transactions.count()).toBe(1)
+
+    const batteriesTx: Transaction | typeof undefined = transactions.get(0)
+    if (!batteriesTx) throw new Error()
+    expect(batteriesTx.get('name')).toBe(txName)
+
+    const txConfirmations = batteriesTx.confirmations
+    if (!txConfirmations) throw new Error()
+    expect(txConfirmations.count()).toBe(1)
+
+    const firstConfirmation: Confirmation | typeof undefined = txConfirmations.get(0)
+    if (!firstConfirmation) throw new Error()
+    expect(firstConfirmation.get('hash')).toBe(EXECUTED_CONFIRMATION_HASH)
   })
 })
 

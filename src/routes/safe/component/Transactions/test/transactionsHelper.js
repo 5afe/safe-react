@@ -20,7 +20,8 @@ export const testSizeOfTransactions = (safeTxs: List<Transaction> | typeof undef
 export const testTransactionFrom = (
   safeTxs: List<Transaction> | typeof undefined, pos: number, name: string,
   nonce: number, value: number, threshold: number, destination: string,
-  creator: string, firstOwner: Owner | typeof undefined, secondOwner: Owner | typeof undefined,
+  creator: string, txHash: string,
+  firstOwner: Owner | typeof undefined, secondOwner: Owner | typeof undefined,
 ) => {
   if (!safeTxs) { throw new Error() }
   const tx: Transaction | typeof undefined = safeTxs.get(pos)
@@ -39,6 +40,7 @@ export const testTransactionFrom = (
   expect(firstConfirmation.get('owner')).not.toBe(undefined)
   expect(firstConfirmation.get('owner')).toEqual(firstOwner)
   expect(firstConfirmation.get('status')).toBe(true)
+  expect(firstConfirmation.get('hash')).toBe(txHash)
 
   const secondConfirmation: Confirmation | typeof undefined = confirmations.get(1)
   if (!secondConfirmation) { throw new Error() }
