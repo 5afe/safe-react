@@ -46,7 +46,8 @@ class GnoSafe extends React.PureComponent<SafeProps, State> {
   }
 
   onAddTx = () => {
-    this.setState({ component: <Transactions balance={Number(this.props.balance)} onReset={this.onSeeTxs} /> })
+    const { balance, safe } = this.props
+    this.setState({ component: <Transactions safe={safe} balance={Number(balance)} onReset={this.onSeeTxs} /> })
   }
 
   onSeeTxs = () => {

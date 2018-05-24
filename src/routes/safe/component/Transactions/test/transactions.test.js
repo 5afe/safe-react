@@ -31,7 +31,7 @@ describe('Transactions Suite', () => {
     // GIVEN
     const txName = 'Buy butteries for project'
     const nonce: number = 10
-    createTransaction(txName, nonce, destination, value, 'foo', owners, '', safe.get('name'), safe.get('address'), safe.get('confirmations'))
+    createTransaction(txName, nonce, destination, value, 'foo', owners, '', safe.get('address'), safe.get('confirmations'))
 
     // WHEN
     const transactions: Map<string, List<Transaction>> = loadSafeTransactions()
@@ -51,11 +51,11 @@ describe('Transactions Suite', () => {
     const firstTxName = 'Buy butteries for project'
     const firstNonce: number = Date.now()
     const safeAddress = safe.get('address')
-    createTransaction(firstTxName, firstNonce, destination, value, 'foo', owners, '', safe.get('name'), safeAddress, safe.get('confirmations'))
+    createTransaction(firstTxName, firstNonce, destination, value, 'foo', owners, '', safeAddress, safe.get('confirmations'))
 
     const secondTxName = 'Buy printers for project'
     const secondNonce: number = firstNonce + 100
-    createTransaction(secondTxName, secondNonce, destination, value, 'foo', owners, '', safe.get('name'), safeAddress, safe.get('confirmations'))
+    createTransaction(secondTxName, secondNonce, destination, value, 'foo', owners, '', safeAddress, safe.get('confirmations'))
 
     // WHEN
     const transactions: Map<string, List<Transaction>> = loadSafeTransactions()
@@ -75,7 +75,7 @@ describe('Transactions Suite', () => {
     const txName = 'Buy batteris for Alplha project'
     const nonce = 10
     const safeAddress = safe.address
-    createTransaction(txName, nonce, destination, value, 'foo', owners, '', safe.get('name'), safeAddress, safe.get('confirmations'))
+    createTransaction(txName, nonce, destination, value, 'foo', owners, '', safeAddress, safe.get('confirmations'))
 
     const secondSafe = SafeFactory.dailyLimitSafe(10, 2)
     const txSecondName = 'Buy batteris for Beta project'
@@ -83,7 +83,7 @@ describe('Transactions Suite', () => {
     const secondSafeAddress = secondSafe.address
     createTransaction(
       txSecondName, txSecondNonce, destination, value, '0x03db1a8b26d08df23337e9276a36b474510f0023',
-      secondSafe.get('owners'), '', secondSafe.get('name'), secondSafeAddress, secondSafe.get('confirmations'),
+      secondSafe.get('owners'), '', secondSafeAddress, secondSafe.get('confirmations'),
     )
 
     let transactions: Map<string, List<Transaction>> = loadSafeTransactions()
@@ -102,7 +102,7 @@ describe('Transactions Suite', () => {
     const txFirstNonce = 11
     createTransaction(
       txFirstName, txFirstNonce, destination, value, 'foo',
-      safe.get('owners'), '', safe.get('name'), safe.get('address'), safe.get('confirmations'),
+      safe.get('owners'), '', safe.get('address'), safe.get('confirmations'),
     )
 
     transactions = loadSafeTransactions()
@@ -136,10 +136,10 @@ describe('Transactions Suite', () => {
     // GIVEN
     const txName = 'Buy butteries for project'
     const nonce: number = 10
-    createTransaction(txName, nonce, destination, value, 'foo', owners, '', safe.get('name'), safe.get('address'), safe.get('confirmations'))
+    createTransaction(txName, nonce, destination, value, 'foo', owners, '', safe.get('address'), safe.get('confirmations'))
 
     // WHEN
-    const createTxFnc = () => createTransaction(txName, nonce, destination, value, 'foo', owners, '', safe.get('name'), safe.get('address'), safe.get('confirmations'))
+    const createTxFnc = () => createTransaction(txName, nonce, destination, value, 'foo', owners, '', safe.get('address'), safe.get('confirmations'))
     expect(createTxFnc).toThrow(/Transaction with same nonce/)
   })
 
@@ -147,7 +147,7 @@ describe('Transactions Suite', () => {
     // GIVEN
     const txName = 'Buy butteries for project'
     const nonce: number = 10
-    createTransaction(txName, nonce, destination, value, 'foo', owners, '', safe.get('name'), safe.get('address'), safe.get('confirmations'))
+    createTransaction(txName, nonce, destination, value, 'foo', owners, '', safe.get('address'), safe.get('confirmations'))
 
     // WHEN
     const transactions: Map<string, List<Transaction>> = loadSafeTransactions()
@@ -161,7 +161,7 @@ describe('Transactions Suite', () => {
     const txName = 'Buy butteries for project'
     const nonce: number = 10
     const ownerName = 'invented'
-    const createTxFnc = () => createTransaction(txName, nonce, destination, value, ownerName, owners, '', safe.get('name'), safe.get('address'), safe.get('confirmations'))
+    const createTxFnc = () => createTransaction(txName, nonce, destination, value, ownerName, owners, '', safe.get('address'), safe.get('confirmations'))
 
     expect(createTxFnc).toThrow(/The creator of the tx is not an owner/)
   })
@@ -172,7 +172,7 @@ describe('Transactions Suite', () => {
     const txName = 'Buy butteries for project'
     const nonce: number = 10
     const tx = ''
-    const createTxFnc = () => createTransaction(txName, nonce, destination, value, ownerName, oneOwnerSafe.get('owners'), tx, oneOwnerSafe.get('name'), oneOwnerSafe.get('address'), oneOwnerSafe.get('confirmations'))
+    const createTxFnc = () => createTransaction(txName, nonce, destination, value, ownerName, oneOwnerSafe.get('owners'), tx, oneOwnerSafe.get('address'), oneOwnerSafe.get('confirmations'))
 
     expect(createTxFnc).toThrow(/The tx should be mined before storing it in safes with one owner/)
   })

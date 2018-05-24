@@ -1,6 +1,12 @@
 // @flow
 import * as React from 'react'
+import { connect } from 'react-redux'
 import Stepper from '~/components/Stepper'
+import { sleep } from '~/utils/timer'
+import { type Safe } from '~/routes/safe/store/model/safe'
+import actions, { type Actions } from './actions'
+import selector, { type SelectorProps } from './selector'
+import transaction, { createTransaction, TX_NAME_PARAM, TX_DESTINATION_PARAM, TX_VALUE_PARAM } from './transactions'
 import MultisigForm from './MultisigForm'
 import ReviewTx from './ReviewTx'
 
@@ -8,14 +14,8 @@ const getSteps = () => [
   'Fill Mutlisig Tx form', 'Review Tx',
 ]
 
-/*
 type Props = SelectorProps & Actions & {
-  safeAddress: string,
-  dailyLimit: DailyLimit,
-}
-*/
-
-type Props = {
+  safe: Safe,
   balance: number,
   onReset: () => void,
 }
@@ -32,8 +32,24 @@ class Transactions extends React.Component<Props, State> {
   }
 
   onTransaction = async (values: Object) => {
-    // eslint-disable-next-line
-    console.log("Executing transaction with params " + JSON.stringify(values))
+    try {
+      const { safe, userAddress } = this.props
+      const nonce = Date.now()
+      const destination = values[TX_DESTINATION_PARAM]
+      const value = values[TX_VALUE_PARAM]
+      const tx = await transaction(safe.get('address'), destination, value, nonce, userAddress)
+      await createTransaction(
+        values[TX_NAME_PARAM], nonce, destination, value, userAddress,
+        safe.get('owners'), tx, safe.get('address'), safe.get('confirmations'),
+      )
+      await sleep(1500)
+      this.props.fetchTransactions()
+      this.setState({ done: true })
+    } catch (error) {
+      this.setState({ done: false })
+      // eslint-disable-next-line
+      console.log('Error while creating multisig tx ' + error)
+    }
   }
 
   onReset = () => {
@@ -68,5 +84,4 @@ class Transactions extends React.Component<Props, State> {
   }
 }
 
-export default Transactions
-
+export default connect(selector, actions)(Transactions)
