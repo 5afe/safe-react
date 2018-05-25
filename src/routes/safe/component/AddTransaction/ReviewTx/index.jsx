@@ -5,7 +5,7 @@ import Block from '~/components/layout/Block'
 import Bold from '~/components/layout/Bold'
 import Heading from '~/components/layout/Heading'
 import Paragraph from '~/components/layout/Paragraph'
-import { TX_NAME_PARAM, TX_DESTINATION_PARAM, TX_VALUE_PARAM } from '~/routes/safe/component/Transactions/transactions'
+import { TX_NAME_PARAM, TX_DESTINATION_PARAM, TX_VALUE_PARAM } from '~/routes/safe/component/AddTransaction/transactions'
 
 type FormProps = {
   values: Object,

@@ -10,7 +10,7 @@ import { type Safe } from '~/routes/safe/store/model/safe'
 import List from 'material-ui/List'
 
 import Withdrawn from '~/routes/safe/component/Withdrawn'
-import Transactions from '~/routes/safe/component/Transactions'
+import AddTransaction from '~/routes/safe/component/AddTransaction'
 
 import Address from './Address'
 import Balance from './Balance'
@@ -47,10 +47,12 @@ class GnoSafe extends React.PureComponent<SafeProps, State> {
 
   onAddTx = () => {
     const { balance, safe } = this.props
-    this.setState({ component: <Transactions safe={safe} balance={Number(balance)} onReset={this.onSeeTxs} /> })
+    this.setState({
+      component: <AddTransaction safe={safe} balance={Number(balance)} onReset={this.onListTransactions} />,
+    })
   }
 
-  onSeeTxs = () => {
+  onListTransactions = () => {
     const { safe } = this.props
 
     this.setState({ component: <Withdrawn safeAddress={safe.get('address')} dailyLimit={safe.get('dailyLimit')} /> })
@@ -69,7 +71,7 @@ class GnoSafe extends React.PureComponent<SafeProps, State> {
             <Confirmations confirmations={safe.get('confirmations')} />
             <Address address={safe.get('address')} />
             <DailyLimit dailyLimit={safe.get('dailyLimit')} onWithdrawn={this.onWithdrawn} />
-            <MultisigTx balance={balance} onAddTx={this.onAddTx} onSeeTxs={this.onSeeTxs} />
+            <MultisigTx balance={balance} onAddTx={this.onAddTx} onSeeTxs={this.onListTransactions} />
           </List>
         </Col>
         <Col sm={12} center="xs" md={7} margin="xl" layout="column">
