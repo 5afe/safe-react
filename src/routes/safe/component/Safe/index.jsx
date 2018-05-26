@@ -10,6 +10,7 @@ import { type Safe } from '~/routes/safe/store/model/safe'
 import List from 'material-ui/List'
 
 import Withdrawn from '~/routes/safe/component/Withdrawn'
+import Transactions from '~/routes/safe/component/Transactions'
 import AddTransaction from '~/routes/safe/component/AddTransaction'
 
 import Address from './Address'
@@ -55,7 +56,7 @@ class GnoSafe extends React.PureComponent<SafeProps, State> {
   onListTransactions = () => {
     const { safe } = this.props
 
-    this.setState({ component: <Withdrawn safeAddress={safe.get('address')} dailyLimit={safe.get('dailyLimit')} /> })
+    this.setState({ component: <Transactions safeName={safe.get('name')} safeAddress={safe.get('address')} onAddTx={this.onAddTx} /> })
   }
 
   render() {
@@ -81,7 +82,7 @@ class GnoSafe extends React.PureComponent<SafeProps, State> {
             </Paragraph>
           </Block>
           <Row grow>
-            <Col sm={12} center="sm" middle={component ? undefined : 'sm'} layout="column">
+            <Col sm={12} center={component ? undefined : 'sm'} middle={component ? undefined : 'sm'} layout="column">
               { component || <Img alt="Safe Icon" src={safeIcon} height={330} /> }
             </Col>
           </Row>
