@@ -23,9 +23,9 @@ type TransactionProps = {
   transaction: Transaction,
 }
 
-const safeAddressSelector = (state: GlobalState, props: SafeProps) => props.safeAddress
+const safePropAddressSelector = (state: GlobalState, props: SafeProps) => props.safeAddress
 
-const safeAddessSelector = (state: GlobalState, props: RouterProps) => props.match.params[SAFE_PARAM_ADDRESS] || ''
+const safeParamAddressSelector = (state: GlobalState, props: RouterProps) => props.match.params[SAFE_PARAM_ADDRESS] || ''
 
 const balancesSelector = (state: GlobalState) => state[BALANCE_REDUCER_ID]
 
@@ -35,7 +35,7 @@ const oneTransactionSelector = (state: GlobalState, props: TransactionProps) => 
 
 export const safeTransactionsSelector: Selector<GlobalState, SafeProps, List<Transaction>> = createSelector(
   transactionsSelector,
-  safeAddressSelector,
+  safePropAddressSelector,
   (transactions: TransactionsState, address: string): List<Transaction> => {
     if (!transactions) {
       return List([])
@@ -49,7 +49,7 @@ export const safeTransactionsSelector: Selector<GlobalState, SafeProps, List<Tra
   },
 )
 
-export const confirmationsTransactionSelector = createSelector(
+export const confirmationsTransactionSelector: Selector<GlobalState, TransactionProps, number> = createSelector(
   oneTransactionSelector,
   (tx: Transaction) => {
     if (!tx) {
@@ -69,7 +69,7 @@ export type SafeSelectorProps = Safe | typeof undefined
 
 export const safeSelector: Selector<GlobalState, RouterProps, SafeSelectorProps> = createSelector(
   safesMapSelector,
-  safeAddessSelector,
+  safeParamAddressSelector,
   (safes: Map<string, Safe>, address: string) => {
     if (!address) {
       return undefined
@@ -81,7 +81,7 @@ export const safeSelector: Selector<GlobalState, RouterProps, SafeSelectorProps>
 
 export const balanceSelector: Selector<GlobalState, RouterProps, string> = createSelector(
   balancesSelector,
-  safeAddessSelector,
+  safeParamAddressSelector,
   (balances: Map<string, string>, address: string) => {
     if (!address) {
       return '0'
