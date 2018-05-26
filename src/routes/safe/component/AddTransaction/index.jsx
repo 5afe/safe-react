@@ -26,7 +26,7 @@ type State = {
 
 export const SEE_TXS_BUTTON_TEXT = 'VISIT TXS'
 
-class Transactions extends React.Component<Props, State> {
+class AddTransaction extends React.Component<Props, State> {
   state = {
     done: false,
   }
@@ -81,4 +81,4 @@ class Transactions extends React.Component<Props, State> {
   }
 }
 
-export default connect(selector, actions)(Transactions)
+export default connect(selector, actions)(AddTransaction)
