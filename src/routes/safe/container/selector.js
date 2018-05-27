@@ -30,7 +30,7 @@ export const grantedSelector: Selector<GlobalState, RouterProps, boolean> = crea
       return false
     }
 
-    return owners.find((owner: Owner) => owner.get('address') === userAccount) !== undefined
+    return owners.find((owner: Owner) => owner.get('address').toLocaleLowerCase() === userAccount.toLocaleLowerCase()) !== undefined
   },
 )
 
