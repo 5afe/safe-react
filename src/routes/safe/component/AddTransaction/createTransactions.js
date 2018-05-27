@@ -7,6 +7,7 @@ import { makeTransaction, type Transaction, type TransactionProps } from '~/rout
 import { getGnosisSafeContract } from '~/wallets/safeContracts'
 import { getWeb3 } from '~/wallets/getWeb3'
 import { type Safe } from '~/routes/safe/store/model/safe'
+import { sameAddress } from '~/wallets/ethAddresses'
 
 export const TX_NAME_PARAM = 'txName'
 export const TX_DESTINATION_PARAM = 'txDestination'
@@ -21,14 +22,14 @@ export const buildConfirmationsFrom =
       throw new Error('This safe has no owners')
     }
 
-    if (!owners.find((owner: Owner) => owner.get('address').toLowerCase() === creator.toLowerCase())) {
+    if (!owners.find((owner: Owner) => sameAddress(owner.get('address'), creator))) {
       throw new Error('The creator of the tx is not an owner')
     }
 
     return owners.map((owner: Owner) => makeConfirmation({
       owner,
-      status: owner.get('address') === creator,
-      hash: owner.get('address') === creator ? confirmationHash : undefined,
+      status: sameAddress(owner.get('address'), creator),
+      hash: sameAddress(owner.get('address'), creator) ? confirmationHash : undefined,
     }))
   }
 

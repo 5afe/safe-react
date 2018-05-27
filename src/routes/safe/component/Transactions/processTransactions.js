@@ -6,6 +6,7 @@ import { type Confirmation, makeConfirmation } from '~/routes/safe/store/model/c
 import { makeTransaction, type Transaction, type TransactionProps } from '~/routes/safe/store/model/transaction'
 import { getGnosisSafeContract } from '~/wallets/safeContracts'
 import { getWeb3 } from '~/wallets/getWeb3'
+import { sameAddress } from '~/wallets/ethAddresses'
 import { EXECUTED_CONFIRMATION_HASH } from '~/routes/safe/component/AddTransaction/createTransactions'
 
 export const updateTransaction = (
@@ -72,8 +73,9 @@ const execConfirmation = async (
 const updateConfirmations = (confirmations: List<Confirmation>, userAddress: string, txHash: string) =>
   confirmations.map((confirmation: Confirmation) => {
     const owner: Owner = confirmation.get('owner')
-    const status: boolean = owner.get('address') === userAddress ? true : confirmation.get('status')
-    const hash: string = owner.get('address') === userAddress ? txHash : confirmation.get('hash')
+    const samePerson = sameAddress(owner.get('address'), userAddress)
+    const status: boolean = samePerson ? true : confirmation.get('status')
+    const hash: string = samePerson ? txHash : confirmation.get('hash')
 
     return makeConfirmation({ owner, status, hash })
   })
@@ -91,7 +93,7 @@ export const processTransaction = async (
   const confirmations = tx.get('confirmations')
   const userHasAlreadyConfirmed = confirmations.filter((confirmation: Confirmation) => {
     const ownerAddress = confirmation.get('owner').get('address')
-    const samePerson = ownerAddress === userAddress
+    const samePerson = sameAddress(ownerAddress, userAddress)
 
     return samePerson && confirmation.get('status')
   }).count() > 0
