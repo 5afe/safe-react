@@ -3,7 +3,7 @@ import { List } from 'immutable'
 import { type Owner } from '~/routes/safe/store/model/owner'
 import { load, TX_KEY } from '~/utils/localStorage'
 import { type Confirmation, makeConfirmation } from '~/routes/safe/store/model/confirmation'
-import { makeTransaction, type Transaction } from '~/routes/safe/store/model/transaction'
+import { makeTransaction, type Transaction, type TransactionProps } from '~/routes/safe/store/model/transaction'
 import { getGnosisSafeContract } from '~/wallets/safeContracts'
 import { getWeb3 } from '~/wallets/getWeb3'
 import { EXECUTED_CONFIRMATION_HASH } from '~/routes/safe/component/AddTransaction/createTransactions'
@@ -27,9 +27,9 @@ export const updateTransaction = (
   const transactions = safeTransactions[safeAddress]
   const txsRecord = transactions ? List(transactions) : List([])
 
-  const index = txsRecord.findIndex((trans: Transaction) => trans.get('nonce') === nonce)
+  const index = txsRecord.findIndex((trans: TransactionProps) => trans.nonce === nonce)
 
-  safeTransactions[safeAddress] = txsRecord.update(index, transaction)
+  safeTransactions[safeAddress] = txsRecord.remove(index).push(transaction)
 
   localStorage.setItem(TX_KEY, JSON.stringify(safeTransactions))
 }

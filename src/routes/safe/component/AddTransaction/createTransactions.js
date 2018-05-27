@@ -21,7 +21,7 @@ export const buildConfirmationsFrom =
       throw new Error('This safe has no owners')
     }
 
-    if (!owners.find((owner: Owner) => owner.get('address') === creator)) {
+    if (!owners.find((owner: Owner) => owner.get('address').toLowerCase() === creator.toLowerCase())) {
       throw new Error('The creator of the tx is not an owner')
     }
 
