@@ -4,22 +4,23 @@ import { connect } from 'react-redux'
 import { type Transaction } from '~/routes/safe/store/model/transaction'
 import NoTransactions from '~/routes/safe/component/Transactions/NoTransactions'
 import GnoTransaction from '~/routes/safe/component/Transactions/Transaction'
+import { sleep } from '~/utils/timer'
+import { processTransaction } from './processTransactions'
 import selector, { type SelectorProps } from './selector'
+import actions, { type Actions } from './actions'
 
-type Props = SelectorProps & {
+type Props = SelectorProps & Actions & {
   onAddTx: () => void,
   safeName: string,
+  safeAddress: string,
+
 }
-
 class Transactions extends React.Component<Props, {}> {
-  onConfirm = () => {
-    // eslint-disable-next-line
-    console.log("Confirming tx")
-  }
-
-  onExecute = () => {
-    // eslint-disable-next-line
-    console.log("Confirming tx")
+  onProcessTx = async (tx: Transaction, alreadyConfirmed: number) => {
+    const { fetchTransactions, safeAddress, userAddress } = this.props
+    await processTransaction(safeAddress, tx, alreadyConfirmed, userAddress)
+    await sleep(1200)
+    fetchTransactions()
   }
 
   render() {
@@ -29,7 +30,7 @@ class Transactions extends React.Component<Props, {}> {
     return (
       <React.Fragment>
         { hasTransactions
-          ? transactions.map((tx: Transaction) => <GnoTransaction key={tx.get('nonce')} safeName={safeName} transaction={tx} />)
+          ? transactions.map((tx: Transaction) => <GnoTransaction key={tx.get('nonce')} safeName={safeName} onProcessTx={this.onProcessTx} transaction={tx} />)
           : <NoTransactions onAddTx={onAddTx} />
         }
       </React.Fragment>
@@ -37,4 +38,4 @@ class Transactions extends React.Component<Props, {}> {
   }
 }
 
-export default connect(selector)(Transactions)
+export default connect(selector, actions)(Transactions)

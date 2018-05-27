@@ -15,7 +15,6 @@ type Props = {
   safeName: string,
   confirmations: ImmutableList<Confirmation>,
   destination: string,
-  tx: string,
 }
 
 const listStyle = {
@@ -25,7 +24,7 @@ const listStyle = {
 class Collapsed extends React.PureComponent<Props, {}> {
   render() {
     const {
-      confirmations, destination, safeName, tx,
+      confirmations, destination, safeName,
     } = this.props
 
     return (
@@ -41,12 +40,6 @@ class Collapsed extends React.PureComponent<Props, {}> {
               <Avatar><MailOutline /></Avatar>
               <ListItemText primary="Destination" secondary={destination} />
             </ListItem>
-            { tx &&
-              <ListItem>
-                <Avatar><MailOutline /></Avatar>
-                <ListItemText cut primary="Transaction Hash" secondary={tx} />
-              </ListItem>
-            }
           </List>
         </Col>
       </Row>

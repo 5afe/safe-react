@@ -90,7 +90,7 @@ describe('React DOM TESTS > Withdrawn funds from safe', () => {
     TestUtils.Simulate.click(paragraphs[2]) // expanded
     await sleep(1000) // Time to expand
     const paragraphsExpanded = TestUtils.scryRenderedDOMComponentsWithTag(Transaction, 'p')
-    const txHashParagraph = paragraphsExpanded[paragraphsExpanded.length - 1]
+    const txHashParagraph = paragraphsExpanded[3]
 
     const transactions = safeTransactionsSelector(store.getState(), { safeAddress: address })
     const batteryTx = transactions.get(0)

@@ -11,20 +11,25 @@ import Avatar from 'material-ui/Avatar'
 import AttachMoney from 'material-ui-icons/AttachMoney'
 import Atm from 'material-ui-icons/LocalAtm'
 import DoneAll from 'material-ui-icons/DoneAll'
+import CompareArrows from 'material-ui-icons/CompareArrows'
 import Collapsed from '~/routes/safe/component/Transactions/Collapsed'
 import { type Transaction } from '~/routes/safe/store/model/transaction'
 import Hairline from '~/components/layout/Hairline/index'
+import Button from '~/components/layout/Button'
 import selector, { type SelectorProps } from './selector'
 
 type Props = Open & SelectorProps & {
   transaction: Transaction,
   safeName: string,
+  onProcessTx: (tx: Transaction, alreadyConfirmed: number) => void,
 }
+
+export const PROCESS_TXS = 'PROCESS TRANSACTION'
 
 class GnoTransaction extends React.PureComponent<Props, {}> {
   render() {
     const {
-      open, toggle, transaction, confirmed, safeName,
+      open, toggle, transaction, confirmed, safeName, onProcessTx,
     } = this.props
 
     const txHash = transaction.get('tx')
@@ -51,12 +56,30 @@ class GnoTransaction extends React.PureComponent<Props, {}> {
             </ListItemIcon>
           </ListItem>
         </Row>
+        <Row>
+          <ListItem>
+            { txHash &&
+              <React.Fragment>
+                <Avatar><CompareArrows /></Avatar>
+                <ListItemText cut primary="Transaction Hash" secondary={txHash} />
+              </React.Fragment>
+            }
+            { !txHash &&
+              <Button
+                variant="raised"
+                color="primary"
+                onClick={onProcessTx(transaction, confirmed)}
+              >
+                {PROCESS_TXS}
+              </Button>
+            }
+          </ListItem>
+        </Row>
         { open &&
           <Collapsed
             safeName={safeName}
             confirmations={transaction.get('confirmations')}
             destination={transaction.get('destination')}
-            tx={transaction.get('tx')}
           /> }
         <Hairline />
       </React.Fragment>

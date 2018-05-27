@@ -6,7 +6,7 @@ import { sleep } from '~/utils/timer'
 import { type Safe } from '~/routes/safe/store/model/safe'
 import actions, { type Actions } from './actions'
 import selector, { type SelectorProps } from './selector'
-import { createTransaction, TX_NAME_PARAM, TX_DESTINATION_PARAM, TX_VALUE_PARAM } from './transactions'
+import { createTransaction, TX_NAME_PARAM, TX_DESTINATION_PARAM, TX_VALUE_PARAM } from './createTransactions'
 import MultisigForm from './MultisigForm'
 import ReviewTx from './ReviewTx'
 
