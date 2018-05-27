@@ -27,9 +27,11 @@ type Props = Open & SelectorProps & {
 export const PROCESS_TXS = 'PROCESS TRANSACTION'
 
 class GnoTransaction extends React.PureComponent<Props, {}> {
+  onProccesClick = () => this.props.onProcessTx(this.props.transaction, this.props.confirmed)
+
   render() {
     const {
-      open, toggle, transaction, confirmed, safeName, onProcessTx,
+      open, toggle, transaction, confirmed, safeName,
     } = this.props
 
     const txHash = transaction.get('tx')
@@ -68,7 +70,7 @@ class GnoTransaction extends React.PureComponent<Props, {}> {
               <Button
                 variant="raised"
                 color="primary"
-                onClick={onProcessTx(transaction, confirmed)}
+                onClick={this.onProccesClick}
               >
                 {PROCESS_TXS}
               </Button>
