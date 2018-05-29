@@ -82,6 +82,7 @@ class GnoTransaction extends React.PureComponent<Props, {}> {
             safeName={safeName}
             confirmations={transaction.get('confirmations')}
             destination={transaction.get('destination')}
+            threshold={transaction.get('threshold')}
           /> }
         <Hairline />
       </React.Fragment>

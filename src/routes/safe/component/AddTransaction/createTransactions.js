@@ -94,7 +94,8 @@ export const createTransaction = async (
   const valueInWei = web3.toWei(txValue, 'ether')
   const CALL = 0
 
-  if (hasOneOwner(safe)) {
+  const thresholdIsOne = safe.get('confirmations') === 1
+  if (hasOneOwner(safe) || thresholdIsOne) {
     const txReceipt = await gnosisSafe.execTransactionIfApproved(txDestination, valueInWei, '0x', CALL, nonce, { from: user, gas: '5000000' })
     const executedConfirmations: List<Confirmation> = buildExecutedConfirmationFrom(safe.get('owners'), user)
     return storeTransaction(txName, nonce, txDestination, txValue, user, executedConfirmations, txReceipt.tx, safeAddress, safe.get('confirmations'))
