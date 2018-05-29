@@ -2,7 +2,7 @@
 import * as React from 'react'
 import Field from '~/components/forms/Field'
 import TextField from '~/components/forms/TextField'
-import { composeValidators, inLimit, mustBeNumber, required, greaterThan, mustBeEthereumAddress } from '~/components/forms/validator'
+import { composeValidators, inLimit, mustBeFloat, required, greaterThan, mustBeEthereumAddress } from '~/components/forms/validator'
 import Block from '~/components/layout/Block'
 import Heading from '~/components/layout/Heading'
 import { DESTINATION_PARAM, VALUE_PARAM } from '~/routes/safe/component/Withdrawn/withdrawn'
@@ -37,7 +37,7 @@ const WithdrawnForm = ({ limit, spentToday }: Props) => () => (
         name={VALUE_PARAM}
         component={TextField}
         type="text"
-        validate={composeValidators(required, mustBeNumber, greaterThan(0), inLimit(limit, spentToday, 'daily limit'))}
+        validate={composeValidators(required, mustBeFloat, greaterThan(0), inLimit(limit, spentToday, 'daily limit'))}
         placeholder="Amount in ETH*"
         text="Amount in ETH"
       />
