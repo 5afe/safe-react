@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react'
+import { List } from 'immutable'
 import { connect } from 'react-redux'
 import openHoc, { type Open } from '~/components/hoc/OpenHoc'
 import ExpandLess from 'material-ui-icons/ExpandLess'
@@ -16,6 +17,8 @@ import Collapsed from '~/routes/safe/component/Transactions/Collapsed'
 import { type Transaction } from '~/routes/safe/store/model/transaction'
 import Hairline from '~/components/layout/Hairline/index'
 import Button from '~/components/layout/Button'
+import { sameAddress } from '~/wallets/ethAddresses'
+import { type Confirmation } from '~/routes/safe/store/model/confirmation'
 import selector, { type SelectorProps } from './selector'
 
 type Props = Open & SelectorProps & {
@@ -29,13 +32,17 @@ export const PROCESS_TXS = 'PROCESS TRANSACTION'
 class GnoTransaction extends React.PureComponent<Props, {}> {
   onProccesClick = () => this.props.onProcessTx(this.props.transaction, this.props.confirmed)
 
+  hasConfirmed = (userAddress: string, confirmations: List<Confirmation>): boolean =>
+    confirmations.filter((conf: Confirmation) => sameAddress(userAddress, conf.get('owner').get('address')) && conf.get('status')).count() > 0
+
   render() {
     const {
-      open, toggle, transaction, confirmed, safeName,
+      open, toggle, transaction, confirmed, safeName, userAddress,
     } = this.props
 
     const txHash = transaction.get('tx')
     const confirmationText = txHash ? 'Already executed' : `${confirmed} of the ${transaction.get('threshold')} confirmations needed`
+    const userConfirmed = this.hasConfirmed(userAddress, transaction.get('confirmations'))
 
     return (
       <React.Fragment>
@@ -66,7 +73,13 @@ class GnoTransaction extends React.PureComponent<Props, {}> {
                 <ListItemText cut primary="Transaction Hash" secondary={txHash} />
               </React.Fragment>
             }
-            { !txHash &&
+            { !txHash && userConfirmed &&
+              <React.Fragment>
+                <Avatar><CompareArrows /></Avatar>
+                <ListItemText cut primary="Confirmed" secondary="Waiting for the rest of confirmations" />
+              </React.Fragment>
+            }
+            { !txHash && !userConfirmed &&
               <Button
                 variant="raised"
                 color="primary"
