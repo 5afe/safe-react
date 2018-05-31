@@ -5,15 +5,16 @@ os:
   - linux
 before_script:
   - yarn global add surge
+  - export NODE_ENV=testing
 after_success:
-  - yarn build-storybook
-  - yarn build
   - |
     if [ ${TRAVIS_BRANCH} = "master" ]; then
       export NODE_ENV=production;
     else
       export NODE_ENV=development;
     fi
+  - yarn build-storybook
+  - yarn build
   - cd build_webpack/ && cp index.html 200.html && cd ..
   - chmod ugo+x ./config/deploy/deploy.sh
   - ./config/deploy/deploy.sh

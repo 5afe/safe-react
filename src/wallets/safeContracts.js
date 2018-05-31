@@ -2,6 +2,7 @@
 import contract from 'truffle-contract'
 import { ensureOnce } from '~/utils/singleton'
 import { getWeb3 } from '~/wallets/getWeb3'
+import { promisify } from '~/utils/promisify'
 import GnosisSafeSol from '#/GnosisSafeTeamEdition.json'
 import ProxyFactorySol from '#/ProxyFactory.json'
 import CreateAndAddModules from '#/CreateAndAddModules.json'
@@ -62,7 +63,7 @@ const getCreateProxyFactoryContract = ensureOnce(createProxyFactoryContract)
 const getCreateAddExtensionContract = ensureOnce(createAddExtensionContract)
 export const getCreateDailyLimitExtensionContract = ensureOnce(createDailyLimitExtensionContract)
 
-const createMasterCopies = async () => {
+const instanciateMasterCopies = async () => {
   const web3 = getWeb3()
 
   // Create ProxyFactory Master Copy
@@ -82,7 +83,26 @@ const createMasterCopies = async () => {
   dailyLimitMaster = await DailyLimitExtension.deployed()
 }
 
-export const initContracts = ensureOnce(createMasterCopies)
+// ONLY USED IN TEST ENVIRONMENT
+const createMasterCopies = async () => {
+  const web3 = getWeb3()
+  const accounts = await promisify(cb => web3.eth.getAccounts(cb))
+  const userAccount = accounts[0]
+
+  const ProxyFactory = getCreateProxyFactoryContract(web3)
+  proxyFactoryMaster = await ProxyFactory.new({ from: userAccount, gas: '5000000' })
+
+  const CreateAndAddExtension = getCreateAddExtensionContract(web3)
+  createAndAddModuleMaster = await CreateAndAddExtension.new({ from: userAccount, gas: '5000000' })
+
+  const GnosisSafe = getGnosisSafeContract(web3)
+  safeMaster = await GnosisSafe.new([userAccount], 1, 0, 0, { from: userAccount, gas: '5000000' })
+
+  const DailyLimitExtension = getCreateDailyLimitExtensionContract(web3)
+  dailyLimitMaster = await DailyLimitExtension.new([], [], { from: userAccount, gas: '5000000' })
+}
+
+export const initContracts = ensureOnce(process.env.NODE_ENV === 'test' ? createMasterCopies : instanciateMasterCopies)
 
 const getSafeDataBasedOn = async (accounts, numConfirmations, dailyLimitInEth) => {
   const web3 = getWeb3()
