@@ -2,7 +2,7 @@
 import * as React from 'react'
 import Field from '~/components/forms/Field'
 import TextField from '~/components/forms/TextField'
-import { composeValidators, mustBeNumber, required, minValue } from '~/components/forms/validator'
+import { composeValidators, mustBeFloat, required, minValue } from '~/components/forms/validator'
 import Block from '~/components/layout/Block'
 import { FIELD_DAILY_LIMIT } from '~/routes/open/components/fields'
 
@@ -12,7 +12,7 @@ const DailyLimit = () => (
       name={FIELD_DAILY_LIMIT}
       component={TextField}
       type="text"
-      validate={composeValidators(required, mustBeNumber, minValue(0))}
+      validate={composeValidators(required, mustBeFloat, minValue(0))}
       placeholder="Daily Limit*"
       text="Daily Limit"
     />

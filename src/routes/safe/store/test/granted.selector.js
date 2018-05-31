@@ -16,10 +16,31 @@ const grantedSelectorTests = () => {
   })
 
   describe('Safe Selector[grantedSelector]', () => {
-    it('should be granted to operate when a safe when the user is owner', () => {
+    it('should be granted to operate a safe when the user is owner', () => {
       // GIVEN
       let map: Map<string, Safe> = Map()
       map = map.set('fooAddress', SafeFactory.oneOwnerSafe(provider.account))
+
+      const match: Match = buildMathPropsFrom('fooAddress')
+
+      const reduxStore = {
+        [SAFE_REDUCER_ID]: map,
+        providers: makeProvider(provider),
+        balances: undefined,
+        transactions: undefined,
+      }
+
+      // WHEN
+      const granted = grantedSelector(reduxStore, { match })
+
+      // THEN
+      expect(granted).toBe(true)
+    })
+
+    it('should be granted to operate a safe when the user is owner in case-insensitive', () => {
+      // GIVEN
+      let map: Map<string, Safe> = Map()
+      map = map.set('fooAddress', SafeFactory.oneOwnerSafe(provider.account.toUpperCase()))
 
       const match: Match = buildMathPropsFrom('fooAddress')
 

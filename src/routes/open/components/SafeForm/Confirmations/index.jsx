@@ -2,7 +2,7 @@
 import * as React from 'react'
 import { Field } from 'react-final-form'
 import TextField from '~/components/forms/TextField'
-import { composeValidators, minValue, mustBeNumber, required } from '~/components/forms/validator'
+import { composeValidators, minValue, mustBeInteger, required } from '~/components/forms/validator'
 import Block from '~/components/layout/Block'
 import { FIELD_CONFIRMATIONS } from '~/routes/open/components/fields'
 
@@ -14,7 +14,7 @@ const Confirmations = () => (
       type="text"
       validate={composeValidators(
         required,
-        mustBeNumber,
+        mustBeInteger,
         minValue(1),
       )}
       placeholder="Required confirmations*"

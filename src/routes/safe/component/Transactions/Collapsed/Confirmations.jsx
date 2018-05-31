@@ -21,6 +21,7 @@ const styles = {
 
 type Props = Open & WithStyles & {
   confirmations: List<Confirmation>,
+  threshold: number,
 }
 
 const GnoConfirmation = ({ owner, status, hash }: ConfirmationProps) => {
@@ -45,35 +46,31 @@ const GnoConfirmation = ({ owner, status, hash }: ConfirmationProps) => {
 }
 
 const Confirmaitons = openHoc(({
-  open, toggle, confirmations,
-}: Props) => {
-  const threshold = confirmations.count()
-
-  return (
-    <React.Fragment>
-      <ListItem onClick={toggle}>
-        <Avatar>
-          <Group />
-        </Avatar>
-        <ListItemText primary="Threshold" secondary={`${threshold} confirmation${threshold === 1 ? '' : 's'} needed`} />
-        <ListItemIcon>
-          {open ? <ExpandLess /> : <ExpandMore />}
-        </ListItemIcon>
-      </ListItem>
-      <Collapse in={open} timeout="auto" unmountOnExit>
-        <List component="div" disablePadding style={{ width: '100%' }}>
-          {confirmations.map(confirmation => (
-            <GnoConfirmation
-              key={confirmation.get('owner').get('address')}
-              owner={confirmation.get('owner')}
-              status={confirmation.get('status')}
-              hash={confirmation.get('hash')}
-            />
-          ))}
-        </List>
-      </Collapse>
-    </React.Fragment>
-  )
-})
+  open, toggle, confirmations, threshold,
+}: Props) => (
+  <React.Fragment>
+    <ListItem onClick={toggle}>
+      <Avatar>
+        <Group />
+      </Avatar>
+      <ListItemText primary="Threshold" secondary={`${threshold} confirmation${threshold === 1 ? '' : 's'} needed`} />
+      <ListItemIcon>
+        {open ? <ExpandLess /> : <ExpandMore />}
+      </ListItemIcon>
+    </ListItem>
+    <Collapse in={open} timeout="auto" unmountOnExit>
+      <List component="div" disablePadding style={{ width: '100%' }}>
+        {confirmations.map(confirmation => (
+          <GnoConfirmation
+            key={confirmation.get('owner').get('address')}
+            owner={confirmation.get('owner')}
+            status={confirmation.get('status')}
+            hash={confirmation.get('hash')}
+          />
+        ))}
+      </List>
+    </Collapse>
+  </React.Fragment>
+))
 
 export default withStyles(styles)(Confirmaitons)

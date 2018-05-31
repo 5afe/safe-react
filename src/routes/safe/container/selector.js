@@ -6,6 +6,7 @@ import { providerNameSelector, userAccountSelector } from '~/wallets/store/selec
 import { type Safe } from '~/routes/safe/store/model/safe'
 import { type Owner } from '~/routes/safe/store/model/owner'
 import { type GlobalState } from '~/store/index'
+import { sameAddress } from '~/wallets/ethAddresses'
 
 export type SelectorProps = {
   safe: SafeSelectorProps,
@@ -30,7 +31,7 @@ export const grantedSelector: Selector<GlobalState, RouterProps, boolean> = crea
       return false
     }
 
-    return owners.find((owner: Owner) => owner.get('address') === userAccount) !== undefined
+    return owners.find((owner: Owner) => sameAddress(owner.get('address'), userAccount)) !== undefined
   },
 )
 

@@ -37,54 +37,54 @@
       "type": "function"
     }
   ],
-  "bytecode": "0x608060405234801561001057600080fd5b5061044e806100206000396000f300608060405260043610610041576000357c0100000000000000000000000000000000000000000000000000000000900463ffffffff16806361b69abd14610046575b600080fd5b34801561005257600080fd5b506100cd600480360381019080803573ffffffffffffffffffffffffffffffffffffffff169060200190929190803590602001908201803590602001908080601f016020809104026020016040519081016040528093929190818152602001838380828437820191505050505050919291929050505061010f565b604051808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200191505060405180910390f35b60008261011a6101fe565b808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff168152602001915050604051809103906000f08015801561016c573d6000803e3d6000fd5b5090506000825111156101955760008060008451602086016000865af1141561019457600080fd5b5b7fa38789425dbeee0239e16ff2d2567e31720127fbc6430758c1a4efc6aef29f8081604051808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200191505060405180910390a192915050565b6040516102148061020f833901905600608060405234801561001057600080fd5b506040516020806102148339810180604052810190808051906020019092919050505060008173ffffffffffffffffffffffffffffffffffffffff161415151561005957600080fd5b806000806101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff1602179055505061016b806100a96000396000f30060806040526004361061004c576000357c0100000000000000000000000000000000000000000000000000000000900463ffffffff1680634555d5c91461008b5780635c60da1b146100b6575b73ffffffffffffffffffffffffffffffffffffffff600054163660008037600080366000845af43d6000803e6000811415610086573d6000fd5b3d6000f35b34801561009757600080fd5b506100a061010d565b6040518082815260200191505060405180910390f35b3480156100c257600080fd5b506100cb610116565b604051808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200191505060405180910390f35b60006002905090565b60008060009054906101000a900473ffffffffffffffffffffffffffffffffffffffff169050905600a165627a7a723058209594d3f13f6fbad0d5e33f423014061ae7898100636a8b854618092ea85c15e90029a165627a7a7230582048e6ac6bd11856ae7c073d3f3d327f3e04a2dff35dfbcf223c8a425cba2fa6a10029",
-  "deployedBytecode": "0x608060405260043610610041576000357c0100000000000000000000000000000000000000000000000000000000900463ffffffff16806361b69abd14610046575b600080fd5b34801561005257600080fd5b506100cd600480360381019080803573ffffffffffffffffffffffffffffffffffffffff169060200190929190803590602001908201803590602001908080601f016020809104026020016040519081016040528093929190818152602001838380828437820191505050505050919291929050505061010f565b604051808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200191505060405180910390f35b60008261011a6101fe565b808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff168152602001915050604051809103906000f08015801561016c573d6000803e3d6000fd5b5090506000825111156101955760008060008451602086016000865af1141561019457600080fd5b5b7fa38789425dbeee0239e16ff2d2567e31720127fbc6430758c1a4efc6aef29f8081604051808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200191505060405180910390a192915050565b6040516102148061020f833901905600608060405234801561001057600080fd5b506040516020806102148339810180604052810190808051906020019092919050505060008173ffffffffffffffffffffffffffffffffffffffff161415151561005957600080fd5b806000806101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff1602179055505061016b806100a96000396000f30060806040526004361061004c576000357c0100000000000000000000000000000000000000000000000000000000900463ffffffff1680634555d5c91461008b5780635c60da1b146100b6575b73ffffffffffffffffffffffffffffffffffffffff600054163660008037600080366000845af43d6000803e6000811415610086573d6000fd5b3d6000f35b34801561009757600080fd5b506100a061010d565b6040518082815260200191505060405180910390f35b3480156100c257600080fd5b506100cb610116565b604051808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200191505060405180910390f35b60006002905090565b60008060009054906101000a900473ffffffffffffffffffffffffffffffffffffffff169050905600a165627a7a723058209594d3f13f6fbad0d5e33f423014061ae7898100636a8b854618092ea85c15e90029a165627a7a7230582048e6ac6bd11856ae7c073d3f3d327f3e04a2dff35dfbcf223c8a425cba2fa6a10029",
-  "sourceMap": "225:725:13:-;;;;8:9:-1;5:2;;;30:1;27;20:12;5:2;225:725:13;;;;;;;",
-  "deployedSourceMap": "225:725:13:-;;;;;;;;;;;;;;;;;;;;;;;;532:416;;8:9:-1;5:2;;;30:1;27;20:12;5:2;532:416:13;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;617:11;662:10;652:21;;:::i;:::-;;;;;;;;;;;;;;;;;;;;;;;;8:9:-1;5:2;;;45:16;42:1;39;24:38;77:16;74:1;67:27;5:2;652:21:13;644:29;;701:1;687:4;:11;:15;683:237;;;874:1;870;867;860:4;854:11;847:4;841;837:15;834:1;827:5;822:3;817:55;814:62;811:2;;;889:1;886;879:12;811:2;793:114;921:20;935:5;921:20;;;;;;;;;;;;;;;;;;;;;;532:416;;;;:::o;225:725::-;;;;;;;;;;:::o",
-  "source": "pragma solidity 0.4.23;\nimport \"./Proxy.sol\";\n\n\n/// @title Proxy Factory - Allows to create new proxy contact and execute a message call to the new proxy within one transaction.\n/// @author Stefan George - <stefan@gnosis.pm>\ncontract ProxyFactory {\n\n    event ProxyCreation(Proxy proxy);\n\n    /// @dev Allows to create new proxy contact and execute a message call to the new proxy within one transaction.\n    /// @param masterCopy Address of master copy.\n    /// @param data Payload for message call sent to new proxy contract.\n    function createProxy(address masterCopy, bytes data)\n        public\n        returns (Proxy proxy)\n    {\n        proxy = new Proxy(masterCopy);\n        if (data.length > 0)\n            // solium-disable-next-line security/no-inline-assembly\n            assembly {\n                if eq(call(gas, proxy, 0, add(data, 0x20), mload(data), 0, 0), 0) { revert(0, 0) }\n            }\n        emit ProxyCreation(proxy);\n    }\n}\n",
+  "bytecode": "0x608060405234801561001057600080fd5b506104dd806100206000396000f300608060405260043610610041576000357c0100000000000000000000000000000000000000000000000000000000900463ffffffff16806361b69abd14610046575b600080fd5b34801561005257600080fd5b506100cd600480360381019080803573ffffffffffffffffffffffffffffffffffffffff169060200190929190803590602001908201803590602001908080601f016020809104026020016040519081016040528093929190818152602001838380828437820191505050505050919291929050505061010f565b604051808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200191505060405180910390f35b60008261011a6101fe565b808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff168152602001915050604051809103906000f08015801561016c573d6000803e3d6000fd5b5090506000825111156101955760008060008451602086016000865af1141561019457600080fd5b5b7fa38789425dbeee0239e16ff2d2567e31720127fbc6430758c1a4efc6aef29f8081604051808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200191505060405180910390a192915050565b6040516102a38061020f833901905600608060405234801561001057600080fd5b506040516020806102a38339810180604052810190808051906020019092919050505060008173ffffffffffffffffffffffffffffffffffffffff16141515156100e8576040517f08c379a00000000000000000000000000000000000000000000000000000000081526004018080602001828103825260248152602001807f496e76616c6964206d617374657220636f707920616464726573732070726f7681526020017f696465640000000000000000000000000000000000000000000000000000000081525060400191505060405180910390fd5b806000806101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff1602179055505061016b806101386000396000f30060806040526004361061004c576000357c0100000000000000000000000000000000000000000000000000000000900463ffffffff1680634555d5c91461008b5780635c60da1b146100b6575b73ffffffffffffffffffffffffffffffffffffffff600054163660008037600080366000845af43d6000803e6000811415610086573d6000fd5b3d6000f35b34801561009757600080fd5b506100a061010d565b6040518082815260200191505060405180910390f35b3480156100c257600080fd5b506100cb610116565b604051808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200191505060405180910390f35b60006002905090565b60008060009054906101000a900473ffffffffffffffffffffffffffffffffffffffff169050905600a165627a7a72305820fb8f7addc79801292900c520af66dd86a1f9d0b643abe5d3ef1ac03eeb2d04080029a165627a7a72305820c742bd15271cf4492803c598458497f17945465dfdcebd0ab4ff208e21d7becf0029",
+  "deployedBytecode": "0x608060405260043610610041576000357c0100000000000000000000000000000000000000000000000000000000900463ffffffff16806361b69abd14610046575b600080fd5b34801561005257600080fd5b506100cd600480360381019080803573ffffffffffffffffffffffffffffffffffffffff169060200190929190803590602001908201803590602001908080601f016020809104026020016040519081016040528093929190818152602001838380828437820191505050505050919291929050505061010f565b604051808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200191505060405180910390f35b60008261011a6101fe565b808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff168152602001915050604051809103906000f08015801561016c573d6000803e3d6000fd5b5090506000825111156101955760008060008451602086016000865af1141561019457600080fd5b5b7fa38789425dbeee0239e16ff2d2567e31720127fbc6430758c1a4efc6aef29f8081604051808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200191505060405180910390a192915050565b6040516102a38061020f833901905600608060405234801561001057600080fd5b506040516020806102a38339810180604052810190808051906020019092919050505060008173ffffffffffffffffffffffffffffffffffffffff16141515156100e8576040517f08c379a00000000000000000000000000000000000000000000000000000000081526004018080602001828103825260248152602001807f496e76616c6964206d617374657220636f707920616464726573732070726f7681526020017f696465640000000000000000000000000000000000000000000000000000000081525060400191505060405180910390fd5b806000806101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff1602179055505061016b806101386000396000f30060806040526004361061004c576000357c0100000000000000000000000000000000000000000000000000000000900463ffffffff1680634555d5c91461008b5780635c60da1b146100b6575b73ffffffffffffffffffffffffffffffffffffffff600054163660008037600080366000845af43d6000803e6000811415610086573d6000fd5b3d6000f35b34801561009757600080fd5b506100a061010d565b6040518082815260200191505060405180910390f35b3480156100c257600080fd5b506100cb610116565b604051808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200191505060405180910390f35b60006002905090565b60008060009054906101000a900473ffffffffffffffffffffffffffffffffffffffff169050905600a165627a7a72305820fb8f7addc79801292900c520af66dd86a1f9d0b643abe5d3ef1ac03eeb2d04080029a165627a7a72305820c742bd15271cf4492803c598458497f17945465dfdcebd0ab4ff208e21d7becf0029",
+  "sourceMap": "225:725:12:-;;;;8:9:-1;5:2;;;30:1;27;20:12;5:2;225:725:12;;;;;;;",
+  "deployedSourceMap": "225:725:12:-;;;;;;;;;;;;;;;;;;;;;;;;532:416;;8:9:-1;5:2;;;30:1;27;20:12;5:2;532:416:12;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;617:11;662:10;652:21;;:::i;:::-;;;;;;;;;;;;;;;;;;;;;;;;8:9:-1;5:2;;;45:16;42:1;39;24:38;77:16;74:1;67:27;5:2;652:21:12;644:29;;701:1;687:4;:11;:15;683:237;;;874:1;870;867;860:4;854:11;847:4;841;837:15;834:1;827:5;822:3;817:55;814:62;811:2;;;889:1;886;879:12;811:2;793:114;921:20;935:5;921:20;;;;;;;;;;;;;;;;;;;;;;532:416;;;;:::o;225:725::-;;;;;;;;;;:::o",
+  "source": "pragma solidity 0.4.24;\nimport \"./Proxy.sol\";\n\n\n/// @title Proxy Factory - Allows to create new proxy contact and execute a message call to the new proxy within one transaction.\n/// @author Stefan George - <stefan@gnosis.pm>\ncontract ProxyFactory {\n\n    event ProxyCreation(Proxy proxy);\n\n    /// @dev Allows to create new proxy contact and execute a message call to the new proxy within one transaction.\n    /// @param masterCopy Address of master copy.\n    /// @param data Payload for message call sent to new proxy contract.\n    function createProxy(address masterCopy, bytes data)\n        public\n        returns (Proxy proxy)\n    {\n        proxy = new Proxy(masterCopy);\n        if (data.length > 0)\n            // solium-disable-next-line security/no-inline-assembly\n            assembly {\n                if eq(call(gas, proxy, 0, add(data, 0x20), mload(data), 0, 0), 0) { revert(0, 0) }\n            }\n        emit ProxyCreation(proxy);\n    }\n}\n",
   "sourcePath": "/Users/apanizo/git/gnosis/safe-contracts/contracts/ProxyFactory.sol",
   "ast": {
     "absolutePath": "/Users/apanizo/git/gnosis/safe-contracts/contracts/ProxyFactory.sol",
     "exportedSymbols": {
       "ProxyFactory": [
-        1543
+        1637
       ]
     },
-    "id": 1544,
+    "id": 1638,
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 1510,
+        "id": 1604,
         "literals": [
           "solidity",
           "0.4",
-          ".23"
+          ".24"
         ],
         "nodeType": "PragmaDirective",
-        "src": "0:23:13"
+        "src": "0:23:12"
       },
       {
         "absolutePath": "/Users/apanizo/git/gnosis/safe-contracts/contracts/Proxy.sol",
         "file": "./Proxy.sol",
-        "id": 1511,
+        "id": 1605,
         "nodeType": "ImportDirective",
-        "scope": 1544,
-        "sourceUnit": 1509,
-        "src": "24:21:13",
+        "scope": 1638,
+        "sourceUnit": 1603,
+        "src": "24:21:12",
         "symbolAliases": [],
         "unitAlias": ""
       },
       {
         "baseContracts": [],
         "contractDependencies": [
-          1508
+          1602
         ],
         "contractKind": "contract",
         "documentation": "@title Proxy Factory - Allows to create new proxy contact and execute a message call to the new proxy within one transaction.\n @author Stefan George - <stefan@gnosis.pm>",
         "fullyImplemented": true,
-        "id": 1543,
+        "id": 1637,
         "linearizedBaseContracts": [
-          1543
+          1637
         ],
         "name": "ProxyFactory",
         "nodeType": "ContractDefinition",
@@ -92,36 +92,36 @@
           {
             "anonymous": false,
             "documentation": null,
-            "id": 1515,
+            "id": 1609,
             "name": "ProxyCreation",
             "nodeType": "EventDefinition",
             "parameters": {
-              "id": 1514,
+              "id": 1608,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 1513,
+                  "id": 1607,
                   "indexed": false,
                   "name": "proxy",
                   "nodeType": "VariableDeclaration",
-                  "scope": 1515,
-                  "src": "274:11:13",
+                  "scope": 1609,
+                  "src": "274:11:12",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
-                    "typeIdentifier": "t_contract$_Proxy_$1508",
+                    "typeIdentifier": "t_contract$_Proxy_$1602",
                     "typeString": "contract Proxy"
                   },
                   "typeName": {
                     "contractScope": null,
-                    "id": 1512,
+                    "id": 1606,
                     "name": "Proxy",
                     "nodeType": "UserDefinedTypeName",
-                    "referencedDeclaration": 1508,
-                    "src": "274:5:13",
+                    "referencedDeclaration": 1602,
+                    "src": "274:5:12",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_contract$_Proxy_$1508",
+                      "typeIdentifier": "t_contract$_Proxy_$1602",
                       "typeString": "contract Proxy"
                     }
                   },
@@ -129,34 +129,34 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "273:13:13"
+              "src": "273:13:12"
             },
-            "src": "254:33:13"
+            "src": "254:33:12"
           },
           {
             "body": {
-              "id": 1541,
+              "id": 1635,
               "nodeType": "Block",
-              "src": "634:314:13",
+              "src": "634:314:12",
               "statements": [
                 {
                   "expression": {
                     "argumentTypes": null,
-                    "id": 1529,
+                    "id": 1623,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
                     "lValueRequested": false,
                     "leftHandSide": {
                       "argumentTypes": null,
-                      "id": 1524,
+                      "id": 1618,
                       "name": "proxy",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 1522,
-                      "src": "644:5:13",
+                      "referencedDeclaration": 1616,
+                      "src": "644:5:12",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_contract$_Proxy_$1508",
+                        "typeIdentifier": "t_contract$_Proxy_$1602",
                         "typeString": "contract Proxy"
                       }
                     },
@@ -167,12 +167,12 @@
                       "arguments": [
                         {
                           "argumentTypes": null,
-                          "id": 1527,
+                          "id": 1621,
                           "name": "masterCopy",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 1517,
-                          "src": "662:10:13",
+                          "referencedDeclaration": 1611,
+                          "src": "662:10:12",
                           "typeDescriptions": {
                             "typeIdentifier": "t_address",
                             "typeString": "address"
@@ -186,31 +186,31 @@
                             "typeString": "address"
                           }
                         ],
-                        "id": 1526,
+                        "id": 1620,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": false,
                         "lValueRequested": false,
                         "nodeType": "NewExpression",
-                        "src": "652:9:13",
+                        "src": "652:9:12",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_function_creation_nonpayable$_t_address_$returns$_t_contract$_Proxy_$1508_$",
+                          "typeIdentifier": "t_function_creation_nonpayable$_t_address_$returns$_t_contract$_Proxy_$1602_$",
                           "typeString": "function (address) returns (contract Proxy)"
                         },
                         "typeName": {
                           "contractScope": null,
-                          "id": 1525,
+                          "id": 1619,
                           "name": "Proxy",
                           "nodeType": "UserDefinedTypeName",
-                          "referencedDeclaration": 1508,
-                          "src": "656:5:13",
+                          "referencedDeclaration": 1602,
+                          "src": "656:5:12",
                           "typeDescriptions": {
-                            "typeIdentifier": "t_contract$_Proxy_$1508",
+                            "typeIdentifier": "t_contract$_Proxy_$1602",
                             "typeString": "contract Proxy"
                           }
                         }
                       },
-                      "id": 1528,
+                      "id": 1622,
                       "isConstant": false,
                       "isLValue": false,
                       "isPure": false,
@@ -218,21 +218,21 @@
                       "lValueRequested": false,
                       "names": [],
                       "nodeType": "FunctionCall",
-                      "src": "652:21:13",
+                      "src": "652:21:12",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_contract$_Proxy_$1508",
+                        "typeIdentifier": "t_contract$_Proxy_$1602",
                         "typeString": "contract Proxy"
                       }
                     },
-                    "src": "644:29:13",
+                    "src": "644:29:12",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_contract$_Proxy_$1508",
+                      "typeIdentifier": "t_contract$_Proxy_$1602",
                       "typeString": "contract Proxy"
                     }
                   },
-                  "id": 1530,
+                  "id": 1624,
                   "nodeType": "ExpressionStatement",
-                  "src": "644:29:13"
+                  "src": "644:29:12"
                 },
                 {
                   "condition": {
@@ -241,7 +241,7 @@
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
                     },
-                    "id": 1534,
+                    "id": 1628,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -250,18 +250,18 @@
                       "argumentTypes": null,
                       "expression": {
                         "argumentTypes": null,
-                        "id": 1531,
+                        "id": 1625,
                         "name": "data",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 1519,
-                        "src": "687:4:13",
+                        "referencedDeclaration": 1613,
+                        "src": "687:4:12",
                         "typeDescriptions": {
                           "typeIdentifier": "t_bytes_memory_ptr",
                           "typeString": "bytes memory"
                         }
                       },
-                      "id": 1532,
+                      "id": 1626,
                       "isConstant": false,
                       "isLValue": false,
                       "isPure": false,
@@ -269,7 +269,7 @@
                       "memberName": "length",
                       "nodeType": "MemberAccess",
                       "referencedDeclaration": null,
-                      "src": "687:11:13",
+                      "src": "687:11:12",
                       "typeDescriptions": {
                         "typeIdentifier": "t_uint256",
                         "typeString": "uint256"
@@ -280,14 +280,14 @@
                     "rightExpression": {
                       "argumentTypes": null,
                       "hexValue": "30",
-                      "id": 1533,
+                      "id": 1627,
                       "isConstant": false,
                       "isLValue": false,
                       "isPure": true,
                       "kind": "number",
                       "lValueRequested": false,
                       "nodeType": "Literal",
-                      "src": "701:1:13",
+                      "src": "701:1:12",
                       "subdenomination": null,
                       "typeDescriptions": {
                         "typeIdentifier": "t_rational_0_by_1",
@@ -295,50 +295,50 @@
                       },
                       "value": "0"
                     },
-                    "src": "687:15:13",
+                    "src": "687:15:12",
                     "typeDescriptions": {
                       "typeIdentifier": "t_bool",
                       "typeString": "bool"
                     }
                   },
                   "falseBody": null,
-                  "id": 1536,
+                  "id": 1630,
                   "nodeType": "IfStatement",
-                  "src": "683:237:13",
+                  "src": "683:237:12",
                   "trueBody": {
                     "externalReferences": [
                       {
                         "data": {
-                          "declaration": 1519,
+                          "declaration": 1613,
                           "isOffset": false,
                           "isSlot": false,
-                          "src": "860:4:13",
+                          "src": "860:4:12",
                           "valueSize": 1
                         }
                       },
                       {
                         "proxy": {
-                          "declaration": 1522,
+                          "declaration": 1616,
                           "isOffset": false,
                           "isSlot": false,
-                          "src": "827:5:13",
+                          "src": "827:5:12",
                           "valueSize": 1
                         }
                       },
                       {
                         "data": {
-                          "declaration": 1519,
+                          "declaration": 1613,
                           "isOffset": false,
                           "isSlot": false,
-                          "src": "841:4:13",
+                          "src": "841:4:12",
                           "valueSize": 1
                         }
                       }
                     ],
-                    "id": 1535,
+                    "id": 1629,
                     "nodeType": "InlineAssembly",
                     "operations": "{\n    if eq(call(gas(), proxy, 0, add(data, 0x20), mload(data), 0, 0), 0)\n    {\n        revert(0, 0)\n    }\n}",
-                    "src": "784:136:13"
+                    "src": "784:136:12"
                   }
                 },
                 {
@@ -347,14 +347,14 @@
                     "arguments": [
                       {
                         "argumentTypes": null,
-                        "id": 1538,
+                        "id": 1632,
                         "name": "proxy",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 1522,
-                        "src": "935:5:13",
+                        "referencedDeclaration": 1616,
+                        "src": "935:5:12",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_contract$_Proxy_$1508",
+                          "typeIdentifier": "t_contract$_Proxy_$1602",
                           "typeString": "contract Proxy"
                         }
                       }
@@ -362,22 +362,22 @@
                     "expression": {
                       "argumentTypes": [
                         {
-                          "typeIdentifier": "t_contract$_Proxy_$1508",
+                          "typeIdentifier": "t_contract$_Proxy_$1602",
                           "typeString": "contract Proxy"
                         }
                       ],
-                      "id": 1537,
+                      "id": 1631,
                       "name": "ProxyCreation",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 1515,
-                      "src": "921:13:13",
+                      "referencedDeclaration": 1609,
+                      "src": "921:13:12",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_function_event_nonpayable$_t_contract$_Proxy_$1508_$returns$__$",
+                        "typeIdentifier": "t_function_event_nonpayable$_t_contract$_Proxy_$1602_$returns$__$",
                         "typeString": "function (contract Proxy)"
                       }
                     },
-                    "id": 1539,
+                    "id": 1633,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -385,20 +385,20 @@
                     "lValueRequested": false,
                     "names": [],
                     "nodeType": "FunctionCall",
-                    "src": "921:20:13",
+                    "src": "921:20:12",
                     "typeDescriptions": {
                       "typeIdentifier": "t_tuple$__$",
                       "typeString": "tuple()"
                     }
                   },
-                  "id": 1540,
+                  "id": 1634,
                   "nodeType": "EmitStatement",
-                  "src": "916:25:13"
+                  "src": "916:25:12"
                 }
               ]
             },
             "documentation": "@dev Allows to create new proxy contact and execute a message call to the new proxy within one transaction.\n @param masterCopy Address of master copy.\n @param data Payload for message call sent to new proxy contract.",
-            "id": 1542,
+            "id": 1636,
             "implemented": true,
             "isConstructor": false,
             "isDeclaredConst": false,
@@ -406,16 +406,16 @@
             "name": "createProxy",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 1520,
+              "id": 1614,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 1517,
+                  "id": 1611,
                   "name": "masterCopy",
                   "nodeType": "VariableDeclaration",
-                  "scope": 1542,
-                  "src": "553:18:13",
+                  "scope": 1636,
+                  "src": "553:18:12",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -423,10 +423,10 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 1516,
+                    "id": 1610,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "553:7:13",
+                    "src": "553:7:12",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
                       "typeString": "address"
@@ -437,11 +437,11 @@
                 },
                 {
                   "constant": false,
-                  "id": 1519,
+                  "id": 1613,
                   "name": "data",
                   "nodeType": "VariableDeclaration",
-                  "scope": 1542,
-                  "src": "573:10:13",
+                  "scope": 1636,
+                  "src": "573:10:12",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -449,10 +449,10 @@
                     "typeString": "bytes"
                   },
                   "typeName": {
-                    "id": 1518,
+                    "id": 1612,
                     "name": "bytes",
                     "nodeType": "ElementaryTypeName",
-                    "src": "573:5:13",
+                    "src": "573:5:12",
                     "typeDescriptions": {
                       "typeIdentifier": "t_bytes_storage_ptr",
                       "typeString": "bytes"
@@ -462,35 +462,35 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "552:32:13"
+              "src": "552:32:12"
             },
             "payable": false,
             "returnParameters": {
-              "id": 1523,
+              "id": 1617,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 1522,
+                  "id": 1616,
                   "name": "proxy",
                   "nodeType": "VariableDeclaration",
-                  "scope": 1542,
-                  "src": "617:11:13",
+                  "scope": 1636,
+                  "src": "617:11:12",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
-                    "typeIdentifier": "t_contract$_Proxy_$1508",
+                    "typeIdentifier": "t_contract$_Proxy_$1602",
                     "typeString": "contract Proxy"
                   },
                   "typeName": {
                     "contractScope": null,
-                    "id": 1521,
+                    "id": 1615,
                     "name": "Proxy",
                     "nodeType": "UserDefinedTypeName",
-                    "referencedDeclaration": 1508,
-                    "src": "617:5:13",
+                    "referencedDeclaration": 1602,
+                    "src": "617:5:12",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_contract$_Proxy_$1508",
+                      "typeIdentifier": "t_contract$_Proxy_$1602",
                       "typeString": "contract Proxy"
                     }
                   },
@@ -498,63 +498,63 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "616:13:13"
+              "src": "616:13:12"
             },
-            "scope": 1543,
-            "src": "532:416:13",
+            "scope": 1637,
+            "src": "532:416:12",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "public"
           }
         ],
-        "scope": 1544,
-        "src": "225:725:13"
+        "scope": 1638,
+        "src": "225:725:12"
       }
     ],
-    "src": "0:951:13"
+    "src": "0:951:12"
   },
   "legacyAST": {
     "absolutePath": "/Users/apanizo/git/gnosis/safe-contracts/contracts/ProxyFactory.sol",
     "exportedSymbols": {
       "ProxyFactory": [
-        1543
+        1637
       ]
     },
-    "id": 1544,
+    "id": 1638,
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 1510,
+        "id": 1604,
         "literals": [
           "solidity",
           "0.4",
-          ".23"
+          ".24"
         ],
         "nodeType": "PragmaDirective",
-        "src": "0:23:13"
+        "src": "0:23:12"
       },
       {
         "absolutePath": "/Users/apanizo/git/gnosis/safe-contracts/contracts/Proxy.sol",
         "file": "./Proxy.sol",
-        "id": 1511,
+        "id": 1605,
         "nodeType": "ImportDirective",
-        "scope": 1544,
-        "sourceUnit": 1509,
-        "src": "24:21:13",
+        "scope": 1638,
+        "sourceUnit": 1603,
+        "src": "24:21:12",
         "symbolAliases": [],
         "unitAlias": ""
       },
       {
         "baseContracts": [],
         "contractDependencies": [
-          1508
+          1602
         ],
         "contractKind": "contract",
         "documentation": "@title Proxy Factory - Allows to create new proxy contact and execute a message call to the new proxy within one transaction.\n @author Stefan George - <stefan@gnosis.pm>",
         "fullyImplemented": true,
-        "id": 1543,
+        "id": 1637,
         "linearizedBaseContracts": [
-          1543
+          1637
         ],
         "name": "ProxyFactory",
         "nodeType": "ContractDefinition",
@@ -562,36 +562,36 @@
           {
             "anonymous": false,
             "documentation": null,
-            "id": 1515,
+            "id": 1609,
             "name": "ProxyCreation",
             "nodeType": "EventDefinition",
             "parameters": {
-              "id": 1514,
+              "id": 1608,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 1513,
+                  "id": 1607,
                   "indexed": false,
                   "name": "proxy",
                   "nodeType": "VariableDeclaration",
-                  "scope": 1515,
-                  "src": "274:11:13",
+                  "scope": 1609,
+                  "src": "274:11:12",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
-                    "typeIdentifier": "t_contract$_Proxy_$1508",
+                    "typeIdentifier": "t_contract$_Proxy_$1602",
                     "typeString": "contract Proxy"
                   },
                   "typeName": {
                     "contractScope": null,
-                    "id": 1512,
+                    "id": 1606,
                     "name": "Proxy",
                     "nodeType": "UserDefinedTypeName",
-                    "referencedDeclaration": 1508,
-                    "src": "274:5:13",
+                    "referencedDeclaration": 1602,
+                    "src": "274:5:12",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_contract$_Proxy_$1508",
+                      "typeIdentifier": "t_contract$_Proxy_$1602",
                       "typeString": "contract Proxy"
                     }
                   },
@@ -599,34 +599,34 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "273:13:13"
+              "src": "273:13:12"
             },
-            "src": "254:33:13"
+            "src": "254:33:12"
           },
           {
             "body": {
-              "id": 1541,
+              "id": 1635,
               "nodeType": "Block",
-              "src": "634:314:13",
+              "src": "634:314:12",
               "statements": [
                 {
                   "expression": {
                     "argumentTypes": null,
-                    "id": 1529,
+                    "id": 1623,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
                     "lValueRequested": false,
                     "leftHandSide": {
                       "argumentTypes": null,
-                      "id": 1524,
+                      "id": 1618,
                       "name": "proxy",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 1522,
-                      "src": "644:5:13",
+                      "referencedDeclaration": 1616,
+                      "src": "644:5:12",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_contract$_Proxy_$1508",
+                        "typeIdentifier": "t_contract$_Proxy_$1602",
                         "typeString": "contract Proxy"
                       }
                     },
@@ -637,12 +637,12 @@
                       "arguments": [
                         {
                           "argumentTypes": null,
-                          "id": 1527,
+                          "id": 1621,
                           "name": "masterCopy",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 1517,
-                          "src": "662:10:13",
+                          "referencedDeclaration": 1611,
+                          "src": "662:10:12",
                           "typeDescriptions": {
                             "typeIdentifier": "t_address",
                             "typeString": "address"
@@ -656,31 +656,31 @@
                             "typeString": "address"
                           }
                         ],
-                        "id": 1526,
+                        "id": 1620,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": false,
                         "lValueRequested": false,
                         "nodeType": "NewExpression",
-                        "src": "652:9:13",
+                        "src": "652:9:12",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_function_creation_nonpayable$_t_address_$returns$_t_contract$_Proxy_$1508_$",
+                          "typeIdentifier": "t_function_creation_nonpayable$_t_address_$returns$_t_contract$_Proxy_$1602_$",
                           "typeString": "function (address) returns (contract Proxy)"
                         },
                         "typeName": {
                           "contractScope": null,
-                          "id": 1525,
+                          "id": 1619,
                           "name": "Proxy",
                           "nodeType": "UserDefinedTypeName",
-                          "referencedDeclaration": 1508,
-                          "src": "656:5:13",
+                          "referencedDeclaration": 1602,
+                          "src": "656:5:12",
                           "typeDescriptions": {
-                            "typeIdentifier": "t_contract$_Proxy_$1508",
+                            "typeIdentifier": "t_contract$_Proxy_$1602",
                             "typeString": "contract Proxy"
                           }
                         }
                       },
-                      "id": 1528,
+                      "id": 1622,
                       "isConstant": false,
                       "isLValue": false,
                       "isPure": false,
@@ -688,21 +688,21 @@
                       "lValueRequested": false,
                       "names": [],
                       "nodeType": "FunctionCall",
-                      "src": "652:21:13",
+                      "src": "652:21:12",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_contract$_Proxy_$1508",
+                        "typeIdentifier": "t_contract$_Proxy_$1602",
                         "typeString": "contract Proxy"
                       }
                     },
-                    "src": "644:29:13",
+                    "src": "644:29:12",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_contract$_Proxy_$1508",
+                      "typeIdentifier": "t_contract$_Proxy_$1602",
                       "typeString": "contract Proxy"
                     }
                   },
-                  "id": 1530,
+                  "id": 1624,
                   "nodeType": "ExpressionStatement",
-                  "src": "644:29:13"
+                  "src": "644:29:12"
                 },
                 {
                   "condition": {
@@ -711,7 +711,7 @@
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
                     },
-                    "id": 1534,
+                    "id": 1628,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -720,18 +720,18 @@
                       "argumentTypes": null,
                       "expression": {
                         "argumentTypes": null,
-                        "id": 1531,
+                        "id": 1625,
                         "name": "data",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 1519,
-                        "src": "687:4:13",
+                        "referencedDeclaration": 1613,
+                        "src": "687:4:12",
                         "typeDescriptions": {
                           "typeIdentifier": "t_bytes_memory_ptr",
                           "typeString": "bytes memory"
                         }
                       },
-                      "id": 1532,
+                      "id": 1626,
                       "isConstant": false,
                       "isLValue": false,
                       "isPure": false,
@@ -739,7 +739,7 @@
                       "memberName": "length",
                       "nodeType": "MemberAccess",
                       "referencedDeclaration": null,
-                      "src": "687:11:13",
+                      "src": "687:11:12",
                       "typeDescriptions": {
                         "typeIdentifier": "t_uint256",
                         "typeString": "uint256"
@@ -750,14 +750,14 @@
                     "rightExpression": {
                       "argumentTypes": null,
                       "hexValue": "30",
-                      "id": 1533,
+                      "id": 1627,
                       "isConstant": false,
                       "isLValue": false,
                       "isPure": true,
                       "kind": "number",
                       "lValueRequested": false,
                       "nodeType": "Literal",
-                      "src": "701:1:13",
+                      "src": "701:1:12",
                       "subdenomination": null,
                       "typeDescriptions": {
                         "typeIdentifier": "t_rational_0_by_1",
@@ -765,50 +765,50 @@
                       },
                       "value": "0"
                     },
-                    "src": "687:15:13",
+                    "src": "687:15:12",
                     "typeDescriptions": {
                       "typeIdentifier": "t_bool",
                       "typeString": "bool"
                     }
                   },
                   "falseBody": null,
-                  "id": 1536,
+                  "id": 1630,
                   "nodeType": "IfStatement",
-                  "src": "683:237:13",
+                  "src": "683:237:12",
                   "trueBody": {
                     "externalReferences": [
                       {
                         "data": {
-                          "declaration": 1519,
+                          "declaration": 1613,
                           "isOffset": false,
                           "isSlot": false,
-                          "src": "860:4:13",
+                          "src": "860:4:12",
                           "valueSize": 1
                         }
                       },
                       {
                         "proxy": {
-                          "declaration": 1522,
+                          "declaration": 1616,
                           "isOffset": false,
                           "isSlot": false,
-                          "src": "827:5:13",
+                          "src": "827:5:12",
                           "valueSize": 1
                         }
                       },
                       {
                         "data": {
-                          "declaration": 1519,
+                          "declaration": 1613,
                           "isOffset": false,
                           "isSlot": false,
-                          "src": "841:4:13",
+                          "src": "841:4:12",
                           "valueSize": 1
                         }
                       }
                     ],
-                    "id": 1535,
+                    "id": 1629,
                     "nodeType": "InlineAssembly",
                     "operations": "{\n    if eq(call(gas(), proxy, 0, add(data, 0x20), mload(data), 0, 0), 0)\n    {\n        revert(0, 0)\n    }\n}",
-                    "src": "784:136:13"
+                    "src": "784:136:12"
                   }
                 },
                 {
@@ -817,14 +817,14 @@
                     "arguments": [
                       {
                         "argumentTypes": null,
-                        "id": 1538,
+                        "id": 1632,
                         "name": "proxy",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 1522,
-                        "src": "935:5:13",
+                        "referencedDeclaration": 1616,
+                        "src": "935:5:12",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_contract$_Proxy_$1508",
+                          "typeIdentifier": "t_contract$_Proxy_$1602",
                           "typeString": "contract Proxy"
                         }
                       }
@@ -832,22 +832,22 @@
                     "expression": {
                       "argumentTypes": [
                         {
-                          "typeIdentifier": "t_contract$_Proxy_$1508",
+                          "typeIdentifier": "t_contract$_Proxy_$1602",
                           "typeString": "contract Proxy"
                         }
                       ],
-                      "id": 1537,
+                      "id": 1631,
                       "name": "ProxyCreation",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 1515,
-                      "src": "921:13:13",
+                      "referencedDeclaration": 1609,
+                      "src": "921:13:12",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_function_event_nonpayable$_t_contract$_Proxy_$1508_$returns$__$",
+                        "typeIdentifier": "t_function_event_nonpayable$_t_contract$_Proxy_$1602_$returns$__$",
                         "typeString": "function (contract Proxy)"
                       }
                     },
-                    "id": 1539,
+                    "id": 1633,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -855,20 +855,20 @@
                     "lValueRequested": false,
                     "names": [],
                     "nodeType": "FunctionCall",
-                    "src": "921:20:13",
+                    "src": "921:20:12",
                     "typeDescriptions": {
                       "typeIdentifier": "t_tuple$__$",
                       "typeString": "tuple()"
                     }
                   },
-                  "id": 1540,
+                  "id": 1634,
                   "nodeType": "EmitStatement",
-                  "src": "916:25:13"
+                  "src": "916:25:12"
                 }
               ]
             },
             "documentation": "@dev Allows to create new proxy contact and execute a message call to the new proxy within one transaction.\n @param masterCopy Address of master copy.\n @param data Payload for message call sent to new proxy contract.",
-            "id": 1542,
+            "id": 1636,
             "implemented": true,
             "isConstructor": false,
             "isDeclaredConst": false,
@@ -876,16 +876,16 @@
             "name": "createProxy",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 1520,
+              "id": 1614,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 1517,
+                  "id": 1611,
                   "name": "masterCopy",
                   "nodeType": "VariableDeclaration",
-                  "scope": 1542,
-                  "src": "553:18:13",
+                  "scope": 1636,
+                  "src": "553:18:12",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -893,10 +893,10 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 1516,
+                    "id": 1610,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "553:7:13",
+                    "src": "553:7:12",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
                       "typeString": "address"
@@ -907,11 +907,11 @@
                 },
                 {
                   "constant": false,
-                  "id": 1519,
+                  "id": 1613,
                   "name": "data",
                   "nodeType": "VariableDeclaration",
-                  "scope": 1542,
-                  "src": "573:10:13",
+                  "scope": 1636,
+                  "src": "573:10:12",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -919,10 +919,10 @@
                     "typeString": "bytes"
                   },
                   "typeName": {
-                    "id": 1518,
+                    "id": 1612,
                     "name": "bytes",
                     "nodeType": "ElementaryTypeName",
-                    "src": "573:5:13",
+                    "src": "573:5:12",
                     "typeDescriptions": {
                       "typeIdentifier": "t_bytes_storage_ptr",
                       "typeString": "bytes"
@@ -932,35 +932,35 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "552:32:13"
+              "src": "552:32:12"
             },
             "payable": false,
             "returnParameters": {
-              "id": 1523,
+              "id": 1617,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 1522,
+                  "id": 1616,
                   "name": "proxy",
                   "nodeType": "VariableDeclaration",
-                  "scope": 1542,
-                  "src": "617:11:13",
+                  "scope": 1636,
+                  "src": "617:11:12",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
-                    "typeIdentifier": "t_contract$_Proxy_$1508",
+                    "typeIdentifier": "t_contract$_Proxy_$1602",
                     "typeString": "contract Proxy"
                   },
                   "typeName": {
                     "contractScope": null,
-                    "id": 1521,
+                    "id": 1615,
                     "name": "Proxy",
                     "nodeType": "UserDefinedTypeName",
-                    "referencedDeclaration": 1508,
-                    "src": "617:5:13",
+                    "referencedDeclaration": 1602,
+                    "src": "617:5:12",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_contract$_Proxy_$1508",
+                      "typeIdentifier": "t_contract$_Proxy_$1602",
                       "typeString": "contract Proxy"
                     }
                   },
@@ -968,63 +968,39 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "616:13:13"
+              "src": "616:13:12"
             },
-            "scope": 1543,
-            "src": "532:416:13",
+            "scope": 1637,
+            "src": "532:416:12",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "public"
           }
         ],
-        "scope": 1544,
-        "src": "225:725:13"
+        "scope": 1638,
+        "src": "225:725:12"
       }
     ],
-    "src": "0:951:13"
+    "src": "0:951:12"
   },
   "compiler": {
     "name": "solc",
-    "version": "0.4.23+commit.124ca40d.Emscripten.clang"
+    "version": "0.4.24+commit.e67f0147.Emscripten.clang"
   },
   "networks": {
     "4": {
       "events": {},
       "links": {},
-      "address": "0xf11c9ac85e73435180707156748ecbaf4efc035b",
-      "transactionHash": "0xf8c48bc1ea023ab15194af47f50d2c8eaeb3d7b9dd13e7325e892e92743c2979"
+      "address": "0x5fae0ba38b6e532e97f064a5a28276071ba5841c",
+      "transactionHash": "0x336dee0e43b6d4defa98ac04db8294591e55361e725d3c1e2e85037e3671ed97"
     },
-    "1525950336085": {
+    "1527420696956": {
       "events": {},
       "links": {},
-      "address": "0x7686eac12d94e3c0bdfe0a00ec759f89fbd115f7",
-      "transactionHash": "0x5b47c779cfd719a97f218a56d99b64b2c5b382549f3375822d5afed010cdb9c5"
-    },
-    "1526283540628": {
-      "events": {},
-      "links": {},
-      "address": "0x321151783f8dfb4699370d1bd5cee4e82bc3b52a",
-      "transactionHash": "0x5b47c779cfd719a97f218a56d99b64b2c5b382549f3375822d5afed010cdb9c5"
-    },
-    "1526478212260": {
-      "events": {},
-      "links": {},
-      "address": "0xf7f9b14921d4723eae3a8b29784c100301f6d8b8",
-      "transactionHash": "0x5b47c779cfd719a97f218a56d99b64b2c5b382549f3375822d5afed010cdb9c5"
-    },
-    "1526973574996": {
-      "events": {},
-      "links": {},
-      "address": "0x91cee89bad367a2621a047c77d65e903acfa8a9d",
-      "transactionHash": "0x5b47c779cfd719a97f218a56d99b64b2c5b382549f3375822d5afed010cdb9c5"
-    },
-    "1527316019334": {
-      "events": {},
-      "links": {},
-      "address": "0x28ca055db09855f4bfefefd2177e33813f21fd8f",
-      "transactionHash": "0x5b47c779cfd719a97f218a56d99b64b2c5b382549f3375822d5afed010cdb9c5"
+      "address": "0x1f7aea763a0714a857aa537a630aa9c1489a9e8d",
+      "transactionHash": "0xe6856fb57fd2c5da970b640fe9a5f8ee38444b5dbc381bb11bef2bb9cb80d648"
     }
   },
   "schemaVersion": "2.0.0",
-  "updatedAt": "2018-05-26T06:28:28.336Z"
+  "updatedAt": "2018-05-28T13:58:28.811Z"
 }
