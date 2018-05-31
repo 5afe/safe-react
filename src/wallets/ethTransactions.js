@@ -35,7 +35,7 @@ const calculateGasOf = async (data: Object, from: string, to: string) => {
 const executeTransaction = async (data: Object, from: string, to: string) => {
   const web3 = getWeb3()
 
-  const gas = await calculateGasOf(data, from, to) + 2000
+  const gas = await calculateGasOf(data, from, to) * 2
 
   let gasPrice
   try {

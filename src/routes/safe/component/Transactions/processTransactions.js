@@ -8,6 +8,7 @@ import { getGnosisSafeContract } from '~/wallets/safeContracts'
 import { getWeb3 } from '~/wallets/getWeb3'
 import { sameAddress } from '~/wallets/ethAddresses'
 import { EXECUTED_CONFIRMATION_HASH } from '~/routes/safe/component/AddTransaction/createTransactions'
+import executeTransaction from '~/wallets/ethTransactions'
 
 export const updateTransaction = (
   name: string,
@@ -49,9 +50,9 @@ const execTransaction = async (
   const CALL = getOperation()
   const web3 = getWeb3()
   const valueInWei = web3.toWei(txValue, 'ether')
-  const txReceipt = await gnosisSafe.execTransactionIfApproved(destination, valueInWei, data, CALL, nonce, { from: executor, gas: '5000000' })
+  const txData = await gnosisSafe.contract.execTransactionIfApproved.getData(destination, valueInWei, data, CALL, nonce)
 
-  return txReceipt
+  return executeTransaction(txData, executor, gnosisSafe.address)
 }
 
 const execConfirmation = async (
@@ -65,9 +66,10 @@ const execConfirmation = async (
   const CALL = getOperation()
   const web3 = getWeb3()
   const valueInWei = web3.toWei(txValue, 'ether')
-  const txConfirmationReceipt = await gnosisSafe.approveTransactionWithParameters(txDestination, valueInWei, data, CALL, nonce, { from: executor, gas: '5000000' })
+  const txConfirmationData =
+    await gnosisSafe.contract.approveTransactionWithParameters.getData(txDestination, valueInWei, data, CALL, nonce)
 
-  return txConfirmationReceipt
+  return executeTransaction(txConfirmationData, executor, gnosisSafe.address)
 }
 
 const updateConfirmations = (confirmations: List<Confirmation>, userAddress: string, txHash: string) =>
@@ -103,7 +105,7 @@ export const processTransaction = async (
   }
 
   const threshold = tx.get('threshold')
-  const thresholdReached = threshold >= alreadyConfirmed + 1
+  const thresholdReached = threshold === alreadyConfirmed + 1
   const nonce = tx.get('nonce')
   const txName = tx.get('name')
   const txValue = tx.get('value')
@@ -113,7 +115,7 @@ export const processTransaction = async (
     ? await execTransaction(gnosisSafe, txDestination, txValue, nonce, userAddress)
     : await execConfirmation(gnosisSafe, txDestination, txValue, nonce, userAddress)
 
-  const confirmationHash = thresholdReached ? EXECUTED_CONFIRMATION_HASH : txReceipt.tx
+  const confirmationHash = thresholdReached ? EXECUTED_CONFIRMATION_HASH : txReceipt
   const executedConfirmations: List<Confirmation> = updateConfirmations(tx.get('confirmations'), userAddress, confirmationHash)
 
   return updateTransaction(
@@ -123,7 +125,7 @@ export const processTransaction = async (
     txValue,
     userAddress,
     executedConfirmations,
-    txReceipt.tx,
+    txReceipt,
     safeAddress,
     threshold,
   )

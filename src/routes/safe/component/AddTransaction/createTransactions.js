@@ -105,7 +105,7 @@ export const createTransaction = async (
 
   const txConfirmationData = gnosisSafe.contract.approveTransactionWithParameters.getData(txDestination, valueInWei, '0x', CALL, nonce)
   const txConfirmationReceipt = await executeTransaction(txConfirmationData, user, safeAddress)
-  const confirmations: List<Confirmation> = buildConfirmationsFrom(safe.get('owners'), user, txConfirmationReceipt.tx)
+  const confirmations: List<Confirmation> = buildConfirmationsFrom(safe.get('owners'), user, txConfirmationReceipt)
 
   return storeTransaction(txName, nonce, txDestination, txValue, user, confirmations, '', safeAddress, safe.get('confirmations'))
 }
