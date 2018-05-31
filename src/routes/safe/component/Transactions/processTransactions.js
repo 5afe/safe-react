@@ -125,7 +125,7 @@ export const processTransaction = async (
     txValue,
     userAddress,
     executedConfirmations,
-    txReceipt,
+    thresholdReached ? txReceipt : '',
     safeAddress,
     threshold,
   )
