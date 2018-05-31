@@ -97,10 +97,10 @@ export const createTransaction = async (
 
   const thresholdIsOne = safe.get('confirmations') === 1
   if (hasOneOwner(safe) || thresholdIsOne) {
-    const txConfirmationData = gnosisSafe.contract.execTransactionIfApproved(txDestination, valueInWei, '0x', CALL, nonce)
+    const txConfirmationData = gnosisSafe.contract.execTransactionIfApproved.getData(txDestination, valueInWei, '0x', CALL, nonce)
     const txReceipt = await executeTransaction(txConfirmationData, user, safeAddress)
     const executedConfirmations: List<Confirmation> = buildExecutedConfirmationFrom(safe.get('owners'), user)
-    return storeTransaction(txName, nonce, txDestination, txValue, user, executedConfirmations, txReceipt.tx, safeAddress, safe.get('confirmations'))
+    return storeTransaction(txName, nonce, txDestination, txValue, user, executedConfirmations, txReceipt, safeAddress, safe.get('confirmations'))
   }
 
   const txConfirmationData = gnosisSafe.contract.approveTransactionWithParameters.getData(txDestination, valueInWei, '0x', CALL, nonce)
