@@ -4,6 +4,9 @@ import safeReducerTests from './safe.reducer'
 import dailyLimitReducerTests from './dailyLimit.reducer'
 import balanceSelectorTests from './balance.selector'
 import safeSelectorTests from './safe.selector'
+import grantedSelectorTests from './granted.selector'
+import confirmationsSelectorTests from './confirmations.selector'
+import transactionsSelectorTests from './transactions.selector'
 
 describe('Safe Test suite', () => {
   // ACTIONS AND REDUCERS
@@ -16,4 +19,13 @@ describe('Safe Test suite', () => {
 
   // BALANCE SELECTOR
   balanceSelectorTests()
+
+  // GRANTED SELECTOR
+  grantedSelectorTests()
+
+  // CONFIRMATIONS SELECTOR
+  confirmationsSelectorTests()
+
+  // TRANSACTIONS SELECTOR
+  transactionsSelectorTests()
 })

@@ -10,12 +10,15 @@ import { type Safe } from '~/routes/safe/store/model/safe'
 import List from 'material-ui/List'
 
 import Withdrawn from '~/routes/safe/component/Withdrawn'
+import Transactions from '~/routes/safe/component/Transactions'
+import AddTransaction from '~/routes/safe/component/AddTransaction'
 
 import Address from './Address'
 import Balance from './Balance'
 import Owners from './Owners'
 import Confirmations from './Confirmations'
 import DailyLimit from './DailyLimit'
+import MultisigTx from './MultisigTx'
 
 const safeIcon = require('./assets/gnosis_safe.svg')
 
@@ -43,6 +46,19 @@ class GnoSafe extends React.PureComponent<SafeProps, State> {
     this.setState({ component: <Withdrawn safeAddress={safe.get('address')} dailyLimit={safe.get('dailyLimit')} /> })
   }
 
+  onAddTx = () => {
+    const { balance, safe } = this.props
+    this.setState({
+      component: <AddTransaction safe={safe} balance={Number(balance)} onReset={this.onListTransactions} />,
+    })
+  }
+
+  onListTransactions = () => {
+    const { safe } = this.props
+
+    this.setState({ component: <Transactions safeName={safe.get('name')} safeAddress={safe.get('address')} onAddTx={this.onAddTx} /> })
+  }
+
   render() {
     const { safe, balance } = this.props
     const { component } = this.state
@@ -56,6 +72,7 @@ class GnoSafe extends React.PureComponent<SafeProps, State> {
             <Confirmations confirmations={safe.get('confirmations')} />
             <Address address={safe.get('address')} />
             <DailyLimit dailyLimit={safe.get('dailyLimit')} onWithdrawn={this.onWithdrawn} />
+            <MultisigTx balance={balance} onAddTx={this.onAddTx} onSeeTxs={this.onListTransactions} />
           </List>
         </Col>
         <Col sm={12} center="xs" md={7} margin="xl" layout="column">
@@ -65,7 +82,7 @@ class GnoSafe extends React.PureComponent<SafeProps, State> {
             </Paragraph>
           </Block>
           <Row grow>
-            <Col sm={12} center="sm" middle={component ? undefined : 'sm'} layout="column">
+            <Col sm={12} center={component ? undefined : 'sm'} middle={component ? undefined : 'sm'} layout="column">
               { component || <Img alt="Safe Icon" src={safeIcon} height={330} /> }
             </Col>
           </Row>
