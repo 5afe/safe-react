@@ -1,6 +1,5 @@
 // @flow
 import contract from 'truffle-contract'
-import { promisify } from '~/utils/promisify'
 import { ensureOnce } from '~/utils/singleton'
 import { getWeb3 } from '~/wallets/getWeb3'
 import GnosisSafeSol from '#/GnosisSafeTeamEdition.json'
@@ -65,40 +64,22 @@ export const getCreateDailyLimitExtensionContract = ensureOnce(createDailyLimitE
 
 const createMasterCopies = async () => {
   const web3 = getWeb3()
-  const accounts = await promisify(cb => web3.eth.getAccounts(cb))
-  const userAccount = accounts[0]
 
   // Create ProxyFactory Master Copy
   const ProxyFactory = getCreateProxyFactoryContract(web3)
-  try {
-    proxyFactoryMaster = await ProxyFactory.deployed()
-  } catch (err) {
-    proxyFactoryMaster = await ProxyFactory.new({ from: userAccount, gas: '5000000' })
-  }
+  proxyFactoryMaster = await ProxyFactory.deployed()
 
   // Create AddExtension Master Copy
   const CreateAndAddExtension = getCreateAddExtensionContract(web3)
-  try {
-    createAndAddModuleMaster = await CreateAndAddExtension.deployed()
-  } catch (err) {
-    createAndAddModuleMaster = await CreateAndAddExtension.new({ from: userAccount, gas: '5000000' })
-  }
+  createAndAddModuleMaster = await CreateAndAddExtension.deployed()
 
   // Initialize safe master copy
   const GnosisSafe = getGnosisSafeContract(web3)
-  try {
-    safeMaster = await GnosisSafe.deployed()
-  } catch (err) {
-    safeMaster = await GnosisSafe.new([userAccount], 1, 0, 0, { from: userAccount, gas: '5000000' })
-  }
+  safeMaster = await GnosisSafe.deployed()
 
   // Initialize extension master copy
   const DailyLimitExtension = getCreateDailyLimitExtensionContract(web3)
-  try {
-    dailyLimitMaster = await DailyLimitExtension.deployed()
-  } catch (err) {
-    dailyLimitMaster = await DailyLimitExtension.new([], [], { from: userAccount, gas: '5000000' })
-  }
+  dailyLimitMaster = await DailyLimitExtension.deployed()
 }
 
 export const initContracts = ensureOnce(createMasterCopies)
