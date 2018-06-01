@@ -5,7 +5,7 @@ import { promisify } from '~/utils/promisify'
 
 // const MAINNET_NETWORK = 1
 
-const calculateGasPrice = async () => {
+export const calculateGasPrice = async () => {
 /*
   const web3 = getWeb3()
   const { network } = web3.version
@@ -26,16 +26,17 @@ const calculateGasPrice = async () => {
   return new BigNumber(json.average).multipliedBy(1e8).toString()
 }
 
-const calculateGasOf = async (data: Object, from: string, to: string) => {
+export const calculateGasOf = async (data: Object, from: string, to: string) => {
   const web3 = getWeb3()
+  const gas = await promisify(cb => web3.eth.estimateGas({ data, from, to }, cb))
 
-  return promisify(cb => web3.eth.estimateGas({ data, from, to }, cb))
+  return gas * 2
 }
 
 const executeTransaction = async (data: Object, from: string, to: string) => {
   const web3 = getWeb3()
 
-  const gas = await calculateGasOf(data, from, to) * 2
+  const gas = await calculateGasOf(data, from, to)
 
   let gasPrice
   try {

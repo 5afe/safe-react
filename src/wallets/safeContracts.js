@@ -7,6 +7,7 @@ import GnosisSafeSol from '#/GnosisSafeTeamEdition.json'
 import ProxyFactorySol from '#/ProxyFactory.json'
 import CreateAndAddModules from '#/CreateAndAddModules.json'
 import DailyLimitModule from '#/DailyLimitModule.json'
+import { calculateGasOf, calculateGasPrice } from '~/wallets/ethTransactions'
 
 let proxyFactoryMaster
 let createAndAddModuleMaster
@@ -129,5 +130,9 @@ export const deploySafeContract = async (
   userAccount: string,
 ) => {
   const gnosisSafeData = await getSafeDataBasedOn(safeAccounts, numConfirmations, dailyLimit)
-  return proxyFactoryMaster.createProxy(safeMaster.address, gnosisSafeData, { from: userAccount, gas: '5000000' })
+  const proxyFactoryData = proxyFactoryMaster.contract.createProxy.getData(safeMaster.address, gnosisSafeData)
+  const gas = await calculateGasOf(proxyFactoryData, userAccount, proxyFactoryMaster.address)
+  const gasPrice = await calculateGasPrice()
+
+  return proxyFactoryMaster.createProxy(safeMaster.address, gnosisSafeData, { from: userAccount, gas, gasPrice })
 }
