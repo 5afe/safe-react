@@ -8,10 +8,11 @@ import { DEPLOYED_COMPONENT_ID } from '~/routes/open/components/FormConfirmation
 import Open from '~/routes/open/container/Open'
 import { history, type GlobalState } from '~/store'
 import { sleep } from '~/utils/timer'
-import { getProviderInfo } from '~/wallets/getWeb3'
+import { getProviderInfo, getWeb3 } from '~/wallets/getWeb3'
 import addProvider from '~/wallets/store/actions/addProvider'
 import { makeProvider } from '~/wallets/store/model/provider'
 import withdrawn, { DESTINATION_PARAM, VALUE_PARAM } from '~/routes/safe/component/Withdrawn/withdrawn'
+import { promisify } from '~/utils/promisify'
 
 export const renderSafe = async (localStore: Store<GlobalState>) => {
   const provider = await getProviderInfo()
@@ -29,20 +30,34 @@ export const renderSafe = async (localStore: Store<GlobalState>) => {
   )
 }
 
-const deploySafe = async (safe: React$Component<{}>, dailyLimit: string) => {
+const deploySafe = async (safe: React$Component<{}>, dailyLimit: string, threshold: number, numOwners: number) => {
+  expect(threshold).toBeLessThanOrEqual(numOwners)
   const inputs = TestUtils.scryRenderedDOMComponentsWithTag(safe, 'input')
   const fieldName = inputs[0]
   const fieldOwners = inputs[1]
   const fieldConfirmations = inputs[2]
   const fieldDailyLimit = inputs[3]
 
-  TestUtils.Simulate.change(fieldOwners, { target: { value: '1' } })
+  const web3 = getWeb3()
+  const accounts = await promisify(cb => web3.eth.getAccounts(cb))
+  TestUtils.Simulate.change(fieldOwners, { target: { value: `${numOwners}` } })
+  await sleep(800)
   const inputsExpanded = TestUtils.scryRenderedDOMComponentsWithTag(safe, 'input')
-  const ownerName = inputsExpanded[2]
+  expect(inputsExpanded.length).toBe((numOwners * 2) + 4) // 2 per owner + name, dailyLimit, confirmations, numOwners
+
+  for (let i = 0; i < numOwners; i += 1) {
+    const nameIndex = (i * 2) + 2
+    const addressIndex = (i * 2) + 3
+    const ownerName = inputsExpanded[nameIndex]
+    const account = inputsExpanded[addressIndex]
+
+    TestUtils.Simulate.change(ownerName, { target: { value: `Adolfo ${i + 1} Eth Account` } })
+    TestUtils.Simulate.change(account, { target: { value: accounts[i] } })
+  }
 
   TestUtils.Simulate.change(fieldName, { target: { value: 'Adolfo Safe' } })
-  TestUtils.Simulate.change(fieldConfirmations, { target: { value: '1' } })
-  TestUtils.Simulate.change(ownerName, { target: { value: 'Adolfo Eth Account' } })
+  TestUtils.Simulate.change(fieldConfirmations, { target: { value: `${threshold}` } })
+
   TestUtils.Simulate.change(fieldDailyLimit, { target: { value: dailyLimit } })
 
   const form = TestUtils.findRenderedDOMComponentWithTag(safe, 'form')
@@ -67,9 +82,14 @@ const deploySafe = async (safe: React$Component<{}>, dailyLimit: string) => {
   return transactionHash
 }
 
-export const aDeployedSafe = async (specificStore: Store<GlobalState>, dailyLimit?: number = 0.5) => {
+export const aDeployedSafe = async (
+  specificStore: Store<GlobalState>,
+  dailyLimit?: number = 0.5,
+  threshold?: number = 1,
+  numOwners?: number = 1,
+) => {
   const safe: React$Component<{}> = await renderSafe(specificStore)
-  const deployedSafe = await deploySafe(safe, `${dailyLimit}`)
+  const deployedSafe = await deploySafe(safe, `${dailyLimit}`, threshold, numOwners)
 
   return deployedSafe.logs[1].args.proxy
 }
