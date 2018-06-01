@@ -65,10 +65,10 @@ describe('React DOM TESTS > Create Safe form', () => {
     const deployed = TestUtils.findRenderedDOMComponentWithClass(open, DEPLOYED_COMPONENT_ID)
 
     if (deployed) {
-      const transactionHash = JSON.parse(deployed.getElementsByTagName('pre')[0].innerHTML)
-      delete transactionHash.logsBloom
+      const transaction = JSON.parse(deployed.getElementsByTagName('pre')[0].innerHTML)
+      delete transaction.receipt.logsBloom
       // eslint-disable-next-line
-      console.log(transactionHash)
+      // console.log(transaction)
     }
   })
 })
