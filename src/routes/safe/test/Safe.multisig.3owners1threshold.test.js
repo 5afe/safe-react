@@ -8,8 +8,7 @@ import { aDeployedSafe } from '~/routes/safe/store/test/builder/deployedSafe.bui
 import { SAFELIST_ADDRESS } from '~/routes/routes'
 import AppRoutes from '~/routes'
 import AddTransactionComponent from '~/routes/safe/component/AddTransaction'
-import { safeTransactionsSelector } from '~/routes/safe/store/selectors/index'
-import { createMultisigTxFilling, addFundsTo, checkBalanceOf, listTxsOf, getTagFromTransaction, expandTransactionOf } from '~/routes/safe/test/testMultisig'
+import { createMultisigTxFilling, addFundsTo, checkBalanceOf, listTxsOf, getTagFromTransaction, expandTransactionOf, getTransactionFromReduxStore, confirmOwners } from '~/routes/safe/test/testMultisig'
 
 const renderSafe = localStore => (
   TestUtils.renderIntoDocument((
@@ -35,21 +34,6 @@ describe('React DOM TESTS > Multisig transactions from safe [3 owners & 1 thresh
     SafeDom = renderSafe(store)
   })
 
-  const getTransactionFromReduxStore = () => {
-    const transactions = safeTransactionsSelector(store.getState(), { safeAddress: address })
-
-    return transactions.get(0)
-  }
-
-  const confirmOwners = async (...statusses: string[]) => {
-    const paragraphsWithOwners = getTagFromTransaction(SafeDom, 'h3')
-    for (let i = 0; i < statusses.length; i += 1) {
-      const ownerIndex = i + 6
-      const ownerParagraph = paragraphsWithOwners[ownerIndex].innerHTML
-      expect(statusses[i]).toEqual(ownerParagraph)
-    }
-  }
-
   it('should execute transaction after 2 owners have confirmed and the last one executed correctly', async () => {
     await addFundsTo(SafeDom, address)
     await checkBalanceOf(address, '0.1')
@@ -57,8 +41,8 @@ describe('React DOM TESTS > Multisig transactions from safe [3 owners & 1 thresh
     await checkBalanceOf(address, '0.09')
     await listTxsOf(SafeDom)
 
-    await expandTransactionOf(SafeDom, 3)
-    await confirmOwners('Adolfo 1 Eth Account [Confirmed]', 'Adolfo 2 Eth Account [Not confirmed]', 'Adolfo 3 Eth Account [Not confirmed]')
+    await expandTransactionOf(SafeDom, 3, 1)
+    await confirmOwners(SafeDom, 'Adolfo 1 Eth Account [Confirmed]', 'Adolfo 2 Eth Account [Not confirmed]', 'Adolfo 3 Eth Account [Not confirmed]')
 
     const paragraphs = getTagFromTransaction(SafeDom, 'p')
 
@@ -66,7 +50,7 @@ describe('React DOM TESTS > Multisig transactions from safe [3 owners & 1 thresh
     expect(status).toBe('Already executed')
 
     const confirmed = paragraphs[3].innerHTML
-    const tx = getTransactionFromReduxStore()
+    const tx = getTransactionFromReduxStore(store, address)
     expect(confirmed).toBe(tx.get('tx'))
 
     const ownerTx = paragraphs[6].innerHTML

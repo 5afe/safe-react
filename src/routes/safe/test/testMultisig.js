@@ -8,6 +8,7 @@ import { addEtherTo } from '~/test/addEtherTo'
 import SafeView from '~/routes/safe/component/Safe'
 import TransactionsComponent from '~/routes/safe/component/Transactions'
 import TransactionComponent from '~/routes/safe/component/Transactions/Transaction'
+import { safeTransactionsSelector } from '~/routes/safe/store/selectors/index'
 
 export const createMultisigTxFilling = async (SafeDom, AddTransactionComponent, store) => {
   // Get AddTransaction form component
@@ -67,14 +68,29 @@ export const getTagFromTransaction = (SafeDom, tag: string) => {
   return TestUtils.scryRenderedDOMComponentsWithTag(Transaction, tag)
 }
 
-export const expandTransactionOf = async (SafeDom, numOwners) => {
+export const expandTransactionOf = async (SafeDom, numOwners, safeThreshold) => {
   const paragraphs = getTagFromTransaction(SafeDom, 'p')
   TestUtils.Simulate.click(paragraphs[2]) // expanded
   await sleep(1000) // Time to expand
   const paragraphsExpanded = getTagFromTransaction(SafeDom, 'p')
   const threshold = paragraphsExpanded[5]
-  expect(threshold.innerHTML).toContain(`confirmation${numOwners === 1 ? 's' : ''} needed`)
+  expect(threshold.innerHTML).toContain(`confirmation${safeThreshold === 1 ? '' : 's'} needed`)
   TestUtils.Simulate.click(threshold) // expanded
   await sleep(1000) // Time to expand
   expect(paragraphsExpanded.length).toBe(paragraphs.length + numOwners)
+}
+
+export const getTransactionFromReduxStore = (store, address) => {
+  const transactions = safeTransactionsSelector(store.getState(), { safeAddress: address })
+
+  return transactions.get(0)
+}
+
+export const confirmOwners = async (SafeDom, ...statusses: string[]) => {
+  const paragraphsWithOwners = getTagFromTransaction(SafeDom, 'h3')
+  for (let i = 0; i < statusses.length; i += 1) {
+    const ownerIndex = i + 6
+    const ownerParagraph = paragraphsWithOwners[ownerIndex].innerHTML
+    expect(statusses[i]).toEqual(ownerParagraph)
+  }
 }
