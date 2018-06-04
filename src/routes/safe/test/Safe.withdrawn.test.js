@@ -48,7 +48,7 @@ describe('React DOM TESTS > Withdrawn funds from safe', () => {
     const withdrawnButton = buttons[0]
     expect(withdrawnButton.props.children).toEqual(WITHDRAWN_BUTTON_TEXT)
     TestUtils.Simulate.click(TestUtils.scryRenderedDOMComponentsWithTag(withdrawnButton, 'button')[0])
-
+    await sleep(1200)
     const Withdrawn = TestUtils.findRenderedComponentWithType(SafeDom, WithdrawnComponent)
 
     // $FlowFixMe
