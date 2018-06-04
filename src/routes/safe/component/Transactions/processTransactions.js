@@ -8,7 +8,7 @@ import { getGnosisSafeContract } from '~/wallets/safeContracts'
 import { getWeb3 } from '~/wallets/getWeb3'
 import { sameAddress } from '~/wallets/ethAddresses'
 import { EXECUTED_CONFIRMATION_HASH } from '~/routes/safe/component/AddTransaction/createTransactions'
-import executeTransaction from '~/wallets/ethTransactions'
+import executeTransaction, { checkReceiptStatus } from '~/wallets/ethTransactions'
 
 export const updateTransaction = (
   name: string,
@@ -111,11 +111,13 @@ export const processTransaction = async (
   const txValue = tx.get('value')
   const txDestination = tx.get('destination')
 
-  const txReceipt = thresholdReached
+  const txHash = thresholdReached
     ? await execTransaction(gnosisSafe, txDestination, txValue, nonce, userAddress)
     : await execConfirmation(gnosisSafe, txDestination, txValue, nonce, userAddress)
 
-  const confirmationHash = thresholdReached ? EXECUTED_CONFIRMATION_HASH : txReceipt
+  checkReceiptStatus(txHash)
+
+  const confirmationHash = thresholdReached ? EXECUTED_CONFIRMATION_HASH : txHash
   const executedConfirmations: List<Confirmation> = updateConfirmations(tx.get('confirmations'), userAddress, confirmationHash)
 
   return updateTransaction(
@@ -125,7 +127,7 @@ export const processTransaction = async (
     txValue,
     userAddress,
     executedConfirmations,
-    thresholdReached ? txReceipt : '',
+    thresholdReached ? txHash : '',
     safeAddress,
     threshold,
   )

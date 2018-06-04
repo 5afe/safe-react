@@ -9,6 +9,7 @@ import { SAFELIST_ADDRESS } from '~/routes/routes'
 import AppRoutes from '~/routes'
 import AddTransactionComponent from '~/routes/safe/component/AddTransaction'
 import { createMultisigTxFilling, addFundsTo, checkBalanceOf, listTxsOf, getTagFromTransaction, expandTransactionOf, getTransactionFromReduxStore, confirmOwners } from '~/routes/safe/test/testMultisig'
+import { sleep } from '~/utils/timer'
 
 const renderSafe = localStore => (
   TestUtils.renderIntoDocument((
@@ -40,6 +41,7 @@ describe('React DOM TESTS > Multisig transactions from safe [3 owners & 1 thresh
     await createMultisigTxFilling(SafeDom, AddTransactionComponent, store)
     await checkBalanceOf(address, '0.09')
     await listTxsOf(SafeDom)
+    await sleep(2500)
 
     await expandTransactionOf(SafeDom, 3, 1)
     await confirmOwners(SafeDom, 'Adolfo 1 Eth Account [Confirmed]', 'Adolfo 2 Eth Account [Not confirmed]', 'Adolfo 3 Eth Account [Not confirmed]')
