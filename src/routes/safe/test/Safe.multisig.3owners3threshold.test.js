@@ -71,7 +71,7 @@ describe('React DOM TESTS > Multisig transactions from safe [3 owners & 3 thresh
 
     await checkBalanceOf(address, '0.1')
     await listTxsOf(SafeDom)
-    sleep(800)
+    sleep(1400)
     const paragraphs = getTagFromTransaction(SafeDom, 'p')
 
     const status = paragraphs[2].innerHTML

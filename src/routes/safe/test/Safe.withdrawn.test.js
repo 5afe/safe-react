@@ -41,6 +41,7 @@ describe('React DOM TESTS > Withdrawn funds from safe', () => {
   it('should withdrawn funds under dailyLimit without needing confirmations', async () => {
     // add funds to safe
     await addEtherTo(address, '0.1')
+    await sleep(3000)
     const Safe = TestUtils.findRenderedComponentWithType(SafeDom, SafeView)
 
     // $FlowFixMe
@@ -48,7 +49,7 @@ describe('React DOM TESTS > Withdrawn funds from safe', () => {
     const withdrawnButton = buttons[0]
     expect(withdrawnButton.props.children).toEqual(WITHDRAWN_BUTTON_TEXT)
     TestUtils.Simulate.click(TestUtils.scryRenderedDOMComponentsWithTag(withdrawnButton, 'button')[0])
-    await sleep(1200)
+    await sleep(4000)
     const Withdrawn = TestUtils.findRenderedComponentWithType(SafeDom, WithdrawnComponent)
 
     // $FlowFixMe

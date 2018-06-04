@@ -34,7 +34,7 @@ describe('React DOM TESTS > Multisig transactions from safe [3 owners & 1 thresh
     SafeDom = renderSafe(store)
   })
 
-  it('should execute transaction after 2 owners have confirmed and the last one executed correctly', async () => {
+  it('should execute transaction straight away', async () => {
     await addFundsTo(SafeDom, address)
     await checkBalanceOf(address, '0.1')
     await createMultisigTxFilling(SafeDom, AddTransactionComponent, store)
