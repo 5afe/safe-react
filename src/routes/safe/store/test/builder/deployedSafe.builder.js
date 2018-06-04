@@ -68,7 +68,7 @@ const deploySafe = async (safe: React$Component<{}>, dailyLimit: string, thresho
 
   // giving some time to the component for updating its state with safe
   // before destroying its context
-  await sleep(3500)
+  await sleep(6000)
 
   // THEN
   const deployed = TestUtils.findRenderedDOMComponentWithClass(safe, DEPLOYED_COMPONENT_ID)
