@@ -1,12 +1,13 @@
 // @flow
 import contract from 'truffle-contract'
-import { promisify } from '~/utils/promisify'
 import { ensureOnce } from '~/utils/singleton'
 import { getWeb3 } from '~/wallets/getWeb3'
+import { promisify } from '~/utils/promisify'
 import GnosisSafeSol from '#/GnosisSafeTeamEdition.json'
 import ProxyFactorySol from '#/ProxyFactory.json'
 import CreateAndAddModules from '#/CreateAndAddModules.json'
 import DailyLimitModule from '#/DailyLimitModule.json'
+import { calculateGasOf, calculateGasPrice } from '~/wallets/ethTransactions'
 
 let proxyFactoryMaster
 let createAndAddModuleMaster
@@ -63,45 +64,46 @@ const getCreateProxyFactoryContract = ensureOnce(createProxyFactoryContract)
 const getCreateAddExtensionContract = ensureOnce(createAddExtensionContract)
 export const getCreateDailyLimitExtensionContract = ensureOnce(createDailyLimitExtensionContract)
 
+const instanciateMasterCopies = async () => {
+  const web3 = getWeb3()
+
+  // Create ProxyFactory Master Copy
+  const ProxyFactory = getCreateProxyFactoryContract(web3)
+  proxyFactoryMaster = await ProxyFactory.deployed()
+
+  // Create AddExtension Master Copy
+  const CreateAndAddExtension = getCreateAddExtensionContract(web3)
+  createAndAddModuleMaster = await CreateAndAddExtension.deployed()
+
+  // Initialize safe master copy
+  const GnosisSafe = getGnosisSafeContract(web3)
+  safeMaster = await GnosisSafe.deployed()
+
+  // Initialize extension master copy
+  const DailyLimitExtension = getCreateDailyLimitExtensionContract(web3)
+  dailyLimitMaster = await DailyLimitExtension.deployed()
+}
+
+// ONLY USED IN TEST ENVIRONMENT
 const createMasterCopies = async () => {
   const web3 = getWeb3()
   const accounts = await promisify(cb => web3.eth.getAccounts(cb))
   const userAccount = accounts[0]
 
-  // Create ProxyFactory Master Copy
   const ProxyFactory = getCreateProxyFactoryContract(web3)
-  try {
-    proxyFactoryMaster = await ProxyFactory.deployed()
-  } catch (err) {
-    proxyFactoryMaster = await ProxyFactory.new({ from: userAccount, gas: '5000000' })
-  }
+  proxyFactoryMaster = await ProxyFactory.new({ from: userAccount, gas: '5000000' })
 
-  // Create AddExtension Master Copy
   const CreateAndAddExtension = getCreateAddExtensionContract(web3)
-  try {
-    createAndAddModuleMaster = await CreateAndAddExtension.deployed()
-  } catch (err) {
-    createAndAddModuleMaster = await CreateAndAddExtension.new({ from: userAccount, gas: '5000000' })
-  }
+  createAndAddModuleMaster = await CreateAndAddExtension.new({ from: userAccount, gas: '5000000' })
 
-  // Initialize safe master copy
   const GnosisSafe = getGnosisSafeContract(web3)
-  try {
-    safeMaster = await GnosisSafe.deployed()
-  } catch (err) {
-    safeMaster = await GnosisSafe.new([userAccount], 1, 0, 0, { from: userAccount, gas: '5000000' })
-  }
+  safeMaster = await GnosisSafe.new([userAccount], 1, 0, 0, { from: userAccount, gas: '5000000' })
 
-  // Initialize extension master copy
   const DailyLimitExtension = getCreateDailyLimitExtensionContract(web3)
-  try {
-    dailyLimitMaster = await DailyLimitExtension.deployed()
-  } catch (err) {
-    dailyLimitMaster = await DailyLimitExtension.new([], [], { from: userAccount, gas: '5000000' })
-  }
+  dailyLimitMaster = await DailyLimitExtension.new([], [], { from: userAccount, gas: '5000000' })
 }
 
-export const initContracts = ensureOnce(createMasterCopies)
+export const initContracts = ensureOnce(process.env.NODE_ENV === 'test' ? createMasterCopies : instanciateMasterCopies)
 
 const getSafeDataBasedOn = async (accounts, numConfirmations, dailyLimitInEth) => {
   const web3 = getWeb3()
@@ -128,5 +130,9 @@ export const deploySafeContract = async (
   userAccount: string,
 ) => {
   const gnosisSafeData = await getSafeDataBasedOn(safeAccounts, numConfirmations, dailyLimit)
-  return proxyFactoryMaster.createProxy(safeMaster.address, gnosisSafeData, { from: userAccount, gas: '5000000' })
+  const proxyFactoryData = proxyFactoryMaster.contract.createProxy.getData(safeMaster.address, gnosisSafeData)
+  const gas = await calculateGasOf(proxyFactoryData, userAccount, proxyFactoryMaster.address)
+  const gasPrice = await calculateGasPrice()
+
+  return proxyFactoryMaster.createProxy(safeMaster.address, gnosisSafeData, { from: userAccount, gas, gasPrice })
 }

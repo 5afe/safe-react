@@ -41,6 +41,7 @@ describe('React DOM TESTS > Withdrawn funds from safe', () => {
   it('should withdrawn funds under dailyLimit without needing confirmations', async () => {
     // add funds to safe
     await addEtherTo(address, '0.1')
+    await sleep(3000)
     const Safe = TestUtils.findRenderedComponentWithType(SafeDom, SafeView)
 
     // $FlowFixMe
@@ -48,7 +49,7 @@ describe('React DOM TESTS > Withdrawn funds from safe', () => {
     const withdrawnButton = buttons[0]
     expect(withdrawnButton.props.children).toEqual(WITHDRAWN_BUTTON_TEXT)
     TestUtils.Simulate.click(TestUtils.scryRenderedDOMComponentsWithTag(withdrawnButton, 'button')[0])
-
+    await sleep(4000)
     const Withdrawn = TestUtils.findRenderedComponentWithType(SafeDom, WithdrawnComponent)
 
     // $FlowFixMe
@@ -63,7 +64,7 @@ describe('React DOM TESTS > Withdrawn funds from safe', () => {
 
     TestUtils.Simulate.submit(form) // fill the form
     TestUtils.Simulate.submit(form) // confirming data
-    await sleep(4000)
+    await sleep(6000)
 
     const safeBalance = await getBalanceInEtherOf(address)
     expect(safeBalance).toBe('0.09')
@@ -97,6 +98,20 @@ describe('React DOM TESTS > Withdrawn funds from safe', () => {
     const buttons = TestUtils.scryRenderedComponentsWithType(Safe, Button)
     const addTxButton = buttons[1]
     expect(addTxButton.props.children).toEqual(ADD_MULTISIG_BUTTON_TEXT)
+    expect(addTxButton.props.disabled).toBe(true)
+
+    await addEtherTo(address, '0.1')
+    await sleep(1800)
+
+    expect(addTxButton.props.disabled).toBe(false)
+  })
+
+  it('Withdrawn button disabled when balance is 0', async () => {
+    const Safe = TestUtils.findRenderedComponentWithType(SafeDom, SafeView)
+    // $FlowFixMe
+    const buttons = TestUtils.scryRenderedComponentsWithType(Safe, Button)
+    const addTxButton = buttons[0]
+    expect(addTxButton.props.children).toEqual(WITHDRAWN_BUTTON_TEXT)
     expect(addTxButton.props.disabled).toBe(true)
 
     await addEtherTo(address, '0.1')
