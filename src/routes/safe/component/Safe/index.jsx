@@ -71,7 +71,7 @@ class GnoSafe extends React.PureComponent<SafeProps, State> {
             <Owners owners={safe.owners} />
             <Confirmations confirmations={safe.get('confirmations')} />
             <Address address={safe.get('address')} />
-            <DailyLimit dailyLimit={safe.get('dailyLimit')} onWithdrawn={this.onWithdrawn} />
+            <DailyLimit balance={balance} dailyLimit={safe.get('dailyLimit')} onWithdrawn={this.onWithdrawn} />
             <MultisigTx balance={balance} onAddTx={this.onAddTx} onSeeTxs={this.onListTransactions} />
           </List>
         </Col>

@@ -10,14 +10,16 @@ import { type DailyLimit } from '~/routes/safe/store/model/dailyLimit'
 type Props = {
   dailyLimit: DailyLimit,
   onWithdrawn: () => void,
+  balance: string,
 }
 
 export const WITHDRAWN_BUTTON_TEXT = 'Withdrawn'
 
-const DailyLimitComponent = ({ dailyLimit, onWithdrawn }: Props) => {
+const DailyLimitComponent = ({ dailyLimit, balance, onWithdrawn }: Props) => {
   const limit = dailyLimit.get('value')
   const spentToday = dailyLimit.get('spentToday')
-  const disabled = spentToday >= limit
+
+  const disabled = spentToday >= limit || Number(balance) === 0
   const text = `${limit} ETH (spent today: ${spentToday} ETH)`
 
   return (

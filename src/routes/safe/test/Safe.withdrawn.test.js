@@ -104,4 +104,18 @@ describe('React DOM TESTS > Withdrawn funds from safe', () => {
 
     expect(addTxButton.props.disabled).toBe(false)
   })
+
+  it('Withdrawn button disabled when balance is 0', async () => {
+    const Safe = TestUtils.findRenderedComponentWithType(SafeDom, SafeView)
+    // $FlowFixMe
+    const buttons = TestUtils.scryRenderedComponentsWithType(Safe, Button)
+    const addTxButton = buttons[0]
+    expect(addTxButton.props.children).toEqual(WITHDRAWN_BUTTON_TEXT)
+    expect(addTxButton.props.disabled).toBe(true)
+
+    await addEtherTo(address, '0.1')
+    await sleep(1800)
+
+    expect(addTxButton.props.disabled).toBe(false)
+  })
 })
