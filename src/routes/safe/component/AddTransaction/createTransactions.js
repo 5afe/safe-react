@@ -47,6 +47,7 @@ export const storeTransaction = (
   tx: string,
   safeAddress: string,
   safeThreshold: number,
+  data: string,
 ) => {
   const notMinedWhenOneOwnerSafe = confirmations.count() === 1 && !tx
   if (notMinedWhenOneOwnerSafe) {
@@ -54,7 +55,7 @@ export const storeTransaction = (
   }
 
   const transaction: Transaction = makeTransaction({
-    name, nonce, value, confirmations, destination, threshold: safeThreshold, tx,
+    name, nonce, value, confirmations, destination, threshold: safeThreshold, tx, data,
   })
 
   const safeTransactions = load(TX_KEY) || {}
@@ -82,10 +83,11 @@ const hasOneOwner = (safe: Safe) => {
 export const createTransaction = async (
   safe: Safe,
   txName: string,
-  txDestination: string,
+  txDest: string,
   txValue: number,
   nonce: number,
   user: string,
+  data: string = '0x',
 ) => {
   const web3 = getWeb3()
   const GnosisSafe = await getGnosisSafeContract(web3)
@@ -97,19 +99,21 @@ export const createTransaction = async (
 
   const thresholdIsOne = safe.get('confirmations') === 1
   if (hasOneOwner(safe) || thresholdIsOne) {
-    const txConfirmationData = gnosisSafe.contract.execTransactionIfApproved.getData(txDestination, valueInWei, '0x', CALL, nonce)
+    const txConfirmationData =
+      gnosisSafe.contract.execTransactionIfApproved.getData(txDest, valueInWei, data, CALL, nonce)
     const txHash = await executeTransaction(txConfirmationData, user, safeAddress)
     checkReceiptStatus(txHash)
 
     const executedConfirmations: List<Confirmation> = buildExecutedConfirmationFrom(safe.get('owners'), user)
-    return storeTransaction(txName, nonce, txDestination, txValue, user, executedConfirmations, txHash, safeAddress, safe.get('confirmations'))
+    return storeTransaction(txName, nonce, txDest, txValue, user, executedConfirmations, txHash, safeAddress, safe.get('confirmations'), data)
   }
 
-  const txConfirmationData = gnosisSafe.contract.approveTransactionWithParameters.getData(txDestination, valueInWei, '0x', CALL, nonce)
+  const txConfirmationData =
+    gnosisSafe.contract.approveTransactionWithParameters.getData(txDest, valueInWei, data, CALL, nonce)
   const txConfirmationHash = await executeTransaction(txConfirmationData, user, safeAddress)
   checkReceiptStatus(txConfirmationHash)
 
   const confirmations: List<Confirmation> = buildConfirmationsFrom(safe.get('owners'), user, txConfirmationHash)
 
-  return storeTransaction(txName, nonce, txDestination, txValue, user, confirmations, '', safeAddress, safe.get('confirmations'))
+  return storeTransaction(txName, nonce, txDest, txValue, user, confirmations, '', safeAddress, safe.get('confirmations'), data)
 }

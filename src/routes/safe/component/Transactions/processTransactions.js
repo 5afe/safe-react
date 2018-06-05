@@ -20,9 +20,10 @@ export const updateTransaction = (
   tx: string,
   safeAddress: string,
   safeThreshold: number,
+  data: string,
 ) => {
   const transaction: Transaction = makeTransaction({
-    name, nonce, value, confirmations, destination, threshold: safeThreshold, tx,
+    name, nonce, value, confirmations, destination, threshold: safeThreshold, tx, data,
   })
 
   const safeTransactions = load(TX_KEY) || {}
@@ -36,7 +37,6 @@ export const updateTransaction = (
   localStorage.setItem(TX_KEY, JSON.stringify(safeTransactions))
 }
 
-const getData = () => '0x'
 const getOperation = () => 0
 
 const execTransaction = async (
@@ -45,8 +45,8 @@ const execTransaction = async (
   txValue: number,
   nonce: number,
   executor: string,
+  data: string,
 ) => {
-  const data = getData()
   const CALL = getOperation()
   const web3 = getWeb3()
   const valueInWei = web3.toWei(txValue, 'ether')
@@ -61,8 +61,8 @@ const execConfirmation = async (
   txValue: number,
   nonce: number,
   executor: string,
+  data: string,
 ) => {
-  const data = getData()
   const CALL = getOperation()
   const web3 = getWeb3()
   const valueInWei = web3.toWei(txValue, 'ether')
@@ -110,10 +110,11 @@ export const processTransaction = async (
   const txName = tx.get('name')
   const txValue = tx.get('value')
   const txDestination = tx.get('destination')
+  const data = tx.get('data')
 
   const txHash = thresholdReached
-    ? await execTransaction(gnosisSafe, txDestination, txValue, nonce, userAddress)
-    : await execConfirmation(gnosisSafe, txDestination, txValue, nonce, userAddress)
+    ? await execTransaction(gnosisSafe, txDestination, txValue, nonce, userAddress, data)
+    : await execConfirmation(gnosisSafe, txDestination, txValue, nonce, userAddress, data)
 
   checkReceiptStatus(txHash)
 
@@ -130,5 +131,6 @@ export const processTransaction = async (
     thresholdReached ? txHash : '',
     safeAddress,
     threshold,
+    data,
   )
 }
