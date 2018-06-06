@@ -8,7 +8,7 @@ import { getGnosisSafeContract } from '~/wallets/safeContracts'
 import { getWeb3 } from '~/wallets/getWeb3'
 import { type Safe } from '~/routes/safe/store/model/safe'
 import { sameAddress } from '~/wallets/ethAddresses'
-import executeTransaction from '~/wallets/ethTransactions'
+import executeTransaction, { checkReceiptStatus } from '~/wallets/ethTransactions'
 
 export const TX_NAME_PARAM = 'txName'
 export const TX_DESTINATION_PARAM = 'txDestination'
@@ -98,14 +98,18 @@ export const createTransaction = async (
   const thresholdIsOne = safe.get('confirmations') === 1
   if (hasOneOwner(safe) || thresholdIsOne) {
     const txConfirmationData = gnosisSafe.contract.execTransactionIfApproved.getData(txDestination, valueInWei, '0x', CALL, nonce)
-    const txReceipt = await executeTransaction(txConfirmationData, user, safeAddress)
+    const txHash = await executeTransaction(txConfirmationData, user, safeAddress)
+    checkReceiptStatus(txHash)
+
     const executedConfirmations: List<Confirmation> = buildExecutedConfirmationFrom(safe.get('owners'), user)
-    return storeTransaction(txName, nonce, txDestination, txValue, user, executedConfirmations, txReceipt, safeAddress, safe.get('confirmations'))
+    return storeTransaction(txName, nonce, txDestination, txValue, user, executedConfirmations, txHash, safeAddress, safe.get('confirmations'))
   }
 
   const txConfirmationData = gnosisSafe.contract.approveTransactionWithParameters.getData(txDestination, valueInWei, '0x', CALL, nonce)
-  const txConfirmationReceipt = await executeTransaction(txConfirmationData, user, safeAddress)
-  const confirmations: List<Confirmation> = buildConfirmationsFrom(safe.get('owners'), user, txConfirmationReceipt)
+  const txConfirmationHash = await executeTransaction(txConfirmationData, user, safeAddress)
+  checkReceiptStatus(txConfirmationHash)
+
+  const confirmations: List<Confirmation> = buildConfirmationsFrom(safe.get('owners'), user, txConfirmationHash)
 
   return storeTransaction(txName, nonce, txDestination, txValue, user, confirmations, '', safeAddress, safe.get('confirmations'))
 }

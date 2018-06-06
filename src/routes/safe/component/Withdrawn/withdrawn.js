@@ -2,7 +2,7 @@
 import { getWeb3 } from '~/wallets/getWeb3'
 import { getGnosisSafeContract, getCreateDailyLimitExtensionContract } from '~/wallets/safeContracts'
 import { type DailyLimitProps } from '~/routes/safe/store/model/dailyLimit'
-import executeTransaction from '~/wallets/ethTransactions'
+import executeTransaction, { checkReceiptStatus } from '~/wallets/ethTransactions'
 
 export const LIMIT_POSITION = 0
 export const SPENT_TODAY_POS = 1
@@ -45,7 +45,8 @@ const withdrawn = async (values: Object, safeAddress: string, userAccount: strin
 
   const dailyLimitData = dailyLimitModule.contract.executeDailyLimit.getData(0, destination, value)
 
-  return executeTransaction(dailyLimitData, userAccount, dailyLimitModule.address)
+  const txHash = await executeTransaction(dailyLimitData, userAccount, dailyLimitModule.address)
+  checkReceiptStatus(txHash)
 }
 
 export default withdrawn

@@ -6,6 +6,7 @@ import Page from '~/components/layout/Page'
 import { getAccountsFrom, getThresholdFrom, getNamesFrom, getSafeNameFrom, getDailyLimitFrom } from '~/routes/open/utils/safeDataExtractor'
 import { getWeb3 } from '~/wallets/getWeb3'
 import { getGnosisSafeContract, deploySafeContract, initContracts } from '~/wallets/safeContracts'
+import { checkReceiptStatus } from '~/wallets/ethTransactions'
 import selector from './selector'
 import actions, { type Actions, type AddSafe } from './actions'
 import Layout from '../components/Layout'
@@ -32,6 +33,7 @@ const createSafe = async (values: Object, userAccount: string, addSafe: AddSafe)
 
   await initContracts()
   const safe = await deploySafeContract(accounts, numConfirmations, dailyLimit, userAccount)
+  checkReceiptStatus(safe.tx)
 
   const param = safe.logs[1].args.proxy
   const safeContract = GnosisSafe.at(param)

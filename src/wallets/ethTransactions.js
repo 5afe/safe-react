@@ -5,6 +5,25 @@ import { promisify } from '~/utils/promisify'
 
 // const MAINNET_NETWORK = 1
 
+export const checkReceiptStatus = async (hash: string) => {
+  if (!hash) {
+    throw new Error('No valid Tx hash to get receipt from')
+  }
+
+  const web3 = getWeb3()
+  const txReceipt = await promisify(cb => web3.eth.getTransactionReceipt(hash, cb))
+
+  const { status } = txReceipt
+  if (!status) {
+    throw new Error('No status found on this transaction receipt')
+  }
+
+  const hasError = status === '0x0'
+  if (hasError) {
+    throw new Error('Obtained a transaction failure in the receipt')
+  }
+}
+
 export const calculateGasPrice = async () => {
 /*
   const web3 = getWeb3()
