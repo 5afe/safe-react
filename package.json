@@ -1,6 +1,6 @@
 {
-  "name": "gnosis-team-safe",
-  "version": "1.0.0",
+  "name": "safe-react",
+  "version": "0.3.2",
   "description": "Allowing crypto users manage funds in a safer way",
   "directories": {
     "test": "test"
@@ -9,7 +9,7 @@
     "start": "node scripts/start.js",
     "build": "node scripts/build.js",
     "test": "run-with-testrpc -l 40000000 'node scripts/test.js --env=jsdom'",
-    "test-local": "node scripts/test.js --env=jsdom",
+    "test-local": "NODE_ENV=test && node scripts/test.js --env=jsdom",
     "precommit": "./precommit.sh",
     "flow": "flow",
     "storybook": "start-storybook -p 6006",
@@ -17,14 +17,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/gnosis/gnosis-team-safe"
+    "url": "https://github.com/gnosis/safe-react"
   },
   "author": "Gnosis Team",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/gnosis/gnosis-team-safe/issues"
+    "url": "https://github.com/gnosis/safe-react/issues"
   },
-  "homepage": "https://github.com/gnosis/gnosis-team-safe#readme",
+  "homepage": "https://github.com/gnosis/safe-react#readme",
   "pre-commit": [
     "precommit"
   ],
@@ -50,6 +50,7 @@
     "babel-plugin-dynamic-import-node": "^1.2.0",
     "babel-plugin-transform-es3-member-expression-literals": "^6.22.0",
     "babel-plugin-transform-es3-property-literals": "^6.22.0",
+    "bignumber.js": "^7.2.1",
     "classnames": "^2.2.5",
     "css-loader": "^0.28.10",
     "detect-port": "^1.2.2",
@@ -87,6 +88,7 @@
     "storybook-host": "^4.1.5",
     "storybook-router": "^0.3.3",
     "style-loader": "^0.20.2",
+    "truffle": "git://github.com/trufflesuite/truffle.git#develop",
     "truffle-contract": "^1.1.8",
     "truffle-solidity-loader": "0.0.8",
     "uglifyjs-webpack-plugin": "^1.2.2",
@@ -104,13 +106,15 @@
     "material-ui-icons": "^1.0.0-beta.35",
     "react-final-form": "^3.1.2",
     "react-loadable": "^5.3.1",
-    "react-router-dom": "^4.2.2"
+    "react-router-dom": "^4.2.2",
+    "recompose": "^0.27.0"
   },
   "jest": {
     "verbose": true,
     "collectCoverageFrom": [
       "src/**/*.{js,jsx}"
     ],
+    "setupTestFrameworkScriptFile": "<rootDir>/config/jest/jest.setup.js",
     "setupFiles": [
       "<rootDir>/config/webpack.config.test.js",
       "<rootDir>/config/polyfills.js",
@@ -134,7 +138,7 @@
     ],
     "moduleNameMapper": {
       "~(.*)$": "<rootDir>/src/$1",
-      "#(.*)$": "<rootDir>/gnosis-safe-contracts/build/contracts/$1",
+      "#(.*)$": "<rootDir>/safe-contracts/build/contracts/$1",
       "^react-native$": "react-native-web"
     }
   }

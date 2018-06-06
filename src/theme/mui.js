@@ -1,6 +1,11 @@
-import red from 'material-ui/colors/red';
+// @flow
+import red from 'material-ui/colors/red'
 import { createMuiTheme } from 'material-ui/styles'
 import { primary, secondary } from './variables'
+
+export type WithStyles = {
+  classes: Object,
+}
 
 const palette = {
   primary: {
@@ -18,7 +23,7 @@ const palette = {
 // see https://github.com/mui-org/material-ui/blob/v1-beta/src/styles/createMuiTheme.js
 export default createMuiTheme({
   typography: {
-    fontFamily: 'Montserrat,sans-serif'
-  }, 
+    fontFamily: 'Montserrat,sans-serif',
+  },
   palette,
 })

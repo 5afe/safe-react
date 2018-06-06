@@ -1,17 +1,8 @@
 // @flow
-import { type Match } from 'react-router-dom'
 import addBalance from '~/routes/safe/store/actions/addBalance'
 import { aNewStore } from '~/store'
+import { buildMathPropsFrom } from '~/test/buildReactRouterProps'
 import { balanceSelector } from '../selectors'
-
-const buildMathPropsFrom = (address): Match => ({
-  params: {
-    address,
-  },
-  isExact: true,
-  path: '',
-  url: '',
-})
 
 const balanceSelectorTests = () => {
   describe('Safe Selector[balanceSelector]', () => {

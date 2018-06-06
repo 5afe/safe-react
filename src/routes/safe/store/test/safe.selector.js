@@ -4,16 +4,8 @@ import { type Match } from 'react-router-dom'
 import { SAFE_REDUCER_ID } from '~/routes/safe/store/reducer/safe'
 import { type Safe } from '~/routes/safe/store/model/safe'
 import { SafeFactory } from '~/routes/safe/store/test/builder/safe.builder'
+import { buildMathPropsFrom } from '~/test/buildReactRouterProps'
 import { safeSelector } from '../selectors'
-
-const buildMathPropsFrom = (address): Match => ({
-  params: {
-    address,
-  },
-  isExact: true,
-  path: '',
-  url: '',
-})
 
 const safeSelectorTests = () => {
   describe('Safe Selector[safeSelector]', () => {
@@ -23,6 +15,7 @@ const safeSelectorTests = () => {
         [SAFE_REDUCER_ID]: Map(),
         providers: undefined,
         balances: undefined,
+        transactions: undefined,
       }
       const match: Match = buildMathPropsFrom('fooAddress')
 
@@ -36,8 +29,8 @@ const safeSelectorTests = () => {
     it('should return a list of size 2 when 2 safes are created', () => {
       // GIVEN
       let map: Map<string, Safe> = Map()
-      map = map.set('fooAddress', SafeFactory.oneOwnerSafe)
-      map = map.set('barAddress', SafeFactory.twoOwnersSafe)
+      map = map.set('fooAddress', SafeFactory.oneOwnerSafe())
+      map = map.set('barAddress', SafeFactory.twoOwnersSafe())
 
       const match: Match = buildMathPropsFrom('fooAddress')
       const undefMatch: Match = buildMathPropsFrom('inventedAddress')
@@ -46,6 +39,7 @@ const safeSelectorTests = () => {
         [SAFE_REDUCER_ID]: map,
         providers: undefined,
         balances: undefined,
+        transactions: undefined,
       }
 
       // WHEN
@@ -53,7 +47,7 @@ const safeSelectorTests = () => {
       const undefinedSafe = safeSelector(reduxStore, { match: undefMatch })
 
       // THEN
-      expect(oneOwnerSafe).toEqual(SafeFactory.oneOwnerSafe)
+      expect(oneOwnerSafe).toEqual(SafeFactory.oneOwnerSafe())
       expect(undefinedSafe).toBe(undefined)
     })
   })

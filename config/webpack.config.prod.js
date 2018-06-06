@@ -77,6 +77,8 @@ module.exports = {
   bail: true,
   optimization: {
     splitChunks: {
+      chunks: "all",
+      /* https://stackoverflow.com/questions/48985780/webpack-4-create-vendor-chunk
       cacheGroups: {
         vendor: {
           test: /node_modules/,
@@ -86,6 +88,7 @@ module.exports = {
           minSize: 1,
         },
       },
+      */
     },
   },
   entry: [

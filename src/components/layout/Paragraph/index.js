@@ -6,7 +6,7 @@ import styles from './index.scss'
 const cx = classNames.bind(styles)
 
 type Props = {
-  center?: boolean,
+  align?: 'right' | 'center' | 'left',
   noMargin?: boolean,
   bold?: boolean,
   size?: 'sm' | 'md' | 'lg' | 'xl',
@@ -17,11 +17,11 @@ type Props = {
 class Paragraph extends React.PureComponent<Props> {
   render() {
     const {
-      bold, children, color, center, size, noMargin, ...props
+      bold, children, color, align, size, noMargin, ...props
     } = this.props
 
     return (
-      <p className={cx(styles.paragraph, { bold }, { noMargin }, size, { center })} {...props}>
+      <p className={cx(styles.paragraph, { bold }, { noMargin }, size, align)} {...props}>
         { children }
       </p>
     )

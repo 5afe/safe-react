@@ -5,11 +5,22 @@ type Field = boolean | string
 
 export const required = (value: Field) => (value ? undefined : 'Required')
 
-export const mustBeNumber = (value: number) =>
+export const mustBeInteger = (value: string) =>
+  (!Number.isInteger(Number(value)) || value.includes('.') ? 'Must be an integer' : undefined)
+
+export const mustBeFloat = (value: number) =>
   (Number.isNaN(Number(value)) ? 'Must be a number' : undefined)
 
+export const greaterThan = (min: number) => (value: string) => {
+  if (Number.isNaN(Number(value)) || Number.parseFloat(value) > Number(min)) {
+    return undefined
+  }
+
+  return `Should be greater than ${min}`
+}
+
 export const minValue = (min: number) => (value: string) => {
-  if (Number.isNaN(Number(value)) || Number.parseInt(value, 10) >= Number(min)) {
+  if (Number.isNaN(Number(value)) || Number.parseFloat(value) >= Number(min)) {
     return undefined
   }
 
@@ -39,3 +50,13 @@ export const uniqueAddress = (addresses: string[]) => (value: string) =>
 
 export const composeValidators = (...validators: Function[]) => (value: Field) =>
   validators.reduce((error, validator) => error || validator(value), undefined)
+
+export const inLimit = (limit: number, base: number, baseText: string) => (value: string) => {
+  const amount = Number(value)
+  const max = limit - base
+  if (amount <= max) {
+    return undefined
+  }
+
+  return `Should not exceed ${max} ETH (amount to reach ${baseText})`
+}

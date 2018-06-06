@@ -5,6 +5,8 @@ import Stepper from '~/components/Stepper'
 import Confirmation from '~/routes/open/components/FormConfirmation'
 import Review from '~/routes/open/components/ReviewInformation'
 import SafeFields, { safeFieldsValidation } from '~/routes/open/components/SafeForm'
+import { SAFELIST_ADDRESS } from '~/routes/routes'
+import Link from '~/components/layout/Link'
 
 const getSteps = () => [
   'Fill Safe Form', 'Review Information', 'Deploy it',
@@ -28,14 +30,16 @@ const Layout = ({
 }: Props) => {
   const steps = getSteps()
   const initialValues = initialValuesFrom(userAccount)
+  const finishedButton = <Stepper.FinishButton title="VISIT SAFES" component={Link} to={SAFELIST_ADDRESS} />
 
   return (
     <React.Fragment>
       { provider
         ? (
           <Stepper
-            onSubmit={onCallSafeContractSubmit}
+            finishedButton={finishedButton}
             finishedTransaction={!!safeAddress}
+            onSubmit={onCallSafeContractSubmit}
             steps={steps}
             initialValues={initialValues}
           >

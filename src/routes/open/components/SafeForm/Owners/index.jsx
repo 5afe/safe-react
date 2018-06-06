@@ -6,7 +6,7 @@ import {
   composeValidators,
   minValue,
   maxValue,
-  mustBeNumber,
+  mustBeInteger,
   mustBeEthereumAddress,
   required,
   uniqueAddress,
@@ -45,7 +45,7 @@ const Owners = (props: Props) => {
           name={FIELD_OWNERS}
           component={TextField}
           type="text"
-          validate={composeValidators(required, mustBeNumber, maxValue(MAX_NUMBER_OWNERS), minValue(1))}
+          validate={composeValidators(required, mustBeInteger, maxValue(MAX_NUMBER_OWNERS), minValue(1))}
           placeholder="Number of owners*"
           text="Number of owners"
         />
