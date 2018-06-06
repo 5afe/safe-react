@@ -17,6 +17,7 @@ import selector, { type SelectorProps } from './selector'
 type Props = SelectorProps & {
   numOwners: number,
   safe: Safe,
+  onReset: () => void,
 }
 
 const THRESHOLD_PARAM = 'threshold'
@@ -62,13 +63,13 @@ class Threshold extends React.PureComponent<Props, State> {
     const gnosisSafe = await getSafeEthereumInstance(safe.get('address'))
     const nonce = Date.now()
     const data = gnosisSafe.contract.changeThreshold.getData(newThreshold)
-    await createTransaction(safe, "Change Safe's threshold", safe.get('address'), 0, nonce, userAddress, data)
+    await createTransaction(safe, `Change Safe's threshold [${nonce}]`, safe.get('address'), 0, nonce, userAddress, data)
     await sleep(1500)
     // this.props.fetchThreshold(safe.get('address'))
   }
 
   render() {
-    const { numOwners } = this.props
+    const { numOwners, onReset } = this.props
 
     return (
       <GnoForm
@@ -82,8 +83,9 @@ class Threshold extends React.PureComponent<Props, State> {
               <Button
                 variant="raised"
                 color="primary"
+                onClick={submitSucceeded ? onReset : undefined}
                 type="submit"
-                disabled={submitting || submitSucceeded}
+                disabled={submitting}
               >
                 { submitSucceeded ? 'VISIT TXs' : 'FINISH' }
               </Button>
