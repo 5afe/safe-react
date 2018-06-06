@@ -13,8 +13,9 @@ import { composeValidators, minValue, maxValue, mustBeInteger, required } from '
 import { getSafeEthereumInstance, createTransaction } from '~/routes/safe/component/AddTransaction/createTransactions'
 import { sleep } from '~/utils/timer'
 import selector, { type SelectorProps } from './selector'
+import actions, { type Actions } from './actions'
 
-type Props = SelectorProps & {
+type Props = SelectorProps & Actions & {
   numOwners: number,
   safe: Safe,
   onReset: () => void,
@@ -65,7 +66,8 @@ class Threshold extends React.PureComponent<Props, State> {
     const data = gnosisSafe.contract.changeThreshold.getData(newThreshold)
     await createTransaction(safe, `Change Safe's threshold [${nonce}]`, safe.get('address'), 0, nonce, userAddress, data)
     await sleep(1500)
-    // this.props.fetchThreshold(safe.get('address'))
+    this.props.fetchTransactions()
+    this.props.fetchThreshold(safe.get('address'))
   }
 
   render() {
@@ -98,4 +100,4 @@ class Threshold extends React.PureComponent<Props, State> {
   }
 }
 
-export default connect(selector)(Threshold)
+export default connect(selector, actions)(Threshold)
