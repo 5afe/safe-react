@@ -22,13 +22,13 @@ type Props = SelectorProps & {
 
 const THRESHOLD_PARAM = 'threshold'
 
-const ThresholdComponent = ({ numOwners }: Props) => () => (
+const ThresholdComponent = ({ numOwners, safe }: Props) => () => (
   <Block margin="md">
     <Heading tag="h2" margin="lg">
       {'Change safe\'s threshold'}
     </Heading>
     <Heading tag="h4" margin="lg">
-      {`Actual number of owners: ${numOwners}`}
+      {`Safe's owners: ${numOwners} and Safe's threshold: ${safe.get('confirmations')}`}
     </Heading>
     <Block margin="md">
       <Field
@@ -69,12 +69,13 @@ class Threshold extends React.PureComponent<Props, State> {
   }
 
   render() {
-    const { numOwners, onReset } = this.props
+    const { numOwners, onReset, safe } = this.props
 
     return (
       <GnoForm
         onSubmit={this.onThreshold}
-        render={ThresholdComponent({ numOwners })}
+        render={ThresholdComponent({ numOwners, safe })}
+        padding={15}
         initialValues={this.state.initialValues}
       >
         {(submitting: boolean, submitSucceeded: boolean) => (
@@ -84,7 +85,7 @@ class Threshold extends React.PureComponent<Props, State> {
                 variant="raised"
                 color="primary"
                 onClick={submitSucceeded ? onReset : undefined}
-                type="submit"
+                type={submitSucceeded ? 'button' : 'submit'}
                 disabled={submitting}
               >
                 { submitSucceeded ? 'VISIT TXs' : 'FINISH' }
