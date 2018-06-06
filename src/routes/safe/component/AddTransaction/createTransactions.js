@@ -80,6 +80,12 @@ const hasOneOwner = (safe: Safe) => {
   return owners.count() === 1
 }
 
+export const getSafeEthereumInstance = async (safeAddress) => {
+  const web3 = getWeb3()
+  const GnosisSafe = await getGnosisSafeContract(web3)
+  return GnosisSafe.at(safeAddress)
+}
+
 export const createTransaction = async (
   safe: Safe,
   txName: string,
@@ -90,10 +96,8 @@ export const createTransaction = async (
   data: string = '0x',
 ) => {
   const web3 = getWeb3()
-  const GnosisSafe = await getGnosisSafeContract(web3)
   const safeAddress = safe.get('address')
-  const gnosisSafe = GnosisSafe.at(safeAddress)
-
+  const gnosisSafe = await getSafeEthereumInstance(safeAddress)
   const valueInWei = web3.toWei(txValue, 'ether')
   const CALL = 0
 
