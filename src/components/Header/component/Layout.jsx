@@ -20,7 +20,7 @@ const Header = ({ provider, reloadWallet }: Props) => (
     <Col xs={12} center="xs" sm={6} start="sm" margin="lg">
       <Img src={logo} height={40} alt="Gnosis Safe" />
     </Col>
-    <Col xs={12} center="xs" sm={6} end="sm" margin="lg">
+    <Col xs={12} center="xs" sm={6} end="sm" middle="xs" margin="lg">
       { provider ? <Connected provider={provider} /> : <NotConnected /> }
       <Refresh callback={reloadWallet} />
     </Col>

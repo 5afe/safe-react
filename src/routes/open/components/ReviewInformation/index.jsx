@@ -7,6 +7,7 @@ import Col from '~/components/layout/Col'
 import Heading from '~/components/layout/Heading'
 import Row from '~/components/layout/Row'
 import Paragraph from '~/components/layout/Paragraph'
+import { FIELD_NAME, FIELD_CONFIRMATIONS, FIELD_DAILY_LIMIT } from '../fields'
 
 type FormProps = {
   values: Object,
@@ -20,10 +21,13 @@ const ReviewInformation = () => ({ values }: FormProps) => {
     <Block>
       <Heading tag="h2">Review the Safe information</Heading>
       <Paragraph>
-        <Bold>Safe Name: </Bold> {values.name}
+        <Bold>Safe Name: </Bold> {values[FIELD_NAME]}
       </Paragraph>
       <Paragraph>
-        <Bold>Required confirmations: </Bold> {values.confirmations}
+        <Bold>Required confirmations: </Bold> {values[FIELD_CONFIRMATIONS]}
+      </Paragraph>
+      <Paragraph>
+        <Bold>Daily limit: </Bold> {values[FIELD_DAILY_LIMIT]} ETH
       </Paragraph>
       <Heading tag="h3">Owners</Heading>
       { names.map((name, index) => (

@@ -2,16 +2,8 @@
 import { BALANCE_REDUCER_ID } from '~/routes/safe/store/reducer/balances'
 import fetchBalance from '~/routes/safe/store/actions/fetchBalance'
 import { aNewStore } from '~/store'
-import { getWeb3 } from '~/wallets/getWeb3'
-import { promisify } from '~/utils/promisify'
+import { addEtherTo } from '~/test/addEtherTo'
 import { aDeployedSafe } from './builder/deployedSafe.builder'
-
-const addEtherTo = async (address: string, eth: string) => {
-  const web3 = getWeb3()
-  const accounts = await promisify(cb => web3.eth.getAccounts(cb))
-  const txData = { from: accounts[0], to: address, value: web3.toWei(eth, 'ether') }
-  return promisify(cb => web3.eth.sendTransaction(txData, cb))
-}
 
 const balanceReducerTests = () => {
   describe('Safe Actions[fetchBalance]', () => {
@@ -22,8 +14,7 @@ const balanceReducerTests = () => {
 
     it('reducer should return 0 to just deployed safe', async () => {
       // GIVEN
-      const safeTx = await aDeployedSafe(store)
-      const address = safeTx.contractAddress
+      const address = await aDeployedSafe(store)
 
       // WHEN
       await store.dispatch(fetchBalance(address))
@@ -34,10 +25,9 @@ const balanceReducerTests = () => {
       expect(balances.get(address)).toBe('0')
     })
 
-    it('reducer should return 1.3456 ETH as funds to safe with 1 ETH', async () => {
+    it('reducer should return 1.3456 ETH as funds to safe with 1.3456 ETH', async () => {
       // GIVEN
-      const safeTx = await aDeployedSafe(store)
-      const address = safeTx.contractAddress
+      const address = await aDeployedSafe(store)
 
       // WHEN
       await addEtherTo(address, '1.3456')

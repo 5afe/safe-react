@@ -35,10 +35,10 @@ export default ({ address, tx }: Props) => ({ submitting }: FormProps) => {
     <Block>
       { !txFinished &&
         <React.Fragment>
-          <Paragraph center size="lg">
+          <Paragraph align="center" size="lg">
             You are about to create a Safe for keeping your funds more secure.
           </Paragraph>
-          <Paragraph center size="lg">
+          <Paragraph align="center" size="lg">
             Remember to check you have enough funds in your wallet.
           </Paragraph>
         </React.Fragment>

@@ -6,6 +6,7 @@ import { getAccountsFrom } from '~/routes/open/utils/safeDataExtractor'
 import Name from './Name'
 import Owners from './Owners'
 import Confirmations from './Confirmations'
+import DailyLimit from './DailyLimit'
 
 export const CONFIRMATIONS_ERROR = 'Number of confirmations can not be higher than the number of owners'
 
@@ -25,5 +26,6 @@ export default () => ({ values }: Object) => (
     <Name />
     <Owners numOwners={values.owners} otherAccounts={getAccountsFrom(values)} />
     <Confirmations />
+    <DailyLimit />
   </Block>
 )

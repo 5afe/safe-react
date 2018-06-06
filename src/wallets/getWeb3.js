@@ -28,8 +28,11 @@ export const getProviderInfo: Function = async (): Promise<ProviderProps> => {
 
   // Use MetaMask's provider.
   web3 = new Web3(window.web3.currentProvider)
-  // eslint-disable-next-line
-  console.log('Injected web3 detected.')
+
+  if (process.env.NODE_ENV !== 'test') {
+    // eslint-disable-next-line
+    console.log('Injected web3 detected.')
+  }
 
   const name = isMetamask(web3) ? 'METAMASK' : 'UNKNOWN'
   const account = await getAccountFrom(web3)

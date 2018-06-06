@@ -1,5 +1,4 @@
 .block {
-  display: inline-block;
   width: 100%;
   overflow: hidden;
 }
@@ -37,7 +36,13 @@
 }
 
 .center {
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.right {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
 }

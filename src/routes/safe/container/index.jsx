@@ -3,10 +3,13 @@ import * as React from 'react'
 import { connect } from 'react-redux'
 import Page from '~/components/layout/Page'
 import Layout from '~/routes/safe/component/Layout'
+import NoRights from '~/routes/safe/component/NoRights'
 import selector, { type SelectorProps } from './selector'
 import actions, { type Actions } from './actions'
 
-type Props = Actions & SelectorProps
+type Props = Actions & SelectorProps & {
+  granted: boolean,
+}
 
 class SafeView extends React.PureComponent<Props> {
   componentDidMount() {
@@ -17,6 +20,11 @@ class SafeView extends React.PureComponent<Props> {
       const safeAddress: string = safe.get('address')
       fetchBalance(safeAddress)
     }, 1500)
+
+    const { fetchDailyLimit, safe } = this.props
+    if (safe) {
+      fetchDailyLimit(safe.get('address'))
+    }
   }
 
   componentWillUnmount() {
@@ -26,15 +34,16 @@ class SafeView extends React.PureComponent<Props> {
   intervalId: IntervalID
 
   render() {
-    const { safe, provider, balance } = this.props
+    const {
+      safe, provider, balance, granted,
+    } = this.props
 
     return (
       <Page>
-        <Layout
-          balance={balance}
-          provider={provider}
-          safe={safe}
-        />
+        { granted
+          ? <Layout balance={balance} provider={provider} safe={safe} />
+          : <NoRights />
+        }
       </Page>
     )
   }
