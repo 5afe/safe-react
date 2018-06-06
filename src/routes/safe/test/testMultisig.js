@@ -43,7 +43,7 @@ export const addFundsTo = async (SafeDom, destination: string) => {
 
   // $FlowFixMe
   const buttons = TestUtils.scryRenderedComponentsWithType(Safe, Button)
-  const addTxButton = buttons[1]
+  const addTxButton = buttons[2]
   expect(addTxButton.props.children).toEqual(ADD_MULTISIG_BUTTON_TEXT)
   await sleep(1800) // Give time to enable Add button
   TestUtils.Simulate.click(TestUtils.scryRenderedDOMComponentsWithTag(addTxButton, 'button')[0])
@@ -54,7 +54,7 @@ export const listTxsOf = (SafeDom) => {
 
   // $FlowFixMe
   const buttons = TestUtils.scryRenderedComponentsWithType(Safe, Button)
-  const seeTx = buttons[2]
+  const seeTx = buttons[3]
   expect(seeTx.props.children).toEqual(SEE_MULTISIG_BUTTON_TEXT)
   TestUtils.Simulate.click(TestUtils.scryRenderedDOMComponentsWithTag(seeTx, 'button')[0])
 }
