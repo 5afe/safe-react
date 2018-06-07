@@ -1,105 +1,82 @@
 // @flow
 import * as React from 'react'
-import Block from '~/components/layout/Block'
-import Heading from '~/components/layout/Heading'
-import Field from '~/components/forms/Field'
-import TextField from '~/components/forms/TextField'
-import GnoForm from '~/components/forms/GnoForm'
+import Stepper from '~/components/Stepper'
 import { connect } from 'react-redux'
-import Button from '~/components/layout/Button'
-import Col from '~/components/layout/Col'
-import Row from '~/components/layout/Row'
-import { composeValidators, minValue, maxValue, mustBeInteger, required } from '~/components/forms/validator'
 import { getSafeEthereumInstance, createTransaction } from '~/routes/safe/component/AddTransaction/createTransactions'
 import { sleep } from '~/utils/timer'
 import { type Safe } from '~/routes/safe/store/model/safe'
+import ThresholdForm, { THRESHOLD_PARAM } from './ThresholdForm'
 import selector, { type SelectorProps } from './selector'
 import actions, { type Actions } from './actions'
+import Review from './Review'
 
-type ThresholdProps = {
+type Props = SelectorProps & Actions & {
   numOwners: number,
   safe: Safe,
-}
-
-type Props = SelectorProps & Actions & ThresholdProps & {
   onReset: () => void,
 }
 
-const THRESHOLD_PARAM = 'threshold'
-
-const ThresholdComponent = ({ numOwners, safe }: ThresholdProps) => () => (
-  <Block margin="md">
-    <Heading tag="h2" margin="lg">
-      {'Change safe\'s threshold'}
-    </Heading>
-    <Heading tag="h4" margin="lg">
-      {`Safe's owners: ${numOwners} and Safe's threshold: ${safe.get('confirmations')}`}
-    </Heading>
-    <Block margin="md">
-      <Field
-        name={THRESHOLD_PARAM}
-        component={TextField}
-        type="text"
-        validate={composeValidators(
-          required,
-          mustBeInteger,
-          minValue(1),
-          maxValue(numOwners),
-        )}
-        placeholder="New threshold"
-        text="Safe's threshold"
-      />
-    </Block>
-  </Block>
-)
+const getSteps = () => [
+  'Fill Change threshold Form', 'Review change threshold operation',
+]
 
 type State = {
-  initialValues: Object,
+  done: boolean,
 }
+
+export const CHANGE_THRESHOLD_RESET_BUTTON_TEXT = 'RESET'
 
 class Threshold extends React.PureComponent<Props, State> {
   state = {
-    initialValues: {},
+    done: false,
   }
 
   onThreshold = async (values: Object) => {
-    const { safe, userAddress } = this.props // , fetchThreshold } = this.props
-    const newThreshold = values[THRESHOLD_PARAM]
-    const gnosisSafe = await getSafeEthereumInstance(safe.get('address'))
-    const nonce = Date.now()
-    const data = gnosisSafe.contract.changeThreshold.getData(newThreshold)
-    await createTransaction(safe, `Change Safe's threshold [${nonce}]`, safe.get('address'), 0, nonce, userAddress, data)
-    await sleep(1500)
-    this.props.fetchTransactions()
-    this.props.fetchThreshold(safe.get('address'))
+    try {
+      const { safe, userAddress } = this.props // , fetchThreshold } = this.props
+      const newThreshold = values[THRESHOLD_PARAM]
+      const gnosisSafe = await getSafeEthereumInstance(safe.get('address'))
+      const nonce = Date.now()
+      const data = gnosisSafe.contract.changeThreshold.getData(newThreshold)
+      await createTransaction(safe, `Change Safe's threshold [${nonce}]`, safe.get('address'), 0, nonce, userAddress, data)
+      await sleep(1500)
+      await this.props.fetchTransactions()
+      await this.props.fetchThreshold(safe.get('address'))
+      this.setState({ done: true })
+    } catch (error) {
+      this.setState({ done: false })
+      // eslint-disable-next-line
+      console.log('Error while changing threshold ' + error)
+    }
+  }
+
+  onReset = () => {
+    this.setState({ done: false })
   }
 
   render() {
-    const { numOwners, onReset, safe } = this.props
+    const { numOwners, safe } = this.props
+    const { done } = this.state
+    const steps = getSteps()
+    const finishedButton = <Stepper.FinishButton title={CHANGE_THRESHOLD_RESET_BUTTON_TEXT} />
 
     return (
-      <GnoForm
-        onSubmit={this.onThreshold}
-        render={ThresholdComponent({ numOwners, safe })}
-        padding={15}
-        initialValues={this.state.initialValues}
-      >
-        {(submitting: boolean, submitSucceeded: boolean) => (
-          <Row align="end" margin="lg" grow>
-            <Col xs={12} center="xs">
-              <Button
-                variant="raised"
-                color="primary"
-                onClick={submitSucceeded ? onReset : undefined}
-                type={submitSucceeded ? 'button' : 'submit'}
-                disabled={submitting}
-              >
-                { submitSucceeded ? 'VISIT TXs' : 'FINISH' }
-              </Button>
-            </Col>
-          </Row>
-        )}
-      </GnoForm>
+      <React.Fragment>
+        <Stepper
+          finishedTransaction={done}
+          finishedButton={finishedButton}
+          onSubmit={this.onThreshold}
+          steps={steps}
+          onReset={this.onReset}
+        >
+          <Stepper.Page numOwners={numOwners} safe={safe}>
+            { ThresholdForm }
+          </Stepper.Page>
+          <Stepper.Page>
+            { Review }
+          </Stepper.Page>
+        </Stepper>
+      </React.Fragment>
     )
   }
 }

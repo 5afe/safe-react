@@ -13,7 +13,7 @@ import selector, { type SelectorProps } from './selector'
 import actions, { type Actions } from './actions'
 
 const getSteps = () => [
-  'Fill Owner Form', 'Review Withdrawn',
+  'Fill Owner Form', 'Review Add order operation',
 ]
 
 type Props = SelectorProps & Actions & {

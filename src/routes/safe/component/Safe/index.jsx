@@ -64,7 +64,7 @@ class GnoSafe extends React.PureComponent<SafeProps, State> {
   onEditThreshold = () => {
     const { safe } = this.props
 
-    this.setState({ component: <Threshold numOwners={safe.get('owners').count()} safe={safe} onReset={this.onListTransactions} /> })
+    this.setState({ component: <Threshold numOwners={safe.get('owners').count()} safe={safe} /> })
   }
 
   onAddOwner = () => {
