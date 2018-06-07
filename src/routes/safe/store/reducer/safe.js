@@ -52,5 +52,5 @@ export default handleActions({
   [UPDATE_DAILY_LIMIT]: (state: State, action: ActionType<typeof updateDailyLimit>): State =>
     state.updateIn([action.payload.safeAddress, 'dailyLimit'], () => makeDailyLimit(action.payload.dailyLimit)),
   [UPDATE_THRESHOLD]: (state: State, action: ActionType<typeof updateThreshold>): State =>
-    state.updateIn([action.payload.safeAddress, 'confirmations'], () => action.payload.threshold),
+    state.updateIn([action.payload.safeAddress, 'threshold'], () => action.payload.threshold),
 }, Map())

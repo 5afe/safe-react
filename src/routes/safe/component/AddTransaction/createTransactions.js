@@ -101,7 +101,7 @@ export const createTransaction = async (
   const valueInWei = web3.toWei(txValue, 'ether')
   const CALL = 0
 
-  const thresholdIsOne = safe.get('confirmations') === 1
+  const thresholdIsOne = safe.get('threshold') === 1
   if (hasOneOwner(safe) || thresholdIsOne) {
     const txConfirmationData =
       gnosisSafe.contract.execTransactionIfApproved.getData(txDest, valueInWei, data, CALL, nonce)
@@ -109,7 +109,7 @@ export const createTransaction = async (
     checkReceiptStatus(txHash)
 
     const executedConfirmations: List<Confirmation> = buildExecutedConfirmationFrom(safe.get('owners'), user)
-    return storeTransaction(txName, nonce, txDest, txValue, user, executedConfirmations, txHash, safeAddress, safe.get('confirmations'), data)
+    return storeTransaction(txName, nonce, txDest, txValue, user, executedConfirmations, txHash, safeAddress, safe.get('threshold'), data)
   }
 
   const txConfirmationData =
@@ -119,5 +119,5 @@ export const createTransaction = async (
 
   const confirmations: List<Confirmation> = buildConfirmationsFrom(safe.get('owners'), user, txConfirmationHash)
 
-  return storeTransaction(txName, nonce, txDest, txValue, user, confirmations, '', safeAddress, safe.get('confirmations'), data)
+  return storeTransaction(txName, nonce, txDest, txValue, user, confirmations, '', safeAddress, safe.get('threshold'), data)
 }

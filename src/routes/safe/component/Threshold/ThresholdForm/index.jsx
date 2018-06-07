@@ -20,7 +20,7 @@ const ThresholdForm = ({ numOwners, safe }: ThresholdProps) => () => (
       {'Change safe\'s threshold'}
     </Heading>
     <Heading tag="h4" margin="lg">
-      {`Safe's owners: ${numOwners} and Safe's threshold: ${safe.get('confirmations')}`}
+      {`Safe's owners: ${numOwners} and Safe's threshold: ${safe.get('threshold')}`}
     </Heading>
     <Block margin="md">
       <Field

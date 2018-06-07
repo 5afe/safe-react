@@ -70,7 +70,7 @@ class GnoSafe extends React.PureComponent<SafeProps, State> {
   onAddOwner = () => {
     const { safe } = this.props
 
-    this.setState({ component: <AddOwner threshold={safe.get('confirmations')} safe={safe} /> })
+    this.setState({ component: <AddOwner threshold={safe.get('threshold')} safe={safe} /> })
   }
 
   render() {
@@ -83,7 +83,7 @@ class GnoSafe extends React.PureComponent<SafeProps, State> {
           <List style={listStyle}>
             <Balance balance={balance} />
             <Owners owners={safe.owners} onAddOwner={this.onAddOwner} />
-            <Confirmations confirmations={safe.get('confirmations')} onEditThreshold={this.onEditThreshold} />
+            <Confirmations confirmations={safe.get('threshold')} onEditThreshold={this.onEditThreshold} />
             <Address address={safe.get('address')} />
             <DailyLimit balance={balance} dailyLimit={safe.get('dailyLimit')} onWithdrawn={this.onWithdrawn} />
             <MultisigTx balance={balance} onAddTx={this.onAddTx} onSeeTxs={this.onListTransactions} />

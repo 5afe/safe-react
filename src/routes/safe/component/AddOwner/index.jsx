@@ -84,7 +84,7 @@ class AddOwner extends React.Component<Props, State> {
           steps={steps}
           onReset={this.onReset}
         >
-          <Stepper.Page numOwners={safe.get('owners').count()} threshold={safe.get('confirmations')} addresses={addresses}>
+          <Stepper.Page numOwners={safe.get('owners').count()} threshold={safe.get('threshold')} addresses={addresses}>
             { AddOwnerForm }
           </Stepper.Page>
           <Stepper.Page>
