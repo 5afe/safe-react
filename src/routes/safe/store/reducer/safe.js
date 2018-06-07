@@ -8,6 +8,7 @@ import { saveSafes } from '~/utils/localStorage'
 import { makeDailyLimit } from '~/routes/safe/store/model/dailyLimit'
 import updateThreshold, { UPDATE_THRESHOLD } from '~/routes/safe/store/actions/updateThreshold'
 import updateSafes, { UPDATE_SAFES } from '~/routes/safe/store/actions/updateSafes'
+import updateSafe, { UPDATE_SAFE } from '~/routes/safe/store/actions/updateSafe'
 
 export const SAFE_REDUCER_ID = 'safes'
 
@@ -25,6 +26,8 @@ action: AddSafeType
 */
 
 export default handleActions({
+  [UPDATE_SAFE]: (state: State, action: ActionType<typeof updateSafe>): State =>
+    state.set(action.payload.get('address'), action.payload),
   [UPDATE_SAFES]: (state: State, action: ActionType<typeof updateSafes>): State =>
     action.payload,
   [ADD_SAFE]: (state: State, action: ActionType<typeof addSafe>): State => {
