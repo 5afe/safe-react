@@ -45,6 +45,7 @@ describe('React DOM TESTS > Multisig transactions from safe [3 owners & 3 thresh
 
   const getAlreadyConfirmed = () => {
     const tx = getTransactionFromReduxStore(store, address)
+    if (!tx) throw new Error()
     const confirmed = confirmationsTransactionSelector(store.getState(), { transaction: tx })
 
     return confirmed
@@ -53,6 +54,7 @@ describe('React DOM TESTS > Multisig transactions from safe [3 owners & 3 thresh
   const makeConfirmation = async (executor) => {
     const alreadyConfirmed = getAlreadyConfirmed()
     const tx = getTransactionFromReduxStore(store, address)
+    if (!tx) throw new Error()
     await processTransaction(address, tx, alreadyConfirmed, executor)
     await sleep(800)
     store.dispatch(fetchTransactions())
@@ -96,6 +98,7 @@ describe('React DOM TESTS > Multisig transactions from safe [3 owners & 3 thresh
 
     const confirmedExecuted = paragraphsExecuted[3].innerHTML
     const tx = getTransactionFromReduxStore(store, address)
+    if (!tx) throw new Error()
     expect(confirmedExecuted).toBe(tx.get('tx'))
   })
 })

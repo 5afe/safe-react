@@ -12,18 +12,22 @@ import Row from '~/components/layout/Row'
 import { composeValidators, minValue, maxValue, mustBeInteger, required } from '~/components/forms/validator'
 import { getSafeEthereumInstance, createTransaction } from '~/routes/safe/component/AddTransaction/createTransactions'
 import { sleep } from '~/utils/timer'
+import { type Safe } from '~/routes/safe/store/model/safe'
 import selector, { type SelectorProps } from './selector'
 import actions, { type Actions } from './actions'
 
-type Props = SelectorProps & Actions & {
+type ThresholdProps = {
   numOwners: number,
   safe: Safe,
+}
+
+type Props = SelectorProps & Actions & ThresholdProps & {
   onReset: () => void,
 }
 
 const THRESHOLD_PARAM = 'threshold'
 
-const ThresholdComponent = ({ numOwners, safe }: Props) => () => (
+const ThresholdComponent = ({ numOwners, safe }: ThresholdProps) => () => (
   <Block margin="md">
     <Heading tag="h2" margin="lg">
       {'Change safe\'s threshold'}

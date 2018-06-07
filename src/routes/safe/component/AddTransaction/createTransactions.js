@@ -80,7 +80,7 @@ const hasOneOwner = (safe: Safe) => {
   return owners.count() === 1
 }
 
-export const getSafeEthereumInstance = async (safeAddress) => {
+export const getSafeEthereumInstance = async (safeAddress: string) => {
   const web3 = getWeb3()
   const GnosisSafe = await getGnosisSafeContract(web3)
   return GnosisSafe.at(safeAddress)
