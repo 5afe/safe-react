@@ -6,6 +6,7 @@ import Collapse from 'material-ui/transitions/Collapse'
 import ListItemText from '~/components/List/ListItemText'
 import List, { ListItem, ListItemIcon } from 'material-ui/List'
 import Avatar from 'material-ui/Avatar'
+import Button from '~/components/layout/Button'
 import Group from 'material-ui-icons/Group'
 import Person from 'material-ui-icons/Person'
 import ExpandLess from 'material-ui-icons/ExpandLess'
@@ -21,10 +22,13 @@ const styles = {
 
 type Props = Open & WithStyles & {
   owners: List<OwnerProps>,
+  onAddOwner: () => void,
 }
 
+export const ADD_OWNER_BUTTON_TEXT = 'Add'
+
 const Owners = openHoc(({
-  open, toggle, owners, classes,
+  open, toggle, owners, classes, onAddOwner,
 }: Props) => (
   <React.Fragment>
     <ListItem onClick={toggle}>
@@ -35,6 +39,13 @@ const Owners = openHoc(({
       <ListItemIcon>
         {open ? <ExpandLess /> : <ExpandMore />}
       </ListItemIcon>
+      <Button
+        variant="raised"
+        color="primary"
+        onClick={onAddOwner}
+      >
+        {ADD_OWNER_BUTTON_TEXT}
+      </Button>
     </ListItem>
     <Collapse in={open} timeout="auto" unmountOnExit>
       <List component="div" disablePadding>

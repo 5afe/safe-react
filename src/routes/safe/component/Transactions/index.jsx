@@ -25,6 +25,7 @@ class Transactions extends React.Component<Props, {}> {
     await sleep(1200)
     fetchTransactions()
     fetchThreshold(safeAddress)
+    // fetchOwners(safeAddress)
   }
 
   render() {
