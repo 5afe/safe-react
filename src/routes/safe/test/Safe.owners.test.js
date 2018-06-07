@@ -10,11 +10,11 @@ import { confirmationsTransactionSelector, safeSelector, safeTransactionsSelecto
 import { getTransactionFromReduxStore } from '~/routes/safe/test/testMultisig'
 import { buildMathPropsFrom } from '~/test/buildReactRouterProps'
 import { createTransaction } from '~/routes/safe/component/AddTransaction/createTransactions'
-import { getGnosisSafeContract } from '~/wallets/safeContracts'
 import fetchTransactions from '~/routes/safe/store/actions/fetchTransactions'
 import { type GlobalState } from '~/store/index'
 import { type Safe } from '~/routes/safe/store/model/safe'
 import { type Transaction } from '~/routes/safe/store/model/transaction'
+import { getGnosisSafeInstanceAt } from '~/wallets/safeContracts'
 
 const getSafeFrom = (state: GlobalState, safeAddress: string): Safe => {
   const match: Match = buildMathPropsFrom(safeAddress)
@@ -22,14 +22,6 @@ const getSafeFrom = (state: GlobalState, safeAddress: string): Safe => {
   if (!safe) throw new Error()
 
   return safe
-}
-
-const getGnosisSafeInstanceAt = async (safeAddress: string) => {
-  const web3 = getWeb3()
-  const GnosisSafe = await getGnosisSafeContract(web3)
-  const gnosisSafe = GnosisSafe.at(safeAddress)
-
-  return gnosisSafe
 }
 
 describe('React DOM TESTS > Add and remove owners', () => {
