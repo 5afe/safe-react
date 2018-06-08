@@ -2,11 +2,8 @@
 import { Map } from 'immutable'
 import { handleActions, type ActionType } from 'redux-actions'
 import addSafe, { ADD_SAFE } from '~/routes/safe/store/actions/addSafe'
-import updateDailyLimit, { UPDATE_DAILY_LIMIT } from '~/routes/safe/store/actions/updateDailyLimit'
 import { type Safe, makeSafe } from '~/routes/safe/store/model/safe'
 import { saveSafes } from '~/utils/localStorage'
-import { makeDailyLimit } from '~/routes/safe/store/model/dailyLimit'
-import updateThreshold, { UPDATE_THRESHOLD } from '~/routes/safe/store/actions/updateThreshold'
 import updateSafes, { UPDATE_SAFES } from '~/routes/safe/store/actions/updateSafes'
 import updateSafe, { UPDATE_SAFE } from '~/routes/safe/store/actions/updateSafe'
 
@@ -35,8 +32,4 @@ export default handleActions({
     saveSafes(safes.toJSON())
     return safes
   },
-  [UPDATE_DAILY_LIMIT]: (state: State, action: ActionType<typeof updateDailyLimit>): State =>
-    state.updateIn([action.payload.safeAddress, 'dailyLimit'], () => makeDailyLimit(action.payload.dailyLimit)),
-  [UPDATE_THRESHOLD]: (state: State, action: ActionType<typeof updateThreshold>): State =>
-    state.updateIn([action.payload.safeAddress, 'threshold'], () => action.payload.threshold),
 }, Map())

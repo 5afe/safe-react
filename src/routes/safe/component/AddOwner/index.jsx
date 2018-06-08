@@ -2,7 +2,6 @@
 import * as React from 'react'
 import { List } from 'immutable'
 import Stepper from '~/components/Stepper'
-import { sleep } from '~/utils/timer'
 import { connect } from 'react-redux'
 import { type Safe } from '~/routes/safe/store/model/safe'
 import { type Owner } from '~/routes/safe/store/model/owner'
@@ -43,7 +42,7 @@ class AddOwner extends React.Component<Props, State> {
   onAddOwner = async (values: Object) => {
     try {
       const {
-        safe, threshold, userAddress, fetchTransactions, // fetchOwners
+        safe, threshold, userAddress, fetchTransactions,
       } = this.props
       const nonce = Date.now()
       const newThreshold = values[INCREASE_PARAM] ? threshold + 1 : threshold
@@ -53,9 +52,7 @@ class AddOwner extends React.Component<Props, State> {
       const gnosisSafe = await getSafeEthereumInstance(safeAddress)
       const data = gnosisSafe.contract.addOwnerWithThreshold.getData(newOwnerAddress, newThreshold)
       await createTransaction(safe, `Add Owner ${newOwnerName}`, safeAddress, 0, nonce, userAddress, data)
-      await sleep(1500)
       fetchTransactions()
-      // fetchOwners(safeAddress)
       this.setState({ done: true })
     } catch (error) {
       this.setState({ done: false })
