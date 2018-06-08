@@ -1,7 +1,7 @@
 // @flow
 import { combineReducers, createStore, applyMiddleware, compose } from 'redux'
 import thunk from 'redux-thunk'
-import safeReducer, { safeInitialState, SAFE_REDUCER_ID } from '~/routes/safe/store/reducer/safe'
+import safeReducer, { SAFE_REDUCER_ID } from '~/routes/safe/store/reducer/safe'
 import addSafe from '~/routes/safe/store/actions/addSafe'
 import * as SafeFields from '~/routes/open/components/fields'
 import { getAccountsFrom, getNamesFrom } from '~/routes/open/utils/safeDataExtractor'
@@ -55,26 +55,6 @@ const providerReducerTests = () => {
 
       // THEN
       expect(safes.get(address)).toEqual(SafeFactory.oneOwnerSafe())
-    })
-
-    it('reducer loads information from localStorage', async () => {
-      // GIVEN in beforeEach method
-
-      // WHEN
-      store.dispatch(addSafe(
-        formValues[SafeFields.FIELD_NAME],
-        formValues.address,
-        formValues[SafeFields.FIELD_CONFIRMATIONS],
-        formValues[SafeFields.FIELD_DAILY_LIMIT],
-        getNamesFrom(formValues),
-        getAccountsFrom(formValues),
-      ))
-
-      const anotherStore = aStore({ [SAFE_REDUCER_ID]: safeInitialState() })
-      const safes = anotherStore.getState()[SAFE_REDUCER_ID]
-
-      // THEN
-      expect(safeInitialState()).toEqual(safes)
     })
   })
 }

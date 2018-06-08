@@ -3,6 +3,7 @@ import { aNewStore } from '~/store'
 import { aDeployedSafe } from '~/routes/safe/store/test/builder/deployedSafe.builder'
 import { getWeb3 } from '~/wallets/getWeb3'
 import { sleep } from '~/utils/timer'
+import { type Match } from 'react-router-dom'
 import { promisify } from '~/utils/promisify'
 import { processTransaction } from '~/routes/safe/component/Transactions/processTransactions'
 import { confirmationsTransactionSelector, safeSelector, safeTransactionsSelector } from '~/routes/safe/store/selectors/index'
@@ -22,6 +23,7 @@ describe('React DOM TESTS > Change threshold', () => {
     const accounts = await promisify(cb => getWeb3().eth.getAccounts(cb))
     const match: Match = buildMathPropsFrom(address)
     const safe = safeSelector(store.getState(), { match })
+    if (!safe) throw new Error()
     const web3 = getWeb3()
     const GnosisSafe = await getGnosisSafeContract(web3)
     const gnosisSafe = GnosisSafe.at(address)
@@ -37,7 +39,8 @@ describe('React DOM TESTS > Change threshold', () => {
     const transactions = safeTransactionsSelector(store.getState(), { safeAddress: address })
     expect(transactions.count()).toBe(1)
 
-    const thresholdTx: Transaction = transactions.get(0)
+    const thresholdTx = transactions.get(0)
+    if (!thresholdTx) throw new Error()
     expect(thresholdTx.get('tx')).not.toBe(null)
     expect(thresholdTx.get('tx')).not.toBe(undefined)
     expect(thresholdTx.get('tx')).not.toBe('')
@@ -48,6 +51,7 @@ describe('React DOM TESTS > Change threshold', () => {
 
   const changeThreshold = async (store, safeAddress, executor) => {
     const tx = getTransactionFromReduxStore(store, safeAddress)
+    if (!tx) throw new Error()
     const confirmed = confirmationsTransactionSelector(store.getState(), { transaction: tx })
     const data = tx.get('data')
     expect(data).not.toBe(null)
@@ -66,6 +70,7 @@ describe('React DOM TESTS > Change threshold', () => {
     const accounts = await promisify(cb => getWeb3().eth.getAccounts(cb))
     const match: Match = buildMathPropsFrom(address)
     const safe = safeSelector(store.getState(), { match })
+    if (!safe) throw new Error()
     const web3 = getWeb3()
     const GnosisSafe = await getGnosisSafeContract(web3)
     const gnosisSafe = GnosisSafe.at(address)
@@ -78,9 +83,11 @@ describe('React DOM TESTS > Change threshold', () => {
     await store.dispatch(fetchTransactions())
 
     let transactions = safeTransactionsSelector(store.getState(), { safeAddress: address })
+    if (!transactions) throw new Error()
     expect(transactions.count()).toBe(1)
 
-    let thresholdTx: Transaction = transactions.get(0)
+    let thresholdTx = transactions.get(0)
+    if (!thresholdTx) throw new Error()
     expect(thresholdTx.get('tx')).toBe('')
     let firstOwnerConfirmation = thresholdTx.get('confirmations').get(0)
     if (!firstOwnerConfirmation) throw new Error()
@@ -103,6 +110,7 @@ describe('React DOM TESTS > Change threshold', () => {
     expect(transactions.count()).toBe(1)
 
     thresholdTx = transactions.get(0)
+    if (!thresholdTx) throw new Error()
     expect(thresholdTx.get('tx')).not.toBe(undefined)
     expect(thresholdTx.get('tx')).not.toBe(null)
     expect(thresholdTx.get('tx')).not.toBe('')

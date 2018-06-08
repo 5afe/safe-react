@@ -20,7 +20,7 @@ class SafeBuilder {
   }
 
   withConfirmations(confirmations: number) {
-    this.safe = this.safe.set('confirmations', confirmations)
+    this.safe = this.safe.set('threshold', confirmations)
     return this
   }
 

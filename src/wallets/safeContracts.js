@@ -136,3 +136,11 @@ export const deploySafeContract = async (
 
   return proxyFactoryMaster.createProxy(safeMaster.address, gnosisSafeData, { from: userAccount, gas, gasPrice })
 }
+
+export const getGnosisSafeInstanceAt = async (safeAddress: string) => {
+  const web3 = getWeb3()
+  const GnosisSafe = await getGnosisSafeContract(web3)
+  const gnosisSafe = GnosisSafe.at(safeAddress)
+
+  return gnosisSafe
+}

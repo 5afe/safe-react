@@ -20,14 +20,14 @@ const addSafe = createAction(
   ADD_SAFE,
   (
     name: string, address: string,
-    confirmations: number, limit: number,
+    threshold: number, limit: number,
     ownersName: string[], ownersAddress: string[],
   ): SafeProps => {
     const owners: List<Owner> = buildOwnersFrom(ownersName, ownersAddress)
     const dailyLimit: DailyLimit = buildDailyLimitFrom(limit)
 
     return ({
-      address, name, confirmations, owners, dailyLimit,
+      address, name, threshold, owners, dailyLimit,
     })
   },
 )
