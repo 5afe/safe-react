@@ -3,7 +3,7 @@ import { Map } from 'immutable'
 import { handleActions, type ActionType } from 'redux-actions'
 import addSafe, { ADD_SAFE } from '~/routes/safe/store/actions/addSafe'
 import { type Safe, makeSafe } from '~/routes/safe/store/model/safe'
-import { saveSafes } from '~/utils/localStorage'
+import { saveSafes, setOwners } from '~/utils/localStorage'
 import updateSafes, { UPDATE_SAFES } from '~/routes/safe/store/actions/updateSafes'
 import updateSafe, { UPDATE_SAFE } from '~/routes/safe/store/actions/updateSafe'
 
@@ -28,7 +28,10 @@ export default handleActions({
   [UPDATE_SAFES]: (state: State, action: ActionType<typeof updateSafes>): State =>
     action.payload,
   [ADD_SAFE]: (state: State, action: ActionType<typeof addSafe>): State => {
-    const safes = state.set(action.payload.address, makeSafe(action.payload))
+    const safe: Safe = makeSafe(action.payload)
+    setOwners(safe.get('address'), safe.get('owners'))
+
+    const safes = state.set(action.payload.address, safe)
     saveSafes(safes.toJSON())
     return safes
   },

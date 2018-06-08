@@ -1,6 +1,10 @@
 // @flow
+import { List, Map } from 'immutable'
+import { type Owner } from '~/routes/safe/store/model/owner'
+
 export const SAFES_KEY = 'SAFES'
 export const TX_KEY = 'TX'
+export const OWNERS_KEY = 'OWNERS'
 
 export const load = (key: string) => {
   try {
@@ -26,4 +30,20 @@ export const saveSafes = (safes: Object) => {
   } catch (err) {
     // Ignore write errors
   }
+}
+
+export const setOwners = (safeAddress: string, owners: List<Owner>) => {
+  try {
+    const ownersAsMap = Map(owners.map((owner: Owner) => [owner.get('address').toLowerCase(), owner.get('name')]))
+    const serializedState = JSON.stringify(ownersAsMap)
+    localStorage.setItem(`${OWNERS_KEY}-${safeAddress}`, serializedState)
+  } catch (err) {
+    // Ignore write errors
+  }
+}
+
+export const getOwners = (safeAddress: string): Map<string, string> => {
+  const data = load(`${OWNERS_KEY}-${safeAddress}`)
+
+  return data ? Map(data) : Map()
 }

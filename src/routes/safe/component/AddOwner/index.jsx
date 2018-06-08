@@ -4,8 +4,9 @@ import { List } from 'immutable'
 import Stepper from '~/components/Stepper'
 import { connect } from 'react-redux'
 import { type Safe } from '~/routes/safe/store/model/safe'
-import { type Owner } from '~/routes/safe/store/model/owner'
+import { type Owner, makeOwner } from '~/routes/safe/store/model/owner'
 import { getSafeEthereumInstance, createTransaction } from '~/routes/safe/component/AddTransaction/createTransactions'
+import { setOwners } from '~/utils/localStorage'
 import AddOwnerForm, { NAME_PARAM, OWNER_ADDRESS_PARAM, INCREASE_PARAM } from './AddOwnerForm'
 import Review from './Review'
 import selector, { type SelectorProps } from './selector'
@@ -52,6 +53,7 @@ class AddOwner extends React.Component<Props, State> {
       const gnosisSafe = await getSafeEthereumInstance(safeAddress)
       const data = gnosisSafe.contract.addOwnerWithThreshold.getData(newOwnerAddress, newThreshold)
       await createTransaction(safe, `Add Owner ${newOwnerName}`, safeAddress, 0, nonce, userAddress, data)
+      setOwners(safeAddress, safe.get('owners').push(makeOwner({ name: newOwnerName, address: newOwnerAddress })))
       fetchTransactions()
       this.setState({ done: true })
     } catch (error) {
