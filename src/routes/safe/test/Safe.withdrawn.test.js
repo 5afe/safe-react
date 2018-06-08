@@ -46,7 +46,7 @@ describe('React DOM TESTS > Withdrawn funds from safe', () => {
 
     // $FlowFixMe
     const buttons = TestUtils.scryRenderedComponentsWithType(Safe, Button)
-    const withdrawnButton = buttons[0]
+    const withdrawnButton = buttons[2]
     expect(withdrawnButton.props.children).toEqual(WITHDRAWN_BUTTON_TEXT)
     TestUtils.Simulate.click(TestUtils.scryRenderedDOMComponentsWithTag(withdrawnButton, 'button')[0])
     await sleep(4000)
@@ -96,7 +96,7 @@ describe('React DOM TESTS > Withdrawn funds from safe', () => {
     const Safe = TestUtils.findRenderedComponentWithType(SafeDom, SafeView)
     // $FlowFixMe
     const buttons = TestUtils.scryRenderedComponentsWithType(Safe, Button)
-    const addTxButton = buttons[1]
+    const addTxButton = buttons[3]
     expect(addTxButton.props.children).toEqual(ADD_MULTISIG_BUTTON_TEXT)
     expect(addTxButton.props.disabled).toBe(true)
 
@@ -110,7 +110,7 @@ describe('React DOM TESTS > Withdrawn funds from safe', () => {
     const Safe = TestUtils.findRenderedComponentWithType(SafeDom, SafeView)
     // $FlowFixMe
     const buttons = TestUtils.scryRenderedComponentsWithType(Safe, Button)
-    const addTxButton = buttons[0]
+    const addTxButton = buttons[2]
     expect(addTxButton.props.children).toEqual(WITHDRAWN_BUTTON_TEXT)
     expect(addTxButton.props.disabled).toBe(true)
 

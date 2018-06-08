@@ -4,7 +4,6 @@ import { connect } from 'react-redux'
 import { type Transaction } from '~/routes/safe/store/model/transaction'
 import NoTransactions from '~/routes/safe/component/Transactions/NoTransactions'
 import GnoTransaction from '~/routes/safe/component/Transactions/Transaction'
-import { sleep } from '~/utils/timer'
 import { processTransaction } from './processTransactions'
 import selector, { type SelectorProps } from './selector'
 import actions, { type Actions } from './actions'
@@ -17,9 +16,11 @@ type Props = SelectorProps & Actions & {
 }
 class Transactions extends React.Component<Props, {}> {
   onProcessTx = async (tx: Transaction, alreadyConfirmed: number) => {
-    const { fetchTransactions, safeAddress, userAddress } = this.props
+    const {
+      fetchTransactions, safeAddress, userAddress,
+    } = this.props
+
     await processTransaction(safeAddress, tx, alreadyConfirmed, userAddress)
-    await sleep(1200)
     fetchTransactions()
   }
 

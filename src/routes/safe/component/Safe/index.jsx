@@ -12,6 +12,8 @@ import List from 'material-ui/List'
 import Withdrawn from '~/routes/safe/component/Withdrawn'
 import Transactions from '~/routes/safe/component/Transactions'
 import AddTransaction from '~/routes/safe/component/AddTransaction'
+import Threshold from '~/routes/safe/component/Threshold'
+import AddOwner from '~/routes/safe/component/AddOwner'
 
 import Address from './Address'
 import Balance from './Balance'
@@ -59,6 +61,18 @@ class GnoSafe extends React.PureComponent<SafeProps, State> {
     this.setState({ component: <Transactions safeName={safe.get('name')} safeAddress={safe.get('address')} onAddTx={this.onAddTx} /> })
   }
 
+  onEditThreshold = () => {
+    const { safe } = this.props
+
+    this.setState({ component: <Threshold numOwners={safe.get('owners').count()} safe={safe} /> })
+  }
+
+  onAddOwner = (e: SyntheticEvent<HTMLButtonElement>) => {
+    const { safe } = this.props
+    e.stopPropagation()
+    this.setState({ component: <AddOwner threshold={safe.get('threshold')} safe={safe} /> })
+  }
+
   render() {
     const { safe, balance } = this.props
     const { component } = this.state
@@ -68,8 +82,8 @@ class GnoSafe extends React.PureComponent<SafeProps, State> {
         <Col sm={12} top="xs" md={5} margin="xl" overflow>
           <List style={listStyle}>
             <Balance balance={balance} />
-            <Owners owners={safe.owners} />
-            <Confirmations confirmations={safe.get('confirmations')} />
+            <Owners owners={safe.owners} onAddOwner={this.onAddOwner} />
+            <Confirmations confirmations={safe.get('threshold')} onEditThreshold={this.onEditThreshold} />
             <Address address={safe.get('address')} />
             <DailyLimit balance={balance} dailyLimit={safe.get('dailyLimit')} onWithdrawn={this.onWithdrawn} />
             <MultisigTx balance={balance} onAddTx={this.onAddTx} onSeeTxs={this.onListTransactions} />

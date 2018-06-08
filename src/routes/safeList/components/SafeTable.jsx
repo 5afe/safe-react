@@ -32,7 +32,7 @@ const SafeTable = ({ safes }: Props) => (
           </TableCell>
           <TableCell padding="none">{safe.get('name')}</TableCell>
           <TableCell padding="none">{safe.get('address')}</TableCell>
-          <TableCell padding="none" numeric>{safe.get('confirmations')}</TableCell>
+          <TableCell padding="none" numeric>{safe.get('threshold')}</TableCell>
           <TableCell padding="none" numeric>{safe.get('owners').count()}</TableCell>
           <TableCell padding="none" numeric>{`${safe.get('dailyLimit').get('value')} ETH`}</TableCell>
         </TableRow>

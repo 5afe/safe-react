@@ -5,7 +5,7 @@ import type { ProviderProps } from '~/wallets/store/model/provider'
 import { promisify } from '~/utils/promisify'
 
 let web3
-export const getWeb3 = () => web3
+export const getWeb3 = () => web3 || new Web3(window.web3.currentProvider)
 
 const isMetamask: Function = (web3Provider): boolean => {
   const isMetamaskConstructor = web3Provider.currentProvider.constructor.name === 'MetamaskInpageProvider'

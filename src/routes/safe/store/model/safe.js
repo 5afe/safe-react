@@ -7,7 +7,7 @@ import type { Owner } from '~/routes/safe/store/model/owner'
 export type SafeProps = {
   name: string,
   address: string,
-  confirmations: number,
+  threshold: number,
   owners: List<Owner>,
   dailyLimit: DailyLimit,
 }
@@ -15,7 +15,7 @@ export type SafeProps = {
 export const makeSafe: RecordFactory<SafeProps> = Record({
   name: '',
   address: '',
-  confirmations: 0,
+  threshold: 0,
   owners: List([]),
   dailyLimit: makeDailyLimit(),
 })

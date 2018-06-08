@@ -11,6 +11,7 @@ export type TransactionProps = {
   confirmations: List<Confirmation>,
   destination: string,
   tx: string,
+  data: string,
 }
 
 export const makeTransaction: RecordFactory<TransactionProps> = Record({
@@ -21,6 +22,7 @@ export const makeTransaction: RecordFactory<TransactionProps> = Record({
   destination: '',
   tx: '',
   threshold: 0,
+  data: '',
 })
 
 export type Transaction = RecordOf<TransactionProps>

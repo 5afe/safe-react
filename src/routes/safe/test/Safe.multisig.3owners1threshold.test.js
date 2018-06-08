@@ -53,6 +53,7 @@ describe('React DOM TESTS > Multisig transactions from safe [3 owners & 1 thresh
 
     const confirmed = paragraphs[3].innerHTML
     const tx = getTransactionFromReduxStore(store, address)
+    if (!tx) throw new Error()
     expect(confirmed).toBe(tx.get('tx'))
 
     const ownerTx = paragraphs[6].innerHTML

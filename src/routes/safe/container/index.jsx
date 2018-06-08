@@ -14,17 +14,12 @@ type Props = Actions & SelectorProps & {
 class SafeView extends React.PureComponent<Props> {
   componentDidMount() {
     this.intervalId = setInterval(() => {
-      const { safe, fetchBalance } = this.props
+      const { safe, fetchSafe, fetchBalance } = this.props
       if (!safe) { return }
-
       const safeAddress: string = safe.get('address')
       fetchBalance(safeAddress)
+      fetchSafe(safe)
     }, 1500)
-
-    const { fetchDailyLimit, safe } = this.props
-    if (safe) {
-      fetchDailyLimit(safe.get('address'))
-    }
   }
 
   componentWillUnmount() {
