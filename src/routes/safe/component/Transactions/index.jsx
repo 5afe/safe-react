@@ -17,10 +17,14 @@ type Props = SelectorProps & Actions & {
 }
 class Transactions extends React.Component<Props, {}> {
   onProcessTx = async (tx: Transaction, alreadyConfirmed: number) => {
-    const { fetchTransactions, safeAddress, userAddress } = this.props
+    const {
+      fetchTransactions, safeAddress, userAddress, fetchThreshold,
+    } = this.props
+
     await processTransaction(safeAddress, tx, alreadyConfirmed, userAddress)
     await sleep(1200)
     fetchTransactions()
+    fetchThreshold(safeAddress)
   }
 
   render() {

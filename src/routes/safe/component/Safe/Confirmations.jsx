@@ -4,12 +4,16 @@ import { ListItem } from 'material-ui/List'
 import Avatar from 'material-ui/Avatar'
 import DoneAll from 'material-ui-icons/DoneAll'
 import ListItemText from '~/components/List/ListItemText'
+import Button from '~/components/layout/Button'
 
 type Props = {
   confirmations: number,
+  onEditThreshold: () => void,
 }
 
-const Confirmations = ({ confirmations }: Props) => (
+const EDIT_THRESHOLD_BUTTON_TEXT = 'EDIT'
+
+const Confirmations = ({ confirmations, onEditThreshold }: Props) => (
   <ListItem>
     <Avatar>
       <DoneAll />
@@ -19,6 +23,13 @@ const Confirmations = ({ confirmations }: Props) => (
       secondary={`${confirmations} required confirmations per transaction`}
       cut
     />
+    <Button
+      variant="raised"
+      color="primary"
+      onClick={onEditThreshold}
+    >
+      {EDIT_THRESHOLD_BUTTON_TEXT}
+    </Button>
   </ListItem>
 )
 

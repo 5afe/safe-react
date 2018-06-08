@@ -2,6 +2,7 @@
 import balanceReducerTests from './balance.reducer'
 import safeReducerTests from './safe.reducer'
 import dailyLimitReducerTests from './dailyLimit.reducer'
+import thresholdReducerTests from './threshold.reducer'
 import balanceSelectorTests from './balance.selector'
 import safeSelectorTests from './safe.selector'
 import grantedSelectorTests from './granted.selector'
@@ -13,6 +14,7 @@ describe('Safe Test suite', () => {
   safeReducerTests()
   balanceReducerTests()
   dailyLimitReducerTests()
+  thresholdReducerTests()
 
   // SAFE SELECTOR
   safeSelectorTests()
