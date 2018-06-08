@@ -28,7 +28,8 @@ export const saveSafes = (safes: Object) => {
     const serializedState = JSON.stringify(safes)
     localStorage.setItem(SAFES_KEY, serializedState)
   } catch (err) {
-    // Ignore write errors
+    // eslint-disable-next-line
+    console.log('Error storing safe info in localstorage')
   }
 }
 
@@ -38,7 +39,8 @@ export const setOwners = (safeAddress: string, owners: List<Owner>) => {
     const serializedState = JSON.stringify(ownersAsMap)
     localStorage.setItem(`${OWNERS_KEY}-${safeAddress}`, serializedState)
   } catch (err) {
-    // Ignore write errors
+    // eslint-disable-next-line
+    console.log('Error storing owners in localstorage')
   }
 }
 
