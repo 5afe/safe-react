@@ -1,0 +1,93 @@
+// @flow
+import * as React from 'react'
+import Stepper from '~/components/Stepper'
+import { connect } from 'react-redux'
+import { type Safe } from '~/routes/safe/store/model/safe'
+import { getSafeEthereumInstance, createTransaction } from '~/routes/safe/component/AddTransaction/createTransactions'
+import RemoveOwnerForm, { DECREASE_PARAM } from './RemoveOwnerForm'
+import Review from './Review'
+import selector, { type SelectorProps } from './selector'
+import actions, { type Actions } from './actions'
+
+const getSteps = () => [
+  'Fill Owner Form', 'Review Add order operation',
+]
+
+type Props = SelectorProps & Actions & {
+  safe: Safe,
+  threshold: number,
+  name: string,
+  userToRemove: string,
+}
+
+type State = {
+  done: boolean,
+}
+
+const SENTINEL_ADDRESS = '0x0000000000000000000000000000000000000001'
+export const REMOVE_OWNER_RESET_BUTTON_TEXT = 'RESET'
+
+class RemoveOwner extends React.Component<Props, State> {
+  state = {
+    done: false,
+  }
+
+  onRemoveOwner = async (values: Object) => {
+    try {
+      const {
+        safe, threshold, executor, fetchTransactions, userToRemove, name,
+      } = this.props
+      const nonce = Date.now()
+      const newThreshold = values[DECREASE_PARAM] ? threshold - 1 : threshold
+      const safeAddress = safe.get('address')
+      const gnosisSafe = await getSafeEthereumInstance(safeAddress)
+
+      const storedOwners = await gnosisSafe.getOwners()
+      const index = storedOwners.findIndex(ownerAddress => ownerAddress === userToRemove)
+      const prevAddress = index === 0 ? SENTINEL_ADDRESS : storedOwners[index - 1]
+      const data = gnosisSafe.contract.removeOwner.getData(prevAddress, userToRemove, newThreshold)
+
+      const text = name || userToRemove
+      await createTransaction(safe, `Remove Owner ${text}`, safeAddress, 0, nonce, executor, data)
+
+      fetchTransactions()
+      this.setState({ done: true })
+    } catch (error) {
+      this.setState({ done: false })
+      // eslint-disable-next-line
+      console.log('Error while adding owner ' + error)
+    }
+  }
+
+  onReset = () => {
+    this.setState({ done: false })
+  }
+
+  render() {
+    const { safe, name } = this.props
+    const { done } = this.state
+    const steps = getSteps()
+    const finishedButton = <Stepper.FinishButton title={REMOVE_OWNER_RESET_BUTTON_TEXT} />
+
+    return (
+      <React.Fragment>
+        <Stepper
+          finishedTransaction={done}
+          finishedButton={finishedButton}
+          onSubmit={this.onRemoveOwner}
+          steps={steps}
+          onReset={this.onReset}
+        >
+          <Stepper.Page numOwners={safe.get('owners').count()} threshold={safe.get('threshold')} name={name}>
+            { RemoveOwnerForm }
+          </Stepper.Page>
+          <Stepper.Page name={name}>
+            { Review }
+          </Stepper.Page>
+        </Stepper>
+      </React.Fragment>
+    )
+  }
+}
+
+export default connect(selector, actions)(RemoveOwner)
