@@ -29,13 +29,14 @@ type Props = Open & WithStyles & {
   owners: List<OwnerProps>,
   userAddress: string,
   onAddOwner: () => void,
+  onRemoveOwner: (name: string, addres: string) => void,
 }
 
 export const ADD_OWNER_BUTTON_TEXT = 'Add'
 export const REMOVE_OWNER_BUTTON_TEXT = 'Delete'
 
 const Owners = openHoc(({
-  open, toggle, owners, classes, onAddOwner, userAddress,
+  open, toggle, owners, classes, onAddOwner, userAddress, onRemoveOwner,
 }: Props) => (
   <React.Fragment>
     <ListItem onClick={toggle}>
@@ -56,23 +57,27 @@ const Owners = openHoc(({
     </ListItem>
     <Collapse in={open} timeout="auto" unmountOnExit>
       <List component="div" disablePadding>
-        {owners.map(owner => (
-          <ListItem key={owner.address} className={classes.nested}>
-            <ListItemIcon>
-              <Person />
-            </ListItemIcon>
-            <ListItemText
-              cut
-              primary={owner.name}
-              secondary={owner.address}
-            />
-            { !sameAddress(userAddress, owner.address) &&
-              <IconButton aria-label="Delete">
-                <Delete />
-              </IconButton>
-            }
-          </ListItem>
-        ))}
+        {owners.map((owner) => {
+          const onRemoveIconClick = () => onRemoveOwner(owner.name, owner.address)
+
+          return (
+            <ListItem key={owner.address} className={classes.nested}>
+              <ListItemIcon>
+                <Person />
+              </ListItemIcon>
+              <ListItemText
+                cut
+                primary={owner.name}
+                secondary={owner.address}
+              />
+              { !sameAddress(userAddress, owner.address) &&
+                <IconButton aria-label="Delete" onClick={onRemoveIconClick}>
+                  <Delete />
+                </IconButton>
+              }
+            </ListItem>
+          )
+        })}
       </List>
     </Collapse>
   </React.Fragment>

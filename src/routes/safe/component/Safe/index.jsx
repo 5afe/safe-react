@@ -14,6 +14,7 @@ import Transactions from '~/routes/safe/component/Transactions'
 import AddTransaction from '~/routes/safe/component/AddTransaction'
 import Threshold from '~/routes/safe/component/Threshold'
 import AddOwner from '~/routes/safe/component/AddOwner'
+import RemoveOwner from '~/routes/safe/component/RemoveOwner'
 
 import Address from './Address'
 import Balance from './Balance'
@@ -74,6 +75,12 @@ class GnoSafe extends React.PureComponent<SafeProps, State> {
     this.setState({ component: <AddOwner threshold={safe.get('threshold')} safe={safe} /> })
   }
 
+  onRemoveOwner = (name: string, address: string) => {
+    const { safe } = this.props
+
+    this.setState({ component: <RemoveOwner threshold={safe.get('threshold')} safe={safe} name={name} userToRemove={address} /> })
+  }
+
   render() {
     const { safe, balance, userAddress } = this.props
     const { component } = this.state
@@ -83,7 +90,12 @@ class GnoSafe extends React.PureComponent<SafeProps, State> {
         <Col sm={12} top="xs" md={5} margin="xl" overflow>
           <List style={listStyle}>
             <Balance balance={balance} />
-            <Owners owners={safe.owners} onAddOwner={this.onAddOwner} userAddress={userAddress} />
+            <Owners
+              owners={safe.owners}
+              onAddOwner={this.onAddOwner}
+              userAddress={userAddress}
+              onRemoveOwner={this.onRemoveOwner}
+            />
             <Confirmations confirmations={safe.get('threshold')} onEditThreshold={this.onEditThreshold} />
             <Address address={safe.get('address')} />
             <DailyLimit balance={balance} dailyLimit={safe.get('dailyLimit')} onWithdrawn={this.onWithdrawn} />
