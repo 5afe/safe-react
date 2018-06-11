@@ -12,6 +12,7 @@ export type SelectorProps = {
   safe: SafeSelectorProps,
   provider: string,
   balance: string,
+  userAddress: string,
 }
 
 export const grantedSelector: Selector<GlobalState, RouterProps, boolean> = createSelector(
@@ -40,4 +41,5 @@ export default createStructuredSelector({
   provider: providerNameSelector,
   balance: balanceSelector,
   granted: grantedSelector,
+  userAddress: userAccountSelector,
 })

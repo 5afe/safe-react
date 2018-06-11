@@ -30,13 +30,13 @@ class SafeView extends React.PureComponent<Props> {
 
   render() {
     const {
-      safe, provider, balance, granted,
+      safe, provider, balance, granted, userAddress,
     } = this.props
 
     return (
       <Page>
         { granted
-          ? <Layout balance={balance} provider={provider} safe={safe} />
+          ? <Layout balance={balance} provider={provider} safe={safe} userAddress={userAddress} />
           : <NoRights />
         }
       </Page>

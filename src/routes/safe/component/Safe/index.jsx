@@ -27,6 +27,7 @@ const safeIcon = require('./assets/gnosis_safe.svg')
 type SafeProps = {
   safe: Safe,
   balance: string,
+  userAddress: string,
 }
 
 type State = {
@@ -74,7 +75,7 @@ class GnoSafe extends React.PureComponent<SafeProps, State> {
   }
 
   render() {
-    const { safe, balance } = this.props
+    const { safe, balance, userAddress } = this.props
     const { component } = this.state
 
     return (
@@ -82,7 +83,7 @@ class GnoSafe extends React.PureComponent<SafeProps, State> {
         <Col sm={12} top="xs" md={5} margin="xl" overflow>
           <List style={listStyle}>
             <Balance balance={balance} />
-            <Owners owners={safe.owners} onAddOwner={this.onAddOwner} />
+            <Owners owners={safe.owners} onAddOwner={this.onAddOwner} userAddress={userAddress} />
             <Confirmations confirmations={safe.get('threshold')} onEditThreshold={this.onEditThreshold} />
             <Address address={safe.get('address')} />
             <DailyLimit balance={balance} dailyLimit={safe.get('dailyLimit')} onWithdrawn={this.onWithdrawn} />

@@ -8,11 +8,13 @@ import List, { ListItem, ListItemIcon } from 'material-ui/List'
 import Avatar from 'material-ui/Avatar'
 import Button from '~/components/layout/Button'
 import Group from 'material-ui-icons/Group'
+import Delete from 'material-ui-icons/Delete'
 import Person from 'material-ui-icons/Person'
 import ExpandLess from 'material-ui-icons/ExpandLess'
 import ExpandMore from 'material-ui-icons/ExpandMore'
 import { type OwnerProps } from '~/routes/safe/store/model/owner'
 import { type WithStyles } from '~/theme/mui'
+import { sameAddress } from '~/wallets/ethAddresses'
 
 const styles = {
   nested: {
@@ -22,13 +24,15 @@ const styles = {
 
 type Props = Open & WithStyles & {
   owners: List<OwnerProps>,
+  userAddress: string,
   onAddOwner: () => void,
 }
 
 export const ADD_OWNER_BUTTON_TEXT = 'Add'
+export const REMOVE_OWNER_BUTTON_TEXT = 'Delete'
 
 const Owners = openHoc(({
-  open, toggle, owners, classes, onAddOwner,
+  open, toggle, owners, classes, onAddOwner, userAddress,
 }: Props) => (
   <React.Fragment>
     <ListItem onClick={toggle}>
@@ -59,6 +63,15 @@ const Owners = openHoc(({
               primary={owner.name}
               secondary={owner.address}
             />
+            { !sameAddress(userAddress, owner.address) &&
+              <Button
+                variant="raised"
+                color="secondary"
+                onClick={() => {}}
+              >
+                <Delete />
+              </Button>
+            }
           </ListItem>
         ))}
       </List>
