@@ -1,8 +1,9 @@
 // @flow
 import * as React from 'react'
-import { ListItem, ListItemText } from 'material-ui/List'
-import Avatar from 'material-ui/Avatar'
-import AccountBalance from 'material-ui-icons/AccountBalance'
+import ListItem from '@material-ui/core/ListItem'
+import ListItemText from '@material-ui/core/ListItemText'
+import Avatar from '@material-ui/core/Avatar'
+import AccountBalance from '@material-ui/icons/AccountBalance'
 
 type Props = {
   balance: string,

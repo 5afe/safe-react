@@ -7,7 +7,7 @@ import Img from '~/components/layout/Img'
 import Paragraph from '~/components/layout/Paragraph'
 import Row from '~/components/layout/Row'
 import { type Safe } from '~/routes/safe/store/model/safe'
-import List from 'material-ui/List'
+import List from '@material-ui/core/List'
 
 import Withdrawn from '~/routes/safe/component/Withdrawn'
 import Transactions from '~/routes/safe/component/Transactions'

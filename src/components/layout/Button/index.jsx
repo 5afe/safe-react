@@ -1,4 +1,4 @@
 // @flow
-import Button from 'material-ui/Button'
+import Button from '@material-ui/core/Button'
 
 export default Button

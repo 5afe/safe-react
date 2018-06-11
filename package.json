@@ -75,9 +75,9 @@
     "postcss-mixins": "^6.2.0",
     "postcss-simple-vars": "^4.1.0",
     "pre-commit": "^1.2.2",
-    "react": "^16.2.0",
-    "react-dev-utils": "^5.0.0",
-    "react-dom": "^16.2.0",
+    "react": "^16.4.0",
+    "react-dev-utils": "^5.0.1",
+    "react-dom": "^16.4.0",
     "react-redux": "^5.0.7",
     "react-router-redux": "^5.0.0-alpha.9",
     "redux": "^3.7.2",
@@ -100,14 +100,14 @@
     "webpack-manifest-plugin": "^2.0.0-rc.2"
   },
   "dependencies": {
+    "@material-ui/core": "^1.2.1",
+    "@material-ui/icons": "^1.1.0",
     "final-form": "^4.2.1",
     "history": "^4.7.2",
-    "material-ui": "^1.0.0-beta.35",
-    "material-ui-icons": "^1.0.0-beta.35",
     "react-final-form": "^3.1.2",
     "react-loadable": "^5.3.1",
     "react-router-dom": "^4.2.2",
-    "recompose": "^0.27.0"
+    "recompose": "^0.27.1"
   },
   "jest": {
     "verbose": true,

@@ -1,17 +1,20 @@
 // @flow
 import * as React from 'react'
 import openHoc, { type Open } from '~/components/hoc/OpenHoc'
-import { withStyles } from 'material-ui/styles'
-import Collapse from 'material-ui/transitions/Collapse'
+import { withStyles } from '@material-ui/core/styles'
+import Collapse from '@material-ui/core/Collapse'
 import ListItemText from '~/components/List/ListItemText'
-import List, { ListItem, ListItemIcon } from 'material-ui/List'
-import Avatar from 'material-ui/Avatar'
+import List from '@material-ui/core/List'
+import ListItem from '@material-ui/core/ListItem'
+import ListItemIcon from '@material-ui/core/ListItemIcon'
+import Avatar from '@material-ui/core/Avatar'
+import IconButton from '@material-ui/core/IconButton'
 import Button from '~/components/layout/Button'
-import Group from 'material-ui-icons/Group'
-import Delete from 'material-ui-icons/Delete'
-import Person from 'material-ui-icons/Person'
-import ExpandLess from 'material-ui-icons/ExpandLess'
-import ExpandMore from 'material-ui-icons/ExpandMore'
+import Group from '@material-ui/icons/Group'
+import Delete from '@material-ui/icons/Delete'
+import Person from '@material-ui/icons/Person'
+import ExpandLess from '@material-ui/icons/ExpandLess'
+import ExpandMore from '@material-ui/icons/ExpandMore'
 import { type OwnerProps } from '~/routes/safe/store/model/owner'
 import { type WithStyles } from '~/theme/mui'
 import { sameAddress } from '~/wallets/ethAddresses'
@@ -64,13 +67,9 @@ const Owners = openHoc(({
               secondary={owner.address}
             />
             { !sameAddress(userAddress, owner.address) &&
-              <Button
-                variant="raised"
-                color="secondary"
-                onClick={() => {}}
-              >
+              <IconButton aria-label="Delete">
                 <Delete />
-              </Button>
+              </IconButton>
             }
           </ListItem>
         ))}

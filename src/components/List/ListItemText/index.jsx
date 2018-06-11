@@ -1,7 +1,7 @@
 // @flow
 import * as React from 'react'
-import { ListItemText } from 'material-ui/List'
-import { withStyles } from 'material-ui/styles'
+import ListItemText from '@material-ui/core/ListItemText'
+import { withStyles } from '@material-ui/core/styles'
 import { type WithStyles } from '~/theme/mui'
 
 type Props = WithStyles & {

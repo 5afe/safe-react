@@ -1,7 +1,7 @@
 // @flow
 import * as React from 'react'
-import { CircularProgress } from 'material-ui/Progress'
-import RefreshIcon from 'material-ui-icons/Refresh'
+import CircularProgress from '@material-ui/core/CircularProgress'
+import RefreshIcon from '@material-ui/icons/Refresh'
 import { sm, secondary } from '~/theme/variables'
 
 type Props = {

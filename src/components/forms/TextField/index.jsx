@@ -1,6 +1,6 @@
 // @flow
 import React from 'react'
-import MuiTextField, { TextFieldProps } from 'material-ui/TextField'
+import MuiTextField, { TextFieldProps } from '@material-ui/core/TextField'
 
 // Neded for solving a fix in Windows browsers
 const overflowStyle = {
