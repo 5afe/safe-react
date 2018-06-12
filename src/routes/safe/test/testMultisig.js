@@ -80,12 +80,12 @@ export const expandTransactionOf = async (
 ) => {
   const paragraphs = getTagFromTransaction(SafeDom, 'p')
   TestUtils.Simulate.click(paragraphs[2]) // expanded
-  await sleep(1000) // Time to expand
+  await sleep(2500) // Time to expand
   const paragraphsExpanded = getTagFromTransaction(SafeDom, 'p')
   const threshold = paragraphsExpanded[5]
   expect(threshold.innerHTML).toContain(`confirmation${safeThreshold === 1 ? '' : 's'} needed`)
   TestUtils.Simulate.click(threshold) // expanded
-  await sleep(1000) // Time to expand
+  await sleep(2500) // Time to expand
   expect(paragraphsExpanded.length).toBe(paragraphs.length + numOwners)
 }
 
@@ -96,10 +96,11 @@ export const getTransactionFromReduxStore = (store: Store<GlobalState>, address:
 }
 
 export const confirmOwners = async (SafeDom: React$Component<any, any>, ...statusses: string[]) => {
-  const paragraphsWithOwners = getTagFromTransaction(SafeDom, 'h3')
+  const paragraphsWithOwners = getTagFromTransaction(SafeDom, 'span')
   for (let i = 0; i < statusses.length; i += 1) {
     const ownerIndex = i + 6
     const ownerParagraph = paragraphsWithOwners[ownerIndex].innerHTML
+
     expect(statusses[i]).toEqual(ownerParagraph)
   }
 }
