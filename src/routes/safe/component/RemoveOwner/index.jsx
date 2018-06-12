@@ -27,6 +27,12 @@ type State = {
 const SENTINEL_ADDRESS = '0x0000000000000000000000000000000000000001'
 export const REMOVE_OWNER_RESET_BUTTON_TEXT = 'RESET'
 
+const initialValuesFrom = (decreaseMandatory: boolean = false) => ({
+  [DECREASE_PARAM]: decreaseMandatory,
+})
+
+const shouldDecrease = (numOwners: number, threshold: number) => threshold === numOwners
+
 class RemoveOwner extends React.Component<Props, State> {
   state = {
     done: false,
@@ -67,7 +73,12 @@ class RemoveOwner extends React.Component<Props, State> {
     const { safe, name } = this.props
     const { done } = this.state
     const steps = getSteps()
+    const numOwners = safe.get('owners').count()
+    const threshold = safe.get('threshold')
     const finishedButton = <Stepper.FinishButton title={REMOVE_OWNER_RESET_BUTTON_TEXT} />
+    const decrease = shouldDecrease(numOwners, threshold)
+    const initialValues = initialValuesFrom(decrease)
+    const disabled = decrease || threshold === 1
 
     return (
       <React.Fragment>
@@ -77,8 +88,9 @@ class RemoveOwner extends React.Component<Props, State> {
           onSubmit={this.onRemoveOwner}
           steps={steps}
           onReset={this.onReset}
+          initialValues={initialValues}
         >
-          <Stepper.Page numOwners={safe.get('owners').count()} threshold={safe.get('threshold')} name={name}>
+          <Stepper.Page numOwners={numOwners} threshold={threshold} name={name} disabled={disabled}>
             { RemoveOwnerForm }
           </Stepper.Page>
           <Stepper.Page name={name}>

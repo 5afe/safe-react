@@ -11,9 +11,12 @@ type Props = {
   numOwners: number,
   threshold: number,
   name: string,
+  disabled: boolean,
 }
 
-const RemoveOwnerForm = ({ numOwners, threshold, name }: Props) => () => (
+const RemoveOwnerForm = ({
+  numOwners, threshold, name, disabled,
+}: Props) => () => (
   <Block margin="md">
     <Heading tag="h2" margin="lg">
       Remove Owner { !!name && name }
@@ -26,8 +29,9 @@ const RemoveOwnerForm = ({ numOwners, threshold, name }: Props) => () => (
         name={DECREASE_PARAM}
         component={Checkbox}
         type="checkbox"
+        disabled={disabled}
       />
-      <Block>Decrease threshold?</Block>
+      <Block>{disabled && '(disabled) '}Decrease threshold?</Block>
     </Block>
   </Block>
 )
