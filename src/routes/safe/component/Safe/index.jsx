@@ -78,7 +78,7 @@ class GnoSafe extends React.PureComponent<SafeProps, State> {
   onRemoveOwner = (name: string, address: string) => {
     const { safe } = this.props
 
-    this.setState({ component: <RemoveOwner threshold={safe.get('threshold')} safe={safe} name={name} userToRemove={address} /> })
+    this.setState({ component: <RemoveOwner safeAddress={safe.get('address')} threshold={safe.get('threshold')} safe={safe} name={name} userToRemove={address} /> })
   }
 
   render() {

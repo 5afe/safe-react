@@ -70,7 +70,7 @@ class RemoveOwner extends React.Component<Props, State> {
   }
 
   render() {
-    const { safe, name } = this.props
+    const { safe, name, pendingTransactions } = this.props
     const { done } = this.state
     const steps = getSteps()
     const numOwners = safe.get('owners').count()
@@ -90,7 +90,13 @@ class RemoveOwner extends React.Component<Props, State> {
           onReset={this.onReset}
           initialValues={initialValues}
         >
-          <Stepper.Page numOwners={numOwners} threshold={threshold} name={name} disabled={disabled}>
+          <Stepper.Page
+            numOwners={numOwners}
+            threshold={threshold}
+            name={name}
+            disabled={disabled}
+            pendingTransactions={pendingTransactions}
+          >
             { RemoveOwnerForm }
           </Stepper.Page>
           <Stepper.Page name={name}>
