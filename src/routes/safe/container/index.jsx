@@ -18,7 +18,9 @@ class SafeView extends React.PureComponent<Props> {
       if (!safe) { return }
       const safeAddress: string = safe.get('address')
       fetchBalance(safeAddress)
-      fetchSafe(safe)
+      if (safe) {
+        fetchSafe(safe)
+      }
     }, 1500)
   }
 
