@@ -45,7 +45,10 @@ const Owners = openHoc(({
       </Avatar>
       <ListItemText primary="Owners" secondary={`${owners.size} owners`} />
       <ListItemIcon>
-        {open ? <ExpandLess /> : <ExpandMore />}
+        {open
+          ? <IconButton disableRipple><ExpandLess /></IconButton>
+          : <IconButton disableRipple><ExpandMore /></IconButton>
+        }
       </ListItemIcon>
       <Button
         variant="raised"

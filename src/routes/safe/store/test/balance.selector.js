@@ -1,7 +1,7 @@
 // @flow
 import addBalance from '~/routes/safe/store/actions/addBalance'
 import { aNewStore } from '~/store'
-import { buildMathPropsFrom } from '~/test/buildReactRouterProps'
+import { buildMathPropsFrom } from '~/test/utils/buildReactRouterProps'
 import { balanceSelector } from '../selectors'
 
 const balanceSelectorTests = () => {

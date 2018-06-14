@@ -5,6 +5,7 @@ import { connect } from 'react-redux'
 import openHoc, { type Open } from '~/components/hoc/OpenHoc'
 import ExpandLess from '@material-ui/icons/ExpandLess'
 import ExpandMore from '@material-ui/icons/ExpandMore'
+import IconButton from '@material-ui/core/IconButton'
 import ListItemText from '~/components/List/ListItemText'
 import Row from '~/components/layout/Row'
 import ListItem from '@material-ui/core/ListItem'
@@ -62,7 +63,10 @@ class GnoTransaction extends React.PureComponent<Props, {}> {
             </Avatar>
             <ListItemText primary="Status" secondary={confirmationText} />
             <ListItemIcon>
-              {open ? <ExpandLess /> : <ExpandMore />}
+              {open
+                ? <IconButton disableRipple><ExpandLess /></IconButton>
+                : <IconButton disableRipple><ExpandMore /></IconButton>
+              }
             </ListItemIcon>
           </ListItem>
         </Row>

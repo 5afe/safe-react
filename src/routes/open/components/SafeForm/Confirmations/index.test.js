@@ -5,7 +5,7 @@ import * as TestUtils from 'react-dom/test-utils'
 import Layout from '~/routes/open/components/Layout'
 import { FIELD_CONFIRMATIONS, FIELD_OWNERS } from '~/routes/open/components/fields'
 import { getProviderInfo } from '~/wallets/getWeb3'
-import Wrapper from '~/test/Wrapper'
+import Wrapper from '~/test/utils/Wrapper'
 import { CONFIRMATIONS_ERROR } from '~/routes/open/components/SafeForm'
 
 const obSubmitMock = () => {}
