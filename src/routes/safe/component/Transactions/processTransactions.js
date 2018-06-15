@@ -50,12 +50,13 @@ const execTransaction = async (
   const CALL = getOperation()
   const web3 = getWeb3()
   const valueInWei = web3.toWei(txValue, 'ether')
+
   const txData = await gnosisSafe.contract.execTransactionIfApproved.getData(destination, valueInWei, data, CALL, nonce)
   const gas = await calculateGasOf(txData, executor, gnosisSafe.address)
   const gasPrice = await calculateGasPrice()
 
   return gnosisSafe
-    .execTransactionIfApproved(destination, valueInWei, txData, CALL, nonce, { from: executor, gas, gasPrice })
+    .execTransactionIfApproved(destination, valueInWei, data, CALL, nonce, { from: executor, gas, gasPrice })
 }
 
 const execConfirmation = async (

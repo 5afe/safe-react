@@ -111,16 +111,16 @@ export const createTransaction = async (
       await gnosisSafe.execTransactionIfApproved(txDest, valueInWei, data, CALL, nonce, { from: user, gas, gasPrice })
     await checkReceiptStatus(txHash.tx)
     const executedConfirmations: List<Confirmation> = buildExecutedConfirmationFrom(safe.get('owners'), user)
-    return storeTransaction(txName, nonce, txDest, txValue, user, executedConfirmations, txHash, safeAddress, safe.get('threshold'), data)
+    return storeTransaction(txName, nonce, txDest, txValue, user, executedConfirmations, txHash.tx, safeAddress, safe.get('threshold'), data)
   }
 
   const txData = gnosisSafe.contract.approveTransactionWithParameters.getData(txDest, valueInWei, data, CALL, nonce)
   const gas = await calculateGasOf(txData, user, safeAddress)
   const txConfirmationHash = await gnosisSafe
-    .approveTransactionWithParameters(txDest, valueInWei, txData, CALL, nonce, { from: user, gas, gasPrice })
-  await checkReceiptStatus(txConfirmationHash)
+    .approveTransactionWithParameters(txDest, valueInWei, data, CALL, nonce, { from: user, gas, gasPrice })
+  await checkReceiptStatus(txConfirmationHash.tx)
 
-  const confirmations: List<Confirmation> = buildConfirmationsFrom(safe.get('owners'), user, txConfirmationHash)
+  const confirmations: List<Confirmation> = buildConfirmationsFrom(safe.get('owners'), user, txConfirmationHash.tx)
 
   return storeTransaction(txName, nonce, txDest, txValue, user, confirmations, '', safeAddress, safe.get('threshold'), data)
 }
