@@ -11222,6 +11222,14 @@ truffle-solidity-loader@0.0.8:
     truffle "^2.0.8"
     web3 "^0.17.0-alpha"
 
+truffle@4.1.11:
+  version "4.1.11"
+  resolved "https://registry.yarnpkg.com/truffle/-/truffle-4.1.11.tgz#a4df812ebf4a564892900c4a1dac1131104a0799"
+  dependencies:
+    mocha "^4.1.0"
+    original-require "^1.0.1"
+    solc "0.4.24"
+
 truffle@^2.0.8:
   version "2.1.2"
   resolved "https://registry.yarnpkg.com/truffle/-/truffle-2.1.2.tgz#1ee61b9d785f6f2edb42801579e31f15b66c3746"
@@ -11253,14 +11261,6 @@ truffle@^2.0.8:
     truffle-default-builder "^1.0.3"
     web3 "^0.16.0"
     yargs "^3.27.0"
-
-"truffle@git://github.com/trufflesuite/truffle.git#develop":
-  version "4.1.11"
-  resolved "git://github.com/trufflesuite/truffle.git#2d722ce8df62271aece9dd3f652489d50c5f7b4b"
-  dependencies:
-    mocha "^4.1.0"
-    original-require "^1.0.1"
-    solc "0.4.24"
 
 tryer@^1.0.0:
   version "1.0.0"
