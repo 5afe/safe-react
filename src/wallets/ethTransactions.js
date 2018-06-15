@@ -51,22 +51,3 @@ export const calculateGasOf = async (data: Object, from: string, to: string) => 
 
   return gas * 2
 }
-
-const executeTransaction = async (data: Object, from: string, to: string) => {
-  const web3 = getWeb3()
-
-  const gas = await calculateGasOf(data, from, to)
-
-  let gasPrice
-  try {
-    gasPrice = await calculateGasPrice()
-  } catch (err) {
-    gasPrice = await promisify(cb => web3.eth.getGasPrice(cb))
-  }
-
-  return promisify(cb => web3.eth.sendTransaction({
-    from, to, data, gas, gasPrice,
-  }, cb))
-}
-
-export default executeTransaction
