@@ -7287,43 +7287,13 @@
     "version": "0.4.24+commit.e67f0147.Emscripten.clang"
   },
   "networks": {
-    "4": {
+    "1529048918903": {
       "events": {},
       "links": {},
-      "address": "0xfb8c65f09f551b6c00a536ad391f61afe44e460e",
-      "transactionHash": "0x77a932885adfcce576f0a86d0e018698522df33375d4f0da06b7712cb447e68c"
-    },
-    "1527420696956": {
-      "events": {},
-      "links": {},
-      "address": "0x72c57fd020ba5c1e42d7e9a7757dd40d5febc594",
-      "transactionHash": "0xf0cd95843453bdac02ad8018ef507479ea62989e56d69ad0ac1aad9d3a8515d2"
-    },
-    "1527678155804": {
-      "events": {},
-      "links": {},
-      "address": "0xeda62e0821a48445ae6f6f80106e216c6a7f01ef",
-      "transactionHash": "0x36c8dd7c6308c6c439014348fa486a003b509f6740a3fbb01b00d57958c4eca7"
-    },
-    "1528109761438": {
-      "events": {},
-      "links": {},
-      "address": "0xfb1771240bb7edf209c70bd520a5d5424d23b084",
-      "transactionHash": "0xf0cd95843453bdac02ad8018ef507479ea62989e56d69ad0ac1aad9d3a8515d2"
-    },
-    "1528296677763": {
-      "events": {},
-      "links": {},
-      "address": "0x9be4b89520d1dd6f2d115192587689c6c9bd1a99",
-      "transactionHash": "0xf0cd95843453bdac02ad8018ef507479ea62989e56d69ad0ac1aad9d3a8515d2"
-    },
-    "1528699188286": {
-      "events": {},
-      "links": {},
-      "address": "0x097d7ddcb1c7eb9f1ec70e945a727833b81c0a1c",
+      "address": "0x54c1c2ebcc5ea3aedc92f21da159bc2636fe42d3",
       "transactionHash": "0xf0cd95843453bdac02ad8018ef507479ea62989e56d69ad0ac1aad9d3a8515d2"
     }
   },
   "schemaVersion": "2.0.0",
-  "updatedAt": "2018-06-11T06:40:26.981Z"
+  "updatedAt": "2018-06-15T07:49:22.366Z"
 }
