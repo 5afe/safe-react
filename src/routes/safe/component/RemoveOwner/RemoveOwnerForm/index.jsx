@@ -29,7 +29,7 @@ const RemoveOwnerForm = ({
     { pendingTransactions &&
       <SnackbarContent
         variant="warning"
-        message="Be careful removing and owner might incur in some of the pending transactions could never be executed"
+        message="Be careful removing an owner might incur in some of the pending transactions could never be executed"
       />
     }
     <Block margin="md">
