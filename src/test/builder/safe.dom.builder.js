@@ -15,7 +15,7 @@ import { makeProvider } from '~/wallets/store/model/provider'
 import AppRoutes from '~/routes'
 import { SAFELIST_ADDRESS } from '~/routes/routes'
 import { promisify } from '~/utils/promisify'
-import { addEtherTo } from '~/test/utils/addEtherTo'
+import { addEtherTo } from '~/test/utils/etherMovements'
 
 const fillOpenSafeForm = async (localStore: Store<GlobalState>) => {
   const provider = await getProviderInfo()
@@ -54,8 +54,10 @@ const deploySafe = async (safe: React$Component<{}>, dailyLimit: string, thresho
     const ownerName = inputsExpanded[nameIndex]
     const account = inputsExpanded[addressIndex]
 
-    TestUtils.Simulate.change(ownerName, { target: { value: `Adolfo ${i + 1} Eth Account` } })
-    TestUtils.Simulate.change(account, { target: { value: accounts[i] } })
+    // eslint-disable-next-line
+    const pos = i === 0 ? 2 : i === 1 ? 1 : i === 2 ? 0 : i 
+    TestUtils.Simulate.change(ownerName, { target: { value: `Adolfo ${pos + 1} Eth Account` } })
+    TestUtils.Simulate.change(account, { target: { value: accounts[pos] } })
   }
 
   TestUtils.Simulate.change(fieldName, { target: { value: 'Adolfo Safe' } })
@@ -136,6 +138,6 @@ export const renderSafeInDom = async (
   const buttons = TestUtils.scryRenderedDOMComponentsWithTag(Safe, 'button')
 
   return {
-    address, safeButtons: buttons, safe: SafeDom, accounts,
+    address, safeButtons: buttons, safe: SafeDom, accounts, store,
   }
 }
