@@ -1,6 +1,6 @@
 // @flow
 import { aNewStore } from '~/store'
-import { addEtherTo } from '~/test/utils/addEtherTo'
+import { addEtherTo } from '~/test/utils/etherMovements'
 import { aDeployedSafe, executeWithdrawnOn } from '~/routes/safe/store/test/builder/deployedSafe.builder'
 
 describe('Safe Blockchain Test', () => {

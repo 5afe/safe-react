@@ -2,7 +2,7 @@
 import { BALANCE_REDUCER_ID } from '~/routes/safe/store/reducer/balances'
 import fetchBalance from '~/routes/safe/store/actions/fetchBalance'
 import { aNewStore } from '~/store'
-import { addEtherTo } from '~/test/utils/addEtherTo'
+import { addEtherTo } from '~/test/utils/etherMovements'
 import { aDeployedSafe } from './builder/deployedSafe.builder'
 
 const balanceReducerTests = () => {

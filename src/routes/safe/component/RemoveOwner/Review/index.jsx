@@ -27,7 +27,7 @@ const Review = ({ name }: Props) => ({ values, submitting }: FormProps) => {
 
   return (
     <Block>
-      <Heading tag="h2">Review the Add Owner operation</Heading>
+      <Heading tag="h2">Review the Remove Owner operation</Heading>
       <Paragraph align="left">
         <Bold>Owner Name: </Bold> {name}
       </Paragraph>
