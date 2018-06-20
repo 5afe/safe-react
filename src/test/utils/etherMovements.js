@@ -1,5 +1,5 @@
 // @flow
-import { getProviderInfo, getWeb3 } from '~/wallets/getWeb3'
+import { getProviderInfo, getBalanceInEtherOf, getWeb3 } from '~/wallets/getWeb3'
 import { promisify } from '~/utils/promisify'
 import withdrawn, { DESTINATION_PARAM, VALUE_PARAM } from '~/routes/safe/component/Withdrawn/withdrawn'
 
@@ -20,4 +20,9 @@ export const executeWithdrawnOn = async (safeAddress: string, value: number) => 
   }
 
   return withdrawn(values, safeAddress, userAddress)
+}
+
+export const checkBalanceOf = async (addressToTest: string, value: string) => {
+  const safeBalance = await getBalanceInEtherOf(addressToTest)
+  expect(safeBalance).toBe(value)
 }

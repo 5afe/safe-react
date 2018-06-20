@@ -15,7 +15,7 @@ import { makeProvider } from '~/wallets/store/model/provider'
 import AppRoutes from '~/routes'
 import { SAFELIST_ADDRESS } from '~/routes/routes'
 import { promisify } from '~/utils/promisify'
-import { addEtherTo } from '~/test/utils/addEtherTo'
+import { addEtherTo } from '~/test/utils/etherMovements'
 
 const fillOpenSafeForm = async (localStore: Store<GlobalState>) => {
   const provider = await getProviderInfo()
@@ -136,6 +136,6 @@ export const renderSafeInDom = async (
   const buttons = TestUtils.scryRenderedDOMComponentsWithTag(Safe, 'button')
 
   return {
-    address, safeButtons: buttons, safe: SafeDom, accounts,
+    address, safeButtons: buttons, safe: SafeDom, accounts, store,
   }
 }

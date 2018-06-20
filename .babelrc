@@ -8,7 +8,7 @@
         "forceAllTransforms": true
       }
     ],
-    "@babel/stage-0"
+    ["@babel/preset-stage-0", { "decoratorsLegacy": true }]
   ],
   "plugins": [
     "@babel/plugin-syntax-dynamic-import",

@@ -1,36 +1,39 @@
 // @flow
 import TestUtils from 'react-dom/test-utils'
 import { sleep } from '~/utils/timer'
-import { checkMinedTx, EXPAND_OWNERS_INDEX } from '~/test/builder/safe.dom.utils'
+import { checkMinedTx } from '~/test/builder/safe.dom.utils'
+import { getGnosisSafeInstanceAt } from '~/wallets/safeContracts'
 
 export const sendChangeThresholdForm = (
   SafeDom: React$Component<any, any>,
-  expandOwners: React$Component<any, any>,
+  changeThreshold: React$Component<any, any>,
+  threshold: string,
 ) => {
-  // Expand owners
-  TestUtils.Simulate.click(expandOwners)
-  sleep(1500)
+  // Load the Threshold Form
+  TestUtils.Simulate.click(changeThreshold)
+  sleep(600)
 
-  // Get delete button user
-  const buttons = TestUtils.scryRenderedDOMComponentsWithTag(SafeDom, 'button')
-  const removeUserButton = buttons[EXPAND_OWNERS_INDEX + 2] // + 2 one the Add and the next delete
-  expect(removeUserButton.getAttribute('aria-label')).toBe('Delete')
-
-  // render form for deleting the user
-  TestUtils.Simulate.click(removeUserButton)
-  sleep(1500)
+  // fill the form
+  const inputs = TestUtils.scryRenderedDOMComponentsWithTag(SafeDom, 'input')
+  const thresholdInput = inputs[0]
+  TestUtils.Simulate.change(thresholdInput, { target: { value: threshold } })
 
   // $FlowFixMe
   const form = TestUtils.findRenderedDOMComponentWithTag(SafeDom, 'form')
-
   // submit it
   TestUtils.Simulate.submit(form)
   TestUtils.Simulate.submit(form)
 
   // give time to process transaction
-  return sleep(4000)
+  return sleep(2500)
 }
 
-export const checkMinedRemoveOwnerTx = (Transaction: React$Component<any, any>, name: string) => {
+export const checkMinedThresholdTx = (Transaction: React$Component<any, any>, name: string) => {
   checkMinedTx(Transaction, name)
+}
+
+export const checkThresholdOf = async (address: string, threshold: number) => {
+  const gnosisSafe = await getGnosisSafeInstanceAt(address)
+  const safeThreshold = await gnosisSafe.getThreshold()
+  expect(Number(safeThreshold)).toEqual(threshold)
 }
