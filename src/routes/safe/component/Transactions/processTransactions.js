@@ -52,7 +52,8 @@ const execTransaction = async (
   const valueInWei = web3.toWei(txValue, 'ether')
 
   const txData = await gnosisSafe.contract.execTransactionIfApproved.getData(destination, valueInWei, data, CALL, nonce)
-  const gas = await calculateGasOf(txData, executor, gnosisSafe.address)
+  const owners = await gnosisSafe.getOwners()
+  const gas = await calculateGasOf(txData, executor, gnosisSafe.address) + (17000 * owners.length)
   const gasPrice = await calculateGasPrice()
 
   return gnosisSafe

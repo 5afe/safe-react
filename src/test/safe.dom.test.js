@@ -10,7 +10,6 @@ import { checkMinedThresholdTx, sendChangeThresholdForm, checkThresholdOf } from
 import { sendWithdrawnForm, checkMinedWithdrawnTx } from '~/test/utils/transactions/withdrawn.helper'
 import { processTransaction } from '~/routes/safe/component/Transactions/processTransactions'
 import { checkBalanceOf } from '~/test/utils/etherMovements'
-import { sleep } from '~/utils/timer'
 
 describe('DOM > Feature > SAFE MULTISIG TX 1 Owner 1 Threshold', () => {
   let domSafe: DomSafe
@@ -89,33 +88,25 @@ describe('DOM > Feature > SAFE MULTISIG TX 1 Owner 1 Threshold', () => {
     await listTxsClickingOn(safeButtons[LIST_TXS_INDEX])
     transactions = TestUtils.scryRenderedComponentsWithType(SafeDom, Transaction)
     expect(transactions.length).toBe(6)
-
     let statusses = ['Adol Metamask 3 [Not confirmed]', 'Adol Metamask 2 [Not confirmed]', 'Adolfo 1 Eth Account [Confirmed]']
     await checkPendingRemoveOwnerTx(transactions[5], 3, 'Remove Owner Adol Metamask 3', statusses)
-    console.log("MOW 0a" + transactions[5].props.transaction)
+
     await processTransaction(address, transactions[5].props.transaction, 1, accounts[1])
     await refreshTransactions(store)
-
     transactions = TestUtils.scryRenderedComponentsWithType(SafeDom, Transaction)
     statusses = ['Adol Metamask 3 [Not confirmed]', 'Adol Metamask 2 [Confirmed]', 'Adolfo 1 Eth Account [Confirmed]']
     await checkPendingRemoveOwnerTx(transactions[5], 2, 'Remove Owner Adol Metamask 3', statusses)
-    console.log("MOW 0B accounts[0] " + accounts[0])
-    console.log("MOW 0B accounts[1] " + accounts[1])
-    console.log("MOW 0B accounts[2] " + accounts[2])
     await checkThresholdOf(address, 3)
-    console.log("MOW 0C" + transactions[5].props.transaction)
+
     await processTransaction(address, transactions[5].props.transaction, 2, accounts[2])
-    console.log("MOW 0D")
     await refreshTransactions(store)
-    console.log("MOW 1")
     await checkThresholdOf(address, 2)
-    console.log("MOW 2")
     transactions = TestUtils.scryRenderedComponentsWithType(SafeDom, Transaction)
-    console.log("MOW 3")
     await checkMinedRemoveOwnerTx(transactions[5], 'Remove Owner')
-    console.log("MOW 4")
+
     // WHEN... changing threshold
     await sendChangeThresholdForm(SafeDom, safeButtons[EDIT_THRESHOLD_INDEX], '1')
+    await listTxsClickingOn(safeButtons[LIST_TXS_INDEX])
 
     // THEN
     transactions = TestUtils.scryRenderedComponentsWithType(SafeDom, Transaction)

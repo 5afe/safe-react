@@ -54,10 +54,8 @@ const deploySafe = async (safe: React$Component<{}>, dailyLimit: string, thresho
     const ownerName = inputsExpanded[nameIndex]
     const account = inputsExpanded[addressIndex]
 
-    // eslint-disable-next-line
-    const pos = i === 0 ? 2 : i === 1 ? 1 : i === 2 ? 0 : i 
-    TestUtils.Simulate.change(ownerName, { target: { value: `Adolfo ${pos + 1} Eth Account` } })
-    TestUtils.Simulate.change(account, { target: { value: accounts[pos] } })
+    TestUtils.Simulate.change(ownerName, { target: { value: `Adolfo ${i + 1} Eth Account` } })
+    TestUtils.Simulate.change(account, { target: { value: accounts[i] } })
   }
 
   TestUtils.Simulate.change(fieldName, { target: { value: 'Adolfo Safe' } })
