@@ -1,5 +1,5 @@
 // @flow
-import { BigNumber } from 'bignumber.js'
+// import { BigNumber } from 'bignumber.js'
 import { getWeb3 } from '~/wallets/getWeb3'
 import { promisify } from '~/utils/promisify'
 
@@ -24,8 +24,11 @@ export const checkReceiptStatus = async (hash: string) => {
   }
 }
 
-export const calculateGasPrice = async () => {
+export const calculateGasPrice = async () => '1000000000'
+
 /*
+export const calculateGasPrice = async () => {
+
   const web3 = getWeb3()
   const { network } = web3.version
   const isMainnet = MAINNET_NETWORK === network
@@ -33,7 +36,6 @@ export const calculateGasPrice = async () => {
   const url = isMainnet
     ? 'https://safe-relay.staging.gnosisdev.com/api/v1/gas-station/'
     : 'https://safe-relay.dev.gnosisdev.com/'
-*/
 
   const response = await fetch('https://ethgasstation.info/json/ethgasAPI.json', { mode: 'cors' })
   if (!response.ok) {
@@ -44,6 +46,7 @@ export const calculateGasPrice = async () => {
 
   return new BigNumber(json.average).multipliedBy(1e8).toString()
 }
+*/
 
 export const calculateGasOf = async (data: Object, from: string, to: string) => {
   const web3 = getWeb3()
