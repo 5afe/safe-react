@@ -35,7 +35,16 @@ export const calculateGasPrice = async () => {
     : 'https://safe-relay.dev.gnosisdev.com/'
   */
 
-  const response = await fetch('https://ethgasstation.info/json/ethgasAPI.json')
+  const header = new Headers({
+    'Access-Control-Allow-Origin': '*',
+  })
+
+  const sentData = {
+    mode: 'cors',
+    header,
+  }
+
+  const response = await fetch('https://ethgasstation.info/json/ethgasAPI.json', sentData)
   if (!response.ok) {
     throw new Error('Error querying gast station')
   }
