@@ -192,7 +192,7 @@ module.exports = {
     new webpack.DefinePlugin(env),
     // Note: this won't work without ExtractTextPlugin.extract(..) in `loaders`.
     new ExtractTextPlugin({
-      filename: 'static/css/[name].[contenthash:8].css',
+      filename: 'static/css/[name].[hash:8].css',
       allChunks: true
     }),
     // Generate a manifest file which contains a mapping of all asset filenames
