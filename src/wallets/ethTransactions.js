@@ -24,8 +24,6 @@ export const checkReceiptStatus = async (hash: string) => {
   }
 }
 
-// export const calculateGasPrice = async () => '1000000000'
-
 export const calculateGasPrice = async () => {
   /*
   const web3 = getWeb3()
@@ -36,10 +34,6 @@ export const calculateGasPrice = async () => {
     ? 'https://safe-relay.staging.gnosisdev.com/api/v1/gas-station/'
     : 'https://safe-relay.dev.gnosisdev.com/'
   */
-  const corsProblem = process.env.NODE_ENV === 'test'
-  if (corsProblem) {
-    return '4000000'
-  }
 
   const response = await fetch('https://ethgasstation.info/json/ethgasAPI.json')
   if (!response.ok) {
