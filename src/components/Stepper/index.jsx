@@ -1,6 +1,8 @@
 // @flow
-import Stepper, { Step as FormStep, StepLabel } from 'material-ui/Stepper'
-import { withStyles } from 'material-ui/styles'
+import Stepper from '@material-ui/core/Stepper'
+import FormStep from '@material-ui/core/Step'
+import StepLabel from '@material-ui/core/StepLabel'
+import { withStyles } from '@material-ui/core/styles'
 import * as React from 'react'
 import type { FormApi } from 'react-final-form'
 import GnoForm from '~/components/forms/GnoForm'

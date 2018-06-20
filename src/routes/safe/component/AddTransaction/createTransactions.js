@@ -8,7 +8,7 @@ import { getGnosisSafeContract } from '~/wallets/safeContracts'
 import { getWeb3 } from '~/wallets/getWeb3'
 import { type Safe } from '~/routes/safe/store/model/safe'
 import { sameAddress } from '~/wallets/ethAddresses'
-import executeTransaction, { checkReceiptStatus } from '~/wallets/ethTransactions'
+import { checkReceiptStatus, calculateGasOf, calculateGasPrice } from '~/wallets/ethTransactions'
 
 export const TX_NAME_PARAM = 'txName'
 export const TX_DESTINATION_PARAM = 'txDestination'
@@ -100,24 +100,27 @@ export const createTransaction = async (
   const gnosisSafe = await getSafeEthereumInstance(safeAddress)
   const valueInWei = web3.toWei(txValue, 'ether')
   const CALL = 0
+  const gasPrice = await calculateGasPrice()
 
   const thresholdIsOne = safe.get('threshold') === 1
   if (hasOneOwner(safe) || thresholdIsOne) {
     const txConfirmationData =
       gnosisSafe.contract.execTransactionIfApproved.getData(txDest, valueInWei, data, CALL, nonce)
-    const txHash = await executeTransaction(txConfirmationData, user, safeAddress)
-    checkReceiptStatus(txHash)
-
+    const gas = await calculateGasOf(txConfirmationData, user, safeAddress)
+    const txHash =
+      await gnosisSafe.execTransactionIfApproved(txDest, valueInWei, data, CALL, nonce, { from: user, gas, gasPrice })
+    await checkReceiptStatus(txHash.tx)
     const executedConfirmations: List<Confirmation> = buildExecutedConfirmationFrom(safe.get('owners'), user)
-    return storeTransaction(txName, nonce, txDest, txValue, user, executedConfirmations, txHash, safeAddress, safe.get('threshold'), data)
+    return storeTransaction(txName, nonce, txDest, txValue, user, executedConfirmations, txHash.tx, safeAddress, safe.get('threshold'), data)
   }
 
-  const txConfirmationData =
-    gnosisSafe.contract.approveTransactionWithParameters.getData(txDest, valueInWei, data, CALL, nonce)
-  const txConfirmationHash = await executeTransaction(txConfirmationData, user, safeAddress)
-  checkReceiptStatus(txConfirmationHash)
+  const txData = gnosisSafe.contract.approveTransactionWithParameters.getData(txDest, valueInWei, data, CALL, nonce)
+  const gas = await calculateGasOf(txData, user, safeAddress)
+  const txConfirmationHash = await gnosisSafe
+    .approveTransactionWithParameters(txDest, valueInWei, data, CALL, nonce, { from: user, gas, gasPrice })
+  await checkReceiptStatus(txConfirmationHash.tx)
 
-  const confirmations: List<Confirmation> = buildConfirmationsFrom(safe.get('owners'), user, txConfirmationHash)
+  const confirmations: List<Confirmation> = buildConfirmationsFrom(safe.get('owners'), user, txConfirmationHash.tx)
 
   return storeTransaction(txName, nonce, txDest, txValue, user, confirmations, '', safeAddress, safe.get('threshold'), data)
 }

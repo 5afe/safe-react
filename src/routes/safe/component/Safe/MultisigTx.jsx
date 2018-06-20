@@ -1,8 +1,8 @@
 // @flow
 import * as React from 'react'
-import { ListItem } from 'material-ui/List'
-import Avatar from 'material-ui/Avatar'
-import AcoountBalanceWallet from 'material-ui-icons/AccountBalanceWallet'
+import ListItem from '@material-ui/core/ListItem'
+import Avatar from '@material-ui/core/Avatar'
+import AcoountBalanceWallet from '@material-ui/icons/AccountBalanceWallet'
 import Button from '~/components/layout/Button'
 import ListItemText from '~/components/List/ListItemText'
 

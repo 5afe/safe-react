@@ -5,7 +5,7 @@ import { Provider } from 'react-redux'
 import { ConnectedRouter } from 'react-router-redux'
 import Button from '~/components/layout/Button'
 import { aNewStore, history } from '~/store'
-import { addEtherTo } from '~/test/addEtherTo'
+import { addEtherTo } from '~/test/utils/etherMovements'
 import { aDeployedSafe } from '~/routes/safe/store/test/builder/deployedSafe.builder'
 import { SAFELIST_ADDRESS } from '~/routes/routes'
 import SafeView from '~/routes/safe/component/Safe'
@@ -75,6 +75,7 @@ describe('React DOM TESTS > Withdrawn funds from safe', () => {
     const addTransactionButtons = TestUtils.scryRenderedComponentsWithType(AddTransaction, Button)
     expect(addTransactionButtons.length).toBe(1)
     const visitTxsButton = addTransactionButtons[0]
+
     expect(visitTxsButton.props.children).toEqual(SEE_TXS_BUTTON_TEXT)
 
     // NOW it is time to check the just executed transaction

@@ -1,7 +1,7 @@
 // @flow
 import * as React from 'react'
-import { ListItemText } from 'material-ui/List'
-import { withStyles } from 'material-ui/styles'
+import MuiListItemText from '@material-ui/core/ListItemText'
+import { withStyles } from '@material-ui/core/styles'
 import { type WithStyles } from '~/theme/mui'
 
 type Props = WithStyles & {
@@ -18,21 +18,26 @@ const styles = {
   },
 }
 
-const GnoListItemText = ({
-  primary, secondary, classes, cut = false,
-}: Props) => {
-  const cutStyle = cut ? {
-    secondary: classes.itemTextSecondary,
-  } : undefined
+class ListItemText extends React.PureComponent<Props> {
+  render() {
+    const {
+      primary, secondary, classes, cut = false,
+    } = this.props
 
-  return (
-    <ListItemText
-      classes={cutStyle}
-      inset
-      primary={primary}
-      secondary={secondary}
-    />
-  )
+    const cutStyle = cut ? {
+      secondary: classes.itemTextSecondary,
+    } : undefined
+
+    return (
+      <MuiListItemText
+        classes={cutStyle}
+        inset
+        primary={primary}
+        secondary={secondary}
+      />
+    )
+  }
 }
 
-export default withStyles(styles)(GnoListItemText)
+
+export default withStyles(styles)(ListItemText)

@@ -23,7 +23,7 @@ type State = {
   done: boolean,
 }
 
-export const CHANGE_THRESHOLD_RESET_BUTTON_TEXT = 'RESET'
+export const CHANGE_THRESHOLD_RESET_BUTTON_TEXT = 'SEE TXs'
 
 class Threshold extends React.PureComponent<Props, State> {
   state = {
@@ -49,6 +49,7 @@ class Threshold extends React.PureComponent<Props, State> {
 
   onReset = () => {
     this.setState({ done: false })
+    this.props.onReset()
   }
 
   render() {

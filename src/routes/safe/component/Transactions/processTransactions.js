@@ -8,7 +8,7 @@ import { getGnosisSafeContract } from '~/wallets/safeContracts'
 import { getWeb3 } from '~/wallets/getWeb3'
 import { sameAddress } from '~/wallets/ethAddresses'
 import { EXECUTED_CONFIRMATION_HASH } from '~/routes/safe/component/AddTransaction/createTransactions'
-import executeTransaction, { checkReceiptStatus } from '~/wallets/ethTransactions'
+import { checkReceiptStatus, calculateGasOf, calculateGasPrice } from '~/wallets/ethTransactions'
 
 export const updateTransaction = (
   name: string,
@@ -50,9 +50,14 @@ const execTransaction = async (
   const CALL = getOperation()
   const web3 = getWeb3()
   const valueInWei = web3.toWei(txValue, 'ether')
-  const txData = await gnosisSafe.contract.execTransactionIfApproved.getData(destination, valueInWei, data, CALL, nonce)
 
-  return executeTransaction(txData, executor, gnosisSafe.address)
+  const txData = await gnosisSafe.contract.execTransactionIfApproved.getData(destination, valueInWei, data, CALL, nonce)
+  const owners = await gnosisSafe.getOwners()
+  const gas = await calculateGasOf(txData, executor, gnosisSafe.address) + (17000 * owners.length)
+  const gasPrice = await calculateGasPrice()
+
+  return gnosisSafe
+    .execTransactionIfApproved(destination, valueInWei, data, CALL, nonce, { from: executor, gas, gasPrice })
 }
 
 const execConfirmation = async (
@@ -66,10 +71,13 @@ const execConfirmation = async (
   const CALL = getOperation()
   const web3 = getWeb3()
   const valueInWei = web3.toWei(txValue, 'ether')
-  const txConfirmationData =
-    await gnosisSafe.contract.approveTransactionWithParameters.getData(txDestination, valueInWei, data, CALL, nonce)
+  const txData = await gnosisSafe.contract
+    .approveTransactionWithParameters.getData(txDestination, valueInWei, data, CALL, nonce)
+  const gas = await calculateGasOf(txData, executor, gnosisSafe.address)
+  const gasPrice = await calculateGasPrice()
 
-  return executeTransaction(txConfirmationData, executor, gnosisSafe.address)
+  return gnosisSafe
+    .approveTransactionWithParameters(txDestination, valueInWei, data, CALL, nonce, { from: executor, gas, gasPrice })
 }
 
 const updateConfirmations = (confirmations: List<Confirmation>, userAddress: string, txHash: string) =>
@@ -116,9 +124,9 @@ export const processTransaction = async (
     ? await execTransaction(gnosisSafe, txDestination, txValue, nonce, userAddress, data)
     : await execConfirmation(gnosisSafe, txDestination, txValue, nonce, userAddress, data)
 
-  checkReceiptStatus(txHash)
+  checkReceiptStatus(txHash.tx)
 
-  const confirmationHash = thresholdReached ? EXECUTED_CONFIRMATION_HASH : txHash
+  const confirmationHash = thresholdReached ? EXECUTED_CONFIRMATION_HASH : txHash.tx
   const executedConfirmations: List<Confirmation> = updateConfirmations(tx.get('confirmations'), userAddress, confirmationHash)
 
   return updateTransaction(
@@ -128,7 +136,7 @@ export const processTransaction = async (
     txValue,
     userAddress,
     executedConfirmations,
-    thresholdReached ? txHash : '',
+    thresholdReached ? txHash.tx : '',
     safeAddress,
     threshold,
     data,

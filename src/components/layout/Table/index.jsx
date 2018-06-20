@@ -1,6 +1,10 @@
 // @flow
 import * as React from 'react'
-import Table, { TableBody, TableCell, TableHead, TableRow } from 'material-ui/Table'
+import Table from '@material-ui/core/Table'
+import TableBody from '@material-ui/core/TableBody'
+import TableCell from '@material-ui/core/TableCell'
+import TableHead from '@material-ui/core/TableHead'
+import TableRow from '@material-ui/core/TableRow'
 
 export { TableBody, TableCell, TableHead, TableRow }
 

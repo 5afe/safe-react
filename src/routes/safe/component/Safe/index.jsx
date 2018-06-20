@@ -7,13 +7,14 @@ import Img from '~/components/layout/Img'
 import Paragraph from '~/components/layout/Paragraph'
 import Row from '~/components/layout/Row'
 import { type Safe } from '~/routes/safe/store/model/safe'
-import List from 'material-ui/List'
+import List from '@material-ui/core/List'
 
 import Withdrawn from '~/routes/safe/component/Withdrawn'
 import Transactions from '~/routes/safe/component/Transactions'
 import AddTransaction from '~/routes/safe/component/AddTransaction'
 import Threshold from '~/routes/safe/component/Threshold'
 import AddOwner from '~/routes/safe/component/AddOwner'
+import RemoveOwner from '~/routes/safe/component/RemoveOwner'
 
 import Address from './Address'
 import Balance from './Balance'
@@ -27,6 +28,7 @@ const safeIcon = require('./assets/gnosis_safe.svg')
 type SafeProps = {
   safe: Safe,
   balance: string,
+  userAddress: string,
 }
 
 type State = {
@@ -64,7 +66,7 @@ class GnoSafe extends React.PureComponent<SafeProps, State> {
   onEditThreshold = () => {
     const { safe } = this.props
 
-    this.setState({ component: <Threshold numOwners={safe.get('owners').count()} safe={safe} /> })
+    this.setState({ component: <Threshold numOwners={safe.get('owners').count()} safe={safe} onReset={this.onListTransactions} /> })
   }
 
   onAddOwner = (e: SyntheticEvent<HTMLButtonElement>) => {
@@ -73,8 +75,14 @@ class GnoSafe extends React.PureComponent<SafeProps, State> {
     this.setState({ component: <AddOwner threshold={safe.get('threshold')} safe={safe} /> })
   }
 
+  onRemoveOwner = (name: string, address: string) => {
+    const { safe } = this.props
+
+    this.setState({ component: <RemoveOwner safeAddress={safe.get('address')} threshold={safe.get('threshold')} safe={safe} name={name} userToRemove={address} /> })
+  }
+
   render() {
-    const { safe, balance } = this.props
+    const { safe, balance, userAddress } = this.props
     const { component } = this.state
 
     return (
@@ -82,7 +90,12 @@ class GnoSafe extends React.PureComponent<SafeProps, State> {
         <Col sm={12} top="xs" md={5} margin="xl" overflow>
           <List style={listStyle}>
             <Balance balance={balance} />
-            <Owners owners={safe.owners} onAddOwner={this.onAddOwner} />
+            <Owners
+              owners={safe.owners}
+              onAddOwner={this.onAddOwner}
+              userAddress={userAddress}
+              onRemoveOwner={this.onRemoveOwner}
+            />
             <Confirmations confirmations={safe.get('threshold')} onEditThreshold={this.onEditThreshold} />
             <Address address={safe.get('address')} />
             <DailyLimit balance={balance} dailyLimit={safe.get('dailyLimit')} onWithdrawn={this.onWithdrawn} />

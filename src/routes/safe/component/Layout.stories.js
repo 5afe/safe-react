@@ -16,6 +16,7 @@ storiesOf('Routes /safe:address', module)
   .addDecorator(FrameDecorator)
   .add('Safe undefined being connected', () => (
     <Component
+      userAddress="foo"
       safe={undefined}
       provider="METAMASK"
       balance="0"
@@ -24,6 +25,7 @@ storiesOf('Routes /safe:address', module)
   ))
   .add('Safe undefined NOT connected', () => (
     <Component
+      userAddress="foo"
       safe={undefined}
       provider=""
       balance="0"
@@ -35,6 +37,7 @@ storiesOf('Routes /safe:address', module)
 
     return (
       <Component
+        userAddress="foo"
         safe={safe}
         provider="METAMASK"
         balance="2"
@@ -47,6 +50,7 @@ storiesOf('Routes /safe:address', module)
 
     return (
       <Component
+        userAddress="foo"
         safe={safe}
         provider="METAMASK"
         balance="2"
