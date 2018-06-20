@@ -1,2 +1,2 @@
 // @flow
-jest.setTimeout(45000)
+jest.setTimeout(60000)

@@ -44,7 +44,7 @@ const deploySafe = async (safe: React$Component<{}>, dailyLimit: string, thresho
   const web3 = getWeb3()
   const accounts = await promisify(cb => web3.eth.getAccounts(cb))
   TestUtils.Simulate.change(fieldOwners, { target: { value: `${numOwners}` } })
-  await sleep(800)
+  await sleep(1500)
   const inputsExpanded = TestUtils.scryRenderedDOMComponentsWithTag(safe, 'input')
   expect(inputsExpanded.length).toBe((numOwners * 2) + 4) // 2 per owner + name, dailyLimit, confirmations, numOwners
 
@@ -71,7 +71,7 @@ const deploySafe = async (safe: React$Component<{}>, dailyLimit: string, thresho
 
   // giving some time to the component for updating its state with safe
   // before destroying its context
-  await sleep(12000)
+  await sleep(15000)
 
   // THEN
   const deployed = TestUtils.findRenderedDOMComponentWithClass(safe, DEPLOYED_COMPONENT_ID)
