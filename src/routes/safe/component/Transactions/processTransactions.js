@@ -126,8 +126,10 @@ export const processTransaction = async (
 
   checkReceiptStatus(txHash.tx)
 
-  const confirmationHash = thresholdReached ? EXECUTED_CONFIRMATION_HASH : txHash.tx
-  const executedConfirmations: List<Confirmation> = updateConfirmations(tx.get('confirmations'), userAddress, confirmationHash)
+  const confirmationHash =
+    thresholdReached ? EXECUTED_CONFIRMATION_HASH : txHash.tx
+  const executedConfirmations: List<Confirmation> =
+    updateConfirmations(tx.get('confirmations'), userAddress, confirmationHash)
 
   return updateTransaction(
     txName,
