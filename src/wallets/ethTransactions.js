@@ -36,8 +36,12 @@ export const calculateGasPrice = async () => {
     ? 'https://safe-relay.staging.gnosisdev.com/api/v1/gas-station/'
     : 'https://safe-relay.dev.gnosisdev.com/'
   */
+  const corsProblem = process.env.NODE_ENV === 'test'
+  if (corsProblem) {
+    return '4000000'
+  }
 
-  const response = await fetch('https://ethgasstation.info/json/ethgasAPI.json', { mode: 'no-cors' })
+  const response = await fetch('https://ethgasstation.info/json/ethgasAPI.json')
   if (!response.ok) {
     throw new Error('Error querying gast station')
   }
