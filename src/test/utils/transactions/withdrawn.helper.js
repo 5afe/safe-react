@@ -3,14 +3,14 @@ import TestUtils from 'react-dom/test-utils'
 import { sleep } from '~/utils/timer'
 import { checkBalanceOf } from '~/test/utils/etherMovements'
 
-export const sendWithdrawnForm = (
+export const sendWithdrawForm = (
   SafeDom: React$Component<any, any>,
-  withdrawnButton: React$Component<any, any>,
+  withdrawButton: React$Component<any, any>,
   amount: string,
   destination: string,
 ) => {
   // load add multisig form component
-  TestUtils.Simulate.click(withdrawnButton)
+  TestUtils.Simulate.click(withdrawButton)
   // give time to re-render it
   sleep(600)
 
@@ -31,6 +31,6 @@ export const sendWithdrawnForm = (
   return sleep(2500)
 }
 
-export const checkMinedWithdrawnTx = async (address: string, funds: number) => {
+export const checkMinedWithdrawTx = async (address: string, funds: number) => {
   await checkBalanceOf(address, funds)
 }

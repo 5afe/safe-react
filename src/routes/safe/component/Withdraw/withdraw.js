@@ -36,7 +36,13 @@ export const getDailyLimitFrom = async (safeAddress: string, tokenAddress: numbe
   return { value: Number(limit), spentToday: Number(spentToday) }
 }
 
-const withdrawn = async (values: Object, safeAddress: string, userAccount: string): Promise<void> => {
+export const getEditDailyLimitData = async (safeAddress: string, token: string, dailyLimit: number) => {
+  const dailyLimitModule = await getDailyLimitModuleFrom(safeAddress)
+
+  return dailyLimitModule.contract.changeDailyLimit.getData(token, dailyLimit)
+}
+
+const withdraw = async (values: Object, safeAddress: string, userAccount: string): Promise<void> => {
   const web3 = getWeb3()
   const dailyLimitModule = await getDailyLimitModuleFrom(safeAddress)
 
@@ -51,4 +57,4 @@ const withdrawn = async (values: Object, safeAddress: string, userAccount: strin
   checkReceiptStatus(txHash.tx)
 }
 
-export default withdrawn
+export default withdraw

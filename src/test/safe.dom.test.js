@@ -1,13 +1,13 @@
 // @flow
 import TestUtils from 'react-dom/test-utils'
 import Transaction from '~/routes/safe/component/Transactions/Transaction'
-import { listTxsClickingOn, LIST_TXS_INDEX, MOVE_FUNDS_INDEX, ADD_OWNERS_INDEX, EXPAND_OWNERS_INDEX, EDIT_THRESHOLD_INDEX, WITHDRAWN_INDEX, refreshTransactions } from '~/test/builder/safe.dom.utils'
+import { listTxsClickingOn, LIST_TXS_INDEX, MOVE_FUNDS_INDEX, ADD_OWNERS_INDEX, EXPAND_OWNERS_INDEX, EDIT_THRESHOLD_INDEX, WITHDRAW_INDEX, refreshTransactions } from '~/test/builder/safe.dom.utils'
 import { renderSafeInDom, type DomSafe } from '~/test/builder/safe.dom.builder'
 import { sendMoveFundsForm, checkMinedMoveFundsTx, checkPendingMoveFundsTx } from '~/test/utils/transactions/moveFunds.helper'
 import { sendAddOwnerForm, checkMinedAddOwnerTx, checkPendingAddOwnerTx } from '~/test/utils/transactions/addOwner.helper'
 import { sendRemoveOwnerForm, checkMinedRemoveOwnerTx, checkPendingRemoveOwnerTx } from '~/test/utils/transactions/removeOwner.helper'
 import { checkMinedThresholdTx, sendChangeThresholdForm, checkThresholdOf } from '~/test/utils/transactions/threshold.helper'
-import { sendWithdrawnForm, checkMinedWithdrawnTx } from '~/test/utils/transactions/withdrawn.helper'
+import { sendWithdrawForm, checkMinedWithdrawTx } from '~/test/utils/transactions/withdraw.helper'
 import { processTransaction } from '~/routes/safe/component/Transactions/processTransactions'
 import { checkBalanceOf } from '~/test/utils/etherMovements'
 
@@ -24,7 +24,7 @@ describe('DOM > Feature > SAFE MULTISIG TX 1 Owner 1 Threshold', () => {
 
     // WHEN
     await sendMoveFundsForm(SafeDom, safeButtons[MOVE_FUNDS_INDEX], 'Move funds', '0.01', accounts[1])
-    await sendWithdrawnForm(SafeDom, safeButtons[WITHDRAWN_INDEX], '0.01', accounts[3])
+    await sendWithdrawForm(SafeDom, safeButtons[WITHDRAW_INDEX], '0.01', accounts[3])
     await sendAddOwnerForm(SafeDom, safeButtons[ADD_OWNERS_INDEX], 'Adol Metamask 2', accounts[1])
     await sendChangeThresholdForm(SafeDom, safeButtons[EDIT_THRESHOLD_INDEX], '2')
 
@@ -33,7 +33,7 @@ describe('DOM > Feature > SAFE MULTISIG TX 1 Owner 1 Threshold', () => {
     const transactions = TestUtils.scryRenderedComponentsWithType(SafeDom, Transaction)
 
     checkMinedMoveFundsTx(transactions[0], 'Move funds')
-    await checkMinedWithdrawnTx(address, '0.08') // 0.1 - 0.01 tx - 0.01 withdrawn
+    await checkMinedWithdrawTx(address, '0.08') // 0.1 - 0.01 tx - 0.01 withdraw
     checkMinedAddOwnerTx(transactions[1], 'Add Owner Adol Metamask 2')
     checkMinedThresholdTx(transactions[2], 'Change Safe\'s threshold')
   })
@@ -48,7 +48,7 @@ describe('DOM > Feature > SAFE MULTISIG TX 1 Owner 1 Threshold', () => {
     await sendMoveFundsForm(SafeDom, safeButtons[MOVE_FUNDS_INDEX], 'Buy batteries', '0.01', accounts[1])
     const increaseThreshold = true
     await sendAddOwnerForm(SafeDom, safeButtons[ADD_OWNERS_INDEX], 'Adol Metamask 3', accounts[2], increaseThreshold)
-    await sendWithdrawnForm(SafeDom, safeButtons[WITHDRAWN_INDEX], '0.01', accounts[3])
+    await sendWithdrawForm(SafeDom, safeButtons[WITHDRAW_INDEX], '0.01', accounts[3])
 
     // THEN
     await listTxsClickingOn(safeButtons[LIST_TXS_INDEX])
@@ -58,7 +58,7 @@ describe('DOM > Feature > SAFE MULTISIG TX 1 Owner 1 Threshold', () => {
     await checkPendingMoveFundsTx(transactions[3], 2, 'Buy batteries', statusses)
     await checkPendingAddOwnerTx(transactions[4], 2, 'Add Owner Adol Metamask 3', statusses)
     // checkMinedThresholdTx(transactions[4], 'Add Owner Adol Metamask 3')
-    await checkMinedWithdrawnTx(address, '0.07')
+    await checkMinedWithdrawTx(address, '0.07')
   })
 
   it('approves and executes pending transactions', async () => {

@@ -4,12 +4,12 @@ import { connect } from 'react-redux'
 import Stepper from '~/components/Stepper'
 import { type DailyLimit } from '~/routes/safe/store/model/dailyLimit'
 import selector, { type SelectorProps } from './selector'
-import withdrawn from './withdrawn'
-import WithdrawnForm from './WithdrawnForm'
+import withdraw from './withdraw'
+import WithdrawForm from './WithdrawForm'
 import Review from './Review'
 
 const getSteps = () => [
-  'Fill Withdrawn Form', 'Review Withdrawn',
+  'Fill Withdraw Form', 'Review Withdraw',
 ]
 
 type Props = SelectorProps & {
@@ -23,15 +23,15 @@ type State = {
 
 export const SEE_TXS_BUTTON_TEXT = 'RESET'
 
-class Withdrawn extends React.Component<Props, State> {
+class Withdraw extends React.Component<Props, State> {
   state = {
     done: false,
   }
 
-  onWithdrawn = async (values: Object) => {
+  onWithdraw = async (values: Object) => {
     try {
       const { safeAddress, userAddress } = this.props
-      await withdrawn(values, safeAddress, userAddress)
+      await withdraw(values, safeAddress, userAddress)
       this.setState({ done: true })
     } catch (error) {
       this.setState({ done: false })
@@ -55,12 +55,12 @@ class Withdrawn extends React.Component<Props, State> {
         <Stepper
           finishedTransaction={done}
           finishedButton={finishedButton}
-          onSubmit={this.onWithdrawn}
+          onSubmit={this.onWithdraw}
           steps={steps}
           onReset={this.onReset}
         >
           <Stepper.Page limit={dailyLimit.get('value')} spentToday={dailyLimit.get('spentToday')}>
-            { WithdrawnForm }
+            { WithdrawForm }
           </Stepper.Page>
           <Stepper.Page>
             { Review }
@@ -71,5 +71,5 @@ class Withdrawn extends React.Component<Props, State> {
   }
 }
 
-export default connect(selector)(Withdrawn)
+export default connect(selector)(Withdraw)
 

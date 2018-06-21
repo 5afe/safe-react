@@ -1,7 +1,7 @@
 // @flow
 import { aNewStore } from '~/store'
 import { addEtherTo } from '~/test/utils/etherMovements'
-import { aDeployedSafe, executeWithdrawnOn } from '~/routes/safe/store/test/builder/deployedSafe.builder'
+import { aDeployedSafe, executeWithdrawOn } from '~/routes/safe/store/test/builder/deployedSafe.builder'
 
 describe('Safe Blockchain Test', () => {
   let store
@@ -17,10 +17,10 @@ describe('Safe Blockchain Test', () => {
     const value = 0.15
 
     // WHEN
-    await executeWithdrawnOn(safeAddress, value)
-    await executeWithdrawnOn(safeAddress, value)
+    await executeWithdrawOn(safeAddress, value)
+    await executeWithdrawOn(safeAddress, value)
 
     // THEN
-    expect(executeWithdrawnOn(safeAddress, value)).rejects.toThrow('VM Exception while processing transaction: revert')
+    expect(executeWithdrawOn(safeAddress, value)).rejects.toThrow('VM Exception while processing transaction: revert')
   })
 })

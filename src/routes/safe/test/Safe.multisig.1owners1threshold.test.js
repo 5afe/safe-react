@@ -18,7 +18,7 @@ import { sleep } from '~/utils/timer'
 import { ADD_MULTISIG_BUTTON_TEXT } from '~/routes/safe/component/Safe/MultisigTx'
 import { safeTransactionsSelector } from '~/routes/safe/store/selectors/index'
 
-describe('React DOM TESTS > Withdrawn funds from safe', () => {
+describe('React DOM TESTS > Withdraw funds from safe', () => {
   let SafeDom
   let store
   let address

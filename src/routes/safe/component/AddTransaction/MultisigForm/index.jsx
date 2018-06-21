@@ -23,7 +23,7 @@ type Props = {
   balance: number,
 }
 
-const WithdrawnForm = ({ balance }: Props) => () => (
+const WithdrawForm = ({ balance }: Props) => () => (
   <Block margin="md">
     <Heading tag="h2" margin="lg">
       Multisig Transaction
@@ -64,4 +64,4 @@ const WithdrawnForm = ({ balance }: Props) => () => (
   </Block>
 )
 
-export default WithdrawnForm
+export default WithdrawForm

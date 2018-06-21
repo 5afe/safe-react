@@ -9,12 +9,13 @@ import Row from '~/components/layout/Row'
 import { type Safe } from '~/routes/safe/store/model/safe'
 import List from '@material-ui/core/List'
 
-import Withdrawn from '~/routes/safe/component/Withdrawn'
+import Withdraw from '~/routes/safe/component/Withdraw'
 import Transactions from '~/routes/safe/component/Transactions'
 import AddTransaction from '~/routes/safe/component/AddTransaction'
 import Threshold from '~/routes/safe/component/Threshold'
 import AddOwner from '~/routes/safe/component/AddOwner'
 import RemoveOwner from '~/routes/safe/component/RemoveOwner'
+import EditDailyLimit from '~/routes/safe/component/EditDailyLimit'
 
 import Address from './Address'
 import Balance from './Balance'
@@ -44,10 +45,17 @@ class GnoSafe extends React.PureComponent<SafeProps, State> {
     component: undefined,
   }
 
-  onWithdrawn = () => {
+  onEditDailyLimit = () => {
     const { safe } = this.props
 
-    this.setState({ component: <Withdrawn safeAddress={safe.get('address')} dailyLimit={safe.get('dailyLimit')} /> })
+    const value = safe.get('dailyLimit').get('value')
+    this.setState({ component: <EditDailyLimit safe={safe} dailyLimit={value} /> })
+  }
+
+  onWithdraw = () => {
+    const { safe } = this.props
+
+    this.setState({ component: <Withdraw safeAddress={safe.get('address')} dailyLimit={safe.get('dailyLimit')} /> })
   }
 
   onAddTx = () => {
@@ -98,7 +106,7 @@ class GnoSafe extends React.PureComponent<SafeProps, State> {
             />
             <Confirmations confirmations={safe.get('threshold')} onEditThreshold={this.onEditThreshold} />
             <Address address={safe.get('address')} />
-            <DailyLimit balance={balance} dailyLimit={safe.get('dailyLimit')} onWithdrawn={this.onWithdrawn} />
+            <DailyLimit balance={balance} dailyLimit={safe.get('dailyLimit')} onWithdraw={this.onWithdraw} onEditDailyLimit={this.onEditDailyLimit} />
             <MultisigTx balance={balance} onAddTx={this.onAddTx} onSeeTxs={this.onListTransactions} />
           </List>
         </Col>

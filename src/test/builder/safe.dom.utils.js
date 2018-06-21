@@ -8,7 +8,7 @@ import { sleep } from '~/utils/timer'
 export const EXPAND_OWNERS_INDEX = 0
 export const ADD_OWNERS_INDEX = 1
 export const EDIT_THRESHOLD_INDEX = 2
-export const WITHDRAWN_INDEX = 3
+export const WITHDRAW_INDEX = 3
 export const MOVE_FUNDS_INDEX = 4
 export const LIST_TXS_INDEX = 5
 
