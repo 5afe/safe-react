@@ -3,7 +3,7 @@ import * as React from 'react'
 import Stepper from '~/components/Stepper'
 import { connect } from 'react-redux'
 import { createTransaction } from '~/routes/safe/component/AddTransaction/createTransactions'
-import { getEditDailyLimitData } from '~/routes/safe/component/Withdraw/withdraw'
+import { getEditDailyLimitData, getDailyLimitAddress } from '~/routes/safe/component/Withdraw/withdraw'
 import { type Safe } from '~/routes/safe/store/model/safe'
 import EditDailyLimitForm, { EDIT_DAILY_LIMIT_PARAM } from './EditDailyLimitForm'
 import selector, { type SelectorProps } from './selector'
@@ -24,7 +24,7 @@ type State = {
   done: boolean,
 }
 
-export const CHANGE_THRESHOLD_RESET_BUTTON_TEXT = 'START'
+export const CHANGE_THRESHOLD_RESET_BUTTON_TEXT = 'SEE TXs'
 
 class EditDailyLimit extends React.PureComponent<Props, State> {
   state = {
@@ -37,8 +37,9 @@ class EditDailyLimit extends React.PureComponent<Props, State> {
       const newDailyLimit = values[EDIT_DAILY_LIMIT_PARAM]
       const safeAddress = safe.get('address')
       const data = await getEditDailyLimitData(safeAddress, 0, Number(newDailyLimit))
+      const to = await getDailyLimitAddress(safeAddress)
       const nonce = Date.now()
-      await createTransaction(safe, `Change Safe's daily limit to ${newDailyLimit} [${nonce}]`, safeAddress, 0, nonce, userAddress, data)
+      await createTransaction(safe, `Change Safe's daily limit to ${newDailyLimit} [${nonce}]`, to, 0, nonce, userAddress, data)
       await this.props.fetchTransactions()
       this.setState({ done: true })
     } catch (error) {

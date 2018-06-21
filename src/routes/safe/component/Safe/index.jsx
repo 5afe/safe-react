@@ -49,7 +49,7 @@ class GnoSafe extends React.PureComponent<SafeProps, State> {
     const { safe } = this.props
 
     const value = safe.get('dailyLimit').get('value')
-    this.setState({ component: <EditDailyLimit safe={safe} dailyLimit={value} /> })
+    this.setState({ component: <EditDailyLimit safe={safe} dailyLimit={value} onReset={this.onListTransactions} /> })
   }
 
   onWithdraw = () => {
