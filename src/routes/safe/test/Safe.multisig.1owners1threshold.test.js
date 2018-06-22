@@ -51,6 +51,7 @@ describe('React DOM TESTS > Withdraw funds from safe', () => {
 
     await sleep(1800) // Give time to enable Add button
     TestUtils.Simulate.click(addTxButton)
+    await sleep(1800) // Give time to render the form
     const AddTransaction = TestUtils.findRenderedComponentWithType(SafeDom, AddTransactionComponent)
 
     // $FlowFixMe
