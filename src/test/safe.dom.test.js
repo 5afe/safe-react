@@ -33,9 +33,9 @@ describe('DOM > Feature > SAFE MULTISIG TX 1 Owner 1 Threshold', () => {
     const transactions = TestUtils.scryRenderedComponentsWithType(SafeDom, Transaction)
 
     checkMinedMoveFundsTx(transactions[0], 'Move funds')
-    await checkMinedWithdrawTx(address, '0.08') // 0.1 - 0.01 tx - 0.01 withdraw
-    checkMinedAddOwnerTx(transactions[1], 'Add Owner Adol Metamask 2')
-    checkMinedThresholdTx(transactions[2], 'Change Safe\'s threshold')
+    await checkMinedWithdrawTx(transactions[1], 'Withdraw movement of 0.01', address, '0.08') // 0.1 - 0.01 tx - 0.01 withdraw
+    checkMinedAddOwnerTx(transactions[2], 'Add Owner Adol Metamask 2')
+    checkMinedThresholdTx(transactions[3], 'Change Safe\'s threshold')
   })
 
   it('mines withdraw process correctly all multisig txs in a 2 owner & 2 threshold safe', async () => {
@@ -55,10 +55,10 @@ describe('DOM > Feature > SAFE MULTISIG TX 1 Owner 1 Threshold', () => {
     const transactions = TestUtils.scryRenderedComponentsWithType(SafeDom, Transaction)
 
     const statusses = ['Adol Metamask 2 [Not confirmed]', 'Adolfo 1 Eth Account [Confirmed]']
-    await checkPendingMoveFundsTx(transactions[3], 2, 'Buy batteries', statusses)
-    await checkPendingAddOwnerTx(transactions[4], 2, 'Add Owner Adol Metamask 3', statusses)
+    await checkPendingMoveFundsTx(transactions[4], 2, 'Buy batteries', statusses)
+    await checkPendingAddOwnerTx(transactions[5], 2, 'Add Owner Adol Metamask 3', statusses)
     // checkMinedThresholdTx(transactions[4], 'Add Owner Adol Metamask 3')
-    await checkMinedWithdrawTx(address, '0.07')
+    await checkMinedWithdrawTx(transactions[6], 'Withdraw movement of 0.01', address, '0.07')
   })
 
   it('approves and executes pending transactions', async () => {
@@ -68,17 +68,17 @@ describe('DOM > Feature > SAFE MULTISIG TX 1 Owner 1 Threshold', () => {
     } = domSafe
 
     let transactions = TestUtils.scryRenderedComponentsWithType(SafeDom, Transaction)
-    expect(transactions.length).toBe(5)
+    expect(transactions.length).toBe(7)
 
     // WHEN... processing pending TXs
-    await processTransaction(address, transactions[3].props.transaction, 1, accounts[1])
     await processTransaction(address, transactions[4].props.transaction, 1, accounts[1])
+    await processTransaction(address, transactions[5].props.transaction, 1, accounts[1])
     await refreshTransactions(store)
 
     // THEN
-    checkMinedMoveFundsTx(transactions[3], 'Buy batteries')
+    checkMinedMoveFundsTx(transactions[4], 'Buy batteries')
     await checkBalanceOf(address, '0.06')
-    checkMinedAddOwnerTx(transactions[4], 'Add Owner Adol Metamask 3')
+    checkMinedAddOwnerTx(transactions[5], 'Add Owner Adol Metamask 3')
     await checkThresholdOf(address, 3)
 
     // WHEN... reducing threshold
@@ -87,22 +87,22 @@ describe('DOM > Feature > SAFE MULTISIG TX 1 Owner 1 Threshold', () => {
     // THEN
     await listTxsClickingOn(safeButtons[LIST_TXS_INDEX])
     transactions = TestUtils.scryRenderedComponentsWithType(SafeDom, Transaction)
-    expect(transactions.length).toBe(6)
+    expect(transactions.length).toBe(8)
     let statusses = ['Adol Metamask 3 [Not confirmed]', 'Adol Metamask 2 [Not confirmed]', 'Adolfo 1 Eth Account [Confirmed]']
-    await checkPendingRemoveOwnerTx(transactions[5], 3, 'Remove Owner Adol Metamask 3', statusses)
+    await checkPendingRemoveOwnerTx(transactions[7], 3, 'Remove Owner Adol Metamask 3', statusses)
 
-    await processTransaction(address, transactions[5].props.transaction, 1, accounts[1])
+    await processTransaction(address, transactions[7].props.transaction, 1, accounts[1])
     await refreshTransactions(store)
     transactions = TestUtils.scryRenderedComponentsWithType(SafeDom, Transaction)
     statusses = ['Adol Metamask 3 [Not confirmed]', 'Adol Metamask 2 [Confirmed]', 'Adolfo 1 Eth Account [Confirmed]']
-    await checkPendingRemoveOwnerTx(transactions[5], 2, 'Remove Owner Adol Metamask 3', statusses)
+    await checkPendingRemoveOwnerTx(transactions[7], 2, 'Remove Owner Adol Metamask 3', statusses)
     await checkThresholdOf(address, 3)
 
-    await processTransaction(address, transactions[5].props.transaction, 2, accounts[2])
+    await processTransaction(address, transactions[7].props.transaction, 2, accounts[2])
     await refreshTransactions(store)
     await checkThresholdOf(address, 2)
     transactions = TestUtils.scryRenderedComponentsWithType(SafeDom, Transaction)
-    await checkMinedRemoveOwnerTx(transactions[5], 'Remove Owner')
+    await checkMinedRemoveOwnerTx(transactions[7], 'Remove Owner')
 
     // WHEN... changing threshold
     await sendChangeThresholdForm(SafeDom, safeButtons[EDIT_THRESHOLD_INDEX], '1')
@@ -110,7 +110,7 @@ describe('DOM > Feature > SAFE MULTISIG TX 1 Owner 1 Threshold', () => {
 
     // THEN
     transactions = TestUtils.scryRenderedComponentsWithType(SafeDom, Transaction)
-    await processTransaction(address, transactions[6].props.transaction, 1, accounts[1])
+    await processTransaction(address, transactions[8].props.transaction, 1, accounts[1])
     await checkThresholdOf(address, 1)
   })
 })

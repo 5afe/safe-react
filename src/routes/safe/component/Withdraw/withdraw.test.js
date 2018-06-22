@@ -2,6 +2,8 @@
 import { aNewStore } from '~/store'
 import { addEtherTo } from '~/test/utils/etherMovements'
 import { aDeployedSafe, executeWithdrawOn } from '~/routes/safe/store/test/builder/deployedSafe.builder'
+import { buildMathPropsFrom } from '~/test/utils/buildReactRouterProps'
+import { safeSelector } from '~/routes/safe/store/selectors/index'
 
 describe('Safe Blockchain Test', () => {
   let store
@@ -17,8 +19,10 @@ describe('Safe Blockchain Test', () => {
     const value = 0.15
 
     // WHEN
-    await executeWithdrawOn(safeAddress, value)
-    await executeWithdrawOn(safeAddress, value)
+    const match: Match = buildMathPropsFrom(safeAddress)
+    const safe = safeSelector(store.getState(), { match })
+    await executeWithdrawOn(safe, value)
+    await executeWithdrawOn(safe, value)
 
     // THEN
     expect(executeWithdrawOn(safeAddress, value)).rejects.toThrow('VM Exception while processing transaction: revert')

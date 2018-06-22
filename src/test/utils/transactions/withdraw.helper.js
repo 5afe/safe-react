@@ -2,6 +2,7 @@
 import TestUtils from 'react-dom/test-utils'
 import { sleep } from '~/utils/timer'
 import { checkBalanceOf } from '~/test/utils/etherMovements'
+import { checkMinedTx } from '~/test/builder/safe.dom.utils'
 
 export const sendWithdrawForm = (
   SafeDom: React$Component<any, any>,
@@ -31,6 +32,13 @@ export const sendWithdrawForm = (
   return sleep(2500)
 }
 
-export const checkMinedWithdrawTx = async (address: string, funds: number) => {
+export const checkMinedWithdrawTx = async (
+  Transaction: React$Component<any, any>,
+  name: string,
+  address: string,
+  funds: number,
+) => {
   await checkBalanceOf(address, funds)
+
+  checkMinedTx(Transaction, name)
 }
