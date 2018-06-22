@@ -8,9 +8,10 @@ import { sleep } from '~/utils/timer'
 export const EXPAND_OWNERS_INDEX = 0
 export const ADD_OWNERS_INDEX = 1
 export const EDIT_THRESHOLD_INDEX = 2
-export const WITHDRAW_INDEX = 3
-export const MOVE_FUNDS_INDEX = 4
-export const LIST_TXS_INDEX = 5
+export const EDIT_INDEX = 3
+export const WITHDRAW_INDEX = 4
+export const MOVE_FUNDS_INDEX = 5
+export const LIST_TXS_INDEX = 6
 
 export const listTxsClickingOn = async (seeTxsButton: Element) => {
   expect(seeTxsButton.getElementsByTagName('span')[0].innerHTML).toEqual(SEE_MULTISIG_BUTTON_TEXT)

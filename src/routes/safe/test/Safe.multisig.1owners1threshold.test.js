@@ -17,6 +17,7 @@ import { getBalanceInEtherOf } from '~/wallets/getWeb3'
 import { sleep } from '~/utils/timer'
 import { ADD_MULTISIG_BUTTON_TEXT } from '~/routes/safe/component/Safe/MultisigTx'
 import { safeTransactionsSelector } from '~/routes/safe/store/selectors/index'
+import { MOVE_FUNDS_INDEX } from '~/test/builder/safe.dom.utils'
 
 describe('React DOM TESTS > Withdraw funds from safe', () => {
   let SafeDom
@@ -44,12 +45,12 @@ describe('React DOM TESTS > Withdraw funds from safe', () => {
     const Safe = TestUtils.findRenderedComponentWithType(SafeDom, SafeView)
 
     // $FlowFixMe
-    const buttons = TestUtils.scryRenderedComponentsWithType(Safe, Button)
-    const addTxButton = buttons[3]
-    expect(addTxButton.props.children).toEqual(ADD_MULTISIG_BUTTON_TEXT)
-    await sleep(1800) // Give time to enable Add button
-    TestUtils.Simulate.click(TestUtils.scryRenderedDOMComponentsWithTag(addTxButton, 'button')[0])
+    const buttons = TestUtils.scryRenderedDOMComponentsWithTag(Safe, 'button')
+    const addTxButton = buttons[MOVE_FUNDS_INDEX]
+    expect(addTxButton.getElementsByTagName('span')[0].innerHTML).toEqual(ADD_MULTISIG_BUTTON_TEXT)
 
+    await sleep(1800) // Give time to enable Add button
+    TestUtils.Simulate.click(addTxButton)
     const AddTransaction = TestUtils.findRenderedComponentWithType(SafeDom, AddTransactionComponent)
 
     // $FlowFixMe

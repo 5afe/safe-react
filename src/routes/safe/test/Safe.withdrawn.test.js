@@ -17,6 +17,7 @@ import { sleep } from '~/utils/timer'
 import { getDailyLimitFrom } from '~/routes/safe/component/Withdraw/withdraw'
 import { type DailyLimitProps } from '~/routes/safe/store/model/dailyLimit'
 import { ADD_MULTISIG_BUTTON_TEXT } from '~/routes/safe/component/Safe/MultisigTx'
+import { WITHDRAW_INDEX, MOVE_FUNDS_INDEX } from '~/test/builder/safe.dom.utils'
 
 describe('React DOM TESTS > Withdraw funds from safe', () => {
   let SafeDom
@@ -45,10 +46,10 @@ describe('React DOM TESTS > Withdraw funds from safe', () => {
     const Safe = TestUtils.findRenderedComponentWithType(SafeDom, SafeView)
 
     // $FlowFixMe
-    const buttons = TestUtils.scryRenderedComponentsWithType(Safe, Button)
-    const withdrawButton = buttons[2]
-    expect(withdrawButton.props.children).toEqual(WITHDRAW_BUTTON_TEXT)
-    TestUtils.Simulate.click(TestUtils.scryRenderedDOMComponentsWithTag(withdrawButton, 'button')[0])
+    const buttons = TestUtils.scryRenderedDOMComponentsWithTag(Safe, 'button')
+    const addWithdrawButton = buttons[WITHDRAW_INDEX]
+    expect(addWithdrawButton.getElementsByTagName('span')[0].innerHTML).toEqual(WITHDRAW_BUTTON_TEXT)
+    TestUtils.Simulate.click(addWithdrawButton)
     await sleep(4000)
     const Withdraw = TestUtils.findRenderedComponentWithType(SafeDom, WithdrawComponent)
 
@@ -95,28 +96,28 @@ describe('React DOM TESTS > Withdraw funds from safe', () => {
   it('add multisig txs button disabled when balance is 0', async () => {
     const Safe = TestUtils.findRenderedComponentWithType(SafeDom, SafeView)
     // $FlowFixMe
-    const buttons = TestUtils.scryRenderedComponentsWithType(Safe, Button)
-    const addTxButton = buttons[3]
-    expect(addTxButton.props.children).toEqual(ADD_MULTISIG_BUTTON_TEXT)
-    expect(addTxButton.props.disabled).toBe(true)
+    const buttons = TestUtils.scryRenderedDOMComponentsWithTag(Safe, 'button')
+    const addTxButton = buttons[MOVE_FUNDS_INDEX]
+    expect(addTxButton.getElementsByTagName('span')[0].innerHTML).toEqual(ADD_MULTISIG_BUTTON_TEXT)
+    expect(addTxButton.hasAttribute('disabled')).toBe(true)
 
     await addEtherTo(address, '0.1')
     await sleep(1800)
 
-    expect(addTxButton.props.disabled).toBe(false)
+    expect(addTxButton.hasAttribute('disabled')).toBe(false)
   })
 
   it('Withdraw button disabled when balance is 0', async () => {
     const Safe = TestUtils.findRenderedComponentWithType(SafeDom, SafeView)
     // $FlowFixMe
-    const buttons = TestUtils.scryRenderedComponentsWithType(Safe, Button)
-    const addTxButton = buttons[2]
-    expect(addTxButton.props.children).toEqual(WITHDRAW_BUTTON_TEXT)
-    expect(addTxButton.props.disabled).toBe(true)
+    const buttons = TestUtils.scryRenderedDOMComponentsWithTag(Safe, 'button')
+    const addWithdrawButton = buttons[WITHDRAW_INDEX]
+    expect(addWithdrawButton.getElementsByTagName('span')[0].innerHTML).toEqual(WITHDRAW_BUTTON_TEXT)
+    expect(addWithdrawButton.hasAttribute('disabled')).toBe(true)
 
     await addEtherTo(address, '0.1')
     await sleep(1800)
 
-    expect(addTxButton.props.disabled).toBe(false)
+    expect(addWithdrawButton.hasAttribute('disabled')).toBe(false)
   })
 })
