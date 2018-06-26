@@ -2,7 +2,6 @@
 import TestUtils from 'react-dom/test-utils'
 import { sleep } from '~/utils/timer'
 import { getBalanceInEtherOf } from '~/wallets/getWeb3'
-import Button from '~/components/layout/Button'
 import { ADD_MULTISIG_BUTTON_TEXT, SEE_MULTISIG_BUTTON_TEXT } from '~/routes/safe/component/Safe/MultisigTx'
 import { addEtherTo } from '~/test/utils/etherMovements'
 import SafeView from '~/routes/safe/component/Safe'
@@ -11,6 +10,7 @@ import TransactionComponent from '~/routes/safe/component/Transactions/Transacti
 import { safeTransactionsSelector } from '~/routes/safe/store/selectors/index'
 import { type GlobalState } from '~/store/index'
 import ListItemText from '~/components/List/ListItemText'
+import { MOVE_FUNDS_INDEX, LIST_TXS_INDEX } from '~/test/builder/safe.dom.utils'
 
 export const createMultisigTxFilling = async (
   SafeDom: React$Component<any, any>,
@@ -48,21 +48,22 @@ export const addFundsTo = async (SafeDom: React$Component<any, any>, destination
   const Safe = TestUtils.findRenderedComponentWithType(SafeDom, SafeView)
 
   // $FlowFixMe
-  const buttons = TestUtils.scryRenderedComponentsWithType(Safe, Button)
-  const addTxButton = buttons[3]
-  expect(addTxButton.props.children).toEqual(ADD_MULTISIG_BUTTON_TEXT)
+  const buttons = TestUtils.scryRenderedDOMComponentsWithTag(Safe, 'button')
+  const addTxButton = buttons[MOVE_FUNDS_INDEX]
+  expect(addTxButton.getElementsByTagName('span')[0].innerHTML).toEqual(ADD_MULTISIG_BUTTON_TEXT)
+
   await sleep(1800) // Give time to enable Add button
-  TestUtils.Simulate.click(TestUtils.scryRenderedDOMComponentsWithTag(addTxButton, 'button')[0])
+  TestUtils.Simulate.click(addTxButton)
 }
 
 export const listTxsOf = (SafeDom: React$Component<any, any>) => {
   const Safe = TestUtils.findRenderedComponentWithType(SafeDom, SafeView)
 
   // $FlowFixMe
-  const buttons = TestUtils.scryRenderedComponentsWithType(Safe, Button)
-  const seeTx = buttons[4]
-  expect(seeTx.props.children).toEqual(SEE_MULTISIG_BUTTON_TEXT)
-  TestUtils.Simulate.click(TestUtils.scryRenderedDOMComponentsWithTag(seeTx, 'button')[0])
+  const buttons = TestUtils.scryRenderedDOMComponentsWithTag(Safe, 'button')
+  const seeTx = buttons[LIST_TXS_INDEX]
+  expect(seeTx.getElementsByTagName('span')[0].innerHTML).toEqual(SEE_MULTISIG_BUTTON_TEXT)
+  TestUtils.Simulate.click(seeTx)
 }
 
 export const getListItemsFrom = (SafeDom: React$Component<any, any>) => {
