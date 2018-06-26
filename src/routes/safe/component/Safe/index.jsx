@@ -55,7 +55,7 @@ class GnoSafe extends React.PureComponent<SafeProps, State> {
   onWithdraw = () => {
     const { safe } = this.props
 
-    this.setState({ component: <Withdraw safeAddress={safe.get('address')} dailyLimit={safe.get('dailyLimit')} /> })
+    this.setState({ component: <Withdraw safe={safe} dailyLimit={safe.get('dailyLimit')} /> })
   }
 
   onAddTx = () => {

@@ -18,6 +18,8 @@ import { getDailyLimitFrom } from '~/routes/safe/component/Withdraw/withdraw'
 import { type DailyLimitProps } from '~/routes/safe/store/model/dailyLimit'
 import { ADD_MULTISIG_BUTTON_TEXT } from '~/routes/safe/component/Safe/MultisigTx'
 import { WITHDRAW_INDEX, MOVE_FUNDS_INDEX } from '~/test/builder/safe.dom.utils'
+import { buildMathPropsFrom } from '~/test/utils/buildReactRouterProps'
+import { safeSelector } from '~/routes/safe/store/selectors/index'
 
 describe('React DOM TESTS > Withdraw funds from safe', () => {
   let SafeDom
@@ -80,10 +82,10 @@ describe('React DOM TESTS > Withdraw funds from safe', () => {
     // add funds to safe
     await addEtherTo(address, '0.1')
 
-    // GIVEN in beforeEach
-    // WHEN
-    await executeWithdrawOn(address, 0.01)
-    await executeWithdrawOn(address, 0.01)
+    const match: Match = buildMathPropsFrom(address)
+    const safe = safeSelector(store.getState(), { match })
+    await executeWithdrawOn(safe, 0.01)
+    await executeWithdrawOn(safe, 0.01)
 
     const ethAddress = 0
     const dailyLimit: DailyLimitProps = await getDailyLimitFrom(address, ethAddress)
