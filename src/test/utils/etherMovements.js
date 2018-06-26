@@ -2,6 +2,7 @@
 import { getProviderInfo, getBalanceInEtherOf, getWeb3 } from '~/wallets/getWeb3'
 import { promisify } from '~/utils/promisify'
 import withdraw, { DESTINATION_PARAM, VALUE_PARAM } from '~/routes/safe/component/Withdraw/withdraw'
+import { type Safe } from '~/routes/safe/store/model/safe'
 
 export const addEtherTo = async (address: string, eth: string) => {
   const web3 = getWeb3()
@@ -10,7 +11,7 @@ export const addEtherTo = async (address: string, eth: string) => {
   return promisify(cb => web3.eth.sendTransaction(txData, cb))
 }
 
-export const executeWithdrawOn = async (safeAddress: string, value: number) => {
+export const executeWithdrawOn = async (safe: Safe, value: number) => {
   const providerInfo = await getProviderInfo()
   const userAddress = providerInfo.account
 
@@ -19,7 +20,7 @@ export const executeWithdrawOn = async (safeAddress: string, value: number) => {
     [VALUE_PARAM]: `${value}`,
   }
 
-  return withdraw(values, safeAddress, userAddress)
+  return withdraw(values, safe, userAddress)
 }
 
 export const checkBalanceOf = async (addressToTest: string, value: string) => {

@@ -102,6 +102,7 @@ export type DomSafe = {
   safeButtons: Element[],
   safe: React$Component<any, any>,
   accounts: string[],
+  store: Store<GlobalState>,
 }
 
 export const renderSafeInDom = async (

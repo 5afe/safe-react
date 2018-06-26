@@ -36,7 +36,7 @@ export const checkMinedWithdrawTx = async (
   Transaction: React$Component<any, any>,
   name: string,
   address: string,
-  funds: number,
+  funds: string,
 ) => {
   await checkBalanceOf(address, funds)
 
