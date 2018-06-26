@@ -1,10 +1,14 @@
 // @flow
 import * as React from 'react'
+import { type FormApi } from 'final-form'
 import { Form } from 'react-final-form'
-import type { FormApi } from 'react-final-form'
 
 type Props = {
-  onSubmit: (values: Object, form: FormApi, callback: ?(errors: ?Object) => void) => ?Object | Promise<?Object> | void,
+  onSubmit: (
+    values: Object,
+    form: FormApi,
+    callback: ?(errors: ?Object) => ?Object
+  ) => ?Object | Promise<?Object> | void,
   children: Function,
   padding: number,
   validation?: (values: Object) => Object | Promise<Object>,
