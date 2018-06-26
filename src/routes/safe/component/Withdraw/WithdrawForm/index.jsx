@@ -5,7 +5,7 @@ import TextField from '~/components/forms/TextField'
 import { composeValidators, inLimit, mustBeFloat, required, greaterThan, mustBeEthereumAddress } from '~/components/forms/validator'
 import Block from '~/components/layout/Block'
 import Heading from '~/components/layout/Heading'
-import { DESTINATION_PARAM, VALUE_PARAM } from '~/routes/safe/component/Withdrawn/withdrawn'
+import { DESTINATION_PARAM, VALUE_PARAM } from '~/routes/safe/component/Withdraw/withdraw'
 
 export const CONFIRMATIONS_ERROR = 'Number of confirmations can not be higher than the number of owners'
 
@@ -24,10 +24,10 @@ type Props = {
   spentToday: number,
 }
 
-const WithdrawnForm = ({ limit, spentToday }: Props) => () => (
+const WithdrawForm = ({ limit, spentToday }: Props) => () => (
   <Block margin="md">
     <Heading tag="h2" margin="lg">
-      Withdrawn Funds
+      Withdraw Funds
     </Heading>
     <Heading tag="h4" margin="lg">
       {`Daily limit ${limit} ETH (spent today: ${spentToday} ETH)`}
@@ -55,4 +55,4 @@ const WithdrawnForm = ({ limit, spentToday }: Props) => () => (
   </Block>
 )
 
-export default WithdrawnForm
+export default WithdrawForm

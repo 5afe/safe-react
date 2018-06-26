@@ -9,13 +9,20 @@ import { type DailyLimit } from '~/routes/safe/store/model/dailyLimit'
 
 type Props = {
   dailyLimit: DailyLimit,
-  onWithdrawn: () => void,
+  onWithdraw: () => void,
+  onEditDailyLimit: () => void,
   balance: string,
 }
+export const EDIT_WITHDRAW = 'Edit'
+export const WITHDRAW_BUTTON_TEXT = 'Withdraw'
 
-export const WITHDRAWN_BUTTON_TEXT = 'Withdrawn'
+const editStyle = {
+  marginRight: '10px',
+}
 
-const DailyLimitComponent = ({ dailyLimit, balance, onWithdrawn }: Props) => {
+const DailyLimitComponent = ({
+  dailyLimit, balance, onWithdraw, onEditDailyLimit,
+}: Props) => {
   const limit = dailyLimit.get('value')
   const spentToday = dailyLimit.get('spentToday')
 
@@ -29,12 +36,20 @@ const DailyLimitComponent = ({ dailyLimit, balance, onWithdrawn }: Props) => {
       </Avatar>
       <ListItemText primary="Daily Limit" secondary={text} />
       <Button
+        style={editStyle}
         variant="raised"
         color="primary"
-        onClick={onWithdrawn}
+        onClick={onEditDailyLimit}
+      >
+        {EDIT_WITHDRAW}
+      </Button>
+      <Button
+        variant="raised"
+        color="primary"
+        onClick={onWithdraw}
         disabled={disabled}
       >
-        {WITHDRAWN_BUTTON_TEXT}
+        {WITHDRAW_BUTTON_TEXT}
       </Button>
     </ListItem>
   )

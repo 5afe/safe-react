@@ -3,6 +3,8 @@ import { getWeb3 } from '~/wallets/getWeb3'
 import { getGnosisSafeContract, getCreateDailyLimitExtensionContract } from '~/wallets/safeContracts'
 import { type DailyLimitProps } from '~/routes/safe/store/model/dailyLimit'
 import { checkReceiptStatus, calculateGasOf, calculateGasPrice } from '~/wallets/ethTransactions'
+import { type Safe } from '~/routes/safe/store/model/safe'
+import { buildExecutedConfirmationFrom, storeTransaction } from '~/routes/safe/component/AddTransaction/createTransactions'
 
 export const LIMIT_POSITION = 0
 export const SPENT_TODAY_POS = 1
@@ -36,12 +38,27 @@ export const getDailyLimitFrom = async (safeAddress: string, tokenAddress: numbe
   return { value: Number(limit), spentToday: Number(spentToday) }
 }
 
-const withdrawn = async (values: Object, safeAddress: string, userAccount: string): Promise<void> => {
+export const getDailyLimitAddress = async (safeAddress: string) => {
+  const dailyLimitModule = await getDailyLimitModuleFrom(safeAddress)
+
+  return dailyLimitModule.address
+}
+
+export const getEditDailyLimitData = async (safeAddress: string, token: string, dailyLimit: string) => {
   const web3 = getWeb3()
+  const dailyLimitModule = await getDailyLimitModuleFrom(safeAddress)
+  const dailyLimitInWei = web3.toWei(dailyLimit, 'ether')
+  return dailyLimitModule.contract.changeDailyLimit.getData(token, dailyLimitInWei)
+}
+
+const withdraw = async (values: Object, safe: Safe, userAccount: string): Promise<void> => {
+  const web3 = getWeb3()
+  const safeAddress = safe.get('address')
   const dailyLimitModule = await getDailyLimitModuleFrom(safeAddress)
 
   const destination = values[DESTINATION_PARAM]
-  const value = web3.toWei(values[VALUE_PARAM], 'ether')
+  const valueInEth = values[VALUE_PARAM]
+  const value = web3.toWei(valueInEth, 'ether')
 
   const dailyLimitData = dailyLimitModule.contract.executeDailyLimit.getData(0, destination, value)
   const gas = await calculateGasOf(dailyLimitData, userAccount, dailyLimitModule.address)
@@ -49,6 +66,11 @@ const withdrawn = async (values: Object, safeAddress: string, userAccount: strin
 
   const txHash = await dailyLimitModule.executeDailyLimit(0, destination, value, { from: userAccount, gas, gasPrice })
   checkReceiptStatus(txHash.tx)
+
+  const nonce = Date.now()
+  const executedConfirmations: List<Confirmation> = buildExecutedConfirmationFrom(safe.get('owners'), userAccount)
+
+  return storeTransaction(`Withdraw movement of ${valueInEth}`, nonce, destination, valueInEth, userAccount, executedConfirmations, txHash.tx, safeAddress, safe.get('threshold'), '0x')
 }
 
-export default withdrawn
+export default withdraw

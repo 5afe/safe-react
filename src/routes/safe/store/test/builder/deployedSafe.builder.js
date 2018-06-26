@@ -11,8 +11,9 @@ import { sleep } from '~/utils/timer'
 import { getProviderInfo, getWeb3 } from '~/wallets/getWeb3'
 import addProvider from '~/wallets/store/actions/addProvider'
 import { makeProvider } from '~/wallets/store/model/provider'
-import withdrawn, { DESTINATION_PARAM, VALUE_PARAM } from '~/routes/safe/component/Withdrawn/withdrawn'
+import withdraw, { DESTINATION_PARAM, VALUE_PARAM } from '~/routes/safe/component/Withdraw/withdraw'
 import { promisify } from '~/utils/promisify'
+import { type Safe } from '~/routes/safe/store/model/safe'
 
 export const renderSafe = async (localStore: Store<GlobalState>) => {
   const provider = await getProviderInfo()
@@ -94,7 +95,7 @@ export const aDeployedSafe = async (
   return deployedSafe.logs[1].args.proxy
 }
 
-export const executeWithdrawnOn = async (safeAddress: string, value: number) => {
+export const executeWithdrawOn = async (safe: Safe, value: number) => {
   const providerInfo = await getProviderInfo()
   const userAddress = providerInfo.account
 
@@ -103,5 +104,5 @@ export const executeWithdrawnOn = async (safeAddress: string, value: number) => 
     [VALUE_PARAM]: `${value}`,
   }
 
-  return withdrawn(values, safeAddress, userAddress)
+  return withdraw(values, safe, userAddress)
 }

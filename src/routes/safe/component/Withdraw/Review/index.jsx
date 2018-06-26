@@ -5,7 +5,7 @@ import Block from '~/components/layout/Block'
 import Bold from '~/components/layout/Bold'
 import Heading from '~/components/layout/Heading'
 import Paragraph from '~/components/layout/Paragraph'
-import { DESTINATION_PARAM, VALUE_PARAM } from '~/routes/safe/component/Withdrawn/withdrawn'
+import { DESTINATION_PARAM, VALUE_PARAM } from '~/routes/safe/component/Withdraw/withdraw'
 
 type FormProps = {
   values: Object,
@@ -18,7 +18,7 @@ const spinnerStyle = {
 
 const Review = () => ({ values, submitting }: FormProps) => (
   <Block>
-    <Heading tag="h2">Review the Withdrawn Operation</Heading>
+    <Heading tag="h2">Review the Withdraw Operation</Heading>
     <Paragraph align="left">
       <Bold>Destination: </Bold> {values[DESTINATION_PARAM]}
     </Paragraph>
