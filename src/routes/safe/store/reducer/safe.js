@@ -24,7 +24,8 @@ action: AddSafeType
 
 export default handleActions({
   [UPDATE_SAFE]: (state: State, action: ActionType<typeof updateSafe>): State =>
-    state.set(action.payload.get('address'), action.payload),
+    state.update(action.payload.get('address'), prevSafe =>
+      (prevSafe.equals(action.payload) ? prevSafe : action.payload)),
   [UPDATE_SAFES]: (state: State, action: ActionType<typeof updateSafes>): State =>
     action.payload,
   [ADD_SAFE]: (state: State, action: ActionType<typeof addSafe>): State => {

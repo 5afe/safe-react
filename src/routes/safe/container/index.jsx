@@ -18,7 +18,9 @@ class SafeView extends React.PureComponent<Props> {
       if (!safe) { return }
       const safeAddress: string = safe.get('address')
       fetchBalance(safeAddress)
-      fetchSafe(safe)
+      if (safe) {
+        fetchSafe(safe)
+      }
     }, 1500)
   }
 
@@ -30,13 +32,13 @@ class SafeView extends React.PureComponent<Props> {
 
   render() {
     const {
-      safe, provider, balance, granted,
+      safe, provider, balance, granted, userAddress,
     } = this.props
 
     return (
       <Page>
         { granted
-          ? <Layout balance={balance} provider={provider} safe={safe} />
+          ? <Layout balance={balance} provider={provider} safe={safe} userAddress={userAddress} />
           : <NoRights />
         }
       </Page>

@@ -1,15 +1,18 @@
 // @flow
 import * as React from 'react'
 import openHoc, { type Open } from '~/components/hoc/OpenHoc'
-import { withStyles } from 'material-ui/styles'
-import Collapse from 'material-ui/transitions/Collapse'
+import { withStyles } from '@material-ui/core/styles'
+import Collapse from '@material-ui/core/Collapse'
+import IconButton from '@material-ui/core/IconButton'
 import ListItemText from '~/components/List/ListItemText'
-import List, { ListItem, ListItemIcon } from 'material-ui/List'
-import Avatar from 'material-ui/Avatar'
-import Group from 'material-ui-icons/Group'
-import Person from 'material-ui-icons/Person'
-import ExpandLess from 'material-ui-icons/ExpandLess'
-import ExpandMore from 'material-ui-icons/ExpandMore'
+import List from '@material-ui/core/List'
+import ListItem from '@material-ui/core/ListItem'
+import ListItemIcon from '@material-ui/core/ListItemIcon'
+import Avatar from '@material-ui/core/Avatar'
+import Group from '@material-ui/icons/Group'
+import Person from '@material-ui/icons/Person'
+import ExpandLess from '@material-ui/icons/ExpandLess'
+import ExpandMore from '@material-ui/icons/ExpandMore'
 import { type WithStyles } from '~/theme/mui'
 import { type Confirmation, type ConfirmationProps } from '~/routes/safe/store/model/confirmation'
 
@@ -55,7 +58,10 @@ const Confirmaitons = openHoc(({
       </Avatar>
       <ListItemText primary="Threshold" secondary={`${threshold} confirmation${threshold === 1 ? '' : 's'} needed`} />
       <ListItemIcon>
-        {open ? <ExpandLess /> : <ExpandMore />}
+        {open
+          ? <IconButton disableRipple><ExpandLess /></IconButton>
+          : <IconButton disableRipple><ExpandMore /></IconButton>
+        }
       </ListItemIcon>
     </ListItem>
     <Collapse in={open} timeout="auto" unmountOnExit>

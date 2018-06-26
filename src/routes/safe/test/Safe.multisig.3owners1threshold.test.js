@@ -8,7 +8,7 @@ import { aDeployedSafe } from '~/routes/safe/store/test/builder/deployedSafe.bui
 import { SAFELIST_ADDRESS } from '~/routes/routes'
 import AppRoutes from '~/routes'
 import AddTransactionComponent from '~/routes/safe/component/AddTransaction'
-import { createMultisigTxFilling, addFundsTo, checkBalanceOf, listTxsOf, getTagFromTransaction, expandTransactionOf, getTransactionFromReduxStore, confirmOwners } from '~/routes/safe/test/testMultisig'
+import { createMultisigTxFilling, addFundsTo, checkBalanceOf, listTxsOf, getListItemsFrom, expandTransactionOf, getTransactionFromReduxStore, confirmOwners } from '~/routes/safe/test/testMultisig'
 import { sleep } from '~/utils/timer'
 
 const renderSafe = localStore => (
@@ -46,17 +46,17 @@ describe('React DOM TESTS > Multisig transactions from safe [3 owners & 1 thresh
     await expandTransactionOf(SafeDom, 3, 1)
     await confirmOwners(SafeDom, 'Adolfo 1 Eth Account [Confirmed]', 'Adolfo 2 Eth Account [Not confirmed]', 'Adolfo 3 Eth Account [Not confirmed]')
 
-    const paragraphs = getTagFromTransaction(SafeDom, 'p')
+    const listItems = getListItemsFrom(SafeDom)
 
-    const status = paragraphs[2].innerHTML
+    const status = listItems[2].props.secondary
     expect(status).toBe('Already executed')
 
-    const confirmed = paragraphs[3].innerHTML
+    const confirmed = listItems[3].props.secondary
     const tx = getTransactionFromReduxStore(store, address)
     if (!tx) throw new Error()
     expect(confirmed).toBe(tx.get('tx'))
 
-    const ownerTx = paragraphs[6].innerHTML
+    const ownerTx = listItems[6].props.secondary
     expect(ownerTx).toBe('Confirmation hash: EXECUTED')
   })
 })

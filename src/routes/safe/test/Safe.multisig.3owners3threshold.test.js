@@ -14,7 +14,7 @@ import AddTransactionComponent from '~/routes/safe/component/AddTransaction'
 import { processTransaction } from '~/routes/safe/component/Transactions/processTransactions'
 import { confirmationsTransactionSelector } from '~/routes/safe/store/selectors/index'
 import fetchTransactions from '~/routes/safe/store/actions/fetchTransactions'
-import { createMultisigTxFilling, addFundsTo, checkBalanceOf, listTxsOf, getTagFromTransaction, expandTransactionOf, getTransactionFromReduxStore, confirmOwners } from '~/routes/safe/test/testMultisig'
+import { createMultisigTxFilling, addFundsTo, checkBalanceOf, listTxsOf, getListItemsFrom, expandTransactionOf, getTransactionFromReduxStore, confirmOwners } from '~/routes/safe/test/testMultisig'
 
 const renderSafe = localStore => (
   TestUtils.renderIntoDocument((
@@ -74,12 +74,12 @@ describe('React DOM TESTS > Multisig transactions from safe [3 owners & 3 thresh
     await checkBalanceOf(address, '0.1')
     await listTxsOf(SafeDom)
     sleep(1400)
-    const paragraphs = getTagFromTransaction(SafeDom, 'p')
+    const listItems = getListItemsFrom(SafeDom)
 
-    const status = paragraphs[2].innerHTML
+    const status = listItems[2].props.secondary
     expect(status).toBe('1 of the 3 confirmations needed')
 
-    const confirmed = paragraphs[3].innerHTML
+    const confirmed = listItems[3].props.secondary
     expect(confirmed).toBe('Waiting for the rest of confirmations')
 
     await expandTransactionOf(SafeDom, 3, 3)
@@ -91,12 +91,12 @@ describe('React DOM TESTS > Multisig transactions from safe [3 owners & 3 thresh
     await makeConfirmation(accounts[2])
     await confirmOwners(SafeDom, 'Adolfo 1 Eth Account [Confirmed]', 'Adolfo 2 Eth Account [Confirmed]', 'Adolfo 3 Eth Account [Confirmed]')
 
-    const paragraphsExecuted = getTagFromTransaction(SafeDom, 'p')
+    const listItemsExecuted = getListItemsFrom(SafeDom)
 
-    const statusExecuted = paragraphsExecuted[2].innerHTML
+    const statusExecuted = listItemsExecuted[2].props.secondary
     expect(statusExecuted).toBe('Already executed')
 
-    const confirmedExecuted = paragraphsExecuted[3].innerHTML
+    const confirmedExecuted = listItemsExecuted[3].props.secondary
     const tx = getTransactionFromReduxStore(store, address)
     if (!tx) throw new Error()
     expect(confirmedExecuted).toBe(tx.get('tx'))

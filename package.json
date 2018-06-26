@@ -8,7 +8,7 @@
   "scripts": {
     "start": "node scripts/start.js",
     "build": "node scripts/build.js",
-    "test": "run-with-testrpc -l 40000000 'node scripts/test.js --env=jsdom'",
+    "test": "run-with-testrpc -l 40000000 --noVMErrorsOnRPCResponse true 'node scripts/test.js --env=jsdom'",
     "test-local": "NODE_ENV=test && node scripts/test.js --env=jsdom",
     "precommit": "./precommit.sh",
     "flow": "flow",
@@ -62,6 +62,7 @@
     "eslint-plugin-jest": "^21.13.0",
     "eslint-plugin-jsx-a11y": "^6.0.3",
     "eslint-plugin-react": "^7.7.0",
+    "ethereumjs-abi": "^0.6.5",
     "extract-text-webpack-plugin": "^4.0.0-beta.0",
     "file-loader": "^1.1.11",
     "flow-bin": "^0.66.0",
@@ -75,9 +76,9 @@
     "postcss-mixins": "^6.2.0",
     "postcss-simple-vars": "^4.1.0",
     "pre-commit": "^1.2.2",
-    "react": "^16.2.0",
-    "react-dev-utils": "^5.0.0",
-    "react-dom": "^16.2.0",
+    "react": "^16.4.0",
+    "react-dev-utils": "^5.0.1",
+    "react-dom": "^16.4.0",
     "react-redux": "^5.0.7",
     "react-router-redux": "^5.0.0-alpha.9",
     "redux": "^3.7.2",
@@ -88,7 +89,7 @@
     "storybook-host": "^4.1.5",
     "storybook-router": "^0.3.3",
     "style-loader": "^0.20.2",
-    "truffle": "git://github.com/trufflesuite/truffle.git#develop",
+    "truffle": "^4.1.11",
     "truffle-contract": "^1.1.8",
     "truffle-solidity-loader": "0.0.8",
     "uglifyjs-webpack-plugin": "^1.2.2",
@@ -100,14 +101,14 @@
     "webpack-manifest-plugin": "^2.0.0-rc.2"
   },
   "dependencies": {
+    "@material-ui/core": "^1.2.1",
+    "@material-ui/icons": "^1.1.0",
     "final-form": "^4.2.1",
     "history": "^4.7.2",
-    "material-ui": "^1.0.0-beta.35",
-    "material-ui-icons": "^1.0.0-beta.35",
     "react-final-form": "^3.1.2",
     "react-loadable": "^5.3.1",
     "react-router-dom": "^4.2.2",
-    "recompose": "^0.27.0"
+    "recompose": "^0.27.1"
   },
   "jest": {
     "verbose": true,
@@ -126,7 +127,7 @@
       "<rootDir>/src/**/?(*.)(spec|test).js?(x)"
     ],
     "testEnvironment": "node",
-    "testURL": "http://localhost",
+    "testURL": "https://safe-react",
     "transform": {
       "^.+\\.(js|jsx)$": "<rootDir>/node_modules/babel-jest",
       "^.+\\.(css|scss)$": "<rootDir>/config/jest/cssTransform.js",

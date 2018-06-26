@@ -1,7 +1,7 @@
 // @flow
 import * as React from 'react'
 import Page from '~/components/layout/Page'
-import { CircularProgress } from 'material-ui/Progress'
+import CircularProgress from '@material-ui/core/CircularProgress'
 
 const centerStyle = {
   margin: 'auto 0',

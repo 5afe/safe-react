@@ -25,7 +25,7 @@ export const checkReceiptStatus = async (hash: string) => {
 }
 
 export const calculateGasPrice = async () => {
-/*
+  /*
   const web3 = getWeb3()
   const { network } = web3.version
   const isMainnet = MAINNET_NETWORK === network
@@ -33,9 +33,22 @@ export const calculateGasPrice = async () => {
   const url = isMainnet
     ? 'https://safe-relay.staging.gnosisdev.com/api/v1/gas-station/'
     : 'https://safe-relay.dev.gnosisdev.com/'
-*/
+  */
 
-  const response = await fetch('https://ethgasstation.info/json/ethgasAPI.json', { mode: 'cors' })
+  if (process.env.NODE_ENV === 'test') {
+    return '20000000000'
+  }
+
+  const header = new Headers({
+    'Access-Control-Allow-Origin': '*',
+  })
+
+  const sentData = {
+    mode: 'cors',
+    header,
+  }
+
+  const response = await fetch('https://ethgasstation.info/json/ethgasAPI.json', sentData)
   if (!response.ok) {
     throw new Error('Error querying gast station')
   }
@@ -51,22 +64,3 @@ export const calculateGasOf = async (data: Object, from: string, to: string) => 
 
   return gas * 2
 }
-
-const executeTransaction = async (data: Object, from: string, to: string) => {
-  const web3 = getWeb3()
-
-  const gas = await calculateGasOf(data, from, to)
-
-  let gasPrice
-  try {
-    gasPrice = await calculateGasPrice()
-  } catch (err) {
-    gasPrice = await promisify(cb => web3.eth.getGasPrice(cb))
-  }
-
-  return promisify(cb => web3.eth.sendTransaction({
-    from, to, data, gas, gasPrice,
-  }, cb))
-}
-
-export default executeTransaction

@@ -5,7 +5,7 @@ import { Provider } from 'react-redux'
 import { ConnectedRouter } from 'react-router-redux'
 import Button from '~/components/layout/Button'
 import { aNewStore, history } from '~/store'
-import { addEtherTo } from '~/test/addEtherTo'
+import { addEtherTo } from '~/test/utils/etherMovements'
 import { aDeployedSafe } from '~/routes/safe/store/test/builder/deployedSafe.builder'
 import { SAFELIST_ADDRESS } from '~/routes/routes'
 import SafeView from '~/routes/safe/component/Safe'
@@ -17,8 +17,9 @@ import { getBalanceInEtherOf } from '~/wallets/getWeb3'
 import { sleep } from '~/utils/timer'
 import { ADD_MULTISIG_BUTTON_TEXT } from '~/routes/safe/component/Safe/MultisigTx'
 import { safeTransactionsSelector } from '~/routes/safe/store/selectors/index'
+import { MOVE_FUNDS_INDEX } from '~/test/builder/safe.dom.utils'
 
-describe('React DOM TESTS > Withdrawn funds from safe', () => {
+describe('React DOM TESTS > Withdraw funds from safe', () => {
   let SafeDom
   let store
   let address
@@ -44,12 +45,13 @@ describe('React DOM TESTS > Withdrawn funds from safe', () => {
     const Safe = TestUtils.findRenderedComponentWithType(SafeDom, SafeView)
 
     // $FlowFixMe
-    const buttons = TestUtils.scryRenderedComponentsWithType(Safe, Button)
-    const addTxButton = buttons[3]
-    expect(addTxButton.props.children).toEqual(ADD_MULTISIG_BUTTON_TEXT)
-    await sleep(1800) // Give time to enable Add button
-    TestUtils.Simulate.click(TestUtils.scryRenderedDOMComponentsWithTag(addTxButton, 'button')[0])
+    const buttons = TestUtils.scryRenderedDOMComponentsWithTag(Safe, 'button')
+    const addTxButton = buttons[MOVE_FUNDS_INDEX]
+    expect(addTxButton.getElementsByTagName('span')[0].innerHTML).toEqual(ADD_MULTISIG_BUTTON_TEXT)
 
+    await sleep(1800) // Give time to enable Add button
+    TestUtils.Simulate.click(addTxButton)
+    await sleep(1800) // Give time to render the form
     const AddTransaction = TestUtils.findRenderedComponentWithType(SafeDom, AddTransactionComponent)
 
     // $FlowFixMe
@@ -75,6 +77,7 @@ describe('React DOM TESTS > Withdrawn funds from safe', () => {
     const addTransactionButtons = TestUtils.scryRenderedComponentsWithType(AddTransaction, Button)
     expect(addTransactionButtons.length).toBe(1)
     const visitTxsButton = addTransactionButtons[0]
+
     expect(visitTxsButton.props.children).toEqual(SEE_TXS_BUTTON_TEXT)
 
     // NOW it is time to check the just executed transaction

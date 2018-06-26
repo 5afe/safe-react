@@ -1,6 +1,6 @@
 // @flow
 import * as React from 'react'
-import { CircularProgress } from 'material-ui/Progress'
+import CircularProgress from '@material-ui/core/CircularProgress'
 import Block from '~/components/layout/Block'
 import Bold from '~/components/layout/Bold'
 import Heading from '~/components/layout/Heading'

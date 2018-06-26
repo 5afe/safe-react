@@ -75,7 +75,9 @@ export const safeSelector: Selector<GlobalState, RouterProps, SafeSelectorProps>
       return undefined
     }
 
-    return safes.get(address)
+    const safe = safes.get(address)
+
+    return safe
   },
 )
 

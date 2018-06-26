@@ -63,7 +63,7 @@ const AddOwnerForm = ({ addresses, numOwners, threshold }: Props) => () => (
         component={Checkbox}
         type="checkbox"
       />
-      <Block>Increase owner?</Block>
+      <Block>Increase threshold?</Block>
     </Block>
   </Block>
 )
