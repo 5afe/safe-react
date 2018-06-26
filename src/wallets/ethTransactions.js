@@ -35,6 +35,10 @@ export const calculateGasPrice = async () => {
     : 'https://safe-relay.dev.gnosisdev.com/'
   */
 
+  if (process.env.NODE_ENV === 'test') {
+    return '20000000000'
+  }
+
   const header = new Headers({
     'Access-Control-Allow-Origin': '*',
   })
