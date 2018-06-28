@@ -2,7 +2,7 @@
 import { Map } from 'immutable'
 import contract from 'truffle-contract'
 import type { Dispatch as ReduxDispatch } from 'redux'
-import ERC20Token from '#/ERC20Token.json'
+import StandardToken from '@gnosis.pm/util-contracts/build/contracts/StandardToken.json'
 import { getBalanceInEtherOf, getWeb3 } from '~/wallets/getWeb3'
 import { type GlobalState } from '~/store/index'
 import { makeBalance, type Balance, type BalanceProps } from '~/routes/safe/store/model/balance'
@@ -10,7 +10,7 @@ import addBalances from './addBalances'
 
 export const calculateBalanceOf = async (tokenAddress: string, address: string) => {
   const web3 = getWeb3()
-  const erc20Token = await contract(ERC20Token)
+  const erc20Token = await contract(StandardToken)
   erc20Token.setProvider(web3.currentProvider)
 
   return erc20Token.at(tokenAddress)

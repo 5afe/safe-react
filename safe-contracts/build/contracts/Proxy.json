@@ -205,10 +205,10 @@
                       "name": "require",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [
-                        2703,
-                        2704
+                        2662,
+                        2663
                       ],
-                      "referencedDeclaration": 2704,
+                      "referencedDeclaration": 2663,
                       "src": "570:7:11",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_require_pure$_t_bool_$_t_string_memory_ptr_$returns$__$",
@@ -704,10 +704,10 @@
                       "name": "require",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [
-                        2703,
-                        2704
+                        2662,
+                        2663
                       ],
-                      "referencedDeclaration": 2704,
+                      "referencedDeclaration": 2663,
                       "src": "570:7:11",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_require_pure$_t_bool_$_t_string_memory_ptr_$returns$__$",
@@ -1055,6 +1055,6 @@
     "version": "0.4.24+commit.e67f0147.Emscripten.clang"
   },
   "networks": {},
-  "schemaVersion": "2.0.0",
-  "updatedAt": "2018-06-18T14:44:09.462Z"
+  "schemaVersion": "2.0.1",
+  "updatedAt": "2018-06-28T15:26:56.487Z"
 }

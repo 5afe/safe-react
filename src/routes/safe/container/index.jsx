@@ -14,11 +14,12 @@ type Props = Actions & SelectorProps & {
 class SafeView extends React.PureComponent<Props> {
   componentDidMount() {
     this.intervalId = setInterval(() => {
-      const { safe, fetchSafe } = this.props
+      const { safe, fetchBalances, fetchSafe } = this.props
       if (!safe) {
         return
       }
-
+      const safeAddress = safe.get('address')
+      fetchBalances(safeAddress)
       fetchSafe(safe)
     }, 1500)
   }
@@ -42,8 +43,10 @@ class SafeView extends React.PureComponent<Props> {
 
   render() {
     const {
-      safe, provider, balance, granted, userAddress,
+      safe, provider, balances, granted, userAddress,
     } = this.props
+    const ethBalance = balances.get('ETH')
+    const balance = ethBalance ? ethBalance.get('funds') : '0'
 
     return (
       <Page>

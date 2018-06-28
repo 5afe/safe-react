@@ -26,14 +26,14 @@
     "absolutePath": "/Users/apanizo/git/gnosis/safe-contracts/contracts/libraries/MultiSend.sol",
     "exportedSymbols": {
       "MultiSend": [
-        1840
+        1799
       ]
     },
-    "id": 1841,
+    "id": 1800,
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 1832,
+        "id": 1791,
         "literals": [
           "solidity",
           "0.4",
@@ -48,16 +48,16 @@
         "contractKind": "contract",
         "documentation": "@title Multi Send - Allows to batch multiple transactions into one.\n @author Nick Dodson - <nick.dodson@consensys.net>\n @author Gonçalo Sá - <goncalo.sa@consensys.net>\n @author Stefan George - <stefan@gnosis.pm>",
         "fullyImplemented": true,
-        "id": 1840,
+        "id": 1799,
         "linearizedBaseContracts": [
-          1840
+          1799
         ],
         "name": "MultiSend",
         "nodeType": "ContractDefinition",
         "nodes": [
           {
             "body": {
-              "id": 1838,
+              "id": 1797,
               "nodeType": "Block",
               "src": "753:922:17",
               "statements": [
@@ -65,7 +65,7 @@
                   "externalReferences": [
                     {
                       "transactions": {
-                        "declaration": 1834,
+                        "declaration": 1793,
                         "isOffset": false,
                         "isSlot": false,
                         "src": "870:12:17",
@@ -74,7 +74,7 @@
                     },
                     {
                       "transactions": {
-                        "declaration": 1834,
+                        "declaration": 1793,
                         "isOffset": false,
                         "isSlot": false,
                         "src": "993:12:17",
@@ -83,7 +83,7 @@
                     },
                     {
                       "transactions": {
-                        "declaration": 1834,
+                        "declaration": 1793,
                         "isOffset": false,
                         "isSlot": false,
                         "src": "1047:12:17",
@@ -92,7 +92,7 @@
                     },
                     {
                       "transactions": {
-                        "declaration": 1834,
+                        "declaration": 1793,
                         "isOffset": false,
                         "isSlot": false,
                         "src": "1188:12:17",
@@ -101,7 +101,7 @@
                     },
                     {
                       "transactions": {
-                        "declaration": 1834,
+                        "declaration": 1793,
                         "isOffset": false,
                         "isSlot": false,
                         "src": "1115:12:17",
@@ -110,7 +110,7 @@
                     },
                     {
                       "transactions": {
-                        "declaration": 1834,
+                        "declaration": 1793,
                         "isOffset": false,
                         "isSlot": false,
                         "src": "1249:12:17",
@@ -118,7 +118,7 @@
                       }
                     }
                   ],
-                  "id": 1837,
+                  "id": 1796,
                   "nodeType": "InlineAssembly",
                   "operations": "{\n    let length := mload(transactions)\n    let i := 0x20\n    for {\n    }\n    lt(i, length)\n    {\n    }\n    {\n        let operation := mload(add(transactions, i))\n        let to := mload(add(transactions, add(i, 0x20)))\n        let value := mload(add(transactions, add(i, 0x40)))\n        let dataLength := mload(add(transactions, add(i, 0x80)))\n        let data := add(transactions, add(i, 0xa0))\n        let success := 0\n        switch operation\n        case 0 {\n            success := call(gas(), to, value, data, dataLength, 0, 0)\n        }\n        case 1 {\n            success := delegatecall(gas(), to, data, dataLength, 0, 0)\n        }\n        if eq(success, 0)\n        {\n            revert(0, 0)\n        }\n        i := add(i, add(0xa0, mul(div(add(dataLength, 0x1f), 0x20), 0x20)))\n    }\n}",
                   "src": "827:848:17"
@@ -126,7 +126,7 @@
               ]
             },
             "documentation": "@dev Sends multiple transactions and reverts all if one fails.\n @param transactions Encoded transactions. Each transaction is encoded as a \n                     tuple(operation,address,uint256,bytes), where operation \n                     can be 0 for a call or 1 for a delegatecall. The bytes \n                     of all encoded transactions are concatenated to form the input.",
-            "id": 1839,
+            "id": 1798,
             "implemented": true,
             "isConstructor": false,
             "isDeclaredConst": false,
@@ -134,15 +134,15 @@
             "name": "multiSend",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 1835,
+              "id": 1794,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 1834,
+                  "id": 1793,
                   "name": "transactions",
                   "nodeType": "VariableDeclaration",
-                  "scope": 1839,
+                  "scope": 1798,
                   "src": "714:18:17",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -151,7 +151,7 @@
                     "typeString": "bytes"
                   },
                   "typeName": {
-                    "id": 1833,
+                    "id": 1792,
                     "name": "bytes",
                     "nodeType": "ElementaryTypeName",
                     "src": "714:5:17",
@@ -168,19 +168,19 @@
             },
             "payable": false,
             "returnParameters": {
-              "id": 1836,
+              "id": 1795,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "753:0:17"
             },
-            "scope": 1840,
+            "scope": 1799,
             "src": "695:980:17",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "public"
           }
         ],
-        "scope": 1841,
+        "scope": 1800,
         "src": "253:1424:17"
       }
     ],
@@ -190,14 +190,14 @@
     "absolutePath": "/Users/apanizo/git/gnosis/safe-contracts/contracts/libraries/MultiSend.sol",
     "exportedSymbols": {
       "MultiSend": [
-        1840
+        1799
       ]
     },
-    "id": 1841,
+    "id": 1800,
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 1832,
+        "id": 1791,
         "literals": [
           "solidity",
           "0.4",
@@ -212,16 +212,16 @@
         "contractKind": "contract",
         "documentation": "@title Multi Send - Allows to batch multiple transactions into one.\n @author Nick Dodson - <nick.dodson@consensys.net>\n @author Gonçalo Sá - <goncalo.sa@consensys.net>\n @author Stefan George - <stefan@gnosis.pm>",
         "fullyImplemented": true,
-        "id": 1840,
+        "id": 1799,
         "linearizedBaseContracts": [
-          1840
+          1799
         ],
         "name": "MultiSend",
         "nodeType": "ContractDefinition",
         "nodes": [
           {
             "body": {
-              "id": 1838,
+              "id": 1797,
               "nodeType": "Block",
               "src": "753:922:17",
               "statements": [
@@ -229,7 +229,7 @@
                   "externalReferences": [
                     {
                       "transactions": {
-                        "declaration": 1834,
+                        "declaration": 1793,
                         "isOffset": false,
                         "isSlot": false,
                         "src": "870:12:17",
@@ -238,7 +238,7 @@
                     },
                     {
                       "transactions": {
-                        "declaration": 1834,
+                        "declaration": 1793,
                         "isOffset": false,
                         "isSlot": false,
                         "src": "993:12:17",
@@ -247,7 +247,7 @@
                     },
                     {
                       "transactions": {
-                        "declaration": 1834,
+                        "declaration": 1793,
                         "isOffset": false,
                         "isSlot": false,
                         "src": "1047:12:17",
@@ -256,7 +256,7 @@
                     },
                     {
                       "transactions": {
-                        "declaration": 1834,
+                        "declaration": 1793,
                         "isOffset": false,
                         "isSlot": false,
                         "src": "1188:12:17",
@@ -265,7 +265,7 @@
                     },
                     {
                       "transactions": {
-                        "declaration": 1834,
+                        "declaration": 1793,
                         "isOffset": false,
                         "isSlot": false,
                         "src": "1115:12:17",
@@ -274,7 +274,7 @@
                     },
                     {
                       "transactions": {
-                        "declaration": 1834,
+                        "declaration": 1793,
                         "isOffset": false,
                         "isSlot": false,
                         "src": "1249:12:17",
@@ -282,7 +282,7 @@
                       }
                     }
                   ],
-                  "id": 1837,
+                  "id": 1796,
                   "nodeType": "InlineAssembly",
                   "operations": "{\n    let length := mload(transactions)\n    let i := 0x20\n    for {\n    }\n    lt(i, length)\n    {\n    }\n    {\n        let operation := mload(add(transactions, i))\n        let to := mload(add(transactions, add(i, 0x20)))\n        let value := mload(add(transactions, add(i, 0x40)))\n        let dataLength := mload(add(transactions, add(i, 0x80)))\n        let data := add(transactions, add(i, 0xa0))\n        let success := 0\n        switch operation\n        case 0 {\n            success := call(gas(), to, value, data, dataLength, 0, 0)\n        }\n        case 1 {\n            success := delegatecall(gas(), to, data, dataLength, 0, 0)\n        }\n        if eq(success, 0)\n        {\n            revert(0, 0)\n        }\n        i := add(i, add(0xa0, mul(div(add(dataLength, 0x1f), 0x20), 0x20)))\n    }\n}",
                   "src": "827:848:17"
@@ -290,7 +290,7 @@
               ]
             },
             "documentation": "@dev Sends multiple transactions and reverts all if one fails.\n @param transactions Encoded transactions. Each transaction is encoded as a \n                     tuple(operation,address,uint256,bytes), where operation \n                     can be 0 for a call or 1 for a delegatecall. The bytes \n                     of all encoded transactions are concatenated to form the input.",
-            "id": 1839,
+            "id": 1798,
             "implemented": true,
             "isConstructor": false,
             "isDeclaredConst": false,
@@ -298,15 +298,15 @@
             "name": "multiSend",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 1835,
+              "id": 1794,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 1834,
+                  "id": 1793,
                   "name": "transactions",
                   "nodeType": "VariableDeclaration",
-                  "scope": 1839,
+                  "scope": 1798,
                   "src": "714:18:17",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -315,7 +315,7 @@
                     "typeString": "bytes"
                   },
                   "typeName": {
-                    "id": 1833,
+                    "id": 1792,
                     "name": "bytes",
                     "nodeType": "ElementaryTypeName",
                     "src": "714:5:17",
@@ -332,19 +332,19 @@
             },
             "payable": false,
             "returnParameters": {
-              "id": 1836,
+              "id": 1795,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "753:0:17"
             },
-            "scope": 1840,
+            "scope": 1799,
             "src": "695:980:17",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "public"
           }
         ],
-        "scope": 1841,
+        "scope": 1800,
         "src": "253:1424:17"
       }
     ],
@@ -355,85 +355,13 @@
     "version": "0.4.24+commit.e67f0147.Emscripten.clang"
   },
   "networks": {
-    "4": {
+    "1530197641790": {
       "events": {},
       "links": {},
-      "address": "0xe94c33a523bf201e412f601eff906eec0b1d21f5",
-      "transactionHash": "0x1f04811d6fb97329f6e96a579587fe5a3abe9fe2f202d4b2e27adb78d3de1c48"
-    },
-    "1529327661534": {
-      "events": {},
-      "links": {},
-      "address": "0xa2a1eb294e1191c1e374f9015a37db35c49e9f26",
-      "transactionHash": "0x5cd2551fce05a8b864a085616ee54449fdddd56dcdebf1019bebd0839c69ef5f"
-    },
-    "1529333415702": {
-      "events": {},
-      "links": {},
-      "address": "0xaba1a0da223a2a5e04158bd80b2af7671e27e2c6",
-      "transactionHash": "0x6e7c0c3947a3a851738677ae63915781ce79fdfb0453030fc63bbcd346f2cf89"
-    },
-    "1529652204341": {
-      "events": {},
-      "links": {},
-      "address": "0x2013688de17569d52fc4cd4fe5f18821d8b32b2a",
-      "transactionHash": "0x2d7f72a94ced345c372040faa1f51a51f3e8da27a02dd04b9eefef487de3ba05"
-    },
-    "1529931780812": {
-      "events": {},
-      "links": {},
-      "address": "0xf0c06c152c06571cabff8461a693c5e530dfb8c0",
-      "transactionHash": "0x2d7f72a94ced345c372040faa1f51a51f3e8da27a02dd04b9eefef487de3ba05"
-    },
-    "1529933005377": {
-      "events": {},
-      "links": {},
-      "address": "0x460f5b4c0928f3c8d3c94cfce2174d5d5acd1898",
-      "transactionHash": "0x2d7f72a94ced345c372040faa1f51a51f3e8da27a02dd04b9eefef487de3ba05"
-    },
-    "1529934931891": {
-      "events": {},
-      "links": {},
-      "address": "0xbe0fe7850bbd415b9ac95a1f97cf1571ee896dcf",
-      "transactionHash": "0x2d7f72a94ced345c372040faa1f51a51f3e8da27a02dd04b9eefef487de3ba05"
-    },
-    "1529935355957": {
-      "events": {},
-      "links": {},
-      "address": "0x28ac52e49a11d982f91241a0ac27c712a36ad365",
-      "transactionHash": "0x2d7f72a94ced345c372040faa1f51a51f3e8da27a02dd04b9eefef487de3ba05"
-    },
-    "1529936204222": {
-      "events": {},
-      "links": {},
-      "address": "0x9837fc926e6243a13e5f0625cda44aebfba18a0b",
-      "transactionHash": "0x2d7f72a94ced345c372040faa1f51a51f3e8da27a02dd04b9eefef487de3ba05"
-    },
-    "1529937280871": {
-      "events": {},
-      "links": {},
-      "address": "0x4bc9a967850e1719fd038373ecd366dfd4911166",
-      "transactionHash": "0x2d7f72a94ced345c372040faa1f51a51f3e8da27a02dd04b9eefef487de3ba05"
-    },
-    "1529937637076": {
-      "events": {},
-      "links": {},
-      "address": "0xc686ebea8134690fc004798bcd83a9a17bdeaf64",
-      "transactionHash": "0x2d7f72a94ced345c372040faa1f51a51f3e8da27a02dd04b9eefef487de3ba05"
-    },
-    "1529937890676": {
-      "events": {},
-      "links": {},
-      "address": "0x9317f067ff839b5898729eae57d02b81b35ff88a",
-      "transactionHash": "0x2d7f72a94ced345c372040faa1f51a51f3e8da27a02dd04b9eefef487de3ba05"
-    },
-    "1530013596495": {
-      "events": {},
-      "links": {},
-      "address": "0x0e71065f6a7bb9d8018b251ea284ab3bd6e55653",
-      "transactionHash": "0x2d7f72a94ced345c372040faa1f51a51f3e8da27a02dd04b9eefef487de3ba05"
+      "address": "0x64a544e87eae5ce003a57054be49dc87d5a913ba",
+      "transactionHash": "0xb91516bf523fbce457f9571af6ff353eb99ac901637c14f64f4ad6ab614a4621"
     }
   },
-  "schemaVersion": "2.0.0",
-  "updatedAt": "2018-06-26T11:47:04.153Z"
+  "schemaVersion": "2.0.1",
+  "updatedAt": "2018-06-28T15:26:58.206Z"
 }

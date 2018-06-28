@@ -11,7 +11,7 @@ import { sameAddress } from '~/wallets/ethAddresses'
 export type SelectorProps = {
   safe: SafeSelectorProps,
   provider: string,
-  balance: string,
+  balances: Map<string, Balance>,
   userAddress: string,
 }
 
@@ -39,7 +39,7 @@ export const grantedSelector: Selector<GlobalState, RouterProps, boolean> = crea
 export default createStructuredSelector({
   safe: safeSelector,
   provider: providerNameSelector,
-  balance: balanceSelector,
+  balances: balanceSelector,
   granted: grantedSelector,
   userAddress: userAccountSelector,
 })

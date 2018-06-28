@@ -3,29 +3,29 @@
   "abi": [],
   "bytecode": "0x6080604052348015600f57600080fd5b50603580601d6000396000f3006080604052600080fd00a165627a7a72305820ec80f1b4520aa5197e4181778f1e2e4fc460002d4a40e2e8e6709c8986067c220029",
   "deployedBytecode": "0x6080604052600080fd00a165627a7a72305820ec80f1b4520aa5197e4181778f1e2e4fc460002d4a40e2e8e6709c8986067c220029",
-  "sourceMap": "152:166:8:-;;;;8:9:-1;5:2;;;30:1;27;20:12;5:2;152:166:8;;;;;;;",
-  "deployedSourceMap": "152:166:8:-;;;;;",
+  "sourceMap": "152:166:14:-;;;;8:9:-1;5:2;;;30:1;27;20:12;5:2;152:166:14;;;;;;;",
+  "deployedSourceMap": "152:166:14:-;;;;;",
   "source": "pragma solidity 0.4.24;\n\n\n/// @title SelfAuthorized - authorizes current contract to perform actions\n/// @author Richard Meissner - <richard@gnosis.pm>\ncontract SelfAuthorized {\n    modifier authorized() {\n        require(msg.sender == address(this), \"Method can only be called from this contract\");\n        _;\n    }\n}\n",
   "sourcePath": "/Users/apanizo/git/gnosis/safe-contracts/contracts/SelfAuthorized.sol",
   "ast": {
     "absolutePath": "/Users/apanizo/git/gnosis/safe-contracts/contracts/SelfAuthorized.sol",
     "exportedSymbols": {
       "SelfAuthorized": [
-        1449
+        1688
       ]
     },
-    "id": 1450,
+    "id": 1689,
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 1434,
+        "id": 1673,
         "literals": [
           "solidity",
           "0.4",
           ".24"
         ],
         "nodeType": "PragmaDirective",
-        "src": "0:23:8"
+        "src": "0:23:14"
       },
       {
         "baseContracts": [],
@@ -33,18 +33,18 @@
         "contractKind": "contract",
         "documentation": "@title SelfAuthorized - authorizes current contract to perform actions\n @author Richard Meissner - <richard@gnosis.pm>",
         "fullyImplemented": true,
-        "id": 1449,
+        "id": 1688,
         "linearizedBaseContracts": [
-          1449
+          1688
         ],
         "name": "SelfAuthorized",
         "nodeType": "ContractDefinition",
         "nodes": [
           {
             "body": {
-              "id": 1447,
+              "id": 1686,
               "nodeType": "Block",
-              "src": "204:112:8",
+              "src": "204:112:14",
               "statements": [
                 {
                   "expression": {
@@ -56,7 +56,7 @@
                           "typeIdentifier": "t_address",
                           "typeString": "address"
                         },
-                        "id": 1442,
+                        "id": 1681,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": false,
@@ -65,18 +65,18 @@
                           "argumentTypes": null,
                           "expression": {
                             "argumentTypes": null,
-                            "id": 1437,
+                            "id": 1676,
                             "name": "msg",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
-                            "referencedDeclaration": 1773,
-                            "src": "222:3:8",
+                            "referencedDeclaration": 2659,
+                            "src": "222:3:14",
                             "typeDescriptions": {
                               "typeIdentifier": "t_magic_message",
                               "typeString": "msg"
                             }
                           },
-                          "id": 1438,
+                          "id": 1677,
                           "isConstant": false,
                           "isLValue": false,
                           "isPure": false,
@@ -84,7 +84,7 @@
                           "memberName": "sender",
                           "nodeType": "MemberAccess",
                           "referencedDeclaration": null,
-                          "src": "222:10:8",
+                          "src": "222:10:14",
                           "typeDescriptions": {
                             "typeIdentifier": "t_address",
                             "typeString": "address"
@@ -97,14 +97,14 @@
                           "arguments": [
                             {
                               "argumentTypes": null,
-                              "id": 1440,
+                              "id": 1679,
                               "name": "this",
                               "nodeType": "Identifier",
                               "overloadedDeclarations": [],
-                              "referencedDeclaration": 1788,
-                              "src": "244:4:8",
+                              "referencedDeclaration": 2678,
+                              "src": "244:4:14",
                               "typeDescriptions": {
-                                "typeIdentifier": "t_contract$_SelfAuthorized_$1449",
+                                "typeIdentifier": "t_contract$_SelfAuthorized_$1688",
                                 "typeString": "contract SelfAuthorized"
                               }
                             }
@@ -112,24 +112,24 @@
                           "expression": {
                             "argumentTypes": [
                               {
-                                "typeIdentifier": "t_contract$_SelfAuthorized_$1449",
+                                "typeIdentifier": "t_contract$_SelfAuthorized_$1688",
                                 "typeString": "contract SelfAuthorized"
                               }
                             ],
-                            "id": 1439,
+                            "id": 1678,
                             "isConstant": false,
                             "isLValue": false,
                             "isPure": true,
                             "lValueRequested": false,
                             "nodeType": "ElementaryTypeNameExpression",
-                            "src": "236:7:8",
+                            "src": "236:7:14",
                             "typeDescriptions": {
                               "typeIdentifier": "t_type$_t_address_$",
                               "typeString": "type(address)"
                             },
                             "typeName": "address"
                           },
-                          "id": 1441,
+                          "id": 1680,
                           "isConstant": false,
                           "isLValue": false,
                           "isPure": false,
@@ -137,13 +137,13 @@
                           "lValueRequested": false,
                           "names": [],
                           "nodeType": "FunctionCall",
-                          "src": "236:13:8",
+                          "src": "236:13:14",
                           "typeDescriptions": {
                             "typeIdentifier": "t_address",
                             "typeString": "address"
                           }
                         },
-                        "src": "222:27:8",
+                        "src": "222:27:14",
                         "typeDescriptions": {
                           "typeIdentifier": "t_bool",
                           "typeString": "bool"
@@ -152,14 +152,14 @@
                       {
                         "argumentTypes": null,
                         "hexValue": "4d6574686f642063616e206f6e6c792062652063616c6c65642066726f6d207468697320636f6e7472616374",
-                        "id": 1443,
+                        "id": 1682,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": true,
                         "kind": "string",
                         "lValueRequested": false,
                         "nodeType": "Literal",
-                        "src": "251:46:8",
+                        "src": "251:46:14",
                         "subdenomination": null,
                         "typeDescriptions": {
                           "typeIdentifier": "t_stringliteral_c4780ef0a1d41d59bac8c510cf9ada421bccf2b90f75a8e4ba2e8c09e8d72733",
@@ -179,21 +179,21 @@
                           "typeString": "literal_string \"Method can only be called from this contract\""
                         }
                       ],
-                      "id": 1436,
+                      "id": 1675,
                       "name": "require",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [
-                        1776,
-                        1777
+                        2662,
+                        2663
                       ],
-                      "referencedDeclaration": 1777,
-                      "src": "214:7:8",
+                      "referencedDeclaration": 2663,
+                      "src": "214:7:14",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_require_pure$_t_bool_$_t_string_memory_ptr_$returns$__$",
                         "typeString": "function (bool,string memory) pure"
                       }
                     },
-                    "id": 1444,
+                    "id": 1683,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -201,62 +201,62 @@
                     "lValueRequested": false,
                     "names": [],
                     "nodeType": "FunctionCall",
-                    "src": "214:84:8",
+                    "src": "214:84:14",
                     "typeDescriptions": {
                       "typeIdentifier": "t_tuple$__$",
                       "typeString": "tuple()"
                     }
                   },
-                  "id": 1445,
+                  "id": 1684,
                   "nodeType": "ExpressionStatement",
-                  "src": "214:84:8"
+                  "src": "214:84:14"
                 },
                 {
-                  "id": 1446,
+                  "id": 1685,
                   "nodeType": "PlaceholderStatement",
-                  "src": "308:1:8"
+                  "src": "308:1:14"
                 }
               ]
             },
             "documentation": null,
-            "id": 1448,
+            "id": 1687,
             "name": "authorized",
             "nodeType": "ModifierDefinition",
             "parameters": {
-              "id": 1435,
+              "id": 1674,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "201:2:8"
+              "src": "201:2:14"
             },
-            "src": "182:134:8",
+            "src": "182:134:14",
             "visibility": "internal"
           }
         ],
-        "scope": 1450,
-        "src": "152:166:8"
+        "scope": 1689,
+        "src": "152:166:14"
       }
     ],
-    "src": "0:319:8"
+    "src": "0:319:14"
   },
   "legacyAST": {
     "absolutePath": "/Users/apanizo/git/gnosis/safe-contracts/contracts/SelfAuthorized.sol",
     "exportedSymbols": {
       "SelfAuthorized": [
-        1449
+        1688
       ]
     },
-    "id": 1450,
+    "id": 1689,
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 1434,
+        "id": 1673,
         "literals": [
           "solidity",
           "0.4",
           ".24"
         ],
         "nodeType": "PragmaDirective",
-        "src": "0:23:8"
+        "src": "0:23:14"
       },
       {
         "baseContracts": [],
@@ -264,18 +264,18 @@
         "contractKind": "contract",
         "documentation": "@title SelfAuthorized - authorizes current contract to perform actions\n @author Richard Meissner - <richard@gnosis.pm>",
         "fullyImplemented": true,
-        "id": 1449,
+        "id": 1688,
         "linearizedBaseContracts": [
-          1449
+          1688
         ],
         "name": "SelfAuthorized",
         "nodeType": "ContractDefinition",
         "nodes": [
           {
             "body": {
-              "id": 1447,
+              "id": 1686,
               "nodeType": "Block",
-              "src": "204:112:8",
+              "src": "204:112:14",
               "statements": [
                 {
                   "expression": {
@@ -287,7 +287,7 @@
                           "typeIdentifier": "t_address",
                           "typeString": "address"
                         },
-                        "id": 1442,
+                        "id": 1681,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": false,
@@ -296,18 +296,18 @@
                           "argumentTypes": null,
                           "expression": {
                             "argumentTypes": null,
-                            "id": 1437,
+                            "id": 1676,
                             "name": "msg",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
-                            "referencedDeclaration": 1773,
-                            "src": "222:3:8",
+                            "referencedDeclaration": 2659,
+                            "src": "222:3:14",
                             "typeDescriptions": {
                               "typeIdentifier": "t_magic_message",
                               "typeString": "msg"
                             }
                           },
-                          "id": 1438,
+                          "id": 1677,
                           "isConstant": false,
                           "isLValue": false,
                           "isPure": false,
@@ -315,7 +315,7 @@
                           "memberName": "sender",
                           "nodeType": "MemberAccess",
                           "referencedDeclaration": null,
-                          "src": "222:10:8",
+                          "src": "222:10:14",
                           "typeDescriptions": {
                             "typeIdentifier": "t_address",
                             "typeString": "address"
@@ -328,14 +328,14 @@
                           "arguments": [
                             {
                               "argumentTypes": null,
-                              "id": 1440,
+                              "id": 1679,
                               "name": "this",
                               "nodeType": "Identifier",
                               "overloadedDeclarations": [],
-                              "referencedDeclaration": 1788,
-                              "src": "244:4:8",
+                              "referencedDeclaration": 2678,
+                              "src": "244:4:14",
                               "typeDescriptions": {
-                                "typeIdentifier": "t_contract$_SelfAuthorized_$1449",
+                                "typeIdentifier": "t_contract$_SelfAuthorized_$1688",
                                 "typeString": "contract SelfAuthorized"
                               }
                             }
@@ -343,24 +343,24 @@
                           "expression": {
                             "argumentTypes": [
                               {
-                                "typeIdentifier": "t_contract$_SelfAuthorized_$1449",
+                                "typeIdentifier": "t_contract$_SelfAuthorized_$1688",
                                 "typeString": "contract SelfAuthorized"
                               }
                             ],
-                            "id": 1439,
+                            "id": 1678,
                             "isConstant": false,
                             "isLValue": false,
                             "isPure": true,
                             "lValueRequested": false,
                             "nodeType": "ElementaryTypeNameExpression",
-                            "src": "236:7:8",
+                            "src": "236:7:14",
                             "typeDescriptions": {
                               "typeIdentifier": "t_type$_t_address_$",
                               "typeString": "type(address)"
                             },
                             "typeName": "address"
                           },
-                          "id": 1441,
+                          "id": 1680,
                           "isConstant": false,
                           "isLValue": false,
                           "isPure": false,
@@ -368,13 +368,13 @@
                           "lValueRequested": false,
                           "names": [],
                           "nodeType": "FunctionCall",
-                          "src": "236:13:8",
+                          "src": "236:13:14",
                           "typeDescriptions": {
                             "typeIdentifier": "t_address",
                             "typeString": "address"
                           }
                         },
-                        "src": "222:27:8",
+                        "src": "222:27:14",
                         "typeDescriptions": {
                           "typeIdentifier": "t_bool",
                           "typeString": "bool"
@@ -383,14 +383,14 @@
                       {
                         "argumentTypes": null,
                         "hexValue": "4d6574686f642063616e206f6e6c792062652063616c6c65642066726f6d207468697320636f6e7472616374",
-                        "id": 1443,
+                        "id": 1682,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": true,
                         "kind": "string",
                         "lValueRequested": false,
                         "nodeType": "Literal",
-                        "src": "251:46:8",
+                        "src": "251:46:14",
                         "subdenomination": null,
                         "typeDescriptions": {
                           "typeIdentifier": "t_stringliteral_c4780ef0a1d41d59bac8c510cf9ada421bccf2b90f75a8e4ba2e8c09e8d72733",
@@ -410,21 +410,21 @@
                           "typeString": "literal_string \"Method can only be called from this contract\""
                         }
                       ],
-                      "id": 1436,
+                      "id": 1675,
                       "name": "require",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [
-                        1776,
-                        1777
+                        2662,
+                        2663
                       ],
-                      "referencedDeclaration": 1777,
-                      "src": "214:7:8",
+                      "referencedDeclaration": 2663,
+                      "src": "214:7:14",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_require_pure$_t_bool_$_t_string_memory_ptr_$returns$__$",
                         "typeString": "function (bool,string memory) pure"
                       }
                     },
-                    "id": 1444,
+                    "id": 1683,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -432,48 +432,48 @@
                     "lValueRequested": false,
                     "names": [],
                     "nodeType": "FunctionCall",
-                    "src": "214:84:8",
+                    "src": "214:84:14",
                     "typeDescriptions": {
                       "typeIdentifier": "t_tuple$__$",
                       "typeString": "tuple()"
                     }
                   },
-                  "id": 1445,
+                  "id": 1684,
                   "nodeType": "ExpressionStatement",
-                  "src": "214:84:8"
+                  "src": "214:84:14"
                 },
                 {
-                  "id": 1446,
+                  "id": 1685,
                   "nodeType": "PlaceholderStatement",
-                  "src": "308:1:8"
+                  "src": "308:1:14"
                 }
               ]
             },
             "documentation": null,
-            "id": 1448,
+            "id": 1687,
             "name": "authorized",
             "nodeType": "ModifierDefinition",
             "parameters": {
-              "id": 1435,
+              "id": 1674,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "201:2:8"
+              "src": "201:2:14"
             },
-            "src": "182:134:8",
+            "src": "182:134:14",
             "visibility": "internal"
           }
         ],
-        "scope": 1450,
-        "src": "152:166:8"
+        "scope": 1689,
+        "src": "152:166:14"
       }
     ],
-    "src": "0:319:8"
+    "src": "0:319:14"
   },
   "compiler": {
     "name": "solc",
     "version": "0.4.24+commit.e67f0147.Emscripten.clang"
   },
   "networks": {},
-  "schemaVersion": "2.0.0",
-  "updatedAt": "2018-06-20T07:57:27.027Z"
+  "schemaVersion": "2.0.1",
+  "updatedAt": "2018-06-28T15:26:56.488Z"
 }
