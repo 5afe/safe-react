@@ -1,12 +1,24 @@
 // @flow
 import { Map } from 'immutable'
+import contract from 'truffle-contract'
 import type { Dispatch as ReduxDispatch } from 'redux'
-import { getBalanceInEtherOf } from '~/wallets/getWeb3'
+import ERC20Token from '#/ERC20Token.json'
+import { getBalanceInEtherOf, getWeb3 } from '~/wallets/getWeb3'
 import { type GlobalState } from '~/store/index'
-import { makeBalance, type Balance } from '~/routes/safe/store/model/balance'
+import { makeBalance, type Balance, type BalanceProps } from '~/routes/safe/store/model/balance'
 import addBalances from './addBalances'
 
-export default (safeAddress: string) => async (dispatch: ReduxDispatch<GlobalState>) => {
+export const calculateBalanceOf = async (tokenAddress: string, address: string) => {
+  const web3 = getWeb3()
+  const erc20Token = await contract(ERC20Token)
+  erc20Token.setProvider(web3.currentProvider)
+
+  return erc20Token.at(tokenAddress)
+    .then(instance => instance.balanceOf(address).then(funds => funds.toString()))
+    .catch(() => '0')
+}
+
+export const fetchBalances = (safeAddress: string) => async (dispatch: ReduxDispatch<GlobalState>) => {
   const balance = await getBalanceInEtherOf(safeAddress)
   const ethBalance = makeBalance({
     address: '0',
@@ -32,8 +44,13 @@ export default (safeAddress: string) => async (dispatch: ReduxDispatch<GlobalSta
   }
 
   const json = await response.json()
+  const balancesRecords = await Promise.all(json.map(async (item: BalanceProps) => {
+    const funds = await calculateBalanceOf(item.address, safeAddress)
+    return makeBalance({ ...item, funds })
+  }))
+
   const balances: Map<string, Balance> = Map().withMutations((map) => {
-    json.forEach(item => map.set(item.symbol, makeBalance(item)))
+    balancesRecords.forEach(record => map.set(record.get('symbol'), record))
     map.set('ETH', ethBalance)
   })
 

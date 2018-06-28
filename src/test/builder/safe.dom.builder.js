@@ -15,7 +15,7 @@ import { makeProvider } from '~/wallets/store/model/provider'
 import AppRoutes from '~/routes'
 import { SAFELIST_ADDRESS } from '~/routes/routes'
 import { promisify } from '~/utils/promisify'
-import { addEtherTo } from '~/test/utils/etherMovements'
+import { addEtherTo } from '~/test/utils/tokenMovements'
 
 const fillOpenSafeForm = async (localStore: Store<GlobalState>) => {
   const provider = await getProviderInfo()

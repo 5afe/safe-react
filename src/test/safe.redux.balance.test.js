@@ -1,15 +1,12 @@
 // @flow
-import contract from 'truffle-contract'
 import { Map } from 'immutable'
 import { BALANCE_REDUCER_ID } from '~/routes/safe/store/reducer/balances'
-import fetchBalances from '~/routes/safe/store/actions/fetchBalances'
+import * as fetchBalancesAction from '~/routes/safe/store/actions/fetchBalances'
 import { aNewStore } from '~/store'
 import { aMinedSafe } from '~/test/builder/safe.redux.builder'
-import { type Balance } from '~/routes/safe/store/model/balance'
-import { addEtherTo } from '~/test/utils/etherMovements'
-import Token from '#/test/Token.json'
-import { getWeb3 } from '~/wallets/getWeb3'
-import { promisify } from '~/utils/promisify'
+import { type Balance, makeBalance } from '~/routes/safe/store/model/balance'
+import addBalances from '~/routes/safe/store/actions/addBalances'
+import { addEtherTo, addTknTo } from '~/test/utils/tokenMovements'
 
 describe('Safe Actions[fetchBalance]', () => {
   let store
@@ -24,7 +21,7 @@ describe('Safe Actions[fetchBalance]', () => {
     const tokenList = ['WE', '<3', 'GNO', 'OMG', 'RDN']
 
     // WHEN
-    await store.dispatch(fetchBalances(address))
+    await store.dispatch(fetchBalancesAction.fetchBalances(address))
 
     // THEN
     const balances: Map<string, Map<string, Balance>> | typeof undefined = store.getState()[BALANCE_REDUCER_ID]
@@ -44,7 +41,7 @@ describe('Safe Actions[fetchBalance]', () => {
   it('reducer should return 0.03456 ETH as funds to safe with 0.03456 ETH', async () => {
     // WHEN
     await addEtherTo(address, '0.03456')
-    await store.dispatch(fetchBalances(address))
+    await store.dispatch(fetchBalancesAction.fetchBalances(address))
 
     // THEN
     const balances: Map<string, Map<string, Balance>> | typeof undefined = store.getState()[BALANCE_REDUCER_ID]
@@ -59,29 +56,32 @@ describe('Safe Actions[fetchBalance]', () => {
     expect(ethBalance.get('funds')).toBe('0.03456')
   })
 
-  it('reducer should return 2 GNO when safe has 2 GNO', async () => {
+  it('reducer should return 100 TKN when safe has 100 TKN', async () => {
     // GIVEN
-    const web3 = getWeb3()
-    const token = contract(Token)
-    token.setProvider(web3.currentProvider)
-    const accounts = await promisify(cb => getWeb3().eth.getAccounts(cb))
-    const myToken = await token.new({ from: accounts[0], gas: '5000000' })
-    await myToken.transfer(address, 100, { from: accounts[0], gas: '5000000' })
+    const numTokens = 100
+    const tokenAddress = await addTknTo(address, numTokens)
 
-    // console.log(await myToken.totalSupply())
     // WHEN
-    await store.dispatch(fetchBalances(address))
+    const fetchBalancesMock = jest.spyOn(fetchBalancesAction, 'fetchBalances')
+    const funds = await fetchBalancesAction.calculateBalanceOf(tokenAddress, address)
+
+    const balances: Map<string, Balance> = Map().set('TKN', makeBalance({
+      address: tokenAddress,
+      name: 'Token',
+      symbol: 'TKN',
+      decimals: 18,
+      logoUrl: 'https://github.com/TrustWallet/tokens/blob/master/images/0x6810e776880c02933d47db1b9fc05908e5386b96.png?raw=true',
+      funds,
+    }))
+    fetchBalancesMock.mockImplementation(() => store.dispatch(addBalances(address, balances)))
+    await store.dispatch(fetchBalancesAction.fetchBalances(address))
+    fetchBalancesMock.mockRestore()
 
     // THEN
-    const balances: Map<string, Map<string, Balance>> | typeof undefined = store.getState()[BALANCE_REDUCER_ID]
-    if (!balances) throw new Error()
+    const safeBalances = store.getState()[BALANCE_REDUCER_ID].get(address)
+    expect(safeBalances.size).toBe(1)
 
-    const safeBalances: Map<string, Balance> | typeof undefined = balances.get(address)
-    if (!safeBalances) throw new Error()
-    expect(safeBalances.size).toBe(6)
-
-    const ethBalance = safeBalances.get('ETH')
-    if (!ethBalance) throw new Error()
-    expect(ethBalance.get('funds')).toBe('0.03456')
+    const tknBalance = safeBalances.get('TKN')
+    expect(tknBalance.get('funds')).toBe(String(numTokens))
   })
 })

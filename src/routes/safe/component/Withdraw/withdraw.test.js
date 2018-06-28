@@ -1,6 +1,6 @@
 // @flow
 import { aNewStore } from '~/store'
-import { addEtherTo } from '~/test/utils/etherMovements'
+import { addEtherTo } from '~/test/utils/tokenMovements'
 import { aDeployedSafe, executeWithdrawOn } from '~/routes/safe/store/test/builder/deployedSafe.builder'
 import { buildMathPropsFrom } from '~/test/utils/buildReactRouterProps'
 import { safeSelector } from '~/routes/safe/store/selectors/index'
