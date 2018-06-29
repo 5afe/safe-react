@@ -83,7 +83,12 @@ export class SafeFactory {
       .get()
 }
 
-export const aMinedSafe = async (store: Store<GlobalState>): Promise<string> => {
+export const aMinedSafe = async (
+  store: Store<GlobalState>,
+  owners: number = 1,
+  threshold: number = 1,
+  dailyLimit: number = 0.5,
+): Promise<string> => {
   const provider = await getProviderInfo()
   const walletRecord = makeProvider(provider)
   store.dispatch(addProvider(walletRecord))
@@ -91,11 +96,11 @@ export const aMinedSafe = async (store: Store<GlobalState>): Promise<string> => 
   const accounts = await promisify(cb => getWeb3().eth.getAccounts(cb))
   const form = {
     [FIELD_NAME]: 'Safe Name',
-    [FIELD_CONFIRMATIONS]: '1',
-    [FIELD_OWNERS]: '1',
-    [getOwnerNameBy(0)]: 'Adol Metamask 1',
+    [FIELD_CONFIRMATIONS]: `${threshold}`,
+    [FIELD_OWNERS]: `${owners}`,
+    [getOwnerNameBy(0)]: 'Adolfo 1 Eth Account',
     [getOwnerAddressBy(0)]: accounts[0],
-    [FIELD_DAILY_LIMIT]: '5',
+    [FIELD_DAILY_LIMIT]: `${dailyLimit}`,
   }
 
   const addSafeFn: any = (...args) => store.dispatch(addSafe(...args))
