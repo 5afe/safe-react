@@ -1,8 +1,10 @@
 // @flow
 import { storiesOf } from '@storybook/react'
 import * as React from 'react'
+import { Map } from 'immutable'
 import styles from '~/components/layout/PageFrame/index.scss'
 import { SafeFactory } from '~/routes/safe/store/test/builder/safe.builder'
+import { makeBalance } from '~/routes/safe/store/model/balance'
 import Component from './Layout'
 
 
@@ -12,6 +14,15 @@ const FrameDecorator = story => (
   </div>
 )
 
+const ethBalance = makeBalance({
+  address: '0',
+  name: 'Ether',
+  symbol: 'ETH',
+  decimals: 18,
+  logoUrl: 'assets/icons/icon_etherTokens.svg',
+  funds: '2',
+})
+
 storiesOf('Routes /safe:address', module)
   .addDecorator(FrameDecorator)
   .add('Safe undefined being connected', () => (
@@ -19,7 +30,7 @@ storiesOf('Routes /safe:address', module)
       userAddress="foo"
       safe={undefined}
       provider="METAMASK"
-      balance="0"
+      balances={Map()}
       fetchBalance={() => {}}
     />
   ))
@@ -28,7 +39,7 @@ storiesOf('Routes /safe:address', module)
       userAddress="foo"
       safe={undefined}
       provider=""
-      balance="0"
+      balances={Map()}
       fetchBalance={() => {}}
     />
   ))
@@ -40,7 +51,7 @@ storiesOf('Routes /safe:address', module)
         userAddress="foo"
         safe={safe}
         provider="METAMASK"
-        balance="2"
+        balances={Map().set('ETH', ethBalance)}
         fetchBalance={() => {}}
       />
     )
@@ -53,7 +64,7 @@ storiesOf('Routes /safe:address', module)
         userAddress="foo"
         safe={safe}
         provider="METAMASK"
-        balance="2"
+        balances={Map().set('ETH', ethBalance)}
         fetchBalance={() => {}}
       />
     )

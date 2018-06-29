@@ -45,13 +45,11 @@ class SafeView extends React.PureComponent<Props> {
     const {
       safe, provider, balances, granted, userAddress,
     } = this.props
-    const ethBalance = balances.get('ETH')
-    const balance = ethBalance ? ethBalance.get('funds') : '0'
 
     return (
       <Page>
         { granted
-          ? <Layout balance={balance} provider={provider} safe={safe} userAddress={userAddress} />
+          ? <Layout balances={balances} provider={provider} safe={safe} userAddress={userAddress} />
           : <NoRights />
         }
       </Page>

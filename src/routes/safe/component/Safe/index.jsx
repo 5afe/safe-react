@@ -1,5 +1,7 @@
 // @flow
+import List from '@material-ui/core/List'
 import * as React from 'react'
+import { Map } from 'immutable'
 import Block from '~/components/layout/Block'
 import Col from '~/components/layout/Col'
 import Bold from '~/components/layout/Bold'
@@ -7,7 +9,7 @@ import Img from '~/components/layout/Img'
 import Paragraph from '~/components/layout/Paragraph'
 import Row from '~/components/layout/Row'
 import { type Safe } from '~/routes/safe/store/model/safe'
-import List from '@material-ui/core/List'
+import { type Balance } from '~/routes/safe/store/model/balance'
 
 import Withdraw from '~/routes/safe/component/Withdraw'
 import Transactions from '~/routes/safe/component/Transactions'
@@ -18,7 +20,7 @@ import RemoveOwner from '~/routes/safe/component/RemoveOwner'
 import EditDailyLimit from '~/routes/safe/component/EditDailyLimit'
 
 import Address from './Address'
-import Balance from './Balance'
+import BalanceInfo from './BalanceInfo'
 import Owners from './Owners'
 import Confirmations from './Confirmations'
 import DailyLimit from './DailyLimit'
@@ -28,7 +30,7 @@ const safeIcon = require('./assets/gnosis_safe.svg')
 
 type SafeProps = {
   safe: Safe,
-  balance: string,
+  balances: Map<string, Balance>,
   userAddress: string,
 }
 
@@ -38,6 +40,15 @@ type State = {
 
 const listStyle = {
   width: '100%',
+}
+
+const getEthBalanceFrom = (balances: Map<string, Balance>) => {
+  const ethBalance = balances.get('ETH')
+  if (!ethBalance) {
+    return 0
+  }
+
+  return Number(ethBalance.get('funds'))
 }
 
 class GnoSafe extends React.PureComponent<SafeProps, State> {
@@ -59,9 +70,11 @@ class GnoSafe extends React.PureComponent<SafeProps, State> {
   }
 
   onAddTx = () => {
-    const { balance, safe } = this.props
+    const { balances, safe } = this.props
+    const ethBalance = getEthBalanceFrom(balances)
+
     this.setState({
-      component: <AddTransaction safe={safe} balance={Number(balance)} onReset={this.onListTransactions} />,
+      component: <AddTransaction safe={safe} balance={Number(ethBalance)} onReset={this.onListTransactions} />,
     })
   }
 
@@ -90,14 +103,15 @@ class GnoSafe extends React.PureComponent<SafeProps, State> {
   }
 
   render() {
-    const { safe, balance, userAddress } = this.props
+    const { safe, balances, userAddress } = this.props
     const { component } = this.state
+    const ethBalance = getEthBalanceFrom(balances)
 
     return (
       <Row grow>
         <Col sm={12} top="xs" md={5} margin="xl" overflow>
           <List style={listStyle}>
-            <Balance balance={balance} />
+            <BalanceInfo balances={balances} />
             <Owners
               owners={safe.owners}
               onAddOwner={this.onAddOwner}
@@ -106,8 +120,8 @@ class GnoSafe extends React.PureComponent<SafeProps, State> {
             />
             <Confirmations confirmations={safe.get('threshold')} onEditThreshold={this.onEditThreshold} />
             <Address address={safe.get('address')} />
-            <DailyLimit balance={balance} dailyLimit={safe.get('dailyLimit')} onWithdraw={this.onWithdraw} onEditDailyLimit={this.onEditDailyLimit} />
-            <MultisigTx balance={balance} onAddTx={this.onAddTx} onSeeTxs={this.onListTransactions} />
+            <DailyLimit balance={ethBalance} dailyLimit={safe.get('dailyLimit')} onWithdraw={this.onWithdraw} onEditDailyLimit={this.onEditDailyLimit} />
+            <MultisigTx balance={ethBalance} onAddTx={this.onAddTx} onSeeTxs={this.onListTransactions} />
           </List>
         </Col>
         <Col sm={12} center="xs" md={7} margin="xl" layout="column">
