@@ -6,13 +6,14 @@ import fetchTransactions from '~/routes/safe/store/actions/fetchTransactions'
 import { sleep } from '~/utils/timer'
 import { type GlobalState } from '~/store/index'
 
-export const EXPAND_OWNERS_INDEX = 0
-export const ADD_OWNERS_INDEX = 1
-export const EDIT_THRESHOLD_INDEX = 2
-export const EDIT_INDEX = 3
-export const WITHDRAW_INDEX = 4
-export const MOVE_FUNDS_INDEX = 5
-export const LIST_TXS_INDEX = 6
+export const EXPAND_BALANCE_INDEX = 0
+export const EXPAND_OWNERS_INDEX = 1
+export const ADD_OWNERS_INDEX = 2
+export const EDIT_THRESHOLD_INDEX = 3
+export const EDIT_INDEX = 4
+export const WITHDRAW_INDEX = 5
+export const MOVE_FUNDS_INDEX = 6
+export const LIST_TXS_INDEX = 7
 
 export const listTxsClickingOn = async (seeTxsButton: Element) => {
   expect(seeTxsButton.getElementsByTagName('span')[0].innerHTML).toEqual(SEE_MULTISIG_BUTTON_TEXT)
