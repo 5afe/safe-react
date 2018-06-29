@@ -6,6 +6,7 @@ import StandardToken from '@gnosis.pm/util-contracts/build/contracts/StandardTok
 import { getBalanceInEtherOf, getWeb3 } from '~/wallets/getWeb3'
 import { type GlobalState } from '~/store/index'
 import { makeBalance, type Balance, type BalanceProps } from '~/routes/safe/store/model/balance'
+import logo from '~/assets/icons/icon_etherTokens.svg'
 import addBalances from './addBalances'
 
 export const calculateBalanceOf = async (tokenAddress: string, address: string) => {
@@ -25,7 +26,7 @@ export const fetchBalances = (safeAddress: string) => async (dispatch: ReduxDisp
     name: 'Ether',
     symbol: 'ETH',
     decimals: 18,
-    logoUrl: 'assets/icons/icon_etherTokens.svg',
+    logoUrl: logo,
     funds: balance,
   })
 
