@@ -54,11 +54,7 @@ const BalanceComponent = openHoc(({
               <ListItemIcon>
                 <Img src={balance.get('logoUrl')} height={30} alt={name} />
               </ListItemIcon>
-              <ListItemText
-                cut
-                primary={name}
-                secondary={`${balance.get('funds')} ${symbol}`}
-              />
+              <ListItemText primary={name} secondary={`${balance.get('funds')} ${symbol}`} />
             </ListItem>
           )
         })}

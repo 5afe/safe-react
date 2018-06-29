@@ -10,5 +10,11 @@ export type State = Map<string, Map<string, Balance>>
 
 export default handleActions({
   [ADD_BALANCES]: (state: State, action: ActionType<typeof addBalances>): State =>
-    state.set(action.payload.safeAddress, action.payload.balances),
+    state.update(action.payload.safeAddress, (prevSafe: Map<string, Balance>) => {
+      if (!prevSafe) {
+        return action.payload.balances
+      }
+
+      return prevSafe.equals(action.payload.balances) ? prevSafe : action.payload.balances
+    }),
 }, Map())
