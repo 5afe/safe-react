@@ -11,7 +11,7 @@ import { sendWithdrawForm, checkMinedWithdrawTx } from '~/test/utils/transaction
 import { processTransaction } from '~/routes/safe/component/Transactions/processTransactions'
 import { checkBalanceOf } from '~/test/utils/tokenMovements'
 
-describe('DOM > Feature > SAFE MULTISIG TX 1 Owner 1 Threshold', () => {
+describe('DOM > Feature > SAFE MULTISIG Transactions', () => {
   let domSafe: DomSafe
   it('mines correctly all multisig txs in a 1 owner & 1 threshold safe', async () => {
     // GIVEN one safe with 1 owner and 1 threshold

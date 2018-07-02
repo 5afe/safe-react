@@ -4,11 +4,11 @@ import { BALANCE_REDUCER_ID } from '~/routes/safe/store/reducer/balances'
 import * as fetchBalancesAction from '~/routes/safe/store/actions/fetchBalances'
 import { aNewStore } from '~/store'
 import { aMinedSafe } from '~/test/builder/safe.redux.builder'
-import { type Balance, makeBalance } from '~/routes/safe/store/model/balance'
-import addBalances from '~/routes/safe/store/actions/addBalances'
+import { type Balance } from '~/routes/safe/store/model/balance'
 import { addEtherTo, addTknTo } from '~/test/utils/tokenMovements'
+import { dispatchTknBalance } from '~/test/utils/transactions/moveTokens.helper'
 
-describe('Safe Actions[fetchBalance]', () => {
+describe('Safe - redux balance property', () => {
   let store
   let address: string
   beforeEach(async () => {
@@ -62,20 +62,7 @@ describe('Safe Actions[fetchBalance]', () => {
     const tokenAddress = await addTknTo(address, numTokens)
 
     // WHEN
-    const fetchBalancesMock = jest.spyOn(fetchBalancesAction, 'fetchBalances')
-    const funds = await fetchBalancesAction.calculateBalanceOf(tokenAddress, address)
-
-    const balances: Map<string, Balance> = Map().set('TKN', makeBalance({
-      address: tokenAddress,
-      name: 'Token',
-      symbol: 'TKN',
-      decimals: 18,
-      logoUrl: 'https://github.com/TrustWallet/tokens/blob/master/images/0x6810e776880c02933d47db1b9fc05908e5386b96.png?raw=true',
-      funds,
-    }))
-    fetchBalancesMock.mockImplementation(() => store.dispatch(addBalances(address, balances)))
-    await store.dispatch(fetchBalancesAction.fetchBalances(address))
-    fetchBalancesMock.mockRestore()
+    await dispatchTknBalance(store, tokenAddress, address)
 
     // THEN
     const safeBalances = store.getState()[BALANCE_REDUCER_ID].get(address)

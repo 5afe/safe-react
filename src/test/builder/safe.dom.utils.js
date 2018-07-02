@@ -1,10 +1,15 @@
 // @flow
+import * as React from 'react'
 import TestUtils from 'react-dom/test-utils'
 import ListItemText from '~/components/List/ListItemText/index'
 import { SEE_MULTISIG_BUTTON_TEXT } from '~/routes/safe/component/Safe/MultisigTx'
 import fetchTransactions from '~/routes/safe/store/actions/fetchTransactions'
 import { sleep } from '~/utils/timer'
-import { type GlobalState } from '~/store/index'
+import { Provider } from 'react-redux'
+import { ConnectedRouter } from 'react-router-redux'
+import AppRoutes from '~/routes'
+import { SAFELIST_ADDRESS } from '~/routes/routes'
+import { history, type GlobalState } from '~/store'
 
 export const EXPAND_BALANCE_INDEX = 0
 export const EXPAND_OWNERS_INDEX = 1
@@ -84,4 +89,17 @@ export const checkPendingTx = async (
 export const refreshTransactions = async (store: Store<GlobalState>) => {
   await store.dispatch(fetchTransactions())
   await sleep(1500)
+}
+
+export const travelToSafe = (store: Store, address: string): React$Component<{}> => {
+  history.push(`${SAFELIST_ADDRESS}/${address}`)
+  const SafeDom = TestUtils.renderIntoDocument((
+    <Provider store={store}>
+      <ConnectedRouter history={history}>
+        <AppRoutes />
+      </ConnectedRouter>
+    </Provider>
+  ))
+
+  return SafeDom
 }
