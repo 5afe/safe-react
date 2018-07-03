@@ -18,6 +18,7 @@ import Threshold from '~/routes/safe/component/Threshold'
 import AddOwner from '~/routes/safe/component/AddOwner'
 import RemoveOwner from '~/routes/safe/component/RemoveOwner'
 import EditDailyLimit from '~/routes/safe/component/EditDailyLimit'
+import SendToken from '~/routes/safe/component/SendToken'
 
 import Address from './Address'
 import BalanceInfo from './BalanceInfo'
@@ -102,6 +103,14 @@ class GnoSafe extends React.PureComponent<SafeProps, State> {
     this.setState({ component: <RemoveOwner safeAddress={safe.get('address')} threshold={safe.get('threshold')} safe={safe} name={name} userToRemove={address} /> })
   }
 
+  onMoveTokens = (ercToken: Balance) => {
+    const { safe } = this.props
+
+    this.setState({
+      component: <SendToken safe={safe} balance={ercToken} onReset={this.onListTransactions} />,
+    })
+  }
+
   render() {
     const { safe, balances, userAddress } = this.props
     const { component } = this.state
@@ -111,7 +120,7 @@ class GnoSafe extends React.PureComponent<SafeProps, State> {
       <Row grow>
         <Col sm={12} top="xs" md={5} margin="xl" overflow>
           <List style={listStyle}>
-            <BalanceInfo balances={balances} />
+            <BalanceInfo balances={balances} onMoveFunds={this.onMoveTokens} />
             <Owners
               owners={safe.owners}
               onAddOwner={this.onAddOwner}

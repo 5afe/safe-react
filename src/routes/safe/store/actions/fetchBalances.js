@@ -9,10 +9,17 @@ import { makeBalance, type Balance, type BalanceProps } from '~/routes/safe/stor
 import logo from '~/assets/icons/icon_etherTokens.svg'
 import addBalances from './addBalances'
 
-export const calculateBalanceOf = async (tokenAddress: string, address: string) => {
+
+export const getStandardTokenContract = async () => {
   const web3 = getWeb3()
   const erc20Token = await contract(StandardToken)
   erc20Token.setProvider(web3.currentProvider)
+
+  return erc20Token
+}
+
+export const calculateBalanceOf = async (tokenAddress: string, address: string) => {
+  const erc20Token = await getStandardTokenContract()
 
   return erc20Token.at(tokenAddress)
     .then(instance => instance.balanceOf(address).then(funds => funds.toString()))
