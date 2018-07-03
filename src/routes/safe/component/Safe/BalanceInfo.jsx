@@ -29,7 +29,7 @@ const styles = {
   },
 }
 
-export const MOVE_FUNDS_BUTTON_TEXT = 'Move Funds'
+export const MOVE_FUNDS_BUTTON_TEXT = 'Move'
 
 const BalanceComponent = openHoc(({
   open, toggle, balances, classes, onMoveFunds,
