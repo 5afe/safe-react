@@ -8,7 +8,7 @@ import { getGnosisSafeContract } from '~/wallets/safeContracts'
 import { getWeb3 } from '~/wallets/getWeb3'
 import { type Safe } from '~/routes/safe/store/model/safe'
 import { sameAddress } from '~/wallets/ethAddresses'
-import { checkReceiptStatus, calculateGasOf, calculateGasPrice } from '~/wallets/ethTransactions'
+import { checkReceiptStatus, calculateGasOf, calculateGasPrice, EMPTY_DATA } from '~/wallets/ethTransactions'
 
 export const TX_NAME_PARAM = 'txName'
 export const TX_DESTINATION_PARAM = 'txDestination'
@@ -93,7 +93,7 @@ export const createTransaction = async (
   txValue: number,
   nonce: number,
   user: string,
-  data: string = '0x',
+  data: string = EMPTY_DATA,
 ) => {
   const web3 = getWeb3()
   const safeAddress = safe.get('address')

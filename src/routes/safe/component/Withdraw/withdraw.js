@@ -3,7 +3,7 @@ import { List } from 'immutable'
 import { getWeb3 } from '~/wallets/getWeb3'
 import { getGnosisSafeContract, getCreateDailyLimitExtensionContract } from '~/wallets/safeContracts'
 import { type DailyLimitProps } from '~/routes/safe/store/model/dailyLimit'
-import { checkReceiptStatus, calculateGasOf, calculateGasPrice } from '~/wallets/ethTransactions'
+import { checkReceiptStatus, calculateGasOf, calculateGasPrice, EMPTY_DATA } from '~/wallets/ethTransactions'
 import { type Safe } from '~/routes/safe/store/model/safe'
 import { buildExecutedConfirmationFrom, storeTransaction } from '~/routes/safe/component/AddTransaction/createTransactions'
 import { type Confirmation } from '~/routes/safe/store/model/confirmation'
@@ -72,7 +72,7 @@ const withdraw = async (values: Object, safe: Safe, userAccount: string): Promis
   const nonce = Date.now()
   const executedConfirmations: List<Confirmation> = buildExecutedConfirmationFrom(safe.get('owners'), userAccount)
 
-  return storeTransaction(`Withdraw movement of ${valueInEth}`, nonce, destination, valueInEth, userAccount, executedConfirmations, txHash.tx, safeAddress, safe.get('threshold'), '0x')
+  return storeTransaction(`Withdraw movement of ${valueInEth}`, nonce, destination, valueInEth, userAccount, executedConfirmations, txHash.tx, safeAddress, safe.get('threshold'), EMPTY_DATA)
 }
 
 export default withdraw

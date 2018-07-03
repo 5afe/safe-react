@@ -10,6 +10,7 @@ import { ConnectedRouter } from 'react-router-redux'
 import AppRoutes from '~/routes'
 import { SAFELIST_ADDRESS } from '~/routes/routes'
 import { history, type GlobalState } from '~/store'
+import { EMPTY_DATA } from '~/wallets/ethTransactions'
 
 export const EXPAND_BALANCE_INDEX = 0
 export const EXPAND_OWNERS_INDEX = 1
@@ -41,7 +42,7 @@ export const checkMinedTx = (Transaction: React$Component<any, any>, name: strin
   expect(hashParagraph).not.toBe('')
   expect(hashParagraph).not.toBe(undefined)
   expect(hashParagraph).not.toBe(null)
-  expect(hashParagraph).toContain('0x')
+  expect(hashParagraph).toContain(EMPTY_DATA)
 }
 
 export const getListItemsFrom = (Transaction: React$Component<any, any>) =>
