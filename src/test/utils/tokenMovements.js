@@ -4,7 +4,7 @@ import { getProviderInfo, getBalanceInEtherOf, getWeb3 } from '~/wallets/getWeb3
 import { promisify } from '~/utils/promisify'
 import withdraw, { DESTINATION_PARAM, VALUE_PARAM } from '~/routes/safe/component/Withdraw/withdraw'
 import { type Safe } from '~/routes/safe/store/model/safe'
-import Token from '#/test/Token.json'
+import Token from '#/test/FixedSupplyToken.json'
 import { ensureOnce } from '~/utils/singleton'
 
 export const addEtherTo = async (address: string, eth: string) => {

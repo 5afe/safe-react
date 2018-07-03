@@ -10,7 +10,6 @@ import addBalances from '~/routes/safe/store/actions/addBalances'
 export const sendMoveTokensForm = async (
   SafeDom: React$Component<any, any>,
   expandBalance: React$Component<any, any>,
-  txName: string,
   value: number,
   destination: string,
 ) => {
@@ -28,10 +27,8 @@ export const sendMoveTokensForm = async (
 
   // fill the form
   const inputs = TestUtils.scryRenderedDOMComponentsWithTag(SafeDom, 'input')
-  const nameInput = inputs[0]
-  const destinationInput = inputs[1]
-  const amountofTokens = inputs[2]
-  TestUtils.Simulate.change(nameInput, { target: { value: txName } })
+  const destinationInput = inputs[0]
+  const amountofTokens = inputs[1]
   TestUtils.Simulate.change(amountofTokens, { target: { value } })
   TestUtils.Simulate.change(destinationInput, { target: { value: destination } })
   // $FlowFixMe
