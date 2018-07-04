@@ -7,7 +7,7 @@ import { makeTransaction, type Transaction, type TransactionProps } from '~/rout
 import { getGnosisSafeContract } from '~/wallets/safeContracts'
 import { getWeb3 } from '~/wallets/getWeb3'
 import { sameAddress } from '~/wallets/ethAddresses'
-import { EXECUTED_CONFIRMATION_HASH } from '~/routes/safe/component/AddTransaction/createTransactions'
+import { EXECUTED_CONFIRMATION_HASH } from '~/wallets/createTransactions'
 import { checkReceiptStatus, calculateGasOf, calculateGasPrice } from '~/wallets/ethTransactions'
 
 export const updateTransaction = (

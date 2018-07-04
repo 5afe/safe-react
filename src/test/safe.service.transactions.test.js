@@ -1,6 +1,6 @@
 // @flow
 import { List, Map } from 'immutable'
-import { storeTransaction, buildConfirmationsFrom, EXECUTED_CONFIRMATION_HASH, buildExecutedConfirmationFrom } from '~/routes/safe/component/AddTransaction/createTransactions'
+import { storeTransaction, buildConfirmationsFrom, EXECUTED_CONFIRMATION_HASH, buildExecutedConfirmationFrom } from '~/wallets/createTransactions'
 import { type Transaction } from '~/routes/safe/store/model/transaction'
 import { SafeFactory } from '~/routes/safe/store/test/builder/safe.builder'
 import { type Safe } from '~/routes/safe/store/model/safe'

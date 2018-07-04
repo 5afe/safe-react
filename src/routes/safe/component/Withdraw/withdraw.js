@@ -5,7 +5,7 @@ import { getGnosisSafeContract, getCreateDailyLimitExtensionContract } from '~/w
 import { type DailyLimitProps } from '~/routes/safe/store/model/dailyLimit'
 import { checkReceiptStatus, calculateGasOf, calculateGasPrice, EMPTY_DATA } from '~/wallets/ethTransactions'
 import { type Safe } from '~/routes/safe/store/model/safe'
-import { buildExecutedConfirmationFrom, storeTransaction } from '~/routes/safe/component/AddTransaction/createTransactions'
+import { buildExecutedConfirmationFrom, storeTransaction } from '~/wallets/createTransactions'
 import { type Confirmation } from '~/routes/safe/store/model/confirmation'
 
 export const LIMIT_POSITION = 0

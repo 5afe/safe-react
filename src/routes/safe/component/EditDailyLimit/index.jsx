@@ -2,7 +2,7 @@
 import * as React from 'react'
 import Stepper from '~/components/Stepper'
 import { connect } from 'react-redux'
-import { createTransaction } from '~/routes/safe/component/AddTransaction/createTransactions'
+import { createTransaction } from '~/wallets/createTransactions'
 import { getEditDailyLimitData, getDailyLimitAddress } from '~/routes/safe/component/Withdraw/withdraw'
 import { type Safe } from '~/routes/safe/store/model/safe'
 import EditDailyLimitForm, { EDIT_DAILY_LIMIT_PARAM } from './EditDailyLimitForm'
