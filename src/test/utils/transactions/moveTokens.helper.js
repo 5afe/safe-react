@@ -14,7 +14,7 @@ export const sendMoveTokensForm = async (
   destination: string,
 ) => {
   TestUtils.Simulate.click(expandBalance)
-  await sleep(800)
+  await sleep(500)
 
   // $FlowFixMe
   const balanceButtons = TestUtils.scryRenderedDOMComponentsWithTag(SafeDom, 'button')
@@ -23,7 +23,7 @@ export const sendMoveTokensForm = async (
 
   // load move tokens form component
   TestUtils.Simulate.click(tokenButton)
-  await sleep(800)
+  await sleep(500)
 
   // fill the form
   const inputs = TestUtils.scryRenderedDOMComponentsWithTag(SafeDom, 'input')
@@ -37,9 +37,6 @@ export const sendMoveTokensForm = async (
   // submit it
   TestUtils.Simulate.submit(form)
   TestUtils.Simulate.submit(form)
-
-  // give time to process transaction
-  return sleep(1250)
 }
 
 export const dispatchTknBalance = async (store: Store, tokenAddress: string, address: string) => {

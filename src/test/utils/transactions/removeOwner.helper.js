@@ -10,7 +10,7 @@ export const sendRemoveOwnerForm = async (
 ) => {
   // Expand owners
   TestUtils.Simulate.click(expandOwners)
-  await sleep(600)
+  await sleep(400)
 
   // Get delete button user
   const allButtons = TestUtils.scryRenderedDOMComponentsWithTag(SafeDom, 'button')
@@ -20,7 +20,7 @@ export const sendRemoveOwnerForm = async (
 
   // render form for deleting the user
   TestUtils.Simulate.click(removeUserButton)
-  await sleep(600)
+  await sleep(400)
 
   // $FlowFixMe
   const form = TestUtils.findRenderedDOMComponentWithTag(SafeDom, 'form')
@@ -28,9 +28,6 @@ export const sendRemoveOwnerForm = async (
   // submit it
   TestUtils.Simulate.submit(form)
   TestUtils.Simulate.submit(form)
-
-  // give time to process transaction
-  return sleep(2500)
 }
 
 export const checkMinedRemoveOwnerTx = (Transaction: React$Component<any, any>, name: string) => {

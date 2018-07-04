@@ -12,13 +12,13 @@ export const sendMoveFundsForm = async (
   // load add multisig form component
   TestUtils.Simulate.click(expandBalance)
   // give time to re-render it
-  await sleep(600)
+  await sleep(400)
 
   const ethList = TestUtils.findRenderedDOMComponentWithClass(SafeDom, 'ETH')
   if (!ethList) throw new Error()
   const ethButton = ethList.getElementsByTagName('button')
   TestUtils.Simulate.click(ethButton[0])
-  await sleep(850)
+  await sleep(450)
 
   // fill the form
   const inputs = TestUtils.scryRenderedDOMComponentsWithTag(SafeDom, 'input')
@@ -32,9 +32,6 @@ export const sendMoveFundsForm = async (
   // submit it
   TestUtils.Simulate.submit(form)
   TestUtils.Simulate.submit(form)
-
-  // give time to process transaction
-  return sleep(2500)
 }
 
 export const checkMinedMoveFundsTx = (Transaction: React$Component<any, any>, name: string) => {

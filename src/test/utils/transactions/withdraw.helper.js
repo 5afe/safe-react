@@ -13,7 +13,7 @@ export const sendWithdrawForm = async (
   // load add multisig form component
   TestUtils.Simulate.click(withdrawButton)
   // give time to re-render it
-  await sleep(600)
+  await sleep(400)
 
   // fill the form
   const inputs = TestUtils.scryRenderedDOMComponentsWithTag(SafeDom, 'input')
@@ -27,9 +27,6 @@ export const sendWithdrawForm = async (
   // submit it
   TestUtils.Simulate.submit(form)
   TestUtils.Simulate.submit(form)
-
-  // give time to process transaction
-  return sleep(2500)
 }
 
 export const checkMinedWithdrawTx = async (

@@ -10,6 +10,7 @@ import { checkMinedThresholdTx, sendChangeThresholdForm, checkThresholdOf } from
 import { sendWithdrawForm, checkMinedWithdrawTx } from '~/test/utils/transactions/withdraw.helper'
 import { processTransaction } from '~/routes/safe/component/Transactions/processTransactions'
 import { checkBalanceOf } from '~/test/utils/tokenMovements'
+import { sleep } from '~/utils/timer'
 
 describe('DOM > Feature > SAFE MULTISIG Transactions', () => {
   let domSafe: DomSafe
@@ -26,6 +27,7 @@ describe('DOM > Feature > SAFE MULTISIG Transactions', () => {
     await sendMoveFundsForm(SafeDom, safeButtons[EXPAND_BALANCE_INDEX], '0.01', accounts[1])
     await sendWithdrawForm(SafeDom, safeButtons[WITHDRAW_INDEX], '0.01', accounts[3])
     await sendAddOwnerForm(SafeDom, safeButtons[ADD_OWNERS_INDEX], 'Adol Metamask 2', accounts[1])
+    await sleep(1200)
     await sendChangeThresholdForm(SafeDom, safeButtons[EDIT_THRESHOLD_INDEX], '2')
 
     // THEN
