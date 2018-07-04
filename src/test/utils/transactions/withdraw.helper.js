@@ -27,6 +27,8 @@ export const sendWithdrawForm = async (
   // submit it
   TestUtils.Simulate.submit(form)
   TestUtils.Simulate.submit(form)
+
+  return sleep(200)
 }
 
 export const checkMinedWithdrawTx = async (

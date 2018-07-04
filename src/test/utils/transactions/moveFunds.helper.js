@@ -32,6 +32,8 @@ export const sendMoveFundsForm = async (
   // submit it
   TestUtils.Simulate.submit(form)
   TestUtils.Simulate.submit(form)
+
+  return sleep(200)
 }
 
 export const checkMinedMoveFundsTx = (Transaction: React$Component<any, any>, name: string) => {

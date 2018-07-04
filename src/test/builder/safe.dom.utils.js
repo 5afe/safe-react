@@ -20,12 +20,14 @@ export const EDIT_INDEX = 4
 export const WITHDRAW_INDEX = 5
 export const LIST_TXS_INDEX = 6
 
-export const listTxsClickingOn = async (seeTxsButton: Element) => {
+export const listTxsClickingOn = async (store: Store, seeTxsButton: Element) => {
+  await store.dispatch(fetchTransactions())
+  await sleep(1200)
   expect(seeTxsButton.getElementsByTagName('span')[0].innerHTML).toEqual(SEE_MULTISIG_BUTTON_TEXT)
   TestUtils.Simulate.click(seeTxsButton)
 
   // give some time to expand the transactions
-  await sleep(1500)
+  await sleep(800)
 }
 
 export const checkMinedTx = (Transaction: React$Component<any, any>, name: string) => {

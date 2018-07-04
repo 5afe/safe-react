@@ -28,6 +28,8 @@ export const sendRemoveOwnerForm = async (
   // submit it
   TestUtils.Simulate.submit(form)
   TestUtils.Simulate.submit(form)
+
+  return sleep(200)
 }
 
 export const checkMinedRemoveOwnerTx = (Transaction: React$Component<any, any>, name: string) => {

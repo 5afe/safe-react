@@ -37,6 +37,8 @@ export const sendMoveTokensForm = async (
   // submit it
   TestUtils.Simulate.submit(form)
   TestUtils.Simulate.submit(form)
+
+  return sleep(200)
 }
 
 export const dispatchTknBalance = async (store: Store, tokenAddress: string, address: string) => {

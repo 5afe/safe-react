@@ -23,6 +23,8 @@ export const sendChangeThresholdForm = async (
   // submit it
   TestUtils.Simulate.submit(form)
   TestUtils.Simulate.submit(form)
+
+  return sleep(200)
 }
 
 export const checkMinedThresholdTx = (Transaction: React$Component<any, any>, name: string) => {

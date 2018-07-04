@@ -20,6 +20,7 @@ import { type DailyLimitProps } from '~/routes/safe/store/model/dailyLimit'
 import { WITHDRAW_INDEX } from '~/test/builder/safe.dom.utils'
 import { buildMathPropsFrom } from '~/test/utils/buildReactRouterProps'
 import { safeSelector } from '~/routes/safe/store/selectors/index'
+import { filterMoveButtonsFrom } from '~/test/builder/safe.dom.builder'
 
 describe('React DOM TESTS > Withdraw funds from safe', () => {
   let SafeDom
@@ -48,7 +49,8 @@ describe('React DOM TESTS > Withdraw funds from safe', () => {
     const Safe = TestUtils.findRenderedComponentWithType(SafeDom, SafeView)
 
     // $FlowFixMe
-    const buttons = TestUtils.scryRenderedDOMComponentsWithTag(Safe, 'button')
+    const expandedButtons = TestUtils.scryRenderedDOMComponentsWithTag(Safe, 'button')
+    const buttons = filterMoveButtonsFrom(expandedButtons)
     const addWithdrawButton = buttons[WITHDRAW_INDEX]
     expect(addWithdrawButton.getElementsByTagName('span')[0].innerHTML).toEqual(WITHDRAW_BUTTON_TEXT)
     TestUtils.Simulate.click(addWithdrawButton)

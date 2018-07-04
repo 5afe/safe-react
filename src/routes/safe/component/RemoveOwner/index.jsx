@@ -45,13 +45,12 @@ export const removeOwner = async (
   const newThreshold = values[DECREASE_PARAM] ? threshold - 1 : threshold
   const safeAddress = safe.get('address')
   const gnosisSafe = await getSafeEthereumInstance(safeAddress)
-
   const storedOwners = await gnosisSafe.getOwners()
   const index = storedOwners.findIndex(ownerAddress => ownerAddress === userToRemove)
   const prevAddress = index === 0 ? SENTINEL_ADDRESS : storedOwners[index - 1]
   const data = gnosisSafe.contract.removeOwner.getData(prevAddress, userToRemove, newThreshold)
-
   const text = name || userToRemove
+
   return createTransaction(safe, `Remove Owner ${text}`, safeAddress, 0, nonce, executor, data)
 }
 
@@ -65,7 +64,7 @@ class RemoveOwner extends React.Component<Props, State> {
       const {
         safe, threshold, executor, fetchTransactions, userToRemove, name,
       } = this.props
-      await removeOwner(values, safe, threshold, userToRemove, executor, name)
+      await removeOwner(values, safe, threshold, userToRemove, name, executor)
       fetchTransactions()
       this.setState({ done: true })
     } catch (error) {

@@ -39,6 +39,7 @@ describe('DOM > Feature > SAFE ERC20 TOKENS', () => {
     const expandBalance = buttons[EXPAND_BALANCE_INDEX]
     const receiver = accounts[2]
     await sendMoveTokensForm(SafeDom, expandBalance, 20, accounts[2])
+    await sleep(800)
 
     // THEN
     const safeFunds = await fetchBalancesAction.calculateBalanceOf(tokenAddress, safeAddress)
