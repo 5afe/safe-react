@@ -27,11 +27,33 @@ type State = {
 const SENTINEL_ADDRESS = '0x0000000000000000000000000000000000000001'
 export const REMOVE_OWNER_RESET_BUTTON_TEXT = 'RESET'
 
-const initialValuesFrom = (decreaseMandatory: boolean = false) => ({
+export const initialValuesFrom = (decreaseMandatory: boolean = false) => ({
   [DECREASE_PARAM]: decreaseMandatory,
 })
 
-const shouldDecrease = (numOwners: number, threshold: number) => threshold === numOwners
+export const shouldDecrease = (numOwners: number, threshold: number) => threshold === numOwners
+
+export const removeOwner = async (
+  values: Object,
+  safe: Safe,
+  threshold: number,
+  userToRemove: string,
+  name: string,
+  executor: string,
+) => {
+  const nonce = Date.now()
+  const newThreshold = values[DECREASE_PARAM] ? threshold - 1 : threshold
+  const safeAddress = safe.get('address')
+  const gnosisSafe = await getSafeEthereumInstance(safeAddress)
+
+  const storedOwners = await gnosisSafe.getOwners()
+  const index = storedOwners.findIndex(ownerAddress => ownerAddress === userToRemove)
+  const prevAddress = index === 0 ? SENTINEL_ADDRESS : storedOwners[index - 1]
+  const data = gnosisSafe.contract.removeOwner.getData(prevAddress, userToRemove, newThreshold)
+
+  const text = name || userToRemove
+  return createTransaction(safe, `Remove Owner ${text}`, safeAddress, 0, nonce, executor, data)
+}
 
 class RemoveOwner extends React.Component<Props, State> {
   state = {
@@ -43,19 +65,7 @@ class RemoveOwner extends React.Component<Props, State> {
       const {
         safe, threshold, executor, fetchTransactions, userToRemove, name,
       } = this.props
-      const nonce = Date.now()
-      const newThreshold = values[DECREASE_PARAM] ? threshold - 1 : threshold
-      const safeAddress = safe.get('address')
-      const gnosisSafe = await getSafeEthereumInstance(safeAddress)
-
-      const storedOwners = await gnosisSafe.getOwners()
-      const index = storedOwners.findIndex(ownerAddress => ownerAddress === userToRemove)
-      const prevAddress = index === 0 ? SENTINEL_ADDRESS : storedOwners[index - 1]
-      const data = gnosisSafe.contract.removeOwner.getData(prevAddress, userToRemove, newThreshold)
-
-      const text = name || userToRemove
-      await createTransaction(safe, `Remove Owner ${text}`, safeAddress, 0, nonce, executor, data)
-
+      await removeOwner(values, safe, threshold, userToRemove, executor, name)
       fetchTransactions()
       this.setState({ done: true })
     } catch (error) {
