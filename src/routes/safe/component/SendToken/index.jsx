@@ -41,19 +41,16 @@ const getTransferData = async (tokenAddress: string, to: string, amount: number)
 const processTokenTransfer = async (safe: Safe, balance: Balance, to: string, amount: number, userAddress: string) => {
   const symbol = balance.get('symbol')
 
-  if (isEther(symbol)) {
-    return Promise.resolve()
-  }
-
   const nonce = Date.now()
   const name = `Send ${amount} ${balance.get('symbol')} to ${to}`
   const value = isEther(symbol) ? amount : 0
   const tokenAddress = balance.get('address')
+  const destination = isEther(symbol) ? to : tokenAddress
   const data = isEther(symbol)
     ? EMPTY_DATA
     : await getTransferData(tokenAddress, to, amount)
 
-  return createTransaction(safe, name, tokenAddress, value, nonce, userAddress, data)
+  return createTransaction(safe, name, destination, value, nonce, userAddress, data)
 }
 
 class AddTransaction extends React.Component<Props, State> {
@@ -67,6 +64,7 @@ class AddTransaction extends React.Component<Props, State> {
 
       const amount = values[TKN_VALUE_PARAM]
       const destination = values[TKN_DESTINATION_PARAM]
+
       await processTokenTransfer(safe, balance, destination, amount, userAddress)
       await sleep(1500)
       this.props.fetchTransactions()

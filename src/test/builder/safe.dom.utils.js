@@ -18,8 +18,7 @@ export const ADD_OWNERS_INDEX = 2
 export const EDIT_THRESHOLD_INDEX = 3
 export const EDIT_INDEX = 4
 export const WITHDRAW_INDEX = 5
-export const MOVE_FUNDS_INDEX = 6
-export const LIST_TXS_INDEX = 7
+export const LIST_TXS_INDEX = 6
 
 export const listTxsClickingOn = async (seeTxsButton: Element) => {
   expect(seeTxsButton.getElementsByTagName('span')[0].innerHTML).toEqual(SEE_MULTISIG_BUTTON_TEXT)

@@ -13,7 +13,6 @@ import { type Balance } from '~/routes/safe/store/model/balance'
 
 import Withdraw from '~/routes/safe/component/Withdraw'
 import Transactions from '~/routes/safe/component/Transactions'
-import AddTransaction from '~/routes/safe/component/AddTransaction'
 import Threshold from '~/routes/safe/component/Threshold'
 import AddOwner from '~/routes/safe/component/AddOwner'
 import RemoveOwner from '~/routes/safe/component/RemoveOwner'
@@ -70,19 +69,10 @@ class GnoSafe extends React.PureComponent<SafeProps, State> {
     this.setState({ component: <Withdraw safe={safe} dailyLimit={safe.get('dailyLimit')} /> })
   }
 
-  onAddTx = () => {
-    const { balances, safe } = this.props
-    const ethBalance = getEthBalanceFrom(balances)
-
-    this.setState({
-      component: <AddTransaction safe={safe} balance={Number(ethBalance)} onReset={this.onListTransactions} />,
-    })
-  }
-
   onListTransactions = () => {
     const { safe } = this.props
 
-    this.setState({ component: <Transactions safeName={safe.get('name')} safeAddress={safe.get('address')} onAddTx={this.onAddTx} /> })
+    this.setState({ component: <Transactions safeName={safe.get('name')} safeAddress={safe.get('address')} /> })
   }
 
   onEditThreshold = () => {
@@ -130,7 +120,7 @@ class GnoSafe extends React.PureComponent<SafeProps, State> {
             <Confirmations confirmations={safe.get('threshold')} onEditThreshold={this.onEditThreshold} />
             <Address address={safe.get('address')} />
             <DailyLimit balance={ethBalance} dailyLimit={safe.get('dailyLimit')} onWithdraw={this.onWithdraw} onEditDailyLimit={this.onEditDailyLimit} />
-            <MultisigTx balance={ethBalance} onAddTx={this.onAddTx} onSeeTxs={this.onListTransactions} />
+            <MultisigTx onSeeTxs={this.onListTransactions} />
           </List>
         </Col>
         <Col sm={12} center="xs" md={7} margin="xl" layout="column">

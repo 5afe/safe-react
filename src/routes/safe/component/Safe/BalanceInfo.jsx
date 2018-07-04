@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react'
+import classNames from 'classnames'
 import AccountBalance from '@material-ui/icons/AccountBalance'
 import Avatar from '@material-ui/core/Avatar'
 import Collapse from '@material-ui/core/Collapse'
@@ -56,7 +57,7 @@ const BalanceComponent = openHoc(({
           const onMoveFundsClick = () => onMoveFunds(balance)
 
           return (
-            <ListItem key={symbol} className={classes.nested}>
+            <ListItem key={symbol} className={classNames(classes.nested, symbol)}>
               <ListItemIcon>
                 <Img src={balance.get('logoUrl')} height={30} alt={name} />
               </ListItemIcon>

@@ -4,7 +4,7 @@ import { sleep } from '~/utils/timer'
 import { checkBalanceOf } from '~/test/utils/tokenMovements'
 import { checkMinedTx } from '~/test/builder/safe.dom.utils'
 
-export const sendWithdrawForm = (
+export const sendWithdrawForm = async (
   SafeDom: React$Component<any, any>,
   withdrawButton: React$Component<any, any>,
   amount: string,
@@ -13,7 +13,7 @@ export const sendWithdrawForm = (
   // load add multisig form component
   TestUtils.Simulate.click(withdrawButton)
   // give time to re-render it
-  sleep(600)
+  await sleep(600)
 
   // fill the form
   const inputs = TestUtils.scryRenderedDOMComponentsWithTag(SafeDom, 'input')

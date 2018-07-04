@@ -9,6 +9,7 @@ import { promisify } from '~/utils/promisify'
 import { addEtherTo } from '~/test/utils/tokenMovements'
 import { aMinedSafe } from '~/test/builder/safe.redux.builder'
 import { travelToSafe } from '~/test/builder/safe.dom.utils'
+import { MOVE_FUNDS_BUTTON_TEXT } from '~/routes/safe/component/Safe/BalanceInfo'
 
 export type DomSafe = {
   address: string,
@@ -17,6 +18,9 @@ export type DomSafe = {
   accounts: string[],
   store: Store<GlobalState>,
 }
+
+export const filterMoveButtonsFrom = (buttons: Element[]) =>
+  buttons.filter(button => button.getElementsByTagName('span')[0].innerHTML !== MOVE_FUNDS_BUTTON_TEXT)
 
 export const renderSafeInDom = async (
   owners: number = 1,
@@ -41,8 +45,9 @@ export const renderSafeInDom = async (
   const Safe = TestUtils.findRenderedComponentWithType(SafeDom, SafeView)
   // $FlowFixMe
   const buttons = TestUtils.scryRenderedDOMComponentsWithTag(Safe, 'button')
+  const filteredButtons = filterMoveButtonsFrom(buttons)
 
   return {
-    address, safeButtons: buttons, safe: SafeDom, accounts, store,
+    address, safeButtons: filteredButtons, safe: SafeDom, accounts, store,
   }
 }
