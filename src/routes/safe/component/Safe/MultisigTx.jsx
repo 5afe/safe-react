@@ -7,7 +7,7 @@ import Button from '~/components/layout/Button'
 import ListItemText from '~/components/List/ListItemText'
 
 type Props = {
-  balance: string,
+  balance: number,
   onAddTx: () => void,
   onSeeTxs: () => void,
 }
@@ -21,7 +21,7 @@ const addStyle = {
 
 const DailyLimitComponent = ({ balance, onAddTx, onSeeTxs }: Props) => {
   const text = `Available ${balance} ETH`
-  const disabled = Number(balance) <= 0
+  const disabled = balance <= 0
 
   return (
     <ListItem>

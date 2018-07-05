@@ -1,5 +1,5 @@
 // @flow
-import { List } from 'immutable'
+import { List, Map } from 'immutable'
 import { createSelector, createStructuredSelector, type Selector } from 'reselect'
 import { balanceSelector, safeSelector, type RouterProps, type SafeSelectorProps } from '~/routes/safe/store/selectors'
 import { providerNameSelector, userAccountSelector } from '~/wallets/store/selectors/index'
@@ -7,11 +7,12 @@ import { type Safe } from '~/routes/safe/store/model/safe'
 import { type Owner } from '~/routes/safe/store/model/owner'
 import { type GlobalState } from '~/store/index'
 import { sameAddress } from '~/wallets/ethAddresses'
+import { type Balance } from '~/routes/safe/store/model/balance'
 
 export type SelectorProps = {
   safe: SafeSelectorProps,
   provider: string,
-  balance: string,
+  balances: Map<string, Balance>,
   userAddress: string,
 }
 
@@ -39,7 +40,7 @@ export const grantedSelector: Selector<GlobalState, RouterProps, boolean> = crea
 export default createStructuredSelector({
   safe: safeSelector,
   provider: providerNameSelector,
-  balance: balanceSelector,
+  balances: balanceSelector,
   granted: grantedSelector,
   userAddress: userAccountSelector,
 })

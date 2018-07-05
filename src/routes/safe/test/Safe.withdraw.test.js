@@ -3,9 +3,10 @@ import * as React from 'react'
 import TestUtils from 'react-dom/test-utils'
 import { Provider } from 'react-redux'
 import { ConnectedRouter } from 'react-router-redux'
+import { type Match } from 'react-router-dom'
 import Button from '~/components/layout/Button'
 import { aNewStore, history } from '~/store'
-import { addEtherTo } from '~/test/utils/etherMovements'
+import { addEtherTo } from '~/test/utils/tokenMovements'
 import { aDeployedSafe, executeWithdrawOn } from '~/routes/safe/store/test/builder/deployedSafe.builder'
 import { SAFELIST_ADDRESS } from '~/routes/routes'
 import SafeView from '~/routes/safe/component/Safe'
@@ -84,6 +85,7 @@ describe('React DOM TESTS > Withdraw funds from safe', () => {
 
     const match: Match = buildMathPropsFrom(address)
     const safe = safeSelector(store.getState(), { match })
+    if (!safe) throw new Error()
     await executeWithdrawOn(safe, 0.01)
     await executeWithdrawOn(safe, 0.01)
 

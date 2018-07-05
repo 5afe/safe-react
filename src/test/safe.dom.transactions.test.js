@@ -9,7 +9,7 @@ import { sendRemoveOwnerForm, checkMinedRemoveOwnerTx, checkPendingRemoveOwnerTx
 import { checkMinedThresholdTx, sendChangeThresholdForm, checkThresholdOf } from '~/test/utils/transactions/threshold.helper'
 import { sendWithdrawForm, checkMinedWithdrawTx } from '~/test/utils/transactions/withdraw.helper'
 import { processTransaction } from '~/routes/safe/component/Transactions/processTransactions'
-import { checkBalanceOf } from '~/test/utils/etherMovements'
+import { checkBalanceOf } from '~/test/utils/tokenMovements'
 
 describe('DOM > Feature > SAFE MULTISIG TX 1 Owner 1 Threshold', () => {
   let domSafe: DomSafe

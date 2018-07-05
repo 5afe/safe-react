@@ -1,7 +1,7 @@
 // @flow
 import TestUtils from 'react-dom/test-utils'
 import { sleep } from '~/utils/timer'
-import { checkBalanceOf } from '~/test/utils/etherMovements'
+import { checkBalanceOf } from '~/test/utils/tokenMovements'
 import { checkMinedTx } from '~/test/builder/safe.dom.utils'
 
 export const sendWithdrawForm = (
@@ -36,7 +36,7 @@ export const checkMinedWithdrawTx = async (
   Transaction: React$Component<any, any>,
   name: string,
   address: string,
-  funds: number,
+  funds: string,
 ) => {
   await checkBalanceOf(address, funds)
 

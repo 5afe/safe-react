@@ -101,6 +101,7 @@
     "webpack-manifest-plugin": "^2.0.0-rc.2"
   },
   "dependencies": {
+    "@gnosis.pm/util-contracts": "^0.2.14",
     "@material-ui/core": "^1.2.1",
     "@material-ui/icons": "^1.1.0",
     "final-form": "^4.2.1",

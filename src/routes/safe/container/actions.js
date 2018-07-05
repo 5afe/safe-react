@@ -1,13 +1,13 @@
 // @flow
 import fetchSafe from '~/routes/safe/store/actions/fetchSafe'
-import fetchBalance from '~/routes/safe/store/actions/fetchBalance'
+import { fetchBalances } from '~/routes/safe/store/actions/fetchBalances'
 
 export type Actions = {
   fetchSafe: typeof fetchSafe,
-  fetchBalance: typeof fetchBalance,
+  fetchBalances: typeof fetchBalances,
 }
 
 export default {
   fetchSafe,
-  fetchBalance,
+  fetchBalances,
 }

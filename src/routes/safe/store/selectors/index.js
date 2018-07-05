@@ -10,6 +10,7 @@ import { BALANCE_REDUCER_ID } from '~/routes/safe/store/reducer/balances'
 import { type State as TransactionsState, TRANSACTIONS_REDUCER_ID } from '~/routes/safe/store/reducer/transactions'
 import { type Transaction } from '~/routes/safe/store/model/transaction'
 import { type Confirmation } from '~/routes/safe/store/model/confirmation'
+import { type Balance } from '~/routes/safe/store/model/balance'
 
 export type RouterProps = {
   match: Match,
@@ -81,15 +82,15 @@ export const safeSelector: Selector<GlobalState, RouterProps, SafeSelectorProps>
   },
 )
 
-export const balanceSelector: Selector<GlobalState, RouterProps, string> = createSelector(
+export const balanceSelector: Selector<GlobalState, RouterProps, Map<string, Balance>> = createSelector(
   balancesSelector,
   safeParamAddressSelector,
-  (balances: Map<string, string>, address: string) => {
+  (balances: Map<string, Map<string, Balance>>, address: string) => {
     if (!address) {
-      return '0'
+      return Map()
     }
 
-    return balances.get(address) || '0'
+    return balances.get(address) || Map()
   },
 )
 

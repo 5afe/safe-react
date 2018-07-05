@@ -4,7 +4,6 @@ import FormStep from '@material-ui/core/Step'
 import StepLabel from '@material-ui/core/StepLabel'
 import { withStyles } from '@material-ui/core/styles'
 import * as React from 'react'
-import type { FormApi } from 'react-final-form'
 import GnoForm from '~/components/forms/GnoForm'
 import Button from '~/components/layout/Button'
 import Col from '~/components/layout/Col'
@@ -21,7 +20,7 @@ type Props = {
   initialValues?: Object,
   children: React$Node,
   onReset?: () => void,
-  onSubmit: (values: Object, form: FormApi, callback: ?(errors: ?Object) => void) => ?Object | Promise<?Object> | void,
+  onSubmit: (values: Object) => Promise<void>,
 }
 
 type State = {

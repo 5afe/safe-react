@@ -8,7 +8,7 @@ import { getProviderInfo } from '~/wallets/getWeb3'
 import Wrapper from '~/test/utils/Wrapper'
 import { CONFIRMATIONS_ERROR } from '~/routes/open/components/SafeForm'
 
-const obSubmitMock = () => {}
+const onSubmitMock = async (): Promise<void> => {}
 
 describe('React DOM TESTS > Create Safe form', () => {
   let open
@@ -25,7 +25,7 @@ describe('React DOM TESTS > Create Safe form', () => {
           userAccount="foo"
           safeAddress=""
           safeTx=""
-          onCallSafeContractSubmit={obSubmitMock}
+          onCallSafeContractSubmit={onSubmitMock}
         />
       </Wrapper>
     ))

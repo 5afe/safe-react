@@ -3,7 +3,7 @@ import TestUtils from 'react-dom/test-utils'
 import { sleep } from '~/utils/timer'
 import { checkMinedTx, checkPendingTx } from '~/test/builder/safe.dom.utils'
 
-export const sendMoveFundsForm = (
+export const sendMoveFundsForm = async (
   SafeDom: React$Component<any, any>,
   multisigButton: React$Component<any, any>,
   txName: string,
@@ -13,7 +13,7 @@ export const sendMoveFundsForm = (
   // load add multisig form component
   TestUtils.Simulate.click(multisigButton)
   // give time to re-render it
-  sleep(600)
+  await sleep(600)
 
   // fill the form
   const inputs = TestUtils.scryRenderedDOMComponentsWithTag(SafeDom, 'input')

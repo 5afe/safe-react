@@ -7,11 +7,11 @@ import GnoSafe from './Safe'
 type Props = SelectorProps
 
 const Layout = ({
-  safe, balance, provider, userAddress,
+  safe, balances, provider, userAddress,
 }: Props) => (
   <React.Fragment>
     { safe
-      ? <GnoSafe safe={safe} balance={balance} userAddress={userAddress} />
+      ? <GnoSafe safe={safe} balances={balances} userAddress={userAddress} />
       : <NoSafe provider={provider} text="Not found safe" />
     }
   </React.Fragment>

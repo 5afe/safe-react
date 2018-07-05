@@ -1,7 +1,8 @@
 // @flow
 import { getWeb3 } from '~/wallets/getWeb3'
+import { type FieldValidator } from 'final-form'
 
-type Field = boolean | string
+type Field = boolean | string | null | typeof undefined
 
 export const required = (value: Field) => (value ? undefined : 'Required')
 
@@ -48,7 +49,7 @@ export const ADDRESS_REPEATED_ERROR = 'Address already introduced'
 export const uniqueAddress = (addresses: string[]) => (value: string) =>
   (addresses.includes(value) ? ADDRESS_REPEATED_ERROR : undefined)
 
-export const composeValidators = (...validators: Function[]) => (value: Field) =>
+export const composeValidators = (...validators: Function[]): FieldValidator => (value: Field) =>
   validators.reduce((error, validator) => error || validator(value), undefined)
 
 export const inLimit = (limit: number, base: number, baseText: string) => (value: string) => {

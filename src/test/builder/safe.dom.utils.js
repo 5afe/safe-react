@@ -4,14 +4,16 @@ import ListItemText from '~/components/List/ListItemText/index'
 import { SEE_MULTISIG_BUTTON_TEXT } from '~/routes/safe/component/Safe/MultisigTx'
 import fetchTransactions from '~/routes/safe/store/actions/fetchTransactions'
 import { sleep } from '~/utils/timer'
+import { type GlobalState } from '~/store/index'
 
-export const EXPAND_OWNERS_INDEX = 0
-export const ADD_OWNERS_INDEX = 1
-export const EDIT_THRESHOLD_INDEX = 2
-export const EDIT_INDEX = 3
-export const WITHDRAW_INDEX = 4
-export const MOVE_FUNDS_INDEX = 5
-export const LIST_TXS_INDEX = 6
+export const EXPAND_BALANCE_INDEX = 0
+export const EXPAND_OWNERS_INDEX = 1
+export const ADD_OWNERS_INDEX = 2
+export const EDIT_THRESHOLD_INDEX = 3
+export const EDIT_INDEX = 4
+export const WITHDRAW_INDEX = 5
+export const MOVE_FUNDS_INDEX = 6
+export const LIST_TXS_INDEX = 7
 
 export const listTxsClickingOn = async (seeTxsButton: Element) => {
   expect(seeTxsButton.getElementsByTagName('span')[0].innerHTML).toEqual(SEE_MULTISIG_BUTTON_TEXT)
@@ -79,7 +81,7 @@ export const checkPendingTx = async (
   }
 }
 
-export const refreshTransactions = async (store) => {
+export const refreshTransactions = async (store: Store<GlobalState>) => {
   await store.dispatch(fetchTransactions())
   await sleep(1500)
 }
