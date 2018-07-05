@@ -110,6 +110,7 @@ class GnoSafe extends React.PureComponent<SafeProps, State> {
     const { safe, balances, userAddress } = this.props
     const { component } = this.state
     const ethBalance = getEthBalanceFrom(balances)
+    console.log("Rendering Safe component...")
 
     return (
       <Row grow>
