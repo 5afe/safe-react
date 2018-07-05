@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react'
+import { BigNumber } from 'bignumber.js'
 import { connect } from 'react-redux'
 import Stepper from '~/components/Stepper'
 import { sleep } from '~/utils/timer'
@@ -8,6 +9,7 @@ import { type Balance } from '~/routes/safe/store/model/balance'
 import { createTransaction } from '~/wallets/createTransactions'
 import { getStandardTokenContract } from '~/routes/safe/store/actions/fetchBalances'
 import { EMPTY_DATA } from '~/wallets/ethTransactions'
+import { toNative } from '~/wallets/tokens'
 import actions, { type Actions } from './actions'
 import selector, { type SelectorProps } from './selector'
 import SendTokenForm, { TKN_DESTINATION_PARAM, TKN_VALUE_PARAM } from './SendTokenForm'
@@ -31,7 +33,7 @@ export const SEE_TXS_BUTTON_TEXT = 'VISIT TXS'
 
 const isEther = (symbol: string) => symbol === 'ETH'
 
-const getTransferData = async (tokenAddress: string, to: string, amount: number) => {
+const getTransferData = async (tokenAddress: string, to: string, amount: BigNumber) => {
   const StandardToken = await getStandardTokenContract()
   const myToken = await StandardToken.at(tokenAddress)
 
@@ -40,7 +42,6 @@ const getTransferData = async (tokenAddress: string, to: string, amount: number)
 
 const processTokenTransfer = async (safe: Safe, balance: Balance, to: string, amount: number, userAddress: string) => {
   const symbol = balance.get('symbol')
-
   const nonce = Date.now()
   const name = `Send ${amount} ${balance.get('symbol')} to ${to}`
   const value = isEther(symbol) ? amount : 0
@@ -48,7 +49,7 @@ const processTokenTransfer = async (safe: Safe, balance: Balance, to: string, am
   const destination = isEther(symbol) ? to : tokenAddress
   const data = isEther(symbol)
     ? EMPTY_DATA
-    : await getTransferData(tokenAddress, to, amount)
+    : await getTransferData(tokenAddress, to, await toNative(amount, balance.get('decimals')))
 
   return createTransaction(safe, name, destination, value, nonce, userAddress, data)
 }

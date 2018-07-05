@@ -45,8 +45,7 @@ export const sendMoveTokensForm = async (
 
 export const dispatchTknBalance = async (store: Store, tokenAddress: string, address: string) => {
   const fetchBalancesMock = jest.spyOn(fetchBalancesAction, 'fetchBalances')
-  const funds = await fetchBalancesAction.calculateBalanceOf(tokenAddress, address)
-
+  const funds = await fetchBalancesAction.calculateBalanceOf(tokenAddress, address, 18)
   const balances: Map<string, Balance> = Map().set('TKN', makeBalance({
     address: tokenAddress,
     name: 'Token',

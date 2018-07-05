@@ -18,11 +18,11 @@ export const getStandardTokenContract = async () => {
   return erc20Token
 }
 
-export const calculateBalanceOf = async (tokenAddress: string, address: string) => {
+export const calculateBalanceOf = async (tokenAddress: string, address: string, decimals: number) => {
   const erc20Token = await getStandardTokenContract()
 
   return erc20Token.at(tokenAddress)
-    .then(instance => instance.balanceOf(address).then(funds => funds.toString()))
+    .then(instance => instance.balanceOf(address).then(funds => funds.div(10 ** decimals).toString()))
     .catch(() => '0')
 }
 
@@ -53,7 +53,7 @@ export const fetchBalances = (safeAddress: string) => async (dispatch: ReduxDisp
 
   const json = await response.json()
   const balancesRecords = await Promise.all(json.map(async (item: BalanceProps) => {
-    const funds = await calculateBalanceOf(item.address, safeAddress)
+    const funds = await calculateBalanceOf(item.address, safeAddress, item.decimals)
     return makeBalance({ ...item, funds })
   }))
 

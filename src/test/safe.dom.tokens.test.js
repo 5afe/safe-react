@@ -25,6 +25,7 @@ describe('DOM > Feature > SAFE ERC20 TOKENS', () => {
     // GIVEN
     const numTokens = 100
     const tokenAddress = await addTknTo(safeAddress, numTokens)
+
     await dispatchTknBalance(store, tokenAddress, safeAddress)
     // const StandardToken = await fetchBalancesAction.getStandardTokenContract()
     // const myToken = await StandardToken.at(tokenAddress)
@@ -39,13 +40,16 @@ describe('DOM > Feature > SAFE ERC20 TOKENS', () => {
     const expandBalance = buttons[EXPAND_BALANCE_INDEX]
     const receiver = accounts[2]
     await sendMoveTokensForm(SafeDom, expandBalance, 20, accounts[2])
-    await sleep(2000)
 
     // THEN
-    const safeFunds = await fetchBalancesAction.calculateBalanceOf(tokenAddress, safeAddress)
+    const safeFunds = await fetchBalancesAction.calculateBalanceOf(tokenAddress, safeAddress, 18)
     expect(Number(safeFunds)).toBe(80)
-    const receiverFunds = await fetchBalancesAction.calculateBalanceOf(tokenAddress, receiver)
+    const receiverFunds = await fetchBalancesAction.calculateBalanceOf(tokenAddress, receiver, 18)
     expect(Number(receiverFunds)).toBe(20)
+
+    const token = await getTokenContract(getWeb3(), accounts[0])
+    const nativeSafeFunds = await token.balanceOf(safeAddress)
+    expect(Number(nativeSafeFunds.valueOf())).toEqual(80 * (10 ** 18))
   })
 
   it('disables send token button when balance is 0', async () => {

@@ -6,6 +6,7 @@ import withdraw, { DESTINATION_PARAM, VALUE_PARAM } from '~/routes/safe/componen
 import { type Safe } from '~/routes/safe/store/model/safe'
 import Token from '#/test/FixedSupplyToken.json'
 import { ensureOnce } from '~/utils/singleton'
+import { toNative } from '~/wallets/tokens'
 
 export const addEtherTo = async (address: string, eth: string) => {
   const web3 = getWeb3()
@@ -45,7 +46,8 @@ export const addTknTo = async (safe: string, value: number) => {
   const accounts = await promisify(cb => getWeb3().eth.getAccounts(cb))
 
   const myToken = await getTokenContract(web3, accounts[0])
-  await myToken.transfer(safe, value, { from: accounts[0], gas: '5000000' })
+  const nativeValue = await toNative(value, 18)
+  await myToken.transfer(safe, nativeValue.valueOf(), { from: accounts[0], gas: '5000000' })
 
   return myToken.address
 }
