@@ -39,7 +39,7 @@ const SendTokenForm = ({ funds, symbol }: Props) => () => (
         name={TKN_VALUE_PARAM}
         component={TextField}
         type="text"
-        validate={composeValidators(required, mustBeFloat, greaterThan(0), inLimit(Number(funds), 0, 'available balance'))}
+        validate={composeValidators(required, mustBeFloat, greaterThan(0), inLimit(Number(funds), 0, 'available balance', symbol))}
         placeholder="Amount of tokens*"
         text="Amount of Tokens"
       />
