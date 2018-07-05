@@ -97,7 +97,12 @@ class GnoSafe extends React.PureComponent<SafeProps, State> {
     const { safe } = this.props
 
     this.setState({
-      component: <SendToken safe={safe} balance={ercToken} onReset={this.onListTransactions} />,
+      component: <SendToken
+        safe={safe}
+        balance={ercToken}
+        key={ercToken.get('symbol')}
+        onReset={this.onListTransactions}
+      />,
     })
   }
 
