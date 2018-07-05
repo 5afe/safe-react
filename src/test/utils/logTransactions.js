@@ -27,7 +27,7 @@ export const printOutApprove = async (
   console.log(`EO transaction executed ${await gnosisSafe.isExecuted(transactionHash)}`)
 }
 
-const MAX_TIMES_EXECUTED = 20
+const MAX_TIMES_EXECUTED = 35
 const INTERVAL = 500
 type FinsihedTx = {
   finishedTransaction: boolean,

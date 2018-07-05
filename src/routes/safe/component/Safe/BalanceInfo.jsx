@@ -41,14 +41,12 @@ const BalanceComponent = openHoc(({
         <AccountBalance />
       </Avatar>
       <ListItemText primary="Balance" secondary="List of different token balances" />
-      { balances.count() > 0 &&
-        <ListItemIcon>
-          {open
-            ? <IconButton disableRipple><ExpandLess /></IconButton>
-            : <IconButton disableRipple><ExpandMore /></IconButton>
-          }
-        </ListItemIcon>
-      }
+      <ListItemIcon>
+        {open
+          ? <IconButton disableRipple><ExpandLess /></IconButton>
+          : <IconButton disabled={balances.count() === 0} disableRipple><ExpandMore /></IconButton>
+        }
+      </ListItemIcon>
     </ListItem>
     <Collapse in={open} timeout="auto">
       <List component="div" disablePadding>
