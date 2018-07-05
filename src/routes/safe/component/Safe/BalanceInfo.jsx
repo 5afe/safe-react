@@ -34,43 +34,47 @@ export const MOVE_FUNDS_BUTTON_TEXT = 'Move'
 
 const BalanceComponent = openHoc(({
   open, toggle, balances, classes, onMoveFunds,
-}: Props) => (
-  <React.Fragment>
-    <ListItem onClick={toggle}>
-      <Avatar>
-        <AccountBalance />
-      </Avatar>
-      <ListItemText primary="Balance" secondary="List of different token balances" />
-      <ListItemIcon>
-        {open
-          ? <IconButton disableRipple><ExpandLess /></IconButton>
-          : <IconButton disabled={balances.count() === 0} disableRipple><ExpandMore /></IconButton>
-        }
-      </ListItemIcon>
-    </ListItem>
-    <Collapse in={open} timeout="auto">
-      <List component="div" disablePadding>
-        {balances.valueSeq().map((balance: Balance) => {
-          const symbol = balance.get('symbol')
-          const name = balance.get('name')
-          const disabled = Number(balance.get('funds')) === 0
-          const onMoveFundsClick = () => onMoveFunds(balance)
+}: Props) => {
+  const hasBalances = balances.count() > 0
 
-          return (
-            <ListItem key={symbol} className={classNames(classes.nested, symbol)}>
-              <ListItemIcon>
-                <Img src={balance.get('logoUrl')} height={30} alt={name} />
-              </ListItemIcon>
-              <ListItemText primary={name} secondary={`${balance.get('funds')} ${symbol}`} />
-              <Button variant="raised" color="primary" onClick={onMoveFundsClick} disabled={disabled}>
-                {MOVE_FUNDS_BUTTON_TEXT}
-              </Button>
-            </ListItem>
-          )
-        })}
-      </List>
-    </Collapse>
-  </React.Fragment>
-))
+  return (
+    <React.Fragment>
+      <ListItem onClick={hasBalances ? toggle : undefined}>
+        <Avatar>
+          <AccountBalance />
+        </Avatar>
+        <ListItemText primary="Balance" secondary="List of different token balances" />
+        <ListItemIcon>
+          {open
+            ? <IconButton disableRipple><ExpandLess /></IconButton>
+            : <IconButton disabled={!hasBalances} disableRipple><ExpandMore /></IconButton>
+          }
+        </ListItemIcon>
+      </ListItem>
+      <Collapse in={open} timeout="auto">
+        <List component="div" disablePadding>
+          {balances.valueSeq().map((balance: Balance) => {
+            const symbol = balance.get('symbol')
+            const name = balance.get('name')
+            const disabled = Number(balance.get('funds')) === 0
+            const onMoveFundsClick = () => onMoveFunds(balance)
+
+            return (
+              <ListItem key={symbol} className={classNames(classes.nested, symbol)}>
+                <ListItemIcon>
+                  <Img src={balance.get('logoUrl')} height={30} alt={name} />
+                </ListItemIcon>
+                <ListItemText primary={name} secondary={`${balance.get('funds')} ${symbol}`} />
+                <Button variant="raised" color="primary" onClick={onMoveFundsClick} disabled={disabled}>
+                  {MOVE_FUNDS_BUTTON_TEXT}
+                </Button>
+              </ListItem>
+            )
+          })}
+        </List>
+      </Collapse>
+    </React.Fragment>
+  )
+})
 
 export default withStyles(styles)(BalanceComponent)

@@ -1,14 +1,11 @@
 // @flow
 import { aNewStore } from '~/store'
 import { getWeb3 } from '~/wallets/getWeb3'
-import { type Match } from 'react-router-dom'
 import { promisify } from '~/utils/promisify'
 import { processTransaction } from '~/routes/safe/component/Transactions/processTransactions'
-import { confirmationsTransactionSelector, safeSelector } from '~/routes/safe/store/selectors/index'
+import { confirmationsTransactionSelector } from '~/routes/safe/store/selectors/index'
 import { getTransactionFromReduxStore } from '~/routes/safe/test/testMultisig'
-import { buildMathPropsFrom } from '~/test/utils/buildReactRouterProps'
 import fetchTransactions from '~/routes/safe/store/actions/fetchTransactions'
-import { type GlobalState } from '~/store/index'
 import { type Safe } from '~/routes/safe/store/model/safe'
 import { getGnosisSafeInstanceAt } from '~/wallets/safeContracts'
 import { aMinedSafe } from '~/test/builder/safe.redux.builder'
@@ -17,14 +14,7 @@ import { addOwner } from '~/routes/safe/component/AddOwner/index'
 import fetchSafe from '~/routes/safe/store/actions/fetchSafe'
 import { removeOwner, shouldDecrease, initialValuesFrom } from '~/routes/safe/component/RemoveOwner'
 import { DECREASE_PARAM } from '~/routes/safe/component/RemoveOwner/RemoveOwnerForm/index'
-
-const getSafeFrom = (state: GlobalState, safeAddress: string): Safe => {
-  const match: Match = buildMathPropsFrom(safeAddress)
-  const safe = safeSelector(state, { match })
-  if (!safe) throw new Error()
-
-  return safe
-}
+import { getSafeFrom } from '~/test/utils/safeHelper'
 
 describe('React DOM TESTS > Add and remove owners', () => {
   const processOwnerModification = async (store, safeAddress, executor) => {
