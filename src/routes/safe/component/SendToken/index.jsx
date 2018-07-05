@@ -53,7 +53,7 @@ const processTokenTransfer = async (safe: Safe, balance: Balance, to: string, am
   return createTransaction(safe, name, destination, value, nonce, userAddress, data)
 }
 
-class AddTransaction extends React.Component<Props, State> {
+class SendToken extends React.Component<Props, State> {
   state = {
     done: false,
   }
@@ -109,4 +109,4 @@ class AddTransaction extends React.Component<Props, State> {
   }
 }
 
-export default connect(selector, actions)(AddTransaction)
+export default connect(selector, actions)(SendToken)

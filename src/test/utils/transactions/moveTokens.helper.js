@@ -6,6 +6,8 @@ import * as fetchBalancesAction from '~/routes/safe/store/actions/fetchBalances'
 import { checkMinedTx, checkPendingTx, EXPAND_BALANCE_INDEX } from '~/test/builder/safe.dom.utils'
 import { makeBalance, type Balance } from '~/routes/safe/store/model/balance'
 import addBalances from '~/routes/safe/store/actions/addBalances'
+import { whenExecuted } from '~/test/utils/logTransactions'
+import SendToken from '~/routes/safe/component/SendToken'
 
 export const sendMoveTokensForm = async (
   SafeDom: React$Component<any, any>,
@@ -38,7 +40,7 @@ export const sendMoveTokensForm = async (
   TestUtils.Simulate.submit(form)
   TestUtils.Simulate.submit(form)
 
-  return sleep(200)
+  return whenExecuted(SafeDom, SendToken)
 }
 
 export const dispatchTknBalance = async (store: Store, tokenAddress: string, address: string) => {

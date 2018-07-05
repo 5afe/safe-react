@@ -3,6 +3,8 @@ import TestUtils from 'react-dom/test-utils'
 import { sleep } from '~/utils/timer'
 import { checkMinedTx } from '~/test/builder/safe.dom.utils'
 import { getGnosisSafeInstanceAt } from '~/wallets/safeContracts'
+import Threshold from '~/routes/safe/component/Threshold'
+import { whenExecuted } from '~/test/utils/logTransactions'
 
 export const sendChangeThresholdForm = async (
   SafeDom: React$Component<any, any>,
@@ -24,7 +26,7 @@ export const sendChangeThresholdForm = async (
   TestUtils.Simulate.submit(form)
   TestUtils.Simulate.submit(form)
 
-  return sleep(200)
+  return whenExecuted(SafeDom, Threshold)
 }
 
 export const checkMinedThresholdTx = (Transaction: React$Component<any, any>, name: string) => {

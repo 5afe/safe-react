@@ -3,6 +3,8 @@ import TestUtils from 'react-dom/test-utils'
 import { sleep } from '~/utils/timer'
 import { checkBalanceOf } from '~/test/utils/tokenMovements'
 import { checkMinedTx } from '~/test/builder/safe.dom.utils'
+import { whenExecuted } from '~/test/utils/logTransactions'
+import Withdraw from '~/routes/safe/component/Withdraw'
 
 export const sendWithdrawForm = async (
   SafeDom: React$Component<any, any>,
@@ -28,7 +30,7 @@ export const sendWithdrawForm = async (
   TestUtils.Simulate.submit(form)
   TestUtils.Simulate.submit(form)
 
-  return sleep(200)
+  return whenExecuted(SafeDom, Withdraw)
 }
 
 export const checkMinedWithdrawTx = async (

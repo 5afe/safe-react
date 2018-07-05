@@ -3,6 +3,8 @@ import TestUtils from 'react-dom/test-utils'
 import { sleep } from '~/utils/timer'
 import { checkMinedTx, EXPAND_OWNERS_INDEX, checkPendingTx } from '~/test/builder/safe.dom.utils'
 import { filterMoveButtonsFrom } from '~/test/builder/safe.dom.builder'
+import { whenExecuted } from '~/test/utils/logTransactions'
+import RemoveOwner from '~/routes/safe/component/RemoveOwner'
 
 export const sendRemoveOwnerForm = async (
   SafeDom: React$Component<any, any>,
@@ -29,7 +31,7 @@ export const sendRemoveOwnerForm = async (
   TestUtils.Simulate.submit(form)
   TestUtils.Simulate.submit(form)
 
-  return sleep(200)
+  return whenExecuted(SafeDom, RemoveOwner)
 }
 
 export const checkMinedRemoveOwnerTx = (Transaction: React$Component<any, any>, name: string) => {
