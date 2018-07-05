@@ -12,11 +12,15 @@ type FormProps = {
   submitting: boolean,
 }
 
+type Props = {
+  symbol: string
+}
+
 const spinnerStyle = {
   minHeight: '50px',
 }
 
-const ReviewTx = (symbol: string) => ({ values, submitting }: FormProps) => (
+const ReviewTx = ({ symbol }: Props) => ({ values, submitting }: FormProps) => (
   <Block>
     <Heading tag="h2">Review the move token funds</Heading>
     <Paragraph align="left">
