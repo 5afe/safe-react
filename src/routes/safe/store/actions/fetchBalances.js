@@ -7,15 +7,19 @@ import { getBalanceInEtherOf, getWeb3 } from '~/wallets/getWeb3'
 import { type GlobalState } from '~/store/index'
 import { makeBalance, type Balance, type BalanceProps } from '~/routes/safe/store/model/balance'
 import logo from '~/assets/icons/icon_etherTokens.svg'
+import { ensureOnce } from '~/utils/singleton'
 import addBalances from './addBalances'
 
-export const getStandardTokenContract = async () => {
+
+const createStandardTokenContract = async () => {
   const web3 = getWeb3()
   const erc20Token = await contract(StandardToken)
   erc20Token.setProvider(web3.currentProvider)
 
   return erc20Token
 }
+
+export const getStandardTokenContract = ensureOnce(createStandardTokenContract)
 
 export const calculateBalanceOf = async (tokenAddress: string, address: string, decimals: number) => {
   const erc20Token = await getStandardTokenContract()
