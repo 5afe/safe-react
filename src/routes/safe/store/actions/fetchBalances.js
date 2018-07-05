@@ -9,7 +9,6 @@ import { makeBalance, type Balance, type BalanceProps } from '~/routes/safe/stor
 import logo from '~/assets/icons/icon_etherTokens.svg'
 import addBalances from './addBalances'
 
-
 export const getStandardTokenContract = async () => {
   const web3 = getWeb3()
   const erc20Token = await contract(StandardToken)
@@ -52,15 +51,15 @@ export const fetchBalances = (safeAddress: string) => async (dispatch: ReduxDisp
   }
 
   const json = await response.json()
-  const balancesRecords = await Promise.all(json.map(async (item: BalanceProps) => {
+  return Promise.all(json.map(async (item: BalanceProps) => {
     const funds = await calculateBalanceOf(item.address, safeAddress, item.decimals)
     return makeBalance({ ...item, funds })
-  }))
+  })).then((balancesRecords) => {
+    const balances: Map<string, Balance> = Map().withMutations((map) => {
+      balancesRecords.forEach(record => map.set(record.get('symbol'), record))
+      map.set('ETH', ethBalance)
+    })
 
-  const balances: Map<string, Balance> = Map().withMutations((map) => {
-    balancesRecords.forEach(record => map.set(record.get('symbol'), record))
-    map.set('ETH', ethBalance)
+    return dispatch(addBalances(safeAddress, balances))
   })
-
-  return dispatch(addBalances(safeAddress, balances))
 }
