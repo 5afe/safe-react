@@ -55,15 +55,23 @@ export const fetchBalances = (safeAddress: string) => async (dispatch: ReduxDisp
   }
 
   const json = await response.json()
-  return Promise.all(json.map(async (item: BalanceProps) => {
-    const funds = await calculateBalanceOf(item.address, safeAddress, item.decimals)
-    return makeBalance({ ...item, funds })
-  })).then((balancesRecords) => {
+
+  try {
+    const balancesRecords = await Promise.all(json.map(async (item: BalanceProps) => {
+      const funds = await calculateBalanceOf(item.address, safeAddress, item.decimals)
+      return makeBalance({ ...item, funds })
+    }))
+
     const balances: Map<string, Balance> = Map().withMutations((map) => {
       balancesRecords.forEach(record => map.set(record.get('symbol'), record))
       map.set('ETH', ethBalance)
     })
 
     return dispatch(addBalances(safeAddress, balances))
-  })
+  } catch (err) {
+    // eslint-disable-next-line
+    console.log("Error fetching token balances...")
+
+    return Promise.resolve()
+  }
 }

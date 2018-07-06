@@ -37,7 +37,14 @@ export const buildSafe = async (storedSafe: Object) => {
 }
 
 export default (safe: Safe) => async (dispatch: ReduxDispatch<GlobalState>) => {
-  const safeRecord = await buildSafe(safe.toJSON())
+  try {
+    const safeRecord = await buildSafe(safe.toJSON())
 
-  return dispatch(updateSafe(safeRecord))
+    return dispatch(updateSafe(safeRecord))
+  } catch (err) {
+    // eslint-disable-next-line
+    console.log("Error while updating safe information")
+
+    return Promise.resolve()
+  }
 }
