@@ -1,5 +1,5 @@
 // @flow
-import * as MuiList from '@material-ui/core/List'
+import MuiList from '@material-ui/core/List'
 import * as React from 'react'
 import Block from '~/components/layout/Block'
 import Col from '~/components/layout/Col'
@@ -24,6 +24,7 @@ type State = {
 
 const listStyle = {
   width: '100%',
+  paddingBottom: 0,
 }
 
 class TokenLayout extends React.PureComponent<TokenProps, State> {
@@ -64,6 +65,7 @@ class TokenLayout extends React.PureComponent<TokenProps, State> {
         <Col sm={12} top="xs" md={5} margin="xl" overflow>
           <MuiList style={listStyle}>
             {tokens.map((token: Token) => (<TokenComponent
+              key={token.get('symbol')}
               token={token}
               onDisableToken={this.onDisableToken}
               onEnableToken={this.onEnableToken}

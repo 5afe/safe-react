@@ -1,7 +1,9 @@
 // @flow
 import * as React from 'react'
 import classNames from 'classnames'
+import Link from '~/components/layout/Link'
 import AccountBalance from '@material-ui/icons/AccountBalance'
+import Settings from '@material-ui/icons/Settings'
 import Avatar from '@material-ui/core/Avatar'
 import Collapse from '@material-ui/core/Collapse'
 import IconButton from '@material-ui/core/IconButton'
@@ -18,8 +20,10 @@ import Button from '~/components/layout/Button'
 import openHoc, { type Open } from '~/components/hoc/OpenHoc'
 import { type WithStyles } from '~/theme/mui'
 import { type Token } from '~/routes/tokens/store/model/token'
+import { settingsUrlFrom } from '~/routes'
 
 type Props = Open & WithStyles & {
+  safeAddress: string,
   tokens: Map<string, Token>,
   onMoveFunds: (token: Token) => void,
 }
@@ -33,9 +37,10 @@ const styles = {
 export const MOVE_FUNDS_BUTTON_TEXT = 'Move'
 
 const BalanceComponent = openHoc(({
-  open, toggle, tokens, classes, onMoveFunds,
+  open, toggle, tokens, classes, onMoveFunds, safeAddress,
 }: Props) => {
   const hasBalances = tokens.count() > 0
+  const settingsUrl = settingsUrlFrom(safeAddress)
 
   return (
     <React.Fragment>
@@ -44,6 +49,11 @@ const BalanceComponent = openHoc(({
           <AccountBalance />
         </Avatar>
         <ListItemText primary="Balance" secondary="List of different token balances" />
+        <ListItemIcon>
+          <IconButton to={settingsUrl} component={Link} className={classes.button} aria-label="Delete">
+            <Settings />
+          </IconButton>
+        </ListItemIcon>
         <ListItemIcon>
           {open
             ? <IconButton disableRipple><ExpandLess /></IconButton>

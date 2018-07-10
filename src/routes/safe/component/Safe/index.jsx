@@ -110,12 +110,13 @@ class GnoSafe extends React.PureComponent<SafeProps, State> {
     const { safe, tokens, userAddress } = this.props
     const { component } = this.state
     const ethBalance = getEthBalanceFrom(tokens)
+    const address = safe.get('address')
 
     return (
       <Row grow>
         <Col sm={12} top="xs" md={5} margin="xl" overflow>
           <List style={listStyle}>
-            <BalanceInfo tokens={tokens} onMoveFunds={this.onMoveTokens} />
+            <BalanceInfo tokens={tokens} onMoveFunds={this.onMoveTokens} safeAddress={address} />
             <Owners
               owners={safe.owners}
               onAddOwner={this.onAddOwner}
@@ -123,7 +124,7 @@ class GnoSafe extends React.PureComponent<SafeProps, State> {
               onRemoveOwner={this.onRemoveOwner}
             />
             <Confirmations confirmations={safe.get('threshold')} onEditThreshold={this.onEditThreshold} />
-            <Address address={safe.get('address')} />
+            <Address address={address} />
             <DailyLimit balance={ethBalance} dailyLimit={safe.get('dailyLimit')} onWithdraw={this.onWithdraw} onEditDailyLimit={this.onEditDailyLimit} />
             <MultisigTx onSeeTxs={this.onListTransactions} />
           </List>

@@ -11,6 +11,11 @@ const Safe = Loadable({
   loading: Loader,
 })
 
+const Settings = Loadable({
+  loader: () => import('./tokens/container'),
+  loading: Loader,
+})
+
 const SafeList = Loadable({
   loader: () => import('./safeList/container'),
   loading: Loader,
@@ -22,6 +27,9 @@ const Open = Loadable({
 })
 
 const SAFE_ADDRESS = `${SAFELIST_ADDRESS}/:${SAFE_PARAM_ADDRESS}`
+const SAFE_SETTINGS = `${SAFE_ADDRESS}/settings`
+
+export const settingsUrlFrom = (safeAddress: string) => `${SAFELIST_ADDRESS}/${safeAddress}/settings`
 
 const Routes = () => (
   <Switch>
@@ -30,6 +38,7 @@ const Routes = () => (
     <Route exact path={OPEN_ADDRESS} component={Open} />
     <Route exact path={SAFELIST_ADDRESS} component={SafeList} />
     <Route exact path={SAFE_ADDRESS} component={Safe} />
+    <Route exact path={SAFE_SETTINGS} component={Settings} />
   </Switch>
 )
 

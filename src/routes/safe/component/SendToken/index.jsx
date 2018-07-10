@@ -10,6 +10,7 @@ import { type Token } from '~/routes/tokens/store/model/token'
 import { createTransaction } from '~/wallets/createTransactions'
 import { EMPTY_DATA } from '~/wallets/ethTransactions'
 import { toNative } from '~/wallets/tokens'
+import { isEther } from '~/utils/tokens'
 import actions, { type Actions } from './actions'
 import selector, { type SelectorProps } from './selector'
 import SendTokenForm, { TKN_DESTINATION_PARAM, TKN_VALUE_PARAM } from './SendTokenForm'
@@ -30,8 +31,6 @@ type State = {
 }
 
 export const SEE_TXS_BUTTON_TEXT = 'VISIT TXS'
-
-const isEther = (symbol: string) => symbol === 'ETH'
 
 const getTransferData = async (tokenAddress: string, to: string, amount: BigNumber) => {
   const StandardToken = await getStandardTokenContract()
