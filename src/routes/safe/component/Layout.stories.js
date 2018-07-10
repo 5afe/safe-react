@@ -4,7 +4,7 @@ import * as React from 'react'
 import { Map } from 'immutable'
 import styles from '~/components/layout/PageFrame/index.scss'
 import { SafeFactory } from '~/routes/safe/store/test/builder/safe.builder'
-import { makeBalance } from '~/routes/safe/store/model/balance'
+import { makeToken } from '~/routes/tokens/store/model/token'
 import Component from './Layout'
 
 
@@ -14,7 +14,7 @@ const FrameDecorator = story => (
   </div>
 )
 
-const ethBalance = makeBalance({
+const ethBalance = makeToken({
   address: '0',
   name: 'Ether',
   symbol: 'ETH',
@@ -30,7 +30,7 @@ storiesOf('Routes /safe:address', module)
       userAddress="foo"
       safe={undefined}
       provider="METAMASK"
-      balances={Map()}
+      tokens={Map()}
       fetchBalance={() => {}}
     />
   ))
@@ -39,7 +39,7 @@ storiesOf('Routes /safe:address', module)
       userAddress="foo"
       safe={undefined}
       provider=""
-      balances={Map()}
+      tokens={Map()}
       fetchBalance={() => {}}
     />
   ))
@@ -51,7 +51,7 @@ storiesOf('Routes /safe:address', module)
         userAddress="foo"
         safe={safe}
         provider="METAMASK"
-        balances={Map().set('ETH', ethBalance)}
+        tokens={Map().set('ETH', ethBalance)}
         fetchBalance={() => {}}
       />
     )
@@ -64,7 +64,7 @@ storiesOf('Routes /safe:address', module)
         userAddress="foo"
         safe={safe}
         provider="METAMASK"
-        balances={Map().set('ETH', ethBalance)}
+        tokens={Map().set('ETH', ethBalance)}
         fetchBalance={() => {}}
       />
     )

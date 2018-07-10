@@ -21,7 +21,7 @@ const safesListSelectorTests = () => {
       const reduxStore = {
         [PROVIDER_REDUCER_ID]: walletRecord,
         [SAFE_REDUCER_ID]: Map(),
-        balances: undefined,
+        tokens: undefined,
         transactions: undefined,
       }
       const emptyList = List([])
@@ -42,7 +42,7 @@ const safesListSelectorTests = () => {
       const reduxStore = {
         [PROVIDER_REDUCER_ID]: walletRecord,
         [SAFE_REDUCER_ID]: map,
-        balances: undefined,
+        tokens: undefined,
         transactions: undefined,
       }
 
@@ -62,7 +62,7 @@ const safesListSelectorTests = () => {
       const reduxStore = {
         [PROVIDER_REDUCER_ID]: walletRecord,
         [SAFE_REDUCER_ID]: map,
-        balances: undefined,
+        tokens: undefined,
         transactions: undefined,
       }
 
@@ -83,7 +83,7 @@ const safesListSelectorTests = () => {
       const reduxStore = {
         [SAFE_REDUCER_ID]: map,
         [PROVIDER_REDUCER_ID]: walletRecord,
-        balances: undefined,
+        tokens: undefined,
         transactions: undefined,
       }
 
@@ -105,7 +105,7 @@ const safesListSelectorTests = () => {
       const reduxStore = {
         [SAFE_REDUCER_ID]: map,
         [PROVIDER_REDUCER_ID]: walletRecord,
-        balances: undefined,
+        tokens: undefined,
         transactions: undefined,
       }
 

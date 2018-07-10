@@ -1,7 +1,7 @@
 // @flow
 
 import TestUtils from 'react-dom/test-utils'
-import * as fetchBalancesAction from '~/routes/safe/store/actions/fetchBalances'
+import * as fetchBalancesAction from '~/routes/tokens/store/actions/fetchTokens'
 import { aNewStore } from '~/store'
 import { aMinedSafe } from '~/test/builder/safe.redux.builder'
 import { addTknTo, getTokenContract } from '~/test/utils/tokenMovements'

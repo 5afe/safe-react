@@ -5,10 +5,10 @@ import type { Dispatch as ReduxDispatch } from 'redux'
 import StandardToken from '@gnosis.pm/util-contracts/build/contracts/StandardToken.json'
 import { getBalanceInEtherOf, getWeb3 } from '~/wallets/getWeb3'
 import { type GlobalState } from '~/store/index'
-import { makeBalance, type Balance, type BalanceProps } from '~/routes/safe/store/model/balance'
+import { makeToken, type Token, type TokenProps } from '~/routes/tokens/store/model/token'
 import logo from '~/assets/icons/icon_etherTokens.svg'
 import { ensureOnce } from '~/utils/singleton'
-import addBalances from './addBalances'
+import addTokens from './addTokens'
 
 
 const createStandardTokenContract = async () => {
@@ -29,9 +29,9 @@ export const calculateBalanceOf = async (tokenAddress: string, address: string, 
     .catch(() => '0')
 }
 
-export const fetchBalances = (safeAddress: string) => async (dispatch: ReduxDispatch<GlobalState>) => {
+export const fetchTokens = (safeAddress: string) => async (dispatch: ReduxDispatch<GlobalState>) => {
   const balance = await getBalanceInEtherOf(safeAddress)
-  const ethBalance = makeBalance({
+  const ethBalance = makeToken({
     address: '0',
     name: 'Ether',
     symbol: 'ETH',
@@ -57,17 +57,17 @@ export const fetchBalances = (safeAddress: string) => async (dispatch: ReduxDisp
   const json = await response.json()
 
   try {
-    const balancesRecords = await Promise.all(json.map(async (item: BalanceProps) => {
+    const balancesRecords = await Promise.all(json.map(async (item: TokenProps) => {
       const funds = await calculateBalanceOf(item.address, safeAddress, item.decimals)
-      return makeBalance({ ...item, funds })
+      return makeToken({ ...item, funds })
     }))
 
-    const balances: Map<string, Balance> = Map().withMutations((map) => {
+    const balances: Map<string, Token> = Map().withMutations((map) => {
       balancesRecords.forEach(record => map.set(record.get('symbol'), record))
       map.set('ETH', ethBalance)
     })
 
-    return dispatch(addBalances(safeAddress, balances))
+    return dispatch(addTokens(safeAddress, balances))
   } catch (err) {
     // eslint-disable-next-line
     console.log("Error fetching token balances...")

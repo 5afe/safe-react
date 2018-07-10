@@ -9,7 +9,7 @@ import Img from '~/components/layout/Img'
 import Paragraph from '~/components/layout/Paragraph'
 import Row from '~/components/layout/Row'
 import { type Safe } from '~/routes/safe/store/model/safe'
-import { type Balance } from '~/routes/safe/store/model/balance'
+import { type Token } from '~/routes/tokens/store/model/token'
 
 import Withdraw from '~/routes/safe/component/Withdraw'
 import Transactions from '~/routes/safe/component/Transactions'
@@ -30,7 +30,7 @@ const safeIcon = require('./assets/gnosis_safe.svg')
 
 type SafeProps = {
   safe: Safe,
-  balances: Map<string, Balance>,
+  tokens: Map<string, Token>,
   userAddress: string,
 }
 
@@ -42,7 +42,7 @@ const listStyle = {
   width: '100%',
 }
 
-const getEthBalanceFrom = (balances: Map<string, Balance>) => {
+const getEthBalanceFrom = (balances: Map<string, Token>) => {
   const ethBalance = balances.get('ETH')
   if (!ethBalance) {
     return 0
@@ -93,13 +93,13 @@ class GnoSafe extends React.PureComponent<SafeProps, State> {
     this.setState({ component: <RemoveOwner safeAddress={safe.get('address')} threshold={safe.get('threshold')} safe={safe} name={name} userToRemove={address} /> })
   }
 
-  onMoveTokens = (ercToken: Balance) => {
+  onMoveTokens = (ercToken: Token) => {
     const { safe } = this.props
 
     this.setState({
       component: <SendToken
         safe={safe}
-        balance={ercToken}
+        token={ercToken}
         key={ercToken.get('symbol')}
         onReset={this.onListTransactions}
       />,
@@ -107,15 +107,15 @@ class GnoSafe extends React.PureComponent<SafeProps, State> {
   }
 
   render() {
-    const { safe, balances, userAddress } = this.props
+    const { safe, tokens, userAddress } = this.props
     const { component } = this.state
-    const ethBalance = getEthBalanceFrom(balances)
+    const ethBalance = getEthBalanceFrom(tokens)
 
     return (
       <Row grow>
         <Col sm={12} top="xs" md={5} margin="xl" overflow>
           <List style={listStyle}>
-            <BalanceInfo balances={balances} onMoveFunds={this.onMoveTokens} />
+            <BalanceInfo tokens={tokens} onMoveFunds={this.onMoveTokens} />
             <Owners
               owners={safe.owners}
               onAddOwner={this.onAddOwner}
