@@ -3,13 +3,17 @@ import MuiList from '@material-ui/core/List'
 import * as React from 'react'
 import Block from '~/components/layout/Block'
 import Col from '~/components/layout/Col'
+import AccountBalanceWallet from '@material-ui/icons/AccountBalanceWallet'
+import Link from '~/components/layout/Link'
 import Bold from '~/components/layout/Bold'
 import Img from '~/components/layout/Img'
+import IconButton from '@material-ui/core/IconButton'
 import Paragraph from '~/components/layout/Paragraph'
 import Row from '~/components/layout/Row'
 import { type Token } from '~/routes/tokens/store/model/token'
 import { type SelectorProps } from '~/routes/tokens/container/selector'
 import { type Actions } from '~/routes/tokens/container/actions'
+import { SAFELIST_ADDRESS } from '~/routes/routes'
 import TokenComponent from './Token'
 // import AddToken from '~/routes/tokens/component/AddToken'
 // import RemoveToken from '~/routes/tokens/component/RemoveToken'
@@ -56,7 +60,7 @@ class TokenLayout extends React.PureComponent<TokenProps, State> {
   }
 
   render() {
-    const { safe, tokens } = this.props
+    const { safe, safeAddress, tokens } = this.props
     const { component } = this.state
     const name = safe ? safe.get('name') : ''
 
@@ -75,6 +79,9 @@ class TokenLayout extends React.PureComponent<TokenProps, State> {
         <Col sm={12} center="xs" md={7} margin="xl" layout="column">
           <Block margin="xl">
             <Paragraph size="lg" noMargin align="right">
+              <IconButton to={`${SAFELIST_ADDRESS}/${safeAddress}`} component={Link}>
+                <AccountBalanceWallet />
+              </IconButton>
               <Bold>{name}</Bold>
             </Paragraph>
           </Block>

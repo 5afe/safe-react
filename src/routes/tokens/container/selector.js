@@ -10,6 +10,7 @@ export type SelectorProps = {
   tokens: List<Token>,
   addresses: List<String>,
   safe: Safe,
+  safeAddress: string,
 }
 
 export default createStructuredSelector({

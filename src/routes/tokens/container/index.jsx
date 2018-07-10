@@ -8,7 +8,6 @@ import selector, { type SelectorProps } from './selector'
 import actions, { type Actions } from './actions'
 
 type Props = Actions & SelectorProps & {
-  safeAddress: string,
   fetchTokens: typeof fetchTokens,
 }
 
@@ -23,7 +22,7 @@ class TokensView extends React.PureComponent<Props> {
 
   render() {
     const {
-      tokens, addresses, safe, disableToken, enableToken,
+      tokens, addresses, safe, safeAddress, disableToken, enableToken,
     } = this.props
 
     return (
@@ -32,6 +31,7 @@ class TokensView extends React.PureComponent<Props> {
           tokens={tokens}
           addresses={addresses}
           safe={safe}
+          safeAddress={safeAddress}
           disableToken={disableToken}
           enableToken={enableToken}
         />
