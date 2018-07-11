@@ -42,13 +42,13 @@ const listStyle = {
   width: '100%',
 }
 
-const getEthBalanceFrom = (balances: Map<string, Token>) => {
-  const ethBalance = balances.get('ETH')
-  if (!ethBalance) {
+const getEthBalanceFrom = (tokens: List<Token>) => {
+  const ethToken = tokens.filter(token => token.get('symbol') === 'ETH')
+  if (ethToken.count() === 0) {
     return 0
   }
 
-  return Number(ethBalance.get('funds'))
+  return Number(ethToken.get(0).get('funds'))
 }
 
 class GnoSafe extends React.PureComponent<SafeProps, State> {
