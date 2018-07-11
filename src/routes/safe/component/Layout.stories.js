@@ -30,7 +30,7 @@ storiesOf('Routes /safe:address', module)
       userAddress="foo"
       safe={undefined}
       provider="METAMASK"
-      tokens={Map()}
+      activeTokens={Map()}
       fetchBalance={() => {}}
     />
   ))
@@ -39,7 +39,7 @@ storiesOf('Routes /safe:address', module)
       userAddress="foo"
       safe={undefined}
       provider=""
-      tokens={Map()}
+      activeTokens={Map()}
       fetchBalance={() => {}}
     />
   ))
@@ -51,7 +51,7 @@ storiesOf('Routes /safe:address', module)
         userAddress="foo"
         safe={safe}
         provider="METAMASK"
-        tokens={Map().set('ETH', ethBalance)}
+        activeTokens={Map().set('ETH', ethBalance)}
         fetchBalance={() => {}}
       />
     )
@@ -64,7 +64,7 @@ storiesOf('Routes /safe:address', module)
         userAddress="foo"
         safe={safe}
         provider="METAMASK"
-        tokens={Map().set('ETH', ethBalance)}
+        activeTokens={Map().set('ETH', ethBalance)}
         fetchBalance={() => {}}
       />
     )

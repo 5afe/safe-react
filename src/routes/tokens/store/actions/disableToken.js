@@ -9,6 +9,7 @@ const disableToken = createAction(
   (safeAddress: string, token: Token) => ({
     safeAddress,
     symbol: token.get('symbol'),
+    address: token.get('address'),
   }),
 )
 

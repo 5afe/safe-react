@@ -44,7 +44,7 @@ const styles = () => ({
 
 class TokenComponent extends React.Component<Props, State> {
   state = {
-    checked: true,
+    checked: this.props.token.get('status'),
   }
 
   // onRemoveClick = () => this.props.onRemoveToken(this.props.token)
