@@ -2,6 +2,7 @@
 import { BigNumber } from 'bignumber.js'
 import { getWeb3 } from '~/wallets/getWeb3'
 import { promisify } from '~/utils/promisify'
+import { enhancedFetch } from '~/utils/fetch'
 
 // const MAINNET_NETWORK = 1
 export const EMPTY_DATA = '0x'
@@ -40,21 +41,9 @@ export const calculateGasPrice = async () => {
     return '20000000000'
   }
 
-  const header = new Headers({
-    'Access-Control-Allow-Origin': '*',
-  })
-
-  const sentData = {
-    mode: 'cors',
-    header,
-  }
-
-  const response = await fetch('https://ethgasstation.info/json/ethgasAPI.json', sentData)
-  if (!response.ok) {
-    throw new Error('Error querying gast station')
-  }
-
-  const json = await response.json()
+  const url = 'https://ethgasstation.info/json/ethgasAPI.json'
+  const errMsg = 'Error querying gas station'
+  const json = await enhancedFetch(url, errMsg)
 
   return new BigNumber(json.average).multipliedBy(1e8).toString()
 }
