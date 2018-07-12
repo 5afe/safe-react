@@ -41,8 +41,9 @@ export const fetchTokens = (safeAddress: string) =>
 
     try {
       const balancesRecords = await Promise.all(json.map(async (item: TokenProps) => {
-        const funds = await calculateBalanceOf(item.address, safeAddress, item.decimals)
         const status = tokens.includes(item.address)
+        const funds = status ? await calculateBalanceOf(item.address, safeAddress, item.decimals) : '0'
+
         return makeToken({ ...item, status, funds })
       }))
 

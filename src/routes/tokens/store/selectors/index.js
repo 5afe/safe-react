@@ -5,7 +5,6 @@ import { safeParamAddressSelector, type RouterProps } from '~/routes/safe/store/
 import { type GlobalState } from '~/store'
 import { TOKEN_REDUCER_ID } from '~/routes/tokens/store/reducer/tokens'
 import { type Token } from '~/routes/tokens/store/model/token'
-import { calculateActiveErc20TokensFrom } from '~/utils/tokens'
 
 const balancesSelector = (state: GlobalState) => state[TOKEN_REDUCER_ID]
 
@@ -39,9 +38,4 @@ export const tokenAddressesSelector = createSelector(
 
     return addresses
   },
-)
-
-export const activeTokenAddressesSelector = createSelector(
-  tokenListSelector,
-  (balances: List<Token>) => calculateActiveErc20TokensFrom(balances),
 )
