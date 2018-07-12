@@ -4,7 +4,7 @@ import TestUtils from 'react-dom/test-utils'
 import * as fetchBalancesAction from '~/routes/tokens/store/actions/fetchTokens'
 import { aNewStore } from '~/store'
 import { aMinedSafe } from '~/test/builder/safe.redux.builder'
-import { addTknTo, getTokenContract } from '~/test/utils/tokenMovements'
+import { addTknTo, getFirstTokenContract } from '~/test/utils/tokenMovements'
 import { EXPAND_BALANCE_INDEX, travelToSafe } from '~/test/builder/safe.dom.utils'
 import { promisify } from '~/utils/promisify'
 import { getWeb3 } from '~/wallets/getWeb3'
@@ -47,14 +47,14 @@ describe('DOM > Feature > SAFE ERC20 TOKENS', () => {
     const receiverFunds = await fetchBalancesAction.calculateBalanceOf(tokenAddress, receiver, 18)
     expect(Number(receiverFunds)).toBe(20)
 
-    const token = await getTokenContract(getWeb3(), accounts[0])
+    const token = await getFirstTokenContract(getWeb3(), accounts[0])
     const nativeSafeFunds = await token.balanceOf(safeAddress)
     expect(Number(nativeSafeFunds.valueOf())).toEqual(80 * (10 ** 18))
   })
 
   it('disables send token button when balance is 0', async () => {
     // GIVEN
-    const token = await getTokenContract(getWeb3(), accounts[0])
+    const token = await getFirstTokenContract(getWeb3(), accounts[0])
     await dispatchTknBalance(store, token.address, safeAddress)
 
     // WHEN

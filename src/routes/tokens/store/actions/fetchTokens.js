@@ -30,14 +30,18 @@ export const calculateBalanceOf = async (tokenAddress: string, address: string, 
     .catch(() => '0')
 }
 
+export const fetchTokensData = async () => {
+  const url = 'https://gist.githubusercontent.com/rmeissner/98911fcf74b0ea9731e2dae2441c97a4/raw/'
+  const errMsg = 'Error querying safe balances'
+  return enhancedFetch(url, errMsg)
+}
+
 export const fetchTokens = (safeAddress: string) =>
   async (dispatch: ReduxDispatch<GlobalState>) => {
     const tokens: List<string> = getTokens(safeAddress)
     const ethBalance = await getSafeEthToken(safeAddress)
 
-    const url = 'https://gist.githubusercontent.com/rmeissner/98911fcf74b0ea9731e2dae2441c97a4/raw/'
-    const errMsg = 'Error querying safe balances'
-    const json = await enhancedFetch(url, errMsg)
+    const json = await exports.fetchTokensData()
 
     try {
       const balancesRecords = await Promise.all(json.map(async (item: TokenProps) => {

@@ -51,6 +51,7 @@ class TokenComponent extends React.Component<Props, State> {
 
   handleChange = (e: SyntheticInputEvent<HTMLInputElement>) => {
     const { checked } = e.target
+
     const callback = checked ? this.props.onEnableToken : this.props.onDisableToken
     this.setState(() => ({ checked }), () => callback(this.props.token))
   }
@@ -69,7 +70,7 @@ class TokenComponent extends React.Component<Props, State> {
             <Typography variant="subheading" color="textSecondary">
               <Checkbox
                 disabled={disabled}
-                checked={this.state.checked}
+                checked={!!this.state.checked}
                 onChange={this.handleChange}
                 color="primary"
               />

@@ -8,7 +8,7 @@ import { sleep } from '~/utils/timer'
 import { Provider } from 'react-redux'
 import { ConnectedRouter } from 'react-router-redux'
 import AppRoutes from '~/routes'
-import { SAFELIST_ADDRESS } from '~/routes/routes'
+import { SAFELIST_ADDRESS, SETTINS_ADDRESS } from '~/routes/routes'
 import { history, type GlobalState } from '~/store'
 import { EMPTY_DATA } from '~/wallets/ethTransactions'
 
@@ -93,15 +93,25 @@ export const refreshTransactions = async (store: Store<GlobalState>) => {
   await sleep(1500)
 }
 
-export const travelToSafe = (store: Store, address: string): React$Component<{}> => {
-  history.push(`${SAFELIST_ADDRESS}/${address}`)
-  const SafeDom = TestUtils.renderIntoDocument((
+const createDom = (store: Store): React$Component<{}> => (
+  TestUtils.renderIntoDocument((
     <Provider store={store}>
       <ConnectedRouter history={history}>
         <AppRoutes />
       </ConnectedRouter>
     </Provider>
   ))
+)
 
-  return SafeDom
+export const travelToSafe = (store: Store, address: string): React$Component<{}> => {
+  history.push(`${SAFELIST_ADDRESS}/${address}`)
+
+  return createDom(store)
+}
+
+export const travelToTokens = (store: Store, address: string): React$Component<{}> => {
+  const url = `${SAFELIST_ADDRESS}/${address}${SETTINS_ADDRESS}`
+  history.push(url)
+
+  return createDom(store)
 }
