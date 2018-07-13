@@ -1,5 +1,6 @@
 // @flow
 import * as TestUtils from 'react-dom/test-utils'
+import { List } from 'immutable'
 import { getWeb3 } from '~/wallets/getWeb3'
 import { type Match } from 'react-router-dom'
 import { promisify } from '~/utils/promisify'
@@ -12,7 +13,8 @@ import { travelToTokens } from '~/test/builder/safe.dom.utils'
 import { sleep } from '~/utils/timer'
 import { buildMathPropsFrom } from '~/test/utils/buildReactRouterProps'
 import { tokenListSelector, activeTokensSelector } from '~/routes/tokens/store/selectors'
-import { type Token } from '~/routes/tokens/store/model/token'
+import { getTokens } from '~/utils/localStorage/tokens'
+import { enableFirstToken, testToken } from '~/test/builder/tokens.dom.utils'
 
 const fetchTokensModule = require('../routes/tokens/store/actions/fetchTokens')
 
@@ -49,7 +51,7 @@ describe('DOM > Feature > Enable and disable default tokens', () => {
     ]))
   })
 
-  it('retrieves only ether as active token', async () => {
+  it('retrieves only ether as active token in first moment', async () => {
     // GIVEN
     const store = aNewStore()
     const safeAddress = await aMinedSafe(store)
@@ -63,31 +65,14 @@ describe('DOM > Feature > Enable and disable default tokens', () => {
     const tokens = TestUtils.scryRenderedComponentsWithType(TokensDom, TokenComponent)
     expect(tokens.length).toBe(3)
 
-    const firstToken = tokens[0]
-    expect(firstToken.props.token.get('symbol')).toBe('FTE')
-    expect(firstToken.props.token.get('status')).toBe(false)
+    testToken(tokens[0].props.token, 'FTE', false)
+    testToken(tokens[1].props.token, 'STE', false)
+    testToken(tokens[2].props.token, 'ETH', true)
 
-    const secontToken = tokens[1]
-    expect(secontToken.props.token.get('symbol')).toBe('STE')
-    expect(secontToken.props.token.get('status')).toBe(false)
-
-    const etherToken = tokens[2]
-    expect(etherToken.props.token.get('symbol')).toBe('ETH')
-    expect(etherToken.props.token.get('status')).toBe(true)
-
-    const ethCheckbox = TestUtils.findRenderedComponentWithType(etherToken, Checkbox)
+    const ethCheckbox = TestUtils.findRenderedComponentWithType(tokens[2], Checkbox)
     if (!ethCheckbox) throw new Error()
     expect(ethCheckbox.props.disabled).toBe(true)
   })
-
-  const testToken = (token: Token | typeof undefined, symbol: string, status: boolean, funds?: string) => {
-    if (!token) throw new Error()
-    expect(token.get('symbol')).toBe(symbol)
-    expect(token.get('status')).toBe(status)
-    if (funds) {
-      expect(token.get('funds')).toBe(funds)
-    }
-  }
 
   it('fetch balances of only enabled tokens', async () => {
     // GIVEN
@@ -96,17 +81,7 @@ describe('DOM > Feature > Enable and disable default tokens', () => {
     await addTknTo(safeAddress, 50, firstErc20Token)
     await addTknTo(safeAddress, 50, secondErc20Token)
     await store.dispatch(fetchTokensModule.fetchTokens(safeAddress))
-    const TokensDom = await travelToTokens(store, safeAddress)
-    await sleep(400)
-
-    // WHEN
-    const inputs = TestUtils.scryRenderedDOMComponentsWithTag(TokensDom, 'input')
-
-    const ethTokenInput = inputs[2]
-    expect(ethTokenInput.hasAttribute('disabled')).toBe(true)
-    const firstTokenInput = inputs[0]
-    expect(firstTokenInput.hasAttribute('disabled')).toBe(false)
-    TestUtils.Simulate.change(firstTokenInput, { target: { checked: 'true' } })
+    await enableFirstToken(store, safeAddress)
 
     // THEN
     const match: Match = buildMathPropsFrom(safeAddress)
@@ -130,5 +105,24 @@ describe('DOM > Feature > Enable and disable default tokens', () => {
     testToken(fundedTokenList.get(0), 'FTE', true, '50')
     testToken(fundedTokenList.get(1), 'STE', false, '0')
     testToken(fundedTokenList.get(2), 'ETH', true, '0')
+  })
+
+  it('localStorage always returns a list', async () => {
+    const store = aNewStore()
+    const safeAddress = await aMinedSafe(store)
+    let tokens: List<string> = getTokens(safeAddress)
+    expect(tokens).toEqual(List([]))
+
+    await store.dispatch(fetchTokensModule.fetchTokens(safeAddress))
+    tokens = getTokens(safeAddress)
+    expect(tokens.count()).toBe(0)
+
+    await enableFirstToken(store, safeAddress)
+    tokens = getTokens(safeAddress)
+    expect(tokens.count()).toBe(1)
+
+    await store.dispatch(fetchTokensModule.fetchTokens(safeAddress))
+    tokens = getTokens(safeAddress)
+    expect(tokens.count()).toBe(1)
   })
 })
