@@ -15,11 +15,8 @@ import { buildMathPropsFrom } from '~/test/utils/buildReactRouterProps'
 import { tokenListSelector, activeTokensSelector } from '~/routes/tokens/store/selectors'
 import { getTokens } from '~/utils/localStorage/tokens'
 import { enableFirstToken, testToken } from '~/test/builder/tokens.dom.utils'
-
-const fetchTokensModule = require('../routes/tokens/store/actions/fetchTokens')
-
-// $FlowFixMe
-fetchTokensModule.fetchTokensData = jest.fn()
+import * as fetchTokensModule from '~/routes/tokens/store/actions/fetchTokens'
+import * as enhancedFetchModule from '~/utils/fetch'
 
 describe('DOM > Feature > Enable and disable default tokens', () => {
   let web3
@@ -33,7 +30,8 @@ describe('DOM > Feature > Enable and disable default tokens', () => {
     firstErc20Token = await getFirstTokenContract(web3, accounts[0])
     secondErc20Token = await getSecondTokenContract(web3, accounts[0])
     // $FlowFixMe
-    fetchTokensModule.fetchTokensData.mockImplementation(() => Promise.resolve([
+    enhancedFetchModule.enhancedFetch = jest.fn()
+    enhancedFetchModule.enhancedFetch.mockImplementation(() => Promise.resolve([
       {
         address: firstErc20Token.address,
         name: 'First Token Example',
