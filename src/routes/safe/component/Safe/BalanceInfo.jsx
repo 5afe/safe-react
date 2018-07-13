@@ -50,7 +50,7 @@ const BalanceComponent = openHoc(({
         </Avatar>
         <ListItemText primary="Balance" secondary="List of different token balances" />
         <ListItemIcon>
-          <IconButton to={settingsUrl} component={Link} className={classes.button}>
+          <IconButton to={settingsUrl} disabled={!hasBalances} component={Link} className={classes.button}>
             <Settings />
           </IconButton>
         </ListItemIcon>
