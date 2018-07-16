@@ -1,10 +1,10 @@
 // @flow
 import { Map } from 'immutable'
-import { BALANCE_REDUCER_ID } from '~/routes/safe/store/reducer/balances'
-import * as fetchBalancesAction from '~/routes/safe/store/actions/fetchBalances'
+import * as fetchTokensAction from '~/routes/tokens/store/actions/fetchTokens'
 import { aNewStore } from '~/store'
 import { aMinedSafe } from '~/test/builder/safe.redux.builder'
-import { type Balance } from '~/routes/safe/store/model/balance'
+import { type Token } from '~/routes/tokens/store/model/token'
+import { TOKEN_REDUCER_ID } from '~/routes/tokens/store/reducer/tokens'
 import { addEtherTo, addTknTo } from '~/test/utils/tokenMovements'
 import { dispatchTknBalance } from '~/test/utils/transactions/moveTokens.helper'
 
@@ -21,13 +21,13 @@ describe('Safe - redux balance property', () => {
     const tokenList = ['WE', '<3', 'GNO', 'OMG', 'RDN']
 
     // WHEN
-    await store.dispatch(fetchBalancesAction.fetchBalances(address))
+    await store.dispatch(fetchTokensAction.fetchTokens(address))
 
     // THEN
-    const balances: Map<string, Map<string, Balance>> | typeof undefined = store.getState()[BALANCE_REDUCER_ID]
-    if (!balances) throw new Error()
+    const tokens: Map<string, Map<string, Token>> | typeof undefined = store.getState()[TOKEN_REDUCER_ID]
+    if (!tokens) throw new Error()
 
-    const safeBalances: Map<string, Balance> | typeof undefined = balances.get(address)
+    const safeBalances: Map<string, Token> | typeof undefined = tokens.get(address)
     if (!safeBalances) throw new Error()
     expect(safeBalances.size).toBe(6)
 
@@ -41,13 +41,13 @@ describe('Safe - redux balance property', () => {
   it('reducer should return 0.03456 ETH as funds to safe with 0.03456 ETH', async () => {
     // WHEN
     await addEtherTo(address, '0.03456')
-    await store.dispatch(fetchBalancesAction.fetchBalances(address))
+    await store.dispatch(fetchTokensAction.fetchTokens(address))
 
     // THEN
-    const balances: Map<string, Map<string, Balance>> | typeof undefined = store.getState()[BALANCE_REDUCER_ID]
-    if (!balances) throw new Error()
+    const tokens: Map<string, Map<string, Token>> | typeof undefined = store.getState()[TOKEN_REDUCER_ID]
+    if (!tokens) throw new Error()
 
-    const safeBalances: Map<string, Balance> | typeof undefined = balances.get(address)
+    const safeBalances: Map<string, Token> | typeof undefined = tokens.get(address)
     if (!safeBalances) throw new Error()
     expect(safeBalances.size).toBe(6)
 
@@ -65,7 +65,7 @@ describe('Safe - redux balance property', () => {
     await dispatchTknBalance(store, tokenAddress, address)
 
     // THEN
-    const safeBalances = store.getState()[BALANCE_REDUCER_ID].get(address)
+    const safeBalances = store.getState()[TOKEN_REDUCER_ID].get(address)
     expect(safeBalances.size).toBe(1)
 
     const tknBalance = safeBalances.get('TKN')

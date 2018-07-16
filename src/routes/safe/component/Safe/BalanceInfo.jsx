@@ -1,7 +1,9 @@
 // @flow
 import * as React from 'react'
 import classNames from 'classnames'
+import Link from '~/components/layout/Link'
 import AccountBalance from '@material-ui/icons/AccountBalance'
+import Settings from '@material-ui/icons/Settings'
 import Avatar from '@material-ui/core/Avatar'
 import Collapse from '@material-ui/core/Collapse'
 import IconButton from '@material-ui/core/IconButton'
@@ -17,11 +19,13 @@ import { Map } from 'immutable'
 import Button from '~/components/layout/Button'
 import openHoc, { type Open } from '~/components/hoc/OpenHoc'
 import { type WithStyles } from '~/theme/mui'
-import { type Balance } from '~/routes/safe/store/model/balance'
+import { type Token } from '~/routes/tokens/store/model/token'
+import { settingsUrlFrom } from '~/routes'
 
 type Props = Open & WithStyles & {
-  balances: Map<string, Balance>,
-  onMoveFunds: (balance: Balance) => void,
+  safeAddress: string,
+  tokens: Map<string, Token>,
+  onMoveFunds: (token: Token) => void,
 }
 
 const styles = {
@@ -33,9 +37,10 @@ const styles = {
 export const MOVE_FUNDS_BUTTON_TEXT = 'Move'
 
 const BalanceComponent = openHoc(({
-  open, toggle, balances, classes, onMoveFunds,
+  open, toggle, tokens, classes, onMoveFunds, safeAddress,
 }: Props) => {
-  const hasBalances = balances.count() > 0
+  const hasBalances = tokens.count() > 0
+  const settingsUrl = settingsUrlFrom(safeAddress)
 
   return (
     <React.Fragment>
@@ -45,6 +50,11 @@ const BalanceComponent = openHoc(({
         </Avatar>
         <ListItemText primary="Balance" secondary="List of different token balances" />
         <ListItemIcon>
+          <IconButton to={settingsUrl} disabled={!hasBalances} component={Link} className={classes.button}>
+            <Settings />
+          </IconButton>
+        </ListItemIcon>
+        <ListItemIcon>
           {open
             ? <IconButton disableRipple><ExpandLess /></IconButton>
             : <IconButton disabled={!hasBalances} disableRipple><ExpandMore /></IconButton>
@@ -53,18 +63,18 @@ const BalanceComponent = openHoc(({
       </ListItem>
       <Collapse in={open} timeout="auto">
         <List component="div" disablePadding>
-          {balances.valueSeq().map((balance: Balance) => {
-            const symbol = balance.get('symbol')
-            const name = balance.get('name')
-            const disabled = Number(balance.get('funds')) === 0
-            const onMoveFundsClick = () => onMoveFunds(balance)
+          {tokens.valueSeq().map((token: Token) => {
+            const symbol = token.get('symbol')
+            const name = token.get('name')
+            const disabled = Number(token.get('funds')) === 0
+            const onMoveFundsClick = () => onMoveFunds(token)
 
             return (
               <ListItem key={symbol} className={classNames(classes.nested, symbol)}>
                 <ListItemIcon>
-                  <Img src={balance.get('logoUrl')} height={30} alt={name} />
+                  <Img src={token.get('logoUrl')} height={30} alt={name} />
                 </ListItemIcon>
-                <ListItemText primary={name} secondary={`${balance.get('funds')} ${symbol}`} />
+                <ListItemText primary={name} secondary={`${token.get('funds')} ${symbol}`} />
                 <Button variant="raised" color="primary" onClick={onMoveFundsClick} disabled={disabled}>
                   {MOVE_FUNDS_BUTTON_TEXT}
                 </Button>

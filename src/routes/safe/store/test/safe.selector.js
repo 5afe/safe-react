@@ -14,7 +14,7 @@ const safeSelectorTests = () => {
       const reduxStore = {
         [SAFE_REDUCER_ID]: Map(),
         providers: undefined,
-        balances: undefined,
+        tokens: undefined,
         transactions: undefined,
       }
       const match: Match = buildMathPropsFrom('fooAddress')
@@ -38,7 +38,7 @@ const safeSelectorTests = () => {
       const reduxStore = {
         [SAFE_REDUCER_ID]: map,
         providers: undefined,
-        balances: undefined,
+        tokens: undefined,
         transactions: undefined,
       }
 

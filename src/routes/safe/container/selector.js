@@ -1,18 +1,19 @@
 // @flow
 import { List, Map } from 'immutable'
 import { createSelector, createStructuredSelector, type Selector } from 'reselect'
-import { balanceSelector, safeSelector, type RouterProps, type SafeSelectorProps } from '~/routes/safe/store/selectors'
+import { safeSelector, type RouterProps, type SafeSelectorProps } from '~/routes/safe/store/selectors'
 import { providerNameSelector, userAccountSelector } from '~/wallets/store/selectors/index'
 import { type Safe } from '~/routes/safe/store/model/safe'
 import { type Owner } from '~/routes/safe/store/model/owner'
 import { type GlobalState } from '~/store/index'
 import { sameAddress } from '~/wallets/ethAddresses'
-import { type Balance } from '~/routes/safe/store/model/balance'
+import { activeTokensSelector } from '~/routes/tokens/store/selectors'
+import { type Token } from '~/routes/tokens/store/model/token'
 
 export type SelectorProps = {
   safe: SafeSelectorProps,
   provider: string,
-  balances: Map<string, Balance>,
+  activeTokens: Map<string, Token>,
   userAddress: string,
 }
 
@@ -40,7 +41,7 @@ export const grantedSelector: Selector<GlobalState, RouterProps, boolean> = crea
 export default createStructuredSelector({
   safe: safeSelector,
   provider: providerNameSelector,
-  balances: balanceSelector,
+  activeTokens: activeTokensSelector,
   granted: grantedSelector,
   userAddress: userAccountSelector,
 })

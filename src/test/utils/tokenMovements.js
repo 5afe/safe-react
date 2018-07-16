@@ -39,13 +39,14 @@ const createTokenContract = async (web3: any, executor: string) => {
   return token.new({ from: executor, gas: '5000000' })
 }
 
-export const getTokenContract = ensureOnce(createTokenContract)
+export const getFirstTokenContract = ensureOnce(createTokenContract)
+export const getSecondTokenContract = ensureOnce(createTokenContract)
 
-export const addTknTo = async (safe: string, value: number) => {
+export const addTknTo = async (safe: string, value: number, tokenContract?: any) => {
   const web3 = getWeb3()
   const accounts = await promisify(cb => getWeb3().eth.getAccounts(cb))
 
-  const myToken = await getTokenContract(web3, accounts[0])
+  const myToken = tokenContract || await getFirstTokenContract(web3, accounts[0])
   const nativeValue = await toNative(value, 18)
   await myToken.transfer(safe, nativeValue.valueOf(), { from: accounts[0], gas: '5000000' })
 
