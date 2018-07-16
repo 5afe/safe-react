@@ -11,6 +11,8 @@ type Props = Actions & SelectorProps & {
   granted: boolean,
 }
 
+const TIMEOUT = process.env.NODE_ENV === 'test' ? 1500 : 15000
+
 class SafeView extends React.PureComponent<Props> {
   componentDidMount() {
     this.intervalId = setInterval(() => {
@@ -21,7 +23,7 @@ class SafeView extends React.PureComponent<Props> {
       const safeAddress = safe.get('address')
       fetchBalances(safeAddress)
       fetchSafe(safe)
-    }, 1500)
+    }, TIMEOUT)
   }
 
   componentDidUpdate(prevProps) {

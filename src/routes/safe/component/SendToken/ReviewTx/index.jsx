@@ -5,28 +5,29 @@ import Block from '~/components/layout/Block'
 import Bold from '~/components/layout/Bold'
 import Heading from '~/components/layout/Heading'
 import Paragraph from '~/components/layout/Paragraph'
-import { TX_NAME_PARAM, TX_DESTINATION_PARAM, TX_VALUE_PARAM } from '~/routes/safe/component/AddTransaction/createTransactions'
+import { TKN_DESTINATION_PARAM, TKN_VALUE_PARAM } from '~/routes/safe/component/SendToken/SendTokenForm/index'
 
 type FormProps = {
   values: Object,
   submitting: boolean,
 }
 
+type Props = {
+  symbol: string
+}
+
 const spinnerStyle = {
   minHeight: '50px',
 }
 
-const ReviewTx = () => ({ values, submitting }: FormProps) => (
+const ReviewTx = ({ symbol }: Props) => ({ values, submitting }: FormProps) => (
   <Block>
-    <Heading tag="h2">Review the Multisig Tx</Heading>
+    <Heading tag="h2">Review the move token funds</Heading>
     <Paragraph align="left">
-      <Bold>Transaction Name: </Bold> {values[TX_NAME_PARAM]}
+      <Bold>Destination: </Bold> {values[TKN_DESTINATION_PARAM]}
     </Paragraph>
     <Paragraph align="left">
-      <Bold>Destination: </Bold> {values[TX_DESTINATION_PARAM]}
-    </Paragraph>
-    <Paragraph align="left">
-      <Bold>Amount to transfer in ETH: </Bold> {values[TX_VALUE_PARAM]}
+      <Bold>{`Amount to transfer: ${values[TKN_VALUE_PARAM]} ${symbol}`}</Bold>
     </Paragraph>
     <Block style={spinnerStyle}>
       { submitting && <CircularProgress size={50} /> }

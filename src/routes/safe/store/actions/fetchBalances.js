@@ -9,13 +9,19 @@ import { makeBalance, type Balance, type BalanceProps } from '~/routes/safe/stor
 import logo from '~/assets/icons/icon_etherTokens.svg'
 import addBalances from './addBalances'
 
-export const calculateBalanceOf = async (tokenAddress: string, address: string) => {
+export const getStandardTokenContract = async () => {
   const web3 = getWeb3()
   const erc20Token = await contract(StandardToken)
   erc20Token.setProvider(web3.currentProvider)
 
+  return erc20Token
+}
+
+export const calculateBalanceOf = async (tokenAddress: string, address: string, decimals: number) => {
+  const erc20Token = await getStandardTokenContract()
+
   return erc20Token.at(tokenAddress)
-    .then(instance => instance.balanceOf(address).then(funds => funds.toString()))
+    .then(instance => instance.balanceOf(address).then(funds => funds.div(10 ** decimals).toString()))
     .catch(() => '0')
 }
 
@@ -45,15 +51,15 @@ export const fetchBalances = (safeAddress: string) => async (dispatch: ReduxDisp
   }
 
   const json = await response.json()
-  const balancesRecords = await Promise.all(json.map(async (item: BalanceProps) => {
-    const funds = await calculateBalanceOf(item.address, safeAddress)
+  return Promise.all(json.map(async (item: BalanceProps) => {
+    const funds = await calculateBalanceOf(item.address, safeAddress, item.decimals)
     return makeBalance({ ...item, funds })
-  }))
+  })).then((balancesRecords) => {
+    const balances: Map<string, Balance> = Map().withMutations((map) => {
+      balancesRecords.forEach(record => map.set(record.get('symbol'), record))
+      map.set('ETH', ethBalance)
+    })
 
-  const balances: Map<string, Balance> = Map().withMutations((map) => {
-    balancesRecords.forEach(record => map.set(record.get('symbol'), record))
-    map.set('ETH', ethBalance)
+    return dispatch(addBalances(safeAddress, balances))
   })
-
-  return dispatch(addBalances(safeAddress, balances))
 }

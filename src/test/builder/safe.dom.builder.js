@@ -1,18 +1,15 @@
 // @flow
-import * as React from 'react'
 import { type Store } from 'redux'
 import TestUtils from 'react-dom/test-utils'
-import { Provider } from 'react-redux'
-import { ConnectedRouter } from 'react-router-redux'
 import SafeView from '~/routes/safe/component/Safe'
-import { aNewStore, history, type GlobalState } from '~/store'
+import { aNewStore, type GlobalState } from '~/store'
 import { sleep } from '~/utils/timer'
 import { getWeb3 } from '~/wallets/getWeb3'
-import AppRoutes from '~/routes'
-import { SAFELIST_ADDRESS } from '~/routes/routes'
 import { promisify } from '~/utils/promisify'
 import { addEtherTo } from '~/test/utils/tokenMovements'
 import { aMinedSafe } from '~/test/builder/safe.redux.builder'
+import { travelToSafe } from '~/test/builder/safe.dom.utils'
+import { MOVE_FUNDS_BUTTON_TEXT } from '~/routes/safe/component/Safe/BalanceInfo'
 
 export type DomSafe = {
   address: string,
@@ -21,6 +18,9 @@ export type DomSafe = {
   accounts: string[],
   store: Store<GlobalState>,
 }
+
+export const filterMoveButtonsFrom = (buttons: Element[]) =>
+  buttons.filter(button => button.getElementsByTagName('span')[0].innerHTML !== MOVE_FUNDS_BUTTON_TEXT)
 
 export const renderSafeInDom = async (
   owners: number = 1,
@@ -34,14 +34,7 @@ export const renderSafeInDom = async (
   // have available accounts
   const accounts = await promisify(cb => getWeb3().eth.getAccounts(cb))
   // navigate to SAFE route
-  history.push(`${SAFELIST_ADDRESS}/${address}`)
-  const SafeDom = TestUtils.renderIntoDocument((
-    <Provider store={store}>
-      <ConnectedRouter history={history}>
-        <AppRoutes />
-      </ConnectedRouter>
-    </Provider>
-  ))
+  const SafeDom = travelToSafe(store, address)
 
   // add funds to safe
   await addEtherTo(address, '0.1')
@@ -52,8 +45,9 @@ export const renderSafeInDom = async (
   const Safe = TestUtils.findRenderedComponentWithType(SafeDom, SafeView)
   // $FlowFixMe
   const buttons = TestUtils.scryRenderedDOMComponentsWithTag(Safe, 'button')
+  const filteredButtons = filterMoveButtonsFrom(buttons)
 
   return {
-    address, safeButtons: buttons, safe: SafeDom, accounts, store,
+    address, safeButtons: filteredButtons, safe: SafeDom, accounts, store,
   }
 }

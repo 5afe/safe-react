@@ -4,6 +4,7 @@ import { getWeb3 } from '~/wallets/getWeb3'
 import { promisify } from '~/utils/promisify'
 
 // const MAINNET_NETWORK = 1
+export const EMPTY_DATA = '0x'
 
 export const checkReceiptStatus = async (hash: string) => {
   if (!hash) {

@@ -98,9 +98,12 @@ export const aMinedSafe = async (
     [FIELD_NAME]: 'Safe Name',
     [FIELD_CONFIRMATIONS]: `${threshold}`,
     [FIELD_OWNERS]: `${owners}`,
-    [getOwnerNameBy(0)]: 'Adolfo 1 Eth Account',
-    [getOwnerAddressBy(0)]: accounts[0],
     [FIELD_DAILY_LIMIT]: `${dailyLimit}`,
+  }
+
+  for (let i = 0; i < owners; i += 1) {
+    form[getOwnerNameBy(i)] = `Adol ${i + 1} Eth Account`
+    form[getOwnerAddressBy(i)] = accounts[i]
   }
 
   const addSafeFn: any = (...args) => store.dispatch(addSafe(...args))

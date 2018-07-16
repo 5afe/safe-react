@@ -7,7 +7,7 @@ import GnosisSafeSol from '#/GnosisSafeTeamEdition.json'
 import ProxyFactorySol from '#/ProxyFactory.json'
 import CreateAndAddModules from '#/CreateAndAddModules.json'
 import DailyLimitModule from '#/DailyLimitModule.json'
-import { calculateGasOf, calculateGasPrice } from '~/wallets/ethTransactions'
+import { calculateGasOf, calculateGasPrice, EMPTY_DATA } from '~/wallets/ethTransactions'
 
 let proxyFactoryMaster
 let createAndAddModuleMaster
@@ -27,7 +27,7 @@ function createAndAddModulesData(dataArray) {
 
   const mw = ModuleDataWrapper.at(1)
   // Remove method id (10) and position of data in payload (64)
-  return dataArray.reduce((acc, data) => acc + mw.setup.getData(data).substr(74), '0x')
+  return dataArray.reduce((acc, data) => acc + mw.setup.getData(data).substr(74), EMPTY_DATA)
 }
 
 

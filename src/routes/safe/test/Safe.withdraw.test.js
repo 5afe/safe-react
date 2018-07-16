@@ -17,10 +17,10 @@ import { getBalanceInEtherOf } from '~/wallets/getWeb3'
 import { sleep } from '~/utils/timer'
 import { getDailyLimitFrom } from '~/routes/safe/component/Withdraw/withdraw'
 import { type DailyLimitProps } from '~/routes/safe/store/model/dailyLimit'
-import { ADD_MULTISIG_BUTTON_TEXT } from '~/routes/safe/component/Safe/MultisigTx'
-import { WITHDRAW_INDEX, MOVE_FUNDS_INDEX } from '~/test/builder/safe.dom.utils'
+import { WITHDRAW_INDEX } from '~/test/builder/safe.dom.utils'
 import { buildMathPropsFrom } from '~/test/utils/buildReactRouterProps'
 import { safeSelector } from '~/routes/safe/store/selectors/index'
+import { filterMoveButtonsFrom } from '~/test/builder/safe.dom.builder'
 
 describe('React DOM TESTS > Withdraw funds from safe', () => {
   let SafeDom
@@ -49,7 +49,8 @@ describe('React DOM TESTS > Withdraw funds from safe', () => {
     const Safe = TestUtils.findRenderedComponentWithType(SafeDom, SafeView)
 
     // $FlowFixMe
-    const buttons = TestUtils.scryRenderedDOMComponentsWithTag(Safe, 'button')
+    const expandedButtons = TestUtils.scryRenderedDOMComponentsWithTag(Safe, 'button')
+    const buttons = filterMoveButtonsFrom(expandedButtons)
     const addWithdrawButton = buttons[WITHDRAW_INDEX]
     expect(addWithdrawButton.getElementsByTagName('span')[0].innerHTML).toEqual(WITHDRAW_BUTTON_TEXT)
     TestUtils.Simulate.click(addWithdrawButton)
@@ -95,20 +96,6 @@ describe('React DOM TESTS > Withdraw funds from safe', () => {
     // THEN
     expect(dailyLimit.value).toBe(0.5)
     expect(dailyLimit.spentToday).toBe(0.02)
-  })
-
-  it('add multisig txs button disabled when balance is 0', async () => {
-    const Safe = TestUtils.findRenderedComponentWithType(SafeDom, SafeView)
-    // $FlowFixMe
-    const buttons = TestUtils.scryRenderedDOMComponentsWithTag(Safe, 'button')
-    const addTxButton = buttons[MOVE_FUNDS_INDEX]
-    expect(addTxButton.getElementsByTagName('span')[0].innerHTML).toEqual(ADD_MULTISIG_BUTTON_TEXT)
-    expect(addTxButton.hasAttribute('disabled')).toBe(true)
-
-    await addEtherTo(address, '0.1')
-    await sleep(1800)
-
-    expect(addTxButton.hasAttribute('disabled')).toBe(false)
   })
 
   it('Withdraw button disabled when balance is 0', async () => {

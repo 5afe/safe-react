@@ -3,8 +3,10 @@ import TestUtils from 'react-dom/test-utils'
 import { sleep } from '~/utils/timer'
 import { checkBalanceOf } from '~/test/utils/tokenMovements'
 import { checkMinedTx } from '~/test/builder/safe.dom.utils'
+import { whenExecuted } from '~/test/utils/logTransactions'
+import Withdraw from '~/routes/safe/component/Withdraw'
 
-export const sendWithdrawForm = (
+export const sendWithdrawForm = async (
   SafeDom: React$Component<any, any>,
   withdrawButton: React$Component<any, any>,
   amount: string,
@@ -13,7 +15,7 @@ export const sendWithdrawForm = (
   // load add multisig form component
   TestUtils.Simulate.click(withdrawButton)
   // give time to re-render it
-  sleep(600)
+  await sleep(400)
 
   // fill the form
   const inputs = TestUtils.scryRenderedDOMComponentsWithTag(SafeDom, 'input')
@@ -28,8 +30,7 @@ export const sendWithdrawForm = (
   TestUtils.Simulate.submit(form)
   TestUtils.Simulate.submit(form)
 
-  // give time to process transaction
-  return sleep(2500)
+  return whenExecuted(SafeDom, Withdraw)
 }
 
 export const checkMinedWithdrawTx = async (

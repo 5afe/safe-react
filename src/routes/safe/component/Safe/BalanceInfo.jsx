@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react'
+import classNames from 'classnames'
 import AccountBalance from '@material-ui/icons/AccountBalance'
 import Avatar from '@material-ui/core/Avatar'
 import Collapse from '@material-ui/core/Collapse'
@@ -13,12 +14,14 @@ import { withStyles } from '@material-ui/core/styles'
 import ExpandLess from '@material-ui/icons/ExpandLess'
 import ExpandMore from '@material-ui/icons/ExpandMore'
 import { Map } from 'immutable'
+import Button from '~/components/layout/Button'
 import openHoc, { type Open } from '~/components/hoc/OpenHoc'
 import { type WithStyles } from '~/theme/mui'
 import { type Balance } from '~/routes/safe/store/model/balance'
 
 type Props = Open & WithStyles & {
   balances: Map<string, Balance>,
+  onMoveFunds: (balance: Balance) => void,
 }
 
 const styles = {
@@ -27,40 +30,51 @@ const styles = {
   },
 }
 
-const BalanceComponent = openHoc(({
-  open, toggle, balances, classes,
-}: Props) => (
-  <React.Fragment>
-    <ListItem onClick={toggle}>
-      <Avatar>
-        <AccountBalance />
-      </Avatar>
-      <ListItemText primary="Balance" secondary="List of different token balances" />
-      <ListItemIcon>
-        {open
-          ? <IconButton disableRipple><ExpandLess /></IconButton>
-          : <IconButton disableRipple><ExpandMore /></IconButton>
-        }
-      </ListItemIcon>
-    </ListItem>
-    <Collapse in={open} timeout="auto">
-      <List component="div" disablePadding>
-        {balances.valueSeq().map((balance: Balance) => {
-          const symbol = balance.get('symbol')
-          const name = balance.get('name')
+export const MOVE_FUNDS_BUTTON_TEXT = 'Move'
 
-          return (
-            <ListItem key={symbol} className={classes.nested}>
-              <ListItemIcon>
-                <Img src={balance.get('logoUrl')} height={30} alt={name} />
-              </ListItemIcon>
-              <ListItemText primary={name} secondary={`${balance.get('funds')} ${symbol}`} />
-            </ListItem>
-          )
-        })}
-      </List>
-    </Collapse>
-  </React.Fragment>
-))
+const BalanceComponent = openHoc(({
+  open, toggle, balances, classes, onMoveFunds,
+}: Props) => {
+  const hasBalances = balances.count() > 0
+
+  return (
+    <React.Fragment>
+      <ListItem onClick={hasBalances ? toggle : undefined}>
+        <Avatar>
+          <AccountBalance />
+        </Avatar>
+        <ListItemText primary="Balance" secondary="List of different token balances" />
+        <ListItemIcon>
+          {open
+            ? <IconButton disableRipple><ExpandLess /></IconButton>
+            : <IconButton disabled={!hasBalances} disableRipple><ExpandMore /></IconButton>
+          }
+        </ListItemIcon>
+      </ListItem>
+      <Collapse in={open} timeout="auto">
+        <List component="div" disablePadding>
+          {balances.valueSeq().map((balance: Balance) => {
+            const symbol = balance.get('symbol')
+            const name = balance.get('name')
+            const disabled = Number(balance.get('funds')) === 0
+            const onMoveFundsClick = () => onMoveFunds(balance)
+
+            return (
+              <ListItem key={symbol} className={classNames(classes.nested, symbol)}>
+                <ListItemIcon>
+                  <Img src={balance.get('logoUrl')} height={30} alt={name} />
+                </ListItemIcon>
+                <ListItemText primary={name} secondary={`${balance.get('funds')} ${symbol}`} />
+                <Button variant="raised" color="primary" onClick={onMoveFundsClick} disabled={disabled}>
+                  {MOVE_FUNDS_BUTTON_TEXT}
+                </Button>
+              </ListItem>
+            )
+          })}
+        </List>
+      </Collapse>
+    </React.Fragment>
+  )
+})
 
 export default withStyles(styles)(BalanceComponent)
