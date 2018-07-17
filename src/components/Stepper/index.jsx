@@ -30,6 +30,7 @@ type State = {
 
 type PageProps = {
   children: Function,
+  prepareNextInitialProps: (values: Object) => {},
 }
 
 class GnoStepper extends React.PureComponent<Props, State> {
@@ -62,8 +63,10 @@ class GnoStepper extends React.PureComponent<Props, State> {
     }))
   }
 
+  getPageProps = (pages: React$Node): PageProps => React.Children.toArray(pages)[this.state.page].props
+
   getActivePageFrom = (pages: React$Node) => {
-    const activePageProps = React.Children.toArray(pages)[this.state.page].props
+    const activePageProps = this.getPageProps(pages)
     const { children, ...props } = activePageProps
 
     return children(props)
@@ -76,11 +79,21 @@ class GnoStepper extends React.PureComponent<Props, State> {
     return activePage.props.validate ? activePage.props.validate(values) : {}
   }
 
-  next = (values: Object) =>
+  next = async (values: Object) => {
+    const activePageProps = this.getPageProps(this.props.children)
+    const { prepareNextInitialProps } = activePageProps
+
+    let pageInitialProps
+    if (prepareNextInitialProps) {
+      pageInitialProps = await prepareNextInitialProps(values)
+    }
+
+    const finalValues = { ...values, ...pageInitialProps }
     this.setState(state => ({
       page: Math.min(state.page + 1, React.Children.count(this.props.children) - 1),
-      values,
+      values: finalValues,
     }))
+  }
 
   previous = () =>
     this.setState(state => ({
