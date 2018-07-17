@@ -1,7 +1,7 @@
 // @flow
-import List from '@material-ui/core/List'
+import ListComponent from '@material-ui/core/List'
 import * as React from 'react'
-import { Map } from 'immutable'
+import { List } from 'immutable'
 import Block from '~/components/layout/Block'
 import Col from '~/components/layout/Col'
 import Bold from '~/components/layout/Bold'
@@ -30,7 +30,7 @@ const safeIcon = require('./assets/gnosis_safe.svg')
 
 type SafeProps = {
   safe: Safe,
-  tokens: Map<string, Token>,
+  tokens: List<Token>,
   userAddress: string,
 }
 
@@ -43,12 +43,17 @@ const listStyle = {
 }
 
 const getEthBalanceFrom = (tokens: List<Token>) => {
-  const ethToken = tokens.filter(token => token.get('symbol') === 'ETH')
-  if (ethToken.count() === 0) {
+  const filteredTokens = tokens.filter(token => token.get('symbol') === 'ETH')
+  if (filteredTokens.count() === 0) {
     return 0
   }
 
-  return Number(ethToken.get(0).get('funds'))
+  const ethToken = filteredTokens.get(0)
+  if (!ethToken) {
+    return 0
+  }
+
+  return Number(ethToken.get('funds'))
 }
 
 class GnoSafe extends React.PureComponent<SafeProps, State> {
@@ -115,7 +120,7 @@ class GnoSafe extends React.PureComponent<SafeProps, State> {
     return (
       <Row grow>
         <Col sm={12} top="xs" md={5} margin="xl" overflow>
-          <List style={listStyle}>
+          <ListComponent style={listStyle}>
             <BalanceInfo tokens={tokens} onMoveFunds={this.onMoveTokens} safeAddress={address} />
             <Owners
               owners={safe.owners}
@@ -127,7 +132,7 @@ class GnoSafe extends React.PureComponent<SafeProps, State> {
             <Address address={address} />
             <DailyLimit balance={ethBalance} dailyLimit={safe.get('dailyLimit')} onWithdraw={this.onWithdraw} onEditDailyLimit={this.onEditDailyLimit} />
             <MultisigTx onSeeTxs={this.onListTransactions} />
-          </List>
+          </ListComponent>
         </Col>
         <Col sm={12} center="xs" md={7} margin="xl" layout="column">
           <Block margin="xl">

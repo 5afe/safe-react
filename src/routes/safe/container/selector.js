@@ -1,5 +1,5 @@
 // @flow
-import { List, Map } from 'immutable'
+import { List } from 'immutable'
 import { createSelector, createStructuredSelector, type Selector } from 'reselect'
 import { safeSelector, type RouterProps, type SafeSelectorProps } from '~/routes/safe/store/selectors'
 import { providerNameSelector, userAccountSelector } from '~/wallets/store/selectors/index'
@@ -13,7 +13,7 @@ import { type Token } from '~/routes/tokens/store/model/token'
 export type SelectorProps = {
   safe: SafeSelectorProps,
   provider: string,
-  activeTokens: Map<string, Token>,
+  activeTokens: List<Token>,
   userAddress: string,
 }
 

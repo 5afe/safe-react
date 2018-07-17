@@ -1,7 +1,7 @@
 // @flow
 import { storiesOf } from '@storybook/react'
 import * as React from 'react'
-import { Map } from 'immutable'
+import { List } from 'immutable'
 import styles from '~/components/layout/PageFrame/index.scss'
 import { SafeFactory } from '~/routes/safe/store/test/builder/safe.builder'
 import { makeToken } from '~/routes/tokens/store/model/token'
@@ -30,7 +30,7 @@ storiesOf('Routes /safe:address', module)
       userAddress="foo"
       safe={undefined}
       provider="METAMASK"
-      activeTokens={Map()}
+      activeTokens={List([])}
       fetchBalance={() => {}}
     />
   ))
@@ -39,7 +39,7 @@ storiesOf('Routes /safe:address', module)
       userAddress="foo"
       safe={undefined}
       provider=""
-      activeTokens={Map()}
+      activeTokens={List([])}
       fetchBalance={() => {}}
     />
   ))
@@ -51,7 +51,7 @@ storiesOf('Routes /safe:address', module)
         userAddress="foo"
         safe={safe}
         provider="METAMASK"
-        activeTokens={Map().set('ETH', ethBalance)}
+        activeTokens={List([]).push(ethBalance)}
         fetchBalance={() => {}}
       />
     )
@@ -64,7 +64,7 @@ storiesOf('Routes /safe:address', module)
         userAddress="foo"
         safe={safe}
         provider="METAMASK"
-        activeTokens={Map().set('ETH', ethBalance)}
+        activeTokens={List([]).push(ethBalance)}
         fetchBalance={() => {}}
       />
     )

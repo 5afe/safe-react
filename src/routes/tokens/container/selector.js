@@ -8,7 +8,7 @@ import { type Token } from '~/routes/tokens/store/model/token'
 
 export type SelectorProps = {
   tokens: List<Token>,
-  addresses: List<String>,
+  addresses: List<string>,
   safe: Safe,
   safeAddress: string,
 }
