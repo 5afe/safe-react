@@ -3,6 +3,7 @@ import { List, Map } from 'immutable'
 import contract from 'truffle-contract'
 import type { Dispatch as ReduxDispatch } from 'redux'
 import StandardToken from '@gnosis.pm/util-contracts/build/contracts/StandardToken.json'
+import HumanFriendlyToken from '@gnosis.pm/util-contracts/build/contracts/HumanFriendlyToken.json'
 import { getWeb3 } from '~/wallets/getWeb3'
 import { type GlobalState } from '~/store/index'
 import { makeToken, type Token, type TokenProps } from '~/routes/tokens/store/model/token'
@@ -19,6 +20,15 @@ const createStandardTokenContract = async () => {
 
   return erc20Token
 }
+const createHumanFriendlyTokenContract = async () => {
+  const web3 = getWeb3()
+  const humanErc20Token = await contract(HumanFriendlyToken)
+  humanErc20Token.setProvider(web3.currentProvider)
+
+  return humanErc20Token
+}
+
+export const getHumanFriendlyToken = ensureOnce(createHumanFriendlyTokenContract)
 
 export const getStandardTokenContract = ensureOnce(createStandardTokenContract)
 
