@@ -8,7 +8,7 @@ import { getWeb3 } from '~/wallets/getWeb3'
 import { type GlobalState } from '~/store/index'
 import { makeToken, type Token, type TokenProps } from '~/routes/tokens/store/model/token'
 import { ensureOnce } from '~/utils/singleton'
-import { getTokens } from '~/utils/localStorage/tokens'
+import { getActiveTokenAddresses, getTokens } from '~/utils/localStorage/tokens'
 import { getSafeEthToken } from '~/utils/tokens'
 import { enhancedFetch } from '~/utils/fetch'
 import addTokens from './addTokens'
@@ -48,9 +48,9 @@ export const fetchTokensData = async () => {
 
 export const fetchTokens = (safeAddress: string) =>
   async (dispatch: ReduxDispatch<GlobalState>) => {
-    const tokens: List<string> = getTokens(safeAddress)
+    const tokens: List<string> = getActiveTokenAddresses(safeAddress)
     const ethBalance = await getSafeEthToken(safeAddress)
-
+    const customTokens = getTokens(safeAddress)
     const json = await exports.fetchTokensData()
 
     try {
@@ -61,10 +61,18 @@ export const fetchTokens = (safeAddress: string) =>
         return makeToken({ ...item, status, funds })
       }))
 
+      const customTokenRecords = await Promise.all(customTokens.map(async (item: TokenProps) => {
+        const status = tokens.includes(item.address)
+        const funds = status ? await calculateBalanceOf(item.address, safeAddress, item.decimals) : '0'
+
+        return makeToken({ ...item, status, funds })
+      }))
+
       const balances: Map<string, Token> = Map().withMutations((map) => {
         balancesRecords.forEach(record => map.set(record.get('address'), record))
+        customTokenRecords.forEach(record => map.set(record.get('address'), record))
 
-        map.set('ETH', ethBalance)
+        map.set(ethBalance.get('address'), ethBalance)
       })
 
       return dispatch(addTokens(safeAddress, balances))

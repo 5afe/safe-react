@@ -6,6 +6,7 @@ import FirstPage, { TOKEN_ADDRESS_PARAM } from '~/routes/tokens/component/AddTok
 import SecondPage, { TOKEN_SYMBOL_PARAM, TOKEN_DECIMALS_PARAM, TOKEN_LOGO_URL_PARAM, TOKEN_NAME_PARAM } from '~/routes/tokens/component/AddToken/SecondPage'
 import { makeToken, type Token } from '~/routes/tokens/store/model/token'
 import addTokenAction from '~/routes/tokens/store/actions/addTokens'
+import enableTokenAction from '~/routes/tokens/store/actions/enabletoken'
 import Review from './Review'
 
 export const getSteps = () => [
@@ -15,7 +16,8 @@ export const getSteps = () => [
 type Props = {
   tokens: string[],
   safeAddress: string,
-  addToken: typeof addTokenAction
+  addToken: typeof addTokenAction,
+  enableToken: typeof enableTokenAction,
 }
 
 type State = {
@@ -24,7 +26,7 @@ type State = {
 
 export const ADD_TOKEN_RESET_BUTTON_TEXT = 'RESET'
 
-export const addTokenFnc = async (values: Object, addToken, safeAddress: string) => {
+export const addTokenFnc = async (values: Object, addToken, enableToken, safeAddress: string) => {
   const address = values[TOKEN_ADDRESS_PARAM]
   const name = values[TOKEN_NAME_PARAM]
   const symbol = values[TOKEN_SYMBOL_PARAM]
@@ -41,6 +43,7 @@ export const addTokenFnc = async (values: Object, addToken, safeAddress: string)
     removable: true,
   })
 
+  await enableToken(safeAddress, token)
   return addToken(safeAddress, token)
 }
 
@@ -50,9 +53,9 @@ class AddToken extends React.Component<Props, State> {
   }
 
   onAddToken = async (values: Object) => {
-    const { addToken, safeAddress } = this.props
+    const { addToken, enableToken, safeAddress } = this.props
 
-    return addTokenFnc(values, addToken, safeAddress)
+    return addTokenFnc(values, addToken, enableToken, safeAddress)
   }
 
   onReset = () => {
