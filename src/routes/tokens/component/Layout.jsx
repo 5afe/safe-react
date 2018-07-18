@@ -37,9 +37,12 @@ class TokenLayout extends React.PureComponent<TokenProps, State> {
     component: undefined,
   }
 
-  onAddToken = () => () => {
-    const { addresses, safeAddress } = this.props
-    this.setState({ component: <AddToken tokens={addresses.toArray()} safeAddress={safeAddress} /> })
+  onAddToken = () => {
+    const { addresses, safeAddress, addToken } = this.props
+
+    this.setState({
+      component: <AddToken addToken={addToken} tokens={addresses.toArray()} safeAddress={safeAddress} />,
+    })
   }
 
   /*

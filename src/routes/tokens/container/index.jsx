@@ -22,7 +22,7 @@ class TokensView extends React.PureComponent<Props> {
 
   render() {
     const {
-      tokens, addresses, safe, safeAddress, disableToken, enableToken,
+      tokens, addresses, safe, safeAddress, disableToken, enableToken, addToken,
     } = this.props
 
     return (
@@ -34,6 +34,7 @@ class TokensView extends React.PureComponent<Props> {
           safeAddress={safeAddress}
           disableToken={disableToken}
           enableToken={enableToken}
+          addToken={addToken}
         />
       </Page>
     )

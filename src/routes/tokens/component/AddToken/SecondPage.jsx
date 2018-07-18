@@ -6,10 +6,10 @@ import { composeValidators, required, mustBeInteger, mustBeUrl } from '~/compone
 import Block from '~/components/layout/Block'
 import Heading from '~/components/layout/Heading'
 
-export const NAME_PARAM = 'tokenName'
-export const SYMBOL_PARAM = 'tokenSymbol'
-export const DECIMALS_PARAM = 'tokenDecimals'
-export const LOGO_URL_PARAM = 'tokenLogo'
+export const TOKEN_NAME_PARAM = 'tokenName'
+export const TOKEN_SYMBOL_PARAM = 'tokenSymbol'
+export const TOKEN_DECIMALS_PARAM = 'tokenDecimals'
+export const TOKEN_LOGO_URL_PARAM = 'tokenLogo'
 
 const SecondPage = () => () => (
   <Block margin="md">
@@ -18,7 +18,7 @@ const SecondPage = () => () => (
     </Heading>
     <Block margin="md">
       <Field
-        name={NAME_PARAM}
+        name={TOKEN_NAME_PARAM}
         component={TextField}
         type="text"
         validate={required}
@@ -28,7 +28,7 @@ const SecondPage = () => () => (
     </Block>
     <Block margin="md">
       <Field
-        name={SYMBOL_PARAM}
+        name={TOKEN_SYMBOL_PARAM}
         component={TextField}
         type="text"
         validate={required}
@@ -38,7 +38,7 @@ const SecondPage = () => () => (
     </Block>
     <Block margin="md">
       <Field
-        name={DECIMALS_PARAM}
+        name={TOKEN_DECIMALS_PARAM}
         component={TextField}
         type="text"
         validate={composeValidators(required, mustBeInteger)}
@@ -48,7 +48,7 @@ const SecondPage = () => () => (
     </Block>
     <Block margin="md">
       <Field
-        name={LOGO_URL_PARAM}
+        name={TOKEN_LOGO_URL_PARAM}
         component={TextField}
         type="text"
         validate={composeValidators(required, mustBeUrl)}

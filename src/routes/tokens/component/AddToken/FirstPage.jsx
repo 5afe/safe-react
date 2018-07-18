@@ -10,7 +10,7 @@ type Props = {
   addresses: string[],
 }
 
-export const TOKEN_PARAM = 'tokenAddress'
+export const TOKEN_ADRESS_PARAM = 'tokenAddress'
 
 const FirstPage = ({ addresses }: Props) => () => (
   <Block margin="md">
@@ -19,7 +19,7 @@ const FirstPage = ({ addresses }: Props) => () => (
     </Heading>
     <Block margin="md">
       <Field
-        name={TOKEN_PARAM}
+        name={TOKEN_ADRESS_PARAM}
         component={TextField}
         type="text"
         validate={composeValidators(required, mustBeEthereumAddress, uniqueAddress(addresses))}
