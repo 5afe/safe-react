@@ -62,7 +62,7 @@ export const fetchTokens = (safeAddress: string) =>
       }))
 
       const balances: Map<string, Token> = Map().withMutations((map) => {
-        balancesRecords.forEach(record => map.set(record.get('symbol'), record))
+        balancesRecords.forEach(record => map.set(record.get('address'), record))
 
         map.set('ETH', ethBalance)
       })

@@ -42,7 +42,7 @@ const getTransferData = async (tokenAddress: string, to: string, amount: BigNumb
 const processTokenTransfer = async (safe: Safe, token: Token, to: string, amount: number, userAddress: string) => {
   const symbol = token.get('symbol')
   const nonce = Date.now()
-  const name = `Send ${amount} ${token.get('symbol')} to ${to}`
+  const name = `Send ${amount} ${symbol} to ${to}`
   const value = isEther(symbol) ? amount : 0
   const tokenAddress = token.get('address')
   const destination = isEther(symbol) ? to : tokenAddress
