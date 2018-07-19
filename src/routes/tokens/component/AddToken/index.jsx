@@ -5,8 +5,8 @@ import { getHumanFriendlyToken } from '~/routes/tokens/store/actions/fetchTokens
 import FirstPage, { TOKEN_ADDRESS_PARAM } from '~/routes/tokens/component/AddToken/FirstPage'
 import SecondPage, { TOKEN_SYMBOL_PARAM, TOKEN_DECIMALS_PARAM, TOKEN_LOGO_URL_PARAM, TOKEN_NAME_PARAM } from '~/routes/tokens/component/AddToken/SecondPage'
 import { makeToken, type Token } from '~/routes/tokens/store/model/token'
-import addTokenAction from '~/routes/tokens/store/actions/addTokens'
-import enableTokenAction from '~/routes/tokens/store/actions/enabletoken'
+import addTokenAction from '~/routes/tokens/store/actions/addToken'
+import enableTokenAction from '~/routes/tokens/store/actions/enableToken'
 import Review from './Review'
 
 export const getSteps = () => [

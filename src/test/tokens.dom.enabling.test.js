@@ -79,12 +79,16 @@ describe('DOM > Feature > Enable and disable default tokens', () => {
     await addTknTo(safeAddress, 50, firstErc20Token)
     await addTknTo(safeAddress, 50, secondErc20Token)
     await store.dispatch(fetchTokensModule.fetchTokens(safeAddress))
+
+    const match: Match = buildMathPropsFrom(safeAddress)
+    let tokenList = tokenListSelector(store.getState(), { match })
+    expect(tokenList.count()).toBe(3)
+
     await enableFirstToken(store, safeAddress)
+    tokenList = tokenListSelector(store.getState(), { match })
+    expect(tokenList.count()).toBe(3) // assuring the enableToken do not add extra info
 
     // THEN
-    const match: Match = buildMathPropsFrom(safeAddress)
-    const tokenList = tokenListSelector(store.getState(), { match })
-
     testToken(tokenList.get(0), 'FTE', true)
     testToken(tokenList.get(1), 'STE', false)
     testToken(tokenList.get(2), 'ETH', true)

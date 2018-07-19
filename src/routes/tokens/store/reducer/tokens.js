@@ -40,20 +40,20 @@ export default handleActions({
     return state.setIn([safeAddress, token.get('address')], token)
   },
   [DISABLE_TOKEN]: (state: State, action: ActionType<typeof disableToken>): State => {
-    const { address, safeAddress, symbol } = action.payload
+    const { address, safeAddress } = action.payload
 
     const activeTokens = getActiveTokenAddresses(safeAddress)
     const index = activeTokens.indexOf(address)
     setActiveTokenAddresses(safeAddress, activeTokens.delete(index))
 
-    return state.setIn([safeAddress, symbol, 'status'], false)
+    return state.setIn([safeAddress, address, 'status'], false)
   },
   [ENABLE_TOKEN]: (state: State, action: ActionType<typeof enableToken>): State => {
-    const { address, safeAddress, symbol } = action.payload
+    const { address, safeAddress } = action.payload
 
     const activeTokens = getActiveTokenAddresses(safeAddress)
     setActiveTokenAddresses(safeAddress, activeTokens.push(address))
 
-    return state.setIn([safeAddress, symbol, 'status'], true)
+    return state.setIn([safeAddress, address, 'status'], true)
   },
 }, Map())

@@ -7,6 +7,7 @@ import { type Token } from '~/routes/tokens/store/model/token'
 import { TOKEN_REDUCER_ID } from '~/routes/tokens/store/reducer/tokens'
 import { addEtherTo, addTknTo } from '~/test/utils/tokenMovements'
 import { dispatchTknBalance } from '~/test/utils/transactions/moveTokens.helper'
+import { ETH_ADDRESS } from '~/utils/tokens'
 
 describe('Safe - redux balance property', () => {
   let store
@@ -18,7 +19,16 @@ describe('Safe - redux balance property', () => {
 
   it('reducer should return 0 to just deployed safe', async () => {
     // GIVEN
-    const tokenList = ['WE', '<3', 'GNO', 'OMG', 'RDN']
+    const tokenList = [
+      '0x975be7f72cea31fd83d0cb2a197f9136f38696b7', // WE
+      '0xb3a4bc89d8517e0e2c9b66703d09d3029ffa1e6d', // <3
+      '0x5f92161588c6178130ede8cbdc181acec66a9731', // GNO
+      '0xb63d06025d580a94d59801f2513f5d309c079559', // OMG
+      '0x3615757011112560521536258c1E7325Ae3b48AE', // RDN
+      '0xc778417E063141139Fce010982780140Aa0cD5Ab', // Wrapped Ether
+      '0x979861dF79C7408553aAF20c01Cfb3f81CCf9341', // OLY
+      '0', // ETH
+    ]
 
     // WHEN
     await store.dispatch(fetchTokensAction.fetchTokens(address))
@@ -29,7 +39,7 @@ describe('Safe - redux balance property', () => {
 
     const safeBalances: Map<string, Token> | typeof undefined = tokens.get(address)
     if (!safeBalances) throw new Error()
-    expect(safeBalances.size).toBe(6)
+    expect(safeBalances.size).toBe(8)
 
     tokenList.forEach((token: string) => {
       const record = safeBalances.get(token)
@@ -49,9 +59,9 @@ describe('Safe - redux balance property', () => {
 
     const safeBalances: Map<string, Token> | typeof undefined = tokens.get(address)
     if (!safeBalances) throw new Error()
-    expect(safeBalances.size).toBe(6)
+    expect(safeBalances.size).toBe(8)
 
-    const ethBalance = safeBalances.get('ETH')
+    const ethBalance = safeBalances.get(ETH_ADDRESS)
     if (!ethBalance) throw new Error()
     expect(ethBalance.get('funds')).toBe('0.03456')
   })
