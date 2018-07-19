@@ -1,5 +1,5 @@
 // @flow
-import addToken from '~/routes/tokens/store/actions/addTokens'
+import addToken from '~/routes/tokens/store/actions/addToken'
 import enableToken from '~/routes/tokens/store/actions/enableToken'
 import disableToken from '~/routes/tokens/store/actions/disableToken'
 import { fetchTokens } from '~/routes/tokens/store/actions/fetchTokens'

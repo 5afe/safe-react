@@ -38,14 +38,11 @@ class TokenLayout extends React.PureComponent<TokenProps, State> {
   }
 
   onAddToken = () => {
-    const {
-      addresses, safeAddress, addToken, enableToken,
-    } = this.props
+    const { addresses, safeAddress, addToken } = this.props
 
     this.setState({
       component: <AddToken
         addToken={addToken}
-        enableToken={enableToken}
         tokens={addresses.toArray()}
         safeAddress={safeAddress}
       />,
@@ -80,12 +77,14 @@ class TokenLayout extends React.PureComponent<TokenProps, State> {
       <Row grow>
         <Col sm={12} top="xs" md={5} margin="xl" overflow>
           <MuiList style={listStyle}>
-            {tokens.map((token: Token) => (<TokenComponent
-              key={token.get('address')}
-              token={token}
-              onDisableToken={this.onDisableToken}
-              onEnableToken={this.onEnableToken}
-            />))}
+            {tokens.map((token: Token) => (
+              <TokenComponent
+                key={token.get('address')}
+                token={token}
+                onDisableToken={this.onDisableToken}
+                onEnableToken={this.onEnableToken}
+              />
+            ))}
           </MuiList>
         </Col>
         <Col sm={12} center="xs" md={7} margin="xl" layout="column">

@@ -33,11 +33,12 @@ export default handleActions({
   },
   [ADD_TOKEN]: (state: State, action: ActionType<typeof addToken>): State => {
     const { safeAddress, token } = action.payload
-    const activeTokens = getActiveTokenAddresses(safeAddress)
-    activeTokens.push(token.get('address'))
-    setActiveTokenAddresses(activeTokens)
 
-    return state.setIn([safeAddress, token.get('address')], token)
+    const tokenAddress = token.get('address')
+    const activeTokens = getActiveTokenAddresses(safeAddress)
+    setActiveTokenAddresses(safeAddress, activeTokens.push(tokenAddress))
+
+    return state.setIn([safeAddress, tokenAddress], token)
   },
   [DISABLE_TOKEN]: (state: State, action: ActionType<typeof disableToken>): State => {
     const { address, safeAddress } = action.payload
