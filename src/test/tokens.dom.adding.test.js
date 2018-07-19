@@ -70,7 +70,7 @@ describe('DOM > Feature > Add new ERC 20 Tokens', () => {
     let form = TestUtils.findRenderedDOMComponentWithTag(AddTokenComponent, 'form')
     // submit it
     TestUtils.Simulate.submit(form)
-    await sleep(5000)
+    await sleep(15000)
 
     inputs = TestUtils.scryRenderedDOMComponentsWithTag(AddTokenComponent, 'input')
     expect(inputs.length).toBe(4)
