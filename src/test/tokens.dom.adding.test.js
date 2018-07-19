@@ -70,7 +70,7 @@ describe('DOM > Feature > Add new ERC 20 Tokens', () => {
     let form = TestUtils.findRenderedDOMComponentWithTag(AddTokenComponent, 'form')
     // submit it
     TestUtils.Simulate.submit(form)
-    await sleep(2500)
+    await sleep(5000)
 
     inputs = TestUtils.scryRenderedDOMComponentsWithTag(AddTokenComponent, 'input')
     expect(inputs.length).toBe(4)
@@ -82,7 +82,7 @@ describe('DOM > Feature > Add new ERC 20 Tokens', () => {
     TestUtils.Simulate.submit(form)
     TestUtils.Simulate.submit(form)
 
-    await sleep(1200)
+    await sleep(3200)
     const match: Match = buildMathPropsFrom(safeAddress)
     const tokenList = tokenListSelector(store.getState(), { match })
     expect(tokenList.count()).toBe(3)
