@@ -13,5 +13,6 @@ const FrameDecorator = story => (
 storiesOf('Components', module)
   .addDecorator(FrameDecorator)
   .add('AddTokenForm', () => (
+    // $FlowFixMe
     <AddTokenForm tokens={List([]).toArray()} safeAddress="" />
   ))

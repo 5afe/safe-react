@@ -24,7 +24,7 @@ type State = {
 
 export const ADD_TOKEN_RESET_BUTTON_TEXT = 'RESET'
 
-export const addTokenFnc = async (values: Object, addToken, safeAddress: string) => {
+export const addTokenFnc = async (values: Object, addToken: typeof addTokenAction, safeAddress: string) => {
   const address = values[TOKEN_ADRESS_PARAM]
   const name = values[TOKEN_NAME_PARAM]
   const symbol = values[TOKEN_SYMBOL_PARAM]
@@ -52,7 +52,10 @@ class AddToken extends React.Component<Props, State> {
   onAddToken = async (values: Object) => {
     const { addToken, safeAddress } = this.props
 
-    return addTokenFnc(values, addToken, safeAddress)
+    const result = addTokenFnc(values, addToken, safeAddress)
+    this.setState({ done: true })
+
+    return result
   }
 
   onReset = () => {

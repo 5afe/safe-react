@@ -1,6 +1,5 @@
 // @flow
 import * as TestUtils from 'react-dom/test-utils'
-import AddToken from '~/routes/tokens/component/AddToken'
 import { getWeb3 } from '~/wallets/getWeb3'
 import { type Match } from 'react-router-dom'
 import { promisify } from '~/utils/promisify'
@@ -15,6 +14,7 @@ import { tokenListSelector } from '~/routes/tokens/store/selectors'
 import { testToken } from '~/test/builder/tokens.dom.utils'
 import * as fetchTokensModule from '~/routes/tokens/store/actions/fetchTokens'
 import * as enhancedFetchModule from '~/utils/fetch'
+import { clickOnAddToken, fillAddress, fillHumanReadableInfo } from '~/test/utils/tokens/addToken.helper'
 
 describe('DOM > Feature > Add new ERC 20 Tokens', () => {
   let web3
@@ -54,35 +54,11 @@ describe('DOM > Feature > Add new ERC 20 Tokens', () => {
     testToken(tokens[1].props.token, 'ETH', true)
 
     // WHEN
-    // $FlowFixMe
-    const buttons = TestUtils.scryRenderedDOMComponentsWithTag(TokensDom, 'button')
-    expect(buttons.length).toBe(1)
-    TestUtils.Simulate.click(buttons[0])
-    await sleep(400)
+    await clickOnAddToken(TokensDom)
+    await fillAddress(TokensDom, secondErc20Token)
+    await fillHumanReadableInfo(TokensDom)
 
-    // fill the form
-    const AddTokenComponent = TestUtils.findRenderedComponentWithType(TokensDom, AddToken)
-    let inputs = TestUtils.scryRenderedDOMComponentsWithTag(AddTokenComponent, 'input')
-    expect(inputs.length).toBe(1)
-    const tokenAddressInput = inputs[0]
-    TestUtils.Simulate.change(tokenAddressInput, { target: { value: `${secondErc20Token.address}` } })
-    // $FlowFixMe
-    let form = TestUtils.findRenderedDOMComponentWithTag(AddTokenComponent, 'form')
-    // submit it
-    TestUtils.Simulate.submit(form)
-    await sleep(15000)
-
-    inputs = TestUtils.scryRenderedDOMComponentsWithTag(AddTokenComponent, 'input')
-    expect(inputs.length).toBe(4)
-
-    TestUtils.Simulate.change(inputs[3], { target: { value: 'https://my.token.image/foo' } })
-
-    form = TestUtils.findRenderedDOMComponentWithTag(AddTokenComponent, 'form')
-    // submit it
-    TestUtils.Simulate.submit(form)
-    TestUtils.Simulate.submit(form)
-
-    await sleep(3200)
+    // THEN
     const match: Match = buildMathPropsFrom(safeAddress)
     const tokenList = tokenListSelector(store.getState(), { match })
     expect(tokenList.count()).toBe(3)

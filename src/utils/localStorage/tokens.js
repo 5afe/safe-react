@@ -32,7 +32,7 @@ export const storedTokensBefore = (safeAddress: string) => {
   return localStorage.getItem(key) === null
 }
 
-export const getTokens: List<TokenProps> = (safeAddress: string) => {
+export const getTokens = (safeAddress: string): List<TokenProps> => {
   const key = getTokensKey(safeAddress)
   const data = load(key)
 
@@ -40,7 +40,7 @@ export const getTokens: List<TokenProps> = (safeAddress: string) => {
 }
 
 export const setToken = (safeAddress: string, token: Token) => {
-  const data: List<Token> = getTokens(safeAddress)
+  const data: List<TokenProps> = getTokens(safeAddress)
   data.push(token)
 
   try {
