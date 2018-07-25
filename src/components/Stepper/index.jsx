@@ -13,6 +13,7 @@ import Controls from './Controls'
 export { default as Step } from './Step'
 
 type Props = {
+  disabledWhenValidating?: boolean,
   classes: Object,
   steps: string[],
   finishedTransaction: boolean,
@@ -100,7 +101,7 @@ class GnoStepper extends React.PureComponent<Props, State> {
       page: Math.max(state.page - 1, 0),
     }))
 
-  handleSubmit = (values: Object) => {
+  handleSubmit = async (values: Object) => {
     const { children, onSubmit } = this.props
     const { page } = this.state
     const isLastPage = page === React.Children.count(children) - 1
@@ -113,7 +114,7 @@ class GnoStepper extends React.PureComponent<Props, State> {
 
   render() {
     const {
-      steps, children, finishedTransaction, finishedButton, classes,
+      steps, children, finishedTransaction, finishedButton, classes, disabledWhenValidating = false,
     } = this.props
     const { page, values } = this.state
     const activePage = this.getActivePageFrom(children)
@@ -136,20 +137,24 @@ class GnoStepper extends React.PureComponent<Props, State> {
           validation={this.validate}
           render={activePage}
         >
-          {(submitting: boolean) => (
-            <Row align="end" margin="lg" grow>
-              <Col xs={12} center="xs">
-                <Controls
-                  submitting={submitting}
-                  finishedTx={finishedTransaction}
-                  finishedButton={finished}
-                  onPrevious={this.previous}
-                  firstPage={page === 0}
-                  lastPage={isLastPage}
-                />
-              </Col>
-            </Row>
-          )}
+          {(submitting: boolean, validating: boolean) => {
+            const disabled = disabledWhenValidating ? submitting || validating : submitting
+
+            return (
+              <Row align="end" margin="lg" grow>
+                <Col xs={12} center="xs">
+                  <Controls
+                    disabled={disabled}
+                    finishedTx={finishedTransaction}
+                    finishedButton={finished}
+                    onPrevious={this.previous}
+                    firstPage={page === 0}
+                    lastPage={isLastPage}
+                  />
+                </Col>
+              </Row>
+            )
+          }}
         </GnoForm>
       </React.Fragment>
     )

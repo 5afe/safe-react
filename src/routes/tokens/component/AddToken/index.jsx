@@ -92,6 +92,7 @@ class AddToken extends React.Component<Props, State> {
           onSubmit={this.onAddToken}
           steps={steps}
           onReset={this.onReset}
+          disabledWhenValidating
         >
           <Stepper.Page addresses={tokens} prepareNextInitialProps={this.fetchInitialPropsSecondPage}>
             { FirstPage }
