@@ -8,7 +8,7 @@ import Heading from '~/components/layout/Heading'
 import { promisify } from '~/utils/promisify'
 import { getWeb3 } from '~/wallets/getWeb3'
 import { EMPTY_DATA } from '~/wallets/ethTransactions'
-import { getHumanFriendlyToken } from '~/routes/tokens/store/actions/fetchTokens'
+import { getStandardTokenContract } from '~/routes/tokens/store/actions/fetchTokens'
 
 type Props = {
   addresses: string[],
@@ -24,7 +24,7 @@ export const token = async (tokenAddress: string) => {
     return 'Specified address is not deployed on the current network'
   }
 
-  const erc20Token = await getHumanFriendlyToken()
+  const erc20Token = await getStandardTokenContract()
   const instance = await erc20Token.at(tokenAddress)
   const supply = await instance.totalSupply()
 
