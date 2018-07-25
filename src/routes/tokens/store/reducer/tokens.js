@@ -6,7 +6,7 @@ import addTokens, { ADD_TOKENS } from '~/routes/tokens/store/actions/addTokens'
 import { type Token } from '~/routes/tokens/store/model/token'
 import disableToken, { DISABLE_TOKEN } from '~/routes/tokens/store/actions/disableToken'
 import enableToken, { ENABLE_TOKEN } from '~/routes/tokens/store/actions/enableToken'
-import { setActiveTokenAddresses, getActiveTokenAddresses } from '~/utils/localStorage/tokens'
+import { setActiveTokenAddresses, getActiveTokenAddresses, setToken } from '~/utils/localStorage/tokens'
 import { ensureOnce } from '~/utils/singleton'
 import { calculateActiveErc20TokensFrom } from '~/utils/tokens'
 
@@ -37,7 +37,7 @@ export default handleActions({
     const tokenAddress = token.get('address')
     const activeTokens = getActiveTokenAddresses(safeAddress)
     setActiveTokenAddresses(safeAddress, activeTokens.push(tokenAddress))
-
+    setToken(safeAddress, token)
     return state.setIn([safeAddress, tokenAddress], token)
   },
   [DISABLE_TOKEN]: (state: State, action: ActionType<typeof disableToken>): State => {

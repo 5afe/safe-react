@@ -41,10 +41,9 @@ export const getTokens = (safeAddress: string): List<TokenProps> => {
 
 export const setToken = (safeAddress: string, token: Token) => {
   const data: List<TokenProps> = getTokens(safeAddress)
-  data.push(token)
 
   try {
-    const serializedState = JSON.stringify(data)
+    const serializedState = JSON.stringify(data.push(token))
     const key = getTokensKey(safeAddress)
     localStorage.setItem(key, serializedState)
   } catch (err) {
