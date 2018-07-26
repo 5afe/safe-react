@@ -49,6 +49,10 @@ class TokenLayout extends React.PureComponent<TokenProps, State> {
     })
   }
 
+  onReset = () => {
+    this.setState({ component: undefined })
+  }
+
   onRemoveToken = (token: Token) => {
     const { safeAddress, removeToken } = this.props
 
@@ -57,6 +61,7 @@ class TokenLayout extends React.PureComponent<TokenProps, State> {
         token={token}
         safeAddress={safeAddress}
         removeTokenAction={removeToken}
+        onReset={this.onReset}
       />,
     })
   }

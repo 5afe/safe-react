@@ -13,6 +13,7 @@ type Props = {
   token: Token,
   safeAddress: string,
   removeTokenAction: typeof RemoveTokenAction,
+  onReset: () => void,
 }
 
 type State = {
@@ -21,17 +22,16 @@ type State = {
 
 export const REMOVE_TOKEN_RESET_BUTTON_TEXT = 'RESET'
 
-export const removeToken = (safeAddress: string, token: Token, removeTokenAction: typeof RemoveTokenAction) => {
+export const removeToken = async (safeAddress: string, token: Token, removeTokenAction: typeof RemoveTokenAction) =>
   removeTokenAction(safeAddress, token)
-}
 
 class RemoveToken extends React.PureComponent<Props, State> {
   state = {
     done: false,
   }
 
-  onReset = () => {
-    this.setState({ done: false })
+  onRemoveReset = () => {
+    this.setState({ done: false }, this.props.onReset())
   }
 
   executeRemoveOperation = async () => {
@@ -59,7 +59,7 @@ class RemoveToken extends React.PureComponent<Props, State> {
           finishedButton={finishedButton}
           onSubmit={this.executeRemoveOperation}
           steps={steps}
-          onReset={this.onReset}
+          onReset={this.onRemoveReset}
         >
           <Stepper.Page name={token.get('name')} symbol={token.get('symbol')} funds={token.get('funds')}>
             { Review }
