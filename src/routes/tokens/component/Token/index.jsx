@@ -9,8 +9,8 @@ import CardContent from '@material-ui/core/CardContent'
 import CardMedia from '@material-ui/core/CardMedia'
 import Typography from '@material-ui/core/Typography'
 import { isEther } from '~/utils/tokens'
-// import Delete from '@material-ui/icons/Delete'
-// import IconButton from '@material-ui/core/IconButton'
+import Delete from '@material-ui/icons/Delete'
+import IconButton from '@material-ui/core/IconButton'
 import { type WithStyles } from '~/theme/mui'
 
 type Props = WithStyles & {
@@ -47,7 +47,7 @@ class TokenComponent extends React.Component<Props, State> {
     checked: this.props.token.get('status'),
   }
 
-  // onRemoveClick = () => this.props.onRemoveToken(this.props.token)
+  onRemoveClick = () => this.props.onRemoveToken(this.props.token)
 
   handleChange = (e: SyntheticInputEvent<HTMLInputElement>) => {
     const { checked } = e.target
@@ -78,13 +78,13 @@ class TokenComponent extends React.Component<Props, State> {
             </Typography>
           </CardContent>
         </Block>
-        {/*
+        { token.get('removable') &&
           <Block className={classes.controls}>
             <IconButton aria-label="Delete" onClick={this.onRemoveClick}>
               <Delete />
             </IconButton>
           </Block>
-        */}
+        }
         <CardMedia
           className={classes.cover}
           image={token.get('logoUrl')}
