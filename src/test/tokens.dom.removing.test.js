@@ -12,6 +12,9 @@ import { TOKEN_ADRESS_PARAM } from '~/routes/tokens/component/AddToken/FirstPage
 import { TOKEN_NAME_PARAM, TOKEN_SYMBOL_PARAM, TOKEN_DECIMALS_PARAM, TOKEN_LOGO_URL_PARAM } from '~/routes/tokens/component/AddToken/SecondPage'
 import addToken from '~/routes/tokens/store/actions/addToken'
 import { addTokenFnc } from '~/routes/tokens/component/AddToken'
+import { sleep } from '~/utils/timer'
+import TokenComponent from '~/routes/tokens/component/Token'
+import { testToken } from '~/test/builder/tokens.dom.utils'
 
 describe('DOM > Feature > Add new ERC 20 Tokens', () => {
   let web3
@@ -38,7 +41,7 @@ describe('DOM > Feature > Add new ERC 20 Tokens', () => {
     ]))
   })
 
-  it('persist added custom ERC 20 tokens as active when reloading the page', async () => {
+  it('remove custom ERC 20 tokens', async () => {
     // GIVEN
     const store = aNewStore()
     const safeAddress = await aMinedSafe(store)
@@ -55,17 +58,26 @@ describe('DOM > Feature > Add new ERC 20 Tokens', () => {
     const customAddTokensFn: any = (...args) => store.dispatch(addToken(...args))
     await addTokenFnc(values, customAddTokensFn, safeAddress)
     const TokensDom = travelToTokens(store, safeAddress)
+    await sleep(400)
 
     // WHEN
     const buttons = TestUtils.scryRenderedDOMComponentsWithTag(TokensDom, 'button')
-    expect(buttons.length).toBe(1)
+    expect(buttons.length).toBe(2)
     const removeUserButton = buttons[0]
     expect(removeUserButton.getAttribute('aria-label')).toBe('Delete')
-    // click on remove Button
-    // sleep 400 msContentScript
+    TestUtils.Simulate.click(removeUserButton)
+    await sleep(400)
 
-    // Click on the form for acepting
+    const form = TestUtils.findRenderedDOMComponentWithTag(TokensDom, 'form')
+    // submit it
+    TestUtils.Simulate.submit(form)
+    TestUtils.Simulate.submit(form)
 
-    // Then list of tokens is updated correctly
+    await sleep(400)
+
+    const tokens = TestUtils.scryRenderedComponentsWithType(TokensDom, TokenComponent)
+    expect(tokens.length).toBe(2)
+    testToken(tokens[0].props.token, 'FTE', false)
+    testToken(tokens[1].props.token, 'ETH', true)
   })
 })
