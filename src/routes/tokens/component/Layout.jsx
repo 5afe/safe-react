@@ -49,8 +49,16 @@ class TokenLayout extends React.PureComponent<TokenProps, State> {
     })
   }
 
-  onRemoveToken = () => {
-    this.setState({ component: <RemoveToken /> })
+  onRemoveToken = (token: Token) => {
+    const { safeAddress, removeToken } = this.props
+
+    this.setState({
+      component: <RemoveToken
+        token={token}
+        safeAddress={safeAddress}
+        removeTokenAction={removeToken}
+      />,
+    })
   }
 
   onEnableToken = (token: Token) => {
@@ -82,7 +90,7 @@ class TokenLayout extends React.PureComponent<TokenProps, State> {
                 token={token}
                 onDisableToken={this.onDisableToken}
                 onEnableToken={this.onEnableToken}
-                onRemovetoken={this.onRemoveToken}
+                onRemove={this.onRemoveToken}
               />
             ))}
           </MuiList>

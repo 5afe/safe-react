@@ -15,7 +15,7 @@ import { type WithStyles } from '~/theme/mui'
 
 type Props = WithStyles & {
   token: Token,
-  onRemoveToken: (balance: Token)=> void,
+  onRemove: (token: Token)=> void,
   onEnableToken: (token: Token) => void,
   onDisableToken: (token: Token) => void,
 }
@@ -42,12 +42,12 @@ const styles = () => ({
   },
 })
 
-class TokenComponent extends React.Component<Props, State> {
+class TokenComponent extends React.PureComponent<Props, State> {
   state = {
     checked: this.props.token.get('status'),
   }
 
-  onRemoveClick = () => this.props.onRemoveToken(this.props.token)
+  onRemoveClick = () => this.props.onRemove(this.props.token)
 
   handleChange = (e: SyntheticInputEvent<HTMLInputElement>) => {
     const { checked } = e.target
@@ -75,16 +75,14 @@ class TokenComponent extends React.Component<Props, State> {
                 color="primary"
               />
               {symbol}
+              { token.get('removable') &&
+                <IconButton aria-label="Delete" onClick={this.onRemoveClick}>
+                  <Delete />
+                </IconButton>
+              }
             </Typography>
           </CardContent>
         </Block>
-        { token.get('removable') &&
-          <Block className={classes.controls}>
-            <IconButton aria-label="Delete" onClick={this.onRemoveClick}>
-              <Delete />
-            </IconButton>
-          </Block>
-        }
         <CardMedia
           className={classes.cover}
           image={token.get('logoUrl')}
