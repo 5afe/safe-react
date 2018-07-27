@@ -9,7 +9,6 @@ import selector, { type SelectorProps } from './selector'
 import actions, { type Actions } from './actions'
 
 type Props = SelectorProps & Actions & {
-  onAddTx: () => void,
   safeName: string,
   safeAddress: string,
 
@@ -25,14 +24,14 @@ class Transactions extends React.Component<Props, {}> {
   }
 
   render() {
-    const { transactions, onAddTx, safeName } = this.props
+    const { transactions, safeName } = this.props
     const hasTransactions = transactions.count() > 0
 
     return (
       <React.Fragment>
         { hasTransactions
           ? transactions.map((tx: Transaction) => <GnoTransaction key={tx.get('nonce')} safeName={safeName} onProcessTx={this.onProcessTx} transaction={tx} />)
-          : <NoTransactions onAddTx={onAddTx} />
+          : <NoTransactions />
         }
       </React.Fragment>
     )

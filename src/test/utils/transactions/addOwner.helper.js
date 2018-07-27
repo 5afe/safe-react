@@ -2,8 +2,10 @@
 import TestUtils from 'react-dom/test-utils'
 import { sleep } from '~/utils/timer'
 import { checkMinedTx, checkPendingTx } from '~/test/builder/safe.dom.utils'
+import { whenExecuted } from '~/test/utils/logTransactions'
+import AddOwner from '~/routes/safe/component/AddOwner'
 
-export const sendAddOwnerForm = (
+export const sendAddOwnerForm = async (
   SafeDom: React$Component<any, any>,
   addOwner: React$Component<any, any>,
   ownerName: string,
@@ -13,7 +15,7 @@ export const sendAddOwnerForm = (
   // load add multisig form component
   TestUtils.Simulate.click(addOwner)
   // give time to re-render it
-  sleep(600)
+  await sleep(400)
 
   // fill the form
   const inputs = TestUtils.scryRenderedDOMComponentsWithTag(SafeDom, 'input')
@@ -34,8 +36,7 @@ export const sendAddOwnerForm = (
   TestUtils.Simulate.submit(form)
   TestUtils.Simulate.submit(form)
 
-  // give time to process transaction
-  return sleep(2500)
+  return whenExecuted(SafeDom, AddOwner)
 }
 
 export const checkMinedAddOwnerTx = (Transaction: React$Component<any, any>, name: string) => {

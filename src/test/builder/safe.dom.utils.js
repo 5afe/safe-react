@@ -1,24 +1,33 @@
 // @flow
+import * as React from 'react'
 import TestUtils from 'react-dom/test-utils'
 import ListItemText from '~/components/List/ListItemText/index'
 import { SEE_MULTISIG_BUTTON_TEXT } from '~/routes/safe/component/Safe/MultisigTx'
 import fetchTransactions from '~/routes/safe/store/actions/fetchTransactions'
 import { sleep } from '~/utils/timer'
+import { Provider } from 'react-redux'
+import { ConnectedRouter } from 'react-router-redux'
+import AppRoutes from '~/routes'
+import { SAFELIST_ADDRESS, SETTINS_ADDRESS } from '~/routes/routes'
+import { history, type GlobalState } from '~/store'
+import { EMPTY_DATA } from '~/wallets/ethTransactions'
 
-export const EXPAND_OWNERS_INDEX = 0
-export const ADD_OWNERS_INDEX = 1
-export const EDIT_THRESHOLD_INDEX = 2
-export const EDIT_INDEX = 3
-export const WITHDRAW_INDEX = 4
-export const MOVE_FUNDS_INDEX = 5
+export const EXPAND_BALANCE_INDEX = 0
+export const EXPAND_OWNERS_INDEX = 1
+export const ADD_OWNERS_INDEX = 2
+export const EDIT_THRESHOLD_INDEX = 3
+export const EDIT_INDEX = 4
+export const WITHDRAW_INDEX = 5
 export const LIST_TXS_INDEX = 6
 
-export const listTxsClickingOn = async (seeTxsButton: Element) => {
+export const listTxsClickingOn = async (store: Store, seeTxsButton: Element) => {
+  await store.dispatch(fetchTransactions())
+  await sleep(1200)
   expect(seeTxsButton.getElementsByTagName('span')[0].innerHTML).toEqual(SEE_MULTISIG_BUTTON_TEXT)
   TestUtils.Simulate.click(seeTxsButton)
 
   // give some time to expand the transactions
-  await sleep(1500)
+  await sleep(800)
 }
 
 export const checkMinedTx = (Transaction: React$Component<any, any>, name: string) => {
@@ -34,7 +43,7 @@ export const checkMinedTx = (Transaction: React$Component<any, any>, name: strin
   expect(hashParagraph).not.toBe('')
   expect(hashParagraph).not.toBe(undefined)
   expect(hashParagraph).not.toBe(null)
-  expect(hashParagraph).toContain('0x')
+  expect(hashParagraph).toContain(EMPTY_DATA)
 }
 
 export const getListItemsFrom = (Transaction: React$Component<any, any>) =>
@@ -79,7 +88,30 @@ export const checkPendingTx = async (
   }
 }
 
-export const refreshTransactions = async (store) => {
+export const refreshTransactions = async (store: Store<GlobalState>) => {
   await store.dispatch(fetchTransactions())
   await sleep(1500)
+}
+
+const createDom = (store: Store): React$Component<{}> => (
+  TestUtils.renderIntoDocument((
+    <Provider store={store}>
+      <ConnectedRouter history={history}>
+        <AppRoutes />
+      </ConnectedRouter>
+    </Provider>
+  ))
+)
+
+export const travelToSafe = (store: Store, address: string): React$Component<{}> => {
+  history.push(`${SAFELIST_ADDRESS}/${address}`)
+
+  return createDom(store)
+}
+
+export const travelToTokens = (store: Store, address: string): React$Component<{}> => {
+  const url = `${SAFELIST_ADDRESS}/${address}${SETTINS_ADDRESS}`
+  history.push(url)
+
+  return createDom(store)
 }

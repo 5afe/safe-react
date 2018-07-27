@@ -14,7 +14,7 @@ const grantedSelectorTests = () => {
       const reduxStore = {
         [SAFE_REDUCER_ID]: Map(),
         providers: makeProvider(),
-        balances: undefined,
+        tokens: undefined,
         transactions: Map(),
       }
 
@@ -46,7 +46,7 @@ const grantedSelectorTests = () => {
       const reduxStore = {
         [SAFE_REDUCER_ID]: Map(),
         providers: makeProvider(),
-        balances: undefined,
+        tokens: undefined,
         transactions: Map({ fooAddress: List([transaction]) }),
       }
 
@@ -81,7 +81,7 @@ const grantedSelectorTests = () => {
       const reduxStore = {
         [SAFE_REDUCER_ID]: Map(),
         providers: makeProvider(),
-        balances: undefined,
+        tokens: undefined,
         transactions: Map({ fooAddress: List([transaction]) }),
       }
 
@@ -113,7 +113,7 @@ const grantedSelectorTests = () => {
       const reduxStore = {
         [SAFE_REDUCER_ID]: Map(),
         providers: makeProvider(),
-        balances: undefined,
+        tokens: undefined,
         transactions: Map({ fooAddress: List([transaction]) }),
       }
 

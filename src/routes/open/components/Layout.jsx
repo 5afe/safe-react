@@ -1,6 +1,5 @@
 // @flow
 import * as React from 'react'
-import type { FormApi } from 'react-final-form'
 import Stepper from '~/components/Stepper'
 import Confirmation from '~/routes/open/components/FormConfirmation'
 import Review from '~/routes/open/components/ReviewInformation'
@@ -21,8 +20,7 @@ type Props = {
   userAccount: string,
   safeAddress: string,
   safeTx: string,
-  onCallSafeContractSubmit: (values: Object, form: FormApi, callback: ?(errors: ?Object) => void)
-    => ?Object | Promise<?Object> | void,
+  onCallSafeContractSubmit: (values: Object) => Promise<void>,
 }
 
 const Layout = ({

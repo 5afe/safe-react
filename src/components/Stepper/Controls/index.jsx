@@ -6,16 +6,16 @@ type ControlProps = {
   next: string,
   onPrevious: () => void,
   firstPage: boolean,
-  submitting: boolean,
+  disabled: boolean,
 }
 
 const ControlButtons = ({
-  next, firstPage, onPrevious, submitting,
+  next, firstPage, onPrevious, disabled,
 }: ControlProps) => (
   <React.Fragment>
     <Button
       type="button"
-      disabled={firstPage || submitting}
+      disabled={firstPage || disabled}
       onClick={onPrevious}
     >
       Back
@@ -24,7 +24,7 @@ const ControlButtons = ({
       variant="raised"
       color="primary"
       type="submit"
-      disabled={submitting}
+      disabled={disabled}
     >
       {next}
     </Button>
@@ -37,16 +37,16 @@ type Props = {
   onPrevious: () => void,
   firstPage: boolean,
   lastPage: boolean,
-  submitting: boolean,
+  disabled: boolean,
 }
 
 const Controls = ({
-  finishedTx, finishedButton, onPrevious, firstPage, lastPage, submitting,
+  finishedTx, finishedButton, onPrevious, firstPage, lastPage, disabled,
 }: Props) => (
   finishedTx
     ? <React.Fragment>{finishedButton}</React.Fragment>
     : <ControlButtons
-      submitting={submitting}
+      disabled={disabled}
       next={lastPage ? 'Finish' : 'Next'}
       firstPage={firstPage}
       onPrevious={onPrevious}

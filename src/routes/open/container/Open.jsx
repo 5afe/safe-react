@@ -16,12 +16,12 @@ type Props = Actions & {
   userAccount: string,
 }
 
-type State = {
+export type OpenState = {
   safeAddress: string,
   safeTx: string,
 }
 
-const createSafe = async (values: Object, userAccount: string, addSafe: AddSafe): Promise<State> => {
+export const createSafe = async (values: Object, userAccount: string, addSafe: AddSafe): Promise<OpenState> => {
   const accounts = getAccountsFrom(values)
   const numConfirmations = getThresholdFrom(values)
   const name = getSafeNameFrom(values)
@@ -43,7 +43,7 @@ const createSafe = async (values: Object, userAccount: string, addSafe: AddSafe)
   return { safeAddress: safeContract.address, safeTx: safe }
 }
 
-class Open extends React.Component<Props, State> {
+class Open extends React.Component<Props, OpenState> {
   constructor() {
     super()
 

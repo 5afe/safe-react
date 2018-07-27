@@ -6,7 +6,6 @@ import { type GlobalState } from '~/store/index'
 import { SAFE_PARAM_ADDRESS } from '~/routes/routes'
 import { type Safe } from '~/routes/safe/store/model/safe'
 import { safesMapSelector } from '~/routes/safeList/store/selectors'
-import { BALANCE_REDUCER_ID } from '~/routes/safe/store/reducer/balances'
 import { type State as TransactionsState, TRANSACTIONS_REDUCER_ID } from '~/routes/safe/store/reducer/transactions'
 import { type Transaction } from '~/routes/safe/store/model/transaction'
 import { type Confirmation } from '~/routes/safe/store/model/confirmation'
@@ -25,13 +24,11 @@ type TransactionProps = {
 
 const safePropAddressSelector = (state: GlobalState, props: SafeProps) => props.safeAddress
 
-const safeParamAddressSelector = (state: GlobalState, props: RouterProps) => props.match.params[SAFE_PARAM_ADDRESS] || ''
-
-const balancesSelector = (state: GlobalState) => state[BALANCE_REDUCER_ID]
-
 const transactionsSelector = (state: GlobalState): TransactionsState => state[TRANSACTIONS_REDUCER_ID]
 
 const oneTransactionSelector = (state: GlobalState, props: TransactionProps) => props.transaction
+
+export const safeParamAddressSelector = (state: GlobalState, props: RouterProps) => props.match.params[SAFE_PARAM_ADDRESS] || ''
 
 export const safeTransactionsSelector: Selector<GlobalState, SafeProps, List<Transaction>> = createSelector(
   transactionsSelector,
@@ -78,18 +75,6 @@ export const safeSelector: Selector<GlobalState, RouterProps, SafeSelectorProps>
     const safe = safes.get(address)
 
     return safe
-  },
-)
-
-export const balanceSelector: Selector<GlobalState, RouterProps, string> = createSelector(
-  balancesSelector,
-  safeParamAddressSelector,
-  (balances: Map<string, string>, address: string) => {
-    if (!address) {
-      return '0'
-    }
-
-    return balances.get(address) || '0'
   },
 )
 

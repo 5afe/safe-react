@@ -26,7 +26,7 @@ storiesOf('Routes /open', module)
     getProviderInfo()
     const provider = 'METAMASK'
     const userAccount = '0x03db1a8b26d08df23337e9276a36b474510f0023'
-    const onCallSafeContractSubmit = async (values: Object) => {
+    const onCallSafeContractSubmit = async (values: Object): Promise<void> => {
       const accounts = getAccountsFrom(values)
       const numConfirmations = getThresholdFrom(values)
       const data = {

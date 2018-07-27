@@ -9,7 +9,7 @@ import { processTransaction } from '~/routes/safe/component/Transactions/process
 import { confirmationsTransactionSelector, safeSelector, safeTransactionsSelector } from '~/routes/safe/store/selectors/index'
 import { getTransactionFromReduxStore } from '~/routes/safe/test/testMultisig'
 import { buildMathPropsFrom } from '~/test/utils/buildReactRouterProps'
-import { createTransaction } from '~/routes/safe/component/AddTransaction/createTransactions'
+import { createTransaction } from '~/wallets/createTransactions'
 import { getGnosisSafeContract } from '~/wallets/safeContracts'
 import fetchTransactions from '~/routes/safe/store/actions/fetchTransactions'
 

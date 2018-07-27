@@ -1,7 +1,7 @@
 import 'babel-polyfill'
 import { addDecorator, configure } from '@storybook/react'
 import { withKnobs } from '@storybook/addon-knobs'
-import { MuiThemeProvider } from 'material-ui/styles'
+import { MuiThemeProvider } from '@material-ui/core/styles'
 import * as React from 'react'
 import { Provider } from 'react-redux'
 import StoryRouter from 'storybook-router'

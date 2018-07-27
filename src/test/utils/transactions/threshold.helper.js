@@ -3,15 +3,17 @@ import TestUtils from 'react-dom/test-utils'
 import { sleep } from '~/utils/timer'
 import { checkMinedTx } from '~/test/builder/safe.dom.utils'
 import { getGnosisSafeInstanceAt } from '~/wallets/safeContracts'
+import Threshold from '~/routes/safe/component/Threshold'
+import { whenExecuted } from '~/test/utils/logTransactions'
 
-export const sendChangeThresholdForm = (
+export const sendChangeThresholdForm = async (
   SafeDom: React$Component<any, any>,
   changeThreshold: React$Component<any, any>,
   threshold: string,
 ) => {
   // Load the Threshold Form
   TestUtils.Simulate.click(changeThreshold)
-  sleep(600)
+  await sleep(400)
 
   // fill the form
   const inputs = TestUtils.scryRenderedDOMComponentsWithTag(SafeDom, 'input')
@@ -24,8 +26,7 @@ export const sendChangeThresholdForm = (
   TestUtils.Simulate.submit(form)
   TestUtils.Simulate.submit(form)
 
-  // give time to process transaction
-  return sleep(2500)
+  return whenExecuted(SafeDom, Threshold)
 }
 
 export const checkMinedThresholdTx = (Transaction: React$Component<any, any>, name: string) => {
