@@ -5,7 +5,6 @@ import { type Owner } from '~/routes/safe/store/model/owner'
 export const SAFES_KEY = 'SAFES'
 export const TX_KEY = 'TX'
 export const OWNERS_KEY = 'OWNERS'
-export const TOKENS_KEY = 'TOKENS'
 
 export const load = (key: string) => {
   try {

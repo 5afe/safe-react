@@ -5448,8 +5448,8 @@ fill-range@^4.0.0:
     to-regex-range "^2.1.0"
 
 final-form@^4.2.1:
-  version "4.8.2"
-  resolved "https://registry.yarnpkg.com/final-form/-/final-form-4.8.2.tgz#905de0a5107f889b1eb86dbbdea96f2d40fcb20d"
+  version "4.8.3"
+  resolved "https://registry.yarnpkg.com/final-form/-/final-form-4.8.3.tgz#86a03da6cd6459ed8fe3737dbd9dc87ed40c11d7"
 
 finalhandler@1.1.1:
   version "1.1.1"
@@ -9799,8 +9799,8 @@ react-event-listener@^0.6.0:
     warning "^4.0.1"
 
 react-final-form@^3.1.2:
-  version "3.6.2"
-  resolved "https://registry.yarnpkg.com/react-final-form/-/react-final-form-3.6.2.tgz#fc61b5abfc8e4afb0fd4dea1a4b70cca07aa3e05"
+  version "3.6.4"
+  resolved "https://registry.yarnpkg.com/react-final-form/-/react-final-form-3.6.4.tgz#1ca37935c2af0bc659a53b293dd84a75d2381548"
 
 react-fuzzy@^0.5.2:
   version "0.5.2"

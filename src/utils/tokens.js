@@ -4,6 +4,7 @@ import logo from '~/assets/icons/icon_etherTokens.svg'
 import { getBalanceInEtherOf } from '~/wallets/getWeb3'
 import { makeToken, type Token } from '~/routes/tokens/store/model/token'
 
+export const ETH_ADDRESS = '0'
 export const isEther = (symbol: string) => symbol === 'ETH'
 
 export const getSafeEthToken = async (safeAddress: string) => {

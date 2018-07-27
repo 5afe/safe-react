@@ -8,7 +8,6 @@ const enableToken = createAction(
   ENABLE_TOKEN,
   (safeAddress: string, token: Token) => ({
     safeAddress,
-    symbol: token.get('symbol'),
     address: token.get('address'),
   }),
 )

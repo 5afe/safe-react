@@ -13,6 +13,7 @@ import Controls from './Controls'
 export { default as Step } from './Step'
 
 type Props = {
+  disabledWhenValidating?: boolean,
   classes: Object,
   steps: string[],
   finishedTransaction: boolean,
@@ -30,6 +31,7 @@ type State = {
 
 type PageProps = {
   children: Function,
+  prepareNextInitialProps: (values: Object) => {},
 }
 
 class GnoStepper extends React.PureComponent<Props, State> {
@@ -62,8 +64,10 @@ class GnoStepper extends React.PureComponent<Props, State> {
     }))
   }
 
+  getPageProps = (pages: React$Node): PageProps => React.Children.toArray(pages)[this.state.page].props
+
   getActivePageFrom = (pages: React$Node) => {
-    const activePageProps = React.Children.toArray(pages)[this.state.page].props
+    const activePageProps = this.getPageProps(pages)
     const { children, ...props } = activePageProps
 
     return children(props)
@@ -76,18 +80,28 @@ class GnoStepper extends React.PureComponent<Props, State> {
     return activePage.props.validate ? activePage.props.validate(values) : {}
   }
 
-  next = (values: Object) =>
+  next = async (values: Object) => {
+    const activePageProps = this.getPageProps(this.props.children)
+    const { prepareNextInitialProps } = activePageProps
+
+    let pageInitialProps
+    if (prepareNextInitialProps) {
+      pageInitialProps = await prepareNextInitialProps(values)
+    }
+
+    const finalValues = { ...values, ...pageInitialProps }
     this.setState(state => ({
       page: Math.min(state.page + 1, React.Children.count(this.props.children) - 1),
-      values,
+      values: finalValues,
     }))
+  }
 
   previous = () =>
     this.setState(state => ({
       page: Math.max(state.page - 1, 0),
     }))
 
-  handleSubmit = (values: Object) => {
+  handleSubmit = async (values: Object) => {
     const { children, onSubmit } = this.props
     const { page } = this.state
     const isLastPage = page === React.Children.count(children) - 1
@@ -100,7 +114,7 @@ class GnoStepper extends React.PureComponent<Props, State> {
 
   render() {
     const {
-      steps, children, finishedTransaction, finishedButton, classes,
+      steps, children, finishedTransaction, finishedButton, classes, disabledWhenValidating = false,
     } = this.props
     const { page, values } = this.state
     const activePage = this.getActivePageFrom(children)
@@ -123,20 +137,24 @@ class GnoStepper extends React.PureComponent<Props, State> {
           validation={this.validate}
           render={activePage}
         >
-          {(submitting: boolean) => (
-            <Row align="end" margin="lg" grow>
-              <Col xs={12} center="xs">
-                <Controls
-                  submitting={submitting}
-                  finishedTx={finishedTransaction}
-                  finishedButton={finished}
-                  onPrevious={this.previous}
-                  firstPage={page === 0}
-                  lastPage={isLastPage}
-                />
-              </Col>
-            </Row>
-          )}
+          {(submitting: boolean, validating: boolean) => {
+            const disabled = disabledWhenValidating ? submitting || validating : submitting
+
+            return (
+              <Row align="end" margin="lg" grow>
+                <Col xs={12} center="xs">
+                  <Controls
+                    disabled={disabled}
+                    finishedTx={finishedTransaction}
+                    finishedButton={finished}
+                    onPrevious={this.previous}
+                    firstPage={page === 0}
+                    lastPage={isLastPage}
+                  />
+                </Col>
+              </Row>
+            )
+          }}
         </GnoForm>
       </React.Fragment>
     )

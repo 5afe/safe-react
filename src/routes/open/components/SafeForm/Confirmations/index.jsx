@@ -1,6 +1,6 @@
 // @flow
 import * as React from 'react'
-import { Field } from 'react-final-form'
+import Field from '~/components/forms/Field'
 import TextField from '~/components/forms/TextField'
 import { composeValidators, minValue, mustBeInteger, required } from '~/components/forms/validator'
 import Block from '~/components/layout/Block'

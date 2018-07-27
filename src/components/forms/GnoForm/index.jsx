@@ -35,7 +35,7 @@ const GnoForm = ({
     render={({ handleSubmit, ...rest }) => (
       <form onSubmit={handleSubmit} style={stylesBasedOn(padding)}>
         {render(rest)}
-        {children(rest.submitting, rest.submitSucceeded)}
+        {children(rest.submitting, rest.validating)}
       </form>
     )}
   />

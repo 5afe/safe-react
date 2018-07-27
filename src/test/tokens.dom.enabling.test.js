@@ -13,7 +13,7 @@ import { travelToTokens } from '~/test/builder/safe.dom.utils'
 import { sleep } from '~/utils/timer'
 import { buildMathPropsFrom } from '~/test/utils/buildReactRouterProps'
 import { tokenListSelector, activeTokensSelector } from '~/routes/tokens/store/selectors'
-import { getTokens } from '~/utils/localStorage/tokens'
+import { getActiveTokenAddresses } from '~/utils/localStorage/tokens'
 import { enableFirstToken, testToken } from '~/test/builder/tokens.dom.utils'
 import * as fetchTokensModule from '~/routes/tokens/store/actions/fetchTokens'
 import * as enhancedFetchModule from '~/utils/fetch'
@@ -79,12 +79,16 @@ describe('DOM > Feature > Enable and disable default tokens', () => {
     await addTknTo(safeAddress, 50, firstErc20Token)
     await addTknTo(safeAddress, 50, secondErc20Token)
     await store.dispatch(fetchTokensModule.fetchTokens(safeAddress))
+
+    const match: Match = buildMathPropsFrom(safeAddress)
+    let tokenList = tokenListSelector(store.getState(), { match })
+    expect(tokenList.count()).toBe(3)
+
     await enableFirstToken(store, safeAddress)
+    tokenList = tokenListSelector(store.getState(), { match })
+    expect(tokenList.count()).toBe(3) // assuring the enableToken do not add extra info
 
     // THEN
-    const match: Match = buildMathPropsFrom(safeAddress)
-    const tokenList = tokenListSelector(store.getState(), { match })
-
     testToken(tokenList.get(0), 'FTE', true)
     testToken(tokenList.get(1), 'STE', false)
     testToken(tokenList.get(2), 'ETH', true)
@@ -108,19 +112,19 @@ describe('DOM > Feature > Enable and disable default tokens', () => {
   it('localStorage always returns a list', async () => {
     const store = aNewStore()
     const safeAddress = await aMinedSafe(store)
-    let tokens: List<string> = getTokens(safeAddress)
+    let tokens: List<string> = getActiveTokenAddresses(safeAddress)
     expect(tokens).toEqual(List([]))
 
     await store.dispatch(fetchTokensModule.fetchTokens(safeAddress))
-    tokens = getTokens(safeAddress)
+    tokens = getActiveTokenAddresses(safeAddress)
     expect(tokens.count()).toBe(0)
 
     await enableFirstToken(store, safeAddress)
-    tokens = getTokens(safeAddress)
+    tokens = getActiveTokenAddresses(safeAddress)
     expect(tokens.count()).toBe(1)
 
     await store.dispatch(fetchTokensModule.fetchTokens(safeAddress))
-    tokens = getTokens(safeAddress)
+    tokens = getActiveTokenAddresses(safeAddress)
     expect(tokens.count()).toBe(1)
   })
 })

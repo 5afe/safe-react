@@ -4,7 +4,7 @@ import { getProviderInfo, getBalanceInEtherOf, getWeb3 } from '~/wallets/getWeb3
 import { promisify } from '~/utils/promisify'
 import withdraw, { DESTINATION_PARAM, VALUE_PARAM } from '~/routes/safe/component/Withdraw/withdraw'
 import { type Safe } from '~/routes/safe/store/model/safe'
-import Token from '#/test/FixedSupplyToken.json'
+import Token from '#/test/TestToken.json'
 import { ensureOnce } from '~/utils/singleton'
 import { toNative } from '~/wallets/tokens'
 
