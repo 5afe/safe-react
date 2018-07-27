@@ -1,10 +1,12 @@
 // @flow
+import { List } from 'immutable'
 import { getWeb3 } from '~/wallets/getWeb3'
 import { getGnosisSafeContract, getCreateDailyLimitExtensionContract } from '~/wallets/safeContracts'
 import { type DailyLimitProps } from '~/routes/safe/store/model/dailyLimit'
-import { checkReceiptStatus, calculateGasOf, calculateGasPrice } from '~/wallets/ethTransactions'
+import { checkReceiptStatus, calculateGasOf, calculateGasPrice, EMPTY_DATA } from '~/wallets/ethTransactions'
 import { type Safe } from '~/routes/safe/store/model/safe'
-import { buildExecutedConfirmationFrom, storeTransaction } from '~/routes/safe/component/AddTransaction/createTransactions'
+import { buildExecutedConfirmationFrom, storeTransaction } from '~/wallets/createTransactions'
+import { type Confirmation } from '~/routes/safe/store/model/confirmation'
 
 export const LIMIT_POSITION = 0
 export const SPENT_TODAY_POS = 1
@@ -44,7 +46,7 @@ export const getDailyLimitAddress = async (safeAddress: string) => {
   return dailyLimitModule.address
 }
 
-export const getEditDailyLimitData = async (safeAddress: string, token: string, dailyLimit: string) => {
+export const getEditDailyLimitData = async (safeAddress: string, token: number, dailyLimit: number) => {
   const web3 = getWeb3()
   const dailyLimitModule = await getDailyLimitModuleFrom(safeAddress)
   const dailyLimitInWei = web3.toWei(dailyLimit, 'ether')
@@ -70,7 +72,7 @@ const withdraw = async (values: Object, safe: Safe, userAccount: string): Promis
   const nonce = Date.now()
   const executedConfirmations: List<Confirmation> = buildExecutedConfirmationFrom(safe.get('owners'), userAccount)
 
-  return storeTransaction(`Withdraw movement of ${valueInEth}`, nonce, destination, valueInEth, userAccount, executedConfirmations, txHash.tx, safeAddress, safe.get('threshold'), '0x')
+  return storeTransaction(`Withdraw movement of ${valueInEth}`, nonce, destination, valueInEth, userAccount, executedConfirmations, txHash.tx, safeAddress, safe.get('threshold'), EMPTY_DATA)
 }
 
 export default withdraw

@@ -1,10 +1,16 @@
 // @flow
 import * as React from 'react'
+import { type FormApi } from 'final-form'
 import { Form } from 'react-final-form'
-import type { FormApi } from 'react-final-form'
+
+export type OnSubmit = (
+  values: Object,
+  form: FormApi,
+  callback: ?(errors: ?Object) => ?Object
+) => ?Object | Promise<?Object> | void
 
 type Props = {
-  onSubmit: (values: Object, form: FormApi, callback: ?(errors: ?Object) => void) => ?Object | Promise<?Object> | void,
+  onSubmit: OnSubmit,
   children: Function,
   padding: number,
   validation?: (values: Object) => Object | Promise<Object>,
@@ -29,7 +35,7 @@ const GnoForm = ({
     render={({ handleSubmit, ...rest }) => (
       <form onSubmit={handleSubmit} style={stylesBasedOn(padding)}>
         {render(rest)}
-        {children(rest.submitting, rest.submitSucceeded)}
+        {children(rest.submitting, rest.validating)}
       </form>
     )}
   />

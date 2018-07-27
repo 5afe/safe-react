@@ -11,7 +11,7 @@ type Props = {
   dailyLimit: DailyLimit,
   onWithdraw: () => void,
   onEditDailyLimit: () => void,
-  balance: string,
+  balance: number,
 }
 export const EDIT_WITHDRAW = 'Edit'
 export const WITHDRAW_BUTTON_TEXT = 'Withdraw'
@@ -26,7 +26,7 @@ const DailyLimitComponent = ({
   const limit = dailyLimit.get('value')
   const spentToday = dailyLimit.get('spentToday')
 
-  const disabled = spentToday >= limit || Number(balance) === 0
+  const disabled = spentToday >= limit || balance === 0
   const text = `${limit} ETH (spent today: ${spentToday} ETH)`
 
   return (

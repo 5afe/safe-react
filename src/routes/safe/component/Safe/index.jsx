@@ -1,5 +1,7 @@
 // @flow
+import ListComponent from '@material-ui/core/List'
 import * as React from 'react'
+import { List } from 'immutable'
 import Block from '~/components/layout/Block'
 import Col from '~/components/layout/Col'
 import Bold from '~/components/layout/Bold'
@@ -7,18 +9,18 @@ import Img from '~/components/layout/Img'
 import Paragraph from '~/components/layout/Paragraph'
 import Row from '~/components/layout/Row'
 import { type Safe } from '~/routes/safe/store/model/safe'
-import List from '@material-ui/core/List'
+import { type Token } from '~/routes/tokens/store/model/token'
 
 import Withdraw from '~/routes/safe/component/Withdraw'
 import Transactions from '~/routes/safe/component/Transactions'
-import AddTransaction from '~/routes/safe/component/AddTransaction'
 import Threshold from '~/routes/safe/component/Threshold'
 import AddOwner from '~/routes/safe/component/AddOwner'
 import RemoveOwner from '~/routes/safe/component/RemoveOwner'
 import EditDailyLimit from '~/routes/safe/component/EditDailyLimit'
+import SendToken from '~/routes/safe/component/SendToken'
 
 import Address from './Address'
-import Balance from './Balance'
+import BalanceInfo from './BalanceInfo'
 import Owners from './Owners'
 import Confirmations from './Confirmations'
 import DailyLimit from './DailyLimit'
@@ -28,7 +30,7 @@ const safeIcon = require('./assets/gnosis_safe.svg')
 
 type SafeProps = {
   safe: Safe,
-  balance: string,
+  tokens: List<Token>,
   userAddress: string,
 }
 
@@ -38,6 +40,20 @@ type State = {
 
 const listStyle = {
   width: '100%',
+}
+
+const getEthBalanceFrom = (tokens: List<Token>) => {
+  const filteredTokens = tokens.filter(token => token.get('symbol') === 'ETH')
+  if (filteredTokens.count() === 0) {
+    return 0
+  }
+
+  const ethToken = filteredTokens.get(0)
+  if (!ethToken) {
+    return 0
+  }
+
+  return Number(ethToken.get('funds'))
 }
 
 class GnoSafe extends React.PureComponent<SafeProps, State> {
@@ -58,17 +74,10 @@ class GnoSafe extends React.PureComponent<SafeProps, State> {
     this.setState({ component: <Withdraw safe={safe} dailyLimit={safe.get('dailyLimit')} /> })
   }
 
-  onAddTx = () => {
-    const { balance, safe } = this.props
-    this.setState({
-      component: <AddTransaction safe={safe} balance={Number(balance)} onReset={this.onListTransactions} />,
-    })
-  }
-
   onListTransactions = () => {
     const { safe } = this.props
 
-    this.setState({ component: <Transactions safeName={safe.get('name')} safeAddress={safe.get('address')} onAddTx={this.onAddTx} /> })
+    this.setState({ component: <Transactions safeName={safe.get('name')} safeAddress={safe.get('address')} /> })
   }
 
   onEditThreshold = () => {
@@ -89,15 +98,30 @@ class GnoSafe extends React.PureComponent<SafeProps, State> {
     this.setState({ component: <RemoveOwner safeAddress={safe.get('address')} threshold={safe.get('threshold')} safe={safe} name={name} userToRemove={address} /> })
   }
 
+  onMoveTokens = (ercToken: Token) => {
+    const { safe } = this.props
+
+    this.setState({
+      component: <SendToken
+        safe={safe}
+        token={ercToken}
+        key={ercToken.get('address')}
+        onReset={this.onListTransactions}
+      />,
+    })
+  }
+
   render() {
-    const { safe, balance, userAddress } = this.props
+    const { safe, tokens, userAddress } = this.props
     const { component } = this.state
+    const ethBalance = getEthBalanceFrom(tokens)
+    const address = safe.get('address')
 
     return (
       <Row grow>
         <Col sm={12} top="xs" md={5} margin="xl" overflow>
-          <List style={listStyle}>
-            <Balance balance={balance} />
+          <ListComponent style={listStyle}>
+            <BalanceInfo tokens={tokens} onMoveFunds={this.onMoveTokens} safeAddress={address} />
             <Owners
               owners={safe.owners}
               onAddOwner={this.onAddOwner}
@@ -105,10 +129,10 @@ class GnoSafe extends React.PureComponent<SafeProps, State> {
               onRemoveOwner={this.onRemoveOwner}
             />
             <Confirmations confirmations={safe.get('threshold')} onEditThreshold={this.onEditThreshold} />
-            <Address address={safe.get('address')} />
-            <DailyLimit balance={balance} dailyLimit={safe.get('dailyLimit')} onWithdraw={this.onWithdraw} onEditDailyLimit={this.onEditDailyLimit} />
-            <MultisigTx balance={balance} onAddTx={this.onAddTx} onSeeTxs={this.onListTransactions} />
-          </List>
+            <Address address={address} />
+            <DailyLimit balance={ethBalance} dailyLimit={safe.get('dailyLimit')} onWithdraw={this.onWithdraw} onEditDailyLimit={this.onEditDailyLimit} />
+            <MultisigTx onSeeTxs={this.onListTransactions} />
+          </ListComponent>
         </Col>
         <Col sm={12} center="xs" md={7} margin="xl" layout="column">
           <Block margin="xl">

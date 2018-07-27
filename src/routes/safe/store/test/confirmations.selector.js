@@ -29,7 +29,7 @@ const grantedSelectorTests = () => {
       const reduxStore = {
         safes: Map(),
         providers: makeProvider(),
-        balances: Map(),
+        tokens: Map(),
         transactions: Map(),
       }
 
@@ -67,7 +67,7 @@ const grantedSelectorTests = () => {
       const reduxStore = {
         safes: Map(),
         providers: makeProvider(),
-        balances: Map(),
+        tokens: Map(),
         transactions: Map(),
       }
 
@@ -82,7 +82,7 @@ const grantedSelectorTests = () => {
       const reduxStore = {
         safes: Map(),
         providers: makeProvider(),
-        balances: Map(),
+        tokens: Map(),
         transactions: Map(),
       }
 
