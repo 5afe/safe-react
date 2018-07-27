@@ -51,3 +51,17 @@ export const setToken = (safeAddress: string, token: Token) => {
     console.log('Error adding token in localstorage')
   }
 }
+
+export const removeTokenFromStorage = (safeAddress: string, token: Token) => {
+  const data: List<TokenProps> = getTokens(safeAddress)
+
+  try {
+    const index = data.indexOf(token)
+    const serializedState = JSON.stringify(data.remove(index))
+    const key = getTokensKey(safeAddress)
+    localStorage.setItem(key, serializedState)
+  } catch (err) {
+    // eslint-disable-next-line
+    console.log('Error removing token in localstorage')
+  }
+}

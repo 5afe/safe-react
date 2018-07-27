@@ -16,8 +16,8 @@ import { type SelectorProps } from '~/routes/tokens/container/selector'
 import { type Actions } from '~/routes/tokens/container/actions'
 import { SAFELIST_ADDRESS } from '~/routes/routes'
 import AddToken from '~/routes/tokens/component/AddToken'
+import RemoveToken from '~/routes/tokens/component/RemoveToken'
 import TokenComponent from './Token'
-// import RemoveToken from '~/routes/tokens/component/RemoveToken'
 
 const safeIcon = require('~/routes/safe/component/Safe/assets/gnosis_safe.svg')
 
@@ -49,11 +49,23 @@ class TokenLayout extends React.PureComponent<TokenProps, State> {
     })
   }
 
-  /*
-    onRemoveToken = () => {
-      this.setState({ component: <RemoveToken /> })
-    }
-  */
+  onReset = () => {
+    this.setState({ component: undefined })
+  }
+
+  onRemoveToken = (token: Token) => {
+    const { safeAddress, removeToken } = this.props
+
+    this.setState({
+      component: <RemoveToken
+        token={token}
+        safeAddress={safeAddress}
+        removeTokenAction={removeToken}
+        onReset={this.onReset}
+      />,
+    })
+  }
+
   onEnableToken = (token: Token) => {
     const { enableToken, safe } = this.props
     const safeAddress = safe.get('address')
@@ -83,6 +95,7 @@ class TokenLayout extends React.PureComponent<TokenProps, State> {
                 token={token}
                 onDisableToken={this.onDisableToken}
                 onEnableToken={this.onEnableToken}
+                onRemove={this.onRemoveToken}
               />
             ))}
           </MuiList>
