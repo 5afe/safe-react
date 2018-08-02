@@ -1,13 +1,19 @@
+if: (branch = development) OR (branch = master) OR (type = pull_request) OR (tag IS present)
 language: node_js
 node_js:
   - "8"
 os:
   - linux
+before_install:
+  # Needed to deploy pull request and releases
+  - sudo apt-get -y install python-pip python-dev
+  - pip install awscli --upgrade --user
 before_script:
-  - yarn global add surge
+  # Used in the tests of the project
   - export NODE_ENV=testing
 after_success:
   - |
+
     if [ ${TRAVIS_BRANCH} = "master" ]; then
       export NODE_ENV=production;
     else
@@ -15,6 +21,42 @@ after_success:
     fi
   - yarn build-storybook
   - yarn build
-  - cd build_webpack/ && cp index.html 200.html && cd ..
-  - chmod ugo+x ./config/deploy/deploy.sh
-  - ./config/deploy/deploy.sh
+  # Pull Request - Deploy it to a review environment
+  # Travis doesn't do deploy step with pull requests builds
+  - ./config/travis/deploy_pull_request.sh
+  # Releases (tagged commits) - Deploy it to a release environment
+  - ./config/travis/deploy_release.sh
+
+deploy:
+  # Development environment
+- provider: s3
+  bucket: $DEV_BUCKET_NAME
+  access_key_id: $AWS_ACCESS_KEY_ID
+  secret_access_key: $AWS_SECRET_ACCESS_KEY
+  skip_cleanup: true
+  local_dir: build_webpack
+  upload-dir: app
+  on:
+    branch: development
+
+  # Development environment - Storybook
+- provider: s3
+  bucket: $DEV_BUCKET_NAME
+  access_key_id: $AWS_ACCESS_KEY_ID
+  secret_access_key: $AWS_SECRET_ACCESS_KEY
+  skip_cleanup: true
+  local_dir: build_storybook
+  upload-dir: storybook
+  on:
+    branch: development
+
+  # Staging environment
+- provider: s3
+  bucket: $STAGING_BUCKET_NAME
+  access_key_id: $AWS_ACCESS_KEY_ID
+  secret_access_key: $AWS_SECRET_ACCESS_KEY
+  skip_cleanup: true
+  local_dir: build_webpack
+  upload-dir: current
+  on:
+    branch: master
