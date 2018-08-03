@@ -9,6 +9,7 @@ import { getWeb3 } from '~/wallets/getWeb3'
 import { type Safe } from '~/routes/safe/store/model/safe'
 import { sameAddress } from '~/wallets/ethAddresses'
 import { checkReceiptStatus, calculateGasOf, calculateGasPrice, EMPTY_DATA } from '~/wallets/ethTransactions'
+import { storeSubject } from '~/utils/localStorage/transactions'
 
 export const TX_NAME_PARAM = 'txName'
 export const TX_DESTINATION_PARAM = 'txDestination'
@@ -53,6 +54,9 @@ export const storeTransaction = (
   if (notMinedWhenOneOwnerSafe) {
     throw new Error('The tx should be mined before storing it in safes with one owner')
   }
+  // fetch actual transactions from endpoint and check nonce is higher than the last one
+  // send tx to service
+  // store subject in local storage (for testing it the actual name should be '')
 
   const transaction: Transaction = makeTransaction({
     name, nonce, value, confirmations, destination, threshold: safeThreshold, tx, data,
@@ -66,8 +70,9 @@ export const storeTransaction = (
     throw new Error(`Transaction with same nonce: ${nonce} already created for safe: ${safeAddress}`)
   }
 
-  safeTransactions[safeAddress] = txsRecord.push(transaction)
+  storeSubject(safeAddress, nonce, name)
 
+  safeTransactions[safeAddress] = txsRecord.push(transaction)
   localStorage.setItem(TX_KEY, JSON.stringify(safeTransactions))
 }
 
