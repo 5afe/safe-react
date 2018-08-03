@@ -59,7 +59,7 @@ export const storeTransaction = (
   // store subject in local storage (for testing it the actual name should be '')
 
   const transaction: Transaction = makeTransaction({
-    name, nonce, value, confirmations, destination, threshold: safeThreshold, tx, data,
+    name: '', nonce, value, confirmations, destination, threshold: safeThreshold, tx, data,
   })
 
   const safeTransactions = load(TX_KEY) || {}
