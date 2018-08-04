@@ -1,6 +1,5 @@
 // @flow
-import { getWeb3 } from '~/wallets/getWeb3'
-import { getGnosisSafeContract } from '~/wallets/safeContracts'
+import { getSafeEthereumInstance } from '~/wallets/createTransactions'
 
 type Type = 'confirmation' | 'execution'
 type Operation = 0 | 1 | 2
@@ -8,7 +7,7 @@ type Operation = 0 | 1 | 2
 const calculateBodyFrom = async (
   safeAddress: string,
   to: string,
-  value: number,
+  valueInWei: number,
   data: string,
   operation: Operation,
   nonce: number,
@@ -16,15 +15,12 @@ const calculateBodyFrom = async (
   sender: string,
   type: Type,
 ) => {
-  const web3 = getWeb3()
-  const valueInWei = value > 0 ? web3.toWei(value, 'ether') : value
-  const GnosisSafe = await getGnosisSafeContract(web3)
-  const gnosisSafe = GnosisSafe.at(safeAddress)
+  const gnosisSafe = await getSafeEthereumInstance(safeAddress)
   const contractTransactionHash = await gnosisSafe.getTransactionHash(safeAddress, valueInWei, data, operation, nonce)
 
   return JSON.stringify({
     to,
-    value,
+    value: valueInWei,
     data,
     operation,
     nonce,
@@ -38,7 +34,7 @@ const calculateBodyFrom = async (
 export const submitOperation = async (
   safeAddress: string,
   to: string,
-  value: number,
+  valueInWei: number,
   data: string,
   operation: Operation,
   nonce: number,
@@ -53,7 +49,7 @@ export const submitOperation = async (
     'Content-Type': 'application/json',
   }
 
-  const body = await calculateBodyFrom(safeAddress, to, value, data, operation, nonce, txHash, sender, type)
+  const body = await calculateBodyFrom(safeAddress, to, valueInWei, data, operation, nonce, txHash, sender, type)
 
   const response = await fetch(url, {
     method: 'POST',
