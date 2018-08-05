@@ -2,7 +2,7 @@
 import { getSafeEthereumInstance } from '~/wallets/createTransactions'
 
 type Type = 'confirmation' | 'execution'
-type Operation = 0 | 1 | 2
+export type Operation = 0 | 1 | 2
 
 const calculateBodyFrom = async (
   safeAddress: string,
@@ -20,7 +20,7 @@ const calculateBodyFrom = async (
 
   return JSON.stringify({
     to,
-    value: valueInWei,
+    value: Number(valueInWei),
     data,
     operation,
     nonce,
@@ -43,7 +43,7 @@ export const submitOperation = async (
   type: Type,
 ) => {
   const base = `safes/${safeAddress}/transaction/`
-  const url = `https://safe-transaction-history.dev.gnosisdev.com/${base}`
+  const url = `https://safe-transaction-history.dev.gnosisdev.com/api/v1/${base}`
   const headers = {
     Accept: 'application/json',
     'Content-Type': 'application/json',
