@@ -1,5 +1,7 @@
 // @flow
 import { getSafeEthereumInstance } from '~/wallets/createTransactions'
+import { getWeb3 } from '~/wallets/getWeb3'
+import { getTxServiceUriFrom, getTxServiceHost } from '~/config'
 
 type Type = 'confirmation' | 'execution'
 export type Operation = 0 | 1 | 2
@@ -16,19 +18,25 @@ const calculateBodyFrom = async (
   type: Type,
 ) => {
   const gnosisSafe = await getSafeEthereumInstance(safeAddress)
-  const contractTransactionHash = await gnosisSafe.getTransactionHash(safeAddress, valueInWei, data, operation, nonce)
+  const contractTransactionHash = await gnosisSafe.getTransactionHash(to, valueInWei, data, operation, nonce)
 
   return JSON.stringify({
-    to,
-    value: Number(valueInWei),
+    to: getWeb3().toChecksumAddress(to),
+    value: valueInWei,
     data,
     operation,
     nonce,
     contractTransactionHash,
     transactionHash,
-    sender,
+    sender: getWeb3().toChecksumAddress(sender),
     type,
   })
+}
+const buildTxServiceUrlFrom = (safeAddress: string) => {
+  const host = getTxServiceHost()
+  const address = getWeb3().toChecksumAddress(safeAddress)
+  const base = getTxServiceUriFrom(address)
+  return `${host}${base}`
 }
 
 export const submitOperation = async (
@@ -42,13 +50,12 @@ export const submitOperation = async (
   sender: string,
   type: Type,
 ) => {
-  const base = `safes/${safeAddress}/transaction/`
-  const url = `https://safe-transaction-history.dev.gnosisdev.com/api/v1/${base}`
+  const url = buildTxServiceUrlFrom(safeAddress)
   const headers = {
     Accept: 'application/json',
     'Content-Type': 'application/json',
+    'Access-Control-Allow-Origin': '*',
   }
-
   const body = await calculateBodyFrom(safeAddress, to, valueInWei, data, operation, nonce, txHash, sender, type)
 
   const response = await fetch(url, {
