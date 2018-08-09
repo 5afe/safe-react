@@ -120,7 +120,7 @@ export const createTransaction = async (
 
   const txHash = await approveTransaction(safeAddress, to, valueInWei, data, CALL, nonce, sender)
   // TODO Remove when TX History service is fully integrated
-  const confirmations: List<Confirmation> = buildConfirmationsFrom(owners, to, txHash)
+  const confirmations: List<Confirmation> = buildConfirmationsFrom(owners, sender, txHash)
 
   // TODO Remove when TX History service is fully integrated
   return storeTransaction(name, nonce, to, value, sender, confirmations, '', safeAddress, threshold, data)
