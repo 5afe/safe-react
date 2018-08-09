@@ -1,7 +1,10 @@
 if: (branch = development) OR (branch = master) OR (type = pull_request) OR (tag IS present)
+sudo: required
+services:
+  - docker
 language: node_js
 node_js:
-  - "8"
+  - "9"
 os:
   - linux
 before_install:
