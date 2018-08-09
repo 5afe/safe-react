@@ -1,0 +1,7 @@
+version: '3.5'
+
+services:
+  setup:
+    image: gnosispm/safe-transaction-history:develop
+    context: .
+    dockerfile: Dockerfile
