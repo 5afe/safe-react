@@ -63,6 +63,7 @@ export const submitOperation = async (
     headers,
     body,
   })
+  console.log(response)
 
   if (response.status !== 202) {
     return Promise.reject(new Error('Error submitting the transaction'))
