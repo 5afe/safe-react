@@ -29,10 +29,12 @@ before_script:
   - git clone https://github.com/gnosis/safe-transaction-history.git
   - cd safe-transaction-history
   - git checkout develop
+  - git log
   - docker-compose --version
   - docker-compose build
   - docker ps
   - docker-compose up -d
+  - sleep 15
   - cd ..
 after_success:
   - cd safe-transaction-history
