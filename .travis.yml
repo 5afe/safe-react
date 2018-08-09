@@ -14,6 +14,12 @@ before_install:
 before_script:
   # Used in the tests of the project
   - export NODE_ENV=testing
+  - git clone https://github.com/gnosis/safe-transaction-history.git
+  - cd safe-transaction-history
+  - git checkout develop
+  - docker-compose build
+  - docker-compose up -d
+  - cd ..
 after_success:
   - |
 
