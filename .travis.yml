@@ -26,9 +26,12 @@ before_script:
   - git checkout develop
   - docker-compose --version
   - docker-compose build
-  - docker-compose up -d
+  - docker-compose start
   - cd ..
 after_success:
+  - cd safe-transaction-history
+  - docker-compose stop
+  - cd ..
   - |
 
     if [ ${TRAVIS_BRANCH} = "master" ]; then
