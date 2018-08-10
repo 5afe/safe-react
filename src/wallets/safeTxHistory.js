@@ -3,7 +3,7 @@ import { getSafeEthereumInstance } from '~/wallets/createTransactions'
 import { getWeb3 } from '~/wallets/getWeb3'
 import { getTxServiceUriFrom, getTxServiceHost } from '~/config'
 
-type Type = 'confirmation' | 'execution'
+export type TxServiceType = 'confirmation' | 'execution'
 export type Operation = 0 | 1 | 2
 
 const calculateBodyFrom = async (
@@ -15,7 +15,7 @@ const calculateBodyFrom = async (
   nonce: number,
   transactionHash: string,
   sender: string,
-  type: Type,
+  type: TxServiceType,
 ) => {
   const gnosisSafe = await getSafeEthereumInstance(safeAddress)
   const contractTransactionHash = await gnosisSafe.getTransactionHash(to, valueInWei, data, operation, nonce)
@@ -32,7 +32,7 @@ const calculateBodyFrom = async (
     type,
   })
 }
-const buildTxServiceUrlFrom = (safeAddress: string) => {
+export const buildTxServiceUrlFrom = (safeAddress: string) => {
   const host = getTxServiceHost()
   const address = getWeb3().toChecksumAddress(safeAddress)
   const base = getTxServiceUriFrom(address)
@@ -48,7 +48,7 @@ export const submitOperation = async (
   nonce: number,
   txHash: string,
   sender: string,
-  type: Type,
+  type: TxServiceType,
 ) => {
   const url = buildTxServiceUrlFrom(safeAddress)
   const headers = {
