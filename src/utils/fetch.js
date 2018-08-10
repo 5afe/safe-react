@@ -12,8 +12,8 @@ export const enhancedFetch = async (url: string, errMsg: string) => {
 
   const response = await fetch(url, sentData)
   if (!response.ok) {
-    throw new Error(errMsg)
+    return Promise.reject(new Error(errMsg))
   }
 
-  return response.json()
+  return Promise.resolve(response.json())
 }
