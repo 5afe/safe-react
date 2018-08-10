@@ -6,6 +6,7 @@ import { makeOwner } from '~/routes/safe/store/model/owner'
 import { makeTransaction, type Transaction, type TransactionProps } from '~/routes/safe/store/model/transaction'
 import { load, TX_KEY } from '~/utils/localStorage'
 import { type Confirmation, type ConfirmationProps, makeConfirmation } from '~/routes/safe/store/model/confirmation'
+import { loadSafeSubjects } from '~/utils/localStorage/transactions'
 import addTransactions from './addTransactions'
 
 export const loadSafeTransactions = () => {
@@ -14,10 +15,13 @@ export const loadSafeTransactions = () => {
   return Map().withMutations((map: Map<string, List<Confirmation>>) =>
     Object.keys(safes).map((safe: string) => {
       const safeTxs = safes[safe]
+      const safeSubjects = loadSafeSubjects(safe)
       const safeTxsRecord = safeTxs.map((tx: TransactionProps) => {
         const { confirmations } = tx
+        const name = safeSubjects.get(String(tx.nonce)) || 'Unknown'
         const txRecord = makeTransaction({
           ...tx,
+          name,
           confirmations: List(confirmations.map((conf: ConfirmationProps) =>
             makeConfirmation({ ...conf, owner: makeOwner(conf.owner) }))),
         })

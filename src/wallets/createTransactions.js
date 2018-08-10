@@ -8,7 +8,9 @@ import { getGnosisSafeContract } from '~/wallets/safeContracts'
 import { getWeb3 } from '~/wallets/getWeb3'
 import { type Safe } from '~/routes/safe/store/model/safe'
 import { sameAddress } from '~/wallets/ethAddresses'
-import { checkReceiptStatus, calculateGasOf, calculateGasPrice, EMPTY_DATA } from '~/wallets/ethTransactions'
+import { EMPTY_DATA } from '~/wallets/ethTransactions'
+import { storeSubject } from '~/utils/localStorage/transactions'
+import { executeTransaction, approveTransaction } from '~/wallets/safeOperations'
 
 export const TX_NAME_PARAM = 'txName'
 export const TX_DESTINATION_PARAM = 'txDestination'
@@ -53,9 +55,12 @@ export const storeTransaction = (
   if (notMinedWhenOneOwnerSafe) {
     throw new Error('The tx should be mined before storing it in safes with one owner')
   }
+  // fetch actual transactions from endpoint and check nonce is higher than the last one
+  // send tx to service
+  // store subject in local storage (for testing it the actual name should be '')
 
   const transaction: Transaction = makeTransaction({
-    name, nonce, value, confirmations, destination, threshold: safeThreshold, tx, data,
+    name: '', nonce, value, confirmations, destination, threshold: safeThreshold, tx, data,
   })
 
   const safeTransactions = load(TX_KEY) || {}
@@ -66,8 +71,9 @@ export const storeTransaction = (
     throw new Error(`Transaction with same nonce: ${nonce} already created for safe: ${safeAddress}`)
   }
 
-  safeTransactions[safeAddress] = txsRecord.push(transaction)
+  storeSubject(safeAddress, nonce, name)
 
+  safeTransactions[safeAddress] = txsRecord.push(transaction)
   localStorage.setItem(TX_KEY, JSON.stringify(safeTransactions))
 }
 
@@ -88,39 +94,34 @@ export const getSafeEthereumInstance = async (safeAddress: string) => {
 
 export const createTransaction = async (
   safe: Safe,
-  txName: string,
-  txDest: string,
-  txValue: number,
+  name: string,
+  to: string,
+  value: number,
   nonce: number,
-  user: string,
+  sender: string,
   data: string = EMPTY_DATA,
 ) => {
   const web3 = getWeb3()
+  const owners = safe.get('owners')
   const safeAddress = safe.get('address')
-  const gnosisSafe = await getSafeEthereumInstance(safeAddress)
-  const valueInWei = web3.toWei(txValue, 'ether')
+  const threshold = safe.get('threshold')
+  const valueInWei = web3.toWei(value, 'ether')
   const CALL = 0
-  const gasPrice = await calculateGasPrice()
 
-  const thresholdIsOne = safe.get('threshold') === 1
-  if (hasOneOwner(safe) || thresholdIsOne) {
-    const txConfirmationData =
-      gnosisSafe.contract.execTransactionIfApproved.getData(txDest, valueInWei, data, CALL, nonce)
-    const gas = await calculateGasOf(txConfirmationData, user, safeAddress)
-    const txHash =
-      await gnosisSafe.execTransactionIfApproved(txDest, valueInWei, data, CALL, nonce, { from: user, gas, gasPrice })
-    await checkReceiptStatus(txHash.tx)
-    const executedConfirmations: List<Confirmation> = buildExecutedConfirmationFrom(safe.get('owners'), user)
-    return storeTransaction(txName, nonce, txDest, txValue, user, executedConfirmations, txHash.tx, safeAddress, safe.get('threshold'), data)
+  const isExecution = hasOneOwner(safe) || threshold === 1
+  if (isExecution) {
+    const txHash = await executeTransaction(safeAddress, to, valueInWei, data, CALL, nonce, sender)
+    // TODO Remove when TX History service is fully integrated
+    const executedConfirmations: List<Confirmation> = buildExecutedConfirmationFrom(owners, sender)
+
+    // TODO Remove when TX History service is fully integrated
+    return storeTransaction(name, nonce, to, value, sender, executedConfirmations, txHash, safeAddress, threshold, data)
   }
 
-  const txData = gnosisSafe.contract.approveTransactionWithParameters.getData(txDest, valueInWei, data, CALL, nonce)
-  const gas = await calculateGasOf(txData, user, safeAddress)
-  const txConfirmationHash = await gnosisSafe
-    .approveTransactionWithParameters(txDest, valueInWei, data, CALL, nonce, { from: user, gas, gasPrice })
-  await checkReceiptStatus(txConfirmationHash.tx)
+  const txHash = await approveTransaction(safeAddress, to, valueInWei, data, CALL, nonce, sender)
+  // TODO Remove when TX History service is fully integrated
+  const confirmations: List<Confirmation> = buildConfirmationsFrom(owners, sender, txHash)
 
-  const confirmations: List<Confirmation> = buildConfirmationsFrom(safe.get('owners'), user, txConfirmationHash.tx)
-
-  return storeTransaction(txName, nonce, txDest, txValue, user, confirmations, '', safeAddress, safe.get('threshold'), data)
+  // TODO Remove when TX History service is fully integrated
+  return storeTransaction(name, nonce, to, value, sender, confirmations, '', safeAddress, threshold, data)
 }
