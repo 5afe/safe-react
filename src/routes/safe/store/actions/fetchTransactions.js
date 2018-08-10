@@ -3,34 +3,71 @@ import { List, Map } from 'immutable'
 import type { Dispatch as ReduxDispatch } from 'redux'
 import { type GlobalState } from '~/store/index'
 import { makeOwner } from '~/routes/safe/store/model/owner'
-import { makeTransaction, type Transaction, type TransactionProps } from '~/routes/safe/store/model/transaction'
+import { makeTransaction, type Transaction } from '~/routes/safe/store/model/transaction'
 import { load, TX_KEY } from '~/utils/localStorage'
-import { type Confirmation, type ConfirmationProps, makeConfirmation } from '~/routes/safe/store/model/confirmation'
+import { makeConfirmation } from '~/routes/safe/store/model/confirmation'
 import { loadSafeSubjects } from '~/utils/localStorage/transactions'
+import { buildTxServiceUrlFrom, type TxServiceType } from '~/wallets/safeTxHistory'
+import { enhancedFetch } from '~/utils/fetch'
 import addTransactions from './addTransactions'
 
-export const loadSafeTransactions = () => {
+type ConfirmationServiceModel = {
+  owner: string,
+  submissionDate: Date,
+  type: TxServiceType,
+  transactionHash: string,
+}
+
+type TxServiceModel = {
+  to: string,
+  value: number,
+  data: string,
+  operation: number,
+  nonce: number,
+  submissionDate: Date,
+  executionDate: Date,
+  confirmations: ConfirmationServiceModel[],
+  isExecuted: boolean,
+}
+
+const buildTransactionFrom = (tx: TxServiceModel, safeSubjects: Map<string, string>) => {
+  const name = safeSubjects.get(String(tx.nonce)) || 'Unknown'
+  const confirmations = List(tx.confirmations.map((conf: ConfirmationServiceModel) =>
+    makeConfirmation({
+      owner: makeOwner({ address: conf.owner }),
+      type: conf.type,
+      hash: conf.transactionHash,
+    })))
+
+  return makeTransaction({
+    name,
+    nonce: tx.nonce,
+    value: tx.value,
+    confirmations,
+    destination: tx.to,
+    data: tx.data,
+    isExecuted: tx.isExecuted,
+  })
+}
+
+export const loadSafeTransactions = async () => {
   const safes = load(TX_KEY) || {}
+  const safeAddresses: string[] = Object.keys(safes)
+  const transactions: TxServiceModel[][] = await Promise.all(safeAddresses.map(async (safeAddress: string) => {
+    const url = buildTxServiceUrlFrom(safeAddress)
 
-  return Map().withMutations((map: Map<string, List<Confirmation>>) =>
-    Object.keys(safes).map((safe: string) => {
-      const safeTxs = safes[safe]
-      const safeSubjects = loadSafeSubjects(safe)
-      const safeTxsRecord = safeTxs.map((tx: TransactionProps) => {
-        const { confirmations } = tx
-        const name = safeSubjects.get(String(tx.nonce)) || 'Unknown'
-        const txRecord = makeTransaction({
-          ...tx,
-          name,
-          confirmations: List(confirmations.map((conf: ConfirmationProps) =>
-            makeConfirmation({ ...conf, owner: makeOwner(conf.owner) }))),
-        })
+    return enhancedFetch(url, 'Error fetching txs information')
+  }))
 
-        return txRecord
-      })
+  return Map().withMutations((map: Map<string, List<Transaction>>) => {
+    transactions.map((safeTxs: TxServiceModel[], index) => {
+      const safeAddress = safeAddresses[index]
+      const safeSubjects = loadSafeSubjects(safeAddress)
+      const txsRecord = safeTxs.map((tx: TxServiceModel) => buildTransactionFrom(tx, safeSubjects))
 
-      return map.set(safe, List(safeTxsRecord))
-    }))
+      return map.set(safeAddress, List(txsRecord))
+    })
+  })
 }
 
 export default () => async (dispatch: ReduxDispatch<GlobalState>) => {
