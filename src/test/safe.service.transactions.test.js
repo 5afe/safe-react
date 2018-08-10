@@ -29,7 +29,7 @@ describe('Transactions Suite', () => {
     if (!secondOwner) { throw new Error() }
   })
 
-  it('adds first confirmation to stored safe', async () => {
+  it('adds first transaction to stored safe', async () => {
     // GIVEN
     const txName = 'Buy butteries for project'
     const nonce: number = 10
@@ -49,7 +49,7 @@ describe('Transactions Suite', () => {
     testTransactionFrom(safeTransactions, 0, txName, nonce, value, 2, destination, EMPTY_DATA, 'foo', 'confirmationHash', owners.get(0), owners.get(1))
   })
 
-  it('adds second confirmation to stored safe with one confirmation', async () => {
+  it('adds second transaction to stored safe with one transaction', async () => {
     // GIVEN
     const firstTxName = 'Buy butteries for project'
     const firstNonce: number = Date.now()
@@ -77,7 +77,7 @@ describe('Transactions Suite', () => {
     testTransactionFrom(safeTxs, 1, secondTxName, secondNonce, value, 2, destination, EMPTY_DATA, 'foo', 'confirmationHash', owners.get(0), owners.get(1))
   })
 
-  it('adds second confirmation to stored safe having two safes with one confirmation each', async () => {
+  it('adds second transaction to stored safe having two safes with one transaction each', async () => {
     const txName = 'Buy batteris for Alplha project'
     const nonce = 10
     const safeAddress = safe.address
@@ -113,7 +113,7 @@ describe('Transactions Suite', () => {
     const txConfirmations: List<Confirmation> = buildConfirmationsFrom(owners, creator, 'secondConfirmationHash')
     storeTransaction(
       txFirstName, txFirstNonce, destination, value, creator,
-      txConfirmations, '', safe.get('address'), safe.get('threshold'), EMPTY_DATA,
+      txConfirmations, '', safeAddress, safe.get('threshold'), EMPTY_DATA,
     )
 
     transactions = loadSafeTransactions()
