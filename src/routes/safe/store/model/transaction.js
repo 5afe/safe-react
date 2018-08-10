@@ -7,11 +7,10 @@ export type TransactionProps = {
   name: string,
   nonce: number,
   value: number,
-  threshold: number,
   confirmations: List<Confirmation>,
   destination: string,
-  tx: string,
   data: string,
+  isExecuted: boolean,
 }
 
 export const makeTransaction: RecordFactory<TransactionProps> = Record({
@@ -20,9 +19,8 @@ export const makeTransaction: RecordFactory<TransactionProps> = Record({
   value: 0,
   confirmations: List([]),
   destination: '',
-  tx: '',
-  threshold: 0,
   data: '',
+  isExecuted: false,
 })
 
 export type Transaction = RecordOf<TransactionProps>
