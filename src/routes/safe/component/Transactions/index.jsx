@@ -11,6 +11,7 @@ import actions, { type Actions } from './actions'
 type Props = SelectorProps & Actions & {
   safeName: string,
   safeAddress: string,
+  threshold: number,
 
 }
 class Transactions extends React.Component<Props, {}> {
@@ -24,13 +25,13 @@ class Transactions extends React.Component<Props, {}> {
   }
 
   render() {
-    const { transactions, safeName } = this.props
+    const { transactions, safeName, threshold } = this.props
     const hasTransactions = transactions.count() > 0
 
     return (
       <React.Fragment>
         { hasTransactions
-          ? transactions.map((tx: Transaction) => <GnoTransaction key={tx.get('nonce')} safeName={safeName} onProcessTx={this.onProcessTx} transaction={tx} />)
+          ? transactions.map((tx: Transaction) => <GnoTransaction key={tx.get('nonce')} safeName={safeName} onProcessTx={this.onProcessTx} transaction={tx} threshold={threshold} />)
           : <NoTransactions />
         }
       </React.Fragment>

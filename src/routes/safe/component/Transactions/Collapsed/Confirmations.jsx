@@ -27,10 +27,11 @@ type Props = Open & WithStyles & {
   threshold: number,
 }
 
-const GnoConfirmation = ({ owner, status, hash }: ConfirmationProps) => {
+const GnoConfirmation = ({ owner, type, hash }: ConfirmationProps) => {
   const address = owner.get('address')
-  const text = status ? 'Confirmed' : 'Not confirmed'
-  const hashText = status ? `Confirmation hash: ${hash}` : undefined
+  const confirmed = type === 'confirmed'
+  const text = confirmed ? 'Confirmed' : 'Not confirmed'
+  const hashText = confirmed ? `Confirmation hash: ${hash}` : undefined
 
   return (
     <React.Fragment>
@@ -70,7 +71,7 @@ const Confirmaitons = openHoc(({
           <GnoConfirmation
             key={confirmation.get('owner').get('address')}
             owner={confirmation.get('owner')}
-            status={confirmation.get('status')}
+            type={confirmation.get('type')}
             hash={confirmation.get('hash')}
           />
         ))}

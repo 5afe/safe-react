@@ -5,7 +5,7 @@ import { safeSelector, type RouterProps, type SafeSelectorProps } from '~/routes
 import { providerNameSelector, userAccountSelector } from '~/wallets/store/selectors/index'
 import { type Safe } from '~/routes/safe/store/model/safe'
 import { type Owner } from '~/routes/safe/store/model/owner'
-import { type GlobalState } from '~/store/index'
+import { type GlobalState } from '~/store'
 import { sameAddress } from '~/wallets/ethAddresses'
 import { activeTokensSelector } from '~/routes/tokens/store/selectors'
 import { type Token } from '~/routes/tokens/store/model/token'
