@@ -10,15 +10,15 @@ import { SAFELIST_ADDRESS } from '~/routes/routes'
 import SafeView from '~/routes/safe/component/Safe'
 import AppRoutes from '~/routes'
 import { WITHDRAW_BUTTON_TEXT } from '~/routes/safe/component/Safe/DailyLimit'
-import { getBalanceInEtherOf } from '~/wallets/getWeb3'
+import { getBalanceInEtherOf } from '~/logic/wallets/getWeb3'
 import { sleep } from '~/utils/timer'
-import { getDailyLimitFrom } from '~/routes/safe/component/Withdraw/withdraw'
 import { type DailyLimitProps } from '~/routes/safe/store/model/dailyLimit'
 import { WITHDRAW_INDEX } from '~/test/builder/safe.dom.utils'
 import { aMinedSafe } from '~/test/builder/safe.redux.builder'
 import { getSafeFrom } from '~/test/utils/safeHelper'
 import { filterMoveButtonsFrom } from '~/test/builder/safe.dom.builder'
 import { fetchTokens } from '~/routes/tokens/store/actions/fetchTokens'
+import { getDailyLimitFrom } from '~/logic/contracts/dailyLimitContracts'
 
 describe('React DOM TESTS > Withdraw funds from safe', () => {
   let store

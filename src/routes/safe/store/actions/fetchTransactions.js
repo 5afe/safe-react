@@ -7,7 +7,7 @@ import { makeTransaction, type Transaction } from '~/routes/safe/store/model/tra
 import { load, TX_KEY } from '~/utils/localStorage'
 import { makeConfirmation } from '~/routes/safe/store/model/confirmation'
 import { loadSafeSubjects } from '~/utils/localStorage/transactions'
-import { buildTxServiceUrlFrom, type TxServiceType } from '~/wallets/safeTxHistory'
+import { buildTxServiceUrlFrom, type TxServiceType } from '~/logic/safe/safeTxHistory'
 import { enhancedFetch } from '~/utils/fetch'
 import addTransactions from './addTransactions'
 

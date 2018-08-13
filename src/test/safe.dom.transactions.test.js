@@ -8,9 +8,9 @@ import { sendAddOwnerForm, checkMinedAddOwnerTx, checkPendingAddOwnerTx } from '
 import { sendRemoveOwnerForm, checkMinedRemoveOwnerTx, checkPendingRemoveOwnerTx } from '~/test/utils/transactions/removeOwner.helper'
 import { checkMinedThresholdTx, sendChangeThresholdForm, checkThresholdOf } from '~/test/utils/transactions/threshold.helper'
 import { sendWithdrawForm, checkMinedWithdrawTx } from '~/test/utils/transactions/withdraw.helper'
-import { processTransaction } from '~/routes/safe/component/Transactions/processTransactions'
 import { checkBalanceOf } from '~/test/utils/tokenMovements'
 import { sleep } from '~/utils/timer'
+import { processTransaction } from '~/logic/safe/safeFrontendOperations'
 
 describe('DOM > Feature > SAFE MULTISIG Transactions', () => {
   let domSafe: DomSafe
@@ -71,10 +71,11 @@ describe('DOM > Feature > SAFE MULTISIG Transactions', () => {
 
     let transactions = TestUtils.scryRenderedComponentsWithType(SafeDom, Transaction)
     expect(transactions.length).toBe(7)
+    await checkThresholdOf(address, 3)
 
     // WHEN... processing pending TXs
-    await processTransaction(address, transactions[4].props.transaction, 1, accounts[1])
-    await processTransaction(address, transactions[5].props.transaction, 1, accounts[1])
+    await processTransaction(address, transactions[4].props.transaction, 1, accounts[1], 3)
+    await processTransaction(address, transactions[5].props.transaction, 1, accounts[1], 3)
     await refreshTransactions(store)
 
     // THEN
@@ -93,14 +94,14 @@ describe('DOM > Feature > SAFE MULTISIG Transactions', () => {
     let statusses = ['Adol Metamask 3 [Not confirmed]', 'Adol Metamask 2 [Not confirmed]', 'Adol 1 Eth Account [Confirmed]']
     await checkPendingRemoveOwnerTx(transactions[7], 3, 'Remove Owner Adol Metamask 3', statusses)
 
-    await processTransaction(address, transactions[7].props.transaction, 1, accounts[1])
+    await processTransaction(address, transactions[7].props.transaction, 1, accounts[1], 3)
     await refreshTransactions(store)
     transactions = TestUtils.scryRenderedComponentsWithType(SafeDom, Transaction)
     statusses = ['Adol Metamask 3 [Not confirmed]', 'Adol Metamask 2 [Confirmed]', 'Adol 1 Eth Account [Confirmed]']
     await checkPendingRemoveOwnerTx(transactions[7], 2, 'Remove Owner Adol Metamask 3', statusses)
     await checkThresholdOf(address, 3)
 
-    await processTransaction(address, transactions[7].props.transaction, 2, accounts[2])
+    await processTransaction(address, transactions[7].props.transaction, 2, accounts[2], 3)
     await refreshTransactions(store)
     await checkThresholdOf(address, 2)
     transactions = TestUtils.scryRenderedComponentsWithType(SafeDom, Transaction)
@@ -112,7 +113,7 @@ describe('DOM > Feature > SAFE MULTISIG Transactions', () => {
 
     // THEN
     transactions = TestUtils.scryRenderedComponentsWithType(SafeDom, Transaction)
-    await processTransaction(address, transactions[8].props.transaction, 1, accounts[1])
+    await processTransaction(address, transactions[8].props.transaction, 1, accounts[1], 2)
     await checkThresholdOf(address, 1)
   })
 })

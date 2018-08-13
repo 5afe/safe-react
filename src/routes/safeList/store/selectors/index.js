@@ -3,9 +3,9 @@ import { List, Map } from 'immutable'
 import { createSelector, type Selector } from 'reselect'
 import { type GlobalState } from '~/store/index'
 import { type Safe } from '~/routes/safe/store/model/safe'
-import { userAccountSelector } from '~/wallets/store/selectors/index'
+import { userAccountSelector } from '~/logic/wallets/store/selectors'
 import { type Owner } from '~/routes/safe/store/model/owner'
-import { sameAddress } from '~/wallets/ethAddresses'
+import { sameAddress } from '~/logic/wallets/ethAddresses'
 
 export const safesMapSelector = (state: GlobalState): Map<string, Safe> => state.safes
 const safesListSelector: Selector<GlobalState, {}, List<Safe>> = createSelector(

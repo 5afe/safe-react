@@ -1,5 +1,5 @@
 // @flow
-import { getWeb3 } from '~/wallets/getWeb3'
+import { getWeb3 } from '~/logic/wallets/getWeb3'
 import abi from 'ethereumjs-abi'
 import { promisify } from '~/utils/promisify'
 

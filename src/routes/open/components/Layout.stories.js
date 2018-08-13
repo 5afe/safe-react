@@ -4,7 +4,7 @@ import { State, Store } from '@sambego/storybook-state'
 import * as React from 'react'
 import styles from '~/components/layout/PageFrame/index.scss'
 import { getAccountsFrom, getThresholdFrom } from '~/routes/open/utils/safeDataExtractor'
-import { getProviderInfo } from '~/wallets/getWeb3'
+import { getProviderInfo } from '~/logic/wallets/getWeb3'
 import { sleep } from '~/utils/timer'
 import Component from './Layout'
 

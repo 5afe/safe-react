@@ -17,7 +17,7 @@ import ExpandLess from '@material-ui/icons/ExpandLess'
 import ExpandMore from '@material-ui/icons/ExpandMore'
 import { type OwnerProps } from '~/routes/safe/store/model/owner'
 import { type WithStyles } from '~/theme/mui'
-import { sameAddress } from '~/wallets/ethAddresses'
+import { sameAddress } from '~/logic/wallets/ethAddresses'
 
 const styles = {
   nested: {

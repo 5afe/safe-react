@@ -1,5 +1,5 @@
 // @flow
-import { getWeb3 } from '~/wallets/getWeb3'
+import { getWeb3 } from '~/logic/wallets/getWeb3'
 import { BigNumber } from 'bignumber.js'
 
 export const toNative = async (amt: string | number | BigNumber, decimal: number): Promise<BigNumber> => {

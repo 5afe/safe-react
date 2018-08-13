@@ -1,9 +1,9 @@
 // @flow
-import { getSafeEthereumInstance } from '~/wallets/createTransactions'
-import { getWeb3 } from '~/wallets/getWeb3'
+import { getWeb3 } from '~/logic/wallets/getWeb3'
 import { getTxServiceUriFrom, getTxServiceHost } from '~/config'
+import { getSafeEthereumInstance } from '~/logic/safe/safeFrontendOperations'
 
-export type TxServiceType = 'confirmation' | 'execution'
+export type TxServiceType = 'confirmation' | 'execution' | 'initialised'
 export type Operation = 0 | 1 | 2
 
 const calculateBodyFrom = async (
@@ -32,6 +32,7 @@ const calculateBodyFrom = async (
     type,
   })
 }
+
 export const buildTxServiceUrlFrom = (safeAddress: string) => {
   const host = getTxServiceHost()
   const address = getWeb3().toChecksumAddress(safeAddress)

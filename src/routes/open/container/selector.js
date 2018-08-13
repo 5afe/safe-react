@@ -1,6 +1,6 @@
 // @flow
 import { createStructuredSelector } from 'reselect'
-import { providerNameSelector, userAccountSelector } from '~/wallets/store/selectors/index'
+import { providerNameSelector, userAccountSelector } from '~/logic/wallets/store/selectors'
 
 export default createStructuredSelector({
   provider: providerNameSelector,

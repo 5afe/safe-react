@@ -1,6 +1,6 @@
 // @flow
 import { List } from 'immutable'
-import { getSafeEthereumInstance, createTransaction } from '~/wallets/createTransactions'
+import { getSafeEthereumInstance, createTransaction } from '~/logic/safe/safeFrontendOperations'
 import { type Safe } from '~/routes/safe/store/model/safe'
 import { makeOwner } from '~/routes/safe/store/model/owner'
 import fetchTransactions from '~/routes/safe/store/actions/fetchTransactions'
@@ -9,7 +9,7 @@ import { aNewStore } from '~/store'
 import { aMinedSafe } from '~/test/builder/safe.redux.builder'
 import { getSafeFrom } from '~/test/utils/safeHelper'
 import { promisify } from '~/utils/promisify'
-import { getWeb3 } from '~/wallets/getWeb3'
+import { getWeb3 } from '~/logic/wallets/getWeb3'
 import { safeTransactionsSelector } from '~/routes/safe/store/selectors'
 import { testTransactionFrom, testSizeOfTransactions } from './utils/historyServiceHelper'
 

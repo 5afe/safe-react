@@ -2,7 +2,7 @@
 /*
 import { aNewStore } from '~/store'
 import { aDeployedSafe } from '~/routes/safe/store/test/builder/deployedSafe.builder'
-import { getWeb3 } from '~/wallets/getWeb3'
+import { getWeb3 } from '~/logic/wallets/getWeb3'
 import { sleep } from '~/utils/timer'
 import { type Match } from 'react-router-dom'
 import { promisify } from '~/utils/promisify'

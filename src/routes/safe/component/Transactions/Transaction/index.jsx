@@ -19,7 +19,7 @@ import Collapsed from '~/routes/safe/component/Transactions/Collapsed'
 import { type Transaction } from '~/routes/safe/store/model/transaction'
 import Hairline from '~/components/layout/Hairline/index'
 import Button from '~/components/layout/Button'
-import { sameAddress } from '~/wallets/ethAddresses'
+import { sameAddress } from '~/logic/wallets/ethAddresses'
 import { type Confirmation } from '~/routes/safe/store/model/confirmation'
 import selector, { type SelectorProps } from './selector'
 

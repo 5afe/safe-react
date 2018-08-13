@@ -2,7 +2,7 @@
 import * as React from 'react'
 import Stepper from '~/components/Stepper'
 import { connect } from 'react-redux'
-import { getSafeEthereumInstance, createTransaction } from '~/wallets/createTransactions'
+import { getSafeEthereumInstance, createTransaction } from '~/logic/safe/safeFrontendOperations'
 import { type Safe } from '~/routes/safe/store/model/safe'
 import ThresholdForm, { THRESHOLD_PARAM } from './ThresholdForm'
 import selector, { type SelectorProps } from './selector'

@@ -1,5 +1,5 @@
 // @flow
-import { fetchProvider } from '~/wallets/store/actions'
+import { fetchProvider } from '~/logic/wallets/store/actions'
 
 export default {
   fetchProvider,

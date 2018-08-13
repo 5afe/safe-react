@@ -1,12 +1,13 @@
 // @flow
 import contract from 'truffle-contract'
-import { getProviderInfo, getBalanceInEtherOf, getWeb3 } from '~/wallets/getWeb3'
+import { getProviderInfo, getBalanceInEtherOf, getWeb3 } from '~/logic/wallets/getWeb3'
 import { promisify } from '~/utils/promisify'
-import withdraw, { DESTINATION_PARAM, VALUE_PARAM } from '~/routes/safe/component/Withdraw/withdraw'
 import { type Safe } from '~/routes/safe/store/model/safe'
 import Token from '#/test/TestToken.json'
 import { ensureOnce } from '~/utils/singleton'
-import { toNative } from '~/wallets/tokens'
+import { DESTINATION_PARAM, VALUE_PARAM } from '~/routes/safe/component/Withdraw/WithdrawForm'
+import { withdraw } from '~/logic/safe/safeFrontendOperations'
+import { toNative } from '~/logic/wallets/tokens'
 
 export const addEtherTo = async (address: string, eth: string) => {
   const web3 = getWeb3()

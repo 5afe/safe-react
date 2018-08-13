@@ -1,6 +1,6 @@
 // @flow
 import { BigNumber } from 'bignumber.js'
-import { getWeb3 } from '~/wallets/getWeb3'
+import { getWeb3 } from '~/logic/wallets/getWeb3'
 import { promisify } from '~/utils/promisify'
 import { enhancedFetch } from '~/utils/fetch'
 

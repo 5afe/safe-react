@@ -2,7 +2,7 @@
 import { Record } from 'immutable'
 import type { RecordFactory, RecordOf } from 'immutable'
 import { makeOwner, type Owner } from '~/routes/safe/store/model/owner'
-import { type TxServiceType } from '~/wallets/safeTxHistory'
+import { type TxServiceType } from '~/logic/safe/safeTxHistory'
 
 export type ConfirmationProps = {
   owner: Owner,
@@ -12,7 +12,7 @@ export type ConfirmationProps = {
 
 export const makeConfirmation: RecordFactory<ConfirmationProps> = Record({
   owner: makeOwner(),
-  type: 'confirmation',
+  type: 'initialised',
   hash: '',
 })
 

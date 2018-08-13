@@ -1,13 +1,13 @@
 // @flow
 import contract from 'truffle-contract'
 import { ensureOnce } from '~/utils/singleton'
-import { getWeb3 } from '~/wallets/getWeb3'
+import { getWeb3 } from '~/logic/wallets/getWeb3'
 import { promisify } from '~/utils/promisify'
 import GnosisSafeSol from '#/GnosisSafeTeamEdition.json'
 import ProxyFactorySol from '#/ProxyFactory.json'
 import CreateAndAddModules from '#/CreateAndAddModules.json'
 import DailyLimitModule from '#/DailyLimitModule.json'
-import { calculateGasOf, calculateGasPrice, EMPTY_DATA } from '~/wallets/ethTransactions'
+import { calculateGasOf, calculateGasPrice, EMPTY_DATA } from '~/logic/wallets/ethTransactions'
 
 let proxyFactoryMaster
 let createAndAddModuleMaster

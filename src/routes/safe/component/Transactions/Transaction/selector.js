@@ -1,7 +1,7 @@
 // @flow
 import { createStructuredSelector } from 'reselect'
 import { confirmationsTransactionSelector } from '~/routes/safe/store/selectors/index'
-import { userAccountSelector } from '~/wallets/store/selectors'
+import { userAccountSelector } from '~/logic/wallets/store/selectors'
 import { type Transaction } from '~/routes/safe/store/model/transaction'
 import { type GlobalState } from '~/store'
 import { type Confirmation } from '~/routes/safe/store/model/confirmation'

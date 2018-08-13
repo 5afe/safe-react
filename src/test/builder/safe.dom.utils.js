@@ -10,7 +10,7 @@ import { ConnectedRouter } from 'react-router-redux'
 import AppRoutes from '~/routes'
 import { SAFELIST_ADDRESS, SETTINS_ADDRESS } from '~/routes/routes'
 import { history, type GlobalState } from '~/store'
-import { EMPTY_DATA } from '~/wallets/ethTransactions'
+import { EMPTY_DATA } from '~/logic/wallets/ethTransactions'
 
 export const EXPAND_BALANCE_INDEX = 0
 export const EXPAND_OWNERS_INDEX = 1

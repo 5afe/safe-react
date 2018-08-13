@@ -2,13 +2,13 @@
 import { makeSafe, type Safe } from '~/routes/safe/store/model/safe'
 import { buildOwnersFrom, buildDailyLimitFrom } from '~/routes/safe/store/actions'
 import { FIELD_NAME, FIELD_CONFIRMATIONS, FIELD_OWNERS, getOwnerNameBy, getOwnerAddressBy, FIELD_DAILY_LIMIT } from '~/routes/open/components/fields'
-import { getWeb3, getProviderInfo } from '~/wallets/getWeb3'
+import { getWeb3, getProviderInfo } from '~/logic/wallets/getWeb3'
 import { promisify } from '~/utils/promisify'
 import addSafe from '~/routes/safe/store/actions/addSafe'
 import { createSafe, type OpenState } from '~/routes/open/container/Open'
 import { type GlobalState } from '~/store/index'
-import { makeProvider } from '~/wallets/store/model/provider'
-import addProvider from '~/wallets/store/actions/addProvider'
+import { makeProvider } from '~/logic/wallets/store/model/provider'
+import addProvider from '~/logic/wallets/store/actions/addProvider'
 
 class SafeBuilder {
   safe: Safe

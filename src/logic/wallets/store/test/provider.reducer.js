@@ -1,9 +1,9 @@
 // @flow
 import { combineReducers, createStore, applyMiddleware, compose } from 'redux'
 import thunk from 'redux-thunk'
-import providerReducer, { PROVIDER_REDUCER_ID } from '~/wallets/store/reducer/provider'
-import type { ProviderProps } from '~/wallets/store/model/provider'
-import { makeProvider } from '~/wallets/store/model/provider'
+import providerReducer, { PROVIDER_REDUCER_ID } from '~/logic/wallets/store/reducer/provider'
+import type { ProviderProps } from '~/logic/wallets/store/model/provider'
+import { makeProvider } from '~/logic/wallets/store/model/provider'
 import { processProviderResponse } from '../actions/fetchProvider'
 
 const providerReducerTests = () => {
