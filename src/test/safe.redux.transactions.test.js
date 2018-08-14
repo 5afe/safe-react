@@ -38,7 +38,7 @@ describe('Transactions Suite', () => {
     const secondTxHash = await createTransaction(safe, 'Add Owner Third account', safeAddress, 0, nonce + 100, executor, secondTxData)
 
     // WHEN
-    store.dispatch(fetchTransactions())
+    store.dispatch(fetchTransactions(safeAddress))
     let transactions = safeTransactionsSelector(store.getState(), { safeAddress })
     testSizeOfTransactions(transactions, 2)
 
@@ -63,7 +63,7 @@ describe('Transactions Suite', () => {
 
     localStorage.clear()
 
-    store.dispatch(fetchTransactions())
+    store.dispatch(fetchTransactions(safeAddress))
     transactions = safeTransactionsSelector(store.getState(), { safeAddress })
     testSizeOfTransactions(transactions, 2)
     testTransactionFrom(transactions, 0, 'Unknown', nonce, 0, safeAddress, firstTxData, true, firstTxConfirmations)

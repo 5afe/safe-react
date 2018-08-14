@@ -65,7 +65,7 @@ class RemoveOwner extends React.Component<Props, State> {
         safe, threshold, executor, fetchTransactions, userToRemove, name,
       } = this.props
       await removeOwner(values, safe, threshold, userToRemove, name, executor)
-      fetchTransactions()
+      fetchTransactions(safe.get('address'))
       this.setState({ done: true })
     } catch (error) {
       this.setState({ done: false })

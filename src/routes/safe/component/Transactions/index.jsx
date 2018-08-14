@@ -35,7 +35,7 @@ class Transactions extends React.Component<Props, {}> {
     }
 
     await processTransaction(safeAddress, tx, alreadyConfirmed, userAddress, threshold)
-    fetchTransactions()
+    fetchTransactions(safeAddress)
   }
 
   render() {

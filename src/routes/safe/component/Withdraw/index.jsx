@@ -34,7 +34,7 @@ class Withdraw extends React.Component<Props, State> {
     try {
       const { safe, userAddress, fetchTransactions } = this.props
       await withdraw(values, safe, userAddress)
-      fetchTransactions()
+      fetchTransactions(safe.get('address'))
 
       this.setState({ done: true })
     } catch (error) {

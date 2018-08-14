@@ -67,7 +67,7 @@ class SendToken extends React.Component<Props, State> {
 
       await processTokenTransfer(safe, token, destination, amount, userAddress)
       await sleep(1500)
-      this.props.fetchTransactions()
+      this.props.fetchTransactions(safe.get('address'))
       this.setState({ done: true })
     } catch (error) {
       this.setState({ done: false })

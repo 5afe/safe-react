@@ -20,8 +20,8 @@ export const EDIT_INDEX = 4
 export const WITHDRAW_INDEX = 5
 export const LIST_TXS_INDEX = 6
 
-export const listTxsClickingOn = async (store: Store, seeTxsButton: Element) => {
-  await store.dispatch(fetchTransactions())
+export const listTxsClickingOn = async (store: Store, seeTxsButton: Element, safeAddress: string) => {
+  await store.dispatch(fetchTransactions(safeAddress))
   await sleep(1200)
   expect(seeTxsButton.getElementsByTagName('span')[0].innerHTML).toEqual(SEE_MULTISIG_BUTTON_TEXT)
   TestUtils.Simulate.click(seeTxsButton)
@@ -88,8 +88,8 @@ export const checkPendingTx = async (
   }
 }
 
-export const refreshTransactions = async (store: Store<GlobalState>) => {
-  await store.dispatch(fetchTransactions())
+export const refreshTransactions = async (store: Store<GlobalState>, safeAddress: string) => {
+  await store.dispatch(fetchTransactions(safeAddress))
   await sleep(1500)
 }
 

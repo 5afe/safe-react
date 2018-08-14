@@ -58,7 +58,7 @@ class AddOwner extends React.Component<Props, State> {
         safe, threshold, userAddress, fetchTransactions,
       } = this.props
       await addOwner(values, safe, threshold, userAddress)
-      fetchTransactions()
+      fetchTransactions(safe.get('address'))
       this.setState({ done: true })
     } catch (error) {
       this.setState({ done: false })

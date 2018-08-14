@@ -40,7 +40,7 @@ class EditDailyLimit extends React.PureComponent<Props, State> {
       const to = await getDailyLimitAddress(safeAddress)
       const nonce = Date.now()
       await createTransaction(safe, `Change Safe's daily limit to ${newDailyLimit} [${nonce}]`, to, 0, nonce, userAddress, data)
-      await this.props.fetchTransactions()
+      await this.props.fetchTransactions(safeAddress)
       this.setState({ done: true })
     } catch (error) {
       this.setState({ done: false })
