@@ -57,6 +57,7 @@ export const executeTransaction = async (
 export const executeDailyLimit = async (
   safeAddress: string,
   to: string,
+  nonce: number,
   valueInWei: number,
   sender: string,
 ) => {
@@ -68,7 +69,6 @@ export const executeDailyLimit = async (
   const txHash = await dailyLimitModule.executeDailyLimit(0, to, valueInWei, { from: sender, gas, gasPrice })
   checkReceiptStatus(txHash.tx)
 
-  const nonce = Date.now()
   const operation = 0 // CALL for all currencies
   const data = '' // empty for ETH
   await submitOperation(safeAddress, to, valueInWei, data, operation, nonce, txHash, sender, 'execution')

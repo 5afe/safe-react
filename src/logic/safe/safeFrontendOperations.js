@@ -6,6 +6,7 @@ import { getWeb3 } from '~/logic/wallets/getWeb3'
 import { DESTINATION_PARAM, VALUE_PARAM } from '~/routes/safe/component/Withdraw/WithdrawForm'
 import { type Safe } from '~/routes/safe/store/model/safe'
 import { getGnosisSafeContract } from '~/logic/contracts/safeContracts'
+import { storeSubject } from '~/utils/localStorage/transactions'
 
 export const TX_NAME_PARAM = 'txName'
 export const TX_DESTINATION_PARAM = 'txDestination'
@@ -45,9 +46,13 @@ export const createTransaction = async (
 
   const isExecution = hasOneOwner(safe) || threshold === 1
 
-  return isExecution
-    ? executeTransaction(safeAddress, to, valueInWei, data, CALL, nonce, sender)
-    : approveTransaction(safeAddress, to, valueInWei, data, CALL, nonce, sender)
+  const txHash = isExecution
+    ? await executeTransaction(safeAddress, to, valueInWei, data, CALL, nonce, sender)
+    : await approveTransaction(safeAddress, to, valueInWei, data, CALL, nonce, sender)
+
+  storeSubject(safeAddress, nonce, name)
+
+  return txHash
 }
 
 export const processTransaction = async (
@@ -65,9 +70,11 @@ export const processTransaction = async (
   const CALL = 0
 
   const thresholdReached = threshold === alreadyConfirmed + 1
-  return thresholdReached
-    ? executeTransaction(safeAddress, to, valueInWei, data, CALL, nonce, sender)
-    : approveTransaction(safeAddress, to, valueInWei, data, CALL, nonce, sender)
+  const txHash = thresholdReached
+    ? await executeTransaction(safeAddress, to, valueInWei, data, CALL, nonce, sender)
+    : await approveTransaction(safeAddress, to, valueInWei, data, CALL, nonce, sender)
+
+  return txHash
 }
 
 export const withdraw = async (values: Object, safe: Safe, sender: string): Promise<void> => {
@@ -75,7 +82,10 @@ export const withdraw = async (values: Object, safe: Safe, sender: string): Prom
   const destination = values[DESTINATION_PARAM]
   const valueInEth = values[VALUE_PARAM]
   const valueInWei = getWeb3().toWei(valueInEth, 'ether')
+  const nonce = Date.now()
+  const txHash = await executeDailyLimit(safeAddress, destination, nonce, valueInWei, sender)
 
-  // TODO write subject `Withdraw movement of ${valueInEth}`
-  return executeDailyLimit(safeAddress, destination, valueInWei, sender)
+  storeSubject(safeAddress, nonce, `Withdraw movement of ${valueInEth}`)
+
+  return txHash
 }
