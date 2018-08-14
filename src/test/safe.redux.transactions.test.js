@@ -61,6 +61,8 @@ describe('Transactions Suite', () => {
     ])
     testTransactionFrom(transactions, 1, 'Add Owner Third account', nonce + 100, 0, safeAddress, secondTxData, false, secondTxConfirmations)
 
+    localStorage.clear()
+
     store.dispatch(fetchTransactions())
     transactions = safeTransactionsSelector(store.getState(), { safeAddress })
     testSizeOfTransactions(transactions, 2)

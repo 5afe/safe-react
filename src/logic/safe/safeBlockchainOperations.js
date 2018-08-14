@@ -66,12 +66,15 @@ export const executeDailyLimit = async (
   const gas = await calculateGasOf(dailyLimitData, sender, dailyLimitModule.address)
   const gasPrice = await calculateGasPrice()
 
-  const txHash = await dailyLimitModule.executeDailyLimit(0, to, valueInWei, { from: sender, gas, gasPrice })
-  checkReceiptStatus(txHash.tx)
+  const txReceipt = await dailyLimitModule.executeDailyLimit(0, to, valueInWei, { from: sender, gas, gasPrice })
+  checkReceiptStatus(txReceipt.tx)
 
+  /*
+  // Temporarily disabled for daily limit operations
   const operation = 0 // CALL for all currencies
   const data = '' // empty for ETH
-  await submitOperation(safeAddress, to, valueInWei, data, operation, nonce, txHash, sender, 'execution')
 
-  return txHash
+  await submitOperation(safeAddress, to, Number(valueInWei), data, operation, nonce, txReceipt.tx, sender, 'execution')
+  */
+  return txReceipt.tx
 }
