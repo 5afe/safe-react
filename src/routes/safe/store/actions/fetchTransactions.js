@@ -44,33 +44,23 @@ const buildTransactionFrom = (tx: TxServiceModel, safeSubjects: Map<string, stri
     value: tx.value,
     confirmations,
     destination: tx.to,
-    data: tx.data,
+    data: `0x${tx.data}`,
     isExecuted: tx.isExecuted,
   })
 }
 
-export const loadSafeTransactions = async () => {
-  const safes = load(TX_KEY) || {}
-  const safeAddresses: string[] = Object.keys(safes)
-  const transactions: TxServiceModel[][] = await Promise.all(safeAddresses.map(async (safeAddress: string) => {
-    const url = buildTxServiceUrlFrom(safeAddress)
+export const loadSafeTransactions = async (safeAddress: string) => {
+  const url = buildTxServiceUrlFrom(safeAddress)
+  const response = await enhancedFetch(url, 'Error fetching txs information')
+  const transactions: TxServiceModel[] = response.results
+  const safeSubjects = loadSafeSubjects(safeAddress)
+  const txsRecord = transactions.map((tx: TxServiceModel) => buildTransactionFrom(tx, safeSubjects))
 
-    return enhancedFetch(url, 'Error fetching txs information')
-  }))
-
-  return Map().withMutations((map: Map<string, List<Transaction>>) => {
-    transactions.map((safeTxs: TxServiceModel[], index) => {
-      const safeAddress = safeAddresses[index]
-      const safeSubjects = loadSafeSubjects(safeAddress)
-      const txsRecord = safeTxs.map((tx: TxServiceModel) => buildTransactionFrom(tx, safeSubjects))
-
-      return map.set(safeAddress, List(txsRecord))
-    })
-  })
+  return Map().set(safeAddress, List(txsRecord))
 }
 
-export default () => async (dispatch: ReduxDispatch<GlobalState>) => {
-  const transactions: Map<string, List<Transaction>> = await loadSafeTransactions()
+export default (safeAddress: string) => async (dispatch: ReduxDispatch<GlobalState>) => {
+  const transactions: Map<string, List<Transaction>> = await loadSafeTransactions(safeAddress)
 
   return dispatch(addTransactions(transactions))
 }
