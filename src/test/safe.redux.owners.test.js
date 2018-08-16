@@ -2,8 +2,7 @@
 import { aNewStore } from '~/store'
 import { getWeb3 } from '~/logic/wallets/getWeb3'
 import { promisify } from '~/utils/promisify'
-import { confirmationsTransactionSelector } from '~/routes/safe/store/selectors/index'
-import { getTransactionFromReduxStore } from '~/routes/safe/test/testMultisig'
+import { confirmationsTransactionSelector, safeTransactionsSelector } from '~/routes/safe/store/selectors/index'
 import fetchTransactions from '~/routes/safe/store/actions/fetchTransactions'
 import { type Safe } from '~/routes/safe/store/model/safe'
 import { getGnosisSafeInstanceAt } from '~/logic/contracts/safeContracts'
@@ -18,13 +17,16 @@ import { processTransaction } from '~/logic/safe/safeFrontendOperations'
 
 describe('React DOM TESTS > Add and remove owners', () => {
   const processOwnerModification = async (store, safeAddress, executor, threshold) => {
-    const tx = getTransactionFromReduxStore(store, safeAddress)
+    const reduxTransactions = safeTransactionsSelector(store.getState(), { safeAddress })
+    const tx = reduxTransactions.get(0)
     if (!tx) throw new Error()
+
     const confirmed = confirmationsTransactionSelector(store.getState(), { transaction: tx })
     const data = tx.get('data')
     expect(data).not.toBe(null)
     expect(data).not.toBe(undefined)
     expect(data).not.toBe('')
+
     return processTransaction(safeAddress, tx, confirmed, executor, threshold)
   }
 
@@ -115,10 +117,10 @@ describe('React DOM TESTS > Add and remove owners', () => {
 
     let safe = getSafeFrom(store.getState(), address)
     await removeOwner(values, safe, threshold, accounts[1], 'Adol Metamask 2', accounts[0])
-    await store.dispatch(fetchTransactions())
+    await store.dispatch(fetchTransactions(address))
     await processOwnerModification(store, address, accounts[1], 2)
 
-    await assureThresholdIs(gnosisSafe, 2)
+    await assureThresholdIs(gnosisSafe, 1)
     await assureOwnersAre(gnosisSafe, accounts[0])
 
     await store.dispatch(fetchSafe(safe))
@@ -140,10 +142,10 @@ describe('React DOM TESTS > Add and remove owners', () => {
 
     let safe = getSafeFrom(store.getState(), address)
     await removeOwner(values, safe, threshold, accounts[2], 'Adol Metamask 3', accounts[0])
-    await store.dispatch(fetchTransactions())
+    await store.dispatch(fetchTransactions(address))
     await processOwnerModification(store, address, accounts[1], 2)
 
-    await assureThresholdIs(gnosisSafe, 2)
+    await assureThresholdIs(gnosisSafe, 1)
     await assureOwnersAre(gnosisSafe, accounts[0], accounts[1])
 
     await store.dispatch(fetchSafe(safe))
@@ -166,7 +168,7 @@ describe('React DOM TESTS > Add and remove owners', () => {
 
     let safe = getSafeFrom(store.getState(), address)
     await removeOwner(values, safe, threshold, accounts[2], 'Adol Metamask 3', accounts[0])
-    await store.dispatch(fetchTransactions())
+    await store.dispatch(fetchTransactions(address))
     await processOwnerModification(store, address, accounts[1], 2)
 
     await assureThresholdIs(gnosisSafe, 2)
