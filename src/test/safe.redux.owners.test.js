@@ -2,7 +2,7 @@
 import { aNewStore } from '~/store'
 import { getWeb3 } from '~/logic/wallets/getWeb3'
 import { promisify } from '~/utils/promisify'
-import { confirmationsTransactionSelector, safeTransactionsSelector } from '~/routes/safe/store/selectors/index'
+import { confirmationsTransactionSelector, safeTransactionsSelector } from '~/routes/safe/store/selectors'
 import fetchTransactions from '~/routes/safe/store/actions/fetchTransactions'
 import { type Safe } from '~/routes/safe/store/model/safe'
 import { getGnosisSafeInstanceAt } from '~/logic/contracts/safeContracts'
@@ -11,9 +11,10 @@ import { NAME_PARAM, OWNER_ADDRESS_PARAM, INCREASE_PARAM } from '~/routes/safe/c
 import { addOwner } from '~/routes/safe/component/AddOwner/index'
 import fetchSafe from '~/routes/safe/store/actions/fetchSafe'
 import { removeOwner, shouldDecrease, initialValuesFrom } from '~/routes/safe/component/RemoveOwner'
-import { DECREASE_PARAM } from '~/routes/safe/component/RemoveOwner/RemoveOwnerForm/index'
+import { DECREASE_PARAM } from '~/routes/safe/component/RemoveOwner/RemoveOwnerForm'
 import { getSafeFrom } from '~/test/utils/safeHelper'
 import { processTransaction } from '~/logic/safe/safeFrontendOperations'
+import { allowedRemoveSenderInTxHistoryService } from '~/config'
 
 describe('React DOM TESTS > Add and remove owners', () => {
   const processOwnerModification = async (store, safeAddress, executor, threshold) => {
@@ -104,6 +105,10 @@ describe('React DOM TESTS > Add and remove owners', () => {
   })
 
   it('remove owner decreasing owner automatically', async () => {
+    if (!allowedRemoveSenderInTxHistoryService()) {
+      return
+    }
+
     const numOwners = 2
     const threshold = 2
     const store = aNewStore()
