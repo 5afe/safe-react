@@ -46,7 +46,7 @@ const buildTransactionFrom = (safeAddress: string, tx: TxServiceModel, safeSubje
   return makeTransaction({
     name,
     nonce: tx.nonce,
-    value: tx.value,
+    value: Number(tx.value),
     confirmations,
     destination: tx.to,
     data: `0x${tx.data || ''}`,

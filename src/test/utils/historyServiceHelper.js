@@ -2,6 +2,7 @@
 import { List, Map } from 'immutable'
 import { type Confirmation } from '~/routes/safe/store/model/confirmation'
 import { type Transaction } from '~/routes/safe/store/model/transaction'
+import { sameAddress } from '~/logic/wallets/ethAddresses'
 
 export const testSizeOfSafesWith = (transactions: Map<string, List<Transaction>>, size: number) => {
   expect(transactions).not.toBe(undefined)
@@ -28,8 +29,8 @@ export const testTransactionFrom = (
   expect(tx.get('name')).toBe(name)
   expect(tx.get('nonce')).toBe(nonce)
   expect(tx.get('value')).toBe(value)
-  expect(tx.get('destination')).toBe(destination)
+  expect(sameAddress(tx.get('destination'), destination)).toBe(true)
   expect(tx.get('data')).toBe(data)
   expect(tx.get('isExecuted')).toBe(isExecuted)
-  expect(tx.get('confirmations')).toBe(confirmations)
+  expect(tx.get('confirmations')).toEqual(confirmations)
 }

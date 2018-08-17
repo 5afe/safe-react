@@ -11,7 +11,9 @@ import { getSafeFrom } from '~/test/utils/safeHelper'
 import { promisify } from '~/utils/promisify'
 import { getWeb3 } from '~/logic/wallets/getWeb3'
 import { safeTransactionsSelector } from '~/routes/safe/store/selectors'
+import fetchSafe from '~/routes/safe/store/actions/fetchSafe'
 import { testTransactionFrom, testSizeOfTransactions } from './utils/historyServiceHelper'
+
 
 describe('Transactions Suite', () => {
   let store: Store
@@ -28,24 +30,29 @@ describe('Transactions Suite', () => {
   })
 
   it('retrieves tx info from service having subject available', async () => {
-    const safe: Safe = getSafeFrom(store.getState(), safeAddress)
+    let safe: Safe = getSafeFrom(store.getState(), safeAddress)
     const gnosisSafe = await getSafeEthereumInstance(safeAddress)
     const firstTxData = gnosisSafe.contract.addOwnerWithThreshold.getData(accounts[1], 2)
     const executor = accounts[0]
     const nonce = Date.now()
     const firstTxHash = await createTransaction(safe, 'Add Owner Second account', safeAddress, 0, nonce, executor, firstTxData)
+    await store.dispatch(fetchSafe(safe))
+    safe = getSafeFrom(store.getState(), safeAddress)
+
     const secondTxData = gnosisSafe.contract.addOwnerWithThreshold.getData(accounts[2], 2)
     const secondTxHash = await createTransaction(safe, 'Add Owner Third account', safeAddress, 0, nonce + 100, executor, secondTxData)
+    await store.dispatch(fetchSafe(safe))
+    safe = getSafeFrom(store.getState(), safeAddress)
 
     // WHEN
-    store.dispatch(fetchTransactions(safeAddress))
+    await store.dispatch(fetchTransactions(safeAddress))
     let transactions = safeTransactionsSelector(store.getState(), { safeAddress })
     testSizeOfTransactions(transactions, 2)
 
     // THEN
     const firstTxConfirmations = List([
       makeConfirmation({
-        owner: makeOwner({ address: executor }),
+        owner: makeOwner({ address: getWeb3().toChecksumAddress(executor), name: 'Adol 1 Eth Account' }),
         type: 'execution',
         hash: firstTxHash,
       }),
@@ -54,7 +61,7 @@ describe('Transactions Suite', () => {
 
     const secondTxConfirmations = List([
       makeConfirmation({
-        owner: makeOwner({ address: accounts[0] }),
+        owner: makeOwner({ address: getWeb3().toChecksumAddress(accounts[0]), name: 'Adol 1 Eth Account' }),
         type: 'confirmation',
         hash: secondTxHash,
       }),
@@ -63,11 +70,26 @@ describe('Transactions Suite', () => {
 
     localStorage.clear()
 
-    store.dispatch(fetchTransactions(safeAddress))
+    await store.dispatch(fetchTransactions(safeAddress))
     transactions = safeTransactionsSelector(store.getState(), { safeAddress })
+
     testSizeOfTransactions(transactions, 2)
-    testTransactionFrom(transactions, 0, 'Unknown', nonce, 0, safeAddress, firstTxData, true, firstTxConfirmations)
-    testTransactionFrom(transactions, 1, 'Unknown', nonce + 100, 0, safeAddress, secondTxData, false, secondTxConfirmations)
+    const firstTxConfWithoutStorage = List([
+      makeConfirmation({
+        owner: makeOwner({ address: getWeb3().toChecksumAddress(executor), name: 'UNKNOWN' }),
+        type: 'execution',
+        hash: firstTxHash,
+      }),
+    ])
+    testTransactionFrom(transactions, 0, 'Unknown', nonce, 0, safeAddress, firstTxData, true, firstTxConfWithoutStorage)
+    const secondTxConfWithoutStorage = List([
+      makeConfirmation({
+        owner: makeOwner({ address: getWeb3().toChecksumAddress(executor), name: 'UNKNOWN' }),
+        type: 'confirmation',
+        hash: secondTxHash,
+      }),
+    ])
+    testTransactionFrom(transactions, 1, 'Unknown', nonce + 100, 0, safeAddress, secondTxData, false, secondTxConfWithoutStorage)
   })
 
   it('returns empty list of trnsactions when safe is not configured', async () => {
