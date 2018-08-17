@@ -8,6 +8,7 @@ import { makeConfirmation } from '~/routes/safe/store/model/confirmation'
 import { loadSafeSubjects } from '~/utils/localStorage/transactions'
 import { buildTxServiceUrlFrom, type TxServiceType } from '~/logic/safe/safeTxHistory'
 import { enhancedFetch } from '~/utils/fetch'
+import { getOwners } from '~/utils/localStorage'
 import addTransactions from './addTransactions'
 
 type ConfirmationServiceModel = {
@@ -29,14 +30,18 @@ type TxServiceModel = {
   isExecuted: boolean,
 }
 
-const buildTransactionFrom = (tx: TxServiceModel, safeSubjects: Map<string, string>) => {
+const buildTransactionFrom = (safeAddress: string, tx: TxServiceModel, safeSubjects: Map<string, string>) => {
   const name = safeSubjects.get(String(tx.nonce)) || 'Unknown'
-  const confirmations = List(tx.confirmations.map((conf: ConfirmationServiceModel) =>
-    makeConfirmation({
-      owner: makeOwner({ address: conf.owner }),
+  const storedOwners = getOwners(safeAddress)
+  const confirmations = List(tx.confirmations.map((conf: ConfirmationServiceModel) => {
+    const ownerName = storedOwners.get(conf.owner.toLowerCase()) || 'UNKNOWN'
+
+    return makeConfirmation({
+      owner: makeOwner({ address: conf.owner, name: ownerName }),
       type: conf.type,
       hash: conf.transactionHash,
-    })))
+    })
+  }))
 
   return makeTransaction({
     name,
@@ -54,7 +59,7 @@ export const loadSafeTransactions = async (safeAddress: string) => {
   const response = await enhancedFetch(url, 'Error fetching txs information')
   const transactions: TxServiceModel[] = response.results
   const safeSubjects = loadSafeSubjects(safeAddress)
-  const txsRecord = transactions.map((tx: TxServiceModel) => buildTransactionFrom(tx, safeSubjects))
+  const txsRecord = transactions.map((tx: TxServiceModel) => buildTransactionFrom(safeAddress, tx, safeSubjects))
 
   return Map().set(safeAddress, List(txsRecord))
 }
