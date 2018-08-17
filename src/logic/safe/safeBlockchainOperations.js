@@ -42,10 +42,17 @@ export const executeTransaction = async (
   const gnosisSafe = await getSafeEthereumInstance(safeAddress)
   const txConfirmationData =
     gnosisSafe.contract.execTransactionIfApproved.getData(to, valueInWei, data, operation, nonce)
+  const numOwners = await gnosisSafe.getOwners()
   const gas = await calculateGasOf(txConfirmationData, sender, safeAddress)
-
-  const txReceipt =
-    await gnosisSafe.execTransactionIfApproved(to, valueInWei, data, operation, nonce, { from: sender, gas, gasPrice })
+  const gasIncludingRemovingStoreUpfront = gas + (numOwners.length * 15000)
+  const txReceipt = await gnosisSafe.execTransactionIfApproved(
+    to,
+    valueInWei,
+    data,
+    operation,
+    nonce,
+    { from: sender, gas: gasIncludingRemovingStoreUpfront, gasPrice },
+  )
   const txHash = txReceipt.tx
   await checkReceiptStatus(txHash)
 
