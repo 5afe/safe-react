@@ -29,7 +29,7 @@ type Props = Open & WithStyles & {
 
 const GnoConfirmation = ({ owner, type, hash }: ConfirmationProps) => {
   const address = owner.get('address')
-  const confirmed = type === 'confirmed'
+  const confirmed = type === 'confirmation'
   const text = confirmed ? 'Confirmed' : 'Not confirmed'
   const hashText = confirmed ? `Confirmation hash: ${hash}` : undefined
 

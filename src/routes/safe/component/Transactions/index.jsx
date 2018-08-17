@@ -27,7 +27,7 @@ class Transactions extends React.Component<Props, {}> {
       const ownerAddress = confirmation.get('owner').get('address')
       const samePerson = sameAddress(ownerAddress, userAddress)
 
-      return samePerson && confirmation.get('type') === 'confirmed'
+      return samePerson && confirmation.get('type') === 'confirmation'
     }).count() > 0
 
     if (userHasAlreadyConfirmed) {
