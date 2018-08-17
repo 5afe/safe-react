@@ -62,9 +62,8 @@ export const processTransaction = async (
   sender: string,
   threshold: number,
 ) => {
-  const web3 = getWeb3()
   const nonce = tx.get('nonce')
-  const valueInWei = web3.toWei(tx.get('value'), 'ether')
+  const valueInWei = tx.get('value')
   const to = tx.get('destination')
   const data = tx.get('data')
   const CALL = 0
