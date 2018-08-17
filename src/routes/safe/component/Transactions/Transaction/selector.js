@@ -22,9 +22,9 @@ const transactionHashSector = (state: GlobalState, props: TxProps) => {
   }
 
   const confirmations = props.transaction.get('confirmations')
-  const executedConf = confirmations.find((conf: Confirmation) => conf.get('type') === 'executed')
+  const executedConf = confirmations.find((conf: Confirmation) => conf.get('type') === 'execution')
 
-  return executedConf.get('hash')
+  return executedConf ? executedConf.get('hash') : undefined
 }
 
 export default createStructuredSelector({
