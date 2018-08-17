@@ -49,7 +49,7 @@ const buildTransactionFrom = (safeAddress: string, tx: TxServiceModel, safeSubje
     value: tx.value,
     confirmations,
     destination: tx.to,
-    data: `0x${tx.data}`,
+    data: `0x${tx.data || ''}`,
     isExecuted: tx.isExecuted,
   })
 }
