@@ -17,12 +17,13 @@ class SafeView extends React.PureComponent<Props> {
   componentDidMount() {
     this.intervalId = setInterval(() => {
       const {
-        safe, fetchTokens, fetchSafe,
+        safe, fetchTokens, fetchSafe, fetchTransactions,
       } = this.props
       if (!safe) {
         return
       }
       const safeAddress = safe.get('address')
+      fetchTransactions(safeAddress)
       fetchTokens(safeAddress)
       fetchSafe(safe)
     }, TIMEOUT)
@@ -36,6 +37,7 @@ class SafeView extends React.PureComponent<Props> {
     if (this.props.safe) {
       const safeAddress = this.props.safe.get('address')
       this.props.fetchTokens(safeAddress)
+      this.props.fetchTransactions(safeAddress)
     }
   }
 
