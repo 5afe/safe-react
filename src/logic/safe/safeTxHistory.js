@@ -55,7 +55,6 @@ export const submitOperation = async (
   const headers = {
     Accept: 'application/json',
     'Content-Type': 'application/json',
-    'Access-Control-Allow-Origin': '*',
   }
   const body = await calculateBodyFrom(safeAddress, to, valueInWei, data, operation, nonce, txHash, sender, type)
 
