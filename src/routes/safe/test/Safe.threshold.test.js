@@ -17,9 +17,14 @@ import { buildMathPropsFrom } from '~/test/utils/buildReactRouterProps'
 import { createTransaction } from '~/wallets/createTransactions'
 import { getGnosisSafeContract } from '~/wallets/safeContracts'
 import fetchTransactions from '~/routes/safe/store/actions/fetchTransactions'
-
+*/
 describe('React DOM TESTS > Change threshold', () => {
   it('should update the threshold directly if safe has 1 threshold', async () => {
+
+  })
+})
+
+/*
     // GIVEN
     const numOwners = 2
     const threshold = 1
