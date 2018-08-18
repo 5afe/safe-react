@@ -9,6 +9,7 @@ import { loadSafeSubjects } from '~/utils/localStorage/transactions'
 import { buildTxServiceUrlFrom, type TxServiceType } from '~/logic/safe/safeTxHistory'
 import { enhancedFetch } from '~/utils/fetch'
 import { getOwners } from '~/utils/localStorage'
+import { EMPTY_DATA } from '~/logic/wallets/ethTransactions'
 import addTransactions from './addTransactions'
 
 type ConfirmationServiceModel = {
@@ -49,7 +50,7 @@ const buildTransactionFrom = (safeAddress: string, tx: TxServiceModel, safeSubje
     value: Number(tx.value),
     confirmations,
     destination: tx.to,
-    data: `0x${tx.data || ''}`,
+    data: tx.data ? tx.data : EMPTY_DATA,
     isExecuted: tx.isExecuted,
   })
 }
