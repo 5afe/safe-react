@@ -82,7 +82,7 @@
         "id": 2,
         "nodeType": "ImportDirective",
         "scope": 24,
-        "sourceUnit": 2989,
+        "sourceUnit": 1689,
         "src": "24:21:0",
         "symbolAliases": [],
         "unitAlias": ""
@@ -96,10 +96,10 @@
               "id": 3,
               "name": "Proxy",
               "nodeType": "UserDefinedTypeName",
-              "referencedDeclaration": 2988,
+              "referencedDeclaration": 1688,
               "src": "392:5:0",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_Proxy_$2988",
+                "typeIdentifier": "t_contract$_Proxy_$1688",
                 "typeString": "contract Proxy"
               }
             },
@@ -109,7 +109,7 @@
           }
         ],
         "contractDependencies": [
-          2988
+          1688
         ],
         "contractKind": "contract",
         "documentation": "@title Delegate Constructor Proxy - Generic proxy contract allows to execute all transactions applying the code of a master contract. It is possible to send along initialization data with the constructor.\n @author Stefan George - <stefan@gnosis.pm>\n @author Richard Meissner - <richard@gnosis.pm>",
@@ -117,7 +117,7 @@
         "id": 23,
         "linearizedBaseContracts": [
           23,
-          2988
+          1688
         ],
         "name": "DelegateConstructorProxy",
         "nodeType": "ContractDefinition",
@@ -264,10 +264,10 @@
                   "name": "Proxy",
                   "nodeType": "Identifier",
                   "overloadedDeclarations": [],
-                  "referencedDeclaration": 2988,
+                  "referencedDeclaration": 1688,
                   "src": "662:5:0",
                   "typeDescriptions": {
-                    "typeIdentifier": "t_type$_t_contract$_Proxy_$2988_$",
+                    "typeIdentifier": "t_type$_t_contract$_Proxy_$1688_$",
                     "typeString": "type(contract Proxy)"
                   }
                 },
@@ -382,7 +382,7 @@
         "id": 2,
         "nodeType": "ImportDirective",
         "scope": 24,
-        "sourceUnit": 2989,
+        "sourceUnit": 1689,
         "src": "24:21:0",
         "symbolAliases": [],
         "unitAlias": ""
@@ -396,10 +396,10 @@
               "id": 3,
               "name": "Proxy",
               "nodeType": "UserDefinedTypeName",
-              "referencedDeclaration": 2988,
+              "referencedDeclaration": 1688,
               "src": "392:5:0",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_Proxy_$2988",
+                "typeIdentifier": "t_contract$_Proxy_$1688",
                 "typeString": "contract Proxy"
               }
             },
@@ -409,7 +409,7 @@
           }
         ],
         "contractDependencies": [
-          2988
+          1688
         ],
         "contractKind": "contract",
         "documentation": "@title Delegate Constructor Proxy - Generic proxy contract allows to execute all transactions applying the code of a master contract. It is possible to send along initialization data with the constructor.\n @author Stefan George - <stefan@gnosis.pm>\n @author Richard Meissner - <richard@gnosis.pm>",
@@ -417,7 +417,7 @@
         "id": 23,
         "linearizedBaseContracts": [
           23,
-          2988
+          1688
         ],
         "name": "DelegateConstructorProxy",
         "nodeType": "ContractDefinition",
@@ -564,10 +564,10 @@
                   "name": "Proxy",
                   "nodeType": "Identifier",
                   "overloadedDeclarations": [],
-                  "referencedDeclaration": 2988,
+                  "referencedDeclaration": 1688,
                   "src": "662:5:0",
                   "typeDescriptions": {
-                    "typeIdentifier": "t_type$_t_contract$_Proxy_$2988_$",
+                    "typeIdentifier": "t_type$_t_contract$_Proxy_$1688_$",
                     "typeString": "type(contract Proxy)"
                   }
                 },
@@ -662,5 +662,5 @@
   },
   "networks": {},
   "schemaVersion": "2.0.0",
-  "updatedAt": "2018-06-29T09:01:22.054Z"
+  "updatedAt": "2018-08-20T07:44:41.083Z"
 }
