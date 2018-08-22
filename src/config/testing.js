@@ -10,7 +10,7 @@ const testConfig = {
   [TX_SERVICE_HOST]: 'http://localhost:8000/api/v1/',
   [ENABLED_TX_SERVICE_MODULES]: false,
   [ENABLED_TX_SERVICE_REMOVAL_SENDER]: false,
-  [SIGNATURES_VIA_METAMASK]: true,
+  [SIGNATURES_VIA_METAMASK]: false,
 }
 
 export default testConfig

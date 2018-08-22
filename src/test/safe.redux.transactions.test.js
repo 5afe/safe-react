@@ -12,6 +12,7 @@ import { promisify } from '~/utils/promisify'
 import { getWeb3 } from '~/logic/wallets/getWeb3'
 import { safeTransactionsSelector } from '~/routes/safe/store/selectors'
 import fetchSafe from '~/routes/safe/store/actions/fetchSafe'
+import { signaturesViaMetamask } from '~/config'
 import { testTransactionFrom, testSizeOfTransactions } from './utils/historyServiceHelper'
 
 
@@ -34,7 +35,7 @@ describe('Transactions Suite', () => {
     const gnosisSafe = await getSafeEthereumInstance(safeAddress)
     const firstTxData = gnosisSafe.contract.addOwnerWithThreshold.getData(accounts[1], 2)
     const executor = accounts[0]
-    const nonce = Date.now()
+    const nonce = signaturesViaMetamask() ? await gnosisSafe.nonce() : Date.now()
     const firstTxHash = await createTransaction(safe, 'Add Owner Second account', safeAddress, 0, nonce, executor, firstTxData)
     await store.dispatch(fetchSafe(safe))
     safe = getSafeFrom(store.getState(), safeAddress)
