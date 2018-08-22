@@ -4,6 +4,9 @@ import abi from 'ethereumjs-abi'
 import { promisify } from '~/utils/promisify'
 
 /*
+console.log(`to[${to}] \n\n valieInWei[${valueInWei}] \n\n
+  data[${data}] \n\n  operation[${operation}] \n\n  sigs[${sigs}]`)
+
 const gnosisSafe = await getSafeEthereumInstance(address)
 await printOutApprove("Remove owner 3", address, await gnosisSafe.getOwners(), tx.get('data'), tx.get('nonce'))
 const txData =
