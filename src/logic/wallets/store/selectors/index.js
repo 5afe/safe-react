@@ -21,6 +21,6 @@ export const providerNameSelector = createSelector(
     const loaded = provider.get('loaded')
     const available = provider.get('available')
 
-    return loaded && available ? name : undefined
+    return loaded && available ? name.toLowerCase() : undefined
   },
 )

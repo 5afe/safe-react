@@ -39,8 +39,8 @@ const Col = ({
 }: Props) => {
   const colClassNames = cx(
     'col',
-    start ? capitalize(start, 'start') : undefined,
     center ? capitalize(center, 'center') : undefined,
+    start ? capitalize(start, 'start') : undefined,
     end ? capitalize(end, 'end') : undefined,
     top ? capitalize(top, 'top') : undefined,
     middle ? capitalize(middle, 'middle') : undefined,
