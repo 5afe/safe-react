@@ -12,17 +12,18 @@ type Props = {
   size?: 'sm' | 'md' | 'lg' | 'xl',
   color?: 'soft' | 'medium' | 'dark' | 'primary',
   transform?: 'capitalize' | 'lowercase' | 'uppercase',
-  children: React$Node
+  children: React$Node,
+  className?: string,
 }
 
 class Paragraph extends React.PureComponent<Props> {
   render() {
     const {
-      bold, children, color, align, size, transform, noMargin, ...props
+      bold, children, color, align, size, transform, noMargin, className, ...props
     } = this.props
 
     return (
-      <p className={cx(styles.paragraph, { bold }, { noMargin }, size, transform, align)} {...props}>
+      <p className={cx(styles.paragraph, className, { bold }, { noMargin }, size, transform, align)} {...props}>
         { children }
       </p>
     )
