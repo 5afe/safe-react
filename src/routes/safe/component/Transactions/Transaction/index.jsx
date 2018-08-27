@@ -32,7 +32,7 @@ type Props = Open & SelectorProps & {
 
 export const PROCESS_TXS = 'PROCESS TRANSACTION'
 
-class GnoTransaction extends React.PureComponent<Props, {}> {
+class GnoTransaction extends React.PureComponent<Props> {
   onProccesClick = () => this.props.onProcessTx(this.props.transaction, this.props.confirmed)
 
   hasConfirmed = (userAddress: string, confirmations: List<Confirmation>): boolean =>
@@ -108,4 +108,4 @@ class GnoTransaction extends React.PureComponent<Props, {}> {
   }
 }
 
-export default connect(selector)(openHoc(GnoTransaction))
+export default openHoc(connect(selector)(GnoTransaction))
