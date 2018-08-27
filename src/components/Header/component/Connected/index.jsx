@@ -1,40 +1,34 @@
 // @flow
 import * as React from 'react'
-import Img from '~/components/layout/Img'
-import Span from '~/components/layout/Span'
-import { upperFirst } from '~/utils/css'
-
-const IconParity = require('~/components/Header/assets/icon_parity.svg')
-const IconMetamask = require('~/components/Header/assets/icon_metamask.svg')
+import Col from '~/components/layout/Col'
+import Bold from '~/components/layout/Bold'
+import Paragraph from '~/components/layout/Paragraph'
 
 type Props = {
   provider: string,
 }
 
-const PROVIDER_METAMASK = 'METAMASK'
-const PROVIDER_PARITY = 'PARITY'
-
-const PROVIDER_ICONS = {
-  [PROVIDER_METAMASK]: IconMetamask,
-  [PROVIDER_PARITY]: IconParity,
+const leftColumnStyle = {
+  maxWidth: '80px',
 }
 
-const Connected = ({ provider }: Props) => {
-  const msg = `You are using ${upperFirst(provider.toLowerCase())} to connect to your Safe`
-
-  return (
-    <React.Fragment>
-      { PROVIDER_ICONS[provider] &&
-        <Img
-          height={40}
-          src={PROVIDER_ICONS[provider]}
-          title={msg}
-          alt={msg}
-        />
-      }
-      <Span>Connected</Span>
-    </React.Fragment>
-  )
+const paragraphStyle = {
+  margin: '2px',
 }
+
+const Connected = ({ provider }: Props) => (
+  <React.Fragment>
+    <Col style={leftColumnStyle} layout="column">
+      <Paragraph style={paragraphStyle} size="sm" noMargin align="right">Status: </Paragraph>
+      <Paragraph style={paragraphStyle} size="sm" noMargin align="right">Client: </Paragraph>
+      <Paragraph style={paragraphStyle} size="sm" noMargin align="right">Network: </Paragraph>
+    </Col>
+    <Col style={leftColumnStyle} layout="column">
+      <Paragraph style={paragraphStyle} size="sm" noMargin align="left"><Bold>Connected</Bold></Paragraph>
+      <Paragraph style={paragraphStyle} size="sm" noMargin align="left"><Bold>{provider}</Bold></Paragraph>
+      <Paragraph style={paragraphStyle} size="sm" noMargin align="left"><Bold>Rinkeby</Bold></Paragraph>
+    </Col>
+  </React.Fragment>
+)
 
 export default Connected
