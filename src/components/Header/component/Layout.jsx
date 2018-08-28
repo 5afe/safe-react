@@ -14,13 +14,16 @@ import Button from '~/components/layout/Button'
 import Row from '~/components/layout/Row'
 import Identicon from '~/components/Identicon'
 import Spacer from '~/components/Spacer'
-import Connected from './Connected'
+import Details from './Details'
 
 const logo = require('../assets/gnosis-safe-logo.svg')
 
 type Props = {
   provider: string,
   classes: Object,
+  network: string,
+  userAddress: string,
+  connected: boolean,
 }
 
 const styles = theme => ({
@@ -86,8 +89,15 @@ const styles = theme => ({
   },
 })
 
-const Header = ({ provider, classes }: Props) => {
-  const providerText = provider ? `${provider} [Rinkeby]` : 'Not connected'
+const openIconStyle = {
+  height: '14px',
+}
+
+const Header = ({
+  provider, network, connected, classes, userAddress,
+}: Props) => {
+  const providerText = connected ? `${provider} [${network}]` : 'Not connected'
+  const cutAddress = connected ? `${userAddress.substring(0, 8)}...${userAddress.substring(36)}` : ''
 
   return (
     <Block margin="md">
@@ -100,21 +110,21 @@ const Header = ({ provider, classes }: Props) => {
             <Spacer />
             <Col end="sm" middle="xs" layout="column" className={classes.provider}>
               <Paragraph size="sm" transform="capitalize" noMargin bold>{providerText}</Paragraph>
-              <Paragraph size="sm" noMargin>0x873faa....d30aaa</Paragraph>
+              <Paragraph size="sm" noMargin>{cutAddress}</Paragraph>
             </Col>
           </Row>
         </ExpansionPanelSummary>
-        { provider &&
+        { connected &&
           <React.Fragment>
             <ExpansionPanelDetails className={classes.details}>
               <Row grow margin="md">
-                <Connected provider={provider} />
+                <Details provider={provider} connected={connected} network={network} />
                 <Spacer />
               </Row>
               <Row className={classes.user} margin="md" grow >
-                <Identicon address="0x873faa4cddd5b157e8e5a57e7a5479afc5d30f0b" diameter={25} />
-                <Paragraph className={classes.address} size="sm" noMargin>0x873faa4cddd5b157e8e5a57e7a5479afc5d30f0b</Paragraph>
-                <OpenInNew style={{ height: '14px' }} />
+                <Identicon address={userAddress} diameter={25} />
+                <Paragraph className={classes.address} size="sm" noMargin>{userAddress}</Paragraph>
+                <OpenInNew style={openIconStyle} />
               </Row>
               <Col align="center" margin="md" grow>
                 <Button size="small" variant="raised" color="secondary">DISCONNECT</Button>
