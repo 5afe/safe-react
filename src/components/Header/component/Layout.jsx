@@ -126,7 +126,7 @@ const Header = ({
                 <Paragraph className={classes.address} size="sm" noMargin>{userAddress}</Paragraph>
                 <OpenInNew style={openIconStyle} />
               </Row>
-              <Col align="center" margin="md" grow>
+              <Col align="center" margin="md">
                 <Button size="small" variant="raised" color="secondary">DISCONNECT</Button>
               </Col>
             </ExpansionPanelDetails>
