@@ -35,7 +35,7 @@ const providerReducerTests = () => {
       const providerName = providerNameSelector(reduxStore)
 
       // THEN
-      expect(providerName).toEqual('METAMASK')
+      expect(providerName).toEqual('metamask')
     })
   })
 }
