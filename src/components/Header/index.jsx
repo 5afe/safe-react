@@ -8,6 +8,9 @@ import selector from './selector'
 type Props = {
   provider: string,
   fetchProvider: Function,
+  userAddress: string,
+  network: string,
+  connected: boolean,
 }
 
 class Header extends React.PureComponent<Props> {
@@ -20,9 +23,18 @@ class Header extends React.PureComponent<Props> {
   }
 
   render() {
-    const { provider } = this.props
+    const {
+      provider, userAddress, network, connected,
+    } = this.props
+
     return (
-      <Layout provider={provider} reloadWallet={this.reloadWallet} />
+      <Layout
+        provider={provider}
+        reloadWallet={this.reloadWallet}
+        userAddress={userAddress}
+        network={network}
+        connected={connected}
+      />
     )
   }
 }
