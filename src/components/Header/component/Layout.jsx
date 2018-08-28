@@ -4,9 +4,10 @@ import { withStyles } from '@material-ui/core/styles'
 import ExpansionPanel from '@material-ui/core/ExpansionPanel'
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails'
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary'
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
+import ExpandMoreIcon from '@material-ui/icons/ArrowDropDown'
 import OpenInNew from '@material-ui/icons/OpenInNew'
 import Paragraph from '~/components/layout/Paragraph'
+import Block from '~/components/layout/Block'
 import Col from '~/components/layout/Col'
 import Img from '~/components/layout/Img'
 import Button from '~/components/layout/Button'
@@ -26,6 +27,10 @@ const styles = theme => ({
   root: {
     width: '100%',
   },
+  summary: {
+    backgroundColor: '#f1f1f1',
+    border: 'solid 0.5px #979797',
+  },
   logo: {
     flexBasis: '125px',
   },
@@ -37,6 +42,9 @@ const styles = theme => ({
   },
   user: {
     alignItems: 'center',
+    border: '1px solid grey',
+    padding: '10px',
+    backgroundColor: '#f1f1f1',
   },
   address: {
     flexGrow: 1,
@@ -56,11 +64,11 @@ const styles = theme => ({
   },
   details: {
     alignItems: 'center',
-    width: '350px',
+    width: '375px',
     border: '1px solid grey',
     display: 'block',
-    padding: '12px 4px 4px',
-    marginLeft: 'auto',
+    padding: '12px 8px 4px',
+    margin: '0 0 16px auto',
   },
   column: {
     flexBasis: '33.33%',
@@ -82,9 +90,9 @@ const Header = ({ provider, classes }: Props) => {
   const providerText = provider ? `${provider} [Rinkeby]` : 'Not connected'
 
   return (
-    <React.Fragment>
-      <ExpansionPanel className={classes.root} elevation={0} defaultExpanded>
-        <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+    <Block margin="md">
+      <ExpansionPanel className={classes.root} elevation={0}>
+        <ExpansionPanelSummary className={classes.summary} expandIcon={<ExpandMoreIcon />}>
           <Row grow>
             <Col start="xs" middle="xs" className={classes.logo}>
               <Img src={logo} height={54} alt="Gnosis Safe" />
@@ -115,7 +123,7 @@ const Header = ({ provider, classes }: Props) => {
           </React.Fragment>
         }
       </ExpansionPanel>
-    </React.Fragment>
+    </Block>
   )
 }
 
