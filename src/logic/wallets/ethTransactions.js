@@ -9,7 +9,7 @@ export const EMPTY_DATA = '0x'
 
 export const checkReceiptStatus = async (hash: string) => {
   if (!hash) {
-    throw new Error('No valid Tx hash to get receipt from')
+    return Promise.reject(new Error('No valid Tx hash to get receipt from'))
   }
 
   const web3 = getWeb3()
@@ -17,13 +17,15 @@ export const checkReceiptStatus = async (hash: string) => {
 
   const { status } = txReceipt
   if (!status) {
-    throw new Error('No status found on this transaction receipt')
+    return Promise.reject(new Error('No status found on this transaction receipt'))
   }
 
   const hasError = status === '0x0'
   if (hasError) {
-    throw new Error('Obtained a transaction failure in the receipt')
+    return Promise.reject(new Error('Obtained a transaction failure in the receipt'))
   }
+
+  return Promise.resolve()
 }
 
 export const calculateGasPrice = async () => {
@@ -50,7 +52,11 @@ export const calculateGasPrice = async () => {
 
 export const calculateGasOf = async (data: Object, from: string, to: string) => {
   const web3 = getWeb3()
-  const gas = await promisify(cb => web3.eth.estimateGas({ data, from, to }, cb))
+  try {
+    const gas = await promisify(cb => web3.eth.estimateGas({ data, from, to }, cb))
 
-  return gas * 2
+    return gas * 2
+  } catch (err) {
+    return Promise.reject(new Error(err))
+  }
 }
