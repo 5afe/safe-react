@@ -50,7 +50,7 @@ const getAccountFrom: Function = async (web3Provider): Promise<string | null> =>
 }
 
 const getNetworkIdFrom = async (web3Provider) => {
-  const networkId = await web3Provider.version.network
+  const networkId = await promisify(cb => web3Provider.version.getNetwork(cb))
 
   return networkId
 }
