@@ -1,4 +1,5 @@
 // @flow
+const border = '#E7EAF1'
 const primary = '#1798cc'
 const secondary = '#13222b'
 const tertiary = '#f6f9fc'
@@ -17,6 +18,7 @@ module.exports = Object.assign({}, {
   md,
   lg,
   xl,
+  border,
   fontSizeHeadingXs: 16,
   fontSizeHeadingSm: 18,
   fontSizeHeadingMd: 21,
