@@ -8,6 +8,7 @@ import Identicon from '~/components/Identicon'
 import Col from '~/components/layout/Col'
 import Row from '~/components/layout/Row'
 import Spacer from '~/components/Spacer'
+import { md } from '~/theme/variables'
 import Details from './Details'
 
 type Props = {
@@ -23,6 +24,10 @@ const openIconStyle = {
 }
 
 const styles = () => ({
+  root: {
+    backgroundColor: 'white',
+    padding: md,
+  },
   user: {
     alignItems: 'center',
     border: '1px solid grey',
@@ -38,7 +43,7 @@ const styles = () => ({
 const UserDetails = ({
   provider, connected, network, userAddress, classes,
 }: Props) => (
-  <React.Fragment>
+  <div className={classes.root}>
     <Row grow margin="md">
       <Details provider={provider} connected={connected} network={network} />
       <Spacer />
@@ -51,7 +56,7 @@ const UserDetails = ({
     <Col align="center" margin="md">
       <Button size="small" variant="raised" color="secondary">DISCONNECT</Button>
     </Col>
-  </React.Fragment>
+  </div>
 )
 
 export default withStyles(styles)(UserDetails)

@@ -99,13 +99,13 @@ const Header = openHoc(({
         open={open}
         toggle={toggle}
       >
-        {myRef => (
-          <Popper open={open} anchorEl={myRef.current} placement="bottom-end">
+        {providerRef => (
+          <Popper open={open} anchorEl={providerRef.current} placement="bottom-end">
             {({ TransitionProps }) => (
               <Grow
                 {...TransitionProps}
               >
-                <ClickAwayListener onClickAway={toggle} className={classes.details}>
+                <ClickAwayListener onClickAway={toggle}>
                   <UserDetails
                     provider={provider}
                     network={network}
