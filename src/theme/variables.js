@@ -1,5 +1,5 @@
 // @flow
-const border = '#E7EAF1'
+const border = '#e4e8f1'
 const primary = '#1798cc'
 const secondary = '#13222b'
 const tertiary = '#f6f9fc'
