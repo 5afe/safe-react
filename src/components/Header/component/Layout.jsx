@@ -1,24 +1,26 @@
 // @flow
 import * as React from 'react'
 import { withStyles } from '@material-ui/core/styles'
-import ExpansionPanel from '@material-ui/core/ExpansionPanel'
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails'
-import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary'
-import ExpandMoreIcon from '@material-ui/icons/ArrowDropDown'
 import OpenInNew from '@material-ui/icons/OpenInNew'
+import IconButton from '@material-ui/core/IconButton'
+import ExpandLess from '@material-ui/icons/ExpandLess'
+import ExpandMore from '@material-ui/icons/ExpandMore'
+import Divider from '~/components/layout/Divider'
 import Paragraph from '~/components/layout/Paragraph'
+import openHoc, { type Open } from '~/components/hoc/OpenHoc'
 import Col from '~/components/layout/Col'
 import Img from '~/components/layout/Img'
 import Button from '~/components/layout/Button'
 import Row from '~/components/layout/Row'
 import Identicon from '~/components/Identicon'
 import Spacer from '~/components/Spacer'
-import { border } from '~/theme/variables'
+import { border, sm, md } from '~/theme/variables'
 import Details from './Details'
 
 const logo = require('../assets/gnosis-safe-logo.svg')
 
-type Props = {
+type Props = Open & {
   provider: string,
   classes: Object,
   network: string,
@@ -27,20 +29,31 @@ type Props = {
 }
 
 const styles = theme => ({
-  root: {
-    width: '100%',
-  },
   summary: {
-    border: `solid 0.5px ${border}`,
+    border: `solid 2px ${border}`,
+    alignItems: 'center',
+    height: '52px',
   },
   logo: {
-    flexBasis: '125px',
+    padding: `${sm} ${md}`,
+    flexBasis: '95px',
   },
   provider: {
-    flexBasis: '130px',
+    padding: `${sm} ${md}`,
+    alignItems: 'center',
+    flex: '0 1 auto',
+    display: 'flex',
+    cursor: 'pointer',
+  },
+  account: {
+    padding: `0 ${md} 0 ${sm}`,
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',
+  },
+  expand: {
+    width: '20px',
+    height: '20px',
   },
   user: {
     alignItems: 'center',
@@ -92,26 +105,32 @@ const openIconStyle = {
   height: '14px',
 }
 
-const Header = ({
-  provider, network, connected, classes, userAddress,
+const Header = openHoc(({
+  open, toggle, provider, network, connected, classes, userAddress,
 }: Props) => {
   const providerText = connected ? `${provider} [${network}]` : 'Not connected'
   const cutAddress = connected ? `${userAddress.substring(0, 8)}...${userAddress.substring(36)}` : ''
 
   return (
-    <ExpansionPanel className={classes.root} elevation={0}>
-      <ExpansionPanelSummary className={classes.summary} expandIcon={<ExpandMoreIcon />}>
-        <Row grow>
-          <Col start="xs" middle="xs" className={classes.logo}>
-            <Img src={logo} height={54} alt="Gnosis Safe" />
-          </Col>
-          <Spacer />
-          <Col end="sm" middle="xs" layout="column" className={classes.provider}>
+    <React.Fragment>
+      <Row onClick={toggle} className={classes.summary}>
+        <Col start="xs" middle="xs" className={classes.logo}>
+          <Img src={logo} height={32} alt="Gnosis Team Safe" />
+        </Col>
+        <Divider />
+        <Spacer />
+        <Divider />
+        <Col end="sm" middle="xs" className={classes.provider}>
+          { connected && <Identicon address={userAddress} diameter={25} /> }
+          <Col end="sm" middle="xs" layout="column" className={classes.account}>
             <Paragraph size="sm" transform="capitalize" noMargin bold>{providerText}</Paragraph>
             <Paragraph size="sm" noMargin>{cutAddress}</Paragraph>
           </Col>
-        </Row>
-      </ExpansionPanelSummary>
+          <IconButton disableRipple className={classes.expand}>
+            { open ? <ExpandLess /> : <ExpandMore />}
+          </IconButton>
+        </Col>
+      </Row>
       { connected &&
         <React.Fragment>
           <ExpansionPanelDetails className={classes.details}>
@@ -130,8 +149,8 @@ const Header = ({
           </ExpansionPanelDetails>
         </React.Fragment>
       }
-    </ExpansionPanel>
+    </React.Fragment>
   )
-}
+})
 
 export default withStyles(styles)(Header)

@@ -2,7 +2,6 @@
 import { createSelector } from 'reselect'
 import type { Provider } from '~/logic/wallets/store/model/provider'
 import { PROVIDER_REDUCER_ID } from '~/logic/wallets/store/reducer/provider'
-import { upperFirst } from '~/utils/css'
 import { ETHEREUM_NETWORK_IDS, ETHEREUM_NETWORK } from '~/logic/wallets/getWeb3'
 
 const providerSelector = (state: any): Provider => state[PROVIDER_REDUCER_ID]
@@ -33,7 +32,7 @@ export const networkSelector = createSelector(
     const networkId = provider.get('network')
     const network = ETHEREUM_NETWORK_IDS[networkId] || ETHEREUM_NETWORK.UNKNOWN
 
-    return upperFirst(network)
+    return network
   },
 )
 
