@@ -1,8 +1,10 @@
 .page {
   display: flex;
-  flex-direction: column;
   flex: 1 0 auto;
-  padding: 0 $xl;
+  width: 100%;
+  flex-direction: column;
+  padding: $xl;
+  background-color: #f1f1f1;
 }
 
 .center {
