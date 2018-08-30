@@ -2,21 +2,17 @@
 import * as React from 'react'
 import { withStyles } from '@material-ui/core/styles'
 import ClickAwayListener from '@material-ui/core/ClickAwayListener'
-import OpenInNew from '@material-ui/icons/OpenInNew'
 import Grow from '@material-ui/core/Grow'
 import Popper from '@material-ui/core/Popper'
 import Divider from '~/components/layout/Divider'
-import Paragraph from '~/components/layout/Paragraph'
 import openHoc, { type Open } from '~/components/hoc/OpenHoc'
 import Col from '~/components/layout/Col'
 import Img from '~/components/layout/Img'
-import Button from '~/components/layout/Button'
 import Row from '~/components/layout/Row'
-import Identicon from '~/components/Identicon'
 import Spacer from '~/components/Spacer'
 import { border, sm, md } from '~/theme/variables'
-import Details from './Details'
 import Provider from './Provider'
+import UserDetails from './UserDetails'
 
 const logo = require('../assets/gnosis-safe-logo.svg')
 
@@ -84,10 +80,6 @@ const styles = theme => ({
   },
 })
 
-const openIconStyle = {
-  height: '14px',
-}
-
 const Header = openHoc(({
   open, toggle, provider, network, connected, classes, userAddress,
 }: Props) => (
@@ -114,20 +106,12 @@ const Header = openHoc(({
                 {...TransitionProps}
               >
                 <ClickAwayListener onClickAway={toggle} className={classes.details}>
-                  <React.Fragment>
-                    <Row grow margin="md">
-                      <Details provider={provider} connected={connected} network={network} />
-                      <Spacer />
-                    </Row>
-                    <Row className={classes.user} margin="md" grow >
-                      <Identicon address={userAddress} diameter={25} />
-                      <Paragraph className={classes.address} size="sm" noMargin>{userAddress}</Paragraph>
-                      <OpenInNew style={openIconStyle} />
-                    </Row>
-                    <Col align="center" margin="md">
-                      <Button size="small" variant="raised" color="secondary">DISCONNECT</Button>
-                    </Col>
-                  </React.Fragment>
+                  <UserDetails
+                    provider={provider}
+                    network={network}
+                    userAddress={userAddress}
+                    connected={connected}
+                  />
                 </ClickAwayListener>
               </Grow>
             )}
