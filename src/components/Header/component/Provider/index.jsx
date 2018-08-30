@@ -23,7 +23,8 @@ type Props = Open & {
 const styles = () => ({
   root: {
     height: '100%',
-    display: 'center',
+    display: 'flex',
+    alignItems: 'center',
   },
   provider: {
     padding: `${sm} ${md}`,
