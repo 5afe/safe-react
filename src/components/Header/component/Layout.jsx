@@ -1,11 +1,10 @@
 // @flow
 import * as React from 'react'
 import { withStyles } from '@material-ui/core/styles'
-import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails'
+import ClickAwayListener from '@material-ui/core/ClickAwayListener'
 import OpenInNew from '@material-ui/icons/OpenInNew'
-import IconButton from '@material-ui/core/IconButton'
-import ExpandLess from '@material-ui/icons/ExpandLess'
-import ExpandMore from '@material-ui/icons/ExpandMore'
+import Grow from '@material-ui/core/Grow'
+import Popper from '@material-ui/core/Popper'
 import Divider from '~/components/layout/Divider'
 import Paragraph from '~/components/layout/Paragraph'
 import openHoc, { type Open } from '~/components/hoc/OpenHoc'
@@ -17,6 +16,7 @@ import Identicon from '~/components/Identicon'
 import Spacer from '~/components/Spacer'
 import { border, sm, md } from '~/theme/variables'
 import Details from './Details'
+import Provider from './Provider'
 
 const logo = require('../assets/gnosis-safe-logo.svg')
 
@@ -30,30 +30,13 @@ type Props = Open & {
 
 const styles = theme => ({
   summary: {
-    border: `solid 2px ${border}`,
+    borderBottom: `solid 2px ${border}`,
     alignItems: 'center',
     height: '52px',
   },
   logo: {
     padding: `${sm} ${md}`,
     flexBasis: '95px',
-  },
-  provider: {
-    padding: `${sm} ${md}`,
-    alignItems: 'center',
-    flex: '0 1 auto',
-    display: 'flex',
-    cursor: 'pointer',
-  },
-  account: {
-    padding: `0 ${md} 0 ${sm}`,
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'center',
-  },
-  expand: {
-    width: '20px',
-    height: '20px',
   },
   user: {
     alignItems: 'center',
@@ -74,8 +57,8 @@ const styles = theme => ({
   },
   icon: {
     verticalAlign: 'bottom',
-    height: 20,
-    width: 20,
+    height: 30,
+    width: 30,
   },
   details: {
     alignItems: 'center',
@@ -107,50 +90,52 @@ const openIconStyle = {
 
 const Header = openHoc(({
   open, toggle, provider, network, connected, classes, userAddress,
-}: Props) => {
-  const providerText = connected ? `${provider} [${network}]` : 'Not connected'
-  const cutAddress = connected ? `${userAddress.substring(0, 8)}...${userAddress.substring(36)}` : ''
+}: Props) => (
+  <React.Fragment>
+    <Row className={classes.summary}>
+      <Col start="xs" middle="xs" className={classes.logo}>
+        <Img src={logo} height={32} alt="Gnosis Team Safe" />
+      </Col>
+      <Divider />
+      <Spacer />
+      <Divider />
+      <Provider
+        provider={provider}
+        network={network}
+        userAddress={userAddress}
+        connected={connected}
+        open={open}
+        toggle={toggle}
+      >
+        {myRef => (
+          <Popper open={open} anchorEl={myRef.current} placement="bottom-end">
+            {({ TransitionProps }) => (
+              <Grow
+                {...TransitionProps}
+              >
+                <ClickAwayListener onClickAway={toggle} className={classes.details}>
+                  <React.Fragment>
+                    <Row grow margin="md">
+                      <Details provider={provider} connected={connected} network={network} />
+                      <Spacer />
+                    </Row>
+                    <Row className={classes.user} margin="md" grow >
+                      <Identicon address={userAddress} diameter={25} />
+                      <Paragraph className={classes.address} size="sm" noMargin>{userAddress}</Paragraph>
+                      <OpenInNew style={openIconStyle} />
+                    </Row>
+                    <Col align="center" margin="md">
+                      <Button size="small" variant="raised" color="secondary">DISCONNECT</Button>
+                    </Col>
+                  </React.Fragment>
+                </ClickAwayListener>
+              </Grow>
+            )}
+          </Popper>
+        )}
+      </Provider>
+    </Row>
+  </React.Fragment>
+))
 
-  return (
-    <React.Fragment>
-      <Row onClick={toggle} className={classes.summary}>
-        <Col start="xs" middle="xs" className={classes.logo}>
-          <Img src={logo} height={32} alt="Gnosis Team Safe" />
-        </Col>
-        <Divider />
-        <Spacer />
-        <Divider />
-        <Col end="sm" middle="xs" className={classes.provider}>
-          { connected && <Identicon address={userAddress} diameter={25} /> }
-          <Col end="sm" middle="xs" layout="column" className={classes.account}>
-            <Paragraph size="sm" transform="capitalize" noMargin bold>{providerText}</Paragraph>
-            <Paragraph size="sm" noMargin>{cutAddress}</Paragraph>
-          </Col>
-          <IconButton disableRipple className={classes.expand}>
-            { open ? <ExpandLess /> : <ExpandMore />}
-          </IconButton>
-        </Col>
-      </Row>
-      { connected &&
-        <React.Fragment>
-          <ExpansionPanelDetails className={classes.details}>
-            <Row grow margin="md">
-              <Details provider={provider} connected={connected} network={network} />
-              <Spacer />
-            </Row>
-            <Row className={classes.user} margin="md" grow >
-              <Identicon address={userAddress} diameter={25} />
-              <Paragraph className={classes.address} size="sm" noMargin>{userAddress}</Paragraph>
-              <OpenInNew style={openIconStyle} />
-            </Row>
-            <Col align="center" margin="md">
-              <Button size="small" variant="raised" color="secondary">DISCONNECT</Button>
-            </Col>
-          </ExpansionPanelDetails>
-        </React.Fragment>
-      }
-    </React.Fragment>
-  )
-})
-
-export default withStyles(styles)(Header)
+export default withStyles(styles)(openHoc(Header))
