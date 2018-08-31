@@ -25,5 +25,12 @@ export default createMuiTheme({
   typography: {
     fontFamily: 'Montserrat,sans-serif',
   },
+  overrides: {
+    MuiButton: {
+      containedPrimary: {
+        backgroundColor: '#467ee5',
+      },
+    },
+  },
   palette,
 })

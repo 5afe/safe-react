@@ -1,7 +1,7 @@
 // @flow
 const border = '#e4e8f1'
 const background = '#f4f4f9'
-const primary = '#4a5579' // '#467ee5' // '#1798cc'
+const primary = '#4a5579'
 const secondary = '#13222b'
 const tertiary = '#f6f9fc'
 const fontColor = '#4a5579'
