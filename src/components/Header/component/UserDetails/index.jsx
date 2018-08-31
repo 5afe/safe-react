@@ -116,7 +116,7 @@ const UserDetails = ({
       <Hairline margin="xs" />
       <Row className={classes.disconnect}>
         <Button
-          size="large"
+          size="medium"
           variant="raised"
           color="primary"
           fullWidth
