@@ -8,10 +8,15 @@ import List from '@material-ui/core/List'
 import Identicon from '~/components/Identicon'
 import Bold from '~/components/layout/Bold'
 import Hairline from '~/components/layout/Hairline'
+import Img from '~/components/layout/Img'
 import Row from '~/components/layout/Row'
 import Spacer from '~/components/Spacer'
-import { md, lg, background } from '~/theme/variables'
+import { sm, md, lg, background } from '~/theme/variables'
 import { upperFirst } from '~/utils/css'
+
+const metamask = require('../../assets/metamask.svg')
+const connectedLogo = require('../../assets/connected.svg')
+const dot = require('../../assets/dotRinkeby.svg')
 
 type Props = {
   provider: string,
@@ -42,7 +47,7 @@ const styles = () => ({
   user: {
     alignItems: 'center',
     backgroundColor: background,
-    padding: md,
+    padding: sm,
   },
   details: {
     padding: `0 ${lg}`,
@@ -55,6 +60,9 @@ const styles = () => ({
   },
   disconnect: {
     padding: `${md} 32px`,
+  },
+  logo: {
+    margin: '0px 2px',
   },
 })
 
@@ -78,6 +86,7 @@ const UserDetails = ({
       <Row className={classes.details}>
         <Paragraph size="sm" noMargin align="right">Status </Paragraph>
         <Spacer />
+        <Img className={classes.logo} src={connectedLogo} height={16} alt="Status connected" />
         <Paragraph size="sm" noMargin align="right">
           <Bold>
             {status}
@@ -88,6 +97,7 @@ const UserDetails = ({
       <Row className={classes.details}>
         <Paragraph size="sm" noMargin align="right">Client </Paragraph>
         <Spacer />
+        <Img className={classes.logo} src={metamask} height={16} alt="Metamask client" />
         <Paragraph size="sm" noMargin align="right">
           <Bold>
             {upperFirst(provider)}
@@ -98,6 +108,7 @@ const UserDetails = ({
       <Row className={classes.details}>
         <Paragraph size="sm" noMargin align="right">Netowrk </Paragraph>
         <Spacer />
+        <Img className={classes.logo} src={dot} height={16} alt="Network" />
         <Paragraph size="sm" noMargin align="right">
           <Bold>{upperFirst(network)}</Bold>
         </Paragraph>
