@@ -102,7 +102,7 @@ class GnoTransaction extends React.PureComponent<Props> {
             destination={transaction.get('destination')}
             threshold={threshold}
           /> }
-        <Hairline />
+        <Hairline margin="md" />
       </React.Fragment>
     )
   }

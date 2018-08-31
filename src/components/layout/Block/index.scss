@@ -2,6 +2,9 @@
   width: 100%;
   overflow: hidden;
 }
+.xs {
+  margin-bottom: $xs;
+}
 
 .sm {
     margin-bottom: $sm;
@@ -17,6 +20,10 @@
 
 .xl {
     margin-bottom: $xl;
+}
+
+.paddingXs {
+  padding-top: $xs;
 }
 
 .paddingSm {

@@ -1,16 +1,23 @@
 // @flow
 import * as React from 'react'
+import { type Size, getSize } from '~/theme/size'
 import { border } from '~/theme/variables'
 
-const hairlineStyle = {
+const calculateStyleFrom = (margin: Size) => ({
   width: '100%',
   height: '2px',
   backgroundColor: border,
-  margin: '20px 0px',
+  margin: `${getSize(margin)} 0px`,
+})
+
+type Props = {
+  margin?: Size,
 }
 
-const Hairline = () => (
-  <div style={hairlineStyle} />
-)
+const Hairline = ({ margin = 'md' }: Props) => {
+  const style = calculateStyleFrom(margin)
+
+  return <div style={style} />
+}
 
 export default Hairline
