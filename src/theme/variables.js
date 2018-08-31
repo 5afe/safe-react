@@ -1,6 +1,7 @@
 // @flow
 const border = '#e4e8f1'
-const primary = '#1798cc'
+const background = '#f4f4f9'
+const primary = '#467ee5' // '#1798cc'
 const secondary = '#13222b'
 const tertiary = '#f6f9fc'
 const xs = '4px'
@@ -13,6 +14,7 @@ module.exports = Object.assign({}, {
   primary,
   secondary,
   tertiary,
+  background,
   xs,
   sm,
   md,
