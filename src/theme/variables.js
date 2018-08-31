@@ -1,9 +1,10 @@
 // @flow
 const border = '#e4e8f1'
 const background = '#f4f4f9'
-const primary = '#467ee5' // '#1798cc'
+const primary = '#4a5579' // '#467ee5' // '#1798cc'
 const secondary = '#13222b'
 const tertiary = '#f6f9fc'
+const fontColor = '#4a5579'
 const xs = '4px'
 const sm = '8px'
 const md = '16px'
@@ -15,6 +16,7 @@ module.exports = Object.assign({}, {
   secondary,
   tertiary,
   background,
+  fontColor,
   xs,
   sm,
   md,
@@ -24,11 +26,11 @@ module.exports = Object.assign({}, {
   fontSizeHeadingXs: 16,
   fontSizeHeadingSm: 18,
   fontSizeHeadingMd: 21,
-  fontSizeHeadingLg: 28,
+  fontSizeHeadingLg: 32,
   regularFontWeight: 400,
   boldFontWeight: 700,
-  smallFontSize: '12px',
-  mediumFontSize: '14px',
+  smallFontSize: '11x',
+  mediumFontSize: '13px',
   largeFontSize: '18px',
   extraLargeFontSize: '24px',
   screenXs: 480,

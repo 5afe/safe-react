@@ -1,19 +1,26 @@
 .heading {
-  font-weight: $boldFontWeight;
+  font-weight: normal;
   line-height: normal;  
   margin: 0;
 }
 
 .h1 {
+  line-height: 36px;
+  font-weight: 500;
+  letter-spacing: -1px;
   font-size: $(fontSizeHeadingLg)px;
 }
 
 .h2 {
-  font-size: $(fontSizeHeadingMd)px;
+  line-height: 28px;
+  font-size: $largeFontSize;
 }
 
 .h3 {
-  font-size: $(fontSizeHeadingSm)px;
+  line-height: 21px;
+  font-size: $mediumFontSize;
+  font-weight: bold;
+  font-family: 'Roboto Mono', monospace;
 }
 
 .h4 {
