@@ -13,7 +13,8 @@ body {
   color:  $fontColor;
   font-family: 'Roboto Mono', monospace; 
   font-size: $mediumFontSize;
-  margin: 0;  
+  margin: 0;
+  background-color: $background;
 }
 
 body>div:first-child {

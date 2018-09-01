@@ -29,6 +29,7 @@ const styles = theme => ({
     borderBottom: `solid 2px ${border}`,
     alignItems: 'center',
     height: '52px',
+    backgroundColor: 'white',
   },
   logo: {
     padding: `${sm} ${md}`,

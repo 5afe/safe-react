@@ -164,6 +164,7 @@ class GnoStepper extends React.PureComponent<Props, State> {
 const styles = {
   root: {
     flex: '1 1 auto',
+    backgroundColor: 'transparent',
   },
 }
 
