@@ -33,11 +33,17 @@ const styles = () => ({
     display: 'flex',
     cursor: 'pointer',
   },
+  network: {
+    fontFamily: 'Montserrat, sans-serif',
+  },
   account: {
     padding: `0 ${md} 0 ${sm}`,
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',
+  },
+  address: {
+    letterSpacing: '-0.5px',
   },
   expand: {
     width: '30px',
@@ -70,8 +76,8 @@ class Provider extends React.Component<Props> {
           <Col end="sm" middle="xs" className={classes.provider}>
             { connected && <Identicon address={userAddress} diameter={25} /> }
             <Col end="sm" middle="xs" layout="column" className={classes.account}>
-              <Paragraph size="sm" transform="capitalize" noMargin bold>{providerText}</Paragraph>
-              <Paragraph size="sm" noMargin>{cutAddress}</Paragraph>
+              <Paragraph size="sm" transform="capitalize" className={classes.network} noMargin bold>{providerText}</Paragraph>
+              <Paragraph size="sm" className={classes.address} noMargin>{cutAddress}</Paragraph>
             </Col>
             <IconButton
               onClick={toggle}
