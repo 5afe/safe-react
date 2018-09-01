@@ -29,7 +29,7 @@ module.exports = Object.assign({}, {
   fontSizeHeadingLg: 32,
   regularFontWeight: 400,
   boldFontWeight: 700,
-  smallFontSize: '11x',
+  smallFontSize: '11px',
   mediumFontSize: '13px',
   largeFontSize: '18px',
   extraLargeFontSize: '24px',
