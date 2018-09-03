@@ -24,7 +24,7 @@ type Props = Open & {
   connected: boolean,
 }
 
-const styles = theme => ({
+const styles = () => ({
   summary: {
     borderBottom: `solid 2px ${border}`,
     alignItems: 'center',
@@ -34,50 +34,6 @@ const styles = theme => ({
   logo: {
     padding: `${sm} ${md}`,
     flexBasis: '95px',
-  },
-  user: {
-    alignItems: 'center',
-    border: '1px solid grey',
-    padding: '10px',
-    backgroundColor: '#f1f1f1',
-  },
-  address: {
-    flexGrow: 1,
-    textAlign: 'center',
-  },
-  heading: {
-    fontSize: theme.typography.pxToRem(15),
-  },
-  secondaryHeading: {
-    fontSize: theme.typography.pxToRem(15),
-    color: theme.palette.text.secondary,
-  },
-  icon: {
-    verticalAlign: 'bottom',
-    height: 30,
-    width: 30,
-  },
-  details: {
-    alignItems: 'center',
-    width: '375px',
-    border: '1px solid grey',
-    display: 'block',
-    padding: '12px 8px 4px',
-    margin: '0 0 0 auto',
-  },
-  column: {
-    flexBasis: '33.33%',
-  },
-  helper: {
-    borderLeft: `2px solid ${theme.palette.divider}`,
-    padding: `${theme.spacing.unit}px ${theme.spacing.unit * 2}px`,
-  },
-  link: {
-    color: theme.palette.primary.main,
-    textDecoration: 'none',
-    '&:hover': {
-      textDecoration: 'underline',
-    },
   },
 })
 
