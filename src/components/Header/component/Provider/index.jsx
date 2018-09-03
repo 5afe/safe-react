@@ -6,10 +6,12 @@ import ExpandLess from '@material-ui/icons/ExpandLess'
 import ExpandMore from '@material-ui/icons/ExpandMore'
 import Paragraph from '~/components/layout/Paragraph'
 import Col from '~/components/layout/Col'
+import Img from '~/components/layout/Img'
 import { type Open } from '~/components/hoc/OpenHoc'
 import { sm, md } from '~/theme/variables'
-
 import Identicon from '~/components/Identicon'
+
+const connectedLogo = require('../../assets/connected.svg')
 
 type Props = Open & {
   provider: string,
@@ -36,8 +38,13 @@ const styles = () => ({
   network: {
     fontFamily: 'Montserrat, sans-serif',
   },
+  logo: {
+    top: '10px',
+    position: 'relative',
+    right: '13px',
+  },
   account: {
-    padding: `0 ${md} 0 ${sm}`,
+    paddingRight: sm,
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',
@@ -74,7 +81,12 @@ class Provider extends React.Component<Props> {
       <React.Fragment>
         <div ref={this.myRef} className={classes.root}>
           <Col end="sm" middle="xs" className={classes.provider}>
-            { connected && <Identicon address={userAddress} diameter={25} /> }
+            { connected &&
+              <React.Fragment>
+                <Identicon address={userAddress} diameter={30} />
+                <Img className={classes.logo} src={connectedLogo} height={20} alt="Status connected" />
+              </React.Fragment>
+            }
             <Col end="sm" middle="xs" layout="column" className={classes.account}>
               <Paragraph size="sm" transform="capitalize" className={classes.network} noMargin bold>{providerText}</Paragraph>
               <Paragraph size="sm" className={classes.address} noMargin>{cutAddress}</Paragraph>
