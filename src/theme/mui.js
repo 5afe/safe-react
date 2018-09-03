@@ -38,7 +38,6 @@ export default createMuiTheme({
         padding: `${md} ${xl}`,
         minHeight: '52px',
         fontSize: mediumFontSize,
-        minWidth: '275px',
       },
     },
   },
