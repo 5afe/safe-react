@@ -10,7 +10,7 @@ type Props = {
   noMargin?: boolean,
   bold?: boolean,
   size?: 'sm' | 'md' | 'lg' | 'xl',
-  color?: 'soft' | 'medium' | 'dark' | 'primary',
+  color?: 'soft' | 'medium' | 'dark' | 'primary' | 'fancy',
   transform?: 'capitalize' | 'lowercase' | 'uppercase',
   children: React$Node,
   className?: string,
@@ -23,7 +23,7 @@ class Paragraph extends React.PureComponent<Props> {
     } = this.props
 
     return (
-      <p className={cx(styles.paragraph, className, { bold }, { noMargin }, size, transform, align)} {...props}>
+      <p className={cx(styles.paragraph, className, { bold }, { noMargin }, size, color, transform, align)} {...props}>
         { children }
       </p>
     )
