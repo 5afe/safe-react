@@ -5,6 +5,7 @@ const primary = '#4a5579'
 const secondary = '#13222b'
 const tertiary = '#f6f9fc'
 const fontColor = '#4a5579'
+const fancyColor = '#fd7890'
 const xs = '4px'
 const sm = '8px'
 const md = '16px'
@@ -17,6 +18,7 @@ module.exports = Object.assign({}, {
   tertiary,
   background,
   fontColor,
+  fancy: fancyColor,
   xs,
   sm,
   md,
