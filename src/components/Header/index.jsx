@@ -2,7 +2,10 @@
 import * as React from 'react'
 import { connect } from 'react-redux'
 import { logComponentStack, type Info } from '~/utils/logBoundaries'
-import Provider from './component/Provider'
+import ProviderInfo from './component/ProviderInfo'
+import ProviderDetails from './component/ProviderInfo/UserDetails'
+import ProviderDisconnected from './component/ProviderDisconnected'
+import ConnectDetails from './component/ProviderDisconnected/ConnectDetails'
 import Layout from './component/Layout'
 import actions from './actions'
 import selector from './selector'
@@ -34,36 +37,48 @@ class Header extends React.PureComponent<Props, State> {
     logComponentStack(error, info)
   }
 
-  reloadWallet = () => {
-    this.props.fetchProvider()
+  getProviderInfoBased = (hasError, disconnected) => {
+    if (hasError) {
+      // return
+    }
+
+    if (disconnected) {
+      return <ProviderDisconnected />
+    }
+
+    const {
+      provider, network, userAddress, connected,
+    } = this.props
+
+    return <ProviderInfo provider={provider} network={network} userAddress={userAddress} connected={connected} />
+  }
+
+  getProviderDetailsBased = (hasError, disconnected) => {
+    if (hasError) {
+      // return
+    }
+
+    if (disconnected) {
+      return <ConnectDetails />
+    }
+
+    const {
+      provider, network, userAddress, connected,
+    } = this.props
+
+    return <ProviderDetails provider={provider} network={network} userAddress={userAddress} connected={connected} />
   }
 
   render() {
-    const {
-      provider, userAddress, network, connected,
-    } = this.props
+    const { connected } = this.props
 
     const { hasError } = this.state
+    const providerDisconnected = !hasError && !connected
 
-    // const providerDisconnected = !hasError && !connected
-    const providerConnected = !hasError && connected
+    const info = this.getProviderInfoBased(hasError, providerDisconnected)
+    const details = this.getProviderDetailsBased(hasError, providerDisconnected)
 
-    return (
-      <Layout
-        reloadWallet={this.reloadWallet}
-      >
-        {/* hasError && <ProviderError /> */}
-        {/* providerDisconnected && <ProviderDisconnected /> */}
-        { providerConnected &&
-          <Provider
-            provider={provider}
-            userAddress={userAddress}
-            network={network}
-            connected={connected}
-          />
-        }
-      </Layout>
-    )
+    return <Layout providerInfo={info} providerDetails={details} />
   }
 }
 
