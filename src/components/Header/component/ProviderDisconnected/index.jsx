@@ -34,7 +34,7 @@ const ProviderDesconnected = ({ classes }: Props) => (
   <React.Fragment>
     <Img src={connectWallet} height={35} alt="Status connected" />
     <Col end="sm" middle="xs" layout="column" className={classes.account}>
-      <Paragraph size="sm" transform="capitalize" className={classes.network} noMargin bold>Not Connected</Paragraph>
+      <Paragraph size="sm" transform="capitalize" className={classes.network} noMargin weight="bold">Not Connected</Paragraph>
       <Paragraph size="sm" color="fancy" className={classes.connect} noMargin>Connect Wallet</Paragraph>
     </Col>
   </React.Fragment>

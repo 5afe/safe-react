@@ -64,7 +64,7 @@ const Welcome = ({ provider }: Props) => (
     <Heading tag="h1" align="center" margin="lg">
       Safe Team Edition
     </Heading>
-    <Heading tag="h3" align="center" margin="lg">
+    <Heading tag="h4" align="center" margin="lg">
       The Gnosis Safe Team Edition is geared towards teams managing <br />
       shared crypto funds. It is an improvement of the existing Gnosis <br />
       MultiSig wallet with redesigned smart contracts, cheaper setup and <br />

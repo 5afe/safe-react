@@ -48,7 +48,7 @@ const ProviderInfo = ({
       <Identicon address={userAddress} diameter={30} />
       <Img className={classes.logo} src={connectedLogo} height={20} alt="Status connected" />
       <Col end="sm" middle="xs" layout="column" className={classes.account}>
-        <Paragraph size="sm" transform="capitalize" className={classes.network} noMargin bold>{providerText}</Paragraph>
+        <Paragraph size="sm" transform="capitalize" className={classes.network} noMargin weight="bold">{providerText}</Paragraph>
         <Paragraph size="sm" className={classes.address} noMargin>{cutAddress}</Paragraph>
       </Col>
     </React.Fragment>
