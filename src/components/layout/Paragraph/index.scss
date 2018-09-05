@@ -1,7 +1,6 @@
 .paragraph {
   text-overflow: ellipsis;
   overflow-x: inherit;
-  color: $fontColor;
 }
 
 .soft {
@@ -18,6 +17,14 @@
 
 .fancy {
   color: $fancy;
+}
+
+.primary {
+  color: $fontColor,
+}
+
+.white {
+  color: white;
 }
 
 .capitalize {

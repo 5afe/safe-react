@@ -5,7 +5,7 @@ import Paragraph from '~/components/layout/Paragraph'
 import Button from '~/components/layout/Button'
 import Img from '~/components/layout/Img'
 import Row from '~/components/layout/Row'
-import { md } from '~/theme/variables'
+import { md, lg } from '~/theme/variables'
 
 const connectedLogo = require('../../assets/connect-wallet.svg')
 
@@ -26,7 +26,10 @@ const styles = () => ({
     textAlign: 'center',
   },
   connect: {
-    padding: `${md} 32px`,
+    padding: `${md} ${lg}`,
+  },
+  connectText: {
+    letterSpacing: '1px',
   },
   img: {
     margin: '0px 2px',
@@ -50,7 +53,7 @@ const ConnectDetails = ({ classes }: Props) => (
         color="primary"
         fullWidth
       >
-        CONNECT
+        <Paragraph className={classes.connectText} size="sm" weight="regular" color="white" noMargin>CONNECT</Paragraph>
       </Button>
     </Row>
   </React.Fragment>

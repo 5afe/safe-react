@@ -129,7 +129,7 @@ const UserDetails = ({
           color="primary"
           fullWidth
         >
-          <Paragraph className={classes.disconnectText} size="sm" weight="regular" noMargin>DISCONNECT</Paragraph>
+          <Paragraph className={classes.disconnectText} size="sm" weight="regular" color="white" noMargin>DISCONNECT</Paragraph>
         </Button>
       </Row>
     </React.Fragment>
