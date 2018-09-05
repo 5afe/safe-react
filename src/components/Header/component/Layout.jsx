@@ -1,14 +1,15 @@
 // @flow
 import * as React from 'react'
 import { withStyles } from '@material-ui/core/styles'
+import Grow from '@material-ui/core/Grow'
+import ClickAwayListener from '@material-ui/core/ClickAwayListener'
+import Popper from '@material-ui/core/Popper'
+import List from '@material-ui/core/List'
 import Divider from '~/components/layout/Divider'
 import openHoc, { type Open } from '~/components/hoc/OpenHoc'
 import Col from '~/components/layout/Col'
 import Img from '~/components/layout/Img'
 import Row from '~/components/layout/Row'
-import Grow from '@material-ui/core/Grow'
-import ClickAwayListener from '@material-ui/core/ClickAwayListener'
-import Popper from '@material-ui/core/Popper'
 import Spacer from '~/components/Spacer'
 import { border, sm, md } from '~/theme/variables'
 import Provider from './Provider'
@@ -22,6 +23,13 @@ type Props = Open & {
 }
 
 const styles = () => ({
+  root: {
+    backgroundColor: 'white',
+    padding: 0,
+    boxShadow: '0 0 10px 0 rgba(33, 48, 77, 0.1)',
+    minWidth: '280px',
+    left: '4px',
+  },
   summary: {
     borderBottom: `solid 2px ${border}`,
     alignItems: 'center',
@@ -53,7 +61,9 @@ const Layout = openHoc(({
                 {...TransitionProps}
               >
                 <ClickAwayListener onClickAway={toggle}>
-                  {providerDetails}
+                  <List className={classes.root} component="div">
+                    {providerDetails}
+                  </List>
                 </ClickAwayListener>
               </Grow>
             )}

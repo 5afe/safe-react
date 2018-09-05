@@ -4,7 +4,6 @@ import OpenInNew from '@material-ui/icons/OpenInNew'
 import { withStyles } from '@material-ui/core/styles'
 import Paragraph from '~/components/layout/Paragraph'
 import Button from '~/components/layout/Button'
-import List from '@material-ui/core/List'
 import Identicon from '~/components/Identicon'
 import Bold from '~/components/layout/Bold'
 import Hairline from '~/components/layout/Hairline'
@@ -32,11 +31,6 @@ const openIconStyle = {
 }
 
 const styles = () => ({
-  root: {
-    backgroundColor: 'white',
-    padding: 0,
-    boxShadow: '0 0 10px 0 rgba(33, 48, 77, 0.1)',
-  },
   container: {
     padding: `${md} 12px`,
   },
@@ -72,7 +66,7 @@ const UserDetails = ({
   const status = connected ? 'Connected' : 'Not connected'
 
   return (
-    <List className={classes.root} component="div">
+    <React.Fragment>
       <div className={classes.container}>
         <Row className={classes.identicon} margin="md" align="center">
           <Identicon address={userAddress} diameter={60} />
@@ -124,7 +118,7 @@ const UserDetails = ({
           DISCONNECT
         </Button>
       </Row>
-    </List>
+    </React.Fragment>
   )
 }
 
