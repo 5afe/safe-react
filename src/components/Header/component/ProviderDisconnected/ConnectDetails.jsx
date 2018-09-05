@@ -3,10 +3,9 @@ import * as React from 'react'
 import { withStyles } from '@material-ui/core/styles'
 import Paragraph from '~/components/layout/Paragraph'
 import Button from '~/components/layout/Button'
-import Hairline from '~/components/layout/Hairline'
 import Img from '~/components/layout/Img'
 import Row from '~/components/layout/Row'
-import { sm, md, lg, background } from '~/theme/variables'
+import { md } from '~/theme/variables'
 
 const connectedLogo = require('../../assets/connect-wallet.svg')
 
@@ -18,24 +17,18 @@ const styles = () => ({
   container: {
     padding: `${md} 12px`,
   },
-  user: {
-    alignItems: 'center',
-    backgroundColor: background,
-    padding: sm,
+  logo: {
+    justifyContent: 'center',
   },
-  details: {
-    padding: `0 ${lg}`,
-    height: '20px',
-    alignItems: 'center',
-  },
-  address: {
+  text: {
+    letterSpacing: '-0.6px',
     flexGrow: 1,
     textAlign: 'center',
   },
-  disconnect: {
+  connect: {
     padding: `${md} 32px`,
   },
-  logo: {
+  img: {
     margin: '0px 2px',
   },
 })
@@ -43,15 +36,14 @@ const styles = () => ({
 const ConnectDetails = ({ classes }: Props) => (
   <React.Fragment>
     <div className={classes.container}>
-      <Row margin="md" align="center">
-        <Paragraph className={classes.address} size="lg" noMargin bolder>Connect a Wallet</Paragraph>
+      <Row margin="lg" align="center">
+        <Paragraph className={classes.text} size="lg" noMargin weight="bolder">Connect a Wallet</Paragraph>
       </Row>
     </div>
-    <Row className={classes.details}>
-      <Img className={classes.logo} src={connectedLogo} height={16} alt="Status connected" />
+    <Row className={classes.logo} margin="lg">
+      <Img className={classes.img} src={connectedLogo} height={75} alt="Connect a Wallet" />
     </Row>
-    <Hairline margin="xs" />
-    <Row className={classes.disconnect}>
+    <Row className={classes.connect}>
       <Button
         size="medium"
         variant="raised"
