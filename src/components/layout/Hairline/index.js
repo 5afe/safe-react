@@ -5,7 +5,7 @@ import { border } from '~/theme/variables'
 
 const calculateStyleFrom = (margin: Size) => ({
   width: '100%',
-  height: '2px',
+  height: '1px',
   backgroundColor: border,
   margin: `${getSize(margin)} 0px`,
 })
