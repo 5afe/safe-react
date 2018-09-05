@@ -8,7 +8,7 @@ const cx = classNames.bind(styles)
 type Props = {
   align?: 'right' | 'center' | 'left',
   noMargin?: boolean,
-  weight?: 'light' | 'regular' | 'bold',
+  weight?: 'light' | 'regular' | 'bolder' | 'bold',
   size?: 'sm' | 'md' | 'lg' | 'xl',
   color?: 'soft' | 'medium' | 'dark' | 'primary' | 'fancy',
   transform?: 'capitalize' | 'lowercase' | 'uppercase',

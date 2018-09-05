@@ -31,6 +31,7 @@ module.exports = Object.assign({}, {
   fontSizeHeadingLg: 32,
   lightFont: 300,
   regularFont: 400,
+  bolderFont: 500,
   boldFont: 700,
   smallFontSize: '11px',
   mediumFontSize: '13px',
