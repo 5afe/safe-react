@@ -8,7 +8,7 @@ const cx = classNames.bind(styles)
 type Props = {
   align?: 'right' | 'center' | 'left',
   noMargin?: boolean,
-  bold?: boolean,
+  weight?: 'light' | 'regular' | 'bold',
   size?: 'sm' | 'md' | 'lg' | 'xl',
   color?: 'soft' | 'medium' | 'dark' | 'primary' | 'fancy',
   transform?: 'capitalize' | 'lowercase' | 'uppercase',
@@ -19,11 +19,14 @@ type Props = {
 class Paragraph extends React.PureComponent<Props> {
   render() {
     const {
-      bold, children, color, align, size, transform, noMargin, className, ...props
+      weight, children, color, align, size, transform, noMargin, className, ...props
     } = this.props
 
     return (
-      <p className={cx(styles.paragraph, className, { bold }, { noMargin }, size, color, transform, align)} {...props}>
+      <p
+        className={cx(styles.paragraph, className, weight, { noMargin }, size, color, transform, align)}
+        {...props}
+      >
         { children }
       </p>
     )

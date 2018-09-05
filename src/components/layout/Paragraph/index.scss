@@ -63,10 +63,18 @@
   font-size: $largeFontSize;
 }
 
-.lg {
+.xl {
   font-size: $extraLargeFontSize;
 }
 
+.light {
+  font-weight: $lightFont;
+}
+
+.regular {
+  font-weight: $regularFont;
+}
+
 .bold {
-  font-weight: bold;
+  font-weight: $boldFont;
 }
