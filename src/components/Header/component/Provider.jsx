@@ -20,11 +20,12 @@ const styles = () => ({
     height: '100%',
     display: 'flex',
     alignItems: 'center',
+    flexBasis: '250px',
   },
   provider: {
     padding: `${sm} ${md}`,
     alignItems: 'center',
-    flex: '0 1 auto',
+    flex: '1 1 auto',
     display: 'flex',
     cursor: 'pointer',
   },

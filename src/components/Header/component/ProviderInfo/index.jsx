@@ -32,6 +32,7 @@ const styles = () => ({
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',
+    flexGrow: 1,
   },
   address: {
     letterSpacing: '-0.5px',

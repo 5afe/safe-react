@@ -14,10 +14,10 @@ const FrameDecorator = story => (
   </div>
 )
 
-storiesOf('Components', module)
+storiesOf('Components /Header', module)
   .addDecorator(FrameDecorator)
-  .add('Connected Header', () => {
-    const provider = 'METAMASK'
+  .add('Connected', () => {
+    const provider = 'Metamask'
     const userAddress = '0x873faa4cddd5b157e8e5a57e7a5479afc5d30moe'
     const network = 'RINKEBY'
     const info = <ProviderInfo provider={provider} network={network} userAddress={userAddress} connected />
@@ -25,7 +25,7 @@ storiesOf('Components', module)
 
     return <Layout providerInfo={info} providerDetails={details} />
   })
-  .add('Disconnected Header', () => {
+  .add('Disconnected', () => {
     const info = <ProviderDisconnected />
     const details = <ConnectDetails />
 

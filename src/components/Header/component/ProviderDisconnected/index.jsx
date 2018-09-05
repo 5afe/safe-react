@@ -5,7 +5,7 @@ import Paragraph from '~/components/layout/Paragraph'
 import Col from '~/components/layout/Col'
 import Img from '~/components/layout/Img'
 import { type Open } from '~/components/hoc/OpenHoc'
-import { sm, md } from '~/theme/variables'
+import { md } from '~/theme/variables'
 
 const connectWallet = require('../../assets/connect-wallet.svg')
 
@@ -19,11 +19,11 @@ const styles = () => ({
     fontFamily: 'Montserrat, sans-serif',
   },
   account: {
-    paddingRight: md,
-    paddingLeft: sm,
+    padding: `0 ${md}`,
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',
+    flexGrow: 1,
   },
   connect: {
     letterSpacing: '-0.5px',
