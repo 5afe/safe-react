@@ -6,6 +6,7 @@ import Col from '~/components/layout/Col'
 import Img from '~/components/layout/Img'
 import { sm } from '~/theme/variables'
 import Identicon from '~/components/Identicon'
+import { shortVersionOf } from '~/logic/wallets/ethAddresses'
 
 const connectedLogo = require('../../assets/connected.svg')
 
@@ -41,7 +42,7 @@ const ProviderInfo = ({
   provider, network, userAddress, connected, classes,
 }: Props) => {
   const providerText = connected ? `${provider} [${network}]` : 'Not connected'
-  const cutAddress = connected ? `${userAddress.substring(0, 8)}...${userAddress.substring(36)}` : ''
+  const cutAddress = connected ? shortVersionOf(userAddress, 6) : ''
 
   return (
     <React.Fragment>

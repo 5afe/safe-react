@@ -9,9 +9,11 @@ import Bold from '~/components/layout/Bold'
 import Hairline from '~/components/layout/Hairline'
 import Img from '~/components/layout/Img'
 import Row from '~/components/layout/Row'
+import Block from '~/components/layout/Block'
 import Spacer from '~/components/Spacer'
-import { sm, md, lg, background } from '~/theme/variables'
+import { xs, sm, md, lg, background } from '~/theme/variables'
 import { upperFirst } from '~/utils/css'
+import { shortVersionOf } from '~/logic/wallets/ethAddresses'
 
 const metamask = require('../../assets/metamask.svg')
 const connectedLogo = require('../../assets/connected.svg')
@@ -33,14 +35,17 @@ const openIconStyle = {
 const styles = () => ({
   container: {
     padding: `${md} 12px`,
+    display: 'flex',
+    flexDirection: 'column',
   },
   identicon: {
     justifyContent: 'center',
     padding: `0 ${md}`,
   },
   user: {
-    alignItems: 'center',
+    borderRadius: '3px',
     backgroundColor: background,
+    margin: '0 auto',
     padding: sm,
   },
   details: {
@@ -51,12 +56,20 @@ const styles = () => ({
   address: {
     flexGrow: 1,
     textAlign: 'center',
+    letterSpacing: '-0.5px',
+  },
+  open: {
+    paddingLeft: sm,
+    width: 'auto',
   },
   disconnect: {
-    padding: `${md} 32px`,
+    padding: `${md} ${lg}`,
+  },
+  disconnectText: {
+    letterSpacing: '1px',
   },
   logo: {
-    margin: '0px 2px',
+    margin: `0px ${xs}`,
   },
 })
 
@@ -64,18 +77,19 @@ const UserDetails = ({
   provider, connected, network, userAddress, classes,
 }: Props) => {
   const status = connected ? 'Connected' : 'Not connected'
+  const address = shortVersionOf(userAddress, 6)
 
   return (
     <React.Fragment>
-      <div className={classes.container}>
+      <Block className={classes.container}>
         <Row className={classes.identicon} margin="md" align="center">
           <Identicon address={userAddress} diameter={60} />
         </Row>
-        <Row className={classes.user} grow >
-          <Paragraph className={classes.address} size="sm" noMargin>{userAddress}</Paragraph>
-          <OpenInNew style={openIconStyle} />
-        </Row>
-      </div>
+        <Block align="center" className={classes.user}>
+          <Paragraph className={classes.address} size="sm" noMargin>{address}</Paragraph>
+          <OpenInNew className={classes.open} style={openIconStyle} />
+        </Block>
+      </Block>
       <Hairline margin="xs" />
       <Row className={classes.details}>
         <Paragraph size="sm" noMargin align="right">Status </Paragraph>
@@ -115,7 +129,7 @@ const UserDetails = ({
           color="primary"
           fullWidth
         >
-          DISCONNECT
+          <Paragraph className={classes.disconnectText} size="sm" weight="regular" noMargin>DISCONNECT</Paragraph>
         </Button>
       </Row>
     </React.Fragment>
