@@ -1,6 +1,7 @@
 .paragraph {
   text-overflow: ellipsis;
-  overflow-x: inherit;  
+  overflow-x: inherit;
+  color: $fontColor;
 }
 
 .soft {
@@ -13,10 +14,6 @@
 
 .dark {
   color: black;
-}
-
-.primary {
-  color: #00a6c4;
 }
 
 .fancy {

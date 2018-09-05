@@ -10,7 +10,7 @@ type Props = {
   noMargin?: boolean,
   weight?: 'light' | 'regular' | 'bolder' | 'bold',
   size?: 'sm' | 'md' | 'lg' | 'xl',
-  color?: 'soft' | 'medium' | 'dark' | 'primary' | 'fancy',
+  color?: 'soft' | 'medium' | 'dark' | 'fancy',
   transform?: 'capitalize' | 'lowercase' | 'uppercase',
   children: React$Node,
   className?: string,
