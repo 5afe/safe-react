@@ -33,10 +33,10 @@ export const CreateSafe = ({ size, provider }: SafeProps) => (
     size={size || 'medium'}
     color="primary"
     disabled={!provider}
-    minWidth={275}
+    minWidth={240}
   >
     <Img src={plus} height={16} alt="Safe" />
-    <div style={buttonStyle}>Create a new Safe</div>
+    <div style={buttonStyle}>Create new Safe</div>
   </Button>
 )
 
@@ -48,7 +48,7 @@ export const LoadSafe = ({ size, provider }: SafeProps) => (
     size={size || 'medium'}
     color="primary"
     disabled={!provider}
-    minWidth={275}
+    minWidth={240}
   >
     <Img src={safe} height={16} alt="Safe" />
     <div style={buttonStyle}>Load existing Safe</div>

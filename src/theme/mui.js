@@ -1,7 +1,7 @@
 // @flow
 import red from '@material-ui/core/colors/red'
 import { createMuiTheme } from '@material-ui/core/styles'
-import { mediumFontSize, primary, secondary, md, xl } from './variables'
+import { mediumFontSize, primary, secondary, md, lg } from './variables'
 
 export type WithStyles = {
   classes: Object,
@@ -35,7 +35,7 @@ export default createMuiTheme({
         backgroundColor: '#467ee5',
       },
       sizeLarge: {
-        padding: `${md} ${xl}`,
+        padding: `${md} ${lg}`,
         minHeight: '52px',
         fontSize: mediumFontSize,
       },
