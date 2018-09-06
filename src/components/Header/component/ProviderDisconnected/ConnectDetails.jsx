@@ -11,6 +11,7 @@ const connectedLogo = require('../../assets/connect-wallet.svg')
 
 type Props = {
   classes: Object,
+  onConnect: Function,
 }
 
 const styles = () => ({
@@ -36,7 +37,7 @@ const styles = () => ({
   },
 })
 
-const ConnectDetails = ({ classes }: Props) => (
+const ConnectDetails = ({ classes, onConnect }: Props) => (
   <React.Fragment>
     <div className={classes.container}>
       <Row margin="lg" align="center">
@@ -48,6 +49,7 @@ const ConnectDetails = ({ classes }: Props) => (
     </Row>
     <Row className={classes.connect}>
       <Button
+        onClick={onConnect}
         size="medium"
         variant="raised"
         color="primary"

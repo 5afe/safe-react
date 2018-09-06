@@ -47,10 +47,11 @@ const ProviderInfo = ({
   const cutAddress = connected ? shortVersionOf(userAddress, 6) : 'Connection Error'
   const color = connected ? 'primary' : 'warning'
   const logo = connected ? connectedLogo : connectedWarning
+  const identiconAddress = userAddress || 'random'
 
   return (
     <React.Fragment>
-      <Identicon address={userAddress} diameter={30} />
+      <Identicon address={identiconAddress} diameter={30} />
       <Img className={classes.logo} src={logo} height={20} alt="Connection status" />
       <Col end="sm" middle="xs" layout="column" className={classes.account}>
         <Paragraph size="sm" transform="capitalize" className={classes.network} noMargin weight="bold">{providerText}</Paragraph>
