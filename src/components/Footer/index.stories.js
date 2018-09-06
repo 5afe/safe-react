@@ -11,6 +11,6 @@ const FrameDecorator = story => (
   </div>
 )
 
-storiesOf('Components', module)
+storiesOf('Components /Footer', module)
   .addDecorator(FrameDecorator)
-  .add('Footer', () => <Component />)
+  .add('Loaded', () => <Component />)
