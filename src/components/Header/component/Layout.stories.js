@@ -31,3 +31,17 @@ storiesOf('Components /Header', module)
 
     return <Layout providerInfo={info} providerDetails={details} />
   })
+  .add('Connection Error', () => {
+    const provider = 'Metamask'
+    const userAddress = '0x873faa4cddd5b157e8e5a57e7a5479afc5d30moe'
+    const network = 'RINKEBY'
+    const info = <ProviderInfo provider={provider} network={network} userAddress={userAddress} connected={false} />
+    const details = (<ProviderDetails
+      provider={provider}
+      network={network}
+      userAddress={userAddress}
+      connected={false}
+    />)
+
+    return <Layout providerInfo={info} providerDetails={details} />
+  })
