@@ -1,5 +1,5 @@
 // @flow
-import { PROVIDER_REDUCER_ID } from '~/wallets/store/reducer/provider'
+import { PROVIDER_REDUCER_ID } from '~/logic/wallets/store/reducer/provider'
 import { userAccountSelector } from '../selectors'
 import { ProviderFactory } from './builder/index.builder'
 

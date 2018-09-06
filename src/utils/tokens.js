@@ -1,7 +1,7 @@
 // @flow
 import { List } from 'immutable'
 import logo from '~/assets/icons/icon_etherTokens.svg'
-import { getBalanceInEtherOf } from '~/wallets/getWeb3'
+import { getBalanceInEtherOf } from '~/logic/wallets/getWeb3'
 import { makeToken, type Token } from '~/routes/tokens/store/model/token'
 
 export const ETH_ADDRESS = '0'

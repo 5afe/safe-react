@@ -2,9 +2,9 @@
 import * as React from 'react'
 import Stepper from '~/components/Stepper'
 import { connect } from 'react-redux'
-import { createTransaction } from '~/wallets/createTransactions'
-import { getEditDailyLimitData, getDailyLimitAddress } from '~/routes/safe/component/Withdraw/withdraw'
 import { type Safe } from '~/routes/safe/store/model/safe'
+import { createTransaction } from '~/logic/safe/safeFrontendOperations'
+import { getEditDailyLimitData, getDailyLimitAddress } from '~/logic/contracts/dailyLimitContracts'
 import EditDailyLimitForm, { EDIT_DAILY_LIMIT_PARAM } from './EditDailyLimitForm'
 import selector, { type SelectorProps } from './selector'
 import actions, { type Actions } from './actions'
@@ -40,7 +40,7 @@ class EditDailyLimit extends React.PureComponent<Props, State> {
       const to = await getDailyLimitAddress(safeAddress)
       const nonce = Date.now()
       await createTransaction(safe, `Change Safe's daily limit to ${newDailyLimit} [${nonce}]`, to, 0, nonce, userAddress, data)
-      await this.props.fetchTransactions()
+      await this.props.fetchTransactions(safeAddress)
       this.setState({ done: true })
     } catch (error) {
       this.setState({ done: false })

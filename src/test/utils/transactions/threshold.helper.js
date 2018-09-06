@@ -2,7 +2,7 @@
 import TestUtils from 'react-dom/test-utils'
 import { sleep } from '~/utils/timer'
 import { checkMinedTx } from '~/test/builder/safe.dom.utils'
-import { getGnosisSafeInstanceAt } from '~/wallets/safeContracts'
+import { getGnosisSafeInstanceAt } from '~/logic/contracts/safeContracts'
 import Threshold from '~/routes/safe/component/Threshold'
 import { whenExecuted } from '~/test/utils/logTransactions'
 

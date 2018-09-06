@@ -1,7 +1,7 @@
 // @flow
 import { createSelector } from 'reselect'
-import type { Provider } from '~/wallets/store/model/provider'
-import { PROVIDER_REDUCER_ID } from '~/wallets/store/reducer/provider'
+import type { Provider } from '~/logic/wallets/store/model/provider'
+import { PROVIDER_REDUCER_ID } from '~/logic/wallets/store/reducer/provider'
 
 const providerSelector = (state: any): Provider => state[PROVIDER_REDUCER_ID]
 

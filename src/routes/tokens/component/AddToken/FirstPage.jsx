@@ -6,8 +6,8 @@ import { composeValidators, required, mustBeEthereumAddress, uniqueAddress } fro
 import Block from '~/components/layout/Block'
 import Heading from '~/components/layout/Heading'
 import { promisify } from '~/utils/promisify'
-import { getWeb3 } from '~/wallets/getWeb3'
-import { EMPTY_DATA } from '~/wallets/ethTransactions'
+import { getWeb3 } from '~/logic/wallets/getWeb3'
+import { EMPTY_DATA } from '~/logic/wallets/ethTransactions'
 import { getStandardTokenContract } from '~/routes/tokens/store/actions/fetchTokens'
 
 type Props = {

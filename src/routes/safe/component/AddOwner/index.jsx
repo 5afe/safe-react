@@ -5,8 +5,8 @@ import Stepper from '~/components/Stepper'
 import { connect } from 'react-redux'
 import { type Safe } from '~/routes/safe/store/model/safe'
 import { type Owner, makeOwner } from '~/routes/safe/store/model/owner'
-import { getSafeEthereumInstance, createTransaction } from '~/wallets/createTransactions'
 import { setOwners } from '~/utils/localStorage'
+import { getSafeEthereumInstance, createTransaction } from '~/logic/safe/safeFrontendOperations'
 import AddOwnerForm, { NAME_PARAM, OWNER_ADDRESS_PARAM, INCREASE_PARAM } from './AddOwnerForm'
 import Review from './Review'
 import selector, { type SelectorProps } from './selector'
@@ -58,7 +58,7 @@ class AddOwner extends React.Component<Props, State> {
         safe, threshold, userAddress, fetchTransactions,
       } = this.props
       await addOwner(values, safe, threshold, userAddress)
-      fetchTransactions()
+      fetchTransactions(safe.get('address'))
       this.setState({ done: true })
     } catch (error) {
       this.setState({ done: false })

@@ -1,6 +1,6 @@
 // @flow
 import { ensureOnce } from '~/utils/singleton'
-import { TX_SERVICE_HOST } from '~/config/names'
+import { TX_SERVICE_HOST, ENABLED_TX_SERVICE_MODULES, ENABLED_TX_SERVICE_REMOVAL_SENDER } from '~/config/names'
 import devConfig from './development'
 import testConfig from './testing'
 import prodConfig from './production'
@@ -26,3 +26,15 @@ export const getTxServiceHost = () => {
 }
 
 export const getTxServiceUriFrom = (safeAddress: string) => `safes/${safeAddress}/transactions/`
+
+export const allowedModulesInTxHistoryService = () => {
+  const config = getConfig()
+
+  return config[ENABLED_TX_SERVICE_MODULES]
+}
+
+export const allowedRemoveSenderInTxHistoryService = () => {
+  const config = getConfig()
+
+  return config[ENABLED_TX_SERVICE_REMOVAL_SENDER]
+}

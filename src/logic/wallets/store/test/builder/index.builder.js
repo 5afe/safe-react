@@ -1,6 +1,6 @@
 // @flow
-import type { Provider } from '~/wallets/store/model/provider'
-import { makeProvider } from '~/wallets/store/model/provider'
+import type { Provider } from '~/logic/wallets/store/model/provider'
+import { makeProvider } from '~/logic/wallets/store/model/provider'
 
 class ProviderBuilder {
   provider: Provider

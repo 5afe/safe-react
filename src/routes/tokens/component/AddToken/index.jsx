@@ -6,9 +6,9 @@ import FirstPage, { TOKEN_ADRESS_PARAM } from '~/routes/tokens/component/AddToke
 import SecondPage, { TOKEN_SYMBOL_PARAM, TOKEN_DECIMALS_PARAM, TOKEN_LOGO_URL_PARAM, TOKEN_NAME_PARAM } from '~/routes/tokens/component/AddToken/SecondPage'
 import { makeToken, type Token } from '~/routes/tokens/store/model/token'
 import addTokenAction from '~/routes/tokens/store/actions/addToken'
-import { getWeb3 } from '~/wallets/getWeb3'
+import { getWeb3 } from '~/logic/wallets/getWeb3'
 import { promisify } from '~/utils/promisify'
-import { EMPTY_DATA } from '~/wallets/ethTransactions'
+import { EMPTY_DATA } from '~/logic/wallets/ethTransactions'
 import Review from './Review'
 
 export const getSteps = () => [

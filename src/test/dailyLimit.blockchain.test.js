@@ -1,10 +1,10 @@
 // @flow
+import { type Match } from 'react-router-dom'
 import { aNewStore } from '~/store'
-import { addEtherTo } from '~/test/utils/tokenMovements'
-import { aDeployedSafe, executeWithdrawOn } from '~/routes/safe/store/test/builder/deployedSafe.builder'
+import { addEtherTo, executeWithdrawOn } from '~/test/utils/tokenMovements'
 import { buildMathPropsFrom } from '~/test/utils/buildReactRouterProps'
 import { safeSelector } from '~/routes/safe/store/selectors/index'
-import { type Match } from 'react-router-dom'
+import { aMinedSafe } from '~/test/builder/safe.redux.builder'
 
 describe('Safe Blockchain Test', () => {
   let store
@@ -15,7 +15,7 @@ describe('Safe Blockchain Test', () => {
   it('wihdrawn should return revert error if exceeded dailyLimit', async () => {
     // GIVEN
     const dailyLimitValue = 0.30
-    const safeAddress = await aDeployedSafe(store, dailyLimitValue)
+    const safeAddress = await aMinedSafe(store, 1, 1, dailyLimitValue)
     await addEtherTo(safeAddress, '0.7')
     const value = 0.15
 

@@ -5,7 +5,7 @@ import Block from '~/components/layout/Block'
 import Bold from '~/components/layout/Bold'
 import Heading from '~/components/layout/Heading'
 import Paragraph from '~/components/layout/Paragraph'
-import { DESTINATION_PARAM, VALUE_PARAM } from '~/routes/safe/component/Withdraw/withdraw'
+import { DESTINATION_PARAM, VALUE_PARAM } from '~/routes/safe/component/Withdraw/WithdrawForm'
 
 type FormProps = {
   values: Object,
