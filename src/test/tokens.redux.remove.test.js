@@ -1,5 +1,5 @@
 // @flow
-import { getWeb3 } from '~/wallets/getWeb3'
+import { getWeb3 } from '~/logic/wallets/getWeb3'
 import { type Match } from 'react-router-dom'
 import { promisify } from '~/utils/promisify'
 import { getFirstTokenContract, getSecondTokenContract } from '~/test/utils/tokenMovements'

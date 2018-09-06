@@ -8,12 +8,13 @@ import { DEPLOYED_COMPONENT_ID } from '~/routes/open/components/FormConfirmation
 import Open from '~/routes/open/container/Open'
 import { history, type GlobalState } from '~/store'
 import { sleep } from '~/utils/timer'
-import { getProviderInfo, getWeb3 } from '~/wallets/getWeb3'
-import addProvider from '~/wallets/store/actions/addProvider'
-import { makeProvider } from '~/wallets/store/model/provider'
-import withdraw, { DESTINATION_PARAM, VALUE_PARAM } from '~/routes/safe/component/Withdraw/withdraw'
+import { getProviderInfo, getWeb3 } from '~/logic/wallets/getWeb3'
+import addProvider from '~/logic/wallets/store/actions/addProvider'
+import { makeProvider } from '~/logic/wallets/store/model/provider'
 import { promisify } from '~/utils/promisify'
 import { type Safe } from '~/routes/safe/store/model/safe'
+import { DESTINATION_PARAM, VALUE_PARAM } from '~/routes/safe/component/Withdraw/WithdrawForm'
+import { withdraw } from '~/logic/safe/safeFrontendOperations'
 
 export const renderSafe = async (localStore: Store<GlobalState>) => {
   const provider = await getProviderInfo()

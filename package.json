@@ -8,7 +8,7 @@
   "scripts": {
     "start": "node scripts/start.js",
     "build": "node scripts/build.js",
-    "test": "run-with-testrpc -l 40000000 --noVMErrorsOnRPCResponse true 'node scripts/test.js --env=jsdom'",
+    "test": "NODE_ENV=test && node scripts/test.js --env=jsdom",
     "test-local": "NODE_ENV=test && node scripts/test.js --env=jsdom",
     "precommit": "./precommit.sh",
     "flow": "flow",
@@ -128,7 +128,7 @@
       "<rootDir>/src/**/?(*.)(spec|test).js?(x)"
     ],
     "testEnvironment": "node",
-    "testURL": "https://safe-react",
+    "testURL": "http://localhost:8000",
     "transform": {
       "^.+\\.(js|jsx)$": "<rootDir>/node_modules/babel-jest",
       "^.+\\.(css|scss)$": "<rootDir>/config/jest/cssTransform.js",

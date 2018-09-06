@@ -5,9 +5,9 @@ import { SAFE_REDUCER_ID } from '~/routes/safe/store/reducer/safe'
 import { type Safe } from '~/routes/safe/store/model/safe'
 import { SafeFactory } from '~/routes/safe/store/test/builder/safe.builder'
 import { buildMathPropsFrom } from '~/test/utils/buildReactRouterProps'
-import { getProviderInfo } from '~/wallets/getWeb3'
+import { getProviderInfo } from '~/logic/wallets/getWeb3'
 import { grantedSelector } from '~/routes/safe/container/selector'
-import { makeProvider } from '~/wallets/store/model/provider'
+import { makeProvider } from '~/logic/wallets/store/model/provider'
 
 const grantedSelectorTests = () => {
   let provider

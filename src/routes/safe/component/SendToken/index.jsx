@@ -7,10 +7,10 @@ import { sleep } from '~/utils/timer'
 import { type Safe } from '~/routes/safe/store/model/safe'
 import { getStandardTokenContract } from '~/routes/tokens/store/actions/fetchTokens'
 import { type Token } from '~/routes/tokens/store/model/token'
-import { createTransaction } from '~/wallets/createTransactions'
-import { EMPTY_DATA } from '~/wallets/ethTransactions'
-import { toNative } from '~/wallets/tokens'
 import { isEther } from '~/utils/tokens'
+import { EMPTY_DATA } from '~/logic/wallets/ethTransactions'
+import { toNative } from '~/logic/wallets/tokens'
+import { createTransaction } from '~/logic/safe/safeFrontendOperations'
 import actions, { type Actions } from './actions'
 import selector, { type SelectorProps } from './selector'
 import SendTokenForm, { TKN_DESTINATION_PARAM, TKN_VALUE_PARAM } from './SendTokenForm'
@@ -67,7 +67,7 @@ class SendToken extends React.Component<Props, State> {
 
       await processTokenTransfer(safe, token, destination, amount, userAddress)
       await sleep(1500)
-      this.props.fetchTransactions()
+      this.props.fetchTransactions(safe.get('address'))
       this.setState({ done: true })
     } catch (error) {
       this.setState({ done: false })

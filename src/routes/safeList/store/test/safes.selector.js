@@ -2,10 +2,10 @@
 import { List, Map } from 'immutable'
 import { SAFE_REDUCER_ID } from '~/routes/safe/store/reducer/safe'
 import { type Safe } from '~/routes/safe/store/model/safe'
-import { getProviderInfo } from '~/wallets/getWeb3'
+import { getProviderInfo } from '~/logic/wallets/getWeb3'
 import { SafeFactory } from '~/routes/safe/store/test/builder/safe.builder'
-import { PROVIDER_REDUCER_ID } from '~/wallets/store/reducer/provider'
-import { makeProvider, type Provider } from '~/wallets/store/model/provider'
+import { PROVIDER_REDUCER_ID } from '~/logic/wallets/store/reducer/provider'
+import { makeProvider, type Provider } from '~/logic/wallets/store/model/provider'
 import { safesByOwnerSelector } from '../selectors'
 
 const safesListSelectorTests = () => {

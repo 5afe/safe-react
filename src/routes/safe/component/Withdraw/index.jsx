@@ -4,8 +4,8 @@ import { connect } from 'react-redux'
 import Stepper from '~/components/Stepper'
 import { type DailyLimit } from '~/routes/safe/store/model/dailyLimit'
 import { type Safe } from '~/routes/safe/store/model/safe'
+import { withdraw } from '~/logic/safe/safeFrontendOperations'
 import selector, { type SelectorProps } from './selector'
-import withdraw from './withdraw'
 import WithdrawForm from './WithdrawForm'
 import Review from './Review'
 import actions, { type Actions } from './actions'
@@ -34,7 +34,7 @@ class Withdraw extends React.Component<Props, State> {
     try {
       const { safe, userAddress, fetchTransactions } = this.props
       await withdraw(values, safe, userAddress)
-      fetchTransactions()
+      fetchTransactions(safe.get('address'))
 
       this.setState({ done: true })
     } catch (error) {

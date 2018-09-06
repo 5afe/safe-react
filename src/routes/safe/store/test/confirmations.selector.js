@@ -1,10 +1,12 @@
 // @flow
+/*
 import { List, Map } from 'immutable'
 import { makeTransaction, type Transaction } from '~/routes/safe/store/model/transaction'
 import { type Confirmation, makeConfirmation } from '~/routes/safe/store/model/confirmation'
 import { makeOwner } from '~/routes/safe/store/model/owner'
 import { confirmationsTransactionSelector } from '~/routes/safe/store/selectors/index'
 import { makeProvider } from '~/wallets/store/model/provider'
+
 
 const grantedSelectorTests = () => {
   describe('Safe Selector[confirmationsTransactionSelector]', () => {
@@ -97,3 +99,4 @@ const grantedSelectorTests = () => {
 }
 
 export default grantedSelectorTests
+*/

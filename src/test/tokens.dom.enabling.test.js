@@ -1,7 +1,7 @@
 // @flow
 import * as TestUtils from 'react-dom/test-utils'
 import { List } from 'immutable'
-import { getWeb3 } from '~/wallets/getWeb3'
+import { getWeb3 } from '~/logic/wallets/getWeb3'
 import { type Match } from 'react-router-dom'
 import { promisify } from '~/utils/promisify'
 import TokenComponent from '~/routes/tokens/component/Token'

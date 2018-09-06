@@ -1,6 +1,6 @@
 // @flow
-import { getWeb3 } from '~/wallets/getWeb3'
 import { type FieldValidator } from 'final-form'
+import { getWeb3 } from '~/logic/wallets/getWeb3'
 
 type Field = boolean | string | null | typeof undefined
 

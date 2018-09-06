@@ -2,7 +2,7 @@
 import { List, Map } from 'immutable'
 import { type Confirmation } from '~/routes/safe/store/model/confirmation'
 import { type Transaction } from '~/routes/safe/store/model/transaction'
-import { type Owner } from '~/routes/safe/store/model/owner'
+import { sameAddress } from '~/logic/wallets/ethAddresses'
 
 export const testSizeOfSafesWith = (transactions: Map<string, List<Transaction>>, size: number) => {
   expect(transactions).not.toBe(undefined)
@@ -18,34 +18,19 @@ export const testSizeOfTransactions = (safeTxs: List<Transaction> | typeof undef
 }
 
 export const testTransactionFrom = (
-  safeTxs: List<Transaction> | typeof undefined, pos: number, name: string,
-  nonce: number, value: number, threshold: number, destination: string,
-  data: string, creator: string, txHash: string,
-  firstOwner: Owner | typeof undefined, secondOwner: Owner | typeof undefined,
+  safeTxs: List<Transaction> | typeof undefined, pos: number,
+  name: string, nonce: number, value: number, destination: string,
+  data: string, isExecuted: boolean, confirmations: List<Confirmation>,
 ) => {
   if (!safeTxs) { throw new Error() }
   const tx: Transaction | typeof undefined = safeTxs.get(pos)
 
   if (!tx) { throw new Error() }
   expect(tx.get('name')).toBe(name)
-  expect(tx.get('value')).toBe(value)
-  expect(tx.get('threshold')).toBe(threshold)
-  expect(tx.get('destination')).toBe(destination)
-  expect(tx.get('confirmations').count()).toBe(2)
   expect(tx.get('nonce')).toBe(nonce)
+  expect(tx.get('value')).toBe(value)
+  expect(sameAddress(tx.get('destination'), destination)).toBe(true)
   expect(tx.get('data')).toBe(data)
-
-  const confirmations: List<Confirmation> = tx.get('confirmations')
-  const firstConfirmation: Confirmation | typeof undefined = confirmations.get(0)
-  if (!firstConfirmation) { throw new Error() }
-  expect(firstConfirmation.get('owner')).not.toBe(undefined)
-  expect(firstConfirmation.get('owner')).toEqual(firstOwner)
-  expect(firstConfirmation.get('status')).toBe(true)
-  expect(firstConfirmation.get('hash')).toBe(txHash)
-
-  const secondConfirmation: Confirmation | typeof undefined = confirmations.get(1)
-  if (!secondConfirmation) { throw new Error() }
-  expect(secondConfirmation.get('owner')).not.toBe(undefined)
-  expect(secondConfirmation.get('owner')).toEqual(secondOwner)
-  expect(secondConfirmation.get('status')).toBe(false)
+  expect(tx.get('isExecuted')).toBe(isExecuted)
+  expect(tx.get('confirmations')).toEqual(confirmations)
 }
