@@ -4,10 +4,12 @@ import { ensureOnce } from '~/utils/singleton'
 import { getWeb3 } from '~/logic/wallets/getWeb3'
 import { promisify } from '~/utils/promisify'
 import GnosisSafeSol from '#/GnosisSafeTeamEdition.json'
+import GnosisPersonalSafeSol from '#/GnosisSafePersonalEdition.json'
 import ProxyFactorySol from '#/ProxyFactory.json'
 import CreateAndAddModules from '#/CreateAndAddModules.json'
 import DailyLimitModule from '#/DailyLimitModule.json'
 import { calculateGasOf, calculateGasPrice, EMPTY_DATA } from '~/logic/wallets/ethTransactions'
+import { signaturesViaMetamask } from '~/config'
 
 let proxyFactoryMaster
 let createAndAddModuleMaster
@@ -30,8 +32,14 @@ function createAndAddModulesData(dataArray) {
   return dataArray.reduce((acc, data) => acc + mw.setup.getData(data).substr(74), EMPTY_DATA)
 }
 
-
 const createGnosisSafeContract = (web3: any) => {
+  if (signaturesViaMetamask()) {
+    const gnosisSafe = contract(GnosisPersonalSafeSol)
+    gnosisSafe.setProvider(web3.currentProvider)
+
+    return gnosisSafe
+  }
+
   const gnosisSafe = contract(GnosisSafeSol)
   gnosisSafe.setProvider(web3.currentProvider)
 

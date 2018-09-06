@@ -1,6 +1,11 @@
 // @flow
 import { ensureOnce } from '~/utils/singleton'
-import { TX_SERVICE_HOST, ENABLED_TX_SERVICE_MODULES, ENABLED_TX_SERVICE_REMOVAL_SENDER } from '~/config/names'
+import {
+  TX_SERVICE_HOST,
+  ENABLED_TX_SERVICE_MODULES,
+  ENABLED_TX_SERVICE_REMOVAL_SENDER,
+  SIGNATURES_VIA_METAMASK,
+} from '~/config/names'
 import devConfig from './development'
 import testConfig from './testing'
 import prodConfig from './production'
@@ -37,4 +42,10 @@ export const allowedRemoveSenderInTxHistoryService = () => {
   const config = getConfig()
 
   return config[ENABLED_TX_SERVICE_REMOVAL_SENDER]
+}
+
+export const signaturesViaMetamask = () => {
+  const config = getConfig()
+
+  return config[SIGNATURES_VIA_METAMASK]
 }
