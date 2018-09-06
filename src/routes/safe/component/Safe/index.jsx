@@ -77,7 +77,7 @@ class GnoSafe extends React.PureComponent<SafeProps, State> {
   onListTransactions = () => {
     const { safe } = this.props
 
-    this.setState({ component: <Transactions safeName={safe.get('name')} safeAddress={safe.get('address')} /> })
+    this.setState({ component: <Transactions threshold={safe.get('threshold')} safeName={safe.get('name')} safeAddress={safe.get('address')} /> })
   }
 
   onEditThreshold = () => {

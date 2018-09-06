@@ -7,7 +7,7 @@ import { aMinedSafe } from '~/test/builder/safe.redux.builder'
 import { addTknTo, getFirstTokenContract } from '~/test/utils/tokenMovements'
 import { EXPAND_BALANCE_INDEX, travelToSafe } from '~/test/builder/safe.dom.utils'
 import { promisify } from '~/utils/promisify'
-import { getWeb3 } from '~/wallets/getWeb3'
+import { getWeb3 } from '~/logic/wallets/getWeb3'
 import { sendMoveTokensForm, dispatchTknBalance } from '~/test/utils/transactions/moveTokens.helper'
 import { sleep } from '~/utils/timer'
 

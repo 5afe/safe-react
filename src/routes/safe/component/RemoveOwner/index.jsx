@@ -3,7 +3,7 @@ import * as React from 'react'
 import Stepper from '~/components/Stepper'
 import { connect } from 'react-redux'
 import { type Safe } from '~/routes/safe/store/model/safe'
-import { getSafeEthereumInstance, createTransaction } from '~/wallets/createTransactions'
+import { getSafeEthereumInstance, createTransaction } from '~/logic/safe/safeFrontendOperations'
 import RemoveOwnerForm, { DECREASE_PARAM } from './RemoveOwnerForm'
 import Review from './Review'
 import selector, { type SelectorProps } from './selector'
@@ -65,7 +65,7 @@ class RemoveOwner extends React.Component<Props, State> {
         safe, threshold, executor, fetchTransactions, userToRemove, name,
       } = this.props
       await removeOwner(values, safe, threshold, userToRemove, name, executor)
-      fetchTransactions()
+      fetchTransactions(safe.get('address'))
       this.setState({ done: true })
     } catch (error) {
       this.setState({ done: false })

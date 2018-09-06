@@ -1,4 +1,5 @@
 // @flow
+/*
 import { List, Map } from 'immutable'
 import { SAFE_REDUCER_ID } from '~/routes/safe/store/reducer/safe'
 import { safeTransactionsSelector } from '~/routes/safe/store/selectors/index'
@@ -127,3 +128,4 @@ const grantedSelectorTests = () => {
 }
 
 export default grantedSelectorTests
+*/

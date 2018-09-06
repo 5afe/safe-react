@@ -19,13 +19,14 @@ import Collapsed from '~/routes/safe/component/Transactions/Collapsed'
 import { type Transaction } from '~/routes/safe/store/model/transaction'
 import Hairline from '~/components/layout/Hairline/index'
 import Button from '~/components/layout/Button'
-import { sameAddress } from '~/wallets/ethAddresses'
+import { sameAddress } from '~/logic/wallets/ethAddresses'
 import { type Confirmation } from '~/routes/safe/store/model/confirmation'
 import selector, { type SelectorProps } from './selector'
 
 type Props = Open & SelectorProps & {
   transaction: Transaction,
   safeName: string,
+  threshold: number,
   onProcessTx: (tx: Transaction, alreadyConfirmed: number) => void,
 }
 
@@ -35,15 +36,14 @@ class GnoTransaction extends React.PureComponent<Props, {}> {
   onProccesClick = () => this.props.onProcessTx(this.props.transaction, this.props.confirmed)
 
   hasConfirmed = (userAddress: string, confirmations: List<Confirmation>): boolean =>
-    confirmations.filter((conf: Confirmation) => sameAddress(userAddress, conf.get('owner').get('address')) && conf.get('status')).count() > 0
+    confirmations.filter((conf: Confirmation) => sameAddress(userAddress, conf.get('owner').get('address')) && conf.get('type') === 'confirmation').count() > 0
 
   render() {
     const {
-      open, toggle, transaction, confirmed, safeName, userAddress,
+      open, toggle, transaction, confirmed, safeName, userAddress, executionHash, threshold,
     } = this.props
 
-    const txHash = transaction.get('tx')
-    const confirmationText = txHash ? 'Already executed' : `${confirmed} of the ${transaction.get('threshold')} confirmations needed`
+    const confirmationText = executionHash ? 'Already executed' : `${confirmed} of the ${threshold} confirmations needed`
     const userConfirmed = this.hasConfirmed(userAddress, transaction.get('confirmations'))
 
     return (
@@ -72,19 +72,19 @@ class GnoTransaction extends React.PureComponent<Props, {}> {
         </Row>
         <Row>
           <ListItem>
-            { txHash &&
+            { executionHash &&
               <React.Fragment>
                 <Avatar><CompareArrows /></Avatar>
-                <ListItemText cut primary="Transaction Hash" secondary={txHash} />
+                <ListItemText cut primary="Transaction Hash" secondary={executionHash} />
               </React.Fragment>
             }
-            { !txHash && userConfirmed &&
+            { !executionHash && userConfirmed &&
               <React.Fragment>
                 <Avatar><CompareArrows /></Avatar>
                 <ListItemText cut primary="Confirmed" secondary="Waiting for the rest of confirmations" />
               </React.Fragment>
             }
-            { !txHash && !userConfirmed &&
+            { !executionHash && !userConfirmed &&
               <Button
                 variant="raised"
                 color="primary"
@@ -100,7 +100,7 @@ class GnoTransaction extends React.PureComponent<Props, {}> {
             safeName={safeName}
             confirmations={transaction.get('confirmations')}
             destination={transaction.get('destination')}
-            threshold={transaction.get('threshold')}
+            threshold={threshold}
           /> }
         <Hairline />
       </React.Fragment>
