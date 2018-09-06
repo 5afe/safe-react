@@ -1,22 +1,31 @@
 .heading {
-  font-weight: $boldFontWeight;
+  font-weight: normal;
   line-height: normal;  
   margin: 0;
 }
 
 .h1 {
+  line-height: 36px;
+  font-weight: 500;
+  letter-spacing: -1px;
   font-size: $(fontSizeHeadingLg)px;
 }
 
 .h2 {
+  line-height: 28px;
   font-size: $(fontSizeHeadingMd)px;
 }
 
 .h3 {
+  line-height: 21px;
+  font-weight: bold;
+  font-family: 'Roboto Mono', monospace;
   font-size: $(fontSizeHeadingSm)px;
 }
 
 .h4 {
+  line-height: 21px;
+  font-family: 'Roboto Mono', monospace;
   font-size: $(fontSizeHeadingXs)px;
 }
 
@@ -44,4 +53,8 @@
 
 .marginLg {
     margin: 0 0 $lg 0;
+}
+
+.marginXl {
+  margin: 0 0 $xl 0;
 }

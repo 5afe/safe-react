@@ -1,7 +1,12 @@
 .footer {
+  font-size: $smallFontSize;
   display: grid;
-  grid-template-columns: 1fr auto auto;
-  justify-items: end;
+  grid-template-columns: 100px 100px 1fr;
+  grid-template-rows: 36px;
+  justify-items: center;
+  align-items: center;
+  border: solid 0.5px $border;
+  background-color: white;
 }
 
 @media only screen and (max-width: $(screenXs)px) {

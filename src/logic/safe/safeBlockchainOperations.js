@@ -118,8 +118,14 @@ export const executeDailyLimit = async (
   const gas = await calculateGasOf(dailyLimitData, sender, dailyLimitModule.address)
   const gasPrice = await calculateGasPrice()
 
-  const txReceipt = await dailyLimitModule.executeDailyLimit(0, to, valueInWei, { from: sender, gas, gasPrice })
-  checkReceiptStatus(txReceipt.tx)
+  try {
+    const txReceipt = await dailyLimitModule.executeDailyLimit(0, to, valueInWei, { from: sender, gas, gasPrice })
+    await checkReceiptStatus(txReceipt.tx)
+
+    return Promise.resolve(txReceipt.tx)
+  } catch (err) {
+    return Promise.reject(new Error(err))
+  }
 
   /*
   // Temporarily disabled for daily limit operations
@@ -128,5 +134,4 @@ export const executeDailyLimit = async (
 
   await submitOperation(safeAddress, to, Number(valueInWei), data, operation, nonce, txReceipt.tx, sender, 'execution')
   */
-  return txReceipt.tx
 }

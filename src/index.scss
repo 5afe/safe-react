@@ -10,19 +10,16 @@ body {
   left: 0;
   right: 0;
   overflow-x: hidden;
-  color: #1f5f76;
-  font-family: 'Montserrat', sans-serif;
+  color:  $fontColor;
+  font-family: 'Roboto Mono', monospace; 
   font-size: $mediumFontSize;
-  margin: 0;  
+  margin: 0;
+  background-color: $background;
 }
 
 body>div:first-child {
   display: flex;
-  flex: 1 1 auto;
-  flex-direction: column;
-  min-height: calc(100% - (2 * $xl));
-  padding: $xl;
-  background-image: linear-gradient(to bottom, $primary, #1a829d, #1a829d, #1f5f76);
+  min-height: 100%;
 }
 
 h1, h2, h3 {

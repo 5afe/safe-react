@@ -1,7 +1,6 @@
 .frame {
   display: flex;
   flex-direction: column;
-  flex: 1 0 auto;
-  background-color: white;
-  padding: $xl;
+  flex: 1 1 auto;
+  max-width: 100%;
 }

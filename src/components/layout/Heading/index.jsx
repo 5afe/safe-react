@@ -10,7 +10,7 @@ type HeadingTag = 'h1' | 'h2' | 'h3' | 'h4';
 
 type Props = {
   align?: 'left' | 'center' | 'right',
-  margin?: 'sm' | 'md' | 'lg',
+  margin?: 'sm' | 'md' | 'lg' | 'xl',
   tag: HeadingTag,
   truncate?: boolean,
   children: React$Node,

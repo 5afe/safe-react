@@ -7,11 +7,11 @@ import addProvider from './addProvider'
 
 export const processProviderResponse = (dispatch: ReduxDispatch<*>, response: ProviderProps) => {
   const {
-    name, available, loaded, account,
+    name, available, loaded, account, network,
   } = response
 
   const walletRecord = makeProvider({
-    name, available, loaded, account,
+    name, available, loaded, account, network,
   })
 
   dispatch(addProvider(walletRecord))
