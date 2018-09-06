@@ -166,7 +166,7 @@ describe('DOM > Feature > SAFE MULTISIG Transactions', () => {
       await refreshTransactions(store, address)
 
       transactions = TestUtils.scryRenderedComponentsWithType(SafeDom, Transaction)
-      statusses = ['Adol 1 Eth Account [Confirmed]', 'Adol Metamask 3 [Confirmed]']
+      statusses = ['Adol Metamask 3 [Confirmed]', 'Adol 1 Eth Account [Confirmed]']
       await checkPendingRemoveOwnerTx(transactions[5], 3, 'Remove Owner Adol Metamask 3', statusses)
       await checkThresholdOf(address, 3)
       await processTransaction(address, transactions[5].props.transaction, 2, accounts[1], 3)

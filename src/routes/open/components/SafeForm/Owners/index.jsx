@@ -54,7 +54,7 @@ const Owners = (props: Props) => {
         <Row key={`owner${(index)}`}>
           <Col xs={11} xsOffset={1}>
             <Block margin="sm">
-              <Paragraph Weight="bold">Owner Nº {index + 1}</Paragraph>
+              <Paragraph weight="bold">Owner Nº {index + 1}</Paragraph>
               <Block margin="sm">
                 <Field
                   name={getOwnerNameBy(index)}
