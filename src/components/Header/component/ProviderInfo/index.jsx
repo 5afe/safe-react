@@ -9,6 +9,7 @@ import Identicon from '~/components/Identicon'
 import { shortVersionOf } from '~/logic/wallets/ethAddresses'
 
 const connectedLogo = require('../../assets/connected.svg')
+const connectedWarning = require('../../assets/connected-error.svg')
 
 type Props = {
   provider: string,
@@ -42,16 +43,18 @@ const styles = () => ({
 const ProviderInfo = ({
   provider, network, userAddress, connected, classes,
 }: Props) => {
-  const providerText = connected ? `${provider} [${network}]` : 'Not connected'
-  const cutAddress = connected ? shortVersionOf(userAddress, 6) : ''
+  const providerText = `${provider} [${network}]`
+  const cutAddress = connected ? shortVersionOf(userAddress, 6) : 'Connection Error'
+  const color = connected ? 'primary' : 'warning'
+  const logo = connected ? connectedLogo : connectedWarning
 
   return (
     <React.Fragment>
       <Identicon address={userAddress} diameter={30} />
-      <Img className={classes.logo} src={connectedLogo} height={20} alt="Status connected" />
+      <Img className={classes.logo} src={logo} height={20} alt="Connection status" />
       <Col end="sm" middle="xs" layout="column" className={classes.account}>
         <Paragraph size="sm" transform="capitalize" className={classes.network} noMargin weight="bold">{providerText}</Paragraph>
-        <Paragraph size="sm" className={classes.address} noMargin>{cutAddress}</Paragraph>
+        <Paragraph size="sm" className={classes.address} noMargin color={color}>{cutAddress}</Paragraph>
       </Col>
     </React.Fragment>
   )

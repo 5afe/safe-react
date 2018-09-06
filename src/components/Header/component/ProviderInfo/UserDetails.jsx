@@ -17,6 +17,7 @@ import { shortVersionOf } from '~/logic/wallets/ethAddresses'
 
 const metamask = require('../../assets/metamask.svg')
 const connectedLogo = require('../../assets/connected.svg')
+const connectedWarning = require('../../assets/connected-error.svg')
 const dot = require('../../assets/dotRinkeby.svg')
 
 type Props = {
@@ -78,6 +79,8 @@ const UserDetails = ({
 }: Props) => {
   const status = connected ? 'Connected' : 'Not connected'
   const address = shortVersionOf(userAddress, 6)
+  const connectionLogo = connected ? connectedLogo : connectedWarning
+  const color = connected ? 'primary' : 'warning'
 
   return (
     <React.Fragment>
@@ -94,8 +97,8 @@ const UserDetails = ({
       <Row className={classes.details}>
         <Paragraph size="sm" noMargin align="right">Status </Paragraph>
         <Spacer />
-        <Img className={classes.logo} src={connectedLogo} height={16} alt="Status connected" />
-        <Paragraph size="sm" noMargin align="right">
+        <Img className={classes.logo} src={connectionLogo} height={16} alt="Conection Status" />
+        <Paragraph size="sm" noMargin align="right" color={color}>
           <Bold>
             {status}
           </Bold>
