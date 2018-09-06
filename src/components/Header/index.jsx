@@ -15,11 +15,28 @@ type Props = {
   fetchProvider: Function,
   userAddress: string,
   network: string,
-  connected: boolean,
+  loaded: boolean,
+  available: boolean,
 }
 
 type State = {
   hasError: boolean,
+}
+
+const getProviderInfoBased = (hasError, loaded, available, provider, network, userAddress) => {
+  if (hasError || !loaded) {
+    return <ProviderDisconnected />
+  }
+
+  return <ProviderInfo provider={provider} network={network} userAddress={userAddress} connected={available} />
+}
+
+const getProviderDetailsBased = (hasError, loaded, available, provider, network, userAddress) => {
+  if (hasError || !loaded) {
+    return <ConnectDetails />
+  }
+
+  return <ProviderDetails provider={provider} network={network} userAddress={userAddress} connected={available} />
 }
 
 class Header extends React.PureComponent<Props, State> {
@@ -37,46 +54,14 @@ class Header extends React.PureComponent<Props, State> {
     logComponentStack(error, info)
   }
 
-  getProviderInfoBased = (hasError, disconnected) => {
-    if (hasError) {
-      // return
-    }
-
-    if (disconnected) {
-      return <ProviderDisconnected />
-    }
-
-    const {
-      provider, network, userAddress, connected,
-    } = this.props
-
-    return <ProviderInfo provider={provider} network={network} userAddress={userAddress} connected={connected} />
-  }
-
-  getProviderDetailsBased = (hasError, disconnected) => {
-    if (hasError) {
-      // return
-    }
-
-    if (disconnected) {
-      return <ConnectDetails />
-    }
-
-    const {
-      provider, network, userAddress, connected,
-    } = this.props
-
-    return <ProviderDetails provider={provider} network={network} userAddress={userAddress} connected={connected} />
-  }
-
   render() {
-    const { connected } = this.props
-
     const { hasError } = this.state
-    const providerDisconnected = !hasError && !connected
+    const {
+      loaded, available, provider, network, userAddress,
+    } = this.props
 
-    const info = this.getProviderInfoBased(hasError, providerDisconnected)
-    const details = this.getProviderDetailsBased(hasError, providerDisconnected)
+    const info = getProviderInfoBased(hasError, loaded, available, provider, network, userAddress)
+    const details = getProviderDetailsBased(hasError, loaded, available, provider, network, userAddress)
 
     return <Layout providerInfo={info} providerDetails={details} />
   }

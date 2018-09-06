@@ -36,7 +36,12 @@ export const networkSelector = createSelector(
   },
 )
 
-export const connectedSelector = createSelector(
+export const loadedSelector = createSelector(
   providerSelector,
-  (provider: Provider) => provider.get('loaded') && provider.get('available'),
+  (provider: Provider) => provider.get('loaded'),
+)
+
+export const availableSelector = createSelector(
+  providerSelector,
+  (provider: Provider) => provider.get('available'),
 )
