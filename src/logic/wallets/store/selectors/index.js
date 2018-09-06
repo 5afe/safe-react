@@ -19,10 +19,8 @@ export const providerNameSelector = createSelector(
   providerSelector,
   (provider: Provider) => {
     const name = provider.get('name')
-    const loaded = provider.get('loaded')
-    const available = provider.get('available')
 
-    return loaded && available ? name.toLowerCase() : undefined
+    return name ? name.toLowerCase() : undefined
   },
 )
 
