@@ -16,7 +16,7 @@ const providerReducerTests = () => {
       expect(providerName).toEqual(undefined)
     })
 
-    it('should return undefined when Metamask is loaded but not available', () => {
+    it('should return metamask when Metamask is loaded but not available', () => {
       // GIVEN
       const reduxStore = { [PROVIDER_REDUCER_ID]: ProviderFactory.metamaskLoaded }
 
@@ -24,7 +24,7 @@ const providerReducerTests = () => {
       const providerName = providerNameSelector(reduxStore)
 
       // THEN
-      expect(providerName).toEqual(undefined)
+      expect(providerName).toEqual('metamask')
     })
 
     it('should return METAMASK when Metamask is loaded and available', () => {
@@ -35,7 +35,7 @@ const providerReducerTests = () => {
       const providerName = providerNameSelector(reduxStore)
 
       // THEN
-      expect(providerName).toEqual('METAMASK')
+      expect(providerName).toEqual('metamask')
     })
   })
 }

@@ -28,6 +28,6 @@ describe('Safe Blockchain Test', () => {
     await executeWithdrawOn(safe, value)
 
     // THEN
-    expect(executeWithdrawOn(safe, value)).rejects.toThrow('VM Exception while processing transaction: revert')
+    expect(executeWithdrawOn(safe, value)).rejects.toThrow('VM Exception while processing transaction: revert Daily limit has been reached')
   })
 })

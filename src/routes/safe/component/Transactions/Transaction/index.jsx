@@ -32,7 +32,7 @@ type Props = Open & SelectorProps & {
 
 export const PROCESS_TXS = 'PROCESS TRANSACTION'
 
-class GnoTransaction extends React.PureComponent<Props, {}> {
+class GnoTransaction extends React.PureComponent<Props> {
   onProccesClick = () => this.props.onProcessTx(this.props.transaction, this.props.confirmed)
 
   hasConfirmed = (userAddress: string, confirmations: List<Confirmation>): boolean =>
@@ -102,10 +102,10 @@ class GnoTransaction extends React.PureComponent<Props, {}> {
             destination={transaction.get('destination')}
             threshold={threshold}
           /> }
-        <Hairline />
+        <Hairline margin="md" />
       </React.Fragment>
     )
   }
 }
 
-export default connect(selector)(openHoc(GnoTransaction))
+export default openHoc(connect(selector)(GnoTransaction))

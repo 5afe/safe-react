@@ -1,30 +1,77 @@
 // @flow
-import React from 'react'
+import * as React from 'react'
+import { withStyles } from '@material-ui/core/styles'
+import Grow from '@material-ui/core/Grow'
+import ClickAwayListener from '@material-ui/core/ClickAwayListener'
+import Popper from '@material-ui/core/Popper'
+import List from '@material-ui/core/List'
+import Divider from '~/components/layout/Divider'
+import openHoc, { type Open } from '~/components/hoc/OpenHoc'
 import Col from '~/components/layout/Col'
 import Img from '~/components/layout/Img'
-import Refresh from '~/components/Refresh'
 import Row from '~/components/layout/Row'
+import Spacer from '~/components/Spacer'
+import { border, sm, md } from '~/theme/variables'
+import Provider from './Provider'
 
-import Connected from './Connected'
-import NotConnected from './NotConnected'
+const logo = require('../assets/gnosis-safe-logo.svg')
 
-const logo = require('../assets/gnosis_logo.svg')
-
-type Props = {
-  provider: string,
-  reloadWallet: Function,
+type Props = Open & {
+  classes: Object,
+  providerDetails: React$Node,
+  providerInfo: React$Node,
 }
 
-const Header = ({ provider, reloadWallet }: Props) => (
-  <Row>
-    <Col xs={12} center="xs" sm={6} start="sm" margin="lg">
-      <Img src={logo} height={40} alt="Gnosis Safe" />
-    </Col>
-    <Col xs={12} center="xs" sm={6} end="sm" middle="xs" margin="lg">
-      { provider ? <Connected provider={provider} /> : <NotConnected /> }
-      <Refresh callback={reloadWallet} />
-    </Col>
-  </Row>
-)
+const styles = () => ({
+  root: {
+    backgroundColor: 'white',
+    padding: 0,
+    boxShadow: '0 0 10px 0 rgba(33, 48, 77, 0.1)',
+    minWidth: '280px',
+    left: '4px',
+  },
+  summary: {
+    borderBottom: `solid 2px ${border}`,
+    alignItems: 'center',
+    height: '52px',
+    backgroundColor: 'white',
+  },
+  logo: {
+    padding: `${sm} ${md}`,
+    flexBasis: '95px',
+  },
+})
 
-export default Header
+const Layout = openHoc(({
+  open, toggle, classes, providerInfo, providerDetails,
+}: Props) => (
+  <React.Fragment>
+    <Row className={classes.summary}>
+      <Col start="xs" middle="xs" className={classes.logo}>
+        <Img src={logo} height={32} alt="Gnosis Team Safe" />
+      </Col>
+      <Divider />
+      <Spacer />
+      <Divider />
+      <Provider open={open} toggle={toggle} info={providerInfo}>
+        {providerRef => (
+          <Popper open={open} anchorEl={providerRef.current} placement="bottom-end">
+            {({ TransitionProps }) => (
+              <Grow
+                {...TransitionProps}
+              >
+                <ClickAwayListener onClickAway={toggle}>
+                  <List className={classes.root} component="div">
+                    {providerDetails}
+                  </List>
+                </ClickAwayListener>
+              </Grow>
+            )}
+          </Popper>
+        )}
+      </Provider>
+    </Row>
+  </React.Fragment>
+))
+
+export default withStyles(styles)(Layout)

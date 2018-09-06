@@ -1,7 +1,7 @@
 // @flow
 import red from '@material-ui/core/colors/red'
 import { createMuiTheme } from '@material-ui/core/styles'
-import { primary, secondary } from './variables'
+import { mediumFontSize, primary, secondary, md, lg } from './variables'
 
 export type WithStyles = {
   classes: Object,
@@ -24,6 +24,22 @@ const palette = {
 export default createMuiTheme({
   typography: {
     fontFamily: 'Montserrat,sans-serif',
+  },
+  overrides: {
+    MuiButton: {
+      root: {
+        fontFamily: 'Roboto Mono, monospace',
+        letterSpacing: '1px',
+      },
+      containedPrimary: {
+        backgroundColor: '#467ee5',
+      },
+      sizeLarge: {
+        padding: `${md} ${lg}`,
+        minHeight: '52px',
+        fontSize: mediumFontSize,
+      },
+    },
   },
   palette,
 })

@@ -1,6 +1,6 @@
 .paragraph {
   text-overflow: ellipsis;
-  overflow-x: inherit;  
+  overflow-x: inherit;
 }
 
 .soft {
@@ -15,8 +15,31 @@
   color: black;
 }
 
+.fancy {
+  color: $fancy;
+}
+
+.warning {
+  color: $warning;
+}
 .primary {
-  color: #00a6c4;
+  color: $fontColor;
+}
+
+.white {
+  color: white;
+}
+
+.capitalize {
+  text-transform: capitalize
+}
+
+.lowercase {
+  text-transform: lowercase
+}
+
+.uppercase {
+  text-transform: uppercase
 }
 
 .noMargin{
@@ -47,10 +70,22 @@
   font-size: $largeFontSize;
 }
 
-.lg {
+.xl {
   font-size: $extraLargeFontSize;
 }
 
+.light {
+  font-weight: $lightFont;
+}
+
+.regular {
+  font-weight: $regularFont;
+}
+
+.bolder {
+  font-weight: $bolderFont;
+}
+
 .bold {
-  font-weight: bold;
+  font-weight: $boldFont;
 }
