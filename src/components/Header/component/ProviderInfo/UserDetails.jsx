@@ -125,7 +125,7 @@ const UserDetails = ({
       </Row>
       <Hairline margin="xs" />
       <Row className={classes.details}>
-        <Paragraph size="sm" noMargin align="right">Netowrk </Paragraph>
+        <Paragraph size="sm" noMargin align="right">Network </Paragraph>
         <Spacer />
         <Img className={classes.logo} src={dot} height={16} alt="Network" />
         <Paragraph size="sm" noMargin align="right">
