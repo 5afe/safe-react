@@ -33,6 +33,9 @@ export const ETHEREUM_NETWORK_IDS = {
   42: ETHEREUM_NETWORK.KOVAN,
 }
 
+export const openInEtherScan = (address: string, network: string) => () => {
+  window.open(`https://${network}.etherscan.io/address/${address}`)
+}
 
 let web3
 export const getWeb3 = () => web3 || new Web3(window.web3.currentProvider)

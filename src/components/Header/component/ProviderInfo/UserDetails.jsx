@@ -14,6 +14,7 @@ import Spacer from '~/components/Spacer'
 import { xs, sm, md, lg, background } from '~/theme/variables'
 import { upperFirst } from '~/utils/css'
 import { shortVersionOf } from '~/logic/wallets/ethAddresses'
+import { openInEtherScan } from '~/logic/wallets/getWeb3'
 
 const metamask = require('../../assets/metamask.svg')
 const connectedLogo = require('../../assets/connected.svg')
@@ -63,6 +64,9 @@ const styles = () => ({
   open: {
     paddingLeft: sm,
     width: 'auto',
+    '&:hover': {
+      cursor: 'pointer',
+    },
   },
   disconnect: {
     padding: `${md} ${lg}`,
@@ -79,7 +83,7 @@ const UserDetails = ({
   provider, connected, network, userAddress, classes, onDisconnect,
 }: Props) => {
   const status = connected ? 'Connected' : 'Connection error'
-  const address = userAddress ? shortVersionOf(userAddress, 6) : 'Not available'
+  const address = userAddress ? shortVersionOf(userAddress, 6) : 'Address not available'
   const identiconAddress = userAddress || 'random'
   const connectionLogo = connected ? connectedLogo : connectedWarning
   const color = connected ? 'primary' : 'warning'
@@ -92,7 +96,9 @@ const UserDetails = ({
         </Row>
         <Block align="center" className={classes.user}>
           <Paragraph className={classes.address} size="sm" noMargin>{address}</Paragraph>
-          <OpenInNew className={classes.open} style={openIconStyle} />
+          { userAddress &&
+            <OpenInNew className={classes.open} style={openIconStyle} onClick={openInEtherScan(userAddress, network)} />
+          }
         </Block>
       </Block>
       <Hairline margin="xs" />
