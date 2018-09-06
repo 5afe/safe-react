@@ -26,14 +26,14 @@
     "absolutePath": "/Users/apanizo/git/gnosis/safe-contracts/contracts/libraries/MultiSend.sol",
     "exportedSymbols": {
       "MultiSend": [
-        3176
+        1876
       ]
     },
-    "id": 3177,
+    "id": 1877,
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 3168,
+        "id": 1868,
         "literals": [
           "solidity",
           "0.4",
@@ -48,16 +48,16 @@
         "contractKind": "contract",
         "documentation": "@title Multi Send - Allows to batch multiple transactions into one.\n @author Nick Dodson - <nick.dodson@consensys.net>\n @author Gonçalo Sá - <goncalo.sa@consensys.net>\n @author Stefan George - <stefan@gnosis.pm>",
         "fullyImplemented": true,
-        "id": 3176,
+        "id": 1876,
         "linearizedBaseContracts": [
-          3176
+          1876
         ],
         "name": "MultiSend",
         "nodeType": "ContractDefinition",
         "nodes": [
           {
             "body": {
-              "id": 3174,
+              "id": 1874,
               "nodeType": "Block",
               "src": "753:922:19",
               "statements": [
@@ -65,7 +65,7 @@
                   "externalReferences": [
                     {
                       "transactions": {
-                        "declaration": 3170,
+                        "declaration": 1870,
                         "isOffset": false,
                         "isSlot": false,
                         "src": "870:12:19",
@@ -74,7 +74,7 @@
                     },
                     {
                       "transactions": {
-                        "declaration": 3170,
+                        "declaration": 1870,
                         "isOffset": false,
                         "isSlot": false,
                         "src": "993:12:19",
@@ -83,7 +83,7 @@
                     },
                     {
                       "transactions": {
-                        "declaration": 3170,
+                        "declaration": 1870,
                         "isOffset": false,
                         "isSlot": false,
                         "src": "1047:12:19",
@@ -92,7 +92,7 @@
                     },
                     {
                       "transactions": {
-                        "declaration": 3170,
+                        "declaration": 1870,
                         "isOffset": false,
                         "isSlot": false,
                         "src": "1188:12:19",
@@ -101,7 +101,7 @@
                     },
                     {
                       "transactions": {
-                        "declaration": 3170,
+                        "declaration": 1870,
                         "isOffset": false,
                         "isSlot": false,
                         "src": "1115:12:19",
@@ -110,7 +110,7 @@
                     },
                     {
                       "transactions": {
-                        "declaration": 3170,
+                        "declaration": 1870,
                         "isOffset": false,
                         "isSlot": false,
                         "src": "1249:12:19",
@@ -118,7 +118,7 @@
                       }
                     }
                   ],
-                  "id": 3173,
+                  "id": 1873,
                   "nodeType": "InlineAssembly",
                   "operations": "{\n    let length := mload(transactions)\n    let i := 0x20\n    for {\n    }\n    lt(i, length)\n    {\n    }\n    {\n        let operation := mload(add(transactions, i))\n        let to := mload(add(transactions, add(i, 0x20)))\n        let value := mload(add(transactions, add(i, 0x40)))\n        let dataLength := mload(add(transactions, add(i, 0x80)))\n        let data := add(transactions, add(i, 0xa0))\n        let success := 0\n        switch operation\n        case 0 {\n            success := call(gas(), to, value, data, dataLength, 0, 0)\n        }\n        case 1 {\n            success := delegatecall(gas(), to, data, dataLength, 0, 0)\n        }\n        if eq(success, 0)\n        {\n            revert(0, 0)\n        }\n        i := add(i, add(0xa0, mul(div(add(dataLength, 0x1f), 0x20), 0x20)))\n    }\n}",
                   "src": "827:848:19"
@@ -126,7 +126,7 @@
               ]
             },
             "documentation": "@dev Sends multiple transactions and reverts all if one fails.\n @param transactions Encoded transactions. Each transaction is encoded as a \n                     tuple(operation,address,uint256,bytes), where operation \n                     can be 0 for a call or 1 for a delegatecall. The bytes \n                     of all encoded transactions are concatenated to form the input.",
-            "id": 3175,
+            "id": 1875,
             "implemented": true,
             "isConstructor": false,
             "isDeclaredConst": false,
@@ -134,15 +134,15 @@
             "name": "multiSend",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 3171,
+              "id": 1871,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 3170,
+                  "id": 1870,
                   "name": "transactions",
                   "nodeType": "VariableDeclaration",
-                  "scope": 3175,
+                  "scope": 1875,
                   "src": "714:18:19",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -151,7 +151,7 @@
                     "typeString": "bytes"
                   },
                   "typeName": {
-                    "id": 3169,
+                    "id": 1869,
                     "name": "bytes",
                     "nodeType": "ElementaryTypeName",
                     "src": "714:5:19",
@@ -168,19 +168,19 @@
             },
             "payable": false,
             "returnParameters": {
-              "id": 3172,
+              "id": 1872,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "753:0:19"
             },
-            "scope": 3176,
+            "scope": 1876,
             "src": "695:980:19",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "public"
           }
         ],
-        "scope": 3177,
+        "scope": 1877,
         "src": "253:1424:19"
       }
     ],
@@ -190,14 +190,14 @@
     "absolutePath": "/Users/apanizo/git/gnosis/safe-contracts/contracts/libraries/MultiSend.sol",
     "exportedSymbols": {
       "MultiSend": [
-        3176
+        1876
       ]
     },
-    "id": 3177,
+    "id": 1877,
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 3168,
+        "id": 1868,
         "literals": [
           "solidity",
           "0.4",
@@ -212,16 +212,16 @@
         "contractKind": "contract",
         "documentation": "@title Multi Send - Allows to batch multiple transactions into one.\n @author Nick Dodson - <nick.dodson@consensys.net>\n @author Gonçalo Sá - <goncalo.sa@consensys.net>\n @author Stefan George - <stefan@gnosis.pm>",
         "fullyImplemented": true,
-        "id": 3176,
+        "id": 1876,
         "linearizedBaseContracts": [
-          3176
+          1876
         ],
         "name": "MultiSend",
         "nodeType": "ContractDefinition",
         "nodes": [
           {
             "body": {
-              "id": 3174,
+              "id": 1874,
               "nodeType": "Block",
               "src": "753:922:19",
               "statements": [
@@ -229,7 +229,7 @@
                   "externalReferences": [
                     {
                       "transactions": {
-                        "declaration": 3170,
+                        "declaration": 1870,
                         "isOffset": false,
                         "isSlot": false,
                         "src": "870:12:19",
@@ -238,7 +238,7 @@
                     },
                     {
                       "transactions": {
-                        "declaration": 3170,
+                        "declaration": 1870,
                         "isOffset": false,
                         "isSlot": false,
                         "src": "993:12:19",
@@ -247,7 +247,7 @@
                     },
                     {
                       "transactions": {
-                        "declaration": 3170,
+                        "declaration": 1870,
                         "isOffset": false,
                         "isSlot": false,
                         "src": "1047:12:19",
@@ -256,7 +256,7 @@
                     },
                     {
                       "transactions": {
-                        "declaration": 3170,
+                        "declaration": 1870,
                         "isOffset": false,
                         "isSlot": false,
                         "src": "1188:12:19",
@@ -265,7 +265,7 @@
                     },
                     {
                       "transactions": {
-                        "declaration": 3170,
+                        "declaration": 1870,
                         "isOffset": false,
                         "isSlot": false,
                         "src": "1115:12:19",
@@ -274,7 +274,7 @@
                     },
                     {
                       "transactions": {
-                        "declaration": 3170,
+                        "declaration": 1870,
                         "isOffset": false,
                         "isSlot": false,
                         "src": "1249:12:19",
@@ -282,7 +282,7 @@
                       }
                     }
                   ],
-                  "id": 3173,
+                  "id": 1873,
                   "nodeType": "InlineAssembly",
                   "operations": "{\n    let length := mload(transactions)\n    let i := 0x20\n    for {\n    }\n    lt(i, length)\n    {\n    }\n    {\n        let operation := mload(add(transactions, i))\n        let to := mload(add(transactions, add(i, 0x20)))\n        let value := mload(add(transactions, add(i, 0x40)))\n        let dataLength := mload(add(transactions, add(i, 0x80)))\n        let data := add(transactions, add(i, 0xa0))\n        let success := 0\n        switch operation\n        case 0 {\n            success := call(gas(), to, value, data, dataLength, 0, 0)\n        }\n        case 1 {\n            success := delegatecall(gas(), to, data, dataLength, 0, 0)\n        }\n        if eq(success, 0)\n        {\n            revert(0, 0)\n        }\n        i := add(i, add(0xa0, mul(div(add(dataLength, 0x1f), 0x20), 0x20)))\n    }\n}",
                   "src": "827:848:19"
@@ -290,7 +290,7 @@
               ]
             },
             "documentation": "@dev Sends multiple transactions and reverts all if one fails.\n @param transactions Encoded transactions. Each transaction is encoded as a \n                     tuple(operation,address,uint256,bytes), where operation \n                     can be 0 for a call or 1 for a delegatecall. The bytes \n                     of all encoded transactions are concatenated to form the input.",
-            "id": 3175,
+            "id": 1875,
             "implemented": true,
             "isConstructor": false,
             "isDeclaredConst": false,
@@ -298,15 +298,15 @@
             "name": "multiSend",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 3171,
+              "id": 1871,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 3170,
+                  "id": 1870,
                   "name": "transactions",
                   "nodeType": "VariableDeclaration",
-                  "scope": 3175,
+                  "scope": 1875,
                   "src": "714:18:19",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -315,7 +315,7 @@
                     "typeString": "bytes"
                   },
                   "typeName": {
-                    "id": 3169,
+                    "id": 1869,
                     "name": "bytes",
                     "nodeType": "ElementaryTypeName",
                     "src": "714:5:19",
@@ -332,19 +332,19 @@
             },
             "payable": false,
             "returnParameters": {
-              "id": 3172,
+              "id": 1872,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "753:0:19"
             },
-            "scope": 3176,
+            "scope": 1876,
             "src": "695:980:19",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "public"
           }
         ],
-        "scope": 3177,
+        "scope": 1877,
         "src": "253:1424:19"
       }
     ],
@@ -358,28 +358,16 @@
     "4": {
       "events": {},
       "links": {},
-      "address": "0x7115893bc1477bc22f127bc2d82fcb4dd99e5838",
-      "transactionHash": "0x1f321cf880f5ec5b189cb1ac1c1c1b71ef8d854fc059c345fea6e6129bb19645"
+      "address": "0x3a29cf32d22f38b7338874b689a88f185663a1c3",
+      "transactionHash": "0x86b6895207dff0b3e19c202e140dc9cf823cbfc02672e02636af23a1b580e7e7"
     },
-    "1530013596495": {
+    "1534750848541": {
       "events": {},
       "links": {},
-      "address": "0x18a8eaa498a58752858e5a912c8ff136b0bc6c69",
-      "transactionHash": "0x7da393438ee13b991e6d94278addb64e86b0c13101efb8a0f0f00d9f86ba51d0"
-    },
-    "1530525742205": {
-      "events": {},
-      "links": {},
-      "address": "0x0a25374d1738169d8653e6ee01f464bf4cdc8dea",
-      "transactionHash": "0x2d7f72a94ced345c372040faa1f51a51f3e8da27a02dd04b9eefef487de3ba05"
-    },
-    "1530611935189": {
-      "events": {},
-      "links": {},
-      "address": "0x0b98f9d8fbd164d8d4884a997a3ef8e7275d5e0e",
-      "transactionHash": "0x2d7f72a94ced345c372040faa1f51a51f3e8da27a02dd04b9eefef487de3ba05"
+      "address": "0x5b9b42d6e4b2e4bf8d42eba32d46918e10899b66",
+      "transactionHash": "0xaf733882096b301ccf5bf4a12ebf84616b88927c71cc656cc037fbd892a24104"
     }
   },
   "schemaVersion": "2.0.0",
-  "updatedAt": "2018-07-03T09:59:18.515Z"
+  "updatedAt": "2018-08-20T07:50:29.677Z"
 }
