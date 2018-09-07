@@ -40,6 +40,17 @@ export default createMuiTheme({
         fontSize: mediumFontSize,
       },
     },
+    MuiStepIcon: {
+      active: {
+        color: `${secondary} !important`,
+      },
+    },
+    MuiTypography: {
+      body1: {
+        fontFamily: 'Roboto Mono, monospace',
+        letterSpacing: '-0.5px',
+      },
+    },
   },
   palette,
 })
