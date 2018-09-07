@@ -32,7 +32,7 @@ export default createMuiTheme({
         letterSpacing: '1px',
       },
       containedPrimary: {
-        backgroundColor: '#467ee5',
+        backgroundColor: secondary,
       },
       sizeLarge: {
         padding: `${md} ${lg}`,

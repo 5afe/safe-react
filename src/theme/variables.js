@@ -2,7 +2,7 @@
 const border = '#eaebef'
 const background = '#f4f4f9'
 const primary = '#4a5579'
-const secondary = '#13222b'
+const secondary = '#467ee5' // '#13222b'
 const tertiary = '#f6f9fc'
 const fontColor = '#4a5579'
 const fancyColor = '#fd7890'
