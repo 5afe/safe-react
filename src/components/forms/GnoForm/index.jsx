@@ -15,7 +15,6 @@ type Props = {
   padding: number,
   validation?: (values: Object) => Object | Promise<Object>,
   initialValues?: Object,
-  render: Function,
 }
 
 const stylesBasedOn = (padding: number): $Shape<CSSStyleDeclaration> => ({
@@ -26,7 +25,7 @@ const stylesBasedOn = (padding: number): $Shape<CSSStyleDeclaration> => ({
 })
 
 const GnoForm = ({
-  onSubmit, validation, initialValues, children, padding, render,
+  onSubmit, validation, initialValues, children, padding,
 }: Props) => (
   <Form
     validate={validation}
@@ -34,8 +33,7 @@ const GnoForm = ({
     initialValues={initialValues}
     render={({ handleSubmit, ...rest }) => (
       <form onSubmit={handleSubmit} style={stylesBasedOn(padding)}>
-        {render(rest)}
-        {children(rest.submitting, rest.validating)}
+        {children(rest.submitting, rest.validating, rest)}
       </form>
     )}
   />

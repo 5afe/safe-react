@@ -2,6 +2,7 @@
 import Stepper from '@material-ui/core/Stepper'
 import FormStep from '@material-ui/core/Step'
 import StepLabel from '@material-ui/core/StepLabel'
+import StepContent from '@material-ui/core/StepContent'
 import { withStyles } from '@material-ui/core/styles'
 import * as React from 'react'
 import GnoForm from '~/components/forms/GnoForm'
@@ -123,36 +124,38 @@ class GnoStepper extends React.PureComponent<Props, State> {
 
     return (
       <React.Fragment>
-        <Stepper classes={{ root: classes.root }} activeStep={page} alternativeLabel>
-          {steps.map(label => (
-            <FormStep key={label}>
-              <StepLabel>{label}</StepLabel>
-            </FormStep>
-          ))}
-        </Stepper>
         <GnoForm
           onSubmit={this.handleSubmit}
           initialValues={values}
           padding={15}
           validation={this.validate}
-          render={activePage}
         >
-          {(submitting: boolean, validating: boolean) => {
+          {(submitting: boolean, validating: boolean, ...rest: any) => {
             const disabled = disabledWhenValidating ? submitting || validating : submitting
 
             return (
-              <Row align="end" margin="lg" grow>
-                <Col xs={12} center="xs">
-                  <Controls
-                    disabled={disabled}
-                    finishedTx={finishedTransaction}
-                    finishedButton={finished}
-                    onPrevious={this.previous}
-                    firstPage={page === 0}
-                    lastPage={isLastPage}
-                  />
-                </Col>
-              </Row>
+              <Stepper classes={{ root: classes.root }} activeStep={page} orientation="vertical">
+                {steps.map(label => (
+                  <FormStep key={label}>
+                    <StepLabel>{label}</StepLabel>
+                    <StepContent>
+                      {activePage(rest)}
+                      <Row align="end" margin="lg" grow>
+                        <Col xs={12} center="xs">
+                          <Controls
+                            disabled={disabled}
+                            finishedTx={finishedTransaction}
+                            finishedButton={finished}
+                            onPrevious={this.previous}
+                            firstPage={page === 0}
+                            lastPage={isLastPage}
+                          />
+                        </Col>
+                      </Row>
+                    </StepContent>
+                  </FormStep>
+                ))}
+              </Stepper>
             )
           }}
         </GnoForm>
