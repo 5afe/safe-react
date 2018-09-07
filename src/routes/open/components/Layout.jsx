@@ -2,10 +2,16 @@
 import * as React from 'react'
 import Stepper from '~/components/Stepper'
 import Confirmation from '~/routes/open/components/FormConfirmation'
+import Block from '~/components/layout/Block'
+import Heading from '~/components/layout/Heading'
+import Row from '~/components/layout/Row'
+import IconButton from '@material-ui/core/IconButton'
 import Review from '~/routes/open/components/ReviewInformation'
+import ChevronLeft from '@material-ui/icons/ChevronLeft'
 import SafeFields, { safeFieldsValidation } from '~/routes/open/components/SafeForm'
 import { SAFELIST_ADDRESS } from '~/routes/routes'
 import Link from '~/components/layout/Link'
+import { secondary } from '~/theme/variables'
 
 const getSteps = () => [
   'Fill Safe Form', 'Review Information', 'Deploy it',
@@ -23,6 +29,10 @@ type Props = {
   onCallSafeContractSubmit: (values: Object) => Promise<void>,
 }
 
+const iconStyle = {
+  color: secondary,
+}
+
 const Layout = ({
   provider, userAccount, safeAddress, safeTx, onCallSafeContractSubmit,
 }: Props) => {
@@ -34,23 +44,31 @@ const Layout = ({
     <React.Fragment>
       { provider
         ? (
-          <Stepper
-            finishedButton={finishedButton}
-            finishedTransaction={!!safeAddress}
-            onSubmit={onCallSafeContractSubmit}
-            steps={steps}
-            initialValues={initialValues}
-          >
-            <Stepper.Page validate={safeFieldsValidation}>
-              { SafeFields }
-            </Stepper.Page>
-            <Stepper.Page>
-              { Review }
-            </Stepper.Page>
-            <Stepper.Page address={safeAddress} tx={safeTx}>
-              { Confirmation }
-            </Stepper.Page>
-          </Stepper>
+          <Block>
+            <Row align="center">
+              <IconButton style={iconStyle} disableRipple>
+                <ChevronLeft />
+              </IconButton>
+              <Heading tag="h3">Create New Safe</Heading>
+            </Row>
+            <Stepper
+              finishedButton={finishedButton}
+              finishedTransaction={!!safeAddress}
+              onSubmit={onCallSafeContractSubmit}
+              steps={steps}
+              initialValues={initialValues}
+            >
+              <Stepper.Page validate={safeFieldsValidation}>
+                { SafeFields }
+              </Stepper.Page>
+              <Stepper.Page>
+                { Review }
+              </Stepper.Page>
+              <Stepper.Page address={safeAddress} tx={safeTx}>
+                { Confirmation }
+              </Stepper.Page>
+            </Stepper>
+          </Block>
         )
         : <div>No metamask detected</div>
       }
