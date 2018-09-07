@@ -14,7 +14,7 @@ import Link from '~/components/layout/Link'
 import { secondary } from '~/theme/variables'
 
 const getSteps = () => [
-  'Fill Safe Form', 'Review Information', 'Deploy it',
+  'Start', 'Owners', 'Confirmations', 'Review',
 ]
 
 const initialValuesFrom = (userAccount: string) => ({
