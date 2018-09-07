@@ -12,7 +12,7 @@ export type OnSubmit = (
 type Props = {
   onSubmit: OnSubmit,
   children: Function,
-  padding: number,
+  padding?: number,
   validation?: (values: Object) => Object | Promise<Object>,
   initialValues?: Object,
 }
@@ -25,7 +25,7 @@ const stylesBasedOn = (padding: number): $Shape<CSSStyleDeclaration> => ({
 })
 
 const GnoForm = ({
-  onSubmit, validation, initialValues, children, padding,
+  onSubmit, validation, initialValues, children, padding = 0,
 }: Props) => (
   <Form
     validate={validation}

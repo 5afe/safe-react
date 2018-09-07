@@ -127,7 +127,6 @@ class GnoStepper extends React.PureComponent<Props, State> {
         <GnoForm
           onSubmit={this.handleSubmit}
           initialValues={values}
-          padding={15}
           validation={this.validate}
         >
           {(submitting: boolean, validating: boolean, ...rest: any) => {
