@@ -9,6 +9,7 @@ import IconButton from '@material-ui/core/IconButton'
 import Review from '~/routes/open/components/ReviewInformation'
 import ChevronLeft from '@material-ui/icons/ChevronLeft'
 import SafeFields, { safeFieldsValidation } from '~/routes/open/components/SafeForm'
+import SafeNameField from '~/routes/open/components/SafeNameForm'
 import { SAFELIST_ADDRESS } from '~/routes/routes'
 import Link from '~/components/layout/Link'
 import { secondary } from '~/theme/variables'
@@ -58,6 +59,9 @@ const Layout = ({
               steps={steps}
               initialValues={initialValues}
             >
+              <Stepper.Page>
+                { SafeNameField }
+              </Stepper.Page>
               <Stepper.Page validate={safeFieldsValidation}>
                 { SafeFields }
               </Stepper.Page>
