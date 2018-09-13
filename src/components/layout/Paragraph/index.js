@@ -13,18 +13,19 @@ type Props = {
   color?: 'soft' | 'medium' | 'dark' | 'white' | 'fancy' | 'primary' | 'warning',
   transform?: 'capitalize' | 'lowercase' | 'uppercase',
   children: React$Node,
+  dot?: boolean,
   className?: string,
 }
 
 class Paragraph extends React.PureComponent<Props> {
   render() {
     const {
-      weight, children, color, align, size, transform, noMargin, className, ...props
+      weight, children, color, align, size, transform, noMargin, className, dot, ...props
     } = this.props
 
     return (
       <p
-        className={cx(styles.paragraph, className, weight, { noMargin }, size, color, transform, align)}
+        className={cx(styles.paragraph, className, weight, { noMargin }, { dot }, size, color, transform, align)}
         {...props}
       >
         { children }
