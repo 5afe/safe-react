@@ -1,9 +1,40 @@
 // @flow
 import * as React from 'react'
+import { withStyles } from '@material-ui/core/styles'
+import Field from '~/components/forms/Field'
+import TextField from '~/components/forms/TextField'
+import { required } from '~/components/forms/validator'
+import Block from '~/components/layout/Block'
+import { FIELD_NAME } from '~/routes/open/components/fields'
 import Paragraph from '~/components/layout/Paragraph'
 import OpenPaper from '../OpenPaper'
 
-const SafeNameForm = () => () => (
+type Props = {
+  classes: Object,
+}
+
+const styles = () => ({
+  root: {
+    display: 'flex',
+  },
+})
+
+const SafeName = ({ classes }: Props) => (
+  <Block margin="md" className={classes.root}>
+    <Field
+      name={FIELD_NAME}
+      component={TextField}
+      type="text"
+      validate={required}
+      placeholder="Name of the new Safe"
+      text="Safe name"
+    />
+  </Block>
+)
+
+const SafeNameForm = withStyles(styles)(SafeName)
+
+const SafeNamePage = () => () => (
   <OpenPaper>
     <Paragraph size="md" color="primary">
       This setup will create a Safe with one or more owners. Optionally give the Safe a local name.
@@ -15,7 +46,8 @@ const SafeNameForm = () => () => (
     <Paragraph size="md" color="primary" weight="bolder">
       &#9679; My Safe is a smart contract on the Ethereum blockchain.
     </Paragraph>
+    <SafeNameForm />
   </OpenPaper>
 )
 
-export default SafeNameForm
+export default SafeNamePage
