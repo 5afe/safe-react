@@ -6,9 +6,8 @@ import StepContent from '@material-ui/core/StepContent'
 import { withStyles } from '@material-ui/core/styles'
 import * as React from 'react'
 import GnoForm from '~/components/forms/GnoForm'
+import Hairline from '~/components/layout/Hairline'
 import Button from '~/components/layout/Button'
-import Col from '~/components/layout/Col'
-import Row from '~/components/layout/Row'
 import Controls from './Controls'
 
 export { default as Step } from './Step'
@@ -139,18 +138,15 @@ class GnoStepper extends React.PureComponent<Props, State> {
                     <StepLabel>{label}</StepLabel>
                     <StepContent>
                       {activePage(rest)}
-                      <Row align="end" margin="lg" grow>
-                        <Col xs={12} center="xs">
-                          <Controls
-                            disabled={disabled}
-                            finishedTx={finishedTransaction}
-                            finishedButton={finished}
-                            onPrevious={this.previous}
-                            firstPage={page === 0}
-                            lastPage={isLastPage}
-                          />
-                        </Col>
-                      </Row>
+                      <Hairline />
+                      <Controls
+                        disabled={disabled}
+                        finishedTx={finishedTransaction}
+                        finishedButton={finished}
+                        onPrevious={this.previous}
+                        firstPage={page === 0}
+                        lastPage={isLastPage}
+                      />
                     </StepContent>
                   </FormStep>
                 ))}

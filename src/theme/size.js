@@ -16,6 +16,6 @@ export const getSize = (size: Size) => {
   case 'xl':
     return xl
   default:
-    return md
+    return '0px'
   }
 }

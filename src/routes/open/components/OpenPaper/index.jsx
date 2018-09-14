@@ -9,6 +9,8 @@ const styles = () => ({
   root: {
     padding: lg,
     maxWidth: '770px',
+    borderBottomRightRadius: '0px',
+    borderBottomLeftRadius: '0px',
   },
   container: {
     maxWidth: '600px',

@@ -14,7 +14,7 @@ type Props = {
   margin?: Size,
 }
 
-const Hairline = ({ margin = 'md' }: Props) => {
+const Hairline = ({ margin }: Props) => {
   const style = calculateStyleFrom(margin)
 
   return <div style={style} />
