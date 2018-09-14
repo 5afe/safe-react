@@ -81,9 +81,6 @@ export default createMuiTheme({
         '&:before': {
           borderBottom: `2px solid ${secondary}`,
         },
-        '&:focus:before': {
-          borderBottom: '1px solid purple',
-        },
         '&:hover:not($disabled):not($focused):not($error):before': {
           borderBottom: `2px solid ${secondary}`,
         },
