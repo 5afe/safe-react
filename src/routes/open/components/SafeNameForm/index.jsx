@@ -7,6 +7,7 @@ import { required } from '~/components/forms/validator'
 import Block from '~/components/layout/Block'
 import { FIELD_NAME } from '~/routes/open/components/fields'
 import Paragraph from '~/components/layout/Paragraph'
+import { lg } from '~/theme/variables'
 import OpenPaper from '../OpenPaper'
 
 type Props = {
@@ -17,25 +18,15 @@ const styles = () => ({
   root: {
     display: 'flex',
   },
+  container: {
+    maxWidth: '600px',
+    letterSpacing: '-0.5px',
+    padding: lg,
+  },
 })
 
 const SafeName = ({ classes }: Props) => (
-  <Block margin="md" className={classes.root}>
-    <Field
-      name={FIELD_NAME}
-      component={TextField}
-      type="text"
-      validate={required}
-      placeholder="Name of the new Safe"
-      text="Safe name"
-    />
-  </Block>
-)
-
-const SafeNameForm = withStyles(styles)(SafeName)
-
-const SafeNamePage = () => () => (
-  <OpenPaper>
+  <Block className={classes.container}>
     <Paragraph size="md" color="primary">
       This setup will create a Safe with one or more owners. Optionally give the Safe a local name.
       By continuing you consent with the terms of use and privacy policy.
@@ -46,7 +37,25 @@ const SafeNamePage = () => () => (
     <Paragraph size="md" color="primary" weight="bolder">
       &#9679; My Safe is a smart contract on the Ethereum blockchain.
     </Paragraph>
+    <Block margin="md" className={classes.root}>
+      <Field
+        name={FIELD_NAME}
+        component={TextField}
+        type="text"
+        validate={required}
+        placeholder="Name of the new Safe"
+        text="Safe name"
+      />
+    </Block>
+  </Block>
+)
+
+const SafeNameForm = withStyles(styles)(SafeName)
+
+const SafeNamePage = () => (controls: React$Node) => (
+  <OpenPaper>
     <SafeNameForm />
+    { controls }
   </OpenPaper>
 )
 
