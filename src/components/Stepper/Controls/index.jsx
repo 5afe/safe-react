@@ -3,6 +3,7 @@ import * as React from 'react'
 import Button from '~/components/layout/Button'
 import Col from '~/components/layout/Col'
 import Row from '~/components/layout/Row'
+import { sm } from '~/theme/variables'
 
 type ControlProps = {
   next: string,
@@ -14,15 +15,13 @@ type ControlProps = {
 
 const controlStyle = {
   backgroundColor: 'white',
-  padding: '8px',
-  borderBottomRightRadius: '4px',
-  borderBottomLeftRadius: '4px',
+  padding: sm,
 }
 
 const ControlButtons = ({
   next, back, firstPage, onPrevious, disabled,
 }: ControlProps) => (
-  <Row style={controlStyle} align="end" margin="lg" grow>
+  <Row style={controlStyle} align="end" grow>
     <Col xs={12} end="xs">
       <Button
         type="button"

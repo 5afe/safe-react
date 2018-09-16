@@ -130,6 +130,19 @@ class GnoStepper extends React.PureComponent<Props, State> {
         >
           {(submitting: boolean, validating: boolean, ...rest: any) => {
             const disabled = disabledWhenValidating ? submitting || validating : submitting
+            const controls = (
+              <React.Fragment>
+                <Hairline />
+                <Controls
+                  disabled={disabled}
+                  finishedTx={finishedTransaction}
+                  finishedButton={finished}
+                  onPrevious={this.previous}
+                  firstPage={page === 0}
+                  lastPage={isLastPage}
+                />
+              </React.Fragment>
+            )
 
             return (
               <Stepper classes={{ root: classes.root }} activeStep={page} orientation="vertical">
@@ -137,16 +150,7 @@ class GnoStepper extends React.PureComponent<Props, State> {
                   <FormStep key={label}>
                     <StepLabel>{label}</StepLabel>
                     <StepContent>
-                      {activePage(rest)}
-                      <Hairline />
-                      <Controls
-                        disabled={disabled}
-                        finishedTx={finishedTransaction}
-                        finishedButton={finished}
-                        onPrevious={this.previous}
-                        firstPage={page === 0}
-                        lastPage={isLastPage}
-                      />
+                      {activePage(controls, rest)}
                     </StepContent>
                   </FormStep>
                 ))}
