@@ -1,7 +1,7 @@
 // @flow
 import red from '@material-ui/core/colors/red'
 import { createMuiTheme } from '@material-ui/core/styles'
-import { largeFontSize, mediumFontSize, smallFontSize, primary, secondary, md, lg, background } from './variables'
+import { largeFontSize, mediumFontSize, smallFontSize, disabled, primary, secondary, md, lg, background } from './variables'
 
 export type WithStyles = {
   classes: Object,
@@ -30,6 +30,13 @@ export default createMuiTheme({
       root: {
         fontFamily: 'Roboto Mono, monospace',
         letterSpacing: '1px',
+        '&:disabled': {
+          color: disabled,
+        },
+        color: disabled,
+      },
+      disabled: {
+        cursor: 'pointer',
       },
       containedPrimary: {
         backgroundColor: secondary,
@@ -38,6 +45,10 @@ export default createMuiTheme({
         padding: `${md} ${lg}`,
         minHeight: '52px',
         fontSize: mediumFontSize,
+      },
+      sizeSmall: {
+        minWidth: '130px',
+        fontSize: smallFontSize,
       },
     },
     MuiStepIcon: {
@@ -73,9 +84,13 @@ export default createMuiTheme({
         order: 1,
         padding: `0 ${md}`,
         backgroundColor: background,
+        '&:$disabled': {
+          color: '#0000ff',
+        },
       },
       input: {
         padding: 0,
+        color: 'initial',
       },
       underline: {
         '&:before': {

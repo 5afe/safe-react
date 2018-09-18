@@ -13,6 +13,9 @@
 
 .h2 {
   line-height: 28px;
+  font-weight: $bolderFont;
+  letter-spacing: -0.5px;
+  font-family: 'Roboto Mono', monospace;
   font-size: $(fontSizeHeadingMd)px;
 }
 

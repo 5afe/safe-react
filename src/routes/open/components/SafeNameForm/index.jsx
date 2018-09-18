@@ -27,17 +27,23 @@ const styles = () => ({
 
 const SafeName = ({ classes }: Props) => (
   <Block className={classes.container}>
-    <Paragraph size="md" color="primary">
-      This setup will create a Safe with one or more owners. Optionally give the Safe a local name.
-      By continuing you consent with the terms of use and privacy policy.
-    </Paragraph>
-    <Paragraph size="md" color="primary" weight="bolder">
-      &#9679; I understand that my funds are held securely in my Safe. They cannot be accessed by Gnosis.
-    </Paragraph>
-    <Paragraph size="md" color="primary" weight="bolder">
-      &#9679; My Safe is a smart contract on the Ethereum blockchain.
-    </Paragraph>
-    <Block margin="md" className={classes.root}>
+    <Block margin="lg">
+      <Paragraph noMargin size="md" color="primary" weight="light">
+        This setup will create a Safe with one or more owners. Optionally give the Safe a local name.
+        By continuing you consent with the terms of use and privacy policy.
+      </Paragraph>
+    </Block>
+    <Block margin="md">
+      <Paragraph noMargin size="md" color="primary" weight="bolder">
+        &#9679; I understand that my funds are held securely in my Safe. They cannot be accessed by Gnosis.
+      </Paragraph>
+    </Block>
+    <Block margin="md">
+      <Paragraph size="md" color="primary" weight="bolder">
+        &#9679; My Safe is a smart contract on the Ethereum blockchain.
+      </Paragraph>
+    </Block>
+    <Block margin="lg" className={classes.root}>
       <Field
         name={FIELD_NAME}
         component={TextField}

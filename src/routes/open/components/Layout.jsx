@@ -32,6 +32,8 @@ type Props = {
 
 const iconStyle = {
   color: secondary,
+  width: '32px',
+  height: '32px',
 }
 
 const Layout = ({
@@ -50,7 +52,7 @@ const Layout = ({
               <IconButton style={iconStyle} disableRipple>
                 <ChevronLeft />
               </IconButton>
-              <Heading tag="h3">Create New Safe</Heading>
+              <Heading tag="h2">Create New Safe</Heading>
             </Row>
             <Stepper
               finishedButton={finishedButton}
