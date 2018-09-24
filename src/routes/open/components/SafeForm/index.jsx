@@ -1,9 +1,7 @@
 // @flow
 import * as React from 'react'
 import Block from '~/components/layout/Block'
-import Heading from '~/components/layout/Heading'
 import { getAccountsFrom } from '~/routes/open/utils/safeDataExtractor'
-import Name from './Name'
 import Owners from './Owners'
 import Confirmations from './Confirmations'
 import DailyLimit from './DailyLimit'
@@ -20,10 +18,8 @@ export const safeFieldsValidation = (values: Object) => {
   return errors
 }
 
-export default () => ({ values }: Object) => (
+export default () => (constrols: React$Node, { values }: Object) => (
   <Block margin="md">
-    <Heading tag="h2" margin="lg">Deploy a new Safe</Heading>
-    <Name />
     <Owners numOwners={values.owners} otherAccounts={getAccountsFrom(values)} />
     <Confirmations />
     <DailyLimit />
