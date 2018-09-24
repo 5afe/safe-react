@@ -9,7 +9,6 @@ type ControlProps = {
   next: string,
   back: string,
   onPrevious: () => void,
-  firstPage: boolean,
   disabled: boolean,
 }
 
@@ -18,14 +17,18 @@ const controlStyle = {
   padding: sm,
 }
 
+const firstButtonStyle = {
+  marginRight: sm,
+}
+
 const ControlButtons = ({
-  next, back, firstPage, onPrevious, disabled,
+  next, back, onPrevious, disabled,
 }: ControlProps) => (
   <Row style={controlStyle} align="end" grow>
     <Col xs={12} end="xs">
       <Button
+        style={firstButtonStyle}
         type="button"
-        disabled={firstPage || disabled}
         onClick={onPrevious}
         size="small"
       >
@@ -63,7 +66,6 @@ const Controls = ({
       back={firstPage ? 'Cancel' : 'Back'}
       // eslint-disable-next-line
       next={firstPage ? 'Start' : lastPage ? 'Finish' : 'Next'}
-      firstPage={firstPage}
       onPrevious={onPrevious}
     />
 )
