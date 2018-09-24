@@ -158,7 +158,7 @@ class GnoStepper extends React.PureComponent<Props, State> {
                   <FormStep key={label}>
                     <StepLabel>{label}</StepLabel>
                     <StepContent>
-                      {activePage(controls, rest)}
+                      {activePage(controls, ...rest)}
                     </StepContent>
                   </FormStep>
                 ))}
