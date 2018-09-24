@@ -8,6 +8,7 @@ import * as React from 'react'
 import GnoForm from '~/components/forms/GnoForm'
 import Hairline from '~/components/layout/Hairline'
 import Button from '~/components/layout/Button'
+import { history } from '~/store'
 import Controls from './Controls'
 
 export { default as Step } from './Step'
@@ -96,10 +97,17 @@ class GnoStepper extends React.PureComponent<Props, State> {
     }))
   }
 
-  previous = () =>
-    this.setState(state => ({
+  previous = () => {
+    const firstPage = this.state.page === 0
+
+    if (firstPage) {
+      return history.goBack()
+    }
+
+    return this.setState(state => ({
       page: Math.max(state.page - 1, 0),
     }))
+  }
 
   handleSubmit = async (values: Object) => {
     const { children, onSubmit } = this.props
