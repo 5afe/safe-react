@@ -12,6 +12,7 @@ import SafeFields, { safeFieldsValidation } from '~/routes/open/components/SafeF
 import SafeNameField from '~/routes/open/components/SafeNameForm'
 import { SAFELIST_ADDRESS } from '~/routes/routes'
 import Link from '~/components/layout/Link'
+import { history } from '~/store'
 import { secondary } from '~/theme/variables'
 
 const getSteps = () => [
@@ -36,6 +37,10 @@ const iconStyle = {
   height: '32px',
 }
 
+const back = () => {
+  history.goBack()
+}
+
 const Layout = ({
   provider, userAccount, safeAddress, safeTx, onCallSafeContractSubmit,
 }: Props) => {
@@ -49,7 +54,7 @@ const Layout = ({
         ? (
           <Block>
             <Row align="center">
-              <IconButton style={iconStyle} disableRipple>
+              <IconButton onClick={back} style={iconStyle} disableRipple>
                 <ChevronLeft />
               </IconButton>
               <Heading tag="h2">Create New Safe</Heading>
