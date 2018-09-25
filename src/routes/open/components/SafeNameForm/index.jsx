@@ -7,7 +7,6 @@ import { required } from '~/components/forms/validator'
 import Block from '~/components/layout/Block'
 import { FIELD_NAME } from '~/routes/open/components/fields'
 import Paragraph from '~/components/layout/Paragraph'
-import { lg } from '~/theme/variables'
 import OpenPaper from '../OpenPaper'
 
 type Props = {
@@ -18,15 +17,10 @@ const styles = () => ({
   root: {
     display: 'flex',
   },
-  container: {
-    maxWidth: '600px',
-    letterSpacing: '-0.5px',
-    padding: lg,
-  },
 })
 
 const SafeName = ({ classes }: Props) => (
-  <Block className={classes.container}>
+  <React.Fragment>
     <Block margin="lg">
       <Paragraph noMargin size="md" color="primary" weight="light">
         This setup will create a Safe with one or more owners. Optionally give the Safe a local name.
@@ -53,15 +47,14 @@ const SafeName = ({ classes }: Props) => (
         text="Safe name"
       />
     </Block>
-  </Block>
+  </React.Fragment>
 )
 
 const SafeNameForm = withStyles(styles)(SafeName)
 
 const SafeNamePage = () => (controls: React$Node) => (
-  <OpenPaper>
+  <OpenPaper controls={controls}>
     <SafeNameForm />
-    { controls }
   </OpenPaper>
 )
 

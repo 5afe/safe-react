@@ -52,29 +52,27 @@ const Owners = (props: Props) => {
       </Block>
       { renderOwners && [...Array(Number(numOwners))].map((x, index) => (
         <Row key={`owner${(index)}`}>
-          <Col xs={11} xsOffset={1}>
+          <Col xs={11} xsOffset={1} layout="column" margin="md">
+            <Paragraph weight="bold">Owner Nº {index + 1}</Paragraph>
             <Block margin="sm">
-              <Paragraph weight="bold">Owner Nº {index + 1}</Paragraph>
-              <Block margin="sm">
-                <Field
-                  name={getOwnerNameBy(index)}
-                  component={TextField}
-                  type="text"
-                  validate={required}
-                  placeholder="Owner Name*"
-                  text="Owner Name"
-                />
-              </Block>
-              <Block margin="sm">
-                <Field
-                  name={getOwnerAddressBy(index)}
-                  component={TextField}
-                  type="text"
-                  validate={getAddressValidators(otherAccounts, index)}
-                  placeholder="Owner Address*"
-                  text="Owner Address"
-                />
-              </Block>
+              <Field
+                name={getOwnerNameBy(index)}
+                component={TextField}
+                type="text"
+                validate={required}
+                placeholder="Owner Name*"
+                text="Owner Name"
+              />
+            </Block>
+            <Block margin="sm">
+              <Field
+                name={getOwnerAddressBy(index)}
+                component={TextField}
+                type="text"
+                validate={getAddressValidators(otherAccounts, index)}
+                placeholder="Owner Address*"
+                text="Owner Address"
+              />
             </Block>
           </Col>
         </Row>
