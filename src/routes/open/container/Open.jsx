@@ -7,6 +7,8 @@ import { getAccountsFrom, getThresholdFrom, getNamesFrom, getSafeNameFrom, getDa
 import { getWeb3 } from '~/logic/wallets/getWeb3'
 import { getGnosisSafeContract, deploySafeContract, initContracts } from '~/logic/contracts/safeContracts'
 import { checkReceiptStatus } from '~/logic/wallets/ethTransactions'
+import { history } from '~/store'
+import { OPENING_ADDRESS, stillInOpeningView, SAFELIST_ADDRESS } from '~/routes/routes'
 import selector from './selector'
 import actions, { type Actions, type AddSafe } from './actions'
 import Layout from '../components/Layout'
@@ -18,7 +20,6 @@ type Props = Actions & {
 
 export type OpenState = {
   safeAddress: string,
-  safeTx: string,
 }
 
 export const createSafe = async (values: Object, userAccount: string, addSafe: AddSafe): Promise<OpenState> => {
@@ -40,24 +41,21 @@ export const createSafe = async (values: Object, userAccount: string, addSafe: A
 
   addSafe(name, safeContract.address, numConfirmations, dailyLimit, owners, accounts)
 
+  if (stillInOpeningView()) {
+    const url = `${SAFELIST_ADDRESS}/${safeContract.address}`
+    history.push(url)
+  }
+
+  // returning info for testing purposes, in app is fully async
   return { safeAddress: safeContract.address, safeTx: safe }
 }
 
-class Open extends React.Component<Props, OpenState> {
-  constructor() {
-    super()
-
-    this.state = {
-      safeAddress: '',
-      safeTx: '',
-    }
-  }
-
+class Open extends React.Component<Props> {
   onCallSafeContractSubmit = async (values) => {
     try {
       const { userAccount, addSafe } = this.props
-      const safeInstance = await createSafe(values, userAccount, addSafe)
-      this.setState(safeInstance)
+      createSafe(values, userAccount, addSafe)
+      history.push(OPENING_ADDRESS)
     } catch (error) {
       // eslint-disable-next-line
       console.log('Error while creating the Safe' + error)
@@ -65,7 +63,6 @@ class Open extends React.Component<Props, OpenState> {
   }
 
   render() {
-    const { safeAddress, safeTx } = this.state
     const { provider, userAccount } = this.props
 
     return (
@@ -73,8 +70,6 @@ class Open extends React.Component<Props, OpenState> {
         <Layout
           provider={provider}
           userAccount={userAccount}
-          safeAddress={safeAddress}
-          safeTx={safeTx}
           onCallSafeContractSubmit={this.onCallSafeContractSubmit}
         />
       </Page>
