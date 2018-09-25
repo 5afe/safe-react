@@ -16,7 +16,7 @@ import { history } from '~/store'
 import { secondary } from '~/theme/variables'
 
 const getSteps = () => [
-  'Start', 'Owners', 'Confirmations', 'Review',
+  'Start', 'Details', 'Review', 'Submit',
 ]
 
 const initialValuesFrom = (userAccount: string) => ({

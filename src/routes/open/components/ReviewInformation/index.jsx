@@ -3,22 +3,19 @@ import * as React from 'react'
 import { getNamesFrom, getAccountsFrom } from '~/routes/open/utils/safeDataExtractor'
 import Block from '~/components/layout/Block'
 import Bold from '~/components/layout/Bold'
+import OpenPaper from '~/routes/open/components/OpenPaper'
 import Col from '~/components/layout/Col'
 import Heading from '~/components/layout/Heading'
 import Row from '~/components/layout/Row'
 import Paragraph from '~/components/layout/Paragraph'
 import { FIELD_NAME, FIELD_CONFIRMATIONS, FIELD_DAILY_LIMIT } from '../fields'
 
-type FormProps = {
-  values: Object,
-}
-
-const ReviewInformation = () => ({ values }: FormProps) => {
+const ReviewInformation = () => (controls: React$Node, { values }: Object) => {
   const names = getNamesFrom(values)
   const addresses = getAccountsFrom(values)
 
   return (
-    <Block>
+    <OpenPaper controls={controls}>
       <Heading tag="h2">Review the Safe information</Heading>
       <Paragraph>
         <Bold>Safe Name: </Bold> {values[FIELD_NAME]}
@@ -44,7 +41,7 @@ const ReviewInformation = () => ({ values }: FormProps) => {
           </Col>
         </Row>
       ))}
-    </Block>
+    </OpenPaper>
   )
 }
 

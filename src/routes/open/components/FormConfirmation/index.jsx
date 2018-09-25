@@ -4,6 +4,7 @@ import CircularProgress from '@material-ui/core/CircularProgress'
 import Block from '~/components/layout/Block'
 import Bold from '~/components/layout/Bold'
 import Col from '~/components/layout/Col'
+import OpenPaper from '~/routes/open/components/OpenPaper'
 import Paragraph from '~/components/layout/Paragraph'
 import Pre from '~/components/layout/Pre'
 import Row from '~/components/layout/Row'
@@ -28,11 +29,11 @@ const Deployment = ({ address, tx }: Props) => (
   </Block>
 )
 
-export default ({ address, tx }: Props) => ({ submitting }: FormProps) => {
+export default ({ address, tx }: Props) => (controls: React$Node, { submitting }: FormProps) => {
   const txFinished = !!address
 
   return (
-    <Block>
+    <OpenPaper controls={controls}>
       { !txFinished &&
         <React.Fragment>
           <Paragraph align="center" size="lg">
@@ -51,6 +52,6 @@ export default ({ address, tx }: Props) => ({ submitting }: FormProps) => {
           }
         </Col>
       </Row>
-    </Block>
+    </OpenPaper>
   )
 }
