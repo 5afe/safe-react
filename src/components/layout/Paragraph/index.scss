@@ -22,8 +22,13 @@
 .warning {
   color: $warning;
 }
+
 .primary {
   color: $fontColor;
+}
+
+.secondary {
+  color: $secondary;
 }
 
 .white {
@@ -72,6 +77,10 @@
 
 .xl {
   font-size: $extraLargeFontSize;
+}
+
+.xxl {
+  font-size: $xxlFontSize;
 }
 
 .light {
