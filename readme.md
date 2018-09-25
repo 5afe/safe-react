@@ -68,7 +68,6 @@ Add additional notes about how to deploy this on a live system
 * [Material UI 1.X](https://material-ui-next.com/) - React components that implement Google's Material Design
 * [redux, immutable, reselect, final-form](https://redux.js.org/) - React ecosystem libraries
 * [Flow](https://flow.org/) - Sttic Type Checker
-* [Surge](https://surge.sh/) - Static web publishing for generating staging links on GitHub
 
 ## Contributing
 
