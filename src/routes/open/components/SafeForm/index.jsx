@@ -1,6 +1,6 @@
 // @flow
 import * as React from 'react'
-import Block from '~/components/layout/Block'
+import OpenPaper from '~/routes/open/components/OpenPaper'
 import { getAccountsFrom } from '~/routes/open/utils/safeDataExtractor'
 import Owners from './Owners'
 import Confirmations from './Confirmations'
@@ -18,10 +18,12 @@ export const safeFieldsValidation = (values: Object) => {
   return errors
 }
 
-export default () => (constrols: React$Node, { values }: Object) => (
-  <Block margin="md">
+const SafeRestPage = () => (controls: React$Node, { values }: Object) => (
+  <OpenPaper controls={controls}>
     <Owners numOwners={values.owners} otherAccounts={getAccountsFrom(values)} />
     <Confirmations />
     <DailyLimit />
-  </Block>
+  </OpenPaper>
 )
+
+export default SafeRestPage
