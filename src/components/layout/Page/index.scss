@@ -5,6 +5,12 @@
   padding: 80px 200px 0px 200px;
 }
 
+@media only screen and (max-width: $(screenLg)px) {
+  .page {
+    padding: 80px $lg 0px $lg;
+  }
+}
+
 .center {
   align-self: center;
 }
