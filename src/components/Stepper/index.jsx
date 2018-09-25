@@ -14,15 +14,13 @@ import Controls from './Controls'
 export { default as Step } from './Step'
 
 type Props = {
-  disabledWhenValidating?: boolean,
-  classes: Object,
   steps: string[],
-  finishedTransaction: boolean,
-  finishedButton: React$Node,
-  initialValues?: Object,
-  children: React$Node,
-  onReset?: () => void,
   onSubmit: (values: Object) => Promise<void>,
+  children: React$Node,
+  classes: Object,
+  onReset?: () => void,
+  initialValues?: Object,
+  disabledWhenValidating?: boolean,
 }
 
 type State = {
@@ -122,12 +120,11 @@ class GnoStepper extends React.PureComponent<Props, State> {
 
   render() {
     const {
-      steps, children, finishedTransaction, finishedButton, classes, disabledWhenValidating = false,
+      steps, children, classes, disabledWhenValidating = false,
     } = this.props
     const { page, values } = this.state
     const activePage = this.getActivePageFrom(children)
     const isLastPage = page === steps.length - 1
-    const finished = React.cloneElement(React.Children.only(finishedButton), { onClick: this.onReset })
 
     return (
       <React.Fragment>
@@ -143,8 +140,6 @@ class GnoStepper extends React.PureComponent<Props, State> {
                 <Hairline />
                 <Controls
                   disabled={disabled}
-                  finishedTx={finishedTransaction}
-                  finishedButton={finished}
                   onPrevious={this.previous}
                   firstPage={page === 0}
                   lastPage={isLastPage}
