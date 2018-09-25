@@ -42,7 +42,13 @@ export const createSafe = async (values: Object, userAccount: string, addSafe: A
   addSafe(name, safeContract.address, numConfirmations, dailyLimit, owners, accounts)
 
   if (stillInOpeningView()) {
-    const url = `${SAFELIST_ADDRESS}/${safeContract.address}`
+    const url = {
+      pathname: `${SAFELIST_ADDRESS}/${safeContract.address}`,
+      state: {
+        name,
+      },
+    }
+
     history.push(url)
   }
 
