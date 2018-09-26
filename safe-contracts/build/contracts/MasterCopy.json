@@ -16,40 +16,40 @@
       "type": "function"
     }
   ],
-  "bytecode": "0x608060405234801561001057600080fd5b50610276806100206000396000f300608060405260043610610041576000357c0100000000000000000000000000000000000000000000000000000000900463ffffffff1680637de7edef14610046575b600080fd5b34801561005257600080fd5b50610087600480360381019080803573ffffffffffffffffffffffffffffffffffffffff169060200190929190505050610089565b005b3073ffffffffffffffffffffffffffffffffffffffff163373ffffffffffffffffffffffffffffffffffffffff16141515610152576040517f08c379a000000000000000000000000000000000000000000000000000000000815260040180806020018281038252602c8152602001807f4d6574686f642063616e206f6e6c792062652063616c6c65642066726f6d207481526020017f68697320636f6e7472616374000000000000000000000000000000000000000081525060400191505060405180910390fd5b60008173ffffffffffffffffffffffffffffffffffffffff1614151515610207576040517f08c379a00000000000000000000000000000000000000000000000000000000081526004018080602001828103825260248152602001807f496e76616c6964206d617374657220636f707920616464726573732070726f7681526020017f696465640000000000000000000000000000000000000000000000000000000081525060400191505060405180910390fd5b806000806101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff160217905550505600a165627a7a72305820243ca7a44eb0464a47c14309cc3a29e407df6e966674981a787df22c0d9280220029",
-  "deployedBytecode": "0x608060405260043610610041576000357c0100000000000000000000000000000000000000000000000000000000900463ffffffff1680637de7edef14610046575b600080fd5b34801561005257600080fd5b50610087600480360381019080803573ffffffffffffffffffffffffffffffffffffffff169060200190929190505050610089565b005b3073ffffffffffffffffffffffffffffffffffffffff163373ffffffffffffffffffffffffffffffffffffffff16141515610152576040517f08c379a000000000000000000000000000000000000000000000000000000000815260040180806020018281038252602c8152602001807f4d6574686f642063616e206f6e6c792062652063616c6c65642066726f6d207481526020017f68697320636f6e7472616374000000000000000000000000000000000000000081525060400191505060405180910390fd5b60008173ffffffffffffffffffffffffffffffffffffffff1614151515610207576040517f08c379a00000000000000000000000000000000000000000000000000000000081526004018080602001828103825260248152602001807f496e76616c6964206d617374657220636f707920616464726573732070726f7681526020017f696465640000000000000000000000000000000000000000000000000000000081525060400191505060405180910390fd5b806000806101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff160217905550505600a165627a7a72305820243ca7a44eb0464a47c14309cc3a29e407df6e966674981a787df22c0d9280220029",
-  "sourceMap": "203:673:7:-;;;;8:9:-1;5:2;;;30:1;27;20:12;5:2;203:673:7;;;;;;;",
-  "deployedSourceMap": "203:673:7:-;;;;;;;;;;;;;;;;;;;;;;;;626:248;;8:9:-1;5:2;;;30:1;27;20:12;5:2;626:248:7;;;;;;;;;;;;;;;;;;;;;;;;;;;;;244:4:16;222:27;;:10;:27;;;214:84;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;791:1:7;776:11;:16;;;;768:65;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;856:11;843:10;;:24;;;;;;;;;;;;;;;;;;626:248;:::o",
+  "bytecode": "0x608060405234801561001057600080fd5b50610276806100206000396000f300608060405260043610610041576000357c0100000000000000000000000000000000000000000000000000000000900463ffffffff1680637de7edef14610046575b600080fd5b34801561005257600080fd5b50610087600480360381019080803573ffffffffffffffffffffffffffffffffffffffff169060200190929190505050610089565b005b3073ffffffffffffffffffffffffffffffffffffffff163373ffffffffffffffffffffffffffffffffffffffff16141515610152576040517f08c379a000000000000000000000000000000000000000000000000000000000815260040180806020018281038252602c8152602001807f4d6574686f642063616e206f6e6c792062652063616c6c65642066726f6d207481526020017f68697320636f6e7472616374000000000000000000000000000000000000000081525060400191505060405180910390fd5b60008173ffffffffffffffffffffffffffffffffffffffff1614151515610207576040517f08c379a00000000000000000000000000000000000000000000000000000000081526004018080602001828103825260248152602001807f496e76616c6964206d617374657220636f707920616464726573732070726f7681526020017f696465640000000000000000000000000000000000000000000000000000000081525060400191505060405180910390fd5b806000806101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff160217905550505600a165627a7a7230582035e9d5d611938f796affd4397aed671c5c4079783e0a67a874440cb154a411440029",
+  "deployedBytecode": "0x608060405260043610610041576000357c0100000000000000000000000000000000000000000000000000000000900463ffffffff1680637de7edef14610046575b600080fd5b34801561005257600080fd5b50610087600480360381019080803573ffffffffffffffffffffffffffffffffffffffff169060200190929190505050610089565b005b3073ffffffffffffffffffffffffffffffffffffffff163373ffffffffffffffffffffffffffffffffffffffff16141515610152576040517f08c379a000000000000000000000000000000000000000000000000000000000815260040180806020018281038252602c8152602001807f4d6574686f642063616e206f6e6c792062652063616c6c65642066726f6d207481526020017f68697320636f6e7472616374000000000000000000000000000000000000000081525060400191505060405180910390fd5b60008173ffffffffffffffffffffffffffffffffffffffff1614151515610207576040517f08c379a00000000000000000000000000000000000000000000000000000000081526004018080602001828103825260248152602001807f496e76616c6964206d617374657220636f707920616464726573732070726f7681526020017f696465640000000000000000000000000000000000000000000000000000000081525060400191505060405180910390fd5b806000806101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff160217905550505600a165627a7a7230582035e9d5d611938f796affd4397aed671c5c4079783e0a67a874440cb154a411440029",
+  "sourceMap": "203:673:9:-;;;;8:9:-1;5:2;;;30:1;27;20:12;5:2;203:673:9;;;;;;;",
+  "deployedSourceMap": "203:673:9:-;;;;;;;;;;;;;;;;;;;;;;;;626:248;;8:9:-1;5:2;;;30:1;27;20:12;5:2;626:248:9;;;;;;;;;;;;;;;;;;;;;;;;;;;;;244:4:11;222:27;;:10;:27;;;214:84;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;791:1:9;776:11;:16;;;;768:65;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;856:11;843:10;;:24;;;;;;;;;;;;;;;;;;626:248;:::o",
   "source": "pragma solidity 0.4.24;\nimport \"./SelfAuthorized.sol\";\n\n\n/// @title MasterCopy - Base for master copy contracts (should always be first super contract)\n/// @author Richard Meissner - <richard@gnosis.pm>\ncontract MasterCopy is SelfAuthorized {\n  // masterCopy always needs to be first declared variable, to ensure that it is at the same location as in the Proxy contract.\n  // It should also always be ensured that the address is stored alone (uses a full word)\n    address masterCopy;\n\n  /// @dev Allows to upgrade the contract. This can only be done via a Safe transaction.\n  /// @param _masterCopy New contract address.\n    function changeMasterCopy(address _masterCopy)\n        public\n        authorized\n    {\n        // Master copy address cannot be null.\n        require(_masterCopy != 0, \"Invalid master copy address provided\");\n        masterCopy = _masterCopy;\n    }\n}\n",
-  "sourcePath": "/Users/apanizo/git/gnosis/safe-contracts/contracts/MasterCopy.sol",
+  "sourcePath": "/Users/apanizo/git/gnosis/safe-contracts/contracts/common/MasterCopy.sol",
   "ast": {
-    "absolutePath": "/Users/apanizo/git/gnosis/safe-contracts/contracts/MasterCopy.sol",
+    "absolutePath": "/Users/apanizo/git/gnosis/safe-contracts/contracts/common/MasterCopy.sol",
     "exportedSymbols": {
       "MasterCopy": [
-        813
+        1693
       ]
     },
-    "id": 814,
+    "id": 1694,
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 788,
+        "id": 1668,
         "literals": [
           "solidity",
           "0.4",
           ".24"
         ],
         "nodeType": "PragmaDirective",
-        "src": "0:23:7"
+        "src": "0:23:9"
       },
       {
-        "absolutePath": "/Users/apanizo/git/gnosis/safe-contracts/contracts/SelfAuthorized.sol",
+        "absolutePath": "/Users/apanizo/git/gnosis/safe-contracts/contracts/common/SelfAuthorized.sol",
         "file": "./SelfAuthorized.sol",
-        "id": 789,
+        "id": 1669,
         "nodeType": "ImportDirective",
-        "scope": 814,
-        "sourceUnit": 1766,
-        "src": "24:30:7",
+        "scope": 1694,
+        "sourceUnit": 1736,
+        "src": "24:30:9",
         "symbolAliases": [],
         "unitAlias": ""
       },
@@ -59,42 +59,42 @@
             "arguments": null,
             "baseName": {
               "contractScope": null,
-              "id": 790,
+              "id": 1670,
               "name": "SelfAuthorized",
               "nodeType": "UserDefinedTypeName",
-              "referencedDeclaration": 1765,
-              "src": "226:14:7",
+              "referencedDeclaration": 1735,
+              "src": "226:14:9",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_SelfAuthorized_$1765",
+                "typeIdentifier": "t_contract$_SelfAuthorized_$1735",
                 "typeString": "contract SelfAuthorized"
               }
             },
-            "id": 791,
+            "id": 1671,
             "nodeType": "InheritanceSpecifier",
-            "src": "226:14:7"
+            "src": "226:14:9"
           }
         ],
         "contractDependencies": [
-          1765
+          1735
         ],
         "contractKind": "contract",
         "documentation": "@title MasterCopy - Base for master copy contracts (should always be first super contract)\n @author Richard Meissner - <richard@gnosis.pm>",
         "fullyImplemented": true,
-        "id": 813,
+        "id": 1693,
         "linearizedBaseContracts": [
-          813,
-          1765
+          1693,
+          1735
         ],
         "name": "MasterCopy",
         "nodeType": "ContractDefinition",
         "nodes": [
           {
             "constant": false,
-            "id": 793,
+            "id": 1673,
             "name": "masterCopy",
             "nodeType": "VariableDeclaration",
-            "scope": 813,
-            "src": "465:18:7",
+            "scope": 1693,
+            "src": "465:18:9",
             "stateVariable": true,
             "storageLocation": "default",
             "typeDescriptions": {
@@ -102,10 +102,10 @@
               "typeString": "address"
             },
             "typeName": {
-              "id": 792,
+              "id": 1672,
               "name": "address",
               "nodeType": "ElementaryTypeName",
-              "src": "465:7:7",
+              "src": "465:7:9",
               "typeDescriptions": {
                 "typeIdentifier": "t_address",
                 "typeString": "address"
@@ -116,9 +116,9 @@
           },
           {
             "body": {
-              "id": 811,
+              "id": 1691,
               "nodeType": "Block",
-              "src": "711:163:7",
+              "src": "711:163:9",
               "statements": [
                 {
                   "expression": {
@@ -130,19 +130,19 @@
                           "typeIdentifier": "t_address",
                           "typeString": "address"
                         },
-                        "id": 803,
+                        "id": 1683,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": false,
                         "lValueRequested": false,
                         "leftExpression": {
                           "argumentTypes": null,
-                          "id": 801,
+                          "id": 1681,
                           "name": "_masterCopy",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 795,
-                          "src": "776:11:7",
+                          "referencedDeclaration": 1675,
+                          "src": "776:11:9",
                           "typeDescriptions": {
                             "typeIdentifier": "t_address",
                             "typeString": "address"
@@ -153,14 +153,14 @@
                         "rightExpression": {
                           "argumentTypes": null,
                           "hexValue": "30",
-                          "id": 802,
+                          "id": 1682,
                           "isConstant": false,
                           "isLValue": false,
                           "isPure": true,
                           "kind": "number",
                           "lValueRequested": false,
                           "nodeType": "Literal",
-                          "src": "791:1:7",
+                          "src": "791:1:9",
                           "subdenomination": null,
                           "typeDescriptions": {
                             "typeIdentifier": "t_rational_0_by_1",
@@ -168,7 +168,7 @@
                           },
                           "value": "0"
                         },
-                        "src": "776:16:7",
+                        "src": "776:16:9",
                         "typeDescriptions": {
                           "typeIdentifier": "t_bool",
                           "typeString": "bool"
@@ -177,14 +177,14 @@
                       {
                         "argumentTypes": null,
                         "hexValue": "496e76616c6964206d617374657220636f707920616464726573732070726f7669646564",
-                        "id": 804,
+                        "id": 1684,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": true,
                         "kind": "string",
                         "lValueRequested": false,
                         "nodeType": "Literal",
-                        "src": "794:38:7",
+                        "src": "794:38:9",
                         "subdenomination": null,
                         "typeDescriptions": {
                           "typeIdentifier": "t_stringliteral_108d84599042957b954e89d43b52f80be89321dfc114a37800028eba58dafc87",
@@ -204,21 +204,21 @@
                           "typeString": "literal_string \"Invalid master copy address provided\""
                         }
                       ],
-                      "id": 800,
+                      "id": 1680,
                       "name": "require",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [
-                        3831,
-                        3832
+                        4494,
+                        4495
                       ],
-                      "referencedDeclaration": 3832,
-                      "src": "768:7:7",
+                      "referencedDeclaration": 4495,
+                      "src": "768:7:9",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_require_pure$_t_bool_$_t_string_memory_ptr_$returns$__$",
                         "typeString": "function (bool,string memory) pure"
                       }
                     },
-                    "id": 805,
+                    "id": 1685,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -226,32 +226,32 @@
                     "lValueRequested": false,
                     "names": [],
                     "nodeType": "FunctionCall",
-                    "src": "768:65:7",
+                    "src": "768:65:9",
                     "typeDescriptions": {
                       "typeIdentifier": "t_tuple$__$",
                       "typeString": "tuple()"
                     }
                   },
-                  "id": 806,
+                  "id": 1686,
                   "nodeType": "ExpressionStatement",
-                  "src": "768:65:7"
+                  "src": "768:65:9"
                 },
                 {
                   "expression": {
                     "argumentTypes": null,
-                    "id": 809,
+                    "id": 1689,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
                     "lValueRequested": false,
                     "leftHandSide": {
                       "argumentTypes": null,
-                      "id": 807,
+                      "id": 1687,
                       "name": "masterCopy",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 793,
-                      "src": "843:10:7",
+                      "referencedDeclaration": 1673,
+                      "src": "843:10:9",
                       "typeDescriptions": {
                         "typeIdentifier": "t_address",
                         "typeString": "address"
@@ -261,68 +261,68 @@
                     "operator": "=",
                     "rightHandSide": {
                       "argumentTypes": null,
-                      "id": 808,
+                      "id": 1688,
                       "name": "_masterCopy",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 795,
-                      "src": "856:11:7",
+                      "referencedDeclaration": 1675,
+                      "src": "856:11:9",
                       "typeDescriptions": {
                         "typeIdentifier": "t_address",
                         "typeString": "address"
                       }
                     },
-                    "src": "843:24:7",
+                    "src": "843:24:9",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
                       "typeString": "address"
                     }
                   },
-                  "id": 810,
+                  "id": 1690,
                   "nodeType": "ExpressionStatement",
-                  "src": "843:24:7"
+                  "src": "843:24:9"
                 }
               ]
             },
             "documentation": "@dev Allows to upgrade the contract. This can only be done via a Safe transaction.\n @param _masterCopy New contract address.",
-            "id": 812,
+            "id": 1692,
             "implemented": true,
             "isConstructor": false,
             "isDeclaredConst": false,
             "modifiers": [
               {
                 "arguments": null,
-                "id": 798,
+                "id": 1678,
                 "modifierName": {
                   "argumentTypes": null,
-                  "id": 797,
+                  "id": 1677,
                   "name": "authorized",
                   "nodeType": "Identifier",
                   "overloadedDeclarations": [],
-                  "referencedDeclaration": 1764,
-                  "src": "696:10:7",
+                  "referencedDeclaration": 1734,
+                  "src": "696:10:9",
                   "typeDescriptions": {
                     "typeIdentifier": "t_modifier$__$",
                     "typeString": "modifier ()"
                   }
                 },
                 "nodeType": "ModifierInvocation",
-                "src": "696:10:7"
+                "src": "696:10:9"
               }
             ],
             "name": "changeMasterCopy",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 796,
+              "id": 1676,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 795,
+                  "id": 1675,
                   "name": "_masterCopy",
                   "nodeType": "VariableDeclaration",
-                  "scope": 812,
-                  "src": "652:19:7",
+                  "scope": 1692,
+                  "src": "652:19:9",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -330,10 +330,10 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 794,
+                    "id": 1674,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "652:7:7",
+                    "src": "652:7:9",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
                       "typeString": "address"
@@ -343,56 +343,56 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "651:21:7"
+              "src": "651:21:9"
             },
             "payable": false,
             "returnParameters": {
-              "id": 799,
+              "id": 1679,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "711:0:7"
+              "src": "711:0:9"
             },
-            "scope": 813,
-            "src": "626:248:7",
+            "scope": 1693,
+            "src": "626:248:9",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "public"
           }
         ],
-        "scope": 814,
-        "src": "203:673:7"
+        "scope": 1694,
+        "src": "203:673:9"
       }
     ],
-    "src": "0:877:7"
+    "src": "0:877:9"
   },
   "legacyAST": {
-    "absolutePath": "/Users/apanizo/git/gnosis/safe-contracts/contracts/MasterCopy.sol",
+    "absolutePath": "/Users/apanizo/git/gnosis/safe-contracts/contracts/common/MasterCopy.sol",
     "exportedSymbols": {
       "MasterCopy": [
-        813
+        1693
       ]
     },
-    "id": 814,
+    "id": 1694,
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 788,
+        "id": 1668,
         "literals": [
           "solidity",
           "0.4",
           ".24"
         ],
         "nodeType": "PragmaDirective",
-        "src": "0:23:7"
+        "src": "0:23:9"
       },
       {
-        "absolutePath": "/Users/apanizo/git/gnosis/safe-contracts/contracts/SelfAuthorized.sol",
+        "absolutePath": "/Users/apanizo/git/gnosis/safe-contracts/contracts/common/SelfAuthorized.sol",
         "file": "./SelfAuthorized.sol",
-        "id": 789,
+        "id": 1669,
         "nodeType": "ImportDirective",
-        "scope": 814,
-        "sourceUnit": 1766,
-        "src": "24:30:7",
+        "scope": 1694,
+        "sourceUnit": 1736,
+        "src": "24:30:9",
         "symbolAliases": [],
         "unitAlias": ""
       },
@@ -402,42 +402,42 @@
             "arguments": null,
             "baseName": {
               "contractScope": null,
-              "id": 790,
+              "id": 1670,
               "name": "SelfAuthorized",
               "nodeType": "UserDefinedTypeName",
-              "referencedDeclaration": 1765,
-              "src": "226:14:7",
+              "referencedDeclaration": 1735,
+              "src": "226:14:9",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_SelfAuthorized_$1765",
+                "typeIdentifier": "t_contract$_SelfAuthorized_$1735",
                 "typeString": "contract SelfAuthorized"
               }
             },
-            "id": 791,
+            "id": 1671,
             "nodeType": "InheritanceSpecifier",
-            "src": "226:14:7"
+            "src": "226:14:9"
           }
         ],
         "contractDependencies": [
-          1765
+          1735
         ],
         "contractKind": "contract",
         "documentation": "@title MasterCopy - Base for master copy contracts (should always be first super contract)\n @author Richard Meissner - <richard@gnosis.pm>",
         "fullyImplemented": true,
-        "id": 813,
+        "id": 1693,
         "linearizedBaseContracts": [
-          813,
-          1765
+          1693,
+          1735
         ],
         "name": "MasterCopy",
         "nodeType": "ContractDefinition",
         "nodes": [
           {
             "constant": false,
-            "id": 793,
+            "id": 1673,
             "name": "masterCopy",
             "nodeType": "VariableDeclaration",
-            "scope": 813,
-            "src": "465:18:7",
+            "scope": 1693,
+            "src": "465:18:9",
             "stateVariable": true,
             "storageLocation": "default",
             "typeDescriptions": {
@@ -445,10 +445,10 @@
               "typeString": "address"
             },
             "typeName": {
-              "id": 792,
+              "id": 1672,
               "name": "address",
               "nodeType": "ElementaryTypeName",
-              "src": "465:7:7",
+              "src": "465:7:9",
               "typeDescriptions": {
                 "typeIdentifier": "t_address",
                 "typeString": "address"
@@ -459,9 +459,9 @@
           },
           {
             "body": {
-              "id": 811,
+              "id": 1691,
               "nodeType": "Block",
-              "src": "711:163:7",
+              "src": "711:163:9",
               "statements": [
                 {
                   "expression": {
@@ -473,19 +473,19 @@
                           "typeIdentifier": "t_address",
                           "typeString": "address"
                         },
-                        "id": 803,
+                        "id": 1683,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": false,
                         "lValueRequested": false,
                         "leftExpression": {
                           "argumentTypes": null,
-                          "id": 801,
+                          "id": 1681,
                           "name": "_masterCopy",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 795,
-                          "src": "776:11:7",
+                          "referencedDeclaration": 1675,
+                          "src": "776:11:9",
                           "typeDescriptions": {
                             "typeIdentifier": "t_address",
                             "typeString": "address"
@@ -496,14 +496,14 @@
                         "rightExpression": {
                           "argumentTypes": null,
                           "hexValue": "30",
-                          "id": 802,
+                          "id": 1682,
                           "isConstant": false,
                           "isLValue": false,
                           "isPure": true,
                           "kind": "number",
                           "lValueRequested": false,
                           "nodeType": "Literal",
-                          "src": "791:1:7",
+                          "src": "791:1:9",
                           "subdenomination": null,
                           "typeDescriptions": {
                             "typeIdentifier": "t_rational_0_by_1",
@@ -511,7 +511,7 @@
                           },
                           "value": "0"
                         },
-                        "src": "776:16:7",
+                        "src": "776:16:9",
                         "typeDescriptions": {
                           "typeIdentifier": "t_bool",
                           "typeString": "bool"
@@ -520,14 +520,14 @@
                       {
                         "argumentTypes": null,
                         "hexValue": "496e76616c6964206d617374657220636f707920616464726573732070726f7669646564",
-                        "id": 804,
+                        "id": 1684,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": true,
                         "kind": "string",
                         "lValueRequested": false,
                         "nodeType": "Literal",
-                        "src": "794:38:7",
+                        "src": "794:38:9",
                         "subdenomination": null,
                         "typeDescriptions": {
                           "typeIdentifier": "t_stringliteral_108d84599042957b954e89d43b52f80be89321dfc114a37800028eba58dafc87",
@@ -547,21 +547,21 @@
                           "typeString": "literal_string \"Invalid master copy address provided\""
                         }
                       ],
-                      "id": 800,
+                      "id": 1680,
                       "name": "require",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [
-                        3831,
-                        3832
+                        4494,
+                        4495
                       ],
-                      "referencedDeclaration": 3832,
-                      "src": "768:7:7",
+                      "referencedDeclaration": 4495,
+                      "src": "768:7:9",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_require_pure$_t_bool_$_t_string_memory_ptr_$returns$__$",
                         "typeString": "function (bool,string memory) pure"
                       }
                     },
-                    "id": 805,
+                    "id": 1685,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -569,32 +569,32 @@
                     "lValueRequested": false,
                     "names": [],
                     "nodeType": "FunctionCall",
-                    "src": "768:65:7",
+                    "src": "768:65:9",
                     "typeDescriptions": {
                       "typeIdentifier": "t_tuple$__$",
                       "typeString": "tuple()"
                     }
                   },
-                  "id": 806,
+                  "id": 1686,
                   "nodeType": "ExpressionStatement",
-                  "src": "768:65:7"
+                  "src": "768:65:9"
                 },
                 {
                   "expression": {
                     "argumentTypes": null,
-                    "id": 809,
+                    "id": 1689,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
                     "lValueRequested": false,
                     "leftHandSide": {
                       "argumentTypes": null,
-                      "id": 807,
+                      "id": 1687,
                       "name": "masterCopy",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 793,
-                      "src": "843:10:7",
+                      "referencedDeclaration": 1673,
+                      "src": "843:10:9",
                       "typeDescriptions": {
                         "typeIdentifier": "t_address",
                         "typeString": "address"
@@ -604,68 +604,68 @@
                     "operator": "=",
                     "rightHandSide": {
                       "argumentTypes": null,
-                      "id": 808,
+                      "id": 1688,
                       "name": "_masterCopy",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 795,
-                      "src": "856:11:7",
+                      "referencedDeclaration": 1675,
+                      "src": "856:11:9",
                       "typeDescriptions": {
                         "typeIdentifier": "t_address",
                         "typeString": "address"
                       }
                     },
-                    "src": "843:24:7",
+                    "src": "843:24:9",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
                       "typeString": "address"
                     }
                   },
-                  "id": 810,
+                  "id": 1690,
                   "nodeType": "ExpressionStatement",
-                  "src": "843:24:7"
+                  "src": "843:24:9"
                 }
               ]
             },
             "documentation": "@dev Allows to upgrade the contract. This can only be done via a Safe transaction.\n @param _masterCopy New contract address.",
-            "id": 812,
+            "id": 1692,
             "implemented": true,
             "isConstructor": false,
             "isDeclaredConst": false,
             "modifiers": [
               {
                 "arguments": null,
-                "id": 798,
+                "id": 1678,
                 "modifierName": {
                   "argumentTypes": null,
-                  "id": 797,
+                  "id": 1677,
                   "name": "authorized",
                   "nodeType": "Identifier",
                   "overloadedDeclarations": [],
-                  "referencedDeclaration": 1764,
-                  "src": "696:10:7",
+                  "referencedDeclaration": 1734,
+                  "src": "696:10:9",
                   "typeDescriptions": {
                     "typeIdentifier": "t_modifier$__$",
                     "typeString": "modifier ()"
                   }
                 },
                 "nodeType": "ModifierInvocation",
-                "src": "696:10:7"
+                "src": "696:10:9"
               }
             ],
             "name": "changeMasterCopy",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 796,
+              "id": 1676,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 795,
+                  "id": 1675,
                   "name": "_masterCopy",
                   "nodeType": "VariableDeclaration",
-                  "scope": 812,
-                  "src": "652:19:7",
+                  "scope": 1692,
+                  "src": "652:19:9",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -673,10 +673,10 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 794,
+                    "id": 1674,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "652:7:7",
+                    "src": "652:7:9",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
                       "typeString": "address"
@@ -686,27 +686,27 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "651:21:7"
+              "src": "651:21:9"
             },
             "payable": false,
             "returnParameters": {
-              "id": 799,
+              "id": 1679,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "711:0:7"
+              "src": "711:0:9"
             },
-            "scope": 813,
-            "src": "626:248:7",
+            "scope": 1693,
+            "src": "626:248:9",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "public"
           }
         ],
-        "scope": 814,
-        "src": "203:673:7"
+        "scope": 1694,
+        "src": "203:673:9"
       }
     ],
-    "src": "0:877:7"
+    "src": "0:877:9"
   },
   "compiler": {
     "name": "solc",
@@ -714,5 +714,5 @@
   },
   "networks": {},
   "schemaVersion": "2.0.0",
-  "updatedAt": "2018-08-20T07:44:41.087Z"
+  "updatedAt": "2018-09-26T08:32:07.643Z"
 }
