@@ -7,7 +7,7 @@ import { required } from '~/components/forms/validator'
 import Block from '~/components/layout/Block'
 import { FIELD_NAME } from '~/routes/open/components/fields'
 import Paragraph from '~/components/layout/Paragraph'
-import OpenPaper from '../OpenPaper'
+import OpenPaper from '~/components/Stepper/OpenPaper'
 
 type Props = {
   classes: Object,

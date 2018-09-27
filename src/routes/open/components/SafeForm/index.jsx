@@ -1,6 +1,6 @@
 // @flow
 import * as React from 'react'
-import OpenPaper from '~/routes/open/components/OpenPaper'
+import OpenPaper from '~/components/Stepper/OpenPaper'
 import { getAccountsFrom } from '~/routes/open/utils/safeDataExtractor'
 import Owners from './Owners'
 import Confirmations from './Confirmations'
