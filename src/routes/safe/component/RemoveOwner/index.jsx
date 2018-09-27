@@ -4,7 +4,6 @@ import Stepper from '~/components/Stepper'
 import { connect } from 'react-redux'
 import { type Safe } from '~/routes/safe/store/model/safe'
 import { getSafeEthereumInstance, createTransaction } from '~/logic/safe/safeFrontendOperations'
-import { signaturesViaMetamask } from '~/config'
 import RemoveOwnerForm, { DECREASE_PARAM } from './RemoveOwnerForm'
 import Review from './Review'
 import selector, { type SelectorProps } from './selector'
@@ -44,7 +43,7 @@ export const removeOwner = async (
 ) => {
   const safeAddress = safe.get('address')
   const gnosisSafe = await getSafeEthereumInstance(safeAddress)
-  const nonce = signaturesViaMetamask() ? await gnosisSafe.nonce() : Date.now()
+  const nonce = await gnosisSafe.nonce()
   const newThreshold = values[DECREASE_PARAM] ? threshold - 1 : threshold
   const storedOwners = await gnosisSafe.getOwners()
   const index = storedOwners.findIndex(ownerAddress => ownerAddress === userToRemove)
