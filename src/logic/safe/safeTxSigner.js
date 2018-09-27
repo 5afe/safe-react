@@ -32,6 +32,7 @@ export const estimateDataGas = (
   gasToken: number,
   nonce: number,
   signatureCount: number,
+  refundReceiver: number,
 ) => {
   // numbers < 256 are 192 -> 31 * 4 + 68
   // numbers < 65k are 256 -> 30 * 4 + 2 * 68
@@ -41,8 +42,8 @@ export const estimateDataGas = (
   const signatureCost = signatureCount * (68 + 2176 + 2176) // array count (3 -> r, s, v) * signature count
 
   const sigs = getSignaturesFrom(safe.address, nonce)
-  const payload = safe.contract.execTransactionAndPaySubmitter
-    .getData(to, valueInWei, data, operation, txGasEstimate, 0, gasPrice, gasToken, sigs)
+  const payload = safe.contract.execTransaction
+    .getData(to, valueInWei, data, operation, txGasEstimate, 0, gasPrice, gasToken, refundReceiver, sigs)
 
   let dataGasEstimate = estimateDataGasCosts(payload) + signatureCost
   if (dataGasEstimate > 65536) {
@@ -95,6 +96,7 @@ const generateTypedDataFrom = async (
   // estimateDataGas(safe, to, valueInWei, data, operation, txGasEstimate, txGasToken, nonce, threshold)
   const dataGasEstimate = 0
   const gasPrice = 0
+  const refundReceiver = 0
   const typedData = {
     types: {
       EIP712Domain: [
@@ -103,7 +105,7 @@ const generateTypedDataFrom = async (
           name: 'verifyingContract',
         },
       ],
-      PersonalSafeTx: [
+      SafeTx: [
         { type: 'address', name: 'to' },
         { type: 'uint256', name: 'value' },
         { type: 'bytes', name: 'data' },
@@ -112,23 +114,25 @@ const generateTypedDataFrom = async (
         { type: 'uint256', name: 'dataGas' },
         { type: 'uint256', name: 'gasPrice' },
         { type: 'address', name: 'gasToken' },
+        { type: 'address', name: 'refundReceiver' },
         { type: 'uint256', name: 'nonce' },
       ],
     },
     domain: {
       verifyingContract: safeAddress,
     },
-    primaryType: 'PersonalSafeTx',
+    primaryType: 'SafeTx',
     message: {
       to,
-      value: valueInWei,
+      value: Number(valueInWei),
       data,
       operation,
       safeTxGas: txGasEstimate,
       dataGas: dataGasEstimate,
       gasPrice,
       gasToken: txGasToken,
-      nonce,
+      refundReceiver,
+      nonce: Number(nonce),
     },
   }
 
@@ -149,11 +153,12 @@ export const generateMetamaskSignature = async (
   const web3 = getWeb3()
   const typedData =
     await generateTypedDataFrom(safe, safeAddress, to, valueInWei, nonce, data, operation, txGasEstimate)
+
+  const jsonTypedData = JSON.stringify(typedData)
   const signedTypedData = {
-    jsonrpc: '2.0',
-    method: 'eth_signTypedData',
-    params: [sender, typedData],
-    id: Date.now(),
+    method: 'eth_signTypedData_v3',
+    params: [jsonTypedData, sender],
+    from: sender,
   }
   const txSignedResponse = await promisify(cb => web3.currentProvider.sendAsync(signedTypedData, cb))
 

@@ -60,19 +60,21 @@ export const executeTransaction = async (
     const sigs = getSignaturesFrom(safeAddress, nonce)
 
     const threshold = await safe.getThreshold()
-    const gas = await estimateDataGas(safe, to, valueInWei, data, operation, txGasEstimate, 0, nonce, Number(threshold))
+    const gas =
+      await estimateDataGas(safe, to, valueInWei, data, operation, txGasEstimate, 0, nonce, Number(threshold), 0)
     const numOwners = await safe.getOwners()
     const gasIncludingRemovingStoreUpfront = gas + txGasEstimate + (numOwners.length * 15000)
 
-    const txReceipt = await safe.execTransactionAndPaySubmitter(
+    const txReceipt = await safe.execTransaction(
       to,
       valueInWei,
       data,
       operation,
       txGasEstimate,
-      0,
-      0,
-      0,
+      0, // dataGasEstimate
+      0, // gasPrice
+      0, // txGasToken
+      0, // refundReceiver
       sigs,
       { from: sender, gas: gasIncludingRemovingStoreUpfront, gasPrice },
     )
