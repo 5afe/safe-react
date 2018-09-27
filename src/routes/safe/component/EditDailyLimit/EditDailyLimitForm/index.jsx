@@ -2,6 +2,7 @@
 import * as React from 'react'
 import Block from '~/components/layout/Block'
 import Heading from '~/components/layout/Heading'
+import OpenPaper from '~/components/Stepper/OpenPaper'
 import Field from '~/components/forms/Field'
 import TextField from '~/components/forms/TextField'
 import { composeValidators, minValue, mustBeFloat, required } from '~/components/forms/validator'
@@ -12,8 +13,8 @@ type EditDailyLimitProps = {
   dailyLimit: string,
 }
 
-const EditDailyLimitForm = ({ dailyLimit }: EditDailyLimitProps) => () => (
-  <Block margin="md">
+const EditDailyLimitForm = ({ dailyLimit }: EditDailyLimitProps) => (controls: React$Node) => (
+  <OpenPaper controls={controls}>
     <Heading tag="h2" margin="lg">
       {'Change safe\'s daily limit'}
     </Heading>
@@ -30,7 +31,7 @@ const EditDailyLimitForm = ({ dailyLimit }: EditDailyLimitProps) => () => (
         text="Safe's daily limit"
       />
     </Block>
-  </Block>
+  </OpenPaper>
 )
 
 export default EditDailyLimitForm
