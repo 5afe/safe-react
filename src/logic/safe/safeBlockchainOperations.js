@@ -19,11 +19,14 @@ export const approveTransaction = async (
   const gasPrice = await calculateGasPrice()
 
   if (signaturesViaMetamask()) {
+    // return executeTransaction(safeAddress, to, valueInWei, data, operation, nonce, sender)
     const safe = await getSafeEthereumInstance(safeAddress)
     const txGasEstimate = await generateTxGasEstimateFrom(safe, safeAddress, data, to, valueInWei, operation)
     const signature =
       await generateMetamaskSignature(safe, safeAddress, sender, to, valueInWei, nonce, data, operation, txGasEstimate)
     storeSignature(safeAddress, nonce, signature)
+
+    return undefined
   }
 
   const gnosisSafe = await getSafeEthereumInstance(safeAddress)
@@ -58,7 +61,6 @@ export const executeTransaction = async (
     storeSignature(safeAddress, nonce, signature)
 
     const sigs = getSignaturesFrom(safeAddress, nonce)
-
     const threshold = await safe.getThreshold()
     const gas =
       await estimateDataGas(safe, to, valueInWei, data, operation, txGasEstimate, 0, nonce, Number(threshold), 0)
