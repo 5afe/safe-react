@@ -2,6 +2,7 @@
 import * as React from 'react'
 import Field from '~/components/forms/Field'
 import SnackbarContent from '~/components/SnackbarContent'
+import OpenPaper from '~/components/Stepper/OpenPaper'
 import Checkbox from '~/components/forms/Checkbox'
 import Block from '~/components/layout/Block'
 import Heading from '~/components/layout/Heading'
@@ -18,8 +19,8 @@ type Props = {
 
 const RemoveOwnerForm = ({
   numOwners, threshold, name, disabled, pendingTransactions,
-}: Props) => () => (
-  <Block margin="md">
+}: Props) => (controls: React$Node) => (
+  <OpenPaper controls={controls}>
     <Heading tag="h2" margin="lg">
       Remove Owner { !!name && name }
     </Heading>
@@ -41,7 +42,7 @@ const RemoveOwnerForm = ({
       />
       <Block>{disabled && '(disabled) '}Decrease threshold?</Block>
     </Block>
-  </Block>
+  </OpenPaper>
 )
 
 export default RemoveOwnerForm
