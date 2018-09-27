@@ -5,7 +5,6 @@ import { connect } from 'react-redux'
 import { type Safe } from '~/routes/safe/store/model/safe'
 import { createTransaction, getSafeEthereumInstance } from '~/logic/safe/safeFrontendOperations'
 import { getEditDailyLimitData, getDailyLimitAddress } from '~/logic/contracts/dailyLimitContracts'
-import { signaturesViaMetamask } from '~/config'
 import EditDailyLimitForm, { EDIT_DAILY_LIMIT_PARAM } from './EditDailyLimitForm'
 import selector, { type SelectorProps } from './selector'
 import actions, { type Actions } from './actions'
@@ -40,7 +39,7 @@ class EditDailyLimit extends React.PureComponent<Props, State> {
       const data = await getEditDailyLimitData(safeAddress, 0, Number(newDailyLimit))
       const to = await getDailyLimitAddress(safeAddress)
       const gnosisSafe = await getSafeEthereumInstance(safeAddress)
-      const nonce = signaturesViaMetamask() ? await gnosisSafe.nonce() : Date.now()
+      const nonce = await gnosisSafe.nonce()
       await createTransaction(safe, `Change Safe's daily limit to ${newDailyLimit} [${nonce}]`, to, 0, nonce, userAddress, data)
       await this.props.fetchTransactions(safeAddress)
       this.setState({ done: true })
