@@ -101,6 +101,11 @@ export default createMuiTheme({
         },
       },
     },
+    MuiStepLabel: {
+      label: {
+        textAlign: 'left',
+      },
+    },
   },
   palette,
 })
