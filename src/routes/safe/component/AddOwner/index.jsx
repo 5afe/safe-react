@@ -7,6 +7,7 @@ import { type Safe } from '~/routes/safe/store/model/safe'
 import { type Owner, makeOwner } from '~/routes/safe/store/model/owner'
 import { setOwners } from '~/utils/localStorage'
 import { getSafeEthereumInstance, createTransaction } from '~/logic/safe/safeFrontendOperations'
+import { signaturesViaMetamask } from '~/config'
 import AddOwnerForm, { NAME_PARAM, OWNER_ADDRESS_PARAM, INCREASE_PARAM } from './AddOwnerForm'
 import Review from './Review'
 import selector, { type SelectorProps } from './selector'
@@ -36,12 +37,14 @@ const getOwnerAddressesFrom = (owners: List<Owner>) => {
 }
 
 export const addOwner = async (values: Object, safe: Safe, threshold: number, executor: string) => {
-  const nonce = Date.now()
+  const safeAddress = safe.get('address')
+  const gnosisSafe = await getSafeEthereumInstance(safeAddress)
+  const nonce = signaturesViaMetamask() ? await gnosisSafe.nonce() : Date.now()
+
   const newThreshold = values[INCREASE_PARAM] ? threshold + 1 : threshold
   const newOwnerAddress = values[OWNER_ADDRESS_PARAM]
   const newOwnerName = values[NAME_PARAM]
-  const safeAddress = safe.get('address')
-  const gnosisSafe = await getSafeEthereumInstance(safeAddress)
+
   const data = gnosisSafe.contract.addOwnerWithThreshold.getData(newOwnerAddress, newThreshold)
   await createTransaction(safe, `Add Owner ${newOwnerName}`, safeAddress, 0, nonce, executor, data)
   setOwners(safeAddress, safe.get('owners').push(makeOwner({ name: newOwnerName, address: newOwnerAddress })))

@@ -1,6 +1,7 @@
 // @flow
 import * as React from 'react'
 import CircularProgress from '@material-ui/core/CircularProgress'
+import OpenPaper from '~/components/Stepper/OpenPaper'
 import Block from '~/components/layout/Block'
 import Bold from '~/components/layout/Bold'
 import Heading from '~/components/layout/Heading'
@@ -16,13 +17,13 @@ const spinnerStyle = {
   minHeight: '50px',
 }
 
-const Review = () => ({ values, submitting }: FormProps) => {
+const Review = () => (controls: React$Node, { values, submitting }: FormProps) => {
   const text = values[INCREASE_PARAM]
     ? 'This operation will increase the threshold of the safe'
     : 'This operation will not modify the threshold of the safe'
 
   return (
-    <Block>
+    <OpenPaper controls={controls}>
       <Heading tag="h2">Review the Add Owner operation</Heading>
       <Paragraph align="left">
         <Bold>Owner Name: </Bold> {values[NAME_PARAM]}
@@ -36,7 +37,7 @@ const Review = () => ({ values, submitting }: FormProps) => {
       <Block style={spinnerStyle}>
         { submitting && <CircularProgress size={50} /> }
       </Block>
-    </Block>
+    </OpenPaper>
   )
 }
 
