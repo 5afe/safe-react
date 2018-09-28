@@ -11,10 +11,10 @@ import Img from '~/components/layout/Img'
 import Row from '~/components/layout/Row'
 import Block from '~/components/layout/Block'
 import Spacer from '~/components/Spacer'
-import { xs, sm, md, lg, background } from '~/theme/variables'
+import { xs, sm, md, lg, background, secondary } from '~/theme/variables'
 import { upperFirst } from '~/utils/css'
 import { shortVersionOf } from '~/logic/wallets/ethAddresses'
-import { openInEtherScan } from '~/logic/wallets/getWeb3'
+import { openAddressInEtherScan } from '~/logic/wallets/getWeb3'
 
 const metamask = require('../../assets/metamask.svg')
 const connectedLogo = require('../../assets/connected.svg')
@@ -32,7 +32,7 @@ type Props = {
 
 const openIconStyle = {
   height: '16px',
-  color: '#467ee5',
+  color: secondary,
 }
 
 const styles = () => ({
@@ -97,7 +97,11 @@ const UserDetails = ({
         <Block align="center" className={classes.user}>
           <Paragraph className={classes.address} size="sm" noMargin>{address}</Paragraph>
           { userAddress &&
-            <OpenInNew className={classes.open} style={openIconStyle} onClick={openInEtherScan(userAddress, network)} />
+            <OpenInNew
+              className={classes.open}
+              style={openIconStyle}
+              onClick={openAddressInEtherScan(userAddress, network)}
+            />
           }
         </Block>
       </Block>
