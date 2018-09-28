@@ -1,7 +1,6 @@
 // @flow
 import * as React from 'react'
 import { connect } from 'react-redux'
-
 import Page from '~/components/layout/Page'
 import { getAccountsFrom, getThresholdFrom, getNamesFrom, getSafeNameFrom, getDailyLimitFrom } from '~/routes/open/utils/safeDataExtractor'
 import { getWeb3 } from '~/logic/wallets/getWeb3'
@@ -46,6 +45,7 @@ export const createSafe = async (values: Object, userAccount: string, addSafe: A
       pathname: `${SAFELIST_ADDRESS}/${safeContract.address}`,
       state: {
         name,
+        tx: safe.tx,
       },
     }
 

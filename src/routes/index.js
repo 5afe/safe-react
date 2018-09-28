@@ -27,7 +27,7 @@ const Open = Loadable({
 })
 
 const Opening = Loadable({
-  loader: () => import('./opening'),
+  loader: () => import('./opening/container'),
   loading: Loader,
 })
 
