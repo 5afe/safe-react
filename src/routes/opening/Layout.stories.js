@@ -20,3 +20,8 @@ storiesOf('Routes /opening', module)
       network={ETHEREUM_NETWORK.RINKEBY}
     />
   ))
+  .add('Load this view without a tx', () => (
+    <Component
+      network={ETHEREUM_NETWORK.UNKNOWN}
+    />
+  ))
