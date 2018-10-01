@@ -9,6 +9,7 @@ import Review from '~/routes/open/components/ReviewInformation'
 import ChevronLeft from '@material-ui/icons/ChevronLeft'
 import SafeFields, { safeFieldsValidation } from '~/routes/open/components/SafeForm'
 import SafeNameField from '~/routes/open/components/SafeNameForm'
+import SafeOwnersFields from '~/routes/open/components/SafeOwnersForm'
 import { history } from '~/store'
 import { secondary } from '~/theme/variables'
 
@@ -58,6 +59,9 @@ const Layout = ({
               steps={steps}
               initialValues={initialValues}
             >
+              <Stepper.Page>
+                { SafeOwnersFields }
+              </Stepper.Page>
               <Stepper.Page>
                 { SafeNameField }
               </Stepper.Page>
