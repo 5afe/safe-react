@@ -11,8 +11,9 @@ const styles = () => ({
     maxWidth: '770px',
   },
   container: {
-    maxWidth: '600px',
     letterSpacing: '-0.5px',
+  },
+  padding: {
     padding: lg,
   },
 })
@@ -21,11 +22,14 @@ type Props = {
   classes: Object,
   children: React$Node,
   controls: React$Node,
+  padding?: boolean,
 }
 
-const OpenPaper = ({ classes, children, controls }: Props) => (
+const OpenPaper = ({
+  classes, children, controls, padding = true,
+}: Props) => (
   <Paper className={classes.root} elevation={1}>
-    <Block className={classes.container}>
+    <Block className={`${classes.container} ${padding ? classes.padding : ''}`}>
       {children}
     </Block>
     { controls }
