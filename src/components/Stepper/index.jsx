@@ -69,7 +69,11 @@ class GnoStepper extends React.PureComponent<Props, State> {
     const activePageProps = this.getPageProps(pages)
     const { children, ...props } = activePageProps
 
-    return children(props)
+    return children({ ...props, updateInitialProps: this.updateInitialProps })
+  }
+
+  updateInitialProps = (initialValues) => {
+    this.setState({ values: initialValues })
   }
 
   validate = (values: Object) => {
