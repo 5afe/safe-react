@@ -27,6 +27,7 @@ class TextField extends React.PureComponent<TextFieldProps> {
       meta,
       render,
       text,
+      inputAdornment,
       classes,
       ...rest
     } = this.props
@@ -36,7 +37,7 @@ class TextField extends React.PureComponent<TextFieldProps> {
 
     const inputRoot = helperText ? classes.root : undefined
     const inputProps = { ...restInput, autoComplete: 'off' }
-    const inputRootProps = { disableUnderline: !underline, className: inputRoot }
+    const inputRootProps = { ...inputAdornment, disableUnderline: !underline, className: inputRoot }
 
     return (
       <MuiTextField
