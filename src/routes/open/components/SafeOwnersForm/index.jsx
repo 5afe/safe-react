@@ -23,6 +23,7 @@ type Props = {
   classes: Object,
   otherAccounts: string[],
   errors: Object,
+  // updateInitialProps: () => void,
 }
 
 type State = {
@@ -68,6 +69,19 @@ class SafeOwners extends React.Component<Props, State> {
     numOwners: 3,
   }
 
+  // eslint-disable-next-line
+  onRemoveRow = (index: number) => () => {
+    /*
+    this.props.updateInitialProps({
+      owner0Address: 'moeFeo',
+    })
+    */
+
+    this.setState(state => ({
+      numOwners: state.numOwners - 1,
+    }))
+  }
+
   render() {
     const { classes, errors, otherAccounts } = this.props
     const { numOwners } = this.state
@@ -81,12 +95,8 @@ class SafeOwners extends React.Component<Props, State> {
         </Block>
         <Hairline />
         <Row className={classes.owner}>
-          <Col xs={4}>
-            NAME
-          </Col>
-          <Col xs={8}>
-            ADDRESS
-          </Col>
+          <Col xs={4}>NAME</Col>
+          <Col xs={8}>ADDRESS</Col>
         </Row>
         <Hairline />
         { [...Array(Number(numOwners))].map((x, index) => {
@@ -124,7 +134,7 @@ class SafeOwners extends React.Component<Props, State> {
               </Col>
               <Col xs={1} center="xs" middle="xs">
                 { index > 0 &&
-                  <IconButton aria-label="Delete" onClick={undefined} className={classes.trash}>
+                  <IconButton aria-label="Delete" onClick={this.onRemoveRow(index)} className={classes.trash}>
                     <Delete />
                   </IconButton>
                 }
@@ -144,16 +154,17 @@ class SafeOwners extends React.Component<Props, State> {
 
 const SafeOwnersForm = withStyles(styles)(SafeOwners)
 
-const SafeOwnersPage = () => (controls: React$Node, moe: Object) => {
-  const { values, errors } = moe
+const SafeOwnersPage = ({ updateInitialProps }: Object) => (controls: React$Node, { values, errors }: Object) => (
+  <React.Fragment>
+    <OpenPaper controls={controls} padding={false}>
+      <SafeOwnersForm
+        otherAccounts={getAccountsFrom(values)}
+        errors={errors}
+        updateInitialProps={updateInitialProps}
+      />
+    </OpenPaper>
+  </React.Fragment>
+)
 
-  return (
-    <React.Fragment>
-      <OpenPaper controls={controls} padding={false}>
-        <SafeOwnersForm otherAccounts={getAccountsFrom(values)} errors={errors} />
-      </OpenPaper>
-    </React.Fragment>
-  )
-}
 
 export default SafeOwnersPage
