@@ -8,7 +8,7 @@ import { lg } from '~/theme/variables'
 const styles = () => ({
   root: {
     margin: '10px',
-    maxWidth: '770px',
+    maxWidth: '870px',
   },
   container: {
     letterSpacing: '-0.5px',
