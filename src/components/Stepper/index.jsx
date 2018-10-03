@@ -33,6 +33,13 @@ type PageProps = {
   prepareNextInitialProps: (values: Object) => {},
 }
 
+const transitionProps = {
+  timeout: {
+    enter: 350,
+    exit: 0,
+  },
+}
+
 class GnoStepper extends React.PureComponent<Props, State> {
   static Page = ({ children }: PageProps) => children
 
@@ -156,7 +163,7 @@ class GnoStepper extends React.PureComponent<Props, State> {
                 {steps.map(label => (
                   <FormStep key={label}>
                     <StepLabel>{label}</StepLabel>
-                    <StepContent>
+                    <StepContent TransitionProps={transitionProps}>
                       {activePage(controls, ...rest)}
                     </StepContent>
                   </FormStep>
