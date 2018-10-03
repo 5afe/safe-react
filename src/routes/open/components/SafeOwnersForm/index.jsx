@@ -23,7 +23,8 @@ type Props = {
   classes: Object,
   otherAccounts: string[],
   errors: Object,
-  // updateInitialProps: () => void,
+  values: Object,
+  updateInitialProps: (initialValues: Object) => void,
 }
 
 type State = {
@@ -64,18 +65,32 @@ const getAddressValidators = (addresses: string[], position: number) => {
 
 const noErrorsOn = (name: string, errors: Object) => errors[name] === undefined
 
+export const calculateValuesAfterRemoving = (index: number, notRemovedOwners: number, values: Object) => {
+  const initialValues = { ...values }
+  const numOwnersAfterRemoving = notRemovedOwners - 1
+  // muevo indices
+  for (let i = index; i < numOwnersAfterRemoving; i += 1) {
+    initialValues[getOwnerNameBy(i)] = values[getOwnerNameBy(i + 1)]
+    initialValues[getOwnerAddressBy(i)] = values[getOwnerAddressBy(i + 1)]
+  }
+
+  delete initialValues[getOwnerNameBy(numOwnersAfterRemoving)]
+  delete initialValues[getOwnerAddressBy(numOwnersAfterRemoving)]
+
+  return initialValues
+}
+
 class SafeOwners extends React.Component<Props, State> {
   state = {
     numOwners: 3,
   }
 
-  // eslint-disable-next-line
   onRemoveRow = (index: number) => () => {
-    /*
-    this.props.updateInitialProps({
-      owner0Address: 'moeFeo',
-    })
-    */
+    const { values } = this.props
+    const { numOwners } = this.state
+    const initialValues = calculateValuesAfterRemoving(index, numOwners, values)
+    this.props.updateInitialProps(initialValues)
+
 
     this.setState(state => ({
       numOwners: state.numOwners - 1,
@@ -161,6 +176,7 @@ const SafeOwnersPage = ({ updateInitialProps }: Object) => (controls: React$Node
         otherAccounts={getAccountsFrom(values)}
         errors={errors}
         updateInitialProps={updateInitialProps}
+        values={values}
       />
     </OpenPaper>
   </React.Fragment>

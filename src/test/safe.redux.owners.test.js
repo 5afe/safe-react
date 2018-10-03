@@ -13,8 +13,10 @@ import fetchSafe from '~/routes/safe/store/actions/fetchSafe'
 import { removeOwner, shouldDecrease, initialValuesFrom } from '~/routes/safe/component/RemoveOwner'
 import { DECREASE_PARAM } from '~/routes/safe/component/RemoveOwner/RemoveOwnerForm'
 import { getSafeFrom } from '~/test/utils/safeHelper'
+import { getOwnerNameBy, getOwnerAddressBy } from '~/routes/open/components/fields'
 import { processTransaction } from '~/logic/safe/safeFrontendOperations'
 import { allowedRemoveSenderInTxHistoryService } from '~/config'
+import { calculateValuesAfterRemoving } from '~/routes/open/components/SafeOwnersForm'
 
 describe('React DOM TESTS > Add and remove owners', () => {
   const processOwnerModification = async (store, safeAddress, executor, threshold) => {
@@ -45,6 +47,54 @@ describe('React DOM TESTS > Add and remove owners', () => {
   }
 
   const getAddressesFrom = (safe: Safe) => safe.get('owners').map(owner => owner.get('address'))
+
+  it.only('creates initialValues removing last owner', () => {
+    const numOwners = 3
+    const values = {
+      moe: 'Bart',
+      [getOwnerNameBy(0)]: 'Foo',
+      [getOwnerAddressBy(0)]: '0x1',
+      [getOwnerNameBy(1)]: 'Bar',
+      [getOwnerAddressBy(1)]: '0x2',
+      [getOwnerNameBy(2)]: 'Baz',
+      [getOwnerAddressBy(2)]: '0x3',
+    }
+
+    const indexToRemove = 2
+    const initialValues = calculateValuesAfterRemoving(indexToRemove, numOwners, values)
+
+    expect(initialValues).toEqual({
+      moe: 'Bart',
+      [getOwnerNameBy(0)]: 'Foo',
+      [getOwnerAddressBy(0)]: '0x1',
+      [getOwnerNameBy(1)]: 'Bar',
+      [getOwnerAddressBy(1)]: '0x2',
+    })
+  })
+
+  it.only('creates initialValues removing middle owner', () => {
+    const numOwners = 3
+    const values = {
+      moe: 'Bart',
+      [getOwnerNameBy(0)]: 'Foo',
+      [getOwnerAddressBy(0)]: '0x1',
+      [getOwnerNameBy(1)]: 'Bar',
+      [getOwnerAddressBy(1)]: '0x2',
+      [getOwnerNameBy(2)]: 'Baz',
+      [getOwnerAddressBy(2)]: '0x3',
+    }
+
+    const indexToRemove = 1
+    const initialValues = calculateValuesAfterRemoving(indexToRemove, numOwners, values)
+
+    expect(initialValues).toEqual({
+      moe: 'Bart',
+      [getOwnerNameBy(0)]: 'Foo',
+      [getOwnerAddressBy(0)]: '0x1',
+      [getOwnerNameBy(1)]: 'Baz',
+      [getOwnerAddressBy(1)]: '0x3',
+    })
+  })
 
   it('adds owner without increasing the threshold', async () => {
     // GIVEN
