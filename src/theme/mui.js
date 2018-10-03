@@ -102,6 +102,9 @@ export default createMuiTheme({
           borderBottom: `2px solid ${secondary}`,
         },
       },
+      formControl: {
+        marginTop: '0px !important',
+      },
     },
     MuiStepLabel: {
       label: {
