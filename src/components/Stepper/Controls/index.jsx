@@ -19,13 +19,14 @@ type Props = {
   firstPage: boolean,
   lastPage: boolean,
   disabled: boolean,
+  penultimate: boolean,
 }
 
 const Controls = ({
-  onPrevious, firstPage, lastPage, disabled,
+  onPrevious, firstPage, penultimate, lastPage, disabled,
 }: Props) => {
   // eslint-disable-next-line
-  const next = firstPage ? 'Start' : lastPage ? 'Submit' : 'Next'
+  const next = firstPage ? 'Start' : penultimate ? 'Review' : lastPage ? 'Submit' : 'Next'
   const back = firstPage ? 'Cancel' : 'Back'
 
   return (
