@@ -7,20 +7,21 @@ import Row from '~/components/layout/Row'
 import IconButton from '@material-ui/core/IconButton'
 import Review from '~/routes/open/components/ReviewInformation'
 import ChevronLeft from '@material-ui/icons/ChevronLeft'
-import SafeFields, { safeFieldsValidation } from '~/routes/open/components/SafeForm'
 import SafeNameField from '~/routes/open/components/SafeNameForm'
+import SafeThresholdField, { safeFieldsValidation } from '~/routes/open/components/SafeThresholdForm'
 import SafeOwnersFields from '~/routes/open/components/SafeOwnersForm'
-import { getOwnerNameBy, getOwnerAddressBy } from '~/routes/open/components/fields'
+import { getOwnerNameBy, getOwnerAddressBy, FIELD_CONFIRMATIONS } from '~/routes/open/components/fields'
 import { history } from '~/store'
 import { secondary } from '~/theme/variables'
 
 const getSteps = () => [
-  'Start', 'Owners', 'Details', 'Review',
+  'Start', 'Owners', 'Confirmations', 'Review',
 ]
 
 const initialValuesFrom = (userAccount: string) => ({
   [getOwnerNameBy(0)]: 'My Metamask (me)',
   [getOwnerAddressBy(0)]: userAccount,
+  [FIELD_CONFIRMATIONS]: '1',
 })
 
 type Props = {
@@ -68,7 +69,7 @@ const Layout = ({
                 { SafeOwnersFields }
               </Stepper.Page>
               <Stepper.Page validate={safeFieldsValidation}>
-                { SafeFields }
+                { SafeThresholdField }
               </Stepper.Page>
               <Stepper.Page>
                 { Review }
