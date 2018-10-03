@@ -91,6 +91,8 @@ export default createMuiTheme({
       input: {
         padding: 0,
         color: 'initial',
+        textOverflow: 'ellipsis',
+        display: 'flex',
       },
       underline: {
         '&:before': {
