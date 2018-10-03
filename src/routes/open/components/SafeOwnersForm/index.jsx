@@ -39,6 +39,9 @@ const styles = () => ({
     padding: `${md} ${lg}`,
   },
   owner: {
+    padding: `0 ${lg}`,
+  },
+  header: {
     padding: `${sm} ${lg}`,
   },
   name: {
@@ -97,6 +100,12 @@ class SafeOwners extends React.Component<Props, State> {
     }))
   }
 
+  onAddOwner = () => {
+    this.setState(state => ({
+      numOwners: state.numOwners + 1,
+    }))
+  }
+
   render() {
     const { classes, errors, otherAccounts } = this.props
     const { numOwners } = this.state
@@ -109,56 +118,58 @@ class SafeOwners extends React.Component<Props, State> {
           </Paragraph>
         </Block>
         <Hairline />
-        <Row className={classes.owner}>
+        <Row className={classes.header}>
           <Col xs={4}>NAME</Col>
           <Col xs={8}>ADDRESS</Col>
         </Row>
         <Hairline />
-        { [...Array(Number(numOwners))].map((x, index) => {
-          const addressName = getOwnerAddressBy(index)
+        <Block margin="md">
+          { [...Array(Number(numOwners))].map((x, index) => {
+            const addressName = getOwnerAddressBy(index)
 
-          return (
-            <Row key={`owner${(index)}`} className={classes.owner}>
-              <Col xs={4}>
-                <Field
-                  className={classes.name}
-                  name={getOwnerNameBy(index)}
-                  component={TextField}
-                  type="text"
-                  validate={required}
-                  placeholder="Owner Name*"
-                  text="Owner Name"
-                />
-              </Col>
-              <Col xs={7}>
-                <Field
-                  name={addressName}
-                  component={TextField}
-                  inputAdornment={noErrorsOn(addressName, errors) && {
-                    endAdornment: (
-                      <InputAdornment position="end">
-                        <CheckCircle className={classes.check} />
-                      </InputAdornment>
-                    ),
-                  }}
-                  type="text"
-                  validate={getAddressValidators(otherAccounts, index)}
-                  placeholder="Owner Address*"
-                  text="Owner Address"
-                />
-              </Col>
-              <Col xs={1} center="xs" middle="xs">
-                { index > 0 &&
-                  <IconButton aria-label="Delete" onClick={this.onRemoveRow(index)} className={classes.trash}>
-                    <Delete />
-                  </IconButton>
-                }
-              </Col>
-            </Row>
-          )
-        }) }
+            return (
+              <Row key={`owner${(index)}`} className={classes.owner}>
+                <Col xs={4}>
+                  <Field
+                    className={classes.name}
+                    name={getOwnerNameBy(index)}
+                    component={TextField}
+                    type="text"
+                    validate={required}
+                    placeholder="Owner Name*"
+                    text="Owner Name"
+                  />
+                </Col>
+                <Col xs={7}>
+                  <Field
+                    name={addressName}
+                    component={TextField}
+                    inputAdornment={noErrorsOn(addressName, errors) && {
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <CheckCircle className={classes.check} />
+                        </InputAdornment>
+                      ),
+                    }}
+                    type="text"
+                    validate={getAddressValidators(otherAccounts, index)}
+                    placeholder="Owner Address*"
+                    text="Owner Address"
+                  />
+                </Col>
+                <Col xs={1} center="xs" middle="xs">
+                  { index > 0 &&
+                    <IconButton aria-label="Delete" onClick={this.onRemoveRow(index)} className={classes.trash}>
+                      <Delete />
+                    </IconButton>
+                  }
+                </Col>
+              </Row>
+            )
+          }) }
+        </Block>
         <Row align="center" grow className={classes.add} margin="xl">
-          <Button color="secondary">
+          <Button color="secondary" onClick={this.onAddOwner}>
             + ADD ANOTHER OWNER
           </Button>
         </Row>
