@@ -129,13 +129,16 @@ class GnoStepper extends React.PureComponent<Props, State> {
     return this.next(values)
   }
 
+  isLastPage = page => page === this.props.steps.length - 1
+
   render() {
     const {
       steps, children, classes, disabledWhenValidating = false,
     } = this.props
     const { page, values } = this.state
     const activePage = this.getActivePageFrom(children)
-    const isLastPage = page === steps.length - 1
+    const lastPage = this.isLastPage(page)
+    const penultimate = this.isLastPage(page + 1)
 
     return (
       <React.Fragment>
@@ -153,7 +156,8 @@ class GnoStepper extends React.PureComponent<Props, State> {
                   disabled={disabled}
                   onPrevious={this.previous}
                   firstPage={page === 0}
-                  lastPage={isLastPage}
+                  lastPage={lastPage}
+                  penultimate={penultimate}
                 />
               </React.Fragment>
             )
