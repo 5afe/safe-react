@@ -10,15 +10,17 @@ import ChevronLeft from '@material-ui/icons/ChevronLeft'
 import SafeFields, { safeFieldsValidation } from '~/routes/open/components/SafeForm'
 import SafeNameField from '~/routes/open/components/SafeNameForm'
 import SafeOwnersFields from '~/routes/open/components/SafeOwnersForm'
+import { getOwnerNameBy, getOwnerAddressBy } from '~/routes/open/components/fields'
 import { history } from '~/store'
 import { secondary } from '~/theme/variables'
 
 const getSteps = () => [
-  'Start', 'Details', 'Review',
+  'Start', 'Owners', 'Details', 'Review',
 ]
 
 const initialValuesFrom = (userAccount: string) => ({
-  owner0Address: userAccount,
+  [getOwnerNameBy(0)]: 'My Metamask (me)',
+  [getOwnerAddressBy(0)]: userAccount,
 })
 
 type Props = {
@@ -60,10 +62,10 @@ const Layout = ({
               initialValues={initialValues}
             >
               <Stepper.Page>
-                { SafeOwnersFields }
+                { SafeNameField }
               </Stepper.Page>
               <Stepper.Page>
-                { SafeNameField }
+                { SafeOwnersFields }
               </Stepper.Page>
               <Stepper.Page validate={safeFieldsValidation}>
                 { SafeFields }
