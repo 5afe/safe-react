@@ -39,6 +39,7 @@ const styles = () => ({
   logo: {
     padding: `${sm} ${md}`,
     flexBasis: '95px',
+    flexGrow: 0,
   },
 })
 
