@@ -52,6 +52,9 @@ export default createMuiTheme({
       },
     },
     MuiStepIcon: {
+      completed: {
+        color: `${secondary} !important`,
+      },
       active: {
         color: `${secondary} !important`,
       },
