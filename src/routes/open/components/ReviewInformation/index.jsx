@@ -3,14 +3,21 @@ import * as React from 'react'
 import { getNamesFrom, getAccountsFrom } from '~/routes/open/utils/safeDataExtractor'
 import Block from '~/components/layout/Block'
 import { withStyles } from '@material-ui/core/styles'
+import OpenInNew from '@material-ui/icons/OpenInNew'
 import Identicon from '~/components/Identicon'
 import OpenPaper from '~/components/Stepper/OpenPaper'
 import Col from '~/components/layout/Col'
 import Row from '~/components/layout/Row'
 import Paragraph from '~/components/layout/Paragraph'
-import { md, lg, border, background } from '~/theme/variables'
+import { sm, md, lg, border, secondary, background } from '~/theme/variables'
 import Hairline from '~/components/layout/Hairline'
+import { openAddressInEtherScan } from '~/logic/wallets/getWeb3'
 import { FIELD_NAME, FIELD_CONFIRMATIONS, getNumOwnersFrom } from '../fields'
+
+const openIconStyle = {
+  height: '16px',
+  color: secondary,
+}
 
 const styles = () => ({
   root: {
@@ -33,14 +40,25 @@ const styles = () => ({
     padding: md,
     alignItems: 'center',
   },
+  open: {
+    paddingLeft: sm,
+    width: 'auto',
+    '&:hover': {
+      cursor: 'pointer',
+    },
+  },
 })
 
-type Props = {
+type LayoutProps = {
+  network: string,
+}
+
+type Props = LayoutProps & {
   values: Object,
   classes: Object,
 }
 
-const ReviewComponent = ({ values, classes }: Props) => {
+const ReviewComponent = ({ values, classes, network }: Props) => {
   const names = getNamesFrom(values)
   const addresses = getAccountsFrom(values)
   const numOwners = getNumOwnersFrom(values)
@@ -89,7 +107,14 @@ const ReviewComponent = ({ values, classes }: Props) => {
                 <Col xs={11}>
                   <Block>
                     <Paragraph size="lg" noMargin>{name}</Paragraph>
-                    <Paragraph size="md" color="disabled" noMargin>{addresses[index]}</Paragraph>
+                    <Block align="center">
+                      <Paragraph size="md" color="disabled" noMargin>{addresses[index]}</Paragraph>
+                      <OpenInNew
+                        className={classes.open}
+                        style={openIconStyle}
+                        onClick={openAddressInEtherScan(addresses[index], network)}
+                      />
+                    </Block>
                   </Block>
                 </Col>
               </Row>
@@ -112,10 +137,10 @@ const ReviewComponent = ({ values, classes }: Props) => {
 
 const ReviewPage = withStyles(styles)(ReviewComponent)
 
-const Review = () => (controls: React$Node, { values }: Object) => (
+const Review = ({ network }: LayoutProps) => (controls: React$Node, { values }: Object) => (
   <React.Fragment>
     <OpenPaper controls={controls} padding={false}>
-      <ReviewPage values={values} />
+      <ReviewPage network={network} values={values} />
     </OpenPaper>
   </React.Fragment>
 )

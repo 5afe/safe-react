@@ -21,6 +21,7 @@ describe('React DOM TESTS > Create Safe form', () => {
     open = TestUtils.renderIntoDocument((
       <Wrapper>
         <Layout
+          network="rinkeby"
           provider="METAMASK"
           userAccount="foo"
           safeAddress=""

@@ -49,6 +49,7 @@ storiesOf('Routes /open', module)
     return (
       <State store={store}>
         <Component
+          network="rinkeby"
           provider={provider}
           userAccount={userAccount}
           safeAddress={store.get('safeAddress')}

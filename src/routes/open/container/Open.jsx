@@ -15,6 +15,7 @@ import Layout from '../components/Layout'
 type Props = Actions & {
   provider: string,
   userAccount: string,
+  network: string,
 }
 
 export type OpenState = {
@@ -69,11 +70,12 @@ class Open extends React.Component<Props> {
   }
 
   render() {
-    const { provider, userAccount } = this.props
+    const { provider, userAccount, network } = this.props
 
     return (
       <Page>
         <Layout
+          network={network}
           provider={provider}
           userAccount={userAccount}
           onCallSafeContractSubmit={this.onCallSafeContractSubmit}

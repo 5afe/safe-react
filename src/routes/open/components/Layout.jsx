@@ -27,6 +27,7 @@ const initialValuesFrom = (userAccount: string) => ({
 type Props = {
   provider: string,
   userAccount: string,
+  network: string,
   onCallSafeContractSubmit: (values: Object) => Promise<void>,
 }
 
@@ -41,7 +42,7 @@ const back = () => {
 }
 
 const Layout = ({
-  provider, userAccount, onCallSafeContractSubmit,
+  provider, userAccount, onCallSafeContractSubmit, network,
 }: Props) => {
   const steps = getSteps()
   const initialValues = initialValuesFrom(userAccount)
@@ -71,7 +72,7 @@ const Layout = ({
               <Stepper.Page validate={safeFieldsValidation}>
                 { SafeThresholdField }
               </Stepper.Page>
-              <Stepper.Page>
+              <Stepper.Page network={network}>
                 { Review }
               </Stepper.Page>
             </Stepper>
