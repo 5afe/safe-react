@@ -1,4 +1,5 @@
 // @flow
+import { List } from 'immutable'
 import { type Transaction } from '~/routes/safe/store/model/transaction'
 import { executeDailyLimit, executeTransaction, approveTransaction } from '~/logic/safe/safeBlockchainOperations'
 import { EMPTY_DATA } from '~/logic/wallets/ethTransactions'
@@ -47,7 +48,7 @@ export const createTransaction = async (
   const isExecution = hasOneOwner(safe) || threshold === 1
 
   const txHash = isExecution
-    ? await executeTransaction(safeAddress, to, valueInWei, data, CALL, nonce, sender)
+    ? await executeTransaction(safeAddress, to, valueInWei, data, CALL, nonce, sender, List([]))
     : await approveTransaction(safeAddress, to, valueInWei, data, CALL, nonce, sender)
 
   storeSubject(safeAddress, nonce, name)
@@ -61,6 +62,7 @@ export const processTransaction = async (
   alreadyConfirmed: number,
   sender: string,
   threshold: number,
+  usersConfirmed: List<string>,
 ) => {
   const nonce = tx.get('nonce')
   const valueInWei = tx.get('value')
@@ -70,7 +72,7 @@ export const processTransaction = async (
 
   const thresholdReached = threshold === alreadyConfirmed + 1
   const txHash = thresholdReached
-    ? await executeTransaction(safeAddress, to, valueInWei, data, CALL, nonce, sender)
+    ? await executeTransaction(safeAddress, to, valueInWei, data, CALL, nonce, sender, usersConfirmed)
     : await approveTransaction(safeAddress, to, valueInWei, data, CALL, nonce, sender)
 
   return txHash

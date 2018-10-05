@@ -1,4 +1,5 @@
 // @flow
+import { List } from 'immutable'
 import { calculateGasOf, checkReceiptStatus, calculateGasPrice } from '~/logic/wallets/ethTransactions'
 import { type Operation, submitOperation } from '~/logic/safe/safeTxHistory'
 import { getDailyLimitModuleFrom } from '~/logic/contracts/dailyLimitContracts'
@@ -53,6 +54,7 @@ export const executeTransaction = async (
   operation: Operation,
   nonce: number,
   sender: string,
+  ownersWhoHasSigned: List<string>,
 ) => {
   const gasPrice = await calculateGasPrice()
 
@@ -92,7 +94,6 @@ export const executeTransaction = async (
   }
 
   const gnosisSafe = await getSafeEthereumInstance(safeAddress)
-  const ownersWhoHasSigned = [] // to obtain from tx-history-service
   const signatures = buildSignaturesFrom(ownersWhoHasSigned, sender)
   const txExecutionData =
     gnosisSafe.contract.execTransaction.getData(to, valueInWei, data, operation, 0, 0, 0, 0, 0, signatures)
