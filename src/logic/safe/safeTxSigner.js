@@ -1,13 +1,17 @@
 // @flow
+import { List } from 'immutable'
+
 const generateSignatureFrom = (account: string) =>
   `000000000000000000000000${account.replace('0x', '')}000000000000000000000000000000000000000000000000000000000000000001`
 
-export const buildSignaturesFrom = (ownersWhoHasSigned: string[], sender: string) => {
+export const buildSignaturesFrom = (ownersWhoHasSigned: List<string>, sender: string) => {
+  const signatures = ownersWhoHasSigned.push(sender)
+  const orderedSignatures = signatures.sortBy(signature => signature)
+
   let sigs = '0x'
-  ownersWhoHasSigned.forEach((owner: string) => {
+  orderedSignatures.forEach((owner: string) => {
     sigs += generateSignatureFrom(owner)
   })
-  sigs += generateSignatureFrom(sender)
 
   return sigs
 }
