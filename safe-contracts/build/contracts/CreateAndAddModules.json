@@ -100,10 +100,10 @@
                       "name": "revert",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [
-                        4496,
-                        4497
+                        4020,
+                        4021
                       ],
-                      "referencedDeclaration": 4496,
+                      "referencedDeclaration": 4020,
                       "src": "476:6:14",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_revert_pure$__$returns$__$",
@@ -465,7 +465,7 @@
                               "name": "this",
                               "nodeType": "Identifier",
                               "overloadedDeclarations": [],
-                              "referencedDeclaration": 4532,
+                              "referencedDeclaration": 4056,
                               "src": "1663:4:14",
                               "typeDescriptions": {
                                 "typeIdentifier": "t_contract$_CreateAndAddModules_$1848",
@@ -704,10 +704,10 @@
                       "name": "revert",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [
-                        4496,
-                        4497
+                        4020,
+                        4021
                       ],
-                      "referencedDeclaration": 4496,
+                      "referencedDeclaration": 4020,
                       "src": "476:6:14",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_revert_pure$__$returns$__$",
@@ -1069,7 +1069,7 @@
                               "name": "this",
                               "nodeType": "Identifier",
                               "overloadedDeclarations": [],
-                              "referencedDeclaration": 4532,
+                              "referencedDeclaration": 4056,
                               "src": "1663:4:14",
                               "typeDescriptions": {
                                 "typeIdentifier": "t_contract$_CreateAndAddModules_$1848",
@@ -1256,10 +1256,16 @@
     "4": {
       "events": {},
       "links": {},
-      "address": "0xf0885d3a2d3c2ef4ee7d48d4ded541e58f51c420",
-      "transactionHash": "0x1c43b98a0e720e12c6c308ae97a249896934ae31f7837adfb0d168504322ba2a"
+      "address": "0xdf596548e089729535b171d13dec6e510cd22de4",
+      "transactionHash": "0x8da8ec46f7fd0935a74170caa40eaf18b29e88607b21273c232a09b7a7251d34"
+    },
+    "1538739975997": {
+      "events": {},
+      "links": {},
+      "address": "0xa57b8a5584442b467b4689f1144d269d096a3daf",
+      "transactionHash": "0xbab48fcde913e539ed8f71571e7f0abe2507e0322c9dda28780e5227e7d31d30"
     }
   },
   "schemaVersion": "2.0.0",
-  "updatedAt": "2018-09-26T08:56:03.702Z"
+  "updatedAt": "2018-10-05T14:43:41.423Z"
 }
