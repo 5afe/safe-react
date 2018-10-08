@@ -32,6 +32,8 @@ const styles = () => ({
     backgroundColor: background,
     padding: lg,
     justifyContent: 'center',
+    textAlign: 'center',
+    flexDirection: 'column',
   },
   owners: {
     padding: lg,
