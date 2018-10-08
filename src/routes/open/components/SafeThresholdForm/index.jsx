@@ -20,7 +20,7 @@ type Props = {
 
 const styles = () => ({
   root: {
-    display: 'flex',
+    maxWidth: '450px',
   },
   owners: {
     paddingLeft: md,
@@ -44,7 +44,7 @@ const SafeThreshold = ({ classes, values }: Props) => {
   const numOwners = getNumOwnersFrom(values)
 
   return (
-    <React.Fragment>
+    <Block className={classes.root}>
       <Block className={classes.title} margin="md">
         <Paragraph size="lg" color="primary" weight="bolder" noMargin>
           Set the required owner confirmations:
@@ -85,7 +85,7 @@ const SafeThreshold = ({ classes, values }: Props) => {
           </Paragraph>
         </Col>
       </Row>
-    </React.Fragment>
+    </Block>
   )
 }
 
