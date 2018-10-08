@@ -52,6 +52,9 @@ export default createMuiTheme({
       },
     },
     MuiStepIcon: {
+      root: {
+        fontSize: '22px',
+      },
       completed: {
         color: `${secondary} !important`,
       },
@@ -63,6 +66,7 @@ export default createMuiTheme({
       body1: {
         fontFamily: 'Roboto Mono, monospace',
         letterSpacing: '-0.5px',
+        fontSize: mediumFontSize,
       },
     },
     MuiFormHelperText: {
