@@ -22,18 +22,27 @@ type Props = {
   classes: Object,
   children: React$Node,
   controls: React$Node,
+  container?: number,
   padding?: boolean,
 }
 
+const generateContainerStyleFrom = (container?: number) => ({
+  maxWidth: container ? `${container}px` : undefined,
+})
+
 const OpenPaper = ({
-  classes, children, controls, padding = true,
-}: Props) => (
-  <Paper className={classes.root} elevation={1}>
-    <Block className={`${classes.container} ${padding ? classes.padding : ''}`}>
-      {children}
-    </Block>
-    { controls }
-  </Paper>
-)
+  classes, children, controls, container, padding = true,
+}: Props) => {
+  const containerStyle = generateContainerStyleFrom(container)
+
+  return (
+    <Paper className={classes.root} elevation={1}>
+      <Block style={containerStyle} className={`${classes.container} ${padding ? classes.padding : ''}`}>
+        {children}
+      </Block>
+      { controls }
+    </Paper>
+  )
+}
 
 export default withStyles(styles)(OpenPaper)

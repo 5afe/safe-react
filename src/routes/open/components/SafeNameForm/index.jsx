@@ -5,9 +5,11 @@ import Field from '~/components/forms/Field'
 import TextField from '~/components/forms/TextField'
 import { required } from '~/components/forms/validator'
 import Block from '~/components/layout/Block'
+import Row from '~/components/layout/Row'
 import { FIELD_NAME } from '~/routes/open/components/fields'
 import Paragraph from '~/components/layout/Paragraph'
 import OpenPaper from '~/components/Stepper/OpenPaper'
+import { sm } from '~/theme/variables'
 
 type Props = {
   classes: Object,
@@ -16,6 +18,13 @@ type Props = {
 const styles = () => ({
   root: {
     display: 'flex',
+    maxWidth: '440px',
+  },
+  text: {
+    flexWrap: 'nowrap',
+  },
+  dot: {
+    marginRight: sm,
   },
 })
 
@@ -27,16 +36,22 @@ const SafeName = ({ classes }: Props) => (
         By continuing you consent with the terms of use and privacy policy.
       </Paragraph>
     </Block>
-    <Block margin="md">
+    <Row margin="md" className={classes.text}>
+      <Paragraph noMargin className={classes.dot} color="secondary">
+        &#9679;
+      </Paragraph>
       <Paragraph noMargin size="md" color="primary" weight="bolder">
-        &#9679; I understand that my funds are held securely in my Safe. They cannot be accessed by Gnosis.
+        I understand that my funds are held securely in my Safe. They cannot be accessed by Gnosis.
       </Paragraph>
-    </Block>
-    <Block margin="md">
-      <Paragraph size="md" color="primary" weight="bolder">
-        &#9679; My Safe is a smart contract on the Ethereum blockchain.
+    </Row>
+    <Row margin="md">
+      <Paragraph noMargin className={classes.dot} color="secondary">
+        &#9679;
       </Paragraph>
-    </Block>
+      <Paragraph noMargin size="md" color="primary" weight="bolder">
+        My Safe is a smart contract on the Ethereum blockchain.
+      </Paragraph>
+    </Row>
     <Block margin="lg" className={classes.root}>
       <Field
         name={FIELD_NAME}
@@ -53,7 +68,7 @@ const SafeName = ({ classes }: Props) => (
 const SafeNameForm = withStyles(styles)(SafeName)
 
 const SafeNamePage = () => (controls: React$Node) => (
-  <OpenPaper controls={controls}>
+  <OpenPaper controls={controls} container={600}>
     <SafeNameForm />
   </OpenPaper>
 )
