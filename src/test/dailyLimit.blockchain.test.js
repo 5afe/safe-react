@@ -6,7 +6,7 @@ import { buildMathPropsFrom } from '~/test/utils/buildReactRouterProps'
 import { safeSelector } from '~/routes/safe/store/selectors/index'
 import { aMinedSafe } from '~/test/builder/safe.redux.builder'
 
-describe('Safe Blockchain Test', () => {
+describe('DailyLimit Blockchain Test', () => {
   let store
   beforeEach(async () => {
     store = aNewStore()

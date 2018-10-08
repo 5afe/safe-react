@@ -6,7 +6,7 @@ const generateSignatureFrom = (account: string) =>
 
 export const buildSignaturesFrom = (ownersWhoHasSigned: List<string>, sender: string) => {
   const signatures = ownersWhoHasSigned.push(sender)
-  const orderedSignatures = signatures.sortBy(signature => signature)
+  const orderedSignatures = signatures.sort() // JS by default sorts in a non case-senstive way
 
   let sigs = '0x'
   orderedSignatures.forEach((owner: string) => {
