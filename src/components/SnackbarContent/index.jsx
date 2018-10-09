@@ -2,8 +2,6 @@
 import SnackbarContent from '@material-ui/core/SnackbarContent'
 import classNames from 'classnames/bind'
 import * as React from 'react'
-import green from '@material-ui/core/colors/green'
-import amber from '@material-ui/core/colors/amber'
 import CloseIcon from '@material-ui/icons/Close'
 import CheckCircleIcon from '@material-ui/icons/CheckCircle'
 import ErrorIcon from '@material-ui/icons/Error'
@@ -12,6 +10,7 @@ import IconButton from '@material-ui/core/IconButton'
 import { withStyles } from '@material-ui/core/styles'
 import WarningIcon from '@material-ui/icons/Warning'
 import { type WithStyles } from '~/theme/mui'
+import { secondary } from '~/theme/variables'
 
 type Variant = 'success' | 'error' | 'warning' | 'info'
 
@@ -37,16 +36,28 @@ const variantIcon = {
 
 const styles = theme => ({
   success: {
-    backgroundColor: green[600],
+    backgroundColor: '#ffffff',
   },
-  error: {
-    backgroundColor: theme.palette.error.dark,
-  },
-  info: {
-    backgroundColor: theme.palette.primary.dark,
+  successIcon: {
+    color: '#00c4c4',
   },
   warning: {
-    backgroundColor: amber[700],
+    backgroundColor: '#fff3e2',
+  },
+  warningIcon: {
+    color: '#ffc05f',
+  },
+  error: {
+    backgroundColor: '#ffe6ea',
+  },
+  errorIcon: {
+    color: '#fd7890',
+  },
+  info: {
+    backgroundColor: '#ffffff',
+  },
+  infoIcon: {
+    color: secondary,
   },
   icon: {
     fontSize: 20,
@@ -78,7 +89,7 @@ const Message = ({ classes, message, variant }: MessageProps) => {
 
   return (
     <span id="client-snackbar" className={classes.message}>
-      <Icon className={classNames(classes.icon, classes.iconVariant)} />
+      <Icon className={classNames(classes.icon, classes.iconVariant, classes[`${variant}Icon`])} />
       {message}
     </span>
   )
@@ -87,7 +98,7 @@ const Message = ({ classes, message, variant }: MessageProps) => {
 const GnoSnackbarContent = ({
   variant, classes, message, onClose,
 }: Props) => {
-  const action = onClose ? [<Close onClose={onClose} classes={classes} />] : undefined
+  const action = onClose ? [<Close key="close" onClose={onClose} classes={classes} />] : undefined
   const messageComponent = <Message classes={classes} message={message} variant={variant} />
 
   return (
