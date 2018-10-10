@@ -42,20 +42,9 @@ const SafeThreshold = ({ classes, values }: Props) => {
 
   return (
     <React.Fragment>
-      <Block className={classes.title} margin="md">
-        <Paragraph size="lg" color="primary" weight="bolder" noMargin>
-          Set the required owner confirmations:
-        </Paragraph>
-      </Block>
-      <Block margin="lg">
-        <Paragraph noMargin size="md" color="primary" weight="light">
-          Every transaction outside any specified daily limits, needs to be confirmed by all
-          specified owners. If no daily limits are set, all owners will need to sign for transactions.
-        </Paragraph>
-      </Block>
       <Block margin="xs">
         <Paragraph noMargin size="md" color="primary" weight="bolder">
-          Any transaction over any daily limit requires the confirmation of:
+          Any transaction requires the confirmation of:
         </Paragraph>
       </Block>
       <Row margin="xl" align="center">

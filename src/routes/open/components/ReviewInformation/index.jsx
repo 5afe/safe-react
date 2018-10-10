@@ -85,7 +85,7 @@ const ReviewComponent = ({ values, classes, network }: Props) => {
             </Block>
             <Block margin="lg">
               <Paragraph size="sm" color="disabled" noMargin>
-                Any transaction over the daily limit requires the confirmation of
+                Any transaction requires the confirmation of:
               </Paragraph>
               <Paragraph size="lg" color="primary" noMargin weight="bolder">
                 {`${values[FIELD_CONFIRMATIONS]} out of ${numOwners} owners`}
