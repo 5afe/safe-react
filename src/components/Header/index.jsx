@@ -3,6 +3,7 @@ import * as React from 'react'
 import { connect } from 'react-redux'
 import { logComponentStack, type Info } from '~/utils/logBoundaries'
 import { SharedSnackbarConsumer, type Variant } from '~/components/SharedSnackBar/Context'
+import { WALLET_ERROR_MSG } from '~/logic/wallets/store/actions'
 import ProviderInfo from './component/ProviderInfo'
 import ProviderDetails from './component/ProviderInfo/UserDetails'
 import ProviderDisconnected from './component/ProviderDisconnected'
@@ -30,7 +31,7 @@ class HeaderComponent extends React.PureComponent<Props, State> {
 
   componentDidCatch(error: Error, info: Info) {
     this.setState({ hasError: true })
-    this.props.openSnackbar('Error connecting to your wallet', 'error')
+    this.props.openSnackbar(WALLET_ERROR_MSG, 'error')
 
     logComponentStack(error, info)
   }
