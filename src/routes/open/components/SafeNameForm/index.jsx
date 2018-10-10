@@ -9,7 +9,7 @@ import Row from '~/components/layout/Row'
 import { FIELD_NAME } from '~/routes/open/components/fields'
 import Paragraph from '~/components/layout/Paragraph'
 import OpenPaper from '~/components/Stepper/OpenPaper'
-import { sm } from '~/theme/variables'
+import { sm, secondary } from '~/theme/variables'
 
 type Props = {
   classes: Object,
@@ -26,14 +26,19 @@ const styles = () => ({
   dot: {
     marginRight: sm,
   },
+  links: {
+    '&>a': {
+      color: secondary,
+    },
+  },
 })
 
 const SafeName = ({ classes }: Props) => (
   <React.Fragment>
     <Block margin="lg">
-      <Paragraph noMargin size="md" color="primary" weight="light">
+      <Paragraph noMargin size="md" color="primary" weight="light" className={classes.links}>
         This setup will create a Safe with one or more owners. Optionally give the Safe a local name.
-        By continuing you consent with the terms of use and privacy policy.
+        By continuing you consent with the <a rel="noopener noreferrer" href="https://safe.gnosis.io/terms" target="_blank">terms of use</a> and <a rel="noopener noreferrer" href="https://safe.gnosis.io/privacy" target="_blank">privacy policy</a>.
       </Paragraph>
     </Block>
     <Row margin="md" className={classes.text}>
