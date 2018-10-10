@@ -38,9 +38,17 @@ const styles = () => ({
   owners: {
     padding: lg,
   },
+  name: {
+    textOverflow: 'ellipsis',
+    overflow: 'hidden',
+    whiteSpace: 'nowrap',
+  },
   owner: {
     padding: md,
     alignItems: 'center',
+  },
+  user: {
+    justifyContent: 'left',
   },
   open: {
     paddingLeft: sm,
@@ -79,7 +87,7 @@ const ReviewComponent = ({ values, classes, network }: Props) => {
               <Paragraph size="sm" color="disabled" noMargin>
                 Name of new Safe
               </Paragraph>
-              <Paragraph size="lg" color="primary" noMargin weight="bolder">
+              <Paragraph size="lg" color="primary" noMargin weight="bolder" className={classes.name}>
                 {values[FIELD_NAME]}
               </Paragraph>
             </Block>
@@ -107,9 +115,9 @@ const ReviewComponent = ({ values, classes, network }: Props) => {
                   <Identicon address={addresses[index]} diameter={32} />
                 </Col>
                 <Col xs={11}>
-                  <Block>
-                    <Paragraph size="lg" noMargin>{name}</Paragraph>
-                    <Block align="center">
+                  <Block className={classes.name}>
+                    <Paragraph size="lg" noMargin >{name}</Paragraph>
+                    <Block align="center" className={classes.user}>
                       <Paragraph size="md" color="disabled" noMargin>{addresses[index]}</Paragraph>
                       <OpenInNew
                         className={classes.open}
