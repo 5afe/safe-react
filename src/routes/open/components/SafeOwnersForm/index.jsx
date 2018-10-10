@@ -85,7 +85,7 @@ export const calculateValuesAfterRemoving = (index: number, notRemovedOwners: nu
 
 class SafeOwners extends React.Component<Props, State> {
   state = {
-    numOwners: 3,
+    numOwners: 1,
   }
 
   onRemoveRow = (index: number) => () => {
