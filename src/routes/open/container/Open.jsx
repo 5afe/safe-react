@@ -2,7 +2,7 @@
 import * as React from 'react'
 import { connect } from 'react-redux'
 import Page from '~/components/layout/Page'
-import { getAccountsFrom, getThresholdFrom, getNamesFrom, getSafeNameFrom, getDailyLimitFrom } from '~/routes/open/utils/safeDataExtractor'
+import { getAccountsFrom, getThresholdFrom, getNamesFrom, getSafeNameFrom } from '~/routes/open/utils/safeDataExtractor'
 import { getWeb3 } from '~/logic/wallets/getWeb3'
 import { getGnosisSafeContract, deploySafeContract, initContracts } from '~/logic/contracts/safeContracts'
 import { checkReceiptStatus } from '~/logic/wallets/ethTransactions'
@@ -27,19 +27,17 @@ export const createSafe = async (values: Object, userAccount: string, addSafe: A
   const numConfirmations = getThresholdFrom(values)
   const name = getSafeNameFrom(values)
   const owners = getNamesFrom(values)
-  const dailyLimit = getDailyLimitFrom(values)
 
   const web3 = getWeb3()
   const GnosisSafe = getGnosisSafeContract(web3)
 
   await initContracts()
-  const safe = await deploySafeContract(accounts, numConfirmations, dailyLimit, userAccount)
+  const safe = await deploySafeContract(accounts, numConfirmations, userAccount)
   checkReceiptStatus(safe.tx)
-
-  const param = safe.logs[1].args.proxy
+  const param = safe.logs[0].args.proxy
   const safeContract = GnosisSafe.at(param)
 
-  addSafe(name, safeContract.address, numConfirmations, dailyLimit, owners, accounts)
+  addSafe(name, safeContract.address, numConfirmations, 0, owners, accounts)
 
   if (stillInOpeningView()) {
     const url = {
