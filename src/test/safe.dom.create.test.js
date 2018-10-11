@@ -2,9 +2,10 @@
 import * as React from 'react'
 import { type Store } from 'redux'
 import TestUtils from 'react-dom/test-utils'
+import Select from '@material-ui/core/Select'
 import { Provider } from 'react-redux'
 import { ConnectedRouter } from 'react-router-redux'
-import { DEPLOYED_COMPONENT_ID } from '~/routes/open/components/FormConfirmation'
+import { ADD_OWNER_BUTTON } from '~/routes/open/components/SafeOwnersForm'
 import Open from '~/routes/open/container/Open'
 import { aNewStore, history, type GlobalState } from '~/store'
 import { sleep } from '~/utils/timer'
@@ -12,6 +13,7 @@ import { getProviderInfo, getWeb3 } from '~/logic/wallets/getWeb3'
 import addProvider from '~/logic/wallets/store/actions/addProvider'
 import { makeProvider } from '~/logic/wallets/store/model/provider'
 import { promisify } from '~/utils/promisify'
+import { getGnosisSafeInstanceAt } from '~/logic/contracts/safeContracts'
 
 const fillOpenSafeForm = async (localStore: Store<GlobalState>) => {
   const provider = await getProviderInfo()
@@ -29,79 +31,104 @@ const fillOpenSafeForm = async (localStore: Store<GlobalState>) => {
   )
 }
 
-const deploySafe = async (safe: React$Component<{}>, dailyLimit: string, threshold: number, numOwners: number) => {
-  expect(threshold).toBeLessThanOrEqual(numOwners)
-  const inputs = TestUtils.scryRenderedDOMComponentsWithTag(safe, 'input')
-  const fieldName = inputs[0]
-  const fieldOwners = inputs[1]
-  const fieldConfirmations = inputs[2]
-  const fieldDailyLimit = inputs[3]
+const INTERVAL = 500
+const MAX_TIMES_EXECUTED = 30
+const whenSafeDeployed = () => new Promise((resolve, reject) => {
+  let times = 0
+  const interval = setInterval(() => {
+    if (times >= MAX_TIMES_EXECUTED) {
+      clearInterval(interval)
+      reject()
+    }
 
+    const url = `${window.location}`
+    const regex = /.*safes\/(0x[a-f0-9A-F]*)/
+    const safeAddress = url.match(regex)
+    if (safeAddress) {
+      resolve(safeAddress[1])
+    }
+    times += 1
+  }, INTERVAL)
+})
+
+const deploySafe = async (safe: React$Component<{}>, threshold: number, numOwners: number) => {
   const web3 = getWeb3()
   const accounts = await promisify(cb => web3.eth.getAccounts(cb))
-  TestUtils.Simulate.change(fieldOwners, { target: { value: `${numOwners}` } })
-  await sleep(1500)
-  const inputsExpanded = TestUtils.scryRenderedDOMComponentsWithTag(safe, 'input')
-  expect(inputsExpanded.length).toBe((numOwners * 2) + 4) // 2 per owner + name, dailyLimit, confirmations, numOwners
 
-  for (let i = 0; i < numOwners; i += 1) {
-    const nameIndex = (i * 2) + 2
-    const addressIndex = (i * 2) + 3
-    const ownerName = inputsExpanded[nameIndex]
-    const account = inputsExpanded[addressIndex]
+  expect(threshold).toBeLessThanOrEqual(numOwners)
+  const form = TestUtils.findRenderedDOMComponentWithTag(safe, 'form')
+
+  // Fill Safe's name
+  const inputs = TestUtils.scryRenderedDOMComponentsWithTag(safe, 'input')
+  expect(inputs.length).toBe(1)
+  const fieldName = inputs[0]
+  TestUtils.Simulate.change(fieldName, { target: { value: 'Adolfo Safe' } })
+  TestUtils.Simulate.submit(form)
+  await sleep(400)
+
+  // Fill owners
+  const addedUpfront = 1
+  const buttons = TestUtils.scryRenderedDOMComponentsWithTag(safe, 'button')
+  const addOwnerButton = buttons[1]
+  expect(addOwnerButton.getElementsByTagName('span')[0].innerHTML).toEqual(ADD_OWNER_BUTTON)
+  for (let i = addedUpfront; i < numOwners; i += 1) {
+    TestUtils.Simulate.click(addOwnerButton)
+  }
+
+  const ownerInputs = TestUtils.scryRenderedDOMComponentsWithTag(safe, 'input')
+  expect(ownerInputs.length).toBe(numOwners * 2)
+  for (let i = addedUpfront; i < numOwners; i += 1) {
+    const nameIndex = i * 2
+    const addressIndex = (i * 2) + 1
+    const ownerName = ownerInputs[nameIndex]
+    const account = ownerInputs[addressIndex]
 
     TestUtils.Simulate.change(ownerName, { target: { value: `Adolfo ${i + 1} Eth Account` } })
     TestUtils.Simulate.change(account, { target: { value: accounts[i] } })
   }
+  TestUtils.Simulate.submit(form)
+  await sleep(400)
 
-  TestUtils.Simulate.change(fieldName, { target: { value: 'Adolfo Safe' } })
-  TestUtils.Simulate.change(fieldConfirmations, { target: { value: `${threshold}` } })
+  // Fill Threshold
+  const muiSelectFields = TestUtils.scryRenderedComponentsWithType(safe, Select)
+  expect(muiSelectFields.length).toEqual(1)
+  muiSelectFields[0].props.onChange(`${threshold}`)
+  TestUtils.Simulate.submit(form)
+  await sleep(400)
 
-  TestUtils.Simulate.change(fieldDailyLimit, { target: { value: dailyLimit } })
-
-  const form = TestUtils.findRenderedDOMComponentWithTag(safe, 'form')
-
-  TestUtils.Simulate.submit(form) // fill the form
-  TestUtils.Simulate.submit(form) // confirming data
-  TestUtils.Simulate.submit(form) // Executing transaction
+  // Submit
+  TestUtils.Simulate.submit(form)
+  await sleep(400)
 
   // giving some time to the component for updating its state with safe
   // before destroying its context
-  await sleep(12000)
-
-  // THEN
-  const deployed = TestUtils.findRenderedDOMComponentWithClass(safe, DEPLOYED_COMPONENT_ID)
-  if (!deployed) {
-    throw new Error()
-  }
-
-  const transactionHash = JSON.parse(deployed.getElementsByTagName('pre')[0].innerHTML)
-  delete transactionHash.receipt.logsBloom
-
-  return transactionHash
+  return whenSafeDeployed()
 }
 
 const aDeployedSafe = async (
   specificStore: Store<GlobalState>,
-  dailyLimit?: number = 0.5,
   threshold?: number = 1,
   numOwners?: number = 1,
 ) => {
   const safe: React$Component<{}> = await fillOpenSafeForm(specificStore)
-  const deployedSafe = await deploySafe(safe, `${dailyLimit}`, threshold, numOwners)
+  const safeAddress = await deploySafe(safe, threshold, numOwners)
 
-  return deployedSafe.logs[1].args.proxy
+  return safeAddress
 }
 
 describe('DOM > Feature > CREATE a safe', () => {
-  it('fills correctly the safe form with 4 owners, 4 threshold and 5 ETH as daily limit', async () => {
+  it('fills correctly the safe form with 4 owners and 4 threshold', async () => {
     const owners = 4
     const threshold = 4
-    const dailyLimit = 5
     const store = aNewStore()
-    const address = await aDeployedSafe(store, dailyLimit, threshold, owners)
-
+    const address = await aDeployedSafe(store, threshold, owners)
     expect(address).not.toBe(null)
     expect(address).not.toBe(undefined)
+
+    const gnosisSafe = await getGnosisSafeInstanceAt(address)
+    const storedOwners = await gnosisSafe.getOwners()
+    expect(storedOwners.length).toEqual(4)
+    const safeThreshold = await gnosisSafe.getThreshold()
+    expect(Number(safeThreshold)).toEqual(4)
   })
 })
