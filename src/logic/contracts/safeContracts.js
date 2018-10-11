@@ -96,7 +96,8 @@ const createMasterCopies = async () => {
   createAndAddModuleMaster = await CreateAndAddExtension.new({ from: userAccount, gas: '5000000' })
 
   const GnosisSafe = getGnosisSafeContract(web3)
-  safeMaster = await GnosisSafe.new([userAccount], 1, 0, 0, { from: userAccount, gas: '5000000' })
+  safeMaster = await GnosisSafe.new({ from: userAccount, gas: '6000000' })
+  // safeMaster.setup([userAccount], 1, 0, '0x', { from: userAccount, gas: '5000000' })
 
   const DailyLimitExtension = getCreateDailyLimitExtensionContract(web3)
   dailyLimitMaster = await DailyLimitExtension.new([], [], { from: userAccount, gas: '5000000' })
@@ -104,7 +105,9 @@ const createMasterCopies = async () => {
 
 export const initContracts = ensureOnce(process.env.NODE_ENV === 'test' ? createMasterCopies : instanciateMasterCopies)
 
-const getSafeDataBasedOn = async (accounts, numConfirmations, dailyLimitInEth) => {
+// ANCHOR Method to be used once we enable dailyLimit again
+// eslint-disable-next-line
+const getSafeDataWithDailyLimitBasedOn = async (accounts, numConfirmations, dailyLimitInEth) => {
   const web3 = getWeb3()
 
   const moduleData = await dailyLimitMaster.contract.setup
@@ -122,13 +125,26 @@ const getSafeDataBasedOn = async (accounts, numConfirmations, dailyLimitInEth) =
     .getData(accounts, numConfirmations, createAndAddModuleMaster.address, createAndAddModuleData)
 }
 
-export const deploySafeContract = async (
+export const deploySafeContractWithDailyLimit = async (
   safeAccounts: string[],
   numConfirmations: number,
   dailyLimit: number,
   userAccount: string,
 ) => {
-  const gnosisSafeData = await getSafeDataBasedOn(safeAccounts, numConfirmations, dailyLimit)
+  const gnosisSafeData = await getSafeDataWithDailyLimitBasedOn(safeAccounts, numConfirmations, dailyLimit)
+  const proxyFactoryData = proxyFactoryMaster.contract.createProxy.getData(safeMaster.address, gnosisSafeData)
+  const gas = await calculateGasOf(proxyFactoryData, userAccount, proxyFactoryMaster.address)
+  const gasPrice = await calculateGasPrice()
+
+  return proxyFactoryMaster.createProxy(safeMaster.address, gnosisSafeData, { from: userAccount, gas, gasPrice })
+}
+
+export const deploySafeContract = async (
+  safeAccounts: string[],
+  numConfirmations: number,
+  userAccount: string,
+) => {
+  const gnosisSafeData = await safeMaster.contract.setup.getData(safeAccounts, numConfirmations, 0, '0x')
   const proxyFactoryData = proxyFactoryMaster.contract.createProxy.getData(safeMaster.address, gnosisSafeData)
   const gas = await calculateGasOf(proxyFactoryData, userAccount, proxyFactoryMaster.address)
   const gasPrice = await calculateGasPrice()
