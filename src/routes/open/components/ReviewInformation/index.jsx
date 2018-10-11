@@ -109,8 +109,8 @@ const ReviewComponent = ({ values, classes, network }: Props) => {
           </Block>
           <Hairline />
           { names.map((name, index) => (
-            <React.Fragment>
-              <Row key={`name${(index)}`} className={classes.owner}>
+            <React.Fragment key={`name${(index)}`}>
+              <Row className={classes.owner}>
                 <Col xs={1} align="center">
                   <Identicon address={addresses[index]} diameter={32} />
                 </Col>
