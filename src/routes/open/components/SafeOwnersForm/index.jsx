@@ -68,6 +68,8 @@ const getAddressValidators = (addresses: string[], position: number) => {
 
 const noErrorsOn = (name: string, errors: Object) => errors[name] === undefined
 
+export const ADD_OWNER_BUTTON = '+ ADD ANOTHER OWNER'
+
 export const calculateValuesAfterRemoving = (index: number, notRemovedOwners: number, values: Object) => {
   const initialValues = { ...values }
   const numOwnersAfterRemoving = notRemovedOwners - 1
@@ -170,7 +172,7 @@ class SafeOwners extends React.Component<Props, State> {
         </Block>
         <Row align="center" grow className={classes.add} margin="xl">
           <Button color="secondary" onClick={this.onAddOwner}>
-            + ADD ANOTHER OWNER
+            {ADD_OWNER_BUTTON}
           </Button>
         </Row>
       </React.Fragment>
