@@ -97,7 +97,6 @@ const createMasterCopies = async () => {
 
   const GnosisSafe = getGnosisSafeContract(web3)
   safeMaster = await GnosisSafe.new({ from: userAccount, gas: '6000000' })
-  // safeMaster.setup([userAccount], 1, 0, '0x', { from: userAccount, gas: '5000000' })
 
   const DailyLimitExtension = getCreateDailyLimitExtensionContract(web3)
   dailyLimitMaster = await DailyLimitExtension.new([], [], { from: userAccount, gas: '5000000' })
