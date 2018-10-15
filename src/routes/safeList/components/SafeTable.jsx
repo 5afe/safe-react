@@ -19,7 +19,6 @@ const SafeTable = ({ safes }: Props) => (
         <TableCell>Deployed Address</TableCell>
         <TableCell numeric>Confirmations</TableCell>
         <TableCell numeric>Number of owners</TableCell>
-        <TableCell numeric>Daily Limit</TableCell>
       </TableRow>
     </TableHead>
     <TableBody>

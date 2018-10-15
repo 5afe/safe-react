@@ -12,7 +12,7 @@ type Props = {
 
 export const SEE_MULTISIG_BUTTON_TEXT = 'TXs'
 
-const DailyLimitComponent = ({ onSeeTxs }: Props) => {
+const MultisigTransactionsComponent = ({ onSeeTxs }: Props) => {
   const text = 'See multisig txs executed on this Safe'
 
   return (
@@ -32,4 +32,4 @@ const DailyLimitComponent = ({ onSeeTxs }: Props) => {
   )
 }
 
-export default DailyLimitComponent
+export default MultisigTransactionsComponent
