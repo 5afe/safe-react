@@ -102,7 +102,7 @@ describe('React DOM TESTS > Add and remove owners', () => {
     const numOwners = 2
     const threshold = 1
     const store = aNewStore()
-    const address = await aMinedSafe(store, numOwners, threshold, 10)
+    const address = await aMinedSafe(store, numOwners, threshold)
     const accounts = await promisify(cb => getWeb3().eth.getAccounts(cb))
     const gnosisSafe = await getGnosisSafeInstanceAt(address)
 
@@ -131,7 +131,7 @@ describe('React DOM TESTS > Add and remove owners', () => {
     const numOwners = 2
     const threshold = 1
     const store = aNewStore()
-    const address = await aMinedSafe(store, numOwners, threshold, 10)
+    const address = await aMinedSafe(store, numOwners, threshold)
     const accounts = await promisify(cb => getWeb3().eth.getAccounts(cb))
     const gnosisSafe = await getGnosisSafeInstanceAt(address)
 
@@ -163,7 +163,7 @@ describe('React DOM TESTS > Add and remove owners', () => {
     const numOwners = 2
     const threshold = 2
     const store = aNewStore()
-    const address = await aMinedSafe(store, numOwners, threshold, 10)
+    const address = await aMinedSafe(store, numOwners, threshold)
     const accounts = await promisify(cb => getWeb3().eth.getAccounts(cb))
     const gnosisSafe = await getGnosisSafeInstanceAt(address)
 
@@ -189,7 +189,7 @@ describe('React DOM TESTS > Add and remove owners', () => {
     const numOwners = 3
     const threshold = 2
     const store = aNewStore()
-    const address = await aMinedSafe(store, numOwners, threshold, 10)
+    const address = await aMinedSafe(store, numOwners, threshold)
     const accounts = await promisify(cb => getWeb3().eth.getAccounts(cb))
     const gnosisSafe = await getGnosisSafeInstanceAt(address)
 
@@ -214,7 +214,7 @@ describe('React DOM TESTS > Add and remove owners', () => {
     const numOwners = 3
     const threshold = 2
     const store = aNewStore()
-    const address = await aMinedSafe(store, numOwners, threshold, 10)
+    const address = await aMinedSafe(store, numOwners, threshold)
     const accounts = await promisify(cb => getWeb3().eth.getAccounts(cb))
     const gnosisSafe = await getGnosisSafeInstanceAt(address)
 

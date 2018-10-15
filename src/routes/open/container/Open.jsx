@@ -37,7 +37,7 @@ export const createSafe = async (values: Object, userAccount: string, addSafe: A
   const param = safe.logs[0].args.proxy
   const safeContract = GnosisSafe.at(param)
 
-  addSafe(name, safeContract.address, numConfirmations, 0, owners, accounts)
+  addSafe(name, safeContract.address, numConfirmations, owners, accounts)
 
   if (stillInOpeningView()) {
     const url = {

@@ -1,7 +1,7 @@
 // @flow
 import { makeSafe, type Safe } from '~/routes/safe/store/model/safe'
 import { buildOwnersFrom } from '~/routes/safe/store/actions'
-import { FIELD_NAME, FIELD_CONFIRMATIONS, FIELD_OWNERS, getOwnerNameBy, getOwnerAddressBy, FIELD_DAILY_LIMIT } from '~/routes/open/components/fields'
+import { FIELD_NAME, FIELD_CONFIRMATIONS, FIELD_OWNERS, getOwnerNameBy, getOwnerAddressBy } from '~/routes/open/components/fields'
 import { getWeb3, getProviderInfo } from '~/logic/wallets/getWeb3'
 import { promisify } from '~/utils/promisify'
 import addSafe from '~/routes/safe/store/actions/addSafe'
@@ -68,7 +68,6 @@ export const aMinedSafe = async (
   store: Store<GlobalState>,
   owners: number = 1,
   threshold: number = 1,
-  dailyLimit: number = 0.5,
 ): Promise<string> => {
   const provider = await getProviderInfo()
   const walletRecord = makeProvider(provider)
@@ -79,7 +78,6 @@ export const aMinedSafe = async (
     [FIELD_NAME]: 'Safe Name',
     [FIELD_CONFIRMATIONS]: `${threshold}`,
     [FIELD_OWNERS]: `${owners}`,
-    [FIELD_DAILY_LIMIT]: `${dailyLimit}`,
   }
 
   for (let i = 0; i < owners; i += 1) {
