@@ -1,10 +1,9 @@
 // @flow
 import { List } from 'immutable'
 import { type Transaction } from '~/routes/safe/store/model/transaction'
-import { executeDailyLimit, executeTransaction, approveTransaction } from '~/logic/safe/safeBlockchainOperations'
+import { executeTransaction, approveTransaction } from '~/logic/safe/safeBlockchainOperations'
 import { EMPTY_DATA } from '~/logic/wallets/ethTransactions'
 import { getWeb3 } from '~/logic/wallets/getWeb3'
-import { DESTINATION_PARAM, VALUE_PARAM } from '~/routes/safe/component/Withdraw/WithdrawForm'
 import { type Safe } from '~/routes/safe/store/model/safe'
 import { getGnosisSafeContract } from '~/logic/contracts/safeContracts'
 import { storeSubject } from '~/utils/localStorage/transactions'
@@ -74,19 +73,6 @@ export const processTransaction = async (
   const txHash = thresholdReached
     ? await executeTransaction(safeAddress, to, valueInWei, data, CALL, nonce, sender, usersConfirmed)
     : await approveTransaction(safeAddress, to, valueInWei, data, CALL, nonce, sender)
-
-  return txHash
-}
-
-export const withdraw = async (values: Object, safe: Safe, sender: string): Promise<void> => {
-  const safeAddress = safe.get('address')
-  const destination = values[DESTINATION_PARAM]
-  const valueInEth = values[VALUE_PARAM]
-  const valueInWei = getWeb3().toWei(valueInEth, 'ether')
-  const nonce = Date.now()
-  const txHash = await executeDailyLimit(safeAddress, destination, nonce, valueInWei, sender)
-
-  storeSubject(safeAddress, nonce, `Withdraw movement of ${valueInEth}`)
 
   return txHash
 }

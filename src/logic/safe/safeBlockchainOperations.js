@@ -2,7 +2,6 @@
 import { List } from 'immutable'
 import { calculateGasOf, checkReceiptStatus, calculateGasPrice } from '~/logic/wallets/ethTransactions'
 import { type Operation, submitOperation } from '~/logic/safe/safeTxHistory'
-import { getDailyLimitModuleFrom } from '~/logic/contracts/dailyLimitContracts'
 import { getSafeEthereumInstance } from '~/logic/safe/safeFrontendOperations'
 import { buildSignaturesFrom } from '~/logic/safe/safeTxSigner'
 import { generateMetamaskSignature, generateTxGasEstimateFrom, estimateDataGas } from '~/logic/safe/safeTxSignerEIP712'
@@ -119,34 +118,4 @@ export const executeTransaction = async (
   await submitOperation(safeAddress, to, valueInWei, data, operation, nonce, txHash, sender, 'execution')
 
   return txHash
-}
-
-export const executeDailyLimit = async (
-  safeAddress: string,
-  to: string,
-  nonce: number,
-  valueInWei: number,
-  sender: string,
-) => {
-  const dailyLimitModule = await getDailyLimitModuleFrom(safeAddress)
-  const dailyLimitData = dailyLimitModule.contract.executeDailyLimit.getData(0, to, valueInWei)
-  const gas = await calculateGasOf(dailyLimitData, sender, dailyLimitModule.address)
-  const gasPrice = await calculateGasPrice()
-
-  try {
-    const txReceipt = await dailyLimitModule.executeDailyLimit(0, to, valueInWei, { from: sender, gas, gasPrice })
-    await checkReceiptStatus(txReceipt.tx)
-
-    return Promise.resolve(txReceipt.tx)
-  } catch (err) {
-    return Promise.reject(new Error(err))
-  }
-
-  /*
-  // Temporarily disabled for daily limit operations
-  const operation = 0 // CALL for all currencies
-  const data = '' // empty for ETH
-
-  await submitOperation(safeAddress, to, Number(valueInWei), data, operation, nonce, txReceipt.tx, sender, 'execution')
-  */
 }
