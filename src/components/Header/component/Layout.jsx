@@ -44,7 +44,7 @@ const styles = () => ({
 })
 
 const Layout = openHoc(({
-  open, toggle, classes, providerInfo, providerDetails,
+  open, toggle, clickAway, classes, providerInfo, providerDetails,
 }: Props) => (
   <React.Fragment>
     <Row className={classes.summary}>
@@ -61,7 +61,7 @@ const Layout = openHoc(({
               <Grow
                 {...TransitionProps}
               >
-                <ClickAwayListener onClickAway={toggle}>
+                <ClickAwayListener onClickAway={clickAway} mouseEvent="onClick" touchEvent={false}>
                   <List className={classes.root} component="div">
                     {providerDetails}
                   </List>
