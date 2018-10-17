@@ -1,12 +1,9 @@
 // @flow
 import contract from 'truffle-contract'
-import { getProviderInfo, getBalanceInEtherOf, getWeb3 } from '~/logic/wallets/getWeb3'
+import { getBalanceInEtherOf, getWeb3 } from '~/logic/wallets/getWeb3'
 import { promisify } from '~/utils/promisify'
-import { type Safe } from '~/routes/safe/store/model/safe'
 import Token from '#/test/TestToken.json'
 import { ensureOnce } from '~/utils/singleton'
-import { DESTINATION_PARAM, VALUE_PARAM } from '~/routes/safe/component/Withdraw/WithdrawForm'
-import { withdraw } from '~/logic/safe/safeFrontendOperations'
 import { toNative } from '~/logic/wallets/tokens'
 
 export const addEtherTo = async (address: string, eth: string) => {
@@ -14,18 +11,6 @@ export const addEtherTo = async (address: string, eth: string) => {
   const accounts = await promisify(cb => web3.eth.getAccounts(cb))
   const txData = { from: accounts[0], to: address, value: web3.toWei(eth, 'ether') }
   return promisify(cb => web3.eth.sendTransaction(txData, cb))
-}
-
-export const executeWithdrawOn = async (safe: Safe, value: number) => {
-  const providerInfo = await getProviderInfo()
-  const userAddress = providerInfo.account
-
-  const values = {
-    [DESTINATION_PARAM]: userAddress,
-    [VALUE_PARAM]: `${value}`,
-  }
-
-  return withdraw(values, safe, userAddress)
 }
 
 export const checkBalanceOf = async (addressToTest: string, value: string) => {

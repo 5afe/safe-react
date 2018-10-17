@@ -1,4 +1,5 @@
 // @flow
+import { List } from 'immutable'
 import { aNewStore } from '~/store'
 import { getWeb3 } from '~/logic/wallets/getWeb3'
 import { promisify } from '~/utils/promisify'
@@ -13,11 +14,13 @@ import fetchSafe from '~/routes/safe/store/actions/fetchSafe'
 import { removeOwner, shouldDecrease, initialValuesFrom } from '~/routes/safe/component/RemoveOwner'
 import { DECREASE_PARAM } from '~/routes/safe/component/RemoveOwner/RemoveOwnerForm'
 import { getSafeFrom } from '~/test/utils/safeHelper'
+import { getOwnerNameBy, getOwnerAddressBy } from '~/routes/open/components/fields'
 import { processTransaction } from '~/logic/safe/safeFrontendOperations'
 import { allowedRemoveSenderInTxHistoryService } from '~/config'
+import { calculateValuesAfterRemoving } from '~/routes/open/components/SafeOwnersForm'
 
 describe('React DOM TESTS > Add and remove owners', () => {
-  const processOwnerModification = async (store, safeAddress, executor, threshold) => {
+  const processOwnerModification = async (store, safeAddress, executor, threshold, alreadyConfirmed) => {
     const reduxTransactions = safeTransactionsSelector(store.getState(), { safeAddress })
     const tx = reduxTransactions.get(0)
     if (!tx) throw new Error()
@@ -28,7 +31,7 @@ describe('React DOM TESTS > Add and remove owners', () => {
     expect(data).not.toBe(undefined)
     expect(data).not.toBe('')
 
-    return processTransaction(safeAddress, tx, confirmed, executor, threshold)
+    return processTransaction(safeAddress, tx, confirmed, executor, threshold, alreadyConfirmed)
   }
 
   const assureThresholdIs = async (gnosisSafe, threshold: number) => {
@@ -46,12 +49,60 @@ describe('React DOM TESTS > Add and remove owners', () => {
 
   const getAddressesFrom = (safe: Safe) => safe.get('owners').map(owner => owner.get('address'))
 
+  it.only('creates initialValues removing last owner', () => {
+    const numOwners = 3
+    const values = {
+      moe: 'Bart',
+      [getOwnerNameBy(0)]: 'Foo',
+      [getOwnerAddressBy(0)]: '0x1',
+      [getOwnerNameBy(1)]: 'Bar',
+      [getOwnerAddressBy(1)]: '0x2',
+      [getOwnerNameBy(2)]: 'Baz',
+      [getOwnerAddressBy(2)]: '0x3',
+    }
+
+    const indexToRemove = 2
+    const initialValues = calculateValuesAfterRemoving(indexToRemove, numOwners, values)
+
+    expect(initialValues).toEqual({
+      moe: 'Bart',
+      [getOwnerNameBy(0)]: 'Foo',
+      [getOwnerAddressBy(0)]: '0x1',
+      [getOwnerNameBy(1)]: 'Bar',
+      [getOwnerAddressBy(1)]: '0x2',
+    })
+  })
+
+  it.only('creates initialValues removing middle owner', () => {
+    const numOwners = 3
+    const values = {
+      moe: 'Bart',
+      [getOwnerNameBy(0)]: 'Foo',
+      [getOwnerAddressBy(0)]: '0x1',
+      [getOwnerNameBy(1)]: 'Bar',
+      [getOwnerAddressBy(1)]: '0x2',
+      [getOwnerNameBy(2)]: 'Baz',
+      [getOwnerAddressBy(2)]: '0x3',
+    }
+
+    const indexToRemove = 1
+    const initialValues = calculateValuesAfterRemoving(indexToRemove, numOwners, values)
+
+    expect(initialValues).toEqual({
+      moe: 'Bart',
+      [getOwnerNameBy(0)]: 'Foo',
+      [getOwnerAddressBy(0)]: '0x1',
+      [getOwnerNameBy(1)]: 'Baz',
+      [getOwnerAddressBy(1)]: '0x3',
+    })
+  })
+
   it('adds owner without increasing the threshold', async () => {
     // GIVEN
     const numOwners = 2
     const threshold = 1
     const store = aNewStore()
-    const address = await aMinedSafe(store, numOwners, threshold, 10)
+    const address = await aMinedSafe(store, numOwners, threshold)
     const accounts = await promisify(cb => getWeb3().eth.getAccounts(cb))
     const gnosisSafe = await getGnosisSafeInstanceAt(address)
 
@@ -80,7 +131,7 @@ describe('React DOM TESTS > Add and remove owners', () => {
     const numOwners = 2
     const threshold = 1
     const store = aNewStore()
-    const address = await aMinedSafe(store, numOwners, threshold, 10)
+    const address = await aMinedSafe(store, numOwners, threshold)
     const accounts = await promisify(cb => getWeb3().eth.getAccounts(cb))
     const gnosisSafe = await getGnosisSafeInstanceAt(address)
 
@@ -112,7 +163,7 @@ describe('React DOM TESTS > Add and remove owners', () => {
     const numOwners = 2
     const threshold = 2
     const store = aNewStore()
-    const address = await aMinedSafe(store, numOwners, threshold, 10)
+    const address = await aMinedSafe(store, numOwners, threshold)
     const accounts = await promisify(cb => getWeb3().eth.getAccounts(cb))
     const gnosisSafe = await getGnosisSafeInstanceAt(address)
 
@@ -123,7 +174,7 @@ describe('React DOM TESTS > Add and remove owners', () => {
     let safe = getSafeFrom(store.getState(), address)
     await removeOwner(values, safe, threshold, accounts[1], 'Adol Metamask 2', accounts[0])
     await store.dispatch(fetchTransactions(address))
-    await processOwnerModification(store, address, accounts[1], 2)
+    await processOwnerModification(store, address, accounts[1], 2, List([accounts[0]]))
 
     await assureThresholdIs(gnosisSafe, 1)
     await assureOwnersAre(gnosisSafe, accounts[0])
@@ -138,7 +189,7 @@ describe('React DOM TESTS > Add and remove owners', () => {
     const numOwners = 3
     const threshold = 2
     const store = aNewStore()
-    const address = await aMinedSafe(store, numOwners, threshold, 10)
+    const address = await aMinedSafe(store, numOwners, threshold)
     const accounts = await promisify(cb => getWeb3().eth.getAccounts(cb))
     const gnosisSafe = await getGnosisSafeInstanceAt(address)
 
@@ -148,7 +199,7 @@ describe('React DOM TESTS > Add and remove owners', () => {
     let safe = getSafeFrom(store.getState(), address)
     await removeOwner(values, safe, threshold, accounts[2], 'Adol Metamask 3', accounts[0])
     await store.dispatch(fetchTransactions(address))
-    await processOwnerModification(store, address, accounts[1], 2)
+    await processOwnerModification(store, address, accounts[1], 2, List([accounts[0]]))
 
     await assureThresholdIs(gnosisSafe, 1)
     await assureOwnersAre(gnosisSafe, accounts[0], accounts[1])
@@ -163,7 +214,7 @@ describe('React DOM TESTS > Add and remove owners', () => {
     const numOwners = 3
     const threshold = 2
     const store = aNewStore()
-    const address = await aMinedSafe(store, numOwners, threshold, 10)
+    const address = await aMinedSafe(store, numOwners, threshold)
     const accounts = await promisify(cb => getWeb3().eth.getAccounts(cb))
     const gnosisSafe = await getGnosisSafeInstanceAt(address)
 
@@ -174,7 +225,7 @@ describe('React DOM TESTS > Add and remove owners', () => {
     let safe = getSafeFrom(store.getState(), address)
     await removeOwner(values, safe, threshold, accounts[2], 'Adol Metamask 3', accounts[0])
     await store.dispatch(fetchTransactions(address))
-    await processOwnerModification(store, address, accounts[1], 2)
+    await processOwnerModification(store, address, accounts[1], 2, List([accounts[0]]))
 
     await assureThresholdIs(gnosisSafe, 2)
     await assureOwnersAre(gnosisSafe, accounts[0], accounts[1])

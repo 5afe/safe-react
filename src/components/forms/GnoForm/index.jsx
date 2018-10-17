@@ -12,21 +12,19 @@ export type OnSubmit = (
 type Props = {
   onSubmit: OnSubmit,
   children: Function,
-  padding: number,
+  padding?: number,
   validation?: (values: Object) => Object | Promise<Object>,
   initialValues?: Object,
-  render: Function,
 }
 
 const stylesBasedOn = (padding: number): $Shape<CSSStyleDeclaration> => ({
   padding: `0 ${padding}%`,
-  display: 'flex',
   flexDirection: 'column',
   flex: '1 0 auto',
 })
 
 const GnoForm = ({
-  onSubmit, validation, initialValues, children, padding, render,
+  onSubmit, validation, initialValues, children, padding = 0,
 }: Props) => (
   <Form
     validate={validation}
@@ -34,8 +32,7 @@ const GnoForm = ({
     initialValues={initialValues}
     render={({ handleSubmit, ...rest }) => (
       <form onSubmit={handleSubmit} style={stylesBasedOn(padding)}>
-        {render(rest)}
-        {children(rest.submitting, rest.validating)}
+        {children(rest.submitting, rest.validating, rest)}
       </form>
     )}
   />

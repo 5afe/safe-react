@@ -4,6 +4,7 @@ import Field from '~/components/forms/Field'
 import TextField from '~/components/forms/TextField'
 import { composeValidators, inLimit, mustBeFloat, required, greaterThan, mustBeEthereumAddress } from '~/components/forms/validator'
 import Block from '~/components/layout/Block'
+import OpenPaper from '~/components/Stepper/OpenPaper'
 import Heading from '~/components/layout/Heading'
 
 export const CONFIRMATIONS_ERROR = 'Number of confirmations can not be higher than the number of owners'
@@ -16,8 +17,8 @@ type Props = {
   symbol: string,
 }
 
-const SendTokenForm = ({ funds, symbol }: Props) => () => (
-  <Block margin="md">
+const SendTokenForm = ({ funds, symbol }: Props) => (controls: React$Node) => (
+  <OpenPaper controls={controls}>
     <Heading tag="h2" margin="lg">
       Send tokens Transaction
     </Heading>
@@ -44,7 +45,7 @@ const SendTokenForm = ({ funds, symbol }: Props) => () => (
         text="Amount of Tokens"
       />
     </Block>
-  </Block>
+  </OpenPaper>
 )
 
 export default SendTokenForm

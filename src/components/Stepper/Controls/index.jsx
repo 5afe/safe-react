@@ -1,56 +1,57 @@
 // @flow
 import * as React from 'react'
 import Button from '~/components/layout/Button'
+import Col from '~/components/layout/Col'
+import Row from '~/components/layout/Row'
+import { sm } from '~/theme/variables'
 
-type ControlProps = {
-  next: string,
-  onPrevious: () => void,
-  firstPage: boolean,
-  disabled: boolean,
+const controlStyle = {
+  backgroundColor: 'white',
+  padding: sm,
 }
 
-const ControlButtons = ({
-  next, firstPage, onPrevious, disabled,
-}: ControlProps) => (
-  <React.Fragment>
-    <Button
-      type="button"
-      disabled={firstPage || disabled}
-      onClick={onPrevious}
-    >
-      Back
-    </Button>
-    <Button
-      variant="raised"
-      color="primary"
-      type="submit"
-      disabled={disabled}
-    >
-      {next}
-    </Button>
-  </React.Fragment>
-)
+const firstButtonStyle = {
+  marginRight: sm,
+}
 
 type Props = {
-  finishedTx: boolean,
-  finishedButton: React$Node,
   onPrevious: () => void,
   firstPage: boolean,
   lastPage: boolean,
   disabled: boolean,
+  penultimate: boolean,
 }
 
 const Controls = ({
-  finishedTx, finishedButton, onPrevious, firstPage, lastPage, disabled,
-}: Props) => (
-  finishedTx
-    ? <React.Fragment>{finishedButton}</React.Fragment>
-    : <ControlButtons
-      disabled={disabled}
-      next={lastPage ? 'Finish' : 'Next'}
-      firstPage={firstPage}
-      onPrevious={onPrevious}
-    />
-)
+  onPrevious, firstPage, penultimate, lastPage, disabled,
+}: Props) => {
+  // eslint-disable-next-line
+  const next = firstPage ? 'Start' : penultimate ? 'Review' : lastPage ? 'Submit' : 'Next'
+  const back = firstPage ? 'Cancel' : 'Back'
+
+  return (
+    <Row style={controlStyle} align="end" grow>
+      <Col xs={12} end="xs">
+        <Button
+          style={firstButtonStyle}
+          type="button"
+          onClick={onPrevious}
+          size="small"
+        >
+          {back}
+        </Button>
+        <Button
+          size="small"
+          variant="raised"
+          color="primary"
+          type="submit"
+          disabled={disabled}
+        >
+          {next}
+        </Button>
+      </Col>
+    </Row>
+  )
+}
 
 export default Controls

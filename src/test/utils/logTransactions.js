@@ -15,7 +15,7 @@ export const printOutApprove = async (
   console.log(subject)
 
   const gnosisSafe = await getGnosisSafeInstanceAt(address)
-  const transactionHash = await gnosisSafe.getTransactionHash(address, 0, data, 0, nonce)
+  const transactionHash = await gnosisSafe.getTransactionHash(address, 0, data, 0, 0, 0, 0, 0, 0, nonce)
   // eslint-disable-next-line
   console.log(`EO transaction hash ${transactionHash}`)
 

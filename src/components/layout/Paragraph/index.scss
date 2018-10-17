@@ -22,8 +22,17 @@
 .warning {
   color: $warning;
 }
+
 .primary {
   color: $fontColor;
+}
+
+.secondary {
+  color: $secondary;
+}
+
+.disabled {
+  color: $disabled;
 }
 
 .white {
@@ -74,6 +83,10 @@
   font-size: $extraLargeFontSize;
 }
 
+.xxl {
+  font-size: $xxlFontSize;
+}
+
 .light {
   font-weight: $lightFont;
 }
@@ -88,4 +101,8 @@
 
 .bold {
   font-weight: $boldFont;
+}
+
+.dot {
+  display: list-item;
 }

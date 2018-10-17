@@ -1,6 +1,4 @@
 // @flow
-export const getDailyLimitFrom = (values: Object): number => Number(values.limit)
-
 export const getAccountsFrom = (values: Object): string[] => {
   const accounts = Object.keys(values).sort().filter(key => /^owner\d+Address$/.test(key))
 

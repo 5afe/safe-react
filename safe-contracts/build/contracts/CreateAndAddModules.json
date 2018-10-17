@@ -34,40 +34,40 @@
       "type": "function"
     }
   ],
-  "bytecode": "0x608060405234801561001057600080fd5b50610275806100206000396000f30060806040526004361061004c576000357c0100000000000000000000000000000000000000000000000000000000900463ffffffff16806360df7f5814610051578063610b5925146100da575b600080fd5b34801561005d57600080fd5b506100d8600480360381019080803573ffffffffffffffffffffffffffffffffffffffff169060200190929190803590602001908201803590602001908080601f016020809104026020016040519081016040528093929190818152602001838380828437820191505050505050919291929050505061011d565b005b3480156100e657600080fd5b5061011b600480360381019080803573ffffffffffffffffffffffffffffffffffffffff169060200190929190505050610244565b005b600080600083519250600090505b8281101561023d5780840160200151818501604001604051600060208285858c5af4141561015857600080fd5b73ffffffffffffffffffffffffffffffffffffffff8151169450602080601f85010402602001840193505050503073ffffffffffffffffffffffffffffffffffffffff1663610b5925836040518263ffffffff167c0100000000000000000000000000000000000000000000000000000000028152600401808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff168152602001915050600060405180830381600087803b15801561022057600080fd5b505af1158015610234573d6000803e3d6000fd5b5050505061012b565b5050505050565b600080fd00a165627a7a723058207c5f557823bcf2be1858240c0c1037c633c0f0159752cd4b58f9f35c29ad604c0029",
-  "deployedBytecode": "0x60806040526004361061004c576000357c0100000000000000000000000000000000000000000000000000000000900463ffffffff16806360df7f5814610051578063610b5925146100da575b600080fd5b34801561005d57600080fd5b506100d8600480360381019080803573ffffffffffffffffffffffffffffffffffffffff169060200190929190803590602001908201803590602001908080601f016020809104026020016040519081016040528093929190818152602001838380828437820191505050505050919291929050505061011d565b005b3480156100e657600080fd5b5061011b600480360381019080803573ffffffffffffffffffffffffffffffffffffffff169060200190929190505050610244565b005b600080600083519250600090505b8281101561023d5780840160200151818501604001604051600060208285858c5af4141561015857600080fd5b73ffffffffffffffffffffffffffffffffffffffff8151169450602080601f85010402602001840193505050503073ffffffffffffffffffffffffffffffffffffffff1663610b5925836040518263ffffffff167c0100000000000000000000000000000000000000000000000000000000028152600401808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff168152602001915050600060405180830381600087803b15801561022057600080fd5b505af1158015610234573d6000803e3d6000fd5b5050505061012b565b5050505050565b600080fd00a165627a7a723058207c5f557823bcf2be1858240c0c1037c633c0f0159752cd4b58f9f35c29ad604c0029",
-  "sourceMap": "245:1457:18:-;;;;8:9:-1;5:2;;;30:1;27;20:12;5:2;245:1457:18;;;;;;;",
-  "deployedSourceMap": "245:1457:18:-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;815:885;;8:9:-1;5:2;;;30:1;27;20:12;5:2;815:885:18;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;405:81;;8:9:-1;5:2;;;30:1;27;20:12;5:2;405:81:18;;;;;;;;;;;;;;;;;;;;;;;;;;;;815:885;907:14;945:13;968:9;924:4;:11;907:28;;980:1;968:13;;991:703;1002:6;998:1;:10;991:703;;;1170:1;1164:4;1160:12;1154:4;1150:23;1144:30;1230:1;1224:4;1220:12;1214:4;1210:23;1271:4;1265:11;1378:1;1371:4;1363:6;1344:17;1331:11;1317:12;1312:3;1299:77;1296:84;1293:2;;;1393:1;1390;1383:12;1293:2;1443:42;1434:6;1428:13;1424:62;1414:72;;1624:4;1617;1610;1591:17;1587:28;1583:39;1579:50;1573:4;1569:61;1566:1;1562:69;1557:74;;1101:544;;;1658:4;:17;;;1676:6;1658:25;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;8:9:-1;5:2;;;30:1;27;20:12;5:2;1658:25:18;;;;8:9:-1;5:2;;;45:16;42:1;39;24:38;77:16;74:1;67:27;5:2;1658:25:18;;;;991:703;;;815:885;;;;;:::o;405:81::-;471:8;;",
-  "source": "pragma solidity 0.4.24;\nimport \"../Module.sol\";\n\n\n/// @title Create and Add Modules - Allows to create and add multiple module in one transaction.\n/// @author Stefan George - <stefan@gnosis.pm>\n/// @author Richard Meissner - <richard@gnosis.pm>\ncontract CreateAndAddModules {\n\n    /// @dev Function required to compile contract. Gnosis Safe function is called instead.\n    /// @param module Not used.\n    function enableModule(Module module)\n        public\n    {\n        revert();\n    }\n\n    /// @dev Allows to create and add multiple module in one transaction.\n    /// @param proxyFactory Module proxy factory contract.\n    /// @param data Modules constructor payload. This is the data for each proxy factory call concatinated. (e.g. <byte_array_len_1><byte_array_data_1><byte_array_len_2><byte_array_data_2>)\n    function createAndAddModules(address proxyFactory, bytes data)\n        public\n    {\n        uint256 length = data.length;\n        Module module;\n        uint256 i = 0;\n        while (i < length) {\n            // solium-disable-next-line security/no-inline-assembly\n            assembly {\n                let createBytesLength := mload(add(0x20, add(data, i)))\n                let createBytes := add(0x40, add(data, i))\n\n                let output := mload(0x40)\n                if eq(delegatecall(gas, proxyFactory, createBytes, createBytesLength, output, 0x20), 0) { revert(0, 0) }\n                module := and(mload(output), 0xffffffffffffffffffffffffffffffffffffffff)\n\n                // Data is always padded to 32 bytes\n                i := add(i, add(0x20, mul(div(add(createBytesLength, 0x1f), 0x20), 0x20)))\n            }\n            this.enableModule(module);\n        }\n    }\n}\n",
+  "bytecode": "0x608060405234801561001057600080fd5b50610275806100206000396000f30060806040526004361061004c576000357c0100000000000000000000000000000000000000000000000000000000900463ffffffff16806360df7f5814610051578063610b5925146100da575b600080fd5b34801561005d57600080fd5b506100d8600480360381019080803573ffffffffffffffffffffffffffffffffffffffff169060200190929190803590602001908201803590602001908080601f016020809104026020016040519081016040528093929190818152602001838380828437820191505050505050919291929050505061011d565b005b3480156100e657600080fd5b5061011b600480360381019080803573ffffffffffffffffffffffffffffffffffffffff169060200190929190505050610244565b005b600080600083519250600090505b8281101561023d5780840160200151818501604001604051600060208285858c5af4141561015857600080fd5b73ffffffffffffffffffffffffffffffffffffffff8151169450602080601f85010402602001840193505050503073ffffffffffffffffffffffffffffffffffffffff1663610b5925836040518263ffffffff167c0100000000000000000000000000000000000000000000000000000000028152600401808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff168152602001915050600060405180830381600087803b15801561022057600080fd5b505af1158015610234573d6000803e3d6000fd5b5050505061012b565b5050505050565b600080fd00a165627a7a72305820032b000033bdda6b988b435c96d1decf8e2f8e4da1b3a0b75e82e9e49c9c8dd10029",
+  "deployedBytecode": "0x60806040526004361061004c576000357c0100000000000000000000000000000000000000000000000000000000900463ffffffff16806360df7f5814610051578063610b5925146100da575b600080fd5b34801561005d57600080fd5b506100d8600480360381019080803573ffffffffffffffffffffffffffffffffffffffff169060200190929190803590602001908201803590602001908080601f016020809104026020016040519081016040528093929190818152602001838380828437820191505050505050919291929050505061011d565b005b3480156100e657600080fd5b5061011b600480360381019080803573ffffffffffffffffffffffffffffffffffffffff169060200190929190505050610244565b005b600080600083519250600090505b8281101561023d5780840160200151818501604001604051600060208285858c5af4141561015857600080fd5b73ffffffffffffffffffffffffffffffffffffffff8151169450602080601f85010402602001840193505050503073ffffffffffffffffffffffffffffffffffffffff1663610b5925836040518263ffffffff167c0100000000000000000000000000000000000000000000000000000000028152600401808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff168152602001915050600060405180830381600087803b15801561022057600080fd5b505af1158015610234573d6000803e3d6000fd5b5050505061012b565b5050505050565b600080fd00a165627a7a72305820032b000033bdda6b988b435c96d1decf8e2f8e4da1b3a0b75e82e9e49c9c8dd10029",
+  "sourceMap": "250:1457:14:-;;;;8:9:-1;5:2;;;30:1;27;20:12;5:2;250:1457:14;;;;;;;",
+  "deployedSourceMap": "250:1457:14:-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;820:885;;8:9:-1;5:2;;;30:1;27;20:12;5:2;820:885:14;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;410:81;;8:9:-1;5:2;;;30:1;27;20:12;5:2;410:81:14;;;;;;;;;;;;;;;;;;;;;;;;;;;;820:885;912:14;950:13;973:9;929:4;:11;912:28;;985:1;973:13;;996:703;1007:6;1003:1;:10;996:703;;;1175:1;1169:4;1165:12;1159:4;1155:23;1149:30;1235:1;1229:4;1225:12;1219:4;1215:23;1276:4;1270:11;1383:1;1376:4;1368:6;1349:17;1336:11;1322:12;1317:3;1304:77;1301:84;1298:2;;;1398:1;1395;1388:12;1298:2;1448:42;1439:6;1433:13;1429:62;1419:72;;1629:4;1622;1615;1596:17;1592:28;1588:39;1584:50;1578:4;1574:61;1571:1;1567:69;1562:74;;1106:544;;;1663:4;:17;;;1681:6;1663:25;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;8:9:-1;5:2;;;30:1;27;20:12;5:2;1663:25:14;;;;8:9:-1;5:2;;;45:16;42:1;39;24:38;77:16;74:1;67:27;5:2;1663:25:14;;;;996:703;;;820:885;;;;;:::o;410:81::-;476:8;;",
+  "source": "pragma solidity 0.4.24;\nimport \"../base/Module.sol\";\n\n\n/// @title Create and Add Modules - Allows to create and add multiple module in one transaction.\n/// @author Stefan George - <stefan@gnosis.pm>\n/// @author Richard Meissner - <richard@gnosis.pm>\ncontract CreateAndAddModules {\n\n    /// @dev Function required to compile contract. Gnosis Safe function is called instead.\n    /// @param module Not used.\n    function enableModule(Module module)\n        public\n    {\n        revert();\n    }\n\n    /// @dev Allows to create and add multiple module in one transaction.\n    /// @param proxyFactory Module proxy factory contract.\n    /// @param data Modules constructor payload. This is the data for each proxy factory call concatinated. (e.g. <byte_array_len_1><byte_array_data_1><byte_array_len_2><byte_array_data_2>)\n    function createAndAddModules(address proxyFactory, bytes data)\n        public\n    {\n        uint256 length = data.length;\n        Module module;\n        uint256 i = 0;\n        while (i < length) {\n            // solium-disable-next-line security/no-inline-assembly\n            assembly {\n                let createBytesLength := mload(add(0x20, add(data, i)))\n                let createBytes := add(0x40, add(data, i))\n\n                let output := mload(0x40)\n                if eq(delegatecall(gas, proxyFactory, createBytes, createBytesLength, output, 0x20), 0) { revert(0, 0) }\n                module := and(mload(output), 0xffffffffffffffffffffffffffffffffffffffff)\n\n                // Data is always padded to 32 bytes\n                i := add(i, add(0x20, mul(div(add(createBytesLength, 0x1f), 0x20), 0x20)))\n            }\n            this.enableModule(module);\n        }\n    }\n}\n",
   "sourcePath": "/Users/apanizo/git/gnosis/safe-contracts/contracts/libraries/CreateAndAddModules.sol",
   "ast": {
     "absolutePath": "/Users/apanizo/git/gnosis/safe-contracts/contracts/libraries/CreateAndAddModules.sol",
     "exportedSymbols": {
       "CreateAndAddModules": [
-        1866
+        1848
       ]
     },
-    "id": 1867,
+    "id": 1849,
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 1823,
+        "id": 1805,
         "literals": [
           "solidity",
           "0.4",
           ".24"
         ],
         "nodeType": "PragmaDirective",
-        "src": "0:23:18"
+        "src": "0:23:14"
       },
       {
-        "absolutePath": "/Users/apanizo/git/gnosis/safe-contracts/contracts/Module.sol",
-        "file": "../Module.sol",
-        "id": 1824,
+        "absolutePath": "/Users/apanizo/git/gnosis/safe-contracts/contracts/base/Module.sol",
+        "file": "../base/Module.sol",
+        "id": 1806,
         "nodeType": "ImportDirective",
-        "scope": 1867,
-        "sourceUnit": 914,
-        "src": "24:23:18",
+        "scope": 1849,
+        "sourceUnit": 936,
+        "src": "24:28:14",
         "symbolAliases": [],
         "unitAlias": ""
       },
@@ -77,18 +77,18 @@
         "contractKind": "contract",
         "documentation": "@title Create and Add Modules - Allows to create and add multiple module in one transaction.\n @author Stefan George - <stefan@gnosis.pm>\n @author Richard Meissner - <richard@gnosis.pm>",
         "fullyImplemented": true,
-        "id": 1866,
+        "id": 1848,
         "linearizedBaseContracts": [
-          1866
+          1848
         ],
         "name": "CreateAndAddModules",
         "nodeType": "ContractDefinition",
         "nodes": [
           {
             "body": {
-              "id": 1832,
+              "id": 1814,
               "nodeType": "Block",
-              "src": "461:25:18",
+              "src": "466:25:14",
               "statements": [
                 {
                   "expression": {
@@ -96,21 +96,21 @@
                     "arguments": [],
                     "expression": {
                       "argumentTypes": [],
-                      "id": 1829,
+                      "id": 1811,
                       "name": "revert",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [
-                        3833,
-                        3834
+                        4020,
+                        4021
                       ],
-                      "referencedDeclaration": 3833,
-                      "src": "471:6:18",
+                      "referencedDeclaration": 4020,
+                      "src": "476:6:14",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_revert_pure$__$returns$__$",
                         "typeString": "function () pure"
                       }
                     },
-                    "id": 1830,
+                    "id": 1812,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -118,20 +118,20 @@
                     "lValueRequested": false,
                     "names": [],
                     "nodeType": "FunctionCall",
-                    "src": "471:8:18",
+                    "src": "476:8:14",
                     "typeDescriptions": {
                       "typeIdentifier": "t_tuple$__$",
                       "typeString": "tuple()"
                     }
                   },
-                  "id": 1831,
+                  "id": 1813,
                   "nodeType": "ExpressionStatement",
-                  "src": "471:8:18"
+                  "src": "476:8:14"
                 }
               ]
             },
             "documentation": "@dev Function required to compile contract. Gnosis Safe function is called instead.\n @param module Not used.",
-            "id": 1833,
+            "id": 1815,
             "implemented": true,
             "isConstructor": false,
             "isDeclaredConst": false,
@@ -139,31 +139,31 @@
             "name": "enableModule",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 1827,
+              "id": 1809,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 1826,
+                  "id": 1808,
                   "name": "module",
                   "nodeType": "VariableDeclaration",
-                  "scope": 1833,
-                  "src": "427:13:18",
+                  "scope": 1815,
+                  "src": "432:13:14",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
-                    "typeIdentifier": "t_contract$_Module_$913",
+                    "typeIdentifier": "t_contract$_Module_$935",
                     "typeString": "contract Module"
                   },
                   "typeName": {
                     "contractScope": null,
-                    "id": 1825,
+                    "id": 1807,
                     "name": "Module",
                     "nodeType": "UserDefinedTypeName",
-                    "referencedDeclaration": 913,
-                    "src": "427:6:18",
+                    "referencedDeclaration": 935,
+                    "src": "432:6:14",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_contract$_Module_$913",
+                      "typeIdentifier": "t_contract$_Module_$935",
                       "typeString": "contract Module"
                     }
                   },
@@ -171,39 +171,39 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "426:15:18"
+              "src": "431:15:14"
             },
             "payable": false,
             "returnParameters": {
-              "id": 1828,
+              "id": 1810,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "461:0:18"
+              "src": "466:0:14"
             },
-            "scope": 1866,
-            "src": "405:81:18",
+            "scope": 1848,
+            "src": "410:81:14",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "public"
           },
           {
             "body": {
-              "id": 1864,
+              "id": 1846,
               "nodeType": "Block",
-              "src": "897:803:18",
+              "src": "902:803:14",
               "statements": [
                 {
                   "assignments": [
-                    1841
+                    1823
                   ],
                   "declarations": [
                     {
                       "constant": false,
-                      "id": 1841,
+                      "id": 1823,
                       "name": "length",
                       "nodeType": "VariableDeclaration",
-                      "scope": 1865,
-                      "src": "907:14:18",
+                      "scope": 1847,
+                      "src": "912:14:14",
                       "stateVariable": false,
                       "storageLocation": "default",
                       "typeDescriptions": {
@@ -211,10 +211,10 @@
                         "typeString": "uint256"
                       },
                       "typeName": {
-                        "id": 1840,
+                        "id": 1822,
                         "name": "uint256",
                         "nodeType": "ElementaryTypeName",
-                        "src": "907:7:18",
+                        "src": "912:7:14",
                         "typeDescriptions": {
                           "typeIdentifier": "t_uint256",
                           "typeString": "uint256"
@@ -224,23 +224,23 @@
                       "visibility": "internal"
                     }
                   ],
-                  "id": 1844,
+                  "id": 1826,
                   "initialValue": {
                     "argumentTypes": null,
                     "expression": {
                       "argumentTypes": null,
-                      "id": 1842,
+                      "id": 1824,
                       "name": "data",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 1837,
-                      "src": "924:4:18",
+                      "referencedDeclaration": 1819,
+                      "src": "929:4:14",
                       "typeDescriptions": {
                         "typeIdentifier": "t_bytes_memory_ptr",
                         "typeString": "bytes memory"
                       }
                     },
-                    "id": 1843,
+                    "id": 1825,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -248,40 +248,40 @@
                     "memberName": "length",
                     "nodeType": "MemberAccess",
                     "referencedDeclaration": null,
-                    "src": "924:11:18",
+                    "src": "929:11:14",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
                     }
                   },
                   "nodeType": "VariableDeclarationStatement",
-                  "src": "907:28:18"
+                  "src": "912:28:14"
                 },
                 {
                   "assignments": [],
                   "declarations": [
                     {
                       "constant": false,
-                      "id": 1846,
+                      "id": 1828,
                       "name": "module",
                       "nodeType": "VariableDeclaration",
-                      "scope": 1865,
-                      "src": "945:13:18",
+                      "scope": 1847,
+                      "src": "950:13:14",
                       "stateVariable": false,
                       "storageLocation": "default",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_contract$_Module_$913",
+                        "typeIdentifier": "t_contract$_Module_$935",
                         "typeString": "contract Module"
                       },
                       "typeName": {
                         "contractScope": null,
-                        "id": 1845,
+                        "id": 1827,
                         "name": "Module",
                         "nodeType": "UserDefinedTypeName",
-                        "referencedDeclaration": 913,
-                        "src": "945:6:18",
+                        "referencedDeclaration": 935,
+                        "src": "950:6:14",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_contract$_Module_$913",
+                          "typeIdentifier": "t_contract$_Module_$935",
                           "typeString": "contract Module"
                         }
                       },
@@ -289,23 +289,23 @@
                       "visibility": "internal"
                     }
                   ],
-                  "id": 1847,
+                  "id": 1829,
                   "initialValue": null,
                   "nodeType": "VariableDeclarationStatement",
-                  "src": "945:13:18"
+                  "src": "950:13:14"
                 },
                 {
                   "assignments": [
-                    1849
+                    1831
                   ],
                   "declarations": [
                     {
                       "constant": false,
-                      "id": 1849,
+                      "id": 1831,
                       "name": "i",
                       "nodeType": "VariableDeclaration",
-                      "scope": 1865,
-                      "src": "968:9:18",
+                      "scope": 1847,
+                      "src": "973:9:14",
                       "stateVariable": false,
                       "storageLocation": "default",
                       "typeDescriptions": {
@@ -313,10 +313,10 @@
                         "typeString": "uint256"
                       },
                       "typeName": {
-                        "id": 1848,
+                        "id": 1830,
                         "name": "uint256",
                         "nodeType": "ElementaryTypeName",
-                        "src": "968:7:18",
+                        "src": "973:7:14",
                         "typeDescriptions": {
                           "typeIdentifier": "t_uint256",
                           "typeString": "uint256"
@@ -326,18 +326,18 @@
                       "visibility": "internal"
                     }
                   ],
-                  "id": 1851,
+                  "id": 1833,
                   "initialValue": {
                     "argumentTypes": null,
                     "hexValue": "30",
-                    "id": 1850,
+                    "id": 1832,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": true,
                     "kind": "number",
                     "lValueRequested": false,
                     "nodeType": "Literal",
-                    "src": "980:1:18",
+                    "src": "985:1:14",
                     "subdenomination": null,
                     "typeDescriptions": {
                       "typeIdentifier": "t_rational_0_by_1",
@@ -346,93 +346,93 @@
                     "value": "0"
                   },
                   "nodeType": "VariableDeclarationStatement",
-                  "src": "968:13:18"
+                  "src": "973:13:14"
                 },
                 {
                   "body": {
-                    "id": 1862,
+                    "id": 1844,
                     "nodeType": "Block",
-                    "src": "1010:684:18",
+                    "src": "1015:684:14",
                     "statements": [
                       {
                         "externalReferences": [
                           {
                             "module": {
-                              "declaration": 1846,
+                              "declaration": 1828,
                               "isOffset": false,
                               "isSlot": false,
-                              "src": "1414:6:18",
+                              "src": "1419:6:14",
                               "valueSize": 1
                             }
                           },
                           {
                             "data": {
-                              "declaration": 1837,
+                              "declaration": 1819,
                               "isOffset": false,
                               "isSlot": false,
-                              "src": "1164:4:18",
+                              "src": "1169:4:14",
                               "valueSize": 1
                             }
                           },
                           {
                             "i": {
-                              "declaration": 1849,
+                              "declaration": 1831,
                               "isOffset": false,
                               "isSlot": false,
-                              "src": "1170:1:18",
+                              "src": "1175:1:14",
                               "valueSize": 1
                             }
                           },
                           {
                             "data": {
-                              "declaration": 1837,
+                              "declaration": 1819,
                               "isOffset": false,
                               "isSlot": false,
-                              "src": "1224:4:18",
+                              "src": "1229:4:14",
                               "valueSize": 1
                             }
                           },
                           {
                             "i": {
-                              "declaration": 1849,
+                              "declaration": 1831,
                               "isOffset": false,
                               "isSlot": false,
-                              "src": "1230:1:18",
+                              "src": "1235:1:14",
                               "valueSize": 1
                             }
                           },
                           {
                             "i": {
-                              "declaration": 1849,
+                              "declaration": 1831,
                               "isOffset": false,
                               "isSlot": false,
-                              "src": "1557:1:18",
+                              "src": "1562:1:14",
                               "valueSize": 1
                             }
                           },
                           {
                             "proxyFactory": {
-                              "declaration": 1835,
+                              "declaration": 1817,
                               "isOffset": false,
                               "isSlot": false,
-                              "src": "1317:12:18",
+                              "src": "1322:12:14",
                               "valueSize": 1
                             }
                           },
                           {
                             "i": {
-                              "declaration": 1849,
+                              "declaration": 1831,
                               "isOffset": false,
                               "isSlot": false,
-                              "src": "1566:1:18",
+                              "src": "1571:1:14",
                               "valueSize": 1
                             }
                           }
                         ],
-                        "id": 1855,
+                        "id": 1837,
                         "nodeType": "InlineAssembly",
                         "operations": "{\n    let createBytesLength := mload(add(0x20, add(data, i)))\n    let createBytes := add(0x40, add(data, i))\n    let output := mload(0x40)\n    if eq(delegatecall(gas(), proxyFactory, createBytes, createBytesLength, output, 0x20), 0)\n    {\n        revert(0, 0)\n    }\n    module := and(mload(output), 0xffffffffffffffffffffffffffffffffffffffff)\n    i := add(i, add(0x20, mul(div(add(createBytesLength, 0x1f), 0x20), 0x20)))\n}",
-                        "src": "1092:570:18"
+                        "src": "1097:570:14"
                       },
                       {
                         "expression": {
@@ -440,14 +440,14 @@
                           "arguments": [
                             {
                               "argumentTypes": null,
-                              "id": 1859,
+                              "id": 1841,
                               "name": "module",
                               "nodeType": "Identifier",
                               "overloadedDeclarations": [],
-                              "referencedDeclaration": 1846,
-                              "src": "1676:6:18",
+                              "referencedDeclaration": 1828,
+                              "src": "1681:6:14",
                               "typeDescriptions": {
-                                "typeIdentifier": "t_contract$_Module_$913",
+                                "typeIdentifier": "t_contract$_Module_$935",
                                 "typeString": "contract Module"
                               }
                             }
@@ -455,38 +455,38 @@
                           "expression": {
                             "argumentTypes": [
                               {
-                                "typeIdentifier": "t_contract$_Module_$913",
+                                "typeIdentifier": "t_contract$_Module_$935",
                                 "typeString": "contract Module"
                               }
                             ],
                             "expression": {
                               "argumentTypes": null,
-                              "id": 1856,
+                              "id": 1838,
                               "name": "this",
                               "nodeType": "Identifier",
                               "overloadedDeclarations": [],
-                              "referencedDeclaration": 3877,
-                              "src": "1658:4:18",
+                              "referencedDeclaration": 4056,
+                              "src": "1663:4:14",
                               "typeDescriptions": {
-                                "typeIdentifier": "t_contract$_CreateAndAddModules_$1866",
+                                "typeIdentifier": "t_contract$_CreateAndAddModules_$1848",
                                 "typeString": "contract CreateAndAddModules"
                               }
                             },
-                            "id": 1858,
+                            "id": 1840,
                             "isConstant": false,
                             "isLValue": false,
                             "isPure": false,
                             "lValueRequested": false,
                             "memberName": "enableModule",
                             "nodeType": "MemberAccess",
-                            "referencedDeclaration": 1833,
-                            "src": "1658:17:18",
+                            "referencedDeclaration": 1815,
+                            "src": "1663:17:14",
                             "typeDescriptions": {
-                              "typeIdentifier": "t_function_external_nonpayable$_t_contract$_Module_$913_$returns$__$",
+                              "typeIdentifier": "t_function_external_nonpayable$_t_contract$_Module_$935_$returns$__$",
                               "typeString": "function (contract Module) external"
                             }
                           },
-                          "id": 1860,
+                          "id": 1842,
                           "isConstant": false,
                           "isLValue": false,
                           "isPure": false,
@@ -494,15 +494,15 @@
                           "lValueRequested": false,
                           "names": [],
                           "nodeType": "FunctionCall",
-                          "src": "1658:25:18",
+                          "src": "1663:25:14",
                           "typeDescriptions": {
                             "typeIdentifier": "t_tuple$__$",
                             "typeString": "tuple()"
                           }
                         },
-                        "id": 1861,
+                        "id": 1843,
                         "nodeType": "ExpressionStatement",
-                        "src": "1658:25:18"
+                        "src": "1663:25:14"
                       }
                     ]
                   },
@@ -512,19 +512,19 @@
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
                     },
-                    "id": 1854,
+                    "id": 1836,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
                     "lValueRequested": false,
                     "leftExpression": {
                       "argumentTypes": null,
-                      "id": 1852,
+                      "id": 1834,
                       "name": "i",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 1849,
-                      "src": "998:1:18",
+                      "referencedDeclaration": 1831,
+                      "src": "1003:1:14",
                       "typeDescriptions": {
                         "typeIdentifier": "t_uint256",
                         "typeString": "uint256"
@@ -534,31 +534,31 @@
                     "operator": "<",
                     "rightExpression": {
                       "argumentTypes": null,
-                      "id": 1853,
+                      "id": 1835,
                       "name": "length",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 1841,
-                      "src": "1002:6:18",
+                      "referencedDeclaration": 1823,
+                      "src": "1007:6:14",
                       "typeDescriptions": {
                         "typeIdentifier": "t_uint256",
                         "typeString": "uint256"
                       }
                     },
-                    "src": "998:10:18",
+                    "src": "1003:10:14",
                     "typeDescriptions": {
                       "typeIdentifier": "t_bool",
                       "typeString": "bool"
                     }
                   },
-                  "id": 1863,
+                  "id": 1845,
                   "nodeType": "WhileStatement",
-                  "src": "991:703:18"
+                  "src": "996:703:14"
                 }
               ]
             },
             "documentation": "@dev Allows to create and add multiple module in one transaction.\n @param proxyFactory Module proxy factory contract.\n @param data Modules constructor payload. This is the data for each proxy factory call concatinated. (e.g. <byte_array_len_1><byte_array_data_1><byte_array_len_2><byte_array_data_2>)",
-            "id": 1865,
+            "id": 1847,
             "implemented": true,
             "isConstructor": false,
             "isDeclaredConst": false,
@@ -566,16 +566,16 @@
             "name": "createAndAddModules",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 1838,
+              "id": 1820,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 1835,
+                  "id": 1817,
                   "name": "proxyFactory",
                   "nodeType": "VariableDeclaration",
-                  "scope": 1865,
-                  "src": "844:20:18",
+                  "scope": 1847,
+                  "src": "849:20:14",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -583,10 +583,10 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 1834,
+                    "id": 1816,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "844:7:18",
+                    "src": "849:7:14",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
                       "typeString": "address"
@@ -597,11 +597,11 @@
                 },
                 {
                   "constant": false,
-                  "id": 1837,
+                  "id": 1819,
                   "name": "data",
                   "nodeType": "VariableDeclaration",
-                  "scope": 1865,
-                  "src": "866:10:18",
+                  "scope": 1847,
+                  "src": "871:10:14",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -609,10 +609,10 @@
                     "typeString": "bytes"
                   },
                   "typeName": {
-                    "id": 1836,
+                    "id": 1818,
                     "name": "bytes",
                     "nodeType": "ElementaryTypeName",
-                    "src": "866:5:18",
+                    "src": "871:5:14",
                     "typeDescriptions": {
                       "typeIdentifier": "t_bytes_storage_ptr",
                       "typeString": "bytes"
@@ -622,56 +622,56 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "843:34:18"
+              "src": "848:34:14"
             },
             "payable": false,
             "returnParameters": {
-              "id": 1839,
+              "id": 1821,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "897:0:18"
+              "src": "902:0:14"
             },
-            "scope": 1866,
-            "src": "815:885:18",
+            "scope": 1848,
+            "src": "820:885:14",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "public"
           }
         ],
-        "scope": 1867,
-        "src": "245:1457:18"
+        "scope": 1849,
+        "src": "250:1457:14"
       }
     ],
-    "src": "0:1703:18"
+    "src": "0:1708:14"
   },
   "legacyAST": {
     "absolutePath": "/Users/apanizo/git/gnosis/safe-contracts/contracts/libraries/CreateAndAddModules.sol",
     "exportedSymbols": {
       "CreateAndAddModules": [
-        1866
+        1848
       ]
     },
-    "id": 1867,
+    "id": 1849,
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 1823,
+        "id": 1805,
         "literals": [
           "solidity",
           "0.4",
           ".24"
         ],
         "nodeType": "PragmaDirective",
-        "src": "0:23:18"
+        "src": "0:23:14"
       },
       {
-        "absolutePath": "/Users/apanizo/git/gnosis/safe-contracts/contracts/Module.sol",
-        "file": "../Module.sol",
-        "id": 1824,
+        "absolutePath": "/Users/apanizo/git/gnosis/safe-contracts/contracts/base/Module.sol",
+        "file": "../base/Module.sol",
+        "id": 1806,
         "nodeType": "ImportDirective",
-        "scope": 1867,
-        "sourceUnit": 914,
-        "src": "24:23:18",
+        "scope": 1849,
+        "sourceUnit": 936,
+        "src": "24:28:14",
         "symbolAliases": [],
         "unitAlias": ""
       },
@@ -681,18 +681,18 @@
         "contractKind": "contract",
         "documentation": "@title Create and Add Modules - Allows to create and add multiple module in one transaction.\n @author Stefan George - <stefan@gnosis.pm>\n @author Richard Meissner - <richard@gnosis.pm>",
         "fullyImplemented": true,
-        "id": 1866,
+        "id": 1848,
         "linearizedBaseContracts": [
-          1866
+          1848
         ],
         "name": "CreateAndAddModules",
         "nodeType": "ContractDefinition",
         "nodes": [
           {
             "body": {
-              "id": 1832,
+              "id": 1814,
               "nodeType": "Block",
-              "src": "461:25:18",
+              "src": "466:25:14",
               "statements": [
                 {
                   "expression": {
@@ -700,21 +700,21 @@
                     "arguments": [],
                     "expression": {
                       "argumentTypes": [],
-                      "id": 1829,
+                      "id": 1811,
                       "name": "revert",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [
-                        3833,
-                        3834
+                        4020,
+                        4021
                       ],
-                      "referencedDeclaration": 3833,
-                      "src": "471:6:18",
+                      "referencedDeclaration": 4020,
+                      "src": "476:6:14",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_revert_pure$__$returns$__$",
                         "typeString": "function () pure"
                       }
                     },
-                    "id": 1830,
+                    "id": 1812,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -722,20 +722,20 @@
                     "lValueRequested": false,
                     "names": [],
                     "nodeType": "FunctionCall",
-                    "src": "471:8:18",
+                    "src": "476:8:14",
                     "typeDescriptions": {
                       "typeIdentifier": "t_tuple$__$",
                       "typeString": "tuple()"
                     }
                   },
-                  "id": 1831,
+                  "id": 1813,
                   "nodeType": "ExpressionStatement",
-                  "src": "471:8:18"
+                  "src": "476:8:14"
                 }
               ]
             },
             "documentation": "@dev Function required to compile contract. Gnosis Safe function is called instead.\n @param module Not used.",
-            "id": 1833,
+            "id": 1815,
             "implemented": true,
             "isConstructor": false,
             "isDeclaredConst": false,
@@ -743,31 +743,31 @@
             "name": "enableModule",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 1827,
+              "id": 1809,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 1826,
+                  "id": 1808,
                   "name": "module",
                   "nodeType": "VariableDeclaration",
-                  "scope": 1833,
-                  "src": "427:13:18",
+                  "scope": 1815,
+                  "src": "432:13:14",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
-                    "typeIdentifier": "t_contract$_Module_$913",
+                    "typeIdentifier": "t_contract$_Module_$935",
                     "typeString": "contract Module"
                   },
                   "typeName": {
                     "contractScope": null,
-                    "id": 1825,
+                    "id": 1807,
                     "name": "Module",
                     "nodeType": "UserDefinedTypeName",
-                    "referencedDeclaration": 913,
-                    "src": "427:6:18",
+                    "referencedDeclaration": 935,
+                    "src": "432:6:14",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_contract$_Module_$913",
+                      "typeIdentifier": "t_contract$_Module_$935",
                       "typeString": "contract Module"
                     }
                   },
@@ -775,39 +775,39 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "426:15:18"
+              "src": "431:15:14"
             },
             "payable": false,
             "returnParameters": {
-              "id": 1828,
+              "id": 1810,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "461:0:18"
+              "src": "466:0:14"
             },
-            "scope": 1866,
-            "src": "405:81:18",
+            "scope": 1848,
+            "src": "410:81:14",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "public"
           },
           {
             "body": {
-              "id": 1864,
+              "id": 1846,
               "nodeType": "Block",
-              "src": "897:803:18",
+              "src": "902:803:14",
               "statements": [
                 {
                   "assignments": [
-                    1841
+                    1823
                   ],
                   "declarations": [
                     {
                       "constant": false,
-                      "id": 1841,
+                      "id": 1823,
                       "name": "length",
                       "nodeType": "VariableDeclaration",
-                      "scope": 1865,
-                      "src": "907:14:18",
+                      "scope": 1847,
+                      "src": "912:14:14",
                       "stateVariable": false,
                       "storageLocation": "default",
                       "typeDescriptions": {
@@ -815,10 +815,10 @@
                         "typeString": "uint256"
                       },
                       "typeName": {
-                        "id": 1840,
+                        "id": 1822,
                         "name": "uint256",
                         "nodeType": "ElementaryTypeName",
-                        "src": "907:7:18",
+                        "src": "912:7:14",
                         "typeDescriptions": {
                           "typeIdentifier": "t_uint256",
                           "typeString": "uint256"
@@ -828,23 +828,23 @@
                       "visibility": "internal"
                     }
                   ],
-                  "id": 1844,
+                  "id": 1826,
                   "initialValue": {
                     "argumentTypes": null,
                     "expression": {
                       "argumentTypes": null,
-                      "id": 1842,
+                      "id": 1824,
                       "name": "data",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 1837,
-                      "src": "924:4:18",
+                      "referencedDeclaration": 1819,
+                      "src": "929:4:14",
                       "typeDescriptions": {
                         "typeIdentifier": "t_bytes_memory_ptr",
                         "typeString": "bytes memory"
                       }
                     },
-                    "id": 1843,
+                    "id": 1825,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -852,40 +852,40 @@
                     "memberName": "length",
                     "nodeType": "MemberAccess",
                     "referencedDeclaration": null,
-                    "src": "924:11:18",
+                    "src": "929:11:14",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
                     }
                   },
                   "nodeType": "VariableDeclarationStatement",
-                  "src": "907:28:18"
+                  "src": "912:28:14"
                 },
                 {
                   "assignments": [],
                   "declarations": [
                     {
                       "constant": false,
-                      "id": 1846,
+                      "id": 1828,
                       "name": "module",
                       "nodeType": "VariableDeclaration",
-                      "scope": 1865,
-                      "src": "945:13:18",
+                      "scope": 1847,
+                      "src": "950:13:14",
                       "stateVariable": false,
                       "storageLocation": "default",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_contract$_Module_$913",
+                        "typeIdentifier": "t_contract$_Module_$935",
                         "typeString": "contract Module"
                       },
                       "typeName": {
                         "contractScope": null,
-                        "id": 1845,
+                        "id": 1827,
                         "name": "Module",
                         "nodeType": "UserDefinedTypeName",
-                        "referencedDeclaration": 913,
-                        "src": "945:6:18",
+                        "referencedDeclaration": 935,
+                        "src": "950:6:14",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_contract$_Module_$913",
+                          "typeIdentifier": "t_contract$_Module_$935",
                           "typeString": "contract Module"
                         }
                       },
@@ -893,23 +893,23 @@
                       "visibility": "internal"
                     }
                   ],
-                  "id": 1847,
+                  "id": 1829,
                   "initialValue": null,
                   "nodeType": "VariableDeclarationStatement",
-                  "src": "945:13:18"
+                  "src": "950:13:14"
                 },
                 {
                   "assignments": [
-                    1849
+                    1831
                   ],
                   "declarations": [
                     {
                       "constant": false,
-                      "id": 1849,
+                      "id": 1831,
                       "name": "i",
                       "nodeType": "VariableDeclaration",
-                      "scope": 1865,
-                      "src": "968:9:18",
+                      "scope": 1847,
+                      "src": "973:9:14",
                       "stateVariable": false,
                       "storageLocation": "default",
                       "typeDescriptions": {
@@ -917,10 +917,10 @@
                         "typeString": "uint256"
                       },
                       "typeName": {
-                        "id": 1848,
+                        "id": 1830,
                         "name": "uint256",
                         "nodeType": "ElementaryTypeName",
-                        "src": "968:7:18",
+                        "src": "973:7:14",
                         "typeDescriptions": {
                           "typeIdentifier": "t_uint256",
                           "typeString": "uint256"
@@ -930,18 +930,18 @@
                       "visibility": "internal"
                     }
                   ],
-                  "id": 1851,
+                  "id": 1833,
                   "initialValue": {
                     "argumentTypes": null,
                     "hexValue": "30",
-                    "id": 1850,
+                    "id": 1832,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": true,
                     "kind": "number",
                     "lValueRequested": false,
                     "nodeType": "Literal",
-                    "src": "980:1:18",
+                    "src": "985:1:14",
                     "subdenomination": null,
                     "typeDescriptions": {
                       "typeIdentifier": "t_rational_0_by_1",
@@ -950,93 +950,93 @@
                     "value": "0"
                   },
                   "nodeType": "VariableDeclarationStatement",
-                  "src": "968:13:18"
+                  "src": "973:13:14"
                 },
                 {
                   "body": {
-                    "id": 1862,
+                    "id": 1844,
                     "nodeType": "Block",
-                    "src": "1010:684:18",
+                    "src": "1015:684:14",
                     "statements": [
                       {
                         "externalReferences": [
                           {
                             "module": {
-                              "declaration": 1846,
+                              "declaration": 1828,
                               "isOffset": false,
                               "isSlot": false,
-                              "src": "1414:6:18",
+                              "src": "1419:6:14",
                               "valueSize": 1
                             }
                           },
                           {
                             "data": {
-                              "declaration": 1837,
+                              "declaration": 1819,
                               "isOffset": false,
                               "isSlot": false,
-                              "src": "1164:4:18",
+                              "src": "1169:4:14",
                               "valueSize": 1
                             }
                           },
                           {
                             "i": {
-                              "declaration": 1849,
+                              "declaration": 1831,
                               "isOffset": false,
                               "isSlot": false,
-                              "src": "1170:1:18",
+                              "src": "1175:1:14",
                               "valueSize": 1
                             }
                           },
                           {
                             "data": {
-                              "declaration": 1837,
+                              "declaration": 1819,
                               "isOffset": false,
                               "isSlot": false,
-                              "src": "1224:4:18",
+                              "src": "1229:4:14",
                               "valueSize": 1
                             }
                           },
                           {
                             "i": {
-                              "declaration": 1849,
+                              "declaration": 1831,
                               "isOffset": false,
                               "isSlot": false,
-                              "src": "1230:1:18",
+                              "src": "1235:1:14",
                               "valueSize": 1
                             }
                           },
                           {
                             "i": {
-                              "declaration": 1849,
+                              "declaration": 1831,
                               "isOffset": false,
                               "isSlot": false,
-                              "src": "1557:1:18",
+                              "src": "1562:1:14",
                               "valueSize": 1
                             }
                           },
                           {
                             "proxyFactory": {
-                              "declaration": 1835,
+                              "declaration": 1817,
                               "isOffset": false,
                               "isSlot": false,
-                              "src": "1317:12:18",
+                              "src": "1322:12:14",
                               "valueSize": 1
                             }
                           },
                           {
                             "i": {
-                              "declaration": 1849,
+                              "declaration": 1831,
                               "isOffset": false,
                               "isSlot": false,
-                              "src": "1566:1:18",
+                              "src": "1571:1:14",
                               "valueSize": 1
                             }
                           }
                         ],
-                        "id": 1855,
+                        "id": 1837,
                         "nodeType": "InlineAssembly",
                         "operations": "{\n    let createBytesLength := mload(add(0x20, add(data, i)))\n    let createBytes := add(0x40, add(data, i))\n    let output := mload(0x40)\n    if eq(delegatecall(gas(), proxyFactory, createBytes, createBytesLength, output, 0x20), 0)\n    {\n        revert(0, 0)\n    }\n    module := and(mload(output), 0xffffffffffffffffffffffffffffffffffffffff)\n    i := add(i, add(0x20, mul(div(add(createBytesLength, 0x1f), 0x20), 0x20)))\n}",
-                        "src": "1092:570:18"
+                        "src": "1097:570:14"
                       },
                       {
                         "expression": {
@@ -1044,14 +1044,14 @@
                           "arguments": [
                             {
                               "argumentTypes": null,
-                              "id": 1859,
+                              "id": 1841,
                               "name": "module",
                               "nodeType": "Identifier",
                               "overloadedDeclarations": [],
-                              "referencedDeclaration": 1846,
-                              "src": "1676:6:18",
+                              "referencedDeclaration": 1828,
+                              "src": "1681:6:14",
                               "typeDescriptions": {
-                                "typeIdentifier": "t_contract$_Module_$913",
+                                "typeIdentifier": "t_contract$_Module_$935",
                                 "typeString": "contract Module"
                               }
                             }
@@ -1059,38 +1059,38 @@
                           "expression": {
                             "argumentTypes": [
                               {
-                                "typeIdentifier": "t_contract$_Module_$913",
+                                "typeIdentifier": "t_contract$_Module_$935",
                                 "typeString": "contract Module"
                               }
                             ],
                             "expression": {
                               "argumentTypes": null,
-                              "id": 1856,
+                              "id": 1838,
                               "name": "this",
                               "nodeType": "Identifier",
                               "overloadedDeclarations": [],
-                              "referencedDeclaration": 3877,
-                              "src": "1658:4:18",
+                              "referencedDeclaration": 4056,
+                              "src": "1663:4:14",
                               "typeDescriptions": {
-                                "typeIdentifier": "t_contract$_CreateAndAddModules_$1866",
+                                "typeIdentifier": "t_contract$_CreateAndAddModules_$1848",
                                 "typeString": "contract CreateAndAddModules"
                               }
                             },
-                            "id": 1858,
+                            "id": 1840,
                             "isConstant": false,
                             "isLValue": false,
                             "isPure": false,
                             "lValueRequested": false,
                             "memberName": "enableModule",
                             "nodeType": "MemberAccess",
-                            "referencedDeclaration": 1833,
-                            "src": "1658:17:18",
+                            "referencedDeclaration": 1815,
+                            "src": "1663:17:14",
                             "typeDescriptions": {
-                              "typeIdentifier": "t_function_external_nonpayable$_t_contract$_Module_$913_$returns$__$",
+                              "typeIdentifier": "t_function_external_nonpayable$_t_contract$_Module_$935_$returns$__$",
                               "typeString": "function (contract Module) external"
                             }
                           },
-                          "id": 1860,
+                          "id": 1842,
                           "isConstant": false,
                           "isLValue": false,
                           "isPure": false,
@@ -1098,15 +1098,15 @@
                           "lValueRequested": false,
                           "names": [],
                           "nodeType": "FunctionCall",
-                          "src": "1658:25:18",
+                          "src": "1663:25:14",
                           "typeDescriptions": {
                             "typeIdentifier": "t_tuple$__$",
                             "typeString": "tuple()"
                           }
                         },
-                        "id": 1861,
+                        "id": 1843,
                         "nodeType": "ExpressionStatement",
-                        "src": "1658:25:18"
+                        "src": "1663:25:14"
                       }
                     ]
                   },
@@ -1116,19 +1116,19 @@
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
                     },
-                    "id": 1854,
+                    "id": 1836,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
                     "lValueRequested": false,
                     "leftExpression": {
                       "argumentTypes": null,
-                      "id": 1852,
+                      "id": 1834,
                       "name": "i",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 1849,
-                      "src": "998:1:18",
+                      "referencedDeclaration": 1831,
+                      "src": "1003:1:14",
                       "typeDescriptions": {
                         "typeIdentifier": "t_uint256",
                         "typeString": "uint256"
@@ -1138,31 +1138,31 @@
                     "operator": "<",
                     "rightExpression": {
                       "argumentTypes": null,
-                      "id": 1853,
+                      "id": 1835,
                       "name": "length",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 1841,
-                      "src": "1002:6:18",
+                      "referencedDeclaration": 1823,
+                      "src": "1007:6:14",
                       "typeDescriptions": {
                         "typeIdentifier": "t_uint256",
                         "typeString": "uint256"
                       }
                     },
-                    "src": "998:10:18",
+                    "src": "1003:10:14",
                     "typeDescriptions": {
                       "typeIdentifier": "t_bool",
                       "typeString": "bool"
                     }
                   },
-                  "id": 1863,
+                  "id": 1845,
                   "nodeType": "WhileStatement",
-                  "src": "991:703:18"
+                  "src": "996:703:14"
                 }
               ]
             },
             "documentation": "@dev Allows to create and add multiple module in one transaction.\n @param proxyFactory Module proxy factory contract.\n @param data Modules constructor payload. This is the data for each proxy factory call concatinated. (e.g. <byte_array_len_1><byte_array_data_1><byte_array_len_2><byte_array_data_2>)",
-            "id": 1865,
+            "id": 1847,
             "implemented": true,
             "isConstructor": false,
             "isDeclaredConst": false,
@@ -1170,16 +1170,16 @@
             "name": "createAndAddModules",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 1838,
+              "id": 1820,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 1835,
+                  "id": 1817,
                   "name": "proxyFactory",
                   "nodeType": "VariableDeclaration",
-                  "scope": 1865,
-                  "src": "844:20:18",
+                  "scope": 1847,
+                  "src": "849:20:14",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -1187,10 +1187,10 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 1834,
+                    "id": 1816,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "844:7:18",
+                    "src": "849:7:14",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
                       "typeString": "address"
@@ -1201,11 +1201,11 @@
                 },
                 {
                   "constant": false,
-                  "id": 1837,
+                  "id": 1819,
                   "name": "data",
                   "nodeType": "VariableDeclaration",
-                  "scope": 1865,
-                  "src": "866:10:18",
+                  "scope": 1847,
+                  "src": "871:10:14",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -1213,10 +1213,10 @@
                     "typeString": "bytes"
                   },
                   "typeName": {
-                    "id": 1836,
+                    "id": 1818,
                     "name": "bytes",
                     "nodeType": "ElementaryTypeName",
-                    "src": "866:5:18",
+                    "src": "871:5:14",
                     "typeDescriptions": {
                       "typeIdentifier": "t_bytes_storage_ptr",
                       "typeString": "bytes"
@@ -1226,27 +1226,27 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "843:34:18"
+              "src": "848:34:14"
             },
             "payable": false,
             "returnParameters": {
-              "id": 1839,
+              "id": 1821,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "897:0:18"
+              "src": "902:0:14"
             },
-            "scope": 1866,
-            "src": "815:885:18",
+            "scope": 1848,
+            "src": "820:885:14",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "public"
           }
         ],
-        "scope": 1867,
-        "src": "245:1457:18"
+        "scope": 1849,
+        "src": "250:1457:14"
       }
     ],
-    "src": "0:1703:18"
+    "src": "0:1708:14"
   },
   "compiler": {
     "name": "solc",
@@ -1256,16 +1256,16 @@
     "4": {
       "events": {},
       "links": {},
-      "address": "0x8d4852f62df9390e178e4ccc5267f82a4f3aa059",
-      "transactionHash": "0xd844d56b38ac9f9f6b9e767dbc441bbc3b6b0f4d3109c5428bc63001cbe64c5c"
+      "address": "0xdf596548e089729535b171d13dec6e510cd22de4",
+      "transactionHash": "0x8da8ec46f7fd0935a74170caa40eaf18b29e88607b21273c232a09b7a7251d34"
     },
-    "1534750848541": {
+    "1538739975997": {
       "events": {},
       "links": {},
-      "address": "0x970e8f18ebfea0b08810f33a5a40438b9530fbcf",
-      "transactionHash": "0x81ed98a58ec6e7d31721cadae9205ef9d68cdb0ccf37e505fbcb154abc170b13"
+      "address": "0xa57b8a5584442b467b4689f1144d269d096a3daf",
+      "transactionHash": "0xbab48fcde913e539ed8f71571e7f0abe2507e0322c9dda28780e5227e7d31d30"
     }
   },
   "schemaVersion": "2.0.0",
-  "updatedAt": "2018-08-20T07:50:29.680Z"
+  "updatedAt": "2018-10-05T14:43:41.423Z"
 }

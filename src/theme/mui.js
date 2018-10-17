@@ -1,7 +1,7 @@
 // @flow
 import red from '@material-ui/core/colors/red'
 import { createMuiTheme } from '@material-ui/core/styles'
-import { mediumFontSize, primary, secondary, md, lg } from './variables'
+import { largeFontSize, mediumFontSize, smallFontSize, disabled, primary, secondary, md, lg, background } from './variables'
 
 export type WithStyles = {
   classes: Object,
@@ -30,14 +30,99 @@ export default createMuiTheme({
       root: {
         fontFamily: 'Roboto Mono, monospace',
         letterSpacing: '1px',
+        '&:disabled': {
+          color: disabled,
+        },
+        color: disabled,
+      },
+      disabled: {
+        cursor: 'pointer',
       },
       containedPrimary: {
-        backgroundColor: '#467ee5',
+        backgroundColor: secondary,
       },
       sizeLarge: {
         padding: `${md} ${lg}`,
         minHeight: '52px',
         fontSize: mediumFontSize,
+      },
+      sizeSmall: {
+        minWidth: '130px',
+        fontSize: smallFontSize,
+      },
+    },
+    MuiStepIcon: {
+      root: {
+        fontSize: '22px',
+      },
+      completed: {
+        color: `${secondary} !important`,
+      },
+      active: {
+        color: `${secondary} !important`,
+      },
+    },
+    MuiTypography: {
+      body1: {
+        fontFamily: 'Roboto Mono, monospace',
+        letterSpacing: '-0.5px',
+        fontSize: mediumFontSize,
+      },
+    },
+    MuiFormHelperText: {
+      root: {
+        fontFamily: 'Roboto Mono, monospace',
+        fontSize: smallFontSize,
+        padding: `0 0 0 ${md}`,
+        position: 'relative',
+        top: '20px',
+        color: secondary,
+        order: 0,
+        marginTop: '0px',
+        backgroundColor: background,
+      },
+    },
+    MuiInput: {
+      root: {
+        fontFamily: 'Roboto Mono, monospace',
+        color: primary,
+        fontSize: largeFontSize,
+        lineHeight: '56px',
+        order: 1,
+        padding: `0 ${md}`,
+        backgroundColor: background,
+        '&:$disabled': {
+          color: '#0000ff',
+        },
+      },
+      input: {
+        padding: 0,
+        color: 'initial',
+        textOverflow: 'ellipsis',
+        display: 'flex',
+      },
+      underline: {
+        '&:before': {
+          borderBottom: `2px solid ${secondary}`,
+        },
+        '&:hover:not($disabled):not($focused):not($error):before': {
+          borderBottom: `2px solid ${secondary}`,
+        },
+      },
+      formControl: {
+        marginTop: '0px !important',
+      },
+    },
+    MuiStepLabel: {
+      label: {
+        textAlign: 'left',
+      },
+    },
+    MuiSnackbarContent: {
+      root: {
+        boxShadow: '0 0 10px 0 rgba(33, 48, 77, 0.1)',
+        borderRadius: '3px',
+        color: primary,
       },
     },
   },

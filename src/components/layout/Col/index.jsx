@@ -35,6 +35,7 @@ const Col = ({
   xs, sm, md, lg,
   start, center, end, top, middle, bottom, around, between,
   xsOffset, smOffset, mdOffset, lgOffset,
+  className,
   ...props
 }: Props) => {
   const colClassNames = cx(
@@ -58,7 +59,7 @@ const Col = ({
     lgOffset ? capitalize(lgOffset, 'lgOffset') : undefined,
     { overflow },
     layout,
-    props.className,
+    className,
   )
 
   return (

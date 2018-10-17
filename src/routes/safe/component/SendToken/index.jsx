@@ -10,7 +10,7 @@ import { type Token } from '~/routes/tokens/store/model/token'
 import { isEther } from '~/utils/tokens'
 import { EMPTY_DATA } from '~/logic/wallets/ethTransactions'
 import { toNative } from '~/logic/wallets/tokens'
-import { createTransaction } from '~/logic/safe/safeFrontendOperations'
+import { createTransaction, getSafeEthereumInstance } from '~/logic/safe/safeFrontendOperations'
 import actions, { type Actions } from './actions'
 import selector, { type SelectorProps } from './selector'
 import SendTokenForm, { TKN_DESTINATION_PARAM, TKN_VALUE_PARAM } from './SendTokenForm'
@@ -40,8 +40,10 @@ const getTransferData = async (tokenAddress: string, to: string, amount: BigNumb
 }
 
 const processTokenTransfer = async (safe: Safe, token: Token, to: string, amount: number, userAddress: string) => {
+  const safeAddress = safe.get('address')
+  const gnosisSafe = await getSafeEthereumInstance(safeAddress)
+  const nonce = await gnosisSafe.nonce()
   const symbol = token.get('symbol')
-  const nonce = Date.now()
   const name = `Send ${amount} ${symbol} to ${to}`
   const value = isEther(symbol) ? amount : 0
   const tokenAddress = token.get('address')

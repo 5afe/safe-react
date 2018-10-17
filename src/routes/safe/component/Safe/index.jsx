@@ -11,19 +11,16 @@ import Row from '~/components/layout/Row'
 import { type Safe } from '~/routes/safe/store/model/safe'
 import { type Token } from '~/routes/tokens/store/model/token'
 
-import Withdraw from '~/routes/safe/component/Withdraw'
 import Transactions from '~/routes/safe/component/Transactions'
 import Threshold from '~/routes/safe/component/Threshold'
 import AddOwner from '~/routes/safe/component/AddOwner'
 import RemoveOwner from '~/routes/safe/component/RemoveOwner'
-import EditDailyLimit from '~/routes/safe/component/EditDailyLimit'
 import SendToken from '~/routes/safe/component/SendToken'
 
 import Address from './Address'
 import BalanceInfo from './BalanceInfo'
 import Owners from './Owners'
 import Confirmations from './Confirmations'
-import DailyLimit from './DailyLimit'
 import MultisigTx from './MultisigTx'
 
 const safeIcon = require('./assets/gnosis_safe.svg')
@@ -42,36 +39,9 @@ const listStyle = {
   width: '100%',
 }
 
-const getEthBalanceFrom = (tokens: List<Token>) => {
-  const filteredTokens = tokens.filter(token => token.get('symbol') === 'ETH')
-  if (filteredTokens.count() === 0) {
-    return 0
-  }
-
-  const ethToken = filteredTokens.get(0)
-  if (!ethToken) {
-    return 0
-  }
-
-  return Number(ethToken.get('funds'))
-}
-
 class GnoSafe extends React.PureComponent<SafeProps, State> {
   state = {
     component: undefined,
-  }
-
-  onEditDailyLimit = () => {
-    const { safe } = this.props
-
-    const value = safe.get('dailyLimit').get('value')
-    this.setState({ component: <EditDailyLimit safe={safe} dailyLimit={value} onReset={this.onListTransactions} /> })
-  }
-
-  onWithdraw = () => {
-    const { safe } = this.props
-
-    this.setState({ component: <Withdraw safe={safe} dailyLimit={safe.get('dailyLimit')} /> })
   }
 
   onListTransactions = () => {
@@ -114,7 +84,6 @@ class GnoSafe extends React.PureComponent<SafeProps, State> {
   render() {
     const { safe, tokens, userAddress } = this.props
     const { component } = this.state
-    const ethBalance = getEthBalanceFrom(tokens)
     const address = safe.get('address')
 
     return (
@@ -130,7 +99,6 @@ class GnoSafe extends React.PureComponent<SafeProps, State> {
             />
             <Confirmations confirmations={safe.get('threshold')} onEditThreshold={this.onEditThreshold} />
             <Address address={address} />
-            <DailyLimit balance={ethBalance} dailyLimit={safe.get('dailyLimit')} onWithdraw={this.onWithdraw} onEditDailyLimit={this.onEditDailyLimit} />
             <MultisigTx onSeeTxs={this.onListTransactions} />
           </ListComponent>
         </Col>

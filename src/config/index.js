@@ -2,7 +2,6 @@
 import { ensureOnce } from '~/utils/singleton'
 import {
   TX_SERVICE_HOST,
-  ENABLED_TX_SERVICE_MODULES,
   ENABLED_TX_SERVICE_REMOVAL_SENDER,
   SIGNATURES_VIA_METAMASK,
 } from '~/config/names'
@@ -31,12 +30,6 @@ export const getTxServiceHost = () => {
 }
 
 export const getTxServiceUriFrom = (safeAddress: string) => `safes/${safeAddress}/transactions/`
-
-export const allowedModulesInTxHistoryService = () => {
-  const config = getConfig()
-
-  return config[ENABLED_TX_SERVICE_MODULES]
-}
 
 export const allowedRemoveSenderInTxHistoryService = () => {
   const config = getConfig()
