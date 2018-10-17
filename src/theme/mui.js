@@ -1,7 +1,7 @@
 // @flow
 import red from '@material-ui/core/colors/red'
 import { createMuiTheme } from '@material-ui/core/styles'
-import { largeFontSize, mediumFontSize, smallFontSize, disabled, primary, secondary, md, lg, background } from './variables'
+import { largeFontSize, mediumFontSize, smallFontSize, disabled, primary, secondary, md, lg, background, bolder } from './variables'
 
 export type WithStyles = {
   classes: Object,
@@ -123,6 +123,12 @@ export default createMuiTheme({
         boxShadow: '0 0 10px 0 rgba(33, 48, 77, 0.1)',
         borderRadius: '3px',
         color: primary,
+      },
+    },
+    MuiTab: {
+      label: {
+        fontFamily: 'Roboto Mono, monospace',
+        fontWeight: bolder,
       },
     },
   },
