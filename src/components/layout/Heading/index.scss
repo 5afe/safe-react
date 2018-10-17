@@ -13,18 +13,23 @@
 
 .h2 {
   line-height: 28px;
+  font-weight: $bolderFont;
+  letter-spacing: -0.5px;
+  font-family: 'Roboto Mono', monospace;
   font-size: $(fontSizeHeadingMd)px;
 }
 
 .h3 {
   line-height: 21px;
-  font-weight: bold;
+  font-weight: $bolderFont;
+  letter-spacing: -0.5px;
   font-family: 'Roboto Mono', monospace;
   font-size: $(fontSizeHeadingSm)px;
 }
 
 .h4 {
   line-height: 21px;
+  letter-spacing: -0.5px;
   font-family: 'Roboto Mono', monospace;
   font-size: $(fontSizeHeadingXs)px;
 }

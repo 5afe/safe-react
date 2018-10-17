@@ -1,6 +1,7 @@
 // @flow
 import * as React from 'react'
 import Field from '~/components/forms/Field'
+import OpenPaper from '~/components/Stepper/OpenPaper'
 import TextField from '~/components/forms/TextField'
 import Checkbox from '~/components/forms/Checkbox'
 import { composeValidators, required, mustBeEthereumAddress, uniqueAddress } from '~/components/forms/validator'
@@ -29,8 +30,8 @@ type Props = {
   addresses: string[]
 }
 
-const AddOwnerForm = ({ addresses, numOwners, threshold }: Props) => () => (
-  <Block margin="md">
+const AddOwnerForm = ({ addresses, numOwners, threshold }: Props) => (controls: React$Node) => (
+  <OpenPaper controls={controls}>
     <Heading tag="h2" margin="lg">
       Add Owner
     </Heading>
@@ -65,7 +66,7 @@ const AddOwnerForm = ({ addresses, numOwners, threshold }: Props) => () => (
       />
       <Block>Increase threshold?</Block>
     </Block>
-  </Block>
+  </OpenPaper>
 )
 
 export default AddOwnerForm

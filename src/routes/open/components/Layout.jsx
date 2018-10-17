@@ -1,56 +1,82 @@
 // @flow
 import * as React from 'react'
 import Stepper from '~/components/Stepper'
-import Confirmation from '~/routes/open/components/FormConfirmation'
+import Block from '~/components/layout/Block'
+import Heading from '~/components/layout/Heading'
+import Row from '~/components/layout/Row'
+import IconButton from '@material-ui/core/IconButton'
 import Review from '~/routes/open/components/ReviewInformation'
-import SafeFields, { safeFieldsValidation } from '~/routes/open/components/SafeForm'
-import { SAFELIST_ADDRESS } from '~/routes/routes'
-import Link from '~/components/layout/Link'
+import ChevronLeft from '@material-ui/icons/ChevronLeft'
+import SafeNameField from '~/routes/open/components/SafeNameForm'
+import SafeThresholdField, { safeFieldsValidation } from '~/routes/open/components/SafeThresholdForm'
+import SafeOwnersFields from '~/routes/open/components/SafeOwnersForm'
+import { getOwnerNameBy, getOwnerAddressBy, FIELD_CONFIRMATIONS } from '~/routes/open/components/fields'
+import { history } from '~/store'
+import { secondary } from '~/theme/variables'
 
 const getSteps = () => [
-  'Fill Safe Form', 'Review Information', 'Deploy it',
+  'Start', 'Owners', 'Confirmations', 'Review',
 ]
 
 const initialValuesFrom = (userAccount: string) => ({
-  owner0Address: userAccount,
+  [getOwnerNameBy(0)]: 'My Metamask (me)',
+  [getOwnerAddressBy(0)]: userAccount,
+  [FIELD_CONFIRMATIONS]: '1',
 })
 
 type Props = {
   provider: string,
   userAccount: string,
-  safeAddress: string,
-  safeTx: string,
+  network: string,
   onCallSafeContractSubmit: (values: Object) => Promise<void>,
 }
 
+const iconStyle = {
+  color: secondary,
+  width: '32px',
+  height: '32px',
+}
+
+const back = () => {
+  history.goBack()
+}
+
 const Layout = ({
-  provider, userAccount, safeAddress, safeTx, onCallSafeContractSubmit,
+  provider, userAccount, onCallSafeContractSubmit, network,
 }: Props) => {
   const steps = getSteps()
   const initialValues = initialValuesFrom(userAccount)
-  const finishedButton = <Stepper.FinishButton title="VISIT SAFES" component={Link} to={SAFELIST_ADDRESS} />
 
   return (
     <React.Fragment>
       { provider
         ? (
-          <Stepper
-            finishedButton={finishedButton}
-            finishedTransaction={!!safeAddress}
-            onSubmit={onCallSafeContractSubmit}
-            steps={steps}
-            initialValues={initialValues}
-          >
-            <Stepper.Page validate={safeFieldsValidation}>
-              { SafeFields }
-            </Stepper.Page>
-            <Stepper.Page>
-              { Review }
-            </Stepper.Page>
-            <Stepper.Page address={safeAddress} tx={safeTx}>
-              { Confirmation }
-            </Stepper.Page>
-          </Stepper>
+          <Block>
+            <Row align="center">
+              <IconButton onClick={back} style={iconStyle} disableRipple>
+                <ChevronLeft />
+              </IconButton>
+              <Heading tag="h2">Create New Safe</Heading>
+            </Row>
+            <Stepper
+              onSubmit={onCallSafeContractSubmit}
+              steps={steps}
+              initialValues={initialValues}
+            >
+              <Stepper.Page>
+                { SafeNameField }
+              </Stepper.Page>
+              <Stepper.Page>
+                { SafeOwnersFields }
+              </Stepper.Page>
+              <Stepper.Page validate={safeFieldsValidation}>
+                { SafeThresholdField }
+              </Stepper.Page>
+              <Stepper.Page network={network}>
+                { Review }
+              </Stepper.Page>
+            </Stepper>
+          </Block>
         )
         : <div>No metamask detected</div>
       }

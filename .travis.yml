@@ -34,6 +34,8 @@ before_script:
   # Give some time to docker to enable all services
   - sleep 15
   - cd ..
+script:
+  - yarn build
 after_success:
   - cd safe-transaction-history
   - docker-compose stop

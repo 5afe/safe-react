@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react'
+import { List } from 'immutable'
 import { connect } from 'react-redux'
 import { type Transaction } from '~/routes/safe/store/model/transaction'
 import NoTransactions from '~/routes/safe/component/Transactions/NoTransactions'
@@ -17,12 +18,18 @@ type Props = SelectorProps & Actions & {
 
 }
 class Transactions extends React.Component<Props, {}> {
+  componentDidMount() {
+    this.props.fetchTransactions(this.props.safeAddress)
+  }
+
   onProcessTx = async (tx: Transaction, alreadyConfirmed: number) => {
     const {
       fetchTransactions, safeAddress, userAddress, threshold,
     } = this.props
 
     const confirmations = tx.get('confirmations')
+    const usersConfirmed = List(confirmations.map((confirmation: Confirmation) =>
+      confirmation.get('owner').get('address')))
     const userHasAlreadyConfirmed = confirmations.filter((confirmation: Confirmation) => {
       const ownerAddress = confirmation.get('owner').get('address')
       const samePerson = sameAddress(ownerAddress, userAddress)
@@ -34,7 +41,7 @@ class Transactions extends React.Component<Props, {}> {
       throw new Error('Owner has already confirmed this transaction')
     }
 
-    await processTransaction(safeAddress, tx, alreadyConfirmed, userAddress, threshold)
+    await processTransaction(safeAddress, tx, alreadyConfirmed, userAddress, threshold, usersConfirmed)
     fetchTransactions(safeAddress)
   }
 

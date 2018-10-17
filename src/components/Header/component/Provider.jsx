@@ -54,10 +54,9 @@ class Provider extends React.Component<Props> {
     return (
       <React.Fragment>
         <div ref={this.myRef} className={classes.root}>
-          <Col end="sm" middle="xs" className={classes.provider}>
+          <Col end="sm" middle="xs" className={classes.provider} onClick={toggle}>
             { info }
             <IconButton
-              onClick={toggle}
               disableRipple
               className={classes.expand}
             >

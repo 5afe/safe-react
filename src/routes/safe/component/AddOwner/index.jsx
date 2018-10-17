@@ -36,12 +36,14 @@ const getOwnerAddressesFrom = (owners: List<Owner>) => {
 }
 
 export const addOwner = async (values: Object, safe: Safe, threshold: number, executor: string) => {
-  const nonce = Date.now()
+  const safeAddress = safe.get('address')
+  const gnosisSafe = await getSafeEthereumInstance(safeAddress)
+  const nonce = await gnosisSafe.nonce()
+
   const newThreshold = values[INCREASE_PARAM] ? threshold + 1 : threshold
   const newOwnerAddress = values[OWNER_ADDRESS_PARAM]
   const newOwnerName = values[NAME_PARAM]
-  const safeAddress = safe.get('address')
-  const gnosisSafe = await getSafeEthereumInstance(safeAddress)
+
   const data = gnosisSafe.contract.addOwnerWithThreshold.getData(newOwnerAddress, newThreshold)
   await createTransaction(safe, `Add Owner ${newOwnerName}`, safeAddress, 0, nonce, executor, data)
   setOwners(safeAddress, safe.get('owners').push(makeOwner({ name: newOwnerName, address: newOwnerAddress })))

@@ -25,12 +25,11 @@ export const filterMoveButtonsFrom = (buttons: Element[]) =>
 export const renderSafeInDom = async (
   owners: number = 1,
   threshold: number = 1,
-  dailyLimit: number = 0.5,
 ): Promise<DomSafe> => {
   // create store
   const store = aNewStore()
   // deploy safe updating store
-  const address = await aMinedSafe(store, owners, threshold, dailyLimit)
+  const address = await aMinedSafe(store, owners, threshold)
   // have available accounts
   const accounts = await promisify(cb => getWeb3().eth.getAccounts(cb))
   // navigate to SAFE route

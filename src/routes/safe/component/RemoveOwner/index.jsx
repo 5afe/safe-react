@@ -41,10 +41,10 @@ export const removeOwner = async (
   name: string,
   executor: string,
 ) => {
-  const nonce = Date.now()
-  const newThreshold = values[DECREASE_PARAM] ? threshold - 1 : threshold
   const safeAddress = safe.get('address')
   const gnosisSafe = await getSafeEthereumInstance(safeAddress)
+  const nonce = await gnosisSafe.nonce()
+  const newThreshold = values[DECREASE_PARAM] ? threshold - 1 : threshold
   const storedOwners = await gnosisSafe.getOwners()
   const index = storedOwners.findIndex(ownerAddress => ownerAddress === userToRemove)
   const prevAddress = index === 0 ? SENTINEL_ADDRESS : storedOwners[index - 1]

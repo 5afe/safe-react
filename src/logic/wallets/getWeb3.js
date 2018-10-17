@@ -33,7 +33,9 @@ export const ETHEREUM_NETWORK_IDS = {
   42: ETHEREUM_NETWORK.KOVAN,
 }
 
-export const openInEtherScan = (address: string, network: string) => () => {
+export const openTxInEtherScan = (tx: string, network: string) => `https://${network}.etherscan.io/tx/${tx}`
+
+export const openAddressInEtherScan = (address: string, network: string) => () => {
   window.open(`https://${network}.etherscan.io/address/${address}`)
 }
 

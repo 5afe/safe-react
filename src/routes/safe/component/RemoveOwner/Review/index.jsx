@@ -2,6 +2,7 @@
 import * as React from 'react'
 import CircularProgress from '@material-ui/core/CircularProgress'
 import Block from '~/components/layout/Block'
+import OpenPaper from '~/components/Stepper/OpenPaper'
 import Bold from '~/components/layout/Bold'
 import Heading from '~/components/layout/Heading'
 import Paragraph from '~/components/layout/Paragraph'
@@ -20,13 +21,13 @@ const spinnerStyle = {
   minHeight: '50px',
 }
 
-const Review = ({ name }: Props) => ({ values, submitting }: FormProps) => {
+const Review = ({ name }: Props) => (controls: React$Node, { values, submitting }: FormProps) => {
   const text = values[DECREASE_PARAM]
     ? 'This operation will decrease the threshold of the safe'
     : 'This operation will not modify the threshold of the safe'
 
   return (
-    <Block>
+    <OpenPaper controls={controls}>
       <Heading tag="h2">Review the Remove Owner operation</Heading>
       <Paragraph align="left">
         <Bold>Owner Name: </Bold> {name}
@@ -37,7 +38,7 @@ const Review = ({ name }: Props) => ({ values, submitting }: FormProps) => {
       <Block style={spinnerStyle}>
         { submitting && <CircularProgress size={50} /> }
       </Block>
-    </Block>
+    </OpenPaper>
   )
 }
 

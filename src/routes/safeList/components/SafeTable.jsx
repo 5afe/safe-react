@@ -19,7 +19,6 @@ const SafeTable = ({ safes }: Props) => (
         <TableCell>Deployed Address</TableCell>
         <TableCell numeric>Confirmations</TableCell>
         <TableCell numeric>Number of owners</TableCell>
-        <TableCell numeric>Daily Limit</TableCell>
       </TableRow>
     </TableHead>
     <TableBody>
@@ -34,7 +33,6 @@ const SafeTable = ({ safes }: Props) => (
           <TableCell padding="none">{safe.get('address')}</TableCell>
           <TableCell padding="none" numeric>{safe.get('threshold')}</TableCell>
           <TableCell padding="none" numeric>{safe.get('owners').count()}</TableCell>
-          <TableCell padding="none" numeric>{`${safe.get('dailyLimit').get('value')} ETH`}</TableCell>
         </TableRow>
       ))}
     </TableBody>

@@ -3,7 +3,7 @@ import { xs, sm, md, lg, xl } from '~/theme/variables'
 
 export type Size = 'xs' | 'sm' | 'md' | 'lg' | 'xl'
 
-export const getSize = (size: Size) => {
+export const getSize = (size: Size | typeof undefined) => {
   switch (size) {
   case 'xs':
     return xs
@@ -16,6 +16,6 @@ export const getSize = (size: Size) => {
   case 'xl':
     return xl
   default:
-    return md
+    return '0px'
   }
 }

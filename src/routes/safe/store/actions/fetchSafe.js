@@ -4,11 +4,9 @@ import { List, Map } from 'immutable'
 import { type GlobalState } from '~/store/index'
 import { makeOwner } from '~/routes/safe/store/model/owner'
 import { type SafeProps, type Safe, makeSafe } from '~/routes/safe/store/model/safe'
-import { makeDailyLimit } from '~/routes/safe/store/model/dailyLimit'
 import updateSafe from '~/routes/safe/store/actions/updateSafe'
 import { getOwners } from '~/utils/localStorage'
 import { getGnosisSafeInstanceAt } from '~/logic/contracts/safeContracts'
-import { getDailyLimitFrom } from '~/logic/contracts/dailyLimitContracts'
 
 const buildOwnersFrom = (safeOwners: string[], storedOwners: Map<string, string>) => (
   safeOwners.map((ownerAddress: string) => {
@@ -21,13 +19,11 @@ export const buildSafe = async (storedSafe: Object) => {
   const safeAddress = storedSafe.address
   const gnosisSafe = await getGnosisSafeInstanceAt(safeAddress)
 
-  const dailyLimit = makeDailyLimit(await getDailyLimitFrom(safeAddress, 0))
   const threshold = Number(await gnosisSafe.getThreshold())
   const owners = List(buildOwnersFrom(await gnosisSafe.getOwners(), getOwners(safeAddress)))
 
   const safe: SafeProps = {
     address: safeAddress,
-    dailyLimit,
     name: storedSafe.name,
     threshold,
     owners,
