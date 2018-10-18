@@ -131,6 +131,32 @@ export default createMuiTheme({
         fontWeight: bolderFont,
       },
     },
+    MuiTablePagination: {
+      toolbar: {
+        '& > span:nth-child(2)': {
+          order: 1,
+        },
+      },
+      selectIcon: {
+        height: '100%',
+        top: '0px',
+      },
+      caption: {
+        fontFamily: 'Roboto Mono, monospace',
+        letterSpacing: '-0.5px',
+        order: 3,
+        color: disabled,
+      },
+      input: {
+        order: 2,
+        width: '60px',
+        padding: `0 ${md} 0 0`,
+      },
+      actions: {
+        order: 4,
+        color: disabled,
+      },
+    },
   },
   palette,
 })
