@@ -5,15 +5,17 @@ import Table from '@material-ui/core/Table'
 import TableBody from '@material-ui/core/TableBody'
 import TableRow from '@material-ui/core/TableRow'
 import TableCell from '@material-ui/core/TableCell'
-import TableHead, { type Column } from '~/components/Table/TableHead'
+import { withStyles } from '@material-ui/core/styles'
 import TablePagination from '@material-ui/core/TablePagination'
 import { type Order, stableSort, getSorting } from '~/components/Table/sorting'
+import TableHead, { type Column } from '~/components/Table/TableHead'
 
 type Props<K> = {
   label: string,
   defaultOrderBy: string,
   columns: List<Column>,
   data: Array<K>,
+  classes: Object,
 }
 
 type State = {
@@ -22,6 +24,24 @@ type State = {
   orderBy: string,
   orderProp: boolean,
   rowsPerPage: number,
+}
+
+const styles = {
+  root: {
+    backgroundColor: 'white',
+    boxShadow: '0 -1px 5px 0 rgba(74, 85, 121, 0.5)',
+  },
+  selectRoot: {
+    lineHeight: '40px',
+    backgroundColor: 'white',
+  },
+  white: {
+    backgroundColor: 'white',
+  },
+  paginationRoot: {
+    backgroundColor: 'white',
+    boxShadow: '0 2px 5px 0 rgba(74, 85, 121, 0.5)',
+  },
 }
 
 class GnoTable<K> extends React.Component<Props<K>, State> {
@@ -55,7 +75,7 @@ class GnoTable<K> extends React.Component<Props<K>, State> {
 
   render() {
     const {
-      data, label, columns,
+      data, label, columns, classes,
     } = this.props
 
     const {
@@ -70,9 +90,15 @@ class GnoTable<K> extends React.Component<Props<K>, State> {
       'aria-label': 'Next Page',
     }
 
+    const paginationClasses = {
+      selectRoot: classes.selectRoot,
+      root: classes.paginationRoot,
+      input: classes.white,
+    }
+
     return (
       <React.Fragment>
-        <Table aria-labelledby={label}>
+        <Table aria-labelledby={label} className={classes.root}>
           <TableHead
             columns={columns}
             order={order}
@@ -89,7 +115,7 @@ class GnoTable<K> extends React.Component<Props<K>, State> {
                 >
                   {
                     columns.map((column: Column) => (
-                      <TableCell key={column.id} numeric={column.numeric} component="th" scope="row" padding="none">
+                      <TableCell key={column.id} numeric={column.numeric} component="th" scope="row">
                         {row[column.id]}
                       </TableCell>
                     ))
@@ -107,10 +133,11 @@ class GnoTable<K> extends React.Component<Props<K>, State> {
           nextIconButtonProps={nextProps}
           onChangePage={this.handleChangePage}
           onChangeRowsPerPage={this.handleChangeRowsPerPage}
+          classes={paginationClasses}
         />
       </React.Fragment>
     )
   }
 }
 
-export default GnoTable
+export default withStyles(styles)(GnoTable)
