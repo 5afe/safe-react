@@ -126,8 +126,11 @@ export default createMuiTheme({
       },
     },
     MuiTab: {
-      label: {
+      root: {
         fontFamily: 'Roboto Mono, monospace',
+        fontWeight: 'normal',
+      },
+      selected: {
         fontWeight: bolderFont,
       },
     },
