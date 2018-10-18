@@ -1,7 +1,7 @@
 // @flow
 import red from '@material-ui/core/colors/red'
 import { createMuiTheme } from '@material-ui/core/styles'
-import { largeFontSize, mediumFontSize, smallFontSize, disabled, primary, secondary, md, lg, background, bolder } from './variables'
+import { largeFontSize, mediumFontSize, smallFontSize, disabled, primary, secondary, md, lg, background, bolderFont } from './variables'
 
 export type WithStyles = {
   classes: Object,
@@ -128,7 +128,7 @@ export default createMuiTheme({
     MuiTab: {
       label: {
         fontFamily: 'Roboto Mono, monospace',
-        fontWeight: bolder,
+        fontWeight: bolderFont,
       },
     },
   },
