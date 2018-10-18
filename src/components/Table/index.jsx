@@ -20,6 +20,7 @@ type State = {
   page: number,
   order: Order,
   orderBy: string,
+  orderProp: boolean,
 }
 
 class GnoTable<K> extends React.Component<Props<K>, State> {
@@ -27,9 +28,10 @@ class GnoTable<K> extends React.Component<Props<K>, State> {
     page: 0,
     order: 'desc',
     orderBy: this.props.defaultOrderBy,
+    orderProp: false,
   }
 
-  onSort = (property: string) => {
+  onSort = (property: string, orderProp: boolean) => {
     const orderBy = property
     let order = 'desc'
 
@@ -37,14 +39,16 @@ class GnoTable<K> extends React.Component<Props<K>, State> {
       order = 'asc'
     }
 
-    this.setState({ order, orderBy })
+    this.setState({ order, orderBy, orderProp })
   }
 
   render() {
     const {
       data, label, columns, rowsPerPage = 5,
     } = this.props
-    const { order, orderBy, page } = this.state
+    const {
+      order, orderBy, page, orderProp,
+    } = this.state
 
     return (
       <Table aria-labelledby={label}>
@@ -55,12 +59,12 @@ class GnoTable<K> extends React.Component<Props<K>, State> {
           onSort={this.onSort}
         />
         <TableBody>
-          {stableSort(data, getSorting(order, orderBy))
+          {stableSort(data, getSorting(order, orderBy, orderProp))
             .slice(page * rowsPerPage, ((page * rowsPerPage) + rowsPerPage))
-            .map((row: any) => (
+            .map((row: any, index: number) => (
               <TableRow
                 tabIndex={-1}
-                key={row.id}
+                key={index}
               >
                 {
                   columns.map((column: Column) => (

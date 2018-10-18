@@ -1,11 +1,17 @@
 // @flow
-const desc = (a, b, orderBy) => {
-  if (b[orderBy] < a[orderBy]) {
+
+export const buildOrderFieldFrom = (attr: string) => `${attr}Order`
+
+const desc = (a: Object, b: Object, orderBy: string, orderProp: boolean) => {
+  const order = orderProp ? buildOrderFieldFrom(orderBy) : orderBy
+
+  if (b[order] < a[order]) {
     return -1
   }
-  if (b[orderBy] > a[orderBy]) {
+  if (b[order] > a[order]) {
     return 1
   }
+
   return 0
 }
 
@@ -26,5 +32,5 @@ export const stableSort = (array: any, cmp: any) => {
 
 export type Order = 'asc' | 'desc'
 
-export const getSorting = (order: Order, orderBy: string) =>
-  (order === 'desc' ? (a: any, b: any) => desc(a, b, orderBy) : (a: any, b: any) => -desc(a, b, orderBy))
+export const getSorting = (order: Order, orderBy: string, orderProp: boolean) =>
+  (order === 'desc' ? (a: any, b: any) => desc(a, b, orderBy, orderProp) : (a: any, b: any) => -desc(a, b, orderBy, orderProp))
