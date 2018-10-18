@@ -1,7 +1,7 @@
 // @flow
 import red from '@material-ui/core/colors/red'
 import { createMuiTheme } from '@material-ui/core/styles'
-import { largeFontSize, mediumFontSize, smallFontSize, disabled, primary, secondary, md, lg, background, bolderFont } from './variables'
+import { largeFontSize, mediumFontSize, smallFontSize, disabled, primary, secondary, md, lg, background, bolderFont, boldFont } from './variables'
 
 export type WithStyles = {
   classes: Object,
@@ -158,6 +158,21 @@ export default createMuiTheme({
       actions: {
         order: 4,
         color: disabled,
+      },
+    },
+    MuiTableCell: {
+      root: {
+        fontFamily: 'Roboto Mono, monospace',
+      },
+      head: {
+        letterSpacing: '1px',
+        textTransform: 'uppercase',
+        fontWeight: boldFont,
+      },
+      body: {
+        color: primary,
+        letterSpacing: '-0.5px',
+        fontWeight: 'normal',
       },
     },
   },

@@ -54,6 +54,9 @@ const styles = {
   zero: {
     letterSpacing: '-0.5px',
   },
+  message: {
+    margin: `${sm} 0`,
+  },
 }
 
 type Props = {
@@ -82,7 +85,7 @@ class Balances extends React.Component<Props, State> {
 
     return (
       <React.Fragment>
-        <Row align="center">
+        <Row align="center" className={classes.message}>
           <Checkbox
             classes={checkboxClasses}
             checked={hideZero}

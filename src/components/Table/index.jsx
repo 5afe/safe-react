@@ -29,7 +29,7 @@ type State = {
 const styles = {
   root: {
     backgroundColor: 'white',
-    boxShadow: '0 -1px 5px 0 rgba(74, 85, 121, 0.5)',
+    boxShadow: '0 -1px 4px 0 rgba(74, 85, 121, 0.5)',
   },
   selectRoot: {
     lineHeight: '40px',
@@ -40,7 +40,7 @@ const styles = {
   },
   paginationRoot: {
     backgroundColor: 'white',
-    boxShadow: '0 2px 5px 0 rgba(74, 85, 121, 0.5)',
+    boxShadow: '0 2px 4px 0 rgba(74, 85, 121, 0.5)',
   },
 }
 
