@@ -9,8 +9,10 @@ import Checkbox from '@material-ui/core/Checkbox'
 import TableRow from '@material-ui/core/TableRow'
 import TableCell from '@material-ui/core/TableCell'
 import { withStyles } from '@material-ui/core/styles'
+import Col from '~/components/layout/Col'
 import Row from '~/components/layout/Row'
 import Paragraph from '~/components/layout/Paragraph'
+import Modal from '~/components/Modal'
 import { type Column } from '~/components/Table/TableHead'
 import Table from '~/components/Table'
 import { sm, xs } from '~/theme/variables'
@@ -58,6 +60,7 @@ const generateColumns = () => {
 
 type State = {
   hideZero: boolean,
+  showToken: boolean,
 }
 
 const styles = theme => ({
@@ -101,6 +104,12 @@ const styles = theme => ({
   leftIcon: {
     marginRight: xs,
   },
+  links: {
+    textDecoration: 'underline',
+    '&:hover': {
+      cursor: 'pointer',
+    },
+  },
 })
 
 type Props = {
@@ -110,6 +119,15 @@ type Props = {
 class Balances extends React.Component<Props, State> {
   state = {
     hideZero: false,
+    showToken: false,
+  }
+
+  onShowToken = () => {
+    this.setState(() => ({ showToken: true }))
+  }
+
+  onHideToken = () => {
+    this.setState(() => ({ showToken: false }))
   }
 
   handleChange = (e: SyntheticInputEvent<HTMLInputElement>) => {
@@ -119,7 +137,7 @@ class Balances extends React.Component<Props, State> {
   }
 
   render() {
-    const { hideZero } = this.state
+    const { hideZero, showToken } = this.state
     const { classes } = this.props
 
     const columns = generateColumns()
@@ -133,14 +151,29 @@ class Balances extends React.Component<Props, State> {
     return (
       <React.Fragment>
         <Row align="center" className={classes.message}>
-          <Checkbox
-            classes={checkboxClasses}
-            checked={hideZero}
-            onChange={this.handleChange}
-            color="secondary"
-            disableRipple
-          />
-          <Paragraph className={classes.zero}>Hide zero balances</Paragraph>
+          <Col xs={6}>
+            <Checkbox
+              classes={checkboxClasses}
+              checked={hideZero}
+              onChange={this.handleChange}
+              color="secondary"
+              disableRipple
+            />
+            <Paragraph className={classes.zero}>Hide zero balances</Paragraph>
+          </Col>
+          <Col xs={6} end="sm">
+            <Paragraph noMargin size="md" color="secondary" className={classes.links} onClick={this.onShowToken}>
+              Manage Tokens
+            </Paragraph>
+            <Modal
+              title="Manage Tokens"
+              description="Enable and disable tokens to be listed"
+              handleClose={this.onHideToken}
+              open={showToken}
+            >
+              List of tokens will show here
+            </Modal>
+          </Col>
         </Row>
         <Table
           label="Balances"
