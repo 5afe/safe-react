@@ -77,8 +77,17 @@ const styles = theme => ({
   iconSmall: {
     fontSize: 16,
   },
+  hide: {
+    '&:hover': {
+      backgroundColor: '#fff3e2',
+    },
+    '&:hover $actions': {
+      visibility: 'initial',
+    },
+  },
   actions: {
     justifyContent: 'flex-end',
+    visibility: 'hidden',
   },
   send: {
     minWidth: '0px',
@@ -140,7 +149,7 @@ class Balances extends React.Component<Props, State> {
           data={filteredData}
         >
           {(sortedData: Array<BalanceRow>) => sortedData.map((row: any, index: number) => (
-            <TableRow tabIndex={-1} key={index}>
+            <TableRow tabIndex={-1} key={index} className={classes.hide}>
               { autoColumns.map((column: Column) => (
                 <TableCell key={column.id} numeric={column.numeric} component="th" scope="row">
                   {row[column.id]}
