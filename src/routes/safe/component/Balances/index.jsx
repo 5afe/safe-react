@@ -13,12 +13,8 @@ import Row from '~/components/layout/Row'
 import Paragraph from '~/components/layout/Paragraph'
 import { type Column } from '~/components/Table/TableHead'
 import Table from '~/components/Table'
-import { buildOrderFieldFrom } from '~/components/Table/sorting'
 import { sm, xs } from '~/theme/variables'
-
-const BALANCE_TABLE_ASSET_ID = 'asset'
-const BALANCE_TABLE_BALANCE_ID = 'balance'
-const BALANCE_TABLE_VALUE_ID = 'value'
+import { getBalanceData, BALANCE_TABLE_ASSET_ID, BALANCE_TABLE_BALANCE_ID, BALANCE_TABLE_VALUE_ID, type BalanceRow, filterByZero } from './dataFetcher'
 
 const generateColumns = () => {
   const assetRow: Column = {
@@ -102,14 +98,6 @@ type Props = {
   classes: Object,
 }
 
-type BalanceRow = {
-  asset: string,
-  balance: string,
-  balanceOrder: number,
-  value: string,
-  valueOrder: number,
-}
-
 class Balances extends React.Component<Props, State> {
   state = {
     hideZero: false,
@@ -131,6 +119,8 @@ class Balances extends React.Component<Props, State> {
       root: classes.root,
     }
 
+    const filteredData = filterByZero(getBalanceData(), hideZero)
+
     return (
       <React.Fragment>
         <Row align="center" className={classes.message}>
@@ -147,29 +137,7 @@ class Balances extends React.Component<Props, State> {
           label="Balances"
           defaultOrderBy={BALANCE_TABLE_ASSET_ID}
           columns={columns}
-          data={[
-            {
-              [BALANCE_TABLE_ASSET_ID]: 'Ethereum',
-              [BALANCE_TABLE_BALANCE_ID]: '9.394 ETH',
-              [buildOrderFieldFrom(BALANCE_TABLE_BALANCE_ID)]: 9.394,
-              [BALANCE_TABLE_VALUE_ID]: '$539.45',
-              [buildOrderFieldFrom(BALANCE_TABLE_VALUE_ID)]: 539.45,
-            },
-            {
-              [BALANCE_TABLE_ASSET_ID]: 'Gnosis',
-              [BALANCE_TABLE_BALANCE_ID]: '0.599 GNO',
-              [buildOrderFieldFrom(BALANCE_TABLE_BALANCE_ID)]: 0.559,
-              [BALANCE_TABLE_VALUE_ID]: '$23.11',
-              [buildOrderFieldFrom(BALANCE_TABLE_VALUE_ID)]: 23.11,
-            },
-            {
-              [BALANCE_TABLE_ASSET_ID]: 'OmiseGO',
-              [BALANCE_TABLE_BALANCE_ID]: '39.922 OMG',
-              [buildOrderFieldFrom(BALANCE_TABLE_BALANCE_ID)]: 39.922,
-              [BALANCE_TABLE_VALUE_ID]: '$2930.89',
-              [buildOrderFieldFrom(BALANCE_TABLE_VALUE_ID)]: 2930.89,
-            },
-          ]}
+          data={filteredData}
         >
           {(sortedData: Array<BalanceRow>) => sortedData.map((row: any, index: number) => (
             <TableRow tabIndex={-1} key={index}>
