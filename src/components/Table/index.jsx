@@ -3,8 +3,6 @@ import * as React from 'react'
 import { List } from 'immutable'
 import Table from '@material-ui/core/Table'
 import TableBody from '@material-ui/core/TableBody'
-import TableRow from '@material-ui/core/TableRow'
-import TableCell from '@material-ui/core/TableCell'
 import { withStyles } from '@material-ui/core/styles'
 import TablePagination from '@material-ui/core/TablePagination'
 import { type Order, stableSort, getSorting } from '~/components/Table/sorting'
@@ -16,6 +14,7 @@ type Props<K> = {
   columns: List<Column>,
   data: Array<K>,
   classes: Object,
+  children: Function,
 }
 
 type State = {
@@ -75,7 +74,7 @@ class GnoTable<K> extends React.Component<Props<K>, State> {
 
   render() {
     const {
-      data, label, columns, classes,
+      data, label, columns, classes, children,
     } = this.props
 
     const {
@@ -96,6 +95,9 @@ class GnoTable<K> extends React.Component<Props<K>, State> {
       input: classes.white,
     }
 
+    const sortedData = stableSort(data, getSorting(order, orderBy, orderProp))
+      .slice(page * rowsPerPage, ((page * rowsPerPage) + rowsPerPage))
+
     return (
       <React.Fragment>
         <Table aria-labelledby={label} className={classes.root}>
@@ -106,22 +108,7 @@ class GnoTable<K> extends React.Component<Props<K>, State> {
             onSort={this.onSort}
           />
           <TableBody>
-            {stableSort(data, getSorting(order, orderBy, orderProp))
-              .slice(page * rowsPerPage, ((page * rowsPerPage) + rowsPerPage))
-              .map((row: any, index: number) => (
-                <TableRow
-                  tabIndex={-1}
-                  key={index}
-                >
-                  {
-                    columns.map((column: Column) => (
-                      <TableCell key={column.id} numeric={column.numeric} component="th" scope="row">
-                        {row[column.id]}
-                      </TableCell>
-                    ))
-                  }
-                </TableRow>
-              ))}
+            { children(sortedData) }
           </TableBody>
         </Table>
         <TablePagination

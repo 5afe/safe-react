@@ -10,9 +10,10 @@ import { type Order } from '~/components/Table/sorting'
 export type Column = {
   id: string,
   numeric: boolean,
-  order: boolean,
+  order: boolean, // If data for sorting will be provided in a different attr
   disablePadding: boolean,
   label: string,
+  custom: boolean, // If content will be rendered by user manually
 }
 
 type Props = {
