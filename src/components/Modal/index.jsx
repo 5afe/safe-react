@@ -12,7 +12,7 @@ type Props = {
   classes: Object,
 }
 
-const styles = theme => ({
+const styles = () => ({
   root: {
     alignItems: 'center',
     justifyContent: 'center',
@@ -20,10 +20,15 @@ const styles = theme => ({
   },
   paper: {
     position: 'absolute',
-    width: theme.spacing.unit * 50,
-    backgroundColor: theme.palette.background.paper,
-    boxShadow: theme.shadows[5],
-    padding: theme.spacing.unit * 4,
+    top: '120px',
+    width: '500px',
+    height: '530px',
+    borderRadius: '3px',
+    backgroundColor: '#ffffff',
+    boxShadow: '0 0 5px 0 rgba(74, 85, 121, 0.5)',
+    '&:focus': {
+      outline: 'none',
+    },
   },
 })
 
