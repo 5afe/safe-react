@@ -79,7 +79,7 @@ type Props = {
 class Balances extends React.Component<Props, State> {
   state = {
     hideZero: false,
-    showToken: false,
+    showToken: true,
   }
 
   onShowToken = () => {
