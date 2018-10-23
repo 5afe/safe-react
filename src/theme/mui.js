@@ -175,6 +175,12 @@ export default createMuiTheme({
         fontWeight: 'normal',
       },
     },
+    MuiBackdrop: {
+      root: {
+        backdropFilter: 'blur(1px)',
+        backgroundColor: 'rgba(228, 232, 241, 0.75)',
+      },
+    },
   },
   palette,
 })

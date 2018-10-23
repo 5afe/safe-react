@@ -1,5 +1,7 @@
 // @flow
+import { List } from 'immutable'
 import { buildOrderFieldFrom } from '~/components/Table/sorting'
+import { type Column } from '~/components/Table/TableHead'
 
 export const BALANCE_TABLE_ASSET_ID = 'asset'
 export const BALANCE_TABLE_BALANCE_ID = 'balance'
@@ -41,6 +43,46 @@ export const getBalanceData = (): Array<BalanceRow> => [
     [buildOrderFieldFrom(BALANCE_TABLE_VALUE_ID)]: 0,
   },
 ]
+
+export const generateColumns = () => {
+  const assetRow: Column = {
+    id: BALANCE_TABLE_ASSET_ID,
+    order: false,
+    numeric: false,
+    disablePadding: false,
+    label: 'Asset',
+    custom: false,
+  }
+
+  const balanceRow: Column = {
+    id: BALANCE_TABLE_BALANCE_ID,
+    order: true,
+    numeric: true,
+    disablePadding: false,
+    label: 'Balance',
+    custom: false,
+  }
+
+  const valueRow: Column = {
+    id: BALANCE_TABLE_VALUE_ID,
+    order: true,
+    numeric: true,
+    disablePadding: false,
+    label: 'Value',
+    custom: false,
+  }
+
+  const actions: Column = {
+    id: 'actions',
+    order: false,
+    numeric: false,
+    disablePadding: false,
+    label: '',
+    custom: true,
+  }
+
+  return List([assetRow, balanceRow, valueRow, actions])
+}
 
 export const filterByZero = (data: Array<BalanceRow>, hideZero: boolean): Array<BalanceRow> =>
   data.filter((row: BalanceRow) => (hideZero ? row[buildOrderFieldFrom(BALANCE_TABLE_BALANCE_ID)] !== 0 : true))

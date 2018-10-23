@@ -1,6 +1,5 @@
 // @flow
 import * as React from 'react'
-import { List } from 'immutable'
 import classNames from 'classnames/bind'
 import CallMade from '@material-ui/icons/CallMade'
 import CallReceived from '@material-ui/icons/CallReceived'
@@ -16,47 +15,8 @@ import Modal from '~/components/Modal'
 import { type Column } from '~/components/Table/TableHead'
 import Table from '~/components/Table'
 import { sm, xs } from '~/theme/variables'
-import { getBalanceData, BALANCE_TABLE_ASSET_ID, BALANCE_TABLE_BALANCE_ID, BALANCE_TABLE_VALUE_ID, type BalanceRow, filterByZero } from './dataFetcher'
-
-const generateColumns = () => {
-  const assetRow: Column = {
-    id: BALANCE_TABLE_ASSET_ID,
-    order: false,
-    numeric: false,
-    disablePadding: false,
-    label: 'Asset',
-    custom: false,
-  }
-
-  const balanceRow: Column = {
-    id: BALANCE_TABLE_BALANCE_ID,
-    order: true,
-    numeric: true,
-    disablePadding: false,
-    label: 'Balance',
-    custom: false,
-  }
-
-  const valueRow: Column = {
-    id: BALANCE_TABLE_VALUE_ID,
-    order: true,
-    numeric: true,
-    disablePadding: false,
-    label: 'Value',
-    custom: false,
-  }
-
-  const actions: Column = {
-    id: 'actions',
-    order: false,
-    numeric: false,
-    disablePadding: false,
-    label: '',
-    custom: true,
-  }
-
-  return List([assetRow, balanceRow, valueRow, actions])
-}
+import { getBalanceData, generateColumns, BALANCE_TABLE_ASSET_ID, type BalanceRow, filterByZero } from './dataFetcher'
+import Tokens from './Tokens'
 
 type State = {
   hideZero: boolean,
@@ -171,7 +131,7 @@ class Balances extends React.Component<Props, State> {
               handleClose={this.onHideToken}
               open={showToken}
             >
-              List of tokens will show here
+              <Tokens />
             </Modal>
           </Col>
         </Row>
