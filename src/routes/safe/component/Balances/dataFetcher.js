@@ -1,13 +1,13 @@
 // @flow
 import { List } from 'immutable'
-import { buildOrderFieldFrom } from '~/components/Table/sorting'
+import { buildOrderFieldFrom, FIXED, type SortRow } from '~/components/Table/sorting'
 import { type Column } from '~/components/Table/TableHead'
 
 export const BALANCE_TABLE_ASSET_ID = 'asset'
 export const BALANCE_TABLE_BALANCE_ID = 'balance'
 export const BALANCE_TABLE_VALUE_ID = 'value'
 
-export type BalanceRow = {
+export type BalanceRow = SortRow & {
   asset: string,
   balance: string,
   value: string,
@@ -15,11 +15,19 @@ export type BalanceRow = {
 
 export const getBalanceData = (): Array<BalanceRow> => [
   {
+    [BALANCE_TABLE_ASSET_ID]: 'ABC Periodico',
+    [BALANCE_TABLE_BALANCE_ID]: '1.394 ABC',
+    [buildOrderFieldFrom(BALANCE_TABLE_BALANCE_ID)]: 1.394,
+    [BALANCE_TABLE_VALUE_ID]: '$3.1',
+    [buildOrderFieldFrom(BALANCE_TABLE_VALUE_ID)]: 3.1,
+  },
+  {
     [BALANCE_TABLE_ASSET_ID]: 'Ethereum',
     [BALANCE_TABLE_BALANCE_ID]: '9.394 ETH',
     [buildOrderFieldFrom(BALANCE_TABLE_BALANCE_ID)]: 9.394,
     [BALANCE_TABLE_VALUE_ID]: '$539.45',
     [buildOrderFieldFrom(BALANCE_TABLE_VALUE_ID)]: 539.45,
+    [FIXED]: true,
   },
   {
     [BALANCE_TABLE_ASSET_ID]: 'Gnosis',

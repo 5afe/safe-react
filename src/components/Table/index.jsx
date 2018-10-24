@@ -15,6 +15,8 @@ type Props<K> = {
   data: Array<K>,
   classes: Object,
   children: Function,
+  size: number,
+  defaultFixed?: boolean,
 }
 
 type State = {
@@ -46,8 +48,9 @@ const styles = {
 class GnoTable<K> extends React.Component<Props<K>, State> {
   state = {
     page: 0,
-    order: 'desc',
+    order: 'asc',
     orderBy: this.props.defaultOrderBy,
+    fixed: !!this.props.defaultFixed,
     orderProp: false,
     rowsPerPage: 5,
   }
@@ -60,7 +63,9 @@ class GnoTable<K> extends React.Component<Props<K>, State> {
       order = 'asc'
     }
 
-    this.setState({ order, orderBy, orderProp })
+    this.setState(() => ({
+      order, orderBy, orderProp, fixed: false,
+    }))
   }
 
   handleChangePage = (page: number) => {
@@ -74,11 +79,11 @@ class GnoTable<K> extends React.Component<Props<K>, State> {
 
   render() {
     const {
-      data, label, columns, classes, children,
+      data, label, columns, classes, children, size,
     } = this.props
 
     const {
-      order, orderBy, page, orderProp, rowsPerPage,
+      order, orderBy, page, orderProp, rowsPerPage, fixed,
     } = this.state
 
     const backProps = {
@@ -95,7 +100,7 @@ class GnoTable<K> extends React.Component<Props<K>, State> {
       input: classes.white,
     }
 
-    const sortedData = stableSort(data, getSorting(order, orderBy, orderProp))
+    const sortedData = stableSort(data, getSorting(order, orderBy, orderProp), fixed)
       .slice(page * rowsPerPage, ((page * rowsPerPage) + rowsPerPage))
 
     return (
@@ -113,7 +118,7 @@ class GnoTable<K> extends React.Component<Props<K>, State> {
         </Table>
         <TablePagination
           component="div"
-          count={data.length}
+          count={size}
           rowsPerPage={rowsPerPage}
           page={page}
           backIconButtonProps={backProps}

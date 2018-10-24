@@ -162,6 +162,8 @@ class Balances extends React.Component<Props, State> {
           defaultOrderBy={BALANCE_TABLE_ASSET_ID}
           columns={columns}
           data={filteredData}
+          size={filteredData.length}
+          defaultFixed
         >
           {(sortedData: Array<BalanceRow>) => sortedData.map((row: any, index: number) => (
             <TableRow tabIndex={-1} key={index} className={classes.hide}>

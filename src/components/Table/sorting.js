@@ -1,6 +1,12 @@
 // @flow
 
+export const FIXED = 'fixed'
+export type SortRow = {
+  [FIXED]: boolean,
+}
+
 export const buildOrderFieldFrom = (attr: string) => `${attr}Order`
+
 
 const desc = (a: Object, b: Object, orderBy: string, orderProp: boolean) => {
   const order = orderProp ? buildOrderFieldFrom(orderBy) : orderBy
@@ -15,7 +21,8 @@ const desc = (a: Object, b: Object, orderBy: string, orderProp: boolean) => {
   return 0
 }
 
-export const stableSort = (array: any, cmp: any) => {
+export const stableSort = (array: any, cmp: any, fixed: boolean) => {
+  const fixedElems = fixed ? array.filter(elem => elem[FIXED]) : []
   const stabilizedThis = array.map((el, index) => [el, index])
 
   stabilizedThis.sort((a, b) => {
@@ -27,7 +34,9 @@ export const stableSort = (array: any, cmp: any) => {
     return a[1] - b[1]
   })
 
-  return stabilizedThis.map(el => el[0])
+  const sortedElems = stabilizedThis.map(el => el[0])
+
+  return fixedElems.concat(sortedElems)
 }
 
 export type Order = 'asc' | 'desc'
