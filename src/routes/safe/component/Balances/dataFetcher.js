@@ -15,6 +15,13 @@ export type BalanceRow = SortRow & {
 
 export const getBalanceData = (): Array<BalanceRow> => [
   {
+    [BALANCE_TABLE_ASSET_ID]: 'CVL Journalism',
+    [BALANCE_TABLE_BALANCE_ID]: '234 CVL',
+    [buildOrderFieldFrom(BALANCE_TABLE_BALANCE_ID)]: 234,
+    [BALANCE_TABLE_VALUE_ID]: '$6700',
+    [buildOrderFieldFrom(BALANCE_TABLE_VALUE_ID)]: 6700,
+  },
+  {
     [BALANCE_TABLE_ASSET_ID]: 'ABC Periodico',
     [BALANCE_TABLE_BALANCE_ID]: '1.394 ABC',
     [buildOrderFieldFrom(BALANCE_TABLE_BALANCE_ID)]: 1.394,

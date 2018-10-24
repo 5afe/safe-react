@@ -3,10 +3,13 @@ import * as React from 'react'
 import { List } from 'immutable'
 import Table from '@material-ui/core/Table'
 import TableBody from '@material-ui/core/TableBody'
+import TableRow from '@material-ui/core/TableRow'
+import TableCell from '@material-ui/core/TableCell'
 import { withStyles } from '@material-ui/core/styles'
 import TablePagination from '@material-ui/core/TablePagination'
 import { type Order, stableSort, getSorting } from '~/components/Table/sorting'
 import TableHead, { type Column } from '~/components/Table/TableHead'
+import { xl } from '~/theme/variables'
 
 type Props<K> = {
   label: string,
@@ -42,8 +45,14 @@ const styles = {
   paginationRoot: {
     backgroundColor: 'white',
     boxShadow: '0 2px 4px 0 rgba(74, 85, 121, 0.5)',
+    marginBottom: xl,
+  },
+  empty: {
+
   },
 }
+
+const FIXED_HEIGHT = 49
 
 class GnoTable<K> extends React.Component<Props<K>, State> {
   state = {
@@ -68,7 +77,7 @@ class GnoTable<K> extends React.Component<Props<K>, State> {
     }))
   }
 
-  handleChangePage = (page: number) => {
+  handleChangePage = (e: SyntheticInputEvent<HTMLInputElement>, page: number) => {
     this.setState({ page })
   }
 
@@ -103,6 +112,11 @@ class GnoTable<K> extends React.Component<Props<K>, State> {
     const sortedData = stableSort(data, getSorting(order, orderBy, orderProp), fixed)
       .slice(page * rowsPerPage, ((page * rowsPerPage) + rowsPerPage))
 
+    const emptyRows = rowsPerPage - Math.min(rowsPerPage, data.length - (page * rowsPerPage))
+    const emptyStyle = {
+      height: FIXED_HEIGHT * emptyRows,
+    }
+
     return (
       <React.Fragment>
         <Table aria-labelledby={label} className={classes.root}>
@@ -114,6 +128,11 @@ class GnoTable<K> extends React.Component<Props<K>, State> {
           />
           <TableBody>
             { children(sortedData) }
+            { emptyRows > 0 &&
+              <TableRow style={emptyStyle}>
+                <TableCell colSpan={4} />
+              </TableRow>
+            }
           </TableBody>
         </Table>
         <TablePagination
