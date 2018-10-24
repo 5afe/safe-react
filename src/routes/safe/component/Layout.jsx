@@ -13,11 +13,12 @@ import Paragraph from '~/components/layout/Paragraph'
 import NoSafe from '~/components/NoSafe'
 import { type SelectorProps } from '~/routes/safe/container/selector'
 import { openAddressInEtherScan } from '~/logic/wallets/getWeb3'
-import { sm, secondary } from '~/theme/variables'
+import { sm, xs, secondary, smallFontSize } from '~/theme/variables'
 import Balances from './Balances'
 
 type Props = SelectorProps & {
   classes: Object,
+  granted: boolean,
 }
 
 type State = {
@@ -50,6 +51,18 @@ const styles = () => ({
       cursor: 'pointer',
     },
   },
+  readonly: {
+    fontSize: smallFontSize,
+    letterSpacing: '0.5px',
+    color: '#ffffff',
+    backgroundColor: '#a2a8ba',
+    fontFamily: 'Roboto Mono, monospace',
+    textTransform: 'uppercase',
+    padding: `0 ${sm}`,
+    marginLeft: sm,
+    borderRadius: xs,
+    lineHeight: '28px',
+  },
 })
 
 class Layout extends React.Component<Props, State> {
@@ -63,7 +76,7 @@ class Layout extends React.Component<Props, State> {
 
   render() {
     const {
-      safe, provider, network, classes,
+      safe, provider, network, classes, granted,
     } = this.props
     const { value } = this.state
 
@@ -78,7 +91,14 @@ class Layout extends React.Component<Props, State> {
         <Block className={classes.container} margin="xl">
           <Identicon address={address} diameter={50} />
           <Block className={classes.name}>
-            <Heading tag="h2" color="secondary">{safe.get('name')}</Heading>
+            <Row>
+              <Heading tag="h2" color="secondary">{safe.get('name')}</Heading>
+              { !granted &&
+                <Block className={classes.readonly} >
+                  Read Only
+                </Block>
+              }
+            </Row>
             <Block align="center" className={classes.user}>
               <Paragraph size="md" color="disabled" noMargin>{address}</Paragraph>
               <OpenInNew
@@ -102,7 +122,7 @@ class Layout extends React.Component<Props, State> {
           </Tabs>
         </Row>
         <Hairline color="#c8ced4" />
-        {value === 0 && <Balances />}
+        {value === 0 && <Balances granted={granted} />}
       </React.Fragment>
     )
   }

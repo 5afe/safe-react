@@ -3,7 +3,6 @@ import * as React from 'react'
 import { connect } from 'react-redux'
 import Page from '~/components/layout/Page'
 import Layout from '~/routes/safe/component/Layout'
-import NoRights from '~/routes/safe/component/NoRights'
 import selector, { type SelectorProps } from './selector'
 import actions, { type Actions } from './actions'
 
@@ -52,16 +51,14 @@ class SafeView extends React.PureComponent<Props> {
 
     return (
       <Page>
-        { granted
-          ? <Layout
-            activeTokens={activeTokens}
-            provider={provider}
-            safe={safe}
-            userAddress={userAddress}
-            network={network}
-          />
-          : <NoRights />
-        }
+        <Layout
+          activeTokens={activeTokens}
+          provider={provider}
+          safe={safe}
+          userAddress={userAddress}
+          network={network}
+          granted={granted}
+        />
       </Page>
     )
   }

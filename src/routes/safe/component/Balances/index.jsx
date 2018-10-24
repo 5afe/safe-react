@@ -76,6 +76,7 @@ const styles = theme => ({
 
 type Props = {
   classes: Object,
+  granted: boolean,
 }
 
 type Action = 'Token' | 'Send' | 'Receive'
@@ -106,7 +107,7 @@ class Balances extends React.Component<Props, State> {
     const {
       hideZero, showToken, showReceive, showSend,
     } = this.state
-    const { classes } = this.props
+    const { classes, granted } = this.props
 
     const columns = generateColumns()
     const autoColumns = columns.filter(c => !c.custom)
@@ -160,10 +161,12 @@ class Balances extends React.Component<Props, State> {
               )) }
               <TableCell component="th" scope="row">
                 <Row align="end" className={classes.actions}>
-                  <Button variant="contained" size="small" color="secondary" className={classes.send} onClick={this.onShow('Send')}>
-                    <CallMade className={classNames(classes.leftIcon, classes.iconSmall)} />
-                    Send
-                  </Button>
+                  { granted &&
+                    <Button variant="contained" size="small" color="secondary" className={classes.send} onClick={this.onShow('Send')}>
+                      <CallMade className={classNames(classes.leftIcon, classes.iconSmall)} />
+                      Send
+                    </Button>
+                  }
                   <Button variant="contained" size="small" color="secondary" className={classes.receive} onClick={this.onShow('Receive')}>
                     <CallReceived className={classNames(classes.leftIcon, classes.iconSmall)} />
                     Receive
@@ -173,20 +176,10 @@ class Balances extends React.Component<Props, State> {
             </TableRow>
           ))}
         </Table>
-        <Modal
-          title="Send Tokens"
-          description="Send Tokens Form"
-          handleClose={this.onHide('Send')}
-          open={showSend}
-        >
+        <Modal title="Send Tokens" description="Send Tokens Form" handleClose={this.onHide('Send')} open={showSend}>
           <Send onClose={this.onHide('Send')} />
         </Modal>
-        <Modal
-          title="Receive Tokens"
-          description="Receive Tokens Form"
-          handleClose={this.onHide('Receive')}
-          open={showReceive}
-        >
+        <Modal title="Receive Tokens" description="Receive Tokens Form" handleClose={this.onHide('Receive')} open={showReceive}>
           <Receive onClose={this.onHide('Receive')} />
         </Modal>
       </React.Fragment>
