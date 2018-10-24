@@ -23,7 +23,8 @@ const desc = (a: Object, b: Object, orderBy: string, orderProp: boolean) => {
 
 export const stableSort = (array: any, cmp: any, fixed: boolean) => {
   const fixedElems = fixed ? array.filter(elem => elem[FIXED]) : []
-  const stabilizedThis = array.map((el, index) => [el, index])
+  const data = fixed ? array.filter(elem => !elem[FIXED]) : array
+  const stabilizedThis = data.map((el, index) => [el, index])
 
   stabilizedThis.sort((a, b) => {
     const order = cmp(a[0], b[0])
