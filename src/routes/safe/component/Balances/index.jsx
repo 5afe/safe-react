@@ -17,6 +17,8 @@ import Table from '~/components/Table'
 import { sm, xs } from '~/theme/variables'
 import { getBalanceData, generateColumns, BALANCE_TABLE_ASSET_ID, type BalanceRow, filterByZero } from './dataFetcher'
 import Tokens from './Tokens'
+import Send from './Send'
+import Receive from './Receive'
 
 type State = {
   hideZero: boolean,
@@ -79,7 +81,9 @@ type Props = {
 class Balances extends React.Component<Props, State> {
   state = {
     hideZero: false,
-    showToken: true,
+    showToken: false,
+    showSend: false,
+    showReceive: false,
   }
 
   onShowToken = () => {
@@ -90,6 +94,22 @@ class Balances extends React.Component<Props, State> {
     this.setState(() => ({ showToken: false }))
   }
 
+  onShowSend = () => {
+    this.setState(() => ({ showSend: true }))
+  }
+
+  onHideSend = () => {
+    this.setState(() => ({ showSend: false }))
+  }
+
+  onShowReceive = () => {
+    this.setState(() => ({ showReceive: true }))
+  }
+
+  onHideReceive = () => {
+    this.setState(() => ({ showReceive: false }))
+  }
+
   handleChange = (e: SyntheticInputEvent<HTMLInputElement>) => {
     const { checked } = e.target
 
@@ -97,7 +117,9 @@ class Balances extends React.Component<Props, State> {
   }
 
   render() {
-    const { hideZero, showToken } = this.state
+    const {
+      hideZero, showToken, showReceive, showSend,
+    } = this.state
     const { classes } = this.props
 
     const columns = generateColumns()
@@ -131,7 +153,7 @@ class Balances extends React.Component<Props, State> {
               handleClose={this.onHideToken}
               open={showToken}
             >
-              <Tokens />
+              <Tokens onClose={this.onHideToken} />
             </Modal>
           </Col>
         </Row>
@@ -150,11 +172,11 @@ class Balances extends React.Component<Props, State> {
               )) }
               <TableCell component="th" scope="row">
                 <Row align="end" className={classes.actions}>
-                  <Button variant="contained" size="small" color="secondary" className={classes.send}>
+                  <Button variant="contained" size="small" color="secondary" className={classes.send} onClick={this.onShowSend}>
                     <CallMade className={classNames(classes.leftIcon, classes.iconSmall)} />
                     Send
                   </Button>
-                  <Button variant="contained" size="small" color="secondary" className={classes.receive}>
+                  <Button variant="contained" size="small" color="secondary" className={classes.receive} onClick={this.onShowReceive}>
                     <CallReceived className={classNames(classes.leftIcon, classes.iconSmall)} />
                     Receive
                   </Button>
@@ -163,6 +185,22 @@ class Balances extends React.Component<Props, State> {
             </TableRow>
           ))}
         </Table>
+        <Modal
+          title="Send Tokens"
+          description="Send Tokens Form"
+          handleClose={this.onHideSend}
+          open={showSend}
+        >
+          <Send onClose={this.onHideSend} />
+        </Modal>
+        <Modal
+          title="Receive Tokens"
+          description="Receive Tokens Form"
+          handleClose={this.onHideReceive}
+          open={showReceive}
+        >
+          <Receive onClose={this.onHideReceive} />
+        </Modal>
       </React.Fragment>
     )
   }
