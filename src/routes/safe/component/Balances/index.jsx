@@ -78,6 +78,8 @@ type Props = {
   classes: Object,
 }
 
+type Action = 'Token' | 'Send' | 'Receive'
+
 class Balances extends React.Component<Props, State> {
   state = {
     hideZero: false,
@@ -86,28 +88,12 @@ class Balances extends React.Component<Props, State> {
     showReceive: false,
   }
 
-  onShowToken = () => {
-    this.setState(() => ({ showToken: true }))
+  onShow = (action: Action) => () => {
+    this.setState(() => ({ [`show${action}`]: true }))
   }
 
-  onHideToken = () => {
-    this.setState(() => ({ showToken: false }))
-  }
-
-  onShowSend = () => {
-    this.setState(() => ({ showSend: true }))
-  }
-
-  onHideSend = () => {
-    this.setState(() => ({ showSend: false }))
-  }
-
-  onShowReceive = () => {
-    this.setState(() => ({ showReceive: true }))
-  }
-
-  onHideReceive = () => {
-    this.setState(() => ({ showReceive: false }))
+  onHide = (action: Action) => () => {
+    this.setState(() => ({ [`show${action}`]: false }))
   }
 
   handleChange = (e: SyntheticInputEvent<HTMLInputElement>) => {
@@ -144,16 +130,16 @@ class Balances extends React.Component<Props, State> {
             <Paragraph className={classes.zero}>Hide zero balances</Paragraph>
           </Col>
           <Col xs={6} end="sm">
-            <Paragraph noMargin size="md" color="secondary" className={classes.links} onClick={this.onShowToken}>
+            <Paragraph noMargin size="md" color="secondary" className={classes.links} onClick={this.onShow('Token')}>
               Manage Tokens
             </Paragraph>
             <Modal
               title="Manage Tokens"
               description="Enable and disable tokens to be listed"
-              handleClose={this.onHideToken}
+              handleClose={this.onHide('Token')}
               open={showToken}
             >
-              <Tokens onClose={this.onHideToken} />
+              <Tokens onClose={this.onHide('Token')} />
             </Modal>
           </Col>
         </Row>
@@ -174,11 +160,11 @@ class Balances extends React.Component<Props, State> {
               )) }
               <TableCell component="th" scope="row">
                 <Row align="end" className={classes.actions}>
-                  <Button variant="contained" size="small" color="secondary" className={classes.send} onClick={this.onShowSend}>
+                  <Button variant="contained" size="small" color="secondary" className={classes.send} onClick={this.onShow('Send')}>
                     <CallMade className={classNames(classes.leftIcon, classes.iconSmall)} />
                     Send
                   </Button>
-                  <Button variant="contained" size="small" color="secondary" className={classes.receive} onClick={this.onShowReceive}>
+                  <Button variant="contained" size="small" color="secondary" className={classes.receive} onClick={this.onShow('Receive')}>
                     <CallReceived className={classNames(classes.leftIcon, classes.iconSmall)} />
                     Receive
                   </Button>
@@ -190,18 +176,18 @@ class Balances extends React.Component<Props, State> {
         <Modal
           title="Send Tokens"
           description="Send Tokens Form"
-          handleClose={this.onHideSend}
+          handleClose={this.onHide('Send')}
           open={showSend}
         >
-          <Send onClose={this.onHideSend} />
+          <Send onClose={this.onHide('Send')} />
         </Modal>
         <Modal
           title="Receive Tokens"
           description="Receive Tokens Form"
-          handleClose={this.onHideReceive}
+          handleClose={this.onHide('Receive')}
           open={showReceive}
         >
-          <Receive onClose={this.onHideReceive} />
+          <Receive onClose={this.onHide('Receive')} />
         </Modal>
       </React.Fragment>
     )
