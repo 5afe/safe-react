@@ -14,6 +14,17 @@ export type Column = {
   disablePadding: boolean,
   label: string,
   custom: boolean, // If content will be rendered by user manually
+  width?: number,
+}
+
+export const cellWidth = (width: number | typeof undefined) => {
+  if (!width) {
+    return undefined
+  }
+
+  return {
+    width: `${width}px`,
+  }
 }
 
 type Props = {

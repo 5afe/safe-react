@@ -12,7 +12,7 @@ import Col from '~/components/layout/Col'
 import Row from '~/components/layout/Row'
 import Paragraph from '~/components/layout/Paragraph'
 import Modal from '~/components/Modal'
-import { type Column } from '~/components/Table/TableHead'
+import { type Column, cellWidth } from '~/components/Table/TableHead'
 import Table from '~/components/Table'
 import { sm, xs } from '~/theme/variables'
 import { getBalanceData, generateColumns, BALANCE_TABLE_ASSET_ID, type BalanceRow, filterByZero } from './dataFetcher'
@@ -155,11 +155,11 @@ class Balances extends React.Component<Props, State> {
           {(sortedData: Array<BalanceRow>) => sortedData.map((row: any, index: number) => (
             <TableRow tabIndex={-1} key={index} className={classes.hide}>
               { autoColumns.map((column: Column) => (
-                <TableCell key={column.id} numeric={column.numeric} component="th" scope="row">
+                <TableCell key={column.id} style={cellWidth(column.width)} numeric={column.numeric} component="td">
                   {row[column.id]}
                 </TableCell>
               )) }
-              <TableCell component="th" scope="row">
+              <TableCell component="td">
                 <Row align="end" className={classes.actions}>
                   { granted &&
                     <Button variant="contained" size="small" color="secondary" className={classes.send} onClick={this.onShow('Send')}>

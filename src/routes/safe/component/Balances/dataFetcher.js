@@ -55,6 +55,7 @@ export const generateColumns = () => {
     disablePadding: false,
     label: 'Asset',
     custom: false,
+    width: 250,
   }
 
   const balanceRow: Column = {
