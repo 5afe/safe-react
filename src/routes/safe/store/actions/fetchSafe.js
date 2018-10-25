@@ -6,7 +6,8 @@ import { makeOwner } from '~/routes/safe/store/model/owner'
 import { type SafeProps, type Safe, makeSafe } from '~/routes/safe/store/model/safe'
 import updateSafe from '~/routes/safe/store/actions/updateSafe'
 import { getOwners } from '~/utils/localStorage'
-import { getGnosisSafeInstanceAt } from '~/logic/contracts/safeContracts'
+import { getGnosisSafeContract } from '~/logic/contracts/safeContracts'
+import { getWeb3 } from '~/logic/wallets/getWeb3'
 
 const buildOwnersFrom = (safeOwners: string[], storedOwners: Map<string, string>) => (
   safeOwners.map((ownerAddress: string) => {
@@ -17,7 +18,9 @@ const buildOwnersFrom = (safeOwners: string[], storedOwners: Map<string, string>
 
 export const buildSafe = async (storedSafe: Object) => {
   const safeAddress = storedSafe.address
-  const gnosisSafe = await getGnosisSafeInstanceAt(safeAddress)
+  const web3 = getWeb3()
+  const GnosisSafe = await getGnosisSafeContract(web3)
+  const gnosisSafe = GnosisSafe.at(safeAddress)
 
   const threshold = Number(await gnosisSafe.getThreshold())
   const owners = List(buildOwnersFrom(await gnosisSafe.getOwners(), getOwners(safeAddress)))
