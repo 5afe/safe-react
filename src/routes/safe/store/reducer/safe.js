@@ -12,8 +12,8 @@ export type State = Map<string, Safe>
 
 export const buildSafe = (storedSafe: SafeProps) => {
   const owners = buildOwnersFrom(
-    storedSafe.owners.map((owner: OwnerProps) => owner.address),
     storedSafe.owners.map((owner: OwnerProps) => owner.name),
+    storedSafe.owners.map((owner: OwnerProps) => owner.address),
   )
 
   const safe: SafeProps = {
@@ -53,9 +53,18 @@ export const safesInitialState = (): State => {
 
 
 export default handleActions({
-  [UPDATE_SAFE]: (state: State, action: ActionType<typeof updateSafe>): State =>
-    state.update(action.payload.get('address'), prevSafe =>
-      (prevSafe.equals(action.payload) ? prevSafe : action.payload)),
+  [UPDATE_SAFE]: (state: State, action: ActionType<typeof updateSafe>): State => {
+    const safe = action.payload
+    const safeAddress = safe.get('address')
+
+    const hasSafe = !!state.get(safeAddress)
+    if (hasSafe) {
+      return state.update(safeAddress, prevSafe =>
+        (prevSafe.equals(safe) ? prevSafe : safe))
+    }
+
+    return state.set(safeAddress, safe)
+  },
   [ADD_SAFE]: (state: State, action: ActionType<typeof addSafe>): State => {
     const safe: Safe = makeSafe(action.payload)
     setOwners(safe.get('address'), safe.get('owners'))

@@ -23,6 +23,16 @@ export const load = (key: string) => {
   }
 }
 
+export const getSafeName = (safeAddress: string) => {
+  const safes = load(SAFES_KEY)
+  if (!safes) {
+    return undefined
+  }
+  const safe = safes[safeAddress]
+
+  return safe ? safe.name : undefined
+}
+
 export const saveSafes = (safes: Object) => {
   try {
     const serializedState = JSON.stringify(safes)
