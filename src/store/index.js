@@ -24,6 +24,8 @@ export type GlobalState = {
   transactions: TransactionsState,
 }
 
+export type GetState = () => GlobalState
+
 const reducers: Reducer<GlobalState> = combineReducers({
   routing: routerReducer,
   [PROVIDER_REDUCER_ID]: provider,
