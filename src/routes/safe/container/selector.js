@@ -9,6 +9,7 @@ import { type GlobalState } from '~/store'
 import { sameAddress } from '~/logic/wallets/ethAddresses'
 import { activeTokensSelector } from '~/routes/tokens/store/selectors'
 import { type Token } from '~/routes/tokens/store/model/token'
+import { safeParamAddressSelector } from '../store/selectors'
 
 export type SelectorProps = {
   safe: SafeSelectorProps,
@@ -16,6 +17,7 @@ export type SelectorProps = {
   activeTokens: List<Token>,
   userAddress: string,
   network: string,
+  safeUrl: string,
 }
 
 export const grantedSelector: Selector<GlobalState, RouterProps, boolean> = createSelector(
@@ -46,4 +48,5 @@ export default createStructuredSelector({
   granted: grantedSelector,
   userAddress: userAccountSelector,
   network: networkSelector,
+  safeUrl: safeParamAddressSelector,
 })
