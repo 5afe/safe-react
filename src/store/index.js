@@ -4,7 +4,7 @@ import { routerMiddleware, routerReducer } from 'react-router-redux'
 import { combineReducers, createStore, applyMiddleware, compose, type Reducer, type Store } from 'redux'
 import thunk from 'redux-thunk'
 import provider, { PROVIDER_REDUCER_ID, type State as ProviderState } from '~/logic/wallets/store/reducer/provider'
-import safe, { SAFE_REDUCER_ID, type State as SafeState } from '~/routes/safe/store/reducer/safe'
+import safe, { SAFE_REDUCER_ID, type State as SafeState, safesInitialState } from '~/routes/safe/store/reducer/safe'
 import tokens, { TOKEN_REDUCER_ID, type State as TokensState } from '~/routes/tokens/store/reducer/tokens'
 import transactions, { type State as TransactionsState, TRANSACTIONS_REDUCER_ID } from '~/routes/safe/store/reducer/transactions'
 
@@ -32,13 +32,11 @@ const reducers: Reducer<GlobalState> = combineReducers({
   [TRANSACTIONS_REDUCER_ID]: transactions,
 })
 
-/*
 const initialState = {
-  [TRANSACTIONS_REDUCER_ID]: transactionsInitialState(),
+  [SAFE_REDUCER_ID]: safesInitialState(),
 }
-*/
 
-export const store: Store<GlobalState> = createStore(reducers, {}, finalCreateStore)
+export const store: Store<GlobalState> = createStore(reducers, initialState, finalCreateStore)
 
 export const aNewStore = (localState?: Object): Store<GlobalState> =>
   createStore(reducers, localState, finalCreateStore)
