@@ -15,6 +15,7 @@ const TIMEOUT = process.env.NODE_ENV === 'test' ? 1500 : 15000
 class SafeView extends React.PureComponent<Props> {
   componentDidMount() {
     this.props.fetchSafe(this.props.safeUrl)
+    this.props.fetchTokens(this.props.safeUrl)
     this.intervalId = setInterval(() => {
       const { safeUrl, fetchTokens, fetchSafe } = this.props
       fetchTokens(safeUrl)
@@ -41,13 +42,14 @@ class SafeView extends React.PureComponent<Props> {
 
   render() {
     const {
-      safe, provider, activeTokens, granted, userAddress, network,
+      safe, provider, activeTokens, granted, userAddress, network, tokens,
     } = this.props
 
     return (
       <Page>
         <Layout
           activeTokens={activeTokens}
+          tokens={tokens}
           provider={provider}
           safe={safe}
           userAddress={userAddress}
