@@ -1,9 +1,11 @@
 // @flow
 
 export const FIXED = 'fixed'
-export type SortRow = {
-  [FIXED]: boolean,
+type Fixed = {
+  fixed?: boolean,
 }
+
+export type SortRow<T> = T & Fixed
 
 export const buildOrderFieldFrom = (attr: string) => `${attr}Order`
 
@@ -21,9 +23,10 @@ const desc = (a: Object, b: Object, orderBy: string, orderProp: boolean) => {
   return 0
 }
 
-export const stableSort = (array: any, cmp: any, fixed: boolean) => {
-  const fixedElems = fixed ? array.filter(elem => elem[FIXED]) : []
-  const data = fixed ? array.filter(elem => !elem[FIXED]) : array
+// eslint-disable-next-line
+export const stableSort = <SortRow>(array: Array<SortRow>, cmp: any, fixed: boolean): Array<SortRow> => { 
+  const fixedElems: Array<SortRow> = fixed ? array.filter((elem: any) => elem.fixed) : []
+  const data: Array<SortRow> = fixed ? array.filter((elem: any) => !elem[FIXED]) : array
   const stabilizedThis = data.map((el, index) => [el, index])
 
   stabilizedThis.sort((a, b) => {
@@ -35,7 +38,7 @@ export const stableSort = (array: any, cmp: any, fixed: boolean) => {
     return a[1] - b[1]
   })
 
-  const sortedElems = stabilizedThis.map(el => el[0])
+  const sortedElems: Array<SortRow> = stabilizedThis.map(el => el[0])
 
   return fixedElems.concat(sortedElems)
 }

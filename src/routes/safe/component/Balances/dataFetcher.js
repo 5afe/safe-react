@@ -7,11 +7,12 @@ export const BALANCE_TABLE_ASSET_ID = 'asset'
 export const BALANCE_TABLE_BALANCE_ID = 'balance'
 export const BALANCE_TABLE_VALUE_ID = 'value'
 
-export type BalanceRow = SortRow & {
+type BalanceData = {
   asset: string,
   balance: string,
-  value: string,
 }
+
+export type BalanceRow = SortRow<BalanceData>
 
 export const getBalanceData = (): Array<BalanceRow> => [
   {

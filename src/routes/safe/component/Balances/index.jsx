@@ -23,6 +23,8 @@ import Receive from './Receive'
 type State = {
   hideZero: boolean,
   showToken: boolean,
+  showReceive: boolean,
+  showSend: boolean,
 }
 
 const styles = theme => ({

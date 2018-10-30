@@ -28,6 +28,7 @@ type State = {
   orderBy: string,
   orderProp: boolean,
   rowsPerPage: number,
+  fixed: boolean,
 }
 
 const styles = {

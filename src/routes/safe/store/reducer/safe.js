@@ -2,7 +2,8 @@
 import { Map } from 'immutable'
 import { handleActions, type ActionType } from 'redux-actions'
 import addSafe, { ADD_SAFE, buildOwnersFrom } from '~/routes/safe/store/actions/addSafe'
-import { type Safe, makeSafe } from '~/routes/safe/store/model/safe'
+import { type Safe, type SafeProps, makeSafe } from '~/routes/safe/store/model/safe'
+import { type OwnerProps } from '~/routes/safe/store/model/owner'
 import { saveSafes, setOwners, load, SAFES_KEY } from '~/utils/localStorage'
 import updateSafe, { UPDATE_SAFE } from '~/routes/safe/store/actions/updateSafe'
 
@@ -11,10 +12,9 @@ export const SAFE_REDUCER_ID = 'safes'
 export type State = Map<string, Safe>
 
 export const buildSafe = (storedSafe: SafeProps) => {
-  const owners = buildOwnersFrom(
-    storedSafe.owners.map((owner: OwnerProps) => owner.name),
-    storedSafe.owners.map((owner: OwnerProps) => owner.address),
-  )
+  const names = storedSafe.owners.map((owner: OwnerProps) => owner.name)
+  const addresses = storedSafe.owners.map((owner: OwnerProps) => owner.address)
+  const owners = buildOwnersFrom(names.toIndexedSeq().toArray(), addresses.toIndexedSeq().toArray())
 
   const safe: SafeProps = {
     address: storedSafe.address,
@@ -26,8 +26,8 @@ export const buildSafe = (storedSafe: SafeProps) => {
   return makeSafe(safe)
 }
 
-const buildSafesFrom = (loadedSafes: Object): Promise<Map<string, Safe>> => {
-  const safes = Map()
+const buildSafesFrom = (loadedSafes: Object): Map<string, Safe> => {
+  const safes: Map<string, Safe> = Map()
 
   const keys = Object.keys(loadedSafes)
   try {

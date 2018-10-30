@@ -6,7 +6,7 @@ import { makeOwner, type Owner } from '~/routes/safe/store/model/owner'
 
 export const ADD_SAFE = 'ADD_SAFE'
 
-export const buildOwnersFrom = (names: string[], addresses: string[]) => {
+export const buildOwnersFrom = (names: Array<string>, addresses: Array<string>) => {
   const owners = names.map((name: string, index: number) => makeOwner({ name, address: addresses[index] }))
 
   return List(owners)
