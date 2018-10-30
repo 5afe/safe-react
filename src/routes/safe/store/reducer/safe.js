@@ -14,7 +14,7 @@ export type State = Map<string, Safe>
 export const buildSafe = (storedSafe: SafeProps) => {
   const names = storedSafe.owners.map((owner: OwnerProps) => owner.name)
   const addresses = storedSafe.owners.map((owner: OwnerProps) => owner.address)
-  const owners = buildOwnersFrom(names.toIndexedSeq().toArray(), addresses.toIndexedSeq().toArray())
+  const owners = buildOwnersFrom(Array.from(names), Array.from(addresses))
 
   const safe: SafeProps = {
     address: storedSafe.address,
