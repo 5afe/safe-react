@@ -7,7 +7,7 @@ import { type Safe } from '~/routes/safe/store/model/safe'
 import { type Owner } from '~/routes/safe/store/model/owner'
 import { type GlobalState } from '~/store'
 import { sameAddress } from '~/logic/wallets/ethAddresses'
-import { activeTokensSelector, tokenListSelector } from '~/routes/tokens/store/selectors'
+import { activeTokensSelector, orderedTokenListSelector } from '~/routes/tokens/store/selectors'
 import { type Token } from '~/routes/tokens/store/model/token'
 import { safeParamAddressSelector } from '../store/selectors'
 
@@ -45,7 +45,7 @@ export const grantedSelector: Selector<GlobalState, RouterProps, boolean> = crea
 export default createStructuredSelector({
   safe: safeSelector,
   provider: providerNameSelector,
-  tokens: tokenListSelector,
+  tokens: orderedTokenListSelector,
   activeTokens: activeTokensSelector,
   granted: grantedSelector,
   userAddress: userAccountSelector,
