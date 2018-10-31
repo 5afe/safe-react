@@ -102,10 +102,24 @@ type Props = {
   tokens: List<Token>,
 }
 
-class Tokens extends React.Component<Props> {
-  requestSearch = () => {
-    // eslint-disable-next-line
-    console.log("Filtering by name or symbol...")
+type State = {
+  filter: string,
+}
+
+const filterBy = (filter: string, tokens: List<Token>): List<Token> =>
+  tokens.filter((token: Token) => !filter || token.get('symbol').toLowerCase().startsWith(filter.toLowerCase()))
+
+class Tokens extends React.Component<Props, State> {
+  state = {
+    filter: '',
+  }
+
+  onCancelSearch = () => {
+    this.setState(() => ({ filter: '' }))
+  }
+
+  onChangeSearchBar = (value) => {
+    this.setState(() => ({ filter: value }))
   }
 
   render() {
@@ -116,6 +130,8 @@ class Tokens extends React.Component<Props> {
       iconButton: classes.searchIcon,
       searchContainer: classes.searchContainer,
     }
+
+    const filteredTokens = filterBy(this.state.filter, tokens)
 
     return (
       <React.Fragment>
@@ -132,20 +148,21 @@ class Tokens extends React.Component<Props> {
             <SearchBar
               placeholder="Search by name or symbol"
               classes={searchClasses}
-              onRequestSearch={this.requestSearch}
               searchIcon={<div />}
+              onChange={this.onChangeSearchBar}
+              onCancelSearch={this.onCancelSearch}
             />
             <Spacer />
             <Divider />
             <Spacer />
-            <Button variant="contained" size="small" color="secondary" className={classes.add}>
+            <Button variant="contained" size="small" color="secondary" className={classes.add} disabled>
               + ADD CUSTOM TOKEN
             </Button>
           </Row>
           <Hairline />
         </Block>
         <MuiList className={classes.list}>
-          {tokens.map((token: Token) => (
+          {filteredTokens.map((token: Token) => (
             <ListItem key={token.get('address')} className={classes.token}>
               <ListItemIcon>
                 <Img src={token.get('logoUrl')} height={28} alt={token.get('name')} />
