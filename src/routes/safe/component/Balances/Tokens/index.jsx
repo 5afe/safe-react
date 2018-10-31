@@ -6,6 +6,7 @@ import SearchBar from 'material-ui-search-bar'
 import { withStyles } from '@material-ui/core/styles'
 import MuiList from '@material-ui/core/List'
 import Img from '~/components/layout/Img'
+import Block from '~/components/layout/Block'
 import ListItem from '@material-ui/core/ListItem'
 import ListItemIcon from '@material-ui/core/ListItemIcon'
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction'
@@ -24,6 +25,9 @@ import { lg, md, sm, xs, mediumFontSize, border } from '~/theme/variables'
 import { type Token } from '~/routes/tokens/store/model/token'
 
 const styles = () => ({
+  root: {
+    minHeight: '132px',
+  },
   heading: {
     padding: `${md} ${lg}`,
     justifyContent: 'space-between',
@@ -53,6 +57,7 @@ const styles = () => ({
   list: {
     overflow: 'hidden',
     overflowY: 'scroll',
+    padding: 0,
   },
   token: {
     minHeight: '50px',
@@ -114,29 +119,31 @@ class Tokens extends React.Component<Props> {
 
     return (
       <React.Fragment>
-        <Row align="center" grow className={classes.heading}>
-          <Paragraph className={classes.manage} noMargin>Manage Tokens</Paragraph>
-          <IconButton onClick={onClose} disableRipple>
-            <Close className={classes.close} />
-          </IconButton>
-        </Row>
-        <Hairline />
-        <Row align="center" className={classNames(classes.padding, classes.actions)}>
-          <Search className={classes.search} />
-          <SearchBar
-            placeholder="Search by name or symbol"
-            classes={searchClasses}
-            onRequestSearch={this.requestSearch}
-            searchIcon={<div />}
-          />
-          <Spacer />
-          <Divider />
-          <Spacer />
-          <Button variant="contained" size="small" color="secondary" className={classes.add}>
-            + ADD CUSTOM TOKEN
-          </Button>
-        </Row>
-        <Hairline />
+        <Block className={classes.root}>
+          <Row align="center" grow className={classes.heading}>
+            <Paragraph className={classes.manage} noMargin>Manage Tokens</Paragraph>
+            <IconButton onClick={onClose} disableRipple>
+              <Close className={classes.close} />
+            </IconButton>
+          </Row>
+          <Hairline />
+          <Row align="center" className={classNames(classes.padding, classes.actions)}>
+            <Search className={classes.search} />
+            <SearchBar
+              placeholder="Search by name or symbol"
+              classes={searchClasses}
+              onRequestSearch={this.requestSearch}
+              searchIcon={<div />}
+            />
+            <Spacer />
+            <Divider />
+            <Spacer />
+            <Button variant="contained" size="small" color="secondary" className={classes.add}>
+              + ADD CUSTOM TOKEN
+            </Button>
+          </Row>
+          <Hairline />
+        </Block>
         <MuiList className={classes.list}>
           {tokens.map((token: Token) => (
             <ListItem key={token.get('address')} className={classes.token}>

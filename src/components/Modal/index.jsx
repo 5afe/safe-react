@@ -29,7 +29,8 @@ const styles = () => ({
     '&:focus': {
       outline: 'none',
     },
-    display: 'grid',
+    display: 'flex',
+    flexDirection: 'column',
   },
 })
 
