@@ -41,7 +41,7 @@ type Action = 'Token' | 'Send' | 'Receive'
 class Balances extends React.Component<Props, State> {
   state = {
     hideZero: false,
-    showToken: true,
+    showToken: false,
     showSend: false,
     showReceive: false,
   }
