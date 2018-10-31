@@ -122,7 +122,13 @@ class Layout extends React.Component<Props, State> {
           </Tabs>
         </Row>
         <Hairline color="#c8ced4" />
-        {value === 0 && <Balances tokens={tokens} activeTokens={activeTokens} granted={granted} />}
+        {value === 0 &&
+          <Balances
+            tokens={tokens}
+            activeTokens={activeTokens}
+            granted={granted}
+            safeAddress={address}
+          />}
       </React.Fragment>
     )
   }

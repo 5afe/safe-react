@@ -33,6 +33,7 @@ type Props = {
   classes: Object,
   granted: boolean,
   tokens: List<Token>,
+  safeAddress: string,
 }
 
 type Action = 'Token' | 'Send' | 'Receive'
@@ -63,7 +64,9 @@ class Balances extends React.Component<Props, State> {
     const {
       hideZero, showToken, showReceive, showSend,
     } = this.state
-    const { classes, granted, tokens } = this.props
+    const {
+      classes, granted, tokens, safeAddress,
+    } = this.props
 
     const columns = generateColumns()
     const autoColumns = columns.filter(c => !c.custom)
@@ -96,7 +99,7 @@ class Balances extends React.Component<Props, State> {
               handleClose={this.onHide('Token')}
               open={showToken}
             >
-              <Tokens tokens={tokens} onClose={this.onHide('Token')} />
+              <Tokens tokens={tokens} onClose={this.onHide('Token')} safeAddress={safeAddress} />
             </Modal>
           </Col>
         </Row>

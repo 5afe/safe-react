@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react'
+import { connect } from 'react-redux'
 import { List } from 'immutable'
 import classNames from 'classnames/bind'
 import SearchBar from 'material-ui-search-bar'
@@ -23,6 +24,7 @@ import Spacer from '~/components/Spacer'
 import Row from '~/components/layout/Row'
 import { lg, md, sm, xs, mediumFontSize, border } from '~/theme/variables'
 import { type Token } from '~/routes/tokens/store/model/token'
+import actions, { type Actions } from './actions'
 
 const styles = () => ({
   root: {
@@ -96,10 +98,11 @@ const styles = () => ({
   },
 })
 
-type Props = {
+type Props = Actions & {
   onClose: () => void,
   classes: Object,
   tokens: List<Token>,
+  safeAddress: string,
 }
 
 type State = {
@@ -120,6 +123,19 @@ class Tokens extends React.Component<Props, State> {
 
   onChangeSearchBar = (value) => {
     this.setState(() => ({ filter: value }))
+  }
+
+  onSwitch = (token: Token) => (e: SyntheticInputEvent<HTMLInputElement>) => {
+    const { checked } = e.target
+    const { safeAddress, enableToken, disableToken } = this.props
+
+    if (checked) {
+      enableToken(safeAddress, token)
+
+      return
+    }
+
+    disableToken(safeAddress, token)
   }
 
   render() {
@@ -170,8 +186,8 @@ class Tokens extends React.Component<Props, State> {
               <ListItemText primary={token.get('symbol')} secondary={token.get('name')} />
               <ListItemSecondaryAction>
                 <Switch
-                  onChange={undefined}
-                  checked
+                  onChange={this.onSwitch(token)}
+                  checked={token.get('status')}
                 />
               </ListItemSecondaryAction>
             </ListItem>
@@ -182,4 +198,7 @@ class Tokens extends React.Component<Props, State> {
   }
 }
 
-export default withStyles(styles)(Tokens)
+const TokenComponent = withStyles(styles)(Tokens)
+
+export default connect(undefined, actions)(TokenComponent)
+
