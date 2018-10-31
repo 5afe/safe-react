@@ -181,6 +181,19 @@ export default createMuiTheme({
         backgroundColor: 'rgba(228, 232, 241, 0.75)',
       },
     },
+    MuiListItemText: {
+      primary: {
+        fontFamily: 'Roboto Mono, monospace',
+        fontSize: mediumFontSize,
+        fontWeight: bolderFont,
+        color: primary,
+      },
+      secondary: {
+        fontFamily: 'Roboto Mono, monospace',
+        fontSize: smallFontSize,
+        color: disabled,
+      },
+    },
   },
   palette,
 })

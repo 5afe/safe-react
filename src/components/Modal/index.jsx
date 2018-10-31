@@ -29,6 +29,7 @@ const styles = () => ({
     '&:focus': {
       outline: 'none',
     },
+    display: 'grid',
   },
 })
 

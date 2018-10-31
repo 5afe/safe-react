@@ -16,11 +16,11 @@ import Paragraph from '~/components/layout/Paragraph'
 import Modal from '~/components/Modal'
 import { type Column, cellWidth } from '~/components/Table/TableHead'
 import Table from '~/components/Table'
-import { sm, xs } from '~/theme/variables'
 import { getBalanceData, generateColumns, BALANCE_TABLE_ASSET_ID, type BalanceRow, filterByZero } from './dataFetcher'
 import Tokens from './Tokens'
 import Send from './Send'
 import Receive from './Receive'
+import { styles } from './style'
 
 type State = {
   hideZero: boolean,
@@ -28,55 +28,6 @@ type State = {
   showReceive: boolean,
   showSend: boolean,
 }
-
-const styles = theme => ({
-  root: {
-    width: '20px',
-    marginRight: sm,
-  },
-  zero: {
-    letterSpacing: '-0.5px',
-  },
-  message: {
-    margin: `${sm} 0`,
-  },
-  actionIcon: {
-    marginRight: theme.spacing.unit,
-  },
-  iconSmall: {
-    fontSize: 16,
-  },
-  hide: {
-    '&:hover': {
-      backgroundColor: '#fff3e2',
-    },
-    '&:hover $actions': {
-      visibility: 'initial',
-    },
-  },
-  actions: {
-    justifyContent: 'flex-end',
-    visibility: 'hidden',
-  },
-  send: {
-    minWidth: '0px',
-    marginRight: sm,
-    width: '70px',
-  },
-  receive: {
-    minWidth: '0px',
-    width: '95px',
-  },
-  leftIcon: {
-    marginRight: xs,
-  },
-  links: {
-    textDecoration: 'underline',
-    '&:hover': {
-      cursor: 'pointer',
-    },
-  },
-})
 
 type Props = {
   classes: Object,
@@ -89,7 +40,7 @@ type Action = 'Token' | 'Send' | 'Receive'
 class Balances extends React.Component<Props, State> {
   state = {
     hideZero: false,
-    showToken: false,
+    showToken: true,
     showSend: false,
     showReceive: false,
   }
