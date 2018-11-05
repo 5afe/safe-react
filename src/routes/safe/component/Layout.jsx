@@ -81,7 +81,7 @@ class Layout extends React.Component<Props, State> {
     const { value } = this.state
 
     if (!safe) {
-      return <NoSafe provider={provider} text="Not found safe" />
+      return <NoSafe provider={provider} text="Safe not found" />
     }
     // <GnoSafe safe={safe} tokens={activeTokens} userAddress={userAddress} />
     const address = safe.get('address')
