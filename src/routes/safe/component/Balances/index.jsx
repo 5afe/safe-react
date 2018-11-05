@@ -33,6 +33,7 @@ type Props = {
   classes: Object,
   granted: boolean,
   tokens: List<Token>,
+  activeTokens: List<Token>,
   safeAddress: string,
 }
 
@@ -65,7 +66,7 @@ class Balances extends React.Component<Props, State> {
       hideZero, showToken, showReceive, showSend,
     } = this.state
     const {
-      classes, granted, tokens, safeAddress,
+      classes, granted, tokens, safeAddress, activeTokens,
     } = this.props
 
     const columns = generateColumns()
@@ -74,7 +75,7 @@ class Balances extends React.Component<Props, State> {
       root: classes.root,
     }
 
-    const filteredData = filterByZero(getBalanceData(), hideZero)
+    const filteredData = filterByZero(getBalanceData(activeTokens), hideZero)
 
     return (
       <React.Fragment>
