@@ -1,11 +1,14 @@
 // @flow
 import * as React from 'react'
+import classNames from 'classnames'
 import { List } from 'immutable'
+import Row from '~/components/layout/Row'
 import Table from '@material-ui/core/Table'
 import TableBody from '@material-ui/core/TableBody'
 import TableRow from '@material-ui/core/TableRow'
 import TableCell from '@material-ui/core/TableCell'
 import { withStyles } from '@material-ui/core/styles'
+import CircularProgress from '@material-ui/core/CircularProgress'
 import TablePagination from '@material-ui/core/TablePagination'
 import { type Order, stableSort, getSorting } from '~/components/Table/sorting'
 import TableHead, { type Column } from '~/components/Table/TableHead'
@@ -48,8 +51,10 @@ const styles = {
     boxShadow: '0 2px 4px 0 rgba(74, 85, 121, 0.5)',
     marginBottom: xl,
   },
-  empty: {
-
+  loader: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'white',
   },
 }
 
@@ -77,6 +82,10 @@ class GnoTable<K> extends React.Component<Props<K>, State> {
       order, orderBy, orderProp, fixed: false,
     }))
   }
+
+  getEmptyStyle = (emptyRows: number) => ({
+    height: FIXED_HEIGHT * emptyRows,
+  })
 
   handleChangePage = (e: SyntheticInputEvent<HTMLInputElement>, page: number) => {
     this.setState({ page })
@@ -114,28 +123,33 @@ class GnoTable<K> extends React.Component<Props<K>, State> {
       .slice(page * rowsPerPage, ((page * rowsPerPage) + rowsPerPage))
 
     const emptyRows = rowsPerPage - Math.min(rowsPerPage, data.length - (page * rowsPerPage))
-    const emptyStyle = {
-      height: FIXED_HEIGHT * emptyRows,
-    }
+    const isEmpty = size === 0
 
     return (
       <React.Fragment>
-        <Table aria-labelledby={label} className={classes.root}>
-          <TableHead
-            columns={columns}
-            order={order}
-            orderBy={orderBy}
-            onSort={this.onSort}
-          />
-          <TableBody>
-            { children(sortedData) }
-            { emptyRows > 0 &&
-              <TableRow style={emptyStyle}>
-                <TableCell colSpan={4} />
-              </TableRow>
-            }
-          </TableBody>
-        </Table>
+        { !isEmpty &&
+          <Table aria-labelledby={label} className={classes.root}>
+            <TableHead
+              columns={columns}
+              order={order}
+              orderBy={orderBy}
+              onSort={this.onSort}
+            />
+            <TableBody>
+              { children(sortedData) }
+              { emptyRows > 0 &&
+                <TableRow style={this.getEmptyStyle(emptyRows)}>
+                  <TableCell colSpan={4} />
+                </TableRow>
+              }
+            </TableBody>
+          </Table>
+        }
+        { isEmpty &&
+          <Row className={classNames(classes.loader, classes.root)} style={this.getEmptyStyle(emptyRows + 1)}>
+            <CircularProgress size={60} />
+          </Row>
+        }
         <TablePagination
           component="div"
           count={size}
