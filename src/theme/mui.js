@@ -1,7 +1,7 @@
 // @flow
 import red from '@material-ui/core/colors/red'
 import { createMuiTheme } from '@material-ui/core/styles'
-import { largeFontSize, mediumFontSize, smallFontSize, disabled, primary, secondary, md, lg, background, bolderFont, boldFont } from './variables'
+import { largeFontSize, mediumFontSize, smallFontSize, disabled, primary, secondary, md, lg, background, bolderFont, boldFont, buttonLargeFontSize } from './variables'
 
 export type WithStyles = {
   classes: Object,
@@ -29,7 +29,7 @@ export default createMuiTheme({
     MuiButton: {
       root: {
         fontFamily: 'Roboto Mono, monospace',
-        letterSpacing: '1px',
+        letterSpacing: '0.9px',
         '&:disabled': {
           color: disabled,
         },
@@ -38,13 +38,17 @@ export default createMuiTheme({
       disabled: {
         cursor: 'pointer',
       },
+      contained: {
+        boxShadow: 'none',
+      },
       containedPrimary: {
         backgroundColor: secondary,
       },
       sizeLarge: {
         padding: `${md} ${lg}`,
         minHeight: '52px',
-        fontSize: mediumFontSize,
+        fontSize: buttonLargeFontSize,
+        fontWeight: boldFont,
       },
       sizeSmall: {
         minWidth: '130px',

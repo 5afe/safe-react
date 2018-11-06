@@ -6,7 +6,7 @@ import Img from '~/components/layout/Img'
 import Button from '~/components/layout/Button'
 import Link from '~/components/layout/Link'
 import { OPEN_ADDRESS } from '~/routes/routes'
-import { sm } from '~/theme/variables'
+import { marginButtonImg } from '~/theme/variables'
 import styles from './Layout.scss'
 
 const safe = require('../assets/safe.svg')
@@ -22,7 +22,7 @@ type SafeProps = {
 }
 
 const buttonStyle = {
-  marginLeft: sm,
+  marginLeft: marginButtonImg,
 }
 
 export const CreateSafe = ({ size, provider }: SafeProps) => (
@@ -35,7 +35,7 @@ export const CreateSafe = ({ size, provider }: SafeProps) => (
     disabled={!provider}
     minWidth={240}
   >
-    <Img src={plus} height={16} alt="Safe" />
+    <Img src={plus} height={14} alt="Safe" />
     <div style={buttonStyle}>Create new Safe</div>
   </Button>
 )
@@ -50,7 +50,7 @@ export const LoadSafe = ({ size, provider }: SafeProps) => (
     disabled={!provider}
     minWidth={240}
   >
-    <Img src={safe} height={16} alt="Safe" />
+    <Img src={safe} height={14} alt="Safe" />
     <div style={buttonStyle}>Load existing Safe</div>
   </Button>
 )
@@ -58,10 +58,8 @@ export const LoadSafe = ({ size, provider }: SafeProps) => (
 
 const Welcome = ({ provider }: Props) => (
   <Block className={styles.safe}>
-    <Heading tag="h1" align="center">
-      Welcome to the Gnosis
-    </Heading>
     <Heading tag="h1" align="center" margin="lg">
+      Welcome to the Gnosis <br />
       Safe Team Edition
     </Heading>
     <Heading tag="h4" align="center" margin="xl">

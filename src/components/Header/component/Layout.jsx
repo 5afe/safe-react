@@ -31,9 +31,9 @@ const styles = () => ({
     left: '4px',
   },
   summary: {
-    borderBottom: `solid 2px ${border}`,
+    borderBottom: `solid 1px ${border}`,
     alignItems: 'center',
-    height: '52px',
+    height: '53px',
     backgroundColor: 'white',
   },
   logo: {
