@@ -47,7 +47,7 @@ const styles = () => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#f4f4f9',
+    backgroundColor: '#e4e8f1',
     borderRadius: '20px',
   },
 })
