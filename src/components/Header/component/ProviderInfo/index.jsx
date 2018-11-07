@@ -4,13 +4,10 @@ import { withStyles } from '@material-ui/core/styles'
 import Paragraph from '~/components/layout/Paragraph'
 import Col from '~/components/layout/Col'
 import Dot from '@material-ui/icons/FiberManualRecord'
-import { sm } from '~/theme/variables'
+import { connected as connectedBg, sm } from '~/theme/variables'
 import Identicon from '~/components/Identicon'
 import { shortVersionOf } from '~/logic/wallets/ethAddresses'
 import CircleDot from '~/components/Header/component/CircleDot'
-
-const connectedBg = '#00c4c4'
-
 
 type Props = {
   provider: string,

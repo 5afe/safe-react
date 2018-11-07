@@ -7,6 +7,7 @@ const tertiary = '#f6f9fc'
 const fontColor = '#4a5579'
 const fancyColor = '#fd7890'
 const warningColor = '#ffc05f'
+const connectedColor = '#00c4c4'
 const disabled = '#65707e'
 const xs = '4px'
 const sm = '8px'
@@ -25,6 +26,7 @@ module.exports = Object.assign({}, {
   fontColor,
   fancy: fancyColor,
   warning: warningColor,
+  connected: connectedColor,
   xs,
   sm,
   md,

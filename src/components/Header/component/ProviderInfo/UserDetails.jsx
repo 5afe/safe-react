@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react'
+import classNames from 'classnames'
 import OpenInNew from '@material-ui/icons/OpenInNew'
 import { withStyles } from '@material-ui/core/styles'
 import Paragraph from '~/components/layout/Paragraph'
@@ -12,15 +13,13 @@ import Img from '~/components/layout/Img'
 import Row from '~/components/layout/Row'
 import Block from '~/components/layout/Block'
 import Spacer from '~/components/Spacer'
-import { xs, sm, md, lg, background, secondary, warning } from '~/theme/variables'
+import { xs, sm, md, lg, background, secondary, warning, connected as connectedBg } from '~/theme/variables'
 import { upperFirst } from '~/utils/css'
 import { shortVersionOf } from '~/logic/wallets/ethAddresses'
 import { openAddressInEtherScan } from '~/logic/wallets/getWeb3'
 import CircleDot from '~/components/Header/component/CircleDot'
 
 const metamask = require('../../assets/metamask.svg')
-const connectedLogo = require('../../assets/connected.svg')
-const connectedWarning = require('../../assets/connected-error.svg')
 const dot = require('../../assets/dotRinkeby.svg')
 
 type Props = {
@@ -79,11 +78,16 @@ const styles = () => ({
   logo: {
     margin: `0px ${xs}`,
   },
-  warning: {
+  dot: {
     marginRight: xs,
-    color: warning,
     height: '15px',
     width: '15px',
+  },
+  warning: {
+    color: warning,
+  },
+  connected: {
+    color: connectedBg,
   },
 })
 
@@ -93,7 +97,6 @@ const UserDetails = ({
   const status = connected ? 'Connected' : 'Connection error'
   const address = userAddress ? shortVersionOf(userAddress, 6) : 'Address not available'
   const identiconAddress = userAddress || 'random'
-  const connectionLogo = connected ? connectedLogo : connectedWarning
   const color = connected ? 'primary' : 'warning'
 
   return (
@@ -120,10 +123,7 @@ const UserDetails = ({
       <Row className={classes.details}>
         <Paragraph size="sm" noMargin align="right">Status </Paragraph>
         <Spacer />
-        { connected
-          ? <Img className={classes.logo} src={connectionLogo} height={16} alt="Conection Status" />
-          : <Dot className={classes.warning} />
-        }
+        <Dot className={classNames(classes.dot, connected ? classes.connected : classes.warning)} />
         <Paragraph size="sm" noMargin align="right" color={color}>
           <Bold>
             {status}
