@@ -55,6 +55,11 @@ export default createMuiTheme({
         minWidth: '130px',
         fontSize: smallFontSize,
       },
+      textSecondary: {
+        '&:hover': {
+          borderRadius: '3px',
+        },
+      },
     },
     MuiStepper: {
       root: {
@@ -64,12 +69,19 @@ export default createMuiTheme({
     MuiStepIcon: {
       root: {
         fontSize: '22px',
+        color: '#A2A8BA !important',
       },
       completed: {
         color: `${secondary} !important`,
       },
       active: {
         color: `${secondary} !important`,
+        fontWeight: boldFont,
+      },
+    },
+    MuiStepContent: {
+      root: {
+        borderLeft: '1px solid #A2A8BA',
       },
     },
     MuiTypography: {
@@ -130,6 +142,10 @@ export default createMuiTheme({
     MuiStepLabel: {
       label: {
         textAlign: 'left',
+        color: '#A2A8BA',
+        '&$active': {
+          color: primary,
+        },
       },
     },
     MuiSnackbarContent: {

@@ -115,7 +115,7 @@ class SafeOwners extends React.Component<Props, State> {
     return (
       <React.Fragment>
         <Block className={classes.title}>
-          <Paragraph noMargin size="md" color="primary" weight="light">
+          <Paragraph noMargin size="md" color="primary">
             Specify the owners of the Safe.
           </Paragraph>
         </Block>
@@ -163,6 +163,7 @@ class SafeOwners extends React.Component<Props, State> {
                   { index > 0 &&
                     <IconButton aria-label="Delete" onClick={this.onRemoveRow(index)} className={classes.trash}>
                       <Delete />
+                      {/* <Img className={classes.logo} src={dot} height={14} alt="Network" /> */}
                     </IconButton>
                   }
                 </Col>
@@ -172,7 +173,7 @@ class SafeOwners extends React.Component<Props, State> {
         </Block>
         <Row align="center" grow className={classes.add} margin="xl">
           <Button color="secondary" onClick={this.onAddOwner}>
-            {ADD_OWNER_BUTTON}
+            <Paragraph weight="bold" size="md" noMargin>{ADD_OWNER_BUTTON}</Paragraph>
           </Button>
         </Row>
       </React.Fragment>
