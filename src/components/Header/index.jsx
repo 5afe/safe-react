@@ -4,10 +4,10 @@ import { connect } from 'react-redux'
 import { logComponentStack, type Info } from '~/utils/logBoundaries'
 import { SharedSnackbarConsumer, type Variant } from '~/components/SharedSnackBar/Context'
 import { WALLET_ERROR_MSG } from '~/logic/wallets/store/actions'
-import ProviderInfo from './component/ProviderInfo'
-import ProviderDetails from './component/ProviderInfo/UserDetails'
-import ProviderDisconnected from './component/ProviderDisconnected'
-import ConnectDetails from './component/ProviderDisconnected/ConnectDetails'
+import ProviderAccesible from './component/ProviderInfo/ProviderAccesible'
+import UserDetails from './component/ProviderDetails/UserDetails'
+import ProviderDisconnected from './component/ProviderInfo/ProviderDisconnected'
+import ConnectDetails from './component/ProviderDetails/ConnectDetails'
 import Layout from './component/Layout'
 import actions, { type Actions } from './actions'
 import selector, { type SelectorProps } from './selector'
@@ -54,7 +54,7 @@ class HeaderComponent extends React.PureComponent<Props, State> {
       return <ProviderDisconnected />
     }
 
-    return <ProviderInfo provider={provider} network={network} userAddress={userAddress} connected={available} />
+    return <ProviderAccesible provider={provider} network={network} userAddress={userAddress} connected={available} />
   }
 
   getProviderDetailsBased = () => {
@@ -67,7 +67,7 @@ class HeaderComponent extends React.PureComponent<Props, State> {
       return <ConnectDetails onConnect={this.onConnect} />
     }
 
-    return (<ProviderDetails
+    return (<UserDetails
       provider={provider}
       network={network}
       userAddress={userAddress}
