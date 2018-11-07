@@ -4,9 +4,10 @@ import { withStyles } from '@material-ui/core/styles'
 import Block from '~/components/layout/Block'
 import Dot from '@material-ui/icons/FiberManualRecord'
 import Img from '~/components/layout/Img'
-import { fancy, border } from '~/theme/variables'
+import { fancy, border, warning } from '~/theme/variables'
 
-const key = require('../../assets/key.svg')
+const key = require('../assets/key.svg')
+const triangle = require('../assets/key.svg')
 
 const styles = () => ({
   root: {
@@ -25,6 +26,8 @@ const styles = () => ({
   },
 })
 
+type Mode = 'error' | 'warning'
+
 type Props = {
   classes: Object,
   keySize: number,
@@ -33,6 +36,7 @@ type Props = {
   dotTop: number,
   dotRight: number,
   center?: boolean,
+  mode: Mode,
 }
 
 const buildKeyStyleFrom = (size: number, center: boolean, dotSize: number) => ({
@@ -42,25 +46,27 @@ const buildKeyStyleFrom = (size: number, center: boolean, dotSize: number) => ({
   borderRadius: `${size}px`,
 })
 
-const buildDotStyleFrom = (size: number, top: number, right: number) => ({
+const buildDotStyleFrom = (size: number, top: number, right: number, mode: Mode) => ({
   width: `${size}px`,
   height: `${size}px`,
   borderRadius: `${size}px`,
   top: `${top}px`,
   right: `${right}px`,
+  color: mode === 'error' ? fancy : warning,
 })
 
 const KeyRing = ({
-  classes, circleSize, keySize, dotSize, dotTop, dotRight, center = false,
+  classes, circleSize, keySize, dotSize, dotTop, dotRight, mode, center = false,
 }: Props) => {
   const keyStyle = buildKeyStyleFrom(circleSize, center, dotSize)
-  const dotStyle = buildDotStyleFrom(dotSize, dotTop, dotRight)
+  const dotStyle = buildDotStyleFrom(dotSize, dotTop, dotRight, mode)
+  const img = mode === warning ? triangle : key
 
   return (
     <React.Fragment>
       <Block className={classes.root}>
         <Block className={classes.key} style={keyStyle}>
-          <Img src={key} height={keySize} alt="Status disconnected" />
+          <Img src={img} height={keySize} alt="Status disconnected" />
         </Block>
         <Dot className={classes.dot} style={dotStyle} />
       </Block>

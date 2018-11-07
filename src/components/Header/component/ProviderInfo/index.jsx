@@ -1,6 +1,5 @@
 // @flow
 import * as React from 'react'
-import classNames from 'classnames'
 import { withStyles } from '@material-ui/core/styles'
 import Paragraph from '~/components/layout/Paragraph'
 import Col from '~/components/layout/Col'
@@ -8,9 +7,10 @@ import Dot from '@material-ui/icons/FiberManualRecord'
 import { sm } from '~/theme/variables'
 import Identicon from '~/components/Identicon'
 import { shortVersionOf } from '~/logic/wallets/ethAddresses'
+import CircleDot from '~/components/Header/component/CircleDot'
 
 const connectedBg = '#00c4c4'
-const warningBg = '#ffc05f'
+
 
 type Props = {
   provider: string,
@@ -32,12 +32,7 @@ const styles = () => ({
     right: '10px',
     backgroundColor: '#ffffff',
     borderRadius: '15px',
-  },
-  connected: {
     color: connectedBg,
-  },
-  warning: {
-    color: warningBg,
   },
   account: {
     paddingRight: sm,
@@ -58,13 +53,19 @@ const ProviderInfo = ({
   const providerText = `${provider} [${network}]`
   const cutAddress = connected ? shortVersionOf(userAddress, 6) : 'Connection Error'
   const color = connected ? 'primary' : 'warning'
-  const logo = connected ? classes.connected : classes.warning
   const identiconAddress = userAddress || 'random'
 
   return (
     <React.Fragment>
-      <Identicon address={identiconAddress} diameter={30} />
-      <Dot className={classNames(classes.logo, logo)} />
+      { connected &&
+        <React.Fragment>
+          <Identicon address={identiconAddress} diameter={30} />
+          <Dot className={classes.logo} />
+        </React.Fragment>
+      }
+      { !connected &&
+        <CircleDot keySize={17} circleSize={35} dotSize={16} dotTop={24} dotRight={11} mode="warning" />
+      }
       <Col start="sm" layout="column" className={classes.account}>
         <Paragraph size="sm" transform="capitalize" className={classes.network} noMargin weight="bolder">{providerText}</Paragraph>
         <Paragraph size="sm" className={classes.address} noMargin color={color}>{cutAddress}</Paragraph>

@@ -5,7 +5,7 @@ import Paragraph from '~/components/layout/Paragraph'
 import Col from '~/components/layout/Col'
 import { type Open } from '~/components/hoc/OpenHoc'
 import { sm } from '~/theme/variables'
-import KeyRing from './KeyRing'
+import CircleDot from '~/components/Header/component/CircleDot'
 
 type Props = Open & {
   classes: Object,
@@ -31,7 +31,7 @@ const styles = () => ({
 
 const ProviderDesconnected = ({ classes }: Props) => (
   <React.Fragment>
-    <KeyRing keySize={17} circleSize={35} dotSize={16} dotTop={24} dotRight={11} />
+    <CircleDot keySize={17} circleSize={35} dotSize={16} dotTop={24} dotRight={11} mode="error" />
     <Col end="sm" middle="xs" layout="column" className={classes.account}>
       <Paragraph size="sm" transform="capitalize" className={classes.network} noMargin weight="bold">Not Connected</Paragraph>
       <Paragraph size="sm" color="fancy" className={classes.connect} noMargin>Connect Wallet</Paragraph>
