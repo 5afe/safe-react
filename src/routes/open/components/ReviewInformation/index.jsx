@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react'
+import classNames from 'classnames'
 import { getNamesFrom, getAccountsFrom } from '~/routes/open/utils/safeDataExtractor'
 import Block from '~/components/layout/Block'
 import { withStyles } from '@material-ui/core/styles'
@@ -41,6 +42,8 @@ const styles = () => ({
   name: {
     textOverflow: 'ellipsis',
     overflow: 'hidden',
+  },
+  userName: {
     whiteSpace: 'nowrap',
   },
   owner: {
@@ -115,7 +118,7 @@ const ReviewComponent = ({ values, classes, network }: Props) => {
                   <Identicon address={addresses[index]} diameter={32} />
                 </Col>
                 <Col xs={11}>
-                  <Block className={classes.name}>
+                  <Block className={classNames(classes.name, classes.userName)}>
                     <Paragraph size="lg" noMargin >{name}</Paragraph>
                     <Block align="center" className={classes.user}>
                       <Paragraph size="md" color="disabled" noMargin>{addresses[index]}</Paragraph>
