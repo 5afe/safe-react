@@ -5,13 +5,14 @@ import { withStyles } from '@material-ui/core/styles'
 import Paragraph from '~/components/layout/Paragraph'
 import Button from '~/components/layout/Button'
 import Identicon from '~/components/Identicon'
+import Dot from '@material-ui/icons/FiberManualRecord'
 import Bold from '~/components/layout/Bold'
 import Hairline from '~/components/layout/Hairline'
 import Img from '~/components/layout/Img'
 import Row from '~/components/layout/Row'
 import Block from '~/components/layout/Block'
 import Spacer from '~/components/Spacer'
-import { xs, sm, md, lg, background, secondary } from '~/theme/variables'
+import { xs, sm, md, lg, background, secondary, warning } from '~/theme/variables'
 import { upperFirst } from '~/utils/css'
 import { shortVersionOf } from '~/logic/wallets/ethAddresses'
 import { openAddressInEtherScan } from '~/logic/wallets/getWeb3'
@@ -78,6 +79,12 @@ const styles = () => ({
   logo: {
     margin: `0px ${xs}`,
   },
+  warning: {
+    marginRight: xs,
+    color: warning,
+    height: '15px',
+    width: '15px',
+  },
 })
 
 const UserDetails = ({
@@ -113,7 +120,10 @@ const UserDetails = ({
       <Row className={classes.details}>
         <Paragraph size="sm" noMargin align="right">Status </Paragraph>
         <Spacer />
-        <Img className={classes.logo} src={connectionLogo} height={16} alt="Conection Status" />
+        { connected
+          ? <Img className={classes.logo} src={connectionLogo} height={16} alt="Conection Status" />
+          : <Dot className={classes.warning} />
+        }
         <Paragraph size="sm" noMargin align="right" color={color}>
           <Bold>
             {status}
