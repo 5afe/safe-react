@@ -9,6 +9,7 @@ const styles = () => ({
   root: {
     margin: '10px',
     maxWidth: '870px',
+    boxShadow: '0 0 10px 0 rgba(33,48,77,0.10)',
   },
   container: {
     letterSpacing: '-0.5px',
