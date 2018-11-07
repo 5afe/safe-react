@@ -64,7 +64,7 @@ const ProviderInfo = ({
         </React.Fragment>
       }
       { !connected &&
-        <CircleDot keySize={17} circleSize={35} dotSize={16} dotTop={24} dotRight={11} mode="warning" />
+        <CircleDot keySize={14} circleSize={35} dotSize={16} dotTop={24} dotRight={11} mode="warning" />
       }
       <Col start="sm" layout="column" className={classes.account}>
         <Paragraph size="sm" transform="capitalize" className={classes.network} noMargin weight="bolder">{providerText}</Paragraph>

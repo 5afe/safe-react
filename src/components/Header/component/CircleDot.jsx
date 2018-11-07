@@ -7,7 +7,7 @@ import Img from '~/components/layout/Img'
 import { fancy, border, warning } from '~/theme/variables'
 
 const key = require('../assets/key.svg')
-const triangle = require('../assets/key.svg')
+const triangle = require('../assets/triangle.svg')
 
 const styles = () => ({
   root: {
@@ -24,6 +24,10 @@ const styles = () => ({
     justifyContent: 'center',
     backgroundColor: border,
   },
+  warning: {
+    position: 'relative',
+    top: '-2px',
+  },
 })
 
 type Mode = 'error' | 'warning'
@@ -35,8 +39,9 @@ type Props = {
   dotSize: number,
   dotTop: number,
   dotRight: number,
-  center?: boolean,
   mode: Mode,
+  center?: boolean,
+  hideDot?: boolean,
 }
 
 const buildKeyStyleFrom = (size: number, center: boolean, dotSize: number) => ({
@@ -56,19 +61,26 @@ const buildDotStyleFrom = (size: number, top: number, right: number, mode: Mode)
 })
 
 const KeyRing = ({
-  classes, circleSize, keySize, dotSize, dotTop, dotRight, mode, center = false,
+  classes, circleSize, keySize, dotSize, dotTop, dotRight, mode, center = false, hideDot = false,
 }: Props) => {
   const keyStyle = buildKeyStyleFrom(circleSize, center, dotSize)
   const dotStyle = buildDotStyleFrom(dotSize, dotTop, dotRight, mode)
-  const img = mode === warning ? triangle : key
+  const isWarning = mode === 'warning'
+  const img = isWarning ? triangle : key
 
   return (
     <React.Fragment>
       <Block className={classes.root}>
         <Block className={classes.key} style={keyStyle}>
-          <Img src={img} height={keySize} alt="Status disconnected" />
+          <Img
+            src={img}
+            height={keySize}
+            width={isWarning ? keySize + 2 : keySize}
+            alt="Status connection"
+            className={isWarning ? classes.warning : undefined}
+          />
         </Block>
-        <Dot className={classes.dot} style={dotStyle} />
+        { !hideDot && <Dot className={classes.dot} style={dotStyle} /> }
       </Block>
     </React.Fragment>
   )

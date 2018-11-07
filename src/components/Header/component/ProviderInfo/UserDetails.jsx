@@ -15,6 +15,7 @@ import { xs, sm, md, lg, background, secondary } from '~/theme/variables'
 import { upperFirst } from '~/utils/css'
 import { shortVersionOf } from '~/logic/wallets/ethAddresses'
 import { openAddressInEtherScan } from '~/logic/wallets/getWeb3'
+import CircleDot from '~/components/Header/component/CircleDot'
 
 const metamask = require('../../assets/metamask.svg')
 const connectedLogo = require('../../assets/connected.svg')
@@ -92,7 +93,10 @@ const UserDetails = ({
     <React.Fragment>
       <Block className={classes.container}>
         <Row className={classes.identicon} margin="md" align="center">
-          <Identicon address={identiconAddress} diameter={60} />
+          { connected
+            ? <Identicon address={identiconAddress} diameter={60} />
+            : <CircleDot keySize={30} circleSize={75} dotSize={25} dotTop={50} dotRight={25} mode="warning" hideDot />
+          }
         </Row>
         <Block align="center" className={classes.user}>
           <Paragraph className={classes.address} size="sm" noMargin>{address}</Paragraph>
