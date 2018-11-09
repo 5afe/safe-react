@@ -6,7 +6,7 @@
 
 .h1 {
   line-height: 36px;
-  font-weight: 500;
+  font-weight: $bolderFont;
   letter-spacing: -1px;
   font-size: $(fontSizeHeadingLg)px;
 }
@@ -29,7 +29,6 @@
 
 .h4 {
   line-height: 21px;
-  letter-spacing: -0.5px;
   font-family: 'Roboto Mono', monospace;
   font-size: $(fontSizeHeadingXs)px;
 }

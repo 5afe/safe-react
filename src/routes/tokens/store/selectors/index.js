@@ -30,6 +30,11 @@ export const activeTokensSelector = createSelector(
   (tokens: List<Token>) => tokens.filter((token: Token) => token.get('status')),
 )
 
+export const orderedTokenListSelector = createSelector(
+  tokenListSelector,
+  (tokens: List<Token>) => tokens.sortBy((token: Token) => token.get('symbol')),
+)
+
 export const tokenAddressesSelector = createSelector(
   tokenListSelector,
   (balances: List<Token>) => {

@@ -1,6 +1,8 @@
 // @flow
 import * as React from 'react'
+import { List } from 'immutable'
 import classNames from 'classnames/bind'
+import { type Token } from '~/routes/tokens/store/model/token'
 import CallMade from '@material-ui/icons/CallMade'
 import CallReceived from '@material-ui/icons/CallReceived'
 import Button from '@material-ui/core/Button'
@@ -14,11 +16,11 @@ import Paragraph from '~/components/layout/Paragraph'
 import Modal from '~/components/Modal'
 import { type Column, cellWidth } from '~/components/Table/TableHead'
 import Table from '~/components/Table'
-import { sm, xs } from '~/theme/variables'
 import { getBalanceData, generateColumns, BALANCE_TABLE_ASSET_ID, type BalanceRow, filterByZero } from './dataFetcher'
 import Tokens from './Tokens'
 import Send from './Send'
 import Receive from './Receive'
+import { styles } from './style'
 
 type State = {
   hideZero: boolean,
@@ -27,58 +29,12 @@ type State = {
   showSend: boolean,
 }
 
-const styles = theme => ({
-  root: {
-    width: '20px',
-    marginRight: sm,
-  },
-  zero: {
-    letterSpacing: '-0.5px',
-  },
-  message: {
-    margin: `${sm} 0`,
-  },
-  actionIcon: {
-    marginRight: theme.spacing.unit,
-  },
-  iconSmall: {
-    fontSize: 16,
-  },
-  hide: {
-    '&:hover': {
-      backgroundColor: '#fff3e2',
-    },
-    '&:hover $actions': {
-      visibility: 'initial',
-    },
-  },
-  actions: {
-    justifyContent: 'flex-end',
-    visibility: 'hidden',
-  },
-  send: {
-    minWidth: '0px',
-    marginRight: sm,
-    width: '70px',
-  },
-  receive: {
-    minWidth: '0px',
-    width: '95px',
-  },
-  leftIcon: {
-    marginRight: xs,
-  },
-  links: {
-    textDecoration: 'underline',
-    '&:hover': {
-      cursor: 'pointer',
-    },
-  },
-})
-
 type Props = {
   classes: Object,
   granted: boolean,
+  tokens: List<Token>,
+  activeTokens: List<Token>,
+  safeAddress: string,
 }
 
 type Action = 'Token' | 'Send' | 'Receive'
@@ -109,7 +65,9 @@ class Balances extends React.Component<Props, State> {
     const {
       hideZero, showToken, showReceive, showSend,
     } = this.state
-    const { classes, granted } = this.props
+    const {
+      classes, granted, tokens, safeAddress, activeTokens,
+    } = this.props
 
     const columns = generateColumns()
     const autoColumns = columns.filter(c => !c.custom)
@@ -117,7 +75,7 @@ class Balances extends React.Component<Props, State> {
       root: classes.root,
     }
 
-    const filteredData = filterByZero(getBalanceData(), hideZero)
+    const filteredData = filterByZero(getBalanceData(activeTokens), hideZero)
 
     return (
       <React.Fragment>
@@ -142,7 +100,7 @@ class Balances extends React.Component<Props, State> {
               handleClose={this.onHide('Token')}
               open={showToken}
             >
-              <Tokens onClose={this.onHide('Token')} />
+              <Tokens tokens={tokens} onClose={this.onHide('Token')} safeAddress={safeAddress} />
             </Modal>
           </Col>
         </Row>

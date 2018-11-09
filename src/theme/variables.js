@@ -1,12 +1,13 @@
 // @flow
-const border = '#eaebef'
+const border = '#e4e8f1'
 const background = '#f4f4f9'
 const primary = '#4a5579'
 const secondary = '#467ee5' // '#13222b'
 const tertiary = '#f6f9fc'
 const fontColor = '#4a5579'
 const fancyColor = '#fd7890'
-const warningColor = '#c97c05'
+const warningColor = '#ffc05f'
+const connectedColor = '#00c4c4'
 const disabled = '#65707e'
 const xs = '4px'
 const sm = '8px'
@@ -14,6 +15,7 @@ const md = '16px'
 const lg = '24px'
 const xl = '32px'
 const xxl = '40px'
+const marginButtonImg = '12px'
 
 module.exports = Object.assign({}, {
   primary,
@@ -24,6 +26,7 @@ module.exports = Object.assign({}, {
   fontColor,
   fancy: fancyColor,
   warning: warningColor,
+  connected: connectedColor,
   xs,
   sm,
   md,
@@ -31,10 +34,12 @@ module.exports = Object.assign({}, {
   xl,
   xxl,
   border,
+  marginButtonImg,
   fontSizeHeadingXs: 13,
   fontSizeHeadingSm: 18,
   fontSizeHeadingMd: 21,
   fontSizeHeadingLg: 32,
+  buttonLargeFontSize: '12px',
   lightFont: 300,
   regularFont: 400,
   bolderFont: 500,

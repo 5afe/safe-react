@@ -10,7 +10,7 @@ import IconButton from '@material-ui/core/IconButton'
 import { withStyles } from '@material-ui/core/styles'
 import WarningIcon from '@material-ui/icons/Warning'
 import { type WithStyles } from '~/theme/mui'
-import { secondary } from '~/theme/variables'
+import { secondary, warning, connected } from '~/theme/variables'
 
 type Variant = 'success' | 'error' | 'warning' | 'info'
 
@@ -39,13 +39,13 @@ const styles = theme => ({
     backgroundColor: '#ffffff',
   },
   successIcon: {
-    color: '#00c4c4',
+    color: connected,
   },
   warning: {
     backgroundColor: '#fff3e2',
   },
   warningIcon: {
-    color: '#ffc05f',
+    color: warning,
   },
   error: {
     backgroundColor: '#ffe6ea',

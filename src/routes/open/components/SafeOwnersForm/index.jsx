@@ -7,9 +7,8 @@ import { required, composeValidators, uniqueAddress, mustBeEthereumAddress } fro
 import Block from '~/components/layout/Block'
 import Button from '~/components/layout/Button'
 import Row from '~/components/layout/Row'
+import Img from '~/components/layout/Img'
 import Col from '~/components/layout/Col'
-import IconButton from '@material-ui/core/IconButton'
-import Delete from '@material-ui/icons/Delete'
 import InputAdornment from '@material-ui/core/InputAdornment'
 import CheckCircle from '@material-ui/icons/CheckCircle'
 import { getOwnerNameBy, getOwnerAddressBy } from '~/routes/open/components/fields'
@@ -18,6 +17,8 @@ import OpenPaper from '~/components/Stepper/OpenPaper'
 import { getAccountsFrom } from '~/routes/open/utils/safeDataExtractor'
 import Hairline from '~/components/layout/Hairline'
 import { md, lg, sm } from '~/theme/variables'
+
+const trash = require('../../assets/trash.svg')
 
 type Props = {
   classes: Object,
@@ -56,6 +57,14 @@ const styles = () => ({
   check: {
     color: '#03AE60',
     height: '20px',
+  },
+  remove: {
+    height: '56px',
+    marginTop: '12px',
+    maxWidth: '50px',
+    '&:hover': {
+      cursor: 'pointer',
+    },
   },
 })
 
@@ -115,7 +124,7 @@ class SafeOwners extends React.Component<Props, State> {
     return (
       <React.Fragment>
         <Block className={classes.title}>
-          <Paragraph noMargin size="md" color="primary" weight="light">
+          <Paragraph noMargin size="md" color="primary">
             Specify the owners of the Safe.
           </Paragraph>
         </Block>
@@ -159,11 +168,9 @@ class SafeOwners extends React.Component<Props, State> {
                     text="Owner Address"
                   />
                 </Col>
-                <Col xs={1} center="xs" middle="xs">
+                <Col xs={1} center="xs" middle="xs" className={classes.remove}>
                   { index > 0 &&
-                    <IconButton aria-label="Delete" onClick={this.onRemoveRow(index)} className={classes.trash}>
-                      <Delete />
-                    </IconButton>
+                    <Img src={trash} height={20} alt="Delete" onClick={this.onRemoveRow(index)} />
                   }
                 </Col>
               </Row>
@@ -172,7 +179,7 @@ class SafeOwners extends React.Component<Props, State> {
         </Block>
         <Row align="center" grow className={classes.add} margin="xl">
           <Button color="secondary" onClick={this.onAddOwner}>
-            {ADD_OWNER_BUTTON}
+            <Paragraph weight="bold" size="md" noMargin>{ADD_OWNER_BUTTON}</Paragraph>
           </Button>
         </Row>
       </React.Fragment>

@@ -76,12 +76,12 @@ class Layout extends React.Component<Props, State> {
 
   render() {
     const {
-      safe, provider, network, classes, granted,
+      safe, provider, network, classes, granted, tokens, activeTokens,
     } = this.props
     const { value } = this.state
 
     if (!safe) {
-      return <NoSafe provider={provider} text="Not found safe" />
+      return <NoSafe provider={provider} text="Safe not found" />
     }
     // <GnoSafe safe={safe} tokens={activeTokens} userAddress={userAddress} />
     const address = safe.get('address')
@@ -122,7 +122,13 @@ class Layout extends React.Component<Props, State> {
           </Tabs>
         </Row>
         <Hairline color="#c8ced4" />
-        {value === 0 && <Balances granted={granted} />}
+        {value === 0 &&
+          <Balances
+            tokens={tokens}
+            activeTokens={activeTokens}
+            granted={granted}
+            safeAddress={address}
+          />}
       </React.Fragment>
     )
   }

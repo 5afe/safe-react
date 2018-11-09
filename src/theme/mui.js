@@ -1,7 +1,6 @@
 // @flow
-import red from '@material-ui/core/colors/red'
 import { createMuiTheme } from '@material-ui/core/styles'
-import { largeFontSize, mediumFontSize, smallFontSize, disabled, primary, secondary, md, lg, background, bolderFont, boldFont } from './variables'
+import { largeFontSize, mediumFontSize, smallFontSize, disabled, primary, secondary, md, lg, bolderFont, boldFont, buttonLargeFontSize } from './variables'
 
 export type WithStyles = {
   classes: Object,
@@ -14,7 +13,9 @@ const palette = {
   secondary: {
     main: secondary,
   },
-  error: red,
+  error: {
+    main: '#FB4F62',
+  },
   contrastThreshold: 3,
   tonalOffset: 0.2,
 }
@@ -29,7 +30,7 @@ export default createMuiTheme({
     MuiButton: {
       root: {
         fontFamily: 'Roboto Mono, monospace',
-        letterSpacing: '1px',
+        letterSpacing: '0.9px',
         '&:disabled': {
           color: disabled,
         },
@@ -38,28 +39,49 @@ export default createMuiTheme({
       disabled: {
         cursor: 'pointer',
       },
+      contained: {
+        boxShadow: 'none',
+      },
       containedPrimary: {
         backgroundColor: secondary,
       },
       sizeLarge: {
         padding: `${md} ${lg}`,
         minHeight: '52px',
-        fontSize: mediumFontSize,
+        fontSize: buttonLargeFontSize,
+        fontWeight: boldFont,
       },
       sizeSmall: {
         minWidth: '130px',
         fontSize: smallFontSize,
       },
+      textSecondary: {
+        '&:hover': {
+          borderRadius: '3px',
+        },
+      },
+    },
+    MuiStepper: {
+      root: {
+        padding: '24px 0 0 15px',
+      },
     },
     MuiStepIcon: {
       root: {
         fontSize: '22px',
+        color: '#A2A8BA !important',
       },
       completed: {
         color: `${secondary} !important`,
       },
       active: {
         color: `${secondary} !important`,
+        fontWeight: boldFont,
+      },
+    },
+    MuiStepContent: {
+      root: {
+        borderLeft: '1px solid #A2A8BA',
       },
     },
     MuiTypography: {
@@ -72,14 +94,14 @@ export default createMuiTheme({
     MuiFormHelperText: {
       root: {
         fontFamily: 'Roboto Mono, monospace',
-        fontSize: smallFontSize,
+        fontSize: '12px',
         padding: `0 0 0 ${md}`,
         position: 'relative',
         top: '20px',
         color: secondary,
         order: 0,
         marginTop: '0px',
-        backgroundColor: background,
+        backgroundColor: 'EAE9EF',
       },
     },
     MuiInput: {
@@ -90,16 +112,20 @@ export default createMuiTheme({
         lineHeight: '56px',
         order: 1,
         padding: `0 ${md}`,
-        backgroundColor: background,
+        backgroundColor: '#EAE9EF',
         '&:$disabled': {
           color: '#0000ff',
         },
       },
       input: {
         padding: 0,
-        color: 'initial',
+        letterSpacing: '0.5px',
+        color: primary,
         textOverflow: 'ellipsis',
         display: 'flex',
+        '&::-webkit-input-placeholder': {
+          color: disabled,
+        },
       },
       underline: {
         '&:before': {
@@ -116,6 +142,10 @@ export default createMuiTheme({
     MuiStepLabel: {
       label: {
         textAlign: 'left',
+        color: '#A2A8BA',
+        '&$active': {
+          color: primary,
+        },
       },
     },
     MuiSnackbarContent: {
@@ -179,6 +209,19 @@ export default createMuiTheme({
       root: {
         backdropFilter: 'blur(1px)',
         backgroundColor: 'rgba(228, 232, 241, 0.75)',
+      },
+    },
+    MuiListItemText: {
+      primary: {
+        fontFamily: 'Roboto Mono, monospace',
+        fontSize: mediumFontSize,
+        fontWeight: bolderFont,
+        color: primary,
+      },
+      secondary: {
+        fontFamily: 'Roboto Mono, monospace',
+        fontSize: smallFontSize,
+        color: disabled,
       },
     },
   },
