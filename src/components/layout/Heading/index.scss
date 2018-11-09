@@ -6,7 +6,7 @@
 
 .h1 {
   line-height: 36px;
-  font-weight: 500;
+  font-weight: $bolderFont;
   letter-spacing: -1px;
   font-size: $(fontSizeHeadingLg)px;
 }
@@ -29,7 +29,6 @@
 
 .h4 {
   line-height: 21px;
-  letter-spacing: -0.5px;
   font-family: 'Roboto Mono', monospace;
   font-size: $(fontSizeHeadingXs)px;
 }
@@ -62,4 +61,40 @@
 
 .marginXl {
   margin: 0 0 $xl 0;
+}
+
+.soft {
+  color: #888888;
+}
+
+.medium {
+  color: #686868;
+}
+
+.dark {
+  color: black;
+}
+
+.fancy {
+  color: $fancy;
+}
+
+.warning {
+  color: $warning;
+}
+
+.primary {
+  color: $fontColor;
+}
+
+.secondary {
+  color: $secondary;
+}
+
+.disabled {
+  color: $disabled;
+}
+
+.white {
+  color: white;
 }

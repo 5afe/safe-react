@@ -3,11 +3,9 @@ import * as React from 'react'
 import { withStyles } from '@material-ui/core/styles'
 import Paragraph from '~/components/layout/Paragraph'
 import Button from '~/components/layout/Button'
-import Img from '~/components/layout/Img'
 import Row from '~/components/layout/Row'
 import { md, lg } from '~/theme/variables'
-
-const connectedLogo = require('../../assets/connect-wallet.svg')
+import CircleDot from '~/components/Header/component/CircleDot'
 
 type Props = {
   classes: Object,
@@ -45,7 +43,7 @@ const ConnectDetails = ({ classes, onConnect }: Props) => (
       </Row>
     </div>
     <Row className={classes.logo} margin="lg">
-      <Img className={classes.img} src={connectedLogo} height={75} alt="Connect a Wallet" />
+      <CircleDot keySize={32} circleSize={75} dotSize={25} dotTop={50} dotRight={25} center mode="error" />
     </Row>
     <Row className={classes.connect}>
       <Button

@@ -1,24 +1,24 @@
 // @flow
 import * as React from 'react'
+import classNames from 'classnames'
 import OpenInNew from '@material-ui/icons/OpenInNew'
 import { withStyles } from '@material-ui/core/styles'
 import Paragraph from '~/components/layout/Paragraph'
 import Button from '~/components/layout/Button'
 import Identicon from '~/components/Identicon'
-import Bold from '~/components/layout/Bold'
+import Dot from '@material-ui/icons/FiberManualRecord'
 import Hairline from '~/components/layout/Hairline'
 import Img from '~/components/layout/Img'
 import Row from '~/components/layout/Row'
 import Block from '~/components/layout/Block'
 import Spacer from '~/components/Spacer'
-import { xs, sm, md, lg, background, secondary } from '~/theme/variables'
+import { xs, sm, md, lg, background, secondary, warning, connected as connectedBg } from '~/theme/variables'
 import { upperFirst } from '~/utils/css'
 import { shortVersionOf } from '~/logic/wallets/ethAddresses'
 import { openAddressInEtherScan } from '~/logic/wallets/getWeb3'
+import CircleDot from '~/components/Header/component/CircleDot'
 
 const metamask = require('../../assets/metamask.svg')
-const connectedLogo = require('../../assets/connected.svg')
-const connectedWarning = require('../../assets/connected-error.svg')
 const dot = require('../../assets/dotRinkeby.svg')
 
 type Props = {
@@ -49,10 +49,11 @@ const styles = () => ({
     borderRadius: '3px',
     backgroundColor: background,
     margin: '0 auto',
-    padding: sm,
+    padding: '9px',
+    lineHeight: 1,
   },
   details: {
-    padding: `0 ${lg}`,
+    padding: `0 ${md}`,
     height: '20px',
     alignItems: 'center',
   },
@@ -60,6 +61,11 @@ const styles = () => ({
     flexGrow: 1,
     textAlign: 'center',
     letterSpacing: '-0.5px',
+    fontSize: '12px',
+  },
+  labels: {
+    fontSize: '12px',
+    letterSpacing: '0.5px',
   },
   open: {
     paddingLeft: sm,
@@ -77,6 +83,17 @@ const styles = () => ({
   logo: {
     margin: `0px ${xs}`,
   },
+  dot: {
+    marginRight: xs,
+    height: '15px',
+    width: '15px',
+  },
+  warning: {
+    color: warning,
+  },
+  connected: {
+    color: connectedBg,
+  },
 })
 
 const UserDetails = ({
@@ -85,14 +102,16 @@ const UserDetails = ({
   const status = connected ? 'Connected' : 'Connection error'
   const address = userAddress ? shortVersionOf(userAddress, 6) : 'Address not available'
   const identiconAddress = userAddress || 'random'
-  const connectionLogo = connected ? connectedLogo : connectedWarning
   const color = connected ? 'primary' : 'warning'
 
   return (
     <React.Fragment>
       <Block className={classes.container}>
         <Row className={classes.identicon} margin="md" align="center">
-          <Identicon address={identiconAddress} diameter={60} />
+          { connected
+            ? <Identicon address={identiconAddress} diameter={60} />
+            : <CircleDot keySize={30} circleSize={75} dotSize={25} dotTop={50} dotRight={25} mode="warning" hideDot />
+          }
         </Row>
         <Block align="center" className={classes.user}>
           <Paragraph className={classes.address} size="sm" noMargin>{address}</Paragraph>
@@ -107,33 +126,29 @@ const UserDetails = ({
       </Block>
       <Hairline margin="xs" />
       <Row className={classes.details}>
-        <Paragraph size="sm" noMargin align="right">Status </Paragraph>
+        <Paragraph noMargin align="right" className={classes.labels}>Status </Paragraph>
         <Spacer />
-        <Img className={classes.logo} src={connectionLogo} height={16} alt="Conection Status" />
-        <Paragraph size="sm" noMargin align="right" color={color}>
-          <Bold>
-            {status}
-          </Bold>
+        <Dot className={classNames(classes.dot, connected ? classes.connected : classes.warning)} />
+        <Paragraph noMargin align="right" color={color} weight="bolder" className={classes.labels}>
+          {status}
         </Paragraph>
       </Row>
       <Hairline margin="xs" />
       <Row className={classes.details}>
-        <Paragraph size="sm" noMargin align="right">Client </Paragraph>
+        <Paragraph noMargin align="right" className={classes.labels}>Client </Paragraph>
         <Spacer />
-        <Img className={classes.logo} src={metamask} height={16} alt="Metamask client" />
-        <Paragraph size="sm" noMargin align="right">
-          <Bold>
-            {upperFirst(provider)}
-          </Bold>
+        <Img className={classes.logo} src={metamask} height={14} alt="Metamask client" />
+        <Paragraph noMargin align="right" weight="bolder" className={classes.labels}>
+          {upperFirst(provider)}
         </Paragraph>
       </Row>
       <Hairline margin="xs" />
       <Row className={classes.details}>
-        <Paragraph size="sm" noMargin align="right">Network </Paragraph>
+        <Paragraph noMargin align="right" className={classes.labels}>Network </Paragraph>
         <Spacer />
-        <Img className={classes.logo} src={dot} height={16} alt="Network" />
-        <Paragraph size="sm" noMargin align="right">
-          <Bold>{upperFirst(network)}</Bold>
+        <Img className={classes.logo} src={dot} height={14} alt="Network" />
+        <Paragraph noMargin align="right" weight="bolder" className={classes.labels}>
+          {upperFirst(network)}
         </Paragraph>
       </Row>
       <Hairline margin="xs" />
@@ -145,7 +160,7 @@ const UserDetails = ({
           color="primary"
           fullWidth
         >
-          <Paragraph className={classes.disconnectText} size="sm" weight="regular" color="white" noMargin>DISCONNECT</Paragraph>
+          <Paragraph className={classes.disconnectText} size="sm" weight="bold" color="white" noMargin>DISCONNECT</Paragraph>
         </Button>
       </Row>
     </React.Fragment>

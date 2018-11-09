@@ -8,6 +8,7 @@ import { type Owner } from '~/routes/safe/store/model/owner'
 import { sameAddress } from '~/logic/wallets/ethAddresses'
 
 export const safesMapSelector = (state: GlobalState): Map<string, Safe> => state.safes
+
 const safesListSelector: Selector<GlobalState, {}, List<Safe>> = createSelector(
   safesMapSelector,
   (safes: Map<string, Safe>): List<Safe> => safes.toList(),

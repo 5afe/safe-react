@@ -15,6 +15,9 @@ body {
   font-size: $mediumFontSize;
   margin: 0;
   background-color: $background;
+  text-rendering: geometricPrecision;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 body>div:first-child {

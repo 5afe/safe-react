@@ -3,7 +3,6 @@ import * as React from 'react'
 import { connect } from 'react-redux'
 import Page from '~/components/layout/Page'
 import Layout from '~/routes/safe/component/Layout'
-import NoRights from '~/routes/safe/component/NoRights'
 import selector, { type SelectorProps } from './selector'
 import actions, { type Actions } from './actions'
 
@@ -15,16 +14,12 @@ const TIMEOUT = process.env.NODE_ENV === 'test' ? 1500 : 15000
 
 class SafeView extends React.PureComponent<Props> {
   componentDidMount() {
+    this.props.fetchSafe(this.props.safeUrl)
+    this.props.fetchTokens(this.props.safeUrl)
     this.intervalId = setInterval(() => {
-      const {
-        safe, fetchTokens, fetchSafe,
-      } = this.props
-      if (!safe) {
-        return
-      }
-      const safeAddress = safe.get('address')
-      fetchTokens(safeAddress)
-      fetchSafe(safe)
+      const { safeUrl, fetchTokens, fetchSafe } = this.props
+      fetchTokens(safeUrl)
+      fetchSafe(safeUrl)
     }, TIMEOUT)
   }
 
@@ -47,15 +42,20 @@ class SafeView extends React.PureComponent<Props> {
 
   render() {
     const {
-      safe, provider, activeTokens, granted, userAddress,
+      safe, provider, activeTokens, granted, userAddress, network, tokens,
     } = this.props
 
     return (
       <Page>
-        { granted
-          ? <Layout activeTokens={activeTokens} provider={provider} safe={safe} userAddress={userAddress} />
-          : <NoRights />
-        }
+        <Layout
+          activeTokens={activeTokens}
+          tokens={tokens}
+          provider={provider}
+          safe={safe}
+          userAddress={userAddress}
+          network={network}
+          granted={granted}
+        />
       </Page>
     )
   }

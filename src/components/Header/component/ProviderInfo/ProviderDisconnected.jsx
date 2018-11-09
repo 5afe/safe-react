@@ -3,11 +3,9 @@ import * as React from 'react'
 import { withStyles } from '@material-ui/core/styles'
 import Paragraph from '~/components/layout/Paragraph'
 import Col from '~/components/layout/Col'
-import Img from '~/components/layout/Img'
 import { type Open } from '~/components/hoc/OpenHoc'
-import { md } from '~/theme/variables'
-
-const connectWallet = require('../../assets/connect-wallet.svg')
+import { sm } from '~/theme/variables'
+import CircleDot from '~/components/Header/component/CircleDot'
 
 type Props = Open & {
   classes: Object,
@@ -19,10 +17,11 @@ const styles = () => ({
     fontFamily: 'Montserrat, sans-serif',
   },
   account: {
-    padding: `0 ${md}`,
+    paddingRight: sm,
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',
+    alignItems: 'start',
     flexGrow: 1,
   },
   connect: {
@@ -32,7 +31,7 @@ const styles = () => ({
 
 const ProviderDesconnected = ({ classes }: Props) => (
   <React.Fragment>
-    <Img src={connectWallet} height={35} alt="Status connected" />
+    <CircleDot keySize={17} circleSize={35} dotSize={16} dotTop={24} dotRight={11} mode="error" />
     <Col end="sm" middle="xs" layout="column" className={classes.account}>
       <Paragraph size="sm" transform="capitalize" className={classes.network} noMargin weight="bold">Not Connected</Paragraph>
       <Paragraph size="sm" color="fancy" className={classes.connect} noMargin>Connect Wallet</Paragraph>

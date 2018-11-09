@@ -3,7 +3,7 @@ import * as React from 'react'
 import Button from '~/components/layout/Button'
 import Col from '~/components/layout/Col'
 import Row from '~/components/layout/Row'
-import { sm } from '~/theme/variables'
+import { sm, boldFont } from '~/theme/variables'
 
 const controlStyle = {
   backgroundColor: 'white',
@@ -12,6 +12,11 @@ const controlStyle = {
 
 const firstButtonStyle = {
   marginRight: sm,
+  fontWeight: boldFont,
+}
+
+const secondButtonStyle = {
+  fontWeight: boldFont,
 }
 
 type Props = {
@@ -41,6 +46,7 @@ const Controls = ({
           {back}
         </Button>
         <Button
+          style={secondButtonStyle}
           size="small"
           variant="raised"
           color="primary"
