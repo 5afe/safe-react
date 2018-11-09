@@ -1,6 +1,6 @@
 // @flow
 import { makeSafe, type Safe } from '~/routes/safe/store/model/safe'
-import { buildOwnersFrom } from '~/routes/safe/store/actions'
+import { buildOwnersFrom } from '~/routes/safe/store/actions/addSafe'
 
 class SafeBuilder {
   safe: Safe

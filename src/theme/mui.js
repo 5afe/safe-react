@@ -1,7 +1,7 @@
 // @flow
 import red from '@material-ui/core/colors/red'
 import { createMuiTheme } from '@material-ui/core/styles'
-import { largeFontSize, mediumFontSize, smallFontSize, disabled, primary, secondary, md, lg, background } from './variables'
+import { largeFontSize, mediumFontSize, smallFontSize, disabled, primary, secondary, md, lg, background, bolderFont, boldFont } from './variables'
 
 export type WithStyles = {
   classes: Object,
@@ -123,6 +123,62 @@ export default createMuiTheme({
         boxShadow: '0 0 10px 0 rgba(33, 48, 77, 0.1)',
         borderRadius: '3px',
         color: primary,
+      },
+    },
+    MuiTab: {
+      root: {
+        fontFamily: 'Roboto Mono, monospace',
+        fontWeight: 'normal',
+      },
+      selected: {
+        fontWeight: bolderFont,
+      },
+    },
+    MuiTablePagination: {
+      toolbar: {
+        '& > span:nth-child(2)': {
+          order: 1,
+        },
+      },
+      selectIcon: {
+        height: '100%',
+        top: '0px',
+      },
+      caption: {
+        fontFamily: 'Roboto Mono, monospace',
+        letterSpacing: '-0.5px',
+        order: 3,
+        color: disabled,
+      },
+      input: {
+        order: 2,
+        width: '60px',
+        padding: `0 ${md} 0 0`,
+      },
+      actions: {
+        order: 4,
+        color: disabled,
+      },
+    },
+    MuiTableCell: {
+      root: {
+        fontFamily: 'Roboto Mono, monospace',
+      },
+      head: {
+        letterSpacing: '1px',
+        textTransform: 'uppercase',
+        fontWeight: boldFont,
+      },
+      body: {
+        color: primary,
+        letterSpacing: '-0.5px',
+        fontWeight: 'normal',
+      },
+    },
+    MuiBackdrop: {
+      root: {
+        backdropFilter: 'blur(1px)',
+        backgroundColor: 'rgba(228, 232, 241, 0.75)',
       },
     },
   },

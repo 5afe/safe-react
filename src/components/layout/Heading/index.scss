@@ -63,3 +63,39 @@
 .marginXl {
   margin: 0 0 $xl 0;
 }
+
+.soft {
+  color: #888888;
+}
+
+.medium {
+  color: #686868;
+}
+
+.dark {
+  color: black;
+}
+
+.fancy {
+  color: $fancy;
+}
+
+.warning {
+  color: $warning;
+}
+
+.primary {
+  color: $fontColor;
+}
+
+.secondary {
+  color: $secondary;
+}
+
+.disabled {
+  color: $disabled;
+}
+
+.white {
+  color: white;
+}

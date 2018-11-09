@@ -3,10 +3,11 @@ import type { Dispatch as ReduxDispatch } from 'redux'
 import { List, Map } from 'immutable'
 import { type GlobalState } from '~/store/index'
 import { makeOwner } from '~/routes/safe/store/model/owner'
-import { type SafeProps, type Safe, makeSafe } from '~/routes/safe/store/model/safe'
+import { type SafeProps, makeSafe } from '~/routes/safe/store/model/safe'
 import updateSafe from '~/routes/safe/store/actions/updateSafe'
-import { getOwners } from '~/utils/localStorage'
-import { getGnosisSafeInstanceAt } from '~/logic/contracts/safeContracts'
+import { getOwners, getSafeName } from '~/utils/localStorage'
+import { getGnosisSafeContract } from '~/logic/contracts/safeContracts'
+import { getWeb3 } from '~/logic/wallets/getWeb3'
 
 const buildOwnersFrom = (safeOwners: string[], storedOwners: Map<string, string>) => (
   safeOwners.map((ownerAddress: string) => {
@@ -15,16 +16,17 @@ const buildOwnersFrom = (safeOwners: string[], storedOwners: Map<string, string>
   })
 )
 
-export const buildSafe = async (storedSafe: Object) => {
-  const safeAddress = storedSafe.address
-  const gnosisSafe = await getGnosisSafeInstanceAt(safeAddress)
+export const buildSafe = async (safeAddress: string, safeName: string) => {
+  const web3 = getWeb3()
+  const GnosisSafe = await getGnosisSafeContract(web3)
+  const gnosisSafe = GnosisSafe.at(safeAddress)
 
   const threshold = Number(await gnosisSafe.getThreshold())
   const owners = List(buildOwnersFrom(await gnosisSafe.getOwners(), getOwners(safeAddress)))
 
   const safe: SafeProps = {
     address: safeAddress,
-    name: storedSafe.name,
+    name: safeName,
     threshold,
     owners,
   }
@@ -32,9 +34,10 @@ export const buildSafe = async (storedSafe: Object) => {
   return makeSafe(safe)
 }
 
-export default (safe: Safe) => async (dispatch: ReduxDispatch<GlobalState>) => {
+export default (safeAddress: string) => async (dispatch: ReduxDispatch<GlobalState>) => {
   try {
-    const safeRecord = await buildSafe(safe.toJSON())
+    const safeName = getSafeName(safeAddress) || 'LOADED SAFE'
+    const safeRecord = await buildSafe(safeAddress, safeName)
 
     return dispatch(updateSafe(safeRecord))
   } catch (err) {

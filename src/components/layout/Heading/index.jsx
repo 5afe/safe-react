@@ -11,6 +11,7 @@ type HeadingTag = 'h1' | 'h2' | 'h3' | 'h4';
 type Props = {
   align?: 'left' | 'center' | 'right',
   margin?: 'sm' | 'md' | 'lg' | 'xl',
+  color?: 'soft' | 'medium' | 'dark' | 'white' | 'fancy' | 'primary' | 'secondary' | 'warning' | 'disabled',
   tag: HeadingTag,
   truncate?: boolean,
   children: React$Node,
@@ -19,7 +20,7 @@ type Props = {
 class Heading extends React.PureComponent<Props> {
   render() {
     const {
-      align, tag, truncate, margin, children, ...props
+      align, tag, truncate, margin, color, children, ...props
     } = this.props
 
     const className = cx(
@@ -27,6 +28,7 @@ class Heading extends React.PureComponent<Props> {
       align,
       tag,
       margin ? capitalize(margin, 'margin') : undefined,
+      color,
       { truncate },
     )
 

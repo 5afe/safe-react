@@ -120,7 +120,7 @@ describe('React DOM TESTS > Add and remove owners', () => {
     await assureThresholdIs(gnosisSafe, 1)
     await assureOwnersAre(gnosisSafe, accounts[2], accounts[0], accounts[1])
 
-    await store.dispatch(fetchSafe(safe))
+    await store.dispatch(fetchSafe(safe.get('address')))
     safe = getSafeFrom(store.getState(), address)
     expect(safe.get('owners').count()).toBe(3)
     await assureOwnersAre(gnosisSafe, ...getAddressesFrom(safe))
@@ -149,7 +149,7 @@ describe('React DOM TESTS > Add and remove owners', () => {
     await assureThresholdIs(gnosisSafe, 2)
     await assureOwnersAre(gnosisSafe, accounts[2], accounts[0], accounts[1])
 
-    await store.dispatch(fetchSafe(safe))
+    await store.dispatch(fetchSafe(safe.get('address')))
     safe = getSafeFrom(store.getState(), address)
     expect(safe.get('owners').count()).toBe(3)
     await assureOwnersAre(gnosisSafe, ...getAddressesFrom(safe))
@@ -179,7 +179,7 @@ describe('React DOM TESTS > Add and remove owners', () => {
     await assureThresholdIs(gnosisSafe, 1)
     await assureOwnersAre(gnosisSafe, accounts[0])
 
-    await store.dispatch(fetchSafe(safe))
+    await store.dispatch(fetchSafe(safe.get('address')))
     safe = getSafeFrom(store.getState(), address)
     expect(safe.get('owners').count()).toBe(1)
     await assureOwnersAre(gnosisSafe, ...getAddressesFrom(safe))
@@ -204,7 +204,7 @@ describe('React DOM TESTS > Add and remove owners', () => {
     await assureThresholdIs(gnosisSafe, 1)
     await assureOwnersAre(gnosisSafe, accounts[0], accounts[1])
 
-    await store.dispatch(fetchSafe(safe))
+    await store.dispatch(fetchSafe(safe.get('address')))
     safe = getSafeFrom(store.getState(), address)
     expect(safe.get('owners').count()).toBe(2)
     await assureOwnersAre(gnosisSafe, ...getAddressesFrom(safe))
@@ -230,7 +230,7 @@ describe('React DOM TESTS > Add and remove owners', () => {
     await assureThresholdIs(gnosisSafe, 2)
     await assureOwnersAre(gnosisSafe, accounts[0], accounts[1])
 
-    await store.dispatch(fetchSafe(safe))
+    await store.dispatch(fetchSafe(safe.get('address')))
     safe = getSafeFrom(store.getState(), address)
     expect(safe.get('owners').count()).toBe(2)
     await assureOwnersAre(gnosisSafe, ...getAddressesFrom(safe))

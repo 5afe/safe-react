@@ -2,19 +2,22 @@
 import { List } from 'immutable'
 import { createSelector, createStructuredSelector, type Selector } from 'reselect'
 import { safeSelector, type RouterProps, type SafeSelectorProps } from '~/routes/safe/store/selectors'
-import { providerNameSelector, userAccountSelector } from '~/logic/wallets/store/selectors'
+import { providerNameSelector, userAccountSelector, networkSelector } from '~/logic/wallets/store/selectors'
 import { type Safe } from '~/routes/safe/store/model/safe'
 import { type Owner } from '~/routes/safe/store/model/owner'
 import { type GlobalState } from '~/store'
 import { sameAddress } from '~/logic/wallets/ethAddresses'
 import { activeTokensSelector } from '~/routes/tokens/store/selectors'
 import { type Token } from '~/routes/tokens/store/model/token'
+import { safeParamAddressSelector } from '../store/selectors'
 
 export type SelectorProps = {
   safe: SafeSelectorProps,
   provider: string,
   activeTokens: List<Token>,
   userAddress: string,
+  network: string,
+  safeUrl: string,
 }
 
 export const grantedSelector: Selector<GlobalState, RouterProps, boolean> = createSelector(
@@ -44,4 +47,6 @@ export default createStructuredSelector({
   activeTokens: activeTokensSelector,
   granted: grantedSelector,
   userAddress: userAccountSelector,
+  network: networkSelector,
+  safeUrl: safeParamAddressSelector,
 })
