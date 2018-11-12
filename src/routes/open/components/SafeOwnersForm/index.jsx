@@ -3,7 +3,7 @@ import * as React from 'react'
 import { withStyles } from '@material-ui/core/styles'
 import Field from '~/components/forms/Field'
 import TextField from '~/components/forms/TextField'
-import { required, composeValidators, uniqueAddress, mustBeEthereumAddress } from '~/components/forms/validator'
+import { required, composeValidators, uniqueAddress, mustBeEthereumAddress, noErrorsOn } from '~/components/forms/validator'
 import Block from '~/components/layout/Block'
 import Button from '~/components/layout/Button'
 import Row from '~/components/layout/Row'
@@ -74,8 +74,6 @@ const getAddressValidators = (addresses: string[], position: number) => {
 
   return composeValidators(required, mustBeEthereumAddress, uniqueAddress(copy))
 }
-
-const noErrorsOn = (name: string, errors: Object) => errors[name] === undefined
 
 export const ADD_OWNER_BUTTON = '+ ADD ANOTHER OWNER'
 
