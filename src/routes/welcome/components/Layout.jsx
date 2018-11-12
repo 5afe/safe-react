@@ -5,7 +5,7 @@ import Heading from '~/components/layout/Heading'
 import Img from '~/components/layout/Img'
 import Button from '~/components/layout/Button'
 import Link from '~/components/layout/Link'
-import { OPEN_ADDRESS } from '~/routes/routes'
+import { OPEN_ADDRESS, LOAD_ADDRESS } from '~/routes/routes'
 import { marginButtonImg } from '~/theme/variables'
 import styles from './Layout.scss'
 
@@ -43,7 +43,7 @@ export const CreateSafe = ({ size, provider }: SafeProps) => (
 export const LoadSafe = ({ size, provider }: SafeProps) => (
   <Button
     component={Link}
-    to={OPEN_ADDRESS}
+    to={LOAD_ADDRESS}
     variant="outlined"
     size={size || 'medium'}
     color="primary"
