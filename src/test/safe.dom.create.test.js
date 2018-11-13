@@ -33,7 +33,7 @@ const fillOpenSafeForm = async (localStore: Store<GlobalState>) => {
 
 const INTERVAL = 500
 const MAX_TIMES_EXECUTED = 30
-const whenSafeDeployed = () => new Promise((resolve, reject) => {
+export const whenSafeDeployed = (): Promise<string> => new Promise((resolve, reject) => {
   let times = 0
   const interval = setInterval(() => {
     if (times >= MAX_TIMES_EXECUTED) {
