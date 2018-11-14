@@ -115,3 +115,23 @@ export const travelToTokens = (store: Store, address: string): React$Component<{
 
   return createDom(store)
 }
+
+const INTERVAL = 500
+const MAX_TIMES_EXECUTED = 30
+export const whenSafeDeployed = (): Promise<string> => new Promise((resolve, reject) => {
+  let times = 0
+  const interval = setInterval(() => {
+    if (times >= MAX_TIMES_EXECUTED) {
+      clearInterval(interval)
+      reject()
+    }
+
+    const url = `${window.location}`
+    const regex = /.*safes\/(0x[a-f0-9A-F]*)/
+    const safeAddress = url.match(regex)
+    if (safeAddress) {
+      resolve(safeAddress[1])
+    }
+    times += 1
+  }, INTERVAL)
+})
