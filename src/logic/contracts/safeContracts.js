@@ -54,6 +54,12 @@ const createMasterCopies = async () => {
 
 export const initContracts = ensureOnce(process.env.NODE_ENV === 'test' ? createMasterCopies : instanciateMasterCopies)
 
+export const getSafeMasterContract = async () => {
+  await initContracts()
+
+  return safeMaster
+}
+
 export const deploySafeContract = async (
   safeAccounts: string[],
   numConfirmations: number,

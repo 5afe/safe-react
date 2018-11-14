@@ -71,3 +71,5 @@ export const inLimit = (limit: number, base: number, baseText: string, symbol: s
 
   return `Should not exceed ${max} ${symbol} (amount to reach ${baseText})`
 }
+
+export const noErrorsOn = (name: string, errors: Object) => errors[name] === undefined
