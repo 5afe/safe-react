@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react'
+import ChevronLeft from '@material-ui/icons/ChevronLeft'
 import Stepper from '~/components/Stepper'
 import Block from '~/components/layout/Block'
 import Heading from '~/components/layout/Heading'
@@ -7,17 +8,15 @@ import Row from '~/components/layout/Row'
 import IconButton from '@material-ui/core/IconButton'
 import ReviewInformation from '~/routes/load/components/ReviewInformation'
 import DetailsForm, { safeFieldsValidation } from '~/routes/load/components/DetailsForm'
-import ChevronLeft from '@material-ui/icons/ChevronLeft'
 import { history } from '~/store'
 import { secondary } from '~/theme/variables'
+import { type SelectorProps } from '~/routes/load/container/selector'
 
 const getSteps = () => [
   'Details', 'Review',
 ]
 
-type Props = {
-  provider: string,
-  network: string,
+type Props = SelectorProps & {
   onLoadSafeSubmit: (values: Object) => Promise<void>,
 }
 
@@ -32,7 +31,7 @@ const back = () => {
 }
 
 const Layout = ({
-  provider, onLoadSafeSubmit, network,
+  provider, onLoadSafeSubmit, network, userAddress,
 }: Props) => {
   const steps = getSteps()
 
@@ -54,7 +53,7 @@ const Layout = ({
               <Stepper.Page validate={safeFieldsValidation}>
                 { DetailsForm }
               </Stepper.Page>
-              <Stepper.Page network={network}>
+              <Stepper.Page network={network} userAddress={userAddress}>
                 { ReviewInformation }
               </Stepper.Page>
             </Stepper>

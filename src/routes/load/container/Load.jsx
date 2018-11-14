@@ -6,16 +6,12 @@ import { buildSafe } from '~/routes/safe/store/actions/fetchSafe'
 import { SAFES_KEY, load, saveSafes } from '~/utils/localStorage'
 import { SAFELIST_ADDRESS } from '~/routes/routes'
 import { history } from '~/store'
-import selector from './selector'
+import selector, { type SelectorProps } from './selector'
 import actions, { type Actions, type UpdateSafe } from './actions'
 import Layout from '../components/Layout'
 import { FIELD_LOAD_NAME, FIELD_LOAD_ADDRESS } from '../components/fields'
 
-type Props = Actions & {
-  provider: string,
-  userAccount: string,
-  network: string,
-}
+type Props = SelectorProps & Actions
 
 export const loadSafe = async (safeName: string, safeAddress: string, updateSafe: UpdateSafe) => {
   const safeRecord = await buildSafe(safeAddress, safeName)
@@ -45,7 +41,9 @@ class Open extends React.Component<Props> {
   }
 
   render() {
-    const { provider, network } = this.props
+    const {
+      provider, network, userAddress,
+    } = this.props
 
     return (
       <Page>
@@ -53,6 +51,7 @@ class Open extends React.Component<Props> {
           network={network}
           provider={provider}
           onLoadSafeSubmit={this.onLoadSafeSubmit}
+          userAddress={userAddress}
         />
       </Page>
     )
