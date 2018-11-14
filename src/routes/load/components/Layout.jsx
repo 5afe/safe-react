@@ -18,7 +18,7 @@ const getSteps = () => [
 type Props = {
   provider: string,
   network: string,
-  onLoadSafeSubmit: () => Promise<void>,
+  onLoadSafeSubmit: (values: Object) => Promise<void>,
 }
 
 const iconStyle = {
