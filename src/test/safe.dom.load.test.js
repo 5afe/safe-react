@@ -11,7 +11,7 @@ import { getProviderInfo } from '~/logic/wallets/getWeb3'
 import addProvider from '~/logic/wallets/store/actions/addProvider'
 import { makeProvider } from '~/logic/wallets/store/model/provider'
 import { aMinedSafe } from './builder/safe.redux.builder'
-import { whenSafeDeployed } from './safe.dom.create.test'
+import { whenSafeDeployed } from './builder/safe.dom.utils'
 
 const travelToLoadRoute = async (localStore: Store<GlobalState>) => {
   const provider = await getProviderInfo()
@@ -41,18 +41,18 @@ describe('DOM > Feature > LOAD a safe', () => {
     // Fill Safe's name
     const fieldName = inputs[0]
     TestUtils.Simulate.change(fieldName, { target: { value: 'Adolfo Safe' } })
-    TestUtils.Simulate.submit(form)
-    await sleep(400)
-
-    // Fill Safe's name
     const fieldAddress = inputs[1]
     TestUtils.Simulate.change(fieldAddress, { target: { value: address } })
+    await sleep(400)
+
+    // Click next
     TestUtils.Simulate.submit(form)
     await sleep(400)
 
     // Submit
     TestUtils.Simulate.submit(form)
     await sleep(400)
+
 
     const deployedAddress = await whenSafeDeployed()
     expect(deployedAddress).toBe(address)

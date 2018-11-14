@@ -14,7 +14,7 @@ import { FIELD_LOAD_NAME, FIELD_LOAD_ADDRESS } from '~/routes/load/components/fi
 import { getWeb3 } from '~/logic/wallets/getWeb3'
 import { promisify } from '~/utils/promisify'
 import SafeProxy from '#/Proxy.json'
-import { getGnosisSafeContract } from '~/logic/contracts/safeContracts'
+import { getSafeMasterContract } from '~/logic/contracts/safeContracts'
 
 type Props = {
   classes: Object,
@@ -66,8 +66,7 @@ export const safeFieldsValidation = async (values: Object) => {
   const proxyInstance = proxy.at(safeAddress)
   const proxyImplementation = await proxyInstance.implementation()
 
-  const GnosisSafe = getGnosisSafeContract(web3)
-  const safeMaster = await GnosisSafe.deployed()
+  const safeMaster = await getSafeMasterContract()
   const masterCopy = safeMaster.address
 
   const sameMasterCopy = proxyImplementation === masterCopy

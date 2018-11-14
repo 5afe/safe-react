@@ -24,14 +24,14 @@ export const loadSafe = async (safeName: string, safeAddress: string, updateSafe
   saveSafes(storedSafes)
 }
 
-class Open extends React.Component<Props> {
+class Load extends React.Component<Props> {
   onLoadSafeSubmit = async (values: Object) => {
     try {
       const { updateSafe } = this.props
       const safeName = values[FIELD_LOAD_NAME]
       const safeAddress = values[FIELD_LOAD_ADDRESS]
 
-      loadSafe(safeName, safeAddress, updateSafe)
+      await loadSafe(safeName, safeAddress, updateSafe)
       const url = `${SAFELIST_ADDRESS}/${safeAddress}`
       history.push(url)
     } catch (error) {
@@ -58,4 +58,4 @@ class Open extends React.Component<Props> {
   }
 }
 
-export default connect(selector, actions)(Open)
+export default connect(selector, actions)(Load)

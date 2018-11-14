@@ -14,6 +14,7 @@ import addProvider from '~/logic/wallets/store/actions/addProvider'
 import { makeProvider } from '~/logic/wallets/store/model/provider'
 import { promisify } from '~/utils/promisify'
 import { getGnosisSafeInstanceAt } from '~/logic/contracts/safeContracts'
+import { whenSafeDeployed } from './builder/safe.dom.utils'
 
 const fillOpenSafeForm = async (localStore: Store<GlobalState>) => {
   const provider = await getProviderInfo()
@@ -30,26 +31,6 @@ const fillOpenSafeForm = async (localStore: Store<GlobalState>) => {
     ))
   )
 }
-
-const INTERVAL = 500
-const MAX_TIMES_EXECUTED = 30
-export const whenSafeDeployed = (): Promise<string> => new Promise((resolve, reject) => {
-  let times = 0
-  const interval = setInterval(() => {
-    if (times >= MAX_TIMES_EXECUTED) {
-      clearInterval(interval)
-      reject()
-    }
-
-    const url = `${window.location}`
-    const regex = /.*safes\/(0x[a-f0-9A-F]*)/
-    const safeAddress = url.match(regex)
-    if (safeAddress) {
-      resolve(safeAddress[1])
-    }
-    times += 1
-  }, INTERVAL)
-})
 
 const deploySafe = async (safe: React$Component<{}>, threshold: number, numOwners: number) => {
   const web3 = getWeb3()
