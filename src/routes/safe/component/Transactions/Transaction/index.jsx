@@ -51,7 +51,9 @@ class GnoTransaction extends React.PureComponent<Props> {
   )
 
   render() {
-    const { open, toggle, transaction, confirmed, safeName, userAddress, executionHash, threshold } = this.props
+    const {
+      open, toggle, transaction, confirmed, safeName, userAddress, executionHash, threshold,
+    } = this.props
 
     const confirmationText = executionHash
       ? 'Already executed'
