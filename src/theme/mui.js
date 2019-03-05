@@ -37,6 +37,7 @@ const palette = {
 export default createMuiTheme({
   typography: {
     fontFamily: 'Montserrat,sans-serif',
+    useNextVariants: true,
   },
   overrides: {
     MuiButton: {
@@ -47,9 +48,6 @@ export default createMuiTheme({
           color: disabled,
         },
         color: disabled,
-      },
-      '&$disabled': {
-        cursor: 'pointer',
       },
       contained: {
         boxShadow: 'none',

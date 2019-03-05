@@ -35,8 +35,7 @@ export const PROCESS_TXS = 'PROCESS TRANSACTION'
 class GnoTransaction extends React.PureComponent<Props> {
   onProccesClick = () => this.props.onProcessTx(this.props.transaction, this.props.confirmed)
 
-  hasConfirmed = (userAddress: string, confirmations: List<Confirmation>): boolean =>
-    confirmations.filter((conf: Confirmation) => sameAddress(userAddress, conf.get('owner').get('address')) && conf.get('type') === 'confirmation').count() > 0
+  hasConfirmed = (userAddress: string, confirmations: List<Confirmation>): boolean => confirmations.filter((conf: Confirmation) => sameAddress(userAddress, conf.get('owner').get('address')) && conf.get('type') === 'confirmation').count() > 0
 
   render() {
     const {
@@ -72,36 +71,44 @@ class GnoTransaction extends React.PureComponent<Props> {
         </Row>
         <Row>
           <ListItem>
-            { executionHash &&
-              <React.Fragment>
-                <Avatar><CompareArrows /></Avatar>
-                <ListItemText cut primary="Transaction Hash" secondary={executionHash} />
-              </React.Fragment>
+            { executionHash
+              && (
+                <React.Fragment>
+                  <Avatar><CompareArrows /></Avatar>
+                  <ListItemText cut primary="Transaction Hash" secondary={executionHash} />
+                </React.Fragment>
+              )
             }
-            { !executionHash && userConfirmed &&
-              <React.Fragment>
-                <Avatar><CompareArrows /></Avatar>
-                <ListItemText cut primary="Confirmed" secondary="Waiting for the rest of confirmations" />
-              </React.Fragment>
+            { !executionHash && userConfirmed
+              && (
+                <React.Fragment>
+                  <Avatar><CompareArrows /></Avatar>
+                  <ListItemText cut primary="Confirmed" secondary="Waiting for the rest of confirmations" />
+                </React.Fragment>
+              )
             }
-            { !executionHash && !userConfirmed &&
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={this.onProccesClick}
-              >
-                {PROCESS_TXS}
-              </Button>
+            { !executionHash && !userConfirmed
+              && (
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={this.onProccesClick}
+                >
+                  {PROCESS_TXS}
+                </Button>
+              )
             }
           </ListItem>
         </Row>
-        { open &&
-          <Collapsed
-            safeName={safeName}
-            confirmations={transaction.get('confirmations')}
-            destination={transaction.get('destination')}
-            threshold={threshold}
-          /> }
+        { open
+          && (
+            <Collapsed
+              safeName={safeName}
+              confirmations={transaction.get('confirmations')}
+              destination={transaction.get('destination')}
+              threshold={threshold}
+            />
+          ) }
         <Hairline margin="md" />
       </React.Fragment>
     )

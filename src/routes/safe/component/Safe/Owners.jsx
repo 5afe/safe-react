@@ -73,10 +73,12 @@ const Owners = openHoc(({
                 primary={owner.name}
                 secondary={owner.address}
               />
-              { !sameAddress(userAddress, owner.address) &&
-                <IconButton aria-label="Delete" onClick={onRemoveIconClick}>
-                  <Delete />
-                </IconButton>
+              { !sameAddress(userAddress, owner.address)
+                && (
+                  <IconButton aria-label="Delete" onClick={onRemoveIconClick}>
+                    <Delete />
+                  </IconButton>
+                )
               }
             </ListItem>
           )

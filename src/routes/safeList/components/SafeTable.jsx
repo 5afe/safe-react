@@ -3,7 +3,9 @@ import { List } from 'immutable'
 import * as React from 'react'
 import Button from '~/components/layout/Button'
 import Link from '~/components/layout/Link'
-import Table, { TableBody, TableCell, TableHead, TableRow } from '~/components/layout/Table'
+import Table, {
+  TableBody, TableCell, TableHead, TableRow,
+} from '~/components/layout/Table'
 import { type Safe } from '~/routes/safe/store/model/safe'
 import { SAFELIST_ADDRESS } from '~/routes/routes'
 

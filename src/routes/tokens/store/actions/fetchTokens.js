@@ -72,7 +72,7 @@ export const fetchTokens = (safeAddress: string) => async (dispatch: ReduxDispat
       }),
     )
 
-    const balances: Map<string, Token> = Map().withMutations(map => {
+    const balances: Map<string, Token> = Map().withMutations((map) => {
       balancesRecords.forEach(record => map.set(record.get('address'), record))
       customTokenRecords.forEach(record => map.set(record.get('address'), record))
 

@@ -12,7 +12,9 @@ import Img from '~/components/layout/Img'
 import Row from '~/components/layout/Row'
 import Block from '~/components/layout/Block'
 import Spacer from '~/components/Spacer'
-import { xs, sm, md, lg, background, secondary, warning, connected as connectedBg } from '~/theme/variables'
+import {
+  xs, sm, md, lg, background, secondary, warning, connected as connectedBg,
+} from '~/theme/variables'
 import { upperFirst } from '~/utils/css'
 import { shortVersionOf } from '~/logic/wallets/ethAddresses'
 import { openAddressInEtherScan } from '~/logic/wallets/getWeb3'
@@ -96,7 +98,9 @@ const styles = () => ({
   },
 })
 
-const UserDetails = ({ provider, connected, network, userAddress, classes, onDisconnect }: Props) => {
+const UserDetails = ({
+  provider, connected, network, userAddress, classes, onDisconnect,
+}: Props) => {
   const status = connected ? 'Connected' : 'Connection error'
   const address = userAddress ? shortVersionOf(userAddress, 6) : 'Address not available'
   const identiconAddress = userAddress || 'random'
@@ -128,7 +132,8 @@ const UserDetails = ({ provider, connected, network, userAddress, classes, onDis
       <Hairline margin="xs" />
       <Row className={classes.details}>
         <Paragraph noMargin align="right" className={classes.labels}>
-          Status{' '}
+          Status
+          {' '}
         </Paragraph>
         <Spacer />
         <Dot className={classNames(classes.dot, connected ? classes.connected : classes.warning)} />
@@ -139,7 +144,8 @@ const UserDetails = ({ provider, connected, network, userAddress, classes, onDis
       <Hairline margin="xs" />
       <Row className={classes.details}>
         <Paragraph noMargin align="right" className={classes.labels}>
-          Client{' '}
+          Client
+          {' '}
         </Paragraph>
         <Spacer />
         <Img className={classes.logo} src={metamask} height={14} alt="Metamask client" />
@@ -150,7 +156,8 @@ const UserDetails = ({ provider, connected, network, userAddress, classes, onDis
       <Hairline margin="xs" />
       <Row className={classes.details}>
         <Paragraph noMargin align="right" className={classes.labels}>
-          Network{' '}
+          Network
+          {' '}
         </Paragraph>
         <Spacer />
         <Img className={classes.logo} src={dot} height={14} alt="Network" />
