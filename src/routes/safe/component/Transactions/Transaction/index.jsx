@@ -86,7 +86,7 @@ class GnoTransaction extends React.PureComponent<Props> {
             }
             { !executionHash && !userConfirmed &&
               <Button
-                variant="raised"
+                variant="contained"
                 color="primary"
                 onClick={this.onProccesClick}
               >

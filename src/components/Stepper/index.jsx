@@ -46,7 +46,7 @@ class GnoStepper extends React.PureComponent<Props, State> {
   static FinishButton = ({
     component, to, title, ...props
   }) => (
-    <Button component={component} to={to} variant="raised" color="primary" {...props}>
+    <Button component={component} to={to} variant="contained" color="primary" {...props}>
       {title}
     </Button>
   )

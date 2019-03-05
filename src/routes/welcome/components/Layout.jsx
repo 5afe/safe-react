@@ -29,7 +29,7 @@ export const CreateSafe = ({ size, provider }: SafeProps) => (
   <Button
     component={Link}
     to={OPEN_ADDRESS}
-    variant="raised"
+    variant="contained"
     size={size || 'medium'}
     color="primary"
     disabled={!provider}

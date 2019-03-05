@@ -48,7 +48,7 @@ const Controls = ({
         <Button
           style={secondButtonStyle}
           size="small"
-          variant="raised"
+          variant="contained"
           color="primary"
           type="submit"
           disabled={disabled}

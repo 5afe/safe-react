@@ -24,7 +24,7 @@ const Confirmations = ({ confirmations, onEditThreshold }: Props) => (
       cut
     />
     <Button
-      variant="raised"
+      variant="contained"
       color="primary"
       onClick={onEditThreshold}
     >

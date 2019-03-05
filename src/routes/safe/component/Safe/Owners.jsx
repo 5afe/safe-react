@@ -51,7 +51,7 @@ const Owners = openHoc(({
         }
       </ListItemIcon>
       <Button
-        variant="raised"
+        variant="contained"
         color="primary"
         onClick={onAddOwner}
       >

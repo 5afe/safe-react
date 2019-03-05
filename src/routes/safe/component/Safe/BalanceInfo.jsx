@@ -75,7 +75,7 @@ const BalanceComponent = openHoc(({
                   <Img src={token.get('logoUrl')} height={30} alt={name} />
                 </ListItemIcon>
                 <ListItemText primary={name} secondary={`${token.get('funds')} ${symbol}`} />
-                <Button variant="raised" color="primary" onClick={onMoveFundsClick} disabled={disabled}>
+                <Button variant="contained" color="primary" onClick={onMoveFundsClick} disabled={disabled}>
                   {MOVE_FUNDS_BUTTON_TEXT}
                 </Button>
               </ListItem>

@@ -26,7 +26,7 @@ const SafeTable = ({ safes }: Props) => (
         <TableRow key={safe.address}>
           <TableCell>
             <Link to={`${SAFELIST_ADDRESS}/${safe.address}`}>
-              <Button variant="raised" size="small" color="primary">Open</Button>
+              <Button variant="contained" size="small" color="primary">Open</Button>
             </Link>
           </TableCell>
           <TableCell padding="none">{safe.get('name')}</TableCell>

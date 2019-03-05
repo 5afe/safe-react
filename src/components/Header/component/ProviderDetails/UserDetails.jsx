@@ -96,9 +96,7 @@ const styles = () => ({
   },
 })
 
-const UserDetails = ({
-  provider, connected, network, userAddress, classes, onDisconnect,
-}: Props) => {
+const UserDetails = ({ provider, connected, network, userAddress, classes, onDisconnect }: Props) => {
   const status = connected ? 'Connected' : 'Connection error'
   const address = userAddress ? shortVersionOf(userAddress, 6) : 'Address not available'
   const identiconAddress = userAddress || 'random'
@@ -108,25 +106,30 @@ const UserDetails = ({
     <React.Fragment>
       <Block className={classes.container}>
         <Row className={classes.identicon} margin="md" align="center">
-          { connected
-            ? <Identicon address={identiconAddress} diameter={60} />
-            : <CircleDot keySize={30} circleSize={75} dotSize={25} dotTop={50} dotRight={25} mode="warning" hideDot />
-          }
+          {connected ? (
+            <Identicon address={identiconAddress} diameter={60} />
+          ) : (
+            <CircleDot keySize={30} circleSize={75} dotSize={25} dotTop={50} dotRight={25} mode="warning" hideDot />
+          )}
         </Row>
         <Block align="center" className={classes.user}>
-          <Paragraph className={classes.address} size="sm" noMargin>{address}</Paragraph>
-          { userAddress &&
+          <Paragraph className={classes.address} size="sm" noMargin>
+            {address}
+          </Paragraph>
+          {userAddress && (
             <OpenInNew
               className={classes.open}
               style={openIconStyle}
               onClick={openAddressInEtherScan(userAddress, network)}
             />
-          }
+          )}
         </Block>
       </Block>
       <Hairline margin="xs" />
       <Row className={classes.details}>
-        <Paragraph noMargin align="right" className={classes.labels}>Status </Paragraph>
+        <Paragraph noMargin align="right" className={classes.labels}>
+          Status{' '}
+        </Paragraph>
         <Spacer />
         <Dot className={classNames(classes.dot, connected ? classes.connected : classes.warning)} />
         <Paragraph noMargin align="right" color={color} weight="bolder" className={classes.labels}>
@@ -135,7 +138,9 @@ const UserDetails = ({
       </Row>
       <Hairline margin="xs" />
       <Row className={classes.details}>
-        <Paragraph noMargin align="right" className={classes.labels}>Client </Paragraph>
+        <Paragraph noMargin align="right" className={classes.labels}>
+          Client{' '}
+        </Paragraph>
         <Spacer />
         <Img className={classes.logo} src={metamask} height={14} alt="Metamask client" />
         <Paragraph noMargin align="right" weight="bolder" className={classes.labels}>
@@ -144,7 +149,9 @@ const UserDetails = ({
       </Row>
       <Hairline margin="xs" />
       <Row className={classes.details}>
-        <Paragraph noMargin align="right" className={classes.labels}>Network </Paragraph>
+        <Paragraph noMargin align="right" className={classes.labels}>
+          Network{' '}
+        </Paragraph>
         <Spacer />
         <Img className={classes.logo} src={dot} height={14} alt="Network" />
         <Paragraph noMargin align="right" weight="bolder" className={classes.labels}>
@@ -153,14 +160,10 @@ const UserDetails = ({
       </Row>
       <Hairline margin="xs" />
       <Row className={classes.disconnect}>
-        <Button
-          onClick={onDisconnect}
-          size="medium"
-          variant="raised"
-          color="primary"
-          fullWidth
-        >
-          <Paragraph className={classes.disconnectText} size="sm" weight="bold" color="white" noMargin>DISCONNECT</Paragraph>
+        <Button onClick={onDisconnect} size="medium" variant="contained" color="primary" fullWidth>
+          <Paragraph className={classes.disconnectText} size="sm" weight="bold" color="white" noMargin>
+            DISCONNECT
+          </Paragraph>
         </Button>
       </Row>
     </React.Fragment>
