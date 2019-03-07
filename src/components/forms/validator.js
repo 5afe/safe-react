@@ -49,7 +49,7 @@ export const maxValue = (max: number) => (value: string) => {
 export const ok = () => undefined
 
 export const mustBeEthereumAddress = (address: Field) => {
-  const isAddress: boolean = getWeb3().isAddress(address)
+  const isAddress: boolean = getWeb3().utils.isAddress(address)
 
   return isAddress ? undefined : 'Address should be a valid Ethereum address'
 }

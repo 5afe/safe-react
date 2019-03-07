@@ -16628,24 +16628,6 @@ web3@1.0.0-beta.37:
     web3-shh "1.0.0-beta.37"
     web3-utils "1.0.0-beta.37"
 
-web3@1.0.0-beta.48, web3@^1.0.0-beta.36:
-  version "1.0.0-beta.48"
-  resolved "https://registry.yarnpkg.com/web3/-/web3-1.0.0-beta.48.tgz#66a3d29cdb40a0d2015cd7e5af081defaa2ec270"
-  integrity sha512-/HfIaRQVScZv0iy6fnEZCsXQbbOmtEB08sa2YaCkRo8nqUQo1C+55VC5sXqjrwKaDs9Xf9qxVTiUUeTbKD+KYg==
-  dependencies:
-    "@babel/runtime" "^7.3.1"
-    "@types/node" "^10.12.18"
-    web3-bzz "1.0.0-beta.48"
-    web3-core "1.0.0-beta.48"
-    web3-core-helpers "1.0.0-beta.48"
-    web3-core-method "1.0.0-beta.48"
-    web3-eth "1.0.0-beta.48"
-    web3-eth-personal "1.0.0-beta.48"
-    web3-net "1.0.0-beta.48"
-    web3-providers "1.0.0-beta.48"
-    web3-shh "1.0.0-beta.48"
-    web3-utils "1.0.0-beta.48"
-
 web3@^0.16.0:
   version "0.16.0"
   resolved "https://registry.yarnpkg.com/web3/-/web3-0.16.0.tgz#a4554175cd462943035b1f1d39432f741c6b6019"
@@ -16677,6 +16659,24 @@ web3@^0.20.1:
     utf8 "^2.1.1"
     xhr2-cookies "^1.1.0"
     xmlhttprequest "*"
+
+web3@^1.0.0-beta.36:
+  version "1.0.0-beta.48"
+  resolved "https://registry.yarnpkg.com/web3/-/web3-1.0.0-beta.48.tgz#66a3d29cdb40a0d2015cd7e5af081defaa2ec270"
+  integrity sha512-/HfIaRQVScZv0iy6fnEZCsXQbbOmtEB08sa2YaCkRo8nqUQo1C+55VC5sXqjrwKaDs9Xf9qxVTiUUeTbKD+KYg==
+  dependencies:
+    "@babel/runtime" "^7.3.1"
+    "@types/node" "^10.12.18"
+    web3-bzz "1.0.0-beta.48"
+    web3-core "1.0.0-beta.48"
+    web3-core-helpers "1.0.0-beta.48"
+    web3-core-method "1.0.0-beta.48"
+    web3-eth "1.0.0-beta.48"
+    web3-eth-personal "1.0.0-beta.48"
+    web3-net "1.0.0-beta.48"
+    web3-providers "1.0.0-beta.48"
+    web3-shh "1.0.0-beta.48"
+    web3-utils "1.0.0-beta.48"
 
 webidl-conversions@^2.0.0:
   version "2.0.1"

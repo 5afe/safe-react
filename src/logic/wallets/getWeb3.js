@@ -56,7 +56,7 @@ const getAccountFrom: Function = async (web3Provider): Promise<string | null> =>
 
 const getNetworkIdFrom = async (web3Provider) => {
   const networkId = await web3Provider.eth.net.getId()
-
+  console.log(networkId)
   return networkId
 }
 
