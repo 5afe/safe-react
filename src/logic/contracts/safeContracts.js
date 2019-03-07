@@ -65,8 +65,9 @@ export const deploySafeContract = async (
   numConfirmations: number,
   userAccount: string,
 ) => {
-  const gnosisSafeData = await safeMaster.contract.setup.getData(safeAccounts, numConfirmations, 0, '0x')
-  const proxyFactoryData = proxyFactoryMaster.contract.createProxy.getData(safeMaster.address, gnosisSafeData)
+  console.log(safeMaster)
+  const gnosisSafeData = await safeMaster.setup(safeAccounts, numConfirmations, 0, '0x').encodeABI()
+  const proxyFactoryData = proxyFactoryMaster.createProxy(safeMaster.address, gnosisSafeData).encodeABI()
   const gas = await calculateGasOf(proxyFactoryData, userAccount, proxyFactoryMaster.address)
   const gasPrice = await calculateGasPrice()
 
