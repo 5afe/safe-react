@@ -51,7 +51,7 @@ export const fetchTokens = (safeAddress: string) => async (dispatch: ReduxDispat
   const tokens: List<string> = getActiveTokenAddresses(safeAddress)
   const ethBalance = await getSafeEthToken(safeAddress)
   const customTokens = getTokens(safeAddress)
-  const json = await exports.fetchTokensData()
+  const json = await fetchTokensData()
 
   try {
     const balancesRecords = await Promise.all(

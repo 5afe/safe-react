@@ -44,7 +44,7 @@ export const getWeb3 = () => web3 || new Web3(window.web3.currentProvider)
 
 const isMetamask: Function = (web3Provider): boolean => {
   const isMetamaskConstructor = web3Provider.currentProvider.constructor.name === 'MetamaskInpageProvider'
-  console.log(web3Provider)
+
   return isMetamaskConstructor || web3Provider.currentProvider.isMetaMask
 }
 
@@ -56,7 +56,7 @@ const getAccountFrom: Function = async (web3Provider): Promise<string | null> =>
 
 const getNetworkIdFrom = async (web3Provider) => {
   const networkId = await web3Provider.eth.net.getId()
-  console.log(networkId)
+
   return networkId
 }
 
@@ -91,8 +91,8 @@ export const getProviderInfo: Function = async (): Promise<ProviderProps> => {
 }
 
 export const getBalanceInEtherOf = async (safeAddress: string) => {
-  const funds: BigNumber = await promisify(cb => web3.eth.getBalance(safeAddress, cb))
-  if (!funds) {
+  const funds: BigNumber = await web3.eth.getBalance(safeAddress)
+  if (!funds || funds === '0') {
     return '0'
   }
 

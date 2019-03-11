@@ -42,7 +42,7 @@ export default (safeAddress: string) => async (dispatch: ReduxDispatch<GlobalSta
     return dispatch(updateSafe(safeRecord))
   } catch (err) {
     // eslint-disable-next-line
-    console.log("Error while updating safe information")
+    console.error("Error while updating safe information: ", err)
 
     return Promise.resolve()
   }

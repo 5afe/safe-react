@@ -2,7 +2,9 @@
 import * as React from 'react'
 import { connect } from 'react-redux'
 import Page from '~/components/layout/Page'
-import { getAccountsFrom, getThresholdFrom, getNamesFrom, getSafeNameFrom } from '~/routes/open/utils/safeDataExtractor'
+import {
+  getAccountsFrom, getThresholdFrom, getNamesFrom, getSafeNameFrom,
+} from '~/routes/open/utils/safeDataExtractor'
 import { getWeb3 } from '~/logic/wallets/getWeb3'
 import { getGnosisSafeContract, deploySafeContract, initContracts } from '~/logic/contracts/safeContracts'
 import { checkReceiptStatus } from '~/logic/wallets/ethTransactions'
@@ -34,11 +36,9 @@ export const createSafe = async (values: Object, userAccount: string, addSafe: A
   await initContracts()
   const safe = await deploySafeContract(accounts, numConfirmations, userAccount)
   checkReceiptStatus(safe.tx)
-  console.log(safe)
+
   const param = safe.logs[0].args.proxy
-  console.log(param)
   const safeContract = await GnosisSafe.at(param)
-  console.log(safeContract)
 
   addSafe(name, safeContract.address, numConfirmations, owners, accounts)
 
@@ -66,7 +66,7 @@ class Open extends React.Component<Props> {
       history.push(OPENING_ADDRESS)
     } catch (error) {
       // eslint-disable-next-line
-      console.log('Error while creating the Safe' + error)
+      console.error('Error while creating the Safe: ' + error)
     }
   }
 
