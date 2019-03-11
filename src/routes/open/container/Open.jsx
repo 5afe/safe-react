@@ -34,8 +34,11 @@ export const createSafe = async (values: Object, userAccount: string, addSafe: A
   await initContracts()
   const safe = await deploySafeContract(accounts, numConfirmations, userAccount)
   checkReceiptStatus(safe.tx)
+  console.log(safe)
   const param = safe.logs[0].args.proxy
-  const safeContract = GnosisSafe.at(param)
+  console.log(param)
+  const safeContract = await GnosisSafe.at(param)
+  console.log(safeContract)
 
   addSafe(name, safeContract.address, numConfirmations, owners, accounts)
 

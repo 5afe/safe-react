@@ -44,7 +44,9 @@ const styles = () => ({
   },
 })
 
-const Layout = openHoc(({ open, toggle, clickAway, classes, providerInfo, providerDetails }: Props) => (
+const Layout = openHoc(({
+  open, toggle, clickAway, classes, providerInfo, providerDetails,
+}: Props) => (
   <React.Fragment>
     <Row className={classes.summary}>
       <Col start="xs" middle="xs" className={classes.logo}>
