@@ -19,7 +19,7 @@ const buildOwnersFrom = (safeOwners: string[], storedOwners: Map<string, string>
 export const buildSafe = async (safeAddress: string, safeName: string) => {
   const web3 = getWeb3()
   const GnosisSafe = await getGnosisSafeContract(web3)
-  const gnosisSafe = GnosisSafe.at(safeAddress)
+  const gnosisSafe = await GnosisSafe.at(safeAddress)
 
   const threshold = Number(await gnosisSafe.getThreshold())
   const owners = List(buildOwnersFrom(await gnosisSafe.getOwners(), getOwners(safeAddress)))
