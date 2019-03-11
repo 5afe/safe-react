@@ -31,7 +31,6 @@ export const generateColumns = () => {
   const assetRow: Column = {
     id: BALANCE_TABLE_ASSET_ID,
     order: false,
-    numeric: false,
     disablePadding: false,
     label: 'Asset',
     custom: false,
@@ -40,8 +39,8 @@ export const generateColumns = () => {
 
   const balanceRow: Column = {
     id: BALANCE_TABLE_BALANCE_ID,
+    align: 'right',
     order: true,
-    numeric: true,
     disablePadding: false,
     label: 'Balance',
     custom: false,
@@ -50,7 +49,6 @@ export const generateColumns = () => {
   const actions: Column = {
     id: 'actions',
     order: false,
-    numeric: false,
     disablePadding: false,
     label: '',
     custom: true,
