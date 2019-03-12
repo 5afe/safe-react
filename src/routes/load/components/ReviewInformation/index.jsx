@@ -7,7 +7,9 @@ import Identicon from '~/components/Identicon'
 import OpenPaper from '~/components/Stepper/OpenPaper'
 import Row from '~/components/layout/Row'
 import Paragraph from '~/components/layout/Paragraph'
-import { xs, sm, lg, border, secondary } from '~/theme/variables'
+import {
+  xs, sm, lg, border, secondary,
+} from '~/theme/variables'
 import { openAddressInEtherScan, getWeb3 } from '~/logic/wallets/getWeb3'
 import { FIELD_LOAD_NAME, FIELD_LOAD_ADDRESS } from '~/routes/load/components/fields'
 import { sameAddress } from '~/logic/wallets/ethAddresses'
