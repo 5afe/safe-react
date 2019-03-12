@@ -13,7 +13,10 @@ import Paragraph from '~/components/layout/Paragraph'
 import NoSafe from '~/components/NoSafe'
 import { type SelectorProps } from '~/routes/safe/container/selector'
 import { openAddressInEtherScan } from '~/logic/wallets/getWeb3'
-import { sm, xs, secondary, smallFontSize } from '~/theme/variables'
+import {
+  sm, xs, secondary, smallFontSize,
+} from '~/theme/variables'
+import { copyToClipboard } from '~/utils/clipboard'
 import Balances from './Balances'
 
 type Props = SelectorProps & {
@@ -74,10 +77,16 @@ class Layout extends React.Component<Props, State> {
     this.setState({ value })
   }
 
+  copyAddress = () => {
+    const { safe } = this.props
+   
+    if (safe.address) {
+      copyToClipboard(safe.address)
+    }
+  }
+
   render() {
-    const {
-      safe, provider, network, classes, granted, tokens, activeTokens,
-    } = this.props
+    const { safe, provider, network, classes, granted, tokens, activeTokens } = this.props
     const { value } = this.state
 
     if (!safe) {
@@ -92,15 +101,15 @@ class Layout extends React.Component<Props, State> {
           <Identicon address={address} diameter={50} />
           <Block className={classes.name}>
             <Row>
-              <Heading tag="h2" color="secondary">{safe.get('name')}</Heading>
-              { !granted &&
-                <Block className={classes.readonly} >
-                  Read Only
-                </Block>
-              }
+              <Heading tag="h2" color="secondary">
+                {safe.get('name')}
+              </Heading>
+              {!granted && <Block className={classes.readonly}>Read Only</Block>}
             </Row>
             <Block align="center" className={classes.user}>
-              <Paragraph size="md" color="disabled" noMargin>{address}</Paragraph>
+              <Paragraph size="md" color="disabled" onClick={this.copyAddress} title="Click to copy" noMargin>
+                {address}
+              </Paragraph>
               <OpenInNew
                 className={classes.open}
                 style={openIconStyle}
@@ -110,25 +119,16 @@ class Layout extends React.Component<Props, State> {
           </Block>
         </Block>
         <Row>
-          <Tabs
-            value={value}
-            onChange={this.handleChange}
-            indicatorColor="secondary"
-            textColor="secondary"
-          >
+          <Tabs value={value} onChange={this.handleChange} indicatorColor="secondary" textColor="secondary">
             <Tab label="Balances" />
             <Tab label="Transactions" />
             <Tab label="Settings" />
           </Tabs>
         </Row>
         <Hairline color="#c8ced4" />
-        {value === 0 &&
-          <Balances
-            tokens={tokens}
-            activeTokens={activeTokens}
-            granted={granted}
-            safeAddress={address}
-          />}
+        {value === 0 && (
+          <Balances tokens={tokens} activeTokens={activeTokens} granted={granted} safeAddress={address} />
+        )}
       </React.Fragment>
     )
   }
