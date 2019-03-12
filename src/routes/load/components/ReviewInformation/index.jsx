@@ -62,6 +62,8 @@ class ReviewComponent extends React.PureComponent<Props, State> {
     isOwner: false,
   }
 
+  mounted = false
+
   componentDidMount = async () => {
     this.mounted = true
 
@@ -70,7 +72,7 @@ class ReviewComponent extends React.PureComponent<Props, State> {
     const web3 = getWeb3()
 
     const GnosisSafe = getGnosisSafeContract(web3)
-    const gnosisSafe = GnosisSafe.at(safeAddress)
+    const gnosisSafe = await GnosisSafe.at(safeAddress)
     const owners = await gnosisSafe.getOwners()
     if (!owners) {
       return
@@ -85,8 +87,6 @@ class ReviewComponent extends React.PureComponent<Props, State> {
   componentWillUnmount() {
     this.mounted = false
   }
-
-  mounted = false
 
   render() {
     const { values, classes, network } = this.props

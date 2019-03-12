@@ -26,7 +26,8 @@ const hasOneOwner = (safe: Safe) => {
 export const getSafeEthereumInstance = async (safeAddress: string) => {
   const web3 = getWeb3()
   const GnosisSafe = await getGnosisSafeContract(web3)
-  return GnosisSafe.at(safeAddress)
+  const safeInstance = await GnosisSafe.at(safeAddress)
+  return safeInstance
 }
 
 export const createTransaction = async (

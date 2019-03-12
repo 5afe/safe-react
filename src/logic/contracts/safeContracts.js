@@ -76,7 +76,7 @@ export const deploySafeContract = async (safeAccounts: string[], numConfirmation
 export const getGnosisSafeInstanceAt = async (safeAddress: string) => {
   const web3 = getWeb3()
   const GnosisSafe = await getGnosisSafeContract(web3)
-  const gnosisSafe = GnosisSafe.at(safeAddress)
+  const gnosisSafe = await GnosisSafe.at(safeAddress)
 
   return gnosisSafe
 }

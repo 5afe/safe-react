@@ -47,7 +47,7 @@ export const safeFieldsValidation = async (values: Object) => {
   // https://solidity.readthedocs.io/en/latest/metadata.html#usage-for-source-code-verification
   const metaData = 'a165'
 
-  const code = await promisify(cb => web3.eth.getCode(safeAddress, cb))
+  const code = await web3.eth.getCode(safeAddress)
   const codeWithoutMetadata = code.substring(0, code.lastIndexOf(metaData))
 
   const proxyCode = SafeProxy.deployedBytecode
@@ -63,7 +63,7 @@ export const safeFieldsValidation = async (values: Object) => {
   // check mastercopy
   const proxy = contract(SafeProxy)
   proxy.setProvider(web3.currentProvider)
-  const proxyInstance = proxy.at(safeAddress)
+  const proxyInstance = await proxy.at(safeAddress)
   const proxyImplementation = await proxyInstance.implementation()
 
   const safeMaster = await getSafeMasterContract()
