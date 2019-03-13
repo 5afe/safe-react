@@ -91,10 +91,11 @@ export const getProviderInfo: Function = async (): Promise<ProviderProps> => {
 }
 
 export const getBalanceInEtherOf = async (safeAddress: string) => {
-  const funds: BigNumber = await web3.eth.getBalance(safeAddress)
-  if (!funds || funds === '0') {
+  const funds: String = await web3.eth.getBalance(safeAddress)
+
+  if (!funds) {
     return '0'
   }
 
-  return web3.fromWei(funds.toNumber(), 'ether').toString()
+  return web3.utils.fromWei(funds, 'ether').toString()
 }
