@@ -39,7 +39,7 @@ export const addTokenFnc = async (values: Object, addToken: typeof addTokenActio
     name,
     symbol,
     decimals: Number(decimals),
-    logoUrl: logo,
+    logoUri: logo,
     status: true,
     removable: true,
   })

@@ -51,7 +51,7 @@ export const dispatchTknBalance = async (store: Store, tokenAddress: string, add
     name: 'Token',
     symbol: 'TKN',
     decimals: 18,
-    logoUrl: 'https://github.com/TrustWallet/tokens/blob/master/images/0x6810e776880c02933d47db1b9fc05908e5386b96.png?raw=true',
+    logoUri: 'https://github.com/TrustWallet/tokens/blob/master/images/0x6810e776880c02933d47db1b9fc05908e5386b96.png?raw=true',
     funds,
   }))
   fetchBalancesMock.mockImplementation(() => store.dispatch(addTokens(address, balances)))

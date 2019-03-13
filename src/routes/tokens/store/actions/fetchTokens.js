@@ -42,7 +42,7 @@ export const calculateBalanceOf = async (tokenAddress: string, address: string, 
 }
 
 export const fetchTokensData = async () => {
-  const url = 'https://gist.githubusercontent.com/rmeissner/98911fcf74b0ea9731e2dae2441c97a4/raw/'
+  const url = `${process.env.REACT_APP_RELAY_API_URL}/tokens`
   const errMsg = 'Error querying safe balances'
   return enhancedFetch(url, errMsg)
 }
@@ -51,11 +51,11 @@ export const fetchTokens = (safeAddress: string) => async (dispatch: ReduxDispat
   const tokens: List<string> = getActiveTokenAddresses(safeAddress)
   const ethBalance = await getSafeEthToken(safeAddress)
   const customTokens = getTokens(safeAddress)
-  const json = await fetchTokensData()
+  const { results } = await fetchTokensData()
 
   try {
     const balancesRecords = await Promise.all(
-      json.map(async (item: TokenProps) => {
+      results.map(async (item: TokenProps) => {
         const status = tokens.includes(item.address)
         const funds = status ? await calculateBalanceOf(item.address, safeAddress, item.decimals) : '0'
 

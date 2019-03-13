@@ -1,5 +1,7 @@
 // @flow
+/* eslint-disable */
 import 'babel-polyfill'
+require('dotenv').config()
 
 import { MuiThemeProvider } from '@material-ui/core/styles'
 import React from 'react'
@@ -12,6 +14,7 @@ import theme from '~/theme/mui'
 import AppRoutes from '~/routes'
 
 import './index.scss'
+
 
 const Root = () => (
   <Provider store={store}>

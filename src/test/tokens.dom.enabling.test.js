@@ -37,14 +37,14 @@ describe('DOM > Feature > Enable and disable default tokens', () => {
         name: 'First Token Example',
         symbol: 'FTE',
         decimals: 18,
-        logoUrl: 'https://upload.wikimedia.org/wikipedia/commons/c/c0/Earth_simple_icon.png',
+        logoUri: 'https://upload.wikimedia.org/wikipedia/commons/c/c0/Earth_simple_icon.png',
       },
       {
         address: secondErc20Token.address,
         name: 'Second Token Example',
         symbol: 'STE',
         decimals: 18,
-        logoUrl: 'https://upload.wikimedia.org/wikipedia/commons/c/c0/Earth_simple_icon.png',
+        logoUri: 'https://upload.wikimedia.org/wikipedia/commons/c/c0/Earth_simple_icon.png',
       },
     ]))
   })

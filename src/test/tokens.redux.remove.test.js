@@ -39,7 +39,7 @@ describe('DOM > Feature > Add new ERC 20 Tokens', () => {
         name: 'First Token Example',
         symbol: 'FTE',
         decimals: 18,
-        logoUrl: 'https://upload.wikimedia.org/wikipedia/commons/c/c0/Earth_simple_icon.png',
+        logoUri: 'https://upload.wikimedia.org/wikipedia/commons/c/c0/Earth_simple_icon.png',
       },
     ]))
   })
@@ -78,7 +78,7 @@ describe('DOM > Feature > Add new ERC 20 Tokens', () => {
       name: 'Custom ERC20 Token',
       symbol: 'CTS',
       decimals: 10,
-      logoUrl: 'https://example.com',
+      logoUri: 'https://example.com',
       status: true,
       removable: true,
     })

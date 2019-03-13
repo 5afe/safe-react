@@ -112,7 +112,7 @@ class Tokens extends React.Component<Props, State> {
           {filteredTokens.map((token: Token) => (
             <ListItem key={token.get('address')} className={classes.token}>
               <ListItemIcon>
-                <Img src={token.get('logoUrl')} height={28} alt={token.get('name')} />
+                <Img src={token.get('logoUri')} height={28} alt={token.get('name')} />
               </ListItemIcon>
               <ListItemText primary={token.get('symbol')} secondary={token.get('name')} />
               <ListItemSecondaryAction>

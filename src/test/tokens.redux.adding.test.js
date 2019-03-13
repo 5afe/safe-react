@@ -36,7 +36,7 @@ describe('DOM > Feature > Add new ERC 20 Tokens', () => {
         name: 'First Token Example',
         symbol: 'FTE',
         decimals: 18,
-        logoUrl: 'https://upload.wikimedia.org/wikipedia/commons/c/c0/Earth_simple_icon.png',
+        logoUri: 'https://upload.wikimedia.org/wikipedia/commons/c/c0/Earth_simple_icon.png',
       },
     ]))
   })
