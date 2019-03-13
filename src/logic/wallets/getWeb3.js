@@ -1,8 +1,6 @@
 // @flow
-import { BigNumber } from 'bignumber.js'
 import Web3 from 'web3'
 import type { ProviderProps } from '~/logic/wallets/store/model/provider'
-import { promisify } from '~/utils/promisify'
 
 export const ETHEREUM_NETWORK = {
   MAIN: 'MAIN',
