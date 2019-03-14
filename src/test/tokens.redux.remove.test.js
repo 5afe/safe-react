@@ -37,15 +37,17 @@ describe('DOM > Feature > Add new ERC 20 Tokens', () => {
 
     // $FlowFixMe
     enhancedFetchModule.enhancedFetch = jest.fn()
-    enhancedFetchModule.enhancedFetch.mockImplementation(() => Promise.resolve([
-      {
-        address: firstErc20Token.address,
-        name: 'First Token Example',
-        symbol: 'FTE',
-        decimals: 18,
-        logoUri: 'https://upload.wikimedia.org/wikipedia/commons/c/c0/Earth_simple_icon.png',
-      },
-    ]))
+    enhancedFetchModule.enhancedFetch.mockImplementation(() => Promise.resolve({
+      results: [
+        {
+          address: firstErc20Token.address,
+          name: 'First Token Example',
+          symbol: 'FTE',
+          decimals: 18,
+          logoUri: 'https://upload.wikimedia.org/wikipedia/commons/c/c0/Earth_simple_icon.png',
+        },
+      ],
+    }))
   })
 
   const checkTokensOf = (store: Store, safeAddress: string) => {

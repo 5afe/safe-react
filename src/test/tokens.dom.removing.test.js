@@ -8,7 +8,12 @@ import { travelToTokens } from '~/test/builder/safe.dom.utils'
 import * as fetchTokensModule from '~/routes/tokens/store/actions/fetchTokens'
 import * as enhancedFetchModule from '~/utils/fetch'
 import { TOKEN_ADRESS_PARAM } from '~/routes/tokens/component/AddToken/FirstPage'
-import { TOKEN_NAME_PARAM, TOKEN_SYMBOL_PARAM, TOKEN_DECIMALS_PARAM, TOKEN_LOGO_URL_PARAM } from '~/routes/tokens/component/AddToken/SecondPage'
+import {
+  TOKEN_NAME_PARAM,
+  TOKEN_SYMBOL_PARAM,
+  TOKEN_DECIMALS_PARAM,
+  TOKEN_LOGO_URL_PARAM,
+} from '~/routes/tokens/component/AddToken/SecondPage'
 import addToken from '~/routes/tokens/store/actions/addToken'
 import { addTokenFnc } from '~/routes/tokens/component/AddToken'
 import { sleep } from '~/utils/timer'
@@ -29,15 +34,17 @@ describe('DOM > Feature > Add new ERC 20 Tokens', () => {
 
     // $FlowFixMe
     enhancedFetchModule.enhancedFetch = jest.fn()
-    enhancedFetchModule.enhancedFetch.mockImplementation(() => Promise.resolve([
-      {
-        address: firstErc20Token.address,
-        name: 'First Token Example',
-        symbol: 'FTE',
-        decimals: 18,
-        logoUri: 'https://upload.wikimedia.org/wikipedia/commons/c/c0/Earth_simple_icon.png',
-      },
-    ]))
+    enhancedFetchModule.enhancedFetch.mockImplementation(() => Promise.resolve({
+      results: [
+        {
+          address: firstErc20Token.address,
+          name: 'First Token Example',
+          symbol: 'FTE',
+          decimals: 18,
+          logoUri: 'https://upload.wikimedia.org/wikipedia/commons/c/c0/Earth_simple_icon.png',
+        },
+      ],
+    }))
   })
 
   it('remove custom ERC 20 tokens', async () => {

@@ -30,22 +30,24 @@ describe('DOM > Feature > Enable and disable default tokens', () => {
     secondErc20Token = await getSecondTokenContract(web3, accounts[0])
     // $FlowFixMe
     enhancedFetchModule.enhancedFetch = jest.fn()
-    enhancedFetchModule.enhancedFetch.mockImplementation(() => Promise.resolve([
-      {
-        address: firstErc20Token.address,
-        name: 'First Token Example',
-        symbol: 'FTE',
-        decimals: 18,
-        logoUri: 'https://upload.wikimedia.org/wikipedia/commons/c/c0/Earth_simple_icon.png',
-      },
-      {
-        address: secondErc20Token.address,
-        name: 'Second Token Example',
-        symbol: 'STE',
-        decimals: 18,
-        logoUri: 'https://upload.wikimedia.org/wikipedia/commons/c/c0/Earth_simple_icon.png',
-      },
-    ]))
+    enhancedFetchModule.enhancedFetch.mockImplementation(() => Promise.resolve({
+      results: [
+        {
+          address: firstErc20Token.address,
+          name: 'First Token Example',
+          symbol: 'FTE',
+          decimals: 18,
+          logoUri: 'https://upload.wikimedia.org/wikipedia/commons/c/c0/Earth_simple_icon.png',
+        },
+        {
+          address: secondErc20Token.address,
+          name: 'Second Token Example',
+          symbol: 'STE',
+          decimals: 18,
+          logoUri: 'https://upload.wikimedia.org/wikipedia/commons/c/c0/Earth_simple_icon.png',
+        },
+      ],
+    }))
   })
 
   it('retrieves only ether as active token in first moment', async () => {

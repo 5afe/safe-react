@@ -12,6 +12,7 @@ import { getActiveTokenAddresses, getTokens } from '~/utils/localStorage/tokens'
 import { getSafeEthToken } from '~/utils/tokens'
 import { enhancedFetch } from '~/utils/fetch'
 import addTokens from './addTokens'
+import { getRelayUrl } from '~/config/index'
 
 const createStandardTokenContract = async () => {
   const web3 = getWeb3()
@@ -34,15 +35,23 @@ export const getStandardTokenContract = ensureOnce(createStandardTokenContract)
 
 export const calculateBalanceOf = async (tokenAddress: string, address: string, decimals: number) => {
   const erc20Token = await getStandardTokenContract()
+  const web3 = getWeb3()
+  let balance = 0
 
-  return erc20Token
-    .at(tokenAddress)
-    .then(instance => instance.balanceOf(address).then(funds => funds.div(10 ** decimals).toString()))
-    .catch(() => '0')
+  try {
+    const token = await erc20Token.at(tokenAddress)
+    balance = await token.balanceOf(address)
+  } catch (err) {
+    console.error('Failed to fetch token balances: ', err)
+  }
+  console.log(balance)
+
+  return web3.utils.toBN(balance).div(10 ** decimals).toString()
 }
 
 export const fetchTokensData = async () => {
-  const url = `${process.env.REACT_APP_RELAY_API_URL}/tokens`
+  const apiUrl = getRelayUrl()
+  const url = `${apiUrl}/tokens`
   const errMsg = 'Error querying safe balances'
   return enhancedFetch(url, errMsg)
 }
@@ -62,7 +71,7 @@ export const fetchTokens = (safeAddress: string) => async (dispatch: ReduxDispat
         return makeToken({ ...item, status, funds })
       }),
     )
-
+    console.log('fetched tokens from relay')
     const customTokenRecords = await Promise.all(
       customTokens.map(async (item: TokenProps) => {
         const status = tokens.includes(item.address)
@@ -71,7 +80,7 @@ export const fetchTokens = (safeAddress: string) => async (dispatch: ReduxDispat
         return makeToken({ ...item, status, funds })
       }),
     )
-
+    console.log('fetched tokens from localstorage')
     const balances: Map<string, Token> = Map().withMutations((map) => {
       balancesRecords.forEach(record => map.set(record.get('address'), record))
       customTokenRecords.forEach(record => map.set(record.get('address'), record))
@@ -79,10 +88,12 @@ export const fetchTokens = (safeAddress: string) => async (dispatch: ReduxDispat
       map.set(ethBalance.get('address'), ethBalance)
     })
 
+    console.log('fetched balances for tokens')
+
     return dispatch(addTokens(safeAddress, balances))
   } catch (err) {
     // eslint-disable-next-line
-    console.log('Error fetching token balances... ' + err)
+    console.log('Error fetching tokens... ' + err)
 
     return Promise.resolve()
   }

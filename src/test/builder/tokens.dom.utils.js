@@ -26,4 +26,3 @@ export const testToken = (token: Token | typeof undefined, symbol: string, statu
     expect(token.get('funds')).toBe(funds)
   }
 }
-
