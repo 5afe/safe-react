@@ -37,10 +37,9 @@ type State = {
   filter: string,
 }
 
-const filterBy = (filter: string, tokens: List<Token>): List<Token> =>
-  tokens.filter((token: Token) => !filter ||
-    token.get('symbol').toLowerCase().includes(filter.toLowerCase()) ||
-    token.get('name').toLowerCase().includes(filter.toLowerCase()))
+const filterBy = (filter: string, tokens: List<Token>): List<Token> => tokens.filter((token: Token) => !filter
+    || token.get('symbol').toLowerCase().includes(filter.toLowerCase())
+    || token.get('name').toLowerCase().includes(filter.toLowerCase()))
 
 
 class Tokens extends React.Component<Props, State> {
@@ -132,4 +131,3 @@ class Tokens extends React.Component<Props, State> {
 const TokenComponent = withStyles(styles)(Tokens)
 
 export default connect(undefined, actions)(TokenComponent)
-

@@ -6,7 +6,6 @@ import { aNewStore } from '~/store'
 import { aMinedSafe } from '~/test/builder/safe.redux.builder'
 import { addTknTo, getFirstTokenContract } from '~/test/utils/tokenMovements'
 import { EXPAND_BALANCE_INDEX, travelToSafe } from '~/test/builder/safe.dom.utils'
-import { promisify } from '~/utils/promisify'
 import { getWeb3 } from '~/logic/wallets/getWeb3'
 import { sendMoveTokensForm, dispatchTknBalance } from '~/test/utils/transactions/moveTokens.helper'
 import { sleep } from '~/utils/timer'
@@ -18,7 +17,7 @@ describe('DOM > Feature > SAFE ERC20 TOKENS', () => {
   beforeEach(async () => {
     store = aNewStore()
     safeAddress = await aMinedSafe(store)
-    accounts = await promisify(cb => getWeb3().eth.getAccounts(cb))
+    accounts = await getWeb3().eth.getAccounts()
   })
 
   it('sends ERC20 tokens', async () => {

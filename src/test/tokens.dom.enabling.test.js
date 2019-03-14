@@ -3,7 +3,6 @@ import * as TestUtils from 'react-dom/test-utils'
 import { List } from 'immutable'
 import { getWeb3 } from '~/logic/wallets/getWeb3'
 import { type Match } from 'react-router-dom'
-import { promisify } from '~/utils/promisify'
 import TokenComponent from '~/routes/tokens/component/Token'
 import Checkbox from '@material-ui/core/Checkbox'
 import { getFirstTokenContract, getSecondTokenContract, addTknTo } from '~/test/utils/tokenMovements'
@@ -26,7 +25,7 @@ describe('DOM > Feature > Enable and disable default tokens', () => {
 
   beforeAll(async () => {
     web3 = getWeb3()
-    accounts = await promisify(cb => web3.eth.getAccounts(cb))
+    accounts = await web3.eth.getAccounts()
     firstErc20Token = await getFirstTokenContract(web3, accounts[0])
     secondErc20Token = await getSecondTokenContract(web3, accounts[0])
     // $FlowFixMe

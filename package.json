@@ -135,7 +135,7 @@
     "collectCoverageFrom": [
       "src/**/*.{js,jsx}"
     ],
-    "setupTestFrameworkScriptFile": "<rootDir>/config/jest/jest.setup.js",
+    "setupFilesAfterEnv": ["<rootDir>/config/jest/jest.setup.js"],
     "setupFiles": [
       "<rootDir>/config/webpack.config.test.js",
       "<rootDir>/config/polyfills.js",

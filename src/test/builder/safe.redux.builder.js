@@ -3,7 +3,6 @@ import { makeSafe, type Safe } from '~/routes/safe/store/model/safe'
 import addSafe, { buildOwnersFrom } from '~/routes/safe/store/actions/addSafe'
 import { FIELD_NAME, FIELD_CONFIRMATIONS, FIELD_OWNERS, getOwnerNameBy, getOwnerAddressBy } from '~/routes/open/components/fields'
 import { getWeb3, getProviderInfo } from '~/logic/wallets/getWeb3'
-import { promisify } from '~/utils/promisify'
 import { createSafe, type OpenState } from '~/routes/open/container/Open'
 import { type GlobalState } from '~/store/index'
 import { makeProvider } from '~/logic/wallets/store/model/provider'
@@ -72,7 +71,7 @@ export const aMinedSafe = async (
   const walletRecord = makeProvider(provider)
   store.dispatch(addProvider(walletRecord))
 
-  const accounts = await promisify(cb => getWeb3().eth.getAccounts(cb))
+  const accounts = await getWeb3().eth.getAccounts()
   const form = {
     [FIELD_NAME]: 'Safe Name',
     [FIELD_CONFIRMATIONS]: `${threshold}`,

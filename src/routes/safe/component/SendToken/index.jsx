@@ -36,7 +36,7 @@ const getTransferData = async (tokenAddress: string, to: string, amount: BigNumb
   const StandardToken = await getStandardTokenContract()
   const myToken = await StandardToken.at(tokenAddress)
 
-  return myToken.contract.transfer.getData(to, amount)
+  return myToken.contract.transfer(to, amount).encodeABI()
 }
 
 const processTokenTransfer = async (safe: Safe, token: Token, to: string, amount: number, userAddress: string) => {

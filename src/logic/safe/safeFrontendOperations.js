@@ -42,7 +42,7 @@ export const createTransaction = async (
   const web3 = getWeb3()
   const safeAddress = safe.get('address')
   const threshold = safe.get('threshold')
-  const valueInWei = web3.toWei(value, 'ether')
+  const valueInWei = web3.utils.toWei(value, 'ether')
   const CALL = 0
 
   const isExecution = hasOneOwner(safe) || threshold === 1

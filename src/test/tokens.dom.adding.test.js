@@ -2,7 +2,6 @@
 import * as TestUtils from 'react-dom/test-utils'
 import { getWeb3 } from '~/logic/wallets/getWeb3'
 import { type Match } from 'react-router-dom'
-import { promisify } from '~/utils/promisify'
 import TokenComponent from '~/routes/tokens/component/Token'
 import { getFirstTokenContract, getSecondTokenContract } from '~/test/utils/tokenMovements'
 import { aNewStore } from '~/store'
@@ -24,7 +23,7 @@ describe('DOM > Feature > Add new ERC 20 Tokens', () => {
 
   beforeAll(async () => {
     web3 = getWeb3()
-    accounts = await promisify(cb => web3.eth.getAccounts(cb))
+    accounts = await web3.eth.getAccounts()
     firstErc20Token = await getFirstTokenContract(web3, accounts[0])
     secondErc20Token = await getSecondTokenContract(web3, accounts[0])
 

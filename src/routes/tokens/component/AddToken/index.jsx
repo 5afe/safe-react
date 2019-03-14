@@ -3,11 +3,12 @@ import * as React from 'react'
 import Stepper from '~/components/Stepper'
 import { getHumanFriendlyToken } from '~/routes/tokens/store/actions/fetchTokens'
 import FirstPage, { TOKEN_ADRESS_PARAM } from '~/routes/tokens/component/AddToken/FirstPage'
-import SecondPage, { TOKEN_SYMBOL_PARAM, TOKEN_DECIMALS_PARAM, TOKEN_LOGO_URL_PARAM, TOKEN_NAME_PARAM } from '~/routes/tokens/component/AddToken/SecondPage'
+import SecondPage, {
+  TOKEN_SYMBOL_PARAM, TOKEN_DECIMALS_PARAM, TOKEN_LOGO_URL_PARAM, TOKEN_NAME_PARAM,
+} from '~/routes/tokens/component/AddToken/SecondPage'
 import { makeToken, type Token } from '~/routes/tokens/store/model/token'
 import addTokenAction from '~/routes/tokens/store/actions/addToken'
 import { getWeb3 } from '~/logic/wallets/getWeb3'
-import { promisify } from '~/utils/promisify'
 import { EMPTY_DATA } from '~/logic/wallets/ethTransactions'
 import Review from './Review'
 
@@ -69,17 +70,18 @@ class AddToken extends React.Component<Props, State> {
     const tokenAddress = values[TOKEN_ADRESS_PARAM]
     const erc20Token = await getHumanFriendlyToken()
     const instance = await erc20Token.at(tokenAddress)
+    const web3 = getWeb3()
 
-    const dataName = await instance.contract.name.getData()
-    const nameResult = await promisify(cb => getWeb3().eth.call({ to: tokenAddress, data: dataName }, cb))
+    const dataName = await instance.contract.methods.name().encodeABI()
+    const nameResult = await web3.eth.call({ to: tokenAddress, data: dataName })
     const hasName = nameResult !== EMPTY_DATA
 
-    const dataSymbol = await instance.contract.symbol.getData()
-    const symbolResult = await promisify(cb => getWeb3().eth.call({ to: tokenAddress, data: dataSymbol }, cb))
+    const dataSymbol = await instance.contract.methods.symbol().encodeABI()
+    const symbolResult = await web3.eth.call({ to: tokenAddress, data: dataSymbol })
     const hasSymbol = symbolResult !== EMPTY_DATA
 
-    const dataDecimals = await instance.contract.decimals.getData()
-    const decimalsResult = await promisify(cb => getWeb3().eth.call({ to: tokenAddress, data: dataDecimals }, cb))
+    const dataDecimals = await instance.contract.methods.decimals().encodeABI()
+    const decimalsResult = await web3.eth.call({ to: tokenAddress, data: dataDecimals })
     const hasDecimals = decimalsResult !== EMPTY_DATA
 
 

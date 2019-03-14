@@ -76,10 +76,12 @@ class TokenComponent extends React.PureComponent<Props, State> {
                 color="primary"
               />
               {symbol}
-              { token.get('removable') &&
-                <IconButton aria-label="Delete" onClick={this.onRemoveClick}>
-                  <Delete />
-                </IconButton>
+              { token.get('removable')
+                && (
+                  <IconButton aria-label="Delete" onClick={this.onRemoveClick}>
+                    <Delete />
+                  </IconButton>
+                )
               }
             </Typography>
           </CardContent>

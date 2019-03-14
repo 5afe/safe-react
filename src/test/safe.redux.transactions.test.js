@@ -8,7 +8,6 @@ import { makeConfirmation } from '~/routes/safe/store/model/confirmation'
 import { aNewStore } from '~/store'
 import { aMinedSafe } from '~/test/builder/safe.redux.builder'
 import { getSafeFrom } from '~/test/utils/safeHelper'
-import { promisify } from '~/utils/promisify'
 import { getWeb3 } from '~/logic/wallets/getWeb3'
 import { safeTransactionsSelector } from '~/routes/safe/store/selectors'
 import fetchSafe from '~/routes/safe/store/actions/fetchSafe'
@@ -20,7 +19,7 @@ describe('Transactions Suite', () => {
   let safeAddress: string
   let accounts: string[]
   beforeAll(async () => {
-    accounts = await promisify(cb => getWeb3().eth.getAccounts(cb))
+    accounts = await getWeb3().eth.getAccounts()
   })
   beforeEach(async () => {
     localStorage.clear()

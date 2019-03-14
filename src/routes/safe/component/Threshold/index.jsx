@@ -32,14 +32,14 @@ class Threshold extends React.PureComponent<Props, State> {
 
   onThreshold = async (values: Object) => {
     try {
-      const { safe, userAddress } = this.props // , fetchThreshold } = this.props
+      const { safe, userAddress, fetchTransactions } = this.props // , fetchThreshold } = this.props
       const newThreshold = values[THRESHOLD_PARAM]
       const safeAddress = safe.get('address')
       const gnosisSafe = await getSafeEthereumInstance(safeAddress)
       const nonce = await gnosisSafe.nonce()
-      const data = gnosisSafe.contract.changeThreshold.getData(newThreshold)
+      const data = gnosisSafe.contract.changeThreshold(newThreshold).encodeABI()
       await createTransaction(safe, `Change Safe's threshold [${nonce}]`, safeAddress, 0, nonce, userAddress, data)
-      await this.props.fetchTransactions(safeAddress)
+      await fetchTransactions(safeAddress)
       this.setState({ done: true })
     } catch (error) {
       this.setState({ done: false })
@@ -49,8 +49,10 @@ class Threshold extends React.PureComponent<Props, State> {
   }
 
   onReset = () => {
+    const { onReset } = this.props
     this.setState({ done: false })
-    this.props.onReset()
+
+    onReset()
   }
 
   render() {

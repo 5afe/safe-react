@@ -2,7 +2,6 @@
 import contract from 'truffle-contract'
 import { ensureOnce } from '~/utils/singleton'
 import { getWeb3 } from '~/logic/wallets/getWeb3'
-import { promisify } from '~/utils/promisify'
 import GnosisSafeSol from '#/GnosisSafe.json'
 import ProxyFactorySol from '#/ProxyFactory.json'
 import { calculateGasOf, calculateGasPrice } from '~/logic/wallets/ethTransactions'
@@ -42,7 +41,7 @@ const instanciateMasterCopies = async () => {
 // ONLY USED IN TEST ENVIRONMENT
 const createMasterCopies = async () => {
   const web3 = getWeb3()
-  const accounts = await promisify(cb => web3.eth.getAccounts(cb))
+  const accounts = await web3.eth.getAccounts()
   const userAccount = accounts[0]
 
   const ProxyFactory = getCreateProxyFactoryContract(web3)

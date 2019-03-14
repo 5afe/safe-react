@@ -2,7 +2,6 @@
 import { List } from 'immutable'
 import { aNewStore } from '~/store'
 import { getWeb3 } from '~/logic/wallets/getWeb3'
-import { promisify } from '~/utils/promisify'
 import { confirmationsTransactionSelector, safeTransactionsSelector } from '~/routes/safe/store/selectors'
 import fetchTransactions from '~/routes/safe/store/actions/fetchTransactions'
 import { type Safe } from '~/routes/safe/store/model/safe'
@@ -103,7 +102,7 @@ describe('React DOM TESTS > Add and remove owners', () => {
     const threshold = 1
     const store = aNewStore()
     const address = await aMinedSafe(store, numOwners, threshold)
-    const accounts = await promisify(cb => getWeb3().eth.getAccounts(cb))
+    const accounts = await getWeb3().eth.getAccounts()
     const gnosisSafe = await getGnosisSafeInstanceAt(address)
 
     const values = {
@@ -132,7 +131,7 @@ describe('React DOM TESTS > Add and remove owners', () => {
     const threshold = 1
     const store = aNewStore()
     const address = await aMinedSafe(store, numOwners, threshold)
-    const accounts = await promisify(cb => getWeb3().eth.getAccounts(cb))
+    const accounts = await getWeb3().eth.getAccounts()
     const gnosisSafe = await getGnosisSafeInstanceAt(address)
 
     const values = {
@@ -164,7 +163,7 @@ describe('React DOM TESTS > Add and remove owners', () => {
     const threshold = 2
     const store = aNewStore()
     const address = await aMinedSafe(store, numOwners, threshold)
-    const accounts = await promisify(cb => getWeb3().eth.getAccounts(cb))
+    const accounts = await getWeb3().eth.getAccounts()
     const gnosisSafe = await getGnosisSafeInstanceAt(address)
 
     const decrease = shouldDecrease(numOwners, threshold)
@@ -190,7 +189,7 @@ describe('React DOM TESTS > Add and remove owners', () => {
     const threshold = 2
     const store = aNewStore()
     const address = await aMinedSafe(store, numOwners, threshold)
-    const accounts = await promisify(cb => getWeb3().eth.getAccounts(cb))
+    const accounts = await getWeb3().eth.getAccounts()
     const gnosisSafe = await getGnosisSafeInstanceAt(address)
 
     const decrease = true
@@ -215,7 +214,7 @@ describe('React DOM TESTS > Add and remove owners', () => {
     const threshold = 2
     const store = aNewStore()
     const address = await aMinedSafe(store, numOwners, threshold)
-    const accounts = await promisify(cb => getWeb3().eth.getAccounts(cb))
+    const accounts = await getWeb3().eth.getAccounts()
     const gnosisSafe = await getGnosisSafeInstanceAt(address)
 
     const decrease = shouldDecrease(numOwners, threshold)

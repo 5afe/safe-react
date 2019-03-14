@@ -12,14 +12,13 @@ import Review from './Review'
 import selector, { type SelectorProps } from './selector'
 import actions, { type Actions } from './actions'
 
-const getSteps = () => [
-  'Fill Owner Form', 'Review Add order operation',
-]
+const getSteps = () => ['Fill Owner Form', 'Review Add order operation']
 
-type Props = SelectorProps & Actions & {
-  safe: Safe,
-  threshold: number,
-}
+type Props = SelectorProps &
+  Actions & {
+    safe: Safe,
+    threshold: number,
+  }
 
 type State = {
   done: boolean,
@@ -44,7 +43,7 @@ export const addOwner = async (values: Object, safe: Safe, threshold: number, ex
   const newOwnerAddress = values[OWNER_ADDRESS_PARAM]
   const newOwnerName = values[NAME_PARAM]
 
-  const data = gnosisSafe.contract.addOwnerWithThreshold.getData(newOwnerAddress, newThreshold)
+  const data = gnosisSafe.contract.methods.addOwnerWithThreshold(newOwnerAddress, newThreshold).encodeABI()
   await createTransaction(safe, `Add Owner ${newOwnerName}`, safeAddress, 0, nonce, executor, data)
   setOwners(safeAddress, safe.get('owners').push(makeOwner({ name: newOwnerName, address: newOwnerAddress })))
 }
@@ -90,15 +89,16 @@ class AddOwner extends React.Component<Props, State> {
           onReset={this.onReset}
         >
           <Stepper.Page numOwners={safe.get('owners').count()} threshold={safe.get('threshold')} addresses={addresses}>
-            { AddOwnerForm }
+            {AddOwnerForm}
           </Stepper.Page>
-          <Stepper.Page>
-            { Review }
-          </Stepper.Page>
+          <Stepper.Page>{Review}</Stepper.Page>
         </Stepper>
       </React.Fragment>
     )
   }
 }
 
-export default connect(selector, actions)(AddOwner)
+export default connect(
+  selector,
+  actions,
+)(AddOwner)

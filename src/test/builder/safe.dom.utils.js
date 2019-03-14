@@ -6,7 +6,7 @@ import { SEE_MULTISIG_BUTTON_TEXT } from '~/routes/safe/component/Safe/MultisigT
 import fetchTransactions from '~/routes/safe/store/actions/fetchTransactions'
 import { sleep } from '~/utils/timer'
 import { Provider } from 'react-redux'
-import { ConnectedRouter } from 'react-router-redux'
+import { ConnectedRouter } from 'connected-react-router'
 import AppRoutes from '~/routes'
 import { SAFELIST_ADDRESS, SETTINS_ADDRESS } from '~/routes/routes'
 import { history, type GlobalState } from '~/store'
