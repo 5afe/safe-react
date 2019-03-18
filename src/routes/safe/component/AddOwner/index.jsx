@@ -44,7 +44,7 @@ export const addOwner = async (values: Object, safe: Safe, threshold: number, ex
   const newOwnerName = values[NAME_PARAM]
 
   const data = gnosisSafe.contract.methods.addOwnerWithThreshold(newOwnerAddress, newThreshold).encodeABI()
-  await createTransaction(safe, `Add Owner ${newOwnerName}`, safeAddress, 0, nonce, executor, data)
+  await createTransaction(safe, `Add Owner ${newOwnerName}`, safeAddress, '0', nonce, executor, data)
   setOwners(safeAddress, safe.get('owners').push(makeOwner({ name: newOwnerName, address: newOwnerAddress })))
 }
 

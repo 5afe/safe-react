@@ -1,5 +1,5 @@
 // @flow
-import createBrowserHistory from 'history/createBrowserHistory'
+import { createBrowserHistory } from 'history'
 import { connectRouter, routerMiddleware } from 'connected-react-router'
 import { combineReducers, createStore, applyMiddleware, compose, type Reducer, type Store } from 'redux'
 import thunk from 'redux-thunk'

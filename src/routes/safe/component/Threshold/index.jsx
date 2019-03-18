@@ -38,7 +38,7 @@ class Threshold extends React.PureComponent<Props, State> {
       const gnosisSafe = await getSafeEthereumInstance(safeAddress)
       const nonce = await gnosisSafe.nonce()
       const data = gnosisSafe.contract.changeThreshold(newThreshold).encodeABI()
-      await createTransaction(safe, `Change Safe's threshold [${nonce}]`, safeAddress, 0, nonce, userAddress, data)
+      await createTransaction(safe, `Change Safe's threshold [${nonce}]`, safeAddress, '0', nonce, userAddress, data)
       await fetchTransactions(safeAddress)
       this.setState({ done: true })
     } catch (error) {

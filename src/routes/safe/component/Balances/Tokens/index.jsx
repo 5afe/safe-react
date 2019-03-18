@@ -70,6 +70,7 @@ class Tokens extends React.Component<Props, State> {
 
   render() {
     const { onClose, classes, tokens } = this.props
+    const { filter } = this.state
     const searchClasses = {
       input: classes.searchInput,
       root: classes.searchRoot,
@@ -77,7 +78,7 @@ class Tokens extends React.Component<Props, State> {
       searchContainer: classes.searchContainer,
     }
 
-    const filteredTokens = filterBy(this.state.filter, tokens)
+    const filteredTokens = filterBy(filter, tokens)
 
     return (
       <React.Fragment>
@@ -101,7 +102,7 @@ class Tokens extends React.Component<Props, State> {
             <Spacer />
             <Divider />
             <Spacer />
-            <Button variant="contained" size="small" color="secondary" className={classes.add} disabled>
+            <Button variant="contained" size="small" color="secondary" className={classes.add}>
               + ADD CUSTOM TOKEN
             </Button>
           </Row>

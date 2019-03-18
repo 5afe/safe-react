@@ -18,13 +18,11 @@ export type DomSafe = {
   store: Store<GlobalState>,
 }
 
-export const filterMoveButtonsFrom = (buttons: Element[]) =>
-  buttons.filter(button => button.getElementsByTagName('span')[0].innerHTML !== MOVE_FUNDS_BUTTON_TEXT)
+export const filterMoveButtonsFrom = (buttons: Element[]) => buttons.filter(
+  (button: Element): boolean => button.getElementsByTagName('span')[0].textContent !== MOVE_FUNDS_BUTTON_TEXT,
+)
 
-export const renderSafeInDom = async (
-  owners: number = 1,
-  threshold: number = 1,
-): Promise<DomSafe> => {
+export const renderSafeInDom = async (owners: number = 1, threshold: number = 1): Promise<DomSafe> => {
   // create store
   const store = aNewStore()
   // deploy safe updating store
@@ -46,6 +44,10 @@ export const renderSafeInDom = async (
   const filteredButtons = filterMoveButtonsFrom(buttons)
 
   return {
-    address, safeButtons: filteredButtons, safe: SafeDom, accounts, store,
+    address,
+    safeButtons: filteredButtons,
+    safe: SafeDom,
+    accounts,
+    store,
   }
 }

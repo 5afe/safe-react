@@ -34,7 +34,7 @@ export const createTransaction = async (
   safe: Safe,
   name: string,
   to: string,
-  value: number,
+  value: string,
   nonce: number,
   sender: string,
   data: string = EMPTY_DATA,

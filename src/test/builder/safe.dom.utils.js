@@ -125,8 +125,8 @@ export const whenSafeDeployed = (): Promise<string> => new Promise((resolve, rej
       clearInterval(interval)
       reject()
     }
-
     const url = `${window.location}`
+    console.log(url)
     const regex = /.*safes\/(0x[a-f0-9A-F]*)/
     const safeAddress = url.match(regex)
     if (safeAddress) {

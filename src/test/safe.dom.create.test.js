@@ -50,7 +50,7 @@ const deploySafe = async (safe: React$Component<{}>, threshold: number, numOwner
   const addedUpfront = 1
   const buttons = TestUtils.scryRenderedDOMComponentsWithTag(safe, 'button')
   const addOwnerButton = buttons[1]
-  expect(addOwnerButton.getElementsByTagName('span')[0].innerHTML).toEqual(ADD_OWNER_BUTTON)
+  expect(addOwnerButton.getElementsByTagName('span')[0].textContent).toEqual(ADD_OWNER_BUTTON)
   for (let i = addedUpfront; i < numOwners; i += 1) {
     TestUtils.Simulate.click(addOwnerButton)
   }

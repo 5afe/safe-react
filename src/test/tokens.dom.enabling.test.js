@@ -77,8 +77,8 @@ describe('DOM > Feature > Enable and disable default tokens', () => {
     // GIVEN
     const store = aNewStore()
     const safeAddress = await aMinedSafe(store)
-    await addTknTo(safeAddress, 50, firstErc20Token)
-    await addTknTo(safeAddress, 50, secondErc20Token)
+    await addTknTo(safeAddress, '50', firstErc20Token)
+    await addTknTo(safeAddress, '50', secondErc20Token)
     await store.dispatch(fetchTokensModule.fetchTokens(safeAddress))
 
     const match: Match = buildMathPropsFrom(safeAddress)

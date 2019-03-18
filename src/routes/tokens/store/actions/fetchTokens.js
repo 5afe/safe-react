@@ -44,9 +44,11 @@ export const calculateBalanceOf = async (tokenAddress: string, address: string, 
   } catch (err) {
     console.error('Failed to fetch token balances: ', err)
   }
-  console.log(balance)
 
-  return web3.utils.toBN(balance).div(10 ** decimals).toString()
+  return web3.utils
+    .toBN(balance)
+    .div(web3.utils.toBN(10 ** decimals))
+    .toString()
 }
 
 export const fetchTokensData = async () => {
@@ -71,7 +73,7 @@ export const fetchTokens = (safeAddress: string) => async (dispatch: ReduxDispat
         return makeToken({ ...item, status, funds })
       }),
     )
-    console.log('fetched tokens from relay')
+
     const customTokenRecords = await Promise.all(
       customTokens.map(async (item: TokenProps) => {
         const status = tokens.includes(item.address)
@@ -80,15 +82,13 @@ export const fetchTokens = (safeAddress: string) => async (dispatch: ReduxDispat
         return makeToken({ ...item, status, funds })
       }),
     )
-    console.log('fetched tokens from localstorage')
+
     const balances: Map<string, Token> = Map().withMutations((map) => {
       balancesRecords.forEach(record => map.set(record.get('address'), record))
       customTokenRecords.forEach(record => map.set(record.get('address'), record))
 
       map.set(ethBalance.get('address'), ethBalance)
     })
-
-    console.log('fetched balances for tokens')
 
     return dispatch(addTokens(safeAddress, balances))
   } catch (err) {

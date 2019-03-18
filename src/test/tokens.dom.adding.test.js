@@ -47,6 +47,7 @@ describe('DOM > Feature > Add new ERC 20 Tokens', () => {
     const store = aNewStore()
     const safeAddress = await aMinedSafe(store)
     await store.dispatch(fetchTokensModule.fetchTokens(safeAddress))
+
     const TokensDom = await travelToTokens(store, safeAddress)
     await sleep(400)
     const tokens = TestUtils.scryRenderedComponentsWithType(TokensDom, TokenComponent)

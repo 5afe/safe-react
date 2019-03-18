@@ -15,7 +15,6 @@ import AppRoutes from '~/routes'
 
 import './index.scss'
 
-
 const Root = () => (
   <Provider store={store}>
     <MuiThemeProvider theme={theme}>

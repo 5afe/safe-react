@@ -51,7 +51,7 @@ export const removeOwner = async (
   const data = gnosisSafe.contract.removeOwner(prevAddress, userToRemove, newThreshold).encodeABI()
   const text = name || userToRemove
 
-  return createTransaction(safe, `Remove Owner ${text}`, safeAddress, 0, nonce, executor, data)
+  return createTransaction(safe, `Remove Owner ${text}`, safeAddress, '0', nonce, executor, data)
 }
 
 class RemoveOwner extends React.Component<Props, State> {

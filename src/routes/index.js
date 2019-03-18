@@ -4,7 +4,15 @@ import Loadable from 'react-loadable'
 import { Switch, Redirect, Route } from 'react-router-dom'
 import Loader from '~/components/Loader'
 import Welcome from './welcome/container'
-import { SAFELIST_ADDRESS, OPEN_ADDRESS, SAFE_PARAM_ADDRESS, WELCOME_ADDRESS, SETTINS_ADDRESS, OPENING_ADDRESS, LOAD_ADDRESS } from './routes'
+import {
+  SAFELIST_ADDRESS,
+  OPEN_ADDRESS,
+  SAFE_PARAM_ADDRESS,
+  WELCOME_ADDRESS,
+  SETTINS_ADDRESS,
+  OPENING_ADDRESS,
+  LOAD_ADDRESS,
+} from './routes'
 
 const Safe = Loadable({
   loader: () => import('./safe/container'),
@@ -55,4 +63,3 @@ const Routes = () => (
 )
 
 export default Routes
-

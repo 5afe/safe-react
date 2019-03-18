@@ -22,7 +22,7 @@ describe('DOM > Feature > SAFE ERC20 TOKENS', () => {
 
   it('sends ERC20 tokens', async () => {
     // GIVEN
-    const numTokens = 100
+    const numTokens = '100'
     const tokenAddress = await addTknTo(safeAddress, numTokens)
 
     await dispatchTknBalance(store, tokenAddress, safeAddress)

@@ -31,15 +31,15 @@ describe('Transactions Suite', () => {
   it('retrieves tx info from service having subject available', async () => {
     let safe: Safe = getSafeFrom(store.getState(), safeAddress)
     const gnosisSafe = await getSafeEthereumInstance(safeAddress)
-    const firstTxData = gnosisSafe.contract.addOwnerWithThreshold.getData(accounts[1], 2)
+    const firstTxData = gnosisSafe.contract.methods.addOwnerWithThreshold(accounts[1], 2).encodeABI()
     const executor = accounts[0]
     const nonce = await gnosisSafe.nonce()
-    const firstTxHash = await createTransaction(safe, 'Add Owner Second account', safeAddress, 0, nonce, executor, firstTxData)
+    const firstTxHash = await createTransaction(safe, 'Add Owner Second account', safeAddress, '0', nonce, executor, firstTxData)
     await store.dispatch(fetchSafe(safe.get('address')))
     safe = getSafeFrom(store.getState(), safeAddress)
 
-    const secondTxData = gnosisSafe.contract.addOwnerWithThreshold.getData(accounts[2], 2)
-    const secondTxHash = await createTransaction(safe, 'Add Owner Third account', safeAddress, 0, nonce + 100, executor, secondTxData)
+    const secondTxData = gnosisSafe.contract.methods.addOwnerWithThreshold(accounts[2], 2).encodeABI()
+    const secondTxHash = await createTransaction(safe, 'Add Owner Third account', safeAddress, '0', nonce + 100, executor, secondTxData)
     await store.dispatch(fetchSafe(safe.get('address')))
     safe = getSafeFrom(store.getState(), safeAddress)
 
