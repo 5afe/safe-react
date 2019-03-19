@@ -23,18 +23,17 @@ export const getSafeEthToken = async (safeAddress: string) => {
 }
 
 export const calculateActiveErc20TokensFrom = (tokens: List<Token>) => {
-  const addresses = List().withMutations(list =>
-    tokens.forEach((token: Token) => {
-      if (isEther(token.get('symbol'))) {
-        return
-      }
+  const addresses = List().withMutations(list => tokens.forEach((token: Token) => {
+    if (isEther(token.get('symbol'))) {
+      return
+    }
 
-      if (!token.get('status')) {
-        return
-      }
+    if (!token.get('status')) {
+      return
+    }
 
-      list.push(token.address)
-    }))
+    list.push(token.address)
+  }))
 
   return addresses
 }

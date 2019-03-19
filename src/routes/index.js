@@ -14,6 +14,9 @@ import {
   LOAD_ADDRESS,
 } from './routes'
 
+// TODO: Use react 16.6 features
+// https://blog.logrocket.com/lazy-loading-components-in-react-16-6-6cea535c0b52
+
 const Safe = Loadable({
   loader: () => import('./safe/container'),
   loading: Loader,
