@@ -86,7 +86,9 @@ class Layout extends React.Component<Props, State> {
   }
 
   render() {
-    const { safe, provider, network, classes, granted, tokens, activeTokens } = this.props
+    const {
+      safe, provider, network, classes, granted, tokens, activeTokens,
+    } = this.props
     const { value } = this.state
 
     if (!safe) {
