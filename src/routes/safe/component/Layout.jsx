@@ -79,7 +79,7 @@ class Layout extends React.Component<Props, State> {
 
   copyAddress = () => {
     const { safe } = this.props
-   
+
     if (safe.address) {
       copyToClipboard(safe.address)
     }

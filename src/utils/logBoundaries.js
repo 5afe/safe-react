@@ -9,4 +9,3 @@ export const logComponentStack = (error: Error, info: Info) => {
   // eslint-disable-next-line
   console.log(info.componentStack)
 }
-
