@@ -4,7 +4,7 @@ import { type Store } from 'redux'
 import TestUtils from 'react-dom/test-utils'
 import Select from '@material-ui/core/Select'
 import { Provider } from 'react-redux'
-import { ConnectedRouter } from 'react-router-redux'
+import { ConnectedRouter } from 'connected-react-router'
 import { ADD_OWNER_BUTTON } from '~/routes/open/components/SafeOwnersForm'
 import Open from '~/routes/open/container/Open'
 import { aNewStore, history, type GlobalState } from '~/store'
@@ -12,7 +12,6 @@ import { sleep } from '~/utils/timer'
 import { getProviderInfo, getWeb3 } from '~/logic/wallets/getWeb3'
 import addProvider from '~/logic/wallets/store/actions/addProvider'
 import { makeProvider } from '~/logic/wallets/store/model/provider'
-import { promisify } from '~/utils/promisify'
 import { getGnosisSafeInstanceAt } from '~/logic/contracts/safeContracts'
 import { whenSafeDeployed } from './builder/safe.dom.utils'
 
@@ -34,7 +33,7 @@ const fillOpenSafeForm = async (localStore: Store<GlobalState>) => {
 
 const deploySafe = async (safe: React$Component<{}>, threshold: number, numOwners: number) => {
   const web3 = getWeb3()
-  const accounts = await promisify(cb => web3.eth.getAccounts(cb))
+  const accounts = await web3.eth.getAccounts()
 
   expect(threshold).toBeLessThanOrEqual(numOwners)
   const form = TestUtils.findRenderedDOMComponentWithTag(safe, 'form')
@@ -51,7 +50,7 @@ const deploySafe = async (safe: React$Component<{}>, threshold: number, numOwner
   const addedUpfront = 1
   const buttons = TestUtils.scryRenderedDOMComponentsWithTag(safe, 'button')
   const addOwnerButton = buttons[1]
-  expect(addOwnerButton.getElementsByTagName('span')[0].innerHTML).toEqual(ADD_OWNER_BUTTON)
+  expect(addOwnerButton.getElementsByTagName('span')[0].textContent).toEqual(ADD_OWNER_BUTTON)
   for (let i = addedUpfront; i < numOwners; i += 1) {
     TestUtils.Simulate.click(addOwnerButton)
   }

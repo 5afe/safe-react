@@ -1,6 +1,5 @@
 // @flow
 import { getWeb3 } from '~/logic/wallets/getWeb3'
-import { promisify } from '~/utils/promisify'
 import { BigNumber } from 'bignumber.js'
 import { EMPTY_DATA } from '~/logic/wallets/ethTransactions'
 import { getSignaturesFrom } from '~/utils/localStorage/signatures'
@@ -20,7 +19,6 @@ const estimateDataGasCosts = (data) => {
 
   return data.match(/.{2}/g).reduce(reducer, 0)
 }
-
 
 export const estimateDataGas = (
   safe: any,
@@ -42,8 +40,9 @@ export const estimateDataGas = (
   const signatureCost = signatureCount * (68 + 2176 + 2176) // array count (3 -> r, s, v) * signature count
 
   const sigs = getSignaturesFrom(safe.address, nonce)
-  const payload = safe.contract.execTransaction
-    .getData(to, valueInWei, data, operation, txGasEstimate, 0, gasPrice, gasToken, refundReceiver, sigs)
+  const payload = safe.contract.methods
+    .execTransaction(to, valueInWei, data, operation, txGasEstimate, 0, gasPrice, gasToken, refundReceiver, sigs)
+    .encodeABI()
 
   let dataGasEstimate = estimateDataGasCosts(payload) + signatureCost
   if (dataGasEstimate > 65536) {
@@ -64,19 +63,19 @@ export const generateTxGasEstimateFrom = async (
   operation: number,
 ) => {
   try {
-    const estimateData = safe.contract.requiredTxGas.getData(to, valueInWei, data, operation)
-    const estimateResponse = await promisify(cb => getWeb3().eth.call({
+    const estimateData = safe.contract.methods.requiredTxGas(to, valueInWei, data, operation).encodeABI()
+    const estimateResponse = await getWeb3().eth.call({
       to: safeAddress,
       from: safeAddress,
       data: estimateData,
-    }, cb))
+    })
     const txGasEstimate = new BigNumber(estimateResponse.substring(138), 16)
 
     // Add 10k else we will fail in case of nested calls
     return Promise.resolve(txGasEstimate.toNumber() + 10000)
   } catch (error) {
     // eslint-disable-next-line
-    console.log("Error calculating tx gas estimation " + error)
+    console.log('Error calculating tx gas estimation ' + error)
     return Promise.resolve(0)
   }
 }
@@ -151,8 +150,16 @@ export const generateMetamaskSignature = async (
   txGasEstimate: number,
 ) => {
   const web3 = getWeb3()
-  const typedData =
-    await generateTypedDataFrom(safe, safeAddress, to, valueInWei, nonce, data, operation, txGasEstimate)
+  const typedData = await generateTypedDataFrom(
+    safe,
+    safeAddress,
+    to,
+    valueInWei,
+    nonce,
+    data,
+    operation,
+    txGasEstimate,
+  )
 
   const jsonTypedData = JSON.stringify(typedData)
   const signedTypedData = {
@@ -163,7 +170,7 @@ export const generateMetamaskSignature = async (
     params: [jsonTypedData, sender],
     from: sender,
   }
-  const txSignedResponse = await promisify(cb => web3.currentProvider.sendAsync(signedTypedData, cb))
+  const txSignedResponse = await web3.currentProvider.sendAsync(signedTypedData)
 
   return txSignedResponse.result.replace(EMPTY_DATA, '')
 }

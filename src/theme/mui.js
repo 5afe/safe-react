@@ -1,6 +1,18 @@
 // @flow
 import { createMuiTheme } from '@material-ui/core/styles'
-import { largeFontSize, mediumFontSize, smallFontSize, disabled, primary, secondary, md, lg, bolderFont, boldFont, buttonLargeFontSize } from './variables'
+import {
+  largeFontSize,
+  mediumFontSize,
+  smallFontSize,
+  disabled,
+  primary,
+  secondary,
+  md,
+  lg,
+  bolderFont,
+  boldFont,
+  buttonLargeFontSize,
+} from './variables'
 
 export type WithStyles = {
   classes: Object,
@@ -25,19 +37,17 @@ const palette = {
 export default createMuiTheme({
   typography: {
     fontFamily: 'Montserrat,sans-serif',
+    useNextVariants: true,
   },
   overrides: {
     MuiButton: {
       root: {
         fontFamily: 'Roboto Mono, monospace',
         letterSpacing: '0.9px',
-        '&:disabled': {
+        '&$disabled': {
           color: disabled,
         },
         color: disabled,
-      },
-      disabled: {
-        cursor: 'pointer',
       },
       contained: {
         boxShadow: 'none',
@@ -159,9 +169,9 @@ export default createMuiTheme({
       root: {
         fontFamily: 'Roboto Mono, monospace',
         fontWeight: 'normal',
-      },
-      selected: {
-        fontWeight: bolderFont,
+        '&$selected': {
+          fontWeight: bolderFont,
+        },
       },
     },
     MuiTablePagination: {

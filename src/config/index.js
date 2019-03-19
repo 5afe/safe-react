@@ -4,6 +4,7 @@ import {
   TX_SERVICE_HOST,
   ENABLED_TX_SERVICE_REMOVAL_SENDER,
   SIGNATURES_VIA_METAMASK,
+  RELAY_API_URL,
 } from '~/config/names'
 import devConfig from './development'
 import testConfig from './testing'
@@ -30,6 +31,8 @@ export const getTxServiceHost = () => {
 }
 
 export const getTxServiceUriFrom = (safeAddress: string) => `safes/${safeAddress}/transactions/`
+
+export const getRelayUrl = () => getConfig()[RELAY_API_URL]
 
 export const allowedRemoveSenderInTxHistoryService = () => {
   const config = getConfig()

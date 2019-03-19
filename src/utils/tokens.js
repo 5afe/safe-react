@@ -15,7 +15,7 @@ export const getSafeEthToken = async (safeAddress: string) => {
     name: 'Ether',
     symbol: 'ETH',
     decimals: 18,
-    logoUrl: logo,
+    logoUri: logo,
     funds: balance,
   })
 

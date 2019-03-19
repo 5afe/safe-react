@@ -5,7 +5,6 @@ import SafeView from '~/routes/safe/component/Safe'
 import { aNewStore, type GlobalState } from '~/store'
 import { sleep } from '~/utils/timer'
 import { getWeb3 } from '~/logic/wallets/getWeb3'
-import { promisify } from '~/utils/promisify'
 import { addEtherTo } from '~/test/utils/tokenMovements'
 import { aMinedSafe } from '~/test/builder/safe.redux.builder'
 import { travelToSafe } from '~/test/builder/safe.dom.utils'
@@ -19,19 +18,17 @@ export type DomSafe = {
   store: Store<GlobalState>,
 }
 
-export const filterMoveButtonsFrom = (buttons: Element[]) =>
-  buttons.filter(button => button.getElementsByTagName('span')[0].innerHTML !== MOVE_FUNDS_BUTTON_TEXT)
+export const filterMoveButtonsFrom = (buttons: Element[]) => buttons.filter(
+  (button: Element): boolean => button.getElementsByTagName('span')[0].textContent !== MOVE_FUNDS_BUTTON_TEXT,
+)
 
-export const renderSafeInDom = async (
-  owners: number = 1,
-  threshold: number = 1,
-): Promise<DomSafe> => {
+export const renderSafeInDom = async (owners: number = 1, threshold: number = 1): Promise<DomSafe> => {
   // create store
   const store = aNewStore()
   // deploy safe updating store
   const address = await aMinedSafe(store, owners, threshold)
   // have available accounts
-  const accounts = await promisify(cb => getWeb3().eth.getAccounts(cb))
+  const accounts = await getWeb3().eth.getAccounts()
   // navigate to SAFE route
   const SafeDom = travelToSafe(store, address)
 
@@ -47,6 +44,10 @@ export const renderSafeInDom = async (
   const filteredButtons = filterMoveButtonsFrom(buttons)
 
   return {
-    address, safeButtons: filteredButtons, safe: SafeDom, accounts, store,
+    address,
+    safeButtons: filteredButtons,
+    safe: SafeDom,
+    accounts,
+    store,
   }
 }

@@ -19,7 +19,7 @@ const NoRights = () => (
       <Button
         component={Link}
         to={SAFELIST_ADDRESS}
-        variant="raised"
+        variant="contained"
         color="primary"
       >
         Safe List

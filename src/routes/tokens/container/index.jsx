@@ -13,10 +13,10 @@ type Props = Actions & SelectorProps & {
 
 class TokensView extends React.PureComponent<Props> {
   componentDidUpdate() {
-    const { safeAddress } = this.props
+    const { safeAddress, tokens, fetchTokens: loadTokens } = this.props
 
-    if (this.props.tokens.count() === 0) {
-      this.props.fetchTokens(safeAddress)
+    if (tokens.count() === 0) {
+      loadTokens(safeAddress)
     }
   }
 

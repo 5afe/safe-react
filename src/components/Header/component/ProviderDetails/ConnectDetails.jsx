@@ -39,21 +39,19 @@ const ConnectDetails = ({ classes, onConnect }: Props) => (
   <React.Fragment>
     <div className={classes.container}>
       <Row margin="lg" align="center">
-        <Paragraph className={classes.text} size="lg" noMargin weight="bolder">Connect a Wallet</Paragraph>
+        <Paragraph className={classes.text} size="lg" noMargin weight="bolder">
+          Connect a Wallet
+        </Paragraph>
       </Row>
     </div>
     <Row className={classes.logo} margin="lg">
       <CircleDot keySize={32} circleSize={75} dotSize={25} dotTop={50} dotRight={25} center mode="error" />
     </Row>
     <Row className={classes.connect}>
-      <Button
-        onClick={onConnect}
-        size="medium"
-        variant="raised"
-        color="primary"
-        fullWidth
-      >
-        <Paragraph className={classes.connectText} size="sm" weight="regular" color="white" noMargin>CONNECT</Paragraph>
+      <Button onClick={onConnect} size="medium" variant="contained" color="primary" fullWidth>
+        <Paragraph className={classes.connectText} size="sm" weight="regular" color="white" noMargin>
+          CONNECT
+        </Paragraph>
       </Button>
     </Row>
   </React.Fragment>

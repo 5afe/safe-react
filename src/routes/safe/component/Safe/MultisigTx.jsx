@@ -22,7 +22,7 @@ const MultisigTransactionsComponent = ({ onSeeTxs }: Props) => {
       </Avatar>
       <ListItemText primary="Safe's Multisig Transaction" secondary={text} />
       <Button
-        variant="raised"
+        variant="contained"
         color="primary"
         onClick={onSeeTxs}
       >

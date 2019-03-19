@@ -43,13 +43,12 @@ const transitionProps = {
 class GnoStepper extends React.PureComponent<Props, State> {
   static Page = ({ children }: PageProps) => children
 
-  static FinishButton = ({
-    component, to, title, ...props
-  }) => (
-    <Button component={component} to={to} variant="raised" color="primary" {...props}>
+  static FinishButton = ({ component, to, title, ...props }) => (
+    <Button component={component} to={to} variant="contained" color="primary" {...props}>
       {title}
     </Button>
   )
+
   constructor(props: Props) {
     super(props)
 
@@ -79,14 +78,12 @@ class GnoStepper extends React.PureComponent<Props, State> {
     return children({ ...props, updateInitialProps: this.updateInitialProps })
   }
 
-  updateInitialProps = (initialValues) => {
+  updateInitialProps = initialValues => {
     this.setState({ values: initialValues })
   }
 
   validate = (values: Object) => {
-    const activePage = React.Children.toArray(this.props.children)[
-      this.state.page
-    ]
+    const activePage = React.Children.toArray(this.props.children)[this.state.page]
     return activePage.props.validate ? activePage.props.validate(values) : {}
   }
 
@@ -132,9 +129,7 @@ class GnoStepper extends React.PureComponent<Props, State> {
   isLastPage = page => page === this.props.steps.length - 1
 
   render() {
-    const {
-      steps, children, classes, disabledWhenValidating = false,
-    } = this.props
+    const { steps, children, classes, disabledWhenValidating = false } = this.props
     const { page, values } = this.state
     const activePage = this.getActivePageFrom(children)
     const lastPage = this.isLastPage(page)
@@ -142,11 +137,7 @@ class GnoStepper extends React.PureComponent<Props, State> {
 
     return (
       <React.Fragment>
-        <GnoForm
-          onSubmit={this.handleSubmit}
-          initialValues={values}
-          validation={this.validate}
-        >
+        <GnoForm onSubmit={this.handleSubmit} initialValues={values} validation={this.validate}>
           {(submitting: boolean, validating: boolean, ...rest: any) => {
             const disabled = disabledWhenValidating ? submitting || validating : submitting
             const controls = (
@@ -167,9 +158,7 @@ class GnoStepper extends React.PureComponent<Props, State> {
                 {steps.map(label => (
                   <FormStep key={label}>
                     <StepLabel>{label}</StepLabel>
-                    <StepContent TransitionProps={transitionProps}>
-                      {activePage(controls, ...rest)}
-                    </StepContent>
+                    <StepContent TransitionProps={transitionProps}>{activePage(controls, ...rest)}</StepContent>
                   </FormStep>
                 ))}
               </Stepper>
