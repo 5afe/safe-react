@@ -6,11 +6,9 @@ type Field = boolean | string | null | typeof undefined
 
 export const required = (value: Field) => (value ? undefined : 'Required')
 
-export const mustBeInteger = (value: string) =>
-  (!Number.isInteger(Number(value)) || value.includes('.') ? 'Must be an integer' : undefined)
+export const mustBeInteger = (value: string) => (!Number.isInteger(Number(value)) || value.includes('.') ? 'Must be an integer' : undefined)
 
-export const mustBeFloat = (value: number) =>
-  (Number.isNaN(Number(value)) ? 'Must be a number' : undefined)
+export const mustBeFloat = (value: number) => (Number.isNaN(Number(value)) ? 'Must be a number' : undefined)
 
 export const greaterThan = (min: number) => (value: string) => {
   if (Number.isNaN(Number(value)) || Number.parseFloat(value) > Number(min)) {
@@ -49,18 +47,16 @@ export const maxValue = (max: number) => (value: string) => {
 export const ok = () => undefined
 
 export const mustBeEthereumAddress = (address: Field) => {
-  const isAddress: boolean = getWeb3().isAddress(address)
+  const isAddress: boolean = getWeb3().utils.isAddress(address)
 
   return isAddress ? undefined : 'Address should be a valid Ethereum address'
 }
 
 export const ADDRESS_REPEATED_ERROR = 'Address already introduced'
 
-export const uniqueAddress = (addresses: string[]) => (value: string) =>
-  (addresses.includes(value) ? ADDRESS_REPEATED_ERROR : undefined)
+export const uniqueAddress = (addresses: string[]) => (value: string) => (addresses.includes(value) ? ADDRESS_REPEATED_ERROR : undefined)
 
-export const composeValidators = (...validators: Function[]): FieldValidator => (value: Field) =>
-  validators.reduce((error, validator) => error || validator(value), undefined)
+export const composeValidators = (...validators: Function[]): FieldValidator => (value: Field) => validators.reduce((error, validator) => error || validator(value), undefined)
 
 export const inLimit = (limit: number, base: number, baseText: string, symbol: string = 'ETH') => (value: string) => {
   const amount = Number(value)

@@ -7,7 +7,9 @@ import Identicon from '~/components/Identicon'
 import OpenPaper from '~/components/Stepper/OpenPaper'
 import Row from '~/components/layout/Row'
 import Paragraph from '~/components/layout/Paragraph'
-import { xs, sm, lg, border, secondary } from '~/theme/variables'
+import {
+  xs, sm, lg, border, secondary,
+} from '~/theme/variables'
 import { openAddressInEtherScan, getWeb3 } from '~/logic/wallets/getWeb3'
 import { FIELD_LOAD_NAME, FIELD_LOAD_ADDRESS } from '~/routes/load/components/fields'
 import { sameAddress } from '~/logic/wallets/ethAddresses'
@@ -62,6 +64,8 @@ class ReviewComponent extends React.PureComponent<Props, State> {
     isOwner: false,
   }
 
+  mounted = false
+
   componentDidMount = async () => {
     this.mounted = true
 
@@ -70,7 +74,7 @@ class ReviewComponent extends React.PureComponent<Props, State> {
     const web3 = getWeb3()
 
     const GnosisSafe = getGnosisSafeContract(web3)
-    const gnosisSafe = GnosisSafe.at(safeAddress)
+    const gnosisSafe = await GnosisSafe.at(safeAddress)
     const owners = await gnosisSafe.getOwners()
     if (!owners) {
       return
@@ -85,8 +89,6 @@ class ReviewComponent extends React.PureComponent<Props, State> {
   componentWillUnmount() {
     this.mounted = false
   }
-
-  mounted = false
 
   render() {
     const { values, classes, network } = this.props

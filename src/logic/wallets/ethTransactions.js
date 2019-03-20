@@ -1,7 +1,6 @@
 // @flow
 import { BigNumber } from 'bignumber.js'
 import { getWeb3 } from '~/logic/wallets/getWeb3'
-import { promisify } from '~/utils/promisify'
 import { enhancedFetch } from '~/utils/fetch'
 
 // const MAINNET_NETWORK = 1
@@ -13,7 +12,7 @@ export const checkReceiptStatus = async (hash: string) => {
   }
 
   const web3 = getWeb3()
-  const txReceipt = await promisify(cb => web3.eth.getTransactionReceipt(hash, cb))
+  const txReceipt = await web3.eth.getTransactionReceipt(hash)
 
   const { status } = txReceipt
   if (!status) {
@@ -53,7 +52,7 @@ export const calculateGasPrice = async () => {
 export const calculateGasOf = async (data: Object, from: string, to: string) => {
   const web3 = getWeb3()
   try {
-    const gas = await promisify(cb => web3.eth.estimateGas({ data, from, to }, cb))
+    const gas = await web3.eth.estimateGas({ data, from, to })
 
     return gas * 2
   } catch (err) {

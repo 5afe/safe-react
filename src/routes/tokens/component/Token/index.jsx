@@ -58,6 +58,7 @@ class TokenComponent extends React.PureComponent<Props, State> {
 
   render() {
     const { classes, token } = this.props
+    const { checked } = this.state
     const name = token.get('name')
     const symbol = token.get('symbol')
     const disabled = isEther(symbol)
@@ -70,22 +71,24 @@ class TokenComponent extends React.PureComponent<Props, State> {
             <Typography variant="subheading" color="textSecondary">
               <Checkbox
                 disabled={disabled}
-                checked={!!this.state.checked}
+                checked={!!checked}
                 onChange={this.handleChange}
                 color="primary"
               />
               {symbol}
-              { token.get('removable') &&
-                <IconButton aria-label="Delete" onClick={this.onRemoveClick}>
-                  <Delete />
-                </IconButton>
+              { token.get('removable')
+                && (
+                  <IconButton aria-label="Delete" onClick={this.onRemoveClick}>
+                    <Delete />
+                  </IconButton>
+                )
               }
             </Typography>
           </CardContent>
         </Block>
         <CardMedia
           className={classes.cover}
-          image={token.get('logoUrl')}
+          image={token.get('logoUri')}
           title={name}
         />
       </Card>

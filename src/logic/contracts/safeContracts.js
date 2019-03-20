@@ -2,7 +2,6 @@
 import contract from 'truffle-contract'
 import { ensureOnce } from '~/utils/singleton'
 import { getWeb3 } from '~/logic/wallets/getWeb3'
-import { promisify } from '~/utils/promisify'
 import GnosisSafeSol from '#/GnosisSafe.json'
 import ProxyFactorySol from '#/ProxyFactory.json'
 import { calculateGasOf, calculateGasPrice } from '~/logic/wallets/ethTransactions'
@@ -42,7 +41,7 @@ const instanciateMasterCopies = async () => {
 // ONLY USED IN TEST ENVIRONMENT
 const createMasterCopies = async () => {
   const web3 = getWeb3()
-  const accounts = await promisify(cb => web3.eth.getAccounts(cb))
+  const accounts = await web3.eth.getAccounts()
   const userAccount = accounts[0]
 
   const ProxyFactory = getCreateProxyFactoryContract(web3)
@@ -60,13 +59,13 @@ export const getSafeMasterContract = async () => {
   return safeMaster
 }
 
-export const deploySafeContract = async (
-  safeAccounts: string[],
-  numConfirmations: number,
-  userAccount: string,
-) => {
-  const gnosisSafeData = await safeMaster.contract.setup.getData(safeAccounts, numConfirmations, 0, '0x')
-  const proxyFactoryData = proxyFactoryMaster.contract.createProxy.getData(safeMaster.address, gnosisSafeData)
+export const deploySafeContract = async (safeAccounts: string[], numConfirmations: number, userAccount: string) => {
+  const gnosisSafeData = await safeMaster.contract.methods
+    .setup(safeAccounts, numConfirmations, '0x0000000000000000000000000000000000000000', '0x')
+    .encodeABI()
+  const proxyFactoryData = proxyFactoryMaster.contract.methods
+    .createProxy(safeMaster.address, gnosisSafeData)
+    .encodeABI()
   const gas = await calculateGasOf(proxyFactoryData, userAccount, proxyFactoryMaster.address)
   const gasPrice = await calculateGasPrice()
 
@@ -76,7 +75,7 @@ export const deploySafeContract = async (
 export const getGnosisSafeInstanceAt = async (safeAddress: string) => {
   const web3 = getWeb3()
   const GnosisSafe = await getGnosisSafeContract(web3)
-  const gnosisSafe = GnosisSafe.at(safeAddress)
+  const gnosisSafe = await GnosisSafe.at(safeAddress)
 
   return gnosisSafe
 }

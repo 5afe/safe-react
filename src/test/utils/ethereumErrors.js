@@ -1,7 +1,6 @@
 // @flow
 import { getWeb3 } from '~/logic/wallets/getWeb3'
 import abi from 'ethereumjs-abi'
-import { promisify } from '~/utils/promisify'
 
 /*
 console.log(`to[${to}] \n\n valieInWei[${valueInWei}] \n\n
@@ -15,9 +14,12 @@ const err = await getErrorMessage(address, 0, txData, accounts[2])
 */
 export const getErrorMessage = async (to: string, value: number, data: string, from: string) => {
   const web3 = getWeb3()
-  const returnData = await promisify(cb => web3.eth.call({
-    to, from, value, data,
-  }, cb))
+  const returnData = await web3.eth.call({
+    to,
+    from,
+    value,
+    data,
+  })
   const returnBuffer = Buffer.from(returnData.slice(2), 'hex')
 
   return abi.rawDecode(['string'], returnBuffer.slice(4))[0]

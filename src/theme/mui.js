@@ -169,9 +169,9 @@ export default createMuiTheme({
       root: {
         fontFamily: 'Roboto Mono, monospace',
         fontWeight: 'normal',
-      },
-      '&$selected': {
-        fontWeight: bolderFont,
+        '&$selected': {
+          fontWeight: bolderFont,
+        },
       },
     },
     MuiTablePagination: {

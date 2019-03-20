@@ -16,7 +16,9 @@ import Paragraph from '~/components/layout/Paragraph'
 import Modal from '~/components/Modal'
 import { type Column, cellWidth } from '~/components/Table/TableHead'
 import Table from '~/components/Table'
-import { getBalanceData, generateColumns, BALANCE_TABLE_ASSET_ID, type BalanceRow, filterByZero } from './dataFetcher'
+import {
+  getBalanceData, generateColumns, BALANCE_TABLE_ASSET_ID, type BalanceRow, filterByZero,
+} from './dataFetcher'
 import Tokens from './Tokens'
 import Send from './Send'
 import Receive from './Receive'
@@ -114,32 +116,50 @@ class Balances extends React.Component<Props, State> {
         >
           {(sortedData: Array<BalanceRow>) => sortedData.map((row: any, index: number) => (
             <TableRow tabIndex={-1} key={index} className={classes.hide}>
-              { autoColumns.map((column: Column) => (
-                <TableCell key={column.id} style={cellWidth(column.width)} numeric={column.numeric} component="td">
+              {autoColumns.map((column: Column) => (
+                <TableCell key={column.id} style={cellWidth(column.width)} align={column.align} component="td">
                   {row[column.id]}
                 </TableCell>
-              )) }
+              ))}
               <TableCell component="td">
                 <Row align="end" className={classes.actions}>
-                  { granted &&
-                    <Button variant="contained" size="small" color="secondary" className={classes.send} onClick={this.onShow('Send')}>
+                  {granted && (
+                    <Button
+                      variant="contained"
+                      size="small"
+                      color="secondary"
+                      className={classes.send}
+                      onClick={this.onShow('Send')}
+                    >
                       <CallMade className={classNames(classes.leftIcon, classes.iconSmall)} />
-                      Send
+                        Send
                     </Button>
-                  }
-                  <Button variant="contained" size="small" color="secondary" className={classes.receive} onClick={this.onShow('Receive')}>
+                  )}
+                  <Button
+                    variant="contained"
+                    size="small"
+                    color="secondary"
+                    className={classes.receive}
+                    onClick={this.onShow('Receive')}
+                  >
                     <CallReceived className={classNames(classes.leftIcon, classes.iconSmall)} />
-                    Receive
+                      Receive
                   </Button>
                 </Row>
               </TableCell>
             </TableRow>
-          ))}
+          ))
+          }
         </Table>
         <Modal title="Send Tokens" description="Send Tokens Form" handleClose={this.onHide('Send')} open={showSend}>
           <Send onClose={this.onHide('Send')} />
         </Modal>
-        <Modal title="Receive Tokens" description="Receive Tokens Form" handleClose={this.onHide('Receive')} open={showReceive}>
+        <Modal
+          title="Receive Tokens"
+          description="Receive Tokens Form"
+          handleClose={this.onHide('Receive')}
+          open={showReceive}
+        >
           <Receive onClose={this.onHide('Receive')} />
         </Modal>
       </React.Fragment>

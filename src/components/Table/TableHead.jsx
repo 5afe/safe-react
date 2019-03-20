@@ -9,7 +9,7 @@ import { type Order } from '~/components/Table/sorting'
 
 export type Column = {
   id: string,
-  numeric: boolean,
+  align?: string,
   order: boolean, // If data for sorting will be provided in a different attr
   disablePadding: boolean,
   label: string,
@@ -48,7 +48,7 @@ class GnoTableHead extends React.PureComponent<Props> {
           {columns.map((column: Column) => (
             <TableCell
               key={column.id}
-              numeric={column.numeric}
+              align={column.align}
               padding={column.disablePadding ? 'none' : 'default'}
               sortDirection={orderBy === column.id ? order : false}
             >

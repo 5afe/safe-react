@@ -48,10 +48,10 @@ export const removeOwner = async (
   const storedOwners = await gnosisSafe.getOwners()
   const index = storedOwners.findIndex(ownerAddress => ownerAddress === userToRemove)
   const prevAddress = index === 0 ? SENTINEL_ADDRESS : storedOwners[index - 1]
-  const data = gnosisSafe.contract.removeOwner.getData(prevAddress, userToRemove, newThreshold)
+  const data = gnosisSafe.contract.removeOwner(prevAddress, userToRemove, newThreshold).encodeABI()
   const text = name || userToRemove
 
-  return createTransaction(safe, `Remove Owner ${text}`, safeAddress, 0, nonce, executor, data)
+  return createTransaction(safe, `Remove Owner ${text}`, safeAddress, '0', nonce, executor, data)
 }
 
 class RemoveOwner extends React.Component<Props, State> {
