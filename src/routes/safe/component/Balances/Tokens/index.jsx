@@ -22,7 +22,7 @@ import Divider from '~/components/layout/Divider'
 import Hairline from '~/components/layout/Hairline'
 import Spacer from '~/components/Spacer'
 import Row from '~/components/layout/Row'
-import { type Token } from '~/routes/tokens/store/model/token'
+import { type Token } from '~/logic/tokens/store/model/token'
 import actions, { type Actions } from './actions'
 import { styles } from './style'
 

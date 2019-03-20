@@ -1,6 +1,6 @@
 // @flow
 import { List } from 'immutable'
-import { type Token } from '~/routes/tokens/store/model/token'
+import { type Token } from '~/logic/tokens/store/model/token'
 import { buildOrderFieldFrom, FIXED, type SortRow } from '~/components/Table/sorting'
 import { type Column } from '~/components/Table/TableHead'
 

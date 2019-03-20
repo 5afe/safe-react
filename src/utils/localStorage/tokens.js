@@ -1,7 +1,7 @@
 // @flow
 import { List } from 'immutable'
 import { load } from '~/utils/localStorage'
-import { type Token, type TokenProps } from '~/routes/tokens/store/model/token'
+import { type Token, type TokenProps } from '~/logic/tokens/store/model/token'
 
 export const ACTIVE_TOKENS_KEY = 'ACTIVE_TOKENS'
 export const TOKENS_KEY = 'TOKENS'

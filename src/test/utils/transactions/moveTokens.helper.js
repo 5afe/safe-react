@@ -2,12 +2,12 @@
 import { Map } from 'immutable'
 import TestUtils from 'react-dom/test-utils'
 import { sleep } from '~/utils/timer'
-import * as fetchTokensAction from '~/routes/tokens/store/actions/fetchTokens'
+import * as fetchTokensAction from '~/logic/tokens/store/actions/fetchTokens'
 import { checkMinedTx, checkPendingTx, EXPAND_BALANCE_INDEX } from '~/test/builder/safe.dom.utils'
 import { whenExecuted } from '~/test/utils/logTransactions'
 import SendToken from '~/routes/safe/component/SendToken'
-import { makeToken, type Token } from '~/routes/tokens/store/model/token'
-import addTokens from '~/routes/tokens/store/actions/addTokens'
+import { makeToken, type Token } from '~/logic/tokens/store/model/token'
+import addTokens from '~/logic/tokens/store/actions/addTokens'
 
 export const sendMoveTokensForm = async (
   SafeDom: React$Component<any, any>,
@@ -46,14 +46,18 @@ export const sendMoveTokensForm = async (
 export const dispatchTknBalance = async (store: Store, tokenAddress: string, address: string) => {
   const fetchBalancesMock = jest.spyOn(fetchTokensAction, 'fetchTokens')
   const funds = await fetchTokensAction.calculateBalanceOf(tokenAddress, address, 18)
-  const balances: Map<string, Token> = Map().set('TKN', makeToken({
-    address: tokenAddress,
-    name: 'Token',
-    symbol: 'TKN',
-    decimals: 18,
-    logoUri: 'https://github.com/TrustWallet/tokens/blob/master/images/0x6810e776880c02933d47db1b9fc05908e5386b96.png?raw=true',
-    funds,
-  }))
+  const balances: Map<string, Token> = Map().set(
+    'TKN',
+    makeToken({
+      address: tokenAddress,
+      name: 'Token',
+      symbol: 'TKN',
+      decimals: 18,
+      logoUri:
+        'https://github.com/TrustWallet/tokens/blob/master/images/0x6810e776880c02933d47db1b9fc05908e5386b96.png?raw=true',
+      funds,
+    }),
+  )
   fetchBalancesMock.mockImplementation(() => store.dispatch(addTokens(address, balances)))
   await store.dispatch(fetchTokensAction.fetchTokens(address))
   fetchBalancesMock.mockRestore()

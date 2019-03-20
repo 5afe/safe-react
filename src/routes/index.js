@@ -14,8 +14,6 @@ import {
 
 const Safe = React.lazy(() => import('./safe/container'))
 
-const Settings = React.lazy(() => import('./tokens/container'))
-
 const SafeList = React.lazy(() => import('./safeList/container'))
 
 const Open = React.lazy(() => import('./open/container/Open'))
@@ -36,7 +34,6 @@ const Routes = () => (
     <Route exact path={OPEN_ADDRESS} component={Open} />
     <Route exact path={SAFELIST_ADDRESS} component={SafeList} />
     <Route exact path={SAFE_ADDRESS} component={Safe} />
-    <Route exact path={SAFE_SETTINGS} component={Settings} />
     <Route exact path={OPENING_ADDRESS} component={Opening} />
     <Route exact path={LOAD_ADDRESS} component={Load} />
   </Switch>

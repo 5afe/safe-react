@@ -1,7 +1,7 @@
 // @flow
 import { sleep } from '~/utils/timer'
 import * as TestUtils from 'react-dom/test-utils'
-import AddToken from '~/routes/tokens/component/AddToken'
+import AddToken from '~/logic/tokens/component/AddToken'
 import { whenOnNext, whenExecuted } from '~/test/utils/logTransactions'
 
 export const clickOnAddToken = async (TokensDom: React$Component<any, any>) => {

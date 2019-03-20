@@ -3,8 +3,8 @@ import { List, Map } from 'immutable'
 import { createSelector, type Selector } from 'reselect'
 import { safeParamAddressSelector, type RouterProps } from '~/routes/safe/store/selectors'
 import { type GlobalState } from '~/store'
-import { TOKEN_REDUCER_ID } from '~/routes/tokens/store/reducer/tokens'
-import { type Token } from '~/routes/tokens/store/model/token'
+import { TOKEN_REDUCER_ID } from '~/logic/tokens/store/reducer/tokens'
+import { type Token } from '~/logic/tokens/store/model/token'
 
 const balancesSelector = (state: GlobalState) => state[TOKEN_REDUCER_ID]
 
@@ -38,8 +38,7 @@ export const orderedTokenListSelector = createSelector(
 export const tokenAddressesSelector = createSelector(
   tokenListSelector,
   (balances: List<Token>) => {
-    const addresses = List().withMutations(list =>
-      balances.map(token => list.push(token.address)))
+    const addresses = List().withMutations(list => balances.map(token => list.push(token.address)))
 
     return addresses
   },

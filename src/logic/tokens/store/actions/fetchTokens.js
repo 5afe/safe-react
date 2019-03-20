@@ -6,7 +6,7 @@ import StandardToken from '@gnosis.pm/util-contracts/build/contracts/GnosisStand
 import HumanFriendlyToken from '@gnosis.pm/util-contracts/build/contracts/HumanFriendlyToken.json'
 import { getWeb3 } from '~/logic/wallets/getWeb3'
 import { type GlobalState } from '~/store/index'
-import { makeToken, type Token, type TokenProps } from '~/routes/tokens/store/model/token'
+import { makeToken, type Token, type TokenProps } from '~/logic/tokens/store/model/token'
 import { ensureOnce } from '~/utils/singleton'
 import { getActiveTokenAddresses, getTokens } from '~/utils/localStorage/tokens'
 import { getSafeEthToken } from '~/utils/tokens'

@@ -9,7 +9,7 @@ import Img from '~/components/layout/Img'
 import Paragraph from '~/components/layout/Paragraph'
 import Row from '~/components/layout/Row'
 import { type Safe } from '~/routes/safe/store/model/safe'
-import { type Token } from '~/routes/tokens/store/model/token'
+import { type Token } from '~/logic/tokens/store/model/token'
 
 import Transactions from '~/routes/safe/component/Transactions'
 import Threshold from '~/routes/safe/component/Threshold'

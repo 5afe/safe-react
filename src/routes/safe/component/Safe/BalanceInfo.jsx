@@ -19,7 +19,7 @@ import { Map } from 'immutable'
 import Button from '~/components/layout/Button'
 import openHoc, { type Open } from '~/components/hoc/OpenHoc'
 import { type WithStyles } from '~/theme/mui'
-import { type Token } from '~/routes/tokens/store/model/token'
+import { type Token } from '~/logic/tokens/store/model/token'
 import { settingsUrlFrom } from '~/routes'
 
 type Props = Open & WithStyles & {

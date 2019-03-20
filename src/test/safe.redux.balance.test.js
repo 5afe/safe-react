@@ -1,10 +1,10 @@
 // @flow
 import { Map } from 'immutable'
-import * as fetchTokensAction from '~/routes/tokens/store/actions/fetchTokens'
+import * as fetchTokensAction from '~/logic/tokens/store/actions/fetchTokens'
 import { aNewStore } from '~/store'
 import { aMinedSafe } from '~/test/builder/safe.redux.builder'
-import { type Token } from '~/routes/tokens/store/model/token'
-import { TOKEN_REDUCER_ID } from '~/routes/tokens/store/reducer/tokens'
+import { type Token } from '~/logic/tokens/store/model/token'
+import { TOKEN_REDUCER_ID } from '~/logic/tokens/store/reducer/tokens'
 import { addEtherTo, addTknTo } from '~/test/utils/tokenMovements'
 import { dispatchTknBalance } from '~/test/utils/transactions/moveTokens.helper'
 import { ETH_ADDRESS } from '~/utils/tokens'
