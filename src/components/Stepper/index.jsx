@@ -72,7 +72,11 @@ class GnoStepper extends React.PureComponent<Props, State> {
     }))
   }
 
-  getPageProps = (pages: React$Node): PageProps => React.Children.toArray(pages)[this.state.page].props
+  getPageProps = (pages: React$Node): PageProps => {
+    const { page } = this.state
+
+    return React.Children.toArray(pages)[page].props
+  }
 
   getActivePageFrom = (pages: React$Node) => {
     const activePageProps = this.getPageProps(pages)
@@ -111,8 +115,9 @@ class GnoStepper extends React.PureComponent<Props, State> {
   }
 
   previous = () => {
-    const firstPage = this.state.page === 0
+    const { page } = this.state
 
+    const firstPage = page === 0
     if (firstPage) {
       return history.goBack()
     }
@@ -133,7 +138,10 @@ class GnoStepper extends React.PureComponent<Props, State> {
     return this.next(values)
   }
 
-  isLastPage = page => page === this.props.steps.length - 1
+  isLastPage = (page) => {
+    const { steps } = this.props
+    return page === steps.length - 1
+  }
 
   render() {
     const {
