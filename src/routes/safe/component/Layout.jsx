@@ -25,7 +25,7 @@ type Props = SelectorProps & {
 }
 
 type State = {
-  value: number,
+  tabIndex: number,
 }
 
 const openIconStyle = {
@@ -70,11 +70,11 @@ const styles = () => ({
 
 class Layout extends React.Component<Props, State> {
   state = {
-    value: 0,
+    tabIndex: 0,
   }
 
-  handleChange = (event, value) => {
-    this.setState({ value })
+  handleChange = (event, tabIndex) => {
+    this.setState({ tabIndex })
   }
 
   copyAddress = () => {
@@ -89,7 +89,7 @@ class Layout extends React.Component<Props, State> {
     const {
       safe, provider, network, classes, granted, tokens, activeTokens,
     } = this.props
-    const { value } = this.state
+    const { tabIndex } = this.state
 
     if (!safe) {
       return <NoSafe provider={provider} text="Safe not found" />
@@ -121,14 +121,14 @@ class Layout extends React.Component<Props, State> {
           </Block>
         </Block>
         <Row>
-          <Tabs value={value} onChange={this.handleChange} indicatorColor="secondary" textColor="secondary">
+          <Tabs value={tabIndex} onChange={this.handleChange} indicatorColor="secondary" textColor="secondary">
             <Tab label="Balances" />
             <Tab label="Transactions" />
             <Tab label="Settings" />
           </Tabs>
         </Row>
         <Hairline color="#c8ced4" />
-        {value === 0 && (
+        {tabIndex === 0 && (
           <Balances tokens={tokens} activeTokens={activeTokens} granted={granted} safeAddress={address} />
         )}
       </React.Fragment>
