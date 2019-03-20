@@ -2,32 +2,91 @@
   "name": "safe-react",
   "version": "0.3.2",
   "description": "Allowing crypto users manage funds in a safer way",
-  "directories": {
-    "test": "test"
-  },
-  "scripts": {
-    "start": "node scripts/start.js",
-    "build": "node scripts/build.js",
-    "test": "NODE_ENV=test && node scripts/test.js --env=jsdom",
-    "test-local": "NODE_ENV=test && node scripts/test.js --env=jsdom",
-    "precommit": "./precommit.sh",
-    "flow": "flow",
-    "storybook": "start-storybook -p 6006",
-    "build-storybook": "build-storybook -o build_storybook"
+  "homepage": "https://github.com/gnosis/safe-react#readme",
+  "bugs": {
+    "url": "https://github.com/gnosis/safe-react/issues"
   },
   "repository": {
     "type": "git",
     "url": "https://github.com/gnosis/safe-react"
   },
-  "author": "Gnosis Team",
   "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/gnosis/safe-react/issues"
+  "author": "Gnosis Team",
+  "directories": {
+    "test": "test"
   },
-  "homepage": "https://github.com/gnosis/safe-react#readme",
+  "scripts": {
+    "build": "node scripts/build.js",
+    "build-storybook": "build-storybook -o build_storybook",
+    "flow": "flow",
+    "precommit": "./precommit.sh",
+    "start": "node scripts/start.js",
+    "storybook": "start-storybook -p 6006",
+    "test": "NODE_ENV=test && node scripts/test.js --env=jsdom",
+    "test-local": "NODE_ENV=test && node scripts/test.js --env=jsdom"
+  },
   "pre-commit": [
     "precommit"
   ],
+  "jest": {
+    "collectCoverageFrom": [
+      "src/**/*.{js,jsx}"
+    ],
+    "moduleNameMapper": {
+      "~(.*)$": "<rootDir>/src/$1",
+      "#(.*)$": "<rootDir>/safe-contracts/build/contracts/$1",
+      "^react-native$": "react-native-web"
+    },
+    "setupFiles": [
+      "<rootDir>/config/webpack.config.test.js",
+      "<rootDir>/config/polyfills.js",
+      "<rootDir>/config/jest/LocalStorageMock.js",
+      "<rootDir>/config/jest/Web3Mock.js"
+    ],
+    "setupFilesAfterEnv": [
+      "<rootDir>/config/jest/jest.setup.js"
+    ],
+    "testEnvironment": "node",
+    "testMatch": [
+      "<rootDir>/src/**/__tests__/**/*.js?(x)",
+      "<rootDir>/src/**/?(*.)(spec|test).js?(x)"
+    ],
+    "testURL": "http://localhost:8000",
+    "transform": {
+      "^.+\\.(js|jsx)$": "<rootDir>/node_modules/babel-jest",
+      "^.+\\.(css|scss)$": "<rootDir>/config/jest/cssTransform.js",
+      "^(?!.*\\.(js|jsx|css|json)$)": "<rootDir>/config/jest/fileTransform.js"
+    },
+    "transformIgnorePatterns": [
+      "[/\\\\]node_modules[/\\\\].+\\.(js|jsx)$",
+      "[/\\\\]flow-typed[/\\\\].+\\.(js|jsx)$"
+    ],
+    "verbose": true
+  },
+  "dependencies": {
+    "@gnosis.pm/util-contracts": "^2.0.0",
+    "@material-ui/core": "^3.0.1",
+    "@material-ui/icons": "^3.0.1",
+    "bignumber.js": "^8.1.1",
+    "connected-react-router": "^6.3.1",
+    "final-form": "^4.2.1",
+    "history": "^4.7.2",
+    "immutable": "^4.0.0-rc.9",
+    "material-ui-search-bar": "^1.0.0-beta.13",
+    "optimize-css-assets-webpack-plugin": "^5.0.1",
+    "react": "^16.4.0",
+    "react-dom": "^16.4.0",
+    "react-final-form": "^4.1.0",
+    "react-loadable": "^5.3.1",
+    "react-redux": "^6.0.1",
+    "react-router-dom": "^5.0.0",
+    "recompose": "^0.30.0",
+    "redux": "^4.0.1",
+    "redux-actions": "^2.3.0",
+    "redux-thunk": "^2.2.0",
+    "reselect": "^4.0.0",
+    "web3": "1.0.0-beta.37"
+  },
   "devDependencies": {
     "@babel/cli": "^7.0.0-beta.40",
     "@babel/core": "^7.4.0",
@@ -103,64 +162,5 @@
     "webpack-cli": "^3.2.3",
     "webpack-dev-server": "^3.1.0",
     "webpack-manifest-plugin": "^2.0.0-rc.2"
-  },
-  "dependencies": {
-    "bignumber.js": "^8.1.1",
-    "@gnosis.pm/util-contracts": "^2.0.0",
-    "@material-ui/core": "^3.0.1",
-    "@material-ui/icons": "^3.0.1",
-    "connected-react-router": "^6.3.1",
-    "final-form": "^4.2.1",
-    "history": "^4.7.2",
-    "material-ui-search-bar": "^1.0.0-beta.13",
-    "optimize-css-assets-webpack-plugin": "^5.0.1",
-    "react-final-form": "^4.1.0",
-    "react-loadable": "^5.3.1",
-    "react-router-dom": "^5.0.0",
-    "recompose": "^0.30.0",
-    "react": "^16.4.0",
-    "react-dom": "^16.4.0",
-    "react-redux": "^6.0.1",
-    "redux": "^4.0.1",
-    "redux-actions": "^2.3.0",
-    "redux-thunk": "^2.2.0",
-    "immutable": "^4.0.0-rc.9",
-    "reselect": "^4.0.0",
-    "web3": "1.0.0-beta.37"
-  },
-  "jest": {
-    "verbose": true,
-    "collectCoverageFrom": [
-      "src/**/*.{js,jsx}"
-    ],
-    "setupFilesAfterEnv": [
-      "<rootDir>/config/jest/jest.setup.js"
-    ],
-    "setupFiles": [
-      "<rootDir>/config/webpack.config.test.js",
-      "<rootDir>/config/polyfills.js",
-      "<rootDir>/config/jest/LocalStorageMock.js",
-      "<rootDir>/config/jest/Web3Mock.js"
-    ],
-    "testMatch": [
-      "<rootDir>/src/**/__tests__/**/*.js?(x)",
-      "<rootDir>/src/**/?(*.)(spec|test).js?(x)"
-    ],
-    "testEnvironment": "node",
-    "testURL": "http://localhost:8000",
-    "transform": {
-      "^.+\\.(js|jsx)$": "<rootDir>/node_modules/babel-jest",
-      "^.+\\.(css|scss)$": "<rootDir>/config/jest/cssTransform.js",
-      "^(?!.*\\.(js|jsx|css|json)$)": "<rootDir>/config/jest/fileTransform.js"
-    },
-    "transformIgnorePatterns": [
-      "[/\\\\]node_modules[/\\\\].+\\.(js|jsx)$",
-      "[/\\\\]flow-typed[/\\\\].+\\.(js|jsx)$"
-    ],
-    "moduleNameMapper": {
-      "~(.*)$": "<rootDir>/src/$1",
-      "#(.*)$": "<rootDir>/safe-contracts/build/contracts/$1",
-      "^react-native$": "react-native-web"
-    }
   }
 }
