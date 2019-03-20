@@ -77,7 +77,6 @@
     "react": "^16.4.0",
     "react-dom": "^16.4.0",
     "react-final-form": "^4.1.0",
-    "react-loadable": "^5.3.1",
     "react-redux": "^6.0.1",
     "react-router-dom": "^4.3.1",
     "recompose": "^0.30.0",

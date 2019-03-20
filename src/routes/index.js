@@ -1,8 +1,6 @@
 // @flow
 import React from 'react'
-import Loadable from 'react-loadable'
 import { Switch, Redirect, Route } from 'react-router-dom'
-import Loader from '~/components/Loader'
 import Welcome from './welcome/container'
 import {
   SAFELIST_ADDRESS,
@@ -14,43 +12,22 @@ import {
   LOAD_ADDRESS,
 } from './routes'
 
-// TODO: Use react 16.6 features
-// https://blog.logrocket.com/lazy-loading-components-in-react-16-6-6cea535c0b52
+const Safe = React.lazy(() => import('./safe/container'))
 
-const Safe = Loadable({
-  loader: () => import('./safe/container'),
-  loading: Loader,
-})
+const Settings = React.lazy(() => import('./tokens/container'))
 
-const Settings = Loadable({
-  loader: () => import('./tokens/container'),
-  loading: Loader,
-})
+const SafeList = React.lazy(() => import('./safeList/container'))
 
-const SafeList = Loadable({
-  loader: () => import('./safeList/container'),
-  loading: Loader,
-})
+const Open = React.lazy(() => import('./open/container/Open'))
 
-const Open = Loadable({
-  loader: () => import('./open/container/Open'),
-  loading: Loader,
-})
+const Opening = React.lazy(() => import('./opening/container'))
 
-const Opening = Loadable({
-  loader: () => import('./opening/container'),
-  loading: Loader,
-})
-
-const Load = Loadable({
-  loader: () => import('./load/container/Load'),
-  loading: Loader,
-})
+const Load = React.lazy(() => import('./load/container/Load'))
 
 const SAFE_ADDRESS = `${SAFELIST_ADDRESS}/:${SAFE_PARAM_ADDRESS}`
 const SAFE_SETTINGS = `${SAFE_ADDRESS}${SETTINS_ADDRESS}`
 
-export const settingsUrlFrom = (safeAddress: string) => `${SAFELIST_ADDRESS}/${safeAddress}/settings`
+export const settingsUrlFrom = (safeAddress: string) => `${SAFELIST_ADDRESS}/${safeAddress}${SETTINS_ADDRESS}`
 
 const Routes = () => (
   <Switch>

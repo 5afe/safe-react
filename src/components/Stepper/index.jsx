@@ -43,7 +43,9 @@ const transitionProps = {
 class GnoStepper extends React.PureComponent<Props, State> {
   static Page = ({ children }: PageProps) => children
 
-  static FinishButton = ({ component, to, title, ...props }) => (
+  static FinishButton = ({
+    component, to, title, ...props
+  }) => (
     <Button component={component} to={to} variant="contained" color="primary" {...props}>
       {title}
     </Button>
@@ -59,13 +61,14 @@ class GnoStepper extends React.PureComponent<Props, State> {
   }
 
   onReset = () => {
-    const resetCallback = this.props.onReset
-    if (resetCallback) {
-      resetCallback()
+    const { onReset, initialValues } = this.props
+    if (onReset) {
+      onReset()
     }
+
     this.setState(() => ({
       page: 0,
-      values: this.props.initialValues || {},
+      values: initialValues || {},
     }))
   }
 
@@ -78,17 +81,21 @@ class GnoStepper extends React.PureComponent<Props, State> {
     return children({ ...props, updateInitialProps: this.updateInitialProps })
   }
 
-  updateInitialProps = initialValues => {
-    this.setState({ values: initialValues })
+  updateInitialProps = (values) => {
+    this.setState({ values })
   }
 
   validate = (values: Object) => {
-    const activePage = React.Children.toArray(this.props.children)[this.state.page]
+    const { children } = this.props
+    const { page } = this.state
+
+    const activePage = React.Children.toArray(children)[page]
     return activePage.props.validate ? activePage.props.validate(values) : {}
   }
 
   next = async (values: Object) => {
-    const activePageProps = this.getPageProps(this.props.children)
+    const { children } = this.props
+    const activePageProps = this.getPageProps(children)
     const { prepareNextInitialProps } = activePageProps
 
     let pageInitialProps
@@ -98,7 +105,7 @@ class GnoStepper extends React.PureComponent<Props, State> {
 
     const finalValues = { ...values, ...pageInitialProps }
     this.setState(state => ({
-      page: Math.min(state.page + 1, React.Children.count(this.props.children) - 1),
+      page: Math.min(state.page + 1, React.Children.count(children) - 1),
       values: finalValues,
     }))
   }
@@ -129,7 +136,9 @@ class GnoStepper extends React.PureComponent<Props, State> {
   isLastPage = page => page === this.props.steps.length - 1
 
   render() {
-    const { steps, children, classes, disabledWhenValidating = false } = this.props
+    const {
+      steps, children, classes, disabledWhenValidating = false,
+    } = this.props
     const { page, values } = this.state
     const activePage = this.getActivePageFrom(children)
     const lastPage = this.isLastPage(page)
