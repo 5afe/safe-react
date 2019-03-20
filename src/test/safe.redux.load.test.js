@@ -8,7 +8,6 @@ import { loadSafe } from '~/routes/load/container/Load'
 import { safesMapSelector } from '~/routes/safeList/store/selectors'
 import { makeOwner, type Owner } from '~/routes/safe/store/model/owner'
 import { getWeb3 } from '~/logic/wallets/getWeb3'
-import { promisify } from '~/utils/promisify'
 import { safesInitialState } from '~/routes/safe/store/reducer/safe'
 import { setOwners, OWNERS_KEY } from '~/utils/localStorage'
 
@@ -20,7 +19,7 @@ describe('Safe - redux load safe', () => {
     store = aNewStore()
     address = await aMinedSafe(store)
     localStorage.clear()
-    accounts = await promisify(cb => getWeb3().eth.getAccounts(cb))
+    accounts = await getWeb3().eth.getAccounts()
   })
 
   it('if safe is not present, store and persist it with default names', async () => {

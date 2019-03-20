@@ -2,7 +2,6 @@
 import * as TestUtils from 'react-dom/test-utils'
 import { getWeb3 } from '~/logic/wallets/getWeb3'
 import { type Match } from 'react-router-dom'
-import { promisify } from '~/utils/promisify'
 import TokenComponent from '~/routes/tokens/component/Token'
 import { getFirstTokenContract, getSecondTokenContract } from '~/test/utils/tokenMovements'
 import { aNewStore } from '~/store'
@@ -24,21 +23,23 @@ describe('DOM > Feature > Add new ERC 20 Tokens', () => {
 
   beforeAll(async () => {
     web3 = getWeb3()
-    accounts = await promisify(cb => web3.eth.getAccounts(cb))
+    accounts = await web3.eth.getAccounts()
     firstErc20Token = await getFirstTokenContract(web3, accounts[0])
     secondErc20Token = await getSecondTokenContract(web3, accounts[0])
 
     // $FlowFixMe
     enhancedFetchModule.enhancedFetch = jest.fn()
-    enhancedFetchModule.enhancedFetch.mockImplementation(() => Promise.resolve([
-      {
-        address: firstErc20Token.address,
-        name: 'First Token Example',
-        symbol: 'FTE',
-        decimals: 18,
-        logoUrl: 'https://upload.wikimedia.org/wikipedia/commons/c/c0/Earth_simple_icon.png',
-      },
-    ]))
+    enhancedFetchModule.enhancedFetch.mockImplementation(() => Promise.resolve({
+      results: [
+        {
+          address: firstErc20Token.address,
+          name: 'First Token Example',
+          symbol: 'FTE',
+          decimals: 18,
+          logoUri: 'https://upload.wikimedia.org/wikipedia/commons/c/c0/Earth_simple_icon.png',
+        },
+      ],
+    }))
   })
 
   it('adds a second erc 20 token filling the form', async () => {
@@ -46,6 +47,7 @@ describe('DOM > Feature > Add new ERC 20 Tokens', () => {
     const store = aNewStore()
     const safeAddress = await aMinedSafe(store)
     await store.dispatch(fetchTokensModule.fetchTokens(safeAddress))
+
     const TokensDom = await travelToTokens(store, safeAddress)
     await sleep(400)
     const tokens = TestUtils.scryRenderedComponentsWithType(TokensDom, TokenComponent)

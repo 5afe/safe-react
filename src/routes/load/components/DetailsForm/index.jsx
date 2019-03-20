@@ -3,7 +3,9 @@ import * as React from 'react'
 import contract from 'truffle-contract'
 import { withStyles } from '@material-ui/core/styles'
 import Field from '~/components/forms/Field'
-import { composeValidators, required, noErrorsOn, mustBeEthereumAddress } from '~/components/forms/validator'
+import {
+  composeValidators, required, noErrorsOn, mustBeEthereumAddress,
+} from '~/components/forms/validator'
 import TextField from '~/components/forms/TextField'
 import InputAdornment from '@material-ui/core/InputAdornment'
 import CheckCircle from '@material-ui/icons/CheckCircle'
@@ -12,7 +14,6 @@ import Paragraph from '~/components/layout/Paragraph'
 import OpenPaper from '~/components/Stepper/OpenPaper'
 import { FIELD_LOAD_NAME, FIELD_LOAD_ADDRESS } from '~/routes/load/components/fields'
 import { getWeb3 } from '~/logic/wallets/getWeb3'
-import { promisify } from '~/utils/promisify'
 import SafeProxy from '#/Proxy.json'
 import { getSafeMasterContract } from '~/logic/contracts/safeContracts'
 
@@ -47,7 +48,7 @@ export const safeFieldsValidation = async (values: Object) => {
   // https://solidity.readthedocs.io/en/latest/metadata.html#usage-for-source-code-verification
   const metaData = 'a165'
 
-  const code = await promisify(cb => web3.eth.getCode(safeAddress, cb))
+  const code = await web3.eth.getCode(safeAddress)
   const codeWithoutMetadata = code.substring(0, code.lastIndexOf(metaData))
 
   const proxyCode = SafeProxy.deployedBytecode
@@ -63,7 +64,7 @@ export const safeFieldsValidation = async (values: Object) => {
   // check mastercopy
   const proxy = contract(SafeProxy)
   proxy.setProvider(web3.currentProvider)
-  const proxyInstance = proxy.at(safeAddress)
+  const proxyInstance = await proxy.at(safeAddress)
   const proxyImplementation = await proxyInstance.implementation()
 
   const safeMaster = await getSafeMasterContract()

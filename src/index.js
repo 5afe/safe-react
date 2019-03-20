@@ -1,11 +1,13 @@
 // @flow
+/* eslint-disable */
 import 'babel-polyfill'
+require('dotenv').config()
 
 import { MuiThemeProvider } from '@material-ui/core/styles'
 import React from 'react'
 import ReactDOM from 'react-dom'
 import { Provider } from 'react-redux'
-import { ConnectedRouter } from 'react-router-redux'
+import { ConnectedRouter } from 'connected-react-router'
 import PageFrame from '~/components/layout/PageFrame'
 import { history, store } from '~/store'
 import theme from '~/theme/mui'
@@ -25,7 +27,4 @@ const Root = () => (
   </Provider>
 )
 
-ReactDOM.render(
-  <Root />,
-  document.getElementById('root'),
-)
+ReactDOM.render(<Root />, document.getElementById('root'))

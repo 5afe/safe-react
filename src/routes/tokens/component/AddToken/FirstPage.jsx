@@ -5,7 +5,6 @@ import TextField from '~/components/forms/TextField'
 import { composeValidators, required, mustBeEthereumAddress, uniqueAddress } from '~/components/forms/validator'
 import Block from '~/components/layout/Block'
 import Heading from '~/components/layout/Heading'
-import { promisify } from '~/utils/promisify'
 import { getWeb3 } from '~/logic/wallets/getWeb3'
 import { EMPTY_DATA } from '~/logic/wallets/ethTransactions'
 import { getStandardTokenContract } from '~/routes/tokens/store/actions/fetchTokens'
@@ -17,7 +16,7 @@ type Props = {
 export const TOKEN_ADRESS_PARAM = 'tokenAddress'
 
 export const token = async (tokenAddress: string) => {
-  const code = await promisify(cb => getWeb3().eth.getCode(tokenAddress, cb))
+  const code = await getWeb3().eth.getCode(tokenAddress)
   const isDeployed = code !== EMPTY_DATA
 
   if (!isDeployed) {

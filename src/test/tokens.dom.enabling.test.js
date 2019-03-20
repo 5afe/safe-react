@@ -3,7 +3,6 @@ import * as TestUtils from 'react-dom/test-utils'
 import { List } from 'immutable'
 import { getWeb3 } from '~/logic/wallets/getWeb3'
 import { type Match } from 'react-router-dom'
-import { promisify } from '~/utils/promisify'
 import TokenComponent from '~/routes/tokens/component/Token'
 import Checkbox from '@material-ui/core/Checkbox'
 import { getFirstTokenContract, getSecondTokenContract, addTknTo } from '~/test/utils/tokenMovements'
@@ -26,27 +25,29 @@ describe('DOM > Feature > Enable and disable default tokens', () => {
 
   beforeAll(async () => {
     web3 = getWeb3()
-    accounts = await promisify(cb => web3.eth.getAccounts(cb))
+    accounts = await web3.eth.getAccounts()
     firstErc20Token = await getFirstTokenContract(web3, accounts[0])
     secondErc20Token = await getSecondTokenContract(web3, accounts[0])
     // $FlowFixMe
     enhancedFetchModule.enhancedFetch = jest.fn()
-    enhancedFetchModule.enhancedFetch.mockImplementation(() => Promise.resolve([
-      {
-        address: firstErc20Token.address,
-        name: 'First Token Example',
-        symbol: 'FTE',
-        decimals: 18,
-        logoUrl: 'https://upload.wikimedia.org/wikipedia/commons/c/c0/Earth_simple_icon.png',
-      },
-      {
-        address: secondErc20Token.address,
-        name: 'Second Token Example',
-        symbol: 'STE',
-        decimals: 18,
-        logoUrl: 'https://upload.wikimedia.org/wikipedia/commons/c/c0/Earth_simple_icon.png',
-      },
-    ]))
+    enhancedFetchModule.enhancedFetch.mockImplementation(() => Promise.resolve({
+      results: [
+        {
+          address: firstErc20Token.address,
+          name: 'First Token Example',
+          symbol: 'FTE',
+          decimals: 18,
+          logoUri: 'https://upload.wikimedia.org/wikipedia/commons/c/c0/Earth_simple_icon.png',
+        },
+        {
+          address: secondErc20Token.address,
+          name: 'Second Token Example',
+          symbol: 'STE',
+          decimals: 18,
+          logoUri: 'https://upload.wikimedia.org/wikipedia/commons/c/c0/Earth_simple_icon.png',
+        },
+      ],
+    }))
   })
 
   it('retrieves only ether as active token in first moment', async () => {
@@ -76,8 +77,8 @@ describe('DOM > Feature > Enable and disable default tokens', () => {
     // GIVEN
     const store = aNewStore()
     const safeAddress = await aMinedSafe(store)
-    await addTknTo(safeAddress, 50, firstErc20Token)
-    await addTknTo(safeAddress, 50, secondErc20Token)
+    await addTknTo(safeAddress, '50', firstErc20Token)
+    await addTknTo(safeAddress, '50', secondErc20Token)
     await store.dispatch(fetchTokensModule.fetchTokens(safeAddress))
 
     const match: Match = buildMathPropsFrom(safeAddress)
