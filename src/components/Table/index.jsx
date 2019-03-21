@@ -28,10 +28,10 @@ type Props<K> = {
 type State = {
   page: number,
   order: Order,
-  orderBy: string,
+  orderBy?: string,
   orderProp: boolean,
   rowsPerPage: number,
-  fixed: boolean,
+  fixed?: boolean,
 }
 
 const styles = {
@@ -64,22 +64,25 @@ class GnoTable<K> extends React.Component<Props<K>, State> {
   state = {
     page: 0,
     order: 'asc',
-    orderBy: this.props.defaultOrderBy,
-    fixed: !!this.props.defaultFixed,
+    orderBy: undefined,
+    fixed: undefined,
     orderProp: false,
     rowsPerPage: 5,
   }
 
-  onSort = (property: string, orderProp: boolean) => {
-    const orderBy = property
-    let order = 'desc'
+  onSort = (newOrderBy: string, orderProp: boolean) => {
+    const { order, orderBy } = this.state
+    let newOrder = 'desc'
 
-    if (this.state.orderBy === property && this.state.order === 'desc') {
-      order = 'asc'
+    if (orderBy === newOrderBy && order === 'desc') {
+      newOrder = 'asc'
     }
 
     this.setState(() => ({
-      order, orderBy, orderProp, fixed: false,
+      order: newOrder,
+      orderBy: newOrderBy,
+      orderProp,
+      fixed: false,
     }))
   }
 
@@ -98,12 +101,13 @@ class GnoTable<K> extends React.Component<Props<K>, State> {
 
   render() {
     const {
-      data, label, columns, classes, children, size,
+      data, label, columns, classes, children, size, defaultOrderBy, defaultFixed,
     } = this.props
-
     const {
       order, orderBy, page, orderProp, rowsPerPage, fixed,
     } = this.state
+    const orderByParam = orderBy || defaultOrderBy
+    const fixedParam = typeof fixed !== 'undefined' ? fixed : !!defaultFixed
 
     const backProps = {
       'aria-label': 'Previous Page',
@@ -119,41 +123,39 @@ class GnoTable<K> extends React.Component<Props<K>, State> {
       input: classes.white,
     }
 
-    const sortedData = stableSort(data, getSorting(order, orderBy, orderProp), fixed)
-      .slice(page * rowsPerPage, ((page * rowsPerPage) + rowsPerPage))
+    const sortedData = stableSort(data, getSorting(order, orderByParam, orderProp), fixedParam).slice(
+      page * rowsPerPage,
+      page * rowsPerPage + rowsPerPage,
+    )
 
-    const emptyRows = rowsPerPage - Math.min(rowsPerPage, data.length - (page * rowsPerPage))
+    const emptyRows = rowsPerPage - Math.min(rowsPerPage, data.length - page * rowsPerPage)
     const isEmpty = size === 0
 
     return (
       <React.Fragment>
-        { !isEmpty &&
+        {!isEmpty && (
           <Table aria-labelledby={label} className={classes.root}>
-            <TableHead
-              columns={columns}
-              order={order}
-              orderBy={orderBy}
-              onSort={this.onSort}
-            />
+            <TableHead columns={columns} order={order} orderBy={orderByParam} onSort={this.onSort} />
             <TableBody>
-              { children(sortedData) }
-              { emptyRows > 0 &&
+              {children(sortedData)}
+              {emptyRows > 0 && (
                 <TableRow style={this.getEmptyStyle(emptyRows)}>
                   <TableCell colSpan={4} />
                 </TableRow>
-              }
+              )}
             </TableBody>
           </Table>
-        }
-        { isEmpty &&
+        )}
+        {isEmpty && (
           <Row className={classNames(classes.loader, classes.root)} style={this.getEmptyStyle(emptyRows + 1)}>
             <CircularProgress size={60} />
           </Row>
-        }
+        )}
         <TablePagination
           component="div"
           count={size}
           rowsPerPage={rowsPerPage}
+          rowsPerPageOptions={[5, 10, 25, 50, 100]}
           page={page}
           backIconButtonProps={backProps}
           nextIconButtonProps={nextProps}

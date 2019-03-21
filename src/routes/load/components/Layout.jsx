@@ -22,8 +22,8 @@ type Props = SelectorProps & {
 
 const iconStyle = {
   color: secondary,
-  width: '32px',
-  height: '32px',
+  padding: '8px',
+  marginRight: '5px',
 }
 
 const back = () => {
