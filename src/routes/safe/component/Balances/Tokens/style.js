@@ -5,10 +5,10 @@ import {
 
 export const styles = () => ({
   root: {
-    minHeight: '143px',
+    minHeight: '127px',
   },
   heading: {
-    padding: `${md} ${lg}`,
+    padding: `${sm} ${lg}`,
     justifyContent: 'space-between',
   },
   manage: {
