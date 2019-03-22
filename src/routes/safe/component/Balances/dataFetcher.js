@@ -56,5 +56,4 @@ export const generateColumns = () => {
   return List([assetRow, balanceRow, actions])
 }
 
-export const filterByZero = (data: Array<BalanceRow>, hideZero: boolean): Array<BalanceRow> =>
-  data.filter((row: BalanceRow) => (hideZero ? row[buildOrderFieldFrom(BALANCE_TABLE_BALANCE_ID)] !== 0 : true))
+export const filterByZero = (data: Array<BalanceRow>, hideZero: boolean): Array<BalanceRow> => data.filter((row: BalanceRow) => (hideZero ? row[buildOrderFieldFrom(BALANCE_TABLE_BALANCE_ID)] !== 0 : true))

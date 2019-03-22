@@ -65,3 +65,9 @@ export const removeTokenFromStorage = (safeAddress: string, token: Token) => {
     console.log('Error removing token in localstorage')
   }
 }
+
+export const removeFromActiveTokens = (safeAddress: string, tokenAddress: string) => {
+  const activeTokens = getActiveTokenAddresses(safeAddress)
+  const index = activeTokens.indexOf(tokenAddress)
+  setActiveTokenAddresses(safeAddress, activeTokens.delete(index))
+}

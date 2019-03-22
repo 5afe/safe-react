@@ -7,7 +7,7 @@ import { type Token } from '~/logic/tokens/store/model/token'
 import { TOKEN_REDUCER_ID } from '~/logic/tokens/store/reducer/tokens'
 import { addEtherTo, addTknTo } from '~/test/utils/tokenMovements'
 import { dispatchTknBalance } from '~/test/utils/transactions/moveTokens.helper'
-import { ETH_ADDRESS } from '~/utils/tokens'
+import { ETH_ADDRESS } from '~/logic/tokens/utils/tokenHelpers'
 
 describe('Safe - redux balance property', () => {
   let store
