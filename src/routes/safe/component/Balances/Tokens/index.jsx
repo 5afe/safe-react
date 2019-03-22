@@ -24,6 +24,7 @@ import Spacer from '~/components/Spacer'
 import Row from '~/components/layout/Row'
 import { type Token } from '~/logic/tokens/store/model/token'
 import actions, { type Actions } from './actions'
+import TokenPlaceholder from './assets/token_placeholder.png'
 import { styles } from './style'
 
 type Props = Actions & {
@@ -37,10 +38,17 @@ type State = {
   filter: string,
 }
 
-const filterBy = (filter: string, tokens: List<Token>): List<Token> => tokens.filter((token: Token) => !filter
-    || token.get('symbol').toLowerCase().includes(filter.toLowerCase())
-    || token.get('name').toLowerCase().includes(filter.toLowerCase()))
-
+const filterBy = (filter: string, tokens: List<Token>): List<Token> => tokens.filter(
+  (token: Token) => !filter
+      || token
+        .get('symbol')
+        .toLowerCase()
+        .includes(filter.toLowerCase())
+      || token
+        .get('name')
+        .toLowerCase()
+        .includes(filter.toLowerCase()),
+)
 
 class Tokens extends React.Component<Props, State> {
   state = {
@@ -68,6 +76,11 @@ class Tokens extends React.Component<Props, State> {
     disableToken(safeAddress, token)
   }
 
+  setImageToPlaceholder = (e) => {
+    e.target.onerror = null
+    e.target.src = TokenPlaceholder
+  }
+
   render() {
     const { onClose, classes, tokens } = this.props
     const { filter } = this.state
@@ -84,7 +97,9 @@ class Tokens extends React.Component<Props, State> {
       <React.Fragment>
         <Block className={classes.root}>
           <Row align="center" grow className={classes.heading}>
-            <Paragraph className={classes.manage} noMargin>Manage Tokens</Paragraph>
+            <Paragraph className={classes.manage} noMargin>
+              Manage Tokens
+            </Paragraph>
             <IconButton onClick={onClose} disableRipple>
               <Close className={classes.close} />
             </IconButton>
@@ -112,14 +127,16 @@ class Tokens extends React.Component<Props, State> {
           {filteredTokens.map((token: Token) => (
             <ListItem key={token.get('address')} className={classes.token}>
               <ListItemIcon>
-                <Img src={token.get('logoUri')} height={28} alt={token.get('name')} />
+                <Img
+                  src={token.get('logoUri')}
+                  height={28}
+                  alt={token.get('name')}
+                  onError={this.setImageToPlaceholder}
+                />
               </ListItemIcon>
               <ListItemText primary={token.get('symbol')} secondary={token.get('name')} />
               <ListItemSecondaryAction>
-                <Switch
-                  onChange={this.onSwitch(token)}
-                  checked={token.get('status')}
-                />
+                <Switch onChange={this.onSwitch(token)} checked={token.get('status')} />
               </ListItemSecondaryAction>
             </ListItem>
           ))}
@@ -131,4 +148,7 @@ class Tokens extends React.Component<Props, State> {
 
 const TokenComponent = withStyles(styles)(Tokens)
 
-export default connect(undefined, actions)(TokenComponent)
+export default connect(
+  undefined,
+  actions,
+)(TokenComponent)
