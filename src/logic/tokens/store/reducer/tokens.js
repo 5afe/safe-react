@@ -12,7 +12,7 @@ import {
   getActiveTokenAddresses,
   setToken,
   removeTokenFromStorage,
-} from '~/utils/localStorage/tokens'
+} from '~/logic/tokens/utils/activeTokensStorage'
 import { ensureOnce } from '~/utils/singleton'
 import { calculateActiveErc20TokensFrom } from '~/utils/tokens'
 

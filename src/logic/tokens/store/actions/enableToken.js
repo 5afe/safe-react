@@ -9,4 +9,10 @@ const enableToken = createAction(ENABLE_TOKEN, (safeAddress: string, token: Toke
   address: token.get('address'),
 }))
 
-export default enableToken
+const setTokenEnabled = (safeAddress: string, token: Token) => (dispatch: ReduxDispatch<GlobalState>) => {
+  dispatch(enableToken(safeAddress, token))
+
+  
+}
+
+export default setTokenEnabled

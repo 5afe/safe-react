@@ -94,8 +94,8 @@ class GnoTable<K> extends React.Component<Props<K>, State> {
     this.setState({ page })
   }
 
-  handleChangeRowsPerPage = (event: SyntheticInputEvent<HTMLInputElement>) => {
-    const rowsPerPage = Number(event.target.value)
+  handleChangeRowsPerPage = (e: SyntheticInputEvent<HTMLInputElement>) => {
+    const rowsPerPage = Number(e.target.value)
     this.setState({ rowsPerPage })
   }
 

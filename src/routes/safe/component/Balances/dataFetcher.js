@@ -26,7 +26,6 @@ export const getBalanceData = (activeTokens: List<Token>): Array<BalanceRow> => 
   return Array.from(rows)
 }
 
-
 export const generateColumns = () => {
   const assetRow: Column = {
     id: BALANCE_TABLE_ASSET_ID,
