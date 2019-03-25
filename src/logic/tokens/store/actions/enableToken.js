@@ -1,16 +1,23 @@
 // @flow
 import { createAction } from 'redux-actions'
+import type { Dispatch as ReduxDispatch } from 'redux'
+import { type GlobalState } from '~/store/index'
 import { type Token } from '~/logic/tokens/store/model/token'
+import { setActiveTokenAddresses, getActiveTokenAddresses } from '~/logic/tokens/utils/activeTokensStorage'
 
 export const ENABLE_TOKEN = 'ENABLE_TOKEN'
 
-const enableToken = createAction(ENABLE_TOKEN, (safeAddress: string, token: Token) => ({
+const enableToken = createAction(ENABLE_TOKEN, (safeAddress: string, tokenAddress: string) => ({
   safeAddress,
-  address: token.get('address'),
+  tokenAddress,
 }))
 
 const setTokenEnabled = (safeAddress: string, token: Token) => (dispatch: ReduxDispatch<GlobalState>) => {
-  dispatch(enableToken(safeAddress, token))
+  const { address } = token
+  dispatch(enableToken(safeAddress, address))
+
+  const activeTokens = getActiveTokenAddresses(safeAddress)
+  setActiveTokenAddresses(safeAddress, activeTokens.push(address))
 }
 
 export default setTokenEnabled

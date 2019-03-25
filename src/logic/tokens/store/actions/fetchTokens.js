@@ -45,9 +45,19 @@ export const calculateBalanceOf = async (tokenAddress: string, address: string, 
     console.error('Failed to fetch token balances: ', err)
   }
 
+  console.log(
+    tokenAddress,
+    balance.toString(),
+    10 ** decimals,
+    web3.utils
+      .toBN(balance)
+      .div(web3.utils.toBN(10).pow(web3.utils.toBN(decimals)))
+      .toString(),
+  )
+
   return web3.utils
     .toBN(balance)
-    .div(web3.utils.toBN(10 ** decimals))
+    .div(web3.utils.toBN(10).pow(web3.utils.toBN(decimals)))
     .toString()
 }
 

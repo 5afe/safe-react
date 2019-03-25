@@ -1,15 +1,25 @@
 // @flow
 import { createAction } from 'redux-actions'
 import { type Token } from '~/logic/tokens/store/model/token'
+import type { Dispatch as ReduxDispatch } from 'redux'
+import { type GlobalState } from '~/store/index'
+import { removeFromActiveTokens } from '~/logic/tokens/utils/activeTokensStorage'
 
 export const DISABLE_TOKEN = 'DISABLE_TOKEN'
 
 const disableToken = createAction(
   DISABLE_TOKEN,
-  (safeAddress: string, token: Token) => ({
+  (safeAddress: string, tokenAddress: string) => ({
     safeAddress,
-    address: token.get('address'),
+    tokenAddress,
   }),
 )
 
-export default disableToken
+const hideToken = (safeAddress: string, token: Token) => (dispatch: ReduxDispatch<GlobalState>) => {
+  const { address } = token
+  dispatch(disableToken(safeAddress, address))
+
+  removeFromActiveTokens(safeAddress, address)
+}
+
+export default hideToken
