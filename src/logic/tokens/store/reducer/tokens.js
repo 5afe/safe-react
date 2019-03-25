@@ -10,6 +10,7 @@ import enableToken, { ENABLE_TOKEN } from '~/logic/tokens/store/actions/enableTo
 import {
   setActiveTokenAddresses,
   getActiveTokenAddresses,
+  removeFromActiveTokens,
 } from '~/logic/tokens/utils/activeTokensStorage'
 
 export const TOKEN_REDUCER_ID = 'tokens'

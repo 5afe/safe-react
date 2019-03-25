@@ -28,8 +28,6 @@ describe('Safe - redux balance property', () => {
     const safeBalances: Map<string, Token> | typeof undefined = tokens.get(address)
     if (!safeBalances) throw new Error('No tokens available, probably failed to fetch')
     expect(safeBalances.size).toBe(11)
-    
-    console.log(safeBalances.entries())
 
     // safeBalances.forEach((token: string) => {
     //   const record = safeBalances.get(token)
