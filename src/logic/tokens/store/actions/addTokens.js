@@ -5,7 +5,7 @@ import type { Dispatch as ReduxDispatch } from 'redux'
 import { type Token } from '~/logic/tokens/store/model/token'
 import { ensureOnce } from '~/utils/singleton'
 import { type GlobalState } from '~/store/index'
-import { setActiveTokenAddresses } from '~/logic/tokens/utils/activeTokensStorage'
+import { setActiveTokenAddresses } from '~/logic/tokens/utils/tokensStorage'
 import { calculateActiveErc20TokensFrom } from '~/logic/tokens/utils/tokenHelpers'
 
 export const ADD_TOKENS = 'ADD_TOKENS'

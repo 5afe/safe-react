@@ -1,6 +1,7 @@
 // @flow
 import { List, Map } from 'immutable'
 import contract from 'truffle-contract'
+import axios from 'axios'
 import { BigNumber } from 'bignumber.js'
 import type { Dispatch as ReduxDispatch } from 'redux'
 import StandardToken from '@gnosis.pm/util-contracts/build/contracts/GnosisStandardToken.json'
@@ -9,9 +10,8 @@ import { getWeb3 } from '~/logic/wallets/getWeb3'
 import { type GlobalState } from '~/store/index'
 import { makeToken, type Token, type TokenProps } from '~/logic/tokens/store/model/token'
 import { ensureOnce } from '~/utils/singleton'
-import { getActiveTokenAddresses, getTokens } from '~/logic/tokens/utils/activeTokensStorage'
+import { getActiveTokenAddresses, getTokens } from '~/logic/tokens/utils/tokensStorage'
 import { getSafeEthToken } from '~/logic/tokens/utils/tokenHelpers'
-import { enhancedFetch } from '~/utils/fetch'
 import addTokens from './addTokens'
 import { getRelayUrl } from '~/config/index'
 
@@ -52,14 +52,16 @@ export const fetchTokensData = async () => {
   const apiUrl = getRelayUrl()
   const url = `${apiUrl}/tokens`
   const errMsg = 'Error querying safe balances'
-  return enhancedFetch(url, errMsg)
+  return axios.get(url, errMsg)
 }
 
 export const fetchTokens = (safeAddress: string) => async (dispatch: ReduxDispatch<GlobalState>) => {
-  const tokens: List<string> = getActiveTokenAddresses(safeAddress)
+  const tokens: List<string> = await getActiveTokenAddresses(safeAddress)
   const ethBalance = await getSafeEthToken(safeAddress)
-  const customTokens = getTokens(safeAddress)
-  const { results } = await fetchTokensData()
+  const customTokens = await getTokens(safeAddress)
+  const {
+    data: { results },
+  } = await fetchTokensData()
 
   try {
     const balancesRecords = await Promise.all(

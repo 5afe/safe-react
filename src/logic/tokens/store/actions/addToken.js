@@ -1,11 +1,7 @@
 // @flow
 import { createAction } from 'redux-actions'
 import { type Token } from '~/logic/tokens/store/model/token'
-import {
-  setActiveTokenAddresses,
-  getActiveTokenAddresses,
-  setToken,
-} from '~/logic/tokens/utils/activeTokensStorage'
+import { setActiveTokenAddresses, getActiveTokenAddresses, setToken } from '~/logic/tokens/utils/tokensStorage'
 import type { Dispatch as ReduxDispatch } from 'redux'
 import { type GlobalState } from '~/store/index'
 
@@ -24,14 +20,13 @@ const addToken = createAction(
   }),
 )
 
-const saveToken = (safeAddress: string, token: Token) => (dispatch: ReduxDispatch<GlobalState>) => {
+const saveToken = (safeAddress: string, token: Token) => async (dispatch: ReduxDispatch<GlobalState>) => {
   dispatch(addToken(safeAddress, token))
 
   const tokenAddress = token.get('address')
-  const activeTokens = getActiveTokenAddresses(safeAddress)
-  setActiveTokenAddresses(safeAddress, activeTokens.push(tokenAddress))
+  const activeTokens = await getActiveTokenAddresses(safeAddress)
+  await setActiveTokenAddresses(safeAddress, activeTokens.push(tokenAddress))
   setToken(safeAddress, token)
 }
-
 
 export default saveToken
