@@ -1,6 +1,7 @@
 // @flow
 import { List, Map } from 'immutable'
 import contract from 'truffle-contract'
+import { BigNumber } from 'bignumber.js'
 import type { Dispatch as ReduxDispatch } from 'redux'
 import StandardToken from '@gnosis.pm/util-contracts/build/contracts/GnosisStandardToken.json'
 import HumanFriendlyToken from '@gnosis.pm/util-contracts/build/contracts/HumanFriendlyToken.json'
@@ -35,7 +36,6 @@ export const getStandardTokenContract = ensureOnce(createStandardTokenContract)
 
 export const calculateBalanceOf = async (tokenAddress: string, address: string, decimals: number) => {
   const erc20Token = await getStandardTokenContract()
-  const web3 = getWeb3()
   let balance = 0
 
   try {
@@ -45,20 +45,7 @@ export const calculateBalanceOf = async (tokenAddress: string, address: string, 
     console.error('Failed to fetch token balances: ', err)
   }
 
-  console.log(
-    tokenAddress,
-    balance.toString(),
-    10 ** decimals,
-    web3.utils
-      .toBN(balance)
-      .div(web3.utils.toBN(10).pow(web3.utils.toBN(decimals)))
-      .toString(),
-  )
-
-  return web3.utils
-    .toBN(balance)
-    .div(web3.utils.toBN(10).pow(web3.utils.toBN(decimals)))
-    .toString()
+  return new BigNumber(balance).div(10 ** decimals).toString()
 }
 
 export const fetchTokensData = async () => {
