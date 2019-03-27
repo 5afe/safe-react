@@ -12,7 +12,7 @@ type RemoveTokenProps = {
   token: Token,
 }
 
-const removeToken = createAction(
+export const removeToken = createAction(
   REMOVE_TOKEN,
   (safeAddress: string, token: Token): RemoveTokenProps => ({
     safeAddress,

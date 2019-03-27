@@ -7,7 +7,7 @@ import { removeFromActiveTokens } from '~/logic/tokens/utils/tokensStorage'
 
 export const DISABLE_TOKEN = 'DISABLE_TOKEN'
 
-const disableToken = createAction(DISABLE_TOKEN, (safeAddress: string, tokenAddress: string) => ({
+export const disableToken = createAction(DISABLE_TOKEN, (safeAddress: string, tokenAddress: string) => ({
   safeAddress,
   tokenAddress,
 }))
