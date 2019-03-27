@@ -20,12 +20,12 @@ const removeToken = createAction(
   }),
 )
 
-const deleteToken = (safeAddress: string, token: Token) => (dispatch: ReduxDispatch<GlobalState>) => {
+const deleteToken = (safeAddress: string, token: Token) => async (dispatch: ReduxDispatch<GlobalState>) => {
   dispatch(removeToken(safeAddress, token))
 
   const tokenAddress = token.get('address')
-  removeFromActiveTokens(safeAddress, tokenAddress)
-  removeTokenFromStorage(safeAddress, token)
+  await removeFromActiveTokens(safeAddress, tokenAddress)
+  await removeTokenFromStorage(safeAddress, token)
 }
 
 export default deleteToken

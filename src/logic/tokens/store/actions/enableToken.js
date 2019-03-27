@@ -12,12 +12,12 @@ const enableToken = createAction(ENABLE_TOKEN, (safeAddress: string, tokenAddres
   tokenAddress,
 }))
 
-const setTokenEnabled = (safeAddress: string, token: Token) => (dispatch: ReduxDispatch<GlobalState>) => {
+const setTokenEnabled = (safeAddress: string, token: Token) => async (dispatch: ReduxDispatch<GlobalState>) => {
   const { address } = token
   dispatch(enableToken(safeAddress, address))
 
-  const activeTokens = getActiveTokenAddresses(safeAddress)
-  setActiveTokenAddresses(safeAddress, activeTokens.push(address))
+  const activeTokens = await getActiveTokenAddresses(safeAddress)
+  await setActiveTokenAddresses(safeAddress, activeTokens.push(address))
 }
 
 export default setTokenEnabled

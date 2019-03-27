@@ -24,14 +24,14 @@ export const getActiveTokenAddresses = async (safeAddress: string): Promise<List
   const key = getActiveTokensKey(safeAddress)
   const data = await ImmortalDB.get(key)
 
-  return data ? List(data) : List()
+  return data ? List(JSON.parse(data)) : List()
 }
 
 export const getTokens = async (safeAddress: string): Promise<List<TokenProps>> => {
   const key = getTokensKey(safeAddress)
   const data = await ImmortalDB.get(key)
 
-  return data ? List(data) : List()
+  return data ? List(JSON.parse(data)) : List()
 }
 
 export const setToken = async (safeAddress: string, token: Token) => {
@@ -40,7 +40,7 @@ export const setToken = async (safeAddress: string, token: Token) => {
   try {
     const serializedState = JSON.stringify(data.push(token))
     const key = getTokensKey(safeAddress)
-    ImmortalDB.set(key, serializedState)
+    await ImmortalDB.set(key, serializedState)
   } catch (err) {
     // eslint-disable-next-line
     console.log('Error adding token in localstorage')
@@ -64,5 +64,5 @@ export const removeTokenFromStorage = async (safeAddress: string, token: Token) 
 export const removeFromActiveTokens = async (safeAddress: string, tokenAddress: string) => {
   const activeTokens = await getActiveTokenAddresses(safeAddress)
   const index = activeTokens.indexOf(tokenAddress)
-  setActiveTokenAddresses(safeAddress, activeTokens.delete(index))
+  await setActiveTokenAddresses(safeAddress, activeTokens.delete(index))
 }

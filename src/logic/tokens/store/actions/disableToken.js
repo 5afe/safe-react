@@ -7,19 +7,16 @@ import { removeFromActiveTokens } from '~/logic/tokens/utils/tokensStorage'
 
 export const DISABLE_TOKEN = 'DISABLE_TOKEN'
 
-const disableToken = createAction(
-  DISABLE_TOKEN,
-  (safeAddress: string, tokenAddress: string) => ({
-    safeAddress,
-    tokenAddress,
-  }),
-)
+const disableToken = createAction(DISABLE_TOKEN, (safeAddress: string, tokenAddress: string) => ({
+  safeAddress,
+  tokenAddress,
+}))
 
-const hideToken = (safeAddress: string, token: Token) => (dispatch: ReduxDispatch<GlobalState>) => {
+const hideToken = (safeAddress: string, token: Token) => async (dispatch: ReduxDispatch<GlobalState>) => {
   const { address } = token
   dispatch(disableToken(safeAddress, address))
 
-  removeFromActiveTokens(safeAddress, address)
+  await removeFromActiveTokens(safeAddress, address)
 }
 
 export default hideToken
