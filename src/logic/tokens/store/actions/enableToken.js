@@ -7,14 +7,13 @@ import { setActiveTokens, getActiveTokens } from '~/logic/tokens/utils/tokensSto
 
 export const ENABLE_TOKEN = 'ENABLE_TOKEN'
 
-export const enableToken = createAction(ENABLE_TOKEN, (safeAddress: string, tokenAddress: string) => ({
+export const enableToken = createAction<string, *, *>(ENABLE_TOKEN, (safeAddress: string, token: Token) => ({
   safeAddress,
-  tokenAddress,
+  token,
 }))
 
 const setTokenEnabled = (safeAddress: string, token: Token) => async (dispatch: ReduxDispatch<GlobalState>) => {
-  const { address } = token
-  dispatch(enableToken(safeAddress, address))
+  dispatch(enableToken(safeAddress, token))
 
   const activeTokens = await getActiveTokens(safeAddress)
   await setActiveTokens(safeAddress, activeTokens.push(token))

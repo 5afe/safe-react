@@ -17,7 +17,7 @@ type TokenProps = {
   tokens: Map<string, Token>,
 }
 
-export const addTokens = createAction(
+export const addTokens = createAction<string, *, *>(
   ADD_TOKENS,
   (safeAddress: string, tokens: Map<string, Token>): TokenProps => ({
     safeAddress,

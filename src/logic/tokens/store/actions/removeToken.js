@@ -12,7 +12,7 @@ type RemoveTokenProps = {
   token: Token,
 }
 
-export const removeToken = createAction(
+export const removeToken = createAction<string, *, *>(
   REMOVE_TOKEN,
   (safeAddress: string, token: Token): RemoveTokenProps => ({
     safeAddress,
@@ -23,8 +23,7 @@ export const removeToken = createAction(
 const deleteToken = (safeAddress: string, token: Token) => async (dispatch: ReduxDispatch<GlobalState>) => {
   dispatch(removeToken(safeAddress, token))
 
-  const tokenAddress = token.get('address')
-  await removeFromActiveTokens(safeAddress, tokenAddress)
+  await removeFromActiveTokens(safeAddress, token)
   await removeTokenFromStorage(safeAddress, token)
 }
 
