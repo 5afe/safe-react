@@ -24,7 +24,7 @@ const saveToken = (safeAddress: string, token: Token) => async (dispatch: ReduxD
   dispatch(addToken(safeAddress, token))
 
   const activeTokens = await getActiveTokens(safeAddress)
-  await setActiveTokens(safeAddress, activeTokens.push(token))
+  await setActiveTokens(safeAddress, activeTokens.push(token.toJS()))
   setToken(safeAddress, token)
 }
 

@@ -7,7 +7,7 @@ import { checkMinedTx, checkPendingTx, EXPAND_BALANCE_INDEX } from '~/test/build
 import { whenExecuted } from '~/test/utils/logTransactions'
 import SendToken from '~/routes/safe/component/SendToken'
 import { makeToken, type Token } from '~/logic/tokens/store/model/token'
-import addTokens from '~/logic/tokens/store/actions/addTokens'
+import addTokens from '~/logic/tokens/store/actions/saveTokens'
 
 export const sendMoveTokensForm = async (
   SafeDom: React$Component<any, any>,

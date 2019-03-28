@@ -9,7 +9,7 @@ export const TOKENS_KEY = 'TOKENS'
 const getActiveTokensKey = (safeAddress: string) => `${ACTIVE_TOKENS_KEY}-${safeAddress}`
 const getTokensKey = (safeAddress: string) => `${TOKENS_KEY}-${safeAddress}`
 
-export const setActiveTokens = async (safeAddress: string, tokens: List<Token>) => {
+export const setActiveTokens = async (safeAddress: string, tokens: List<TokenProps>) => {
   try {
     const serializedState = JSON.stringify(tokens.toJS())
     const key = getActiveTokensKey(safeAddress)
@@ -20,7 +20,7 @@ export const setActiveTokens = async (safeAddress: string, tokens: List<Token>) 
   }
 }
 
-export const getActiveTokens = async (safeAddress: string): Promise<List<Token>> => {
+export const getActiveTokens = async (safeAddress: string): Promise<List<TokenProps>> => {
   const key = getActiveTokensKey(safeAddress)
   const data = await ImmortalDB.get(key)
 
@@ -62,7 +62,10 @@ export const removeTokenFromStorage = async (safeAddress: string, token: Token) 
 }
 
 export const removeFromActiveTokens = async (safeAddress: string, token: Token) => {
-  const activeTokens = await getActiveTokenAddresses(safeAddress)
-  const index = activeTokens.indexOf(token)
-  await setActiveTokens(safeAddress, activeTokens.delete(index))
+  const activeTokens = await getActiveTokens(safeAddress)
+  const index = activeTokens.findIndex(activeToken => activeToken.name === token.name)
+
+  if (index !== -1) {
+    await setActiveTokens(safeAddress, activeTokens.delete(index))
+  }
 }

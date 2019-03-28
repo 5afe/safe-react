@@ -41,14 +41,8 @@ type State = {
 
 const filterBy = (filter: string, tokens: List<Token>): List<Token> => tokens.filter(
   (token: Token) => !filter
-      || token
-        .get('symbol')
-        .toLowerCase()
-        .includes(filter.toLowerCase())
-      || token
-        .get('name')
-        .toLowerCase()
-        .includes(filter.toLowerCase()),
+      || token.symbol.toLowerCase().includes(filter.toLowerCase())
+      || token.name.toLowerCase().includes(filter.toLowerCase()),
 )
 
 class Tokens extends React.Component<Props, State> {
@@ -70,11 +64,9 @@ class Tokens extends React.Component<Props, State> {
 
     if (checked) {
       enableToken(safeAddress, token)
-
-      return
+    } else {
+      disableToken(safeAddress, token)
     }
-
-    disableToken(safeAddress, token)
   }
 
   setImageToPlaceholder = (e) => {
@@ -126,18 +118,13 @@ class Tokens extends React.Component<Props, State> {
         </Block>
         <MuiList className={classes.list}>
           {filteredTokens.map((token: Token) => (
-            <ListItem key={token.get('address')} className={classes.token}>
+            <ListItem key={token.address} className={classes.token}>
               <ListItemIcon>
-                <Img
-                  src={token.get('logoUri')}
-                  height={28}
-                  alt={token.get('name')}
-                  onError={this.setImageToPlaceholder}
-                />
+                <Img src={token.logoUri} height={28} alt={token.name} onError={this.setImageToPlaceholder} />
               </ListItemIcon>
-              <ListItemText primary={token.get('symbol')} secondary={token.get('name')} />
+              <ListItemText primary={token.symbol} secondary={token.name} />
               <ListItemSecondaryAction>
-                <Switch onChange={this.onSwitch(token)} checked={token.get('status')} />
+                <Switch onChange={this.onSwitch(token)} checked={token.status} />
               </ListItemSecondaryAction>
             </ListItem>
           ))}

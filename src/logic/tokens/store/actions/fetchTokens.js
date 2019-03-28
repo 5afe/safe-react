@@ -12,7 +12,7 @@ import { makeToken, type Token, type TokenProps } from '~/logic/tokens/store/mod
 import { ensureOnce } from '~/utils/singleton'
 import { getActiveTokens, getTokens } from '~/logic/tokens/utils/tokensStorage'
 import { getSafeEthToken } from '~/logic/tokens/utils/tokenHelpers'
-import addTokens from './addTokens'
+import saveTokens from './saveTokens'
 import { getRelayUrl } from '~/config/index'
 
 const createStandardTokenContract = async () => {
@@ -56,7 +56,7 @@ export const fetchTokensData = async () => {
 }
 
 export const fetchTokens = (safeAddress: string) => async (dispatch: ReduxDispatch<GlobalState>) => {
-  const tokens: List<string> = await getActiveTokenAddresses(safeAddress)
+  const tokens: List<TokenProps> = await getActiveTokens(safeAddress)
   const ethBalance = await getSafeEthToken(safeAddress)
   const customTokens = await getTokens(safeAddress)
   const {
@@ -66,7 +66,7 @@ export const fetchTokens = (safeAddress: string) => async (dispatch: ReduxDispat
   try {
     const balancesRecords = await Promise.all(
       results.map(async (item: TokenProps) => {
-        const status = tokens.includes(item.address)
+        const status = tokens.findIndex(activeToken => activeToken.name === item.name) !== -1
         const funds = status ? await calculateBalanceOf(item.address, safeAddress, item.decimals) : '0'
 
         return makeToken({ ...item, status, funds })
@@ -75,7 +75,7 @@ export const fetchTokens = (safeAddress: string) => async (dispatch: ReduxDispat
 
     const customTokenRecords = await Promise.all(
       customTokens.map(async (item: TokenProps) => {
-        const status = tokens.includes(item.address)
+        const status = tokens.findIndex(activeToken => activeToken.name === item.name) !== -1
         const funds = status ? await calculateBalanceOf(item.address, safeAddress, item.decimals) : '0'
 
         return makeToken({ ...item, status, funds })
@@ -83,13 +83,13 @@ export const fetchTokens = (safeAddress: string) => async (dispatch: ReduxDispat
     )
 
     const balances: Map<string, Token> = Map().withMutations((map) => {
-      balancesRecords.forEach(record => map.set(record.get('address'), record))
-      customTokenRecords.forEach(record => map.set(record.get('address'), record))
+      balancesRecords.forEach(record => map.set(record.address, record))
+      customTokenRecords.forEach(record => map.set(record.address, record))
 
-      map.set(ethBalance.get('address'), ethBalance)
+      map.set(ethBalance.address, ethBalance)
     })
 
-    return dispatch(addTokens(safeAddress, balances))
+    return dispatch(saveTokens(safeAddress, balances))
   } catch (err) {
     // eslint-disable-next-line
     console.log('Error fetching tokens... ' + err)
