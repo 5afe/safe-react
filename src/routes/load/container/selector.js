@@ -16,4 +16,3 @@ const structuredSelector: Selector<GlobalState, any, any> = createStructuredSele
 })
 
 export default structuredSelector
-

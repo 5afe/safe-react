@@ -7,8 +7,6 @@ const style = {
   borderRight: `solid 1px ${border}`,
 }
 
-const Divider = () => (
-  <div style={style} />
-)
+const Divider = () => <div style={style} />
 
 export default Divider

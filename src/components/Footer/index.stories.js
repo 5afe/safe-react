@@ -7,7 +7,7 @@ import Component from './index'
 const FrameDecorator = story => (
   <div className={styles.frame}>
     <div style={{ flex: '1' }} />
-    { story() }
+    {story()}
   </div>
 )
 

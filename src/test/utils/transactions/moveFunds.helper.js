@@ -5,7 +5,6 @@ import { checkMinedTx, checkPendingTx } from '~/test/builder/safe.dom.utils'
 import SendToken from '~/routes/safe/component/SendToken'
 import { whenExecuted } from '~/test/utils/logTransactions'
 
-
 export const sendMoveFundsForm = async (
   SafeDom: React$Component<any, any>,
   expandBalance: React$Component<any, any>,
@@ -35,7 +34,6 @@ export const sendMoveFundsForm = async (
   // submit it
   TestUtils.Simulate.submit(form)
   TestUtils.Simulate.submit(form)
-
 
   return whenExecuted(SafeDom, SendToken)
 }

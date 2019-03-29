@@ -1,5 +1,7 @@
 // @flow
-import { combineReducers, createStore, applyMiddleware, compose } from 'redux'
+import {
+  combineReducers, createStore, applyMiddleware, compose,
+} from 'redux'
 import thunk from 'redux-thunk'
 import providerReducer, { PROVIDER_REDUCER_ID } from '~/logic/wallets/store/reducer/provider'
 import type { ProviderProps } from '~/logic/wallets/store/model/provider'
@@ -13,19 +15,19 @@ const providerReducerTests = () => {
       const reducers = combineReducers({
         [PROVIDER_REDUCER_ID]: providerReducer,
       })
-      const middlewares = [
-        thunk,
-      ]
-      const enhancers = [
-        applyMiddleware(...middlewares),
-      ]
+      const middlewares = [thunk]
+      const enhancers = [applyMiddleware(...middlewares)]
       store = createStore(reducers, compose(...enhancers))
     })
 
     it('reducer should return default Provider record when no Metamask is loaded', () => {
       // GIVEN
       const emptyResponse: ProviderProps = {
-        name: '', loaded: false, available: false, account: '', network: 0,
+        name: '',
+        loaded: false,
+        available: false,
+        account: '',
+        network: 0,
       }
 
       // WHEN
@@ -39,7 +41,11 @@ const providerReducerTests = () => {
     it('reducer should return avaiable with its default value when is loaded but not available', () => {
       // GIVEN
       const metamaskLoaded: ProviderProps = {
-        name: 'METAMASK', loaded: true, available: false, account: '', network: 0,
+        name: 'METAMASK',
+        loaded: true,
+        available: false,
+        account: '',
+        network: 0,
       }
 
       // WHEN
@@ -53,7 +59,11 @@ const providerReducerTests = () => {
     it('reducer should return metamask provider when it is loaded and available', () => {
       // GIVEN
       const metamask: ProviderProps = {
-        name: 'METAMASK', loaded: true, available: true, account: '', network: 0,
+        name: 'METAMASK',
+        loaded: true,
+        available: true,
+        account: '',
+        network: 0,
       }
 
       // WHEN

@@ -58,7 +58,7 @@ export const confirmationsTransactionSelector: Selector<GlobalState, Transaction
       return 0
     }
 
-    return confirmations.filter(((confirmation: Confirmation) => confirmation.get('type') === 'confirmation')).count()
+    return confirmations.filter((confirmation: Confirmation) => confirmation.get('type') === 'confirmation').count()
   },
 )
 

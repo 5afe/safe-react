@@ -45,14 +45,14 @@ export class SafeFactory {
     .withOwner(['Adol Metamask'], [ownerAddress])
     .get()
 
-  static twoOwnersSafe = (firstOwner: string = '0x03db1a8b26d08df23337e9276a36b474510f0023', secondOwner: string = '0x03db1a8b26d08df23337e9276a36b474510f0024') => aSafe()
+  static twoOwnersSafe = (
+    firstOwner: string = '0x03db1a8b26d08df23337e9276a36b474510f0023',
+    secondOwner: string = '0x03db1a8b26d08df23337e9276a36b474510f0024',
+  ) => aSafe()
     .withAddress('0x03db1a8b26d08df23337e9276a36b474510f0026')
     .withName('Adol & Tobias Safe')
     .withConfirmations(2)
-    .withOwner(
-      ['Adol Metamask', 'Tobias Metamask'],
-      [firstOwner, secondOwner],
-    )
+    .withOwner(['Adol Metamask', 'Tobias Metamask'], [firstOwner, secondOwner])
     .get()
 }
 

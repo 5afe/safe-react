@@ -61,7 +61,11 @@ const getNetworkIdFrom = async (web3Provider) => {
 export const getProviderInfo: Function = async (): Promise<ProviderProps> => {
   if (typeof window.web3 === 'undefined') {
     return {
-      name: '', available: false, loaded: false, account: '', network: 0,
+      name: '',
+      available: false,
+      loaded: false,
+      account: '',
+      network: 0,
     }
   }
 

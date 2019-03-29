@@ -18,14 +18,12 @@ const travelToLoadRoute = async (localStore: Store<GlobalState>) => {
   const walletRecord = makeProvider(provider)
   localStore.dispatch(addProvider(walletRecord))
 
-  return (
-    TestUtils.renderIntoDocument((
-      <Provider store={localStore}>
-        <ConnectedRouter history={history}>
-          <Load />
-        </ConnectedRouter>
-      </Provider>
-    ))
+  return TestUtils.renderIntoDocument(
+    <Provider store={localStore}>
+      <ConnectedRouter history={history}>
+        <Load />
+      </ConnectedRouter>
+    </Provider>,
   )
 }
 
@@ -52,7 +50,6 @@ describe('DOM > Feature > LOAD a safe', () => {
     // Submit
     TestUtils.Simulate.submit(form)
     await sleep(400)
-
 
     const deployedAddress = await whenSafeDeployed()
     expect(deployedAddress).toBe(address)

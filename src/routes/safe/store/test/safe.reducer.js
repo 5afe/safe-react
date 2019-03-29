@@ -1,5 +1,7 @@
 // @flow
-import { combineReducers, createStore, applyMiddleware, compose } from 'redux'
+import {
+  combineReducers, createStore, applyMiddleware, compose,
+} from 'redux'
 import thunk from 'redux-thunk'
 import safeReducer, { SAFE_REDUCER_ID } from '~/routes/safe/store/reducer/safe'
 import addSafe from '~/routes/safe/store/actions/addSafe'
@@ -11,12 +13,8 @@ const aStore = (initState) => {
   const reducers = combineReducers({
     [SAFE_REDUCER_ID]: safeReducer,
   })
-  const middlewares = [
-    thunk,
-  ]
-  const enhancers = [
-    applyMiddleware(...middlewares),
-  ]
+  const middlewares = [thunk]
+  const enhancers = [applyMiddleware(...middlewares)]
   return createStore(reducers, initState, compose(...enhancers))
 }
 
@@ -42,13 +40,15 @@ const providerReducerTests = () => {
       // GIVEN in beforeEach method
 
       // WHEN
-      store.dispatch(addSafe(
-        formValues[SafeFields.FIELD_NAME],
-        formValues.address,
-        formValues[SafeFields.FIELD_CONFIRMATIONS],
-        getNamesFrom(formValues),
-        getAccountsFrom(formValues),
-      ))
+      store.dispatch(
+        addSafe(
+          formValues[SafeFields.FIELD_NAME],
+          formValues.address,
+          formValues[SafeFields.FIELD_CONFIRMATIONS],
+          getNamesFrom(formValues),
+          getAccountsFrom(formValues),
+        ),
+      )
       const safes = store.getState()[SAFE_REDUCER_ID]
 
       // THEN
