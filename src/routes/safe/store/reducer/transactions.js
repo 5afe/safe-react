@@ -8,7 +8,7 @@ export const TRANSACTIONS_REDUCER_ID = 'transactions'
 
 export type State = Map<string, List<Transaction>>
 
-export default handleActions({
+export default handleActions<State, *>({
   [ADD_TRANSACTIONS]: (state: State, action: ActionType<typeof addTransactions>): State =>
     action.payload,
 }, Map())
