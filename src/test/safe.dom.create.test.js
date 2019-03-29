@@ -20,14 +20,12 @@ const fillOpenSafeForm = async (localStore: Store<GlobalState>) => {
   const walletRecord = makeProvider(provider)
   localStore.dispatch(addProvider(walletRecord))
 
-  return (
-    TestUtils.renderIntoDocument((
-      <Provider store={localStore}>
-        <ConnectedRouter history={history}>
-          <Open />
-        </ConnectedRouter>
-      </Provider>
-    ))
+  return TestUtils.renderIntoDocument(
+    <Provider store={localStore}>
+      <ConnectedRouter history={history}>
+        <Open />
+      </ConnectedRouter>
+    </Provider>,
   )
 }
 
@@ -59,7 +57,7 @@ const deploySafe = async (safe: React$Component<{}>, threshold: number, numOwner
   expect(ownerInputs.length).toBe(numOwners * 2)
   for (let i = addedUpfront; i < numOwners; i += 1) {
     const nameIndex = i * 2
-    const addressIndex = (i * 2) + 1
+    const addressIndex = i * 2 + 1
     const ownerName = ownerInputs[nameIndex]
     const account = ownerInputs[addressIndex]
 
@@ -85,11 +83,7 @@ const deploySafe = async (safe: React$Component<{}>, threshold: number, numOwner
   return whenSafeDeployed()
 }
 
-const aDeployedSafe = async (
-  specificStore: Store<GlobalState>,
-  threshold?: number = 1,
-  numOwners?: number = 1,
-) => {
+const aDeployedSafe = async (specificStore: Store<GlobalState>, threshold?: number = 1, numOwners?: number = 1) => {
   const safe: React$Component<{}> = await fillOpenSafeForm(specificStore)
   const safeAddress = await deploySafe(safe, threshold, numOwners)
 

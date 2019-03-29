@@ -28,7 +28,7 @@ class Paragraph extends React.PureComponent<Props> {
         className={cx(styles.paragraph, className, weight, { noMargin }, { dot }, size, color, transform, align)}
         {...props}
       >
-        { children }
+        {children}
       </p>
     )
   }

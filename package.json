@@ -23,7 +23,8 @@
     "start": "node scripts/start.js",
     "storybook": "start-storybook -p 6006",
     "test": "NODE_ENV=test && node scripts/test.js --env=jsdom",
-    "test-local": "NODE_ENV=test && node scripts/test.js --env=jsdom"
+    "test-local": "NODE_ENV=test && node scripts/test.js --env=jsdom",
+    "format": "prettier-eslint \"src/**/*.js\" --write"
   },
   "pre-commit": [
     "precommit"
@@ -152,6 +153,7 @@
     "postcss-mixins": "^6.2.0",
     "postcss-simple-vars": "^5.0.2",
     "pre-commit": "^1.2.2",
+    "prettier-eslint-cli": "^4.7.1",
     "run-with-testrpc": "^0.3.0",
     "storybook-host": "^5.0.3",
     "storybook-router": "^0.3.3",

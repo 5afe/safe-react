@@ -13,7 +13,6 @@ import { safeTransactionsSelector } from '~/routes/safe/store/selectors'
 import fetchSafe from '~/routes/safe/store/actions/fetchSafe'
 import { testTransactionFrom, testSizeOfTransactions } from './utils/historyServiceHelper'
 
-
 describe('Transactions Suite', () => {
   let store: Store
   let safeAddress: string
@@ -34,12 +33,28 @@ describe('Transactions Suite', () => {
     const firstTxData = gnosisSafe.contract.methods.addOwnerWithThreshold(accounts[1], 2).encodeABI()
     const executor = accounts[0]
     const nonce = await gnosisSafe.nonce()
-    const firstTxHash = await createTransaction(safe, 'Add Owner Second account', safeAddress, '0', nonce, executor, firstTxData)
+    const firstTxHash = await createTransaction(
+      safe,
+      'Add Owner Second account',
+      safeAddress,
+      '0',
+      nonce,
+      executor,
+      firstTxData,
+    )
     await store.dispatch(fetchSafe(safe.get('address')))
     safe = getSafeFrom(store.getState(), safeAddress)
 
     const secondTxData = gnosisSafe.contract.methods.addOwnerWithThreshold(accounts[2], 2).encodeABI()
-    const secondTxHash = await createTransaction(safe, 'Add Owner Third account', safeAddress, '0', nonce + 100, executor, secondTxData)
+    const secondTxHash = await createTransaction(
+      safe,
+      'Add Owner Third account',
+      safeAddress,
+      '0',
+      nonce + 100,
+      executor,
+      secondTxData,
+    )
     await store.dispatch(fetchSafe(safe.get('address')))
     safe = getSafeFrom(store.getState(), safeAddress)
 
@@ -56,7 +71,17 @@ describe('Transactions Suite', () => {
         hash: firstTxHash,
       }),
     ])
-    testTransactionFrom(transactions, 0, 'Add Owner Second account', nonce, 0, safeAddress, firstTxData, true, firstTxConfirmations)
+    testTransactionFrom(
+      transactions,
+      0,
+      'Add Owner Second account',
+      nonce,
+      0,
+      safeAddress,
+      firstTxData,
+      true,
+      firstTxConfirmations,
+    )
 
     const secondTxConfirmations = List([
       makeConfirmation({
@@ -65,7 +90,17 @@ describe('Transactions Suite', () => {
         hash: secondTxHash,
       }),
     ])
-    testTransactionFrom(transactions, 1, 'Add Owner Third account', nonce + 100, 0, safeAddress, secondTxData, false, secondTxConfirmations)
+    testTransactionFrom(
+      transactions,
+      1,
+      'Add Owner Third account',
+      nonce + 100,
+      0,
+      safeAddress,
+      secondTxData,
+      false,
+      secondTxConfirmations,
+    )
 
     localStorage.clear()
 
@@ -88,7 +123,17 @@ describe('Transactions Suite', () => {
         hash: secondTxHash,
       }),
     ])
-    testTransactionFrom(transactions, 1, 'Unknown', nonce + 100, 0, safeAddress, secondTxData, false, secondTxConfWithoutStorage)
+    testTransactionFrom(
+      transactions,
+      1,
+      'Unknown',
+      nonce + 100,
+      0,
+      safeAddress,
+      secondTxData,
+      false,
+      secondTxConfWithoutStorage,
+    )
   })
 
   it('returns empty list of trnsactions when safe is not configured', async () => {
@@ -130,4 +175,3 @@ describe('Transactions Suite', () => {
     */
   })
 })
-

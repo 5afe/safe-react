@@ -2,12 +2,36 @@
 import TestUtils from 'react-dom/test-utils'
 import { List } from 'immutable'
 import Transaction from '~/routes/safe/component/Transactions/Transaction'
-import { listTxsClickingOn, LIST_TXS_INDEX, ADD_OWNERS_INDEX, EXPAND_OWNERS_INDEX, EDIT_THRESHOLD_INDEX, refreshTransactions, EXPAND_BALANCE_INDEX } from '~/test/builder/safe.dom.utils'
+import {
+  listTxsClickingOn,
+  LIST_TXS_INDEX,
+  ADD_OWNERS_INDEX,
+  EXPAND_OWNERS_INDEX,
+  EDIT_THRESHOLD_INDEX,
+  refreshTransactions,
+  EXPAND_BALANCE_INDEX,
+} from '~/test/builder/safe.dom.utils'
 import { renderSafeInDom, type DomSafe } from '~/test/builder/safe.dom.builder'
-import { sendMoveFundsForm, checkMinedMoveFundsTx, checkPendingMoveFundsTx } from '~/test/utils/transactions/moveFunds.helper'
-import { sendAddOwnerForm, checkMinedAddOwnerTx, checkPendingAddOwnerTx } from '~/test/utils/transactions/addOwner.helper'
-import { sendRemoveOwnerForm, checkMinedRemoveOwnerTx, checkPendingRemoveOwnerTx } from '~/test/utils/transactions/removeOwner.helper'
-import { checkMinedThresholdTx, sendChangeThresholdForm, checkThresholdOf } from '~/test/utils/transactions/threshold.helper'
+import {
+  sendMoveFundsForm,
+  checkMinedMoveFundsTx,
+  checkPendingMoveFundsTx,
+} from '~/test/utils/transactions/moveFunds.helper'
+import {
+  sendAddOwnerForm,
+  checkMinedAddOwnerTx,
+  checkPendingAddOwnerTx,
+} from '~/test/utils/transactions/addOwner.helper'
+import {
+  sendRemoveOwnerForm,
+  checkMinedRemoveOwnerTx,
+  checkPendingRemoveOwnerTx,
+} from '~/test/utils/transactions/removeOwner.helper'
+import {
+  checkMinedThresholdTx,
+  sendChangeThresholdForm,
+  checkThresholdOf,
+} from '~/test/utils/transactions/threshold.helper'
 import { checkBalanceOf } from '~/test/utils/tokenMovements'
 import { sleep } from '~/utils/timer'
 import { processTransaction } from '~/logic/safe/safeFrontendOperations'
@@ -35,7 +59,7 @@ describe('DOM > Feature > SAFE MULTISIG Transactions', () => {
 
     checkMinedMoveFundsTx(transactions[0], 'Send 0.01 ETH to')
     checkMinedAddOwnerTx(transactions[1], 'Add Owner Adol Metamask 2')
-    checkMinedThresholdTx(transactions[2], 'Change Safe\'s threshold')
+    checkMinedThresholdTx(transactions[2], "Change Safe's threshold")
   })
 
   it.only('mines withdraw process correctly all multisig txs in a 2 owner & 2 threshold safe', async () => {

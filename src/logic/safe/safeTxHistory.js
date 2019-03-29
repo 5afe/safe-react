@@ -18,8 +18,18 @@ const calculateBodyFrom = async (
   type: TxServiceType,
 ) => {
   const gnosisSafe = await getSafeEthereumInstance(safeAddress)
-  const contractTransactionHash =
-    await gnosisSafe.getTransactionHash(to, valueInWei, data, operation, 0, 0, 0, 0, 0, nonce)
+  const contractTransactionHash = await gnosisSafe.getTransactionHash(
+    to,
+    valueInWei,
+    data,
+    operation,
+    0,
+    0,
+    0,
+    0,
+    0,
+    nonce,
+  )
 
   return JSON.stringify({
     to: getWeb3().toChecksumAddress(to),

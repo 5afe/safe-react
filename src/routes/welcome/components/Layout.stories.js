@@ -5,39 +5,19 @@ import * as React from 'react'
 import styles from '~/components/layout/PageFrame/index.scss'
 import Component from './Layout'
 
-const FrameDecorator = story => (
-  <div className={styles.frame}>
-    { story() }
-  </div>
-)
-
+const FrameDecorator = story => <div className={styles.frame}>{story()}</div>
 
 storiesOf('Routes /welcome', module)
   .addDecorator(FrameDecorator)
   .add('Welcome with Metamask connected', () => {
     const provider = select('Status by Provider', ['', 'UNKNOWN', 'METAMASK', 'PARITY'], 'METAMASK')
-    return (
-      <Component
-        provider={provider}
-        fetchProvider={() => { }}
-      />
-    )
+    return <Component provider={provider} fetchProvider={() => {}} />
   })
   .add('Welcome with unknown wallet', () => {
     const provider = select('Status by Provider', ['', 'UNKNOWN', 'METAMASK', 'PARITY'], 'UNKNOWN')
-    return (
-      <Component
-        provider={provider}
-        fetchProvider={() => { }}
-      />
-    )
+    return <Component provider={provider} fetchProvider={() => {}} />
   })
   .add('Welcome without wallet connected', () => {
     const provider = select('Status by Provider', ['', 'UNKNOWN', 'METAMASK', 'PARITY'], '')
-    return (
-      <Component
-        provider={provider}
-        fetchProvider={() => { }}
-      />
-    )
+    return <Component provider={provider} fetchProvider={() => {}} />
   })

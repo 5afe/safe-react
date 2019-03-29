@@ -17,7 +17,7 @@ const safesListSelector: Selector<GlobalState, {}, List<Safe>> = createSelector(
 export const safesByOwnerSelector: Selector<GlobalState, {}, List<Safe>> = createSelector(
   userAccountSelector,
   safesListSelector,
-  (userAddress: string, safes: List<Safe>): List<Safe> =>
-    safes.filter((safe: Safe) =>
-      safe.owners.filter((owner: Owner) => sameAddress(owner.get('address'), userAddress)).count() > 0),
+  (userAddress: string, safes: List<Safe>): List<Safe> => safes.filter(
+    (safe: Safe) => safe.owners.filter((owner: Owner) => sameAddress(owner.get('address'), userAddress)).count() > 0,
+  ),
 )

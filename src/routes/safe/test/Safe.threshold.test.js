@@ -19,9 +19,7 @@ import { getGnosisSafeContract } from '~/wallets/safeContracts'
 import fetchTransactions from '~/routes/safe/store/actions/fetchTransactions'
 */
 describe('React DOM TESTS > Change threshold', () => {
-  it('should update the threshold directly if safe has 1 threshold', async () => {
-
-  })
+  it('should update the threshold directly if safe has 1 threshold', async () => {})
 })
 
 /*

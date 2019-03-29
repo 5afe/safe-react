@@ -46,24 +46,20 @@ describe('DOM > Feature > Add new ERC 20 Tokens', () => {
     // const store = aNewStore()
     // const safeAddress = await aMinedSafe(store)
     // await store.dispatch(fetchTokensModule.fetchTokens(safeAddress))
-
     // const TokensDom = await travelToTokens(store, safeAddress)
     // await sleep(400)
     // const tokens = TestUtils.scryRenderedComponentsWithType(TokensDom, TokenComponent)
     // expect(tokens.length).toBe(2)
     // testToken(tokens[0].props.token, 'FTE', false)
     // testToken(tokens[1].props.token, 'ETH', true)
-
     // // WHEN
     // await clickOnAddToken(TokensDom)
     // await fillAddress(TokensDom, secondErc20Token)
     // await fillHumanReadableInfo(TokensDom)
-
     // // THEN
     // const match: Match = buildMathPropsFrom(safeAddress)
     // const tokenList = tokenListSelector(store.getState(), { match })
     // expect(tokenList.count()).toBe(3)
-
     // testToken(tokenList.get(0), 'FTE', false)
     // testToken(tokenList.get(1), 'ETH', true)
     // testToken(tokenList.get(2), 'TKN', true)

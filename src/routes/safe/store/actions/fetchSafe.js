@@ -9,12 +9,10 @@ import { getOwners, getSafeName } from '~/utils/localStorage'
 import { getGnosisSafeContract } from '~/logic/contracts/safeContracts'
 import { getWeb3 } from '~/logic/wallets/getWeb3'
 
-const buildOwnersFrom = (safeOwners: string[], storedOwners: Map<string, string>) => (
-  safeOwners.map((ownerAddress: string) => {
-    const ownerName = storedOwners.get(ownerAddress.toLowerCase()) || 'UNKNOWN'
-    return makeOwner({ name: ownerName, address: ownerAddress })
-  })
-)
+const buildOwnersFrom = (safeOwners: string[], storedOwners: Map<string, string>) => safeOwners.map((ownerAddress: string) => {
+  const ownerName = storedOwners.get(ownerAddress.toLowerCase()) || 'UNKNOWN'
+  return makeOwner({ name: ownerName, address: ownerAddress })
+})
 
 export const buildSafe = async (safeAddress: string, safeName: string) => {
   const web3 = getWeb3()
@@ -42,7 +40,7 @@ export default (safeAddress: string) => async (dispatch: ReduxDispatch<GlobalSta
     return dispatch(updateSafe(safeRecord))
   } catch (err) {
     // eslint-disable-next-line
-    console.error("Error while updating safe information: ", err)
+    console.error('Error while updating safe information: ', err)
 
     return Promise.resolve()
   }
