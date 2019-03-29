@@ -2,7 +2,7 @@
 import { List } from 'immutable'
 import logo from '~/assets/icons/icon_etherTokens.svg'
 import { getBalanceInEtherOf } from '~/logic/wallets/getWeb3'
-import { makeToken, type Token } from '~/routes/tokens/store/model/token'
+import { makeToken, type Token } from '~/logic/tokens/store/model/token'
 
 export const ETH_ADDRESS = '0'
 export const isEther = (symbol: string) => symbol === 'ETH'
@@ -24,15 +24,12 @@ export const getSafeEthToken = async (safeAddress: string) => {
 
 export const calculateActiveErc20TokensFrom = (tokens: List<Token>) => {
   const addresses = List().withMutations(list => tokens.forEach((token: Token) => {
-    if (isEther(token.get('symbol'))) {
+    const isDeactivated = isEther(token.symbol) || !token.status
+    if (isDeactivated) {
       return
     }
 
-    if (!token.get('status')) {
-      return
-    }
-
-    list.push(token.address)
+    list.push(token)
   }))
 
   return addresses

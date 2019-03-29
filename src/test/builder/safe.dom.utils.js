@@ -46,8 +46,7 @@ export const checkMinedTx = (Transaction: React$Component<any, any>, name: strin
   expect(hashParagraph).toContain(EMPTY_DATA)
 }
 
-export const getListItemsFrom = (Transaction: React$Component<any, any>) =>
-  TestUtils.scryRenderedComponentsWithType(Transaction, ListItemText)
+export const getListItemsFrom = (Transaction: React$Component<any, any>) => TestUtils.scryRenderedComponentsWithType(Transaction, ListItemText)
 
 export const expand = async (Transaction: React$Component<any, any>) => {
   const listItems = getListItemsFrom(Transaction)
@@ -93,14 +92,12 @@ export const refreshTransactions = async (store: Store<GlobalState>, safeAddress
   await sleep(1500)
 }
 
-const createDom = (store: Store): React$Component<{}> => (
-  TestUtils.renderIntoDocument((
-    <Provider store={store}>
-      <ConnectedRouter history={history}>
-        <AppRoutes />
-      </ConnectedRouter>
-    </Provider>
-  ))
+const createDom = (store: Store): React$Component<{}> => TestUtils.renderIntoDocument(
+  <Provider store={store}>
+    <ConnectedRouter history={history}>
+      <AppRoutes />
+    </ConnectedRouter>
+  </Provider>,
 )
 
 export const travelToSafe = (store: Store, address: string): React$Component<{}> => {

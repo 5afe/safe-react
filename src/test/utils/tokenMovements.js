@@ -31,7 +31,7 @@ export const addTknTo = async (safe: string, value: string, tokenContract?: any)
   const web3 = getWeb3()
   const accounts = await web3.eth.getAccounts()
 
-  const myToken = tokenContract || await getFirstTokenContract(web3, accounts[0])
+  const myToken = tokenContract || (await getFirstTokenContract(web3, accounts[0]))
   const nativeValue = toNative(value, 18)
   await myToken.transfer(safe, nativeValue.valueOf(), { from: accounts[0], gas: '5000000' })
 

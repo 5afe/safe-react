@@ -1,6 +1,6 @@
 // @flow
 import { List } from 'immutable'
-import { type Token } from '~/routes/tokens/store/model/token'
+import { type Token } from '~/logic/tokens/store/model/token'
 import { buildOrderFieldFrom, FIXED, type SortRow } from '~/components/Table/sorting'
 import { type Column } from '~/components/Table/TableHead'
 
@@ -25,7 +25,6 @@ export const getBalanceData = (activeTokens: List<Token>): Array<BalanceRow> => 
 
   return Array.from(rows)
 }
-
 
 export const generateColumns = () => {
   const assetRow: Column = {
@@ -57,5 +56,4 @@ export const generateColumns = () => {
   return List([assetRow, balanceRow, actions])
 }
 
-export const filterByZero = (data: Array<BalanceRow>, hideZero: boolean): Array<BalanceRow> =>
-  data.filter((row: BalanceRow) => (hideZero ? row[buildOrderFieldFrom(BALANCE_TABLE_BALANCE_ID)] !== 0 : true))
+export const filterByZero = (data: Array<BalanceRow>, hideZero: boolean): Array<BalanceRow> => data.filter((row: BalanceRow) => (hideZero ? row[buildOrderFieldFrom(BALANCE_TABLE_BALANCE_ID)] !== 0 : true))

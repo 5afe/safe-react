@@ -4,7 +4,9 @@ import { handleActions, type ActionType } from 'redux-actions'
 import addSafe, { ADD_SAFE, buildOwnersFrom } from '~/routes/safe/store/actions/addSafe'
 import { type Safe, type SafeProps, makeSafe } from '~/routes/safe/store/model/safe'
 import { type OwnerProps } from '~/routes/safe/store/model/owner'
-import { saveSafes, setOwners, load, SAFES_KEY } from '~/utils/localStorage'
+import {
+  saveSafes, setOwners, load, SAFES_KEY,
+} from '~/utils/localStorage'
 import updateSafe, { UPDATE_SAFE } from '~/routes/safe/store/actions/updateSafe'
 
 export const SAFE_REDUCER_ID = 'safes'
@@ -38,7 +40,7 @@ const buildSafesFrom = (loadedSafes: Object): Map<string, Safe> => {
     })
   } catch (err) {
     // eslint-disable-next-line
-    console.log("Error while fetching safes information")
+    console.log('Error while fetching safes information')
 
     return Map()
   }
@@ -51,27 +53,28 @@ export const safesInitialState = (): State => {
   return safes
 }
 
+export default handleActions<State, *>(
+  {
+    [UPDATE_SAFE]: (state: State, action: ActionType<typeof updateSafe>): State => {
+      const safe = action.payload
+      const safeAddress = safe.get('address')
 
-export default handleActions({
-  [UPDATE_SAFE]: (state: State, action: ActionType<typeof updateSafe>): State => {
-    const safe = action.payload
-    const safeAddress = safe.get('address')
+      const hasSafe = !!state.get(safeAddress)
+      if (hasSafe) {
+        return state.update(safeAddress, prevSafe => (prevSafe.equals(safe) ? prevSafe : safe))
+      }
 
-    const hasSafe = !!state.get(safeAddress)
-    if (hasSafe) {
-      return state.update(safeAddress, prevSafe =>
-        (prevSafe.equals(safe) ? prevSafe : safe))
-    }
+      return state.set(safeAddress, safe)
+    },
+    [ADD_SAFE]: (state: State, action: ActionType<typeof addSafe>): State => {
+      const safe: Safe = makeSafe(action.payload)
+      setOwners(safe.get('address'), safe.get('owners'))
 
-    return state.set(safeAddress, safe)
+      const safes = state.set(action.payload.address, safe)
+      saveSafes(safes.toJSON())
+
+      return safes
+    },
   },
-  [ADD_SAFE]: (state: State, action: ActionType<typeof addSafe>): State => {
-    const safe: Safe = makeSafe(action.payload)
-    setOwners(safe.get('address'), safe.get('owners'))
-
-    const safes = state.set(action.payload.address, safe)
-    saveSafes(safes.toJSON())
-
-    return safes
-  },
-}, Map())
+  Map(),
+)

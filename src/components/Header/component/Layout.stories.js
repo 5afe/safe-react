@@ -8,11 +8,7 @@ import UserDetails from './ProviderDetails/UserDetails'
 import ProviderDisconnected from './ProviderInfo/ProviderDisconnected'
 import ConnectDetails from './ProviderDetails/ConnectDetails'
 
-const FrameDecorator = story => (
-  <div className={styles.frame}>
-    { story() }
-  </div>
-)
+const FrameDecorator = story => <div className={styles.frame}>{story()}</div>
 
 storiesOf('Components /Header', module)
   .addDecorator(FrameDecorator)
@@ -36,12 +32,7 @@ storiesOf('Components /Header', module)
     const userAddress = '0x873faa4cddd5b157e8e5a57e7a5479afc5d30moe'
     const network = 'RINKEBY'
     const info = <ProviderAccesible provider={provider} network={network} userAddress={userAddress} connected={false} />
-    const details = (<UserDetails
-      provider={provider}
-      network={network}
-      userAddress={userAddress}
-      connected={false}
-    />)
+    const details = <UserDetails provider={provider} network={network} userAddress={userAddress} connected={false} />
 
     return <Layout providerInfo={info} providerDetails={details} />
   })

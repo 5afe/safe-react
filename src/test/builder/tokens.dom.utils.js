@@ -2,7 +2,7 @@
 import * as TestUtils from 'react-dom/test-utils'
 import { travelToTokens } from '~/test/builder/safe.dom.utils'
 import { sleep } from '~/utils/timer'
-import { type Token } from '~/routes/tokens/store/model/token'
+import { type Token } from '~/logic/tokens/store/model/token'
 
 export const enableFirstToken = async (store: Store, safeAddress: string) => {
   const TokensDom = await travelToTokens(store, safeAddress)

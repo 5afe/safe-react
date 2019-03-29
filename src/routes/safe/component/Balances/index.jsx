@@ -2,7 +2,7 @@
 import * as React from 'react'
 import { List } from 'immutable'
 import classNames from 'classnames/bind'
-import { type Token } from '~/routes/tokens/store/model/token'
+import { type Token } from '~/logic/tokens/store/model/token'
 import CallMade from '@material-ui/icons/CallMade'
 import CallReceived from '@material-ui/icons/CallReceived'
 import Button from '@material-ui/core/Button'

@@ -1,12 +1,14 @@
 // @flow
-import { lg, md, sm, xs, mediumFontSize, border } from '~/theme/variables'
+import {
+  lg, md, sm, xs, mediumFontSize, border,
+} from '~/theme/variables'
 
 export const styles = () => ({
   root: {
-    minHeight: '132px',
+    minHeight: '127px',
   },
   heading: {
-    padding: `${md} ${lg}`,
+    padding: `${sm} ${lg}`,
     justifyContent: 'space-between',
   },
   manage: {

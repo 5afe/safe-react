@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 import { List } from 'immutable'
 import classNames from 'classnames/bind'
 import SearchBar from 'material-ui-search-bar'
+import InfiniteScroll from 'react-infinite-scroll-component'
 import { withStyles } from '@material-ui/core/styles'
 import MuiList from '@material-ui/core/List'
 import Img from '~/components/layout/Img'
@@ -22,8 +23,9 @@ import Divider from '~/components/layout/Divider'
 import Hairline from '~/components/layout/Hairline'
 import Spacer from '~/components/Spacer'
 import Row from '~/components/layout/Row'
-import { type Token } from '~/routes/tokens/store/model/token'
+import { type Token } from '~/logic/tokens/store/model/token'
 import actions, { type Actions } from './actions'
+import TokenPlaceholder from './assets/token_placeholder.png'
 import { styles } from './style'
 
 type Props = Actions & {
@@ -37,10 +39,11 @@ type State = {
   filter: string,
 }
 
-const filterBy = (filter: string, tokens: List<Token>): List<Token> => tokens.filter((token: Token) => !filter
-    || token.get('symbol').toLowerCase().includes(filter.toLowerCase())
-    || token.get('name').toLowerCase().includes(filter.toLowerCase()))
-
+const filterBy = (filter: string, tokens: List<Token>): List<Token> => tokens.filter(
+  (token: Token) => !filter
+      || token.symbol.toLowerCase().includes(filter.toLowerCase())
+      || token.name.toLowerCase().includes(filter.toLowerCase()),
+)
 
 class Tokens extends React.Component<Props, State> {
   state = {
@@ -61,11 +64,14 @@ class Tokens extends React.Component<Props, State> {
 
     if (checked) {
       enableToken(safeAddress, token)
-
-      return
+    } else {
+      disableToken(safeAddress, token)
     }
+  }
 
-    disableToken(safeAddress, token)
+  setImageToPlaceholder = (e) => {
+    e.target.onerror = null
+    e.target.src = TokenPlaceholder
   }
 
   render() {
@@ -84,7 +90,9 @@ class Tokens extends React.Component<Props, State> {
       <React.Fragment>
         <Block className={classes.root}>
           <Row align="center" grow className={classes.heading}>
-            <Paragraph className={classes.manage} noMargin>Manage Tokens</Paragraph>
+            <Paragraph className={classes.manage} noMargin>
+              Manage Tokens
+            </Paragraph>
             <IconButton onClick={onClose} disableRipple>
               <Close className={classes.close} />
             </IconButton>
@@ -110,16 +118,13 @@ class Tokens extends React.Component<Props, State> {
         </Block>
         <MuiList className={classes.list}>
           {filteredTokens.map((token: Token) => (
-            <ListItem key={token.get('address')} className={classes.token}>
+            <ListItem key={token.address} className={classes.token}>
               <ListItemIcon>
-                <Img src={token.get('logoUri')} height={28} alt={token.get('name')} />
+                <Img src={token.logoUri} height={28} alt={token.name} onError={this.setImageToPlaceholder} />
               </ListItemIcon>
-              <ListItemText primary={token.get('symbol')} secondary={token.get('name')} />
+              <ListItemText primary={token.symbol} secondary={token.name} />
               <ListItemSecondaryAction>
-                <Switch
-                  onChange={this.onSwitch(token)}
-                  checked={token.get('status')}
-                />
+                <Switch onChange={this.onSwitch(token)} checked={token.status} />
               </ListItemSecondaryAction>
             </ListItem>
           ))}
@@ -131,4 +136,7 @@ class Tokens extends React.Component<Props, State> {
 
 const TokenComponent = withStyles(styles)(Tokens)
 
-export default connect(undefined, actions)(TokenComponent)
+export default connect(
+  undefined,
+  actions,
+)(TokenComponent)

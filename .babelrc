@@ -10,6 +10,7 @@
     ]
   ],
   "plugins": [
+    "react-hot-loader/babel",
     "@babel/plugin-syntax-dynamic-import",
     "@babel/plugin-transform-member-expression-literals",
     "@babel/plugin-transform-property-literals",

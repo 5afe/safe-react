@@ -7,8 +7,7 @@ import { safeTransactionsSelector } from '~/routes/safe/store/selectors/index'
 
 const pendingTransactionsSelector = createSelector(
   safeTransactionsSelector,
-  (transactions: List<Transaction>) =>
-    transactions.findEntry((tx: Transaction) => tx.get('isExecuted')),
+  (transactions: List<Transaction>) => transactions.findEntry((tx: Transaction) => tx.get('isExecuted')),
 )
 
 export type SelectorProps = {

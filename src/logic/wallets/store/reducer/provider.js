@@ -7,7 +7,9 @@ export const PROVIDER_REDUCER_ID = 'providers'
 
 export type State = Provider
 
-export default handleActions({
-  [ADD_PROVIDER]: (state: State, { payload }: ActionType<typeof addProvider>) =>
-    makeProvider(payload),
-}, makeProvider())
+export default handleActions(
+  {
+    [ADD_PROVIDER]: (state: State, { payload }: ActionType<typeof addProvider>) => makeProvider(payload),
+  },
+  makeProvider(),
+)

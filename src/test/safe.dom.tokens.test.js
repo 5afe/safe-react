@@ -1,7 +1,7 @@
 // @flow
 
 import TestUtils from 'react-dom/test-utils'
-import * as fetchBalancesAction from '~/routes/tokens/store/actions/fetchTokens'
+import * as fetchBalancesAction from '~/logic/tokens/store/actions/fetchTokens'
 import { aNewStore } from '~/store'
 import { aMinedSafe } from '~/test/builder/safe.redux.builder'
 import { addTknTo, getFirstTokenContract } from '~/test/utils/tokenMovements'
@@ -48,7 +48,7 @@ describe('DOM > Feature > SAFE ERC20 TOKENS', () => {
 
     const token = await getFirstTokenContract(getWeb3(), accounts[0])
     const nativeSafeFunds = await token.balanceOf(safeAddress)
-    expect(Number(nativeSafeFunds.valueOf())).toEqual(80 * (10 ** 18))
+    expect(Number(nativeSafeFunds.valueOf())).toEqual(80 * 10 ** 18)
   })
 
   it('disables send token button when balance is 0', async () => {

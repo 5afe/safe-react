@@ -9,7 +9,7 @@ import Img from '~/components/layout/Img'
 import Paragraph from '~/components/layout/Paragraph'
 import Row from '~/components/layout/Row'
 import { type Safe } from '~/routes/safe/store/model/safe'
-import { type Token } from '~/routes/tokens/store/model/token'
+import { type Token } from '~/logic/tokens/store/model/token'
 
 import Transactions from '~/routes/safe/component/Transactions'
 import Threshold from '~/routes/safe/component/Threshold'
@@ -32,7 +32,7 @@ type SafeProps = {
 }
 
 type State = {
-  component: React$Node,
+  component?: React$Node,
 }
 
 const listStyle = {
@@ -47,13 +47,19 @@ class GnoSafe extends React.PureComponent<SafeProps, State> {
   onListTransactions = () => {
     const { safe } = this.props
 
-    this.setState({ component: <Transactions threshold={safe.get('threshold')} safeName={safe.get('name')} safeAddress={safe.get('address')} /> })
+    this.setState({
+      component: (
+        <Transactions threshold={safe.get('threshold')} safeName={safe.get('name')} safeAddress={safe.get('address')} />
+      ),
+    })
   }
 
   onEditThreshold = () => {
     const { safe } = this.props
 
-    this.setState({ component: <Threshold numOwners={safe.get('owners').count()} safe={safe} onReset={this.onListTransactions} /> })
+    this.setState({
+      component: <Threshold numOwners={safe.get('owners').count()} safe={safe} onReset={this.onListTransactions} />,
+    })
   }
 
   onAddOwner = (e: SyntheticEvent<HTMLButtonElement>) => {
@@ -65,19 +71,26 @@ class GnoSafe extends React.PureComponent<SafeProps, State> {
   onRemoveOwner = (name: string, address: string) => {
     const { safe } = this.props
 
-    this.setState({ component: <RemoveOwner safeAddress={safe.get('address')} threshold={safe.get('threshold')} safe={safe} name={name} userToRemove={address} /> })
+    this.setState({
+      component: (
+        <RemoveOwner
+          safeAddress={safe.get('address')}
+          threshold={safe.get('threshold')}
+          safe={safe}
+          name={name}
+          userToRemove={address}
+        />
+      ),
+    })
   }
 
   onMoveTokens = (ercToken: Token) => {
     const { safe } = this.props
 
     this.setState({
-      component: <SendToken
-        safe={safe}
-        token={ercToken}
-        key={ercToken.get('address')}
-        onReset={this.onListTransactions}
-      />,
+      component: (
+        <SendToken safe={safe} token={ercToken} key={ercToken.get('address')} onReset={this.onListTransactions} />
+      ),
     })
   }
 
@@ -110,7 +123,7 @@ class GnoSafe extends React.PureComponent<SafeProps, State> {
           </Block>
           <Row grow>
             <Col sm={12} center={component ? undefined : 'sm'} middle={component ? undefined : 'sm'} layout="column">
-              { component || <Img alt="Safe Icon" src={safeIcon} height={330} /> }
+              {component || <Img alt="Safe Icon" src={safeIcon} height={330} />}
             </Col>
           </Row>
         </Col>
