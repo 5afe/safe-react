@@ -73,7 +73,7 @@ export default handleActions<State, *>(
       const safes = state.set(action.payload.address, safe)
       saveSafes(safes.toJSON())
 
-      return safes
+      return state.set(action.payload.address, safe)
     },
   },
   Map(),
