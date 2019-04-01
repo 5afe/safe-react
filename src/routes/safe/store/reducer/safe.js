@@ -67,13 +67,9 @@ export default handleActions<State, *>(
       return state.set(safeAddress, safe)
     },
     [ADD_SAFE]: (state: State, action: ActionType<typeof addSafe>): State => {
-      const safe: Safe = makeSafe(action.payload)
-      setOwners(safe.get('address'), safe.get('owners'))
+      const { safe }: { safe: Safe } = action.payload
 
-      const safes = state.set(action.payload.address, safe)
-      saveSafes(safes.toJSON())
-
-      return state.set(action.payload.address, safe)
+      return state.set(safe.address, safe)
     },
   },
   Map(),
