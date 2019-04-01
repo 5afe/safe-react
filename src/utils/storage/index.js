@@ -9,11 +9,7 @@ export const storage = new ImmortalStorage(stores)
 export const load = async (key: string): Promise<*> => {
   try {
     const serializedState = await storage.get(key)
-    if (serializedState === null) {
-      return undefined
-    }
-
-    if (serializedState === undefined) {
+    if (serializedState === null || serializedState === undefined) {
       return undefined
     }
 
