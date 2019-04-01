@@ -20,7 +20,7 @@ export const buildSafe = async (safeAddress: string, safeName: string) => {
   const gnosisSafe = await SafeContract.at(safeAddress)
 
   const threshold = Number(await gnosisSafe.getThreshold())
-  const owners = List(buildOwnersFrom(await gnosisSafe.getOwners(), getOwners(safeAddress)))
+  const owners = List(buildOwnersFrom(await gnosisSafe.getOwners(), await getOwners(safeAddress)))
 
   const safe: SafeProps = {
     address: safeAddress,
@@ -34,7 +34,7 @@ export const buildSafe = async (safeAddress: string, safeName: string) => {
 
 export default (safeAddress: string) => async (dispatch: ReduxDispatch<GlobalState>) => {
   try {
-    const safeName = getSafeName(safeAddress) || 'LOADED SAFE'
+    const safeName = await getSafeName(safeAddress) || 'LOADED SAFE'
     const safeRecord = await buildSafe(safeAddress, safeName)
 
     return dispatch(updateSafe(safeRecord))

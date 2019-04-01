@@ -19,7 +19,7 @@ export const loadSafe = async (safeName: string, safeAddress: string, updateSafe
 
   await updateSafe(safeRecord)
 
-  const storedSafes = load(SAFES_KEY) || {}
+  const storedSafes = await load(SAFES_KEY) || {}
   storedSafes[safeAddress] = safeRecord.toJSON()
 
   saveSafes(storedSafes)
