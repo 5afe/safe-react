@@ -9,7 +9,7 @@ import { safesMapSelector } from '~/routes/safeList/store/selectors'
 import { makeOwner, type Owner } from '~/routes/safe/store/model/owner'
 import { getWeb3 } from '~/logic/wallets/getWeb3'
 import { safesInitialState } from '~/routes/safe/store/reducer/safe'
-import { setOwners, OWNERS_KEY } from '~/utils/localStorage'
+import { setOwners, OWNERS_KEY } from '~/utils/storage'
 
 describe('Safe - redux load safe', () => {
   let store

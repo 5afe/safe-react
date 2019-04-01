@@ -2,7 +2,7 @@
 import { getWeb3 } from '~/logic/wallets/getWeb3'
 import { BigNumber } from 'bignumber.js'
 import { EMPTY_DATA } from '~/logic/wallets/ethTransactions'
-import { getSignaturesFrom } from '~/utils/localStorage/signatures'
+import { getSignaturesFrom } from '~/utils/storage/signatures'
 
 const estimateDataGasCosts = (data) => {
   const reducer = (accumulator, currentValue) => {

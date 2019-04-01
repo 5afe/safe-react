@@ -1,13 +1,12 @@
 // @flow
 import { Map } from 'immutable'
 import { handleActions, type ActionType } from 'redux-actions'
-import addSafe, { ADD_SAFE, buildOwnersFrom } from '~/routes/safe/store/actions/addSafe'
+import { ADD_SAFE, buildOwnersFrom } from '~/routes/safe/store/actions/addSafe'
 import { type Safe, type SafeProps, makeSafe } from '~/routes/safe/store/model/safe'
 import { type OwnerProps } from '~/routes/safe/store/model/owner'
-import {
-  saveSafes, setOwners, load, SAFES_KEY,
-} from '~/utils/localStorage'
-import updateSafe, { UPDATE_SAFE } from '~/routes/safe/store/actions/updateSafe'
+import { load } from '~/utils/storage'
+import { SAFES_KEY } from '~/logic/safe/utils'
+import { UPDATE_SAFE } from '~/routes/safe/store/actions/updateSafe'
 
 export const SAFE_REDUCER_ID = 'safes'
 
@@ -55,7 +54,7 @@ export const safesInitialState = (): State => {
 
 export default handleActions<State, *>(
   {
-    [UPDATE_SAFE]: (state: State, action: ActionType<typeof updateSafe>): State => {
+    [UPDATE_SAFE]: (state: State, action: ActionType<Function>): State => {
       const safe = action.payload
       const safeAddress = safe.get('address')
 
@@ -66,7 +65,7 @@ export default handleActions<State, *>(
 
       return state.set(safeAddress, safe)
     },
-    [ADD_SAFE]: (state: State, action: ActionType<typeof addSafe>): State => {
+    [ADD_SAFE]: (state: State, action: ActionType<Function>): State => {
       const { safe }: { safe: Safe } = action.payload
 
       return state.set(safe.address, safe)

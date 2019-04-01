@@ -5,7 +5,7 @@ import { type Operation, submitOperation } from '~/logic/safe/safeTxHistory'
 import { getSafeEthereumInstance } from '~/logic/safe/safeFrontendOperations'
 import { buildSignaturesFrom } from '~/logic/safe/safeTxSigner'
 import { generateMetamaskSignature, generateTxGasEstimateFrom, estimateDataGas } from '~/logic/safe/safeTxSignerEIP712'
-import { storeSignature, getSignaturesFrom } from '~/utils/localStorage/signatures'
+import { storeSignature, getSignaturesFrom } from '~/utils/storage/signatures'
 import { signaturesViaMetamask } from '~/config'
 
 export const approveTransaction = async (
