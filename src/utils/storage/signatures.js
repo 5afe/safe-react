@@ -1,12 +1,12 @@
 // @flow
 import { Map } from 'immutable'
-import { load } from '~/utils/storage'
+import { loadFromStorage } from '~/utils/storage'
 
 const getSignaturesKeyFrom = (safeAddress: string) => `TXS-SIGNATURES-${safeAddress}`
 
 export const storeSignature = async (safeAddress: string, nonce: number, signature: string) => {
   const signaturesKey = getSignaturesKeyFrom(safeAddress)
-  const subjects = Map(await load(signaturesKey)) || Map()
+  const subjects = Map(await loadFromStorage(signaturesKey)) || Map()
 
   try {
     const key = `${nonce}`
@@ -23,7 +23,7 @@ export const storeSignature = async (safeAddress: string, nonce: number, signatu
 
 export const getSignaturesFrom = (safeAddress: string, nonce: number) => {
   const key = getSignaturesKeyFrom(safeAddress)
-  const data: any = load(key)
+  const data: any = loadFromStorage(key)
 
   const signatures = data ? Map(data) : Map()
   const txSigs = signatures.get(String(nonce)) || ''

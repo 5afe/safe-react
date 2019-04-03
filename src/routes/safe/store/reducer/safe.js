@@ -4,7 +4,7 @@ import { handleActions, type ActionType } from 'redux-actions'
 import { ADD_SAFE, buildOwnersFrom } from '~/routes/safe/store/actions/addSafe'
 import { type Safe, type SafeProps, makeSafe } from '~/routes/safe/store/model/safe'
 import { type OwnerProps } from '~/routes/safe/store/model/owner'
-import { load } from '~/utils/storage'
+import { loadFromStorage } from '~/utils/storage'
 import { SAFES_KEY } from '~/logic/safe/utils'
 import { UPDATE_SAFE } from '~/routes/safe/store/actions/updateSafe'
 
@@ -46,7 +46,7 @@ const buildSafesFrom = (loadedSafes: Object): Map<string, Safe> => {
 }
 
 export const safesInitialState = (): State => {
-  const storedSafes = load(SAFES_KEY)
+  const storedSafes = loadFromStorage(SAFES_KEY)
   const safes = storedSafes ? buildSafesFrom(storedSafes) : Map()
 
   return safes

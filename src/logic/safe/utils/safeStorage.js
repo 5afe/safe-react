@@ -1,14 +1,14 @@
 // @flow
 import { type Owner } from '~/routes/safe/store/model/owner'
 import { List, Map } from 'immutable'
-import { storage, load } from '~/utils/storage'
+import { storage, loadFromStorage } from '~/utils/storage'
 
 export const SAFES_KEY = 'SAFES'
 export const TX_KEY = 'TX'
 export const OWNERS_KEY = 'OWNERS'
 
 export const getSafeName = async (safeAddress: string) => {
-  const safes = await load(SAFES_KEY)
+  const safes = await loadFromStorage(SAFES_KEY)
   if (!safes) {
     return undefined
   }
@@ -39,7 +39,7 @@ export const setOwners = async (safeAddress: string, owners: List<Owner>) => {
 }
 
 export const getOwners = async (safeAddress: string): Map<string, string> => {
-  const data: Object = await load(`${OWNERS_KEY}-${safeAddress}`)
+  const data: Object = await loadFromStorage(`${OWNERS_KEY}-${safeAddress}`)
 
   return data ? Map(data) : Map()
 }

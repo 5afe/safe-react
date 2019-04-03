@@ -1,12 +1,12 @@
 // @flow
 import { Map } from 'immutable'
-import { load } from '~/utils/storage'
+import { loadFromStorage } from '~/utils/storage'
 
 const getSubjectKeyFrom = (safeAddress: string) => `TXS-SUBJECTS-${safeAddress}`
 
 export const storeSubject = async (safeAddress: string, nonce: number, subject: string) => {
   const key = getSubjectKeyFrom(safeAddress)
-  const subjects = Map(await load(key)) || Map()
+  const subjects = Map(await loadFromStorage(key)) || Map()
 
   try {
     const updatedSubjects = subjects.set(nonce, subject)
@@ -20,7 +20,7 @@ export const storeSubject = async (safeAddress: string, nonce: number, subject: 
 
 export const loadSafeSubjects = (safeAddress: string): Map<string, string> => {
   const key = getSubjectKeyFrom(safeAddress)
-  const data: any = load(key)
+  const data: any = loadFromStorage(key)
 
   return data ? Map(data) : Map()
 }

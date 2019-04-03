@@ -1,7 +1,7 @@
 // @flow
 import { List } from 'immutable'
 import { type Token, type TokenProps } from '~/logic/tokens/store/model/token'
-import { storage, load } from '~/utils/storage'
+import { storage, loadFromStorage } from '~/utils/storage'
 
 export const ACTIVE_TOKENS_KEY = 'ACTIVE_TOKENS'
 export const TOKENS_KEY = 'TOKENS'
@@ -22,14 +22,14 @@ export const setActiveTokens = async (safeAddress: string, tokens: List<TokenPro
 
 export const getActiveTokens = async (safeAddress: string): Promise<List<TokenProps>> => {
   const key = getActiveTokensKey(safeAddress)
-  const data = await load(key)
+  const data = await loadFromStorage(key)
 
   return data ? List(data) : List()
 }
 
 export const getTokens = async (safeAddress: string): Promise<List<TokenProps>> => {
   const key = getTokensKey(safeAddress)
-  const data = await load(key)
+  const data = await loadFromStorage(key)
 
   return data ? List(data) : List()
 }

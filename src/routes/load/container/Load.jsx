@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import Page from '~/components/layout/Page'
 import { buildSafe } from '~/routes/safe/store/actions/fetchSafe'
 import { SAFES_KEY, saveSafes } from '~/logic/safe/utils'
-import { load } from '~/utils/storage'
+import { loadFromStorage } from '~/utils/storage'
 import { SAFELIST_ADDRESS } from '~/routes/routes'
 import { history } from '~/store'
 import selector, { type SelectorProps } from './selector'
@@ -19,7 +19,7 @@ export const loadSafe = async (safeName: string, safeAddress: string, updateSafe
 
   await updateSafe(safeRecord)
 
-  const storedSafes = await load(SAFES_KEY) || {}
+  const storedSafes = await loadFromStorage(SAFES_KEY) || {}
   storedSafes[safeAddress] = safeRecord.toJSON()
 
   saveSafes(storedSafes)
