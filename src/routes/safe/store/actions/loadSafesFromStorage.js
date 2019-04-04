@@ -5,7 +5,7 @@ import { SAFES_KEY } from '~/logic/safe/utils'
 import { type SafeProps } from '~/routes/safe/store/model/safe'
 import { loadFromStorage } from '~/utils/storage'
 import { addSafe } from './addSafe'
-import { buildSafe } from '../reducer/safe';
+import { buildSafe } from '~/routes/safe/store/reducer/safe'
 
 export default () => async (dispatch: ReduxDispatch<GlobalState>) => {
   try {
