@@ -8,7 +8,7 @@ import { makeTransaction, type Transaction } from '~/routes/safe/store/model/tra
 import { makeConfirmation } from '~/routes/safe/store/model/confirmation'
 import { loadSafeSubjects } from '~/utils/storage/transactions'
 import { buildTxServiceUrlFrom, type TxServiceType } from '~/logic/safe/safeTxHistory'
-import { getOwners } from '~/utils/storage'
+import { getOwners } from '~/logic/safe/utils'
 import { EMPTY_DATA } from '~/logic/wallets/ethTransactions'
 import addTransactions from './addTransactions'
 

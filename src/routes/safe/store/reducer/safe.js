@@ -45,8 +45,8 @@ const buildSafesFrom = (loadedSafes: Object): Map<string, Safe> => {
   }
 }
 
-export const safesInitialState = (): State => {
-  const storedSafes = loadFromStorage(SAFES_KEY)
+export const safesInitialState = async (): Promise<State> => {
+  const storedSafes = await loadFromStorage(SAFES_KEY)
   const safes = storedSafes ? buildSafesFrom(storedSafes) : Map()
 
   return safes

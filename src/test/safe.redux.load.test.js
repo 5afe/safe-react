@@ -40,7 +40,7 @@ describe('Safe - redux load safe', () => {
     expect(safe.get('address')).toBe(safeAddress)
     expect(safe.get('owners')).toEqual(List([makeOwner({ name: 'UNKNOWN', address: accounts[0] })]))
 
-    expect(safesInitialState()).toEqual(safes)
+    expect(await safesInitialState()).toEqual(safes)
   })
 
   it('if safe is not present but owners, store and persist it with stored names', async () => {
@@ -64,7 +64,7 @@ describe('Safe - redux load safe', () => {
     expect(safe.get('address')).toBe(safeAddress)
     expect(safe.get('owners')).toEqual(List([makeOwner({ name: ownerName, address: accounts[0] })]))
 
-    expect(safesInitialState()).toEqual(safes)
+    expect(await safesInitialState()).toEqual(safes)
   })
 
   it('if safe is present but no owners, store and persist it with default names', async () => {
@@ -86,7 +86,7 @@ describe('Safe - redux load safe', () => {
     expect(safe.get('address')).toBe(safeAddress)
     expect(safe.get('owners')).toEqual(List([makeOwner({ name: 'UNKNOWN', address: accounts[0] })]))
 
-    expect(safesInitialState()).toEqual(safes)
+    expect(await safesInitialState()).toEqual(safes)
   })
 
   it('if safe is present but owners, store and persist it with stored names', async () => {
@@ -107,6 +107,6 @@ describe('Safe - redux load safe', () => {
     expect(safe.get('address')).toBe(safeAddress)
     expect(safe.get('owners')).toEqual(List([makeOwner({ name: 'Adol 1 Eth Account', address: accounts[0] })]))
 
-    expect(safesInitialState()).toEqual(safes)
+    expect(await safesInitialState()).toEqual(safes)
   })
 })

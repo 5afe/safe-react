@@ -1,7 +1,7 @@
 // @flow
 import { type Owner } from '~/routes/safe/store/model/owner'
 import { List, Map } from 'immutable'
-import { storage, loadFromStorage } from '~/utils/storage'
+import { loadFromStorage, saveToStorage } from '~/utils/storage'
 
 export const SAFES_KEY = 'SAFES'
 export const TX_KEY = 'TX'
@@ -19,8 +19,7 @@ export const getSafeName = async (safeAddress: string) => {
 
 export const saveSafes = async (safes: Object) => {
   try {
-    const serializedState = JSON.stringify(safes)
-    await storage.set(SAFES_KEY, serializedState)
+    await saveToStorage(SAFES_KEY, safes)
   } catch (err) {
     // eslint-disable-next-line
     console.log('Error storing safe info in localstorage')
@@ -30,8 +29,7 @@ export const saveSafes = async (safes: Object) => {
 export const setOwners = async (safeAddress: string, owners: List<Owner>) => {
   try {
     const ownersAsMap = Map(owners.map((owner: Owner) => [owner.get('address').toLowerCase(), owner.get('name')]))
-    const serializedState = JSON.stringify(ownersAsMap)
-    await storage.set(`${OWNERS_KEY}-${safeAddress}`, serializedState)
+    await saveToStorage(`${OWNERS_KEY}-${safeAddress}`, ownersAsMap)
   } catch (err) {
     // eslint-disable-next-line
     console.log('Error storing owners in localstorage')

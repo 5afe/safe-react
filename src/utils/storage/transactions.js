@@ -1,6 +1,6 @@
 // @flow
 import { Map } from 'immutable'
-import { loadFromStorage } from '~/utils/storage'
+import { loadFromStorage, saveToStorage } from '~/utils/storage'
 
 const getSubjectKeyFrom = (safeAddress: string) => `TXS-SUBJECTS-${safeAddress}`
 
@@ -10,8 +10,7 @@ export const storeSubject = async (safeAddress: string, nonce: number, subject: 
 
   try {
     const updatedSubjects = subjects.set(nonce, subject)
-    const serializedState = JSON.stringify(updatedSubjects)
-    localStorage.setItem(key, serializedState)
+    saveToStorage(key, updatedSubjects)
   } catch (err) {
     // eslint-disable-next-line
     console.log('Error storing transaction subject in localstorage')

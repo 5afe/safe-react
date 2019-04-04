@@ -10,20 +10,22 @@ const PREFIX = 'v1'
 
 export const loadFromStorage = async (key: string): Promise<*> => {
   try {
-    const serializedState = await storage.get(`${PREFIX}__${key}`)
-    if (serializedState === null || serializedState === undefined) {
+    const stringifiedValue = await storage.get(`${PREFIX}__${key}`)
+    if (stringifiedValue === null || stringifiedValue === undefined) {
       return undefined
     }
 
-    return JSON.parse(serializedState)
+    return JSON.parse(stringifiedValue)
   } catch (err) {
+    console.error(`Failed to load ${key} from storage:`, err)
     return undefined
   }
 }
 
-export const saveInStorage = async (key: string, value: string): Promise<*> => {
+export const saveToStorage = async (key: string, value: *): Promise<*> => {
   try {
-    await storage.set(`${PREFIX}__${key}`, value)
+    const stringifiedValue = JSON.stringify(value)
+    await storage.set(`${PREFIX}__${key}`, stringifiedValue)
   } catch (err) {
     console.error(`Failed to save ${key} in the storage:`, err)
   }

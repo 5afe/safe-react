@@ -1,6 +1,6 @@
 // @flow
 import { Map } from 'immutable'
-import { loadFromStorage } from '~/utils/storage'
+import { loadFromStorage, saveToStorage } from '~/utils/storage'
 
 const getSignaturesKeyFrom = (safeAddress: string) => `TXS-SIGNATURES-${safeAddress}`
 
@@ -13,8 +13,7 @@ export const storeSignature = async (safeAddress: string, nonce: number, signatu
     const existingSignatures = subjects.get(key)
     const signatures = existingSignatures ? existingSignatures + signature : signature
     const updatedSubjects = subjects.set(key, signatures)
-    const serializedState = JSON.stringify(updatedSubjects)
-    localStorage.setItem(signaturesKey, serializedState)
+    await saveToStorage(signaturesKey, updatedSubjects)
   } catch (err) {
     // eslint-disable-next-line
     console.log('Error storing signatures in localstorage')

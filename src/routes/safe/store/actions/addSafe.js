@@ -20,7 +20,7 @@ type ActionReturn = {
   safe: Safe,
 }
 
-const addSafe = createAction<string, *, *>(
+export const addSafe = createAction<string, *, *>(
   ADD_SAFE,
   (safe: Safe): ActionReturn => ({
     safe,

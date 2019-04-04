@@ -18,4 +18,4 @@ const SafeList = ({ safes, provider }: Props) => (
   </Page>
 )
 
-export default connect(selector)(SafeList)
+export default connect<*, *, *, *>(selector)(SafeList)
