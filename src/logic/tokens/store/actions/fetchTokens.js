@@ -34,7 +34,7 @@ export const getHumanFriendlyToken = ensureOnce(createHumanFriendlyTokenContract
 
 export const getStandardTokenContract = ensureOnce(createStandardTokenContract)
 
-export const calculateBalanceOf = async (tokenAddress: string, address: string, decimals: number) => {
+export const calculateBalanceOf = async (tokenAddress: string, address: string, decimals: number = 18) => {
   const erc20Token = await getStandardTokenContract()
   let balance = 0
 

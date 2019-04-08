@@ -6,10 +6,10 @@ import { type GlobalState } from '~/store'
 import { TOKEN_REDUCER_ID } from '~/logic/tokens/store/reducer/tokens'
 import { type Token } from '~/logic/tokens/store/model/token'
 
-const balancesSelector = (state: GlobalState) => state[TOKEN_REDUCER_ID]
+const tokensStateSelector = (state: GlobalState) => state[TOKEN_REDUCER_ID]
 
 export const tokensSelector: Selector<GlobalState, RouterProps, Map<string, Token>> = createSelector(
-  balancesSelector,
+  tokensStateSelector,
   safeParamAddressSelector,
   (tokens: Map<string, Map<string, Token>>, address: string) => {
     if (!address) {
@@ -20,25 +20,34 @@ export const tokensSelector: Selector<GlobalState, RouterProps, Map<string, Toke
   },
 )
 
-export const tokenListSelector = createSelector(
+export const tokenListSelector: Selector<GlobalState, RouterProps, List<Token>> = createSelector(
   tokensSelector,
   (tokens: Map<string, Token>) => tokens.toList(),
 )
 
-export const activeTokensSelector = createSelector(
+export const activeTokensSelector: Selector<GlobalState, RouterProps, List<Token>> = createSelector(
   tokenListSelector,
   (tokens: List<Token>) => tokens.filter((token: Token) => token.get('status')),
 )
 
-export const orderedTokenListSelector = createSelector(
+export const orderedTokenListSelector: Selector<GlobalState, RouterProps, List<Token>> = createSelector(
   tokenListSelector,
   (tokens: List<Token>) => tokens.sortBy((token: Token) => token.get('symbol')),
 )
 
-export const tokenAddressesSelector = createSelector(
+export const tokenAddressesSelector: Selector<GlobalState, RouterProps, List<string>> = createSelector(
   tokenListSelector,
-  (balances: List<Token>) => {
-    const addresses = List().withMutations(list => balances.map(token => list.push(token.address)))
+  (tokens: List<Token>) => {
+    const addresses = List().withMutations(list => tokens.map(token => list.push(token.address)))
+
+    return addresses
+  },
+)
+
+export const activeTokenAdressesSelector: Selector<GlobalState, RouterProps, List<string>> = createSelector(
+  activeTokensSelector,
+  (tokens: List<Token>) => {
+    const addresses = List().withMutations(list => tokens.map(token => list.push(token.address)))
 
     return addresses
   },

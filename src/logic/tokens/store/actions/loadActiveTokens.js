@@ -19,7 +19,7 @@ const loadActiveTokens = (safeAddress: string) => async (dispatch: ReduxDispatch
     }
   } catch (err) {
     // eslint-disable-next-line
-    console.error('Error while getting safes from storage:', err)
+    console.error('Error while loading active tokens from storage:', err)
   }
 }
 
