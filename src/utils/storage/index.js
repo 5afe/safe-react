@@ -1,7 +1,5 @@
 // @flow
-import {
-  ImmortalStorage, IndexedDbStore, LocalStorageStore,
-} from 'immortal-db'
+import { ImmortalStorage, IndexedDbStore, LocalStorageStore } from 'immortal-db'
 
 // Don't use sessionStorage and cookieStorage
 // https://github.com/gruns/ImmortalDB/issues/22
