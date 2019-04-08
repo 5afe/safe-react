@@ -42,7 +42,7 @@ export const grantedSelector: Selector<GlobalState, RouterProps, boolean> = crea
   },
 )
 
-export default createStructuredSelector({
+export default createStructuredSelector<Object, *>({
   safe: safeSelector,
   provider: providerNameSelector,
   tokens: orderedTokenListSelector,
