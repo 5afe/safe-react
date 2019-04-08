@@ -6,8 +6,9 @@ import { type Safe } from '~/routes/safe/store/model/safe'
 import { userAccountSelector } from '~/logic/wallets/store/selectors'
 import { type Owner } from '~/routes/safe/store/model/owner'
 import { sameAddress } from '~/logic/wallets/ethAddresses'
+import { SAFE_REDUCER_ID } from '~/routes/safe/store/reducer/safe'
 
-export const safesMapSelector = (state: GlobalState): Map<string, Safe> => state.safes
+export const safesMapSelector = (state: GlobalState): Map<string, Safe> => state[SAFE_REDUCER_ID]
 
 const safesListSelector: Selector<GlobalState, {}, List<Safe>> = createSelector(
   safesMapSelector,

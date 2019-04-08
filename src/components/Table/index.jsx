@@ -5,8 +5,6 @@ import { List } from 'immutable'
 import Row from '~/components/layout/Row'
 import Table from '@material-ui/core/Table'
 import TableBody from '@material-ui/core/TableBody'
-import TableRow from '@material-ui/core/TableRow'
-import TableCell from '@material-ui/core/TableCell'
 import { withStyles } from '@material-ui/core/styles'
 import CircularProgress from '@material-ui/core/CircularProgress'
 import TablePagination from '@material-ui/core/TablePagination'
@@ -136,14 +134,7 @@ class GnoTable<K> extends React.Component<Props<K>, State> {
         {!isEmpty && (
           <Table aria-labelledby={label} className={classes.root}>
             <TableHead columns={columns} order={order} orderBy={orderByParam} onSort={this.onSort} />
-            <TableBody>
-              {children(sortedData)}
-              {emptyRows > 0 && (
-                <TableRow style={this.getEmptyStyle(emptyRows)}>
-                  <TableCell colSpan={4} />
-                </TableRow>
-              )}
-            </TableBody>
+            <TableBody>{children(sortedData)}</TableBody>
           </Table>
         )}
         {isEmpty && (

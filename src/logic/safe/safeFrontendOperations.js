@@ -6,7 +6,7 @@ import { EMPTY_DATA } from '~/logic/wallets/ethTransactions'
 import { getWeb3 } from '~/logic/wallets/getWeb3'
 import { type Safe } from '~/routes/safe/store/model/safe'
 import { getGnosisSafeContract } from '~/logic/contracts/safeContracts'
-import { storeSubject } from '~/utils/localStorage/transactions'
+import { storeSubject } from '~/utils/storage/transactions'
 
 export const TX_NAME_PARAM = 'txName'
 export const TX_DESTINATION_PARAM = 'txDestination'

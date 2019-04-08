@@ -6,7 +6,7 @@ import {
 } from 'redux'
 import thunk from 'redux-thunk'
 import provider, { PROVIDER_REDUCER_ID, type State as ProviderState } from '~/logic/wallets/store/reducer/provider'
-import safe, { SAFE_REDUCER_ID, type State as SafeState, safesInitialState } from '~/routes/safe/store/reducer/safe'
+import safe, { SAFE_REDUCER_ID, type State as SafeState } from '~/routes/safe/store/reducer/safe'
 import tokens, { TOKEN_REDUCER_ID, type State as TokensState } from '~/logic/tokens/store/reducer/tokens'
 import transactions, {
   type State as TransactionsState,
@@ -36,10 +36,6 @@ const reducers: Reducer<GlobalState> = combineReducers({
   [TRANSACTIONS_REDUCER_ID]: transactions,
 })
 
-const initialState = {
-  [SAFE_REDUCER_ID]: safesInitialState(),
-}
-
-export const store: Store<GlobalState> = createStore(reducers, initialState, finalCreateStore)
+export const store: Store<GlobalState> = createStore(reducers, finalCreateStore)
 
 export const aNewStore = (localState?: Object): Store<GlobalState> => createStore(reducers, localState, finalCreateStore)

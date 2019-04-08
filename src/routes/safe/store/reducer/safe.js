@@ -1,13 +1,12 @@
 // @flow
 import { Map } from 'immutable'
 import { handleActions, type ActionType } from 'redux-actions'
-import addSafe, { ADD_SAFE, buildOwnersFrom } from '~/routes/safe/store/actions/addSafe'
+import { ADD_SAFE, buildOwnersFrom } from '~/routes/safe/store/actions/addSafe'
 import { type Safe, type SafeProps, makeSafe } from '~/routes/safe/store/model/safe'
 import { type OwnerProps } from '~/routes/safe/store/model/owner'
-import {
-  saveSafes, setOwners, load, SAFES_KEY,
-} from '~/utils/localStorage'
-import updateSafe, { UPDATE_SAFE } from '~/routes/safe/store/actions/updateSafe'
+import { loadFromStorage } from '~/utils/storage'
+import { SAFES_KEY } from '~/logic/safe/utils'
+import { UPDATE_SAFE } from '~/routes/safe/store/actions/updateSafe'
 
 export const SAFE_REDUCER_ID = 'safes'
 
@@ -46,8 +45,8 @@ const buildSafesFrom = (loadedSafes: Object): Map<string, Safe> => {
   }
 }
 
-export const safesInitialState = (): State => {
-  const storedSafes = load(SAFES_KEY)
+export const safesInitialState = async (): Promise<State> => {
+  const storedSafes = await loadFromStorage(SAFES_KEY)
   const safes = storedSafes ? buildSafesFrom(storedSafes) : Map()
 
   return safes
@@ -55,7 +54,7 @@ export const safesInitialState = (): State => {
 
 export default handleActions<State, *>(
   {
-    [UPDATE_SAFE]: (state: State, action: ActionType<typeof updateSafe>): State => {
+    [UPDATE_SAFE]: (state: State, action: ActionType<Function>): State => {
       const safe = action.payload
       const safeAddress = safe.get('address')
 
@@ -66,14 +65,10 @@ export default handleActions<State, *>(
 
       return state.set(safeAddress, safe)
     },
-    [ADD_SAFE]: (state: State, action: ActionType<typeof addSafe>): State => {
-      const safe: Safe = makeSafe(action.payload)
-      setOwners(safe.get('address'), safe.get('owners'))
+    [ADD_SAFE]: (state: State, action: ActionType<Function>): State => {
+      const { safe }: { safe: Safe } = action.payload
 
-      const safes = state.set(action.payload.address, safe)
-      saveSafes(safes.toJSON())
-
-      return safes
+      return state.set(safe.address, safe)
     },
   },
   Map(),
