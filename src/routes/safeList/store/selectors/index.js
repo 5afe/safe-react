@@ -10,15 +10,15 @@ import { SAFE_REDUCER_ID } from '~/routes/safe/store/reducer/safe'
 
 export const safesMapSelector = (state: GlobalState): Map<string, Safe> => state[SAFE_REDUCER_ID]
 
-const safesListSelector: Selector<GlobalState, {}, List<Safe>> = createSelector(
+export const safesListSelector: Selector<GlobalState, {}, List<Safe>> = createSelector(
   safesMapSelector,
   (safes: Map<string, Safe>): List<Safe> => safes.toList(),
 )
 
-export const safesByOwnerSelector: Selector<GlobalState, {}, List<Safe>> = createSelector(
-  userAccountSelector,
-  safesListSelector,
-  (userAddress: string, safes: List<Safe>): List<Safe> => safes.filter(
-    (safe: Safe) => safe.owners.filter((owner: Owner) => sameAddress(owner.get('address'), userAddress)).count() > 0,
-  ),
-)
+// export const safesByOwnerSelector: Selector<GlobalState, {}, List<Safe>> = createSelector(
+//   userAccountSelector,
+//   safesListSelector,
+//   (userAddress: string, safes: List<Safe>): List<Safe> => safes.filter(
+//     (safe: Safe) => safe.owners.filter((owner: Owner) => sameAddress(owner.get('address'), userAddress)).count() > 0,
+//   ),
+// )
