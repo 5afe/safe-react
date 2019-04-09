@@ -35,18 +35,17 @@ class SafeView extends React.PureComponent<Props> {
 
   componentDidUpdate(prevProps) {
     const {
-      safe, fetchTokenBalances, loadActiveTokens, activeTokens,
+      fetchTokenBalances, loadActiveTokens, activeTokens, safeUrl,
     } = this.props
 
     if (prevProps.safe) {
       return
     }
 
-    if (safe) {
-      const safeAddress = safe.get('address')
-      loadActiveTokens(safeAddress)
+    if (safeUrl) {
+      loadActiveTokens(safeUrl)
       if (activeTokens.size) {
-        fetchTokenBalances(safeAddress, activeTokens)
+        fetchTokenBalances(safeUrl, activeTokens)
       }
     }
   }
