@@ -21,11 +21,7 @@ class SafeView extends React.Component<Props> {
 
     fetchSafe(safeUrl)
     loadActiveTokens(safeUrl)
-
-    if (activeTokens.size) {
-      // eslint-disable-next-line
-      fetchTokenBalances(safeUrl, activeTokens)
-    }
+    fetchTokenBalances(safeUrl, activeTokens)
 
     this.intervalId = setInterval(() => {
       // update in another function so it uses up-to-date props values

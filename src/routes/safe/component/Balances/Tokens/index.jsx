@@ -23,6 +23,7 @@ import Divider from '~/components/layout/Divider'
 import Hairline from '~/components/layout/Hairline'
 import Spacer from '~/components/Spacer'
 import Row from '~/components/layout/Row'
+import { ETH_ADDRESS } from '~/logic/tokens/utils/tokenHelpers'
 import { type Token } from '~/logic/tokens/store/model/token'
 import actions, { type Actions } from './actions'
 import TokenPlaceholder from './assets/token_placeholder.png'
@@ -123,9 +124,11 @@ class Tokens extends React.Component<Props, State> {
                 <Img src={token.logoUri} height={28} alt={token.name} onError={this.setImageToPlaceholder} />
               </ListItemIcon>
               <ListItemText primary={token.symbol} secondary={token.name} />
-              <ListItemSecondaryAction>
-                <Switch onChange={this.onSwitch(token)} checked={token.status} />
-              </ListItemSecondaryAction>
+              {token.address !== ETH_ADDRESS && (
+                <ListItemSecondaryAction>
+                  <Switch onChange={this.onSwitch(token)} checked={token.status} />
+                </ListItemSecondaryAction>
+              )}
             </ListItem>
           ))}
         </MuiList>

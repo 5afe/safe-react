@@ -2,7 +2,6 @@
 import { List, Map } from 'immutable'
 import contract from 'truffle-contract'
 import axios from 'axios'
-import { BigNumber } from 'bignumber.js'
 import type { Dispatch as ReduxDispatch } from 'redux'
 import StandardToken from '@gnosis.pm/util-contracts/build/contracts/GnosisStandardToken.json'
 import HumanFriendlyToken from '@gnosis.pm/util-contracts/build/contracts/HumanFriendlyToken.json'
@@ -11,7 +10,7 @@ import { type GlobalState } from '~/store/index'
 import { makeToken, type Token, type TokenProps } from '~/logic/tokens/store/model/token'
 import { ensureOnce } from '~/utils/singleton'
 import { getActiveTokens, getTokens } from '~/logic/tokens/utils/tokensStorage'
-import { getSafeEthToken } from '~/logic/tokens/utils/tokenHelpers'
+import { getEthAsToken } from '~/logic/tokens/utils/tokenHelpers'
 import saveTokens from './saveTokens'
 import { getRelayUrl } from '~/config/index'
 
@@ -34,20 +33,6 @@ export const getHumanFriendlyToken = ensureOnce(createHumanFriendlyTokenContract
 
 export const getStandardTokenContract = ensureOnce(createStandardTokenContract)
 
-export const calculateBalanceOf = async (tokenAddress: string, address: string, decimals: number = 18) => {
-  const erc20Token = await getStandardTokenContract()
-  let balance = 0
-
-  try {
-    const token = await erc20Token.at(tokenAddress)
-    balance = await token.balanceOf(address)
-  } catch (err) {
-    console.error('Failed to fetch token balances: ', err)
-  }
-
-  return new BigNumber(balance).div(10 ** decimals).toString()
-}
-
 export const fetchTokensData = async () => {
   const apiUrl = getRelayUrl()
   const url = `${apiUrl}/tokens`
@@ -57,7 +42,7 @@ export const fetchTokensData = async () => {
 
 export const fetchTokens = (safeAddress: string) => async (dispatch: ReduxDispatch<GlobalState>) => {
   const tokens: List<TokenProps> = await getActiveTokens(safeAddress)
-  const ethBalance = await getSafeEthToken(safeAddress)
+  const ethBalance = await getEthAsToken(safeAddress)
   const customTokens = await getTokens(safeAddress)
   const {
     data: { results },
