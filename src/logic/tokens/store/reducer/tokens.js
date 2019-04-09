@@ -17,13 +17,7 @@ export default handleActions<State, *>(
     [ADD_TOKENS]: (state: State, action: ActionType<Function>): State => {
       const { safeAddress, tokens } = action.payload
 
-      return state.update(safeAddress, (prevSafe: Map<string, Token>) => {
-        if (!prevSafe) {
-          return tokens
-        }
-
-        return prevSafe.equals(tokens) ? prevSafe : tokens
-      })
+      return state.update(safeAddress, (prevState: Map<string, Token>) => (prevState ? prevState.merge(tokens) : tokens))
     },
     [ADD_TOKEN]: (state: State, action: ActionType<Function>): State => {
       const { safeAddress, token } = action.payload
