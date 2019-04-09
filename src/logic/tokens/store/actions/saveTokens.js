@@ -10,8 +10,6 @@ import { calculateActiveErc20TokensFrom } from '~/logic/tokens/utils/tokenHelper
 
 export const ADD_TOKENS = 'ADD_TOKENS'
 
-const setTokensOnce = ensureOnceAsync(setActiveTokens)
-
 type TokenProps = {
   safeAddress: string,
   tokens: Map<string, Token>,
@@ -25,13 +23,4 @@ export const addTokens = createAction<string, *, *>(
   }),
 )
 
-const saveTokens = (safeAddress: string, tokens: Map<string, Token>) => async (
-  dispatch: ReduxDispatch<GlobalState>,
-) => {
-  dispatch(addTokens(safeAddress, tokens))
-
-  const activeAddresses: List<Token> = calculateActiveErc20TokensFrom(tokens.toList())
-  await setTokensOnce(safeAddress, activeAddresses)
-}
-
-export default saveTokens
+export default addTokens

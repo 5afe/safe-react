@@ -1,5 +1,5 @@
 // @flow
-import { List, Map } from 'immutable'
+import { Map } from 'immutable'
 import contract from 'truffle-contract'
 import axios from 'axios'
 import type { Dispatch as ReduxDispatch } from 'redux'
@@ -9,8 +9,6 @@ import { getWeb3 } from '~/logic/wallets/getWeb3'
 import { type GlobalState } from '~/store/index'
 import { makeToken, type Token, type TokenProps } from '~/logic/tokens/store/model/token'
 import { ensureOnce } from '~/utils/singleton'
-import { getActiveTokens, getTokens } from '~/logic/tokens/utils/tokensStorage'
-import { getEthAsToken } from '~/logic/tokens/utils/tokenHelpers'
 import saveTokens from './saveTokens'
 import { getRelayUrl } from '~/config/index'
 
@@ -33,7 +31,7 @@ export const getHumanFriendlyToken = ensureOnce(createHumanFriendlyTokenContract
 
 export const getStandardTokenContract = ensureOnce(createStandardTokenContract)
 
-export const fetchTokensData = async () => {
+const fetchTokenList = async () => {
   const apiUrl = getRelayUrl()
   const url = `${apiUrl}/tokens`
   const errMsg = 'Error querying safe balances'
@@ -41,44 +39,22 @@ export const fetchTokensData = async () => {
 }
 
 export const fetchTokens = (safeAddress: string) => async (dispatch: ReduxDispatch<GlobalState>) => {
-  const tokens: List<TokenProps> = await getActiveTokens(safeAddress)
-  const ethBalance = await getEthAsToken(safeAddress)
-  const customTokens = await getTokens(safeAddress)
-  const {
-    data: { results },
-  } = await fetchTokensData()
-
   try {
-    const balancesRecords = await Promise.all(
-      results.map(async (item: TokenProps) => {
-        const status = tokens.findIndex(activeToken => activeToken.name === item.name) !== -1
-        const funds = status ? await calculateBalanceOf(item.address, safeAddress, item.decimals) : '0'
+    const {
+      data: { results: tokenList },
+    } = await fetchTokenList()
 
-        return makeToken({ ...item, status, funds })
-      }),
-    )
-
-    const customTokenRecords = await Promise.all(
-      customTokens.map(async (item: TokenProps) => {
-        const status = tokens.findIndex(activeToken => activeToken.name === item.name) !== -1
-        const funds = status ? await calculateBalanceOf(item.address, safeAddress, item.decimals) : '0'
-
-        return makeToken({ ...item, status, funds })
-      }),
-    )
-
-    const balances: Map<string, Token> = Map().withMutations((map) => {
-      balancesRecords.forEach(record => map.set(record.address, record))
-      customTokenRecords.forEach(record => map.set(record.address, record))
-
-      map.set(ethBalance.address, ethBalance)
+    const tokensMap: Map<string, Token> = Map().withMutations((map) => {
+      tokenList.forEach((token: TokenProps) => map.set(token.address, makeToken(token)))
     })
 
-    return dispatch(saveTokens(safeAddress, balances))
+    dispatch(saveTokens(safeAddress, tokensMap))
   } catch (err) {
     // eslint-disable-next-line
-    console.log('Error fetching tokens... ' + err)
+    console.log('Error fetching token list ' + err)
 
     return Promise.resolve()
   }
 }
+
+export default fetchTokens

@@ -51,6 +51,12 @@ class Tokens extends React.Component<Props, State> {
     filter: '',
   }
 
+  componentDidMount() {
+    const { fetchTokens } = this.props
+
+    fetchTokens()
+  }
+
   onCancelSearch = () => {
     this.setState(() => ({ filter: '' }))
   }
