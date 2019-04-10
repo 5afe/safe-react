@@ -52,9 +52,9 @@ class Tokens extends React.Component<Props, State> {
   }
 
   componentDidMount() {
-    const { fetchTokens } = this.props
+    const { fetchTokens, safeAddress } = this.props
 
-    fetchTokens()
+    fetchTokens(safeAddress)
   }
 
   onCancelSearch = () => {
