@@ -8,9 +8,6 @@ export type TokenProps = {
   symbol: string,
   decimals: number,
   logoUri: string,
-  funds: string,
-  status: boolean,
-  removable: boolean,
 }
 
 export const makeToken: RecordFactory<TokenProps> = Record({
@@ -19,9 +16,6 @@ export const makeToken: RecordFactory<TokenProps> = Record({
   symbol: '',
   decimals: 0,
   logoUri: '',
-  funds: '0',
-  status: true,
-  removable: false,
 })
 
 export type Token = RecordOf<TokenProps>

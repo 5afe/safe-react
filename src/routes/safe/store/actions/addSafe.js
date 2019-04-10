@@ -1,7 +1,7 @@
 // @flow
 import { List } from 'immutable'
 import { createAction } from 'redux-actions'
-import { type Safe, makeSafe } from '~/routes/safe/store/model/safe'
+import SafeRecord, { type Safe } from '~/routes/safe/store/model/safe'
 import { saveSafes, setOwners } from '~/logic/safe/utils'
 import { makeOwner, type Owner } from '~/routes/safe/store/model/owner'
 import type { Dispatch as ReduxDispatch, GetState } from 'redux'
@@ -37,7 +37,7 @@ const saveSafe = (
   const owners: List<Owner> = buildOwnersFrom(ownersName, ownersAddress)
   const state: GlobalState = getState()
 
-  const safe: Safe = makeSafe({
+  const safe: Safe = SafeRecord({
     name,
     address,
     threshold,

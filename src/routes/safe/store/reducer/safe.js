@@ -2,7 +2,7 @@
 import { Map } from 'immutable'
 import { handleActions, type ActionType } from 'redux-actions'
 import { ADD_SAFE, buildOwnersFrom } from '~/routes/safe/store/actions/addSafe'
-import { type Safe, type SafeProps, makeSafe } from '~/routes/safe/store/model/safe'
+import SafeRecord, { type Safe, type SafeProps } from '~/routes/safe/store/model/safe'
 import { type OwnerProps } from '~/routes/safe/store/model/owner'
 import { loadFromStorage } from '~/utils/storage'
 import { SAFES_KEY } from '~/logic/safe/utils'
@@ -21,10 +21,12 @@ export const buildSafe = (storedSafe: SafeProps) => {
     address: storedSafe.address,
     name: storedSafe.name,
     threshold: storedSafe.threshold,
+    activeTokens: storedSafe.activeTokens,
+    balances: storedSafe.balances,
     owners,
   }
 
-  return makeSafe(safe)
+  return SafeRecord(safe)
 }
 
 const buildSafesFrom = (loadedSafes: Object): Map<string, Safe> => {

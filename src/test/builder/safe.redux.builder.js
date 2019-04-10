@@ -1,5 +1,5 @@
 // @flow
-import { makeSafe, type Safe } from '~/routes/safe/store/model/safe'
+import SafeRecord, { type Safe } from '~/routes/safe/store/model/safe'
 import addSafe, { buildOwnersFrom } from '~/routes/safe/store/actions/addSafe'
 import {
   FIELD_NAME,
@@ -18,7 +18,7 @@ class SafeBuilder {
   safe: Safe
 
   constructor() {
-    this.safe = makeSafe()
+    this.safe = SafeRecord()
   }
 
   withAddress(address: string) {

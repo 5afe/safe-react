@@ -3,7 +3,7 @@ import type { Dispatch as ReduxDispatch } from 'redux'
 import { List, Map } from 'immutable'
 import { type GlobalState } from '~/store/index'
 import { makeOwner } from '~/routes/safe/store/model/owner'
-import { type SafeProps, makeSafe } from '~/routes/safe/store/model/safe'
+import SafeRecord, { type SafeProps } from '~/routes/safe/store/model/safe'
 import updateSafe from '~/routes/safe/store/actions/updateSafe'
 import { getOwners, getSafeName } from '~/logic/safe/utils'
 import { getGnosisSafeContract } from '~/logic/contracts/safeContracts'
@@ -29,7 +29,7 @@ export const buildSafe = async (safeAddress: string, safeName: string) => {
     owners,
   }
 
-  return makeSafe(safe)
+  return SafeRecord(safe)
 }
 
 export default (safeAddress: string) => async (dispatch: ReduxDispatch<GlobalState>) => {
