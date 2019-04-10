@@ -1,13 +1,18 @@
 // @flow
-import { List } from 'immutable'
+import { List, Map } from 'immutable'
 import { createSelector, createStructuredSelector, type Selector } from 'reselect'
-import { safeSelector, type RouterProps, type SafeSelectorProps } from '~/routes/safe/store/selectors'
+import {
+  safeSelector,
+  safeTokensSelector,
+  type RouterProps,
+  type SafeSelectorProps,
+} from '~/routes/safe/store/selectors'
 import { providerNameSelector, userAccountSelector, networkSelector } from '~/logic/wallets/store/selectors'
 import { type Safe } from '~/routes/safe/store/model/safe'
 import { type Owner } from '~/routes/safe/store/model/owner'
 import { type GlobalState } from '~/store'
 import { sameAddress } from '~/logic/wallets/ethAddresses'
-import { activeTokensSelector, orderedTokenListSelector } from '~/logic/tokens/store/selectors'
+import { activeTokensSelector, orderedTokenListSelector, tokensSelector } from '~/logic/tokens/store/selectors'
 import { type Token } from '~/logic/tokens/store/model/token'
 import { safeParamAddressSelector } from '../store/selectors'
 
@@ -42,10 +47,25 @@ export const grantedSelector: Selector<GlobalState, RouterProps, boolean> = crea
   },
 )
 
+const extendedSafeTokensSelector: Selector<GlobalState, RouterProps, List<Token>> = createSelector(
+  safeTokensSelector,
+  tokensSelector,
+  (safeTokens: Map<string, string>, tokensList: Map<string, Token>) => {
+    // const extendedTokens = safeTokens.map(token => tokensList.get(token.address).set('balance', token.balance))
+    const extendedTokens = Map().withMutations((map) => {
+      safeTokens.forEach(({ address, balance }: { address: string, balance: string }) => {
+        map.set(address, tokensList.get(address).set(balance))
+      })
+    })
+
+    return extendedTokens
+  },
+)
+
 export default createStructuredSelector<Object, *>({
   safe: safeSelector,
   provider: providerNameSelector,
-  tokens: orderedTokenListSelector,
+  tokens: extendedSafeTokensSelector,
   activeTokens: activeTokensSelector,
   granted: grantedSelector,
   userAddress: userAccountSelector,
