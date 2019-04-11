@@ -7,7 +7,7 @@ import SafeRecord, { type SafeProps } from '~/routes/safe/store/model/safe'
 import updateSafe from '~/routes/safe/store/actions/updateSafe'
 import { getOwners, getSafeName } from '~/logic/safe/utils'
 import { getGnosisSafeContract } from '~/logic/contracts/safeContracts'
-import { getWeb3 } from '~/logic/wallets/getWeb3'
+import { getWeb3, getBalanceInEtherOf } from '~/logic/wallets/getWeb3'
 
 const buildOwnersFrom = (
   safeOwners: string[],
@@ -21,6 +21,7 @@ export const buildSafe = async (safeAddress: string, safeName: string) => {
   const web3 = getWeb3()
   const SafeContract = await getGnosisSafeContract(web3)
   const gnosisSafe = await SafeContract.at(safeAddress)
+  const ethBalance = await getBalanceInEtherOf(safeAddress)
 
   const threshold = Number(await gnosisSafe.getThreshold())
   const owners = List(buildOwnersFrom(await gnosisSafe.getOwners(), await getOwners(safeAddress)))
@@ -30,6 +31,7 @@ export const buildSafe = async (safeAddress: string, safeName: string) => {
     name: safeName,
     threshold,
     owners,
+    ethBalance,
   }
 
   return SafeRecord(safe)
