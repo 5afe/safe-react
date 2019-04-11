@@ -19,7 +19,7 @@ export const loadSafe = async (safeName: string, safeAddress: string, updateSafe
 
   await updateSafe(safeRecord)
 
-  const storedSafes = await loadFromStorage(SAFES_KEY) || {}
+  const storedSafes = (await loadFromStorage(SAFES_KEY)) || {}
   storedSafes[safeAddress] = safeRecord.toJSON()
 
   saveSafes(storedSafes)
@@ -33,6 +33,7 @@ class Load extends React.Component<Props> {
       const safeAddress = values[FIELD_LOAD_ADDRESS]
 
       await loadSafe(safeName, safeAddress, updateSafe)
+
       const url = `${SAFELIST_ADDRESS}/${safeAddress}`
       history.push(url)
     } catch (error) {
@@ -42,9 +43,7 @@ class Load extends React.Component<Props> {
   }
 
   render() {
-    const {
-      provider, network, userAddress,
-    } = this.props
+    const { provider, network, userAddress } = this.props
 
     return (
       <Page>
@@ -59,4 +58,7 @@ class Load extends React.Component<Props> {
   }
 }
 
-export default connect(selector, actions)(Load)
+export default connect<Object, Object, ?Function, ?Object>(
+  selector,
+  actions,
+)(Load)
