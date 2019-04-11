@@ -21,8 +21,7 @@ export const buildSafe = (storedSafe: SafeProps) => {
     address: storedSafe.address,
     name: storedSafe.name,
     threshold: storedSafe.threshold,
-    activeTokens: storedSafe.activeTokens,
-    balances: storedSafe.balances,
+    tokens: storedSafe.tokens,
     owners,
   }
 
@@ -58,7 +57,7 @@ export default handleActions<State, *>(
   {
     [UPDATE_SAFE]: (state: State, action: ActionType<Function>): State => {
       const safe = action.payload
-      const safeAddress = safe.get('address')
+      const safeAddress = safe.address
 
       const hasSafe = !!state.get(safeAddress)
       if (hasSafe) {

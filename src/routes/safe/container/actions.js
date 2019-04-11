@@ -1,7 +1,7 @@
 // @flow
 import fetchSafe from '~/routes/safe/store/actions/fetchSafe'
 import loadActiveTokens from '~/logic/tokens/store/actions/loadActiveTokens'
-import fetchTokenBalances from '~/logic/tokens/store/actions/fetchTokenBalances'
+import fetchTokenBalances from '~/routes/safe/store/actions/fetchTokenBalances'
 
 export type Actions = {
   fetchSafe: typeof fetchSafe,

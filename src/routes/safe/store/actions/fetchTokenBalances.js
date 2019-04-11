@@ -6,8 +6,9 @@ import { type GlobalState } from '~/store/index'
 import { type Token } from '~/logic/tokens/store/model/token'
 import { ETH_ADDRESS } from '~/logic/tokens/utils/tokenHelpers'
 import { getBalanceInEtherOf } from '~/logic/wallets/getWeb3'
-import { getStandardTokenContract } from './fetchTokens'
-import saveTokens from './saveTokens'
+import { getStandardTokenContract } from '~/logic/tokens/store/actions/fetchTokens'
+import type { Safe } from '~/routes/safe/store/model/safe'
+import updateSafe from './updateSafe'
 
 export const calculateBalanceOf = async (tokenAddress: string, safeAddress: string, decimals: number = 18) => {
   if (tokenAddress === ETH_ADDRESS) {
@@ -28,23 +29,24 @@ export const calculateBalanceOf = async (tokenAddress: string, safeAddress: stri
   return new BigNumber(balance).div(10 ** decimals).toString()
 }
 
-const fetchTokenBalances = (safeAddress: string, tokens: List<Token>) => async (
+const fetchTokenBalances = (safe: Safe, tokens: List<Token>) => async (
   dispatch: ReduxDispatch<GlobalState>,
 ) => {
-  if (!safeAddress || !tokens || !tokens.size) {
+  if (!safe || !tokens || !tokens.size) {
     return
   }
 
   try {
     const withBalances = await Promise.all(
-      tokens.map(async token => token.set('balance', await calculateBalanceOf(token.address, safeAddress, token.decimals))),
+      tokens.map(async token => ({
+        address: token.address,
+        balance: await calculateBalanceOf(token.address, safe.address, token.decimals),
+      })),
     )
 
-    const tokensMap = Map().withMutations((map) => {
-      withBalances.forEach(token => map.set(token.address, token))
-    })
+    const safeWithBalances = safe.set('tokens', List(withBalances))
 
-    dispatch(saveTokens(safeAddress, tokensMap))
+    dispatch(updateSafe(safeWithBalances))
   } catch (err) {
     // eslint-disable-next-line
     console.error('Error while loading active tokens from storage:', err)
