@@ -47,11 +47,15 @@ export const grantedSelector: Selector<GlobalState, RouterProps, boolean> = crea
   },
 )
 
+type UserToken = {
+  address: string,
+  balance: string,
+}
+
 const extendedSafeTokensSelector: Selector<GlobalState, RouterProps, List<Token>> = createSelector(
   safeTokensSelector,
   tokensSelector,
-  (safeTokens: Map<string, string>, tokensList: Map<string, Token>) => {
-    // const extendedTokens = safeTokens.map(token => tokensList.get(token.address).set('balance', token.balance))
+  (safeTokens: List<UserToken>, tokensList: Map<string, Token>) => {
     const extendedTokens = Map().withMutations((map) => {
       safeTokens.forEach((token: { address: string, balance: string }) => {
         const baseToken = tokensList.get(token.address)
@@ -62,7 +66,7 @@ const extendedSafeTokensSelector: Selector<GlobalState, RouterProps, List<Token>
       })
     })
 
-    return extendedTokens
+    return extendedTokens.toList()
   },
 )
 

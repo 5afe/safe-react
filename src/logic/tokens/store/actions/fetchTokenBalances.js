@@ -7,7 +7,7 @@ import { type Token } from '~/logic/tokens/store/model/token'
 import { ETH_ADDRESS } from '~/logic/tokens/utils/tokenHelpers'
 import { getBalanceInEtherOf } from '~/logic/wallets/getWeb3'
 import { getStandardTokenContract } from './fetchTokens'
-import { addTokens } from './saveTokens'
+import saveTokens from './saveTokens'
 
 export const calculateBalanceOf = async (tokenAddress: string, safeAddress: string, decimals: number = 18) => {
   if (tokenAddress === ETH_ADDRESS) {
@@ -37,14 +37,14 @@ const fetchTokenBalances = (safeAddress: string, tokens: List<Token>) => async (
 
   try {
     const withBalances = await Promise.all(
-      tokens.map(async token => token.set('funds', await calculateBalanceOf(token.address, safeAddress, token.decimals))),
+      tokens.map(async token => token.set('balance', await calculateBalanceOf(token.address, safeAddress, token.decimals))),
     )
 
     const tokensMap = Map().withMutations((map) => {
       withBalances.forEach(token => map.set(token.address, token))
     })
 
-    dispatch(addTokens(safeAddress, tokensMap))
+    dispatch(saveTokens(safeAddress, tokensMap))
   } catch (err) {
     // eslint-disable-next-line
     console.error('Error while loading active tokens from storage:', err)
