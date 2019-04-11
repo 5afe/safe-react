@@ -9,7 +9,7 @@ export type SafeProps = {
   address: string,
   threshold: number,
   owners: List<Owner>,
-  tokens: List<Map<string, string>>,
+  tokens?: List<Map<string, string>>,
 }
 
 const SafeRecord: RecordFactory<SafeProps> = Record({

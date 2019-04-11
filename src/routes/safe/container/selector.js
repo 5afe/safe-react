@@ -12,7 +12,7 @@ import { type Safe } from '~/routes/safe/store/model/safe'
 import { type Owner } from '~/routes/safe/store/model/owner'
 import { type GlobalState } from '~/store'
 import { sameAddress } from '~/logic/wallets/ethAddresses'
-import { activeTokensSelector, orderedTokenListSelector, tokensSelector } from '~/logic/tokens/store/selectors'
+import { orderedTokenListSelector, tokensSelector } from '~/logic/tokens/store/selectors'
 import { type Token } from '~/logic/tokens/store/model/token'
 import { safeParamAddressSelector } from '../store/selectors'
 
@@ -53,11 +53,11 @@ const extendedSafeTokensSelector: Selector<GlobalState, RouterProps, List<Token>
   (safeTokens: Map<string, string>, tokensList: Map<string, Token>) => {
     // const extendedTokens = safeTokens.map(token => tokensList.get(token.address).set('balance', token.balance))
     const extendedTokens = Map().withMutations((map) => {
-      safeTokens.forEach(({ address, balance }: { address: string, balance: string }) => {
-        const baseToken = tokensList.get(address)
+      safeTokens.forEach((token: { address: string, balance: string }) => {
+        const baseToken = tokensList.get(token.address)
 
         if (baseToken) {
-          map.set(address, baseToken.set(balance))
+          map.set(token.address, baseToken.set(token.balance))
         }
       })
     })
@@ -69,8 +69,8 @@ const extendedSafeTokensSelector: Selector<GlobalState, RouterProps, List<Token>
 export default createStructuredSelector<Object, *>({
   safe: safeSelector,
   provider: providerNameSelector,
-  tokens: extendedSafeTokensSelector,
-  activeTokens: activeTokensSelector,
+  tokens: orderedTokenListSelector,
+  activeTokens: extendedSafeTokensSelector,
   granted: grantedSelector,
   userAddress: userAccountSelector,
   network: networkSelector,

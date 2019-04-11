@@ -9,7 +9,10 @@ import { getOwners, getSafeName } from '~/logic/safe/utils'
 import { getGnosisSafeContract } from '~/logic/contracts/safeContracts'
 import { getWeb3 } from '~/logic/wallets/getWeb3'
 
-const buildOwnersFrom = (safeOwners: string[], storedOwners: Map<string, string>) => safeOwners.map((ownerAddress: string) => {
+const buildOwnersFrom = (
+  safeOwners: string[],
+  storedOwners: Map<string, string>, // eslint-disable-next-line
+) => safeOwners.map((ownerAddress: string) => {
   const ownerName = storedOwners.get(ownerAddress.toLowerCase()) || 'UNKNOWN'
   return makeOwner({ name: ownerName, address: ownerAddress })
 })
@@ -34,7 +37,7 @@ export const buildSafe = async (safeAddress: string, safeName: string) => {
 
 export default (safeAddress: string) => async (dispatch: ReduxDispatch<GlobalState>) => {
   try {
-    const safeName = await getSafeName(safeAddress) || 'LOADED SAFE'
+    const safeName = (await getSafeName(safeAddress)) || 'LOADED SAFE'
     const safeRecord = await buildSafe(safeAddress, safeName)
 
     return dispatch(updateSafe(safeRecord))

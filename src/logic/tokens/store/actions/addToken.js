@@ -14,14 +14,13 @@ type AddTokenProps = {
 
 export const addToken = createAction<string, *, *>(
   ADD_TOKEN,
-  (safeAddress: string, token: Token): AddTokenProps => ({
-    safeAddress,
+  (token: Token): AddTokenProps => ({
     token,
   }),
 )
 
 const saveToken = (safeAddress: string, token: Token) => async (dispatch: ReduxDispatch<GlobalState>) => {
-  dispatch(addToken(safeAddress, token))
+  dispatch(addToken(token))
 
   const activeTokens = await getActiveTokens(safeAddress)
   await setActiveTokens(safeAddress, activeTokens.push(token.toJS()))

@@ -20,14 +20,9 @@ export const tokensSelector: Selector<GlobalState, RouterProps, Map<string, Toke
   },
 )
 
-export const tokenListSelector: Selector<GlobalState, RouterProps, List<Token>> = createSelector(
-  tokensSelector,
+export const tokenListSelector: Selector<GlobalState, Map<string, Token>, List<Token>> = createSelector(
+  tokensStateSelector,
   (tokens: Map<string, Token>) => tokens.toList(),
-)
-
-export const activeTokensSelector: Selector<GlobalState, RouterProps, List<Token>> = createSelector(
-  tokenListSelector,
-  (tokens: List<Token>) => tokens.filter((token: Token) => token.get('status')),
 )
 
 export const orderedTokenListSelector: Selector<GlobalState, RouterProps, List<Token>> = createSelector(
@@ -37,15 +32,6 @@ export const orderedTokenListSelector: Selector<GlobalState, RouterProps, List<T
 
 export const tokenAddressesSelector: Selector<GlobalState, RouterProps, List<string>> = createSelector(
   tokenListSelector,
-  (tokens: List<Token>) => {
-    const addresses = List().withMutations(list => tokens.map(token => list.push(token.address)))
-
-    return addresses
-  },
-)
-
-export const activeTokenAdressesSelector: Selector<GlobalState, RouterProps, List<string>> = createSelector(
-  activeTokensSelector,
   (tokens: List<Token>) => {
     const addresses = List().withMutations(list => tokens.map(token => list.push(token.address)))
 
