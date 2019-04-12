@@ -61,7 +61,7 @@ export default handleActions<State, *>(
       const safe = action.payload
       const safeAddress = safe.address
 
-      return state.mergeIn(safeAddress, safe)
+      return state.mergeIn([safeAddress], safe)
     },
     [ADD_SAFE]: (state: State, action: ActionType<Function>): State => {
       const { safe }: { safe: Safe } = action.payload

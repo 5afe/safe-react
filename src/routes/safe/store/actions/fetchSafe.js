@@ -8,6 +8,7 @@ import { addSafe } from '~/routes/safe/store/actions/addSafe'
 import { getOwners, getSafeName } from '~/logic/safe/utils'
 import { getGnosisSafeContract } from '~/logic/contracts/safeContracts'
 import { getWeb3, getBalanceInEtherOf } from '~/logic/wallets/getWeb3'
+import updateSafe from '~/routes/safe/store/actions/updateSafe'
 
 const buildOwnersFrom = (
   safeOwners: string[],
@@ -37,12 +38,16 @@ export const buildSafe = async (safeAddress: string, safeName: string) => {
   return SafeRecord(safe)
 }
 
-export default (safeAddress: string) => async (dispatch: ReduxDispatch<GlobalState>) => {
+export default (safeAddress: string, update: boolean = false) => async (dispatch: ReduxDispatch<GlobalState>) => {
   try {
     const safeName = (await getSafeName(safeAddress)) || 'LOADED SAFE'
-    const safeRecord = await buildSafe(safeAddress, safeName)
-
-    return dispatch(addSafe(safeRecord))
+    const safe = await buildSafe(safeAddress, safeName)
+    console.log(safe.toJS())
+    if (update) {
+      dispatch(updateSafe(safe))
+    } else {
+      dispatch(addSafe(safe))
+    }
   } catch (err) {
     // eslint-disable-next-line
     console.error('Error while updating safe information: ', err)

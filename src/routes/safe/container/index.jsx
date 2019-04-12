@@ -20,7 +20,7 @@ class SafeView extends React.Component<Props> {
     } = this.props
 
     fetchSafe(safeUrl)
-    loadActiveTokens(safeUrl)
+    // loadActiveTokens(safeUrl)
     fetchTokenBalances(safe, activeTokens)
 
     this.intervalId = setInterval(() => {
@@ -38,7 +38,7 @@ class SafeView extends React.Component<Props> {
       safeUrl, activeTokens, fetchSafe, fetchTokenBalances, safe,
     } = this.props
 
-    fetchSafe(safeUrl)
+    fetchSafe(safeUrl, true)
     fetchTokenBalances(safe, activeTokens)
   }
 
