@@ -15,6 +15,7 @@ import { sameAddress } from '~/logic/wallets/ethAddresses'
 import { orderedTokenListSelector, tokensSelector } from '~/logic/tokens/store/selectors'
 import { type Token } from '~/logic/tokens/store/model/token'
 import { safeParamAddressSelector } from '../store/selectors'
+import { getEthAsToken } from '~/logic/tokens/utils/tokenHelpers'
 
 export type SelectorProps = {
   safe: SafeSelectorProps,
@@ -52,10 +53,22 @@ type UserToken = {
   balance: string,
 }
 
+const safeEthAsTokenSelector: Selector<GlobalState, RouterProps, ?Token> = createSelector(
+  safeSelector,
+  (safe: Safe) => {
+    if (!safe) {
+      return undefined
+    }
+
+    return getEthAsToken(safe.ethBalance)
+  },
+)
+
 const extendedSafeTokensSelector: Selector<GlobalState, RouterProps, List<Token>> = createSelector(
   safeTokensSelector,
   tokensSelector,
-  (safeTokens: List<UserToken>, tokensList: Map<string, Token>) => {
+  safeEthAsTokenSelector,
+  (safeTokens: List<UserToken>, tokensList: Map<string, Token>, ethAsToken: Token) => {
     const extendedTokens = Map().withMutations((map) => {
       safeTokens.forEach((token: { address: string, balance: string }) => {
         const baseToken = tokensList.get(token.address)
@@ -64,6 +77,10 @@ const extendedSafeTokensSelector: Selector<GlobalState, RouterProps, List<Token>
           map.set(token.address, baseToken.set(token.balance))
         }
       })
+
+      if (ethAsToken) {
+        map.set(ethAsToken.address, ethAsToken)
+      }
     })
 
     return extendedTokens.toList()

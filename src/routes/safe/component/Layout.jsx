@@ -94,8 +94,8 @@ class Layout extends React.Component<Props, State> {
     if (!safe) {
       return <NoSafe provider={provider} text="Safe not found" />
     }
-    // <GnoSafe safe={safe} tokens={activeTokens} userAddress={userAddress} />
-    const address = safe.get('address')
+
+    const { address, ethBalance } = safe
 
     return (
       <React.Fragment>
@@ -129,7 +129,13 @@ class Layout extends React.Component<Props, State> {
         </Row>
         <Hairline color="#c8ced4" />
         {tabIndex === 0 && (
-          <Balances tokens={tokens} activeTokens={activeTokens} granted={granted} safeAddress={address} />
+          <Balances
+            ethBalance={ethBalance}
+            tokens={tokens}
+            activeTokens={activeTokens}
+            granted={granted}
+            safeAddress={address}
+          />
         )}
       </React.Fragment>
     )
