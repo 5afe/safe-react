@@ -14,6 +14,7 @@ type ActionReturn = {
 export const updateTokenAction = createAction<string, Function, ActionReturn>(
   UPDATE_SAFE_TOKENS,
   (token: SafeToken): ActionReturn => ({
+    safeAddress,
     token,
   }),
 )
@@ -23,7 +24,7 @@ const updateActiveTokens = (safeAddress: string, tokenAddress: string) => async 
 ) => {
   const token: SafeToken = SafeTokenRecord({ address: tokenAddress })
 
-  dispatch(updateTokenAction(token))
+  dispatch(updateTokenAction(safeAddress, token))
 }
 
 export default updateActiveTokens

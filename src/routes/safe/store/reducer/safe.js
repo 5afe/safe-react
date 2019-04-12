@@ -7,6 +7,7 @@ import { type OwnerProps } from '~/routes/safe/store/models/owner'
 import { loadFromStorage } from '~/utils/storage'
 import { SAFES_KEY } from '~/logic/safe/utils'
 import { UPDATE_SAFE } from '~/routes/safe/store/actions/updateSafe'
+import { UPDATE_SAFE_TOKENS } from '~/routes/safe/store/actions/updateActiveTokens'
 
 export const SAFE_REDUCER_ID = 'safes'
 
@@ -66,6 +67,7 @@ export default handleActions<State, *>(
 
       return state.set(safe.address, safe)
     },
+    [UPDATE_SAFE_TOKENS]: (state: State, action: ActionType<Function>):
   },
   Map(),
 )
