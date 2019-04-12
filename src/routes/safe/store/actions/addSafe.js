@@ -1,11 +1,11 @@
 // @flow
 import { List } from 'immutable'
 import { createAction } from 'redux-actions'
-import SafeRecord, { type Safe } from '~/routes/safe/store/models/safe'
-import { saveSafes, setOwners } from '~/logic/safe/utils'
-import { makeOwner, type Owner } from '~/routes/safe/store/models/owner'
 import type { Dispatch as ReduxDispatch, GetState } from 'redux'
-import { type GlobalState } from '~/store/index'
+import { type GlobalState } from '~/store'
+import { saveSafes, setOwners } from '~/logic/safe/utils'
+import SafeRecord, { type Safe } from '~/routes/safe/store/models/safe'
+import { makeOwner, type Owner } from '~/routes/safe/store/models/owner'
 import { safesMapSelector } from '~/routes/safeList/store/selectors/index'
 
 export const ADD_SAFE = 'ADD_SAFE'
@@ -20,7 +20,7 @@ type ActionReturn = {
   safe: Safe,
 }
 
-export const addSafe = createAction<string, *, *>(
+export const addSafe = createAction<string, Function, ActionReturn>(
   ADD_SAFE,
   (safe: Safe): ActionReturn => ({
     safe,

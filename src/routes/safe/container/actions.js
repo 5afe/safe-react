@@ -6,7 +6,7 @@ import fetchTokenBalances from '~/routes/safe/store/actions/fetchTokenBalances'
 export type Actions = {
   fetchSafe: typeof fetchSafe,
   loadActiveTokens: typeof loadActiveTokens,
-  fetchTokenBalances: typeof fetchTokenBalances
+  fetchTokenBalances: typeof fetchTokenBalances,
 }
 
 export default {

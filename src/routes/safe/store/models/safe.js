@@ -8,9 +8,9 @@ export type SafeProps = {
   name: string,
   address: string,
   threshold: number,
-  ethBalance: string,
   owners: List<Owner>,
   tokens?: List<SafeToken>,
+  ethBalance?: string,
 }
 
 const SafeRecord: RecordFactory<SafeProps> = Record({
