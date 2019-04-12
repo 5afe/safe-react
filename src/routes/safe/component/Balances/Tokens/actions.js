@@ -4,7 +4,7 @@ import updateActiveTokens from '~/routes/safe/store/actions/updateActiveTokens'
 
 export type Actions = {
   fetchTokens: Function,
-  updateActiveTokens: Function
+  updateActiveTokens: Function,
 }
 
 export default {

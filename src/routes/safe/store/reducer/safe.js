@@ -67,7 +67,10 @@ export default handleActions<State, *>(
 
       return state.set(safe.address, safe)
     },
-    [UPDATE_SAFE_TOKENS]: (state: State, action: ActionType<Function>):
+    [UPDATE_SAFE_TOKENS]: (state: State, action: ActionType<Function>): State => {
+      const { safeAddress, token } = action.payload
+      const tokens = state.getIn([safeAddress, 'tokens'])
+    }
   },
   Map(),
 )

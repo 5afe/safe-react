@@ -29,9 +29,7 @@ export const calculateBalanceOf = async (tokenAddress: string, safeAddress: stri
   return new BigNumber(balance).div(10 ** decimals).toString()
 }
 
-const fetchTokenBalances = (safe: Safe, tokens: List<Token>) => async (
-  dispatch: ReduxDispatch<GlobalState>,
-) => {
+const fetchTokenBalances = (safe: Safe, tokens: List<Token>) => async (dispatch: ReduxDispatch<GlobalState>) => {
   if (!safe || !tokens || !tokens.size) {
     return
   }
