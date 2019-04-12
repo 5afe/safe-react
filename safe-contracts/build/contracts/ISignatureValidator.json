@@ -16,8 +16,8 @@
       "name": "isValidSignature",
       "outputs": [
         {
-          "name": "isValid",
-          "type": "bool"
+          "name": "",
+          "type": "bytes4"
         }
       ],
       "payable": false,
@@ -29,27 +29,28 @@
   "deployedBytecode": "0x",
   "sourceMap": "",
   "deployedSourceMap": "",
-  "source": "pragma solidity 0.4.24;\n\ncontract ISignatureValidator {\n    /**\n    * @dev Should return whether the signature provided is valid for the provided data\n    * @param _data Arbitrary length data signed on the behalf of address(this)\n    * @param _signature Signature byte array associated with _data\n    *\n    * MUST return a bool upon valid or invalid signature with corresponding _data\n    * MUST take (bytes, bytes) as arguments\n    */ \n    function isValidSignature(\n        bytes _data, \n        bytes _signature)\n        public\n        returns (bool isValid); \n}",
-  "sourcePath": "/Users/apanizo/git/gnosis/safe-contracts/contracts/interfaces/ISignatureValidator.sol",
+  "source": "pragma solidity ^0.5.0;\n\ncontract ISignatureValidator {\n    // bytes4(keccak256(\"isValidSignature(bytes,bytes)\")\n    bytes4 constant internal EIP1271_MAGIC_VALUE = 0x20c13b0b;\n\n    /**\n    * @dev Should return whether the signature provided is valid for the provided data\n    * @param _data Arbitrary length data signed on the behalf of address(this)\n    * @param _signature Signature byte array associated with _data\n    *\n    * MUST return the bytes4 magic value 0x20c13b0b when function passes.\n    * MUST NOT modify state (using STATICCALL for solc < 0.5, view modifier for solc > 0.5)\n    * MUST allow external calls\n    */ \n    function isValidSignature(\n        bytes calldata _data, \n        bytes calldata _signature)\n        external \n        returns (bytes4);\n}",
+  "sourcePath": "/home/ger/git/gnosis/safe-contracts/contracts/interfaces/ISignatureValidator.sol",
   "ast": {
-    "absolutePath": "/Users/apanizo/git/gnosis/safe-contracts/contracts/interfaces/ISignatureValidator.sol",
+    "absolutePath": "/home/ger/git/gnosis/safe-contracts/contracts/interfaces/ISignatureValidator.sol",
     "exportedSymbols": {
       "ISignatureValidator": [
-        1803
+        2080
       ]
     },
-    "id": 1804,
+    "id": 2081,
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 1793,
+        "id": 2067,
         "literals": [
           "solidity",
-          "0.4",
-          ".24"
+          "^",
+          "0.5",
+          ".0"
         ],
         "nodeType": "PragmaDirective",
-        "src": "0:23:13"
+        "src": "0:23:14"
       },
       {
         "baseContracts": [],
@@ -57,45 +58,87 @@
         "contractKind": "contract",
         "documentation": null,
         "fullyImplemented": false,
-        "id": 1803,
+        "id": 2080,
         "linearizedBaseContracts": [
-          1803
+          2080
         ],
         "name": "ISignatureValidator",
         "nodeType": "ContractDefinition",
         "nodes": [
           {
+            "constant": true,
+            "id": 2070,
+            "name": "EIP1271_MAGIC_VALUE",
+            "nodeType": "VariableDeclaration",
+            "scope": 2080,
+            "src": "117:57:14",
+            "stateVariable": true,
+            "storageLocation": "default",
+            "typeDescriptions": {
+              "typeIdentifier": "t_bytes4",
+              "typeString": "bytes4"
+            },
+            "typeName": {
+              "id": 2068,
+              "name": "bytes4",
+              "nodeType": "ElementaryTypeName",
+              "src": "117:6:14",
+              "typeDescriptions": {
+                "typeIdentifier": "t_bytes4",
+                "typeString": "bytes4"
+              }
+            },
+            "value": {
+              "argumentTypes": null,
+              "hexValue": "30783230633133623062",
+              "id": 2069,
+              "isConstant": false,
+              "isLValue": false,
+              "isPure": true,
+              "kind": "number",
+              "lValueRequested": false,
+              "nodeType": "Literal",
+              "src": "164:10:14",
+              "subdenomination": null,
+              "typeDescriptions": {
+                "typeIdentifier": "t_rational_549534475_by_1",
+                "typeString": "int_const 549534475"
+              },
+              "value": "0x20c13b0b"
+            },
+            "visibility": "internal"
+          },
+          {
             "body": null,
-            "documentation": "@dev Should return whether the signature provided is valid for the provided data\n@param _data Arbitrary length data signed on the behalf of address(this)\n@param _signature Signature byte array associated with _data\n    * MUST return a bool upon valid or invalid signature with corresponding _data\nMUST take (bytes, bytes) as arguments",
-            "id": 1802,
+            "documentation": "@dev Should return whether the signature provided is valid for the provided data\n@param _data Arbitrary length data signed on the behalf of address(this)\n@param _signature Signature byte array associated with _data\n    * MUST return the bytes4 magic value 0x20c13b0b when function passes.\nMUST NOT modify state (using STATICCALL for solc < 0.5, view modifier for solc > 0.5)\nMUST allow external calls",
+            "id": 2079,
             "implemented": false,
-            "isConstructor": false,
-            "isDeclaredConst": false,
+            "kind": "function",
             "modifiers": [],
             "name": "isValidSignature",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 1798,
+              "id": 2075,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 1795,
+                  "id": 2072,
                   "name": "_data",
                   "nodeType": "VariableDeclaration",
-                  "scope": 1802,
-                  "src": "476:11:13",
+                  "scope": 2079,
+                  "src": "669:20:14",
                   "stateVariable": false,
-                  "storageLocation": "default",
+                  "storageLocation": "calldata",
                   "typeDescriptions": {
-                    "typeIdentifier": "t_bytes_memory_ptr",
+                    "typeIdentifier": "t_bytes_calldata_ptr",
                     "typeString": "bytes"
                   },
                   "typeName": {
-                    "id": 1794,
+                    "id": 2071,
                     "name": "bytes",
                     "nodeType": "ElementaryTypeName",
-                    "src": "476:5:13",
+                    "src": "669:5:14",
                     "typeDescriptions": {
                       "typeIdentifier": "t_bytes_storage_ptr",
                       "typeString": "bytes"
@@ -106,22 +149,22 @@
                 },
                 {
                   "constant": false,
-                  "id": 1797,
+                  "id": 2074,
                   "name": "_signature",
                   "nodeType": "VariableDeclaration",
-                  "scope": 1802,
-                  "src": "498:16:13",
+                  "scope": 2079,
+                  "src": "700:25:14",
                   "stateVariable": false,
-                  "storageLocation": "default",
+                  "storageLocation": "calldata",
                   "typeDescriptions": {
-                    "typeIdentifier": "t_bytes_memory_ptr",
+                    "typeIdentifier": "t_bytes_calldata_ptr",
                     "typeString": "bytes"
                   },
                   "typeName": {
-                    "id": 1796,
+                    "id": 2073,
                     "name": "bytes",
                     "nodeType": "ElementaryTypeName",
-                    "src": "498:5:13",
+                    "src": "700:5:14",
                     "typeDescriptions": {
                       "typeIdentifier": "t_bytes_storage_ptr",
                       "typeString": "bytes"
@@ -131,74 +174,74 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "466:49:13"
+              "src": "659:67:14"
             },
-            "payable": false,
             "returnParameters": {
-              "id": 1801,
+              "id": 2078,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 1800,
-                  "name": "isValid",
+                  "id": 2077,
+                  "name": "",
                   "nodeType": "VariableDeclaration",
-                  "scope": 1802,
-                  "src": "548:12:13",
+                  "scope": 2079,
+                  "src": "762:6:14",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
-                    "typeIdentifier": "t_bool",
-                    "typeString": "bool"
+                    "typeIdentifier": "t_bytes4",
+                    "typeString": "bytes4"
                   },
                   "typeName": {
-                    "id": 1799,
-                    "name": "bool",
+                    "id": 2076,
+                    "name": "bytes4",
                     "nodeType": "ElementaryTypeName",
-                    "src": "548:4:13",
+                    "src": "762:6:14",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_bool",
-                      "typeString": "bool"
+                      "typeIdentifier": "t_bytes4",
+                      "typeString": "bytes4"
                     }
                   },
                   "value": null,
                   "visibility": "internal"
                 }
               ],
-              "src": "547:14:13"
+              "src": "761:8:14"
             },
-            "scope": 1803,
-            "src": "441:121:13",
+            "scope": 2080,
+            "src": "634:136:14",
             "stateMutability": "nonpayable",
             "superFunction": null,
-            "visibility": "public"
+            "visibility": "external"
           }
         ],
-        "scope": 1804,
-        "src": "25:540:13"
+        "scope": 2081,
+        "src": "25:747:14"
       }
     ],
-    "src": "0:565:13"
+    "src": "0:772:14"
   },
   "legacyAST": {
-    "absolutePath": "/Users/apanizo/git/gnosis/safe-contracts/contracts/interfaces/ISignatureValidator.sol",
+    "absolutePath": "/home/ger/git/gnosis/safe-contracts/contracts/interfaces/ISignatureValidator.sol",
     "exportedSymbols": {
       "ISignatureValidator": [
-        1803
+        2080
       ]
     },
-    "id": 1804,
+    "id": 2081,
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 1793,
+        "id": 2067,
         "literals": [
           "solidity",
-          "0.4",
-          ".24"
+          "^",
+          "0.5",
+          ".0"
         ],
         "nodeType": "PragmaDirective",
-        "src": "0:23:13"
+        "src": "0:23:14"
       },
       {
         "baseContracts": [],
@@ -206,45 +249,87 @@
         "contractKind": "contract",
         "documentation": null,
         "fullyImplemented": false,
-        "id": 1803,
+        "id": 2080,
         "linearizedBaseContracts": [
-          1803
+          2080
         ],
         "name": "ISignatureValidator",
         "nodeType": "ContractDefinition",
         "nodes": [
           {
+            "constant": true,
+            "id": 2070,
+            "name": "EIP1271_MAGIC_VALUE",
+            "nodeType": "VariableDeclaration",
+            "scope": 2080,
+            "src": "117:57:14",
+            "stateVariable": true,
+            "storageLocation": "default",
+            "typeDescriptions": {
+              "typeIdentifier": "t_bytes4",
+              "typeString": "bytes4"
+            },
+            "typeName": {
+              "id": 2068,
+              "name": "bytes4",
+              "nodeType": "ElementaryTypeName",
+              "src": "117:6:14",
+              "typeDescriptions": {
+                "typeIdentifier": "t_bytes4",
+                "typeString": "bytes4"
+              }
+            },
+            "value": {
+              "argumentTypes": null,
+              "hexValue": "30783230633133623062",
+              "id": 2069,
+              "isConstant": false,
+              "isLValue": false,
+              "isPure": true,
+              "kind": "number",
+              "lValueRequested": false,
+              "nodeType": "Literal",
+              "src": "164:10:14",
+              "subdenomination": null,
+              "typeDescriptions": {
+                "typeIdentifier": "t_rational_549534475_by_1",
+                "typeString": "int_const 549534475"
+              },
+              "value": "0x20c13b0b"
+            },
+            "visibility": "internal"
+          },
+          {
             "body": null,
-            "documentation": "@dev Should return whether the signature provided is valid for the provided data\n@param _data Arbitrary length data signed on the behalf of address(this)\n@param _signature Signature byte array associated with _data\n    * MUST return a bool upon valid or invalid signature with corresponding _data\nMUST take (bytes, bytes) as arguments",
-            "id": 1802,
+            "documentation": "@dev Should return whether the signature provided is valid for the provided data\n@param _data Arbitrary length data signed on the behalf of address(this)\n@param _signature Signature byte array associated with _data\n    * MUST return the bytes4 magic value 0x20c13b0b when function passes.\nMUST NOT modify state (using STATICCALL for solc < 0.5, view modifier for solc > 0.5)\nMUST allow external calls",
+            "id": 2079,
             "implemented": false,
-            "isConstructor": false,
-            "isDeclaredConst": false,
+            "kind": "function",
             "modifiers": [],
             "name": "isValidSignature",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 1798,
+              "id": 2075,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 1795,
+                  "id": 2072,
                   "name": "_data",
                   "nodeType": "VariableDeclaration",
-                  "scope": 1802,
-                  "src": "476:11:13",
+                  "scope": 2079,
+                  "src": "669:20:14",
                   "stateVariable": false,
-                  "storageLocation": "default",
+                  "storageLocation": "calldata",
                   "typeDescriptions": {
-                    "typeIdentifier": "t_bytes_memory_ptr",
+                    "typeIdentifier": "t_bytes_calldata_ptr",
                     "typeString": "bytes"
                   },
                   "typeName": {
-                    "id": 1794,
+                    "id": 2071,
                     "name": "bytes",
                     "nodeType": "ElementaryTypeName",
-                    "src": "476:5:13",
+                    "src": "669:5:14",
                     "typeDescriptions": {
                       "typeIdentifier": "t_bytes_storage_ptr",
                       "typeString": "bytes"
@@ -255,22 +340,22 @@
                 },
                 {
                   "constant": false,
-                  "id": 1797,
+                  "id": 2074,
                   "name": "_signature",
                   "nodeType": "VariableDeclaration",
-                  "scope": 1802,
-                  "src": "498:16:13",
+                  "scope": 2079,
+                  "src": "700:25:14",
                   "stateVariable": false,
-                  "storageLocation": "default",
+                  "storageLocation": "calldata",
                   "typeDescriptions": {
-                    "typeIdentifier": "t_bytes_memory_ptr",
+                    "typeIdentifier": "t_bytes_calldata_ptr",
                     "typeString": "bytes"
                   },
                   "typeName": {
-                    "id": 1796,
+                    "id": 2073,
                     "name": "bytes",
                     "nodeType": "ElementaryTypeName",
-                    "src": "498:5:13",
+                    "src": "700:5:14",
                     "typeDescriptions": {
                       "typeIdentifier": "t_bytes_storage_ptr",
                       "typeString": "bytes"
@@ -280,60 +365,59 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "466:49:13"
+              "src": "659:67:14"
             },
-            "payable": false,
             "returnParameters": {
-              "id": 1801,
+              "id": 2078,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 1800,
-                  "name": "isValid",
+                  "id": 2077,
+                  "name": "",
                   "nodeType": "VariableDeclaration",
-                  "scope": 1802,
-                  "src": "548:12:13",
+                  "scope": 2079,
+                  "src": "762:6:14",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
-                    "typeIdentifier": "t_bool",
-                    "typeString": "bool"
+                    "typeIdentifier": "t_bytes4",
+                    "typeString": "bytes4"
                   },
                   "typeName": {
-                    "id": 1799,
-                    "name": "bool",
+                    "id": 2076,
+                    "name": "bytes4",
                     "nodeType": "ElementaryTypeName",
-                    "src": "548:4:13",
+                    "src": "762:6:14",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_bool",
-                      "typeString": "bool"
+                      "typeIdentifier": "t_bytes4",
+                      "typeString": "bytes4"
                     }
                   },
                   "value": null,
                   "visibility": "internal"
                 }
               ],
-              "src": "547:14:13"
+              "src": "761:8:14"
             },
-            "scope": 1803,
-            "src": "441:121:13",
+            "scope": 2080,
+            "src": "634:136:14",
             "stateMutability": "nonpayable",
             "superFunction": null,
-            "visibility": "public"
+            "visibility": "external"
           }
         ],
-        "scope": 1804,
-        "src": "25:540:13"
+        "scope": 2081,
+        "src": "25:747:14"
       }
     ],
-    "src": "0:565:13"
+    "src": "0:772:14"
   },
   "compiler": {
     "name": "solc",
-    "version": "0.4.24+commit.e67f0147.Emscripten.clang"
+    "version": "0.5.7+commit.6da8b019.Emscripten.clang"
   },
   "networks": {},
-  "schemaVersion": "2.0.0",
-  "updatedAt": "2018-10-05T14:25:58.938Z"
+  "schemaVersion": "2.0.2",
+  "updatedAt": "2019-04-12T12:46:18.635Z"
 }

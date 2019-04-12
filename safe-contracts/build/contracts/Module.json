@@ -30,50 +30,51 @@
       "type": "function"
     }
   ],
-  "bytecode": "0x608060405234801561001057600080fd5b50610320806100206000396000f30060806040526004361061004c576000357c0100000000000000000000000000000000000000000000000000000000900463ffffffff168063481c6a75146100515780637de7edef146100a8575b600080fd5b34801561005d57600080fd5b506100666100eb565b604051808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200191505060405180910390f35b3480156100b457600080fd5b506100e9600480360381019080803573ffffffffffffffffffffffffffffffffffffffff169060200190929190505050610111565b005b600160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1681565b600160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff163373ffffffffffffffffffffffffffffffffffffffff161415156101fc576040517f08c379a00000000000000000000000000000000000000000000000000000000081526004018080602001828103825260268152602001807f4d6574686f642063616e206f6e6c792062652063616c6c65642066726f6d206d81526020017f616e61676572000000000000000000000000000000000000000000000000000081525060400191505060405180910390fd5b60008173ffffffffffffffffffffffffffffffffffffffff16141515156102b1576040517f08c379a00000000000000000000000000000000000000000000000000000000081526004018080602001828103825260248152602001807f496e76616c6964206d617374657220636f707920616464726573732070726f7681526020017f696465640000000000000000000000000000000000000000000000000000000081525060400191505060405180910390fd5b806000806101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff160217905550505600a165627a7a723058206735a74f4afef13f3b2701cdd3899ee378ad1eb5d0cd64887ffd5885365545ee0029",
-  "deployedBytecode": "0x60806040526004361061004c576000357c0100000000000000000000000000000000000000000000000000000000900463ffffffff168063481c6a75146100515780637de7edef146100a8575b600080fd5b34801561005d57600080fd5b506100666100eb565b604051808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200191505060405180910390f35b3480156100b457600080fd5b506100e9600480360381019080803573ffffffffffffffffffffffffffffffffffffffff169060200190929190505050610111565b005b600160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1681565b600160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff163373ffffffffffffffffffffffffffffffffffffffff161415156101fc576040517f08c379a00000000000000000000000000000000000000000000000000000000081526004018080602001828103825260268152602001807f4d6574686f642063616e206f6e6c792062652063616c6c65642066726f6d206d81526020017f616e61676572000000000000000000000000000000000000000000000000000081525060400191505060405180910390fd5b60008173ffffffffffffffffffffffffffffffffffffffff16141515156102b1576040517f08c379a00000000000000000000000000000000000000000000000000000000081526004018080602001828103825260248152602001807f496e76616c6964206d617374657220636f707920616464726573732070726f7681526020017f696465640000000000000000000000000000000000000000000000000000000081525060400191505060405180910390fd5b806000806101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff160217905550505600a165627a7a723058206735a74f4afef13f3b2701cdd3899ee378ad1eb5d0cd64887ffd5885365545ee0029",
-  "sourceMap": "233:511:4:-;;;;8:9:-1;5:2;;;30:1;27;20:12;5:2;233:511:4;;;;;;;",
-  "deployedSourceMap": "233:511:4:-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;270:28;;8:9:-1;5:2;;;30:1;27;20:12;5:2;270:28:4;;;;;;;;;;;;;;;;;;;;;;;;;;;626:248:9;;8:9:-1;5:2;;;30:1;27;20:12;5:2;626:248:9;;;;;;;;;;;;;;;;;;;;;;;;;;;;270:28:4;;;;;;;;;;;;;:::o;626:248:9:-;367:7:4;;;;;;;;;;;345:30;;:10;:30;;;337:81;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;791:1:9;776:11;:16;;;;768:65;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;856:11;843:10;;:24;;;;;;;;;;;;;;;;;;626:248;:::o",
-  "source": "pragma solidity 0.4.24;\nimport \"../common/MasterCopy.sol\";\nimport \"./ModuleManager.sol\";\n\n\n/// @title Module - Base class for modules.\n/// @author Stefan George - <stefan@gnosis.pm>\n/// @author Richard Meissner - <richard@gnosis.pm>\ncontract Module is MasterCopy {\n\n    ModuleManager public manager;\n\n    modifier authorized() {\n        require(msg.sender == address(manager), \"Method can only be called from manager\");\n        _;\n    }\n\n    function setManager()\n        internal\n    {\n        // manager can only be 0 at initalization of contract.\n        // Check ensures that setup function can only be called once.\n        require(address(manager) == 0, \"Manager has already been set\");\n        manager = ModuleManager(msg.sender);\n    }\n}\n",
-  "sourcePath": "/Users/apanizo/git/gnosis/safe-contracts/contracts/base/Module.sol",
+  "bytecode": "0x608060405234801561001057600080fd5b506102d4806100206000396000f3fe608060405234801561001057600080fd5b50600436106100365760003560e01c8063481c6a751461003b5780637de7edef14610085575b600080fd5b6100436100c9565b604051808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200191505060405180910390f35b6100c76004803603602081101561009b57600080fd5b81019080803573ffffffffffffffffffffffffffffffffffffffff1690602001909291905050506100ef565b005b600160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1681565b600160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff163373ffffffffffffffffffffffffffffffffffffffff1614610195576040517f08c379a00000000000000000000000000000000000000000000000000000000081526004018080602001828103825260268152602001806102836026913960400191505060405180910390fd5b600073ffffffffffffffffffffffffffffffffffffffff168173ffffffffffffffffffffffffffffffffffffffff16141561021b576040517f08c379a000000000000000000000000000000000000000000000000000000000815260040180806020018281038252602481526020018061025f6024913960400191505060405180910390fd5b806000806101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff1602179055505056fe496e76616c6964206d617374657220636f707920616464726573732070726f76696465644d6574686f642063616e206f6e6c792062652063616c6c65642066726f6d206d616e61676572a165627a7a723058207d5d57b76c411688dcf985fae5801ab472c86ac7464d15b65260d0e08216f2af0029",
+  "deployedBytecode": "0x608060405234801561001057600080fd5b50600436106100365760003560e01c8063481c6a751461003b5780637de7edef14610085575b600080fd5b6100436100c9565b604051808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200191505060405180910390f35b6100c76004803603602081101561009b57600080fd5b81019080803573ffffffffffffffffffffffffffffffffffffffff1690602001909291905050506100ef565b005b600160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1681565b600160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff163373ffffffffffffffffffffffffffffffffffffffff1614610195576040517f08c379a00000000000000000000000000000000000000000000000000000000081526004018080602001828103825260268152602001806102836026913960400191505060405180910390fd5b600073ffffffffffffffffffffffffffffffffffffffff168173ffffffffffffffffffffffffffffffffffffffff16141561021b576040517f08c379a000000000000000000000000000000000000000000000000000000000815260040180806020018281038252602481526020018061025f6024913960400191505060405180910390fd5b806000806101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff1602179055505056fe496e76616c6964206d617374657220636f707920616464726573732070726f76696465644d6574686f642063616e206f6e6c792062652063616c6c65642066726f6d206d616e61676572a165627a7a723058207d5d57b76c411688dcf985fae5801ab472c86ac7464d15b65260d0e08216f2af0029",
+  "sourceMap": "233:520:4:-;;;;8:9:-1;5:2;;;30:1;27;20:12;5:2;233:520:4;;;;;;;",
+  "deployedSourceMap": "233:520:4:-;;;;8:9:-1;5:2;;;30:1;27;20:12;5:2;233:520:4;;;;;;;;;;;;;;;;;;;;;;;;270:28;;;:::i;:::-;;;;;;;;;;;;;;;;;;;;;;;626:257:9;;;;;;13:2:-1;8:3;5:11;2:2;;;29:1;26;19:12;2:2;626:257:9;;;;;;;;;;;;;;;;;;;:::i;:::-;;270:28:4;;;;;;;;;;;;;:::o;626:257:9:-;367:7:4;;;;;;;;;;;345:30;;:10;:30;;;337:81;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;799:1:9;776:25;;:11;:25;;;;768:74;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;865:11;852:10;;:24;;;;;;;;;;;;;;;;;;626:257;:::o",
+  "source": "pragma solidity ^0.5.0;\nimport \"../common/MasterCopy.sol\";\nimport \"./ModuleManager.sol\";\n\n\n/// @title Module - Base class for modules.\n/// @author Stefan George - <stefan@gnosis.pm>\n/// @author Richard Meissner - <richard@gnosis.pm>\ncontract Module is MasterCopy {\n\n    ModuleManager public manager;\n\n    modifier authorized() {\n        require(msg.sender == address(manager), \"Method can only be called from manager\");\n        _;\n    }\n\n    function setManager()\n        internal\n    {\n        // manager can only be 0 at initalization of contract.\n        // Check ensures that setup function can only be called once.\n        require(address(manager) == address(0), \"Manager has already been set\");\n        manager = ModuleManager(msg.sender);\n    }\n}\n",
+  "sourcePath": "/home/ger/git/gnosis/safe-contracts/contracts/base/Module.sol",
   "ast": {
-    "absolutePath": "/Users/apanizo/git/gnosis/safe-contracts/contracts/base/Module.sol",
+    "absolutePath": "/home/ger/git/gnosis/safe-contracts/contracts/base/Module.sol",
     "exportedSymbols": {
       "Module": [
-        935
+        1020
       ]
     },
-    "id": 936,
+    "id": 1021,
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 894,
+        "id": 977,
         "literals": [
           "solidity",
-          "0.4",
-          ".24"
+          "^",
+          "0.5",
+          ".0"
         ],
         "nodeType": "PragmaDirective",
         "src": "0:23:4"
       },
       {
-        "absolutePath": "/Users/apanizo/git/gnosis/safe-contracts/contracts/common/MasterCopy.sol",
+        "absolutePath": "/home/ger/git/gnosis/safe-contracts/contracts/common/MasterCopy.sol",
         "file": "../common/MasterCopy.sol",
-        "id": 895,
+        "id": 978,
         "nodeType": "ImportDirective",
-        "scope": 936,
-        "sourceUnit": 1694,
+        "scope": 1021,
+        "sourceUnit": 1840,
         "src": "24:34:4",
         "symbolAliases": [],
         "unitAlias": ""
       },
       {
-        "absolutePath": "/Users/apanizo/git/gnosis/safe-contracts/contracts/base/ModuleManager.sol",
+        "absolutePath": "/home/ger/git/gnosis/safe-contracts/contracts/base/ModuleManager.sol",
         "file": "./ModuleManager.sol",
-        "id": 896,
+        "id": 979,
         "nodeType": "ImportDirective",
-        "scope": 936,
-        "sourceUnit": 1213,
+        "scope": 1021,
+        "sourceUnit": 1331,
         "src": "59:29:4",
         "symbolAliases": [],
         "unitAlias": ""
@@ -84,59 +85,59 @@
             "arguments": null,
             "baseName": {
               "contractScope": null,
-              "id": 897,
+              "id": 980,
               "name": "MasterCopy",
               "nodeType": "UserDefinedTypeName",
-              "referencedDeclaration": 1693,
+              "referencedDeclaration": 1839,
               "src": "252:10:4",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_MasterCopy_$1693",
+                "typeIdentifier": "t_contract$_MasterCopy_$1839",
                 "typeString": "contract MasterCopy"
               }
             },
-            "id": 898,
+            "id": 981,
             "nodeType": "InheritanceSpecifier",
             "src": "252:10:4"
           }
         ],
         "contractDependencies": [
-          1693,
-          1735
+          1839,
+          1881
         ],
         "contractKind": "contract",
         "documentation": "@title Module - Base class for modules.\n @author Stefan George - <stefan@gnosis.pm>\n @author Richard Meissner - <richard@gnosis.pm>",
         "fullyImplemented": true,
-        "id": 935,
+        "id": 1020,
         "linearizedBaseContracts": [
-          935,
-          1693,
-          1735
+          1020,
+          1839,
+          1881
         ],
         "name": "Module",
         "nodeType": "ContractDefinition",
         "nodes": [
           {
             "constant": false,
-            "id": 900,
+            "id": 983,
             "name": "manager",
             "nodeType": "VariableDeclaration",
-            "scope": 935,
+            "scope": 1020,
             "src": "270:28:4",
             "stateVariable": true,
             "storageLocation": "default",
             "typeDescriptions": {
-              "typeIdentifier": "t_contract$_ModuleManager_$1212",
+              "typeIdentifier": "t_contract$_ModuleManager_$1330",
               "typeString": "contract ModuleManager"
             },
             "typeName": {
               "contractScope": null,
-              "id": 899,
+              "id": 982,
               "name": "ModuleManager",
               "nodeType": "UserDefinedTypeName",
-              "referencedDeclaration": 1212,
+              "referencedDeclaration": 1330,
               "src": "270:13:4",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_ModuleManager_$1212",
+                "typeIdentifier": "t_contract$_ModuleManager_$1330",
                 "typeString": "contract ModuleManager"
               }
             },
@@ -145,7 +146,7 @@
           },
           {
             "body": {
-              "id": 913,
+              "id": 996,
               "nodeType": "Block",
               "src": "327:109:4",
               "statements": [
@@ -156,10 +157,10 @@
                       {
                         "argumentTypes": null,
                         "commonType": {
-                          "typeIdentifier": "t_address",
-                          "typeString": "address"
+                          "typeIdentifier": "t_address_payable",
+                          "typeString": "address payable"
                         },
-                        "id": 908,
+                        "id": 991,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": false,
@@ -168,18 +169,18 @@
                           "argumentTypes": null,
                           "expression": {
                             "argumentTypes": null,
-                            "id": 903,
+                            "id": 986,
                             "name": "msg",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
-                            "referencedDeclaration": 4015,
+                            "referencedDeclaration": 4366,
                             "src": "345:3:4",
                             "typeDescriptions": {
                               "typeIdentifier": "t_magic_message",
                               "typeString": "msg"
                             }
                           },
-                          "id": 904,
+                          "id": 987,
                           "isConstant": false,
                           "isLValue": false,
                           "isPure": false,
@@ -189,8 +190,8 @@
                           "referencedDeclaration": null,
                           "src": "345:10:4",
                           "typeDescriptions": {
-                            "typeIdentifier": "t_address",
-                            "typeString": "address"
+                            "typeIdentifier": "t_address_payable",
+                            "typeString": "address payable"
                           }
                         },
                         "nodeType": "BinaryOperation",
@@ -200,14 +201,14 @@
                           "arguments": [
                             {
                               "argumentTypes": null,
-                              "id": 906,
+                              "id": 989,
                               "name": "manager",
                               "nodeType": "Identifier",
                               "overloadedDeclarations": [],
-                              "referencedDeclaration": 900,
+                              "referencedDeclaration": 983,
                               "src": "367:7:4",
                               "typeDescriptions": {
-                                "typeIdentifier": "t_contract$_ModuleManager_$1212",
+                                "typeIdentifier": "t_contract$_ModuleManager_$1330",
                                 "typeString": "contract ModuleManager"
                               }
                             }
@@ -215,11 +216,11 @@
                           "expression": {
                             "argumentTypes": [
                               {
-                                "typeIdentifier": "t_contract$_ModuleManager_$1212",
+                                "typeIdentifier": "t_contract$_ModuleManager_$1330",
                                 "typeString": "contract ModuleManager"
                               }
                             ],
-                            "id": 905,
+                            "id": 988,
                             "isConstant": false,
                             "isLValue": false,
                             "isPure": true,
@@ -232,7 +233,7 @@
                             },
                             "typeName": "address"
                           },
-                          "id": 907,
+                          "id": 990,
                           "isConstant": false,
                           "isLValue": false,
                           "isPure": false,
@@ -242,8 +243,8 @@
                           "nodeType": "FunctionCall",
                           "src": "359:16:4",
                           "typeDescriptions": {
-                            "typeIdentifier": "t_address",
-                            "typeString": "address"
+                            "typeIdentifier": "t_address_payable",
+                            "typeString": "address payable"
                           }
                         },
                         "src": "345:30:4",
@@ -255,7 +256,7 @@
                       {
                         "argumentTypes": null,
                         "hexValue": "4d6574686f642063616e206f6e6c792062652063616c6c65642066726f6d206d616e61676572",
-                        "id": 909,
+                        "id": 992,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": true,
@@ -282,21 +283,21 @@
                           "typeString": "literal_string \"Method can only be called from manager\""
                         }
                       ],
-                      "id": 902,
+                      "id": 985,
                       "name": "require",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [
-                        4018,
-                        4019
+                        4369,
+                        4370
                       ],
-                      "referencedDeclaration": 4019,
+                      "referencedDeclaration": 4370,
                       "src": "337:7:4",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_require_pure$_t_bool_$_t_string_memory_ptr_$returns$__$",
                         "typeString": "function (bool,string memory) pure"
                       }
                     },
-                    "id": 910,
+                    "id": 993,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -310,23 +311,23 @@
                       "typeString": "tuple()"
                     }
                   },
-                  "id": 911,
+                  "id": 994,
                   "nodeType": "ExpressionStatement",
                   "src": "337:81:4"
                 },
                 {
-                  "id": 912,
+                  "id": 995,
                   "nodeType": "PlaceholderStatement",
                   "src": "428:1:4"
                 }
               ]
             },
             "documentation": null,
-            "id": 914,
+            "id": 997,
             "name": "authorized",
             "nodeType": "ModifierDefinition",
             "parameters": {
-              "id": 901,
+              "id": 984,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "324:2:4"
@@ -336,9 +337,9 @@
           },
           {
             "body": {
-              "id": 933,
+              "id": 1018,
               "nodeType": "Block",
-              "src": "485:257:4",
+              "src": "485:266:4",
               "statements": [
                 {
                   "expression": {
@@ -347,10 +348,10 @@
                       {
                         "argumentTypes": null,
                         "commonType": {
-                          "typeIdentifier": "t_address",
-                          "typeString": "address"
+                          "typeIdentifier": "t_address_payable",
+                          "typeString": "address payable"
                         },
-                        "id": 922,
+                        "id": 1007,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": false,
@@ -360,14 +361,14 @@
                           "arguments": [
                             {
                               "argumentTypes": null,
-                              "id": 919,
+                              "id": 1002,
                               "name": "manager",
                               "nodeType": "Identifier",
                               "overloadedDeclarations": [],
-                              "referencedDeclaration": 900,
+                              "referencedDeclaration": 983,
                               "src": "644:7:4",
                               "typeDescriptions": {
-                                "typeIdentifier": "t_contract$_ModuleManager_$1212",
+                                "typeIdentifier": "t_contract$_ModuleManager_$1330",
                                 "typeString": "contract ModuleManager"
                               }
                             }
@@ -375,11 +376,11 @@
                           "expression": {
                             "argumentTypes": [
                               {
-                                "typeIdentifier": "t_contract$_ModuleManager_$1212",
+                                "typeIdentifier": "t_contract$_ModuleManager_$1330",
                                 "typeString": "contract ModuleManager"
                               }
                             ],
-                            "id": 918,
+                            "id": 1001,
                             "isConstant": false,
                             "isLValue": false,
                             "isPure": true,
@@ -392,7 +393,7 @@
                             },
                             "typeName": "address"
                           },
-                          "id": 920,
+                          "id": 1003,
                           "isConstant": false,
                           "isLValue": false,
                           "isPure": false,
@@ -402,31 +403,69 @@
                           "nodeType": "FunctionCall",
                           "src": "636:16:4",
                           "typeDescriptions": {
-                            "typeIdentifier": "t_address",
-                            "typeString": "address"
+                            "typeIdentifier": "t_address_payable",
+                            "typeString": "address payable"
                           }
                         },
                         "nodeType": "BinaryOperation",
                         "operator": "==",
                         "rightExpression": {
                           "argumentTypes": null,
-                          "hexValue": "30",
-                          "id": 921,
+                          "arguments": [
+                            {
+                              "argumentTypes": null,
+                              "hexValue": "30",
+                              "id": 1005,
+                              "isConstant": false,
+                              "isLValue": false,
+                              "isPure": true,
+                              "kind": "number",
+                              "lValueRequested": false,
+                              "nodeType": "Literal",
+                              "src": "664:1:4",
+                              "subdenomination": null,
+                              "typeDescriptions": {
+                                "typeIdentifier": "t_rational_0_by_1",
+                                "typeString": "int_const 0"
+                              },
+                              "value": "0"
+                            }
+                          ],
+                          "expression": {
+                            "argumentTypes": [
+                              {
+                                "typeIdentifier": "t_rational_0_by_1",
+                                "typeString": "int_const 0"
+                              }
+                            ],
+                            "id": 1004,
+                            "isConstant": false,
+                            "isLValue": false,
+                            "isPure": true,
+                            "lValueRequested": false,
+                            "nodeType": "ElementaryTypeNameExpression",
+                            "src": "656:7:4",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_type$_t_address_$",
+                              "typeString": "type(address)"
+                            },
+                            "typeName": "address"
+                          },
+                          "id": 1006,
                           "isConstant": false,
                           "isLValue": false,
                           "isPure": true,
-                          "kind": "number",
+                          "kind": "typeConversion",
                           "lValueRequested": false,
-                          "nodeType": "Literal",
-                          "src": "656:1:4",
-                          "subdenomination": null,
+                          "names": [],
+                          "nodeType": "FunctionCall",
+                          "src": "656:10:4",
                           "typeDescriptions": {
-                            "typeIdentifier": "t_rational_0_by_1",
-                            "typeString": "int_const 0"
-                          },
-                          "value": "0"
+                            "typeIdentifier": "t_address_payable",
+                            "typeString": "address payable"
+                          }
                         },
-                        "src": "636:21:4",
+                        "src": "636:30:4",
                         "typeDescriptions": {
                           "typeIdentifier": "t_bool",
                           "typeString": "bool"
@@ -435,14 +474,14 @@
                       {
                         "argumentTypes": null,
                         "hexValue": "4d616e616765722068617320616c7265616479206265656e20736574",
-                        "id": 923,
+                        "id": 1008,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": true,
                         "kind": "string",
                         "lValueRequested": false,
                         "nodeType": "Literal",
-                        "src": "659:30:4",
+                        "src": "668:30:4",
                         "subdenomination": null,
                         "typeDescriptions": {
                           "typeIdentifier": "t_stringliteral_5b4e79257e154cde85ff5a3cf5bf48eb2c3921f8c031de73d371d41be013f3cc",
@@ -462,21 +501,21 @@
                           "typeString": "literal_string \"Manager has already been set\""
                         }
                       ],
-                      "id": 917,
+                      "id": 1000,
                       "name": "require",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [
-                        4018,
-                        4019
+                        4369,
+                        4370
                       ],
-                      "referencedDeclaration": 4019,
+                      "referencedDeclaration": 4370,
                       "src": "628:7:4",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_require_pure$_t_bool_$_t_string_memory_ptr_$returns$__$",
                         "typeString": "function (bool,string memory) pure"
                       }
                     },
-                    "id": 924,
+                    "id": 1009,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -484,34 +523,34 @@
                     "lValueRequested": false,
                     "names": [],
                     "nodeType": "FunctionCall",
-                    "src": "628:62:4",
+                    "src": "628:71:4",
                     "typeDescriptions": {
                       "typeIdentifier": "t_tuple$__$",
                       "typeString": "tuple()"
                     }
                   },
-                  "id": 925,
+                  "id": 1010,
                   "nodeType": "ExpressionStatement",
-                  "src": "628:62:4"
+                  "src": "628:71:4"
                 },
                 {
                   "expression": {
                     "argumentTypes": null,
-                    "id": 931,
+                    "id": 1016,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
                     "lValueRequested": false,
                     "leftHandSide": {
                       "argumentTypes": null,
-                      "id": 926,
+                      "id": 1011,
                       "name": "manager",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 900,
-                      "src": "700:7:4",
+                      "referencedDeclaration": 983,
+                      "src": "709:7:4",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_contract$_ModuleManager_$1212",
+                        "typeIdentifier": "t_contract$_ModuleManager_$1330",
                         "typeString": "contract ModuleManager"
                       }
                     },
@@ -524,18 +563,18 @@
                           "argumentTypes": null,
                           "expression": {
                             "argumentTypes": null,
-                            "id": 928,
+                            "id": 1013,
                             "name": "msg",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
-                            "referencedDeclaration": 4015,
-                            "src": "724:3:4",
+                            "referencedDeclaration": 4366,
+                            "src": "733:3:4",
                             "typeDescriptions": {
                               "typeIdentifier": "t_magic_message",
                               "typeString": "msg"
                             }
                           },
-                          "id": 929,
+                          "id": 1014,
                           "isConstant": false,
                           "isLValue": false,
                           "isPure": false,
@@ -543,32 +582,32 @@
                           "memberName": "sender",
                           "nodeType": "MemberAccess",
                           "referencedDeclaration": null,
-                          "src": "724:10:4",
+                          "src": "733:10:4",
                           "typeDescriptions": {
-                            "typeIdentifier": "t_address",
-                            "typeString": "address"
+                            "typeIdentifier": "t_address_payable",
+                            "typeString": "address payable"
                           }
                         }
                       ],
                       "expression": {
                         "argumentTypes": [
                           {
-                            "typeIdentifier": "t_address",
-                            "typeString": "address"
+                            "typeIdentifier": "t_address_payable",
+                            "typeString": "address payable"
                           }
                         ],
-                        "id": 927,
+                        "id": 1012,
                         "name": "ModuleManager",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 1212,
-                        "src": "710:13:4",
+                        "referencedDeclaration": 1330,
+                        "src": "719:13:4",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_type$_t_contract$_ModuleManager_$1212_$",
+                          "typeIdentifier": "t_type$_t_contract$_ModuleManager_$1330_$",
                           "typeString": "type(contract ModuleManager)"
                         }
                       },
-                      "id": 930,
+                      "id": 1015,
                       "isConstant": false,
                       "isLValue": false,
                       "isPure": false,
@@ -576,96 +615,95 @@
                       "lValueRequested": false,
                       "names": [],
                       "nodeType": "FunctionCall",
-                      "src": "710:25:4",
+                      "src": "719:25:4",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_contract$_ModuleManager_$1212",
+                        "typeIdentifier": "t_contract$_ModuleManager_$1330",
                         "typeString": "contract ModuleManager"
                       }
                     },
-                    "src": "700:35:4",
+                    "src": "709:35:4",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_contract$_ModuleManager_$1212",
+                      "typeIdentifier": "t_contract$_ModuleManager_$1330",
                       "typeString": "contract ModuleManager"
                     }
                   },
-                  "id": 932,
+                  "id": 1017,
                   "nodeType": "ExpressionStatement",
-                  "src": "700:35:4"
+                  "src": "709:35:4"
                 }
               ]
             },
             "documentation": null,
-            "id": 934,
+            "id": 1019,
             "implemented": true,
-            "isConstructor": false,
-            "isDeclaredConst": false,
+            "kind": "function",
             "modifiers": [],
             "name": "setManager",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 915,
+              "id": 998,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "461:2:4"
             },
-            "payable": false,
             "returnParameters": {
-              "id": 916,
+              "id": 999,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "485:0:4"
             },
-            "scope": 935,
-            "src": "442:300:4",
+            "scope": 1020,
+            "src": "442:309:4",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "internal"
           }
         ],
-        "scope": 936,
-        "src": "233:511:4"
+        "scope": 1021,
+        "src": "233:520:4"
       }
     ],
-    "src": "0:745:4"
+    "src": "0:754:4"
   },
   "legacyAST": {
-    "absolutePath": "/Users/apanizo/git/gnosis/safe-contracts/contracts/base/Module.sol",
+    "absolutePath": "/home/ger/git/gnosis/safe-contracts/contracts/base/Module.sol",
     "exportedSymbols": {
       "Module": [
-        935
+        1020
       ]
     },
-    "id": 936,
+    "id": 1021,
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 894,
+        "id": 977,
         "literals": [
           "solidity",
-          "0.4",
-          ".24"
+          "^",
+          "0.5",
+          ".0"
         ],
         "nodeType": "PragmaDirective",
         "src": "0:23:4"
       },
       {
-        "absolutePath": "/Users/apanizo/git/gnosis/safe-contracts/contracts/common/MasterCopy.sol",
+        "absolutePath": "/home/ger/git/gnosis/safe-contracts/contracts/common/MasterCopy.sol",
         "file": "../common/MasterCopy.sol",
-        "id": 895,
+        "id": 978,
         "nodeType": "ImportDirective",
-        "scope": 936,
-        "sourceUnit": 1694,
+        "scope": 1021,
+        "sourceUnit": 1840,
         "src": "24:34:4",
         "symbolAliases": [],
         "unitAlias": ""
       },
       {
-        "absolutePath": "/Users/apanizo/git/gnosis/safe-contracts/contracts/base/ModuleManager.sol",
+        "absolutePath": "/home/ger/git/gnosis/safe-contracts/contracts/base/ModuleManager.sol",
         "file": "./ModuleManager.sol",
-        "id": 896,
+        "id": 979,
         "nodeType": "ImportDirective",
-        "scope": 936,
-        "sourceUnit": 1213,
+        "scope": 1021,
+        "sourceUnit": 1331,
         "src": "59:29:4",
         "symbolAliases": [],
         "unitAlias": ""
@@ -676,59 +714,59 @@
             "arguments": null,
             "baseName": {
               "contractScope": null,
-              "id": 897,
+              "id": 980,
               "name": "MasterCopy",
               "nodeType": "UserDefinedTypeName",
-              "referencedDeclaration": 1693,
+              "referencedDeclaration": 1839,
               "src": "252:10:4",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_MasterCopy_$1693",
+                "typeIdentifier": "t_contract$_MasterCopy_$1839",
                 "typeString": "contract MasterCopy"
               }
             },
-            "id": 898,
+            "id": 981,
             "nodeType": "InheritanceSpecifier",
             "src": "252:10:4"
           }
         ],
         "contractDependencies": [
-          1693,
-          1735
+          1839,
+          1881
         ],
         "contractKind": "contract",
         "documentation": "@title Module - Base class for modules.\n @author Stefan George - <stefan@gnosis.pm>\n @author Richard Meissner - <richard@gnosis.pm>",
         "fullyImplemented": true,
-        "id": 935,
+        "id": 1020,
         "linearizedBaseContracts": [
-          935,
-          1693,
-          1735
+          1020,
+          1839,
+          1881
         ],
         "name": "Module",
         "nodeType": "ContractDefinition",
         "nodes": [
           {
             "constant": false,
-            "id": 900,
+            "id": 983,
             "name": "manager",
             "nodeType": "VariableDeclaration",
-            "scope": 935,
+            "scope": 1020,
             "src": "270:28:4",
             "stateVariable": true,
             "storageLocation": "default",
             "typeDescriptions": {
-              "typeIdentifier": "t_contract$_ModuleManager_$1212",
+              "typeIdentifier": "t_contract$_ModuleManager_$1330",
               "typeString": "contract ModuleManager"
             },
             "typeName": {
               "contractScope": null,
-              "id": 899,
+              "id": 982,
               "name": "ModuleManager",
               "nodeType": "UserDefinedTypeName",
-              "referencedDeclaration": 1212,
+              "referencedDeclaration": 1330,
               "src": "270:13:4",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_ModuleManager_$1212",
+                "typeIdentifier": "t_contract$_ModuleManager_$1330",
                 "typeString": "contract ModuleManager"
               }
             },
@@ -737,7 +775,7 @@
           },
           {
             "body": {
-              "id": 913,
+              "id": 996,
               "nodeType": "Block",
               "src": "327:109:4",
               "statements": [
@@ -748,10 +786,10 @@
                       {
                         "argumentTypes": null,
                         "commonType": {
-                          "typeIdentifier": "t_address",
-                          "typeString": "address"
+                          "typeIdentifier": "t_address_payable",
+                          "typeString": "address payable"
                         },
-                        "id": 908,
+                        "id": 991,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": false,
@@ -760,18 +798,18 @@
                           "argumentTypes": null,
                           "expression": {
                             "argumentTypes": null,
-                            "id": 903,
+                            "id": 986,
                             "name": "msg",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
-                            "referencedDeclaration": 4015,
+                            "referencedDeclaration": 4366,
                             "src": "345:3:4",
                             "typeDescriptions": {
                               "typeIdentifier": "t_magic_message",
                               "typeString": "msg"
                             }
                           },
-                          "id": 904,
+                          "id": 987,
                           "isConstant": false,
                           "isLValue": false,
                           "isPure": false,
@@ -781,8 +819,8 @@
                           "referencedDeclaration": null,
                           "src": "345:10:4",
                           "typeDescriptions": {
-                            "typeIdentifier": "t_address",
-                            "typeString": "address"
+                            "typeIdentifier": "t_address_payable",
+                            "typeString": "address payable"
                           }
                         },
                         "nodeType": "BinaryOperation",
@@ -792,14 +830,14 @@
                           "arguments": [
                             {
                               "argumentTypes": null,
-                              "id": 906,
+                              "id": 989,
                               "name": "manager",
                               "nodeType": "Identifier",
                               "overloadedDeclarations": [],
-                              "referencedDeclaration": 900,
+                              "referencedDeclaration": 983,
                               "src": "367:7:4",
                               "typeDescriptions": {
-                                "typeIdentifier": "t_contract$_ModuleManager_$1212",
+                                "typeIdentifier": "t_contract$_ModuleManager_$1330",
                                 "typeString": "contract ModuleManager"
                               }
                             }
@@ -807,11 +845,11 @@
                           "expression": {
                             "argumentTypes": [
                               {
-                                "typeIdentifier": "t_contract$_ModuleManager_$1212",
+                                "typeIdentifier": "t_contract$_ModuleManager_$1330",
                                 "typeString": "contract ModuleManager"
                               }
                             ],
-                            "id": 905,
+                            "id": 988,
                             "isConstant": false,
                             "isLValue": false,
                             "isPure": true,
@@ -824,7 +862,7 @@
                             },
                             "typeName": "address"
                           },
-                          "id": 907,
+                          "id": 990,
                           "isConstant": false,
                           "isLValue": false,
                           "isPure": false,
@@ -834,8 +872,8 @@
                           "nodeType": "FunctionCall",
                           "src": "359:16:4",
                           "typeDescriptions": {
-                            "typeIdentifier": "t_address",
-                            "typeString": "address"
+                            "typeIdentifier": "t_address_payable",
+                            "typeString": "address payable"
                           }
                         },
                         "src": "345:30:4",
@@ -847,7 +885,7 @@
                       {
                         "argumentTypes": null,
                         "hexValue": "4d6574686f642063616e206f6e6c792062652063616c6c65642066726f6d206d616e61676572",
-                        "id": 909,
+                        "id": 992,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": true,
@@ -874,21 +912,21 @@
                           "typeString": "literal_string \"Method can only be called from manager\""
                         }
                       ],
-                      "id": 902,
+                      "id": 985,
                       "name": "require",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [
-                        4018,
-                        4019
+                        4369,
+                        4370
                       ],
-                      "referencedDeclaration": 4019,
+                      "referencedDeclaration": 4370,
                       "src": "337:7:4",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_require_pure$_t_bool_$_t_string_memory_ptr_$returns$__$",
                         "typeString": "function (bool,string memory) pure"
                       }
                     },
-                    "id": 910,
+                    "id": 993,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -902,23 +940,23 @@
                       "typeString": "tuple()"
                     }
                   },
-                  "id": 911,
+                  "id": 994,
                   "nodeType": "ExpressionStatement",
                   "src": "337:81:4"
                 },
                 {
-                  "id": 912,
+                  "id": 995,
                   "nodeType": "PlaceholderStatement",
                   "src": "428:1:4"
                 }
               ]
             },
             "documentation": null,
-            "id": 914,
+            "id": 997,
             "name": "authorized",
             "nodeType": "ModifierDefinition",
             "parameters": {
-              "id": 901,
+              "id": 984,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "324:2:4"
@@ -928,9 +966,9 @@
           },
           {
             "body": {
-              "id": 933,
+              "id": 1018,
               "nodeType": "Block",
-              "src": "485:257:4",
+              "src": "485:266:4",
               "statements": [
                 {
                   "expression": {
@@ -939,10 +977,10 @@
                       {
                         "argumentTypes": null,
                         "commonType": {
-                          "typeIdentifier": "t_address",
-                          "typeString": "address"
+                          "typeIdentifier": "t_address_payable",
+                          "typeString": "address payable"
                         },
-                        "id": 922,
+                        "id": 1007,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": false,
@@ -952,14 +990,14 @@
                           "arguments": [
                             {
                               "argumentTypes": null,
-                              "id": 919,
+                              "id": 1002,
                               "name": "manager",
                               "nodeType": "Identifier",
                               "overloadedDeclarations": [],
-                              "referencedDeclaration": 900,
+                              "referencedDeclaration": 983,
                               "src": "644:7:4",
                               "typeDescriptions": {
-                                "typeIdentifier": "t_contract$_ModuleManager_$1212",
+                                "typeIdentifier": "t_contract$_ModuleManager_$1330",
                                 "typeString": "contract ModuleManager"
                               }
                             }
@@ -967,11 +1005,11 @@
                           "expression": {
                             "argumentTypes": [
                               {
-                                "typeIdentifier": "t_contract$_ModuleManager_$1212",
+                                "typeIdentifier": "t_contract$_ModuleManager_$1330",
                                 "typeString": "contract ModuleManager"
                               }
                             ],
-                            "id": 918,
+                            "id": 1001,
                             "isConstant": false,
                             "isLValue": false,
                             "isPure": true,
@@ -984,7 +1022,7 @@
                             },
                             "typeName": "address"
                           },
-                          "id": 920,
+                          "id": 1003,
                           "isConstant": false,
                           "isLValue": false,
                           "isPure": false,
@@ -994,31 +1032,69 @@
                           "nodeType": "FunctionCall",
                           "src": "636:16:4",
                           "typeDescriptions": {
-                            "typeIdentifier": "t_address",
-                            "typeString": "address"
+                            "typeIdentifier": "t_address_payable",
+                            "typeString": "address payable"
                           }
                         },
                         "nodeType": "BinaryOperation",
                         "operator": "==",
                         "rightExpression": {
                           "argumentTypes": null,
-                          "hexValue": "30",
-                          "id": 921,
+                          "arguments": [
+                            {
+                              "argumentTypes": null,
+                              "hexValue": "30",
+                              "id": 1005,
+                              "isConstant": false,
+                              "isLValue": false,
+                              "isPure": true,
+                              "kind": "number",
+                              "lValueRequested": false,
+                              "nodeType": "Literal",
+                              "src": "664:1:4",
+                              "subdenomination": null,
+                              "typeDescriptions": {
+                                "typeIdentifier": "t_rational_0_by_1",
+                                "typeString": "int_const 0"
+                              },
+                              "value": "0"
+                            }
+                          ],
+                          "expression": {
+                            "argumentTypes": [
+                              {
+                                "typeIdentifier": "t_rational_0_by_1",
+                                "typeString": "int_const 0"
+                              }
+                            ],
+                            "id": 1004,
+                            "isConstant": false,
+                            "isLValue": false,
+                            "isPure": true,
+                            "lValueRequested": false,
+                            "nodeType": "ElementaryTypeNameExpression",
+                            "src": "656:7:4",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_type$_t_address_$",
+                              "typeString": "type(address)"
+                            },
+                            "typeName": "address"
+                          },
+                          "id": 1006,
                           "isConstant": false,
                           "isLValue": false,
                           "isPure": true,
-                          "kind": "number",
+                          "kind": "typeConversion",
                           "lValueRequested": false,
-                          "nodeType": "Literal",
-                          "src": "656:1:4",
-                          "subdenomination": null,
+                          "names": [],
+                          "nodeType": "FunctionCall",
+                          "src": "656:10:4",
                           "typeDescriptions": {
-                            "typeIdentifier": "t_rational_0_by_1",
-                            "typeString": "int_const 0"
-                          },
-                          "value": "0"
+                            "typeIdentifier": "t_address_payable",
+                            "typeString": "address payable"
+                          }
                         },
-                        "src": "636:21:4",
+                        "src": "636:30:4",
                         "typeDescriptions": {
                           "typeIdentifier": "t_bool",
                           "typeString": "bool"
@@ -1027,14 +1103,14 @@
                       {
                         "argumentTypes": null,
                         "hexValue": "4d616e616765722068617320616c7265616479206265656e20736574",
-                        "id": 923,
+                        "id": 1008,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": true,
                         "kind": "string",
                         "lValueRequested": false,
                         "nodeType": "Literal",
-                        "src": "659:30:4",
+                        "src": "668:30:4",
                         "subdenomination": null,
                         "typeDescriptions": {
                           "typeIdentifier": "t_stringliteral_5b4e79257e154cde85ff5a3cf5bf48eb2c3921f8c031de73d371d41be013f3cc",
@@ -1054,21 +1130,21 @@
                           "typeString": "literal_string \"Manager has already been set\""
                         }
                       ],
-                      "id": 917,
+                      "id": 1000,
                       "name": "require",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [
-                        4018,
-                        4019
+                        4369,
+                        4370
                       ],
-                      "referencedDeclaration": 4019,
+                      "referencedDeclaration": 4370,
                       "src": "628:7:4",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_require_pure$_t_bool_$_t_string_memory_ptr_$returns$__$",
                         "typeString": "function (bool,string memory) pure"
                       }
                     },
-                    "id": 924,
+                    "id": 1009,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -1076,34 +1152,34 @@
                     "lValueRequested": false,
                     "names": [],
                     "nodeType": "FunctionCall",
-                    "src": "628:62:4",
+                    "src": "628:71:4",
                     "typeDescriptions": {
                       "typeIdentifier": "t_tuple$__$",
                       "typeString": "tuple()"
                     }
                   },
-                  "id": 925,
+                  "id": 1010,
                   "nodeType": "ExpressionStatement",
-                  "src": "628:62:4"
+                  "src": "628:71:4"
                 },
                 {
                   "expression": {
                     "argumentTypes": null,
-                    "id": 931,
+                    "id": 1016,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
                     "lValueRequested": false,
                     "leftHandSide": {
                       "argumentTypes": null,
-                      "id": 926,
+                      "id": 1011,
                       "name": "manager",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 900,
-                      "src": "700:7:4",
+                      "referencedDeclaration": 983,
+                      "src": "709:7:4",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_contract$_ModuleManager_$1212",
+                        "typeIdentifier": "t_contract$_ModuleManager_$1330",
                         "typeString": "contract ModuleManager"
                       }
                     },
@@ -1116,18 +1192,18 @@
                           "argumentTypes": null,
                           "expression": {
                             "argumentTypes": null,
-                            "id": 928,
+                            "id": 1013,
                             "name": "msg",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
-                            "referencedDeclaration": 4015,
-                            "src": "724:3:4",
+                            "referencedDeclaration": 4366,
+                            "src": "733:3:4",
                             "typeDescriptions": {
                               "typeIdentifier": "t_magic_message",
                               "typeString": "msg"
                             }
                           },
-                          "id": 929,
+                          "id": 1014,
                           "isConstant": false,
                           "isLValue": false,
                           "isPure": false,
@@ -1135,32 +1211,32 @@
                           "memberName": "sender",
                           "nodeType": "MemberAccess",
                           "referencedDeclaration": null,
-                          "src": "724:10:4",
+                          "src": "733:10:4",
                           "typeDescriptions": {
-                            "typeIdentifier": "t_address",
-                            "typeString": "address"
+                            "typeIdentifier": "t_address_payable",
+                            "typeString": "address payable"
                           }
                         }
                       ],
                       "expression": {
                         "argumentTypes": [
                           {
-                            "typeIdentifier": "t_address",
-                            "typeString": "address"
+                            "typeIdentifier": "t_address_payable",
+                            "typeString": "address payable"
                           }
                         ],
-                        "id": 927,
+                        "id": 1012,
                         "name": "ModuleManager",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 1212,
-                        "src": "710:13:4",
+                        "referencedDeclaration": 1330,
+                        "src": "719:13:4",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_type$_t_contract$_ModuleManager_$1212_$",
+                          "typeIdentifier": "t_type$_t_contract$_ModuleManager_$1330_$",
                           "typeString": "type(contract ModuleManager)"
                         }
                       },
-                      "id": 930,
+                      "id": 1015,
                       "isConstant": false,
                       "isLValue": false,
                       "isPure": false,
@@ -1168,63 +1244,61 @@
                       "lValueRequested": false,
                       "names": [],
                       "nodeType": "FunctionCall",
-                      "src": "710:25:4",
+                      "src": "719:25:4",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_contract$_ModuleManager_$1212",
+                        "typeIdentifier": "t_contract$_ModuleManager_$1330",
                         "typeString": "contract ModuleManager"
                       }
                     },
-                    "src": "700:35:4",
+                    "src": "709:35:4",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_contract$_ModuleManager_$1212",
+                      "typeIdentifier": "t_contract$_ModuleManager_$1330",
                       "typeString": "contract ModuleManager"
                     }
                   },
-                  "id": 932,
+                  "id": 1017,
                   "nodeType": "ExpressionStatement",
-                  "src": "700:35:4"
+                  "src": "709:35:4"
                 }
               ]
             },
             "documentation": null,
-            "id": 934,
+            "id": 1019,
             "implemented": true,
-            "isConstructor": false,
-            "isDeclaredConst": false,
+            "kind": "function",
             "modifiers": [],
             "name": "setManager",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 915,
+              "id": 998,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "461:2:4"
             },
-            "payable": false,
             "returnParameters": {
-              "id": 916,
+              "id": 999,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "485:0:4"
             },
-            "scope": 935,
-            "src": "442:300:4",
+            "scope": 1020,
+            "src": "442:309:4",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "internal"
           }
         ],
-        "scope": 936,
-        "src": "233:511:4"
+        "scope": 1021,
+        "src": "233:520:4"
       }
     ],
-    "src": "0:745:4"
+    "src": "0:754:4"
   },
   "compiler": {
     "name": "solc",
-    "version": "0.4.24+commit.e67f0147.Emscripten.clang"
+    "version": "0.5.7+commit.6da8b019.Emscripten.clang"
   },
   "networks": {},
-  "schemaVersion": "2.0.0",
-  "updatedAt": "2018-10-05T14:25:58.910Z"
+  "schemaVersion": "2.0.2",
+  "updatedAt": "2019-04-12T12:46:18.624Z"
 }
