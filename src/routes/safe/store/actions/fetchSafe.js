@@ -4,7 +4,7 @@ import { List, Map } from 'immutable'
 import { type GlobalState } from '~/store/index'
 import { makeOwner } from '~/routes/safe/store/model/owner'
 import SafeRecord, { type SafeProps } from '~/routes/safe/store/model/safe'
-import updateSafe from '~/routes/safe/store/actions/updateSafe'
+import { addSafe } from '~/routes/safe/store/actions/addSafe'
 import { getOwners, getSafeName } from '~/logic/safe/utils'
 import { getGnosisSafeContract } from '~/logic/contracts/safeContracts'
 import { getWeb3, getBalanceInEtherOf } from '~/logic/wallets/getWeb3'
@@ -42,7 +42,7 @@ export default (safeAddress: string) => async (dispatch: ReduxDispatch<GlobalSta
     const safeName = (await getSafeName(safeAddress)) || 'LOADED SAFE'
     const safeRecord = await buildSafe(safeAddress, safeName)
 
-    return dispatch(updateSafe(safeRecord))
+    return dispatch(addSafe(safeRecord))
   } catch (err) {
     // eslint-disable-next-line
     console.error('Error while updating safe information: ', err)

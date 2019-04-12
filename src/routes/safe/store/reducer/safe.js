@@ -59,12 +59,7 @@ export default handleActions<State, *>(
       const safe = action.payload
       const safeAddress = safe.address
 
-      const hasSafe = !!state.get(safeAddress)
-      if (hasSafe) {
-        return state.update(safeAddress, prevSafe => (prevSafe.equals(safe) ? prevSafe : safe))
-      }
-
-      return state.set(safeAddress, safe)
+      return state.mergeIn(safeAddress, safe)
     },
     [ADD_SAFE]: (state: State, action: ActionType<Function>): State => {
       const { safe }: { safe: Safe } = action.payload
