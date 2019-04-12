@@ -2,9 +2,9 @@
 import { createStructuredSelector } from 'reselect'
 import { confirmationsTransactionSelector } from '~/routes/safe/store/selectors/index'
 import { userAccountSelector } from '~/logic/wallets/store/selectors'
-import { type Transaction } from '~/routes/safe/store/model/transaction'
+import { type Transaction } from '~/routes/safe/store/models/transaction'
 import { type GlobalState } from '~/store'
-import { type Confirmation } from '~/routes/safe/store/model/confirmation'
+import { type Confirmation } from '~/routes/safe/store/models/confirmation'
 
 export type SelectorProps = {
   confirmed: confirmationsTransactionSelector,

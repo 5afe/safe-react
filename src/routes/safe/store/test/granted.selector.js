@@ -2,7 +2,7 @@
 import { Map } from 'immutable'
 import { type Match } from 'react-router-dom'
 import { SAFE_REDUCER_ID } from '~/routes/safe/store/reducer/safe'
-import { type Safe } from '~/routes/safe/store/model/safe'
+import { type Safe } from '~/routes/safe/store/models/safe'
 import { SafeFactory } from '~/routes/safe/store/test/builder/safe.builder'
 import { buildMathPropsFrom } from '~/test/utils/buildReactRouterProps'
 import { getProviderInfo } from '~/logic/wallets/getWeb3'

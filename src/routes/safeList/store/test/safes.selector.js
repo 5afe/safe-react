@@ -1,7 +1,7 @@
 // @flow
 import { List, Map } from 'immutable'
 import { SAFE_REDUCER_ID } from '~/routes/safe/store/reducer/safe'
-import { type Safe } from '~/routes/safe/store/model/safe'
+import { type Safe } from '~/routes/safe/store/models/safe'
 import { getProviderInfo } from '~/logic/wallets/getWeb3'
 import { SafeFactory } from '~/routes/safe/store/test/builder/safe.builder'
 import { PROVIDER_REDUCER_ID } from '~/logic/wallets/store/reducer/provider'

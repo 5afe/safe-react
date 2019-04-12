@@ -9,7 +9,7 @@ import ListItemText from '~/components/List/ListItemText'
 import Avatar from '@material-ui/core/Avatar'
 import Group from '@material-ui/icons/Group'
 import MailOutline from '@material-ui/icons/MailOutline'
-import { type Confirmation } from '~/routes/safe/store/model/confirmation'
+import { type Confirmation } from '~/routes/safe/store/models/confirmation'
 import Confirmations from './Confirmations'
 
 type Props = {

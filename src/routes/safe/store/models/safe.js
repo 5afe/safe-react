@@ -1,7 +1,8 @@
 // @flow
-import { List, Record, Map } from 'immutable'
+import { List, Record } from 'immutable'
 import type { RecordFactory, RecordOf } from 'immutable'
-import type { Owner } from '~/routes/safe/store/model/owner'
+import type { Owner } from '~/routes/safe/store/models/owner'
+import type { SafeToken } from '~/routes/safe/store/models/safeToken'
 
 export type SafeProps = {
   name: string,
@@ -9,7 +10,7 @@ export type SafeProps = {
   threshold: number,
   ethBalance: string,
   owners: List<Owner>,
-  tokens?: List<Object>,
+  tokens?: List<SafeToken>,
 }
 
 const SafeRecord: RecordFactory<SafeProps> = Record({

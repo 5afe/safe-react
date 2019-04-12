@@ -1,9 +1,9 @@
 // @flow
 import { List } from 'immutable'
 import { createAction } from 'redux-actions'
-import SafeRecord, { type Safe } from '~/routes/safe/store/model/safe'
+import SafeRecord, { type Safe } from '~/routes/safe/store/models/safe'
 import { saveSafes, setOwners } from '~/logic/safe/utils'
-import { makeOwner, type Owner } from '~/routes/safe/store/model/owner'
+import { makeOwner, type Owner } from '~/routes/safe/store/models/owner'
 import type { Dispatch as ReduxDispatch, GetState } from 'redux'
 import { type GlobalState } from '~/store/index'
 import { safesMapSelector } from '~/routes/safeList/store/selectors/index'

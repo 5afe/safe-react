@@ -8,8 +8,8 @@ import {
   type SafeSelectorProps,
 } from '~/routes/safe/store/selectors'
 import { providerNameSelector, userAccountSelector, networkSelector } from '~/logic/wallets/store/selectors'
-import { type Safe } from '~/routes/safe/store/model/safe'
-import { type Owner } from '~/routes/safe/store/model/owner'
+import { type Safe } from '~/routes/safe/store/models/safe'
+import { type Owner } from '~/routes/safe/store/models/owner'
 import { type GlobalState } from '~/store'
 import { sameAddress } from '~/logic/wallets/ethAddresses'
 import { orderedTokenListSelector, tokensSelector } from '~/logic/tokens/store/selectors'

@@ -14,7 +14,7 @@ import Person from '@material-ui/icons/Person'
 import ExpandLess from '@material-ui/icons/ExpandLess'
 import ExpandMore from '@material-ui/icons/ExpandMore'
 import { type WithStyles } from '~/theme/mui'
-import { type Confirmation, type ConfirmationProps } from '~/routes/safe/store/model/confirmation'
+import { type Confirmation, type ConfirmationProps } from '~/routes/safe/store/models/confirmation'
 
 const styles = {
   nested: {

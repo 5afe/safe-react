@@ -1,5 +1,5 @@
 // @flow
-import { type Owner } from '~/routes/safe/store/model/owner'
+import { type Owner } from '~/routes/safe/store/models/owner'
 import { List, Map } from 'immutable'
 import { loadFromStorage, saveToStorage } from '~/utils/storage'
 

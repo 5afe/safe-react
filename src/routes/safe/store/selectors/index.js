@@ -4,11 +4,11 @@ import { type Match } from 'react-router-dom'
 import { createSelector, createStructuredSelector, type Selector } from 'reselect'
 import { type GlobalState } from '~/store/index'
 import { SAFE_PARAM_ADDRESS } from '~/routes/routes'
-import { type Safe } from '~/routes/safe/store/model/safe'
+import { type Safe } from '~/routes/safe/store/models/safe'
 import { safesMapSelector } from '~/routes/safeList/store/selectors'
 import { type State as TransactionsState, TRANSACTIONS_REDUCER_ID } from '~/routes/safe/store/reducer/transactions'
-import { type Transaction } from '~/routes/safe/store/model/transaction'
-import { type Confirmation } from '~/routes/safe/store/model/confirmation'
+import { type Transaction } from '~/routes/safe/store/models/transaction'
+import { type Confirmation } from '~/routes/safe/store/models/confirmation'
 
 export type RouterProps = {
   match: Match,

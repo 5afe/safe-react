@@ -1,10 +1,10 @@
 // @flow
 import { List } from 'immutable'
-import { type Transaction } from '~/routes/safe/store/model/transaction'
+import { type Transaction } from '~/routes/safe/store/models/transaction'
 import { executeTransaction, approveTransaction } from '~/logic/safe/safeBlockchainOperations'
 import { EMPTY_DATA } from '~/logic/wallets/ethTransactions'
 import { getWeb3 } from '~/logic/wallets/getWeb3'
-import { type Safe } from '~/routes/safe/store/model/safe'
+import { type Safe } from '~/routes/safe/store/models/safe'
 import { getGnosisSafeContract } from '~/logic/contracts/safeContracts'
 import { storeSubject } from '~/utils/storage/transactions'
 

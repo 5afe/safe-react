@@ -2,9 +2,9 @@
 import { List, Map } from 'immutable'
 import { createSelector, type Selector } from 'reselect'
 import { type GlobalState } from '~/store/index'
-import { type Safe } from '~/routes/safe/store/model/safe'
+import { type Safe } from '~/routes/safe/store/models/safe'
 import { userAccountSelector } from '~/logic/wallets/store/selectors'
-import { type Owner } from '~/routes/safe/store/model/owner'
+import { type Owner } from '~/routes/safe/store/models/owner'
 import { sameAddress } from '~/logic/wallets/ethAddresses'
 import { SAFE_REDUCER_ID } from '~/routes/safe/store/reducer/safe'
 

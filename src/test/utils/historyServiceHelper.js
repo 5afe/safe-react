@@ -1,7 +1,7 @@
 // @flow
 import { List, Map } from 'immutable'
-import { type Confirmation } from '~/routes/safe/store/model/confirmation'
-import { type Transaction } from '~/routes/safe/store/model/transaction'
+import { type Confirmation } from '~/routes/safe/store/models/confirmation'
+import { type Transaction } from '~/routes/safe/store/models/transaction'
 import { sameAddress } from '~/logic/wallets/ethAddresses'
 
 export const testSizeOfSafesWith = (transactions: Map<string, List<Transaction>>, size: number) => {

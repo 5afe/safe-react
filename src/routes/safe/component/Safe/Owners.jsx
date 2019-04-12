@@ -15,7 +15,7 @@ import Delete from '@material-ui/icons/Delete'
 import Person from '@material-ui/icons/Person'
 import ExpandLess from '@material-ui/icons/ExpandLess'
 import ExpandMore from '@material-ui/icons/ExpandMore'
-import { type OwnerProps } from '~/routes/safe/store/model/owner'
+import { type OwnerProps } from '~/routes/safe/store/models/owner'
 import { type WithStyles } from '~/theme/mui'
 import { sameAddress } from '~/logic/wallets/ethAddresses'
 

@@ -6,7 +6,7 @@ import OpenPaper from '~/components/Stepper/OpenPaper'
 import Field from '~/components/forms/Field'
 import TextField from '~/components/forms/TextField'
 import { composeValidators, minValue, maxValue, mustBeInteger, required } from '~/components/forms/validator'
-import { type Safe } from '~/routes/safe/store/model/safe'
+import { type Safe } from '~/routes/safe/store/models/safe'
 
 export const THRESHOLD_PARAM = 'threshold'
 

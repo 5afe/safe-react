@@ -1,5 +1,5 @@
 // @flow
-import SafeRecord, { type Safe } from '~/routes/safe/store/model/safe'
+import SafeRecord, { type Safe } from '~/routes/safe/store/models/safe'
 import addSafe, { buildOwnersFrom } from '~/routes/safe/store/actions/addSafe'
 import {
   FIELD_NAME,
