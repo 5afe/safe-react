@@ -1,9 +1,10 @@
 // @flow
-import { Map } from 'immutable'
+import { Map, List } from 'immutable'
 import { handleActions, type ActionType } from 'redux-actions'
 import { ADD_SAFE, buildOwnersFrom } from '~/routes/safe/store/actions/addSafe'
 import SafeRecord, { type Safe, type SafeProps } from '~/routes/safe/store/models/safe'
 import { type OwnerProps } from '~/routes/safe/store/models/owner'
+import type { SafeToken } from '~/routes/safe/store/models/safeToken'
 import { loadFromStorage } from '~/utils/storage'
 import { SAFES_KEY } from '~/logic/safe/utils'
 import { UPDATE_SAFE } from '~/routes/safe/store/actions/updateSafe'
@@ -68,9 +69,22 @@ export default handleActions<State, *>(
       return state.set(safe.address, safe)
     },
     [UPDATE_SAFE_TOKENS]: (state: State, action: ActionType<Function>): State => {
-      const { safeAddress, token } = action.payload
-      const tokens = state.getIn([safeAddress, 'tokens'])
-    }
+      const { safeAddress, token: updatedToken } = action.payload
+
+      const tokens: List<SafeToken> = state.getIn([safeAddress, 'tokens'])
+      console.log(tokens)
+      const index = tokens.findIndex(token => token.address === updatedToken.address)
+      console.log('called')
+      let newState
+      if (index !== -1) {
+        newState = state.setIn([safeAddress, 'tokens'], tokens.delete(index))
+      } else {
+        newState = state.setIn([safeAddress, 'tokens'], tokens.push(updatedToken))
+      }
+      console.log(newState.toJS())
+
+      return newState
+    },
   },
   Map(),
 )

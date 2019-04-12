@@ -13,7 +13,7 @@ type ActionReturn = {
 
 export const updateTokenAction = createAction<string, Function, ActionReturn>(
   UPDATE_SAFE_TOKENS,
-  (token: SafeToken): ActionReturn => ({
+  (safeAddress: string, token: SafeToken): ActionReturn => ({
     safeAddress,
     token,
   }),

@@ -67,13 +67,9 @@ class Tokens extends React.Component<Props, State> {
 
   onSwitch = (token: Token) => (e: SyntheticInputEvent<HTMLInputElement>) => {
     const { checked } = e.target
-    const { safeAddress, enableToken, disableToken } = this.props
+    const { safeAddress, updateActiveTokens } = this.props
 
-    if (checked) {
-      enableToken(safeAddress, token)
-    } else {
-      disableToken(safeAddress, token)
-    }
+    updateActiveTokens(safeAddress, token.address)
   }
 
   setImageToPlaceholder = (e) => {
