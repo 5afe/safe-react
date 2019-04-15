@@ -8,8 +8,13 @@ import SafeTokenRecord from '~/routes/safe/store/models/safeToken'
 import { getStandardTokenContract } from '~/logic/tokens/store/actions/fetchTokens'
 import type { Safe } from '~/routes/safe/store/models/safe'
 import updateSafe from './updateSafe'
+import { ETH_ADDRESS } from '~/logic/tokens/utils/tokenHelpers';
 
 export const calculateBalanceOf = async (tokenAddress: string, safeAddress: string, decimals: number = 18) => {
+  if (tokenAddress === ETH_ADDRESS) {
+    return '0'
+  }
+
   const erc20Token = await getStandardTokenContract()
   let balance = 0
 

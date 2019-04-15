@@ -74,7 +74,7 @@ const extendedSafeTokensSelector: Selector<GlobalState, RouterProps, List<Token>
         const baseToken = tokensList.get(token.address)
 
         if (baseToken) {
-          map.set(token.address, baseToken.set(token.balance))
+          map.set(token.address, baseToken.set('balance', token.balance))
         }
       })
 

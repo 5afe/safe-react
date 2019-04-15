@@ -76,16 +76,14 @@ export default handleActions<State, *>(
       const { safeAddress, token: updatedToken } = action.payload
 
       const tokens: List<SafeToken> = state.getIn([safeAddress, 'tokens'])
-      console.log(tokens)
       const index = tokens.findIndex(token => token.address === updatedToken.address)
-      console.log('called')
+
       let newState
       if (index !== -1) {
         newState = state.setIn([safeAddress, 'tokens'], tokens.delete(index))
       } else {
         newState = state.setIn([safeAddress, 'tokens'], tokens.push(updatedToken))
       }
-      console.log(newState.toJS())
 
       return newState
     },
