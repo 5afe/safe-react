@@ -15,12 +15,12 @@ import { FIELD_LOAD_NAME, FIELD_LOAD_ADDRESS } from '../components/fields'
 type Props = SelectorProps & Actions
 
 export const loadSafe = async (safeName: string, safeAddress: string, addSafe: Function) => {
-  const safeRecord = await buildSafe(safeAddress, safeName)
+  const safeProps = await buildSafe(safeAddress, safeName)
 
-  await addSafe(safeRecord)
+  await addSafe(safeProps)
 
   const storedSafes = (await loadFromStorage(SAFES_KEY)) || {}
-  storedSafes[safeAddress] = safeRecord.toJSON()
+  storedSafes[safeAddress] = safeProps
 
   saveSafes(storedSafes)
 }

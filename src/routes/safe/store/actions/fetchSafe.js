@@ -3,13 +3,15 @@ import type { Dispatch as ReduxDispatch } from 'redux'
 import { List, Map } from 'immutable'
 import { type GlobalState } from '~/store/index'
 import { makeOwner } from '~/routes/safe/store/models/owner'
-import SafeRecord, { type SafeProps } from '~/routes/safe/store/models/safe'
+import { type SafeProps } from '~/routes/safe/store/models/safe'
 import { addSafe } from '~/routes/safe/store/actions/addSafe'
 import { getOwners, getSafeName } from '~/logic/safe/utils'
 import { getGnosisSafeContract } from '~/logic/contracts/safeContracts'
 import { getWeb3, getBalanceInEtherOf } from '~/logic/wallets/getWeb3'
 import updateSafe from '~/routes/safe/store/actions/updateSafe'
 
+// eslint-disable-next-line
+// eslint-disable-next-line
 const buildOwnersFrom = (
   safeOwners: string[],
   storedOwners: Map<string, string>, // eslint-disable-next-line
@@ -35,18 +37,18 @@ export const buildSafe = async (safeAddress: string, safeName: string) => {
     ethBalance,
   }
 
-  return SafeRecord(safe)
+  return safe
 }
 
 export default (safeAddress: string, update: boolean = false) => async (dispatch: ReduxDispatch<GlobalState>) => {
   try {
     const safeName = (await getSafeName(safeAddress)) || 'LOADED SAFE'
-    const safe = await buildSafe(safeAddress, safeName)
-    console.log(safe.toJS())
+    const safeProps: SafeProps = await buildSafe(safeAddress, safeName)
+
     if (update) {
-      dispatch(updateSafe(safe))
+      dispatch(updateSafe(safeProps))
     } else {
-      dispatch(addSafe(safe))
+      dispatch(addSafe(safeProps))
     }
   } catch (err) {
     // eslint-disable-next-line

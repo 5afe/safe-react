@@ -66,7 +66,11 @@ export default handleActions<State, *>(
     [ADD_SAFE]: (state: State, action: ActionType<Function>): State => {
       const { safe }: { safe: Safe } = action.payload
 
-      return state.set(safe.address, safe)
+      // if you add a new safe it needs to be set as a record
+      // in case of update it shouldn't, because a record would be initialized
+      // with initial props and it would overwrite existing ones
+
+      return state.set(safe.address, SafeRecord(safe))
     },
     [UPDATE_SAFE_TOKENS]: (state: State, action: ActionType<Function>): State => {
       const { safeAddress, token: updatedToken } = action.payload
