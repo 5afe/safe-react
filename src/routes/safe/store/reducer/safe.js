@@ -25,7 +25,7 @@ export const buildSafe = (storedSafe: SafeProps) => {
     owners,
   }
 
-  return SafeRecord(safe)
+  return safe
 }
 
 const buildSafesFrom = (loadedSafes: Object): Map<string, Safe> => {
@@ -36,7 +36,7 @@ const buildSafesFrom = (loadedSafes: Object): Map<string, Safe> => {
     const safeRecords = keys.map((address: string) => buildSafe(loadedSafes[address]))
 
     return safes.withMutations(async (map) => {
-      safeRecords.forEach((safe: Safe) => map.set(safe.get('address'), safe))
+      safeRecords.forEach((safe: SafeProps) => map.set(safe.address, safe))
     })
   } catch (err) {
     // eslint-disable-next-line

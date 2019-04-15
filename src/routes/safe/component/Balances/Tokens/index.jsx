@@ -65,8 +65,7 @@ class Tokens extends React.Component<Props, State> {
     this.setState(() => ({ filter: value }))
   }
 
-  onSwitch = (token: Token) => (e: SyntheticInputEvent<HTMLInputElement>) => {
-    const { checked } = e.target
+  onSwitch = (token: Token) => () => {
     const { safeAddress, updateActiveTokens } = this.props
 
     updateActiveTokens(safeAddress, token.address)
@@ -78,7 +77,9 @@ class Tokens extends React.Component<Props, State> {
   }
 
   render() {
-    const { onClose, classes, tokens } = this.props
+    const {
+      onClose, classes, tokens, activeTokens,
+    } = this.props
     const { filter } = this.state
     const searchClasses = {
       input: classes.searchInput,
@@ -120,19 +121,23 @@ class Tokens extends React.Component<Props, State> {
           <Hairline />
         </Block>
         <MuiList className={classes.list}>
-          {filteredTokens.map((token: Token) => (
-            <ListItem key={token.address} className={classes.token}>
-              <ListItemIcon>
-                <Img src={token.logoUri} height={28} alt={token.name} onError={this.setImageToPlaceholder} />
-              </ListItemIcon>
-              <ListItemText primary={token.symbol} secondary={token.name} />
-              {token.address !== ETH_ADDRESS && (
-                <ListItemSecondaryAction>
-                  <Switch onChange={this.onSwitch(token)} checked={token.status} />
-                </ListItemSecondaryAction>
-              )}
-            </ListItem>
-          ))}
+          {filteredTokens.map((token: Token) => {
+            const isActive = activeTokens.findIndex(({ address }) => address === token.address) !== -1
+
+            return (
+              <ListItem key={token.address} className={classes.token}>
+                <ListItemIcon>
+                  <Img src={token.logoUri} height={28} alt={token.name} onError={this.setImageToPlaceholder} />
+                </ListItemIcon>
+                <ListItemText primary={token.symbol} secondary={token.name} />
+                {token.address !== ETH_ADDRESS && (
+                  <ListItemSecondaryAction>
+                    <Switch onChange={this.onSwitch(token)} checked={isActive} />
+                  </ListItemSecondaryAction>
+                )}
+              </ListItem>
+            )
+          })}
         </MuiList>
       </React.Fragment>
     )
