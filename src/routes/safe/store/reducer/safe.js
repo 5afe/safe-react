@@ -8,7 +8,6 @@ import type { SafeToken } from '~/routes/safe/store/models/safeToken'
 import { loadFromStorage } from '~/utils/storage'
 import { SAFES_KEY } from '~/logic/safe/utils'
 import { UPDATE_SAFE } from '~/routes/safe/store/actions/updateSafe'
-import { UPDATE_SAFE_TOKENS } from '~/routes/safe/store/actions/updateActiveTokens'
 
 export const SAFE_REDUCER_ID = 'safes'
 
@@ -71,21 +70,6 @@ export default handleActions<State, *>(
       // with initial props and it would overwrite existing ones
 
       return state.set(safe.address, SafeRecord(safe))
-    },
-    [UPDATE_SAFE_TOKENS]: (state: State, action: ActionType<Function>): State => {
-      const { safeAddress, token: updatedToken } = action.payload
-
-      const tokens: List<SafeToken> = state.getIn([safeAddress, 'tokens'])
-      const index = tokens.findIndex(token => token.address === updatedToken.address)
-
-      let newState
-      if (index !== -1) {
-        newState = state.setIn([safeAddress, 'tokens'], tokens.delete(index))
-      } else {
-        newState = state.setIn([safeAddress, 'tokens'], tokens.push(updatedToken))
-      }
-
-      return newState
     },
   },
   Map(),
