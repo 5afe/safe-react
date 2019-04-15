@@ -6,7 +6,6 @@ import { type GlobalState } from '~/store/index'
 import { type Token } from '~/logic/tokens/store/model/token'
 import SafeTokenRecord from '~/routes/safe/store/models/safeToken'
 import { getStandardTokenContract } from '~/logic/tokens/store/actions/fetchTokens'
-import type { Safe } from '~/routes/safe/store/models/safe'
 import updateSafe from './updateSafe'
 import { ETH_ADDRESS } from '~/logic/tokens/utils/tokenHelpers'
 
@@ -28,22 +27,24 @@ export const calculateBalanceOf = async (tokenAddress: string, safeAddress: stri
   return new BigNumber(balance).div(10 ** decimals).toString()
 }
 
-const fetchTokenBalances = (safe: Safe, tokens: List<Token>) => async (dispatch: ReduxDispatch<GlobalState>) => {
-  if (!safe || !tokens || !tokens.size) {
+const fetchTokenBalances = (safeAddress: string, tokens: List<Token>) => async (
+  dispatch: ReduxDispatch<GlobalState>,
+) => {
+  if (!safeAddress || !tokens || !tokens.size) {
     return
   }
 
   try {
     const withBalances = await Promise.all(
-      tokens.map(async token => SafeTokenRecord({
-        address: token.address,
-        balance: await calculateBalanceOf(token.address, safe.address, token.decimals),
-      })),
+      tokens
+        .filter(token => token.address !== ETH_ADDRESS)
+        .map(async token => SafeTokenRecord({
+          address: token.address,
+          balance: await calculateBalanceOf(token.address, safeAddress, token.decimals),
+        })),
     )
 
-    const safeWithBalances = safe.set('tokens', List(withBalances))
-
-    dispatch(updateSafe(safeWithBalances))
+    dispatch(updateSafe({ address: safeAddress, tokens: List(withBalances) }))
   } catch (err) {
     // eslint-disable-next-line
     console.error('Error while loading active tokens from storage:', err)

@@ -46,6 +46,7 @@ export default (safeAddress: string, update: boolean = false) => async (dispatch
     const safeProps: SafeProps = await buildSafe(safeAddress, safeName)
 
     if (update) {
+      console.log(safeProps)
       dispatch(updateSafe(safeProps))
     } else {
       dispatch(addSafe(safeProps))

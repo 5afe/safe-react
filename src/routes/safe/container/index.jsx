@@ -16,17 +16,25 @@ const TIMEOUT = process.env.NODE_ENV === 'test' ? 1500 : 15000
 class SafeView extends React.Component<Props> {
   componentDidMount() {
     const {
-      fetchSafe, loadActiveTokens, activeTokens, safeUrl, fetchTokenBalances, safe,
+      fetchSafe, loadActiveTokens, activeTokens, safeUrl, fetchTokenBalances,
     } = this.props
 
     fetchSafe(safeUrl)
     // loadActiveTokens(safeUrl)
-    fetchTokenBalances(safe, activeTokens)
+    fetchTokenBalances(safeUrl, activeTokens)
 
     this.intervalId = setInterval(() => {
       // update in another function so it uses up-to-date props values
       this.checkForUpdates()
     }, TIMEOUT)
+  }
+
+  componentDidUpdate(prevProps) {
+    const { activeTokens } = this.props
+
+    if (!activeTokens.equals(prevProps.activeTokens)) {
+      this.checkForUpdates()
+    }
   }
 
   componentWillUnmount() {
@@ -35,11 +43,11 @@ class SafeView extends React.Component<Props> {
 
   checkForUpdates() {
     const {
-      safeUrl, activeTokens, fetchSafe, fetchTokenBalances, safe,
+      safeUrl, activeTokens, fetchSafe, fetchTokenBalances,
     } = this.props
 
     fetchSafe(safeUrl, true)
-    fetchTokenBalances(safe, activeTokens)
+    fetchTokenBalances(safeUrl, activeTokens)
   }
 
   intervalId: IntervalID
