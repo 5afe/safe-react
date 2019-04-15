@@ -1,10 +1,9 @@
 // @flow
-import { Map, List } from 'immutable'
+import { Map } from 'immutable'
 import { handleActions, type ActionType } from 'redux-actions'
 import { ADD_SAFE, buildOwnersFrom } from '~/routes/safe/store/actions/addSafe'
 import SafeRecord, { type Safe, type SafeProps } from '~/routes/safe/store/models/safe'
 import { type OwnerProps } from '~/routes/safe/store/models/owner'
-import type { SafeToken } from '~/routes/safe/store/models/safeToken'
 import { loadFromStorage } from '~/utils/storage'
 import { SAFES_KEY } from '~/logic/safe/utils'
 import { UPDATE_SAFE } from '~/routes/safe/store/actions/updateSafe'

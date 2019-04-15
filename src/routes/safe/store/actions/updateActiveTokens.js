@@ -8,6 +8,8 @@ import { safeTokensSelector } from '~/routes/safe/store/selectors/index'
 import { SAFE_PARAM_ADDRESS } from '~/routes/routes'
 import updateSafe from './updateSafe'
 
+// the selector uses ownProps argument/router props to get the address of the safe
+// so in order to use it I had to recreate the same structure
 const generateMatchProps = (safeAddress: string) => ({
   match: {
     params: {
