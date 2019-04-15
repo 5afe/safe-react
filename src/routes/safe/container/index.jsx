@@ -29,13 +29,13 @@ class SafeView extends React.Component<Props> {
     }, TIMEOUT)
   }
 
-  // componentDidUpdate(prevProps) {
-  //   const { activeTokens } = this.props
+  componentDidUpdate(prevProps) {
+    const { activeTokens } = this.props
 
-  //   if (!activeTokens.equals(prevProps.activeTokens)) {
-  //     this.checkForUpdates()
-  //   }
-  // }
+    if (activeTokens.size > prevProps.activeTokens.size) {
+      this.checkForUpdates()
+    }
+  }
 
   componentWillUnmount() {
     clearInterval(this.intervalId)
