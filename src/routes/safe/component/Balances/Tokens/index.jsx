@@ -25,7 +25,7 @@ import Spacer from '~/components/Spacer'
 import Row from '~/components/layout/Row'
 import { ETH_ADDRESS } from '~/logic/tokens/utils/tokenHelpers'
 import { type Token } from '~/logic/tokens/store/model/token'
-import { type SafeToken } from '~/routes/safe/store/models/safeToken'
+import { type TokenBalance } from '~/routes/safe/store/models/tokenBalance'
 import actions, { type Actions } from './actions'
 import TokenPlaceholder from './assets/token_placeholder.png'
 import { styles } from './style'
@@ -47,6 +47,11 @@ const filterBy = (filter: string, tokens: List<Token>): List<Token> => tokens.fi
       || token.symbol.toLowerCase().includes(filter.toLowerCase())
       || token.name.toLowerCase().includes(filter.toLowerCase()),
 )
+
+// OPTIMIZATION IDEA (Thanks Andre)
+// Calculate active tokens on component mount, store it in component state
+// After user closes modal, dispatch an action so we dont have 100500 actions
+// And selectors dont recalculate
 
 class Tokens extends React.Component<Props, State> {
   state = {

@@ -3,7 +3,7 @@ import { createAction } from 'redux-actions'
 import { type Token } from '~/logic/tokens/store/model/token'
 import { setActiveTokens, getActiveTokens, setToken } from '~/logic/tokens/utils/tokensStorage'
 import type { Dispatch as ReduxDispatch } from 'redux'
-import { type GlobalState } from '~/store/index'
+import { type GlobalState } from '~/store/'
 
 export const ADD_TOKEN = 'ADD_TOKEN'
 
