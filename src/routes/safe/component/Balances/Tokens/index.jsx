@@ -25,6 +25,7 @@ import Spacer from '~/components/Spacer'
 import Row from '~/components/layout/Row'
 import { ETH_ADDRESS } from '~/logic/tokens/utils/tokenHelpers'
 import { type Token } from '~/logic/tokens/store/model/token'
+import { type SafeToken } from '~/routes/safe/store/models/safeToken'
 import actions, { type Actions } from './actions'
 import TokenPlaceholder from './assets/token_placeholder.png'
 import { styles } from './style'
@@ -34,6 +35,7 @@ type Props = Actions & {
   classes: Object,
   tokens: List<Token>,
   safeAddress: string,
+  activeTokens: List<SafeToken>
 }
 
 type State = {
@@ -68,7 +70,7 @@ class Tokens extends React.Component<Props, State> {
   onSwitch = (token: Token) => () => {
     const { safeAddress, updateActiveTokens } = this.props
 
-    updateActiveTokens(safeAddress, token.address)
+    updateActiveTokens(safeAddress, token)
   }
 
   setImageToPlaceholder = (e) => {

@@ -2,6 +2,7 @@
 import { List } from 'immutable'
 import type { Dispatch as ReduxDispatch, GetState } from 'redux'
 import { type GlobalState } from '~/store'
+import { type TokenBalance } from '/routes/safe/store/models/tokenBalance'
 import { safeActiveTokensSelector } from '~/routes/safe/store/selectors'
 import { SAFE_PARAM_ADDRESS } from '~/routes/routes'
 import updateSafe from './updateSafe'
@@ -21,7 +22,7 @@ const updateActiveTokens = (safeAddress: string, tokenAddress: string) => async 
   getState: GetState<GlobalState>,
 ) => {
   const state = getState()
-  const safeTokens: List<SafeToken> = safeActiveTokensSelector(state, generateMatchProps(safeAddress))
+  const safeTokens: List<TokenBalance> = safeActiveTokensSelector(state, generateMatchProps(safeAddress))
   const index = safeTokens.findIndex(safeToken => safeToken === tokenAddress)
 
   let updatedTokens
