@@ -75,10 +75,10 @@ const extendedSafeTokensSelector: Selector<GlobalState, RouterProps, List<Token>
     const extendedTokens = Map().withMutations((map) => {
       safeTokens.forEach((tokenAddress: string) => {
         const baseToken = tokensList.get(tokenAddress)
-        const tokenBalance = balances.find(tknBalance => tknBalance.address === tokenAddress) || '0'
+        const tokenBalance = balances.find(tknBalance => tknBalance.address === tokenAddress)
 
         if (baseToken) {
-          map.set(tokenAddress, baseToken.set('balance', tokenBalance))
+          map.set(tokenAddress, baseToken.set('balance', tokenBalance ? tokenBalance.balance : '0'))
         }
       })
 
