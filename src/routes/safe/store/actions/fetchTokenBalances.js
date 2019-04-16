@@ -44,7 +44,7 @@ const fetchTokenBalances = (safeAddress: string, tokens: List<Token>) => async (
         })),
     )
 
-    dispatch(updateSafe({ address: safeAddress, tokens: List(withBalances) }))
+    dispatch(updateSafe({ address: safeAddress, balances: List(withBalances) }))
   } catch (err) {
     // eslint-disable-next-line
     console.error('Error while loading active tokens from storage:', err)

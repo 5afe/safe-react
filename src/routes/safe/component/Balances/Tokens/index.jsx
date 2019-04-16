@@ -70,7 +70,7 @@ class Tokens extends React.Component<Props, State> {
   onSwitch = (token: Token) => () => {
     const { safeAddress, updateActiveTokens } = this.props
 
-    updateActiveTokens(safeAddress, token)
+    updateActiveTokens(safeAddress, token.address)
   }
 
   setImageToPlaceholder = (e) => {

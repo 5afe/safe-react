@@ -23,7 +23,7 @@ const updateActiveTokens = (safeAddress: string, tokenAddress: string) => async 
 ) => {
   const state = getState()
   const safeTokens: List<TokenBalance> = safeActiveTokensSelector(state, generateMatchProps(safeAddress))
-  const index = safeTokens.findIndex(safeToken => safeToken === tokenAddress)
+  const index = safeTokens.findIndex(address => address === tokenAddress)
 
   let updatedTokens
   if (index !== -1) {
