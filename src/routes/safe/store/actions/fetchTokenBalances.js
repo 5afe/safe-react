@@ -4,7 +4,7 @@ import { List } from 'immutable'
 import { BigNumber } from 'bignumber.js'
 import { type GlobalState } from '~/store/index'
 import { type Token } from '~/logic/tokens/store/model/token'
-import SafeTokenRecord from '~/routes/safe/store/models/safeToken'
+import TokenBalanceRecord from '~/routes/safe/store/models/tokenBalance'
 import { getStandardTokenContract } from '~/logic/tokens/store/actions/fetchTokens'
 import updateSafe from './updateSafe'
 import { ETH_ADDRESS } from '~/logic/tokens/utils/tokenHelpers'
@@ -38,7 +38,7 @@ const fetchTokenBalances = (safeAddress: string, tokens: List<Token>) => async (
     const withBalances = await Promise.all(
       tokens
         .filter(token => token.address !== ETH_ADDRESS)
-        .map(async token => SafeTokenRecord({
+        .map(async token => TokenBalanceRecord({
           address: token.address,
           balance: await calculateBalanceOf(token.address, safeAddress, token.decimals),
         })),

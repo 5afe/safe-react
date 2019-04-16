@@ -78,20 +78,29 @@ export const safeSelector: Selector<GlobalState, RouterProps, SafeSelectorProps>
   },
 )
 
-export const safeTokensSelector: Selector<GlobalState, RouterProps, Map<string, string>> = createSelector(
+export const safeActiveTokensSelector: Selector<GlobalState, RouterProps, List<string>> = createSelector(
   safeSelector,
   (safe: Safe) => {
     if (!safe) {
-      return Map()
+      return List()
     }
 
-    const tokens = safe.get('tokens')
+    return safe.activeTokens
+  },
+)
 
-    return tokens
+export const safeBalancesSelector: Selector<GlobalState, RouterProps, Map<string, string>> = createSelector(
+  safeSelector,
+  (safe: Safe) => {
+    if (!safe) {
+      return List()
+    }
+
+    return safe.balances
   },
 )
 
 export default createStructuredSelector<Object, *>({
   safe: safeSelector,
-  tokens: safeTokensSelector,
+  tokens: safeActiveTokensSelector,
 })

@@ -2,14 +2,15 @@
 import { List, Record } from 'immutable'
 import type { RecordFactory, RecordOf } from 'immutable'
 import type { Owner } from '~/routes/safe/store/models/owner'
-import type { SafeToken } from '~/routes/safe/store/models/safeToken'
+import TokenBalance from '~/routes/safe/store/models/tokenBalance'
 
 export type SafeProps = {
   name: string,
   address: string,
   threshold: number,
   owners: List<Owner>,
-  tokens?: List<SafeToken>,
+  balances?: List<TokenBalance>,
+  activeTokens?: List<string>,
   ethBalance?: string,
 }
 
@@ -19,10 +20,9 @@ const SafeRecord: RecordFactory<SafeProps> = Record({
   threshold: 0,
   ethBalance: 0,
   owners: List([]),
-  tokens: List([]),
+  activeTokens: List([]),
+  balances: List([]),
 })
-
-// Tokens is a list of currently enabled tokens for the safe with balances
 
 export type Safe = RecordOf<SafeProps>
 

@@ -3,7 +3,8 @@ import { List, Map } from 'immutable'
 import { createSelector, createStructuredSelector, type Selector } from 'reselect'
 import {
   safeSelector,
-  safeTokensSelector,
+  safeActiveTokensSelector,
+  safeBalancesSelector,
   type RouterProps,
   type SafeSelectorProps,
 } from '~/routes/safe/store/selectors'
@@ -14,6 +15,7 @@ import { type GlobalState } from '~/store'
 import { sameAddress } from '~/logic/wallets/ethAddresses'
 import { orderedTokenListSelector, tokensSelector } from '~/logic/tokens/store/selectors'
 import { type Token } from '~/logic/tokens/store/model/token'
+import { type TokenBalance } from '~/routes/safe/store/models/tokenBalance'
 import { safeParamAddressSelector } from '../store/selectors'
 import { getEthAsToken } from '~/logic/tokens/utils/tokenHelpers'
 
@@ -65,16 +67,18 @@ const safeEthAsTokenSelector: Selector<GlobalState, RouterProps, ?Token> = creat
 )
 
 const extendedSafeTokensSelector: Selector<GlobalState, RouterProps, List<Token>> = createSelector(
-  safeTokensSelector,
+  safeActiveTokensSelector,
+  safeBalancesSelector,
   tokensSelector,
   safeEthAsTokenSelector,
-  (safeTokens: List<UserToken>, tokensList: Map<string, Token>, ethAsToken: Token) => {
+  (safeTokens: List<string>, balances: List<TokenBalance>, tokensList: Map<string, Token>, ethAsToken: Token) => {
     const extendedTokens = Map().withMutations((map) => {
-      safeTokens.forEach((token: { address: string, balance: string }) => {
-        const baseToken = tokensList.get(token.address)
+      safeTokens.forEach((tokenAddress: string) => {
+        const baseToken = tokensList.get(tokenAddress)
+        const tokenBalance = balances.find(tknBalance => tknBalance.address === tokenAddress) || '0'
 
         if (baseToken) {
-          map.set(token.address, baseToken.set('balance', token.balance))
+          map.set(tokenAddress, baseToken.set('balance', tokenBalance))
         }
       })
 
