@@ -1,8 +1,9 @@
 // @flow
-import { Map } from 'immutable'
+import { Map, List } from 'immutable'
 import { handleActions, type ActionType } from 'redux-actions'
 import { ADD_SAFE, buildOwnersFrom } from '~/routes/safe/store/actions/addSafe'
 import SafeRecord, { type Safe, type SafeProps } from '~/routes/safe/store/models/safe'
+import TokenBalance from '~/routes/safe/store/models/tokenBalance'
 import { type OwnerProps } from '~/routes/safe/store/models/owner'
 import { loadFromStorage } from '~/utils/storage'
 import { SAFES_KEY } from '~/logic/safe/utils'
@@ -16,10 +17,14 @@ export const buildSafe = (storedSafe: SafeProps) => {
   const names = storedSafe.owners.map((owner: OwnerProps) => owner.name)
   const addresses = storedSafe.owners.map((owner: OwnerProps) => owner.address)
   const owners = buildOwnersFrom(Array.from(names), Array.from(addresses))
+  const activeTokens = List(storedSafe.activeTokens)
+  const balances = storedSafe.balances.map(balance => TokenBalance(balance))
 
   const safe: SafeProps = {
     ...storedSafe,
     owners,
+    balances,
+    activeTokens,
   }
 
   return safe
@@ -56,7 +61,7 @@ export default handleActions<State, *>(
       const safe = action.payload
       const safeAddress = safe.address
 
-      return state.mergeIn([safeAddress], safe)
+      return state.update(safeAddress, prevSafe => prevSafe.merge(safe))
     },
     [ADD_SAFE]: (state: State, action: ActionType<Function>): State => {
       const { safe }: { safe: SafeProps } = action.payload
@@ -66,7 +71,7 @@ export default handleActions<State, *>(
       // with initial props and it would overwrite existing ones
 
       if (state.has(safe.address)) {
-        return state.mergeIn([safe.address], safe)
+        return state.update(safe.address, prevSafe => prevSafe.merge(safe))
       }
 
       return state.set(safe.address, SafeRecord(safe))
