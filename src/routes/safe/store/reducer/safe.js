@@ -18,10 +18,7 @@ export const buildSafe = (storedSafe: SafeProps) => {
   const owners = buildOwnersFrom(Array.from(names), Array.from(addresses))
 
   const safe: SafeProps = {
-    address: storedSafe.address,
-    name: storedSafe.name,
-    threshold: storedSafe.threshold,
-    tokens: storedSafe.tokens,
+    ...storedSafe,
     owners,
   }
 
@@ -62,11 +59,15 @@ export default handleActions<State, *>(
       return state.mergeIn([safeAddress], safe)
     },
     [ADD_SAFE]: (state: State, action: ActionType<Function>): State => {
-      const { safe }: { safe: Safe } = action.payload
+      const { safe }: { safe: SafeProps } = action.payload
 
       // if you add a new safe it needs to be set as a record
       // in case of update it shouldn't, because a record would be initialized
       // with initial props and it would overwrite existing ones
+
+      if (state.has(safe.address)) {
+        return state.mergeIn([safe.address], safe)
+      }
 
       return state.set(safe.address, SafeRecord(safe))
     },
