@@ -8,7 +8,7 @@ import { safesMapSelector } from '~/routes/safeList/store/selectors'
 import { getActiveTokensAddressesForAllSafes } from '~/routes/safe/store/selectors'
 import { tokensSelector } from '~/logic/tokens/store/selectors'
 import type { Token } from '~/logic/tokens/store/model/token'
-import { setActiveTokens } from '~/logic/tokens/utils/tokensStorage'
+import { saveActiveTokens } from '~/logic/tokens/utils/tokensStorage'
 
 const watchedActions = [ADD_SAFE, UPDATE_SAFE]
 
@@ -33,7 +33,7 @@ const safeStorageMware = (store: Store<GlobalState>) => (next: Function) => asyn
         })
       })
 
-      setActiveTokens(activeTokens)
+      saveActiveTokens(activeTokens)
     }
 
     if (action.type === ADD_SAFE) {
