@@ -1,5 +1,5 @@
 // @flow
-import { Map, List } from 'immutable'
+import { Map, List, Set } from 'immutable'
 import { type Match } from 'react-router-dom'
 import { createSelector, createStructuredSelector, type Selector } from 'reselect'
 import { type GlobalState } from '~/store/index'
@@ -9,6 +9,7 @@ import { safesMapSelector } from '~/routes/safeList/store/selectors'
 import { type State as TransactionsState, TRANSACTIONS_REDUCER_ID } from '~/routes/safe/store/reducer/transactions'
 import { type Transaction } from '~/routes/safe/store/models/transaction'
 import { type Confirmation } from '~/routes/safe/store/models/confirmation'
+import { safesListSelector } from '~/routes/safeList/store/selectors/'
 
 export type RouterProps = {
   match: Match,
@@ -97,6 +98,21 @@ export const safeBalancesSelector: Selector<GlobalState, RouterProps, Map<string
     }
 
     return safe.balances
+  },
+)
+
+export const getActiveTokensAddressesForAllSafes: Selector<GlobalState, any, Set<string>> = createSelector(
+  safesListSelector,
+  (safes: List<Safe>) => {
+    const addresses = Set().withMutations((set) => {
+      safes.forEach((safe: Safe) => {
+        safe.activeTokens.forEach((tokenAddress) => {
+          set.add(tokenAddress)
+        })
+      })
+    })
+
+    return addresses
   },
 )
 
