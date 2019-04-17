@@ -37,7 +37,6 @@ const fetchTokenBalances = (safeAddress: string, tokens: List<Token>) => async (
   try {
     const withBalances = await Promise.all(
       tokens
-        .filter(token => token.address !== ETH_ADDRESS)
         .map(async token => TokenBalanceRecord({
           address: token.address,
           balance: await calculateBalanceOf(token.address, safeAddress, token.decimals),

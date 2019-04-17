@@ -1,5 +1,5 @@
 // @flow
-import { Map } from 'immutable'
+import { List } from 'immutable'
 import contract from 'truffle-contract'
 import axios from 'axios'
 import type { Dispatch as ReduxDispatch } from 'redux'
@@ -44,11 +44,9 @@ export const fetchTokens = () => async (dispatch: ReduxDispatch<GlobalState>) =>
       data: { results: tokenList },
     } = await fetchTokenList()
 
-    const tokensMap: Map<string, Token> = Map().withMutations((map) => {
-      tokenList.forEach((token: TokenProps) => map.set(token.address, makeToken(token)))
-    })
+    const tokens = List(tokenList.map((token: TokenProps) => makeToken(token)))
 
-    dispatch(saveTokens(tokensMap))
+    dispatch(saveTokens(tokens))
   } catch (err) {
     // eslint-disable-next-line
     console.log('Error fetching token list ' + err)
