@@ -1,10 +1,9 @@
 // @flow
 import * as React from 'react'
 import { connect } from 'react-redux'
-import { List } from 'immutable'
+import { List, Set } from 'immutable'
 import classNames from 'classnames/bind'
 import SearchBar from 'material-ui-search-bar'
-import InfiniteScroll from 'react-infinite-scroll-component'
 import { withStyles } from '@material-ui/core/styles'
 import MuiList from '@material-ui/core/List'
 import Img from '~/components/layout/Img'
@@ -25,7 +24,6 @@ import Spacer from '~/components/Spacer'
 import Row from '~/components/layout/Row'
 import { ETH_ADDRESS } from '~/logic/tokens/utils/tokenHelpers'
 import { type Token } from '~/logic/tokens/store/model/token'
-import { type TokenBalance } from '~/routes/safe/store/models/tokenBalance'
 import actions, { type Actions } from './actions'
 import TokenPlaceholder from './assets/token_placeholder.png'
 import { styles } from './style'
@@ -35,11 +33,12 @@ type Props = Actions & {
   classes: Object,
   tokens: List<Token>,
   safeAddress: string,
-  activeTokens: List<SafeToken>
+  activeTokens: List<Token>,
 }
 
 type State = {
   filter: string,
+  activeTokensAddresses: Set<string>,
 }
 
 const filterBy = (filter: string, tokens: List<Token>): List<Token> => tokens.filter(
@@ -56,12 +55,39 @@ const filterBy = (filter: string, tokens: List<Token>): List<Token> => tokens.fi
 class Tokens extends React.Component<Props, State> {
   state = {
     filter: '',
+    activeTokensAddresses: Set([]),
+    activeTokensCalculated: false,
   }
 
   componentDidMount() {
-    const { fetchTokens, safeAddress } = this.props
+    const { fetchTokens, safeAddress, activeTokens } = this.props
 
     fetchTokens(safeAddress)
+
+    // this.setState({
+    //   activeTokensAddresses: Set(activeTokens.map(({ address }) => address)),
+    // })
+  }
+
+  static getDerivedStateFromProps(nextProps, prevState) {
+    if (!prevState.activeTokensCalculated) {
+      const { activeTokens } = nextProps
+
+      return {
+        activeTokensAddresses: Set(activeTokens.map(({ address }) => address)),
+        activeTokensCalculated: true,
+      }
+    }
+    return null
+  }
+
+  componentWillUnmount() {
+    const { activeTokensAddresses } = this.state
+    const { updateActiveTokens, safeAddress } = this.props
+
+    activeTokensAddresses.forEach((tokenAddress: string) => {
+      updateActiveTokens(safeAddress, activeTokensAddresses.toList())
+    })
   }
 
   onCancelSearch = () => {
@@ -73,9 +99,17 @@ class Tokens extends React.Component<Props, State> {
   }
 
   onSwitch = (token: Token) => () => {
-    const { safeAddress, updateActiveTokens } = this.props
+    const { activeTokensAddresses } = this.state
 
-    updateActiveTokens(safeAddress, token.address)
+    if (activeTokensAddresses.has(token.address)) {
+      this.setState({
+        activeTokensAddresses: activeTokensAddresses.remove(token.address),
+      })
+    } else {
+      this.setState({
+        activeTokensAddresses: activeTokensAddresses.add(token.address),
+      })
+    }
   }
 
   setImageToPlaceholder = (e) => {
@@ -84,10 +118,8 @@ class Tokens extends React.Component<Props, State> {
   }
 
   render() {
-    const {
-      onClose, classes, tokens, activeTokens,
-    } = this.props
-    const { filter } = this.state
+    const { onClose, classes, tokens } = this.props
+    const { filter, activeTokensAddresses } = this.state
     const searchClasses = {
       input: classes.searchInput,
       root: classes.searchRoot,
@@ -129,7 +161,7 @@ class Tokens extends React.Component<Props, State> {
         </Block>
         <MuiList className={classes.list}>
           {filteredTokens.map((token: Token) => {
-            const isActive = activeTokens.findIndex(({ address }) => address === token.address) !== -1
+            const isActive = activeTokensAddresses.has(token.address)
 
             return (
               <ListItem key={token.address} className={classes.token}>
