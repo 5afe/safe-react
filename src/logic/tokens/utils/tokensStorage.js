@@ -1,5 +1,5 @@
 // @flow
-import { List } from 'immutable'
+import { List, Map } from 'immutable'
 import { type Token, type TokenProps } from '~/logic/tokens/store/model/token'
 import { loadFromStorage, saveToStorage } from '~/utils/storage'
 
@@ -10,7 +10,7 @@ export const CUSTOM_TOKENS_KEY = 'CUSTOM_TOKENS'
 // to avoid iterating a large amount of data of tokens from the backend
 // Custom tokens should be saved too unless they're deleted (marking them as inactive doesn't count)
 
-export const setActiveTokens = async (tokens: List<TokenProps>) => {
+export const setActiveTokens = async (tokens: Map<string, Token>) => {
   try {
     await saveToStorage(ACTIVE_TOKENS_KEY, tokens.toJS())
   } catch (err) {
@@ -19,10 +19,10 @@ export const setActiveTokens = async (tokens: List<TokenProps>) => {
   }
 }
 
-export const getActiveTokens = async (): Promise<List<TokenProps>> => {
+export const getActiveTokens = async (): Promise<Map<string, TokenProps>> => {
   const data = await loadFromStorage(ACTIVE_TOKENS_KEY)
 
-  return data ? List(data) : List()
+  return data || Map({})
 }
 
 export const getCustomTokens = async (): Promise<List<TokenProps>> => {

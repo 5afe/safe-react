@@ -38,7 +38,7 @@ const fetchTokenList = async () => {
   return axios.get(url, errMsg)
 }
 
-export const fetchTokens = (safeAddress: string) => async (dispatch: ReduxDispatch<GlobalState>) => {
+export const fetchTokens = () => async (dispatch: ReduxDispatch<GlobalState>) => {
   try {
     const {
       data: { results: tokenList },
@@ -48,7 +48,7 @@ export const fetchTokens = (safeAddress: string) => async (dispatch: ReduxDispat
       tokenList.forEach((token: TokenProps) => map.set(token.address, makeToken(token)))
     })
 
-    dispatch(saveTokens(safeAddress, tokensMap))
+    dispatch(saveTokens(tokensMap))
   } catch (err) {
     // eslint-disable-next-line
     console.log('Error fetching token list ' + err)
