@@ -60,16 +60,15 @@ class Tokens extends React.Component<Props, State> {
   }
 
   componentDidMount() {
-    const { fetchTokens, safeAddress, activeTokens } = this.props
+    const { fetchTokens, safeAddress } = this.props
 
     fetchTokens(safeAddress)
-
-    // this.setState({
-    //   activeTokensAddresses: Set(activeTokens.map(({ address }) => address)),
-    // })
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {
+    // I moved this logic here because if placed in ComponentDidMount
+    // the user would see Switches switch and this method fires before the component mounts
+
     if (!prevState.activeTokensCalculated) {
       const { activeTokens } = nextProps
 
@@ -85,9 +84,7 @@ class Tokens extends React.Component<Props, State> {
     const { activeTokensAddresses } = this.state
     const { updateActiveTokens, safeAddress } = this.props
 
-    activeTokensAddresses.forEach((tokenAddress: string) => {
-      updateActiveTokens(safeAddress, activeTokensAddresses.toList())
-    })
+    updateActiveTokens(safeAddress, activeTokensAddresses.toList())
   }
 
   onCancelSearch = () => {
