@@ -19,6 +19,7 @@ import Table from '~/components/Table'
 import {
   getBalanceData, generateColumns, BALANCE_TABLE_ASSET_ID, type BalanceRow, filterByZero,
 } from './dataFetcher'
+import AssetTableCell from './AssetTableCell'
 import Tokens from './Tokens'
 import Send from './Send'
 import Receive from './Receive'
@@ -116,14 +117,14 @@ class Balances extends React.Component<Props, State> {
           defaultOrderBy={BALANCE_TABLE_ASSET_ID}
           columns={columns}
           data={filteredData}
-          size={filteredData.length}
+          size={filteredData.size}
           defaultFixed
         >
           {(sortedData: Array<BalanceRow>) => sortedData.map((row: any, index: number) => (
             <TableRow tabIndex={-1} key={index} className={classes.hide}>
               {autoColumns.map((column: Column) => (
                 <TableCell key={column.id} style={cellWidth(column.width)} align={column.align} component="td">
-                  {row[column.id]}
+                  {column.id === BALANCE_TABLE_ASSET_ID ? <AssetTableCell asset={row[column.id]} /> : row[column.id]}
                 </TableCell>
               ))}
               <TableCell component="td">

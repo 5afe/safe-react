@@ -9,21 +9,21 @@ export const BALANCE_TABLE_BALANCE_ID = 'balance'
 export const BALANCE_TABLE_VALUE_ID = 'value'
 
 type BalanceData = {
-  asset: string,
+  asset: Object,
   balance: string,
 }
 
 export type BalanceRow = SortRow<BalanceData>
 
-export const getBalanceData = (activeTokens: List<Token>): Array<BalanceRow> => {
+export const getBalanceData = (activeTokens: List<Token>): List<BalanceRow> => {
   const rows = activeTokens.map((token: Token) => ({
-    [BALANCE_TABLE_ASSET_ID]: token.name,
+    [BALANCE_TABLE_ASSET_ID]: { name: token.name, logoUri: token.logoUri },
     [BALANCE_TABLE_BALANCE_ID]: `${token.balance} ${token.symbol}`,
     [buildOrderFieldFrom(BALANCE_TABLE_BALANCE_ID)]: Number(token.balance),
     [FIXED]: token.get('symbol') === 'ETH',
   }))
 
-  return Array.from(rows)
+  return rows
 }
 
 export const generateColumns = () => {
@@ -56,4 +56,4 @@ export const generateColumns = () => {
   return List([assetRow, balanceRow, actions])
 }
 
-export const filterByZero = (data: Array<BalanceRow>, hideZero: boolean): Array<BalanceRow> => data.filter((row: BalanceRow) => (hideZero ? row[buildOrderFieldFrom(BALANCE_TABLE_BALANCE_ID)] !== 0 : true))
+export const filterByZero = (data: List<BalanceRow>, hideZero: boolean): List<BalanceRow> => data.filter((row: BalanceRow) => (hideZero ? row[buildOrderFieldFrom(BALANCE_TABLE_BALANCE_ID)] !== 0 : true))

@@ -25,7 +25,7 @@ import Row from '~/components/layout/Row'
 import { ETH_ADDRESS } from '~/logic/tokens/utils/tokenHelpers'
 import { type Token } from '~/logic/tokens/store/model/token'
 import actions, { type Actions } from './actions'
-import TokenPlaceholder from './assets/token_placeholder.png'
+import TokenPlaceholder from './assets/token_placeholder.svg'
 import { styles } from './style'
 
 type Props = Actions & {
@@ -54,6 +54,7 @@ const filterBy = (filter: string, tokens: List<Token>): List<Token> => tokens.fi
 
 class Tokens extends React.Component<Props, State> {
   state = {
+    activeScreen: '',
     filter: '',
     activeTokensAddresses: Set([]),
     activeTokensCalculated: false,

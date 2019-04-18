@@ -36,7 +36,9 @@ type Props = {
 
 class GnoTableHead extends React.PureComponent<Props> {
   changeSort = (property: string, orderAttr: boolean) => () => {
-    this.props.onSort(property, orderAttr)
+    const { onSort } = this.props
+
+    onSort(property, orderAttr)
   }
 
   render() {
