@@ -7,4 +7,7 @@ export const styles = () => ({
     fontWeight: bolderFont,
     fontSize: '16px',
   },
+  inputContainer: {
+    padding: '0 20px',
+  },
 })
