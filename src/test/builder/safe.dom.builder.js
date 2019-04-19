@@ -1,14 +1,14 @@
 // @flow
 import { type Store } from 'redux'
 import TestUtils from 'react-dom/test-utils'
-import SafeView from '~/routes/safe/component/Safe'
+import SafeView from '~/routes/safe/components/Safe'
 import { aNewStore, type GlobalState } from '~/store'
 import { sleep } from '~/utils/timer'
 import { getWeb3 } from '~/logic/wallets/getWeb3'
 import { addEtherTo } from '~/test/utils/tokenMovements'
 import { aMinedSafe } from '~/test/builder/safe.redux.builder'
 import { travelToSafe } from '~/test/builder/safe.dom.utils'
-import { MOVE_FUNDS_BUTTON_TEXT } from '~/routes/safe/component/Safe/BalanceInfo'
+import { MOVE_FUNDS_BUTTON_TEXT } from '~/routes/safe/components/Safe/BalanceInfo'
 
 export type DomSafe = {
   address: string,

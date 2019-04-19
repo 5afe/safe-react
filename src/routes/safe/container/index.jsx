@@ -2,7 +2,7 @@
 import * as React from 'react'
 import { connect } from 'react-redux'
 import Page from '~/components/layout/Page'
-import Layout from '~/routes/safe/component/Layout'
+import Layout from '~/routes/safe/components/Layout'
 import selector, { type SelectorProps } from './selector'
 import actions, { type Actions } from './actions'
 

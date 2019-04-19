@@ -5,7 +5,7 @@ import { sleep } from '~/utils/timer'
 import * as fetchTokensAction from '~/logic/tokens/store/actions/fetchTokens'
 import { checkMinedTx, checkPendingTx, EXPAND_BALANCE_INDEX } from '~/test/builder/safe.dom.utils'
 import { whenExecuted } from '~/test/utils/logTransactions'
-import SendToken from '~/routes/safe/component/SendToken'
+import SendToken from '~/routes/safe/components/SendToken'
 import { makeToken, type Token } from '~/logic/tokens/store/model/token'
 import addTokens from '~/logic/tokens/store/actions/saveTokens'
 

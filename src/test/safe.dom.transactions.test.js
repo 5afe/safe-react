@@ -1,7 +1,7 @@
 // @flow
 import TestUtils from 'react-dom/test-utils'
 import { List } from 'immutable'
-import Transaction from '~/routes/safe/component/Transactions/Transaction'
+import Transaction from '~/routes/safe/components/Transactions/Transaction'
 import {
   listTxsClickingOn,
   LIST_TXS_INDEX,

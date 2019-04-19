@@ -2,7 +2,7 @@
 import * as React from 'react'
 import TestUtils from 'react-dom/test-utils'
 import ListItemText from '~/components/List/ListItemText/index'
-import { SEE_MULTISIG_BUTTON_TEXT } from '~/routes/safe/component/Safe/MultisigTx'
+import { SEE_MULTISIG_BUTTON_TEXT } from '~/routes/safe/components/Safe/MultisigTx'
 import fetchTransactions from '~/routes/safe/store/actions/fetchTransactions'
 import { sleep } from '~/utils/timer'
 import { Provider } from 'react-redux'

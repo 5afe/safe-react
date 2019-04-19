@@ -3,7 +3,7 @@ import TestUtils from 'react-dom/test-utils'
 import { sleep } from '~/utils/timer'
 import { checkMinedTx, checkPendingTx } from '~/test/builder/safe.dom.utils'
 import { whenExecuted } from '~/test/utils/logTransactions'
-import AddOwner from '~/routes/safe/component/AddOwner'
+import AddOwner from '~/routes/safe/components/AddOwner'
 
 export const sendAddOwnerForm = async (
   SafeDom: React$Component<any, any>,
