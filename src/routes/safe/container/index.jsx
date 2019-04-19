@@ -16,15 +16,13 @@ const TIMEOUT = process.env.NODE_ENV === 'test' ? 1500 : 15000
 class SafeView extends React.Component<Props> {
   componentDidMount() {
     const {
-      fetchSafe, loadActiveTokens, activeTokens, safeUrl, fetchTokenBalances,
+      fetchSafe, activeTokens, safeUrl, fetchTokenBalances,
     } = this.props
 
     fetchSafe(safeUrl)
-    // loadActiveTokens(safeUrl)
     fetchTokenBalances(safeUrl, activeTokens)
 
     this.intervalId = setInterval(() => {
-      // update in another function so it uses up-to-date props values
       this.checkForUpdates()
     }, TIMEOUT)
   }
