@@ -9,6 +9,7 @@ import Paragraph from '~/components/layout/Paragraph'
 import Hairline from '~/components/layout/Hairline'
 import Row from '~/components/layout/Row'
 import TokenList from '~/routes/safe/components/Balances/Tokens/screens/TokenList'
+import AddCustomToken from '~/routes/safe/components/Balances/Tokens/screens/AddCustomToken'
 import { type Token } from '~/logic/tokens/store/model/token'
 import actions, { type Actions } from './actions'
 import { styles } from './style'
@@ -29,6 +30,10 @@ class Tokens extends React.Component<Props, State> {
   state = {
     activeScreen: 'tokenList',
   }
+
+  setActiveScreen = (activeScreen: string) => this.setState({
+    activeScreen,
+  })
 
   render() {
     const {
@@ -54,8 +59,10 @@ class Tokens extends React.Component<Props, State> {
             fetchTokens={fetchTokens}
             updateActiveTokens={updateActiveTokens}
             safeAddress={safeAddress}
+            setActiveScreen={this.setActiveScreen}
           />
         )}
+        {activeScreen === 'addCustomToken' && <AddCustomToken />}
       </React.Fragment>
     )
   }

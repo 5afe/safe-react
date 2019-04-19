@@ -30,6 +30,7 @@ type Props = {
   activeTokens: List<Token>,
   fetchTokens: Function,
   updateActiveTokens: Function,
+  setActiveScreen: Function,
 }
 
 type State = {
@@ -106,7 +107,7 @@ class Tokens extends React.Component<Props, State> {
   }
 
   render() {
-    const { classes, tokens } = this.props
+    const { classes, tokens, setActiveScreen } = this.props
     const { filter, activeTokensAddresses } = this.state
     const searchClasses = {
       input: classes.searchInput,
@@ -114,6 +115,7 @@ class Tokens extends React.Component<Props, State> {
       iconButton: classes.searchIcon,
       searchContainer: classes.searchContainer,
     }
+    const switchToAddCustomTokenScreen = () => setActiveScreen('addCustomToken')
 
     const filteredTokens = filterBy(filter, tokens)
 
@@ -132,7 +134,13 @@ class Tokens extends React.Component<Props, State> {
             <Spacer />
             <Divider />
             <Spacer />
-            <Button variant="contained" size="small" color="secondary" className={classes.add}>
+            <Button
+              variant="contained"
+              size="small"
+              color="secondary"
+              className={classes.add}
+              onClick={switchToAddCustomTokenScreen}
+            >
               + ADD CUSTOM TOKEN
             </Button>
           </Row>
