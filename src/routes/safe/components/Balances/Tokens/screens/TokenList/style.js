@@ -15,9 +15,13 @@ export const styles = () => ({
     padding: `0 ${md}`,
   },
   add: {
+    fontSize: '11px',
     fontWeight: 'normal',
     paddingRight: md,
     paddingLeft: md,
+  },
+  actions: {
+    height: '50px',
   },
   list: {
     overflow: 'hidden',
@@ -32,7 +36,7 @@ export const styles = () => ({
   searchInput: {
     backgroundColor: 'transparent',
     lineHeight: 'initial',
-    fontSize: mediumFontSize,
+    fontSize: '13px',
     padding: 0,
     '& > input::placeholder': {
       letterSpacing: '-0.5px',
@@ -51,9 +55,12 @@ export const styles = () => ({
   searchRoot: {
     letterSpacing: '-0.5px',
     fontFamily: 'Roboto Mono, monospace',
-    fontSize: mediumFontSize,
+    fontSize: '13px',
     border: 'none',
     boxShadow: 'none',
+    '& > button': {
+      display: 'none',
+    },
   },
   searchIcon: {
     '&:hover': {
