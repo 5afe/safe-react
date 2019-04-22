@@ -1,10 +1,9 @@
 // @flow
-import { lg, bolderFont } from '~/theme/variables'
+import { lg } from '~/theme/variables'
 
 export const styles = () => ({
   title: {
     padding: `${lg} 20px 20px`,
-    fontWeight: bolderFont,
     fontSize: '16px',
   },
   formContainer: {
@@ -12,5 +11,16 @@ export const styles = () => ({
   },
   addressInput: {
     marginBottom: '15px',
+  },
+  tokenImageHeading: {
+    margin: '0 0 15px',
+  },
+  checkbox: {
+    padding: '0 7px 0 0',
+    width: '18px',
+    height: '18px',
+  },
+  checkboxLabel: {
+    letterSpacing: '-0.5px',
   },
 })

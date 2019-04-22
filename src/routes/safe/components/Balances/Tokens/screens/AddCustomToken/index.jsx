@@ -7,6 +7,7 @@ import Row from '~/components/layout/Row'
 import Col from '~/components/layout/Col'
 import Img from '~/components/layout/Img'
 import Field from '~/components/forms/Field'
+import Checkbox from '~/components/forms/Checkbox'
 import GnoForm from '~/components/forms/GnoForm'
 import TextField from '~/components/forms/TextField'
 import { composeValidators, required, mustBeEthereumAddress } from '~/components/forms/validator'
@@ -23,7 +24,7 @@ class AddCustomToken extends Component {
 
     return (
       <React.Fragment>
-        <Paragraph noMargin className={classes.title} size="lg">
+        <Paragraph noMargin className={classes.title} weight="bolder" size="lg">
           Add custom token
         </Paragraph>
         <GnoForm onSubmit={this.handleSubmit}>
@@ -58,9 +59,15 @@ class AddCustomToken extends Component {
                     text="Token decimals*"
                     className={classes.addressInput}
                   />
+                  <Block align="left">
+                    <Field name="showForAllSafes" component={Checkbox} type="checkbox" className={classes.checkbox} />
+                    <Paragraph weight="bolder" size="md" className={classes.checkboxLabel}>
+                      Display token for all safes
+                    </Paragraph>
+                  </Block>
                 </Col>
                 <Col xs={6} layout="column" align="center">
-                  <Paragraph>Token Image</Paragraph>
+                  <Paragraph className={classes.tokenImageHeading}>Token Image</Paragraph>
                   <Img src={TokenPlaceholder} alt="Token image" height={100} />
                 </Col>
               </Row>
