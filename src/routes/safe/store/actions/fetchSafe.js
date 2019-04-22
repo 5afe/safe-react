@@ -10,8 +10,6 @@ import { getGnosisSafeContract } from '~/logic/contracts/safeContracts'
 import { getWeb3, getBalanceInEtherOf } from '~/logic/wallets/getWeb3'
 import updateSafe from '~/routes/safe/store/actions/updateSafe'
 
-// eslint-disable-next-line
-// eslint-disable-next-line
 const buildOwnersFrom = (
   safeOwners: string[],
   storedOwners: Map<string, string>, // eslint-disable-next-line

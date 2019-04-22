@@ -19,10 +19,10 @@ export const saveActiveTokens = async (tokens: Map<string, Token>) => {
   }
 }
 
-export const getActiveTokens = async (): Promise<Map<string, TokenProps>> => {
+export const getActiveTokens = async (): Promise<Object<string, TokenProps>> => {
   const data = await loadFromStorage(ACTIVE_TOKENS_KEY)
 
-  return data || Map({})
+  return data || {}
 }
 
 export const getCustomTokens = async (): Promise<List<TokenProps>> => {
