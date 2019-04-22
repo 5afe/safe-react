@@ -1,9 +1,10 @@
 // @flow
-import {
-  ImmortalStorage, CookieStore, IndexedDbStore, LocalStorageStore, SessionStorageStore,
-} from 'immortal-db'
+import { ImmortalStorage, IndexedDbStore, LocalStorageStore } from 'immortal-db'
 
-const stores = [CookieStore, IndexedDbStore, LocalStorageStore, SessionStorageStore]
+// Don't use sessionStorage and cookieStorage
+// https://github.com/gruns/ImmortalDB/issues/22
+// https://github.com/gruns/ImmortalDB/issues/6
+const stores = [IndexedDbStore, LocalStorageStore]
 export const storage = new ImmortalStorage(stores)
 
 const PREFIX = 'v1'

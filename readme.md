@@ -11,11 +11,13 @@ These instructions will get you a copy of the project up and running on your loc
 What things you need to install the software and how to install them
 
 ```
-npm install truffle // recommended usage of -g flag
-npm install ganache-cli // recommended usage of -g flag
-npm install flow-type // recommended usage of -g flag
+yarn add truffle // recommended usage of -g flag
+yarn add ganache-cli // recommended usage of -g flag
+yarn add flow-type // recommended usage of -g flag
 git clone https://github.com/gnosis/safe-contracts.git
 ```
+
+We use [yarn](https://yarnpkg.com) in our infrastacture, so we decided to go with yarn in the README
 
 ### Installing
 
@@ -29,14 +31,14 @@ ganache-cli -b 3
 Start the project in the other one
 ```
 cd safe-contracts && truffle compile && truffle migrate && cd ..
-npm install
-npm start
+yarn install
+yarn start
 ```
 
 ## Running the tests
 
 ```
-npm test
+yarn test
 ```
 
 

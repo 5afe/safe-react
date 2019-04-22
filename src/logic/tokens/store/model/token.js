@@ -8,9 +8,7 @@ export type TokenProps = {
   symbol: string,
   decimals: number,
   logoUri: string,
-  funds: string,
-  status: boolean,
-  removable: boolean,
+  balance: string,
 }
 
 export const makeToken: RecordFactory<TokenProps> = Record({
@@ -19,9 +17,9 @@ export const makeToken: RecordFactory<TokenProps> = Record({
   symbol: '',
   decimals: 0,
   logoUri: '',
-  funds: '0',
-  status: true,
-  removable: false,
+  balance: undefined,
 })
+
+// balance is only set in extendedSafeTokensSelector when we display user's token balances
 
 export type Token = RecordOf<TokenProps>

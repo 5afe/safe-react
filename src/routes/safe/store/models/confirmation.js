@@ -1,7 +1,7 @@
 // @flow
 import { Record } from 'immutable'
 import type { RecordFactory, RecordOf } from 'immutable'
-import { makeOwner, type Owner } from '~/routes/safe/store/model/owner'
+import { makeOwner, type Owner } from '~/routes/safe/store/models/owner'
 import { type TxServiceType } from '~/logic/safe/safeTxHistory'
 
 export type ConfirmationProps = {

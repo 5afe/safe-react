@@ -8,19 +8,19 @@ import { loadFromStorage } from '~/utils/storage'
 import { SAFELIST_ADDRESS } from '~/routes/routes'
 import { history } from '~/store'
 import selector, { type SelectorProps } from './selector'
-import actions, { type Actions, type UpdateSafe } from './actions'
+import actions, { type Actions } from './actions'
 import Layout from '../components/Layout'
 import { FIELD_LOAD_NAME, FIELD_LOAD_ADDRESS } from '../components/fields'
 
 type Props = SelectorProps & Actions
 
-export const loadSafe = async (safeName: string, safeAddress: string, updateSafe: UpdateSafe) => {
-  const safeRecord = await buildSafe(safeAddress, safeName)
+export const loadSafe = async (safeName: string, safeAddress: string, addSafe: Function) => {
+  const safeProps = await buildSafe(safeAddress, safeName)
 
-  await updateSafe(safeRecord)
+  await addSafe(safeProps)
 
-  const storedSafes = await loadFromStorage(SAFES_KEY) || {}
-  storedSafes[safeAddress] = safeRecord.toJSON()
+  const storedSafes = (await loadFromStorage(SAFES_KEY)) || {}
+  storedSafes[safeAddress] = safeProps
 
   saveSafes(storedSafes)
 }
@@ -28,11 +28,12 @@ export const loadSafe = async (safeName: string, safeAddress: string, updateSafe
 class Load extends React.Component<Props> {
   onLoadSafeSubmit = async (values: Object) => {
     try {
-      const { updateSafe } = this.props
+      const { addSafe } = this.props
       const safeName = values[FIELD_LOAD_NAME]
       const safeAddress = values[FIELD_LOAD_ADDRESS]
 
-      await loadSafe(safeName, safeAddress, updateSafe)
+      await loadSafe(safeName, safeAddress, addSafe)
+
       const url = `${SAFELIST_ADDRESS}/${safeAddress}`
       history.push(url)
     } catch (error) {
@@ -42,9 +43,7 @@ class Load extends React.Component<Props> {
   }
 
   render() {
-    const {
-      provider, network, userAddress,
-    } = this.props
+    const { provider, network, userAddress } = this.props
 
     return (
       <Page>
@@ -59,4 +58,7 @@ class Load extends React.Component<Props> {
   }
 }
 
-export default connect(selector, actions)(Load)
+export default connect<Object, Object, ?Function, ?Object>(
+  selector,
+  actions,
+)(Load)

@@ -2,7 +2,7 @@
 import * as React from 'react'
 import Stepper from '~/components/Stepper'
 import { connect } from 'react-redux'
-import { type Safe } from '~/routes/safe/store/model/safe'
+import { type Safe } from '~/routes/safe/store/models/safe'
 import { getSafeEthereumInstance, createTransaction } from '~/logic/safe/safeFrontendOperations'
 import RemoveOwnerForm, { DECREASE_PARAM } from './RemoveOwnerForm'
 import Review from './Review'

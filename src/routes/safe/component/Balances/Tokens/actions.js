@@ -1,13 +1,13 @@
 // @flow
-import enableToken from '~/logic/tokens/store/actions/enableToken'
-import disableToken from '~/logic/tokens/store/actions/disableToken'
+import fetchTokens from '~/logic/tokens/store/actions/fetchTokens'
+import updateActiveTokens from '~/routes/safe/store/actions/updateActiveTokens'
 
 export type Actions = {
-  enableToken: typeof enableToken,
-  disableToken: typeof disableToken,
+  fetchTokens: Function,
+  updateActiveTokens: Function,
 }
 
 export default {
-  enableToken,
-  disableToken,
+  fetchTokens,
+  updateActiveTokens,
 }

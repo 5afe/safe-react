@@ -10,7 +10,6 @@ import { testToken } from '~/test/builder/tokens.dom.utils'
 import * as fetchTokensModule from '~/logic/tokens/store/actions/fetchTokens'
 import * as enhancedFetchModule from '~/utils/fetch'
 import addToken from '~/logic/tokens/store/actions/addToken'
-import { activeTokensSelector, tokenListSelector } from '~/logic/tokens/store/selectors'
 import removeTokenAction from '~/logic/tokens/store/actions/removeToken'
 import { makeToken } from '~/logic/tokens/store/model/token'
 

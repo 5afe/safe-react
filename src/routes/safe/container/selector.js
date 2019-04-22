@@ -1,15 +1,23 @@
 // @flow
-import { List } from 'immutable'
+import { List, Map } from 'immutable'
 import { createSelector, createStructuredSelector, type Selector } from 'reselect'
-import { safeSelector, type RouterProps, type SafeSelectorProps } from '~/routes/safe/store/selectors'
+import {
+  safeSelector,
+  safeActiveTokensSelector,
+  safeBalancesSelector,
+  type RouterProps,
+  type SafeSelectorProps,
+} from '~/routes/safe/store/selectors'
 import { providerNameSelector, userAccountSelector, networkSelector } from '~/logic/wallets/store/selectors'
-import { type Safe } from '~/routes/safe/store/model/safe'
-import { type Owner } from '~/routes/safe/store/model/owner'
+import { type Safe } from '~/routes/safe/store/models/safe'
+import { type Owner } from '~/routes/safe/store/models/owner'
 import { type GlobalState } from '~/store'
 import { sameAddress } from '~/logic/wallets/ethAddresses'
-import { activeTokensSelector, orderedTokenListSelector } from '~/logic/tokens/store/selectors'
+import { orderedTokenListSelector, tokensSelector } from '~/logic/tokens/store/selectors'
 import { type Token } from '~/logic/tokens/store/model/token'
+import { type TokenBalance } from '~/routes/safe/store/models/tokenBalance'
 import { safeParamAddressSelector } from '../store/selectors'
+import { getEthAsToken } from '~/logic/tokens/utils/tokenHelpers'
 
 export type SelectorProps = {
   safe: SafeSelectorProps,
@@ -42,11 +50,52 @@ export const grantedSelector: Selector<GlobalState, RouterProps, boolean> = crea
   },
 )
 
-export default createStructuredSelector({
+type UserToken = {
+  address: string,
+  balance: string,
+}
+
+const safeEthAsTokenSelector: Selector<GlobalState, RouterProps, ?Token> = createSelector(
+  safeSelector,
+  (safe: Safe) => {
+    if (!safe) {
+      return undefined
+    }
+
+    return getEthAsToken(safe.ethBalance)
+  },
+)
+
+const extendedSafeTokensSelector: Selector<GlobalState, RouterProps, List<Token>> = createSelector(
+  safeActiveTokensSelector,
+  safeBalancesSelector,
+  tokensSelector,
+  safeEthAsTokenSelector,
+  (safeTokens: List<string>, balances: List<TokenBalance>, tokensList: Map<string, Token>, ethAsToken: Token) => {
+    const extendedTokens = Map().withMutations((map) => {
+      safeTokens.forEach((tokenAddress: string) => {
+        const baseToken = tokensList.get(tokenAddress)
+        const tokenBalance = balances.find(tknBalance => tknBalance.address === tokenAddress)
+
+        if (baseToken) {
+          map.set(tokenAddress, baseToken.set('balance', tokenBalance ? tokenBalance.balance : '0'))
+        }
+      })
+
+      if (ethAsToken) {
+        map.set(ethAsToken.address, ethAsToken)
+      }
+    })
+
+    return extendedTokens.toList()
+  },
+)
+
+export default createStructuredSelector<Object, *>({
   safe: safeSelector,
   provider: providerNameSelector,
   tokens: orderedTokenListSelector,
-  activeTokens: activeTokensSelector,
+  activeTokens: extendedSafeTokensSelector,
   granted: grantedSelector,
   userAddress: userAccountSelector,
   network: networkSelector,

@@ -6,7 +6,7 @@ import Link from '~/components/layout/Link'
 import Table, {
   TableBody, TableCell, TableHead, TableRow,
 } from '~/components/layout/Table'
-import { type Safe } from '~/routes/safe/store/model/safe'
+import { type Safe } from '~/routes/safe/store/models/safe'
 import { SAFELIST_ADDRESS } from '~/routes/routes'
 
 type Props = {

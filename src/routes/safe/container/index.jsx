@@ -6,39 +6,48 @@ import Layout from '~/routes/safe/component/Layout'
 import selector, { type SelectorProps } from './selector'
 import actions, { type Actions } from './actions'
 
-type Props = Actions & SelectorProps & {
-  granted: boolean,
-}
+export type Props = Actions &
+  SelectorProps & {
+    granted: boolean,
+  }
 
 const TIMEOUT = process.env.NODE_ENV === 'test' ? 1500 : 15000
 
-class SafeView extends React.PureComponent<Props> {
+class SafeView extends React.Component<Props> {
   componentDidMount() {
-    const { safeUrl, fetchTokens, fetchSafe } = this.props
+    const {
+      fetchSafe, loadActiveTokens, activeTokens, safeUrl, fetchTokenBalances,
+    } = this.props
+
     fetchSafe(safeUrl)
-    fetchTokens(safeUrl)
+    // loadActiveTokens(safeUrl)
+    fetchTokenBalances(safeUrl, activeTokens)
 
     this.intervalId = setInterval(() => {
-      fetchTokens(safeUrl)
-      fetchSafe(safeUrl)
+      // update in another function so it uses up-to-date props values
+      this.checkForUpdates()
     }, TIMEOUT)
   }
 
   componentDidUpdate(prevProps) {
-    const { safe, fetchTokens } = this.props
+    const { activeTokens } = this.props
 
-    if (prevProps.safe) {
-      return
-    }
-
-    if (safe) {
-      const safeAddress = safe.get('address')
-      fetchTokens(safeAddress)
+    if (activeTokens.size > prevProps.activeTokens.size) {
+      this.checkForUpdates()
     }
   }
 
   componentWillUnmount() {
     clearInterval(this.intervalId)
+  }
+
+  checkForUpdates() {
+    const {
+      safeUrl, activeTokens, fetchSafe, fetchTokenBalances,
+    } = this.props
+
+    fetchSafe(safeUrl, true)
+    fetchTokenBalances(safeUrl, activeTokens)
   }
 
   intervalId: IntervalID
@@ -64,4 +73,7 @@ class SafeView extends React.PureComponent<Props> {
   }
 }
 
-export default connect(selector, actions)(SafeView)
+export default connect<Object, Object, ?Function, ?Object>(
+  selector,
+  actions,
+)(SafeView)

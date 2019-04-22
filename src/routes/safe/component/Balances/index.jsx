@@ -102,7 +102,12 @@ class Balances extends React.Component<Props, State> {
               handleClose={this.onHide('Token')}
               open={showToken}
             >
-              <Tokens tokens={tokens} onClose={this.onHide('Token')} safeAddress={safeAddress} />
+              <Tokens
+                tokens={tokens}
+                onClose={this.onHide('Token')}
+                safeAddress={safeAddress}
+                activeTokens={activeTokens}
+              />
             </Modal>
           </Col>
         </Row>

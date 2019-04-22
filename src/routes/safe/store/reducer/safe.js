@@ -1,9 +1,10 @@
 // @flow
-import { Map } from 'immutable'
+import { Map, List } from 'immutable'
 import { handleActions, type ActionType } from 'redux-actions'
 import { ADD_SAFE, buildOwnersFrom } from '~/routes/safe/store/actions/addSafe'
-import { type Safe, type SafeProps, makeSafe } from '~/routes/safe/store/model/safe'
-import { type OwnerProps } from '~/routes/safe/store/model/owner'
+import SafeRecord, { type Safe, type SafeProps } from '~/routes/safe/store/models/safe'
+import TokenBalance from '~/routes/safe/store/models/tokenBalance'
+import { type OwnerProps } from '~/routes/safe/store/models/owner'
 import { loadFromStorage } from '~/utils/storage'
 import { SAFES_KEY } from '~/logic/safe/utils'
 import { UPDATE_SAFE } from '~/routes/safe/store/actions/updateSafe'
@@ -16,15 +17,17 @@ export const buildSafe = (storedSafe: SafeProps) => {
   const names = storedSafe.owners.map((owner: OwnerProps) => owner.name)
   const addresses = storedSafe.owners.map((owner: OwnerProps) => owner.address)
   const owners = buildOwnersFrom(Array.from(names), Array.from(addresses))
+  const activeTokens = List(storedSafe.activeTokens)
+  const balances = storedSafe.balances.map(balance => TokenBalance(balance))
 
   const safe: SafeProps = {
-    address: storedSafe.address,
-    name: storedSafe.name,
-    threshold: storedSafe.threshold,
+    ...storedSafe,
     owners,
+    balances,
+    activeTokens,
   }
 
-  return makeSafe(safe)
+  return safe
 }
 
 const buildSafesFrom = (loadedSafes: Object): Map<string, Safe> => {
@@ -35,7 +38,7 @@ const buildSafesFrom = (loadedSafes: Object): Map<string, Safe> => {
     const safeRecords = keys.map((address: string) => buildSafe(loadedSafes[address]))
 
     return safes.withMutations(async (map) => {
-      safeRecords.forEach((safe: Safe) => map.set(safe.get('address'), safe))
+      safeRecords.forEach((safe: SafeProps) => map.set(safe.address, safe))
     })
   } catch (err) {
     // eslint-disable-next-line
@@ -56,19 +59,22 @@ export default handleActions<State, *>(
   {
     [UPDATE_SAFE]: (state: State, action: ActionType<Function>): State => {
       const safe = action.payload
-      const safeAddress = safe.get('address')
+      const safeAddress = safe.address
 
-      const hasSafe = !!state.get(safeAddress)
-      if (hasSafe) {
-        return state.update(safeAddress, prevSafe => (prevSafe.equals(safe) ? prevSafe : safe))
-      }
-
-      return state.set(safeAddress, safe)
+      return state.update(safeAddress, prevSafe => prevSafe.merge(safe))
     },
     [ADD_SAFE]: (state: State, action: ActionType<Function>): State => {
-      const { safe }: { safe: Safe } = action.payload
+      const { safe }: { safe: SafeProps } = action.payload
 
-      return state.set(safe.address, safe)
+      // if you add a new safe it needs to be set as a record
+      // in case of update it shouldn't, because a record would be initialized
+      // with initial props and it would overwrite existing ones
+
+      if (state.has(safe.address)) {
+        return state.update(safe.address, prevSafe => prevSafe.merge(safe))
+      }
+
+      return state.set(safe.address, SafeRecord(safe))
     },
   },
   Map(),

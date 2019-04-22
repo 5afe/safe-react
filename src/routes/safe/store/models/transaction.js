@@ -1,7 +1,7 @@
 // @flow
 import { List, Record } from 'immutable'
 import type { RecordFactory, RecordOf } from 'immutable'
-import { type Confirmation } from '~/routes/safe/store/model/confirmation'
+import { type Confirmation } from '~/routes/safe/store/models/confirmation'
 
 export type TransactionProps = {
   name: string,

@@ -1,10 +1,10 @@
 // @flow
 import { List } from 'immutable'
 import { getSafeEthereumInstance, createTransaction } from '~/logic/safe/safeFrontendOperations'
-import { type Safe } from '~/routes/safe/store/model/safe'
-import { makeOwner } from '~/routes/safe/store/model/owner'
+import { type Safe } from '~/routes/safe/store/models/safe'
+import { makeOwner } from '~/routes/safe/store/models/owner'
 import fetchTransactions from '~/routes/safe/store/actions/fetchTransactions'
-import { makeConfirmation } from '~/routes/safe/store/model/confirmation'
+import { makeConfirmation } from '~/routes/safe/store/models/confirmation'
 import { aNewStore } from '~/store'
 import { aMinedSafe } from '~/test/builder/safe.redux.builder'
 import { getSafeFrom } from '~/test/utils/safeHelper'

@@ -16,11 +16,11 @@ import Atm from '@material-ui/icons/LocalAtm'
 import DoneAll from '@material-ui/icons/DoneAll'
 import CompareArrows from '@material-ui/icons/CompareArrows'
 import Collapsed from '~/routes/safe/component/Transactions/Collapsed'
-import { type Transaction } from '~/routes/safe/store/model/transaction'
+import { type Transaction } from '~/routes/safe/store/models/transaction'
 import Hairline from '~/components/layout/Hairline/index'
 import Button from '~/components/layout/Button'
 import { sameAddress } from '~/logic/wallets/ethAddresses'
-import { type Confirmation } from '~/routes/safe/store/model/confirmation'
+import { type Confirmation } from '~/routes/safe/store/models/confirmation'
 import selector, { type SelectorProps } from './selector'
 
 type Props = Open &

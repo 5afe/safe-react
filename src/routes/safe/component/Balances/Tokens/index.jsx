@@ -1,10 +1,9 @@
 // @flow
 import * as React from 'react'
 import { connect } from 'react-redux'
-import { List } from 'immutable'
+import { List, Set } from 'immutable'
 import classNames from 'classnames/bind'
 import SearchBar from 'material-ui-search-bar'
-import InfiniteScroll from 'react-infinite-scroll-component'
 import { withStyles } from '@material-ui/core/styles'
 import MuiList from '@material-ui/core/List'
 import Img from '~/components/layout/Img'
@@ -23,6 +22,7 @@ import Divider from '~/components/layout/Divider'
 import Hairline from '~/components/layout/Hairline'
 import Spacer from '~/components/Spacer'
 import Row from '~/components/layout/Row'
+import { ETH_ADDRESS } from '~/logic/tokens/utils/tokenHelpers'
 import { type Token } from '~/logic/tokens/store/model/token'
 import actions, { type Actions } from './actions'
 import TokenPlaceholder from './assets/token_placeholder.png'
@@ -33,10 +33,12 @@ type Props = Actions & {
   classes: Object,
   tokens: List<Token>,
   safeAddress: string,
+  activeTokens: List<Token>,
 }
 
 type State = {
   filter: string,
+  activeTokensAddresses: Set<string>,
 }
 
 const filterBy = (filter: string, tokens: List<Token>): List<Token> => tokens.filter(
@@ -45,9 +47,44 @@ const filterBy = (filter: string, tokens: List<Token>): List<Token> => tokens.fi
       || token.name.toLowerCase().includes(filter.toLowerCase()),
 )
 
+// OPTIMIZATION IDEA (Thanks Andre)
+// Calculate active tokens on component mount, store it in component state
+// After user closes modal, dispatch an action so we dont have 100500 actions
+// And selectors dont recalculate
+
 class Tokens extends React.Component<Props, State> {
   state = {
     filter: '',
+    activeTokensAddresses: Set([]),
+    activeTokensCalculated: false,
+  }
+
+  componentDidMount() {
+    const { fetchTokens, safeAddress } = this.props
+
+    fetchTokens(safeAddress)
+  }
+
+  static getDerivedStateFromProps(nextProps, prevState) {
+    // I moved this logic here because if placed in ComponentDidMount
+    // the user would see Switches switch and this method fires before the component mounts
+
+    if (!prevState.activeTokensCalculated) {
+      const { activeTokens } = nextProps
+
+      return {
+        activeTokensAddresses: Set(activeTokens.map(({ address }) => address)),
+        activeTokensCalculated: true,
+      }
+    }
+    return null
+  }
+
+  componentWillUnmount() {
+    const { activeTokensAddresses } = this.state
+    const { updateActiveTokens, safeAddress } = this.props
+
+    updateActiveTokens(safeAddress, activeTokensAddresses.toList())
   }
 
   onCancelSearch = () => {
@@ -58,14 +95,17 @@ class Tokens extends React.Component<Props, State> {
     this.setState(() => ({ filter: value }))
   }
 
-  onSwitch = (token: Token) => (e: SyntheticInputEvent<HTMLInputElement>) => {
-    const { checked } = e.target
-    const { safeAddress, enableToken, disableToken } = this.props
+  onSwitch = (token: Token) => () => {
+    const { activeTokensAddresses } = this.state
 
-    if (checked) {
-      enableToken(safeAddress, token)
+    if (activeTokensAddresses.has(token.address)) {
+      this.setState({
+        activeTokensAddresses: activeTokensAddresses.remove(token.address),
+      })
     } else {
-      disableToken(safeAddress, token)
+      this.setState({
+        activeTokensAddresses: activeTokensAddresses.add(token.address),
+      })
     }
   }
 
@@ -76,7 +116,7 @@ class Tokens extends React.Component<Props, State> {
 
   render() {
     const { onClose, classes, tokens } = this.props
-    const { filter } = this.state
+    const { filter, activeTokensAddresses } = this.state
     const searchClasses = {
       input: classes.searchInput,
       root: classes.searchRoot,
@@ -117,17 +157,23 @@ class Tokens extends React.Component<Props, State> {
           <Hairline />
         </Block>
         <MuiList className={classes.list}>
-          {filteredTokens.map((token: Token) => (
-            <ListItem key={token.address} className={classes.token}>
-              <ListItemIcon>
-                <Img src={token.logoUri} height={28} alt={token.name} onError={this.setImageToPlaceholder} />
-              </ListItemIcon>
-              <ListItemText primary={token.symbol} secondary={token.name} />
-              <ListItemSecondaryAction>
-                <Switch onChange={this.onSwitch(token)} checked={token.status} />
-              </ListItemSecondaryAction>
-            </ListItem>
-          ))}
+          {filteredTokens.map((token: Token) => {
+            const isActive = activeTokensAddresses.has(token.address)
+
+            return (
+              <ListItem key={token.address} className={classes.token}>
+                <ListItemIcon>
+                  <Img src={token.logoUri} height={28} alt={token.name} onError={this.setImageToPlaceholder} />
+                </ListItemIcon>
+                <ListItemText primary={token.symbol} secondary={token.name} />
+                {token.address !== ETH_ADDRESS && (
+                  <ListItemSecondaryAction>
+                    <Switch onChange={this.onSwitch(token)} checked={isActive} />
+                  </ListItemSecondaryAction>
+                )}
+              </ListItem>
+            )
+          })}
         </MuiList>
       </React.Fragment>
     )

@@ -2,7 +2,7 @@
 import { List } from 'immutable'
 import * as React from 'react'
 import NoSafe from '~/components/NoSafe'
-import { type Safe } from '~/routes/safe/store/model/safe'
+import { type Safe } from '~/routes/safe/store/models/safe'
 import SafeTable from '~/routes/safeList/components/SafeTable'
 
 type Props = {

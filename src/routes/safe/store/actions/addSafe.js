@@ -1,12 +1,10 @@
 // @flow
 import { List } from 'immutable'
 import { createAction } from 'redux-actions'
-import { type Safe, makeSafe } from '~/routes/safe/store/model/safe'
-import { saveSafes, setOwners } from '~/logic/safe/utils'
-import { makeOwner, type Owner } from '~/routes/safe/store/model/owner'
-import type { Dispatch as ReduxDispatch, GetState } from 'redux'
-import { type GlobalState } from '~/store/index'
-import { safesMapSelector } from '~/routes/safeList/store/selectors/index'
+import type { Dispatch as ReduxDispatch } from 'redux'
+import { type GlobalState } from '~/store'
+import SafeRecord, { type Safe } from '~/routes/safe/store/models/safe'
+import { makeOwner, type Owner } from '~/routes/safe/store/models/owner'
 
 export const ADD_SAFE = 'ADD_SAFE'
 
@@ -20,7 +18,7 @@ type ActionReturn = {
   safe: Safe,
 }
 
-export const addSafe = createAction<string, *, *>(
+export const addSafe = createAction<string, Function, ActionReturn>(
   ADD_SAFE,
   (safe: Safe): ActionReturn => ({
     safe,
@@ -33,21 +31,15 @@ const saveSafe = (
   threshold: number,
   ownersName: string[],
   ownersAddress: string[],
-) => async (dispatch: ReduxDispatch<GlobalState>, getState: GetState<GlobalState>) => {
+) => async (dispatch: ReduxDispatch<GlobalState>) => {
   const owners: List<Owner> = buildOwnersFrom(ownersName, ownersAddress)
-  const state: GlobalState = getState()
 
-  const safe: Safe = makeSafe({
+  const safe: Safe = SafeRecord({
     name,
     address,
     threshold,
     owners,
   })
-  const safes = safesMapSelector(state)
-  const newSafes = safes.set(address, safe)
-
-  setOwners(address, owners)
-  saveSafes(newSafes.toJSON())
 
   dispatch(addSafe(safe))
 }

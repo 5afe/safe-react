@@ -1,14 +1,15 @@
 // @flow
-import { Map, List } from 'immutable'
+import { Map, List, Set } from 'immutable'
 import { type Match } from 'react-router-dom'
 import { createSelector, createStructuredSelector, type Selector } from 'reselect'
 import { type GlobalState } from '~/store/index'
 import { SAFE_PARAM_ADDRESS } from '~/routes/routes'
-import { type Safe } from '~/routes/safe/store/model/safe'
+import { type Safe } from '~/routes/safe/store/models/safe'
 import { safesMapSelector } from '~/routes/safeList/store/selectors'
 import { type State as TransactionsState, TRANSACTIONS_REDUCER_ID } from '~/routes/safe/store/reducer/transactions'
-import { type Transaction } from '~/routes/safe/store/model/transaction'
-import { type Confirmation } from '~/routes/safe/store/model/confirmation'
+import { type Transaction } from '~/routes/safe/store/models/transaction'
+import { type Confirmation } from '~/routes/safe/store/models/confirmation'
+import { safesListSelector } from '~/routes/safeList/store/selectors/'
 
 export type RouterProps = {
   match: Match,
@@ -78,6 +79,44 @@ export const safeSelector: Selector<GlobalState, RouterProps, SafeSelectorProps>
   },
 )
 
-export default createStructuredSelector({
+export const safeActiveTokensSelector: Selector<GlobalState, RouterProps, List<string>> = createSelector(
+  safeSelector,
+  (safe: Safe) => {
+    if (!safe) {
+      return List()
+    }
+
+    return safe.activeTokens
+  },
+)
+
+export const safeBalancesSelector: Selector<GlobalState, RouterProps, Map<string, string>> = createSelector(
+  safeSelector,
+  (safe: Safe) => {
+    if (!safe) {
+      return List()
+    }
+
+    return safe.balances
+  },
+)
+
+export const getActiveTokensAddressesForAllSafes: Selector<GlobalState, any, Set<string>> = createSelector(
+  safesListSelector,
+  (safes: List<Safe>) => {
+    const addresses = Set().withMutations((set) => {
+      safes.forEach((safe: Safe) => {
+        safe.activeTokens.forEach((tokenAddress) => {
+          set.add(tokenAddress)
+        })
+      })
+    })
+
+    return addresses
+  },
+)
+
+export default createStructuredSelector<Object, *>({
   safe: safeSelector,
+  tokens: safeActiveTokensSelector,
 })

@@ -8,7 +8,7 @@ import Bold from '~/components/layout/Bold'
 import Img from '~/components/layout/Img'
 import Paragraph from '~/components/layout/Paragraph'
 import Row from '~/components/layout/Row'
-import { type Safe } from '~/routes/safe/store/model/safe'
+import { type Safe } from '~/routes/safe/store/models/safe'
 import { type Token } from '~/logic/tokens/store/model/token'
 
 import Transactions from '~/routes/safe/component/Transactions'

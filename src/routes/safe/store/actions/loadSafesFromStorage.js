@@ -2,12 +2,12 @@
 import type { Dispatch as ReduxDispatch } from 'redux'
 import { type GlobalState } from '~/store/index'
 import { SAFES_KEY } from '~/logic/safe/utils'
-import { type SafeProps } from '~/routes/safe/store/model/safe'
+import { type SafeProps } from '~/routes/safe/store/models/safe'
 import { loadFromStorage } from '~/utils/storage'
 import { addSafe } from './addSafe'
 import { buildSafe } from '~/routes/safe/store/reducer/safe'
 
-export default () => async (dispatch: ReduxDispatch<GlobalState>) => {
+const loadSafesFromStorage = () => async (dispatch: ReduxDispatch<GlobalState>) => {
   try {
     const safes: ?{ [string]: SafeProps } = await loadFromStorage(SAFES_KEY)
 
@@ -23,3 +23,5 @@ export default () => async (dispatch: ReduxDispatch<GlobalState>) => {
 
   return Promise.resolve()
 }
+
+export default loadSafesFromStorage
