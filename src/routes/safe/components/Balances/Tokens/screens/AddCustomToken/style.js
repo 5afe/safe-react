@@ -3,11 +3,12 @@ import { lg } from '~/theme/variables'
 
 export const styles = () => ({
   title: {
-    padding: `${lg} 20px 20px`,
+    padding: `${lg} 0 20px`,
     fontSize: '16px',
   },
   formContainer: {
     padding: '0 20px',
+    minHeight: '369px',
   },
   addressInput: {
     marginBottom: '15px',
@@ -22,5 +23,12 @@ export const styles = () => ({
   },
   checkboxLabel: {
     letterSpacing: '-0.5px',
+  },
+  buttonRow: {
+    height: '84px',
+    justifyContent: 'center',
+  },
+  button: {
+    height: '42px',
   },
 })

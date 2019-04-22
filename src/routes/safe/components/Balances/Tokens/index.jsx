@@ -62,7 +62,7 @@ class Tokens extends React.Component<Props, State> {
             setActiveScreen={this.setActiveScreen}
           />
         )}
-        {activeScreen === 'addCustomToken' && <AddCustomToken />}
+        {activeScreen === 'addCustomToken' && <AddCustomToken setActiveScreen={this.setActiveScreen} />}
       </React.Fragment>
     )
   }
