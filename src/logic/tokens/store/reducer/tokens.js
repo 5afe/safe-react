@@ -1,7 +1,7 @@
 // @flow
 import { Map } from 'immutable'
 import { handleActions, type ActionType } from 'redux-actions'
-import { type Token } from '~/logic/tokens/store/model/token'
+import { type Token, makeToken } from '~/logic/tokens/store/model/token'
 import { ADD_TOKEN } from '~/logic/tokens/store/actions/addToken'
 import { REMOVE_TOKEN } from '~/logic/tokens/store/actions/removeToken'
 import { ADD_TOKENS } from '~/logic/tokens/store/actions/saveTokens'
@@ -27,7 +27,7 @@ export default handleActions<State, *>(
       const { token } = action.payload
       const { address: tokenAddress } = token
 
-      return state.set(tokenAddress, token)
+      return state.set(tokenAddress, makeToken(token))
     },
     [REMOVE_TOKEN]: (state: State, action: ActionType<Function>): State => {
       const { token } = action.payload
