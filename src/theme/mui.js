@@ -107,7 +107,7 @@ export default createMuiTheme({
         fontSize: '12px',
         padding: `0 0 0 ${md}`,
         position: 'absolute',
-        top: '9px',
+        top: '5px',
         color: secondary,
         order: 0,
         marginTop: '0px',
