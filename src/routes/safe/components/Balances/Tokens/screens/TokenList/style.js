@@ -47,6 +47,11 @@ export const styles = () => ({
       letterSpacing: '-0.5px',
     },
   },
+  progressContainer: {
+    width: '100%',
+    height: '100%',
+    alignItems: 'center',
+  },
   searchContainer: {
     width: '180px',
     marginLeft: xs,

@@ -17,6 +17,7 @@ import Switch from '@material-ui/core/Switch'
 import Divider from '~/components/layout/Divider'
 import Hairline from '~/components/layout/Hairline'
 import Spacer from '~/components/Spacer'
+import CircularProgress from '@material-ui/core/CircularProgress'
 import Row from '~/components/layout/Row'
 import { ETH_ADDRESS } from '~/logic/tokens/utils/tokenHelpers'
 import { type Token } from '~/logic/tokens/store/model/token'
@@ -147,6 +148,11 @@ class Tokens extends React.Component<Props, State> {
           <Hairline />
         </Block>
         <MuiList className={classes.list}>
+          {!tokens.size && (
+            <Block align="center" className={classes.progressContainer}>
+              <CircularProgress />
+            </Block>
+          )}
           {filteredTokens.map((token: Token) => {
             const isActive = activeTokensAddresses.has(token.address)
 
