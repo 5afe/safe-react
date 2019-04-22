@@ -3,10 +3,14 @@ import React, { Component } from 'react'
 import { withStyles } from '@material-ui/core/styles'
 import Block from '~/components/layout/Block'
 import Paragraph from '~/components/layout/Paragraph'
+import Row from '~/components/layout/Row'
+import Col from '~/components/layout/Col'
+import Img from '~/components/layout/Img'
 import Field from '~/components/forms/Field'
 import GnoForm from '~/components/forms/GnoForm'
 import TextField from '~/components/forms/TextField'
 import { composeValidators, required, mustBeEthereumAddress } from '~/components/forms/validator'
+import TokenPlaceholder from '~/routes/safe/components/Balances/assets/token_placeholder.svg'
 import { styles } from './style'
 
 class AddCustomToken extends Component {
@@ -24,7 +28,7 @@ class AddCustomToken extends Component {
         </Paragraph>
         <GnoForm onSubmit={this.handleSubmit}>
           {(submitting: boolean, validating: boolean, ...rest: any) => (
-            <Block className={classes.inputContainer}>
+            <Block className={classes.formContainer}>
               <Field
                 name="tokenAddress"
                 component={TextField}
@@ -32,7 +36,34 @@ class AddCustomToken extends Component {
                 validate={composeValidators(required, mustBeEthereumAddress)}
                 placeholder="Token contract address*"
                 text="Token contract address*"
+                className={classes.addressInput}
               />
+              <Row>
+                <Col xs={6} layout="column">
+                  <Field
+                    name="tokenSymbol"
+                    component={TextField}
+                    type="text"
+                    validate={composeValidators(required, mustBeEthereumAddress)}
+                    placeholder="Token symbol*"
+                    text="Token symbol"
+                    className={classes.addressInput}
+                  />
+                  <Field
+                    name="tokenDecimals"
+                    component={TextField}
+                    type="text"
+                    validate={composeValidators(required, mustBeEthereumAddress)}
+                    placeholder="Token decimals*"
+                    text="Token decimals*"
+                    className={classes.addressInput}
+                  />
+                </Col>
+                <Col xs={6} layout="column" align="center">
+                  <Paragraph>Token Image</Paragraph>
+                  <Img src={TokenPlaceholder} alt="Token image" height={100} />
+                </Col>
+              </Row>
             </Block>
           )}
         </GnoForm>

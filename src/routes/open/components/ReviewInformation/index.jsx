@@ -10,7 +10,9 @@ import OpenPaper from '~/components/Stepper/OpenPaper'
 import Col from '~/components/layout/Col'
 import Row from '~/components/layout/Row'
 import Paragraph from '~/components/layout/Paragraph'
-import { sm, md, lg, border, secondary, background } from '~/theme/variables'
+import {
+  sm, md, lg, border, secondary, background,
+} from '~/theme/variables'
 import Hairline from '~/components/layout/Hairline'
 import { openAddressInEtherScan } from '~/logic/wallets/getWeb3'
 import { FIELD_NAME, FIELD_CONFIRMATIONS, getNumOwnersFrom } from '../fields'
@@ -111,17 +113,21 @@ const ReviewComponent = ({ values, classes, network }: Props) => {
             </Paragraph>
           </Block>
           <Hairline />
-          { names.map((name, index) => (
-            <React.Fragment key={`name${(index)}`}>
+          {names.map((name, index) => (
+            <React.Fragment key={`name${index}`}>
               <Row className={classes.owner}>
                 <Col xs={1} align="center">
                   <Identicon address={addresses[index]} diameter={32} />
                 </Col>
                 <Col xs={11}>
                   <Block className={classNames(classes.name, classes.userName)}>
-                    <Paragraph size="lg" noMargin >{name}</Paragraph>
+                    <Paragraph size="lg" noMargin>
+                      {name}
+                    </Paragraph>
                     <Block align="center" className={classes.user}>
-                      <Paragraph size="md" color="disabled" noMargin>{addresses[index]}</Paragraph>
+                      <Paragraph size="md" color="disabled" noMargin>
+                        {addresses[index]}
+                      </Paragraph>
                       <OpenInNew
                         className={classes.open}
                         style={openIconStyle}
@@ -138,7 +144,7 @@ const ReviewComponent = ({ values, classes, network }: Props) => {
       </Row>
       <Row className={classes.info} align="center">
         <Paragraph noMargin color="primary" size="md">
-          {'You\'re about to create a new Safe.'}
+          {"You're about to create a new Safe."}
         </Paragraph>
         <Paragraph noMargin color="primary" size="md">
           Make sure you have enough ETH in your wallet client to fund this transaction.
@@ -157,6 +163,5 @@ const Review = ({ network }: LayoutProps) => (controls: React$Node, { values }: 
     </OpenPaper>
   </React.Fragment>
 )
-
 
 export default Review

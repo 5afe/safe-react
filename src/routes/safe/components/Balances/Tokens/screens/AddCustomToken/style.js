@@ -7,7 +7,10 @@ export const styles = () => ({
     fontWeight: bolderFont,
     fontSize: '16px',
   },
-  inputContainer: {
+  formContainer: {
     padding: '0 20px',
+  },
+  addressInput: {
+    marginBottom: '15px',
   },
 })
