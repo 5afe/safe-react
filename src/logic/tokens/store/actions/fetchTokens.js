@@ -1,16 +1,15 @@
 // @flow
 import { List } from 'immutable'
 import contract from 'truffle-contract'
-import axios from 'axios'
 import type { Dispatch as ReduxDispatch } from 'redux'
 import StandardToken from '@gnosis.pm/util-contracts/build/contracts/GnosisStandardToken.json'
 import HumanFriendlyToken from '@gnosis.pm/util-contracts/build/contracts/HumanFriendlyToken.json'
 import { getWeb3 } from '~/logic/wallets/getWeb3'
 import { type GlobalState } from '~/store/index'
 import { makeToken, type TokenProps } from '~/logic/tokens/store/model/token'
+import { fetchTokenList } from '~/logic/tokens/api'
 import { ensureOnce } from '~/utils/singleton'
 import saveTokens from './saveTokens'
-import { getRelayUrl } from '~/config/index'
 
 const createStandardTokenContract = async () => {
   const web3 = getWeb3()
@@ -30,13 +29,6 @@ const createHumanFriendlyTokenContract = async () => {
 export const getHumanFriendlyToken = ensureOnce(createHumanFriendlyTokenContract)
 
 export const getStandardTokenContract = ensureOnce(createStandardTokenContract)
-
-const fetchTokenList = async () => {
-  const apiUrl = getRelayUrl()
-  const url = `${apiUrl}/tokens`
-  const errMsg = 'Error querying safe balances'
-  return axios.get(url, errMsg)
-}
 
 export const fetchTokens = () => async (dispatch: ReduxDispatch<GlobalState>) => {
   try {
