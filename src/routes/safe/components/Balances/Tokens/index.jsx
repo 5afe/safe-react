@@ -35,26 +35,9 @@ class Tokens extends React.Component<Props, State> {
     activeScreen,
   })
 
-  onTokenAdd = (formValues) => {
-    const {
-      addToken, updateActiveTokens, safeAddress, activeTokens,
-    } = this.props
-
-    const activeTokensAddresses = List(activeTokens.map(({ address }) => address))
-    const token = {
-      address: formValues.tokenAddress,
-      decimals: formValues.tokenDecimals,
-      symbol: formValues.tokenSymbol,
-      name: formValues.tokenSymbol,
-    }
-
-    addToken(token)
-    updateActiveTokens(safeAddress, activeTokensAddresses.push(token.address))
-  }
-
   render() {
     const {
-      onClose, classes, tokens, activeTokens, fetchTokens, updateActiveTokens, safeAddress,
+      onClose, classes, tokens, activeTokens, fetchTokens, updateActiveTokens, safeAddress, addToken,
     } = this.props
     const { activeScreen } = this.state
 
@@ -80,7 +63,14 @@ class Tokens extends React.Component<Props, State> {
           />
         )}
         {activeScreen === 'addCustomToken' && (
-          <AddCustomToken setActiveScreen={this.setActiveScreen} onTokenAdd={this.onTokenAdd} onClose={onClose} />
+          <AddCustomToken
+            setActiveScreen={this.setActiveScreen}
+            onClose={onClose}
+            addToken={addToken}
+            safeAddress={safeAddress}
+            activeTokens={activeTokens}
+            updateActiveTokens={updateActiveTokens}
+          />
         )}
       </React.Fragment>
     )
