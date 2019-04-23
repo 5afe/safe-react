@@ -1,6 +1,7 @@
 // @flow
 import React, { useState } from 'react'
 import { List } from 'immutable'
+import { OnChange } from 'react-final-form-listeners'
 import { withStyles } from '@material-ui/core/styles'
 import Block from '~/components/layout/Block'
 import Paragraph from '~/components/layout/Paragraph'
@@ -13,12 +14,10 @@ import Checkbox from '~/components/forms/Checkbox'
 import GnoForm from '~/components/forms/GnoForm'
 import TextField from '~/components/forms/TextField'
 import Hairline from '~/components/layout/Hairline'
-import {
-  composeValidators, required, mustBeEthereumAddress, mustBeInteger,
-} from '~/components/forms/validator'
+import { composeValidators, required, mustBeEthereumAddress } from '~/components/forms/validator'
 import { type TokenProps } from '~/logic/tokens/store/model/token'
 import TokenPlaceholder from '~/routes/safe/components/Balances/assets/token_placeholder.svg'
-import { checkTokenExistence, INITIAL_FORM_STATE } from './validators'
+import { checkTokenExistenceAndSetFields, INITIAL_FORM_STATE } from './validators'
 import { styles } from './style'
 
 type Props = {
@@ -68,11 +67,22 @@ const AddCustomToken = (props: Props) => {
                 name="address"
                 component={TextField}
                 type="text"
-                validate={composeValidators(required, mustBeEthereumAddress, checkTokenExistence(setFormValue))}
+                validate={composeValidators(
+                  required,
+                  mustBeEthereumAddress,
+                  checkTokenExistenceAndSetFields(setFormValue),
+                )}
                 placeholder="Token contract address*"
                 text="Token contract address*"
                 className={classes.addressInput}
               />
+              <OnChange name="address">
+                {(value) => {
+                  if (value === '') {
+                    setFormValue(INITIAL_FORM_STATE)
+                  }
+                }}
+              </OnChange>
               <Row>
                 <Col xs={6} layout="column">
                   <Field
@@ -89,7 +99,6 @@ const AddCustomToken = (props: Props) => {
                     component={TextField}
                     disabled
                     type="text"
-                    validate={composeValidators(required, mustBeInteger)}
                     placeholder="Token decimals*"
                     text="Token decimals*"
                     className={classes.addressInput}

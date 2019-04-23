@@ -20,11 +20,7 @@ export const simpleMemoize = (fn: Function) => {
   }
 }
 
-export const checkTokenExistence = (updateForm: ?Function) => simpleMemoize(async (tokenAddress: string) => {
-  if (!tokenAddress && updateForm) {
-    updateForm(INITIAL_FORM_STATE)
-  }
-
+export const checkTokenExistenceAndSetFields = (updateForm: ?Function) => simpleMemoize(async (tokenAddress: string, anotherArgument, andAnotherone) => {
   const relayToken = await fetchToken(tokenAddress)
 
   if (!relayToken.data.count) {
