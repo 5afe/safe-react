@@ -78,8 +78,14 @@ const AddCustomToken = (props: Props) => {
 
   const formSpyOnChangeHandler = async (state) => {
     const {
-      errors, validating, values, dirty,
+      errors, validating, values, dirty, submitSucceeded,
     } = state
+    // for some reason this is called after submitting, we don't need to update the values
+    // after submit
+    if (submitSucceeded) {
+      return
+    }
+
     if (dirty && !validating && errors.address) {
       setFormValues(INITIAL_FORM_STATE)
     }
@@ -122,6 +128,7 @@ const AddCustomToken = (props: Props) => {
                   errors: true,
                   validating: true,
                   dirty: true,
+                  submitSucceeded: true,
                 }}
                 onChange={formSpyOnChangeHandler}
               />
