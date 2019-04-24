@@ -20,6 +20,7 @@ import { setImageToPlaceholder } from '~/routes/safe/components/Balances/utils'
 import TokenPlaceholder from '~/routes/safe/components/Balances/assets/token_placeholder.svg'
 import { addressIsTokenContract, doesntExistInTokenList } from './validators'
 import { styles } from './style'
+import { getSymbolAndDecimalsFromContract } from './utils'
 
 type Props = {
   classes: Object,
@@ -59,12 +60,31 @@ const AddCustomToken = (props: Props) => {
     onClose()
   }
 
-  const populateFormValuesFromAddress = (tokenAddress) => {}
+  const populateFormValuesFromAddress = async (tokenAddress: string) => {
+    const tokenData = await getSymbolAndDecimalsFromContract(tokenAddress)
 
-  const formSpyOnChangeHandler = (state) => {
-    const { errors, validating, values } = state
-    if (!errors.address && !validating) {
-      populateFormValuesFromAddress(values.address)
+    if (tokenData.length) {
+      const [symbol, decimals] = tokenData
+
+      setFormValues({
+        address: tokenAddress,
+        symbol,
+        decimals,
+        name: symbol,
+      })
+    }
+  }
+
+  const formSpyOnChangeHandler = async (state) => {
+    const {
+      errors, validating, values, dirty,
+    } = state
+    if (dirty && !validating && errors.address) {
+      setFormValues(INITIAL_FORM_STATE)
+    }
+
+    if (!errors.address && !validating && dirty) {
+      await populateFormValuesFromAddress(values.address)
     }
   }
 
@@ -85,13 +105,23 @@ const AddCustomToken = (props: Props) => {
                 name="address"
                 component={TextField}
                 type="text"
-                validate={composeValidators(required, mustBeEthereumAddress, doesntExistInTokenList(tokens), addressIsTokenContract)}
+                validate={composeValidators(
+                  required,
+                  mustBeEthereumAddress,
+                  doesntExistInTokenList(tokens),
+                  addressIsTokenContract,
+                )}
                 placeholder="Token contract address*"
                 text="Token contract address*"
                 className={classes.addressInput}
               />
               <FormSpy
-                subscription={{ values: true, errors: true, validating: true }}
+                subscription={{
+                  values: true,
+                  errors: true,
+                  validating: true,
+                  dirty: true,
+                }}
                 onChange={formSpyOnChangeHandler}
               />
               <Row>
