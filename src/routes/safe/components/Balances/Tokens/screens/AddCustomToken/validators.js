@@ -1,13 +1,6 @@
 // @flow
 import { getWeb3 } from '~/logic/wallets/getWeb3'
 
-export const INITIAL_FORM_STATE = {
-  address: '',
-  decimals: '',
-  symbol: '',
-  logoUri: '',
-}
-
 export const simpleMemoize = (fn: Function) => {
   let lastArg
   let lastResult

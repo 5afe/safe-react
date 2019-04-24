@@ -1,7 +1,6 @@
 // @flow
 import React, { useState } from 'react'
 import { List } from 'immutable'
-import { OnChange } from 'react-final-form-listeners'
 import { FormSpy } from 'react-final-form'
 import { withStyles } from '@material-ui/core/styles'
 import Block from '~/components/layout/Block'
@@ -17,8 +16,9 @@ import TextField from '~/components/forms/TextField'
 import Hairline from '~/components/layout/Hairline'
 import { composeValidators, required, mustBeEthereumAddress } from '~/components/forms/validator'
 import { type TokenProps } from '~/logic/tokens/store/model/token'
+import { setImageToPlaceholder } from '~/routes/safe/components/Balances/utils'
 import TokenPlaceholder from '~/routes/safe/components/Balances/assets/token_placeholder.svg'
-import { addressIsTokenContract, INITIAL_FORM_STATE } from './validators'
+import { addressIsTokenContract } from './validators'
 import { styles } from './style'
 
 type Props = {
@@ -31,24 +31,40 @@ type Props = {
   onClose: Function,
 }
 
+const INITIAL_FORM_STATE = {
+  address: '',
+  decimals: '',
+  symbol: '',
+  logoUri: '',
+}
+
 const AddCustomToken = (props: Props) => {
   const {
     classes, setActiveScreen, onClose, addToken, updateActiveTokens, safeAddress, activeTokens,
   } = props
-  const [formValue, setFormValue] = useState(INITIAL_FORM_STATE)
+  const [formValues, setFormValues] = useState(INITIAL_FORM_STATE)
 
-  const handleSubmit = (formValues) => {
+  const handleSubmit = (values) => {
     const activeTokensAddresses = activeTokens.map(({ address }) => address)
     const token = {
-      address: formValues.address,
-      decimals: formValues.decimals,
-      symbol: formValues.symbol,
-      name: formValues.symbol,
+      address: values.address,
+      decimals: values.decimals,
+      symbol: values.symbol,
+      name: values.symbol,
     }
 
     addToken(token)
     updateActiveTokens(safeAddress, activeTokensAddresses.push(token.address))
     onClose()
+  }
+
+  const populateFormValuesFromAddress = (tokenAddress) => {}
+
+  const formSpyOnChangeHandler = (state) => {
+    const { errors, validating, values } = state
+    if (!errors.address && !validating) {
+      populateFormValuesFromAddress(values.address)
+    }
   }
 
   const goBackToTokenList = () => {
@@ -57,7 +73,7 @@ const AddCustomToken = (props: Props) => {
 
   return (
     <React.Fragment>
-      <GnoForm onSubmit={handleSubmit} initialValues={formValue}>
+      <GnoForm onSubmit={handleSubmit} initialValues={formValues}>
         {() => (
           <React.Fragment>
             <Block className={classes.formContainer}>
@@ -68,22 +84,15 @@ const AddCustomToken = (props: Props) => {
                 name="address"
                 component={TextField}
                 type="text"
-                validate={composeValidators(
-                  required,
-                  mustBeEthereumAddress,
-                  addressIsTokenContract,
-                )}
+                validate={composeValidators(required, mustBeEthereumAddress, addressIsTokenContract)}
                 placeholder="Token contract address*"
                 text="Token contract address*"
                 className={classes.addressInput}
               />
-              <OnChange name="address">
-                {(value) => {
-                  if (value === '') {
-                    setFormValue(INITIAL_FORM_STATE)
-                  }
-                }}
-              </OnChange>
+              <FormSpy
+                subscription={{ values: true, errors: true, validating: true }}
+                onChange={formSpyOnChangeHandler}
+              />
               <Row>
                 <Col xs={6} layout="column">
                   <Field
@@ -113,7 +122,12 @@ const AddCustomToken = (props: Props) => {
                 </Col>
                 <Col xs={6} layout="column" align="center">
                   <Paragraph className={classes.tokenImageHeading}>Token Image</Paragraph>
-                  <Img src={TokenPlaceholder} alt="Token image" height={100} />
+                  <Img
+                    src={formValues.logoUri || TokenPlaceholder}
+                    onError={setImageToPlaceholder}
+                    alt="Token image"
+                    height={100}
+                  />
                 </Col>
               </Row>
             </Block>
