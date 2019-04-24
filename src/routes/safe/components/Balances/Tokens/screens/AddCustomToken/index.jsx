@@ -2,6 +2,7 @@
 import React, { useState } from 'react'
 import { List } from 'immutable'
 import { OnChange } from 'react-final-form-listeners'
+import { FormSpy } from 'react-final-form'
 import { withStyles } from '@material-ui/core/styles'
 import Block from '~/components/layout/Block'
 import Paragraph from '~/components/layout/Paragraph'
@@ -17,7 +18,7 @@ import Hairline from '~/components/layout/Hairline'
 import { composeValidators, required, mustBeEthereumAddress } from '~/components/forms/validator'
 import { type TokenProps } from '~/logic/tokens/store/model/token'
 import TokenPlaceholder from '~/routes/safe/components/Balances/assets/token_placeholder.svg'
-import { checkTokenExistenceAndSetFields, INITIAL_FORM_STATE } from './validators'
+import { addressIsTokenContract, INITIAL_FORM_STATE } from './validators'
 import { styles } from './style'
 
 type Props = {
@@ -70,7 +71,7 @@ const AddCustomToken = (props: Props) => {
                 validate={composeValidators(
                   required,
                   mustBeEthereumAddress,
-                  checkTokenExistenceAndSetFields(setFormValue),
+                  addressIsTokenContract,
                 )}
                 placeholder="Token contract address*"
                 text="Token contract address*"

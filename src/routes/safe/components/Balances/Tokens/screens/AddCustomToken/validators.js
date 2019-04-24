@@ -1,5 +1,5 @@
 // @flow
-import { fetchToken } from '~/logic/tokens/api'
+import { getWeb3 } from '~/logic/wallets/getWeb3'
 
 export const INITIAL_FORM_STATE = {
   address: '',
@@ -20,22 +20,12 @@ export const simpleMemoize = (fn: Function) => {
   }
 }
 
-export const checkTokenExistenceAndSetFields = (updateForm: ?Function) => simpleMemoize(async (tokenAddress: string, anotherArgument, andAnotherone) => {
-  const relayToken = await fetchToken(tokenAddress)
+// eslint-disable-next-line
+export const addressIsTokenContract = simpleMemoize(async (tokenAddress: string) => {
+  const web3 = getWeb3()
+  const call = await web3.eth.call({ to: tokenAddress, data: web3.utils.sha3('totalSupply()') })
 
-  if (!relayToken.data.count) {
-    return "Couldn't find the token"
-  }
-
-  if (updateForm) {
-    const {
-      address, symbol, decimals, logoUri,
-    } = relayToken.data.results[0]
-    updateForm({
-      address,
-      symbol,
-      decimals: String(decimals),
-      logoUri,
-    })
+  if (call === '0x') {
+    return 'Not a token address'
   }
 })
