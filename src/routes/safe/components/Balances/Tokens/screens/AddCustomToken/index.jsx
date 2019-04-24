@@ -14,9 +14,10 @@ import Checkbox from '~/components/forms/Checkbox'
 import GnoForm from '~/components/forms/GnoForm'
 import TextField from '~/components/forms/TextField'
 import Hairline from '~/components/layout/Hairline'
-import { composeValidators, required, mustBeEthereumAddress } from '~/components/forms/validator'
+import {
+  composeValidators, required, mustBeEthereumAddress, minMaxLength,
+} from '~/components/forms/validator'
 import { type TokenProps, type Token } from '~/logic/tokens/store/model/token'
-import { setImageToPlaceholder } from '~/routes/safe/components/Balances/utils'
 import TokenPlaceholder from '~/routes/safe/components/Balances/assets/token_placeholder.svg'
 import { addressIsTokenContract, doesntExistInTokenList } from './validators'
 import { styles } from './style'
@@ -130,7 +131,7 @@ const AddCustomToken = (props: Props) => {
                     name="symbol"
                     component={TextField}
                     type="text"
-                    validate={required}
+                    validate={composeValidators(required, minMaxLength(3, 12))}
                     placeholder="Token symbol*"
                     text="Token symbol"
                     className={classes.addressInput}
@@ -147,18 +148,13 @@ const AddCustomToken = (props: Props) => {
                   <Block align="left">
                     <Field name="showForAllSafes" component={Checkbox} type="checkbox" className={classes.checkbox} />
                     <Paragraph weight="bolder" size="md" className={classes.checkboxLabel}>
-                      Display token for all safes
+                      Activate token for all Safes
                     </Paragraph>
                   </Block>
                 </Col>
                 <Col xs={6} layout="column" align="center">
                   <Paragraph className={classes.tokenImageHeading}>Token Image</Paragraph>
-                  <Img
-                    src={formValues.logoUri || TokenPlaceholder}
-                    onError={setImageToPlaceholder}
-                    alt="Token image"
-                    height={100}
-                  />
+                  <Img src={TokenPlaceholder} alt="Token image" height={100} />
                 </Col>
               </Row>
             </Block>
