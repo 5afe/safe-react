@@ -70,6 +70,7 @@ class Tokens extends React.Component<Props, State> {
             safeAddress={safeAddress}
             activeTokens={activeTokens}
             updateActiveTokens={updateActiveTokens}
+            tokens={tokens}
           />
         )}
       </React.Fragment>

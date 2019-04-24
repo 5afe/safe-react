@@ -15,10 +15,10 @@ import GnoForm from '~/components/forms/GnoForm'
 import TextField from '~/components/forms/TextField'
 import Hairline from '~/components/layout/Hairline'
 import { composeValidators, required, mustBeEthereumAddress } from '~/components/forms/validator'
-import { type TokenProps } from '~/logic/tokens/store/model/token'
+import { type TokenProps, type Token } from '~/logic/tokens/store/model/token'
 import { setImageToPlaceholder } from '~/routes/safe/components/Balances/utils'
 import TokenPlaceholder from '~/routes/safe/components/Balances/assets/token_placeholder.svg'
-import { addressIsTokenContract } from './validators'
+import { addressIsTokenContract, doesntExistInTokenList } from './validators'
 import { styles } from './style'
 
 type Props = {
@@ -27,6 +27,7 @@ type Props = {
   updateActiveTokens: Function,
   safeAddress: string,
   activeTokens: List<TokenProps>,
+  tokens: List<Token>,
   setActiveScreen: Function,
   onClose: Function,
 }
@@ -40,7 +41,7 @@ const INITIAL_FORM_STATE = {
 
 const AddCustomToken = (props: Props) => {
   const {
-    classes, setActiveScreen, onClose, addToken, updateActiveTokens, safeAddress, activeTokens,
+    classes, setActiveScreen, onClose, addToken, updateActiveTokens, safeAddress, activeTokens, tokens,
   } = props
   const [formValues, setFormValues] = useState(INITIAL_FORM_STATE)
 
@@ -84,7 +85,7 @@ const AddCustomToken = (props: Props) => {
                 name="address"
                 component={TextField}
                 type="text"
-                validate={composeValidators(required, mustBeEthereumAddress, addressIsTokenContract)}
+                validate={composeValidators(required, mustBeEthereumAddress, doesntExistInTokenList(tokens), addressIsTokenContract)}
                 placeholder="Token contract address*"
                 text="Token contract address*"
                 className={classes.addressInput}
