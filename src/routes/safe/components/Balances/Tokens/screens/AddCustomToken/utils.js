@@ -7,7 +7,8 @@ export const getSymbolAndDecimalsFromContract = async (tokenAddress: string) => 
   let values
 
   try {
-    values = await Promise.all([token.symbol(), (await token.decimals()).toString()])
+    const [symbol, decimals] = await Promise.all([token.symbol(), token.decimals()])
+    values = [symbol, decimals.toString()]
   } catch {
     values = []
   }

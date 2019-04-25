@@ -68,7 +68,6 @@ export default handleActions<State, *>(
       const tokenAddress = action.payload
 
       const newState = state.withMutations((map) => {
-        console.log(map.keys())
         map.keySeq().forEach((safeAddress) => {
           const safeActiveTokens = map.getIn([safeAddress, 'activeTokens'])
           const activeTokens = safeActiveTokens.push(tokenAddress)
