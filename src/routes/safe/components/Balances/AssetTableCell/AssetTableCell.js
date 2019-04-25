@@ -3,12 +3,7 @@ import * as React from 'react'
 import Block from '~/components/layout/Block'
 import Img from '~/components/layout/Img'
 import Paragraph from '~/components/layout/Paragraph'
-import TokenPlaceholder from '../assets/token_placeholder.svg'
-
-const setImageToPlaceholder = (e) => {
-  e.target.onerror = null
-  e.target.src = TokenPlaceholder
-}
+import { setImageToPlaceholder } from '~/routes/safe/components/Balances/utils'
 
 type Props = {
   asset: {
