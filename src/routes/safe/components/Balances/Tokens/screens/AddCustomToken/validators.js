@@ -18,7 +18,7 @@ export const simpleMemoize = (fn: Function) => {
 }
 
 // eslint-disable-next-line
-export const addressIsTokenContract = async (tokenAddress: string) => {
+export const addressIsTokenContract = simpleMemoize(async (tokenAddress: string) => {
   // SECOND APPROACH:
   // They both seem to work the same
   // const tokenContract = await getStandardTokenContract()
@@ -34,8 +34,9 @@ export const addressIsTokenContract = async (tokenAddress: string) => {
   if (call === '0x') {
     return 'Not a token address'
   }
-}
+})
 
+// eslint-disable-next-line
 export const doesntExistInTokenList = (tokenList: List<Token>) => simpleMemoize((tokenAddress: string) => {
   const tokenIndex = tokenList.findIndex(({ address }) => sameAddress(address, tokenAddress))
 
