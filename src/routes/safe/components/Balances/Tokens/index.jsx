@@ -1,5 +1,5 @@
 // @flow
-import * as React from 'react'
+import React, { useState } from 'react'
 import { connect } from 'react-redux'
 import { List } from 'immutable'
 import { withStyles } from '@material-ui/core/styles'
@@ -22,60 +22,55 @@ type Props = Actions & {
   activeTokens: List<Token>,
 }
 
-type State = {
-  activeScreen: string,
-}
+const Tokens = (props: Props) => {
+  const [activeScreen, setActiveScreen] = useState<string>('tokenList')
+  const {
+    onClose,
+    classes,
+    tokens,
+    activeTokens,
+    fetchTokens,
+    updateActiveTokens,
+    safeAddress,
+    addToken,
+    activateTokenForAllSafes,
+  } = props
 
-class Tokens extends React.Component<Props, State> {
-  state = {
-    activeScreen: 'tokenList',
-  }
-
-  setActiveScreen = (activeScreen: string) => this.setState({
-    activeScreen,
-  })
-
-  render() {
-    const {
-      onClose, classes, tokens, activeTokens, fetchTokens, updateActiveTokens, safeAddress, addToken,
-    } = this.props
-    const { activeScreen } = this.state
-
-    return (
-      <React.Fragment>
-        <Row align="center" grow className={classes.heading}>
-          <Paragraph className={classes.manage} noMargin>
-            Manage Tokens
-          </Paragraph>
-          <IconButton onClick={onClose} disableRipple>
-            <Close className={classes.close} />
-          </IconButton>
-        </Row>
-        <Hairline />
-        {activeScreen === 'tokenList' && (
-          <TokenList
-            tokens={tokens}
-            activeTokens={activeTokens}
-            fetchTokens={fetchTokens}
-            updateActiveTokens={updateActiveTokens}
-            safeAddress={safeAddress}
-            setActiveScreen={this.setActiveScreen}
-          />
-        )}
-        {activeScreen === 'addCustomToken' && (
-          <AddCustomToken
-            setActiveScreen={this.setActiveScreen}
-            onClose={onClose}
-            addToken={addToken}
-            safeAddress={safeAddress}
-            activeTokens={activeTokens}
-            updateActiveTokens={updateActiveTokens}
-            tokens={tokens}
-          />
-        )}
-      </React.Fragment>
-    )
-  }
+  return (
+    <React.Fragment>
+      <Row align="center" grow className={classes.heading}>
+        <Paragraph className={classes.manage} noMargin>
+          Manage Tokens
+        </Paragraph>
+        <IconButton onClick={onClose} disableRipple>
+          <Close className={classes.close} />
+        </IconButton>
+      </Row>
+      <Hairline />
+      {activeScreen === 'tokenList' && (
+        <TokenList
+          tokens={tokens}
+          activeTokens={activeTokens}
+          fetchTokens={fetchTokens}
+          updateActiveTokens={updateActiveTokens}
+          safeAddress={safeAddress}
+          setActiveScreen={setActiveScreen}
+        />
+      )}
+      {activeScreen === 'addCustomToken' && (
+        <AddCustomToken
+          setActiveScreen={setActiveScreen}
+          onClose={onClose}
+          addToken={addToken}
+          safeAddress={safeAddress}
+          activeTokens={activeTokens}
+          updateActiveTokens={updateActiveTokens}
+          activateTokenForAllSafes={activateTokenForAllSafes}
+          tokens={tokens}
+        />
+      )}
+    </React.Fragment>
+  )
 }
 
 const TokenComponent = withStyles(styles)(Tokens)

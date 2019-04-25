@@ -32,6 +32,7 @@ type Props = {
   tokens: List<Token>,
   setActiveScreen: Function,
   onClose: Function,
+  activateTokenForAllSafes: Function,
 }
 
 const INITIAL_FORM_STATE = {
@@ -43,12 +44,11 @@ const INITIAL_FORM_STATE = {
 
 const AddCustomToken = (props: Props) => {
   const {
-    classes, setActiveScreen, onClose, addToken, updateActiveTokens, safeAddress, activeTokens, tokens,
+    classes, setActiveScreen, onClose, addToken, updateActiveTokens, safeAddress, activeTokens, tokens, activateTokenForAllSafes,
   } = props
   const [formValues, setFormValues] = useState(INITIAL_FORM_STATE)
 
   const handleSubmit = (values) => {
-    const activeTokensAddresses = activeTokens.map(({ address }) => address)
     const token = {
       address: values.address,
       decimals: values.decimals,
@@ -57,7 +57,13 @@ const AddCustomToken = (props: Props) => {
     }
 
     addToken(token)
-    updateActiveTokens(safeAddress, activeTokensAddresses.push(token.address))
+    if (values.showForAllSafes) {
+      activateTokenForAllSafes(token.address)
+    } else {
+      const activeTokensAddresses = activeTokens.map(({ address }) => address)
+      updateActiveTokens(safeAddress, activeTokensAddresses.push(token.address))
+    }
+
     onClose()
   }
 

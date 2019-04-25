@@ -9,8 +9,9 @@ import { getActiveTokensAddressesForAllSafes } from '~/routes/safe/store/selecto
 import { tokensSelector } from '~/logic/tokens/store/selectors'
 import type { Token } from '~/logic/tokens/store/model/token'
 import { saveActiveTokens } from '~/logic/tokens/utils/tokensStorage'
+import { ACTIVATE_TOKEN_FOR_ALL_SAFES } from '~/routes/safe/store/actions/activateTokenForAllSafes';
 
-const watchedActions = [ADD_SAFE, UPDATE_SAFE]
+const watchedActions = [ADD_SAFE, UPDATE_SAFE, ACTIVATE_TOKEN_FOR_ALL_SAFES]
 
 const safeStorageMware = (store: Store<GlobalState>) => (next: Function) => async (action: AnyAction) => {
   const handledAction = next(action)
@@ -21,7 +22,7 @@ const safeStorageMware = (store: Store<GlobalState>) => (next: Function) => asyn
     saveSafes(safes.toJSON())
 
     // recalculate active tokens
-    if (action.payload.activeTokens) {
+    if (action.payload.activeTokens || action.type === ACTIVATE_TOKEN_FOR_ALL_SAFES) {
       const tokens = tokensSelector(state)
       const activeTokenAddresses = getActiveTokensAddressesForAllSafes(state)
 

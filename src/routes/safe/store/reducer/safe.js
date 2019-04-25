@@ -67,7 +67,17 @@ export default handleActions<State, *>(
     [ACTIVATE_TOKEN_FOR_ALL_SAFES]: (state: State, action: ActionType<Function>): State => {
       const tokenAddress = action.payload
 
-      return state
+      const newState = state.withMutations((map) => {
+        console.log(map.keys())
+        map.keySeq().forEach((safeAddress) => {
+          const safeActiveTokens = map.getIn([safeAddress, 'activeTokens'])
+          const activeTokens = safeActiveTokens.push(tokenAddress)
+
+          map.update(safeAddress, prevSafe => prevSafe.merge({ activeTokens }))
+        })
+      })
+
+      return newState
     },
     [ADD_SAFE]: (state: State, action: ActionType<Function>): State => {
       const { safe }: { safe: SafeProps } = action.payload
