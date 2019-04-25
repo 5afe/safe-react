@@ -18,7 +18,7 @@ const createStandardTokenContract = async () => {
 
   return erc20Token
 }
-export const createHumanFriendlyTokenContract = async () => {
+const createHumanFriendlyTokenContract = async () => {
   const web3 = getWeb3()
   const humanErc20Token = await contract(HumanFriendlyToken)
   humanErc20Token.setProvider(web3.currentProvider)

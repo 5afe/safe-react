@@ -9,7 +9,7 @@ import { getActiveTokensAddressesForAllSafes } from '~/routes/safe/store/selecto
 import { tokensSelector } from '~/logic/tokens/store/selectors'
 import type { Token } from '~/logic/tokens/store/model/token'
 import { saveActiveTokens } from '~/logic/tokens/utils/tokensStorage'
-import { ACTIVATE_TOKEN_FOR_ALL_SAFES } from '~/routes/safe/store/actions/activateTokenForAllSafes';
+import { ACTIVATE_TOKEN_FOR_ALL_SAFES } from '~/routes/safe/store/actions/activateTokenForAllSafes'
 
 const watchedActions = [ADD_SAFE, UPDATE_SAFE, ACTIVATE_TOKEN_FOR_ALL_SAFES]
 
