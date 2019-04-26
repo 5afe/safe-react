@@ -3,7 +3,9 @@ import * as React from 'react'
 import { withStyles } from '@material-ui/core/styles'
 import Field from '~/components/forms/Field'
 import TextField from '~/components/forms/TextField'
-import { required, composeValidators, uniqueAddress, mustBeEthereumAddress, noErrorsOn } from '~/components/forms/validator'
+import {
+  required, composeValidators, uniqueAddress, mustBeEthereumAddress, noErrorsOn,
+} from '~/components/forms/validator'
 import Block from '~/components/layout/Block'
 import Button from '~/components/layout/Button'
 import Row from '~/components/layout/Row'
@@ -98,10 +100,10 @@ class SafeOwners extends React.Component<Props, State> {
   }
 
   onRemoveRow = (index: number) => () => {
-    const { values } = this.props
+    const { values, updateInitialProps } = this.props
     const { numOwners } = this.state
     const initialValues = calculateValuesAfterRemoving(index, numOwners, values)
-    this.props.updateInitialProps(initialValues)
+    updateInitialProps(initialValues)
 
 
     this.setState(state => ({
@@ -132,7 +134,7 @@ class SafeOwners extends React.Component<Props, State> {
           <Col xs={8}>ADDRESS</Col>
         </Row>
         <Hairline />
-        <Block margin="md">
+        <Block margin="md" padding="md">
           { [...Array(Number(numOwners))].map((x, index) => {
             const addressName = getOwnerAddressBy(index)
 
@@ -167,8 +169,8 @@ class SafeOwners extends React.Component<Props, State> {
                   />
                 </Col>
                 <Col xs={1} center="xs" middle="xs" className={classes.remove}>
-                  { index > 0 &&
-                    <Img src={trash} height={20} alt="Delete" onClick={this.onRemoveRow(index)} />
+                  { index > 0
+                    && <Img src={trash} height={20} alt="Delete" onClick={this.onRemoveRow(index)} />
                   }
                 </Col>
               </Row>
