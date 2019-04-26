@@ -2,7 +2,7 @@
 import TestUtils from 'react-dom/test-utils'
 import { sleep } from '~/utils/timer'
 import { checkMinedTx, checkPendingTx } from '~/test/builder/safe.dom.utils'
-import SendToken from '~/routes/safe/component/SendToken'
+import SendToken from '~/routes/safe/components/SendToken'
 import { whenExecuted } from '~/test/utils/logTransactions'
 
 export const sendMoveFundsForm = async (

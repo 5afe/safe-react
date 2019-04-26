@@ -8,6 +8,7 @@ import { type OwnerProps } from '~/routes/safe/store/models/owner'
 import { loadFromStorage } from '~/utils/storage'
 import { SAFES_KEY } from '~/logic/safe/utils'
 import { UPDATE_SAFE } from '~/routes/safe/store/actions/updateSafe'
+import { ACTIVATE_TOKEN_FOR_ALL_SAFES } from '~/routes/safe/store/actions/activateTokenForAllSafes'
 
 export const SAFE_REDUCER_ID = 'safes'
 
@@ -62,6 +63,20 @@ export default handleActions<State, *>(
       const safeAddress = safe.address
 
       return state.update(safeAddress, prevSafe => prevSafe.merge(safe))
+    },
+    [ACTIVATE_TOKEN_FOR_ALL_SAFES]: (state: State, action: ActionType<Function>): State => {
+      const tokenAddress = action.payload
+
+      const newState = state.withMutations((map) => {
+        map.keySeq().forEach((safeAddress) => {
+          const safeActiveTokens = map.getIn([safeAddress, 'activeTokens'])
+          const activeTokens = safeActiveTokens.push(tokenAddress)
+
+          map.update(safeAddress, prevSafe => prevSafe.merge({ activeTokens }))
+        })
+      })
+
+      return newState
     },
     [ADD_SAFE]: (state: State, action: ActionType<Function>): State => {
       const { safe }: { safe: SafeProps } = action.payload

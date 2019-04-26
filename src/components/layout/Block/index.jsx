@@ -10,7 +10,7 @@ const cx = classNames.bind(styles)
 type Props = {
   margin?: Size,
   padding?: Size,
-  align?: 'center' | 'right',
+  align?: 'center' | 'right' | 'left',
   children: React$Node,
   className?: string,
 }

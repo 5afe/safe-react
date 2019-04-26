@@ -10,7 +10,7 @@ const styles = {
 }
 
 type Props = {
-  minWidth?: number
+  minWidth?: number,
 }
 
 const calculateStyleBased = minWidth => ({

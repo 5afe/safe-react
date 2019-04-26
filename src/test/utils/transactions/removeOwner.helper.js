@@ -4,7 +4,7 @@ import { sleep } from '~/utils/timer'
 import { checkMinedTx, EXPAND_OWNERS_INDEX, checkPendingTx } from '~/test/builder/safe.dom.utils'
 import { filterMoveButtonsFrom } from '~/test/builder/safe.dom.builder'
 import { whenExecuted } from '~/test/utils/logTransactions'
-import RemoveOwner from '~/routes/safe/component/RemoveOwner'
+import RemoveOwner from '~/routes/safe/components/RemoveOwner'
 
 export const sendRemoveOwnerForm = async (
   SafeDom: React$Component<any, any>,

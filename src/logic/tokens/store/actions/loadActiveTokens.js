@@ -11,7 +11,7 @@ const loadActiveTokens = () => async (dispatch: ReduxDispatch<GlobalState>) => {
     const tokens: Map<string, TokenProps> = await getActiveTokens()
 
     const tokenRecordsList: List<Token> = List(
-      Object.values(tokens).map(token => makeToken(token)),
+      Object.values(tokens).map((token: TokenProps): Token => makeToken(token)),
     )
 
     dispatch(saveTokens(tokenRecordsList))
