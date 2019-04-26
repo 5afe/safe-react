@@ -9,12 +9,13 @@ import Identicon from '~/components/Identicon'
 import OpenPaper from '~/components/Stepper/OpenPaper'
 import Col from '~/components/layout/Col'
 import Row from '~/components/layout/Row'
+import Link from '~/components/layout/Link'
 import Paragraph from '~/components/layout/Paragraph'
 import {
   sm, md, lg, border, secondary, background,
 } from '~/theme/variables'
 import Hairline from '~/components/layout/Hairline'
-import { openAddressInEtherScan } from '~/logic/wallets/getWeb3'
+import { getEtherScanLink } from '~/logic/wallets/getWeb3'
 import { FIELD_NAME, FIELD_CONFIRMATIONS, getNumOwnersFrom } from '../fields'
 
 const openIconStyle = {
@@ -128,11 +129,9 @@ const ReviewComponent = ({ values, classes, network }: Props) => {
                       <Paragraph size="md" color="disabled" noMargin>
                         {addresses[index]}
                       </Paragraph>
-                      <OpenInNew
-                        className={classes.open}
-                        style={openIconStyle}
-                        onClick={openAddressInEtherScan(addresses[index], network)}
-                      />
+                      <Link className={classes.open} to={getEtherScanLink(addresses[index], network)} target="_blank">
+                        <OpenInNew style={openIconStyle} />
+                      </Link>
                     </Block>
                   </Block>
                 </Col>

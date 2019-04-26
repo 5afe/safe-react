@@ -9,10 +9,11 @@ import Identicon from '~/components/Identicon'
 import { withStyles } from '@material-ui/core/styles'
 import Heading from '~/components/layout/Heading'
 import Row from '~/components/layout/Row'
+import Link from '~/components/layout/Link'
 import Paragraph from '~/components/layout/Paragraph'
 import NoSafe from '~/components/NoSafe'
 import { type SelectorProps } from '~/routes/safe/container/selector'
-import { openAddressInEtherScan } from '~/logic/wallets/getWeb3'
+import { getEtherScanLink } from '~/logic/wallets/getWeb3'
 import {
   sm, xs, secondary, smallFontSize,
 } from '~/theme/variables'
@@ -112,11 +113,9 @@ class Layout extends React.Component<Props, State> {
               <Paragraph size="md" color="disabled" onClick={this.copyAddress} title="Click to copy" noMargin>
                 {address}
               </Paragraph>
-              <OpenInNew
-                className={classes.open}
-                style={openIconStyle}
-                onClick={openAddressInEtherScan(address, network)}
-              />
+              <Link className={classes.open} to={getEtherScanLink(address, network)} target="_blank">
+                <OpenInNew style={openIconStyle} />
+              </Link>
             </Block>
           </Block>
         </Block>

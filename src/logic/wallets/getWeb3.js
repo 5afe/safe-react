@@ -33,9 +33,7 @@ export const ETHEREUM_NETWORK_IDS = {
 
 export const openTxInEtherScan = (tx: string, network: string) => `https://${network}.etherscan.io/tx/${tx}`
 
-export const openAddressInEtherScan = (address: string, network: string) => () => {
-  window.open(`https://${network}.etherscan.io/address/${address}`)
-}
+export const getEtherScanLink = (address: string, network: string) => `https://${network}.etherscan.io/address/${address}`
 
 let web3
 export const getWeb3 = () => web3 || new Web3(window.web3.currentProvider)

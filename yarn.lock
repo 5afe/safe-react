@@ -1086,7 +1086,7 @@
   dependencies:
     regenerator-runtime "^0.12.0"
 
-"@babel/runtime@^7.0.0", "@babel/runtime@^7.1.2", "@babel/runtime@^7.1.5", "@babel/runtime@^7.2.0", "@babel/runtime@^7.3.1", "@babel/runtime@^7.3.4", "@babel/runtime@^7.4.2", "@babel/runtime@^7.4.3":
+"@babel/runtime@^7.0.0", "@babel/runtime@^7.1.2", "@babel/runtime@^7.2.0", "@babel/runtime@^7.3.1", "@babel/runtime@^7.3.4", "@babel/runtime@^7.4.2", "@babel/runtime@^7.4.3":
   version "7.4.3"
   resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.4.3.tgz#79888e452034223ad9609187a0ad1fe0d2ad4bdc"
   integrity sha512-9lsJwJLxDh/T3Q3SZszfWOTkk3pHbkmH+3KY+zwIDmsNlxsumuhS2TH3NIpktU4kNvfzy+k3eLT7aTJSPTo0OA==
@@ -5827,6 +5827,13 @@ detect-indent@^4.0.0:
   dependencies:
     repeating "^2.0.0"
 
+detect-installed@^2.0.4:
+  version "2.0.4"
+  resolved "https://registry.yarnpkg.com/detect-installed/-/detect-installed-2.0.4.tgz#a0850465e7c3ebcff979d6b6535ad344b80dd7c5"
+  integrity sha1-oIUEZefD68/5eda2U1rTRLgN18U=
+  dependencies:
+    get-installed-path "^2.0.3"
+
 detect-libc@^1.0.2:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/detect-libc/-/detect-libc-1.0.3.tgz#fa137c4bd698edf55cd5cd02ac559f91a4c4ba9b"
@@ -6368,10 +6375,10 @@ eslint-plugin-import@2.17.2:
     read-pkg-up "^2.0.0"
     resolve "^1.10.0"
 
-eslint-plugin-jest@^22.3.0:
-  version "22.4.1"
-  resolved "https://registry.yarnpkg.com/eslint-plugin-jest/-/eslint-plugin-jest-22.4.1.tgz#a5fd6f7a2a41388d16f527073b778013c5189a9c"
-  integrity sha512-gcLfn6P2PrFAVx3AobaOzlIEevpAEf9chTpFZz7bYfc7pz8XRv7vuKTIE4hxPKZSha6XWKKplDQ0x9Pq8xX2mg==
+eslint-plugin-jest@22.5.1:
+  version "22.5.1"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-jest/-/eslint-plugin-jest-22.5.1.tgz#a31dfe9f9513c6af7c17ece4c65535a1370f060b"
+  integrity sha512-c3WjZR/HBoi4GedJRwo2OGHa8Pzo1EbSVwQ2HFzJ+4t2OoYM7Alx646EH/aaxZ+9eGcPiq0FT0UGkRuFFx2FHg==
 
 eslint-plugin-jsx-a11y@^6.0.3:
   version "6.2.1"
@@ -6833,7 +6840,7 @@ ethereumjs-util@^6.0.0:
     safe-buffer "^5.1.1"
     secp256k1 "^3.0.1"
 
-ethereumjs-vm@^2.1.0, ethereumjs-vm@^2.3.4, ethereumjs-vm@^2.6.0:
+ethereumjs-vm@2.6.0, ethereumjs-vm@^2.1.0, ethereumjs-vm@^2.3.4, ethereumjs-vm@^2.6.0:
   version "2.6.0"
   resolved "https://registry.yarnpkg.com/ethereumjs-vm/-/ethereumjs-vm-2.6.0.tgz#76243ed8de031b408793ac33907fb3407fe400c6"
   integrity sha512-r/XIUik/ynGbxS3y+mvGnbOKnuLo40V5Mj1J25+HEO63aWYREIqvWeRO/hnROlMBE5WoniQmPmhiaN0ctiHaXw==
@@ -7779,10 +7786,10 @@ ganache-cli@^6.4.2:
     source-map-support "0.5.9"
     yargs "11.1.0"
 
-ganache-core@2.5.1:
-  version "2.5.1"
-  resolved "https://registry.yarnpkg.com/ganache-core/-/ganache-core-2.5.1.tgz#731e88db70c12ac8a7c2b56a055483338523b739"
-  integrity sha512-sqTpmUtoExsUZqCqMdIZ+kPmXXu/fab755LpCaaty2u9EHb9gfIM9f/8gTpg0biaJ7LesbdyTfAbw66wHi4ujw==
+ganache-core@2.5.5:
+  version "2.5.5"
+  resolved "https://registry.yarnpkg.com/ganache-core/-/ganache-core-2.5.5.tgz#84da56de1957b6200a2d02934853fe7af89d260b"
+  integrity sha512-mrvPCtDjFLWmqygCx6LngWfA1hv6DH+iisEVYxRmCujstcMgzqi5UQdcKprxoO2Jx9st1fWVvDLi/tc6WHPGoA==
   dependencies:
     abstract-leveldown "3.0.0"
     async "2.6.1"
@@ -7798,7 +7805,7 @@ ganache-core@2.5.1:
     ethereumjs-block "2.1.0"
     ethereumjs-tx "1.3.7"
     ethereumjs-util "5.2.0"
-    ethereumjs-vm "^2.6.0"
+    ethereumjs-vm "2.6.0"
     heap "0.2.6"
     level-sublevel "6.6.4"
     levelup "3.1.1"
@@ -7837,6 +7844,20 @@ get-func-name@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/get-func-name/-/get-func-name-2.0.0.tgz#ead774abee72e20409433a066366023dd6887a41"
   integrity sha1-6td0q+5y4gQJQzoGY2YCPdaIekE=
+
+get-installed-path@^2.0.3:
+  version "2.1.1"
+  resolved "https://registry.yarnpkg.com/get-installed-path/-/get-installed-path-2.1.1.tgz#a1f33dc6b8af542c9331084e8edbe37fe2634152"
+  integrity sha512-Qkn9eq6tW5/q9BDVdMpB8tOHljX9OSP0jRC5TRNVA4qRc839t4g8KQaR8t0Uv0EFVL0MlyG7m/ofjEgAROtYsA==
+  dependencies:
+    global-modules "1.0.0"
+
+get-installed-path@^4.0.8:
+  version "4.0.8"
+  resolved "https://registry.yarnpkg.com/get-installed-path/-/get-installed-path-4.0.8.tgz#a4fee849f5f327c12c551bb37477acd5151e5f7d"
+  integrity sha512-PmANK1xElIHlHH2tXfOoTnSDUjX1X3GvKK6ZyLbUnSCCn1pADwu67eVWttuPzJWrXDDT2MfO6uAaKILOFfitmA==
+  dependencies:
+    global-modules "1.0.0"
 
 get-params@^0.1.2:
   version "0.1.2"
@@ -7990,14 +8011,7 @@ glob@~7.0.6:
     once "^1.3.0"
     path-is-absolute "^1.0.0"
 
-global-modules@2.0.0:
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/global-modules/-/global-modules-2.0.0.tgz#997605ad2345f27f51539bea26574421215c7780"
-  integrity sha512-NGbfmJBp9x8IxyJSd1P+otYK8vonoJactOogrVfFRIAEY1ukil8RSKDz2Yo7wh1oihl51l/r6W4epkeKJHqL8A==
-  dependencies:
-    global-prefix "^3.0.0"
-
-global-modules@^1.0.0:
+global-modules@1.0.0, global-modules@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/global-modules/-/global-modules-1.0.0.tgz#6d770f0eb523ac78164d72b5e71a8877265cc3ea"
   integrity sha512-sKzpEkf11GpOFuw0Zzjzmt4B4UZwjOcG757PPvrfhxcLFbq0wpsgpOqxpxtxFiCG4DtG93M6XRVbF2oGdev7bg==
@@ -8005,6 +8019,13 @@ global-modules@^1.0.0:
     global-prefix "^1.0.1"
     is-windows "^1.0.1"
     resolve-dir "^1.0.0"
+
+global-modules@2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/global-modules/-/global-modules-2.0.0.tgz#997605ad2345f27f51539bea26574421215c7780"
+  integrity sha512-NGbfmJBp9x8IxyJSd1P+otYK8vonoJactOogrVfFRIAEY1ukil8RSKDz2Yo7wh1oihl51l/r6W4epkeKJHqL8A==
+  dependencies:
+    global-prefix "^3.0.0"
 
 global-prefix@^1.0.1:
   version "1.0.2"
@@ -13092,13 +13113,6 @@ react-fast-compare@^2.0.2:
   resolved "https://registry.yarnpkg.com/react-fast-compare/-/react-fast-compare-2.0.4.tgz#e84b4d455b0fec113e0402c329352715196f81f9"
   integrity sha512-suNP+J1VU1MWFKcyt7RtjiSWUjvidmQSlqu+eHslq+342xCbGTYmC0mEhPCOHxlW0CywylOC1u2DFAT+bv4dBw==
 
-react-final-form-listeners@^1.0.2:
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/react-final-form-listeners/-/react-final-form-listeners-1.0.2.tgz#b52da984300281cf1f69a6412e86df6249e2bf1c"
-  integrity sha512-AaUUHcXRhD3esC80yUfYPI8FJ3TUiMu0f4hk18QL8NMCWjokg6NWS32WkRJsH3bLWDoiy7+uNVOAAyO/XoupyA==
-  dependencies:
-    "@babel/runtime" "^7.1.5"
-
 react-final-form@^4.1.0:
   version "4.1.0"
   resolved "https://registry.yarnpkg.com/react-final-form/-/react-final-form-4.1.0.tgz#4e1b513de164771b2b824f3fb9c0548014255971"
@@ -15605,17 +15619,17 @@ truffle-artifactor@^2.1.2:
     truffle-contract "^2.0.3"
     truffle-contract-schema "^0.0.5"
 
-truffle-artifactor@^4.0.11:
-  version "4.0.11"
-  resolved "https://registry.yarnpkg.com/truffle-artifactor/-/truffle-artifactor-4.0.11.tgz#84b2e059123f0c531eb552995569033693abaea9"
-  integrity sha512-J8Xgez/flyP6/ZTI4qT3T3H5/EuM5tQFXJviIFb1+3zXWFM2UcdrcI29RJUdqHdushxCMmXE5kH3KpxCY1jGWQ==
+truffle-artifactor@^4.0.12:
+  version "4.0.12"
+  resolved "https://registry.yarnpkg.com/truffle-artifactor/-/truffle-artifactor-4.0.12.tgz#fc51ca479eba93cfe09738485f31a533198a085b"
+  integrity sha512-/FC0e5arkYBsEZj4bdKKF2jITRK4nHz0YV+eTlub8v/pszP7HlZakxS4ii1q0EauoiOZFHU451wmG3q0lY6EFA==
   dependencies:
     async "2.6.1"
     debug "^4.1.0"
     fs-extra "6.0.1"
     lodash "4.17.11"
-    truffle-contract "^4.0.12"
-    truffle-contract-schema "^3.0.6"
+    truffle-contract "^4.0.13"
+    truffle-contract-schema "^3.0.8"
     truffle-expect "^0.0.7"
 
 truffle-blockchain-utils@^0.0.3:
@@ -15635,10 +15649,10 @@ truffle-blockchain-utils@^0.0.8:
   resolved "https://registry.yarnpkg.com/truffle-blockchain-utils/-/truffle-blockchain-utils-0.0.8.tgz#09995c36016a54092b337f237c3dc1a3dca12341"
   integrity sha512-4dbgqd4GrloKNLiaXACiymE3R2PsNFOlbgOh/CGkQVLArtcbgBAl7Fg2l5yVfDV8dtOFWHddj/2UkY25KY1+Dw==
 
-truffle-box@^1.0.21:
-  version "1.0.21"
-  resolved "https://registry.yarnpkg.com/truffle-box/-/truffle-box-1.0.21.tgz#ee1fe77cc0e376b31c5f83b96e6c19c3089ca25c"
-  integrity sha512-tO6mDqKjTmOKaFGUv5JmeZj/aZzoT0RT87QyI8rgKM4x3Yx6s/Q1c7p3ltCbXoMHjx0Wx+zakyZ1ZUJB9ITEuQ==
+truffle-box@^1.0.23:
+  version "1.0.23"
+  resolved "https://registry.yarnpkg.com/truffle-box/-/truffle-box-1.0.23.tgz#05d012347d5fe0dd1e371efc518703270780132c"
+  integrity sha512-Y4ma8Ji48LpzU40zqpGkoKqDw8ZBAcnFot15MHfKRDap9f0CYLMZKNnRnXh+WZHLAq/6hoCViEfDs48ZKerYbg==
   dependencies:
     fs-extra "6.0.1"
     github-download "^0.5.0"
@@ -15652,21 +15666,21 @@ truffle-code-utils@^1.2.1:
   resolved "https://registry.yarnpkg.com/truffle-code-utils/-/truffle-code-utils-1.2.1.tgz#5abe1ce8237ee90ca511c7a612b98d545030a47f"
   integrity sha512-baCmNq6dcRnRkoGdSS4e0/yNtsmCyWApCxjjB18fNaavs6QGNQVguFJ3n4Dd7dglQxc4dqwjcngt2I+GFIAt5w==
 
-truffle-compile-vyper@^1.0.11:
-  version "1.0.11"
-  resolved "https://registry.yarnpkg.com/truffle-compile-vyper/-/truffle-compile-vyper-1.0.11.tgz#1e561ab2a5da1ddf0cb4791e6d89fec9b5905824"
-  integrity sha512-qSOsiCOxNGqEtqQf/TA0/MxThkrEtJVbZy7HLGie9lIYoUtct7W1q1nkJS6XecKlZtW/aQm/1dlYfDNultwbug==
+truffle-compile-vyper@^1.0.12:
+  version "1.0.12"
+  resolved "https://registry.yarnpkg.com/truffle-compile-vyper/-/truffle-compile-vyper-1.0.12.tgz#9a370ad2a55300030baeb7d9d682ee7bc4a319d3"
+  integrity sha512-DEY1gloys3j+4/9upDcH3SOMhV1L5hWon5ii44Hh7Yjp5iUGpFKQ1j4p/3Hrsoq2rE5KpXLfdwKITScIK8oeGQ==
   dependencies:
     async "2.6.1"
     colors "^1.1.2"
     eslint "^5.5.0"
     minimatch "^3.0.4"
-    truffle-compile "^4.0.11"
+    truffle-compile "^4.0.12"
 
-truffle-compile@^4.0.11:
-  version "4.0.11"
-  resolved "https://registry.yarnpkg.com/truffle-compile/-/truffle-compile-4.0.11.tgz#261e31c9efc4e807e8084fdd1322405f04c20378"
-  integrity sha512-rgwvQwVlCyryhOzkbALNePEtsR2wTrwaUgnEm5mefCFWHmSFgB/sw2u6CT4wb1aOAofeYgkQXlUzS9qmM+7jTg==
+truffle-compile@^4.0.12:
+  version "4.0.12"
+  resolved "https://registry.yarnpkg.com/truffle-compile/-/truffle-compile-4.0.12.tgz#dbcda214aae57df6bd49e95d46f9cf93aa989f20"
+  integrity sha512-0ZZ3IMqhmbpDNzyGbClZAbT+v7/WIsS7aQOu9VV81RbZJuXMcYb5IOU/NzU3WGdLszpZ3h19/sKI+eVxEU3XEA==
   dependencies:
     async "2.6.1"
     colors "^1.1.2"
@@ -15678,7 +15692,7 @@ truffle-compile@^4.0.11:
     require-from-string "^2.0.2"
     semver "^5.6.0"
     solc "0.5.0"
-    truffle-config "^1.1.8"
+    truffle-config "^1.1.9"
     truffle-contract-sources "^0.1.3"
     truffle-error "^0.0.4"
     truffle-expect "^0.0.7"
@@ -15695,17 +15709,17 @@ truffle-config@^1.0.1:
     truffle-error "^0.0.4"
     truffle-provider "^0.1.6"
 
-truffle-config@^1.1.8:
-  version "1.1.8"
-  resolved "https://registry.yarnpkg.com/truffle-config/-/truffle-config-1.1.8.tgz#3df667d08dddf8ab57f607925a1008924fdd60f7"
-  integrity sha512-0auelJDz2aZztxO12T+y32wjYh/Dj/ENOfqD/d7+wEa0TMdBHGTnmSJ62eS/JryMwQEbAt9gRE7l4afH18uAJw==
+truffle-config@^1.1.9:
+  version "1.1.9"
+  resolved "https://registry.yarnpkg.com/truffle-config/-/truffle-config-1.1.9.tgz#e1f5700ca13bc7a2f930fdc9aed4b0f25223be25"
+  integrity sha512-QuSKy9+R/cSbSgPNqIKUknWrzXAg1ldy5n2OINJF0FE6NGeR7ssXJtps1NJhXw9AXhXXfMy4RZyCLZdzlfgkhw==
   dependencies:
     configstore "^4.0.0"
     find-up "^2.1.0"
     lodash "4.17.11"
     original-require "1.0.1"
     truffle-error "^0.0.4"
-    truffle-provider "^0.1.6"
+    truffle-provider "^0.1.7"
 
 truffle-contract-schema@^0.0.5:
   version "0.0.5"
@@ -15723,10 +15737,10 @@ truffle-contract-schema@^2.0.1:
     crypto-js "^3.1.9-1"
     debug "^3.1.0"
 
-truffle-contract-schema@^3.0.6:
-  version "3.0.6"
-  resolved "https://registry.yarnpkg.com/truffle-contract-schema/-/truffle-contract-schema-3.0.6.tgz#d28c43ccbc15524a2be81326ccb8c036332f7371"
-  integrity sha512-oAMPr/ecr06ViJMSatfp1VpbDNul0Q1dSrFkWSF4/6WWK4orhNL90A8uhtEt61doLz5n0Yjf59KWE0p7qToPXw==
+truffle-contract-schema@^3.0.8:
+  version "3.0.8"
+  resolved "https://registry.yarnpkg.com/truffle-contract-schema/-/truffle-contract-schema-3.0.8.tgz#6fdff1e656dced1c59ce643a128b67b894ec5d46"
+  integrity sha512-gj3i5jmCZHjn7/3q7vyrkUtdG8WB8KC5lb3n9FkDML90exDX/D3bzA2e+ghgMbI3xUJPHeE9ni51U9u3k0dbhQ==
   dependencies:
     ajv "^5.1.1"
     crypto-js "^3.1.9-1"
@@ -15756,17 +15770,17 @@ truffle-contract@4.0.0-next.0:
     web3-eth-abi "1.0.0-beta.35"
     web3-utils "1.0.0-beta.35"
 
-truffle-contract@4.0.12, truffle-contract@^4.0.12:
-  version "4.0.12"
-  resolved "https://registry.yarnpkg.com/truffle-contract/-/truffle-contract-4.0.12.tgz#b7ecf7f8398936a0d0f1b57c18a4be60ea8b22a1"
-  integrity sha512-/ZfGvBgMB+NcKtJ0gpq803JyhNW0BNiEb29HgEr0FS7rLh4fGXD7gfYzwWwl3neKLeqGtAyhxEPMPBOTqNe+xw==
+truffle-contract@4.0.13, truffle-contract@^4.0.13:
+  version "4.0.13"
+  resolved "https://registry.yarnpkg.com/truffle-contract/-/truffle-contract-4.0.13.tgz#dab4d7e6136060fa3044e53232802ce81e4277fe"
+  integrity sha512-GogN8/y47cyoJBEGLpMe4yl+f0DzZkSkY5rsY2LuJ+vax/3jMMxoH1cOyn+98/c2kgdAORAQz5+7s52MRVLEig==
   dependencies:
     bignumber.js "^7.2.1"
     ethers "^4.0.0-beta.1"
     truffle-blockchain-utils "^0.0.8"
-    truffle-contract-schema "^3.0.6"
+    truffle-contract-schema "^3.0.8"
     truffle-error "^0.0.4"
-    truffle-interface-adapter "^0.1.2"
+    truffle-interface-adapter "^0.1.3"
     web3 "1.0.0-beta.37"
     web3-core-promievent "1.0.0-beta.37"
     web3-eth-abi "1.0.0-beta.37"
@@ -15782,10 +15796,10 @@ truffle-contract@^2.0.3:
     truffle-contract-schema "^0.0.5"
     web3 "^0.20.1"
 
-truffle-core@^5.0.13:
-  version "5.0.13"
-  resolved "https://registry.yarnpkg.com/truffle-core/-/truffle-core-5.0.13.tgz#57e54de775e1177aa0b2ed21381fa60eaf130c28"
-  integrity sha512-0dnH56+NcMNyL4OKtlA++j7wsgh+tKM5jaITAvG5md0Sn7D+Wl5M8Yu/MSzR7Xw2o6ERRfMrmTtOM6cO3BXEqw==
+truffle-core@^5.0.14:
+  version "5.0.14"
+  resolved "https://registry.yarnpkg.com/truffle-core/-/truffle-core-5.0.14.tgz#33cf93107a422fff00cd839d8beac252ba35dec6"
+  integrity sha512-MXrkA/q79UvxAXK8YYYowBaqMcI6KFPy2nHAEMoUGjUI4R5T2agFlWzPOFKY6w8VqLLMKER1FM6x0hIDkIPBKA==
   dependencies:
     app-module-path "^2.2.0"
     async "2.6.1"
@@ -15802,7 +15816,7 @@ truffle-core@^5.0.13:
     ethpm "0.0.16"
     ethpm-registry "0.1.0-next.2"
     fs-extra "6.0.1"
-    ganache-core "2.5.1"
+    ganache-core "2.5.5"
     hdkey "^1.1.0"
     lodash "4.17.11"
     mkdirp "^0.5.1"
@@ -15816,26 +15830,26 @@ truffle-core@^5.0.13:
     source-map-support "^0.5.3"
     spawn-args "^0.1.0"
     temp "^0.8.3"
-    truffle-artifactor "^4.0.11"
-    truffle-box "^1.0.21"
-    truffle-compile "^4.0.11"
-    truffle-config "^1.1.8"
-    truffle-contract "^4.0.12"
+    truffle-artifactor "^4.0.12"
+    truffle-box "^1.0.23"
+    truffle-compile "^4.0.12"
+    truffle-config "^1.1.9"
+    truffle-contract "^4.0.13"
     truffle-contract-sources "^0.1.3"
     truffle-debug-utils "^1.0.15"
-    truffle-debugger "^5.0.7"
-    truffle-deployer "^3.0.13"
+    truffle-debugger "^5.0.8"
+    truffle-deployer "^3.0.14"
     truffle-error "^0.0.4"
     truffle-expect "^0.0.7"
     truffle-init "^1.0.7"
-    truffle-interface-adapter "^0.1.2"
-    truffle-migrate "^3.0.13"
-    truffle-provider "^0.1.6"
+    truffle-interface-adapter "^0.1.3"
+    truffle-migrate "^3.0.14"
+    truffle-provider "^0.1.7"
     truffle-provisioner "^0.1.4"
-    truffle-require "^2.0.8"
-    truffle-resolver "^5.0.11"
+    truffle-require "^2.0.9"
+    truffle-resolver "^5.0.12"
     truffle-solidity-utils "^1.2.2"
-    truffle-workflow-compile "^2.0.11"
+    truffle-workflow-compile "^2.0.12"
     universal-analytics "^0.4.17"
     web3 "1.0.0-beta.37"
     xregexp "^4.2.4"
@@ -15850,10 +15864,10 @@ truffle-debug-utils@^1.0.15:
     debug "^4.1.0"
     node-dir "0.1.17"
 
-truffle-debugger@^5.0.7:
-  version "5.0.7"
-  resolved "https://registry.yarnpkg.com/truffle-debugger/-/truffle-debugger-5.0.7.tgz#45e91a482a62801a9f13181150dea59f77a61493"
-  integrity sha512-inSvAYz2xZVJXbCRKUJvVtvvNvzGxqbmCWq9dIPJmN323ha+Oh76Kc8+Pig89QHKAOzudJdlV8u7dtGtoexauA==
+truffle-debugger@^5.0.8:
+  version "5.0.8"
+  resolved "https://registry.yarnpkg.com/truffle-debugger/-/truffle-debugger-5.0.8.tgz#80dd303e10c132f24dd19910c60840c91cd45280"
+  integrity sha512-2Sj1QTcCAm8HRi9nP6xTW0d+Fw519pG6I0dyJFzV02slRMrfPIrjCKiLwTLUIhvFVhUH6TBSvuhis5j2IeAPdA==
   dependencies:
     bn.js "^4.11.8"
     debug "^4.1.0"
@@ -15865,17 +15879,17 @@ truffle-debugger@^5.0.7:
     remote-redux-devtools "^0.5.12"
     reselect-tree "^1.3.0"
     truffle-code-utils "^1.2.1"
-    truffle-decode-utils "^1.0.9"
-    truffle-decoder "^3.0.0"
+    truffle-decode-utils "^1.0.11"
+    truffle-decoder "^3.0.1"
     truffle-expect "^0.0.7"
     truffle-solidity-utils "^1.2.2"
     web3 "1.0.0-beta.37"
     web3-eth-abi "1.0.0-beta.37"
 
-truffle-decode-utils@^1.0.9:
-  version "1.0.9"
-  resolved "https://registry.yarnpkg.com/truffle-decode-utils/-/truffle-decode-utils-1.0.9.tgz#ee07165bb0ad475b57cde20179d0551efc1fdffe"
-  integrity sha512-9kNNZvsuUE16WHytj/bG/vp2GFcqANTl8sr8/+dvQ6dZG2RnmrdWmEmSNR0/roKi4dxsdhExON1gTj1emN3yeQ==
+truffle-decode-utils@^1.0.11:
+  version "1.0.11"
+  resolved "https://registry.yarnpkg.com/truffle-decode-utils/-/truffle-decode-utils-1.0.11.tgz#026485d0b92f943f30743e2e6477347d848be689"
+  integrity sha512-+4867Joh0wmiznDqGeVCcVixh0JDtTxzNsIMKH89QwHvZMvU00xh7+5+KeCWH240Pvx5DqQsZAI+kkqdKRKTug==
   dependencies:
     bn.js "^4.11.8"
     lodash.clonedeep "^4.5.0"
@@ -15883,10 +15897,10 @@ truffle-decode-utils@^1.0.9:
     web3 "1.0.0-beta.37"
     web3-eth-abi "1.0.0-beta.52"
 
-truffle-decoder@^3.0.0:
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/truffle-decoder/-/truffle-decoder-3.0.0.tgz#03d264ad325cbb8ad3956002e1f963c2aa193cf6"
-  integrity sha512-ax27U6hk3Mh5fmrtw3PByi+z/c1mQc0igxrejGx6xTQCrU1tIuW/TMiLGXaGsZg9B2L5DfR1MP9QvDlIbn+WdQ==
+truffle-decoder@^3.0.1:
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/truffle-decoder/-/truffle-decoder-3.0.1.tgz#009ba9a38db2c6178bd6c24b1bf2cca55ca32a99"
+  integrity sha512-jnzFKvCy31Ie+Zgb2Khn9lcBLHWVGuWMHI7G69+WXUMRUVhGxeiyfWbyaLveWZEwCsof8Qk2IYwCOhOdeK46kQ==
   dependencies:
     abi-decoder "^1.2.0"
     async-eventemitter "^0.2.4"
@@ -15895,16 +15909,16 @@ truffle-decoder@^3.0.0:
     lodash.clonedeep "^4.5.0"
     lodash.isequal "^4.5.0"
     lodash.merge "^4.6.1"
-    truffle-decode-utils "^1.0.9"
+    truffle-decode-utils "^1.0.11"
     web3 "1.0.0-beta.37"
 
-truffle-deployer@^3.0.13:
-  version "3.0.13"
-  resolved "https://registry.yarnpkg.com/truffle-deployer/-/truffle-deployer-3.0.13.tgz#9954be3336b3796beded3a04559b4246ba98eb55"
-  integrity sha512-7ZrQaSdJO8DLsgAnWyGSC4XWYcpvPhDL82stxKts2gfOHuYwKhDwSxlxqVgbidjNB0Ed+Fko9cmRvxXFvnJ7Rw==
+truffle-deployer@^3.0.14:
+  version "3.0.14"
+  resolved "https://registry.yarnpkg.com/truffle-deployer/-/truffle-deployer-3.0.14.tgz#9db95f600fccbada87a47b1983f52dd7b6d77e10"
+  integrity sha512-iJKDfxgAv4/HBd5TUcbyJ3GQ9l9kbR/u1pbFj+sDbnEbw0aXRlIkiVbqaV8tBPzADvwV4IyWHYsAf3piXwU5hA==
   dependencies:
     emittery "^0.4.0"
-    truffle-contract "^4.0.12"
+    truffle-contract "^4.0.13"
     truffle-expect "^0.0.7"
 
 truffle-error@^0.0.3:
@@ -15922,14 +15936,14 @@ truffle-expect@^0.0.7:
   resolved "https://registry.yarnpkg.com/truffle-expect/-/truffle-expect-0.0.7.tgz#77cbd8e59c269679491cf5f3ddaad24127a05d55"
   integrity sha512-qnasS3kXZ9EcqvRkpJ1Q7xSLTU1WxSWf487pudsGcDMsmcQ2YUMizmyV0BdhMVPUhcnXkNDaITHtMch1hGVyPA==
 
-truffle-external-compile@^1.0.7:
-  version "1.0.7"
-  resolved "https://registry.yarnpkg.com/truffle-external-compile/-/truffle-external-compile-1.0.7.tgz#39721a6c43af4660e8520b1ba5cd10e6f1f2cf48"
-  integrity sha512-XI+b1WPOjag723D4NTPbT17VpRHRtCNwX7GJlEAgZd2qBiBS0+WFIzVl/7JWMQFkIMbwiIRrMpDAilqQjqIHZA==
+truffle-external-compile@^1.0.8:
+  version "1.0.8"
+  resolved "https://registry.yarnpkg.com/truffle-external-compile/-/truffle-external-compile-1.0.8.tgz#b61b12f43880722f73394baa09b1de6ca1a2436c"
+  integrity sha512-aa3hhdzfIh7cluRYVxP5Dhyf9Wppi3N8DshAjpdsGVAd24LZ/zKENEiANNpJnUN57z6lafZXycJsqddy+fGj7A==
   dependencies:
     debug "^4.1.0"
     glob "^7.1.2"
-    truffle-contract-schema "^3.0.6"
+    truffle-contract-schema "^3.0.8"
     truffle-expect "^0.0.7"
     web3-utils "1.0.0-beta.37"
 
@@ -15953,19 +15967,27 @@ truffle-interface-adapter@^0.1.2:
     bn.js "^4.11.8"
     web3 "1.0.0-beta.37"
 
-truffle-migrate@^3.0.13:
-  version "3.0.13"
-  resolved "https://registry.yarnpkg.com/truffle-migrate/-/truffle-migrate-3.0.13.tgz#d2898be4a16fd0e219b0fb4d8a2929016e592b7a"
-  integrity sha512-C0eQSPbNmmpGDh54CI17gFYPY3CHphXI6exfDBcQl7ZFcWSpOlWMztJ4aexlIl7jlR1yPIbxVwJroSb6wNmr9Q==
+truffle-interface-adapter@^0.1.3:
+  version "0.1.3"
+  resolved "https://registry.yarnpkg.com/truffle-interface-adapter/-/truffle-interface-adapter-0.1.3.tgz#512f5fe1f2345431adc1647c9918e46728351709"
+  integrity sha512-OjV89mwf3JFXvca8fUTdzgDJg9stUqO5XXZVqa3BphiWEMhEUFEjh/tfiGfeplxq77kVOMLul6FXb75daKVF2Q==
+  dependencies:
+    bn.js "^4.11.8"
+    web3 "1.0.0-beta.37"
+
+truffle-migrate@^3.0.14:
+  version "3.0.14"
+  resolved "https://registry.yarnpkg.com/truffle-migrate/-/truffle-migrate-3.0.14.tgz#b777ea4d480e91c4531172d9e3f6fca311bef1fb"
+  integrity sha512-ipb8vFXIVGXdVMCRM6KK7qjQWIugK0wG+XOPWWbcseKsHLIlj3e5v8VgKSdlH1KM1ryFEQbynFiZcq4P4r1UKw==
   dependencies:
     async "2.6.1"
     emittery "^0.4.0"
     node-dir "0.1.17"
-    truffle-deployer "^3.0.13"
+    truffle-deployer "^3.0.14"
     truffle-expect "^0.0.7"
-    truffle-interface-adapter "^0.1.2"
+    truffle-interface-adapter "^0.1.3"
     truffle-reporters "^1.0.9"
-    truffle-require "^2.0.8"
+    truffle-require "^2.0.9"
     web3 "1.0.0-beta.37"
 
 truffle-provider@^0.1.6:
@@ -15975,6 +15997,15 @@ truffle-provider@^0.1.6:
   dependencies:
     truffle-error "^0.0.4"
     truffle-interface-adapter "^0.1.2"
+    web3 "1.0.0-beta.37"
+
+truffle-provider@^0.1.7:
+  version "0.1.7"
+  resolved "https://registry.yarnpkg.com/truffle-provider/-/truffle-provider-0.1.7.tgz#017d9b22387b6764c873cd76ce5569d97d4c3eea"
+  integrity sha512-ARCZrx39grvFGSRb+KTd4dYOCBVnwKwPidsOUxm94TU55WGGltpPsAtEDrKB9aD8xhan1xF6WaIzD8sehd5TSQ==
+  dependencies:
+    truffle-error "^0.0.4"
+    truffle-interface-adapter "^0.1.3"
     web3 "1.0.0-beta.37"
 
 truffle-provisioner@^0.1.4:
@@ -15991,65 +16022,67 @@ truffle-reporters@^1.0.9:
     ora "^3.0.0"
     web3-utils "1.0.0-beta.37"
 
-truffle-require@^2.0.8:
-  version "2.0.8"
-  resolved "https://registry.yarnpkg.com/truffle-require/-/truffle-require-2.0.8.tgz#7be74fb7e36c0002f9e088aea34dec40d5ded732"
-  integrity sha512-qVg0i3Qq+IBsUmHO32457cJ4Alkj8pEPSXPsJeM45wd0mbhUaKF+3k7xpCg8FSg7Td2HDmIRPQljQpVW09Z7nA==
+truffle-require@^2.0.9:
+  version "2.0.9"
+  resolved "https://registry.yarnpkg.com/truffle-require/-/truffle-require-2.0.9.tgz#7e07e29fc47825eef2e409cf18d719bf9c7694cd"
+  integrity sha512-zv6IcwAqlU/jo69Ii+E2ZLl3l+HWltEMfYaDFlL1hGTBvDjLrg16YoUyw0NjNz8lGSTj81PvzrrP5+sn3UPaaQ==
   dependencies:
     original-require "1.0.1"
-    truffle-config "^1.1.8"
+    truffle-config "^1.1.9"
     truffle-expect "^0.0.7"
-    truffle-interface-adapter "^0.1.2"
+    truffle-interface-adapter "^0.1.3"
     web3 "1.0.0-beta.37"
 
-truffle-resolver@^5.0.11:
-  version "5.0.11"
-  resolved "https://registry.yarnpkg.com/truffle-resolver/-/truffle-resolver-5.0.11.tgz#78efdb618177909a45c76594d9f94238167f2ad0"
-  integrity sha512-yB89eDOyYwR6SQ1d2nVm0Dt+NWW5tTAso91+D4O7PoUdbZHD9sxTbLC6nv6bsTqN5xGGvpxWOx0h0b04RpAc2Q==
+truffle-resolver@^5.0.12:
+  version "5.0.12"
+  resolved "https://registry.yarnpkg.com/truffle-resolver/-/truffle-resolver-5.0.12.tgz#f0e5a44a97e38cbf5c41d6505b6e6e6bae2901ec"
+  integrity sha512-SosQxYaH6usnRDe9u0tmtcHKlGWHLcXCihUwjSMX1Z++3JhoyGxAkFs9QBJ0NppbymoTDxbXdxj1JVgqfcv/uQ==
   dependencies:
     async "2.6.1"
-    truffle-contract "^4.0.12"
+    detect-installed "^2.0.4"
+    get-installed-path "^4.0.8"
+    truffle-contract "^4.0.13"
     truffle-expect "^0.0.7"
     truffle-provisioner "^0.1.4"
 
-truffle-solidity-loader@0.1.13:
-  version "0.1.13"
-  resolved "https://registry.yarnpkg.com/truffle-solidity-loader/-/truffle-solidity-loader-0.1.13.tgz#a3839f4fe815b9335a8b139895e254c9a6c363b2"
-  integrity sha512-oJ0GYGf9BWkgSGonaCAvwomlAno7sxvJ53Y934I50hxsisq60qSjgOTwD/245TQL8RlD2fWE2PUZ5d0a6pbXcg==
+truffle-solidity-loader@0.1.14:
+  version "0.1.14"
+  resolved "https://registry.yarnpkg.com/truffle-solidity-loader/-/truffle-solidity-loader-0.1.14.tgz#21c5fd25df2faf1bdc9de5b8169fd8dbc4f937ee"
+  integrity sha512-zTXxW+g1RyxisvA4QOf2N2ZFv08WSpb6hKC9Q6JHgInvQDDYjTvJ6jfLwCrznoKWTTVwpFfptMzZviTUFXXtvg==
   dependencies:
     chalk "^1.1.3"
     find-up "^1.1.2"
     loader-utils "^1.1.0"
     schema-utils "^1.0.0"
-    truffle-config "^1.1.8"
-    truffle-core "^5.0.13"
+    truffle-config "^1.1.9"
+    truffle-core "^5.0.14"
 
 truffle-solidity-utils@^1.2.2:
   version "1.2.2"
   resolved "https://registry.yarnpkg.com/truffle-solidity-utils/-/truffle-solidity-utils-1.2.2.tgz#72100f12317a94cb8e784bc84d8f8832292e5fc0"
   integrity sha512-27Eos1o33x+tdRogeR8WwWuhRXatHwbp9AHANGSCm46ZhRzSWcObW8Ctm2kKdAP0jZehDLT2e7l5oZ4NJofLMg==
 
-truffle-workflow-compile@^2.0.11:
-  version "2.0.11"
-  resolved "https://registry.yarnpkg.com/truffle-workflow-compile/-/truffle-workflow-compile-2.0.11.tgz#b07c928d19b86f1d6858c64f5238fda9288079db"
-  integrity sha512-rRuGtzQP29qknVU0JNyTWv9U2BoTA+Zd7AKyM2IS00dJweLnlfPY/Ja2G43GBSMR0PF/4iNI7U88iQL/j4tkNA==
+truffle-workflow-compile@^2.0.12:
+  version "2.0.12"
+  resolved "https://registry.yarnpkg.com/truffle-workflow-compile/-/truffle-workflow-compile-2.0.12.tgz#f56dd1a5df2bb6bc9ae5876bf2a252dc54d03502"
+  integrity sha512-nzJF1acHmaVJhBAvnNWJL9WXTwFmvavo7Wf8RujJGjpPpY/ifNMCNfpc0iQcELUH16yjOpwUyMGnsF134eo6Ew==
   dependencies:
     async "2.6.1"
     debug "^4.1.0"
     lodash "4.17.11"
     mkdirp "^0.5.1"
-    truffle-artifactor "^4.0.11"
-    truffle-compile "^4.0.11"
-    truffle-compile-vyper "^1.0.11"
-    truffle-config "^1.1.8"
+    truffle-artifactor "^4.0.12"
+    truffle-compile "^4.0.12"
+    truffle-compile-vyper "^1.0.12"
+    truffle-config "^1.1.9"
     truffle-expect "^0.0.7"
-    truffle-external-compile "^1.0.7"
-    truffle-resolver "^5.0.11"
+    truffle-external-compile "^1.0.8"
+    truffle-resolver "^5.0.12"
 
-truffle@5.0.13:
-  version "5.0.13"
-  resolved "https://registry.yarnpkg.com/truffle/-/truffle-5.0.13.tgz#bd0c6c142889140ab9db57d9a8738d5f5afaed68"
-  integrity sha512-TF8X95780TqfxkWtITG8n3dyBI23ifLmOpsrQp6TugmB150nLZrZ1ncW63wgF9jwj/B0UXGE04bE72SYhbgcvg==
+truffle@5.0.14:
+  version "5.0.14"
+  resolved "https://registry.yarnpkg.com/truffle/-/truffle-5.0.14.tgz#589e301f64aac1b22481c5e41b31aa08bbcd8fea"
+  integrity sha512-Mlf4S58NMyR8YZFvQLAzA+7eCaDZw6ZSa92NWXDQjy1RbUfpl08/VPa06KLT+LosQuOPZr/NSH9f0u2qxfo/Qw==
   dependencies:
     app-module-path "^2.2.0"
     mocha "^4.1.0"
