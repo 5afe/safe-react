@@ -26,6 +26,9 @@ const styles = () => ({
   root: {
     display: 'flex',
     maxWidth: '460px',
+    '&:last-child': {
+      marginTop: '12px',
+    },
   },
   check: {
     color: '#03AE60',

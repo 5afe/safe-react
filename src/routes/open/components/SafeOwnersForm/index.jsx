@@ -98,10 +98,10 @@ class SafeOwners extends React.Component<Props, State> {
   }
 
   onRemoveRow = (index: number) => () => {
-    const { values } = this.props
+    const { values, updateInitialProps } = this.props
     const { numOwners } = this.state
     const initialValues = calculateValuesAfterRemoving(index, numOwners, values)
-    this.props.updateInitialProps(initialValues)
+    updateInitialProps(initialValues)
 
 
     this.setState(state => ({
@@ -132,7 +132,7 @@ class SafeOwners extends React.Component<Props, State> {
           <Col xs={8}>ADDRESS</Col>
         </Row>
         <Hairline />
-        <Block margin="md">
+        <Block margin="md" padding="md">
           { [...Array(Number(numOwners))].map((x, index) => {
             const addressName = getOwnerAddressBy(index)
 
