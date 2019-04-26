@@ -26,9 +26,7 @@ const styles = () => ({
   root: {
     display: 'flex',
     maxWidth: '460px',
-    '&:last-child': {
-      marginTop: '12px',
-    },
+    marginTop: '12px',
   },
   check: {
     color: '#03AE60',
@@ -85,9 +83,8 @@ const Details = ({ classes, errors }: Props) => (
   <React.Fragment>
     <Block margin="sm">
       <Paragraph noMargin size="md" color="primary">
-        Adding an existing Safe only requires the Safe address. Optionally you can give it a name.
-        In case your connected client is not the owner of the Safe, the interface will essentially provide you a
-        read-only view.
+        Adding an existing Safe only requires the Safe address. Optionally you can give it a name. In case your
+        connected client is not the owner of the Safe, the interface will essentially provide you a read-only view.
       </Paragraph>
     </Block>
     <Block className={classes.root}>
@@ -104,13 +101,15 @@ const Details = ({ classes, errors }: Props) => (
       <Field
         name={FIELD_LOAD_ADDRESS}
         component={TextField}
-        inputAdornment={noErrorsOn(FIELD_LOAD_ADDRESS, errors) && {
-          endAdornment: (
-            <InputAdornment position="end">
-              <CheckCircle className={classes.check} />
-            </InputAdornment>
-          ),
-        }}
+        inputAdornment={
+          noErrorsOn(FIELD_LOAD_ADDRESS, errors) && {
+            endAdornment: (
+              <InputAdornment position="end">
+                <CheckCircle className={classes.check} />
+              </InputAdornment>
+            ),
+          }
+        }
         type="text"
         validate={composeValidators(required, mustBeEthereumAddress)}
         placeholder="Safe Address*"
@@ -129,6 +128,5 @@ const DetailsPage = () => (controls: React$Node, { errors }: Object) => (
     </OpenPaper>
   </React.Fragment>
 )
-
 
 export default DetailsPage
