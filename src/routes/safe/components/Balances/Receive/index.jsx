@@ -16,6 +16,7 @@ import Col from '~/components/layout/Col'
 import {
   xxl, lg, sm, md, background, secondary,
 } from '~/theme/variables'
+import { copyToClipboard } from '~/utils/clipboard'
 
 const styles = () => ({
   heading: {
@@ -92,7 +93,7 @@ const Receive = ({
       </Block>
       <Block align="center" className={classes.addressContainer}>
         <Identicon address={safeAddress} diameter={32} />
-        <Paragraph className={classes.address}>{safeAddress}</Paragraph>
+        <Paragraph onClick={copyToClipboard} className={classes.address}>{safeAddress}</Paragraph>
         <Link className={classes.open} to={etherScanLink} target="_blank">
           <OpenInNew style={openIconStyle} />
         </Link>
