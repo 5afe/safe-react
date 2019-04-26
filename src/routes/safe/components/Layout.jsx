@@ -91,11 +91,11 @@ class Layout extends React.Component<Props, State> {
       safe, provider, network, classes, granted, tokens, activeTokens,
     } = this.props
     const { tabIndex } = this.state
-    
+
     if (!safe) {
       return <NoSafe provider={provider} text="Safe not found" />
     }
-    
+
     const { address, ethBalance, name } = safe
     const etherScanLink = getEtherScanLink(address, network)
 
