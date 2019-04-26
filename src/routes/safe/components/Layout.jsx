@@ -91,12 +91,13 @@ class Layout extends React.Component<Props, State> {
       safe, provider, network, classes, granted, tokens, activeTokens,
     } = this.props
     const { tabIndex } = this.state
-
+    
     if (!safe) {
       return <NoSafe provider={provider} text="Safe not found" />
     }
-
-    const { address, ethBalance } = safe
+    
+    const { address, ethBalance, name } = safe
+    const etherScanLink = getEtherScanLink(address, network)
 
     return (
       <React.Fragment>
@@ -105,7 +106,7 @@ class Layout extends React.Component<Props, State> {
           <Block className={classes.name}>
             <Row>
               <Heading tag="h2" color="secondary">
-                {safe.get('name')}
+                {name}
               </Heading>
               {!granted && <Block className={classes.readonly}>Read Only</Block>}
             </Row>
@@ -113,7 +114,7 @@ class Layout extends React.Component<Props, State> {
               <Paragraph size="md" color="disabled" onClick={this.copyAddress} title="Click to copy" noMargin>
                 {address}
               </Paragraph>
-              <Link className={classes.open} to={getEtherScanLink(address, network)} target="_blank">
+              <Link className={classes.open} to={etherScanLink} target="_blank">
                 <OpenInNew style={openIconStyle} />
               </Link>
             </Block>
@@ -134,6 +135,8 @@ class Layout extends React.Component<Props, State> {
             activeTokens={activeTokens}
             granted={granted}
             safeAddress={address}
+            safeName={name}
+            etherScanLink={etherScanLink}
           />
         )}
       </React.Fragment>
