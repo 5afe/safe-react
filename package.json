@@ -65,6 +65,7 @@
     "verbose": true
   },
   "dependencies": {
+    "@gnosis.pm/safe-contracts": "^1.0.0",
     "@gnosis.pm/util-contracts": "^2.0.0",
     "@material-ui/core": "^3.9.3",
     "@material-ui/icons": "^3.0.1",
