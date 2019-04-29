@@ -18,17 +18,14 @@ type Props = {
 const GnosisLink = ({
   to, children, color, className, padding, ...props
 }: Props) => {
-  const classes = cx(
-    styles.link,
-    color || 'regular',
-    padding ? capitalize(padding, 'padding') : undefined,
-    className,
-  )
+  const internal = /^\/(?!\/)/.test(to)
+  const classes = cx(styles.link, color || 'regular', padding ? capitalize(padding, 'padding') : undefined, className)
+  const LinkElement = internal ? Link : 'a'
 
   return (
-    <Link className={classes} to={to} {...props}>
-      { children }
-    </Link>
+    <LinkElement className={classes} href={internal ? null : to} to={internal ? to : null} {...props}>
+      {children}
+    </LinkElement>
   )
 }
 

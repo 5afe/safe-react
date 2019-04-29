@@ -44,7 +44,15 @@ const INITIAL_FORM_STATE = {
 
 const AddCustomToken = (props: Props) => {
   const {
-    classes, setActiveScreen, onClose, addToken, updateActiveTokens, safeAddress, activeTokens, tokens, activateTokenForAllSafes,
+    classes,
+    setActiveScreen,
+    onClose,
+    addToken,
+    updateActiveTokens,
+    safeAddress,
+    activeTokens,
+    tokens,
+    activateTokenForAllSafes,
   } = props
   const [formValues, setFormValues] = useState(INITIAL_FORM_STATE)
 
