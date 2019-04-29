@@ -159,7 +159,13 @@ class Balances extends React.Component<Props, State> {
           ))
           }
         </Table>
-        <Modal title="Send Tokens" description="Send Tokens Form" handleClose={this.onHide('Send')} open={showSend}>
+        <Modal
+          title="Send Tokens"
+          description="Send Tokens Form"
+          handleClose={this.onHide('Send')}
+          open={showSend}
+          paperClassName={classes.sendModal}
+        >
           <Send onClose={this.onHide('Send')} />
         </Modal>
         <Modal

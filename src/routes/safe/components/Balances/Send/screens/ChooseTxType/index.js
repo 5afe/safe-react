@@ -4,22 +4,31 @@ import { withStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
 import IconButton from '@material-ui/core/IconButton'
 import Paragraph from '~/components/layout/Paragraph'
+import Button from '~/components/layout/Button'
 import Row from '~/components/layout/Row'
+import Col from '~/components/layout/Col'
 import Hairline from '~/components/layout/Hairline'
-import { lg, md } from '~/theme/variables'
+import { lg, sm } from '~/theme/variables'
 
 const styles = () => ({
   heading: {
-    padding: `${md} ${lg}`,
+    padding: `${sm} ${lg}`,
     justifyContent: 'space-between',
+    boxSizing: 'border-box',
     maxHeight: '75px',
   },
   manage: {
     fontSize: '24px',
   },
-  close: {
+  closeIcon: {
     height: '35px',
     width: '35px',
+  },
+  buttonColumn: {
+    padding: '52px 0',
+  },
+  secondButton: {
+    marginTop: 10,
   },
 })
 
@@ -31,10 +40,30 @@ type Props = {
 const Send = ({ classes, onClose }: Props) => (
   <React.Fragment>
     <Row align="center" grow className={classes.heading}>
-      <Paragraph className={classes.manage} noMargin>Send</Paragraph>
+      <Paragraph className={classes.manage} noMargin>
+        Send
+      </Paragraph>
       <IconButton onClick={onClose} disableRipple>
-        <Close className={classes.close} />
+        <Close className={classes.closeIcon} />
       </IconButton>
+    </Row>
+    <Hairline />
+    <Row align="center">
+      <Col layout="column" middle="xs" className={classes.buttonColumn}>
+        <Button color="primary" minWidth={260} minHeight={52} onClick={onClose} variant="contained">
+          SEND FUNDS
+        </Button>
+        <Button
+          color="primary"
+          className={classes.secondButton}
+          minWidth={260}
+          minHeight={52}
+          onClick={onClose}
+          variant="outlined"
+        >
+          SEND CUSTOM TRANSACTION
+        </Button>
+      </Col>
     </Row>
   </React.Fragment>
 )

@@ -23,6 +23,7 @@ const styles = () => ({
     padding: `${sm} ${lg}`,
     justifyContent: 'space-between',
     maxHeight: '75px',
+    boxSizing: 'border-box',
   },
   manage: {
     fontSize: '24px',
