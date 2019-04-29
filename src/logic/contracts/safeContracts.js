@@ -5,6 +5,7 @@ import { getWeb3 } from '~/logic/wallets/getWeb3'
 import GnosisSafeSol from '#/GnosisSafe.json'
 import ProxyFactorySol from '#/ProxyFactory.json'
 import { calculateGasOf, calculateGasPrice } from '~/logic/wallets/ethTransactions'
+import { ZERO_ADDRESS } from '~/logic/wallets/ethAddresses'
 
 let proxyFactoryMaster
 let safeMaster
@@ -61,7 +62,7 @@ export const getSafeMasterContract = async () => {
 
 export const deploySafeContract = async (safeAccounts: string[], numConfirmations: number, userAccount: string) => {
   const gnosisSafeData = await safeMaster.contract.methods
-    .setup(safeAccounts, numConfirmations, '0x0000000000000000000000000000000000000000', '0x')
+    .setup(safeAccounts, numConfirmations, ZERO_ADDRESS, '0x', ZERO_ADDRESS, 0, ZERO_ADDRESS)
     .encodeABI()
   const proxyFactoryData = proxyFactoryMaster.contract.methods
     .createProxy(safeMaster.address, gnosisSafeData)
