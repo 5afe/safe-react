@@ -21,7 +21,7 @@ import {
 } from './dataFetcher'
 import AssetTableCell from './AssetTableCell'
 import Tokens from './Tokens'
-import Send from './Send'
+import SendModal from './SendModal'
 import Receive from './Receive'
 import { styles } from './style'
 
@@ -159,15 +159,7 @@ class Balances extends React.Component<Props, State> {
           ))
           }
         </Table>
-        <Modal
-          title="Send Tokens"
-          description="Send Tokens Form"
-          handleClose={this.onHide('Send')}
-          open={showSend}
-          paperClassName={classes.sendModal}
-        >
-          <Send onClose={this.onHide('Send')} />
-        </Modal>
+        <SendModal onClose={this.onHide('Send')} isOpen={showSend} />
         <Modal
           title="Receive Tokens"
           description="Receive Tokens Form"

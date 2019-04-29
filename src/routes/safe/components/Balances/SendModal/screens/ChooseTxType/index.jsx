@@ -35,9 +35,10 @@ const styles = () => ({
 type Props = {
   onClose: () => void,
   classes: Object,
+  setActiveScreen: Function,
 }
 
-const Send = ({ classes, onClose }: Props) => (
+const ChooseTxType = ({ classes, onClose, setActiveScreen }: Props) => (
   <React.Fragment>
     <Row align="center" grow className={classes.heading}>
       <Paragraph className={classes.manage} noMargin>
@@ -50,7 +51,13 @@ const Send = ({ classes, onClose }: Props) => (
     <Hairline />
     <Row align="center">
       <Col layout="column" middle="xs" className={classes.buttonColumn}>
-        <Button color="primary" minWidth={260} minHeight={52} onClick={onClose} variant="contained">
+        <Button
+          color="primary"
+          minWidth={260}
+          minHeight={52}
+          onClick={() => setActiveScreen('sendFunds')}
+          variant="contained"
+        >
           SEND FUNDS
         </Button>
         <Button
@@ -68,4 +75,4 @@ const Send = ({ classes, onClose }: Props) => (
   </React.Fragment>
 )
 
-export default withStyles(styles)(Send)
+export default withStyles(styles)(ChooseTxType)

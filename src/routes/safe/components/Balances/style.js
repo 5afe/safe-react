@@ -48,8 +48,4 @@ export const styles = (theme: Object) => ({
       cursor: 'pointer',
     },
   },
-  sendModal: {
-    height: 'auto',
-    position: 'static',
-  },
 })
