@@ -1,5 +1,5 @@
 // @flow
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import cn from 'classnames'
 import { withStyles } from '@material-ui/core/styles'
 import Modal from '~/components/Modal'
@@ -10,6 +10,9 @@ type Props = {
   onClose: () => void,
   classes: Object,
   isOpen: boolean,
+  safeAddress: string,
+  etherScanLink: string,
+  safeName: string,
 }
 type ActiveScreen = 'chooseTxType' | 'sendFunds'
 
@@ -20,16 +23,19 @@ const styles = () => ({
   },
 })
 
-const Send = ({ onClose, isOpen, classes }: Props) => {
-  const [activeScreen, setActiveScreen] = useState<ActiveScreen>('chooseTxType')
+const Send = ({
+  onClose, isOpen, classes, safeAddress, etherScanLink, safeName,
+}: Props) => {
+  const [activeScreen, setActiveScreen] = useState<ActiveScreen>('sendFunds')
   const smallerModalSize = activeScreen === 'chooseTxType'
 
-  useEffect(
-    () => () => {
-      setActiveScreen('chooseTxType')
-    },
-    [isOpen],
-  )
+  // Uncomment when we add custom txs
+  // useEffect(
+  //   () => () => {
+  //     setActiveScreen('chooseTxType')
+  //   },
+  //   [isOpen],
+  // )
 
   return (
     <Modal
@@ -41,7 +47,15 @@ const Send = ({ onClose, isOpen, classes }: Props) => {
     >
       <React.Fragment>
         {activeScreen === 'chooseTxType' && <ChooseTxType onClose={onClose} setActiveScreen={setActiveScreen} />}
-        {activeScreen === 'sendFunds' && <SendFunds onClose={onClose} setActiveScreen={setActiveScreen} />}
+        {activeScreen === 'sendFunds' && (
+          <SendFunds
+            onClose={onClose}
+            setActiveScreen={setActiveScreen}
+            safeAddress={safeAddress}
+            etherScanLink={etherScanLink}
+            safeName={safeName}
+          />
+        )}
       </React.Fragment>
     </Modal>
   )

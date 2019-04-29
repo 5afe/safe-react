@@ -41,7 +41,7 @@ type Props = {
 const ChooseTxType = ({ classes, onClose, setActiveScreen }: Props) => (
   <React.Fragment>
     <Row align="center" grow className={classes.heading}>
-      <Paragraph className={classes.manage} noMargin>
+      <Paragraph weight="bolder" className={classes.manage} noMargin>
         Send
       </Paragraph>
       <IconButton onClick={onClose} disableRipple>
