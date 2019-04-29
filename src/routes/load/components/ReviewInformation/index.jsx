@@ -6,11 +6,12 @@ import OpenInNew from '@material-ui/icons/OpenInNew'
 import Identicon from '~/components/Identicon'
 import OpenPaper from '~/components/Stepper/OpenPaper'
 import Row from '~/components/layout/Row'
+import Link from '~/components/layout/Link'
 import Paragraph from '~/components/layout/Paragraph'
 import {
   xs, sm, lg, border, secondary,
 } from '~/theme/variables'
-import { openAddressInEtherScan, getWeb3 } from '~/logic/wallets/getWeb3'
+import { getEtherScanLink, getWeb3 } from '~/logic/wallets/getWeb3'
 import { FIELD_LOAD_NAME, FIELD_LOAD_ADDRESS } from '~/routes/load/components/fields'
 import { sameAddress } from '~/logic/wallets/ethAddresses'
 import { getGnosisSafeContract } from '~/logic/contracts/safeContracts'
@@ -113,12 +114,12 @@ class ReviewComponent extends React.PureComponent<Props, State> {
             </Paragraph>
             <Row className={classes.container}>
               <Identicon address={safeAddress} diameter={32} />
-              <Paragraph size="md" color="disabled" noMargin className={classes.address}>{safeAddress}</Paragraph>
-              <OpenInNew
-                className={classes.open}
-                style={openIconStyle}
-                onClick={openAddressInEtherScan(safeAddress, network)}
-              />
+              <Paragraph size="md" color="disabled" noMargin className={classes.address}>
+                {safeAddress}
+              </Paragraph>
+              <Link className={classes.open} to={getEtherScanLink(safeAddress, network)} target="_blank">
+                <OpenInNew style={openIconStyle} />
+              </Link>
             </Row>
           </Block>
           <Block margin="lg">
@@ -126,7 +127,7 @@ class ReviewComponent extends React.PureComponent<Props, State> {
               Connected wallet client is owner?
             </Paragraph>
             <Paragraph size="lg" color="primary" noMargin weight="bolder" className={classes.name}>
-              { isOwner ? 'Yes' : 'No (read-only)' }
+              {isOwner ? 'Yes' : 'No (read-only)'}
             </Paragraph>
           </Block>
         </Block>
@@ -144,6 +145,5 @@ const Review = ({ network, userAddress }: LayoutProps) => (controls: React$Node,
     </OpenPaper>
   </React.Fragment>
 )
-
 
 export default Review

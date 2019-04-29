@@ -38,6 +38,8 @@ type Props = {
   tokens: List<Token>,
   activeTokens: List<Token>,
   safeAddress: string,
+  safeName: string,
+  etherScanLink: string,
 }
 
 type Action = 'Token' | 'Send' | 'Receive'
@@ -69,7 +71,7 @@ class Balances extends React.Component<Props, State> {
       hideZero, showToken, showReceive, showSend,
     } = this.state
     const {
-      classes, granted, tokens, safeAddress, activeTokens,
+      classes, granted, tokens, safeAddress, activeTokens, safeName, etherScanLink,
     } = this.props
 
     const columns = generateColumns()
@@ -166,7 +168,12 @@ class Balances extends React.Component<Props, State> {
           handleClose={this.onHide('Receive')}
           open={showReceive}
         >
-          <Receive onClose={this.onHide('Receive')} />
+          <Receive
+            safeName={safeName}
+            safeAddress={safeAddress}
+            etherScanLink={etherScanLink}
+            onClose={this.onHide('Receive')}
+          />
         </Modal>
       </React.Fragment>
     )

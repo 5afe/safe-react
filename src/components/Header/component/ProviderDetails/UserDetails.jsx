@@ -4,6 +4,7 @@ import classNames from 'classnames'
 import OpenInNew from '@material-ui/icons/OpenInNew'
 import { withStyles } from '@material-ui/core/styles'
 import Paragraph from '~/components/layout/Paragraph'
+import Link from '~/components/layout/Link'
 import Button from '~/components/layout/Button'
 import Identicon from '~/components/Identicon'
 import Dot from '@material-ui/icons/FiberManualRecord'
@@ -17,7 +18,7 @@ import {
 } from '~/theme/variables'
 import { upperFirst } from '~/utils/css'
 import { shortVersionOf } from '~/logic/wallets/ethAddresses'
-import { openAddressInEtherScan } from '~/logic/wallets/getWeb3'
+import { getEtherScanLink } from '~/logic/wallets/getWeb3'
 import CircleDot from '~/components/Header/component/CircleDot'
 
 const metamask = require('../../assets/metamask.svg')
@@ -121,11 +122,9 @@ const UserDetails = ({
             {address}
           </Paragraph>
           {userAddress && (
-            <OpenInNew
-              className={classes.open}
-              style={openIconStyle}
-              onClick={openAddressInEtherScan(userAddress, network)}
-            />
+            <Link className={classes.open} to={getEtherScanLink(userAddress, network)} target="_blank">
+              <OpenInNew style={openIconStyle} />
+            </Link>
           )}
         </Block>
       </Block>
