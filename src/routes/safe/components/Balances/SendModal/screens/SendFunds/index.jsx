@@ -4,7 +4,6 @@ import { withStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
 import IconButton from '@material-ui/core/IconButton'
 import OpenInNew from '@material-ui/icons/OpenInNew'
-import ArrowDown from '@material-ui/icons/ArrowDownward'
 import Identicon from '~/components/Identicon'
 import Paragraph from '~/components/layout/Paragraph'
 import Row from '~/components/layout/Row'
@@ -19,6 +18,7 @@ import {
   lg, md, sm, secondary, xs,
 } from '~/theme/variables'
 import { copyToClipboard } from '~/utils/clipboard'
+import ArrowDown from './assets/arrow-down.svg'
 
 const styles = () => ({
   heading: {
@@ -98,7 +98,7 @@ const SendFunds = ({
               <Bold>
                 {ethBalance}
                 {' '}
-                ETH
+ETH
               </Bold>
             </Paragraph>
           </Block>
@@ -106,7 +106,7 @@ const SendFunds = ({
       </Row>
       <Row>
         <Col xs={1}>
-          <ArrowDown />
+          <img src={ArrowDown} alt="Arrow Down" style={{ marginLeft: '8px' }} />
         </Col>
         <Col xs={11} center="xs" layout="column">
           <Hairline />
