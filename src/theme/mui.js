@@ -111,7 +111,7 @@ export default createMuiTheme({
         color: secondary,
         order: 0,
         marginTop: '0px',
-        backgroundColor: 'EAE9EF',
+        backgroundColor: '#EAE9EF',
       },
     },
     MuiInput: {

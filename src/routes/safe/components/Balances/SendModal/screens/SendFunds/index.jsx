@@ -10,8 +10,11 @@ import Row from '~/components/layout/Row'
 import Link from '~/components/layout/Link'
 import Col from '~/components/layout/Col'
 import Block from '~/components/layout/Block'
+import Bold from '~/components/layout/Bold'
 import Hairline from '~/components/layout/Hairline'
-import { lg, sm, secondary } from '~/theme/variables'
+import {
+  lg, md, sm, secondary, xs,
+} from '~/theme/variables'
 import { copyToClipboard } from '~/utils/clipboard'
 
 const styles = () => ({
@@ -28,6 +31,19 @@ const styles = () => ({
     height: '35px',
     width: '35px',
   },
+  formContainer: {
+    padding: `${md} ${lg}`,
+  },
+  balanceContainer: {
+    fontSize: '12px',
+    lineHeight: 1.08,
+    letterSpacing: -0.5,
+    backgroundColor: '#eae9ef',
+    width: 'fit-content',
+    padding: '6px',
+    marginTop: xs,
+    borderRadius: '3px',
+  },
 })
 
 const openIconStyle = {
@@ -43,7 +59,7 @@ type Props = {
   safeName: string,
 }
 
-const Send = ({
+const SendFunds = ({
   classes, onClose, safeAddress, etherScanLink, safeName,
 }: Props) => (
   <React.Fragment>
@@ -56,21 +72,33 @@ const Send = ({
       </IconButton>
     </Row>
     <Hairline />
-    <Row>
-      <Col layout="column" middle="xs">
-        <Identicon address={safeAddress} diameter={32} />
-      </Col>
-      <Col layout="column">
-        <Paragraph weight="bolder">{safeName}</Paragraph>
-        <Paragraph weight="bolder" onClick={copyToClipboard}>
-          {safeAddress}
-          <Link to={etherScanLink} target="_blank">
-            <OpenInNew style={openIconStyle} />
-          </Link>
-        </Paragraph>
-      </Col>
-    </Row>
+    <Block className={classes.formContainer}>
+      <Row>
+        <Col xs={1}>
+          <Identicon address={safeAddress} diameter={32} />
+        </Col>
+        <Col xs={11} layout="column">
+          <Paragraph weight="bolder" noMargin style={{lineHeight: 1}}>
+            {safeName}
+          </Paragraph>
+          <Paragraph weight="bolder" onClick={copyToClipboard} noMargin>
+            {safeAddress}
+            <Link to={etherScanLink} target="_blank">
+              <OpenInNew style={openIconStyle} />
+            </Link>
+          </Paragraph>
+          <Block className={classes.balanceContainer} margin="lg">
+            <Paragraph noMargin>
+              Balance:
+              {' '}
+              <Bold>1.349 ETH</Bold>
+            </Paragraph>
+          </Block>
+        </Col>
+      </Row>
+      <Hairline />
+    </Block>
   </React.Fragment>
 )
 
-export default withStyles(styles)(Send)
+export default withStyles(styles)(SendFunds)
