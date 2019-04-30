@@ -4,6 +4,7 @@ import { withStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
 import IconButton from '@material-ui/core/IconButton'
 import OpenInNew from '@material-ui/icons/OpenInNew'
+import MenuItem from '@material-ui/core/MenuItem'
 import Identicon from '~/components/Identicon'
 import Paragraph from '~/components/layout/Paragraph'
 import Row from '~/components/layout/Row'
@@ -12,6 +13,7 @@ import Link from '~/components/layout/Link'
 import Col from '~/components/layout/Col'
 import Field from '~/components/forms/Field'
 import TextField from '~/components/forms/TextField'
+import SelectField from '~/components/forms/SelectField'
 import Block from '~/components/layout/Block'
 import Bold from '~/components/layout/Bold'
 import Hairline from '~/components/layout/Hairline'
@@ -103,7 +105,7 @@ const SendFunds = ({
                 <Bold>
                   {ethBalance}
                   {' '}
-                  ETH
+ETH
                 </Bold>
               </Paragraph>
             </Block>
@@ -119,19 +121,33 @@ const SendFunds = ({
         </Row>
         <GnoForm onSubmit={handleSubmit}>
           {() => (
-            <Row>
-              <Col xs={12}>
-                <Field
-                  name="address"
-                  component={TextField}
-                  type="text"
-                  validate={composeValidators(required, mustBeEthereumAddress)}
-                  placeholder="Recipient*"
-                  text="Recipient*"
-                  className={classes.addressInput}
-                />
-              </Col>
-            </Row>
+            <React.Fragment>
+              <Row margin="md">
+                <Col xs={12}>
+                  <Field
+                    name="recipientAddress"
+                    component={TextField}
+                    type="text"
+                    validate={composeValidators(required, mustBeEthereumAddress)}
+                    placeholder="Recipient*"
+                    text="Recipient*"
+                    className={classes.addressInput}
+                  />
+                </Col>
+              </Row>
+              <Row>
+                <Col>
+                  <Field name="token" component={SelectField} validate={composeValidators(required)}>
+                    <MenuItem>
+                      1
+                    </MenuItem>
+                    <MenuItem>
+                      2
+                    </MenuItem>
+                  </Field>
+                </Col>
+              </Row>
+            </React.Fragment>
           )}
         </GnoForm>
       </Block>

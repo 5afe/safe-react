@@ -20,28 +20,16 @@ const SelectInput = ({
 }: SelectFieldProps) => {
   const showError = ((meta.submitError && !meta.dirtySinceLastSubmit) || meta.error) && meta.touched
   const inputProps = { ...restInput, name }
+  const inputRootProps = { style: { borderRadius: '5px' } }
 
   return (
-    <FormControl
-      {...formControlProps}
-      error={showError}
-      style={style}
-    >
+    <FormControl {...formControlProps} error={showError} style={style}>
       <InputLabel htmlFor={name}>{label}</InputLabel>
-      <Select
-        {...rest}
-        onChange={onChange}
-        inputProps={inputProps}
-        value={value}
-      />
-      { showError &&
-        <FormHelperText>
-          {meta.error || meta.submitError}
-        </FormHelperText>
-      }
+      {/* eslint-disable-next-line */}
+      <Select {...rest} onChange={onChange} inputProps={inputProps} InputProps={inputRootProps} value={value} />
+      {showError && <FormHelperText>{meta.error || meta.submitError}</FormHelperText>}
     </FormControl>
   )
 }
-
 
 export default SelectInput
