@@ -4,11 +4,13 @@ import { withStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
 import IconButton from '@material-ui/core/IconButton'
 import OpenInNew from '@material-ui/icons/OpenInNew'
+import ArrowDown from '@material-ui/icons/ArrowDownward'
 import Identicon from '~/components/Identicon'
 import Paragraph from '~/components/layout/Paragraph'
 import Row from '~/components/layout/Row'
 import Link from '~/components/layout/Link'
 import Col from '~/components/layout/Col'
+
 import Block from '~/components/layout/Block'
 import Bold from '~/components/layout/Bold'
 import Hairline from '~/components/layout/Hairline'
@@ -73,12 +75,12 @@ const SendFunds = ({
     </Row>
     <Hairline />
     <Block className={classes.formContainer}>
-      <Row>
+      <Row margin="md">
         <Col xs={1}>
           <Identicon address={safeAddress} diameter={32} />
         </Col>
         <Col xs={11} layout="column">
-          <Paragraph weight="bolder" noMargin style={{lineHeight: 1}}>
+          <Paragraph weight="bolder" noMargin style={{ lineHeight: 1 }}>
             {safeName}
           </Paragraph>
           <Paragraph weight="bolder" onClick={copyToClipboard} noMargin>
@@ -87,7 +89,7 @@ const SendFunds = ({
               <OpenInNew style={openIconStyle} />
             </Link>
           </Paragraph>
-          <Block className={classes.balanceContainer} margin="lg">
+          <Block className={classes.balanceContainer}>
             <Paragraph noMargin>
               Balance:
               {' '}
@@ -96,7 +98,14 @@ const SendFunds = ({
           </Block>
         </Col>
       </Row>
-      <Hairline />
+      <Row>
+        <Col xs={1}>
+          <ArrowDown />
+        </Col>
+        <Col xs={11} center="xs" layout="column">
+          <Hairline />
+        </Col>
+      </Row>
     </Block>
   </React.Fragment>
 )
