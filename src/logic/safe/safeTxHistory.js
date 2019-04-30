@@ -1,7 +1,7 @@
 // @flow
 import { getWeb3 } from '~/logic/wallets/getWeb3'
 import { getTxServiceUriFrom, getTxServiceHost } from '~/config'
-import { getSafeEthereumInstance } from '~/logic/safe/safeFrontendOperations'
+import { getGnosisSafeInstanceAt } from '~/logic/contracts/safeContracts'
 
 export type TxServiceType = 'confirmation' | 'execution' | 'initialised'
 export type Operation = 0 | 1 | 2
@@ -17,7 +17,7 @@ const calculateBodyFrom = async (
   sender: string,
   type: TxServiceType,
 ) => {
-  const gnosisSafe = await getSafeEthereumInstance(safeAddress)
+  const gnosisSafe = await getGnosisSafeInstanceAt(safeAddress)
   const contractTransactionHash = await gnosisSafe.getTransactionHash(
     to,
     valueInWei,

@@ -2,7 +2,8 @@
 import * as React from 'react'
 import Stepper from '~/components/Stepper'
 import { connect } from 'react-redux'
-import { getSafeEthereumInstance, createTransaction } from '~/logic/safe/safeFrontendOperations'
+import { createTransaction } from '~/logic/safe/safeFrontendOperations'
+import { getGnosisSafeInstanceAt } from '~/logic/contracts/safeContracts'
 import { type Safe } from '~/routes/safe/store/models/safe'
 import ThresholdForm, { THRESHOLD_PARAM } from './ThresholdForm'
 import selector, { type SelectorProps } from './selector'
@@ -35,7 +36,7 @@ class Threshold extends React.PureComponent<Props, State> {
       const { safe, userAddress, fetchTransactions } = this.props // , fetchThreshold } = this.props
       const newThreshold = values[THRESHOLD_PARAM]
       const safeAddress = safe.get('address')
-      const gnosisSafe = await getSafeEthereumInstance(safeAddress)
+      const gnosisSafe = await getGnosisSafeInstanceAt(safeAddress)
       const nonce = await gnosisSafe.nonce()
       const data = gnosisSafe.contract.changeThreshold(newThreshold).encodeABI()
       await createTransaction(safe, `Change Safe's threshold [${nonce}]`, safeAddress, '0', nonce, userAddress, data)
