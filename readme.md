@@ -14,7 +14,6 @@ What things you need to install the software and how to install them
 yarn add truffle // recommended usage of -g flag
 yarn add ganache-cli // recommended usage of -g flag
 yarn add flow-type // recommended usage of -g flag
-git clone https://github.com/gnosis/safe-contracts.git
 ```
 
 We use [yarn](https://yarnpkg.com) in our infrastacture, so we decided to go with yarn in the README
@@ -30,7 +29,6 @@ ganache-cli -b 3
 
 Start the project in the other one
 ```
-cd safe-contracts && truffle compile && truffle migrate && cd ..
 yarn install
 yarn start
 ```
