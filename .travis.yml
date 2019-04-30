@@ -1,5 +1,6 @@
 if: (branch = development) OR (branch = master) OR (type = pull_request) OR (tag IS present)
 sudo: required
+dist: xenial
 services:
   - docker
 language: node_js
