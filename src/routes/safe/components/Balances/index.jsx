@@ -167,6 +167,7 @@ class Balances extends React.Component<Props, State> {
           safeAddress={safeAddress}
           safeName={safeName}
           ethBalance={ethBalance}
+          tokens={activeTokens}
         />
         <Modal
           title="Receive Tokens"

@@ -1,5 +1,7 @@
 // @flow
 import React, { useState } from 'react'
+import { List } from 'immutable'
+import { type Token } from '~/logic/tokens/store/model/token'
 import cn from 'classnames'
 import { withStyles } from '@material-ui/core/styles'
 import Modal from '~/components/Modal'
@@ -14,6 +16,7 @@ type Props = {
   etherScanLink: string,
   safeName: string,
   ethBalance: string,
+  tokens: List<Token>,
 }
 type ActiveScreen = 'chooseTxType' | 'sendFunds'
 
@@ -25,7 +28,7 @@ const styles = () => ({
 })
 
 const Send = ({
-  onClose, isOpen, classes, safeAddress, etherScanLink, safeName, ethBalance,
+  onClose, isOpen, classes, safeAddress, etherScanLink, safeName, ethBalance, tokens,
 }: Props) => {
   const [activeScreen, setActiveScreen] = useState<ActiveScreen>('sendFunds')
   const smallerModalSize = activeScreen === 'chooseTxType'
@@ -56,6 +59,7 @@ const Send = ({
             etherScanLink={etherScanLink}
             safeName={safeName}
             ethBalance={ethBalance}
+            tokens={tokens}
           />
         )}
       </React.Fragment>

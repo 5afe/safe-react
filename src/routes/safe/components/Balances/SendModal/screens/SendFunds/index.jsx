@@ -1,15 +1,19 @@
 // @flow
 import * as React from 'react'
+import { List } from 'immutable'
 import { withStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
 import IconButton from '@material-ui/core/IconButton'
 import OpenInNew from '@material-ui/icons/OpenInNew'
 import MenuItem from '@material-ui/core/MenuItem'
+import ListItemIcon from '@material-ui/core/ListItemIcon'
+import ListItemText from '@material-ui/core/ListItemText'
 import Identicon from '~/components/Identicon'
 import Paragraph from '~/components/layout/Paragraph'
 import Row from '~/components/layout/Row'
 import GnoForm from '~/components/forms/GnoForm'
 import Link from '~/components/layout/Link'
+import Img from '~/components/layout/Img'
 import Col from '~/components/layout/Col'
 import Field from '~/components/forms/Field'
 import TextField from '~/components/forms/TextField'
@@ -20,7 +24,9 @@ import Hairline from '~/components/layout/Hairline'
 import {
   lg, md, sm, secondary, xs,
 } from '~/theme/variables'
+import { type Token } from '~/logic/tokens/store/model/token'
 import { composeValidators, required, mustBeEthereumAddress } from '~/components/forms/validator'
+import { setImageToPlaceholder } from '~/routes/safe/components/Balances/utils'
 import { copyToClipboard } from '~/utils/clipboard'
 import ArrowDown from './assets/arrow-down.svg'
 
@@ -65,10 +71,11 @@ type Props = {
   etherScanLink: string,
   safeName: string,
   ethBalance: string,
+  tokens: List<Token>,
 }
 
 const SendFunds = ({
-  classes, onClose, safeAddress, etherScanLink, safeName, ethBalance,
+  classes, onClose, safeAddress, etherScanLink, safeName, ethBalance, tokens,
 }: Props) => {
   const handleSubmit = () => {}
 
@@ -138,12 +145,14 @@ ETH
               <Row>
                 <Col>
                   <Field name="token" component={SelectField} validate={composeValidators(required)}>
-                    <MenuItem>
-                      1
-                    </MenuItem>
-                    <MenuItem>
-                      2
-                    </MenuItem>
+                    {tokens.map(token => (
+                      <MenuItem key={token.address}>
+                        <ListItemIcon>
+                          <Img src={token.logoUri} height={28} alt={token.name} onError={setImageToPlaceholder} />
+                        </ListItemIcon>
+                        <ListItemText primary={token.name} secondary={`${token.balance} ${token.symbol}`} />
+                      </MenuItem>
+                    ))}
                   </Field>
                 </Col>
               </Row>
