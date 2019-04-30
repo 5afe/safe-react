@@ -10,13 +10,15 @@ import Row from '~/components/layout/Row'
 import GnoForm from '~/components/forms/GnoForm'
 import Link from '~/components/layout/Link'
 import Col from '~/components/layout/Col'
-
+import Field from '~/components/forms/Field'
+import TextField from '~/components/forms/TextField'
 import Block from '~/components/layout/Block'
 import Bold from '~/components/layout/Bold'
 import Hairline from '~/components/layout/Hairline'
 import {
   lg, md, sm, secondary, xs,
 } from '~/theme/variables'
+import { composeValidators, required, mustBeEthereumAddress } from '~/components/forms/validator'
 import { copyToClipboard } from '~/utils/clipboard'
 import ArrowDown from './assets/arrow-down.svg'
 
@@ -65,56 +67,76 @@ type Props = {
 
 const SendFunds = ({
   classes, onClose, safeAddress, etherScanLink, safeName, ethBalance,
-}: Props) => (
-  <React.Fragment>
-    <Row align="center" grow className={classes.heading}>
-      <Paragraph weight="bolder" className={classes.manage} noMargin>
-        Send Funds
-      </Paragraph>
-      <IconButton onClick={onClose} disableRipple>
-        <Close className={classes.closeIcon} />
-      </IconButton>
-    </Row>
-    <Hairline />
-    <Block className={classes.formContainer}>
-      <Row margin="md">
-        <Col xs={1}>
-          <Identicon address={safeAddress} diameter={32} />
-        </Col>
-        <Col xs={11} layout="column">
-          <Paragraph weight="bolder" noMargin style={{ lineHeight: 1 }}>
-            {safeName}
-          </Paragraph>
-          <Paragraph weight="bolder" onClick={copyToClipboard} noMargin>
-            {safeAddress}
-            <Link to={etherScanLink} target="_blank">
-              <OpenInNew style={openIconStyle} />
-            </Link>
-          </Paragraph>
-          <Block className={classes.balanceContainer}>
-            <Paragraph noMargin>
-              Balance:
-              {' '}
-              <Bold>
-                {ethBalance}
-                {' '}
-ETH
-              </Bold>
+}: Props) => {
+  const handleSubmit = () => {}
+
+  return (
+    <React.Fragment>
+      <Row align="center" grow className={classes.heading}>
+        <Paragraph weight="bolder" className={classes.manage} noMargin>
+          Send Funds
+        </Paragraph>
+        <IconButton onClick={onClose} disableRipple>
+          <Close className={classes.closeIcon} />
+        </IconButton>
+      </Row>
+      <Hairline />
+      <Block className={classes.formContainer}>
+        <Row margin="md">
+          <Col xs={1}>
+            <Identicon address={safeAddress} diameter={32} />
+          </Col>
+          <Col xs={11} layout="column">
+            <Paragraph weight="bolder" noMargin style={{ lineHeight: 1 }}>
+              {safeName}
             </Paragraph>
-          </Block>
-        </Col>
-      </Row>
-      <Row>
-        <Col xs={1}>
-          <img src={ArrowDown} alt="Arrow Down" style={{ marginLeft: '8px' }} />
-        </Col>
-        <Col xs={11} center="xs" layout="column">
-          <Hairline />
-        </Col>
-      </Row>
-      <GnoForm>{() => <Row />}</GnoForm>
-    </Block>
-  </React.Fragment>
-)
+            <Paragraph weight="bolder" onClick={copyToClipboard} noMargin>
+              {safeAddress}
+              <Link to={etherScanLink} target="_blank">
+                <OpenInNew style={openIconStyle} />
+              </Link>
+            </Paragraph>
+            <Block className={classes.balanceContainer}>
+              <Paragraph noMargin>
+                Balance:
+                {' '}
+                <Bold>
+                  {ethBalance}
+                  {' '}
+                  ETH
+                </Bold>
+              </Paragraph>
+            </Block>
+          </Col>
+        </Row>
+        <Row margin="md">
+          <Col xs={1}>
+            <img src={ArrowDown} alt="Arrow Down" style={{ marginLeft: '8px' }} />
+          </Col>
+          <Col xs={11} center="xs" layout="column">
+            <Hairline />
+          </Col>
+        </Row>
+        <GnoForm onSubmit={handleSubmit}>
+          {() => (
+            <Row>
+              <Col xs={12}>
+                <Field
+                  name="address"
+                  component={TextField}
+                  type="text"
+                  validate={composeValidators(required, mustBeEthereumAddress)}
+                  placeholder="Recipient*"
+                  text="Recipient*"
+                  className={classes.addressInput}
+                />
+              </Col>
+            </Row>
+          )}
+        </GnoForm>
+      </Block>
+    </React.Fragment>
+  )
+}
 
 export default withStyles(styles)(SendFunds)
