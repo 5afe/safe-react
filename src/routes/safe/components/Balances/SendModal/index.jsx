@@ -13,6 +13,7 @@ type Props = {
   safeAddress: string,
   etherScanLink: string,
   safeName: string,
+  ethBalance: string,
 }
 type ActiveScreen = 'chooseTxType' | 'sendFunds'
 
@@ -24,7 +25,7 @@ const styles = () => ({
 })
 
 const Send = ({
-  onClose, isOpen, classes, safeAddress, etherScanLink, safeName,
+  onClose, isOpen, classes, safeAddress, etherScanLink, safeName, ethBalance,
 }: Props) => {
   const [activeScreen, setActiveScreen] = useState<ActiveScreen>('sendFunds')
   const smallerModalSize = activeScreen === 'chooseTxType'
@@ -54,6 +55,7 @@ const Send = ({
             safeAddress={safeAddress}
             etherScanLink={etherScanLink}
             safeName={safeName}
+            ethBalance={ethBalance}
           />
         )}
       </React.Fragment>

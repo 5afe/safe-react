@@ -8,6 +8,7 @@ import ArrowDown from '@material-ui/icons/ArrowDownward'
 import Identicon from '~/components/Identicon'
 import Paragraph from '~/components/layout/Paragraph'
 import Row from '~/components/layout/Row'
+import GnoForm from '~/components/forms/GnoForm'
 import Link from '~/components/layout/Link'
 import Col from '~/components/layout/Col'
 
@@ -59,10 +60,11 @@ type Props = {
   safeAddress: string,
   etherScanLink: string,
   safeName: string,
+  ethBalance: string,
 }
 
 const SendFunds = ({
-  classes, onClose, safeAddress, etherScanLink, safeName,
+  classes, onClose, safeAddress, etherScanLink, safeName, ethBalance,
 }: Props) => (
   <React.Fragment>
     <Row align="center" grow className={classes.heading}>
@@ -93,7 +95,11 @@ const SendFunds = ({
             <Paragraph noMargin>
               Balance:
               {' '}
-              <Bold>1.349 ETH</Bold>
+              <Bold>
+                {ethBalance}
+                {' '}
+                ETH
+              </Bold>
             </Paragraph>
           </Block>
         </Col>
@@ -106,6 +112,7 @@ const SendFunds = ({
           <Hairline />
         </Col>
       </Row>
+      <GnoForm>{() => <Row />}</GnoForm>
     </Block>
   </React.Fragment>
 )
