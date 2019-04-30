@@ -1,5 +1,5 @@
 // @flow
-export const ZERO_ADDRESS = ' 0x0000000000000000000000000000000000000000'
+export const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'
 
 export const sameAddress = (firstAddress: string, secondAddress: string): boolean => {
   if (!firstAddress) {
