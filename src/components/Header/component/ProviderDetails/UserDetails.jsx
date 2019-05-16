@@ -132,7 +132,6 @@ const UserDetails = ({
       <Row className={classes.details}>
         <Paragraph noMargin align="right" className={classes.labels}>
           Status
-          {' '}
         </Paragraph>
         <Spacer />
         <Dot className={classNames(classes.dot, connected ? classes.connected : classes.warning)} />
@@ -144,7 +143,6 @@ const UserDetails = ({
       <Row className={classes.details}>
         <Paragraph noMargin align="right" className={classes.labels}>
           Client
-          {' '}
         </Paragraph>
         <Spacer />
         <Img className={classes.logo} src={metamask} height={14} alt="Metamask client" />
@@ -156,7 +154,6 @@ const UserDetails = ({
       <Row className={classes.details}>
         <Paragraph noMargin align="right" className={classes.labels}>
           Network
-          {' '}
         </Paragraph>
         <Spacer />
         <Img className={classes.logo} src={dot} height={14} alt="Network" />
