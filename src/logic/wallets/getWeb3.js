@@ -12,6 +12,7 @@ export const ETHEREUM_NETWORK = {
 }
 
 export const WALLET_PROVIDER = {
+  SAFE: 'SAFE',
   METAMASK: 'METAMASK',
   PARITY: 'PARITY',
   REMOTE: 'REMOTE',
@@ -36,12 +37,23 @@ export const openTxInEtherScan = (tx: string, network: string) => `https://${net
 export const getEtherScanLink = (address: string, network: string) => `https://${network}.etherscan.io/address/${address}`
 
 let web3
-export const getWeb3 = () => web3 || new Web3(window.web3.currentProvider)
+export const getWeb3 = () => web3
 
-const isMetamask: Function = (web3Provider): boolean => {
-  const isMetamaskConstructor = web3Provider.currentProvider.constructor.name === 'MetamaskInpageProvider'
+const getProviderName: Function = (web3Provider): boolean => {
+  let name
 
-  return isMetamaskConstructor || web3Provider.currentProvider.isMetaMask
+  switch (web3Provider.currentProvider.constructor.name) {
+  case 'SafeWeb3Provider':
+    name = WALLET_PROVIDER.SAFE
+    break
+  case 'MetamaskInpageProvider':
+    name = WALLET_PROVIDER.METAMASK
+    break
+  default:
+    name = 'UNKNOWN'
+  }
+
+  return name
 }
 
 const getAccountFrom: Function = async (web3Provider): Promise<string | null> => {
@@ -76,7 +88,7 @@ export const getProviderInfo: Function = async (): Promise<ProviderProps> => {
 
   web3 = new Web3(web3Provider)
 
-  const name = isMetamask(web3) ? WALLET_PROVIDER.METAMASK : 'UNKNOWN'
+  const name = getProviderName(web3)
   const account = await getAccountFrom(web3)
   const network = await getNetworkIdFrom(web3)
 
