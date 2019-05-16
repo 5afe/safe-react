@@ -57,7 +57,14 @@ const getNetworkIdFrom = async (web3Provider) => {
 }
 
 export const getProviderInfo: Function = async (): Promise<ProviderProps> => {
-  if (typeof window.web3 === 'undefined') {
+  let web3Provider
+
+  if (window.ethereum) {
+    web3Provider = window.ethereum
+    await web3Provider.enable()
+  } else if (window.web3) {
+    web3Provider = window.web3.currentProvider
+  } else {
     return {
       name: '',
       available: false,
@@ -67,15 +74,9 @@ export const getProviderInfo: Function = async (): Promise<ProviderProps> => {
     }
   }
 
-  // Use MetaMask's provider.
-  web3 = new Web3(window.web3.currentProvider)
+  web3 = new Web3(web3Provider)
 
-  if (process.env.NODE_ENV !== 'test') {
-    // eslint-disable-next-line
-    console.log('Injected web3 detected.')
-  }
-
-  const name = isMetamask(window.web3) ? WALLET_PROVIDER.METAMASK : 'UNKNOWN'
+  const name = isMetamask(web3) ? WALLET_PROVIDER.METAMASK : 'UNKNOWN'
   const account = await getAccountFrom(web3)
   const network = await getNetworkIdFrom(web3)
 
