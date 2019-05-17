@@ -19,7 +19,9 @@ const buildOwnersFrom = (
 })
 
 export const buildSafe = async (safeAddress: string, safeName: string) => {
+  console.log('build1')
   const gnosisSafe = await getGnosisSafeInstanceAt(safeAddress)
+  console.log('build2', gnosisSafe)
   const ethBalance = await getBalanceInEtherOf(safeAddress)
 
   const threshold = Number(await gnosisSafe.getThreshold())

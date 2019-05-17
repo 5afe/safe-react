@@ -12,14 +12,20 @@ import { ensureOnce } from '~/utils/singleton'
 import saveTokens from './saveTokens'
 
 const createStandardTokenContract = async () => {
+  console.log('createStandardTokenContract')
   const web3 = getWeb3()
+  console.log('web3', web3)
   const erc20Token = await contract(StandardToken)
+  console.log('erc20Token', erc20Token)
   erc20Token.setProvider(web3.currentProvider)
-
+  console.log('erc20Token', erc20Token)
   return erc20Token
 }
+
 const createHumanFriendlyTokenContract = async () => {
+  console.log('createHumanFriendlyTokenContract')
   const web3 = getWeb3()
+  console.log('web3', web3)
   const humanErc20Token = await contract(HumanFriendlyToken)
   humanErc20Token.setProvider(web3.currentProvider)
 
@@ -32,6 +38,7 @@ export const getStandardTokenContract = ensureOnce(createStandardTokenContract)
 
 export const fetchTokens = () => async (dispatch: ReduxDispatch<GlobalState>) => {
   try {
+    console.log('fetchTokens------')
     const {
       data: { results: tokenList },
     } = await fetchTokenList()

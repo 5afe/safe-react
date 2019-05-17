@@ -87,6 +87,7 @@ export const getProviderInfo: Function = async (): Promise<ProviderProps> => {
   }
 
   web3 = new Web3(web3Provider)
+  console.log('WEB3 UPDATED!!!!', web3, getWeb3())
 
   const name = getProviderName(web3)
   const account = await getAccountFrom(web3)

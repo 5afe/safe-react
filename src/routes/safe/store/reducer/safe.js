@@ -59,6 +59,7 @@ export const safesInitialState = async (): Promise<State> => {
 export default handleActions<State, *>(
   {
     [UPDATE_SAFE]: (state: State, action: ActionType<Function>): State => {
+      console.log('updating safe')
       const safe = action.payload
       const safeAddress = safe.address
 

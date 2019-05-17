@@ -23,6 +23,7 @@ class SafeView extends React.Component<Props> {
     fetchTokenBalances(safeUrl, activeTokens)
 
     this.intervalId = setInterval(() => {
+      console.log('checkUpdates')
       this.checkForUpdates()
     }, TIMEOUT)
   }

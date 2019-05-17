@@ -34,6 +34,7 @@ export const createSafe = async (values: Object, userAccount: string, addSafe: A
   await checkReceiptStatus(safe.tx)
 
   const safeAddress = safe.logs[0].args.proxy
+  console.log('createSafe')
   const safeContract = await getGnosisSafeInstanceAt(safeAddress)
 
   addSafe(name, safeContract.address, numConfirmations, owners, accounts)
