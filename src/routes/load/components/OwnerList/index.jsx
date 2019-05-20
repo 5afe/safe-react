@@ -17,10 +17,9 @@ import {
   sm, md, lg, border, secondary,
 } from '~/theme/variables'
 import { getOwnerNameBy, getOwnerAddressBy } from '~/routes/open/components/fields'
-import { getEtherScanLink, getWeb3 } from '~/logic/wallets/getWeb3'
+import { getEtherScanLink } from '~/logic/wallets/getWeb3'
 import { FIELD_LOAD_ADDRESS, THRESHOLD } from '~/routes/load/components/fields'
-import { getGnosisSafeContract } from '~/logic/contracts/safeContracts'
-
+import { getGnosisSafeInstanceAt } from '~/logic/contracts/safeContracts'
 
 const openIconStyle = {
   height: '16px',
@@ -102,12 +101,9 @@ class OwnerListComponent extends React.PureComponent<Props, State> {
   componentDidMount = async () => {
     this.mounted = true
     const { values, updateInitialProps } = this.props
-
     const safeAddress = values[FIELD_LOAD_ADDRESS]
-    const web3 = getWeb3()
 
-    const GnosisSafe = getGnosisSafeContract(web3)
-    const gnosisSafe = await GnosisSafe.at(safeAddress)
+    const gnosisSafe = await getGnosisSafeInstanceAt(safeAddress)
     const owners = await gnosisSafe.getOwners()
     const threshold = await gnosisSafe.getThreshold()
 
