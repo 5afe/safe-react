@@ -12,7 +12,7 @@ import Link from '~/components/layout/Link'
 import Paragraph from '~/components/layout/Paragraph'
 import Hairline from '~/components/layout/Hairline'
 import {
-  xs, sm, lg, border, secondary,
+  xs, sm, md, lg, border, secondary,
 } from '~/theme/variables'
 import { shortVersionOf } from '~/logic/wallets/ethAddresses'
 import { getAccountsFrom } from '~/routes/open/utils/safeDataExtractor'
