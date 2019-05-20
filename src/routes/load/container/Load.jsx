@@ -10,13 +10,21 @@ import { history } from '~/store'
 import selector, { type SelectorProps } from './selector'
 import actions, { type Actions } from './actions'
 import Layout from '../components/Layout'
+import { getNamesFrom, getOwnersFrom } from '~/routes/open/utils/safeDataExtractor'
+import { getWeb3 } from '~/logic/wallets/getWeb3'
+import { getGnosisSafeContract } from '~/logic/contracts/safeContracts'
 import { FIELD_LOAD_NAME, FIELD_LOAD_ADDRESS } from '../components/fields'
 
 type Props = SelectorProps & Actions
 
-export const loadSafe = async (safeName: string, safeAddress: string, addSafe: Function) => {
+export const loadSafe = async (
+  safeName: string,
+  safeAddress: string,
+  owners: Array,
+  addSafe: Function
+) => {
   const safeProps = await buildSafe(safeAddress, safeName)
-
+  safeProps.owners = owners
   await addSafe(safeProps)
 
   const storedSafes = (await loadFromStorage(SAFES_KEY)) || {}
@@ -31,8 +39,15 @@ class Load extends React.Component<Props> {
       const { addSafe } = this.props
       const safeName = values[FIELD_LOAD_NAME]
       const safeAddress = values[FIELD_LOAD_ADDRESS]
+      const ownerNames = getNamesFrom(values)
 
-      await loadSafe(safeName, safeAddress, addSafe)
+      const web3 = getWeb3()
+      const GnosisSafe = getGnosisSafeContract(web3)
+      const gnosisSafe = await GnosisSafe.at(safeAddress)
+      const ownerAddresses = await gnosisSafe.getOwners()
+      const owners = getOwnersFrom(ownerNames, ownerAddresses.sort())
+
+      await loadSafe(safeName, safeAddress, owners, addSafe)
 
       const url = `${SAFELIST_ADDRESS}/${safeAddress}`
       history.push(url)
