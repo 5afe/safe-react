@@ -33,6 +33,7 @@ const Layout = ({
   provider, onLoadSafeSubmit, network, userAddress,
 }: Props) => {
   const steps = getSteps()
+  const initialValues = {}
 
   return (
     <React.Fragment>
@@ -44,7 +45,7 @@ const Layout = ({
             </IconButton>
             <Heading tag="h2">Load existing Safe</Heading>
           </Row>
-          <Stepper onSubmit={onLoadSafeSubmit} steps={steps} testId="load-safe-form">
+          <Stepper onSubmit={onLoadSafeSubmit} steps={steps} initialValues={initialValues} testId="load-safe-form">
             <Stepper.Page validate={safeFieldsValidation}>{DetailsForm}</Stepper.Page>
             <Stepper.Page network={network}>{OwnerList}</Stepper.Page>
             <Stepper.Page network={network} userAddress={userAddress}>

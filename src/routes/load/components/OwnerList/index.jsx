@@ -16,9 +16,9 @@ import Hairline from '~/components/layout/Hairline'
 import {
   xs, sm, md, lg, border, secondary,
 } from '~/theme/variables'
-import { getOwnerNameBy } from '~/routes/open/components/fields'
+import { getOwnerNameBy, getOwnerAddressBy } from '~/routes/open/components/fields'
 import { getEtherScanLink, getWeb3 } from '~/logic/wallets/getWeb3'
-import { FIELD_LOAD_ADDRESS } from '~/routes/load/components/fields'
+import { FIELD_LOAD_ADDRESS, THRESHOLD } from '~/routes/load/components/fields'
 import { getGnosisSafeContract } from '~/logic/contracts/safeContracts'
 
 
@@ -76,10 +76,20 @@ type LayoutProps = {
 type Props = LayoutProps & {
   values: Object,
   classes: Object,
+  updateInitialProps: (initialValues: Object) => void,
 }
 
 type State = {
   owners: Array<string>,
+}
+
+const calculateSafeValues = (owners: Array<string>, threshold: Number, values: Object) => {
+  const initialValues = { ...values }
+  for (let i = 0; i < owners.length; i += 1) {
+    initialValues[getOwnerAddressBy(i)] = owners[i]
+  }
+  initialValues[THRESHOLD] = threshold
+  return initialValues
 }
 
 class OwnerListComponent extends React.PureComponent<Props, State> {
@@ -91,7 +101,7 @@ class OwnerListComponent extends React.PureComponent<Props, State> {
 
   componentDidMount = async () => {
     this.mounted = true
-    const { values } = this.props
+    const { values, updateInitialProps } = this.props
 
     const safeAddress = values[FIELD_LOAD_ADDRESS]
     const web3 = getWeb3()
@@ -99,6 +109,10 @@ class OwnerListComponent extends React.PureComponent<Props, State> {
     const GnosisSafe = getGnosisSafeContract(web3)
     const gnosisSafe = await GnosisSafe.at(safeAddress)
     const owners = await gnosisSafe.getOwners()
+    const threshold = await gnosisSafe.getThreshold()
+
+    const initialValues = calculateSafeValues(owners.sort(), threshold, values)
+    updateInitialProps(initialValues)
 
     if (!owners) {
       return
@@ -166,11 +180,12 @@ class OwnerListComponent extends React.PureComponent<Props, State> {
 
 const OwnerListPage = withStyles(styles)(OwnerListComponent)
 
-const OwnerList = (network: string) => (controls: React$Node, { values }: Object) => (
+const OwnerList = ({ updateInitialProps }: Object, network: string) => (controls: React$Node, { values }: Object) => (
   <React.Fragment>
     <OpenPaper controls={controls} padding={false}>
       <OwnerListPage
         network={network}
+        updateInitialProps={updateInitialProps}
         values={values}
       />
     </OpenPaper>
