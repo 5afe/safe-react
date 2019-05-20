@@ -1,5 +1,5 @@
 // @flow
-import React, { useState } from 'react'
+import React from 'react'
 import { List } from 'immutable'
 import { withStyles } from '@material-ui/core/styles'
 import MenuItem from '@material-ui/core/MenuItem'
@@ -44,33 +44,25 @@ const SelectedToken = ({ token, classes }: SelectedTokenProps) => (
 
 const SelectedTokenStyled = withStyles(selectedTokenStyles)(SelectedToken)
 
-const TokenSelectField = ({ tokens, classes }: SelectFieldProps) => {
-  const [selectedToken, setSelectedToken] = useState('')
-  const onSelect = (event) => {
-    setSelectedToken(event.target.value)
-  }
-
-  return (
-    <Field
-      name="token"
-      component={SelectField}
-      classes={{ selectMenu: classes.selectMenu }}
-      validate={composeValidators(required)}
-      renderValue={token => <SelectedTokenStyled token={token} />}
-      value={selectedToken}
-      onChange={onSelect}
-      displayEmpty
-    >
-      {tokens.map(token => (
-        <MenuItem key={token.address} value={token}>
-          <ListItemIcon>
-            <Img src={token.logoUri} height={28} alt={token.name} onError={setImageToPlaceholder} />
-          </ListItemIcon>
-          <ListItemText primary={token.name} secondary={`${token.balance} ${token.symbol}`} />
-        </MenuItem>
-      ))}
-    </Field>
-  )
-}
+const TokenSelectField = ({ tokens, classes }: SelectFieldProps) => (
+  <Field
+    name="token"
+    component={SelectField}
+    classes={{ selectMenu: classes.selectMenu }}
+    validate={composeValidators(required)}
+    renderValue={token => <SelectedTokenStyled token={token} />}
+    initialValue=""
+    displayEmpty
+  >
+    {tokens.map(token => (
+      <MenuItem key={token.address} value={token}>
+        <ListItemIcon>
+          <Img src={token.logoUri} height={28} alt={token.name} onError={setImageToPlaceholder} />
+        </ListItemIcon>
+        <ListItemText primary={token.name} secondary={`${token.balance} ${token.symbol}`} />
+      </MenuItem>
+    ))}
+  </Field>
+)
 
 export default withStyles(selectStyles)(TokenSelectField)

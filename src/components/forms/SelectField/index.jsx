@@ -25,6 +25,7 @@ const SelectInput = ({
     ...restInput,
     name,
   }
+
   return (
     <FormControl {...formControlProps} error={showError} style={style}>
       <InputLabel htmlFor={name}>{label}</InputLabel>
