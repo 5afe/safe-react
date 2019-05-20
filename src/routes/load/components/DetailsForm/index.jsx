@@ -71,7 +71,7 @@ export const safeFieldsValidation = async (values: Object) => {
   )
   const safeMaster = await getSafeMasterContract()
   const masterCopy = safeMaster.address
-  
+
   const sameMasterCopy = checksummedProxyAddress === masterCopy
   if (!sameMasterCopy) {
     errors[FIELD_LOAD_ADDRESS] = SAFE_MASTERCOPY_ERROR

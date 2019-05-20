@@ -1,19 +1,25 @@
 // @flow
 import * as React from 'react'
+import classNames from 'classnames'
 import Block from '~/components/layout/Block'
 import { withStyles } from '@material-ui/core/styles'
 import OpenInNew from '@material-ui/icons/OpenInNew'
 import Identicon from '~/components/Identicon'
 import OpenPaper from '~/components/Stepper/OpenPaper'
+import Col from '~/components/layout/Col'
 import Row from '~/components/layout/Row'
 import Link from '~/components/layout/Link'
 import Paragraph from '~/components/layout/Paragraph'
+import Hairline from '~/components/layout/Hairline'
 import {
-  xs, sm, lg, border, secondary,
+  xs, sm, md, lg, border, secondary,
 } from '~/theme/variables'
+import { shortVersionOf, sameAddress } from '~/logic/wallets/ethAddresses'
+import { getNamesFrom, getAccountsFrom } from '~/routes/open/utils/safeDataExtractor'
+import { getOwnerNameBy, getOwnerAddressBy, getNumOwnersFrom } from '~/routes/open/components/fields'
 import { getEtherScanLink, getWeb3 } from '~/logic/wallets/getWeb3'
-import { FIELD_LOAD_NAME, FIELD_LOAD_ADDRESS } from '~/routes/load/components/fields'
-import { sameAddress } from '~/logic/wallets/ethAddresses'
+import { FIELD_LOAD_NAME, FIELD_LOAD_ADDRESS, THRESHOLD } from '~/routes/load/components/fields'
+
 import { getGnosisSafeContract } from '~/logic/contracts/safeContracts'
 
 const openIconStyle = {
@@ -22,13 +28,38 @@ const openIconStyle = {
 }
 
 const styles = () => ({
+  root: {
+    minHeight: '300px',
+  },
   details: {
     padding: lg,
     borderRight: `solid 1px ${border}`,
     height: '100%',
   },
+  owners: {
+    padding: lg,
+  },
   name: {
-    letterSpacing: '-0.6px',
+    textOverflow: 'ellipsis',
+    overflow: 'hidden',
+  },
+  userName: {
+    whiteSpace: 'nowrap',
+  },
+  owner: {
+    padding: sm,
+    paddingLeft: lg,
+    alignItems: 'center',
+  },
+  user: {
+    justifyContent: 'left',
+  },
+  open: {
+    paddingLeft: sm,
+    width: 'auto',
+    '&:hover': {
+      cursor: 'pointer',
+    },
   },
   container: {
     marginTop: xs,
@@ -60,77 +91,111 @@ type State = {
   isOwner: boolean,
 }
 
+const checkUserAddressOwner = (values: Object, userAddress: string): boolean => {
+  let isOwner: boolean = false
+
+  for (let i = 0; i < getNumOwnersFrom(values); i += 1) {
+    if (values[getOwnerAddressBy(i)] === userAddress) {
+      isOwner = true
+      break
+    }
+  }
+
+  return isOwner
+}
+
 class ReviewComponent extends React.PureComponent<Props, State> {
-  state = {
-    isOwner: false,
-  }
-
-  mounted = false
-
-  componentDidMount = async () => {
-    this.mounted = true
-
-    const { values, userAddress } = this.props
-    const safeAddress = values[FIELD_LOAD_ADDRESS]
-    const web3 = getWeb3()
-
-    const GnosisSafe = getGnosisSafeContract(web3)
-    const gnosisSafe = await GnosisSafe.at(safeAddress)
-    const owners = await gnosisSafe.getOwners()
-    if (!owners) {
-      return
-    }
-
-    const isOwner = owners.find((owner: string) => sameAddress(owner, userAddress)) !== undefined
-    if (this.mounted) {
-      this.setState(() => ({ isOwner }))
-    }
-  }
-
-  componentWillUnmount() {
-    this.mounted = false
-  }
-
   render() {
-    const { values, classes, network } = this.props
-    const { isOwner } = this.state
-
+    const { values, classes, network, userAddress } = this.props
+    
+    const isOwner = checkUserAddressOwner(values, userAddress)
+    const owners = getAccountsFrom(values)
     const safeAddress = values[FIELD_LOAD_ADDRESS]
 
     return (
       <React.Fragment>
-        <Block className={classes.details}>
-          <Block margin="lg">
-            <Paragraph size="sm" color="disabled" noMargin>
-              Name of the Safe
-            </Paragraph>
-            <Paragraph size="lg" color="primary" noMargin weight="bolder" className={classes.name}>
-              {values[FIELD_LOAD_NAME]}
-            </Paragraph>
-          </Block>
-          <Block margin="lg">
-            <Paragraph size="sm" color="disabled" noMargin>
-              Safe address
-            </Paragraph>
-            <Row className={classes.container}>
-              <Identicon address={safeAddress} diameter={32} />
-              <Paragraph size="md" color="disabled" noMargin className={classes.address}>
-                {safeAddress}
+        <Row className={classes.root}>
+          <Col xs={4} layout="column">
+            <Block className={classes.details}>
+              <Block margin="lg">
+                <Paragraph size="lg" color="primary" noMargin>
+                Review details
+                </Paragraph>
+              </Block>
+              <Block margin="lg">
+                <Paragraph size="sm" color="disabled" noMargin>
+                Name of the Safe
+                </Paragraph>
+                <Paragraph size="lg" color="primary" noMargin weight="bolder" className={classes.name}>
+                  {values[FIELD_LOAD_NAME]}
+                </Paragraph>
+              </Block>
+              <Block margin="lg">
+                <Paragraph size="sm" color="disabled" noMargin>
+                Safe address
+                </Paragraph>
+                <Row className={classes.container}>
+                  <Identicon address={safeAddress} diameter={32} />
+                  <Paragraph size="md" color="disabled" noMargin className={classes.address}>
+                    {shortVersionOf(safeAddress, 4)}
+                  </Paragraph>
+                  <Link className={classes.open} to={getEtherScanLink(safeAddress, network)} target="_blank">
+                    <OpenInNew style={openIconStyle} />
+                  </Link>
+                </Row>
+              </Block>
+              <Block margin="lg">
+                <Paragraph size="sm" color="disabled" noMargin>
+                Connected wallet client is owner?
+                </Paragraph>
+                <Paragraph size="lg" color="primary" noMargin weight="bolder" className={classes.name}>
+                  {isOwner ? 'Yes' : 'No (read-only)'}
+                </Paragraph>
+              </Block>
+              <Block margin="lg">
+                <Paragraph size="sm" color="disabled" noMargin>
+                Any transaction requires the confirmation of:
+                </Paragraph>
+                <Paragraph size="lg" color="primary" noMargin weight="bolder" className={classes.name}>
+                  {`${values[THRESHOLD]} out of ${getNumOwnersFrom(values)} owners`}
+                </Paragraph>
+              </Block>
+            </Block>
+          </Col>
+          <Col xs={8} layout="column">
+            <Block className={classes.owners}>
+              <Paragraph size="lg" color="primary" noMargin>
+                {`${getNumOwnersFrom(values)} Safe owners`}
               </Paragraph>
-              <Link className={classes.open} to={getEtherScanLink(safeAddress, network)} target="_blank">
-                <OpenInNew style={openIconStyle} />
-              </Link>
-            </Row>
-          </Block>
-          <Block margin="lg">
-            <Paragraph size="sm" color="disabled" noMargin>
-              Connected wallet client is owner?
-            </Paragraph>
-            <Paragraph size="lg" color="primary" noMargin weight="bolder" className={classes.name}>
-              {isOwner ? 'Yes' : 'No (read-only)'}
-            </Paragraph>
-          </Block>
-        </Block>
+            </Block>
+            <Hairline />
+            {owners.map((x, index) => (
+              <React.Fragment key={`name${index}`}>
+                <Row className={classes.owner}>
+                  <Col xs={1} align="center">
+                    <Identicon address={owners[index]} diameter={32} />
+                  </Col>
+                  <Col xs={11}>
+                    <Block className={classNames(classes.name, classes.userName)}>
+                      <Paragraph size="lg" noMargin>
+                        {values[getOwnerNameBy(index)]}
+                      </Paragraph>
+                      <Block align="center" className={classes.user}>
+                        <Paragraph size="md" color="disabled" noMargin>
+                          {owners[index]}
+                        </Paragraph>
+                        <Link className={classes.open} to={getEtherScanLink(owners[index], network)} target="_blank">
+                          <OpenInNew style={openIconStyle} />
+                        </Link>
+                      </Block>
+                    </Block>
+                  </Col>
+                </Row>
+                <Hairline />
+              </React.Fragment>
+            ))}
+          </Col>
+        </Row>
       </React.Fragment>
     )
   }
