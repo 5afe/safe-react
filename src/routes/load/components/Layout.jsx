@@ -7,12 +7,13 @@ import Heading from '~/components/layout/Heading'
 import Row from '~/components/layout/Row'
 import IconButton from '@material-ui/core/IconButton'
 import ReviewInformation from '~/routes/load/components/ReviewInformation'
+import OwnerList from '~/routes/load/components/OwnerList'
 import DetailsForm, { safeFieldsValidation } from '~/routes/load/components/DetailsForm'
 import { history } from '~/store'
 import { secondary } from '~/theme/variables'
 import { type SelectorProps } from '~/routes/load/container/selector'
 
-const getSteps = () => ['Details', 'Review']
+const getSteps = () => ['Details', 'Owners', 'Review']
 
 type Props = SelectorProps & {
   onLoadSafeSubmit: (values: Object) => Promise<void>,
@@ -45,13 +46,14 @@ const Layout = ({
           </Row>
           <Stepper onSubmit={onLoadSafeSubmit} steps={steps} testId="load-safe-form">
             <Stepper.Page validate={safeFieldsValidation}>{DetailsForm}</Stepper.Page>
+            <Stepper.Page network={network}>{OwnerList}</Stepper.Page>
             <Stepper.Page network={network} userAddress={userAddress}>
               {ReviewInformation}
             </Stepper.Page>
           </Stepper>
         </Block>
       ) : (
-        <div>No metamask detected</div>
+        <div>No account detected</div>
       )}
     </React.Fragment>
   )
