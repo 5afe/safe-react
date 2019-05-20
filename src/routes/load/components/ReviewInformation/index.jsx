@@ -12,15 +12,13 @@ import Link from '~/components/layout/Link'
 import Paragraph from '~/components/layout/Paragraph'
 import Hairline from '~/components/layout/Hairline'
 import {
-  xs, sm, md, lg, border, secondary,
+  xs, sm, lg, border, secondary,
 } from '~/theme/variables'
-import { shortVersionOf, sameAddress } from '~/logic/wallets/ethAddresses'
-import { getNamesFrom, getAccountsFrom } from '~/routes/open/utils/safeDataExtractor'
+import { shortVersionOf } from '~/logic/wallets/ethAddresses'
+import { getAccountsFrom } from '~/routes/open/utils/safeDataExtractor'
 import { getOwnerNameBy, getOwnerAddressBy, getNumOwnersFrom } from '~/routes/open/components/fields'
-import { getEtherScanLink, getWeb3 } from '~/logic/wallets/getWeb3'
+import { getEtherScanLink } from '~/logic/wallets/getWeb3'
 import { FIELD_LOAD_NAME, FIELD_LOAD_ADDRESS, THRESHOLD } from '~/routes/load/components/fields'
-
-import { getGnosisSafeContract } from '~/logic/contracts/safeContracts'
 
 const openIconStyle = {
   height: '16px',

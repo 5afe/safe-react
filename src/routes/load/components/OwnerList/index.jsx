@@ -14,7 +14,7 @@ import Link from '~/components/layout/Link'
 import Paragraph from '~/components/layout/Paragraph'
 import Hairline from '~/components/layout/Hairline'
 import {
-  xs, sm, md, lg, border, secondary,
+  sm, md, lg, border, secondary,
 } from '~/theme/variables'
 import { getOwnerNameBy, getOwnerAddressBy } from '~/routes/open/components/fields'
 import { getEtherScanLink, getWeb3 } from '~/logic/wallets/getWeb3'

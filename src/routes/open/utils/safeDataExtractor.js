@@ -19,10 +19,10 @@ export const getNamesFrom = (values: Object): string[] => {
 
 export const getOwnersFrom = (
   names: string[],
-  addresses: string[]
+  addresses: string[],
 ): Array<string, string> => {
   const owners = names.map((name: string, index: number) => makeOwner(
-    { name, address: addresses[index] }
+    { name, address: addresses[index] },
   ))
 
   return owners
