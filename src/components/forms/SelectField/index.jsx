@@ -21,12 +21,13 @@ const SelectInput = ({
   ...rest
 }: SelectFieldProps) => {
   const showError = ((meta.submitError && !meta.dirtySinceLastSubmit) || meta.error) && meta.touched
-  const inputProps = { ...restInput, name }
-  console.log(classes)
+  const inputProps = {
+    ...restInput,
+    name,
+  }
   return (
     <FormControl {...formControlProps} error={showError} style={style}>
       <InputLabel htmlFor={name}>{label}</InputLabel>
-      {/* eslint-disable-next-line */}
       <Select
         classes={classes}
         onChange={onChange}
