@@ -1,7 +1,6 @@
 // @flow
 import React, { useState } from 'react'
 import { List } from 'immutable'
-import { BigNumber } from 'bignumber.js'
 import { withStyles } from '@material-ui/core/styles'
 import { OnChange } from 'react-final-form-listeners'
 import Close from '@material-ui/icons/Close'
