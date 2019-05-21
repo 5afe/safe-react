@@ -222,6 +222,11 @@ export default createMuiTheme({
         backgroundColor: 'rgba(228, 232, 241, 0.75)',
       },
     },
+    MuiMenuItem: {
+      root: {
+        fontFamily: 'Roboto Mono, monospace',
+      },
+    },
     MuiListItemText: {
       primary: {
         fontFamily: 'Roboto Mono, monospace',

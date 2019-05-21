@@ -7,6 +7,7 @@ import ListItemIcon from '@material-ui/core/ListItemIcon'
 import ListItemText from '@material-ui/core/ListItemText'
 import Field from '~/components/forms/Field'
 import Img from '~/components/layout/Img'
+import Paragraph from '~/components/layout/Paragraph'
 import SelectField from '~/components/forms/SelectField'
 import { setImageToPlaceholder } from '~/routes/safe/components/Balances/utils'
 import { composeValidators, required } from '~/components/forms/validator'
@@ -37,7 +38,9 @@ const SelectedToken = ({ token, classes }: SelectedTokenProps) => (
         />
       </>
     ) : (
-      'Select an asset'
+      <Paragraph color="disabled" size="lg" weight="light" style={{ opacity: 0.5 }}>
+        Select an asset*
+      </Paragraph>
     )}
   </MenuItem>
 )
