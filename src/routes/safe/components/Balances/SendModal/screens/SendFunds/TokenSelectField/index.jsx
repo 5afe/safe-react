@@ -1,7 +1,6 @@
 // @flow
 import React from 'react'
 import { List } from 'immutable'
-import { OnChange } from 'react-final-form-listeners'
 import { withStyles } from '@material-ui/core/styles'
 import MenuItem from '@material-ui/core/MenuItem'
 import ListItemIcon from '@material-ui/core/ListItemIcon'
@@ -18,7 +17,6 @@ import { selectedTokenStyles, selectStyles } from './style'
 type SelectFieldProps = {
   tokens: List<Token>,
   classes: Object,
-  onTokenChange: Function,
 }
 
 type SelectedTokenProps = {
@@ -49,7 +47,7 @@ const SelectedToken = ({ token, classes }: SelectedTokenProps) => (
 
 const SelectedTokenStyled = withStyles(selectedTokenStyles)(SelectedToken)
 
-const TokenSelectField = ({ tokens, onTokenChange, classes }: SelectFieldProps) => (
+const TokenSelectField = ({ tokens, classes }: SelectFieldProps) => (
   <Field
     name="token"
     component={SelectField}
@@ -67,11 +65,6 @@ const TokenSelectField = ({ tokens, onTokenChange, classes }: SelectFieldProps) 
         <ListItemText primary={token.name} secondary={`${token.balance} ${token.symbol}`} />
       </MenuItem>
     ))}
-    <OnChange name="token">
-      {() => {
-        onTokenChange()
-      }}
-    </OnChange>
   </Field>
 )
 

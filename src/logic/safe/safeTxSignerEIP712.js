@@ -3,6 +3,7 @@ import { getWeb3 } from '~/logic/wallets/getWeb3'
 import { BigNumber } from 'bignumber.js'
 import { EMPTY_DATA } from '~/logic/wallets/ethTransactions'
 import { getSignaturesFrom } from '~/utils/storage/signatures'
+import { getSafeEthereumInstance } from './safeFrontendOperations';
 
 const estimateDataGasCosts = (data) => {
   const reducer = (accumulator, currentValue) => {
@@ -63,7 +64,12 @@ export const generateTxGasEstimateFrom = async (
   operation: number,
 ) => {
   try {
-    const estimateData = safe.contract.methods.requiredTxGas(to, valueInWei, data, operation).encodeABI()
+    let safeInstance = safe
+    if (!safeInstance) {
+      safeInstance = await getSafeEthereumInstance(safeAddress)
+    }
+
+    const estimateData = safeInstance.contract.methods.requiredTxGas(to, valueInWei, data, operation).encodeABI()
     const estimateResponse = await getWeb3().eth.call({
       to: safeAddress,
       from: safeAddress,
@@ -72,11 +78,11 @@ export const generateTxGasEstimateFrom = async (
     const txGasEstimate = new BigNumber(estimateResponse.substring(138), 16)
 
     // Add 10k else we will fail in case of nested calls
-    return Promise.resolve(txGasEstimate.toNumber() + 10000)
+    return txGasEstimate.toNumber() + 10000
   } catch (error) {
     // eslint-disable-next-line
     console.log('Error calculating tx gas estimation ' + error)
-    return Promise.resolve(0)
+    return 0
   }
 }
 
