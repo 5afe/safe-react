@@ -107,7 +107,7 @@ const SendFunds = ({
                 <Bold>
                   {ethBalance}
                   {' '}
-                  ETH
+ETH
                 </Bold>
               </Paragraph>
             </Block>
@@ -140,6 +140,22 @@ const SendFunds = ({
               <Row>
                 <Col>
                   <TokenSelectField tokens={tokens} />
+                </Col>
+              </Row>
+              <Row>
+                <Col layout="column">
+                  <Paragraph size="md" color="disabled" style={{ letterSpacing: '-0.5px' }}>
+                    Amount
+                  </Paragraph>
+                  <Field
+                    name="amount"
+                    component={TextField}
+                    type="text"
+                    validate={composeValidators(required)}
+                    placeholder="Amount*"
+                    text="Amount*"
+                    className={classes.addressInput}
+                  />
                 </Col>
               </Row>
             </React.Fragment>

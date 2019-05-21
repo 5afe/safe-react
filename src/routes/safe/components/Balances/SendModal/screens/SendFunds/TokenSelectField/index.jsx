@@ -10,7 +10,7 @@ import Img from '~/components/layout/Img'
 import Paragraph from '~/components/layout/Paragraph'
 import SelectField from '~/components/forms/SelectField'
 import { setImageToPlaceholder } from '~/routes/safe/components/Balances/utils'
-import { composeValidators, required } from '~/components/forms/validator'
+import { required } from '~/components/forms/validator'
 import { type Token } from '~/logic/tokens/store/model/token'
 import { selectedTokenStyles, selectStyles } from './style'
 
@@ -52,7 +52,7 @@ const TokenSelectField = ({ tokens, classes }: SelectFieldProps) => (
     name="token"
     component={SelectField}
     classes={{ selectMenu: classes.selectMenu }}
-    validate={composeValidators(required)}
+    validate={required}
     renderValue={token => <SelectedTokenStyled token={token} />}
     initialValue=""
     displayEmpty
