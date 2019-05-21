@@ -11,11 +11,12 @@ import Row from '~/components/layout/Row'
 import GnoForm from '~/components/forms/GnoForm'
 import Link from '~/components/layout/Link'
 import Col from '~/components/layout/Col'
-import Field from '~/components/forms/Field'
-import TextField from '~/components/forms/TextField'
 import Block from '~/components/layout/Block'
 import Bold from '~/components/layout/Bold'
 import Hairline from '~/components/layout/Hairline'
+import ButtonLink from '~/components/layout/ButtonLink'
+import Field from '~/components/forms/Field'
+import TextField from '~/components/forms/TextField'
 import {
   lg, md, sm, secondary, xs,
 } from '~/theme/variables'
@@ -73,6 +74,16 @@ const SendFunds = ({
   classes, onClose, safeAddress, etherScanLink, safeName, ethBalance, tokens,
 }: Props) => {
   const handleSubmit = () => {}
+  const formMutators = {
+    setMax: (args, state, utils) => {
+      const { token } = state.formState.values
+
+      utils.changeValue(state, 'amount', () => token && token.balance)
+    },
+    onTokenChange: (args, state, utils) => {
+      utils.changeValue(state, 'amount', () => '')
+    },
+  }
 
   return (
     <React.Fragment>
@@ -121,45 +132,55 @@ ETH
             <Hairline />
           </Col>
         </Row>
-        <GnoForm onSubmit={handleSubmit}>
-          {() => (
-            <React.Fragment>
-              <Row margin="md">
-                <Col xs={12}>
-                  <Field
-                    name="recipientAddress"
-                    component={TextField}
-                    type="text"
-                    validate={composeValidators(required, mustBeEthereumAddress)}
-                    placeholder="Recipient*"
-                    text="Recipient*"
-                    className={classes.addressInput}
-                  />
-                </Col>
-              </Row>
-              <Row>
-                <Col>
-                  <TokenSelectField tokens={tokens} />
-                </Col>
-              </Row>
-              <Row>
-                <Col layout="column">
-                  <Paragraph size="md" color="disabled" style={{ letterSpacing: '-0.5px' }}>
-                    Amount
-                  </Paragraph>
-                  <Field
-                    name="amount"
-                    component={TextField}
-                    type="text"
-                    validate={composeValidators(required)}
-                    placeholder="Amount*"
-                    text="Amount*"
-                    className={classes.addressInput}
-                  />
-                </Col>
-              </Row>
-            </React.Fragment>
-          )}
+        <GnoForm onSubmit={handleSubmit} formMutators={formMutators}>
+          {(...args) => {
+            const mutators = args[3]
+            return (
+              <React.Fragment>
+                <Row margin="md">
+                  <Col xs={12}>
+                    <Field
+                      name="recipientAddress"
+                      component={TextField}
+                      type="text"
+                      validate={composeValidators(required, mustBeEthereumAddress)}
+                      placeholder="Recipient*"
+                      text="Recipient*"
+                      className={classes.addressInput}
+                    />
+                  </Col>
+                </Row>
+                <Row margin="sm">
+                  <Col>
+                    <TokenSelectField tokens={tokens} onTokenChange={mutators.onTokenChange} />
+                  </Col>
+                </Row>
+                <Row margin="xs">
+                  <Col between="lg">
+                    <Paragraph size="md" color="disabled" style={{ letterSpacing: '-0.5px' }} noMargin>
+                      Amount
+                    </Paragraph>
+                    <ButtonLink weight="bold" onClick={mutators.setMax}>
+                      Send max
+                    </ButtonLink>
+                  </Col>
+                </Row>
+                <Row>
+                  <Col>
+                    <Field
+                      name="amount"
+                      component={TextField}
+                      type="text"
+                      validate={composeValidators(required)}
+                      placeholder="Amount*"
+                      text="Amount*"
+                      className={classes.addressInput}
+                    />
+                  </Col>
+                </Row>
+              </React.Fragment>
+            )
+          }}
         </GnoForm>
       </Block>
     </React.Fragment>

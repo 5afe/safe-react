@@ -9,7 +9,7 @@ const cx = classNames.bind(styles)
 type Props = {
   className?: string,
   children: React$Node,
-  margin?: 'sm' | 'md' | 'lg' | 'xl',
+  margin?: 'xs' | 'sm' | 'md' | 'lg' | 'xl',
   align?: 'center' | 'end' | 'start',
   grow?: boolean,
 }
