@@ -100,6 +100,9 @@ export default createMuiTheme({
         letterSpacing: '-0.5px',
         fontSize: mediumFontSize,
       },
+      body2: {
+        fontFamily: 'Roboto Mono, monospace',
+      },
     },
     MuiFormHelperText: {
       root: {

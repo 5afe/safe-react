@@ -3,6 +3,7 @@ import * as React from 'react'
 import { List } from 'immutable'
 import { withStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
+import InputAdornment from '@material-ui/core/InputAdornment'
 import IconButton from '@material-ui/core/IconButton'
 import OpenInNew from '@material-ui/icons/OpenInNew'
 import Identicon from '~/components/Identicon'
@@ -134,7 +135,10 @@ ETH
         </Row>
         <GnoForm onSubmit={handleSubmit} formMutators={formMutators}>
           {(...args) => {
+            const formState = args[2]
             const mutators = args[3]
+            const { token } = formState.values
+
             return (
               <React.Fragment>
                 <Row margin="md">
@@ -175,6 +179,13 @@ ETH
                       placeholder="Amount*"
                       text="Amount*"
                       className={classes.addressInput}
+                      inputAdornment={token && {
+                        endAdornment: (
+                          <InputAdornment position="end">
+                            {token.symbol}
+                          </InputAdornment>
+                        ),
+                      }}
                     />
                   </Col>
                 </Row>

@@ -14,7 +14,9 @@ type Props = {
   color?: 'soft' | 'medium' | 'dark' | 'white' | 'fancy' | 'primary' | 'secondary' | 'warning' | 'disabled',
 }
 
-const GnoButtonLink = ({ type, size, weight, color, ...props }: Props) => (
+const GnoButtonLink = ({
+  type, size, weight, color, ...props
+}: Props) => (
   <button type={type} className={cx(styles.btnLink, size, color, weight)} {...props} />
 )
 
