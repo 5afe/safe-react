@@ -17,13 +17,8 @@ export const getNamesFrom = (values: Object): string[] => {
   return accounts.map(account => values[account]).slice(0, values.owners)
 }
 
-export const getOwnersFrom = (
-  names: string[],
-  addresses: string[],
-): Array<string, string> => {
-  const owners = names.map((name: string, index: number) => makeOwner(
-    { name, address: addresses[index] },
-  ))
+export const getOwnersFrom = (names: string[], addresses: string[]): Array<string, string> => {
+  const owners = names.map((name: string, index: number) => makeOwner({ name, address: addresses[index] }))
 
   return owners
 }
