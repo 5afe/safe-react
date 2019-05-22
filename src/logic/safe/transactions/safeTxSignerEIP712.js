@@ -82,14 +82,14 @@ export const generateMetamaskSignature = async (
     operation,
     txGasEstimate,
   )
-
+  console.log({sender})
   const jsonTypedData = JSON.stringify(typedData)
   const signedTypedData = {
     method: 'eth_signTypedData_v3',
     // To change once Metamask fixes their status
     // https://github.com/MetaMask/metamask-extension/pull/5368
     // https://github.com/MetaMask/metamask-extension/issues/5366
-    params: [jsonTypedData, sender],
+    params: [sender, jsonTypedData],
     from: sender,
   }
   const txSignedResponse = await web3.currentProvider.sendAsync(signedTypedData)

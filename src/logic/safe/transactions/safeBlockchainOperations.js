@@ -4,7 +4,7 @@ import { calculateGasOf, checkReceiptStatus, calculateGasPrice } from '~/logic/w
 import { type Operation, submitOperation } from '~/logic/safe/safeTxHistory'
 import { getSafeEthereumInstance } from '~/logic/safe/safeFrontendOperations'
 import { buildSignaturesFrom } from '~/logic/safe/safeTxSigner'
-import { generateMetamaskSignature, generateTxGasEstimateFrom, estimateDataGas } from '~/logic/safe/safeTxSignerEIP712'
+import { generateMetamaskSignature, generateTxGasEstimateFrom, estimateDataGas } from '~/logic/safe/transactions'
 import { storeSignature, getSignaturesFrom } from '~/utils/storage/signatures'
 import { signaturesViaMetamask } from '~/config'
 
