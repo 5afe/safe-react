@@ -42,19 +42,20 @@ export const estimateDataGas = (
   const gasPrice = 0 // no need to get refund when we submit txs to metamask
   const signatureCost = signatureCount * (68 + 2176 + 2176 + 6000) // array count (3 -> r, s, v) * signature count
 
-  const sigs = `0x000000000000000000000000${
-    '0xbc2BB26a6d821e69A38016f3858561a1D80d4182'.replace('0x', '')
-  }0000000000000000000000000000000000000000000000000000000000000000`
+  const sigs = `0x000000000000000000000000${'0xbc2BB26a6d821e69A38016f3858561a1D80d4182'.replace(
+    '0x',
+    '',
+  )}0000000000000000000000000000000000000000000000000000000000000000`
   const payload = safe.contract.methods
     .execTransaction(to, valueInWei, data, operation, txGasEstimate, 0, gasPrice, gasToken, refundReceiver, sigs)
     .encodeABI()
 
+  // eslint-disable-next-line
   const dataGasEstimate = estimateDataGasCosts(payload) + signatureCost + (nonce > 0 ? 5000 : 20000) + 1500 // 1500 -> hash generation costs
 
   return dataGasEstimate + 32000 // Add aditional gas costs (e.g. base tx costs, transfer costs)
 }
 
-// eslint-disable-next-line
 export const generateTxGasEstimateFrom = async (
   safe: any,
   safeAddress: string,
@@ -117,11 +118,12 @@ export const calculateTxFee = async (
       Number(threshold),
       safeAddress,
     )
+    console.log({ dataGasEstimate, txGasEstimate })
 
-    const sigs = `0x000000000000000000000000${
-      '0xbc2BB26a6d821e69A38016f3858561a1D80d4182'.replace('0x', '')
-    }0000000000000000000000000000000000000000000000000000000000000000`
-      + '01'
+    const sigs = `0x000000000000000000000000${'0xbc2BB26a6d821e69A38016f3858561a1D80d4182'.replace(
+      '0x',
+      '',
+    )}0000000000000000000000000000000000000000000000000000000000000000` + '01'
     console.log({
       to,
       valueInWei,
