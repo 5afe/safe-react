@@ -1,11 +1,12 @@
 // @flow
 import * as React from 'react'
 import { withStyles } from '@material-ui/core/styles'
+import Block from '~/components/layout/Block'
 import Col from '~/components/layout/Col'
 import Row from '~/components/layout/Row'
 import RemoveSafeModal from './RemoveSafeModal'
 import Paragraph from '~/components/layout/Paragraph'
-
+import Hairline from '~/components/layout/Hairline'
 import { styles } from './style'
 
 type State = {
@@ -25,6 +26,11 @@ type Action = 'RemoveSafe'
 class Settings extends React.Component<Props, State> {
   state = {
     showRemoveSafe: false,
+    menuOptionIndex: 1,
+  }
+
+  handleChange = menuOptionIndex => () => {
+    this.setState({ menuOptionIndex })
   }
 
   onShow = (action: Action) => () => {
@@ -36,7 +42,7 @@ class Settings extends React.Component<Props, State> {
   }
 
   render() {
-    const { showRemoveSafe } = this.state
+    const { showRemoveSafe, menuOptionIndex } = this.state
     const {
       classes,
       granted,
@@ -64,7 +70,48 @@ class Settings extends React.Component<Props, State> {
             />
           </Col>
         </Row>
-        Settings page content
+        <Block className={classes.root}>
+          <Col xs={3} layout="column">
+            <Block className={classes.menu}>
+              <Row className={classes.menuOption} onClick={this.handleChange(1)}>
+                Safe name
+              </Row>
+              <Hairline />
+              {granted && (
+                <React.Fragment>
+                  <Row className={classes.menuOption} onClick={this.handleChange(2)}>
+                    Owners
+                  </Row>
+                  <Hairline />
+                  <Row className={classes.menuOption} onClick={this.handleChange(3)}>
+                    Required confirmations
+                  </Row>
+                  <Hairline />
+                  <Row className={classes.menuOption} onClick={this.handleChange(4)}>
+                    Modules
+                  </Row>
+                  <Hairline />
+                </React.Fragment>
+              )}
+            </Block>
+          </Col>
+          <Col xs={9} layout="column">
+            <Block className={classes.container}>
+              {menuOptionIndex === 1 && (
+                <p>To be done</p>
+              )}
+              {granted && menuOptionIndex === 2 && (
+                <p>To be done</p>
+              )}
+              {granted && menuOptionIndex === 3 && (
+                <p>To be done</p>
+              )}
+              {granted && menuOptionIndex === 4 && (
+                <p>To be done</p>
+              )}
+            </Block>
+          </Col>
+        </Block>
       </React.Fragment>
     )
   }
