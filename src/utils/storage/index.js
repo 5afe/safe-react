@@ -31,3 +31,11 @@ export const saveToStorage = async (key: string, value: *): Promise<*> => {
     console.error(`Failed to save ${key} in the storage:`, err)
   }
 }
+
+export const removeFromStorage = async (key: string): Promise<*> => {
+  try {
+    await storage.remove(`${PREFIX}__${key}`)
+  } catch (err) {
+    console.error(`Failed to remove ${key} from the storage:`, err)
+  }
+}
