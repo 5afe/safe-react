@@ -4,7 +4,6 @@ import { BigNumber } from 'bignumber.js'
 import { getWeb3 } from '~/logic/wallets/getWeb3'
 import { EMPTY_DATA } from '~/logic/wallets/ethTransactions'
 import { getSafeEthereumInstance } from '../safeFrontendOperations'
-import { generateMetamaskSignature } from '~/logic/safe/transactions'
 
 const estimateDataGasCosts = (data) => {
   const reducer = (accumulator, currentValue) => {
@@ -120,20 +119,34 @@ export const calculateTxFee = async (
       Number(threshold),
       safeAddress,
     )
-    const signature = await generateMetamaskSignature(
-      safe,
-      safeAddress,
-      '0xbc2BB26a6d821e69A38016f3858561a1D80d4182',
+
+    const sigs = `0x000000000000000000000000${
+      '0xbc2BB26a6d821e69A38016f3858561a1D80d4182'.replace('0x', '')
+    }0000000000000000000000000000000000000000000000000000000000000000`
+      + '01'
+    console.log({
       to,
       valueInWei,
-      nonce,
       data,
       operation,
       txGasEstimate,
-    )
-    const sigs = getSignaturesFrom(safeInstance.address, nonce)
+      dataGasEstimate,
+      gasPrice: 0,
+      txGasToken: '0x0000000000000000000000000000000000000000',
+      refundReceiver: '0x0000000000000000000000000000000000000000',
+      sigs,
+    })
     const estimate = await safeInstance.execTransaction.estimateGas(
-      to, valueInWei, data, operation, txGasEstimate, dataGasEstimate, 0, '0x0000000000000000000000000000000000000000', '0x0000000000000000000000000000000000000000', signature,
+      to,
+      valueInWei,
+      data,
+      operation,
+      txGasEstimate,
+      dataGasEstimate,
+      0,
+      '0x0000000000000000000000000000000000000000',
+      '0x0000000000000000000000000000000000000000',
+      sigs,
     )
 
     return estimate
