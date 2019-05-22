@@ -9,11 +9,8 @@ type TokenProps = {
   tokens: Map<string, Token>,
 }
 
-const addTokens = createAction<string, *, *>(
-  ADD_TOKENS,
-  (tokens: Map<string, Token>): TokenProps => ({
-    tokens,
-  }),
-)
+const addTokens = createAction<string, *, *>(ADD_TOKENS, (tokens: Map<string, Token>): TokenProps => ({
+  tokens,
+}))
 
 export default addTokens
