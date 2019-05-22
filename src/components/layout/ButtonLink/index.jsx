@@ -11,7 +11,7 @@ type Props = {
   type: 'button' | 'submit' | 'reset',
   size?: 'sm' | 'md' | 'lg' | 'xl' | 'xxl',
   weight?: 'light' | 'regular' | 'bolder' | 'bold',
-  color?: 'soft' | 'medium' | 'dark' | 'white' | 'fancy' | 'primary' | 'secondary' | 'warning' | 'disabled',
+  color?: 'soft' | 'medium' | 'dark' | 'white' | 'fancy' | 'primary' | 'secondary' | 'warning' | 'disabled' | 'error',
 }
 
 const GnoButtonLink = ({
