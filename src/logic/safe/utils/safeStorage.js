@@ -1,7 +1,7 @@
 // @flow
 import { type Owner } from '~/routes/safe/store/models/owner'
 import { List, Map } from 'immutable'
-import { loadFromStorage, saveToStorage } from '~/utils/storage'
+import { loadFromStorage, saveToStorage, removeFromStorage } from '~/utils/storage'
 
 export const SAFES_KEY = 'SAFES'
 export const TX_KEY = 'TX'
@@ -40,4 +40,13 @@ export const getOwners = async (safeAddress: string): Map<string, string> => {
   const data: Object = await loadFromStorage(`${OWNERS_KEY}-${safeAddress}`)
 
   return data ? Map(data) : Map()
+}
+
+export const removeOwners = async (safeAddress: string): Map<string, string> => {
+  try {
+    await removeFromStorage(`${OWNERS_KEY}-${safeAddress}`)
+  } catch (err) {
+    // eslint-disable-next-line
+    console.log('Error removing owners from localstorage')
+  }
 }
