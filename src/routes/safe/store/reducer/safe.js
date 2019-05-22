@@ -9,6 +9,7 @@ import { loadFromStorage } from '~/utils/storage'
 import { SAFES_KEY } from '~/logic/safe/utils'
 import { UPDATE_SAFE } from '~/routes/safe/store/actions/updateSafe'
 import { ACTIVATE_TOKEN_FOR_ALL_SAFES } from '~/routes/safe/store/actions/activateTokenForAllSafes'
+import { REMOVE_SAFE } from '~/routes/safe/store/actions/removeSafe'
 
 export const SAFE_REDUCER_ID = 'safes'
 
@@ -90,6 +91,11 @@ export default handleActions<State, *>(
       }
 
       return state.set(safe.address, SafeRecord(safe))
+    },
+    [REMOVE_SAFE]: (state: State, action: ActionType<Function>): State => {
+      const safeAddress = action.payload
+
+      return state.delete(safeAddress)
     },
   },
   Map(),
