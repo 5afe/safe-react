@@ -48,6 +48,7 @@ export const estimateDataGas = (
     .encodeABI()
 
   let dataGasEstimate = estimateDataGasCosts(payload) + signatureCost
+  console.log(dataGasEstimate, signatureCost)
   if (dataGasEstimate > 65536) {
     dataGasEstimate += 64
   } else {
@@ -81,6 +82,49 @@ export const generateTxGasEstimateFrom = async (
 
     // Add 10k else we will fail in case of nested calls
     return txGasEstimate.toNumber() + 10000
+  } catch (error) {
+    // eslint-disable-next-line
+    console.log('Error calculating tx gas estimation ' + error)
+    return 0
+  }
+}
+
+export const calculateTxFee = async (
+  safe: any,
+  safeAddress: string,
+  data: string,
+  to: string,
+  valueInWei: number,
+  operation: number,
+) => {
+  try {
+    let safeInstance = safe
+    if (!safeInstance) {
+      safeInstance = await getSafeEthereumInstance(safeAddress)
+    }
+
+    // Estimate safe transaction (need to be called with "from" set to the safe address)
+    const nonce = await safeInstance.nonce()
+    const threshold = await safeInstance.getThreshold()
+    const txGasEstimate = await generateTxGasEstimateFrom(safeInstance, safeAddress, data, to, valueInWei, operation)
+    const dataGasEstimate = await estimateDataGas(
+      safeInstance,
+      to,
+      valueInWei,
+      data,
+      operation,
+      txGasEstimate,
+      '0x0000000000000000000000000000000000000000',
+      nonce,
+      Number(threshold),
+      safeAddress,
+    )
+    const sigs = getSignaturesFrom(safeInstance.address, nonce)
+    const estimate = await safeInstance.execTransaction.estimateGas(
+      to, valueInWei, data, operation, txGasEstimate, dataGasEstimate, 0, '0x0000000000000000000000000000000000000000', safeAddress, sigs
+  )
+
+    return estimate
   } catch (error) {
     // eslint-disable-next-line
     console.log('Error calculating tx gas estimation ' + error)

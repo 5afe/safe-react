@@ -28,7 +28,7 @@ import {
 } from '~/components/forms/validator'
 import TokenSelectField from '~/routes/safe/components/Balances/SendModal/screens/SendFunds/TokenSelectField'
 import SafeInfo from '~/routes/safe/components/Balances/SendModal/screens/SendFunds/SafeInfo'
-import { generateTxGasEstimateFrom } from '~/logic/safe/safeTxSignerEIP712'
+import { calculateTxFee } from '~/logic/safe/transactions'
 import ArrowDown from './assets/arrow-down.svg'
 import { styles } from './style'
 
@@ -89,7 +89,7 @@ const SendFunds = ({
 
             const estimateFee = async () => {
               const valueInWei = web3.utils.toWei(amount, 'ether')
-              const fee = await generateTxGasEstimateFrom(null, safeAddress, '0x', recipientAddress, valueInWei, 0)
+              const fee = await calculateTxFee(null, safeAddress, '0x', recipientAddress, valueInWei, 0)
               setTxFee(fee)
             }
 
