@@ -14,14 +14,14 @@ export const styles = () => ({
     marginRight: 'auto',
     marginLeft: '20px',
   },
-  manage: {
+  headingText: {
     fontSize: '24px',
   },
   closeIcon: {
     height: '35px',
     width: '35px',
   },
-  formContainer: {
+  container: {
     padding: `${md} ${lg}`,
   },
   buttonRow: {

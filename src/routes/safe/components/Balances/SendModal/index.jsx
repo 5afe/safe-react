@@ -1,5 +1,5 @@
 // @flow
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { List } from 'immutable'
 import { type Token } from '~/logic/tokens/store/model/token'
 import cn from 'classnames'
@@ -56,13 +56,12 @@ const Send = ({
     setTx(txInfo)
   }
 
-  // Uncomment when we add custom txs
-  // useEffect(
-  //   () => () => {
-  //     setActiveScreen('chooseTxType')
-  //   },
-  //   [isOpen],
-  // )
+  useEffect(
+    () => () => {
+      setActiveScreen('sendFunds')
+    },
+    [isOpen],
+  )
 
   return (
     <Modal
@@ -87,7 +86,16 @@ const Send = ({
             onSubmit={handleTxCreation}
           />
         )}
-        {activeScreen === 'reviewTx' && <ReviewTx tx={tx} />}
+        {activeScreen === 'reviewTx' && (
+          <ReviewTx
+            tx={tx}
+            onClose={onClose}
+            safeAddress={safeAddress}
+            etherScanLink={etherScanLink}
+            safeName={safeName}
+            ethBalance={ethBalance}
+          />
+        )}
       </React.Fragment>
     </Modal>
   )

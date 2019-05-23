@@ -26,8 +26,8 @@ import {
   greaterThan,
 } from '~/components/forms/validator'
 import TokenSelectField from '~/routes/safe/components/Balances/SendModal/screens/SendFunds/TokenSelectField'
-import SafeInfo from '~/routes/safe/components/Balances/SendModal/screens/SendFunds/SafeInfo'
-import ArrowDown from './assets/arrow-down.svg'
+import SafeInfo from '~/routes/safe/components/Balances/SendModal/SafeInfo'
+import ArrowDown from '../assets/arrow-down.svg'
 import { styles } from './style'
 
 type Props = {
@@ -74,6 +74,7 @@ const SendFunds = ({
         <Paragraph weight="bolder" className={classes.manage} noMargin>
           Send Funds
         </Paragraph>
+        <Paragraph className={classes.annotation}>1 of 2</Paragraph>
         <IconButton onClick={onClose} disableRipple>
           <Close className={classes.closeIcon} />
         </IconButton>
