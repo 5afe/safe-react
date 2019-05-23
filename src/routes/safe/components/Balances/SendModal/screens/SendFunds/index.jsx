@@ -36,11 +36,12 @@ type Props = {
   etherScanLink: string,
   safeName: string,
   ethBalance: string,
+  selectedToken: string,
   tokens: List<Token>,
 }
 
 const SendFunds = ({
-  classes, onClose, safeAddress, etherScanLink, safeName, ethBalance, tokens,
+  classes, onClose, safeAddress, etherScanLink, safeName, ethBalance, tokens, selectedToken,
 }: Props) => {
   const handleSubmit = () => {}
   const formMutators = {
@@ -98,7 +99,7 @@ const SendFunds = ({
                 </Row>
                 <Row margin="sm">
                   <Col>
-                    <TokenSelectField tokens={tokens} />
+                    <TokenSelectField tokens={tokens} initialValue={selectedToken} />
                   </Col>
                 </Row>
                 <Row margin="xs">

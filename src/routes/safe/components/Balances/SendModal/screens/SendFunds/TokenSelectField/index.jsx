@@ -17,6 +17,7 @@ import { selectedTokenStyles, selectStyles } from './style'
 type SelectFieldProps = {
   tokens: List<Token>,
   classes: Object,
+  initialValue: string,
 }
 
 type SelectedTokenProps = {
@@ -47,14 +48,14 @@ const SelectedToken = ({ token, classes }: SelectedTokenProps) => (
 
 const SelectedTokenStyled = withStyles(selectedTokenStyles)(SelectedToken)
 
-const TokenSelectField = ({ tokens, classes }: SelectFieldProps) => (
+const TokenSelectField = ({ tokens, classes, initialValue }: SelectFieldProps) => (
   <Field
     name="token"
     component={SelectField}
     classes={{ selectMenu: classes.selectMenu }}
     validate={required}
     renderValue={token => <SelectedTokenStyled token={token} />}
-    initialValue=""
+    initialValue={tokens.find(token => token.name === initialValue) || ''}
     displayEmpty
   >
     {tokens.map(token => (

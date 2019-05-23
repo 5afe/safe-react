@@ -29,7 +29,7 @@ type State = {
   hideZero: boolean,
   showToken: boolean,
   showReceive: boolean,
-  showSend: boolean,
+  sendFunds: Object,
 }
 
 type Props = {
@@ -49,7 +49,10 @@ class Balances extends React.Component<Props, State> {
   state = {
     hideZero: false,
     showToken: false,
-    showSend: false,
+    sendFunds: {
+      isOpen: false,
+      selectedToken: undefined,
+    },
     showReceive: false,
   }
 
@@ -61,6 +64,24 @@ class Balances extends React.Component<Props, State> {
     this.setState(() => ({ [`show${action}`]: false }))
   }
 
+  showSendFunds = (token: Token) => {
+    this.setState({
+      sendFunds: {
+        isOpen: true,
+        selectedToken: token,
+      },
+    })
+  }
+
+  hideSendFunds = () => {
+    this.setState({
+      sendFunds: {
+        isOpen: false,
+        selectedToken: undefined,
+      },
+    })
+  } 
+
   handleChange = (e: SyntheticInputEvent<HTMLInputElement>) => {
     const { checked } = e.target
 
@@ -69,7 +90,7 @@ class Balances extends React.Component<Props, State> {
 
   render() {
     const {
-      hideZero, showToken, showReceive, showSend,
+      hideZero, showToken, showReceive, sendFunds,
     } = this.state
     const {
       classes, granted, tokens, safeAddress, activeTokens, safeName, etherScanLink, ethBalance,
@@ -138,7 +159,7 @@ class Balances extends React.Component<Props, State> {
                       size="small"
                       color="secondary"
                       className={classes.send}
-                      onClick={this.onShow('Send')}
+                      onClick={() => this.showSendFunds(row.asset.name)}
                     >
                       <CallMade className={classNames(classes.leftIcon, classes.iconSmall)} />
                         Send
@@ -161,13 +182,14 @@ class Balances extends React.Component<Props, State> {
           }
         </Table>
         <SendModal
-          onClose={this.onHide('Send')}
-          isOpen={showSend}
+          onClose={this.hideSendFunds}
+          isOpen={sendFunds.isOpen}
           etherScanLink={etherScanLink}
           safeAddress={safeAddress}
           safeName={safeName}
           ethBalance={ethBalance}
           tokens={activeTokens}
+          selectedToken={sendFunds.selectedToken} 
         />
         <Modal
           title="Receive Tokens"
