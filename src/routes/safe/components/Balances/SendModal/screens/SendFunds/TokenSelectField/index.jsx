@@ -1,5 +1,5 @@
 // @flow
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { List } from 'immutable'
 import { withStyles } from '@material-ui/core/styles'
 import MenuItem from '@material-ui/core/MenuItem'
@@ -48,25 +48,36 @@ const SelectedToken = ({ token, classes }: SelectedTokenProps) => (
 
 const SelectedTokenStyled = withStyles(selectedTokenStyles)(SelectedToken)
 
-const TokenSelectField = ({ tokens, classes, initialValue }: SelectFieldProps) => (
-  <Field
-    name="token"
-    component={SelectField}
-    classes={{ selectMenu: classes.selectMenu }}
-    validate={required}
-    renderValue={token => <SelectedTokenStyled token={token} />}
-    initialValue={tokens.find(token => token.name === initialValue) || ''}
-    displayEmpty
-  >
-    {tokens.map(token => (
-      <MenuItem key={token.address} value={token}>
-        <ListItemIcon>
-          <Img src={token.logoUri} height={28} alt={token.name} onError={setImageToPlaceholder} />
-        </ListItemIcon>
-        <ListItemText primary={token.name} secondary={`${token.balance} ${token.symbol}`} />
-      </MenuItem>
-    ))}
-  </Field>
-)
+type InitialTokenType = Token | string
+
+const TokenSelectField = ({ tokens, classes, initialValue }: SelectFieldProps) => {
+  const [initialToken, setInitialToken] = useState<InitialTokenType>('')
+
+  useEffect(() => {
+    const selectedToken = tokens.find(token => token.name === initialValue)
+    setInitialToken(selectedToken || '')
+  }, [initialValue])
+
+  return (
+    <Field
+      name="token"
+      component={SelectField}
+      classes={{ selectMenu: classes.selectMenu }}
+      validate={required}
+      renderValue={token => <SelectedTokenStyled token={token} />}
+      initialValue={initialToken}
+      displayEmpty
+    >
+      {tokens.map(token => (
+        <MenuItem key={token.address} value={token}>
+          <ListItemIcon>
+            <Img src={token.logoUri} height={28} alt={token.name} onError={setImageToPlaceholder} />
+          </ListItemIcon>
+          <ListItemText primary={token.name} secondary={`${token.balance} ${token.symbol}`} />
+        </MenuItem>
+      ))}
+    </Field>
+  )
+}
 
 export default withStyles(selectStyles)(TokenSelectField)

@@ -80,7 +80,7 @@ class Balances extends React.Component<Props, State> {
         selectedToken: undefined,
       },
     })
-  } 
+  }
 
   handleChange = (e: SyntheticInputEvent<HTMLInputElement>) => {
     const { checked } = e.target
@@ -189,7 +189,7 @@ class Balances extends React.Component<Props, State> {
           safeName={safeName}
           ethBalance={ethBalance}
           tokens={activeTokens}
-          selectedToken={sendFunds.selectedToken} 
+          selectedToken={sendFunds.selectedToken}
         />
         <Modal
           title="Receive Tokens"

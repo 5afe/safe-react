@@ -68,6 +68,7 @@
     "@gnosis.pm/util-contracts": "2.0.1",
     "@material-ui/core": "^3.9.3",
     "@material-ui/icons": "^3.0.1",
+    "@welldone-software/why-did-you-render": "^3.0.9",
     "axios": "^0.18.0",
     "bignumber.js": "^8.1.1",
     "connected-react-router": "^6.3.1",
