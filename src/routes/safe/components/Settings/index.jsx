@@ -13,6 +13,7 @@ import Hairline from '~/components/layout/Hairline'
 import type { Owner } from '~/routes/safe/store/models/owner'
 import ThresholdSettings from './ThresholdSettings'
 import UpdateSafeName from './UpdateSafeName'
+import ManageOwners from './ManageOwners'
 import actions, { type Actions } from './actions'
 import { styles } from './style'
 
@@ -29,7 +30,9 @@ type Props = Actions & {
   safeName: string,
   owners: List<Owner>,
   threshold: number,
+  network: string,
   createTransaction: Function,
+  updateSafeName: Function,
 }
 
 type Action = 'RemoveSafe'
@@ -60,8 +63,10 @@ class Settings extends React.Component<Props, State> {
       etherScanLink,
       safeAddress,
       safeName,
-      owners,
       threshold,
+      owners,
+      network,
+      userAddress,
       createTransaction,
       updateSafeName,
     } = this.props
@@ -103,7 +108,7 @@ class Settings extends React.Component<Props, State> {
                     className={cn(classes.menuOption, menuOptionIndex === 2 && classes.active)}
                     onClick={this.handleChange(2)}
                   >
-                    Owners
+                    Owners ({owners.size})
                   </Row>
                   <Hairline />
                   <Row
@@ -133,7 +138,17 @@ class Settings extends React.Component<Props, State> {
                   updateSafeName={updateSafeName}
                 />
               )}
-              {granted && menuOptionIndex === 2 && <p>To be done</p>}
+              {granted && menuOptionIndex === 2 && (
+                <ManageOwners
+                  owners={owners}
+                  threshold={threshold}
+                  safeAddress={safeAddress}
+                  safeName={safeName}
+                  network={network}
+                  createTransaction={createTransaction}
+                  userAddress={userAddress}
+                />
+              )}
               {granted && menuOptionIndex === 3 && (
                 <ThresholdSettings
                   owners={owners}

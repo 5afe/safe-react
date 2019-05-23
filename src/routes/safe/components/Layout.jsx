@@ -90,7 +90,7 @@ class Layout extends React.Component<Props, State> {
 
   render() {
     const {
-      safe, provider, network, classes, granted, tokens, activeTokens, createTransaction, updateSafeName,
+      safe, provider, network, classes, granted, tokens, activeTokens, createTransaction, userAddress, updateSafeName,
     } = this.props
     const { tabIndex } = this.state
 
@@ -150,6 +150,8 @@ class Layout extends React.Component<Props, State> {
             etherScanLink={etherScanLink}
             threshold={safe.threshold}
             owners={safe.owners}
+            network={network}
+            userAddress={userAddress}
             createTransaction={createTransaction}
             updateSafeName={updateSafeName}
           />
