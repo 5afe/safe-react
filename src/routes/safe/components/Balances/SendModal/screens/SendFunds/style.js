@@ -18,4 +18,8 @@ export const styles = () => ({
   formContainer: {
     padding: `${md} ${lg}`,
   },
+  buttonRow: {
+    height: '84px',
+    justifyContent: 'center',
+  },
 })

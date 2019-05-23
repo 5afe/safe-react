@@ -10,6 +10,7 @@ import Paragraph from '~/components/layout/Paragraph'
 import Row from '~/components/layout/Row'
 import GnoForm from '~/components/forms/GnoForm'
 import Col from '~/components/layout/Col'
+import Button from '~/components/layout/Button'
 import Block from '~/components/layout/Block'
 import Hairline from '~/components/layout/Hairline'
 import ButtonLink from '~/components/layout/ButtonLink'
@@ -41,9 +42,18 @@ type Props = {
 }
 
 const SendFunds = ({
-  classes, onClose, safeAddress, etherScanLink, safeName, ethBalance, tokens, selectedToken,
+  classes,
+  onClose,
+  safeAddress,
+  etherScanLink,
+  safeName,
+  ethBalance,
+  tokens,
+  selectedToken,
 }: Props) => {
-  const handleSubmit = () => {}
+  const handleSubmit = (values) => {
+    console.log(values)
+  }
   const formMutators = {
     setMax: (args, state, utils) => {
       const { token } = state.formState.values
@@ -139,6 +149,15 @@ const SendFunds = ({
                       }}
                     </OnChange>
                   </Col>
+                </Row>
+                <Hairline />
+                <Row align="center" className={classes.buttonRow}>
+                  <Button className={classes.button} minWidth={140} onClick={onClose}>
+                    Cancel
+                  </Button>
+                  <Button type="submit" className={classes.button} variant="contained" minWidth={140} color="primary">
+                    Review
+                  </Button>
                 </Row>
               </React.Fragment>
             )
