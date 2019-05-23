@@ -26,6 +26,7 @@ export const estimateDataGas = (
   safe: any,
   to: string,
   valueInWei: number,
+  from: string,
   data: string,
   operation: number,
   txGasEstimate: number,
@@ -41,10 +42,11 @@ export const estimateDataGas = (
   const gasPrice = 0 // no need to get refund when we submit txs to metamask
   const signatureCost = signatureCount * (68 + 2176 + 2176 + 6000) // array count (3 -> r, s, v) * signature count
 
-  const sigs = `0x000000000000000000000000${'0xbc2BB26a6d821e69A38016f3858561a1D80d4182'.replace(
+  // https://gnosis-safe.readthedocs.io/en/latest/contracts/signatures.html#pre-validated-signatures
+  const sigs = `0x000000000000000000000000${from.replace(
     '0x',
     '',
-  )}0000000000000000000000000000000000000000000000000000000000000000`
+  )}000000000000000000000000000000000000000000000000000000000000000001`
   const payload = safe.contract.methods
     .execTransaction(to, valueInWei, data, operation, txGasEstimate, 0, gasPrice, gasToken, refundReceiver, sigs)
     .encodeABI()
