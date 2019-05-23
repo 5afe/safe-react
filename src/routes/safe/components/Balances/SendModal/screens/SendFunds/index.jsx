@@ -1,5 +1,5 @@
 // @flow
-import React, { useState } from 'react'
+import React from 'react'
 import { List } from 'immutable'
 import { withStyles } from '@material-ui/core/styles'
 import { OnChange } from 'react-final-form-listeners'
@@ -14,9 +14,7 @@ import Block from '~/components/layout/Block'
 import Hairline from '~/components/layout/Hairline'
 import ButtonLink from '~/components/layout/ButtonLink'
 import Field from '~/components/forms/Field'
-import Bold from '~/components/layout/Bold'
 import TextField from '~/components/forms/TextField'
-import { getWeb3 } from '~/logic/wallets/getWeb3'
 import { type Token } from '~/logic/tokens/store/model/token'
 import {
   composeValidators,
@@ -28,7 +26,6 @@ import {
 } from '~/components/forms/validator'
 import TokenSelectField from '~/routes/safe/components/Balances/SendModal/screens/SendFunds/TokenSelectField'
 import SafeInfo from '~/routes/safe/components/Balances/SendModal/screens/SendFunds/SafeInfo'
-import { calculateTxFee } from '~/logic/safe/transactions'
 import ArrowDown from './assets/arrow-down.svg'
 import { styles } from './style'
 
@@ -42,12 +39,9 @@ type Props = {
   tokens: List<Token>,
 }
 
-const web3 = getWeb3()
-
 const SendFunds = ({
   classes, onClose, safeAddress, etherScanLink, safeName, ethBalance, tokens,
 }: Props) => {
-  const [txFee, setTxFee] = useState(0)
   const handleSubmit = () => {}
   const formMutators = {
     setMax: (args, state, utils) => {
@@ -85,13 +79,7 @@ const SendFunds = ({
           {(...args) => {
             const formState = args[2]
             const mutators = args[3]
-            const { token, recipientAddress, amount } = formState.values
-
-            const estimateFee = async () => {
-              const valueInWei = web3.utils.toWei(amount, 'ether')
-              const fee = await calculateTxFee(null, safeAddress, '0x', recipientAddress, valueInWei, 0)
-              setTxFee(fee)
-            }
+            const { token } = formState.values
 
             return (
               <React.Fragment>
@@ -144,32 +132,11 @@ const SendFunds = ({
                         }
                       }
                     />
-                    <OnChange name="amount">
-                      {() => {
-                        estimateFee()
-                      }}
-                    </OnChange>
                     <OnChange name="token">
                       {() => {
                         mutators.onTokenChange()
                       }}
                     </OnChange>
-                  </Col>
-                </Row>
-                <Row margin="xs">
-                  <Col>
-                    <Paragraph size="md" color="disabled" style={{ letterSpacing: '-0.5px' }} noMargin>
-                      Fee
-                    </Paragraph>
-                  </Col>
-                </Row>
-                <Row>
-                  <Col layout="column">
-                    <Bold>
-                      {web3.utils.fromWei(web3.utils.toBN(txFee), 'ether')}
-                      {' '}
-ETH
-                    </Bold>
                   </Col>
                 </Row>
               </React.Fragment>

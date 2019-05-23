@@ -1,5 +1,4 @@
 // @flow
-import { getSignaturesFrom } from '~/utils/storage/signatures'
 import { BigNumber } from 'bignumber.js'
 import { getWeb3 } from '~/logic/wallets/getWeb3'
 import { EMPTY_DATA } from '~/logic/wallets/ethTransactions'
@@ -90,6 +89,7 @@ export const generateTxGasEstimateFrom = async (
 export const calculateTxFee = async (
   safe: any,
   safeAddress: string,
+  from: string,
   data: string,
   to: string,
   valueInWei: number,
@@ -100,42 +100,16 @@ export const calculateTxFee = async (
     if (!safeInstance) {
       safeInstance = await getSafeEthereumInstance(safeAddress)
     }
-    window.safeInstance = safeInstance
 
-    // Estimate safe transaction (need to be called with "from" set to the safe address)
-    const nonce = await safeInstance.nonce()
-    const threshold = await safeInstance.getThreshold()
-    const txGasEstimate = await generateTxGasEstimateFrom(safeInstance, safeAddress, data, to, valueInWei, operation)
-    const dataGasEstimate = await estimateDataGas(
-      safeInstance,
-      to,
-      valueInWei,
-      data,
-      operation,
-      txGasEstimate,
-      '0x0000000000000000000000000000000000000000',
-      nonce,
-      Number(threshold),
-      safeAddress,
-    )
-    console.log({ dataGasEstimate, txGasEstimate })
-
-    const sigs = `0x000000000000000000000000${'0xbc2BB26a6d821e69A38016f3858561a1D80d4182'.replace(
+    // https://gnosis-safe.readthedocs.io/en/latest/contracts/signatures.html#pre-validated-signatures
+    const sigs = `0x000000000000000000000000${from.replace(
       '0x',
       '',
-    )}0000000000000000000000000000000000000000000000000000000000000000` + '01'
-    console.log({
-      to,
-      valueInWei,
-      data,
-      operation,
-      txGasEstimate: 0,
-      dataGasEstimate: 0,
-      gasPrice: 0,
-      txGasToken: '0x0000000000000000000000000000000000000000',
-      refundReceiver: '0x0000000000000000000000000000000000000000',
-      sigs,
-    })
+    )}000000000000000000000000000000000000000000000000000000000000000001`
+
+    // we get gas limit from this call, then it needs to be multiplied by the gas price
+    // https://safe-relay.gnosis.pm/api/v1/gas-station/
+    // https://safe-relay.rinkeby.gnosis.pm/api/v1/about/
     const estimate = await safeInstance.execTransaction.estimateGas(
       to,
       valueInWei,
