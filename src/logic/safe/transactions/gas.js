@@ -129,8 +129,8 @@ export const calculateTxFee = async (
       valueInWei,
       data,
       operation,
-      txGasEstimate,
-      dataGasEstimate,
+      txGasEstimate: 0,
+      dataGasEstimate: 0,
       gasPrice: 0,
       txGasToken: '0x0000000000000000000000000000000000000000',
       refundReceiver: '0x0000000000000000000000000000000000000000',
@@ -141,12 +141,13 @@ export const calculateTxFee = async (
       valueInWei,
       data,
       operation,
-      txGasEstimate,
-      dataGasEstimate,
+      0,
+      0,
       0,
       '0x0000000000000000000000000000000000000000',
-      safeAddress,
+      '0x0000000000000000000000000000000000000000',
       sigs,
+      { from: '0xbc2BB26a6d821e69A38016f3858561a1D80d4182' },
     )
 
     return estimate
