@@ -39,6 +39,7 @@ type Props = {
   ethBalance: string,
   selectedToken: string,
   tokens: List<Token>,
+  onSubmit: Function,
 }
 
 const SendFunds = ({
@@ -50,10 +51,12 @@ const SendFunds = ({
   ethBalance,
   tokens,
   selectedToken,
+  onSubmit,
 }: Props) => {
   const handleSubmit = (values) => {
-    console.log(values)
+    onSubmit(values)
   }
+
   const formMutators = {
     setMax: (args, state, utils) => {
       const { token } = state.formState.values

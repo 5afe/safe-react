@@ -7,6 +7,7 @@ import { withStyles } from '@material-ui/core/styles'
 import Modal from '~/components/Modal'
 import ChooseTxType from './screens/ChooseTxType'
 import SendFunds from './screens/SendFunds'
+import ReviewTx from './screens/ReviewTx'
 
 type Props = {
   onClose: () => void,
@@ -19,7 +20,15 @@ type Props = {
   tokens: List<Token>,
   selectedToken: string,
 }
-type ActiveScreen = 'chooseTxType' | 'sendFunds'
+type ActiveScreen = 'chooseTxType' | 'sendFunds' | 'reviewTx'
+
+type TxStateType =
+  | {
+      token: Token,
+      recipientAddress: string,
+      amount: string,
+    }
+  | Object
 
 const styles = () => ({
   smallerModalWindow: {
@@ -29,10 +38,23 @@ const styles = () => ({
 })
 
 const Send = ({
-  onClose, isOpen, classes, safeAddress, etherScanLink, safeName, ethBalance, tokens, selectedToken,
+  onClose,
+  isOpen,
+  classes,
+  safeAddress,
+  etherScanLink,
+  safeName,
+  ethBalance,
+  tokens,
+  selectedToken,
 }: Props) => {
   const [activeScreen, setActiveScreen] = useState<ActiveScreen>('sendFunds')
+  const [tx, setTx] = useState<TxStateType>({})
   const smallerModalSize = activeScreen === 'chooseTxType'
+  const handleTxCreation = (txInfo) => {
+    setActiveScreen('reviewTx')
+    setTx(txInfo)
+  }
 
   // Uncomment when we add custom txs
   // useEffect(
@@ -62,8 +84,10 @@ const Send = ({
             ethBalance={ethBalance}
             tokens={tokens}
             selectedToken={selectedToken}
+            onSubmit={handleTxCreation}
           />
         )}
+        {activeScreen === 'reviewTx' && <ReviewTx tx={tx} />}
       </React.Fragment>
     </Modal>
   )
