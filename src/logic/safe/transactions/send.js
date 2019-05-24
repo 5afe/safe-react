@@ -6,7 +6,7 @@ import { isEther } from '~/logic/tokens/utils/tokenHelpers'
 import { type Token } from '~/logic/tokens/store/model/token'
 import { getSafeEthereumInstance } from '../safeFrontendOperations'
 
-const CALL = 0
+export const CALL = 0
 const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'
 
 export const executeTransaction = async (
