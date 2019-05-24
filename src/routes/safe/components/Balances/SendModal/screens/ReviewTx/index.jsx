@@ -19,6 +19,7 @@ import { setImageToPlaceholder } from '~/routes/safe/components/Balances/utils'
 import ArrowDown from '../assets/arrow-down.svg'
 import { secondary } from '~/theme/variables'
 import { styles } from './style'
+import { createTransaction } from '~/logic/safe/transactions'
 
 type Props = {
   onClose: () => void,
@@ -97,8 +98,18 @@ const ReviewTx = ({
       <Button className={classes.button} minWidth={140} onClick={onClickBack}>
         Back
       </Button>
-      <Button type="submit" className={classes.button} variant="contained" minWidth={140} color="primary">
-        Review
+      <Button
+        type="submit"
+        className={classes.button}
+        onClick={async () => {
+          await createTransaction(safeAddress, tx.recipientAddress, tx.amount, tx.token)
+          onClose()
+        }}
+        variant="contained"
+        minWidth={140}
+        color="primary"
+      >
+        SUBMIT
       </Button>
     </Row>
   </React.Fragment>
