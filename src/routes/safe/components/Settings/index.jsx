@@ -118,13 +118,6 @@ class Settings extends React.Component<Props, State> {
                     Required confirmations
                   </Row>
                   <Hairline />
-                  <Row
-                    className={cn(classes.menuOption, menuOptionIndex === 4 && classes.active)}
-                    onClick={this.handleChange(4)}
-                  >
-                    Modules
-                  </Row>
-                  <Hairline />
                 </React.Fragment>
               )}
             </Block>
@@ -157,7 +150,6 @@ class Settings extends React.Component<Props, State> {
                   safeAddress={safeAddress}
                 />
               )}
-              {granted && menuOptionIndex === 4 && <p>To be done</p>}
             </Block>
           </Col>
         </Block>
