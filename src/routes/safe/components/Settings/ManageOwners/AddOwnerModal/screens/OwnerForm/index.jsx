@@ -37,7 +37,6 @@ const OwnerForm = ({
   onSubmit,
 }: Props) => {
   const handleSubmit = (values) => {
-    console.log(values)
     onSubmit(values)
   }
 
