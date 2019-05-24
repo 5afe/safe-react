@@ -40,6 +40,7 @@ type Props = {
   selectedToken: string,
   tokens: List<Token>,
   onSubmit: Function,
+  initialValues: Object,
 }
 
 const SendFunds = ({
@@ -51,6 +52,7 @@ const SendFunds = ({
   ethBalance,
   tokens,
   selectedToken,
+  initialValues,
   onSubmit,
 }: Props) => {
   const handleSubmit = (values) => {
@@ -90,7 +92,7 @@ const SendFunds = ({
             <Hairline />
           </Col>
         </Row>
-        <GnoForm onSubmit={handleSubmit} formMutators={formMutators}>
+        <GnoForm onSubmit={handleSubmit} formMutators={formMutators} initialValues={initialValues}>
           {(...args) => {
             const formState = args[2]
             const mutators = args[3]

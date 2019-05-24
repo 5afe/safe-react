@@ -27,5 +27,8 @@ export const styles = () => ({
   buttonRow: {
     height: '84px',
     justifyContent: 'center',
+    position: 'absolute',
+    bottom: 0,
+    width: '100%',
   },
 })

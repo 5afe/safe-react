@@ -55,10 +55,12 @@ const Send = ({
     setActiveScreen('reviewTx')
     setTx(txInfo)
   }
+  const onClickBack = () => setActiveScreen('sendFunds')
 
   useEffect(
     () => () => {
       setActiveScreen('sendFunds')
+      setTx({})
     },
     [isOpen],
   )
@@ -84,6 +86,7 @@ const Send = ({
             tokens={tokens}
             selectedToken={selectedToken}
             onSubmit={handleTxCreation}
+            initialValues={tx}
           />
         )}
         {activeScreen === 'reviewTx' && (
@@ -94,6 +97,7 @@ const Send = ({
             etherScanLink={etherScanLink}
             safeName={safeName}
             ethBalance={ethBalance}
+            onClickBack={onClickBack}
           />
         )}
       </React.Fragment>
