@@ -1,6 +1,7 @@
 // @flow
 import React from 'react'
 import classNames from 'classnames'
+import { List } from 'immutable'
 import { withStyles } from '@material-ui/core/styles'
 import Identicon from '~/components/Identicon'
 import Block from '~/components/layout/Block'
@@ -9,12 +10,19 @@ import Field from '~/components/forms/Field'
 import {
   composeValidators, required, minMaxLength,
 } from '~/components/forms/validator'
+import Table from '~/components/Table'
+import { type Column, cellWidth } from '~/components/Table/TableHead'
+import TableRow from '@material-ui/core/TableRow'
+import TableCell from '@material-ui/core/TableCell'
 import TextField from '~/components/forms/TextField'
 import Row from '~/components/layout/Row'
 import Paragraph from '~/components/layout/Paragraph'
 import Hairline from '~/components/layout/Hairline'
 import Button from '~/components/layout/Button'
 import AddOwnerModal from './AddOwnerModal'
+import OwnerAddressTableCell from './OwnerAddressTableCell'
+import type { Owner } from '~/routes/safe/store/models/owner'
+import { getOwnerData, generateColumns, OWNERS_TABLE_ADDRESS_ID, type OwnerRow, } from './dataFetcher'
 import { sm, boldFont } from '~/theme/variables'
 import { styles } from './style'
 
@@ -38,7 +46,7 @@ type Props = {
   createTransaction: Function,
 }
 
-type Action = 'AddOwner'
+type Action = 'AddOwner' | 'EditOwner' | 'ReplaceOwner' | 'RemoveOwner'
 
 class ManageOwners extends React.Component<Props, State> {
   state = {
@@ -66,45 +74,53 @@ class ManageOwners extends React.Component<Props, State> {
     } = this.props
     const { showAddOwner } = this.state
 
+    const columns = generateColumns()
+    const ownerData = getOwnerData(owners)
+
     return (
       <React.Fragment>
         <Block className={classes.formContainer}>
           <Paragraph noMargin className={classes.title} size="lg" weight="bolder">
             Manage Safe Owners
           </Paragraph>
-          <Row className={classes.header}>
-            <Col xs={3}>NAME</Col>
-            <Col xs={9}>ADDRESS</Col>
-          </Row>
-          <Hairline />
-          <Block>
-            {owners.map(owner => (
-              <React.Fragment key={owner.get('address')}>
-                <Row className={classes.owner}>
-                  <Col xs={3}>
-                    <Paragraph size="lg" noMargin>
-                      {owner.get('name')}
-                    </Paragraph>
-                  </Col>
-                  <Col xs={1} align="right">
-                    <Block className={classNames(classes.name, classes.userName)}>
-                      <Identicon address={owner.get('address')} diameter={32} />
-                    </Block>
-                  </Col>
-                  <Col xs={8}>
-                    <Block className={classNames(classes.name, classes.userName)}>
-                      <Block align="center" className={classes.user}>
-                        <Paragraph size="md" color="disabled" noMargin>
-                          {owner.get('address')}
-                        </Paragraph>
-                      </Block>
-                    </Block>
-                  </Col>
-                </Row>
-                <Hairline />
-              </React.Fragment>
+
+          <Table
+            label="owners"
+            columns={columns}
+            data={ownerData}
+            size={ownerData.size}
+            defaultFixed
+            noBorder
+          >
+            {(sortedData: Array<OwnerRow>) => sortedData.map((row: any, index: number) => (
+              <TableRow tabIndex={-1} key={index} className={classes.hide}>
+                {columns.map((column: Column) => (
+                  <TableCell key={column.id} style={cellWidth(column.width)} align={column.align} component="td">
+                    {column.id === OWNERS_TABLE_ADDRESS_ID ? <OwnerAddressTableCell address={row[column.id]} /> : row[column.id]}
+                  </TableCell>
+                ))}
+                <TableCell component="td">
+                  <Row align="end" className={classes.actions}>
+                    <Button
+                      onClick={this.onShow('EditOwner')}
+                    >
+                      Edit
+                    </Button>
+                    <Button
+                      onClick={this.onShow('ReplaceOwner')}
+                    >
+                      Replace
+                    </Button>
+                    <Button
+                      onClick={this.onShow('RemoveOwner')}
+                    >
+                      Remove
+                    </Button>
+                  </Row>
+                </TableCell>
+              </TableRow>
             ))}
-          </Block>
+          </Table>
         </Block>
         <Hairline />
         <Row style={controlsStyle} align="end" grow>

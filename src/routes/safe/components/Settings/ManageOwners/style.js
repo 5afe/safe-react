@@ -1,6 +1,6 @@
 // @flow
 import {
-  sm, xs, lg, border,
+  sm, xs, md, lg, border,
 } from '~/theme/variables'
 
 export const styles = () => ({
@@ -10,9 +10,6 @@ export const styles = () => ({
   },
   formContainer: {
     minHeight: '369px',
-  },
-  header: {
-    padding: `${sm} ${lg}`,
   },
   owners: {
     padding: lg,
@@ -25,7 +22,7 @@ export const styles = () => ({
     whiteSpace: 'nowrap',
   },
   owner: {
-    padding: sm,
+    padding: md,
     paddingLeft: lg,
     alignItems: 'center',
   },
