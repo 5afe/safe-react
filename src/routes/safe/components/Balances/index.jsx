@@ -41,6 +41,7 @@ type Props = {
   safeName: string,
   etherScanLink: string,
   ethBalance: string,
+  createTransaction: Function,
 }
 
 type Action = 'Token' | 'Send' | 'Receive'
@@ -93,7 +94,15 @@ class Balances extends React.Component<Props, State> {
       hideZero, showToken, showReceive, sendFunds,
     } = this.state
     const {
-      classes, granted, tokens, safeAddress, activeTokens, safeName, etherScanLink, ethBalance,
+      classes,
+      granted,
+      tokens,
+      safeAddress,
+      activeTokens,
+      safeName,
+      etherScanLink,
+      ethBalance,
+      createTransaction,
     } = this.props
 
     const columns = generateColumns()
@@ -190,6 +199,7 @@ class Balances extends React.Component<Props, State> {
           ethBalance={ethBalance}
           tokens={activeTokens}
           selectedToken={sendFunds.selectedToken}
+          createTransaction={createTransaction}
         />
         <Modal
           title="Receive Tokens"

@@ -13,7 +13,7 @@ import { getStandardTokenContract } from '~/logic/tokens/store/actions/fetchToke
 export const ADD_TRANSACTIONS = 'ADD_TRANSACTIONS'
 export const addTransactions = createAction<string, *>(ADD_TRANSACTIONS)
 
-export const createTransaction = async (safeAddress: string, to: string, valueInEth: string, token: Token) => async (
+const createTransaction = (safeAddress: string, to: string, valueInEth: string, token: Token, openSnackbar: Function) => async (
   dispatch: ReduxDispatch<GlobalState>,
 ) => {
   const safeInstance = await getSafeEthereumInstance(safeAddress)
@@ -35,6 +35,7 @@ export const createTransaction = async (safeAddress: string, to: string, valueIn
   let txHash
   if (isExecution) {
     txHash = await executeTransaction(safeInstance, to, valueInWei, txData, CALL, nonce, from)
+    openSnackbar('Transaction has been submitted', 'success')
   } else {
     // txHash = await approveTransaction(safeAddress, to, valueInWei, txData, CALL, nonce)
   }
@@ -42,3 +43,5 @@ export const createTransaction = async (safeAddress: string, to: string, valueIn
 
   return txHash
 }
+
+export default createTransaction

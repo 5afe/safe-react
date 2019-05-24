@@ -19,6 +19,7 @@ type Props = {
   ethBalance: string,
   tokens: List<Token>,
   selectedToken: string,
+  createTransaction: Function,
 }
 type ActiveScreen = 'chooseTxType' | 'sendFunds' | 'reviewTx'
 
@@ -47,6 +48,7 @@ const Send = ({
   ethBalance,
   tokens,
   selectedToken,
+  createTransaction,
 }: Props) => {
   const [activeScreen, setActiveScreen] = useState<ActiveScreen>('sendFunds')
   const [tx, setTx] = useState<TxStateType>({})
@@ -98,6 +100,7 @@ const Send = ({
             safeName={safeName}
             ethBalance={ethBalance}
             onClickBack={onClickBack}
+            createTransaction={createTransaction}
           />
         )}
       </React.Fragment>

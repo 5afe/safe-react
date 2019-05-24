@@ -23,6 +23,7 @@ import Balances from './Balances'
 type Props = SelectorProps & {
   classes: Object,
   granted: boolean,
+  createTransaction: Function,
 }
 
 type State = {
@@ -88,7 +89,7 @@ class Layout extends React.Component<Props, State> {
 
   render() {
     const {
-      safe, provider, network, classes, granted, tokens, activeTokens,
+      safe, provider, network, classes, granted, tokens, activeTokens, createTransaction,
     } = this.props
     const { tabIndex } = this.state
 
@@ -137,6 +138,7 @@ class Layout extends React.Component<Props, State> {
             safeAddress={address}
             safeName={name}
             etherScanLink={etherScanLink}
+            createTransaction={createTransaction}
           />
         )}
       </React.Fragment>
