@@ -28,8 +28,6 @@ import { styles } from './style'
 type Props = {
   onClose: () => void,
   classes: Object,
-  safeAddress: string,
-  safeName: string,
   owners: List<Owner>,
   threshold: number,
   onClickBack: Function,
@@ -39,8 +37,6 @@ type Props = {
 const ThresholdForm = ({
   classes,
   onClose,
-  safeAddress,
-  safeName,
   owners,
   threshold,
   onClickBack,
@@ -127,7 +123,7 @@ const ThresholdForm = ({
                   color="primary"
                   data-testid="review-tx-btn"
                 >
-                  Next
+                  Review
                 </Button>
               </Row>
             </React.Fragment>

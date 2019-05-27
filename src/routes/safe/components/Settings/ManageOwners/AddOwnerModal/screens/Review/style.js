@@ -60,7 +60,7 @@ export const styles = () => ({
   userName: {
     whiteSpace: 'nowrap',
   },
-  newOwner: {
+  selectedOwner: {
     padding: sm,
     alignItems: 'center',
     backgroundColor: '#fff3e2',

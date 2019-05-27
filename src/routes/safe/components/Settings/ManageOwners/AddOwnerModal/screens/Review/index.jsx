@@ -93,7 +93,7 @@ const ReviewAddOwner = ({
           <Col xs={8} layout="column" className={classes.owners}>
             <Row className={classes.ownersTitle}>
               <Paragraph size="lg" color="primary" noMargin>
-                {owners.size + 1} Safe owners
+                {owners.size + 1} Safe owner(s)
               </Paragraph>
             </Row>
             <Hairline />
@@ -128,7 +128,7 @@ const ReviewAddOwner = ({
               </Paragraph>
             </Row>
             <Hairline />
-            <Row className={classes.newOwner}>
+            <Row className={classes.selectedOwner}>
               <Col xs={1} align="center">
                 <Identicon address={values.ownerAddress} diameter={32} />
               </Col>
@@ -166,7 +166,7 @@ const ReviewAddOwner = ({
           color="primary"
           data-testid="review-tx-btn"
         >
-          Next
+          Submit
         </Button>
       </Row>
     </React.Fragment>

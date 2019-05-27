@@ -65,14 +65,14 @@ const AddOwner = ({
     }
   }
 
-  const ownerSubmited = (newValues: Object) => {
+  const ownerSubmitted = (newValues: Object) => {
     values.ownerName = newValues.ownerName
     values.ownerAddress = newValues.ownerAddress
     setValues(values)
     setActiveScreen('selectThreshold')
   }
 
-  const thresholdSubmited = (newValues: Object) => {
+  const thresholdSubmitted = (newValues: Object) => {
     values.threshold = newValues.threshold
     setValues(values)
     setActiveScreen('reviewAddOwner')
@@ -95,8 +95,8 @@ const AddOwner = ({
 
           return (
             <Modal
-              title="Send Tokens"
-              description="Send Tokens Form"
+              title="Add owner to Safe"
+              description="Add owner to Safe"
               handleClose={onClose}
               open={isOpen}
               paperClassName={classes.biggerModalWindow}
@@ -105,22 +105,16 @@ const AddOwner = ({
                 {activeScreen === 'selectOwner' && (
                   <OwnerForm
                     onClose={onClose}
-                    setActiveScreen={setActiveScreen}
-                    safeAddress={safeAddress}
-                    safeName={safeName}
-                    onSubmit={ownerSubmited}
+                    onSubmit={ownerSubmitted}
                   />
                 )}
                 {activeScreen === 'selectThreshold' && (
                   <ThresholdForm
                     onClose={onClose}
-                    setActiveScreen={setActiveScreen}
-                    safeAddress={safeAddress}
-                    safeName={safeName}
                     owners={owners}
                     threshold={threshold}
                     onClickBack={onClickBack}
-                    onSubmit={thresholdSubmited}
+                    onSubmit={thresholdSubmitted}
                   />
                 )}
                 {activeScreen === 'reviewAddOwner' && (

@@ -24,16 +24,12 @@ import { styles } from './style'
 type Props = {
   onClose: () => void,
   classes: Object,
-  safeAddress: string,
-  safeName: string,
   onSubmit: Function,
 }
 
 const OwnerForm = ({
   classes,
   onClose,
-  safeAddress,
-  safeName,
   onSubmit,
 }: Props) => {
   const handleSubmit = (values) => {
