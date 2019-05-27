@@ -24,6 +24,9 @@ export const styles = () => ({
   container: {
     padding: `${md} ${lg}`,
   },
+  amount: {
+    marginLeft: sm,
+  },
   buttonRow: {
     height: '84px',
     justifyContent: 'center',

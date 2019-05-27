@@ -102,7 +102,7 @@ const ReviewTx = ({
           </Row>
           <Row margin="md" align="center">
             <Img src={tx.token.logoUri} height={28} alt={tx.token.name} onError={setImageToPlaceholder} />
-            <Paragraph size="md" noMargin>
+            <Paragraph size="md" noMargin className={classes.amount}>
               {tx.amount}
               {' '}
               {tx.token.symbol}
