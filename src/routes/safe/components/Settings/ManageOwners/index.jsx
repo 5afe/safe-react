@@ -20,6 +20,7 @@ import Paragraph from '~/components/layout/Paragraph'
 import Hairline from '~/components/layout/Hairline'
 import Button from '~/components/layout/Button'
 import AddOwnerModal from './AddOwnerModal'
+import RemoveOwnerModal from './RemoveOwnerModal'
 import OwnerAddressTableCell from './OwnerAddressTableCell'
 import type { Owner } from '~/routes/safe/store/models/owner'
 import {
@@ -150,6 +151,19 @@ class ManageOwners extends React.Component<Props, State> {
           isOpen={showAddOwner}
           safeAddress={safeAddress}
           safeName={safeName}
+          owners={owners}
+          threshold={threshold}
+          network={network}
+          userAddress={userAddress}
+          createTransaction={createTransaction}
+        />
+        <RemoveOwnerModal
+          onClose={this.onHide('RemoveOwner')}
+          isOpen={showRemoveOwner}
+          safeAddress={safeAddress}
+          safeName={safeName}
+          ownerAddress={selectedOwnerAddress}
+          ownerName={selectedOwnerName}
           owners={owners}
           threshold={threshold}
           network={network}
