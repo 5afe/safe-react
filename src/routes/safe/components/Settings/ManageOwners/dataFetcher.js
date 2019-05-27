@@ -40,7 +40,6 @@ export const generateColumns = () => {
     order: false,
     disablePadding: false,
     label: 'Address',
-    width: 350,
     custom: false,
     align: 'left',
   }
@@ -50,7 +49,6 @@ export const generateColumns = () => {
     order: false,
     disablePadding: false,
     label: '',
-    align: 'right',
     custom: true,
   }
 

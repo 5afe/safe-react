@@ -26,4 +26,15 @@ export const styles = () => ({
     justifyContent: 'flex-end',
     visibility: 'hidden',
   },
+  editOwnerIcon: {
+    cursor: 'pointer',
+  },
+  replaceOwnerIcon: {
+    marginLeft: lg,
+    cursor: 'pointer',
+  },
+  removeOwnerIcon: {
+    marginLeft: lg,
+    cursor: 'pointer',
+  },
 })

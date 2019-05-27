@@ -27,6 +27,9 @@ import {
 } from './dataFetcher'
 import { sm, boldFont } from '~/theme/variables'
 import { styles } from './style'
+import ReplaceOwnerIcon from './assets/icons/replace-owner.svg'
+import RenameOwnerIcon from './assets/icons/rename-owner.svg'
+import RemoveOwnerIcon from '../assets/icons/bin.svg'
 
 const controlsStyle = {
   backgroundColor: 'white',
@@ -52,15 +55,26 @@ type Action = 'AddOwner' | 'EditOwner' | 'ReplaceOwner' | 'RemoveOwner'
 
 class ManageOwners extends React.Component<Props, State> {
   state = {
+    selectedOwnerAddress: undefined,
+    selectedOwnerName: undefined,
     showAddOwner: false,
+    showRemoveOwner: false,
   }
 
-  onShow = (action: Action) => () => {
-    this.setState(() => ({ [`show${action}`]: true }))
+  onShow = (action: Action, row?: Object) => () => {
+    this.setState({
+      [`show${action}`]: true,
+      selectedOwnerAddress: row && row.address,
+      selectedOwnerName: row && row.name,
+    })
   }
 
   onHide = (action: Action) => () => {
-    this.setState(() => ({ [`show${action}`]: false }))
+    this.setState({
+      [`show${action}`]: false,
+      selectedOwnerAddress: undefined,
+      selectedOwnerName: undefined,
+    })
   }
 
   render() {
@@ -74,9 +88,15 @@ class ManageOwners extends React.Component<Props, State> {
       userAddress,
       createTransaction,
     } = this.props
-    const { showAddOwner } = this.state
+    const {
+      showAddOwner,
+      showRemoveOwner,
+      selectedOwnerName,
+      selectedOwnerAddress
+    } = this.state
 
     const columns = generateColumns()
+    const autoColumns = columns.filter(c => !c.custom)
     const ownerData = getOwnerData(owners)
 
     return (
@@ -85,7 +105,6 @@ class ManageOwners extends React.Component<Props, State> {
           <Paragraph noMargin className={classes.title} size="lg" weight="bolder">
             Manage Safe Owners
           </Paragraph>
-
           <Table
             label="owners"
             columns={columns}
@@ -96,28 +115,16 @@ class ManageOwners extends React.Component<Props, State> {
           >
             {(sortedData: Array<OwnerRow>) => sortedData.map((row: any, index: number) => (
               <TableRow tabIndex={-1} key={index} className={classes.hide}>
-                {columns.map((column: Column) => (
+                {autoColumns.map((column: Column) => (
                   <TableCell key={column.id} style={cellWidth(column.width)} align={column.align} component="td">
                     {column.id === OWNERS_TABLE_ADDRESS_ID ? <OwnerAddressTableCell address={row[column.id]} /> : row[column.id]}
                   </TableCell>
                 ))}
                 <TableCell component="td">
                   <Row align="end" className={classes.actions}>
-                    <Button
-                      onClick={this.onShow('EditOwner')}
-                    >
-                      Edit
-                    </Button>
-                    <Button
-                      onClick={this.onShow('ReplaceOwner')}
-                    >
-                      Replace
-                    </Button>
-                    <Button
-                      onClick={this.onShow('RemoveOwner')}
-                    >
-                      Remove
-                    </Button>
+                    <img className={classes.editOwnerIcon} src={RenameOwnerIcon} onClick={this.onShow('EditOwner', row)} />
+                    <img className={classes.replaceOwnerIcon} src={ReplaceOwnerIcon} onClick={this.onShow('ReplaceOwner', row)} />
+                    <img className={classes.removeOwnerIcon} src={RemoveOwnerIcon} onClick={this.onShow('RemoveOwner', row)} />
                   </Row>
                 </TableCell>
               </TableRow>

@@ -16,6 +16,7 @@ import UpdateSafeName from './UpdateSafeName'
 import ManageOwners from './ManageOwners'
 import actions, { type Actions } from './actions'
 import { styles } from './style'
+import RemoveSafeIcon from './assets/icons/bin.svg'
 
 type State = {
   showRemoveSafe: boolean,
@@ -80,8 +81,11 @@ class Settings extends React.Component<Props, State> {
             </Paragraph>
           </Col>
           <Col xs={6} end="sm">
-            <Paragraph noMargin size="md" color="error" className={classes.links} onClick={this.onShow('RemoveSafe')}>
-              Remove Safe
+            <Paragraph noMargin size="md" color="error" onClick={this.onShow('RemoveSafe')}>
+              <Paragraph noMargin className={cn(classes.links, classes.removeSafeText)}>
+                Remove Safe
+              </Paragraph>
+              <img className={classes.removeSafeIcon} src={RemoveSafeIcon} />
             </Paragraph>
             <RemoveSafeModal
               onClose={this.onHide('RemoveSafe')}

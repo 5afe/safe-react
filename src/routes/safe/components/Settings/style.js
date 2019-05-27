@@ -39,4 +39,14 @@ export const styles = (theme: Object) => ({
       cursor: 'pointer',
     },
   },
+  removeSafeText: {
+    height: '16px',
+    lineHeight: '16px',
+    paddingRight: sm,
+    float: 'left',
+  },
+  removeSafeIcon: {
+    height: '16px',
+    cursor: 'pointer',
+  },
 })
