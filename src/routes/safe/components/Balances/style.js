@@ -13,7 +13,7 @@ export const styles = (theme: Object) => ({
     margin: `${sm} 0`,
   },
   actionIcon: {
-    marginRight: theme.spacing.unit,
+    marginRight: theme.spacing(1),
   },
   iconSmall: {
     fontSize: 16,

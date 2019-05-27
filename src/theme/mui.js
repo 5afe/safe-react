@@ -12,6 +12,7 @@ import {
   bolderFont,
   boldFont,
   buttonLargeFontSize,
+  xs,
 } from './variables'
 
 export type WithStyles = {
@@ -135,6 +136,7 @@ export default createMuiTheme({
         padding: 0,
         letterSpacing: '0.5px',
         color: primary,
+        height: 'auto',
         textOverflow: 'ellipsis',
         display: 'flex',
         '&::-webkit-input-placeholder': {
@@ -217,6 +219,8 @@ export default createMuiTheme({
         color: primary,
         letterSpacing: '-0.5px',
         fontWeight: 'normal',
+        paddingTop: xs,
+        paddingBottom: xs,
       },
     },
     MuiBackdrop: {
@@ -228,6 +232,11 @@ export default createMuiTheme({
     MuiMenuItem: {
       root: {
         fontFamily: 'Roboto Mono, monospace',
+      },
+    },
+    MuiListItemIcon: {
+      root: {
+        minWidth: 'auto',
       },
     },
     MuiListItemText: {
