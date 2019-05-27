@@ -22,7 +22,9 @@ import Button from '~/components/layout/Button'
 import AddOwnerModal from './AddOwnerModal'
 import OwnerAddressTableCell from './OwnerAddressTableCell'
 import type { Owner } from '~/routes/safe/store/models/owner'
-import { getOwnerData, generateColumns, OWNERS_TABLE_ADDRESS_ID, type OwnerRow, } from './dataFetcher'
+import {
+  getOwnerData, generateColumns, OWNERS_TABLE_ADDRESS_ID, type OwnerRow,
+} from './dataFetcher'
 import { sm, boldFont } from '~/theme/variables'
 import { styles } from './style'
 

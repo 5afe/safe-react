@@ -11,43 +11,19 @@ export const styles = () => ({
   formContainer: {
     minHeight: '369px',
   },
-  owners: {
-    padding: lg,
-  },
-  name: {
-    textOverflow: 'ellipsis',
-    overflow: 'hidden',
-  },
-  userName: {
-    whiteSpace: 'nowrap',
-  },
-  owner: {
-    padding: md,
-    paddingLeft: lg,
-    alignItems: 'center',
-  },
-  user: {
-    justifyContent: 'left',
-  },
-  open: {
-    paddingLeft: sm,
-    width: 'auto',
+  hide: {
     '&:hover': {
-      cursor: 'pointer',
+      backgroundColor: '#fff3e2',
+    },
+    '&:hover $actions': {
+      visibility: 'initial',
+    },
+    '&:focus $actions': {
+      visibility: 'initial',
     },
   },
-  container: {
-    marginTop: xs,
-    alignItems: 'center',
-  },
-  address: {
-    paddingLeft: '6px',
-  },
-  open: {
-    paddingLeft: sm,
-    width: 'auto',
-    '&:hover': {
-      cursor: 'pointer',
-    },
+  actions: {
+    justifyContent: 'flex-end',
+    visibility: 'hidden',
   },
 })
