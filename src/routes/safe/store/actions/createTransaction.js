@@ -28,7 +28,8 @@ const createTransaction = (
   const threshold = await safeInstance.getThreshold()
   const nonce = await safeInstance.nonce()
   const txRecipient = isSendingETH ? to : token.address
-  let valueInWei = web3.utils.toWei(valueInEth, 'ether')
+  const valueInWei = web3.utils.toWei(valueInEth, 'ether')
+  let txAmount = valueInWei
   const isExecution = threshold.toNumber() === 1
 
   let txData = EMPTY_DATA
@@ -37,16 +38,17 @@ const createTransaction = (
     const sendToken = await StandardToken.at(token.address)
 
     txData = sendToken.contract.methods.transfer(to, valueInWei).encodeABI()
-    // valueInWei should be 0 if we send tokens
+    // txAmount should be 0 if we send tokens
     // the real value is encoded in txData and will be used by the contract
-    // if valueInWei > 0 it would send ETH from the safe
-    valueInWei = 0
+    // if txAmount > 0 it would send ETH from the safe
+    txAmount = 0
   }
 
   let txHash
   if (isExecution) {
-    txHash = await executeTransaction(safeInstance, txRecipient, valueInWei, txData, CALL, nonce, from)
     openSnackbar('Transaction has been submitted', 'success')
+    txHash = await executeTransaction(safeInstance, txRecipient, txAmount, txData, CALL, nonce, from)
+    openSnackbar('Transaction has been confirmed', 'success')
   } else {
     // txHash = await approveTransaction(safeAddress, to, valueInWei, txData, CALL, nonce)
   }
