@@ -9,6 +9,7 @@ import { setOwners } from '~/logic/safe/utils'
 import { getGnosisSafeInstanceAt } from '~/logic/contracts/safeContracts'
 import CheckOwner from './screens/CheckOwner'
 import ThresholdForm from './screens/ThresholdForm'
+import ReviewRemoveOwner from './screens/Review'
 import { withStyles } from '@material-ui/core/styles'
 
 const styles = () => ({
@@ -141,6 +142,19 @@ const RemoveOwner = ({
                     threshold={threshold}
                     onClickBack={onClickBack}
                     onSubmit={thresholdSubmitted}
+                  />
+                )}
+                {activeScreen === 'reviewRemoveOwner' && (
+                  <ReviewRemoveOwner
+                    onClose={onClose}
+                    safeName={safeName}
+                    owners={owners}
+                    network={network}
+                    values={values}
+                    ownerAddress={ownerAddress}
+                    ownerName={ownerName}
+                    onClickBack={onClickBack}
+                    onSubmit={onRemoveOwner}
                   />
                 )}
               </React.Fragment>
