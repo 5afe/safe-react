@@ -1,6 +1,7 @@
 // @flow
 import { List } from 'immutable'
-import { getSafeEthereumInstance, createTransaction } from '~/logic/safe/safeFrontendOperations'
+import { createTransaction } from '~/logic/safe/safeFrontendOperations'
+import { getGnosisSafeInstanceAt } from '~/logic/contracts/safeContracts'
 import { type Safe } from '~/routes/safe/store/models/safe'
 import { makeOwner } from '~/routes/safe/store/models/owner'
 import fetchTransactions from '~/routes/safe/store/actions/fetchTransactions'
@@ -29,7 +30,7 @@ describe('Transactions Suite', () => {
 
   it('retrieves tx info from service having subject available', async () => {
     let safe: Safe = getSafeFrom(store.getState(), safeAddress)
-    const gnosisSafe = await getSafeEthereumInstance(safeAddress)
+    const gnosisSafe = await getGnosisSafeInstanceAt(safeAddress)
     const firstTxData = gnosisSafe.contract.methods.addOwnerWithThreshold(accounts[1], 2).encodeABI()
     const executor = accounts[0]
     const nonce = await gnosisSafe.nonce()

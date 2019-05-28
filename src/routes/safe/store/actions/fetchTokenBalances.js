@@ -36,11 +36,10 @@ const fetchTokenBalances = (safeAddress: string, tokens: List<Token>) => async (
 
   try {
     const withBalances = await Promise.all(
-      tokens
-        .map(async token => TokenBalanceRecord({
-          address: token.address,
-          balance: await calculateBalanceOf(token.address, safeAddress, token.decimals),
-        })),
+      tokens.map(async token => TokenBalanceRecord({
+        address: token.address,
+        balance: await calculateBalanceOf(token.address, safeAddress, token.decimals),
+      })),
     )
 
     dispatch(updateSafe({ address: safeAddress, balances: List(withBalances) }))

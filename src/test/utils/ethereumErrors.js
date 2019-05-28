@@ -6,7 +6,7 @@ import abi from 'ethereumjs-abi'
 console.log(`to[${to}] \n\n valieInWei[${valueInWei}] \n\n
   data[${data}] \n\n  operation[${operation}] \n\n  sigs[${sigs}]`)
 
-const gnosisSafe = await getSafeEthereumInstance(address)
+const gnosisSafe = await getGnosisSafeInstanceAt(address)
 await printOutApprove("Remove owner 3", address, await gnosisSafe.getOwners(), tx.get('data'), tx.get('nonce'))
 const txData =
   await gnosisSafe.contract.execTransactionIfApproved.getData(address, 0, tx.get('data'), 0, tx.get('nonce'))

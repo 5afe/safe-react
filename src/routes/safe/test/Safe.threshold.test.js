@@ -15,7 +15,7 @@ import {
 import { getTransactionFromReduxStore } from '~/routes/safe/test/testMultisig'
 import { buildMathPropsFrom } from '~/test/utils/buildReactRouterProps'
 import { createTransaction } from '~/wallets/createTransactions'
-import { getGnosisSafeContract } from '~/wallets/safeContracts'
+import { getGnosisSafeInstanceAt } from '~/wallets/safeContracts'
 import fetchTransactions from '~/routes/safe/store/actions/fetchTransactions'
 */
 describe('React DOM TESTS > Change threshold', () => {
@@ -32,9 +32,7 @@ describe('React DOM TESTS > Change threshold', () => {
     const match: Match = buildMathPropsFrom(address)
     const safe = safeSelector(store.getState(), { match })
     if (!safe) throw new Error()
-    const web3 = getWeb3()
-    const GnosisSafe = await getGnosisSafeContract(web3)
-    const gnosisSafe = GnosisSafe.at(address)
+    const gnosisSafe = await getGnosisSafeInstanceAt(safeAddress)
 
     // WHEN
     const nonce = Date.now()
@@ -79,9 +77,7 @@ describe('React DOM TESTS > Change threshold', () => {
     const match: Match = buildMathPropsFrom(address)
     const safe = safeSelector(store.getState(), { match })
     if (!safe) throw new Error()
-    const web3 = getWeb3()
-    const GnosisSafe = await getGnosisSafeContract(web3)
-    const gnosisSafe = GnosisSafe.at(address)
+    const gnosisSafe = await getGnosisSafeInstanceAt(safeAddress)
 
     // WHEN
     const nonce = Date.now()
