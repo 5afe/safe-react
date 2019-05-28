@@ -34,6 +34,22 @@ type Props = {
 }
 type ActiveScreen = 'selectOwner' | 'selectThreshold' | 'reviewAddOwner'
 
+export const sendAddOwner = async (
+  values: Object,
+  safeAddress: string,
+  owners: List<Owner>,
+  openSnackbar: Fuction,
+  createTransaction: Function,
+) => {
+  const gnosisSafe = await getGnosisSafeInstanceAt(safeAddress)
+  const txData = gnosisSafe.contract.methods.addOwnerWithThreshold(values.ownerAddress, values.threshold).encodeABI()
+
+  const txHash = await createTransaction(safeAddress, safeAddress, 0, txData, openSnackbar)
+  if (txHash) {
+    setOwners(safeAddress, owners.push(makeOwner({ name: values.ownerName, address: values.ownerAddress })))
+  }
+}
+
 const AddOwner = ({
   onClose,
   isOpen,
@@ -84,12 +100,11 @@ const AddOwner = ({
         {({ openSnackbar }) => {
           const onAddOwner = async () => {
             onClose()
-            const gnosisSafe = await getGnosisSafeInstanceAt(safeAddress)
-            const txData = gnosisSafe.contract.methods.addOwnerWithThreshold(values.ownerAddress, values.threshold).encodeABI()
-
-            const txHash = await createTransaction(safeAddress, safeAddress, 0, txData, openSnackbar)
-            if (txHash) {
-              setOwners(safeAddress, owners.push(makeOwner({ name: values.ownerName, address: values.ownerAddress })))
+            try {
+              sendAddOwner(values, safeAddress, owners, openSnackbar, createTransaction)
+            } catch (error) {
+              // eslint-disable-next-line
+              console.log('Error while removing an owner ' + error)
             }
           }
 

@@ -93,7 +93,7 @@ class ManageOwners extends React.Component<Props, State> {
       showAddOwner,
       showRemoveOwner,
       selectedOwnerName,
-      selectedOwnerAddress
+      selectedOwnerAddress,
     } = this.state
 
     const columns = generateColumns()

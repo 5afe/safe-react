@@ -8,6 +8,7 @@ import { type Owner, makeOwner } from '~/routes/safe/store/models/owner'
 import { setOwners } from '~/logic/safe/utils'
 import { getGnosisSafeInstanceAt } from '~/logic/contracts/safeContracts'
 import CheckOwner from './screens/CheckOwner'
+import ThresholdForm from './screens/ThresholdForm'
 import { withStyles } from '@material-ui/core/styles'
 
 const styles = () => ({
@@ -33,6 +34,30 @@ type Props = {
   createTransaction: Function,
 }
 type ActiveScreen = 'checkOwner' | 'selectThreshold' | 'reviewRemoveOwner'
+
+const SENTINEL_ADDRESS = '0x0000000000000000000000000000000000000001'
+
+export const sendRemoveOwner = async (
+  values: Object,
+  safeAddress: string,
+  ownerAddressToRemove: string,
+  ownerNameToRemove: string,
+  owners: List<Owner>,
+  openSnackbar: Function,
+  createTransaction: Function,
+) => {
+  const gnosisSafe = await getGnosisSafeInstanceAt(safeAddress)
+  const storedOwners = await gnosisSafe.getOwners()
+  const index = storedOwners.findIndex(ownerAddress => ownerAddress === ownerAddressToRemove)
+  const prevAddress = index === 0 ? SENTINEL_ADDRESS : storedOwners[index - 1]
+  const txData = gnosisSafe.contract.methods.removeOwner(prevAddress, ownerAddressToRemove, values.threshold).encodeABI()
+  const text = `Remove Owner ${ownerNameToRemove} (${ownerAddressToRemove})`
+
+  const txHash = createTransaction(safeAddress, safeAddress, 0, txData, openSnackbar)
+  if (txHash) {
+    setOwners(safeAddress, owners.filter(o => o.address !== ownerAddressToRemove))
+  }
+}
 
 const RemoveOwner = ({
   onClose,
@@ -81,7 +106,14 @@ const RemoveOwner = ({
     <React.Fragment>
       <SharedSnackbarConsumer>
         {({ openSnackbar }) => {
-          const onRemoveOwner = async () => {
+          const onRemoveOwner = () => {
+            onClose()
+            try {
+              sendRemoveOwner(values, safeAddress, ownerAddress, ownerName, owners, openSnackbar, createTransaction)
+            } catch (error) {
+              // eslint-disable-next-line
+              console.log('Error while removing an owner ' + error)
+            }
           }
 
           return (
@@ -100,6 +132,15 @@ const RemoveOwner = ({
                     ownerName={ownerName}
                     network={network}
                     onSubmit={ownerSubmitted}
+                  />
+                )}
+                {activeScreen === 'selectThreshold' && (
+                  <ThresholdForm
+                    onClose={onClose}
+                    owners={owners}
+                    threshold={threshold}
+                    onClickBack={onClickBack}
+                    onSubmit={thresholdSubmitted}
                   />
                 )}
               </React.Fragment>
