@@ -12,9 +12,10 @@ import Layout from './component/Layout'
 import actions, { type Actions } from './actions'
 import selector, { type SelectorProps } from './selector'
 
-type Props = Actions & SelectorProps & {
-  openSnackbar: (message: string, variant: Variant) => void,
-}
+type Props = Actions &
+  SelectorProps & {
+    openSnackbar: (message: string, variant: Variant) => void,
+  }
 
 type State = {
   hasError: boolean,
@@ -67,13 +68,15 @@ class HeaderComponent extends React.PureComponent<Props, State> {
       return <ConnectDetails onConnect={this.onConnect} />
     }
 
-    return (<UserDetails
-      provider={provider}
-      network={network}
-      userAddress={userAddress}
-      connected={available}
-      onDisconnect={this.onDisconnect}
-    />)
+    return (
+      <UserDetails
+        provider={provider}
+        network={network}
+        userAddress={userAddress}
+        connected={available}
+        onDisconnect={this.onDisconnect}
+      />
+    )
   }
 
   render() {
@@ -84,14 +87,13 @@ class HeaderComponent extends React.PureComponent<Props, State> {
   }
 }
 
-const Header = connect(selector, actions)(HeaderComponent)
+const Header = connect(
+  selector,
+  actions,
+)(HeaderComponent)
 
 const HeaderSnack = () => (
-  <SharedSnackbarConsumer>
-    {({ openSnackbar }) => (
-      <Header openSnackbar={openSnackbar} />
-    )}
-  </SharedSnackbarConsumer>
+  <SharedSnackbarConsumer>{({ openSnackbar }) => <Header openSnackbar={openSnackbar} />}</SharedSnackbarConsumer>
 )
 
 export default HeaderSnack

@@ -2,6 +2,7 @@
 import React from 'react'
 import OpenInNew from '@material-ui/icons/OpenInNew'
 import { withStyles } from '@material-ui/core/styles'
+import { SharedSnackbarConsumer } from '~/components/SharedSnackBar/Context'
 import Close from '@material-ui/icons/Close'
 import IconButton from '@material-ui/core/IconButton'
 import Paragraph from '~/components/layout/Paragraph'
@@ -29,6 +30,7 @@ type Props = {
   onClickBack: Function,
   ethBalance: string,
   tx: Object,
+  createTransaction: Function,
 }
 
 const openIconStyle = {
@@ -37,71 +39,98 @@ const openIconStyle = {
 }
 
 const ReviewTx = ({
-  onClose, classes, safeAddress, etherScanLink, safeName, ethBalance, tx, onClickBack,
+  onClose,
+  classes,
+  safeAddress,
+  etherScanLink,
+  safeName,
+  ethBalance,
+  tx,
+  onClickBack,
+  createTransaction,
 }: Props) => (
-  <React.Fragment>
-    <Row align="center" grow className={classes.heading}>
-      <Paragraph weight="bolder" className={classes.headingText} noMargin>
-        Send Funds
-      </Paragraph>
-      <Paragraph className={classes.annotation}>2 of 2</Paragraph>
-      <IconButton onClick={onClose} disableRipple>
-        <Close className={classes.closeIcon} />
-      </IconButton>
-    </Row>
-    <Hairline />
-    <Block className={classes.container}>
-      <SafeInfo safeAddress={safeAddress} etherScanLink={etherScanLink} safeName={safeName} ethBalance={ethBalance} />
-      <Row margin="md">
-        <Col xs={1}>
-          <img src={ArrowDown} alt="Arrow Down" style={{ marginLeft: '8px' }} />
-        </Col>
-        <Col xs={11} center="xs" layout="column">
-          <Hairline />
-        </Col>
-      </Row>
-      <Row margin="xs">
-        <Paragraph size="md" color="disabled" style={{ letterSpacing: '-0.5px' }} noMargin>
-          Recipient
-        </Paragraph>
-      </Row>
-      <Row margin="md" align="center">
-        <Col xs={1}>
-          <Identicon address={tx.recipientAddress} diameter={32} />
-        </Col>
-        <Col xs={11} layout="column">
-          <Paragraph weight="bolder" onClick={copyToClipboard} noMargin>
-            {tx.recipientAddress}
-            <Link to={etherScanLink} target="_blank">
-              <OpenInNew style={openIconStyle} />
-            </Link>
+  <SharedSnackbarConsumer>
+    {({ openSnackbar }) => (
+      <React.Fragment>
+        <Row align="center" grow className={classes.heading}>
+          <Paragraph weight="bolder" className={classes.headingText} noMargin>
+            Send Funds
           </Paragraph>
-        </Col>
-      </Row>
-      <Row margin="xs">
-        <Paragraph size="md" color="disabled" style={{ letterSpacing: '-0.5px' }} noMargin>
-          Amount
-        </Paragraph>
-      </Row>
-      <Row margin="md" align="center">
-        <Img src={tx.token.logoUri} height={28} alt={tx.token.name} onError={setImageToPlaceholder} />
-        <Paragraph size="md" noMargin>
-          {tx.amount}
-          {' '}
-          {tx.token.symbol}
-        </Paragraph>
-      </Row>
-    </Block>
-    <Hairline style={{ position: 'absolute', bottom: 85 }} />
-    <Row align="center" className={classes.buttonRow}>
-      <Button className={classes.button} minWidth={140} onClick={onClickBack}>
-        Back
-      </Button>
-      <Button type="submit" className={classes.button} variant="contained" minWidth={140} color="primary">
-        Review
-      </Button>
-    </Row>
-  </React.Fragment>
+          <Paragraph className={classes.annotation}>2 of 2</Paragraph>
+          <IconButton onClick={onClose} disableRipple>
+            <Close className={classes.closeIcon} />
+          </IconButton>
+        </Row>
+        <Hairline />
+        <Block className={classes.container}>
+          <SafeInfo
+            safeAddress={safeAddress}
+            etherScanLink={etherScanLink}
+            safeName={safeName}
+            ethBalance={ethBalance}
+          />
+          <Row margin="md">
+            <Col xs={1}>
+              <img src={ArrowDown} alt="Arrow Down" style={{ marginLeft: '8px' }} />
+            </Col>
+            <Col xs={11} center="xs" layout="column">
+              <Hairline />
+            </Col>
+          </Row>
+          <Row margin="xs">
+            <Paragraph size="md" color="disabled" style={{ letterSpacing: '-0.5px' }} noMargin>
+              Recipient
+            </Paragraph>
+          </Row>
+          <Row margin="md" align="center">
+            <Col xs={1}>
+              <Identicon address={tx.recipientAddress} diameter={32} />
+            </Col>
+            <Col xs={11} layout="column">
+              <Paragraph weight="bolder" onClick={copyToClipboard} noMargin>
+                {tx.recipientAddress}
+                <Link to={etherScanLink} target="_blank">
+                  <OpenInNew style={openIconStyle} />
+                </Link>
+              </Paragraph>
+            </Col>
+          </Row>
+          <Row margin="xs">
+            <Paragraph size="md" color="disabled" style={{ letterSpacing: '-0.5px' }} noMargin>
+              Amount
+            </Paragraph>
+          </Row>
+          <Row margin="md" align="center">
+            <Img src={tx.token.logoUri} height={28} alt={tx.token.name} onError={setImageToPlaceholder} />
+            <Paragraph size="md" noMargin className={classes.amount}>
+              {tx.amount}
+              {' '}
+              {tx.token.symbol}
+            </Paragraph>
+          </Row>
+        </Block>
+        <Hairline style={{ position: 'absolute', bottom: 85 }} />
+        <Row align="center" className={classes.buttonRow}>
+          <Button className={classes.button} minWidth={140} onClick={onClickBack}>
+            Back
+          </Button>
+          <Button
+            type="submit"
+            className={classes.button}
+            onClick={() => {
+              createTransaction(safeAddress, tx.recipientAddress, tx.amount, tx.token, openSnackbar)
+              onClose()
+            }}
+            variant="contained"
+            minWidth={140}
+            color="primary"
+          >
+            SUBMIT
+          </Button>
+        </Row>
+      </React.Fragment>
+    )}
+  </SharedSnackbarConsumer>
 )
 
 export default withStyles(styles)(ReviewTx)

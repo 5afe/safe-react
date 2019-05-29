@@ -9,6 +9,8 @@ export const selectedTokenStyles = () => ({
   },
   tokenData: {
     padding: 0,
+    margin: 0,
+    lineHeight: '14px',
   },
   tokenImage: {
     marginRight: sm,

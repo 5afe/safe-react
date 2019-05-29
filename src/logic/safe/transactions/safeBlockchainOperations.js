@@ -54,89 +54,89 @@ export const approveTransaction = async (
   return txHash
 }
 
-export const executeTransaction = async (
-  safeAddress: string,
-  to: string,
-  valueInWei: number,
-  data: string,
-  operation: Operation,
-  nonce: number,
-  sender: string,
-  ownersWhoHasSigned: List<string>,
-) => {
-  const gasPrice = await calculateGasPrice()
+// export const executeTransaction = async (
+//   safeAddress: string,
+//   to: string,
+//   valueInWei: number,
+//   data: string,
+//   operation: Operation,
+//   nonce: number,
+//   sender: string,
+//   ownersWhoHasSigned: List<string>,
+// ) => {
+//   const gasPrice = await calculateGasPrice()
 
-  if (signaturesViaMetamask()) {
-    const safe = await getGnosisSafeInstanceAt(safeAddress)
-    const txGasEstimate = await generateTxGasEstimateFrom(safe, safeAddress, data, to, valueInWei, operation)
-    const signature = await generateMetamaskSignature(
-      safe,
-      safeAddress,
-      sender,
-      to,
-      valueInWei,
-      nonce,
-      data,
-      operation,
-      txGasEstimate,
-    )
-    storeSignature(safeAddress, nonce, signature)
+//   if (signaturesViaMetamask()) {
+//     const safe = await getSafeEthereumInstance(safeAddress)
+//     const txGasEstimate = await generateTxGasEstimateFrom(safe, safeAddress, data, to, valueInWei, operation)
+//     const signature = await generateMetamaskSignature(
+//       safe,
+//       safeAddress,
+//       sender,
+//       to,
+//       valueInWei,
+//       nonce,
+//       data,
+//       operation,
+//       txGasEstimate,
+//     )
+//     storeSignature(safeAddress, nonce, signature)
 
-    const sigs = getSignaturesFrom(safeAddress, nonce)
-    const threshold = await safe.getThreshold()
-    const gas = await estimateDataGas(
-      safe,
-      to,
-      valueInWei,
-      data,
-      operation,
-      txGasEstimate,
-      0,
-      nonce,
-      Number(threshold),
-      0,
-    )
-    const numOwners = await safe.getOwners()
-    const gasIncludingRemovingStoreUpfront = gas + txGasEstimate + numOwners.length * 15000
+//     const sigs = getSignaturesFrom(safeAddress, nonce)
+//     const threshold = await safe.getThreshold()
+//     const gas = await estimateDataGas(
+//       safe,
+//       to,
+//       valueInWei,
+//       data,
+//       operation,
+//       txGasEstimate,
+//       0,
+//       nonce,
+//       Number(threshold),
+//       0,
+//     )
+//     const numOwners = await safe.getOwners()
+//     const gasIncludingRemovingStoreUpfront = gas + txGasEstimate + numOwners.length * 15000
 
-    const txReceipt = await safe.execTransaction(
-      to,
-      valueInWei,
-      data,
-      operation,
-      txGasEstimate,
-      0, // dataGasEstimate
-      0, // gasPrice
-      0, // txGasToken
-      0, // refundReceiver
-      sigs,
-      { from: sender, gas: gasIncludingRemovingStoreUpfront, gasPrice },
-    )
+//     const txReceipt = await safe.execTransaction(
+//       to,
+//       valueInWei,
+//       data,
+//       operation,
+//       txGasEstimate,
+//       0, // dataGasEstimate
+//       0, // gasPrice
+//       0, // txGasToken
+//       0, // refundReceiver
+//       sigs,
+//       { from: sender, gas: gasIncludingRemovingStoreUpfront, gasPrice },
+//     )
 
-    const txHash = txReceipt.tx
-    await checkReceiptStatus(txHash)
-    // await submitOperation(safeAddress, to, valueInWei, data, operation, nonce, txHash, sender, 'execution')
+//     const txHash = txReceipt.tx
+//     await checkReceiptStatus(txHash)
+//     // await submitOperation(safeAddress, to, valueInWei, data, operation, nonce, txHash, sender, 'execution')
 
-    return txHash
-  }
+//     return txHash
+//   }
 
-  const gnosisSafe = await getGnosisSafeInstanceAt(safeAddress)
-  const signatures = buildSignaturesFrom(ownersWhoHasSigned, sender)
-  const txExecutionData = gnosisSafe.contract.methods
-    .execTransaction(to, valueInWei, data, operation, 0, 0, 0, 0, 0, signatures)
-    .encodeABI()
-  const gas = await calculateGasOf(txExecutionData, sender, safeAddress)
-  const numOwners = await gnosisSafe.getOwners()
-  const gasIncludingRemovingStoreUpfront = gas + numOwners.length * 15000
-  const txReceipt = await gnosisSafe.execTransaction(to, valueInWei, data, operation, 0, 0, 0, 0, 0, signatures, {
-    from: sender,
-    gas: gasIncludingRemovingStoreUpfront,
-    gasPrice,
-  })
-  const txHash = txReceipt.tx
-  await checkReceiptStatus(txHash)
+//   const gnosisSafe = await getSafeEthereumInstance(safeAddress)
+//   const signatures = buildSignaturesFrom(ownersWhoHasSigned, sender)
+//   const txExecutionData = gnosisSafe.contract.methods
+//     .execTransaction(to, valueInWei, data, operation, 0, 0, 0, 0, 0, signatures)
+//     .encodeABI()
+//   const gas = await calculateGasOf(txExecutionData, sender, safeAddress)
+//   const numOwners = await gnosisSafe.getOwners()
+//   const gasIncludingRemovingStoreUpfront = gas + numOwners.length * 15000
+//   const txReceipt = await gnosisSafe.execTransaction(to, valueInWei, data, operation, 0, 0, 0, 0, 0, signatures, {
+//     from: sender,
+//     gas: gasIncludingRemovingStoreUpfront,
+//     gasPrice,
+//   })
+//   const txHash = txReceipt.tx
+//   await checkReceiptStatus(txHash)
 
-  await submitOperation(safeAddress, to, valueInWei, data, operation, nonce, txHash, sender, 'execution')
+//   await submitOperation(safeAddress, to, valueInWei, data, operation, nonce, txHash, sender, 'execution')
 
-  return txHash
-}
+//   return txHash
+// }

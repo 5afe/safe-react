@@ -15,7 +15,7 @@ type Props = {
   padding?: number,
   validation?: (values: Object) => Object | Promise<Object>,
   initialValues?: Object,
-  formMutators: Object,
+  formMutators?: Object,
 }
 
 const stylesBasedOn = (padding: number): $Shape<CSSStyleDeclaration> => ({

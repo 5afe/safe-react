@@ -82,7 +82,7 @@ export const generateMetamaskSignature = async (
     operation,
     txGasEstimate,
   )
-  console.log({sender})
+
   const jsonTypedData = JSON.stringify(typedData)
   const signedTypedData = {
     method: 'eth_signTypedData_v3',
