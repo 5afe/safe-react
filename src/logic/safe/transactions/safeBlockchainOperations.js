@@ -2,7 +2,7 @@
 import { List } from 'immutable'
 import { calculateGasOf, checkReceiptStatus, calculateGasPrice } from '~/logic/wallets/ethTransactions'
 import { type Operation, submitOperation } from '~/logic/safe/safeTxHistory'
-import { getSafeEthereumInstance } from '~/logic/safe/safeFrontendOperations'
+import { getGnosisSafeInstanceAt } from '~/logic/contracts/safeContracts'
 import { buildSignaturesFrom } from '~/logic/safe/safeTxSigner'
 import { generateMetamaskSignature, generateTxGasEstimateFrom, estimateDataGas } from '~/logic/safe/transactions'
 import { storeSignature, getSignaturesFrom } from '~/utils/storage/signatures'
@@ -21,7 +21,7 @@ export const approveTransaction = async (
 
   if (signaturesViaMetamask()) {
     // return executeTransaction(safeAddress, to, valueInWei, data, operation, nonce, sender)
-    const safe = await getSafeEthereumInstance(safeAddress)
+    const safe = await getGnosisSafeInstanceAt(safeAddress)
     const txGasEstimate = await generateTxGasEstimateFrom(safe, safeAddress, data, to, valueInWei, operation)
     const signature = await generateMetamaskSignature(
       safe,
@@ -39,7 +39,7 @@ export const approveTransaction = async (
     return undefined
   }
 
-  const gnosisSafe = await getSafeEthereumInstance(safeAddress)
+  const gnosisSafe = await getGnosisSafeInstanceAt(safeAddress)
   const contractTxHash = await gnosisSafe.getTransactionHash(to, valueInWei, data, operation, 0, 0, 0, 0, 0, nonce)
 
   const approveData = gnosisSafe.contract.methods.approveHash(contractTxHash).encodeABI()
@@ -67,7 +67,7 @@ export const executeTransaction = async (
   const gasPrice = await calculateGasPrice()
 
   if (signaturesViaMetamask()) {
-    const safe = await getSafeEthereumInstance(safeAddress)
+    const safe = await getGnosisSafeInstanceAt(safeAddress)
     const txGasEstimate = await generateTxGasEstimateFrom(safe, safeAddress, data, to, valueInWei, operation)
     const signature = await generateMetamaskSignature(
       safe,
@@ -120,7 +120,7 @@ export const executeTransaction = async (
     return txHash
   }
 
-  const gnosisSafe = await getSafeEthereumInstance(safeAddress)
+  const gnosisSafe = await getGnosisSafeInstanceAt(safeAddress)
   const signatures = buildSignaturesFrom(ownersWhoHasSigned, sender)
   const txExecutionData = gnosisSafe.contract.methods
     .execTransaction(to, valueInWei, data, operation, 0, 0, 0, 0, 0, signatures)

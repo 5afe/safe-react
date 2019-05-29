@@ -5,7 +5,6 @@ import { executeTransaction, approveTransaction } from '~/logic/safe/transaction
 import { EMPTY_DATA } from '~/logic/wallets/ethTransactions'
 import { getWeb3 } from '~/logic/wallets/getWeb3'
 import { type Safe } from '~/routes/safe/store/models/safe'
-import { getGnosisSafeContract } from '~/logic/contracts/safeContracts'
 import { storeSubject } from '~/utils/storage/transactions'
 
 export const TX_NAME_PARAM = 'txName'
@@ -21,13 +20,6 @@ const hasOneOwner = (safe: Safe) => {
   }
 
   return owners.count() === 1
-}
-
-export const getSafeEthereumInstance = async (safeAddress: string) => {
-  const web3 = getWeb3()
-  const GnosisSafe = await getGnosisSafeContract(web3)
-  const safeInstance = await GnosisSafe.at(safeAddress)
-  return safeInstance
 }
 
 export const createTransaction = async (

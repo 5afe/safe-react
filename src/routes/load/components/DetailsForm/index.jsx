@@ -14,7 +14,7 @@ import Paragraph from '~/components/layout/Paragraph'
 import OpenPaper from '~/components/Stepper/OpenPaper'
 import { FIELD_LOAD_NAME, FIELD_LOAD_ADDRESS } from '~/routes/load/components/fields'
 import { getWeb3 } from '~/logic/wallets/getWeb3'
-import SafeProxy from '#/Proxy.json'
+import SafeProxy from '@gnosis.pm/safe-contracts/build/contracts/Proxy.json'
 import { getSafeMasterContract } from '~/logic/contracts/safeContracts'
 
 type Props = {
