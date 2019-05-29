@@ -16,7 +16,7 @@ export type SelectorProps = {
   available: boolean,
 }
 
-export default createStructuredSelector({
+export default createStructuredSelector<Object, *>({
   provider: providerNameSelector,
   userAddress: userAccountSelector,
   network: networkSelector,

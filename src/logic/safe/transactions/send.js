@@ -4,7 +4,7 @@ import { getStandardTokenContract } from '~/logic/tokens/store/actions/fetchToke
 import { EMPTY_DATA } from '~/logic/wallets/ethTransactions'
 import { isEther } from '~/logic/tokens/utils/tokenHelpers'
 import { type Token } from '~/logic/tokens/store/model/token'
-import { getSafeEthereumInstance } from '../safeFrontendOperations'
+import { getGnosisSafeInstanceAt } from '~/logic/contracts/safeContracts'
 
 export const CALL = 0
 const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'
@@ -42,13 +42,13 @@ export const executeTransaction = async (
     return tx
   } catch (error) {
     // eslint-disable-next-line
-    console.log('Error calculating tx gas estimation ' + error)
+    console.log('Error executing the TX: ' + error)
     return 0
   }
 }
 
 export const createTransaction = async (safeAddress: string, to: string, valueInEth: string, token: Token) => {
-  const safeInstance = await getSafeEthereumInstance(safeAddress)
+  const safeInstance = await getGnosisSafeInstanceAt(safeAddress)
   const web3 = getWeb3()
   const from = web3.currentProvider.selectedAddress
   const threshold = await safeInstance.getThreshold()

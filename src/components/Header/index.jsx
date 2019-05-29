@@ -27,22 +27,19 @@ class HeaderComponent extends React.PureComponent<Props, State> {
   }
 
   componentDidMount() {
-    this.props.fetchProvider(this.props.openSnackbar)
-  }
-
-  componentDidCatch(error: Error, info: Info) {
-    this.setState({ hasError: true })
-    this.props.openSnackbar(WALLET_ERROR_MSG, 'error')
-
-    logComponentStack(error, info)
+    this.onConnect()
   }
 
   onDisconnect = () => {
-    this.props.removeProvider(this.props.openSnackbar)
+    const { removeProvider, openSnackbar } = this.props
+
+    removeProvider(openSnackbar)
   }
 
   onConnect = () => {
-    this.props.fetchProvider(this.props.openSnackbar)
+    const { fetchProvider, openSnackbar } = this.props
+
+    fetchProvider(openSnackbar)
   }
 
   getProviderInfoBased = () => {
@@ -77,6 +74,14 @@ class HeaderComponent extends React.PureComponent<Props, State> {
         onDisconnect={this.onDisconnect}
       />
     )
+  }
+
+  componentDidCatch(error: Error, info: Info) {
+    const { openSnackbar } = this.props
+    this.setState({ hasError: true })
+    openSnackbar(WALLET_ERROR_MSG, 'error')
+
+    logComponentStack(error, info)
   }
 
   render() {

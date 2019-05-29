@@ -1,12 +1,13 @@
 // @flow
-import type { Dispatch as ReduxDispatch } from 'redux'
+import type { Dispatch as ReduxDispatch, GetState } from 'redux'
 import { createAction } from 'redux-actions'
 import { getWeb3 } from '~/logic/wallets/getWeb3'
 import { EMPTY_DATA } from '~/logic/wallets/ethTransactions'
 import { type Token } from '~/logic/tokens/store/model/token'
+import { userAccountSelector } from '~/logic/wallets/store/selectors'
 import { type GlobalState } from '~/store'
 import { isEther } from '~/logic/tokens/utils/tokenHelpers'
-import { getSafeEthereumInstance } from '~/logic/safe/safeFrontendOperations'
+import { getGnosisSafeInstanceAt } from '~/logic/contracts/safeContracts'
 import { executeTransaction, CALL } from '~/logic/safe/transactions'
 import { getStandardTokenContract } from '~/logic/tokens/store/actions/fetchTokens'
 
@@ -19,12 +20,13 @@ const createTransaction = (
   valueInEth: string,
   token: Token,
   openSnackbar: Function,
-) => async (dispatch: ReduxDispatch<GlobalState>) => {
+) => async (dispatch: ReduxDispatch<GlobalState>, getState: GetState<GlobalState>) => {
   const isSendingETH = isEther(token.symbol)
+  const state: GlobalState = getState()
 
-  const safeInstance = await getSafeEthereumInstance(safeAddress)
+  const safeInstance = await getGnosisSafeInstanceAt(safeAddress)
   const web3 = getWeb3()
-  const from = web3.currentProvider.selectedAddress
+  const from = userAccountSelector(state)
   const threshold = await safeInstance.getThreshold()
   const nonce = await safeInstance.nonce()
   const txRecipient = isSendingETH ? to : token.address

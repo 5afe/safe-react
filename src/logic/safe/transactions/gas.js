@@ -2,7 +2,7 @@
 import { BigNumber } from 'bignumber.js'
 import { getWeb3 } from '~/logic/wallets/getWeb3'
 import { EMPTY_DATA } from '~/logic/wallets/ethTransactions'
-import { getSafeEthereumInstance } from '../safeFrontendOperations'
+import { getGnosisSafeInstanceAt } from '~/logic/contracts/safeContracts'
 
 const estimateDataGasCosts = (data) => {
   const reducer = (accumulator, currentValue) => {
@@ -68,7 +68,7 @@ export const generateTxGasEstimateFrom = async (
   try {
     let safeInstance = safe
     if (!safeInstance) {
-      safeInstance = await getSafeEthereumInstance(safeAddress)
+      safeInstance = await getGnosisSafeInstanceAt(safeAddress)
     }
 
     const estimateData = safeInstance.contract.methods.requiredTxGas(to, valueInWei, data, operation).encodeABI()
@@ -100,7 +100,7 @@ export const calculateTxFee = async (
   try {
     let safeInstance = safe
     if (!safeInstance) {
-      safeInstance = await getSafeEthereumInstance(safeAddress)
+      safeInstance = await getGnosisSafeInstanceAt(safeAddress)
     }
 
     // https://gnosis-safe.readthedocs.io/en/latest/contracts/signatures.html#pre-validated-signatures
