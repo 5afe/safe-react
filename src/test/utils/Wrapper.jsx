@@ -2,17 +2,9 @@
 import * as React from 'react'
 
 type WrapperProps = {
-  children: React$Node
+  children: React$Node,
 }
 
-class Wrapper extends React.PureComponent<WrapperProps> {
-  render() {
-    return (
-      <React.Fragment>
-        { this.props.children }
-      </React.Fragment>
-    )
-  }
-}
+const Wrapper = ({ children }: WrapperProps) => <React.Fragment>{children}</React.Fragment>
 
 export default Wrapper
