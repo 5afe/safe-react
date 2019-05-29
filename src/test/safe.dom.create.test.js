@@ -2,6 +2,7 @@
 import * as React from 'react'
 import { type Store } from 'redux'
 import TestUtils from 'react-dom/test-utils'
+import { render, fireEvent, cleanup } from 'react-testing-library'
 import Select from '@material-ui/core/Select'
 import { Provider } from 'react-redux'
 import { ConnectedRouter } from 'connected-react-router'
@@ -15,12 +16,14 @@ import { makeProvider } from '~/logic/wallets/store/model/provider'
 import { getGnosisSafeInstanceAt } from '~/logic/contracts/safeContracts'
 import { whenSafeDeployed } from './builder/safe.dom.utils'
 
+afterEach(cleanup)
+
 const fillOpenSafeForm = async (localStore: Store<GlobalState>) => {
   const provider = await getProviderInfo()
   const walletRecord = makeProvider(provider)
   localStore.dispatch(addProvider(walletRecord))
 
-  return TestUtils.renderIntoDocument(
+  return render(
     <Provider store={localStore}>
       <ConnectedRouter history={history}>
         <Open />
