@@ -10,7 +10,7 @@ const prodConfig = {
   [TX_SERVICE_HOST]: 'https://safe-transaction-history.dev.gnosisdev.com/api/v1/',
   [ENABLED_TX_SERVICE_REMOVAL_SENDER]: false,
   [SIGNATURES_VIA_METAMASK]: false,
-  [RELAY_API_URL]: 'https://safe-relay.staging.gnosisdev.com/api/v1/',
+  [RELAY_API_URL]: 'https://safe-relay.staging.gnosisdev.com/api/v1',
 }
 
 export default prodConfig

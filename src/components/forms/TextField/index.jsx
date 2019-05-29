@@ -1,6 +1,5 @@
 // @flow
 import React from 'react'
-import cn from 'classnames'
 import MuiTextField, { TextFieldProps } from '@material-ui/core/TextField'
 import { withStyles } from '@material-ui/core/styles'
 import { lg } from '~/theme/variables'
@@ -16,9 +15,6 @@ const styles = () => ({
     paddingTop: lg,
     paddingBottom: '12px',
     lineHeight: 0,
-  },
-  input: {
-    borderRadius: '5px',
   },
 })
 
@@ -41,7 +37,7 @@ class TextField extends React.PureComponent<TextFieldProps> {
 
     const inputRoot = helperText ? classes.root : undefined
     const inputProps = { ...restInput, autoComplete: 'off' }
-    const inputRootProps = { ...inputAdornment, disableUnderline: !underline, className: cn(inputRoot, classes.input) }
+    const inputRootProps = { ...inputAdornment, disableUnderline: !underline, className: inputRoot }
 
     return (
       <MuiTextField

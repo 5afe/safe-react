@@ -158,7 +158,7 @@ class Tokens extends React.Component<Props, State> {
 
             return (
               <ListItem key={token.address} className={classes.token}>
-                <ListItemIcon>
+                <ListItemIcon className={classes.tokenIcon}>
                   <Img src={token.logoUri} height={28} alt={token.name} onError={setImageToPlaceholder} />
                 </ListItemIcon>
                 <ListItemText primary={token.symbol} secondary={token.name} />

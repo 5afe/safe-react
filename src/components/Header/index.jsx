@@ -12,9 +12,10 @@ import Layout from './component/Layout'
 import actions, { type Actions } from './actions'
 import selector, { type SelectorProps } from './selector'
 
-type Props = Actions & SelectorProps & {
-  openSnackbar: (message: string, variant: Variant) => void,
-}
+type Props = Actions &
+  SelectorProps & {
+    openSnackbar: (message: string, variant: Variant) => void,
+  }
 
 type State = {
   hasError: boolean,
@@ -26,22 +27,19 @@ class HeaderComponent extends React.PureComponent<Props, State> {
   }
 
   componentDidMount() {
-    this.props.fetchProvider(this.props.openSnackbar)
-  }
-
-  componentDidCatch(error: Error, info: Info) {
-    this.setState({ hasError: true })
-    this.props.openSnackbar(WALLET_ERROR_MSG, 'error')
-
-    logComponentStack(error, info)
+    this.onConnect()
   }
 
   onDisconnect = () => {
-    this.props.removeProvider(this.props.openSnackbar)
+    const { removeProvider, openSnackbar } = this.props
+
+    removeProvider(openSnackbar)
   }
 
   onConnect = () => {
-    this.props.fetchProvider(this.props.openSnackbar)
+    const { fetchProvider, openSnackbar } = this.props
+
+    fetchProvider(openSnackbar)
   }
 
   getProviderInfoBased = () => {
@@ -67,13 +65,23 @@ class HeaderComponent extends React.PureComponent<Props, State> {
       return <ConnectDetails onConnect={this.onConnect} />
     }
 
-    return (<UserDetails
-      provider={provider}
-      network={network}
-      userAddress={userAddress}
-      connected={available}
-      onDisconnect={this.onDisconnect}
-    />)
+    return (
+      <UserDetails
+        provider={provider}
+        network={network}
+        userAddress={userAddress}
+        connected={available}
+        onDisconnect={this.onDisconnect}
+      />
+    )
+  }
+
+  componentDidCatch(error: Error, info: Info) {
+    const { openSnackbar } = this.props
+    this.setState({ hasError: true })
+    openSnackbar(WALLET_ERROR_MSG, 'error')
+
+    logComponentStack(error, info)
   }
 
   render() {
@@ -84,14 +92,13 @@ class HeaderComponent extends React.PureComponent<Props, State> {
   }
 }
 
-const Header = connect(selector, actions)(HeaderComponent)
+const Header = connect(
+  selector,
+  actions,
+)(HeaderComponent)
 
 const HeaderSnack = () => (
-  <SharedSnackbarConsumer>
-    {({ openSnackbar }) => (
-      <Header openSnackbar={openSnackbar} />
-    )}
-  </SharedSnackbarConsumer>
+  <SharedSnackbarConsumer>{({ openSnackbar }) => <Header openSnackbar={openSnackbar} />}</SharedSnackbarConsumer>
 )
 
 export default HeaderSnack

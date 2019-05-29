@@ -21,7 +21,7 @@ import {
 } from './dataFetcher'
 import AssetTableCell from './AssetTableCell'
 import Tokens from './Tokens'
-import Send from './Send'
+import SendModal from './SendModal'
 import Receive from './Receive'
 import { styles } from './style'
 
@@ -29,7 +29,7 @@ type State = {
   hideZero: boolean,
   showToken: boolean,
   showReceive: boolean,
-  showSend: boolean,
+  sendFunds: Object,
 }
 
 type Props = {
@@ -40,6 +40,8 @@ type Props = {
   safeAddress: string,
   safeName: string,
   etherScanLink: string,
+  ethBalance: string,
+  createTransaction: Function,
 }
 
 type Action = 'Token' | 'Send' | 'Receive'
@@ -48,7 +50,10 @@ class Balances extends React.Component<Props, State> {
   state = {
     hideZero: false,
     showToken: false,
-    showSend: false,
+    sendFunds: {
+      isOpen: false,
+      selectedToken: undefined,
+    },
     showReceive: false,
   }
 
@@ -60,6 +65,24 @@ class Balances extends React.Component<Props, State> {
     this.setState(() => ({ [`show${action}`]: false }))
   }
 
+  showSendFunds = (token: Token) => {
+    this.setState({
+      sendFunds: {
+        isOpen: true,
+        selectedToken: token,
+      },
+    })
+  }
+
+  hideSendFunds = () => {
+    this.setState({
+      sendFunds: {
+        isOpen: false,
+        selectedToken: undefined,
+      },
+    })
+  }
+
   handleChange = (e: SyntheticInputEvent<HTMLInputElement>) => {
     const { checked } = e.target
 
@@ -68,10 +91,18 @@ class Balances extends React.Component<Props, State> {
 
   render() {
     const {
-      hideZero, showToken, showReceive, showSend,
+      hideZero, showToken, showReceive, sendFunds,
     } = this.state
     const {
-      classes, granted, tokens, safeAddress, activeTokens, safeName, etherScanLink,
+      classes,
+      granted,
+      tokens,
+      safeAddress,
+      activeTokens,
+      safeName,
+      etherScanLink,
+      ethBalance,
+      createTransaction,
     } = this.props
 
     const columns = generateColumns()
@@ -137,7 +168,7 @@ class Balances extends React.Component<Props, State> {
                       size="small"
                       color="secondary"
                       className={classes.send}
-                      onClick={this.onShow('Send')}
+                      onClick={() => this.showSendFunds(row.asset.name)}
                     >
                       <CallMade className={classNames(classes.leftIcon, classes.iconSmall)} />
                         Send
@@ -159,9 +190,17 @@ class Balances extends React.Component<Props, State> {
           ))
           }
         </Table>
-        <Modal title="Send Tokens" description="Send Tokens Form" handleClose={this.onHide('Send')} open={showSend}>
-          <Send onClose={this.onHide('Send')} />
-        </Modal>
+        <SendModal
+          onClose={this.hideSendFunds}
+          isOpen={sendFunds.isOpen}
+          etherScanLink={etherScanLink}
+          safeAddress={safeAddress}
+          safeName={safeName}
+          ethBalance={ethBalance}
+          tokens={activeTokens}
+          selectedToken={sendFunds.selectedToken}
+          createTransaction={createTransaction}
+        />
         <Modal
           title="Receive Tokens"
           description="Receive Tokens Form"

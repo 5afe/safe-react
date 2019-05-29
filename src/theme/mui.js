@@ -12,6 +12,7 @@ import {
   bolderFont,
   boldFont,
   buttonLargeFontSize,
+  xs,
 } from './variables'
 
 export type WithStyles = {
@@ -100,6 +101,9 @@ export default createMuiTheme({
         letterSpacing: '-0.5px',
         fontSize: mediumFontSize,
       },
+      body2: {
+        fontFamily: 'Roboto Mono, monospace',
+      },
     },
     MuiFormHelperText: {
       root: {
@@ -111,7 +115,7 @@ export default createMuiTheme({
         color: secondary,
         order: 0,
         marginTop: '0px',
-        backgroundColor: 'EAE9EF',
+        backgroundColor: '#EAE9EF',
       },
     },
     MuiInput: {
@@ -123,6 +127,7 @@ export default createMuiTheme({
         order: 1,
         padding: `0 ${md}`,
         backgroundColor: '#EAE9EF',
+        borderRadius: '5px',
         '&:$disabled': {
           color: '#0000ff',
         },
@@ -131,6 +136,7 @@ export default createMuiTheme({
         padding: 0,
         letterSpacing: '0.5px',
         color: primary,
+        height: 'auto',
         textOverflow: 'ellipsis',
         display: 'flex',
         '&::-webkit-input-placeholder': {
@@ -213,12 +219,24 @@ export default createMuiTheme({
         color: primary,
         letterSpacing: '-0.5px',
         fontWeight: 'normal',
+        paddingTop: xs,
+        paddingBottom: xs,
       },
     },
     MuiBackdrop: {
       root: {
         backdropFilter: 'blur(1px)',
         backgroundColor: 'rgba(228, 232, 241, 0.75)',
+      },
+    },
+    MuiMenuItem: {
+      root: {
+        fontFamily: 'Roboto Mono, monospace',
+      },
+    },
+    MuiListItemIcon: {
+      root: {
+        minWidth: 'auto',
       },
     },
     MuiListItemText: {

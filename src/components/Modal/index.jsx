@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react'
+import cn from 'classnames'
 import Modal from '@material-ui/core/Modal'
 import { withStyles } from '@material-ui/core/styles'
 
@@ -10,6 +11,8 @@ type Props = {
   handleClose: Function,
   children: React$Node,
   classes: Object,
+  modalClassName: ?string,
+  paperClassName: ?string,
 }
 
 const styles = () => ({
@@ -35,18 +38,16 @@ const styles = () => ({
 })
 
 const GnoModal = ({
-  title, description, open, children, handleClose, classes,
+  title, description, open, children, handleClose, modalClassName, classes, paperClassName,
 }: Props) => (
   <Modal
     aria-labelledby={title}
     aria-describedby={description}
     open={open}
     onClose={handleClose}
-    className={classes.root}
+    className={cn(classes.root, modalClassName)}
   >
-    <div className={classes.paper}>
-      { children }
-    </div>
+    <div className={cn(classes.paper, paperClassName)}>{children}</div>
   </Modal>
 )
 

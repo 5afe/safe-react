@@ -52,7 +52,7 @@ class SafeView extends React.Component<Props> {
 
   render() {
     const {
-      safe, provider, activeTokens, granted, userAddress, network, tokens,
+      safe, provider, activeTokens, granted, userAddress, network, tokens, createTransaction,
     } = this.props
 
     return (
@@ -65,6 +65,7 @@ class SafeView extends React.Component<Props> {
           userAddress={userAddress}
           network={network}
           granted={granted}
+          createTransaction={createTransaction}
         />
       </Page>
     )

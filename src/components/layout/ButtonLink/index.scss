@@ -1,0 +1,79 @@
+.btnLink {
+  background: transparent;
+  border: none;
+  text-decoration: underline;
+  font-family: 'Roboto Mono', monospace;
+  cursor: pointer;
+}
+
+.sm {
+  font-size: $smallFontSize;
+}
+
+.md {
+  font-size: $mediumFontSize;
+}
+
+.lg {
+  font-size: $largeFontSize;
+}
+
+.xl {
+  font-size: $extraLargeFontSize;
+}
+
+.xxl {
+  font-size: $xxlFontSize;
+}
+
+.light {
+  font-weight: $lightFont;
+}
+
+.regular {
+  font-weight: $regularFont;
+}
+
+.bolder {
+  font-weight: $bolderFont;
+}
+
+.bold {
+  font-weight: $boldFont;
+}
+
+.soft {
+  color: #888888;
+}
+
+.medium {
+  color: #686868;
+}
+
+.dark {
+  color: black;
+}
+
+.fancy {
+  color: $fancy;
+}
+
+.warning {
+  color: $warning;
+}
+
+.primary {
+  color: $fontColor;
+}
+
+.secondary {
+  color: $secondary;
+}
+
+.disabled {
+  color: $disabled;
+}
+
+.white {
+  color: white;
+}

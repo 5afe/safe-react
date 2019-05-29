@@ -21,9 +21,10 @@ type Props = Actions & {
   safeAddress: string,
   activeTokens: List<Token>,
 }
+type ActiveScreen = 'tokenList' | 'addCustomToken'
 
 const Tokens = (props: Props) => {
-  const [activeScreen, setActiveScreen] = useState<string>('tokenList')
+  const [activeScreen, setActiveScreen] = useState<ActiveScreen>('tokenList')
   const {
     onClose,
     classes,

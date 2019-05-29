@@ -8,6 +8,12 @@ import { store } from '~/store'
 import loadSafesFromStorage from '~/routes/safe/store/actions/loadSafesFromStorage'
 import loadActiveTokens from '~/logic/tokens/store/actions/loadActiveTokens'
 
+if (process.env.NODE_ENV !== 'production') {
+  // eslint-disable-next-line
+  const whyDidYouRender = require('@welldone-software/why-did-you-render')
+  whyDidYouRender(React)
+}
+
 store.dispatch(loadActiveTokens())
 store.dispatch(loadSafesFromStorage())
 

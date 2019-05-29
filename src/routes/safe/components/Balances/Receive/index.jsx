@@ -23,6 +23,7 @@ const styles = () => ({
     padding: `${sm} ${lg}`,
     justifyContent: 'space-between',
     maxHeight: '75px',
+    boxSizing: 'border-box',
   },
   manage: {
     fontSize: '24px',
@@ -93,7 +94,14 @@ const Receive = ({
       </Block>
       <Block align="center" className={classes.addressContainer}>
         <Identicon address={safeAddress} diameter={32} />
-        <Paragraph onClick={copyToClipboard} className={classes.address}>{safeAddress}</Paragraph>
+        <Paragraph
+          onClick={() => {
+            copyToClipboard(safeAddress)
+          }}
+          className={classes.address}
+        >
+          {safeAddress}
+        </Paragraph>
         <Link className={classes.open} to={etherScanLink} target="_blank">
           <OpenInNew style={openIconStyle} />
         </Link>

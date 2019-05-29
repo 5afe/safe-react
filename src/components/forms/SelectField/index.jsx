@@ -16,32 +16,30 @@ const SelectInput = ({
   meta,
   label,
   formControlProps,
+  classes,
+  renderValue,
   ...rest
 }: SelectFieldProps) => {
   const showError = ((meta.submitError && !meta.dirtySinceLastSubmit) || meta.error) && meta.touched
-  const inputProps = { ...restInput, name }
+  const inputProps = {
+    ...restInput,
+    name,
+  }
 
   return (
-    <FormControl
-      {...formControlProps}
-      error={showError}
-      style={style}
-    >
+    <FormControl {...formControlProps} error={showError} style={style}>
       <InputLabel htmlFor={name}>{label}</InputLabel>
       <Select
-        {...rest}
+        classes={classes}
         onChange={onChange}
+        renderValue={renderValue}
         inputProps={inputProps}
         value={value}
+        {...rest}
       />
-      { showError &&
-        <FormHelperText>
-          {meta.error || meta.submitError}
-        </FormHelperText>
-      }
+      {showError && <FormHelperText>{meta.error || meta.submitError}</FormHelperText>}
     </FormControl>
   )
 }
-
 
 export default SelectInput

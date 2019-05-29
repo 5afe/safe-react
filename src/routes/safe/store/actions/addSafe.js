@@ -31,7 +31,7 @@ const saveSafe = (
   threshold: number,
   ownersName: string[],
   ownersAddress: string[],
-) => async (dispatch: ReduxDispatch<GlobalState>) => {
+) => (dispatch: ReduxDispatch<GlobalState>) => {
   const owners: List<Owner> = buildOwnersFrom(ownersName, ownersAddress)
 
   const safe: Safe = SafeRecord({
