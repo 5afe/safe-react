@@ -18,7 +18,7 @@ import { whenSafeDeployed } from './builder/safe.dom.utils'
 
 afterEach(cleanup)
 
-const fillOpenSafeForm = async (localStore: Store<GlobalState>) => {
+const renderOpenSafeForm = async (localStore: Store<GlobalState>) => {
   const provider = await getProviderInfo()
   const walletRecord = makeProvider(provider)
   localStore.dispatch(addProvider(walletRecord))
@@ -87,7 +87,7 @@ const deploySafe = async (safe: React$Component<{}>, threshold: number, numOwner
 }
 
 const aDeployedSafe = async (specificStore: Store<GlobalState>, threshold?: number = 1, numOwners?: number = 1) => {
-  const safe: React$Component<{}> = await fillOpenSafeForm(specificStore)
+  const safe: React$Component<{}> = await renderOpenSafeForm(specificStore)
   const safeAddress = await deploySafe(safe, threshold, numOwners)
 
   return safeAddress
