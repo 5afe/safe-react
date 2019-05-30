@@ -12,9 +12,7 @@ import { history } from '~/store'
 import { secondary } from '~/theme/variables'
 import { type SelectorProps } from '~/routes/load/container/selector'
 
-const getSteps = () => [
-  'Details', 'Review',
-]
+const getSteps = () => ['Details', 'Review']
 
 type Props = SelectorProps & {
   onLoadSafeSubmit: (values: Object) => Promise<void>,
@@ -37,30 +35,24 @@ const Layout = ({
 
   return (
     <React.Fragment>
-      { provider
-        ? (
-          <Block>
-            <Row align="center">
-              <IconButton onClick={back} style={iconStyle} disableRipple>
-                <ChevronLeft />
-              </IconButton>
-              <Heading tag="h2">Load existing Safe</Heading>
-            </Row>
-            <Stepper
-              onSubmit={onLoadSafeSubmit}
-              steps={steps}
-            >
-              <Stepper.Page validate={safeFieldsValidation}>
-                { DetailsForm }
-              </Stepper.Page>
-              <Stepper.Page network={network} userAddress={userAddress}>
-                { ReviewInformation }
-              </Stepper.Page>
-            </Stepper>
-          </Block>
-        )
-        : <div>No metamask detected</div>
-      }
+      {provider ? (
+        <Block>
+          <Row align="center">
+            <IconButton onClick={back} style={iconStyle} disableRipple>
+              <ChevronLeft />
+            </IconButton>
+            <Heading tag="h2">Load existing Safe</Heading>
+          </Row>
+          <Stepper onSubmit={onLoadSafeSubmit} steps={steps} testId="load-safe-form">
+            <Stepper.Page validate={safeFieldsValidation}>{DetailsForm}</Stepper.Page>
+            <Stepper.Page network={network} userAddress={userAddress}>
+              {ReviewInformation}
+            </Stepper.Page>
+          </Stepper>
+        </Block>
+      ) : (
+        <div>No metamask detected</div>
+      )}
     </React.Fragment>
   )
 }
