@@ -49,7 +49,7 @@ const createMasterCopies = async () => {
   proxyFactoryMaster = await ProxyFactory.new({ from: userAccount, gas: '5000000' })
 
   const GnosisSafe = getGnosisSafeContract(web3)
-  safeMaster = await GnosisSafe.new({ from: userAccount, gas: '6000000' })
+  safeMaster = await GnosisSafe.new({ from: userAccount, gas: '7000000' })
 }
 
 export const initContracts = ensureOnce(process.env.NODE_ENV === 'test' ? createMasterCopies : instanciateMasterCopies)
