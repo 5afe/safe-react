@@ -1,7 +1,6 @@
 // @flow
 import * as React from 'react'
 import { type Store } from 'redux'
-import TestUtils from 'react-dom/test-utils'
 import { render, fireEvent, cleanup } from 'react-testing-library'
 import Select from '@material-ui/core/Select'
 import { Provider } from 'react-redux'
@@ -32,12 +31,12 @@ const renderOpenSafeForm = async (localStore: Store<GlobalState>) => {
   )
 }
 
-const deploySafe = async (safe: React$Component<{}>, threshold: number, numOwners: number) => {
+const deploySafe = async (safe: any, threshold: number, numOwners: number) => {
   const web3 = getWeb3()
   const accounts = await web3.eth.getAccounts()
 
   expect(threshold).toBeLessThanOrEqual(numOwners)
-  const form = TestUtils.findRenderedDOMComponentWithTag(safe, 'form')
+  const form = safe.getByTestId('create-safe-form')
 
   // Fill Safe's name
   const inputs = TestUtils.scryRenderedDOMComponentsWithTag(safe, 'input')

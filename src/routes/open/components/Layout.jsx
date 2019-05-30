@@ -14,9 +14,7 @@ import { getOwnerNameBy, getOwnerAddressBy, FIELD_CONFIRMATIONS } from '~/routes
 import { history } from '~/store'
 import { secondary } from '~/theme/variables'
 
-const getSteps = () => [
-  'Start', 'Owners', 'Confirmations', 'Review',
-]
+const getSteps = () => ['Start', 'Owners', 'Confirmations', 'Review']
 
 const initialValuesFrom = (userAccount: string) => ({
   [getOwnerNameBy(0)]: 'My Metamask (me)',
@@ -49,37 +47,24 @@ const Layout = ({
 
   return (
     <React.Fragment>
-      { provider
-        ? (
-          <Block>
-            <Row align="center">
-              <IconButton onClick={back} style={iconStyle} disableRipple>
-                <ChevronLeft />
-              </IconButton>
-              <Heading tag="h2">Create New Safe</Heading>
-            </Row>
-            <Stepper
-              onSubmit={onCallSafeContractSubmit}
-              steps={steps}
-              initialValues={initialValues}
-            >
-              <Stepper.Page>
-                { SafeNameField }
-              </Stepper.Page>
-              <Stepper.Page>
-                { SafeOwnersFields }
-              </Stepper.Page>
-              <Stepper.Page validate={safeFieldsValidation}>
-                { SafeThresholdField }
-              </Stepper.Page>
-              <Stepper.Page network={network}>
-                { Review }
-              </Stepper.Page>
-            </Stepper>
-          </Block>
-        )
-        : <div>No metamask detected</div>
-      }
+      {provider ? (
+        <Block>
+          <Row align="center">
+            <IconButton onClick={back} style={iconStyle} disableRipple>
+              <ChevronLeft />
+            </IconButton>
+            <Heading tag="h2">Create New Safe</Heading>
+          </Row>
+          <Stepper onSubmit={onCallSafeContractSubmit} steps={steps} initialValues={initialValues} testId="create-safe-form">
+            <Stepper.Page>{SafeNameField}</Stepper.Page>
+            <Stepper.Page>{SafeOwnersFields}</Stepper.Page>
+            <Stepper.Page validate={safeFieldsValidation}>{SafeThresholdField}</Stepper.Page>
+            <Stepper.Page network={network}>{Review}</Stepper.Page>
+          </Stepper>
+        </Block>
+      ) : (
+        <div>No metamask detected</div>
+      )}
     </React.Fragment>
   )
 }
