@@ -22,9 +22,7 @@ export const checkBalanceOf = async (addressToTest: string, value: string) => {
 const createTokenOMGContract = async (web3: any, creator: string) => {
   const token = contract(TokenOMG)
   const { toBN } = web3.utils
-  const amount = toBN(50000)
-    .mul(toBN(10).pow(toBN(18)))
-    .toString()
+  const amount = toBN(50000).mul(toBN(10).pow(toBN(18))).toString()
   token.setProvider(web3.currentProvider)
 
   return token.new(amount, { from: creator })
@@ -33,9 +31,7 @@ const createTokenOMGContract = async (web3: any, creator: string) => {
 const createTokenRDNContract = async (web3: any, creator: string) => {
   const token = contract(TokenRDN)
   const { toBN } = web3.utils
-  const amount = toBN(50000)
-    .mul(toBN(10).pow(toBN(18)))
-    .toString()
+  const amount = toBN(50000).mul(toBN(10).pow(toBN(18))).toString()
   token.setProvider(web3.currentProvider)
 
   return token.new(amount, { from: creator })
