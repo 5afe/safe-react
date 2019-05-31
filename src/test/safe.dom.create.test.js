@@ -1,8 +1,7 @@
 // @flow
 import * as React from 'react'
 import { type Store } from 'redux'
-import TestUtils from 'react-dom/test-utils'
-import Select from '@material-ui/core/Select'
+import { render, fireEvent, cleanup } from 'react-testing-library'
 import { Provider } from 'react-redux'
 import { ConnectedRouter } from 'connected-react-router'
 import { ADD_OWNER_BUTTON } from '~/routes/open/components/SafeOwnersForm'
@@ -15,12 +14,29 @@ import { makeProvider } from '~/logic/wallets/store/model/provider'
 import { getGnosisSafeInstanceAt } from '~/logic/contracts/safeContracts'
 import { whenSafeDeployed } from './builder/safe.dom.utils'
 
-const fillOpenSafeForm = async (localStore: Store<GlobalState>) => {
+afterEach(cleanup)
+
+// https://github.com/testing-library/react-testing-library/issues/281
+const originalError = console.error
+beforeAll(() => {
+  console.error = (...args) => {
+    if (/Warning.*not wrapped in act/.test(args[0])) {
+      return
+    }
+    originalError.call(console, ...args)
+  }
+})
+
+afterAll(() => {
+  console.error = originalError
+})
+
+const renderOpenSafeForm = async (localStore: Store<GlobalState>) => {
   const provider = await getProviderInfo()
   const walletRecord = makeProvider(provider)
   localStore.dispatch(addProvider(walletRecord))
 
-  return TestUtils.renderIntoDocument(
+  return render(
     <Provider store={localStore}>
       <ConnectedRouter history={history}>
         <Open />
@@ -29,53 +45,54 @@ const fillOpenSafeForm = async (localStore: Store<GlobalState>) => {
   )
 }
 
-const deploySafe = async (safe: React$Component<{}>, threshold: number, numOwners: number) => {
+const deploySafe = async (createSafeForm: any, threshold: number, numOwners: number) => {
   const web3 = getWeb3()
   const accounts = await web3.eth.getAccounts()
 
   expect(threshold).toBeLessThanOrEqual(numOwners)
-  const form = TestUtils.findRenderedDOMComponentWithTag(safe, 'form')
+  const form = createSafeForm.getByTestId('create-safe-form')
 
   // Fill Safe's name
-  const inputs = TestUtils.scryRenderedDOMComponentsWithTag(safe, 'input')
-  expect(inputs.length).toBe(1)
-  const fieldName = inputs[0]
-  TestUtils.Simulate.change(fieldName, { target: { value: 'Adolfo Safe' } })
-  TestUtils.Simulate.submit(form)
+  const nameInput: HTMLInputElement = createSafeForm.getByPlaceholderText('Name of the new Safe')
+
+  fireEvent.change(nameInput, { target: { value: 'Adolfo Safe' } })
+  fireEvent.submit(form)
   await sleep(400)
 
   // Fill owners
   const addedUpfront = 1
-  const buttons = TestUtils.scryRenderedDOMComponentsWithTag(safe, 'button')
-  const addOwnerButton = buttons[1]
+  const addOwnerButton = createSafeForm.getByTestId('add-owner-btn')
+
   expect(addOwnerButton.getElementsByTagName('span')[0].textContent).toEqual(ADD_OWNER_BUTTON)
   for (let i = addedUpfront; i < numOwners; i += 1) {
-    TestUtils.Simulate.click(addOwnerButton)
+    fireEvent.click(addOwnerButton)
   }
 
-  const ownerInputs = TestUtils.scryRenderedDOMComponentsWithTag(safe, 'input')
-  expect(ownerInputs.length).toBe(numOwners * 2)
+  const ownerNameInputs = createSafeForm.getAllByPlaceholderText('Owner Name*')
+  const ownerAddressInputs = createSafeForm.getAllByPlaceholderText('Owner Address*')
+  expect(ownerNameInputs.length).toBe(numOwners)
+  expect(ownerAddressInputs.length).toBe(numOwners)
+
   for (let i = addedUpfront; i < numOwners; i += 1) {
-    const nameIndex = i * 2
-    const addressIndex = i * 2 + 1
-    const ownerName = ownerInputs[nameIndex]
-    const account = ownerInputs[addressIndex]
+    const ownerNameInput = ownerNameInputs[i]
+    const ownerAddressInput = ownerAddressInputs[i]
 
-    TestUtils.Simulate.change(ownerName, { target: { value: `Adolfo ${i + 1} Eth Account` } })
-    TestUtils.Simulate.change(account, { target: { value: accounts[i] } })
+    fireEvent.change(ownerNameInput, { target: { value: `Owner ${i + 1}` } })
+    fireEvent.change(ownerAddressInput, { target: { value: accounts[i] } })
   }
-  TestUtils.Simulate.submit(form)
+  fireEvent.submit(form)
   await sleep(400)
 
   // Fill Threshold
-  const muiSelectFields = TestUtils.scryRenderedComponentsWithType(safe, Select)
-  expect(muiSelectFields.length).toEqual(1)
-  muiSelectFields[0].props.onChange(`${threshold}`)
-  TestUtils.Simulate.submit(form)
+  const thresholdSelect = createSafeForm.getByRole('button')
+  fireEvent.click(thresholdSelect)
+  const thresholdOptions = createSafeForm.getAllByRole('option')
+  fireEvent.click(thresholdOptions[numOwners - 1])
+  fireEvent.submit(form)
   await sleep(400)
 
   // Submit
-  TestUtils.Simulate.submit(form)
+  fireEvent.submit(form)
   await sleep(400)
 
   // giving some time to the component for updating its state with safe
@@ -84,14 +101,14 @@ const deploySafe = async (safe: React$Component<{}>, threshold: number, numOwner
 }
 
 const aDeployedSafe = async (specificStore: Store<GlobalState>, threshold?: number = 1, numOwners?: number = 1) => {
-  const safe: React$Component<{}> = await fillOpenSafeForm(specificStore)
+  const safe: React$Component<{}> = await renderOpenSafeForm(specificStore)
   const safeAddress = await deploySafe(safe, threshold, numOwners)
 
   return safeAddress
 }
 
 describe('DOM > Feature > CREATE a safe', () => {
-  it('fills correctly the safe form with 4 owners and 4 threshold', async () => {
+  it('fills correctly the safe form with 4 owners and 4 threshold and creates a safe', async () => {
     const owners = 4
     const threshold = 4
     const store = aNewStore()

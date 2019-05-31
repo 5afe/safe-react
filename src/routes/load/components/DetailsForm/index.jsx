@@ -37,9 +37,11 @@ const styles = () => ({
 export const SAFE_INSTANCE_ERROR = 'Address given is not a safe instance'
 export const SAFE_MASTERCOPY_ERROR = 'Mastercopy used by this safe is not the same'
 
+// In case of an error here, it will be swallowed by final-form
+// So if you're experiencing any strang behaviours like freeze or hanging
+// Don't mind to check if everything is OK inside this function :)
 export const safeFieldsValidation = async (values: Object) => {
   const errors = {}
-
   const web3 = getWeb3()
   const safeAddress = values[FIELD_LOAD_ADDRESS]
   if (!safeAddress || mustBeEthereumAddress(safeAddress) !== undefined) {
@@ -51,27 +53,21 @@ export const safeFieldsValidation = async (values: Object) => {
 
   const code = await web3.eth.getCode(safeAddress)
   const codeWithoutMetadata = code.substring(0, code.lastIndexOf(metaData))
-
   const proxyCode = SafeProxy.deployedBytecode
   const proxyCodeWithoutMetadata = proxyCode.substring(0, proxyCode.lastIndexOf(metaData))
-
   const safeInstance = codeWithoutMetadata === proxyCodeWithoutMetadata
   if (!safeInstance) {
     errors[FIELD_LOAD_ADDRESS] = SAFE_INSTANCE_ERROR
-
     return errors
   }
 
   // check mastercopy
-  const proxy = contract(SafeProxy)
-  proxy.setProvider(web3.currentProvider)
-  const proxyInstance = await proxy.at(safeAddress)
-  const proxyImplementation = await proxyInstance.implementation()
-
+  const proxyAddressFromStorage = await web3.eth.getStorageAt(safeAddress, 0)
+  const checksummedProxyAddress = web3.utils.toChecksumAddress(proxyAddressFromStorage)
   const safeMaster = await getSafeMasterContract()
   const masterCopy = safeMaster.address
 
-  const sameMasterCopy = proxyImplementation === masterCopy
+  const sameMasterCopy = checksummedProxyAddress === masterCopy
   if (!sameMasterCopy) {
     errors[FIELD_LOAD_ADDRESS] = SAFE_MASTERCOPY_ERROR
   }
