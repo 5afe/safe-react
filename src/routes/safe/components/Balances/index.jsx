@@ -154,7 +154,7 @@ class Balances extends React.Component<Props, State> {
           defaultFixed
         >
           {(sortedData: Array<BalanceRow>) => sortedData.map((row: any, index: number) => (
-            <TableRow tabIndex={-1} key={index} className={classes.hide}>
+            <TableRow tabIndex={-1} key={index} className={classes.hide} data-testid="balance-row">
               {autoColumns.map((column: Column) => (
                 <TableCell key={column.id} style={cellWidth(column.width)} align={column.align} component="td">
                   {column.id === BALANCE_TABLE_ASSET_ID ? <AssetTableCell asset={row[column.id]} /> : row[column.id]}
@@ -169,6 +169,7 @@ class Balances extends React.Component<Props, State> {
                       color="secondary"
                       className={classes.send}
                       onClick={() => this.showSendFunds(row.asset.name)}
+                      data-testid="balance-send-btn"
                     >
                       <CallMade className={classNames(classes.leftIcon, classes.iconSmall)} />
                         Send

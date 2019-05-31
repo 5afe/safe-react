@@ -1,6 +1,7 @@
 // @flow
 import * as React from 'react'
 import TestUtils from 'react-dom/test-utils'
+import { render } from '@testing-library/react'
 import ListItemText from '~/components/List/ListItemText/index'
 import { SEE_MULTISIG_BUTTON_TEXT } from '~/routes/safe/components/Safe/MultisigTx'
 import fetchTransactions from '~/routes/safe/store/actions/fetchTransactions'
@@ -92,7 +93,7 @@ export const refreshTransactions = async (store: Store<GlobalState>, safeAddress
   await sleep(1500)
 }
 
-const createDom = (store: Store): React$Component<{}> => TestUtils.renderIntoDocument(
+const renderApp = (store: Store) => render(
   <Provider store={store}>
     <ConnectedRouter history={history}>
       <AppRoutes />
@@ -100,17 +101,17 @@ const createDom = (store: Store): React$Component<{}> => TestUtils.renderIntoDoc
   </Provider>,
 )
 
-export const travelToSafe = (store: Store, address: string): React$Component<{}> => {
+export const renderSafeView = (store: Store, address: string) => {
   history.push(`${SAFELIST_ADDRESS}/${address}`)
 
-  return createDom(store)
+  return renderApp(store)
 }
 
 export const travelToTokens = (store: Store, address: string): React$Component<{}> => {
   const url = `${SAFELIST_ADDRESS}/${address}${SETTINS_ADDRESS}`
   history.push(url)
 
-  return createDom(store)
+  return renderApp(store)
 }
 
 const INTERVAL = 500

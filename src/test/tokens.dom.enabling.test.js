@@ -4,7 +4,7 @@ import { List } from 'immutable'
 import { getWeb3 } from '~/logic/wallets/getWeb3'
 import { type Match } from 'react-router-dom'
 import Checkbox from '@material-ui/core/Checkbox'
-import { getFirstTokenContract, getSecondTokenContract, addTknTo } from '~/test/utils/tokenMovements'
+import { getFirstTokenContract, getSecondTokenContract, sendTokenTo } from '~/test/utils/tokenMovements'
 import { aNewStore } from '~/store'
 import { aMinedSafe } from '~/test/builder/safe.redux.builder'
 import { travelToTokens } from '~/test/builder/safe.dom.utils'
@@ -76,8 +76,8 @@ describe('DOM > Feature > Enable and disable default tokens', () => {
     // GIVEN
     const store = aNewStore()
     const safeAddress = await aMinedSafe(store)
-    await addTknTo(safeAddress, '50', firstErc20Token)
-    await addTknTo(safeAddress, '50', secondErc20Token)
+    await sendTokenTo(safeAddress, '50', firstErc20Token)
+    await sendTokenTo(safeAddress, '50', secondErc20Token)
     await store.dispatch(fetchTokensModule.fetchTokens(safeAddress))
 
     const match: Match = buildMathPropsFrom(safeAddress)

@@ -5,9 +5,9 @@ import SafeView from '~/routes/safe/components/Safe'
 import { aNewStore, type GlobalState } from '~/store'
 import { sleep } from '~/utils/timer'
 import { getWeb3 } from '~/logic/wallets/getWeb3'
-import { addEtherTo } from '~/test/utils/tokenMovements'
+import { sendEtherTo } from '~/test/utils/tokenMovements'
 import { aMinedSafe } from '~/test/builder/safe.redux.builder'
-import { travelToSafe } from '~/test/builder/safe.dom.utils'
+import { renderSafeView } from '~/test/builder/safe.dom.utils'
 import { MOVE_FUNDS_BUTTON_TEXT } from '~/routes/safe/components/Safe/BalanceInfo'
 
 export type DomSafe = {
@@ -30,10 +30,10 @@ export const renderSafeInDom = async (owners: number = 1, threshold: number = 1)
   // have available accounts
   const accounts = await getWeb3().eth.getAccounts()
   // navigate to SAFE route
-  const SafeDom = travelToSafe(store, address)
+  const SafeDom = renderSafeView(store, address)
 
   // add funds to safe
-  await addEtherTo(address, '0.1')
+  await sendEtherTo(address, '0.1')
   // wait until funds are displayed and buttons are enabled
   await sleep(3000)
 

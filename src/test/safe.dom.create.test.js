@@ -1,7 +1,7 @@
 // @flow
 import * as React from 'react'
 import { type Store } from 'redux'
-import { render, fireEvent, cleanup } from 'react-testing-library'
+import { render, fireEvent, cleanup } from '@testing-library/react'
 import { Provider } from 'react-redux'
 import { ConnectedRouter } from 'connected-react-router'
 import { ADD_OWNER_BUTTON } from '~/routes/open/components/SafeOwnersForm'
@@ -16,7 +16,7 @@ import { whenSafeDeployed } from './builder/safe.dom.utils'
 
 afterEach(cleanup)
 
-// https://github.com/testing-library/react-testing-library/issues/281
+// https://github.com/testing-library/@testing-library/react/issues/281
 const originalError = console.error
 beforeAll(() => {
   console.error = (...args) => {

@@ -1,16 +1,17 @@
 // @flow
-
-import TestUtils from 'react-dom/test-utils'
+import { render, fireEvent, cleanup } from '@testing-library/react'
 import * as fetchBalancesAction from '~/logic/tokens/store/actions/fetchTokens'
 import { aNewStore } from '~/store'
 import { aMinedSafe } from '~/test/builder/safe.redux.builder'
-import { addTknTo, getFirstTokenContract } from '~/test/utils/tokenMovements'
-import { EXPAND_BALANCE_INDEX, travelToSafe } from '~/test/builder/safe.dom.utils'
+import { sendTokenTo, getFirstTokenContract } from '~/test/utils/tokenMovements'
+import { EXPAND_BALANCE_INDEX, renderSafeView } from '~/test/builder/safe.dom.utils'
 import { getWeb3 } from '~/logic/wallets/getWeb3'
 import { sendMoveTokensForm, dispatchTknBalance } from '~/test/utils/transactions/moveTokens.helper'
 import { sleep } from '~/utils/timer'
 
-describe('DOM > Feature > SAFE ERC20 TOKENS', () => {
+afterEach(cleanup)
+
+describe('DOM > Feature > Funds', () => {
   let store
   let safeAddress: string
   let accounts
@@ -20,10 +21,10 @@ describe('DOM > Feature > SAFE ERC20 TOKENS', () => {
     accounts = await getWeb3().eth.getAccounts()
   })
 
-  it('sends ERC20 tokens', async () => {
+  it('Sends ETH', async () => {
     // GIVEN
     const numTokens = '100'
-    const tokenAddress = await addTknTo(safeAddress, numTokens)
+    const tokenAddress = await sendTokenTo(safeAddress, numTokens)
 
     await dispatchTknBalance(store, tokenAddress, safeAddress)
     // const StandardToken = await fetchBalancesAction.getStandardTokenContract()
@@ -32,9 +33,10 @@ describe('DOM > Feature > SAFE ERC20 TOKENS', () => {
     // console.log(await myToken.balanceOf(safeAddress))
 
     // WHEN
-    const SafeDom = await travelToSafe(store, safeAddress)
+    const SafeDom = await renderSafeView(store, safeAddress)
     await sleep(800)
-    // $FlowFixMe
+
+    const balanceRows = SafeDom.getAllByTestId('balance-row')
     const buttons = TestUtils.scryRenderedDOMComponentsWithTag(SafeDom, 'button')
     const expandBalance = buttons[EXPAND_BALANCE_INDEX]
     const receiver = accounts[2]
@@ -51,24 +53,34 @@ describe('DOM > Feature > SAFE ERC20 TOKENS', () => {
     expect(Number(nativeSafeFunds.valueOf())).toEqual(80 * 10 ** 18)
   })
 
-  it('disables send token button when balance is 0', async () => {
+  it('Sends Tokens', async () => {
     // GIVEN
-    const token = await getFirstTokenContract(getWeb3(), accounts[0])
-    await dispatchTknBalance(store, token.address, safeAddress)
+    const numTokens = '100'
+    const tokenAddress = await sendTokenTo(safeAddress, numTokens)
+
+    await dispatchTknBalance(store, tokenAddress, safeAddress)
+    // const StandardToken = await fetchBalancesAction.getStandardTokenContract()
+    // const myToken = await StandardToken.at(tokenAddress)
+    // console.log(await myToken.allowance(safeAddress, accounts[2]))
+    // console.log(await myToken.balanceOf(safeAddress))
 
     // WHEN
-    const SafeDom = travelToSafe(store, safeAddress)
-
+    const SafeDom = await renderSafeView(store, safeAddress)
+    await sleep(800)
     // $FlowFixMe
     const buttons = TestUtils.scryRenderedDOMComponentsWithTag(SafeDom, 'button')
     const expandBalance = buttons[EXPAND_BALANCE_INDEX]
+    const receiver = accounts[2]
+    await sendMoveTokensForm(SafeDom, expandBalance, 20, accounts[2])
 
-    TestUtils.Simulate.click(expandBalance)
-    await sleep(800)
+    // THEN
+    const safeFunds = await fetchBalancesAction.calculateBalanceOf(tokenAddress, safeAddress, 18)
+    expect(Number(safeFunds)).toBe(80)
+    const receiverFunds = await fetchBalancesAction.calculateBalanceOf(tokenAddress, receiver, 18)
+    expect(Number(receiverFunds)).toBe(20)
 
-    // $FlowFixMe
-    const balanceButtons = TestUtils.scryRenderedDOMComponentsWithTag(SafeDom, 'button')
-    const tokenButton = balanceButtons[EXPAND_BALANCE_INDEX + 1] // expand button, and the next one is for sending
-    expect(tokenButton.hasAttribute('disabled')).toBe(true)
+    const token = await getFirstTokenContract(getWeb3(), accounts[0])
+    const nativeSafeFunds = await token.balanceOf(safeAddress)
+    expect(Number(nativeSafeFunds.valueOf())).toEqual(80 * 10 ** 18)
   })
 })

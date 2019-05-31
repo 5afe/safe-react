@@ -1,6 +1,5 @@
 // @flow
 import * as React from 'react'
-import contract from 'truffle-contract'
 import { withStyles } from '@material-ui/core/styles'
 import Field from '~/components/forms/Field'
 import {

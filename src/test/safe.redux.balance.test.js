@@ -5,7 +5,7 @@ import { aNewStore } from '~/store'
 import { aMinedSafe } from '~/test/builder/safe.redux.builder'
 import { type Token } from '~/logic/tokens/store/model/token'
 import { TOKEN_REDUCER_ID } from '~/logic/tokens/store/reducer/tokens'
-import { addEtherTo, addTknTo } from '~/test/utils/tokenMovements'
+import { sendEtherTo, sendTokenTo } from '~/test/utils/tokenMovements'
 import { dispatchTknBalance } from '~/test/utils/transactions/moveTokens.helper'
 import { ETH_ADDRESS } from '~/logic/tokens/utils/tokenHelpers'
 
@@ -38,7 +38,7 @@ describe('Safe - redux balance property', () => {
 
   it('reducer should return 0.03456 ETH as funds to safe with 0.03456 ETH', async () => {
     // WHEN
-    await addEtherTo(address, '0.03456')
+    await sendEtherTo(address, '0.03456')
     await store.dispatch(fetchTokensAction.fetchTokens(address))
 
     // THEN
@@ -57,7 +57,7 @@ describe('Safe - redux balance property', () => {
   it('reducer should return 100 TKN when safe has 100 TKN', async () => {
     // GIVEN
     const numTokens = '100'
-    const tokenAddress = await addTknTo(address, numTokens)
+    const tokenAddress = await sendTokenTo(address, numTokens)
 
     // WHEN
     await dispatchTknBalance(store, tokenAddress, address)

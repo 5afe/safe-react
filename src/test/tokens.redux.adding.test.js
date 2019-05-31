@@ -4,7 +4,7 @@ import { type Match } from 'react-router-dom'
 import { getFirstTokenContract, getSecondTokenContract } from '~/test/utils/tokenMovements'
 import { aNewStore } from '~/store'
 import { aMinedSafe } from '~/test/builder/safe.redux.builder'
-import { travelToSafe } from '~/test/builder/safe.dom.utils'
+import { renderSafeView } from '~/test/builder/safe.dom.utils'
 import { buildMathPropsFrom } from '~/test/utils/buildReactRouterProps'
 import { testToken } from '~/test/builder/tokens.dom.utils'
 import * as fetchTokensModule from '~/logic/tokens/store/actions/fetchTokens'
@@ -49,11 +49,11 @@ describe('DOM > Feature > Add new ERC 20 Tokens', () => {
   //   }
   //   const customAddTokensFn: any = (...args) => store.dispatch(addToken(...args))
   //   await addTokenFnc(values, customAddTokensFn, safeAddress)
-  //   travelToSafe(store, safeAddress)
+  //   renderSafeView(store, safeAddress)
   //   // WHEN
   //   const reloadedStore = aNewStore()
   //   await reloadedStore.dispatch(fetchTokensModule.fetchTokens(safeAddress))
-  //   travelToSafe(reloadedStore, safeAddress) // reload
+  //   renderSafeView(reloadedStore, safeAddress) // reload
   //   // THEN
   //   const match: Match = buildMathPropsFrom(safeAddress)
   //   const activeTokenList = activeTokensSelector(reloadedStore.getState(), { match })
