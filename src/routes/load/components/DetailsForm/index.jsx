@@ -62,10 +62,15 @@ export const safeFieldsValidation = async (values: Object) => {
 
   // check mastercopy
   const proxyAddressFromStorage = await web3.eth.getStorageAt(safeAddress, 0)
-  const checksummedProxyAddress = web3.utils.toChecksumAddress(proxyAddressFromStorage)
+  // https://www.reddit.com/r/ethereum/comments/6l3da1/how_long_are_ethereum_addresses/
+  // ganache returns plain address
+  // rinkeby returns 0x0000000000000+{40 address charachers}
+  // address comes last so we just get last 40 charachers (1byte = 2hex chars)
+  const checksummedProxyAddress = web3.utils.toChecksumAddress(
+    `0x${proxyAddressFromStorage.substr(proxyAddressFromStorage.length - 40)}`,
+  )
   const safeMaster = await getSafeMasterContract()
   const masterCopy = safeMaster.address
-
   const sameMasterCopy = checksummedProxyAddress === masterCopy
   if (!sameMasterCopy) {
     errors[FIELD_LOAD_ADDRESS] = SAFE_MASTERCOPY_ERROR
