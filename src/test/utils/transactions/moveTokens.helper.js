@@ -8,6 +8,7 @@ import { whenExecuted } from '~/test/utils/logTransactions'
 import SendToken from '~/routes/safe/components/SendToken'
 import { makeToken, type Token } from '~/logic/tokens/store/model/token'
 import addTokens from '~/logic/tokens/store/actions/saveTokens'
+import { calculateBalanceOf } from '~/routes/safe/store/actions/fetchTokenBalances'
 
 export const sendMoveTokensForm = async (
   SafeDom: React$Component<any, any>,
@@ -44,22 +45,22 @@ export const sendMoveTokensForm = async (
 }
 
 export const dispatchTknBalance = async (store: Store, tokenAddress: string, address: string) => {
-  const fetchBalancesMock = jest.spyOn(fetchTokensAction, 'fetchTokens')
-  const funds = await fetchTokensAction.calculateBalanceOf(tokenAddress, address, 18)
+  const fetchBalancesMock = jest.fn()
+  const balance = await calculateBalanceOf(tokenAddress, address, 18)
   const balances: Map<string, Token> = Map().set(
     'TKN',
     makeToken({
       address: tokenAddress,
-      name: 'Token',
-      symbol: 'TKN',
+      name: 'OmiseGo',
+      symbol: 'OMG',
       decimals: 18,
       logoUri:
         'https://github.com/TrustWallet/tokens/blob/master/images/0x6810e776880c02933d47db1b9fc05908e5386b96.png?raw=true',
-      funds,
+      balance,
     }),
   )
   fetchBalancesMock.mockImplementation(() => store.dispatch(addTokens(address, balances)))
-  await store.dispatch(fetchTokensAction.fetchTokens(address))
+  await store.dispatch(fetchTokensAction.fetchTokens())
   fetchBalancesMock.mockRestore()
 }
 

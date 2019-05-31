@@ -1,17 +1,20 @@
 // @flow
 import * as React from 'react'
 import TestUtils from 'react-dom/test-utils'
+import { createMemoryHistory } from 'history'
 import { render } from '@testing-library/react'
 import ListItemText from '~/components/List/ListItemText/index'
 import { SEE_MULTISIG_BUTTON_TEXT } from '~/routes/safe/components/Safe/MultisigTx'
 import fetchTransactions from '~/routes/safe/store/actions/fetchTransactions'
 import { sleep } from '~/utils/timer'
+import { aNewStore, type GlobalState } from '~/store'
 import { Provider } from 'react-redux'
 import { ConnectedRouter } from 'connected-react-router'
 import AppRoutes from '~/routes'
 import { SAFELIST_ADDRESS, SETTINS_ADDRESS } from '~/routes/routes'
-import { history, type GlobalState } from '~/store'
 import { EMPTY_DATA } from '~/logic/wallets/ethTransactions'
+
+export const testHistory = createMemoryHistory
 
 export const EXPAND_BALANCE_INDEX = 0
 export const EXPAND_OWNERS_INDEX = 1
@@ -93,25 +96,39 @@ export const refreshTransactions = async (store: Store<GlobalState>, safeAddress
   await sleep(1500)
 }
 
-const renderApp = (store: Store) => render(
-  <Provider store={store}>
-    <ConnectedRouter history={history}>
-      <AppRoutes />
-    </ConnectedRouter>
-  </Provider>,
-)
+const renderApp = (store: Store) => ({
+  ...render(
+    <Provider store={store}>
+      <ConnectedRouter history={history}>
+        <React.Suspense fallback={<div />}>
+          <AppRoutes />
+        </React.Suspense>
+      </ConnectedRouter>
+    </Provider>,
+  ),
+  store,
+})
 
-export const renderSafeView = (store: Store, address: string) => {
-  history.push(`${SAFELIST_ADDRESS}/${address}`)
+export const renderSafeView = (address: string) => {
+  const url = `${SAFELIST_ADDRESS}/${address}`
+  const history = createMemoryHistory({ initialEntries: [url] })
+  const store = aNewStore(history)
 
-  return renderApp(store)
+  return renderApp(store, history)
 }
 
-export const travelToTokens = (store: Store, address: string): React$Component<{}> => {
+export const travelToTokens = (address: string) => {
   const url = `${SAFELIST_ADDRESS}/${address}${SETTINS_ADDRESS}`
-  history.push(url)
+  const history = createMemoryHistory({ initialEntries: [url] })
+  const store = aNewStore(history)
 
-  return renderApp(store)
+  return renderApp(store, history)
+}
+
+export const createTestStore = (initialRoute = '/') => {
+  const history = createMemoryHistory({initialEntries: [initialRoute]})
+
+  return aNewStore(history)
 }
 
 const INTERVAL = 500

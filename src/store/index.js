@@ -29,14 +29,15 @@ export type GlobalState = {
 
 export type GetState = () => GlobalState
 
-const reducers: Reducer<GlobalState> = combineReducers({
-  router: connectRouter(history),
+// customHistory is passed in tests, check test/builder/safe.dom.utils.js
+const reducers: Reducer<GlobalState> = (customHistory: any = history) => combineReducers({
+  router: connectRouter(customHistory),
   [PROVIDER_REDUCER_ID]: provider,
   [SAFE_REDUCER_ID]: safe,
   [TOKEN_REDUCER_ID]: tokens,
   [TRANSACTIONS_REDUCER_ID]: transactions,
 })
 
-export const store: Store<GlobalState> = createStore(reducers, finalCreateStore)
+export const store: Store<GlobalState> = createStore(reducers(), finalCreateStore)
 
-export const aNewStore = (localState?: Object): Store<GlobalState> => createStore(reducers, localState, finalCreateStore)
+export const aNewStore = (localState?: Object, customHistory: any = history): Store<GlobalState> => createStore(reducers(customHistory), localState, finalCreateStore)

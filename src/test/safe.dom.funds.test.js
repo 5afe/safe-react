@@ -1,10 +1,9 @@
 // @flow
 import { render, fireEvent, cleanup } from '@testing-library/react'
 import * as fetchBalancesAction from '~/logic/tokens/store/actions/fetchTokens'
-import { aNewStore } from '~/store'
 import { aMinedSafe } from '~/test/builder/safe.redux.builder'
 import { sendTokenTo, getFirstTokenContract } from '~/test/utils/tokenMovements'
-import { EXPAND_BALANCE_INDEX, renderSafeView } from '~/test/builder/safe.dom.utils'
+import { EXPAND_BALANCE_INDEX, renderSafeView, createTestStore } from '~/test/builder/safe.dom.utils'
 import { getWeb3 } from '~/logic/wallets/getWeb3'
 import { sendMoveTokensForm, dispatchTknBalance } from '~/test/utils/transactions/moveTokens.helper'
 import { sleep } from '~/utils/timer'
@@ -12,11 +11,9 @@ import { sleep } from '~/utils/timer'
 afterEach(cleanup)
 
 describe('DOM > Feature > Funds', () => {
-  let store
   let safeAddress: string
   let accounts
   beforeEach(async () => {
-    store = aNewStore()
     safeAddress = await aMinedSafe(store)
     accounts = await getWeb3().eth.getAccounts()
   })
@@ -25,6 +22,8 @@ describe('DOM > Feature > Funds', () => {
     // GIVEN
     const numTokens = '100'
     const tokenAddress = await sendTokenTo(safeAddress, numTokens)
+    const SafeDom = await renderSafeView(safeAddress)
+    const { store } = SafeDom
 
     await dispatchTknBalance(store, tokenAddress, safeAddress)
     // const StandardToken = await fetchBalancesAction.getStandardTokenContract()
@@ -33,9 +32,8 @@ describe('DOM > Feature > Funds', () => {
     // console.log(await myToken.balanceOf(safeAddress))
 
     // WHEN
-    const SafeDom = await renderSafeView(store, safeAddress)
-    await sleep(800)
-
+    await sleep(1500)
+    console.log(SafeDom.history)
     const balanceRows = SafeDom.getAllByTestId('balance-row')
     const buttons = TestUtils.scryRenderedDOMComponentsWithTag(SafeDom, 'button')
     const expandBalance = buttons[EXPAND_BALANCE_INDEX]
