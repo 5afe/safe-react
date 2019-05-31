@@ -126,7 +126,7 @@ export const travelToTokens = (address: string) => {
 }
 
 export const createTestStore = (initialRoute = '/') => {
-  const history = createMemoryHistory({initialEntries: [initialRoute]})
+  const history = createMemoryHistory({ initialEntries: [initialRoute] })
 
   return aNewStore(history)
 }
