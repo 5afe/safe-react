@@ -116,6 +116,7 @@ export default createMuiTheme({
         order: 0,
         marginTop: '0px',
         backgroundColor: '#EAE9EF',
+        zIndex: 1, // for firefox
       },
     },
     MuiInput: {
