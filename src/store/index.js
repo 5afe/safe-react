@@ -1,5 +1,5 @@
 // @flow
-import { createBrowserHistory } from 'history'
+import { createBrowserHistory, createMemoryHistory } from 'history'
 import { connectRouter, routerMiddleware } from 'connected-react-router'
 import {
   combineReducers, createStore, applyMiddleware, compose, type Reducer, type Store,
@@ -14,7 +14,7 @@ import transactions, {
   TRANSACTIONS_REDUCER_ID,
 } from '~/routes/safe/store/reducer/transactions'
 
-export const history = createBrowserHistory()
+export const history = process.env.NODE_ENV === 'test' ? createMemoryHistory() : createBrowserHistory()
 
 // eslint-disable-next-line
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
@@ -29,15 +29,14 @@ export type GlobalState = {
 
 export type GetState = () => GlobalState
 
-// customHistory is passed in tests, check test/builder/safe.dom.utils.js
-const reducers: Reducer<GlobalState> = (customHistory: any = history) => combineReducers({
-  router: connectRouter(customHistory),
+const reducers: Reducer<GlobalState> = combineReducers({
+  router: connectRouter(history),
   [PROVIDER_REDUCER_ID]: provider,
   [SAFE_REDUCER_ID]: safe,
   [TOKEN_REDUCER_ID]: tokens,
   [TRANSACTIONS_REDUCER_ID]: transactions,
 })
 
-export const store: Store<GlobalState> = createStore(reducers(), finalCreateStore)
+export const store: Store<GlobalState> = createStore(reducers, finalCreateStore)
 
-export const aNewStore = (localState?: Object, customHistory: any = history): Store<GlobalState> => createStore(reducers(customHistory), localState, finalCreateStore)
+export const aNewStore = (localState?: Object): Store<GlobalState> => createStore(reducers, localState, finalCreateStore)

@@ -2,7 +2,7 @@
 import React from 'react'
 import Footer from '~/components/Footer'
 import Header from '~/components/Header'
-import { SharedSnackbarProvider } from '~/components/SharedSnackBar/Context'
+import { SharedSnackbarProvider } from '~/components/SharedSnackBar'
 import styles from './index.scss'
 
 type Props = {

@@ -953,7 +953,7 @@
   },
   "networks": {},
   "schemaVersion": "3.0.10",
-  "updatedAt": "2019-05-31T13:47:05.345Z",
+  "updatedAt": "2019-06-03T08:59:02.081Z",
   "devdoc": {
     "methods": {
       "allowance(address,address)": {
