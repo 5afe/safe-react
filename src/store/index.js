@@ -1,5 +1,5 @@
 // @flow
-import { createBrowserHistory } from 'history'
+import { createBrowserHistory, createMemoryHistory } from 'history'
 import { connectRouter, routerMiddleware } from 'connected-react-router'
 import {
   combineReducers, createStore, applyMiddleware, compose, type Reducer, type Store,
@@ -14,7 +14,7 @@ import transactions, {
   TRANSACTIONS_REDUCER_ID,
 } from '~/routes/safe/store/reducer/transactions'
 
-export const history = createBrowserHistory()
+export const history = process.env.NODE_ENV === 'test' ? createMemoryHistory() : createBrowserHistory()
 
 // eslint-disable-next-line
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
