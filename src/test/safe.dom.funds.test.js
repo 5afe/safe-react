@@ -1,14 +1,16 @@
 // @flow
 import { fireEvent, cleanup } from '@testing-library/react'
+import { List } from 'immutable'
 import { aNewStore } from '~/store'
 import { aMinedSafe } from '~/test/builder/safe.redux.builder'
 import { sendTokenTo, getFirstTokenContract, sendEtherTo } from '~/test/utils/tokenMovements'
 import { EXPAND_BALANCE_INDEX, renderSafeView } from '~/test/builder/safe.dom.utils'
 import { getWeb3, getBalanceInEtherOf } from '~/logic/wallets/getWeb3'
-import { sendMoveTokensForm, dispatchTknBalance } from '~/test/utils/transactions/moveTokens.helper'
+import { sendMoveTokensForm, dispatchAddTokenToList } from '~/test/utils/transactions/moveTokens.helper'
 import { sleep } from '~/utils/timer'
 import { ETH_ADDRESS } from '~/logic/tokens/utils/tokenHelpers'
 import { calculateBalanceOf } from '~/routes/safe/store/actions/fetchTokenBalances'
+import updateActiveTokens from '~/routes/safe/store/actions/updateActiveTokens'
 import 'jest-dom/extend-expect'
 
 afterEach(cleanup)
@@ -68,8 +70,10 @@ describe('DOM > Feature > Funds', () => {
     // GIVEN
     const numTokens = '100'
     const tokenAddress = await sendTokenTo(safeAddress, numTokens)
+    const safeTokenBalance = await calculateBalanceOf(tokenAddress, safeAddress, 18)
+    store.dispatch(updateActiveTokens(safeAddress, List([tokenAddress])))
 
-    await dispatchTknBalance(store, tokenAddress, safeAddress)
+    await dispatchAddTokenToList(store, tokenAddress, safeAddress)
     // const StandardToken = await fetchBalancesAction.getStandardTokenContract()
     // const myToken = await StandardToken.at(tokenAddress)
     // console.log(await myToken.allowance(safeAddress, accounts[2]))

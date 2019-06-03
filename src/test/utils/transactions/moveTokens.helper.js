@@ -44,9 +44,8 @@ export const sendMoveTokensForm = async (
   return whenExecuted(SafeDom, SendToken)
 }
 
-export const dispatchTknBalance = async (store: Store, tokenAddress: string, address: string) => {
+export const dispatchAddTokenToList = async (store: Store, tokenAddress: string, address: string) => {
   const fetchBalancesMock = jest.fn()
-  const balance = await calculateBalanceOf(tokenAddress, address, 18)
   const balances: Map<string, Token> = Map().set(
     'TKN',
     makeToken({
@@ -56,7 +55,6 @@ export const dispatchTknBalance = async (store: Store, tokenAddress: string, add
       decimals: 18,
       logoUri:
         'https://github.com/TrustWallet/tokens/blob/master/images/0x6810e776880c02933d47db1b9fc05908e5386b96.png?raw=true',
-      balance,
     }),
   )
   fetchBalancesMock.mockImplementation(() => store.dispatch(addTokens(address, balances)))
