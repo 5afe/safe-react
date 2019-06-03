@@ -80,7 +80,7 @@ const SafeThreshold = ({ classes, values }: Props) => {
 
 const SafeThresholdForm = withStyles(styles)(SafeThreshold)
 
-const SafeOwnersPage = () => (controls: React$Node, { values }: Object) => (
+const SafeOwnersPage = () => (controls: React.Node, { values }: Object) => (
   <React.Fragment>
     <OpenPaper controls={controls} container={450}>
       <SafeThresholdForm values={values} />

@@ -17,7 +17,7 @@ const spinnerStyle = {
   minHeight: '50px',
 }
 
-const Review = () => (controls: React$Node, { values, submitting }: FormProps) => {
+const Review = () => (controls: React.Node, { values, submitting }: FormProps) => {
   const text = values[INCREASE_PARAM]
     ? 'This operation will increase the threshold of the safe'
     : 'This operation will not modify the threshold of the safe'
@@ -26,10 +26,14 @@ const Review = () => (controls: React$Node, { values, submitting }: FormProps) =
     <OpenPaper controls={controls}>
       <Heading tag="h2">Review the Add Owner operation</Heading>
       <Paragraph align="left">
-        <Bold>Owner Name: </Bold> {values[NAME_PARAM]}
+        <Bold>Owner Name: </Bold>
+        {' '}
+        {values[NAME_PARAM]}
       </Paragraph>
       <Paragraph align="left">
-        <Bold>Owner Address: </Bold> {values[OWNER_ADDRESS_PARAM]}
+        <Bold>Owner Address: </Bold>
+        {' '}
+        {values[OWNER_ADDRESS_PARAM]}
       </Paragraph>
       <Paragraph align="left">
         <Bold>{text}</Bold>

@@ -33,7 +33,7 @@ export const listTxsClickingOn = async (store: Store, seeTxsButton: Element, saf
   await sleep(800)
 }
 
-export const checkMinedTx = (Transaction: React$Component<any, any>, name: string) => {
+export const checkMinedTx = (Transaction: React.Component<any, any>, name: string) => {
   const paragraphs = TestUtils.scryRenderedDOMComponentsWithTag(Transaction, 'p')
 
   const status = 'Already executed'
@@ -49,9 +49,9 @@ export const checkMinedTx = (Transaction: React$Component<any, any>, name: strin
   expect(hashParagraph).toContain(EMPTY_DATA)
 }
 
-export const getListItemsFrom = (Transaction: React$Component<any, any>) => TestUtils.scryRenderedComponentsWithType(Transaction, ListItemText)
+export const getListItemsFrom = (Transaction: React.Component<any, any>) => TestUtils.scryRenderedComponentsWithType(Transaction, ListItemText)
 
-export const expand = async (Transaction: React$Component<any, any>) => {
+export const expand = async (Transaction: React.Component<any, any>) => {
   const listItems = getListItemsFrom(Transaction)
   if (listItems.length > 4) {
     return
@@ -68,7 +68,7 @@ export const expand = async (Transaction: React$Component<any, any>) => {
 }
 
 export const checkPendingTx = async (
-  Transaction: React$Component<any, any>,
+  Transaction: React.Component<any, any>,
   safeThreshold: number,
   name: string,
   statusses: string[],

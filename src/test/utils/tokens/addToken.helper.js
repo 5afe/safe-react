@@ -4,14 +4,14 @@ import * as TestUtils from 'react-dom/test-utils'
 import AddToken from '~/logic/tokens/component/AddToken'
 import { whenOnNext, whenExecuted } from '~/test/utils/logTransactions'
 
-export const clickOnAddToken = async (TokensDom: React$Component<any, any>) => {
+export const clickOnAddToken = async (TokensDom: React.Component<any, any>) => {
   const buttons = TestUtils.scryRenderedDOMComponentsWithTag(TokensDom, 'button')
   expect(buttons.length).toBe(1)
   TestUtils.Simulate.click(buttons[0])
   await sleep(400)
 }
 
-export const fillAddress = async (TokensDom: React$Component<any, any>, secondErc20Token: any) => {
+export const fillAddress = async (TokensDom: React.Component<any, any>, secondErc20Token: any) => {
   // fill the form
   const AddTokenComponent = TestUtils.findRenderedComponentWithType(TokensDom, AddToken)
   if (!AddTokenComponent) throw new Error()
@@ -28,7 +28,7 @@ export const fillAddress = async (TokensDom: React$Component<any, any>, secondEr
   return whenOnNext(TokensDom, AddToken, 1)
 }
 
-export const fillHumanReadableInfo = async (TokensDom: React$Component<any, any>) => {
+export const fillHumanReadableInfo = async (TokensDom: React.Component<any, any>) => {
   // fill the form
   const AddTokenComponent = TestUtils.findRenderedComponentWithType(TokensDom, AddToken)
   if (!AddTokenComponent) throw new Error()

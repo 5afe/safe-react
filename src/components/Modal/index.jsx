@@ -9,7 +9,7 @@ type Props = {
   description: string,
   open: boolean,
   handleClose: Function,
-  children: React$Node,
+  children: React.Node,
   classes: Object,
   modalClassName: ?string,
   paperClassName: ?string,

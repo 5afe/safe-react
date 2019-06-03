@@ -13,7 +13,7 @@ import { MOVE_FUNDS_BUTTON_TEXT } from '~/routes/safe/components/Safe/BalanceInf
 export type DomSafe = {
   address: string,
   safeButtons: Element[],
-  safe: React$Component<any, any>,
+  safe: React.Component<any, any>,
   accounts: string[],
   store: Store<GlobalState>,
 }

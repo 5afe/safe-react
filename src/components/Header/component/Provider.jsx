@@ -10,8 +10,8 @@ import { sm, md } from '~/theme/variables'
 
 type Props = Open & {
   classes: Object,
-  popupDetails: React$Node,
-  info: React$Node,
+  popupDetails: React.Node,
+  info: React.Node,
   children: Function,
 }
 

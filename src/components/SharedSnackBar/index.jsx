@@ -31,7 +31,15 @@ export const SharedSnackbar = () => (
   </SharedSnackbarConsumer>
 )
 
-const SharedSnackbarContext = React.createContext({
+type SnackbarContext = {
+  openSnackbar: Function,
+  closeSnackbar: Function,
+  snackbarIsOpen: boolean,
+  message: string,
+  variant: string,
+}
+
+const SharedSnackbarContext = React.createContext<SnackbarContext>({
   openSnackbar: undefined,
   closeSnackbar: undefined,
   snackbarIsOpen: false,
@@ -40,7 +48,7 @@ const SharedSnackbarContext = React.createContext({
 })
 
 type Props = {
-  children: React$Node,
+  children: React.Node,
 }
 
 export type Variant = 'success' | 'error' | 'warning' | 'info'

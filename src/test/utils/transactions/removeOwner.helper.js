@@ -7,8 +7,8 @@ import { whenExecuted } from '~/test/utils/logTransactions'
 import RemoveOwner from '~/routes/safe/components/RemoveOwner'
 
 export const sendRemoveOwnerForm = async (
-  SafeDom: React$Component<any, any>,
-  expandOwners: React$Component<any, any>,
+  SafeDom: React.Component<any, any>,
+  expandOwners: React.Component<any, any>,
 ) => {
   // Expand owners
   TestUtils.Simulate.click(expandOwners)
@@ -34,12 +34,12 @@ export const sendRemoveOwnerForm = async (
   return whenExecuted(SafeDom, RemoveOwner)
 }
 
-export const checkMinedRemoveOwnerTx = (Transaction: React$Component<any, any>, name: string) => {
+export const checkMinedRemoveOwnerTx = (Transaction: React.Component<any, any>, name: string) => {
   checkMinedTx(Transaction, name)
 }
 
 export const checkPendingRemoveOwnerTx = async (
-  Transaction: React$Component<any, any>,
+  Transaction: React.Component<any, any>,
   safeThreshold: number,
   name: string,
   statusses: string[],

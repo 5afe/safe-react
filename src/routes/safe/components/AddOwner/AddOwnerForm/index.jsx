@@ -32,7 +32,7 @@ type Props = {
   addresses: string[],
 }
 
-const AddOwnerForm = ({ addresses, numOwners, threshold }: Props) => (controls: React$Node) => (
+const AddOwnerForm = ({ addresses, numOwners, threshold }: Props) => (controls: React.Node) => (
   <OpenPaper controls={controls}>
     <Heading tag="h2" margin="lg">
       Add Owner

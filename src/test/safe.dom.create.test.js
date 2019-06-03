@@ -101,7 +101,7 @@ const deploySafe = async (createSafeForm: any, threshold: number, numOwners: num
 }
 
 const aDeployedSafe = async (specificStore: Store<GlobalState>, threshold?: number = 1, numOwners?: number = 1) => {
-  const safe: React$Component<{}> = await renderOpenSafeForm(specificStore)
+  const safe: React.Component<{}> = await renderOpenSafeForm(specificStore)
   const safeAddress = await deploySafe(safe, threshold, numOwners)
 
   return safeAddress

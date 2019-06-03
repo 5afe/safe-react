@@ -11,8 +11,8 @@ import addTokens from '~/logic/tokens/store/actions/saveTokens'
 import { calculateBalanceOf } from '~/routes/safe/store/actions/fetchTokenBalances'
 
 export const sendMoveTokensForm = async (
-  SafeDom: React$Component<any, any>,
-  expandBalance: React$Component<any, any>,
+  SafeDom: React.Component<any, any>,
+  expandBalance: React.Component<any, any>,
   value: number,
   destination: string,
 ) => {
@@ -64,12 +64,12 @@ export const dispatchTknBalance = async (store: Store, tokenAddress: string, add
   fetchBalancesMock.mockRestore()
 }
 
-export const checkMinedMoveTokensTx = (Transaction: React$Component<any, any>, name: string) => {
+export const checkMinedMoveTokensTx = (Transaction: React.Component<any, any>, name: string) => {
   checkMinedTx(Transaction, name)
 }
 
 export const checkPendingMoveTokensTx = async (
-  Transaction: React$Component<any, any>,
+  Transaction: React.Component<any, any>,
   safeThreshold: number,
   name: string,
   statusses: string[],

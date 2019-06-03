@@ -16,7 +16,7 @@ export { default as Step } from './Step'
 type Props = {
   steps: string[],
   onSubmit: (values: Object) => Promise<void>,
-  children: React$Node,
+  children: React.Node,
   classes: Object,
   onReset?: () => void,
   initialValues?: Object,
@@ -73,13 +73,13 @@ class GnoStepper extends React.PureComponent<Props, State> {
     }))
   }
 
-  getPageProps = (pages: React$Node): PageProps => {
+  getPageProps = (pages: React.Node): PageProps => {
     const { page } = this.state
 
     return React.Children.toArray(pages)[page].props
   }
 
-  getActivePageFrom = (pages: React$Node) => {
+  getActivePageFrom = (pages: React.Node) => {
     const activePageProps = this.getPageProps(pages)
     const { children, ...props } = activePageProps
 

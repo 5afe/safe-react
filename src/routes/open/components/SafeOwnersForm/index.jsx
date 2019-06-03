@@ -194,7 +194,7 @@ class SafeOwners extends React.Component<Props, State> {
 
 const SafeOwnersForm = withStyles(styles)(SafeOwners)
 
-const SafeOwnersPage = ({ updateInitialProps }: Object) => (controls: React$Node, { values, errors }: Object) => (
+const SafeOwnersPage = ({ updateInitialProps }: Object) => (controls: React.Node, { values, errors }: Object) => (
   <React.Fragment>
     <OpenPaper controls={controls} padding={false}>
       <SafeOwnersForm

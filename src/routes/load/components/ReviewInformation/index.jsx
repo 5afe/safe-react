@@ -138,7 +138,7 @@ class ReviewComponent extends React.PureComponent<Props, State> {
 
 const ReviewPage = withStyles(styles)(ReviewComponent)
 
-const Review = ({ network, userAddress }: LayoutProps) => (controls: React$Node, { values }: Object) => (
+const Review = ({ network, userAddress }: LayoutProps) => (controls: React.Node, { values }: Object) => (
   <React.Fragment>
     <OpenPaper controls={controls} padding={false}>
       <ReviewPage network={network} values={values} userAddress={userAddress} />

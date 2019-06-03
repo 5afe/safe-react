@@ -6,8 +6,8 @@ import { whenExecuted } from '~/test/utils/logTransactions'
 import AddOwner from '~/routes/safe/components/AddOwner'
 
 export const sendAddOwnerForm = async (
-  SafeDom: React$Component<any, any>,
-  addOwner: React$Component<any, any>,
+  SafeDom: React.Component<any, any>,
+  addOwner: React.Component<any, any>,
   ownerName: string,
   ownerAddress: string,
   increase: boolean = false,
@@ -39,12 +39,12 @@ export const sendAddOwnerForm = async (
   return whenExecuted(SafeDom, AddOwner)
 }
 
-export const checkMinedAddOwnerTx = (Transaction: React$Component<any, any>, name: string) => {
+export const checkMinedAddOwnerTx = (Transaction: React.Component<any, any>, name: string) => {
   checkMinedTx(Transaction, name)
 }
 
 export const checkPendingAddOwnerTx = async (
-  Transaction: React$Component<any, any>,
+  Transaction: React.Component<any, any>,
   safeThreshold: number,
   name: string,
   statusses: string[],

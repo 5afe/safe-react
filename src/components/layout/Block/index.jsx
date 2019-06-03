@@ -11,7 +11,7 @@ type Props = {
   margin?: Size,
   padding?: Size,
   align?: 'center' | 'right' | 'left',
-  children: React$Node,
+  children: React.Node,
   className?: string,
 }
 

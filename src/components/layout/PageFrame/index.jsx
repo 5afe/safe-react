@@ -6,7 +6,7 @@ import { SharedSnackbarProvider } from '~/components/SharedSnackBar'
 import styles from './index.scss'
 
 type Props = {
-  children: React$Node,
+  children: React.Node,
 }
 
 const PageFrame = ({ children }: Props) => (

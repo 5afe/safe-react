@@ -21,8 +21,8 @@ const styles = () => ({
 
 type Props = {
   classes: Object,
-  children: React$Node,
-  controls: React$Node,
+  children: React.Node,
+  controls: React.Node,
   container?: number,
   padding?: boolean,
 }

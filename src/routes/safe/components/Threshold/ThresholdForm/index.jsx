@@ -5,7 +5,9 @@ import Heading from '~/components/layout/Heading'
 import OpenPaper from '~/components/Stepper/OpenPaper'
 import Field from '~/components/forms/Field'
 import TextField from '~/components/forms/TextField'
-import { composeValidators, minValue, maxValue, mustBeInteger, required } from '~/components/forms/validator'
+import {
+  composeValidators, minValue, maxValue, mustBeInteger, required,
+} from '~/components/forms/validator'
 import { type Safe } from '~/routes/safe/store/models/safe'
 
 export const THRESHOLD_PARAM = 'threshold'
@@ -15,7 +17,7 @@ type ThresholdProps = {
   safe: Safe,
 }
 
-const ThresholdForm = ({ numOwners, safe }: ThresholdProps) => (controls: React$Node) => (
+const ThresholdForm = ({ numOwners, safe }: ThresholdProps) => (controls: React.Node) => (
   <OpenPaper controls={controls}>
     <Heading tag="h2" margin="lg">
       {'Change safe\'s threshold'}
