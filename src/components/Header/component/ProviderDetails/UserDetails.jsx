@@ -21,7 +21,8 @@ import { shortVersionOf } from '~/logic/wallets/ethAddresses'
 import { getEtherScanLink } from '~/logic/wallets/getWeb3'
 import CircleDot from '~/components/Header/component/CircleDot'
 
-const metamask = require('../../assets/metamask.svg')
+const metamaskIcon = require('../../assets/metamask-icon.svg')
+const safeIcon = require('../../assets/gnosis-safe-icon.svg')
 const dot = require('../../assets/dotRinkeby.svg')
 
 type Props = {
@@ -145,7 +146,10 @@ const UserDetails = ({
           Client
         </Paragraph>
         <Spacer />
-        <Img className={classes.logo} src={metamask} height={14} alt="Metamask client" />
+        {provider === 'safe'
+          ? <Img className={classes.logo} src={safeIcon} height={14} alt="Safe client" />
+          : <Img className={classes.logo} src={metamaskIcon} height={14} alt="Metamask client" />
+        }
         <Paragraph noMargin align="right" weight="bolder" className={classes.labels}>
           {upperFirst(provider)}
         </Paragraph>
