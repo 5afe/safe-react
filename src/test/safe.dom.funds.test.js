@@ -23,7 +23,7 @@ describe('DOM > Feature > Funds', () => {
     accounts = await getWeb3().eth.getAccounts()
   })
 
-  it('Sends ETH', async () => {
+  it('Sends ETH with threshold = 1', async () => {
     // GIVEN
     const ethAmount = '5'
     await sendEtherTo(safeAddress, ethAmount)
@@ -64,7 +64,7 @@ describe('DOM > Feature > Funds', () => {
     )
   })
 
-  it('Sends Tokens', async () => {
+  it('Sends Tokens with threshold = 1', async () => {
     // GIVEN
     const numTokens = '100'
     const tokenAddress = await sendTokenTo(safeAddress, numTokens)
