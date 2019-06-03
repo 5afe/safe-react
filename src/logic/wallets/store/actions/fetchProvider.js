@@ -44,13 +44,12 @@ const handleProviderNotification = (openSnackbar: Function, provider: ProviderPr
   openSnackbar(msg, variant)
 }
 
-export const recurrentFetchProvider = (currentProvider: ProviderProps, openSnackbar: Function) => async (dispatch: ReduxDispatch<*>) => {
+export const recurrentFetchProvider = (currentProvider: ProviderProps, openSnackbar: Function) => async (
+  dispatch: ReduxDispatch<*>,
+) => {
   const newProvider: ProviderProps = await getProviderInfo()
 
   if (JSON.stringify(currentProvider) !== JSON.stringify(newProvider)) {
-    console.log('provider updated')
-    console.log(JSON.stringify(currentProvider))
-    console.log(JSON.stringify(newProvider))
     handleProviderNotification(openSnackbar, newProvider)
     processProviderResponse(dispatch, newProvider)
   }
@@ -60,7 +59,6 @@ export const recurrentFetchProvider = (currentProvider: ProviderProps, openSnack
 
 export default (openSnackbar: Function) => async (dispatch: ReduxDispatch<*>) => {
   const provider: ProviderProps = await getProviderInfo()
-  console.log('initial provider', provider)
   handleProviderNotification(openSnackbar, provider)
 
   processProviderResponse(dispatch, provider)

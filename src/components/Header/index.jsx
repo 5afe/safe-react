@@ -27,36 +27,30 @@ class HeaderComponent extends React.PureComponent<Props, State> {
   }
 
   async componentDidMount() {
-    const { fetchProvider, recurrentFetchProvider } = this.props
-  
-    let currentProvider: ProviderProps = await fetchProvider(this.props.openSnackbar)
-    this.providerListener = setInterval(async () => {
-      console.log('loop')
-      currentProvider = await recurrentFetchProvider(currentProvider, this.props.openSnackbar)
-    }, 2000)
+    this.onConnect()
   }
 
   componentDidCatch(error: Error, info: Info) {
+    const { openSnackbar } = this.props
     this.setState({ hasError: true })
-    this.props.openSnackbar(WALLET_ERROR_MSG, 'error')
+    openSnackbar(WALLET_ERROR_MSG, 'error')
 
     logComponentStack(error, info)
   }
 
   onDisconnect = () => {
+    const { removeProvider } = this.props
     clearInterval(this.providerListener)
 
-    this.props.removeProvider(this.props.openSnackbar)
+    removeProvider(this.props.openSnackbar)
   }
 
   onConnect = async () => {
     const { fetchProvider, recurrentFetchProvider } = this.props
   
     clearInterval(this.providerListener)
-    console.log('onConnect')
     let currentProvider: ProviderProps = await fetchProvider(this.props.openSnackbar)
     this.providerListener = setInterval(async () => {
-      console.log('loopConnect')
       currentProvider = await recurrentFetchProvider(currentProvider, this.props.openSnackbar)
     }, 2000)
   }

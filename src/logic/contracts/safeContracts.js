@@ -11,9 +11,7 @@ let proxyFactoryMaster
 let safeMaster
 
 const createGnosisSafeContract = async (web3: any) => {
-  console.log('createGnosisSafeContract')
   const gnosisSafe = contract(GnosisSafeSol)
-  console.log('gnosisSafe', gnosisSafe, web3)
   gnosisSafe.setProvider(web3.currentProvider)
 
   return gnosisSafe
@@ -77,10 +75,7 @@ export const deploySafeContract = async (safeAccounts: string[], numConfirmation
 
 export const getGnosisSafeInstanceAt = async (safeAddress: string) => {
   const web3 = getWeb3()
-  console.log('web3', web3)
   const GnosisSafe = await getGnosisSafeContract(web3)
-  console.log('GnosisSafe', GnosisSafe)
-  console.log('safeAddress', safeAddress)
   const gnosisSafe = await GnosisSafe.at(safeAddress)
 
   return gnosisSafe

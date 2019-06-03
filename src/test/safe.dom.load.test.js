@@ -30,7 +30,6 @@ afterAll(() => {
   console.error = originalError
 })
 
-
 const renderLoadSafe = async (localStore: Store<GlobalState>) => {
   const provider = await getProviderInfo()
   const walletRecord = makeProvider(provider)

@@ -7,10 +7,8 @@ import { getActiveTokens } from '~/logic/tokens/utils/tokensStorage'
 import saveTokens from './saveTokens'
 
 const loadActiveTokens = () => async (dispatch: ReduxDispatch<GlobalState>) => {
-  console.log('loadActiveTokens')
   try {
     const tokens: Map<string, TokenProps> = await getActiveTokens()
-    console.log('tokens', tokens)
     const tokenRecordsList: List<Token> = List(
       Object.values(tokens).map((token: TokenProps): Token => makeToken(token)),
     )
