@@ -1,4 +1,5 @@
 // @flow
+import * as React from 'react'
 import TestUtils from 'react-dom/test-utils'
 import { sleep } from '~/utils/timer'
 import { checkMinedTx, EXPAND_OWNERS_INDEX, checkPendingTx } from '~/test/builder/safe.dom.utils'

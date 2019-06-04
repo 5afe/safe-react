@@ -12,7 +12,6 @@ import { tokenListSelector } from '~/logic/tokens/store/selectors'
 import { testToken } from '~/test/builder/tokens.dom.utils'
 import * as fetchTokensModule from '~/logic/tokens/store/actions/fetchTokens'
 import * as enhancedFetchModule from '~/utils/fetch'
-import { clickOnAddToken, fillAddress, fillHumanReadableInfo } from '~/test/utils/tokens/addToken.helper'
 
 describe('DOM > Feature > Add new ERC 20 Tokens', () => {
   // let web3

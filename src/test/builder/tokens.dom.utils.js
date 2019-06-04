@@ -18,11 +18,7 @@ export const enableFirstToken = async (store: Store, safeAddress: string) => {
   TestUtils.Simulate.change(firstTokenInput, { target: { checked: 'true' } })
 }
 
-export const testToken = (token: Token | typeof undefined, symbol: string, status: boolean, funds?: string) => {
+export const testToken = (token: Token | typeof undefined, symbol: string) => {
   if (!token) throw new Error()
   expect(token.get('symbol')).toBe(symbol)
-  expect(token.get('status')).toBe(status)
-  if (funds) {
-    expect(token.get('funds')).toBe(funds)
-  }
 }
