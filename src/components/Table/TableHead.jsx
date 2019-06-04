@@ -16,7 +16,6 @@ export type Column = {
   custom: boolean, // If content will be rendered by user manually
   width?: number,
   static?: boolean, // If content can't be sorted by values in the column
-  sortKey?: string, // If value of the column is an object
 }
 
 export const cellWidth = (width: number | typeof undefined) => {
