@@ -41,7 +41,7 @@ const OpenPaper = ({
       <Block style={containerStyle} className={`${classes.container} ${padding ? classes.padding : ''}`}>
         {children}
       </Block>
-      { controls }
+      {controls}
     </Paper>
   )
 }
