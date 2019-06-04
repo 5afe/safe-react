@@ -58,7 +58,6 @@ describe('DOM > Feature > LOAD a safe', () => {
     fireEvent.change(safeNameInput, { target: { value: 'A Safe To Load' } })
     fireEvent.change(safeAddressInput, { target: { value: address } })
     await sleep(400)
-
     // Click next
     fireEvent.submit(form)
     await sleep(400)
