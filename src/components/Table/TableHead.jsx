@@ -15,6 +15,7 @@ export type Column = {
   label: string,
   custom: boolean, // If content will be rendered by user manually
   width?: number,
+  static?: boolean, // If content can't be sorted by values in the column
 }
 
 export const cellWidth = (width: number | typeof undefined) => {
@@ -57,7 +58,7 @@ class GnoTableHead extends React.PureComponent<Props> {
               <TableSortLabel
                 active={orderBy === column.id}
                 direction={order}
-                onClick={this.changeSort(column.id, column.order)}
+                onClick={!column.static && this.changeSort(column.id, column.order)}
               >
                 {column.label}
               </TableSortLabel>

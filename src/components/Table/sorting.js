@@ -23,7 +23,7 @@ const desc = (a: Object, b: Object, orderBy: string, orderProp: boolean) => {
 }
 
 // eslint-disable-next-line
-export const stableSort = <SortRow>(array: Array<SortRow>, cmp: any, fixed: boolean): Array<SortRow> => {
+export const stableSort = (array: Array<SortRow>, cmp: any, fixed: boolean): Array<SortRow> => {
   const fixedElems: Array<SortRow> = fixed ? array.filter((elem: any) => elem.fixed) : []
   const data: Array<SortRow> = fixed ? array.filter((elem: any) => !elem[FIXED]) : array
   const stabilizedThis = data.map((el, index) => [el, index])
