@@ -16,6 +16,7 @@ export type Column = {
   custom: boolean, // If content will be rendered by user manually
   width?: number,
   static?: boolean, // If content can't be sorted by values in the column
+  sortKey?: string, // If value of the column is an object
 }
 
 export const cellWidth = (width: number | typeof undefined) => {
@@ -55,13 +56,17 @@ class GnoTableHead extends React.PureComponent<Props> {
               padding={column.disablePadding ? 'none' : 'default'}
               sortDirection={orderBy === column.id ? order : false}
             >
-              <TableSortLabel
-                active={orderBy === column.id}
-                direction={order}
-                onClick={!column.static && this.changeSort(column.id, column.order)}
-              >
-                {column.label}
-              </TableSortLabel>
+              {column.static ? (
+                column.label
+              ) : (
+                <TableSortLabel
+                  active={orderBy === column.id}
+                  direction={order}
+                  onClick={this.changeSort(column.id, column.order)}
+                >
+                  {column.label}
+                </TableSortLabel>
+              )}
             </TableCell>
           ))}
         </TableRow>

@@ -12,16 +12,15 @@ import TableCell from '@material-ui/core/TableCell'
 import { withStyles } from '@material-ui/core/styles'
 import Col from '~/components/layout/Col'
 import Row from '~/components/layout/Row'
-import Img from '~/components/layout/Img'
 import ButtonLink from '~/components/layout/ButtonLink'
 import Paragraph from '~/components/layout/Paragraph'
 import Modal from '~/components/Modal'
 import { type Column, cellWidth } from '~/components/Table/TableHead'
 import Table from '~/components/Table'
 import {
-  getBalanceData, generateColumns, BALANCE_TABLE_IMAGE_ID, BALANCE_TABLE_BALANCE_ID, type BalanceRow, filterByZero,
+  getBalanceData, generateColumns, BALANCE_TABLE_ASSET_ID, type BalanceRow, filterByZero,
 } from './dataFetcher'
-import { setImageToPlaceholder } from '~/routes/safe/components/Balances/utils'
+import AssetTableCell from './AssetTableCell'
 import Tokens from './Tokens'
 import SendModal from './SendModal'
 import Receive from './Receive'
@@ -147,7 +146,7 @@ class Balances extends React.Component<Props, State> {
         </Row>
         <Table
           label="Balances"
-          defaultOrderBy={BALANCE_TABLE_BALANCE_ID}
+          defaultOrderBy={BALANCE_TABLE_ASSET_ID}
           columns={columns}
           data={filteredData}
           size={filteredData.size}
@@ -157,7 +156,7 @@ class Balances extends React.Component<Props, State> {
             <TableRow tabIndex={-1} key={index} className={classes.hide} data-testid="balance-row">
               {autoColumns.map((column: Column) => (
                 <TableCell key={column.id} style={cellWidth(column.width)} align={column.align} component="td">
-                  {column.id === BALANCE_TABLE_IMAGE_ID ? <Img src={row[column.id]} height={26} alt="Logo" onError={setImageToPlaceholder} /> : row[column.id]}
+                  {column.id === BALANCE_TABLE_ASSET_ID ? <AssetTableCell asset={row[column.id]} /> : row[column.id]}
                 </TableCell>
               ))}
               <TableCell component="td">

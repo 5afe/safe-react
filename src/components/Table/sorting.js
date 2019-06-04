@@ -1,4 +1,5 @@
 // @flow
+import { List } from 'immutable'
 
 export const FIXED = 'fixed'
 type Fixed = {
@@ -11,6 +12,7 @@ export const buildOrderFieldFrom = (attr: string) => `${attr}Order`
 
 const desc = (a: Object, b: Object, orderBy: string, orderProp: boolean) => {
   const order = orderProp ? buildOrderFieldFrom(orderBy) : orderBy
+  console.log(a, b, orderBy, orderProp)
 
   if (b[order] < a[order]) {
     return -1
@@ -23,9 +25,9 @@ const desc = (a: Object, b: Object, orderBy: string, orderProp: boolean) => {
 }
 
 // eslint-disable-next-line
-export const stableSort = (array: Array<SortRow>, cmp: any, fixed: boolean): Array<SortRow> => {
-  const fixedElems: Array<SortRow> = fixed ? array.filter((elem: any) => elem.fixed) : []
-  const data: Array<SortRow> = fixed ? array.filter((elem: any) => !elem[FIXED]) : array
+export const stableSort = (dataArray: List<any>, cmp: any, fixed: boolean): Array<SortRow> => {
+  const fixedElems: List<any> = fixed ? dataArray.filter((elem: any) => elem.fixed) : List([])
+  const data: List<any> = fixed ? dataArray.filter((elem: any) => !elem[FIXED]) : dataArray
   const stabilizedThis = data.map((el, index) => [el, index])
 
   stabilizedThis.sort((a, b) => {
