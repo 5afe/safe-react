@@ -3,15 +3,16 @@ import { fireEvent, cleanup } from '@testing-library/react'
 import { List } from 'immutable'
 import { aNewStore } from '~/store'
 import { aMinedSafe } from '~/test/builder/safe.redux.builder'
-import { sendTokenTo, getFirstTokenContract, sendEtherTo } from '~/test/utils/tokenMovements'
-import { EXPAND_BALANCE_INDEX, renderSafeView } from '~/test/builder/safe.dom.utils'
+import { sendTokenTo, sendEtherTo } from '~/test/utils/tokenMovements'
+import { renderSafeView } from '~/test/builder/safe.dom.utils'
 import { getWeb3, getBalanceInEtherOf } from '~/logic/wallets/getWeb3'
-import { sendMoveTokensForm, dispatchAddTokenToList } from '~/test/utils/transactions/moveTokens.helper'
+import { dispatchAddTokenToList } from '~/test/utils/transactions/moveTokens.helper'
 import { sleep } from '~/utils/timer'
-import { ETH_ADDRESS } from '~/logic/tokens/utils/tokenHelpers'
+import TokenBalanceRecord from '~/routes/safe/store/models/tokenBalance'
 import { calculateBalanceOf } from '~/routes/safe/store/actions/fetchTokenBalances'
 import updateActiveTokens from '~/routes/safe/store/actions/updateActiveTokens'
 import 'jest-dom/extend-expect'
+import updateSafe from '~/routes/safe/store/actions/updateSafe'
 
 afterEach(cleanup)
 
@@ -33,7 +34,7 @@ describe('DOM > Feature > Funds', () => {
 
     // WHEN
     const SafeDom = renderSafeView(store, safeAddress)
-    await sleep(1000)
+    await sleep(1300)
 
     // Open send funds modal
     const balanceRows = SafeDom.getAllByTestId('balance-row')
@@ -56,7 +57,7 @@ describe('DOM > Feature > Funds', () => {
     await sleep(1000)
 
     // THEN
-    const safeFunds = await calculateBalanceOf(ETH_ADDRESS, safeAddress, 18)
+    const safeFunds = await getBalanceInEtherOf(safeAddress)
     expect(Number(safeFunds)).toBe(0)
 
     const receiverFunds = await getBalanceInEtherOf(accounts[0])
@@ -68,34 +69,52 @@ describe('DOM > Feature > Funds', () => {
 
   it('Sends Tokens with threshold = 1', async () => {
     // GIVEN
-    const numTokens = '100'
-    const tokenAddress = await sendTokenTo(safeAddress, numTokens)
-    const safeTokenBalance = await calculateBalanceOf(tokenAddress, safeAddress, 18)
-    store.dispatch(updateActiveTokens(safeAddress, List([tokenAddress])))
-
-    await dispatchAddTokenToList(store, tokenAddress, safeAddress)
-    // const StandardToken = await fetchBalancesAction.getStandardTokenContract()
-    // const myToken = await StandardToken.at(tokenAddress)
-    // console.log(await myToken.allowance(safeAddress, accounts[2]))
-    // console.log(await myToken.balanceOf(safeAddress))
+    const tokensAmount = '100'
+    const tokenReceiver = accounts[1]
+    const tokenAddress = await sendTokenTo(safeAddress, tokensAmount)
+    await dispatchAddTokenToList(store, tokenAddress)
 
     // WHEN
     const SafeDom = await renderSafeView(store, safeAddress)
-    await sleep(800)
-    // $FlowFixMe
-    const buttons = TestUtils.scryRenderedDOMComponentsWithTag(SafeDom, 'button')
-    const expandBalance = buttons[EXPAND_BALANCE_INDEX]
-    const receiver = accounts[2]
-    await sendMoveTokensForm(SafeDom, expandBalance, 20, accounts[2])
+    await sleep(1300)
+
+    // Activate token
+    const safeTokenBalance = await calculateBalanceOf(tokenAddress, safeAddress, 18)
+    expect(safeTokenBalance).toBe(tokensAmount)
+
+    const balanceAsRecord = TokenBalanceRecord({
+      address: tokenAddress,
+      balance: safeTokenBalance,
+    })
+    store.dispatch(updateActiveTokens(safeAddress, List([tokenAddress])))
+    store.dispatch(updateSafe({ address: safeAddress, balances: List([balanceAsRecord]) }))
+    await sleep(1000)
+
+    // Open send funds modal
+    const balanceRows = SafeDom.getAllByTestId('balance-row')
+    expect(balanceRows.length).toBe(2)
+    const sendButtons = SafeDom.getAllByTestId('balance-send-btn')
+    expect(sendButtons.length).toBe(2)
+    fireEvent.click(sendButtons[1])
+
+    // Fill first send funds screen
+    const recipientInput = SafeDom.getByPlaceholderText('Recipient*')
+    const amountInput = SafeDom.getByPlaceholderText('Amount*')
+    const reviewBtn = SafeDom.getByTestId('review-tx-btn')
+    fireEvent.change(recipientInput, { target: { value: tokenReceiver } })
+    fireEvent.change(amountInput, { target: { value: tokensAmount } })
+    await sleep(200)
+    fireEvent.click(reviewBtn)
+
+    // Submit the tx (Review Tx screen)
+    const submitBtn = SafeDom.getByTestId('submit-tx-btn')
+    fireEvent.click(submitBtn)
+    await sleep(1000)
 
     // THEN
-    const safeFunds = await fetchBalancesAction.calculateBalanceOf(tokenAddress, safeAddress, 18)
-    expect(Number(safeFunds)).toBe(80)
-    const receiverFunds = await fetchBalancesAction.calculateBalanceOf(tokenAddress, receiver, 18)
-    expect(Number(receiverFunds)).toBe(20)
-
-    const token = await getFirstTokenContract(getWeb3(), accounts[0])
-    const nativeSafeFunds = await token.balanceOf(safeAddress)
-    expect(Number(nativeSafeFunds.valueOf())).toEqual(80 * 10 ** 18)
+    const safeFunds = await calculateBalanceOf(tokenAddress, safeAddress, 18)
+    expect(Number(safeFunds)).toBe(0)
+    const receiverFunds = await calculateBalanceOf(tokenAddress, tokenReceiver, 18)
+    expect(receiverFunds).toBe(tokensAmount)
   })
 })
