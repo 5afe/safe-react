@@ -79,6 +79,5 @@ describe('DOM > Feature > Enable and disable default tokens', () => {
     balanceRows = TokensDom.getAllByTestId(BALANCE_ROW_TEST_ID)
     expect(balanceRows.length).toBe(1)
     expect(balanceRows[0]).toHaveTextContent('ETH')
-
   })
 })
