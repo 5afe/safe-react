@@ -12,7 +12,6 @@ export const buildOrderFieldFrom = (attr: string) => `${attr}Order`
 
 const desc = (a: Object, b: Object, orderBy: string, orderProp: boolean) => {
   const order = orderProp ? buildOrderFieldFrom(orderBy) : orderBy
-  console.log(a, b, orderBy, orderProp)
 
   if (b[order] < a[order]) {
     return -1
@@ -25,13 +24,14 @@ const desc = (a: Object, b: Object, orderBy: string, orderProp: boolean) => {
 }
 
 // eslint-disable-next-line
-export const stableSort = (dataArray: List<any>, cmp: any, fixed: boolean): Array<SortRow> => {
+export const stableSort = (dataArray: List<any>, cmp: any, fixed: boolean): List<any> => {
   const fixedElems: List<any> = fixed ? dataArray.filter((elem: any) => elem.fixed) : List([])
   const data: List<any> = fixed ? dataArray.filter((elem: any) => !elem[FIXED]) : dataArray
-  const stabilizedThis = data.map((el, index) => [el, index])
+  let stabilizedThis = data.map((el, index) => [el, index])
 
-  stabilizedThis.sort((a, b) => {
+  stabilizedThis = stabilizedThis.sort((a, b) => {
     const order = cmp(a[0], b[0])
+
     if (order !== 0) {
       return order
     }

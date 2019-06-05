@@ -30,7 +30,7 @@ export const getBalanceData = (activeTokens: List<Token>): List<BalanceRow> => {
 export const generateColumns = () => {
   const assetColumn: Column = {
     id: BALANCE_TABLE_ASSET_ID,
-    order: false,
+    order: true,
     disablePadding: false,
     label: 'Asset',
     custom: false,
