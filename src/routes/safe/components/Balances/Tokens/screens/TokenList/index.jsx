@@ -24,6 +24,8 @@ import { type Token } from '~/logic/tokens/store/model/token'
 import { setImageToPlaceholder } from '~/routes/safe/components/Balances/utils'
 import { styles } from './style'
 
+export const ADD_CUSTOM_TOKEN_BUTTON_TEST_ID = 'add-custom-token-btn'
+
 type Props = {
   classes: Object,
   tokens: List<Token>,
@@ -141,6 +143,7 @@ class Tokens extends React.Component<Props, State> {
               color="secondary"
               className={classes.add}
               onClick={switchToAddCustomTokenScreen}
+              testId={ADD_CUSTOM_TOKEN_BUTTON_TEST_ID}
             >
               + ADD CUSTOM TOKEN
             </Button>

@@ -1,8 +1,16 @@
 // @flow
-import { fireEvent } from '@testing-library/reactß'
+import { fireEvent } from '@testing-library/react'
+import { MANAGE_TOKENS_BUTTON_TEST_ID } from '~/routes/safe/components/Balances'
+import { ADD_CUSTOM_TOKEN_BUTTON_TEST_ID } from '~/routes/safe/components/Balances/Tokens/screens/TokenList'
 
-const clickOnManageTokens = (dom) => {
-  const btn = dom.findByTestId()
+export const clickOnManageTokens = (dom: any): void => {
+  const btn = dom.getByTestId(MANAGE_TOKENS_BUTTON_TEST_ID)
 
-  
+  fireEvent.click(btn)
+}
+
+export const clickOnAddCustomToken = (dom: any): void => {
+  const btn = dom.getByTestId(ADD_CUSTOM_TOKEN_BUTTON_TEST_ID)
+
+  fireEvent.click(btn)
 }

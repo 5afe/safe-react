@@ -13,6 +13,7 @@ import { calculateBalanceOf } from '~/routes/safe/store/actions/fetchTokenBalanc
 import updateActiveTokens from '~/routes/safe/store/actions/updateActiveTokens'
 import 'jest-dom/extend-expect'
 import updateSafe from '~/routes/safe/store/actions/updateSafe'
+import { BALANCE_ROW_TEST_ID } from '~/routes/safe/components/Balances'
 
 afterEach(cleanup)
 
@@ -37,7 +38,7 @@ describe('DOM > Feature > Funds', () => {
     await sleep(1300)
 
     // Open send funds modal
-    const balanceRows = SafeDom.getAllByTestId('balance-row')
+    const balanceRows = SafeDom.getAllByTestId(BALANCE_ROW_TEST_ID)
     expect(balanceRows[0]).toHaveTextContent(`${ethAmount} ETH`)
     const sendButton = SafeDom.getByTestId('balance-send-btn')
     fireEvent.click(sendButton)
@@ -91,7 +92,7 @@ describe('DOM > Feature > Funds', () => {
     await sleep(1000)
 
     // Open send funds modal
-    const balanceRows = SafeDom.getAllByTestId('balance-row')
+    const balanceRows = SafeDom.getAllByTestId(BALANCE_ROW_TEST_ID)
     expect(balanceRows.length).toBe(2)
     const sendButtons = SafeDom.getAllByTestId('balance-send-btn')
     expect(sendButtons.length).toBe(2)

@@ -1,6 +1,5 @@
 // @flow
 /* eslint-disable react/button-has-type  */
-/* eslint-disable react/default-props-match-prop-types */
 import * as React from 'react'
 import cn from 'classnames/bind'
 import styles from './index.scss'
@@ -12,20 +11,16 @@ type Props = {
   size?: 'sm' | 'md' | 'lg' | 'xl' | 'xxl',
   weight?: 'light' | 'regular' | 'bolder' | 'bold',
   color?: 'soft' | 'medium' | 'dark' | 'white' | 'fancy' | 'primary' | 'secondary' | 'warning' | 'disabled',
+  testId?: string,
 }
 
 const GnoButtonLink = ({
-  type, size, weight, color, ...props
-}: Props) => (
-  <button type={type} className={cx(styles.btnLink, size, color, weight)} {...props} />
-)
-
-
-GnoButtonLink.defaultProps = {
-  type: 'button',
-  size: 'md',
-  weight: 'regular',
-  color: 'secondary',
-}
+  type = 'button',
+  size = 'md',
+  weight = 'regular',
+  color = 'secondary',
+  testId = '',
+  ...props
+}: Props) => <button type={type} className={cx(styles.btnLink, size, color, weight)} data-testid={testId} {...props} />
 
 export default GnoButtonLink
