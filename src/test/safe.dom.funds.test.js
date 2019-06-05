@@ -23,7 +23,8 @@ describe('DOM > Feature > Funds', () => {
   let accounts
   beforeEach(async () => {
     store = aNewStore()
-    safeAddress = await aMinedSafe(store)
+    // using 4th account because other accounts were used in other tests and paid gas
+    safeAddress = await aMinedSafe(store, 1, 1, 4)
     accounts = await getWeb3().eth.getAccounts()
   })
 
