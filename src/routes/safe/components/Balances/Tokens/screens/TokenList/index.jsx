@@ -25,6 +25,7 @@ import { setImageToPlaceholder } from '~/routes/safe/components/Balances/utils'
 import { styles } from './style'
 
 export const ADD_CUSTOM_TOKEN_BUTTON_TEST_ID = 'add-custom-token-btn'
+export const TOGGLE_TOKEN_TEST_ID = 'toggle-token-btn'
 
 type Props = {
   classes: Object,
@@ -167,7 +168,11 @@ class Tokens extends React.Component<Props, State> {
                 <ListItemText primary={token.symbol} secondary={token.name} />
                 {token.address !== ETH_ADDRESS && (
                   <ListItemSecondaryAction>
-                    <Switch onChange={this.onSwitch(token)} checked={isActive} />
+                    <Switch
+                      onChange={this.onSwitch(token)}
+                      checked={isActive}
+                      inputProps={{ 'data-testid': `${token.symbol}_${TOGGLE_TOKEN_TEST_ID}` }}
+                    />
                   </ListItemSecondaryAction>
                 )}
               </ListItem>

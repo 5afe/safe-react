@@ -37,7 +37,7 @@ class TextField extends React.PureComponent<TextFieldProps> {
     const underline = meta.active || (meta.visited && !meta.valid)
 
     const inputRoot = helperText ? classes.root : undefined
-    const inputProps = { ...restInput, autoComplete: 'off',  'data-testid': testId }
+    const inputProps = { ...restInput, autoComplete: 'off', 'data-testid': testId }
     const inputRootProps = { ...inputAdornment, disableUnderline: !underline, className: inputRoot }
 
     return (

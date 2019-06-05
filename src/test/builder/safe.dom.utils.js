@@ -119,15 +119,6 @@ export const renderSafeView = (store: Store<GlobalState>, address: string) => {
   return app
 }
 
-export const travelToTokens = (store: Store<GlobalState>, address: string) => {
-  const app = renderApp(store)
-
-  const url = `${SAFELIST_ADDRESS}/${address}${SETTINS_ADDRESS}`
-  history.push(url)
-
-  return app
-}
-
 const INTERVAL = 500
 const MAX_TIMES_EXECUTED = 30
 export const whenSafeDeployed = (): Promise<string> => new Promise((resolve, reject) => {
