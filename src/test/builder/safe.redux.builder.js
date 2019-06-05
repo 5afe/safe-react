@@ -72,7 +72,6 @@ export const aMinedSafe = async (
   store: Store<GlobalState>,
   owners: number = 1,
   threshold: number = 1,
-  startAccountPosition: number = 0,
 ): Promise<string> => {
   const provider = await getProviderInfo()
   const walletRecord = makeProvider(provider)
@@ -85,7 +84,7 @@ export const aMinedSafe = async (
     [FIELD_OWNERS]: `${owners}`,
   }
 
-  for (let i = startAccountPosition; i < owners; i += 1) {
+  for (let i = 0; i < owners; i += 1) {
     form[getOwnerNameBy(i)] = `Adol ${i + 1} Eth Account`
     form[getOwnerAddressBy(i)] = accounts[i]
   }

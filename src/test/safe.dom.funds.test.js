@@ -24,7 +24,7 @@ describe('DOM > Feature > Funds', () => {
   beforeEach(async () => {
     store = aNewStore()
     // using 4th account because other accounts were used in other tests and paid gas
-    safeAddress = await aMinedSafe(store, 1, 1, 4)
+    safeAddress = await aMinedSafe(store)
     accounts = await getWeb3().eth.getAccounts()
   })
 
@@ -63,7 +63,7 @@ describe('DOM > Feature > Funds', () => {
     expect(Number(safeFunds)).toBe(0)
 
     const receiverFunds = await getBalanceInEtherOf(accounts[0])
-    const ESTIMATED_GASCOSTS = 0.1
+    const ESTIMATED_GASCOSTS = 0.3
     expect(Number(parseInt(receiverFunds, 10) - parseInt(balanceAfterSendingEthToSafe, 10))).toBeGreaterThan(
       parseInt(ethAmount, 10) - ESTIMATED_GASCOSTS,
     )
