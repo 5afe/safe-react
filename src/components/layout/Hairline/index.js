@@ -14,7 +14,7 @@ const calculateStyleFrom = (color?: string, margin?: Size) => ({
 type Props = {
   margin?: Size,
   color?: string,
-  style?: Object
+  style?: Object,
 }
 
 const Hairline = ({ margin, color, style }: Props) => {

@@ -10,7 +10,7 @@ import { ZERO_ADDRESS } from '~/logic/wallets/ethAddresses'
 let proxyFactoryMaster
 let safeMaster
 
-const createGnosisSafeContract = async (web3: any) => {
+const createGnosisSafeContract = (web3: any) => {
   const gnosisSafe = contract(GnosisSafeSol)
   gnosisSafe.setProvider(web3.currentProvider)
 
