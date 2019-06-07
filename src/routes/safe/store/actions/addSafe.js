@@ -25,13 +25,9 @@ export const addSafe = createAction<string, Function, ActionReturn>(
   }),
 )
 
-const saveSafe = (
-  name: string,
-  address: string,
-  threshold: number,
-  ownersName: string[],
-  ownersAddress: string[],
-) => (dispatch: ReduxDispatch<GlobalState>) => {
+const saveSafe = (name: string, address: string, threshold: number, ownersName: string[], ownersAddress: string[]) => (
+  dispatch: ReduxDispatch<GlobalState>,
+) => {
   const owners: List<Owner> = buildOwnersFrom(ownersName, ownersAddress)
 
   const safe: Safe = SafeRecord({

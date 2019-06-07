@@ -20,9 +20,9 @@ const providerReducerTests = () => {
       store = createStore(reducers, compose(...enhancers))
     })
 
-    it('reducer should return default Provider record when no Metamask is loaded', () => {
+    it('reducer should return default Provider record when no provider is loaded', () => {
       // GIVEN
-      const emptyResponse: ProviderProps = {
+      const emptyProvider: ProviderProps = {
         name: '',
         loaded: false,
         available: false,
@@ -31,17 +31,17 @@ const providerReducerTests = () => {
       }
 
       // WHEN
-      processProviderResponse(store.dispatch, emptyResponse)
+      processProviderResponse(store.dispatch, emptyProvider)
       const provider = store.getState()[PROVIDER_REDUCER_ID]
 
       // THEN
-      expect(makeProvider(emptyResponse)).toEqual(provider)
+      expect(makeProvider(emptyProvider)).toEqual(provider)
     })
 
     it('reducer should return avaiable with its default value when is loaded but not available', () => {
       // GIVEN
-      const metamaskLoaded: ProviderProps = {
-        name: 'METAMASK',
+      const providerLoaded: ProviderProps = {
+        name: 'SAFE',
         loaded: true,
         available: false,
         account: '',
@@ -49,17 +49,17 @@ const providerReducerTests = () => {
       }
 
       // WHEN
-      processProviderResponse(store.dispatch, metamaskLoaded)
+      processProviderResponse(store.dispatch, providerLoaded)
       const provider = store.getState()[PROVIDER_REDUCER_ID]
 
       // THEN
-      expect(makeProvider(metamaskLoaded)).toEqual(provider)
+      expect(makeProvider(providerLoaded)).toEqual(provider)
     })
 
-    it('reducer should return metamask provider when it is loaded and available', () => {
+    it('reducer should return provider when it is loaded and available', () => {
       // GIVEN
-      const metamask: ProviderProps = {
-        name: 'METAMASK',
+      const providerLoaded: ProviderProps = {
+        name: 'SAFE',
         loaded: true,
         available: true,
         account: '',
@@ -67,11 +67,11 @@ const providerReducerTests = () => {
       }
 
       // WHEN
-      processProviderResponse(store.dispatch, metamask)
+      processProviderResponse(store.dispatch, providerLoaded)
       const provider = store.getState()[PROVIDER_REDUCER_ID]
 
       // THEN
-      expect(makeProvider(metamask)).toEqual(provider)
+      expect(makeProvider(providerLoaded)).toEqual(provider)
     })
   })
 }

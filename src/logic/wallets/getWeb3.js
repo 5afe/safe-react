@@ -12,6 +12,7 @@ export const ETHEREUM_NETWORK = {
 }
 
 export const WALLET_PROVIDER = {
+  SAFE: 'SAFE',
   METAMASK: 'METAMASK',
   PARITY: 'PARITY',
   REMOTE: 'REMOTE',
@@ -36,12 +37,23 @@ export const openTxInEtherScan = (tx: string, network: string) => `https://${net
 export const getEtherScanLink = (address: string, network: string) => `https://${network}.etherscan.io/address/${address}`
 
 let web3
-export const getWeb3 = () => web3 || new Web3(window.web3.currentProvider)
+export const getWeb3 = () => web3 || (window.web3 && new Web3(window.web3.currentProvider)) || (window.ethereum && new Web3(window.ethereum))
 
-const isMetamask: Function = (web3Provider): boolean => {
-  const isMetamaskConstructor = web3Provider.currentProvider.constructor.name === 'MetamaskInpageProvider'
+const getProviderName: Function = (web3Provider): boolean => {
+  let name
 
-  return isMetamaskConstructor || web3Provider.currentProvider.isMetaMask
+  switch (web3Provider.currentProvider.constructor.name) {
+  case 'SafeWeb3Provider':
+    name = WALLET_PROVIDER.SAFE
+    break
+  case 'MetamaskInpageProvider':
+    name = WALLET_PROVIDER.METAMASK
+    break
+  default:
+    name = 'UNKNOWN'
+  }
+
+  return name
 }
 
 const getAccountFrom: Function = async (web3Provider): Promise<string | null> => {
@@ -57,7 +69,14 @@ const getNetworkIdFrom = async (web3Provider) => {
 }
 
 export const getProviderInfo: Function = async (): Promise<ProviderProps> => {
-  if (typeof window.web3 === 'undefined') {
+  let web3Provider
+
+  if (window.ethereum) {
+    web3Provider = window.ethereum
+    await web3Provider.enable()
+  } else if (window.web3) {
+    web3Provider = window.web3.currentProvider
+  } else {
     return {
       name: '',
       available: false,
@@ -67,15 +86,9 @@ export const getProviderInfo: Function = async (): Promise<ProviderProps> => {
     }
   }
 
-  // Use MetaMask's provider.
-  web3 = new Web3(window.web3.currentProvider)
+  web3 = new Web3(web3Provider)
 
-  if (process.env.NODE_ENV !== 'test') {
-    // eslint-disable-next-line
-    console.log('Injected web3 detected.')
-  }
-
-  const name = isMetamask(window.web3) ? WALLET_PROVIDER.METAMASK : 'UNKNOWN'
+  const name = getProviderName(web3)
   const account = await getAccountFrom(web3)
   const network = await getNetworkIdFrom(web3)
 

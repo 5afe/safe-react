@@ -13,7 +13,6 @@ export const calculateBalanceOf = async (tokenAddress: string, safeAddress: stri
   if (tokenAddress === ETH_ADDRESS) {
     return '0'
   }
-
   const erc20Token = await getStandardTokenContract()
   let balance = 0
 
@@ -33,15 +32,16 @@ const fetchTokenBalances = (safeAddress: string, tokens: List<Token>) => async (
   if (!safeAddress || !tokens || !tokens.size) {
     return
   }
-
   try {
     const withBalances = await Promise.all(
-      tokens.map(async token => TokenBalanceRecord({
-        address: token.address,
-        balance: await calculateBalanceOf(token.address, safeAddress, token.decimals),
-      })),
+      tokens.map(async (token) => {
+        const balance = await calculateBalanceOf(token.address, safeAddress, token.decimals)
+        return TokenBalanceRecord({
+          address: token.address,
+          balance,
+        })
+      }),
     )
-
     dispatch(updateSafe({ address: safeAddress, balances: List(withBalances) }))
   } catch (err) {
     // eslint-disable-next-line

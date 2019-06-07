@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 import { logComponentStack, type Info } from '~/utils/logBoundaries'
 import { SharedSnackbarConsumer, type Variant } from '~/components/SharedSnackBar/Context'
 import { WALLET_ERROR_MSG } from '~/logic/wallets/store/actions'
+import { getProviderInfo } from '~/logic/wallets/getWeb3'
 import ProviderAccesible from './component/ProviderInfo/ProviderAccesible'
 import UserDetails from './component/ProviderDetails/UserDetails'
 import ProviderDisconnected from './component/ProviderInfo/ProviderDisconnected'
@@ -30,16 +31,35 @@ class HeaderComponent extends React.PureComponent<Props, State> {
     this.onConnect()
   }
 
+  componentDidCatch(error: Error, info: Info) {
+    const { openSnackbar } = this.props
+    this.setState({ hasError: true })
+    openSnackbar(WALLET_ERROR_MSG, 'error')
+
+    logComponentStack(error, info)
+  }
+
   onDisconnect = () => {
     const { removeProvider, openSnackbar } = this.props
+    clearInterval(this.providerListener)
 
     removeProvider(openSnackbar)
   }
 
-  onConnect = () => {
+  onConnect = async () => {
     const { fetchProvider, openSnackbar } = this.props
 
-    fetchProvider(openSnackbar)
+    clearInterval(this.providerListener)
+    let currentProvider: ProviderProps = await getProviderInfo()
+    fetchProvider(currentProvider, openSnackbar)
+
+    this.providerListener = setInterval(async () => {   
+      const newProvider: ProviderProps = await getProviderInfo()
+      if (JSON.stringify(currentProvider) !== JSON.stringify(newProvider)) {
+        fetchProvider(newProvider, openSnackbar)
+      }
+      currentProvider = newProvider
+    }, 2000)
   }
 
   getProviderInfoBased = () => {
@@ -74,14 +94,6 @@ class HeaderComponent extends React.PureComponent<Props, State> {
         onDisconnect={this.onDisconnect}
       />
     )
-  }
-
-  componentDidCatch(error: Error, info: Info) {
-    const { openSnackbar } = this.props
-    this.setState({ hasError: true })
-    openSnackbar(WALLET_ERROR_MSG, 'error')
-
-    logComponentStack(error, info)
   }
 
   render() {

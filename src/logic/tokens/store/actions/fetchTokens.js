@@ -15,9 +15,9 @@ const createStandardTokenContract = async () => {
   const web3 = getWeb3()
   const erc20Token = await contract(StandardToken)
   erc20Token.setProvider(web3.currentProvider)
-
   return erc20Token
 }
+
 const createHumanFriendlyTokenContract = async () => {
   const web3 = getWeb3()
   const humanErc20Token = await contract(HumanFriendlyToken)
