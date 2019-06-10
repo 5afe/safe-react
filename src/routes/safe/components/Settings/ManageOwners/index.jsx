@@ -21,6 +21,7 @@ import Hairline from '~/components/layout/Hairline'
 import Button from '~/components/layout/Button'
 import AddOwnerModal from './AddOwnerModal'
 import RemoveOwnerModal from './RemoveOwnerModal'
+import ReplaceOwnerModal from './ReplaceOwnerModal'
 import OwnerAddressTableCell from './OwnerAddressTableCell'
 import type { Owner } from '~/routes/safe/store/models/owner'
 import {
@@ -60,6 +61,7 @@ class ManageOwners extends React.Component<Props, State> {
     selectedOwnerName: undefined,
     showAddOwner: false,
     showRemoveOwner: false,
+    showReplaceOwner: false,
   }
 
   onShow = (action: Action, row?: Object) => () => {
@@ -92,6 +94,7 @@ class ManageOwners extends React.Component<Props, State> {
     const {
       showAddOwner,
       showRemoveOwner,
+      showReplaceOwner,
       selectedOwnerName,
       selectedOwnerAddress,
     } = this.state
@@ -166,6 +169,18 @@ class ManageOwners extends React.Component<Props, State> {
           ownerName={selectedOwnerName}
           owners={owners}
           threshold={threshold}
+          network={network}
+          userAddress={userAddress}
+          createTransaction={createTransaction}
+        />
+        <ReplaceOwnerModal
+          onClose={this.onHide('ReplaceOwner')}
+          isOpen={showReplaceOwner}
+          safeAddress={safeAddress}
+          safeName={safeName}
+          ownerAddress={selectedOwnerAddress}
+          ownerName={selectedOwnerName}
+          owners={owners}
           network={network}
           userAddress={userAddress}
           createTransaction={createTransaction}
