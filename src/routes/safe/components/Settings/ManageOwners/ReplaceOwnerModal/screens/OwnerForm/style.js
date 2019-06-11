@@ -35,4 +35,10 @@ export const styles = () => ({
   user: {
     justifyContent: 'left',
   },
+  userName: {
+    whiteSpace: 'nowrap',
+  },
+  name: {
+    marginRight: `${sm}`,
+  },
 })

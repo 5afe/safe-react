@@ -1,20 +1,13 @@
 // @flow
 import React from 'react'
-import classNames from 'classnames'
 import { List } from 'immutable'
 import { withStyles } from '@material-ui/core/styles'
-import Identicon from '~/components/Identicon'
 import Block from '~/components/layout/Block'
 import Col from '~/components/layout/Col'
-import Field from '~/components/forms/Field'
-import {
-  composeValidators, required, minMaxLength,
-} from '~/components/forms/validator'
 import Table from '~/components/Table'
 import { type Column, cellWidth } from '~/components/Table/TableHead'
 import TableRow from '@material-ui/core/TableRow'
 import TableCell from '@material-ui/core/TableCell'
-import TextField from '~/components/forms/TextField'
 import Row from '~/components/layout/Row'
 import Paragraph from '~/components/layout/Paragraph'
 import Hairline from '~/components/layout/Hairline'
@@ -50,6 +43,7 @@ type Props = {
   safeName: string,
   owners: List<Owner>,
   network: string,
+  threshold: number,
   userAddress: string,
   createTransaction: Function,
 }
@@ -129,9 +123,24 @@ class ManageOwners extends React.Component<Props, State> {
                 ))}
                 <TableCell component="td">
                   <Row align="end" className={classes.actions}>
-                    <img className={classes.editOwnerIcon} src={RenameOwnerIcon} onClick={this.onShow('EditOwner', row)} />
-                    <img className={classes.replaceOwnerIcon} src={ReplaceOwnerIcon} onClick={this.onShow('ReplaceOwner', row)} />
-                    <img className={classes.removeOwnerIcon} src={RemoveOwnerIcon} onClick={this.onShow('RemoveOwner', row)} />
+                    <img
+                      alt="Edit owner"
+                      className={classes.editOwnerIcon}
+                      src={RenameOwnerIcon}
+                      onClick={this.onShow('EditOwner', row)}
+                    />
+                    <img
+                      alt="Replace owner"
+                      className={classes.replaceOwnerIcon}
+                      src={ReplaceOwnerIcon}
+                      onClick={this.onShow('ReplaceOwner', row)}
+                    />
+                    <img
+                      alt="Remove owner"
+                      className={classes.removeOwnerIcon}
+                      src={RemoveOwnerIcon}
+                      onClick={this.onShow('RemoveOwner', row)}
+                    />
                   </Row>
                 </TableCell>
               </TableRow>
