@@ -22,6 +22,7 @@ import Button from '~/components/layout/Button'
 import AddOwnerModal from './AddOwnerModal'
 import RemoveOwnerModal from './RemoveOwnerModal'
 import ReplaceOwnerModal from './ReplaceOwnerModal'
+import EditOwnerModal from './EditOwnerModal'
 import OwnerAddressTableCell from './OwnerAddressTableCell'
 import type { Owner } from '~/routes/safe/store/models/owner'
 import {
@@ -62,6 +63,7 @@ class ManageOwners extends React.Component<Props, State> {
     showAddOwner: false,
     showRemoveOwner: false,
     showReplaceOwner: false,
+    showEditOwner: false,
   }
 
   onShow = (action: Action, row?: Object) => () => {
@@ -95,6 +97,7 @@ class ManageOwners extends React.Component<Props, State> {
       showAddOwner,
       showRemoveOwner,
       showReplaceOwner,
+      showEditOwner,
       selectedOwnerName,
       selectedOwnerAddress,
     } = this.state
@@ -184,6 +187,14 @@ class ManageOwners extends React.Component<Props, State> {
           network={network}
           userAddress={userAddress}
           createTransaction={createTransaction}
+        />
+        <EditOwnerModal
+          onClose={this.onHide('EditOwner')}
+          isOpen={showEditOwner}
+          safeAddress={safeAddress}
+          ownerAddress={selectedOwnerAddress}
+          owners={owners}
+          network={network}
         />
       </React.Fragment>
     )
