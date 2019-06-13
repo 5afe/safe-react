@@ -17,11 +17,13 @@ const spinnerStyle = {
   minHeight: '50px',
 }
 
-const Review = () => (controls: React$Node, { values, submitting }: FormProps) => (
+const Review = () => (controls: React.Node, { values, submitting }: FormProps) => (
   <OpenPaper controls={controls}>
     <Heading tag="h2">Review the Threshold operation</Heading>
     <Paragraph align="left">
-      <Bold>The new threshold will be: </Bold> {values[THRESHOLD_PARAM]}
+      <Bold>The new threshold will be: </Bold>
+      {' '}
+      {values[THRESHOLD_PARAM]}
     </Paragraph>
     <Block style={spinnerStyle}>
       { submitting && <CircularProgress size={50} /> }

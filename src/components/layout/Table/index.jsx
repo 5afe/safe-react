@@ -6,10 +6,12 @@ import TableCell from '@material-ui/core/TableCell'
 import TableHead from '@material-ui/core/TableHead'
 import TableRow from '@material-ui/core/TableRow'
 
-export { TableBody, TableCell, TableHead, TableRow }
+export {
+  TableBody, TableCell, TableHead, TableRow,
+}
 
 type Props = {
-  children: React$Node,
+  children: React.Node,
   size?: number
 }
 
@@ -35,4 +37,3 @@ const GnoTable = ({ size, children }: Props) => {
 }
 
 export default GnoTable
-

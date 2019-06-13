@@ -2,7 +2,7 @@
 import React from 'react'
 import OpenInNew from '@material-ui/icons/OpenInNew'
 import { withStyles } from '@material-ui/core/styles'
-import { SharedSnackbarConsumer } from '~/components/SharedSnackBar/Context'
+import { SharedSnackbarConsumer } from '~/components/SharedSnackBar'
 import Close from '@material-ui/icons/Close'
 import IconButton from '@material-ui/core/IconButton'
 import Paragraph from '~/components/layout/Paragraph'
@@ -124,6 +124,7 @@ const ReviewTx = ({
             variant="contained"
             minWidth={140}
             color="primary"
+            data-testid="submit-tx-btn"
           >
             SUBMIT
           </Button>

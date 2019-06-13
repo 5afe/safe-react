@@ -83,7 +83,7 @@ const SafeName = ({ classes }: Props) => (
 
 const SafeNameForm = withStyles(styles)(SafeName)
 
-const SafeNamePage = () => (controls: React$Node) => (
+const SafeNamePage = () => (controls: React.Node) => (
   <OpenPaper controls={controls} container={600}>
     <SafeNameForm />
   </OpenPaper>

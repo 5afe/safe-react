@@ -6,7 +6,7 @@ import styles from './index.scss'
 const cx = classNames.bind(styles)
 
 type Props = {
-  children: React$Node,
+  children: React.Node,
 }
 
 const Pre = ({ children, ...props }: Props) => (

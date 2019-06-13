@@ -14,6 +14,8 @@ import { type Token } from '~/logic/tokens/store/model/token'
 import actions, { type Actions } from './actions'
 import { styles } from './style'
 
+export const MANAGE_TOKENS_MODAL_CLOSE_BUTTON_TEST_ID = 'manage-tokens-close-modal-btn'
+
 type Props = Actions & {
   onClose: () => void,
   classes: Object,
@@ -43,7 +45,7 @@ const Tokens = (props: Props) => {
         <Paragraph className={classes.manage} noMargin>
           Manage Tokens
         </Paragraph>
-        <IconButton onClick={onClose} disableRipple>
+        <IconButton onClick={onClose} disableRipple data-testid={MANAGE_TOKENS_MODAL_CLOSE_BUTTON_TEST_ID}>
           <Close className={classes.close} />
         </IconButton>
       </Row>

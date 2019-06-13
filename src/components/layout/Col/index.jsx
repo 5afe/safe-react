@@ -27,7 +27,7 @@ type Props = {
   mdOffset?: number,
   lgOffset?: number,
   className?: string,
-  children: React$Node,
+  children: React.Node,
 }
 
 const Col = ({

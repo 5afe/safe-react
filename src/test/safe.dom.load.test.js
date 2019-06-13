@@ -2,7 +2,7 @@
 import * as React from 'react'
 import { type Store } from 'redux'
 import { Provider } from 'react-redux'
-import { render, fireEvent, cleanup } from 'react-testing-library'
+import { render, fireEvent, cleanup } from '@testing-library/react'
 import { ConnectedRouter } from 'connected-react-router'
 import Load from '~/routes/load/container/Load'
 import { aNewStore, history, type GlobalState } from '~/store'
@@ -15,7 +15,7 @@ import { whenSafeDeployed } from './builder/safe.dom.utils'
 
 afterEach(cleanup)
 
-// https://github.com/testing-library/react-testing-library/issues/281
+// https://github.com/testing-library/@testing-library/react/issues/281
 const originalError = console.error
 beforeAll(() => {
   console.error = (...args) => {
@@ -57,7 +57,6 @@ describe('DOM > Feature > LOAD a safe', () => {
     fireEvent.change(safeNameInput, { target: { value: 'A Safe To Load' } })
     fireEvent.change(safeAddressInput, { target: { value: address } })
     await sleep(400)
-
     // Click next
     fireEvent.submit(form)
     await sleep(400)

@@ -12,6 +12,7 @@ import TableCell from '@material-ui/core/TableCell'
 import { withStyles } from '@material-ui/core/styles'
 import Col from '~/components/layout/Col'
 import Row from '~/components/layout/Row'
+import ButtonLink from '~/components/layout/ButtonLink'
 import Paragraph from '~/components/layout/Paragraph'
 import Modal from '~/components/Modal'
 import { type Column, cellWidth } from '~/components/Table/TableHead'
@@ -24,6 +25,9 @@ import Tokens from './Tokens'
 import SendModal from './SendModal'
 import Receive from './Receive'
 import { styles } from './style'
+
+export const MANAGE_TOKENS_BUTTON_TEST_ID = 'manage-tokens-btn'
+export const BALANCE_ROW_TEST_ID = 'balance-row'
 
 type State = {
   hideZero: boolean,
@@ -127,9 +131,7 @@ class Balances extends React.Component<Props, State> {
             <Paragraph className={classes.zero}>Hide zero balances</Paragraph>
           </Col>
           <Col xs={6} end="sm">
-            <Paragraph noMargin size="md" color="secondary" className={classes.links} onClick={this.onShow('Token')}>
-              Manage Tokens
-            </Paragraph>
+            <ButtonLink onClick={this.onShow('Token')} testId="manage-tokens-btn">Manage Tokens</ButtonLink>
             <Modal
               title="Manage Tokens"
               description="Enable and disable tokens to be listed"
@@ -154,7 +156,7 @@ class Balances extends React.Component<Props, State> {
           defaultFixed
         >
           {(sortedData: Array<BalanceRow>) => sortedData.map((row: any, index: number) => (
-            <TableRow tabIndex={-1} key={index} className={classes.hide}>
+            <TableRow tabIndex={-1} key={index} className={classes.hide} data-testid={BALANCE_ROW_TEST_ID}>
               {autoColumns.map((column: Column) => (
                 <TableCell key={column.id} style={cellWidth(column.width)} align={column.align} component="td">
                   {column.id === BALANCE_TABLE_ASSET_ID ? <AssetTableCell asset={row[column.id]} /> : row[column.id]}
@@ -169,6 +171,7 @@ class Balances extends React.Component<Props, State> {
                       color="secondary"
                       className={classes.send}
                       onClick={() => this.showSendFunds(row.asset.name)}
+                      data-testid="balance-send-btn"
                     >
                       <CallMade className={classNames(classes.leftIcon, classes.iconSmall)} />
                         Send

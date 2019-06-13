@@ -161,7 +161,14 @@ const SendFunds = ({
                   <Button className={classes.button} minWidth={140} onClick={onClose}>
                     Cancel
                   </Button>
-                  <Button type="submit" className={classes.button} variant="contained" minWidth={140} color="primary">
+                  <Button
+                    type="submit"
+                    className={classes.button}
+                    variant="contained"
+                    minWidth={140}
+                    color="primary"
+                    data-testid="review-tx-btn"
+                  >
                     Review
                   </Button>
                 </Row>

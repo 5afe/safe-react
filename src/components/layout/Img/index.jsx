@@ -10,7 +10,7 @@ type Props = {
   fullwidth?: boolean,
   bordered?: boolean,
   className?: string,
-  style?: React$Node,
+  style?: React.Node,
 }
 
 const Img = ({

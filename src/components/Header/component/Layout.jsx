@@ -19,8 +19,8 @@ const logo = require('../assets/gnosis-safe-logo.svg')
 
 type Props = Open & {
   classes: Object,
-  providerDetails: React$Node,
-  providerInfo: React$Node,
+  providerDetails: React.Node,
+  providerInfo: React.Node,
 }
 
 const styles = () => ({
