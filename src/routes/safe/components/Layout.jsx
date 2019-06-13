@@ -19,6 +19,7 @@ import {
 } from '~/theme/variables'
 import { copyToClipboard } from '~/utils/clipboard'
 import Balances from './Balances'
+import Transactions from './TransactionsNew'
 
 type Props = SelectorProps & {
   classes: Object,
@@ -141,6 +142,7 @@ class Layout extends React.Component<Props, State> {
             createTransaction={createTransaction}
           />
         )}
+        {tabIndex === 1 && <Transactions />}
       </React.Fragment>
     )
   }
