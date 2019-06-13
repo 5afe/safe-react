@@ -163,7 +163,7 @@ class ReviewComponent extends React.PureComponent<Props, State> {
             </Block>
             <Hairline />
             {owners.map((x, index) => (
-              <React.Fragment key={`name${index}`}>
+              <React.Fragment key={owners[index].address}>
                 <Row className={classes.owner}>
                   <Col xs={1} align="center">
                     <Identicon address={owners[index]} diameter={32} />

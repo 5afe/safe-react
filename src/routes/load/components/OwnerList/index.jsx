@@ -141,8 +141,8 @@ class OwnerListComponent extends React.PureComponent<Props, State> {
         </Row>
         <Hairline />
         <Block margin="md" padding="md">
-          { owners.map((x, index) => (
-            <Row key={`owner${(index)}`} className={classes.owner}>
+          {owners.map((x, index) => (
+            <Row key={owners[index].address} className={classes.owner}>
               <Col xs={4}>
                 <Field
                   className={classes.name}
