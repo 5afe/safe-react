@@ -81,10 +81,12 @@ const deploySafe = async (createSafeForm: any, threshold: number, numOwners: num
     fireEvent.change(ownerAddressInput, { target: { value: accounts[i] } })
   }
   fireEvent.submit(form)
-  await sleep(400)
+  await sleep(600)
 
   // Fill Threshold
-  const thresholdSelect = createSafeForm.getByRole('button')
+  // The test is fragile here, MUI select btn is hard to find
+  const thresholdSelect = createSafeForm.getAllByRole('button')[1]
+
   fireEvent.click(thresholdSelect)
   const thresholdOptions = createSafeForm.getAllByRole('option')
   fireEvent.click(thresholdOptions[numOwners - 1])
