@@ -1,67 +1,83 @@
 // @flow
-import * as TestUtils from 'react-dom/test-utils'
 import { getWeb3 } from '~/logic/wallets/getWeb3'
-import { type Match } from 'react-router-dom'
-import { getFirstTokenContract, getSecondTokenContract } from '~/test/utils/tokenMovements'
+import { fireEvent } from '@testing-library/react'
+import { getFirstTokenContract } from '~/test/utils/tokenMovements'
 import { aNewStore } from '~/store'
 import { aMinedSafe } from '~/test/builder/safe.redux.builder'
-import { travelToTokens } from '~/test/builder/safe.dom.utils'
+import { renderSafeView } from '~/test/builder/safe.dom.utils'
 import { sleep } from '~/utils/timer'
-import { buildMathPropsFrom } from '~/test/utils/buildReactRouterProps'
-import { tokenListSelector } from '~/logic/tokens/store/selectors'
-import { testToken } from '~/test/builder/tokens.dom.utils'
+import { clickOnManageTokens, clickOnAddCustomToken } from '~/test/utils/DOMNavigation'
 import * as fetchTokensModule from '~/logic/tokens/store/actions/fetchTokens'
-import * as enhancedFetchModule from '~/utils/fetch'
-import { clickOnAddToken, fillAddress, fillHumanReadableInfo } from '~/test/utils/tokens/addToken.helper'
+import {
+  ADD_CUSTOM_TOKEN_ADDRESS_INPUT_TEST_ID,
+  ADD_CUSTOM_TOKEN_SYMBOLS_INPUT_TEST_ID,
+  ADD_CUSTOM_TOKEN_DECIMALS_INPUT_TEST_ID,
+  ADD_CUSTOM_TOKEN_FORM,
+} from '~/routes/safe/components/Balances/Tokens/screens/AddCustomToken'
+import { BALANCE_ROW_TEST_ID } from '~/routes/safe/components/Balances/'
+import 'jest-dom/extend-expect'
 
-describe('DOM > Feature > Add new ERC 20 Tokens', () => {
-  // let web3
-  // let accounts
-  // let firstErc20Token
-  // let secondErc20Token
+// https://github.com/testing-library/@testing-library/react/issues/281
+const originalError = console.error
+beforeAll(() => {
+  console.error = (...args) => {
+    if (/Warning.*not wrapped in act/.test(args[0])) {
+      return
+    }
+    originalError.call(console, ...args)
+  }
+})
 
-  // beforeAll(async () => {
-  //   web3 = getWeb3()
-  //   accounts = await web3.eth.getAccounts()
-  //   firstErc20Token = await getFirstTokenContract(web3, accounts[0])
-  //   secondErc20Token = await getSecondTokenContract(web3, accounts[0])
+afterAll(() => {
+  console.error = originalError
+})
 
-  //   // $FlowFixMe
-  //   enhancedFetchModule.enhancedFetch = jest.fn()
-  //   enhancedFetchModule.enhancedFetch.mockImplementation(() => Promise.resolve({
-  //     results: [
-  //       {
-  //         address: firstErc20Token.address,
-  //         name: 'First Token Example',
-  //         symbol: 'FTE',
-  //         decimals: 18,
-  //         logoUri: 'https://upload.wikimedia.org/wikipedia/commons/c/c0/Earth_simple_icon.png',
-  //       },
-  //     ],
-  //   }))
-  // })
+describe('DOM > Feature > Add custom ERC 20 Tokens', () => {
+  let web3
+  let accounts
+  let erc20Token
 
-  it('adds a second erc 20 token filling the form', async () => {
-    // // GIVEN
-    // const store = aNewStore()
-    // const safeAddress = await aMinedSafe(store)
-    // await store.dispatch(fetchTokensModule.fetchTokens(safeAddress))
-    // const TokensDom = await travelToTokens(store, safeAddress)
-    // await sleep(400)
-    // const tokens = TestUtils.scryRenderedComponentsWithType(TokensDom, TokenComponent)
-    // expect(tokens.length).toBe(2)
-    // testToken(tokens[0].props.token, 'FTE', false)
-    // testToken(tokens[1].props.token, 'ETH', true)
-    // // WHEN
-    // await clickOnAddToken(TokensDom)
-    // await fillAddress(TokensDom, secondErc20Token)
-    // await fillHumanReadableInfo(TokensDom)
-    // // THEN
-    // const match: Match = buildMathPropsFrom(safeAddress)
-    // const tokenList = tokenListSelector(store.getState(), { match })
-    // expect(tokenList.count()).toBe(3)
-    // testToken(tokenList.get(0), 'FTE', false)
-    // testToken(tokenList.get(1), 'ETH', true)
-    // testToken(tokenList.get(2), 'TKN', true)
+  beforeAll(async () => {
+    web3 = getWeb3()
+    accounts = await web3.eth.getAccounts()
+    erc20Token = await getFirstTokenContract(web3, accounts[0])
+  })
+
+  it('adds and displays an erc 20 token after filling the form', async () => {
+    // GIVEN
+    const store = aNewStore()
+    const safeAddress = await aMinedSafe(store)
+    await store.dispatch(fetchTokensModule.fetchTokens())
+    const TokensDom = renderSafeView(store, safeAddress)
+    await sleep(400)
+
+    // WHEN
+    clickOnManageTokens(TokensDom)
+    clickOnAddCustomToken(TokensDom)
+    await sleep(200)
+
+    // Fill address
+    const addTokenForm = TokensDom.getByTestId(ADD_CUSTOM_TOKEN_FORM)
+    const addressInput = TokensDom.getByTestId(ADD_CUSTOM_TOKEN_ADDRESS_INPUT_TEST_ID)
+    fireEvent.change(addressInput, { target: { value: erc20Token.address } })
+    await sleep(500)
+
+    // Check if it loaded symbol/decimals correctly
+    const symbolInput = TokensDom.getByTestId(ADD_CUSTOM_TOKEN_SYMBOLS_INPUT_TEST_ID)
+    const decimalsInput = TokensDom.getByTestId(ADD_CUSTOM_TOKEN_DECIMALS_INPUT_TEST_ID)
+
+    const tokenSymbol = await erc20Token.symbol()
+    const tokenDecimals = await erc20Token.decimals()
+    expect(symbolInput.value).toBe(tokenSymbol)
+    expect(decimalsInput.value).toBe(tokenDecimals.toString())
+
+    // Submit form
+    fireEvent.submit(addTokenForm)
+    await sleep(300)
+
+    // check if token is displayed
+    const balanceRows = TokensDom.getAllByTestId(BALANCE_ROW_TEST_ID)
+    expect(balanceRows.length).toBe(2)
+    expect(balanceRows[1]).toHaveTextContent(tokenSymbol)
   })
 })

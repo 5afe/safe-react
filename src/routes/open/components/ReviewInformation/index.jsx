@@ -155,7 +155,7 @@ const ReviewComponent = ({ values, classes, network }: Props) => {
 
 const ReviewPage = withStyles(styles)(ReviewComponent)
 
-const Review = ({ network }: LayoutProps) => (controls: React$Node, { values }: Object) => (
+const Review = ({ network }: LayoutProps) => (controls: React.Node, { values }: Object) => (
   <React.Fragment>
     <OpenPaper controls={controls} padding={false}>
       <ReviewPage network={network} values={values} />

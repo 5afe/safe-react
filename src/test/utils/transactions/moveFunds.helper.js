@@ -6,8 +6,8 @@ import SendToken from '~/routes/safe/components/SendToken'
 import { whenExecuted } from '~/test/utils/logTransactions'
 
 export const sendMoveFundsForm = async (
-  SafeDom: React$Component<any, any>,
-  expandBalance: React$Component<any, any>,
+  SafeDom: React.Component<any, any>,
+  expandBalance: React.Component<any, any>,
   value: string,
   destination: string,
 ) => {
@@ -38,12 +38,12 @@ export const sendMoveFundsForm = async (
   return whenExecuted(SafeDom, SendToken)
 }
 
-export const checkMinedMoveFundsTx = (Transaction: React$Component<any, any>, name: string) => {
+export const checkMinedMoveFundsTx = (Transaction: React.Component<any, any>, name: string) => {
   checkMinedTx(Transaction, name)
 }
 
 export const checkPendingMoveFundsTx = async (
-  Transaction: React$Component<any, any>,
+  Transaction: React.Component<any, any>,
   safeThreshold: number,
   name: string,
   statusses: string[],

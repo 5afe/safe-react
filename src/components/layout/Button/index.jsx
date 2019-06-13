@@ -12,6 +12,7 @@ const styles = {
 type Props = {
   minWidth?: number,
   minHeight?: number,
+  testId: string,
 }
 
 const calculateStyleBased = (minWidth, minHeight) => ({
@@ -19,10 +20,12 @@ const calculateStyleBased = (minWidth, minHeight) => ({
   minHeight: minHeight && `${minHeight}px`,
 })
 
-const GnoButton = ({ minWidth, minHeight, ...props }: Props) => {
+const GnoButton = ({
+  minWidth, minHeight, testId = '', ...props
+}: Props) => {
   const style = calculateStyleBased(minWidth, minHeight)
 
-  return <Button style={style} {...props} />
+  return <Button style={style} data-testid={testId} {...props} />
 }
 
 export default withStyles(styles)(GnoButton)

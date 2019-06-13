@@ -10,7 +10,7 @@ const cx = classNames.bind(styles)
 type Props = {
   padding?: 'xs' | 'sm' | 'md',
   to: string,
-  children: React$Node,
+  children: React.Node,
   color?: 'regular' | 'white',
   className?: string,
   innerRef: React.ElementRef<any>,

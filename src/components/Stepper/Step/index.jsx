@@ -2,7 +2,7 @@
 import * as React from 'react'
 
 type Props = {
-  children: React$Node,
+  children: React.Node,
 }
 
 const Step = ({ children }: Props) => (

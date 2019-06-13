@@ -21,7 +21,7 @@ const spinnerStyle = {
   minHeight: '50px',
 }
 
-const ReviewTx = ({ symbol }: Props) => (controls: React$Node, { values, submitting }: FormProps) => (
+const ReviewTx = ({ symbol }: Props) => (controls: React.Node, { values, submitting }: FormProps) => (
   <OpenPaper controls={controls}>
     <Heading tag="h2">Review the move token funds</Heading>
     <Paragraph align="left">

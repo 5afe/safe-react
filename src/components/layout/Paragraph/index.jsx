@@ -13,7 +13,7 @@ type Props = {
   size?: 'sm' | 'md' | 'lg' | 'xl' | 'xxl',
   color?: 'soft' | 'medium' | 'dark' | 'white' | 'fancy' | 'primary' | 'secondary' | 'warning' | 'disabled',
   transform?: 'capitalize' | 'lowercase' | 'uppercase',
-  children: React$Node,
+  children: React.Node,
   dot?: boolean,
   className?: string,
 }

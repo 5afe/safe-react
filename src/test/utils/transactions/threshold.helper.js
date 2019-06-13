@@ -7,8 +7,8 @@ import Threshold from '~/routes/safe/components/Threshold'
 import { whenExecuted } from '~/test/utils/logTransactions'
 
 export const sendChangeThresholdForm = async (
-  SafeDom: React$Component<any, any>,
-  changeThreshold: React$Component<any, any>,
+  SafeDom: React.Component<any, any>,
+  changeThreshold: React.Component<any, any>,
   threshold: string,
 ) => {
   // Load the Threshold Form
@@ -29,7 +29,7 @@ export const sendChangeThresholdForm = async (
   return whenExecuted(SafeDom, Threshold)
 }
 
-export const checkMinedThresholdTx = (Transaction: React$Component<any, any>, name: string) => {
+export const checkMinedThresholdTx = (Transaction: React.Component<any, any>, name: string) => {
   checkMinedTx(Transaction, name)
 }
 

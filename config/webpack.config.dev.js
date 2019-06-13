@@ -21,7 +21,7 @@ const cssvariables = require(paths.appSrc + '/theme/variables')
 
 const postcssPlugins = [
   autoprefixer({
-    browsers: [
+    overrideBrowserslist: [
       '>1%',
       'last 4 versions',
       'Firefox ESR',
@@ -102,8 +102,9 @@ module.exports = {
             loader: 'css-loader',
             options: {
               importLoaders: 1,
-              modules: true,
-              localIdentName: '[name]__[local]___[hash:base64:5]',
+              modules: {
+                localIdentName: '[name]__[local]___[hash:base64:5]',
+              },
             },
           },
           {
