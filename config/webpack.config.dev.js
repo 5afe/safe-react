@@ -21,7 +21,7 @@ const cssvariables = require(paths.appSrc + '/theme/variables')
 
 const postcssPlugins = [
   autoprefixer({
-    browsers: [
+    overrideBrowserslist: [
       '>1%',
       'last 4 versions',
       'Firefox ESR',
