@@ -51,7 +51,7 @@ const RemoveSafeComponent = ({
     open={isOpen}
   >
     <Row align="center" grow className={classes.heading}>
-      <Paragraph className={classes.manage} noMargin>
+      <Paragraph className={classes.manage} noMargin weight="bolder" >
           Remove Safe
       </Paragraph>
       <IconButton onClick={onClose} disableRipple>
@@ -66,7 +66,7 @@ const RemoveSafeComponent = ({
         </Col>
         <Col xs={11}>
           <Block className={classNames(classes.name, classes.userName)}>
-            <Paragraph size="lg" noMargin>
+            <Paragraph size="lg" noMargin weight="bolder">
               {safeName}
             </Paragraph>
             <Block align="center" className={classes.user}>

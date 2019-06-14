@@ -70,7 +70,9 @@ class Settings extends React.Component<Props, State> {
       <React.Fragment>
         <Row align="center" className={classes.message}>
           <Col xs={6}>
-            <Paragraph className={classes.settings}>Settings</Paragraph>
+            <Paragraph className={classes.settings} size="lg" weight="bolder">
+              Settings
+            </Paragraph>
           </Col>
           <Col xs={6} end="sm">
             <Paragraph noMargin size="md" color="error" className={classes.links} onClick={this.onShow('RemoveSafe')}>
