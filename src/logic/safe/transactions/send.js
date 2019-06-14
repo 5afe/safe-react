@@ -5,6 +5,7 @@ import { EMPTY_DATA } from '~/logic/wallets/ethTransactions'
 import { isEther } from '~/logic/tokens/utils/tokenHelpers'
 import { type Token } from '~/logic/tokens/store/model/token'
 import { getGnosisSafeInstanceAt } from '~/logic/contracts/safeContracts'
+import { saveTxViaService } from '~/logic/safe/transactions'
 
 export const CALL = 0
 const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'
@@ -38,6 +39,17 @@ export const executeTransaction = async (
       sigs,
       { from: sender },
     )
+    await saveTxViaService(
+      safeInstance.address,
+      to,
+      valueInWei,
+      data,
+      nonce,
+      0,
+      tx.tx, // tx hash,
+      sender,
+    )
+    console.log(tx.tx)
 
     return tx
   } catch (error) {

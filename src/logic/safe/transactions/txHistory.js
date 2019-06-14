@@ -1,4 +1,5 @@
 // @flow
+import axios from 'axios'
 import { getWeb3 } from '~/logic/wallets/getWeb3'
 import { getTxServiceUriFrom, getTxServiceHost } from '~/config'
 import { getGnosisSafeInstanceAt } from '~/logic/contracts/safeContracts'
@@ -49,7 +50,7 @@ const calculateBodyFrom = async (
   })
 }
 
-export const buildTxServiceUrlFrom = (safeAddress: string) => {
+export const buildTxServiceUrl = (safeAddress: string) => {
   const host = getTxServiceHost()
   const address = getWeb3().toChecksumAddress(safeAddress)
   const base = getTxServiceUriFrom(address)
@@ -67,18 +68,10 @@ export const submitOperation = async (
   sender: string,
   type: TxServiceType,
 ) => {
-  const url = buildTxServiceUrlFrom(safeAddress)
-  const headers = {
-    Accept: 'application/json',
-    'Content-Type': 'application/json',
-  }
+  const url = buildTxServiceUrl(safeAddress)
   const body = await calculateBodyFrom(safeAddress, to, valueInWei, data, operation, nonce, txHash, sender, type)
 
-  const response = await fetch(url, {
-    method: 'POST',
-    headers,
-    body,
-  })
+  const response = await axios.post(url, { body })
 
   if (response.status !== 202) {
     return Promise.reject(new Error('Error submitting the transaction'))
