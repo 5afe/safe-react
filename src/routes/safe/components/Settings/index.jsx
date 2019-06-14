@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react'
+import { connect } from 'react-redux'
 import { withStyles } from '@material-ui/core/styles'
 import Block from '~/components/layout/Block'
 import Col from '~/components/layout/Col'
@@ -7,13 +8,15 @@ import Row from '~/components/layout/Row'
 import RemoveSafeModal from './RemoveSafeModal'
 import Paragraph from '~/components/layout/Paragraph'
 import Hairline from '~/components/layout/Hairline'
+import UpdateSafeName from './UpdateSafeName'
+import actions, { type Actions } from './actions'
 import { styles } from './style'
 
 type State = {
   showRemoveSafe: boolean,
 }
 
-type Props = {
+type Props = Actions & {
   classes: Object,
   granted: boolean,
   etherScanLink: string,
@@ -49,6 +52,7 @@ class Settings extends React.Component<Props, State> {
       etherScanLink,
       safeAddress,
       safeName,
+      updateSafeName,
     } = this.props
 
     return (
@@ -98,7 +102,11 @@ class Settings extends React.Component<Props, State> {
           <Col xs={9} layout="column">
             <Block className={classes.container}>
               {menuOptionIndex === 1 && (
-                <p>To be done</p>
+                <UpdateSafeName
+                  safeAddress={safeAddress}
+                  safeName={safeName}
+                  updateSafeName={updateSafeName}
+                />
               )}
               {granted && menuOptionIndex === 2 && (
                 <p>To be done</p>
@@ -117,4 +125,9 @@ class Settings extends React.Component<Props, State> {
   }
 }
 
-export default withStyles(styles)(Settings)
+const settingsComponent = withStyles(styles)(Settings)
+
+export default connect(
+  undefined,
+  actions,
+)(settingsComponent)
