@@ -29,8 +29,9 @@ class SafeView extends React.Component<Props> {
 
   componentDidUpdate(prevProps) {
     const { activeTokens } = this.props
+    const oldActiveTokensSize = prevProps.activeTokens.size
 
-    if (activeTokens.size > prevProps.activeTokens.size) {
+    if (oldActiveTokensSize > 0 && activeTokens.size > oldActiveTokensSize) {
       this.checkForUpdates()
     }
   }
