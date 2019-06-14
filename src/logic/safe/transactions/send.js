@@ -6,9 +6,9 @@ import { isEther } from '~/logic/tokens/utils/tokenHelpers'
 import { type Token } from '~/logic/tokens/store/model/token'
 import { getGnosisSafeInstanceAt } from '~/logic/contracts/safeContracts'
 import { saveTxToHistory } from '~/logic/safe/transactions'
+import { ZERO_ADDRESS } from '~/logic/wallets/ethAddresses'
 
 export const CALL = 0
-const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'
 export const TX_TYPE_EXECUTION = 'execution'
 
 export const executeTransaction = async (
@@ -27,11 +27,11 @@ export const executeTransaction = async (
       '',
     )}000000000000000000000000000000000000000000000000000000000000000001`
 
-    const tx = await safeInstance.execTransaction(
+    const receipt = await safeInstance.execTransaction(
       to,
       valueInWei,
       data,
-      CALL,
+      operation,
       0,
       0,
       0,
@@ -46,14 +46,14 @@ export const executeTransaction = async (
       to,
       valueInWei,
       data,
-      CALL,
+      operation,
       nonce,
-      tx.tx, // tx hash,
+      receipt.tx, // tx hash,
       sender,
       TX_TYPE_EXECUTION,
     )
 
-    return tx
+    return receipt
   } catch (error) {
     // eslint-disable-next-line
     console.log('Error executing the TX: ' + error)
