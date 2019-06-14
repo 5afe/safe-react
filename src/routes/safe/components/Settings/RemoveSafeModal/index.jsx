@@ -51,7 +51,7 @@ const RemoveSafeComponent = ({
     open={isOpen}
   >
     <Row align="center" grow className={classes.heading}>
-      <Paragraph className={classes.manage} noMargin weight="bolder" >
+      <Paragraph className={classes.manage} noMargin weight="bolder">
           Remove Safe
       </Paragraph>
       <IconButton onClick={onClose} disableRipple>
@@ -84,7 +84,8 @@ const RemoveSafeComponent = ({
       <Row className={classes.description}>
         <Paragraph noMargin>
             Removing a Safe only removes it from your interface.
-            <b>It does not delete the Safe</b>.
+          <b>It does not delete the Safe</b>
+.
             You can always add it back using the Safe's address.
         </Paragraph>
       </Row>
