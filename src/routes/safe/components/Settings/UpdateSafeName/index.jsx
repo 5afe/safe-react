@@ -51,7 +51,7 @@ const UpdateSafeName = (props: Props) => {
         {() => (
           <React.Fragment>
             <Block className={classes.formContainer}>
-              <Paragraph noMargin className={classes.title} size="lg">
+              <Paragraph noMargin className={classes.title} size="lg" weight="bolder">
               Modify Safe name
               </Paragraph>
               <Block className={classes.root}>

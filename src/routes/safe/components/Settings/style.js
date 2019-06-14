@@ -22,9 +22,6 @@ export const styles = (theme: Object) => ({
     alignItems: 'center',
     cursor: 'pointer',
   },
-  container: {
-    padding: lg,
-  },
   message: {
     margin: `${sm} 0`,
   },
