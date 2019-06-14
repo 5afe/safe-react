@@ -2,6 +2,7 @@
 import * as React from 'react'
 import cn from 'classnames'
 import { List } from 'immutable'
+import { connect } from 'react-redux'
 import { withStyles } from '@material-ui/core/styles'
 import Block from '~/components/layout/Block'
 import Col from '~/components/layout/Col'
@@ -11,6 +12,8 @@ import Paragraph from '~/components/layout/Paragraph'
 import Hairline from '~/components/layout/Hairline'
 import type { Owner } from '~/routes/safe/store/models/owner'
 import ThresholdSettings from './ThresholdSettings'
+import UpdateSafeName from './UpdateSafeName'
+import actions, { type Actions } from './actions'
 import { styles } from './style'
 
 type State = {
@@ -18,7 +21,7 @@ type State = {
   menuOptionIndex: number,
 }
 
-type Props = {
+type Props = Actions & {
   classes: Object,
   granted: boolean,
   etherScanLink: string,
@@ -52,7 +55,15 @@ class Settings extends React.Component<Props, State> {
   render() {
     const { showRemoveSafe, menuOptionIndex } = this.state
     const {
-      classes, granted, etherScanLink, safeAddress, safeName, owners, threshold, createTransaction,
+      classes,
+      granted,
+      etherScanLink,
+      safeAddress,
+      safeName,
+      owners,
+      threshold,
+      createTransaction,
+      updateSafeName,
     } = this.props
 
     return (
@@ -113,7 +124,13 @@ class Settings extends React.Component<Props, State> {
           </Col>
           <Col xs={9} layout="column">
             <Block className={classes.container}>
-              {menuOptionIndex === 1 && <p>To be done</p>}
+              {menuOptionIndex === 1 && (
+                <UpdateSafeName
+                  safeAddress={safeAddress}
+                  safeName={safeName}
+                  updateSafeName={updateSafeName}
+                />
+              )}
               {granted && menuOptionIndex === 2 && <p>To be done</p>}
               {granted && menuOptionIndex === 3 && (
                 <ThresholdSettings
@@ -132,4 +149,9 @@ class Settings extends React.Component<Props, State> {
   }
 }
 
-export default withStyles(styles)(Settings)
+const settingsComponent = withStyles(styles)(Settings)
+
+export default connect(
+  undefined,
+  actions,
+)(settingsComponent)
