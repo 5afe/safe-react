@@ -1,7 +1,7 @@
 // @flow
 import { List } from 'immutable'
 import { calculateGasOf, checkReceiptStatus, calculateGasPrice } from '~/logic/wallets/ethTransactions'
-import { type Operation, submitOperation } from '~/logic/safe/safeTxHistory'
+import { type Operation, saveTxToHistory } from '~/logic/safe/transactions'
 import { getGnosisSafeInstanceAt } from '~/logic/contracts/safeContracts'
 import { buildSignaturesFrom } from '~/logic/safe/safeTxSigner'
 import { generateMetamaskSignature, generateTxGasEstimateFrom, estimateDataGas } from '~/logic/safe/transactions'
@@ -49,7 +49,7 @@ export const approveTransaction = async (
   const txHash = txReceipt.tx
   await checkReceiptStatus(txHash)
 
-  await submitOperation(safeAddress, to, valueInWei, data, operation, nonce, txHash, sender, 'confirmation')
+  await saveTxToHistory(safeAddress, to, valueInWei, data, operation, nonce, txHash, sender, 'confirmation')
 
   return txHash
 }

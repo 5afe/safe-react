@@ -3,6 +3,7 @@ import axios from 'axios'
 import { getWeb3 } from '~/logic/wallets/getWeb3'
 import { getTxServiceUriFrom, getTxServiceHost } from '~/config'
 import { getGnosisSafeInstanceAt } from '~/logic/contracts/safeContracts'
+import { ZERO_ADDRESS } from '~/logic/wallets/ethAddresses'
 
 export type TxServiceType = 'confirmation' | 'execution' | 'initialised'
 export type Operation = 0 | 1 | 2
@@ -13,7 +14,7 @@ const calculateBodyFrom = async (
   valueInWei: number,
   data: string,
   operation: Operation,
-  nonce: number,
+  nonce: string | number,
   transactionHash: string,
   sender: string,
   type: TxServiceType,
@@ -27,13 +28,13 @@ const calculateBodyFrom = async (
     0,
     0,
     0,
-    0,
-    0,
+    ZERO_ADDRESS,
+    ZERO_ADDRESS,
     nonce,
   )
 
-  return JSON.stringify({
-    to: getWeb3().toChecksumAddress(to),
+  return {
+    to: getWeb3().utils.toChecksumAddress(to),
     value: valueInWei,
     data,
     operation,
@@ -41,37 +42,36 @@ const calculateBodyFrom = async (
     safeTxGas: 0,
     dataGas: 0,
     gasPrice: 0,
-    gasToken: null,
-    refundReceiver: null,
+    gasToken: ZERO_ADDRESS,
+    refundReceiver: ZERO_ADDRESS,
     contractTransactionHash,
     transactionHash,
-    sender: getWeb3().toChecksumAddress(sender),
+    sender: getWeb3().utils.toChecksumAddress(sender),
     type,
-  })
+  }
 }
 
 export const buildTxServiceUrl = (safeAddress: string) => {
   const host = getTxServiceHost()
-  const address = getWeb3().toChecksumAddress(safeAddress)
+  const address = getWeb3().utils.toChecksumAddress(safeAddress)
   const base = getTxServiceUriFrom(address)
   return `${host}${base}`
 }
 
-export const submitOperation = async (
+export const saveTxToHistory = async (
   safeAddress: string,
   to: string,
   valueInWei: number,
   data: string,
   operation: Operation,
-  nonce: number,
+  nonce: number | string,
   txHash: string,
   sender: string,
   type: TxServiceType,
 ) => {
   const url = buildTxServiceUrl(safeAddress)
   const body = await calculateBodyFrom(safeAddress, to, valueInWei, data, operation, nonce, txHash, sender, type)
-
-  const response = await axios.post(url, { body })
+  const response = await axios.post(url, body)
 
   if (response.status !== 202) {
     return Promise.reject(new Error('Error submitting the transaction'))
