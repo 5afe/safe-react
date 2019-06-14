@@ -2,14 +2,13 @@
 import axios from 'axios'
 import { getWeb3 } from '~/logic/wallets/getWeb3'
 import { getTxServiceUriFrom, getTxServiceHost } from '~/config'
-import { getGnosisSafeInstanceAt } from '~/logic/contracts/safeContracts'
 import { ZERO_ADDRESS } from '~/logic/wallets/ethAddresses'
 
 export type TxServiceType = 'confirmation' | 'execution' | 'initialised'
 export type Operation = 0 | 1 | 2
 
 const calculateBodyFrom = async (
-  safeAddress: string,
+  safeInstance: any,
   to: string,
   valueInWei: number,
   data: string,
@@ -19,8 +18,7 @@ const calculateBodyFrom = async (
   sender: string,
   type: TxServiceType,
 ) => {
-  const gnosisSafe = await getGnosisSafeInstanceAt(safeAddress)
-  const contractTransactionHash = await gnosisSafe.getTransactionHash(
+  const contractTransactionHash = await safeInstance.getTransactionHash(
     to,
     valueInWei,
     data,
@@ -59,7 +57,7 @@ export const buildTxServiceUrl = (safeAddress: string) => {
 }
 
 export const saveTxToHistory = async (
-  safeAddress: string,
+  safeInstance: any,
   to: string,
   valueInWei: number,
   data: string,
@@ -69,8 +67,8 @@ export const saveTxToHistory = async (
   sender: string,
   type: TxServiceType,
 ) => {
-  const url = buildTxServiceUrl(safeAddress)
-  const body = await calculateBodyFrom(safeAddress, to, valueInWei, data, operation, nonce, txHash, sender, type)
+  const url = buildTxServiceUrl(safeInstance.address)
+  const body = await calculateBodyFrom(safeInstance, to, valueInWei, data, operation, nonce, txHash, sender, type)
   const response = await axios.post(url, body)
 
   if (response.status !== 202) {

@@ -9,7 +9,7 @@ import { saveTxToHistory } from '~/logic/safe/transactions'
 
 export const CALL = 0
 const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'
-export const EXECUTION_TX_TYPE = 'execution'
+export const TX_TYPE_EXECUTION = 'execution'
 
 export const executeTransaction = async (
   safeInstance: any,
@@ -42,7 +42,7 @@ export const executeTransaction = async (
     )
 
     await saveTxToHistory(
-      safeInstance.address,
+      safeInstance,
       to,
       valueInWei,
       data,
@@ -50,7 +50,7 @@ export const executeTransaction = async (
       nonce,
       tx.tx, // tx hash,
       sender,
-      EXECUTION_TX_TYPE,
+      TX_TYPE_EXECUTION,
     )
 
     return tx
