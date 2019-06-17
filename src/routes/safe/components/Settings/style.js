@@ -1,6 +1,6 @@
 // @flow
 import {
-  sm, md, lg, border,
+  sm, md, lg, border, secondary, bolderFont,
 } from '~/theme/variables'
 
 export const styles = (theme: Object) => ({
@@ -21,6 +21,11 @@ export const styles = (theme: Object) => ({
     padding: lg,
     alignItems: 'center',
     cursor: 'pointer',
+  },
+  active: {
+    backgroundColor: '#f4f4f9',
+    color: secondary,
+    fontWeight: bolderFont,
   },
   container: {
     padding: lg,

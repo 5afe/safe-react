@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react'
+import cn from 'classnames'
 import { withStyles } from '@material-ui/core/styles'
 import Block from '~/components/layout/Block'
 import Col from '~/components/layout/Col'
@@ -7,10 +8,12 @@ import Row from '~/components/layout/Row'
 import RemoveSafeModal from './RemoveSafeModal'
 import Paragraph from '~/components/layout/Paragraph'
 import Hairline from '~/components/layout/Hairline'
+import Threshold from './Threshold'
 import { styles } from './style'
 
 type State = {
   showRemoveSafe: boolean,
+  menuOptionIndex: number,
 }
 
 type Props = {
@@ -44,11 +47,7 @@ class Settings extends React.Component<Props, State> {
   render() {
     const { showRemoveSafe, menuOptionIndex } = this.state
     const {
-      classes,
-      granted,
-      etherScanLink,
-      safeAddress,
-      safeName,
+      classes, granted, etherScanLink, safeAddress, safeName,
     } = this.props
 
     return (
@@ -73,21 +72,33 @@ class Settings extends React.Component<Props, State> {
         <Block className={classes.root}>
           <Col xs={3} layout="column">
             <Block className={classes.menu}>
-              <Row className={classes.menuOption} onClick={this.handleChange(1)}>
+              <Row
+                className={cn(classes.menuOption, menuOptionIndex === 1 && classes.active)}
+                onClick={this.handleChange(1)}
+              >
                 Safe name
               </Row>
               <Hairline />
               {granted && (
                 <React.Fragment>
-                  <Row className={classes.menuOption} onClick={this.handleChange(2)}>
+                  <Row
+                    className={cn(classes.menuOption, menuOptionIndex === 2 && classes.active)}
+                    onClick={this.handleChange(2)}
+                  >
                     Owners
                   </Row>
                   <Hairline />
-                  <Row className={classes.menuOption} onClick={this.handleChange(3)}>
+                  <Row
+                    className={cn(classes.menuOption, menuOptionIndex === 3 && classes.active)}
+                    onClick={this.handleChange(3)}
+                  >
                     Required confirmations
                   </Row>
                   <Hairline />
-                  <Row className={classes.menuOption} onClick={this.handleChange(4)}>
+                  <Row
+                    className={cn(classes.menuOption, menuOptionIndex === 4 && classes.active)}
+                    onClick={this.handleChange(4)}
+                  >
                     Modules
                   </Row>
                   <Hairline />
@@ -97,18 +108,10 @@ class Settings extends React.Component<Props, State> {
           </Col>
           <Col xs={9} layout="column">
             <Block className={classes.container}>
-              {menuOptionIndex === 1 && (
-                <p>To be done</p>
-              )}
-              {granted && menuOptionIndex === 2 && (
-                <p>To be done</p>
-              )}
-              {granted && menuOptionIndex === 3 && (
-                <p>To be done</p>
-              )}
-              {granted && menuOptionIndex === 4 && (
-                <p>To be done</p>
-              )}
+              {menuOptionIndex === 1 && <p>To be done</p>}
+              {granted && menuOptionIndex === 2 && <p>To be done</p>}
+              {granted && menuOptionIndex === 3 && <Threshold />}
+              {granted && menuOptionIndex === 4 && <p>To be done</p>}
             </Block>
           </Col>
         </Block>
