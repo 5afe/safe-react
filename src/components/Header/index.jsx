@@ -53,7 +53,7 @@ class HeaderComponent extends React.PureComponent<Props, State> {
     let currentProvider: ProviderProps = await getProviderInfo()
     fetchProvider(currentProvider, openSnackbar)
 
-    this.providerListener = setInterval(async () => {   
+    this.providerListener = setInterval(async () => {
       const newProvider: ProviderProps = await getProviderInfo()
       if (JSON.stringify(currentProvider) !== JSON.stringify(newProvider)) {
         fetchProvider(newProvider, openSnackbar)
