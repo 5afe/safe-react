@@ -1,5 +1,7 @@
 // @flow
-import { fontColor, lg, smallFontSize, md } from '~/theme/variables'
+import {
+  fontColor, lg, smallFontSize, md,
+} from '~/theme/variables'
 
 export const styles = () => ({
   ownersText: {
