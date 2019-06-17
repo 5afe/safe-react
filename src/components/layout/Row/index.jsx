@@ -1,6 +1,6 @@
 // @flow
 import classNames from 'classnames/bind'
-import React from 'react'
+import * as React from 'react'
 import { capitalize } from '~/utils/css'
 import styles from './index.scss'
 
@@ -27,7 +27,7 @@ const Row = ({
 
   return (
     <div className={rowClassNames} {...props}>
-      { children }
+      {children}
     </div>
   )
 }

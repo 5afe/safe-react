@@ -1,6 +1,7 @@
 // @flow
 import * as React from 'react'
 import cn from 'classnames'
+import { List } from 'immutable'
 import { withStyles } from '@material-ui/core/styles'
 import Block from '~/components/layout/Block'
 import Col from '~/components/layout/Col'
@@ -8,7 +9,8 @@ import Row from '~/components/layout/Row'
 import RemoveSafeModal from './RemoveSafeModal'
 import Paragraph from '~/components/layout/Paragraph'
 import Hairline from '~/components/layout/Hairline'
-import Threshold from './Threshold'
+import type { Owner } from '~/routes/safe/store/models/owner'
+import ThresholdSettings from './ThresholdSettings'
 import { styles } from './style'
 
 type State = {
@@ -22,6 +24,8 @@ type Props = {
   etherScanLink: string,
   safeAddress: string,
   safeName: string,
+  owners: List<Owner>,
+  threshold: number,
 }
 
 type Action = 'RemoveSafe'
@@ -47,7 +51,7 @@ class Settings extends React.Component<Props, State> {
   render() {
     const { showRemoveSafe, menuOptionIndex } = this.state
     const {
-      classes, granted, etherScanLink, safeAddress, safeName,
+      classes, granted, etherScanLink, safeAddress, safeName, owners, threshold,
     } = this.props
 
     return (
@@ -110,7 +114,7 @@ class Settings extends React.Component<Props, State> {
             <Block className={classes.container}>
               {menuOptionIndex === 1 && <p>To be done</p>}
               {granted && menuOptionIndex === 2 && <p>To be done</p>}
-              {granted && menuOptionIndex === 3 && <Threshold />}
+              {granted && menuOptionIndex === 3 && <ThresholdSettings owners={owners} threshold={threshold} />}
               {granted && menuOptionIndex === 4 && <p>To be done</p>}
             </Block>
           </Col>

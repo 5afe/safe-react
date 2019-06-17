@@ -28,7 +28,7 @@ export const styles = (theme: Object) => ({
     fontWeight: bolderFont,
   },
   container: {
-    padding: lg,
+    height: '100%',
   },
   message: {
     margin: `${sm} 0`,

@@ -13,7 +13,7 @@ type Props = {
   children: React.Node,
   color?: 'regular' | 'white',
   className?: string,
-  innerRef: React.ElementRef<any>,
+  innerRef?: React.ElementRef<any>,
 }
 
 const GnosisLink = ({
