@@ -32,7 +32,7 @@ type SafeProps = {
 }
 
 type State = {
-  component?: React$Node,
+  component?: React.Node,
 }
 
 const listStyle = {

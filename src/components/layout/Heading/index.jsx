@@ -14,7 +14,7 @@ type Props = {
   color?: 'soft' | 'medium' | 'dark' | 'white' | 'fancy' | 'primary' | 'secondary' | 'warning' | 'disabled' | 'error',
   tag: HeadingTag,
   truncate?: boolean,
-  children: React$Node,
+  children: React.Node,
 }
 
 class Heading extends React.PureComponent<Props> {

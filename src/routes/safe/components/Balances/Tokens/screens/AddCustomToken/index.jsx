@@ -23,6 +23,11 @@ import { addressIsTokenContract, doesntExistInTokenList } from './validators'
 import { styles } from './style'
 import { getSymbolAndDecimalsFromContract } from './utils'
 
+export const ADD_CUSTOM_TOKEN_ADDRESS_INPUT_TEST_ID = 'add-custom-token-address-input'
+export const ADD_CUSTOM_TOKEN_SYMBOLS_INPUT_TEST_ID = 'add-custom-token-symbols-input'
+export const ADD_CUSTOM_TOKEN_DECIMALS_INPUT_TEST_ID = 'add-custom-token-decimals-input'
+export const ADD_CUSTOM_TOKEN_FORM = 'add-custom-token-form'
+
 type Props = {
   classes: Object,
   addToken: Function,
@@ -115,7 +120,7 @@ const AddCustomToken = (props: Props) => {
 
   return (
     <React.Fragment>
-      <GnoForm onSubmit={handleSubmit} initialValues={formValues}>
+      <GnoForm onSubmit={handleSubmit} initialValues={formValues} testId={ADD_CUSTOM_TOKEN_FORM}>
         {() => (
           <React.Fragment>
             <Block className={classes.formContainer}>
@@ -135,6 +140,7 @@ const AddCustomToken = (props: Props) => {
                 placeholder="Token contract address*"
                 text="Token contract address*"
                 className={classes.addressInput}
+                testId={ADD_CUSTOM_TOKEN_ADDRESS_INPUT_TEST_ID}
               />
               <FormSpy
                 subscription={{
@@ -156,6 +162,7 @@ const AddCustomToken = (props: Props) => {
                     placeholder="Token symbol*"
                     text="Token symbol"
                     className={classes.addressInput}
+                    testId={ADD_CUSTOM_TOKEN_SYMBOLS_INPUT_TEST_ID}
                   />
                   <Field
                     name="decimals"
@@ -165,6 +172,7 @@ const AddCustomToken = (props: Props) => {
                     placeholder="Token decimals*"
                     text="Token decimals*"
                     className={classes.addressInput}
+                    testId={ADD_CUSTOM_TOKEN_DECIMALS_INPUT_TEST_ID}
                   />
                   <Block align="left">
                     <Field name="showForAllSafes" component={Checkbox} type="checkbox" className={classes.checkbox} />

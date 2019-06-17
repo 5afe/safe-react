@@ -20,7 +20,7 @@ type Props = {
 const RemoveOwnerForm = ({
   numOwners, threshold, name, disabled, pendingTransactions,
 }: Props) => (
-  controls: React$Node,
+  controls: React.Node,
 ) => (
   <OpenPaper controls={controls}>
     <Heading tag="h2" margin="lg">

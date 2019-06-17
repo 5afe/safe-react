@@ -1,26 +1,18 @@
 // @flow
 import { type Store } from 'redux'
-import TestUtils from 'react-dom/test-utils'
-import SafeView from '~/routes/safe/components/Safe'
 import { aNewStore, type GlobalState } from '~/store'
 import { sleep } from '~/utils/timer'
 import { getWeb3 } from '~/logic/wallets/getWeb3'
-import { addEtherTo } from '~/test/utils/tokenMovements'
+import { sendEtherTo } from '~/test/utils/tokenMovements'
 import { aMinedSafe } from '~/test/builder/safe.redux.builder'
-import { travelToSafe } from '~/test/builder/safe.dom.utils'
-import { MOVE_FUNDS_BUTTON_TEXT } from '~/routes/safe/components/Safe/BalanceInfo'
+import { renderSafeView } from '~/test/builder/safe.dom.utils'
 
 export type DomSafe = {
   address: string,
-  safeButtons: Element[],
-  safe: React$Component<any, any>,
   accounts: string[],
   store: Store<GlobalState>,
+  SafeDom: any,
 }
-
-export const filterMoveButtonsFrom = (buttons: Element[]) => buttons.filter(
-  (button: Element): boolean => button.getElementsByTagName('span')[0].textContent !== MOVE_FUNDS_BUTTON_TEXT,
-)
 
 export const renderSafeInDom = async (owners: number = 1, threshold: number = 1): Promise<DomSafe> => {
   // create store
@@ -30,23 +22,16 @@ export const renderSafeInDom = async (owners: number = 1, threshold: number = 1)
   // have available accounts
   const accounts = await getWeb3().eth.getAccounts()
   // navigate to SAFE route
-  const SafeDom = travelToSafe(store, address)
+  const SafeDom = renderSafeView(store, address)
 
   // add funds to safe
-  await addEtherTo(address, '0.1')
+  await sendEtherTo(address, '0.1')
   // wait until funds are displayed and buttons are enabled
   await sleep(3000)
 
-  // $FlowFixMe
-  const Safe = TestUtils.findRenderedComponentWithType(SafeDom, SafeView)
-  // $FlowFixMe
-  const buttons = TestUtils.scryRenderedDOMComponentsWithTag(Safe, 'button')
-  const filteredButtons = filterMoveButtonsFrom(buttons)
-
   return {
     address,
-    safeButtons: filteredButtons,
-    safe: SafeDom,
+    SafeDom,
     accounts,
     store,
   }

@@ -50,11 +50,6 @@ export const grantedSelector: Selector<GlobalState, RouterProps, boolean> = crea
   },
 )
 
-type UserToken = {
-  address: string,
-  balance: string,
-}
-
 const safeEthAsTokenSelector: Selector<GlobalState, RouterProps, ?Token> = createSelector(
   safeSelector,
   (safe: Safe) => {

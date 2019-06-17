@@ -2,7 +2,9 @@
 import * as React from 'react'
 import Field from '~/components/forms/Field'
 import TextField from '~/components/forms/TextField'
-import { composeValidators, inLimit, mustBeFloat, required, greaterThan, mustBeEthereumAddress } from '~/components/forms/validator'
+import {
+  composeValidators, inLimit, mustBeFloat, required, greaterThan, mustBeEthereumAddress,
+} from '~/components/forms/validator'
 import Block from '~/components/layout/Block'
 import OpenPaper from '~/components/Stepper/OpenPaper'
 import Heading from '~/components/layout/Heading'
@@ -17,7 +19,7 @@ type Props = {
   symbol: string,
 }
 
-const SendTokenForm = ({ funds, symbol }: Props) => (controls: React$Node) => (
+const SendTokenForm = ({ funds, symbol }: Props) => (controls: React.Node) => (
   <OpenPaper controls={controls}>
     <Heading tag="h2" margin="lg">
       Send tokens Transaction

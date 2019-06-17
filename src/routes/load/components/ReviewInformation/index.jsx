@@ -66,13 +66,6 @@ const styles = () => ({
   address: {
     paddingLeft: '6px',
   },
-  open: {
-    paddingLeft: sm,
-    width: 'auto',
-    '&:hover': {
-      cursor: 'pointer',
-    },
-  },
 })
 
 type LayoutProps = {
@@ -104,8 +97,10 @@ const checkUserAddressOwner = (values: Object, userAddress: string): boolean => 
 
 class ReviewComponent extends React.PureComponent<Props, State> {
   render() {
-    const { values, classes, network, userAddress } = this.props
-    
+    const {
+      values, classes, network, userAddress,
+    } = this.props
+
     const isOwner = checkUserAddressOwner(values, userAddress)
     const owners = getAccountsFrom(values)
     const safeAddress = values[FIELD_LOAD_ADDRESS]
@@ -168,7 +163,7 @@ class ReviewComponent extends React.PureComponent<Props, State> {
             </Block>
             <Hairline />
             {owners.map((x, index) => (
-              <React.Fragment key={`name${index}`}>
+              <React.Fragment key={owners[index].address}>
                 <Row className={classes.owner}>
                   <Col xs={1} align="center">
                     <Identicon address={owners[index]} diameter={32} />
@@ -201,7 +196,7 @@ class ReviewComponent extends React.PureComponent<Props, State> {
 
 const ReviewPage = withStyles(styles)(ReviewComponent)
 
-const Review = ({ network, userAddress }: LayoutProps) => (controls: React$Node, { values }: Object) => (
+const Review = ({ network, userAddress }: LayoutProps) => (controls: React.Node, { values }: Object) => (
   <React.Fragment>
     <OpenPaper controls={controls} padding={false}>
       <ReviewPage network={network} values={values} userAddress={userAddress} />

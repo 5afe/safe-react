@@ -2,7 +2,7 @@
 import * as React from 'react'
 import { connect } from 'react-redux'
 import { logComponentStack, type Info } from '~/utils/logBoundaries'
-import { SharedSnackbarConsumer, type Variant } from '~/components/SharedSnackBar/Context'
+import { SharedSnackbarConsumer, type Variant } from '~/components/SharedSnackBar'
 import { WALLET_ERROR_MSG } from '~/logic/wallets/store/actions'
 import { getProviderInfo } from '~/logic/wallets/getWeb3'
 import ProviderAccesible from './component/ProviderInfo/ProviderAccesible'
@@ -53,7 +53,7 @@ class HeaderComponent extends React.PureComponent<Props, State> {
     let currentProvider: ProviderProps = await getProviderInfo()
     fetchProvider(currentProvider, openSnackbar)
 
-    this.providerListener = setInterval(async () => {   
+    this.providerListener = setInterval(async () => {
       const newProvider: ProviderProps = await getProviderInfo()
       if (JSON.stringify(currentProvider) !== JSON.stringify(newProvider)) {
         fetchProvider(newProvider, openSnackbar)

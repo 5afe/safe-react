@@ -35,6 +35,23 @@ yarn start
 
 ## Running the tests
 
+To run the test, you'll need to migrate contracts `safe-contracts` to the local ganache-cli
+
+1. Migrating Safe Contracts:
+```
+git clone https://github.com/gnosis/safe-contracts.git
+cd safe-contracts
+yarn
+ganache-cli -l 7000000
+npx truffle compile
+npx truffle migrate
+```
+2. Compiling Token Contracts for the tests:
+Inside `safe-react` directory
+```
+npx truffle compile
+```
+3. Run the tests:
 ```
 yarn test
 ```

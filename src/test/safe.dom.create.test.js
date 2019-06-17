@@ -1,7 +1,7 @@
 // @flow
 import * as React from 'react'
 import { type Store } from 'redux'
-import { render, fireEvent, cleanup } from 'react-testing-library'
+import { render, fireEvent, cleanup } from '@testing-library/react'
 import { Provider } from 'react-redux'
 import { ConnectedRouter } from 'connected-react-router'
 import { ADD_OWNER_BUTTON } from '~/routes/open/components/SafeOwnersForm'
@@ -16,7 +16,7 @@ import { whenSafeDeployed } from './builder/safe.dom.utils'
 
 afterEach(cleanup)
 
-// https://github.com/testing-library/react-testing-library/issues/281
+// https://github.com/testing-library/@testing-library/react/issues/281
 const originalError = console.error
 beforeAll(() => {
   console.error = (...args) => {
@@ -81,10 +81,12 @@ const deploySafe = async (createSafeForm: any, threshold: number, numOwners: num
     fireEvent.change(ownerAddressInput, { target: { value: accounts[i] } })
   }
   fireEvent.submit(form)
-  await sleep(400)
+  await sleep(600)
 
   // Fill Threshold
-  const thresholdSelect = createSafeForm.getByRole('button')
+  // The test is fragile here, MUI select btn is hard to find
+  const thresholdSelect = createSafeForm.getAllByRole('button')[1]
+
   fireEvent.click(thresholdSelect)
   const thresholdOptions = createSafeForm.getAllByRole('option')
   fireEvent.click(thresholdOptions[numOwners - 1])
@@ -101,7 +103,7 @@ const deploySafe = async (createSafeForm: any, threshold: number, numOwners: num
 }
 
 const aDeployedSafe = async (specificStore: Store<GlobalState>, threshold?: number = 1, numOwners?: number = 1) => {
-  const safe: React$Component<{}> = await renderOpenSafeForm(specificStore)
+  const safe: React.Component<{}> = await renderOpenSafeForm(specificStore)
   const safeAddress = await deploySafe(safe, threshold, numOwners)
 
   return safeAddress

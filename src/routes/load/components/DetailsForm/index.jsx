@@ -122,7 +122,7 @@ const Details = ({ classes, errors }: Props) => (
 
 const DetailsForm = withStyles(styles)(Details)
 
-const DetailsPage = () => (controls: React$Node, { errors }: Object) => (
+const DetailsPage = () => (controls: React.Node, { errors }: Object) => (
   <React.Fragment>
     <OpenPaper controls={controls} container={605}>
       <DetailsForm errors={errors} />

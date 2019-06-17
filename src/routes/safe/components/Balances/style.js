@@ -25,6 +25,9 @@ export const styles = (theme: Object) => ({
     '&:hover $actions': {
       visibility: 'initial',
     },
+    '&:focus $actions': {
+      visibility: 'initial',
+    },
   },
   actions: {
     justifyContent: 'flex-end',

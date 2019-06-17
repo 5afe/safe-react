@@ -6,7 +6,6 @@ export const SAFELIST_ADDRESS = '/safes'
 export const OPEN_ADDRESS = '/open'
 export const LOAD_ADDRESS = '/load'
 export const WELCOME_ADDRESS = '/welcome'
-export const SETTINS_ADDRESS = '/settings'
 export const OPENING_ADDRESS = '/opening'
 
 export const stillInOpeningView = () => {

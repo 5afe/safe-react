@@ -7,7 +7,6 @@ import {
   OPEN_ADDRESS,
   SAFE_PARAM_ADDRESS,
   WELCOME_ADDRESS,
-  SETTINS_ADDRESS,
   OPENING_ADDRESS,
   LOAD_ADDRESS,
 } from './routes'
@@ -23,9 +22,6 @@ const Opening = React.lazy(() => import('./opening/container'))
 const Load = React.lazy(() => import('./load/container/Load'))
 
 const SAFE_ADDRESS = `${SAFELIST_ADDRESS}/:${SAFE_PARAM_ADDRESS}`
-const SAFE_SETTINGS = `${SAFE_ADDRESS}${SETTINS_ADDRESS}`
-
-export const settingsUrlFrom = (safeAddress: string) => `${SAFELIST_ADDRESS}/${safeAddress}${SETTINS_ADDRESS}`
 
 const Routes = () => (
   <Switch>
