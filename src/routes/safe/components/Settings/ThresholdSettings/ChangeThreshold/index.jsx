@@ -9,7 +9,6 @@ import Paragraph from '~/components/layout/Paragraph'
 import Button from '~/components/layout/Button'
 import Block from '~/components/layout/Block'
 import Row from '~/components/layout/Row'
-import Col from '~/components/layout/Col'
 import type { Owner } from '~/routes/safe/store/models/owner'
 import { styles } from './style'
 
@@ -20,23 +19,31 @@ type Props = {
   owners: List<Owner>,
 }
 
-const ChangeThreshold = ({ onClose, owners, threshold, classes, }: Props) => (
+const ChangeThreshold = ({
+  onClose, owners, threshold, classes,
+}: Props) => (
   <React.Fragment>
     <Row align="center" grow className={classes.heading}>
-      <Paragraph className={classes.manage} weight="bolder" noMargin>
-        Remove owner
+      <Paragraph className={classes.headingText} weight="bolder" noMargin>
+        Change required confirmations
       </Paragraph>
       <IconButton onClick={onClose} disableRipple>
         <Close className={classes.close} />
       </IconButton>
     </Row>
-    <Col layout="column" middle="xs" className={classes.detailsContainer}>
-      <Hairline />
-    </Col>
     <Hairline />
+    <Block>
+      <Row>
+        Wanna change threshold?
+      </Row>
+    </Block>
+    <Hairline style={{ position: 'absolute', bottom: 85 }} />
     <Row align="center" className={classes.buttonRow}>
+      <Button className={classes.button} minWidth={140} onClick={onClose}>
+        BACK
+      </Button>
       <Button color="primary" className={classes.button} minWidth={140} onClick={onClose} variant="contained">
-        Done
+        CHANGE
       </Button>
     </Row>
   </React.Fragment>

@@ -4,7 +4,7 @@ import { lg, md, sm } from '~/theme/variables'
 export const styles = () => ({
   heading: {
     padding: `${sm} ${lg}`,
-    justifyContent: 'flex-start',
+    justifyContent: 'space-between',
     boxSizing: 'border-box',
     maxHeight: '75px',
   },
@@ -15,9 +15,9 @@ export const styles = () => ({
     marginLeft: '20px',
   },
   headingText: {
-    fontSize: '24px',
+    fontSize: '20px',
   },
-  closeIcon: {
+  close: {
     height: '35px',
     width: '35px',
   },
