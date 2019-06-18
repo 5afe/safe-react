@@ -25,7 +25,6 @@ const createTransaction = (
   const nonce = await safeInstance.nonce()
   const isExecution = threshold.toNumber() === 1
 
-
   let txHash
   if (isExecution) {
     openSnackbar('Transaction has been submitted', 'success')

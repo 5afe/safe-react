@@ -124,7 +124,6 @@
     "postcss-simple-vars": "^5.0.2",
     "pre-commit": "^1.2.2",
     "prettier-eslint-cli": "5.0.0",
-    "react-testing-library": "8.0.1",
     "run-with-testrpc": "0.3.1",
     "storybook-host": "^5.0.3",
     "storybook-router": "^0.3.3",

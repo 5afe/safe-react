@@ -7,7 +7,7 @@ import IconButton from '@material-ui/core/IconButton'
 import SelectField from '~/components/forms/SelectField'
 import MenuItem from '@material-ui/core/MenuItem'
 import {
-  composeValidators, minValue, mustBeInteger, required,
+  composeValidators, minValue, mustBeInteger, required, differentFrom,
 } from '~/components/forms/validator'
 import Field from '~/components/forms/Field'
 import GnoForm from '~/components/forms/GnoForm'
@@ -33,10 +33,11 @@ const THRESHOLD_FIELD_NAME = 'threshold'
 const ChangeThreshold = ({
   onClose, owners, threshold, classes, onChangeThreshold,
 }: Props) => {
-  const handleSubmit = (values) => {
+  const handleSubmit = async (values) => {
     const newThreshold = values[THRESHOLD_FIELD_NAME]
 
-    onChangeThreshold(newThreshold)
+    await onChangeThreshold(newThreshold)
+    onClose()
   }
 
   return (
@@ -50,10 +51,10 @@ const ChangeThreshold = ({
         </IconButton>
       </Row>
       <Hairline />
-      <Block className={classes.modalContent}>
-        <GnoForm onSubmit={handleSubmit} initialValues={{ threshold: threshold.toString() }}>
-          {() => (
-            <React.Fragment>
+      <GnoForm onSubmit={handleSubmit} initialValues={{ threshold: threshold.toString() }}>
+        {() => (
+          <React.Fragment>
+            <Block className={classes.modalContent}>
               <Row>
                 <Paragraph>
                   Every transaction outside any specified daily limits, needs to be confirmed by all specified owners.
@@ -70,7 +71,7 @@ const ChangeThreshold = ({
                   <Field
                     name={THRESHOLD_FIELD_NAME}
                     component={SelectField}
-                    validate={composeValidators(required, mustBeInteger, minValue(1))}
+                    validate={composeValidators(required, mustBeInteger, minValue(1), differentFrom(threshold))}
                     data-testid="threshold-select-input"
                   >
                     {[...Array(Number(owners.size))].map((x, index) => (
@@ -90,19 +91,19 @@ owner(s)
                   </Paragraph>
                 </Col>
               </Row>
-            </React.Fragment>
-          )}
-        </GnoForm>
-      </Block>
-      <Hairline style={{ position: 'absolute', bottom: 85 }} />
-      <Row align="center" className={classes.buttonRow}>
-        <Button className={classes.button} minWidth={140} onClick={onClose}>
-          BACK
-        </Button>
-        <Button color="primary" className={classes.button} minWidth={140} onClick={onClose} variant="contained">
-          CHANGE
-        </Button>
-      </Row>
+            </Block>
+            <Hairline style={{ position: 'absolute', bottom: 85 }} />
+            <Row align="center" className={classes.buttonRow}>
+              <Button className={classes.button} minWidth={140} onClick={onClose}>
+                BACK
+              </Button>
+              <Button type="submit" color="primary" className={classes.button} minWidth={140} variant="contained">
+                CHANGE
+              </Button>
+            </Row>
+          </React.Fragment>
+        )}
+      </GnoForm>
     </React.Fragment>
   )
 }
