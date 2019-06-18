@@ -10,7 +10,7 @@ import { loadSafeSubjects } from '~/utils/storage/transactions'
 import { buildTxServiceUrl, type TxServiceType } from '~/logic/safe/transactions/txHistory'
 import { getOwners } from '~/logic/safe/utils'
 import { EMPTY_DATA } from '~/logic/wallets/ethTransactions'
-import addTransactions from './addTransactions'
+import { addTransactions } from './addTransactions'
 
 type ConfirmationServiceModel = {
   owner: string,
@@ -31,9 +31,9 @@ type TxServiceModel = {
   isExecuted: boolean,
 }
 
-const buildTransactionFrom = (safeAddress: string, tx: TxServiceModel, safeSubjects: Map<string, string>) => {
+const buildTransactionFrom = async (safeAddress: string, tx: TxServiceModel, safeSubjects: Map<string, string>) => {
   const name = safeSubjects.get(String(tx.nonce)) || 'Unknown'
-  const storedOwners = getOwners(safeAddress)
+  const storedOwners = await getOwners(safeAddress)
   const confirmations = List(
     tx.confirmations.map((conf: ConfirmationServiceModel) => {
       const ownerName = storedOwners.get(conf.owner.toLowerCase()) || 'UNKNOWN'
@@ -62,7 +62,9 @@ export const loadSafeTransactions = async (safeAddress: string) => {
   const response = await axios.get(url)
   const transactions: TxServiceModel[] = response.data.results
   const safeSubjects = loadSafeSubjects(safeAddress)
-  const txsRecord = transactions.map((tx: TxServiceModel) => buildTransactionFrom(safeAddress, tx, safeSubjects))
+  const txsRecord = transactions.map(
+    async (tx: TxServiceModel) => await buildTransactionFrom(safeAddress, tx, safeSubjects),
+  )
 
   return Map().set(safeAddress, List(txsRecord))
 }

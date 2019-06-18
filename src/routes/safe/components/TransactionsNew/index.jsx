@@ -3,13 +3,18 @@ import * as React from 'react'
 import { List } from 'immutable'
 import NoTransactions from '~/routes/safe/components/Transactions/NoTransactions'
 
-type Props = SelectorProps &
-  Actions & {
-    safeName: string,
-    safeAddress: string,
-    threshold: number,
-  }
+type Props = {
+  safeAddress: string,
+  threshold: number,
+}
+
 class Transactions extends React.Component<Props, {}> {
+  componentDidMount() {
+    const { safeAddress, fetchTransactions } = this.props
+
+    fetchTransactions(safeAddress)
+  }
+
   render() {
     const { transactions = List(), safeName, threshold } = this.props
     const hasTransactions = false

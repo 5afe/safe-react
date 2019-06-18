@@ -38,6 +38,6 @@ export const setOwners = async (safeAddress: string, owners: List<Owner>) => {
 
 export const getOwners = async (safeAddress: string): Map<string, string> => {
   const data: Object = await loadFromStorage(`${OWNERS_KEY}-${safeAddress}`)
-
+  console.log(data)
   return data ? Map(data) : Map()
 }

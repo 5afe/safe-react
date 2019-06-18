@@ -25,6 +25,7 @@ type Props = SelectorProps & {
   classes: Object,
   granted: boolean,
   createTransaction: Function,
+  fetchTransactions: Function,
 }
 
 type State = {
@@ -90,7 +91,15 @@ class Layout extends React.Component<Props, State> {
 
   render() {
     const {
-      safe, provider, network, classes, granted, tokens, activeTokens, createTransaction,
+      safe,
+      provider,
+      network,
+      classes,
+      granted,
+      tokens,
+      activeTokens,
+      createTransaction,
+      fetchTransactions,
     } = this.props
     const { tabIndex } = this.state
 
@@ -142,7 +151,7 @@ class Layout extends React.Component<Props, State> {
             createTransaction={createTransaction}
           />
         )}
-        {tabIndex === 1 && <Transactions />}
+        {tabIndex === 1 && <Transactions fetchTransactions={fetchTransactions} safeAddress={address} />}
       </React.Fragment>
     )
   }
