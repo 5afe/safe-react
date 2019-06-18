@@ -18,7 +18,6 @@ import {
   sm, xs, secondary, smallFontSize,
 } from '~/theme/variables'
 import { copyToClipboard } from '~/utils/clipboard'
-import type { Safe } from '~/routes/safe/store/models/safe'
 import Balances from './Balances'
 import Settings from './Settings'
 
