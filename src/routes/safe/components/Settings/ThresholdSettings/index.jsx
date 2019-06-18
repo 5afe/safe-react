@@ -64,6 +64,8 @@ owners
       >
         <ChangeThreshold
           onClose={toggleModal}
+          owners={owners}
+          threshold={threshold}
         />
       </Modal>
     </React.Fragment>
