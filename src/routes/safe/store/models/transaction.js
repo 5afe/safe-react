@@ -8,7 +8,7 @@ export type TransactionProps = {
   nonce: number,
   value: number,
   confirmations: List<Confirmation>,
-  destination: string,
+  recipient: string,
   data: string,
   isExecuted: boolean,
 }
@@ -18,7 +18,7 @@ export const makeTransaction: RecordFactory<TransactionProps> = Record({
   nonce: 0,
   value: 0,
   confirmations: List([]),
-  destination: '',
+  recipient: '',
   data: '',
   isExecuted: false,
 })

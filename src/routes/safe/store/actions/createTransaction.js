@@ -11,9 +11,6 @@ import { getGnosisSafeInstanceAt } from '~/logic/contracts/safeContracts'
 import { executeTransaction, CALL } from '~/logic/safe/transactions'
 import { getStandardTokenContract } from '~/logic/tokens/store/actions/fetchTokens'
 
-export const ADD_TRANSACTIONS = 'ADD_TRANSACTIONS'
-export const addTransactions = createAction<string, *>(ADD_TRANSACTIONS)
-
 const createTransaction = (
   safeAddress: string,
   to: string,
