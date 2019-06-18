@@ -25,12 +25,19 @@ type Props = {
   classes: Object,
   threshold: number,
   owners: List<Owner>,
+  onChangeThreshold: Function,
 }
 
+const THRESHOLD_FIELD_NAME = 'threshold'
+
 const ChangeThreshold = ({
-  onClose, owners, threshold, classes,
+  onClose, owners, threshold, classes, onChangeThreshold,
 }: Props) => {
-  const handleSubmit = () => ({})
+  const handleSubmit = (values) => {
+    const newThreshold = values[THRESHOLD_FIELD_NAME]
+
+    onChangeThreshold(newThreshold)
+  }
 
   return (
     <React.Fragment>
@@ -61,7 +68,7 @@ const ChangeThreshold = ({
               <Row margin="xl" align="center">
                 <Col xs={2}>
                   <Field
-                    name="threshold"
+                    name={THRESHOLD_FIELD_NAME}
                     component={SelectField}
                     validate={composeValidators(required, mustBeInteger, minValue(1))}
                     data-testid="threshold-select-input"
@@ -74,7 +81,7 @@ const ChangeThreshold = ({
                   </Field>
                 </Col>
                 <Col xs={10}>
-                  <Paragraph size="lg" color="primary" noMargin className={classes.owners}>
+                  <Paragraph size="lg" color="primary" noMargin className={classes.ownersText}>
                     out of
                     {' '}
                     {owners.size}

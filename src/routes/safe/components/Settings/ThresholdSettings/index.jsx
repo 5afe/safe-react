@@ -12,18 +12,31 @@ import Paragraph from '~/components/layout/Paragraph'
 import ChangeThreshold from './ChangeThreshold'
 import type { Owner } from '~/routes/safe/store/models/owner'
 import { styles } from './style'
+import { getGnosisSafeInstanceAt } from '~/logic/contracts/safeContracts'
+import { ZERO_ADDRESS } from '~/logic/wallets/ethAddresses'
 
 type Props = {
   owners: List<Owner>,
   threshold: number,
   classes: Object,
+  createTransaction: Function,
+  safeAddress: string,
 }
 
-const ThresholdSettings = ({ owners, threshold, classes }: Props) => {
+const ThresholdSettings = ({
+  owners, threshold, classes, createTransaction, safeAddress,
+}: Props) => {
   const [isModalOpen, setModalOpen] = useState(false)
 
   const toggleModal = () => {
     setModalOpen(prevOpen => !prevOpen)
+  }
+
+  const onChangeThreshold = async (newThreshold) => {
+    const safeInstance = await getGnosisSafeInstanceAt(safeAddress)
+    const data = safeInstance.contract.changeThreshold(newThreshold).encodeABI()
+
+    createTransaction(safeInstance, safeAddress, 0, ZERO_ADDRESS)
   }
 
   return (
@@ -66,6 +79,7 @@ owners
           onClose={toggleModal}
           owners={owners}
           threshold={threshold}
+          onChangeThreshold={onChangeThreshold}
         />
       </Modal>
     </React.Fragment>

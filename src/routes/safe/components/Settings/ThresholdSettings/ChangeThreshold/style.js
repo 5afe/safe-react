@@ -24,7 +24,7 @@ export const styles = () => ({
   modalContent: {
     padding: `${md} ${lg}`,
   },
-  amount: {
+  ownersText: {
     marginLeft: sm,
   },
   buttonRow: {

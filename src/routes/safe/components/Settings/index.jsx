@@ -26,6 +26,7 @@ type Props = {
   safeName: string,
   owners: List<Owner>,
   threshold: number,
+  createTransaction: Function,
 }
 
 type Action = 'RemoveSafe'
@@ -51,7 +52,7 @@ class Settings extends React.Component<Props, State> {
   render() {
     const { showRemoveSafe, menuOptionIndex } = this.state
     const {
-      classes, granted, etherScanLink, safeAddress, safeName, owners, threshold,
+      classes, granted, etherScanLink, safeAddress, safeName, owners, threshold, createTransaction,
     } = this.props
 
     return (
@@ -114,7 +115,14 @@ class Settings extends React.Component<Props, State> {
             <Block className={classes.container}>
               {menuOptionIndex === 1 && <p>To be done</p>}
               {granted && menuOptionIndex === 2 && <p>To be done</p>}
-              {granted && menuOptionIndex === 3 && <ThresholdSettings owners={owners} threshold={threshold} />}
+              {granted && menuOptionIndex === 3 && (
+                <ThresholdSettings
+                  owners={owners}
+                  threshold={threshold}
+                  createTransaction={createTransaction}
+                  safeAddress={safeAddress}
+                />
+              )}
               {granted && menuOptionIndex === 4 && <p>To be done</p>}
             </Block>
           </Col>

@@ -20,6 +20,7 @@ const createTransaction = (
   valueInEth: string,
   token: Token,
   openSnackbar: Function,
+  txData: string = EMPTY_DATA,
 ) => async (dispatch: ReduxDispatch<GlobalState>, getState: GetState<GlobalState>) => {
   const isSendingETH = isEther(token.symbol)
   const state: GlobalState = getState()
