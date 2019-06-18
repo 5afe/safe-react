@@ -4,11 +4,18 @@ import { List } from 'immutable'
 import { withStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
 import IconButton from '@material-ui/core/IconButton'
+import SelectField from '~/components/forms/SelectField'
+import MenuItem from '@material-ui/core/MenuItem'
+import {
+  composeValidators, minValue, mustBeInteger, required,
+} from '~/components/forms/validator'
+import Field from '~/components/forms/Field'
 import Hairline from '~/components/layout/Hairline'
 import Paragraph from '~/components/layout/Paragraph'
 import Button from '~/components/layout/Button'
 import Block from '~/components/layout/Block'
 import Row from '~/components/layout/Row'
+import Col from '~/components/layout/Col'
 import type { Owner } from '~/routes/safe/store/models/owner'
 import { styles } from './style'
 
@@ -32,9 +39,40 @@ const ChangeThreshold = ({
       </IconButton>
     </Row>
     <Hairline />
-    <Block>
+    <Block className={classes.modalContent}>
       <Row>
-        Wanna change threshold?
+        <Paragraph>
+          Every transaction outside any specified daily limits, needs to be confirmed by all specified owners. If no
+          daily limits are set, all owners will need to sign for transactions.
+        </Paragraph>
+      </Row>
+      <Row>
+        <Paragraph weight="bolder">Any transaction over any daily limit requires the confirmation of:</Paragraph>
+      </Row>
+      <Row margin="xl" align="center">
+        <Col xs={2}>
+          <Field
+            name="threshold"
+            component={SelectField}
+            validate={composeValidators(required, mustBeInteger, minValue(1))}
+            data-testid="threshold-select-input"
+          >
+            {[...Array(Number(owners.size))].map((x, index) => (
+              <MenuItem key={index} value={`${index + 1}`}>
+                {index + 1}
+              </MenuItem>
+            ))}
+          </Field>
+        </Col>
+        <Col xs={10}>
+          <Paragraph size="lg" color="primary" noMargin className={classes.owners}>
+            out of
+            {' '}
+            {owners.size}
+            {' '}
+            owner(s)
+          </Paragraph>
+        </Col>
       </Row>
     </Block>
     <Hairline style={{ position: 'absolute', bottom: 85 }} />

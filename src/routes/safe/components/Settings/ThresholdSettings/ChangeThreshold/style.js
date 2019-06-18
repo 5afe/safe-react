@@ -21,7 +21,7 @@ export const styles = () => ({
     height: '35px',
     width: '35px',
   },
-  container: {
+  modalContent: {
     padding: `${md} ${lg}`,
   },
   amount: {
