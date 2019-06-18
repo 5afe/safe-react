@@ -63,17 +63,19 @@ const ThresholdSettings = ({
                   {' '}
                   owners
                 </Paragraph>
-                <Row align="center" className={classes.buttonRow}>
-                  <Button
-                    color="primary"
-                    minWidth={120}
-                    className={classes.modifyBtn}
-                    onClick={toggleModal}
-                    variant="contained"
-                  >
-                    Modify
-                  </Button>
-                </Row>
+                {owners.size > 1 && (
+                  <Row align="center" className={classes.buttonRow}>
+                    <Button
+                      color="primary"
+                      minWidth={120}
+                      className={classes.modifyBtn}
+                      onClick={toggleModal}
+                      variant="contained"
+                    >
+                      Modify
+                    </Button>
+                  </Row>
+                )}
               </Block>
               <Modal
                 title="Change Required Confirmations"

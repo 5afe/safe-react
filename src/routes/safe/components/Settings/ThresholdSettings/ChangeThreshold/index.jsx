@@ -66,20 +66,29 @@ const ChangeThreshold = ({
                   Any transaction over any daily limit requires the confirmation of:
                 </Paragraph>
               </Row>
-              <Row margin="xl" align="center">
+              <Row margin="xl" align="center" className={classes.inputRow}>
                 <Col xs={2}>
                   <Field
                     name={THRESHOLD_FIELD_NAME}
-                    component={SelectField}
+                    render={props => (
+                      <>
+                        <SelectField {...props} disableError>
+                          {[...Array(Number(owners.size))].map((x, index) => (
+                            <MenuItem key={index} value={`${index + 1}`}>
+                              {index + 1}
+                            </MenuItem>
+                          ))}
+                        </SelectField>
+                        {props.meta.error && props.meta.touched && (
+                          <Paragraph className={classes.errorText} noMargin color="error">
+                            {props.meta.error}
+                          </Paragraph>
+                        )}
+                      </>
+                    )}
                     validate={composeValidators(required, mustBeInteger, minValue(1), differentFrom(threshold))}
                     data-testid="threshold-select-input"
-                  >
-                    {[...Array(Number(owners.size))].map((x, index) => (
-                      <MenuItem key={index} value={`${index + 1}`}>
-                        {index + 1}
-                      </MenuItem>
-                    ))}
-                  </Field>
+                  />
                 </Col>
                 <Col xs={10}>
                   <Paragraph size="lg" color="primary" noMargin className={classes.ownersText}>
@@ -87,7 +96,7 @@ const ChangeThreshold = ({
                     {' '}
                     {owners.size}
                     {' '}
-owner(s)
+                    owner(s)
                   </Paragraph>
                 </Col>
               </Row>

@@ -34,4 +34,11 @@ export const styles = () => ({
     bottom: 0,
     width: '100%',
   },
+  inputRow: {
+    position: 'relative',
+  },
+  errorText: {
+    position: 'absolute',
+    bottom: '-25px',
+  },
 })
