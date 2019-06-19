@@ -61,6 +61,7 @@ class SafeView extends React.Component<Props> {
       tokens,
       createTransaction,
       fetchTransactions,
+      transactions,
     } = this.props
 
     return (
@@ -75,6 +76,7 @@ class SafeView extends React.Component<Props> {
           granted={granted}
           createTransaction={createTransaction}
           fetchTransactions={fetchTransactions}
+          transactions={transactions}
         />
       </Page>
     )

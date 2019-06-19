@@ -1,8 +1,10 @@
 // @flow
+import { format } from 'date-fns'
 import { List } from 'immutable'
 import { type Transaction } from '~/routes/safe/store/models/transaction'
-import { buildOrderFieldFrom, FIXED, type SortRow } from '~/components/Table/sorting'
+import { type SortRow } from '~/components/Table/sorting'
 import { type Column } from '~/components/Table/TableHead'
+import { getWeb3 } from '~/logic/wallets/getWeb3'
 
 export const TX_TABLE_NONCE_ID = 'nonce'
 export const TX_TABLE_TYPE_ID = 'type'
@@ -10,51 +12,76 @@ export const TX_TABLE_DATE_ID = 'date'
 export const TX_TABLE_AMOUNT_ID = 'amount'
 export const TX_TABLE_STATUS_ID = 'status'
 
-type BalanceData = {
-  asset: Object,
-  balance: string,
+const web3 = getWeb3()
+const { toBN, fromWei } = web3.utils
+
+type TxData = {
+  nonce: number,
+  type: string,
+  date: Date,
+  amount: number | string,
+  status: string,
 }
 
-export type BalanceRow = SortRow<BalanceData>
+const formatDate = date => format(date, 'MMM D, YYYY - h:m:s')
 
-export const getBalanceData = (activeTokens: List<Token>): List<BalanceRow> => {
-  const rows = activeTokens.map((token: Token) => ({
-    [BALANCE_TABLE_ASSET_ID]: { name: token.name, logoUri: token.logoUri },
-    [buildOrderFieldFrom(BALANCE_TABLE_ASSET_ID)]: token.name,
-    [BALANCE_TABLE_BALANCE_ID]: `${token.balance} ${token.symbol}`,
-    [buildOrderFieldFrom(BALANCE_TABLE_BALANCE_ID)]: Number(token.balance),
-    [FIXED]: token.get('symbol') === 'ETH',
+export type BalanceRow = SortRow<TxData>
+
+export const getTxTableData = (transactions: List<Transaction>): List<BalanceRow> => {
+  const rows = transactions.map((tx: Transaction) => ({
+    [TX_TABLE_NONCE_ID]: tx.nonce,
+    [TX_TABLE_TYPE_ID]: 'Outgoing transfer',
+    [TX_TABLE_DATE_ID]: formatDate(tx.isExecuted ? tx.executionDate : tx.submissionDate),
+    [TX_TABLE_AMOUNT_ID]: Number(tx.value) > 0 ? fromWei(toBN(tx.value), 'ether') : 'n/a',
+    [TX_TABLE_STATUS_ID]: tx.isExecuted ? 'done' : 'peding',
   }))
 
   return rows
 }
 
 export const generateColumns = () => {
-  const assetColumn: Column = {
-    id: BALANCE_TABLE_ASSET_ID,
-    order: true,
+  const nonceColumn: Column = {
+    id: TX_TABLE_NONCE_ID,
     disablePadding: false,
-    label: 'Asset',
+    label: 'Nonce',
     custom: false,
-    width: 250,
+    order: false,
+    width: 50,
   }
 
-  const balanceColumn: Column = {
-    id: BALANCE_TABLE_BALANCE_ID,
-    align: 'right',
-    order: true,
+  const typeColumn: Column = {
+    id: TX_TABLE_TYPE_ID,
+    order: false,
     disablePadding: false,
-    label: 'Balance',
+    label: 'Type',
+    custom: false,
+    width: 150,
+  }
+
+  const valueColumn: Column = {
+    id: TX_TABLE_AMOUNT_ID,
+    order: false,
+    disablePadding: false,
+    label: 'Amount',
+    custom: false,
+    width: 100,
+  }
+
+  const dateColumn: Column = {
+    id: TX_TABLE_DATE_ID,
+    order: false,
+    disablePadding: false,
+    label: 'Date',
     custom: false,
   }
 
-  const actions: Column = {
-    id: 'actions',
+  const statusColumn: Column = {
+    id: TX_TABLE_STATUS_ID,
     order: false,
     disablePadding: false,
     label: '',
     custom: true,
   }
 
-  return List([assetColumn, balanceColumn, actions])
+  return List([nonceColumn, typeColumn, valueColumn, dateColumn, statusColumn])
 }

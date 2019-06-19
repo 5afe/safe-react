@@ -1,12 +1,15 @@
 // @flow
 import * as React from 'react'
 import { List } from 'immutable'
-import NoTransactions from '~/routes/safe/components/Transactions/NoTransactions'
+import NoTransactions from '~/routes/safe/components/TransactionsNew/NoTransactions'
+import TxsTable from '~/routes/safe/components/TransactionsNew/TxsTable'
+import { type Transaction } from '~/routes/safe/store/models/transaction'
 
 type Props = {
   safeAddress: string,
   threshold: number,
-  fetchTransactions: Function
+  fetchTransactions: Function,
+  transactions: List<Transaction>,
 }
 
 class Transactions extends React.Component<Props, {}> {
@@ -18,9 +21,11 @@ class Transactions extends React.Component<Props, {}> {
 
   render() {
     const { transactions, safeName, threshold } = this.props
-    const hasTransactions = false
+    const hasTransactions = transactions.size > 0
 
-    return <React.Fragment>{hasTransactions ? <div /> : <NoTransactions />}</React.Fragment>
+    return (
+      <React.Fragment>{hasTransactions ? <TxsTable transactions={transactions} /> : <NoTransactions />}</React.Fragment>
+    )
   }
 }
 

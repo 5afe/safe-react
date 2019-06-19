@@ -100,6 +100,7 @@ class Layout extends React.Component<Props, State> {
       activeTokens,
       createTransaction,
       fetchTransactions,
+      transactions,
     } = this.props
     const { tabIndex } = this.state
 
@@ -151,7 +152,9 @@ class Layout extends React.Component<Props, State> {
             createTransaction={createTransaction}
           />
         )}
-        {tabIndex === 1 && <Transactions fetchTransactions={fetchTransactions} safeAddress={address} />}
+        {tabIndex === 1 && (
+          <Transactions transactions={transactions} fetchTransactions={fetchTransactions} safeAddress={address} />
+        )}
       </React.Fragment>
     )
   }

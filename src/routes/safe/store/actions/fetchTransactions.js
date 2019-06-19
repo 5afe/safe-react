@@ -54,6 +54,8 @@ const buildTransactionFrom = async (safeAddress: string, tx: TxServiceModel, saf
     recipient: tx.to,
     data: tx.data ? tx.data : EMPTY_DATA,
     isExecuted: tx.isExecuted,
+    submissionDate: tx.submissionDate,
+    executionDate: tx.executionDate,
   })
 }
 
