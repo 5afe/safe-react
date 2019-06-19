@@ -167,7 +167,7 @@ class GnoTable<K> extends React.Component<Props<K>, State> {
 }
 
 GnoTable.defaultProps = {
-  defaultOrder: 'asc'
+  defaultOrder: 'asc',
 }
 
 export default withStyles(styles)(GnoTable)

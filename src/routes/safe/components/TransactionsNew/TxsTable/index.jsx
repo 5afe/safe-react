@@ -21,6 +21,7 @@ import {
   getTxTableData, generateColumns, TX_TABLE_NONCE_ID, type BalanceRow,
 } from './columns'
 import { styles } from './style'
+import Status from './Status'
 
 type State = {
 
@@ -64,33 +65,11 @@ class Balances extends React.Component<Props, State> {
                   {row[column.id]}
                 </TableCell>
               ))}
-              {/* <TableCell component="td">
+              <TableCell component="td">
                 <Row align="end" className={classes.actions}>
-                  {granted && (
-                    <Button
-                      variant="contained"
-                      size="small"
-                      color="secondary"
-                      className={classes.send}
-                      onClick={() => this.showSendFunds(row.asset.name)}
-                      data-testid="balance-send-btn"
-                    >
-                      <CallMade className={classNames(classes.leftIcon, classes.iconSmall)} />
-                        Send
-                    </Button>
-                  )}
-                  <Button
-                    variant="contained"
-                    size="small"
-                    color="secondary"
-                    className={classes.receive}
-                    onClick={this.onShow('Receive')}
-                  >
-                    <CallReceived className={classNames(classes.leftIcon, classes.iconSmall)} />
-                      Receive
-                  </Button>
+                  <Status status={row.status} />
                 </Row>
-              </TableCell> */}
+              </TableCell>
             </TableRow>
           ))
           }

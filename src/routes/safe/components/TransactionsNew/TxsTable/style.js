@@ -30,10 +30,6 @@ export const styles = (theme: Object) => ({
       backgroundColor: '#fff3e2',
     },
   },
-  actions: {
-    justifyContent: 'flex-end',
-    visibility: 'hidden',
-  },
   send: {
     minWidth: '0px',
     marginRight: sm,
