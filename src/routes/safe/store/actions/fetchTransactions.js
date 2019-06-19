@@ -62,8 +62,8 @@ export const loadSafeTransactions = async (safeAddress: string) => {
   const response = await axios.get(url)
   const transactions: TxServiceModel[] = response.data.results
   const safeSubjects = loadSafeSubjects(safeAddress)
-  const txsRecord = transactions.map(
-    async (tx: TxServiceModel) => await buildTransactionFrom(safeAddress, tx, safeSubjects),
+  const txsRecord = await Promise.all(
+    transactions.map((tx: TxServiceModel) => buildTransactionFrom(safeAddress, tx, safeSubjects)),
   )
 
   return Map().set(safeAddress, List(txsRecord))
