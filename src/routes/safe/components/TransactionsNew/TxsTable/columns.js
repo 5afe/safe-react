@@ -79,7 +79,7 @@ export const generateColumns = () => {
     id: TX_TABLE_STATUS_ID,
     order: false,
     disablePadding: false,
-    label: '',
+    label: 'Status',
     custom: true,
   }
 

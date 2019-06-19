@@ -51,6 +51,7 @@ class Balances extends React.Component<Props, State> {
         <Table
           label="Transactions"
           defaultOrderBy={TX_TABLE_NONCE_ID}
+          defaultOrder="desc"
           columns={columns}
           data={filteredData}
           size={filteredData.size}
