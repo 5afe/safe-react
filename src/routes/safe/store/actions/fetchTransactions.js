@@ -11,6 +11,7 @@ import { buildTxServiceUrl, type TxServiceType } from '~/logic/safe/transactions
 import { getOwners } from '~/logic/safe/utils'
 import { EMPTY_DATA } from '~/logic/wallets/ethTransactions'
 import { addTransactions } from './addTransactions'
+import { addressIsTokenContract } from '../../components/Balances/Tokens/screens/AddCustomToken/validators'
 
 type ConfirmationServiceModel = {
   owner: string,
@@ -45,7 +46,8 @@ const buildTransactionFrom = async (safeAddress: string, tx: TxServiceModel, saf
       })
     }),
   )
-
+  const isToken = await addressIsTokenContract(tx.to)
+  console.log(isToken)
   return makeTransaction({
     name,
     nonce: tx.nonce,
