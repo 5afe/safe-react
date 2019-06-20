@@ -11,7 +11,8 @@ import { buildTxServiceUrl, type TxServiceType } from '~/logic/safe/transactions
 import { getOwners } from '~/logic/safe/utils'
 import { EMPTY_DATA } from '~/logic/wallets/ethTransactions'
 import { addTransactions } from './addTransactions'
-import { addressIsTokenContract } from '../../components/Balances/Tokens/screens/AddCustomToken/validators'
+import { getHumanFriendlyToken } from '~/logic/tokens/store/actions/fetchTokens'
+import { isAddressAToken } from '~/logic/tokens/utils/tokenHelpers'
 
 type ConfirmationServiceModel = {
   owner: string,
@@ -46,10 +47,18 @@ const buildTransactionFrom = async (safeAddress: string, tx: TxServiceModel, saf
       })
     }),
   )
-  const isToken = await addressIsTokenContract(tx.to)
-  console.log(isToken)
+  const isToken = await isAddressAToken(tx.to)
+
+  let symbol = 'ETH'
+  if (isToken) {
+    const tokenContract = await getHumanFriendlyToken()
+    const tokenInstance = await tokenContract.at(tx.to)
+    symbol = await tokenInstance.symbol()
+  }
+
   return makeTransaction({
     name,
+    symbol,
     nonce: tx.nonce,
     value: Number(tx.value),
     confirmations,

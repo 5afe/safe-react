@@ -1,6 +1,5 @@
 // @flow
 import { List } from 'immutable'
-import { getWeb3 } from '~/logic/wallets/getWeb3'
 import { type Token } from '~/logic/tokens/store/model/token'
 import { sameAddress } from '~/logic/wallets/ethAddresses'
 import { isAddressAToken } from '~/logic/tokens/utils/tokenHelpers'
