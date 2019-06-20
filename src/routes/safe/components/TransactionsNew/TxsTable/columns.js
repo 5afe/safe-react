@@ -33,7 +33,7 @@ export const getTxTableData = (transactions: List<Transaction>): List<BalanceRow
     [TX_TABLE_TYPE_ID]: 'Outgoing transfer',
     [TX_TABLE_DATE_ID]: formatDate(tx.isExecuted ? tx.executionDate : tx.submissionDate),
     [TX_TABLE_AMOUNT_ID]: Number(tx.value) > 0 ? fromWei(toBN(tx.value), 'ether') : 'n/a',
-    [TX_TABLE_STATUS_ID]: tx.isExecuted ? 'success' : 'pending',
+    [TX_TABLE_STATUS_ID]: tx.isExecuted ? 'success' : 'awaiting',
   }))
 
   return rows

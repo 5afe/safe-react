@@ -10,7 +10,7 @@ export type Operation = 0 | 1 | 2
 const calculateBodyFrom = async (
   safeInstance: any,
   to: string,
-  valueInWei: number,
+  valueInWei: number | string,
   data: string,
   operation: Operation,
   nonce: string | number,
@@ -59,7 +59,7 @@ export const buildTxServiceUrl = (safeAddress: string) => {
 export const saveTxToHistory = async (
   safeInstance: any,
   to: string,
-  valueInWei: number,
+  valueInWei: number | string,
   data: string,
   operation: Operation,
   nonce: number | string,

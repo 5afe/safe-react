@@ -6,7 +6,7 @@ export const styles = () => ({
     display: 'flex',
     fontSize: smallFontSize,
     fontWeight: boldFont,
-    width: '105px',
+    width: '100px',
     padding: sm,
     alignItems: 'center',
     boxSizing: 'border-box',
