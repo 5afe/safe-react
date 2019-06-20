@@ -15,7 +15,7 @@ import { addTransactions } from './addTransactions'
 type ConfirmationServiceModel = {
   owner: string,
   submissionDate: Date,
-  type: string,
+  confirmationType: string,
   transactionHash: string,
 }
 
@@ -40,7 +40,7 @@ const buildTransactionFrom = async (safeAddress: string, tx: TxServiceModel, saf
 
       return makeConfirmation({
         owner: makeOwner({ address: conf.owner, name: ownerName }),
-        type: ((conf.type.toLowerCase(): any): TxServiceType),
+        type: ((conf.confirmationType.toLowerCase(): any): TxServiceType),
         hash: conf.transactionHash,
       })
     }),

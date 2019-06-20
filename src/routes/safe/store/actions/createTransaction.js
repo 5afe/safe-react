@@ -19,7 +19,7 @@ const createTransaction = (
   const safeInstance = await getGnosisSafeInstanceAt(safeAddress)
   const from = userAccountSelector(state)
   const threshold = await safeInstance.getThreshold()
-  const nonce = await safeInstance.nonce()
+  const nonce = (await safeInstance.nonce()).toString()
   const isExecution = threshold.toNumber() === 1
 
   let txHash

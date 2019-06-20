@@ -66,7 +66,7 @@ export const createTransaction = async (safeAddress: string, to: string, valueIn
   const web3 = getWeb3()
   const from = web3.currentProvider.selectedAddress
   const threshold = await safeInstance.getThreshold()
-  const nonce = await safeInstance.nonce()
+  const nonce = (await safeInstance.nonce()).toString()
   const valueInWei = web3.utils.toWei(valueInEth, 'ether')
   const isExecution = threshold.toNumber() === 1
 

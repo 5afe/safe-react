@@ -16,7 +16,7 @@ const calculateBodyFrom = async (
   nonce: string | number,
   transactionHash: string,
   sender: string,
-  type: TxServiceType,
+  confirmationType: TxServiceType,
 ) => {
   const contractTransactionHash = await safeInstance.getTransactionHash(
     to,
@@ -38,14 +38,14 @@ const calculateBodyFrom = async (
     operation,
     nonce,
     safeTxGas: 0,
-    dataGas: 0,
+    baseGas: 0,
     gasPrice: 0,
     gasToken: ZERO_ADDRESS,
     refundReceiver: ZERO_ADDRESS,
     contractTransactionHash,
     transactionHash,
     sender: getWeb3().utils.toChecksumAddress(sender),
-    type,
+    confirmationType,
   }
 }
 
