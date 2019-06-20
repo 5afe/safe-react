@@ -1,9 +1,10 @@
 // @flow
 import { ADD_SAFE } from '~/routes/safe/store/actions/addSafe'
 import { UPDATE_SAFE } from '~/routes/safe/store/actions/updateSafe'
+import { REMOVE_SAFE } from '~/routes/safe/store/actions/removeSafe'
 import type { Store, AnyAction } from 'redux'
 import { type GlobalState } from '~/store/'
-import { saveSafes, setOwners } from '~/logic/safe/utils'
+import { saveSafes, setOwners, removeOwners } from '~/logic/safe/utils'
 import { safesMapSelector } from '~/routes/safeList/store/selectors'
 import { getActiveTokensAddressesForAllSafes } from '~/routes/safe/store/selectors'
 import { tokensSelector } from '~/logic/tokens/store/selectors'
@@ -11,7 +12,7 @@ import type { Token } from '~/logic/tokens/store/model/token'
 import { saveActiveTokens } from '~/logic/tokens/utils/tokensStorage'
 import { ACTIVATE_TOKEN_FOR_ALL_SAFES } from '~/routes/safe/store/actions/activateTokenForAllSafes'
 
-const watchedActions = [ADD_SAFE, UPDATE_SAFE, ACTIVATE_TOKEN_FOR_ALL_SAFES]
+const watchedActions = [ADD_SAFE, UPDATE_SAFE, REMOVE_SAFE, ACTIVATE_TOKEN_FOR_ALL_SAFES]
 
 const safeStorageMware = (store: Store<GlobalState>) => (next: Function) => async (action: AnyAction) => {
   const handledAction = next(action)
@@ -40,6 +41,9 @@ const safeStorageMware = (store: Store<GlobalState>) => (next: Function) => asyn
     if (action.type === ADD_SAFE) {
       const { safe } = action.payload
       setOwners(safe.address, safe.owners)
+    } else if (action.type === REMOVE_SAFE) {
+      const safeAddress = action.payload
+      removeOwners(safeAddress)
     }
   }
 

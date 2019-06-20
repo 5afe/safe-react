@@ -12,7 +12,7 @@ const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'
 export const executeTransaction = async (
   safeInstance: any,
   to: string,
-  valueInWei: number,
+  valueInWei: number | string,
   data: string,
   operation: number | string,
   nonce: string | number,

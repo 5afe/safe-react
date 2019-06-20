@@ -8,9 +8,6 @@ type AddTokenProps = {
   token: Token,
 }
 
-export const addToken = createAction<string, *, *>(
-  ADD_TOKEN,
-  (token: Token): AddTokenProps => ({
-    token,
-  }),
-)
+export const addToken = createAction<string, *, *>(ADD_TOKEN, (token: Token): AddTokenProps => ({
+  token,
+}))

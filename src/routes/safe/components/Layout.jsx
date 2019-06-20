@@ -19,6 +19,7 @@ import {
 } from '~/theme/variables'
 import { copyToClipboard } from '~/utils/clipboard'
 import Balances from './Balances'
+import Settings from './Settings'
 
 type Props = SelectorProps & {
   classes: Object,
@@ -138,6 +139,17 @@ class Layout extends React.Component<Props, State> {
             safeAddress={address}
             safeName={name}
             etherScanLink={etherScanLink}
+            createTransaction={createTransaction}
+          />
+        )}
+        {tabIndex === 2 && (
+          <Settings
+            granted={granted}
+            safeAddress={address}
+            safeName={name}
+            etherScanLink={etherScanLink}
+            threshold={safe.threshold}
+            owners={safe.owners}
             createTransaction={createTransaction}
           />
         )}
