@@ -20,7 +20,7 @@ const statusToIcon = {
   awaiting: AwaitingIcon,
 }
 
-const statusIconStyle={
+const statusIconStyle = {
   height: '14px',
   width: '14px',
 }

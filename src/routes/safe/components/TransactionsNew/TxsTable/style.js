@@ -1,5 +1,7 @@
 // @flow
-import { xs, sm, md, lg } from '~/theme/variables'
+import {
+  xs, sm, md, lg,
+} from '~/theme/variables'
 
 export const styles = (theme: Object) => ({
   container: {
