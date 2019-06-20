@@ -7,6 +7,7 @@ import {
   disabled,
   primary,
   secondary,
+  error,
   md,
   lg,
   bolderFont,
@@ -27,7 +28,7 @@ const palette = {
     main: secondary,
   },
   error: {
-    main: '#FB4F62',
+    main: error,
   },
   contrastThreshold: 3,
   tonalOffset: 0.2,

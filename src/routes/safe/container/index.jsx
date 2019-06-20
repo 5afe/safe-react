@@ -11,7 +11,7 @@ export type Props = Actions &
     granted: boolean,
   }
 
-const TIMEOUT = process.env.NODE_ENV === 'test' ? 1500 : 15000
+const TIMEOUT = process.env.NODE_ENV === 'test' ? 1500 : 5000
 
 class SafeView extends React.Component<Props> {
   componentDidMount() {

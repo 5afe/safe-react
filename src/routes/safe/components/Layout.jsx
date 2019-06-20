@@ -20,6 +20,7 @@ import {
 import { copyToClipboard } from '~/utils/clipboard'
 import Balances from './Balances'
 import Transactions from './TransactionsNew'
+import Settings from './Settings'
 
 type Props = SelectorProps & {
   classes: Object,
@@ -154,6 +155,17 @@ class Layout extends React.Component<Props, State> {
         )}
         {tabIndex === 1 && (
           <Transactions transactions={transactions} fetchTransactions={fetchTransactions} safeAddress={address} />
+        )}
+        {tabIndex === 2 && (
+          <Settings
+            granted={granted}
+            safeAddress={address}
+            safeName={name}
+            etherScanLink={etherScanLink}
+            threshold={safe.threshold}
+            owners={safe.owners}
+            createTransaction={createTransaction}
+          />
         )}
       </React.Fragment>
     )
