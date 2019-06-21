@@ -73,7 +73,11 @@ const TxsTable = (props: Props) => {
                 </Row>
               </TableCell>
             </TableRow>
-            <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
+            <TableCell
+              style={{ paddingBottom: 0, paddingTop: 0 }}
+              colSpan={6}
+              className={classes.extendedTxContainer}
+            >
               <Collapse
                 in={expandedTx === row.nonce}
                 timeout="auto"

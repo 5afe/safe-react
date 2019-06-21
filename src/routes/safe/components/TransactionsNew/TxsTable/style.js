@@ -11,4 +11,7 @@ export const styles = () => ({
       backgroundColor: '#fff3e2',
     },
   },
+  extendedTxContainer: {
+    padding: 0,
+  },
 })
