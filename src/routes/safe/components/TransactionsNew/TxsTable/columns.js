@@ -25,9 +25,9 @@ type TxData = {
 
 const formatDate = date => format(date, 'MMM D, YYYY - h:m:s')
 
-export type BalanceRow = SortRow<TxData>
+export type TransactionRow = SortRow<TxData>
 
-export const getTxTableData = (transactions: List<Transaction>): List<BalanceRow> => {
+export const getTxTableData = (transactions: List<Transaction>): List<TransactionRow> => {
   const rows = transactions.map((tx: Transaction) => ({
     [TX_TABLE_NONCE_ID]: tx.nonce,
     [TX_TABLE_TYPE_ID]: 'Outgoing transfer',

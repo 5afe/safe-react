@@ -9,7 +9,7 @@ import styles from './index.scss'
 const Footer = () => (
   <Block className={styles.footer}>
     <Link to={WELCOME_ADDRESS}>
-      <Paragraph size="sm" color="primary" noMargin>Welcome</Paragraph>
+      <Paragraph size="sm" color="primary" noMargin>Add Safe</Paragraph>
     </Link>
     <Link to={SAFELIST_ADDRESS}>
       <Paragraph size="sm" color="primary" noMargin>Safe List</Paragraph>
