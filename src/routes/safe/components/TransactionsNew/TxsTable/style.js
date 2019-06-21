@@ -11,7 +11,11 @@ export const styles = () => ({
       backgroundColor: '#fff3e2',
     },
   },
+  expandedRow: {
+    backgroundColor: '#fff3e2',
+  },
   extendedTxContainer: {
     padding: 0,
+    backgroundColor: '#fffaf4',
   },
 })

@@ -1,23 +1,16 @@
 // @flow
 import React, { useState } from 'react'
+import cn from 'classnames'
 import { List } from 'immutable'
 import Collapse from '@material-ui/core/Collapse'
 import IconButton from '@material-ui/core/IconButton'
 import ExpandLess from '@material-ui/icons/ExpandLess'
 import ExpandMore from '@material-ui/icons/ExpandMore'
-import classNames from 'classnames/bind'
-import CallMade from '@material-ui/icons/CallMade'
-import CallReceived from '@material-ui/icons/CallReceived'
-import Button from '@material-ui/core/Button'
 import TableRow from '@material-ui/core/TableRow'
 import TableCell from '@material-ui/core/TableCell'
 import { withStyles } from '@material-ui/core/styles'
-import Col from '~/components/layout/Col'
-import { type Token } from '~/logic/tokens/store/model/token'
 import Block from '~/components/layout/Block'
 import Row from '~/components/layout/Row'
-import Paragraph from '~/components/layout/Paragraph'
-import Modal from '~/components/Modal'
 import { type Column, cellWidth } from '~/components/Table/TableHead'
 import Table from '~/components/Table'
 import { type Transaction } from '~/routes/safe/store/models/transaction'
@@ -63,7 +56,11 @@ const TxsTable = (props: Props) => {
       >
         {(sortedData: Array<TransactionRow>) => sortedData.map((row: any, index: number) => (
           <React.Fragment key={index}>
-            <TableRow tabIndex={-1} className={classes.row} onClick={() => handleTxExpand(row.nonce)}>
+            <TableRow
+              tabIndex={-1}
+              className={cn(classes.row, expandedTx === row.nonce && classes.expandedRow)}
+              onClick={() => handleTxExpand(row.nonce)}
+            >
               {autoColumns.map((column: Column) => (
                 <TableCell
                   key={column.id}
@@ -84,19 +81,21 @@ const TxsTable = (props: Props) => {
                 <IconButton disableRipple>{expandedTx === row.nonce ? <ExpandLess /> : <ExpandMore />}</IconButton>
               </TableCell>
             </TableRow>
-            <TableCell
-              style={{ paddingBottom: 0, paddingTop: 0 }}
-              colSpan={6}
-              className={classes.extendedTxContainer}
-            >
-              <Collapse
-                in={expandedTx === row.nonce}
-                timeout="auto"
-                component={ExpandedTxComponent}
-                unmountOnExit
-                tx={row[TX_TABLE_RAW_TX_ID]}
-              />
-            </TableCell>
+            <TableRow>
+              <TableCell
+                style={{ paddingBottom: 0, paddingTop: 0 }}
+                colSpan={6}
+                className={classes.extendedTxContainer}
+              >
+                <Collapse
+                  in={expandedTx === row.nonce}
+                  timeout="auto"
+                  component={ExpandedTxComponent}
+                  unmountOnExit
+                  tx={row[TX_TABLE_RAW_TX_ID]}
+                />
+              </TableCell>
+            </TableRow>
           </React.Fragment>
         ))
         }
