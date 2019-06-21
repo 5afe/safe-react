@@ -12,6 +12,7 @@ export const TX_TABLE_DATE_ID = 'date'
 export const TX_TABLE_AMOUNT_ID = 'amount'
 export const TX_TABLE_STATUS_ID = 'status'
 export const TX_TABLE_RAW_TX_ID = 'tx'
+export const TX_TABLE_EXPAND_ICON = 'expand'
 
 const web3 = getWeb3()
 const { toBN, fromWei } = web3.utils
@@ -19,12 +20,13 @@ const { toBN, fromWei } = web3.utils
 type TxData = {
   nonce: number,
   type: string,
-  date: Date,
+  date: string,
   amount: number | string,
   status: string,
+  tx: Transaction,
 }
 
-const formatDate = date => format(date, 'MMM D, YYYY - h:m:s')
+export const formatDate = (date: Date): string => format(date, 'MMM D, YYYY - h:m:s')
 
 export type TransactionRow = SortRow<TxData>
 
@@ -85,5 +87,15 @@ export const generateColumns = () => {
     custom: true,
   }
 
-  return List([nonceColumn, typeColumn, valueColumn, dateColumn, statusColumn])
+  const expandIconColumn: Column = {
+    id: TX_TABLE_EXPAND_ICON,
+    order: false,
+    disablePadding: true,
+    label: '',
+    custom: true,
+    width: 50,
+    static: true,
+  }
+
+  return List([nonceColumn, typeColumn, valueColumn, dateColumn, statusColumn, expandIconColumn])
 }

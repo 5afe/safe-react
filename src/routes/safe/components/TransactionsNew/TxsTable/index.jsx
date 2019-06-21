@@ -2,6 +2,9 @@
 import React, { useState } from 'react'
 import { List } from 'immutable'
 import Collapse from '@material-ui/core/Collapse'
+import IconButton from '@material-ui/core/IconButton'
+import ExpandLess from '@material-ui/icons/ExpandLess'
+import ExpandMore from '@material-ui/icons/ExpandMore'
 import classNames from 'classnames/bind'
 import CallMade from '@material-ui/icons/CallMade'
 import CallReceived from '@material-ui/icons/CallReceived'
@@ -24,6 +27,11 @@ import {
 } from './columns'
 import { styles } from './style'
 import Status from './Status'
+
+const expandCellStyle = {
+  paddingLeft: 0,
+  paddingRight: 0,
+}
 
 type Props = {
   classes: Object,
@@ -54,8 +62,8 @@ const TxsTable = (props: Props) => {
         defaultFixed
       >
         {(sortedData: Array<TransactionRow>) => sortedData.map((row: any, index: number) => (
-          <>
-            <TableRow tabIndex={-1} key={index} className={classes.row} onClick={() => handleTxExpand(row.nonce)}>
+          <React.Fragment key={index}>
+            <TableRow tabIndex={-1} className={classes.row} onClick={() => handleTxExpand(row.nonce)}>
               {autoColumns.map((column: Column) => (
                 <TableCell
                   key={column.id}
@@ -72,6 +80,9 @@ const TxsTable = (props: Props) => {
                   <Status status={row.status} />
                 </Row>
               </TableCell>
+              <TableCell style={expandCellStyle}>
+                <IconButton disableRipple>{expandedTx === row.nonce ? <ExpandLess /> : <ExpandMore />}</IconButton>
+              </TableCell>
             </TableRow>
             <TableCell
               style={{ paddingBottom: 0, paddingTop: 0 }}
@@ -86,7 +97,7 @@ const TxsTable = (props: Props) => {
                 tx={row[TX_TABLE_RAW_TX_ID]}
               />
             </TableCell>
-          </>
+          </React.Fragment>
         ))
         }
       </Table>

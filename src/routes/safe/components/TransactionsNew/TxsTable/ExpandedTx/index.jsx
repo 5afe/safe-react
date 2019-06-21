@@ -1,50 +1,74 @@
 // @flow
-import React from 'react'
+import React, { useState } from 'react'
+import { withStyles } from '@material-ui/core/styles'
+import Tabs from '@material-ui/core/Tabs'
+import Tab from '@material-ui/core/Tab'
 import Row from '~/components/layout/Row'
 import Block from '~/components/layout/Block'
 import Col from '~/components/layout/Col'
 import Bold from '~/components/layout/Bold'
 import Paragraph from '~/components/layout/Paragraph'
 import Hairline from '~/components/layout/Hairline'
+import { type Transaction } from '~/routes/safe/store/models/transaction'
+import { styles } from './style'
+import { formatDate } from '../columns'
 
-const ExpandedTx = () => (
-  <Block>
-    <Row>
-      <Col xs={6} layout="column">
-        <Block>
-          <Paragraph noMargin>
-            <Bold>TX hash: </Bold>
-            n/a
-          </Paragraph>
-          <Paragraph noMargin>
-            <Bold>TX fee: </Bold>
-            n/a
-          </Paragraph>
-          <Paragraph noMargin>
-            <Bold>TX status: </Bold>
-            n/a
-          </Paragraph>
-          <Paragraph noMargin>
-            <Bold>TX created: </Bold>
-            n/a
-          </Paragraph>
-          <Paragraph noMargin>
-            <Bold>TX submitted: </Bold>
-            n/a
-          </Paragraph>
-        </Block>
-        <Hairline />
-        <Block>
-          <Paragraph noMargin>
-            <Bold>Sent 1.00 ETH to:</Bold>
-            <br />
-            0xbc2BB26a6d821e69A38016f3858561a1D80d4182
-          </Paragraph>
-        </Block>
-      </Col>
-      <Col xs={6}>right</Col>
-    </Row>
-  </Block>
-)
+type Props = {
+  classes: Object,
+  tx: Transaction,
+}
 
-export default ExpandedTx
+const ExpandedTx = ({ classes, tx }: Props) => {
+  const [tabIndex, setTabIndex] = useState<number>(0)
+
+  const handleTabChange = (event, tabClicked) => {
+    setTabIndex(tabClicked)
+  }
+
+  return (
+    <Block>
+      <Row>
+        <Col xs={6} layout="column">
+          <Block className={classes.txDataContainer}>
+            <Paragraph noMargin>
+              <Bold>TX hash: </Bold>
+              n/a
+            </Paragraph>
+            <Paragraph noMargin>
+              <Bold>TX status: </Bold>
+              n/a
+            </Paragraph>
+            <Paragraph noMargin>
+              <Bold>TX created: </Bold>
+              {formatDate(tx.submissionDate)}
+            </Paragraph>
+            {tx.executionDate && (
+              <Paragraph noMargin>
+                <Bold>TX executed: </Bold>
+                {formatDate(tx.executionDate)}
+              </Paragraph>
+            )}
+          </Block>
+          <Hairline />
+          <Block className={classes.txDataContainer}>
+            <Paragraph noMargin>
+              <Bold>Send 1.00 ETH to:</Bold>
+              <br />
+              {tx.recipient}
+            </Paragraph>
+          </Block>
+        </Col>
+        <Col xs={6} className={classes.rightCol}>
+          <Row>
+            <Tabs value={tabIndex} onChange={handleTabChange} indicatorColor="secondary" textColor="secondary">
+              <Tab label="Confirmed" />
+              <Tab label="Unconfirmed" />
+            </Tabs>
+          </Row>
+        </Col>
+      </Row>
+    </Block>
+  )
+}
+
+export default withStyles(styles)(ExpandedTx)
