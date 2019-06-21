@@ -14,6 +14,7 @@ import Row from '~/components/layout/Row'
 import { type Column, cellWidth } from '~/components/Table/TableHead'
 import Table from '~/components/Table'
 import { type Transaction } from '~/routes/safe/store/models/transaction'
+import { type Owner } from '~/routes/safe/store/models/owner'
 import ExpandedTxComponent from './ExpandedTx'
 import {
   getTxTableData, generateColumns, TX_TABLE_NONCE_ID, type TransactionRow, TX_TABLE_RAW_TX_ID,
@@ -29,10 +30,14 @@ const expandCellStyle = {
 type Props = {
   classes: Object,
   transactions: List<Transaction>,
+  threshold: number,
+  owners: List<Owner>,
 }
 
 const TxsTable = (props: Props) => {
-  const { classes, transactions } = props
+  const {
+    classes, transactions, threshold, owners,
+  } = props
   const [expandedTx, setExpandedTx] = useState<string | null>(null)
 
   const handleTxExpand = (nonce) => {
@@ -93,6 +98,8 @@ const TxsTable = (props: Props) => {
                   component={ExpandedTxComponent}
                   unmountOnExit
                   tx={row[TX_TABLE_RAW_TX_ID]}
+                  threshold={threshold}
+                  owners={owners}
                 />
               </TableCell>
             </TableRow>

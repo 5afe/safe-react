@@ -154,7 +154,13 @@ class Layout extends React.Component<Props, State> {
           />
         )}
         {tabIndex === 1 && (
-          <Transactions transactions={transactions} fetchTransactions={fetchTransactions} safeAddress={address} />
+          <Transactions
+            threshold={safe.threshold}
+            owners={safe.owners}
+            transactions={transactions}
+            fetchTransactions={fetchTransactions}
+            safeAddress={address}
+          />
         )}
         {tabIndex === 2 && (
           <Settings

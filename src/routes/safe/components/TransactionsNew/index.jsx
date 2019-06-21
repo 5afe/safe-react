@@ -4,12 +4,14 @@ import { List } from 'immutable'
 import NoTransactions from '~/routes/safe/components/TransactionsNew/NoTransactions'
 import TxsTable from '~/routes/safe/components/TransactionsNew/TxsTable'
 import { type Transaction } from '~/routes/safe/store/models/transaction'
+import { type Owner } from '~/routes/safe/store/models/owner'
 
 type Props = {
   safeAddress: string,
   threshold: number,
   fetchTransactions: Function,
   transactions: List<Transaction>,
+  owners: List<Owner>,
 }
 
 class Transactions extends React.Component<Props, {}> {
@@ -20,11 +22,17 @@ class Transactions extends React.Component<Props, {}> {
   }
 
   render() {
-    const { transactions, safeName, threshold } = this.props
+    const { transactions, owners, threshold } = this.props
     const hasTransactions = transactions.size > 0
 
     return (
-      <React.Fragment>{hasTransactions ? <TxsTable transactions={transactions} /> : <NoTransactions />}</React.Fragment>
+      <React.Fragment>
+        {hasTransactions ? (
+          <TxsTable transactions={transactions} threshold={threshold} owners={owners} />
+        ) : (
+          <NoTransactions />
+        )}
+      </React.Fragment>
     )
   }
 }
