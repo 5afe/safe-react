@@ -11,6 +11,7 @@ export const TX_TABLE_TYPE_ID = 'type'
 export const TX_TABLE_DATE_ID = 'date'
 export const TX_TABLE_AMOUNT_ID = 'amount'
 export const TX_TABLE_STATUS_ID = 'status'
+export const TX_TABLE_RAW_TX_ID = 'tx'
 
 const web3 = getWeb3()
 const { toBN, fromWei } = web3.utils
@@ -34,6 +35,7 @@ export const getTxTableData = (transactions: List<Transaction>): List<Transactio
     [TX_TABLE_DATE_ID]: formatDate(tx.isExecuted ? tx.executionDate : tx.submissionDate),
     [TX_TABLE_AMOUNT_ID]: Number(tx.value) > 0 ? `${fromWei(toBN(tx.value), 'ether')} ${tx.symbol}` : 'n/a',
     [TX_TABLE_STATUS_ID]: tx.isExecuted ? 'success' : 'awaiting',
+    [TX_TABLE_RAW_TX_ID]: tx,
   }))
 
   return rows

@@ -20,12 +20,10 @@ import Table from '~/components/Table'
 import { type Transaction } from '~/routes/safe/store/models/transaction'
 import ExpandedTxComponent from './ExpandedTx'
 import {
-  getTxTableData, generateColumns, TX_TABLE_NONCE_ID, type TransactionRow,
+  getTxTableData, generateColumns, TX_TABLE_NONCE_ID, type TransactionRow, TX_TABLE_RAW_TX_ID,
 } from './columns'
 import { styles } from './style'
 import Status from './Status'
-
-type State = {}
 
 type Props = {
   classes: Object,
@@ -34,7 +32,7 @@ type Props = {
 
 const TxsTable = (props: Props) => {
   const { classes, transactions } = props
-  const [expandedTx, setExpandedTx] = useState(null)
+  const [expandedTx, setExpandedTx] = useState<string | null>(null)
 
   const handleTxExpand = (nonce) => {
     setExpandedTx(prevTx => (prevTx === nonce ? null : nonce))
@@ -75,7 +73,15 @@ const TxsTable = (props: Props) => {
                 </Row>
               </TableCell>
             </TableRow>
-            <Collapse in={expandedTx === row.nonce} timeout="auto" component={ExpandedTxComponent} unmountOnExit />
+            <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
+              <Collapse
+                in={expandedTx === row.nonce}
+                timeout="auto"
+                component={ExpandedTxComponent}
+                unmountOnExit
+                tx={row[TX_TABLE_RAW_TX_ID]}
+              />
+            </TableCell>
           </>
         ))
         }
