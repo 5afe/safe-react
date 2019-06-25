@@ -149,6 +149,9 @@ class Layout extends React.Component<Props, State> {
             safeName={name}
             etherScanLink={etherScanLink}
             updateSafeName={updateSafeName}
+            threshold={safe.threshold}
+            owners={safe.owners}
+            createTransaction={createTransaction}
           />
         )}
       </React.Fragment>

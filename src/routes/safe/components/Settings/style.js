@@ -1,9 +1,9 @@
 // @flow
 import {
-  sm, md, lg, border,
+  sm, lg, border, secondary, bolderFont,
 } from '~/theme/variables'
 
-export const styles = (theme: Object) => ({
+export const styles = () => ({
   root: {
     backgroundColor: 'white',
     boxShadow: '0 -1px 4px 0 rgba(74, 85, 121, 0.5)',
@@ -21,6 +21,14 @@ export const styles = (theme: Object) => ({
     padding: lg,
     alignItems: 'center',
     cursor: 'pointer',
+  },
+  active: {
+    backgroundColor: '#f4f4f9',
+    color: secondary,
+    fontWeight: bolderFont,
+  },
+  container: {
+    height: '100%',
   },
   message: {
     margin: `${sm} 0`,

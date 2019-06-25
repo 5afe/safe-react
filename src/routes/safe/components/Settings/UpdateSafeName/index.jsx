@@ -1,5 +1,5 @@
 // @flow
-import React, { useState } from 'react'
+import React from 'react'
 import { withStyles } from '@material-ui/core/styles'
 import Block from '~/components/layout/Block'
 import Col from '~/components/layout/Col'
@@ -30,7 +30,7 @@ type Props = {
   classes: Object,
   safeAddress: string,
   safeName: string,
-  updateSafe: Funtion
+  updateSafeName: Function
 }
 
 const UpdateSafeName = (props: Props) => {
