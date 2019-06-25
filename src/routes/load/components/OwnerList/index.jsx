@@ -92,6 +92,8 @@ const calculateSafeValues = (owners: Array<string>, threshold: Number, values: O
 }
 
 class OwnerListComponent extends React.PureComponent<Props, State> {
+  static whyDidYouRender = true
+
   state = {
     owners: [],
   }
@@ -113,7 +115,7 @@ class OwnerListComponent extends React.PureComponent<Props, State> {
     if (!owners) {
       return
     }
-
+    console.log('eee')
     if (this.mounted) {
       this.setState(() => ({ owners: owners.sort() }))
     }
@@ -126,6 +128,7 @@ class OwnerListComponent extends React.PureComponent<Props, State> {
   render() {
     const { network, classes } = this.props
     const { owners } = this.state
+    console.log(owners)
 
     return (
       <React.Fragment>
@@ -141,8 +144,8 @@ class OwnerListComponent extends React.PureComponent<Props, State> {
         </Row>
         <Hairline />
         <Block margin="md" padding="md">
-          {owners.map((x, index) => (
-            <Row key={owners[index].address} className={classes.owner}>
+          {owners.map((address, index) => (
+            <Row key={address} className={classes.owner}>
               <Col xs={4}>
                 <Field
                   className={classes.name}
@@ -150,24 +153,24 @@ class OwnerListComponent extends React.PureComponent<Props, State> {
                   component={TextField}
                   type="text"
                   validate={required}
-                  defaultValue={`Owner #${index + 1}`}
+                  initialValue={`Owner #${index + 1}`}
                   placeholder="Owner Name*"
                   text="Owner Name"
                 />
               </Col>
               <Col xs={7}>
                 <Row className={classes.ownerAddresses}>
-                  <Identicon address={owners[index]} diameter={32} />
+                  <Identicon address={address} diameter={32} />
                   <Paragraph size="md" color="disabled" noMargin className={classes.address}>
-                    {owners[index]}
+                    {address}
                   </Paragraph>
-                  <Link className={classes.open} to={getEtherScanLink(owners[index], network)} target="_blank">
+                  <Link className={classes.open} to={getEtherScanLink(address, network)} target="_blank">
                     <OpenInNew style={openIconStyle} />
                   </Link>
                 </Row>
               </Col>
             </Row>
-          )) }
+          ))}
         </Block>
       </React.Fragment>
     )
@@ -179,13 +182,11 @@ const OwnerListPage = withStyles(styles)(OwnerListComponent)
 const OwnerList = ({ updateInitialProps }: Object, network: string) => (controls: React$Node, { values }: Object) => (
   <React.Fragment>
     <OpenPaper controls={controls} padding={false}>
-      <OwnerListPage
-        network={network}
-        updateInitialProps={updateInitialProps}
-        values={values}
-      />
+      <OwnerListPage network={network} updateInitialProps={updateInitialProps} values={values} />
     </OpenPaper>
   </React.Fragment>
 )
+
+OwnerList.whyDidYouRender = true
 
 export default OwnerList
