@@ -109,14 +109,13 @@ class OwnerListComponent extends React.PureComponent<Props, State> {
     const owners = await gnosisSafe.getOwners()
     const threshold = await gnosisSafe.getThreshold()
 
-    const initialValues = calculateSafeValues(owners.sort(), threshold, values)
-    updateInitialProps(initialValues)
-
     if (!owners) {
       return
     }
-    console.log('eee')
+
     if (this.mounted) {
+      const initialValues = calculateSafeValues(owners.sort(), threshold, values)
+      updateInitialProps(initialValues)
       this.setState(() => ({ owners: owners.sort() }))
     }
   }
@@ -128,7 +127,6 @@ class OwnerListComponent extends React.PureComponent<Props, State> {
   render() {
     const { network, classes } = this.props
     const { owners } = this.state
-    console.log(owners)
 
     return (
       <React.Fragment>
