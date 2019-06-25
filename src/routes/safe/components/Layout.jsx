@@ -25,6 +25,7 @@ type Props = SelectorProps & {
   classes: Object,
   granted: boolean,
   createTransaction: Function,
+  updateSafe: Function,
 }
 
 type State = {
@@ -90,7 +91,7 @@ class Layout extends React.Component<Props, State> {
 
   render() {
     const {
-      safe, provider, network, classes, granted, tokens, activeTokens, createTransaction, updateSafeName,
+      safe, provider, network, classes, granted, tokens, activeTokens, createTransaction, updateSafe,
     } = this.props
     const { tabIndex } = this.state
 
@@ -148,7 +149,7 @@ class Layout extends React.Component<Props, State> {
             safeAddress={address}
             safeName={name}
             etherScanLink={etherScanLink}
-            updateSafeName={updateSafeName}
+            updateSafe={updateSafe}
             threshold={safe.threshold}
             owners={safe.owners}
             createTransaction={createTransaction}

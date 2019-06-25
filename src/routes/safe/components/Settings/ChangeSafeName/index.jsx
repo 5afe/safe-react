@@ -4,9 +4,7 @@ import { withStyles } from '@material-ui/core/styles'
 import Block from '~/components/layout/Block'
 import Col from '~/components/layout/Col'
 import Field from '~/components/forms/Field'
-import {
-  composeValidators, required, minMaxLength,
-} from '~/components/forms/validator'
+import { composeValidators, required, minMaxLength } from '~/components/forms/validator'
 import TextField from '~/components/forms/TextField'
 import GnoForm from '~/components/forms/GnoForm'
 import Row from '~/components/layout/Row'
@@ -30,19 +28,16 @@ type Props = {
   classes: Object,
   safeAddress: string,
   safeName: string,
-  updateSafeName: Function
+  updateSafe: Function,
 }
 
-const UpdateSafeName = (props: Props) => {
+const ChangeSafeName = (props: Props) => {
   const {
-    classes,
-    safeAddress,
-    safeName,
-    updateSafeName,
+    classes, safeAddress, safeName, updateSafe,
   } = props
 
   const handleSubmit = (values) => {
-    updateSafeName(safeAddress, values.safeName)
+    updateSafe({ address: safeAddress, name: values.safeName })
   }
 
   return (
@@ -52,7 +47,7 @@ const UpdateSafeName = (props: Props) => {
           <React.Fragment>
             <Block className={classes.formContainer}>
               <Paragraph noMargin className={classes.title} size="lg" weight="bolder">
-              Modify Safe name
+                Modify Safe name
               </Paragraph>
               <Block className={classes.root}>
                 <Field
@@ -69,14 +64,8 @@ const UpdateSafeName = (props: Props) => {
             <Hairline />
             <Row style={controlsStyle} align="end" grow>
               <Col end="xs">
-                <Button
-                  type="submit"
-                  style={saveButtonStyle}
-                  size="small"
-                  variant="contained"
-                  color="primary"
-                >
-                SAVE
+                <Button type="submit" style={saveButtonStyle} size="small" variant="contained" color="primary">
+                  SAVE
                 </Button>
               </Col>
             </Row>
@@ -87,4 +76,4 @@ const UpdateSafeName = (props: Props) => {
   )
 }
 
-export default withStyles(styles)(UpdateSafeName)
+export default withStyles(styles)(ChangeSafeName)
