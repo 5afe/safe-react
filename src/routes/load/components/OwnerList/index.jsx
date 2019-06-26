@@ -1,11 +1,11 @@
 // @flow
-import * as React from 'react'
-import Block from '~/components/layout/Block'
+import React, { useState, useEffect } from 'react'
 import { withStyles } from '@material-ui/core/styles'
+import OpenInNew from '@material-ui/icons/OpenInNew'
+import Block from '~/components/layout/Block'
 import Field from '~/components/forms/Field'
 import { required } from '~/components/forms/validator'
 import TextField from '~/components/forms/TextField'
-import OpenInNew from '@material-ui/icons/OpenInNew'
 import Identicon from '~/components/Identicon'
 import OpenPaper from '~/components/Stepper/OpenPaper'
 import Col from '~/components/layout/Col'
@@ -78,10 +78,6 @@ type Props = LayoutProps & {
   updateInitialProps: (initialValues: Object) => void,
 }
 
-type State = {
-  owners: Array<string>,
-}
-
 const calculateSafeValues = (owners: Array<string>, threshold: Number, values: Object) => {
   const initialValues = { ...values }
   for (let i = 0; i < owners.length; i += 1) {
@@ -91,88 +87,80 @@ const calculateSafeValues = (owners: Array<string>, threshold: Number, values: O
   return initialValues
 }
 
-class OwnerListComponent extends React.PureComponent<Props, State> {
-  static whyDidYouRender = true
+const OwnerListComponent = (props: Props) => {
+  const [owners, setOwners] = useState<Array<string>>([])
+  const {
+    values, updateInitialProps, network, classes,
+  } = props
 
-  state = {
-    owners: [],
-  }
+  useEffect(() => {
+    let isCurrent = true
 
-  mounted = false
+    const fetchSafe = async () => {
+      const safeAddress = values[FIELD_LOAD_ADDRESS]
+      const gnosisSafe = await getGnosisSafeInstanceAt(safeAddress)
+      const safeOwners = await gnosisSafe.getOwners()
+      const threshold = await gnosisSafe.getThreshold()
 
-  componentDidMount = async () => {
-    this.mounted = true
-    const { values, updateInitialProps } = this.props
-    const safeAddress = values[FIELD_LOAD_ADDRESS]
-
-    const gnosisSafe = await getGnosisSafeInstanceAt(safeAddress)
-    const owners = await gnosisSafe.getOwners()
-    const threshold = await gnosisSafe.getThreshold()
-
-    if (!owners) {
-      return
+      if (isCurrent && owners) {
+        const sortedOwners = safeOwners.sort()
+        const initialValues = calculateSafeValues(sortedOwners, threshold, values)
+        updateInitialProps(initialValues)
+        setOwners(sortedOwners)
+      }
     }
 
-    if (this.mounted) {
-      const initialValues = calculateSafeValues(owners.sort(), threshold, values)
-      updateInitialProps(initialValues)
-      this.setState(() => ({ owners: owners.sort() }))
+    fetchSafe()
+
+    return () => {
+      isCurrent = false
     }
-  }
+  }, [])
 
-  componentWillUnmount() {
-    this.mounted = false
-  }
-
-  render() {
-    const { network, classes } = this.props
-    const { owners } = this.state
-
-    return (
-      <React.Fragment>
-        <Block className={classes.title}>
-          <Paragraph noMargin size="md" color="primary">
-            {`This Safe has ${owners.length} owners. Optional: Provide a name for each owner.`}
-          </Paragraph>
-        </Block>
-        <Hairline />
-        <Row className={classes.header}>
-          <Col xs={4}>NAME</Col>
-          <Col xs={8}>ADDRESS</Col>
-        </Row>
-        <Hairline />
-        <Block margin="md" padding="md">
-          {owners.map((address, index) => (
-            <Row key={address} className={classes.owner}>
-              <Col xs={4}>
-                <Field
-                  className={classes.name}
-                  name={getOwnerNameBy(index)}
-                  component={TextField}
-                  type="text"
-                  validate={required}
-                  initialValue={`Owner #${index + 1}`}
-                  placeholder="Owner Name*"
-                  text="Owner Name"
-                />
-              </Col>
-              <Col xs={7}>
-                <Row className={classes.ownerAddresses}>
-                  <Identicon address={address} diameter={32} />
-                  <Paragraph size="md" color="disabled" noMargin className={classes.address}>
-                    {address}
-                  </Paragraph>
-                  <Link className={classes.open} to={getEtherScanLink(address, network)} target="_blank">
-                    <OpenInNew style={openIconStyle} />
-                  </Link>
-                </Row>
-              </Col>
-            </Row>
-          ))}
-        </Block>
-      </React.Fragment>
-    )
-  }
+  return (
+    <React.Fragment>
+      <Block className={classes.title}>
+        <Paragraph noMargin size="md" color="primary">
+          {`This Safe has ${owners.length} owners. Optional: Provide a name for each owner.`}
+        </Paragraph>
+      </Block>
+      <Hairline />
+      <Row className={classes.header}>
+        <Col xs={4}>NAME</Col>
+        <Col xs={8}>ADDRESS</Col>
+      </Row>
+      <Hairline />
+      <Block margin="md" padding="md">
+        {owners.map((address, index) => (
+          <Row key={address} className={classes.owner}>
+            <Col xs={4}>
+              <Field
+                className={classes.name}
+                name={getOwnerNameBy(index)}
+                component={TextField}
+                type="text"
+                validate={required}
+                initialValue={`Owner #${index + 1}`}
+                placeholder="Owner Name*"
+                text="Owner Name"
+              />
+            </Col>
+            <Col xs={7}>
+              <Row className={classes.ownerAddresses}>
+                <Identicon address={address} diameter={32} />
+                <Paragraph size="md" color="disabled" noMargin className={classes.address}>
+                  {address}
+                </Paragraph>
+                <Link className={classes.open} to={getEtherScanLink(address, network)} target="_blank">
+                  <OpenInNew style={openIconStyle} />
+                </Link>
+              </Row>
+            </Col>
+          </Row>
+        ))}
+      </Block>
+    </React.Fragment>
+  )
 }
 
 const OwnerListPage = withStyles(styles)(OwnerListComponent)
@@ -184,7 +172,5 @@ const OwnerList = ({ updateInitialProps }: Object, network: string) => (controls
     </OpenPaper>
   </React.Fragment>
 )
-
-OwnerList.whyDidYouRender = true
 
 export default OwnerList
