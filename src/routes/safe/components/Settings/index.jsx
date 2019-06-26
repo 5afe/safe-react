@@ -7,6 +7,8 @@ import { withStyles } from '@material-ui/core/styles'
 import Block from '~/components/layout/Block'
 import Col from '~/components/layout/Col'
 import Row from '~/components/layout/Row'
+import Span from '~/components/layout/Span'
+import Img from '~/components/layout/Img'
 import RemoveSafeModal from './RemoveSafeModal'
 import Paragraph from '~/components/layout/Paragraph'
 import Hairline from '~/components/layout/Hairline'
@@ -83,10 +85,10 @@ class Settings extends React.Component<Props, State> {
           </Col>
           <Col xs={6} end="sm">
             <Paragraph noMargin size="md" color="error" onClick={this.onShow('RemoveSafe')}>
-              <Paragraph noMargin className={cn(classes.links, classes.removeSafeText)}>
+              <Span className={cn(classes.links, classes.removeSafeText)}>
                 Remove Safe
-              </Paragraph>
-              <img alt="Trash Icon" className={classes.removeSafeIcon} src={RemoveSafeIcon} />
+              </Span>
+              <Img alt="Trash Icon" className={classes.removeSafeIcon} src={RemoveSafeIcon} />
             </Paragraph>
             <RemoveSafeModal
               onClose={this.onHide('RemoveSafe')}

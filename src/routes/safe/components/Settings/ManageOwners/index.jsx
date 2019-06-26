@@ -2,16 +2,17 @@
 import React from 'react'
 import { List } from 'immutable'
 import { withStyles } from '@material-ui/core/styles'
+import TableRow from '@material-ui/core/TableRow'
+import TableCell from '@material-ui/core/TableCell'
 import Block from '~/components/layout/Block'
 import Col from '~/components/layout/Col'
 import Table from '~/components/Table'
 import { type Column, cellWidth } from '~/components/Table/TableHead'
-import TableRow from '@material-ui/core/TableRow'
-import TableCell from '@material-ui/core/TableCell'
 import Row from '~/components/layout/Row'
 import Paragraph from '~/components/layout/Paragraph'
 import Hairline from '~/components/layout/Hairline'
 import Button from '~/components/layout/Button'
+import Img from '~/components/layout/Img'
 import AddOwnerModal from './AddOwnerModal'
 import RemoveOwnerModal from './RemoveOwnerModal'
 import ReplaceOwnerModal from './ReplaceOwnerModal'
@@ -48,6 +49,15 @@ type Props = {
   createTransaction: Function,
 }
 
+type State = {
+  selectedOwnerAddress?: string,
+  selectedOwnerName?: string,
+  showAddOwner: boolean,
+  showRemoveOwner: boolean,
+  showReplaceOwner: boolean,
+  showEditOwner: boolean,
+}
+
 type Action = 'AddOwner' | 'EditOwner' | 'ReplaceOwner' | 'RemoveOwner'
 
 class ManageOwners extends React.Component<Props, State> {
@@ -78,14 +88,7 @@ class ManageOwners extends React.Component<Props, State> {
 
   render() {
     const {
-      classes,
-      safeAddress,
-      safeName,
-      owners,
-      threshold,
-      network,
-      userAddress,
-      createTransaction,
+      classes, safeAddress, safeName, owners, threshold, network, userAddress, createTransaction,
     } = this.props
     const {
       showAddOwner,
@@ -106,36 +109,33 @@ class ManageOwners extends React.Component<Props, State> {
           <Paragraph noMargin className={classes.title} size="lg" weight="bolder">
             Manage Safe Owners
           </Paragraph>
-          <Table
-            label="owners"
-            columns={columns}
-            data={ownerData}
-            size={ownerData.size}
-            defaultFixed
-            noBorder
-          >
+          <Table label="owners" columns={columns} data={ownerData} size={ownerData.size} defaultFixed noBorder>
             {(sortedData: Array<OwnerRow>) => sortedData.map((row: any, index: number) => (
               <TableRow tabIndex={-1} key={index} className={classes.hide}>
                 {autoColumns.map((column: Column) => (
                   <TableCell key={column.id} style={cellWidth(column.width)} align={column.align} component="td">
-                    {column.id === OWNERS_TABLE_ADDRESS_ID ? <OwnerAddressTableCell address={row[column.id]} /> : row[column.id]}
+                    {column.id === OWNERS_TABLE_ADDRESS_ID ? (
+                      <OwnerAddressTableCell address={row[column.id]} />
+                    ) : (
+                      row[column.id]
+                    )}
                   </TableCell>
                 ))}
                 <TableCell component="td">
                   <Row align="end" className={classes.actions}>
-                    <img
+                    <Img
                       alt="Edit owner"
                       className={classes.editOwnerIcon}
                       src={RenameOwnerIcon}
                       onClick={this.onShow('EditOwner', row)}
                     />
-                    <img
+                    <Img
                       alt="Replace owner"
                       className={classes.replaceOwnerIcon}
                       src={ReplaceOwnerIcon}
                       onClick={this.onShow('ReplaceOwner', row)}
                     />
-                    <img
+                    <Img
                       alt="Remove owner"
                       className={classes.removeOwnerIcon}
                       src={RemoveOwnerIcon}
@@ -144,7 +144,8 @@ class ManageOwners extends React.Component<Props, State> {
                   </Row>
                 </TableCell>
               </TableRow>
-            ))}
+            ))
+            }
           </Table>
         </Block>
         <Hairline />

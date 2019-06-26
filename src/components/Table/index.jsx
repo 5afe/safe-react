@@ -2,12 +2,12 @@
 import * as React from 'react'
 import classNames from 'classnames'
 import { List } from 'immutable'
-import Row from '~/components/layout/Row'
 import Table from '@material-ui/core/Table'
 import TableBody from '@material-ui/core/TableBody'
 import { withStyles } from '@material-ui/core/styles'
 import CircularProgress from '@material-ui/core/CircularProgress'
 import TablePagination from '@material-ui/core/TablePagination'
+import Row from '~/components/layout/Row'
 import { type Order, stableSort, getSorting } from '~/components/Table/sorting'
 import TableHead, { type Column } from '~/components/Table/TableHead'
 import { xl } from '~/theme/variables'
@@ -31,7 +31,6 @@ type State = {
   orderProp: boolean,
   rowsPerPage: number,
   fixed?: boolean,
-  noBorder: boolean,
 }
 
 const styles = {
@@ -134,13 +133,16 @@ class GnoTable<K> extends React.Component<Props<K>, State> {
     return (
       <React.Fragment>
         {!isEmpty && (
-          <Table aria-labelledby={label} className={!noBorder && classes.root}>
+          <Table aria-labelledby={label} className={noBorder ? '' : classes.root}>
             <TableHead columns={columns} order={order} orderBy={orderByParam} onSort={this.onSort} />
             <TableBody>{children(sortedData)}</TableBody>
           </Table>
         )}
         {isEmpty && (
-          <Row className={classNames(classes.loader, !noBorder && classes.root)} style={this.getEmptyStyle(emptyRows + 1)}>
+          <Row
+            className={classNames(classes.loader, !noBorder && classes.root)}
+            style={this.getEmptyStyle(emptyRows + 1)}
+          >
             <CircularProgress size={60} />
           </Row>
         )}
