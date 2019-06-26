@@ -23,8 +23,7 @@ import OpenPaper from '~/components/Stepper/OpenPaper'
 import { getAccountsFrom } from '~/routes/open/utils/safeDataExtractor'
 import Hairline from '~/components/layout/Hairline'
 import { md, lg, sm } from '~/theme/variables'
-
-const trash = require('../../assets/trash.svg')
+import trash from '~/assets/icons/trash.svg'
 
 type Props = {
   classes: Object,

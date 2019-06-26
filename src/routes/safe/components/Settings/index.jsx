@@ -9,7 +9,8 @@ import Row from '~/components/layout/Row'
 import RemoveSafeModal from './RemoveSafeModal'
 import Paragraph from '~/components/layout/Paragraph'
 import Hairline from '~/components/layout/Hairline'
-import type { Owner } from '~/routes/safe/store/models/owner'
+import { type Owner } from '~/routes/safe/store/models/owner'
+import ChangeSafeName from './ChangeSafeName'
 import ThresholdSettings from './ThresholdSettings'
 import { styles } from './style'
 
@@ -27,6 +28,7 @@ type Props = {
   owners: List<Owner>,
   threshold: number,
   createTransaction: Function,
+  updateSafe: Function,
 }
 
 type Action = 'RemoveSafe'
@@ -52,14 +54,24 @@ class Settings extends React.Component<Props, State> {
   render() {
     const { showRemoveSafe, menuOptionIndex } = this.state
     const {
-      classes, granted, etherScanLink, safeAddress, safeName, owners, threshold, createTransaction,
+      classes,
+      granted,
+      etherScanLink,
+      safeAddress,
+      safeName,
+      updateSafe,
+      owners,
+      threshold,
+      createTransaction,
     } = this.props
 
     return (
       <React.Fragment>
         <Row align="center" className={classes.message}>
           <Col xs={6}>
-            <Paragraph className={classes.settings}>Settings</Paragraph>
+            <Paragraph className={classes.settings} size="lg" weight="bolder">
+              Settings
+            </Paragraph>
           </Col>
           <Col xs={6} end="sm">
             <Paragraph noMargin size="md" color="error" className={classes.links} onClick={this.onShow('RemoveSafe')}>
@@ -113,7 +125,9 @@ class Settings extends React.Component<Props, State> {
           </Col>
           <Col xs={9} layout="column">
             <Block className={classes.container}>
-              {menuOptionIndex === 1 && <p>To be done</p>}
+              {menuOptionIndex === 1 && (
+                <ChangeSafeName safeAddress={safeAddress} safeName={safeName} updateSafe={updateSafe} />
+              )}
               {granted && menuOptionIndex === 2 && <p>To be done</p>}
               {granted && menuOptionIndex === 3 && (
                 <ThresholdSettings

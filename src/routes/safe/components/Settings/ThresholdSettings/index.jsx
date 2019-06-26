@@ -14,7 +14,6 @@ import ChangeThreshold from './ChangeThreshold'
 import type { Owner } from '~/routes/safe/store/models/owner'
 import { styles } from './style'
 import { getGnosisSafeInstanceAt } from '~/logic/contracts/safeContracts'
-import { ZERO_ADDRESS } from '~/logic/wallets/ethAddresses'
 
 type Props = {
   owners: List<Owner>,

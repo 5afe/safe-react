@@ -29,8 +29,9 @@ class SafeView extends React.Component<Props> {
 
   componentDidUpdate(prevProps) {
     const { activeTokens } = this.props
+    const oldActiveTokensSize = prevProps.activeTokens.size
 
-    if (activeTokens.size > prevProps.activeTokens.size) {
+    if (oldActiveTokensSize > 0 && activeTokens.size > oldActiveTokensSize) {
       this.checkForUpdates()
     }
   }
@@ -52,7 +53,15 @@ class SafeView extends React.Component<Props> {
 
   render() {
     const {
-      safe, provider, activeTokens, granted, userAddress, network, tokens, createTransaction,
+      safe,
+      provider,
+      activeTokens,
+      granted,
+      userAddress,
+      network,
+      tokens,
+      createTransaction,
+      updateSafe,
     } = this.props
 
     return (
@@ -66,6 +75,7 @@ class SafeView extends React.Component<Props> {
           network={network}
           granted={granted}
           createTransaction={createTransaction}
+          updateSafe={updateSafe}
         />
       </Page>
     )
