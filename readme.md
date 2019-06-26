@@ -43,13 +43,12 @@ git clone https://github.com/gnosis/safe-contracts.git
 cd safe-contracts
 yarn
 ganache-cli -l 7000000
-npx truffle compile
 npx truffle migrate
 ```
-2. Compiling Token Contracts for the tests:
+2. Migrate Token Contracts for the tests:
 Inside `safe-react` directory
 ```
-npx truffle compile
+npx truffle migrate
 ```
 3. Run the tests:
 ```

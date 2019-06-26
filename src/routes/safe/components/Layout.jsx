@@ -3,10 +3,10 @@ import * as React from 'react'
 import OpenInNew from '@material-ui/icons/OpenInNew'
 import Tabs from '@material-ui/core/Tabs'
 import Tab from '@material-ui/core/Tab'
+import { withStyles } from '@material-ui/core/styles'
 import Hairline from '~/components/layout/Hairline'
 import Block from '~/components/layout/Block'
 import Identicon from '~/components/Identicon'
-import { withStyles } from '@material-ui/core/styles'
 import Heading from '~/components/layout/Heading'
 import Row from '~/components/layout/Row'
 import Link from '~/components/layout/Link'
@@ -21,10 +21,14 @@ import { copyToClipboard } from '~/utils/clipboard'
 import Balances from './Balances'
 import Settings from './Settings'
 
+export const SETTINGS_TAB_BTN_TESTID = 'settings-tab-btn'
+export const SAFE_VIEW_NAME_HEADING_TESTID = 'safe-name-heading'
+
 type Props = SelectorProps & {
   classes: Object,
   granted: boolean,
   createTransaction: Function,
+  updateSafe: Function,
 }
 
 type State = {
@@ -90,7 +94,16 @@ class Layout extends React.Component<Props, State> {
 
   render() {
     const {
-      safe, provider, network, classes, granted, tokens, activeTokens, createTransaction, userAddress, updateSafeName,
+      safe,
+      provider,
+      network,
+      classes,
+      granted,
+      tokens,
+      activeTokens,
+      createTransaction,
+      updateSafe,
+      userAddress,
     } = this.props
     const { tabIndex } = this.state
 
@@ -107,7 +120,7 @@ class Layout extends React.Component<Props, State> {
           <Identicon address={address} diameter={50} />
           <Block className={classes.name}>
             <Row>
-              <Heading tag="h2" color="secondary">
+              <Heading tag="h2" color="secondary" testId={SAFE_VIEW_NAME_HEADING_TESTID}>
                 {name}
               </Heading>
               {!granted && <Block className={classes.readonly}>Read Only</Block>}
@@ -126,7 +139,7 @@ class Layout extends React.Component<Props, State> {
           <Tabs value={tabIndex} onChange={this.handleChange} indicatorColor="secondary" textColor="secondary">
             <Tab label="Balances" />
             <Tab label="Transactions" />
-            <Tab label="Settings" />
+            <Tab label="Settings" data-testid={SETTINGS_TAB_BTN_TESTID} />
           </Tabs>
         </Row>
         <Hairline color="#c8ced4" />
@@ -148,12 +161,12 @@ class Layout extends React.Component<Props, State> {
             safeAddress={address}
             safeName={name}
             etherScanLink={etherScanLink}
+            updateSafe={updateSafe}
             threshold={safe.threshold}
             owners={safe.owners}
             network={network}
             userAddress={userAddress}
             createTransaction={createTransaction}
-            updateSafeName={updateSafeName}
           />
         )}
       </React.Fragment>

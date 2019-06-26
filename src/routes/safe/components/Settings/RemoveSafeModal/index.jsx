@@ -2,12 +2,12 @@
 import React from 'react'
 import classNames from 'classnames'
 import { connect } from 'react-redux'
-import { history } from '~/store'
-import { SAFELIST_ADDRESS } from '~/routes/routes'
 import { withStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
 import IconButton from '@material-ui/core/IconButton'
 import OpenInNew from '@material-ui/icons/OpenInNew'
+import { SAFELIST_ADDRESS } from '~/routes/routes'
+import { history } from '~/store'
 import Block from '~/components/layout/Block'
 import Modal from '~/components/Modal'
 import Identicon from '~/components/Identicon'
@@ -18,7 +18,7 @@ import Link from '~/components/layout/Link'
 import Paragraph from '~/components/layout/Paragraph'
 import Hairline from '~/components/layout/Hairline'
 import actions, { type Actions } from './actions'
-import { lg, md, secondary } from '~/theme/variables'
+import { secondary } from '~/theme/variables'
 import { styles } from './style'
 
 const openIconStyle = {
@@ -36,23 +36,12 @@ type Props = Actions & {
 }
 
 const RemoveSafeComponent = ({
-  onClose,
-  isOpen,
-  classes,
-  safeAddress,
-  etherScanLink,
-  safeName,
-  removeSafe,
+  onClose, isOpen, classes, safeAddress, etherScanLink, safeName, removeSafe,
 }: Props) => (
-  <Modal
-    title="Remove Safe"
-    description="Remove the selected Safe"
-    handleClose={onClose}
-    open={isOpen}
-  >
+  <Modal title="Remove Safe" description="Remove the selected Safe" handleClose={onClose} open={isOpen}>
     <Row align="center" grow className={classes.heading}>
       <Paragraph className={classes.manage} noMargin weight="bolder">
-          Remove Safe
+        Remove Safe
       </Paragraph>
       <IconButton onClick={onClose} disableRipple>
         <Close className={classes.close} />
@@ -83,17 +72,16 @@ const RemoveSafeComponent = ({
       <Hairline />
       <Row className={classes.description}>
         <Paragraph noMargin>
-            Removing a Safe only removes it from your interface.
+          Removing a Safe only removes it from your interface.
           <b>It does not delete the Safe</b>
-.
-            You can always add it back using the Safe's address.
+. You can always add it back using the Safe&apos;s address.
         </Paragraph>
       </Row>
     </Block>
     <Hairline />
     <Row align="center" className={classes.buttonRow}>
       <Button className={classes.button} minWidth={140} onClick={onClose}>
-          Cancel
+        Cancel
       </Button>
       <Button
         type="submit"
@@ -106,7 +94,7 @@ const RemoveSafeComponent = ({
         variant="contained"
         minWidth={140}
       >
-          Remove
+        Remove
       </Button>
     </Row>
   </Modal>

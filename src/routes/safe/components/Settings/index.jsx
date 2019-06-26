@@ -10,9 +10,9 @@ import Row from '~/components/layout/Row'
 import RemoveSafeModal from './RemoveSafeModal'
 import Paragraph from '~/components/layout/Paragraph'
 import Hairline from '~/components/layout/Hairline'
-import type { Owner } from '~/routes/safe/store/models/owner'
+import { type Owner } from '~/routes/safe/store/models/owner'
+import ChangeSafeName from './ChangeSafeName'
 import ThresholdSettings from './ThresholdSettings'
-import UpdateSafeName from './UpdateSafeName'
 import ManageOwners from './ManageOwners'
 import actions, { type Actions } from './actions'
 import { styles } from './style'
@@ -33,7 +33,8 @@ type Props = Actions & {
   threshold: number,
   network: string,
   createTransaction: Function,
-  updateSafeName: Function,
+  updateSafe: Function,
+  userAddress: string,
 }
 
 type Action = 'RemoveSafe'
@@ -69,7 +70,7 @@ class Settings extends React.Component<Props, State> {
       network,
       userAddress,
       createTransaction,
-      updateSafeName,
+      updateSafe,
     } = this.props
 
     return (
@@ -85,7 +86,7 @@ class Settings extends React.Component<Props, State> {
               <Paragraph noMargin className={cn(classes.links, classes.removeSafeText)}>
                 Remove Safe
               </Paragraph>
-              <img className={classes.removeSafeIcon} src={RemoveSafeIcon} />
+              <img alt="Trash Icon" className={classes.removeSafeIcon} src={RemoveSafeIcon} />
             </Paragraph>
             <RemoveSafeModal
               onClose={this.onHide('RemoveSafe')}
@@ -112,7 +113,9 @@ class Settings extends React.Component<Props, State> {
                     className={cn(classes.menuOption, menuOptionIndex === 2 && classes.active)}
                     onClick={this.handleChange(2)}
                   >
-                    Owners ({owners.size})
+                    Owners (
+                    {owners.size}
+)
                   </Row>
                   <Hairline />
                   <Row
@@ -129,11 +132,7 @@ class Settings extends React.Component<Props, State> {
           <Col xs={9} layout="column">
             <Block className={classes.container}>
               {menuOptionIndex === 1 && (
-                <UpdateSafeName
-                  safeAddress={safeAddress}
-                  safeName={safeName}
-                  updateSafeName={updateSafeName}
-                />
+                <ChangeSafeName safeAddress={safeAddress} safeName={safeName} updateSafe={updateSafe} />
               )}
               {granted && menuOptionIndex === 2 && (
                 <ManageOwners

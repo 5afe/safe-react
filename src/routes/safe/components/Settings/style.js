@@ -1,9 +1,9 @@
 // @flow
 import {
-  sm, md, lg, border, secondary, bolderFont,
+  sm, lg, border, secondary, bolderFont,
 } from '~/theme/variables'
 
-export const styles = (theme: Object) => ({
+export const styles = () => ({
   root: {
     backgroundColor: 'white',
     boxShadow: '0 -1px 4px 0 rgba(74, 85, 121, 0.5)',

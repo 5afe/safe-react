@@ -61,6 +61,10 @@ describe('DOM > Feature > LOAD a safe', () => {
     fireEvent.submit(form)
     await sleep(400)
 
+    // submit form with owners names
+    fireEvent.submit(form)
+    await sleep(400)
+
     // Submit
     fireEvent.submit(form)
     const deployedAddress = await whenSafeDeployed()
