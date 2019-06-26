@@ -24,6 +24,9 @@ const saveButtonStyle = {
   fontWeight: boldFont,
 }
 
+export const SAFE_NAME_INPUT_TESTID = 'safe-name-input'
+export const SAFE_NAME_SUBMIT_BTN_TESTID = 'change-safe-name-btn'
+
 type Props = {
   classes: Object,
   safeAddress: string,
@@ -49,6 +52,10 @@ const ChangeSafeName = (props: Props) => {
               <Paragraph noMargin className={classes.title} size="lg" weight="bolder">
                 Modify Safe name
               </Paragraph>
+              <Paragraph size="sm">
+                You can change the name of this Safe. This name is only stored locally and never shared with Gnosis or
+                any third parties.
+              </Paragraph>
               <Block className={classes.root}>
                 <Field
                   name="safeName"
@@ -58,13 +65,21 @@ const ChangeSafeName = (props: Props) => {
                   placeholder="Safe name*"
                   text="Safe name*"
                   defaultValue={safeName}
+                  testId={SAFE_NAME_INPUT_TESTID}
                 />
               </Block>
             </Block>
             <Hairline />
             <Row style={controlsStyle} align="end" grow>
               <Col end="xs">
-                <Button type="submit" style={saveButtonStyle} size="small" variant="contained" color="primary">
+                <Button
+                  type="submit"
+                  style={saveButtonStyle}
+                  size="small"
+                  variant="contained"
+                  color="primary"
+                  testId={SAFE_NAME_SUBMIT_BTN_TESTID}
+                >
                   SAVE
                 </Button>
               </Col>
