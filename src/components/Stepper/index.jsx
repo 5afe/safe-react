@@ -57,7 +57,7 @@ class GnoStepper extends React.PureComponent<Props, State> {
 
     this.state = {
       page: 0,
-      values: {},
+      values: props.initialValues || {},
     }
   }
 
@@ -146,7 +146,7 @@ class GnoStepper extends React.PureComponent<Props, State> {
 
   render() {
     const {
-      steps, children, classes, disabledWhenValidating = false, testId, initialValues,
+      steps, children, classes, disabledWhenValidating = false, testId,
     } = this.props
     const { page, values } = this.state
     const activePage = this.getActivePageFrom(children)
@@ -155,7 +155,7 @@ class GnoStepper extends React.PureComponent<Props, State> {
 
     return (
       <React.Fragment>
-        <GnoForm onSubmit={this.handleSubmit} initialValues={values || initialValues} validation={this.validate} testId={testId}>
+        <GnoForm onSubmit={this.handleSubmit} initialValues={values} validation={this.validate} testId={testId}>
           {(submitting: boolean, validating: boolean, ...rest: any) => {
             const disabled = disabledWhenValidating ? submitting || validating : submitting
             const controls = (
