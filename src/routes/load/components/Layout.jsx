@@ -1,11 +1,11 @@
 // @flow
 import * as React from 'react'
 import ChevronLeft from '@material-ui/icons/ChevronLeft'
+import IconButton from '@material-ui/core/IconButton'
 import Stepper from '~/components/Stepper'
 import Block from '~/components/layout/Block'
 import Heading from '~/components/layout/Heading'
 import Row from '~/components/layout/Row'
-import IconButton from '@material-ui/core/IconButton'
 import ReviewInformation from '~/routes/load/components/ReviewInformation'
 import OwnerList from '~/routes/load/components/OwnerList'
 import DetailsForm, { safeFieldsValidation } from '~/routes/load/components/DetailsForm'

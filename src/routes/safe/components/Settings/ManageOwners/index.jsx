@@ -203,6 +203,7 @@ class ManageOwners extends React.Component<Props, State> {
           isOpen={showEditOwner}
           safeAddress={safeAddress}
           ownerAddress={selectedOwnerAddress}
+          selectedOwnerName={selectedOwnerName}
           owners={owners}
           network={network}
         />

@@ -1,11 +1,11 @@
 // @flow
 import React from 'react'
-import { connect } from 'react-redux'
 import { List } from 'immutable'
 import { withStyles } from '@material-ui/core/styles'
+import Close from '@material-ui/icons/Close'
 import OpenInNew from '@material-ui/icons/OpenInNew'
+import IconButton from '@material-ui/core/IconButton'
 import Row from '~/components/layout/Row'
-import Col from '~/components/layout/Col'
 import Link from '~/components/layout/Link'
 import Block from '~/components/layout/Block'
 import GnoForm from '~/components/forms/GnoForm'
@@ -15,8 +15,6 @@ import Field from '~/components/forms/Field'
 import TextField from '~/components/forms/TextField'
 import Paragraph from '~/components/layout/Paragraph'
 import Identicon from '~/components/Identicon'
-import IconButton from '@material-ui/core/IconButton'
-import Close from '@material-ui/icons/Close'
 import { getEtherScanLink } from '~/logic/wallets/getWeb3'
 import type { Owner } from '~/routes/safe/store/models/owner'
 import { makeOwner } from '~/routes/safe/store/models/owner'
@@ -50,6 +48,7 @@ type Props = {
   ownerAddress: string,
   owners: List<Owner>,
   network: string,
+  selectedOwnerName: string,
 }
 
 const EditOwnerComponent = ({
@@ -58,6 +57,7 @@ const EditOwnerComponent = ({
   classes,
   safeAddress,
   ownerAddress,
+  selectedOwnerName,
   owners,
   network,
 }: Props) => {
@@ -87,7 +87,7 @@ const EditOwnerComponent = ({
       </Row>
       <Hairline />
       <GnoForm onSubmit={handleSubmit}>
-        {(...args) => (
+        {() => (
           <React.Fragment>
             <Block className={classes.container}>
               <Row margin="md">
@@ -98,6 +98,7 @@ const EditOwnerComponent = ({
                   validate={composeValidators(required, minMaxLength(1, 50))}
                   placeholder="Owner name*"
                   text="Owner name*"
+                  initialValue={selectedOwnerName}
                   className={classes.addressInput}
                 />
               </Row>
