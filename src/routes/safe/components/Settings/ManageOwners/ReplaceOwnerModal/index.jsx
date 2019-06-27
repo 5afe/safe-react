@@ -5,7 +5,6 @@ import { withStyles } from '@material-ui/core/styles'
 import { SharedSnackbarConsumer } from '~/components/SharedSnackBar'
 import Modal from '~/components/Modal'
 import { type Owner, makeOwner } from '~/routes/safe/store/models/owner'
-import { setOwners } from '~/logic/safe/utils'
 import { getGnosisSafeInstanceAt } from '~/logic/contracts/safeContracts'
 import OwnerForm from './screens/OwnerForm'
 import ReviewReplaceOwner from './screens/Review'
@@ -30,6 +29,7 @@ type Props = {
   network: string,
   threshold: string,
   createTransaction: Function,
+  updateSafe: Function
 }
 type ActiveScreen = 'checkOwner' | 'reviewReplaceOwner'
 
@@ -43,6 +43,7 @@ export const sendReplaceOwner = async (
   owners: List<Owner>,
   openSnackbar: Function,
   createTransaction: Function,
+  updateSafe: Function,
 ) => {
   const gnosisSafe = await getGnosisSafeInstanceAt(safeAddress)
   const storedOwners = await gnosisSafe.getOwners()
@@ -53,14 +54,13 @@ export const sendReplaceOwner = async (
     .encodeABI()
   // const text = `Replace Owner ${ownerNameToRemove} (${ownerAddressToRemove}) with ${values.ownerName} (${values.ownerAddress})`
 
-  const ownersWithoutOldOwner = owners.filter(o => o.address !== ownerAddressToRemove)
-  const ownersWithNewOwner = ownersWithoutOldOwner.push(
-    makeOwner({ name: values.ownerName, address: values.ownerAddress }),
-  )
+  const ownerToRemoveIndex = owners.findIndex(o => o.address === ownerAddressToRemove)
+  const newOwner = makeOwner({ name: values.ownerName, address: values.ownerAddress })
 
   const txHash = createTransaction(safeAddress, safeAddress, 0, txData, openSnackbar)
+
   if (txHash) {
-    setOwners(safeAddress, ownersWithNewOwner)
+    updateSafe({ address: safeAddress, owners: owners.set(ownerToRemoveIndex, newOwner) })
   }
 }
 
@@ -76,6 +76,7 @@ const ReplaceOwner = ({
   network,
   threshold,
   createTransaction,
+  updateSafe,
 }: Props) => {
   const [activeScreen, setActiveScreen] = useState<ActiveScreen>('checkOwner')
   const [values, setValues] = useState<Object>({})
@@ -104,7 +105,16 @@ const ReplaceOwner = ({
           const onReplaceOwner = () => {
             onClose()
             try {
-              sendReplaceOwner(values, safeAddress, ownerAddress, ownerName, owners, openSnackbar, createTransaction)
+              sendReplaceOwner(
+                values,
+                safeAddress,
+                ownerAddress,
+                ownerName,
+                owners,
+                openSnackbar,
+                createTransaction,
+                updateSafe,
+              )
             } catch (error) {
               // eslint-disable-next-line
               console.log('Error while removing an owner ' + error)

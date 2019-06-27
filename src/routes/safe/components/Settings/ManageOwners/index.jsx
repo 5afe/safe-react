@@ -207,6 +207,7 @@ class ManageOwners extends React.Component<Props, State> {
           threshold={threshold}
           userAddress={userAddress}
           createTransaction={createTransaction}
+          updateSafe={updateSafe}
         />
         <EditOwnerModal
           onClose={this.onHide('EditOwner')}
