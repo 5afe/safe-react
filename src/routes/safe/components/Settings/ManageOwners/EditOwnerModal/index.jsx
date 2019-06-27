@@ -17,14 +17,8 @@ import Paragraph from '~/components/layout/Paragraph'
 import Identicon from '~/components/Identicon'
 import { getEtherScanLink } from '~/logic/wallets/getWeb3'
 import type { Owner } from '~/routes/safe/store/models/owner'
-import { makeOwner } from '~/routes/safe/store/models/owner'
-import {
-  composeValidators,
-  required,
-  minMaxLength,
-} from '~/components/forms/validator'
+import { composeValidators, required, minMaxLength } from '~/components/forms/validator'
 import Modal from '~/components/Modal'
-import { setOwners } from '~/logic/safe/utils'
 import { styles } from './style'
 import { secondary } from '~/theme/variables'
 
@@ -49,6 +43,7 @@ type Props = {
   owners: List<Owner>,
   network: string,
   selectedOwnerName: string,
+  updateSafe: Function,
 }
 
 const EditOwnerComponent = ({
@@ -58,14 +53,15 @@ const EditOwnerComponent = ({
   safeAddress,
   ownerAddress,
   selectedOwnerName,
+  updateSafe,
   owners,
   network,
 }: Props) => {
   const handleSubmit = (values) => {
-    const updatedOwners = owners.filter(o => o.address !== ownerAddress).push(
-      makeOwner({ name: values.ownerName, address: ownerAddress }),
-    )
-    setOwners(safeAddress, updatedOwners)
+    const ownerToUpdateIndex = owners.findIndex(o => o.address === ownerAddress)
+    const updatedOwners = owners.update(ownerToUpdateIndex, owner => owner.set('name', values.ownerName))
+
+    updateSafe({ address: safeAddress, owners: updatedOwners })
     onClose()
   }
 
@@ -79,7 +75,7 @@ const EditOwnerComponent = ({
     >
       <Row align="center" grow className={classes.heading}>
         <Paragraph className={classes.manage} noMargin weight="bolder">
-            Edit owner name
+          Edit owner name
         </Paragraph>
         <IconButton onClick={onClose} disableRipple>
           <Close className={classes.close} />
@@ -117,16 +113,10 @@ const EditOwnerComponent = ({
             <Hairline />
             <Row align="center" className={classes.buttonRow}>
               <Button className={classes.button} minWidth={140} onClick={onClose}>
-                  Cancel
+                Cancel
               </Button>
-              <Button
-                type="submit"
-                className={classes.button}
-                variant="contained"
-                minWidth={140}
-                color="primary"
-              >
-                  Save
+              <Button type="submit" className={classes.button} variant="contained" minWidth={140} color="primary">
+                Save
               </Button>
             </Row>
           </React.Fragment>

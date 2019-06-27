@@ -145,6 +145,7 @@ class Settings extends React.Component<Props, State> {
                   network={network}
                   createTransaction={createTransaction}
                   userAddress={userAddress}
+                  updateSafe={updateSafe}
                 />
               )}
               {granted && menuOptionIndex === 3 && (

@@ -47,6 +47,7 @@ type Props = {
   threshold: number,
   userAddress: string,
   createTransaction: Function,
+  updateSafe: Function,
 }
 
 type State = {
@@ -88,7 +89,15 @@ class ManageOwners extends React.Component<Props, State> {
 
   render() {
     const {
-      classes, safeAddress, safeName, owners, threshold, network, userAddress, createTransaction,
+      classes,
+      safeAddress,
+      safeName,
+      owners,
+      threshold,
+      network,
+      userAddress,
+      createTransaction,
+      updateSafe,
     } = this.props
     const {
       showAddOwner,
@@ -206,6 +215,7 @@ class ManageOwners extends React.Component<Props, State> {
           selectedOwnerName={selectedOwnerName}
           owners={owners}
           network={network}
+          updateSafe={updateSafe}
         />
       </React.Fragment>
     )

@@ -1,8 +1,8 @@
 // @flow
+import type { Store, AnyAction } from 'redux'
 import { ADD_SAFE } from '~/routes/safe/store/actions/addSafe'
 import { UPDATE_SAFE } from '~/routes/safe/store/actions/updateSafe'
 import { REMOVE_SAFE } from '~/routes/safe/store/actions/removeSafe'
-import type { Store, AnyAction } from 'redux'
 import { type GlobalState } from '~/store/'
 import { saveSafes, setOwners, removeOwners } from '~/logic/safe/utils'
 import { safesMapSelector } from '~/routes/safeList/store/selectors'
@@ -41,6 +41,12 @@ const safeStorageMware = (store: Store<GlobalState>) => (next: Function) => asyn
     if (action.type === ADD_SAFE) {
       const { safe } = action.payload
       setOwners(safe.address, safe.owners)
+    } else if (action.type === UPDATE_SAFE) {
+      const { address, owners } = action.payload
+
+      if (address && owners) {
+        setOwners(address, owners)
+      }
     } else if (action.type === REMOVE_SAFE) {
       const safeAddress = action.payload
       removeOwners(safeAddress)
