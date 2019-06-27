@@ -10,13 +10,10 @@ import Identicon from '~/components/Identicon'
 import Link from '~/components/layout/Link'
 import Paragraph from '~/components/layout/Paragraph'
 import Row from '~/components/layout/Row'
-import GnoForm from '~/components/forms/GnoForm'
 import Col from '~/components/layout/Col'
 import Button from '~/components/layout/Button'
 import Block from '~/components/layout/Block'
 import Hairline from '~/components/layout/Hairline'
-import Field from '~/components/forms/Field'
-import TextField from '~/components/forms/TextField'
 import type { Owner } from '~/routes/safe/store/models/owner'
 import { getEtherScanLink } from '~/logic/wallets/getWeb3'
 import { secondary } from '~/theme/variables'
@@ -38,6 +35,7 @@ type Props = {
   ownerName: string,
   onClickBack: Function,
   onSubmit: Function,
+  threshold: string,
 }
 
 const ReviewRemoveOwner = ({
@@ -50,6 +48,7 @@ const ReviewRemoveOwner = ({
   ownerAddress,
   ownerName,
   onClickBack,
+  threshold,
   onSubmit,
 }: Props) => {
   const handleSubmit = () => {
@@ -90,7 +89,13 @@ const ReviewRemoveOwner = ({
                   Any transaction requires the confirmation of:
                 </Paragraph>
                 <Paragraph size="lg" color="primary" noMargin weight="bolder" className={classes.name}>
-                  {values.threshold} out of {owners.size} owner(s)
+                  {threshold}
+                  {' '}
+                  out of
+                  {' '}
+                  {owners.size}
+                  {' '}
+                  owner(s)
                 </Paragraph>
               </Block>
             </Block>
@@ -98,35 +103,43 @@ const ReviewRemoveOwner = ({
           <Col xs={8} layout="column" className={classes.owners}>
             <Row className={classes.ownersTitle}>
               <Paragraph size="lg" color="primary" noMargin>
-                {owners.size} Safe owner(s)
+                {owners.size}
+                {' '}
+                Safe owner(s)
               </Paragraph>
             </Row>
             <Hairline />
-            {owners.map(owner => owner.get('address') != ownerAddress && (
-              <React.Fragment key={owner.get('address')}>
-                <Row className={classes.owner}>
-                  <Col xs={1} align="center">
-                    <Identicon address={owner.get('address')} diameter={32} />
-                  </Col>
-                  <Col xs={11}>
-                    <Block className={classNames(classes.name, classes.userName)}>
-                      <Paragraph weight="bolder" size="lg" noMargin>
-                        {owner.get('name')}
-                      </Paragraph>
-                      <Block align="center" className={classes.user}>
-                        <Paragraph size="md" color="disabled" noMargin>
-                          {owner.get('address')}
+            {owners.map(
+              owner => owner.address !== ownerAddress && (
+                <React.Fragment key={owner.get('address')}>
+                  <Row className={classes.owner}>
+                    <Col xs={1} align="center">
+                      <Identicon address={owner.get('address')} diameter={32} />
+                    </Col>
+                    <Col xs={11}>
+                      <Block className={classNames(classes.name, classes.userName)}>
+                        <Paragraph weight="bolder" size="lg" noMargin>
+                          {owner.get('name')}
                         </Paragraph>
-                        <Link className={classes.open} to={getEtherScanLink(owner.get('address'), network)} target="_blank">
-                          <OpenInNew style={openIconStyle} />
-                        </Link>
+                        <Block align="center" className={classes.user}>
+                          <Paragraph size="md" color="disabled" noMargin>
+                            {owner.get('address')}
+                          </Paragraph>
+                          <Link
+                            className={classes.open}
+                            to={getEtherScanLink(owner.get('address'), network)}
+                            target="_blank"
+                          >
+                            <OpenInNew style={openIconStyle} />
+                          </Link>
+                        </Block>
                       </Block>
-                    </Block>
-                  </Col>
-                </Row>
-                <Hairline />
-              </React.Fragment>
-            ))}
+                    </Col>
+                  </Row>
+                  <Hairline />
+                </React.Fragment>
+              ),
+            )}
             <Row className={classes.info} align="center">
               <Paragraph weight="bolder" noMargin color="primary" size="md">
                 REMOVING OWNER &darr;

@@ -204,6 +204,7 @@ class ManageOwners extends React.Component<Props, State> {
           ownerName={selectedOwnerName}
           owners={owners}
           network={network}
+          threshold={threshold}
           userAddress={userAddress}
           createTransaction={createTransaction}
         />

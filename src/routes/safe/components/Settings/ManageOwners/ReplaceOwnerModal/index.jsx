@@ -1,15 +1,14 @@
 // @flow
 import React, { useState, useEffect } from 'react'
 import { List } from 'immutable'
+import { withStyles } from '@material-ui/core/styles'
 import { SharedSnackbarConsumer } from '~/components/SharedSnackBar'
 import Modal from '~/components/Modal'
-import { type Safe } from '~/routes/safe/store/models/safe'
 import { type Owner, makeOwner } from '~/routes/safe/store/models/owner'
 import { setOwners } from '~/logic/safe/utils'
 import { getGnosisSafeInstanceAt } from '~/logic/contracts/safeContracts'
 import OwnerForm from './screens/OwnerForm'
 import ReviewReplaceOwner from './screens/Review'
-import { withStyles } from '@material-ui/core/styles'
 
 const styles = () => ({
   biggerModalWindow: {
@@ -29,10 +28,10 @@ type Props = {
   ownerName: string,
   owners: List<Owner>,
   network: string,
-  userAddress: string,
+  threshold: string,
   createTransaction: Function,
 }
-type ActiveScreen = 'ownerForm' | 'reviewReplaceOwner'
+type ActiveScreen = 'checkOwner' | 'reviewReplaceOwner'
 
 const SENTINEL_ADDRESS = '0x0000000000000000000000000000000000000001'
 
@@ -49,11 +48,15 @@ export const sendReplaceOwner = async (
   const storedOwners = await gnosisSafe.getOwners()
   const index = storedOwners.findIndex(ownerAddress => ownerAddress === ownerAddressToRemove)
   const prevAddress = index === 0 ? SENTINEL_ADDRESS : storedOwners[index - 1]
-  const txData = gnosisSafe.contract.methods.swapOwner(prevAddress, ownerAddressToRemove, values.ownerAddress).encodeABI()
-  const text = `Replace Owner ${ownerNameToRemove} (${ownerAddressToRemove}) with ${values.ownerName} (${values.ownerAddress})`
+  const txData = gnosisSafe.contract.methods
+    .swapOwner(prevAddress, ownerAddressToRemove, values.ownerAddress)
+    .encodeABI()
+  // const text = `Replace Owner ${ownerNameToRemove} (${ownerAddressToRemove}) with ${values.ownerName} (${values.ownerAddress})`
 
   const ownersWithoutOldOwner = owners.filter(o => o.address !== ownerAddressToRemove)
-  const ownersWithNewOwner = ownersWithoutOldOwner.push(makeOwner({ name: values.ownerName, address: values.ownerAddress }))
+  const ownersWithNewOwner = ownersWithoutOldOwner.push(
+    makeOwner({ name: values.ownerName, address: values.ownerAddress }),
+  )
 
   const txHash = createTransaction(safeAddress, safeAddress, 0, txData, openSnackbar)
   if (txHash) {
@@ -71,7 +74,7 @@ const ReplaceOwner = ({
   ownerName,
   owners,
   network,
-  userAddress,
+  threshold,
   createTransaction,
 }: Props) => {
   const [activeScreen, setActiveScreen] = useState<ActiveScreen>('checkOwner')
@@ -137,6 +140,7 @@ const ReplaceOwner = ({
                     ownerName={ownerName}
                     onClickBack={onClickBack}
                     onSubmit={onReplaceOwner}
+                    threshold={threshold}
                   />
                 )}
               </React.Fragment>
