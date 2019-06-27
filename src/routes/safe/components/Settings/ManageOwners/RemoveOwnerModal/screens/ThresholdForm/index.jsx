@@ -3,9 +3,9 @@ import React from 'react'
 import { List } from 'immutable'
 import { withStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
+import MenuItem from '@material-ui/core/MenuItem'
 import IconButton from '@material-ui/core/IconButton'
 import SelectField from '~/components/forms/SelectField'
-import MenuItem from '@material-ui/core/MenuItem'
 import Paragraph from '~/components/layout/Paragraph'
 import Row from '~/components/layout/Row'
 import GnoForm from '~/components/forms/GnoForm'
@@ -14,14 +14,9 @@ import Button from '~/components/layout/Button'
 import Block from '~/components/layout/Block'
 import Hairline from '~/components/layout/Hairline'
 import Field from '~/components/forms/Field'
-import TextField from '~/components/forms/TextField'
 import type { Owner } from '~/routes/safe/store/models/owner'
 import {
-  composeValidators,
-  required,
-  minValue,
-  maxValue,
-  mustBeInteger,
+  composeValidators, required, minValue, maxValue, mustBeInteger,
 } from '~/components/forms/validator'
 import { styles } from './style'
 
@@ -35,12 +30,7 @@ type Props = {
 }
 
 const ThresholdForm = ({
-  classes,
-  onClose,
-  owners,
-  threshold,
-  onClickBack,
-  onSubmit,
+  classes, onClose, owners, threshold, onClickBack, onSubmit,
 }: Props) => {
   const handleSubmit = (values) => {
     onSubmit(values)
@@ -59,9 +49,8 @@ const ThresholdForm = ({
         </IconButton>
       </Row>
       <Hairline />
-      <GnoForm onSubmit={handleSubmit} initialValues={{threshold: defaultThreshold.toString()}}>
-        {(...args) => {
-          const formState = args[2]
+      <GnoForm onSubmit={handleSubmit} initialValues={{ threshold: defaultThreshold.toString() }}>
+        {() => {
           const numOptions = owners.size > 1 ? owners.size - 1 : 1
 
           return (
@@ -80,7 +69,7 @@ const ThresholdForm = ({
                 <Row margin="xl" align="center" className={classes.inputRow}>
                   <Col xs={2}>
                     <Field
-                      name={"threshold"}
+                      name="threshold"
                       render={props => (
                         <React.Fragment>
                           <SelectField {...props} disableError>
@@ -107,7 +96,7 @@ const ThresholdForm = ({
                       {' '}
                       {owners.size - 1}
                       {' '}
-                      owner(s)
+owner(s)
                     </Paragraph>
                   </Col>
                 </Row>
