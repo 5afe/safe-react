@@ -4,16 +4,15 @@ import classNames from 'classnames/bind'
 import { withStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
 import IconButton from '@material-ui/core/IconButton'
+import OpenInNew from '@material-ui/icons/OpenInNew'
 import Paragraph from '~/components/layout/Paragraph'
 import Row from '~/components/layout/Row'
-import GnoForm from '~/components/forms/GnoForm'
 import Col from '~/components/layout/Col'
 import Button from '~/components/layout/Button'
 import Block from '~/components/layout/Block'
 import Hairline from '~/components/layout/Hairline'
 import Link from '~/components/layout/Link'
 import Identicon from '~/components/Identicon'
-import OpenInNew from '@material-ui/icons/OpenInNew'
 import { getEtherScanLink } from '~/logic/wallets/getWeb3'
 import { styles } from './style'
 import { secondary } from '~/theme/variables'
@@ -94,7 +93,7 @@ const CheckOwner = ({
           variant="contained"
           minWidth={140}
           color="primary"
-          data-testid="review-tx-btn"
+          onClick={handleSubmit}
         >
           Next
         </Button>

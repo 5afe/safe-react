@@ -16,9 +16,6 @@ export const styles = () => ({
     '&:hover $actions': {
       visibility: 'initial',
     },
-    '&:focus $actions': {
-      visibility: 'initial',
-    },
   },
   actions: {
     justifyContent: 'flex-end',

@@ -1,16 +1,15 @@
 // @flow
 import React, { useState, useEffect } from 'react'
 import { List } from 'immutable'
+import { withStyles } from '@material-ui/core/styles'
 import { SharedSnackbarConsumer } from '~/components/SharedSnackBar'
 import Modal from '~/components/Modal'
-import { type Safe } from '~/routes/safe/store/models/safe'
 import { type Owner } from '~/routes/safe/store/models/owner'
 import { setOwners } from '~/logic/safe/utils'
 import { getGnosisSafeInstanceAt } from '~/logic/contracts/safeContracts'
 import CheckOwner from './screens/CheckOwner'
 import ThresholdForm from './screens/ThresholdForm'
 import ReviewRemoveOwner from './screens/Review'
-import { withStyles } from '@material-ui/core/styles'
 
 const styles = () => ({
   biggerModalWindow: {
@@ -31,7 +30,6 @@ type Props = {
   owners: List<Owner>,
   threshold: number,
   network: string,
-  userAddress: string,
   createTransaction: Function,
 }
 type ActiveScreen = 'checkOwner' | 'selectThreshold' | 'reviewRemoveOwner'
@@ -51,8 +49,10 @@ export const sendRemoveOwner = async (
   const storedOwners = await gnosisSafe.getOwners()
   const index = storedOwners.findIndex(ownerAddress => ownerAddress === ownerAddressToRemove)
   const prevAddress = index === 0 ? SENTINEL_ADDRESS : storedOwners[index - 1]
-  const txData = gnosisSafe.contract.methods.removeOwner(prevAddress, ownerAddressToRemove, values.threshold).encodeABI()
-  const text = `Remove Owner ${ownerNameToRemove} (${ownerAddressToRemove})`
+  const txData = gnosisSafe.contract.methods
+    .removeOwner(prevAddress, ownerAddressToRemove, values.threshold)
+    .encodeABI()
+  // const text = `Remove Owner ${ownerNameToRemove} (${ownerAddressToRemove})`
 
   const txHash = createTransaction(safeAddress, safeAddress, 0, txData, openSnackbar)
   if (txHash) {
@@ -71,7 +71,6 @@ const RemoveOwner = ({
   owners,
   threshold,
   network,
-  userAddress,
   createTransaction,
 }: Props) => {
   const [activeScreen, setActiveScreen] = useState<ActiveScreen>('checkOwner')
@@ -93,7 +92,7 @@ const RemoveOwner = ({
     }
   }
 
-  const ownerSubmitted = (newValues: Object) => {
+  const ownerSubmitted = () => {
     setActiveScreen('selectThreshold')
   }
 
