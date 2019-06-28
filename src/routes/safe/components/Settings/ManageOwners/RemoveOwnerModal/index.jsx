@@ -5,7 +5,6 @@ import { withStyles } from '@material-ui/core/styles'
 import { SharedSnackbarConsumer } from '~/components/SharedSnackBar'
 import Modal from '~/components/Modal'
 import { type Owner } from '~/routes/safe/store/models/owner'
-import { setOwners } from '~/logic/safe/utils'
 import { getGnosisSafeInstanceAt } from '~/logic/contracts/safeContracts'
 import CheckOwner from './screens/CheckOwner'
 import ThresholdForm from './screens/ThresholdForm'
@@ -31,6 +30,7 @@ type Props = {
   threshold: number,
   network: string,
   createTransaction: Function,
+  updateSafe: Function,
 }
 type ActiveScreen = 'checkOwner' | 'selectThreshold' | 'reviewRemoveOwner'
 
@@ -44,6 +44,7 @@ export const sendRemoveOwner = async (
   owners: List<Owner>,
   openSnackbar: Function,
   createTransaction: Function,
+  updateSafe: Function,
 ) => {
   const gnosisSafe = await getGnosisSafeInstanceAt(safeAddress)
   const storedOwners = await gnosisSafe.getOwners()
@@ -54,9 +55,9 @@ export const sendRemoveOwner = async (
     .encodeABI()
   // const text = `Remove Owner ${ownerNameToRemove} (${ownerAddressToRemove})`
 
-  const txHash = createTransaction(safeAddress, safeAddress, 0, txData, openSnackbar)
+  const txHash = await createTransaction(safeAddress, safeAddress, 0, txData, openSnackbar)
   if (txHash) {
-    setOwners(safeAddress, owners.filter(o => o.address !== ownerAddressToRemove))
+    updateSafe({ address: safeAddress, owners: owners.filter(o => o.address !== ownerAddressToRemove) })
   }
 }
 
@@ -72,6 +73,7 @@ const RemoveOwner = ({
   threshold,
   network,
   createTransaction,
+  updateSafe,
 }: Props) => {
   const [activeScreen, setActiveScreen] = useState<ActiveScreen>('checkOwner')
   const [values, setValues] = useState<Object>({})
@@ -109,7 +111,16 @@ const RemoveOwner = ({
           const onRemoveOwner = () => {
             onClose()
             try {
-              sendRemoveOwner(values, safeAddress, ownerAddress, ownerName, owners, openSnackbar, createTransaction)
+              sendRemoveOwner(
+                values,
+                safeAddress,
+                ownerAddress,
+                ownerName,
+                owners,
+                openSnackbar,
+                createTransaction,
+                updateSafe,
+              )
             } catch (error) {
               // eslint-disable-next-line
               console.log('Error while removing an owner ' + error)

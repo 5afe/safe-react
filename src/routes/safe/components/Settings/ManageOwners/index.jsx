@@ -194,6 +194,7 @@ class ManageOwners extends React.Component<Props, State> {
           network={network}
           userAddress={userAddress}
           createTransaction={createTransaction}
+          updateSafe={updateSafe}
         />
         <ReplaceOwnerModal
           onClose={this.onHide('ReplaceOwner')}
