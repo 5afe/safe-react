@@ -123,7 +123,7 @@ class ManageOwners extends React.Component<Props, State> {
           </Paragraph>
           <Table label="owners" columns={columns} data={ownerData} size={ownerData.size} defaultFixed noBorder>
             {(sortedData: Array<OwnerRow>) => sortedData.map((row: any, index: number) => (
-              <TableRow tabIndex={-1} key={index} className={classes.hide} date-testid={OWNERS_ROW_TESTID}>
+              <TableRow tabIndex={-1} key={index} className={classes.hide} data-testid={OWNERS_ROW_TESTID}>
                 {autoColumns.map((column: Column) => (
                   <TableCell key={column.id} style={cellWidth(column.width)} align={column.align} component="td">
                     {column.id === OWNERS_TABLE_ADDRESS_ID ? (
