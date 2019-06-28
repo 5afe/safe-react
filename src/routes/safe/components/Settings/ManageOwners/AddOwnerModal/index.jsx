@@ -123,7 +123,9 @@ const AddOwner = ({
               paperClassName={classes.biggerModalWindow}
             >
               <React.Fragment>
-                {activeScreen === 'selectOwner' && <OwnerForm onClose={onClose} onSubmit={ownerSubmitted} />}
+                {activeScreen === 'selectOwner' && (
+                  <OwnerForm onClose={onClose} onSubmit={ownerSubmitted} owners={owners} />
+                )}
                 {activeScreen === 'selectThreshold' && (
                   <ThresholdForm
                     onClose={onClose}

@@ -13,6 +13,7 @@ import Block from '~/components/layout/Block'
 import Hairline from '~/components/layout/Hairline'
 import Field from '~/components/forms/Field'
 import TextField from '~/components/forms/TextField'
+import { type Owner } from '~/routes/safe/store/models/owner'
 import {
   composeValidators,
   required,
@@ -26,13 +27,16 @@ type Props = {
   onClose: () => void,
   classes: Object,
   onSubmit: Function,
-  owners: List<string>,
+  owners: List<Owner>,
 }
 
-const OwnerForm = ({ classes, onClose, onSubmit }: Props) => {
+const OwnerForm = ({
+  classes, onClose, onSubmit, owners,
+}: Props) => {
   const handleSubmit = (values) => {
     onSubmit(values)
   }
+  const ownerDoesntExist = uniqueAddress(owners.map(o => o.address))
 
   return (
     <React.Fragment>
@@ -72,7 +76,7 @@ const OwnerForm = ({ classes, onClose, onSubmit }: Props) => {
                     name="ownerAddress"
                     component={TextField}
                     type="text"
-                    validate={composeValidators(required, mustBeEthereumAddress)}
+                    validate={composeValidators(required, mustBeEthereumAddress, ownerDoesntExist)}
                     placeholder="Owner address*"
                     text="Owner address*"
                     className={classes.addressInput}
@@ -83,7 +87,7 @@ const OwnerForm = ({ classes, onClose, onSubmit }: Props) => {
             <Hairline />
             <Row align="center" className={classes.buttonRow}>
               <Button className={classes.button} minWidth={140} onClick={onClose}>
-                  Cancel
+                Cancel
               </Button>
               <Button
                 type="submit"
@@ -93,7 +97,7 @@ const OwnerForm = ({ classes, onClose, onSubmit }: Props) => {
                 color="primary"
                 data-testid="review-tx-btn"
               >
-                  Next
+                Next
               </Button>
             </Row>
           </React.Fragment>
