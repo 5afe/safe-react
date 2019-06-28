@@ -11,7 +11,7 @@ type Props = {
   bordered?: boolean,
   className?: string,
   style?: Object,
-  testId? : string,
+  testId?: string,
 }
 
 const Img = ({

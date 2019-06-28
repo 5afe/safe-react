@@ -98,21 +98,21 @@ const ReviewAddOwner = ({
             </Row>
             <Hairline />
             {owners.map(owner => (
-              <React.Fragment key={owner.get('address')}>
+              <React.Fragment key={owner.address}>
                 <Row className={classes.owner}>
                   <Col xs={1} align="center">
-                    <Identicon address={owner.get('address')} diameter={32} />
+                    <Identicon address={owner.address} diameter={32} />
                   </Col>
                   <Col xs={11}>
                     <Block className={classNames(classes.name, classes.userName)}>
                       <Paragraph weight="bolder" size="lg" noMargin>
-                        {owner.get('name')}
+                        {owner.name}
                       </Paragraph>
                       <Block align="center" className={classes.user}>
                         <Paragraph size="md" color="disabled" noMargin>
-                          {owner.get('address')}
+                          {owner.address}
                         </Paragraph>
-                        <Link className={classes.open} to={getEtherScanLink(owner.get('address'), network)} target="_blank">
+                        <Link className={classes.open} to={getEtherScanLink(owner.address, network)} target="_blank">
                           <OpenInNew style={openIconStyle} />
                         </Link>
                       </Block>

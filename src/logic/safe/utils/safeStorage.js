@@ -28,7 +28,7 @@ export const saveSafes = async (safes: Object) => {
 
 export const setOwners = async (safeAddress: string, owners: List<Owner>) => {
   try {
-    const ownersAsMap = Map(owners.map((owner: Owner) => [owner.get('address').toLowerCase(), owner.get('name')]))
+    const ownersAsMap = Map(owners.map((owner: Owner) => [owner.address.toLowerCase(), owner.name]))
     await saveToStorage(`${OWNERS_KEY}-${safeAddress}`, ownersAsMap)
   } catch (err) {
     // eslint-disable-next-line

@@ -17,8 +17,8 @@ export type OwnerRow = SortRow<OwnerData>
 
 export const getOwnerData = (owners: List<Owner>): List<OwnerRow> => {
   const rows = owners.map((owner: Owner) => ({
-    [OWNERS_TABLE_NAME_ID]: owner.get('name'),
-    [OWNERS_TABLE_ADDRESS_ID]: owner.get('address'),
+    [OWNERS_TABLE_NAME_ID]: owner.name,
+    [OWNERS_TABLE_ADDRESS_ID]: owner.address,
   }))
 
   return rows
