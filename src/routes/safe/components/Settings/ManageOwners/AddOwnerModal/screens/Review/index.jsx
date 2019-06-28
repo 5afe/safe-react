@@ -10,17 +10,16 @@ import Identicon from '~/components/Identicon'
 import Link from '~/components/layout/Link'
 import Paragraph from '~/components/layout/Paragraph'
 import Row from '~/components/layout/Row'
-import GnoForm from '~/components/forms/GnoForm'
 import Col from '~/components/layout/Col'
 import Button from '~/components/layout/Button'
 import Block from '~/components/layout/Block'
 import Hairline from '~/components/layout/Hairline'
-import Field from '~/components/forms/Field'
-import TextField from '~/components/forms/TextField'
 import type { Owner } from '~/routes/safe/store/models/owner'
 import { getEtherScanLink } from '~/logic/wallets/getWeb3'
 import { secondary } from '~/theme/variables'
 import { styles } from './style'
+
+export const ADD_OWNER_SUBMIT_BTN = 'add-owner-submit-btn'
 
 const openIconStyle = {
   height: '16px',
@@ -39,14 +38,7 @@ type Props = {
 }
 
 const ReviewAddOwner = ({
-  classes,
-  onClose,
-  safeName,
-  owners,
-  network,
-  values,
-  onClickBack,
-  onSubmit,
+  classes, onClose, safeName, owners, network, values, onClickBack, onSubmit,
 }: Props) => {
   const handleSubmit = () => {
     onSubmit()
@@ -85,7 +77,13 @@ const ReviewAddOwner = ({
                   Any transaction requires the confirmation of:
                 </Paragraph>
                 <Paragraph size="lg" color="primary" noMargin weight="bolder" className={classes.name}>
-                  {values.threshold} out of {owners.size + 1} owner(s)
+                  {values.threshold}
+                  {' '}
+                  out of
+                  {' '}
+                  {owners.size + 1}
+                  {' '}
+                  owner(s)
                 </Paragraph>
               </Block>
             </Block>
@@ -93,7 +91,9 @@ const ReviewAddOwner = ({
           <Col xs={8} layout="column" className={classes.owners}>
             <Row className={classes.ownersTitle}>
               <Paragraph size="lg" color="primary" noMargin>
-                {owners.size + 1} Safe owner(s)
+                {owners.size + 1}
+                {' '}
+                Safe owner(s)
               </Paragraph>
             </Row>
             <Hairline />
@@ -164,7 +164,7 @@ const ReviewAddOwner = ({
           variant="contained"
           minWidth={140}
           color="primary"
-          data-testid="review-tx-btn"
+          testId={ADD_OWNER_SUBMIT_BTN}
         >
           Submit
         </Button>

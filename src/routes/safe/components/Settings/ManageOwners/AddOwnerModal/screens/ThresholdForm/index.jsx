@@ -4,8 +4,8 @@ import { List } from 'immutable'
 import { withStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
 import IconButton from '@material-ui/core/IconButton'
-import SelectField from '~/components/forms/SelectField'
 import MenuItem from '@material-ui/core/MenuItem'
+import SelectField from '~/components/forms/SelectField'
 import Paragraph from '~/components/layout/Paragraph'
 import Row from '~/components/layout/Row'
 import GnoForm from '~/components/forms/GnoForm'
@@ -14,16 +14,13 @@ import Button from '~/components/layout/Button'
 import Block from '~/components/layout/Block'
 import Hairline from '~/components/layout/Hairline'
 import Field from '~/components/forms/Field'
-import TextField from '~/components/forms/TextField'
 import type { Owner } from '~/routes/safe/store/models/owner'
 import {
-  composeValidators,
-  required,
-  minValue,
-  maxValue,
-  mustBeInteger,
+  composeValidators, required, minValue, maxValue, mustBeInteger,
 } from '~/components/forms/validator'
 import { styles } from './style'
+
+export const ADD_OWNER_THRESHOLD_NEXT_BTN_TESTID = 'add-owner-threshold-next-btn'
 
 type Props = {
   onClose: () => void,
@@ -35,12 +32,7 @@ type Props = {
 }
 
 const ThresholdForm = ({
-  classes,
-  onClose,
-  owners,
-  threshold,
-  onClickBack,
-  onSubmit,
+  classes, onClose, owners, threshold, onClickBack, onSubmit,
 }: Props) => {
   const handleSubmit = (values) => {
     onSubmit(values)
@@ -58,77 +50,73 @@ const ThresholdForm = ({
         </IconButton>
       </Row>
       <Hairline />
-      <GnoForm onSubmit={handleSubmit} initialValues={{threshold: threshold.toString()}}>
-        {(...args) => {
-          const formState = args[2]
-
-          return (
-            <React.Fragment>
-              <Block className={classes.formContainer}>
-                <Row>
-                  <Paragraph weight="bolder" className={classes.headingText}>
+      <GnoForm onSubmit={handleSubmit} initialValues={{ threshold: threshold.toString() }}>
+        {() => (
+          <React.Fragment>
+            <Block className={classes.formContainer}>
+              <Row>
+                <Paragraph weight="bolder" className={classes.headingText}>
                     Set the required owner confirmations:
-                  </Paragraph>
-                </Row>
-                <Row>
-                  <Paragraph weight="bolder">
-                    Any transaction over any daily limit requires the confirmation of:
-                  </Paragraph>
-                </Row>
-                <Row margin="xl" align="center" className={classes.inputRow}>
-                  <Col xs={2}>
-                    <Field
-                      name={"threshold"}
-                      render={props => (
-                        <React.Fragment>
-                          <SelectField {...props} disableError>
-                            {[...Array(Number(owners.size + 1))].map((x, index) => (
-                              <MenuItem key={index} value={`${index + 1}`}>
-                                {index + 1}
-                              </MenuItem>
-                            ))}
-                          </SelectField>
-                          {props.meta.error && props.meta.touched && (
-                            <Paragraph className={classes.errorText} noMargin color="error">
-                              {props.meta.error}
-                            </Paragraph>
-                          )}
-                        </React.Fragment>
-                      )}
-                      validate={composeValidators(required, mustBeInteger, minValue(1), maxValue(owners.size + 1))}
-                      data-testid="threshold-select-input"
-                    />
-                  </Col>
-                  <Col xs={10}>
-                    <Paragraph size="lg" color="primary" noMargin className={classes.ownersText}>
-                      out of
-                      {' '}
-                      {owners.size + 1}
-                      {' '}
-                      owner(s)
-                    </Paragraph>
-                  </Col>
-                </Row>
-              </Block>
-              <Hairline />
-              <Row align="center" className={classes.buttonRow}>
-                <Button className={classes.button} minWidth={140} onClick={onClickBack}>
-                  Back
-                </Button>
-                <Button
-                  type="submit"
-                  className={classes.button}
-                  variant="contained"
-                  minWidth={140}
-                  color="primary"
-                  data-testid="review-tx-btn"
-                >
-                  Review
-                </Button>
+                </Paragraph>
               </Row>
-            </React.Fragment>
-          )
-        }}
+              <Row>
+                <Paragraph weight="bolder">
+                    Any transaction over any daily limit requires the confirmation of:
+                </Paragraph>
+              </Row>
+              <Row margin="xl" align="center" className={classes.inputRow}>
+                <Col xs={2}>
+                  <Field
+                    name="threshold"
+                    render={props => (
+                      <React.Fragment>
+                        <SelectField {...props} disableError>
+                          {[...Array(Number(owners.size + 1))].map((x, index) => (
+                            <MenuItem key={index} value={`${index + 1}`}>
+                              {index + 1}
+                            </MenuItem>
+                          ))}
+                        </SelectField>
+                        {props.meta.error && props.meta.touched && (
+                          <Paragraph className={classes.errorText} noMargin color="error">
+                            {props.meta.error}
+                          </Paragraph>
+                        )}
+                      </React.Fragment>
+                    )}
+                    validate={composeValidators(required, mustBeInteger, minValue(1), maxValue(owners.size + 1))}
+                    data-testid="threshold-select-input"
+                  />
+                </Col>
+                <Col xs={10}>
+                  <Paragraph size="lg" color="primary" noMargin className={classes.ownersText}>
+                      out of
+                    {' '}
+                    {owners.size + 1}
+                    {' '}
+owner(s)
+                  </Paragraph>
+                </Col>
+              </Row>
+            </Block>
+            <Hairline />
+            <Row align="center" className={classes.buttonRow}>
+              <Button className={classes.button} minWidth={140} onClick={onClickBack}>
+                  Back
+              </Button>
+              <Button
+                type="submit"
+                className={classes.button}
+                variant="contained"
+                minWidth={140}
+                color="primary"
+                testId={ADD_OWNER_THRESHOLD_NEXT_BTN_TESTID}
+              >
+                  Review
+              </Button>
+            </Row>
+          </React.Fragment>
+        )}
       </GnoForm>
     </React.Fragment>
   )
