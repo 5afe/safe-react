@@ -6,7 +6,6 @@ import { renderSafeView } from '~/test/builder/safe.dom.utils'
 import { sleep } from '~/utils/timer'
 import 'jest-dom/extend-expect'
 import { SETTINGS_TAB_BTN_TESTID } from '~/routes/safe/components/Layout'
-import { getWeb3 } from '~/logic/wallets/getWeb3'
 import { OWNERS_SETTINGS_TAB_TEST_ID } from '~/routes/safe/components/Settings'
 import {
   RENAME_OWNER_BTN_TESTID,
@@ -113,7 +112,7 @@ describe('DOM > Feature > Settings - Manage owners', () => {
 
   it('Adds a new owner', async () => {
     const NEW_OWNER_NAME = 'I am a new owner'
-    const NEW_OWNER_ADDRESS = (await getWeb3().eth.getAccounts())[1]
+    const NEW_OWNER_ADDRESS = '0x0E329Fa8d6fCd1BA0cDA495431F1F7ca24F442c3'
 
     const SafeDom = renderSafeView(store, safeAddress)
     await sleep(1300)
@@ -142,6 +141,7 @@ describe('DOM > Feature > Settings - Manage owners', () => {
     await sleep(200)
 
     fireEvent.click(SafeDom.getByTestId(ADD_OWNER_THRESHOLD_NEXT_BTN_TESTID))
+    await sleep(200)
     fireEvent.click(SafeDom.getByTestId(ADD_OWNER_SUBMIT_BTN))
     await sleep(400)
 
