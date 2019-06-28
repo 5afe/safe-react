@@ -57,7 +57,7 @@ export const sendReplaceOwner = async (
   const ownerToRemoveIndex = owners.findIndex(o => o.address === ownerAddressToRemove)
   const newOwner = makeOwner({ name: values.ownerName, address: values.ownerAddress })
 
-  const txHash = createTransaction(safeAddress, safeAddress, 0, txData, openSnackbar)
+  const txHash = await createTransaction(safeAddress, safeAddress, 0, txData, openSnackbar)
 
   if (txHash) {
     updateSafe({ address: safeAddress, owners: owners.set(ownerToRemoveIndex, newOwner) })
