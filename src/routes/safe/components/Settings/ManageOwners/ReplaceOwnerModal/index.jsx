@@ -29,7 +29,7 @@ type Props = {
   network: string,
   threshold: string,
   createTransaction: Function,
-  updateSafe: Function
+  updateSafe: Function,
 }
 type ActiveScreen = 'checkOwner' | 'reviewReplaceOwner'
 

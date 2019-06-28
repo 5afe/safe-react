@@ -20,6 +20,8 @@ import actions, { type Actions } from './actions'
 import { styles } from './style'
 import RemoveSafeIcon from './assets/icons/bin.svg'
 
+export const OWNERS_SETTINGS_TAB_TEST_ID = 'owner-settings-tab'
+
 type State = {
   showRemoveSafe: boolean,
   menuOptionIndex: number,
@@ -114,6 +116,7 @@ class Settings extends React.Component<Props, State> {
                   <Row
                     className={cn(classes.menuOption, menuOptionIndex === 2 && classes.active)}
                     onClick={this.handleChange(2)}
+                    testId={OWNERS_SETTINGS_TAB_TEST_ID}
                   >
                     Owners (
                     {owners.size}

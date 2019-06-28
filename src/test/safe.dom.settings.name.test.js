@@ -10,7 +10,7 @@ import { SAFE_NAME_INPUT_TESTID, SAFE_NAME_SUBMIT_BTN_TESTID } from '~/routes/sa
 
 afterEach(cleanup)
 
-describe('DOM > Feature > Settings', () => {
+describe('DOM > Feature > Settings - Name', () => {
   let store
   let safeAddress
   beforeEach(async () => {

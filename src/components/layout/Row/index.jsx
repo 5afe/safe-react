@@ -12,10 +12,11 @@ type Props = {
   margin?: 'xs' | 'sm' | 'md' | 'lg' | 'xl',
   align?: 'center' | 'end' | 'start',
   grow?: boolean,
+  testId?: string,
 }
 
 const Row = ({
-  children, className, margin, align, grow, ...props
+  children, className, margin, align, grow, testId = '', ...props
 }: Props) => {
   const rowClassNames = cx(
     styles.row,
@@ -26,7 +27,7 @@ const Row = ({
   )
 
   return (
-    <div className={rowClassNames} {...props}>
+    <div className={rowClassNames} data-testid={testId} {...props}>
       {children}
     </div>
   )

@@ -22,6 +22,9 @@ import Modal from '~/components/Modal'
 import { styles } from './style'
 import { secondary } from '~/theme/variables'
 
+export const RENAME_OWNER_INPUT_TESTID = 'rename-owner-input'
+export const SAVE_OWNER_CHANGES_BTN_TESTID = 'save-owner-changes-btn'
+
 const openIconStyle = {
   height: '16px',
   color: secondary,
@@ -96,6 +99,7 @@ const EditOwnerComponent = ({
                   text="Owner name*"
                   initialValue={selectedOwnerName}
                   className={classes.addressInput}
+                  testId={RENAME_OWNER_INPUT_TESTID}
                 />
               </Row>
               <Row>
@@ -115,7 +119,7 @@ const EditOwnerComponent = ({
               <Button className={classes.button} minWidth={140} onClick={onClose}>
                 Cancel
               </Button>
-              <Button type="submit" className={classes.button} variant="contained" minWidth={140} color="primary">
+              <Button type="submit" className={classes.button} variant="contained" minWidth={140} color="primary" testId={SAVE_OWNER_CHANGES_BTN_TESTID}>
                 Save
               </Button>
             </Row>

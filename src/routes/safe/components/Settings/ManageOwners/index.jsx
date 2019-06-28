@@ -28,6 +28,9 @@ import ReplaceOwnerIcon from './assets/icons/replace-owner.svg'
 import RenameOwnerIcon from './assets/icons/rename-owner.svg'
 import RemoveOwnerIcon from '../assets/icons/bin.svg'
 
+export const RENAME_OWNER_BTN_TESTID = 'rename-owner-btn'
+export const OWNERS_ROW_TESTID = 'owners-row'
+
 const controlsStyle = {
   backgroundColor: 'white',
   padding: sm,
@@ -120,7 +123,7 @@ class ManageOwners extends React.Component<Props, State> {
           </Paragraph>
           <Table label="owners" columns={columns} data={ownerData} size={ownerData.size} defaultFixed noBorder>
             {(sortedData: Array<OwnerRow>) => sortedData.map((row: any, index: number) => (
-              <TableRow tabIndex={-1} key={index} className={classes.hide}>
+              <TableRow tabIndex={-1} key={index} className={classes.hide} date-testid={OWNERS_ROW_TESTID}>
                 {autoColumns.map((column: Column) => (
                   <TableCell key={column.id} style={cellWidth(column.width)} align={column.align} component="td">
                     {column.id === OWNERS_TABLE_ADDRESS_ID ? (
@@ -137,6 +140,7 @@ class ManageOwners extends React.Component<Props, State> {
                       className={classes.editOwnerIcon}
                       src={RenameOwnerIcon}
                       onClick={this.onShow('EditOwner', row)}
+                      testId={RENAME_OWNER_BTN_TESTID}
                     />
                     <Img
                       alt="Replace owner"
