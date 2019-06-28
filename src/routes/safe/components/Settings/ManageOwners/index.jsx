@@ -29,6 +29,7 @@ import RenameOwnerIcon from './assets/icons/rename-owner.svg'
 import RemoveOwnerIcon from '../assets/icons/bin.svg'
 
 export const RENAME_OWNER_BTN_TESTID = 'rename-owner-btn'
+export const REMOVE_OWNER_BTN_TESTID = 'remove-owner-btn'
 export const OWNERS_ROW_TESTID = 'owners-row'
 
 const controlsStyle = {
@@ -153,6 +154,7 @@ class ManageOwners extends React.Component<Props, State> {
                       className={classes.removeOwnerIcon}
                       src={RemoveOwnerIcon}
                       onClick={this.onShow('RemoveOwner', row)}
+                      testId={REMOVE_OWNER_BTN_TESTID}
                     />
                   </Row>
                 </TableCell>
