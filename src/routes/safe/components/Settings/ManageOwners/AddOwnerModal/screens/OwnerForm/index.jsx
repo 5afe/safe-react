@@ -1,5 +1,6 @@
 // @flow
 import React from 'react'
+import { List } from 'immutable'
 import { withStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
 import IconButton from '@material-ui/core/IconButton'
@@ -17,7 +18,7 @@ import {
   required,
   mustBeEthereumAddress,
   minMaxLength,
-  noErrorsOn,
+  uniqueAddress,
 } from '~/components/forms/validator'
 import { styles } from './style'
 
@@ -25,13 +26,10 @@ type Props = {
   onClose: () => void,
   classes: Object,
   onSubmit: Function,
+  owners: List<string>,
 }
 
-const OwnerForm = ({
-  classes,
-  onClose,
-  onSubmit,
-}: Props) => {
+const OwnerForm = ({ classes, onClose, onSubmit }: Props) => {
   const handleSubmit = (values) => {
     onSubmit(values)
   }
@@ -49,63 +47,57 @@ const OwnerForm = ({
       </Row>
       <Hairline />
       <GnoForm onSubmit={handleSubmit}>
-        {(...args) => {
-          const formState = args[2]
-
-          return (
-            <React.Fragment>
-              <Block className={classes.formContainer}>
-                <Row margin="md">
-                  <Paragraph>
-                    Add a new owner to the active Safe
-                  </Paragraph>
-                </Row>
-                <Row margin="md">
-                  <Col xs={8}>
-                    <Field
-                      name="ownerName"
-                      component={TextField}
-                      type="text"
-                      validate={composeValidators(required, minMaxLength(1,50))}
-                      placeholder="Owner name*"
-                      text="Owner name*"
-                      className={classes.addressInput}
-                    />
-                  </Col>
-                </Row>
-                <Row margin="md">
-                  <Col xs={8}>
-                    <Field
-                      name="ownerAddress"
-                      component={TextField}
-                      type="text"
-                      validate={composeValidators(required, mustBeEthereumAddress)}
-                      placeholder="Owner address*"
-                      text="Owner address*"
-                      className={classes.addressInput}
-                    />
-                  </Col>
-                </Row>
-              </Block>
-              <Hairline />
-              <Row align="center" className={classes.buttonRow}>
-                <Button className={classes.button} minWidth={140} onClick={onClose}>
-                  Cancel
-                </Button>
-                <Button
-                  type="submit"
-                  className={classes.button}
-                  variant="contained"
-                  minWidth={140}
-                  color="primary"
-                  data-testid="review-tx-btn"
-                >
-                  Next
-                </Button>
+        {() => (
+          <React.Fragment>
+            <Block className={classes.formContainer}>
+              <Row margin="md">
+                <Paragraph>Add a new owner to the active Safe</Paragraph>
               </Row>
-            </React.Fragment>
-          )
-        }}
+              <Row margin="md">
+                <Col xs={8}>
+                  <Field
+                    name="ownerName"
+                    component={TextField}
+                    type="text"
+                    validate={composeValidators(required, minMaxLength(1, 50))}
+                    placeholder="Owner name*"
+                    text="Owner name*"
+                    className={classes.addressInput}
+                  />
+                </Col>
+              </Row>
+              <Row margin="md">
+                <Col xs={8}>
+                  <Field
+                    name="ownerAddress"
+                    component={TextField}
+                    type="text"
+                    validate={composeValidators(required, mustBeEthereumAddress)}
+                    placeholder="Owner address*"
+                    text="Owner address*"
+                    className={classes.addressInput}
+                  />
+                </Col>
+              </Row>
+            </Block>
+            <Hairline />
+            <Row align="center" className={classes.buttonRow}>
+              <Button className={classes.button} minWidth={140} onClick={onClose}>
+                  Cancel
+              </Button>
+              <Button
+                type="submit"
+                className={classes.button}
+                variant="contained"
+                minWidth={140}
+                color="primary"
+                data-testid="review-tx-btn"
+              >
+                  Next
+              </Button>
+            </Row>
+          </React.Fragment>
+        )}
       </GnoForm>
     </React.Fragment>
   )

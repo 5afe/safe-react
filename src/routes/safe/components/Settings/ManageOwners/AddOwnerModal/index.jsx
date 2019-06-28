@@ -1,16 +1,14 @@
 // @flow
 import React, { useState, useEffect } from 'react'
 import { List } from 'immutable'
+import { withStyles } from '@material-ui/core/styles'
 import { SharedSnackbarConsumer } from '~/components/SharedSnackBar'
 import Modal from '~/components/Modal'
-import { type Safe } from '~/routes/safe/store/models/safe'
 import { type Owner, makeOwner } from '~/routes/safe/store/models/owner'
-import { setOwners } from '~/logic/safe/utils'
 import { getGnosisSafeInstanceAt } from '~/logic/contracts/safeContracts'
 import OwnerForm from './screens/OwnerForm'
 import ThresholdForm from './screens/ThresholdForm'
 import ReviewAddOwner from './screens/Review'
-import { withStyles } from '@material-ui/core/styles'
 
 const styles = () => ({
   biggerModalWindow: {
@@ -29,7 +27,7 @@ type Props = {
   owners: List<Owner>,
   threshold: number,
   network: string,
-  userAddress: string,
+  updateSafe: Function,
   createTransaction: Function,
 }
 type ActiveScreen = 'selectOwner' | 'selectThreshold' | 'reviewAddOwner'
@@ -38,15 +36,19 @@ export const sendAddOwner = async (
   values: Object,
   safeAddress: string,
   owners: List<Owner>,
-  openSnackbar: Fuction,
+  openSnackbar: Function,
   createTransaction: Function,
+  updateSafe: Function,
 ) => {
   const gnosisSafe = await getGnosisSafeInstanceAt(safeAddress)
   const txData = gnosisSafe.contract.methods.addOwnerWithThreshold(values.ownerAddress, values.threshold).encodeABI()
 
   const txHash = await createTransaction(safeAddress, safeAddress, 0, txData, openSnackbar)
   if (txHash) {
-    setOwners(safeAddress, owners.push(makeOwner({ name: values.ownerName, address: values.ownerAddress })))
+    updateSafe({
+      address: safeAddress,
+      owners: owners.push(makeOwner({ name: values.ownerName, address: values.ownerAddress })),
+    })
   }
 }
 
@@ -59,8 +61,8 @@ const AddOwner = ({
   owners,
   threshold,
   network,
-  userAddress,
   createTransaction,
+  updateSafe,
 }: Props) => {
   const [activeScreen, setActiveScreen] = useState<ActiveScreen>('selectOwner')
   const [values, setValues] = useState<Object>({})
@@ -82,15 +84,19 @@ const AddOwner = ({
   }
 
   const ownerSubmitted = (newValues: Object) => {
-    values.ownerName = newValues.ownerName
-    values.ownerAddress = newValues.ownerAddress
-    setValues(values)
+    setValues(stateValues => ({
+      ...stateValues,
+      ownerName: newValues.ownerName,
+      ownerAddress: newValues.ownerAddress,
+    }))
     setActiveScreen('selectThreshold')
   }
 
   const thresholdSubmitted = (newValues: Object) => {
-    values.threshold = newValues.threshold
-    setValues(values)
+    setValues(stateValues => ({
+      ...stateValues,
+      threshold: newValues.threshold,
+    }))
     setActiveScreen('reviewAddOwner')
   }
 
@@ -101,7 +107,7 @@ const AddOwner = ({
           const onAddOwner = async () => {
             onClose()
             try {
-              sendAddOwner(values, safeAddress, owners, openSnackbar, createTransaction)
+              sendAddOwner(values, safeAddress, owners, openSnackbar, createTransaction, updateSafe)
             } catch (error) {
               // eslint-disable-next-line
               console.log('Error while removing an owner ' + error)
@@ -117,12 +123,7 @@ const AddOwner = ({
               paperClassName={classes.biggerModalWindow}
             >
               <React.Fragment>
-                {activeScreen === 'selectOwner' && (
-                  <OwnerForm
-                    onClose={onClose}
-                    onSubmit={ownerSubmitted}
-                  />
-                )}
+                {activeScreen === 'selectOwner' && <OwnerForm onClose={onClose} onSubmit={ownerSubmitted} />}
                 {activeScreen === 'selectThreshold' && (
                   <ThresholdForm
                     onClose={onClose}
