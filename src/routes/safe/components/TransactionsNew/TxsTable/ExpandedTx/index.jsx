@@ -100,7 +100,7 @@ const ExpandedTx = ({
             </Tabs>
             <Hairline color="#c8ced4" />
           </Row>
-          <Row>{tabIndex === 0 && <OwnersList owners={owners.map(owner => owner.address)} />}</Row>
+          <Row>{tabIndex === 0 && <OwnersList owners={owners} />}</Row>
         </Col>
       </Row>
     </Block>
