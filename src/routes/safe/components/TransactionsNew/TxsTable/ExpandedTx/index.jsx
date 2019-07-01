@@ -9,6 +9,7 @@ import Row from '~/components/layout/Row'
 import Block from '~/components/layout/Block'
 import Col from '~/components/layout/Col'
 import Bold from '~/components/layout/Bold'
+import Span from '~/components/layout/Span'
 import Paragraph from '~/components/layout/Paragraph'
 import Hairline from '~/components/layout/Hairline'
 import { type Transaction } from '~/routes/safe/store/models/transaction'
@@ -31,12 +32,18 @@ const openIconStyle = {
   color: secondary,
 }
 
+const txStatusToLabel = {
+  success: 'Success',
+  awaiting_confirmations: 'Awaiting confirmations',
+}
+
 const ExpandedTx = ({
   classes, tx, threshold, owners,
 }: Props) => {
   const [tabIndex, setTabIndex] = useState<number>(0)
   const confirmedLabel = `Confirmed [${tx.confirmations.size}/${threshold}]`
   const unconfirmedLabel = `Unconfirmed [${owners.size - tx.confirmations.size}]`
+  const txStatus = tx.isExecuted ? 'success' : 'awaiting_confirmations'
 
   const handleTabChange = (event, tabClicked) => {
     setTabIndex(tabClicked)
@@ -60,7 +67,9 @@ const ExpandedTx = ({
             </Paragraph>
             <Paragraph noMargin>
               <Bold>TX status: </Bold>
-              {tx.executionTxHash ? 'Success' : 'Awaiting confirmations'}
+              <Span className={classes[txStatus]} style={{ fontWeight: 'bold' }}>
+                {txStatusToLabel[txStatus]}
+              </Span>
             </Paragraph>
             <Paragraph noMargin>
               <Bold>TX created: </Bold>

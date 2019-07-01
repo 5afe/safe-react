@@ -1,5 +1,5 @@
 // @flow
-import { md, lg } from '~/theme/variables'
+import { md, lg, connected } from '~/theme/variables'
 
 export const styles = () => ({
   txDataContainer: {
@@ -8,5 +8,11 @@ export const styles = () => ({
   rightCol: {
     boxSizing: 'border-box',
     borderLeft: 'solid 1px #c8ced4',
+  },
+  awaiting_confirmations: {
+    color: '#2e73d9',
+  },
+  success: {
+    color: connected,
   },
 })
