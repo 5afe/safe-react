@@ -1,10 +1,10 @@
 // @flow
 import * as React from 'react'
-import Block from '~/components/layout/Block'
 import OpenInNew from '@material-ui/icons/OpenInNew'
-import Paragraph from '~/components/layout/Paragraph'
 import LinearProgress from '@material-ui/core/LinearProgress'
 import { withStyles } from '@material-ui/core/styles'
+import Block from '~/components/layout/Block'
+import Paragraph from '~/components/layout/Paragraph'
 import Img from '~/components/layout/Img'
 import Page from '~/components/layout/Page'
 import { openTxInEtherScan } from '~/logic/wallets/getWeb3'

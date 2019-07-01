@@ -1,7 +1,9 @@
 // @flow
 import React, { useState } from 'react'
+import { List } from 'immutable'
 import { withStyles } from '@material-ui/core/styles'
 import Tabs from '@material-ui/core/Tabs'
+import OpenInNew from '@material-ui/icons/OpenInNew'
 import Tab from '@material-ui/core/Tab'
 import Row from '~/components/layout/Row'
 import Block from '~/components/layout/Block'
@@ -11,14 +13,22 @@ import Paragraph from '~/components/layout/Paragraph'
 import Hairline from '~/components/layout/Hairline'
 import { type Transaction } from '~/routes/safe/store/models/transaction'
 import { type Owner } from '~/routes/safe/store/models/owner'
+import { openTxInEtherScan } from '~/logic/wallets/getWeb3'
+import { shortVersionOf } from '~/logic/wallets/ethAddresses'
 import { styles } from './style'
 import { formatDate } from '../columns'
+import { secondary } from '~/theme/variables'
 
 type Props = {
   classes: Object,
   tx: Transaction,
   threshold: number,
   owners: List<Owner>,
+}
+
+const openIconStyle = {
+  height: '13px',
+  color: secondary,
 }
 
 const ExpandedTx = ({
@@ -39,11 +49,18 @@ const ExpandedTx = ({
           <Block className={classes.txDataContainer}>
             <Paragraph noMargin>
               <Bold>TX hash: </Bold>
-              n/a
+              {tx.executionTxHash ? (
+                <a href={openTxInEtherScan(tx.executionTxHash, 'rinkeby')} target="_blank" rel="noopener noreferrer">
+                  {shortVersionOf(tx.executionTxHash, 4)}
+                  <OpenInNew style={openIconStyle} />
+                </a>
+              ) : (
+                'n/a'
+              )}
             </Paragraph>
             <Paragraph noMargin>
               <Bold>TX status: </Bold>
-              n/a
+              {tx.executionTxHash ? 'Success' : 'Awaiting confirmations'}
             </Paragraph>
             <Paragraph noMargin>
               <Bold>TX created: </Bold>
