@@ -11,11 +11,13 @@ import { buildTxServiceUrl, type TxServiceType } from '~/logic/safe/transactions
 import { getOwners } from '~/logic/safe/utils'
 import { EMPTY_DATA } from '~/logic/wallets/ethTransactions'
 import { addTransactions } from './addTransactions'
+import { getHumanFriendlyToken } from '~/logic/tokens/store/actions/fetchTokens'
+import { isAddressAToken } from '~/logic/tokens/utils/tokenHelpers'
 
 type ConfirmationServiceModel = {
   owner: string,
   submissionDate: Date,
-  type: string,
+  confirmationType: string,
   transactionHash: string,
 }
 
@@ -40,20 +42,31 @@ const buildTransactionFrom = async (safeAddress: string, tx: TxServiceModel, saf
 
       return makeConfirmation({
         owner: makeOwner({ address: conf.owner, name: ownerName }),
-        type: ((conf.type.toLowerCase(): any): TxServiceType),
+        type: ((conf.confirmationType.toLowerCase(): any): TxServiceType),
         hash: conf.transactionHash,
       })
     }),
   )
+  const isToken = await isAddressAToken(tx.to)
+
+  let symbol = 'ETH'
+  if (isToken) {
+    const tokenContract = await getHumanFriendlyToken()
+    const tokenInstance = await tokenContract.at(tx.to)
+    symbol = await tokenInstance.symbol()
+  }
 
   return makeTransaction({
     name,
+    symbol,
     nonce: tx.nonce,
     value: Number(tx.value),
     confirmations,
     recipient: tx.to,
     data: tx.data ? tx.data : EMPTY_DATA,
     isExecuted: tx.isExecuted,
+    submissionDate: tx.submissionDate,
+    executionDate: tx.executionDate,
   })
 }
 
@@ -62,8 +75,8 @@ export const loadSafeTransactions = async (safeAddress: string) => {
   const response = await axios.get(url)
   const transactions: TxServiceModel[] = response.data.results
   const safeSubjects = loadSafeSubjects(safeAddress)
-  const txsRecord = transactions.map(
-    async (tx: TxServiceModel) => await buildTransactionFrom(safeAddress, tx, safeSubjects),
+  const txsRecord = await Promise.all(
+    transactions.map((tx: TxServiceModel) => buildTransactionFrom(safeAddress, tx, safeSubjects)),
   )
 
   return Map().set(safeAddress, List(txsRecord))

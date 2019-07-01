@@ -2,12 +2,12 @@
 import * as React from 'react'
 import classNames from 'classnames'
 import { List } from 'immutable'
-import Row from '~/components/layout/Row'
 import Table from '@material-ui/core/Table'
 import TableBody from '@material-ui/core/TableBody'
 import { withStyles } from '@material-ui/core/styles'
 import CircularProgress from '@material-ui/core/CircularProgress'
 import TablePagination from '@material-ui/core/TablePagination'
+import Row from '~/components/layout/Row'
 import { type Order, stableSort, getSorting } from '~/components/Table/sorting'
 import TableHead, { type Column } from '~/components/Table/TableHead'
 import { xl } from '~/theme/variables'
@@ -21,6 +21,7 @@ type Props<K> = {
   children: Function,
   size: number,
   defaultFixed?: boolean,
+  defaultOrder?: 'desc' | 'asc',
 }
 
 type State = {
@@ -61,7 +62,7 @@ const FIXED_HEIGHT = 49
 class GnoTable<K> extends React.Component<Props<K>, State> {
   state = {
     page: 0,
-    order: 'asc',
+    order: undefined,
     orderBy: undefined,
     fixed: undefined,
     orderProp: false,
@@ -70,9 +71,14 @@ class GnoTable<K> extends React.Component<Props<K>, State> {
 
   onSort = (newOrderBy: string, orderProp: boolean) => {
     const { order, orderBy } = this.state
+    const { defaultOrder } = this.props
     let newOrder = 'desc'
 
-    if (orderBy === newOrderBy && order === 'desc') {
+    // if table was previously sorted by the user
+    if (order && orderBy === newOrderBy && order === 'desc') {
+      newOrder = 'asc'
+    } else if (!order && defaultOrder === 'desc') {
+      // if it was not sorted and defaultOrder is used
       newOrder = 'asc'
     }
 
@@ -99,12 +105,13 @@ class GnoTable<K> extends React.Component<Props<K>, State> {
 
   render() {
     const {
-      data, label, columns, classes, children, size, defaultOrderBy, defaultFixed,
+      data, label, columns, classes, children, size, defaultOrderBy, defaultOrder, defaultFixed,
     } = this.props
     const {
       order, orderBy, page, orderProp, rowsPerPage, fixed,
     } = this.state
     const orderByParam = orderBy || defaultOrderBy
+    const orderParam = order || defaultOrder
     const fixedParam = typeof fixed !== 'undefined' ? fixed : !!defaultFixed
 
     const backProps = {
@@ -121,7 +128,7 @@ class GnoTable<K> extends React.Component<Props<K>, State> {
       input: classes.white,
     }
 
-    const sortedData = stableSort(data, getSorting(order, orderByParam, orderProp), fixedParam).slice(
+    const sortedData = stableSort(data, getSorting(orderParam, orderByParam, orderProp), fixedParam).slice(
       page * rowsPerPage,
       page * rowsPerPage + rowsPerPage,
     )
@@ -133,7 +140,7 @@ class GnoTable<K> extends React.Component<Props<K>, State> {
       <React.Fragment>
         {!isEmpty && (
           <Table aria-labelledby={label} className={classes.root}>
-            <TableHead columns={columns} order={order} orderBy={orderByParam} onSort={this.onSort} />
+            <TableHead columns={columns} order={orderParam} orderBy={orderByParam} onSort={this.onSort} />
             <TableBody>{children(sortedData)}</TableBody>
           </Table>
         )}
@@ -157,6 +164,10 @@ class GnoTable<K> extends React.Component<Props<K>, State> {
       </React.Fragment>
     )
   }
+}
+
+GnoTable.defaultProps = {
+  defaultOrder: 'asc',
 }
 
 export default withStyles(styles)(GnoTable)

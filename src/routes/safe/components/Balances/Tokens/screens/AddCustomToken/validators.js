@@ -1,9 +1,8 @@
 // @flow
 import { List } from 'immutable'
-import { getWeb3 } from '~/logic/wallets/getWeb3'
 import { type Token } from '~/logic/tokens/store/model/token'
 import { sameAddress } from '~/logic/wallets/ethAddresses'
-// import { getStandardTokenContract } from '~/logic/tokens/store/actions/fetchTokens'
+import { isAddressAToken } from '~/logic/tokens/utils/tokenHelpers'
 
 export const simpleMemoize = (fn: Function) => {
   let lastArg
@@ -28,10 +27,9 @@ export const addressIsTokenContract = simpleMemoize(async (tokenAddress: string)
   //   return 'Not a token address'
   // }
 
-  const web3 = getWeb3()
-  const call = await web3.eth.call({ to: tokenAddress, data: web3.utils.sha3('totalSupply()') })
+  const isToken = await isAddressAToken(tokenAddress)
 
-  if (call === '0x') {
+  if (!isToken) {
     return 'Not a token address'
   }
 })

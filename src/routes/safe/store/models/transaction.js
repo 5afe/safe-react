@@ -11,6 +11,9 @@ export type TransactionProps = {
   recipient: string,
   data: string,
   isExecuted: boolean,
+  submissionDate: Date,
+  executionDate: Date,
+  symbol: string,
 }
 
 export const makeTransaction: RecordFactory<TransactionProps> = Record({
@@ -21,6 +24,9 @@ export const makeTransaction: RecordFactory<TransactionProps> = Record({
   recipient: '',
   data: '',
   isExecuted: false,
+  submissionDate: '',
+  executionDate: '',
+  symbol: '',
 })
 
 export type Transaction = RecordOf<TransactionProps>

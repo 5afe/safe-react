@@ -101,6 +101,7 @@ class Layout extends React.Component<Props, State> {
       createTransaction,
       fetchTransactions,
       updateSafe,
+      transactions,
     } = this.props
     const { tabIndex } = this.state
 
@@ -152,7 +153,15 @@ class Layout extends React.Component<Props, State> {
             createTransaction={createTransaction}
           />
         )}
-        {tabIndex === 1 && <Transactions fetchTransactions={fetchTransactions} safeAddress={address} />}
+        {tabIndex === 1 && (
+          <Transactions
+            threshold={safe.threshold}
+            owners={safe.owners}
+            transactions={transactions}
+            fetchTransactions={fetchTransactions}
+            safeAddress={address}
+          />
+        )}
         {tabIndex === 2 && (
           <Settings
             granted={granted}

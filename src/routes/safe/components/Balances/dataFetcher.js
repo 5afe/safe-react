@@ -52,6 +52,7 @@ export const generateColumns = () => {
     disablePadding: false,
     label: '',
     custom: true,
+    static: true,
   }
 
   return List([assetColumn, balanceColumn, actions])
