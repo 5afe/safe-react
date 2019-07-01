@@ -16,9 +16,10 @@ import { type Transaction } from '~/routes/safe/store/models/transaction'
 import { type Owner } from '~/routes/safe/store/models/owner'
 import { openTxInEtherScan } from '~/logic/wallets/getWeb3'
 import { shortVersionOf } from '~/logic/wallets/ethAddresses'
+import { secondary } from '~/theme/variables'
+import OwnersList from './OwnersList'
 import { styles } from './style'
 import { formatDate } from '../columns'
-import { secondary } from '~/theme/variables'
 
 type Props = {
   classes: Object,
@@ -91,13 +92,15 @@ const ExpandedTx = ({
             </Paragraph>
           </Block>
         </Col>
-        <Col xs={6} className={classes.rightCol}>
+        <Col xs={6} className={classes.rightCol} layout="block">
           <Row>
             <Tabs value={tabIndex} onChange={handleTabChange} indicatorColor="secondary" textColor="secondary">
               <Tab label={confirmedLabel} />
               <Tab label={unconfirmedLabel} />
             </Tabs>
+            <Hairline color="#c8ced4" />
           </Row>
+          <Row>{tabIndex === 0 && <OwnersList owners={owners.map(owner => owner.address)} />}</Row>
         </Col>
       </Row>
     </Block>
