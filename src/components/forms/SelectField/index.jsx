@@ -18,9 +18,10 @@ const SelectInput = ({
   formControlProps,
   classes,
   renderValue,
+  disableError,
   ...rest
 }: SelectFieldProps) => {
-  const showError = ((meta.submitError && !meta.dirtySinceLastSubmit) || meta.error) && meta.touched
+  const showError = ((meta.submitError && !meta.dirtySinceLastSubmit) || meta.error) && meta.touched && !disableError
   const inputProps = {
     ...restInput,
     name,

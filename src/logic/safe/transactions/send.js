@@ -14,7 +14,7 @@ export const TX_TYPE_EXECUTION = 'execution'
 export const executeTransaction = async (
   safeInstance: any,
   to: string,
-  valueInWei: number,
+  valueInWei: number | string,
   data: string,
   operation: number | string,
   nonce: string | number,

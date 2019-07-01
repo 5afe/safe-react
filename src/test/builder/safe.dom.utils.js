@@ -12,7 +12,7 @@ import fetchTransactions from '~/routes/safe/store/actions/fetchTransactions'
 import { sleep } from '~/utils/timer'
 import { history } from '~/store'
 import AppRoutes from '~/routes'
-import { SAFELIST_ADDRESS, SETTINS_ADDRESS } from '~/routes/routes'
+import { SAFELIST_ADDRESS } from '~/routes/routes'
 import { EMPTY_DATA } from '~/logic/wallets/ethTransactions'
 
 export const EXPAND_BALANCE_INDEX = 0

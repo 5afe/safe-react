@@ -18,12 +18,9 @@ type ActionReturn = {
   safe: Safe,
 }
 
-export const addSafe = createAction<string, Function, ActionReturn>(
-  ADD_SAFE,
-  (safe: Safe): ActionReturn => ({
-    safe,
-  }),
-)
+export const addSafe = createAction<string, Function, ActionReturn>(ADD_SAFE, (safe: Safe): ActionReturn => ({
+  safe,
+}))
 
 const saveSafe = (name: string, address: string, threshold: number, ownersName: string[], ownersAddress: string[]) => (
   dispatch: ReduxDispatch<GlobalState>,

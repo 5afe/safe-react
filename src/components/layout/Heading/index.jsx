@@ -6,33 +6,27 @@ import styles from './index.scss'
 
 const cx = classNames.bind(styles)
 
-type HeadingTag = 'h1' | 'h2' | 'h3' | 'h4';
+type HeadingTag = 'h1' | 'h2' | 'h3' | 'h4'
 
 type Props = {
   align?: 'left' | 'center' | 'right',
   margin?: 'sm' | 'md' | 'lg' | 'xl',
-  color?: 'soft' | 'medium' | 'dark' | 'white' | 'fancy' | 'primary' | 'secondary' | 'warning' | 'disabled',
+  color?: 'soft' | 'medium' | 'dark' | 'white' | 'fancy' | 'primary' | 'secondary' | 'warning' | 'disabled' | 'error',
   tag: HeadingTag,
   truncate?: boolean,
   children: React.Node,
+  testId?: string,
 }
 
 class Heading extends React.PureComponent<Props> {
   render() {
     const {
-      align, tag, truncate, margin, color, children, ...props
+      align, tag, truncate, margin, color, children, testId, ...props
     } = this.props
 
-    const className = cx(
-      'heading',
-      align,
-      tag,
-      margin ? capitalize(margin, 'margin') : undefined,
-      color,
-      { truncate },
-    )
+    const className = cx('heading', align, tag, margin ? capitalize(margin, 'margin') : undefined, color, { truncate })
 
-    return React.createElement(tag, { ...props, className }, children)
+    return React.createElement(tag, { ...props, className, 'data-testid': testId || '' }, children)
   }
 }
 

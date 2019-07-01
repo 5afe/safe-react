@@ -11,7 +11,7 @@ export type Props = Actions &
     granted: boolean,
   }
 
-const TIMEOUT = process.env.NODE_ENV === 'test' ? 1500 : 15000
+const TIMEOUT = process.env.NODE_ENV === 'test' ? 1500 : 5000
 
 class SafeView extends React.Component<Props> {
   componentDidMount() {
@@ -29,8 +29,9 @@ class SafeView extends React.Component<Props> {
 
   componentDidUpdate(prevProps) {
     const { activeTokens } = this.props
+    const oldActiveTokensSize = prevProps.activeTokens.size
 
-    if (activeTokens.size > prevProps.activeTokens.size) {
+    if (oldActiveTokensSize > 0 && activeTokens.size > oldActiveTokensSize) {
       this.checkForUpdates()
     }
   }
@@ -61,6 +62,7 @@ class SafeView extends React.Component<Props> {
       tokens,
       createTransaction,
       fetchTransactions,
+      updateSafe,
     } = this.props
 
     return (
@@ -75,6 +77,7 @@ class SafeView extends React.Component<Props> {
           granted={granted}
           createTransaction={createTransaction}
           fetchTransactions={fetchTransactions}
+          updateSafe={updateSafe}
         />
       </Page>
     )
