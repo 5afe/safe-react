@@ -1,9 +1,9 @@
 // @flow
 import * as React from 'react'
 import classNames from 'classnames'
-import Block from '~/components/layout/Block'
 import { withStyles } from '@material-ui/core/styles'
 import OpenInNew from '@material-ui/icons/OpenInNew'
+import Block from '~/components/layout/Block'
 import Identicon from '~/components/Identicon'
 import OpenPaper from '~/components/Stepper/OpenPaper'
 import Col from '~/components/layout/Col'

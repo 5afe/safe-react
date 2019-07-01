@@ -1,8 +1,8 @@
 // @flow
+import type { Store, AnyAction } from 'redux'
 import { ADD_SAFE } from '~/routes/safe/store/actions/addSafe'
 import { UPDATE_SAFE } from '~/routes/safe/store/actions/updateSafe'
 import { REMOVE_SAFE } from '~/routes/safe/store/actions/removeSafe'
-import type { Store, AnyAction } from 'redux'
 import { type GlobalState } from '~/store/'
 import { saveSafes, setOwners, removeOwners } from '~/logic/safe/utils'
 import { safesMapSelector } from '~/routes/safeList/store/selectors'

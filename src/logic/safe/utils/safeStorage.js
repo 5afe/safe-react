@@ -1,6 +1,6 @@
 // @flow
-import { type Owner } from '~/routes/safe/store/models/owner'
 import { List, Map } from 'immutable'
+import { type Owner } from '~/routes/safe/store/models/owner'
 import { loadFromStorage, saveToStorage, removeFromStorage } from '~/utils/storage'
 
 export const SAFES_KEY = 'SAFES'

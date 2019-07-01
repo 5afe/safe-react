@@ -1,6 +1,8 @@
 // @flow
 import * as React from 'react'
 import { withStyles } from '@material-ui/core/styles'
+import InputAdornment from '@material-ui/core/InputAdornment'
+import CheckCircle from '@material-ui/icons/CheckCircle'
 import Field from '~/components/forms/Field'
 import TextField from '~/components/forms/TextField'
 import {
@@ -15,8 +17,6 @@ import Button from '~/components/layout/Button'
 import Row from '~/components/layout/Row'
 import Img from '~/components/layout/Img'
 import Col from '~/components/layout/Col'
-import InputAdornment from '@material-ui/core/InputAdornment'
-import CheckCircle from '@material-ui/icons/CheckCircle'
 import { getOwnerNameBy, getOwnerAddressBy } from '~/routes/open/components/fields'
 import Paragraph from '~/components/layout/Paragraph'
 import OpenPaper from '~/components/Stepper/OpenPaper'

@@ -20,7 +20,7 @@ export const loadSafe = async (
   safeName: string,
   safeAddress: string,
   owners: Array,
-  addSafe: Function
+  addSafe: Function,
 ) => {
   const safeProps = await buildSafe(safeAddress, safeName)
   safeProps.owners = owners
