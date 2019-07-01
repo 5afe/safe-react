@@ -1693,7 +1693,7 @@
     prop-types "^15.7.2"
     qs "^6.6.0"
 
-"@storybook/addons@5.1.9":
+"@storybook/addons@5.1.9", "@storybook/addons@^5.1.9":
   version "5.1.9"
   resolved "https://registry.yarnpkg.com/@storybook/addons/-/addons-5.1.9.tgz#ecf218d08508b97ca5e6e0f1ed361081385bd3ff"
   integrity sha512-1bavbcS/NiE65DwyKj8c0DmWmz9VekOinB+has2Pqt2bOffZoZwVnbmepcz9hH3GUyvp5fQBYbxTEmTDvF2lLA==
@@ -5660,7 +5660,7 @@ cssnano-util-same-parent@^4.0.0:
   resolved "https://registry.yarnpkg.com/cssnano-util-same-parent/-/cssnano-util-same-parent-4.0.1.tgz#574082fb2859d2db433855835d9a8456ea18bbf3"
   integrity sha512-WcKx5OY+KoSIAxBW6UBBRay1U6vkYheCdjyVNDm85zt5K9mHoGOfsOsqIszfAqrQQFIIKgjh2+FDgIj/zsl21Q==
 
-cssnano@^4.1.0:
+cssnano@^4.1.10:
   version "4.1.10"
   resolved "https://registry.yarnpkg.com/cssnano/-/cssnano-4.1.10.tgz#0ac41f0b13d13d465487e111b778d42da631b8b2"
   integrity sha512-5wny+F6H4/8RgNlaqab4ktc3e0/blKutmq8yNlBFXA//nSFFAqAngjNVRzUvCgYROULmZZUoosL/KSoZo5aUaQ==
@@ -5727,7 +5727,7 @@ data-urls@^1.0.0:
     whatwg-mimetype "^2.2.0"
     whatwg-url "^7.0.0"
 
-date-fns@^1.30.1:
+date-fns@1.30.1:
   version "1.30.1"
   resolved "https://registry.yarnpkg.com/date-fns/-/date-fns-1.30.1.tgz#2e71bf0b119153dbb4cc4e88d9ea5acfb50dc05c"
   integrity sha512-hBSVCvSmWC+QypYObzwGOd9wqdDpOt+0wl0KbU+R+uuZBS1jN8VsD1ss3irQDknRj5NvxiTF6oj/nDRnN/UQNw==
@@ -6545,11 +6545,12 @@ eslint-plugin-jest@22.7.1:
   resolved "https://registry.yarnpkg.com/eslint-plugin-jest/-/eslint-plugin-jest-22.7.1.tgz#5dcdf8f7a285f98040378220d6beca581f0ab2a1"
   integrity sha512-CrT3AzA738neimv8G8iK2HCkrCwHnAJeeo7k5TEHK86VMItKl6zdJT/tHBDImfnVVAYsVs4Y6BUdBZQCCgfiyw==
 
-eslint-plugin-jsx-a11y@^6.0.3:
-  version "6.2.1"
-  resolved "https://registry.yarnpkg.com/eslint-plugin-jsx-a11y/-/eslint-plugin-jsx-a11y-6.2.1.tgz#4ebba9f339b600ff415ae4166e3e2e008831cf0c"
-  integrity sha512-cjN2ObWrRz0TTw7vEcGQrx+YltMvZoOEx4hWU8eEERDnBIU00OTq7Vr+jA7DFKxiwLNv4tTh5Pq2GUNEa8b6+w==
+eslint-plugin-jsx-a11y@6.2.3:
+  version "6.2.3"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-jsx-a11y/-/eslint-plugin-jsx-a11y-6.2.3.tgz#b872a09d5de51af70a97db1eea7dc933043708aa"
+  integrity sha512-CawzfGt9w83tyuVekn0GDPU9ytYtxyxyFZ3aSWROmnRRFQFT2BiPJd7jvRdzNDi6oLWaS2asMeYSNMjWTV4eNg==
   dependencies:
+    "@babel/runtime" "^7.4.5"
     aria-query "^3.0.0"
     array-includes "^3.0.3"
     ast-types-flow "^0.0.7"
@@ -6557,7 +6558,7 @@ eslint-plugin-jsx-a11y@^6.0.3:
     damerau-levenshtein "^1.0.4"
     emoji-regex "^7.0.2"
     has "^1.0.3"
-    jsx-ast-utils "^2.0.1"
+    jsx-ast-utils "^2.2.1"
 
 eslint-plugin-react@7.14.2:
   version "7.14.2"
@@ -7773,12 +7774,12 @@ fs-extra@6.0.1, fs-extra@^6.0.1:
     jsonfile "^4.0.0"
     universalify "^0.1.0"
 
-fs-extra@8.0.1, fs-extra@^8.0.1:
-  version "8.0.1"
-  resolved "https://registry.yarnpkg.com/fs-extra/-/fs-extra-8.0.1.tgz#90294081f978b1f182f347a440a209154344285b"
-  integrity sha512-W+XLrggcDzlle47X/XnS7FXrXu9sDo+Ze9zpndeBxdgv88FHLm1HtmkhEwavruS6koanBjp098rUpHs65EmG7A==
+fs-extra@8.1.0:
+  version "8.1.0"
+  resolved "https://registry.yarnpkg.com/fs-extra/-/fs-extra-8.1.0.tgz#49d43c45a88cd9677668cb7be1b46efdb8d2e1c0"
+  integrity sha512-yhlQgA6mnOJUKOsRUFsgJdQCvkKhcz8tlZG5HBQfReYZy46OwLcY+Zia0mtdHsOo9y/hP+CxMN0TU9QxoOtG4g==
   dependencies:
-    graceful-fs "^4.1.2"
+    graceful-fs "^4.2.0"
     jsonfile "^4.0.0"
     universalify "^0.1.0"
 
@@ -7824,6 +7825,15 @@ fs-extra@^7.0.0:
   version "7.0.1"
   resolved "https://registry.yarnpkg.com/fs-extra/-/fs-extra-7.0.1.tgz#4f189c44aa123b895f722804f55ea23eadc348e9"
   integrity sha512-YJDaCJZEnBmcbw13fvdAM9AwNOJwOzrE4pqMqBq5nFiEqXUqHwlK4B+3pUw6JNvfSPtX05xFHtYy/1ni01eGCw==
+  dependencies:
+    graceful-fs "^4.1.2"
+    jsonfile "^4.0.0"
+    universalify "^0.1.0"
+
+fs-extra@^8.0.1:
+  version "8.0.1"
+  resolved "https://registry.yarnpkg.com/fs-extra/-/fs-extra-8.0.1.tgz#90294081f978b1f182f347a440a209154344285b"
+  integrity sha512-W+XLrggcDzlle47X/XnS7FXrXu9sDo+Ze9zpndeBxdgv88FHLm1HtmkhEwavruS6koanBjp098rUpHs65EmG7A==
   dependencies:
     graceful-fs "^4.1.2"
     jsonfile "^4.0.0"
@@ -8262,6 +8272,11 @@ graceful-fs@^4.1.10, graceful-fs@^4.1.11, graceful-fs@^4.1.15, graceful-fs@^4.1.
   version "4.1.15"
   resolved "https://registry.yarnpkg.com/graceful-fs/-/graceful-fs-4.1.15.tgz#ffb703e1066e8a0eeaa4c8b80ba9253eeefbfb00"
   integrity sha512-6uHUhOPEBgQ24HM+r6b/QwWfZq+yiFcipKFrOFiBEnWdy5sdzYoi+pJeQaPI5qOLRFqWmAXUPQNsielzdLoecA==
+
+graceful-fs@^4.2.0:
+  version "4.2.0"
+  resolved "https://registry.yarnpkg.com/graceful-fs/-/graceful-fs-4.2.0.tgz#8d8fdc73977cb04104721cb53666c1ca64cd328b"
+  integrity sha512-jpSvDPV4Cq/bgtpndIWbI5hmYxhQGHPC4d4cqBPb4DLniCfhJokdXhwhaDuLBGLQdvvRum/UiX6ECVIPvDXqdg==
 
 "graceful-readlink@>= 1.0.0":
   version "1.0.1"
@@ -10247,10 +10262,18 @@ jss@10.0.0-alpha.17:
     is-in-browser "^1.1.3"
     tiny-warning "^1.0.2"
 
-jsx-ast-utils@^2.0.1, jsx-ast-utils@^2.1.0:
+jsx-ast-utils@^2.1.0:
   version "2.2.0"
   resolved "https://registry.yarnpkg.com/jsx-ast-utils/-/jsx-ast-utils-2.2.0.tgz#e2bade6d09c8ef9d5f6b9ff2ace67b2cdbc7e370"
   integrity sha512-yAmhGSzR7TsD0OQpu1AGLz8Bx84cxMqtgoJrufomY6BlveEDlREhvu1rea21936xbe5tlUh7IPda82m5ae0H8Q==
+  dependencies:
+    array-includes "^3.0.3"
+    object.assign "^4.1.0"
+
+jsx-ast-utils@^2.2.1:
+  version "2.2.1"
+  resolved "https://registry.yarnpkg.com/jsx-ast-utils/-/jsx-ast-utils-2.2.1.tgz#4d4973ebf8b9d2837ee91a8208cc66f3a2776cfb"
+  integrity sha512-v3FxCcAf20DayI+uxnCuw795+oOIkVu6EnJ1+kSzhqqTZHNkTZ7B66ZgLp4oLJ/gbA64cI0B7WRoHZMSRdyVRQ==
   dependencies:
     array-includes "^3.0.3"
     object.assign "^4.1.0"
@@ -11786,12 +11809,12 @@ optimist@^0.6.1:
     minimist "~0.0.1"
     wordwrap "~0.0.2"
 
-optimize-css-assets-webpack-plugin@^5.0.1:
-  version "5.0.1"
-  resolved "https://registry.yarnpkg.com/optimize-css-assets-webpack-plugin/-/optimize-css-assets-webpack-plugin-5.0.1.tgz#9eb500711d35165b45e7fd60ba2df40cb3eb9159"
-  integrity sha512-Rqm6sSjWtx9FchdP0uzTQDc7GXDKnwVEGoSxjezPkzMewx7gEWE9IMUYKmigTRC4U3RaNSwYVnUDLuIdtTpm0A==
+optimize-css-assets-webpack-plugin@5.0.3:
+  version "5.0.3"
+  resolved "https://registry.yarnpkg.com/optimize-css-assets-webpack-plugin/-/optimize-css-assets-webpack-plugin-5.0.3.tgz#e2f1d4d94ad8c0af8967ebd7cf138dcb1ef14572"
+  integrity sha512-q9fbvCRS6EYtUKKSwI87qm2IxlyJK5b4dygW1rKUBT6mMDhdG5e5bZT63v6tnJR9F9FB/H5a0HTmtw+laUBxKA==
   dependencies:
-    cssnano "^4.1.0"
+    cssnano "^4.1.10"
     last-call-webpack-plugin "^3.0.0"
 
 optionator@^0.8.1, optionator@^0.8.2:
@@ -13325,10 +13348,10 @@ react-helmet-async@^1.0.2:
     react-fast-compare "2.0.4"
     shallowequal "1.1.0"
 
-react-hot-loader@4.11.1:
-  version "4.11.1"
-  resolved "https://registry.yarnpkg.com/react-hot-loader/-/react-hot-loader-4.11.1.tgz#2cabbd0f1c8a44c28837b86d6ce28521e6d9a8ac"
-  integrity sha512-HAC0UedYzM3mD+ZaQHesntFO0yi2ftOV4ZMMRTj43E4GvW5sQqYTPvur+6J7EaH3MDr/RqjDKXyCqKepV8+y7w==
+react-hot-loader@4.12.0:
+  version "4.12.0"
+  resolved "https://registry.yarnpkg.com/react-hot-loader/-/react-hot-loader-4.12.0.tgz#cb93d78db8b97fd7c1f5ab688a7eeaa4ad47df3f"
+  integrity sha512-N+8ct1euiQnwqqDyX+SrxsgZ13ax4e8JiHbSAPf7xAshPxF3iTqVJQUxOLH90RXOFaT8LLynq0VPz3rCK7AW1A==
   dependencies:
     fast-levenshtein "^2.0.6"
     global "^4.3.0"
@@ -15026,11 +15049,12 @@ store2@^2.7.1:
   resolved "https://registry.yarnpkg.com/store2/-/store2-2.7.1.tgz#22070b7dc04748a792fc6912a58ab99d3a21d788"
   integrity sha512-zzzP5ZY6QWumnAFV6kBRbS44pUMcpZBNER5DWUe1HETlaKXqLcCQxbNu6IHaKr1pUsjuhUGBdOy8sWKmMkL6pQ==
 
-storybook-host@^5.0.3:
-  version "5.0.3"
-  resolved "https://registry.yarnpkg.com/storybook-host/-/storybook-host-5.0.3.tgz#f28bf4c7758ed09f35d6c154875d2a5239fd11d2"
-  integrity sha512-IPysbrN6hMH6UspALIL1aD9PA6HL3nZC39+Vat5qkqF3YvcJk9/PNrMOQiCarxPXXuE3JxutSBqMHTlaoaSR6A==
+storybook-host@5.1.0:
+  version "5.1.0"
+  resolved "https://registry.yarnpkg.com/storybook-host/-/storybook-host-5.1.0.tgz#d48d3bdb3a048360bb89f9894037be5397cc6b61"
+  integrity sha512-iuDa1UnhFwDGuPDuxYke9QXnVrRNd8fvXRu/eGes22FDHhXUHn3tKicxbVELVNDiTAXptqVTrRazFmku2PUDIw==
   dependencies:
+    "@storybook/addons" "^5.1.9"
     "@types/tinycolor2" "^1.4.1"
     glamor "^2.20.40"
     ramda "^0.25.0"
@@ -15734,10 +15758,10 @@ truffle-artifactor@^2.1.2:
     truffle-contract "^2.0.3"
     truffle-contract-schema "^0.0.5"
 
-truffle-artifactor@^4.0.20:
-  version "4.0.20"
-  resolved "https://registry.yarnpkg.com/truffle-artifactor/-/truffle-artifactor-4.0.20.tgz#1baba681f407485fda7c408976ce0ad31a13d5ac"
-  integrity sha512-IX+KvGNPkDQlMW1+9txYYn1+6IkvLPFiIh+hIjj2E7yYg9XS3zYxYbWg/wTcGyZsdtHwRVLOks7EvA0k+5LD1w==
+truffle-artifactor@^4.0.21:
+  version "4.0.21"
+  resolved "https://registry.yarnpkg.com/truffle-artifactor/-/truffle-artifactor-4.0.21.tgz#decbe6ba18cfa19f267c0de61ba71ebd41ec191f"
+  integrity sha512-FTeJnChoaKBW33vkdfzjzpCWF+N09PuCSUIpogFy7QcFsEjTKej4cVPFCEDA5X/+DAJXCXiZapImth3rymZzEQ==
   dependencies:
     fs-extra "6.0.1"
     lodash "4.17.11"
@@ -15778,21 +15802,21 @@ truffle-code-utils@^1.2.4:
   resolved "https://registry.yarnpkg.com/truffle-code-utils/-/truffle-code-utils-1.2.4.tgz#19acbc225a5c99081c7aa4bbda122f6fbf2d27e9"
   integrity sha512-MtIusUMxJeJlOqoqda4DYJ86gqSGDVMGiqhVEVgHL2J5L4plci/uePgYROajklXE9H/g6u7yotnAKOhCdTB9/A==
 
-truffle-compile-vyper@^1.0.18:
-  version "1.0.18"
-  resolved "https://registry.yarnpkg.com/truffle-compile-vyper/-/truffle-compile-vyper-1.0.18.tgz#f9ed4c4141a76edfd1b32f6fd87eb95cd96495d3"
-  integrity sha512-MAsmYqY0eFklYtG3IBtBqlT0sibyq2yox2T356R1XGh/KpsFC1AbjyxsSTBL+pzpSb0ro3Fd2qZkluS1sSoijg==
+truffle-compile-vyper@^1.0.19:
+  version "1.0.19"
+  resolved "https://registry.yarnpkg.com/truffle-compile-vyper/-/truffle-compile-vyper-1.0.19.tgz#a75bb38b4c08734ec3e0472c2e0d429b50c5ba86"
+  integrity sha512-aIt0KUYp0ZHB9EodJkvz49V16XMDrZBlrg7fWP9DQQPCqyUz5kFfsUWgXbjoM1QOL+YDaLxOVshTTb8At0Clxg==
   dependencies:
     async "2.6.1"
     colors "^1.1.2"
     eslint "^5.5.0"
     minimatch "^3.0.4"
-    truffle-compile "^4.1.1"
+    truffle-compile "^4.1.2"
 
-truffle-compile@^4.1.1:
-  version "4.1.1"
-  resolved "https://registry.yarnpkg.com/truffle-compile/-/truffle-compile-4.1.1.tgz#581a3a6b851282b17ba010b141b8c1f5c9667420"
-  integrity sha512-b4XTcK2L/nb11ekeZy3Q4cx0DRaoqrZ4UQfd0cp6CXq3IVqMuEF+lNXjHnu+tIbzhMN2Zov1xV5DtoJC3vOJmw==
+truffle-compile@^4.1.2:
+  version "4.1.2"
+  resolved "https://registry.yarnpkg.com/truffle-compile/-/truffle-compile-4.1.2.tgz#fddc683a307feb4e470433c8c0fa1245ff82762d"
+  integrity sha512-uH1Svbo/huzFTOGfXnMJXM7t3r6j6T9ZzmT7OGrpPtRUX9vM36TC+6TJNIfpNxS548PfR9ujGZrZVBPZQ1IZmw==
   dependencies:
     async "2.6.1"
     colors "^1.1.2"
@@ -15870,10 +15894,10 @@ truffle-contract@4.0.0-next.0:
     web3-eth-abi "1.0.0-beta.35"
     web3-utils "1.0.0-beta.35"
 
-truffle-contract@4.0.21, truffle-contract@^4.0.21:
-  version "4.0.21"
-  resolved "https://registry.yarnpkg.com/truffle-contract/-/truffle-contract-4.0.21.tgz#aa336764d9712346ee1914b383b43a57f6ff3962"
-  integrity sha512-nFoEYDCyDihw3eDC7aHSJcNVP7WQbKl0N8umxXS5gAb3AujlNeV0OCV5lbAMMY4KwyfwaZp+uVjLnK/AnuSbww==
+truffle-contract@4.0.22, truffle-contract@^4.0.22:
+  version "4.0.22"
+  resolved "https://registry.yarnpkg.com/truffle-contract/-/truffle-contract-4.0.22.tgz#9c6d3dd7deb05004bafde22d8aa3d394d5ea989d"
+  integrity sha512-hPSyxk9yCQQV1MgSiIFtqDgO7aw/8TJS92i7LKlcr6v7+hXTsxp1EpuhkywQMrWPSlnc08tu6PHqT5wVDIuYvg==
   dependencies:
     bignumber.js "^7.2.1"
     ethers "^4.0.0-beta.1"
@@ -15896,10 +15920,10 @@ truffle-contract@^2.0.3:
     truffle-contract-schema "^0.0.5"
     web3 "^0.20.1"
 
-truffle-core@^5.0.24:
-  version "5.0.24"
-  resolved "https://registry.yarnpkg.com/truffle-core/-/truffle-core-5.0.24.tgz#80e6694032411aca6d98c0f4e38d49143df25a5c"
-  integrity sha512-rAjOUZnfGBivlwvkM2EyzL3tQJAqyDq/5IVgwR4LkM/dlYi5ZeIjA7Jj8LiUwtlmUiuYJi0R6bpk/cTjtJFaJQ==
+truffle-core@^5.0.25:
+  version "5.0.25"
+  resolved "https://registry.yarnpkg.com/truffle-core/-/truffle-core-5.0.25.tgz#85741c926d453fdfb47dc46926a89e9c0b06ef44"
+  integrity sha512-9EF82KAkgo6rpho4iApYImAdroSIEkN4eJMELtuplVi75njryEaxXcEejNdOxjWChKqEXSfChKf+IyOtLYMGyg==
   dependencies:
     app-module-path "^2.2.0"
     async "2.6.1"
@@ -15928,26 +15952,26 @@ truffle-core@^5.0.24:
     source-map-support "^0.5.3"
     spawn-args "^0.1.0"
     temp "^0.8.3"
-    truffle-artifactor "^4.0.20"
+    truffle-artifactor "^4.0.21"
     truffle-box "^1.0.28"
-    truffle-compile "^4.1.1"
+    truffle-compile "^4.1.2"
     truffle-config "^1.1.13"
-    truffle-contract "^4.0.21"
+    truffle-contract "^4.0.22"
     truffle-contract-sources "^0.1.4"
     truffle-debug-utils "^1.0.18"
-    truffle-debugger "^5.0.16"
-    truffle-deployer "^3.0.22"
+    truffle-debugger "^5.0.17"
+    truffle-deployer "^3.0.23"
     truffle-error "^0.0.5"
     truffle-expect "^0.0.9"
     truffle-init "^1.0.7"
     truffle-interface-adapter "^0.1.6"
-    truffle-migrate "^3.0.22"
+    truffle-migrate "^3.0.23"
     truffle-provider "^0.1.10"
     truffle-provisioner "^0.1.5"
     truffle-require "^2.0.13"
     truffle-resolver "^5.0.14"
     truffle-solidity-utils "^1.2.3"
-    truffle-workflow-compile "^2.0.20"
+    truffle-workflow-compile "^2.0.21"
     universal-analytics "^0.4.17"
     web3 "1.0.0-beta.37"
     xregexp "^4.2.4"
@@ -15962,10 +15986,10 @@ truffle-debug-utils@^1.0.18:
     debug "^4.1.0"
     node-dir "0.1.17"
 
-truffle-debugger@^5.0.16:
-  version "5.0.16"
-  resolved "https://registry.yarnpkg.com/truffle-debugger/-/truffle-debugger-5.0.16.tgz#b2b42609357c127479b617be6c1fb410374d8789"
-  integrity sha512-aeCRZPmowbFm8D0s8/e+FQPhStxcGpsEnZ2B446GHhSB+Y04fcqohOQqyPDXyua2P1nkLfuxhWBxFW2qgr23ig==
+truffle-debugger@^5.0.17:
+  version "5.0.17"
+  resolved "https://registry.yarnpkg.com/truffle-debugger/-/truffle-debugger-5.0.17.tgz#0c8c61a2f8501867235d39e55e03f5699a08490e"
+  integrity sha512-HDe+J9r0dIVwSdTJBa2mE/cL3aJhaM1hHT/RyoFFhmUcvpCyDSJwuYdZ/mJg3kfgA94FuL+PiywBbUItQz9YLw==
   dependencies:
     bn.js "^4.11.8"
     debug "^4.1.0"
@@ -15978,7 +16002,7 @@ truffle-debugger@^5.0.16:
     reselect-tree "^1.3.1"
     truffle-code-utils "^1.2.4"
     truffle-decode-utils "^1.0.14"
-    truffle-decoder "^3.0.5"
+    truffle-decoder "^3.0.6"
     truffle-expect "^0.0.9"
     truffle-solidity-utils "^1.2.3"
     web3 "1.0.0-beta.37"
@@ -15995,10 +16019,10 @@ truffle-decode-utils@^1.0.14:
     web3 "1.0.0-beta.37"
     web3-eth-abi "1.0.0-beta.52"
 
-truffle-decoder@^3.0.5:
-  version "3.0.5"
-  resolved "https://registry.yarnpkg.com/truffle-decoder/-/truffle-decoder-3.0.5.tgz#78d106eb50a3f032da963e0059a802bebafe618a"
-  integrity sha512-lY1ls6Hht9NK/UAzNYh9bfx5fDPBe7DvJGTwYm4TehwpaCsz67xTMrYN/Fr+6qFSxXXQ0lSW3X0VRQcbD5CDlA==
+truffle-decoder@^3.0.6:
+  version "3.0.6"
+  resolved "https://registry.yarnpkg.com/truffle-decoder/-/truffle-decoder-3.0.6.tgz#81f2a79b3e9b7d8f481aa624a848fedfa465548f"
+  integrity sha512-+oTTnymkCs/CClbk7xZCE2Im/2a26p0NRLFIhGghU3W25KxS6h810eeL+PHgtkNTCnbRbd/KNJaVS68j8u1IJg==
   dependencies:
     abi-decoder "^1.2.0"
     async-eventemitter "^0.2.4"
@@ -16008,15 +16032,16 @@ truffle-decoder@^3.0.5:
     lodash.isequal "^4.5.0"
     lodash.merge "^4.6.1"
     truffle-decode-utils "^1.0.14"
+    utf8 "^3.0.0"
     web3 "1.0.0-beta.37"
 
-truffle-deployer@^3.0.22:
-  version "3.0.22"
-  resolved "https://registry.yarnpkg.com/truffle-deployer/-/truffle-deployer-3.0.22.tgz#6b779241208a6a8180041e9c0b0e6cc408803e17"
-  integrity sha512-5XmwBU/53xnVzOMAS3gjhdQAxRKRcy/rwUiqg0Fr5YMncqKj/gRfQvaJxav8k1GWPz7Cxjh7Yc7dC4HPd9sZjA==
+truffle-deployer@^3.0.23:
+  version "3.0.23"
+  resolved "https://registry.yarnpkg.com/truffle-deployer/-/truffle-deployer-3.0.23.tgz#aedc519166c9ebdeff7a578bc2179ac3623b31bd"
+  integrity sha512-Au4oLIF5qNTO1sh2/8U9WTQ7nYA3S0sauHo/wc10QX38uSCfhO9Ly6VNYeJC4rz3WOsRDFaSqy3y+9V+89BL+g==
   dependencies:
     emittery "^0.4.0"
-    truffle-contract "^4.0.21"
+    truffle-contract "^4.0.22"
     truffle-expect "^0.0.9"
 
 truffle-error@^0.0.3:
@@ -16075,16 +16100,16 @@ truffle-interface-adapter@^0.1.6:
     bn.js "^4.11.8"
     web3 "1.0.0-beta.37"
 
-truffle-migrate@^3.0.22:
-  version "3.0.22"
-  resolved "https://registry.yarnpkg.com/truffle-migrate/-/truffle-migrate-3.0.22.tgz#6f66f9b79c57d69f09cf17ee39bedb1506479c1e"
-  integrity sha512-saTphMwl8oG95N3HqYettzkh7jjLfBR/Z40Pp087OL84YbqGpLxGXzfW6vF37IRs0UZfE0Ip0Py5VFIXRdgvmw==
+truffle-migrate@^3.0.23:
+  version "3.0.23"
+  resolved "https://registry.yarnpkg.com/truffle-migrate/-/truffle-migrate-3.0.23.tgz#ac694815f6c5e9ef22225ce77045ed3e6d50acd2"
+  integrity sha512-QjHTxpg7Q9RmM7q5E87+JKHtIkW30dXK+hPRr/GP92IDTsw/ZEa61k1bCKcXfiSMZFeKqCayM7kqLrmAqkwQeQ==
   dependencies:
     async "2.6.1"
     emittery "^0.4.0"
     node-dir "0.1.17"
     truffle-config "^1.1.13"
-    truffle-deployer "^3.0.22"
+    truffle-deployer "^3.0.23"
     truffle-expect "^0.0.9"
     truffle-interface-adapter "^0.1.6"
     truffle-reporters "^1.0.10"
@@ -16136,41 +16161,41 @@ truffle-resolver@^5.0.14:
     truffle-expect "^0.0.9"
     truffle-provisioner "^0.1.5"
 
-truffle-solidity-loader@0.1.23:
-  version "0.1.23"
-  resolved "https://registry.yarnpkg.com/truffle-solidity-loader/-/truffle-solidity-loader-0.1.23.tgz#b94ced7b412f8760468fc5e8ea6a6c6c86628a2c"
-  integrity sha512-AT83a1pqu8XSVa9NttTOVjDqCuwGFEVEUSjKKMxeKSorlK8tZqlipAe5GHs2lTZ1ffnRgGBFgPUrfiSr9tQp+w==
+truffle-solidity-loader@0.1.24:
+  version "0.1.24"
+  resolved "https://registry.yarnpkg.com/truffle-solidity-loader/-/truffle-solidity-loader-0.1.24.tgz#460b628ff615eb761718411986a61bc772998d58"
+  integrity sha512-f49mX42U/RpbB/URphaQM60L3O2bhDX4GBxjdisVCzepo6U81NgQl+j8RqSg8+fKaQSUSUx2nypPbA7MgnZ/7g==
   dependencies:
     chalk "^1.1.3"
     find-up "^1.1.2"
     loader-utils "^1.1.0"
     schema-utils "^1.0.0"
     truffle-config "^1.1.13"
-    truffle-core "^5.0.24"
+    truffle-core "^5.0.25"
 
 truffle-solidity-utils@^1.2.3:
   version "1.2.3"
   resolved "https://registry.yarnpkg.com/truffle-solidity-utils/-/truffle-solidity-utils-1.2.3.tgz#9e83c80fe5eeac1b9587f227af57e3feee5e183c"
   integrity sha512-Rf9KLx8BFTX6/1jxKuzWC5AegSMTN9uxLIKWP38oBAxHq/ilD64W+W5eyEqBxAXUYlAABj9jpOg4Pn5NRYtxOg==
 
-truffle-workflow-compile@^2.0.20:
-  version "2.0.20"
-  resolved "https://registry.yarnpkg.com/truffle-workflow-compile/-/truffle-workflow-compile-2.0.20.tgz#2faa3c3e2d0873beebce2c5fc265027e36c12fd8"
-  integrity sha512-XyUW5DTmnsCF9149/0kgUkRPe5gBzCb7W8FfjqXsUuGMKbSqucb+yMOU7qidSsl7NGiDBekWoR4G5Li6Z5k21g==
+truffle-workflow-compile@^2.0.21:
+  version "2.0.21"
+  resolved "https://registry.yarnpkg.com/truffle-workflow-compile/-/truffle-workflow-compile-2.0.21.tgz#2aad86bc70dca9b418d46b731759fe90aa138f59"
+  integrity sha512-Tf7xALEA9Tviu7lJ1JVIuEr2kYIint8tPWR+LwM0xDUZov6K5UaBuK0hPF/vGfkx9+wqzmi/kmo6vbDrtsNXng==
   dependencies:
     mkdirp "^0.5.1"
-    truffle-artifactor "^4.0.20"
-    truffle-compile "^4.1.1"
-    truffle-compile-vyper "^1.0.18"
+    truffle-artifactor "^4.0.21"
+    truffle-compile "^4.1.2"
+    truffle-compile-vyper "^1.0.19"
     truffle-config "^1.1.13"
     truffle-expect "^0.0.9"
     truffle-external-compile "^1.0.11"
     truffle-resolver "^5.0.14"
 
-truffle@5.0.24:
-  version "5.0.24"
-  resolved "https://registry.yarnpkg.com/truffle/-/truffle-5.0.24.tgz#5cbba0bb280a2907529e9b71b9444f064c649262"
-  integrity sha512-a7sAi7S3s82+qQBstGJzEUE09QjJLRlY00ITrK4N4Qfzgje3thUA2nIGl2uExdD07w6bUZBOLWW9eoCVwps1Eg==
+truffle@5.0.25:
+  version "5.0.25"
+  resolved "https://registry.yarnpkg.com/truffle/-/truffle-5.0.25.tgz#79e06eb004af481e6b43625557f68de97d5d1dd1"
+  integrity sha512-QGP6m/FPl761Vo01bp/kIvLse5ZiJP1sOs3CIDEXOskP4YilE4NmYuG0GwFSeVyxgjjXFzycJ16QHpndMK8KPQ==
   dependencies:
     app-module-path "^2.2.0"
     mocha "5.2.0"
@@ -17730,7 +17755,37 @@ webpack-sources@^1.1.0, webpack-sources@^1.3.0:
     source-list-map "^2.0.0"
     source-map "~0.6.1"
 
-webpack@4.35.0, webpack@^4.33.0:
+webpack@4.35.2:
+  version "4.35.2"
+  resolved "https://registry.yarnpkg.com/webpack/-/webpack-4.35.2.tgz#5c8b8a66602cbbd6ec65c6e6747914a61c1449b1"
+  integrity sha512-TZAmorNymV4q66gAM/h90cEjG+N3627Q2MnkSgKlX/z3DlNVKUtqy57lz1WmZU2+FUZwzM+qm7cGaO95PyrX5A==
+  dependencies:
+    "@webassemblyjs/ast" "1.8.5"
+    "@webassemblyjs/helper-module-context" "1.8.5"
+    "@webassemblyjs/wasm-edit" "1.8.5"
+    "@webassemblyjs/wasm-parser" "1.8.5"
+    acorn "^6.0.5"
+    acorn-dynamic-import "^4.0.0"
+    ajv "^6.1.0"
+    ajv-keywords "^3.1.0"
+    chrome-trace-event "^1.0.0"
+    enhanced-resolve "^4.1.0"
+    eslint-scope "^4.0.0"
+    json-parse-better-errors "^1.0.2"
+    loader-runner "^2.3.0"
+    loader-utils "^1.1.0"
+    memory-fs "~0.4.1"
+    micromatch "^3.1.8"
+    mkdirp "~0.5.0"
+    neo-async "^2.5.0"
+    node-libs-browser "^2.0.0"
+    schema-utils "^1.0.0"
+    tapable "^1.1.0"
+    terser-webpack-plugin "^1.1.0"
+    watchpack "^1.5.0"
+    webpack-sources "^1.3.0"
+
+webpack@^4.33.0:
   version "4.35.0"
   resolved "https://registry.yarnpkg.com/webpack/-/webpack-4.35.0.tgz#ad3f0f8190876328806ccb7a36f3ce6e764b8378"
   integrity sha512-M5hL3qpVvtr8d4YaJANbAQBc4uT01G33eDpl/psRTBCfjxFTihdhin1NtAKB1ruDwzeVdcsHHV3NX+QsAgOosw==
