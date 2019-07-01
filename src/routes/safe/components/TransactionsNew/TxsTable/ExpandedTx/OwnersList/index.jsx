@@ -31,7 +31,7 @@ const OwnersList = ({ owners, classes }: Props) => (
     {owners.map(owner => (
       <ListItem key={owner.address} className={classes.owner}>
         <ListItemIcon>
-          <Identicon address={owner.address} diameter={32} />
+          <Identicon address={owner.address} diameter={32} className={classes.icon} />
         </ListItemIcon>
         <ListItemText primary={owner.name} secondary={owner.address} />
       </ListItem>

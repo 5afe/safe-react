@@ -1,5 +1,5 @@
 // @flow
-import { border } from '~/theme/variables'
+import { border, sm } from '~/theme/variables'
 
 export const styles = () => ({
   ownersList: {
@@ -7,6 +7,9 @@ export const styles = () => ({
     padding: 0,
     maxHeight: '192px',
     overflowY: 'scroll',
+  },
+  icon: {
+    marginRight: sm,
   },
   owner: {
     borderBottom: `1px solid ${border}`,
