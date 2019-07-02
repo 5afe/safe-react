@@ -45,6 +45,8 @@ const ExpandedTx = ({
   const confirmedLabel = `Confirmed [${tx.confirmations.size}/${threshold}]`
   const unconfirmedLabel = `Unconfirmed [${owners.size - tx.confirmations.size}]`
   const txStatus = tx.isExecuted ? 'success' : 'awaiting_confirmations'
+  const ownersWhoConfirmed = tx.confirmations.map(conf => conf.owner)
+  const ownersNotConfirmed = owners.filter(owner => !ownersWhoConfirmed.find(confOfwner => confOfwner.address === owner.address))
 
   const handleTabChange = (event, tabClicked) => {
     setTabIndex(tabClicked)
@@ -100,7 +102,8 @@ const ExpandedTx = ({
             </Tabs>
             <Hairline color="#c8ced4" />
           </Row>
-          <Row>{tabIndex === 0 && <OwnersList owners={owners} />}</Row>
+          <Row>{tabIndex === 0 && <OwnersList owners={ownersWhoConfirmed} />}</Row>
+          <Row>{tabIndex === 1 && <OwnersList owners={ownersNotConfirmed} />}</Row>
         </Col>
       </Row>
     </Block>
