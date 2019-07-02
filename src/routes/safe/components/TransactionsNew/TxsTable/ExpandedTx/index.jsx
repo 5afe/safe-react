@@ -19,6 +19,7 @@ import { shortVersionOf } from '~/logic/wallets/ethAddresses'
 import { secondary } from '~/theme/variables'
 import OwnersList from './OwnersList'
 import ButtonRow from './ButtonRow'
+import CancelTxModal from './CancelTxModal'
 import { styles } from './style'
 import { formatDate } from '../columns'
 
@@ -31,6 +32,8 @@ type Props = {
   threshold: number,
   owners: List<Owner>,
 }
+
+type OpenModal = 'cancelTx' | 'approveTx' | null
 
 const openIconStyle = {
   height: '13px',
@@ -46,6 +49,11 @@ const ExpandedTx = ({
   classes, tx, threshold, owners,
 }: Props) => {
   const [tabIndex, setTabIndex] = useState<number>(0)
+  const [openModal, setOpenModal] = useState<OpenModal>(null)
+  const openApproveModal = () => setOpenModal('approveTx')
+  const openCancelModal = () => setOpenModal('cancelTx')
+  const closeModal = () => setOpenModal(null)
+
   const confirmedLabel = `Confirmed [${tx.confirmations.size}/${threshold}]`
   const unconfirmedLabel = `Unconfirmed [${owners.size - tx.confirmations.size}]`
   const txStatus = tx.isExecuted ? 'success' : 'awaiting_confirmations'
@@ -65,72 +73,75 @@ const ExpandedTx = ({
   }
 
   return (
-    <Block>
-      <Row>
-        <Col xs={6} layout="column">
-          <Block className={classes.txDataContainer}>
-            <Paragraph noMargin>
-              <Bold>TX hash: </Bold>
-              {tx.executionTxHash ? (
-                <a href={openTxInEtherScan(tx.executionTxHash, 'rinkeby')} target="_blank" rel="noopener noreferrer">
-                  {shortVersionOf(tx.executionTxHash, 4)}
+    <>
+      <Block>
+        <Row>
+          <Col xs={6} layout="column">
+            <Block className={classes.txDataContainer}>
+              <Paragraph noMargin>
+                <Bold>TX hash: </Bold>
+                {tx.executionTxHash ? (
+                  <a href={openTxInEtherScan(tx.executionTxHash, 'rinkeby')} target="_blank" rel="noopener noreferrer">
+                    {shortVersionOf(tx.executionTxHash, 4)}
+                    <OpenInNew style={openIconStyle} />
+                  </a>
+                ) : (
+                  'n/a'
+                )}
+              </Paragraph>
+              <Paragraph noMargin>
+                <Bold>TX status: </Bold>
+                <Span className={classes[txStatus]} style={{ fontWeight: 'bold' }}>
+                  {txStatusToLabel[txStatus]}
+                </Span>
+              </Paragraph>
+              <Paragraph noMargin>
+                <Bold>TX created: </Bold>
+                {formatDate(tx.submissionDate)}
+              </Paragraph>
+              {tx.executionDate && (
+                <Paragraph noMargin>
+                  <Bold>TX executed: </Bold>
+                  {formatDate(tx.executionDate)}
+                </Paragraph>
+              )}
+            </Block>
+            <Hairline />
+            <Block className={classes.txDataContainer}>
+              <Paragraph noMargin>
+                <Bold>
+                  Send
+                  {' '}
+                  {fromWei(toBN(tx.value), 'ether')}
+                  {' '}
+                  {tx.symbol}
+                  {' '}
+to:
+                </Bold>
+                <br />
+                <a href={getEtherScanLink(tx.recipient, 'rinkeby')} target="_blank" rel="noopener noreferrer">
+                  {shortVersionOf(tx.recipient, 4)}
                   <OpenInNew style={openIconStyle} />
                 </a>
-              ) : (
-                'n/a'
-              )}
-            </Paragraph>
-            <Paragraph noMargin>
-              <Bold>TX status: </Bold>
-              <Span className={classes[txStatus]} style={{ fontWeight: 'bold' }}>
-                {txStatusToLabel[txStatus]}
-              </Span>
-            </Paragraph>
-            <Paragraph noMargin>
-              <Bold>TX created: </Bold>
-              {formatDate(tx.submissionDate)}
-            </Paragraph>
-            {tx.executionDate && (
-              <Paragraph noMargin>
-                <Bold>TX executed: </Bold>
-                {formatDate(tx.executionDate)}
               </Paragraph>
-            )}
-          </Block>
-          <Hairline />
-          <Block className={classes.txDataContainer}>
-            <Paragraph noMargin>
-              <Bold>
-                Send
-                {' '}
-                {fromWei(toBN(tx.value), 'ether')}
-                {' '}
-                {tx.symbol}
-                {' '}
-                to:
-              </Bold>
-              <br />
-              <a href={getEtherScanLink(tx.recipient, 'rinkeby')} target="_blank" rel="noopener noreferrer">
-                {shortVersionOf(tx.recipient, 4)}
-                <OpenInNew style={openIconStyle} />
-              </a>
-            </Paragraph>
-          </Block>
-        </Col>
-        <Col xs={6} className={classes.rightCol} layout="block">
-          <Row>
-            <Tabs value={tabIndex} onChange={handleTabChange} indicatorColor="secondary" textColor="secondary">
-              <Tab label={confirmedLabel} />
-              <Tab label={unconfirmedLabel} />
-            </Tabs>
-            <Hairline color="#c8ced4" />
-          </Row>
-          <Row>{tabIndex === 0 && <OwnersList owners={ownersWhoConfirmed} />}</Row>
-          <Row>{tabIndex === 1 && <OwnersList owners={ownersUnconfirmed} />}</Row>
-          <ButtonRow />
-        </Col>
-      </Row>
-    </Block>
+            </Block>
+          </Col>
+          <Col xs={6} className={classes.rightCol} layout="block">
+            <Row>
+              <Tabs value={tabIndex} onChange={handleTabChange} indicatorColor="secondary" textColor="secondary">
+                <Tab label={confirmedLabel} />
+                <Tab label={unconfirmedLabel} />
+              </Tabs>
+              <Hairline color="#c8ced4" />
+            </Row>
+            <Row>{tabIndex === 0 && <OwnersList owners={ownersWhoConfirmed} />}</Row>
+            <Row>{tabIndex === 1 && <OwnersList owners={ownersUnconfirmed} />}</Row>
+            <ButtonRow onTxApprove={openApproveModal} onTxCancel={openCancelModal} />
+          </Col>
+        </Row>
+      </Block>
+      <CancelTxModal isOpen={openModal === 'cancelTx'} onClose={closeModal} />
+    </>
   )
 }
 
