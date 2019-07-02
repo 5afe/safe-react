@@ -1,9 +1,11 @@
 // @flow
 import React from 'react'
 import { withStyles } from '@material-ui/core/styles'
+import EditIcon from '@material-ui/icons/Edit'
+import BlockIcon from '@material-ui/icons/Block'
 import Row from '~/components/layout/Row'
 import Button from '~/components/layout/Button'
-import { lg } from '~/theme/variables'
+import { sm, lg } from '~/theme/variables'
 
 type Props = {
   onTxConfirm: Function,
@@ -23,14 +25,23 @@ const styles = () => ({
       marginLeft: lg,
     },
   },
+  icon: {
+    width: '14px',
+    height: '14px',
+    marginRight: sm,
+  },
 })
 
 const ButtonRow = ({ classes, onTxCancel, onTxConfirm }: Props) => (
   <Row align="center" className={classes.buttonRow}>
     <Button className={classes.button} variant="contained" minWidth={140} color="secondary" onClick={onTxCancel}>
+      <BlockIcon className={classes.icon} />
+      {' '}
       Cancel TX
     </Button>
     <Button className={classes.button} variant="contained" minWidth={140} color="primary" onClick={onTxConfirm}>
+      <EditIcon className={classes.icon} />
+      {' '}
       Confirm TX
     </Button>
   </Row>
