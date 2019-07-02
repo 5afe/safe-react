@@ -20,7 +20,7 @@ import EditOwnerModal from './EditOwnerModal'
 import OwnerAddressTableCell from './OwnerAddressTableCell'
 import type { Owner } from '~/routes/safe/store/models/owner'
 import {
-  getOwnerData, generateColumns, OWNERS_TABLE_ADDRESS_ID, type OwnerRow,
+  getOwnerData, generateColumns, OWNERS_TABLE_NAME_ID, OWNERS_TABLE_ADDRESS_ID, type OwnerRow,
 } from './dataFetcher'
 import { sm, boldFont } from '~/theme/variables'
 import { styles } from './style'
@@ -123,7 +123,15 @@ class ManageOwners extends React.Component<Props, State> {
           <Paragraph noMargin className={classes.title} size="lg" weight="bolder">
             Manage Safe Owners
           </Paragraph>
-          <Table label="owners" columns={columns} data={ownerData} size={ownerData.size} defaultFixed noBorder>
+          <Table
+            label="Owners"
+            defaultOrderBy={OWNERS_TABLE_NAME_ID}
+            columns={columns}
+            data={ownerData}
+            size={ownerData.size}
+            defaultFixed
+            noBorder
+          >
             {(sortedData: Array<OwnerRow>) => sortedData.map((row: any, index: number) => (
               <TableRow tabIndex={-1} key={index} className={classes.hide} data-testid={OWNERS_ROW_TESTID}>
                 {autoColumns.map((column: Column) => (
