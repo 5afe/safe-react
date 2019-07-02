@@ -57,6 +57,9 @@ export default createMuiTheme({
       containedPrimary: {
         backgroundColor: secondary,
       },
+      containedSecondary: {
+        backgroundColor: error,
+      },
       sizeLarge: {
         padding: `${md} ${lg}`,
         minHeight: '52px',

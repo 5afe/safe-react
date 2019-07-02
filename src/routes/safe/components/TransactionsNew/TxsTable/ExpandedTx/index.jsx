@@ -14,12 +14,16 @@ import Paragraph from '~/components/layout/Paragraph'
 import Hairline from '~/components/layout/Hairline'
 import { type Transaction } from '~/routes/safe/store/models/transaction'
 import { type Owner } from '~/routes/safe/store/models/owner'
-import { openTxInEtherScan } from '~/logic/wallets/getWeb3'
+import { getEtherScanLink, openTxInEtherScan, getWeb3 } from '~/logic/wallets/getWeb3'
 import { shortVersionOf } from '~/logic/wallets/ethAddresses'
 import { secondary } from '~/theme/variables'
 import OwnersList from './OwnersList'
+import ButtonRow from './ButtonRow'
 import { styles } from './style'
 import { formatDate } from '../columns'
+
+const web3 = getWeb3()
+const { toBN, fromWei } = web3.utils
 
 type Props = {
   classes: Object,
@@ -45,8 +49,16 @@ const ExpandedTx = ({
   const confirmedLabel = `Confirmed [${tx.confirmations.size}/${threshold}]`
   const unconfirmedLabel = `Unconfirmed [${owners.size - tx.confirmations.size}]`
   const txStatus = tx.isExecuted ? 'success' : 'awaiting_confirmations'
-  const ownersWhoConfirmed = tx.confirmations.map(conf => conf.owner)
-  const ownersNotConfirmed = owners.filter(owner => !ownersWhoConfirmed.find(confOfwner => confOfwner.address === owner.address))
+
+  const ownersWhoConfirmed = []
+  const ownersUnconfirmed = []
+  owners.forEach((owner) => {
+    if (tx.confirmations.find(conf => conf.owner.address === owner.address)) {
+      ownersWhoConfirmed.push(owner)
+    } else {
+      ownersUnconfirmed.push(owner)
+    }
+  })
 
   const handleTabChange = (event, tabClicked) => {
     setTabIndex(tabClicked)
@@ -88,9 +100,20 @@ const ExpandedTx = ({
           <Hairline />
           <Block className={classes.txDataContainer}>
             <Paragraph noMargin>
-              <Bold>Send 1.00 ETH to:</Bold>
+              <Bold>
+                Send
+                {' '}
+                {fromWei(toBN(tx.value), 'ether')}
+                {' '}
+                {tx.symbol}
+                {' '}
+                to:
+              </Bold>
               <br />
-              {tx.recipient}
+              <a href={getEtherScanLink(tx.recipient, 'rinkeby')} target="_blank" rel="noopener noreferrer">
+                {shortVersionOf(tx.recipient, 4)}
+                <OpenInNew style={openIconStyle} />
+              </a>
             </Paragraph>
           </Block>
         </Col>
@@ -103,7 +126,8 @@ const ExpandedTx = ({
             <Hairline color="#c8ced4" />
           </Row>
           <Row>{tabIndex === 0 && <OwnersList owners={ownersWhoConfirmed} />}</Row>
-          <Row>{tabIndex === 1 && <OwnersList owners={ownersNotConfirmed} />}</Row>
+          <Row>{tabIndex === 1 && <OwnersList owners={ownersUnconfirmed} />}</Row>
+          <ButtonRow />
         </Col>
       </Row>
     </Block>
