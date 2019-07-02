@@ -1,7 +1,7 @@
 // @flow
+import { type Match } from 'react-router-dom'
 import { buildMatchPropsFrom } from '~/test/utils/buildReactRouterProps'
 import { safeSelector } from '~/routes/safe/store/selectors/index'
-import { type Match } from 'react-router-dom'
 import { type GlobalState } from '~/store'
 import { type Safe } from '~/routes/safe/store/models/safe'
 
