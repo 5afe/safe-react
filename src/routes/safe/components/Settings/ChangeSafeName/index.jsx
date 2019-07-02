@@ -11,17 +11,12 @@ import Row from '~/components/layout/Row'
 import Paragraph from '~/components/layout/Paragraph'
 import Hairline from '~/components/layout/Hairline'
 import Button from '~/components/layout/Button'
-import { sm, boldFont } from '~/theme/variables'
+import { sm } from '~/theme/variables'
 import { styles } from './style'
 
 const controlsStyle = {
   backgroundColor: 'white',
   padding: sm,
-}
-
-const saveButtonStyle = {
-  marginRight: sm,
-  fontWeight: boldFont,
 }
 
 export const SAFE_NAME_INPUT_TESTID = 'safe-name-input'
@@ -74,7 +69,7 @@ const ChangeSafeName = (props: Props) => {
               <Col end="xs">
                 <Button
                   type="submit"
-                  style={saveButtonStyle}
+                  className={classes.saveBtn}
                   size="small"
                   variant="contained"
                   color="primary"

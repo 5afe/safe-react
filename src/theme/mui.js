@@ -43,6 +43,9 @@ export default createMuiTheme({
   },
   overrides: {
     MuiButton: {
+      label: {
+        lineHeight: 1,
+      },
       root: {
         fontFamily: 'Roboto Mono, monospace',
         letterSpacing: '0.9px',
