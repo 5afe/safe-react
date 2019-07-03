@@ -103,7 +103,7 @@ describe('DOM > Feature > Settings - Manage owners', () => {
 
     const nextBtnStep3 = SafeDom.getByTestId(REMOVE_OWNER_REVIEW_BTN_TESTID)
     fireEvent.click(nextBtnStep3)
-    await sleep(400)
+    await sleep(1300)
 
     // check if owner was removed
     ownerRows = SafeDom.getAllByTestId(OWNERS_ROW_TESTID)
@@ -143,7 +143,7 @@ describe('DOM > Feature > Settings - Manage owners', () => {
     fireEvent.click(SafeDom.getByTestId(ADD_OWNER_THRESHOLD_NEXT_BTN_TESTID))
     await sleep(200)
     fireEvent.click(SafeDom.getByTestId(ADD_OWNER_SUBMIT_BTN))
-    await sleep(400)
+    await sleep(1000)
 
     // check if owner was added
     const newOwnerRow = SafeDom.getAllByTestId(OWNERS_ROW_TESTID)[1]
