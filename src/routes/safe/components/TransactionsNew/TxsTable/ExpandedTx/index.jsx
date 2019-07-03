@@ -32,6 +32,8 @@ type Props = {
   tx: Transaction,
   threshold: number,
   owners: List<Owner>,
+  granted: boolean,
+  userAddress: string,
 }
 
 type OpenModal = 'cancelTx' | 'approveTx' | null
@@ -47,7 +49,7 @@ const txStatusToLabel = {
 }
 
 const ExpandedTx = ({
-  classes, tx, threshold, owners,
+  classes, tx, threshold, owners, granted, userAddress,
 }: Props) => {
   const [tabIndex, setTabIndex] = useState<number>(0)
   const [openModal, setOpenModal] = useState<OpenModal>(null)
@@ -61,9 +63,15 @@ const ExpandedTx = ({
 
   const ownersWhoConfirmed = []
   const ownersUnconfirmed = []
+
+  let currentUserAlreadyConfirmed = false
   owners.forEach((owner) => {
     if (tx.confirmations.find(conf => conf.owner.address === owner.address)) {
       ownersWhoConfirmed.push(owner)
+
+      if (owner.address === userAddress) {
+        currentUserAlreadyConfirmed = true
+      }
     } else {
       ownersUnconfirmed.push(owner)
     }
@@ -117,7 +125,7 @@ const ExpandedTx = ({
                   {' '}
                   {tx.symbol}
                   {' '}
-                  to:
+to:
                 </Bold>
                 <br />
                 <a href={getEtherScanLink(tx.recipient, 'rinkeby')} target="_blank" rel="noopener noreferrer">
@@ -137,7 +145,13 @@ const ExpandedTx = ({
             </Row>
             <Row>{tabIndex === 0 && <OwnersList owners={ownersWhoConfirmed} />}</Row>
             <Row>{tabIndex === 1 && <OwnersList owners={ownersUnconfirmed} />}</Row>
-            <ButtonRow onTxConfirm={openApproveModal} onTxCancel={openCancelModal} />
+            {granted && (
+              <ButtonRow
+                onTxConfirm={openApproveModal}
+                onTxCancel={openCancelModal}
+                showConfirmBtn={!currentUserAlreadyConfirmed}
+              />
+            )}
           </Col>
         </Row>
       </Block>

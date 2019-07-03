@@ -25,9 +25,14 @@ import Settings from './Settings'
 export const SETTINGS_TAB_BTN_TESTID = 'settings-tab-btn'
 export const SAFE_VIEW_NAME_HEADING_TESTID = 'safe-name-heading'
 
+type State = {
+  tabIndex: number,
+}
+
 type Props = SelectorProps & {
   classes: Object,
   granted: boolean,
+  updateSafe: Function,
   createTransaction: Function,
   fetchTransactions: Function,
 }
@@ -102,6 +107,7 @@ class Layout extends React.Component<Props, State> {
       fetchTransactions,
       updateSafe,
       transactions,
+      userAddress,
     } = this.props
     const { tabIndex } = this.state
 
@@ -160,6 +166,8 @@ class Layout extends React.Component<Props, State> {
             transactions={transactions}
             fetchTransactions={fetchTransactions}
             safeAddress={address}
+            userAddress={userAddress}
+            granted={granted}
           />
         )}
         {tabIndex === 2 && (

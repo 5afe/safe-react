@@ -12,6 +12,8 @@ type Props = {
   fetchTransactions: Function,
   transactions: List<Transaction>,
   owners: List<Owner>,
+  userAddress: string,
+  granted: boolean,
 }
 
 class Transactions extends React.Component<Props, {}> {
@@ -22,13 +24,21 @@ class Transactions extends React.Component<Props, {}> {
   }
 
   render() {
-    const { transactions, owners, threshold } = this.props
+    const {
+      transactions, owners, threshold, userAddress, granted,
+    } = this.props
     const hasTransactions = transactions.size > 0
 
     return (
       <React.Fragment>
         {hasTransactions ? (
-          <TxsTable transactions={transactions} threshold={threshold} owners={owners} />
+          <TxsTable
+            transactions={transactions}
+            threshold={threshold}
+            owners={owners}
+            userAddress={userAddress}
+            granted={granted}
+          />
         ) : (
           <NoTransactions />
         )}
