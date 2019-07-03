@@ -6,6 +6,7 @@ import { SharedSnackbarConsumer } from '~/components/SharedSnackBar'
 import Modal from '~/components/Modal'
 import { type Owner, makeOwner } from '~/routes/safe/store/models/owner'
 import { getGnosisSafeInstanceAt } from '~/logic/contracts/safeContracts'
+import { getOwners } from '~/logic/safe/utils'
 import OwnerForm from './screens/OwnerForm'
 import ThresholdForm from './screens/ThresholdForm'
 import ReviewAddOwner from './screens/Review'
@@ -35,7 +36,7 @@ type ActiveScreen = 'selectOwner' | 'selectThreshold' | 'reviewAddOwner'
 export const sendAddOwner = async (
   values: Object,
   safeAddress: string,
-  owners: List<Owner>,
+  ownersOld: List<Owner>,
   openSnackbar: Function,
   createTransaction: Function,
   updateSafe: Function,
@@ -45,10 +46,21 @@ export const sendAddOwner = async (
 
   const txHash = await createTransaction(safeAddress, safeAddress, 0, txData, openSnackbar)
 
+  const owners = []
+  const storedOwners = await getOwners(safeAddress)
+  storedOwners.forEach((value, key) => owners.push(makeOwner({
+    address: key,
+    name: (values.ownerAddress.toLowerCase() === key.toLowerCase()) ? values.ownerName : value,
+  })))
+  const newOwnerIndex = List(owners).findIndex(o => o.address.toLowerCase() === values.ownerAddress.toLowerCase())
+  if (newOwnerIndex < 0) {
+    owners.push(makeOwner({ address: values.ownerAddress, name: values.ownerName }))
+  }
+
   if (txHash) {
     updateSafe({
       address: safeAddress,
-      owners: owners.push(makeOwner({ name: values.ownerName, address: values.ownerAddress })),
+      owners: List(owners),
     })
   }
 }

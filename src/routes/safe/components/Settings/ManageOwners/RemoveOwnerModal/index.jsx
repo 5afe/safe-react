@@ -4,8 +4,9 @@ import { List } from 'immutable'
 import { withStyles } from '@material-ui/core/styles'
 import { SharedSnackbarConsumer } from '~/components/SharedSnackBar'
 import Modal from '~/components/Modal'
-import { type Owner } from '~/routes/safe/store/models/owner'
+import { type Owner, makeOwner } from '~/routes/safe/store/models/owner'
 import { getGnosisSafeInstanceAt } from '~/logic/contracts/safeContracts'
+import { getOwners } from '~/logic/safe/utils'
 import CheckOwner from './screens/CheckOwner'
 import ThresholdForm from './screens/ThresholdForm'
 import ReviewRemoveOwner from './screens/Review'
@@ -41,23 +42,31 @@ export const sendRemoveOwner = async (
   safeAddress: string,
   ownerAddressToRemove: string,
   ownerNameToRemove: string,
-  owners: List<Owner>,
+  ownersOld: List<Owner>,
   openSnackbar: Function,
   createTransaction: Function,
   updateSafe: Function,
 ) => {
   const gnosisSafe = await getGnosisSafeInstanceAt(safeAddress)
-  const storedOwners = await gnosisSafe.getOwners()
-  const index = storedOwners.findIndex(ownerAddress => ownerAddress === ownerAddressToRemove)
-  const prevAddress = index === 0 ? SENTINEL_ADDRESS : storedOwners[index - 1]
+  const safeOwners = await gnosisSafe.getOwners()
+  const index = safeOwners.findIndex(ownerAddress => ownerAddress.toLowerCase() === ownerAddressToRemove.toLowerCase())
+  const prevAddress = index === 0 ? SENTINEL_ADDRESS : safeOwners[index - 1]
   const txData = gnosisSafe.contract.methods
     .removeOwner(prevAddress, ownerAddressToRemove, values.threshold)
     .encodeABI()
-  // const text = `Remove Owner ${ownerNameToRemove} (${ownerAddressToRemove})`
 
   const txHash = await createTransaction(safeAddress, safeAddress, 0, txData, openSnackbar)
+
+  let owners = []
+  const storedOwners = await getOwners(safeAddress)
+  storedOwners.forEach((value, key) => owners.push(makeOwner({ address: key, name: value })))
+  owners = List(owners).filter(o => o.address.toLowerCase() !== ownerAddressToRemove.toLowerCase())
+
   if (txHash) {
-    updateSafe({ address: safeAddress, owners: owners.filter(o => o.address !== ownerAddressToRemove) })
+    updateSafe({
+      address: safeAddress,
+      owners,
+    })
   }
 }
 
