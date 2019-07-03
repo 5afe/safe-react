@@ -117,7 +117,7 @@ const ExpandedTx = ({
                   {' '}
                   {tx.symbol}
                   {' '}
-to:
+                  to:
                 </Bold>
                 <br />
                 <a href={getEtherScanLink(tx.recipient, 'rinkeby')} target="_blank" rel="noopener noreferrer">
@@ -141,8 +141,8 @@ to:
           </Col>
         </Row>
       </Block>
-      <CancelTxModal isOpen={openModal === 'cancelTx'} onClose={closeModal} nonce={tx.nonce} />
-      <ApproveTxModal isOpen={openModal === 'approveTx'} onClose={closeModal} nonce={tx.nonce} />
+      <CancelTxModal isOpen={openModal === 'cancelTx'} onClose={closeModal} tx={tx} />
+      <ApproveTxModal isOpen={openModal === 'approveTx'} onClose={closeModal} tx={tx} />
     </>
   )
 }

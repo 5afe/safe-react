@@ -10,6 +10,7 @@ import Row from '~/components/layout/Row'
 import Bold from '~/components/layout/Bold'
 import Block from '~/components/layout/Block'
 import Paragraph from '~/components/layout/Paragraph'
+import { type Transaction } from '~/routes/safe/store/models/transaction'
 import { styles } from './style'
 
 type Props = {
@@ -17,11 +18,11 @@ type Props = {
   classes: Object,
   isOpen: boolean,
   createTransaction: Function,
-  nonce: string,
+  tx: Transaction,
 }
 
 const CancelTxModal = ({
-  onClose, isOpen, classes, createTransaction, nonce,
+  onClose, isOpen, classes, createTransaction, tx,
 }: Props) => (
   <Modal
     title="Cancel Transaction"
@@ -47,7 +48,7 @@ const CancelTxModal = ({
         <Paragraph size="sm" color="medium">
           Transaction nonce:
           <br />
-          <Bold className={classes.nonceNumber}>{nonce}</Bold>
+          <Bold className={classes.nonceNumber}>{tx.nonce}</Bold>
         </Paragraph>
       </Row>
     </Block>
