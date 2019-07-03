@@ -3,6 +3,8 @@ import React from 'react'
 import Close from '@material-ui/icons/Close'
 import IconButton from '@material-ui/core/IconButton'
 import { withStyles } from '@material-ui/core/styles'
+import FormControlLabel from '@material-ui/core/FormControlLabel'
+import Checkbox from '@material-ui/core/Checkbox'
 import Modal from '~/components/Modal'
 import Hairline from '~/components/layout/Hairline'
 import Button from '~/components/layout/Button'
@@ -20,19 +22,19 @@ type Props = {
   nonce: string,
 }
 
-const CancelTxModal = ({
+const ApproveTxModal = ({
   onClose, isOpen, classes, createTransaction, nonce,
 }: Props) => (
   <Modal
-    title="Cancel Transaction"
-    description="Cancel Transaction"
+    title="Approve Transaction"
+    description="Approve Transaction"
     handleClose={onClose}
     open={isOpen}
     // paperClassName={cn(smallerModalSize && classes.smallerModalWindow)}
   >
     <Row align="center" grow className={classes.heading}>
       <Paragraph weight="bolder" className={classes.headingText} noMargin>
-        Cancel transaction
+        Approve transaction
       </Paragraph>
       <IconButton onClick={onClose} disableRipple>
         <Close className={classes.closeIcon} />
@@ -42,13 +44,18 @@ const CancelTxModal = ({
     <Block className={classes.container}>
       <Row>
         <Paragraph>
-          This action will cancel this transaction. A separate transaction will be performed to submit the cancellation.
+          This action will approve this transaction. A separate transaction will be performed to submit the approval.
         </Paragraph>
         <Paragraph size="sm" color="medium">
           Transaction nonce:
           <br />
           <Bold className={classes.nonceNumber}>{nonce}</Bold>
         </Paragraph>
+        <Paragraph color="error">
+          Approving transaction does not execute it immediately. If you want to approve and execute the transaction
+          right away, click on checkbox below.
+        </Paragraph>
+        <FormControlLabel control={<Checkbox checked={false} color="primary" />} label="Execute transaction" />
       </Row>
     </Block>
     <Row align="center" className={classes.buttonRow}>
@@ -61,13 +68,13 @@ const CancelTxModal = ({
         variant="contained"
         minWidth={214}
         minHeight={42}
-        color="secondary"
+        color="primary"
         data-testid="review-tx-btn"
       >
-        Cancel Transaction
+        Approve Transaction
       </Button>
     </Row>
   </Modal>
 )
 
-export default withStyles(styles)(CancelTxModal)
+export default withStyles(styles)(ApproveTxModal)

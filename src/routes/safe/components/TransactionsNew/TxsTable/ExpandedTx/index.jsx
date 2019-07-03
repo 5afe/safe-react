@@ -20,6 +20,7 @@ import { secondary } from '~/theme/variables'
 import OwnersList from './OwnersList'
 import ButtonRow from './ButtonRow'
 import CancelTxModal from './CancelTxModal'
+import ApproveTxModal from './ApproveTxModal'
 import { styles } from './style'
 import { formatDate } from '../columns'
 
@@ -136,11 +137,12 @@ to:
             </Row>
             <Row>{tabIndex === 0 && <OwnersList owners={ownersWhoConfirmed} />}</Row>
             <Row>{tabIndex === 1 && <OwnersList owners={ownersUnconfirmed} />}</Row>
-            <ButtonRow onTxApprove={openApproveModal} onTxCancel={openCancelModal} />
+            <ButtonRow onTxConfirm={openApproveModal} onTxCancel={openCancelModal} />
           </Col>
         </Row>
       </Block>
       <CancelTxModal isOpen={openModal === 'cancelTx'} onClose={closeModal} nonce={tx.nonce} />
+      <ApproveTxModal isOpen={openModal === 'approveTx'} onClose={closeModal} nonce={tx.nonce} />
     </>
   )
 }
