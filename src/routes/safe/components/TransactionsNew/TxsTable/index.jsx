@@ -17,7 +17,7 @@ import { type Transaction } from '~/routes/safe/store/models/transaction'
 import { type Owner } from '~/routes/safe/store/models/owner'
 import ExpandedTxComponent from './ExpandedTx'
 import {
-  getTxTableData, generateColumns, TX_TABLE_NONCE_ID, type TransactionRow, TX_TABLE_RAW_TX_ID,
+  getTxTableData, generateColumns, TX_TABLE_DATE_ID, type TransactionRow, TX_TABLE_RAW_TX_ID,
 } from './columns'
 import { styles } from './style'
 import Status from './Status'
@@ -62,7 +62,7 @@ const TxsTable = ({
     <Block className={classes.container}>
       <Table
         label="Transactions"
-        defaultOrderBy={TX_TABLE_NONCE_ID}
+        defaultOrderBy={TX_TABLE_DATE_ID}
         defaultOrder="desc"
         columns={columns}
         data={filteredData}
@@ -73,8 +73,8 @@ const TxsTable = ({
           <React.Fragment key={index}>
             <TableRow
               tabIndex={-1}
-              className={cn(classes.row, expandedTx === row.nonce && classes.expandedRow)}
-              onClick={() => handleTxExpand(row.nonce)}
+              className={cn(classes.row, expandedTx === row.tx.id && classes.expandedRow)}
+              onClick={() => handleTxExpand(row.tx.id)}
             >
               {autoColumns.map((column: Column) => (
                 <TableCell
@@ -103,7 +103,7 @@ const TxsTable = ({
                 className={classes.extendedTxContainer}
               >
                 <Collapse
-                  in={expandedTx === row.nonce}
+                  in={expandedTx === row.tx.id}
                   timeout="auto"
                   component={ExpandedTxComponent}
                   unmountOnExit

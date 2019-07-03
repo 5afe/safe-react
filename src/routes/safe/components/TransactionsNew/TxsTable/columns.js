@@ -1,8 +1,8 @@
 // @flow
-import { format } from 'date-fns'
+import { format, getTime } from 'date-fns'
 import { List } from 'immutable'
 import { type Transaction } from '~/routes/safe/store/models/transaction'
-import { type SortRow } from '~/components/Table/sorting'
+import { type SortRow, buildOrderFieldFrom } from '~/components/Table/sorting'
 import { type Column } from '~/components/Table/TableHead'
 import { getWeb3 } from '~/logic/wallets/getWeb3'
 
@@ -31,14 +31,19 @@ export const formatDate = (date: Date): string => format(date, 'MMM D, YYYY - h:
 export type TransactionRow = SortRow<TxData>
 
 export const getTxTableData = (transactions: List<Transaction>): List<TransactionRow> => {
-  const rows = transactions.map((tx: Transaction) => ({
-    [TX_TABLE_NONCE_ID]: tx.nonce,
-    [TX_TABLE_TYPE_ID]: 'Outgoing transfer',
-    [TX_TABLE_DATE_ID]: formatDate(tx.isExecuted ? tx.executionDate : tx.submissionDate),
-    [TX_TABLE_AMOUNT_ID]: Number(tx.value) > 0 ? `${fromWei(toBN(tx.value), 'ether')} ${tx.symbol}` : 'n/a',
-    [TX_TABLE_STATUS_ID]: tx.isExecuted ? 'success' : 'awaiting',
-    [TX_TABLE_RAW_TX_ID]: tx,
-  }))
+  const rows = transactions.map((tx: Transaction) => {
+    const txDate = tx.isExecuted ? tx.executionDate : tx.submissionDate
+
+    return {
+      [TX_TABLE_NONCE_ID]: tx.nonce,
+      [TX_TABLE_TYPE_ID]: 'Outgoing transfer',
+      [TX_TABLE_DATE_ID]: formatDate(tx.isExecuted ? tx.executionDate : tx.submissionDate),
+      [buildOrderFieldFrom(TX_TABLE_DATE_ID)]: getTime(txDate),
+      [TX_TABLE_AMOUNT_ID]: Number(tx.value) > 0 ? `${fromWei(toBN(tx.value), 'ether')} ${tx.symbol}` : 'n/a',
+      [TX_TABLE_STATUS_ID]: tx.isExecuted ? 'success' : 'awaiting',
+      [TX_TABLE_RAW_TX_ID]: tx,
+    }
+  })
 
   return rows
 }
@@ -73,8 +78,8 @@ export const generateColumns = () => {
 
   const dateColumn: Column = {
     id: TX_TABLE_DATE_ID,
-    order: false,
     disablePadding: false,
+    order: true,
     label: 'Date',
     custom: false,
   }
