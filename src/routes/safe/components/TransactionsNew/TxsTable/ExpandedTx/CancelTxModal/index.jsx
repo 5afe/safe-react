@@ -1,14 +1,15 @@
 // @flow
 import React from 'react'
-import { List } from 'immutable'
 import Close from '@material-ui/icons/Close'
 import IconButton from '@material-ui/core/IconButton'
-import cn from 'classnames'
 import { withStyles } from '@material-ui/core/styles'
 import Modal from '~/components/Modal'
 import Hairline from '~/components/layout/Hairline'
-import Paragraph from '~/components/layout/Paragraph'
+import Button from '~/components/layout/Button'
 import Row from '~/components/layout/Row'
+import Bold from '~/components/layout/Bold'
+import Block from '~/components/layout/Block'
+import Paragraph from '~/components/layout/Paragraph'
 import { styles } from './style'
 
 type Props = {
@@ -16,10 +17,11 @@ type Props = {
   classes: Object,
   isOpen: boolean,
   createTransaction: Function,
+  nonce: string,
 }
 
 const CancelTxModal = ({
-  onClose, isOpen, classes, createTransaction,
+  onClose, isOpen, classes, createTransaction, nonce,
 }: Props) => (
   <Modal
     title="Cancel Transaction"
@@ -30,13 +32,41 @@ const CancelTxModal = ({
   >
     <Row align="center" grow className={classes.heading}>
       <Paragraph weight="bolder" className={classes.headingText} noMargin>
-          Cancel transaction
+        Cancel transaction
       </Paragraph>
       <IconButton onClick={onClose} disableRipple>
         <Close className={classes.closeIcon} />
       </IconButton>
     </Row>
     <Hairline />
+    <Block className={classes.container}>
+      <Row>
+        <Paragraph>
+          This action will cancel this transaction. A separate transaction will be performed to submit the cancellation.
+        </Paragraph>
+        <Paragraph size="sm" color="medium">
+          Transaction nonce:
+          <br />
+          <Bold className={classes.nonceNumber}>{nonce}</Bold>
+        </Paragraph>
+      </Row>
+    </Block>
+    <Row align="center" className={classes.buttonRow}>
+      <Button className={classes.button} minWidth={140} minHeight={42} onClick={onClose}>
+        Exit
+      </Button>
+      <Button
+        type="submit"
+        className={classes.button}
+        variant="contained"
+        minWidth={214}
+        minHeight={42}
+        color="secondary"
+        data-testid="review-tx-btn"
+      >
+        Cancel Transaction
+      </Button>
+    </Row>
   </Modal>
 )
 

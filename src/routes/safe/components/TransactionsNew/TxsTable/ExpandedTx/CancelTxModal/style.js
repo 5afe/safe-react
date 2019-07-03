@@ -1,5 +1,7 @@
 // @flow
-import { lg, md, sm } from '~/theme/variables'
+import {
+  lg, md, sm, border,
+} from '~/theme/variables'
 
 export const styles = () => ({
   heading: {
@@ -24,9 +26,10 @@ export const styles = () => ({
     position: 'absolute',
     bottom: 0,
     width: '100%',
+    borderTop: `1px solid ${border}`,
   },
-  smallerModalWindow: {
-    height: 'auto',
-    position: 'static',
+  nonceNumber: {
+    marginTop: sm,
+    fontSize: md,
   },
 })

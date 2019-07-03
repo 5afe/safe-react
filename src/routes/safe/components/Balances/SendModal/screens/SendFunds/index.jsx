@@ -163,7 +163,6 @@ const SendFunds = ({
                   </Button>
                   <Button
                     type="submit"
-                    className={classes.button}
                     variant="contained"
                     minWidth={140}
                     color="primary"

@@ -140,7 +140,7 @@ to:
           </Col>
         </Row>
       </Block>
-      <CancelTxModal isOpen={openModal === 'cancelTx'} onClose={closeModal} />
+      <CancelTxModal isOpen={openModal === 'cancelTx'} onClose={closeModal} nonce={tx.nonce} />
     </>
   )
 }
