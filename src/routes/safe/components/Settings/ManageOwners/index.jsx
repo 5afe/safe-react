@@ -9,7 +9,7 @@ import Col from '~/components/layout/Col'
 import Table from '~/components/Table'
 import { type Column, cellWidth } from '~/components/Table/TableHead'
 import Row from '~/components/layout/Row'
-import Paragraph from '~/components/layout/Paragraph'
+import Heading from '~/components/layout/Heading'
 import Hairline from '~/components/layout/Hairline'
 import Button from '~/components/layout/Button'
 import Img from '~/components/layout/Img'
@@ -22,7 +22,7 @@ import type { Owner } from '~/routes/safe/store/models/owner'
 import {
   getOwnerData, generateColumns, OWNERS_TABLE_NAME_ID, OWNERS_TABLE_ADDRESS_ID, type OwnerRow,
 } from './dataFetcher'
-import { sm, boldFont } from '~/theme/variables'
+import { lg, sm, boldFont } from '~/theme/variables'
 import { styles } from './style'
 import ReplaceOwnerIcon from './assets/icons/replace-owner.svg'
 import RenameOwnerIcon from './assets/icons/rename-owner.svg'
@@ -43,6 +43,10 @@ const addOwnerButtonStyle = {
   fontWeight: boldFont,
 }
 
+const title = {
+  padding: lg,
+}
+
 type Props = {
   classes: Object,
   safeAddress: string,
@@ -53,6 +57,7 @@ type Props = {
   userAddress: string,
   createTransaction: Function,
   updateSafe: Function,
+  granted: boolean,
 }
 
 type State = {
@@ -103,6 +108,7 @@ class ManageOwners extends React.Component<Props, State> {
       userAddress,
       createTransaction,
       updateSafe,
+      granted,
     } = this.props
     const {
       showAddOwner,
@@ -120,9 +126,7 @@ class ManageOwners extends React.Component<Props, State> {
     return (
       <React.Fragment>
         <Block className={classes.formContainer}>
-          <Paragraph noMargin className={classes.title} size="lg" weight="bolder">
-            Manage Safe Owners
-          </Paragraph>
+          <Heading tag="h3" style={title}>Manage Safe Owners</Heading>
           <Table
             label="Owners"
             defaultOrderBy={OWNERS_TABLE_NAME_ID}
@@ -144,49 +148,57 @@ class ManageOwners extends React.Component<Props, State> {
                   </TableCell>
                 ))}
                 <TableCell component="td">
-                  <Row align="end" className={classes.actions}>
-                    <Img
-                      alt="Edit owner"
-                      className={classes.editOwnerIcon}
-                      src={RenameOwnerIcon}
-                      onClick={this.onShow('EditOwner', row)}
-                      testId={RENAME_OWNER_BTN_TESTID}
-                    />
-                    <Img
-                      alt="Replace owner"
-                      className={classes.replaceOwnerIcon}
-                      src={ReplaceOwnerIcon}
-                      onClick={this.onShow('ReplaceOwner', row)}
-                    />
-                    <Img
-                      alt="Remove owner"
-                      className={classes.removeOwnerIcon}
-                      src={RemoveOwnerIcon}
-                      onClick={this.onShow('RemoveOwner', row)}
-                      testId={REMOVE_OWNER_BTN_TESTID}
-                    />
-                  </Row>
+                  {granted && (
+                    <Row align="end" className={classes.actions}>
+                      <Img
+                        alt="Edit owner"
+                        className={classes.editOwnerIcon}
+                        src={RenameOwnerIcon}
+                        onClick={this.onShow('EditOwner', row)}
+                        testId={RENAME_OWNER_BTN_TESTID}
+                      />
+                      <Img
+                        alt="Replace owner"
+                        className={classes.replaceOwnerIcon}
+                        src={ReplaceOwnerIcon}
+                        onClick={this.onShow('ReplaceOwner', row)}
+                      />
+                      {ownerData.size > 1 && (
+                        <Img
+                          alt="Remove owner"
+                          className={classes.removeOwnerIcon}
+                          src={RemoveOwnerIcon}
+                          onClick={this.onShow('RemoveOwner', row)}
+                          testId={REMOVE_OWNER_BTN_TESTID}
+                        />
+                      )}
+                    </Row>
+                  )}
                 </TableCell>
               </TableRow>
             ))
             }
           </Table>
         </Block>
-        <Hairline />
-        <Row style={controlsStyle} align="end" grow>
-          <Col end="xs">
-            <Button
-              style={addOwnerButtonStyle}
-              size="small"
-              variant="contained"
-              color="primary"
-              onClick={this.onShow('AddOwner')}
-              testId={ADD_OWNER_BTN_TESTID}
-            >
-              Add new owner
-            </Button>
-          </Col>
-        </Row>
+        {granted && (
+          <React.Fragment>
+            <Hairline />
+            <Row style={controlsStyle} align="end" grow>
+              <Col end="xs">
+                <Button
+                  style={addOwnerButtonStyle}
+                  size="small"
+                  variant="contained"
+                  color="primary"
+                  onClick={this.onShow('AddOwner')}
+                  testId={ADD_OWNER_BTN_TESTID}
+                >
+                  Add new owner
+                </Button>
+              </Col>
+            </Row>
+          </React.Fragment>
+        )}
         <AddOwnerModal
           onClose={this.onHide('AddOwner')}
           isOpen={showAddOwner}

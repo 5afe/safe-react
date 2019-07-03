@@ -2,10 +2,6 @@
 import { lg } from '~/theme/variables'
 
 export const styles = () => ({
-  title: {
-    padding: `${lg} 20px`,
-    fontSize: '16px',
-  },
   formContainer: {
     minHeight: '369px',
   },

@@ -20,8 +20,6 @@ import actions, { type Actions } from './actions'
 import { styles } from './style'
 import RemoveSafeIcon from './assets/icons/bin.svg'
 
-export const OWNERS_SETTINGS_TAB_TEST_ID = 'owner-settings-tab'
-
 type State = {
   showRemoveSafe: boolean,
   menuOptionIndex: number,
@@ -111,18 +109,15 @@ class Settings extends React.Component<Props, State> {
                 Safe name
               </Row>
               <Hairline />
+              <Row
+                className={cn(classes.menuOption, menuOptionIndex === 2 && classes.active)}
+                onClick={this.handleChange(2)}
+              >
+                Owners ({owners.size})
+              </Row>
+              <Hairline />
               {granted && (
                 <React.Fragment>
-                  <Row
-                    className={cn(classes.menuOption, menuOptionIndex === 2 && classes.active)}
-                    onClick={this.handleChange(2)}
-                    testId={OWNERS_SETTINGS_TAB_TEST_ID}
-                  >
-                    Owners (
-                    {owners.size}
-)
-                  </Row>
-                  <Hairline />
                   <Row
                     className={cn(classes.menuOption, menuOptionIndex === 3 && classes.active)}
                     onClick={this.handleChange(3)}
@@ -139,7 +134,7 @@ class Settings extends React.Component<Props, State> {
               {menuOptionIndex === 1 && (
                 <ChangeSafeName safeAddress={safeAddress} safeName={safeName} updateSafe={updateSafe} />
               )}
-              {granted && menuOptionIndex === 2 && (
+              {menuOptionIndex === 2 && (
                 <ManageOwners
                   owners={owners}
                   threshold={threshold}
@@ -149,6 +144,7 @@ class Settings extends React.Component<Props, State> {
                   createTransaction={createTransaction}
                   userAddress={userAddress}
                   updateSafe={updateSafe}
+                  granted={granted}
                 />
               )}
               {granted && menuOptionIndex === 3 && (
