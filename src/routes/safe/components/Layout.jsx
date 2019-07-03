@@ -168,6 +168,7 @@ class Layout extends React.Component<Props, State> {
             safeAddress={address}
             userAddress={userAddress}
             granted={granted}
+            createTransaction={createTransaction}
           />
         )}
         {tabIndex === 2 && (

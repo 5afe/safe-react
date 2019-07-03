@@ -34,6 +34,8 @@ type Props = {
   owners: List<Owner>,
   granted: boolean,
   userAddress: string,
+  safeAddress: string,
+  createTransaction: Function,
 }
 
 type OpenModal = 'cancelTx' | 'approveTx' | null
@@ -49,7 +51,7 @@ const txStatusToLabel = {
 }
 
 const ExpandedTx = ({
-  classes, tx, threshold, owners, granted, userAddress,
+  classes, tx, threshold, owners, granted, userAddress, safeAddress, createTransaction,
 }: Props) => {
   const [tabIndex, setTabIndex] = useState<number>(0)
   const [openModal, setOpenModal] = useState<OpenModal>(null)
@@ -155,8 +157,8 @@ to:
           </Col>
         </Row>
       </Block>
-      <CancelTxModal isOpen={openModal === 'cancelTx'} onClose={closeModal} tx={tx} />
-      <ApproveTxModal isOpen={openModal === 'approveTx'} onClose={closeModal} tx={tx} />
+      <CancelTxModal isOpen={openModal === 'cancelTx'} createTransaction={createTransaction} onClose={closeModal} tx={tx} safeAddress={safeAddress} />
+      <ApproveTxModal isOpen={openModal === 'approveTx'} createTransaction={createTransaction} onClose={closeModal} tx={tx} safeAddress={safeAddress} />
     </>
   )
 }

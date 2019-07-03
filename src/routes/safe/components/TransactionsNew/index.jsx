@@ -1,5 +1,5 @@
 // @flow
-import * as React from 'react'
+import React, { useEffect } from 'react'
 import { List } from 'immutable'
 import NoTransactions from '~/routes/safe/components/TransactionsNew/NoTransactions'
 import TxsTable from '~/routes/safe/components/TransactionsNew/TxsTable'
@@ -14,41 +14,42 @@ type Props = {
   owners: List<Owner>,
   userAddress: string,
   granted: boolean,
+  createTransaction: Function,
 }
 
-class Transactions extends React.Component<Props, {}> {
-  componentDidMount() {
-    const { safeAddress, fetchTransactions } = this.props
-
+const Transactions = ({
+  transactions = List(),
+  owners,
+  threshold,
+  userAddress,
+  granted,
+  safeAddress,
+  createTransaction,
+  fetchTransactions,
+}: Props) => {
+  useEffect(() => {
     fetchTransactions(safeAddress)
-  }
+  }, [safeAddress])
 
-  render() {
-    const {
-      transactions, owners, threshold, userAddress, granted,
-    } = this.props
-    const hasTransactions = transactions.size > 0
+  const hasTransactions = transactions.size > 0
 
-    return (
-      <React.Fragment>
-        {hasTransactions ? (
-          <TxsTable
-            transactions={transactions}
-            threshold={threshold}
-            owners={owners}
-            userAddress={userAddress}
-            granted={granted}
-          />
-        ) : (
-          <NoTransactions />
-        )}
-      </React.Fragment>
-    )
-  }
-}
-
-Transactions.defaultProps = {
-  transactions: List(),
+  return (
+    <React.Fragment>
+      {hasTransactions ? (
+        <TxsTable
+          transactions={transactions}
+          threshold={threshold}
+          owners={owners}
+          userAddress={userAddress}
+          granted={granted}
+          safeAddress={safeAddress}
+          createTransaction={createTransaction}
+        />
+      ) : (
+        <NoTransactions />
+      )}
+    </React.Fragment>
+  )
 }
 
 export default Transactions

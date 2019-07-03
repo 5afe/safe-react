@@ -34,10 +34,19 @@ type Props = {
   owners: List<Owner>,
   userAddress: string,
   granted: boolean,
+  safeAddress: string,
+  createTransaction: Function,
 }
 
 const TxsTable = ({
-  classes, transactions, threshold, owners, granted, userAddress,
+  classes,
+  transactions,
+  threshold,
+  owners,
+  granted,
+  userAddress,
+  safeAddress,
+  createTransaction,
 }: Props) => {
   const [expandedTx, setExpandedTx] = useState<string | null>(null)
 
@@ -103,6 +112,8 @@ const TxsTable = ({
                   owners={owners}
                   granted={granted}
                   userAddress={userAddress}
+                  createTransaction={createTransaction}
+                  safeAddress={safeAddress}
                 />
               </TableCell>
             </TableRow>
