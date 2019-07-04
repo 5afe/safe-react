@@ -30,6 +30,18 @@ export const formatDate = (date: Date): string => format(date, 'MMM D, YYYY - h:
 
 export type TransactionRow = SortRow<TxData>
 
+const getTxStatus = (tx: Transaction): string => {
+  let txStatus = 'awaiting'
+
+  if (tx.isExecuted) {
+    txStatus = 'success'
+  } else if (tx.cancelled) {
+    txStatus = 'cancelled'
+  }
+
+  return txStatus
+}
+
 export const getTxTableData = (transactions: List<Transaction>): List<TransactionRow> => {
   const rows = transactions.map((tx: Transaction) => {
     const txDate = tx.isExecuted ? tx.executionDate : tx.submissionDate
@@ -40,7 +52,7 @@ export const getTxTableData = (transactions: List<Transaction>): List<Transactio
       [TX_TABLE_DATE_ID]: formatDate(tx.isExecuted ? tx.executionDate : tx.submissionDate),
       [buildOrderFieldFrom(TX_TABLE_DATE_ID)]: getTime(txDate),
       [TX_TABLE_AMOUNT_ID]: Number(tx.value) > 0 ? `${fromWei(toBN(tx.value), 'ether')} ${tx.symbol}` : 'n/a',
-      [TX_TABLE_STATUS_ID]: tx.isExecuted ? 'success' : 'awaiting',
+      [TX_TABLE_STATUS_ID]: getTxStatus(tx),
       [TX_TABLE_RAW_TX_ID]: tx,
     }
   })

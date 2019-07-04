@@ -11,12 +11,12 @@ import { styles } from './style'
 
 type Props = {
   classes: Object,
-  status: 'pending' | 'awaiting' | 'success' | 'failed',
+  status: 'awaiting' | 'success' | 'cancelled',
 }
 
 const statusToIcon = {
   success: OkIcon,
-  failed: ErrorIcon,
+  cancelled: ErrorIcon,
   awaiting: AwaitingIcon,
 }
 

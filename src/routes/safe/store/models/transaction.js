@@ -14,7 +14,9 @@ export type TransactionProps = {
   submissionDate: Date,
   executionDate: Date,
   symbol: string,
+  creationTxHash: string,
   executionTxHash?: string,
+  cancelled?: boolean,
 }
 
 export const makeTransaction: RecordFactory<TransactionProps> = Record({
@@ -29,6 +31,8 @@ export const makeTransaction: RecordFactory<TransactionProps> = Record({
   executionDate: '',
   symbol: '',
   executionTxHash: undefined,
+  creationTxHash: '',
+  cancelled: false,
 })
 
 export type Transaction = RecordOf<TransactionProps>

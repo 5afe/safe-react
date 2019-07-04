@@ -50,8 +50,8 @@ const TxsTable = ({
 }: Props) => {
   const [expandedTx, setExpandedTx] = useState<string | null>(null)
 
-  const handleTxExpand = (nonce) => {
-    setExpandedTx(prevTx => (prevTx === nonce ? null : nonce))
+  const handleTxExpand = (creationTxHash) => {
+    setExpandedTx(prevTx => (prevTx === creationTxHash ? null : creationTxHash))
   }
 
   const columns = generateColumns()
@@ -73,8 +73,8 @@ const TxsTable = ({
           <React.Fragment key={index}>
             <TableRow
               tabIndex={-1}
-              className={cn(classes.row, expandedTx === row.tx.id && classes.expandedRow)}
-              onClick={() => handleTxExpand(row.tx.id)}
+              className={cn(classes.row, expandedTx === row.tx.creationTxHash && classes.expandedRow)}
+              onClick={() => handleTxExpand(row.tx.creationTxHash)}
             >
               {autoColumns.map((column: Column) => (
                 <TableCell
@@ -103,7 +103,7 @@ const TxsTable = ({
                 className={classes.extendedTxContainer}
               >
                 <Collapse
-                  in={expandedTx === row.tx.id}
+                  in={expandedTx === row.tx.creationTxHash}
                   timeout="auto"
                   component={ExpandedTxComponent}
                   unmountOnExit

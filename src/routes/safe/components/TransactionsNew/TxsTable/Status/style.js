@@ -15,7 +15,7 @@ export const styles = () => ({
     backgroundColor: '#d7f3f3',
     color: '#346d6d',
   },
-  failed: {
+  cancelled: {
     backgroundColor: 'transparent',
     color: '#fd7890',
   },

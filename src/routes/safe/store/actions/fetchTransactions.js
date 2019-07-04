@@ -13,7 +13,7 @@ import { EMPTY_DATA } from '~/logic/wallets/ethTransactions'
 import { addTransactions } from './addTransactions'
 import { getHumanFriendlyToken } from '~/logic/tokens/store/actions/fetchTokens'
 import { isAddressAToken } from '~/logic/tokens/utils/tokenHelpers'
-import { TX_TYPE_EXECUTION } from '~/logic/safe/transactions/send'
+import { TX_TYPE_EXECUTION, TX_TYPE_CONFIRMATION } from '~/logic/safe/transactions/send'
 
 type ConfirmationServiceModel = {
   owner: string,
@@ -49,6 +49,7 @@ const buildTransactionFrom = async (safeAddress: string, tx: TxServiceModel, saf
     }),
   )
   const isToken = await isAddressAToken(tx.to)
+  const creationTxHash = confirmations.find(conf => conf.type === TX_TYPE_CONFIRMATION).hash
 
   let executionTxHash
   const executionTx = confirmations.find(conf => conf.type === TX_TYPE_EXECUTION)
@@ -76,6 +77,7 @@ const buildTransactionFrom = async (safeAddress: string, tx: TxServiceModel, saf
     submissionDate: tx.submissionDate,
     executionDate: tx.executionDate,
     executionTxHash,
+    creationTxHash,
   })
 }
 

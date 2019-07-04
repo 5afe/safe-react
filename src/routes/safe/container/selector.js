@@ -1,6 +1,7 @@
 // @flow
 import { List, Map } from 'immutable'
 import { createSelector, createStructuredSelector, type Selector } from 'reselect'
+import { isAfter } from 'date-fns'
 import {
   safeSelector,
   safeActiveTokensSelector,
@@ -89,6 +90,31 @@ const extendedSafeTokensSelector: Selector<GlobalState, RouterProps, List<Token>
   },
 )
 
+const extendedTransactionsSelector: Selector<GlobalState, RouterProps, List<Transaction>> = createSelector(
+  safeTransactionsSelector,
+  (transactions) => {
+    const extendedTransactions = transactions.map((tx: Transaction) => {
+      if (tx.isExecuted) {
+        return tx
+      }
+
+      // If transactions is not executed, but there's a transaction with the same nonce submitted later
+      // it means that the transaction was cancelled (Replaced) and shouldn't get executed
+      const replacementTransaction = transactions.findLast(
+        transaction => transaction.nonce === tx.nonce && isAfter(transaction.submissionDate, tx.submissionDate),
+      )
+
+      if (!replacementTransaction) {
+        return tx
+      }
+
+      return tx.set('cancelled', true)
+    })
+
+    return extendedTransactions
+  },
+)
+
 export default createStructuredSelector<Object, *>({
   safe: safeSelector,
   provider: providerNameSelector,
@@ -98,5 +124,5 @@ export default createStructuredSelector<Object, *>({
   userAddress: userAccountSelector,
   network: networkSelector,
   safeUrl: safeParamAddressSelector,
-  transactions: safeTransactionsSelector,
+  transactions: extendedTransactionsSelector,
 })
