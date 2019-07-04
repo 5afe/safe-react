@@ -19,7 +19,7 @@ import { getEtherScanLink } from '~/logic/wallets/getWeb3'
 import { secondary } from '~/theme/variables'
 import { styles } from './style'
 
-export const ADD_OWNER_SUBMIT_BTN = 'add-owner-submit-btn'
+export const ADD_OWNER_SUBMIT_BTN_TESTID = 'add-owner-submit-btn'
 
 const openIconStyle = {
   height: '16px',
@@ -164,7 +164,7 @@ const ReviewAddOwner = ({
           variant="contained"
           minWidth={140}
           color="primary"
-          testId={ADD_OWNER_SUBMIT_BTN}
+          testId={ADD_OWNER_SUBMIT_BTN_TESTID}
         >
           Submit
         </Button>

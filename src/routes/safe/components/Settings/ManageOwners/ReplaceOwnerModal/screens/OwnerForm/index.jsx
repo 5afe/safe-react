@@ -29,6 +29,10 @@ import {
 import { styles } from './style'
 import { secondary } from '~/theme/variables'
 
+export const REPLACE_OWNER_NAME_INPUT_TESTID = 'replace-owner-name-input'
+export const REPLACE_OWNER_ADDRESS_INPUT_TESTID = 'replace-owner-address-testid'
+export const REPLACE_OWNER_NEXT_BTN_TESTID = 'replace-owner-next-btn'
+
 const openIconStyle = {
   height: '16px',
   color: secondary,
@@ -110,6 +114,7 @@ const OwnerForm = ({
                     placeholder="Owner name*"
                     text="Owner name*"
                     className={classes.addressInput}
+                    testId={REPLACE_OWNER_NAME_INPUT_TESTID}
                   />
                 </Col>
               </Row>
@@ -123,6 +128,7 @@ const OwnerForm = ({
                     placeholder="Owner address*"
                     text="Owner address*"
                     className={classes.addressInput}
+                    testId={REPLACE_OWNER_ADDRESS_INPUT_TESTID}
                   />
                 </Col>
               </Row>
@@ -138,6 +144,7 @@ const OwnerForm = ({
                 variant="contained"
                 minWidth={140}
                 color="primary"
+                testId={REPLACE_OWNER_NEXT_BTN_TESTID}
               >
                 Next
               </Button>

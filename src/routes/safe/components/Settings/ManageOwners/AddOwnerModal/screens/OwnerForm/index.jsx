@@ -25,7 +25,7 @@ import { styles } from './style'
 
 export const ADD_OWNER_NAME_INPUT_TESTID = 'add-owner-name-input'
 export const ADD_OWNER_ADDRESS_INPUT_TESTID = 'add-owner-address-testid'
-export const ADD_OWNER_NEXT_BTN_TESTID = 'add-owner-next btn'
+export const ADD_OWNER_NEXT_BTN_TESTID = 'add-owner-next-btn'
 
 type Props = {
   onClose: () => void,

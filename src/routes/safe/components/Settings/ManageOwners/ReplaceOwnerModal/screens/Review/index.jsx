@@ -19,6 +19,8 @@ import { getEtherScanLink } from '~/logic/wallets/getWeb3'
 import { secondary } from '~/theme/variables'
 import { styles } from './style'
 
+export const REPLACE_OWNER_SUBMIT_BTN_TESTID = 'replace-owner-submit-btn'
+
 const openIconStyle = {
   height: '16px',
   color: secondary,
@@ -208,7 +210,7 @@ const ReviewRemoveOwner = ({
           variant="contained"
           minWidth={140}
           color="primary"
-          data-testid="review-tx-btn"
+          testId={REPLACE_OWNER_SUBMIT_BTN_TESTID}
         >
           Submit
         </Button>

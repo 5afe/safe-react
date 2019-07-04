@@ -31,6 +31,7 @@ import RemoveOwnerIcon from '../assets/icons/bin.svg'
 export const RENAME_OWNER_BTN_TESTID = 'rename-owner-btn'
 export const REMOVE_OWNER_BTN_TESTID = 'remove-owner-btn'
 export const ADD_OWNER_BTN_TESTID = 'add-owner-btn'
+export const REPLACE_OWNER_BTN_TESTID = 'replace-owner-btn'
 export const OWNERS_ROW_TESTID = 'owners-row'
 
 const controlsStyle = {
@@ -162,6 +163,7 @@ class ManageOwners extends React.Component<Props, State> {
                         className={classes.replaceOwnerIcon}
                         src={ReplaceOwnerIcon}
                         onClick={this.onShow('ReplaceOwner', row)}
+                        testId={REPLACE_OWNER_BTN_TESTID}
                       />
                       {ownerData.size > 1 && (
                         <Img
