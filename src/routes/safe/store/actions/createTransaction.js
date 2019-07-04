@@ -2,6 +2,7 @@
 import type { Dispatch as ReduxDispatch, GetState } from 'redux'
 import { EMPTY_DATA } from '~/logic/wallets/ethTransactions'
 import { userAccountSelector } from '~/logic/wallets/store/selectors'
+import fetchTransactions from '~/routes/safe/store/actions/fetchTransactions'
 import { type GlobalState } from '~/store'
 import { getGnosisSafeInstanceAt } from '~/logic/contracts/safeContracts'
 import { approveTransaction, executeTransaction, CALL } from '~/logic/safe/transactions'
@@ -27,9 +28,11 @@ const createTransaction = (
     txHash = await executeTransaction(safeInstance, to, valueInWei, txData, CALL, nonce, from)
     openSnackbar('Transaction has been confirmed', 'success')
   } else {
+    openSnackbar('Approval transaction has been submitted', 'success')
     txHash = await approveTransaction(safeInstance, to, valueInWei, txData, CALL, nonce, from)
+    openSnackbar('Approval transaction has been confirmed', 'success')
   }
-  // dispatch(addTransactions(txHash))
+  dispatch(fetchTransactions(safeAddress))
 
   return txHash
 }
