@@ -10,9 +10,11 @@ import { sm, lg } from '~/theme/variables'
 type Props = {
   onTxConfirm: Function,
   onTxCancel: Function,
+  onTxExecute: Function,
   classes: Object,
   showConfirmBtn: boolean,
   showCancelBtn: boolean,
+  showExecuteBtn: boolean,
 }
 
 const styles = () => ({
@@ -35,21 +37,34 @@ const styles = () => ({
 })
 
 const ButtonRow = ({
-  classes, onTxCancel, onTxConfirm, showConfirmBtn, showCancelBtn,
+  classes,
+  onTxCancel,
+  onTxConfirm,
+  showConfirmBtn,
+  showCancelBtn,
+  showExecuteBtn,
+  onTxExecute,
 }: Props) => (
   <Row align="center" className={classes.buttonRow}>
     {showCancelBtn && (
       <Button className={classes.button} variant="contained" minWidth={140} color="secondary" onClick={onTxCancel}>
         <BlockIcon className={classes.icon} />
         {' '}
-Cancel TX
+        Cancel TX
       </Button>
     )}
     {showConfirmBtn && (
       <Button className={classes.button} variant="contained" minWidth={140} color="primary" onClick={onTxConfirm}>
         <EditIcon className={classes.icon} />
         {' '}
-Confirm TX
+        Confirm TX
+      </Button>
+    )}
+    {showExecuteBtn && (
+      <Button className={classes.button} variant="contained" minWidth={140} color="primary" onClick={onTxExecute}>
+        <EditIcon className={classes.icon} />
+        {' '}
+        Execute TX
       </Button>
     )}
   </Row>

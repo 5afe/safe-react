@@ -19,7 +19,11 @@ export const styles = () => ({
     backgroundColor: 'transparent',
     color: '#fd7890',
   },
-  awaiting: {
+  awaiting_confirmations: {
+    backgroundColor: '#dfebff',
+    color: '#2e73d9',
+  },
+  awaiting_execution: {
     backgroundColor: '#dfebff',
     color: '#2e73d9',
   },

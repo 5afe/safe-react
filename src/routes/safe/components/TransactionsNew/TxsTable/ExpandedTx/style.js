@@ -14,6 +14,9 @@ export const styles = () => ({
   awaiting_confirmations: {
     color: '#2e73d9',
   },
+  awaiting_execution: {
+    color: '#2e73d9',
+  },
   success: {
     color: connected,
   },

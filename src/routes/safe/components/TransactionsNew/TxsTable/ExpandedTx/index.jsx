@@ -50,6 +50,7 @@ const txStatusToLabel = {
   success: 'Success',
   awaiting_confirmations: 'Awaiting confirmations',
   cancelled: 'Cancelled',
+  awaiting_execution: 'Awaiting execution',
 }
 
 const isCancellationTransaction = (tx: Transaction, safeAddress: string) => !tx.value && tx.data === EMPTY_DATA && tx.recipient === safeAddress
@@ -72,6 +73,7 @@ const ExpandedTx = ({
   const cancellationTx = isCancellationTransaction(tx, safeAddress)
   const confirmedLabel = `Confirmed [${tx.confirmations.size}/${threshold}]`
   const unconfirmedLabel = `Unconfirmed [${owners.size - tx.confirmations.size}]`
+  const thresholdReached = owners.size <= tx.confirmations.size
 
   const ownersWhoConfirmed = []
   const ownersUnconfirmed = []
@@ -164,6 +166,8 @@ to:
                 onTxCancel={openCancelModal}
                 showConfirmBtn={!currentUserAlreadyConfirmed}
                 showCancelBtn={!cancellationTx}
+                showExecuteBtn={thresholdReached}
+                onTxExecute={openApproveModal}
               />
             )}
           </Col>
