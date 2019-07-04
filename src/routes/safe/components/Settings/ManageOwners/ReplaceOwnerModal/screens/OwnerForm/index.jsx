@@ -1,6 +1,7 @@
 // @flow
 import React from 'react'
 import classNames from 'classnames/bind'
+import { List } from 'immutable'
 import { withStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
 import IconButton from '@material-ui/core/IconButton'
@@ -17,8 +18,13 @@ import TextField from '~/components/forms/TextField'
 import Identicon from '~/components/Identicon'
 import Link from '~/components/layout/Link'
 import { getEtherScanLink } from '~/logic/wallets/getWeb3'
+import { type Owner } from '~/routes/safe/store/models/owner'
 import {
-  composeValidators, required, mustBeEthereumAddress, minMaxLength,
+  composeValidators,
+  required,
+  mustBeEthereumAddress,
+  minMaxLength,
+  uniqueAddress,
 } from '~/components/forms/validator'
 import { styles } from './style'
 import { secondary } from '~/theme/variables'
@@ -35,14 +41,16 @@ type Props = {
   ownerName: string,
   network: string,
   onSubmit: Function,
+  owners: List<Owner>,
 }
 
 const OwnerForm = ({
-  classes, onClose, ownerAddress, ownerName, network, onSubmit,
+  classes, onClose, ownerAddress, ownerName, network, onSubmit, owners,
 }: Props) => {
   const handleSubmit = (values) => {
     onSubmit(values)
   }
+  const ownerDoesntExist = uniqueAddress(owners.map(o => o.address))
 
   return (
     <React.Fragment>
@@ -111,7 +119,7 @@ const OwnerForm = ({
                     name="ownerAddress"
                     component={TextField}
                     type="text"
-                    validate={composeValidators(required, mustBeEthereumAddress)}
+                    validate={composeValidators(required, mustBeEthereumAddress, ownerDoesntExist)}
                     placeholder="Owner address*"
                     text="Owner address*"
                     className={classes.addressInput}
@@ -130,7 +138,6 @@ const OwnerForm = ({
                 variant="contained"
                 minWidth={140}
                 color="primary"
-                data-testid="review-tx-btn"
               >
                 Next
               </Button>
