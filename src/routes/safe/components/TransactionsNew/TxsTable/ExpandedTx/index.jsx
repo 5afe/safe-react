@@ -90,7 +90,19 @@ const ExpandedTx = ({
       ownersUnconfirmed.push(owner)
     }
   })
-  const displayButtonRow = (!tx.isExecuted && tx.status !== 'cancelled' && !cancellationTx) || (cancellationTx && !currentUserAlreadyConfirmed)
+
+  let displayButtonRow = true
+  if (tx.isExecuted) {
+    // already executed, can't do any actions
+    displayButtonRow = false
+  } else if (tx.status === 'cancelled') {
+    // tx is cancelled (replaced) by another one
+    displayButtonRow = false
+  } else if (cancellationTx && currentUserAlreadyConfirmed && !thresholdReached) {
+    // the TX is the cancellation (replacement) transaction for previous TX,
+    // current user has already confirmed it and threshold is not reached (so he can't execute/cancel it)
+    displayButtonRow = false
+  }
 
   const handleTabChange = (event, tabClicked) => {
     setTabIndex(tabClicked)
