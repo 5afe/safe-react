@@ -17,7 +17,7 @@ import { sameAddress } from '~/logic/wallets/ethAddresses'
 import { safeTransactionsSelector } from '~/routes/safe/store/selectors/index'
 import { orderedTokenListSelector, tokensSelector } from '~/logic/tokens/store/selectors'
 import { type Token } from '~/logic/tokens/store/model/token'
-import { type Transaction } from '~/routes/safe/store/models/transaction'
+import { type Transaction, type TransactionStatus } from '~/routes/safe/store/models/transaction'
 import { type TokenBalance } from '~/routes/safe/store/models/tokenBalance'
 import { safeParamAddressSelector } from '../store/selectors'
 import { getEthAsToken } from '~/logic/tokens/utils/tokenHelpers'
@@ -31,6 +31,18 @@ export type SelectorProps = {
   network: string,
   safeUrl: string,
   transactions: List<Transaction>,
+}
+
+const getTxStatus = (tx: Transaction): TransactionStatus => {
+  let txStatus = 'awaiting'
+
+  if (tx.isExecuted) {
+    txStatus = 'success'
+  } else if (tx.cancelled) {
+    txStatus = 'cancelled'
+  }
+
+  return txStatus
 }
 
 export const grantedSelector: Selector<GlobalState, RouterProps, boolean> = createSelector(
@@ -94,21 +106,21 @@ const extendedTransactionsSelector: Selector<GlobalState, RouterProps, List<Tran
   safeTransactionsSelector,
   (transactions) => {
     const extendedTransactions = transactions.map((tx: Transaction) => {
-      if (tx.isExecuted) {
-        return tx
-      }
+      let extendedTx = tx
 
       // If transactions is not executed, but there's a transaction with the same nonce submitted later
       // it means that the transaction was cancelled (Replaced) and shouldn't get executed
-      const replacementTransaction = transactions.findLast(
-        transaction => transaction.nonce === tx.nonce && isAfter(transaction.submissionDate, tx.submissionDate),
-      )
-
-      if (!replacementTransaction) {
-        return tx
+      let replacementTransaction
+      if (!tx.isExecuted) {
+        replacementTransaction = transactions.findLast(
+          transaction => transaction.nonce === tx.nonce && isAfter(transaction.submissionDate, tx.submissionDate),
+        )
+        if (replacementTransaction) {
+          extendedTx = tx.set('cancelled', true)
+        }
       }
 
-      return tx.set('cancelled', true)
+      return extendedTx.set('status', getTxStatus(extendedTx))
     })
 
     return extendedTransactions
