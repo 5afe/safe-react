@@ -1,5 +1,7 @@
 // @flow
-import { md, lg, connected } from '~/theme/variables'
+import {
+  md, lg, connected, error,
+} from '~/theme/variables'
 
 export const styles = () => ({
   txDataContainer: {
@@ -14,5 +16,8 @@ export const styles = () => ({
   },
   success: {
     color: connected,
+  },
+  cancelled: {
+    color: error,
   },
 })

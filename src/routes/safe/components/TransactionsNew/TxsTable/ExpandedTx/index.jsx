@@ -16,6 +16,7 @@ import { type Transaction } from '~/routes/safe/store/models/transaction'
 import { type Owner } from '~/routes/safe/store/models/owner'
 import { getEtherScanLink, openTxInEtherScan, getWeb3 } from '~/logic/wallets/getWeb3'
 import { shortVersionOf } from '~/logic/wallets/ethAddresses'
+import { EMPTY_DATA } from '~/logic/wallets/ethTransactions'
 import { secondary } from '~/theme/variables'
 import OwnersList from './OwnersList'
 import ButtonRow from './ButtonRow'
@@ -48,20 +49,29 @@ const openIconStyle = {
 const txStatusToLabel = {
   success: 'Success',
   awaiting_confirmations: 'Awaiting confirmations',
+  cancelled: 'Cancelled',
 }
 
+const isCancellationTransaction = (tx: Transaction, safeAddress: string) => !tx.value && tx.data === EMPTY_DATA && tx.recipient === safeAddress
+
 const ExpandedTx = ({
-  classes, tx, threshold, owners, granted, userAddress, safeAddress, createTransaction,
+  classes,
+  tx,
+  threshold,
+  owners,
+  granted,
+  userAddress,
+  safeAddress,
+  createTransaction,
 }: Props) => {
   const [tabIndex, setTabIndex] = useState<number>(0)
   const [openModal, setOpenModal] = useState<OpenModal>(null)
   const openApproveModal = () => setOpenModal('approveTx')
   const openCancelModal = () => setOpenModal('cancelTx')
   const closeModal = () => setOpenModal(null)
-
+  const cancellationTx = isCancellationTransaction(tx, safeAddress)
   const confirmedLabel = `Confirmed [${tx.confirmations.size}/${threshold}]`
   const unconfirmedLabel = `Unconfirmed [${owners.size - tx.confirmations.size}]`
-  const txStatus = tx.isExecuted ? 'success' : 'awaiting_confirmations'
 
   const ownersWhoConfirmed = []
   const ownersUnconfirmed = []
@@ -78,6 +88,7 @@ const ExpandedTx = ({
       ownersUnconfirmed.push(owner)
     }
   })
+  const displayButtonRow = (!tx.isExecuted && tx.status !== 'cancelled' && !cancellationTx) || (cancellationTx && !currentUserAlreadyConfirmed)
 
   const handleTabChange = (event, tabClicked) => {
     setTabIndex(tabClicked)
@@ -102,8 +113,8 @@ const ExpandedTx = ({
               </Paragraph>
               <Paragraph noMargin>
                 <Bold>TX status: </Bold>
-                <Span className={classes[txStatus]} style={{ fontWeight: 'bold' }}>
-                  {txStatusToLabel[txStatus]}
+                <Span className={classes[tx.status]} style={{ fontWeight: 'bold' }}>
+                  {txStatusToLabel[tx.status]}
                 </Span>
               </Paragraph>
               <Paragraph noMargin>
@@ -147,18 +158,31 @@ to:
             </Row>
             <Row>{tabIndex === 0 && <OwnersList owners={ownersWhoConfirmed} />}</Row>
             <Row>{tabIndex === 1 && <OwnersList owners={ownersUnconfirmed} />}</Row>
-            {granted && (
+            {granted && displayButtonRow && (
               <ButtonRow
                 onTxConfirm={openApproveModal}
                 onTxCancel={openCancelModal}
                 showConfirmBtn={!currentUserAlreadyConfirmed}
+                showCancelBtn={!cancellationTx}
               />
             )}
           </Col>
         </Row>
       </Block>
-      <CancelTxModal isOpen={openModal === 'cancelTx'} createTransaction={createTransaction} onClose={closeModal} tx={tx} safeAddress={safeAddress} />
-      <ApproveTxModal isOpen={openModal === 'approveTx'} createTransaction={createTransaction} onClose={closeModal} tx={tx} safeAddress={safeAddress} />
+      <CancelTxModal
+        isOpen={openModal === 'cancelTx'}
+        createTransaction={createTransaction}
+        onClose={closeModal}
+        tx={tx}
+        safeAddress={safeAddress}
+      />
+      <ApproveTxModal
+        isOpen={openModal === 'approveTx'}
+        createTransaction={createTransaction}
+        onClose={closeModal}
+        tx={tx}
+        safeAddress={safeAddress}
+      />
     </>
   )
 }

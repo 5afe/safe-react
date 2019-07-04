@@ -12,6 +12,7 @@ type Props = {
   onTxCancel: Function,
   classes: Object,
   showConfirmBtn: boolean,
+  showCancelBtn: boolean,
 }
 
 const styles = () => ({
@@ -34,14 +35,16 @@ const styles = () => ({
 })
 
 const ButtonRow = ({
-  classes, onTxCancel, onTxConfirm, showConfirmBtn,
+  classes, onTxCancel, onTxConfirm, showConfirmBtn, showCancelBtn,
 }: Props) => (
   <Row align="center" className={classes.buttonRow}>
-    <Button className={classes.button} variant="contained" minWidth={140} color="secondary" onClick={onTxCancel}>
-      <BlockIcon className={classes.icon} />
-      {' '}
+    {showCancelBtn && (
+      <Button className={classes.button} variant="contained" minWidth={140} color="secondary" onClick={onTxCancel}>
+        <BlockIcon className={classes.icon} />
+        {' '}
 Cancel TX
-    </Button>
+      </Button>
+    )}
     {showConfirmBtn && (
       <Button className={classes.button} variant="contained" minWidth={140} color="primary" onClick={onTxConfirm}>
         <EditIcon className={classes.icon} />
