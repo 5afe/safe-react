@@ -7,6 +7,7 @@ import { type Token } from '~/logic/tokens/store/model/token'
 import { getGnosisSafeInstanceAt } from '~/logic/contracts/safeContracts'
 import { type Operation, saveTxToHistory } from '~/logic/safe/transactions'
 import { ZERO_ADDRESS } from '~/logic/wallets/ethAddresses'
+import { getErrorMessage } from '~/test/utils/ethereumErrors'
 
 export const CALL = 0
 export const TX_TYPE_EXECUTION = 'execution'
@@ -82,6 +83,13 @@ export const executeTransaction = async (
         '',
       )}000000000000000000000000000000000000000000000000000000000000000001`
     }
+
+    // debug
+    const executeDataUsedSignatures = safeInstance.contract.methods
+      .execTransaction(to, valueInWei, data, operation, 0, 0, 0, ZERO_ADDRESS, ZERO_ADDRESS, sigs)
+      .encodeABI()
+    console.log(await getErrorMessage(safeInstance.address, 0, executeDataUsedSignatures, sender))
+    // debug end
 
     const receipt = await safeInstance.execTransaction(
       to,

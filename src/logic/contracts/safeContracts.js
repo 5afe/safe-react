@@ -1,9 +1,9 @@
 // @flow
 import contract from 'truffle-contract'
+import ProxyFactorySol from '@gnosis.pm/safe-contracts/build/contracts/ProxyFactory.json'
+import GnosisSafeSol from '@gnosis.pm/safe-contracts/build/contracts/GnosisSafe.json'
 import { ensureOnce } from '~/utils/singleton'
 import { getWeb3 } from '~/logic/wallets/getWeb3'
-import GnosisSafeSol from '@gnosis.pm/safe-contracts/build/contracts/GnosisSafe.json'
-import ProxyFactorySol from '@gnosis.pm/safe-contracts/build/contracts/ProxyFactory.json'
 import { calculateGasOf, calculateGasPrice } from '~/logic/wallets/ethTransactions'
 import { ZERO_ADDRESS } from '~/logic/wallets/ethAddresses'
 
