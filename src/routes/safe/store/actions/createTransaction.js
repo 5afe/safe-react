@@ -13,6 +13,7 @@ const createTransaction = (
   valueInWei: string,
   txData: string = EMPTY_DATA,
   openSnackbar: Function,
+  shouldExecute?: boolean,
 ) => async (dispatch: ReduxDispatch<GlobalState>, getState: GetState<GlobalState>) => {
   const state: GlobalState = getState()
 
@@ -20,7 +21,7 @@ const createTransaction = (
   const from = userAccountSelector(state)
   const threshold = await safeInstance.getThreshold()
   const nonce = (await safeInstance.nonce()).toString()
-  const isExecution = threshold.toNumber() === 1
+  const isExecution = threshold.toNumber() === 1 || shouldExecute
 
   let txHash
   if (isExecution) {

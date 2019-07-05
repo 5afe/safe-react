@@ -24,12 +24,28 @@ type Props = {
   tx: Transaction,
   nonce: string,
   safeAddress: string,
+  thresholdReached: boolean,
+}
+
+const getModalTitleAndDescription = (thresholdReached: boolean) => {
+  const title = thresholdReached ? 'Execute Transaction' : 'Approve Transaction'
+  const description = `This action will ${
+    thresholdReached ? 'execute' : 'approve'
+  } this transaction. A separate transaction will be performed to submit the ${
+    thresholdReached ? 'execution' : 'approval'
+  }.`
+
+  return {
+    title,
+    description,
+  }
 }
 
 const ApproveTxModal = ({
-  onClose, isOpen, classes, createTransaction, tx, safeAddress,
+  onClose, isOpen, classes, createTransaction, tx, safeAddress, thresholdReached,
 }: Props) => {
   const [shouldExecuteTx, setShouldExecuteTx] = useState<boolean>(false)
+  const { title, description } = getModalTitleAndDescription(thresholdReached)
 
   const handleExecuteCheckbox = () => setShouldExecuteTx(prevShouldExecute => !prevShouldExecute)
 
@@ -37,20 +53,22 @@ const ApproveTxModal = ({
     <SharedSnackbarConsumer>
       {({ openSnackbar }) => {
         const approveTx = () => {
-          createTransaction(safeAddress, tx.recipient, tx.value, tx.data, openSnackbar)
+          createTransaction(
+            safeAddress,
+            tx.recipient,
+            tx.value,
+            tx.data,
+            openSnackbar,
+            thresholdReached || shouldExecuteTx,
+          )
           onClose()
         }
 
         return (
-          <Modal
-            title="Approve Transaction"
-            description="Approve Transaction"
-            handleClose={onClose}
-            open={isOpen}
-          >
+          <Modal title={title} description={description} handleClose={onClose} open={isOpen}>
             <Row align="center" grow className={classes.heading}>
               <Paragraph weight="bolder" className={classes.headingText} noMargin>
-                Approve transaction
+                {title}
               </Paragraph>
               <IconButton onClick={onClose} disableRipple>
                 <Close className={classes.closeIcon} />
@@ -59,23 +77,24 @@ const ApproveTxModal = ({
             <Hairline />
             <Block className={classes.container}>
               <Row>
-                <Paragraph>
-                  This action will approve this transaction. A separate transaction will be performed to submit the
-                  approval.
-                </Paragraph>
+                <Paragraph>{description}</Paragraph>
                 <Paragraph size="sm" color="medium">
                   Transaction nonce:
                   <br />
                   <Bold className={classes.nonceNumber}>{tx.nonce}</Bold>
                 </Paragraph>
-                <Paragraph color="error">
-                  Approving transaction does not execute it immediately. If you want to approve and execute the
-                  transaction right away, click on checkbox below.
-                </Paragraph>
-                <FormControlLabel
-                  control={<Checkbox onChange={handleExecuteCheckbox} checked={shouldExecuteTx} color="primary" />}
-                  label="Execute transaction"
-                />
+                {!thresholdReached && (
+                  <>
+                    <Paragraph color="error">
+                      Approving transaction does not execute it immediately. If you want to approve and execute the
+                      transaction right away, click on checkbox below.
+                    </Paragraph>
+                    <FormControlLabel
+                      control={<Checkbox onChange={handleExecuteCheckbox} checked={shouldExecuteTx} color="primary" />}
+                      label="Execute transaction"
+                    />
+                  </>
+                )}
               </Row>
             </Block>
             <Row align="center" className={classes.buttonRow}>
@@ -91,7 +110,7 @@ const ApproveTxModal = ({
                 color="primary"
                 onClick={approveTx}
               >
-                Approve Transaction
+                {title}
               </Button>
             </Row>
           </Modal>

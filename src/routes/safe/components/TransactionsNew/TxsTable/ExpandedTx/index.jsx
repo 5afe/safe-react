@@ -53,7 +53,9 @@ const txStatusToLabel = {
   awaiting_execution: 'Awaiting execution',
 }
 
-const isCancellationTransaction = (tx: Transaction, safeAddress: string) => !tx.value && tx.data === EMPTY_DATA && tx.recipient === safeAddress
+const isCancellationTransaction = (tx: Transaction, safeAddress: string) =>
+  !tx.value && tx.data === EMPTY_DATA && tx.recipient === safeAddress
+
 
 const ExpandedTx = ({
   classes,
@@ -198,6 +200,7 @@ to:
         onClose={closeModal}
         tx={tx}
         safeAddress={safeAddress}
+        thresholdReached={thresholdReached}
       />
     </>
   )
