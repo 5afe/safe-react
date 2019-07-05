@@ -36,6 +36,7 @@ type Props = {
   granted: boolean,
   safeAddress: string,
   createTransaction: Function,
+  processTransaction: Function,
 }
 
 const TxsTable = ({
@@ -47,6 +48,7 @@ const TxsTable = ({
   userAddress,
   safeAddress,
   createTransaction,
+  processTransaction,
 }: Props) => {
   const [expandedTx, setExpandedTx] = useState<string | null>(null)
 
@@ -113,6 +115,7 @@ const TxsTable = ({
                   granted={granted}
                   userAddress={userAddress}
                   createTransaction={createTransaction}
+                  processTransaction={processTransaction}
                   safeAddress={safeAddress}
                 />
               </TableCell>

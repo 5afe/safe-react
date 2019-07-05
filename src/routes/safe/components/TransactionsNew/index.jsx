@@ -15,6 +15,7 @@ type Props = {
   userAddress: string,
   granted: boolean,
   createTransaction: Function,
+  processTransaction: Function,
 }
 
 const Transactions = ({
@@ -25,6 +26,7 @@ const Transactions = ({
   granted,
   safeAddress,
   createTransaction,
+  processTransaction,
   fetchTransactions,
 }: Props) => {
   useEffect(() => {
@@ -44,6 +46,7 @@ const Transactions = ({
           granted={granted}
           safeAddress={safeAddress}
           createTransaction={createTransaction}
+          processTransaction={processTransaction}
         />
       ) : (
         <NoTransactions />

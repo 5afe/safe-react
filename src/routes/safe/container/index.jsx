@@ -63,6 +63,7 @@ class SafeView extends React.Component<Props> {
       network,
       tokens,
       createTransaction,
+      processTransaction,
       fetchTransactions,
       updateSafe,
       transactions,
@@ -79,6 +80,7 @@ class SafeView extends React.Component<Props> {
           network={network}
           granted={granted}
           createTransaction={createTransaction}
+          processTransaction={processTransaction}
           fetchTransactions={fetchTransactions}
           updateSafe={updateSafe}
           transactions={transactions}

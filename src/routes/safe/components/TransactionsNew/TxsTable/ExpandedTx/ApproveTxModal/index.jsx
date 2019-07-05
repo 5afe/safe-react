@@ -20,10 +20,11 @@ type Props = {
   onClose: () => void,
   classes: Object,
   isOpen: boolean,
-  createTransaction: Function,
+  processTransaction: Function,
   tx: Transaction,
   nonce: string,
   safeAddress: string,
+  threshold: number,
   thresholdReached: boolean,
 }
 
@@ -42,10 +43,18 @@ const getModalTitleAndDescription = (thresholdReached: boolean) => {
 }
 
 const ApproveTxModal = ({
-  onClose, isOpen, classes, createTransaction, tx, safeAddress, thresholdReached,
+  onClose,
+  isOpen,
+  classes,
+  processTransaction,
+  tx,
+  safeAddress,
+  threshold,
+  thresholdReached,
 }: Props) => {
   const [shouldExecuteTx, setShouldExecuteTx] = useState<boolean>(false)
   const { title, description } = getModalTitleAndDescription(thresholdReached)
+  const oneConfirmationLeft = tx.confirmations.size + 1 === threshold
 
   const handleExecuteCheckbox = () => setShouldExecuteTx(prevShouldExecute => !prevShouldExecute)
 
@@ -53,14 +62,7 @@ const ApproveTxModal = ({
     <SharedSnackbarConsumer>
       {({ openSnackbar }) => {
         const approveTx = () => {
-          createTransaction(
-            safeAddress,
-            tx.recipient,
-            tx.value,
-            tx.data,
-            openSnackbar,
-            thresholdReached || shouldExecuteTx,
-          )
+          processTransaction(safeAddress, tx, openSnackbar, thresholdReached || shouldExecuteTx)
           onClose()
         }
 
@@ -83,7 +85,7 @@ const ApproveTxModal = ({
                   <br />
                   <Bold className={classes.nonceNumber}>{tx.nonce}</Bold>
                 </Paragraph>
-                {!thresholdReached && (
+                {!thresholdReached && oneConfirmationLeft && (
                   <>
                     <Paragraph color="error">
                       Approving transaction does not execute it immediately. If you want to approve and execute the

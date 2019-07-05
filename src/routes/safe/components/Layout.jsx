@@ -34,6 +34,7 @@ type Props = SelectorProps & {
   granted: boolean,
   updateSafe: Function,
   createTransaction: Function,
+  processTransaction: Function,
   fetchTransactions: Function,
 }
 
@@ -104,6 +105,7 @@ class Layout extends React.Component<Props, State> {
       tokens,
       activeTokens,
       createTransaction,
+      processTransaction,
       fetchTransactions,
       updateSafe,
       transactions,
@@ -169,6 +171,7 @@ class Layout extends React.Component<Props, State> {
             userAddress={userAddress}
             granted={granted}
             createTransaction={createTransaction}
+            processTransaction={processTransaction}
           />
         )}
         {tabIndex === 2 && (

@@ -37,6 +37,7 @@ type Props = {
   userAddress: string,
   safeAddress: string,
   createTransaction: Function,
+  processTransaction: Function,
 }
 
 type OpenModal = 'cancelTx' | 'approveTx' | null
@@ -55,7 +56,6 @@ const txStatusToLabel = {
 
 const isCancellationTransaction = (tx: Transaction, safeAddress: string) => !tx.value && tx.data === EMPTY_DATA && tx.recipient === safeAddress
 
-
 const ExpandedTx = ({
   classes,
   tx,
@@ -65,6 +65,7 @@ const ExpandedTx = ({
   userAddress,
   safeAddress,
   createTransaction,
+  processTransaction,
 }: Props) => {
   const [tabIndex, setTabIndex] = useState<number>(0)
   const [openModal, setOpenModal] = useState<OpenModal>(null)
@@ -74,7 +75,7 @@ const ExpandedTx = ({
   const cancellationTx = isCancellationTransaction(tx, safeAddress)
   const confirmedLabel = `Confirmed [${tx.confirmations.size}/${threshold}]`
   const unconfirmedLabel = `Unconfirmed [${owners.size - tx.confirmations.size}]`
-  const thresholdReached = owners.size <= tx.confirmations.size
+  const thresholdReached = threshold <= tx.confirmations.size
 
   const ownersWhoConfirmed = []
   const ownersUnconfirmed = []
@@ -195,11 +196,13 @@ to:
       />
       <ApproveTxModal
         isOpen={openModal === 'approveTx'}
-        createTransaction={createTransaction}
+        processTransaction={processTransaction}
         onClose={closeModal}
         tx={tx}
         safeAddress={safeAddress}
+        threshold={threshold}
         thresholdReached={thresholdReached}
+        currentUserAlreadyConfirmed={currentUserAlreadyConfirmed}
       />
     </>
   )

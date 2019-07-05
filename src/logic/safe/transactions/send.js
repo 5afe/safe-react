@@ -61,13 +61,27 @@ export const executeTransaction = async (
   operation: Operation,
   nonce: string | number,
   sender: string,
+  signatures?: string,
 ) => {
+  console.log({
+    to,
+    valueInWei,
+    data,
+    operation,
+    nonce,
+    sender,
+    signatures,
+  })
   try {
+    let sigs = signatures
+
     // https://gnosis-safe.readthedocs.io/en/latest/contracts/signatures.html#pre-validated-signatures
-    const sigs = `0x000000000000000000000000${sender.replace(
-      '0x',
-      '',
-    )}000000000000000000000000000000000000000000000000000000000000000001`
+    if (!sigs) {
+      sigs = `0x000000000000000000000000${sender.replace(
+        '0x',
+        '',
+      )}000000000000000000000000000000000000000000000000000000000000000001`
+    }
 
     const receipt = await safeInstance.execTransaction(
       to,

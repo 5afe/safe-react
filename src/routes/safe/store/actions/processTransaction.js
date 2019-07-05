@@ -7,6 +7,20 @@ import { type GlobalState } from '~/store'
 import { getGnosisSafeInstanceAt } from '~/logic/contracts/safeContracts'
 import { approveTransaction, executeTransaction, CALL } from '~/logic/safe/transactions'
 
+// https://gnosis-safe.readthedocs.io/en/latest/contracts/signatures.html#pre-validated-signatures
+// https://github.com/gnosis/safe-contracts/blob/master/test/gnosisSafeTeamEdition.js#L26
+const generateSignaturesFromTxConfirmations = (tx: Transaction) => {
+  let sigs = '0x'
+  tx.confirmations.forEach((conf) => {
+    sigs
+      += `000000000000000000000000${
+        conf.owner.address.replace('0x', '')
+      }0000000000000000000000000000000000000000000000000000000000000000`
+      + '01'
+  })
+  return sigs
+}
+
 const processTransaction = (
   safeAddress: string,
   tx: Transaction,
@@ -18,11 +32,12 @@ const processTransaction = (
   const safeInstance = await getGnosisSafeInstanceAt(safeAddress)
   const from = userAccountSelector(state)
   const nonce = (await safeInstance.nonce()).toString()
+  const sigs = generateSignaturesFromTxConfirmations(tx)
 
   let txHash
   if (shouldExecute) {
     openSnackbar('Transaction has been submitted', 'success')
-    txHash = await executeTransaction(safeInstance, tx.recipient, tx.value, tx.data, CALL, nonce, from)
+    txHash = await executeTransaction(safeInstance, tx.recipient, tx.value, tx.data, CALL, nonce, from, sigs)
     openSnackbar('Transaction has been confirmed', 'success')
   } else {
     openSnackbar('Approval transaction has been submitted', 'success')
