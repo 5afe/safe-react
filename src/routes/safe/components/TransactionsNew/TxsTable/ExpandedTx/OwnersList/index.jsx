@@ -7,7 +7,7 @@ import MuiList from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
 import ListItemIcon from '@material-ui/core/ListItemIcon'
 import ListItemText from '@material-ui/core/ListItemText'
-import Chip from '@material-ui/core/Chip';
+import Chip from '@material-ui/core/Chip'
 import Identicon from '~/components/Identicon'
 import Hairline from '~/components/layout/Hairline'
 import { type Owner } from '~/routes/safe/store/models/owner'
