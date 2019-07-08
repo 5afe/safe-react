@@ -84,9 +84,15 @@ const ExpandedTx = ({
   const ownersUnconfirmed = []
 
   let currentUserAlreadyConfirmed = false
+  let executionConfirmation
   owners.forEach((owner) => {
-    if (tx.confirmations.find(conf => conf.owner.address === owner.address)) {
-      ownersWhoConfirmed.push(owner)
+    const ownerConfirmation = tx.confirmations.find(conf => conf.owner.address === owner.address)
+    if (ownerConfirmation) {
+      if (ownerConfirmation.type === TX_TYPE_CONFIRMATION) {
+        ownersWhoConfirmed.push(owner)
+      } else {
+        executionConfirmation = owner
+      }
 
       if (owner.address === userAddress) {
         currentUserAlreadyConfirmed = true
@@ -175,7 +181,11 @@ to:
               </Tabs>
               <Hairline color="#c8ced4" />
             </Row>
-            <Row>{tabIndex === 0 && <OwnersList owners={ownersWhoConfirmed} />}</Row>
+            <Row>
+              {tabIndex === 0 && (
+                <OwnersList owners={ownersWhoConfirmed} executionConfirmation={executionConfirmation} />
+              )}
+            </Row>
             <Row>{tabIndex === 1 && <OwnersList owners={ownersUnconfirmed} />}</Row>
             {granted && displayButtonRow && (
               <ButtonRow

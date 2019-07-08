@@ -84,6 +84,11 @@ export default createMuiTheme({
         padding: '24px 0 0 15px',
       },
     },
+    MuiChip: {
+      root: {
+        fontFamily: 'Roboto Mono, monospace',
+      },
+    },
     MuiStepIcon: {
       root: {
         fontSize: '22px',
