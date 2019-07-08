@@ -49,7 +49,7 @@ const buildTransactionFrom = async (safeAddress: string, tx: TxServiceModel, saf
     }),
   )
   const isToken = await isAddressAToken(tx.to)
-  const creationTxHash = confirmations.find(conf => conf.type === TX_TYPE_CONFIRMATION).hash
+  const creationTxHash = confirmations.findLast(conf => conf.type === TX_TYPE_CONFIRMATION).hash
 
   let executionTxHash
   const executionTx = confirmations.find(conf => conf.type === TX_TYPE_EXECUTION)

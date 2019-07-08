@@ -10,7 +10,8 @@ import { approveTransaction, executeTransaction, CALL } from '~/logic/safe/trans
 // https://gnosis-safe.readthedocs.io/en/latest/contracts/signatures.html#pre-validated-signatures
 // https://github.com/gnosis/safe-contracts/blob/master/test/gnosisSafeTeamEdition.js#L26
 const generateSignaturesFromTxConfirmations = (tx: Transaction) => {
-  // The constant parts need to be sorted so that the recovered signers are sorted ascending (natural order) by address (not checksummed).
+  // The constant parts need to be sorted so that the recovered signers are sorted ascending
+  // (natural order) by address (not checksummed).
   const confirmedAdresses = tx.confirmations.map(conf => conf.owner.address).sort()
 
   let sigs = '0x'
