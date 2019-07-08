@@ -69,7 +69,7 @@ const buildTransactionFrom = async (safeAddress: string, tx: TxServiceModel, saf
     name,
     symbol,
     nonce: tx.nonce,
-    value: Number(tx.value),
+    value: tx.value.toString(),
     confirmations,
     recipient: tx.to,
     data: tx.data ? tx.data : EMPTY_DATA,

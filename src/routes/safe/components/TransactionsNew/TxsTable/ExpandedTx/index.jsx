@@ -16,6 +16,7 @@ import { type Transaction } from '~/routes/safe/store/models/transaction'
 import { type Owner } from '~/routes/safe/store/models/owner'
 import { getEtherScanLink, openTxInEtherScan, getWeb3 } from '~/logic/wallets/getWeb3'
 import { shortVersionOf } from '~/logic/wallets/ethAddresses'
+import { TX_TYPE_CONFIRMATION } from '~/logic/safe/transactions'
 import { EMPTY_DATA } from '~/logic/wallets/ethTransactions'
 import { secondary } from '~/theme/variables'
 import OwnersList from './OwnersList'
@@ -73,7 +74,9 @@ const ExpandedTx = ({
   const openCancelModal = () => setOpenModal('cancelTx')
   const closeModal = () => setOpenModal(null)
   const cancellationTx = isCancellationTransaction(tx, safeAddress)
-  const confirmedLabel = `Confirmed [${tx.confirmations.size}/${threshold}]`
+  const confirmedLabel = `Confirmed [${
+    tx.confirmations.filter(conf => conf.type === TX_TYPE_CONFIRMATION).size
+  }/${threshold}]`
   const unconfirmedLabel = `Unconfirmed [${owners.size - tx.confirmations.size}]`
   const thresholdReached = threshold <= tx.confirmations.size
 

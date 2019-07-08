@@ -8,7 +8,7 @@ export type TransactionStatus = 'awaiting_confirmations' | 'success' | 'cancelle
 export type TransactionProps = {
   name: string,
   nonce: number,
-  value: number,
+  value: string,
   confirmations: List<Confirmation>,
   recipient: string,
   data: string,
