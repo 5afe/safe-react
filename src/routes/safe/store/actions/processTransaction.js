@@ -41,7 +41,6 @@ const processTransaction = (
   const from = userAccountSelector(state)
   const nonce = (await safeInstance.nonce()).toString()
   const threshold = (await safeInstance.getThreshold()).toNumber()
-  console.log(threshold, tx.confirmations.size)
   const shouldExecute = threshold === tx.confirmations.size || approveAndExecute
   const sigs = generateSignaturesFromTxConfirmations(tx, approveAndExecute && userAddress)
 
