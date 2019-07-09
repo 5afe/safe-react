@@ -26,7 +26,7 @@ type TxData = {
   status?: string,
 }
 
-export const formatDate = (date: Date): string => format(date, 'MMM D, YYYY - h:m:s')
+export const formatDate = (date: Date): string => format(date, 'MMM D, YYYY - HH:mm:ss')
 
 export type TransactionRow = SortRow<TxData>
 
