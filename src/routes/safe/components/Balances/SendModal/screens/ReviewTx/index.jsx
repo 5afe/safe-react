@@ -62,7 +62,6 @@ const ReviewTx = ({
         let txData = EMPTY_DATA
         let txAmount = web3.utils.toWei(tx.amount, 'ether')
 
-
         if (!isSendingETH) {
           const StandardToken = await getStandardTokenContract()
           const tokenInstance = await StandardToken.at(tx.token.address)
@@ -139,7 +138,7 @@ const ReviewTx = ({
           </Block>
           <Hairline style={{ position: 'absolute', bottom: 85 }} />
           <Row align="center" className={classes.buttonRow}>
-            <Button className={classes.button} minWidth={140} onClick={onClickBack}>
+            <Button className={classes.button} minWidth={140} minHeight={42} onClick={onClickBack}>
               Back
             </Button>
             <Button
@@ -148,6 +147,7 @@ const ReviewTx = ({
               onClick={submitTx}
               variant="contained"
               minWidth={140}
+              minHeight={42}
               color="primary"
               data-testid="submit-tx-btn"
             >

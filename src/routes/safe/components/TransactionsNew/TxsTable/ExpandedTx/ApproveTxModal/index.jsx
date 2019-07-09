@@ -26,6 +26,7 @@ type Props = {
   safeAddress: string,
   threshold: number,
   thresholdReached: boolean,
+  userAddress: string,
 }
 
 const getModalTitleAndDescription = (thresholdReached: boolean) => {
@@ -51,18 +52,19 @@ const ApproveTxModal = ({
   safeAddress,
   threshold,
   thresholdReached,
+  userAddress,
 }: Props) => {
-  const [shouldExecuteTx, setShouldExecuteTx] = useState<boolean>(false)
+  const [approveAndExecute, setApproveAndExecute] = useState<boolean>(false)
   const { title, description } = getModalTitleAndDescription(thresholdReached)
   const oneConfirmationLeft = tx.confirmations.size + 1 === threshold
 
-  const handleExecuteCheckbox = () => setShouldExecuteTx(prevShouldExecute => !prevShouldExecute)
+  const handleExecuteCheckbox = () => setApproveAndExecute(prevApproveAndExecute => !prevApproveAndExecute)
 
   return (
     <SharedSnackbarConsumer>
       {({ openSnackbar }) => {
         const approveTx = () => {
-          processTransaction(safeAddress, tx, openSnackbar, thresholdReached || shouldExecuteTx)
+          processTransaction(safeAddress, tx, openSnackbar, userAddress, approveAndExecute)
           onClose()
         }
 
@@ -92,7 +94,7 @@ const ApproveTxModal = ({
                       transaction right away, click on checkbox below.
                     </Paragraph>
                     <FormControlLabel
-                      control={<Checkbox onChange={handleExecuteCheckbox} checked={shouldExecuteTx} color="primary" />}
+                      control={<Checkbox onChange={handleExecuteCheckbox} checked={approveAndExecute} color="primary" />}
                       label="Execute transaction"
                     />
                   </>

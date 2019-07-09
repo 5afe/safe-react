@@ -9,13 +9,17 @@ import { approveTransaction, executeTransaction, CALL } from '~/logic/safe/trans
 
 // https://gnosis-safe.readthedocs.io/en/latest/contracts/signatures.html#pre-validated-signatures
 // https://github.com/gnosis/safe-contracts/blob/master/test/gnosisSafeTeamEdition.js#L26
-const generateSignaturesFromTxConfirmations = (tx: Transaction) => {
+const generateSignaturesFromTxConfirmations = (tx: Transaction, preApprovingOwner?: string) => {
   // The constant parts need to be sorted so that the recovered signers are sorted ascending
   // (natural order) by address (not checksummed).
-  const confirmedAdresses = tx.confirmations.map(conf => conf.owner.address).sort()
+  let confirmedAdresses = tx.confirmations.map(conf => conf.owner.address)
+
+  if (preApprovingOwner) {
+    confirmedAdresses = confirmedAdresses.push(preApprovingOwner)
+  }
 
   let sigs = '0x'
-  confirmedAdresses.forEach((addr) => {
+  confirmedAdresses.sort().forEach((addr) => {
     sigs += `000000000000000000000000${addr.replace(
       '0x',
       '',
@@ -28,14 +32,19 @@ const processTransaction = (
   safeAddress: string,
   tx: Transaction,
   openSnackbar: Function,
-  shouldExecute?: boolean,
+  userAddress: string,
+  approveAndExecute?: boolean,
 ) => async (dispatch: ReduxDispatch<GlobalState>, getState: GetState<GlobalState>) => {
   const state: GlobalState = getState()
 
   const safeInstance = await getGnosisSafeInstanceAt(safeAddress)
   const from = userAccountSelector(state)
   const nonce = (await safeInstance.nonce()).toString()
-  const sigs = generateSignaturesFromTxConfirmations(tx)
+  const threshold = (await safeInstance.getThreshold()).toNumber()
+  console.log(threshold, tx.confirmations.size)
+  const shouldExecute = threshold === tx.confirmations.size || approveAndExecute
+  const sigs = generateSignaturesFromTxConfirmations(tx, approveAndExecute && userAddress)
+
 
   let txHash
   if (shouldExecute) {

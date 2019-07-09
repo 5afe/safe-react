@@ -2,9 +2,7 @@
 import React, { useState } from 'react'
 import { List } from 'immutable'
 import { withStyles } from '@material-ui/core/styles'
-import Tabs from '@material-ui/core/Tabs'
 import OpenInNew from '@material-ui/icons/OpenInNew'
-import Tab from '@material-ui/core/Tab'
 import Row from '~/components/layout/Row'
 import Block from '~/components/layout/Block'
 import Col from '~/components/layout/Col'
@@ -16,7 +14,6 @@ import { type Transaction } from '~/routes/safe/store/models/transaction'
 import { type Owner } from '~/routes/safe/store/models/owner'
 import { getEtherScanLink, openTxInEtherScan, getWeb3 } from '~/logic/wallets/getWeb3'
 import { shortVersionOf } from '~/logic/wallets/ethAddresses'
-import { TX_TYPE_CONFIRMATION } from '~/logic/safe/transactions'
 import { secondary } from '~/theme/variables'
 import OwnersColumn from './OwnersColumn'
 import CancelTxModal from './CancelTxModal'
@@ -150,6 +147,7 @@ to:
         processTransaction={processTransaction}
         onClose={closeModal}
         tx={tx}
+        userAddress={userAddress}
         safeAddress={safeAddress}
         threshold={threshold}
         thresholdReached={thresholdReached}
