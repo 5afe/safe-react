@@ -17,10 +17,8 @@ import { type Owner } from '~/routes/safe/store/models/owner'
 import { getEtherScanLink, openTxInEtherScan, getWeb3 } from '~/logic/wallets/getWeb3'
 import { shortVersionOf } from '~/logic/wallets/ethAddresses'
 import { TX_TYPE_CONFIRMATION } from '~/logic/safe/transactions'
-import { EMPTY_DATA } from '~/logic/wallets/ethTransactions'
 import { secondary } from '~/theme/variables'
-import OwnersList from './OwnersList'
-import ButtonRow from './ButtonRow'
+import OwnersColumn from './OwnersColumn'
 import CancelTxModal from './CancelTxModal'
 import ApproveTxModal from './ApproveTxModal'
 import { styles } from './style'
@@ -55,8 +53,6 @@ const txStatusToLabel = {
   awaiting_execution: 'Awaiting execution',
 }
 
-const isCancellationTransaction = (tx: Transaction, safeAddress: string) => !tx.value && tx.data === EMPTY_DATA && tx.recipient === safeAddress
-
 const ExpandedTx = ({
   classes,
   tx,
@@ -68,56 +64,11 @@ const ExpandedTx = ({
   createTransaction,
   processTransaction,
 }: Props) => {
-  const [tabIndex, setTabIndex] = useState<number>(0)
   const [openModal, setOpenModal] = useState<OpenModal>(null)
   const openApproveModal = () => setOpenModal('approveTx')
   const openCancelModal = () => setOpenModal('cancelTx')
   const closeModal = () => setOpenModal(null)
-  const cancellationTx = isCancellationTransaction(tx, safeAddress)
-  const confirmedLabel = `Confirmed [${
-    tx.confirmations.filter(conf => conf.type === TX_TYPE_CONFIRMATION).size
-  }/${threshold}]`
-  const unconfirmedLabel = `Unconfirmed [${owners.size - tx.confirmations.size}]`
   const thresholdReached = threshold <= tx.confirmations.size
-
-  const ownersWhoConfirmed = []
-  const ownersUnconfirmed = []
-
-  let currentUserAlreadyConfirmed = false
-  let executionConfirmation
-  owners.forEach((owner) => {
-    const ownerConfirmation = tx.confirmations.find(conf => conf.owner.address === owner.address)
-    if (ownerConfirmation) {
-      if (ownerConfirmation.type === TX_TYPE_CONFIRMATION) {
-        ownersWhoConfirmed.push(owner)
-      } else {
-        executionConfirmation = owner
-      }
-
-      if (owner.address === userAddress) {
-        currentUserAlreadyConfirmed = true
-      }
-    } else {
-      ownersUnconfirmed.push(owner)
-    }
-  })
-
-  let displayButtonRow = true
-  if (tx.isExecuted) {
-    // already executed, can't do any actions
-    displayButtonRow = false
-  } else if (tx.status === 'cancelled') {
-    // tx is cancelled (replaced) by another one
-    displayButtonRow = false
-  } else if (cancellationTx && currentUserAlreadyConfirmed && !thresholdReached) {
-    // the TX is the cancellation (replacement) transaction for previous TX,
-    // current user has already confirmed it and threshold is not reached (so he can't execute/cancel it)
-    displayButtonRow = false
-  }
-
-  const handleTabChange = (event, tabClicked) => {
-    setTabIndex(tabClicked)
-  }
 
   return (
     <>
@@ -173,31 +124,18 @@ to:
               </Paragraph>
             </Block>
           </Col>
-          <Col xs={6} className={classes.rightCol} layout="block">
-            <Row>
-              <Tabs value={tabIndex} onChange={handleTabChange} indicatorColor="secondary" textColor="secondary">
-                <Tab label={confirmedLabel} />
-                <Tab label={unconfirmedLabel} />
-              </Tabs>
-              <Hairline color="#c8ced4" />
-            </Row>
-            <Row>
-              {tabIndex === 0 && (
-                <OwnersList owners={ownersWhoConfirmed} executionConfirmation={executionConfirmation} />
-              )}
-            </Row>
-            <Row>{tabIndex === 1 && <OwnersList owners={ownersUnconfirmed} />}</Row>
-            {granted && displayButtonRow && (
-              <ButtonRow
-                onTxConfirm={openApproveModal}
-                onTxCancel={openCancelModal}
-                showConfirmBtn={!currentUserAlreadyConfirmed}
-                showCancelBtn={!cancellationTx}
-                showExecuteBtn={thresholdReached}
-                onTxExecute={openApproveModal}
-              />
-            )}
-          </Col>
+          <OwnersColumn
+            tx={tx}
+            owners={owners}
+            granted={granted}
+            threshold={threshold}
+            userAddress={userAddress}
+            thresholdReached={thresholdReached}
+            safeAddress={safeAddress}
+            onTxConfirm={openApproveModal}
+            onTxCancel={openCancelModal}
+            onTxExecute={openApproveModal}
+          />
         </Row>
       </Block>
       <CancelTxModal
@@ -215,7 +153,6 @@ to:
         safeAddress={safeAddress}
         threshold={threshold}
         thresholdReached={thresholdReached}
-        currentUserAlreadyConfirmed={currentUserAlreadyConfirmed}
       />
     </>
   )
