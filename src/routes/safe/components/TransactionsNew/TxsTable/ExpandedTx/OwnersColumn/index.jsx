@@ -50,14 +50,9 @@ const OwnersColumn = ({
   }
 
   const cancellationTx = isCancellationTransaction(tx, safeAddress)
-  const confirmedLabel = `Confirmed [${
-    tx.confirmations.filter(conf => conf.type === TX_TYPE_CONFIRMATION).size
-  }/${threshold}]`
-  const unconfirmedLabel = `Unconfirmed [${owners.size - tx.confirmations.size}]`
 
   const ownersWhoConfirmed = []
   const ownersUnconfirmed = []
-
   let currentUserAlreadyConfirmed = false
   let executionConfirmation
   owners.forEach((owner) => {
@@ -90,6 +85,9 @@ const OwnersColumn = ({
     displayButtonRow = false
   }
 
+  const confirmedLabel = `Confirmed [${tx.confirmations.size}/${threshold}]`
+  const unconfirmedLabel = `Unconfirmed [${owners.size - tx.confirmations.size}]`
+
   return (
     <Col xs={6} className={classes.rightCol} layout="block">
       <Row>
@@ -107,7 +105,7 @@ const OwnersColumn = ({
         <ButtonRow
           onTxConfirm={onTxConfirm}
           onTxCancel={onTxCancel}
-          showConfirmBtn={!currentUserAlreadyConfirmed}
+          showConfirmBtn={!currentUserAlreadyConfirmed && !thresholdReached}
           showCancelBtn={!cancellationTx}
           showExecuteBtn={thresholdReached}
           onTxExecute={onTxExecute}
