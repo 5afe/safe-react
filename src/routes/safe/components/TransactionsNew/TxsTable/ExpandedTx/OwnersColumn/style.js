@@ -8,6 +8,10 @@ export const styles = () => ({
     height: '192px',
     overflowY: 'scroll',
   },
+  rightCol: {
+    boxSizing: 'border-box',
+    borderLeft: 'solid 1px #c8ced4',
+  },
   icon: {
     marginRight: sm,
   },
