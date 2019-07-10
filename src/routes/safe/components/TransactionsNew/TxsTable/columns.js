@@ -28,18 +28,31 @@ type TxData = {
 
 export const formatDate = (date: Date): string => format(date, 'MMM D, YYYY - HH:mm:ss')
 
+export const getTxAmount = (tx: Transaction) => {
+  let txAmount = 'n/a'
+
+  if (tx.isTokenTransfer && tx.decodedParams) {
+    txAmount = `${fromWei(toBN(tx.decodedParams.value), 'ether')} ${tx.symbol}`
+  } else if (Number(tx.value) > 0) {
+    txAmount = `${fromWei(toBN(tx.value), 'ether')} ${tx.symbol}`
+  }
+
+  return txAmount
+}
+
 export type TransactionRow = SortRow<TxData>
 
 export const getTxTableData = (transactions: List<Transaction>): List<TransactionRow> => {
   const rows = transactions.map((tx: Transaction) => {
     const txDate = tx.isExecuted ? tx.executionDate : tx.submissionDate
 
+
     return {
       [TX_TABLE_NONCE_ID]: tx.nonce,
       [TX_TABLE_TYPE_ID]: 'Outgoing transfer',
       [TX_TABLE_DATE_ID]: formatDate(tx.isExecuted ? tx.executionDate : tx.submissionDate),
       [buildOrderFieldFrom(TX_TABLE_DATE_ID)]: getTime(txDate),
-      [TX_TABLE_AMOUNT_ID]: Number(tx.value) > 0 ? `${fromWei(toBN(tx.value), 'ether')} ${tx.symbol}` : 'n/a',
+      [TX_TABLE_AMOUNT_ID]: getTxAmount(tx),
       [TX_TABLE_STATUS_ID]: tx.status,
       [TX_TABLE_RAW_TX_ID]: tx,
     }

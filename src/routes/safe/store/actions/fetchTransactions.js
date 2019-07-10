@@ -51,7 +51,7 @@ const buildTransactionFrom = async (safeAddress: string, tx: TxServiceModel, saf
       })
     }),
   )
-  const isToken = await isAddressAToken(tx.to)
+  const isTokenTransfer = await isAddressAToken(tx.to)
   const creationTxHash = confirmations.findLast(conf => conf.type === TX_TYPE_CONFIRMATION).hash
 
   let executionTxHash
@@ -63,7 +63,7 @@ const buildTransactionFrom = async (safeAddress: string, tx: TxServiceModel, saf
 
   let symbol = 'ETH'
   let decodedParams
-  if (isToken) {
+  if (isTokenTransfer) {
     const tokenContract = await getHumanFriendlyToken()
     const tokenInstance = await tokenContract.at(tx.to)
     symbol = await tokenInstance.symbol()
@@ -88,7 +88,7 @@ const buildTransactionFrom = async (safeAddress: string, tx: TxServiceModel, saf
     executionDate: tx.executionDate,
     executionTxHash,
     creationTxHash,
-    isToken,
+    isTokenTransfer,
     decodedParams,
   })
 }
