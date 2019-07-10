@@ -52,25 +52,23 @@ const OwnersColumn = ({
   const cancellationTx = isCancellationTransaction(tx, safeAddress)
 
   const ownersWhoConfirmed = []
-  const ownersUnconfirmed = []
   let currentUserAlreadyConfirmed = false
   let executionConfirmation
-  owners.forEach((owner) => {
-    const ownerConfirmation = tx.confirmations.find(conf => conf.owner.address === owner.address)
-    if (ownerConfirmation) {
-      if (ownerConfirmation.type === TX_TYPE_CONFIRMATION) {
-        ownersWhoConfirmed.push(owner)
-      } else {
-        executionConfirmation = owner
-      }
 
-      if (owner.address === userAddress) {
-        currentUserAlreadyConfirmed = true
-      }
+  tx.confirmations.forEach((conf) => {
+    if (conf.owner.address === userAddress) {
+      currentUserAlreadyConfirmed = true
+    }
+
+    if (conf.type === TX_TYPE_CONFIRMATION) {
+      ownersWhoConfirmed.push(conf.owner)
     } else {
-      ownersUnconfirmed.push(owner)
+      executionConfirmation = conf.owner
     }
   })
+  const ownersUnconfirmed = owners.filter(
+    owner => tx.confirmations.findIndex(conf => conf.owner.address === owner.address) === -1,
+  )
 
   let displayButtonRow = true
   if (tx.executionTxHash) {
@@ -86,7 +84,7 @@ const OwnersColumn = ({
   }
 
   const confirmedLabel = `Confirmed [${tx.confirmations.size}/${threshold}]`
-  const unconfirmedLabel = `Unconfirmed [${owners.size - tx.confirmations.size}]`
+  const unconfirmedLabel = `Unconfirmed [${ownersUnconfirmed.size}]`
 
   return (
     <Col xs={6} className={classes.rightCol} layout="block">

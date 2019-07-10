@@ -36,11 +36,11 @@ export type SelectorProps = {
 const getTxStatus = (tx: Transaction, safe: Safe): TransactionStatus => {
   let txStatus = 'awaiting_confirmations'
 
-  if (tx.isExecuted) {
+  if (tx.executionTxHash) {
     txStatus = 'success'
   } else if (tx.cancelled) {
     txStatus = 'cancelled'
-  } else if (tx.confirmations.size === safe.owners.size) {
+  } else if (tx.confirmations.size === safe.threshold) {
     txStatus = 'awaiting_execution'
   }
 
