@@ -18,6 +18,20 @@ const openIconStyle = {
   color: secondary,
 }
 
+const getTxData = (tx: Transaction) => {
+  const txData = {}
+
+  if (tx.isTokenTransfer && tx.decodedParams) {
+    txData.recipient = tx.decodedParams.recipient
+    txData.value = fromWei(toBN(tx.decodedParams.value), 'ether')
+  } else if (Number(tx.value) > 0) {
+    txData.recipient = tx.recipient
+    txData.value = fromWei(toBN(tx.value), 'ether')
+  }
+
+  return txData
+}
+
 export const styles = () => ({
   txDataContainer: {
     padding: `${lg} ${md}`,
@@ -30,7 +44,7 @@ type Props = {
 }
 
 const TxDescription = ({ tx, classes }: Props) => {
-  const description = ''
+  const { recipient, value } = getTxData(tx)
 
   return (
     <Block className={classes.txDataContainer}>
@@ -38,15 +52,15 @@ const TxDescription = ({ tx, classes }: Props) => {
         <Bold>
           Send
           {' '}
-          {fromWei(toBN(tx.value), 'ether')}
+          {value}
           {' '}
           {tx.symbol}
           {' '}
-to:
+          to:
         </Bold>
         <br />
-        <a href={getEtherScanLink(tx.recipient, 'rinkeby')} target="_blank" rel="noopener noreferrer">
-          {shortVersionOf(tx.recipient, 4)}
+        <a href={getEtherScanLink(recipient, 'rinkeby')} target="_blank" rel="noopener noreferrer">
+          {shortVersionOf(recipient, 4)}
           <OpenInNew style={openIconStyle} />
         </a>
       </Paragraph>
