@@ -62,33 +62,34 @@ const buildTransactionFrom = async (safeAddress: string, tx: TxServiceModel, saf
   }
 
   let symbol = 'ETH'
-  let recipient = tx.to
-  let value = tx.value.toString()
+  let decodedParams
   if (isToken) {
     const tokenContract = await getHumanFriendlyToken()
     const tokenInstance = await tokenContract.at(tx.to)
     symbol = await tokenInstance.symbol()
 
-    const decodedParams = web3.eth.abi.decodeParameters(['address', 'uint256'], tx.data.slice(10))
-    /* eslint-disable */
-    recipient = decodedParams[0]
-    value = decodedParams[1]
-    /* eslint-enable */
+    const params = web3.eth.abi.decodeParameters(['address', 'uint256'], tx.data.slice(10))
+    decodedParams = {
+      recipient: params[0],
+      value: params[1],
+    }
   }
 
   return makeTransaction({
     name,
     symbol,
     nonce: tx.nonce,
-    value,
+    value: tx.value.toString(),
     confirmations,
-    recipient,
+    recipient: tx.to,
     data: tx.data ? tx.data : EMPTY_DATA,
     isExecuted: tx.isExecuted,
     submissionDate: tx.submissionDate,
     executionDate: tx.executionDate,
     executionTxHash,
     creationTxHash,
+    isToken,
+    decodedParams,
   })
 }
 

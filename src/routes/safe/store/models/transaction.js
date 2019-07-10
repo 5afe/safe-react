@@ -20,6 +20,8 @@ export type TransactionProps = {
   executionTxHash?: string,
   cancelled?: boolean,
   status?: TransactionStatus,
+  isToken: boolean,
+  decodedParams?: Object,
 }
 
 export const makeTransaction: RecordFactory<TransactionProps> = Record({
@@ -37,6 +39,8 @@ export const makeTransaction: RecordFactory<TransactionProps> = Record({
   creationTxHash: '',
   cancelled: false,
   status: 'awaiting',
+  isToken: false,
+  decodedParams: {},
 })
 
 export type Transaction = RecordOf<TransactionProps>
