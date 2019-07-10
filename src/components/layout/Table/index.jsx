@@ -20,7 +20,7 @@ const buildWidthFrom = (size: number) => ({
 })
 
 const overflowStyle = {
-  overflowX: 'scroll',
+  overflowX: 'auto',
 }
 
 // see: https://css-tricks.com/responsive-data-tables/

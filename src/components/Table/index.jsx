@@ -22,6 +22,7 @@ type Props<K> = {
   size: number,
   defaultFixed?: boolean,
   defaultOrder?: 'desc' | 'asc',
+  noBorder: boolean,
 }
 
 type State = {
@@ -127,7 +128,7 @@ class GnoTable<K> extends React.Component<Props<K>, State> {
 
   render() {
     const {
-      data, label, columns, classes, children, size, defaultOrderBy, defaultOrder, defaultFixed,
+      data, label, columns, classes, children, size, defaultOrderBy, defaultOrder, defaultFixed, noBorder,
     } = this.props
     const {
       order, orderBy, page, orderProp, rowsPerPage, fixed,
@@ -138,7 +139,7 @@ class GnoTable<K> extends React.Component<Props<K>, State> {
 
     const paginationClasses = {
       selectRoot: classes.selectRoot,
-      root: classes.paginationRoot,
+      root: !noBorder && classes.paginationRoot,
       input: classes.white,
     }
 
@@ -153,13 +154,16 @@ class GnoTable<K> extends React.Component<Props<K>, State> {
     return (
       <React.Fragment>
         {!isEmpty && (
-          <Table aria-labelledby={label} className={classes.root}>
-            <TableHead columns={columns} order={orderParam} orderBy={orderByParam} onSort={this.onSort} />
+          <Table aria-labelledby={label} className={noBorder ? '' : classes.root}>
+            <TableHead columns={columns} order={order} orderBy={orderByParam} onSort={this.onSort} />
             <TableBody>{children(sortedData)}</TableBody>
           </Table>
         )}
         {isEmpty && (
-          <Row className={classNames(classes.loader, classes.root)} style={this.getEmptyStyle(emptyRows + 1)}>
+          <Row
+            className={classNames(classes.loader, !noBorder && classes.root)}
+            style={this.getEmptyStyle(emptyRows + 1)}
+          >
             <CircularProgress size={60} />
           </Row>
         )}

@@ -2,24 +2,32 @@
 import * as React from 'react'
 import cn from 'classnames'
 import { List } from 'immutable'
+import { connect } from 'react-redux'
 import { withStyles } from '@material-ui/core/styles'
 import Block from '~/components/layout/Block'
 import Col from '~/components/layout/Col'
 import Row from '~/components/layout/Row'
+import Span from '~/components/layout/Span'
+import Img from '~/components/layout/Img'
 import RemoveSafeModal from './RemoveSafeModal'
 import Paragraph from '~/components/layout/Paragraph'
 import Hairline from '~/components/layout/Hairline'
 import { type Owner } from '~/routes/safe/store/models/owner'
 import ChangeSafeName from './ChangeSafeName'
 import ThresholdSettings from './ThresholdSettings'
+import ManageOwners from './ManageOwners'
+import actions, { type Actions } from './actions'
 import { styles } from './style'
+import RemoveSafeIcon from './assets/icons/bin.svg'
+
+export const OWNERS_SETTINGS_TAB_TESTID = 'owner-settings-tab'
 
 type State = {
   showRemoveSafe: boolean,
   menuOptionIndex: number,
 }
 
-type Props = {
+type Props = Actions & {
   classes: Object,
   granted: boolean,
   etherScanLink: string,
@@ -27,8 +35,10 @@ type Props = {
   safeName: string,
   owners: List<Owner>,
   threshold: number,
+  network: string,
   createTransaction: Function,
   updateSafe: Function,
+  userAddress: string,
 }
 
 type Action = 'RemoveSafe'
@@ -59,10 +69,12 @@ class Settings extends React.Component<Props, State> {
       etherScanLink,
       safeAddress,
       safeName,
-      updateSafe,
-      owners,
       threshold,
+      owners,
+      network,
+      userAddress,
       createTransaction,
+      updateSafe,
     } = this.props
 
     return (
@@ -74,8 +86,11 @@ class Settings extends React.Component<Props, State> {
             </Paragraph>
           </Col>
           <Col xs={6} end="sm">
-            <Paragraph noMargin size="md" color="error" className={classes.links} onClick={this.onShow('RemoveSafe')}>
-              Remove Safe
+            <Paragraph noMargin size="md" color="error" onClick={this.onShow('RemoveSafe')}>
+              <Span className={cn(classes.links, classes.removeSafeText)}>
+                Remove Safe
+              </Span>
+              <Img alt="Trash Icon" className={classes.removeSafeIcon} src={RemoveSafeIcon} />
             </Paragraph>
             <RemoveSafeModal
               onClose={this.onHide('RemoveSafe')}
@@ -96,27 +111,23 @@ class Settings extends React.Component<Props, State> {
                 Safe name
               </Row>
               <Hairline />
+              <Row
+                className={cn(classes.menuOption, menuOptionIndex === 2 && classes.active)}
+                onClick={this.handleChange(2)}
+                testId={OWNERS_SETTINGS_TAB_TESTID}
+              >
+                Owners (
+                {owners.size}
+)
+              </Row>
+              <Hairline />
               {granted && (
                 <React.Fragment>
-                  <Row
-                    className={cn(classes.menuOption, menuOptionIndex === 2 && classes.active)}
-                    onClick={this.handleChange(2)}
-                  >
-                    Owners
-                  </Row>
-                  <Hairline />
                   <Row
                     className={cn(classes.menuOption, menuOptionIndex === 3 && classes.active)}
                     onClick={this.handleChange(3)}
                   >
                     Required confirmations
-                  </Row>
-                  <Hairline />
-                  <Row
-                    className={cn(classes.menuOption, menuOptionIndex === 4 && classes.active)}
-                    onClick={this.handleChange(4)}
-                  >
-                    Modules
                   </Row>
                   <Hairline />
                 </React.Fragment>
@@ -128,7 +139,19 @@ class Settings extends React.Component<Props, State> {
               {menuOptionIndex === 1 && (
                 <ChangeSafeName safeAddress={safeAddress} safeName={safeName} updateSafe={updateSafe} />
               )}
-              {granted && menuOptionIndex === 2 && <p>To be done</p>}
+              {menuOptionIndex === 2 && (
+                <ManageOwners
+                  owners={owners}
+                  threshold={threshold}
+                  safeAddress={safeAddress}
+                  safeName={safeName}
+                  network={network}
+                  createTransaction={createTransaction}
+                  userAddress={userAddress}
+                  updateSafe={updateSafe}
+                  granted={granted}
+                />
+              )}
               {granted && menuOptionIndex === 3 && (
                 <ThresholdSettings
                   owners={owners}
@@ -137,7 +160,6 @@ class Settings extends React.Component<Props, State> {
                   safeAddress={safeAddress}
                 />
               )}
-              {granted && menuOptionIndex === 4 && <p>To be done</p>}
             </Block>
           </Col>
         </Block>
@@ -146,4 +168,9 @@ class Settings extends React.Component<Props, State> {
   }
 }
 
-export default withStyles(styles)(Settings)
+const settingsComponent = withStyles(styles)(Settings)
+
+export default connect(
+  undefined,
+  actions,
+)(settingsComponent)

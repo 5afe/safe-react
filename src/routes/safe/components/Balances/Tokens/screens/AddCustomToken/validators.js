@@ -3,18 +3,8 @@ import { List } from 'immutable'
 import { type Token } from '~/logic/tokens/store/model/token'
 import { sameAddress } from '~/logic/wallets/ethAddresses'
 import { isAddressAToken } from '~/logic/tokens/utils/tokenHelpers'
-
-export const simpleMemoize = (fn: Function) => {
-  let lastArg
-  let lastResult
-  return (arg: any) => {
-    if (arg !== lastArg) {
-      lastArg = arg
-      lastResult = fn(arg)
-    }
-    return lastResult
-  }
-}
+import { simpleMemoize } from '~/components/forms/validator'
+// import { getStandardTokenContract } from '~/logic/tokens/store/actions/fetchTokens'
 
 // eslint-disable-next-line
 export const addressIsTokenContract = simpleMemoize(async (tokenAddress: string) => {

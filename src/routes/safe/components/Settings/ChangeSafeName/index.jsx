@@ -4,6 +4,7 @@ import { withStyles } from '@material-ui/core/styles'
 import Block from '~/components/layout/Block'
 import Col from '~/components/layout/Col'
 import Field from '~/components/forms/Field'
+import Heading from '~/components/layout/Heading'
 import { composeValidators, required, minMaxLength } from '~/components/forms/validator'
 import TextField from '~/components/forms/TextField'
 import GnoForm from '~/components/forms/GnoForm'
@@ -44,10 +45,8 @@ const ChangeSafeName = (props: Props) => {
         {() => (
           <React.Fragment>
             <Block className={classes.formContainer}>
-              <Paragraph noMargin className={classes.title} size="lg" weight="bolder">
-                Modify Safe name
-              </Paragraph>
-              <Paragraph size="sm">
+              <Heading tag="h3">Modify Safe name</Heading>
+              <Paragraph>
                 You can change the name of this Safe. This name is only stored locally and never shared with Gnosis or
                 any third parties.
               </Paragraph>

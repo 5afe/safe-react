@@ -41,6 +41,12 @@ const safeStorageMware = (store: Store<GlobalState>) => (next: Function) => asyn
     if (action.type === ADD_SAFE) {
       const { safe } = action.payload
       setOwners(safe.address, safe.owners)
+    } else if (action.type === UPDATE_SAFE) {
+      const { address, owners } = action.payload
+
+      if (address && owners) {
+        setOwners(address, owners)
+      }
     } else if (action.type === REMOVE_SAFE) {
       const safeAddress = action.payload
       removeOwners(safeAddress)

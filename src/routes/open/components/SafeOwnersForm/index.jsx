@@ -74,8 +74,11 @@ const styles = () => ({
 })
 
 const getAddressValidators = (addresses: string[], position: number) => {
+  // thanks Rich Harris
+  // https://twitter.com/Rich_Harris/status/1125850391155965952
   const copy = addresses.slice()
-  copy.splice(position, 1)
+  copy[position] = copy[copy.length - 1]
+  copy.pop()
 
   return composeValidators(required, mustBeEthereumAddress, uniqueAddress(copy))
 }
@@ -97,7 +100,7 @@ export const calculateValuesAfterRemoving = (index: number, notRemovedOwners: nu
   return initialValues
 }
 
-class SafeOwners extends React.Component<Props, State> {
+class SafeOwners extends React.PureComponent<Props, State> {
   state = {
     numOwners: 1,
   }

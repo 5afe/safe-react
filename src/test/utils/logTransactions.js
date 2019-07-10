@@ -1,9 +1,9 @@
 // @flow
 import React from 'react'
-import { getGnosisSafeInstanceAt } from '~/logic/contracts/safeContracts'
-import GnoStepper from '~/components/Stepper'
 import Stepper from '@material-ui/core/Stepper'
 import TestUtils from 'react-dom/test-utils'
+import { getGnosisSafeInstanceAt } from '~/logic/contracts/safeContracts'
+import GnoStepper from '~/components/Stepper'
 
 export const printOutApprove = async (
   subject: string,
@@ -38,7 +38,10 @@ type FinsihedTx = {
   finishedTransaction: boolean,
 }
 
-export const whenExecuted = (SafeDom: React.Component<any, any>, ParentComponent: React.ElementType): Promise<void> => new Promise((resolve, reject) => {
+export const whenExecuted = (
+  SafeDom: React.Component<any, any>,
+  ParentComponent: React.ElementType,
+): Promise<void> => new Promise((resolve, reject) => {
   let times = 0
   const interval = setInterval(() => {
     if (times >= MAX_TIMES_EXECUTED) {
