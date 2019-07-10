@@ -73,8 +73,8 @@ const OwnersColumn = ({
   })
 
   let displayButtonRow = true
-  if (tx.isExecuted) {
-    // already executed, can't do any actions
+  if (tx.executionTxHash) {
+    // One of owners already executed the tx
     displayButtonRow = false
   } else if (tx.status === 'cancelled') {
     // tx is cancelled (replaced) by another one

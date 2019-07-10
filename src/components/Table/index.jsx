@@ -59,6 +59,14 @@ const styles = {
 
 const FIXED_HEIGHT = 49
 
+const backProps = {
+  'aria-label': 'Previous Page',
+}
+
+const nextProps = {
+  'aria-label': 'Next Page',
+}
+
 class GnoTable<K> extends React.Component<Props<K>, State> {
   state = {
     page: 0,
@@ -67,6 +75,20 @@ class GnoTable<K> extends React.Component<Props<K>, State> {
     fixed: undefined,
     orderProp: false,
     rowsPerPage: 5,
+  }
+
+  componentDidMount() {
+    const { defaultOrderBy, columns } = this.props
+
+    if (defaultOrderBy && columns) {
+      const defaultOrderCol = columns.find(({ id }) => id === defaultOrderBy)
+
+      if (defaultOrderCol.order) {
+        this.setState({
+          orderProp: true,
+        })
+      }
+    }
   }
 
   onSort = (newOrderBy: string, orderProp: boolean) => {
@@ -113,14 +135,6 @@ class GnoTable<K> extends React.Component<Props<K>, State> {
     const orderByParam = orderBy || defaultOrderBy
     const orderParam = order || defaultOrder
     const fixedParam = typeof fixed !== 'undefined' ? fixed : !!defaultFixed
-
-    const backProps = {
-      'aria-label': 'Previous Page',
-    }
-
-    const nextProps = {
-      'aria-label': 'Next Page',
-    }
 
     const paginationClasses = {
       selectRoot: classes.selectRoot,
