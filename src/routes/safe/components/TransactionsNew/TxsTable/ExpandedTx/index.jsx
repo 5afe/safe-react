@@ -12,17 +12,15 @@ import Paragraph from '~/components/layout/Paragraph'
 import Hairline from '~/components/layout/Hairline'
 import { type Transaction } from '~/routes/safe/store/models/transaction'
 import { type Owner } from '~/routes/safe/store/models/owner'
-import { getEtherScanLink, openTxInEtherScan, getWeb3 } from '~/logic/wallets/getWeb3'
+import { openTxInEtherScan } from '~/logic/wallets/getWeb3'
 import { shortVersionOf } from '~/logic/wallets/ethAddresses'
 import { secondary } from '~/theme/variables'
+import TxDescription from './TxDescription'
 import OwnersColumn from './OwnersColumn'
 import CancelTxModal from './CancelTxModal'
 import ApproveTxModal from './ApproveTxModal'
 import { styles } from './style'
 import { formatDate } from '../columns'
-
-const web3 = getWeb3()
-const { toBN, fromWei } = web3.utils
 
 type Props = {
   classes: Object,
@@ -102,24 +100,7 @@ const ExpandedTx = ({
               )}
             </Block>
             <Hairline />
-            <Block className={classes.txDataContainer}>
-              <Paragraph noMargin>
-                <Bold>
-                  Send
-                  {' '}
-                  {fromWei(toBN(tx.value), 'ether')}
-                  {' '}
-                  {tx.symbol}
-                  {' '}
-to:
-                </Bold>
-                <br />
-                <a href={getEtherScanLink(tx.recipient, 'rinkeby')} target="_blank" rel="noopener noreferrer">
-                  {shortVersionOf(tx.recipient, 4)}
-                  <OpenInNew style={openIconStyle} />
-                </a>
-              </Paragraph>
-            </Block>
+            <TxDescription tx={tx} />
           </Col>
           <OwnersColumn
             tx={tx}
