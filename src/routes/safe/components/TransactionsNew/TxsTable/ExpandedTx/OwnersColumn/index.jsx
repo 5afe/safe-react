@@ -83,7 +83,10 @@ const OwnersColumn = ({
     displayButtonRow = false
   }
 
-  const confirmedLabel = `Confirmed [${tx.confirmations.size}/${threshold}]`
+  let confirmedLabel = `Confirmed [${tx.confirmations.size}/${threshold}]`
+  if (tx.executionTxHash) {
+    confirmedLabel = `Confirmed [${tx.confirmations.size}]`
+  }
   const unconfirmedLabel = `Unconfirmed [${ownersUnconfirmed.size}]`
 
   return (
