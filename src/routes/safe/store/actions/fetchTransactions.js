@@ -9,11 +9,14 @@ import { makeConfirmation } from '~/routes/safe/store/models/confirmation'
 import { loadSafeSubjects } from '~/utils/storage/transactions'
 import { buildTxServiceUrl, type TxServiceType } from '~/logic/safe/transactions/txHistory'
 import { getOwners } from '~/logic/safe/utils'
+import { getWeb3 } from '~/logic/wallets/getWeb3'
 import { EMPTY_DATA } from '~/logic/wallets/ethTransactions'
 import { addTransactions } from './addTransactions'
 import { getHumanFriendlyToken } from '~/logic/tokens/store/actions/fetchTokens'
 import { isAddressAToken } from '~/logic/tokens/utils/tokenHelpers'
 import { TX_TYPE_EXECUTION, TX_TYPE_CONFIRMATION } from '~/logic/safe/transactions/send'
+
+let web3
 
 type ConfirmationServiceModel = {
   owner: string,
@@ -59,19 +62,27 @@ const buildTransactionFrom = async (safeAddress: string, tx: TxServiceModel, saf
   }
 
   let symbol = 'ETH'
+  let recipient = tx.to
+  let value = tx.value.toString()
   if (isToken) {
     const tokenContract = await getHumanFriendlyToken()
     const tokenInstance = await tokenContract.at(tx.to)
     symbol = await tokenInstance.symbol()
+
+    const decodedParams = web3.eth.abi.decodeParameters(['address', 'uint256'], tx.data.slice(10))
+    /* eslint-disable */
+    recipient = decodedParams[0]
+    value = decodedParams[1]
+    /* eslint-enable */
   }
 
   return makeTransaction({
     name,
     symbol,
     nonce: tx.nonce,
-    value: tx.value.toString(),
+    value,
     confirmations,
-    recipient: tx.to,
+    recipient,
     data: tx.data ? tx.data : EMPTY_DATA,
     isExecuted: tx.isExecuted,
     submissionDate: tx.submissionDate,
@@ -82,6 +93,8 @@ const buildTransactionFrom = async (safeAddress: string, tx: TxServiceModel, saf
 }
 
 export const loadSafeTransactions = async (safeAddress: string) => {
+  web3 = await getWeb3()
+
   const url = buildTxServiceUrl(safeAddress)
   const response = await axios.get(url)
   const transactions: TxServiceModel[] = response.data.results
