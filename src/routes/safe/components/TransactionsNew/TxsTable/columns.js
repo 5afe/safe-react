@@ -46,10 +46,9 @@ export const getTxTableData = (transactions: List<Transaction>): List<Transactio
   const rows = transactions.map((tx: Transaction) => {
     const txDate = tx.isExecuted ? tx.executionDate : tx.submissionDate
 
-
     return {
       [TX_TABLE_NONCE_ID]: tx.nonce,
-      [TX_TABLE_TYPE_ID]: 'Outgoing transfer',
+      [TX_TABLE_TYPE_ID]: tx.modifySettingsTx ? 'Modify Safe Settings' : 'Outgoing transfer',
       [TX_TABLE_DATE_ID]: formatDate(tx.isExecuted ? tx.executionDate : tx.submissionDate),
       [buildOrderFieldFrom(TX_TABLE_DATE_ID)]: getTime(txDate),
       [TX_TABLE_AMOUNT_ID]: getTxAmount(tx),
@@ -77,7 +76,7 @@ export const generateColumns = () => {
     disablePadding: false,
     label: 'Type',
     custom: false,
-    width: 150,
+    width: 200,
   }
 
   const valueColumn: Column = {

@@ -27,6 +27,9 @@ const getTxData = (tx: Transaction) => {
   } else if (Number(tx.value) > 0) {
     txData.recipient = tx.recipient
     txData.value = fromWei(toBN(tx.value), 'ether')
+  } else if (tx.modifySettingsTx) {
+    txData.recipient = tx.recipient
+    txData.modifySettingsTx = true
   }
 
   return txData
@@ -44,25 +47,31 @@ type Props = {
 }
 
 const TxDescription = ({ tx, classes }: Props) => {
-  const { recipient, value } = getTxData(tx)
+  const { recipient, value, modifySettingsTx } = getTxData(tx)
 
   return (
     <Block className={classes.txDataContainer}>
       <Paragraph noMargin>
-        <Bold>
-          Send
-          {' '}
-          {value}
-          {' '}
-          {tx.symbol}
-          {' '}
-          to:
-        </Bold>
-        <br />
-        <a href={getEtherScanLink(recipient, 'rinkeby')} target="_blank" rel="noopener noreferrer">
-          {shortVersionOf(recipient, 4)}
-          <OpenInNew style={openIconStyle} />
-        </a>
+        {modifySettingsTx ? (
+          <Bold>Modify Safe Settings</Bold>
+        ) : (
+          <>
+            <Bold>
+              Send
+              {' '}
+              {value}
+              {' '}
+              {tx.symbol}
+              {' '}
+to:
+            </Bold>
+            <br />
+            <a href={getEtherScanLink(recipient, 'rinkeby')} target="_blank" rel="noopener noreferrer">
+              {shortVersionOf(recipient, 4)}
+              <OpenInNew style={openIconStyle} />
+            </a>
+          </>
+        )}
       </Paragraph>
     </Block>
   )

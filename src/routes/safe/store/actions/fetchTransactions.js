@@ -90,6 +90,7 @@ const buildTransactionFrom = async (safeAddress: string, tx: TxServiceModel, saf
     creationTxHash,
     isTokenTransfer,
     decodedParams,
+    modifySettingsTx: tx.to === safeAddress,
   })
 }
 

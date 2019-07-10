@@ -56,12 +56,12 @@ const ThresholdForm = ({
             <Block className={classes.formContainer}>
               <Row>
                 <Paragraph weight="bolder" className={classes.headingText}>
-                    Set the required owner confirmations:
+                  Set the required owner confirmations:
                 </Paragraph>
               </Row>
               <Row>
                 <Paragraph weight="bolder">
-                    Any transaction over any daily limit requires the confirmation of:
+                  Any transaction over any daily limit requires the confirmation of:
                 </Paragraph>
               </Row>
               <Row margin="xl" align="center" className={classes.inputRow}>
@@ -90,7 +90,7 @@ const ThresholdForm = ({
                 </Col>
                 <Col xs={10}>
                   <Paragraph size="lg" color="primary" noMargin className={classes.ownersText}>
-                      out of
+                    out of
                     {' '}
                     {owners.size + 1}
                     {' '}
@@ -102,7 +102,7 @@ owner(s)
             <Hairline />
             <Row align="center" className={classes.buttonRow}>
               <Button className={classes.button} minWidth={140} onClick={onClickBack}>
-                  Back
+                Back
               </Button>
               <Button
                 type="submit"
@@ -112,7 +112,7 @@ owner(s)
                 color="primary"
                 testId={ADD_OWNER_THRESHOLD_NEXT_BTN_TESTID}
               >
-                  Review
+                Review
               </Button>
             </Row>
           </React.Fragment>
