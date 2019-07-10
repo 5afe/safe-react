@@ -141,7 +141,7 @@ class Tokens extends React.Component<Props, State> {
             <Button
               variant="contained"
               size="small"
-              color="secondary"
+              color="primary"
               className={classes.add}
               onClick={switchToAddCustomTokenScreen}
               testId={ADD_CUSTOM_TOKEN_BUTTON_TEST_ID}
