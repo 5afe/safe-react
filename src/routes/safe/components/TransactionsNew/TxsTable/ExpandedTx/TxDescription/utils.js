@@ -5,7 +5,16 @@ import { getWeb3 } from '~/logic/wallets/getWeb3'
 const web3 = getWeb3()
 const { toBN, fromWei } = web3.utils
 
-export const getTxData = (tx: Transaction) => {
+type DecodedTxData = {
+  recipient: string,
+  value?: string,
+  modifySettingsTx?: boolean,
+  removedOwner?: string,
+  newThreshold?: string,
+  addedOwner?: string,
+}
+
+export const getTxData = (tx: Transaction): DecodedTxData => {
   const txData = {}
 
   if (tx.isTokenTransfer && tx.decodedParams) {
@@ -29,7 +38,7 @@ export const getTxData = (tx: Transaction) => {
         txData.addedOwner = tx.decodedParams.args[1]
         txData.newThreshold = tx.decodedParams.args[1]
       } else if (tx.decodedParams.methodName === 'swapOwner') {
-        txData.replacedOwner = tx.decodedParams.args[0]
+        txData.addedOwner = tx.decodedParams.args[0]
         txData.removedOwner = tx.decodedParams.args[1]
         txData.newThreshold = tx.decodedParams.args[2]
       }

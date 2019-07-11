@@ -27,35 +27,83 @@ type Props = {
   tx: Transaction,
 }
 
+type TransferDescProps = {
+  value: string,
+  symbol: string,
+  recipient: string,
+}
+
+type DescriptionDescProps = {
+  removedOwner?: string,
+  addedOwner?: string,
+  newThreshold?: string,
+}
+
+type AddressLinkProps = {
+  address: string
+}
+
+const RinkebyAddressLink = ({ address }: AddressLinkProps) => (
+  <a href={getEtherScanLink(address, 'rinkeby')} target="_blank" rel="noopener noreferrer">
+    {shortVersionOf(address, 4)}
+    <OpenInNew style={openIconStyle} />
+  </a>
+)
+
+const TransferDescription = ({ value = '', symbol, recipient }: TransferDescProps) => (
+  <Paragraph noMargin>
+    <Bold>
+      Send
+      {' '}
+      {value}
+      {' '}
+      {symbol}
+      {' '}
+to:
+    </Bold>
+    <br />
+    <RinkebyAddressLink address={recipient} />
+  </Paragraph>
+)
+
+const SettingsDescription = ({ removedOwner, addedOwner, newThreshold }: DescriptionDescProps) => (
+  <>
+    {newThreshold && (
+      <Paragraph>
+        <Bold>Change required confirmations:</Bold>
+        <br />
+        {newThreshold}
+      </Paragraph>
+    )}
+    {removedOwner && (
+      <Paragraph>
+        <Bold>Remove owner:</Bold>
+        <br />
+        <RinkebyAddressLink address={removedOwner} />
+      </Paragraph>
+    )}
+    {addedOwner && (
+      <Paragraph>
+        <Bold>Add owner:</Bold>
+        <br />
+        <RinkebyAddressLink address={addedOwner} />
+      </Paragraph>
+    )}
+  </>
+)
+
 const TxDescription = ({ tx, classes }: Props) => {
   const {
-    recipient, value, modifySettingsTx, replacedOwner, removedOwner, addedOwner, newThreshold,
+    recipient, value, modifySettingsTx, removedOwner, addedOwner, newThreshold,
   } = getTxData(tx)
 
   return (
     <Block className={classes.txDataContainer}>
-      <Paragraph noMargin>
-        {modifySettingsTx ? (
-          <Bold>Modify Safe Settings</Bold>
-        ) : (
-          <>
-            <Bold>
-              Send
-              {' '}
-              {value}
-              {' '}
-              {tx.symbol}
-              {' '}
-to:
-            </Bold>
-            <br />
-            <a href={getEtherScanLink(recipient, 'rinkeby')} target="_blank" rel="noopener noreferrer">
-              {shortVersionOf(recipient, 4)}
-              <OpenInNew style={openIconStyle} />
-            </a>
-          </>
-        )}
-      </Paragraph>
+      {modifySettingsTx ? (
+        <SettingsDescription removedOwner={removedOwner} newThreshold={newThreshold} addedOwner={addedOwner} />
+      ) : (
+        <TransferDescription value={value} symbol={tx.symbol} recipient={recipient} />
+      )}
     </Block>
   )
 }
