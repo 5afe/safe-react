@@ -3,6 +3,7 @@ import { getWeb3 } from '~/logic/wallets/getWeb3'
 
 // SAFE METHODS TO ITS ID
 // https://github.com/gnosis/safe-contracts/blob/development/test/safeMethodNaming.js
+// https://github.com/gnosis/safe-contracts/blob/development/contracts/GnosisSafe.sol
 //  [
 //   { name: "addOwnerWithThreshold", id: "0x0d582f13" },
 //   { name: "DOMAIN_SEPARATOR_TYPEHASH", id: "0x1db61b54" },
@@ -38,26 +39,47 @@ import { getWeb3 } from '~/logic/wallets/getWeb3'
 //   { name: "getTransactionHash", id: "0xd8d11f78" }
 // ]
 
-export const decodeParamsFromSafeMethod = async (data) => {
-  const web3 = await getWeb3()
+const METHOD_TO_ID = {
+  '0xe318b52b': 'swapOwner',
+  '0x0d582f13': 'addOwnerWithThreshold',
+  '0xf8dc5dd9': 'removeOwner',
+  '0x694e80c3': 'changeThreshold',
+}
 
-  switch (data.slice(0, 10)) {
-  // swapOwner
-  case '0xe318b52b':
-    return
+export const decodeParamsFromSafeMethod = async (data: string) => {
+  const web3 = await getWeb3()
+  const [methodId, params] = [data.slice(0, 10), data.slice(10)]
+
+  switch (methodId) {
+    // swapOwner
+    case '0xe318b52b':
+      return {
+        methodName: METHOD_TO_ID[methodId],
+        args: web3.eth.abi.decodeParameters(['address', 'address', 'address'], params),
+      }
 
     // addOwnerWithThreshold
-  case '0x0d582f13':
-    return
+    case '0x0d582f13':
+      return {
+        methodName: METHOD_TO_ID[methodId],
+        args: web3.eth.abi.decodeParameters(['address', 'uint'], params),
+      }
 
     // removeOwner
-  case '0xf8dc5dd9':
-    return
+    case '0xf8dc5dd9':
+      return {
+        methodName: METHOD_TO_ID[methodId],
+        args: web3.eth.abi.decodeParameters(['address', 'address', 'uint'], params),
+      }
 
-  case '0x694e80c3':
-    return
+    // changeThreshold
+    case '0x694e80c3':
+      return {
+        methodName: METHOD_TO_ID[methodId],
+        args: web3.eth.abi.decodeParameters(['uint'], params),
+      }
 
-  default:
-    return {}
+    default:
+      return {}
   }
 }

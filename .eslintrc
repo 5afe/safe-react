@@ -1,8 +1,5 @@
 {
-  "extends": [
-    "airbnb",
-    "plugin:flowtype/recommended"
-  ],
+  "extends": ["airbnb", "plugin:flowtype/recommended"],
   "parser": "babel-eslint",
   "plugins": ["jest", "flowtype"],
   "rules": {
@@ -27,19 +24,23 @@
     "import/extensions": 0,
     "import/prefer-default-export": 0,
     "jsx-a11y/label-has-for": 0,
-    "indent": ["error", 2],
+    "indent": ["error", 2, { "SwitchCase": 1 }],
     "no-console": ["error", { "allow": ["warn", "error"] }],
     "flowtype/require-valid-file-annotation": [
       2,
-      "always", {
+      "always",
+      {
         "annotationStyle": "line"
       }
     ],
-    "jsx-a11y/anchor-is-valid": [ "error", {
-      "components": [ "Link" ],
-      "specialLink": [ "to", "hrefLeft", "hrefRight" ],
-      "aspects": [ "noHref", "invalidHref", "preferButton" ]
-    }],
+    "jsx-a11y/anchor-is-valid": [
+      "error",
+      {
+        "components": ["Link"],
+        "specialLink": ["to", "hrefLeft", "hrefRight"],
+        "aspects": ["noHref", "invalidHref", "preferButton"]
+      }
+    ],
     "react/require-default-props": 0,
     "react/no-array-index-key": 0
   },

@@ -15,6 +15,7 @@ import { addTransactions } from './addTransactions'
 import { getHumanFriendlyToken } from '~/logic/tokens/store/actions/fetchTokens'
 import { isAddressAToken } from '~/logic/tokens/utils/tokenHelpers'
 import { TX_TYPE_EXECUTION, TX_TYPE_CONFIRMATION } from '~/logic/safe/transactions/send'
+import { decodeParamsFromSafeMethod } from '~/logic/contracts/methodIds'
 
 let web3
 
@@ -51,6 +52,7 @@ const buildTransactionFrom = async (safeAddress: string, tx: TxServiceModel, saf
       })
     }),
   )
+  const modifySettingsTx = tx.to === safeAddress
   const isTokenTransfer = await isAddressAToken(tx.to)
   const creationTxHash = confirmations.findLast(conf => conf.type === TX_TYPE_CONFIRMATION).hash
 
@@ -73,6 +75,10 @@ const buildTransactionFrom = async (safeAddress: string, tx: TxServiceModel, saf
       recipient: params[0],
       value: params[1],
     }
+  } else if (
+    modifySettingsTx && tx.data
+  ) {
+    decodedParams = await decodeParamsFromSafeMethod(tx.data)
   }
 
   return makeTransaction({
@@ -90,7 +96,7 @@ const buildTransactionFrom = async (safeAddress: string, tx: TxServiceModel, saf
     creationTxHash,
     isTokenTransfer,
     decodedParams,
-    modifySettingsTx: tx.to === safeAddress,
+    modifySettingsTx,
   })
 }
 
