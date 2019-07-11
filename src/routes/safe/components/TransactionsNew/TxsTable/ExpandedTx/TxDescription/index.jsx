@@ -6,33 +6,14 @@ import { type Transaction } from '~/routes/safe/store/models/transaction'
 import Bold from '~/components/layout/Bold'
 import Paragraph from '~/components/layout/Paragraph'
 import Block from '~/components/layout/Block'
-import { getEtherScanLink, getWeb3 } from '~/logic/wallets/getWeb3'
+import { getEtherScanLink } from '~/logic/wallets/getWeb3'
 import { shortVersionOf } from '~/logic/wallets/ethAddresses'
 import { md, lg, secondary } from '~/theme/variables'
-
-const web3 = getWeb3()
-const { toBN, fromWei } = web3.utils
+import { getTxData } from './utils'
 
 const openIconStyle = {
   height: '13px',
   color: secondary,
-}
-
-const getTxData = (tx: Transaction) => {
-  const txData = {}
-
-  if (tx.isTokenTransfer && tx.decodedParams) {
-    txData.recipient = tx.decodedParams.recipient
-    txData.value = fromWei(toBN(tx.decodedParams.value), 'ether')
-  } else if (Number(tx.value) > 0) {
-    txData.recipient = tx.recipient
-    txData.value = fromWei(toBN(tx.value), 'ether')
-  } else if (tx.modifySettingsTx) {
-    txData.recipient = tx.recipient
-    txData.modifySettingsTx = true
-  }
-
-  return txData
 }
 
 export const styles = () => ({
@@ -47,7 +28,9 @@ type Props = {
 }
 
 const TxDescription = ({ tx, classes }: Props) => {
-  const { recipient, value, modifySettingsTx } = getTxData(tx)
+  const {
+    recipient, value, modifySettingsTx, replacedOwner, removedOwner, addedOwner, newThreshold,
+  } = getTxData(tx)
 
   return (
     <Block className={classes.txDataContainer}>
