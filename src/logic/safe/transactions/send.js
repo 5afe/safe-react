@@ -64,15 +64,6 @@ export const executeTransaction = async (
   sender: string,
   signatures?: string,
 ) => {
-  console.log({
-    to,
-    valueInWei,
-    data,
-    operation,
-    nonce,
-    sender,
-    signatures,
-  })
   try {
     let sigs = signatures
 
@@ -83,13 +74,6 @@ export const executeTransaction = async (
         '',
       )}000000000000000000000000000000000000000000000000000000000000000001`
     }
-
-    // debug
-    const executeDataUsedSignatures = safeInstance.contract.methods
-      .execTransaction(to, valueInWei, data, operation, 0, 0, 0, ZERO_ADDRESS, ZERO_ADDRESS, sigs)
-      .encodeABI()
-    console.log(await getErrorMessage(safeInstance.address, 0, executeDataUsedSignatures, sender))
-    // debug end
 
     const receipt = await safeInstance.execTransaction(
       to,
@@ -119,8 +103,15 @@ export const executeTransaction = async (
 
     return receipt
   } catch (error) {
-    // eslint-disable-next-line
-    console.log('Error executing the TX: ' + error)
+    /* eslint-disable */
+    const executeDataUsedSignatures = safeInstance.contract.methods
+      .execTransaction(to, valueInWei, data, operation, 0, 0, 0, ZERO_ADDRESS, ZERO_ADDRESS, sigs)
+      .encodeABI()
+    const errMsg = await getErrorMessage(safeInstance.address, 0, executeDataUsedSignatures, sender)
+
+    console.log(`Error executing the TX: ${error}`)
+    console.log(`Error executing the TX: ${errMsg}`)
+    /* eslint-enable */
     return 0
   }
 }
