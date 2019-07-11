@@ -7,6 +7,7 @@ type Props = {
   minHeight?: number,
   rounded?: boolean,
   testId?: string,
+  style?: Object,
 }
 
 const calculateStyleBased = (minWidth, minHeight, rounded) => ({
@@ -16,11 +17,11 @@ const calculateStyleBased = (minWidth, minHeight, rounded) => ({
 })
 
 const GnoButton = ({
-  minWidth, minHeight = 27, testId = '', rounded, ...props
+  minWidth, minHeight = 27, testId = '', rounded, style = {}, ...props
 }: Props) => {
-  const style = calculateStyleBased(minWidth, minHeight, rounded)
+  const calculatedStyle = calculateStyleBased(minWidth, minHeight, rounded)
 
-  return <Button style={style} data-testid={testId} {...props} />
+  return <Button style={{ ...calculatedStyle, ...style }} data-testid={testId} {...props} />
 }
 
 export default GnoButton
