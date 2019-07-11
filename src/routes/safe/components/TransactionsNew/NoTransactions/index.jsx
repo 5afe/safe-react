@@ -5,7 +5,7 @@ import Col from '~/components/layout/Col'
 import Row from '~/components/layout/Row'
 import Paragraph from '~/components/layout/Paragraph/index'
 
-const NoRights = () => (
+const NoTransactions = () => (
   <Row>
     <Col xs={12} center="xs" sm={10} smOffset={2} start="sm" margin="md">
       <Paragraph size="lg">
@@ -15,4 +15,4 @@ const NoRights = () => (
   </Row>
 )
 
-export default NoRights
+export default NoTransactions
