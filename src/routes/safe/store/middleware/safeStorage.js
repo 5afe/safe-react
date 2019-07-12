@@ -9,9 +9,7 @@ import { REMOVE_SAFE_OWNER } from '~/routes/safe/store/actions/removeSafeOwner'
 import { REPLACE_SAFE_OWNER } from '~/routes/safe/store/actions/replaceSafeOwner'
 import { EDIT_SAFE_OWNER } from '~/routes/safe/store/actions/editSafeOwner'
 import { type GlobalState } from '~/store/'
-import {
-  saveSafes, getOwners, setOwners, removeOwners,
-} from '~/logic/safe/utils'
+import { saveSafes, setOwners, removeOwners } from '~/logic/safe/utils'
 import { safesMapSelector } from '~/routes/safeList/store/selectors'
 import { getActiveTokensAddressesForAllSafes } from '~/routes/safe/store/selectors'
 import { tokensSelector } from '~/logic/tokens/store/selectors'
@@ -39,16 +37,14 @@ const safeStorageMware = (store: Store<GlobalState>) => (next: Function) => asyn
     const safes = safesMapSelector(state)
     await saveSafes(safes.toJSON())
 
-    let owners
-    const { safeAddress, ownerName, ownerAddress } = action.payload
     switch (action.type) {
-    case ACTIVATE_TOKEN_FOR_ALL_SAFES:
-      const { activeTokens } = action.payload
+    case ACTIVATE_TOKEN_FOR_ALL_SAFES: {
+      let { activeTokens } = action.payload
       if (activeTokens) {
         const tokens = tokensSelector(state)
         const activeTokenAddresses = getActiveTokensAddressesForAllSafes(state)
 
-        const activeTokens = tokens.withMutations((map) => {
+        activeTokens = tokens.withMutations((map) => {
           map.forEach((token: Token) => {
             if (!activeTokenAddresses.has(token.address)) {
               map.remove(token.address)
@@ -59,36 +55,41 @@ const safeStorageMware = (store: Store<GlobalState>) => (next: Function) => asyn
         saveActiveTokens(activeTokens)
       }
       break
-
-    case ADD_SAFE:
+    }
+    case ADD_SAFE: {
       const { safe } = action.payload
       setOwners(safe.address, safe.owners)
       break
-
-    case UPDATE_SAFE:
-      owners = action.payload.owners
+    }
+    case UPDATE_SAFE: {
+      const { safeAddress, owners } = action.payload
       if (safeAddress && owners) {
         setOwners(safeAddress, owners)
       }
       break
-
-    case REMOVE_SAFE:
+    }
+    case REMOVE_SAFE: {
+      const { safeAddress } = action.payload
       await removeOwners(safeAddress)
       break
-
-    case ADD_SAFE_OWNER:
-      owners = List(safes.get(safeAddress).owners)
+    }
+    case ADD_SAFE_OWNER: {
+      const { safeAddress, ownerAddress, ownerName } = action.payload
+      const owners = List(safes.get(safeAddress).owners)
       setOwners(safeAddress, owners.push(makeOwner({ address: ownerAddress, name: ownerName })))
       break
-
-    case REMOVE_SAFE_OWNER:
-      owners = List(safes.get(safeAddress).owners)
+    }
+    case REMOVE_SAFE_OWNER: {
+      const { safeAddress, ownerAddress } = action.payload
+      const owners = List(safes.get(safeAddress).owners)
       setOwners(safeAddress, owners.filter(o => o.address.toLowerCase() !== ownerAddress.toLowerCase()))
       break
-
-    case REPLACE_SAFE_OWNER:
-      const { oldOwnerAddress } = action.payload
-      owners = List(safes.get(safeAddress).owners)
+    }
+    case REPLACE_SAFE_OWNER: {
+      const {
+        safeAddress, ownerAddress, ownerName, oldOwnerAddress,
+      } = action.payload
+      const owners = List(safes.get(safeAddress).owners)
       setOwners(
         safeAddress,
         owners
@@ -96,13 +97,14 @@ const safeStorageMware = (store: Store<GlobalState>) => (next: Function) => asyn
           .push(makeOwner({ address: ownerAddress, name: ownerName })),
       )
       break
-
-    case EDIT_SAFE_OWNER:
-      owners = List(safes.get(safeAddress).owners)
+    }
+    case EDIT_SAFE_OWNER: {
+      const { safeAddress, ownerAddress, ownerName } = action.payload
+      const owners = List(safes.get(safeAddress).owners)
       const ownerToUpdateIndex = owners.findIndex(o => o.address.toLowerCase() === ownerAddress.toLowerCase())
       setOwners(safeAddress, owners.update(ownerToUpdateIndex, owner => owner.set('name', ownerName)))
       break
-
+    }
     default:
       break
     }
