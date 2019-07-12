@@ -42,7 +42,7 @@ export const getOwners = async (safeAddress: string): Map<string, string> => {
   return data ? Map(data) : Map()
 }
 
-export const removeOwners = async (safeAddress: string): Map<string, string> => {
+export const removeOwners = async (safeAddress: string) => {
   try {
     await removeFromStorage(`${OWNERS_KEY}-${safeAddress}`)
   } catch (err) {
