@@ -4,9 +4,8 @@ import { List } from 'immutable'
 import { withStyles } from '@material-ui/core/styles'
 import { SharedSnackbarConsumer } from '~/components/SharedSnackBar'
 import Modal from '~/components/Modal'
-import { type Owner, makeOwner } from '~/routes/safe/store/models/owner'
+import { type Owner } from '~/routes/safe/store/models/owner'
 import { getGnosisSafeInstanceAt } from '~/logic/contracts/safeContracts'
-import { getOwners } from '~/logic/safe/utils'
 import OwnerForm from './screens/OwnerForm'
 import ThresholdForm from './screens/ThresholdForm'
 import ReviewAddOwner from './screens/Review'
@@ -28,7 +27,7 @@ type Props = {
   owners: List<Owner>,
   threshold: number,
   network: string,
-  updateSafe: Function,
+  addSafeOwner: Function,
   createTransaction: Function,
 }
 type ActiveScreen = 'selectOwner' | 'selectThreshold' | 'reviewAddOwner'
@@ -39,29 +38,15 @@ export const sendAddOwner = async (
   ownersOld: List<Owner>,
   openSnackbar: Function,
   createTransaction: Function,
-  updateSafe: Function,
+  addSafeOwner: Function,
 ) => {
   const gnosisSafe = await getGnosisSafeInstanceAt(safeAddress)
   const txData = gnosisSafe.contract.methods.addOwnerWithThreshold(values.ownerAddress, values.threshold).encodeABI()
 
   const txHash = await createTransaction(safeAddress, safeAddress, 0, txData, openSnackbar)
 
-  const owners = []
-  const storedOwners = await getOwners(safeAddress)
-  storedOwners.forEach((value, key) => owners.push(makeOwner({
-    address: key,
-    name: (values.ownerAddress.toLowerCase() === key.toLowerCase()) ? values.ownerName : value,
-  })))
-  const newOwnerIndex = List(owners).findIndex(o => o.address.toLowerCase() === values.ownerAddress.toLowerCase())
-  if (newOwnerIndex < 0) {
-    owners.push(makeOwner({ address: values.ownerAddress, name: values.ownerName }))
-  }
-
   if (txHash) {
-    updateSafe({
-      address: safeAddress,
-      owners: List(owners),
-    })
+    addSafeOwner({ safeAddress, ownerName: values.ownerName, ownerAddress: values.ownerAddress })
   }
 }
 
@@ -75,7 +60,7 @@ const AddOwner = ({
   threshold,
   network,
   createTransaction,
-  updateSafe,
+  addSafeOwner,
 }: Props) => {
   const [activeScreen, setActiveScreen] = useState<ActiveScreen>('selectOwner')
   const [values, setValues] = useState<Object>({})
@@ -120,7 +105,7 @@ const AddOwner = ({
           const onAddOwner = async () => {
             onClose()
             try {
-              sendAddOwner(values, safeAddress, owners, openSnackbar, createTransaction, updateSafe)
+              sendAddOwner(values, safeAddress, owners, openSnackbar, createTransaction, addSafeOwner)
             } catch (error) {
               // eslint-disable-next-line
               console.log('Error while removing an owner ' + error)

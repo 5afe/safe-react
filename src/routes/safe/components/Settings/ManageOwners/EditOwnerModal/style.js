@@ -1,9 +1,9 @@
 // @flow
 import {
-  lg, md, sm, error, background,
+  lg, md, sm, error,
 } from '~/theme/variables'
 
-export const styles = (theme: Object) => ({
+export const styles = () => ({
   heading: {
     padding: `${sm} ${lg}`,
     justifyContent: 'space-between',
@@ -35,5 +35,9 @@ export const styles = (theme: Object) => ({
     '&:hover': {
       cursor: 'pointer',
     },
+  },
+  smallerModalWindow: {
+    height: 'auto',
+    position: 'static',
   },
 })

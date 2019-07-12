@@ -1,6 +1,5 @@
 // @flow
 import React from 'react'
-import { List } from 'immutable'
 import { withStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
 import OpenInNew from '@material-ui/icons/OpenInNew'
@@ -16,7 +15,6 @@ import TextField from '~/components/forms/TextField'
 import Paragraph from '~/components/layout/Paragraph'
 import Identicon from '~/components/Identicon'
 import { getEtherScanLink } from '~/logic/wallets/getWeb3'
-import type { Owner } from '~/routes/safe/store/models/owner'
 import { composeValidators, required, minMaxLength } from '~/components/forms/validator'
 import Modal from '~/components/Modal'
 import { styles } from './style'
@@ -30,23 +28,15 @@ const openIconStyle = {
   color: secondary,
 }
 
-const stylesModal = () => ({
-  smallerModalWindow: {
-    height: 'auto',
-    position: 'static',
-  },
-})
-
 type Props = {
   onClose: () => void,
   classes: Object,
   isOpen: boolean,
   safeAddress: string,
   ownerAddress: string,
-  owners: List<Owner>,
   network: string,
   selectedOwnerName: string,
-  updateSafe: Function,
+  editSafeOwner: Function,
 }
 
 const EditOwnerComponent = ({
@@ -56,15 +46,11 @@ const EditOwnerComponent = ({
   safeAddress,
   ownerAddress,
   selectedOwnerName,
-  updateSafe,
-  owners,
+  editSafeOwner,
   network,
 }: Props) => {
   const handleSubmit = (values) => {
-    const ownerToUpdateIndex = owners.findIndex(o => o.address === ownerAddress)
-    const updatedOwners = owners.update(ownerToUpdateIndex, owner => owner.set('name', values.ownerName))
-
-    updateSafe({ address: safeAddress, owners: updatedOwners })
+    editSafeOwner({ safeAddress, ownerAddress, ownerName: values.ownerName })
     onClose()
   }
 
@@ -74,7 +60,7 @@ const EditOwnerComponent = ({
       description="Edit owner from Safe"
       handleClose={onClose}
       open={isOpen}
-      paperClassName={stylesModal.smallerModalWindow}
+      paperClassName={classes.smallerModalWindow}
     >
       <Row align="center" grow className={classes.heading}>
         <Paragraph className={classes.manage} noMargin weight="bolder">

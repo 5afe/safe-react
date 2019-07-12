@@ -57,7 +57,10 @@ type Props = {
   threshold: number,
   userAddress: string,
   createTransaction: Function,
-  updateSafe: Function,
+  addSafeOwner: Function,
+  removeSafeOwner: Function,
+  replaceSafeOwner: Function,
+  editSafeOwner: Function,
   granted: boolean,
 }
 
@@ -108,7 +111,10 @@ class ManageOwners extends React.Component<Props, State> {
       network,
       userAddress,
       createTransaction,
-      updateSafe,
+      addSafeOwner,
+      removeSafeOwner,
+      replaceSafeOwner,
+      editSafeOwner,
       granted,
     } = this.props
     const {
@@ -211,7 +217,7 @@ class ManageOwners extends React.Component<Props, State> {
           network={network}
           userAddress={userAddress}
           createTransaction={createTransaction}
-          updateSafe={updateSafe}
+          addSafeOwner={addSafeOwner}
         />
         <RemoveOwnerModal
           onClose={this.onHide('RemoveOwner')}
@@ -225,7 +231,7 @@ class ManageOwners extends React.Component<Props, State> {
           network={network}
           userAddress={userAddress}
           createTransaction={createTransaction}
-          updateSafe={updateSafe}
+          removeSafeOwner={removeSafeOwner}
         />
         <ReplaceOwnerModal
           onClose={this.onHide('ReplaceOwner')}
@@ -239,7 +245,7 @@ class ManageOwners extends React.Component<Props, State> {
           threshold={threshold}
           userAddress={userAddress}
           createTransaction={createTransaction}
-          updateSafe={updateSafe}
+          replaceSafeOwner={replaceSafeOwner}
         />
         <EditOwnerModal
           onClose={this.onHide('EditOwner')}
@@ -249,7 +255,7 @@ class ManageOwners extends React.Component<Props, State> {
           selectedOwnerName={selectedOwnerName}
           owners={owners}
           network={network}
-          updateSafe={updateSafe}
+          editSafeOwner={editSafeOwner}
         />
       </React.Fragment>
     )
