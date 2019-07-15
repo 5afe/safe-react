@@ -4,7 +4,7 @@ import { List } from 'immutable'
 import { withStyles } from '@material-ui/core/styles'
 import { SharedSnackbarConsumer } from '~/components/SharedSnackBar'
 import Modal from '~/components/Modal'
-import { getGnosisSafeInstanceAt } from '~/logic/contracts/safeContracts'
+import { getGnosisSafeInstanceAt, SENTINEL_ADDRESS } from '~/logic/contracts/safeContracts'
 import OwnerForm from './screens/OwnerForm'
 import ReviewReplaceOwner from './screens/Review'
 
@@ -31,8 +31,6 @@ type Props = {
   replaceSafeOwner: Function,
 }
 type ActiveScreen = 'checkOwner' | 'reviewReplaceOwner'
-
-const SENTINEL_ADDRESS = '0x0000000000000000000000000000000000000001'
 
 export const sendReplaceOwner = async (
   values: Object,

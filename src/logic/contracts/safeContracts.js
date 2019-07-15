@@ -7,6 +7,8 @@ import { getWeb3 } from '~/logic/wallets/getWeb3'
 import { calculateGasOf, calculateGasPrice } from '~/logic/wallets/ethTransactions'
 import { ZERO_ADDRESS } from '~/logic/wallets/ethAddresses'
 
+export const SENTINEL_ADDRESS = '0x0000000000000000000000000000000000000001'
+
 let proxyFactoryMaster
 let safeMaster
 

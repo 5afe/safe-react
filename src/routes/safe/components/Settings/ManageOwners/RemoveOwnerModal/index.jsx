@@ -5,7 +5,7 @@ import { withStyles } from '@material-ui/core/styles'
 import { SharedSnackbarConsumer } from '~/components/SharedSnackBar'
 import Modal from '~/components/Modal'
 import { type Owner } from '~/routes/safe/store/models/owner'
-import { getGnosisSafeInstanceAt } from '~/logic/contracts/safeContracts'
+import { getGnosisSafeInstanceAt, SENTINEL_ADDRESS } from '~/logic/contracts/safeContracts'
 import CheckOwner from './screens/CheckOwner'
 import ThresholdForm from './screens/ThresholdForm'
 import ReviewRemoveOwner from './screens/Review'
@@ -33,8 +33,6 @@ type Props = {
   removeSafeOwner: Function,
 }
 type ActiveScreen = 'checkOwner' | 'selectThreshold' | 'reviewRemoveOwner'
-
-const SENTINEL_ADDRESS = '0x0000000000000000000000000000000000000001'
 
 export const sendRemoveOwner = async (
   values: Object,
