@@ -46,7 +46,7 @@ export const grantedSelector: Selector<GlobalState, RouterProps, boolean> = crea
       return false
     }
 
-    return owners.find((owner: Owner) => sameAddress(owner.get('address'), userAccount)) !== undefined
+    return owners.find((owner: Owner) => sameAddress(owner.address, userAccount)) !== undefined
   },
 )
 

@@ -31,6 +31,7 @@ const createTransaction = (
     txHash = await executeTransaction(safeInstance, to, valueInWei, txData, CALL, nonce, from)
     openSnackbar('Transaction has been confirmed', 'success')
   } else {
+    console.log('Temporal error: threshold != 1')
     // txHash = await approveTransaction(safeAddress, to, valueInWei, txData, CALL, nonce)
   }
   // dispatch(addTransactions(txHash))

@@ -103,6 +103,7 @@ class Layout extends React.Component<Props, State> {
       activeTokens,
       createTransaction,
       updateSafe,
+      userAddress,
     } = this.props
     const { tabIndex } = this.state
 
@@ -163,6 +164,8 @@ class Layout extends React.Component<Props, State> {
             updateSafe={updateSafe}
             threshold={safe.threshold}
             owners={safe.owners}
+            network={network}
+            userAddress={userAddress}
             createTransaction={createTransaction}
           />
         )}

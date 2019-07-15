@@ -1,6 +1,6 @@
 // @flow
-import { type Owner } from '~/routes/safe/store/models/owner'
 import { List, Map } from 'immutable'
+import { type Owner } from '~/routes/safe/store/models/owner'
 import { loadFromStorage, saveToStorage, removeFromStorage } from '~/utils/storage'
 
 export const SAFES_KEY = 'SAFES'
@@ -28,7 +28,7 @@ export const saveSafes = async (safes: Object) => {
 
 export const setOwners = async (safeAddress: string, owners: List<Owner>) => {
   try {
-    const ownersAsMap = Map(owners.map((owner: Owner) => [owner.get('address').toLowerCase(), owner.get('name')]))
+    const ownersAsMap = Map(owners.map((owner: Owner) => [owner.address.toLowerCase(), owner.name]))
     await saveToStorage(`${OWNERS_KEY}-${safeAddress}`, ownersAsMap)
   } catch (err) {
     // eslint-disable-next-line
@@ -42,7 +42,7 @@ export const getOwners = async (safeAddress: string): Map<string, string> => {
   return data ? Map(data) : Map()
 }
 
-export const removeOwners = async (safeAddress: string): Map<string, string> => {
+export const removeOwners = async (safeAddress: string) => {
   try {
     await removeFromStorage(`${OWNERS_KEY}-${safeAddress}`)
   } catch (err) {

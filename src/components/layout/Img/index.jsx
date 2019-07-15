@@ -10,15 +10,16 @@ type Props = {
   fullwidth?: boolean,
   bordered?: boolean,
   className?: string,
-  style?: React.Node,
+  style?: Object,
+  testId?: string,
 }
 
 const Img = ({
-  fullwidth, alt, bordered, className, style, ...props
+  fullwidth, alt, bordered, className, style, testId = '', ...props
 }: Props) => {
   const classes = cx(styles.img, { fullwidth, bordered }, className)
 
-  return <img alt={alt} style={style} className={classes} {...props} />
+  return <img alt={alt} style={style} className={classes} data-testid={testId} {...props} />
 }
 
 export default Img
