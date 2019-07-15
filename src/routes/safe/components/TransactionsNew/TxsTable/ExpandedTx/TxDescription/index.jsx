@@ -40,7 +40,7 @@ type DescriptionDescProps = {
 }
 
 type AddressLinkProps = {
-  address: string
+  address: string,
 }
 
 const RinkebyAddressLink = ({ address }: AddressLinkProps) => (
@@ -68,13 +68,6 @@ to:
 
 const SettingsDescription = ({ removedOwner, addedOwner, newThreshold }: DescriptionDescProps) => (
   <>
-    {newThreshold && (
-      <Paragraph>
-        <Bold>Change required confirmations:</Bold>
-        <br />
-        {newThreshold}
-      </Paragraph>
-    )}
     {removedOwner && (
       <Paragraph>
         <Bold>Remove owner:</Bold>
@@ -89,19 +82,27 @@ const SettingsDescription = ({ removedOwner, addedOwner, newThreshold }: Descrip
         <RinkebyAddressLink address={addedOwner} />
       </Paragraph>
     )}
+    {newThreshold && (
+      <Paragraph>
+        <Bold>Change required confirmations:</Bold>
+        <br />
+        {newThreshold}
+      </Paragraph>
+    )}
   </>
 )
 
 const TxDescription = ({ tx, classes }: Props) => {
   const {
-    recipient, value, modifySettingsTx, removedOwner, addedOwner, newThreshold,
+    recipient, value, modifySettingsTx, removedOwner, addedOwner, newThreshold, cancellationTx,
   } = getTxData(tx)
 
   return (
     <Block className={classes.txDataContainer}>
-      {modifySettingsTx ? (
+      {modifySettingsTx && (
         <SettingsDescription removedOwner={removedOwner} newThreshold={newThreshold} addedOwner={addedOwner} />
-      ) : (
+      )}
+      {!cancellationTx && !modifySettingsTx && (
         <TransferDescription value={value} symbol={tx.symbol} recipient={recipient} />
       )}
     </Block>

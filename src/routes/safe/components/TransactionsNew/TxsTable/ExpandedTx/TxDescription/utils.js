@@ -12,6 +12,7 @@ type DecodedTxData = {
   removedOwner?: string,
   newThreshold?: string,
   addedOwner?: string,
+  cancellationTx?: boolean,
 }
 
 export const getTxData = (tx: Transaction): DecodedTxData => {
@@ -34,8 +35,8 @@ export const getTxData = (tx: Transaction): DecodedTxData => {
         txData.newThreshold = tx.decodedParams.args[2]
       } else if (tx.decodedParams.methodName === 'changeThreshold') {
         txData.newThreshold = tx.decodedParams.args[0]
-      } else if (tx.decodedParams.methodName === 'addOWnerWithThreshold') {
-        txData.addedOwner = tx.decodedParams.args[1]
+      } else if (tx.decodedParams.methodName === 'addOwnerWithThreshold') {
+        txData.addedOwner = tx.decodedParams.args[0]
         txData.newThreshold = tx.decodedParams.args[1]
       } else if (tx.decodedParams.methodName === 'swapOwner') {
         txData.addedOwner = tx.decodedParams.args[0]
@@ -44,6 +45,8 @@ export const getTxData = (tx: Transaction): DecodedTxData => {
       }
       /* eslint-enable */
     }
+  } else if (tx.cancellationTx) {
+    txData.cancellationTx = true
   }
 
   return txData

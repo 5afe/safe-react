@@ -52,7 +52,8 @@ const buildTransactionFrom = async (safeAddress: string, tx: TxServiceModel, saf
       })
     }),
   )
-  const modifySettingsTx = tx.to === safeAddress && Number(tx.value) === 0
+  const modifySettingsTx = tx.to === safeAddress && Number(tx.value) === 0 && !!tx.data
+  const cancellationTx = tx.to === safeAddress && Number(tx.value) === 0 && !tx.data
   const isTokenTransfer = await isAddressAToken(tx.to)
   const creationTxHash = confirmations.last().hash
 
@@ -97,6 +98,7 @@ const buildTransactionFrom = async (safeAddress: string, tx: TxServiceModel, saf
     isTokenTransfer,
     decodedParams,
     modifySettingsTx,
+    cancellationTx,
   })
 }
 

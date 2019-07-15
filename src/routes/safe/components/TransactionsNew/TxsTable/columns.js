@@ -45,10 +45,16 @@ export type TransactionRow = SortRow<TxData>
 export const getTxTableData = (transactions: List<Transaction>): List<TransactionRow> => {
   const rows = transactions.map((tx: Transaction) => {
     const txDate = tx.isExecuted ? tx.executionDate : tx.submissionDate
+    let txType = 'Outgoing transfer'
+    if (tx.modifySettingsTx) {
+      txType = 'Modify Safe Settings'
+    } else if (tx.cancellationTx) {
+      txType = 'Cancellation transaction'
+    }
 
     return {
       [TX_TABLE_NONCE_ID]: tx.nonce,
-      [TX_TABLE_TYPE_ID]: tx.modifySettingsTx ? 'Modify Safe Settings' : 'Outgoing transfer',
+      [TX_TABLE_TYPE_ID]: txType,
       [TX_TABLE_DATE_ID]: formatDate(tx.isExecuted ? tx.executionDate : tx.submissionDate),
       [buildOrderFieldFrom(TX_TABLE_DATE_ID)]: getTime(txDate),
       [TX_TABLE_AMOUNT_ID]: getTxAmount(tx),
