@@ -36,4 +36,8 @@ export const styles = () => ({
       cursor: 'pointer',
     },
   },
+  smallerModalWindow: {
+    height: 'auto',
+    position: 'static',
+  },
 })

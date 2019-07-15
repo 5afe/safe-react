@@ -1,10 +1,19 @@
 // @flow
-import updateSafeName from '~/routes/safe/store/actions/updateSafeName'
+import addSafeOwner from '~/routes/safe/store/actions/addSafeOwner'
+import removeSafeOwner from '~/routes/safe/store/actions/removeSafeOwner'
+import replaceSafeOwner from '~/routes/safe/store/actions/replaceSafeOwner'
+import editSafeOwner from '~/routes/safe/store/actions/editSafeOwner'
 
 export type Actions = {
-  updateSafeName: Function,
+  addSafeOwner: Function,
+  removeSafeOwner: Function,
+  replaceSafeOwner: Function,
+  editSafeOwner: Function,
 }
 
 export default {
-  updateSafeName,
+  addSafeOwner,
+  removeSafeOwner,
+  replaceSafeOwner,
+  editSafeOwner,
 }

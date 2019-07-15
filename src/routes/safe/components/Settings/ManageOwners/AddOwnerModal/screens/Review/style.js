@@ -1,6 +1,6 @@
 // @flow
 import {
-  lg, sm, border, background,
+  lg, md, sm, border, background,
 } from '~/theme/variables'
 
 export const styles = () => ({

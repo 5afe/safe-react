@@ -4,9 +4,8 @@ import { List } from 'immutable'
 import { withStyles } from '@material-ui/core/styles'
 import { SharedSnackbarConsumer } from '~/components/SharedSnackBar'
 import Modal from '~/components/Modal'
-import { type Owner, makeOwner } from '~/routes/safe/store/models/owner'
-import { getGnosisSafeInstanceAt } from '~/logic/contracts/safeContracts'
-import { getOwners } from '~/logic/safe/utils'
+import { type Owner } from '~/routes/safe/store/models/owner'
+import { getGnosisSafeInstanceAt, SENTINEL_ADDRESS } from '~/logic/contracts/safeContracts'
 import CheckOwner from './screens/CheckOwner'
 import ThresholdForm from './screens/ThresholdForm'
 import ReviewRemoveOwner from './screens/Review'
@@ -31,11 +30,9 @@ type Props = {
   threshold: number,
   network: string,
   createTransaction: Function,
-  updateSafe: Function,
+  removeSafeOwner: Function,
 }
 type ActiveScreen = 'checkOwner' | 'selectThreshold' | 'reviewRemoveOwner'
-
-const SENTINEL_ADDRESS = '0x0000000000000000000000000000000000000001'
 
 export const sendRemoveOwner = async (
   values: Object,
@@ -45,7 +42,7 @@ export const sendRemoveOwner = async (
   ownersOld: List<Owner>,
   openSnackbar: Function,
   createTransaction: Function,
-  updateSafe: Function,
+  removeSafeOwner: Function,
 ) => {
   const gnosisSafe = await getGnosisSafeInstanceAt(safeAddress)
   const safeOwners = await gnosisSafe.getOwners()
@@ -57,16 +54,8 @@ export const sendRemoveOwner = async (
 
   const txHash = await createTransaction(safeAddress, safeAddress, 0, txData, openSnackbar)
 
-  let owners = []
-  const storedOwners = await getOwners(safeAddress)
-  storedOwners.forEach((value, key) => owners.push(makeOwner({ address: key, name: value })))
-  owners = List(owners).filter(o => o.address.toLowerCase() !== ownerAddressToRemove.toLowerCase())
-
   if (txHash) {
-    updateSafe({
-      address: safeAddress,
-      owners,
-    })
+    removeSafeOwner({ safeAddress, ownerAddress: ownerAddressToRemove })
   }
 }
 
@@ -82,7 +71,7 @@ const RemoveOwner = ({
   threshold,
   network,
   createTransaction,
-  updateSafe,
+  removeSafeOwner,
 }: Props) => {
   const [activeScreen, setActiveScreen] = useState<ActiveScreen>('checkOwner')
   const [values, setValues] = useState<Object>({})
@@ -128,7 +117,7 @@ const RemoveOwner = ({
                 owners,
                 openSnackbar,
                 createTransaction,
-                updateSafe,
+                removeSafeOwner,
               )
             } catch (error) {
               // eslint-disable-next-line

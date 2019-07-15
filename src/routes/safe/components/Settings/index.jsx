@@ -37,7 +37,10 @@ type Props = Actions & {
   threshold: number,
   network: string,
   createTransaction: Function,
-  updateSafe: Function,
+  addSafeOwner: Function,
+  removeSafeOwner: Function,
+  replaceSafeOwner: Function,
+  editSafeOwner: Function,
   userAddress: string,
 }
 
@@ -75,6 +78,10 @@ class Settings extends React.Component<Props, State> {
       userAddress,
       createTransaction,
       updateSafe,
+      addSafeOwner,
+      removeSafeOwner,
+      replaceSafeOwner,
+      editSafeOwner,
     } = this.props
 
     return (
@@ -148,7 +155,10 @@ class Settings extends React.Component<Props, State> {
                   network={network}
                   createTransaction={createTransaction}
                   userAddress={userAddress}
-                  updateSafe={updateSafe}
+                  addSafeOwner={addSafeOwner}
+                  removeSafeOwner={removeSafeOwner}
+                  replaceSafeOwner={replaceSafeOwner}
+                  editSafeOwner={editSafeOwner}
                   granted={granted}
                 />
               )}

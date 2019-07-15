@@ -96,8 +96,10 @@ describe('DOM > Feature > Settings - Manage owners', () => {
     // check if there are 2 owners
     let ownerRows = SafeDom.getAllByTestId(OWNERS_ROW_TESTID)
     expect(ownerRows.length).toBe(2)
-    expect(ownerRows[0]).toHaveTextContent('Adol 1 Eth Account0x90F8bf6A479f320ead074411a4B0e7944Ea8c9C1')
-    expect(ownerRows[1]).toHaveTextContent('Adol 2 Eth Account0xFFcf8FDEE72ac11b5c542428B35EEF5769C409f0')
+    expect(ownerRows[0]).toHaveTextContent('Adol 1 Eth Account')
+    expect(ownerRows[0]).toHaveTextContent('0x90F8bf6A479f320ead074411a4B0e7944Ea8c9C1')
+    expect(ownerRows[1]).toHaveTextContent('Adol 2 Eth Account')
+    expect(ownerRows[1]).toHaveTextContent('0xFFcf8FDEE72ac11b5c542428B35EEF5769C409f0')
 
     // click remove owner btn which opens the modal
     const removeOwnerBtn = SafeDom.getAllByTestId(REMOVE_OWNER_BTN_TESTID)[1]
@@ -117,7 +119,8 @@ describe('DOM > Feature > Settings - Manage owners', () => {
     // check if owner was removed
     ownerRows = SafeDom.getAllByTestId(OWNERS_ROW_TESTID)
     expect(ownerRows.length).toBe(1)
-    expect(ownerRows[0]).toHaveTextContent('Adol 1 Eth Account0x90F8bf6A479f320ead074411a4B0e7944Ea8c9C1')
+    expect(ownerRows[0]).toHaveTextContent('Adol 1 Eth Account')
+    expect(ownerRows[0]).toHaveTextContent('0x90F8bf6A479f320ead074411a4B0e7944Ea8c9C1')
   })
 
   it('Adds a new owner', async () => {
@@ -140,7 +143,8 @@ describe('DOM > Feature > Settings - Manage owners', () => {
     // check if there is 1 owner
     let ownerRows = SafeDom.getAllByTestId(OWNERS_ROW_TESTID)
     expect(ownerRows.length).toBe(1)
-    expect(ownerRows[0]).toHaveTextContent('Adol 1 Eth Account0x90F8bf6A479f320ead074411a4B0e7944Ea8c9C1')
+    expect(ownerRows[0]).toHaveTextContent('Adol 1 Eth Account')
+    expect(ownerRows[0]).toHaveTextContent('0x90F8bf6A479f320ead074411a4B0e7944Ea8c9C1')
 
     // click add owner btn
     fireEvent.click(SafeDom.getByTestId(ADD_OWNER_BTN_TESTID))
@@ -163,8 +167,10 @@ describe('DOM > Feature > Settings - Manage owners', () => {
     // check if owner was added
     ownerRows = SafeDom.getAllByTestId(OWNERS_ROW_TESTID)
     expect(ownerRows.length).toBe(2)
-    expect(ownerRows[0]).toHaveTextContent('Adol 1 Eth Account0x90F8bf6A479f320ead074411a4B0e7944Ea8c9C1')
-    expect(ownerRows[1]).toHaveTextContent(`${NEW_OWNER_NAME}${NEW_OWNER_ADDRESS}`)
+    expect(ownerRows[0]).toHaveTextContent('Adol 1 Eth Account')
+    expect(ownerRows[0]).toHaveTextContent('0x90F8bf6A479f320ead074411a4B0e7944Ea8c9C1')
+    expect(ownerRows[1]).toHaveTextContent(NEW_OWNER_NAME)
+    expect(ownerRows[1]).toHaveTextContent(NEW_OWNER_ADDRESS)
   })
 
   it('Replaces an owner', async () => {
@@ -189,8 +195,10 @@ describe('DOM > Feature > Settings - Manage owners', () => {
     // check if there are 2 owners
     let ownerRows = SafeDom.getAllByTestId(OWNERS_ROW_TESTID)
     expect(ownerRows.length).toBe(2)
-    expect(ownerRows[0]).toHaveTextContent('Adol 1 Eth Account0x90F8bf6A479f320ead074411a4B0e7944Ea8c9C1')
-    expect(ownerRows[1]).toHaveTextContent('Adol 2 Eth Account0xFFcf8FDEE72ac11b5c542428B35EEF5769C409f0')
+    expect(ownerRows[0]).toHaveTextContent('Adol 1 Eth Account')
+    expect(ownerRows[0]).toHaveTextContent('0x90F8bf6A479f320ead074411a4B0e7944Ea8c9C1')
+    expect(ownerRows[1]).toHaveTextContent('Adol 2 Eth Account')
+    expect(ownerRows[1]).toHaveTextContent('0xFFcf8FDEE72ac11b5c542428B35EEF5769C409f0')
 
     // click replace owner btn which opens the modal
     const replaceOwnerBtn = SafeDom.getAllByTestId(REPLACE_OWNER_BTN_TESTID)[1]
@@ -212,7 +220,9 @@ describe('DOM > Feature > Settings - Manage owners', () => {
     // check if the owner was replaced
     ownerRows = SafeDom.getAllByTestId(OWNERS_ROW_TESTID)
     expect(ownerRows.length).toBe(2)
-    expect(ownerRows[0]).toHaveTextContent('Adol 1 Eth Account0x90F8bf6A479f320ead074411a4B0e7944Ea8c9C1')
-    expect(ownerRows[1]).toHaveTextContent(`${NEW_OWNER_NAME}${NEW_OWNER_ADDRESS}`)
+    expect(ownerRows[0]).toHaveTextContent('Adol 1 Eth Account')
+    expect(ownerRows[0]).toHaveTextContent('0x90F8bf6A479f320ead074411a4B0e7944Ea8c9C1')
+    expect(ownerRows[1]).toHaveTextContent(NEW_OWNER_NAME)
+    expect(ownerRows[1]).toHaveTextContent(NEW_OWNER_ADDRESS)
   })
 })
