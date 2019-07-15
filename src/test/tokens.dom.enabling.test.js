@@ -10,7 +10,7 @@ import saveTokens from '~/logic/tokens/store/actions/saveTokens'
 import { clickOnManageTokens, toggleToken, closeManageTokensModal } from './utils/DOMNavigation'
 import { BALANCE_ROW_TEST_ID } from '~/routes/safe/components/Balances'
 import { makeToken } from '~/logic/tokens/store/model/token'
-import 'jest-dom/extend-expect'
+import '@testing-library/jest-dom/extend-expect'
 
 describe('DOM > Feature > Enable and disable default tokens', () => {
   let web3

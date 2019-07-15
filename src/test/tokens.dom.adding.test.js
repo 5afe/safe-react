@@ -15,7 +15,7 @@ import {
   ADD_CUSTOM_TOKEN_FORM,
 } from '~/routes/safe/components/Balances/Tokens/screens/AddCustomToken'
 import { BALANCE_ROW_TEST_ID } from '~/routes/safe/components/Balances/'
-import 'jest-dom/extend-expect'
+import '@testing-library/jest-dom/extend-expect'
 
 // https://github.com/testing-library/@testing-library/react/issues/281
 const originalError = console.error

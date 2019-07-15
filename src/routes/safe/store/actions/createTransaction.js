@@ -33,7 +33,10 @@ const createTransaction = (
     txHash = await approveTransaction(safeInstance, to, valueInWei, txData, CALL, nonce, from)
     openSnackbar('Approval transaction has been confirmed', 'success')
   }
-  dispatch(fetchTransactions(safeAddress))
+
+  if (!process.env.NODE_ENV === 'test') {
+    dispatch(fetchTransactions(safeAddress))
+  }
 
   return txHash
 }

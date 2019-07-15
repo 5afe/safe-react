@@ -39,17 +39,19 @@ export const approveTransaction = async (
   )
   const receipt = await safeInstance.approveHash(contractTxHash, { from: sender })
 
-  await saveTxToHistory(
-    safeInstance,
-    to,
-    valueInWei,
-    data,
-    operation,
-    nonce,
-    receipt.tx, // tx hash,
-    sender,
-    TX_TYPE_CONFIRMATION,
-  )
+  if (process.env.NODE_ENV !== 'test') {
+    await saveTxToHistory(
+      safeInstance,
+      to,
+      valueInWei,
+      data,
+      operation,
+      nonce,
+      receipt.tx, // tx hash,
+      sender,
+      TX_TYPE_CONFIRMATION,
+    )
+  }
 
   return receipt
 }
@@ -64,17 +66,17 @@ export const executeTransaction = async (
   sender: string,
   signatures?: string,
 ) => {
+  let sigs = signatures
+
+  // https://gnosis-safe.readthedocs.io/en/latest/contracts/signatures.html#pre-validated-signatures
+  if (!sigs) {
+    sigs = `0x000000000000000000000000${sender.replace(
+      '0x',
+      '',
+    )}000000000000000000000000000000000000000000000000000000000000000001`
+  }
+
   try {
-    let sigs = signatures
-
-    // https://gnosis-safe.readthedocs.io/en/latest/contracts/signatures.html#pre-validated-signatures
-    if (!sigs) {
-      sigs = `0x000000000000000000000000${sender.replace(
-        '0x',
-        '',
-      )}000000000000000000000000000000000000000000000000000000000000000001`
-    }
-
     const receipt = await safeInstance.execTransaction(
       to,
       valueInWei,
@@ -89,17 +91,19 @@ export const executeTransaction = async (
       { from: sender },
     )
 
-    await saveTxToHistory(
-      safeInstance,
-      to,
-      valueInWei,
-      data,
-      operation,
-      nonce,
-      receipt.tx, // tx hash,
-      sender,
-      TX_TYPE_EXECUTION,
-    )
+    if (process.env.NODE_ENV !== 'test') {
+      await saveTxToHistory(
+        safeInstance,
+        to,
+        valueInWei,
+        data,
+        operation,
+        nonce,
+        receipt.tx, // tx hash,
+        sender,
+        TX_TYPE_EXECUTION,
+      )
+    }
 
     return receipt
   } catch (error) {

@@ -11,7 +11,7 @@ import { sleep } from '~/utils/timer'
 import TokenBalanceRecord from '~/routes/safe/store/models/tokenBalance'
 import { calculateBalanceOf } from '~/routes/safe/store/actions/fetchTokenBalances'
 import updateActiveTokens from '~/routes/safe/store/actions/updateActiveTokens'
-import 'jest-dom/extend-expect'
+import '@testing-library/jest-dom/extend-expect'
 import updateSafe from '~/routes/safe/store/actions/updateSafe'
 import { BALANCE_ROW_TEST_ID } from '~/routes/safe/components/Balances'
 
