@@ -14,10 +14,11 @@ import updateActiveTokens from '~/routes/safe/store/actions/updateActiveTokens'
 import '@testing-library/jest-dom/extend-expect'
 import updateSafe from '~/routes/safe/store/actions/updateSafe'
 import { BALANCE_ROW_TEST_ID } from '~/routes/safe/components/Balances'
+import { fillAndSubmitSendFundsForm } from './utils/transactions'
 
 afterEach(cleanup)
 
-describe('DOM > Feature > Funds', () => {
+describe('DOM > Feature > Sending Funds', () => {
   let store
   let safeAddress: string
   let accounts
@@ -44,19 +45,7 @@ describe('DOM > Feature > Funds', () => {
     const sendButton = SafeDom.getByTestId('balance-send-btn')
     fireEvent.click(sendButton)
 
-    // Fill first send funds screen
-    const recipientInput = SafeDom.getByPlaceholderText('Recipient*')
-    const amountInput = SafeDom.getByPlaceholderText('Amount*')
-    const reviewBtn = SafeDom.getByTestId('review-tx-btn')
-    fireEvent.change(recipientInput, { target: { value: accounts[0] } })
-    fireEvent.change(amountInput, { target: { value: ethAmount } })
-    await sleep(200)
-    fireEvent.click(reviewBtn)
-
-    // Submit the tx (Review Tx screen)
-    const submitBtn = SafeDom.getByTestId('submit-tx-btn')
-    fireEvent.click(submitBtn)
-    await sleep(1000)
+    await fillAndSubmitSendFundsForm(SafeDom, sendButton, ethAmount, accounts[0])
 
     // THEN
     const safeFunds = await getBalanceInEtherOf(safeAddress)
@@ -97,21 +86,8 @@ describe('DOM > Feature > Funds', () => {
     expect(balanceRows.length).toBe(2)
     const sendButtons = SafeDom.getAllByTestId('balance-send-btn')
     expect(sendButtons.length).toBe(2)
-    fireEvent.click(sendButtons[1])
 
-    // Fill first send funds screen
-    const recipientInput = SafeDom.getByPlaceholderText('Recipient*')
-    const amountInput = SafeDom.getByPlaceholderText('Amount*')
-    const reviewBtn = SafeDom.getByTestId('review-tx-btn')
-    fireEvent.change(recipientInput, { target: { value: tokenReceiver } })
-    fireEvent.change(amountInput, { target: { value: tokensAmount } })
-    await sleep(200)
-    fireEvent.click(reviewBtn)
-
-    // Submit the tx (Review Tx screen)
-    const submitBtn = SafeDom.getByTestId('submit-tx-btn')
-    fireEvent.click(submitBtn)
-    await sleep(1000)
+    await fillAndSubmitSendFundsForm(SafeDom, sendButtons[1], tokensAmount, tokenReceiver)
 
     // THEN
     const safeFunds = await calculateBalanceOf(tokenAddress, safeAddress, 18)

@@ -42,7 +42,7 @@ To run the test, you'll need to migrate contracts `safe-contracts` to the local 
 git clone https://github.com/gnosis/safe-contracts.git
 cd safe-contracts
 yarn
-ganache-cli -l 7000000
+ganache-cli -l 7000000 -d
 npx truffle migrate
 ```
 2. Migrate Token Contracts for the tests:
