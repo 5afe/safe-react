@@ -23,6 +23,7 @@ import Transactions from './TransactionsNew'
 import Settings from './Settings'
 
 export const SETTINGS_TAB_BTN_TESTID = 'settings-tab-btn'
+export const TRANSACTIONS_TAB_BTN_TESTID = 'transactions-tab-btn'
 export const SAFE_VIEW_NAME_HEADING_TESTID = 'safe-name-heading'
 
 type State = {
@@ -144,7 +145,7 @@ class Layout extends React.Component<Props, State> {
         <Row>
           <Tabs value={tabIndex} onChange={this.handleChange} indicatorColor="secondary" textColor="secondary">
             <Tab label="Balances" />
-            <Tab label="Transactions" />
+            <Tab label="Transactions" data-testid={TRANSACTIONS_TAB_BTN_TESTID} />
             <Tab label="Settings" data-testid={SETTINGS_TAB_BTN_TESTID} />
           </Tabs>
         </Row>

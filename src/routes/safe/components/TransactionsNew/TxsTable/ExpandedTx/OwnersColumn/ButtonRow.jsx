@@ -7,6 +7,9 @@ import Row from '~/components/layout/Row'
 import Button from '~/components/layout/Button'
 import { sm, lg } from '~/theme/variables'
 
+export const CONFIRM_TX_BTN_TESTID = 'confirm-btn'
+export const EXECUTE_TX_BTN_TESTID = 'execute-btn'
+
 type Props = {
   onTxConfirm: Function,
   onTxCancel: Function,
@@ -54,14 +57,28 @@ const ButtonRow = ({
       </Button>
     )}
     {showConfirmBtn && (
-      <Button className={classes.button} variant="contained" minWidth={140} color="primary" onClick={onTxConfirm}>
+      <Button
+        className={classes.button}
+        variant="contained"
+        minWidth={140}
+        color="primary"
+        onClick={onTxConfirm}
+        testId={CONFIRM_TX_BTN_TESTID}
+      >
         <EditIcon className={classes.icon} />
         {' '}
         Confirm TX
       </Button>
     )}
     {showExecuteBtn && (
-      <Button className={classes.button} variant="contained" minWidth={140} color="primary" onClick={onTxExecute}>
+      <Button
+        className={classes.button}
+        variant="contained"
+        minWidth={140}
+        color="primary"
+        onClick={onTxExecute}
+        testId={EXECUTE_TX_BTN_TESTID}
+      >
         <EditIcon className={classes.icon} />
         {' '}
         Execute TX
