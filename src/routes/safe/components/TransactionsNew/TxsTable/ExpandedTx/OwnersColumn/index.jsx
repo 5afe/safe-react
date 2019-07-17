@@ -29,7 +29,8 @@ type Props = {
   onTxExecute: Function,
 }
 
-const isCancellationTransaction = (tx: Transaction, safeAddress: string) => !tx.value && tx.data === EMPTY_DATA && tx.recipient === safeAddress
+const isCancellationTransaction = (tx: Transaction, safeAddress: string) =>
+  !tx.value && tx.data === EMPTY_DATA && tx.recipient === safeAddress
 
 const OwnersColumn = ({
   tx,

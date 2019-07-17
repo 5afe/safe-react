@@ -4,6 +4,7 @@ import { withStyles } from '@material-ui/core/styles'
 import OpenInNew from '@material-ui/icons/OpenInNew'
 import { type Transaction } from '~/routes/safe/store/models/transaction'
 import Bold from '~/components/layout/Bold'
+import AddressLink from '~/components/AddressLink'
 import Paragraph from '~/components/layout/Paragraph'
 import Block from '~/components/layout/Block'
 import { getEtherScanLink } from '~/logic/wallets/getWeb3'
@@ -39,17 +40,6 @@ type DescriptionDescProps = {
   newThreshold?: string,
 }
 
-type AddressLinkProps = {
-  address: string,
-}
-
-const RinkebyAddressLink = ({ address }: AddressLinkProps) => (
-  <a href={getEtherScanLink(address, 'rinkeby')} target="_blank" rel="noopener noreferrer">
-    {shortVersionOf(address, 4)}
-    <OpenInNew style={openIconStyle} />
-  </a>
-)
-
 const TransferDescription = ({ value = '', symbol, recipient }: TransferDescProps) => (
   <Paragraph noMargin>
     <Bold>
@@ -62,7 +52,7 @@ const TransferDescription = ({ value = '', symbol, recipient }: TransferDescProp
 to:
     </Bold>
     <br />
-    <RinkebyAddressLink address={recipient} />
+    <AddressLink address={recipient} />
   </Paragraph>
 )
 
@@ -72,14 +62,14 @@ const SettingsDescription = ({ removedOwner, addedOwner, newThreshold }: Descrip
       <Paragraph>
         <Bold>Remove owner:</Bold>
         <br />
-        <RinkebyAddressLink address={removedOwner} />
+        <AddressLink address={removedOwner} />
       </Paragraph>
     )}
     {addedOwner && (
       <Paragraph>
         <Bold>Add owner:</Bold>
         <br />
-        <RinkebyAddressLink address={addedOwner} />
+        <AddressLink address={addedOwner} />
       </Paragraph>
     )}
     {newThreshold && (
