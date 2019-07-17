@@ -55,7 +55,7 @@ export const buildTransactionFrom = async (safeAddress: string, tx: TxServiceMod
   const modifySettingsTx = tx.to === safeAddress && Number(tx.value) === 0 && !!tx.data
   const cancellationTx = tx.to === safeAddress && Number(tx.value) === 0 && !tx.data
   const isTokenTransfer = await isAddressAToken(tx.to)
-  const creationTxHash = confirmations.last().hash
+  const creationTxHash = confirmations.first().hash
 
   let executionTxHash
   const executionTx = confirmations.find(conf => conf.type === TX_TYPE_EXECUTION)

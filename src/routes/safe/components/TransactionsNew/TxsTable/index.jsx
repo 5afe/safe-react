@@ -22,6 +22,8 @@ import {
 import { styles } from './style'
 import Status from './Status'
 
+export const TRANSACTION_ROW_TEST_ID = 'tx-row'
+
 const expandCellStyle = {
   paddingLeft: 0,
   paddingRight: 0,
@@ -77,6 +79,7 @@ const TxsTable = ({
               tabIndex={-1}
               className={cn(classes.row, expandedTx === row.tx.creationTxHash && classes.expandedRow)}
               onClick={() => handleTxExpand(row.tx.creationTxHash)}
+              data-testid={TRANSACTION_ROW_TEST_ID}
             >
               {autoColumns.map((column: Column) => (
                 <TableCell
