@@ -41,14 +41,14 @@ const getProviderName: Function = (web3Provider): boolean => {
   let name
 
   switch (web3Provider.currentProvider.constructor.name) {
-  case 'SafeWeb3Provider':
-    name = WALLET_PROVIDER.SAFE
-    break
-  case 'MetamaskInpageProvider':
-    name = WALLET_PROVIDER.METAMASK
-    break
-  default:
-    name = 'UNKNOWN'
+    case 'SafeWeb3Provider':
+      name = WALLET_PROVIDER.SAFE
+      break
+    case 'MetamaskInpageProvider':
+      name = WALLET_PROVIDER.METAMASK
+      break
+    default:
+      name = 'UNKNOWN'
   }
 
   return name
