@@ -1,21 +1,13 @@
 // @flow
 import React from 'react'
 import { withStyles } from '@material-ui/core/styles'
-import OpenInNew from '@material-ui/icons/OpenInNew'
 import { type Transaction } from '~/routes/safe/store/models/transaction'
 import Bold from '~/components/layout/Bold'
-import AddressLink from '~/components/AddressLink'
+import EtherscanLink from '~/components/EtherscanLink'
 import Paragraph from '~/components/layout/Paragraph'
 import Block from '~/components/layout/Block'
-import { getEtherScanLink } from '~/logic/wallets/getWeb3'
-import { shortVersionOf } from '~/logic/wallets/ethAddresses'
 import { md, lg, secondary } from '~/theme/variables'
 import { getTxData } from './utils'
-
-const openIconStyle = {
-  height: '13px',
-  color: secondary,
-}
 
 export const styles = () => ({
   txDataContainer: {
@@ -52,7 +44,7 @@ const TransferDescription = ({ value = '', symbol, recipient }: TransferDescProp
 to:
     </Bold>
     <br />
-    <AddressLink address={recipient} />
+    <EtherscanLink type="address" value={recipient} />
   </Paragraph>
 )
 
@@ -62,14 +54,14 @@ const SettingsDescription = ({ removedOwner, addedOwner, newThreshold }: Descrip
       <Paragraph>
         <Bold>Remove owner:</Bold>
         <br />
-        <AddressLink address={removedOwner} />
+        <EtherscanLink type="address" value={removedOwner} />
       </Paragraph>
     )}
     {addedOwner && (
       <Paragraph>
         <Bold>Add owner:</Bold>
         <br />
-        <AddressLink address={addedOwner} />
+        <EtherscanLink type="address" value={addedOwner} />
       </Paragraph>
     )}
     {newThreshold && (

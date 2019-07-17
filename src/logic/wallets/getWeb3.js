@@ -32,9 +32,7 @@ export const ETHEREUM_NETWORK_IDS = {
   42: ETHEREUM_NETWORK.KOVAN,
 }
 
-export const openTxInEtherScan = (txHash: string, network: string) => `https://${network === 'mainnet' ? '' : `${network}.`}etherscan.io/tx/${txHash}`
-
-export const getEtherScanLink = (address: string, network: string) => `https://${network === 'mainnet' ? '' : `${network}.`}etherscan.io/address/${address}`
+export const getEtherScanLink = (type: 'address' | 'tx', value: string, network: string) => `https://${network === 'mainnet' ? '' : `${network}.`}etherscan.io/${type}/${value}`
 
 let web3
 export const getWeb3 = () => web3 || (window.web3 && new Web3(window.web3.currentProvider)) || (window.ethereum && new Web3(window.ethereum))

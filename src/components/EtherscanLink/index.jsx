@@ -12,14 +12,15 @@ const openIconStyle = {
   color: secondary,
 }
 
-type AddressLinkProps = {
-  address: string,
+type EtherscanLinkProps = {
+  type: 'tx' | 'address',
+  value: string,
   currentNetwork: string,
 }
 
-const AddressLink = ({ address, currentNetwork }: AddressLinkProps) => (
-  <a href={getEtherScanLink(address, currentNetwork)} target="_blank" rel="noopener noreferrer">
-    {shortVersionOf(address, 4)}
+const EtherscanLink = ({ type, value, currentNetwork }: EtherscanLinkProps) => (
+  <a href={getEtherScanLink(type, value, currentNetwork)} target="_blank" rel="noopener noreferrer">
+    {shortVersionOf(value, 4)}
     <OpenInNew style={openIconStyle} />
   </a>
 )
@@ -27,4 +28,4 @@ const AddressLink = ({ address, currentNetwork }: AddressLinkProps) => (
 export default connect<Object, Object, ?Function, ?Object>(
   state => ({ currentNetwork: networkSelector(state) }),
   null,
-)(AddressLink)
+)(EtherscanLink)

@@ -129,7 +129,7 @@ const ReviewComponent = ({ values, classes, network }: Props) => {
                       <Paragraph size="md" color="disabled" noMargin>
                         {addresses[index]}
                       </Paragraph>
-                      <Link className={classes.open} to={getEtherScanLink(addresses[index], network)} target="_blank">
+                      <Link className={classes.open} to={getEtherScanLink('address', addresses[index], network)} target="_blank">
                         <OpenInNew style={openIconStyle} />
                       </Link>
                     </Block>

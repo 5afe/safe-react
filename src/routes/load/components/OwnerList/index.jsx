@@ -151,7 +151,7 @@ const OwnerListComponent = (props: Props) => {
                 <Paragraph size="md" color="disabled" noMargin className={classes.address}>
                   {address}
                 </Paragraph>
-                <Link className={classes.open} to={getEtherScanLink(address, network)} target="_blank">
+                <Link className={classes.open} to={getEtherScanLink('address', address, network)} target="_blank">
                   <OpenInNew style={openIconStyle} />
                 </Link>
               </Row>

@@ -123,7 +123,7 @@ const UserDetails = ({
             {address}
           </Paragraph>
           {userAddress && (
-            <Link className={classes.open} to={getEtherScanLink(userAddress, network)} target="_blank">
+            <Link className={classes.open} to={getEtherScanLink('address', userAddress, network)} target="_blank">
               <OpenInNew style={openIconStyle} />
             </Link>
           )}

@@ -76,7 +76,7 @@ const CheckOwner = ({
                 <Paragraph size="md" color="disabled" noMargin>
                   {ownerAddress}
                 </Paragraph>
-                <Link className={classes.open} to={getEtherScanLink(ownerAddress, network)} target="_blank">
+                <Link className={classes.open} to={getEtherScanLink('address', ownerAddress, network)} target="_blank">
                   <OpenInNew style={openIconStyle} />
                 </Link>
               </Block>

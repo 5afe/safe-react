@@ -132,7 +132,7 @@ class ReviewComponent extends React.PureComponent<Props, State> {
                   <Paragraph size="md" color="disabled" noMargin className={classes.address}>
                     {shortVersionOf(safeAddress, 4)}
                   </Paragraph>
-                  <Link className={classes.open} to={getEtherScanLink(safeAddress, network)} target="_blank">
+                  <Link className={classes.open} to={getEtherScanLink('address', safeAddress, network)} target="_blank">
                     <OpenInNew style={openIconStyle} />
                   </Link>
                 </Row>
@@ -177,7 +177,7 @@ class ReviewComponent extends React.PureComponent<Props, State> {
                         <Paragraph size="md" color="disabled" noMargin>
                           {owners[index]}
                         </Paragraph>
-                        <Link className={classes.open} to={getEtherScanLink(owners[index], network)} target="_blank">
+                        <Link className={classes.open} to={getEtherScanLink('address', owners[index], network)} target="_blank">
                           <OpenInNew style={openIconStyle} />
                         </Link>
                       </Block>

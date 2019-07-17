@@ -12,7 +12,7 @@ import Paragraph from '~/components/layout/Paragraph'
 import Hairline from '~/components/layout/Hairline'
 import { type Transaction } from '~/routes/safe/store/models/transaction'
 import { type Owner } from '~/routes/safe/store/models/owner'
-import { openTxInEtherScan } from '~/logic/wallets/getWeb3'
+import { getEtherScanLink } from '~/logic/wallets/getWeb3'
 import { shortVersionOf } from '~/logic/wallets/ethAddresses'
 import { secondary } from '~/theme/variables'
 import TxDescription from './TxDescription'
@@ -74,7 +74,7 @@ const ExpandedTx = ({
               <Paragraph noMargin>
                 <Bold>TX hash: </Bold>
                 {tx.executionTxHash ? (
-                  <a href={openTxInEtherScan(tx.executionTxHash, 'rinkeby')} target="_blank" rel="noopener noreferrer">
+                  <a href={getEtherScanLink('tx', tx.executionTxHash, 'rinkeby')} target="_blank" rel="noopener noreferrer">
                     {shortVersionOf(tx.executionTxHash, 4)}
                     <OpenInNew style={openIconStyle} />
                   </a>
