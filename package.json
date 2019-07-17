@@ -104,7 +104,7 @@
     "classnames": "^2.2.5",
     "css-loader": "3.0.0",
     "detect-port": "^1.2.2",
-    "eslint": "6.0.1",
+    "eslint": "5.16.0",
     "eslint-config-airbnb": "17.1.1",
     "eslint-plugin-flowtype": "3.11.1",
     "eslint-plugin-import": "2.18.0",
