@@ -5,35 +5,35 @@ import { aMinedSafe } from '~/test/builder/safe.redux.builder'
 import { renderSafeView } from '~/test/builder/safe.dom.utils'
 import { sleep } from '~/utils/timer'
 import '@testing-library/jest-dom/extend-expect'
-import { SETTINGS_TAB_BTN_TESTID } from '~/routes/safe/components/Layout'
-import { OWNERS_SETTINGS_TAB_TESTID } from '~/routes/safe/components/Settings'
+import { SETTINGS_TAB_BTN_TEST_ID } from '~/routes/safe/components/Layout'
+import { OWNERS_SETTINGS_TAB_TEST_ID } from '~/routes/safe/components/Settings'
 import {
-  RENAME_OWNER_BTN_TESTID,
-  OWNERS_ROW_TESTID,
-  REMOVE_OWNER_BTN_TESTID,
-  ADD_OWNER_BTN_TESTID,
-  REPLACE_OWNER_BTN_TESTID,
+  RENAME_OWNER_BTN_TEST_ID,
+  OWNERS_ROW_TEST_ID,
+  REMOVE_OWNER_BTN_TEST_ID,
+  ADD_OWNER_BTN_TEST_ID,
+  REPLACE_OWNER_BTN_TEST_ID,
 } from '~/routes/safe/components/Settings/ManageOwners'
 import {
-  RENAME_OWNER_INPUT_TESTID,
-  SAVE_OWNER_CHANGES_BTN_TESTID,
+  RENAME_OWNER_INPUT_TEST_ID,
+  SAVE_OWNER_CHANGES_BTN_TEST_ID,
 } from '~/routes/safe/components/Settings/ManageOwners/EditOwnerModal'
-import { REMOVE_OWNER_MODAL_NEXT_BTN_TESTID } from '~/routes/safe/components/Settings/ManageOwners/RemoveOwnerModal/screens/CheckOwner'
-import { REMOVE_OWNER_THRESHOLD_NEXT_BTN_TESTID } from '~/routes/safe/components/Settings/ManageOwners/RemoveOwnerModal/screens/ThresholdForm'
-import { REMOVE_OWNER_REVIEW_BTN_TESTID } from '~/routes/safe/components/Settings/ManageOwners/RemoveOwnerModal/screens/Review'
-import { ADD_OWNER_THRESHOLD_NEXT_BTN_TESTID } from '~/routes/safe/components/Settings/ManageOwners/AddOwnerModal/screens/ThresholdForm'
+import { REMOVE_OWNER_MODAL_NEXT_BTN_TEST_ID } from '~/routes/safe/components/Settings/ManageOwners/RemoveOwnerModal/screens/CheckOwner'
+import { REMOVE_OWNER_THRESHOLD_NEXT_BTN_TEST_ID } from '~/routes/safe/components/Settings/ManageOwners/RemoveOwnerModal/screens/ThresholdForm'
+import { REMOVE_OWNER_REVIEW_BTN_TEST_ID } from '~/routes/safe/components/Settings/ManageOwners/RemoveOwnerModal/screens/Review'
+import { ADD_OWNER_THRESHOLD_NEXT_BTN_TEST_ID } from '~/routes/safe/components/Settings/ManageOwners/AddOwnerModal/screens/ThresholdForm'
 import {
-  ADD_OWNER_NAME_INPUT_TESTID,
-  ADD_OWNER_ADDRESS_INPUT_TESTID,
-  ADD_OWNER_NEXT_BTN_TESTID,
+  ADD_OWNER_NAME_INPUT_TEST_ID,
+  ADD_OWNER_ADDRESS_INPUT_TEST_ID,
+  ADD_OWNER_NEXT_BTN_TEST_ID,
 } from '~/routes/safe/components/Settings/ManageOwners/AddOwnerModal/screens/OwnerForm'
-import { ADD_OWNER_SUBMIT_BTN_TESTID } from '~/routes/safe/components/Settings/ManageOwners/AddOwnerModal/screens/Review'
+import { ADD_OWNER_SUBMIT_BTN_TEST_ID } from '~/routes/safe/components/Settings/ManageOwners/AddOwnerModal/screens/Review'
 import {
-  REPLACE_OWNER_NEXT_BTN_TESTID,
-  REPLACE_OWNER_NAME_INPUT_TESTID,
-  REPLACE_OWNER_ADDRESS_INPUT_TESTID,
+  REPLACE_OWNER_NEXT_BTN_TEST_ID,
+  REPLACE_OWNER_NAME_INPUT_TEST_ID,
+  REPLACE_OWNER_ADDRESS_INPUT_TEST_ID,
 } from '~/routes/safe/components/Settings/ManageOwners/ReplaceOwnerModal/screens/OwnerForm'
-import { REPLACE_OWNER_SUBMIT_BTN_TESTID } from '~/routes/safe/components/Settings/ManageOwners/ReplaceOwnerModal/screens/Review'
+import { REPLACE_OWNER_SUBMIT_BTN_TEST_ID } from '~/routes/safe/components/Settings/ManageOwners/ReplaceOwnerModal/screens/Review'
 
 afterEach(cleanup)
 
@@ -52,28 +52,28 @@ describe('DOM > Feature > Settings - Manage owners', () => {
     await sleep(1300)
 
     // Travel to settings
-    const settingsBtn = SafeDom.getByTestId(SETTINGS_TAB_BTN_TESTID)
+    const settingsBtn = SafeDom.getByTestId(SETTINGS_TAB_BTN_TEST_ID)
     fireEvent.click(settingsBtn)
     await sleep(200)
 
     // click on owners settings
-    const ownersSettingsBtn = SafeDom.getByTestId(OWNERS_SETTINGS_TAB_TESTID)
+    const ownersSettingsBtn = SafeDom.getByTestId(OWNERS_SETTINGS_TAB_TEST_ID)
     fireEvent.click(ownersSettingsBtn)
     await sleep(200)
 
     // open rename owner modal
-    const renameOwnerBtn = SafeDom.getByTestId(RENAME_OWNER_BTN_TESTID)
+    const renameOwnerBtn = SafeDom.getByTestId(RENAME_OWNER_BTN_TEST_ID)
     fireEvent.click(renameOwnerBtn)
 
     // rename owner
-    const ownerNameInput = SafeDom.getByTestId(RENAME_OWNER_INPUT_TESTID)
-    const saveOwnerChangesBtn = SafeDom.getByTestId(SAVE_OWNER_CHANGES_BTN_TESTID)
+    const ownerNameInput = SafeDom.getByTestId(RENAME_OWNER_INPUT_TEST_ID)
+    const saveOwnerChangesBtn = SafeDom.getByTestId(SAVE_OWNER_CHANGES_BTN_TEST_ID)
     fireEvent.change(ownerNameInput, { target: { value: NEW_OWNER_NAME } })
     fireEvent.click(saveOwnerChangesBtn)
     await sleep(200)
 
     // check if the name updated
-    const ownerRow = SafeDom.getByTestId(OWNERS_ROW_TESTID)
+    const ownerRow = SafeDom.getByTestId(OWNERS_ROW_TEST_ID)
     expect(ownerRow).toHaveTextContent(NEW_OWNER_NAME)
   })
 
@@ -84,17 +84,17 @@ describe('DOM > Feature > Settings - Manage owners', () => {
     await sleep(1300)
 
     // Travel to settings
-    const settingsBtn = SafeDom.getByTestId(SETTINGS_TAB_BTN_TESTID)
+    const settingsBtn = SafeDom.getByTestId(SETTINGS_TAB_BTN_TEST_ID)
     fireEvent.click(settingsBtn)
     await sleep(200)
 
     // click on owners settings
-    const ownersSettingsBtn = SafeDom.getByTestId(OWNERS_SETTINGS_TAB_TESTID)
+    const ownersSettingsBtn = SafeDom.getByTestId(OWNERS_SETTINGS_TAB_TEST_ID)
     fireEvent.click(ownersSettingsBtn)
     await sleep(200)
 
     // check if there are 2 owners
-    let ownerRows = SafeDom.getAllByTestId(OWNERS_ROW_TESTID)
+    let ownerRows = SafeDom.getAllByTestId(OWNERS_ROW_TEST_ID)
     expect(ownerRows.length).toBe(2)
     expect(ownerRows[0]).toHaveTextContent('Adol 1 Eth Account')
     expect(ownerRows[0]).toHaveTextContent('0x90F8bf6A479f320ead074411a4B0e7944Ea8c9C1')
@@ -102,22 +102,22 @@ describe('DOM > Feature > Settings - Manage owners', () => {
     expect(ownerRows[1]).toHaveTextContent('0xFFcf8FDEE72ac11b5c542428B35EEF5769C409f0')
 
     // click remove owner btn which opens the modal
-    const removeOwnerBtn = SafeDom.getAllByTestId(REMOVE_OWNER_BTN_TESTID)[1]
+    const removeOwnerBtn = SafeDom.getAllByTestId(REMOVE_OWNER_BTN_TEST_ID)[1]
     fireEvent.click(removeOwnerBtn)
 
     // modal navigation
-    const nextBtnStep1 = SafeDom.getByTestId(REMOVE_OWNER_MODAL_NEXT_BTN_TESTID)
+    const nextBtnStep1 = SafeDom.getByTestId(REMOVE_OWNER_MODAL_NEXT_BTN_TEST_ID)
     fireEvent.click(nextBtnStep1)
 
-    const nextBtnStep2 = SafeDom.getByTestId(REMOVE_OWNER_THRESHOLD_NEXT_BTN_TESTID)
+    const nextBtnStep2 = SafeDom.getByTestId(REMOVE_OWNER_THRESHOLD_NEXT_BTN_TEST_ID)
     fireEvent.click(nextBtnStep2)
 
-    const nextBtnStep3 = SafeDom.getByTestId(REMOVE_OWNER_REVIEW_BTN_TESTID)
+    const nextBtnStep3 = SafeDom.getByTestId(REMOVE_OWNER_REVIEW_BTN_TEST_ID)
     fireEvent.click(nextBtnStep3)
     await sleep(1300)
 
     // check if owner was removed
-    ownerRows = SafeDom.getAllByTestId(OWNERS_ROW_TESTID)
+    ownerRows = SafeDom.getAllByTestId(OWNERS_ROW_TEST_ID)
     expect(ownerRows.length).toBe(1)
     expect(ownerRows[0]).toHaveTextContent('Adol 1 Eth Account')
     expect(ownerRows[0]).toHaveTextContent('0x90F8bf6A479f320ead074411a4B0e7944Ea8c9C1')
@@ -131,41 +131,41 @@ describe('DOM > Feature > Settings - Manage owners', () => {
     await sleep(1300)
 
     // Travel to settings
-    const settingsBtn = SafeDom.getByTestId(SETTINGS_TAB_BTN_TESTID)
+    const settingsBtn = SafeDom.getByTestId(SETTINGS_TAB_BTN_TEST_ID)
     fireEvent.click(settingsBtn)
     await sleep(200)
 
     // click on owners settings
-    const ownersSettingsBtn = SafeDom.getByTestId(OWNERS_SETTINGS_TAB_TESTID)
+    const ownersSettingsBtn = SafeDom.getByTestId(OWNERS_SETTINGS_TAB_TEST_ID)
     fireEvent.click(ownersSettingsBtn)
     await sleep(200)
 
     // check if there is 1 owner
-    let ownerRows = SafeDom.getAllByTestId(OWNERS_ROW_TESTID)
+    let ownerRows = SafeDom.getAllByTestId(OWNERS_ROW_TEST_ID)
     expect(ownerRows.length).toBe(1)
     expect(ownerRows[0]).toHaveTextContent('Adol 1 Eth Account')
     expect(ownerRows[0]).toHaveTextContent('0x90F8bf6A479f320ead074411a4B0e7944Ea8c9C1')
 
     // click add owner btn
-    fireEvent.click(SafeDom.getByTestId(ADD_OWNER_BTN_TESTID))
+    fireEvent.click(SafeDom.getByTestId(ADD_OWNER_BTN_TEST_ID))
     await sleep(200)
 
     // fill and travel add owner modal
-    const ownerNameInput = SafeDom.getByTestId(ADD_OWNER_NAME_INPUT_TESTID)
-    const ownerAddressInput = SafeDom.getByTestId(ADD_OWNER_ADDRESS_INPUT_TESTID)
-    const nextBtn = SafeDom.getByTestId(ADD_OWNER_NEXT_BTN_TESTID)
+    const ownerNameInput = SafeDom.getByTestId(ADD_OWNER_NAME_INPUT_TEST_ID)
+    const ownerAddressInput = SafeDom.getByTestId(ADD_OWNER_ADDRESS_INPUT_TEST_ID)
+    const nextBtn = SafeDom.getByTestId(ADD_OWNER_NEXT_BTN_TEST_ID)
     fireEvent.change(ownerNameInput, { target: { value: NEW_OWNER_NAME } })
     fireEvent.change(ownerAddressInput, { target: { value: NEW_OWNER_ADDRESS } })
     fireEvent.click(nextBtn)
     await sleep(200)
 
-    fireEvent.click(SafeDom.getByTestId(ADD_OWNER_THRESHOLD_NEXT_BTN_TESTID))
+    fireEvent.click(SafeDom.getByTestId(ADD_OWNER_THRESHOLD_NEXT_BTN_TEST_ID))
     await sleep(200)
-    fireEvent.click(SafeDom.getByTestId(ADD_OWNER_SUBMIT_BTN_TESTID))
+    fireEvent.click(SafeDom.getByTestId(ADD_OWNER_SUBMIT_BTN_TEST_ID))
     await sleep(1500)
 
     // check if owner was added
-    ownerRows = SafeDom.getAllByTestId(OWNERS_ROW_TESTID)
+    ownerRows = SafeDom.getAllByTestId(OWNERS_ROW_TEST_ID)
     expect(ownerRows.length).toBe(2)
     expect(ownerRows[0]).toHaveTextContent('Adol 1 Eth Account')
     expect(ownerRows[0]).toHaveTextContent('0x90F8bf6A479f320ead074411a4B0e7944Ea8c9C1')
@@ -183,17 +183,17 @@ describe('DOM > Feature > Settings - Manage owners', () => {
     await sleep(1300)
 
     // Travel to settings
-    const settingsBtn = SafeDom.getByTestId(SETTINGS_TAB_BTN_TESTID)
+    const settingsBtn = SafeDom.getByTestId(SETTINGS_TAB_BTN_TEST_ID)
     fireEvent.click(settingsBtn)
     await sleep(200)
 
     // click on owners settings
-    const ownersSettingsBtn = SafeDom.getByTestId(OWNERS_SETTINGS_TAB_TESTID)
+    const ownersSettingsBtn = SafeDom.getByTestId(OWNERS_SETTINGS_TAB_TEST_ID)
     fireEvent.click(ownersSettingsBtn)
     await sleep(200)
 
     // check if there are 2 owners
-    let ownerRows = SafeDom.getAllByTestId(OWNERS_ROW_TESTID)
+    let ownerRows = SafeDom.getAllByTestId(OWNERS_ROW_TEST_ID)
     expect(ownerRows.length).toBe(2)
     expect(ownerRows[0]).toHaveTextContent('Adol 1 Eth Account')
     expect(ownerRows[0]).toHaveTextContent('0x90F8bf6A479f320ead074411a4B0e7944Ea8c9C1')
@@ -201,24 +201,24 @@ describe('DOM > Feature > Settings - Manage owners', () => {
     expect(ownerRows[1]).toHaveTextContent('0xFFcf8FDEE72ac11b5c542428B35EEF5769C409f0')
 
     // click replace owner btn which opens the modal
-    const replaceOwnerBtn = SafeDom.getAllByTestId(REPLACE_OWNER_BTN_TESTID)[1]
+    const replaceOwnerBtn = SafeDom.getAllByTestId(REPLACE_OWNER_BTN_TEST_ID)[1]
     fireEvent.click(replaceOwnerBtn)
 
     // fill and travel add owner modal
-    const ownerNameInput = SafeDom.getByTestId(REPLACE_OWNER_NAME_INPUT_TESTID)
-    const ownerAddressInput = SafeDom.getByTestId(REPLACE_OWNER_ADDRESS_INPUT_TESTID)
-    const nextBtn = SafeDom.getByTestId(REPLACE_OWNER_NEXT_BTN_TESTID)
+    const ownerNameInput = SafeDom.getByTestId(REPLACE_OWNER_NAME_INPUT_TEST_ID)
+    const ownerAddressInput = SafeDom.getByTestId(REPLACE_OWNER_ADDRESS_INPUT_TEST_ID)
+    const nextBtn = SafeDom.getByTestId(REPLACE_OWNER_NEXT_BTN_TEST_ID)
     fireEvent.change(ownerNameInput, { target: { value: NEW_OWNER_NAME } })
     fireEvent.change(ownerAddressInput, { target: { value: NEW_OWNER_ADDRESS } })
     fireEvent.click(nextBtn)
     await sleep(200)
 
-    const replaceSubmitBtn = SafeDom.getByTestId(REPLACE_OWNER_SUBMIT_BTN_TESTID)
+    const replaceSubmitBtn = SafeDom.getByTestId(REPLACE_OWNER_SUBMIT_BTN_TEST_ID)
     fireEvent.click(replaceSubmitBtn)
     await sleep(1000)
 
     // check if the owner was replaced
-    ownerRows = SafeDom.getAllByTestId(OWNERS_ROW_TESTID)
+    ownerRows = SafeDom.getAllByTestId(OWNERS_ROW_TEST_ID)
     expect(ownerRows.length).toBe(2)
     expect(ownerRows[0]).toHaveTextContent('Adol 1 Eth Account')
     expect(ownerRows[0]).toHaveTextContent('0x90F8bf6A479f320ead074411a4B0e7944Ea8c9C1')

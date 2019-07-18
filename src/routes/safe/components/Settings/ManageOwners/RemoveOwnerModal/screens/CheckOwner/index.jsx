@@ -17,7 +17,7 @@ import { getEtherScanLink } from '~/logic/wallets/getWeb3'
 import { styles } from './style'
 import { secondary } from '~/theme/variables'
 
-export const REMOVE_OWNER_MODAL_NEXT_BTN_TESTID = 'remove-owner-next-btn'
+export const REMOVE_OWNER_MODAL_NEXT_BTN_TEST_ID = 'remove-owner-next-btn'
 
 const openIconStyle = {
   height: '16px',
@@ -95,7 +95,7 @@ const CheckOwner = ({
           minWidth={140}
           color="primary"
           onClick={handleSubmit}
-          testId={REMOVE_OWNER_MODAL_NEXT_BTN_TESTID}
+          testId={REMOVE_OWNER_MODAL_NEXT_BTN_TEST_ID}
         >
           Next
         </Button>

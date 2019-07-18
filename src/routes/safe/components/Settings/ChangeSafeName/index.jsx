@@ -20,8 +20,8 @@ const controlsStyle = {
   padding: sm,
 }
 
-export const SAFE_NAME_INPUT_TESTID = 'safe-name-input'
-export const SAFE_NAME_SUBMIT_BTN_TESTID = 'change-safe-name-btn'
+export const SAFE_NAME_INPUT_TEST_ID = 'safe-name-input'
+export const SAFE_NAME_SUBMIT_BTN_TEST_ID = 'change-safe-name-btn'
 
 type Props = {
   classes: Object,
@@ -59,7 +59,7 @@ const ChangeSafeName = (props: Props) => {
                   placeholder="Safe name*"
                   text="Safe name*"
                   defaultValue={safeName}
-                  testId={SAFE_NAME_INPUT_TESTID}
+                  testId={SAFE_NAME_INPUT_TEST_ID}
                 />
               </Block>
             </Block>
@@ -72,7 +72,7 @@ const ChangeSafeName = (props: Props) => {
                   size="small"
                   variant="contained"
                   color="primary"
-                  testId={SAFE_NAME_SUBMIT_BTN_TESTID}
+                  testId={SAFE_NAME_SUBMIT_BTN_TEST_ID}
                 >
                   SAVE
                 </Button>
