@@ -22,9 +22,10 @@ import Balances from './Balances'
 import Transactions from './TransactionsNew'
 import Settings from './Settings'
 
-export const SETTINGS_TAB_BTN_TESTID = 'settings-tab-btn'
-export const TRANSACTIONS_TAB_BTN_TESTID = 'transactions-tab-btn'
-export const SAFE_VIEW_NAME_HEADING_TESTID = 'safe-name-heading'
+export const BALANCES_TAB_BTN_TEST_ID = 'balances-tab-btn'
+export const SETTINGS_TAB_BTN_TEST_ID = 'settings-tab-btn'
+export const TRANSACTIONS_TAB_BTN_TEST_ID = 'transactions-tab-btn'
+export const SAFE_VIEW_NAME_HEADING_TEST_ID = 'safe-name-heading'
 
 type State = {
   tabIndex: number,
@@ -127,7 +128,7 @@ class Layout extends React.Component<Props, State> {
           <Identicon address={address} diameter={50} />
           <Block className={classes.name}>
             <Row>
-              <Heading tag="h2" color="secondary" testId={SAFE_VIEW_NAME_HEADING_TESTID}>
+              <Heading tag="h2" color="secondary" testId={SAFE_VIEW_NAME_HEADING_TEST_ID}>
                 {name}
               </Heading>
               {!granted && <Block className={classes.readonly}>Read Only</Block>}
@@ -144,9 +145,9 @@ class Layout extends React.Component<Props, State> {
         </Block>
         <Row>
           <Tabs value={tabIndex} onChange={this.handleChange} indicatorColor="secondary" textColor="secondary">
-            <Tab label="Balances" />
-            <Tab label="Transactions" data-testid={TRANSACTIONS_TAB_BTN_TESTID} />
-            <Tab label="Settings" data-testid={SETTINGS_TAB_BTN_TESTID} />
+            <Tab label="Balances" data-testid={BALANCES_TAB_BTN_TEST_ID} />
+            <Tab label="Transactions" data-testid={TRANSACTIONS_TAB_BTN_TEST_ID} />
+            <Tab label="Settings" data-testid={SETTINGS_TAB_BTN_TEST_ID} />
           </Tabs>
         </Row>
         <Hairline color="#c8ced4" />

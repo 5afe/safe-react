@@ -22,7 +22,7 @@ import {
 import { styles } from './style'
 import Status from './Status'
 
-export const TRANSACTION_ROW_TEST_ID = 'tx-row'
+export const TRANSACTION_ROW_TEST_ID = 'transaction-row'
 
 const expandCellStyle = {
   paddingLeft: 0,

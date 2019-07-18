@@ -16,7 +16,7 @@ import Paragraph from '~/components/layout/Paragraph'
 import { type Transaction } from '~/routes/safe/store/models/transaction'
 import { styles } from './style'
 
-export const APPROVE_TX_MODAL_SUBMIT_BTN_TESTID = 'approve-tx-modal-submit-btn'
+export const APPROVE_TX_MODAL_SUBMIT_BTN_TEST_ID = 'approve-tx-modal-submit-btn'
 
 type Props = {
   onClose: () => void,
@@ -115,7 +115,7 @@ const ApproveTxModal = ({
                 minHeight={42}
                 color="primary"
                 onClick={approveTx}
-                testId={APPROVE_TX_MODAL_SUBMIT_BTN_TESTID}
+                testId={APPROVE_TX_MODAL_SUBMIT_BTN_TEST_ID}
               >
                 {title}
               </Button>
