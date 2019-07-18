@@ -15,7 +15,9 @@ import Button from '~/components/layout/Button'
 import Row from '~/components/layout/Row'
 import Img from '~/components/layout/Img'
 import Col from '~/components/layout/Col'
-import { FIELD_CONFIRMATIONS, getOwnerNameBy, getOwnerAddressBy, getNumOwnersFrom } from '~/routes/open/components/fields'
+import {
+  FIELD_CONFIRMATIONS, getOwnerNameBy, getOwnerAddressBy, getNumOwnersFrom,
+} from '~/routes/open/components/fields'
 import Paragraph from '~/components/layout/Paragraph'
 import OpenPaper from '~/components/Stepper/OpenPaper'
 import { getAccountsFrom } from '~/routes/open/utils/safeDataExtractor'
@@ -183,8 +185,8 @@ const SafeOwnersPage = ({ updateInitialProps }: Object) => (controls: React.Node
         errors={errors}
         updateInitialProps={updateInitialProps}
         values={values}
-        />
-        {console.log('vals one level up', values)}
+      />
+      {console.log('vals one level up', values)}
     </OpenPaper>
   </React.Fragment>
 )

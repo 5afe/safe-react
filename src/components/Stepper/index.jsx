@@ -1,15 +1,16 @@
 // @flow
+import * as React from 'react'
 import Stepper from '@material-ui/core/Stepper'
 import FormStep from '@material-ui/core/Step'
 import StepLabel from '@material-ui/core/StepLabel'
 import StepContent from '@material-ui/core/StepContent'
 import { withStyles } from '@material-ui/core/styles'
-import * as React from 'react'
 import GnoForm from '~/components/forms/GnoForm'
 import Hairline from '~/components/layout/Hairline'
-import Button from '~/components/layout/Button'
 import { history } from '~/store'
 import Controls from './Controls'
+
+const { useState, useEffect } = React
 
 export { default as Step } from './Step'
 
@@ -18,20 +19,14 @@ type Props = {
   onSubmit: (values: Object) => Promise<void>,
   children: React.Node,
   classes: Object,
-  onReset?: () => void,
   initialValues?: Object,
   disabledWhenValidating?: boolean,
   testId?: string,
 }
 
-type State = {
-  page: number,
-  values: Object,
-}
-
 type PageProps = {
   children: Function,
-  prepareNextInitialProps: (values: Object) => {},
+  prepareNextInitialProps?: (values: Object) => {},
 }
 
 const transitionProps = {
@@ -41,151 +36,117 @@ const transitionProps = {
   },
 }
 
-class GnoStepper extends React.PureComponent<Props, State> {
-  static Page = ({ children }: PageProps) => children
+export const StepperPage = ({ children }: PageProps) => children
 
-  static FinishButton = ({
-    component, to, title, ...props
-  }) => (
-    <Button component={component} to={to} variant="contained" color="primary" {...props}>
-      {title}
-    </Button>
-  )
+const GnoStepper = (props: Props) => {
+  const [page, setPage] = useState<number>(0)
+  const [values, setValues] = useState<Object>({})
 
-  constructor(props: Props) {
-    super(props)
-
-    this.state = {
-      page: 0,
-      values: props.initialValues || {},
+  useEffect(() => {
+    if (props.initialValues) {
+      setValues(props.initialValues)
     }
+  }, [])
+
+  const getPageProps = (pages: React.Node): PageProps => React.Children.toArray(pages)[page].props
+
+  const updateInitialProps = (newInitialProps) => {
+    setValues(newInitialProps)
   }
 
-  onReset = () => {
-    const { onReset, initialValues } = this.props
-    if (onReset) {
-      onReset()
-    }
+  const getActivePageFrom = (pages: React.Node) => {
+    const activePageProps = getPageProps(pages)
+    const { children, ...restProps } = activePageProps
 
-    this.setState(() => ({
-      page: 0,
-      values: initialValues || {},
-    }))
+    return children({ ...restProps, updateInitialProps })
   }
 
-  getPageProps = (pages: React.Node): PageProps => {
-    const { page } = this.state
-
-    return React.Children.toArray(pages)[page].props
-  }
-
-  getActivePageFrom = (pages: React.Node) => {
-    const activePageProps = this.getPageProps(pages)
-    const { children, ...props } = activePageProps
-
-    return children({ ...props, updateInitialProps: this.updateInitialProps })
-  }
-
-  updateInitialProps = (values) => {
-    this.setState({ values })
-  }
-
-  validate = (values: Object) => {
-    const { children } = this.props
-    const { page } = this.state
+  const validate = (valuesToValidate: Object) => {
+    const { children } = props
 
     const activePage = React.Children.toArray(children)[page]
-    return activePage.props.validate ? activePage.props.validate(values) : {}
+    return activePage.props.validate ? activePage.props.validate(valuesToValidate) : {}
   }
 
-  next = async (values: Object) => {
-    const { children } = this.props
-    const activePageProps = this.getPageProps(children)
+  const next = async (formValues: Object) => {
+    const { children } = props
+    const activePageProps = getPageProps(children)
     const { prepareNextInitialProps } = activePageProps
 
     let pageInitialProps
     if (prepareNextInitialProps) {
-      pageInitialProps = await prepareNextInitialProps(values)
+      pageInitialProps = await prepareNextInitialProps(formValues)
     }
 
-    const finalValues = { ...values, ...pageInitialProps }
-    this.setState(state => ({
-      page: Math.min(state.page + 1, React.Children.count(children) - 1),
-      values: finalValues,
-    }))
+    const finalValues = { ...formValues, ...pageInitialProps }
+
+    setValues(finalValues)
+    setPage(Math.min(page + 1, React.Children.count(children) - 1))
   }
 
-  previous = () => {
-    const { page } = this.state
-
+  const previous = () => {
     const firstPage = page === 0
     if (firstPage) {
       return history.goBack()
     }
 
-    return this.setState(state => ({
-      page: Math.max(state.page - 1, 0),
-    }))
+    return setPage(Math.max(page - 1, 0))
   }
 
-  handleSubmit = async (values: Object) => {
-    const { children, onSubmit } = this.props
-    const { page } = this.state
+  const handleSubmit = async (formValues: Object) => {
+    const { children, onSubmit } = props
     const isLastPage = page === React.Children.count(children) - 1
     if (isLastPage) {
-      return onSubmit(values)
+      return onSubmit(formValues)
     }
 
-    return this.next(values)
+    return next(formValues)
   }
 
-  isLastPage = (page) => {
-    const { steps } = this.props
-    return page === steps.length - 1
+  const isLastPage = (pageNumber) => {
+    const { steps } = props
+    return pageNumber === steps.length - 1
   }
 
-  render() {
-    const {
-      steps, children, classes, disabledWhenValidating = false, testId,
-    } = this.props
-    const { page, values } = this.state
-    const activePage = this.getActivePageFrom(children)
-    const lastPage = this.isLastPage(page)
-    const penultimate = this.isLastPage(page + 1)
+  const {
+    steps, children, classes, disabledWhenValidating = false, testId,
+  } = props
+  const activePage = getActivePageFrom(children)
+  const lastPage = isLastPage(page)
+  const penultimate = isLastPage(page + 1)
 
-    return (
-      <React.Fragment>
-        <GnoForm onSubmit={this.handleSubmit} initialValues={values} validation={this.validate} testId={testId}>
-          {(submitting: boolean, validating: boolean, ...rest: any) => {
-            const disabled = disabledWhenValidating ? submitting || validating : submitting
-            const controls = (
-              <React.Fragment>
-                <Hairline />
-                <Controls
-                  disabled={disabled}
-                  onPrevious={this.previous}
-                  firstPage={page === 0}
-                  lastPage={lastPage}
-                  penultimate={penultimate}
-                />
-              </React.Fragment>
-            )
+  return (
+    <React.Fragment>
+      <GnoForm onSubmit={handleSubmit} initialValues={values} validation={validate} testId={testId}>
+        {(submitting: boolean, validating: boolean, ...rest: any) => {
+          const disabled = disabledWhenValidating ? submitting || validating : submitting
+          const controls = (
+            <React.Fragment>
+              <Hairline />
+              <Controls
+                disabled={disabled}
+                onPrevious={previous}
+                firstPage={page === 0}
+                lastPage={lastPage}
+                penultimate={penultimate}
+              />
+            </React.Fragment>
+          )
 
-            return (
-              <Stepper classes={{ root: classes.root }} activeStep={page} orientation="vertical">
-                {steps.map(label => (
-                  <FormStep key={label}>
-                    <StepLabel>{label}</StepLabel>
-                    <StepContent TransitionProps={transitionProps}>{activePage(controls, ...rest)}</StepContent>
-                  </FormStep>
-                ))}
-              </Stepper>
-            )
-          }}
-        </GnoForm>
-      </React.Fragment>
-    )
-  }
+          return (
+            <Stepper classes={{ root: classes.root }} activeStep={page} orientation="vertical">
+              {steps.map(label => (
+                <FormStep key={label}>
+                  <StepLabel>{label}</StepLabel>
+                  <StepContent TransitionProps={transitionProps}>{activePage(controls, ...rest)}</StepContent>
+                </FormStep>
+              ))}
+            </Stepper>
+          )
+        }}
+      </GnoForm>
+    </React.Fragment>
+  )
 }
 
 const styles = {

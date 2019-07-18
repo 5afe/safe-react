@@ -2,7 +2,7 @@
 import * as React from 'react'
 import ChevronLeft from '@material-ui/icons/ChevronLeft'
 import IconButton from '@material-ui/core/IconButton'
-import Stepper from '~/components/Stepper'
+import Stepper, { StepperPage } from '~/components/Stepper'
 import Block from '~/components/layout/Block'
 import Heading from '~/components/layout/Heading'
 import Row from '~/components/layout/Row'
@@ -60,9 +60,9 @@ const Layout = ({
             initialValues={initialValues}
             testId="create-safe-form"
           >
-            <Stepper.Page>{SafeNameField}</Stepper.Page>
-            <Stepper.Page>{SafeOwnersFields}</Stepper.Page>
-            <Stepper.Page network={network}>{Review}</Stepper.Page>
+            <StepperPage>{SafeNameField}</StepperPage>
+            <StepperPage>{SafeOwnersFields}</StepperPage>
+            <StepperPage network={network}>{Review}</StepperPage>
           </Stepper>
         </Block>
       ) : (
