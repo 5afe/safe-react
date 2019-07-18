@@ -112,6 +112,7 @@ const GnoStepper = (props: Props) => {
     steps, children, classes, disabledWhenValidating = false, testId,
   } = props
   const activePage = getActivePageFrom(children)
+
   const lastPage = isLastPage(page)
   const penultimate = isLastPage(page + 1)
 

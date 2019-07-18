@@ -16,7 +16,10 @@ import Row from '~/components/layout/Row'
 import Img from '~/components/layout/Img'
 import Col from '~/components/layout/Col'
 import {
-  FIELD_CONFIRMATIONS, getOwnerNameBy, getOwnerAddressBy, getNumOwnersFrom,
+  FIELD_CONFIRMATIONS,
+  getOwnerNameBy,
+  getOwnerAddressBy,
+  getNumOwnersFrom,
 } from '~/routes/open/components/fields'
 import Paragraph from '~/components/layout/Paragraph'
 import OpenPaper from '~/components/Stepper/OpenPaper'
@@ -30,6 +33,7 @@ type Props = {
   classes: Object,
   otherAccounts: string[],
   errors: Object,
+  form: Object,
   values: Object,
   updateInitialProps: (initialValues: Object) => void,
 }
@@ -66,13 +70,16 @@ const SafeOwners = (props: Props) => {
   const validOwners = getNumOwnersFrom(values)
 
   const onRemoveRow = (index: number) => () => {
-    const initialValues = calculateValuesAfterRemoving(index, numOwners, values)
-    console.log({ initialValues })
-    updateInitialProps(initialValues)
+    if (numOwners === 2) {
+      const { form } = props
+      form.reset()
+    } else {
+      const initialValues = calculateValuesAfterRemoving(index, numOwners, values)
+      updateInitialProps(initialValues)
+    }
 
     setNumOwners(numOwners - 1)
   }
-  console.log('values in form', { values })
 
   const onAddOwner = () => {
     setNumOwners(numOwners + 1)
@@ -166,7 +173,7 @@ const SafeOwners = (props: Props) => {
               {' '}
               {validOwners}
               {' '}
-              owner(s)
+owner(s)
             </Paragraph>
           </Col>
         </Row>
@@ -177,16 +184,16 @@ const SafeOwners = (props: Props) => {
 
 const SafeOwnersForm = withStyles(styles)(SafeOwners)
 
-const SafeOwnersPage = ({ updateInitialProps }: Object) => (controls: React.Node, { values, errors }: Object) => (
+const SafeOwnersPage = ({ updateInitialProps }: Object) => (controls: React.Node, { values, errors, form }: Object) => (
   <React.Fragment>
     <OpenPaper controls={controls} padding={false}>
       <SafeOwnersForm
         otherAccounts={getAccountsFrom(values)}
         errors={errors}
+        form={form}
         updateInitialProps={updateInitialProps}
         values={values}
       />
-      {console.log('vals one level up', values)}
     </OpenPaper>
   </React.Fragment>
 )
