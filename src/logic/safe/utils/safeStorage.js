@@ -36,13 +36,13 @@ export const setOwners = async (safeAddress: string, owners: List<Owner>) => {
   }
 }
 
-export const getOwners = async (safeAddress: string): Map<string, string> => {
+export const getOwners = async (safeAddress: string): Promise<Map<string, string>> => {
   const data: Object = await loadFromStorage(`${OWNERS_KEY}-${safeAddress}`)
 
   return data ? Map(data) : Map()
 }
 
-export const removeOwners = async (safeAddress: string) => {
+export const removeOwners = async (safeAddress: string): Promise<void> => {
   try {
     await removeFromStorage(`${OWNERS_KEY}-${safeAddress}`)
   } catch (err) {

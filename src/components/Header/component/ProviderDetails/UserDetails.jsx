@@ -3,11 +3,11 @@ import * as React from 'react'
 import classNames from 'classnames'
 import OpenInNew from '@material-ui/icons/OpenInNew'
 import { withStyles } from '@material-ui/core/styles'
+import Dot from '@material-ui/icons/FiberManualRecord'
 import Paragraph from '~/components/layout/Paragraph'
 import Link from '~/components/layout/Link'
 import Button from '~/components/layout/Button'
 import Identicon from '~/components/Identicon'
-import Dot from '@material-ui/icons/FiberManualRecord'
 import Hairline from '~/components/layout/Hairline'
 import Img from '~/components/layout/Img'
 import Row from '~/components/layout/Row'
@@ -123,7 +123,7 @@ const UserDetails = ({
             {address}
           </Paragraph>
           {userAddress && (
-            <Link className={classes.open} to={getEtherScanLink(userAddress, network)} target="_blank">
+            <Link className={classes.open} to={getEtherScanLink('address', userAddress, network)} target="_blank">
               <OpenInNew style={openIconStyle} />
             </Link>
           )}

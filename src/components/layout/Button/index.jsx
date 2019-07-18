@@ -1,31 +1,27 @@
 // @flow
 import * as React from 'react'
 import Button from '@material-ui/core/Button'
-import { withStyles } from '@material-ui/core/styles'
-
-const styles = {
-  root: {
-    borderRadius: 0,
-  },
-}
 
 type Props = {
   minWidth?: number,
   minHeight?: number,
-  testId: string,
+  rounded?: boolean,
+  testId?: string,
+  style?: Object,
 }
 
-const calculateStyleBased = (minWidth, minHeight) => ({
+const calculateStyleBased = (minWidth, minHeight, rounded) => ({
   minWidth: minWidth && `${minWidth}px`,
   minHeight: minHeight && `${minHeight}px`,
+  borderRadius: rounded ? '4px' : 0,
 })
 
 const GnoButton = ({
-  minWidth, minHeight, testId = '', ...props
+  minWidth, minHeight = 27, testId = '', rounded, style = {}, ...props
 }: Props) => {
-  const style = calculateStyleBased(minWidth, minHeight)
+  const calculatedStyle = calculateStyleBased(minWidth, minHeight, rounded)
 
-  return <Button style={style} data-testid={testId} {...props} />
+  return <Button style={{ ...calculatedStyle, ...style }} data-testid={testId} {...props} />
 }
 
-export default withStyles(styles)(GnoButton)
+export default GnoButton

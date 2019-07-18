@@ -5,11 +5,18 @@ import { toDataUrl } from './blockies'
 type Props = {
   address: string,
   diameter: number,
+  className?: string,
 }
 
 type IdenticonRef = { current: null | HTMLDivElement }
 
 export default class Identicon extends React.PureComponent<Props> {
+  static defaultProps = {
+    className: '',
+  }
+
+  identicon: IdenticonRef
+
   constructor(props: Props) {
     super(props)
 
@@ -55,13 +62,13 @@ export default class Identicon extends React.PureComponent<Props> {
     return image
   }
 
-  identicon: IdenticonRef
 
   render() {
-    const style = this.getStyleFrom(this.props.diameter)
+    const { diameter, className } = this.props
+    const style = this.getStyleFrom(diameter)
 
     return (
-      <div style={style} ref={this.identicon} />
+      <div className={className} style={style} ref={this.identicon} />
     )
   }
 }

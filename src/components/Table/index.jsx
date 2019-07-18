@@ -21,6 +21,7 @@ type Props<K> = {
   children: Function,
   size: number,
   defaultFixed?: boolean,
+  defaultOrder?: 'desc' | 'asc',
   noBorder: boolean,
 }
 
@@ -59,21 +60,48 @@ const styles = {
 
 const FIXED_HEIGHT = 49
 
+const backProps = {
+  'aria-label': 'Previous Page',
+}
+
+const nextProps = {
+  'aria-label': 'Next Page',
+}
+
 class GnoTable<K> extends React.Component<Props<K>, State> {
   state = {
     page: 0,
-    order: 'asc',
+    order: undefined,
     orderBy: undefined,
     fixed: undefined,
     orderProp: false,
     rowsPerPage: 5,
   }
 
+  componentDidMount() {
+    const { defaultOrderBy, columns } = this.props
+
+    if (defaultOrderBy && columns) {
+      const defaultOrderCol = columns.find(({ id }) => id === defaultOrderBy)
+
+      if (defaultOrderCol.order) {
+        this.setState({
+          orderProp: true,
+        })
+      }
+    }
+  }
+
   onSort = (newOrderBy: string, orderProp: boolean) => {
     const { order, orderBy } = this.state
+    const { defaultOrder } = this.props
     let newOrder = 'desc'
 
-    if (orderBy === newOrderBy && order === 'desc') {
+    // if table was previously sorted by the user
+    if (order && orderBy === newOrderBy && order === 'desc') {
+      newOrder = 'asc'
+    } else if (!order && defaultOrder === 'desc') {
+      // if it was not sorted and defaultOrder is used
       newOrder = 'asc'
     }
 
@@ -100,21 +128,14 @@ class GnoTable<K> extends React.Component<Props<K>, State> {
 
   render() {
     const {
-      data, label, columns, classes, children, size, defaultOrderBy, defaultFixed, noBorder,
+      data, label, columns, classes, children, size, defaultOrderBy, defaultOrder, defaultFixed, noBorder,
     } = this.props
     const {
       order, orderBy, page, orderProp, rowsPerPage, fixed,
     } = this.state
     const orderByParam = orderBy || defaultOrderBy
+    const orderParam = order || defaultOrder
     const fixedParam = typeof fixed !== 'undefined' ? fixed : !!defaultFixed
-
-    const backProps = {
-      'aria-label': 'Previous Page',
-    }
-
-    const nextProps = {
-      'aria-label': 'Next Page',
-    }
 
     const paginationClasses = {
       selectRoot: classes.selectRoot,
@@ -122,7 +143,7 @@ class GnoTable<K> extends React.Component<Props<K>, State> {
       input: classes.white,
     }
 
-    const sortedData = stableSort(data, getSorting(order, orderByParam, orderProp), fixedParam).slice(
+    const sortedData = stableSort(data, getSorting(orderParam, orderByParam, orderProp), fixedParam).slice(
       page * rowsPerPage,
       page * rowsPerPage + rowsPerPage,
     )
@@ -161,6 +182,10 @@ class GnoTable<K> extends React.Component<Props<K>, State> {
       </React.Fragment>
     )
   }
+}
+
+GnoTable.defaultProps = {
+  defaultOrder: 'asc',
 }
 
 export default withStyles(styles)(GnoTable)

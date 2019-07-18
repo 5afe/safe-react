@@ -19,20 +19,23 @@ import {
 } from '~/theme/variables'
 import { copyToClipboard } from '~/utils/clipboard'
 import Balances from './Balances'
+import Transactions from './TransactionsNew'
 import Settings from './Settings'
 
 export const SETTINGS_TAB_BTN_TESTID = 'settings-tab-btn'
 export const SAFE_VIEW_NAME_HEADING_TESTID = 'safe-name-heading'
 
+type State = {
+  tabIndex: number,
+}
+
 type Props = SelectorProps & {
   classes: Object,
   granted: boolean,
-  createTransaction: Function,
   updateSafe: Function,
-}
-
-type State = {
-  tabIndex: number,
+  createTransaction: Function,
+  processTransaction: Function,
+  fetchTransactions: Function,
 }
 
 const openIconStyle = {
@@ -102,7 +105,10 @@ class Layout extends React.Component<Props, State> {
       tokens,
       activeTokens,
       createTransaction,
+      processTransaction,
+      fetchTransactions,
       updateSafe,
+      transactions,
       userAddress,
     } = this.props
     const { tabIndex } = this.state
@@ -112,7 +118,7 @@ class Layout extends React.Component<Props, State> {
     }
 
     const { address, ethBalance, name } = safe
-    const etherScanLink = getEtherScanLink(address, network)
+    const etherScanLink = getEtherScanLink('address', address, network)
 
     return (
       <React.Fragment>
@@ -153,6 +159,19 @@ class Layout extends React.Component<Props, State> {
             safeName={name}
             etherScanLink={etherScanLink}
             createTransaction={createTransaction}
+          />
+        )}
+        {tabIndex === 1 && (
+          <Transactions
+            threshold={safe.threshold}
+            owners={safe.owners}
+            transactions={transactions}
+            fetchTransactions={fetchTransactions}
+            safeAddress={address}
+            userAddress={userAddress}
+            granted={granted}
+            createTransaction={createTransaction}
+            processTransaction={processTransaction}
           />
         )}
         {tabIndex === 2 && (

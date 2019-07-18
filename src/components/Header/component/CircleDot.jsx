@@ -1,8 +1,8 @@
 // @flow
 import * as React from 'react'
 import { withStyles } from '@material-ui/core/styles'
-import Block from '~/components/layout/Block'
 import Dot from '@material-ui/icons/FiberManualRecord'
+import Block from '~/components/layout/Block'
 import Img from '~/components/layout/Img'
 import { fancy, border, warning } from '~/theme/variables'
 

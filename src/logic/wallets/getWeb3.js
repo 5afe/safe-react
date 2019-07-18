@@ -32,9 +32,7 @@ export const ETHEREUM_NETWORK_IDS = {
   42: ETHEREUM_NETWORK.KOVAN,
 }
 
-export const openTxInEtherScan = (tx: string, network: string) => `https://${network}.etherscan.io/tx/${tx}`
-
-export const getEtherScanLink = (address: string, network: string) => `https://${network}.etherscan.io/address/${address}`
+export const getEtherScanLink = (type: 'address' | 'tx', value: string, network: string) => `https://${network === 'mainnet' ? '' : `${network}.`}etherscan.io/${type}/${value}`
 
 let web3
 export const getWeb3 = () => web3 || (window.web3 && new Web3(window.web3.currentProvider)) || (window.ethereum && new Web3(window.ethereum))
@@ -43,14 +41,14 @@ const getProviderName: Function = (web3Provider): boolean => {
   let name
 
   switch (web3Provider.currentProvider.constructor.name) {
-  case 'SafeWeb3Provider':
-    name = WALLET_PROVIDER.SAFE
-    break
-  case 'MetamaskInpageProvider':
-    name = WALLET_PROVIDER.METAMASK
-    break
-  default:
-    name = 'UNKNOWN'
+    case 'SafeWeb3Provider':
+      name = WALLET_PROVIDER.SAFE
+      break
+    case 'MetamaskInpageProvider':
+      name = WALLET_PROVIDER.METAMASK
+      break
+    default:
+      name = 'UNKNOWN'
   }
 
   return name

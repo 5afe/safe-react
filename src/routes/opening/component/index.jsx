@@ -1,13 +1,13 @@
 // @flow
 import * as React from 'react'
-import Block from '~/components/layout/Block'
 import OpenInNew from '@material-ui/icons/OpenInNew'
-import Paragraph from '~/components/layout/Paragraph'
 import LinearProgress from '@material-ui/core/LinearProgress'
 import { withStyles } from '@material-ui/core/styles'
+import Block from '~/components/layout/Block'
+import Paragraph from '~/components/layout/Paragraph'
 import Img from '~/components/layout/Img'
 import Page from '~/components/layout/Page'
-import { openTxInEtherScan } from '~/logic/wallets/getWeb3'
+import { getEtherScanLink } from '~/logic/wallets/getWeb3'
 import { mediumFontSize, secondary, xs } from '~/theme/variables'
 import { type SelectorProps } from '../container/selector'
 
@@ -74,7 +74,7 @@ const Opening = ({
           Follow progress on
           {' '}
           <a
-            href={openTxInEtherScan(tx, network)}
+            href={getEtherScanLink('tx', tx, network)}
             target="_blank"
             rel="noopener noreferrer"
             className={classes.etherscan}

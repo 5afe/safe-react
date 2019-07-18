@@ -2,16 +2,16 @@
 import * as React from 'react'
 import { List } from 'immutable'
 import classNames from 'classnames/bind'
-import { type Token } from '~/logic/tokens/store/model/token'
 import CallMade from '@material-ui/icons/CallMade'
 import CallReceived from '@material-ui/icons/CallReceived'
-import Button from '@material-ui/core/Button'
 import Checkbox from '@material-ui/core/Checkbox'
 import TableRow from '@material-ui/core/TableRow'
 import TableCell from '@material-ui/core/TableCell'
 import { withStyles } from '@material-ui/core/styles'
+import { type Token } from '~/logic/tokens/store/model/token'
 import Col from '~/components/layout/Col'
 import Row from '~/components/layout/Row'
+import Button from '~/components/layout/Button'
 import ButtonLink from '~/components/layout/ButtonLink'
 import Paragraph from '~/components/layout/Paragraph'
 import Modal from '~/components/Modal'
@@ -168,10 +168,11 @@ class Balances extends React.Component<Props, State> {
                     <Button
                       variant="contained"
                       size="small"
-                      color="secondary"
+                      color="primary"
                       className={classes.send}
                       onClick={() => this.showSendFunds(row.asset.name)}
-                      data-testid="balance-send-btn"
+                      rounded
+                      testId="balance-send-btn"
                     >
                       <CallMade className={classNames(classes.leftIcon, classes.iconSmall)} />
                         Send
@@ -180,9 +181,10 @@ class Balances extends React.Component<Props, State> {
                   <Button
                     variant="contained"
                     size="small"
-                    color="secondary"
+                    color="primary"
                     className={classes.receive}
                     onClick={this.onShow('Receive')}
+                    rounded
                   >
                     <CallReceived className={classNames(classes.leftIcon, classes.iconSmall)} />
                       Receive

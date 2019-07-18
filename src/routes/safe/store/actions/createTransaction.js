@@ -1,14 +1,11 @@
 // @flow
 import type { Dispatch as ReduxDispatch, GetState } from 'redux'
-import { createAction } from 'redux-actions'
 import { EMPTY_DATA } from '~/logic/wallets/ethTransactions'
 import { userAccountSelector } from '~/logic/wallets/store/selectors'
+import fetchTransactions from '~/routes/safe/store/actions/fetchTransactions'
 import { type GlobalState } from '~/store'
 import { getGnosisSafeInstanceAt } from '~/logic/contracts/safeContracts'
-import { executeTransaction, CALL } from '~/logic/safe/transactions'
-
-export const ADD_TRANSACTIONS = 'ADD_TRANSACTIONS'
-export const addTransactions = createAction<string, *>(ADD_TRANSACTIONS)
+import { approveTransaction, executeTransaction, CALL } from '~/logic/safe/transactions'
 
 const createTransaction = (
   safeAddress: string,
@@ -16,14 +13,15 @@ const createTransaction = (
   valueInWei: string,
   txData: string = EMPTY_DATA,
   openSnackbar: Function,
+  shouldExecute?: boolean,
 ) => async (dispatch: ReduxDispatch<GlobalState>, getState: GetState<GlobalState>) => {
   const state: GlobalState = getState()
 
   const safeInstance = await getGnosisSafeInstanceAt(safeAddress)
   const from = userAccountSelector(state)
   const threshold = await safeInstance.getThreshold()
-  const nonce = await safeInstance.nonce()
-  const isExecution = threshold.toNumber() === 1
+  const nonce = (await safeInstance.nonce()).toString()
+  const isExecution = threshold.toNumber() === 1 || shouldExecute
 
   let txHash
   if (isExecution) {
@@ -31,10 +29,14 @@ const createTransaction = (
     txHash = await executeTransaction(safeInstance, to, valueInWei, txData, CALL, nonce, from)
     openSnackbar('Transaction has been confirmed', 'success')
   } else {
-    console.log('Temporal error: threshold != 1')
-    // txHash = await approveTransaction(safeAddress, to, valueInWei, txData, CALL, nonce)
+    openSnackbar('Approval transaction has been submitted', 'success')
+    txHash = await approveTransaction(safeInstance, to, valueInWei, txData, CALL, nonce, from)
+    openSnackbar('Approval transaction has been confirmed', 'success')
   }
-  // dispatch(addTransactions(txHash))
+
+  if (!process.env.NODE_ENV === 'test') {
+    dispatch(fetchTransactions(safeAddress))
+  }
 
   return txHash
 }

@@ -1,6 +1,5 @@
 // @flow
 import type { Store, AnyAction } from 'redux'
-import { List } from 'immutable'
 import { ADD_SAFE } from '~/routes/safe/store/actions/addSafe'
 import { UPDATE_SAFE } from '~/routes/safe/store/actions/updateSafe'
 import { REMOVE_SAFE } from '~/routes/safe/store/actions/removeSafe'
@@ -38,75 +37,75 @@ const safeStorageMware = (store: Store<GlobalState>) => (next: Function) => asyn
     await saveSafes(safes.toJSON())
 
     switch (action.type) {
-    case ACTIVATE_TOKEN_FOR_ALL_SAFES: {
-      let { activeTokens } = action.payload
-      if (activeTokens) {
-        const tokens = tokensSelector(state)
-        const activeTokenAddresses = getActiveTokensAddressesForAllSafes(state)
+      case ACTIVATE_TOKEN_FOR_ALL_SAFES: {
+        let { activeTokens } = action.payload
+        if (activeTokens) {
+          const tokens = tokensSelector(state)
+          const activeTokenAddresses = getActiveTokensAddressesForAllSafes(state)
 
-        activeTokens = tokens.withMutations((map) => {
-          map.forEach((token: Token) => {
-            if (!activeTokenAddresses.has(token.address)) {
-              map.remove(token.address)
-            }
+          activeTokens = tokens.withMutations((map) => {
+            map.forEach((token: Token) => {
+              if (!activeTokenAddresses.has(token.address)) {
+                map.remove(token.address)
+              }
+            })
           })
-        })
 
-        saveActiveTokens(activeTokens)
+          saveActiveTokens(activeTokens)
+        }
+        break
       }
-      break
-    }
-    case ADD_SAFE: {
-      const { safe } = action.payload
-      setOwners(safe.address, safe.owners)
-      break
-    }
-    case UPDATE_SAFE: {
-      const { safeAddress, owners } = action.payload
-      if (safeAddress && owners) {
-        setOwners(safeAddress, owners)
+      case ADD_SAFE: {
+        const { safe } = action.payload
+        setOwners(safe.address, safe.owners)
+        break
       }
-      break
-    }
-    case REMOVE_SAFE: {
-      const { safeAddress } = action.payload
-      await removeOwners(safeAddress)
-      break
-    }
-    case ADD_SAFE_OWNER: {
-      const { safeAddress, ownerAddress, ownerName } = action.payload
-      const owners = List(safes.get(safeAddress).owners)
-      setOwners(safeAddress, owners.push(makeOwner({ address: ownerAddress, name: ownerName })))
-      break
-    }
-    case REMOVE_SAFE_OWNER: {
-      const { safeAddress, ownerAddress } = action.payload
-      const owners = List(safes.get(safeAddress).owners)
-      setOwners(safeAddress, owners.filter(o => o.address.toLowerCase() !== ownerAddress.toLowerCase()))
-      break
-    }
-    case REPLACE_SAFE_OWNER: {
-      const {
-        safeAddress, ownerAddress, ownerName, oldOwnerAddress,
-      } = action.payload
-      const owners = List(safes.get(safeAddress).owners)
-      setOwners(
-        safeAddress,
-        owners
-          .filter(o => o.address.toLowerCase() !== oldOwnerAddress.toLowerCase())
-          .push(makeOwner({ address: ownerAddress, name: ownerName })),
-      )
-      break
-    }
-    case EDIT_SAFE_OWNER: {
-      const { safeAddress, ownerAddress, ownerName } = action.payload
-      const owners = List(safes.get(safeAddress).owners)
-      const ownerToUpdateIndex = owners.findIndex(o => o.address.toLowerCase() === ownerAddress.toLowerCase())
-      setOwners(safeAddress, owners.update(ownerToUpdateIndex, owner => owner.set('name', ownerName)))
-      break
-    }
-    default:
-      break
+      case UPDATE_SAFE: {
+        const { safeAddress, owners } = action.payload
+        if (safeAddress && owners) {
+          setOwners(safeAddress, owners)
+        }
+        break
+      }
+      case REMOVE_SAFE: {
+        const { safeAddress } = action.payload
+        await removeOwners(safeAddress)
+        break
+      }
+      case ADD_SAFE_OWNER: {
+        const { safeAddress, ownerAddress, ownerName } = action.payload
+        const { owners } = safes.get(safeAddress)
+        setOwners(safeAddress, owners.push(makeOwner({ address: ownerAddress, name: ownerName })))
+        break
+      }
+      case REMOVE_SAFE_OWNER: {
+        const { safeAddress, ownerAddress } = action.payload
+        const { owners } = safes.get(safeAddress)
+        setOwners(safeAddress, owners.filter(o => o.address.toLowerCase() !== ownerAddress.toLowerCase()))
+        break
+      }
+      case REPLACE_SAFE_OWNER: {
+        const {
+          safeAddress, ownerAddress, ownerName, oldOwnerAddress,
+        } = action.payload
+        const { owners } = safes.get(safeAddress)
+        setOwners(
+          safeAddress,
+          owners
+            .filter(o => o.address.toLowerCase() !== oldOwnerAddress.toLowerCase())
+            .push(makeOwner({ address: ownerAddress, name: ownerName })),
+        )
+        break
+      }
+      case EDIT_SAFE_OWNER: {
+        const { safeAddress, ownerAddress, ownerName } = action.payload
+        const { owners } = safes.get(safeAddress)
+        const ownerToUpdateIndex = owners.findIndex(o => o.address.toLowerCase() === ownerAddress.toLowerCase())
+        setOwners(safeAddress, owners.update(ownerToUpdateIndex, owner => owner.set('name', ownerName)))
+        break
+      }
+      default:
+        break
     }
   }
 

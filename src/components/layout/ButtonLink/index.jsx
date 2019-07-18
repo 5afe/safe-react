@@ -7,7 +7,7 @@ import styles from './index.scss'
 const cx = cn.bind(styles)
 
 type Props = {
-  type: 'button' | 'submit' | 'reset',
+  type?: 'button' | 'submit' | 'reset',
   size?: 'sm' | 'md' | 'lg' | 'xl' | 'xxl',
   weight?: 'light' | 'regular' | 'bolder' | 'bold',
   color?: 'soft' | 'medium' | 'dark' | 'white' | 'fancy' | 'primary' | 'secondary' | 'warning' | 'disabled' | 'error',

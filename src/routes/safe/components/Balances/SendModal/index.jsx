@@ -1,9 +1,9 @@
 // @flow
 import React, { useState, useEffect } from 'react'
 import { List } from 'immutable'
-import { type Token } from '~/logic/tokens/store/model/token'
 import cn from 'classnames'
 import { withStyles } from '@material-ui/core/styles'
+import { type Token } from '~/logic/tokens/store/model/token'
 import Modal from '~/components/Modal'
 import ChooseTxType from './screens/ChooseTxType'
 import SendFunds from './screens/SendFunds'

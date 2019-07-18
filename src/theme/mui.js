@@ -43,6 +43,9 @@ export default createMuiTheme({
   },
   overrides: {
     MuiButton: {
+      label: {
+        lineHeight: 1,
+      },
       root: {
         fontFamily: 'Roboto Mono, monospace',
         letterSpacing: '0.9px',
@@ -56,6 +59,9 @@ export default createMuiTheme({
       },
       containedPrimary: {
         backgroundColor: secondary,
+      },
+      containedSecondary: {
+        backgroundColor: error,
       },
       sizeLarge: {
         padding: `${md} ${lg}`,
@@ -76,6 +82,16 @@ export default createMuiTheme({
     MuiStepper: {
       root: {
         padding: '24px 0 0 15px',
+      },
+    },
+    MuiIconButton: {
+      root: {
+        padding: 0,
+      },
+    },
+    MuiChip: {
+      root: {
+        fontFamily: 'Roboto Mono, monospace',
       },
     },
     MuiStepIcon: {

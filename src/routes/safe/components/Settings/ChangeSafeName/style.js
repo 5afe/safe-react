@@ -1,5 +1,5 @@
 // @flow
-import { lg } from '~/theme/variables'
+import { lg, sm, boldFont } from '~/theme/variables'
 
 export const styles = () => ({
   formContainer: {
@@ -9,5 +9,9 @@ export const styles = () => ({
   root: {
     display: 'flex',
     maxWidth: '460px',
+  },
+  saveBtn: {
+    marginRight: sm,
+    fontWeight: boldFont,
   },
 })

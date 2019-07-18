@@ -4,7 +4,7 @@ import { aNewStore } from '~/store'
 import { aMinedSafe } from '~/test/builder/safe.redux.builder'
 import { renderSafeView } from '~/test/builder/safe.dom.utils'
 import { sleep } from '~/utils/timer'
-import 'jest-dom/extend-expect'
+import '@testing-library/jest-dom/extend-expect'
 import { SETTINGS_TAB_BTN_TESTID, SAFE_VIEW_NAME_HEADING_TESTID } from '~/routes/safe/components/Layout'
 import { SAFE_NAME_INPUT_TESTID, SAFE_NAME_SUBMIT_BTN_TESTID } from '~/routes/safe/components/Settings/ChangeSafeName'
 

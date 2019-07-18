@@ -23,17 +23,15 @@ type TransactionProps = {
   transaction: Transaction,
 }
 
-const safePropAddressSelector = (state: GlobalState, props: SafeProps) => props.safeAddress
-
 const transactionsSelector = (state: GlobalState): TransactionsState => state[TRANSACTIONS_REDUCER_ID]
 
 const oneTransactionSelector = (state: GlobalState, props: TransactionProps) => props.transaction
 
 export const safeParamAddressSelector = (state: GlobalState, props: RouterProps) => props.match.params[SAFE_PARAM_ADDRESS] || ''
 
-export const safeTransactionsSelector: Selector<GlobalState, SafeProps, List<Transaction>> = createSelector(
+export const safeTransactionsSelector: Selector<GlobalState, RouterProps, List<Transaction>> = createSelector(
   transactionsSelector,
-  safePropAddressSelector,
+  safeParamAddressSelector,
   (transactions: TransactionsState, address: string): List<Transaction> => {
     if (!transactions) {
       return List([])

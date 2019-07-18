@@ -112,7 +112,7 @@ const ReviewAddOwner = ({
                         <Paragraph size="md" color="disabled" noMargin>
                           {owner.address}
                         </Paragraph>
-                        <Link className={classes.open} to={getEtherScanLink(owner.address, network)} target="_blank">
+                        <Link className={classes.open} to={getEtherScanLink('address', owner.address, network)} target="_blank">
                           <OpenInNew style={openIconStyle} />
                         </Link>
                       </Block>
@@ -141,7 +141,7 @@ const ReviewAddOwner = ({
                     <Paragraph size="md" color="disabled" noMargin>
                       {values.ownerAddress}
                     </Paragraph>
-                    <Link className={classes.open} to={getEtherScanLink(values.ownerAddress, network)} target="_blank">
+                    <Link className={classes.open} to={getEtherScanLink('address', values.ownerAddress, network)} target="_blank">
                       <OpenInNew style={openIconStyle} />
                     </Link>
                   </Block>

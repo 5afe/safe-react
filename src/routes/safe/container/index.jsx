@@ -16,11 +16,13 @@ const TIMEOUT = process.env.NODE_ENV === 'test' ? 1500 : 5000
 class SafeView extends React.Component<Props> {
   componentDidMount() {
     const {
-      fetchSafe, activeTokens, safeUrl, fetchTokenBalances,
+      fetchSafe, activeTokens, safeUrl, fetchTokenBalances, fetchTokens,
     } = this.props
 
     fetchSafe(safeUrl)
     fetchTokenBalances(safeUrl, activeTokens)
+    // fetch tokens there to get symbols for tokens in TXs list
+    fetchTokens()
 
     this.intervalId = setInterval(() => {
       this.checkForUpdates()
@@ -61,7 +63,10 @@ class SafeView extends React.Component<Props> {
       network,
       tokens,
       createTransaction,
+      processTransaction,
+      fetchTransactions,
       updateSafe,
+      transactions,
     } = this.props
 
     return (
@@ -75,7 +80,10 @@ class SafeView extends React.Component<Props> {
           network={network}
           granted={granted}
           createTransaction={createTransaction}
+          processTransaction={processTransaction}
+          fetchTransactions={fetchTransactions}
           updateSafe={updateSafe}
+          transactions={transactions}
         />
       </Page>
     )

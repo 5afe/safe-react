@@ -129,7 +129,7 @@ const ReviewRemoveOwner = ({
                           </Paragraph>
                           <Link
                             className={classes.open}
-                            to={getEtherScanLink(owner.address, network)}
+                            to={getEtherScanLink('address', owner.address, network)}
                             target="_blank"
                           >
                             <OpenInNew style={openIconStyle} />
@@ -161,7 +161,7 @@ const ReviewRemoveOwner = ({
                     <Paragraph size="md" color="disabled" noMargin>
                       {ownerAddress}
                     </Paragraph>
-                    <Link className={classes.open} to={getEtherScanLink(ownerAddress, network)} target="_blank">
+                    <Link className={classes.open} to={getEtherScanLink('address', ownerAddress, network)} target="_blank">
                       <OpenInNew style={openIconStyle} />
                     </Link>
                   </Block>
@@ -187,7 +187,7 @@ const ReviewRemoveOwner = ({
                     <Paragraph size="md" color="disabled" noMargin>
                       {values.ownerAddress}
                     </Paragraph>
-                    <Link className={classes.open} to={getEtherScanLink(values.ownerAddress, network)} target="_blank">
+                    <Link className={classes.open} to={getEtherScanLink('address', values.ownerAddress, network)} target="_blank">
                       <OpenInNew style={openIconStyle} />
                     </Link>
                   </Block>

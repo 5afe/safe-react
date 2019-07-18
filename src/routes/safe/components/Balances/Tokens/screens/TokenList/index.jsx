@@ -5,19 +5,19 @@ import cn from 'classnames'
 import SearchBar from 'material-ui-search-bar'
 import { withStyles } from '@material-ui/core/styles'
 import MuiList from '@material-ui/core/List'
-import Img from '~/components/layout/Img'
-import Block from '~/components/layout/Block'
 import ListItem from '@material-ui/core/ListItem'
 import ListItemIcon from '@material-ui/core/ListItemIcon'
+import CircularProgress from '@material-ui/core/CircularProgress'
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction'
 import ListItemText from '@material-ui/core/ListItemText'
-import Search from '@material-ui/icons/Search'
-import Button from '~/components/layout/Button'
 import Switch from '@material-ui/core/Switch'
+import Search from '@material-ui/icons/Search'
+import Img from '~/components/layout/Img'
+import Block from '~/components/layout/Block'
+import Button from '~/components/layout/Button'
 import Divider from '~/components/layout/Divider'
 import Hairline from '~/components/layout/Hairline'
 import Spacer from '~/components/Spacer'
-import CircularProgress from '@material-ui/core/CircularProgress'
 import Row from '~/components/layout/Row'
 import { ETH_ADDRESS } from '~/logic/tokens/utils/tokenHelpers'
 import { type Token } from '~/logic/tokens/store/model/token'
@@ -141,7 +141,7 @@ class Tokens extends React.Component<Props, State> {
             <Button
               variant="contained"
               size="small"
-              color="secondary"
+              color="primary"
               className={classes.add}
               onClick={switchToAddCustomTokenScreen}
               testId={ADD_CUSTOM_TOKEN_BUTTON_TEST_ID}

@@ -2,9 +2,9 @@
 import React from 'react'
 import OpenInNew from '@material-ui/icons/OpenInNew'
 import { withStyles } from '@material-ui/core/styles'
-import { SharedSnackbarConsumer } from '~/components/SharedSnackBar'
 import Close from '@material-ui/icons/Close'
 import IconButton from '@material-ui/core/IconButton'
+import { SharedSnackbarConsumer } from '~/components/SharedSnackBar'
 import Paragraph from '~/components/layout/Paragraph'
 import Row from '~/components/layout/Row'
 import Link from '~/components/layout/Link'
@@ -61,7 +61,6 @@ const ReviewTx = ({
         const txRecipient = isSendingETH ? tx.recipientAddress : tx.token.address
         let txData = EMPTY_DATA
         let txAmount = web3.utils.toWei(tx.amount, 'ether')
-
 
         if (!isSendingETH) {
           const StandardToken = await getStandardTokenContract()
@@ -139,7 +138,7 @@ const ReviewTx = ({
           </Block>
           <Hairline style={{ position: 'absolute', bottom: 85 }} />
           <Row align="center" className={classes.buttonRow}>
-            <Button className={classes.button} minWidth={140} onClick={onClickBack}>
+            <Button className={classes.button} minWidth={140} minHeight={42} onClick={onClickBack}>
               Back
             </Button>
             <Button
@@ -148,6 +147,7 @@ const ReviewTx = ({
               onClick={submitTx}
               variant="contained"
               minWidth={140}
+              minHeight={42}
               color="primary"
               data-testid="submit-tx-btn"
             >

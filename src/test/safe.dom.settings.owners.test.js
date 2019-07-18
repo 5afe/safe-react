@@ -4,7 +4,7 @@ import { aNewStore } from '~/store'
 import { aMinedSafe } from '~/test/builder/safe.redux.builder'
 import { renderSafeView } from '~/test/builder/safe.dom.utils'
 import { sleep } from '~/utils/timer'
-import 'jest-dom/extend-expect'
+import '@testing-library/jest-dom/extend-expect'
 import { SETTINGS_TAB_BTN_TESTID } from '~/routes/safe/components/Layout'
 import { OWNERS_SETTINGS_TAB_TESTID } from '~/routes/safe/components/Settings'
 import {
@@ -162,7 +162,7 @@ describe('DOM > Feature > Settings - Manage owners', () => {
     fireEvent.click(SafeDom.getByTestId(ADD_OWNER_THRESHOLD_NEXT_BTN_TESTID))
     await sleep(200)
     fireEvent.click(SafeDom.getByTestId(ADD_OWNER_SUBMIT_BTN_TESTID))
-    await sleep(1000)
+    await sleep(1500)
 
     // check if owner was added
     ownerRows = SafeDom.getAllByTestId(OWNERS_ROW_TESTID)
