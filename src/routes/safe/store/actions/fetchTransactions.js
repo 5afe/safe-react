@@ -38,7 +38,11 @@ type TxServiceModel = {
   isExecuted: boolean,
 }
 
-export const buildTransactionFrom = async (safeAddress: string, tx: TxServiceModel, safeSubjects: Map<string, string>) => {
+export const buildTransactionFrom = async (
+  safeAddress: string,
+  tx: TxServiceModel,
+  safeSubjects: Map<string, string>,
+) => {
   const name = safeSubjects.get(String(tx.nonce)) || 'Unknown'
   const storedOwners = await getOwners(safeAddress)
   const confirmations = List(
@@ -76,9 +80,7 @@ export const buildTransactionFrom = async (safeAddress: string, tx: TxServiceMod
       recipient: params[0],
       value: params[1],
     }
-  } else if (
-    modifySettingsTx && tx.data
-  ) {
+  } else if (modifySettingsTx && tx.data) {
     decodedParams = await decodeParamsFromSafeMethod(tx.data)
   }
 
