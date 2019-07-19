@@ -10,6 +10,10 @@ export const styles = () => ({
   },
   owner: {
     padding: `0 ${lg}`,
+    marginTop: '12px',
+    '&:first-child': {
+      marginTop: 0,
+    },
   },
   header: {
     padding: `${sm} ${lg}`,
@@ -29,7 +33,6 @@ export const styles = () => ({
   },
   remove: {
     height: '56px',
-    marginTop: '12px',
     maxWidth: '50px',
     '&:hover': {
       cursor: 'pointer',

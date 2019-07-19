@@ -26,6 +26,8 @@ import OpenPaper from '~/components/Stepper/OpenPaper'
 import { getAccountsFrom } from '~/routes/open/utils/safeDataExtractor'
 import Hairline from '~/components/layout/Hairline'
 import trash from '~/assets/icons/trash.svg'
+import QRIcon from '~/assets/icons/qrcode.svg'
+import ScanQRModal from './ScanQRModal'
 import { getAddressValidators } from './validators'
 import { styles } from './style'
 
@@ -67,7 +69,15 @@ const SafeOwners = (props: Props) => {
     classes, errors, otherAccounts, values, updateInitialProps,
   } = props
   const [numOwners, setNumOwners] = useState<number>(1)
+  const [qrModalOpen, setQrModalOpen] = useState<boolean>(false)
   const validOwners = getNumOwnersFrom(values)
+
+  const openQrModal = () => {
+    setQrModalOpen(true)
+  }
+  const closeQrModal = () => {
+    setQrModalOpen(false)
+  }
 
   const onRemoveRow = (index: number) => () => {
     if (numOwners === 2) {
@@ -115,7 +125,7 @@ const SafeOwners = (props: Props) => {
                   text="Owner Name"
                 />
               </Col>
-              <Col xs={7}>
+              <Col xs={6}>
                 <Field
                   name={addressName}
                   component={TextField}
@@ -133,6 +143,9 @@ const SafeOwners = (props: Props) => {
                   placeholder="Owner Address*"
                   text="Owner Address"
                 />
+              </Col>
+              <Col xs={1} center="xs" middle="xs" className={classes.remove}>
+                <Img src={QRIcon} height={20} alt="Scan QR" onClick={openQrModal} />
               </Col>
               <Col xs={1} center="xs" middle="xs" className={classes.remove}>
                 {index > 0 && <Img src={trash} height={20} alt="Delete" onClick={onRemoveRow(index)} />}
@@ -178,6 +191,7 @@ owner(s)
           </Col>
         </Row>
       </Block>
+      {qrModalOpen && <ScanQRModal isOpen={qrModalOpen} onClose={closeQrModal} />}
     </React.Fragment>
   )
 }
