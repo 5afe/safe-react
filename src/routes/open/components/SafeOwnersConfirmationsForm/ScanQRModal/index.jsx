@@ -12,43 +12,10 @@ import Row from '~/components/layout/Row'
 import Hairline from '~/components/layout/Hairline'
 import Col from '~/components/layout/Col'
 import Modal from '~/components/Modal'
-import { lg, sm, background } from '~/theme/variables'
 import { checkWebcam } from './utils'
+import { styles } from './style'
 
 const { useEffect, useState } = React
-
-const styles = () => ({
-  heading: {
-    padding: `${sm} ${lg}`,
-    justifyContent: 'space-between',
-    maxHeight: '75px',
-    boxSizing: 'border-box',
-  },
-  loaderContainer: {
-    width: '100%',
-    height: '100%',
-  },
-  manage: {
-    fontSize: '24px',
-  },
-  close: {
-    height: '35px',
-    width: '35px',
-  },
-  detailsContainer: {
-    backgroundColor: background,
-    maxHeight: '420px',
-  },
-  buttonRow: {
-    height: '84px',
-    justifyContent: 'center',
-  },
-  button: {
-    '&:last-child': {
-      marginLeft: sm,
-    },
-  },
-})
 
 type Props = {
   onClose: () => void,
