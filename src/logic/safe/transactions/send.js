@@ -39,7 +39,7 @@ export const approveTransaction = async (
   )
   const receipt = await safeInstance.approveHash(contractTxHash, { from: sender })
 
-  await saveTxToHistory(
+  saveTxToHistory(
     safeInstance,
     to,
     valueInWei,
@@ -89,7 +89,7 @@ export const executeTransaction = async (
       { from: sender },
     )
 
-    await saveTxToHistory(
+    saveTxToHistory(
       safeInstance,
       to,
       valueInWei,
