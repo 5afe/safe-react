@@ -38,6 +38,12 @@ const back = () => {
   history.goBack()
 }
 
+const formMutators = {
+  setValue: ([field, value], state, { changeValue }) => {
+    changeValue(state, field, () => value)
+  },
+}
+
 const Layout = ({
   provider, userAccount, onCallSafeContractSubmit, network,
 }: Props) => {
@@ -58,6 +64,7 @@ const Layout = ({
             onSubmit={onCallSafeContractSubmit}
             steps={steps}
             initialValues={initialValues}
+            mutators={formMutators}
             testId="create-safe-form"
           >
             <StepperPage>{SafeNameField}</StepperPage>

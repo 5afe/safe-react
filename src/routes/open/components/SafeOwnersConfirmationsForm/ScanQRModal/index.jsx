@@ -46,19 +46,22 @@ const styles = () => ({
   button: {
     '&:last-child': {
       marginLeft: sm,
-    }
+    },
   },
 })
 
 type Props = {
   onClose: () => void,
   classes: Object,
+  onScan: Function,
   isOpen: boolean,
 }
 
-const ScanQRModal = ({ classes, onClose, isOpen }: Props) => {
+const ScanQRModal = ({
+  classes, onClose, isOpen, onScan,
+}: Props) => {
   const [hasWebcam, setHasWebcam] = useState(null)
-  const scannerRef = React.createRef()
+  const scannerRef: Object = React.createRef()
   const openImageDialog = () => {
     scannerRef.current.openImageDialog()
   }
@@ -101,7 +104,7 @@ const ScanQRModal = ({ classes, onClose, isOpen }: Props) => {
             ref={scannerRef}
             legacyMode={!hasWebcam}
             onScan={(data) => {
-              if (data) console.log(data)
+              if (data) onScan(data)
             }}
             onError={(err) => {
               console.error(err)
@@ -112,7 +115,14 @@ const ScanQRModal = ({ classes, onClose, isOpen }: Props) => {
       </Col>
       <Hairline />
       <Row align="center" className={classes.buttonRow}>
-        <Button color="secondary" className={classes.button} minHeight={42} minWidth={140} onClick={onClose} variant="contained">
+        <Button
+          color="secondary"
+          className={classes.button}
+          minHeight={42}
+          minWidth={140}
+          onClick={onClose}
+          variant="contained"
+        >
           Close
         </Button>
         <Button

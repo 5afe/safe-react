@@ -21,6 +21,7 @@ type Props = {
   classes: Object,
   initialValues?: Object,
   disabledWhenValidating?: boolean,
+  mutators?: Object,
   testId?: string,
 }
 
@@ -109,7 +110,7 @@ const GnoStepper = (props: Props) => {
   }
 
   const {
-    steps, children, classes, disabledWhenValidating = false, testId,
+    steps, children, classes, disabledWhenValidating = false, testId, mutators,
   } = props
   const activePage = getActivePageFrom(children)
 
@@ -118,7 +119,13 @@ const GnoStepper = (props: Props) => {
 
   return (
     <React.Fragment>
-      <GnoForm onSubmit={handleSubmit} initialValues={values} validation={validate} testId={testId}>
+      <GnoForm
+        onSubmit={handleSubmit}
+        initialValues={values}
+        validation={validate}
+        testId={testId}
+        formMutators={mutators}
+      >
         {(submitting: boolean, validating: boolean, ...rest: any) => {
           const disabled = disabledWhenValidating ? submitting || validating : submitting
           const controls = (

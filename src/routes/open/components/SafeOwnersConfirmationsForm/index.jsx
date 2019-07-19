@@ -66,22 +66,24 @@ export const calculateValuesAfterRemoving = (index: number, notRemovedOwners: nu
 
 const SafeOwners = (props: Props) => {
   const {
-    classes, errors, otherAccounts, values, updateInitialProps,
+    classes, errors, otherAccounts, values, updateInitialProps, form,
   } = props
   const [numOwners, setNumOwners] = useState<number>(1)
   const [qrModalOpen, setQrModalOpen] = useState<boolean>(false)
+  const [scanQrForOwnerName, setScanQrForOwnerName] = useState<string | null>(null)
   const validOwners = getNumOwnersFrom(values)
 
-  const openQrModal = () => {
+  const openQrModal = (ownerName) => {
+    setScanQrForOwnerName(ownerName)
     setQrModalOpen(true)
   }
+
   const closeQrModal = () => {
     setQrModalOpen(false)
   }
 
   const onRemoveRow = (index: number) => () => {
     if (numOwners === 2) {
-      const { form } = props
       form.reset()
     } else {
       const initialValues = calculateValuesAfterRemoving(index, numOwners, values)
@@ -93,6 +95,11 @@ const SafeOwners = (props: Props) => {
 
   const onAddOwner = () => {
     setNumOwners(numOwners + 1)
+  }
+
+  const handleScan = (value) => {
+    form.mutators.setValue(scanQrForOwnerName, value)
+    closeQrModal()
   }
 
   return (
@@ -145,7 +152,14 @@ const SafeOwners = (props: Props) => {
                 />
               </Col>
               <Col xs={1} center="xs" middle="xs" className={classes.remove}>
-                <Img src={QRIcon} height={20} alt="Scan QR" onClick={openQrModal} />
+                <Img
+                  src={QRIcon}
+                  height={20}
+                  alt="Scan QR"
+                  onClick={() => {
+                    openQrModal(addressName)
+                  }}
+                />
               </Col>
               <Col xs={1} center="xs" middle="xs" className={classes.remove}>
                 {index > 0 && <Img src={trash} height={20} alt="Delete" onClick={onRemoveRow(index)} />}
@@ -191,7 +205,7 @@ owner(s)
           </Col>
         </Row>
       </Block>
-      {qrModalOpen && <ScanQRModal isOpen={qrModalOpen} onClose={closeQrModal} />}
+      {qrModalOpen && <ScanQRModal isOpen={qrModalOpen} onScan={handleScan} onClose={closeQrModal} />}
     </React.Fragment>
   )
 }
