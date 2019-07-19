@@ -58,8 +58,8 @@ export const calculateValuesAfterRemoving = (index: number, notRemovedOwners: nu
     initialValues[FIELD_CONFIRMATIONS] = numOwnersAfterRemoving.toString()
   }
 
-  delete initialValues[getOwnerNameBy(numOwnersAfterRemoving)]
-  delete initialValues[getOwnerAddressBy(numOwnersAfterRemoving)]
+  delete initialValues[getOwnerNameBy(index)]
+  delete initialValues[getOwnerAddressBy(index)]
 
   return initialValues
 }
@@ -87,7 +87,14 @@ const SafeOwners = (props: Props) => {
       form.reset()
     } else {
       const initialValues = calculateValuesAfterRemoving(index, numOwners, values)
-      updateInitialProps(initialValues)
+
+      if (Object.keys(initialValues).length === 4) {
+        // this means that the form is back to its inital state
+        // and if they're equal it won't update the form
+        form.reset()
+      } else {
+        updateInitialProps(initialValues)
+      }
     }
 
     setNumOwners(numOwners - 1)

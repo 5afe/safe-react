@@ -45,6 +45,9 @@ const ScanQRModal = ({
   }, [])
 
   useEffect(() => {
+    // this fires only when the hasWebcam changes to false (null > false (user doesn't have webcam)
+    // , true > false (user switched from webcam to file upload))
+    // Doesn't fire on re-render
     if (hasWebcam === false) {
       openImageDialog()
     }
