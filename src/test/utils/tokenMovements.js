@@ -6,11 +6,11 @@ import { toNative } from '~/logic/wallets/tokens'
 import TokenOMG from '../../../build/contracts/TokenOMG'
 import TokenRDN from '../../../build/contracts/TokenRDN'
 
-export const sendEtherTo = async (address: string, eth: string) => {
+export const sendEtherTo = async (address: string, eth: string, fromAccountIndex: number = 0) => {
   const web3 = getWeb3()
   const accounts = await web3.eth.getAccounts()
   const { toBN, toWei } = web3.utils
-  const txData = { from: accounts[0], to: address, value: toBN(toWei(eth, 'ether')) }
+  const txData = { from: accounts[fromAccountIndex], to: address, value: toBN(toWei(eth, 'ether')) }
   return web3.eth.sendTransaction(txData)
 }
 

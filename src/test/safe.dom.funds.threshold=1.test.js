@@ -32,8 +32,11 @@ describe('DOM > Feature > Sending Funds', () => {
   it('Sends ETH with threshold = 1', async () => {
     // GIVEN
     const ethAmount = '5'
-    await sendEtherTo(safeAddress, ethAmount)
-    const balanceAfterSendingEthToSafe = await getBalanceInEtherOf(accounts[0])
+
+    // the tests are run in parallel, lets use account 9 because it's not used anywhere else
+    // (in other tests we trigger transactions and pay gas for it, so we can't really make reliable
+    // assumptions on account's ETH balance)
+    await sendEtherTo(safeAddress, ethAmount, 9)
 
     // WHEN
     const SafeDom = renderSafeView(store, safeAddress)
@@ -45,15 +48,16 @@ describe('DOM > Feature > Sending Funds', () => {
     const sendButton = SafeDom.getByTestId('balance-send-btn')
     fireEvent.click(sendButton)
 
-    await fillAndSubmitSendFundsForm(SafeDom, sendButton, ethAmount, accounts[0])
+    const receiverBalanceBeforeTx = await getBalanceInEtherOf(accounts[9])
+    await fillAndSubmitSendFundsForm(SafeDom, sendButton, ethAmount, accounts[9])
 
     // THEN
     const safeFunds = await getBalanceInEtherOf(safeAddress)
     expect(Number(safeFunds)).toBe(0)
+    const receiverBalanceAfterTx = await getBalanceInEtherOf(accounts[9])
 
-    const receiverFunds = await getBalanceInEtherOf(accounts[0])
     const ESTIMATED_GASCOSTS = 0.3
-    expect(Number(parseInt(receiverFunds, 10) - parseInt(balanceAfterSendingEthToSafe, 10))).toBeGreaterThan(
+    expect(Number(parseInt(receiverBalanceAfterTx, 10) - parseInt(receiverBalanceBeforeTx, 10))).toBeGreaterThan(
       parseInt(ethAmount, 10) - ESTIMATED_GASCOSTS,
     )
   })
