@@ -5,6 +5,11 @@ import { aMinedSafe } from '~/test/builder/safe.redux.builder'
 import { renderSafeView } from '~/test/builder/safe.dom.utils'
 import { sleep } from '~/utils/timer'
 import '@testing-library/jest-dom/extend-expect'
+import {
+  checkRegisteredTxAddOwner,
+  checkRegisteredTxRemoveOwner,
+  checkRegisteredTxReplaceOwner,
+} from './utils/transactions'
 import { SETTINGS_TAB_BTN_TEST_ID } from '~/routes/safe/components/Layout'
 import { OWNERS_SETTINGS_TAB_TEST_ID } from '~/routes/safe/components/Settings'
 import {
@@ -121,6 +126,9 @@ describe('DOM > Feature > Settings - Manage owners', () => {
     expect(ownerRows.length).toBe(1)
     expect(ownerRows[0]).toHaveTextContent('Adol 1 Eth Account')
     expect(ownerRows[0]).toHaveTextContent('0x90F8bf6A479f320ead074411a4B0e7944Ea8c9C1')
+
+    // Check that the transaction was registered
+    await checkRegisteredTxRemoveOwner(SafeDom, '0xFFcf8FDEE72ac11b5c542428B35EEF5769C409f0')
   })
 
   it('Adds a new owner', async () => {
@@ -171,6 +179,9 @@ describe('DOM > Feature > Settings - Manage owners', () => {
     expect(ownerRows[0]).toHaveTextContent('0x90F8bf6A479f320ead074411a4B0e7944Ea8c9C1')
     expect(ownerRows[1]).toHaveTextContent(NEW_OWNER_NAME)
     expect(ownerRows[1]).toHaveTextContent(NEW_OWNER_ADDRESS)
+
+    // Check that the transaction was registered
+    await checkRegisteredTxAddOwner(SafeDom, NEW_OWNER_ADDRESS)
   })
 
   it('Replaces an owner', async () => {
@@ -224,5 +235,8 @@ describe('DOM > Feature > Settings - Manage owners', () => {
     expect(ownerRows[0]).toHaveTextContent('0x90F8bf6A479f320ead074411a4B0e7944Ea8c9C1')
     expect(ownerRows[1]).toHaveTextContent(NEW_OWNER_NAME)
     expect(ownerRows[1]).toHaveTextContent(NEW_OWNER_ADDRESS)
+
+    // Check that the transaction was registered
+    await checkRegisteredTxReplaceOwner(SafeDom, '0xFFcf8FDEE72ac11b5c542428B35EEF5769C409f0', NEW_OWNER_ADDRESS)
   })
 })
