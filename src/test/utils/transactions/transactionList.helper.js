@@ -31,7 +31,7 @@ export const checkRegisteredTxSend = async (
   await getLastTransaction(SafeDom)
 
   const txDescription = SafeDom.getAllByTestId(TRANSACTIONS_DESC_SEND_TEST_ID)[0]
-  expect(txDescription).toHaveTextContent(`Send ${ethAmount} ${symbol} ${shortVersionOf(ethAddress, 4)}`)
+  expect(txDescription).toHaveTextContent(`Send ${ethAmount} ${symbol} to:${shortVersionOf(ethAddress, 4)}`)
 }
 
 export const checkRegisteredTxAddOwner = async (
