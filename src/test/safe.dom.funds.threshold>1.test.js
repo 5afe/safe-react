@@ -63,7 +63,7 @@ describe('DOM > Feature > Sending Funds', () => {
 
     // Travel confirm modal
     fireEvent.click(SafeDom.getByTestId(APPROVE_TX_MODAL_SUBMIT_BTN_TEST_ID))
-    await sleep(500)
+    await sleep(2000)
 
     // EXECUTE TX
     fireEvent.click(SafeDom.getByTestId(EXECUTE_TX_BTN_TEST_ID))
