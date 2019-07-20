@@ -13,8 +13,8 @@ import { calculateBalanceOf } from '~/routes/safe/store/actions/fetchTokenBalanc
 import updateActiveTokens from '~/routes/safe/store/actions/updateActiveTokens'
 import '@testing-library/jest-dom/extend-expect'
 import updateSafe from '~/routes/safe/store/actions/updateSafe'
+import { checkRegisteredTxSend, fillAndSubmitSendFundsForm } from './utils/transactions'
 import { BALANCE_ROW_TEST_ID } from '~/routes/safe/components/Balances'
-import { fillAndSubmitSendFundsForm } from './utils/transactions'
 
 afterEach(cleanup)
 
@@ -60,6 +60,9 @@ describe('DOM > Feature > Sending Funds', () => {
     expect(Number(parseInt(receiverBalanceAfterTx, 10) - parseInt(receiverBalanceBeforeTx, 10))).toBeGreaterThan(
       parseInt(ethAmount, 10) - ESTIMATED_GASCOSTS,
     )
+
+    // Check that the transaction was registered
+    await checkRegisteredTxSend(SafeDom, ethAmount, 'ETH', accounts[9])
   })
 
   it('Sends Tokens with threshold = 1', async () => {
@@ -98,5 +101,8 @@ describe('DOM > Feature > Sending Funds', () => {
     expect(Number(safeFunds)).toBe(0)
     const receiverFunds = await calculateBalanceOf(tokenAddress, tokenReceiver, 18)
     expect(receiverFunds).toBe(tokensAmount)
+
+    // Check that the transaction was registered
+    await checkRegisteredTxSend(SafeDom, tokensAmount, 'OMG', tokenReceiver)
   })
 })

@@ -7,6 +7,7 @@ import { TRANSACTION_ROW_TEST_ID } from '~/routes/safe/components/TransactionsNe
 import {
   TRANSACTIONS_DESC_ADD_OWNER_TEST_ID,
   TRANSACTIONS_DESC_REMOVE_OWNER_TEST_ID,
+  TRANSACTIONS_DESC_SEND_TEST_ID,
 } from '~/routes/safe/components/TransactionsNew/TxsTable/ExpandedTx/TxDescription'
 
 export const getLastTransaction = async (SafeDom: React.Component<any, any>) => {
@@ -19,6 +20,18 @@ export const getLastTransaction = async (SafeDom: React.Component<any, any>) => 
   const transactionRows = SafeDom.getAllByTestId(TRANSACTION_ROW_TEST_ID)
   expect(transactionRows.length).toBe(1)
   fireEvent.click(transactionRows[0])
+}
+
+export const checkRegisteredTxSend = async (
+  SafeDom: React.Component<any, any>,
+  ethAmount: number,
+  symbol: string,
+  ethAddress: string,
+) => {
+  await getLastTransaction(SafeDom)
+
+  const txDescription = SafeDom.getAllByTestId(TRANSACTIONS_DESC_SEND_TEST_ID)[0]
+  expect(txDescription).toHaveTextContent(`Send ${ethAmount} ${symbol} ${shortVersionOf(ethAddress, 4)}`)
 }
 
 export const checkRegisteredTxAddOwner = async (
