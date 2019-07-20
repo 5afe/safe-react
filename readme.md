@@ -35,28 +35,27 @@ yarn start
 
 ## Running the tests
 
-To run the test, you'll need to migrate contracts `safe-contracts` to the local ganache-cli
-
-1. Migrate Safe Contracts:
+1. Run `transaction-history-service`
 ```
-git clone https://github.com/gnosis/safe-contracts.git
-cd safe-contracts
-yarn
-ganache-cli -l 7000000 -d
-npx truffle migrate
-```
-2. Migrate Token Contracts for the tests:
-Inside `safe-react` directory
-```
-npx truffle migrate
-```
-3. Run `transaction-history-service`
-```
-git clone https://github.com/gnosis/safe-transaction-history.git
+git clone https://github.com/gnosis/safe-transaction-service.git
 cd safe-transaction-history
 git checkout develop
 docker-compose build
 docker-compose up -d
+```
+Check that the service is running at https://localhost:8000
+
+2. Migrate Safe Contracts:
+```
+git clone https://github.com/gnosis/safe-contracts.git
+cd safe-contracts
+yarn
+npx truffle migrate
+```
+3. Migrate Token Contracts for the tests:
+Inside `safe-react` directory
+```
+npx truffle migrate
 ```
 4. Run the tests:
 ```
