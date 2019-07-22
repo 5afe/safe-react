@@ -37,10 +37,6 @@ export const getEtherScanLink = (type: 'address' | 'tx', value: string, network:
 let web3
 export const getWeb3 = () => web3 || (window.web3 && new Web3(window.web3.currentProvider)) || (window.ethereum && new Web3(window.ethereum))
 
-export const setProvider = (provider: Object) => {
-  web3 = new Web3(provider)
-}
-
 const getProviderName: Function = (web3Provider): boolean => {
   let name
 
@@ -70,7 +66,7 @@ const getNetworkIdFrom = async (web3Provider) => {
   return networkId
 }
 
-export const getProviderInfo: Function = async (): Promise<ProviderProps> => {
+export const getProviderInfo: Function = async (provider): Promise<ProviderProps> => {
   let web3Provider
 
   if (window.ethereum) {

@@ -95,8 +95,7 @@ const Welcome = ({ provider }: Props) => (
               network: 'mainnet', // optional
             },
           }}
-          onConnect={(provider: any) => {
-            onConnect(provider)
+          onConnect={(connectedProvider: any) => {
           }}
         />
       </Block>
