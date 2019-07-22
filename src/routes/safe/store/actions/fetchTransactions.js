@@ -38,6 +38,19 @@ type TxServiceModel = {
   isExecuted: boolean,
 }
 
+const compareConfirmations = (a, b) => {
+  const confA = a.hash.toLowerCase()
+  const confB = b.hash.toLowerCase()
+
+  let comparison = 0
+  if (confA > confB) {
+    comparison = 1
+  } else if (confA < confB) {
+    comparison = -1
+  }
+  return comparison
+}
+
 export const buildTransactionFrom = async (
   safeAddress: string,
   tx: TxServiceModel,
@@ -59,7 +72,7 @@ export const buildTransactionFrom = async (
   const modifySettingsTx = tx.to === safeAddress && Number(tx.value) === 0 && !!tx.data
   const cancellationTx = tx.to === safeAddress && Number(tx.value) === 0 && !tx.data
   const isTokenTransfer = await isAddressAToken(tx.to)
-  const creationTxHash = confirmations.first().hash
+  const creationTxHash = confirmations.sort(compareConfirmations).first().hash
 
   let executionTxHash
   const executionTx = confirmations.find(conf => conf.type === TX_TYPE_EXECUTION)
