@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react'
+import Web3Connect from 'web3connect'
 import { withStyles } from '@material-ui/core/styles'
 import Paragraph from '~/components/layout/Paragraph'
 import Button from '~/components/layout/Button'
@@ -48,11 +49,21 @@ const ConnectDetails = ({ classes, onConnect }: Props) => (
       <CircleDot keySize={32} circleSize={75} dotSize={25} dotTop={50} dotRight={25} center mode="error" />
     </Row>
     <Row className={classes.connect}>
-      <Button onClick={onConnect} size="medium" variant="contained" color="primary" fullWidth>
-        <Paragraph className={classes.connectText} size="sm" weight="regular" color="white" noMargin>
-          CONNECT
-        </Paragraph>
-      </Button>
+      <Web3Connect.Button
+        providerOptions={{
+          portis: {
+            id: 'PORTIS_ID', // required
+            network: 'mainnet', // optional
+          },
+          fortmatic: {
+            key: 'FORTMATIC_KEY', // required
+            network: 'mainnet', // optional
+          },
+        }}
+        onConnect={(provider: any) => {
+          onConnect(provider)
+        }}
+      />
     </Row>
   </React.Fragment>
 )

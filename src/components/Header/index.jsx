@@ -4,7 +4,8 @@ import { connect } from 'react-redux'
 import { logComponentStack, type Info } from '~/utils/logBoundaries'
 import { SharedSnackbarConsumer, type Variant } from '~/components/SharedSnackBar'
 import { WALLET_ERROR_MSG } from '~/logic/wallets/store/actions'
-import { getProviderInfo } from '~/logic/wallets/getWeb3'
+import { getProviderInfo, setProvider } from '~/logic/wallets/getWeb3'
+import type { ProviderProps } from '~/logic/wallets/store/model/provider'
 import ProviderAccesible from './component/ProviderInfo/ProviderAccesible'
 import UserDetails from './component/ProviderDetails/UserDetails'
 import ProviderDisconnected from './component/ProviderInfo/ProviderDisconnected'
@@ -27,8 +28,10 @@ class HeaderComponent extends React.PureComponent<Props, State> {
     hasError: false,
   }
 
+  providerListener: IntervalID
+
   componentDidMount() {
-    this.onConnect()
+    // this.onConnect()
   }
 
   componentDidCatch(error: Error, info: Info) {
@@ -46,11 +49,15 @@ class HeaderComponent extends React.PureComponent<Props, State> {
     removeProvider(openSnackbar)
   }
 
-  onConnect = async () => {
+  onConnect = async (provider) => {
     const { fetchProvider, openSnackbar } = this.props
 
     clearInterval(this.providerListener)
+    if (provider) {
+      setProvider(provider)
+    }
     let currentProvider: ProviderProps = await getProviderInfo()
+
     fetchProvider(currentProvider, openSnackbar)
 
     this.providerListener = setInterval(async () => {
