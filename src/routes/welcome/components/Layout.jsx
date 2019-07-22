@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react'
+import Web3Connect from 'web3connect'
 import Block from '~/components/layout/Block'
 import Heading from '~/components/layout/Heading'
 import Img from '~/components/layout/Img'
@@ -72,12 +73,34 @@ const Welcome = ({ provider }: Props) => (
       <br />
       transaction costs as well as an enhanced user experience.
     </Heading>
-    <Block className={styles.safeActions} margin="md">
-      <CreateSafe size="large" provider={provider} />
-    </Block>
-    <Block className={styles.safeActions} margin="md">
-      <LoadSafe size="large" provider={provider} />
-    </Block>
+    {provider ? (
+      <>
+        <Block className={styles.safeActions} margin="md">
+          <CreateSafe size="large" provider={provider} />
+        </Block>
+        <Block className={styles.safeActions} margin="md">
+          <LoadSafe size="large" provider={provider} />
+        </Block>
+      </>
+    ) : (
+      <Block className={styles.safeActions} margin="md">
+        <Web3Connect.Button
+          providerOptions={{
+            portis: {
+              id: 'PORTIS_ID', // required
+              network: 'mainnet', // optional
+            },
+            fortmatic: {
+              key: 'FORTMATIC_KEY', // required
+              network: 'mainnet', // optional
+            },
+          }}
+          onConnect={(provider: any) => {
+            onConnect(provider)
+          }}
+        />
+      </Block>
+    )}
   </Block>
 )
 
