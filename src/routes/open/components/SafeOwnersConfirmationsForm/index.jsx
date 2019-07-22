@@ -105,6 +105,12 @@ const SafeOwners = (props: Props) => {
   }
 
   const handleScan = (value) => {
+    let scannedAddress = value
+
+    if (scannedAddress.startsWith('ethereum:')) {
+      scannedAddress = scannedAddress.replace('ethereum:', '')
+    }
+
     form.mutators.setValue(scanQrForOwnerName, value)
     closeQrModal()
   }
@@ -183,7 +189,7 @@ const SafeOwners = (props: Props) => {
         </Button>
       </Row>
       <Block margin="md" padding="md" className={classes.owner}>
-        <Paragraph noMargin size="md" color="primary" weight="bolder">
+        <Paragraph size="md" color="primary">
           Any transaction requires the confirmation of:
         </Paragraph>
         <Row margin="xl" align="center">
