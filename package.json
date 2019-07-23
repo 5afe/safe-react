@@ -23,7 +23,6 @@
     "start": "node scripts/start.js",
     "storybook": "start-storybook -p 6006",
     "test": "NODE_ENV=test && node scripts/test.js --env=jsdom",
-    "test-local": "NODE_ENV=test && node scripts/test.js --env=jsdom",
     "format": "prettier-eslint \"src/**/*.js\" --write"
   },
   "pre-commit": [
