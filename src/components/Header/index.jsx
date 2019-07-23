@@ -2,26 +2,24 @@
 import * as React from 'react'
 import { connect } from 'react-redux'
 import { logComponentStack, type Info } from '~/utils/logBoundaries'
-import { SharedSnackbarConsumer, type Variant } from '~/components/SharedSnackBar'
 import { WALLET_ERROR_MSG } from '~/logic/wallets/store/actions'
+import { SharedSnackbarConsumer, type Variant } from '~/components/SharedSnackBar'
 import Web3Integration from '~/logic/wallets/web3Integration'
-import type { ProviderProps } from '~/logic/wallets/store/model/provider'
 import ProviderAccesible from './component/ProviderInfo/ProviderAccesible'
 import UserDetails from './component/ProviderDetails/UserDetails'
 import ProviderDisconnected from './component/ProviderInfo/ProviderDisconnected'
 import ConnectDetails from './component/ProviderDetails/ConnectDetails'
 import Layout from './component/Layout'
-import actions, { type Actions } from './actions'
 import selector, { type SelectorProps } from './selector'
 
-type Props = Actions &
-  SelectorProps & {
-    openSnackbar: (message: string, variant: Variant) => void,
-  }
+type Props = SelectorProps & {
+  openSnackbar: (message: string, variant: Variant) => void,
+}
 
 type State = {
   hasError: boolean,
 }
+
 
 class HeaderComponent extends React.PureComponent<Props, State> {
   state = {
@@ -43,17 +41,13 @@ class HeaderComponent extends React.PureComponent<Props, State> {
   }
 
   onDisconnect = () => {
-    const { removeProvider, openSnackbar } = this.props
-
     Web3Integration.disconnect()
   }
 
   onConnect = async (provider) => {
-    console.log({provider})
     if (!provider) {
       return
     }
-    const { openSnackbar } = this.props
 
     Web3Integration.setWeb3(provider)
   }
@@ -102,7 +96,7 @@ class HeaderComponent extends React.PureComponent<Props, State> {
 
 const Header = connect(
   selector,
-  actions,
+  null,
 )(HeaderComponent)
 
 const HeaderSnack = () => (

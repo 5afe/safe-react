@@ -61,7 +61,6 @@ const ConnectDetails = ({ classes, onConnect }: Props) => (
           },
         }}
         onConnect={(provider: any) => {
-          console.log('button 1')
           onConnect(provider)
         }}
       />
