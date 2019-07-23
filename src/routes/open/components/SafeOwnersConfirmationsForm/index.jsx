@@ -111,7 +111,7 @@ const SafeOwners = (props: Props) => {
       scannedAddress = scannedAddress.replace('ethereum:', '')
     }
 
-    form.mutators.setValue(scanQrForOwnerName, value)
+    form.mutators.setValue(scanQrForOwnerName, scannedAddress)
     closeQrModal()
   }
 
