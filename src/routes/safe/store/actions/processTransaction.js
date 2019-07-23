@@ -44,7 +44,6 @@ const processTransaction = (
   const shouldExecute = threshold === tx.confirmations.size || approveAndExecute
   const sigs = generateSignaturesFromTxConfirmations(tx, approveAndExecute && userAddress)
 
-
   let txHash
   if (shouldExecute) {
     openSnackbar('Transaction has been submitted', 'success')
@@ -56,9 +55,7 @@ const processTransaction = (
     openSnackbar('Approval transaction has been confirmed', 'success')
   }
 
-  if (!process.env.NODE_ENV === 'test') {
-    dispatch(fetchTransactions(safeAddress))
-  }
+  dispatch(fetchTransactions(safeAddress))
 
   return txHash
 }

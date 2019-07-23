@@ -23,7 +23,6 @@
     "start": "node scripts/start.js",
     "storybook": "start-storybook -p 6006",
     "test": "NODE_ENV=test && node scripts/test.js --env=jsdom",
-    "test-local": "NODE_ENV=test && node scripts/test.js --env=jsdom",
     "format": "prettier-eslint \"src/**/*.js\" --write"
   },
   "pre-commit": [
@@ -54,7 +53,7 @@
     "react-hot-loader": "4.12.7",
     "react-infinite-scroll-component": "^4.5.2",
     "react-redux": "7.1.0",
-    "react-router-dom": "^4.3.1",
+    "react-router-dom": "^5.0.1",
     "recompose": "^0.30.0",
     "redux": "4.0.4",
     "redux-actions": "^2.3.0",
@@ -104,7 +103,7 @@
     "classnames": "^2.2.5",
     "css-loader": "3.0.0",
     "detect-port": "^1.2.2",
-    "eslint": "6.0.1",
+    "eslint": "5.16.0",
     "eslint-config-airbnb": "17.1.1",
     "eslint-plugin-flowtype": "3.11.1",
     "eslint-plugin-import": "2.18.0",

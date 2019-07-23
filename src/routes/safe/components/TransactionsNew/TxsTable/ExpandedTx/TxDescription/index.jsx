@@ -6,8 +6,13 @@ import Bold from '~/components/layout/Bold'
 import EtherscanLink from '~/components/EtherscanLink'
 import Paragraph from '~/components/layout/Paragraph'
 import Block from '~/components/layout/Block'
-import { md, lg, secondary } from '~/theme/variables'
+import { md, lg } from '~/theme/variables'
 import { getTxData } from './utils'
+
+export const TRANSACTIONS_DESC_ADD_OWNER_TEST_ID = 'tx-description-add-owner'
+export const TRANSACTIONS_DESC_REMOVE_OWNER_TEST_ID = 'tx-description-remove-owner'
+export const TRANSACTIONS_DESC_CHANGE_THRESHOLD_TEST_ID = 'tx-description-change-threshold'
+export const TRANSACTIONS_DESC_SEND_TEST_ID = 'tx-description-send'
 
 export const styles = () => ({
   txDataContainer: {
@@ -33,7 +38,7 @@ type DescriptionDescProps = {
 }
 
 const TransferDescription = ({ value = '', symbol, recipient }: TransferDescProps) => (
-  <Paragraph noMargin>
+  <Paragraph noMargin data-testid={TRANSACTIONS_DESC_SEND_TEST_ID}>
     <Bold>
       Send
       {' '}
@@ -51,21 +56,21 @@ to:
 const SettingsDescription = ({ removedOwner, addedOwner, newThreshold }: DescriptionDescProps) => (
   <>
     {removedOwner && (
-      <Paragraph>
+      <Paragraph data-testid={TRANSACTIONS_DESC_REMOVE_OWNER_TEST_ID}>
         <Bold>Remove owner:</Bold>
         <br />
         <EtherscanLink type="address" value={removedOwner} />
       </Paragraph>
     )}
     {addedOwner && (
-      <Paragraph>
+      <Paragraph data-testid={TRANSACTIONS_DESC_ADD_OWNER_TEST_ID}>
         <Bold>Add owner:</Bold>
         <br />
         <EtherscanLink type="address" value={addedOwner} />
       </Paragraph>
     )}
     {newThreshold && (
-      <Paragraph>
+      <Paragraph data-testid={TRANSACTIONS_DESC_CHANGE_THRESHOLD_TEST_ID}>
         <Bold>Change required confirmations:</Bold>
         <br />
         {newThreshold}
