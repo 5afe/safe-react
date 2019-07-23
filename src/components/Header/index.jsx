@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import { logComponentStack, type Info } from '~/utils/logBoundaries'
 import { SharedSnackbarConsumer, type Variant } from '~/components/SharedSnackBar'
 import { WALLET_ERROR_MSG } from '~/logic/wallets/store/actions'
-import { getProviderInfo } from '~/logic/wallets/getWeb3'
+import Web3Integration from '~/logic/wallets/web3Integration'
 import type { ProviderProps } from '~/logic/wallets/store/model/provider'
 import ProviderAccesible from './component/ProviderInfo/ProviderAccesible'
 import UserDetails from './component/ProviderDetails/UserDetails'
@@ -44,29 +44,18 @@ class HeaderComponent extends React.PureComponent<Props, State> {
 
   onDisconnect = () => {
     const { removeProvider, openSnackbar } = this.props
-    clearInterval(this.providerListener)
 
-    removeProvider(openSnackbar)
+    Web3Integration.disconnect()
   }
 
   onConnect = async (provider) => {
+    console.log({provider})
     if (!provider) {
       return
     }
-    const { fetchProvider, openSnackbar } = this.props
+    const { openSnackbar } = this.props
 
-    clearInterval(this.providerListener)
-    let currentProvider: ProviderProps = await getProviderInfo(provider)
-
-    fetchProvider(currentProvider, openSnackbar)
-
-    this.providerListener = setInterval(async () => {
-      const newProvider: ProviderProps = await getProviderInfo()
-      if (JSON.stringify(currentProvider) !== JSON.stringify(newProvider)) {
-        fetchProvider(newProvider, openSnackbar)
-      }
-      currentProvider = newProvider
-    }, 2000)
+    Web3Integration.setWeb3(provider)
   }
 
   getProviderInfoBased = () => {

@@ -64,7 +64,7 @@ const Layout = openHoc(({
               <Grow {...TransitionProps}>
                 <ClickAwayListener onClickAway={clickAway} mouseEvent="onClick" touchEvent={false}>
                   <List className={classes.root} component="div">
-                    {providerDetails}
+                    {React.cloneElement(providerDetails, { toggle })}
                   </List>
                 </ClickAwayListener>
               </Grow>

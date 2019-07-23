@@ -13,7 +13,7 @@ export default (openSnackbar: Function) => async (dispatch: ReduxDispatch<*>) =>
   }
 
   const provider: Provider = makeProvider(providerProps)
-  openSnackbar('Wallet disconnected succesfully', 'info')
+  // openSnackbar('Wallet disconnected succesfully', 'info')
 
   dispatch(addProvider(provider))
 }

@@ -3,6 +3,7 @@ import * as React from 'react'
 import Web3Connect from 'web3connect'
 import { withStyles } from '@material-ui/core/styles'
 import Paragraph from '~/components/layout/Paragraph'
+import Web3Integration from '~/logic/wallets/web3Integration'
 import Row from '~/components/layout/Row'
 import { md, lg } from '~/theme/variables'
 import CircleDot from '~/components/Header/component/CircleDot'
@@ -60,6 +61,7 @@ const ConnectDetails = ({ classes, onConnect }: Props) => (
           },
         }}
         onConnect={(provider: any) => {
+          console.log('button 1')
           onConnect(provider)
         }}
       />

@@ -32,6 +32,7 @@ type Props = {
   userAddress: string,
   classes: Object,
   onDisconnect: Function,
+  toggle: Function,
 }
 
 const openIconStyle = {
@@ -101,12 +102,16 @@ const styles = () => ({
 })
 
 const UserDetails = ({
-  provider, connected, network, userAddress, classes, onDisconnect,
+  provider, connected, network, userAddress, classes, onDisconnect, toggle,
 }: Props) => {
   const status = connected ? 'Connected' : 'Connection error'
   const address = userAddress ? shortVersionOf(userAddress, 6) : 'Address not available'
   const identiconAddress = userAddress || 'random'
   const color = connected ? 'primary' : 'warning'
+  const onDisconnectHandler = () => {
+    onDisconnect()
+    toggle()
+  }
 
   return (
     <React.Fragment>
@@ -167,7 +172,7 @@ const UserDetails = ({
       </Row>
       <Hairline margin="xs" />
       <Row className={classes.disconnect}>
-        <Button onClick={onDisconnect} size="medium" variant="contained" color="primary" fullWidth>
+        <Button onClick={onDisconnectHandler} size="medium" variant="contained" color="primary" fullWidth>
           <Paragraph className={classes.disconnectText} size="sm" weight="bold" color="white" noMargin>
             DISCONNECT
           </Paragraph>

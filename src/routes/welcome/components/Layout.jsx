@@ -6,6 +6,7 @@ import Heading from '~/components/layout/Heading'
 import Img from '~/components/layout/Img'
 import Button from '~/components/layout/Button'
 import Link from '~/components/layout/Link'
+import Web3Integration from '~/logic/wallets/web3Integration'
 import { OPEN_ADDRESS, LOAD_ADDRESS } from '~/routes/routes'
 import { marginButtonImg } from '~/theme/variables'
 import styles from './Layout.scss'
@@ -96,6 +97,7 @@ const Welcome = ({ provider }: Props) => (
             },
           }}
           onConnect={(connectedProvider: any) => {
+            Web3Integration.setWeb3(connectedProvider)
           }}
         />
       </Block>
