@@ -42,14 +42,6 @@ class HeaderComponent extends React.PureComponent<Props, State> {
     Web3Integration.disconnect()
   }
 
-  onConnect = async (provider) => {
-    if (!provider) {
-      return
-    }
-
-    Web3Integration.setWeb3(provider)
-  }
-
   getProviderInfoBased = () => {
     const { hasError } = this.state
     const {
@@ -70,7 +62,7 @@ class HeaderComponent extends React.PureComponent<Props, State> {
     } = this.props
 
     if (hasError || !loaded) {
-      return <ConnectDetails onConnect={this.onConnect} />
+      return <ConnectDetails />
     }
 
     return (

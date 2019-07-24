@@ -1,9 +1,9 @@
 // @flow
 import * as React from 'react'
 import { withStyles } from '@material-ui/core/styles'
+import Dot from '@material-ui/icons/FiberManualRecord'
 import Paragraph from '~/components/layout/Paragraph'
 import Col from '~/components/layout/Col'
-import Dot from '@material-ui/icons/FiberManualRecord'
 import { connected as connectedBg, sm } from '~/theme/variables'
 import Identicon from '~/components/Identicon'
 import { shortVersionOf } from '~/logic/wallets/ethAddresses'

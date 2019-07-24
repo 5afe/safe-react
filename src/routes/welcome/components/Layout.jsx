@@ -1,6 +1,6 @@
 // @flow
 import * as React from 'react'
-import Web3Connect from 'web3connect'
+import ConnectButton from '~/components/ConnectButton'
 import Block from '~/components/layout/Block'
 import Heading from '~/components/layout/Heading'
 import Img from '~/components/layout/Img'
@@ -89,21 +89,7 @@ const Welcome = ({ provider }: Props) => (
         <Heading tag="h3" align="center" margin="md">
           Get Started by Connecting a Wallet
         </Heading>
-        <Web3Connect.Button
-          providerOptions={{
-            portis: {
-              id: 'PORTIS_ID', // required
-              network: 'mainnet', // optional
-            },
-            fortmatic: {
-              key: 'FORTMATIC_KEY', // required
-              network: 'mainnet', // optional
-            },
-          }}
-          onConnect={(connectedProvider: any) => {
-            Web3Integration.setWeb3(connectedProvider)
-          }}
-        />
+        <ConnectButton />
       </Block>
     )}
   </Block>

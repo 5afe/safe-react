@@ -154,10 +154,10 @@ class Web3Integration {
     if (!provider) {
       throw new Error('No provider object provided')
     }
-
+    console.log('setting web3')
     this.provider = new Web3(provider)
     const providerInfo = await this.getProviderInfo()
-
+    console.log(providerInfo)
     store.dispatch(fetchProvider(providerInfo))
     this.watch()
   }
