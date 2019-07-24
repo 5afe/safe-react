@@ -4,6 +4,7 @@ import Web3Connect from 'web3connect'
 import Block from '~/components/layout/Block'
 import Heading from '~/components/layout/Heading'
 import Img from '~/components/layout/Img'
+import Paragraph from '~/components/layout/Paragraph'
 import Button from '~/components/layout/Button'
 import Link from '~/components/layout/Link'
 import Web3Integration from '~/logic/wallets/web3Integration'
@@ -65,7 +66,7 @@ const Welcome = ({ provider }: Props) => (
       <br />
       Safe Team Edition
     </Heading>
-    <Heading tag="h4" align="center" margin="xl">
+    <Paragraph align="center" margin="xl">
       The Gnosis Safe Team Edition is geared towards teams managing
       <br />
       shared crypto funds. It is an improvement of the existing Gnosis
@@ -73,7 +74,7 @@ const Welcome = ({ provider }: Props) => (
       MultiSig wallet with redesigned smart contracts, cheaper setup and
       <br />
       transaction costs as well as an enhanced user experience.
-    </Heading>
+    </Paragraph>
     {provider ? (
       <>
         <Block className={styles.safeActions} margin="md">
@@ -84,7 +85,10 @@ const Welcome = ({ provider }: Props) => (
         </Block>
       </>
     ) : (
-      <Block className={styles.safeActions} margin="md">
+      <Block className={styles.connectWallet} margin="md">
+        <Heading tag="h3" align="center" margin="md">
+          Get Started by Connecting a Wallet
+        </Heading>
         <Web3Connect.Button
           providerOptions={{
             portis: {
