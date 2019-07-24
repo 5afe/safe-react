@@ -12,9 +12,9 @@ import Block from '~/components/layout/Block'
 import Paragraph from '~/components/layout/Paragraph'
 import OpenPaper from '~/components/Stepper/OpenPaper'
 import { FIELD_LOAD_NAME, FIELD_LOAD_ADDRESS } from '~/routes/load/components/fields'
-import { getWeb3 } from '~/logic/wallets/getWeb3'
 import SafeProxy from '@gnosis.pm/safe-contracts/build/contracts/Proxy.json'
 import { getSafeMasterContract } from '~/logic/contracts/safeContracts'
+import Web3Integration from '~/logic/wallets/web3Integration'
 
 type Props = {
   classes: Object,
@@ -41,7 +41,7 @@ export const SAFE_MASTERCOPY_ERROR = 'Mastercopy used by this safe is not the sa
 // Don't mind to check if everything is OK inside this function :)
 export const safeFieldsValidation = async (values: Object) => {
   const errors = {}
-  const web3 = getWeb3()
+  const { web3 } = Web3Integration
   const safeAddress = values[FIELD_LOAD_ADDRESS]
   if (!safeAddress || mustBeEthereumAddress(safeAddress) !== undefined) {
     return errors

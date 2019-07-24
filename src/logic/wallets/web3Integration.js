@@ -120,8 +120,21 @@ class Web3Integration {
     }, 2000)
   }
 
-  get getWeb3() {
-    return this.web3
+  async checkForInjectedProvider() {
+    let web3Provider
+
+    if (window.ethereum) {
+      web3Provider = window.ethereum
+      await web3Provider.enable()
+    } else if (window.web3) {
+      web3Provider = window.web3.currentProvider
+    }
+
+    this.setWeb3(web3Provider)
+  }
+
+  get web3() {
+    return this.web3 || (window.web3 && new Web3(window.web3.currentProvider)) || (window.ethereum && new Web3(window.ethereum))
   }
 
   disconnect() {

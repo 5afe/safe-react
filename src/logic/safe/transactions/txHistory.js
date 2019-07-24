@@ -1,6 +1,6 @@
 // @flow
 import axios from 'axios'
-import { getWeb3 } from '~/logic/wallets/getWeb3'
+import Web3Integration from '~/logic/wallets/web3Integration'
 import { getTxServiceUriFrom, getTxServiceHost } from '~/config'
 import { ZERO_ADDRESS } from '~/logic/wallets/ethAddresses'
 
@@ -30,9 +30,10 @@ const calculateBodyFrom = async (
     ZERO_ADDRESS,
     nonce,
   )
+  const { web3 } = Web3Integration
 
   return {
-    to: getWeb3().utils.toChecksumAddress(to),
+    to: web3.utils.toChecksumAddress(to),
     value: valueInWei,
     data,
     operation,
@@ -44,14 +45,14 @@ const calculateBodyFrom = async (
     refundReceiver: ZERO_ADDRESS,
     contractTransactionHash,
     transactionHash,
-    sender: getWeb3().utils.toChecksumAddress(sender),
+    sender: web3.utils.toChecksumAddress(sender),
     confirmationType,
   }
 }
 
 export const buildTxServiceUrl = (safeAddress: string) => {
   const host = getTxServiceHost()
-  const address = getWeb3().utils.toChecksumAddress(safeAddress)
+  const address = Web3Integration.web3.utils.toChecksumAddress(safeAddress)
   const base = getTxServiceUriFrom(address)
   return `${host}${base}`
 }

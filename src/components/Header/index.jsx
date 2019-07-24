@@ -26,10 +26,8 @@ class HeaderComponent extends React.PureComponent<Props, State> {
     hasError: false,
   }
 
-  providerListener: IntervalID
-
   componentDidMount() {
-    this.onConnect()
+    Web3Integration.checkForInjectedProvider()
   }
 
   componentDidCatch(error: Error, info: Info) {
@@ -94,10 +92,10 @@ class HeaderComponent extends React.PureComponent<Props, State> {
   }
 }
 
-const Header = connect(
+const Header = connect<Object, Object, ?Function, ?Object>(
   selector,
   {
-    showSnackbarMsg: showSnackbarMsgAction
+    showSnackbarMsg: showSnackbarMsgAction,
   },
 )(HeaderComponent)
 

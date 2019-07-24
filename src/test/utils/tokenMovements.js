@@ -1,13 +1,13 @@
 // @flow
 import contract from 'truffle-contract'
-import { getBalanceInEtherOf, getWeb3 } from '~/logic/wallets/getWeb3'
+import Web3Integration from '~/logic/wallets/web3Integration'
 import { ensureOnce } from '~/utils/singleton'
 import { toNative } from '~/logic/wallets/tokens'
 import TokenOMG from '../../../build/contracts/TokenOMG'
 import TokenRDN from '../../../build/contracts/TokenRDN'
 
 export const sendEtherTo = async (address: string, eth: string) => {
-  const web3 = getWeb3()
+  const { web3 } = Web3Integration
   const accounts = await web3.eth.getAccounts()
   const { toBN, toWei } = web3.utils
   const txData = { from: accounts[0], to: address, value: toBN(toWei(eth, 'ether')) }
@@ -15,7 +15,7 @@ export const sendEtherTo = async (address: string, eth: string) => {
 }
 
 export const checkBalanceOf = async (addressToTest: string, value: string) => {
-  const safeBalance = await getBalanceInEtherOf(addressToTest)
+  const safeBalance = await Web3Integration.getBalanceInEtherOf(addressToTest)
   expect(safeBalance).toBe(value)
 }
 
@@ -45,7 +45,7 @@ export const getFirstTokenContract = ensureOnce(createTokenOMGContract)
 export const getSecondTokenContract = ensureOnce(createTokenRDNContract)
 
 export const sendTokenTo = async (safe: string, value: string, tokenContract?: any) => {
-  const web3 = getWeb3()
+  const { web3 } = Web3Integration
   const accounts = await web3.eth.getAccounts()
 
   const OMGToken = tokenContract || (await getFirstTokenContract(web3, accounts[0]))

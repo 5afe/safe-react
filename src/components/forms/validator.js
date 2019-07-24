@@ -1,6 +1,6 @@
 // @flow
 import { type FieldValidator } from 'final-form'
-import { getWeb3 } from '~/logic/wallets/getWeb3'
+import Web3Integration from '~/logic/wallets/web3Integration'
 
 export const simpleMemoize = (fn: Function) => {
   let lastArg
@@ -59,7 +59,7 @@ export const maxValue = (max: number) => (value: string) => {
 export const ok = () => undefined
 
 export const mustBeEthereumAddress = simpleMemoize((address: Field) => {
-  const isAddress: boolean = getWeb3().utils.isAddress(address)
+  const isAddress: boolean = Web3Integration.web3.utils.isAddress(address)
 
   return isAddress ? undefined : 'Address should be a valid Ethereum address'
 })

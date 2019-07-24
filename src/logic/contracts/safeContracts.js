@@ -3,7 +3,7 @@ import contract from 'truffle-contract'
 import ProxyFactorySol from '@gnosis.pm/safe-contracts/build/contracts/ProxyFactory.json'
 import GnosisSafeSol from '@gnosis.pm/safe-contracts/build/contracts/GnosisSafe.json'
 import { ensureOnce } from '~/utils/singleton'
-import { getWeb3 } from '~/logic/wallets/getWeb3'
+import Web3Integration from '~/logic/wallets/web3Integration'
 import { calculateGasOf, calculateGasPrice } from '~/logic/wallets/ethTransactions'
 import { ZERO_ADDRESS } from '~/logic/wallets/ethAddresses'
 
@@ -30,7 +30,7 @@ export const getGnosisSafeContract = ensureOnce(createGnosisSafeContract)
 const getCreateProxyFactoryContract = ensureOnce(createProxyFactoryContract)
 
 const instanciateMasterCopies = async () => {
-  const web3 = getWeb3()
+  const { web3 } = Web3Integration
 
   // Create ProxyFactory Master Copy
   const ProxyFactory = getCreateProxyFactoryContract(web3)
@@ -43,7 +43,7 @@ const instanciateMasterCopies = async () => {
 
 // ONLY USED IN TEST ENVIRONMENT
 const createMasterCopies = async () => {
-  const web3 = getWeb3()
+  const { web3 } = Web3Integration
   const accounts = await web3.eth.getAccounts()
   const userAccount = accounts[0]
 
@@ -76,7 +76,7 @@ export const deploySafeContract = async (safeAccounts: string[], numConfirmation
 }
 
 export const getGnosisSafeInstanceAt = async (safeAddress: string) => {
-  const web3 = getWeb3()
+  const { web3 } = Web3Integration
   const GnosisSafe = await getGnosisSafeContract(web3)
   const gnosisSafe = await GnosisSafe.at(safeAddress)
 

@@ -1,5 +1,5 @@
 // @flow
-import { getWeb3 } from '~/logic/wallets/getWeb3'
+import Web3Integration from '~/logic/wallets/web3Integration'
 import { EMPTY_DATA } from '~/logic/wallets/ethTransactions'
 
 const generateTypedDataFrom = async (
@@ -71,7 +71,7 @@ export const generateMetamaskSignature = async (
   operation: number,
   txGasEstimate: number,
 ) => {
-  const web3 = getWeb3()
+  const { web3 } = Web3Integration
   const typedData = await generateTypedDataFrom(
     safe,
     safeAddress,

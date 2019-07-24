@@ -1,6 +1,6 @@
 // @flow
 import { BigNumber } from 'bignumber.js'
-import { getWeb3 } from '~/logic/wallets/getWeb3'
+import Web3Integration from '~/logic/wallets/web3Integration'
 import { EMPTY_DATA } from '~/logic/wallets/ethTransactions'
 import { getGnosisSafeInstanceAt } from '~/logic/contracts/safeContracts'
 
@@ -72,7 +72,7 @@ export const generateTxGasEstimateFrom = async (
     }
 
     const estimateData = safeInstance.contract.methods.requiredTxGas(to, valueInWei, data, operation).encodeABI()
-    const estimateResponse = await getWeb3().eth.call({
+    const estimateResponse = await Web3Integration.web3.eth.call({
       to: safeAddress,
       from: safeAddress,
       data: estimateData,

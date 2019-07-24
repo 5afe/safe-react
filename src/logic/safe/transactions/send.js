@@ -1,5 +1,5 @@
 // @flow
-import { getWeb3 } from '~/logic/wallets/getWeb3'
+import Web3Integration from '~/logic/wallets/web3Integration'
 import { getStandardTokenContract } from '~/logic/tokens/store/actions/fetchTokens'
 import { EMPTY_DATA } from '~/logic/wallets/ethTransactions'
 import { isEther } from '~/logic/tokens/utils/tokenHelpers'
@@ -122,7 +122,7 @@ export const executeTransaction = async (
 
 export const createTransaction = async (safeAddress: string, to: string, valueInEth: string, token: Token) => {
   const safeInstance = await getGnosisSafeInstanceAt(safeAddress)
-  const web3 = getWeb3()
+  const { web3 } = Web3Integration
   const from = web3.currentProvider.selectedAddress
   const threshold = await safeInstance.getThreshold()
   const nonce = (await safeInstance.nonce()).toString()
