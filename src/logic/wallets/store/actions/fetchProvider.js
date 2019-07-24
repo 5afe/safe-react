@@ -44,7 +44,6 @@ const handleProviderNotification = (openSnackbar: Function, provider: ProviderPr
   openSnackbar(msg, variant)
 }
 
-export default (provider: ProviderProps, openSnackbar: Function) => (dispatch: ReduxDispatch<*>) => {
-  // handleProviderNotification(openSnackbar, provider)
+export default (provider: ProviderProps) => (dispatch: ReduxDispatch<*>) => {
   processProviderResponse(dispatch, provider)
 }
