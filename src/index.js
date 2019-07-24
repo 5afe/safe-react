@@ -7,7 +7,6 @@ import Root from '~/components/Root'
 import { store } from '~/store'
 import loadSafesFromStorage from '~/routes/safe/store/actions/loadSafesFromStorage'
 import loadActiveTokens from '~/logic/tokens/store/actions/loadActiveTokens'
-import showSnackbarMsg from './components/Snackbar/store/actions/showSnackbarMsg'
 
 if (process.env.NODE_ENV !== 'production') {
   // eslint-disable-next-line

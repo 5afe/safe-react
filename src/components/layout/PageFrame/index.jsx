@@ -2,7 +2,7 @@
 import * as React from 'react'
 import Footer from '~/components/Footer'
 import Header from '~/components/Header'
-import Snackbar from '~/components/Snackbar/components/Snackbar'
+import Snackbar from '~/components/Snackbar/Snackbar'
 import styles from './index.scss'
 
 type Props = {

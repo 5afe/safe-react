@@ -3,8 +3,8 @@ import * as React from 'react'
 import { connect } from 'react-redux'
 import { logComponentStack, type Info } from '~/utils/logBoundaries'
 import { WALLET_ERROR_MSG } from '~/logic/wallets/store/actions'
-import { SharedSnackbarConsumer, type Variant } from '~/components/SharedSnackBar'
 import Web3Integration from '~/logic/wallets/web3Integration'
+import showSnackbarMsgAction from '~/components/Snackbar/store/actions/showSnackbarMsg'
 import ProviderAccesible from './component/ProviderInfo/ProviderAccesible'
 import UserDetails from './component/ProviderDetails/UserDetails'
 import ProviderDisconnected from './component/ProviderInfo/ProviderDisconnected'
@@ -13,7 +13,7 @@ import Layout from './component/Layout'
 import selector, { type SelectorProps } from './selector'
 
 type Props = SelectorProps & {
-  openSnackbar: (message: string, variant: Variant) => void,
+  showSnackbarMsg: (message: string, variant: string) => void,
 }
 
 type State = {
@@ -33,9 +33,9 @@ class HeaderComponent extends React.PureComponent<Props, State> {
   }
 
   componentDidCatch(error: Error, info: Info) {
-    const { openSnackbar } = this.props
+    const { showSnackbarMsg } = this.props
     this.setState({ hasError: true })
-    openSnackbar(WALLET_ERROR_MSG, 'error')
+    showSnackbarMsg(WALLET_ERROR_MSG, 'error')
 
     logComponentStack(error, info)
   }
@@ -96,11 +96,9 @@ class HeaderComponent extends React.PureComponent<Props, State> {
 
 const Header = connect(
   selector,
-  null,
+  {
+    showSnackbarMsg: showSnackbarMsgAction
+  },
 )(HeaderComponent)
 
-const HeaderSnack = () => (
-  <SharedSnackbarConsumer>{({ openSnackbar }) => <Header openSnackbar={openSnackbar} />}</SharedSnackbarConsumer>
-)
-
-export default HeaderSnack
+export default Header
