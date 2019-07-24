@@ -3,10 +3,10 @@ import * as React from 'react'
 import { List } from 'immutable'
 import { connect } from 'react-redux'
 import { Snackbar } from '@material-ui/core'
-import SnackbarContent from '~/components/SnackbarContent'
-import { type Message } from '../store/models/index'
-import { snackbarMessagesSelector } from '../store/selectors'
-import { hideSnackbarMessage as hideSnackbarMsg } from '../store/actions'
+import SnackbarContent from './SnackbarContent'
+import { type Message } from './store/models/index'
+import { snackbarMessagesSelector } from './store/selectors'
+import { hideSnackbarMessage as hideSnackbarMsg } from './store/actions'
 
 type Props = {
   children: React.Node,
