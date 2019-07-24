@@ -23,9 +23,9 @@ import {
 } from '~/components/forms/validator'
 import { styles } from './style'
 
-export const ADD_OWNER_NAME_INPUT_TESTID = 'add-owner-name-input'
-export const ADD_OWNER_ADDRESS_INPUT_TESTID = 'add-owner-address-testid'
-export const ADD_OWNER_NEXT_BTN_TESTID = 'add-owner-next-btn'
+export const ADD_OWNER_NAME_INPUT_TEST_ID = 'add-owner-name-input'
+export const ADD_OWNER_ADDRESS_INPUT_TEST_ID = 'add-owner-address-testid'
+export const ADD_OWNER_NEXT_BTN_TEST_ID = 'add-owner-next-btn'
 
 type Props = {
   onClose: () => void,
@@ -71,7 +71,7 @@ const OwnerForm = ({
                     placeholder="Owner name*"
                     text="Owner name*"
                     className={classes.addressInput}
-                    testId={ADD_OWNER_NAME_INPUT_TESTID}
+                    testId={ADD_OWNER_NAME_INPUT_TEST_ID}
                   />
                 </Col>
               </Row>
@@ -85,7 +85,7 @@ const OwnerForm = ({
                     placeholder="Owner address*"
                     text="Owner address*"
                     className={classes.addressInput}
-                    testId={ADD_OWNER_ADDRESS_INPUT_TESTID}
+                    testId={ADD_OWNER_ADDRESS_INPUT_TEST_ID}
                   />
                 </Col>
               </Row>
@@ -101,7 +101,7 @@ const OwnerForm = ({
                 variant="contained"
                 minWidth={140}
                 color="primary"
-                testId={ADD_OWNER_NEXT_BTN_TESTID}
+                testId={ADD_OWNER_NEXT_BTN_TEST_ID}
               >
                 Next
               </Button>

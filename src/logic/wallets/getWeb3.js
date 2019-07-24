@@ -57,6 +57,10 @@ const getProviderName: Function = (web3Provider): boolean => {
 const getAccountFrom: Function = async (web3Provider): Promise<string | null> => {
   const accounts = await web3Provider.eth.getAccounts()
 
+  if (process.env.NODE_ENV === 'test' && window.testAccountIndex) {
+    return accounts[window.testAccountIndex]
+  }
+
   return accounts && accounts.length > 0 ? accounts[0] : null
 }
 

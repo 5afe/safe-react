@@ -13,11 +13,12 @@ import { calculateBalanceOf } from '~/routes/safe/store/actions/fetchTokenBalanc
 import updateActiveTokens from '~/routes/safe/store/actions/updateActiveTokens'
 import '@testing-library/jest-dom/extend-expect'
 import updateSafe from '~/routes/safe/store/actions/updateSafe'
+import { checkRegisteredTxSend, fillAndSubmitSendFundsForm } from './utils/transactions'
 import { BALANCE_ROW_TEST_ID } from '~/routes/safe/components/Balances'
 
 afterEach(cleanup)
 
-describe('DOM > Feature > Funds', () => {
+describe('DOM > Feature > Sending Funds', () => {
   let store
   let safeAddress: string
   let accounts
@@ -31,8 +32,10 @@ describe('DOM > Feature > Funds', () => {
   it('Sends ETH with threshold = 1', async () => {
     // GIVEN
     const ethAmount = '5'
-    await sendEtherTo(safeAddress, ethAmount)
-    const balanceAfterSendingEthToSafe = await Web3Integration.getBalanceInEtherOf(accounts[0])
+    // the tests are run in parallel, lets use account 9 because it's not used anywhere else
+    // (in other tests we trigger transactions and pay gas for it, so we can't really make reliable
+    // assumptions on account's ETH balance)
+    await sendEtherTo(safeAddress, ethAmount, 9)
 
     // WHEN
     const SafeDom = renderSafeView(store, safeAddress)
@@ -44,29 +47,21 @@ describe('DOM > Feature > Funds', () => {
     const sendButton = SafeDom.getByTestId('balance-send-btn')
     fireEvent.click(sendButton)
 
-    // Fill first send funds screen
-    const recipientInput = SafeDom.getByPlaceholderText('Recipient*')
-    const amountInput = SafeDom.getByPlaceholderText('Amount*')
-    const reviewBtn = SafeDom.getByTestId('review-tx-btn')
-    fireEvent.change(recipientInput, { target: { value: accounts[0] } })
-    fireEvent.change(amountInput, { target: { value: ethAmount } })
-    await sleep(200)
-    fireEvent.click(reviewBtn)
-
-    // Submit the tx (Review Tx screen)
-    const submitBtn = SafeDom.getByTestId('submit-tx-btn')
-    fireEvent.click(submitBtn)
-    await sleep(1000)
+    const receiverBalanceBeforeTx = await Web3Integration.getBalanceInEtherOf(accounts[9])
+    await fillAndSubmitSendFundsForm(SafeDom, sendButton, ethAmount, accounts[9])
 
     // THEN
     const safeFunds = await Web3Integration.getBalanceInEtherOf(safeAddress)
     expect(Number(safeFunds)).toBe(0)
+    const receiverBalanceAfterTx = await Web3Integration.getBalanceInEtherOf(accounts[9])
 
-    const receiverFunds = await Web3Integration.getBalanceInEtherOf(accounts[0])
     const ESTIMATED_GASCOSTS = 0.3
-    expect(Number(parseInt(receiverFunds, 10) - parseInt(balanceAfterSendingEthToSafe, 10))).toBeGreaterThan(
+    expect(Number(parseInt(receiverBalanceAfterTx, 10) - parseInt(receiverBalanceBeforeTx, 10))).toBeGreaterThan(
       parseInt(ethAmount, 10) - ESTIMATED_GASCOSTS,
     )
+
+    // Check that the transaction was registered
+    await checkRegisteredTxSend(SafeDom, ethAmount, 'ETH', accounts[9])
   })
 
   it('Sends Tokens with threshold = 1', async () => {
@@ -97,26 +92,16 @@ describe('DOM > Feature > Funds', () => {
     expect(balanceRows.length).toBe(2)
     const sendButtons = SafeDom.getAllByTestId('balance-send-btn')
     expect(sendButtons.length).toBe(2)
-    fireEvent.click(sendButtons[1])
 
-    // Fill first send funds screen
-    const recipientInput = SafeDom.getByPlaceholderText('Recipient*')
-    const amountInput = SafeDom.getByPlaceholderText('Amount*')
-    const reviewBtn = SafeDom.getByTestId('review-tx-btn')
-    fireEvent.change(recipientInput, { target: { value: tokenReceiver } })
-    fireEvent.change(amountInput, { target: { value: tokensAmount } })
-    await sleep(200)
-    fireEvent.click(reviewBtn)
-
-    // Submit the tx (Review Tx screen)
-    const submitBtn = SafeDom.getByTestId('submit-tx-btn')
-    fireEvent.click(submitBtn)
-    await sleep(1000)
+    await fillAndSubmitSendFundsForm(SafeDom, sendButtons[1], tokensAmount, tokenReceiver)
 
     // THEN
     const safeFunds = await calculateBalanceOf(tokenAddress, safeAddress, 18)
     expect(Number(safeFunds)).toBe(0)
     const receiverFunds = await calculateBalanceOf(tokenAddress, tokenReceiver, 18)
     expect(receiverFunds).toBe(tokensAmount)
+
+    // Check that the transaction was registered
+    await checkRegisteredTxSend(SafeDom, tokensAmount, 'OMG', tokenReceiver)
   })
 })

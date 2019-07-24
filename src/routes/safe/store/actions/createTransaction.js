@@ -34,9 +34,7 @@ const createTransaction = (
     dispatch(showSnackbarMsg('Approval transaction has been confirmed', 'success'))
   }
 
-  if (!process.env.NODE_ENV === 'test') {
-    dispatch(fetchTransactions(safeAddress))
-  }
+  dispatch(fetchTransactions(safeAddress))
 
   return txHash
 }

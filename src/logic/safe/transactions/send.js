@@ -39,19 +39,17 @@ export const approveTransaction = async (
   )
   const receipt = await safeInstance.approveHash(contractTxHash, { from: sender })
 
-  if (process.env.NODE_ENV !== 'test') {
-    await saveTxToHistory(
-      safeInstance,
-      to,
-      valueInWei,
-      data,
-      operation,
-      nonce,
-      receipt.tx, // tx hash,
-      sender,
-      TX_TYPE_CONFIRMATION,
-    )
-  }
+  await saveTxToHistory(
+    safeInstance,
+    to,
+    valueInWei,
+    data,
+    operation,
+    nonce,
+    receipt.tx, // tx hash,
+    sender,
+    TX_TYPE_CONFIRMATION,
+  )
 
   return receipt
 }
@@ -91,19 +89,17 @@ export const executeTransaction = async (
       { from: sender },
     )
 
-    if (process.env.NODE_ENV !== 'test') {
-      await saveTxToHistory(
-        safeInstance,
-        to,
-        valueInWei,
-        data,
-        operation,
-        nonce,
-        receipt.tx, // tx hash,
-        sender,
-        TX_TYPE_EXECUTION,
-      )
-    }
+    await saveTxToHistory(
+      safeInstance,
+      to,
+      valueInWei,
+      data,
+      operation,
+      nonce,
+      receipt.tx, // tx hash,
+      sender,
+      TX_TYPE_EXECUTION,
+    )
 
     return receipt
   } catch (error) {
