@@ -13,7 +13,7 @@ export type MessageProps = {
 export const makeMessage: RecordFactory<MessageProps> = Record({
   content: '',
   variant: '',
-  key: new Date().getTime() + Math.random(),
+  key: '',
 })
 
 export type Message = RecordOf<MessageProps>

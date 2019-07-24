@@ -2,7 +2,7 @@
 import * as React from 'react'
 import Footer from '~/components/Footer'
 import Header from '~/components/Header'
-import { SharedSnackbarProvider } from '~/components/SharedSnackBar'
+import Snackbar from '~/components/Snackbar/components/Snackbar'
 import styles from './index.scss'
 
 type Props = {
@@ -10,13 +10,13 @@ type Props = {
 }
 
 const PageFrame = ({ children }: Props) => (
-  <SharedSnackbarProvider>
+  <Snackbar>
     <div className={styles.frame}>
       <Header />
       {children}
       <Footer />
     </div>
-  </SharedSnackbarProvider>
+  </Snackbar>
 )
 
 export default PageFrame

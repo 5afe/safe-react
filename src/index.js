@@ -7,6 +7,7 @@ import Root from '~/components/Root'
 import { store } from '~/store'
 import loadSafesFromStorage from '~/routes/safe/store/actions/loadSafesFromStorage'
 import loadActiveTokens from '~/logic/tokens/store/actions/loadActiveTokens'
+import showSnackbarMsg from './components/Snackbar/store/actions/showSnackbarMsg'
 
 if (process.env.NODE_ENV !== 'production') {
   // eslint-disable-next-line
@@ -16,5 +17,9 @@ if (process.env.NODE_ENV !== 'production') {
 
 store.dispatch(loadActiveTokens())
 store.dispatch(loadSafesFromStorage())
+store.dispatch(showSnackbarMsg('pizdec', 'success'))
+setTimeout(() => {
+  store.dispatch(showSnackbarMsg('pizdeec', 'success'))
+}, 2000)
 
 ReactDOM.render(<Root />, document.getElementById('root'))
