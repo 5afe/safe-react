@@ -1,6 +1,5 @@
 // @flow
 import 'babel-polyfill'
-
 import React from 'react'
 import ReactDOM from 'react-dom'
 import Root from '~/components/Root'
@@ -16,9 +15,5 @@ if (process.env.NODE_ENV !== 'production') {
 
 store.dispatch(loadActiveTokens())
 store.dispatch(loadSafesFromStorage())
-store.dispatch(showSnackbarMsg('pizdec', 'success'))
-setTimeout(() => {
-  store.dispatch(showSnackbarMsg('pizdeec', 'success'))
-}, 2000)
 
 ReactDOM.render(<Root />, document.getElementById('root'))

@@ -2,8 +2,8 @@
 import React, { useState, useEffect } from 'react'
 import { List } from 'immutable'
 import { withStyles } from '@material-ui/core/styles'
-import { SharedSnackbarConsumer } from '~/components/SharedSnackBar'
 import Modal from '~/components/Modal'
+import { type Owner } from '~/routes/safe/store/models/owner'
 import { getGnosisSafeInstanceAt, SENTINEL_ADDRESS } from '~/logic/contracts/safeContracts'
 import OwnerForm from './screens/OwnerForm'
 import ReviewReplaceOwner from './screens/Review'
@@ -32,13 +32,12 @@ type Props = {
 }
 type ActiveScreen = 'checkOwner' | 'reviewReplaceOwner'
 
-export const sendReplaceOwner = async (
+const sendReplaceOwner = async (
   values: Object,
   safeAddress: string,
   ownerAddressToRemove: string,
   ownerNameToRemove: string,
   ownersOld: List<Owner>,
-  openSnackbar: Function,
   createTransaction: Function,
   replaceSafeOwner: Function,
 ) => {
@@ -50,7 +49,7 @@ export const sendReplaceOwner = async (
     .swapOwner(prevAddress, ownerAddressToRemove, values.ownerAddress)
     .encodeABI()
 
-  const txHash = await createTransaction(safeAddress, safeAddress, 0, txData, openSnackbar)
+  const txHash = await createTransaction(safeAddress, safeAddress, 0, txData)
 
   if (txHash) {
     replaceSafeOwner({
@@ -96,68 +95,58 @@ const ReplaceOwner = ({
     setActiveScreen('reviewReplaceOwner')
   }
 
+  const onReplaceOwner = () => {
+    onClose()
+    try {
+      sendReplaceOwner(
+        values,
+        safeAddress,
+        ownerAddress,
+        ownerName,
+        owners,
+        createTransaction,
+        replaceSafeOwner,
+      )
+    } catch (error) {
+      // eslint-disable-next-line
+      console.log('Error while removing an owner ' + error)
+    }
+  }
   return (
-    <React.Fragment>
-      <SharedSnackbarConsumer>
-        {({ openSnackbar }) => {
-          const onReplaceOwner = () => {
-            onClose()
-            try {
-              sendReplaceOwner(
-                values,
-                safeAddress,
-                ownerAddress,
-                ownerName,
-                owners,
-                openSnackbar,
-                createTransaction,
-                replaceSafeOwner,
-              )
-            } catch (error) {
-              // eslint-disable-next-line
-              console.log('Error while removing an owner ' + error)
-            }
-          }
-
-          return (
-            <Modal
-              title="Replace owner from Safe"
-              description="Replace owner from Safe"
-              handleClose={onClose}
-              open={isOpen}
-              paperClassName={classes.biggerModalWindow}
-            >
-              <React.Fragment>
-                {activeScreen === 'checkOwner' && (
-                  <OwnerForm
-                    onClose={onClose}
-                    ownerAddress={ownerAddress}
-                    ownerName={ownerName}
-                    owners={owners}
-                    network={network}
-                    onSubmit={ownerSubmitted}
-                  />
-                )}
-                {activeScreen === 'reviewReplaceOwner' && (
-                  <ReviewReplaceOwner
-                    onClose={onClose}
-                    safeName={safeName}
-                    owners={owners}
-                    network={network}
-                    values={values}
-                    ownerAddress={ownerAddress}
-                    ownerName={ownerName}
-                    onClickBack={onClickBack}
-                    onSubmit={onReplaceOwner}
-                    threshold={threshold}
-                  />
-                )}
-              </React.Fragment>
-            </Modal>
-          )
-        }}
-      </SharedSnackbarConsumer>
-    </React.Fragment>
+    <Modal
+      title="Replace owner from Safe"
+      description="Replace owner from Safe"
+      handleClose={onClose}
+      open={isOpen}
+      paperClassName={classes.biggerModalWindow}
+    >
+      <React.Fragment>
+        {activeScreen === 'checkOwner' && (
+          <OwnerForm
+            onClose={onClose}
+            ownerAddress={ownerAddress}
+            ownerName={ownerName}
+            owners={owners}
+            network={network}
+            onSubmit={ownerSubmitted}
+          />
+        )}
+        {activeScreen === 'reviewReplaceOwner' && (
+          <ReviewReplaceOwner
+            onClose={onClose}
+            safeName={safeName}
+            owners={owners}
+            network={network}
+            values={values}
+            ownerAddress={ownerAddress}
+            ownerName={ownerName}
+            onClickBack={onClickBack}
+            onSubmit={onReplaceOwner}
+            threshold={threshold}
+          />
+        )}
+      </React.Fragment>
+    </Modal>
   )
 }
 
