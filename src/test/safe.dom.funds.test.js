@@ -5,7 +5,7 @@ import { aNewStore } from '~/store'
 import { aMinedSafe } from '~/test/builder/safe.redux.builder'
 import { sendTokenTo, sendEtherTo } from '~/test/utils/tokenMovements'
 import { renderSafeView } from '~/test/builder/safe.dom.utils'
-import { getWeb3, getBalanceInEtherOf } from '~/logic/wallets/getWeb3'
+import Web3Integration from '~/logic/wallets/web3Integration'
 import { dispatchAddTokenToList } from '~/test/utils/transactions/moveTokens.helper'
 import { sleep } from '~/utils/timer'
 import TokenBalanceRecord from '~/routes/safe/store/models/tokenBalance'
@@ -25,14 +25,14 @@ describe('DOM > Feature > Funds', () => {
     store = aNewStore()
     // using 4th account because other accounts were used in other tests and paid gas
     safeAddress = await aMinedSafe(store)
-    accounts = await getWeb3().eth.getAccounts()
+    accounts = await Web3Integration.web3.eth.getAccounts()
   })
 
   it('Sends ETH with threshold = 1', async () => {
     // GIVEN
     const ethAmount = '5'
     await sendEtherTo(safeAddress, ethAmount)
-    const balanceAfterSendingEthToSafe = await getBalanceInEtherOf(accounts[0])
+    const balanceAfterSendingEthToSafe = await Web3Integration.getBalanceInEtherOf(accounts[0])
 
     // WHEN
     const SafeDom = renderSafeView(store, safeAddress)
@@ -59,10 +59,10 @@ describe('DOM > Feature > Funds', () => {
     await sleep(1000)
 
     // THEN
-    const safeFunds = await getBalanceInEtherOf(safeAddress)
+    const safeFunds = await Web3Integration.getBalanceInEtherOf(safeAddress)
     expect(Number(safeFunds)).toBe(0)
 
-    const receiverFunds = await getBalanceInEtherOf(accounts[0])
+    const receiverFunds = await Web3Integration.getBalanceInEtherOf(accounts[0])
     const ESTIMATED_GASCOSTS = 0.3
     expect(Number(parseInt(receiverFunds, 10) - parseInt(balanceAfterSendingEthToSafe, 10))).toBeGreaterThan(
       parseInt(ethAmount, 10) - ESTIMATED_GASCOSTS,

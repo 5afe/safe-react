@@ -35,12 +35,12 @@ export const ETHEREUM_NETWORK_IDS = {
 }
 
 class Web3Integration {
-  web3: Object
+  provider: Object
 
   watcherInterval: IntervalID
 
   constructor() {
-    this.web3 = null
+    this.provider = null
   }
 
   async getAccount(): Promise<string | null> {
@@ -83,13 +83,17 @@ class Web3Integration {
   }
 
   async getProviderInfo(): Promise<ProviderProps> {
-    if (!this.web3) {
-      return {
-        name: '',
-        available: false,
-        loaded: false,
-        account: '',
-        network: 0,
+    if (!this.provider) {
+      await this.checkForInjectedProvider()
+
+      if (!this.provider) {
+        return {
+          name: '',
+          available: false,
+          loaded: false,
+          account: '',
+          network: 0,
+        }
       }
     }
 
@@ -134,7 +138,11 @@ class Web3Integration {
   }
 
   get web3() {
-    return this.web3 || (window.web3 && new Web3(window.web3.currentProvider)) || (window.ethereum && new Web3(window.ethereum))
+    return (
+      this.provider
+      || (window.web3 && new Web3(window.web3.currentProvider))
+      || (window.ethereum && new Web3(window.ethereum))
+    )
   }
 
   disconnect() {
@@ -147,7 +155,7 @@ class Web3Integration {
       throw new Error('No provider object provided')
     }
 
-    this.web3 = new Web3(provider)
+    this.provider = new Web3(provider)
     const providerInfo = await this.getProviderInfo()
 
     store.dispatch(fetchProvider(providerInfo))

@@ -1,6 +1,6 @@
 // @flow
 import { fireEvent } from '@testing-library/react'
-import { getWeb3 } from '~/logic/wallets/getWeb3'
+import Web3Integration from '~/logic/wallets/web3Integration'
 import { getFirstTokenContract } from '~/test/utils/tokenMovements'
 import { aNewStore } from '~/store'
 import { aMinedSafe } from '~/test/builder/safe.redux.builder'
@@ -38,7 +38,7 @@ describe('DOM > Feature > Add custom ERC 20 Tokens', () => {
   let erc20Token
 
   beforeAll(async () => {
-    web3 = getWeb3()
+    web3 = Web3Integration.web3
     accounts = await web3.eth.getAccounts()
     erc20Token = await getFirstTokenContract(web3, accounts[0])
   })

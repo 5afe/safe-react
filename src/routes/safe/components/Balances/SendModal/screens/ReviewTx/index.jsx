@@ -18,7 +18,7 @@ import SafeInfo from '~/routes/safe/components/Balances/SendModal/SafeInfo'
 import { setImageToPlaceholder } from '~/routes/safe/components/Balances/utils'
 import { getStandardTokenContract } from '~/logic/tokens/store/actions/fetchTokens'
 import { EMPTY_DATA } from '~/logic/wallets/ethTransactions'
-import { getWeb3 } from '~/logic/wallets/getWeb3'
+import Web3Integration from '~/logic/wallets/web3Integration'
 import ArrowDown from '../assets/arrow-down.svg'
 import { secondary } from '~/theme/variables'
 import { isEther } from '~/logic/tokens/utils/tokenHelpers'
@@ -53,7 +53,7 @@ const ReviewTx = ({
   createTransaction,
 }: Props) => {
   const submitTx = async () => {
-    const web3 = getWeb3()
+    const { web3 } = Web3Integration
     const isSendingETH = isEther(tx.token.symbol)
     const txRecipient = isSendingETH ? tx.recipientAddress : tx.token.address
     let txData = EMPTY_DATA

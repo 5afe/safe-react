@@ -8,7 +8,7 @@ import { ADD_OWNER_BUTTON } from '~/routes/open/components/SafeOwnersForm'
 import Open from '~/routes/open/container/Open'
 import { aNewStore, history, type GlobalState } from '~/store'
 import { sleep } from '~/utils/timer'
-import { getProviderInfo, getWeb3 } from '~/logic/wallets/getWeb3'
+import Web3Integration from '~/logic/wallets/web3Integration'
 import addProvider from '~/logic/wallets/store/actions/addProvider'
 import { makeProvider } from '~/logic/wallets/store/model/provider'
 import { getGnosisSafeInstanceAt } from '~/logic/contracts/safeContracts'
@@ -32,7 +32,7 @@ afterAll(() => {
 })
 
 const renderOpenSafeForm = async (localStore: Store<GlobalState>) => {
-  const provider = await getProviderInfo()
+  const provider = await Web3Integration.getProviderInfo()
   const walletRecord = makeProvider(provider)
   localStore.dispatch(addProvider(walletRecord))
 
@@ -46,7 +46,7 @@ const renderOpenSafeForm = async (localStore: Store<GlobalState>) => {
 }
 
 const deploySafe = async (createSafeForm: any, threshold: number, numOwners: number) => {
-  const web3 = getWeb3()
+  const { web3 } = Web3Integration
   const accounts = await web3.eth.getAccounts()
 
   expect(threshold).toBeLessThanOrEqual(numOwners)
