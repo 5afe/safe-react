@@ -76,7 +76,7 @@ class Web3Integration {
     // and should be fixed soon
     const chainIdRes = await this.web3.currentProvider.send('eth_chainId', [])
     const networkId = convertHexToNumber(
-      sanitizeHex(addHexPrefix(`${chainIdRes}`))
+      sanitizeHex(addHexPrefix(`${chainIdRes}`)),
     )
 
     return networkId
