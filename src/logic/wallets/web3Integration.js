@@ -66,7 +66,7 @@ class Web3Integration {
     return name
   }
 
-  async getNetworkIdFrom() {
+  async getNetworkId() {
     const networkId = await this.web3.eth.net.getId()
 
     return networkId
@@ -99,7 +99,7 @@ class Web3Integration {
 
     const name = this.getProviderName()
     const account = await this.getAccount()
-    const network = await this.getNetworkIdFrom()
+    const network = await this.getNetworkId()
 
     const available = account !== null
 
@@ -137,6 +137,12 @@ class Web3Integration {
     this.setWeb3(web3Provider)
   }
 
+  resetWalletConnectSession() {
+    if (localStorage.getItem('walletconnect')) {
+      localStorage.removeItem('walletconnect')
+    }
+  }
+
   get web3() {
     return (
       this.provider
@@ -147,6 +153,7 @@ class Web3Integration {
 
   disconnect() {
     clearInterval(this.watcherInterval)
+    this.resetWalletConnectSession()
     store.dispatch(removeProvider())
   }
 
@@ -154,10 +161,10 @@ class Web3Integration {
     if (!provider) {
       throw new Error('No provider object provided')
     }
-    console.log('setting web3')
+
     this.provider = new Web3(provider)
+
     const providerInfo = await this.getProviderInfo()
-    console.log(providerInfo)
     store.dispatch(fetchProvider(providerInfo))
     this.watch()
   }

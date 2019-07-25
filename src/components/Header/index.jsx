@@ -27,6 +27,7 @@ class HeaderComponent extends React.PureComponent<Props, State> {
   }
 
   componentDidMount() {
+    Web3Integration.resetWalletConnectSession()
     Web3Integration.checkForInjectedProvider()
   }
 

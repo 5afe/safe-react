@@ -13,7 +13,7 @@ import Block from '~/components/layout/Block'
 import Hairline from '~/components/layout/Hairline'
 import Link from '~/components/layout/Link'
 import Identicon from '~/components/Identicon'
-import { getEtherScanLink } from '~/logic/wallets/getWeb3'
+import { getEtherScanLink } from '~/logic/wallets/etherscan'
 import { styles } from './style'
 import { secondary } from '~/theme/variables'
 

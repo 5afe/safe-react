@@ -23,7 +23,7 @@ web3Connect.on('connect', (provider: any) => {
   }
 })
 
-const ConnectButton = () => (
+const ConnectButton = (props: Object) => (
   <Button
     color="primary"
     variant="contained"
@@ -31,6 +31,7 @@ const ConnectButton = () => (
     onClick={() => {
       web3Connect.toggleModal()
     }}
+    {...props}
   >
     Connect
   </Button>

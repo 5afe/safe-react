@@ -17,7 +17,7 @@ import Field from '~/components/forms/Field'
 import TextField from '~/components/forms/TextField'
 import Identicon from '~/components/Identicon'
 import Link from '~/components/layout/Link'
-import { getEtherScanLink } from '~/logic/wallets/getWeb3'
+import { getEtherScanLink } from '~/logic/wallets/etherscan'
 import { type Owner } from '~/routes/safe/store/models/owner'
 import {
   composeValidators,

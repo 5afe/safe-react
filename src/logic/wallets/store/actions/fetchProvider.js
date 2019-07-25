@@ -1,6 +1,6 @@
 // @flow
 import type { Dispatch as ReduxDispatch } from 'redux'
-import { ETHEREUM_NETWORK_IDS, ETHEREUM_NETWORK } from '~/logic/wallets/getWeb3'
+import { ETHEREUM_NETWORK_IDS, ETHEREUM_NETWORK } from '~/logic/wallets/web3Integration'
 import type { ProviderProps } from '~/logic/wallets/store/model/provider'
 import showSnackbarMsg from '~/components/Snackbar/store/actions/showSnackbarMsg'
 import { makeProvider } from '~/logic/wallets/store/model/provider'

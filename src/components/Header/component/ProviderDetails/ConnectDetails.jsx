@@ -25,6 +25,7 @@ const styles = () => ({
   },
   connect: {
     padding: `${md} ${lg}`,
+    justifyContent: 'center',
   },
   connectText: {
     letterSpacing: '1px',

@@ -7,7 +7,7 @@ import Block from '~/components/layout/Block'
 import Paragraph from '~/components/layout/Paragraph'
 import Img from '~/components/layout/Img'
 import Page from '~/components/layout/Page'
-import { getEtherScanLink } from '~/logic/wallets/getWeb3'
+import { getEtherScanLink } from '~/logic/wallets/etherscan'
 import { mediumFontSize, secondary, xs } from '~/theme/variables'
 import { type SelectorProps } from '../container/selector'
 

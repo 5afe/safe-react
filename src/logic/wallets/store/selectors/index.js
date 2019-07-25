@@ -2,7 +2,7 @@
 import { createSelector } from 'reselect'
 import type { Provider } from '~/logic/wallets/store/model/provider'
 import { PROVIDER_REDUCER_ID } from '~/logic/wallets/store/reducer/provider'
-import { ETHEREUM_NETWORK_IDS, ETHEREUM_NETWORK } from '~/logic/wallets/getWeb3'
+import { ETHEREUM_NETWORK_IDS, ETHEREUM_NETWORK } from '~/logic/wallets/web3Integration'
 
 const providerSelector = (state: any): Provider => state[PROVIDER_REDUCER_ID]
 

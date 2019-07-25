@@ -15,7 +15,7 @@ import Button from '~/components/layout/Button'
 import Block from '~/components/layout/Block'
 import Hairline from '~/components/layout/Hairline'
 import type { Owner } from '~/routes/safe/store/models/owner'
-import { getEtherScanLink } from '~/logic/wallets/getWeb3'
+import { getEtherScanLink } from '~/logic/wallets/etherscan'
 import { secondary } from '~/theme/variables'
 import { styles } from './style'
 

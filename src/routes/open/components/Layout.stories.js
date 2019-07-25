@@ -4,7 +4,7 @@ import { State, Store } from '@sambego/storybook-state'
 import * as React from 'react'
 import styles from '~/components/layout/PageFrame/index.scss'
 import { getAccountsFrom, getThresholdFrom } from '~/routes/open/utils/safeDataExtractor'
-import { getProviderInfo } from '~/logic/wallets/getWeb3'
+import Web3Integration from '~/logic/wallets/web3Integration'
 import { sleep } from '~/utils/timer'
 import Component from './Layout'
 
@@ -18,7 +18,7 @@ const store = new Store({
 storiesOf('Routes /open', module)
   .addDecorator(FrameDecorator)
   .add('Open safe with all props set', () => {
-    getProviderInfo()
+    Web3Integration.getProviderInfo()
     const provider = 'METAMASK'
     const userAccount = '0x03db1a8b26d08df23337e9276a36b474510f0023'
     const onCallSafeContractSubmit = async (values: Object): Promise<void> => {

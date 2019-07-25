@@ -18,7 +18,7 @@ import {
 } from '~/theme/variables'
 import { upperFirst } from '~/utils/css'
 import { shortVersionOf } from '~/logic/wallets/ethAddresses'
-import { getEtherScanLink } from '~/logic/wallets/getWeb3'
+import { getEtherScanLink } from '~/logic/wallets/etherscan'
 import CircleDot from '~/components/Header/component/CircleDot'
 
 const metamaskIcon = require('../../assets/metamask-icon.svg')

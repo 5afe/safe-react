@@ -7,7 +7,6 @@ import Img from '~/components/layout/Img'
 import Paragraph from '~/components/layout/Paragraph'
 import Button from '~/components/layout/Button'
 import Link from '~/components/layout/Link'
-import Web3Integration from '~/logic/wallets/web3Integration'
 import { OPEN_ADDRESS, LOAD_ADDRESS } from '~/routes/routes'
 import { marginButtonImg } from '~/theme/variables'
 import styles from './Layout.scss'
@@ -89,7 +88,7 @@ const Welcome = ({ provider }: Props) => (
         <Heading tag="h3" align="center" margin="md">
           Get Started by Connecting a Wallet
         </Heading>
-        <ConnectButton />
+        <ConnectButton minWidth={240} minHeight={42} />
       </Block>
     )}
   </Block>

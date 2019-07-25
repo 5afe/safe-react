@@ -17,7 +17,7 @@ import {
   sm, md, lg, border, secondary,
 } from '~/theme/variables'
 import { getOwnerNameBy, getOwnerAddressBy } from '~/routes/open/components/fields'
-import { getEtherScanLink } from '~/logic/wallets/getWeb3'
+import { getEtherScanLink } from '~/logic/wallets/etherscan'
 import { FIELD_LOAD_ADDRESS, THRESHOLD } from '~/routes/load/components/fields'
 import { getGnosisSafeInstanceAt } from '~/logic/contracts/safeContracts'
 

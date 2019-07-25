@@ -13,7 +13,7 @@ import Link from '~/components/layout/Link'
 import Paragraph from '~/components/layout/Paragraph'
 import NoSafe from '~/components/NoSafe'
 import { type SelectorProps } from '~/routes/safe/container/selector'
-import { getEtherScanLink } from '~/logic/wallets/getWeb3'
+import { getEtherScanLink } from '~/logic/wallets/etherscan'
 import {
   sm, xs, secondary, smallFontSize,
 } from '~/theme/variables'
