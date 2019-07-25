@@ -37,7 +37,6 @@ type Props = {
   errors: Object,
   form: Object,
   values: Object,
-  updateInitialProps: (initialValues: Object) => void,
 }
 
 const { useState } = React
@@ -66,12 +65,13 @@ export const calculateValuesAfterRemoving = (index: number, notRemovedOwners: nu
 
 const SafeOwners = (props: Props) => {
   const {
-    classes, errors, otherAccounts, values, updateInitialProps, form,
+    classes, errors, otherAccounts, values, form,
   } = props
-  const [numOwners, setNumOwners] = useState<number>(1)
+
+  const validOwners = getNumOwnersFrom(values)
+  const [numOwners, setNumOwners] = useState<number>(validOwners)
   const [qrModalOpen, setQrModalOpen] = useState<boolean>(false)
   const [scanQrForOwnerName, setScanQrForOwnerName] = useState<string | null>(null)
-  const validOwners = getNumOwnersFrom(values)
 
   const openQrModal = (ownerName) => {
     setScanQrForOwnerName(ownerName)
@@ -83,19 +83,8 @@ const SafeOwners = (props: Props) => {
   }
 
   const onRemoveRow = (index: number) => () => {
-    if (numOwners === 2) {
-      form.reset()
-    } else {
-      const initialValues = calculateValuesAfterRemoving(index, numOwners, values)
-
-      if (Object.keys(initialValues).length === 4) {
-        // this means that the form is back to its inital state
-        // and if they're equal it won't update the form
-        form.reset()
-      } else {
-        updateInitialProps(initialValues)
-      }
-    }
+    const initialValues = calculateValuesAfterRemoving(index, numOwners, values)
+    form.reset(initialValues)
 
     setNumOwners(numOwners - 1)
   }
