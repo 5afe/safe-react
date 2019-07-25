@@ -20,7 +20,7 @@ import {
 } from '~/components/forms/validator'
 import { styles } from './style'
 
-export const REMOVE_OWNER_THRESHOLD_NEXT_BTN_TESTID = 'remove-owner-threshold-next-btn'
+export const REMOVE_OWNER_THRESHOLD_NEXT_BTN_TEST_ID = 'remove-owner-threshold-next-btn'
 
 type Props = {
   onClose: () => void,
@@ -114,7 +114,7 @@ owner(s)
                   variant="contained"
                   minWidth={140}
                   color="primary"
-                  data-testid={REMOVE_OWNER_THRESHOLD_NEXT_BTN_TESTID}
+                  data-testid={REMOVE_OWNER_THRESHOLD_NEXT_BTN_TEST_ID}
                 >
                   Review
                 </Button>

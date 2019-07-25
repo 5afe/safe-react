@@ -14,6 +14,8 @@ export type Props = Actions &
 const TIMEOUT = process.env.NODE_ENV === 'test' ? 1500 : 5000
 
 class SafeView extends React.Component<Props> {
+  intervalId: IntervalID
+
   componentDidMount() {
     const {
       fetchSafe, activeTokens, safeUrl, fetchTokenBalances, fetchTokens,
@@ -44,14 +46,11 @@ class SafeView extends React.Component<Props> {
 
   checkForUpdates() {
     const {
-      safeUrl, activeTokens, fetchSafe, fetchTokenBalances,
+      safeUrl, activeTokens, fetchTokenBalances,
     } = this.props
 
-    fetchSafe(safeUrl, true)
     fetchTokenBalances(safeUrl, activeTokens)
   }
-
-  intervalId: IntervalID
 
   render() {
     const {
