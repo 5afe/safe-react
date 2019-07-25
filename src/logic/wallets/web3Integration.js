@@ -3,6 +3,7 @@ import Web3 from 'web3'
 import { fetchProvider, removeProvider } from '~/logic/wallets/store/actions'
 import { store } from '~/store'
 import type { ProviderProps } from '~/logic/wallets/store/model/provider'
+import { addHexPrefix, sanitizeHex, convertHexToNumber } from '~/utils/hex'
 
 export const ETHEREUM_NETWORK = {
   MAIN: 'MAIN',
@@ -44,7 +45,7 @@ class Web3Integration {
   }
 
   async getAccount(): Promise<string | null> {
-    const accounts = await this.web3.eth.getAccounts()
+    const accounts: string[] = await this.web3.eth.getAccounts()
 
     return accounts && accounts.length > 0 ? accounts[0] : null
   }
@@ -67,7 +68,16 @@ class Web3Integration {
   }
 
   async getNetworkId() {
-    const networkId = await this.web3.eth.net.getId()
+    //     const networkId = await this.web3.eth.net.getId()
+
+    // this approach was taken from web3connect example app
+    // https://github.com/web3connect/web3connect/blob/master/example/src/helpers/utilities.ts#L144
+    // for some reason getId() call never resolves, the bug was reported to wallet conenct foundation
+    // and should be fixed soon
+    const chainIdRes = await this.web3.currentProvider.send('eth_chainId', [])
+    const networkId = convertHexToNumber(
+      sanitizeHex(addHexPrefix(`${chainIdRes}`))
+    )
 
     return networkId
   }
