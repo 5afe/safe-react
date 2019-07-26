@@ -5,6 +5,7 @@ import { border } from '~/theme/variables'
 
 const calculateStyleFrom = (color?: string, margin?: Size) => ({
   width: '100%',
+  minHeight: '1px',
   height: '1px',
   backgroundColor: color || border,
   margin: `${getSize(margin)} 0px`,
@@ -13,12 +14,14 @@ const calculateStyleFrom = (color?: string, margin?: Size) => ({
 type Props = {
   margin?: Size,
   color?: string,
+  style?: Object,
 }
 
-const Hairline = ({ margin, color }: Props) => {
-  const style = calculateStyleFrom(color, margin)
+const Hairline = ({ margin, color, style }: Props) => {
+  const calculatedStyles = calculateStyleFrom(color, margin)
+  const mergedStyles = { ...calculatedStyles, ...(style || {}) }
 
-  return <div style={style} />
+  return <div style={mergedStyles} />
 }
 
 export default Hairline

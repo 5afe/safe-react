@@ -1,9 +1,14 @@
 // @flow
-import { makeSafe, type Safe } from '~/routes/safe/store/model/safe'
+import SafeRecord, { type Safe } from '~/routes/safe/store/models/safe'
 import addSafe, { buildOwnersFrom } from '~/routes/safe/store/actions/addSafe'
-import { FIELD_NAME, FIELD_CONFIRMATIONS, FIELD_OWNERS, getOwnerNameBy, getOwnerAddressBy } from '~/routes/open/components/fields'
+import {
+  FIELD_NAME,
+  FIELD_CONFIRMATIONS,
+  FIELD_OWNERS,
+  getOwnerNameBy,
+  getOwnerAddressBy,
+} from '~/routes/open/components/fields'
 import { getWeb3, getProviderInfo } from '~/logic/wallets/getWeb3'
-import { promisify } from '~/utils/promisify'
 import { createSafe, type OpenState } from '~/routes/open/container/Open'
 import { type GlobalState } from '~/store/index'
 import { makeProvider } from '~/logic/wallets/store/model/provider'
@@ -13,7 +18,7 @@ class SafeBuilder {
   safe: Safe
 
   constructor() {
-    this.safe = makeSafe()
+    this.safe = SafeRecord()
   }
 
   withAddress(address: string) {
@@ -52,14 +57,14 @@ export class SafeFactory {
     .withOwner(['Adol Metamask'], [ownerAddress])
     .get()
 
-  static twoOwnersSafe = (firstOwner: string = '0x03db1a8b26d08df23337e9276a36b474510f0023', secondOwner: string = '0x03db1a8b26d08df23337e9276a36b474510f0024') => aSafe()
+  static twoOwnersSafe = (
+    firstOwner: string = '0x03db1a8b26d08df23337e9276a36b474510f0023',
+    secondOwner: string = '0x03db1a8b26d08df23337e9276a36b474510f0024',
+  ) => aSafe()
     .withAddress('0x03db1a8b26d08df23337e9276a36b474510f0026')
     .withName('Adol & Tobias Safe')
     .withConfirmations(2)
-    .withOwner(
-      ['Adol Metamask', 'Tobias Metamask'],
-      [firstOwner, secondOwner],
-    )
+    .withOwner(['Adol Metamask', 'Tobias Metamask'], [firstOwner, secondOwner])
     .get()
 }
 
@@ -72,7 +77,7 @@ export const aMinedSafe = async (
   const walletRecord = makeProvider(provider)
   store.dispatch(addProvider(walletRecord))
 
-  const accounts = await promisify(cb => getWeb3().eth.getAccounts(cb))
+  const accounts = await getWeb3().eth.getAccounts()
   const form = {
     [FIELD_NAME]: 'Safe Name',
     [FIELD_CONFIRMATIONS]: `${threshold}`,

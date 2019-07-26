@@ -2,35 +2,41 @@
 import * as React from 'react'
 import { connect } from 'react-redux'
 import Page from '~/components/layout/Page'
-import Layout from '~/routes/safe/component/Layout'
+import Layout from '~/routes/safe/components/Layout'
 import selector, { type SelectorProps } from './selector'
 import actions, { type Actions } from './actions'
 
-type Props = Actions & SelectorProps & {
-  granted: boolean,
-}
+export type Props = Actions &
+  SelectorProps & {
+    granted: boolean,
+  }
 
-const TIMEOUT = process.env.NODE_ENV === 'test' ? 1500 : 15000
+const TIMEOUT = process.env.NODE_ENV === 'test' ? 1500 : 5000
 
-class SafeView extends React.PureComponent<Props> {
+class SafeView extends React.Component<Props> {
+  intervalId: IntervalID
+
   componentDidMount() {
-    this.props.fetchSafe(this.props.safeUrl)
-    this.props.fetchTokens(this.props.safeUrl)
+    const {
+      fetchSafe, activeTokens, safeUrl, fetchTokenBalances, fetchTokens,
+    } = this.props
+
+    fetchSafe(safeUrl)
+    fetchTokenBalances(safeUrl, activeTokens)
+    // fetch tokens there to get symbols for tokens in TXs list
+    fetchTokens()
+
     this.intervalId = setInterval(() => {
-      const { safeUrl, fetchTokens, fetchSafe } = this.props
-      fetchTokens(safeUrl)
-      fetchSafe(safeUrl)
+      this.checkForUpdates()
     }, TIMEOUT)
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps.safe) {
-      return
-    }
+    const { activeTokens } = this.props
+    const oldActiveTokensSize = prevProps.activeTokens.size
 
-    if (this.props.safe) {
-      const safeAddress = this.props.safe.get('address')
-      this.props.fetchTokens(safeAddress)
+    if (oldActiveTokensSize > 0 && activeTokens.size > oldActiveTokensSize) {
+      this.checkForUpdates()
     }
   }
 
@@ -38,11 +44,28 @@ class SafeView extends React.PureComponent<Props> {
     clearInterval(this.intervalId)
   }
 
-  intervalId: IntervalID
+  checkForUpdates() {
+    const {
+      safeUrl, activeTokens, fetchTokenBalances,
+    } = this.props
+
+    fetchTokenBalances(safeUrl, activeTokens)
+  }
 
   render() {
     const {
-      safe, provider, activeTokens, granted, userAddress, network, tokens,
+      safe,
+      provider,
+      activeTokens,
+      granted,
+      userAddress,
+      network,
+      tokens,
+      createTransaction,
+      processTransaction,
+      fetchTransactions,
+      updateSafe,
+      transactions,
     } = this.props
 
     return (
@@ -55,10 +78,18 @@ class SafeView extends React.PureComponent<Props> {
           userAddress={userAddress}
           network={network}
           granted={granted}
+          createTransaction={createTransaction}
+          processTransaction={processTransaction}
+          fetchTransactions={fetchTransactions}
+          updateSafe={updateSafe}
+          transactions={transactions}
         />
       </Page>
     )
   }
 }
 
-export default connect(selector, actions)(SafeView)
+export default connect<Object, Object, ?Function, ?Object>(
+  selector,
+  actions,
+)(SafeView)

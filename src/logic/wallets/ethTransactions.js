@@ -1,8 +1,7 @@
 // @flow
 import { BigNumber } from 'bignumber.js'
+import axios from 'axios'
 import { getWeb3 } from '~/logic/wallets/getWeb3'
-import { promisify } from '~/utils/promisify'
-import { enhancedFetch } from '~/utils/fetch'
 
 // const MAINNET_NETWORK = 1
 export const EMPTY_DATA = '0x'
@@ -13,7 +12,7 @@ export const checkReceiptStatus = async (hash: string) => {
   }
 
   const web3 = getWeb3()
-  const txReceipt = await promisify(cb => web3.eth.getTransactionReceipt(hash, cb))
+  const txReceipt = await web3.eth.getTransactionReceipt(hash)
 
   const { status } = txReceipt
   if (!status) {
@@ -45,15 +44,15 @@ export const calculateGasPrice = async () => {
 
   const url = 'https://ethgasstation.info/json/ethgasAPI.json'
   const errMsg = 'Error querying gas station'
-  const json = await enhancedFetch(url, errMsg)
+  const { data } = await axios.get(url, errMsg)
 
-  return new BigNumber(json.average).multipliedBy(1e8).toString()
+  return new BigNumber(data.average).multipliedBy(1e8).toString()
 }
 
 export const calculateGasOf = async (data: Object, from: string, to: string) => {
   const web3 = getWeb3()
   try {
-    const gas = await promisify(cb => web3.eth.estimateGas({ data, from, to }, cb))
+    const gas = await web3.eth.estimateGas({ data, from, to })
 
     return gas * 2
   } catch (err) {

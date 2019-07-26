@@ -5,11 +5,7 @@ import styles from '~/components/layout/PageFrame/index.scss'
 import { ETHEREUM_NETWORK } from '~/logic/wallets/getWeb3'
 import Component from './component'
 
-const FrameDecorator = story => (
-  <div className={styles.frame}>
-    { story() }
-  </div>
-)
+const FrameDecorator = story => <div className={styles.frame}>{story()}</div>
 
 storiesOf('Routes /opening', module)
   .addDecorator(FrameDecorator)
@@ -20,8 +16,4 @@ storiesOf('Routes /opening', module)
       network={ETHEREUM_NETWORK.RINKEBY}
     />
   ))
-  .add('Load this view without a tx', () => (
-    <Component
-      network={ETHEREUM_NETWORK.UNKNOWN}
-    />
-  ))
+  .add('Load this view without a tx', () => <Component network={ETHEREUM_NETWORK.UNKNOWN} />)

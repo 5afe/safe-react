@@ -37,8 +37,19 @@ const SafeName = ({ classes }: Props) => (
   <React.Fragment>
     <Block margin="lg">
       <Paragraph noMargin size="md" color="primary" className={classes.links}>
-        This setup will create a Safe with one or more owners. Optionally give the Safe a local name.
-        By continuing you consent with the <a rel="noopener noreferrer" href="https://safe.gnosis.io/terms" target="_blank">terms of use</a> and <a rel="noopener noreferrer" href="https://safe.gnosis.io/privacy" target="_blank">privacy policy</a>.
+        This setup will create a Safe with one or more owners. Optionally give the Safe a local name. By continuing you
+        consent with the
+        {' '}
+        <a rel="noopener noreferrer" href="https://safe.gnosis.io/terms" target="_blank">
+          terms of use
+        </a>
+        {' '}
+        and
+        {' '}
+        <a rel="noopener noreferrer" href="https://safe.gnosis.io/privacy" target="_blank">
+          privacy policy
+        </a>
+        .
       </Paragraph>
     </Block>
     <Row margin="md" className={classes.text}>
@@ -72,7 +83,7 @@ const SafeName = ({ classes }: Props) => (
 
 const SafeNameForm = withStyles(styles)(SafeName)
 
-const SafeNamePage = () => (controls: React$Node) => (
+const SafeNamePage = () => (controls: React.Node) => (
   <OpenPaper controls={controls} container={600}>
     <SafeNameForm />
   </OpenPaper>

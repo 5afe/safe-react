@@ -21,8 +21,8 @@ const styles = () => ({
 
 type Props = {
   classes: Object,
-  children: React$Node,
-  controls: React$Node,
+  children: React.Node,
+  controls: React.Node,
   container?: number,
   padding?: boolean,
 }
@@ -41,7 +41,7 @@ const OpenPaper = ({
       <Block style={containerStyle} className={`${classes.container} ${padding ? classes.padding : ''}`}>
         {children}
       </Block>
-      { controls }
+      {controls}
     </Paper>
   )
 }

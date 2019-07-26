@@ -11,11 +11,12 @@ These instructions will get you a copy of the project up and running on your loc
 What things you need to install the software and how to install them
 
 ```
-npm install truffle // recommended usage of -g flag
-npm install ganache-cli // recommended usage of -g flag
-npm install flow-type // recommended usage of -g flag
-git clone https://github.com/gnosis/safe-contracts.git
+yarn add truffle // recommended usage of -g flag
+yarn add ganache-cli // recommended usage of -g flag
+yarn add flow-type // recommended usage of -g flag
 ```
+
+We use [yarn](https://yarnpkg.com) in our infrastacture, so we decided to go with yarn in the README
 
 ### Installing
 
@@ -28,15 +29,37 @@ ganache-cli -b 3
 
 Start the project in the other one
 ```
-cd safe-contracts && truffle compile && truffle migrate && cd ..
-npm install
-npm start
+yarn install
+yarn start
 ```
 
 ## Running the tests
 
+1. Run `transaction-history-service`
 ```
-npm test
+git clone https://github.com/gnosis/safe-transaction-service.git
+cd safe-transaction-history
+git checkout develop
+docker-compose build
+docker-compose up -d
+```
+Check that the service is running at https://localhost:8000
+
+2. Migrate Safe Contracts:
+```
+git clone https://github.com/gnosis/safe-contracts.git
+cd safe-contracts
+yarn
+npx truffle migrate
+```
+3. Migrate Token Contracts for the tests:
+Inside `safe-react` directory
+```
+npx truffle migrate
+```
+4. Run the tests:
+```
+yarn test
 ```
 
 

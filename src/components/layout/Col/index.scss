@@ -184,19 +184,19 @@
     text-align: end;
   }
   .top$(size) {
-      align-items: flex-start;
+    align-items: flex-start;
   }
   .middle$(size) {
-      align-items: center;
+    align-items: center;
   }
   .bottom$(size) {
-      align-items: flex-end;
+    align-items: flex-end;
   }
   .around$(size) {
-      justify-content: space-around;
+    justify-content: space-around;
   }
   .between$(size) {
-      justify-content: space-between;
+    justify-content: space-between;
   }
 }
 

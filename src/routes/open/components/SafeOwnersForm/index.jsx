@@ -1,24 +1,29 @@
 // @flow
 import * as React from 'react'
 import { withStyles } from '@material-ui/core/styles'
+import InputAdornment from '@material-ui/core/InputAdornment'
+import CheckCircle from '@material-ui/icons/CheckCircle'
 import Field from '~/components/forms/Field'
 import TextField from '~/components/forms/TextField'
-import { required, composeValidators, uniqueAddress, mustBeEthereumAddress, noErrorsOn } from '~/components/forms/validator'
+import {
+  required,
+  composeValidators,
+  uniqueAddress,
+  mustBeEthereumAddress,
+  noErrorsOn,
+} from '~/components/forms/validator'
 import Block from '~/components/layout/Block'
 import Button from '~/components/layout/Button'
 import Row from '~/components/layout/Row'
 import Img from '~/components/layout/Img'
 import Col from '~/components/layout/Col'
-import InputAdornment from '@material-ui/core/InputAdornment'
-import CheckCircle from '@material-ui/icons/CheckCircle'
 import { getOwnerNameBy, getOwnerAddressBy } from '~/routes/open/components/fields'
 import Paragraph from '~/components/layout/Paragraph'
 import OpenPaper from '~/components/Stepper/OpenPaper'
 import { getAccountsFrom } from '~/routes/open/utils/safeDataExtractor'
 import Hairline from '~/components/layout/Hairline'
 import { md, lg, sm } from '~/theme/variables'
-
-const trash = require('../../assets/trash.svg')
+import trash from '~/assets/icons/trash.svg'
 
 type Props = {
   classes: Object,
@@ -69,8 +74,11 @@ const styles = () => ({
 })
 
 const getAddressValidators = (addresses: string[], position: number) => {
+  // thanks Rich Harris
+  // https://twitter.com/Rich_Harris/status/1125850391155965952
   const copy = addresses.slice()
-  copy.splice(position, 1)
+  copy[position] = copy[copy.length - 1]
+  copy.pop()
 
   return composeValidators(required, mustBeEthereumAddress, uniqueAddress(copy))
 }
@@ -92,17 +100,16 @@ export const calculateValuesAfterRemoving = (index: number, notRemovedOwners: nu
   return initialValues
 }
 
-class SafeOwners extends React.Component<Props, State> {
+class SafeOwners extends React.PureComponent<Props, State> {
   state = {
     numOwners: 1,
   }
 
   onRemoveRow = (index: number) => () => {
-    const { values } = this.props
+    const { values, updateInitialProps } = this.props
     const { numOwners } = this.state
     const initialValues = calculateValuesAfterRemoving(index, numOwners, values)
-    this.props.updateInitialProps(initialValues)
-
+    updateInitialProps(initialValues)
 
     this.setState(state => ({
       numOwners: state.numOwners - 1,
@@ -132,12 +139,12 @@ class SafeOwners extends React.Component<Props, State> {
           <Col xs={8}>ADDRESS</Col>
         </Row>
         <Hairline />
-        <Block margin="md">
-          { [...Array(Number(numOwners))].map((x, index) => {
+        <Block margin="md" padding="md">
+          {[...Array(Number(numOwners))].map((x, index) => {
             const addressName = getOwnerAddressBy(index)
 
             return (
-              <Row key={`owner${(index)}`} className={classes.owner}>
+              <Row key={`owner${index}`} className={classes.owner}>
                 <Col xs={4}>
                   <Field
                     className={classes.name}
@@ -153,13 +160,15 @@ class SafeOwners extends React.Component<Props, State> {
                   <Field
                     name={addressName}
                     component={TextField}
-                    inputAdornment={noErrorsOn(addressName, errors) && {
-                      endAdornment: (
-                        <InputAdornment position="end">
-                          <CheckCircle className={classes.check} />
-                        </InputAdornment>
-                      ),
-                    }}
+                    inputAdornment={
+                      noErrorsOn(addressName, errors) && {
+                        endAdornment: (
+                          <InputAdornment position="end">
+                            <CheckCircle className={classes.check} />
+                          </InputAdornment>
+                        ),
+                      }
+                    }
                     type="text"
                     validate={getAddressValidators(otherAccounts, index)}
                     placeholder="Owner Address*"
@@ -167,17 +176,17 @@ class SafeOwners extends React.Component<Props, State> {
                   />
                 </Col>
                 <Col xs={1} center="xs" middle="xs" className={classes.remove}>
-                  { index > 0 &&
-                    <Img src={trash} height={20} alt="Delete" onClick={this.onRemoveRow(index)} />
-                  }
+                  {index > 0 && <Img src={trash} height={20} alt="Delete" onClick={this.onRemoveRow(index)} />}
                 </Col>
               </Row>
             )
-          }) }
+          })}
         </Block>
         <Row align="center" grow className={classes.add} margin="xl">
-          <Button color="secondary" onClick={this.onAddOwner}>
-            <Paragraph weight="bold" size="md" noMargin>{ADD_OWNER_BUTTON}</Paragraph>
+          <Button color="secondary" onClick={this.onAddOwner} data-testid="add-owner-btn">
+            <Paragraph weight="bold" size="md" noMargin>
+              {ADD_OWNER_BUTTON}
+            </Paragraph>
           </Button>
         </Row>
       </React.Fragment>
@@ -187,7 +196,7 @@ class SafeOwners extends React.Component<Props, State> {
 
 const SafeOwnersForm = withStyles(styles)(SafeOwners)
 
-const SafeOwnersPage = ({ updateInitialProps }: Object) => (controls: React$Node, { values, errors }: Object) => (
+const SafeOwnersPage = ({ updateInitialProps }: Object) => (controls: React.Node, { values, errors }: Object) => (
   <React.Fragment>
     <OpenPaper controls={controls} padding={false}>
       <SafeOwnersForm
@@ -199,6 +208,5 @@ const SafeOwnersPage = ({ updateInitialProps }: Object) => (controls: React$Node
     </OpenPaper>
   </React.Fragment>
 )
-
 
 export default SafeOwnersPage

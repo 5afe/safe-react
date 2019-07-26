@@ -1,7 +1,7 @@
 /*eslint-disable*/
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
 const autoprefixer = require('autoprefixer')
-const cssmixins = require('postcss-mixins');
+const cssmixins = require('postcss-mixins')
 const cssvars = require('postcss-simple-vars')
 const webpack = require('webpack')
 
@@ -9,8 +9,10 @@ const UglifyJSPlugin = require('uglifyjs-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const ManifestPlugin = require('webpack-manifest-plugin')
-const url = require('url')
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin')
 
+const url = require('url')
 const paths = require('./paths')
 const getClientEnvironment = require('./env')
 
@@ -18,7 +20,7 @@ const cssvariables = require(`${paths.appSrc}/theme/variables`)
 
 const postcssPlugins = [
   autoprefixer({
-    browsers: [
+    overrideBrowserslist: [
       '>1%',
       'last 4 versions',
       'Firefox ESR',
@@ -77,7 +79,7 @@ module.exports = {
   bail: true,
   optimization: {
     splitChunks: {
-      chunks: "all",
+      chunks: 'all',
       /* https://stackoverflow.com/questions/48985780/webpack-4-create-vendor-chunk
       cacheGroups: {
         vendor: {
@@ -90,11 +92,9 @@ module.exports = {
       },
       */
     },
+    minimizer: [new OptimizeCSSAssetsPlugin({})],
   },
-  entry: [
-    require.resolve('./polyfills'),
-    paths.appIndexJs,
-  ],
+  entry: [require.resolve('./polyfills'), paths.appIndexJs],
   output: {
     // The build folder.
     path: paths.appBuild,
@@ -107,11 +107,7 @@ module.exports = {
     publicPath,
   },
   resolve: {
-    modules: [
-      paths.appSrc,
-      'node_modules',
-      paths.appContracts,
-    ],
+    modules: [paths.appSrc, 'node_modules', paths.appContracts],
     // These are the reasonable defaults supported by the Node ecosystem.
     // We also include JSX as a common component filename extension to support
     // some tools, although we do not recommend using it, see:
@@ -134,36 +130,35 @@ module.exports = {
       },
       {
         test: /\.(scss|css)$/,
-        use: ExtractTextPlugin.extract({
-          fallback: 'style-loader',
-          use: [
-            {
-              loader: 'css-loader',
-              options: {
-                importLoaders: 1,
-                modules: true,
-                minimize: true,
-              },
+        use: [
+          MiniCssExtractPlugin.loader,
+          {
+            loader: 'css-loader',
+            options: {
+              importLoaders: 1,
+              modules: true,
             },
-            {
-              loader: 'postcss-loader',
-              options: {
-                sourceMap: true,
-                plugins: postcssPlugins,
-              },
+          },
+          {
+            loader: 'postcss-loader',
+            options: {
+              sourceMap: true,
+              plugins: postcssPlugins,
             },
-          ],
-        }),
+          },
+        ],
       },
       {
         test: /\.(jpe?g|png|svg)$/i,
         exclude: /node_modules/,
-        use: [{
-          loader: "file-loader",
-          options: {
-            name: 'img/[hash].[ext]'
-          }
-        }]
+        use: [
+          {
+            loader: 'file-loader',
+            options: {
+              name: 'img/[hash].[ext]',
+            },
+          },
+        ],
       },
     ],
   },
@@ -190,10 +185,9 @@ module.exports = {
     // It is absolutely essential that NODE_ENV was set to production here.
     // Otherwise React will be compiled in the very slow development mode.
     new webpack.DefinePlugin(env),
-    // Note: this won't work without ExtractTextPlugin.extract(..) in `loaders`.
-    new ExtractTextPlugin({
+    new MiniCssExtractPlugin({
       filename: 'static/css/[name].[hash:8].css',
-      allChunks: true
+      allChunks: 'static/css/[id].[hash:8].css',
     }),
     // Generate a manifest file which contains a mapping of all asset filenames
     // to their corresponding output file so that tools can pick it up without

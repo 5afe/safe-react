@@ -1,18 +1,21 @@
 // @flow
 import * as React from 'react'
 import classNames from 'classnames'
-import { getNamesFrom, getAccountsFrom } from '~/routes/open/utils/safeDataExtractor'
-import Block from '~/components/layout/Block'
 import { withStyles } from '@material-ui/core/styles'
 import OpenInNew from '@material-ui/icons/OpenInNew'
+import { getNamesFrom, getAccountsFrom } from '~/routes/open/utils/safeDataExtractor'
+import Block from '~/components/layout/Block'
 import Identicon from '~/components/Identicon'
 import OpenPaper from '~/components/Stepper/OpenPaper'
 import Col from '~/components/layout/Col'
 import Row from '~/components/layout/Row'
+import Link from '~/components/layout/Link'
 import Paragraph from '~/components/layout/Paragraph'
-import { sm, md, lg, border, secondary, background } from '~/theme/variables'
+import {
+  sm, md, lg, border, secondary, background,
+} from '~/theme/variables'
 import Hairline from '~/components/layout/Hairline'
-import { openAddressInEtherScan } from '~/logic/wallets/getWeb3'
+import { getEtherScanLink } from '~/logic/wallets/getWeb3'
 import { FIELD_NAME, FIELD_CONFIRMATIONS, getNumOwnersFrom } from '../fields'
 
 const openIconStyle = {
@@ -111,22 +114,24 @@ const ReviewComponent = ({ values, classes, network }: Props) => {
             </Paragraph>
           </Block>
           <Hairline />
-          { names.map((name, index) => (
-            <React.Fragment key={`name${(index)}`}>
+          {names.map((name, index) => (
+            <React.Fragment key={`name${index}`}>
               <Row className={classes.owner}>
                 <Col xs={1} align="center">
                   <Identicon address={addresses[index]} diameter={32} />
                 </Col>
                 <Col xs={11}>
                   <Block className={classNames(classes.name, classes.userName)}>
-                    <Paragraph size="lg" noMargin >{name}</Paragraph>
+                    <Paragraph size="lg" noMargin>
+                      {name}
+                    </Paragraph>
                     <Block align="center" className={classes.user}>
-                      <Paragraph size="md" color="disabled" noMargin>{addresses[index]}</Paragraph>
-                      <OpenInNew
-                        className={classes.open}
-                        style={openIconStyle}
-                        onClick={openAddressInEtherScan(addresses[index], network)}
-                      />
+                      <Paragraph size="md" color="disabled" noMargin>
+                        {addresses[index]}
+                      </Paragraph>
+                      <Link className={classes.open} to={getEtherScanLink('address', addresses[index], network)} target="_blank">
+                        <OpenInNew style={openIconStyle} />
+                      </Link>
                     </Block>
                   </Block>
                 </Col>
@@ -138,7 +143,7 @@ const ReviewComponent = ({ values, classes, network }: Props) => {
       </Row>
       <Row className={classes.info} align="center">
         <Paragraph noMargin color="primary" size="md">
-          {'You\'re about to create a new Safe.'}
+          {"You're about to create a new Safe."}
         </Paragraph>
         <Paragraph noMargin color="primary" size="md">
           Make sure you have enough ETH in your wallet client to fund this transaction.
@@ -150,13 +155,12 @@ const ReviewComponent = ({ values, classes, network }: Props) => {
 
 const ReviewPage = withStyles(styles)(ReviewComponent)
 
-const Review = ({ network }: LayoutProps) => (controls: React$Node, { values }: Object) => (
+const Review = ({ network }: LayoutProps) => (controls: React.Node, { values }: Object) => (
   <React.Fragment>
     <OpenPaper controls={controls} padding={false}>
       <ReviewPage network={network} values={values} />
     </OpenPaper>
   </React.Fragment>
 )
-
 
 export default Review

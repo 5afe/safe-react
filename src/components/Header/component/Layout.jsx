@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react'
+import { Link } from 'react-router-dom'
 import { withStyles } from '@material-ui/core/styles'
 import Grow from '@material-ui/core/Grow'
 import ClickAwayListener from '@material-ui/core/ClickAwayListener'
@@ -18,8 +19,8 @@ const logo = require('../assets/gnosis-safe-logo.svg')
 
 type Props = Open & {
   classes: Object,
-  providerDetails: React$Node,
-  providerInfo: React$Node,
+  providerDetails: React.Node,
+  providerInfo: React.Node,
 }
 
 const styles = () => ({
@@ -49,7 +50,9 @@ const Layout = openHoc(({
   <React.Fragment>
     <Row className={classes.summary}>
       <Col start="xs" middle="xs" className={classes.logo}>
-        <Img src={logo} height={32} alt="Gnosis Team Safe" />
+        <Link to="/">
+          <Img src={logo} height={32} alt="Gnosis Team Safe" />
+        </Link>
       </Col>
       <Divider />
       <Spacer />
@@ -58,9 +61,7 @@ const Layout = openHoc(({
         {providerRef => (
           <Popper open={open} anchorEl={providerRef.current} placement="bottom-end">
             {({ TransitionProps }) => (
-              <Grow
-                {...TransitionProps}
-              >
+              <Grow {...TransitionProps}>
                 <ClickAwayListener onClickAway={clickAway} mouseEvent="onClick" touchEvent={false}>
                   <List className={classes.root} component="div">
                     {providerDetails}

@@ -27,14 +27,30 @@ type Props = {
   mdOffset?: number,
   lgOffset?: number,
   className?: string,
-  children: React$Node,
+  children: React.Node,
 }
 
 const Col = ({
-  children, margin, layout = 'inherit', overflow,
-  xs, sm, md, lg,
-  start, center, end, top, middle, bottom, around, between,
-  xsOffset, smOffset, mdOffset, lgOffset,
+  children,
+  margin,
+  layout = 'inherit',
+  overflow,
+  xs,
+  sm,
+  md,
+  lg,
+  start,
+  center,
+  end,
+  top,
+  middle,
+  bottom,
+  around,
+  between,
+  xsOffset,
+  smOffset,
+  mdOffset,
+  lgOffset,
   className,
   ...props
 }: Props) => {
@@ -64,7 +80,7 @@ const Col = ({
 
   return (
     <div className={colClassNames} {...props}>
-      { children }
+      {children}
     </div>
   )
 }

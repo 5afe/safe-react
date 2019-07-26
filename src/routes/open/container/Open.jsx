@@ -2,9 +2,10 @@
 import * as React from 'react'
 import { connect } from 'react-redux'
 import Page from '~/components/layout/Page'
-import { getAccountsFrom, getThresholdFrom, getNamesFrom, getSafeNameFrom } from '~/routes/open/utils/safeDataExtractor'
-import { getWeb3 } from '~/logic/wallets/getWeb3'
-import { getGnosisSafeContract, deploySafeContract, initContracts } from '~/logic/contracts/safeContracts'
+import {
+  getAccountsFrom, getThresholdFrom, getNamesFrom, getSafeNameFrom,
+} from '~/routes/open/utils/safeDataExtractor'
+import { getGnosisSafeInstanceAt, deploySafeContract, initContracts } from '~/logic/contracts/safeContracts'
 import { checkReceiptStatus } from '~/logic/wallets/ethTransactions'
 import { history } from '~/store'
 import { OPENING_ADDRESS, stillInOpeningView, SAFELIST_ADDRESS } from '~/routes/routes'
@@ -28,14 +29,12 @@ export const createSafe = async (values: Object, userAccount: string, addSafe: A
   const name = getSafeNameFrom(values)
   const owners = getNamesFrom(values)
 
-  const web3 = getWeb3()
-  const GnosisSafe = getGnosisSafeContract(web3)
-
   await initContracts()
   const safe = await deploySafeContract(accounts, numConfirmations, userAccount)
-  checkReceiptStatus(safe.tx)
-  const param = safe.logs[0].args.proxy
-  const safeContract = GnosisSafe.at(param)
+  await checkReceiptStatus(safe.tx)
+
+  const safeAddress = safe.logs[0].args.proxy
+  const safeContract = await getGnosisSafeInstanceAt(safeAddress)
 
   addSafe(name, safeContract.address, numConfirmations, owners, accounts)
 
@@ -63,7 +62,7 @@ class Open extends React.Component<Props> {
       history.push(OPENING_ADDRESS)
     } catch (error) {
       // eslint-disable-next-line
-      console.log('Error while creating the Safe' + error)
+      console.error('Error while creating the Safe: ' + error)
     }
   }
 

@@ -1,47 +1,47 @@
 /*eslint-disable*/
-const autoprefixer = require('autoprefixer');
-const cssmixins = require('postcss-mixins');
-const cssvars = require('postcss-simple-vars');
-const webpack = require('webpack');
-const HtmlWebPackPlugin = require("html-webpack-plugin");
+const autoprefixer = require('autoprefixer')
+const cssmixins = require('postcss-mixins')
+const cssvars = require('postcss-simple-vars')
+const webpack = require('webpack')
+const HtmlWebPackPlugin = require('html-webpack-plugin')
 
-const paths = require('./paths');
-const getClientEnvironment = require('./env');
+const paths = require('./paths')
+const getClientEnvironment = require('./env')
 
-const publicPath = '/';
+const publicPath = '/'
 
 // `publicUrl` we will provide it to our app
 // as %PUBLIC_URL% in `index.html` and `process.env.PUBLIC_URL` in JavaScript.
 // Omit trailing slash as %PUBLIC_PATH%/xyz looks better than %PUBLIC_PATH%xyz.
-var publicUrl = '';
+var publicUrl = ''
 // Get environment variables to inject into our app.
-var env = getClientEnvironment(publicUrl);
+var env = getClientEnvironment(publicUrl)
 
-const cssvariables = require(paths.appSrc + '/theme/variables');
+const cssvariables = require(paths.appSrc + '/theme/variables')
 
 const postcssPlugins = [
   autoprefixer({
-    browsers: [
+    overrideBrowserslist: [
       '>1%',
       'last 4 versions',
       'Firefox ESR',
       'not ie < 9', // React doesn't support IE8 anyway
-    ]
+    ],
   }),
   cssmixins,
   cssvars({
-    variables: function () {
-        return Object.assign({}, cssvariables);
+    variables: function() {
+      return Object.assign({}, cssvariables)
     },
-    silent: false
+    silent: false,
   }),
-];
+]
 
 module.exports = {
   devtool: 'eval-source-map',
   mode: 'development',
   entry: [
-    "babel-polyfill",
+    'babel-polyfill',
     // Include an alternative client for WebpackDevServer. A client's job is to
     // connect to WebpackDevServer by a socket and get notified about changes.
     // When you save a file, the client will either apply hot updates (in case
@@ -56,17 +56,13 @@ module.exports = {
     // We ship a few polyfills by default:
     require.resolve('./polyfills'),
     // Finally, this is your app's code:
-    paths.appIndexJs
+    paths.appIndexJs,
     // We include the app code last so that if there is a runtime error during
     // initialization, it doesn't blow up the WebpackDevServer client, and
     // changing JS code would still trigger a refresh.
   ],
   resolve: {
-    modules: [
-      paths.appSrc,
-      'node_modules',
-      paths.appContracts,
-    ], 
+    modules: [paths.appSrc, 'node_modules', paths.appContracts],
     // These are the reasonable defaults supported by the Node ecosystem.
     // We also include JSX as a common component filename extension to support
     // some tools, although we do not recommend using it, see:
@@ -75,7 +71,7 @@ module.exports = {
     alias: {
       '~': paths.appSrc,
       '#': paths.appContracts,
-    }
+    },
   },
   output: {
     // Next line is not used in dev but WebpackDevServer crashes without it:
@@ -87,28 +83,29 @@ module.exports = {
     // containing code from all our entry points, and the Webpack runtime.
     filename: 'static/js/bundle.js',
     // This is the URL that app is served from. We use "/" in development.
-    publicPath: publicPath
-  },  
+    publicPath: publicPath,
+  },
   module: {
     rules: [
       {
         test: /\.(js|jsx)$/,
         exclude: /node_modules/,
         use: {
-          loader: "babel-loader"
-        }
+          loader: 'babel-loader',
+        },
       },
       {
         test: /\.(scss|css)$/,
         use: [
           'style-loader',
-          { loader: 'css-loader',
+          {
+            loader: 'css-loader',
             options: {
               importLoaders: 1,
-              modules: true,
-              minimize: false,
-              localIdentName: '[name]__[local]___[hash:base64:5]',
-            }
+              modules: {
+                localIdentName: '[name]__[local]___[hash:base64:5]',
+              },
+            },
           },
           {
             loader: 'postcss-loader',
@@ -123,22 +120,24 @@ module.exports = {
         test: /\.html$/,
         use: [
           {
-            loader: "html-loader",
-            options: { minimize: false }
-          }
-        ]
+            loader: 'html-loader',
+            options: { minimize: false },
+          },
+        ],
       },
       {
         test: /\.(jpe?g|png|svg)$/i,
         exclude: /node_modules/,
-        use: [{
-          loader: "file-loader",
-          options: {
-            name: 'img/[hash].[ext]'
-          }
-        }]
+        use: [
+          {
+            loader: 'file-loader',
+            options: {
+              name: 'img/[hash].[ext]',
+            },
+          },
+        ],
       },
-    ]
+    ],
   },
   plugins: [
     new HtmlWebPackPlugin({
@@ -152,6 +151,6 @@ module.exports = {
   node: {
     fs: 'empty',
     net: 'empty',
-    tls: 'empty'
-  }
-};
+    tls: 'empty',
+  },
+}

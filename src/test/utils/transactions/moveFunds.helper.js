@@ -1,54 +1,30 @@
 // @flow
-import TestUtils from 'react-dom/test-utils'
+import * as React from 'react'
+import { fireEvent } from '@testing-library/react'
 import { sleep } from '~/utils/timer'
-import { checkMinedTx, checkPendingTx } from '~/test/builder/safe.dom.utils'
-import SendToken from '~/routes/safe/component/SendToken'
-import { whenExecuted } from '~/test/utils/logTransactions'
 
-
-export const sendMoveFundsForm = async (
-  SafeDom: React$Component<any, any>,
-  expandBalance: React$Component<any, any>,
+export const fillAndSubmitSendFundsForm = async (
+  SafeDom: any,
+  sendButton: React.Component<any, any>,
   value: string,
-  destination: string,
+  recipient: string,
 ) => {
   // load add multisig form component
-  TestUtils.Simulate.click(expandBalance)
+  fireEvent.click(sendButton)
   // give time to re-render it
   await sleep(400)
 
-  const ethList = TestUtils.findRenderedDOMComponentWithClass(SafeDom, 'ETH')
-  if (!ethList) throw new Error()
-  const ethButton = ethList.getElementsByTagName('button')
-  TestUtils.Simulate.click(ethButton[0])
-  await sleep(450)
+  // Fill first send funds screen
+  const recipientInput = SafeDom.getByPlaceholderText('Recipient*')
+  const amountInput = SafeDom.getByPlaceholderText('Amount*')
+  const reviewBtn = SafeDom.getByTestId('review-tx-btn')
+  fireEvent.change(recipientInput, { target: { value: recipient } })
+  fireEvent.change(amountInput, { target: { value } })
+  await sleep(200)
+  fireEvent.click(reviewBtn)
 
-  // fill the form
-  const inputs = TestUtils.scryRenderedDOMComponentsWithTag(SafeDom, 'input')
-  const destinationInput = inputs[0]
-  const amountInEthInput = inputs[1]
-  TestUtils.Simulate.change(amountInEthInput, { target: { value } })
-  TestUtils.Simulate.change(destinationInput, { target: { value: destination } })
-  // $FlowFixMe
-  const form = TestUtils.findRenderedDOMComponentWithTag(SafeDom, 'form')
-
-  // submit it
-  TestUtils.Simulate.submit(form)
-  TestUtils.Simulate.submit(form)
-
-
-  return whenExecuted(SafeDom, SendToken)
-}
-
-export const checkMinedMoveFundsTx = (Transaction: React$Component<any, any>, name: string) => {
-  checkMinedTx(Transaction, name)
-}
-
-export const checkPendingMoveFundsTx = async (
-  Transaction: React$Component<any, any>,
-  safeThreshold: number,
-  name: string,
-  statusses: string[],
-) => {
-  await checkPendingTx(Transaction, safeThreshold, name, statusses)
+  // Submit the tx (Review Tx screen)
+  const submitBtn = SafeDom.getByTestId('submit-tx-btn')
+  fireEvent.click(submitBtn)
+  await sleep(1000)
 }

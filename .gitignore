@@ -2,3 +2,5 @@ node_modules/
 build_webpack/
 build_storybook/
 .DS_Store
+build/
+yarn-error.log

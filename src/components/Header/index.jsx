@@ -2,8 +2,9 @@
 import * as React from 'react'
 import { connect } from 'react-redux'
 import { logComponentStack, type Info } from '~/utils/logBoundaries'
-import { SharedSnackbarConsumer, type Variant } from '~/components/SharedSnackBar/Context'
+import { SharedSnackbarConsumer, type Variant } from '~/components/SharedSnackBar'
 import { WALLET_ERROR_MSG } from '~/logic/wallets/store/actions'
+import { getProviderInfo } from '~/logic/wallets/getWeb3'
 import ProviderAccesible from './component/ProviderInfo/ProviderAccesible'
 import UserDetails from './component/ProviderDetails/UserDetails'
 import ProviderDisconnected from './component/ProviderInfo/ProviderDisconnected'
@@ -12,9 +13,10 @@ import Layout from './component/Layout'
 import actions, { type Actions } from './actions'
 import selector, { type SelectorProps } from './selector'
 
-type Props = Actions & SelectorProps & {
-  openSnackbar: (message: string, variant: Variant) => void,
-}
+type Props = Actions &
+  SelectorProps & {
+    openSnackbar: (message: string, variant: Variant) => void,
+  }
 
 type State = {
   hasError: boolean,
@@ -26,22 +28,38 @@ class HeaderComponent extends React.PureComponent<Props, State> {
   }
 
   componentDidMount() {
-    this.props.fetchProvider(this.props.openSnackbar)
+    this.onConnect()
   }
 
   componentDidCatch(error: Error, info: Info) {
+    const { openSnackbar } = this.props
     this.setState({ hasError: true })
-    this.props.openSnackbar(WALLET_ERROR_MSG, 'error')
+    openSnackbar(WALLET_ERROR_MSG, 'error')
 
     logComponentStack(error, info)
   }
 
   onDisconnect = () => {
-    this.props.removeProvider(this.props.openSnackbar)
+    const { removeProvider, openSnackbar } = this.props
+    clearInterval(this.providerListener)
+
+    removeProvider(openSnackbar)
   }
 
-  onConnect = () => {
-    this.props.fetchProvider(this.props.openSnackbar)
+  onConnect = async () => {
+    const { fetchProvider, openSnackbar } = this.props
+
+    clearInterval(this.providerListener)
+    let currentProvider: ProviderProps = await getProviderInfo()
+    fetchProvider(currentProvider, openSnackbar)
+
+    this.providerListener = setInterval(async () => {
+      const newProvider: ProviderProps = await getProviderInfo()
+      if (JSON.stringify(currentProvider) !== JSON.stringify(newProvider)) {
+        fetchProvider(newProvider, openSnackbar)
+      }
+      currentProvider = newProvider
+    }, 2000)
   }
 
   getProviderInfoBased = () => {
@@ -67,13 +85,15 @@ class HeaderComponent extends React.PureComponent<Props, State> {
       return <ConnectDetails onConnect={this.onConnect} />
     }
 
-    return (<UserDetails
-      provider={provider}
-      network={network}
-      userAddress={userAddress}
-      connected={available}
-      onDisconnect={this.onDisconnect}
-    />)
+    return (
+      <UserDetails
+        provider={provider}
+        network={network}
+        userAddress={userAddress}
+        connected={available}
+        onDisconnect={this.onDisconnect}
+      />
+    )
   }
 
   render() {
@@ -84,14 +104,13 @@ class HeaderComponent extends React.PureComponent<Props, State> {
   }
 }
 
-const Header = connect(selector, actions)(HeaderComponent)
+const Header = connect(
+  selector,
+  actions,
+)(HeaderComponent)
 
 const HeaderSnack = () => (
-  <SharedSnackbarConsumer>
-    {({ openSnackbar }) => (
-      <Header openSnackbar={openSnackbar} />
-    )}
-  </SharedSnackbarConsumer>
+  <SharedSnackbarConsumer>{({ openSnackbar }) => <Header openSnackbar={openSnackbar} />}</SharedSnackbarConsumer>
 )
 
 export default HeaderSnack

@@ -2,14 +2,12 @@
 import * as React from 'react'
 import classNames from 'classnames'
 import { List } from 'immutable'
-import Row from '~/components/layout/Row'
 import Table from '@material-ui/core/Table'
 import TableBody from '@material-ui/core/TableBody'
-import TableRow from '@material-ui/core/TableRow'
-import TableCell from '@material-ui/core/TableCell'
 import { withStyles } from '@material-ui/core/styles'
 import CircularProgress from '@material-ui/core/CircularProgress'
 import TablePagination from '@material-ui/core/TablePagination'
+import Row from '~/components/layout/Row'
 import { type Order, stableSort, getSorting } from '~/components/Table/sorting'
 import TableHead, { type Column } from '~/components/Table/TableHead'
 import { xl } from '~/theme/variables'
@@ -23,15 +21,17 @@ type Props<K> = {
   children: Function,
   size: number,
   defaultFixed?: boolean,
+  defaultOrder?: 'desc' | 'asc',
+  noBorder: boolean,
 }
 
 type State = {
   page: number,
   order: Order,
-  orderBy: string,
+  orderBy?: string,
   orderProp: boolean,
   rowsPerPage: number,
-  fixed: boolean,
+  fixed?: boolean,
 }
 
 const styles = {
@@ -60,26 +60,56 @@ const styles = {
 
 const FIXED_HEIGHT = 49
 
+const backProps = {
+  'aria-label': 'Previous Page',
+}
+
+const nextProps = {
+  'aria-label': 'Next Page',
+}
+
 class GnoTable<K> extends React.Component<Props<K>, State> {
   state = {
     page: 0,
-    order: 'asc',
-    orderBy: this.props.defaultOrderBy,
-    fixed: !!this.props.defaultFixed,
+    order: undefined,
+    orderBy: undefined,
+    fixed: undefined,
     orderProp: false,
     rowsPerPage: 5,
   }
 
-  onSort = (property: string, orderProp: boolean) => {
-    const orderBy = property
-    let order = 'desc'
+  componentDidMount() {
+    const { defaultOrderBy, columns } = this.props
 
-    if (this.state.orderBy === property && this.state.order === 'desc') {
-      order = 'asc'
+    if (defaultOrderBy && columns) {
+      const defaultOrderCol = columns.find(({ id }) => id === defaultOrderBy)
+
+      if (defaultOrderCol.order) {
+        this.setState({
+          orderProp: true,
+        })
+      }
+    }
+  }
+
+  onSort = (newOrderBy: string, orderProp: boolean) => {
+    const { order, orderBy } = this.state
+    const { defaultOrder } = this.props
+    let newOrder = 'desc'
+
+    // if table was previously sorted by the user
+    if (order && orderBy === newOrderBy && order === 'desc') {
+      newOrder = 'asc'
+    } else if (!order && defaultOrder === 'desc') {
+      // if it was not sorted and defaultOrder is used
+      newOrder = 'asc'
     }
 
     this.setState(() => ({
-      order, orderBy, orderProp, fixed: false,
+      order: newOrder,
+      orderBy: newOrderBy,
+      orderProp,
+      fixed: false,
     }))
   }
 
@@ -91,69 +121,57 @@ class GnoTable<K> extends React.Component<Props<K>, State> {
     this.setState({ page })
   }
 
-  handleChangeRowsPerPage = (event: SyntheticInputEvent<HTMLInputElement>) => {
-    const rowsPerPage = Number(event.target.value)
+  handleChangeRowsPerPage = (e: SyntheticInputEvent<HTMLInputElement>) => {
+    const rowsPerPage = Number(e.target.value)
     this.setState({ rowsPerPage })
   }
 
   render() {
     const {
-      data, label, columns, classes, children, size,
+      data, label, columns, classes, children, size, defaultOrderBy, defaultOrder, defaultFixed, noBorder,
     } = this.props
-
     const {
       order, orderBy, page, orderProp, rowsPerPage, fixed,
     } = this.state
-
-    const backProps = {
-      'aria-label': 'Previous Page',
-    }
-
-    const nextProps = {
-      'aria-label': 'Next Page',
-    }
+    const orderByParam = orderBy || defaultOrderBy
+    const orderParam = order || defaultOrder
+    const fixedParam = typeof fixed !== 'undefined' ? fixed : !!defaultFixed
 
     const paginationClasses = {
       selectRoot: classes.selectRoot,
-      root: classes.paginationRoot,
+      root: !noBorder && classes.paginationRoot,
       input: classes.white,
     }
 
-    const sortedData = stableSort(data, getSorting(order, orderBy, orderProp), fixed)
-      .slice(page * rowsPerPage, ((page * rowsPerPage) + rowsPerPage))
+    const sortedData = stableSort(data, getSorting(orderParam, orderByParam, orderProp), fixedParam).slice(
+      page * rowsPerPage,
+      page * rowsPerPage + rowsPerPage,
+    )
 
-    const emptyRows = rowsPerPage - Math.min(rowsPerPage, data.length - (page * rowsPerPage))
+    const emptyRows = rowsPerPage - Math.min(rowsPerPage, data.length - page * rowsPerPage)
     const isEmpty = size === 0
 
     return (
       <React.Fragment>
-        { !isEmpty &&
-          <Table aria-labelledby={label} className={classes.root}>
-            <TableHead
-              columns={columns}
-              order={order}
-              orderBy={orderBy}
-              onSort={this.onSort}
-            />
-            <TableBody>
-              { children(sortedData) }
-              { emptyRows > 0 &&
-                <TableRow style={this.getEmptyStyle(emptyRows)}>
-                  <TableCell colSpan={4} />
-                </TableRow>
-              }
-            </TableBody>
+        {!isEmpty && (
+          <Table aria-labelledby={label} className={noBorder ? '' : classes.root}>
+            <TableHead columns={columns} order={order} orderBy={orderByParam} onSort={this.onSort} />
+            <TableBody>{children(sortedData)}</TableBody>
           </Table>
-        }
-        { isEmpty &&
-          <Row className={classNames(classes.loader, classes.root)} style={this.getEmptyStyle(emptyRows + 1)}>
+        )}
+        {isEmpty && (
+          <Row
+            className={classNames(classes.loader, !noBorder && classes.root)}
+            style={this.getEmptyStyle(emptyRows + 1)}
+          >
             <CircularProgress size={60} />
           </Row>
-        }
+        )}
         <TablePagination
           component="div"
           count={size}
           rowsPerPage={rowsPerPage}
+          rowsPerPageOptions={[5, 10, 25, 50, 100]}
           page={page}
           backIconButtonProps={backProps}
           nextIconButtonProps={nextProps}
@@ -164,6 +182,10 @@ class GnoTable<K> extends React.Component<Props<K>, State> {
       </React.Fragment>
     )
   }
+}
+
+GnoTable.defaultProps = {
+  defaultOrder: 'asc',
 }
 
 export default withStyles(styles)(GnoTable)

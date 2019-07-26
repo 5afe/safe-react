@@ -35,24 +35,28 @@
   color: $disabled;
 }
 
+.error {
+  color: $error;
+}
+
 .white {
   color: white;
 }
 
 .capitalize {
-  text-transform: capitalize
+  text-transform: capitalize;
 }
 
 .lowercase {
-  text-transform: lowercase
+  text-transform: lowercase;
 }
 
 .uppercase {
-  text-transform: uppercase
+  text-transform: uppercase;
 }
 
-.noMargin{
-    margin: 0;
+.noMargin {
+  margin: 0;
 }
 
 .center {

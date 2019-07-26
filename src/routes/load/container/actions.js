@@ -1,12 +1,10 @@
 // @flow
-import updateSafe from '~/routes/safe/store/actions/updateSafe'
-
-export type UpdateSafe = typeof updateSafe
+import { addSafe } from '~/routes/safe/store/actions/addSafe'
 
 export type Actions = {
-  updateSafe: typeof updateSafe,
+  addSafe: Function,
 }
 
 export default {
-  updateSafe,
+  addSafe,
 }

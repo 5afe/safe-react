@@ -1,8 +1,9 @@
 // @flow
-import { getGnosisSafeInstanceAt } from '~/logic/contracts/safeContracts'
-import GnoStepper from '~/components/Stepper'
+import React from 'react'
 import Stepper from '@material-ui/core/Stepper'
 import TestUtils from 'react-dom/test-utils'
+import { getGnosisSafeInstanceAt } from '~/logic/contracts/safeContracts'
+import GnoStepper from '~/components/Stepper'
 
 export const printOutApprove = async (
   subject: string,
@@ -19,11 +20,13 @@ export const printOutApprove = async (
   // eslint-disable-next-line
   console.log(`EO transaction hash ${transactionHash}`)
 
-  await Promise.all(owners.map(async (owner, index) => {
-    const approved = await gnosisSafe.isApproved(transactionHash, owner)
-    // eslint-disable-next-line
-    console.log(`EO transaction approved by owner index ${index}: ${approved}`)
-  }))
+  await Promise.all(
+    owners.map(async (owner, index) => {
+      const approved = await gnosisSafe.isApproved(transactionHash, owner)
+      // eslint-disable-next-line
+      console.log(`EO transaction approved by owner index ${index}: ${approved}`)
+    }),
+  )
   // eslint-disable-next-line
   console.log(`EO transaction executed ${await gnosisSafe.isExecuted(transactionHash)}`)
 }
@@ -36,8 +39,8 @@ type FinsihedTx = {
 }
 
 export const whenExecuted = (
-  SafeDom: React$Component<any, any>,
-  ParentComponent: React$ElementType,
+  SafeDom: React.Component<any, any>,
+  ParentComponent: React.ElementType,
 ): Promise<void> => new Promise((resolve, reject) => {
   let times = 0
   const interval = setInterval(() => {
@@ -48,25 +51,25 @@ export const whenExecuted = (
 
     // $FlowFixMe
     const SafeComponent = TestUtils.findRenderedComponentWithType(SafeDom, ParentComponent)
-    type GnoStepperType = React$Component<FinsihedTx, any>
-    // $FlowFixMe
-    const StepperComponent: GnoStepperType = TestUtils.findRenderedComponentWithType(SafeComponent, GnoStepper)
+      type GnoStepperType = React.Component<FinsihedTx, any>
+      // $FlowFixMe
+      const StepperComponent: GnoStepperType = TestUtils.findRenderedComponentWithType(SafeComponent, GnoStepper)
 
-    if (StepperComponent.props.finishedTransaction === true) {
-      clearInterval(interval)
-      resolve()
-    }
-    times += 1
+      if (StepperComponent.props.finishedTransaction === true) {
+        clearInterval(interval)
+        resolve()
+      }
+      times += 1
   }, INTERVAL)
 })
 
 type MiddleStep = {
-  activeStep: number
+  activeStep: number,
 }
 
 export const whenOnNext = (
-  SafeDom: React$Component<any, any>,
-  ParentComponent: React$ElementType,
+  SafeDom: React.Component<any, any>,
+  ParentComponent: React.ElementType,
   position: number,
 ): Promise<void> => new Promise((resolve, reject) => {
   let times = 0
@@ -78,13 +81,13 @@ export const whenOnNext = (
 
     // $FlowFixMe
     const SafeComponent = TestUtils.findRenderedComponentWithType(SafeDom, ParentComponent)
-    type StepperType = React$Component<MiddleStep, any>
-    // $FlowFixMe
-    const StepperComponent: StepperType = TestUtils.findRenderedComponentWithType(SafeComponent, Stepper)
-    if (StepperComponent.props.activeStep === position) {
-      clearInterval(interval)
-      resolve()
-    }
-    times += 1
+      type StepperType = React.Component<MiddleStep, any>
+      // $FlowFixMe
+      const StepperComponent: StepperType = TestUtils.findRenderedComponentWithType(SafeComponent, Stepper)
+      if (StepperComponent.props.activeStep === position) {
+        clearInterval(interval)
+        resolve()
+      }
+      times += 1
   }, INTERVAL)
 })

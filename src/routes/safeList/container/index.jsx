@@ -3,7 +3,7 @@ import { List } from 'immutable'
 import * as React from 'react'
 import { connect } from 'react-redux'
 import Page from '~/components/layout/Page'
-import { type Safe } from '~/routes/safe/store/model/safe'
+import { type Safe } from '~/routes/safe/store/models/safe'
 import Layout from '../components/Layout'
 import selector from './selector'
 
@@ -18,4 +18,4 @@ const SafeList = ({ safes, provider }: Props) => (
   </Page>
 )
 
-export default connect(selector)(SafeList)
+export default connect<*, *, *, *>(selector)(SafeList)

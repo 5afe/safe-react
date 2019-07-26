@@ -1,31 +1,20 @@
 // @flow
 import 'babel-polyfill'
 
-import { MuiThemeProvider } from '@material-ui/core/styles'
 import React from 'react'
 import ReactDOM from 'react-dom'
-import { Provider } from 'react-redux'
-import { ConnectedRouter } from 'react-router-redux'
-import PageFrame from '~/components/layout/PageFrame'
-import { history, store } from '~/store'
-import theme from '~/theme/mui'
-import AppRoutes from '~/routes'
+import Root from '~/components/Root'
+import { store } from '~/store'
+import loadSafesFromStorage from '~/routes/safe/store/actions/loadSafesFromStorage'
+import loadActiveTokens from '~/logic/tokens/store/actions/loadActiveTokens'
 
-import './index.scss'
+if (process.env.NODE_ENV !== 'production') {
+  // eslint-disable-next-line
+  const whyDidYouRender = require('@welldone-software/why-did-you-render')
+  whyDidYouRender(React)
+}
 
-const Root = () => (
-  <Provider store={store}>
-    <MuiThemeProvider theme={theme}>
-      <ConnectedRouter history={history}>
-        <PageFrame>
-          <AppRoutes />
-        </PageFrame>
-      </ConnectedRouter>
-    </MuiThemeProvider>
-  </Provider>
-)
+store.dispatch(loadActiveTokens())
+store.dispatch(loadSafesFromStorage())
 
-ReactDOM.render(
-  <Root />,
-  document.getElementById('root'),
-)
+ReactDOM.render(<Root />, document.getElementById('root'))

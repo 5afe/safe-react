@@ -1,12 +1,11 @@
 // @flow
 import { List } from 'immutable'
-import { type Transaction } from '~/routes/safe/store/model/transaction'
-import { executeTransaction, approveTransaction } from '~/logic/safe/safeBlockchainOperations'
+import { type Transaction } from '~/routes/safe/store/models/transaction'
+import { executeTransaction, approveTransaction } from '~/logic/safe/transactions'
 import { EMPTY_DATA } from '~/logic/wallets/ethTransactions'
 import { getWeb3 } from '~/logic/wallets/getWeb3'
-import { type Safe } from '~/routes/safe/store/model/safe'
-import { getGnosisSafeContract } from '~/logic/contracts/safeContracts'
-import { storeSubject } from '~/utils/localStorage/transactions'
+import { type Safe } from '~/routes/safe/store/models/safe'
+import { storeSubject } from '~/utils/storage/transactions'
 
 export const TX_NAME_PARAM = 'txName'
 export const TX_DESTINATION_PARAM = 'txDestination'
@@ -23,17 +22,11 @@ const hasOneOwner = (safe: Safe) => {
   return owners.count() === 1
 }
 
-export const getSafeEthereumInstance = async (safeAddress: string) => {
-  const web3 = getWeb3()
-  const GnosisSafe = await getGnosisSafeContract(web3)
-  return GnosisSafe.at(safeAddress)
-}
-
 export const createTransaction = async (
   safe: Safe,
   name: string,
   to: string,
-  value: number,
+  value: string,
   nonce: number,
   sender: string,
   data: string = EMPTY_DATA,
@@ -41,7 +34,7 @@ export const createTransaction = async (
   const web3 = getWeb3()
   const safeAddress = safe.get('address')
   const threshold = safe.get('threshold')
-  const valueInWei = web3.toWei(value, 'ether')
+  const valueInWei = web3.utils.toWei(value, 'ether')
   const CALL = 0
 
   const isExecution = hasOneOwner(safe) || threshold === 1

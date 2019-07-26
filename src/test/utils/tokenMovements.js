@@ -1,16 +1,17 @@
 // @flow
 import contract from 'truffle-contract'
 import { getBalanceInEtherOf, getWeb3 } from '~/logic/wallets/getWeb3'
-import { promisify } from '~/utils/promisify'
-import Token from '#/test/TestToken.json'
 import { ensureOnce } from '~/utils/singleton'
 import { toNative } from '~/logic/wallets/tokens'
+import TokenOMG from '../../../build/contracts/TokenOMG'
+import TokenRDN from '../../../build/contracts/TokenRDN'
 
-export const addEtherTo = async (address: string, eth: string) => {
+export const sendEtherTo = async (address: string, eth: string, fromAccountIndex: number = 0) => {
   const web3 = getWeb3()
-  const accounts = await promisify(cb => web3.eth.getAccounts(cb))
-  const txData = { from: accounts[0], to: address, value: web3.toWei(eth, 'ether') }
-  return promisify(cb => web3.eth.sendTransaction(txData, cb))
+  const accounts = await web3.eth.getAccounts()
+  const { toBN, toWei } = web3.utils
+  const txData = { from: accounts[fromAccountIndex], to: address, value: toBN(toWei(eth, 'ether')) }
+  return web3.eth.sendTransaction(txData)
 }
 
 export const checkBalanceOf = async (addressToTest: string, value: string) => {
@@ -18,23 +19,38 @@ export const checkBalanceOf = async (addressToTest: string, value: string) => {
   expect(safeBalance).toBe(value)
 }
 
-const createTokenContract = async (web3: any, executor: string) => {
-  const token = contract(Token)
+const createTokenOMGContract = async (web3: any, creator: string) => {
+  const token = contract(TokenOMG)
+  const { toBN } = web3.utils
+  const amount = toBN(50000)
+    .mul(toBN(10).pow(toBN(18)))
+    .toString()
   token.setProvider(web3.currentProvider)
 
-  return token.new({ from: executor, gas: '5000000' })
+  return token.new(amount, { from: creator })
 }
 
-export const getFirstTokenContract = ensureOnce(createTokenContract)
-export const getSecondTokenContract = ensureOnce(createTokenContract)
+const createTokenRDNContract = async (web3: any, creator: string) => {
+  const token = contract(TokenRDN)
+  const { toBN } = web3.utils
+  const amount = toBN(50000)
+    .mul(toBN(10).pow(toBN(18)))
+    .toString()
+  token.setProvider(web3.currentProvider)
 
-export const addTknTo = async (safe: string, value: number, tokenContract?: any) => {
+  return token.new(amount, { from: creator })
+}
+
+export const getFirstTokenContract = ensureOnce(createTokenOMGContract)
+export const getSecondTokenContract = ensureOnce(createTokenRDNContract)
+
+export const sendTokenTo = async (safe: string, value: string, tokenContract?: any) => {
   const web3 = getWeb3()
-  const accounts = await promisify(cb => getWeb3().eth.getAccounts(cb))
+  const accounts = await web3.eth.getAccounts()
 
-  const myToken = tokenContract || await getFirstTokenContract(web3, accounts[0])
-  const nativeValue = await toNative(value, 18)
-  await myToken.transfer(safe, nativeValue.valueOf(), { from: accounts[0], gas: '5000000' })
+  const OMGToken = tokenContract || (await getFirstTokenContract(web3, accounts[0]))
+  const nativeValue = toNative(value, 18)
+  await OMGToken.transfer(safe, nativeValue.valueOf(), { from: accounts[0], gas: '5000000' })
 
-  return myToken.address
+  return OMGToken.address
 }

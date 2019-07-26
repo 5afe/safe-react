@@ -9,12 +9,13 @@ import { type Order } from '~/components/Table/sorting'
 
 export type Column = {
   id: string,
-  numeric: boolean,
+  align?: string,
   order: boolean, // If data for sorting will be provided in a different attr
   disablePadding: boolean,
   label: string,
   custom: boolean, // If content will be rendered by user manually
   width?: number,
+  static?: boolean, // If content can't be sorted by values in the column
 }
 
 export const cellWidth = (width: number | typeof undefined) => {
@@ -36,7 +37,9 @@ type Props = {
 
 class GnoTableHead extends React.PureComponent<Props> {
   changeSort = (property: string, orderAttr: boolean) => () => {
-    this.props.onSort(property, orderAttr)
+    const { onSort } = this.props
+
+    onSort(property, orderAttr)
   }
 
   render() {
@@ -48,17 +51,21 @@ class GnoTableHead extends React.PureComponent<Props> {
           {columns.map((column: Column) => (
             <TableCell
               key={column.id}
-              numeric={column.numeric}
+              align={column.align}
               padding={column.disablePadding ? 'none' : 'default'}
               sortDirection={orderBy === column.id ? order : false}
             >
-              <TableSortLabel
-                active={orderBy === column.id}
-                direction={order}
-                onClick={this.changeSort(column.id, column.order)}
-              >
-                {column.label}
-              </TableSortLabel>
+              {column.static ? (
+                column.label
+              ) : (
+                <TableSortLabel
+                  active={orderBy === column.id}
+                  direction={order}
+                  onClick={this.changeSort(column.id, column.order)}
+                >
+                  {column.label}
+                </TableSortLabel>
+              )}
             </TableCell>
           ))}
         </TableRow>

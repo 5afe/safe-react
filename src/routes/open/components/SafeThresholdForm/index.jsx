@@ -4,7 +4,9 @@ import { withStyles } from '@material-ui/core/styles'
 import MenuItem from '@material-ui/core/MenuItem'
 import Field from '~/components/forms/Field'
 import SelectField from '~/components/forms/SelectField'
-import { composeValidators, minValue, mustBeInteger, required } from '~/components/forms/validator'
+import {
+  composeValidators, minValue, mustBeInteger, required,
+} from '~/components/forms/validator'
 import Block from '~/components/layout/Block'
 import Row from '~/components/layout/Row'
 import Col from '~/components/layout/Col'
@@ -52,22 +54,23 @@ const SafeThreshold = ({ classes, values }: Props) => {
           <Field
             name={FIELD_CONFIRMATIONS}
             component={SelectField}
-            validate={composeValidators(
-              required,
-              mustBeInteger,
-              minValue(1),
-            )}
+            validate={composeValidators(required, mustBeInteger, minValue(1))}
+            data-testid="threshold-select-input"
           >
-            {
-              [...Array(Number(numOwners))].map((x, index) => (
-                <MenuItem key={`selectOwner${index}`} value={`${index + 1}`}>{index + 1}</MenuItem>
-              ))
-            }
+            {[...Array(Number(numOwners))].map((x, index) => (
+              <MenuItem key={`selectOwner${index}`} value={`${index + 1}`}>
+                {index + 1}
+              </MenuItem>
+            ))}
           </Field>
         </Col>
         <Col xs={10}>
           <Paragraph size="lg" color="primary" noMargin className={classes.owners}>
-            out of {numOwners} owner(s)
+            out of
+            {' '}
+            {numOwners}
+            {' '}
+            owner(s)
           </Paragraph>
         </Col>
       </Row>
@@ -77,13 +80,12 @@ const SafeThreshold = ({ classes, values }: Props) => {
 
 const SafeThresholdForm = withStyles(styles)(SafeThreshold)
 
-const SafeOwnersPage = () => (controls: React$Node, { values }: Object) => (
+const SafeOwnersPage = () => (controls: React.Node, { values }: Object) => (
   <React.Fragment>
     <OpenPaper controls={controls} container={450}>
       <SafeThresholdForm values={values} />
     </OpenPaper>
   </React.Fragment>
 )
-
 
 export default SafeOwnersPage

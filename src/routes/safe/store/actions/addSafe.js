@@ -1,8 +1,10 @@
 // @flow
 import { List } from 'immutable'
 import { createAction } from 'redux-actions'
-import { type SafeProps } from '~/routes/safe/store/model/safe'
-import { makeOwner, type Owner } from '~/routes/safe/store/model/owner'
+import type { Dispatch as ReduxDispatch } from 'redux'
+import { type GlobalState } from '~/store'
+import SafeRecord, { type Safe } from '~/routes/safe/store/models/safe'
+import { makeOwner, type Owner } from '~/routes/safe/store/models/owner'
 
 export const ADD_SAFE = 'ADD_SAFE'
 
@@ -12,18 +14,27 @@ export const buildOwnersFrom = (names: Array<string>, addresses: Array<string>) 
   return List(owners)
 }
 
-const addSafe = createAction(
-  ADD_SAFE,
-  (
-    name: string, address: string, threshold: number,
-    ownersName: string[], ownersAddress: string[],
-  ): SafeProps => {
-    const owners: List<Owner> = buildOwnersFrom(ownersName, ownersAddress)
+type ActionReturn = {
+  safe: Safe,
+}
 
-    return ({
-      address, name, threshold, owners,
-    })
-  },
-)
+export const addSafe = createAction<string, Function, ActionReturn>(ADD_SAFE, (safe: Safe): ActionReturn => ({
+  safe,
+}))
 
-export default addSafe
+const saveSafe = (name: string, address: string, threshold: number, ownersName: string[], ownersAddress: string[]) => (
+  dispatch: ReduxDispatch<GlobalState>,
+) => {
+  const owners: List<Owner> = buildOwnersFrom(ownersName, ownersAddress)
+
+  const safe: Safe = SafeRecord({
+    name,
+    address,
+    threshold,
+    owners,
+  })
+
+  dispatch(addSafe(safe))
+}
+
+export default saveSafe

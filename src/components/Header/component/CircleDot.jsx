@@ -1,8 +1,8 @@
 // @flow
 import * as React from 'react'
 import { withStyles } from '@material-ui/core/styles'
-import Block from '~/components/layout/Block'
 import Dot from '@material-ui/icons/FiberManualRecord'
+import Block from '~/components/layout/Block'
 import Img from '~/components/layout/Img'
 import { fancy, border, warning } from '~/theme/variables'
 
@@ -61,7 +61,15 @@ const buildDotStyleFrom = (size: number, top: number, right: number, mode: Mode)
 })
 
 const KeyRing = ({
-  classes, circleSize, keySize, dotSize, dotTop, dotRight, mode, center = false, hideDot = false,
+  classes,
+  circleSize,
+  keySize,
+  dotSize,
+  dotTop,
+  dotRight,
+  mode,
+  center = false,
+  hideDot = false,
 }: Props) => {
   const keyStyle = buildKeyStyleFrom(circleSize, center, dotSize)
   const dotStyle = buildDotStyleFrom(dotSize, dotTop, dotRight, mode)
@@ -80,7 +88,7 @@ const KeyRing = ({
             className={isWarning ? classes.warning : undefined}
           />
         </Block>
-        { !hideDot && <Dot className={classes.dot} style={dotStyle} /> }
+        {!hideDot && <Dot className={classes.dot} style={dotStyle} />}
       </Block>
     </React.Fragment>
   )

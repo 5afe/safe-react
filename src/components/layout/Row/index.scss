@@ -7,6 +7,11 @@
 .grow {
   flex: 1 1 auto;
 }
+
+.marginXs {
+  margin-bottom: $xs;
+}
+
 .marginSm {
   margin-bottom: $sm;
 }

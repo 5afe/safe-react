@@ -1,6 +1,20 @@
 // @flow
 import { createMuiTheme } from '@material-ui/core/styles'
-import { largeFontSize, mediumFontSize, smallFontSize, disabled, primary, secondary, md, lg, bolderFont, boldFont, buttonLargeFontSize } from './variables'
+import {
+  largeFontSize,
+  mediumFontSize,
+  smallFontSize,
+  disabled,
+  primary,
+  secondary,
+  error,
+  md,
+  lg,
+  bolderFont,
+  boldFont,
+  buttonLargeFontSize,
+  xs,
+} from './variables'
 
 export type WithStyles = {
   classes: Object,
@@ -14,7 +28,7 @@ const palette = {
     main: secondary,
   },
   error: {
-    main: '#FB4F62',
+    main: error,
   },
   contrastThreshold: 3,
   tonalOffset: 0.2,
@@ -25,25 +39,29 @@ const palette = {
 export default createMuiTheme({
   typography: {
     fontFamily: 'Montserrat,sans-serif',
+    useNextVariants: true,
   },
   overrides: {
     MuiButton: {
+      label: {
+        lineHeight: 1,
+      },
       root: {
         fontFamily: 'Roboto Mono, monospace',
         letterSpacing: '0.9px',
-        '&:disabled': {
+        '&$disabled': {
           color: disabled,
         },
         color: disabled,
-      },
-      disabled: {
-        cursor: 'pointer',
       },
       contained: {
         boxShadow: 'none',
       },
       containedPrimary: {
         backgroundColor: secondary,
+      },
+      containedSecondary: {
+        backgroundColor: error,
       },
       sizeLarge: {
         padding: `${md} ${lg}`,
@@ -64,6 +82,16 @@ export default createMuiTheme({
     MuiStepper: {
       root: {
         padding: '24px 0 0 15px',
+      },
+    },
+    MuiIconButton: {
+      root: {
+        padding: 0,
+      },
+    },
+    MuiChip: {
+      root: {
+        fontFamily: 'Roboto Mono, monospace',
       },
     },
     MuiStepIcon: {
@@ -90,18 +118,22 @@ export default createMuiTheme({
         letterSpacing: '-0.5px',
         fontSize: mediumFontSize,
       },
+      body2: {
+        fontFamily: 'Roboto Mono, monospace',
+      },
     },
     MuiFormHelperText: {
       root: {
         fontFamily: 'Roboto Mono, monospace',
         fontSize: '12px',
         padding: `0 0 0 ${md}`,
-        position: 'relative',
-        top: '20px',
+        position: 'absolute',
+        top: '5px',
         color: secondary,
         order: 0,
         marginTop: '0px',
-        backgroundColor: 'EAE9EF',
+        backgroundColor: '#EAE9EF',
+        zIndex: 1, // for firefox
       },
     },
     MuiInput: {
@@ -113,6 +145,7 @@ export default createMuiTheme({
         order: 1,
         padding: `0 ${md}`,
         backgroundColor: '#EAE9EF',
+        borderRadius: '5px',
         '&:$disabled': {
           color: '#0000ff',
         },
@@ -121,6 +154,7 @@ export default createMuiTheme({
         padding: 0,
         letterSpacing: '0.5px',
         color: primary,
+        height: 'auto',
         textOverflow: 'ellipsis',
         display: 'flex',
         '&::-webkit-input-placeholder': {
@@ -159,9 +193,9 @@ export default createMuiTheme({
       root: {
         fontFamily: 'Roboto Mono, monospace',
         fontWeight: 'normal',
-      },
-      selected: {
-        fontWeight: bolderFont,
+        '&$selected': {
+          fontWeight: bolderFont,
+        },
       },
     },
     MuiTablePagination: {
@@ -203,12 +237,24 @@ export default createMuiTheme({
         color: primary,
         letterSpacing: '-0.5px',
         fontWeight: 'normal',
+        paddingTop: xs,
+        paddingBottom: xs,
       },
     },
     MuiBackdrop: {
       root: {
         backdropFilter: 'blur(1px)',
         backgroundColor: 'rgba(228, 232, 241, 0.75)',
+      },
+    },
+    MuiMenuItem: {
+      root: {
+        fontFamily: 'Roboto Mono, monospace',
+      },
+    },
+    MuiListItemIcon: {
+      root: {
+        minWidth: 'auto',
       },
     },
     MuiListItemText: {

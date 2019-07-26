@@ -1,5 +1,7 @@
 // @flow
-import { combineReducers, createStore, applyMiddleware, compose } from 'redux'
+import {
+  combineReducers, createStore, applyMiddleware, compose,
+} from 'redux'
 import thunk from 'redux-thunk'
 import providerReducer, { PROVIDER_REDUCER_ID } from '~/logic/wallets/store/reducer/provider'
 import type { ProviderProps } from '~/logic/wallets/store/model/provider'
@@ -13,55 +15,63 @@ const providerReducerTests = () => {
       const reducers = combineReducers({
         [PROVIDER_REDUCER_ID]: providerReducer,
       })
-      const middlewares = [
-        thunk,
-      ]
-      const enhancers = [
-        applyMiddleware(...middlewares),
-      ]
+      const middlewares = [thunk]
+      const enhancers = [applyMiddleware(...middlewares)]
       store = createStore(reducers, compose(...enhancers))
     })
 
-    it('reducer should return default Provider record when no Metamask is loaded', () => {
+    it('reducer should return default Provider record when no provider is loaded', () => {
       // GIVEN
-      const emptyResponse: ProviderProps = {
-        name: '', loaded: false, available: false, account: '', network: 0,
+      const emptyProvider: ProviderProps = {
+        name: '',
+        loaded: false,
+        available: false,
+        account: '',
+        network: 0,
       }
 
       // WHEN
-      processProviderResponse(store.dispatch, emptyResponse)
+      processProviderResponse(store.dispatch, emptyProvider)
       const provider = store.getState()[PROVIDER_REDUCER_ID]
 
       // THEN
-      expect(makeProvider(emptyResponse)).toEqual(provider)
+      expect(makeProvider(emptyProvider)).toEqual(provider)
     })
 
     it('reducer should return avaiable with its default value when is loaded but not available', () => {
       // GIVEN
-      const metamaskLoaded: ProviderProps = {
-        name: 'METAMASK', loaded: true, available: false, account: '', network: 0,
+      const providerLoaded: ProviderProps = {
+        name: 'SAFE',
+        loaded: true,
+        available: false,
+        account: '',
+        network: 0,
       }
 
       // WHEN
-      processProviderResponse(store.dispatch, metamaskLoaded)
+      processProviderResponse(store.dispatch, providerLoaded)
       const provider = store.getState()[PROVIDER_REDUCER_ID]
 
       // THEN
-      expect(makeProvider(metamaskLoaded)).toEqual(provider)
+      expect(makeProvider(providerLoaded)).toEqual(provider)
     })
 
-    it('reducer should return metamask provider when it is loaded and available', () => {
+    it('reducer should return provider when it is loaded and available', () => {
       // GIVEN
-      const metamask: ProviderProps = {
-        name: 'METAMASK', loaded: true, available: true, account: '', network: 0,
+      const providerLoaded: ProviderProps = {
+        name: 'SAFE',
+        loaded: true,
+        available: true,
+        account: '',
+        network: 0,
       }
 
       // WHEN
-      processProviderResponse(store.dispatch, metamask)
+      processProviderResponse(store.dispatch, providerLoaded)
       const provider = store.getState()[PROVIDER_REDUCER_ID]
 
       // THEN
-      expect(makeProvider(metamask)).toEqual(provider)
+      expect(makeProvider(providerLoaded)).toEqual(provider)
     })
   })
 }
