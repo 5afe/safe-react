@@ -1,7 +1,6 @@
 // @flow
 import * as React from 'react'
 import { Field } from 'react-final-form'
-import { OnChange } from 'react-final-form-listeners'
 import TextField from '~/components/forms/TextField'
 import { composeValidators, required, mustBeEthereumAddress } from '~/components/forms/validator'
 import { getAddressFromENS } from '~/logic/wallets/getWeb3'
@@ -11,37 +10,61 @@ type Props = {
   name?: string,
   text?: string,
   placeholder?: string,
+  fieldMutator: Function,
 }
 
 const isValidEnsName = name => /^([\w-]+\.)+(eth|test)$/.test(name)
+
+const { useState, useEffect } = React
+
+// an idea for second field was taken from here
+// https://github.com/final-form/react-final-form-listeners/blob/master/src/OnBlur.js
 
 const AddressInput = ({
   className = '',
   name = 'recipientAddress',
   text = 'Recipient*',
   placeholder = 'Recipient*',
+  fieldMutator,
 }: Props): React.Element<*> => (
   <>
     <Field
       name={name}
       component={TextField}
       type="text"
-      // validate={composeValidators(required, mustBeEthereumAddress)}
+      validate={composeValidators(required, mustBeEthereumAddress)}
       placeholder={placeholder}
       text={text}
       className={className}
     />
-    <OnChange name={name}>
-      {async (value) => {
-        if (isValidEnsName(value)) {
-          try {
-            const resolverAddr = await getAddressFromENS(value)
-          } catch {
-            console.error('No resolver for ENS name')
+    <Field
+      name={name}
+      subscription={{ active: true, value: true }}
+      render={({ meta, input }) => {
+        const [prevActive, setPrevActive] = useState<boolean>(!!meta.active)
+
+        useEffect(() => {
+          async function setAddressFromENS() {
+            if (isValidEnsName(input.value)) {
+              try {
+                const resolverAddr = await getAddressFromENS(input.value)
+                fieldMutator(resolverAddr)
+              } catch (err) {
+                console.error('Error when trying to fetch address for ENS name: ', err)
+              }
+            }
           }
-        }
+
+          if (prevActive && !meta.active) {
+            setAddressFromENS()
+          } else if (prevActive !== meta.active) {
+            setPrevActive(meta.active)
+          }
+        }, [meta.active])
+
+        return null
       }}
-    </OnChange>
+    />
   </>
 )
 

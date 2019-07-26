@@ -69,6 +69,9 @@ const SendFunds = ({
     onTokenChange: (args, state, utils) => {
       utils.changeValue(state, 'amount', () => '')
     },
+    setRecipient: (args, state, utils) => {
+      utils.changeValue(state, 'recipientAddress', () => args[0])
+    },
   }
 
   return (
@@ -111,6 +114,7 @@ const SendFunds = ({
                       placeholder="Recipient*"
                       text="Recipient*"
                       className={classes.addressInput}
+                      fieldMutator={mutators.setRecipient}
                     />
                   </Col>
                 </Row>
