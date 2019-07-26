@@ -9,6 +9,7 @@ import IconButton from '@material-ui/core/IconButton'
 import Paragraph from '~/components/layout/Paragraph'
 import Row from '~/components/layout/Row'
 import GnoForm from '~/components/forms/GnoForm'
+import AddressInput from '~/components/forms/AddressInput'
 import Col from '~/components/layout/Col'
 import Button from '~/components/layout/Button'
 import Block from '~/components/layout/Block'
@@ -102,7 +103,7 @@ const SendFunds = ({
               <React.Fragment>
                 <Row margin="md">
                   <Col xs={12}>
-                    <Field
+                    <AddressInput
                       name="recipientAddress"
                       component={TextField}
                       type="text"

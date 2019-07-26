@@ -1,5 +1,6 @@
 // @flow
 import Web3 from 'web3'
+import ENS from 'ethereum-ens'
 import type { ProviderProps } from '~/logic/wallets/store/model/provider'
 
 export const ETHEREUM_NETWORK = {
@@ -103,6 +104,15 @@ export const getProviderInfo: Function = async (): Promise<ProviderProps> => {
     account,
     network,
   }
+}
+
+export const getAddressFromENS = async (name: string) => {
+  const ens = new ENS(web3)
+  // window.web3provider = web3
+  window.ens = ens
+  const address = await ens.resolver(name).addr()
+
+  return address
 }
 
 export const getBalanceInEtherOf = async (safeAddress: string) => {
