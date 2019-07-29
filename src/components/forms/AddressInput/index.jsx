@@ -2,7 +2,13 @@
 import * as React from 'react'
 import { Field } from 'react-final-form'
 import TextField from '~/components/forms/TextField'
-import { composeValidators, required, mustBeEthereumAddress } from '~/components/forms/validator'
+import {
+  composeValidators,
+  required,
+  mustBeEthereumAddress,
+  ifElseValidator,
+  ensResolverHasAddress,
+} from '~/components/forms/validator'
 import { getAddressFromENS } from '~/logic/wallets/getWeb3'
 
 type Props = {
@@ -11,6 +17,8 @@ type Props = {
   text?: string,
   placeholder?: string,
   fieldMutator: Function,
+  testId?: string,
+  validators?: Function[],
 }
 
 const isValidEnsName = name => /^([\w-]+\.)+(eth|test)$/.test(name)
@@ -26,16 +34,23 @@ const AddressInput = ({
   text = 'Recipient*',
   placeholder = 'Recipient*',
   fieldMutator,
+  testId,
+  validators = [],
 }: Props): React.Element<*> => (
   <>
     <Field
       name={name}
       component={TextField}
       type="text"
-      validate={composeValidators(required, mustBeEthereumAddress)}
+      validate={composeValidators(
+        required,
+        ifElseValidator(isValidEnsName, ensResolverHasAddress, mustBeEthereumAddress),
+        ...validators,
+      )}
       placeholder={placeholder}
       text={text}
       className={className}
+      testId={testId}
     />
     <Field
       name={name}

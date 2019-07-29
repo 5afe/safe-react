@@ -89,7 +89,7 @@ const OwnerForm = ({
                   <Col xs={8}>
                     <AddressInput
                       name="ownerAddress"
-                      // validate={composeValidators(required, mustBeEthereumAddress, ownerDoesntExist)}
+                      validators={[ownerDoesntExist]}
                       placeholder="Owner address*"
                       text="Owner address*"
                       className={classes.addressInput}
