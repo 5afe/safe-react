@@ -21,7 +21,6 @@ import { type Token } from '~/logic/tokens/store/model/token'
 import {
   composeValidators,
   required,
-  mustBeEthereumAddress,
   mustBeFloat,
   maxValue,
   greaterThan,
@@ -109,8 +108,6 @@ const SendFunds = ({
                     <AddressInput
                       name="recipientAddress"
                       component={TextField}
-                      type="text"
-                      validate={composeValidators(required, mustBeEthereumAddress)}
                       placeholder="Recipient*"
                       text="Recipient*"
                       className={classes.addressInput}
