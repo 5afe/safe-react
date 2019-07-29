@@ -19,6 +19,7 @@ type Props = {
   fieldMutator: Function,
   testId?: string,
   validators?: Function[],
+  inputAdornment?: React.Element,
 }
 
 const isValidEnsName = name => /^([\w-]+\.)+(eth|test)$/.test(name)
@@ -35,6 +36,7 @@ const AddressInput = ({
   placeholder = 'Recipient*',
   fieldMutator,
   testId,
+  inputAdornment,
   validators = [],
 }: Props): React.Element<*> => (
   <>
@@ -47,6 +49,7 @@ const AddressInput = ({
         ifElseValidator(isValidEnsName, ensResolverHasAddress, mustBeEthereumAddress),
         ...validators,
       )}
+      inputAdornment={inputAdornment}
       placeholder={placeholder}
       text={text}
       className={className}

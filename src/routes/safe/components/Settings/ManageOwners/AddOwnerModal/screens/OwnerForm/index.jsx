@@ -18,7 +18,6 @@ import { type Owner } from '~/routes/safe/store/models/owner'
 import {
   composeValidators,
   required,
-  mustBeEthereumAddress,
   minMaxLength,
   uniqueAddress,
 } from '~/components/forms/validator'
@@ -28,17 +27,17 @@ export const ADD_OWNER_NAME_INPUT_TEST_ID = 'add-owner-name-input'
 export const ADD_OWNER_ADDRESS_INPUT_TEST_ID = 'add-owner-address-testid'
 export const ADD_OWNER_NEXT_BTN_TEST_ID = 'add-owner-next-btn'
 
+const formMutators = {
+  setOwnerAddress: (args, state, utils) => {
+    utils.changeValue(state, 'ownerAddress', () => args[0])
+  },
+}
+
 type Props = {
   onClose: () => void,
   classes: Object,
   onSubmit: Function,
   owners: List<Owner>,
-}
-
-const formMutators = {
-  setOwnerAddress: (args, state, utils) => {
-    utils.changeValue(state, 'ownerAddress', () => args[0])
-  },
 }
 
 const OwnerForm = ({

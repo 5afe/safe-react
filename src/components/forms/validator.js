@@ -61,7 +61,7 @@ export const ok = () => undefined
 export const mustBeEthereumAddress = simpleMemoize((address: Field) => {
   const isAddress: boolean = getWeb3().utils.isAddress(address)
 
-  return isAddress ? undefined : 'Address should be a valid Ethereum address'
+  return isAddress ? undefined : 'Address should be a valid Ethereum address or ENS domain'
 })
 
 export const minMaxLength = (minLen: string | number, maxLen: string | number) => (value: string) => (value.length >= +minLen && value.length <= +maxLen ? undefined : `Should be ${minLen} to ${maxLen} symbols`)
