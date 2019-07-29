@@ -108,8 +108,6 @@ export const getProviderInfo: Function = async (): Promise<ProviderProps> => {
 
 export const getAddressFromENS = async (name: string) => {
   const ens = new ENS(web3)
-  // window.web3provider = web3
-  window.ens = ens
   const address = await ens.resolver(name).addr()
 
   return address
