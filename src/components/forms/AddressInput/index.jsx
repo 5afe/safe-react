@@ -22,7 +22,7 @@ type Props = {
   inputAdornment?: React.Element,
 }
 
-const isValidEnsName = name => /^([\w-]+\.)+(eth|test)$/.test(name)
+const isValidEnsName = name => /^([\w-]+\.)+(eth|test|xyz|luxe)$/.test(name)
 
 const { useState, useEffect } = React
 
