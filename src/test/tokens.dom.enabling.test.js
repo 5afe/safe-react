@@ -1,6 +1,6 @@
 // @flow
 import { List } from 'immutable'
-import { getWeb3 } from '~/logic/wallets/getWeb3'
+import Web3Integration from '~/logic/wallets/web3Integration'
 import { getFirstTokenContract, getSecondTokenContract } from '~/test/utils/tokenMovements'
 import { aNewStore } from '~/store'
 import { aMinedSafe } from '~/test/builder/safe.redux.builder'
@@ -20,7 +20,7 @@ describe('DOM > Feature > Enable and disable default tokens', () => {
   let testTokens
 
   beforeAll(async () => {
-    web3 = getWeb3()
+    web3 = Web3Integration.web3
     accounts = await web3.eth.getAccounts()
 
     firstErc20Token = await getFirstTokenContract(web3, accounts[0])

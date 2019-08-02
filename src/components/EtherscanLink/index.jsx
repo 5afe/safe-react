@@ -2,7 +2,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import OpenInNew from '@material-ui/icons/OpenInNew'
-import { getEtherScanLink } from '~/logic/wallets/getWeb3'
+import { getEtherScanLink } from '~/logic/wallets/etherscan'
 import { shortVersionOf } from '~/logic/wallets/ethAddresses'
 import { secondary } from '~/theme/variables'
 import { networkSelector } from '~/logic/wallets/store/selectors'

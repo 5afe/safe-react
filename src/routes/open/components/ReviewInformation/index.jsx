@@ -15,7 +15,7 @@ import {
   sm, md, lg, border, secondary, background,
 } from '~/theme/variables'
 import Hairline from '~/components/layout/Hairline'
-import { getEtherScanLink } from '~/logic/wallets/getWeb3'
+import { getEtherScanLink } from '~/logic/wallets/etherscan'
 import { FIELD_NAME, FIELD_CONFIRMATIONS, getNumOwnersFrom } from '../fields'
 
 const openIconStyle = {

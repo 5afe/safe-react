@@ -13,6 +13,10 @@ import transactions, {
   type State as TransactionsState,
   TRANSACTIONS_REDUCER_ID,
 } from '~/routes/safe/store/reducer/transactions'
+import snackbarMessages, {
+  type State as SnackbarState,
+  SNACKBAR_REDUCER_ID,
+} from '~/components/Snackbar/store/reducer'
 
 export const history = createBrowserHistory()
 
@@ -25,6 +29,7 @@ export type GlobalState = {
   safes: SafeState,
   tokens: TokensState,
   transactions: TransactionsState,
+  snackbar: SnackbarState,
 }
 
 export type GetState = () => GlobalState
@@ -35,6 +40,7 @@ const reducers: Reducer<GlobalState> = combineReducers({
   [SAFE_REDUCER_ID]: safe,
   [TOKEN_REDUCER_ID]: tokens,
   [TRANSACTIONS_REDUCER_ID]: transactions,
+  [SNACKBAR_REDUCER_ID]: snackbarMessages,
 })
 
 export const store: Store<GlobalState> = createStore(reducers, finalCreateStore)

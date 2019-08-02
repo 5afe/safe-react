@@ -17,7 +17,7 @@ import {
 import { shortVersionOf } from '~/logic/wallets/ethAddresses'
 import { getAccountsFrom } from '~/routes/open/utils/safeDataExtractor'
 import { getOwnerNameBy, getOwnerAddressBy, getNumOwnersFrom } from '~/routes/open/components/fields'
-import { getEtherScanLink } from '~/logic/wallets/getWeb3'
+import { getEtherScanLink } from '~/logic/wallets/etherscan'
 import { FIELD_LOAD_NAME, FIELD_LOAD_ADDRESS, THRESHOLD } from '~/routes/load/components/fields'
 
 const openIconStyle = {

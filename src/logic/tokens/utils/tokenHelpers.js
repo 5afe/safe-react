@@ -1,6 +1,6 @@
 // @flow
 import { List } from 'immutable'
-import { getWeb3 } from '~/logic/wallets/getWeb3'
+import Web3Integration from '~/logic/wallets/web3Integration'
 import { makeToken, type Token } from '~/logic/tokens/store/model/token'
 import logo from '~/assets/icons/icon_etherTokens.svg'
 
@@ -43,8 +43,8 @@ export const isAddressAToken = async (tokenAddress: string) => {
   //   return 'Not a token address'
   // }
 
-  const web3 = getWeb3()
-  const call = await web3.eth.call({ to: tokenAddress, data: web3.utils.sha3('totalSupply()') })
+  const { web3 } = Web3Integration
+  const call = await Web3Integration.web3.eth.call({ to: tokenAddress, data: web3.utils.sha3('totalSupply()') })
 
   return call !== '0x'
 }

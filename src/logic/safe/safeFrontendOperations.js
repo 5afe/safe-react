@@ -3,7 +3,7 @@ import { List } from 'immutable'
 import { type Transaction } from '~/routes/safe/store/models/transaction'
 import { executeTransaction, approveTransaction } from '~/logic/safe/transactions'
 import { EMPTY_DATA } from '~/logic/wallets/ethTransactions'
-import { getWeb3 } from '~/logic/wallets/getWeb3'
+import Web3Integration from '~/logic/wallets/web3Integration'
 import { type Safe } from '~/routes/safe/store/models/safe'
 import { storeSubject } from '~/utils/storage/transactions'
 
@@ -31,7 +31,7 @@ export const createTransaction = async (
   sender: string,
   data: string = EMPTY_DATA,
 ) => {
-  const web3 = getWeb3()
+  const { web3 } = Web3Integration
   const safeAddress = safe.get('address')
   const threshold = safe.get('threshold')
   const valueInWei = web3.utils.toWei(value, 'ether')

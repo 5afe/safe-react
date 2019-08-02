@@ -1,8 +1,8 @@
 // @flow
 import { type Transaction } from '~/routes/safe/store/models/transaction'
-import { getWeb3 } from '~/logic/wallets/getWeb3'
+import Web3Integration from '~/logic/wallets/web3Integration'
 
-const web3 = getWeb3()
+const { web3 } = Web3Integration
 const { toBN, fromWei } = web3.utils
 
 type DecodedTxData = {
@@ -39,9 +39,9 @@ export const getTxData = (tx: Transaction): DecodedTxData => {
         txData.addedOwner = tx.decodedParams.args[0]
         txData.newThreshold = tx.decodedParams.args[1]
       } else if (tx.decodedParams.methodName === 'swapOwner') {
-        txData.addedOwner = tx.decodedParams.args[0]
+        txData.newThreshold = tx.decodedParams.args[0]
         txData.removedOwner = tx.decodedParams.args[1]
-        txData.newThreshold = tx.decodedParams.args[2]
+        txData.addedOwner = tx.decodedParams.args[2]
       }
       /* eslint-enable */
     }

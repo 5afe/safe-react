@@ -9,15 +9,13 @@ import { makeConfirmation } from '~/routes/safe/store/models/confirmation'
 import { loadSafeSubjects } from '~/utils/storage/transactions'
 import { buildTxServiceUrl, type TxServiceType } from '~/logic/safe/transactions/txHistory'
 import { getOwners } from '~/logic/safe/utils'
-import { getWeb3 } from '~/logic/wallets/getWeb3'
+import Web3Integration from '~/logic/wallets/web3Integration'
 import { EMPTY_DATA } from '~/logic/wallets/ethTransactions'
 import { addTransactions } from './addTransactions'
 import { getHumanFriendlyToken } from '~/logic/tokens/store/actions/fetchTokens'
 import { isAddressAToken } from '~/logic/tokens/utils/tokenHelpers'
 import { TX_TYPE_EXECUTION } from '~/logic/safe/transactions/send'
 import { decodeParamsFromSafeMethod } from '~/logic/contracts/methodIds'
-
-let web3
 
 type ConfirmationServiceModel = {
   owner: string,
@@ -38,7 +36,11 @@ type TxServiceModel = {
   isExecuted: boolean,
 }
 
-const buildTransactionFrom = async (safeAddress: string, tx: TxServiceModel, safeSubjects: Map<string, string>) => {
+export const buildTransactionFrom = async (
+  safeAddress: string,
+  tx: TxServiceModel,
+  safeSubjects: Map<string, string>,
+) => {
   const name = safeSubjects.get(String(tx.nonce)) || 'Unknown'
   const storedOwners = await getOwners(safeAddress)
   const confirmations = List(
@@ -55,7 +57,6 @@ const buildTransactionFrom = async (safeAddress: string, tx: TxServiceModel, saf
   const modifySettingsTx = tx.to === safeAddress && Number(tx.value) === 0 && !!tx.data
   const cancellationTx = tx.to === safeAddress && Number(tx.value) === 0 && !tx.data
   const isTokenTransfer = await isAddressAToken(tx.to)
-  const creationTxHash = confirmations.last().hash
 
   let executionTxHash
   const executionTx = confirmations.find(conf => conf.type === TX_TYPE_EXECUTION)
@@ -71,14 +72,12 @@ const buildTransactionFrom = async (safeAddress: string, tx: TxServiceModel, saf
     const tokenInstance = await tokenContract.at(tx.to)
     symbol = await tokenInstance.symbol()
 
-    const params = web3.eth.abi.decodeParameters(['address', 'uint256'], tx.data.slice(10))
+    const params = Web3Integration.web3.eth.abi.decodeParameters(['address', 'uint256'], tx.data.slice(10))
     decodedParams = {
       recipient: params[0],
       value: params[1],
     }
-  } else if (
-    modifySettingsTx && tx.data
-  ) {
+  } else if (modifySettingsTx && tx.data) {
     decodedParams = await decodeParamsFromSafeMethod(tx.data)
   }
 
@@ -94,7 +93,7 @@ const buildTransactionFrom = async (safeAddress: string, tx: TxServiceModel, saf
     submissionDate: tx.submissionDate,
     executionDate: tx.executionDate,
     executionTxHash,
-    creationTxHash,
+    safeTxHash: tx.safeTxHash,
     isTokenTransfer,
     decodedParams,
     modifySettingsTx,
@@ -103,8 +102,6 @@ const buildTransactionFrom = async (safeAddress: string, tx: TxServiceModel, saf
 }
 
 export const loadSafeTransactions = async (safeAddress: string) => {
-  web3 = await getWeb3()
-
   const url = buildTxServiceUrl(safeAddress)
   const response = await axios.get(url)
   const transactions: TxServiceModel[] = response.data.results

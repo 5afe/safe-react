@@ -1,12 +1,12 @@
 // @flow
 import * as React from 'react'
-import Web3Connect from 'web3connect'
+import ConnectButton from '~/components/ConnectButton'
 import Block from '~/components/layout/Block'
 import Heading from '~/components/layout/Heading'
 import Img from '~/components/layout/Img'
+import Paragraph from '~/components/layout/Paragraph'
 import Button from '~/components/layout/Button'
 import Link from '~/components/layout/Link'
-import Web3Integration from '~/logic/wallets/web3Integration'
 import { OPEN_ADDRESS, LOAD_ADDRESS } from '~/routes/routes'
 import { marginButtonImg } from '~/theme/variables'
 import styles from './Layout.scss'
@@ -65,7 +65,7 @@ const Welcome = ({ provider }: Props) => (
       <br />
       Safe Team Edition
     </Heading>
-    <Heading tag="h4" align="center" margin="xl">
+    <Paragraph align="center" margin="xl">
       The Gnosis Safe Team Edition is geared towards teams managing
       <br />
       shared crypto funds. It is an improvement of the existing Gnosis
@@ -73,7 +73,7 @@ const Welcome = ({ provider }: Props) => (
       MultiSig wallet with redesigned smart contracts, cheaper setup and
       <br />
       transaction costs as well as an enhanced user experience.
-    </Heading>
+    </Paragraph>
     {provider ? (
       <>
         <Block className={styles.safeActions} margin="md">
@@ -84,22 +84,11 @@ const Welcome = ({ provider }: Props) => (
         </Block>
       </>
     ) : (
-      <Block className={styles.safeActions} margin="md">
-        <Web3Connect.Button
-          providerOptions={{
-            portis: {
-              id: 'PORTIS_ID', // required
-              network: 'mainnet', // optional
-            },
-            fortmatic: {
-              key: 'FORTMATIC_KEY', // required
-              network: 'mainnet', // optional
-            },
-          }}
-          onConnect={(connectedProvider: any) => {
-            Web3Integration.setWeb3(connectedProvider)
-          }}
-        />
+      <Block className={styles.connectWallet} margin="md">
+        <Heading tag="h3" align="center" margin="md">
+          Get Started by Connecting a Wallet
+        </Heading>
+        <ConnectButton minWidth={240} minHeight={42} />
       </Block>
     )}
   </Block>

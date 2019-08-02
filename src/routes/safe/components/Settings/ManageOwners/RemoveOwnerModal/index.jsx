@@ -2,7 +2,6 @@
 import React, { useState, useEffect } from 'react'
 import { List } from 'immutable'
 import { withStyles } from '@material-ui/core/styles'
-import { SharedSnackbarConsumer } from '~/components/SharedSnackBar'
 import Modal from '~/components/Modal'
 import { type Owner } from '~/routes/safe/store/models/owner'
 import { getGnosisSafeInstanceAt, SENTINEL_ADDRESS } from '~/logic/contracts/safeContracts'
@@ -40,7 +39,6 @@ export const sendRemoveOwner = async (
   ownerAddressToRemove: string,
   ownerNameToRemove: string,
   ownersOld: List<Owner>,
-  openSnackbar: Function,
   createTransaction: Function,
   removeSafeOwner: Function,
 ) => {
@@ -52,7 +50,7 @@ export const sendRemoveOwner = async (
     .removeOwner(prevAddress, ownerAddressToRemove, values.threshold)
     .encodeABI()
 
-  const txHash = await createTransaction(safeAddress, safeAddress, 0, txData, openSnackbar)
+  const txHash = await createTransaction(safeAddress, safeAddress, 0, txData)
 
   if (txHash) {
     removeSafeOwner({ safeAddress, ownerAddress: ownerAddressToRemove })
@@ -102,75 +100,58 @@ const RemoveOwner = ({
     setActiveScreen('reviewRemoveOwner')
   }
 
-  return (
-    <React.Fragment>
-      <SharedSnackbarConsumer>
-        {({ openSnackbar }) => {
-          const onRemoveOwner = () => {
-            onClose()
-            try {
-              sendRemoveOwner(
-                values,
-                safeAddress,
-                ownerAddress,
-                ownerName,
-                owners,
-                openSnackbar,
-                createTransaction,
-                removeSafeOwner,
-              )
-            } catch (error) {
-              // eslint-disable-next-line
-              console.log('Error while removing an owner ' + error)
-            }
-          }
+  const onRemoveOwner = () => {
+    onClose()
+    try {
+      sendRemoveOwner(values, safeAddress, ownerAddress, ownerName, owners, createTransaction, removeSafeOwner)
+    } catch (error) {
+      // eslint-disable-next-line
+      console.log('Error while removing an owner ' + error)
+    }
+  }
 
-          return (
-            <Modal
-              title="Remove owner from Safe"
-              description="Remove owner from Safe"
-              handleClose={onClose}
-              open={isOpen}
-              paperClassName={classes.biggerModalWindow}
-            >
-              <React.Fragment>
-                {activeScreen === 'checkOwner' && (
-                  <CheckOwner
-                    onClose={onClose}
-                    ownerAddress={ownerAddress}
-                    ownerName={ownerName}
-                    network={network}
-                    onSubmit={ownerSubmitted}
-                  />
-                )}
-                {activeScreen === 'selectThreshold' && (
-                  <ThresholdForm
-                    onClose={onClose}
-                    owners={owners}
-                    threshold={threshold}
-                    onClickBack={onClickBack}
-                    onSubmit={thresholdSubmitted}
-                  />
-                )}
-                {activeScreen === 'reviewRemoveOwner' && (
-                  <ReviewRemoveOwner
-                    onClose={onClose}
-                    safeName={safeName}
-                    owners={owners}
-                    network={network}
-                    values={values}
-                    ownerAddress={ownerAddress}
-                    ownerName={ownerName}
-                    onClickBack={onClickBack}
-                    onSubmit={onRemoveOwner}
-                  />
-                )}
-              </React.Fragment>
-            </Modal>
-          )
-        }}
-      </SharedSnackbarConsumer>
-    </React.Fragment>
+  return (
+    <Modal
+      title="Remove owner from Safe"
+      description="Remove owner from Safe"
+      handleClose={onClose}
+      open={isOpen}
+      paperClassName={classes.biggerModalWindow}
+    >
+      <React.Fragment>
+        {activeScreen === 'checkOwner' && (
+          <CheckOwner
+            onClose={onClose}
+            ownerAddress={ownerAddress}
+            ownerName={ownerName}
+            network={network}
+            onSubmit={ownerSubmitted}
+          />
+        )}
+        {activeScreen === 'selectThreshold' && (
+          <ThresholdForm
+            onClose={onClose}
+            owners={owners}
+            threshold={threshold}
+            onClickBack={onClickBack}
+            onSubmit={thresholdSubmitted}
+          />
+        )}
+        {activeScreen === 'reviewRemoveOwner' && (
+          <ReviewRemoveOwner
+            onClose={onClose}
+            safeName={safeName}
+            owners={owners}
+            network={network}
+            values={values}
+            ownerAddress={ownerAddress}
+            ownerName={ownerName}
+            onClickBack={onClickBack}
+            onSubmit={onRemoveOwner}
+          />
+        )}
+      </React.Fragment>
+    </Modal>
   )
 }
 

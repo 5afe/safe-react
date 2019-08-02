@@ -1,5 +1,5 @@
 // @flow
-import { getWeb3 } from '~/logic/wallets/getWeb3'
+import Web3Integration from '~/logic/wallets/web3Integration'
 
 // SAFE METHODS TO ITS ID
 // https://github.com/gnosis/safe-contracts/blob/development/test/safeMethodNaming.js
@@ -47,7 +47,7 @@ const METHOD_TO_ID = {
 }
 
 export const decodeParamsFromSafeMethod = async (data: string) => {
-  const web3 = await getWeb3()
+  const { web3 } = Web3Integration
   const [methodId, params] = [data.slice(0, 10), data.slice(10)]
 
   switch (methodId) {

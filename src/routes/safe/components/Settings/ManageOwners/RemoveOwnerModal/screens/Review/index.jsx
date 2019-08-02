@@ -15,11 +15,11 @@ import Button from '~/components/layout/Button'
 import Block from '~/components/layout/Block'
 import Hairline from '~/components/layout/Hairline'
 import type { Owner } from '~/routes/safe/store/models/owner'
-import { getEtherScanLink } from '~/logic/wallets/getWeb3'
+import { getEtherScanLink } from '~/logic/wallets/etherscan'
 import { secondary } from '~/theme/variables'
 import { styles } from './style'
 
-export const REMOVE_OWNER_REVIEW_BTN_TESTID = 'remove-owner-review-btn'
+export const REMOVE_OWNER_REVIEW_BTN_TEST_ID = 'remove-owner-review-btn'
 
 const openIconStyle = {
   height: '16px',
@@ -182,7 +182,7 @@ const ReviewRemoveOwner = ({
           variant="contained"
           minWidth={140}
           color="primary"
-          testId={REMOVE_OWNER_REVIEW_BTN_TESTID}
+          testId={REMOVE_OWNER_REVIEW_BTN_TEST_ID}
         >
           Submit
         </Button>

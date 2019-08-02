@@ -8,7 +8,7 @@ import {
   getOwnerNameBy,
   getOwnerAddressBy,
 } from '~/routes/open/components/fields'
-import { getWeb3, getProviderInfo } from '~/logic/wallets/getWeb3'
+import Web3Integration from '~/logic/wallets/web3Integration'
 import { createSafe, type OpenState } from '~/routes/open/container/Open'
 import { type GlobalState } from '~/store/index'
 import { makeProvider } from '~/logic/wallets/store/model/provider'
@@ -73,11 +73,11 @@ export const aMinedSafe = async (
   owners: number = 1,
   threshold: number = 1,
 ): Promise<string> => {
-  const provider = await getProviderInfo()
+  const provider = await Web3Integration.getProviderInfo()
   const walletRecord = makeProvider(provider)
   store.dispatch(addProvider(walletRecord))
 
-  const accounts = await getWeb3().eth.getAccounts()
+  const accounts = await Web3Integration.web3.eth.getAccounts()
   const form = {
     [FIELD_NAME]: 'Safe Name',
     [FIELD_CONFIRMATIONS]: `${threshold}`,

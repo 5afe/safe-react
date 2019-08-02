@@ -3,6 +3,7 @@ import Web3 from 'web3'
 import { fetchProvider, removeProvider } from '~/logic/wallets/store/actions'
 import { store } from '~/store'
 import type { ProviderProps } from '~/logic/wallets/store/model/provider'
+import { addHexPrefix, sanitizeHex, convertHexToNumber } from '~/utils/hex'
 
 export const ETHEREUM_NETWORK = {
   MAIN: 'MAIN',
@@ -35,16 +36,16 @@ export const ETHEREUM_NETWORK_IDS = {
 }
 
 class Web3Integration {
-  web3: Object
+  provider: Object
 
   watcherInterval: IntervalID
 
   constructor() {
-    this.web3 = null
+    this.provider = null
   }
 
   async getAccount(): Promise<string | null> {
-    const accounts = await this.web3.eth.getAccounts()
+    const accounts: string[] = await this.web3.eth.getAccounts()
 
     return accounts && accounts.length > 0 ? accounts[0] : null
   }
@@ -66,8 +67,17 @@ class Web3Integration {
     return name
   }
 
-  async getNetworkIdFrom() {
-    const networkId = await this.web3.eth.net.getId()
+  async getNetworkId() {
+    //     const networkId = await this.web3.eth.net.getId()
+
+    // this approach was taken from web3connect example app
+    // https://github.com/web3connect/web3connect/blob/master/example/src/helpers/utilities.ts#L144
+    // for some reason getId() call never resolves, the bug was reported to wallet conenct foundation
+    // and should be fixed soon
+    const chainIdRes = await this.web3.currentProvider.send('eth_chainId', [])
+    const networkId = convertHexToNumber(
+      sanitizeHex(addHexPrefix(`${chainIdRes}`)),
+    )
 
     return networkId
   }
@@ -83,19 +93,23 @@ class Web3Integration {
   }
 
   async getProviderInfo(): Promise<ProviderProps> {
-    if (!this.web3) {
-      return {
-        name: '',
-        available: false,
-        loaded: false,
-        account: '',
-        network: 0,
+    if (!this.provider) {
+      await this.checkForInjectedProvider()
+
+      if (!this.provider) {
+        return {
+          name: '',
+          available: false,
+          loaded: false,
+          account: '',
+          network: 0,
+        }
       }
     }
 
     const name = this.getProviderName()
     const account = await this.getAccount()
-    const network = await this.getNetworkIdFrom()
+    const network = await this.getNetworkId()
 
     const available = account !== null
 
@@ -120,12 +134,36 @@ class Web3Integration {
     }, 2000)
   }
 
-  get getWeb3() {
-    return this.web3
+  async checkForInjectedProvider() {
+    let web3Provider
+
+    if (window.ethereum) {
+      web3Provider = window.ethereum
+      await web3Provider.enable()
+    } else if (window.web3) {
+      web3Provider = window.web3.currentProvider
+    }
+
+    this.setWeb3(web3Provider)
+  }
+
+  resetWalletConnectSession() {
+    if (localStorage.getItem('walletconnect')) {
+      localStorage.removeItem('walletconnect')
+    }
+  }
+
+  get web3() {
+    return (
+      this.provider
+      || (window.web3 && new Web3(window.web3.currentProvider))
+      || (window.ethereum && new Web3(window.ethereum))
+    )
   }
 
   disconnect() {
     clearInterval(this.watcherInterval)
+    this.resetWalletConnectSession()
     store.dispatch(removeProvider())
   }
 
@@ -134,9 +172,9 @@ class Web3Integration {
       throw new Error('No provider object provided')
     }
 
-    this.web3 = new Web3(provider)
-    const providerInfo = await this.getProviderInfo()
+    this.provider = new Web3(provider)
 
+    const providerInfo = await this.getProviderInfo()
     store.dispatch(fetchProvider(providerInfo))
     this.watch()
   }

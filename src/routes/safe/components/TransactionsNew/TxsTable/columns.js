@@ -4,7 +4,7 @@ import { List } from 'immutable'
 import { type Transaction } from '~/routes/safe/store/models/transaction'
 import { type SortRow, buildOrderFieldFrom } from '~/components/Table/sorting'
 import { type Column } from '~/components/Table/TableHead'
-import { getWeb3 } from '~/logic/wallets/getWeb3'
+import Web3Integration from '~/logic/wallets/web3Integration'
 
 export const TX_TABLE_NONCE_ID = 'nonce'
 export const TX_TABLE_TYPE_ID = 'type'
@@ -14,7 +14,7 @@ export const TX_TABLE_STATUS_ID = 'status'
 export const TX_TABLE_RAW_TX_ID = 'tx'
 export const TX_TABLE_EXPAND_ICON = 'expand'
 
-const web3 = getWeb3()
+const { web3 } = Web3Integration
 const { toBN, fromWei } = web3.utils
 
 type TxData = {
