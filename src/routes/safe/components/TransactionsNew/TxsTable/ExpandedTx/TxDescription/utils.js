@@ -2,9 +2,6 @@
 import { type Transaction } from '~/routes/safe/store/models/transaction'
 import Web3Integration from '~/logic/wallets/web3Integration'
 
-const { web3 } = Web3Integration
-const { toBN, fromWei } = web3.utils
-
 type DecodedTxData = {
   recipient: string,
   value?: string,
@@ -16,6 +13,9 @@ type DecodedTxData = {
 }
 
 export const getTxData = (tx: Transaction): DecodedTxData => {
+  const { web3 } = Web3Integration
+  const { toBN, fromWei } = web3.utils
+
   const txData = {}
 
   if (tx.isTokenTransfer && tx.decodedParams) {

@@ -129,7 +129,11 @@ const ReviewComponent = ({ values, classes, network }: Props) => {
                       <Paragraph size="md" color="disabled" noMargin>
                         {addresses[index]}
                       </Paragraph>
-                      <Link className={classes.open} to={getEtherScanLink('address', addresses[index], network)} target="_blank">
+                      <Link
+                        className={classes.open}
+                        to={getEtherScanLink('address', addresses[index], network)}
+                        target="_blank"
+                      >
                         <OpenInNew style={openIconStyle} />
                       </Link>
                     </Block>
@@ -143,10 +147,8 @@ const ReviewComponent = ({ values, classes, network }: Props) => {
       </Row>
       <Row className={classes.info} align="center">
         <Paragraph noMargin color="primary" size="md">
-          {"You're about to create a new Safe."}
-        </Paragraph>
-        <Paragraph noMargin color="primary" size="md">
-          Make sure you have enough ETH in your wallet client to fund this transaction.
+          You&apos;re about to create a new Safe and will have to confirm a transaction with your currently connected
+          wallet. Make sure you have ETH in this wallet to fund this transaction.
         </Paragraph>
       </Row>
     </React.Fragment>

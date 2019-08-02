@@ -1,20 +1,19 @@
 // @flow
 import * as React from 'react'
-import Stepper from '~/components/Stepper'
+import ChevronLeft from '@material-ui/icons/ChevronLeft'
+import IconButton from '@material-ui/core/IconButton'
+import Stepper, { StepperPage } from '~/components/Stepper'
 import Block from '~/components/layout/Block'
 import Heading from '~/components/layout/Heading'
 import Row from '~/components/layout/Row'
-import IconButton from '@material-ui/core/IconButton'
 import Review from '~/routes/open/components/ReviewInformation'
-import ChevronLeft from '@material-ui/icons/ChevronLeft'
 import SafeNameField from '~/routes/open/components/SafeNameForm'
-import SafeThresholdField, { safeFieldsValidation } from '~/routes/open/components/SafeThresholdForm'
-import SafeOwnersFields from '~/routes/open/components/SafeOwnersForm'
+import SafeOwnersFields from '~/routes/open/components/SafeOwnersConfirmationsForm'
 import { getOwnerNameBy, getOwnerAddressBy, FIELD_CONFIRMATIONS } from '~/routes/open/components/fields'
 import { history } from '~/store'
 import { secondary } from '~/theme/variables'
 
-const getSteps = () => ['Start', 'Owners', 'Confirmations', 'Review']
+const getSteps = () => ['Start', 'Owners and confirmations', 'Review']
 
 const initialValuesFrom = (userAccount: string) => ({
   [getOwnerNameBy(0)]: 'My Metamask (me)',
@@ -39,6 +38,12 @@ const back = () => {
   history.goBack()
 }
 
+const formMutators = {
+  setValue: ([field, value], state, { changeValue }) => {
+    changeValue(state, field, () => value)
+  },
+}
+
 const Layout = ({
   provider, userAccount, onCallSafeContractSubmit, network,
 }: Props) => {
@@ -55,15 +60,20 @@ const Layout = ({
             </IconButton>
             <Heading tag="h2">Create New Safe</Heading>
           </Row>
-          <Stepper onSubmit={onCallSafeContractSubmit} steps={steps} initialValues={initialValues} testId="create-safe-form">
-            <Stepper.Page>{SafeNameField}</Stepper.Page>
-            <Stepper.Page>{SafeOwnersFields}</Stepper.Page>
-            <Stepper.Page validate={safeFieldsValidation}>{SafeThresholdField}</Stepper.Page>
-            <Stepper.Page network={network}>{Review}</Stepper.Page>
+          <Stepper
+            onSubmit={onCallSafeContractSubmit}
+            steps={steps}
+            initialValues={initialValues}
+            mutators={formMutators}
+            testId="create-safe-form"
+          >
+            <StepperPage>{SafeNameField}</StepperPage>
+            <StepperPage>{SafeOwnersFields}</StepperPage>
+            <StepperPage network={network}>{Review}</StepperPage>
           </Stepper>
         </Block>
       ) : (
-        <div>No metamask detected</div>
+        <div>No web3 provider detected</div>
       )}
     </React.Fragment>
   )

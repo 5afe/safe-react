@@ -4,7 +4,7 @@ import { type Store } from 'redux'
 import { render, fireEvent, cleanup } from '@testing-library/react'
 import { Provider } from 'react-redux'
 import { ConnectedRouter } from 'connected-react-router'
-import { ADD_OWNER_BUTTON } from '~/routes/open/components/SafeOwnersForm'
+import { ADD_OWNER_BUTTON } from '~/routes/open/components/SafeOwnersConfirmationsForm'
 import Open from '~/routes/open/container/Open'
 import { aNewStore, history, type GlobalState } from '~/store'
 import { sleep } from '~/utils/timer'
@@ -80,14 +80,12 @@ const deploySafe = async (createSafeForm: any, threshold: number, numOwners: num
     fireEvent.change(ownerNameInput, { target: { value: `Owner ${i + 1}` } })
     fireEvent.change(ownerAddressInput, { target: { value: accounts[i] } })
   }
-  fireEvent.submit(form)
-  await sleep(600)
 
   // Fill Threshold
   // The test is fragile here, MUI select btn is hard to find
-  const thresholdSelect = createSafeForm.getAllByRole('button')[1]
-
+  const thresholdSelect = createSafeForm.getAllByRole('button')[2]
   fireEvent.click(thresholdSelect)
+
   const thresholdOptions = createSafeForm.getAllByRole('option')
   fireEvent.click(thresholdOptions[numOwners - 1])
   fireEvent.submit(form)

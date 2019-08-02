@@ -52,6 +52,7 @@
     "react-final-form-listeners": "^1.0.2",
     "react-hot-loader": "4.12.10",
     "react-infinite-scroll-component": "^4.5.2",
+    "react-qr-reader": "^2.2.1",
     "react-redux": "7.1.0",
     "react-router-dom": "^5.0.1",
     "recompose": "^0.30.0",

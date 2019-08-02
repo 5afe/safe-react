@@ -2,7 +2,7 @@
 import * as React from 'react'
 import ChevronLeft from '@material-ui/icons/ChevronLeft'
 import IconButton from '@material-ui/core/IconButton'
-import Stepper from '~/components/Stepper'
+import Stepper, { StepperPage } from '~/components/Stepper'
 import Block from '~/components/layout/Block'
 import Heading from '~/components/layout/Heading'
 import Row from '~/components/layout/Row'
@@ -46,11 +46,11 @@ const Layout = ({
             <Heading tag="h2">Load existing Safe</Heading>
           </Row>
           <Stepper onSubmit={onLoadSafeSubmit} steps={steps} initialValues={initialValues} testId="load-safe-form">
-            <Stepper.Page validate={safeFieldsValidation}>{DetailsForm}</Stepper.Page>
-            <Stepper.Page network={network}>{OwnerList}</Stepper.Page>
-            <Stepper.Page network={network} userAddress={userAddress}>
+            <StepperPage validate={safeFieldsValidation}>{DetailsForm}</StepperPage>
+            <StepperPage network={network}>{OwnerList}</StepperPage>
+            <StepperPage network={network} userAddress={userAddress}>
               {ReviewInformation}
-            </Stepper.Page>
+            </StepperPage>
           </Stepper>
         </Block>
       ) : (
