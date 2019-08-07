@@ -60,7 +60,7 @@
     "redux-thunk": "^2.2.0",
     "reselect": "^4.0.0",
     "web3": "1.2.1",
-    "web3connect": "^1.0.0-beta.15"
+    "web3connect": "1.0.0-beta.18"
   },
   "devDependencies": {
     "@babel/cli": "7.5.5",

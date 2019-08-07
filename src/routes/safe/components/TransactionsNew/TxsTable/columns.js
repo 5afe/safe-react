@@ -14,9 +14,6 @@ export const TX_TABLE_STATUS_ID = 'status'
 export const TX_TABLE_RAW_TX_ID = 'tx'
 export const TX_TABLE_EXPAND_ICON = 'expand'
 
-const { web3 } = Web3Integration
-const { toBN, fromWei } = web3.utils
-
 type TxData = {
   nonce: number,
   type: string,
@@ -29,6 +26,9 @@ type TxData = {
 export const formatDate = (date: Date): string => format(date, 'MMM D, YYYY - HH:mm:ss')
 
 export const getTxAmount = (tx: Transaction) => {
+  const { web3 } = Web3Integration
+  const { toBN, fromWei } = web3.utils
+
   let txAmount = 'n/a'
 
   if (tx.isTokenTransfer && tx.decodedParams) {

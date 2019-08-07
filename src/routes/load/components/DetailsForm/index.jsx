@@ -1,18 +1,18 @@
 // @flow
 import * as React from 'react'
 import { withStyles } from '@material-ui/core/styles'
+import InputAdornment from '@material-ui/core/InputAdornment'
+import CheckCircle from '@material-ui/icons/CheckCircle'
+import SafeProxy from '@gnosis.pm/safe-contracts/build/contracts/Proxy.json'
 import Field from '~/components/forms/Field'
 import {
   composeValidators, required, noErrorsOn, mustBeEthereumAddress,
 } from '~/components/forms/validator'
 import TextField from '~/components/forms/TextField'
-import InputAdornment from '@material-ui/core/InputAdornment'
-import CheckCircle from '@material-ui/icons/CheckCircle'
 import Block from '~/components/layout/Block'
 import Paragraph from '~/components/layout/Paragraph'
 import OpenPaper from '~/components/Stepper/OpenPaper'
 import { FIELD_LOAD_NAME, FIELD_LOAD_ADDRESS } from '~/routes/load/components/fields'
-import SafeProxy from '@gnosis.pm/safe-contracts/build/contracts/Proxy.json'
 import { getSafeMasterContract } from '~/logic/contracts/safeContracts'
 import Web3Integration from '~/logic/wallets/web3Integration'
 
