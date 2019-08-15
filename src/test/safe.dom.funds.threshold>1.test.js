@@ -1,5 +1,5 @@
 // @flow
-import { fireEvent, cleanup } from '@testing-library/react'
+import { fireEvent } from '@testing-library/react'
 import { aNewStore } from '~/store'
 import { aMinedSafe } from '~/test/builder/safe.redux.builder'
 import { sendEtherTo } from '~/test/utils/tokenMovements'
@@ -15,7 +15,6 @@ import { useTestAccountAt, resetTestAccount } from './utils/accounts'
 import { CONFIRM_TX_BTN_TEST_ID, EXECUTE_TX_BTN_TEST_ID } from '~/routes/safe/components/TransactionsNew/TxsTable/ExpandedTx/OwnersColumn/ButtonRow'
 import { APPROVE_TX_MODAL_SUBMIT_BTN_TEST_ID } from '~/routes/safe/components/TransactionsNew/TxsTable/ExpandedTx/ApproveTxModal'
 
-afterEach(cleanup)
 afterEach(resetTestAccount)
 
 describe('DOM > Feature > Sending Funds', () => {

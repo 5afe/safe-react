@@ -1,7 +1,7 @@
 // @flow
 import * as React from 'react'
 import { type Store } from 'redux'
-import { render, fireEvent, cleanup } from '@testing-library/react'
+import { render, fireEvent } from '@testing-library/react'
 import { Provider } from 'react-redux'
 import { ConnectedRouter } from 'connected-react-router'
 import { ADD_OWNER_BUTTON } from '~/routes/open/components/SafeOwnersConfirmationsForm'
@@ -13,8 +13,6 @@ import addProvider from '~/logic/wallets/store/actions/addProvider'
 import { makeProvider } from '~/logic/wallets/store/model/provider'
 import { getGnosisSafeInstanceAt } from '~/logic/contracts/safeContracts'
 import { whenSafeDeployed } from './builder/safe.dom.utils'
-
-afterEach(cleanup)
 
 // https://github.com/testing-library/@testing-library/react/issues/281
 const originalError = console.error

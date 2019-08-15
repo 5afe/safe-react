@@ -2,7 +2,7 @@
 import * as React from 'react'
 import { type Store } from 'redux'
 import { Provider } from 'react-redux'
-import { render, fireEvent, cleanup } from '@testing-library/react'
+import { render, fireEvent } from '@testing-library/react'
 import { ConnectedRouter } from 'connected-react-router'
 import Load from '~/routes/load/container/Load'
 import { aNewStore, history, type GlobalState } from '~/store'
@@ -12,8 +12,6 @@ import addProvider from '~/logic/wallets/store/actions/addProvider'
 import { makeProvider } from '~/logic/wallets/store/model/provider'
 import { aMinedSafe } from './builder/safe.redux.builder'
 import { whenSafeDeployed } from './builder/safe.dom.utils'
-
-afterEach(cleanup)
 
 // https://github.com/testing-library/@testing-library/react/issues/281
 const originalError = console.error

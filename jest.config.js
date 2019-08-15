@@ -14,7 +14,7 @@ module.exports = {
     '<rootDir>/config/jest/LocalStorageMock.js',
     '<rootDir>/config/jest/Web3Mock.js',
   ],
-  setupFilesAfterEnv: ['<rootDir>/config/jest/jest.setup.js', '@testing-library/react/cleanup-after-each'],
+  setupFilesAfterEnv: ['<rootDir>/config/jest/jest.setup.js'],
   testEnvironment: 'node',
   testMatch: ['<rootDir>/src/**/__tests__/**/*.js?(x)', '<rootDir>/src/**/?(*.)(spec|test).js?(x)'],
   testURL: 'http://localhost:8000',
