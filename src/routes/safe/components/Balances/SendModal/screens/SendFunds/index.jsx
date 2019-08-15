@@ -19,11 +19,7 @@ import Field from '~/components/forms/Field'
 import TextField from '~/components/forms/TextField'
 import { type Token } from '~/logic/tokens/store/model/token'
 import {
-  composeValidators,
-  required,
-  mustBeFloat,
-  maxValue,
-  greaterThan,
+  composeValidators, required, mustBeFloat, maxValue, greaterThan,
 } from '~/components/forms/validator'
 import TokenSelectField from '~/routes/safe/components/Balances/SendModal/screens/SendFunds/TokenSelectField'
 import SafeInfo from '~/routes/safe/components/Balances/SendModal/SafeInfo'
@@ -74,7 +70,7 @@ const SendFunds = ({
   }
 
   return (
-    <React.Fragment>
+    <>
       <Row align="center" grow className={classes.heading}>
         <Paragraph weight="bolder" className={classes.manage} noMargin>
           Send Funds
@@ -102,7 +98,7 @@ const SendFunds = ({
             const { token } = formState.values
 
             return (
-              <React.Fragment>
+              <>
                 <Row margin="md">
                   <Col xs={12}>
                     <AddressInput
@@ -174,12 +170,12 @@ const SendFunds = ({
                     Review
                   </Button>
                 </Row>
-              </React.Fragment>
+              </>
             )
           }}
         </GnoForm>
       </Block>
-    </React.Fragment>
+    </>
   )
 }
 

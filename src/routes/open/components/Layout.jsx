@@ -51,7 +51,7 @@ const Layout = ({
   const initialValues = initialValuesFrom(userAccount)
 
   return (
-    <React.Fragment>
+    <>
       {provider ? (
         <Block>
           <Row align="center">
@@ -75,7 +75,7 @@ const Layout = ({
       ) : (
         <div>No web3 provider detected</div>
       )}
-    </React.Fragment>
+    </>
   )
 }
 

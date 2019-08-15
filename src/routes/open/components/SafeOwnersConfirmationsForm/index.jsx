@@ -106,7 +106,7 @@ const SafeOwners = (props: Props) => {
   }
 
   return (
-    <React.Fragment>
+    <>
       <Block className={classes.title}>
         <Paragraph noMargin size="md" color="primary">
           Specify the owners of the Safe.
@@ -212,14 +212,14 @@ owner(s)
         </Row>
       </Block>
       {qrModalOpen && <ScanQRModal isOpen={qrModalOpen} onScan={handleScan} onClose={closeQrModal} />}
-    </React.Fragment>
+    </>
   )
 }
 
 const SafeOwnersForm = withStyles(styles)(SafeOwners)
 
 const SafeOwnersPage = ({ updateInitialProps }: Object) => (controls: React.Node, { values, errors, form }: Object) => (
-  <React.Fragment>
+  <>
     <OpenPaper controls={controls} padding={false}>
       <SafeOwnersForm
         otherAccounts={getAccountsFrom(values)}
@@ -229,7 +229,7 @@ const SafeOwnersPage = ({ updateInitialProps }: Object) => (controls: React.Node
         values={values}
       />
     </OpenPaper>
-  </React.Fragment>
+  </>
 )
 
 export default SafeOwnersPage

@@ -1,6 +1,6 @@
 // @flow
 import { type FieldValidator } from 'final-form'
-import { getWeb3, getAddressFromENS } from '~/logic/wallets/getWeb3'
+import { getWeb3 } from '~/logic/wallets/getWeb3'
 
 export const simpleMemoize = (fn: Function) => {
   let lastArg
@@ -61,7 +61,7 @@ export const ok = () => undefined
 export const mustBeEthereumAddress = simpleMemoize((address: Field) => {
   const isAddress: boolean = getWeb3().utils.isAddress(address)
 
-  return isAddress ? undefined : 'Address should be a valid Ethereum address or ENS domain'
+  return isAddress ? undefined : 'Address should be a valid Ethereum address or ENS name'
 })
 
 export const minMaxLength = (minLen: string | number, maxLen: string | number) => (value: string) => (value.length >= +minLen && value.length <= +maxLen ? undefined : `Should be ${minLen} to ${maxLen} symbols`)
@@ -90,24 +90,4 @@ export const differentFrom = (diffValue: string) => (value: string) => {
   return undefined
 }
 
-export const ensResolverHasAddress = async (value: string) => {
-  let error
-
-  try {
-    await getAddressFromENS(value)
-  } catch {
-    error = 'Couldn\'t resolve the address'
-  }
-
-  return error
-}
-
 export const noErrorsOn = (name: string, errors: Object) => errors[name] === undefined
-
-export const ifElseValidator = (ifFunc: Function, thenFunc: Function, elseFunc: Function) => (value: string) => {
-  if (ifFunc(value)) {
-    return thenFunc(value)
-  }
-
-  return elseFunc(value)
-}
