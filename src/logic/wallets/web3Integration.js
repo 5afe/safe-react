@@ -74,10 +74,14 @@ class Web3Integration {
     // https://github.com/web3connect/web3connect/blob/master/example/src/helpers/utilities.ts#L144
     // for some reason getId() call never resolves, the bug was reported to wallet conenct foundation
     // and should be fixed soon
-    const chainIdRes = await this.web3.currentProvider.send('eth_chainId', [])
-    const networkId = convertHexToNumber(
-      sanitizeHex(addHexPrefix(`${chainIdRes}`)),
-    )
+    let networkId = 0
+
+    if (this.web3.currentProvider.isWalletConnect) {
+      const chainIdRes = await this.web3.currentProvider.send('eth_chainId', [])
+      networkId = convertHexToNumber(sanitizeHex(addHexPrefix(`${chainIdRes}`)))
+    } else {
+      networkId = this.web3.eth.net.getId()
+    }
 
     return networkId
   }
