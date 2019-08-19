@@ -29,6 +29,12 @@ const back = () => {
   history.goBack()
 }
 
+const formMutators = {
+  setValue: ([field, value], state, { changeValue }) => {
+    changeValue(state, field, () => value)
+  },
+}
+
 const Layout = ({
   provider, onLoadSafeSubmit, network, userAddress,
 }: Props) => {
@@ -36,7 +42,7 @@ const Layout = ({
   const initialValues = {}
 
   return (
-    <React.Fragment>
+    <>
       {provider ? (
         <Block>
           <Row align="center">
@@ -45,7 +51,13 @@ const Layout = ({
             </IconButton>
             <Heading tag="h2">Load existing Safe</Heading>
           </Row>
-          <Stepper onSubmit={onLoadSafeSubmit} steps={steps} initialValues={initialValues} testId="load-safe-form">
+          <Stepper
+            onSubmit={onLoadSafeSubmit}
+            steps={steps}
+            initialValues={initialValues}
+            mutators={formMutators}
+            testId="load-safe-form"
+          >
             <StepperPage validate={safeFieldsValidation}>{DetailsForm}</StepperPage>
             <StepperPage network={network}>{OwnerList}</StepperPage>
             <StepperPage network={network} userAddress={userAddress}>
@@ -56,7 +68,7 @@ const Layout = ({
       ) : (
         <div>No account detected</div>
       )}
-    </React.Fragment>
+    </>
   )
 }
 

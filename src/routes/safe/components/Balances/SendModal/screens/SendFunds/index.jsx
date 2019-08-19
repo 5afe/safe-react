@@ -9,6 +9,7 @@ import IconButton from '@material-ui/core/IconButton'
 import Paragraph from '~/components/layout/Paragraph'
 import Row from '~/components/layout/Row'
 import GnoForm from '~/components/forms/GnoForm'
+import AddressInput from '~/components/forms/AddressInput'
 import Col from '~/components/layout/Col'
 import Button from '~/components/layout/Button'
 import Block from '~/components/layout/Block'
@@ -18,12 +19,7 @@ import Field from '~/components/forms/Field'
 import TextField from '~/components/forms/TextField'
 import { type Token } from '~/logic/tokens/store/model/token'
 import {
-  composeValidators,
-  required,
-  mustBeEthereumAddress,
-  mustBeFloat,
-  maxValue,
-  greaterThan,
+  composeValidators, required, mustBeFloat, maxValue, greaterThan,
 } from '~/components/forms/validator'
 import TokenSelectField from '~/routes/safe/components/Balances/SendModal/screens/SendFunds/TokenSelectField'
 import SafeInfo from '~/routes/safe/components/Balances/SendModal/SafeInfo'
@@ -68,10 +64,13 @@ const SendFunds = ({
     onTokenChange: (args, state, utils) => {
       utils.changeValue(state, 'amount', () => '')
     },
+    setRecipient: (args, state, utils) => {
+      utils.changeValue(state, 'recipientAddress', () => args[0])
+    },
   }
 
   return (
-    <React.Fragment>
+    <>
       <Row align="center" grow className={classes.heading}>
         <Paragraph weight="bolder" className={classes.manage} noMargin>
           Send Funds
@@ -99,17 +98,16 @@ const SendFunds = ({
             const { token } = formState.values
 
             return (
-              <React.Fragment>
+              <>
                 <Row margin="md">
                   <Col xs={12}>
-                    <Field
+                    <AddressInput
                       name="recipientAddress"
                       component={TextField}
-                      type="text"
-                      validate={composeValidators(required, mustBeEthereumAddress)}
                       placeholder="Recipient*"
                       text="Recipient*"
                       className={classes.addressInput}
+                      fieldMutator={mutators.setRecipient}
                     />
                   </Col>
                 </Row>
@@ -172,12 +170,12 @@ const SendFunds = ({
                     Review
                   </Button>
                 </Row>
-              </React.Fragment>
+              </>
             )
           }}
         </GnoForm>
       </Block>
-    </React.Fragment>
+    </>
   )
 }
 

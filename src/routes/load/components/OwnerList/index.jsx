@@ -118,7 +118,7 @@ const OwnerListComponent = (props: Props) => {
   }, [])
 
   return (
-    <React.Fragment>
+    <>
       <Block className={classes.title}>
         <Paragraph noMargin size="md" color="primary">
           {`This Safe has ${owners.length} owners. Optional: Provide a name for each owner.`}
@@ -159,18 +159,18 @@ const OwnerListComponent = (props: Props) => {
           </Row>
         ))}
       </Block>
-    </React.Fragment>
+    </>
   )
 }
 
 const OwnerListPage = withStyles(styles)(OwnerListComponent)
 
 const OwnerList = ({ updateInitialProps }: Object, network: string) => (controls: React$Node, { values }: Object) => (
-  <React.Fragment>
+  <>
     <OpenPaper controls={controls} padding={false}>
       <OwnerListPage network={network} updateInitialProps={updateInitialProps} values={values} />
     </OpenPaper>
-  </React.Fragment>
+  </>
 )
 
 export default OwnerList

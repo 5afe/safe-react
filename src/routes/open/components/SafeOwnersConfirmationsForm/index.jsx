@@ -7,6 +7,7 @@ import MenuItem from '@material-ui/core/MenuItem'
 import Field from '~/components/forms/Field'
 import TextField from '~/components/forms/TextField'
 import SelectField from '~/components/forms/SelectField'
+import AddressInput from '~/components/forms/AddressInput'
 import {
   required, composeValidators, noErrorsOn, mustBeInteger, minValue,
 } from '~/components/forms/validator'
@@ -28,7 +29,7 @@ import Hairline from '~/components/layout/Hairline'
 import trash from '~/assets/icons/trash.svg'
 import QRIcon from '~/assets/icons/qrcode.svg'
 import ScanQRModal from './ScanQRModal'
-import { getAddressValidators } from './validators'
+import { getAddressValidator } from './validators'
 import { styles } from './style'
 
 type Props = {
@@ -105,7 +106,7 @@ const SafeOwners = (props: Props) => {
   }
 
   return (
-    <React.Fragment>
+    <>
       <Block className={classes.title}>
         <Paragraph noMargin size="md" color="primary">
           Specify the owners of the Safe.
@@ -135,7 +136,7 @@ const SafeOwners = (props: Props) => {
                 />
               </Col>
               <Col xs={6}>
-                <Field
+                <AddressInput
                   name={addressName}
                   component={TextField}
                   inputAdornment={
@@ -147,8 +148,11 @@ const SafeOwners = (props: Props) => {
                       ),
                     }
                   }
+                  fieldMutator={(val) => {
+                    form.mutators.setValue(addressName, val)
+                  }}
                   type="text"
-                  validate={getAddressValidators(otherAccounts, index)}
+                  validators={[getAddressValidator(otherAccounts, index)]}
                   placeholder="Owner Address*"
                   text="Owner Address"
                 />
@@ -208,14 +212,14 @@ owner(s)
         </Row>
       </Block>
       {qrModalOpen && <ScanQRModal isOpen={qrModalOpen} onScan={handleScan} onClose={closeQrModal} />}
-    </React.Fragment>
+    </>
   )
 }
 
 const SafeOwnersForm = withStyles(styles)(SafeOwners)
 
 const SafeOwnersPage = ({ updateInitialProps }: Object) => (controls: React.Node, { values, errors, form }: Object) => (
-  <React.Fragment>
+  <>
     <OpenPaper controls={controls} padding={false}>
       <SafeOwnersForm
         otherAccounts={getAccountsFrom(values)}
@@ -225,7 +229,7 @@ const SafeOwnersPage = ({ updateInitialProps }: Object) => (controls: React.Node
         values={values}
       />
     </OpenPaper>
-  </React.Fragment>
+  </>
 )
 
 export default SafeOwnersPage

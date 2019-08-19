@@ -1,5 +1,5 @@
 // @flow
-import { fireEvent, cleanup } from '@testing-library/react'
+import { fireEvent } from '@testing-library/react'
 import { List } from 'immutable'
 import { aNewStore } from '~/store'
 import { aMinedSafe } from '~/test/builder/safe.redux.builder'
@@ -15,8 +15,6 @@ import '@testing-library/jest-dom/extend-expect'
 import updateSafe from '~/routes/safe/store/actions/updateSafe'
 import { checkRegisteredTxSend, fillAndSubmitSendFundsForm } from './utils/transactions'
 import { BALANCE_ROW_TEST_ID } from '~/routes/safe/components/Balances'
-
-afterEach(cleanup)
 
 describe('DOM > Feature > Sending Funds', () => {
   let store

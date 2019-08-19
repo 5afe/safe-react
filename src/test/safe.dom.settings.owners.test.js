@@ -1,5 +1,5 @@
 // @flow
-import { fireEvent, cleanup } from '@testing-library/react'
+import { fireEvent } from '@testing-library/react'
 import { aNewStore } from '~/store'
 import { aMinedSafe } from '~/test/builder/safe.redux.builder'
 import { renderSafeView } from '~/test/builder/safe.dom.utils'
@@ -39,8 +39,6 @@ import {
   REPLACE_OWNER_ADDRESS_INPUT_TEST_ID,
 } from '~/routes/safe/components/Settings/ManageOwners/ReplaceOwnerModal/screens/OwnerForm'
 import { REPLACE_OWNER_SUBMIT_BTN_TEST_ID } from '~/routes/safe/components/Settings/ManageOwners/ReplaceOwnerModal/screens/Review'
-
-afterEach(cleanup)
 
 describe('DOM > Feature > Settings - Manage owners', () => {
   let store

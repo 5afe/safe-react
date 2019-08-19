@@ -1,24 +1,26 @@
 // @flow
 import * as React from 'react'
 import { withStyles } from '@material-ui/core/styles'
+import SafeProxy from '@gnosis.pm/safe-contracts/build/contracts/Proxy.json'
+import InputAdornment from '@material-ui/core/InputAdornment'
+import CheckCircle from '@material-ui/icons/CheckCircle'
 import Field from '~/components/forms/Field'
+import AddressInput from '~/components/forms/AddressInput'
 import {
   composeValidators, required, noErrorsOn, mustBeEthereumAddress,
 } from '~/components/forms/validator'
 import TextField from '~/components/forms/TextField'
-import InputAdornment from '@material-ui/core/InputAdornment'
-import CheckCircle from '@material-ui/icons/CheckCircle'
 import Block from '~/components/layout/Block'
 import Paragraph from '~/components/layout/Paragraph'
 import OpenPaper from '~/components/Stepper/OpenPaper'
 import { FIELD_LOAD_NAME, FIELD_LOAD_ADDRESS } from '~/routes/load/components/fields'
 import { getWeb3 } from '~/logic/wallets/getWeb3'
-import SafeProxy from '@gnosis.pm/safe-contracts/build/contracts/Proxy.json'
 import { getSafeMasterContract } from '~/logic/contracts/safeContracts'
 
 type Props = {
   classes: Object,
   errors: Object,
+  form: Object,
 }
 
 const styles = () => ({
@@ -80,8 +82,8 @@ export const safeFieldsValidation = async (values: Object) => {
   return errors
 }
 
-const Details = ({ classes, errors }: Props) => (
-  <React.Fragment>
+const Details = ({ classes, errors, form }: Props) => (
+  <>
     <Block margin="sm">
       <Paragraph noMargin size="md" color="primary">
         Adding an existing Safe only requires the Safe address. Optionally you can give it a name. In case your
@@ -99,9 +101,12 @@ const Details = ({ classes, errors }: Props) => (
       />
     </Block>
     <Block margin="lg" className={classes.root}>
-      <Field
+      <AddressInput
         name={FIELD_LOAD_ADDRESS}
         component={TextField}
+        fieldMutator={(val) => {
+          form.mutators.setValue(FIELD_LOAD_ADDRESS, val)
+        }}
         inputAdornment={
           noErrorsOn(FIELD_LOAD_ADDRESS, errors) && {
             endAdornment: (
@@ -117,17 +122,17 @@ const Details = ({ classes, errors }: Props) => (
         text="Safe Address"
       />
     </Block>
-  </React.Fragment>
+  </>
 )
 
 const DetailsForm = withStyles(styles)(Details)
 
-const DetailsPage = () => (controls: React.Node, { errors }: Object) => (
-  <React.Fragment>
+const DetailsPage = () => (controls: React.Node, { errors, form }: Object) => (
+  <>
     <OpenPaper controls={controls} container={605}>
-      <DetailsForm errors={errors} />
+      <DetailsForm errors={errors} form={form} />
     </OpenPaper>
-  </React.Fragment>
+  </>
 )
 
 export default DetailsPage
