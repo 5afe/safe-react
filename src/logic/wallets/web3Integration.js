@@ -38,10 +38,15 @@ export const ETHEREUM_NETWORK_IDS = {
 class Web3Integration {
   provider: Object
 
+  // this is needed for Portis, Portis' web3 provider should be used only for signing tx
+  // A separate provider should be used for getting data from the blockchain
+  readOnlyProvider: Object
+
   watcherInterval: IntervalID
 
   constructor() {
     this.provider = null
+    this.readOnlyProvider = new Web3(new Web3.providers.HttpProvider('https://rinkeby.infura.io:443/v3/5e7a225e60184afaa7b888303def93b8'))
   }
 
   async getAccount(): Promise<string | null> {
@@ -68,8 +73,6 @@ class Web3Integration {
   }
 
   async getNetworkId() {
-    //     const networkId = await this.web3.eth.net.getId()
-
     // this approach was taken from web3connect example app
     // https://github.com/web3connect/web3connect/blob/master/example/src/helpers/utilities.ts#L144
     // for some reason getId() call never resolves, the bug was reported to wallet conenct foundation
@@ -80,7 +83,7 @@ class Web3Integration {
       const chainIdRes = await this.web3.currentProvider.send('eth_chainId', [])
       networkId = convertHexToNumber(sanitizeHex(addHexPrefix(`${chainIdRes}`)))
     } else {
-      networkId = this.web3.eth.net.getId()
+      networkId = await this.web3.eth.net.getId()
     }
 
     return networkId
@@ -163,6 +166,10 @@ class Web3Integration {
       || (window.web3 && new Web3(window.web3.currentProvider))
       || (window.ethereum && new Web3(window.ethereum))
     )
+  }
+
+  get web3RO() {
+    return this.readOnlyProvider
   }
 
   disconnect() {

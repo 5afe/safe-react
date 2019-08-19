@@ -3,6 +3,8 @@ import { BigNumber } from 'bignumber.js'
 import axios from 'axios'
 import Web3Integration from '~/logic/wallets/web3Integration'
 
+const { web3RO } = Web3Integration
+
 // const MAINNET_NETWORK = 1
 export const EMPTY_DATA = '0x'
 
@@ -11,8 +13,7 @@ export const checkReceiptStatus = async (hash: string) => {
     return Promise.reject(new Error('No valid Tx hash to get receipt from'))
   }
 
-  const { web3 } = Web3Integration
-  const txReceipt = await web3.eth.getTransactionReceipt(hash)
+  const txReceipt = await web3RO.eth.getTransactionReceipt(hash)
 
   const { status } = txReceipt
   if (!status) {
@@ -50,10 +51,8 @@ export const calculateGasPrice = async () => {
 }
 
 export const calculateGasOf = async (data: Object, from: string, to: string) => {
-  const { web3 } = Web3Integration
-
   try {
-    const gas = await web3.eth.estimateGas({ data, from, to })
+    const gas = await web3RO.eth.estimateGas({ data, from, to })
 
     return gas * 2
   } catch (err) {
