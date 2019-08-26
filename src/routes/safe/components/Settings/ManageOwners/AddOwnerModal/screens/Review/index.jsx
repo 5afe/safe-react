@@ -154,15 +154,15 @@ const ReviewAddOwner = ({
       </Block>
       <Hairline />
       <Row align="center" className={classes.buttonRow}>
-        <Button className={classes.button} minWidth={140} onClick={onClickBack}>
+        <Button minWidth={140} minHeight={42} onClick={onClickBack}>
           Back
         </Button>
         <Button
           type="submit"
           onClick={handleSubmit}
-          className={classes.button}
           variant="contained"
           minWidth={140}
+          minHeight={42}
           color="primary"
           testId={ADD_OWNER_SUBMIT_BTN_TEST_ID}
         >

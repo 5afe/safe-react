@@ -27,6 +27,7 @@ export const styles = (theme: Object) => ({
   buttonRemove: {
     color: '#fff',
     backgroundColor: error,
+    height: '42px',
   },
   name: {
     textOverflow: 'ellipsis',

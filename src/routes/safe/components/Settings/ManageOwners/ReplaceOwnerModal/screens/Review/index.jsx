@@ -200,14 +200,14 @@ const ReviewRemoveOwner = ({
       </Block>
       <Hairline />
       <Row align="center" className={classes.buttonRow}>
-        <Button className={classes.button} minWidth={140} onClick={onClickBack}>
+        <Button minWidth={140} minHeight={42} onClick={onClickBack}>
           Back
         </Button>
         <Button
           type="submit"
           onClick={handleSubmit}
-          className={classes.button}
           variant="contained"
+          minHeight={42}
           minWidth={140}
           color="primary"
           testId={REPLACE_OWNER_SUBMIT_BTN_TEST_ID}
