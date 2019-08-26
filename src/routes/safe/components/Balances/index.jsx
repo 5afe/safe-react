@@ -2,8 +2,6 @@
 import * as React from 'react'
 import { List } from 'immutable'
 import classNames from 'classnames/bind'
-import CallMade from '@material-ui/icons/CallMade'
-import CallReceived from '@material-ui/icons/CallReceived'
 import Checkbox from '@material-ui/core/Checkbox'
 import TableRow from '@material-ui/core/TableRow'
 import TableCell from '@material-ui/core/TableCell'
@@ -14,6 +12,7 @@ import Row from '~/components/layout/Row'
 import Button from '~/components/layout/Button'
 import ButtonLink from '~/components/layout/ButtonLink'
 import Paragraph from '~/components/layout/Paragraph'
+import Img from '~/components/layout/Img'
 import Modal from '~/components/Modal'
 import { type Column, cellWidth } from '~/components/Table/TableHead'
 import Table from '~/components/Table'
@@ -25,6 +24,9 @@ import Tokens from './Tokens'
 import SendModal from './SendModal'
 import Receive from './Receive'
 import { styles } from './style'
+
+const ReceiveTx = require('../assets/tx-receive.svg')
+const SendTx = require('../assets/tx-send.svg')
 
 export const MANAGE_TOKENS_BUTTON_TEST_ID = 'manage-tokens-btn'
 export const BALANCE_ROW_TEST_ID = 'balance-row'
@@ -169,6 +171,17 @@ class Balances extends React.Component<Props, State> {
               ))}
               <TableCell component="td">
                 <Row align="end" className={classes.actions}>
+                  <Button
+                    variant="contained"
+                    size="small"
+                    color="primary"
+                    className={classes.receive}
+                    onClick={this.onShow('Receive')}
+                    rounded
+                  >
+                    <Img src={ReceiveTx} alt="Receive Transaction" className={classNames(classes.leftIcon, classes.iconSmall)} />
+                      Receive
+                  </Button>
                   {granted && (
                     <Button
                       variant="contained"
@@ -178,7 +191,7 @@ class Balances extends React.Component<Props, State> {
                       onClick={() => this.showSendFunds(row.asset.name)}
                       testId="balance-send-btn"
                     >
-                      <CallMade className={classNames(classes.leftIcon, classes.iconSmall)} />
+                      <Img src={SendTx} alt="Send Transaction" className={classNames(classes.leftIcon, classes.iconSmall)} />
                         Send
                     </Button>
                   )}

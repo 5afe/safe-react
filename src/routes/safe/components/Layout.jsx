@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react'
+import classNames from 'classnames/bind'
 import OpenInNew from '@material-ui/icons/OpenInNew'
 import Tabs from '@material-ui/core/Tabs'
 import Tab from '@material-ui/core/Tab'
@@ -9,8 +10,10 @@ import Block from '~/components/layout/Block'
 import Identicon from '~/components/Identicon'
 import Heading from '~/components/layout/Heading'
 import Row from '~/components/layout/Row'
+import Button from '~/components/layout/Button'
 import Link from '~/components/layout/Link'
 import Paragraph from '~/components/layout/Paragraph'
+import Img from '~/components/layout/Img'
 import NoSafe from '~/components/NoSafe'
 import { type SelectorProps } from '~/routes/safe/container/selector'
 import { getEtherScanLink } from '~/logic/wallets/getWeb3'
@@ -22,6 +25,10 @@ import { type Actions } from '../container/actions'
 import Balances from './Balances'
 import Transactions from './Transactions'
 import Settings from './Settings'
+import { styles } from './style'
+
+const ReceiveTx = require('./assets/tx-receive.svg')
+const SendTx = require('./assets/tx-send.svg')
 
 export const BALANCES_TAB_BTN_TEST_ID = 'balances-tab-btn'
 export const SETTINGS_TAB_BTN_TEST_ID = 'settings-tab-btn'
@@ -141,6 +148,35 @@ class Layout extends React.Component<Props, State> {
                 <OpenInNew style={openIconStyle} />
               </Link>
             </Block>
+          </Block>
+          <Block className={classes.balance}>
+            <Row align="end" className={classes.actions}>
+              <Button
+                variant="contained"
+                size="small"
+                color="primary"
+                className={classes.receive}
+                onClick={() => {}}
+                rounded
+              >
+                <Img src={ReceiveTx} alt="Receive Transaction" className={classNames(classes.leftIcon, classes.iconSmall)} />
+                  Receive
+              </Button>
+              {granted && (
+                <Button
+                  variant="contained"
+                  size="small"
+                  color="primary"
+                  className={classes.send}
+                  onClick={() => {}}
+                  rounded
+                  testId="balance-send-btn"
+                >
+                  <Img src={SendTx} alt="Send Transaction" className={classNames(classes.leftIcon, classes.iconSmall)} />
+                    Send
+                </Button>
+              )}
+            </Row>
           </Block>
         </Block>
         <Row>

@@ -30,14 +30,12 @@ export const styles = (theme: Object) => ({
     justifyContent: 'flex-end',
     visibility: 'hidden',
   },
-  send: {
-    minWidth: '0px',
-    marginRight: sm,
-    width: '70px',
-  },
   receive: {
-    minWidth: '0px',
     width: '95px',
+  },
+  send: {
+    width: '70px',
+    marginLeft: sm,
   },
   leftIcon: {
     marginRight: xs,

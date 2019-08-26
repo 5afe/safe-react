@@ -3,7 +3,7 @@ import {
   lg, md, sm, error, background,
 } from '~/theme/variables'
 
-export const styles = (theme: Object) => ({
+export const styles = () => ({
   heading: {
     padding: `${sm} ${lg}`,
     justifyContent: 'space-between',
