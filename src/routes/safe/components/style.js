@@ -43,12 +43,14 @@ export const styles = () => ({
   },
   receive: {
     width: '95px',
+    minWidth: '95px',
   },
   send: {
-    width: '70px',
+    width: '75px',
+    minWidth: '75px',
     marginLeft: sm,
   },
   leftIcon: {
-    marginRight: xs,
+    marginRight: sm,
   },
 })

@@ -1,5 +1,5 @@
 // @flow
-import { sm, xs } from '~/theme/variables'
+import { sm } from '~/theme/variables'
 
 export const styles = (theme: Object) => ({
   root: {
@@ -32,13 +32,15 @@ export const styles = (theme: Object) => ({
   },
   receive: {
     width: '95px',
+    minWidth: '95px',
   },
   send: {
-    width: '70px',
+    width: '75px',
+    minWidth: '75px',
     marginLeft: sm,
   },
   leftIcon: {
-    marginRight: xs,
+    marginRight: sm,
   },
   links: {
     textDecoration: 'underline',

@@ -138,12 +138,11 @@ const ReviewTx = ({
           </Block>
           <Hairline style={{ position: 'absolute', bottom: 85 }} />
           <Row align="center" className={classes.buttonRow}>
-            <Button className={classes.button} minWidth={140} minHeight={42} onClick={onClickBack}>
+            <Button minWidth={140} minHeight={42} onClick={onClickBack}>
               Back
             </Button>
             <Button
               type="submit"
-              className={classes.button}
               onClick={submitTx}
               variant="contained"
               minWidth={140}

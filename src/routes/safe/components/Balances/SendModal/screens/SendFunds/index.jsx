@@ -156,7 +156,7 @@ const SendFunds = ({
                 </Row>
                 <Hairline />
                 <Row align="center" className={classes.buttonRow}>
-                  <Button className={classes.button} minWidth={140} minHeight={42} onClick={onClose}>
+                  <Button minWidth={140} minHeight={42} onClick={onClose}>
                     Cancel
                   </Button>
                   <Button

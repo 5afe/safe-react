@@ -48,9 +48,6 @@ const styles = () => ({
     height: '84px',
     justifyContent: 'center',
   },
-  button: {
-    height: '42px',
-  },
   addressContainer: {
     marginTop: '28px',
   },
@@ -109,7 +106,7 @@ const Receive = ({
     </Col>
     <Hairline />
     <Row align="center" className={classes.buttonRow}>
-      <Button color="primary" className={classes.button} minWidth={140} onClick={onClose} variant="contained">
+      <Button color="primary" minHeight={42} minWidth={140} onClick={onClose} variant="contained">
         Done
       </Button>
     </Row>

@@ -189,10 +189,10 @@ const AddCustomToken = (props: Props) => {
             </Block>
             <Hairline />
             <Row align="center" className={classes.buttonRow}>
-              <Button className={classes.button} minWidth={140} onClick={goBackToTokenList}>
+              <Button minHeight={42} minWidth={140} onClick={goBackToTokenList}>
                 Cancel
               </Button>
-              <Button type="submit" className={classes.button} variant="contained" minWidth={140} color="primary">
+              <Button type="submit" variant="contained" minWidth={140} minHeight={42} color="primary">
                 Save
               </Button>
             </Row>
