@@ -85,7 +85,6 @@ const Send = ({
         {activeScreen === 'sendFunds' && (
           <SendFunds
             onClose={onClose}
-            setActiveScreen={setActiveScreen}
             safeAddress={safeAddress}
             etherScanLink={etherScanLink}
             safeName={safeName}
@@ -111,7 +110,6 @@ const Send = ({
         {activeScreen === 'sendCustomTx' && (
           <SendCustomTx
             onClose={onClose}
-            setActiveScreen={setActiveScreen}
             safeAddress={safeAddress}
             etherScanLink={etherScanLink}
             safeName={safeName}
