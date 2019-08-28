@@ -27,11 +27,11 @@ import { styles } from './style'
 
 type Props = {
   onClose: () => void,
+  setActiveScreen: Function,
   classes: Object,
   safeAddress: string,
   etherScanLink: string,
   safeName: string,
-  onClickBack: Function,
   ethBalance: string,
   tx: Object,
   createTransaction: Function,
@@ -44,13 +44,13 @@ const openIconStyle = {
 
 const ReviewTx = ({
   onClose,
+  setActiveScreen,
   classes,
   safeAddress,
   etherScanLink,
   safeName,
   ethBalance,
   tx,
-  onClickBack,
   createTransaction,
 }: Props) => (
   <SharedSnackbarConsumer>
@@ -138,7 +138,7 @@ const ReviewTx = ({
           </Block>
           <Hairline style={{ position: 'absolute', bottom: 85 }} />
           <Row align="center" className={classes.buttonRow}>
-            <Button minWidth={140} minHeight={42} onClick={onClickBack}>
+            <Button minWidth={140} minHeight={42} onClick={() => setActiveScreen('sendFunds')}>
               Back
             </Button>
             <Button

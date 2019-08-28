@@ -8,6 +8,7 @@ import Modal from '~/components/Modal'
 import ChooseTxType from './screens/ChooseTxType'
 import SendFunds from './screens/SendFunds'
 import ReviewTx from './screens/ReviewTx'
+import SendCustomTx from './screens/SendCustomTx'
 
 type Props = {
   onClose: () => void,
@@ -20,14 +21,17 @@ type Props = {
   tokens: List<Token>,
   selectedToken: string,
   createTransaction: Function,
+  activeScreenType: string
 }
-type ActiveScreen = 'chooseTxType' | 'sendFunds' | 'reviewTx'
+
+type ActiveScreen = 'chooseTxType' | 'sendFunds' | 'reviewTx' | 'sendCustomTx' | 'reviewCustomTx'
 
 type TxStateType =
   | {
       token: Token,
       recipientAddress: string,
       amount: string,
+      data: string,
     }
   | Object
 
@@ -49,23 +53,24 @@ const Send = ({
   tokens,
   selectedToken,
   createTransaction,
+  activeScreenType,
 }: Props) => {
-  const [activeScreen, setActiveScreen] = useState<ActiveScreen>('sendFunds')
+  const [activeScreen, setActiveScreen] = useState<ActiveScreen>(activeScreenType || 'chooseTxType')
   const [tx, setTx] = useState<TxStateType>({})
   const smallerModalSize = activeScreen === 'chooseTxType'
   const handleTxCreation = (txInfo) => {
     setActiveScreen('reviewTx')
     setTx(txInfo)
   }
-  const onClickBack = () => setActiveScreen('sendFunds')
+  const handleCustomTxCreation = (customTxInfo) => {
+    setActiveScreen('reviewCustomTx')
+    setTx(customTxInfo)
+  }
 
-  useEffect(
-    () => () => {
-      setActiveScreen('sendFunds')
-      setTx({})
-    },
-    [isOpen],
-  )
+  useEffect(() => {
+    setActiveScreen(activeScreenType || 'chooseTxType')
+    setTx({})
+  }, [isOpen])
 
   return (
     <Modal
@@ -95,12 +100,24 @@ const Send = ({
           <ReviewTx
             tx={tx}
             onClose={onClose}
+            setActiveScreen={setActiveScreen}
             safeAddress={safeAddress}
             etherScanLink={etherScanLink}
             safeName={safeName}
             ethBalance={ethBalance}
-            onClickBack={onClickBack}
             createTransaction={createTransaction}
+          />
+        )}
+        {activeScreen === 'sendCustomTx' && (
+          <SendCustomTx
+            onClose={onClose}
+            setActiveScreen={setActiveScreen}
+            safeAddress={safeAddress}
+            etherScanLink={etherScanLink}
+            safeName={safeName}
+            ethBalance={ethBalance}
+            onSubmit={handleCustomTxCreation}
+            initialValues={tx}
           />
         )}
       </React.Fragment>
