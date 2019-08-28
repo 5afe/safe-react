@@ -14,6 +14,9 @@ import Button from '~/components/layout/Button'
 import Link from '~/components/layout/Link'
 import Paragraph from '~/components/layout/Paragraph'
 import Img from '~/components/layout/Img'
+import Modal from '~/components/Modal'
+import SendModal from './Balances/SendModal'
+import Receive from './Balances/Receive'
 import NoSafe from '~/components/NoSafe'
 import { type SelectorProps } from '~/routes/safe/container/selector'
 import { getEtherScanLink } from '~/logic/wallets/getWeb3'
@@ -43,6 +46,12 @@ type Props = SelectorProps &
   Actions & {
     classes: Object,
     granted: boolean,
+    sendFunds: Object,
+    showReceive: boolean,
+    onShow: Function,
+    onHide: Function,
+    showSendFunds: Function,
+    hideSendFunds: Function
   }
 
 const openIconStyle = {
@@ -119,6 +128,12 @@ class Layout extends React.Component<Props, State> {
       updateSafe,
       transactions,
       userAddress,
+      sendFunds,
+      showReceive,
+      onShow,
+      onHide,
+      showSendFunds,
+      hideSendFunds,
     } = this.props
     const { tabIndex } = this.state
 
@@ -156,7 +171,7 @@ class Layout extends React.Component<Props, State> {
                 size="small"
                 color="primary"
                 className={classes.receive}
-                onClick={() => {}}
+                onClick={onShow('Receive')}
                 rounded
               >
                 <Img src={ReceiveTx} alt="Receive Transaction" className={classNames(classes.leftIcon, classes.iconSmall)} />
@@ -168,7 +183,7 @@ class Layout extends React.Component<Props, State> {
                   size="small"
                   color="primary"
                   className={classes.send}
-                  onClick={() => {}}
+                  onClick={() => showSendFunds('Ether')}
                   rounded
                   testId="balance-send-btn"
                 >

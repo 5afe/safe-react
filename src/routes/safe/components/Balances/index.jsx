@@ -220,6 +220,7 @@ class Balances extends React.Component<Props, State> {
           tokens={activeTokens}
           selectedToken={sendFunds.selectedToken}
           createTransaction={createTransaction}
+          activeScreenType="sendFunds"
         />
         <Modal
           title="Receive Tokens"
