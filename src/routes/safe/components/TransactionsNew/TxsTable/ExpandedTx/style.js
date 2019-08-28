@@ -1,6 +1,6 @@
 // @flow
 import {
-  md, lg, connected, error,
+  md, lg, connected, error, disabled,
 } from '~/theme/variables'
 
 export const styles = () => ({
@@ -8,10 +8,10 @@ export const styles = () => ({
     padding: `${lg} ${md}`,
   },
   awaiting_confirmations: {
-    color: '#2e73d9',
+    color: disabled,
   },
   awaiting_execution: {
-    color: '#2e73d9',
+    color: disabled,
   },
   success: {
     color: connected,

@@ -1,9 +1,9 @@
 // @flow
 import * as React from 'react'
 import { withStyles } from '@material-ui/core/styles'
+import Dot from '@material-ui/icons/FiberManualRecord'
 import Paragraph from '~/components/layout/Paragraph'
 import Col from '~/components/layout/Col'
-import Dot from '@material-ui/icons/FiberManualRecord'
 import { connected as connectedBg, sm } from '~/theme/variables'
 import Identicon from '~/components/Identicon'
 import { shortVersionOf } from '~/logic/wallets/ethAddresses'
@@ -53,12 +53,12 @@ const ProviderInfo = ({
   const identiconAddress = userAddress || 'random'
 
   return (
-    <React.Fragment>
+    <>
       {connected && (
-        <React.Fragment>
+        <>
           <Identicon address={identiconAddress} diameter={30} />
           <Dot className={classes.logo} />
-        </React.Fragment>
+        </>
       )}
       {!connected && <CircleDot keySize={14} circleSize={35} dotSize={16} dotTop={24} dotRight={11} mode="warning" />}
       <Col start="sm" layout="column" className={classes.account}>
@@ -69,7 +69,7 @@ const ProviderInfo = ({
           {cutAddress}
         </Paragraph>
       </Col>
-    </React.Fragment>
+    </>
   )
 }
 

@@ -70,7 +70,7 @@ const styles = () => ({
     fontSize: smallFontSize,
     letterSpacing: '0.5px',
     color: '#ffffff',
-    backgroundColor: '#a2a8ba',
+    backgroundColor: '#B2B5B2',
     fontFamily: 'Roboto Mono, monospace',
     textTransform: 'uppercase',
     padding: `0 ${sm}`,
@@ -81,8 +81,11 @@ const styles = () => ({
 })
 
 class Layout extends React.Component<Props, State> {
-  state = {
-    tabIndex: 0,
+  constructor(props) {
+    super(props)
+    this.state = {
+      tabIndex: 0,
+    }
   }
 
   handleChange = (event, tabIndex) => {
@@ -123,7 +126,7 @@ class Layout extends React.Component<Props, State> {
     const etherScanLink = getEtherScanLink('address', address, network)
 
     return (
-      <React.Fragment>
+      <>
         <Block className={classes.container} margin="xl">
           <Identicon address={address} diameter={50} />
           <Block className={classes.name}>
@@ -150,7 +153,7 @@ class Layout extends React.Component<Props, State> {
             <Tab label="Settings" data-testid={SETTINGS_TAB_BTN_TEST_ID} />
           </Tabs>
         </Row>
-        <Hairline color="#c8ced4" />
+        <Hairline color="#d4d53d" />
         {tabIndex === 0 && (
           <Balances
             ethBalance={ethBalance}
@@ -190,7 +193,7 @@ class Layout extends React.Component<Props, State> {
             createTransaction={createTransaction}
           />
         )}
-      </React.Fragment>
+      </>
     )
   }
 }

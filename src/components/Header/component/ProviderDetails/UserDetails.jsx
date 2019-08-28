@@ -109,7 +109,7 @@ const UserDetails = ({
   const color = connected ? 'primary' : 'warning'
 
   return (
-    <React.Fragment>
+    <>
       <Block className={classes.container}>
         <Row className={classes.identicon} margin="md" align="center">
           {connected ? (
@@ -148,8 +148,7 @@ const UserDetails = ({
         <Spacer />
         {provider === 'safe'
           ? <Img className={classes.logo} src={safeIcon} height={14} alt="Safe client" />
-          : <Img className={classes.logo} src={metamaskIcon} height={14} alt="Metamask client" />
-        }
+          : <Img className={classes.logo} src={metamaskIcon} height={14} alt="Metamask client" />}
         <Paragraph noMargin align="right" weight="bolder" className={classes.labels}>
           {upperFirst(provider)}
         </Paragraph>
@@ -173,7 +172,7 @@ const UserDetails = ({
           </Paragraph>
         </Button>
       </Row>
-    </React.Fragment>
+    </>
   )
 }
 

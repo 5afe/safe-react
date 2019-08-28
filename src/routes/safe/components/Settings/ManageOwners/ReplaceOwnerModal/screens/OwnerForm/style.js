@@ -10,7 +10,7 @@ export const styles = () => ({
   },
   annotation: {
     letterSpacing: '-1px',
-    color: '#a2a8ba',
+    color: '#B2B5B2',
     marginRight: 'auto',
     marginLeft: '20px',
   },

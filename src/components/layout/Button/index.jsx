@@ -5,21 +5,19 @@ import Button from '@material-ui/core/Button'
 type Props = {
   minWidth?: number,
   minHeight?: number,
-  rounded?: boolean,
   testId?: string,
   style?: Object,
 }
 
-const calculateStyleBased = (minWidth, minHeight, rounded) => ({
+const calculateStyleBased = (minWidth, minHeight) => ({
   minWidth: minWidth && `${minWidth}px`,
   minHeight: minHeight && `${minHeight}px`,
-  borderRadius: rounded ? '4px' : 0,
 })
 
 const GnoButton = ({
-  minWidth, minHeight = 27, testId = '', rounded, style = {}, ...props
+  minWidth, minHeight = 27, testId = '', style = {}, ...props
 }: Props) => {
-  const calculatedStyle = calculateStyleBased(minWidth, minHeight, rounded)
+  const calculatedStyle = calculateStyleBased(minWidth, minHeight)
 
   return <Button style={{ ...calculatedStyle, ...style }} data-testid={testId} {...props} />
 }

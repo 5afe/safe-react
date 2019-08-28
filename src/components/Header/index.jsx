@@ -5,6 +5,7 @@ import { logComponentStack, type Info } from '~/utils/logBoundaries'
 import { SharedSnackbarConsumer, type Variant } from '~/components/SharedSnackBar'
 import { WALLET_ERROR_MSG } from '~/logic/wallets/store/actions'
 import { getProviderInfo } from '~/logic/wallets/getWeb3'
+import type { ProviderProps } from '~/logic/wallets/store/model/provider'
 import ProviderAccesible from './component/ProviderInfo/ProviderAccesible'
 import UserDetails from './component/ProviderDetails/UserDetails'
 import ProviderDisconnected from './component/ProviderInfo/ProviderDisconnected'
@@ -23,8 +24,14 @@ type State = {
 }
 
 class HeaderComponent extends React.PureComponent<Props, State> {
-  state = {
-    hasError: false,
+  providerListener: ?IntervalID
+
+  constructor(props) {
+    super(props)
+
+    this.state = {
+      hasError: false,
+    }
   }
 
   componentDidMount() {

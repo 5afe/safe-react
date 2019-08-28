@@ -47,7 +47,7 @@ const styles = () => ({
 const Layout = openHoc(({
   open, toggle, clickAway, classes, providerInfo, providerDetails,
 }: Props) => (
-  <React.Fragment>
+  <>
     <Row className={classes.summary}>
       <Col start="xs" middle="xs" className={classes.logo}>
         <Link to="/">
@@ -58,7 +58,7 @@ const Layout = openHoc(({
       <Spacer />
       <Divider />
       <Provider open={open} toggle={toggle} info={providerInfo}>
-        {providerRef => (
+        {(providerRef) => (
           <Popper open={open} anchorEl={providerRef.current} placement="bottom-end">
             {({ TransitionProps }) => (
               <Grow {...TransitionProps}>
@@ -73,7 +73,7 @@ const Layout = openHoc(({
         )}
       </Provider>
     </Row>
-  </React.Fragment>
+  </>
 ))
 
 export default withStyles(styles)(Layout)

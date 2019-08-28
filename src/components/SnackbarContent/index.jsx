@@ -10,7 +10,9 @@ import IconButton from '@material-ui/core/IconButton'
 import { withStyles } from '@material-ui/core/styles'
 import WarningIcon from '@material-ui/icons/Warning'
 import { type WithStyles } from '~/theme/mui'
-import { secondary, warning, connected } from '~/theme/variables'
+import {
+  secondary, warning, connected, error,
+} from '~/theme/variables'
 
 type Variant = 'success' | 'error' | 'warning' | 'info'
 
@@ -34,7 +36,7 @@ const variantIcon = {
   info: InfoIcon,
 }
 
-const styles = theme => ({
+const styles = (theme) => ({
   success: {
     backgroundColor: '#ffffff',
   },
@@ -51,7 +53,7 @@ const styles = theme => ({
     backgroundColor: '#ffe6ea',
   },
   errorIcon: {
-    color: '#fd7890',
+    color: error,
   },
   info: {
     backgroundColor: '#ffffff',
@@ -73,13 +75,7 @@ const styles = theme => ({
 })
 
 const Close = ({ classes, onClose }: CloseProps) => (
-  <IconButton
-    key="close"
-    aria-label="Close"
-    color="inherit"
-    className={classes.close}
-    onClick={onClose}
-  >
+  <IconButton key="close" aria-label="Close" color="inherit" className={classes.close} onClick={onClose}>
     <CloseIcon className={classes.icon} />
   </IconButton>
 )

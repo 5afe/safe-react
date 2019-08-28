@@ -8,7 +8,7 @@ export const styles = () => ({
     minHeight: '48px',
   },
   search: {
-    color: '#a2a8ba',
+    color: '#B2B5B2',
     paddingLeft: sm,
   },
   padding: {

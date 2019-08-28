@@ -13,6 +13,7 @@ import {
   bolderFont,
   boldFont,
   buttonLargeFontSize,
+  border,
   xs,
 } from './variables'
 
@@ -53,6 +54,7 @@ export default createMuiTheme({
           color: disabled,
         },
         color: disabled,
+        borderRadius: '8px',
       },
       contained: {
         boxShadow: 'none',
@@ -62,6 +64,9 @@ export default createMuiTheme({
       },
       containedSecondary: {
         backgroundColor: error,
+      },
+      outlinedPrimary: {
+        border: `2px solid ${primary}`,
       },
       sizeLarge: {
         padding: `${md} ${lg}`,
@@ -97,7 +102,7 @@ export default createMuiTheme({
     MuiStepIcon: {
       root: {
         fontSize: '22px',
-        color: '#A2A8BA !important',
+        color: '#B2B5B2 !important',
       },
       completed: {
         color: `${secondary} !important`,
@@ -109,7 +114,7 @@ export default createMuiTheme({
     },
     MuiStepContent: {
       root: {
-        borderLeft: '1px solid #A2A8BA',
+        borderLeft: '1px solid #B2B5B2',
       },
     },
     MuiTypography: {
@@ -132,7 +137,7 @@ export default createMuiTheme({
         color: secondary,
         order: 0,
         marginTop: '0px',
-        backgroundColor: '#EAE9EF',
+        backgroundColor: border,
         zIndex: 1, // for firefox
       },
     },
@@ -144,7 +149,7 @@ export default createMuiTheme({
         lineHeight: '56px',
         order: 1,
         padding: `0 ${md}`,
-        backgroundColor: '#EAE9EF',
+        backgroundColor: '#F0EFEE',
         borderRadius: '5px',
         '&:$disabled': {
           color: '#0000ff',
@@ -176,7 +181,7 @@ export default createMuiTheme({
     MuiStepLabel: {
       label: {
         textAlign: 'left',
-        color: '#A2A8BA',
+        color: '#B2B5B2',
         '&$active': {
           color: primary,
         },
