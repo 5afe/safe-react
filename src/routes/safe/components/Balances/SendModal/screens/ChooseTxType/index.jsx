@@ -65,7 +65,7 @@ const ChooseTxType = ({ classes, onClose, setActiveScreen }: Props) => (
           className={classes.secondButton}
           minWidth={260}
           minHeight={52}
-          onClick={onClose}
+          onClick={() => setActiveScreen('sendCustomTx')}
           variant="outlined"
         >
           SEND CUSTOM TRANSACTION
