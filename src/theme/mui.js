@@ -67,6 +67,9 @@ export default createMuiTheme({
       },
       outlinedPrimary: {
         border: `2px solid ${primary}`,
+        '&:hover': {
+          border: `2px solid ${primary}`,
+        },
       },
       sizeLarge: {
         padding: `${md} ${lg}`,

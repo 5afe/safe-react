@@ -1,7 +1,7 @@
 // @flow
 import { List, Map } from 'immutable'
 import { createSelector, createStructuredSelector, type Selector } from 'reselect'
-import { isAfter } from 'date-fns'
+import { isAfter, parseISO } from 'date-fns'
 import {
   safeSelector,
   safeActiveTokensSelector,
@@ -88,7 +88,7 @@ const extendedSafeTokensSelector: Selector<GlobalState, RouterProps, List<Token>
     const extendedTokens = Map().withMutations((map) => {
       safeTokens.forEach((tokenAddress: string) => {
         const baseToken = tokensList.get(tokenAddress)
-        const tokenBalance = balances.find(tknBalance => tknBalance.address === tokenAddress)
+        const tokenBalance = balances.find((tknBalance) => tknBalance.address === tokenAddress)
 
         if (baseToken) {
           map.set(tokenAddress, baseToken.set('balance', tokenBalance ? tokenBalance.balance : '0'))
@@ -116,7 +116,8 @@ const extendedTransactionsSelector: Selector<GlobalState, RouterProps, List<Tran
       let replacementTransaction
       if (!tx.isExecuted) {
         replacementTransaction = transactions.findLast(
-          transaction => transaction.nonce === tx.nonce && isAfter(transaction.submissionDate, tx.submissionDate),
+          (transaction) => transaction.nonce === tx.nonce
+            && isAfter(parseISO(transaction.submissionDate), parseISO(tx.submissionDate)),
         )
         if (replacementTransaction) {
           extendedTx = tx.set('cancelled', true)

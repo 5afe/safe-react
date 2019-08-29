@@ -32,8 +32,8 @@ type TxServiceModel = {
   data: string,
   operation: number,
   nonce: number,
-  submissionDate: Date,
-  executionDate: Date,
+  submissionDate: string,
+  executionDate: string,
   confirmations: ConfirmationServiceModel[],
   isExecuted: boolean,
 }
