@@ -61,7 +61,7 @@ export const buildTransactionFrom = async (
   const isTokenTransfer = await isAddressAToken(tx.to)
 
   let executionTxHash
-  const executionTx = confirmations.find(conf => conf.type === TX_TYPE_EXECUTION)
+  const executionTx = confirmations.find((conf) => conf.type === TX_TYPE_EXECUTION)
 
   if (executionTx) {
     executionTxHash = executionTx.hash
