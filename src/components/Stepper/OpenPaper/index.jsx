@@ -35,7 +35,7 @@ const OpenPaper = ({
 
   return (
     <Paper className={classes.root} elevation={1}>
-      <Block style={containerStyle} className={`${classes.container} ${padding ? classes.padding : ''}`}>
+      <Block style={containerStyle} className={padding ? classes.padding : ''}>
         {children}
       </Block>
       {controls}

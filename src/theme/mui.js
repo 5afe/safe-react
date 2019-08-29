@@ -1,7 +1,6 @@
 // @flow
 import { createMuiTheme } from '@material-ui/core/styles'
 import {
-  largeFontSize,
   mediumFontSize,
   smallFontSize,
   disabled,
@@ -12,6 +11,7 @@ import {
   md,
   lg,
   bolderFont,
+  regularFont,
   boldFont,
   buttonLargeFontSize,
   border,
@@ -47,6 +47,7 @@ export default createMuiTheme({
     MuiButton: {
       label: {
         lineHeight: 1,
+        fontWeight: regularFont,
       },
       root: {
         fontFamily: 'Averta, monospace',
@@ -154,7 +155,7 @@ export default createMuiTheme({
       root: {
         fontFamily: 'Averta, monospace',
         color: primary,
-        fontSize: largeFontSize,
+        fontSize: mediumFontSize,
         lineHeight: '56px',
         order: 1,
         padding: `0 ${md}`,
@@ -190,7 +191,7 @@ export default createMuiTheme({
     MuiStepLabel: {
       label: {
         textAlign: 'left',
-        color: '#B2B5B2',
+        color: secondary,
         '&$active': {
           color: primary,
         },
