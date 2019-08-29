@@ -71,7 +71,6 @@ const styles = () => ({
     letterSpacing: '0.5px',
     color: '#ffffff',
     backgroundColor: '#B2B5B2',
-    fontFamily: 'Roboto Mono, monospace',
     textTransform: 'uppercase',
     padding: `0 ${sm}`,
     marginLeft: sm,

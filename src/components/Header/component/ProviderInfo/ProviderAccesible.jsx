@@ -19,7 +19,7 @@ type Props = {
 
 const styles = () => ({
   network: {
-    fontFamily: 'Montserrat, sans-serif',
+    fontFamily: 'Averta, sans-serif',
   },
   logo: {
     height: '15px',

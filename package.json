@@ -136,6 +136,7 @@
     "truffle-contract": "4.0.30",
     "truffle-solidity-loader": "0.1.32",
     "uglifyjs-webpack-plugin": "2.2.0",
+    "url-loader": "^2.1.0",
     "webpack": "4.39.3",
     "webpack-bundle-analyzer": "3.4.1",
     "webpack-cli": "3.3.7",

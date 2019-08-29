@@ -39,7 +39,7 @@ const palette = {
 // see https://github.com/mui-org/material-ui/blob/v1-beta/src/styles/createMuiTheme.js
 export default createMuiTheme({
   typography: {
-    fontFamily: 'Montserrat,sans-serif',
+    fontFamily: 'Averta,sans-serif',
     useNextVariants: true,
   },
   overrides: {
@@ -48,7 +48,7 @@ export default createMuiTheme({
         lineHeight: 1,
       },
       root: {
-        fontFamily: 'Roboto Mono, monospace',
+        fontFamily: 'Averta, monospace',
         letterSpacing: '0.9px',
         '&$disabled': {
           color: disabled,
@@ -96,7 +96,7 @@ export default createMuiTheme({
     },
     MuiChip: {
       root: {
-        fontFamily: 'Roboto Mono, monospace',
+        fontFamily: 'Averta, monospace',
       },
     },
     MuiStepIcon: {
@@ -119,17 +119,17 @@ export default createMuiTheme({
     },
     MuiTypography: {
       body1: {
-        fontFamily: 'Roboto Mono, monospace',
+        fontFamily: 'Averta, monospace',
         letterSpacing: '-0.5px',
         fontSize: mediumFontSize,
       },
       body2: {
-        fontFamily: 'Roboto Mono, monospace',
+        fontFamily: 'Averta, monospace',
       },
     },
     MuiFormHelperText: {
       root: {
-        fontFamily: 'Roboto Mono, monospace',
+        fontFamily: 'Averta, monospace',
         fontSize: '12px',
         padding: `0 0 0 ${md}`,
         position: 'absolute',
@@ -143,7 +143,7 @@ export default createMuiTheme({
     },
     MuiInput: {
       root: {
-        fontFamily: 'Roboto Mono, monospace',
+        fontFamily: 'Averta, monospace',
         color: primary,
         fontSize: largeFontSize,
         lineHeight: '56px',
@@ -196,7 +196,7 @@ export default createMuiTheme({
     },
     MuiTab: {
       root: {
-        fontFamily: 'Roboto Mono, monospace',
+        fontFamily: 'Averta, monospace',
         fontWeight: 'normal',
         '&$selected': {
           fontWeight: bolderFont,
@@ -214,7 +214,7 @@ export default createMuiTheme({
         top: '0px',
       },
       caption: {
-        fontFamily: 'Roboto Mono, monospace',
+        fontFamily: 'Averta, monospace',
         letterSpacing: '-0.5px',
         order: 3,
         color: disabled,
@@ -231,7 +231,7 @@ export default createMuiTheme({
     },
     MuiTableCell: {
       root: {
-        fontFamily: 'Roboto Mono, monospace',
+        fontFamily: 'Averta, monospace',
       },
       head: {
         letterSpacing: '1px',
@@ -254,7 +254,7 @@ export default createMuiTheme({
     },
     MuiMenuItem: {
       root: {
-        fontFamily: 'Roboto Mono, monospace',
+        fontFamily: 'Averta, monospace',
       },
     },
     MuiListItemIcon: {
@@ -264,13 +264,13 @@ export default createMuiTheme({
     },
     MuiListItemText: {
       primary: {
-        fontFamily: 'Roboto Mono, monospace',
+        fontFamily: 'Averta, monospace',
         fontSize: mediumFontSize,
         fontWeight: bolderFont,
         color: primary,
       },
       secondary: {
-        fontFamily: 'Roboto Mono, monospace',
+        fontFamily: 'Averta, monospace',
         fontSize: smallFontSize,
         color: disabled,
       },

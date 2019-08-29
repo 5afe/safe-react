@@ -14,7 +14,7 @@ type Props = Open & {
 
 const styles = () => ({
   network: {
-    fontFamily: 'Montserrat, sans-serif',
+    fontFamily: 'Averta, sans-serif',
   },
   account: {
     paddingRight: sm,
@@ -30,7 +30,7 @@ const styles = () => ({
 })
 
 const ProviderDesconnected = ({ classes }: Props) => (
-  <React.Fragment>
+  <>
     <CircleDot keySize={17} circleSize={35} dotSize={16} dotTop={24} dotRight={11} mode="error" />
     <Col end="sm" middle="xs" layout="column" className={classes.account}>
       <Paragraph size="sm" transform="capitalize" className={classes.network} noMargin weight="bold">
@@ -40,7 +40,7 @@ const ProviderDesconnected = ({ classes }: Props) => (
         Connect Wallet
       </Paragraph>
     </Col>
-  </React.Fragment>
+  </>
 )
 
 export default withStyles(styles)(ProviderDesconnected)

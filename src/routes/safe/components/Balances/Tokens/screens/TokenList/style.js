@@ -62,7 +62,6 @@ export const styles = () => ({
   },
   searchRoot: {
     letterSpacing: '-0.5px',
-    fontFamily: 'Roboto Mono, monospace',
     fontSize: '13px',
     border: 'none',
     boxShadow: 'none',
