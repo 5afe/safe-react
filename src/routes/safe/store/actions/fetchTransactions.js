@@ -32,6 +32,7 @@ type TxServiceModel = {
   data: string,
   operation: number,
   nonce: number,
+  safeTxHash: string,
   submissionDate: string,
   executionDate: string,
   confirmations: ConfirmationServiceModel[],
