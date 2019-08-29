@@ -167,8 +167,8 @@ const UserDetails = ({
       <Hairline margin="xs" />
       <Row className={classes.disconnect}>
         <Button onClick={onDisconnect} size="medium" variant="contained" color="primary" fullWidth>
-          <Paragraph className={classes.disconnectText} size="sm" weight="bold" color="white" noMargin>
-            DISCONNECT
+          <Paragraph className={classes.disconnectText} size="md" color="white" noMargin>
+            Disconnect
           </Paragraph>
         </Button>
       </Row>

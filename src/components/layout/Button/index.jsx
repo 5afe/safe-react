@@ -15,7 +15,7 @@ const calculateStyleBased = (minWidth, minHeight) => ({
 })
 
 const GnoButton = ({
-  minWidth, minHeight = 27, testId = '', style = {}, ...props
+  minWidth, minHeight = 35, testId = '', style = {}, ...props
 }: Props) => {
   const calculatedStyle = calculateStyleBased(minWidth, minHeight)
 

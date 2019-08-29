@@ -58,19 +58,19 @@ export const LoadSafe = ({ size, provider }: SafeProps) => (
 
 const Welcome = ({ provider }: Props) => (
   <Block className={styles.safe}>
-    <Heading tag="h1" align="center" margin="lg">
+    <Heading tag="h1" weight="bold" align="center" margin="lg">
       Welcome to the Gnosis
       <br />
       Safe Team Edition
     </Heading>
-    <Heading tag="h4" align="center" margin="xl">
-      The Gnosis Safe Team Edition is geared towards teams managing
+    <Heading tag="h3" align="center" margin="xl">
+      The Gnosis Safe for Teams is geared towards teams managing shared
       <br />
-      shared crypto funds. It is an improvement of the existing Gnosis
+      crypto funds. It is an improvement of the existing Gnosis MultiSig
       <br />
-      MultiSig wallet with redesigned smart contracts, cheaper setup and
+      wallet with redesigned smart contracts, cheaper setup and transaction
       <br />
-      transaction costs as well as an enhanced user experience.
+      costs as well as an enhanced user experience.
     </Heading>
     <Block className={styles.safeActions} margin="md">
       <CreateSafe size="large" provider={provider} />

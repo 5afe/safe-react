@@ -11,9 +11,6 @@ const styles = () => ({
     maxWidth: '870px',
     boxShadow: '0 0 10px 0 rgba(33,48,77,0.10)',
   },
-  container: {
-    letterSpacing: '-0.5px',
-  },
   padding: {
     padding: lg,
   },

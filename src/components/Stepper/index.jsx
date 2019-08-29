@@ -118,7 +118,7 @@ const GnoStepper = (props: Props) => {
   const penultimate = isLastPage(page + 1)
 
   return (
-    <React.Fragment>
+    <>
       <GnoForm
         onSubmit={handleSubmit}
         initialValues={values}
@@ -129,7 +129,7 @@ const GnoStepper = (props: Props) => {
         {(submitting: boolean, validating: boolean, ...rest: any) => {
           const disabled = disabledWhenValidating ? submitting || validating : submitting
           const controls = (
-            <React.Fragment>
+            <>
               <Hairline />
               <Controls
                 disabled={disabled}
@@ -138,12 +138,12 @@ const GnoStepper = (props: Props) => {
                 lastPage={lastPage}
                 penultimate={penultimate}
               />
-            </React.Fragment>
+            </>
           )
 
           return (
             <Stepper classes={{ root: classes.root }} activeStep={page} orientation="vertical">
-              {steps.map(label => (
+              {steps.map((label) => (
                 <FormStep key={label}>
                   <StepLabel>{label}</StepLabel>
                   <StepContent TransitionProps={transitionProps}>{activePage(controls, ...rest)}</StepContent>
@@ -153,7 +153,7 @@ const GnoStepper = (props: Props) => {
           )
         }}
       </GnoForm>
-    </React.Fragment>
+    </>
   )
 }
 

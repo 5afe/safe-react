@@ -8,6 +8,7 @@ import {
   primary,
   secondary,
   error,
+  sm,
   md,
   lg,
   bolderFont,
@@ -54,6 +55,7 @@ export default createMuiTheme({
           color: disabled,
         },
         color: disabled,
+        textTransform: 'none',
         borderRadius: '8px',
       },
       contained: {
@@ -75,7 +77,6 @@ export default createMuiTheme({
         padding: `${md} ${lg}`,
         minHeight: '52px',
         fontSize: buttonLargeFontSize,
-        fontWeight: boldFont,
       },
       sizeSmall: {
         minWidth: '130px',
@@ -85,6 +86,11 @@ export default createMuiTheme({
         '&:hover': {
           borderRadius: '3px',
         },
+      },
+    },
+    MuiPaper: {
+      rounded: {
+        borderRadius: sm,
       },
     },
     MuiStepper: {
