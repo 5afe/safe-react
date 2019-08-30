@@ -188,7 +188,7 @@ class ReviewComponent extends React.PureComponent<Props, State> {
                     </Block>
                   </Col>
                 </Row>
-                <Hairline />
+                {index !== owners.length - 1 && <Hairline />}
               </React.Fragment>
             ))}
           </Col>

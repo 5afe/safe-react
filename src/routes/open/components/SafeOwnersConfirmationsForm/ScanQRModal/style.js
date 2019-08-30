@@ -3,7 +3,7 @@ import { lg, sm, background } from '~/theme/variables'
 
 export const styles = () => ({
   heading: {
-    padding: `${sm} ${lg}`,
+    padding: lg,
     justifyContent: 'space-between',
     maxHeight: '75px',
     boxSizing: 'border-box',
@@ -12,12 +12,9 @@ export const styles = () => ({
     width: '100%',
     height: '100%',
   },
-  manage: {
-    fontSize: '24px',
-  },
   close: {
-    height: '35px',
-    width: '35px',
+    height: '25px',
+    width: '25px',
   },
   detailsContainer: {
     backgroundColor: background,
