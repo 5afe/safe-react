@@ -20,9 +20,6 @@ type Props = SelectorProps & {
 const vault = require('../assets/vault.svg')
 
 const styles = {
-  page: {
-    letterSpacing: '-1px',
-  },
   icon: {
     height: mediumFontSize,
     color: secondary,
@@ -38,7 +35,6 @@ const styles = {
     display: 'flex',
     alignItems: 'center',
     marginLeft: xs,
-    fontWeight: 'bolder',
   },
 }
 
@@ -46,7 +42,7 @@ const Opening = ({
   classes, name = 'Safe creation process', tx, network,
 }: Props) => (
   <Page align="center">
-    <Paragraph className={classes.page} color="secondary" size="xxl" weight="bolder" align="center">
+    <Paragraph color="primary" size="xxl" weight="bold" align="center">
       {name}
     </Paragraph>
     <Block margin="lg" align="center">

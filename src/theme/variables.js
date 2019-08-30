@@ -7,6 +7,7 @@ const fontColor = '#001428'
 const fancyColor = '#f02525'
 const warningColor = '#ffc05f'
 const errorColor = '#f02525'
+const secondaryTextOrSvg = '#B2B5B2'
 const connectedColor = '#008C73'
 const disabled = '#5D6D74'
 const xs = '4px'
@@ -23,6 +24,7 @@ module.exports = {
   disabled,
   background,
   fontColor,
+  secondaryText: secondaryTextOrSvg,
   fancy: fancyColor,
   warning: warningColor,
   error: errorColor,

@@ -1,5 +1,7 @@
 // @flow
-import { lg, sm, background } from '~/theme/variables'
+import {
+  lg, sm, background, secondaryText,
+} from '~/theme/variables'
 
 export const styles = () => ({
   heading: {
@@ -15,6 +17,7 @@ export const styles = () => ({
   close: {
     height: '25px',
     width: '25px',
+    color: secondaryText,
   },
   detailsContainer: {
     backgroundColor: background,
