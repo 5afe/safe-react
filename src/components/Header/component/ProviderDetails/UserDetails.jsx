@@ -104,7 +104,7 @@ const UserDetails = ({
   provider, connected, network, userAddress, classes, onDisconnect,
 }: Props) => {
   const status = connected ? 'Connected' : 'Connection error'
-  const address = userAddress ? shortVersionOf(userAddress, 6) : 'Address not available'
+  const address = userAddress ? shortVersionOf(userAddress, 4) : 'Address not available'
   const identiconAddress = userAddress || 'random'
   const color = connected ? 'primary' : 'warning'
 
@@ -119,7 +119,7 @@ const UserDetails = ({
           )}
         </Row>
         <Block align="center" className={classes.user}>
-          <Paragraph className={classes.address} size="sm" noMargin>
+          <Paragraph className={classes.address} size="xs" noMargin>
             {address}
           </Paragraph>
           {userAddress && (
