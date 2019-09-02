@@ -4,6 +4,8 @@ import classNames from 'classnames/bind'
 import OpenInNew from '@material-ui/icons/OpenInNew'
 import Tabs from '@material-ui/core/Tabs'
 import Tab from '@material-ui/core/Tab'
+import CallMade from '@material-ui/icons/CallMade'
+import CallReceived from '@material-ui/icons/CallReceived'
 import { withStyles } from '@material-ui/core/styles'
 import Hairline from '~/components/layout/Hairline'
 import Block from '~/components/layout/Block'
@@ -13,7 +15,6 @@ import Row from '~/components/layout/Row'
 import Button from '~/components/layout/Button'
 import Link from '~/components/layout/Link'
 import Paragraph from '~/components/layout/Paragraph'
-import Img from '~/components/layout/Img'
 import Modal from '~/components/Modal'
 import SendModal from './Balances/SendModal'
 import Receive from './Balances/Receive'
@@ -21,7 +22,7 @@ import NoSafe from '~/components/NoSafe'
 import { type SelectorProps } from '~/routes/safe/container/selector'
 import { getEtherScanLink } from '~/logic/wallets/getWeb3'
 import {
-  sm, xs, secondary, smallFontSize, border, secondaryText,
+  secondary, border,
 } from '~/theme/variables'
 import { copyToClipboard } from '~/utils/clipboard'
 import { type Actions } from '../container/actions'
@@ -29,9 +30,6 @@ import Balances from './Balances'
 import Transactions from './Transactions'
 import Settings from './Settings'
 import { styles } from './style'
-
-const ReceiveTx = require('./assets/tx-receive.svg')
-const SendTx = require('./assets/tx-send.svg')
 
 export const BALANCES_TAB_BTN_TEST_ID = 'balances-tab-btn'
 export const SETTINGS_TAB_BTN_TEST_ID = 'settings-tab-btn'
@@ -58,40 +56,6 @@ const openIconStyle = {
   height: '16px',
   color: secondary,
 }
-
-const styles = () => ({
-  container: {
-    display: 'flex',
-    alignItems: 'center',
-  },
-  name: {
-    marginLeft: sm,
-    textOverflow: 'ellipsis',
-    overflow: 'hidden',
-    whiteSpace: 'nowrap',
-  },
-  user: {
-    justifyContent: 'left',
-  },
-  open: {
-    paddingLeft: sm,
-    width: 'auto',
-    '&:hover': {
-      cursor: 'pointer',
-    },
-  },
-  readonly: {
-    fontSize: smallFontSize,
-    letterSpacing: '0.5px',
-    color: '#ffffff',
-    backgroundColor: secondaryText,
-    textTransform: 'uppercase',
-    padding: `0 ${sm}`,
-    marginLeft: sm,
-    borderRadius: xs,
-    lineHeight: '28px',
-  },
-})
 
 class Layout extends React.Component<Props, State> {
   constructor(props) {
@@ -166,17 +130,6 @@ class Layout extends React.Component<Props, State> {
           </Block>
           <Block className={classes.balance}>
             <Row align="end" className={classes.actions}>
-              <Button
-                variant="contained"
-                size="small"
-                color="primary"
-                className={classes.receive}
-                onClick={onShow('Receive')}
-                rounded
-              >
-                <Img src={ReceiveTx} alt="Receive Transaction" className={classNames(classes.leftIcon, classes.iconSmall)} />
-                  Receive
-              </Button>
               {granted && (
                 <Button
                   variant="contained"
@@ -187,10 +140,21 @@ class Layout extends React.Component<Props, State> {
                   rounded
                   testId="balance-send-btn"
                 >
-                  <Img src={SendTx} alt="Send Transaction" className={classNames(classes.leftIcon, classes.iconSmall)} />
+                  <CallMade alt="Send Transaction" className={classNames(classes.leftIcon, classes.iconSmall)} />
                     Send
                 </Button>
               )}
+              <Button
+                variant="contained"
+                size="small"
+                color="primary"
+                className={classes.receive}
+                onClick={onShow('Receive')}
+                rounded
+              >
+                <CallReceived alt="Receive Transaction" className={classNames(classes.leftIcon, classes.iconSmall)} />
+                  Receive
+              </Button>
             </Row>
           </Block>
         </Block>
@@ -241,6 +205,31 @@ class Layout extends React.Component<Props, State> {
             createTransaction={createTransaction}
           />
         )}
+        <SendModal
+          onClose={hideSendFunds}
+          isOpen={sendFunds.isOpen}
+          etherScanLink={etherScanLink}
+          safeAddress={address}
+          safeName={name}
+          ethBalance={ethBalance}
+          tokens={activeTokens}
+          selectedToken={sendFunds.selectedToken}
+          createTransaction={createTransaction}
+          activeScreenType="chooseTxType"
+        />
+        <Modal
+          title="Receive Tokens"
+          description="Receive Tokens Form"
+          handleClose={onHide('Receive')}
+          open={showReceive}
+        >
+          <Receive
+            safeName={name}
+            safeAddress={address}
+            etherScanLink={etherScanLink}
+            onClose={onHide('Receive')}
+          />
+        </Modal>
       </>
     )
   }

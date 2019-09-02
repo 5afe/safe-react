@@ -33,11 +33,11 @@ export const styles = (theme: Object) => ({
   receive: {
     width: '95px',
     minWidth: '95px',
+    marginLeft: sm,
   },
   send: {
     width: '75px',
     minWidth: '75px',
-    marginLeft: sm,
   },
   leftIcon: {
     marginRight: sm,

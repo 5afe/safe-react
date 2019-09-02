@@ -1,5 +1,7 @@
 // @flow
-import { sm, xs, smallFontSize } from '~/theme/variables'
+import {
+  sm, xs, smallFontSize, secondaryText,
+} from '~/theme/variables'
 
 export const styles = () => ({
   container: {
@@ -26,13 +28,15 @@ export const styles = () => ({
     fontSize: smallFontSize,
     letterSpacing: '0.5px',
     color: '#ffffff',
-    backgroundColor: '#a2a8ba',
-    fontFamily: 'Roboto Mono, monospace',
+    backgroundColor: secondaryText,
     textTransform: 'uppercase',
     padding: `0 ${sm}`,
     marginLeft: sm,
     borderRadius: xs,
     lineHeight: '28px',
+  },
+  iconSmall: {
+    fontSize: 16,
   },
   balance: {
     marginLeft: 'auto',
@@ -44,11 +48,11 @@ export const styles = () => ({
   receive: {
     width: '95px',
     minWidth: '95px',
+    marginLeft: sm,
   },
   send: {
     width: '75px',
     minWidth: '75px',
-    marginLeft: sm,
   },
   leftIcon: {
     marginRight: sm,

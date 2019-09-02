@@ -2,6 +2,7 @@
 import React from 'react'
 import { withStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
+import InputAdornment from '@material-ui/core/InputAdornment'
 import IconButton from '@material-ui/core/IconButton'
 import Paragraph from '~/components/layout/Paragraph'
 import Row from '~/components/layout/Row'
@@ -10,6 +11,7 @@ import Col from '~/components/layout/Col'
 import Button from '~/components/layout/Button'
 import Block from '~/components/layout/Block'
 import Hairline from '~/components/layout/Hairline'
+import ButtonLink from '~/components/layout/ButtonLink'
 import Field from '~/components/forms/Field'
 import TextField from '~/components/forms/TextField'
 import TextareaField from '~/components/forms/TextareaField'
@@ -17,6 +19,9 @@ import {
   composeValidators,
   required,
   mustBeEthereumAddress,
+  mustBeFloat,
+  maxValue,
+  greaterThan,
 } from '~/components/forms/validator'
 import SafeInfo from '~/routes/safe/components/Balances/SendModal/SafeInfo'
 import ArrowDown from '../assets/arrow-down.svg'
@@ -47,10 +52,14 @@ const SendCustomTx = ({
     onSubmit(values)
   }
 
-  const formMutators = {}
+  const formMutators = {
+    setMax: (args, state, utils) => {
+      utils.changeValue(state, 'amount', () => ethBalance)
+    },
+  }
 
   return (
-    <React.Fragment>
+    <>
       <Row align="center" grow className={classes.heading}>
         <Paragraph weight="bolder" className={classes.manage} noMargin>
           Send custom transactions
@@ -72,52 +81,86 @@ const SendCustomTx = ({
           </Col>
         </Row>
         <GnoForm onSubmit={handleSubmit} formMutators={formMutators} initialValues={initialValues}>
-          {() => (
-            <React.Fragment>
-              <Row margin="md">
-                <Col xs={12}>
-                  <Field
-                    name="recipientAddress"
-                    component={TextField}
-                    type="text"
-                    validate={composeValidators(required, mustBeEthereumAddress)}
-                    placeholder="Recipient*"
-                    text="Recipient*"
-                    className={classes.addressInput}
-                  />
-                </Col>
-              </Row>
-              <Row margin="sm">
-                <Col>
-                  <TextareaField
-                    name="data"
-                    type="text"
-                    placeholder="Data interface (ABI / JSON)*"
-                    text="Data interface (ABI / JSON)*"
-                  />
-                </Col>
-              </Row>
-              <Hairline />
-              <Row align="center" className={classes.buttonRow}>
-                <Button minWidth={140} minHeight={42} onClick={onClose}>
-                    Cancel
-                </Button>
-                <Button
-                  type="submit"
-                  variant="contained"
-                  minHeight={42}
-                  minWidth={140}
-                  color="primary"
-                  data-testid="review-tx-btn"
-                >
-                    Review
-                </Button>
-              </Row>
-            </React.Fragment>
-          )}
+          {(...args) => {
+            const mutators = args[3]
+
+            return (
+              <>
+                <Row margin="md">
+                  <Col xs={12}>
+                    <Field
+                      name="recipientAddress"
+                      component={TextField}
+                      type="text"
+                      validate={composeValidators(required, mustBeEthereumAddress)}
+                      placeholder="Recipient*"
+                      text="Recipient*"
+                      className={classes.addressInput}
+                    />
+                  </Col>
+                </Row>
+                <Row margin="xs">
+                  <Col between="lg">
+                    <Paragraph size="md" color="disabled" style={{ letterSpacing: '-0.5px' }} noMargin>
+                        Amount
+                    </Paragraph>
+                    <ButtonLink weight="bold" onClick={mutators.setMax}>
+                        Send max
+                    </ButtonLink>
+                  </Col>
+                </Row>
+                <Row margin="md">
+                  <Col>
+                    <Field
+                      name="amount"
+                      component={TextField}
+                      type="text"
+                      validate={composeValidators(
+                        mustBeFloat,
+                        greaterThan(0),
+                        maxValue(ethBalance),
+                      )}
+                      placeholder="Value*"
+                      text="Value*"
+                      className={classes.addressInput}
+                      inputAdornment={{
+                        endAdornment: <InputAdornment position="end">ETH</InputAdornment>,
+                      }}
+                    />
+                  </Col>
+                </Row>
+                <Row margin="sm">
+                  <Col>
+                    <TextareaField
+                      name="data"
+                      type="text"
+                      placeholder="Data interface (ABI / JSON)*"
+                      text="Data interface (ABI / JSON)*"
+                    />
+                  </Col>
+                </Row>
+                <Hairline />
+                <Row align="center" className={classes.buttonRow}>
+                  <Button minWidth={140} minHeight={42} onClick={onClose}>
+                      Cancel
+                  </Button>
+                  <Button
+                    type="submit"
+                    variant="contained"
+                    minHeight={42}
+                    minWidth={140}
+                    color="primary"
+                    data-testid="review-tx-btn"
+                  >
+                      Review
+                  </Button>
+                </Row>
+              </>
+            )
+          }}
         </GnoForm>
       </Block>
-    </React.Fragment>
+    </>
   )
 }
 

@@ -36,7 +36,7 @@ type TxStateType =
   | Object
 
 const styles = () => ({
-  smallerModalWindow: {
+  scalableModalWindow: {
     height: 'auto',
     position: 'static',
   },
@@ -57,20 +57,23 @@ const Send = ({
 }: Props) => {
   const [activeScreen, setActiveScreen] = useState<ActiveScreen>(activeScreenType || 'chooseTxType')
   const [tx, setTx] = useState<TxStateType>({})
-  const smallerModalSize = activeScreen === 'chooseTxType'
-  const handleTxCreation = (txInfo) => {
-    setActiveScreen('reviewTx')
-    setTx(txInfo)
-  }
-  const handleCustomTxCreation = (customTxInfo) => {
-    setActiveScreen('reviewCustomTx')
-    setTx(customTxInfo)
-  }
 
   useEffect(() => {
     setActiveScreen(activeScreenType || 'chooseTxType')
     setTx({})
   }, [isOpen])
+
+  const scalableModalSize = activeScreen === 'chooseTxType' || activeScreen === 'sendCustomTx'
+
+  const handleTxCreation = (txInfo) => {
+    setActiveScreen('reviewTx')
+    setTx(txInfo)
+  }
+
+  const handleCustomTxCreation = (customTxInfo) => {
+    setActiveScreen('reviewCustomTx')
+    setTx(customTxInfo)
+  }
 
   return (
     <Modal
@@ -78,9 +81,9 @@ const Send = ({
       description="Send Tokens Form"
       handleClose={onClose}
       open={isOpen}
-      paperClassName={cn(smallerModalSize && classes.smallerModalWindow)}
+      paperClassName={cn(scalableModalSize && classes.scalableModalWindow)}
     >
-      <React.Fragment>
+      <>
         {activeScreen === 'chooseTxType' && <ChooseTxType onClose={onClose} setActiveScreen={setActiveScreen} />}
         {activeScreen === 'sendFunds' && (
           <SendFunds
@@ -118,7 +121,7 @@ const Send = ({
             initialValues={tx}
           />
         )}
-      </React.Fragment>
+      </>
     </Modal>
   )
 }
