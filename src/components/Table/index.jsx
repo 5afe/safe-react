@@ -27,7 +27,7 @@ type Props<K> = {
 
 type State = {
   page: number,
-  order: Order,
+  order?: Order,
   orderBy?: string,
   orderProp: boolean,
   rowsPerPage: number,
@@ -52,6 +52,8 @@ const styles = {
     boxShadow: '1px 2px 10px 0 rgba(212, 212, 211, 0.59)',
     marginBottom: xl,
     borderRadius: '8px',
+    borderTopLeftRadius: 0,
+    borderTopRightRadius: 0,
   },
   loader: {
     alignItems: 'center',
@@ -71,13 +73,17 @@ const nextProps = {
 }
 
 class GnoTable<K> extends React.Component<Props<K>, State> {
-  state = {
-    page: 0,
-    order: undefined,
-    orderBy: undefined,
-    fixed: undefined,
-    orderProp: false,
-    rowsPerPage: 5,
+  constructor(props) {
+    super(props)
+
+    this.state = {
+      page: 0,
+      order: undefined,
+      orderBy: undefined,
+      fixed: undefined,
+      orderProp: false,
+      rowsPerPage: 5,
+    }
   }
 
   componentDidMount() {
@@ -130,7 +136,16 @@ class GnoTable<K> extends React.Component<Props<K>, State> {
 
   render() {
     const {
-      data, label, columns, classes, children, size, defaultOrderBy, defaultOrder, defaultFixed, noBorder,
+      data,
+      label,
+      columns,
+      classes,
+      children,
+      size,
+      defaultOrderBy,
+      defaultOrder,
+      defaultFixed,
+      noBorder,
     } = this.props
     const {
       order, orderBy, page, orderProp, rowsPerPage, fixed,
@@ -154,7 +169,7 @@ class GnoTable<K> extends React.Component<Props<K>, State> {
     const isEmpty = size === 0
 
     return (
-      <React.Fragment>
+      <>
         {!isEmpty && (
           <Table aria-labelledby={label} className={noBorder ? '' : classes.root}>
             <TableHead columns={columns} order={order} orderBy={orderByParam} onSort={this.onSort} />
@@ -181,7 +196,7 @@ class GnoTable<K> extends React.Component<Props<K>, State> {
           onChangeRowsPerPage={this.handleChangeRowsPerPage}
           classes={paginationClasses}
         />
-      </React.Fragment>
+      </>
     )
   }
 }
