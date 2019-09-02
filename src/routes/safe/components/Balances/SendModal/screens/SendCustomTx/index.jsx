@@ -7,6 +7,7 @@ import IconButton from '@material-ui/core/IconButton'
 import Paragraph from '~/components/layout/Paragraph'
 import Row from '~/components/layout/Row'
 import GnoForm from '~/components/forms/GnoForm'
+import AddressInput from '~/components/forms/AddressInput'
 import Col from '~/components/layout/Col'
 import Button from '~/components/layout/Button'
 import Block from '~/components/layout/Block'
@@ -17,8 +18,6 @@ import TextField from '~/components/forms/TextField'
 import TextareaField from '~/components/forms/TextareaField'
 import {
   composeValidators,
-  required,
-  mustBeEthereumAddress,
   mustBeFloat,
   maxValue,
   greaterThan,
@@ -48,13 +47,18 @@ const SendCustomTx = ({
   onSubmit,
   initialValues,
 }: Props) => {
-  const handleSubmit = (values) => {
-    onSubmit(values)
+  const handleSubmit = (values: Object) => {
+    if (values.data || values.value) {
+      onSubmit(values)
+    }
   }
 
   const formMutators = {
     setMax: (args, state, utils) => {
-      utils.changeValue(state, 'amount', () => ethBalance)
+      utils.changeValue(state, 'value', () => ethBalance)
+    },
+    setRecipient: (args, state, utils) => {
+      utils.changeValue(state, 'recipientAddress', () => args[0])
     },
   }
 
@@ -88,31 +92,30 @@ const SendCustomTx = ({
               <>
                 <Row margin="md">
                   <Col xs={12}>
-                    <Field
+                    <AddressInput
                       name="recipientAddress"
                       component={TextField}
-                      type="text"
-                      validate={composeValidators(required, mustBeEthereumAddress)}
                       placeholder="Recipient*"
                       text="Recipient*"
                       className={classes.addressInput}
+                      fieldMutator={mutators.setRecipient}
                     />
                   </Col>
                 </Row>
                 <Row margin="xs">
                   <Col between="lg">
                     <Paragraph size="md" color="disabled" style={{ letterSpacing: '-0.5px' }} noMargin>
-                        Amount
+                      Amount
                     </Paragraph>
                     <ButtonLink weight="bold" onClick={mutators.setMax}>
-                        Send max
+                      Send max
                     </ButtonLink>
                   </Col>
                 </Row>
                 <Row margin="md">
                   <Col>
                     <Field
-                      name="amount"
+                      name="value"
                       component={TextField}
                       type="text"
                       validate={composeValidators(
@@ -142,7 +145,7 @@ const SendCustomTx = ({
                 <Hairline />
                 <Row align="center" className={classes.buttonRow}>
                   <Button minWidth={140} minHeight={42} onClick={onClose}>
-                      Cancel
+                    Cancel
                   </Button>
                   <Button
                     type="submit"
@@ -152,7 +155,7 @@ const SendCustomTx = ({
                     color="primary"
                     data-testid="review-tx-btn"
                   >
-                      Review
+                    Review
                   </Button>
                 </Row>
               </>

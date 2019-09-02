@@ -22,7 +22,7 @@ export const required = simpleMemoize((value: Field) => (value ? undefined : 'Re
 
 export const mustBeInteger = (value: string) => (!Number.isInteger(Number(value)) || value.includes('.') ? 'Must be an integer' : undefined)
 
-export const mustBeFloat = (value: number) => (Number.isNaN(Number(value)) ? 'Must be a number' : undefined)
+export const mustBeFloat = (value: number) => (value && Number.isNaN(Number(value)) ? 'Must be a number' : undefined)
 
 export const greaterThan = (min: number) => (value: string) => {
   if (Number.isNaN(Number(value)) || Number.parseFloat(value) > Number(min)) {
