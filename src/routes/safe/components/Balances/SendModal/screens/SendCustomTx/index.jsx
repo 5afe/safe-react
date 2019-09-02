@@ -134,8 +134,8 @@ const SendCustomTx = ({
                     <TextareaField
                       name="data"
                       type="text"
-                      placeholder="Data interface (ABI / JSON)*"
-                      text="Data interface (ABI / JSON)*"
+                      placeholder="Data (hex encoded)*"
+                      text="Data (hex encoded)*"
                     />
                   </Col>
                 </Row>
