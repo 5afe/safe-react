@@ -41,7 +41,6 @@ export const styles = () => ({
   balance: {
     marginLeft: 'auto',
     overflow: 'hidden',
-    border: '1px solid #c8ced4',
     borderRadius: '3px',
     padding: '20px',
   },

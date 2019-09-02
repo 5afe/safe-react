@@ -130,20 +130,19 @@ class Layout extends React.Component<Props, State> {
           </Block>
           <Block className={classes.balance}>
             <Row align="end" className={classes.actions}>
-              {granted && (
-                <Button
-                  variant="contained"
-                  size="small"
-                  color="primary"
-                  className={classes.send}
-                  onClick={() => showSendFunds('Ether')}
-                  rounded
-                  testId="balance-send-btn"
-                >
-                  <CallMade alt="Send Transaction" className={classNames(classes.leftIcon, classes.iconSmall)} />
-                    Send
-                </Button>
-              )}
+              <Button
+                variant="contained"
+                size="small"
+                color="primary"
+                className={classes.send}
+                onClick={() => showSendFunds('Ether')}
+                rounded
+                disabled={!granted}
+                testId="balance-send-btn"
+              >
+                <CallMade alt="Send Transaction" className={classNames(classes.leftIcon, classes.iconSmall)} />
+                  Send
+              </Button>
               <Button
                 variant="contained"
                 size="small"
