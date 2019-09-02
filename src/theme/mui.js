@@ -1,6 +1,7 @@
 // @flow
 import { createMuiTheme } from '@material-ui/core/styles'
 import {
+  extraSmallFontSize,
   mediumFontSize,
   smallFontSize,
   disabled,
@@ -208,9 +209,13 @@ export default createMuiTheme({
       root: {
         fontFamily: 'Averta, monospace',
         fontWeight: 'normal',
+        fontSize: extraSmallFontSize,
         '&$selected': {
-          fontWeight: bolderFont,
+          fontWeight: boldFont,
         },
+        '@media (min-width: 960px)': {
+          fontSize: extraSmallFontSize, // override material-ui media query
+        }
       },
     },
     MuiTablePagination: {

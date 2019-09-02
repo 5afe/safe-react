@@ -15,7 +15,7 @@ import NoSafe from '~/components/NoSafe'
 import { type SelectorProps } from '~/routes/safe/container/selector'
 import { getEtherScanLink } from '~/logic/wallets/getWeb3'
 import {
-  sm, xs, secondary, smallFontSize,
+  sm, xs, secondary, smallFontSize, border,
 } from '~/theme/variables'
 import { copyToClipboard } from '~/utils/clipboard'
 import Balances from './Balances'
@@ -130,7 +130,7 @@ class Layout extends React.Component<Props, State> {
           <Identicon address={address} diameter={50} />
           <Block className={classes.name}>
             <Row>
-              <Heading tag="h2" color="secondary" testId={SAFE_VIEW_NAME_HEADING_TEST_ID}>
+              <Heading tag="h2" color="primary" testId={SAFE_VIEW_NAME_HEADING_TEST_ID}>
                 {name}
               </Heading>
               {!granted && <Block className={classes.readonly}>Read Only</Block>}
@@ -152,7 +152,7 @@ class Layout extends React.Component<Props, State> {
             <Tab label="Settings" data-testid={SETTINGS_TAB_BTN_TEST_ID} />
           </Tabs>
         </Row>
-        <Hairline color="#d4d53d" />
+        <Hairline color={border} />
         {tabIndex === 0 && (
           <Balances
             ethBalance={ethBalance}
