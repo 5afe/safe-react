@@ -215,7 +215,7 @@ export default createMuiTheme({
         },
         '@media (min-width: 960px)': {
           fontSize: extraSmallFontSize, // override material-ui media query
-        }
+        },
       },
     },
     MuiTablePagination: {
@@ -230,7 +230,7 @@ export default createMuiTheme({
       },
       caption: {
         fontFamily: 'Averta, monospace',
-        letterSpacing: '-0.5px',
+        fontSize: mediumFontSize,
         order: 3,
         color: disabled,
       },
@@ -244,9 +244,16 @@ export default createMuiTheme({
         color: disabled,
       },
     },
+    MuiTableSortLabel: {
+      root: {
+        fontSize: extraSmallFontSize,
+      },
+    },
     MuiTableCell: {
       root: {
         fontFamily: 'Averta, monospace',
+        fontSize: mediumFontSize,
+        borderBottomWidth: '2px',
       },
       head: {
         letterSpacing: '1px',
@@ -255,7 +262,7 @@ export default createMuiTheme({
       },
       body: {
         color: primary,
-        letterSpacing: '-0.5px',
+        letterSpacing: 'normal',
         fontWeight: 'normal',
         paddingTop: xs,
         paddingBottom: xs,

@@ -37,7 +37,8 @@ type State = {
 const styles = {
   root: {
     backgroundColor: 'white',
-    boxShadow: '0 -1px 4px 0 rgba(74, 85, 121, 0.5)',
+    borderRadius: '8px',
+    boxShadow: '1px 2px 10px 0 rgba(212, 212, 211, 0.59)',
   },
   selectRoot: {
     lineHeight: '40px',
@@ -48,8 +49,9 @@ const styles = {
   },
   paginationRoot: {
     backgroundColor: 'white',
-    boxShadow: '0 2px 4px 0 rgba(74, 85, 121, 0.5)',
+    boxShadow: '1px 2px 10px 0 rgba(212, 212, 211, 0.59)',
     marginBottom: xl,
+    borderRadius: '8px',
   },
   loader: {
     alignItems: 'center',
