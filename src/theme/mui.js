@@ -17,6 +17,7 @@ import {
   buttonLargeFontSize,
   border,
   xs,
+  secondaryText,
 } from './variables'
 
 export type WithStyles = {
@@ -113,7 +114,7 @@ export default createMuiTheme({
     MuiStepIcon: {
       root: {
         fontSize: '22px',
-        color: '#B2B5B2 !important',
+        color: `${secondaryText} !important`,
       },
       completed: {
         color: `${secondary} !important`,
@@ -125,7 +126,7 @@ export default createMuiTheme({
     },
     MuiStepContent: {
       root: {
-        borderLeft: '1px solid #B2B5B2',
+        borderLeft: `1px solid ${secondaryText}`,
       },
     },
     MuiTypography: {

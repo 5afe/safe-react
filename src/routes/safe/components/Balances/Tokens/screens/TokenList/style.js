@@ -1,6 +1,6 @@
 // @flow
 import {
-  md, sm, xs, mediumFontSize, border,
+  md, sm, xs, mediumFontSize, border, secondaryText,
 } from '~/theme/variables'
 
 export const styles = () => ({
@@ -8,7 +8,7 @@ export const styles = () => ({
     minHeight: '48px',
   },
   search: {
-    color: '#B2B5B2',
+    color: secondaryText,
     paddingLeft: sm,
   },
   padding: {

@@ -1,12 +1,12 @@
 // @flow
 import {
-  fontColor, lg, smallFontSize, md, border,
+  fontColor, lg, smallFontSize, md, border, secondaryText,
 } from '~/theme/variables'
 
 export const styles = () => ({
   ownersText: {
     fontSize: '26px',
-    color: '#B2B5B2',
+    color: secondaryText,
     '& b': {
       color: fontColor,
     },

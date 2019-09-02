@@ -1,5 +1,5 @@
 // @flow
-import { lg, md, sm } from '~/theme/variables'
+import { lg, md, sm, secondaryText } from '~/theme/variables'
 
 export const styles = () => ({
   heading: {
@@ -10,7 +10,7 @@ export const styles = () => ({
   },
   annotation: {
     letterSpacing: '-1px',
-    color: '#B2B5B2',
+    color: secondaryText,
     marginRight: 'auto',
     marginLeft: '20px',
   },

@@ -1,6 +1,6 @@
 // @flow
 import {
-  lg, sm, border, background,
+  lg, sm, border, background, secondaryText,
 } from '~/theme/variables'
 
 export const styles = () => ({
@@ -15,7 +15,7 @@ export const styles = () => ({
   },
   annotation: {
     letterSpacing: '-1px',
-    color: '#B2B5B2',
+    color: secondaryText,
     marginRight: 'auto',
     marginLeft: '20px',
   },

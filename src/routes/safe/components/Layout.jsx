@@ -15,7 +15,7 @@ import NoSafe from '~/components/NoSafe'
 import { type SelectorProps } from '~/routes/safe/container/selector'
 import { getEtherScanLink } from '~/logic/wallets/getWeb3'
 import {
-  sm, xs, secondary, smallFontSize, border,
+  sm, xs, secondary, smallFontSize, border, secondaryText,
 } from '~/theme/variables'
 import { copyToClipboard } from '~/utils/clipboard'
 import Balances from './Balances'
@@ -70,7 +70,7 @@ const styles = () => ({
     fontSize: smallFontSize,
     letterSpacing: '0.5px',
     color: '#ffffff',
-    backgroundColor: '#B2B5B2',
+    backgroundColor: secondaryText,
     textTransform: 'uppercase',
     padding: `0 ${sm}`,
     marginLeft: sm,
