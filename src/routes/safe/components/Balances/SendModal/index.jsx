@@ -9,6 +9,7 @@ import ChooseTxType from './screens/ChooseTxType'
 import SendFunds from './screens/SendFunds'
 import ReviewTx from './screens/ReviewTx'
 import SendCustomTx from './screens/SendCustomTx'
+import ReviewCustomTx from './screens/ReviewCustomTx'
 
 type Props = {
   onClose: () => void,
@@ -38,6 +39,9 @@ type TxStateType =
 const styles = () => ({
   scalableModalWindow: {
     height: 'auto',
+  },
+  scalableStaticModalWindow: {
+    height: 'auto',
     position: 'static',
   },
 })
@@ -63,7 +67,8 @@ const Send = ({
     setTx({})
   }, [isOpen])
 
-  const scalableModalSize = activeScreen === 'chooseTxType' || activeScreen === 'sendCustomTx'
+  const scalableModalSize = activeScreen === 'sendCustomTx' || activeScreen === 'reviewCustomTx'
+  const scalableStaticModalSize = activeScreen === 'chooseTxType'
 
   const handleTxCreation = (txInfo) => {
     setActiveScreen('reviewTx')
@@ -81,7 +86,10 @@ const Send = ({
       description="Send Tokens Form"
       handleClose={onClose}
       open={isOpen}
-      paperClassName={cn(scalableModalSize && classes.scalableModalWindow)}
+      paperClassName={cn(
+        scalableStaticModalSize && classes.scalableStaticModalWindow,
+        scalableModalSize && classes.scalableModalWindow,
+      )}
     >
       <>
         {activeScreen === 'chooseTxType' && <ChooseTxType onClose={onClose} setActiveScreen={setActiveScreen} />}
@@ -119,6 +127,18 @@ const Send = ({
             ethBalance={ethBalance}
             onSubmit={handleCustomTxCreation}
             initialValues={tx}
+          />
+        )}
+        {activeScreen === 'reviewCustomTx' && (
+          <ReviewCustomTx
+            tx={tx}
+            onClose={onClose}
+            setActiveScreen={setActiveScreen}
+            safeAddress={safeAddress}
+            etherScanLink={etherScanLink}
+            safeName={safeName}
+            ethBalance={ethBalance}
+            createTransaction={createTransaction}
           />
         )}
       </>
