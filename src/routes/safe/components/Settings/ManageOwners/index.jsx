@@ -20,7 +20,11 @@ import EditOwnerModal from './EditOwnerModal'
 import OwnerAddressTableCell from './OwnerAddressTableCell'
 import type { Owner } from '~/routes/safe/store/models/owner'
 import {
-  getOwnerData, generateColumns, OWNERS_TABLE_NAME_ID, OWNERS_TABLE_ADDRESS_ID, type OwnerRow,
+  getOwnerData,
+  generateColumns,
+  OWNERS_TABLE_NAME_ID,
+  OWNERS_TABLE_ADDRESS_ID,
+  type OwnerRow,
 } from './dataFetcher'
 import { lg, sm, boldFont } from '~/theme/variables'
 import { styles } from './style'
@@ -76,13 +80,17 @@ type State = {
 type Action = 'AddOwner' | 'EditOwner' | 'ReplaceOwner' | 'RemoveOwner'
 
 class ManageOwners extends React.Component<Props, State> {
-  state = {
-    selectedOwnerAddress: undefined,
-    selectedOwnerName: undefined,
-    showAddOwner: false,
-    showRemoveOwner: false,
-    showReplaceOwner: false,
-    showEditOwner: false,
+  constructor(props) {
+    super(props)
+  
+    this.state = {
+      selectedOwnerAddress: undefined,
+      selectedOwnerName: undefined,
+      showAddOwner: false,
+      showRemoveOwner: false,
+      showReplaceOwner: false,
+      showEditOwner: false,
+    }
   }
 
   onShow = (action: Action, row?: Object) => () => {
@@ -127,13 +135,15 @@ class ManageOwners extends React.Component<Props, State> {
     } = this.state
 
     const columns = generateColumns()
-    const autoColumns = columns.filter(c => !c.custom)
+    const autoColumns = columns.filter((c) => !c.custom)
     const ownerData = getOwnerData(owners)
 
     return (
-      <React.Fragment>
+      <>
         <Block className={classes.formContainer}>
-          <Heading tag="h3" style={title}>Manage Safe Owners</Heading>
+          <Heading tag="h3" style={title}>
+            Manage Safe Owners
+          </Heading>
           <Table
             label="Owners"
             defaultOrderBy={OWNERS_TABLE_NAME_ID}
@@ -184,12 +194,11 @@ class ManageOwners extends React.Component<Props, State> {
                   )}
                 </TableCell>
               </TableRow>
-            ))
-            }
+            ))}
           </Table>
         </Block>
         {granted && (
-          <React.Fragment>
+          <>
             <Hairline />
             <Row style={controlsStyle} align="end" grow>
               <Col end="xs">
@@ -205,7 +214,7 @@ class ManageOwners extends React.Component<Props, State> {
                 </Button>
               </Col>
             </Row>
-          </React.Fragment>
+          </>
         )}
         <AddOwnerModal
           onClose={this.onHide('AddOwner')}
@@ -257,7 +266,7 @@ class ManageOwners extends React.Component<Props, State> {
           network={network}
           editSafeOwner={editSafeOwner}
         />
-      </React.Fragment>
+      </>
     )
   }
 }

@@ -21,19 +21,20 @@ type Props = {
   classes: Object,
   createTransaction: Function,
   safeAddress: string,
+  granted: Boolean,
 }
 
 const ThresholdSettings = ({
-  owners, threshold, classes, createTransaction, safeAddress,
+  owners, threshold, classes, createTransaction, safeAddress, granted,
 }: Props) => {
   const [isModalOpen, setModalOpen] = useState(false)
 
   const toggleModal = () => {
-    setModalOpen(prevOpen => !prevOpen)
+    setModalOpen((prevOpen) => !prevOpen)
   }
 
   return (
-    <React.Fragment>
+    <>
       <SharedSnackbarConsumer>
         {({ openSnackbar }) => {
           const onChangeThreshold = async (newThreshold) => {
@@ -62,7 +63,7 @@ const ThresholdSettings = ({
                   {' '}
                   owners
                 </Paragraph>
-                {owners.size > 1 && (
+                {owners.size > 1 && granted && (
                   <Row align="center" className={classes.buttonRow}>
                     <Button
                       color="primary"
@@ -93,7 +94,7 @@ const ThresholdSettings = ({
           )
         }}
       </SharedSnackbarConsumer>
-    </React.Fragment>
+    </>
   )
 }
 
