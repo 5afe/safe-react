@@ -5,6 +5,7 @@ import Block from '~/components/layout/Block'
 import Col from '~/components/layout/Col'
 import Field from '~/components/forms/Field'
 import Heading from '~/components/layout/Heading'
+import { SharedSnackbarConsumer } from '~/components/SharedSnackBar'
 import { composeValidators, required, minMaxLength } from '~/components/forms/validator'
 import TextField from '~/components/forms/TextField'
 import GnoForm from '~/components/forms/GnoForm'
@@ -28,22 +29,24 @@ type Props = {
   safeAddress: string,
   safeName: string,
   updateSafe: Function,
+  openSnackbar: Function,
 }
 
 const ChangeSafeName = (props: Props) => {
   const {
-    classes, safeAddress, safeName, updateSafe,
+    classes, safeAddress, safeName, updateSafe, openSnackbar,
   } = props
 
   const handleSubmit = (values) => {
     updateSafe({ address: safeAddress, name: values.safeName })
+    openSnackbar('Safe name changed', 'success')
   }
 
   return (
-    <React.Fragment>
+    <>
       <GnoForm onSubmit={handleSubmit}>
         {() => (
-          <React.Fragment>
+          <>
             <Block className={classes.formContainer}>
               <Heading tag="h3">Modify Safe name</Heading>
               <Paragraph>
@@ -78,11 +81,17 @@ const ChangeSafeName = (props: Props) => {
                 </Button>
               </Col>
             </Row>
-          </React.Fragment>
+          </>
         )}
       </GnoForm>
-    </React.Fragment>
+    </>
   )
 }
 
-export default withStyles(styles)(ChangeSafeName)
+const withSnackbar = (props) => (
+  <SharedSnackbarConsumer>
+    {({ openSnackbar }) => <ChangeSafeName {...props} openSnackbar={openSnackbar} />}
+  </SharedSnackbarConsumer>
+)
+
+export default withStyles(styles)(withSnackbar)

@@ -78,7 +78,7 @@ const ReviewTx = ({
       }
 
       return (
-        <React.Fragment>
+        <>
           <Row align="center" grow className={classes.heading}>
             <Paragraph weight="bolder" className={classes.headingText} noMargin>
               Send Funds
@@ -154,7 +154,7 @@ const ReviewTx = ({
               SUBMIT
             </Button>
           </Row>
-        </React.Fragment>
+        </>
       )
     }}
   </SharedSnackbarConsumer>

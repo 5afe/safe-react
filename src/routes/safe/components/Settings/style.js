@@ -6,9 +6,10 @@ import {
 export const styles = () => ({
   root: {
     backgroundColor: 'white',
-    boxShadow: '0 -1px 4px 0 rgba(74, 85, 121, 0.5)',
+    boxShadow: '1px 2px 10px 0 rgba(212, 212, 211, 0.59)',
     minHeight: '400px',
     display: 'flex',
+    borderRadius: '8px',
   },
   settings: {
     letterSpacing: '-0.5px',
