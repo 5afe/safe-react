@@ -5,7 +5,6 @@ import {
 
 export const styles = () => ({
   ownersText: {
-    fontSize: '26px',
     color: secondaryText,
     '& b': {
       color: fontColor,

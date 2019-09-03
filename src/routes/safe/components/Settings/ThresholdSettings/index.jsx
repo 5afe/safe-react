@@ -49,12 +49,9 @@ const ThresholdSettings = ({
               <Block className={classes.container}>
                 <Heading tag="h3">Required confirmations</Heading>
                 <Paragraph>
-                  Any transaction over any daily limit
-                  <br />
-                  {' '}
-                  requires the confirmation of:
+                  Any transaction requires the confirmation of:
                 </Paragraph>
-                <Paragraph size="xxl" className={classes.ownersText}>
+                <Paragraph size="lg" className={classes.ownersText}>
                   <Bold>{threshold}</Bold>
                   {' '}
                   out of
