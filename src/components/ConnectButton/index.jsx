@@ -5,14 +5,13 @@ import Button from '~/components/layout/Button'
 import Web3Integration from '~/logic/wallets/web3Integration'
 
 const web3Connect = new Web3Connect.Core({
+  network: 'rinkeby',
   providerOptions: {
     portis: {
       id: '852b763d-f28b-4463-80cb-846d7ec5806b',
-      network: 'rinkeby',
     },
     fortmatic: {
       key: 'pk_test_43A53775AE976718',
-      network: 'rinkeby',
     },
   },
 })
