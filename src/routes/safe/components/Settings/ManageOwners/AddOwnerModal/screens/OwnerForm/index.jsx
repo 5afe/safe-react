@@ -16,10 +16,7 @@ import Field from '~/components/forms/Field'
 import TextField from '~/components/forms/TextField'
 import { type Owner } from '~/routes/safe/store/models/owner'
 import {
-  composeValidators,
-  required,
-  minMaxLength,
-  uniqueAddress,
+  composeValidators, required, minMaxLength, uniqueAddress,
 } from '~/components/forms/validator'
 import { styles } from './style'
 
@@ -46,10 +43,10 @@ const OwnerForm = ({
   const handleSubmit = (values) => {
     onSubmit(values)
   }
-  const ownerDoesntExist = uniqueAddress(owners.map(o => o.address))
+  const ownerDoesntExist = uniqueAddress(owners.map((o) => o.address))
 
   return (
-    <React.Fragment>
+    <>
       <Row align="center" grow className={classes.heading}>
         <Paragraph weight="bolder" className={classes.manage} noMargin>
           Add new owner
@@ -65,7 +62,7 @@ const OwnerForm = ({
           const mutators = args[3]
 
           return (
-            <React.Fragment>
+            <>
               <Block className={classes.formContainer}>
                 <Row margin="md">
                   <Paragraph>Add a new owner to the active Safe</Paragraph>
@@ -114,11 +111,11 @@ const OwnerForm = ({
                   Next
                 </Button>
               </Row>
-            </React.Fragment>
+            </>
           )
         }}
       </GnoForm>
-    </React.Fragment>
+    </>
   )
 }
 

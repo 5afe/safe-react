@@ -82,7 +82,7 @@ const AddOwner = ({
   }
 
   const ownerSubmitted = (newValues: Object) => {
-    setValues(stateValues => ({
+    setValues((stateValues) => ({
       ...stateValues,
       ownerName: newValues.ownerName,
       ownerAddress: newValues.ownerAddress,
@@ -91,7 +91,7 @@ const AddOwner = ({
   }
 
   const thresholdSubmitted = (newValues: Object) => {
-    setValues(stateValues => ({
+    setValues((stateValues) => ({
       ...stateValues,
       threshold: newValues.threshold,
     }))
@@ -99,7 +99,7 @@ const AddOwner = ({
   }
 
   return (
-    <React.Fragment>
+    <>
       <SharedSnackbarConsumer>
         {({ openSnackbar }) => {
           const onAddOwner = async () => {
@@ -120,7 +120,7 @@ const AddOwner = ({
               open={isOpen}
               paperClassName={classes.biggerModalWindow}
             >
-              <React.Fragment>
+              <>
                 {activeScreen === 'selectOwner' && (
                   <OwnerForm onClose={onClose} onSubmit={ownerSubmitted} owners={owners} />
                 )}
@@ -144,12 +144,12 @@ const AddOwner = ({
                     onSubmit={onAddOwner}
                   />
                 )}
-              </React.Fragment>
+              </>
             </Modal>
           )
         }}
       </SharedSnackbarConsumer>
-    </React.Fragment>
+    </>
   )
 }
 
