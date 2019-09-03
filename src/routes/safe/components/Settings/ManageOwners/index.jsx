@@ -82,7 +82,7 @@ type Action = 'AddOwner' | 'EditOwner' | 'ReplaceOwner' | 'RemoveOwner'
 class ManageOwners extends React.Component<Props, State> {
   constructor(props) {
     super(props)
-  
+
     this.state = {
       selectedOwnerAddress: undefined,
       selectedOwnerName: undefined,
