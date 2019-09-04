@@ -5,6 +5,13 @@ export const styles = () => ({
   formContainer: {
     minHeight: '369px',
   },
+  title: {
+    padding: lg,
+    paddingBottom: 0,
+  },
+  annotation: {
+    padding: lg,
+  },
   hide: {
     '&:hover': {
       backgroundColor: '#fff3e2',

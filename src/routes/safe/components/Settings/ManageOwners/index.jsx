@@ -26,11 +26,12 @@ import {
   OWNERS_TABLE_ADDRESS_ID,
   type OwnerRow,
 } from './dataFetcher'
-import { lg, sm, boldFont } from '~/theme/variables'
+import { sm, boldFont } from '~/theme/variables'
 import { styles } from './style'
 import ReplaceOwnerIcon from './assets/icons/replace-owner.svg'
 import RenameOwnerIcon from './assets/icons/rename-owner.svg'
 import RemoveOwnerIcon from '../assets/icons/bin.svg'
+import Paragraph from '~/components/layout/Paragraph/index'
 
 export const RENAME_OWNER_BTN_TEST_ID = 'rename-owner-btn'
 export const REMOVE_OWNER_BTN_TEST_ID = 'remove-owner-btn'
@@ -46,10 +47,6 @@ const controlsStyle = {
 const addOwnerButtonStyle = {
   marginRight: sm,
   fontWeight: boldFont,
-}
-
-const title = {
-  padding: lg,
 }
 
 type Props = {
@@ -141,9 +138,13 @@ class ManageOwners extends React.Component<Props, State> {
     return (
       <>
         <Block className={classes.formContainer}>
-          <Heading tag="h3" style={title}>
+          <Heading tag="h3" className={classes.title}>
             Manage Safe Owners
           </Heading>
+          <Paragraph className={classes.annotation} noMargin>
+            Add, remove and replace owners or rename existing owners. Owner names are only stored locally and never
+            shared with Gnosis or any third parties
+          </Paragraph>
           <Table
             label="Owners"
             defaultOrderBy={OWNERS_TABLE_NAME_ID}
