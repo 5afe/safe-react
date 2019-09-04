@@ -21,7 +21,7 @@ type Props = {
   classes: Object,
   createTransaction: Function,
   safeAddress: string,
-  granted: Boolean,
+  granted: boolean,
 }
 
 const ThresholdSettings = ({

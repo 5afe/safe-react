@@ -150,6 +150,7 @@ class ManageOwners extends React.Component<Props, State> {
             columns={columns}
             data={ownerData}
             size={ownerData.size}
+            disablePagination
             defaultFixed
             noBorder
           >
