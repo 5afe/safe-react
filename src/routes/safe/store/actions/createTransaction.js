@@ -7,6 +7,20 @@ import { type GlobalState } from '~/store'
 import { getGnosisSafeInstanceAt } from '~/logic/contracts/safeContracts'
 import { approveTransaction, executeTransaction, CALL } from '~/logic/safe/transactions'
 
+export type Notifications = {
+  BEFORE_EXECUTION_OR_CREATION: string,
+  AFTER_EXECUTION: string,
+  CREATED_MORE_CONFIRMATIONS_NEEDED: string,
+  ERROR: string,
+}
+
+const DEFAULT_NOTIFICATIONS: Notifications = {
+  BEFORE_EXECUTION_OR_CREATION: 'Transaction in progress',
+  AFTER_EXECUTION: 'Transaction successfully executed',
+  CREATED_MORE_CONFIRMATIONS_NEEDED: 'Transaction in progress: More confirmations required to execute',
+  ERROR: 'Transaction failed',
+}
+
 const createTransaction = (
   safeAddress: string,
   to: string,
@@ -14,6 +28,7 @@ const createTransaction = (
   txData: string = EMPTY_DATA,
   openSnackbar: Function,
   shouldExecute?: boolean,
+  notifications?: Notifications = DEFAULT_NOTIFICATIONS,
 ) => async (dispatch: ReduxDispatch<GlobalState>, getState: GetState<GlobalState>) => {
   const state: GlobalState = getState()
 
@@ -24,14 +39,19 @@ const createTransaction = (
   const isExecution = threshold.toNumber() === 1 || shouldExecute
 
   let txHash
-  if (isExecution) {
-    openSnackbar('Transaction has been submitted', 'success')
-    txHash = await executeTransaction(safeInstance, to, valueInWei, txData, CALL, nonce, from)
-    openSnackbar('Transaction has been confirmed', 'success')
-  } else {
-    openSnackbar('Approval transaction has been submitted', 'success')
-    txHash = await approveTransaction(safeInstance, to, valueInWei, txData, CALL, nonce, from)
-    openSnackbar('Approval transaction has been confirmed', 'success')
+  try {
+    if (isExecution) {
+      openSnackbar(notifications.BEFORE_EXECUTION_OR_CREATION, 'success')
+      txHash = await executeTransaction(safeInstance, to, valueInWei, txData, CALL, nonce, from)
+      openSnackbar(notifications.AFTER_EXECUTION, 'success')
+    } else {
+      openSnackbar(notifications.BEFORE_EXECUTION_OR_CREATION, 'success')
+      txHash = await approveTransaction(safeInstance, to, valueInWei, txData, CALL, nonce, from)
+      openSnackbar(notifications.CREATED_MORE_CONFIRMATIONS_NEEDED, 'success')
+    }
+  } catch (err) {
+    openSnackbar(notifications.ERROR, '')
+    console.error(`Error while creating transaction: ${err}`)
   }
 
   dispatch(fetchTransactions(safeAddress))

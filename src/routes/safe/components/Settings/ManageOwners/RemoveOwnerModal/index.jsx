@@ -46,7 +46,9 @@ export const sendRemoveOwner = async (
 ) => {
   const gnosisSafe = await getGnosisSafeInstanceAt(safeAddress)
   const safeOwners = await gnosisSafe.getOwners()
-  const index = safeOwners.findIndex(ownerAddress => ownerAddress.toLowerCase() === ownerAddressToRemove.toLowerCase())
+  const index = safeOwners.findIndex(
+    (ownerAddress) => ownerAddress.toLowerCase() === ownerAddressToRemove.toLowerCase(),
+  )
   const prevAddress = index === 0 ? SENTINEL_ADDRESS : safeOwners[index - 1]
   const txData = gnosisSafe.contract.methods
     .removeOwner(prevAddress, ownerAddressToRemove, values.threshold)
@@ -103,26 +105,21 @@ const RemoveOwner = ({
   }
 
   return (
-    <React.Fragment>
+    <>
       <SharedSnackbarConsumer>
         {({ openSnackbar }) => {
           const onRemoveOwner = () => {
             onClose()
-            try {
-              sendRemoveOwner(
-                values,
-                safeAddress,
-                ownerAddress,
-                ownerName,
-                owners,
-                openSnackbar,
-                createTransaction,
-                removeSafeOwner,
-              )
-            } catch (error) {
-              // eslint-disable-next-line
-              console.log('Error while removing an owner ' + error)
-            }
+            sendRemoveOwner(
+              values,
+              safeAddress,
+              ownerAddress,
+              ownerName,
+              owners,
+              openSnackbar,
+              createTransaction,
+              removeSafeOwner,
+            )
           }
 
           return (
@@ -133,7 +130,7 @@ const RemoveOwner = ({
               open={isOpen}
               paperClassName={classes.biggerModalWindow}
             >
-              <React.Fragment>
+              <>
                 {activeScreen === 'checkOwner' && (
                   <CheckOwner
                     onClose={onClose}
@@ -165,12 +162,12 @@ const RemoveOwner = ({
                     onSubmit={onRemoveOwner}
                   />
                 )}
-              </React.Fragment>
+              </>
             </Modal>
           )
         }}
       </SharedSnackbarConsumer>
-    </React.Fragment>
+    </>
   )
 }
 

@@ -108,11 +108,9 @@ export const executeTransaction = async (
       .execTransaction(to, valueInWei, data, operation, 0, 0, 0, ZERO_ADDRESS, ZERO_ADDRESS, sigs)
       .encodeABI()
     const errMsg = await getErrorMessage(safeInstance.address, 0, executeDataUsedSignatures, sender)
-
-    console.log(`Error executing the TX: ${error}`)
     console.log(`Error executing the TX: ${errMsg}`)
-    /* eslint-enable */
-    return 0
+    
+    throw error;
   }
 }
 
