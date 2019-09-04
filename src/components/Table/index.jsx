@@ -162,10 +162,11 @@ class GnoTable<K> extends React.Component<Props<K>, State> {
       input: classes.white,
     }
 
-    const sortedData = stableSort(data, getSorting(orderParam, orderByParam, orderProp), fixedParam).slice(
-      page * rowsPerPage,
-      page * rowsPerPage + rowsPerPage,
-    )
+    let sortedData = stableSort(data, getSorting(orderParam, orderByParam, orderProp), fixedParam)
+
+    if (!disablePagination) {
+      sortedData = sortedData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+    }
 
     const emptyRows = rowsPerPage - Math.min(rowsPerPage, data.length - page * rowsPerPage)
     const isEmpty = size === 0
