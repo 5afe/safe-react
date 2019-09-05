@@ -11,15 +11,9 @@ import TextField from '~/components/forms/TextField'
 import GnoForm from '~/components/forms/GnoForm'
 import Row from '~/components/layout/Row'
 import Paragraph from '~/components/layout/Paragraph'
-import Hairline from '~/components/layout/Hairline'
 import Button from '~/components/layout/Button'
-import { sm } from '~/theme/variables'
+import { lg } from '~/theme/variables'
 import { styles } from './style'
-
-const controlsStyle = {
-  backgroundColor: 'white',
-  padding: sm,
-}
 
 export const SAFE_NAME_INPUT_TEST_ID = 'safe-name-input'
 export const SAFE_NAME_SUBMIT_BTN_TEST_ID = 'change-safe-name-btn'
@@ -48,7 +42,7 @@ const ChangeSafeName = (props: Props) => {
         {() => (
           <>
             <Block className={classes.formContainer}>
-              <Heading tag="h3">Modify Safe name</Heading>
+              <Heading tag="h2">Modify Safe name</Heading>
               <Paragraph>
                 You can change the name of this Safe. This name is only stored locally and never shared with Gnosis or
                 any third parties.
@@ -66,8 +60,7 @@ const ChangeSafeName = (props: Props) => {
                 />
               </Block>
             </Block>
-            <Hairline />
-            <Row style={controlsStyle} align="end" grow>
+            <Row className={classes.controlsRow} align="end" grow>
               <Col end="xs">
                 <Button
                   type="submit"

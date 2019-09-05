@@ -15,6 +15,7 @@ import {
   regularFont,
   boldFont,
   buttonLargeFontSize,
+  largeFontSize,
   border,
   xs,
   secondaryText,
@@ -49,6 +50,7 @@ export default createMuiTheme({
     MuiButton: {
       label: {
         lineHeight: 1,
+        fontSize: largeFontSize,
         fontWeight: regularFont,
       },
       root: {

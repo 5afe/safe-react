@@ -1,6 +1,6 @@
 // @flow
 import {
-  sm, lg, border, secondary, bolderFont, background,
+  sm, md, lg, border, secondary, bolderFont, background, largeFontSize,
 } from '~/theme/variables'
 
 export const styles = () => ({
@@ -15,11 +15,12 @@ export const styles = () => ({
     letterSpacing: '-0.5px',
   },
   menu: {
-    borderRight: `solid 1px ${border}`,
+    borderRight: `solid 2px ${border}`,
     height: '100%',
   },
   menuOption: {
-    padding: lg,
+    fontSize: largeFontSize,
+    padding: `${md} 0 ${md} ${lg}`,
     alignItems: 'center',
     cursor: 'pointer',
   },
@@ -30,6 +31,7 @@ export const styles = () => ({
   },
   container: {
     height: '100%',
+    position: 'relative',
   },
   message: {
     margin: `${sm} 0`,

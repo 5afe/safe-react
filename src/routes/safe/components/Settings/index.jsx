@@ -98,7 +98,7 @@ class Settings extends React.Component<Props, State> {
             </Paragraph>
           </Col>
           <Col xs={6} end="sm">
-            <Paragraph noMargin size="md" color="error" onClick={this.onShow('RemoveSafe')}>
+            <Paragraph noMargin size="lg" color="error" onClick={this.onShow('RemoveSafe')}>
               <Span className={cn(classes.links, classes.removeSafeText)}>Remove Safe</Span>
               <Img alt="Trash Icon" className={classes.removeSafeIcon} src={RemoveSafeIcon} />
             </Paragraph>
