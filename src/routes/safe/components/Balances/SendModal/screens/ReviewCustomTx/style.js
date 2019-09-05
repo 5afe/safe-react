@@ -33,6 +33,7 @@ export const styles = () => ({
     borderRadius: '5px',
     border: `1px solid ${border}`,
     padding: '11px',
+    minHeight: '21px',
   },
   data: {
     wordBreak: 'break-all',

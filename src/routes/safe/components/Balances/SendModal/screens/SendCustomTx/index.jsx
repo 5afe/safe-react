@@ -106,7 +106,7 @@ const SendCustomTx = ({
                 <Row margin="xs">
                   <Col between="lg">
                     <Paragraph size="md" color="disabled" style={{ letterSpacing: '-0.5px' }} noMargin>
-                      Amount
+                      Value
                     </Paragraph>
                     <ButtonLink weight="bold" onClick={mutators.setMax}>
                       Send max

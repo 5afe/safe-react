@@ -119,6 +119,11 @@ const ReviewCustomTx = ({
                 {'ETH'}
               </Paragraph>
             </Row>
+            <Row margin="xs">
+              <Paragraph size="md" color="disabled" style={{ letterSpacing: '-0.5px' }} noMargin>
+                Data (hex encoded)
+              </Paragraph>
+            </Row>
             <Row margin="md" align="center">
               <Col className={classes.outerData}>
                 <Row size="md" noMargin className={classes.data}>
