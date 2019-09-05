@@ -16,7 +16,6 @@ import {
   boldFont,
   buttonLargeFontSize,
   largeFontSize,
-  border,
   xs,
   secondaryText,
 } from './variables'
@@ -151,7 +150,6 @@ export default createMuiTheme({
         color: secondary,
         order: 0,
         marginTop: '0px',
-        backgroundColor: border,
         zIndex: 1, // for firefox
       },
     },
