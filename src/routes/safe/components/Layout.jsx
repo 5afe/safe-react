@@ -18,8 +18,9 @@ import {
   sm, xs, secondary, smallFontSize, border, secondaryText,
 } from '~/theme/variables'
 import { copyToClipboard } from '~/utils/clipboard'
+import { type Actions } from '../container/actions'
 import Balances from './Balances'
-import Transactions from './TransactionsNew'
+import Transactions from './Transactions'
 import Settings from './Settings'
 
 export const BALANCES_TAB_BTN_TEST_ID = 'balances-tab-btn'
@@ -31,13 +32,9 @@ type State = {
   tabIndex: number,
 }
 
-type Props = SelectorProps & {
+type Props = SelectorProps & Actions & {
   classes: Object,
   granted: boolean,
-  updateSafe: Function,
-  createTransaction: Function,
-  processTransaction: Function,
-  fetchTransactions: Function,
 }
 
 const openIconStyle = {

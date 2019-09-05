@@ -3,12 +3,12 @@ import { fireEvent } from '@testing-library/react'
 import { sleep } from '~/utils/timer'
 import { shortVersionOf } from '~/logic/wallets/ethAddresses'
 import { TRANSACTIONS_TAB_BTN_TEST_ID } from '~/routes/safe/components/Layout'
-import { TRANSACTION_ROW_TEST_ID } from '~/routes/safe/components/TransactionsNew/TxsTable'
+import { TRANSACTION_ROW_TEST_ID } from '~/routes/safe/components/Transactions/TxsTable'
 import {
   TRANSACTIONS_DESC_ADD_OWNER_TEST_ID,
   TRANSACTIONS_DESC_REMOVE_OWNER_TEST_ID,
   TRANSACTIONS_DESC_SEND_TEST_ID,
-} from '~/routes/safe/components/TransactionsNew/TxsTable/ExpandedTx/TxDescription'
+} from '~/routes/safe/components/Transactions/TxsTable/ExpandedTx/TxDescription'
 
 export const getLastTransaction = async (SafeDom: React.Component<any, any>) => {
   // Travel to transactions
