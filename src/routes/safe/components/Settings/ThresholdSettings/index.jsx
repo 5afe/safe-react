@@ -61,7 +61,7 @@ const ThresholdSettings = ({
                   owners
                 </Paragraph>
                 {owners.size > 1 && granted && (
-                  <Row align="center" className={classes.buttonRow}>
+                  <Row className={classes.buttonRow}>
                     <Button
                       color="primary"
                       minWidth={120}

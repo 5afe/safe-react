@@ -1,5 +1,7 @@
 // @flow
-import { lg, sm, boldFont, border } from '~/theme/variables'
+import {
+  lg, sm, boldFont, border,
+} from '~/theme/variables'
 
 export const styles = () => ({
   formContainer: {
@@ -12,7 +14,6 @@ export const styles = () => ({
   saveBtn: {
     marginRight: sm,
     fontWeight: boldFont,
-    boxShadow: '1px 2px 10px 0 rgba(212, 212, 211, 0.59)',
   },
   controlsRow: {
     padding: lg,

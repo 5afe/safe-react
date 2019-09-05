@@ -1,6 +1,6 @@
 // @flow
 import {
-  fontColor, lg, smallFontSize, md, border, secondaryText,
+  fontColor, lg, smallFontSize, border, secondaryText,
 } from '~/theme/variables'
 
 export const styles = () => ({
@@ -11,21 +11,17 @@ export const styles = () => ({
     },
   },
   container: {
-    height: '100%',
-    position: 'relative',
     padding: lg,
   },
   buttonRow: {
+    padding: lg,
     position: 'absolute',
-    bottom: '51px',
     left: 0,
-    height: '51px',
-    width: '100%',
-    paddingRight: md,
-    display: 'flex',
-    justifyContent: 'flex-end',
-    borderTop: `solid 1px ${border}`,
+    bottom: 0,
     boxSizing: 'border-box',
+    width: '100%',
+    justifyContent: 'flex-end',
+    borderTop: `2px solid ${border}`,
   },
   modifyBtn: {
     height: '32px',
