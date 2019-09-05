@@ -18,6 +18,7 @@ import Hairline from '~/components/layout/Hairline'
 import SafeInfo from '~/routes/safe/components/Balances/SendModal/SafeInfo'
 import { setImageToPlaceholder } from '~/routes/safe/components/Balances/utils'
 import { getWeb3 } from '~/logic/wallets/getWeb3'
+import { getEthAsToken } from '~/logic/tokens/utils/tokenHelpers'
 import ArrowDown from '../assets/arrow-down.svg'
 import { secondary } from '~/theme/variables'
 import { styles } from './style'
@@ -113,7 +114,7 @@ const ReviewCustomTx = ({
               </Paragraph>
             </Row>
             <Row margin="md" align="center">
-              <Img src="tx.token.logoUri" height={28} alt="Ether" onError={setImageToPlaceholder} />
+              <Img src={getEthAsToken().logoUri} height={28} alt="Ether" onError={setImageToPlaceholder} />
               <Paragraph size="md" noMargin className={classes.value}>
                 {tx.value}
                 {'ETH'}
