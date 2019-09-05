@@ -55,8 +55,8 @@ const ReviewCustomTx = ({
       const submitTx = async () => {
         const web3 = getWeb3()
         const txRecipient = tx.recipientAddress
-        let txData = tx.data
-        let txValue = tx.value ? web3.utils.toWei(tx.value, 'ether') : 0
+        const txData = tx.data
+        const txValue = tx.value ? web3.utils.toWei(tx.value, 'ether') : 0
 
         createTransaction(safeAddress, txRecipient, txValue, txData, openSnackbar)
         onClose()
@@ -113,7 +113,7 @@ const ReviewCustomTx = ({
               </Paragraph>
             </Row>
             <Row margin="md" align="center">
-              <Img src={'tx.token.logoUri'} height={28} alt={'Ether'} onError={setImageToPlaceholder} />
+              <Img src="tx.token.logoUri" height={28} alt="Ether" onError={setImageToPlaceholder} />
               <Paragraph size="md" noMargin className={classes.value}>
                 {tx.value}
                 {'ETH'}
