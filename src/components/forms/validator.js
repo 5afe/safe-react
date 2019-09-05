@@ -66,6 +66,14 @@ export const mustBeEthereumAddress = simpleMemoize((address: Field) => {
   return isAddress ? undefined : 'Address should be a valid Ethereum address or ENS name'
 })
 
+export const mustBeEthereumContractAddress = simpleMemoize(async (address: Field) => {
+  const contractCode: string = await getWeb3().eth.getCode(address)
+
+  return (!contractCode || contractCode.replace('0x', '').replace(/0/g, '') === '')
+    ? 'Address should be a valid Ethereum contract address or ENS name'
+    : undefined
+})
+
 export const minMaxLength = (minLen: string | number, maxLen: string | number) => (value: string) => (value.length >= +minLen && value.length <= +maxLen ? undefined : `Should be ${minLen} to ${maxLen} symbols`)
 
 export const ADDRESS_REPEATED_ERROR = 'Address already introduced'

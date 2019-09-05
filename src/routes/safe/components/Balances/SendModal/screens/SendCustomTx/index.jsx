@@ -99,6 +99,7 @@ const SendCustomTx = ({
                       text="Recipient*"
                       className={classes.addressInput}
                       fieldMutator={mutators.setRecipient}
+                      mustBeContract
                     />
                   </Col>
                 </Row>
