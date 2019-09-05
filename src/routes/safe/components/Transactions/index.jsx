@@ -36,7 +36,7 @@ const Transactions = ({
   const hasTransactions = transactions.size > 0
 
   return (
-    <React.Fragment>
+    <>
       {hasTransactions ? (
         <TxsTable
           transactions={transactions}
@@ -51,7 +51,7 @@ const Transactions = ({
       ) : (
         <NoTransactions />
       )}
-    </React.Fragment>
+    </>
   )
 }
 

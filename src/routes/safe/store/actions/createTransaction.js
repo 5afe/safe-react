@@ -5,21 +5,13 @@ import { userAccountSelector } from '~/logic/wallets/store/selectors'
 import fetchTransactions from '~/routes/safe/store/actions/fetchTransactions'
 import { type GlobalState } from '~/store'
 import { getGnosisSafeInstanceAt } from '~/logic/contracts/safeContracts'
-import { approveTransaction, executeTransaction, CALL } from '~/logic/safe/transactions'
-
-export type Notifications = {
-  BEFORE_EXECUTION_OR_CREATION: string,
-  AFTER_EXECUTION: string,
-  CREATED_MORE_CONFIRMATIONS_NEEDED: string,
-  ERROR: string,
-}
-
-const DEFAULT_NOTIFICATIONS: Notifications = {
-  BEFORE_EXECUTION_OR_CREATION: 'Transaction in progress',
-  AFTER_EXECUTION: 'Transaction successfully executed',
-  CREATED_MORE_CONFIRMATIONS_NEEDED: 'Transaction in progress: More confirmations required to execute',
-  ERROR: 'Transaction failed',
-}
+import {
+  approveTransaction,
+  executeTransaction,
+  CALL,
+  type Notifications,
+  DEFAULT_NOTIFICATIONS,
+} from '~/logic/safe/transactions'
 
 const createTransaction = (
   safeAddress: string,
