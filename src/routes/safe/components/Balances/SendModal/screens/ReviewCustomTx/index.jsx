@@ -17,6 +17,7 @@ import { copyToClipboard } from '~/utils/clipboard'
 import Hairline from '~/components/layout/Hairline'
 import SafeInfo from '~/routes/safe/components/Balances/SendModal/SafeInfo'
 import { setImageToPlaceholder } from '~/routes/safe/components/Balances/utils'
+import { getWeb3 } from '~/logic/wallets/getWeb3'
 import ArrowDown from '../assets/arrow-down.svg'
 import { secondary } from '~/theme/variables'
 import { styles } from './style'
@@ -30,6 +31,7 @@ type Props = {
   safeName: string,
   ethBalance: string,
   tx: Object,
+  createTransaction: Function,
 }
 
 const openIconStyle = {
@@ -46,11 +48,18 @@ const ReviewCustomTx = ({
   safeName,
   ethBalance,
   tx,
+  createTransaction,
 }: Props) => (
   <SharedSnackbarConsumer>
-    {() => {
+    {({ openSnackbar }) => {
       const submitTx = async () => {
+        const web3 = getWeb3()
+        const txRecipient = tx.recipientAddress
+        let txData = tx.data
+        let txValue = tx.value ? web3.utils.toWei(tx.value, 'ether') : 0
 
+        createTransaction(safeAddress, txRecipient, txValue, txData, openSnackbar)
+        onClose()
       }
 
       return (
@@ -104,7 +113,7 @@ const ReviewCustomTx = ({
               </Paragraph>
             </Row>
             <Row margin="md" align="center">
-              <Img src="tx.token.logoUri" height={28} alt="Ether" onError={setImageToPlaceholder} />
+              <Img src={'tx.token.logoUri'} height={28} alt={'Ether'} onError={setImageToPlaceholder} />
               <Paragraph size="md" noMargin className={classes.value}>
                 {tx.value}
                 {'ETH'}
