@@ -3,7 +3,7 @@ import { lg } from '~/theme/variables'
 
 export const styles = () => ({
   formContainer: {
-    minHeight: '369px',
+    minHeight: '420px',
   },
   title: {
     padding: lg,
@@ -30,6 +30,11 @@ export const styles = () => ({
   replaceOwnerIcon: {
     marginLeft: lg,
     cursor: 'pointer',
+  },
+  controlsRow: {
+    backgroundColor: 'white',
+    padding: lg,
+    borderRadius: '8px',
   },
   removeOwnerIcon: {
     marginLeft: lg,

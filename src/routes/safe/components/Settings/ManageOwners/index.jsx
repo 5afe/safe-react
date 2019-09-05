@@ -26,7 +26,6 @@ import {
   OWNERS_TABLE_ADDRESS_ID,
   type OwnerRow,
 } from './dataFetcher'
-import { sm, boldFont } from '~/theme/variables'
 import { styles } from './style'
 import ReplaceOwnerIcon from './assets/icons/replace-owner.svg'
 import RenameOwnerIcon from './assets/icons/rename-owner.svg'
@@ -38,16 +37,6 @@ export const REMOVE_OWNER_BTN_TEST_ID = 'remove-owner-btn'
 export const ADD_OWNER_BTN_TEST_ID = 'add-owner-btn'
 export const REPLACE_OWNER_BTN_TEST_ID = 'replace-owner-btn'
 export const OWNERS_ROW_TEST_ID = 'owners-row'
-
-const controlsStyle = {
-  backgroundColor: 'white',
-  padding: sm,
-}
-
-const addOwnerButtonStyle = {
-  marginRight: sm,
-  fontWeight: boldFont,
-}
 
 type Props = {
   classes: Object,
@@ -202,10 +191,9 @@ class ManageOwners extends React.Component<Props, State> {
         {granted && (
           <>
             <Hairline />
-            <Row style={controlsStyle} align="end" grow>
+            <Row className={classes.controlsRow} align="end" grow>
               <Col end="xs">
                 <Button
-                  style={addOwnerButtonStyle}
                   size="small"
                   variant="contained"
                   color="primary"

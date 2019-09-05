@@ -12,7 +12,6 @@ import GnoForm from '~/components/forms/GnoForm'
 import Row from '~/components/layout/Row'
 import Paragraph from '~/components/layout/Paragraph'
 import Button from '~/components/layout/Button'
-import { lg } from '~/theme/variables'
 import { styles } from './style'
 
 export const SAFE_NAME_INPUT_TEST_ID = 'safe-name-input'
@@ -70,7 +69,7 @@ const ChangeSafeName = (props: Props) => {
                   color="primary"
                   testId={SAFE_NAME_SUBMIT_BTN_TEST_ID}
                 >
-                  SAVE
+                  Save
                 </Button>
               </Col>
             </Row>
