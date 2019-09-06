@@ -23,6 +23,9 @@ export const styles = () => ({
     padding: `${md} 0 ${md} ${lg}`,
     alignItems: 'center',
     cursor: 'pointer',
+    '&:first-child': {
+      borderRadius: '8px',
+    },
   },
   active: {
     backgroundColor: background,
