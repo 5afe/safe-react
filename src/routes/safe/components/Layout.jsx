@@ -32,10 +32,11 @@ type State = {
   tabIndex: number,
 }
 
-type Props = SelectorProps & Actions & {
-  classes: Object,
-  granted: boolean,
-}
+type Props = SelectorProps &
+  Actions & {
+    classes: Object,
+    granted: boolean,
+  }
 
 const openIconStyle = {
   height: '16px',
@@ -149,7 +150,7 @@ class Layout extends React.Component<Props, State> {
             <Tab label="Settings" data-testid={SETTINGS_TAB_BTN_TEST_ID} />
           </Tabs>
         </Row>
-        <Hairline color={border} />
+        <Hairline color={border} style={{ marginTop: '-2px' }} />
         {tabIndex === 0 && (
           <Balances
             ethBalance={ethBalance}
