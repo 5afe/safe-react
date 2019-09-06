@@ -6,9 +6,6 @@ export const styles = (theme: Object) => ({
     width: '20px',
     marginRight: sm,
   },
-  zero: {
-    letterSpacing: '-0.5px',
-  },
   message: {
     margin: `${sm} 0`,
   },

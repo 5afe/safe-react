@@ -91,25 +91,18 @@ class Settings extends React.Component<Props, State> {
 
     return (
       <>
-        <Row align="center" className={classes.message}>
-          <Col xs={6}>
-            <Paragraph className={classes.settings} size="lg" weight="bolder">
-              Settings
-            </Paragraph>
-          </Col>
-          <Col xs={6} end="sm">
-            <Paragraph noMargin size="lg" color="error" onClick={this.onShow('RemoveSafe')}>
-              <Span className={cn(classes.links, classes.removeSafeText)}>Remove Safe</Span>
-              <Img alt="Trash Icon" className={classes.removeSafeIcon} src={RemoveSafeIcon} />
-            </Paragraph>
-            <RemoveSafeModal
-              onClose={this.onHide('RemoveSafe')}
-              isOpen={showRemoveSafe}
-              etherScanLink={etherScanLink}
-              safeAddress={safeAddress}
-              safeName={safeName}
-            />
-          </Col>
+        <Row className={classes.message}>
+          <Paragraph size="lg" color="error" onClick={this.onShow('RemoveSafe')}>
+            <Span className={cn(classes.links, classes.removeSafeText)}>Remove Safe</Span>
+            <Img alt="Trash Icon" className={classes.removeSafeIcon} src={RemoveSafeIcon} />
+          </Paragraph>
+          <RemoveSafeModal
+            onClose={this.onHide('RemoveSafe')}
+            isOpen={showRemoveSafe}
+            etherScanLink={etherScanLink}
+            safeAddress={safeAddress}
+            safeName={safeName}
+          />
         </Row>
         <Block className={classes.root}>
           <Col xs={3} layout="column">
@@ -128,7 +121,7 @@ class Settings extends React.Component<Props, State> {
               >
                 Owners (
                 {owners.size}
-                )
+)
               </Row>
               <Hairline />
               <Row

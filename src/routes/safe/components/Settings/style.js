@@ -38,6 +38,7 @@ export const styles = () => ({
   },
   message: {
     margin: `${sm} 0`,
+    justifyContent: 'flex-end',
   },
   links: {
     textDecoration: 'underline',
