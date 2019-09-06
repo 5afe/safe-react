@@ -1,5 +1,6 @@
 // @flow
 import React from 'react'
+import cn from 'classnames'
 import { List } from 'immutable'
 import { withStyles } from '@material-ui/core/styles'
 import TableRow from '@material-ui/core/TableRow'
@@ -145,7 +146,12 @@ class ManageOwners extends React.Component<Props, State> {
             noBorder
           >
             {(sortedData: Array<OwnerRow>) => sortedData.map((row: any, index: number) => (
-              <TableRow tabIndex={-1} key={index} className={classes.hide} data-testid={OWNERS_ROW_TEST_ID}>
+              <TableRow
+                tabIndex={-1}
+                key={index}
+                className={cn(classes.hide, index >= 3 && index === sortedData.size - 1 && classes.noBorderBottom)}
+                data-testid={OWNERS_ROW_TEST_ID}
+              >
                 {autoColumns.map((column: Column) => (
                   <TableCell key={column.id} style={cellWidth(column.width)} align={column.align} component="td">
                     {column.id === OWNERS_TABLE_ADDRESS_ID ? (

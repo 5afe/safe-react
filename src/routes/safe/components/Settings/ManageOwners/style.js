@@ -24,6 +24,11 @@ export const styles = () => ({
     justifyContent: 'flex-end',
     visibility: 'hidden',
   },
+  noBorderBottom: {
+    '& > td': {
+      borderBottom: 'none',
+    },
+  },
   editOwnerIcon: {
     cursor: 'pointer',
   },
