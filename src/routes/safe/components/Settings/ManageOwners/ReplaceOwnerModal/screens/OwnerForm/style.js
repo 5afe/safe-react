@@ -11,10 +11,10 @@ export const styles = () => ({
     maxHeight: '75px',
   },
   annotation: {
-    letterSpacing: '-1px',
     color: secondaryText,
     marginRight: 'auto',
     marginLeft: '20px',
+    lineHeight: 'normal',
   },
   manage: {
     fontSize: '24px',
