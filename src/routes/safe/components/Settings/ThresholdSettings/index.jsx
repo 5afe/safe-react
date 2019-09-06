@@ -47,7 +47,7 @@ const ThresholdSettings = ({
           return (
             <>
               <Block className={classes.container}>
-                <Heading tag="h3">Required confirmations</Heading>
+                <Heading tag="h2">Required confirmations</Heading>
                 <Paragraph>
                   Any transaction requires the confirmation of:
                 </Paragraph>

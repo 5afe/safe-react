@@ -127,7 +127,7 @@ class ManageOwners extends React.Component<Props, State> {
     return (
       <>
         <Block className={classes.formContainer}>
-          <Heading tag="h3" className={classes.title}>
+          <Heading tag="h2" className={classes.title}>
             Manage Safe Owners
           </Heading>
           <Paragraph className={classes.annotation} noMargin>
