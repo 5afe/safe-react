@@ -56,11 +56,11 @@ const OwnersList = ({ owners, classes, executionConfirmation }: ListProps) => (
   <>
     <MuiList className={classes.ownersList}>
       {executionConfirmation && <OwnerComponent owner={executionConfirmation} isExecutor />}
-      {owners.map(owner => (
+      {owners.map((owner) => (
         <OwnerComponent key={owner.address} owner={owner} />
       ))}
     </MuiList>
-    <Hairline color="#c8ced4" />
+    <Hairline color="#d4d53d" />
   </>
 )
 

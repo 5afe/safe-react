@@ -42,7 +42,7 @@ type Props = {
 
 const { useState } = React
 
-export const ADD_OWNER_BUTTON = '+ ADD ANOTHER OWNER'
+export const ADD_OWNER_BUTTON = '+ Add another owner'
 
 export const calculateValuesAfterRemoving = (index: number, notRemovedOwners: number, values: Object) => {
   const initialValues = { ...values }
@@ -176,7 +176,7 @@ const SafeOwners = (props: Props) => {
       </Block>
       <Row align="center" grow className={classes.add} margin="xl">
         <Button color="secondary" onClick={onAddOwner} data-testid="add-owner-btn">
-          <Paragraph weight="bold" size="md" noMargin>
+          <Paragraph size="md" noMargin>
             {ADD_OWNER_BUTTON}
           </Paragraph>
         </Button>

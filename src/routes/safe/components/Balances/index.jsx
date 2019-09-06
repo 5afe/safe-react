@@ -51,14 +51,17 @@ type Props = {
 type Action = 'Token' | 'Send' | 'Receive'
 
 class Balances extends React.Component<Props, State> {
-  state = {
-    hideZero: false,
-    showToken: false,
-    sendFunds: {
-      isOpen: false,
-      selectedToken: undefined,
-    },
-    showReceive: false,
+  constructor(props) {
+    super(props)
+    this.state = {
+      hideZero: false,
+      showToken: false,
+      sendFunds: {
+        isOpen: false,
+        selectedToken: undefined,
+      },
+      showReceive: false,
+    }
   }
 
   onShow = (action: Action) => () => {
@@ -110,7 +113,7 @@ class Balances extends React.Component<Props, State> {
     } = this.props
 
     const columns = generateColumns()
-    const autoColumns = columns.filter(c => !c.custom)
+    const autoColumns = columns.filter((c) => !c.custom)
     const checkboxClasses = {
       root: classes.root,
     }
@@ -118,7 +121,7 @@ class Balances extends React.Component<Props, State> {
     const filteredData = filterByZero(getBalanceData(activeTokens), hideZero)
 
     return (
-      <React.Fragment>
+      <>
         <Row align="center" className={classes.message}>
           <Col xs={6}>
             <Checkbox
@@ -171,7 +174,6 @@ class Balances extends React.Component<Props, State> {
                       color="primary"
                       className={classes.send}
                       onClick={() => this.showSendFunds(row.asset.name)}
-                      rounded
                       testId="balance-send-btn"
                     >
                       <CallMade className={classNames(classes.leftIcon, classes.iconSmall)} />
@@ -184,7 +186,6 @@ class Balances extends React.Component<Props, State> {
                     color="primary"
                     className={classes.receive}
                     onClick={this.onShow('Receive')}
-                    rounded
                   >
                     <CallReceived className={classNames(classes.leftIcon, classes.iconSmall)} />
                       Receive
@@ -192,8 +193,7 @@ class Balances extends React.Component<Props, State> {
                 </Row>
               </TableCell>
             </TableRow>
-          ))
-          }
+          ))}
         </Table>
         <SendModal
           onClose={this.hideSendFunds}
@@ -219,7 +219,7 @@ class Balances extends React.Component<Props, State> {
             onClose={this.onHide('Receive')}
           />
         </Modal>
-      </React.Fragment>
+      </>
     )
   }
 }

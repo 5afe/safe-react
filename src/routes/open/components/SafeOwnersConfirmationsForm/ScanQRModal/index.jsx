@@ -56,7 +56,7 @@ const ScanQRModal = ({
   return (
     <Modal title="Receive Tokens" description="Receive Tokens Form" handleClose={onClose} open={isOpen}>
       <Row align="center" grow className={classes.heading}>
-        <Paragraph className={classes.manage} weight="bolder" noMargin>
+        <Paragraph size="xl" noMargin>
           Scan QR
         </Paragraph>
         <IconButton onClick={onClose} disableRipple>
@@ -88,18 +88,15 @@ const ScanQRModal = ({
         <Button
           color="secondary"
           className={classes.button}
-          minHeight={42}
-          minWidth={140}
+          minWidth={154}
           onClick={onClose}
-          variant="contained"
         >
           Close
         </Button>
         <Button
           color="primary"
           className={classes.button}
-          minWidth={140}
-          minHeight={42}
+          minWidth={154}
           onClick={() => {
             if (hasWebcam) {
               setHasWebcam(false)

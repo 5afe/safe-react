@@ -15,7 +15,7 @@ import NoSafe from '~/components/NoSafe'
 import { type SelectorProps } from '~/routes/safe/container/selector'
 import { getEtherScanLink } from '~/logic/wallets/getWeb3'
 import {
-  sm, xs, secondary, smallFontSize,
+  sm, xs, secondary, smallFontSize, border, secondaryText,
 } from '~/theme/variables'
 import { copyToClipboard } from '~/utils/clipboard'
 import Balances from './Balances'
@@ -70,8 +70,7 @@ const styles = () => ({
     fontSize: smallFontSize,
     letterSpacing: '0.5px',
     color: '#ffffff',
-    backgroundColor: '#a2a8ba',
-    fontFamily: 'Roboto Mono, monospace',
+    backgroundColor: secondaryText,
     textTransform: 'uppercase',
     padding: `0 ${sm}`,
     marginLeft: sm,
@@ -81,8 +80,11 @@ const styles = () => ({
 })
 
 class Layout extends React.Component<Props, State> {
-  state = {
-    tabIndex: 0,
+  constructor(props) {
+    super(props)
+    this.state = {
+      tabIndex: 0,
+    }
   }
 
   handleChange = (event, tabIndex) => {
@@ -123,12 +125,12 @@ class Layout extends React.Component<Props, State> {
     const etherScanLink = getEtherScanLink('address', address, network)
 
     return (
-      <React.Fragment>
+      <>
         <Block className={classes.container} margin="xl">
           <Identicon address={address} diameter={50} />
           <Block className={classes.name}>
             <Row>
-              <Heading tag="h2" color="secondary" testId={SAFE_VIEW_NAME_HEADING_TEST_ID}>
+              <Heading tag="h2" color="primary" testId={SAFE_VIEW_NAME_HEADING_TEST_ID}>
                 {name}
               </Heading>
               {!granted && <Block className={classes.readonly}>Read Only</Block>}
@@ -150,7 +152,7 @@ class Layout extends React.Component<Props, State> {
             <Tab label="Settings" data-testid={SETTINGS_TAB_BTN_TEST_ID} />
           </Tabs>
         </Row>
-        <Hairline color="#c8ced4" />
+        <Hairline color={border} />
         {tabIndex === 0 && (
           <Balances
             ethBalance={ethBalance}
@@ -190,7 +192,7 @@ class Layout extends React.Component<Props, State> {
             createTransaction={createTransaction}
           />
         )}
-      </React.Fragment>
+      </>
     )
   }
 }

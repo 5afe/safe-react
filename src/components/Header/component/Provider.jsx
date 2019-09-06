@@ -38,13 +38,13 @@ const styles = () => ({
 type ProviderRef = { current: null | HTMLDivElement }
 
 class Provider extends React.Component<Props> {
+  myRef: ProviderRef
+
   constructor(props: Props) {
     super(props)
 
     this.myRef = React.createRef()
   }
-
-  myRef: ProviderRef
 
   render() {
     const {
@@ -52,7 +52,7 @@ class Provider extends React.Component<Props> {
     } = this.props
 
     return (
-      <React.Fragment>
+      <>
         <div ref={this.myRef} className={classes.root}>
           <Col end="sm" middle="xs" className={classes.provider} onClick={toggle}>
             {info}
@@ -62,7 +62,7 @@ class Provider extends React.Component<Props> {
           </Col>
         </div>
         {children(this.myRef)}
-      </React.Fragment>
+      </>
     )
   }
 }

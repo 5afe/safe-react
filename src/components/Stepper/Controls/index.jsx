@@ -8,6 +8,7 @@ import { sm, boldFont } from '~/theme/variables'
 const controlStyle = {
   backgroundColor: 'white',
   padding: sm,
+  borderRadius: sm,
 }
 
 const firstButtonStyle = {

@@ -1,5 +1,7 @@
 // @flow
-import { md, lg, sm } from '~/theme/variables'
+import {
+  md, lg, sm, disabled, extraSmallFontSize,
+} from '~/theme/variables'
 
 export const styles = () => ({
   root: {
@@ -17,6 +19,8 @@ export const styles = () => ({
   },
   header: {
     padding: `${sm} ${lg}`,
+    fontSize: extraSmallFontSize,
+    color: disabled,
   },
   name: {
     marginRight: `${sm}`,

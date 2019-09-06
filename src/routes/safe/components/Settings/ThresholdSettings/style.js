@@ -1,12 +1,12 @@
 // @flow
 import {
-  fontColor, lg, smallFontSize, md,
+  fontColor, lg, smallFontSize, md, border, secondaryText,
 } from '~/theme/variables'
 
 export const styles = () => ({
   ownersText: {
     fontSize: '26px',
-    color: '#8896b6',
+    color: secondaryText,
     '& b': {
       color: fontColor,
     },
@@ -25,7 +25,7 @@ export const styles = () => ({
     paddingRight: md,
     display: 'flex',
     justifyContent: 'flex-end',
-    borderTop: 'solid 1px #e4e8f1',
+    borderTop: `solid 1px ${border}`,
     boxSizing: 'border-box',
   },
   modifyBtn: {

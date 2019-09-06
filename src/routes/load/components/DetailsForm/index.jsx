@@ -85,7 +85,7 @@ export const safeFieldsValidation = async (values: Object) => {
 const Details = ({ classes, errors, form }: Props) => (
   <>
     <Block margin="sm">
-      <Paragraph noMargin size="md" color="primary">
+      <Paragraph noMargin size="lg" color="primary">
         Adding an existing Safe only requires the Safe address. Optionally you can give it a name. In case your
         connected client is not the owner of the Safe, the interface will essentially provide you a read-only view.
       </Paragraph>

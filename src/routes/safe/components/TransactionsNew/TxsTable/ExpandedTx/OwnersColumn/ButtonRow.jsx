@@ -5,7 +5,7 @@ import EditIcon from '@material-ui/icons/Edit'
 import BlockIcon from '@material-ui/icons/Block'
 import Row from '~/components/layout/Row'
 import Button from '~/components/layout/Button'
-import { sm, lg } from '~/theme/variables'
+import { sm, lg, background } from '~/theme/variables'
 
 export const CONFIRM_TX_BTN_TEST_ID = 'confirm-btn'
 export const EXECUTE_TX_BTN_TEST_ID = 'execute-btn'
@@ -24,7 +24,7 @@ const styles = () => ({
   buttonRow: {
     height: '56px',
     justifyContent: 'center',
-    backgroundColor: '#f7f8fb',
+    backgroundColor: background,
   },
   button: {
     height: '32px',

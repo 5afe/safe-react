@@ -1,19 +1,22 @@
 // @flow
 import { createMuiTheme } from '@material-ui/core/styles'
 import {
-  largeFontSize,
+  extraSmallFontSize,
   mediumFontSize,
   smallFontSize,
   disabled,
   primary,
   secondary,
   error,
+  sm,
   md,
   lg,
   bolderFont,
+  regularFont,
   boldFont,
   buttonLargeFontSize,
   xs,
+  secondaryText,
 } from './variables'
 
 export type WithStyles = {
@@ -38,21 +41,24 @@ const palette = {
 // see https://github.com/mui-org/material-ui/blob/v1-beta/src/styles/createMuiTheme.js
 export default createMuiTheme({
   typography: {
-    fontFamily: 'Montserrat,sans-serif',
+    fontFamily: 'Averta,sans-serif',
     useNextVariants: true,
   },
   overrides: {
     MuiButton: {
       label: {
         lineHeight: 1,
+        fontWeight: regularFont,
       },
       root: {
-        fontFamily: 'Roboto Mono, monospace',
+        fontFamily: 'Averta, monospace',
         letterSpacing: '0.9px',
         '&$disabled': {
           color: disabled,
         },
         color: disabled,
+        textTransform: 'none',
+        borderRadius: '8px',
       },
       contained: {
         boxShadow: 'none',
@@ -63,11 +69,16 @@ export default createMuiTheme({
       containedSecondary: {
         backgroundColor: error,
       },
+      outlinedPrimary: {
+        border: `2px solid ${primary}`,
+        '&:hover': {
+          border: `2px solid ${primary}`,
+        },
+      },
       sizeLarge: {
         padding: `${md} ${lg}`,
         minHeight: '52px',
         fontSize: buttonLargeFontSize,
-        fontWeight: boldFont,
       },
       sizeSmall: {
         minWidth: '130px',
@@ -77,6 +88,11 @@ export default createMuiTheme({
         '&:hover': {
           borderRadius: '3px',
         },
+      },
+    },
+    MuiPaper: {
+      rounded: {
+        borderRadius: sm,
       },
     },
     MuiStepper: {
@@ -91,13 +107,13 @@ export default createMuiTheme({
     },
     MuiChip: {
       root: {
-        fontFamily: 'Roboto Mono, monospace',
+        fontFamily: 'Averta, monospace',
       },
     },
     MuiStepIcon: {
       root: {
         fontSize: '22px',
-        color: '#A2A8BA !important',
+        color: `${secondaryText} !important`,
       },
       completed: {
         color: `${secondary} !important`,
@@ -109,22 +125,22 @@ export default createMuiTheme({
     },
     MuiStepContent: {
       root: {
-        borderLeft: '1px solid #A2A8BA',
+        borderLeft: `1px solid ${secondaryText}`,
       },
     },
     MuiTypography: {
       body1: {
-        fontFamily: 'Roboto Mono, monospace',
+        fontFamily: 'Averta, monospace',
         letterSpacing: '-0.5px',
         fontSize: mediumFontSize,
       },
       body2: {
-        fontFamily: 'Roboto Mono, monospace',
+        fontFamily: 'Averta, monospace',
       },
     },
     MuiFormHelperText: {
       root: {
-        fontFamily: 'Roboto Mono, monospace',
+        fontFamily: 'Averta, monospace',
         fontSize: '12px',
         padding: `0 0 0 ${md}`,
         position: 'absolute',
@@ -132,19 +148,18 @@ export default createMuiTheme({
         color: secondary,
         order: 0,
         marginTop: '0px',
-        backgroundColor: '#EAE9EF',
         zIndex: 1, // for firefox
       },
     },
     MuiInput: {
       root: {
-        fontFamily: 'Roboto Mono, monospace',
+        fontFamily: 'Averta, monospace',
         color: primary,
-        fontSize: largeFontSize,
+        fontSize: mediumFontSize,
         lineHeight: '56px',
         order: 1,
         padding: `0 ${md}`,
-        backgroundColor: '#EAE9EF',
+        backgroundColor: '#F0EFEE',
         borderRadius: '5px',
         '&:$disabled': {
           color: '#0000ff',
@@ -176,7 +191,7 @@ export default createMuiTheme({
     MuiStepLabel: {
       label: {
         textAlign: 'left',
-        color: '#A2A8BA',
+        color: secondary,
         '&$active': {
           color: primary,
         },
@@ -191,10 +206,14 @@ export default createMuiTheme({
     },
     MuiTab: {
       root: {
-        fontFamily: 'Roboto Mono, monospace',
+        fontFamily: 'Averta, monospace',
         fontWeight: 'normal',
+        fontSize: extraSmallFontSize,
         '&$selected': {
-          fontWeight: bolderFont,
+          fontWeight: boldFont,
+        },
+        '@media (min-width: 960px)': {
+          fontSize: extraSmallFontSize, // override material-ui media query
         },
       },
     },
@@ -209,8 +228,8 @@ export default createMuiTheme({
         top: '0px',
       },
       caption: {
-        fontFamily: 'Roboto Mono, monospace',
-        letterSpacing: '-0.5px',
+        fontFamily: 'Averta, monospace',
+        fontSize: mediumFontSize,
         order: 3,
         color: disabled,
       },
@@ -224,9 +243,16 @@ export default createMuiTheme({
         color: disabled,
       },
     },
+    MuiTableSortLabel: {
+      root: {
+        fontSize: extraSmallFontSize,
+      },
+    },
     MuiTableCell: {
       root: {
-        fontFamily: 'Roboto Mono, monospace',
+        fontFamily: 'Averta, monospace',
+        fontSize: mediumFontSize,
+        borderBottomWidth: '2px',
       },
       head: {
         letterSpacing: '1px',
@@ -235,7 +261,7 @@ export default createMuiTheme({
       },
       body: {
         color: primary,
-        letterSpacing: '-0.5px',
+        letterSpacing: 'normal',
         fontWeight: 'normal',
         paddingTop: xs,
         paddingBottom: xs,
@@ -249,7 +275,7 @@ export default createMuiTheme({
     },
     MuiMenuItem: {
       root: {
-        fontFamily: 'Roboto Mono, monospace',
+        fontFamily: 'Averta, monospace',
       },
     },
     MuiListItemIcon: {
@@ -259,13 +285,13 @@ export default createMuiTheme({
     },
     MuiListItemText: {
       primary: {
-        fontFamily: 'Roboto Mono, monospace',
+        fontFamily: 'Averta, monospace',
         fontSize: mediumFontSize,
         fontWeight: bolderFont,
         color: primary,
       },
       secondary: {
-        fontFamily: 'Roboto Mono, monospace',
+        fontFamily: 'Averta, monospace',
         fontSize: smallFontSize,
         color: disabled,
       },

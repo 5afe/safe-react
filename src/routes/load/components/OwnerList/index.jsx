@@ -14,7 +14,7 @@ import Link from '~/components/layout/Link'
 import Paragraph from '~/components/layout/Paragraph'
 import Hairline from '~/components/layout/Hairline'
 import {
-  sm, md, lg, border, secondary,
+  sm, md, lg, border, secondary, disabled, extraSmallFontSize,
 } from '~/theme/variables'
 import { getOwnerNameBy, getOwnerAddressBy } from '~/routes/open/components/fields'
 import { getEtherScanLink } from '~/logic/wallets/getWeb3'
@@ -62,6 +62,8 @@ const styles = () => ({
   },
   header: {
     padding: `${sm} ${lg}`,
+    color: disabled,
+    fontSize: extraSmallFontSize,
   },
   name: {
     marginRight: `${sm}`,
@@ -120,7 +122,7 @@ const OwnerListComponent = (props: Props) => {
   return (
     <>
       <Block className={classes.title}>
-        <Paragraph noMargin size="md" color="primary">
+        <Paragraph noMargin size="lg" color="primary">
           {`This Safe has ${owners.length} owners. Optional: Provide a name for each owner.`}
         </Paragraph>
       </Block>

@@ -36,7 +36,7 @@ const styles = () => ({
 })
 
 const ConnectDetails = ({ classes, onConnect }: Props) => (
-  <React.Fragment>
+  <>
     <div className={classes.container}>
       <Row margin="lg" align="center">
         <Paragraph className={classes.text} size="lg" noMargin weight="bolder">
@@ -54,7 +54,7 @@ const ConnectDetails = ({ classes, onConnect }: Props) => (
         </Paragraph>
       </Button>
     </Row>
-  </React.Fragment>
+  </>
 )
 
 export default withStyles(styles)(ConnectDetails)

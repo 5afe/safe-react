@@ -10,7 +10,7 @@ import Bold from '~/components/layout/Bold'
 import Block from '~/components/layout/Block'
 import Identicon from '~/components/Identicon'
 import { copyToClipboard } from '~/utils/clipboard'
-import { secondary, xs } from '~/theme/variables'
+import { secondary, xs, border } from '~/theme/variables'
 
 const openIconStyle = {
   height: '16px',
@@ -22,7 +22,7 @@ const styles = () => ({
     fontSize: '12px',
     lineHeight: 1.08,
     letterSpacing: -0.5,
-    backgroundColor: '#eae9ef',
+    backgroundColor: border,
     width: 'fit-content',
     padding: '6px',
     marginTop: xs,

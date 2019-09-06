@@ -11,9 +11,6 @@ const styles = () => ({
     maxWidth: '870px',
     boxShadow: '0 0 10px 0 rgba(33,48,77,0.10)',
   },
-  container: {
-    letterSpacing: '-0.5px',
-  },
   padding: {
     padding: lg,
   },
@@ -38,7 +35,7 @@ const OpenPaper = ({
 
   return (
     <Paper className={classes.root} elevation={1}>
-      <Block style={containerStyle} className={`${classes.container} ${padding ? classes.padding : ''}`}>
+      <Block style={containerStyle} className={padding ? classes.padding : ''}>
         {children}
       </Block>
       {controls}

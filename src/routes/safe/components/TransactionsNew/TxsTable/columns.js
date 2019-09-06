@@ -1,5 +1,5 @@
 // @flow
-import { format, getTime } from 'date-fns'
+import { format, getTime, parseISO } from 'date-fns'
 import { List } from 'immutable'
 import { type Transaction } from '~/routes/safe/store/models/transaction'
 import { type SortRow, buildOrderFieldFrom } from '~/components/Table/sorting'
@@ -23,7 +23,7 @@ type TxData = {
   status?: string,
 }
 
-export const formatDate = (date: Date): string => format(date, 'MMM D, YYYY - HH:mm:ss')
+export const formatDate = (date: string): string => format(parseISO(date), 'MMM d, yyyy - HH:mm:ss')
 
 export const getTxAmount = (tx: Transaction) => {
   const web3 = getWeb3()
@@ -56,7 +56,7 @@ export const getTxTableData = (transactions: List<Transaction>): List<Transactio
       [TX_TABLE_NONCE_ID]: tx.nonce,
       [TX_TABLE_TYPE_ID]: txType,
       [TX_TABLE_DATE_ID]: formatDate(tx.isExecuted ? tx.executionDate : tx.submissionDate),
-      [buildOrderFieldFrom(TX_TABLE_DATE_ID)]: getTime(txDate),
+      [buildOrderFieldFrom(TX_TABLE_DATE_ID)]: getTime(parseISO(txDate)),
       [TX_TABLE_AMOUNT_ID]: getTxAmount(tx),
       [TX_TABLE_STATUS_ID]: tx.status,
       [TX_TABLE_RAW_TX_ID]: tx,

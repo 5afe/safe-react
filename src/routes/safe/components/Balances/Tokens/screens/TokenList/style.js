@@ -1,6 +1,6 @@
 // @flow
 import {
-  md, sm, xs, mediumFontSize, border,
+  md, sm, xs, mediumFontSize, border, secondaryText,
 } from '~/theme/variables'
 
 export const styles = () => ({
@@ -8,7 +8,7 @@ export const styles = () => ({
     minHeight: '48px',
   },
   search: {
-    color: '#a2a8ba',
+    color: secondaryText,
     paddingLeft: sm,
   },
   padding: {
@@ -62,7 +62,6 @@ export const styles = () => ({
   },
   searchRoot: {
     letterSpacing: '-0.5px',
-    fontFamily: 'Roboto Mono, monospace',
     fontSize: '13px',
     border: 'none',
     boxShadow: 'none',

@@ -29,8 +29,7 @@ type Props = {
   onTxExecute: Function,
 }
 
-const isCancellationTransaction = (tx: Transaction, safeAddress: string) =>
-  !tx.value && tx.data === EMPTY_DATA && tx.recipient === safeAddress
+const isCancellationTransaction = (tx: Transaction, safeAddress: string) => !tx.value && tx.data === EMPTY_DATA && tx.recipient === safeAddress
 
 const OwnersColumn = ({
   tx,
@@ -68,7 +67,7 @@ const OwnersColumn = ({
     }
   })
   const ownersUnconfirmed = owners.filter(
-    owner => tx.confirmations.findIndex(conf => conf.owner.address === owner.address) === -1,
+    (owner) => tx.confirmations.findIndex((conf) => conf.owner.address === owner.address) === -1,
   )
 
   let displayButtonRow = true
@@ -97,7 +96,7 @@ const OwnersColumn = ({
           <Tab label={confirmedLabel} />
           <Tab label={unconfirmedLabel} />
         </Tabs>
-        <Hairline color="#c8ced4" />
+        <Hairline color="#d4d53d" />
       </Row>
       <Row>
         {tabIndex === 0 && <OwnersList owners={ownersWhoConfirmed} executionConfirmation={executionConfirmation} />}

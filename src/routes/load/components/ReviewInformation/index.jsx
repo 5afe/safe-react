@@ -106,18 +106,18 @@ class ReviewComponent extends React.PureComponent<Props, State> {
     const safeAddress = values[FIELD_LOAD_ADDRESS]
 
     return (
-      <React.Fragment>
+      <>
         <Row className={classes.root}>
           <Col xs={4} layout="column">
             <Block className={classes.details}>
               <Block margin="lg">
                 <Paragraph size="lg" color="primary" noMargin>
-                Review details
+                  Review details
                 </Paragraph>
               </Block>
               <Block margin="lg">
                 <Paragraph size="sm" color="disabled" noMargin>
-                Name of the Safe
+                  Name of the Safe
                 </Paragraph>
                 <Paragraph size="lg" color="primary" noMargin weight="bolder" className={classes.name}>
                   {values[FIELD_LOAD_NAME]}
@@ -125,7 +125,7 @@ class ReviewComponent extends React.PureComponent<Props, State> {
               </Block>
               <Block margin="lg">
                 <Paragraph size="sm" color="disabled" noMargin>
-                Safe address
+                  Safe address
                 </Paragraph>
                 <Row className={classes.container}>
                   <Identicon address={safeAddress} diameter={32} />
@@ -139,7 +139,7 @@ class ReviewComponent extends React.PureComponent<Props, State> {
               </Block>
               <Block margin="lg">
                 <Paragraph size="sm" color="disabled" noMargin>
-                Connected wallet client is owner?
+                  Connected wallet client is owner?
                 </Paragraph>
                 <Paragraph size="lg" color="primary" noMargin weight="bolder" className={classes.name}>
                   {isOwner ? 'Yes' : 'No (read-only)'}
@@ -147,7 +147,7 @@ class ReviewComponent extends React.PureComponent<Props, State> {
               </Block>
               <Block margin="lg">
                 <Paragraph size="sm" color="disabled" noMargin>
-                Any transaction requires the confirmation of:
+                  Any transaction requires the confirmation of:
                 </Paragraph>
                 <Paragraph size="lg" color="primary" noMargin weight="bolder" className={classes.name}>
                   {`${values[THRESHOLD]} out of ${getNumOwnersFrom(values)} owners`}
@@ -162,11 +162,11 @@ class ReviewComponent extends React.PureComponent<Props, State> {
               </Paragraph>
             </Block>
             <Hairline />
-            {owners.map((x, index) => (
-              <React.Fragment key={owners[index].address}>
+            {owners.map((address, index) => (
+              <React.Fragment key={address}>
                 <Row className={classes.owner}>
                   <Col xs={1} align="center">
-                    <Identicon address={owners[index]} diameter={32} />
+                    <Identicon address={address} diameter={32} />
                   </Col>
                   <Col xs={11}>
                     <Block className={classNames(classes.name, classes.userName)}>
@@ -175,21 +175,25 @@ class ReviewComponent extends React.PureComponent<Props, State> {
                       </Paragraph>
                       <Block align="center" className={classes.user}>
                         <Paragraph size="md" color="disabled" noMargin>
-                          {owners[index]}
+                          {address}
                         </Paragraph>
-                        <Link className={classes.open} to={getEtherScanLink('address', owners[index], network)} target="_blank">
+                        <Link
+                          className={classes.open}
+                          to={getEtherScanLink('address', address, network)}
+                          target="_blank"
+                        >
                           <OpenInNew style={openIconStyle} />
                         </Link>
                       </Block>
                     </Block>
                   </Col>
                 </Row>
-                <Hairline />
+                {index !== owners.length - 1 && <Hairline />}
               </React.Fragment>
             ))}
           </Col>
         </Row>
-      </React.Fragment>
+      </>
     )
   }
 }
@@ -197,11 +201,11 @@ class ReviewComponent extends React.PureComponent<Props, State> {
 const ReviewPage = withStyles(styles)(ReviewComponent)
 
 const Review = ({ network, userAddress }: LayoutProps) => (controls: React.Node, { values }: Object) => (
-  <React.Fragment>
+  <>
     <OpenPaper controls={controls} padding={false}>
       <ReviewPage network={network} values={values} userAddress={userAddress} />
     </OpenPaper>
-  </React.Fragment>
+  </>
 )
 
 export default Review
