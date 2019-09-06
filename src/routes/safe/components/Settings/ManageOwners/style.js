@@ -10,7 +10,7 @@ export const styles = () => ({
     paddingBottom: 0,
   },
   annotation: {
-    padding: lg,
+    paddingLeft: lg,
   },
   hide: {
     '&:hover': {

@@ -130,7 +130,7 @@ class ManageOwners extends React.Component<Props, State> {
           <Heading tag="h2" className={classes.title}>
             Manage Safe Owners
           </Heading>
-          <Paragraph className={classes.annotation} noMargin>
+          <Paragraph className={classes.annotation}>
             Add, remove and replace owners or rename existing owners. Owner names are only stored locally and never
             shared with Gnosis or any third parties
           </Paragraph>
