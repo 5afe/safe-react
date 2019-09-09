@@ -13,7 +13,7 @@ import { history } from '~/store'
 import { secondary } from '~/theme/variables'
 import { type SelectorProps } from '~/routes/load/container/selector'
 
-const getSteps = () => ['Details', 'Owners', 'Review']
+const getSteps = () => ['Name and address', 'Owners', 'Review']
 
 type Props = SelectorProps & {
   onLoadSafeSubmit: (values: Object) => Promise<void>,
