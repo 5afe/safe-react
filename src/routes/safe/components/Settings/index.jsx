@@ -9,8 +9,8 @@ import Col from '~/components/layout/Col'
 import Row from '~/components/layout/Row'
 import Span from '~/components/layout/Span'
 import Img from '~/components/layout/Img'
+import ButtonLink from '~/components/layout/ButtonLink'
 import RemoveSafeModal from './RemoveSafeModal'
-import Paragraph from '~/components/layout/Paragraph'
 import Hairline from '~/components/layout/Hairline'
 import { type Owner } from '~/routes/safe/store/models/owner'
 import ChangeSafeName from './ChangeSafeName'
@@ -92,10 +92,10 @@ class Settings extends React.Component<Props, State> {
     return (
       <>
         <Row className={classes.message}>
-          <Paragraph size="lg" color="error" onClick={this.onShow('RemoveSafe')}>
-            <Span className={cn(classes.links, classes.removeSafeText)}>Remove Safe</Span>
+          <ButtonLink size="lg" color="error" className={classes.removeSafeBtn} onClick={this.onShow('RemoveSafe')}>
+            <Span className={classes.links}>Remove Safe</Span>
             <Img alt="Trash Icon" className={classes.removeSafeIcon} src={RemoveSafeIcon} />
-          </Paragraph>
+          </ButtonLink>
           <RemoveSafeModal
             onClose={this.onHide('RemoveSafe')}
             isOpen={showRemoveSafe}

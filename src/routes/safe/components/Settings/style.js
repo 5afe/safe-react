@@ -38,6 +38,9 @@ export const styles = () => ({
   },
   message: {
     margin: `${sm} 0`,
+    padding: `${md} 0`,
+    maxHeight: '54px', // to make it the same as row in Balances component
+    boxSizing: 'border-box',
     justifyContent: 'flex-end',
   },
   links: {
@@ -46,13 +49,13 @@ export const styles = () => ({
       cursor: 'pointer',
     },
   },
-  removeSafeText: {
-    height: '16px',
-    lineHeight: '16px',
-    paddingRight: sm,
-    float: 'left',
+  removeSafeBtn: {
+    display: 'flex',
+    alignItems: 'center',
+    marginTop: '-1px', // to make it the same as row in Balances component
   },
   removeSafeIcon: {
+    marginLeft: sm,
     height: '16px',
     cursor: 'pointer',
   },
