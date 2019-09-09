@@ -109,7 +109,13 @@ const SafeOwners = (props: Props) => {
     <>
       <Block className={classes.title}>
         <Paragraph noMargin size="md" color="primary">
-          Specify the owners of the Safe.
+          Your Safe will have one or more owners. We have prefilled the first owner with your connected wallet details,
+          but you are free to change this to a different owner.
+          <br />
+          <br />
+          Add additional owners (e.g. wallets of your teammates) and specify how many of them have to confirm a
+          transaction before it gets executed. In general, the more confirmations required, the more secure is your
+          Safe.
         </Paragraph>
       </Block>
       <Hairline />
