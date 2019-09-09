@@ -69,7 +69,9 @@ const Layout = ({
           >
             <StepperPage>{SafeNameField}</StepperPage>
             <StepperPage>{SafeOwnersFields}</StepperPage>
-            <StepperPage network={network}>{Review}</StepperPage>
+            <StepperPage network={network} userAccount={userAccount}>
+              {Review}
+            </StepperPage>
           </Stepper>
         </Block>
       ) : (

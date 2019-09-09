@@ -3,6 +3,7 @@ import * as React from 'react'
 import classNames from 'classnames'
 import { withStyles } from '@material-ui/core/styles'
 import OpenInNew from '@material-ui/icons/OpenInNew'
+import { estimateGasForDeployingSafe } from '~/logic/contracts/safeContracts'
 import { getNamesFrom, getAccountsFrom } from '~/routes/open/utils/safeDataExtractor'
 import Block from '~/components/layout/Block'
 import Identicon from '~/components/Identicon'
@@ -15,8 +16,10 @@ import {
   sm, md, lg, border, secondary, background,
 } from '~/theme/variables'
 import Hairline from '~/components/layout/Hairline'
-import { getEtherScanLink } from '~/logic/wallets/getWeb3'
+import { getEtherScanLink, getWeb3 } from '~/logic/wallets/getWeb3'
 import { FIELD_NAME, FIELD_CONFIRMATIONS, getNumOwnersFrom } from '../fields'
+
+const { useEffect, useState } = React
 
 const openIconStyle = {
   height: '16px',
@@ -65,22 +68,42 @@ const styles = () => ({
   },
 })
 
-type LayoutProps = {
+type Props = {
   network: string,
-}
-
-type Props = LayoutProps & {
   values: Object,
   classes: Object,
+  userAccount: string,
 }
 
-const ReviewComponent = ({ values, classes, network }: Props) => {
+const ReviewComponent = ({
+  values, classes, network, userAccount,
+}: Props) => {
+  const [gasCosts, setGasCosts] = useState<string>('0.00')
   const names = getNamesFrom(values)
   const addresses = getAccountsFrom(values)
   const numOwners = getNumOwnersFrom(values)
 
+  useEffect(() => {
+    let isCurrent = true
+    const estimateGas = async () => {
+      const web3 = getWeb3()
+      const { fromWei, toBN } = web3.utils
+      const estimatedGasCosts = await estimateGasForDeployingSafe(addresses, numOwners, userAccount)
+      const gasCostsAsEth = fromWei(toBN(estimatedGasCosts), 'ether')
+      if (isCurrent) {
+        setGasCosts(gasCostsAsEth)
+      }
+    }
+
+    estimateGas()
+
+    return () => {
+      isCurrent = false
+    }
+  }, [])
+
   return (
-    <React.Fragment>
+    <>
       <Row className={classes.root}>
         <Col xs={4} layout="column">
           <Block className={classes.details}>
@@ -148,21 +171,25 @@ const ReviewComponent = ({ values, classes, network }: Props) => {
       <Row className={classes.info} align="center">
         <Paragraph noMargin color="primary" size="md">
           You&apos;re about to create a new Safe and will have to confirm a transaction with your currently connected
-          wallet. Make sure you have ETH in this wallet to fund this transaction.
+          wallet. Make sure you have
+          {' '}
+          {gasCosts}
+          {' '}
+ETH in this wallet to fund this transaction.
         </Paragraph>
       </Row>
-    </React.Fragment>
+    </>
   )
 }
 
 const ReviewPage = withStyles(styles)(ReviewComponent)
 
 const Review = ({ network }: LayoutProps) => (controls: React.Node, { values }: Object) => (
-  <React.Fragment>
+  <>
     <OpenPaper controls={controls} padding={false}>
       <ReviewPage network={network} values={values} />
     </OpenPaper>
-  </React.Fragment>
+  </>
 )
 
 export default Review
