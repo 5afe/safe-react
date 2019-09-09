@@ -145,7 +145,7 @@ class ManageOwners extends React.Component<Props, State> {
             defaultFixed
             noBorder
           >
-            {(sortedData: Array<OwnerRow>) => sortedData.map((row: any, index: number) => (
+            {(sortedData: List<OwnerRow>) => sortedData.map((row: any, index: number) => (
               <TableRow
                 tabIndex={-1}
                 key={index}
