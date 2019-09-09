@@ -23,6 +23,7 @@ export const styles = () => ({
   actions: {
     justifyContent: 'flex-end',
     visibility: 'hidden',
+    minWidth: '100px',
   },
   noBorderBottom: {
     '& > td': {
