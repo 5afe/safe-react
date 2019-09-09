@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react'
+import classNames from 'classnames/bind'
 import { withStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
 import IconButton from '@material-ui/core/IconButton'
@@ -8,11 +9,14 @@ import Button from '~/components/layout/Button'
 import Row from '~/components/layout/Row'
 import Col from '~/components/layout/Col'
 import Hairline from '~/components/layout/Hairline'
-import { lg, sm } from '~/theme/variables'
+import Img from '~/components/layout/Img'
+import Token from '../assets/token.svg'
+import Code from '../assets/code.svg'
+import { lg, md, sm } from '~/theme/variables'
 
 const styles = () => ({
   heading: {
-    padding: `${sm} ${lg}`,
+    padding: `${md} ${lg}`,
     justifyContent: 'space-between',
     boxSizing: 'border-box',
     maxHeight: '75px',
@@ -26,10 +30,22 @@ const styles = () => ({
   },
   buttonColumn: {
     padding: '52px 0',
+    '& > button': {
+      fontSize: '16px',
+      fontFamily: 'Averta',
+    },
   },
-  secondButton: {
-    marginTop: 10,
+  firstButton: {
+    boxShadow: '1px 2px 10px 0 rgba(212, 212, 211, 0.59)',
+    marginBottom: 15,
   },
+  iconSmall: {
+    fontSize: 16,
+  },
+  leftIcon: {
+    marginRight: sm,
+  },
+
 })
 
 type Props = {
@@ -57,18 +73,20 @@ const ChooseTxType = ({ classes, onClose, setActiveScreen }: Props) => (
           minHeight={52}
           onClick={() => setActiveScreen('sendFunds')}
           variant="contained"
+          className={classes.firstButton}
         >
-          SEND FUNDS
+          <Img src={Token} alt="Send funds" className={classNames(classes.leftIcon, classes.iconSmall)} />
+          Send funds
         </Button>
         <Button
           color="primary"
-          className={classes.secondButton}
           minWidth={260}
           minHeight={52}
           onClick={() => setActiveScreen('sendCustomTx')}
           variant="outlined"
         >
-          SEND CUSTOM TRANSACTION
+          <Img src={Code} alt="Send custom transaction" className={classNames(classes.leftIcon, classes.iconSmall)} />
+          Send custom transaction
         </Button>
       </Col>
     </Row>

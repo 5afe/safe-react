@@ -67,8 +67,7 @@ const Send = ({
     setTx({})
   }, [isOpen])
 
-  const scalableModalSize = activeScreen === 'sendCustomTx' || activeScreen === 'reviewCustomTx'
-  const scalableStaticModalSize = activeScreen === 'chooseTxType'
+  const scalableModalSize = activeScreen === 'chooseTxType'
 
   const handleTxCreation = (txInfo) => {
     setActiveScreen('reviewTx')
@@ -87,8 +86,7 @@ const Send = ({
       handleClose={onClose}
       open={isOpen}
       paperClassName={cn(
-        scalableStaticModalSize && classes.scalableStaticModalWindow,
-        scalableModalSize && classes.scalableModalWindow,
+        scalableModalSize ? classes.scalableStaticModalWindow : classes.scalableModalWindow,
       )}
     >
       <>
