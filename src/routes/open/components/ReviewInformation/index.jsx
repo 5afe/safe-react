@@ -80,7 +80,7 @@ const ReviewComponent = ({ values, classes, network }: Props) => {
   const numOwners = getNumOwnersFrom(values)
 
   return (
-    <React.Fragment>
+    <>
       <Row className={classes.root}>
         <Col xs={4} layout="column">
           <Block className={classes.details}>
@@ -151,18 +151,18 @@ const ReviewComponent = ({ values, classes, network }: Props) => {
           wallet. Make sure you have ETH in this wallet to fund this transaction.
         </Paragraph>
       </Row>
-    </React.Fragment>
+    </>
   )
 }
 
 const ReviewPage = withStyles(styles)(ReviewComponent)
 
 const Review = ({ network }: LayoutProps) => (controls: React.Node, { values }: Object) => (
-  <React.Fragment>
+  <>
     <OpenPaper controls={controls} padding={false}>
       <ReviewPage network={network} values={values} />
     </OpenPaper>
-  </React.Fragment>
+  </>
 )
 
 export default Review

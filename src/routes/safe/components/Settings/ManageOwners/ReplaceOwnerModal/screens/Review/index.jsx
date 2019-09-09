@@ -58,7 +58,7 @@ const ReviewRemoveOwner = ({
   }
 
   return (
-    <React.Fragment>
+    <>
       <Row align="center" grow className={classes.heading}>
         <Paragraph weight="bolder" className={classes.manage} noMargin>
           Replace owner
@@ -112,7 +112,7 @@ const ReviewRemoveOwner = ({
             </Row>
             <Hairline />
             {owners.map(
-              owner => owner.address !== ownerAddress && (
+              (owner) => owner.address !== ownerAddress && (
                 <React.Fragment key={owner.address}>
                   <Row className={classes.owner}>
                     <Col xs={1} align="center">
@@ -215,7 +215,7 @@ const ReviewRemoveOwner = ({
           Submit
         </Button>
       </Row>
-    </React.Fragment>
+    </>
   )
 }
 

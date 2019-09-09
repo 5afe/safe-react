@@ -44,7 +44,7 @@ const ReviewAddOwner = ({
     onSubmit()
   }
   return (
-    <React.Fragment>
+    <>
       <Row align="center" grow className={classes.heading}>
         <Paragraph weight="bolder" className={classes.manage} noMargin>
           Add new owner
@@ -97,7 +97,7 @@ const ReviewAddOwner = ({
               </Paragraph>
             </Row>
             <Hairline />
-            {owners.map(owner => (
+            {owners.map((owner) => (
               <React.Fragment key={owner.address}>
                 <Row className={classes.owner}>
                   <Col xs={1} align="center">
@@ -169,7 +169,7 @@ const ReviewAddOwner = ({
           Submit
         </Button>
       </Row>
-    </React.Fragment>
+    </>
   )
 }
 

@@ -119,10 +119,10 @@ const AddCustomToken = (props: Props) => {
   }
 
   return (
-    <React.Fragment>
+    <>
       <GnoForm onSubmit={handleSubmit} initialValues={formValues} testId={ADD_CUSTOM_TOKEN_FORM}>
         {() => (
-          <React.Fragment>
+          <>
             <Block className={classes.formContainer}>
               <Paragraph noMargin className={classes.title} weight="bolder" size="lg">
                 Add custom token
@@ -196,10 +196,10 @@ const AddCustomToken = (props: Props) => {
                 Save
               </Button>
             </Row>
-          </React.Fragment>
+          </>
         )}
       </GnoForm>
-    </React.Fragment>
+    </>
   )
 }
 

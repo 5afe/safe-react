@@ -39,7 +39,7 @@ type Props = {
 }
 
 const ChooseTxType = ({ classes, onClose, setActiveScreen }: Props) => (
-  <React.Fragment>
+  <>
     <Row align="center" grow className={classes.heading}>
       <Paragraph weight="bolder" className={classes.manage} noMargin>
         Send
@@ -72,7 +72,7 @@ const ChooseTxType = ({ classes, onClose, setActiveScreen }: Props) => (
         </Button>
       </Col>
     </Row>
-  </React.Fragment>
+  </>
 )
 
 export default withStyles(styles)(ChooseTxType)

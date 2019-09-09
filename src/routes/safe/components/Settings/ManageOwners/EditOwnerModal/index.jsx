@@ -73,7 +73,7 @@ const EditOwnerComponent = ({
       <Hairline />
       <GnoForm onSubmit={handleSubmit}>
         {() => (
-          <React.Fragment>
+          <>
             <Block className={classes.container}>
               <Row margin="md">
                 <Field
@@ -109,7 +109,7 @@ const EditOwnerComponent = ({
                 Save
               </Button>
             </Row>
-          </React.Fragment>
+          </>
         )}
       </GnoForm>
     </Modal>
