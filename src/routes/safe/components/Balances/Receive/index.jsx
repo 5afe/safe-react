@@ -14,13 +14,13 @@ import Row from '~/components/layout/Row'
 import Hairline from '~/components/layout/Hairline'
 import Col from '~/components/layout/Col'
 import {
-  xxl, lg, sm, md, background, secondary,
+  lg, md, secondary, secondaryText,
 } from '~/theme/variables'
 import { copyToClipboard } from '~/utils/clipboard'
 
 const styles = () => ({
   heading: {
-    padding: `${sm} ${lg}`,
+    padding: `${md} ${lg}`,
     justifyContent: 'space-between',
     maxHeight: '75px',
     boxSizing: 'border-box',
@@ -32,24 +32,27 @@ const styles = () => ({
     height: '35px',
     width: '35px',
   },
-  detailsContainer: {
-    backgroundColor: background,
-  },
   qrContainer: {
     backgroundColor: '#fff',
     padding: md,
-    borderRadius: '3px',
-    boxShadow: '0 0 5px 0 rgba(74, 85, 121, 0.5)',
+    borderRadius: '6px',
+    border: `1px solid ${secondaryText}`,
   },
   safeName: {
-    margin: `${xxl} 0 20px`,
+    margin: `${lg} 0 ${lg}`,
   },
   buttonRow: {
     height: '84px',
     justifyContent: 'center',
+    '& > button': {
+      fontFamily: 'Averta',
+      fontSize: '16px',
+      boxShadow: '1px 2px 10px 0 rgba(212, 212, 211, 0.59)',
+    },
   },
   addressContainer: {
-    marginTop: '28px',
+    marginTop: '25px',
+    marginBottom: '25px',
   },
   address: {
     marginLeft: '6px',
@@ -81,7 +84,7 @@ const Receive = ({
         <Close className={classes.close} />
       </IconButton>
     </Row>
-    <Col layout="column" middle="xs" className={classes.detailsContainer}>
+    <Col layout="column" middle="xs">
       <Hairline />
       <Paragraph className={classes.safeName} weight="bolder" size="xl" noMargin>
         {safeName}
@@ -106,7 +109,7 @@ const Receive = ({
     </Col>
     <Hairline />
     <Row align="center" className={classes.buttonRow}>
-      <Button color="primary" minHeight={42} minWidth={140} onClick={onClose} variant="contained">
+      <Button color="primary" minHeight={35} minWidth={140} onClick={onClose} variant="contained">
         Done
       </Button>
     </Row>
