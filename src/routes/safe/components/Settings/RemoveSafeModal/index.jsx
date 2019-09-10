@@ -73,8 +73,10 @@ const RemoveSafeComponent = ({
       <Row className={classes.description}>
         <Paragraph noMargin>
           Removing a Safe only removes it from your interface.
+          {' '}
           <b>It does not delete the Safe</b>
-. You can always add it back using the Safe&apos;s address.
+          . You can always add it
+          back using the Safe&apos;s address.
         </Paragraph>
       </Row>
     </Block>

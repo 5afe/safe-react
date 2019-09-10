@@ -1,6 +1,8 @@
 // @flow
 import { type FieldValidator } from 'final-form'
+import { List } from 'immutable'
 import { getWeb3 } from '~/logic/wallets/getWeb3'
+import { sameAddress } from '~/logic/wallets/ethAddresses'
 
 export const simpleMemoize = (fn: Function) => {
   let lastArg
@@ -68,7 +70,10 @@ export const minMaxLength = (minLen: string | number, maxLen: string | number) =
 
 export const ADDRESS_REPEATED_ERROR = 'Address already introduced'
 
-export const uniqueAddress = (addresses: string[]) => simpleMemoize((value: string) => (addresses.includes(value) ? ADDRESS_REPEATED_ERROR : undefined))
+export const uniqueAddress = (addresses: string[] | List<string>) => simpleMemoize((value: string) => {
+  const addressAlreadyExists = addresses.some((address) => sameAddress(value, address))
+  return addressAlreadyExists ? ADDRESS_REPEATED_ERROR : undefined
+})
 
 export const composeValidators = (...validators: Function[]): FieldValidator => (value: Field) => validators.reduce((error, validator) => error || validator(value), undefined)
 
@@ -82,7 +87,7 @@ export const inLimit = (limit: number, base: number, baseText: string, symbol: s
   return `Should not exceed ${max} ${symbol} (amount to reach ${baseText})`
 }
 
-export const differentFrom = (diffValue: string) => (value: string) => {
+export const differentFrom = (diffValue: string | number) => (value: string) => {
   if (value === diffValue.toString()) {
     return `Value should be different than ${value}`
   }

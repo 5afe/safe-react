@@ -20,9 +20,10 @@ type Props<K> = {
   classes: Object,
   children: Function,
   size: number,
-  defaultFixed?: boolean,
-  defaultOrder?: 'desc' | 'asc',
+  defaultFixed: boolean,
+  defaultOrder: 'desc' | 'asc',
   noBorder: boolean,
+  disablePagination: boolean,
 }
 
 type State = {
@@ -142,6 +143,7 @@ class GnoTable<K> extends React.Component<Props<K>, State> {
       classes,
       children,
       size,
+      disablePagination,
       defaultOrderBy,
       defaultOrder,
       defaultFixed,
@@ -160,10 +162,11 @@ class GnoTable<K> extends React.Component<Props<K>, State> {
       input: classes.white,
     }
 
-    const sortedData = stableSort(data, getSorting(orderParam, orderByParam, orderProp), fixedParam).slice(
-      page * rowsPerPage,
-      page * rowsPerPage + rowsPerPage,
-    )
+    let sortedData = stableSort(data, getSorting(orderParam, orderByParam, orderProp), fixedParam)
+
+    if (!disablePagination) {
+      sortedData = sortedData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+    }
 
     const emptyRows = rowsPerPage - Math.min(rowsPerPage, data.length - page * rowsPerPage)
     const isEmpty = size === 0
@@ -184,18 +187,20 @@ class GnoTable<K> extends React.Component<Props<K>, State> {
             <CircularProgress size={60} />
           </Row>
         )}
-        <TablePagination
-          component="div"
-          count={size}
-          rowsPerPage={rowsPerPage}
-          rowsPerPageOptions={[5, 10, 25, 50, 100]}
-          page={page}
-          backIconButtonProps={backProps}
-          nextIconButtonProps={nextProps}
-          onChangePage={this.handleChangePage}
-          onChangeRowsPerPage={this.handleChangeRowsPerPage}
-          classes={paginationClasses}
-        />
+        {!disablePagination && (
+          <TablePagination
+            component="div"
+            count={size}
+            rowsPerPage={rowsPerPage}
+            rowsPerPageOptions={[5, 10, 25, 50, 100]}
+            page={page}
+            backIconButtonProps={backProps}
+            nextIconButtonProps={nextProps}
+            onChangePage={this.handleChangePage}
+            onChangeRowsPerPage={this.handleChangeRowsPerPage}
+            classes={paginationClasses}
+          />
+        )}
       </>
     )
   }
@@ -203,6 +208,7 @@ class GnoTable<K> extends React.Component<Props<K>, State> {
 
 GnoTable.defaultProps = {
   defaultOrder: 'asc',
+  disablePagination: false,
 }
 
 export default withStyles(styles)(GnoTable)

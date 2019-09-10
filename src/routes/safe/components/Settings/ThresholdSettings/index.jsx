@@ -21,19 +21,20 @@ type Props = {
   classes: Object,
   createTransaction: Function,
   safeAddress: string,
+  granted: boolean,
 }
 
 const ThresholdSettings = ({
-  owners, threshold, classes, createTransaction, safeAddress,
+  owners, threshold, classes, createTransaction, safeAddress, granted,
 }: Props) => {
   const [isModalOpen, setModalOpen] = useState(false)
 
   const toggleModal = () => {
-    setModalOpen(prevOpen => !prevOpen)
+    setModalOpen((prevOpen) => !prevOpen)
   }
 
   return (
-    <React.Fragment>
+    <>
       <SharedSnackbarConsumer>
         {({ openSnackbar }) => {
           const onChangeThreshold = async (newThreshold) => {
@@ -46,14 +47,11 @@ const ThresholdSettings = ({
           return (
             <>
               <Block className={classes.container}>
-                <Heading tag="h3">Required confirmations</Heading>
+                <Heading tag="h2">Required confirmations</Heading>
                 <Paragraph>
-                  Any transaction over any daily limit
-                  <br />
-                  {' '}
-                  requires the confirmation of:
+                  Any transaction requires the confirmation of:
                 </Paragraph>
-                <Paragraph size="xxl" className={classes.ownersText}>
+                <Paragraph size="lg" className={classes.ownersText}>
                   <Bold>{threshold}</Bold>
                   {' '}
                   out of
@@ -62,8 +60,8 @@ const ThresholdSettings = ({
                   {' '}
                   owners
                 </Paragraph>
-                {owners.size > 1 && (
-                  <Row align="center" className={classes.buttonRow}>
+                {owners.size > 1 && granted && (
+                  <Row className={classes.buttonRow}>
                     <Button
                       color="primary"
                       minWidth={120}
@@ -93,7 +91,7 @@ const ThresholdSettings = ({
           )
         }}
       </SharedSnackbarConsumer>
-    </React.Fragment>
+    </>
   )
 }
 

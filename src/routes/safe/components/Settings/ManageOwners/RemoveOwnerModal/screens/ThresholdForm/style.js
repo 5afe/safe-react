@@ -11,7 +11,7 @@ export const styles = () => ({
     maxHeight: '75px',
   },
   annotation: {
-    letterSpacing: '-1px',
+    lineHeight: 'normal',
     color: secondaryText,
     marginRight: 'auto',
     marginLeft: '20px',

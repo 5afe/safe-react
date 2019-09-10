@@ -40,7 +40,7 @@ const ThresholdForm = ({
   const defaultThreshold = threshold > 1 ? threshold - 1 : threshold
 
   return (
-    <React.Fragment>
+    <>
       <Row align="center" grow className={classes.heading}>
         <Paragraph weight="bolder" className={classes.manage} noMargin>
           Remove owner
@@ -56,7 +56,7 @@ const ThresholdForm = ({
           const numOptions = owners.size > 1 ? owners.size - 1 : 1
 
           return (
-            <React.Fragment>
+            <>
               <Block className={classes.formContainer}>
                 <Row>
                   <Paragraph weight="bolder" className={classes.headingText}>
@@ -72,8 +72,8 @@ const ThresholdForm = ({
                   <Col xs={2}>
                     <Field
                       name="threshold"
-                      render={props => (
-                        <React.Fragment>
+                      render={(props) => (
+                        <>
                           <SelectField {...props} disableError>
                             {[...Array(Number(numOptions))].map((x, index) => (
                               <MenuItem key={index} value={`${index + 1}`}>
@@ -86,7 +86,7 @@ const ThresholdForm = ({
                               {props.meta.error}
                             </Paragraph>
                           )}
-                        </React.Fragment>
+                        </>
                       )}
                       validate={composeValidators(required, mustBeInteger, minValue(1), maxValue(numOptions))}
                       data-testid="threshold-select-input"
@@ -119,11 +119,11 @@ owner(s)
                   Review
                 </Button>
               </Row>
-            </React.Fragment>
+            </>
           )
         }}
       </GnoForm>
-    </React.Fragment>
+    </>
   )
 }
 

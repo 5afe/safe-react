@@ -1,5 +1,6 @@
 // @flow
 import React from 'react'
+import cn from 'classnames'
 import { List } from 'immutable'
 import { withStyles } from '@material-ui/core/styles'
 import TableRow from '@material-ui/core/TableRow'
@@ -20,33 +21,23 @@ import EditOwnerModal from './EditOwnerModal'
 import OwnerAddressTableCell from './OwnerAddressTableCell'
 import type { Owner } from '~/routes/safe/store/models/owner'
 import {
-  getOwnerData, generateColumns, OWNERS_TABLE_NAME_ID, OWNERS_TABLE_ADDRESS_ID, type OwnerRow,
+  getOwnerData,
+  generateColumns,
+  OWNERS_TABLE_NAME_ID,
+  OWNERS_TABLE_ADDRESS_ID,
+  type OwnerRow,
 } from './dataFetcher'
-import { lg, sm, boldFont } from '~/theme/variables'
 import { styles } from './style'
 import ReplaceOwnerIcon from './assets/icons/replace-owner.svg'
 import RenameOwnerIcon from './assets/icons/rename-owner.svg'
 import RemoveOwnerIcon from '../assets/icons/bin.svg'
+import Paragraph from '~/components/layout/Paragraph/index'
 
 export const RENAME_OWNER_BTN_TEST_ID = 'rename-owner-btn'
 export const REMOVE_OWNER_BTN_TEST_ID = 'remove-owner-btn'
 export const ADD_OWNER_BTN_TEST_ID = 'add-owner-btn'
 export const REPLACE_OWNER_BTN_TEST_ID = 'replace-owner-btn'
 export const OWNERS_ROW_TEST_ID = 'owners-row'
-
-const controlsStyle = {
-  backgroundColor: 'white',
-  padding: sm,
-}
-
-const addOwnerButtonStyle = {
-  marginRight: sm,
-  fontWeight: boldFont,
-}
-
-const title = {
-  padding: lg,
-}
 
 type Props = {
   classes: Object,
@@ -76,13 +67,17 @@ type State = {
 type Action = 'AddOwner' | 'EditOwner' | 'ReplaceOwner' | 'RemoveOwner'
 
 class ManageOwners extends React.Component<Props, State> {
-  state = {
-    selectedOwnerAddress: undefined,
-    selectedOwnerName: undefined,
-    showAddOwner: false,
-    showRemoveOwner: false,
-    showReplaceOwner: false,
-    showEditOwner: false,
+  constructor(props) {
+    super(props)
+
+    this.state = {
+      selectedOwnerAddress: undefined,
+      selectedOwnerName: undefined,
+      showAddOwner: false,
+      showRemoveOwner: false,
+      showReplaceOwner: false,
+      showEditOwner: false,
+    }
   }
 
   onShow = (action: Action, row?: Object) => () => {
@@ -127,24 +122,36 @@ class ManageOwners extends React.Component<Props, State> {
     } = this.state
 
     const columns = generateColumns()
-    const autoColumns = columns.filter(c => !c.custom)
+    const autoColumns = columns.filter((c) => !c.custom)
     const ownerData = getOwnerData(owners)
 
     return (
-      <React.Fragment>
+      <>
         <Block className={classes.formContainer}>
-          <Heading tag="h3" style={title}>Manage Safe Owners</Heading>
+          <Heading tag="h2" className={classes.title}>
+            Manage Safe Owners
+          </Heading>
+          <Paragraph className={classes.annotation}>
+            Add, remove and replace owners or rename existing owners. Owner names are only stored locally and never
+            shared with Gnosis or any third parties.
+          </Paragraph>
           <Table
             label="Owners"
             defaultOrderBy={OWNERS_TABLE_NAME_ID}
             columns={columns}
             data={ownerData}
             size={ownerData.size}
+            disablePagination
             defaultFixed
             noBorder
           >
-            {(sortedData: Array<OwnerRow>) => sortedData.map((row: any, index: number) => (
-              <TableRow tabIndex={-1} key={index} className={classes.hide} data-testid={OWNERS_ROW_TEST_ID}>
+            {(sortedData: List<OwnerRow>) => sortedData.map((row: any, index: number) => (
+              <TableRow
+                tabIndex={-1}
+                key={index}
+                className={cn(classes.hide, index >= 3 && index === sortedData.size - 1 && classes.noBorderBottom)}
+                data-testid={OWNERS_ROW_TEST_ID}
+              >
                 {autoColumns.map((column: Column) => (
                   <TableCell key={column.id} style={cellWidth(column.width)} align={column.align} component="td">
                     {column.id === OWNERS_TABLE_ADDRESS_ID ? (
@@ -184,17 +191,15 @@ class ManageOwners extends React.Component<Props, State> {
                   )}
                 </TableCell>
               </TableRow>
-            ))
-            }
+            ))}
           </Table>
         </Block>
         {granted && (
-          <React.Fragment>
+          <>
             <Hairline />
-            <Row style={controlsStyle} align="end" grow>
+            <Row className={classes.controlsRow} align="end" grow>
               <Col end="xs">
                 <Button
-                  style={addOwnerButtonStyle}
                   size="small"
                   variant="contained"
                   color="primary"
@@ -205,7 +210,7 @@ class ManageOwners extends React.Component<Props, State> {
                 </Button>
               </Col>
             </Row>
-          </React.Fragment>
+          </>
         )}
         <AddOwnerModal
           onClose={this.onHide('AddOwner')}
@@ -257,7 +262,7 @@ class ManageOwners extends React.Component<Props, State> {
           network={network}
           editSafeOwner={editSafeOwner}
         />
-      </React.Fragment>
+      </>
     )
   }
 }

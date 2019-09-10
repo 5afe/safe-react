@@ -34,19 +34,14 @@ type Props = {
 }
 
 const CheckOwner = ({
-  classes,
-  onClose,
-  ownerAddress,
-  ownerName,
-  network,
-  onSubmit,
+  classes, onClose, ownerAddress, ownerName, network, onSubmit,
 }: Props) => {
   const handleSubmit = (values) => {
     onSubmit(values)
   }
 
   return (
-    <React.Fragment>
+    <>
       <Row align="center" grow className={classes.heading}>
         <Paragraph weight="bolder" className={classes.manage} noMargin>
           Remove owner
@@ -59,9 +54,7 @@ const CheckOwner = ({
       <Hairline />
       <Block className={classes.formContainer}>
         <Row margin="md">
-          <Paragraph>
-            Review the owner you want to remove from the active Safe:
-          </Paragraph>
+          <Paragraph>Review the owner you want to remove from the active Safe:</Paragraph>
         </Row>
         <Row className={classes.owner}>
           <Col xs={1} align="center">
@@ -100,7 +93,7 @@ const CheckOwner = ({
           Next
         </Button>
       </Row>
-    </React.Fragment>
+    </>
   )
 }
 

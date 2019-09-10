@@ -131,10 +131,12 @@ class Balances extends React.Component<Props, State> {
               color="secondary"
               disableRipple
             />
-            <Paragraph className={classes.zero}>Hide zero balances</Paragraph>
+            <Paragraph size="lg">Hide zero balances</Paragraph>
           </Col>
           <Col xs={6} end="sm">
-            <ButtonLink onClick={this.onShow('Token')} testId="manage-tokens-btn">Manage Tokens</ButtonLink>
+            <ButtonLink size="lg" onClick={this.onShow('Token')} testId="manage-tokens-btn">
+              Manage Tokens
+            </ButtonLink>
             <Modal
               title="Manage Tokens"
               description="Enable and disable tokens to be listed"

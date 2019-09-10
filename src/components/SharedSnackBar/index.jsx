@@ -20,11 +20,7 @@ export const SharedSnackbar = () => (
           autoHideDuration={4000}
           onClose={closeSnackbar}
         >
-          <SnackbarContent
-            onClose={closeSnackbar}
-            message={message}
-            variant={variant}
-          />
+          <SnackbarContent onClose={closeSnackbar} message={message} variant={variant} />
         </Snackbar>
       )
     }}
@@ -60,10 +56,14 @@ type State = {
 }
 
 export class SharedSnackbarProvider extends React.Component<Props, State> {
-  state = {
-    isOpen: false,
-    message: '',
-    variant: 'info',
+  constructor(props: Props) {
+    super(props)
+
+    this.state = {
+      isOpen: false,
+      message: '',
+      variant: 'info',
+    }
   }
 
   openSnackbar = (message: string, variant: Variant) => {

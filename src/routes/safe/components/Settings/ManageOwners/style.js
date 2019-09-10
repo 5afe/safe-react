@@ -3,7 +3,14 @@ import { lg } from '~/theme/variables'
 
 export const styles = () => ({
   formContainer: {
-    minHeight: '369px',
+    minHeight: '420px',
+  },
+  title: {
+    padding: lg,
+    paddingBottom: 0,
+  },
+  annotation: {
+    paddingLeft: lg,
   },
   hide: {
     '&:hover': {
@@ -16,6 +23,12 @@ export const styles = () => ({
   actions: {
     justifyContent: 'flex-end',
     visibility: 'hidden',
+    minWidth: '100px',
+  },
+  noBorderBottom: {
+    '& > td': {
+      borderBottom: 'none',
+    },
   },
   editOwnerIcon: {
     cursor: 'pointer',
@@ -23,6 +36,11 @@ export const styles = () => ({
   replaceOwnerIcon: {
     marginLeft: lg,
     cursor: 'pointer',
+  },
+  controlsRow: {
+    backgroundColor: 'white',
+    padding: lg,
+    borderRadius: '8px',
   },
   removeOwnerIcon: {
     marginLeft: lg,

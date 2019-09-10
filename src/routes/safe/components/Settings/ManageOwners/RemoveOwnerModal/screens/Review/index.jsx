@@ -56,7 +56,7 @@ const ReviewRemoveOwner = ({
   }
 
   return (
-    <React.Fragment>
+    <>
       <Row align="center" grow className={classes.heading}>
         <Paragraph weight="bolder" className={classes.manage} noMargin>
           Remove owner
@@ -91,11 +91,10 @@ const ReviewRemoveOwner = ({
                 <Paragraph size="lg" color="primary" noMargin weight="bolder" className={classes.name}>
                   {values.threshold}
                   {' '}
-                  out of
-                  {' '}
+out of
                   {owners.size - 1}
                   {' '}
-                  owner(s)
+owner(s)
                 </Paragraph>
               </Block>
             </Block>
@@ -105,12 +104,12 @@ const ReviewRemoveOwner = ({
               <Paragraph size="lg" color="primary" noMargin>
                 {owners.size - 1}
                 {' '}
-                Safe owner(s)
+Safe owner(s)
               </Paragraph>
             </Row>
             <Hairline />
             {owners.map(
-              owner => owner.address !== ownerAddress && (
+              (owner) => owner.address !== ownerAddress && (
                 <React.Fragment key={owner.address}>
                   <Row className={classes.owner}>
                     <Col xs={1} align="center">
@@ -159,7 +158,11 @@ const ReviewRemoveOwner = ({
                     <Paragraph size="md" color="disabled" noMargin>
                       {ownerAddress}
                     </Paragraph>
-                    <Link className={classes.open} to={getEtherScanLink('address', ownerAddress, network)} target="_blank">
+                    <Link
+                      className={classes.open}
+                      to={getEtherScanLink('address', ownerAddress, network)}
+                      target="_blank"
+                    >
                       <OpenInNew style={openIconStyle} />
                     </Link>
                   </Block>
@@ -187,7 +190,7 @@ const ReviewRemoveOwner = ({
           Submit
         </Button>
       </Row>
-    </React.Fragment>
+    </>
   )
 }
 

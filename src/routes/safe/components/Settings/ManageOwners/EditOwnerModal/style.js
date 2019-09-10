@@ -5,9 +5,8 @@ import {
 
 export const styles = () => ({
   heading: {
-    padding: `${sm} ${lg}`,
+    padding: lg,
     justifyContent: 'space-between',
-    maxHeight: '75px',
     boxSizing: 'border-box',
   },
   manage: {
@@ -15,7 +14,6 @@ export const styles = () => ({
   },
   container: {
     padding: `${md} ${lg}`,
-    paddingBottom: '40px',
   },
   close: {
     height: '35px',

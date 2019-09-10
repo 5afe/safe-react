@@ -23,6 +23,8 @@
     "import/no-extraneous-dependencies": 0,
     "import/extensions": 0,
     "import/prefer-default-export": 0,
+    "react/default-props-match-prop-types": ["error", { "allowRequiredDefaults": true }],
+    // https://github.com/yannickcr/eslint-plugin-react/issues/1593 ^
     "jsx-a11y/label-has-for": 0,
     "indent": ["error", 2, { "SwitchCase": 1 }],
     "no-console": ["error", { "allow": ["warn", "error"] }],

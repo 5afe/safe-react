@@ -21,10 +21,7 @@ import Link from '~/components/layout/Link'
 import { getEtherScanLink } from '~/logic/wallets/getWeb3'
 import { type Owner } from '~/routes/safe/store/models/owner'
 import {
-  composeValidators,
-  required,
-  minMaxLength,
-  uniqueAddress,
+  composeValidators, required, minMaxLength, uniqueAddress,
 } from '~/components/forms/validator'
 import { styles } from './style'
 import { secondary } from '~/theme/variables'
@@ -60,10 +57,10 @@ const OwnerForm = ({
   const handleSubmit = (values) => {
     onSubmit(values)
   }
-  const ownerDoesntExist = uniqueAddress(owners.map(o => o.address))
+  const ownerDoesntExist = uniqueAddress(owners.map((o) => o.address))
 
   return (
-    <React.Fragment>
+    <>
       <Row align="center" grow className={classes.heading}>
         <Paragraph weight="bolder" className={classes.manage} noMargin>
           Replace owner
@@ -79,7 +76,7 @@ const OwnerForm = ({
           const mutators = args[3]
 
           return (
-            <React.Fragment>
+            <>
               <Block className={classes.formContainer}>
                 <Row>
                   <Paragraph>
@@ -162,11 +159,11 @@ const OwnerForm = ({
                   Next
                 </Button>
               </Row>
-            </React.Fragment>
+            </>
           )
         }}
       </GnoForm>
-    </React.Fragment>
+    </>
   )
 }
 
