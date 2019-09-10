@@ -34,10 +34,18 @@ export const styles = (theme: Object) => ({
     width: '95px',
     minWidth: '95px',
     marginLeft: sm,
+    borderRadius: '4px',
+    '& > span': {
+      fontSize: '14px',
+    },
   },
   send: {
     width: '75px',
     minWidth: '75px',
+    borderRadius: '4px',
+    '& > span': {
+      fontSize: '14px',
+    },
   },
   leftIcon: {
     marginRight: sm,
