@@ -97,10 +97,13 @@ export const safeFieldsValidation = async (values: Object) => {
 
 const Details = ({ classes, errors, form }: Props) => (
   <>
-    <Block margin="sm">
+    <Block margin="md">
       <Paragraph noMargin size="lg" color="primary">
         You are about to load an existing Gnosis Safe. First, choose a name and enter the Safe address. The name is only
-        stored locally and will never be shared with Gnosis or any third parties
+        stored locally and will never be shared with Gnosis or any third parties.
+        <br />
+        Your connected wallet does not have to be the owner of this Safe. In this case, the interface will provide you a
+        read-only view.
       </Paragraph>
     </Block>
     <Block className={classes.root}>
