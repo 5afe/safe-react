@@ -1,6 +1,7 @@
 // @flow
 import fetchSafe from '~/routes/safe/store/actions/fetchSafe'
 import fetchTokenBalances from '~/routes/safe/store/actions/fetchTokenBalances'
+import fetchEtherBalance from '~/routes/safe/store/actions/fetchEtherBalance'
 import createTransaction from '~/routes/safe/store/actions/createTransaction'
 import processTransaction from '~/routes/safe/store/actions/processTransaction'
 import fetchTransactions from '~/routes/safe/store/actions/fetchTransactions'
@@ -15,6 +16,7 @@ export type Actions = {
   updateSafe: typeof updateSafe,
   fetchTokens: typeof fetchTokens,
   processTransaction: typeof processTransaction,
+  fetchEtherBalance: typeof fetchEtherBalance,
 }
 
 export default {
@@ -25,4 +27,5 @@ export default {
   fetchTokens,
   fetchTransactions,
   updateSafe,
+  fetchEtherBalance,
 }
