@@ -10,6 +10,16 @@ import Paragraph from '~/components/layout/Paragraph'
 import OpenPaper from '~/components/Stepper/OpenPaper'
 import { sm, secondary } from '~/theme/variables'
 
+export const safeNameValidation = async (values: Object) => {
+  const errors = {}
+
+  if (!values[FIELD_NAME]) {
+    errors[FIELD_NAME] = 'Required'
+  }
+
+  return errors
+}
+
 type Props = {
   classes: Object,
 }

@@ -7,7 +7,7 @@ import Block from '~/components/layout/Block'
 import Heading from '~/components/layout/Heading'
 import Row from '~/components/layout/Row'
 import Review from '~/routes/open/components/ReviewInformation'
-import SafeNameField from '~/routes/open/components/SafeNameForm'
+import SafeNameField, { safeNameValidation } from '~/routes/open/components/SafeNameForm'
 import SafeOwnersFields from '~/routes/open/components/SafeOwnersConfirmationsForm'
 import { getOwnerNameBy, getOwnerAddressBy, FIELD_CONFIRMATIONS } from '~/routes/open/components/fields'
 import { history } from '~/store'
@@ -67,7 +67,7 @@ const Layout = ({
             mutators={formMutators}
             testId="create-safe-form"
           >
-            <StepperPage>{SafeNameField}</StepperPage>
+            <StepperPage validate={safeNameValidation}>{SafeNameField}</StepperPage>
             <StepperPage>{SafeOwnersFields}</StepperPage>
             <StepperPage network={network} userAccount={userAccount}>
               {Review}

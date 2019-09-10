@@ -50,8 +50,15 @@ export const SAFE_MASTERCOPY_ERROR = 'Mastercopy used by this safe is not the sa
 export const safeFieldsValidation = async (values: Object) => {
   const errors = {}
   const web3 = getWeb3()
+  const safeName = values[FIELD_LOAD_NAME]
   const safeAddress = values[FIELD_LOAD_ADDRESS]
+
+  if (!safeName) {
+    errors[FIELD_LOAD_NAME] = 'Required'
+  }
+
   if (!safeAddress || mustBeEthereumAddress(safeAddress) !== undefined) {
+    errors[FIELD_LOAD_ADDRESS] = 'Required'
     return errors
   }
 
@@ -92,8 +99,8 @@ const Details = ({ classes, errors, form }: Props) => (
   <>
     <Block margin="sm">
       <Paragraph noMargin size="lg" color="primary">
-        Adding an existing Safe only requires the Safe address. Your connected wallet does not have to be the owner of
-        this Safe. In this case, the interface will provide you a read-only view.
+        You are about to load an existing Gnosis Safe. First, choose a name and enter the Safe address. The name is only
+        stored locally and will never be shared with Gnosis or any third parties
       </Paragraph>
     </Block>
     <Block className={classes.root}>
