@@ -133,7 +133,7 @@ class ManageOwners extends React.Component<Props, State> {
           </Heading>
           <Paragraph className={classes.annotation}>
             Add, remove and replace owners or rename existing owners. Owner names are only stored locally and never
-            shared with Gnosis or any third parties
+            shared with Gnosis or any third parties.
           </Paragraph>
           <Table
             label="Owners"
