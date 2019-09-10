@@ -11,7 +11,7 @@ const fetchEtherBalance = (safeAddress: string) => async (dispatch: ReduxDispatc
     dispatch(updateSafe({ address: safeAddress, ethBalance }))
   } catch (err) {
     // eslint-disable-next-line
-    console.error('Error while loading active tokens from storage:', err)
+    console.error('Error when fetching Ether balance:', err)
   }
 }
 
