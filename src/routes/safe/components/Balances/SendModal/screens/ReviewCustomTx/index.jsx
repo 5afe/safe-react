@@ -116,8 +116,8 @@ const ReviewCustomTx = ({
             <Row margin="md" align="center">
               <Img src={getEthAsToken().logoUri} height={28} alt="Ether" onError={setImageToPlaceholder} />
               <Paragraph size="md" noMargin className={classes.value}>
-                {tx.value}
-                {'ETH'}
+                {tx.value || 0}
+                {' ETH'}
               </Paragraph>
             </Row>
             <Row margin="xs">

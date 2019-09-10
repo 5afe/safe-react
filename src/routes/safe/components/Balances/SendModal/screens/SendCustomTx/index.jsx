@@ -20,7 +20,6 @@ import {
   composeValidators,
   mustBeFloat,
   maxValue,
-  greaterThan,
 } from '~/components/forms/validator'
 import SafeInfo from '~/routes/safe/components/Balances/SendModal/SafeInfo'
 import ArrowDown from '../assets/arrow-down.svg'
@@ -126,7 +125,6 @@ const SendCustomTx = ({
                       type="text"
                       validate={composeValidators(
                         mustBeFloat,
-                        greaterThan(0),
                         maxValue(ethBalance),
                       )}
                       placeholder="Value*"
