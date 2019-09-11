@@ -1,7 +1,6 @@
 // @flow
 import React, { useState, useEffect } from 'react'
 import { withStyles } from '@material-ui/core/styles'
-import OpenInNew from '@material-ui/icons/OpenInNew'
 import Block from '~/components/layout/Block'
 import Field from '~/components/forms/Field'
 import { required } from '~/components/forms/validator'
@@ -10,21 +9,16 @@ import Identicon from '~/components/Identicon'
 import OpenPaper from '~/components/Stepper/OpenPaper'
 import Col from '~/components/layout/Col'
 import Row from '~/components/layout/Row'
-import Link from '~/components/layout/Link'
 import Paragraph from '~/components/layout/Paragraph'
 import Hairline from '~/components/layout/Hairline'
+import EtherscanBtn from '~/components/EtherscanBtn'
+import CopyBtn from '~/components/CopyBtn'
 import {
-  sm, md, lg, border, secondary, disabled, extraSmallFontSize,
+  sm, md, lg, border, disabled, extraSmallFontSize,
 } from '~/theme/variables'
 import { getOwnerNameBy, getOwnerAddressBy } from '~/routes/open/components/fields'
-import { getEtherScanLink } from '~/logic/wallets/getWeb3'
 import { FIELD_LOAD_ADDRESS, THRESHOLD } from '~/routes/load/components/fields'
 import { getGnosisSafeInstanceAt } from '~/logic/contracts/safeContracts'
-
-const openIconStyle = {
-  height: '16px',
-  color: secondary,
-}
 
 const styles = () => ({
   details: {
@@ -45,6 +39,7 @@ const styles = () => ({
   },
   address: {
     paddingLeft: '6px',
+    marginRight: sm,
   },
   open: {
     paddingLeft: sm,
@@ -70,11 +65,7 @@ const styles = () => ({
   },
 })
 
-type LayoutProps = {
-  network: string,
-}
-
-type Props = LayoutProps & {
+type Props = {
   values: Object,
   classes: Object,
   updateInitialProps: (initialValues: Object) => void,
@@ -92,7 +83,7 @@ const calculateSafeValues = (owners: Array<string>, threshold: Number, values: O
 const OwnerListComponent = (props: Props) => {
   const [owners, setOwners] = useState<Array<string>>([])
   const {
-    values, updateInitialProps, network, classes,
+    values, updateInitialProps, classes,
   } = props
 
   useEffect(() => {
@@ -153,9 +144,8 @@ const OwnerListComponent = (props: Props) => {
                 <Paragraph size="md" color="disabled" noMargin className={classes.address}>
                   {address}
                 </Paragraph>
-                <Link className={classes.open} to={getEtherScanLink('address', address, network)} target="_blank">
-                  <OpenInNew style={openIconStyle} />
-                </Link>
+                <CopyBtn content={address} />
+                <EtherscanBtn type="address" value={address} />
               </Row>
             </Col>
           </Row>

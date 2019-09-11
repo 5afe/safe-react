@@ -75,7 +75,7 @@ type Props = {
 const Receive = ({
   classes, onClose, safeAddress, safeName, etherScanLink,
 }: Props) => (
-  <React.Fragment>
+  <>
     <Row align="center" grow className={classes.heading}>
       <Paragraph className={classes.manage} weight="bolder" noMargin>
         Receive funds
@@ -113,7 +113,7 @@ const Receive = ({
         Done
       </Button>
     </Row>
-  </React.Fragment>
+  </>
 )
 
 export default withStyles(styles)(Receive)

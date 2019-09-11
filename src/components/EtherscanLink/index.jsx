@@ -26,6 +26,6 @@ const EtherscanLink = ({ type, value, currentNetwork }: EtherscanLinkProps) => (
 )
 
 export default connect<Object, Object, ?Function, ?Object>(
-  state => ({ currentNetwork: networkSelector(state) }),
+  (state) => ({ currentNetwork: networkSelector(state) }),
   null,
 )(EtherscanLink)

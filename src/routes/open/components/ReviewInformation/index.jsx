@@ -2,29 +2,24 @@
 import * as React from 'react'
 import classNames from 'classnames'
 import { withStyles } from '@material-ui/core/styles'
-import OpenInNew from '@material-ui/icons/OpenInNew'
 import { estimateGasForDeployingSafe } from '~/logic/contracts/safeContracts'
 import { getNamesFrom, getAccountsFrom } from '~/routes/open/utils/safeDataExtractor'
 import Block from '~/components/layout/Block'
+import EtherscanBtn from '~/components/EtherscanBtn'
+import CopyBtn from '~/components/CopyBtn'
 import Identicon from '~/components/Identicon'
 import OpenPaper from '~/components/Stepper/OpenPaper'
 import Col from '~/components/layout/Col'
 import Row from '~/components/layout/Row'
-import Link from '~/components/layout/Link'
 import Paragraph from '~/components/layout/Paragraph'
 import {
-  sm, md, lg, border, secondary, background,
+  sm, md, lg, border, background,
 } from '~/theme/variables'
 import Hairline from '~/components/layout/Hairline'
-import { getEtherScanLink, getWeb3 } from '~/logic/wallets/getWeb3'
+import { getWeb3 } from '~/logic/wallets/getWeb3'
 import { FIELD_NAME, FIELD_CONFIRMATIONS, getNumOwnersFrom } from '../fields'
 
 const { useEffect, useState } = React
-
-const openIconStyle = {
-  height: '16px',
-  color: secondary,
-}
 
 const styles = () => ({
   root: {
@@ -58,6 +53,9 @@ const styles = () => ({
   },
   user: {
     justifyContent: 'left',
+    '& > p': {
+      marginRight: sm,
+    },
   },
   open: {
     paddingLeft: sm,
@@ -69,15 +67,12 @@ const styles = () => ({
 })
 
 type Props = {
-  network: string,
   values: Object,
   classes: Object,
   userAccount: string,
 }
 
-const ReviewComponent = ({
-  values, classes, network, userAccount,
-}: Props) => {
+const ReviewComponent = ({ values, classes, userAccount }: Props) => {
   const [gasCosts, setGasCosts] = useState<string>('0.00')
   const names = getNamesFrom(values)
   const addresses = getAccountsFrom(values)
@@ -152,13 +147,8 @@ const ReviewComponent = ({
                       <Paragraph size="md" color="disabled" noMargin>
                         {addresses[index]}
                       </Paragraph>
-                      <Link
-                        className={classes.open}
-                        to={getEtherScanLink('address', addresses[index], network)}
-                        target="_blank"
-                      >
-                        <OpenInNew style={openIconStyle} />
-                      </Link>
+                      <CopyBtn content={addresses[index]} />
+                      <EtherscanBtn type="address" value={addresses[index]} />
                     </Block>
                   </Block>
                 </Col>
@@ -184,10 +174,10 @@ ETH in this wallet to fund this transaction.
 
 const ReviewPage = withStyles(styles)(ReviewComponent)
 
-const Review = ({ network }: LayoutProps) => (controls: React.Node, { values }: Object) => (
+const Review = () => (controls: React.Node, { values }: Object) => (
   <>
     <OpenPaper controls={controls} padding={false}>
-      <ReviewPage network={network} values={values} />
+      <ReviewPage values={values} />
     </OpenPaper>
   </>
 )
