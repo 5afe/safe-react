@@ -162,7 +162,7 @@ const DetailsForm = withStyles(styles)(Details)
 
 const DetailsPage = () => (controls: React.Node, { errors, form }: Object) => (
   <>
-    <OpenPaper controls={controls} container={605}>
+    <OpenPaper controls={controls}>
       <DetailsForm errors={errors} form={form} />
     </OpenPaper>
   </>

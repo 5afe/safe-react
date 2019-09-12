@@ -113,7 +113,7 @@ const OwnerListComponent = (props: Props) => {
   return (
     <>
       <Block className={classes.title}>
-        <Paragraph noMargin size="lg" color="primary">
+        <Paragraph noMargin size="md" color="primary">
           {`This Safe has ${owners.length} owners. Optional: Provide a name for each owner.`}
         </Paragraph>
       </Block>
@@ -138,7 +138,7 @@ const OwnerListComponent = (props: Props) => {
                 text="Owner Name"
               />
             </Col>
-            <Col xs={7}>
+            <Col xs={8}>
               <Row className={classes.ownerAddresses}>
                 <Identicon address={address} diameter={32} />
                 <Paragraph size="md" color="disabled" noMargin className={classes.address}>
