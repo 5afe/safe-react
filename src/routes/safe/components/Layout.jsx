@@ -136,7 +136,6 @@ class Layout extends React.Component<Props, State> {
                 color="primary"
                 className={classes.send}
                 onClick={() => showSendFunds('Ether')}
-                rounded
                 disabled={!granted}
                 testId="balance-send-btn"
               >
@@ -149,7 +148,6 @@ class Layout extends React.Component<Props, State> {
                 color="primary"
                 className={classes.receive}
                 onClick={onShow('Receive')}
-                rounded
               >
                 <CallReceived alt="Receive Transaction" className={classNames(classes.leftIcon, classes.iconSmall)} />
                   Receive
