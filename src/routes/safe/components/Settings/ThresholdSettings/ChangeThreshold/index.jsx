@@ -103,10 +103,10 @@ owner(s)
             </Block>
             <Hairline style={{ position: 'absolute', bottom: 85 }} />
             <Row align="center" className={classes.buttonRow}>
-              <Button className={classes.button} minWidth={140} onClick={onClose}>
+              <Button minWidth={140} onClick={onClose}>
                 BACK
               </Button>
-              <Button type="submit" color="primary" className={classes.button} minWidth={140} variant="contained">
+              <Button type="submit" color="primary" minWidth={140} variant="contained">
                 CHANGE
               </Button>
             </Row>

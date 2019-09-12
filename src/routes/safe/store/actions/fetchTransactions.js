@@ -59,6 +59,7 @@ export const buildTransactionFrom = async (
   )
   const modifySettingsTx = tx.to === safeAddress && Number(tx.value) === 0 && !!tx.data
   const cancellationTx = tx.to === safeAddress && Number(tx.value) === 0 && !tx.data
+  const customTx = tx.to !== safeAddress && !!tx.data
   const isTokenTransfer = await isAddressAToken(tx.to)
 
   let executionTxHash
@@ -82,6 +83,8 @@ export const buildTransactionFrom = async (
     }
   } else if (modifySettingsTx && tx.data) {
     decodedParams = await decodeParamsFromSafeMethod(tx.data)
+  } else if (customTx && tx.data) {
+    decodedParams = await decodeParamsFromSafeMethod(tx.data)
   }
 
   return makeTransaction({
@@ -100,6 +103,7 @@ export const buildTransactionFrom = async (
     isTokenTransfer,
     decodedParams,
     modifySettingsTx,
+    customTx,
     cancellationTx,
   })
 }

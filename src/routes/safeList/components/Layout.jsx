@@ -14,12 +14,11 @@ const SafeList = ({ safes, provider }: Props) => {
   const safesAvailable = safes && safes.count() > 0
 
   return (
-    <React.Fragment>
+    <>
       { safesAvailable
         ? <SafeTable safes={safes} />
-        : <NoSafe provider={provider} text="No safes created, please create a new one" />
-      }
-    </React.Fragment>
+        : <NoSafe provider={provider} text="No safes created, please create a new one" />}
+    </>
   )
 }
 

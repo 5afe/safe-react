@@ -2,12 +2,12 @@
 import * as React from 'react'
 import { List } from 'immutable'
 import classNames from 'classnames/bind'
-import CallMade from '@material-ui/icons/CallMade'
-import CallReceived from '@material-ui/icons/CallReceived'
 import Checkbox from '@material-ui/core/Checkbox'
 import TableRow from '@material-ui/core/TableRow'
 import TableCell from '@material-ui/core/TableCell'
 import { withStyles } from '@material-ui/core/styles'
+import CallMade from '@material-ui/icons/CallMade'
+import CallReceived from '@material-ui/icons/CallReceived'
 import { type Token } from '~/logic/tokens/store/model/token'
 import Col from '~/components/layout/Col'
 import Row from '~/components/layout/Row'
@@ -178,7 +178,7 @@ class Balances extends React.Component<Props, State> {
                       onClick={() => this.showSendFunds(row.asset.name)}
                       testId="balance-send-btn"
                     >
-                      <CallMade className={classNames(classes.leftIcon, classes.iconSmall)} />
+                      <CallMade alt="Send Transaction" className={classNames(classes.leftIcon, classes.iconSmall)} />
                         Send
                     </Button>
                   )}
@@ -189,7 +189,7 @@ class Balances extends React.Component<Props, State> {
                     className={classes.receive}
                     onClick={this.onShow('Receive')}
                   >
-                    <CallReceived className={classNames(classes.leftIcon, classes.iconSmall)} />
+                    <CallReceived alt="Receive Transaction" className={classNames(classes.leftIcon, classes.iconSmall)} />
                       Receive
                   </Button>
                 </Row>
@@ -207,6 +207,7 @@ class Balances extends React.Component<Props, State> {
           tokens={activeTokens}
           selectedToken={sendFunds.selectedToken}
           createTransaction={createTransaction}
+          activeScreenType="sendFunds"
         />
         <Modal
           title="Receive Tokens"

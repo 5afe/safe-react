@@ -10,6 +10,8 @@ type DecodedTxData = {
   newThreshold?: string,
   addedOwner?: string,
   cancellationTx?: boolean,
+  customTx?: boolean,
+  data: string,
 }
 
 export const getTxData = (tx: Transaction): DecodedTxData => {
@@ -47,6 +49,9 @@ export const getTxData = (tx: Transaction): DecodedTxData => {
     }
   } else if (tx.cancellationTx) {
     txData.cancellationTx = true
+  } else if (tx.customTx) {
+    txData.data = tx.data
+    txData.customTx = true
   }
 
   return txData

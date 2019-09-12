@@ -22,7 +22,7 @@ export const required = simpleMemoize((value: Field) => (value ? undefined : 'Re
 
 export const mustBeInteger = (value: string) => (!Number.isInteger(Number(value)) || value.includes('.') ? 'Must be an integer' : undefined)
 
-export const mustBeFloat = (value: number) => (Number.isNaN(Number(value)) ? 'Must be a number' : undefined)
+export const mustBeFloat = (value: number) => (value && Number.isNaN(Number(value)) ? 'Must be a number' : undefined)
 
 export const greaterThan = (min: number) => (value: string) => {
   if (Number.isNaN(Number(value)) || Number.parseFloat(value) > Number(min)) {
@@ -66,6 +66,14 @@ export const mustBeEthereumAddress = simpleMemoize((address: Field) => {
   return isAddress ? undefined : 'Address should be a valid Ethereum address or ENS name'
 })
 
+export const mustBeEthereumContractAddress = simpleMemoize(async (address: string) => {
+  const contractCode: string = await getWeb3().eth.getCode(address)
+
+  return !contractCode || contractCode.replace('0x', '').replace(/0/g, '') === ''
+    ? 'Address should be a valid Ethereum contract address or ENS name'
+    : undefined
+})
+
 export const minMaxLength = (minLen: string | number, maxLen: string | number) => (value: string) => (value.length >= +minLen && value.length <= +maxLen ? undefined : `Should be ${minLen} to ${maxLen} symbols`)
 
 export const ADDRESS_REPEATED_ERROR = 'Address already introduced'
@@ -75,7 +83,7 @@ export const uniqueAddress = (addresses: string[] | List<string>) => simpleMemoi
   return addressAlreadyExists ? ADDRESS_REPEATED_ERROR : undefined
 })
 
-export const composeValidators = (...validators: Function[]): FieldValidator => (value: Field) => validators.reduce((error, validator) => error || validator(value), undefined)
+export const composeValidators = (...validators: Function[]): FieldValidator => (value: Field) => validators.reduce((error, validator) => (error || (validator && validator(value)), undefined))
 
 export const inLimit = (limit: number, base: number, baseText: string, symbol: string = 'ETH') => (value: string) => {
   const amount = Number(value)

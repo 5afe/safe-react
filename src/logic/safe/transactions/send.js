@@ -109,8 +109,8 @@ export const executeTransaction = async (
       .encodeABI()
     const errMsg = await getErrorMessage(safeInstance.address, 0, executeDataUsedSignatures, sender)
     console.log(`Error executing the TX: ${errMsg}`)
-    
-    throw error;
+
+    throw error
   }
 }
 

@@ -7,6 +7,7 @@ import {
   composeValidators,
   required,
   mustBeEthereumAddress,
+  mustBeEthereumContractAddress,
 } from '~/components/forms/validator'
 import { getAddressFromENS } from '~/logic/wallets/getWeb3'
 
@@ -19,6 +20,7 @@ type Props = {
   testId?: string,
   validators?: Function[],
   inputAdornment?: React.Element,
+  mustBeContract?: boolean,
 }
 
 const isValidEnsName = (name) => /^([\w-]+\.)+(eth|test|xyz|luxe)$/.test(name)
@@ -35,6 +37,7 @@ const AddressInput = ({
   testId,
   inputAdornment,
   validators = [],
+  mustBeContract,
 }: Props): React.Element<*> => (
   <>
     <Field
@@ -44,6 +47,7 @@ const AddressInput = ({
       validate={composeValidators(
         required,
         mustBeEthereumAddress,
+        mustBeContract && mustBeEthereumContractAddress,
         ...validators,
       )}
       inputAdornment={inputAdornment}

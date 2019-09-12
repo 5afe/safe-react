@@ -39,7 +39,7 @@ export const stableSort = (dataArray: List<any>, cmp: any, fixed: boolean): List
     return a[1] - b[1]
   })
 
-  const sortedElems: List<any> = stabilizedThis.map(el => el[0])
+  const sortedElems: List<any> = stabilizedThis.map((el) => el[0])
 
   return fixedElems.concat(sortedElems)
 }
