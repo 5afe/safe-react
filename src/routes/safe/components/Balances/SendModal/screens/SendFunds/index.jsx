@@ -161,13 +161,12 @@ const SendFunds = ({
               </Block>
               <Hairline />
               <Row align="center" className={classes.buttonRow}>
-                <Button minWidth={140} minHeight={35} onClick={onClose}>
+                <Button minWidth={140} onClick={onClose}>
                   Cancel
                 </Button>
                 <Button
                   type="submit"
                   variant="contained"
-                  minHeight={35}
                   minWidth={140}
                   color="primary"
                   data-testid="review-tx-btn"

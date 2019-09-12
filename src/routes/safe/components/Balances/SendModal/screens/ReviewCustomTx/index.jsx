@@ -127,7 +127,7 @@ const ReviewCustomTx = ({
             </Row>
             <Row margin="md" align="center">
               <Col className={classes.outerData}>
-                <Row size="md" noMargin className={classes.data}>
+                <Row size="md" className={classes.data}>
                   {tx.data}
                 </Row>
               </Col>
@@ -135,7 +135,7 @@ const ReviewCustomTx = ({
           </Block>
           <Hairline />
           <Row align="center" className={classes.buttonRow}>
-            <Button minWidth={140} minHeight={35} onClick={() => setActiveScreen('sendCustomTx')}>
+            <Button minWidth={140} onClick={() => setActiveScreen('sendCustomTx')}>
               Back
             </Button>
             <Button
@@ -143,7 +143,6 @@ const ReviewCustomTx = ({
               onClick={submitTx}
               variant="contained"
               minWidth={140}
-              minHeight={35}
               color="primary"
               data-testid="submit-tx-btn"
               className={classes.submitButton}

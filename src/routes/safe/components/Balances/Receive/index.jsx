@@ -109,7 +109,7 @@ const Receive = ({
     </Col>
     <Hairline />
     <Row align="center" className={classes.buttonRow}>
-      <Button color="primary" minHeight={35} minWidth={140} onClick={onClose} variant="contained">
+      <Button color="primary" minWidth={140} onClick={onClose} variant="contained">
         Done
       </Button>
     </Row>

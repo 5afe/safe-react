@@ -138,7 +138,7 @@ const ReviewTx = ({
           </Block>
           <Hairline style={{ position: 'absolute', bottom: 85 }} />
           <Row align="center" className={classes.buttonRow}>
-            <Button minWidth={140} minHeight={35} onClick={() => setActiveScreen('sendFunds')}>
+            <Button minWidth={140} onClick={() => setActiveScreen('sendFunds')}>
               Back
             </Button>
             <Button
@@ -146,7 +146,6 @@ const ReviewTx = ({
               onClick={submitTx}
               variant="contained"
               minWidth={140}
-              minHeight={35}
               color="primary"
               data-testid="submit-tx-btn"
               className={classes.submitButton}
