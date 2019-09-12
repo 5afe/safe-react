@@ -5,11 +5,16 @@ import cn from 'classnames'
 import { withStyles } from '@material-ui/core/styles'
 import { type Token } from '~/logic/tokens/store/model/token'
 import Modal from '~/components/Modal'
-import ChooseTxType from './screens/ChooseTxType'
-import SendFunds from './screens/SendFunds'
-import ReviewTx from './screens/ReviewTx'
-import SendCustomTx from './screens/SendCustomTx'
-import ReviewCustomTx from './screens/ReviewCustomTx'
+
+const ChooseTxType = React.lazy(() => import('./screens/ChooseTxType'))
+
+const SendFunds = React.lazy(() => import('./screens/SendFunds'))
+
+const ReviewTx = React.lazy(() => import('./screens/ReviewTx'))
+
+const SendCustomTx = React.lazy(() => import('./screens/SendCustomTx'))
+
+const ReviewCustomTx = React.lazy(() => import('./screens/ReviewCustomTx'))
 
 type ActiveScreen = 'chooseTxType' | 'sendFunds' | 'reviewTx' | 'sendCustomTx' | 'reviewCustomTx'
 
