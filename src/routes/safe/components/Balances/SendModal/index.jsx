@@ -11,6 +11,8 @@ import ReviewTx from './screens/ReviewTx'
 import SendCustomTx from './screens/SendCustomTx'
 import ReviewCustomTx from './screens/ReviewCustomTx'
 
+type ActiveScreen = 'chooseTxType' | 'sendFunds' | 'reviewTx' | 'sendCustomTx' | 'reviewCustomTx'
+
 type Props = {
   onClose: () => void,
   classes: Object,
@@ -22,10 +24,8 @@ type Props = {
   tokens: List<Token>,
   selectedToken: string,
   createTransaction: Function,
-  activeScreenType: string
+  activeScreenType: ActiveScreen
 }
-
-type ActiveScreen = 'chooseTxType' | 'sendFunds' | 'reviewTx' | 'sendCustomTx' | 'reviewCustomTx'
 
 type TxStateType =
   | {
