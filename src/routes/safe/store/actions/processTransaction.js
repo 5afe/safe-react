@@ -12,7 +12,7 @@ import { approveTransaction, executeTransaction, CALL } from '~/logic/safe/trans
 const generateSignaturesFromTxConfirmations = (tx: Transaction, preApprovingOwner?: string) => {
   // The constant parts need to be sorted so that the recovered signers are sorted ascending
   // (natural order) by address (not checksummed).
-  let confirmedAdresses = tx.confirmations.map(conf => conf.owner.address)
+  let confirmedAdresses = tx.confirmations.map((conf) => conf.owner.address)
 
   if (preApprovingOwner) {
     confirmedAdresses = confirmedAdresses.push(preApprovingOwner)

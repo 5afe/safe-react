@@ -69,7 +69,7 @@ export const mustBeEthereumAddress = simpleMemoize((address: Field) => {
 export const mustBeEthereumContractAddress = simpleMemoize(async (address: string) => {
   const contractCode: string = await getWeb3().eth.getCode(address)
 
-  return (!contractCode || contractCode.replace('0x', '').replace(/0/g, '') === '')
+  return !contractCode || contractCode.replace('0x', '').replace(/0/g, '') === ''
     ? 'Address should be a valid Ethereum contract address or ENS name'
     : undefined
 })
@@ -83,7 +83,7 @@ export const uniqueAddress = (addresses: string[] | List<string>) => simpleMemoi
   return addressAlreadyExists ? ADDRESS_REPEATED_ERROR : undefined
 })
 
-export const composeValidators = (...validators: Function[]): FieldValidator => (value: Field) => validators.reduce((error, validator) => error || (validator && validator(value)), undefined)
+export const composeValidators = (...validators: Function[]): FieldValidator => (value: Field) => validators.reduce((error, validator) => (error || (validator && validator(value)), undefined))
 
 export const inLimit = (limit: number, base: number, baseText: string, symbol: string = 'ETH') => (value: string) => {
   const amount = Number(value)

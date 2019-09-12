@@ -38,10 +38,7 @@ type FinsihedTx = {
   finishedTransaction: boolean,
 }
 
-export const whenExecuted = (
-  SafeDom: React.Component<any, any>,
-  ParentComponent: React.ElementType,
-): Promise<void> => new Promise((resolve, reject) => {
+export const whenExecuted = (SafeDom: React.Component<any, any>, ParentComponent: React.ElementType): Promise<void> => new Promise((resolve, reject) => {
   let times = 0
   const interval = setInterval(() => {
     if (times >= MAX_TIMES_EXECUTED) {
