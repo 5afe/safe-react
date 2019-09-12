@@ -1,5 +1,6 @@
 // @flow
 import React from 'react'
+import Tooltip from '@material-ui/core/Tooltip'
 import { withStyles } from '@material-ui/core/styles'
 import { connect } from 'react-redux'
 import Img from '~/components/layout/Img'
@@ -7,7 +8,6 @@ import { getEtherScanLink } from '~/logic/wallets/getWeb3'
 import { xs } from '~/theme/variables'
 import { networkSelector } from '~/logic/wallets/store/selectors'
 import SearchIcon from './search.svg'
-
 
 const styles = () => ({
   container: {
@@ -33,16 +33,17 @@ type EtherscanBtnProps = {
 const EtherscanBtn = ({
   type, value, currentNetwork, classes,
 }: EtherscanBtnProps) => (
-  <a
-    className={classes.container}
-    href={getEtherScanLink(type, value, currentNetwork)}
-    target="_blank"
-    rel="noopener noreferrer"
-    title="Show Details on etherscan"
-    aria-label="Show Details on etherscan"
-  >
-    <Img src={SearchIcon} height={20} alt="Etherscan" />
-  </a>
+  <Tooltip title="Show details on Etherscan" placement="top">
+    <a
+      className={classes.container}
+      href={getEtherScanLink(type, value, currentNetwork)}
+      target="_blank"
+      rel="noopener noreferrer"
+      aria-label="Show details on Etherscan"
+    >
+      <Img src={SearchIcon} height={20} alt="Etherscan" />
+    </a>
+  </Tooltip>
 )
 
 const EtherscanBtnWithStyles = withStyles(styles)(EtherscanBtn)

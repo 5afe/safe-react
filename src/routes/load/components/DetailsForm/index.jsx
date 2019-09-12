@@ -98,7 +98,7 @@ export const safeFieldsValidation = async (values: Object) => {
 const Details = ({ classes, errors, form }: Props) => (
   <>
     <Block margin="md">
-      <Paragraph noMargin size="lg" color="primary">
+      <Paragraph noMargin size="md" color="primary">
         You are about to load an existing Gnosis Safe. First, choose a name and enter the Safe address. The name is only
         stored locally and will never be shared with Gnosis or any third parties.
         <br />
