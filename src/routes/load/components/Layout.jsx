@@ -35,6 +35,8 @@ const formMutators = {
   },
 }
 
+const buttonLabels = ['Next', 'Review', 'Load']
+
 const Layout = ({
   provider, onLoadSafeSubmit, network, userAddress,
 }: Props) => {
@@ -56,6 +58,7 @@ const Layout = ({
             steps={steps}
             initialValues={initialValues}
             mutators={formMutators}
+            buttonLabels={buttonLabels}
             testId="load-safe-form"
           >
             <StepperPage validate={safeFieldsValidation}>{DetailsForm}</StepperPage>

@@ -27,8 +27,8 @@ type CopyBtnProps = {
 }
 
 const CopyBtn = ({ content, classes }: CopyBtnProps) => (navigator.clipboard ? (
-  <div className={classes.container}>
-    <Img src={CopyIcon} height={20} alt="Click to copy" onClick={() => copyToClipboard(content)} />
+  <div className={classes.container} title="Copy to clipboard">
+    <Img src={CopyIcon} height={20} alt="Copy to clipboard" onClick={() => copyToClipboard(content)} />
   </div>
 ) : null)
 

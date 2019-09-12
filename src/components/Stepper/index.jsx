@@ -19,6 +19,7 @@ type Props = {
   onSubmit: (values: Object) => Promise<void>,
   children: React.Node,
   classes: Object,
+  buttonLabels: Array<string>,
   initialValues?: Object,
   disabledWhenValidating?: boolean,
   mutators?: Object,
@@ -110,7 +111,7 @@ const GnoStepper = (props: Props) => {
   }
 
   const {
-    steps, children, classes, disabledWhenValidating = false, testId, mutators,
+    steps, children, classes, disabledWhenValidating = false, testId, mutators, buttonLabels,
   } = props
   const activePage = getActivePageFrom(children)
 
@@ -137,6 +138,8 @@ const GnoStepper = (props: Props) => {
                 firstPage={page === 0}
                 lastPage={lastPage}
                 penultimate={penultimate}
+                buttonLabels={buttonLabels}
+                currentStep={page}
               />
             </>
           )
