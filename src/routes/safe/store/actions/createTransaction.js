@@ -42,7 +42,7 @@ const createTransaction = (
       openSnackbar(notifications.CREATED_MORE_CONFIRMATIONS_NEEDED, 'success')
     }
   } catch (err) {
-    openSnackbar(notifications.ERROR, '')
+    openSnackbar(notifications.ERROR, 'error')
     console.error(`Error while creating transaction: ${err}`)
   }
 
