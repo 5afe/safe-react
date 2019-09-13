@@ -1,4 +1,5 @@
 // @flow
+import GnosisSafeSol from '@gnosis.pm/safe-contracts/build/contracts/GnosisSafe.json'
 import { getWeb3 } from '~/logic/wallets/getWeb3'
 import { getStandardTokenContract } from '~/logic/tokens/store/actions/fetchTokens'
 import { EMPTY_DATA } from '~/logic/wallets/ethTransactions'
@@ -55,6 +56,7 @@ export const approveTransaction = async (
 }
 
 export const executeTransaction = async (
+  showNotification: Function,
   safeInstance: any,
   to: string,
   valueInWei: number | string,
@@ -75,33 +77,37 @@ export const executeTransaction = async (
   }
 
   try {
-    const receipt = await safeInstance.execTransaction(
-      to,
-      valueInWei,
-      data,
-      operation,
-      0,
-      0,
-      0,
-      ZERO_ADDRESS,
-      ZERO_ADDRESS,
-      sigs,
-      { from: sender },
-    )
+    const web3 = getWeb3()
+    const contract = new web3.eth.Contract(GnosisSafeSol.abi, safeInstance.address)
 
-    await saveTxToHistory(
-      safeInstance,
-      to,
-      valueInWei,
-      data,
-      operation,
-      nonce,
-      receipt.tx, // tx hash,
-      sender,
-      TX_TYPE_EXECUTION,
-    )
+    const transactionHash = await contract.methods
+      .execTransaction(to, valueInWei, data, operation, 0, 0, 0, ZERO_ADDRESS, ZERO_ADDRESS, sigs)
+      .send({
+        from: sender,
+      })
+      .once('transactionHash', (transactionHash) => {
+        showNotification()
+      })
+      .on('error', (error) => {
+        console.log('Tx error:', error)
+      })
+      .then(async (receipt) => {
+        await saveTxToHistory(
+          safeInstance,
+          to,
+          valueInWei,
+          data,
+          operation,
+          nonce,
+          receipt.transactionHash,
+          sender,
+          TX_TYPE_EXECUTION,
+        )
 
-    return receipt
+        return receipt.transactionHash
+      })
+
+    return transactionHash
   } catch (error) {
     /* eslint-disable */
     const executeDataUsedSignatures = safeInstance.contract.methods
