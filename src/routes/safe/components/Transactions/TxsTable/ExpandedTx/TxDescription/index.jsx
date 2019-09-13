@@ -13,7 +13,8 @@ export const TRANSACTIONS_DESC_ADD_OWNER_TEST_ID = 'tx-description-add-owner'
 export const TRANSACTIONS_DESC_REMOVE_OWNER_TEST_ID = 'tx-description-remove-owner'
 export const TRANSACTIONS_DESC_CHANGE_THRESHOLD_TEST_ID = 'tx-description-change-threshold'
 export const TRANSACTIONS_DESC_SEND_TEST_ID = 'tx-description-send'
-export const TRANSACTIONS_DESC_CUSTOM_TEST_ID = 'tx-description-custom'
+export const TRANSACTIONS_DESC_CUSTOM_VALUE_TEST_ID = 'tx-description-custom-value'
+export const TRANSACTIONS_DESC_CUSTOM_DATA_TEST_ID = 'tx-description-custom-data'
 
 export const styles = () => ({
   txDataContainer: {
@@ -42,6 +43,8 @@ type DescriptionDescProps = {
 }
 
 type CustomDescProps = {
+  value: string,
+  recipient: string,
   data: String,
   classes: Obeject,
 }
@@ -88,9 +91,24 @@ const SettingsDescription = ({ removedOwner, addedOwner, newThreshold }: Descrip
   </>
 )
 
-const CustomDescription = ({ data, classes }: CustomDescProps) => (
+const CustomDescription = ({
+  data, value = 0, recipient, classes,
+}: CustomDescProps) => (
   <>
-    <Paragraph className={classes.txData} data-testid={TRANSACTIONS_DESC_CUSTOM_TEST_ID}>
+    <Paragraph noMargin data-testid={TRANSACTIONS_DESC_CUSTOM_VALUE_TEST_ID}>
+      <Bold>
+        Send
+        {' '}
+        {value}
+        {' '}
+        ETH
+        {' '}
+        to:
+      </Bold>
+      <br />
+      <EtherscanLink type="address" value={recipient} />
+    </Paragraph>
+    <Paragraph className={classes.txData} data-testid={TRANSACTIONS_DESC_CUSTOM_DATA_TEST_ID}>
       <Bold>Data (hex encoded):</Bold>
       <br />
       {data}
@@ -109,7 +127,7 @@ const TxDescription = ({ tx, classes }: Props) => {
         <SettingsDescription removedOwner={removedOwner} newThreshold={newThreshold} addedOwner={addedOwner} />
       )}
       {customTx && (
-        <CustomDescription data={data} classes={classes} />
+        <CustomDescription data={data} value={value} recipient={recipient} classes={classes} />
       )}
       {!cancellationTx && !modifySettingsTx && !customTx && (
         <TransferDescription value={value} symbol={tx.symbol} recipient={recipient} />
