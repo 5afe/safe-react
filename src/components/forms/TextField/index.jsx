@@ -30,6 +30,8 @@ class TextField extends React.PureComponent<TextFieldProps> {
       inputAdornment,
       classes,
       testId,
+      rows,
+      multiline,
       ...rest
     } = this.props
     const helperText = value ? text : undefined
@@ -53,6 +55,8 @@ class TextField extends React.PureComponent<TextFieldProps> {
         onChange={onChange}
         value={value}
         // data-testid={testId}
+        rows={rows}
+        multiline={multiline}
       />
     )
   }

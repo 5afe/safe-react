@@ -1,5 +1,5 @@
 // @flow
-import { lg, md, secondaryText } from '~/theme/variables'
+import { lg, md } from '~/theme/variables'
 
 export const styles = () => ({
   heading: {
@@ -10,7 +10,7 @@ export const styles = () => ({
   },
   annotation: {
     letterSpacing: '-1px',
-    color: secondaryText,
+    color: '#a2a8ba',
     marginRight: 'auto',
     marginLeft: '20px',
   },
@@ -35,5 +35,11 @@ export const styles = () => ({
   submitButton: {
     boxShadow: '1px 2px 10px 0 rgba(212, 212, 211, 0.59)',
     marginLeft: '15px',
+  },
+  dataInput: {
+    '& TextField-root-294': {
+      lineHeight: 'auto',
+      border: 'green',
+    },
   },
 })

@@ -34,20 +34,14 @@ export const checkRegisteredTxSend = async (
   expect(txDescription).toHaveTextContent(`Send ${ethAmount} ${symbol} to:${shortVersionOf(ethAddress, 4)}`)
 }
 
-export const checkRegisteredTxAddOwner = async (
-  SafeDom: React.Component<any, any>,
-  ownerAddress: string,
-) => {
+export const checkRegisteredTxAddOwner = async (SafeDom: React.Component<any, any>, ownerAddress: string) => {
   await getLastTransaction(SafeDom)
 
   const txDescription = SafeDom.getAllByTestId(TRANSACTIONS_DESC_ADD_OWNER_TEST_ID)[0]
   expect(txDescription).toHaveTextContent(`Add owner:${shortVersionOf(ownerAddress, 4)}`)
 }
 
-export const checkRegisteredTxRemoveOwner = async (
-  SafeDom: React.Component<any, any>,
-  ownerAddress: string,
-) => {
+export const checkRegisteredTxRemoveOwner = async (SafeDom: React.Component<any, any>, ownerAddress: string) => {
   await getLastTransaction(SafeDom)
 
   const txDescription = SafeDom.getAllByTestId(TRANSACTIONS_DESC_REMOVE_OWNER_TEST_ID)[0]

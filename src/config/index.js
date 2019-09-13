@@ -1,10 +1,6 @@
 // @flow
 import { ensureOnce } from '~/utils/singleton'
-import {
-  TX_SERVICE_HOST,
-  SIGNATURES_VIA_METAMASK,
-  RELAY_API_URL,
-} from '~/config/names'
+import { TX_SERVICE_HOST, SIGNATURES_VIA_METAMASK, RELAY_API_URL } from '~/config/names'
 import devConfig from './development'
 import testConfig from './testing'
 import prodConfig from './production'

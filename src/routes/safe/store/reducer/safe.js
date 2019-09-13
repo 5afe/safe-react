@@ -24,7 +24,7 @@ export const buildSafe = (storedSafe: SafeProps) => {
   const addresses = storedSafe.owners.map((owner: OwnerProps) => owner.address)
   const owners = buildOwnersFrom(Array.from(names), Array.from(addresses))
   const activeTokens = List(storedSafe.activeTokens)
-  const balances = storedSafe.balances.map(balance => TokenBalance(balance))
+  const balances = storedSafe.balances.map((balance) => TokenBalance(balance))
 
   const safe: SafeProps = {
     ...storedSafe,
@@ -67,7 +67,7 @@ export default handleActions<State, *>(
       const safe = action.payload
       const safeAddress = safe.address
 
-      return state.update(safeAddress, prevSafe => prevSafe.merge(safe))
+      return state.update(safeAddress, (prevSafe) => prevSafe.merge(safe))
     },
     [ACTIVATE_TOKEN_FOR_ALL_SAFES]: (state: State, action: ActionType<Function>): State => {
       const tokenAddress = action.payload
@@ -77,7 +77,7 @@ export default handleActions<State, *>(
           const safeActiveTokens = map.getIn([safeAddress, 'activeTokens'])
           const activeTokens = safeActiveTokens.push(tokenAddress)
 
-          map.update(safeAddress, prevSafe => prevSafe.merge({ activeTokens }))
+          map.update(safeAddress, (prevSafe) => prevSafe.merge({ activeTokens }))
         })
       })
 
@@ -91,7 +91,7 @@ export default handleActions<State, *>(
       // with initial props and it would overwrite existing ones
 
       if (state.has(safe.address)) {
-        return state.update(safe.address, prevSafe => prevSafe.merge(safe))
+        return state.update(safe.address, (prevSafe) => prevSafe.merge(safe))
       }
 
       return state.set(safe.address, SafeRecord(safe))
@@ -104,15 +104,15 @@ export default handleActions<State, *>(
     [ADD_SAFE_OWNER]: (state: State, action: ActionType<Function>): State => {
       const { safeAddress, ownerName, ownerAddress } = action.payload
 
-      return state.update(safeAddress, prevSafe => prevSafe.merge({
+      return state.update(safeAddress, (prevSafe) => prevSafe.merge({
         owners: prevSafe.owners.push(makeOwner({ address: ownerAddress, name: ownerName })),
       }))
     },
     [REMOVE_SAFE_OWNER]: (state: State, action: ActionType<Function>): State => {
       const { safeAddress, ownerAddress } = action.payload
 
-      return state.update(safeAddress, prevSafe => prevSafe.merge({
-        owners: prevSafe.owners.filter(o => o.address.toLowerCase() !== ownerAddress.toLowerCase()),
+      return state.update(safeAddress, (prevSafe) => prevSafe.merge({
+        owners: prevSafe.owners.filter((o) => o.address.toLowerCase() !== ownerAddress.toLowerCase()),
       }))
     },
     [REPLACE_SAFE_OWNER]: (state: State, action: ActionType<Function>): State => {
@@ -120,9 +120,9 @@ export default handleActions<State, *>(
         safeAddress, oldOwnerAddress, ownerName, ownerAddress,
       } = action.payload
 
-      return state.update(safeAddress, prevSafe => prevSafe.merge({
+      return state.update(safeAddress, (prevSafe) => prevSafe.merge({
         owners: prevSafe.owners
-          .filter(o => o.address.toLowerCase() !== oldOwnerAddress.toLowerCase())
+          .filter((o) => o.address.toLowerCase() !== oldOwnerAddress.toLowerCase())
           .push(makeOwner({ address: ownerAddress, name: ownerName })),
       }))
     },
@@ -131,9 +131,9 @@ export default handleActions<State, *>(
 
       return state.update(safeAddress, (prevSafe) => {
         const ownerToUpdateIndex = prevSafe.owners.findIndex(
-          o => o.address.toLowerCase() === ownerAddress.toLowerCase(),
+          (o) => o.address.toLowerCase() === ownerAddress.toLowerCase(),
         )
-        const updatedOwners = prevSafe.owners.update(ownerToUpdateIndex, owner => owner.set('name', ownerName))
+        const updatedOwners = prevSafe.owners.update(ownerToUpdateIndex, (owner) => owner.set('name', ownerName))
         return prevSafe.merge({ owners: updatedOwners })
       })
     },

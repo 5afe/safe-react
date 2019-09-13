@@ -77,7 +77,7 @@ const KeyRing = ({
   const img = isWarning ? triangle : key
 
   return (
-    <React.Fragment>
+    <>
       <Block className={classes.root}>
         <Block className={classes.key} style={keyStyle}>
           <Img
@@ -90,7 +90,7 @@ const KeyRing = ({
         </Block>
         {!hideDot && <Dot className={classes.dot} style={dotStyle} />}
       </Block>
-    </React.Fragment>
+    </>
   )
 }
 
