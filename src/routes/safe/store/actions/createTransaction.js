@@ -37,8 +37,8 @@ const createTransaction = (
       txHash = await executeTransaction(showNotification, safeInstance, to, valueInWei, txData, CALL, nonce, from)
       openSnackbar(notifications.AFTER_EXECUTION, 'success')
     } else {
-      openSnackbar(notifications.BEFORE_EXECUTION_OR_CREATION, 'success')
-      txHash = await approveTransaction(safeInstance, to, valueInWei, txData, CALL, nonce, from)
+      const showNotification = () => openSnackbar(notifications.BEFORE_EXECUTION_OR_CREATION, 'success')
+      txHash = await approveTransaction(showNotification, safeInstance, to, valueInWei, txData, CALL, nonce, from)
       openSnackbar(notifications.CREATED_MORE_CONFIRMATIONS_NEEDED, 'success')
     }
   } catch (err) {
