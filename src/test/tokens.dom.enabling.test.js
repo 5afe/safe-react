@@ -70,6 +70,13 @@ describe('DOM > Feature > Enable and disable default tokens', () => {
     expect(balanceRows[1]).toHaveTextContent('FTE')
     expect(balanceRows[2]).toHaveTextContent('STE')
 
+    await sleep(1000)
+
+    const tokensFromStorage = await getActiveTokens()
+
+    expect(Object.keys(tokensFromStorage)).toContain(firstErc20Token.address)
+    expect(Object.keys(tokensFromStorage)).toContain(secondErc20Token.address)
+
     // disable tokens
     clickOnManageTokens(TokensDom)
     toggleToken(TokensDom, 'FTE')
@@ -80,7 +87,5 @@ describe('DOM > Feature > Enable and disable default tokens', () => {
     balanceRows = TokensDom.getAllByTestId(BALANCE_ROW_TEST_ID)
     expect(balanceRows.length).toBe(1)
     expect(balanceRows[0]).toHaveTextContent('ETH')
-
-    expect()
   })
 })
