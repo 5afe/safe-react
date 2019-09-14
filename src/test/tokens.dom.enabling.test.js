@@ -11,6 +11,7 @@ import { clickOnManageTokens, toggleToken, closeManageTokensModal } from './util
 import { BALANCE_ROW_TEST_ID } from '~/routes/safe/components/Balances'
 import { makeToken } from '~/logic/tokens/store/model/token'
 import '@testing-library/jest-dom/extend-expect'
+import { getActiveTokens } from '~/logic/tokens/utils/tokensStorage'
 
 describe('DOM > Feature > Enable and disable default tokens', () => {
   let web3
@@ -43,7 +44,7 @@ describe('DOM > Feature > Enable and disable default tokens', () => {
     ])
   })
 
-  it('allows to enable and disable tokens', async () => {
+  it('allows to enable and disable tokens, stores active ones in the local storage', async () => {
     // GIVEN
     const store = aNewStore()
     const safeAddress = await aMinedSafe(store)
@@ -79,5 +80,7 @@ describe('DOM > Feature > Enable and disable default tokens', () => {
     balanceRows = TokensDom.getAllByTestId(BALANCE_ROW_TEST_ID)
     expect(balanceRows.length).toBe(1)
     expect(balanceRows[0]).toHaveTextContent('ETH')
+
+    expect()
   })
 })
