@@ -1,4 +1,5 @@
 // @flow
+import { waitForElement } from '@testing-library/react'
 import { List } from 'immutable'
 import { aNewStore } from '~/store'
 import { sleep } from '~/utils/timer'
@@ -44,13 +45,11 @@ describe('DOM > Feature > Balances', () => {
     const balanceRows = SafeDom.getAllByTestId(BALANCE_ROW_TEST_ID)
     expect(balanceRows.length).toBe(2)
 
-    expect(balanceRows[1]).toHaveTextContent(`${tokensAmount} FTE`)
+    await waitForElement(() => SafeDom.getByText(`${tokensAmount} OMG`))
 
     await sendTokenTo(safeAddress, tokensAmount)
 
-    await sleep(2000)
-
-    expect(balanceRows[2]).toHaveTextContent(`${parseInt(tokensAmount, 10) * 2} FTE`)
+    await waitForElement(() => SafeDom.getByText(`${parseInt(tokensAmount, 10) * 2} OMG`))
   })
 
   it('Updates ether balance automatically', async () => {
@@ -65,11 +64,10 @@ describe('DOM > Feature > Balances', () => {
     const balanceRows = SafeDom.getAllByTestId(BALANCE_ROW_TEST_ID)
     expect(balanceRows.length).toBe(1)
 
-    expect(balanceRows[0]).toHaveTextContent(`${etherAmount} ETH`)
+    await waitForElement(() => SafeDom.getByText(`${etherAmount} ETH`))
 
     await sendEtherTo(safeAddress, etherAmount)
-    await sleep(2000)
 
-    expect(balanceRows[0]).toHaveTextContent(`${parseInt(etherAmount, 10) * 2} ETH`)
+    await waitForElement(() => SafeDom.getByText(`${parseInt(etherAmount, 10) * 2} ETH`))
   })
 })
