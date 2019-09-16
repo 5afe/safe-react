@@ -31,17 +31,6 @@ export const getCustomTokens = async (): Promise<List<TokenProps>> => {
   return data ? List(data) : List()
 }
 
-export const setToken = async (safeAddress: string, token: Token) => {
-  const data: List<TokenProps> = await getCustomTokens()
-
-  try {
-    await saveToStorage(CUSTOM_TOKENS_KEY, data.push(token))
-  } catch (err) {
-    // eslint-disable-next-line
-    console.log('Error adding token in localstorage')
-  }
-}
-
 export const removeTokenFromStorage = async (safeAddress: string, token: Token) => {
   const data: List<TokenProps> = await getCustomTokens()
 
