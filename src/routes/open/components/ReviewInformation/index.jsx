@@ -165,8 +165,9 @@ const ReviewComponent = ({ values, classes, userAccount }: Props) => {
           wallet. The creation will cost approximately
           {' '}
           {gasCosts}
-          {' '} ETH
-          . The exact amount will be determined by your wallet.
+          {' '}
+          ETH. The exact amount will be determined by your
+          wallet.
         </Paragraph>
       </Row>
     </>
