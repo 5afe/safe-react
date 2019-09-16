@@ -85,8 +85,9 @@ const ReviewComponent = ({ values, classes, userAccount }: Props) => {
       const { fromWei, toBN } = web3.utils
       const estimatedGasCosts = await estimateGasForDeployingSafe(addresses, numOwners, userAccount)
       const gasCostsAsEth = fromWei(toBN(estimatedGasCosts), 'ether')
+      const roundedGasCosts = parseFloat(gasCostsAsEth).toFixed(3)
       if (isCurrent) {
-        setGasCosts(gasCostsAsEth)
+        setGasCosts(roundedGasCosts)
       }
     }
 
@@ -164,6 +165,7 @@ const ReviewComponent = ({ values, classes, userAccount }: Props) => {
           wallet. The creation will cost approximately
           {' '}
           {gasCosts}
+          {' '} ETH
           . The exact amount will be determined by your wallet.
         </Paragraph>
       </Row>
