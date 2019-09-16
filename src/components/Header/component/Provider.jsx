@@ -21,7 +21,7 @@ const styles = () => ({
     height: '100%',
     display: 'flex',
     alignItems: 'center',
-    flexBasis: '280px',
+    flexBasis: '284px',
     marginRight: '20px',
   },
   provider: {

@@ -143,7 +143,7 @@ const UserDetails = ({
       <Hairline margin="xs" />
       <Row className={classes.details}>
         <Paragraph noMargin align="right" className={classes.labels}>
-          Client
+          Wallet
         </Paragraph>
         <Spacer />
         {provider === 'safe'
