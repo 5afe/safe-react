@@ -17,12 +17,10 @@ import { copyToClipboard } from '~/utils/clipboard'
 import Hairline from '~/components/layout/Hairline'
 import SafeInfo from '~/routes/safe/components/Balances/SendModal/SafeInfo'
 import { setImageToPlaceholder } from '~/routes/safe/components/Balances/utils'
-import { getStandardTokenContract } from '~/logic/tokens/store/actions/fetchTokens'
-import { EMPTY_DATA } from '~/logic/wallets/ethTransactions'
 import { getWeb3 } from '~/logic/wallets/getWeb3'
+import { getEthAsToken } from '~/logic/tokens/utils/tokenHelpers'
 import ArrowDown from '../assets/arrow-down.svg'
 import { secondary } from '~/theme/variables'
-import { isEther } from '~/logic/tokens/utils/tokenHelpers'
 import { styles } from './style'
 
 type Props = {
@@ -42,7 +40,7 @@ const openIconStyle = {
   color: secondary,
 }
 
-const ReviewTx = ({
+const ReviewCustomTx = ({
   onClose,
   setActiveScreen,
   classes,
@@ -57,23 +55,11 @@ const ReviewTx = ({
     {({ openSnackbar }) => {
       const submitTx = async () => {
         const web3 = getWeb3()
-        const isSendingETH = isEther(tx.token.symbol)
-        const txRecipient = isSendingETH ? tx.recipientAddress : tx.token.address
-        let txData = EMPTY_DATA
-        let txAmount = web3.utils.toWei(tx.amount, 'ether')
+        const txRecipient = tx.recipientAddress
+        const txData = tx.data
+        const txValue = tx.value ? web3.utils.toWei(tx.value, 'ether') : 0
 
-        if (!isSendingETH) {
-          const StandardToken = await getStandardTokenContract()
-          const tokenInstance = await StandardToken.at(tx.token.address)
-
-          txData = tokenInstance.contract.methods.transfer(tx.recipientAddress, txAmount).encodeABI()
-          // txAmount should be 0 if we send tokens
-          // the real value is encoded in txData and will be used by the contract
-          // if txAmount > 0 it would send ETH from the safe
-          txAmount = 0
-        }
-
-        createTransaction(safeAddress, txRecipient, txAmount, txData, openSnackbar)
+        createTransaction(safeAddress, txRecipient, txValue, txData, openSnackbar)
         onClose()
       }
 
@@ -124,21 +110,32 @@ const ReviewTx = ({
             </Row>
             <Row margin="xs">
               <Paragraph size="md" color="disabled" style={{ letterSpacing: '-0.5px' }} noMargin>
-                Amount
+                Value
               </Paragraph>
             </Row>
             <Row margin="md" align="center">
-              <Img src={tx.token.logoUri} height={28} alt={tx.token.name} onError={setImageToPlaceholder} />
-              <Paragraph size="md" noMargin className={classes.amount}>
-                {tx.amount}
-                {' '}
-                {tx.token.symbol}
+              <Img src={getEthAsToken().logoUri} height={28} alt="Ether" onError={setImageToPlaceholder} />
+              <Paragraph size="md" noMargin className={classes.value}>
+                {tx.value || 0}
+                {' ETH'}
               </Paragraph>
             </Row>
+            <Row margin="xs">
+              <Paragraph size="md" color="disabled" style={{ letterSpacing: '-0.5px' }} noMargin>
+                Data (hex encoded)
+              </Paragraph>
+            </Row>
+            <Row margin="md" align="center">
+              <Col className={classes.outerData}>
+                <Row size="md" className={classes.data}>
+                  {tx.data}
+                </Row>
+              </Col>
+            </Row>
           </Block>
-          <Hairline style={{ position: 'absolute', bottom: 85 }} />
+          <Hairline />
           <Row align="center" className={classes.buttonRow}>
-            <Button minWidth={140} onClick={() => setActiveScreen('sendFunds')}>
+            <Button minWidth={140} onClick={() => setActiveScreen('sendCustomTx')}>
               Back
             </Button>
             <Button
@@ -159,4 +156,4 @@ const ReviewTx = ({
   </SharedSnackbarConsumer>
 )
 
-export default withStyles(styles)(ReviewTx)
+export default withStyles(styles)(ReviewCustomTx)

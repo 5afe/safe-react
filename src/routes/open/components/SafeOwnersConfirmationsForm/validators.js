@@ -1,7 +1,5 @@
 // @flow
-import {
-  uniqueAddress,
-} from '~/components/forms/validator'
+import { uniqueAddress } from '~/components/forms/validator'
 
 export const getAddressValidator = (addresses: string[], position: number) => {
   // thanks Rich Harris

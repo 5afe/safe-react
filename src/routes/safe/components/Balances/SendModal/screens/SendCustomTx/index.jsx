@@ -1,8 +1,6 @@
 // @flow
 import React from 'react'
-import { List } from 'immutable'
 import { withStyles } from '@material-ui/core/styles'
-import { OnChange } from 'react-final-form-listeners'
 import Close from '@material-ui/icons/Close'
 import InputAdornment from '@material-ui/core/InputAdornment'
 import IconButton from '@material-ui/core/IconButton'
@@ -17,11 +15,12 @@ import Hairline from '~/components/layout/Hairline'
 import ButtonLink from '~/components/layout/ButtonLink'
 import Field from '~/components/forms/Field'
 import TextField from '~/components/forms/TextField'
-import { type Token } from '~/logic/tokens/store/model/token'
+import TextareaField from '~/components/forms/TextareaField'
 import {
-  composeValidators, required, mustBeFloat, maxValue, greaterThan,
+  composeValidators,
+  mustBeFloat,
+  maxValue,
 } from '~/components/forms/validator'
-import TokenSelectField from '~/routes/safe/components/Balances/SendModal/screens/SendFunds/TokenSelectField'
 import SafeInfo from '~/routes/safe/components/Balances/SendModal/SafeInfo'
 import ArrowDown from '../assets/arrow-down.svg'
 import { styles } from './style'
@@ -33,36 +32,29 @@ type Props = {
   etherScanLink: string,
   safeName: string,
   ethBalance: string,
-  selectedToken: string,
-  tokens: List<Token>,
   onSubmit: Function,
   initialValues: Object,
 }
 
-const SendFunds = ({
+const SendCustomTx = ({
   classes,
   onClose,
   safeAddress,
   etherScanLink,
   safeName,
   ethBalance,
-  tokens,
-  selectedToken,
-  initialValues,
   onSubmit,
+  initialValues,
 }: Props) => {
-  const handleSubmit = (values) => {
-    onSubmit(values)
+  const handleSubmit = (values: Object) => {
+    if (values.data || values.value) {
+      onSubmit(values)
+    }
   }
 
   const formMutators = {
     setMax: (args, state, utils) => {
-      const { token } = state.formState.values
-
-      utils.changeValue(state, 'amount', () => token && token.balance)
-    },
-    onTokenChange: (args, state, utils) => {
-      utils.changeValue(state, 'amount', () => '')
+      utils.changeValue(state, 'value', () => ethBalance)
     },
     setRecipient: (args, state, utils) => {
       utils.changeValue(state, 'recipientAddress', () => args[0])
@@ -73,7 +65,7 @@ const SendFunds = ({
     <>
       <Row align="center" grow className={classes.heading}>
         <Paragraph weight="bolder" className={classes.manage} noMargin>
-          Send Funds
+          Send custom transactions
         </Paragraph>
         <Paragraph className={classes.annotation}>1 of 2</Paragraph>
         <IconButton onClick={onClose} disableRipple>
@@ -83,9 +75,8 @@ const SendFunds = ({
       <Hairline />
       <GnoForm onSubmit={handleSubmit} formMutators={formMutators} initialValues={initialValues}>
         {(...args) => {
-          const formState = args[2]
           const mutators = args[3]
-          const { token } = formState.values
+
           return (
             <>
               <Block className={classes.formContainer}>
@@ -112,18 +103,14 @@ const SendFunds = ({
                       text="Recipient*"
                       className={classes.addressInput}
                       fieldMutator={mutators.setRecipient}
+                      mustBeContract
                     />
-                  </Col>
-                </Row>
-                <Row margin="sm">
-                  <Col>
-                    <TokenSelectField tokens={tokens} initialValue={selectedToken} />
                   </Col>
                 </Row>
                 <Row margin="xs">
                   <Col between="lg">
                     <Paragraph size="md" color="disabled" style={{ letterSpacing: '-0.5px' }} noMargin>
-                      Amount
+                      Value
                     </Paragraph>
                     <ButtonLink weight="bold" onClick={mutators.setMax}>
                       Send max
@@ -133,29 +120,30 @@ const SendFunds = ({
                 <Row margin="md">
                   <Col>
                     <Field
-                      name="amount"
+                      name="value"
                       component={TextField}
                       type="text"
                       validate={composeValidators(
-                        required,
                         mustBeFloat,
-                        greaterThan(0),
-                        maxValue(token && token.balance),
+                        maxValue(ethBalance),
                       )}
-                      placeholder="Amount*"
-                      text="Amount*"
+                      placeholder="Value*"
+                      text="Value*"
                       className={classes.addressInput}
-                      inputAdornment={
-                        token && {
-                          endAdornment: <InputAdornment position="end">{token.symbol}</InputAdornment>,
-                        }
-                      }
-                    />
-                    <OnChange name="token">
-                      {() => {
-                        mutators.onTokenChange()
+                      inputAdornment={{
+                        endAdornment: <InputAdornment position="end">ETH</InputAdornment>,
                       }}
-                    </OnChange>
+                    />
+                  </Col>
+                </Row>
+                <Row margin="sm">
+                  <Col>
+                    <TextareaField
+                      name="data"
+                      type="text"
+                      placeholder="Data (hex encoded)*"
+                      text="Data (hex encoded)*"
+                    />
                   </Col>
                 </Row>
               </Block>
@@ -183,4 +171,4 @@ const SendFunds = ({
   )
 }
 
-export default withStyles(styles)(SendFunds)
+export default withStyles(styles)(SendCustomTx)
