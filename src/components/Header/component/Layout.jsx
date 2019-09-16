@@ -63,7 +63,6 @@ const Layout = openHoc(({
       <SafeListHeader />
       <Divider />
       <Spacer />
-      <Divider />
       <Provider open={open} toggle={toggle} info={providerInfo}>
         {(providerRef) => (
           <Popper open={open} anchorEl={providerRef.current} placement="bottom-end">
