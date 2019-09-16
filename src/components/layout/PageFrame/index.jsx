@@ -1,8 +1,9 @@
 // @flow
 import * as React from 'react'
-import Header from '~/components/Header'
+import { SnackbarProvider } from 'notistack'
 import SidebarProvider from '~/components/Sidebar'
-import { SharedSnackbarProvider } from '~/components/SharedSnackBar'
+import Footer from '~/components/Footer'
+import Header from '~/components/Header'
 import styles from './index.scss'
 
 type Props = {
@@ -10,14 +11,22 @@ type Props = {
 }
 
 const PageFrame = ({ children }: Props) => (
-  <SharedSnackbarProvider>
+  <SnackbarProvider
+    anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+    classes={{
+      variantSuccess: styles.success,
+      variantError: styles.error,
+      variantWarning: styles.warning,
+      variantInfo: styles.info,
+    }}
+  >
     <div className={styles.frame}>
       <SidebarProvider>
         <Header />
         {children}
       </SidebarProvider>
     </div>
-  </SharedSnackbarProvider>
+  </SnackbarProvider>
 )
 
 export default PageFrame

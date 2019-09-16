@@ -1,8 +1,8 @@
 // @flow
 import * as React from 'react'
 import { connect } from 'react-redux'
+import { useSnackbar } from 'notistack'
 import { logComponentStack, type Info } from '~/utils/logBoundaries'
-import { SharedSnackbarConsumer, type Variant } from '~/components/SharedSnackBar'
 import { WALLET_ERROR_MSG } from '~/logic/wallets/store/actions'
 import { getProviderInfo } from '~/logic/wallets/getWeb3'
 import type { ProviderProps } from '~/logic/wallets/store/model/provider'
@@ -13,6 +13,8 @@ import ConnectDetails from './component/ProviderDetails/ConnectDetails'
 import Layout from './component/Layout'
 import actions, { type Actions } from './actions'
 import selector, { type SelectorProps } from './selector'
+
+type Variant = 'success' | 'error' | 'warning' | 'info'
 
 type Props = Actions &
   SelectorProps & {
@@ -116,8 +118,10 @@ const Header = connect(
   actions,
 )(HeaderComponent)
 
-const HeaderSnack = () => (
-  <SharedSnackbarConsumer>{({ openSnackbar }) => <Header openSnackbar={openSnackbar} />}</SharedSnackbarConsumer>
-)
+const HeaderSnack = () => {
+  const { enqueueSnackbar } = useSnackbar()
+
+  return <Header openSnackbar={enqueueSnackbar} />
+}
 
 export default HeaderSnack
