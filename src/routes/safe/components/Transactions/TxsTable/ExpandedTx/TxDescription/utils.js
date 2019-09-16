@@ -54,6 +54,9 @@ export const getTxData = (tx: Transaction): DecodedTxData => {
     }
   } else if (tx.cancellationTx) {
     txData.cancellationTx = true
+  } else {
+    txData.recipient = tx.recipient
+    txData.value = 0
   }
 
   return txData

@@ -54,9 +54,15 @@ const createTransaction = (
   let tx
   try {
     if (isExecution) {
-      tx = await getExecutionTransaction(safeInstance, to, valueInWei, txData, CALL, nonce, from, sigs)
+      tx = await getExecutionTransaction(
+        safeInstance, to, valueInWei, txData, CALL, nonce, 
+        0, 0, 0, ZERO_ADDRESS, ZERO_ADDRESS, from, sigs
+      )
     } else {
-      tx = await getApprovalTransaction(safeInstance, to, valueInWei, txData, CALL, nonce, from)
+      tx = await getApprovalTransaction(
+        safeInstance, to, valueInWei, txData, CALL, nonce, 
+        0, 0, 0, ZERO_ADDRESS, ZERO_ADDRESS, from, sigs
+      )
     }
 
     const sendParams = { from, value: 0 }
@@ -81,6 +87,11 @@ const createTransaction = (
             txData,
             CALL,
             nonce,
+            0,
+            0,
+            0,
+            ZERO_ADDRESS,
+            ZERO_ADDRESS,
             txHash,
             from,
             isExecution ? TX_TYPE_EXECUTION : TX_TYPE_CONFIRMATION,
@@ -94,7 +105,6 @@ const createTransaction = (
       })
       .then((receipt) => {
         closeSnackbar(pendingExecutionKey)
-
         showSnackbar(
           isExecution
             ? notificationsQueue.afterExecution.noMoreConfirmationsNeeded

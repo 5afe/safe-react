@@ -2,6 +2,7 @@
 import { List, Record } from 'immutable'
 import type { RecordFactory, RecordOf } from 'immutable'
 import { type Confirmation } from '~/routes/safe/store/models/confirmation'
+import { ZERO_ADDRESS } from '~/logic/wallets/ethAddresses'
 
 export type TransactionStatus = 'awaiting_confirmations' | 'success' | 'cancelled' | 'awaiting_execution'
 
@@ -11,7 +12,13 @@ export type TransactionProps = {
   value: string,
   confirmations: List<Confirmation>,
   recipient: string,
-  data: string,
+  data?: string,
+  operation: number,
+  safeTxGas: number,
+  baseGas: number,
+  gasPrice: number,
+  gasToken: string,
+  refundReceiver: string,
   isExecuted: boolean,
   submissionDate: string,
   executionDate: string,
@@ -26,6 +33,7 @@ export type TransactionProps = {
   status?: TransactionStatus,
   isTokenTransfer: boolean,
   decodedParams?: Object,
+  refundParams?: Object,
 }
 
 export const makeTransaction: RecordFactory<TransactionProps> = Record({
@@ -34,7 +42,13 @@ export const makeTransaction: RecordFactory<TransactionProps> = Record({
   value: 0,
   confirmations: List([]),
   recipient: '',
-  data: '',
+  data: null,
+  operation: 0,
+  safeTxGas: 0,
+  baseGas: 0,
+  gasPrice: 0,
+  gasToken: ZERO_ADDRESS,
+  refundReceiver: ZERO_ADDRESS,
   isExecuted: false,
   submissionDate: '',
   executionDate: '',
@@ -49,6 +63,7 @@ export const makeTransaction: RecordFactory<TransactionProps> = Record({
   decimals: 18,
   isTokenTransfer: false,
   decodedParams: {},
+  refundParams: null,
 })
 
 export type Transaction = RecordOf<TransactionProps>

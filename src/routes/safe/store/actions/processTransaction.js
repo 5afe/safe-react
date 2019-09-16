@@ -11,7 +11,6 @@ import {
   type NotifiedTransaction,
   getApprovalTransaction,
   getExecutionTransaction,
-  CALL,
   saveTxToHistory,
   TX_TYPE_EXECUTION,
   TX_TYPE_CONFIRMATION,
@@ -31,18 +30,27 @@ export const generateSignaturesFromTxConfirmations = (
 ) => {
   // The constant parts need to be sorted so that the recovered signers are sorted ascending
   // (natural order) by address (not checksummed).
-  let confirmedAdresses = confirmations.map((conf) => conf.owner.address)
+  const confirmationsMap = confirmations.reduce((map, obj) => {
+    map[obj.owner.address] = obj // eslint-disable-line no-param-reassign
+    return map
+  }, {})
 
   if (preApprovingOwner) {
-    confirmedAdresses = confirmedAdresses.push(preApprovingOwner)
+    confirmationsMap[preApprovingOwner] = { owner: preApprovingOwner }
   }
 
   let sigs = '0x'
-  confirmedAdresses.sort().forEach((addr) => {
-    sigs += `000000000000000000000000${addr.replace(
-      '0x',
-      '',
-    )}000000000000000000000000000000000000000000000000000000000000000001`
+  Object.keys(confirmationsMap).sort().forEach((addr) => {
+    const conf = confirmationsMap[addr]
+    if (conf.signature) {
+      sigs += conf.signature.slice(2)
+    } else {
+      // https://gnosis-safe.readthedocs.io/en/latest/contracts/signatures.html#pre-validated-signatures
+      sigs += `000000000000000000000000${addr.replace(
+        '0x',
+        '',
+      )}000000000000000000000000000000000000000000000000000000000000000001`
+    }
   })
   return sigs
 }
@@ -60,7 +68,6 @@ const processTransaction = (
 
   const safeInstance = await getGnosisSafeInstanceAt(safeAddress)
   const from = userAccountSelector(state)
-  const nonce = (await safeInstance.nonce()).toString()
   const threshold = (await safeInstance.getThreshold()).toNumber()
   const shouldExecute = threshold === tx.confirmations.size || approveAndExecute
 
@@ -86,13 +93,31 @@ const processTransaction = (
         tx.recipient,
         tx.value,
         tx.data,
-        CALL,
-        nonce,
+        tx.operation,
+        tx.nonce,
+        tx.safeTxGas,
+        tx.baseGas,
+        tx.gasPrice,
+        tx.gasToken,
+        tx.refundReceiver,
         from,
         sigs,
       )
     } else {
-      transaction = await getApprovalTransaction(safeInstance, tx.recipient, tx.value, tx.data, CALL, nonce, from)
+      transaction = await getApprovalTransaction(
+        safeInstance,
+        tx.recipient,
+        tx.value,
+        tx.data,
+        tx.operation,
+        tx.nonce,
+        tx.safeTxGas,
+        tx.baseGas,
+        tx.gasPrice,
+        tx.gasToken,
+        tx.refundReceiver,
+        from,
+      )
     }
 
     const sendParams = { from, value: 0 }
@@ -115,8 +140,13 @@ const processTransaction = (
             tx.recipient,
             tx.value,
             tx.data,
-            CALL,
-            nonce,
+            tx.operation,
+            tx.nonce,
+            tx.safeTxGas,
+            tx.baseGas,
+            tx.gasPrice,
+            tx.gasToken,
+            tx.refundReceiver,
             txHash,
             from,
             shouldExecute ? TX_TYPE_EXECUTION : TX_TYPE_CONFIRMATION,
