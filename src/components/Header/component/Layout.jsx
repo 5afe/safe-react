@@ -32,7 +32,7 @@ const styles = () => ({
     padding: 0,
     boxShadow: '0 0 10px 0 rgba(33, 48, 77, 0.1)',
     minWidth: '280px',
-    left: '4px',
+    borderRadius: '8px',
   },
   summary: {
     borderBottom: `solid 2px ${border}`,
@@ -68,11 +68,13 @@ const Layout = openHoc(({
           <Popper open={open} anchorEl={providerRef.current} placement="bottom-end">
             {({ TransitionProps }) => (
               <Grow {...TransitionProps}>
-                <ClickAwayListener onClickAway={clickAway} mouseEvent="onClick" touchEvent={false}>
-                  <List className={classes.root} component="div">
-                    {providerDetails}
-                  </List>
-                </ClickAwayListener>
+                <>
+                  <ClickAwayListener onClickAway={clickAway} mouseEvent="onClick" touchEvent={false}>
+                    <List className={classes.root} component="div">
+                      {providerDetails}
+                    </List>
+                  </ClickAwayListener>
+                </>
               </Grow>
             )}
           </Popper>
