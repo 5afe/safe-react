@@ -36,6 +36,7 @@ const styles = () => ({
     alignItems: 'center',
     height: '53px',
     backgroundColor: 'white',
+    zIndex: 1301,
   },
   logo: {
     padding: `${sm} ${md}`,
