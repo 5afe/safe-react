@@ -17,6 +17,8 @@ import Provider from './Provider'
 
 const logo = require('../assets/gnosis-safe-logo.svg')
 
+export const headerHeight = '53px'
+
 type Props = Open & {
   classes: Object,
   providerDetails: React.Node,
@@ -34,7 +36,7 @@ const styles = () => ({
   summary: {
     borderBottom: `solid 1px ${border}`,
     alignItems: 'center',
-    height: '53px',
+    height: headerHeight,
     backgroundColor: 'white',
     zIndex: 1301,
   },
