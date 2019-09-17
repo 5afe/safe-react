@@ -8,8 +8,9 @@ import ListItemIcon from '@material-ui/core/ListItemIcon'
 import ListItemText from '@material-ui/core/ListItemText'
 import Link from '~/components/layout/Link'
 import Hairline from '~/components/layout/Hairline'
+import Paragraph from '~/components/layout/Paragraph'
 import Identicon from '~/components/Identicon'
-import { sm, secondary, primary } from '~/theme/variables'
+import { mediumFontSize, sm, secondary, primary } from '~/theme/variables'
 import { shortVersionOf } from '~/logic/wallets/ethAddresses'
 import { type Safe } from '~/routes/safe/store/models/safe'
 import { SAFELIST_ADDRESS } from '~/routes/routes'
@@ -31,6 +32,7 @@ const useStyles = makeStyles({
   },
   safeAddress: {
     color: primary,
+    fontSize: mediumFontSize,
   },
 })
 
@@ -51,6 +53,11 @@ const SafeList = ({ safes }: SafeListProps) => {
                 secondary={shortVersionOf(safe.address, 4)}
                 classes={{ primary: classes.safeName, secondary: classes.safeAddress }}
               />
+              <Paragraph size="lg" color="primary">
+                {safe.ethBalance}
+                {' '}
+                ETH
+              </Paragraph>
             </ListItem>
           </Link>
           <Hairline />
