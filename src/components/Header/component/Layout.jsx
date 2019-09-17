@@ -14,6 +14,7 @@ import Row from '~/components/layout/Row'
 import Spacer from '~/components/Spacer'
 import { border, sm, md } from '~/theme/variables'
 import Provider from './Provider'
+import SafeListHeader from './SafeListHeader'
 
 const logo = require('../assets/gnosis-safe-logo.svg')
 
@@ -58,8 +59,9 @@ const Layout = openHoc(({
         </Link>
       </Col>
       <Divider />
-      <Spacer />
+      <SafeListHeader />
       <Divider />
+      <Spacer />
       <Provider open={open} toggle={toggle} info={providerInfo}>
         {(providerRef) => (
           <Popper open={open} anchorEl={providerRef.current} placement="bottom-end">

@@ -11,3 +11,8 @@ export const safesListSelector: Selector<GlobalState, {}, List<Safe>> = createSe
   safesMapSelector,
   (safes: Map<string, Safe>): List<Safe> => safes.toList(),
 )
+
+export const safesCountSelector: Selector<GlobalState, {}, number> = createSelector(
+  safesMapSelector,
+  (safes: Map<string, Safe>): number => safes.size,
+)

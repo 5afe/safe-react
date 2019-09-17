@@ -6,7 +6,6 @@ import React, { Suspense } from 'react'
 import { Provider } from 'react-redux'
 import { ConnectedRouter } from 'connected-react-router'
 import { hot } from 'react-hot-loader/root'
-import Sidebar from '~/components/Sidebar'
 import PageFrame from '../layout/PageFrame'
 import Loader from '../Loader'
 import { history, store } from '~/store'
@@ -22,7 +21,6 @@ const Root = () => (
         <PageFrame>
           <Suspense fallback={<Loader />}>
             <AppRoutes />
-            <Sidebar />
           </Suspense>
         </PageFrame>
       </ConnectedRouter>
