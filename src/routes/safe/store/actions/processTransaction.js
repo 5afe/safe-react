@@ -31,7 +31,7 @@ const generateSignaturesFromTxConfirmations = (tx: Transaction, preApprovingOwne
 const processTransaction = (
   safeAddress: string,
   tx: Transaction,
-  openSnackbar: Function,
+  enqueueSnackbar: Function,
   userAddress: string,
   approveAndExecute?: boolean,
 ) => async (dispatch: ReduxDispatch<GlobalState>, getState: GetState<GlobalState>) => {
@@ -46,7 +46,7 @@ const processTransaction = (
 
   let txHash
   if (shouldExecute) {
-    const showNotification = () => openSnackbar('Transaction has been submitted', 'success')
+    const showNotification = () => enqueueSnackbar('Transaction has been submitted', 'success')
     txHash = await executeTransaction(
       showNotification,
       safeInstance,
@@ -58,9 +58,9 @@ const processTransaction = (
       from,
       sigs,
     )
-    openSnackbar('Transaction has been confirmed', 'success')
+    enqueueSnackbar('Transaction has been confirmed', 'success')
   } else {
-    const showNotification = () => openSnackbar('Approval transaction has been submitted', 'success')
+    const showNotification = () => enqueueSnackbar('Approval transaction has been submitted', 'success')
     txHash = await approveTransaction(
       showNotification,
       safeInstance,
@@ -71,7 +71,7 @@ const processTransaction = (
       nonce,
       from,
     )
-    openSnackbar('Approval transaction has been confirmed', 'success')
+    enqueueSnackbar('Approval transaction has been confirmed', 'success')
   }
 
   dispatch(fetchTransactions(safeAddress))

@@ -18,7 +18,7 @@ const createTransaction = (
   to: string,
   valueInWei: string,
   txData: string = EMPTY_DATA,
-  openSnackbar: Function,
+  enqueueSnackbar: Function,
   shouldExecute?: boolean,
   notifications?: Notifications = DEFAULT_NOTIFICATIONS,
 ) => async (dispatch: ReduxDispatch<GlobalState>, getState: GetState<GlobalState>) => {
@@ -33,16 +33,16 @@ const createTransaction = (
   let txHash
   try {
     if (isExecution) {
-      const showNotification = () => openSnackbar(notifications.BEFORE_EXECUTION_OR_CREATION, 'success')
+      const showNotification = () => enqueueSnackbar(notifications.BEFORE_EXECUTION_OR_CREATION, 'success')
       txHash = await executeTransaction(showNotification, safeInstance, to, valueInWei, txData, CALL, nonce, from)
-      openSnackbar(notifications.AFTER_EXECUTION, 'success')
+      enqueueSnackbar(notifications.AFTER_EXECUTION, 'success')
     } else {
-      const showNotification = () => openSnackbar(notifications.BEFORE_EXECUTION_OR_CREATION, 'success')
+      const showNotification = () => enqueueSnackbar(notifications.BEFORE_EXECUTION_OR_CREATION, 'success')
       txHash = await approveTransaction(showNotification, safeInstance, to, valueInWei, txData, CALL, nonce, from)
-      openSnackbar(notifications.CREATED_MORE_CONFIRMATIONS_NEEDED, 'success')
+      enqueueSnackbar(notifications.CREATED_MORE_CONFIRMATIONS_NEEDED, 'success')
     }
   } catch (err) {
-    openSnackbar(notifications.ERROR, 'error')
+    enqueueSnackbar(notifications.ERROR, 'error')
     console.error(`Error while creating transaction: ${err}`)
   }
 

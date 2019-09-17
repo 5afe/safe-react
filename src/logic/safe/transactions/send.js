@@ -44,13 +44,16 @@ export const approveTransaction = async (
     const web3 = getWeb3()
     const contract = new web3.eth.Contract(GnosisSafeSol.abi, safeInstance.address)
 
-    const transactionHash = await contract.methods.approveHash(txHash)
+    const transactionHash = await contract.methods
+      .approveHash(txHash)
       .send({
         from: sender,
-      }).once('transactionHash', () => {
+      })
+      .once('transactionHash', () => {
         showNotification()
       })
       .on('error', (error) => {
+        /* eslint-disable */
         console.log('Tx error:', error)
       })
       .then(async (receipt) => {
