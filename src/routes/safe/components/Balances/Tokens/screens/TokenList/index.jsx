@@ -124,7 +124,7 @@ class Tokens extends React.Component<Props, State> {
     const filteredTokens = filterBy(filter, tokens)
 
     return (
-      <React.Fragment>
+      <>
         <Block className={classes.root}>
           <Row align="center" className={cn(classes.padding, classes.actions)}>
             <Search className={classes.search} />
@@ -179,7 +179,7 @@ class Tokens extends React.Component<Props, State> {
             )
           })}
         </MuiList>
-      </React.Fragment>
+      </>
     )
   }
 }

@@ -10,7 +10,9 @@ import Link from '~/components/layout/Link'
 import Hairline from '~/components/layout/Hairline'
 import Paragraph from '~/components/layout/Paragraph'
 import Identicon from '~/components/Identicon'
-import { mediumFontSize, sm, secondary, primary } from '~/theme/variables'
+import {
+  mediumFontSize, sm, secondary, primary,
+} from '~/theme/variables'
 import { shortVersionOf } from '~/logic/wallets/ethAddresses'
 import { type Safe } from '~/routes/safe/store/models/safe'
 import { SAFELIST_ADDRESS } from '~/routes/routes'

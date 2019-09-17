@@ -48,7 +48,7 @@ const SafeListHeader = ({ safesCount }: Props) => {
         {safesCount}
       </Paragraph>
       <IconButton onClick={toggleSidebar} className={classes.icon} aria-label="Expand Safe List">
-        {isOpen ? <ExpandMoreIcon color="secondary" /> : <ExpandLessIcon />}
+        {isOpen ? <ExpandLessIcon /> : <ExpandMoreIcon color="secondary" />}
       </IconButton>
     </Col>
   )
