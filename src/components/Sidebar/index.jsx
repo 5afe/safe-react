@@ -1,7 +1,12 @@
 // @flow
 import * as React from 'react'
+import { List } from 'immutable'
+import { connect } from 'react-redux'
 import Drawer from '@material-ui/core/Drawer'
+import { type Safe } from '~/routes/safe/store/models/safe'
+import { safesListSelector } from '~/routes/safeList/store/selectors'
 import useSidebarStyles from './style'
+import SafeList from './SafeList'
 
 const { useState } = React
 
@@ -17,9 +22,10 @@ export const SidebarContext = React.createContext<TSidebarContext>({
 
 type SidebarProps = {
   children: React.Node,
+  safes: List<Safe>,
 }
 
-const Sidebar = ({ children }: SidebarProps) => {
+const Sidebar = ({ children, safes }: SidebarProps) => {
   const [isOpen, setIsOpen] = useState<boolean>(false)
   const classes = useSidebarStyles()
 
@@ -33,14 +39,19 @@ const Sidebar = ({ children }: SidebarProps) => {
         className={classes.sidebar}
         open={isOpen}
         onKeyDown={toggleSidebar}
+        onClick={toggleSidebar}
         classes={{ paper: classes.sidebarPaper }}
       >
         <div className={classes.headerPlaceholder} />
-        Wop
+        <SafeList safes={safes} />
       </Drawer>
       {children}
     </SidebarContext.Provider>
   )
 }
 
-export default Sidebar
+export default connect<Object, Object, ?Function, ?Object>(
+  // $FlowFixMe
+  (state) => ({ safes: safesListSelector(state) }),
+  null,
+)(Sidebar)

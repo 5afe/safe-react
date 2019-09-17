@@ -1,6 +1,6 @@
 // @flow
 import { makeStyles } from '@material-ui/core/styles'
-import { headerHeight } from '~/components/Header/component/Layout'
+import { headerHeight } from '~/theme/variables'
 
 const sidebarWidth = '400px'
 
@@ -12,7 +12,7 @@ const useSidebarStyles = makeStyles({
     width: sidebarWidth,
   },
   headerPlaceholder: {
-    height: headerHeight,
+    height: headerHeight, // for some reason it didn't want to work with an imported variable 🤔
   },
 })
 

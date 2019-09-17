@@ -12,13 +12,13 @@ import Col from '~/components/layout/Col'
 import Img from '~/components/layout/Img'
 import Row from '~/components/layout/Row'
 import Spacer from '~/components/Spacer'
-import { border, sm, md } from '~/theme/variables'
+import {
+  border, sm, md, headerHeight,
+} from '~/theme/variables'
 import Provider from './Provider'
 import SafeListHeader from './SafeListHeader'
 
 const logo = require('../assets/gnosis-safe-logo.svg')
-
-export const headerHeight = '53px'
 
 type Props = Open & {
   classes: Object,
