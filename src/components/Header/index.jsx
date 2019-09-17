@@ -1,7 +1,7 @@
 // @flow
 import * as React from 'react'
 import { connect } from 'react-redux'
-import { useSnackbar } from 'notistack'
+import { withSnackbar } from 'notistack'
 import { logComponentStack, type Info } from '~/utils/logBoundaries'
 import { WALLET_ERROR_MSG } from '~/logic/wallets/store/actions'
 import { getProviderInfo } from '~/logic/wallets/getWeb3'
@@ -18,7 +18,7 @@ type Variant = 'success' | 'error' | 'warning' | 'info'
 
 type Props = Actions &
   SelectorProps & {
-    openSnackbar: (message: string, variant: Variant) => void,
+    enqueueSnackbar: (message: string, variant: Variant) => void,
   }
 
 type State = {
@@ -41,31 +41,33 @@ class HeaderComponent extends React.PureComponent<Props, State> {
   }
 
   componentDidCatch(error: Error, info: Info) {
-    const { openSnackbar } = this.props
+    const { enqueueSnackbar } = this.props
+
     this.setState({ hasError: true })
-    openSnackbar(WALLET_ERROR_MSG, 'error')
+    enqueueSnackbar(WALLET_ERROR_MSG, 'error')
 
     logComponentStack(error, info)
   }
 
   onDisconnect = () => {
-    const { removeProvider, openSnackbar } = this.props
+    const { removeProvider, enqueueSnackbar } = this.props
+
     clearInterval(this.providerListener)
 
-    removeProvider(openSnackbar)
+    removeProvider(enqueueSnackbar)
   }
 
   onConnect = async () => {
-    const { fetchProvider, openSnackbar } = this.props
+    const { fetchProvider, enqueueSnackbar } = this.props
 
     clearInterval(this.providerListener)
     let currentProvider: ProviderProps = await getProviderInfo()
-    fetchProvider(currentProvider, openSnackbar)
+    fetchProvider(currentProvider, enqueueSnackbar)
 
     this.providerListener = setInterval(async () => {
       const newProvider: ProviderProps = await getProviderInfo()
       if (JSON.stringify(currentProvider) !== JSON.stringify(newProvider)) {
-        fetchProvider(newProvider, openSnackbar)
+        fetchProvider(newProvider, enqueueSnackbar)
       }
       currentProvider = newProvider
     }, 2000)
@@ -113,15 +115,7 @@ class HeaderComponent extends React.PureComponent<Props, State> {
   }
 }
 
-const Header = connect(
+export default connect(
   selector,
   actions,
-)(HeaderComponent)
-
-const HeaderSnack = () => {
-  const { enqueueSnackbar } = useSnackbar()
-
-  return <Header openSnackbar={enqueueSnackbar} />
-}
-
-export default HeaderSnack
+)(withSnackbar(HeaderComponent))
