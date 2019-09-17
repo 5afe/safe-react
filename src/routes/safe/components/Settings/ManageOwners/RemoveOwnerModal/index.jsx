@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react'
 import { List } from 'immutable'
 import { withStyles } from '@material-ui/core/styles'
-import { SharedSnackbarConsumer } from '~/components/SharedSnackBar'
+import { withSnackbar } from 'notistack'
 import Modal from '~/components/Modal'
 import { type Owner } from '~/routes/safe/store/models/owner'
 import { getGnosisSafeInstanceAt, SENTINEL_ADDRESS } from '~/logic/contracts/safeContracts'
@@ -31,7 +31,9 @@ type Props = {
   network: string,
   createTransaction: Function,
   removeSafeOwner: Function,
+  enqueueSnackbar: Function,
 }
+
 type ActiveScreen = 'checkOwner' | 'selectThreshold' | 'reviewRemoveOwner'
 
 export const sendRemoveOwner = async (
@@ -40,7 +42,7 @@ export const sendRemoveOwner = async (
   ownerAddressToRemove: string,
   ownerNameToRemove: string,
   ownersOld: List<Owner>,
-  openSnackbar: Function,
+  enqueueSnackbar: Function,
   createTransaction: Function,
   removeSafeOwner: Function,
 ) => {
@@ -54,7 +56,7 @@ export const sendRemoveOwner = async (
     .removeOwner(prevAddress, ownerAddressToRemove, values.threshold)
     .encodeABI()
 
-  const txHash = await createTransaction(safeAddress, safeAddress, 0, txData, openSnackbar)
+  const txHash = await createTransaction(safeAddress, safeAddress, 0, txData, enqueueSnackbar)
 
   if (txHash) {
     removeSafeOwner({ safeAddress, ownerAddress: ownerAddressToRemove })
@@ -74,6 +76,7 @@ const RemoveOwner = ({
   network,
   createTransaction,
   removeSafeOwner,
+  enqueueSnackbar,
 }: Props) => {
   const [activeScreen, setActiveScreen] = useState<ActiveScreen>('checkOwner')
   const [values, setValues] = useState<Object>({})
@@ -104,71 +107,63 @@ const RemoveOwner = ({
     setActiveScreen('reviewRemoveOwner')
   }
 
-  return (
-    <>
-      <SharedSnackbarConsumer>
-        {({ openSnackbar }) => {
-          const onRemoveOwner = () => {
-            onClose()
-            sendRemoveOwner(
-              values,
-              safeAddress,
-              ownerAddress,
-              ownerName,
-              owners,
-              openSnackbar,
-              createTransaction,
-              removeSafeOwner,
-            )
-          }
+  const onRemoveOwner = () => {
+    onClose()
+    sendRemoveOwner(
+      values,
+      safeAddress,
+      ownerAddress,
+      ownerName,
+      owners,
+      enqueueSnackbar,
+      createTransaction,
+      removeSafeOwner,
+    )
+  }
 
-          return (
-            <Modal
-              title="Remove owner from Safe"
-              description="Remove owner from Safe"
-              handleClose={onClose}
-              open={isOpen}
-              paperClassName={classes.biggerModalWindow}
-            >
-              <>
-                {activeScreen === 'checkOwner' && (
-                  <CheckOwner
-                    onClose={onClose}
-                    ownerAddress={ownerAddress}
-                    ownerName={ownerName}
-                    network={network}
-                    onSubmit={ownerSubmitted}
-                  />
-                )}
-                {activeScreen === 'selectThreshold' && (
-                  <ThresholdForm
-                    onClose={onClose}
-                    owners={owners}
-                    threshold={threshold}
-                    onClickBack={onClickBack}
-                    onSubmit={thresholdSubmitted}
-                  />
-                )}
-                {activeScreen === 'reviewRemoveOwner' && (
-                  <ReviewRemoveOwner
-                    onClose={onClose}
-                    safeName={safeName}
-                    owners={owners}
-                    network={network}
-                    values={values}
-                    ownerAddress={ownerAddress}
-                    ownerName={ownerName}
-                    onClickBack={onClickBack}
-                    onSubmit={onRemoveOwner}
-                  />
-                )}
-              </>
-            </Modal>
-          )
-        }}
-      </SharedSnackbarConsumer>
-    </>
+  return (
+    <Modal
+      title="Remove owner from Safe"
+      description="Remove owner from Safe"
+      handleClose={onClose}
+      open={isOpen}
+      paperClassName={classes.biggerModalWindow}
+    >
+      <>
+        {activeScreen === 'checkOwner' && (
+          <CheckOwner
+            onClose={onClose}
+            ownerAddress={ownerAddress}
+            ownerName={ownerName}
+            network={network}
+            onSubmit={ownerSubmitted}
+          />
+        )}
+        {activeScreen === 'selectThreshold' && (
+          <ThresholdForm
+            onClose={onClose}
+            owners={owners}
+            threshold={threshold}
+            onClickBack={onClickBack}
+            onSubmit={thresholdSubmitted}
+          />
+        )}
+        {activeScreen === 'reviewRemoveOwner' && (
+          <ReviewRemoveOwner
+            onClose={onClose}
+            safeName={safeName}
+            owners={owners}
+            network={network}
+            values={values}
+            ownerAddress={ownerAddress}
+            ownerName={ownerName}
+            onClickBack={onClickBack}
+            onSubmit={onRemoveOwner}
+          />
+        )}
+      </>
+    </Modal>
   )
 }
 
-export default withStyles(styles)(RemoveOwner)
+export default withStyles(styles)(withSnackbar(RemoveOwner))

@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react'
 import { List } from 'immutable'
 import { withStyles } from '@material-ui/core/styles'
-import { SharedSnackbarConsumer } from '~/components/SharedSnackBar'
+import { withSnackbar } from 'notistack'
 import Modal from '~/components/Modal'
 import { getGnosisSafeInstanceAt, SENTINEL_ADDRESS } from '~/logic/contracts/safeContracts'
 import OwnerForm from './screens/OwnerForm'
@@ -29,6 +29,7 @@ type Props = {
   threshold: string,
   createTransaction: Function,
   replaceSafeOwner: Function,
+  enqueueSnackbar: Function,
 }
 type ActiveScreen = 'checkOwner' | 'reviewReplaceOwner'
 
@@ -36,7 +37,7 @@ export const sendReplaceOwner = async (
   values: Object,
   safeAddress: string,
   ownerAddressToRemove: string,
-  openSnackbar: Function,
+  enqueueSnackbar: Function,
   createTransaction: Function,
   replaceSafeOwner: Function,
 ) => {
@@ -50,7 +51,7 @@ export const sendReplaceOwner = async (
     .swapOwner(prevAddress, ownerAddressToRemove, values.ownerAddress)
     .encodeABI()
 
-  const txHash = await createTransaction(safeAddress, safeAddress, 0, txData, openSnackbar)
+  const txHash = await createTransaction(safeAddress, safeAddress, 0, txData, enqueueSnackbar)
 
   if (txHash) {
     replaceSafeOwner({
@@ -75,6 +76,7 @@ const ReplaceOwner = ({
   threshold,
   createTransaction,
   replaceSafeOwner,
+  enqueueSnackbar,
 }: Props) => {
   const [activeScreen, setActiveScreen] = useState<ActiveScreen>('checkOwner')
   const [values, setValues] = useState<Object>({})
@@ -96,67 +98,59 @@ const ReplaceOwner = ({
     setActiveScreen('reviewReplaceOwner')
   }
 
-  return (
-    <>
-      <SharedSnackbarConsumer>
-        {({ openSnackbar }) => {
-          const onReplaceOwner = () => {
-            onClose()
-            try {
-              sendReplaceOwner(
-                values,
-                safeAddress,
-                ownerAddress,
-                openSnackbar,
-                createTransaction,
-                replaceSafeOwner,
-              )
-            } catch (error) {
-              // eslint-disable-next-line
-              console.log('Error while removing an owner ' + error)
-            }
-          }
+  const onReplaceOwner = () => {
+    onClose()
+    try {
+      sendReplaceOwner(
+        values,
+        safeAddress,
+        ownerAddress,
+        enqueueSnackbar,
+        createTransaction,
+        replaceSafeOwner,
+      )
+    } catch (error) {
+      // eslint-disable-next-line
+      console.log('Error while removing an owner ' + error)
+    }
+  }
 
-          return (
-            <Modal
-              title="Replace owner from Safe"
-              description="Replace owner from Safe"
-              handleClose={onClose}
-              open={isOpen}
-              paperClassName={classes.biggerModalWindow}
-            >
-              <>
-                {activeScreen === 'checkOwner' && (
-                  <OwnerForm
-                    onClose={onClose}
-                    ownerAddress={ownerAddress}
-                    ownerName={ownerName}
-                    owners={owners}
-                    network={network}
-                    onSubmit={ownerSubmitted}
-                  />
-                )}
-                {activeScreen === 'reviewReplaceOwner' && (
-                  <ReviewReplaceOwner
-                    onClose={onClose}
-                    safeName={safeName}
-                    owners={owners}
-                    network={network}
-                    values={values}
-                    ownerAddress={ownerAddress}
-                    ownerName={ownerName}
-                    onClickBack={onClickBack}
-                    onSubmit={onReplaceOwner}
-                    threshold={threshold}
-                  />
-                )}
-              </>
-            </Modal>
-          )
-        }}
-      </SharedSnackbarConsumer>
-    </>
+  return (
+    <Modal
+      title="Replace owner from Safe"
+      description="Replace owner from Safe"
+      handleClose={onClose}
+      open={isOpen}
+      paperClassName={classes.biggerModalWindow}
+    >
+      <>
+        {activeScreen === 'checkOwner' && (
+          <OwnerForm
+            onClose={onClose}
+            ownerAddress={ownerAddress}
+            ownerName={ownerName}
+            owners={owners}
+            network={network}
+            onSubmit={ownerSubmitted}
+          />
+        )}
+        {activeScreen === 'reviewReplaceOwner' && (
+          <ReviewReplaceOwner
+            onClose={onClose}
+            safeName={safeName}
+            owners={owners}
+            network={network}
+            values={values}
+            ownerAddress={ownerAddress}
+            ownerName={ownerName}
+            onClickBack={onClickBack}
+            onSubmit={onReplaceOwner}
+            threshold={threshold}
+          />
+        )}
+      </>
+    </Modal>
   )
 }
 
-export default withStyles(styles)(ReplaceOwner)
+export default withStyles(styles)(withSnackbar(ReplaceOwner))

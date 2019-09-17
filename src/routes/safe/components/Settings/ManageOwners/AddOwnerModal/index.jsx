@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react'
 import { List } from 'immutable'
 import { withStyles } from '@material-ui/core/styles'
-import { SharedSnackbarConsumer } from '~/components/SharedSnackBar'
+import { withSnackbar } from 'notistack'
 import Modal from '~/components/Modal'
 import { type Owner } from '~/routes/safe/store/models/owner'
 import { getGnosisSafeInstanceAt } from '~/logic/contracts/safeContracts'
@@ -29,6 +29,7 @@ type Props = {
   network: string,
   addSafeOwner: Function,
   createTransaction: Function,
+  enqueueSnackbar: Function,
 }
 type ActiveScreen = 'selectOwner' | 'selectThreshold' | 'reviewAddOwner'
 
@@ -36,14 +37,14 @@ export const sendAddOwner = async (
   values: Object,
   safeAddress: string,
   ownersOld: List<Owner>,
-  openSnackbar: Function,
+  enqueueSnackbar: Function,
   createTransaction: Function,
   addSafeOwner: Function,
 ) => {
   const gnosisSafe = await getGnosisSafeInstanceAt(safeAddress)
   const txData = gnosisSafe.contract.methods.addOwnerWithThreshold(values.ownerAddress, values.threshold).encodeABI()
 
-  const txHash = await createTransaction(safeAddress, safeAddress, 0, txData, openSnackbar)
+  const txHash = await createTransaction(safeAddress, safeAddress, 0, txData, enqueueSnackbar)
 
   if (txHash) {
     addSafeOwner({ safeAddress, ownerName: values.ownerName, ownerAddress: values.ownerAddress })
@@ -61,6 +62,7 @@ const AddOwner = ({
   network,
   createTransaction,
   addSafeOwner,
+  enqueueSnackbar,
 }: Props) => {
   const [activeScreen, setActiveScreen] = useState<ActiveScreen>('selectOwner')
   const [values, setValues] = useState<Object>({})
@@ -98,59 +100,51 @@ const AddOwner = ({
     setActiveScreen('reviewAddOwner')
   }
 
-  return (
-    <>
-      <SharedSnackbarConsumer>
-        {({ openSnackbar }) => {
-          const onAddOwner = async () => {
-            onClose()
-            try {
-              sendAddOwner(values, safeAddress, owners, openSnackbar, createTransaction, addSafeOwner)
-            } catch (error) {
-              // eslint-disable-next-line
-              console.log('Error while removing an owner ' + error)
-            }
-          }
+  const onAddOwner = async () => {
+    onClose()
+    try {
+      sendAddOwner(values, safeAddress, owners, enqueueSnackbar, createTransaction, addSafeOwner)
+    } catch (error) {
+      // eslint-disable-next-line
+      console.log('Error while removing an owner ' + error)
+    }
+  }
 
-          return (
-            <Modal
-              title="Add owner to Safe"
-              description="Add owner to Safe"
-              handleClose={onClose}
-              open={isOpen}
-              paperClassName={classes.biggerModalWindow}
-            >
-              <>
-                {activeScreen === 'selectOwner' && (
-                  <OwnerForm onClose={onClose} onSubmit={ownerSubmitted} owners={owners} />
-                )}
-                {activeScreen === 'selectThreshold' && (
-                  <ThresholdForm
-                    onClose={onClose}
-                    owners={owners}
-                    threshold={threshold}
-                    onClickBack={onClickBack}
-                    onSubmit={thresholdSubmitted}
-                  />
-                )}
-                {activeScreen === 'reviewAddOwner' && (
-                  <ReviewAddOwner
-                    onClose={onClose}
-                    safeName={safeName}
-                    owners={owners}
-                    network={network}
-                    values={values}
-                    onClickBack={onClickBack}
-                    onSubmit={onAddOwner}
-                  />
-                )}
-              </>
-            </Modal>
-          )
-        }}
-      </SharedSnackbarConsumer>
-    </>
+  return (
+    <Modal
+      title="Add owner to Safe"
+      description="Add owner to Safe"
+      handleClose={onClose}
+      open={isOpen}
+      paperClassName={classes.biggerModalWindow}
+    >
+      <>
+        {activeScreen === 'selectOwner' && (
+          <OwnerForm onClose={onClose} onSubmit={ownerSubmitted} owners={owners} />
+        )}
+        {activeScreen === 'selectThreshold' && (
+          <ThresholdForm
+            onClose={onClose}
+            owners={owners}
+            threshold={threshold}
+            onClickBack={onClickBack}
+            onSubmit={thresholdSubmitted}
+          />
+        )}
+        {activeScreen === 'reviewAddOwner' && (
+          <ReviewAddOwner
+            onClose={onClose}
+            safeName={safeName}
+            owners={owners}
+            network={network}
+            values={values}
+            onClickBack={onClickBack}
+            onSubmit={onAddOwner}
+          />
+        )}
+      </>
+    </Modal>
   )
 }
 
-export default withStyles(styles)(AddOwner)
+export default withStyles(styles)(withSnackbar(AddOwner))

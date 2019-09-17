@@ -1,11 +1,11 @@
 // @flow
 import React from 'react'
 import { withStyles } from '@material-ui/core/styles'
+import { withSnackbar } from 'notistack'
 import Block from '~/components/layout/Block'
 import Col from '~/components/layout/Col'
 import Field from '~/components/forms/Field'
 import Heading from '~/components/layout/Heading'
-import { SharedSnackbarConsumer } from '~/components/SharedSnackBar'
 import { composeValidators, required, minMaxLength } from '~/components/forms/validator'
 import TextField from '~/components/forms/TextField'
 import GnoForm from '~/components/forms/GnoForm'
@@ -22,17 +22,17 @@ type Props = {
   safeAddress: string,
   safeName: string,
   updateSafe: Function,
-  openSnackbar: Function,
+  enqueueSnackbar: Function,
 }
 
 const ChangeSafeName = (props: Props) => {
   const {
-    classes, safeAddress, safeName, updateSafe, openSnackbar,
+    classes, safeAddress, safeName, updateSafe, enqueueSnackbar,
   } = props
 
   const handleSubmit = (values) => {
     updateSafe({ address: safeAddress, name: values.safeName })
-    openSnackbar('Safe name changed', 'success')
+    enqueueSnackbar('Safe name changed', 'success')
   }
 
   return (
@@ -80,10 +80,4 @@ const ChangeSafeName = (props: Props) => {
   )
 }
 
-const withSnackbar = (props) => (
-  <SharedSnackbarConsumer>
-    {({ openSnackbar }) => <ChangeSafeName {...props} openSnackbar={openSnackbar} />}
-  </SharedSnackbarConsumer>
-)
-
-export default withStyles(styles)(withSnackbar)
+export default withStyles(styles)(withSnackbar(ChangeSafeName))
