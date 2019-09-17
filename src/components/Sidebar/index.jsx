@@ -1,15 +1,26 @@
 // @flow
-import React, { useState } from 'react'
+import * as React from 'react'
 import Drawer from '@material-ui/core/Drawer'
 import useSidebarStyles from './style'
 
-export const SidebarContext = React.createContext({
+const { useState } = React
+
+type TSidebarContext = {
+  isOpen: boolean,
+  toggleSidebar: Function,
+}
+
+export const SidebarContext = React.createContext<TSidebarContext>({
   isOpen: false,
   toggleSidebar: () => {},
 })
 
-const Sidebar = ({ children }) => {
-  const [isOpen, setIsOpen] = useState<boolean>(true)
+type SidebarProps = {
+  children: React.Node,
+}
+
+const Sidebar = ({ children }: SidebarProps) => {
+  const [isOpen, setIsOpen] = useState<boolean>(false)
   const classes = useSidebarStyles()
 
   const toggleSidebar = () => {

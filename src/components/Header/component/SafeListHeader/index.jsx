@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 import { makeStyles } from '@material-ui/core/styles'
 import IconButton from '@material-ui/core/IconButton'
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
+import ExpandLessIcon from '@material-ui/icons/ExpandLess'
 import Paragraph from '~/components/layout/Paragraph'
 import Col from '~/components/layout/Col'
 import {
@@ -37,7 +38,7 @@ const { useContext } = React
 
 const SafeListHeader = ({ safesCount }: Props) => {
   const classes = useStyles()
-  const { toggleSidebar } = useContext(SidebarContext)
+  const { toggleSidebar, isOpen } = useContext(SidebarContext)
 
   return (
     <Col start="xs" middle="xs" className={classes.container}>
@@ -47,7 +48,7 @@ const SafeListHeader = ({ safesCount }: Props) => {
         {safesCount}
       </Paragraph>
       <IconButton onClick={toggleSidebar} className={classes.icon} aria-label="Expand Safe List">
-        <ExpandMoreIcon color="secondary" />
+        {isOpen ? <ExpandMoreIcon color="secondary" /> : <ExpandLessIcon />}
       </IconButton>
     </Col>
   )
