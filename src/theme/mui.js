@@ -209,7 +209,7 @@ export default createMuiTheme({
     MuiSvgIcon: {
       colorSecondary: {
         color: secondaryText,
-      }
+      },
     },
     MuiTab: {
       root: {
