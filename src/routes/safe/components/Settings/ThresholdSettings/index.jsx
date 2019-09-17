@@ -10,10 +10,11 @@ import Block from '~/components/layout/Block'
 import Row from '~/components/layout/Row'
 import Modal from '~/components/Modal'
 import Paragraph from '~/components/layout/Paragraph'
+import { type Variant } from '~/components/Header'
 import ChangeThreshold from './ChangeThreshold'
 import type { Owner } from '~/routes/safe/store/models/owner'
-import { styles } from './style'
 import { getGnosisSafeInstanceAt } from '~/logic/contracts/safeContracts'
+import { styles } from './style'
 
 type Props = {
   owners: List<Owner>,
@@ -22,7 +23,7 @@ type Props = {
   createTransaction: Function,
   safeAddress: string,
   granted: boolean,
-  enqueueSnackbar: Function,
+  enqueueSnackbar: (message: string, variant: Variant) => void,
 }
 
 const ThresholdSettings = ({

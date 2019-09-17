@@ -13,6 +13,7 @@ import Row from '~/components/layout/Row'
 import Bold from '~/components/layout/Bold'
 import Block from '~/components/layout/Block'
 import Paragraph from '~/components/layout/Paragraph'
+import { type Variant } from '~/components/Header'
 import { type Transaction } from '~/routes/safe/store/models/transaction'
 import { styles } from './style'
 
@@ -29,7 +30,7 @@ type Props = {
   threshold: number,
   thresholdReached: boolean,
   userAddress: string,
-  enqueueSnackbar: Function,
+  enqueueSnackbar: (message: string, variant: Variant) => void,
 }
 
 const getModalTitleAndDescription = (thresholdReached: boolean) => {

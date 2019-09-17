@@ -13,6 +13,7 @@ import Block from '~/components/layout/Block'
 import Paragraph from '~/components/layout/Paragraph'
 import { type Transaction } from '~/routes/safe/store/models/transaction'
 import { EMPTY_DATA } from '~/logic/wallets/ethTransactions'
+import { type Variant } from '~/components/Header'
 import { styles } from './style'
 
 type Props = {
@@ -22,7 +23,7 @@ type Props = {
   createTransaction: Function,
   tx: Transaction,
   safeAddress: string,
-  enqueueSnackbar: Function,
+  enqueueSnackbar: (message: string, variant: Variant) => void,
 }
 
 const CancelTxModal = ({

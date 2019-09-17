@@ -14,7 +14,12 @@ import Layout from './component/Layout'
 import actions, { type Actions } from './actions'
 import selector, { type SelectorProps } from './selector'
 
-type Variant = 'success' | 'error' | 'warning' | 'info'
+const SUCCESS = 'SUCCESS'
+const ERROR = 'ERROR'
+const WARNING = 'WARNING'
+const INFO = 'INFO'
+
+export type Variant = SUCCESS | ERROR | WARNING | INFO
 
 type Props = Actions &
   SelectorProps & {

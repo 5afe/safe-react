@@ -12,13 +12,14 @@ import {
   type Notifications,
   DEFAULT_NOTIFICATIONS,
 } from '~/logic/safe/transactions'
+import { type Variant } from '~/components/Header'
 
 const createTransaction = (
   safeAddress: string,
   to: string,
   valueInWei: string,
   txData: string = EMPTY_DATA,
-  enqueueSnackbar: Function,
+  enqueueSnackbar: (message: string, variant: Variant) => void,
   shouldExecute?: boolean,
   notifications?: Notifications = DEFAULT_NOTIFICATIONS,
 ) => async (dispatch: ReduxDispatch<GlobalState>, getState: GetState<GlobalState>) => {

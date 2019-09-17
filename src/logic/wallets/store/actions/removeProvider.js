@@ -1,9 +1,10 @@
 // @flow
 import type { Dispatch as ReduxDispatch } from 'redux'
 import { makeProvider, type ProviderProps, type Provider } from '~/logic/wallets/store/model/provider'
+import { type Variant } from '~/components/Header'
 import addProvider from './addProvider'
 
-export default (enqueueSnackbar: Function) => async (dispatch: ReduxDispatch<*>) => {
+export default (enqueueSnackbar: (message: string, variant: Variant) => void) => async (dispatch: ReduxDispatch<*>) => {
   const providerProps: ProviderProps = {
     name: '',
     available: false,

@@ -12,6 +12,7 @@ import GnoForm from '~/components/forms/GnoForm'
 import Row from '~/components/layout/Row'
 import Paragraph from '~/components/layout/Paragraph'
 import Button from '~/components/layout/Button'
+import { type Variant } from '~/components/Header'
 import { styles } from './style'
 
 export const SAFE_NAME_INPUT_TEST_ID = 'safe-name-input'
@@ -22,7 +23,7 @@ type Props = {
   safeAddress: string,
   safeName: string,
   updateSafe: Function,
-  enqueueSnackbar: Function,
+  enqueueSnackbar: (message: string, variant: Variant) => void,
 }
 
 const ChangeSafeName = (props: Props) => {

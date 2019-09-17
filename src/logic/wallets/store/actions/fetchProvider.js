@@ -3,6 +3,7 @@ import type { Dispatch as ReduxDispatch } from 'redux'
 import { ETHEREUM_NETWORK_IDS, ETHEREUM_NETWORK } from '~/logic/wallets/getWeb3'
 import type { ProviderProps } from '~/logic/wallets/store/model/provider'
 import { makeProvider } from '~/logic/wallets/store/model/provider'
+import { type Variant } from '~/components/Header'
 import addProvider from './addProvider'
 
 export const processProviderResponse = (dispatch: ReduxDispatch<*>, provider: ProviderProps) => {
@@ -26,7 +27,10 @@ const UNLOCK_MSG = 'Unlock your wallet to connect'
 const WRONG_NETWORK = 'You are connected to wrong network. Please use RINKEBY'
 export const WALLET_ERROR_MSG = 'Error connecting to your wallet'
 
-const handleProviderNotification = (enqueueSnackbar: Function, provider: ProviderProps) => {
+const handleProviderNotification = (
+  enqueueSnackbar: (message: string, variant: Variant) => void,
+  provider: ProviderProps,
+) => {
   const { loaded, available, network } = provider
 
   if (!loaded) {
@@ -44,7 +48,9 @@ const handleProviderNotification = (enqueueSnackbar: Function, provider: Provide
   enqueueSnackbar(msg, variant)
 }
 
-export default (provider: ProviderProps, enqueueSnackbar: Function) => (dispatch: ReduxDispatch<*>) => {
+export default (provider: ProviderProps, enqueueSnackbar: (message: string, variant: Variant) => void) => (
+  dispatch: ReduxDispatch<*>,
+) => {
   handleProviderNotification(enqueueSnackbar, provider)
   processProviderResponse(dispatch, provider)
 }

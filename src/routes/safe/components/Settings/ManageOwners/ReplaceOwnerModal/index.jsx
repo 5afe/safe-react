@@ -4,6 +4,7 @@ import { List } from 'immutable'
 import { withStyles } from '@material-ui/core/styles'
 import { withSnackbar } from 'notistack'
 import Modal from '~/components/Modal'
+import { type Variant } from '~/components/Header'
 import { getGnosisSafeInstanceAt, SENTINEL_ADDRESS } from '~/logic/contracts/safeContracts'
 import OwnerForm from './screens/OwnerForm'
 import ReviewReplaceOwner from './screens/Review'
@@ -29,7 +30,7 @@ type Props = {
   threshold: string,
   createTransaction: Function,
   replaceSafeOwner: Function,
-  enqueueSnackbar: Function,
+  enqueueSnackbar: (message: string, variant: Variant) => void,
 }
 type ActiveScreen = 'checkOwner' | 'reviewReplaceOwner'
 
@@ -37,7 +38,7 @@ export const sendReplaceOwner = async (
   values: Object,
   safeAddress: string,
   ownerAddressToRemove: string,
-  enqueueSnackbar: Function,
+  enqueueSnackbar: (message: string, variant: Variant) => void,
   createTransaction: Function,
   replaceSafeOwner: Function,
 ) => {

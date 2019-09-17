@@ -13,8 +13,9 @@ import Button from '~/components/layout/Button'
 import Img from '~/components/layout/Img'
 import Block from '~/components/layout/Block'
 import Identicon from '~/components/Identicon'
-import { copyToClipboard } from '~/utils/clipboard'
 import Hairline from '~/components/layout/Hairline'
+import { type Variant } from '~/components/Header'
+import { copyToClipboard } from '~/utils/clipboard'
 import SafeInfo from '~/routes/safe/components/Balances/SendModal/SafeInfo'
 import { setImageToPlaceholder } from '~/routes/safe/components/Balances/utils'
 import { getWeb3 } from '~/logic/wallets/getWeb3'
@@ -33,7 +34,7 @@ type Props = {
   ethBalance: string,
   tx: Object,
   createTransaction: Function,
-  enqueueSnackbar: Function,
+  enqueueSnackbar: (message: string, variant: Variant) => void,
 }
 
 const openIconStyle = {

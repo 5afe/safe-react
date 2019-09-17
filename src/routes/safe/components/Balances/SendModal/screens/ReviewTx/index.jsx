@@ -15,6 +15,7 @@ import Block from '~/components/layout/Block'
 import Identicon from '~/components/Identicon'
 import { copyToClipboard } from '~/utils/clipboard'
 import Hairline from '~/components/layout/Hairline'
+import { type Variant } from '~/components/Header'
 import SafeInfo from '~/routes/safe/components/Balances/SendModal/SafeInfo'
 import { setImageToPlaceholder } from '~/routes/safe/components/Balances/utils'
 import { getStandardTokenContract } from '~/logic/tokens/store/actions/fetchTokens'
@@ -35,7 +36,7 @@ type Props = {
   ethBalance: string,
   tx: Object,
   createTransaction: Function,
-  enqueueSnackbar: Function,
+  enqueueSnackbar: (message: string, variant: Variant) => void,
 }
 
 const openIconStyle = {

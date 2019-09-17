@@ -6,6 +6,7 @@ import fetchTransactions from '~/routes/safe/store/actions/fetchTransactions'
 import { type GlobalState } from '~/store'
 import { getGnosisSafeInstanceAt } from '~/logic/contracts/safeContracts'
 import { approveTransaction, executeTransaction, CALL } from '~/logic/safe/transactions'
+import { type Variant } from '~/components/Header'
 
 // https://gnosis-safe.readthedocs.io/en/latest/contracts/signatures.html#pre-validated-signatures
 // https://github.com/gnosis/safe-contracts/blob/master/test/gnosisSafeTeamEdition.js#L26
@@ -31,7 +32,7 @@ const generateSignaturesFromTxConfirmations = (tx: Transaction, preApprovingOwne
 const processTransaction = (
   safeAddress: string,
   tx: Transaction,
-  enqueueSnackbar: Function,
+  enqueueSnackbar: (message: string, variant: Variant) => void,
   userAddress: string,
   approveAndExecute?: boolean,
 ) => async (dispatch: ReduxDispatch<GlobalState>, getState: GetState<GlobalState>) => {
