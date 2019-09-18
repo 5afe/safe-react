@@ -162,12 +162,11 @@ const ReviewComponent = ({ values, classes, userAccount }: Props) => {
       <Row className={classes.info} align="center">
         <Paragraph noMargin color="primary" size="md">
           You&apos;re about to create a new Safe and will have to confirm a transaction with your currently connected
-          wallet. The creation will cost approximately
+          wallet. Make sure you have
           {' '}
           {gasCosts}
           {' '}
-          ETH. The exact amount will be determined by your
-          wallet.
+          ETH in this wallet to fund this transaction.
         </Paragraph>
       </Row>
     </>
