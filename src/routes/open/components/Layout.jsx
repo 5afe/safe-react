@@ -67,7 +67,7 @@ const Layout = ({
             mutators={formMutators}
             testId="create-safe-form"
           >
-            <StepperPage validate={safeNameValidation}>{SafeNameField}</StepperPage>
+            <StepperPage>{SafeNameField}</StepperPage>
             <StepperPage>{SafeOwnersFields}</StepperPage>
             <StepperPage network={network} userAccount={userAccount}>
               {Review}

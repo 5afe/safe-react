@@ -50,12 +50,6 @@ export const SAFE_MASTERCOPY_ERROR = 'Mastercopy used by this safe is not the sa
 export const safeFieldsValidation = async (values: Object) => {
   const errors = {}
   const web3 = getWeb3()
-  const safeName = values[FIELD_LOAD_NAME]
-  const safeAddress = values[FIELD_LOAD_ADDRESS]
-
-  if (!safeName) {
-    errors[FIELD_LOAD_NAME] = 'Required'
-  }
 
   if (!safeAddress || mustBeEthereumAddress(safeAddress) !== undefined) {
     errors[FIELD_LOAD_ADDRESS] = 'Required'
