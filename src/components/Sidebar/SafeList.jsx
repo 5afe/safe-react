@@ -61,7 +61,7 @@ const SafeList = ({ safes, onSafeClick }: SafeListProps) => {
                 {' '}
                 ETH
               </Paragraph>
-              PIZDOS))
+              Make default
             </ListItem>
           </Link>
           <Hairline />

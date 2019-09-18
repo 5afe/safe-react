@@ -14,10 +14,11 @@ import { ADD_SAFE_OWNER } from '~/routes/safe/store/actions/addSafeOwner'
 import { REMOVE_SAFE_OWNER } from '~/routes/safe/store/actions/removeSafeOwner'
 import { REPLACE_SAFE_OWNER } from '~/routes/safe/store/actions/replaceSafeOwner'
 import { EDIT_SAFE_OWNER } from '~/routes/safe/store/actions/editSafeOwner'
+import { SET_DEFAULT_SAFE } from '~/routes/safe/store/actions/setDefaultSafe'
 
 export const SAFE_REDUCER_ID = 'safes'
 
-export type State = Map<string, Safe>
+type SafeReducerState = Map<string, *>
 
 export const buildSafe = (storedSafe: SafeProps) => {
   const names = storedSafe.owners.map((owner: OwnerProps) => owner.name)
@@ -61,15 +62,15 @@ export const safesInitialState = async (): Promise<State> => {
   return safes
 }
 
-export default handleActions<State, *>(
+export default handleActions<SafeReducerState, *>(
   {
-    [UPDATE_SAFE]: (state: State, action: ActionType<Function>): State => {
+    [UPDATE_SAFE]: (state: SafeReducerState, action: ActionType<Function>): SafeReducerState => {
       const safe = action.payload
       const safeAddress = safe.address
 
-      return state.update(safeAddress, (prevSafe) => prevSafe.merge(safe))
+      return state.updateIn(['safes', safeAddress], (prevSafe) => prevSafe.merge(safe))
     },
-    [ACTIVATE_TOKEN_FOR_ALL_SAFES]: (state: State, action: ActionType<Function>): State => {
+    [ACTIVATE_TOKEN_FOR_ALL_SAFES]: (state: SafeReducerState, action: ActionType<Function>): SafeReducerState => {
       const tokenAddress = action.payload
 
       const newState = state.withMutations((map) => {
@@ -77,13 +78,13 @@ export default handleActions<State, *>(
           const safeActiveTokens = map.getIn([safeAddress, 'activeTokens'])
           const activeTokens = safeActiveTokens.push(tokenAddress)
 
-          map.update(safeAddress, (prevSafe) => prevSafe.merge({ activeTokens }))
+          map.updateIn(['safes', safeAddress], (prevSafe) => prevSafe.merge({ activeTokens }))
         })
       })
 
       return newState
     },
-    [ADD_SAFE]: (state: State, action: ActionType<Function>): State => {
+    [ADD_SAFE]: (state: SafeReducerState, action: ActionType<Function>): SafeReducerState => {
       const { safe }: { safe: SafeProps } = action.payload
 
       // if you add a new safe it needs to be set as a record
@@ -91,45 +92,45 @@ export default handleActions<State, *>(
       // with initial props and it would overwrite existing ones
 
       if (state.has(safe.address)) {
-        return state.update(safe.address, (prevSafe) => prevSafe.merge(safe))
+        return state.updateIn(['safes', safe.address], (prevSafe) => prevSafe.merge(safe))
       }
 
-      return state.set(safe.address, SafeRecord(safe))
+      return state.setIn(['safes', safe.address], SafeRecord(safe))
     },
-    [REMOVE_SAFE]: (state: State, action: ActionType<Function>): State => {
+    [REMOVE_SAFE]: (state: SafeReducerState, action: ActionType<Function>): SafeReducerState => {
       const safeAddress = action.payload
 
-      return state.delete(safeAddress)
+      return state.deleteIn(['safes', safeAddress])
     },
-    [ADD_SAFE_OWNER]: (state: State, action: ActionType<Function>): State => {
+    [ADD_SAFE_OWNER]: (state: SafeReducerState, action: ActionType<Function>): SafeReducerState => {
       const { safeAddress, ownerName, ownerAddress } = action.payload
 
-      return state.update(safeAddress, (prevSafe) => prevSafe.merge({
+      return state.updateIn(['safes', safeAddress], (prevSafe) => prevSafe.merge({
         owners: prevSafe.owners.push(makeOwner({ address: ownerAddress, name: ownerName })),
       }))
     },
-    [REMOVE_SAFE_OWNER]: (state: State, action: ActionType<Function>): State => {
+    [REMOVE_SAFE_OWNER]: (state: SafeReducerState, action: ActionType<Function>): SafeReducerState => {
       const { safeAddress, ownerAddress } = action.payload
 
-      return state.update(safeAddress, (prevSafe) => prevSafe.merge({
+      return state.updateIn(['safes', safeAddress], (prevSafe) => prevSafe.merge({
         owners: prevSafe.owners.filter((o) => o.address.toLowerCase() !== ownerAddress.toLowerCase()),
       }))
     },
-    [REPLACE_SAFE_OWNER]: (state: State, action: ActionType<Function>): State => {
+    [REPLACE_SAFE_OWNER]: (state: SafeReducerState, action: ActionType<Function>): SafeReducerState => {
       const {
         safeAddress, oldOwnerAddress, ownerName, ownerAddress,
       } = action.payload
 
-      return state.update(safeAddress, (prevSafe) => prevSafe.merge({
+      return state.updateIn(['safes', safeAddress], (prevSafe) => prevSafe.merge({
         owners: prevSafe.owners
           .filter((o) => o.address.toLowerCase() !== oldOwnerAddress.toLowerCase())
           .push(makeOwner({ address: ownerAddress, name: ownerName })),
       }))
     },
-    [EDIT_SAFE_OWNER]: (state: State, action: ActionType<Function>): State => {
+    [EDIT_SAFE_OWNER]: (state: SafeReducerState, action: ActionType<Function>): SafeReducerState => {
       const { safeAddress, ownerAddress, ownerName } = action.payload
 
-      return state.update(safeAddress, (prevSafe) => {
+      return state.updateIn(['safes', safeAddress], (prevSafe) => {
         const ownerToUpdateIndex = prevSafe.owners.findIndex(
           (o) => o.address.toLowerCase() === ownerAddress.toLowerCase(),
         )
@@ -137,6 +138,11 @@ export default handleActions<State, *>(
         return prevSafe.merge({ owners: updatedOwners })
       })
     },
+    [SET_DEFAULT_SAFE]: (state: SafeReducerState, action: ActionType<Function>): SafeReducerState => state.set('defaultSafe', action.payload),
   },
-  Map(),
+  Map({
+    // $FlowFixMe
+    defaultSafe: '',
+    safes: Map(),
+  }),
 )
