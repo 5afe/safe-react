@@ -20,6 +20,7 @@ import {
   composeValidators,
   mustBeFloat,
   maxValue,
+  mustBeEthereumContractAddress,
 } from '~/components/forms/validator'
 import SafeInfo from '~/routes/safe/components/Balances/SendModal/SafeInfo'
 import ArrowDown from '../assets/arrow-down.svg'
@@ -103,7 +104,7 @@ const SendCustomTx = ({
                       text="Recipient*"
                       className={classes.addressInput}
                       fieldMutator={mutators.setRecipient}
-                      mustBeContract
+                      validators={[mustBeEthereumContractAddress]}
                     />
                   </Col>
                 </Row>
