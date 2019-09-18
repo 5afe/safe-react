@@ -13,7 +13,7 @@ import Spacer from '~/components/Spacer'
 import Hairline from '~/components/layout/Hairline'
 import Row from '~/components/layout/Row'
 import { type Safe } from '~/routes/safe/store/models/safe'
-import { safesListSelector } from '~/routes/safeList/store/selectors'
+import { safesListSelector, defaultSafeSelector } from '~/routes/safeList/store/selectors'
 import setDefaultSafe from '~/routes/safe/store/actions/setDefaultSafe'
 import useSidebarStyles from './style'
 import SafeList from './SafeList'
@@ -35,6 +35,7 @@ type SidebarProps = {
   children: React.Node,
   safes: List<Safe>,
   setDefaultSafeAction: Function,
+  defaultSafe: string,
 }
 
 const filterBy = (filter: string, safes: List<Safe>): List<Safe> => safes.filter(
@@ -43,7 +44,9 @@ const filterBy = (filter: string, safes: List<Safe>): List<Safe> => safes.filter
       || safe.name.toLowerCase().includes(filter.toLowerCase()),
 )
 
-const Sidebar = ({ children, safes, setDefaultSafeAction }: SidebarProps) => {
+const Sidebar = ({
+  children, safes, setDefaultSafeAction, defaultSafe,
+}: SidebarProps) => {
   const [isOpen, setIsOpen] = useState<boolean>(false)
   const [filter, setFilter] = useState<string>('')
   const classes = useSidebarStyles()
@@ -112,7 +115,12 @@ const Sidebar = ({ children, safes, setDefaultSafeAction }: SidebarProps) => {
             <Spacer />
           </Row>
           <Hairline />
-          <SafeList safes={filteredSafes} onSafeClick={toggleSidebar} setDefaultSafe={setDefaultSafeAction} />
+          <SafeList
+            safes={filteredSafes}
+            onSafeClick={toggleSidebar}
+            setDefaultSafe={setDefaultSafeAction}
+            defaultSafe={defaultSafe}
+          />
         </Drawer>
       </ClickAwayListener>
       {children}
@@ -122,6 +130,6 @@ const Sidebar = ({ children, safes, setDefaultSafeAction }: SidebarProps) => {
 
 export default connect<Object, Object, ?Function, ?Object>(
   // $FlowFixMe
-  (state) => ({ safes: safesListSelector(state) }),
+  (state) => ({ safes: safesListSelector(state), defaultSafe: defaultSafeSelector(state) }),
   { setDefaultSafeAction: setDefaultSafe },
 )(Sidebar)

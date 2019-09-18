@@ -14,14 +14,16 @@ import Identicon from '~/components/Identicon'
 import {
   mediumFontSize, sm, secondary, primary,
 } from '~/theme/variables'
-import { shortVersionOf } from '~/logic/wallets/ethAddresses'
+import { shortVersionOf, sameAddress } from '~/logic/wallets/ethAddresses'
 import { type Safe } from '~/routes/safe/store/models/safe'
 import { SAFELIST_ADDRESS } from '~/routes/routes'
+import DefaultBadge from './DefaultBadge'
 
 type SafeListProps = {
   safes: List<Safe>,
   onSafeClick: Function,
   setDefaultSafe: Function,
+  defaultSafe: string,
 }
 
 const useStyles = makeStyles({
@@ -39,9 +41,15 @@ const useStyles = makeStyles({
     color: primary,
     fontSize: mediumFontSize,
   },
+  makeDefaultBtn: {
+    padding: 0,
+    marginLeft: sm,
+  },
 })
 
-const SafeList = ({ safes, onSafeClick, setDefaultSafe }: SafeListProps) => {
+const SafeList = ({
+  safes, onSafeClick, setDefaultSafe, defaultSafe,
+}: SafeListProps) => {
   const classes = useStyles()
 
   return (
@@ -63,14 +71,22 @@ const SafeList = ({ safes, onSafeClick, setDefaultSafe }: SafeListProps) => {
                 {' '}
 ETH
               </Paragraph>
-              <ButtonLink
-                size="sm"
-                onClick={() => {
-                  setDefaultSafe(safe.address)
-                }}
-              >
-                Make default
-              </ButtonLink>
+              {sameAddress(defaultSafe, safe.address) ? (
+                <DefaultBadge />
+              ) : (
+                <ButtonLink
+                  className={classes.makeDefaultBtn}
+                  size="sm"
+                  onClick={(e) => {
+                    e.preventDefault()
+                    e.stopPropagation()
+
+                    setDefaultSafe(safe.address)
+                  }}
+                >
+                  Make default
+                </ButtonLink>
+              )}
             </ListItem>
           </Link>
           <Hairline />
