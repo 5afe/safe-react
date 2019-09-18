@@ -204,6 +204,18 @@ export default createMuiTheme({
         color: secondaryText,
       },
     },
+    /* MuiSnackbar: {
+      anchorOriginTopRight: {
+        marginTop: '50px',
+      },
+    }, */
+    MuiSnackbarContent: {
+      message: {
+        '& img': {
+          marginRight: '5px',
+        },
+      },
+    },
     MuiTab: {
       root: {
         fontFamily: 'Averta, monospace',
