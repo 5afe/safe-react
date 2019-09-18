@@ -33,8 +33,15 @@ type SidebarProps = {
   safes: List<Safe>,
 }
 
+const filterBy = (filter: string, safes: List<Safe>): List<Safe> => safes.filter(
+  (safe: Safe) => !filter
+      || safe.address.toLowerCase().includes(filter.toLowerCase())
+      || safe.name.toLowerCase().includes(filter.toLowerCase()),
+)
+
 const Sidebar = ({ children, safes }: SidebarProps) => {
   const [isOpen, setIsOpen] = useState<boolean>(false)
+  const [filter, setFilter] = useState<string>('')
   const classes = useSidebarStyles()
 
   const searchClasses = {
@@ -48,11 +55,21 @@ const Sidebar = ({ children, safes }: SidebarProps) => {
     setIsOpen((prevIsOpen) => !prevIsOpen)
   }
 
-  const handleEsc = (e: React.KeyboardEvent) => {
+  const handleFilterChange = (value: string) => {
+    setFilter(value)
+  }
+
+  const handleFilterCancel = () => {
+    setFilter('')
+  }
+
+  const handleEsc = (e: SyntheticKeyboardEvent<*>) => {
     if (e.keyCode === 27) {
       toggleSidebar()
     }
   }
+
+  const filteredSafes = filterBy(filter, safes)
 
   return (
     <SidebarContext.Provider value={{ isOpen, toggleSidebar }}>
@@ -67,7 +84,13 @@ const Sidebar = ({ children, safes }: SidebarProps) => {
           <div className={classes.headerPlaceholder} />
           <Row align="center">
             <SearchIcon className={classes.searchIcon} />
-            <SearchBar classes={searchClasses} placeholder="Search by name or address" searchIcon={<div />} />
+            <SearchBar
+              classes={searchClasses}
+              placeholder="Search by name or address"
+              searchIcon={<div />}
+              onChange={handleFilterChange}
+              onCancelSearch={handleFilterCancel}
+            />
             <Spacer />
             <Divider />
             <Spacer />
@@ -77,7 +100,7 @@ const Sidebar = ({ children, safes }: SidebarProps) => {
             <Spacer />
           </Row>
           <Hairline />
-          <SafeList safes={safes} />
+          <SafeList safes={filteredSafes} onSafeClick={toggleSidebar} />
         </Drawer>
       </ClickAwayListener>
       {children}

@@ -19,6 +19,7 @@ import { SAFELIST_ADDRESS } from '~/routes/routes'
 
 type SafeListProps = {
   safes: List<Safe>,
+  onSafeClick: Function,
 }
 
 const useStyles = makeStyles({
@@ -38,14 +39,14 @@ const useStyles = makeStyles({
   },
 })
 
-const SafeList = ({ safes }: SafeListProps) => {
+const SafeList = ({ safes, onSafeClick }: SafeListProps) => {
   const classes = useStyles()
 
   return (
     <MuiList>
       {safes.map((safe) => (
         <React.Fragment key={safe.address}>
-          <Link to={`${SAFELIST_ADDRESS}/${safe.address}`}>
+          <Link to={`${SAFELIST_ADDRESS}/${safe.address}`} onClick={onSafeClick}>
             <ListItem classes={{ root: classes.listItemRoot }}>
               <ListItemIcon>
                 <Identicon address={safe.address} diameter={32} className={classes.icon} />
