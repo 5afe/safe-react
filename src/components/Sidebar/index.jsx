@@ -14,6 +14,7 @@ import Hairline from '~/components/layout/Hairline'
 import Row from '~/components/layout/Row'
 import { type Safe } from '~/routes/safe/store/models/safe'
 import { safesListSelector } from '~/routes/safeList/store/selectors'
+import setDefaultSafe from '~/routes/safe/store/actions/setDefaultSafe'
 import useSidebarStyles from './style'
 import SafeList from './SafeList'
 import { WELCOME_ADDRESS } from '~/routes/routes'
@@ -33,6 +34,7 @@ export const SidebarContext = React.createContext<TSidebarContext>({
 type SidebarProps = {
   children: React.Node,
   safes: List<Safe>,
+  setDefaultSafeAction: Function,
 }
 
 const filterBy = (filter: string, safes: List<Safe>): List<Safe> => safes.filter(
@@ -41,7 +43,7 @@ const filterBy = (filter: string, safes: List<Safe>): List<Safe> => safes.filter
       || safe.name.toLowerCase().includes(filter.toLowerCase()),
 )
 
-const Sidebar = ({ children, safes }: SidebarProps) => {
+const Sidebar = ({ children, safes, setDefaultSafeAction }: SidebarProps) => {
   const [isOpen, setIsOpen] = useState<boolean>(false)
   const [filter, setFilter] = useState<string>('')
   const classes = useSidebarStyles()
@@ -110,7 +112,7 @@ const Sidebar = ({ children, safes }: SidebarProps) => {
             <Spacer />
           </Row>
           <Hairline />
-          <SafeList safes={filteredSafes} onSafeClick={toggleSidebar} />
+          <SafeList safes={filteredSafes} onSafeClick={toggleSidebar} setDefaultSafe={setDefaultSafeAction} />
         </Drawer>
       </ClickAwayListener>
       {children}
@@ -121,5 +123,5 @@ const Sidebar = ({ children, safes }: SidebarProps) => {
 export default connect<Object, Object, ?Function, ?Object>(
   // $FlowFixMe
   (state) => ({ safes: safesListSelector(state) }),
-  null,
+  { setDefaultSafeAction: setDefaultSafe },
 )(Sidebar)

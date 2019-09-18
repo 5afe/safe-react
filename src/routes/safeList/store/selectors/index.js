@@ -5,6 +5,8 @@ import { type GlobalState } from '~/store/index'
 import { type Safe } from '~/routes/safe/store/models/safe'
 import { SAFE_REDUCER_ID } from '~/routes/safe/store/reducer/safe'
 
+const safesStateSelector = (state: GlobalState): Map<string, *> => state[SAFE_REDUCER_ID]
+
 export const safesMapSelector = (state: GlobalState): Map<string, Safe> => state[SAFE_REDUCER_ID].get('safes')
 
 export const safesListSelector: Selector<GlobalState, {}, List<Safe>> = createSelector(
@@ -15,4 +17,9 @@ export const safesListSelector: Selector<GlobalState, {}, List<Safe>> = createSe
 export const safesCountSelector: Selector<GlobalState, {}, number> = createSelector(
   safesMapSelector,
   (safes: Map<string, Safe>): number => safes.size,
+)
+
+export const defaultSafeSelector: Selector<GlobalState, {}, string> = createSelector(
+  safesStateSelector,
+  (safeState: Map<string, *>): string => safeState.get('defaultSafe'),
 )

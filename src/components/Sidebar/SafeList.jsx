@@ -9,6 +9,7 @@ import ListItemText from '@material-ui/core/ListItemText'
 import Link from '~/components/layout/Link'
 import Hairline from '~/components/layout/Hairline'
 import Paragraph from '~/components/layout/Paragraph'
+import ButtonLink from '~/components/layout/ButtonLink'
 import Identicon from '~/components/Identicon'
 import {
   mediumFontSize, sm, secondary, primary,
@@ -20,6 +21,7 @@ import { SAFELIST_ADDRESS } from '~/routes/routes'
 type SafeListProps = {
   safes: List<Safe>,
   onSafeClick: Function,
+  setDefaultSafe: Function,
 }
 
 const useStyles = makeStyles({
@@ -39,7 +41,7 @@ const useStyles = makeStyles({
   },
 })
 
-const SafeList = ({ safes, onSafeClick }: SafeListProps) => {
+const SafeList = ({ safes, onSafeClick, setDefaultSafe }: SafeListProps) => {
   const classes = useStyles()
 
   return (
@@ -59,9 +61,16 @@ const SafeList = ({ safes, onSafeClick }: SafeListProps) => {
               <Paragraph size="lg" color="primary">
                 {safe.ethBalance}
                 {' '}
-                ETH
+ETH
               </Paragraph>
-              Make default
+              <ButtonLink
+                size="sm"
+                onClick={() => {
+                  setDefaultSafe(safe.address)
+                }}
+              >
+                Make default
+              </ButtonLink>
             </ListItem>
           </Link>
           <Hairline />
