@@ -6,7 +6,7 @@ import fetchTransactions from '~/routes/safe/store/actions/fetchTransactions'
 import { type GlobalState } from '~/store'
 import { getGnosisSafeInstanceAt } from '~/logic/contracts/safeContracts'
 import { approveTransaction, executeTransaction, CALL } from '~/logic/safe/transactions'
-import { type Variant } from '~/components/Header'
+import { type Variant, SUCCESS } from '~/components/Header'
 
 // https://gnosis-safe.readthedocs.io/en/latest/contracts/signatures.html#pre-validated-signatures
 // https://github.com/gnosis/safe-contracts/blob/master/test/gnosisSafeTeamEdition.js#L26
@@ -47,7 +47,7 @@ const processTransaction = (
 
   let txHash
   if (shouldExecute) {
-    const showNotification = () => enqueueSnackbar('Transaction has been submitted', 'success')
+    const showNotification = () => enqueueSnackbar('Transaction has been submitted', { variant: SUCCESS })
     txHash = await executeTransaction(
       showNotification,
       safeInstance,
@@ -59,9 +59,9 @@ const processTransaction = (
       from,
       sigs,
     )
-    enqueueSnackbar('Transaction has been confirmed', 'success')
+    enqueueSnackbar('Transaction has been confirmed', { variant: SUCCESS })
   } else {
-    const showNotification = () => enqueueSnackbar('Approval transaction has been submitted', 'success')
+    const showNotification = () => enqueueSnackbar('Approval transaction has been submitted', { variant: SUCCESS })
     txHash = await approveTransaction(
       showNotification,
       safeInstance,
@@ -72,7 +72,7 @@ const processTransaction = (
       nonce,
       from,
     )
-    enqueueSnackbar('Approval transaction has been confirmed', 'success')
+    enqueueSnackbar('Approval transaction has been confirmed', { variant: SUCCESS })
   }
 
   dispatch(fetchTransactions(safeAddress))

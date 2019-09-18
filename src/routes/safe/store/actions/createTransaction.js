@@ -9,10 +9,12 @@ import {
   approveTransaction,
   executeTransaction,
   CALL,
-  type Notifications,
-  DEFAULT_NOTIFICATIONS,
 } from '~/logic/safe/transactions'
-import { type Variant } from '~/components/Header'
+import {
+  type Notifications,
+  NOTIFICATIONS,
+} from '~/logic/notifications'
+import { type Variant, SUCCESS, ERROR } from '~/components/Header'
 
 const createTransaction = (
   safeAddress: string,
@@ -21,7 +23,7 @@ const createTransaction = (
   txData: string = EMPTY_DATA,
   enqueueSnackbar: (message: string, variant: Variant) => void,
   shouldExecute?: boolean,
-  notifications?: Notifications = DEFAULT_NOTIFICATIONS,
+  notifications?: Notifications = NOTIFICATIONS,
 ) => async (dispatch: ReduxDispatch<GlobalState>, getState: GetState<GlobalState>) => {
   const state: GlobalState = getState()
 
@@ -34,16 +36,16 @@ const createTransaction = (
   let txHash
   try {
     if (isExecution) {
-      const showNotification = () => enqueueSnackbar(notifications.BEFORE_EXECUTION_OR_CREATION, 'success')
+      const showNotification = () => enqueueSnackbar(notifications.BEFORE_EXECUTION_OR_CREATION, { variant: SUCCESS })
       txHash = await executeTransaction(showNotification, safeInstance, to, valueInWei, txData, CALL, nonce, from)
-      enqueueSnackbar(notifications.AFTER_EXECUTION, 'success')
+      enqueueSnackbar(notifications.AFTER_EXECUTION, { variant: SUCCESS })
     } else {
-      const showNotification = () => enqueueSnackbar(notifications.BEFORE_EXECUTION_OR_CREATION, 'success')
+      const showNotification = () => enqueueSnackbar(notifications.BEFORE_EXECUTION_OR_CREATION, { variant: SUCCESS })
       txHash = await approveTransaction(showNotification, safeInstance, to, valueInWei, txData, CALL, nonce, from)
-      enqueueSnackbar(notifications.CREATED_MORE_CONFIRMATIONS_NEEDED, 'success')
+      enqueueSnackbar(notifications.CREATED_MORE_CONFIRMATIONS_NEEDED, { variant: SUCCESS })
     }
   } catch (err) {
-    enqueueSnackbar(notifications.ERROR, 'error')
+    enqueueSnackbar(notifications.ERROR, { variant: ERROR })
     console.error(`Error while creating transaction: ${err}`)
   }
 

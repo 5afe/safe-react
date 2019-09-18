@@ -14,10 +14,10 @@ import Layout from './component/Layout'
 import actions, { type Actions } from './actions'
 import selector, { type SelectorProps } from './selector'
 
-const SUCCESS = 'SUCCESS'
-const ERROR = 'ERROR'
-const WARNING = 'WARNING'
-const INFO = 'INFO'
+export const SUCCESS = 'success'
+export const ERROR = 'error'
+export const WARNING = 'warning'
+export const INFO = 'info'
 
 export type Variant = SUCCESS | ERROR | WARNING | INFO
 
@@ -49,7 +49,7 @@ class HeaderComponent extends React.PureComponent<Props, State> {
     const { enqueueSnackbar } = this.props
 
     this.setState({ hasError: true })
-    enqueueSnackbar(WALLET_ERROR_MSG, 'error')
+    enqueueSnackbar(WALLET_ERROR_MSG, { variant: ERROR })
 
     logComponentStack(error, info)
   }
