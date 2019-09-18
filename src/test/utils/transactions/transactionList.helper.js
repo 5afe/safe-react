@@ -24,7 +24,7 @@ export const getLastTransaction = async (SafeDom: React.Component<any, any>) => 
 
 export const checkRegisteredTxSend = async (
   SafeDom: React.Component<any, any>,
-  ethAmount: number,
+  ethAmount: number | string,
   symbol: string,
   ethAddress: string,
 ) => {
