@@ -8,6 +8,7 @@ import Drawer from '@material-ui/core/Drawer'
 import SearchIcon from '@material-ui/icons/Search'
 import Divider from '~/components/layout/Divider'
 import Button from '~/components/layout/Button'
+import Link from '~/components/layout/Link'
 import Spacer from '~/components/Spacer'
 import Hairline from '~/components/layout/Hairline'
 import Row from '~/components/layout/Row'
@@ -15,6 +16,7 @@ import { type Safe } from '~/routes/safe/store/models/safe'
 import { safesListSelector } from '~/routes/safeList/store/selectors'
 import useSidebarStyles from './style'
 import SafeList from './SafeList'
+import { WELCOME_ADDRESS } from '~/routes/routes'
 
 const { useState } = React
 
@@ -94,7 +96,15 @@ const Sidebar = ({ children, safes }: SidebarProps) => {
             <Spacer />
             <Divider />
             <Spacer />
-            <Button className={classes.addSafeBtn} variant="contained" size="small" color="primary">
+            <Button
+              component={Link}
+              to={WELCOME_ADDRESS}
+              className={classes.addSafeBtn}
+              variant="contained"
+              size="small"
+              color="primary"
+              onClick={toggleSidebar}
+            >
               + Add Safe
             </Button>
             <Spacer />
