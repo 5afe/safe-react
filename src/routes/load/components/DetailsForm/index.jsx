@@ -52,7 +52,6 @@ export const safeFieldsValidation = async (values: Object) => {
   const web3 = getWeb3()
 
   if (!safeAddress || mustBeEthereumAddress(safeAddress) !== undefined) {
-    errors[FIELD_LOAD_ADDRESS] = 'Required'
     return errors
   }
 

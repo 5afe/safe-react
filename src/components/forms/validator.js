@@ -18,7 +18,7 @@ export const simpleMemoize = (fn: Function) => {
 
 type Field = boolean | string | null | typeof undefined
 
-export const required = simpleMemoize((value: Field) => (value ? undefined : 'Required'))
+export const required = (value: Field) => (value ? undefined : 'Required')
 
 export const mustBeInteger = (value: string) => (!Number.isInteger(Number(value)) || value.includes('.') ? 'Must be an integer' : undefined)
 
