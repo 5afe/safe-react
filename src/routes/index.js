@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import {
   Switch, Redirect, Route, withRouter,
 } from 'react-router-dom'
-import { defaultSafeSelector } from '~/routes/safeList/store/selectors'
+import { defaultSafeSelector } from '~/routes/safe/store/selectors'
 import Loader from '~/components/Loader'
 import Welcome from './welcome/container'
 import {
@@ -17,8 +17,6 @@ import {
 } from './routes'
 
 const Safe = React.lazy(() => import('./safe/container'))
-
-const SafeList = React.lazy(() => import('./safeList/container'))
 
 const Open = React.lazy(() => import('./open/container/Open'))
 
@@ -66,10 +64,10 @@ const Routes = ({ defaultSafe, location }: RoutesProps) => {
       />
       <Route exact path={WELCOME_ADDRESS} component={Welcome} />
       <Route exact path={OPEN_ADDRESS} component={Open} />
-      <Route exact path={SAFELIST_ADDRESS} component={SafeList} />
       <Route exact path={SAFE_ADDRESS} component={Safe} />
       <Route exact path={OPENING_ADDRESS} component={Opening} />
       <Route exact path={LOAD_ADDRESS} component={Load} />
+      <Redirect to="/" />
     </Switch>
   )
 }

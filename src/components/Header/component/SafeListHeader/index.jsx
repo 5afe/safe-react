@@ -10,7 +10,7 @@ import Col from '~/components/layout/Col'
 import {
   xs, sm, md, border,
 } from '~/theme/variables'
-import { safesCountSelector } from '~/routes/safeList/store/selectors'
+import { safesCountSelector } from '~/routes/safe/store/selectors'
 import { SidebarContext } from '~/components/Sidebar'
 
 const useStyles = makeStyles({
