@@ -1,8 +1,9 @@
 // @flow
-import React from 'react'
+import React, { useState } from 'react'
 import { connect } from 'react-redux'
 import { Switch, Redirect, Route } from 'react-router-dom'
 import { defaultSafeSelector } from '~/routes/safeList/store/selectors'
+import Loader from '~/components/Loader'
 import Welcome from './welcome/container'
 import {
   SAFELIST_ADDRESS,
@@ -29,29 +30,40 @@ type RoutesProps = {
   defaultSafe?: string,
 }
 
-const Routes = ({ defaultSafe }: RoutesProps) => (
-  <Switch>
-    <Route
-      exact
-      path="/"
-      render={() => {
-        if (typeof defaultSafe === 'undefined') {
-          return 'Loading...'
-        }
-        if (defaultSafe) {
-          return <Redirect to={`${SAFELIST_ADDRESS}/${defaultSafe}`} />
-        }
-        return <Redirect to={WELCOME_ADDRESS} />
-      }}
-    />
-    <Route exact path={WELCOME_ADDRESS} component={Welcome} />
-    <Route exact path={OPEN_ADDRESS} component={Open} />
-    <Route exact path={SAFELIST_ADDRESS} component={SafeList} />
-    <Route exact path={SAFE_ADDRESS} component={Safe} />
-    <Route exact path={OPENING_ADDRESS} component={Opening} />
-    <Route exact path={LOAD_ADDRESS} component={Load} />
-  </Switch>
-)
+const Routes = ({ defaultSafe }: RoutesProps) => {
+  const [isInitialLoad, setIniitialLoad] = useState<boolean>(true)
+
+  return (
+    <Switch>
+      <Route
+        exact
+        path="/"
+        render={() => {
+          if (!isInitialLoad) {
+            return <Redirect to={WELCOME_ADDRESS} />
+          }
+
+          if (typeof defaultSafe === 'undefined') {
+            return <Loader />
+          }
+
+          setIniitialLoad(false)
+          if (defaultSafe) {
+            return <Redirect to={`${SAFELIST_ADDRESS}/${defaultSafe}`} />
+          }
+
+          return <Redirect to={WELCOME_ADDRESS} />
+        }}
+      />
+      <Route exact path={WELCOME_ADDRESS} component={Welcome} />
+      <Route exact path={OPEN_ADDRESS} component={Open} />
+      <Route exact path={SAFELIST_ADDRESS} component={SafeList} />
+      <Route exact path={SAFE_ADDRESS} component={Safe} />
+      <Route exact path={OPENING_ADDRESS} component={Opening} />
+      <Route exact path={LOAD_ADDRESS} component={Load} />
+    </Switch>
+  )
+}
 
 export default connect<Object, Object, ?Function, ?Object>(
   // $FlowFixMe
