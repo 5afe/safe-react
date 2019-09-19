@@ -33,6 +33,12 @@ const useStyles = makeStyles({
   listItemRoot: {
     paddingTop: 0,
     paddingBottom: 0,
+    '&:hover $makeDefaultBtn': {
+      visibility: 'initial'
+    },
+    '&:focus $makeDefaultBtn': {
+      visibility: 'initial'
+    } 
   },
   safeName: {
     color: secondary,
@@ -44,6 +50,7 @@ const useStyles = makeStyles({
   makeDefaultBtn: {
     padding: 0,
     marginLeft: sm,
+    visibility: 'hidden',
   },
 })
 
