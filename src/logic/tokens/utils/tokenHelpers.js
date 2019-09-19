@@ -48,3 +48,5 @@ export const isAddressAToken = async (tokenAddress: string) => {
 
   return call !== '0x'
 }
+
+export const isTokenTransfer = async (data: string, value: number) => data.substring(0, 10) === '0xa9059cbb' && value === 0
