@@ -4,8 +4,8 @@ import { createAction } from 'redux-actions'
 import type { Dispatch as ReduxDispatch, GetState } from 'redux'
 import { type GlobalState } from '~/store'
 import { safesListSelector } from '~/routes/safeList/store/selectors'
-import SafeRecord, { type Safe } from '~/routes/safe/store/models/safe'
-import { makeOwner, type Owner } from '~/routes/safe/store/models/owner'
+import { type Safe } from '~/routes/safe/store/models/safe'
+import { makeOwner } from '~/routes/safe/store/models/owner'
 import setDefaultSafe from '~/routes/safe/store/actions/setDefaultSafe'
 
 export const ADD_SAFE = 'ADD_SAFE'
@@ -24,25 +24,17 @@ export const addSafe = createAction<string, Function, ActionReturn>(ADD_SAFE, (s
   safe,
 }))
 
-const saveSafe = (name: string, address: string, threshold: number, ownersName: string[], ownersAddress: string[]) => (
+const saveSafe = (safe: Safe) => (
   dispatch: ReduxDispatch<GlobalState>,
   getState: GetState<GlobalState>,
 ) => {
-  const owners: List<Owner> = buildOwnersFrom(ownersName, ownersAddress)
   const state = getState()
   const safeList = safesListSelector(state)
 
-  const safe: Safe = SafeRecord({
-    name,
-    address,
-    threshold,
-    owners,
-  })
-
   dispatch(addSafe(safe))
-  console.log(safeList.size)
+
   if (safeList.size === 0) {
-    setDefaultSafe(address)
+    dispatch(setDefaultSafe(safe.address))
   }
 }
 
