@@ -2,11 +2,9 @@
 import { Map, List } from 'immutable'
 import { handleActions, type ActionType } from 'redux-actions'
 import { ADD_SAFE, buildOwnersFrom } from '~/routes/safe/store/actions/addSafe'
-import SafeRecord, { type Safe, type SafeProps } from '~/routes/safe/store/models/safe'
+import SafeRecord, { type SafeProps } from '~/routes/safe/store/models/safe'
 import TokenBalance from '~/routes/safe/store/models/tokenBalance'
 import { makeOwner, type OwnerProps } from '~/routes/safe/store/models/owner'
-import { loadFromStorage } from '~/utils/storage'
-import { SAFES_KEY } from '~/logic/safe/utils'
 import { UPDATE_SAFE } from '~/routes/safe/store/actions/updateSafe'
 import { ACTIVATE_TOKEN_FOR_ALL_SAFES } from '~/routes/safe/store/actions/activateTokenForAllSafes'
 import { REMOVE_SAFE } from '~/routes/safe/store/actions/removeSafe'
@@ -18,7 +16,7 @@ import { SET_DEFAULT_SAFE } from '~/routes/safe/store/actions/setDefaultSafe'
 
 export const SAFE_REDUCER_ID = 'safes'
 
-type SafeReducerState = Map<string, *>
+export type SafeReducerState = Map<string, *>
 
 export const buildSafe = (storedSafe: SafeProps) => {
   const names = storedSafe.owners.map((owner: OwnerProps) => owner.name)
@@ -35,31 +33,6 @@ export const buildSafe = (storedSafe: SafeProps) => {
   }
 
   return safe
-}
-
-const buildSafesFrom = (loadedSafes: Object): Map<string, Safe> => {
-  const safes: Map<string, Safe> = Map()
-
-  const keys = Object.keys(loadedSafes)
-  try {
-    const safeRecords = keys.map((address: string) => buildSafe(loadedSafes[address]))
-
-    return safes.withMutations(async (map) => {
-      safeRecords.forEach((safe: SafeProps) => map.set(safe.address, safe))
-    })
-  } catch (err) {
-    // eslint-disable-next-line
-    console.log('Error while fetching safes information')
-
-    return Map()
-  }
-}
-
-export const safesInitialState = async (): Promise<State> => {
-  const storedSafes = await loadFromStorage(SAFES_KEY)
-  const safes = storedSafes ? buildSafesFrom(storedSafes) : Map()
-
-  return safes
 }
 
 export default handleActions<SafeReducerState, *>(
@@ -142,7 +115,7 @@ export default handleActions<SafeReducerState, *>(
   },
   Map({
     // $FlowFixMe
-    defaultSafe: '',
+    defaultSafe: undefined,
     safes: Map(),
   }),
 )

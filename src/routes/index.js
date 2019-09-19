@@ -1,6 +1,8 @@
 // @flow
 import React from 'react'
+import { connect } from 'react-redux'
 import { Switch, Redirect, Route } from 'react-router-dom'
+import { defaultSafeSelector } from '~/routes/safeList/store/selectors'
 import Welcome from './welcome/container'
 import {
   SAFELIST_ADDRESS,
@@ -23,9 +25,25 @@ const Load = React.lazy(() => import('./load/container/Load'))
 
 const SAFE_ADDRESS = `${SAFELIST_ADDRESS}/:${SAFE_PARAM_ADDRESS}`
 
-const Routes = () => (
+type RoutesProps = {
+  defaultSafe?: string,
+}
+
+const Routes = ({ defaultSafe }: RoutesProps) => (
   <Switch>
-    <Redirect exact from="/" to={WELCOME_ADDRESS} />
+    <Route
+      exact
+      path="/"
+      render={() => {
+        if (typeof defaultSafe === 'undefined') {
+          return 'Loading...'
+        }
+        if (defaultSafe) {
+          return <Redirect to={`${SAFELIST_ADDRESS}/${defaultSafe}`} />
+        }
+        return <Redirect to={WELCOME_ADDRESS} />
+      }}
+    />
     <Route exact path={WELCOME_ADDRESS} component={Welcome} />
     <Route exact path={OPEN_ADDRESS} component={Open} />
     <Route exact path={SAFELIST_ADDRESS} component={SafeList} />
@@ -35,4 +53,8 @@ const Routes = () => (
   </Switch>
 )
 
-export default Routes
+export default connect<Object, Object, ?Function, ?Object>(
+  // $FlowFixMe
+  (state) => ({ defaultSafe: defaultSafeSelector(state) }),
+  null,
+)(Routes)
