@@ -100,7 +100,7 @@ export const buildTransactionFrom = async (
     executionDate: tx.executionDate,
     executionTxHash,
     safeTxHash: tx.safeTxHash,
-    isTokenTransfer,
+    isTokenTransfer: isSendTokenTx,
     decodedParams,
     modifySettingsTx,
     customTx,
