@@ -34,11 +34,11 @@ const useStyles = makeStyles({
     paddingTop: 0,
     paddingBottom: 0,
     '&:hover $makeDefaultBtn': {
-      visibility: 'initial'
+      visibility: 'initial',
     },
     '&:focus $makeDefaultBtn': {
-      visibility: 'initial'
-    } 
+      visibility: 'initial',
+    },
   },
   safeName: {
     color: secondary,
