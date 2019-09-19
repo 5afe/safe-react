@@ -73,7 +73,7 @@ const EditOwnerComponent = ({
       <Hairline />
       <GnoForm onSubmit={handleSubmit}>
         {() => (
-          <React.Fragment>
+          <>
             <Block className={classes.container}>
               <Row margin="md">
                 <Field
@@ -102,14 +102,14 @@ const EditOwnerComponent = ({
             </Block>
             <Hairline />
             <Row align="center" className={classes.buttonRow}>
-              <Button className={classes.button} minWidth={140} onClick={onClose}>
+              <Button minWidth={140} minHeight={42} onClick={onClose}>
                 Cancel
               </Button>
-              <Button type="submit" className={classes.button} variant="contained" minWidth={140} color="primary" testId={SAVE_OWNER_CHANGES_BTN_TEST_ID}>
+              <Button type="submit" variant="contained" minWidth={140} minHeight={42} color="primary" testId={SAVE_OWNER_CHANGES_BTN_TEST_ID}>
                 Save
               </Button>
             </Row>
-          </React.Fragment>
+          </>
         )}
       </GnoForm>
     </Modal>

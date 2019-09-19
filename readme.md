@@ -102,9 +102,7 @@ We use [SemVer](http://semver.org/) for versioning. For the versions available, 
 
 ## Authors
 
-* **Adolfo Panizo** - [apanizo](https://github.com/apanizo)
-
-See also the list of [contributors](https://github.com/gnosis/gnosis-team-safe/contributors) who participated in this project.
+See the list of [contributors](https://github.com/gnosis/gnosis-team-safe/contributors) who participated in this project.
 
 ## License
 

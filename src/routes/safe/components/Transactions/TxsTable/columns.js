@@ -50,6 +50,8 @@ export const getTxTableData = (transactions: List<Transaction>): List<Transactio
       txType = 'Modify Safe Settings'
     } else if (tx.cancellationTx) {
       txType = 'Cancellation transaction'
+    } else if (tx.customTx) {
+      txType = 'Custom transaction'
     }
 
     return {

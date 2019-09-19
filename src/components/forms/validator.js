@@ -18,11 +18,11 @@ export const simpleMemoize = (fn: Function) => {
 
 type Field = boolean | string | null | typeof undefined
 
-export const required = simpleMemoize((value: Field) => (value ? undefined : 'Required'))
+export const required = (value: Field) => (value ? undefined : 'Required')
 
 export const mustBeInteger = (value: string) => (!Number.isInteger(Number(value)) || value.includes('.') ? 'Must be an integer' : undefined)
 
-export const mustBeFloat = (value: number) => (Number.isNaN(Number(value)) ? 'Must be a number' : undefined)
+export const mustBeFloat = (value: number) => (value && Number.isNaN(Number(value)) ? 'Must be a number' : undefined)
 
 export const greaterThan = (min: number) => (value: string) => {
   if (Number.isNaN(Number(value)) || Number.parseFloat(value) > Number(min)) {
@@ -64,6 +64,14 @@ export const mustBeEthereumAddress = simpleMemoize((address: Field) => {
   const isAddress: boolean = getWeb3().utils.isAddress(address)
 
   return isAddress ? undefined : 'Address should be a valid Ethereum address or ENS name'
+})
+
+export const mustBeEthereumContractAddress = simpleMemoize(async (address: string) => {
+  const contractCode: string = await getWeb3().eth.getCode(address)
+
+  return !contractCode || contractCode.replace('0x', '').replace(/0/g, '') === ''
+    ? 'Address should be a valid Ethereum contract address or ENS name'
+    : undefined
 })
 
 export const minMaxLength = (minLen: string | number, maxLen: string | number) => (value: string) => (value.length >= +minLen && value.length <= +maxLen ? undefined : `Should be ${minLen} to ${maxLen} symbols`)

@@ -5,7 +5,7 @@ import { List } from 'immutable'
 import styles from '~/components/layout/PageFrame/index.scss'
 import Component from './Layout'
 
-const FrameDecorator = story => <div className={styles.frame}>{story()}</div>
+const FrameDecorator = (story) => <div className={styles.frame}>{story()}</div>
 
 storiesOf('Routes /safe:address', module)
   .addDecorator(FrameDecorator)

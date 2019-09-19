@@ -60,7 +60,7 @@ const ApproveTxModal = ({
   const { title, description } = getModalTitleAndDescription(thresholdReached)
   const oneConfirmationLeft = tx.confirmations.size + 1 === threshold
 
-  const handleExecuteCheckbox = () => setApproveAndExecute(prevApproveAndExecute => !prevApproveAndExecute)
+  const handleExecuteCheckbox = () => setApproveAndExecute((prevApproveAndExecute) => !prevApproveAndExecute)
 
   return (
     <SharedSnackbarConsumer>
@@ -104,12 +104,11 @@ const ApproveTxModal = ({
               </Row>
             </Block>
             <Row align="center" className={classes.buttonRow}>
-              <Button className={classes.button} minWidth={140} minHeight={42} onClick={onClose}>
+              <Button minWidth={140} minHeight={42} onClick={onClose}>
                 Exit
               </Button>
               <Button
                 type="submit"
-                className={classes.button}
                 variant="contained"
                 minWidth={214}
                 minHeight={42}

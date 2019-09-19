@@ -24,7 +24,7 @@ const styles = () => ({
     letterSpacing: -0.5,
     backgroundColor: border,
     width: 'fit-content',
-    padding: '6px',
+    padding: '5px 10px',
     marginTop: xs,
     borderRadius: '3px',
   },

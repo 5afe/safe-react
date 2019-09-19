@@ -33,7 +33,7 @@ const styles = () => ({
 })
 
 const SafeName = ({ classes }: Props) => (
-  <React.Fragment>
+  <>
     <Block margin="lg">
       <Paragraph noMargin size="md" color="primary">
         You are about to create a new Gnosis Safe wallet with one or more owners. First, let&apos;s give your new wallet
@@ -67,13 +67,13 @@ const SafeName = ({ classes }: Props) => (
         Ethereum blockchain. These funds cannot be accessed by Gnosis at any point.
       </Paragraph>
     </Block>
-  </React.Fragment>
+  </>
 )
 
 const SafeNameForm = withStyles(styles)(SafeName)
 
 const SafeNamePage = () => (controls: React.Node) => (
-  <OpenPaper controls={controls} container={600}>
+  <OpenPaper controls={controls}>
     <SafeNameForm />
   </OpenPaper>
 )

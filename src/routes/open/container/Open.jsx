@@ -59,6 +59,10 @@ export const createSafe = async (values: Object, userAccount: string, addSafe: A
 }
 
 class Open extends React.Component<Props> {
+  async componentDidMount() {
+    await initContracts()
+  }
+
   onCallSafeContractSubmit = async (values) => {
     try {
       const { userAccount, addSafe } = this.props

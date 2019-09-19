@@ -19,6 +19,7 @@ type Props = {
   onSubmit: (values: Object) => Promise<void>,
   children: React.Node,
   classes: Object,
+  buttonLabels: Array<string>,
   initialValues?: Object,
   disabledWhenValidating?: boolean,
   mutators?: Object,
@@ -110,7 +111,7 @@ const GnoStepper = (props: Props) => {
   }
 
   const {
-    steps, children, classes, disabledWhenValidating = false, testId, mutators,
+    steps, children, classes, disabledWhenValidating = false, testId, mutators, buttonLabels,
   } = props
   const activePage = getActivePageFrom(children)
 
@@ -137,18 +138,32 @@ const GnoStepper = (props: Props) => {
                 firstPage={page === 0}
                 lastPage={lastPage}
                 penultimate={penultimate}
+                buttonLabels={buttonLabels}
+                currentStep={page}
               />
             </>
           )
 
           return (
             <Stepper classes={{ root: classes.root }} activeStep={page} orientation="vertical">
-              {steps.map((label) => (
-                <FormStep key={label}>
-                  <StepLabel>{label}</StepLabel>
-                  <StepContent TransitionProps={transitionProps}>{activePage(controls, ...rest)}</StepContent>
-                </FormStep>
-              ))}
+              {steps.map((label, index) => {
+                const labelProps = {}
+                const isClickable = index < page
+
+                if (isClickable) {
+                  labelProps.onClick = () => {
+                    setPage(index)
+                  }
+                  labelProps.className = classes.pointerCursor
+                }
+
+                return (
+                  <FormStep key={label}>
+                    <StepLabel {...labelProps}>{label}</StepLabel>
+                    <StepContent TransitionProps={transitionProps}>{activePage(controls, ...rest)}</StepContent>
+                  </FormStep>
+                )
+              })}
             </Stepper>
           )
         }}
@@ -161,6 +176,14 @@ const styles = {
   root: {
     flex: '1 1 auto',
     backgroundColor: 'transparent',
+  },
+  pointerCursor: {
+    '& > .MuiStepLabel-iconContainer': {
+      cursor: 'pointer',
+    },
+    '& > .MuiStepLabel-labelContainer': {
+      cursor: 'pointer',
+    },
   },
 }
 

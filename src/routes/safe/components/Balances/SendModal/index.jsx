@@ -5,9 +5,18 @@ import cn from 'classnames'
 import { withStyles } from '@material-ui/core/styles'
 import { type Token } from '~/logic/tokens/store/model/token'
 import Modal from '~/components/Modal'
-import ChooseTxType from './screens/ChooseTxType'
-import SendFunds from './screens/SendFunds'
-import ReviewTx from './screens/ReviewTx'
+
+const ChooseTxType = React.lazy(() => import('./screens/ChooseTxType'))
+
+const SendFunds = React.lazy(() => import('./screens/SendFunds'))
+
+const ReviewTx = React.lazy(() => import('./screens/ReviewTx'))
+
+const SendCustomTx = React.lazy(() => import('./screens/SendCustomTx'))
+
+const ReviewCustomTx = React.lazy(() => import('./screens/ReviewCustomTx'))
+
+type ActiveScreen = 'chooseTxType' | 'sendFunds' | 'reviewTx' | 'sendCustomTx' | 'reviewCustomTx'
 
 type Props = {
   onClose: () => void,
@@ -20,19 +29,23 @@ type Props = {
   tokens: List<Token>,
   selectedToken: string,
   createTransaction: Function,
+  activeScreenType: ActiveScreen
 }
-type ActiveScreen = 'chooseTxType' | 'sendFunds' | 'reviewTx'
 
 type TxStateType =
   | {
       token: Token,
       recipientAddress: string,
       amount: string,
+      data: string,
     }
   | Object
 
 const styles = () => ({
-  smallerModalWindow: {
+  scalableModalWindow: {
+    height: 'auto',
+  },
+  scalableStaticModalWindow: {
     height: 'auto',
     position: 'static',
   },
@@ -49,23 +62,27 @@ const Send = ({
   tokens,
   selectedToken,
   createTransaction,
+  activeScreenType,
 }: Props) => {
-  const [activeScreen, setActiveScreen] = useState<ActiveScreen>('sendFunds')
+  const [activeScreen, setActiveScreen] = useState<ActiveScreen>(activeScreenType || 'chooseTxType')
   const [tx, setTx] = useState<TxStateType>({})
-  const smallerModalSize = activeScreen === 'chooseTxType'
+
+  useEffect(() => {
+    setActiveScreen(activeScreenType || 'chooseTxType')
+    setTx({})
+  }, [isOpen])
+
+  const scalableModalSize = activeScreen === 'chooseTxType'
+
   const handleTxCreation = (txInfo) => {
     setActiveScreen('reviewTx')
     setTx(txInfo)
   }
-  const onClickBack = () => setActiveScreen('sendFunds')
 
-  useEffect(
-    () => () => {
-      setActiveScreen('sendFunds')
-      setTx({})
-    },
-    [isOpen],
-  )
+  const handleCustomTxCreation = (customTxInfo) => {
+    setActiveScreen('reviewCustomTx')
+    setTx(customTxInfo)
+  }
 
   return (
     <Modal
@@ -73,14 +90,15 @@ const Send = ({
       description="Send Tokens Form"
       handleClose={onClose}
       open={isOpen}
-      paperClassName={cn(smallerModalSize && classes.smallerModalWindow)}
+      paperClassName={cn(
+        scalableModalSize ? classes.scalableStaticModalWindow : classes.scalableModalWindow,
+      )}
     >
-      <React.Fragment>
+      <>
         {activeScreen === 'chooseTxType' && <ChooseTxType onClose={onClose} setActiveScreen={setActiveScreen} />}
         {activeScreen === 'sendFunds' && (
           <SendFunds
             onClose={onClose}
-            setActiveScreen={setActiveScreen}
             safeAddress={safeAddress}
             etherScanLink={etherScanLink}
             safeName={safeName}
@@ -95,15 +113,38 @@ const Send = ({
           <ReviewTx
             tx={tx}
             onClose={onClose}
+            setActiveScreen={setActiveScreen}
             safeAddress={safeAddress}
             etherScanLink={etherScanLink}
             safeName={safeName}
             ethBalance={ethBalance}
-            onClickBack={onClickBack}
             createTransaction={createTransaction}
           />
         )}
-      </React.Fragment>
+        {activeScreen === 'sendCustomTx' && (
+          <SendCustomTx
+            onClose={onClose}
+            safeAddress={safeAddress}
+            etherScanLink={etherScanLink}
+            safeName={safeName}
+            ethBalance={ethBalance}
+            onSubmit={handleCustomTxCreation}
+            initialValues={tx}
+          />
+        )}
+        {activeScreen === 'reviewCustomTx' && (
+          <ReviewCustomTx
+            tx={tx}
+            onClose={onClose}
+            setActiveScreen={setActiveScreen}
+            safeAddress={safeAddress}
+            etherScanLink={etherScanLink}
+            safeName={safeName}
+            ethBalance={ethBalance}
+            createTransaction={createTransaction}
+          />
+        )}
+      </>
     </Modal>
   )
 }

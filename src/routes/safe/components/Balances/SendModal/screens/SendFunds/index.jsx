@@ -81,24 +81,28 @@ const SendFunds = ({
         </IconButton>
       </Row>
       <Hairline />
-      <Block className={classes.formContainer}>
-        <SafeInfo safeAddress={safeAddress} etherScanLink={etherScanLink} safeName={safeName} ethBalance={ethBalance} />
-        <Row margin="md">
-          <Col xs={1}>
-            <img src={ArrowDown} alt="Arrow Down" style={{ marginLeft: '8px' }} />
-          </Col>
-          <Col xs={11} center="xs" layout="column">
-            <Hairline />
-          </Col>
-        </Row>
-        <GnoForm onSubmit={handleSubmit} formMutators={formMutators} initialValues={initialValues}>
-          {(...args) => {
-            const formState = args[2]
-            const mutators = args[3]
-            const { token } = formState.values
-
-            return (
-              <>
+      <GnoForm onSubmit={handleSubmit} formMutators={formMutators} initialValues={initialValues}>
+        {(...args) => {
+          const formState = args[2]
+          const mutators = args[3]
+          const { token } = formState.values
+          return (
+            <>
+              <Block className={classes.formContainer}>
+                <SafeInfo
+                  safeAddress={safeAddress}
+                  etherScanLink={etherScanLink}
+                  safeName={safeName}
+                  ethBalance={ethBalance}
+                />
+                <Row margin="md">
+                  <Col xs={1}>
+                    <img src={ArrowDown} alt="Arrow Down" style={{ marginLeft: '8px' }} />
+                  </Col>
+                  <Col xs={11} center="xs" layout="column">
+                    <Hairline />
+                  </Col>
+                </Row>
                 <Row margin="md">
                   <Col xs={12}>
                     <AddressInput
@@ -154,27 +158,27 @@ const SendFunds = ({
                     </OnChange>
                   </Col>
                 </Row>
-                <Hairline />
-                <Row align="center" className={classes.buttonRow}>
-                  <Button className={classes.button} minWidth={140} minHeight={42} onClick={onClose}>
-                    Cancel
-                  </Button>
-                  <Button
-                    type="submit"
-                    variant="contained"
-                    minHeight={42}
-                    minWidth={140}
-                    color="primary"
-                    data-testid="review-tx-btn"
-                  >
-                    Review
-                  </Button>
-                </Row>
-              </>
-            )
-          }}
-        </GnoForm>
-      </Block>
+              </Block>
+              <Hairline />
+              <Row align="center" className={classes.buttonRow}>
+                <Button minWidth={140} onClick={onClose}>
+                  Cancel
+                </Button>
+                <Button
+                  type="submit"
+                  variant="contained"
+                  minWidth={140}
+                  color="primary"
+                  data-testid="review-tx-btn"
+                  className={classes.submitButton}
+                >
+                  Review
+                </Button>
+              </Row>
+            </>
+          )
+        }}
+      </GnoForm>
     </>
   )
 }

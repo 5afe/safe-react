@@ -13,10 +13,14 @@ export const TRANSACTIONS_DESC_ADD_OWNER_TEST_ID = 'tx-description-add-owner'
 export const TRANSACTIONS_DESC_REMOVE_OWNER_TEST_ID = 'tx-description-remove-owner'
 export const TRANSACTIONS_DESC_CHANGE_THRESHOLD_TEST_ID = 'tx-description-change-threshold'
 export const TRANSACTIONS_DESC_SEND_TEST_ID = 'tx-description-send'
+export const TRANSACTIONS_DESC_CUSTOM_TEST_ID = 'tx-description-custom'
 
 export const styles = () => ({
   txDataContainer: {
     padding: `${lg} ${md}`,
+  },
+  txData: {
+    wordBreak: 'break-all',
   },
 })
 
@@ -37,6 +41,11 @@ type DescriptionDescProps = {
   newThreshold?: string,
 }
 
+type CustomDescProps = {
+  data: String,
+  classes: Obeject,
+}
+
 const TransferDescription = ({ value = '', symbol, recipient }: TransferDescProps) => (
   <Paragraph noMargin data-testid={TRANSACTIONS_DESC_SEND_TEST_ID}>
     <Bold>
@@ -46,7 +55,7 @@ const TransferDescription = ({ value = '', symbol, recipient }: TransferDescProp
       {' '}
       {symbol}
       {' '}
-to:
+      to:
     </Bold>
     <br />
     <EtherscanLink type="address" value={recipient} />
@@ -79,9 +88,19 @@ const SettingsDescription = ({ removedOwner, addedOwner, newThreshold }: Descrip
   </>
 )
 
+const CustomDescription = ({ data, classes }: CustomDescProps) => (
+  <>
+    <Paragraph className={classes.txData} data-testid={TRANSACTIONS_DESC_CUSTOM_TEST_ID}>
+      <Bold>Data (hex encoded):</Bold>
+      <br />
+      {data}
+    </Paragraph>
+  </>
+)
+
 const TxDescription = ({ tx, classes }: Props) => {
   const {
-    recipient, value, modifySettingsTx, removedOwner, addedOwner, newThreshold, cancellationTx,
+    recipient, value, modifySettingsTx, removedOwner, addedOwner, newThreshold, cancellationTx, customTx, data,
   } = getTxData(tx)
 
   return (
@@ -89,7 +108,10 @@ const TxDescription = ({ tx, classes }: Props) => {
       {modifySettingsTx && (
         <SettingsDescription removedOwner={removedOwner} newThreshold={newThreshold} addedOwner={addedOwner} />
       )}
-      {!cancellationTx && !modifySettingsTx && (
+      {customTx && (
+        <CustomDescription data={data} classes={classes} />
+      )}
+      {!cancellationTx && !modifySettingsTx && !customTx && (
         <TransferDescription value={value} symbol={tx.symbol} recipient={recipient} />
       )}
     </Block>
