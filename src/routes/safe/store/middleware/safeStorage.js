@@ -12,8 +12,8 @@ import { type GlobalState } from '~/store/'
 import {
   saveSafes, setOwners, removeOwners, saveDefaultSafe,
 } from '~/logic/safe/utils'
-import { safesMapSelector } from '~/routes/safe/store/selectors'
-import { getActiveTokensAddressesForAllSafes } from '~/routes/safe/store/selectors'
+import { safesMapSelector, getActiveTokensAddressesForAllSafes } from '~/routes/safe/store/selectors'
+
 import { tokensSelector } from '~/logic/tokens/store/selectors'
 import type { Token } from '~/logic/tokens/store/model/token'
 import { makeOwner } from '~/routes/safe/store/models/owner'
