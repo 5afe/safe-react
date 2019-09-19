@@ -46,12 +46,31 @@ const processTransaction = (
 
   let txHash
   if (shouldExecute) {
-    openSnackbar('Transaction has been submitted', 'success')
-    txHash = await executeTransaction(safeInstance, tx.recipient, tx.value, tx.data, CALL, nonce, from, sigs)
+    const showNotification = () => openSnackbar('Transaction has been submitted', 'success')
+    txHash = await executeTransaction(
+      showNotification,
+      safeInstance,
+      tx.recipient,
+      tx.value,
+      tx.data,
+      CALL,
+      nonce,
+      from,
+      sigs,
+    )
     openSnackbar('Transaction has been confirmed', 'success')
   } else {
-    openSnackbar('Approval transaction has been submitted', 'success')
-    txHash = await approveTransaction(safeInstance, tx.recipient, tx.value, tx.data, CALL, nonce, from)
+    const showNotification = () => openSnackbar('Approval transaction has been submitted', 'success')
+    txHash = await approveTransaction(
+      showNotification,
+      safeInstance,
+      tx.recipient,
+      tx.value,
+      tx.data,
+      CALL,
+      nonce,
+      from,
+    )
     openSnackbar('Approval transaction has been confirmed', 'success')
   }
 

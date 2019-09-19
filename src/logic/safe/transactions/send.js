@@ -15,6 +15,7 @@ export const TX_TYPE_EXECUTION = 'execution'
 export const TX_TYPE_CONFIRMATION = 'confirmation'
 
 export const approveTransaction = async (
+  showNotification: Function,
   safeInstance: any,
   to: string,
   valueInWei: number | string,
@@ -23,7 +24,7 @@ export const approveTransaction = async (
   nonce: number,
   sender: string,
 ) => {
-  const contractTxHash = await safeInstance.getTransactionHash(
+  const txHash = await safeInstance.getTransactionHash(
     to,
     valueInWei,
     data,
@@ -38,21 +39,45 @@ export const approveTransaction = async (
       from: sender,
     },
   )
-  const receipt = await safeInstance.approveHash(contractTxHash, { from: sender })
 
-  await saveTxToHistory(
-    safeInstance,
-    to,
-    valueInWei,
-    data,
-    operation,
-    nonce,
-    receipt.tx, // tx hash,
-    sender,
-    TX_TYPE_CONFIRMATION,
-  )
+  try {
+    const web3 = getWeb3()
+    const contract = new web3.eth.Contract(GnosisSafeSol.abi, safeInstance.address)
 
-  return receipt
+    const transactionHash = await contract.methods.approveHash(txHash)
+      .send({
+        from: sender,
+      }).once('transactionHash', () => {
+        showNotification()
+      })
+      .on('error', (error) => {
+        console.log('Tx error:', error)
+      })
+      .then(async (receipt) => {
+        await saveTxToHistory(
+          safeInstance,
+          to,
+          valueInWei,
+          data,
+          operation,
+          nonce,
+          receipt.transactionHash,
+          sender,
+          TX_TYPE_CONFIRMATION,
+        )
+
+        return receipt.transactionHash
+      })
+
+    return transactionHash
+  } catch (error) {
+    /* eslint-disable */
+    const executeData = safeInstance.contract.methods.approveHash(txHash).encodeABI()
+    const errMsg = await getErrorMessage(safeInstance.address, 0, executeData, sender)
+    console.log(`Error executing the TX: ${errMsg}`)
+
+    throw error
+  }
 }
 
 export const executeTransaction = async (
@@ -85,7 +110,7 @@ export const executeTransaction = async (
       .send({
         from: sender,
       })
-      .once('transactionHash', (transactionHash) => {
+      .once('transactionHash', () => {
         showNotification()
       })
       .on('error', (error) => {
