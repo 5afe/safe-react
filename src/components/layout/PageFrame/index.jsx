@@ -1,6 +1,5 @@
 // @flow
 import * as React from 'react'
-import Footer from '~/components/Footer'
 import Header from '~/components/Header'
 import SidebarProvider from '~/components/Sidebar'
 import { SharedSnackbarProvider } from '~/components/SharedSnackBar'
@@ -16,7 +15,6 @@ const PageFrame = ({ children }: Props) => (
       <SidebarProvider>
         <Header />
         {children}
-        <Footer />
       </SidebarProvider>
     </div>
   </SharedSnackbarProvider>
