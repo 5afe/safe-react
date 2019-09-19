@@ -24,7 +24,7 @@ export const styles = () => ({
     alignItems: 'center',
     cursor: 'pointer',
     '&:first-child': {
-      borderRadius: '8px 0 0 0',
+      borderTopLeftRadius: '8px',
     },
   },
   active: {

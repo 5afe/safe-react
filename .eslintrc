@@ -1,7 +1,7 @@
 {
-  "extends": ["airbnb", "plugin:flowtype/recommended"],
+  "extends": ["airbnb", "plugin:flowtype/recommended", "plugin:jsx-a11y/recommended"],
   "parser": "babel-eslint",
-  "plugins": ["jest", "flowtype"],
+  "plugins": ["jsx-a11y", "jest", "flowtype"],
   "rules": {
     "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
     "react/forbid-prop-types": [1, { "forbid": ["object", "any"] }],

@@ -2,26 +2,24 @@
 import * as React from 'react'
 import classNames from 'classnames'
 import { withStyles } from '@material-ui/core/styles'
-import OpenInNew from '@material-ui/icons/OpenInNew'
+import { estimateGasForDeployingSafe } from '~/logic/contracts/safeContracts'
 import { getNamesFrom, getAccountsFrom } from '~/routes/open/utils/safeDataExtractor'
 import Block from '~/components/layout/Block'
+import EtherscanBtn from '~/components/EtherscanBtn'
+import CopyBtn from '~/components/CopyBtn'
 import Identicon from '~/components/Identicon'
 import OpenPaper from '~/components/Stepper/OpenPaper'
 import Col from '~/components/layout/Col'
 import Row from '~/components/layout/Row'
-import Link from '~/components/layout/Link'
 import Paragraph from '~/components/layout/Paragraph'
 import {
-  sm, md, lg, border, secondary, background,
+  sm, md, lg, border, background,
 } from '~/theme/variables'
 import Hairline from '~/components/layout/Hairline'
-import { getEtherScanLink } from '~/logic/wallets/getWeb3'
+import { getWeb3 } from '~/logic/wallets/getWeb3'
 import { FIELD_NAME, FIELD_CONFIRMATIONS, getNumOwnersFrom } from '../fields'
 
-const openIconStyle = {
-  height: '16px',
-  color: secondary,
-}
+const { useEffect, useState } = React
 
 const styles = () => ({
   root: {
@@ -55,6 +53,9 @@ const styles = () => ({
   },
   user: {
     justifyContent: 'left',
+    '& > p': {
+      marginRight: sm,
+    },
   },
   open: {
     paddingLeft: sm,
@@ -65,19 +66,37 @@ const styles = () => ({
   },
 })
 
-type LayoutProps = {
-  network: string,
-}
-
-type Props = LayoutProps & {
+type Props = {
   values: Object,
   classes: Object,
+  userAccount: string,
 }
 
-const ReviewComponent = ({ values, classes, network }: Props) => {
+const ReviewComponent = ({ values, classes, userAccount }: Props) => {
+  const [gasCosts, setGasCosts] = useState<string>('0.00')
   const names = getNamesFrom(values)
   const addresses = getAccountsFrom(values)
   const numOwners = getNumOwnersFrom(values)
+
+  useEffect(() => {
+    let isCurrent = true
+    const estimateGas = async () => {
+      const web3 = getWeb3()
+      const { fromWei, toBN } = web3.utils
+      const estimatedGasCosts = await estimateGasForDeployingSafe(addresses, numOwners, userAccount)
+      const gasCostsAsEth = fromWei(toBN(estimatedGasCosts), 'ether')
+      const roundedGasCosts = parseFloat(gasCostsAsEth).toFixed(3)
+      if (isCurrent) {
+        setGasCosts(roundedGasCosts)
+      }
+    }
+
+    estimateGas()
+
+    return () => {
+      isCurrent = false
+    }
+  }, [])
 
   return (
     <>
@@ -129,13 +148,8 @@ const ReviewComponent = ({ values, classes, network }: Props) => {
                       <Paragraph size="md" color="disabled" noMargin>
                         {addresses[index]}
                       </Paragraph>
-                      <Link
-                        className={classes.open}
-                        to={getEtherScanLink('address', addresses[index], network)}
-                        target="_blank"
-                      >
-                        <OpenInNew style={openIconStyle} />
-                      </Link>
+                      <CopyBtn content={addresses[index]} />
+                      <EtherscanBtn type="address" value={addresses[index]} />
                     </Block>
                   </Block>
                 </Col>
@@ -148,7 +162,12 @@ const ReviewComponent = ({ values, classes, network }: Props) => {
       <Row className={classes.info} align="center">
         <Paragraph noMargin color="primary" size="md">
           You&apos;re about to create a new Safe and will have to confirm a transaction with your currently connected
-          wallet. Make sure you have ETH in this wallet to fund this transaction.
+          wallet. The creation will cost approximately
+          {' '}
+          {gasCosts}
+          {' '}
+          ETH. The exact amount will be determined by your
+          wallet.
         </Paragraph>
       </Row>
     </>
@@ -157,10 +176,10 @@ const ReviewComponent = ({ values, classes, network }: Props) => {
 
 const ReviewPage = withStyles(styles)(ReviewComponent)
 
-const Review = ({ network }: LayoutProps) => (controls: React.Node, { values }: Object) => (
+const Review = () => (controls: React.Node, { values }: Object) => (
   <>
     <OpenPaper controls={controls} padding={false}>
-      <ReviewPage network={network} values={values} />
+      <ReviewPage values={values} />
     </OpenPaper>
   </>
 )

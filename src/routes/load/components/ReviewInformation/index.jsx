@@ -2,28 +2,22 @@
 import * as React from 'react'
 import classNames from 'classnames'
 import { withStyles } from '@material-ui/core/styles'
-import OpenInNew from '@material-ui/icons/OpenInNew'
 import Block from '~/components/layout/Block'
 import Identicon from '~/components/Identicon'
 import OpenPaper from '~/components/Stepper/OpenPaper'
 import Col from '~/components/layout/Col'
 import Row from '~/components/layout/Row'
-import Link from '~/components/layout/Link'
+import EtherscanBtn from '~/components/EtherscanBtn'
 import Paragraph from '~/components/layout/Paragraph'
+import CopyBtn from '~/components/CopyBtn'
 import Hairline from '~/components/layout/Hairline'
 import {
-  xs, sm, lg, border, secondary,
+  xs, sm, lg, border,
 } from '~/theme/variables'
 import { shortVersionOf } from '~/logic/wallets/ethAddresses'
 import { getAccountsFrom } from '~/routes/open/utils/safeDataExtractor'
 import { getOwnerNameBy, getOwnerAddressBy, getNumOwnersFrom } from '~/routes/open/components/fields'
-import { getEtherScanLink } from '~/logic/wallets/getWeb3'
 import { FIELD_LOAD_NAME, FIELD_LOAD_ADDRESS, THRESHOLD } from '~/routes/load/components/fields'
-
-const openIconStyle = {
-  height: '16px',
-  color: secondary,
-}
 
 const styles = () => ({
   root: {
@@ -51,6 +45,9 @@ const styles = () => ({
   },
   user: {
     justifyContent: 'left',
+    '& > p': {
+      marginRight: sm,
+    },
   },
   open: {
     paddingLeft: sm,
@@ -65,15 +62,12 @@ const styles = () => ({
   },
   address: {
     paddingLeft: '6px',
+    marginRight: sm,
   },
 })
 
-type LayoutProps = {
-  network: string,
+type Props = {
   userAddress: string,
-}
-
-type Props = LayoutProps & {
   values: Object,
   classes: Object,
 }
@@ -97,9 +91,7 @@ const checkUserAddressOwner = (values: Object, userAddress: string): boolean => 
 
 class ReviewComponent extends React.PureComponent<Props, State> {
   render() {
-    const {
-      values, classes, network, userAddress,
-    } = this.props
+    const { values, classes, userAddress } = this.props
 
     const isOwner = checkUserAddressOwner(values, userAddress)
     const owners = getAccountsFrom(values)
@@ -132,9 +124,8 @@ class ReviewComponent extends React.PureComponent<Props, State> {
                   <Paragraph size="md" color="disabled" noMargin className={classes.address}>
                     {shortVersionOf(safeAddress, 4)}
                   </Paragraph>
-                  <Link className={classes.open} to={getEtherScanLink('address', safeAddress, network)} target="_blank">
-                    <OpenInNew style={openIconStyle} />
-                  </Link>
+                  <CopyBtn content={safeAddress} />
+                  <EtherscanBtn type="address" value={safeAddress} />
                 </Row>
               </Block>
               <Block margin="lg">
@@ -177,13 +168,8 @@ class ReviewComponent extends React.PureComponent<Props, State> {
                         <Paragraph size="md" color="disabled" noMargin>
                           {address}
                         </Paragraph>
-                        <Link
-                          className={classes.open}
-                          to={getEtherScanLink('address', address, network)}
-                          target="_blank"
-                        >
-                          <OpenInNew style={openIconStyle} />
-                        </Link>
+                        <CopyBtn content={address} />
+                        <EtherscanBtn type="address" value={address} />
                       </Block>
                     </Block>
                   </Col>

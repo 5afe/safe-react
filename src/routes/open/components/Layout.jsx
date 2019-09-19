@@ -7,16 +7,16 @@ import Block from '~/components/layout/Block'
 import Heading from '~/components/layout/Heading'
 import Row from '~/components/layout/Row'
 import Review from '~/routes/open/components/ReviewInformation'
-import SafeNameField from '~/routes/open/components/SafeNameForm'
+import SafeNameField, { safeNameValidation } from '~/routes/open/components/SafeNameForm'
 import SafeOwnersFields from '~/routes/open/components/SafeOwnersConfirmationsForm'
 import { getOwnerNameBy, getOwnerAddressBy, FIELD_CONFIRMATIONS } from '~/routes/open/components/fields'
 import { history } from '~/store'
 import { secondary } from '~/theme/variables'
 
-const getSteps = () => ['Start', 'Owners and confirmations', 'Review']
+const getSteps = () => ['Name', 'Owners and confirmations', 'Review']
 
 const initialValuesFrom = (userAccount: string) => ({
-  [getOwnerNameBy(0)]: 'My Metamask (me)',
+  [getOwnerNameBy(0)]: 'My Wallet',
   [getOwnerAddressBy(0)]: userAccount,
   [FIELD_CONFIRMATIONS]: '1',
 })
@@ -69,7 +69,9 @@ const Layout = ({
           >
             <StepperPage>{SafeNameField}</StepperPage>
             <StepperPage>{SafeOwnersFields}</StepperPage>
-            <StepperPage network={network}>{Review}</StepperPage>
+            <StepperPage network={network} userAccount={userAccount}>
+              {Review}
+            </StepperPage>
           </Stepper>
         </Block>
       ) : (

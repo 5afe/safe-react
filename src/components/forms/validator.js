@@ -18,7 +18,7 @@ export const simpleMemoize = (fn: Function) => {
 
 type Field = boolean | string | null | typeof undefined
 
-export const required = simpleMemoize((value: Field) => (value ? undefined : 'Required'))
+export const required = (value: Field) => (value ? undefined : 'Required')
 
 export const mustBeInteger = (value: string) => (!Number.isInteger(Number(value)) || value.includes('.') ? 'Must be an integer' : undefined)
 
@@ -83,7 +83,7 @@ export const uniqueAddress = (addresses: string[] | List<string>) => simpleMemoi
   return addressAlreadyExists ? ADDRESS_REPEATED_ERROR : undefined
 })
 
-export const composeValidators = (...validators: Function[]): FieldValidator => (value: Field) => validators.reduce((error, validator) => (error || (validator && validator(value)), undefined))
+export const composeValidators = (...validators: Function[]): FieldValidator => (value: Field) => validators.reduce((error, validator) => error || validator(value), undefined)
 
 export const inLimit = (limit: number, base: number, baseText: string, symbol: string = 'ETH') => (value: string) => {
   const amount = Number(value)
