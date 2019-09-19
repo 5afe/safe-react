@@ -1,6 +1,6 @@
 // @flow
 import * as React from 'react'
-import { fireEvent } from '@testing-library/react'
+import { fireEvent, waitForElement } from '@testing-library/react'
 import { sleep } from '~/utils/timer'
 
 export const fillAndSubmitSendFundsForm = async (
@@ -24,7 +24,7 @@ export const fillAndSubmitSendFundsForm = async (
   fireEvent.click(reviewBtn)
 
   // Submit the tx (Review Tx screen)
-  const submitBtn = SafeDom.getByTestId('submit-tx-btn')
+  const submitBtn = await waitForElement(() => SafeDom.getByTestId('submit-tx-btn'))
   fireEvent.click(submitBtn)
   await sleep(1000)
 }
