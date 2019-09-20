@@ -4,9 +4,9 @@ import { List } from 'immutable'
 import { withStyles } from '@material-ui/core/styles'
 import { withSnackbar } from 'notistack'
 import Modal from '~/components/Modal'
-import { type Variant } from '~/components/Header'
 import { type Owner } from '~/routes/safe/store/models/owner'
 import { getGnosisSafeInstanceAt, SENTINEL_ADDRESS } from '~/logic/contracts/safeContracts'
+import { NOTIFIED_TRANSACTIONS } from '~/logic/safe/transactions'
 import CheckOwner from './screens/CheckOwner'
 import ThresholdForm from './screens/ThresholdForm'
 import ReviewRemoveOwner from './screens/Review'
@@ -32,7 +32,8 @@ type Props = {
   network: string,
   createTransaction: Function,
   removeSafeOwner: Function,
-  enqueueSnackbar: (message: string, variant: Variant) => void,
+  enqueueSnackbar: Function,
+  closeSnackbar: Function,
 }
 
 type ActiveScreen = 'checkOwner' | 'selectThreshold' | 'reviewRemoveOwner'
@@ -43,7 +44,8 @@ export const sendRemoveOwner = async (
   ownerAddressToRemove: string,
   ownerNameToRemove: string,
   ownersOld: List<Owner>,
-  enqueueSnackbar: (message: string, variant: Variant) => void,
+  enqueueSnackbar: Function,
+  closeSnackbar: Function,
   createTransaction: Function,
   removeSafeOwner: Function,
 ) => {
@@ -57,7 +59,15 @@ export const sendRemoveOwner = async (
     .removeOwner(prevAddress, ownerAddressToRemove, values.threshold)
     .encodeABI()
 
-  const txHash = await createTransaction(safeAddress, safeAddress, 0, txData, enqueueSnackbar)
+  const txHash = await createTransaction(
+    safeAddress,
+    safeAddress,
+    0,
+    txData,
+    NOTIFIED_TRANSACTIONS.OWNER_CHANGE_TX,
+    enqueueSnackbar,
+    closeSnackbar,
+  )
 
   if (txHash) {
     removeSafeOwner({ safeAddress, ownerAddress: ownerAddressToRemove })
@@ -78,6 +88,7 @@ const RemoveOwner = ({
   createTransaction,
   removeSafeOwner,
   enqueueSnackbar,
+  closeSnackbar,
 }: Props) => {
   const [activeScreen, setActiveScreen] = useState<ActiveScreen>('checkOwner')
   const [values, setValues] = useState<Object>({})
@@ -117,6 +128,7 @@ const RemoveOwner = ({
       ownerName,
       owners,
       enqueueSnackbar,
+      closeSnackbar,
       createTransaction,
       removeSafeOwner,
     )

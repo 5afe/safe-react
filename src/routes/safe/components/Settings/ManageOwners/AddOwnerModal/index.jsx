@@ -4,9 +4,9 @@ import { List } from 'immutable'
 import { withStyles } from '@material-ui/core/styles'
 import { withSnackbar } from 'notistack'
 import Modal from '~/components/Modal'
-import { type Variant } from '~/components/Header'
 import { type Owner } from '~/routes/safe/store/models/owner'
 import { getGnosisSafeInstanceAt } from '~/logic/contracts/safeContracts'
+import { NOTIFIED_TRANSACTIONS } from '~/logic/safe/transactions'
 import OwnerForm from './screens/OwnerForm'
 import ThresholdForm from './screens/ThresholdForm'
 import ReviewAddOwner from './screens/Review'
@@ -30,7 +30,8 @@ type Props = {
   network: string,
   addSafeOwner: Function,
   createTransaction: Function,
-  enqueueSnackbar: (message: string, variant: Variant) => void,
+  enqueueSnackbar: Function,
+  closeSnackbar: Function,
 }
 type ActiveScreen = 'selectOwner' | 'selectThreshold' | 'reviewAddOwner'
 
@@ -38,14 +39,23 @@ export const sendAddOwner = async (
   values: Object,
   safeAddress: string,
   ownersOld: List<Owner>,
-  enqueueSnackbar: (message: string, variant: Variant) => void,
+  enqueueSnackbar: Function,
+  closeSnackbar: Function,
   createTransaction: Function,
   addSafeOwner: Function,
 ) => {
   const gnosisSafe = await getGnosisSafeInstanceAt(safeAddress)
   const txData = gnosisSafe.contract.methods.addOwnerWithThreshold(values.ownerAddress, values.threshold).encodeABI()
 
-  const txHash = await createTransaction(safeAddress, safeAddress, 0, txData, enqueueSnackbar)
+  const txHash = await createTransaction(
+    safeAddress,
+    safeAddress,
+    0,
+    txData,
+    NOTIFIED_TRANSACTIONS.OWNER_CHANGE_TX,
+    enqueueSnackbar,
+    closeSnackbar,
+  )
 
   if (txHash) {
     addSafeOwner({ safeAddress, ownerName: values.ownerName, ownerAddress: values.ownerAddress })
@@ -64,6 +74,7 @@ const AddOwner = ({
   createTransaction,
   addSafeOwner,
   enqueueSnackbar,
+  closeSnackbar,
 }: Props) => {
   const [activeScreen, setActiveScreen] = useState<ActiveScreen>('selectOwner')
   const [values, setValues] = useState<Object>({})
@@ -104,7 +115,7 @@ const AddOwner = ({
   const onAddOwner = async () => {
     onClose()
     try {
-      sendAddOwner(values, safeAddress, owners, enqueueSnackbar, createTransaction, addSafeOwner)
+      sendAddOwner(values, safeAddress, owners, enqueueSnackbar, closeSnackbar, createTransaction, addSafeOwner)
     } catch (error) {
       // eslint-disable-next-line
       console.log('Error while removing an owner ' + error)

@@ -4,7 +4,7 @@ import { List } from 'immutable'
 import { withStyles } from '@material-ui/core/styles'
 import { withSnackbar } from 'notistack'
 import Modal from '~/components/Modal'
-import { type Variant } from '~/components/Header'
+import { NOTIFIED_TRANSACTIONS } from '~/logic/safe/transactions'
 import { getGnosisSafeInstanceAt, SENTINEL_ADDRESS } from '~/logic/contracts/safeContracts'
 import OwnerForm from './screens/OwnerForm'
 import ReviewReplaceOwner from './screens/Review'
@@ -30,7 +30,8 @@ type Props = {
   threshold: string,
   createTransaction: Function,
   replaceSafeOwner: Function,
-  enqueueSnackbar: (message: string, variant: Variant) => void,
+  enqueueSnackbar: Function,
+  closeSnackbar: Function,
 }
 type ActiveScreen = 'checkOwner' | 'reviewReplaceOwner'
 
@@ -38,7 +39,8 @@ export const sendReplaceOwner = async (
   values: Object,
   safeAddress: string,
   ownerAddressToRemove: string,
-  enqueueSnackbar: (message: string, variant: Variant) => void,
+  enqueueSnackbar: Function,
+  closeSnackbar: Function,
   createTransaction: Function,
   replaceSafeOwner: Function,
 ) => {
@@ -52,7 +54,15 @@ export const sendReplaceOwner = async (
     .swapOwner(prevAddress, ownerAddressToRemove, values.ownerAddress)
     .encodeABI()
 
-  const txHash = await createTransaction(safeAddress, safeAddress, 0, txData, enqueueSnackbar)
+  const txHash = await createTransaction(
+    safeAddress,
+    safeAddress,
+    0,
+    txData,
+    NOTIFIED_TRANSACTIONS.OWNER_CHANGE_TX,
+    enqueueSnackbar,
+    closeSnackbar,
+  )
 
   if (txHash) {
     replaceSafeOwner({
@@ -78,6 +88,7 @@ const ReplaceOwner = ({
   createTransaction,
   replaceSafeOwner,
   enqueueSnackbar,
+  closeSnackbar,
 }: Props) => {
   const [activeScreen, setActiveScreen] = useState<ActiveScreen>('checkOwner')
   const [values, setValues] = useState<Object>({})
@@ -107,6 +118,7 @@ const ReplaceOwner = ({
         safeAddress,
         ownerAddress,
         enqueueSnackbar,
+        closeSnackbar,
         createTransaction,
         replaceSafeOwner,
       )

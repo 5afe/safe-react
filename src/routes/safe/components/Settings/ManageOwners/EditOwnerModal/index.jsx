@@ -1,5 +1,6 @@
 // @flow
 import React from 'react'
+import { withSnackbar } from 'notistack'
 import { withStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
 import OpenInNew from '@material-ui/icons/OpenInNew'
@@ -14,8 +15,10 @@ import Field from '~/components/forms/Field'
 import TextField from '~/components/forms/TextField'
 import Paragraph from '~/components/layout/Paragraph'
 import Identicon from '~/components/Identicon'
-import { getEtherScanLink } from '~/logic/wallets/getWeb3'
 import { composeValidators, required, minMaxLength } from '~/components/forms/validator'
+import { getNofiticationsFromTxType } from '~/logic/notifications'
+import { NOTIFIED_TRANSACTIONS } from '~/logic/safe/transactions'
+import { getEtherScanLink } from '~/logic/wallets/getWeb3'
 import Modal from '~/components/Modal'
 import { styles } from './style'
 import { secondary } from '~/theme/variables'
@@ -37,6 +40,7 @@ type Props = {
   network: string,
   selectedOwnerName: string,
   editSafeOwner: Function,
+  enqueueSnackbar: Function,
 }
 
 const EditOwnerComponent = ({
@@ -48,9 +52,14 @@ const EditOwnerComponent = ({
   selectedOwnerName,
   editSafeOwner,
   network,
+  enqueueSnackbar,
 }: Props) => {
   const handleSubmit = (values) => {
     editSafeOwner({ safeAddress, ownerAddress, ownerName: values.ownerName })
+
+    const notification = getNofiticationsFromTxType(NOTIFIED_TRANSACTIONS.OWNER_NAME_CHANGE_TX)
+    enqueueSnackbar(notification.afterExecution.description, notification.afterExecution.options)
+
     onClose()
   }
 
@@ -116,6 +125,6 @@ const EditOwnerComponent = ({
   )
 }
 
-const EditOwnerModal = withStyles(styles)(EditOwnerComponent)
+const EditOwnerModal = withStyles(styles)(withSnackbar(EditOwnerComponent))
 
 export default EditOwnerModal
