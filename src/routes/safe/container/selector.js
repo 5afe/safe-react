@@ -59,7 +59,7 @@ export const grantedSelector: Selector<GlobalState, RouterProps, boolean> = crea
       return false
     }
 
-    const owners: List<Owner> = safe.get('owners')
+    const { owners }: List<Owner> = safe
     if (!owners) {
       return false
     }
