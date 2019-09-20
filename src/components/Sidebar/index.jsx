@@ -19,7 +19,7 @@ import useSidebarStyles from './style'
 import SafeList from './SafeList'
 import { WELCOME_ADDRESS } from '~/routes/routes'
 
-const { useState } = React
+const { useState, useEffect } = React
 
 type TSidebarContext = {
   isOpen: boolean,
@@ -50,6 +50,10 @@ const Sidebar = ({
   const [isOpen, setIsOpen] = useState<boolean>(false)
   const [filter, setFilter] = useState<string>('')
   const classes = useSidebarStyles()
+
+  useEffect(() => {
+    setFilter('')
+  }, [isOpen])
 
   const searchClasses = {
     input: classes.searchInput,
