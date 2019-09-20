@@ -31,6 +31,7 @@ export const createSafe = async (values: Object, userAccount: string, addSafe: A
   const ownersNames = getNamesFrom(values)
 
   await initContracts()
+
   const safe = await deploySafeContract(ownerAddresses, numConfirmations, userAccount)
   await checkReceiptStatus(safe.tx)
 

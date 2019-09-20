@@ -64,7 +64,7 @@ export default handleActions<SafeReducerState, *>(
       // in case of update it shouldn't, because a record would be initialized
       // with initial props and it would overwrite existing ones
 
-      if (state.has(safe.address)) {
+      if (state.hasIn(['safes', safe.address])) {
         return state.updateIn(['safes', safe.address], (prevSafe) => prevSafe.merge(safe))
       }
 
