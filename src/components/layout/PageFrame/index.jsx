@@ -1,8 +1,8 @@
 // @flow
 import * as React from 'react'
 import { SnackbarProvider } from 'notistack'
-import SidebarProvider from '~/components/Sidebar'
 import { withStyles } from '@material-ui/core/styles'
+import SidebarProvider from '~/components/Sidebar'
 import Header from '~/components/Header'
 import Img from '~/components/layout/Img'
 import AlertLogo from './assets/alert.svg'
@@ -10,7 +10,7 @@ import CheckLogo from './assets/check.svg'
 import ErrorLogo from './assets/error.svg'
 import styles from './index.scss'
 
-const classes = {
+const notificationStyles = {
   success: {
     background: '#ffffff',
     fontFamily: 'Averta',
@@ -51,6 +51,7 @@ const classes = {
 
 type Props = {
   children: React.Node,
+  classes: Object,
 }
 
 const PageFrame = ({ children, classes }: Props) => (
@@ -65,17 +66,17 @@ const PageFrame = ({ children, classes }: Props) => (
         variantInfo: classes.info,
       }}
       iconVariant={{
-        success: <img src={CheckLogo} />,
-        error: <img src={ErrorLogo} />,
-        warning: <img src={AlertLogo} />,
+        success: <Img src={CheckLogo} />,
+        error: <Img src={ErrorLogo} />,
+        warning: <Img src={AlertLogo} />,
       }}
-    ><>
+    >
       <SidebarProvider>
         <Header />
         {children}
-      </SidebarProvider></>
+      </SidebarProvider>
     </SnackbarProvider>
   </div>
 )
 
-export default withStyles(classes)(PageFrame)
+export default withStyles(notificationStyles)(PageFrame)
