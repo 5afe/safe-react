@@ -10,7 +10,7 @@ import Block from '~/components/layout/Block'
 import Row from '~/components/layout/Row'
 import Modal from '~/components/Modal'
 import Paragraph from '~/components/layout/Paragraph'
-import { type Variant } from '~/components/Header'
+import { NOTIFIED_TRANSACTIONS } from '~/logic/safe/transactions'
 import ChangeThreshold from './ChangeThreshold'
 import type { Owner } from '~/routes/safe/store/models/owner'
 import { getGnosisSafeInstanceAt } from '~/logic/contracts/safeContracts'
@@ -23,11 +23,19 @@ type Props = {
   createTransaction: Function,
   safeAddress: string,
   granted: boolean,
-  enqueueSnackbar: (message: string, variant: Variant) => void,
+  enqueueSnackbar: Function,
+  closeSnackbar: Function,
 }
 
 const ThresholdSettings = ({
-  owners, threshold, classes, createTransaction, safeAddress, granted, enqueueSnackbar,
+  owners,
+  threshold,
+  classes,
+  createTransaction,
+  safeAddress,
+  granted,
+  enqueueSnackbar,
+  closeSnackbar,
 }: Props) => {
   const [isModalOpen, setModalOpen] = useState(false)
 
@@ -39,7 +47,15 @@ const ThresholdSettings = ({
     const safeInstance = await getGnosisSafeInstanceAt(safeAddress)
     const txData = safeInstance.contract.methods.changeThreshold(newThreshold).encodeABI()
 
-    createTransaction(safeAddress, safeAddress, 0, txData, enqueueSnackbar)
+    createTransaction(
+      safeAddress,
+      safeAddress,
+      0,
+      txData,
+      NOTIFIED_TRANSACTIONS.THRESHOLD_CHANGE_TX,
+      enqueueSnackbar,
+      closeSnackbar,
+    )
   }
 
   return (
