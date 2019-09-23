@@ -12,8 +12,8 @@ import GnoForm from '~/components/forms/GnoForm'
 import Row from '~/components/layout/Row'
 import Paragraph from '~/components/layout/Paragraph'
 import Button from '~/components/layout/Button'
-import { type Variant, SUCCESS } from '~/components/Header'
-import { NOTIFICATIONS } from '~/logic/notifications'
+import { getNofiticationsFromTxType } from '~/logic/notifications'
+import { NOTIFIED_TRANSACTIONS } from '~/logic/safe/transactions'
 import { styles } from './style'
 
 export const SAFE_NAME_INPUT_TEST_ID = 'safe-name-input'
@@ -24,7 +24,7 @@ type Props = {
   safeAddress: string,
   safeName: string,
   updateSafe: Function,
-  enqueueSnackbar: (message: string, variant: Variant) => void,
+  enqueueSnackbar: Function,
 }
 
 const ChangeSafeName = (props: Props) => {
@@ -34,7 +34,9 @@ const ChangeSafeName = (props: Props) => {
 
   const handleSubmit = (values) => {
     updateSafe({ address: safeAddress, name: values.safeName })
-    enqueueSnackbar(NOTIFICATIONS.SAFE_NAME_CHANGED_MSG, { variant: SUCCESS })
+
+    const notification = getNofiticationsFromTxType(NOTIFIED_TRANSACTIONS.SAFE_NAME_CHANGE_TX)
+    enqueueSnackbar(notification.afterExecution.description, notification.afterExecution.options)
   }
 
   return (
