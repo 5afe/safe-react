@@ -14,7 +14,7 @@ const useSidebarStyles = makeStyles({
     width: sidebarWidth,
   },
   headerPlaceholder: {
-    height: headerHeight, // for some reason it didn't want to work with an imported variable 🤔
+    minHeight: headerHeight,
   },
   addSafeBtn: {
     fontSize: mediumFontSize,
