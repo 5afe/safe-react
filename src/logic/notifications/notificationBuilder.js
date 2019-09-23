@@ -35,6 +35,17 @@ const confirmationTxNotificationsQueue: NotificationsQueue = {
   afterExecutionError: NOTIFICATIONS.TX_CONFIRMATION_FAILED_MSG,
 }
 
+const cancellationTxNotificationsQueue: NotificationsQueue = {
+  beforeExecution: NOTIFICATIONS.SIGN_TX_MSG,
+  pendingExecution: {
+    single: NOTIFICATIONS.TX_PENDING_MSG,
+    multiple: NOTIFICATIONS.TX_PENDING_MORE_CONFIRMATIONS_MSG,
+  },
+  afterRejection: NOTIFICATIONS.TX_REJECTED_MSG,
+  afterExecution: NOTIFICATIONS.TX_EXECUTED_MSG,
+  afterExecutionError: NOTIFICATIONS.TX_FAILED_MSG,
+}
+
 const ownerChangeTxNotificationsQueue: NotificationsQueue = {
   beforeExecution: NOTIFICATIONS.SIGN_OWNER_CHANGE_MSG,
   pendingExecution: {
@@ -54,7 +65,7 @@ const safeNameChangeNotificationsQueue: NotificationsQueue = {
   },
   afterRejection: null,
   afterExecution: NOTIFICATIONS.SAFE_NAME_CHANGE_EXECUTED_MSG,
-  afterExeCONNECT_WALLET_TXcutionError: null,
+  afterExecutionError: null,
 }
 
 const ownerNameChangeNotificationsQueue: NotificationsQueue = {
@@ -103,6 +114,10 @@ export const getNofiticationsFromTxType = (txType: string) => {
     }
     case NOTIFIED_TRANSACTIONS.CONFIRMATION_TX: {
       notificationsQueue = confirmationTxNotificationsQueue
+      break
+    }
+    case NOTIFIED_TRANSACTIONS.CANCELLATION_TX: {
+      notificationsQueue = cancellationTxNotificationsQueue
       break
     }
     case NOTIFIED_TRANSACTIONS.OWNER_CHANGE_TX: {

@@ -14,15 +14,17 @@ export type Notification = {
   variant: Variant,
   persist: boolean,
   autoHideDuration?: shortDuration | longDuration,
+  preventDuplicate: boolean,
 }
 
 export type Notifications = {
   // Wallet Connection
-  CONNECT_WALLET_MSG: string,
-  CONNECT_WALLET_READ_MODE_MSG: string,
-  WALLET_CONNECTED_MSG: string,
-  UNLOCK_WALLET_MSG: string,
-  CONNECT_WALLET_ERROR_MSG: string,
+  CONNECT_WALLET_MSG: Notification,
+  CONNECT_WALLET_READ_MODE_MSG: Notification,
+  WALLET_CONNECTED_MSG: Notification,
+  WALLET_DISCONNECTED_MSG: Notification,
+  UNLOCK_WALLET_MSG: Notification,
+  CONNECT_WALLET_ERROR_MSG: Notification,
 
   // Regular/Custom Transactions
   SIGN_TX_MSG: Notification,
@@ -33,47 +35,47 @@ export type Notifications = {
   TX_FAILED_MSG: Notification,
 
   // Approval Transactions
-  TX_CONFIRMATION_PENDING_MSG: string,
-  TX_CONFIRMATION_EXECUTED_MSG: string,
-  TX_CONFIRMATION_FAILED_MSG: string,
+  TX_CONFIRMATION_PENDING_MSG: Notification,
+  TX_CONFIRMATION_EXECUTED_MSG: Notification,
+  TX_CONFIRMATION_FAILED_MSG: Notification,
 
   // Safe Name
-  SAFE_NAME_CHANGED_MSG: string,
+  SAFE_NAME_CHANGED_MSG: Notification,
 
   // Owner Name
-  OWNER_NAME_CHANGE_EXECUTED_MSG: string,
+  OWNER_NAME_CHANGE_EXECUTED_MSG: Notification,
 
   // Owners
-  SIGN_OWNER_CHANGE_MSG: string,
-  ONWER_CHANGE_PENDING_MSG: string,
-  ONWER_CHANGE_PENDING_MORE_CONFIRMATIONS_MSG: string,
-  ONWER_CHANGE_REJECTED_MSG: string,
-  ONWER_CHANGE_EXECUTED_MSG: string,
-  ONWER_CHANGE_FAILED_MSG: string,
+  SIGN_OWNER_CHANGE_MSG: Notification,
+  ONWER_CHANGE_PENDING_MSG: Notification,
+  ONWER_CHANGE_PENDING_MORE_CONFIRMATIONS_MSG: Notification,
+  ONWER_CHANGE_REJECTED_MSG: Notification,
+  ONWER_CHANGE_EXECUTED_MSG: Notification,
+  ONWER_CHANGE_FAILED_MSG: Notification,
 
   // Threshold
-  SIGN_THRESHOLD_CHANGE_MSG: string,
-  THRESHOLD_CHANGE_PENDING_MSG: string,
-  THRESHOLD_CHANGE_PENDING_MORE_CONFIRMATIONS_MSG: string,
-  THRESHOLD_CHANGE_REJECTED_MSG: string,
-  THRESHOLD_CHANGE_EXECUTED_MSG: string,
-  THRESHOLD_CHANGE_FAILED_MSG: string,
+  SIGN_THRESHOLD_CHANGE_MSG: Notification,
+  THRESHOLD_CHANGE_PENDING_MSG: Notification,
+  THRESHOLD_CHANGE_PENDING_MORE_CONFIRMATIONS_MSG: Notification,
+  THRESHOLD_CHANGE_REJECTED_MSG: Notification,
+  THRESHOLD_CHANGE_EXECUTED_MSG: Notification,
+  THRESHOLD_CHANGE_FAILED_MSG: Notification,
 
   // Rinkeby version
-  RINKEBY_VERSION_MSG: string,
-  WRONG_NETWORK_RINKEBY_MSG: string,
-  WRONG_NETWOEK_MAINNET_MSG: string,
+  RINKEBY_VERSION_MSG: Notification,
+  WRONG_NETWORK_RINKEBY_MSG: Notification,
+  WRONG_NETWOEK_MAINNET_MSG: Notification,
 }
 
 export const NOTIFICATIONS: Notifications = {
   // Wallet Connection
   CONNECT_WALLET_MSG: {
     description: 'Please connect wallet to continue',
-    options: { variant: WARNING, persist: true },
+    options: { variant: WARNING, persist: true, preventDuplicate: true },
   },
   CONNECT_WALLET_READ_MODE_MSG: {
     description: 'You are in read-only mode: Please connect wallet',
-    options: { variant: WARNING, persist: true },
+    options: { variant: WARNING, persist: true, preventDuplicate: true },
   },
   WALLET_CONNECTED_MSG: {
     description: 'Wallet connected',
@@ -81,12 +83,19 @@ export const NOTIFICATIONS: Notifications = {
       variant: SUCCESS,
       persist: false,
       autoHideDuration: shortDuration,
-      preventDuplicate: true,
+    },
+  },
+  WALLET_DISCONNECTED_MSG: {
+    description: 'Wallet disconnected',
+    options: {
+      variant: SUCCESS,
+      persist: false,
+      autoHideDuration: shortDuration,
     },
   },
   UNLOCK_WALLET_MSG: {
     description: 'Unlock your wallet to connect',
-    options: { variant: WARNING, persist: true },
+    options: { variant: WARNING, persist: true, preventDuplicate: true },
   },
   CONNECT_WALLET_ERROR_MSG: {
     description: 'Error connecting to your wallet',
@@ -200,14 +209,14 @@ export const NOTIFICATIONS: Notifications = {
   // Network
   RINKEBY_VERSION_MSG: {
     description: "Rinkeby Version: Don't send mainnet assets to this Safe",
-    options: { variant: INFO, persist: true, hideIconVariant: true },
+    options: { variant: INFO, persist: true, preventDuplicate: true },
   },
   WRONG_NETWORK_RINKEBY_MSG: {
     description: 'Wrong network: Please use Rinkeby',
-    options: { variant: WARNING, persist: true },
+    options: { variant: WARNING, persist: true, preventDuplicate: true },
   },
   WRONG_NETWOEK_MAINNET_MSG: {
     description: 'Wrong network: Please use Mainnet',
-    options: { variant: WARNING, persist: true },
+    options: { variant: WARNING, persist: true, preventDuplicate: true },
   },
 }

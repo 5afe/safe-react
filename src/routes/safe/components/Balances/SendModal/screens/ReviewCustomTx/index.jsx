@@ -69,7 +69,7 @@ const ReviewCustomTx = ({
       txData,
       NOTIFIED_TRANSACTIONS.STANDARD_TX,
       enqueueSnackbar,
-      closeSnackbar
+      closeSnackbar,
     )
     onClose()
   }

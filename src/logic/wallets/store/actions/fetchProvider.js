@@ -3,9 +3,7 @@ import type { Dispatch as ReduxDispatch } from 'redux'
 import { ETHEREUM_NETWORK_IDS, ETHEREUM_NETWORK } from '~/logic/wallets/getWeb3'
 import type { ProviderProps } from '~/logic/wallets/store/model/provider'
 import { makeProvider } from '~/logic/wallets/store/model/provider'
-import {
-  type Variant, SUCCESS, ERROR, WARNING,
-} from '~/components/Header'
+import { NOTIFICATIONS } from '~/logic/notifications'
 import addProvider from './addProvider'
 
 export const processProviderResponse = (dispatch: ReduxDispatch<*>, provider: ProviderProps) => {
@@ -24,38 +22,35 @@ export const processProviderResponse = (dispatch: ReduxDispatch<*>, provider: Pr
   dispatch(addProvider(walletRecord))
 }
 
-
-const CONNECT_WALLET_MSG = 'Please connect wallet to continue'
-const CONNECT_WALLET_READ_MODE_MSG = 'You are in read-only mode: Please connect wallet'
-const UNLOCK_MSG = 'Unlock your wallet to connect'
-const WRONG_NETWORK_RINKEBY_MSG = 'Wrong network: Please use Rinkeby'
-const SUCCESS_MSG = 'Wallet connected'
-export const WALLET_ERROR_MSG = 'Error connecting to your wallet'
-
-const handleProviderNotification = (
-  enqueueSnackbar: (message: string, variant: Variant) => void,
-  provider: ProviderProps,
-) => {
+const handleProviderNotification = (enqueueSnackbar: Function, closeSnackbar: Function, provider: ProviderProps) => {
   const { loaded, available, network } = provider
 
   if (!loaded) {
-    enqueueSnackbar(WALLET_ERROR_MSG, { variant: ERROR })
+    enqueueSnackbar(NOTIFICATIONS.CONNECT_WALLET_ERROR_MSG.description, NOTIFICATIONS.CONNECT_WALLET_ERROR_MSG.options)
     return
   }
 
   if (ETHEREUM_NETWORK_IDS[network] !== ETHEREUM_NETWORK.RINKEBY) {
-    enqueueSnackbar(WRONG_NETWORK_RINKEBY_MSG, { variant: ERROR, persist: true })
+    enqueueSnackbar(
+      NOTIFICATIONS.WRONG_NETWORK_RINKEBY_MSG.description,
+      NOTIFICATIONS.WRONG_NETWORK_RINKEBY_MSG.options,
+    )
     return
   }
+  enqueueSnackbar(NOTIFICATIONS.RINKEBY_VERSION_MSG.description, NOTIFICATIONS.RINKEBY_VERSION_MSG.options)
 
-  const msg = available ? SUCCESS_MSG : UNLOCK_MSG
-  const variant = { variant: (available ? SUCCESS : WARNING) }
-  enqueueSnackbar(msg, variant)
+  if (available) {
+    enqueueSnackbar(NOTIFICATIONS.WALLET_CONNECTED_MSG.description, NOTIFICATIONS.WALLET_CONNECTED_MSG.options)
+  } else {
+    enqueueSnackbar(NOTIFICATIONS.UNLOCK_WALLET_MSG.description, NOTIFICATIONS.UNLOCK_WALLET_MSG.options)
+  }
 }
 
-export default (provider: ProviderProps, enqueueSnackbar: (message: string, variant: Variant) => void) => (
-  dispatch: ReduxDispatch<*>,
-) => {
-  handleProviderNotification(enqueueSnackbar, provider)
+export default (
+  provider: ProviderProps,
+  enqueueSnackbar: Function,
+  closeSnackbar: Function,
+) => (dispatch: ReduxDispatch<*>) => {
+  handleProviderNotification(enqueueSnackbar, closeSnackbar, provider)
   processProviderResponse(dispatch, provider)
 }

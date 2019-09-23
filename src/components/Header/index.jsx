@@ -3,9 +3,9 @@ import * as React from 'react'
 import { connect } from 'react-redux'
 import { withSnackbar } from 'notistack'
 import { logComponentStack, type Info } from '~/utils/logBoundaries'
-import { WALLET_ERROR_MSG } from '~/logic/wallets/store/actions'
 import { getProviderInfo } from '~/logic/wallets/getWeb3'
 import type { ProviderProps } from '~/logic/wallets/store/model/provider'
+import { NOTIFICATIONS } from '~/logic/notifications'
 import ProviderAccesible from './component/ProviderInfo/ProviderAccesible'
 import UserDetails from './component/ProviderDetails/UserDetails'
 import ProviderDisconnected from './component/ProviderInfo/ProviderDisconnected'
@@ -14,16 +14,9 @@ import Layout from './component/Layout'
 import actions, { type Actions } from './actions'
 import selector, { type SelectorProps } from './selector'
 
-export const SUCCESS = 'success'
-export const ERROR = 'error'
-export const WARNING = 'warning'
-export const INFO = 'info'
-
-export type Variant = SUCCESS | ERROR | WARNING | INFO
-
 type Props = Actions &
   SelectorProps & {
-    enqueueSnackbar: (message: string, variant: Variant) => void,
+    enqueueSnackbar: Function,
   }
 
 type State = {
@@ -49,7 +42,7 @@ class HeaderComponent extends React.PureComponent<Props, State> {
     const { enqueueSnackbar } = this.props
 
     this.setState({ hasError: true })
-    enqueueSnackbar(WALLET_ERROR_MSG, { variant: ERROR })
+    enqueueSnackbar(NOTIFICATIONS.CONNECT_WALLET_ERROR_MSG.description, NOTIFICATIONS.CONNECT_WALLET_ERROR_MSG.options)
 
     logComponentStack(error, info)
   }
@@ -63,16 +56,16 @@ class HeaderComponent extends React.PureComponent<Props, State> {
   }
 
   onConnect = async () => {
-    const { fetchProvider, enqueueSnackbar } = this.props
+    const { fetchProvider, enqueueSnackbar, closeSnackbar } = this.props
 
     clearInterval(this.providerListener)
     let currentProvider: ProviderProps = await getProviderInfo()
-    fetchProvider(currentProvider, enqueueSnackbar)
+    fetchProvider(currentProvider, enqueueSnackbar, closeSnackbar)
 
     this.providerListener = setInterval(async () => {
       const newProvider: ProviderProps = await getProviderInfo()
-      if (JSON.stringify(currentProvider) !== JSON.stringify(newProvider)) {
-        fetchProvider(newProvider, enqueueSnackbar)
+      if (currentProvider && JSON.stringify(currentProvider) !== JSON.stringify(newProvider)) {
+        fetchProvider(newProvider, enqueueSnackbar, closeSnackbar)
       }
       currentProvider = newProvider
     }, 2000)

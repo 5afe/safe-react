@@ -121,6 +121,10 @@ export const getAddressFromENS = async (name: string) => {
 }
 
 export const getBalanceInEtherOf = async (safeAddress: string) => {
+  if (!web3) {
+    return '0'
+  }
+
   const funds: String = await web3.eth.getBalance(safeAddress)
 
   if (!funds) {
