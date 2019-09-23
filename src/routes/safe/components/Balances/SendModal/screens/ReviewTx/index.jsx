@@ -15,12 +15,12 @@ import Block from '~/components/layout/Block'
 import Identicon from '~/components/Identicon'
 import { copyToClipboard } from '~/utils/clipboard'
 import Hairline from '~/components/layout/Hairline'
-import { type Variant } from '~/components/Header'
 import SafeInfo from '~/routes/safe/components/Balances/SendModal/SafeInfo'
 import { setImageToPlaceholder } from '~/routes/safe/components/Balances/utils'
 import { getStandardTokenContract } from '~/logic/tokens/store/actions/fetchTokens'
 import { EMPTY_DATA } from '~/logic/wallets/ethTransactions'
 import { getWeb3 } from '~/logic/wallets/getWeb3'
+import { NOTIFIED_TRANSACTIONS } from '~/logic/safe/transactions'
 import ArrowDown from '../assets/arrow-down.svg'
 import { secondary } from '~/theme/variables'
 import { isEther } from '~/logic/tokens/utils/tokenHelpers'
@@ -36,7 +36,8 @@ type Props = {
   ethBalance: string,
   tx: Object,
   createTransaction: Function,
-  enqueueSnackbar: (message: string, variant: Variant) => void,
+  enqueueSnackbar: Function,
+  closeSnackbar: Function,
 }
 
 const openIconStyle = {
@@ -55,6 +56,7 @@ const ReviewTx = ({
   tx,
   createTransaction,
   enqueueSnackbar,
+  closeSnackbar,
 }: Props) => {
   const submitTx = async () => {
     const web3 = getWeb3()
@@ -74,7 +76,15 @@ const ReviewTx = ({
       txAmount = 0
     }
 
-    createTransaction(safeAddress, txRecipient, txAmount, txData, enqueueSnackbar)
+    createTransaction(
+      safeAddress,
+      txRecipient,
+      txAmount,
+      txData,
+      NOTIFIED_TRANSACTIONS.STANDARD_TX,
+      enqueueSnackbar,
+      closeSnackbar,
+    )
     onClose()
   }
 
