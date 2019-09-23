@@ -19,6 +19,8 @@ import { type Safe } from '~/routes/safe/store/models/safe'
 import { SAFELIST_ADDRESS } from '~/routes/routes'
 import DefaultBadge from './DefaultBadge'
 
+export const SIDEBAR_SAFELIST_ROW_TESTID = 'SIDEBAR_SAFELIST_ROW_TESTID'
+
 type SafeListProps = {
   safes: List<Safe>,
   onSafeClick: Function,
@@ -69,7 +71,7 @@ const SafeList = ({
     <MuiList className={classes.list}>
       {safes.map((safe) => (
         <React.Fragment key={safe.address}>
-          <Link to={`${SAFELIST_ADDRESS}/${safe.address}`} onClick={onSafeClick}>
+          <Link to={`${SAFELIST_ADDRESS}/${safe.address}`} onClick={onSafeClick} data-testid={SIDEBAR_SAFELIST_ROW_TESTID}>
             <ListItem classes={{ root: classes.listItemRoot }}>
               <ListItemIcon>
                 <Identicon address={safe.address} diameter={32} className={classes.icon} />

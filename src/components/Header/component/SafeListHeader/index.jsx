@@ -13,6 +13,8 @@ import {
 import { safesCountSelector } from '~/routes/safe/store/selectors'
 import { SidebarContext } from '~/components/Sidebar'
 
+export const TOGGLE_SIDEBAR_BTN_TESTID = 'TOGGLE_SIDEBAR_BTN'
+
 const useStyles = makeStyles({
   container: {
     flexGrow: 0,
@@ -47,7 +49,12 @@ const SafeListHeader = ({ safesCount }: Props) => {
       <Paragraph size="xs" className={classes.counter}>
         {safesCount}
       </Paragraph>
-      <IconButton onClick={toggleSidebar} className={classes.icon} aria-label="Expand Safe List">
+      <IconButton
+        onClick={toggleSidebar}
+        className={classes.icon}
+        aria-label="Expand Safe List"
+        data-testid={TOGGLE_SIDEBAR_BTN_TESTID}
+      >
         {isOpen ? <ExpandLessIcon /> : <ExpandMoreIcon color="secondary" />}
       </IconButton>
     </Col>
