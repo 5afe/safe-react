@@ -76,7 +76,14 @@ export const getProviderInfo: Function = async (): Promise<ProviderProps> => {
 
   if (window.ethereum) {
     web3Provider = window.ethereum
-    await web3Provider.enable()
+    try {
+      const accounts = await web3Provider.enable()
+      if (!accounts) {
+        console.error('Empty web3 provider')
+      }
+    } catch (error) {
+      console.error('Error when enabling web3 provider', error)
+    }
   } else if (window.web3) {
     web3Provider = window.web3.currentProvider
   } else {
