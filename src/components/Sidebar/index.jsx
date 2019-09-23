@@ -52,7 +52,9 @@ const Sidebar = ({
   const classes = useSidebarStyles()
 
   useEffect(() => {
-    setFilter('')
+    setTimeout(() => {
+      setFilter('')
+    }, 300)
   }, [isOpen])
 
   const searchClasses = {

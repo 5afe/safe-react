@@ -35,9 +35,10 @@ const styles = () => ({
     left: '4px',
   },
   summary: {
-    borderBottom: `solid 1px ${border}`,
+    borderBottom: `solid 2px ${border}`,
     alignItems: 'center',
     height: headerHeight,
+    boxShadow: '0 2px 4px 0 rgba(212, 212, 211, 0.59)',
     backgroundColor: 'white',
     zIndex: 1301,
   },
