@@ -13,7 +13,7 @@ import Block from '~/components/layout/Block'
 import Paragraph from '~/components/layout/Paragraph'
 import { type Transaction } from '~/routes/safe/store/models/transaction'
 import { EMPTY_DATA } from '~/logic/wallets/ethTransactions'
-import { type Variant } from '~/components/Header'
+import { NOTIFIED_TRANSACTIONS } from '~/logic/safe/transactions'
 import { styles } from './style'
 
 type Props = {
@@ -23,14 +23,30 @@ type Props = {
   createTransaction: Function,
   tx: Transaction,
   safeAddress: string,
-  enqueueSnackbar: (message: string, variant: Variant) => void,
+  enqueueSnackbar: Function,
+  closeSnackbar: Function,
 }
 
 const CancelTxModal = ({
-  onClose, isOpen, classes, createTransaction, tx, safeAddress, enqueueSnackbar,
+  onClose,
+  isOpen,
+  classes,
+  createTransaction,
+  tx,
+  safeAddress,
+  enqueueSnackbar,
+  closeSnackbar,
 }: Props) => {
   const sendReplacementTransaction = () => {
-    createTransaction(safeAddress, safeAddress, 0, EMPTY_DATA, enqueueSnackbar)
+    createTransaction(
+      safeAddress,
+      safeAddress,
+      0,
+      EMPTY_DATA,
+      NOTIFIED_TRANSACTIONS.CANCELLATION_TX,
+      enqueueSnackbar,
+      closeSnackbar,
+    )
     onClose()
   }
 

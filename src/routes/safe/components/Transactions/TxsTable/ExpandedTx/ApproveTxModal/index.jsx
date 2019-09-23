@@ -13,7 +13,7 @@ import Row from '~/components/layout/Row'
 import Bold from '~/components/layout/Bold'
 import Block from '~/components/layout/Block'
 import Paragraph from '~/components/layout/Paragraph'
-import { type Variant } from '~/components/Header'
+import { NOTIFIED_TRANSACTIONS } from '~/logic/safe/transactions'
 import { type Transaction } from '~/routes/safe/store/models/transaction'
 import { styles } from './style'
 
@@ -30,7 +30,8 @@ type Props = {
   threshold: number,
   thresholdReached: boolean,
   userAddress: string,
-  enqueueSnackbar: (message: string, variant: Variant) => void,
+  enqueueSnackbar: Function,
+  closeSnackbar: Function,
 }
 
 const getModalTitleAndDescription = (thresholdReached: boolean) => {
@@ -58,6 +59,7 @@ const ApproveTxModal = ({
   thresholdReached,
   userAddress,
   enqueueSnackbar,
+  closeSnackbar,
 }: Props) => {
   const [approveAndExecute, setApproveAndExecute] = useState<boolean>(false)
   const { title, description } = getModalTitleAndDescription(thresholdReached)
@@ -66,7 +68,14 @@ const ApproveTxModal = ({
   const handleExecuteCheckbox = () => setApproveAndExecute((prevApproveAndExecute) => !prevApproveAndExecute)
 
   const approveTx = () => {
-    processTransaction(safeAddress, tx, enqueueSnackbar, userAddress, enqueueSnackbar)
+    processTransaction(
+      safeAddress,
+      tx,
+      userAddress,
+      NOTIFIED_TRANSACTIONS.CONFIRMATION_TX,
+      enqueueSnackbar,
+      closeSnackbar,
+    )
     onClose()
   }
 
