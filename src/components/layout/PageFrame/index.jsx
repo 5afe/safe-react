@@ -43,7 +43,7 @@ const notificationStyles = {
     fontFamily: 'Averta',
     fontSize: '14px',
     lineHeight: 1.43,
-    color: '#001428',
+    color: '#ffffff',
     minHeight: '58px',
     boxShadow: '0 0 10px 0 rgba(212, 212, 211, 0.59)',
   },
@@ -69,6 +69,7 @@ const PageFrame = ({ children, classes }: Props) => (
         success: <Img src={CheckLogo} />,
         error: <Img src={ErrorLogo} />,
         warning: <Img src={AlertLogo} />,
+        info: '',
       }}
     >
       <SidebarProvider>
