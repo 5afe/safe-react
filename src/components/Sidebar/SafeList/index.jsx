@@ -30,6 +30,12 @@ const useStyles = makeStyles({
   icon: {
     marginRight: sm,
   },
+  list: {
+    overflow: 'hidden',
+    overflowY: 'scroll',
+    padding: 0,
+    height: '100%',
+  },
   listItemRoot: {
     paddingTop: 0,
     paddingBottom: 0,
@@ -60,7 +66,7 @@ const SafeList = ({
   const classes = useStyles()
 
   return (
-    <MuiList>
+    <MuiList className={classes.list}>
       {safes.map((safe) => (
         <React.Fragment key={safe.address}>
           <Link to={`${SAFELIST_ADDRESS}/${safe.address}`} onClick={onSafeClick}>
