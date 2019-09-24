@@ -106,7 +106,7 @@ class Layout extends React.Component<Props, State> {
     }
 
     const { address, ethBalance, name } = safe
-    const etherScanLink = getEtherScanLink('address', address, network)
+    const etherScanLink = getEtherScanLink('address', address)
 
     return (
       <>

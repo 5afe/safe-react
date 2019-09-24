@@ -34,7 +34,6 @@ type Props = {
   isOpen: boolean,
   safeAddress: string,
   ownerAddress: string,
-  network: string,
   selectedOwnerName: string,
   editSafeOwner: Function,
 }
@@ -47,7 +46,6 @@ const EditOwnerComponent = ({
   ownerAddress,
   selectedOwnerName,
   editSafeOwner,
-  network,
 }: Props) => {
   const handleSubmit = (values) => {
     editSafeOwner({ safeAddress, ownerAddress, ownerName: values.ownerName })
@@ -94,7 +92,7 @@ const EditOwnerComponent = ({
                   <Paragraph style={{ marginLeft: 10 }} size="md" color="disabled" noMargin>
                     {ownerAddress}
                   </Paragraph>
-                  <Link className={classes.open} to={getEtherScanLink('address', ownerAddress, network)} target="_blank">
+                  <Link className={classes.open} to={getEtherScanLink('address', ownerAddress)} target="_blank">
                     <OpenInNew style={openIconStyle} />
                   </Link>
                 </Block>

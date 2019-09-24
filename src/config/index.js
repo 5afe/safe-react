@@ -13,18 +13,17 @@ const configuration = () => {
   }
 
   if (process.env.NODE_ENV === 'production') {
-    if (process.env.NETWORK === 'mainnet') {
+    if (process.env.REACT_APP_NETWORK === 'mainnet') {
       return mainnetProdConfig
     }
 
     return prodConfig
   }
-  console.log(process.env)
 
   return devConfig
 }
 
-export const getNetwork = () => (process.env.NETWORK === 'mainnet' ? ETHEREUM_NETWORK.MAIN : ETHEREUM_NETWORK.RINKEBY)
+export const getNetwork = () => (process.env.REACT_APP_NETWORK === 'mainnet' ? ETHEREUM_NETWORK.MAIN : ETHEREUM_NETWORK.RINKEBY)
 
 const getConfig = ensureOnce(configuration)
 

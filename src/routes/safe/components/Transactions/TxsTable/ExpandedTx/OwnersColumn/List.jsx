@@ -41,7 +41,7 @@ const OwnerComponent = withStyles(styles)(({ owner, classes, isExecutor }: Owner
     <ListItemText
       primary={owner.name}
       secondary={(
-        <a href={getEtherScanLink('address', owner.address, 'rinkeby')} target="_blank" rel="noopener noreferrer">
+        <a href={getEtherScanLink('address', owner.address)} target="_blank" rel="noopener noreferrer">
           {shortVersionOf(owner.address, 4)}
           {' '}
           <OpenInNew style={openIconStyle} />

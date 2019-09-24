@@ -31,14 +31,13 @@ type Props = {
   classes: Object,
   safeName: string,
   owners: List<Owner>,
-  network: string,
   values: Object,
   onClickBack: Function,
   onSubmit: Function,
 }
 
 const ReviewAddOwner = ({
-  classes, onClose, safeName, owners, network, values, onClickBack, onSubmit,
+  classes, onClose, safeName, owners, values, onClickBack, onSubmit,
 }: Props) => {
   const handleSubmit = () => {
     onSubmit()
@@ -80,7 +79,6 @@ const ReviewAddOwner = ({
                   {values.threshold}
                   {' '}
                   out of
-                  {' '}
                   {owners.size + 1}
                   {' '}
                   owner(s)
@@ -112,7 +110,7 @@ const ReviewAddOwner = ({
                         <Paragraph size="md" color="disabled" noMargin>
                           {owner.address}
                         </Paragraph>
-                        <Link className={classes.open} to={getEtherScanLink('address', owner.address, network)} target="_blank">
+                        <Link className={classes.open} to={getEtherScanLink('address', owner.address)} target="_blank">
                           <OpenInNew style={openIconStyle} />
                         </Link>
                       </Block>
@@ -141,7 +139,11 @@ const ReviewAddOwner = ({
                     <Paragraph size="md" color="disabled" noMargin>
                       {values.ownerAddress}
                     </Paragraph>
-                    <Link className={classes.open} to={getEtherScanLink('address', values.ownerAddress, network)} target="_blank">
+                    <Link
+                      className={classes.open}
+                      to={getEtherScanLink('address', values.ownerAddress)}
+                      target="_blank"
+                    >
                       <OpenInNew style={openIconStyle} />
                     </Link>
                   </Block>

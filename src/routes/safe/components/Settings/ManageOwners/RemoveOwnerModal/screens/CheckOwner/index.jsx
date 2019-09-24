@@ -29,12 +29,11 @@ type Props = {
   classes: Object,
   ownerAddress: string,
   ownerName: string,
-  network: string,
   onSubmit: Function,
 }
 
 const CheckOwner = ({
-  classes, onClose, ownerAddress, ownerName, network, onSubmit,
+  classes, onClose, ownerAddress, ownerName, onSubmit,
 }: Props) => {
   const handleSubmit = (values) => {
     onSubmit(values)
@@ -69,7 +68,7 @@ const CheckOwner = ({
                 <Paragraph size="md" color="disabled" noMargin>
                   {ownerAddress}
                 </Paragraph>
-                <Link className={classes.open} to={getEtherScanLink('address', ownerAddress, network)} target="_blank">
+                <Link className={classes.open} to={getEtherScanLink('address', ownerAddress)} target="_blank">
                   <OpenInNew style={openIconStyle} />
                 </Link>
               </Block>

@@ -39,7 +39,6 @@ type Props = {
   safeAddress: string,
   createTransaction: Function,
   processTransaction: Function,
-  currentNetwork: string,
 }
 
 const TxsTable = ({
@@ -52,16 +51,15 @@ const TxsTable = ({
   safeAddress,
   createTransaction,
   processTransaction,
-  currentNetwork,
 }: Props) => {
   const [expandedTx, setExpandedTx] = useState<string | null>(null)
 
   const handleTxExpand = (safeTxHash) => {
-    setExpandedTx(prevTx => (prevTx === safeTxHash ? null : safeTxHash))
+    setExpandedTx((prevTx) => (prevTx === safeTxHash ? null : safeTxHash))
   }
 
   const columns = generateColumns()
-  const autoColumns = columns.filter(c => !c.custom)
+  const autoColumns = columns.filter((c) => !c.custom)
   const filteredData = getTxTableData(transactions)
 
   return (
@@ -118,7 +116,6 @@ const TxsTable = ({
                   threshold={threshold}
                   owners={owners}
                   granted={granted}
-                  currentNetwork={currentNetwork}
                   userAddress={userAddress}
                   createTransaction={createTransaction}
                   processTransaction={processTransaction}
@@ -127,8 +124,7 @@ const TxsTable = ({
               </TableCell>
             </TableRow>
           </React.Fragment>
-        ))
-        }
+        ))}
       </Table>
     </Block>
   )

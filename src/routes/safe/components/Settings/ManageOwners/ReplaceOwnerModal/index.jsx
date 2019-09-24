@@ -4,6 +4,7 @@ import { List } from 'immutable'
 import { withStyles } from '@material-ui/core/styles'
 import { SharedSnackbarConsumer } from '~/components/SharedSnackBar'
 import Modal from '~/components/Modal'
+import { type Owner } from '~/routes/safe/store/models/owner'
 import { getGnosisSafeInstanceAt, SENTINEL_ADDRESS } from '~/logic/contracts/safeContracts'
 import OwnerForm from './screens/OwnerForm'
 import ReviewReplaceOwner from './screens/Review'
@@ -25,7 +26,6 @@ type Props = {
   ownerAddress: string,
   ownerName: string,
   owners: List<Owner>,
-  network: string,
   threshold: string,
   createTransaction: Function,
   replaceSafeOwner: Function,
@@ -73,7 +73,6 @@ const ReplaceOwner = ({
   ownerAddress,
   ownerName,
   owners,
-  network,
   threshold,
   createTransaction,
   replaceSafeOwner,
@@ -136,7 +135,6 @@ const ReplaceOwner = ({
                     ownerAddress={ownerAddress}
                     ownerName={ownerName}
                     owners={owners}
-                    network={network}
                     onSubmit={ownerSubmitted}
                   />
                 )}
@@ -145,7 +143,6 @@ const ReplaceOwner = ({
                     onClose={onClose}
                     safeName={safeName}
                     owners={owners}
-                    network={network}
                     values={values}
                     ownerAddress={ownerAddress}
                     ownerName={ownerName}
