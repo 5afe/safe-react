@@ -54,7 +54,7 @@ export const saveDefaultSafe = async (safeAddress: string): Promise<void> => {
     await saveToStorage(DEFAULT_SAFE_KEY, safeAddress)
   } catch (err) {
     // eslint-disable-next-line
-    console.error('Error saving default save to storage: ', err)
+    console.error('Error saving default safe to storage: ', err)
   }
 }
 

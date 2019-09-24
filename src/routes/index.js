@@ -32,11 +32,11 @@ type RoutesProps = {
 }
 
 const Routes = ({ defaultSafe, location }: RoutesProps) => {
-  const [isInitialLoad, setIniitialLoad] = useState<boolean>(true)
+  const [isInitialLoad, setInitialLoad] = useState<boolean>(true)
 
   useEffect(() => {
     if (location.pathname !== '/') {
-      setIniitialLoad(false)
+      setInitialLoad(false)
     }
   }, [])
 
@@ -54,7 +54,7 @@ const Routes = ({ defaultSafe, location }: RoutesProps) => {
             return <Loader />
           }
 
-          setIniitialLoad(false)
+          setInitialLoad(false)
           if (defaultSafe) {
             return <Redirect to={`${SAFELIST_ADDRESS}/${defaultSafe}`} />
           }
