@@ -6,7 +6,7 @@ import fetchTransactions from '~/routes/safe/store/actions/fetchTransactions'
 import { type GlobalState } from '~/store'
 import { getGnosisSafeInstanceAt } from '~/logic/contracts/safeContracts'
 import { approveTransaction, executeTransaction, CALL } from '~/logic/safe/transactions'
-import { type Variant, SUCCESS } from '~/components/Header'
+import { getNofiticationsFromTxType } from '~/logic/notifications'
 
 // https://gnosis-safe.readthedocs.io/en/latest/contracts/signatures.html#pre-validated-signatures
 // https://github.com/gnosis/safe-contracts/blob/master/test/gnosisSafeTeamEdition.js#L26
@@ -32,8 +32,10 @@ const generateSignaturesFromTxConfirmations = (tx: Transaction, preApprovingOwne
 const processTransaction = (
   safeAddress: string,
   tx: Transaction,
-  enqueueSnackbar: (message: string, variant: Variant) => void,
   userAddress: string,
+  notifiedTransaction: NotifiedTransaction,
+  enqueueSnackbar: Function,
+  closeSnackbar: Function,
   approveAndExecute?: boolean,
 ) => async (dispatch: ReduxDispatch<GlobalState>, getState: GetState<GlobalState>) => {
   const state: GlobalState = getState()
@@ -45,11 +47,14 @@ const processTransaction = (
   const shouldExecute = threshold === tx.confirmations.size || approveAndExecute
   const sigs = generateSignaturesFromTxConfirmations(tx, approveAndExecute && userAddress)
 
+  const notificationsQueue = getNofiticationsFromTxType(notifiedTransaction)
+
   let txHash
   if (shouldExecute) {
-    const showNotification = () => enqueueSnackbar('Transaction has been submitted', { variant: SUCCESS })
     txHash = await executeTransaction(
-      showNotification,
+      notificationsQueue,
+      enqueueSnackbar,
+      closeSnackbar,
       safeInstance,
       tx.recipient,
       tx.value,
@@ -59,11 +64,11 @@ const processTransaction = (
       from,
       sigs,
     )
-    enqueueSnackbar('Transaction has been confirmed', { variant: SUCCESS })
   } else {
-    const showNotification = () => enqueueSnackbar('Approval transaction has been submitted', { variant: SUCCESS })
     txHash = await approveTransaction(
-      showNotification,
+      notificationsQueue,
+      enqueueSnackbar,
+      closeSnackbar,
       safeInstance,
       tx.recipient,
       tx.value,
@@ -72,7 +77,6 @@ const processTransaction = (
       nonce,
       from,
     )
-    enqueueSnackbar('Approval transaction has been confirmed', { variant: SUCCESS })
   }
 
   dispatch(fetchTransactions(safeAddress))

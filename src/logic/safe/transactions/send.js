@@ -7,6 +7,7 @@ import { isEther } from '~/logic/tokens/utils/tokenHelpers'
 import { type Token } from '~/logic/tokens/store/model/token'
 import { getGnosisSafeInstanceAt } from '~/logic/contracts/safeContracts'
 import { type Operation, saveTxToHistory } from '~/logic/safe/transactions'
+import { type NotificationsQueue } from '~/logic/notifications'
 import { ZERO_ADDRESS } from '~/logic/wallets/ethAddresses'
 import { getErrorMessage } from '~/test/utils/ethereumErrors'
 
@@ -15,7 +16,9 @@ export const TX_TYPE_EXECUTION = 'execution'
 export const TX_TYPE_CONFIRMATION = 'confirmation'
 
 export const approveTransaction = async (
-  showNotification: Function,
+  notiQueue: NotificationsQueue,
+  enqueueSnackbar: Function,
+  closeSnackbar: Function,
   safeInstance: any,
   to: string,
   valueInWei: number | string,
@@ -40,6 +43,8 @@ export const approveTransaction = async (
     },
   )
 
+  const beforeExecutionKey = enqueueSnackbar(notiQueue.beforeExecution.description, notiQueue.beforeExecution.options)
+  let pendingExecutionKey
   try {
     const web3 = getWeb3()
     const contract = new web3.eth.Contract(GnosisSafeSol.abi, safeInstance.address)
@@ -50,13 +55,18 @@ export const approveTransaction = async (
         from: sender,
       })
       .once('transactionHash', () => {
-        showNotification()
+        closeSnackbar(beforeExecutionKey)
+        pendingExecutionKey = enqueueSnackbar(
+          notiQueue.pendingExecution.single.description,
+          notiQueue.pendingExecution.single.options,
+        )
       })
       .on('error', (error) => {
         /* eslint-disable */
         console.log('Tx error:', error)
       })
       .then(async (receipt) => {
+        closeSnackbar(pendingExecutionKey)
         await saveTxToHistory(
           safeInstance,
           to,
@@ -68,12 +78,15 @@ export const approveTransaction = async (
           sender,
           TX_TYPE_CONFIRMATION,
         )
-
+        enqueueSnackbar(notiQueue.afterExecution.description, notiQueue.afterExecution.options)
         return receipt.transactionHash
       })
 
     return transactionHash
   } catch (error) {
+    closeSnackbar(pendingExecutionKey)
+    enqueueSnackbar(notiQueue.afterExecutionError.description, notiQueue.afterExecutionError.options)
+
     /* eslint-disable */
     const executeData = safeInstance.contract.methods.approveHash(txHash).encodeABI()
     const errMsg = await getErrorMessage(safeInstance.address, 0, executeData, sender)
@@ -84,7 +97,9 @@ export const approveTransaction = async (
 }
 
 export const executeTransaction = async (
-  showNotification: Function,
+  notiQueue: NotificationsQueue,
+  enqueueSnackbar: Function,
+  closeSnackbar: Function,
   safeInstance: any,
   to: string,
   valueInWei: number | string,
@@ -104,6 +119,8 @@ export const executeTransaction = async (
     )}000000000000000000000000000000000000000000000000000000000000000001`
   }
 
+  const beforeExecutionKey = enqueueSnackbar(notiQueue.beforeExecution.description, notiQueue.beforeExecution.options)
+  let pendingExecutionKey
   try {
     const web3 = getWeb3()
     const contract = new web3.eth.Contract(GnosisSafeSol.abi, safeInstance.address)
@@ -114,12 +131,17 @@ export const executeTransaction = async (
         from: sender,
       })
       .once('transactionHash', () => {
-        showNotification()
+        closeSnackbar(beforeExecutionKey)
+        pendingExecutionKey = enqueueSnackbar(
+          notiQueue.pendingExecution.single.description,
+          notiQueue.pendingExecution.single.options,
+        )
       })
       .on('error', (error) => {
         console.log('Tx error:', error)
       })
       .then(async (receipt) => {
+        closeSnackbar(pendingExecutionKey)
         await saveTxToHistory(
           safeInstance,
           to,
@@ -131,12 +153,15 @@ export const executeTransaction = async (
           sender,
           TX_TYPE_EXECUTION,
         )
-
+        enqueueSnackbar(notiQueue.afterExecution.description, notiQueue.afterExecution.options)
         return receipt.transactionHash
       })
 
     return transactionHash
   } catch (error) {
+    closeSnackbar(beforeExecutionKey)
+    enqueueSnackbar(notiQueue.afterExecutionError.description, notiQueue.afterExecutionError.options)
+
     /* eslint-disable */
     const executeDataUsedSignatures = safeInstance.contract.methods
       .execTransaction(to, valueInWei, data, operation, 0, 0, 0, ZERO_ADDRESS, ZERO_ADDRESS, sigs)

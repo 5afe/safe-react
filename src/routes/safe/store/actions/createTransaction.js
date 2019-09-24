@@ -6,24 +6,19 @@ import fetchTransactions from '~/routes/safe/store/actions/fetchTransactions'
 import { type GlobalState } from '~/store'
 import { getGnosisSafeInstanceAt } from '~/logic/contracts/safeContracts'
 import {
-  approveTransaction,
-  executeTransaction,
-  CALL,
+  type NotifiedTransaction, approveTransaction, executeTransaction, CALL,
 } from '~/logic/safe/transactions'
-import {
-  type Notifications,
-  NOTIFICATIONS,
-} from '~/logic/notifications'
-import { type Variant, SUCCESS, ERROR } from '~/components/Header'
+import { getNofiticationsFromTxType } from '~/logic/notifications'
 
 const createTransaction = (
   safeAddress: string,
   to: string,
   valueInWei: string,
   txData: string = EMPTY_DATA,
-  enqueueSnackbar: (message: string, variant: Variant) => void,
+  notifiedTransaction: NotifiedTransaction,
+  enqueueSnackbar: Function,
+  closeSnackbar: Function,
   shouldExecute?: boolean,
-  notifications?: Notifications = NOTIFICATIONS,
 ) => async (dispatch: ReduxDispatch<GlobalState>, getState: GetState<GlobalState>) => {
   const state: GlobalState = getState()
 
@@ -33,19 +28,38 @@ const createTransaction = (
   const nonce = (await safeInstance.nonce()).toString()
   const isExecution = threshold.toNumber() === 1 || shouldExecute
 
+  const notificationsQueue = getNofiticationsFromTxType(notifiedTransaction)
+
   let txHash
   try {
     if (isExecution) {
-      const showNotification = () => enqueueSnackbar(notifications.BEFORE_EXECUTION_OR_CREATION, { variant: SUCCESS })
-      txHash = await executeTransaction(showNotification, safeInstance, to, valueInWei, txData, CALL, nonce, from)
-      enqueueSnackbar(notifications.AFTER_EXECUTION, { variant: SUCCESS })
+      txHash = await executeTransaction(
+        notificationsQueue,
+        enqueueSnackbar,
+        closeSnackbar,
+        safeInstance,
+        to,
+        valueInWei,
+        txData,
+        CALL,
+        nonce,
+        from,
+      )
     } else {
-      const showNotification = () => enqueueSnackbar(notifications.BEFORE_EXECUTION_OR_CREATION, { variant: SUCCESS })
-      txHash = await approveTransaction(showNotification, safeInstance, to, valueInWei, txData, CALL, nonce, from)
-      enqueueSnackbar(notifications.CREATED_MORE_CONFIRMATIONS_NEEDED, { variant: SUCCESS })
+      txHash = await approveTransaction(
+        notificationsQueue,
+        enqueueSnackbar,
+        closeSnackbar,
+        safeInstance,
+        to,
+        valueInWei,
+        txData,
+        CALL,
+        nonce,
+        from,
+      )
     }
   } catch (err) {
-    enqueueSnackbar(notifications.ERROR, { variant: ERROR })
     console.error(`Error while creating transaction: ${err}`)
   }
 
