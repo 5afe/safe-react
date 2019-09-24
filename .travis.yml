@@ -10,6 +10,14 @@ os:
   - linux
 env:
   - DOCKER_COMPOSE_VERSION=1.22.0
+matrix:
+  include:
+  - env:
+    - REACT_APP_NETWORK='mainnet'
+    - DEV_BUCKET_NAME=${DEV_MAINNET_BUCKET_NAME}
+    - STAGING_BUCKET_NAME=${STAGING_MAINNET_BUCKET_NAME}
+  - env:
+    - REACT_APP_NETWORK='rinkeby'
 before_install:
   # Install custom docker-compose version
   - sudo rm /usr/local/bin/docker-compose
