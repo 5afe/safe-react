@@ -32,6 +32,11 @@ Start the project in the other one
 yarn install
 yarn start
 ```
+For the mainnet version:
+```
+REACT_APP_NETWORK=mainnet yarn start
+```
+
 
 ## Running the tests
 
