@@ -17,6 +17,7 @@ const lg = '24px'
 const xl = '32px'
 const xxl = '40px'
 const marginButtonImg = '12px'
+const headerHeight = '53px'
 
 module.exports = {
   primary,
@@ -29,6 +30,7 @@ module.exports = {
   warning: warningColor,
   error: errorColor,
   connected: connectedColor,
+  headerHeight,
   xs,
   sm,
   md,

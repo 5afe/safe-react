@@ -12,8 +12,11 @@ import Col from '~/components/layout/Col'
 import Img from '~/components/layout/Img'
 import Row from '~/components/layout/Row'
 import Spacer from '~/components/Spacer'
-import { border, sm, md } from '~/theme/variables'
+import {
+  border, sm, md, headerHeight,
+} from '~/theme/variables'
 import Provider from './Provider'
+import SafeListHeader from './SafeListHeader'
 
 const logo = require('../assets/gnosis-safe-logo.svg')
 
@@ -32,10 +35,12 @@ const styles = () => ({
     left: '4px',
   },
   summary: {
-    borderBottom: `solid 1px ${border}`,
+    borderBottom: `solid 2px ${border}`,
     alignItems: 'center',
-    height: '53px',
+    height: headerHeight,
+    boxShadow: '0 2px 4px 0 rgba(212, 212, 211, 0.59)',
     backgroundColor: 'white',
+    zIndex: 1301,
   },
   logo: {
     padding: `${sm} ${md}`,
@@ -54,6 +59,8 @@ const Layout = openHoc(({
           <Img src={logo} height={32} alt="Gnosis Team Safe" />
         </Link>
       </Col>
+      <Divider />
+      <SafeListHeader />
       <Divider />
       <Spacer />
       <Divider />

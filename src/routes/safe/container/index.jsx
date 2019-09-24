@@ -3,6 +3,7 @@ import * as React from 'react'
 import { connect } from 'react-redux'
 import Page from '~/components/layout/Page'
 import Layout from '~/routes/safe/components/Layout'
+import { type Token } from '~/logic/tokens/store/model/token'
 import selector, { type SelectorProps } from './selector'
 import actions, { type Actions } from './actions'
 

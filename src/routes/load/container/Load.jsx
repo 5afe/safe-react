@@ -24,6 +24,7 @@ export const loadSafe = async (
 ) => {
   const safeProps = await buildSafe(safeAddress, safeName)
   safeProps.owners = owners
+
   await addSafe(safeProps)
 
   const storedSafes = (await loadFromStorage(SAFES_KEY)) || {}
