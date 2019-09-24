@@ -183,6 +183,7 @@ class Layout extends React.Component<Props, State> {
             fetchTransactions={fetchTransactions}
             safeAddress={address}
             userAddress={userAddress}
+            currentNetwork={network}
             granted={granted}
             createTransaction={createTransaction}
             processTransaction={processTransaction}

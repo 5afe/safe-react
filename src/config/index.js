@@ -1,5 +1,6 @@
 // @flow
 import { ensureOnce } from '~/utils/singleton'
+import { ETHEREUM_NETWORK } from '~/logic/wallets/getWeb3'
 import { TX_SERVICE_HOST, SIGNATURES_VIA_METAMASK, RELAY_API_URL } from '~/config/names'
 import devConfig from './development'
 import testConfig from './testing'
@@ -18,11 +19,12 @@ const configuration = () => {
 
     return prodConfig
   }
+  console.log(process.env)
 
   return devConfig
 }
 
-export const getNetwork = () => process.env.NETWORK || 'rinkeby'
+export const getNetwork = () => (process.env.NETWORK === 'mainnet' ? ETHEREUM_NETWORK.MAIN : ETHEREUM_NETWORK.RINKEBY)
 
 const getConfig = ensureOnce(configuration)
 

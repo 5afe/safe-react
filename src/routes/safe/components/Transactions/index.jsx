@@ -16,6 +16,7 @@ type Props = {
   granted: boolean,
   createTransaction: Function,
   processTransaction: Function,
+  currentNetwork: string,
 }
 
 const Transactions = ({
@@ -28,6 +29,7 @@ const Transactions = ({
   createTransaction,
   processTransaction,
   fetchTransactions,
+  currentNetwork,
 }: Props) => {
   useEffect(() => {
     fetchTransactions(safeAddress)
@@ -43,6 +45,7 @@ const Transactions = ({
           threshold={threshold}
           owners={owners}
           userAddress={userAddress}
+          currentNetwork={currentNetwork}
           granted={granted}
           safeAddress={safeAddress}
           createTransaction={createTransaction}

@@ -39,6 +39,7 @@ type Props = {
   safeAddress: string,
   createTransaction: Function,
   processTransaction: Function,
+  currentNetwork: string,
 }
 
 const TxsTable = ({
@@ -51,6 +52,7 @@ const TxsTable = ({
   safeAddress,
   createTransaction,
   processTransaction,
+  currentNetwork,
 }: Props) => {
   const [expandedTx, setExpandedTx] = useState<string | null>(null)
 
@@ -116,6 +118,7 @@ const TxsTable = ({
                   threshold={threshold}
                   owners={owners}
                   granted={granted}
+                  currentNetwork={currentNetwork}
                   userAddress={userAddress}
                   createTransaction={createTransaction}
                   processTransaction={processTransaction}

@@ -33,7 +33,7 @@ export const ETHEREUM_NETWORK_IDS = {
   42: ETHEREUM_NETWORK.KOVAN,
 }
 
-export const getEtherScanLink = (type: 'address' | 'tx', value: string, network: string) => `https://${network === 'mainnet' ? '' : `${network}.`}etherscan.io/${type}/${value}`
+export const getEtherScanLink = (type: 'address' | 'tx', value: string, network: string) => `https://${network.toLowerCase() === 'mainnet' ? '' : `${network.toLowerCase()}.`}etherscan.io/${type}/${value}`
 
 let web3
 export const getWeb3 = () => web3 || (window.web3 && new Web3(window.web3.currentProvider)) || (window.ethereum && new Web3(window.ethereum))
