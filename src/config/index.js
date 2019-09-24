@@ -4,6 +4,7 @@ import { TX_SERVICE_HOST, SIGNATURES_VIA_METAMASK, RELAY_API_URL } from '~/confi
 import devConfig from './development'
 import testConfig from './testing'
 import prodConfig from './production'
+import mainnetProdConfig from './production-mainnet'
 
 const configuration = () => {
   if (process.env.NODE_ENV === 'test') {
@@ -11,11 +12,17 @@ const configuration = () => {
   }
 
   if (process.env.NODE_ENV === 'production') {
+    if (process.env.NETWORK === 'mainnet') {
+      return mainnetProdConfig
+    }
+
     return prodConfig
   }
 
   return devConfig
 }
+
+export const getNetwork = () => process.env.NETWORK || 'rinkeby'
 
 const getConfig = ensureOnce(configuration)
 
