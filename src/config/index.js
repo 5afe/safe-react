@@ -5,6 +5,7 @@ import { TX_SERVICE_HOST, SIGNATURES_VIA_METAMASK, RELAY_API_URL } from '~/confi
 import devConfig from './development'
 import testConfig from './testing'
 import prodConfig from './production'
+import mainnetDevConfig from './development-mainnet'
 import mainnetProdConfig from './production-mainnet'
 
 const configuration = () => {
@@ -18,6 +19,10 @@ const configuration = () => {
     }
 
     return prodConfig
+  }
+
+  if (process.env.REACT_APP_NETWORK === 'mainnet') {
+    return mainnetDevConfig
   }
 
   return devConfig
