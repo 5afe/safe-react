@@ -1,20 +1,21 @@
 // @flow
 import * as React from 'react'
 import { type Store } from 'redux'
-import { render, fireEvent } from '@testing-library/react'
+import { render, fireEvent, act } from '@testing-library/react'
 import { Provider } from 'react-redux'
 import { ConnectedRouter } from 'connected-react-router'
+import { sleep } from '~/utils/timer'
 import { ADD_OWNER_BUTTON } from '~/routes/open/components/SafeOwnersConfirmationsForm'
 import Open from '~/routes/open/container/Open'
 import { aNewStore, history, type GlobalState } from '~/store'
-import { sleep } from '~/utils/timer'
 import { getProviderInfo, getWeb3 } from '~/logic/wallets/getWeb3'
 import addProvider from '~/logic/wallets/store/actions/addProvider'
 import { makeProvider } from '~/logic/wallets/store/model/provider'
 import { getGnosisSafeInstanceAt } from '~/logic/contracts/safeContracts'
 import { whenSafeDeployed } from './builder/safe.dom.utils'
 
-// https://github.com/testing-library/@testing-library/react/issues/281
+// For some reason it warns about events not wrapped in act
+// But they're wrapped :(
 const originalError = console.error
 beforeAll(() => {
   console.error = (...args) => {
@@ -53,9 +54,10 @@ const deploySafe = async (createSafeForm: any, threshold: number, numOwners: num
   // Fill Safe's name
   const nameInput: HTMLInputElement = createSafeForm.getByPlaceholderText('Name of the new Safe')
 
-  fireEvent.change(nameInput, { target: { value: 'Adolfo Safe' } })
-  fireEvent.submit(form)
-  await sleep(400)
+  await act(async () => {
+    fireEvent.change(nameInput, { target: { value: 'Adolfo Safe' } })
+    fireEvent.submit(form)
+  })
 
   // Fill owners
   const addedUpfront = 1
@@ -63,7 +65,11 @@ const deploySafe = async (createSafeForm: any, threshold: number, numOwners: num
 
   expect(addOwnerButton.getElementsByTagName('span')[0].textContent).toEqual(ADD_OWNER_BUTTON)
   for (let i = addedUpfront; i < numOwners; i += 1) {
-    fireEvent.click(addOwnerButton)
+    /* eslint-disable */
+    await act(async () => {
+      fireEvent.click(addOwnerButton)
+    })
+    /* eslint-enable */
   }
 
   const ownerNameInputs = createSafeForm.getAllByPlaceholderText('Owner Name*')
@@ -75,23 +81,31 @@ const deploySafe = async (createSafeForm: any, threshold: number, numOwners: num
     const ownerNameInput = ownerNameInputs[i]
     const ownerAddressInput = ownerAddressInputs[i]
 
-    fireEvent.change(ownerNameInput, { target: { value: `Owner ${i + 1}` } })
-    fireEvent.change(ownerAddressInput, { target: { value: accounts[i] } })
+    /* eslint-disable */
+    await act(async () => {
+      fireEvent.change(ownerNameInput, { target: { value: `Owner ${i + 1}` } })
+      fireEvent.change(ownerAddressInput, { target: { value: accounts[i] } })
+    })
+    /* eslint-enable */
   }
 
   // Fill Threshold
   // The test is fragile here, MUI select btn is hard to find
   const thresholdSelect = createSafeForm.getAllByRole('button')[2]
-  fireEvent.click(thresholdSelect)
+  await act(async () => {
+    fireEvent.click(thresholdSelect)
+  })
 
   const thresholdOptions = createSafeForm.getAllByRole('option')
-  fireEvent.click(thresholdOptions[numOwners - 1])
-  fireEvent.submit(form)
-  await sleep(400)
+  await act(async () => {
+    fireEvent.click(thresholdOptions[numOwners - 1])
+    fireEvent.submit(form)
+  })
 
   // Submit
-  fireEvent.submit(form)
-  await sleep(400)
+  await act(async () => {
+    fireEvent.submit(form)
+  })
 
   // giving some time to the component for updating its state with safe
   // before destroying its context
@@ -100,6 +114,7 @@ const deploySafe = async (createSafeForm: any, threshold: number, numOwners: num
 
 const aDeployedSafe = async (specificStore: Store<GlobalState>, threshold?: number = 1, numOwners?: number = 1) => {
   const safe: React.Component<{}> = await renderOpenSafeForm(specificStore)
+  await sleep(1500)
   const safeAddress = await deploySafe(safe, threshold, numOwners)
 
   return safeAddress

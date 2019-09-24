@@ -137,7 +137,6 @@ class Layout extends React.Component<Props, State> {
                 className={classes.send}
                 onClick={() => showSendFunds('Ether')}
                 disabled={!granted}
-                testId="balance-send-btn"
               >
                 <CallMade alt="Send Transaction" className={classNames(classes.leftIcon, classes.iconSmall)} />
                   Send

@@ -1,5 +1,5 @@
 // @flow
-import { fireEvent } from '@testing-library/react'
+import { fireEvent, waitForElement } from '@testing-library/react'
 import { aNewStore } from '~/store'
 import { aMinedSafe } from '~/test/builder/safe.redux.builder'
 import { sendEtherTo } from '~/test/utils/tokenMovements'
@@ -59,18 +59,20 @@ describe('DOM > Feature > Sending Funds', () => {
     expect(txRows.length).toBe(1)
 
     fireEvent.click(txRows[0])
-    await sleep(100)
-    fireEvent.click(SafeDom.getByTestId(CONFIRM_TX_BTN_TEST_ID))
-    await sleep(100)
+
+    const confirmBtn = await waitForElement(() => SafeDom.getByTestId(CONFIRM_TX_BTN_TEST_ID))
+    fireEvent.click(confirmBtn)
 
     // Travel confirm modal
-    fireEvent.click(SafeDom.getByTestId(APPROVE_TX_MODAL_SUBMIT_BTN_TEST_ID))
-    await sleep(2000)
+    const approveTxBtn = await waitForElement(() => SafeDom.getByTestId(APPROVE_TX_MODAL_SUBMIT_BTN_TEST_ID))
+    fireEvent.click(approveTxBtn)
 
     // EXECUTE TX
-    fireEvent.click(SafeDom.getByTestId(EXECUTE_TX_BTN_TEST_ID))
-    await sleep(100)
-    fireEvent.click(SafeDom.getByTestId(APPROVE_TX_MODAL_SUBMIT_BTN_TEST_ID))
+    const executeTxBtn = await waitForElement(() => SafeDom.getByTestId(EXECUTE_TX_BTN_TEST_ID))
+    fireEvent.click(executeTxBtn)
+
+    const confirmReviewTxBtn = await waitForElement(() => SafeDom.getByTestId(APPROVE_TX_MODAL_SUBMIT_BTN_TEST_ID))
+    fireEvent.click(confirmReviewTxBtn)
     await sleep(500)
 
     // THEN

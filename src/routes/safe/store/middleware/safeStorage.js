@@ -9,14 +9,17 @@ import { REMOVE_SAFE_OWNER } from '~/routes/safe/store/actions/removeSafeOwner'
 import { REPLACE_SAFE_OWNER } from '~/routes/safe/store/actions/replaceSafeOwner'
 import { EDIT_SAFE_OWNER } from '~/routes/safe/store/actions/editSafeOwner'
 import { type GlobalState } from '~/store/'
-import { saveSafes, setOwners, removeOwners } from '~/logic/safe/utils'
-import { safesMapSelector } from '~/routes/safeList/store/selectors'
-import { getActiveTokensAddressesForAllSafes } from '~/routes/safe/store/selectors'
+import {
+  saveSafes, setOwners, removeOwners, saveDefaultSafe,
+} from '~/logic/safe/utils'
+import { safesMapSelector, getActiveTokensAddressesForAllSafes } from '~/routes/safe/store/selectors'
+
 import { tokensSelector } from '~/logic/tokens/store/selectors'
 import type { Token } from '~/logic/tokens/store/model/token'
 import { makeOwner } from '~/routes/safe/store/models/owner'
 import { saveActiveTokens } from '~/logic/tokens/utils/tokensStorage'
 import { ACTIVATE_TOKEN_FOR_ALL_SAFES } from '~/routes/safe/store/actions/activateTokenForAllSafes'
+import { SET_DEFAULT_SAFE } from '~/routes/safe/store/actions/setDefaultSafe'
 
 const watchedActions = [
   ADD_SAFE,
@@ -27,6 +30,7 @@ const watchedActions = [
   REPLACE_SAFE_OWNER,
   EDIT_SAFE_OWNER,
   ACTIVATE_TOKEN_FOR_ALL_SAFES,
+  SET_DEFAULT_SAFE,
 ]
 
 const recalculateActiveTokens = (state: GlobalState): void => {
@@ -108,6 +112,12 @@ const safeStorageMware = (store: Store<GlobalState>) => (next: Function) => asyn
         const ownerToUpdateIndex = owners.findIndex((o) => o.address.toLowerCase() === ownerAddress.toLowerCase())
         setOwners(safeAddress, owners.update(ownerToUpdateIndex, (owner) => owner.set('name', ownerName)))
         break
+      }
+      case SET_DEFAULT_SAFE: {
+        if (action.payload) {
+          saveDefaultSafe(action.payload)
+          break
+        }
       }
       default:
         break
