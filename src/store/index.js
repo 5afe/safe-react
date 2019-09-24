@@ -37,9 +37,6 @@ const reducers: Reducer<GlobalState> = combineReducers({
   [TRANSACTIONS_REDUCER_ID]: transactions,
 })
 
-export const store: Store<GlobalState> = createStore(
-  reducers,
-  finalCreateStore,
-)
+export const store: Store<GlobalState> = createStore(reducers, finalCreateStore)
 
 export const aNewStore = (localState?: Object): Store<GlobalState> => createStore(reducers, localState, finalCreateStore)

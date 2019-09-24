@@ -62,8 +62,7 @@ export const approveTransaction = async (
         )
       })
       .on('error', (error) => {
-        /* eslint-disable */
-        console.log('Tx error:', error)
+        console.error('Tx error:', error)
       })
       .then(async (receipt) => {
         closeSnackbar(pendingExecutionKey)
@@ -84,13 +83,13 @@ export const approveTransaction = async (
 
     return transactionHash
   } catch (error) {
+    closeSnackbar(beforeExecutionKey)
     closeSnackbar(pendingExecutionKey)
     enqueueSnackbar(notiQueue.afterExecutionError.description, notiQueue.afterExecutionError.options)
 
-    /* eslint-disable */
     const executeData = safeInstance.contract.methods.approveHash(txHash).encodeABI()
     const errMsg = await getErrorMessage(safeInstance.address, 0, executeData, sender)
-    console.log(`Error executing the TX: ${errMsg}`)
+    console.error(`Error executing the TX: ${errMsg}`)
 
     throw error
   }
@@ -138,7 +137,7 @@ export const executeTransaction = async (
         )
       })
       .on('error', (error) => {
-        console.log('Tx error:', error)
+        console.error('Tx error:', error)
       })
       .then(async (receipt) => {
         closeSnackbar(pendingExecutionKey)
@@ -160,14 +159,14 @@ export const executeTransaction = async (
     return transactionHash
   } catch (error) {
     closeSnackbar(beforeExecutionKey)
+    closeSnackbar(pendingExecutionKey)
     enqueueSnackbar(notiQueue.afterExecutionError.description, notiQueue.afterExecutionError.options)
 
-    /* eslint-disable */
     const executeDataUsedSignatures = safeInstance.contract.methods
       .execTransaction(to, valueInWei, data, operation, 0, 0, 0, ZERO_ADDRESS, ZERO_ADDRESS, sigs)
       .encodeABI()
     const errMsg = await getErrorMessage(safeInstance.address, 0, executeDataUsedSignatures, sender)
-    console.log(`Error executing the TX: ${errMsg}`)
+    console.error(`Error executing the TX: ${errMsg}`)
 
     throw error
   }
