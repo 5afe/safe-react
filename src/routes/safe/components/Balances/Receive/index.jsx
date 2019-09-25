@@ -38,10 +38,10 @@ const styles = () => ({
   },
   annotation: {
     margin: lg,
-    marginTop: 0,
+    marginBottom: 0,
   },
   safeName: {
-    margin: `${md} ${lg}`,
+    margin: `${md} 0`,
   },
   buttonRow: {
     height: '84px',
@@ -81,14 +81,14 @@ const Receive = ({
       </IconButton>
     </Row>
     <Hairline />
-    <Paragraph className={classes.safeName} weight="bold" size="lg" noMargin>
-      {safeName}
-    </Paragraph>
     <Paragraph className={classes.annotation} size="lg" noMargin>
       This is the address of your Safe. Deposit funds by scanning the QR code or copying the address below. Only send
       ETH and ERC-20 tokens to this address!
     </Paragraph>
     <Col layout="column" middle="xs">
+      <Paragraph className={classes.safeName} weight="bold" size="lg" noMargin>
+        {safeName}
+      </Paragraph>
       <Block className={classes.qrContainer}>
         <QRCode value={safeAddress} size={135} />
       </Block>
