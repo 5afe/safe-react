@@ -36,9 +36,7 @@ const createTransaction = (
   let txHash
   try {
     if (isExecution) {
-      const showNotification = () => openSnackbar(notifications.BEFORE_EXECUTION_OR_CREATION, 'success')
       const tx = await getExecutionTransaction(
-        showNotification,
         safeInstance,
         to,
         valueInWei,
