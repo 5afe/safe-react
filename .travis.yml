@@ -14,8 +14,9 @@ matrix:
   include:
   - env:
     - REACT_APP_NETWORK='mainnet'
-    - DEV_BUCKET_NAME=${DEV_MAINNET_BUCKET_NAME}
     - STAGING_BUCKET_NAME=${STAGING_MAINNET_BUCKET_NAME}
+    before_install:
+      - if [[ "$TRAVIS_BRANCH" == "development" ]]; then exit 0; fi
   - env:
     - REACT_APP_NETWORK='rinkeby'
 before_install:
@@ -99,3 +100,18 @@ deploy:
   upload-dir: current
   on:
     branch: master
+
+  # Prepare production deployment
+- provider: s3
+  bucket: $STAGING_BUCKET_NAME
+  secret_access_key: $AWS_SECRET_ACCESS_KEY
+  access_key_id: $AWS_ACCESS_KEY_ID
+  skip_cleanup: true
+  local_dir: build_webpack
+  upload-dir: releases/$TRAVIS_TAG
+  on:
+    tags: true
+- provider: script
+  script: bash config/travis/prepare_production_deployment.sh
+  on:
+    tags: true
