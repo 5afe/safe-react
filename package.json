@@ -38,7 +38,7 @@
     "axios": "0.19.0",
     "bignumber.js": "9.0.0",
     "connected-react-router": "6.5.2",
-    "date-fns": "2.2.1",
+    "date-fns": "2.3.0",
     "ethereum-ens": "0.7.8",
     "final-form": "4.18.5",
     "history": "4.10.1",
@@ -55,7 +55,7 @@
     "react-infinite-scroll-component": "4.5.3",
     "react-qr-reader": "^2.2.1",
     "react-redux": "7.1.1",
-    "react-router-dom": "^5.0.1",
+    "react-router-dom": "5.1.0",
     "recompose": "^0.30.0",
     "redux": "4.0.4",
     "redux-actions": "^2.3.0",
@@ -64,8 +64,8 @@
     "web3": "1.2.1"
   },
   "devDependencies": {
-    "@babel/cli": "7.6.0",
-    "@babel/core": "7.6.0",
+    "@babel/cli": "7.6.2",
+    "@babel/core": "7.6.2",
     "@babel/plugin-proposal-class-properties": "7.5.5",
     "@babel/plugin-proposal-decorators": "7.6.0",
     "@babel/plugin-proposal-do-expressions": "7.6.0",
@@ -85,7 +85,7 @@
     "@babel/plugin-transform-member-expression-literals": "^7.2.0",
     "@babel/plugin-transform-property-literals": "^7.2.0",
     "@babel/polyfill": "7.6.0",
-    "@babel/preset-env": "7.6.0",
+    "@babel/preset-env": "7.6.2",
     "@babel/preset-flow": "^7.0.0-beta.40",
     "@babel/preset-react": "^7.0.0-beta.40",
     "@sambego/storybook-state": "^1.0.7",
@@ -137,10 +137,10 @@
     "truffle-solidity-loader": "0.1.32",
     "uglifyjs-webpack-plugin": "2.2.0",
     "url-loader": "^2.1.0",
-    "webpack": "4.40.2",
+    "webpack": "4.41.0",
     "webpack-bundle-analyzer": "3.5.1",
     "webpack-cli": "3.3.9",
     "webpack-dev-server": "3.8.1",
-    "webpack-manifest-plugin": "^2.0.0-rc.2"
+    "webpack-manifest-plugin": "2.1.1"
   }
 }
