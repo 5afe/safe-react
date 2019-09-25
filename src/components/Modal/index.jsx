@@ -26,7 +26,7 @@ const styles = () => ({
     top: '120px',
     width: '500px',
     height: '530px',
-    borderRadius: '3px',
+    borderRadius: '8px',
     backgroundColor: '#ffffff',
     boxShadow: '0 0 5px 0 rgba(74, 85, 121, 0.5)',
     '&:focus': {

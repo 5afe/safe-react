@@ -17,6 +17,9 @@ export const styles = () => ({
   user: {
     justifyContent: 'left',
   },
+  receiveModal: {
+    height: '544px',
+  },
   open: {
     paddingLeft: sm,
     width: 'auto',

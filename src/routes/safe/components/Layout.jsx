@@ -218,6 +218,7 @@ class Layout extends React.Component<Props, State> {
           description="Receive Tokens Form"
           handleClose={onHide('Receive')}
           open={showReceive}
+          paperClassName={classes.receiveModal}
         >
           <Receive
             safeName={name}
