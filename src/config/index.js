@@ -4,9 +4,11 @@ import { ETHEREUM_NETWORK } from '~/logic/wallets/getWeb3'
 import { TX_SERVICE_HOST, SIGNATURES_VIA_METAMASK, RELAY_API_URL } from '~/config/names'
 import devConfig from './development'
 import testConfig from './testing'
+import stagingConfig from './staging'
 import prodConfig from './production'
 import mainnetDevConfig from './development-mainnet'
 import mainnetProdConfig from './production-mainnet'
+import mainnetStagingConfig from './staging-mainnet'
 
 const configuration = () => {
   if (process.env.NODE_ENV === 'test') {
@@ -15,17 +17,13 @@ const configuration = () => {
 
   if (process.env.NODE_ENV === 'production') {
     if (process.env.REACT_APP_NETWORK === 'mainnet') {
-      return mainnetProdConfig
+      return process.env.REACT_APP_ENV === 'staging' ? mainnetStagingConfig : mainnetProdConfig
     }
 
-    return prodConfig
+    return process.env.REACT_APP_ENV === 'staging' ? stagingConfig : prodConfig
   }
 
-  if (process.env.REACT_APP_NETWORK === 'mainnet') {
-    return mainnetDevConfig
-  }
-
-  return devConfig
+  return process.env.REACT_APP_NETWORK === 'mainnet' ? mainnetDevConfig : devConfig
 }
 
 export const getNetwork = () => (process.env.REACT_APP_NETWORK === 'mainnet' ? ETHEREUM_NETWORK.MAIN : ETHEREUM_NETWORK.RINKEBY)
