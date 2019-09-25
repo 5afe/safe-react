@@ -60,7 +60,7 @@ const ApproveTxModal = ({
   const { title, description } = getModalTitleAndDescription(thresholdReached)
   const oneConfirmationLeft = tx.confirmations.size + 1 === threshold
 
-  const handleExecuteCheckbox = () => setApproveAndExecute(prevApproveAndExecute => !prevApproveAndExecute)
+  const handleExecuteCheckbox = () => setApproveAndExecute((prevApproveAndExecute) => !prevApproveAndExecute)
 
   return (
     <SharedSnackbarConsumer>

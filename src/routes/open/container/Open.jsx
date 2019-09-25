@@ -3,8 +3,9 @@ import * as React from 'react'
 import { connect } from 'react-redux'
 import Page from '~/components/layout/Page'
 import {
-  getAccountsFrom, getThresholdFrom, getNamesFrom, getSafeNameFrom,
+  getAccountsFrom, getThresholdFrom, getNamesFrom, getSafeNameFrom, getOwnersFrom,
 } from '~/routes/open/utils/safeDataExtractor'
+import { buildSafe } from '~/routes/safe/store/actions/fetchSafe'
 import { getGnosisSafeInstanceAt, deploySafeContract, initContracts } from '~/logic/contracts/safeContracts'
 import { checkReceiptStatus } from '~/logic/wallets/ethTransactions'
 import { history } from '~/store'
@@ -24,18 +25,23 @@ export type OpenState = {
 }
 
 export const createSafe = async (values: Object, userAccount: string, addSafe: AddSafe): Promise<OpenState> => {
-  const accounts = getAccountsFrom(values)
+  const ownerAddresses = getAccountsFrom(values)
   const numConfirmations = getThresholdFrom(values)
   const name = getSafeNameFrom(values)
-  const owners = getNamesFrom(values)
+  const ownersNames = getNamesFrom(values)
 
-  const safe = await deploySafeContract(accounts, numConfirmations, userAccount)
+  await initContracts()
+
+  const safe = await deploySafeContract(ownerAddresses, numConfirmations, userAccount)
   await checkReceiptStatus(safe.tx)
 
   const safeAddress = safe.logs[0].args.proxy
   const safeContract = await getGnosisSafeInstanceAt(safeAddress)
+  const safeProps = await buildSafe(safeAddress, name)
+  const owners = getOwnersFrom(ownersNames, ownerAddresses.sort())
+  safeProps.owners = owners
 
-  addSafe(name, safeContract.address, numConfirmations, owners, accounts)
+  addSafe(safeProps)
 
   if (stillInOpeningView()) {
     const url = {

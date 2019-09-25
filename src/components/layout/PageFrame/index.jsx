@@ -1,7 +1,7 @@
 // @flow
-import React from 'react'
-import Footer from '~/components/Footer'
+import * as React from 'react'
 import Header from '~/components/Header'
+import SidebarProvider from '~/components/Sidebar'
 import { SharedSnackbarProvider } from '~/components/SharedSnackBar'
 import styles from './index.scss'
 
@@ -12,9 +12,10 @@ type Props = {
 const PageFrame = ({ children }: Props) => (
   <SharedSnackbarProvider>
     <div className={styles.frame}>
-      <Header />
-      {children}
-      <Footer />
+      <SidebarProvider>
+        <Header />
+        {children}
+      </SidebarProvider>
     </div>
   </SharedSnackbarProvider>
 )

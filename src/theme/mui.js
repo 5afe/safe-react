@@ -206,6 +206,11 @@ export default createMuiTheme({
         color: primary,
       },
     },
+    MuiSvgIcon: {
+      colorSecondary: {
+        color: secondaryText,
+      },
+    },
     MuiTab: {
       root: {
         fontFamily: 'Averta, monospace',
