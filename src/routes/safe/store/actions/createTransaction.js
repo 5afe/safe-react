@@ -6,11 +6,14 @@ import fetchTransactions from '~/routes/safe/store/actions/fetchTransactions'
 import { type GlobalState } from '~/store'
 import { getGnosisSafeInstanceAt } from '~/logic/contracts/safeContracts'
 import {
-  approveTransaction,
-  executeTransaction,
+  getApprovalTransaction,
+  getExecutionTransaction,
   CALL,
   type Notifications,
   DEFAULT_NOTIFICATIONS,
+  TX_TYPE_CONFIRMATION,
+  TX_TYPE_EXECUTION,
+  saveTxToHistory,
 } from '~/logic/safe/transactions'
 
 const createTransaction = (
@@ -34,11 +37,73 @@ const createTransaction = (
   try {
     if (isExecution) {
       const showNotification = () => openSnackbar(notifications.BEFORE_EXECUTION_OR_CREATION, 'success')
-      txHash = await executeTransaction(showNotification, safeInstance, to, valueInWei, txData, CALL, nonce, from)
+      const tx = await getExecutionTransaction(
+        showNotification,
+        safeInstance,
+        to,
+        valueInWei,
+        txData,
+        CALL,
+        nonce,
+        from,
+      )
+
+      await tx
+        .send({
+          from,
+        })
+        .once('transactionHash', (hash: string) => {
+          txHash = hash
+          openSnackbar(notifications.BEFORE_EXECUTION_OR_CREATION, 'success')
+        })
+        .on('error', (error) => {
+          console.error('Tx error: ', error)
+        })
+        .then(async (receipt) => {
+          await saveTxToHistory(
+            safeInstance,
+            to,
+            valueInWei,
+            txData,
+            CALL,
+            nonce,
+            receipt.transactionHash,
+            from,
+            TX_TYPE_EXECUTION,
+          )
+
+          return receipt.transactionHash
+        })
       openSnackbar(notifications.AFTER_EXECUTION, 'success')
     } else {
-      const showNotification = () => openSnackbar(notifications.BEFORE_EXECUTION_OR_CREATION, 'success')
-      txHash = await approveTransaction(showNotification, safeInstance, to, valueInWei, txData, CALL, nonce, from)
+      const tx = await getApprovalTransaction(safeInstance, to, valueInWei, txData, CALL, nonce, from)
+
+      await tx.send({
+        from,
+      })
+        .once('transactionHash', (hash) => {
+          txHash = hash
+          openSnackbar(notifications.BEFORE_EXECUTION_OR_CREATION, 'success')
+        })
+        .on('error', (error) => {
+          console.error('Tx error: ', error)
+        })
+        .then(async (receipt) => {
+          await saveTxToHistory(
+            safeInstance,
+            to,
+            valueInWei,
+            txData,
+            CALL,
+            nonce,
+            receipt.transactionHash,
+            from,
+            TX_TYPE_CONFIRMATION,
+          )
+
+          return receipt.transactionHash
+        })
+
       openSnackbar(notifications.CREATED_MORE_CONFIRMATIONS_NEEDED, 'success')
     }
   } catch (err) {

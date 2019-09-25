@@ -5,7 +5,14 @@ import { userAccountSelector } from '~/logic/wallets/store/selectors'
 import fetchTransactions from '~/routes/safe/store/actions/fetchTransactions'
 import { type GlobalState } from '~/store'
 import { getGnosisSafeInstanceAt } from '~/logic/contracts/safeContracts'
-import { approveTransaction, executeTransaction, CALL } from '~/logic/safe/transactions'
+import {
+  getApprovalTransaction,
+  getExecutionTransaction,
+  CALL,
+  saveTxToHistory,
+  TX_TYPE_EXECUTION,
+  TX_TYPE_CONFIRMATION,
+} from '~/logic/safe/transactions'
 
 // https://gnosis-safe.readthedocs.io/en/latest/contracts/signatures.html#pre-validated-signatures
 // https://github.com/gnosis/safe-contracts/blob/master/test/gnosisSafeTeamEdition.js#L26
@@ -46,9 +53,7 @@ const processTransaction = (
 
   let txHash
   if (shouldExecute) {
-    const showNotification = () => openSnackbar('Transaction has been submitted', 'success')
-    txHash = await executeTransaction(
-      showNotification,
+    const transaction = await getExecutionTransaction(
       safeInstance,
       tx.recipient,
       tx.value,
@@ -58,19 +63,65 @@ const processTransaction = (
       from,
       sigs,
     )
+
+    await transaction
+      .send({
+        from,
+      })
+      .once('transactionHash', (hash: string) => {
+        txHash = hash
+        openSnackbar('Transaction has been submitted', 'success')
+      })
+      .on('error', (error) => {
+        console.error('Tx error: ', error)
+      })
+      .then(async (receipt) => {
+        await saveTxToHistory(
+          safeInstance,
+          tx.recipient,
+          tx.value,
+          tx.data,
+          CALL,
+          nonce,
+          receipt.transactionHash,
+          from,
+          TX_TYPE_EXECUTION,
+        )
+
+        return receipt.transactionHash
+      })
+
     openSnackbar('Transaction has been confirmed', 'success')
   } else {
-    const showNotification = () => openSnackbar('Approval transaction has been submitted', 'success')
-    txHash = await approveTransaction(
-      showNotification,
-      safeInstance,
-      tx.recipient,
-      tx.value,
-      tx.data,
-      CALL,
-      nonce,
-      from,
-    )
+    const transaction = await getApprovalTransaction(safeInstance, tx.recipient, tx.value, tx.data, CALL, nonce, from)
+
+    await transaction
+      .send({
+        from,
+      })
+      .once('transactionHash', (hash) => {
+        txHash = hash
+        openSnackbar('Approval transaction has been submitted', 'success')
+      })
+      .on('error', (error) => {
+        console.error('Tx error: ', error)
+      })
+      .then(async (receipt) => {
+        await saveTxToHistory(
+          safeInstance,
+          tx.recipient,
+          tx.value,
+          tx.data,
+          CALL,
+          nonce,
+          receipt.transactionHash,
+          from,
+          TX_TYPE_CONFIRMATION,
+        )
+
+        return receipt.transactionHash
+      })
+
     openSnackbar('Approval transaction has been confirmed', 'success')
   }
 
