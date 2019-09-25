@@ -4,6 +4,8 @@ import { ETHEREUM_NETWORK_IDS, ETHEREUM_NETWORK } from '~/logic/wallets/getWeb3'
 import type { ProviderProps } from '~/logic/wallets/store/model/provider'
 import { makeProvider } from '~/logic/wallets/store/model/provider'
 import { NOTIFICATIONS } from '~/logic/notifications'
+import enqueueSnackbar from '~/logic/notifications/store/actions/enqueueSnackbar'
+import closeSnackbar from '~/logic/notifications/store/actions/closeSnackbar'
 import addProvider from './addProvider'
 
 export const processProviderResponse = (dispatch: ReduxDispatch<*>, provider: ProviderProps) => {
@@ -22,7 +24,7 @@ export const processProviderResponse = (dispatch: ReduxDispatch<*>, provider: Pr
   dispatch(addProvider(walletRecord))
 }
 
-const handleProviderNotification = (enqueueSnackbar: Function, closeSnackbar: Function, provider: ProviderProps) => {
+const handleProviderNotification = (dispatch: ReduxDispatch<*>, provider: ProviderProps) => {
   const { loaded, available, network } = provider
 
   if (!loaded) {
@@ -40,15 +42,26 @@ const handleProviderNotification = (enqueueSnackbar: Function, closeSnackbar: Fu
   enqueueSnackbar(NOTIFICATIONS.RINKEBY_VERSION_MSG.description, NOTIFICATIONS.RINKEBY_VERSION_MSG.options)
 
   if (available) {
-    enqueueSnackbar(NOTIFICATIONS.WALLET_CONNECTED_MSG.description, NOTIFICATIONS.WALLET_CONNECTED_MSG.options)
+    // NOTE:
+    // if you want to be able to dispatch a `closeSnackbar` action later on,
+    // you SHOULD pass your own `key` in the options. `key` can be any sequence
+    // of number or characters, but it has to be unique to a given snackbar.
+    dispatch(
+      enqueueSnackbar({
+        message: NOTIFICATIONS.WALLET_CONNECTED_MSG.description,
+        options: {
+          ...NOTIFICATIONS.WALLET_CONNECTED_MSG.options,
+          key: new Date().getTime() + Math.random(),
+        },
+      }),
+    )
+    // enqueueSnackbar(NOTIFICATIONS.WALLET_CONNECTED_MSG.description, NOTIFICATIONS.WALLET_CONNECTED_MSG.options)
   } else {
     enqueueSnackbar(NOTIFICATIONS.UNLOCK_WALLET_MSG.description, NOTIFICATIONS.UNLOCK_WALLET_MSG.options)
   }
 }
 
-export default (provider: ProviderProps, enqueueSnackbar: Function, closeSnackbar: Function) => (
-  dispatch: ReduxDispatch<*>,
-) => {
-  handleProviderNotification(enqueueSnackbar, closeSnackbar, provider)
+export default (provider: ProviderProps) => (dispatch: ReduxDispatch<*>) => {
+  handleProviderNotification(dispatch, provider)
   processProviderResponse(dispatch, provider)
 }
