@@ -17,10 +17,10 @@ const configuration = () => {
 
   if (process.env.NODE_ENV === 'production') {
     if (process.env.REACT_APP_NETWORK === 'mainnet') {
-      return process.env.REACT_APP_ENV === 'staging' ? mainnetStagingConfig : mainnetProdConfig
+      return process.env.REACT_APP_ENV === 'production' ? mainnetProdConfig : mainnetStagingConfig
     }
 
-    return process.env.REACT_APP_ENV === 'staging' ? stagingConfig : prodConfig
+    return process.env.REACT_APP_ENV === 'production' ? prodConfig : stagingConfig
   }
 
   return process.env.REACT_APP_NETWORK === 'mainnet' ? mainnetDevConfig : devConfig

@@ -18,7 +18,7 @@ yarn add flow-type // recommended usage of -g flag
 
 We use [yarn](https://yarnpkg.com) in our infrastacture, so we decided to go with yarn in the README
 
-### Installing
+### Installing and running
 
 A step by step series of examples that tell you have to get a development env running
 
@@ -35,6 +35,17 @@ yarn start
 For the mainnet version:
 ```
 REACT_APP_NETWORK=mainnet yarn start
+```
+
+### Building
+*For rinkeby:*
+```
+yarn build
+```
+
+*For mainnet:*
+```
+REACT_APP_NETWORK=mainnet yarn build
 ```
 
 
