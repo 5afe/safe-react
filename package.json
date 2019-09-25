@@ -33,9 +33,9 @@
     "@gnosis.pm/util-contracts": "2.0.1",
     "@material-ui/core": "4.4.0",
     "@material-ui/icons": "4.2.1",
-    "@portis/web3": "^2.0.0-beta.40",
+    "@portis/web3": "^2.0.0-beta.43",
     "@testing-library/jest-dom": "4.1.0",
-    "@walletconnect/web3-provider": "^1.0.0-beta.35",
+    "@walletconnect/web3-provider": "^1.0.0-beta.36",
     "@welldone-software/why-did-you-render": "3.3.3",
     "axios": "0.19.0",
     "bignumber.js": "9.0.0",
@@ -63,9 +63,9 @@
     "redux-actions": "^2.3.0",
     "redux-thunk": "^2.2.0",
     "reselect": "^4.0.0",
-    "squarelink": "^1.0.4",
+    "squarelink": "^1.0.10",
     "web3": "1.2.1",
-    "web3connect": "^1.0.0-beta.20"
+    "web3connect": "1.0.0-beta.22"
   },
   "devDependencies": {
     "@babel/cli": "7.5.5",
