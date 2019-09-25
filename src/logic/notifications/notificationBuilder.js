@@ -1,6 +1,6 @@
 // @flow
-import { NOTIFICATIONS } from './notificationTypes'
 import { NOTIFIED_TRANSACTIONS } from '~/logic/safe/transactions'
+import { type Notification, NOTIFICATIONS } from './notificationTypes'
 
 type NotificationsQueue = {
   beforeExecution: Notification,
@@ -105,9 +105,6 @@ export const getNofiticationsFromTxType = (txType: string) => {
   let notificationsQueue: NotificationsQueue
 
   switch (txType) {
-    case NOTIFIED_TRANSACTIONS.CONNECT_WALLET_TX: {
-      break
-    }
     case NOTIFIED_TRANSACTIONS.STANDARD_TX: {
       notificationsQueue = standardTxNotificationsQueue
       break
@@ -134,9 +131,6 @@ export const getNofiticationsFromTxType = (txType: string) => {
     }
     case NOTIFIED_TRANSACTIONS.THRESHOLD_CHANGE_TX: {
       notificationsQueue = thresholdChangeTxNotificationsQueue
-      break
-    }
-    case NOTIFIED_TRANSACTIONS.NETWORK_TX: {
       break
     }
     default: {

@@ -11,10 +11,12 @@ export type Variant = SUCCESS | ERROR | WARNING | INFO
 
 export type Notification = {
   description: string,
-  variant: Variant,
-  persist: boolean,
-  autoHideDuration?: shortDuration | longDuration,
-  preventDuplicate: boolean,
+  options: {
+    variant: Variant,
+    persist: boolean,
+    autoHideDuration?: shortDuration | longDuration,
+    preventDuplicate: boolean,
+  },
 }
 
 export type Notifications = {

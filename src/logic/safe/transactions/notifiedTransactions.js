@@ -1,7 +1,6 @@
 // @flow
 
 export type NotifiedTransaction = {
-  CONNECT_WALLET_TX: string,
   STANDARD_TX: string,
   CONFIRMATION_TX: string,
   CANCELLATION_TX: string,
@@ -9,11 +8,9 @@ export type NotifiedTransaction = {
   SAFE_NAME_CHANGE_TX: string,
   OWNER_NAME_CHANGE_TX: string,
   THRESHOLD_CHANGE_TX: string,
-  NETWORK_TX: string,
 }
 
 export const NOTIFIED_TRANSACTIONS: NotifiedTransaction = {
-  CONNECT_WALLET_TX: 'CONNECT_WALLET_TX',
   STANDARD_TX: 'STANDARD_TX',
   CONFIRMATION_TX: 'CONFIRMATION_TX',
   CANCELLATION_TX: 'CANCELLATION_TX',
@@ -21,5 +18,4 @@ export const NOTIFIED_TRANSACTIONS: NotifiedTransaction = {
   SAFE_NAME_CHANGE_TX: 'SAFE_NAME_CHANGE_TX',
   OWNER_NAME_CHANGE_TX: 'OWNER_NAME_CHANGE_TX',
   THRESHOLD_CHANGE_TX: 'THRESHOLD_CHANGE_TX',
-  NETWORK_TX: 'NETWORK_TX',
 }
