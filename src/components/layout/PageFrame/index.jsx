@@ -5,6 +5,7 @@ import { withStyles } from '@material-ui/core/styles'
 import SidebarProvider from '~/components/Sidebar'
 import Header from '~/components/Header'
 import Img from '~/components/layout/Img'
+import Notifier from '~/components/Notifier'
 import AlertLogo from './assets/alert.svg'
 import CheckLogo from './assets/check.svg'
 import ErrorLogo from './assets/error.svg'
@@ -72,6 +73,7 @@ const PageFrame = ({ children, classes }: Props) => (
         info: '',
       }}
     >
+      <Notifier />
       <SidebarProvider>
         <Header />
         {children}
