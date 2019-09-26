@@ -34,76 +34,45 @@ const createTransaction = (
   const isExecution = threshold.toNumber() === 1 || shouldExecute
 
   let txHash
+  let tx
   try {
     if (isExecution) {
-      const tx = await getExecutionTransaction(
-        safeInstance,
-        to,
-        valueInWei,
-        txData,
-        CALL,
-        nonce,
-        from,
-      )
-
-      await tx
-        .send({
-          from,
-        })
-        .once('transactionHash', (hash: string) => {
-          txHash = hash
-          openSnackbar(notifications.BEFORE_EXECUTION_OR_CREATION, 'success')
-        })
-        .on('error', (error) => {
-          console.error('Tx error: ', error)
-        })
-        .then(async (receipt) => {
-          await saveTxToHistory(
-            safeInstance,
-            to,
-            valueInWei,
-            txData,
-            CALL,
-            nonce,
-            receipt.transactionHash,
-            from,
-            TX_TYPE_EXECUTION,
-          )
-
-          return receipt.transactionHash
-        })
-      openSnackbar(notifications.AFTER_EXECUTION, 'success')
+      tx = await getExecutionTransaction(safeInstance, to, valueInWei, txData, CALL, nonce, from)
     } else {
-      const tx = await getApprovalTransaction(safeInstance, to, valueInWei, txData, CALL, nonce, from)
+      tx = await getApprovalTransaction(safeInstance, to, valueInWei, txData, CALL, nonce, from)
+    }
 
-      await tx.send({
+    await tx
+      .send({
         from,
       })
-        .once('transactionHash', (hash) => {
-          txHash = hash
-          openSnackbar(notifications.BEFORE_EXECUTION_OR_CREATION, 'success')
-        })
-        .on('error', (error) => {
-          console.error('Tx error: ', error)
-        })
-        .then(async (receipt) => {
-          await saveTxToHistory(
-            safeInstance,
-            to,
-            valueInWei,
-            txData,
-            CALL,
-            nonce,
-            receipt.transactionHash,
-            from,
-            TX_TYPE_CONFIRMATION,
-          )
+      .once('transactionHash', (hash) => {
+        txHash = hash
+        openSnackbar(notifications.BEFORE_EXECUTION_OR_CREATION, 'success')
+      })
+      .on('error', (error) => {
+        console.error('Tx error: ', error)
+      })
+      .then(async (receipt) => {
+        await saveTxToHistory(
+          safeInstance,
+          to,
+          valueInWei,
+          txData,
+          CALL,
+          nonce,
+          receipt.transactionHash,
+          from,
+          isExecution ? TX_TYPE_EXECUTION : TX_TYPE_CONFIRMATION,
+        )
 
-          return receipt.transactionHash
-        })
+        return receipt.transactionHash
+      })
 
-      openSnackbar(notifications.CREATED_MORE_CONFIRMATIONS_NEEDED, 'success')
-    }
+    openSnackbar(
+      isExecution ? notifications.AFTER_EXECUTION : notifications.CREATED_MORE_CONFIRMATIONS_NEEDED,
+      'success',
+    )
   } catch (err) {
     openSnackbar(notifications.ERROR, 'error')
     console.error(`Error while creating transaction: ${err}`)
