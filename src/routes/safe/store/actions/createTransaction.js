@@ -41,11 +41,18 @@ const createTransaction = (
     } else {
       tx = await getApprovalTransaction(safeInstance, to, valueInWei, txData, CALL, nonce, from)
     }
+    
+    const sendParams = {
+      from,
+    }
+
+    // if not set owner management tests will fail on ganache
+    if (process.env.NODE_ENV === 'test') {
+      sendParams.gas = '7000000'
+    }
 
     await tx
-      .send({
-        from,
-      })
+      .send(sendParams)
       .once('transactionHash', (hash) => {
         txHash = hash
         openSnackbar(notifications.BEFORE_EXECUTION_OR_CREATION, 'success')
