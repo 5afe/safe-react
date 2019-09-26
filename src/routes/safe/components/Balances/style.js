@@ -15,6 +15,9 @@ export const styles = (theme: Object) => ({
   iconSmall: {
     fontSize: 16,
   },
+  receiveModal: {
+    height: '544px',
+  },
   hide: {
     '&:hover': {
       backgroundColor: '#fff3e2',
