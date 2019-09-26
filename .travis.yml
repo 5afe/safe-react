@@ -9,20 +9,20 @@ node_js:
 os:
   - linux
 env:
-  - DOCKER_COMPOSE_VERSION=1.22.0
+  global:
+    - DOCKER_COMPOSE_VERSION=1.22.0
 matrix:
   include:
   - env:
     - REACT_APP_NETWORK='mainnet'
     - STAGING_BUCKET_NAME=${STAGING_MAINNET_BUCKET_NAME}
-    before_install:
-      - if [[ "$TRAVIS_BRANCH" == "development" ]]; then exit 0; fi
+    if: branch = master OR tag IS present
   - env:
     - REACT_APP_NETWORK='rinkeby'
 before_install:
   # Install custom docker-compose version
   - sudo rm /usr/local/bin/docker-compose
-  - curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > docker-compose
+  - curl -Ls https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > docker-compose
   - chmod +x docker-compose
   - sudo mv docker-compose /usr/local/bin
   # Shut down postgres because it blocks our db container's port map to :5432
@@ -59,6 +59,7 @@ after_success:
     else
       export NODE_ENV=development;
     fi
+  - if [[ -n "$TRAVIS_TAG" ]]; then export REACT_APP_ENV='production'; fi
   - yarn build-storybook
   - yarn build
   # Pull Request - Deploy it to a review environment
