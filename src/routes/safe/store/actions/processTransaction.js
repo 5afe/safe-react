@@ -52,78 +52,44 @@ const processTransaction = (
   const sigs = generateSignaturesFromTxConfirmations(tx, approveAndExecute && userAddress)
 
   let txHash
+  let transaction
   if (shouldExecute) {
-    const transaction = await getExecutionTransaction(
-      safeInstance,
-      tx.recipient,
-      tx.value,
-      tx.data,
-      CALL,
-      nonce,
-      from,
-      sigs,
-    )
-
-    await transaction
-      .send({
-        from,
-      })
-      .once('transactionHash', (hash: string) => {
-        txHash = hash
-        openSnackbar('Transaction has been submitted', 'success')
-      })
-      .on('error', (error) => {
-        console.error('Tx error: ', error)
-      })
-      .then(async (receipt) => {
-        await saveTxToHistory(
-          safeInstance,
-          tx.recipient,
-          tx.value,
-          tx.data,
-          CALL,
-          nonce,
-          receipt.transactionHash,
-          from,
-          TX_TYPE_EXECUTION,
-        )
-
-        return receipt.transactionHash
-      })
-
-    openSnackbar('Transaction has been confirmed', 'success')
+    transaction = await getExecutionTransaction(safeInstance, tx.recipient, tx.value, tx.data, CALL, nonce, from, sigs)
   } else {
-    const transaction = await getApprovalTransaction(safeInstance, tx.recipient, tx.value, tx.data, CALL, nonce, from)
-
-    await transaction
-      .send({
-        from,
-      })
-      .once('transactionHash', (hash) => {
-        txHash = hash
-        openSnackbar('Approval transaction has been submitted', 'success')
-      })
-      .on('error', (error) => {
-        console.error('Tx error: ', error)
-      })
-      .then(async (receipt) => {
-        await saveTxToHistory(
-          safeInstance,
-          tx.recipient,
-          tx.value,
-          tx.data,
-          CALL,
-          nonce,
-          receipt.transactionHash,
-          from,
-          TX_TYPE_CONFIRMATION,
-        )
-
-        return receipt.transactionHash
-      })
-
-    openSnackbar('Approval transaction has been confirmed', 'success')
+    transaction = await getApprovalTransaction(safeInstance, tx.recipient, tx.value, tx.data, CALL, nonce, from)
   }
+
+  await transaction
+    .send({
+      from,
+    })
+    .once('transactionHash', (hash) => {
+      txHash = hash
+      openSnackbar(
+        shouldExecute ? 'Transaction has been submitted' : 'Approval transaction has been submitted',
+        'success',
+      )
+    })
+    .on('error', (error) => {
+      console.error('Processing transaction error: ', error)
+    })
+    .then(async (receipt) => {
+      await saveTxToHistory(
+        safeInstance,
+        tx.recipient,
+        tx.value,
+        tx.data,
+        CALL,
+        nonce,
+        receipt.transactionHash,
+        from,
+        shouldExecute ? TX_TYPE_EXECUTION : TX_TYPE_CONFIRMATION,
+      )
+
+      return receipt.transactionHash
+    })
+
+  openSnackbar(shouldExecute ? 'Transaction has been confirmed' : 'Approval transaction has been confirmed', 'success')
 
   dispatch(fetchTransactions(safeAddress))
 
