@@ -6,9 +6,7 @@ import { type NotificationProps } from '~/logic/notifications/store/models/notif
 
 export const ENQUEUE_SNACKBAR = 'ENQUEUE_SNACKBAR'
 
-const addSnackbar = createAction<string, *, *>(ENQUEUE_SNACKBAR, (notification: NotificationProps): ActionReturn => ({
-  notification,
-}))
+const addSnackbar = createAction<string, *>(ENQUEUE_SNACKBAR)
 
 const enqueueSnackbar = (notification: NotificationProps) => (
   dispatch: ReduxDispatch<GlobalState>,
@@ -16,7 +14,7 @@ const enqueueSnackbar = (notification: NotificationProps) => (
 ) => {
   const newNotification = {
     ...notification,
-    key: new Date().getTime() + Math.random(),
+    key: new Date().getTime(),
   }
   dispatch(addSnackbar(newNotification))
 }

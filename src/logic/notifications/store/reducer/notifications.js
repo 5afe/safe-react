@@ -13,23 +13,20 @@ export type NotificationReducerState = Map<string, *>
 export default handleActions<NotificationReducerState, *>(
   {
     [ENQUEUE_SNACKBAR]: (state: NotificationReducerState, action: ActionType<Function>): NotificationReducerState => {
-      const { notification }: { notification: NotificationProps } = action.payload
+      const notification: NotificationProps = action.payload
 
-      if (state.hasIn(['notifications', notification.options.key])) {
-        return state.updateIn(['notifications', notification.options.key], (prev) => prev.merge(notification))
-      }
-      return state.setIn(['notifications', notification.options.key], makeNotification(notification))
+      return state.set(notification.key, makeNotification(notification))
     },
     [CLOSE_SNACKBAR]: (state: NotificationReducerState, action: ActionType<Function>): NotificationReducerState => {
       const { notification }: { notification: NotificationProps } = action.payload
       notification.dismissed = true
 
-      return state.updateIn(['notifications', notification.key], (prev) => prev.merge(notification))
+      return state.update(notification.key, (prev) => prev.merge(notification))
     },
     [REMOVE_SNACKBAR]: (state: NotificationReducerState, action: ActionType<Function>): NotificationReducerState => {
       const key = action.payload
 
-      return state.deleteIn(['notification', key])
+      return state.delete(key)
     },
   },
   Map({

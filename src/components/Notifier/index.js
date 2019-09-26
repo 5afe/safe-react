@@ -35,24 +35,24 @@ class Notifier extends Component {
   componentDidUpdate() {
     const { notifications = [], enqueueSnackbar, removeSnackbar } = this.props
 
-    notifications.map(({ key, message, options = {} }) => {
+    notifications.forEach((notification) => {
       // Do nothing if snackbar is already displayed
-      if (this.displayed.includes(key)) {
+      if (this.displayed.includes(notification.key)) {
         return
       }
       // Display snackbar using notistack
-      enqueueSnackbar(message, {
-        ...options,
+      enqueueSnackbar(notification.message, {
+        ...notification.options,
         onClose: (event, reason, key) => {
-          if (options.onClose) {
-            options.onClose(event, reason, key)
+          if (notification.options.onClose) {
+            notification.options.onClose(event, reason, key)
           }
           // Dispatch action to remove snackbar from redux store
           removeSnackbar(key)
         },
       })
       // Keep track of snackbars that we've displayed
-      this.storeDisplayed(key)
+      this.storeDisplayed(notification.key)
     })
   }
 

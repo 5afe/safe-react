@@ -47,7 +47,7 @@ const handleProviderNotification = (dispatch: ReduxDispatch<*>, provider: Provid
     // you SHOULD pass your own `key` in the options. `key` can be any sequence
     // of number or characters, but it has to be unique to a given snackbar.
 
-    //dispatch(enqueueSnackbarAction(NOTIFICATIONS.WALLET_CONNECTED_MSG))
+    // dispatch(enqueueSnackbarAction(NOTIFICATIONS.WALLET_CONNECTED_MSG))
     enqueueSnackbar(NOTIFICATIONS.WALLET_CONNECTED_MSG.message, NOTIFICATIONS.WALLET_CONNECTED_MSG.options)
   } else {
     enqueueSnackbar(NOTIFICATIONS.UNLOCK_WALLET_MSG.message, NOTIFICATIONS.UNLOCK_WALLET_MSG.options)
