@@ -213,12 +213,12 @@ class Balances extends React.Component<Props, State> {
           title="Receive Tokens"
           description="Receive Tokens Form"
           handleClose={this.onHide('Receive')}
+          paperClassName={classes.receiveModal}
           open={showReceive}
         >
           <Receive
             safeName={safeName}
             safeAddress={safeAddress}
-            etherScanLink={etherScanLink}
             onClose={this.onHide('Receive')}
           />
         </Modal>
