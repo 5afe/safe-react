@@ -41,7 +41,7 @@ const createTransaction = (
     } else {
       tx = await getApprovalTransaction(safeInstance, to, valueInWei, txData, CALL, nonce, from)
     }
-    
+
     const sendParams = {
       from,
     }
