@@ -14,7 +14,7 @@ export default (enqueueSnackbar: Function) => async (dispatch: ReduxDispatch<*>)
   }
 
   const provider: Provider = makeProvider(providerProps)
-  enqueueSnackbar(NOTIFICATIONS.WALLET_DISCONNECTED_MSG.description, NOTIFICATIONS.WALLET_DISCONNECTED_MSG.options)
+  enqueueSnackbar(NOTIFICATIONS.WALLET_DISCONNECTED_MSG.message, NOTIFICATIONS.WALLET_DISCONNECTED_MSG.options)
 
   dispatch(addProvider(provider))
 }

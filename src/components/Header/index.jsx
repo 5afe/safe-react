@@ -42,7 +42,7 @@ class HeaderComponent extends React.PureComponent<Props, State> {
     const { enqueueSnackbar } = this.props
 
     this.setState({ hasError: true })
-    enqueueSnackbar(NOTIFICATIONS.CONNECT_WALLET_ERROR_MSG.description, NOTIFICATIONS.CONNECT_WALLET_ERROR_MSG.options)
+    enqueueSnackbar(NOTIFICATIONS.CONNECT_WALLET_ERROR_MSG.message, NOTIFICATIONS.CONNECT_WALLET_ERROR_MSG.options)
 
     logComponentStack(error, info)
   }

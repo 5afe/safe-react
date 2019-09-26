@@ -43,7 +43,7 @@ export const approveTransaction = async (
     },
   )
 
-  const beforeExecutionKey = enqueueSnackbar(notiQueue.beforeExecution.description, notiQueue.beforeExecution.options)
+  const beforeExecutionKey = enqueueSnackbar(notiQueue.beforeExecution.message, notiQueue.beforeExecution.options)
   let pendingExecutionKey
   try {
     const web3 = getWeb3()
@@ -57,7 +57,7 @@ export const approveTransaction = async (
       .once('transactionHash', () => {
         closeSnackbar(beforeExecutionKey)
         pendingExecutionKey = enqueueSnackbar(
-          notiQueue.pendingExecution.single.description,
+          notiQueue.pendingExecution.single.message,
           notiQueue.pendingExecution.single.options,
         )
       })
@@ -77,7 +77,7 @@ export const approveTransaction = async (
           sender,
           TX_TYPE_CONFIRMATION,
         )
-        enqueueSnackbar(notiQueue.afterExecution.description, notiQueue.afterExecution.options)
+        enqueueSnackbar(notiQueue.afterExecution.message, notiQueue.afterExecution.options)
         return receipt.transactionHash
       })
 
@@ -85,7 +85,7 @@ export const approveTransaction = async (
   } catch (error) {
     closeSnackbar(beforeExecutionKey)
     closeSnackbar(pendingExecutionKey)
-    enqueueSnackbar(notiQueue.afterExecutionError.description, notiQueue.afterExecutionError.options)
+    enqueueSnackbar(notiQueue.afterExecutionError.message, notiQueue.afterExecutionError.options)
 
     const executeData = safeInstance.contract.methods.approveHash(txHash).encodeABI()
     const errMsg = await getErrorMessage(safeInstance.address, 0, executeData, sender)
@@ -118,7 +118,7 @@ export const executeTransaction = async (
     )}000000000000000000000000000000000000000000000000000000000000000001`
   }
 
-  const beforeExecutionKey = enqueueSnackbar(notiQueue.beforeExecution.description, notiQueue.beforeExecution.options)
+  const beforeExecutionKey = enqueueSnackbar(notiQueue.beforeExecution.message, notiQueue.beforeExecution.options)
   let pendingExecutionKey
   try {
     const web3 = getWeb3()
@@ -132,7 +132,7 @@ export const executeTransaction = async (
       .once('transactionHash', () => {
         closeSnackbar(beforeExecutionKey)
         pendingExecutionKey = enqueueSnackbar(
-          notiQueue.pendingExecution.single.description,
+          notiQueue.pendingExecution.single.message,
           notiQueue.pendingExecution.single.options,
         )
       })
@@ -152,7 +152,7 @@ export const executeTransaction = async (
           sender,
           TX_TYPE_EXECUTION,
         )
-        enqueueSnackbar(notiQueue.afterExecution.description, notiQueue.afterExecution.options)
+        enqueueSnackbar(notiQueue.afterExecution.message, notiQueue.afterExecution.options)
         return receipt.transactionHash
       })
 
@@ -160,7 +160,7 @@ export const executeTransaction = async (
   } catch (error) {
     closeSnackbar(beforeExecutionKey)
     closeSnackbar(pendingExecutionKey)
-    enqueueSnackbar(notiQueue.afterExecutionError.description, notiQueue.afterExecutionError.options)
+    enqueueSnackbar(notiQueue.afterExecutionError.message, notiQueue.afterExecutionError.options)
 
     const executeDataUsedSignatures = safeInstance.contract.methods
       .execTransaction(to, valueInWei, data, operation, 0, 0, 0, ZERO_ADDRESS, ZERO_ADDRESS, sigs)

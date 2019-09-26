@@ -36,7 +36,7 @@ const ChangeSafeName = (props: Props) => {
     updateSafe({ address: safeAddress, name: values.safeName })
 
     const notification = getNofiticationsFromTxType(NOTIFIED_TRANSACTIONS.SAFE_NAME_CHANGE_TX)
-    enqueueSnackbar(notification.afterExecution.description, notification.afterExecution.options)
+    enqueueSnackbar(notification.afterExecution.message, notification.afterExecution.options)
   }
 
   return (

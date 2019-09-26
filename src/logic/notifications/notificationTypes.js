@@ -10,7 +10,7 @@ const longDuration = 10000
 export type Variant = SUCCESS | ERROR | WARNING | INFO
 
 export type Notification = {
-  description: string,
+  message: string,
   options: {
     variant: Variant,
     persist: boolean,
@@ -72,15 +72,15 @@ export type Notifications = {
 export const NOTIFICATIONS: Notifications = {
   // Wallet Connection
   CONNECT_WALLET_MSG: {
-    description: 'Please connect wallet to continue',
+    message: 'Please connect wallet to continue',
     options: { variant: WARNING, persist: true, preventDuplicate: true },
   },
   CONNECT_WALLET_READ_MODE_MSG: {
-    description: 'You are in read-only mode: Please connect wallet',
+    message: 'You are in read-only mode: Please connect wallet',
     options: { variant: WARNING, persist: true, preventDuplicate: true },
   },
   WALLET_CONNECTED_MSG: {
-    description: 'Wallet connected',
+    message: 'Wallet connected',
     options: {
       variant: SUCCESS,
       persist: false,
@@ -88,7 +88,7 @@ export const NOTIFICATIONS: Notifications = {
     },
   },
   WALLET_DISCONNECTED_MSG: {
-    description: 'Wallet disconnected',
+    message: 'Wallet disconnected',
     options: {
       variant: SUCCESS,
       persist: false,
@@ -96,129 +96,129 @@ export const NOTIFICATIONS: Notifications = {
     },
   },
   UNLOCK_WALLET_MSG: {
-    description: 'Unlock your wallet to connect',
+    message: 'Unlock your wallet to connect',
     options: { variant: WARNING, persist: true, preventDuplicate: true },
   },
   CONNECT_WALLET_ERROR_MSG: {
-    description: 'Error connecting to your wallet',
+    message: 'Error connecting to your wallet',
     options: { variant: ERROR, persist: true },
   },
 
   // Regular/Custom Transactions
   SIGN_TX_MSG: {
-    description: 'Please sign the transaction',
+    message: 'Please sign the transaction',
     options: { variant: SUCCESS, persist: true },
   },
   TX_PENDING_MSG: {
-    description: 'Transaction pending',
+    message: 'Transaction pending',
     options: { variant: SUCCESS, persist: true },
   },
   TX_PENDING_MORE_CONFIRMATIONS_MSG: {
-    description: 'Transaction pending: More confirmations required to execute',
+    message: 'Transaction pending: More confirmations required to execute',
     options: { variant: SUCCESS, persist: true },
   },
   TX_REJECTED_MSG: {
-    description: 'Transaction rejected',
+    message: 'Transaction rejected',
     options: { variant: ERROR, persist: false, autoHideDuration: longDuration },
   },
   TX_EXECUTED_MSG: {
-    description: 'Transaction successfully executed',
+    message: 'Transaction successfully executed',
     options: { variant: SUCCESS, persist: false, autoHideDuration: longDuration },
   },
   TX_FAILED_MSG: {
-    description: 'Transaction failed',
+    message: 'Transaction failed',
     options: { variant: ERROR, persist: false, autoHideDuration: longDuration },
   },
 
   // Approval Transactions
   TX_CONFIRMATION_PENDING_MSG: {
-    description: 'Confirmation transaction pending',
+    message: 'Confirmation transaction pending',
     options: { variant: SUCCESS, persist: true },
   },
   TX_CONFIRMATION_EXECUTED_MSG: {
-    description: 'Confirmation transaction succesful',
+    message: 'Confirmation transaction succesful',
     options: { variant: SUCCESS, persist: false, autoHideDuration: longDuration },
   },
   TX_CONFIRMATION_FAILED_MSG: {
-    description: 'Confirmation transaction failed',
+    message: 'Confirmation transaction failed',
     options: { variant: ERROR, persist: false, autoHideDuration: longDuration },
   },
 
   // Safe Name
   SAFE_NAME_CHANGE_EXECUTED_MSG: {
-    description: 'Safe name changed',
+    message: 'Safe name changed',
     options: { variant: SUCCESS, persist: false, autoHideDuration: shortDuration },
   },
 
   // Owner Name
   OWNER_NAME_CHANGE_EXECUTED_MSG: {
-    description: 'Owner name changed',
+    message: 'Owner name changed',
     options: { variant: SUCCESS, persist: false, autoHideDuration: shortDuration },
   },
 
   // Owners
   SIGN_OWNER_CHANGE_MSG: {
-    description: 'Please sign the owner change',
+    message: 'Please sign the owner change',
     options: { variant: SUCCESS, persist: true },
   },
   ONWER_CHANGE_PENDING_MSG: {
-    description: 'Owner change pending',
+    message: 'Owner change pending',
     options: { variant: SUCCESS, persist: true },
   },
   ONWER_CHANGE_PENDING_MORE_CONFIRMATIONS_MSG: {
-    description: 'Owner change pending: More confirmations required to execute',
+    message: 'Owner change pending: More confirmations required to execute',
     options: { variant: SUCCESS, persist: true },
   },
   ONWER_CHANGE_REJECTED_MSG: {
-    description: 'Owner change rejected',
+    message: 'Owner change rejected',
     options: { variant: ERROR, persist: false, autoHideDuration: longDuration },
   },
   OWNER_CHANGE_EXECUTED_MSG: {
-    description: 'Owner change successfully executed',
+    message: 'Owner change successfully executed',
     options: { variant: SUCCESS, persist: false, autoHideDuration: longDuration },
   },
   ONWER_CHANGE_FAILED_MSG: {
-    description: 'Owner change failed',
+    message: 'Owner change failed',
     options: { variant: ERROR, persist: false, autoHideDuration: longDuration },
   },
 
   // Threshold
   SIGN_THRESHOLD_CHANGE_MSG: {
-    description: 'Please sign the required confirmations change',
+    message: 'Please sign the required confirmations change',
     options: { variant: SUCCESS, persist: true },
   },
   THRESHOLD_CHANGE_PENDING_MSG: {
-    description: 'Required confirmations change pending',
+    message: 'Required confirmations change pending',
     options: { variant: SUCCESS, persist: true },
   },
   THRESHOLD_CHANGE_PENDING_MORE_CONFIRMATIONS_MSG: {
-    description: 'Required confirmations change pending: More confirmations required to execute',
+    message: 'Required confirmations change pending: More confirmations required to execute',
     options: { variant: SUCCESS, persist: true },
   },
   THRESHOLD_CHANGE_REJECTED_MSG: {
-    description: 'Required confirmations change rejected',
+    message: 'Required confirmations change rejected',
     options: { variant: ERROR, persist: false, autoHideDuration: longDuration },
   },
   THRESHOLD_CHANGE_EXECUTED_MSG: {
-    description: 'Required confirmations change successfully executed',
+    message: 'Required confirmations change successfully executed',
     options: { variant: SUCCESS, persist: false, autoHideDuration: longDuration },
   },
   THRESHOLD_CHANGE_FAILED_MSG: {
-    description: 'Required confirmations change failed',
+    message: 'Required confirmations change failed',
     options: { variant: ERROR, persist: false, autoHideDuration: longDuration },
   },
 
   // Network
   RINKEBY_VERSION_MSG: {
-    description: "Rinkeby Version: Don't send mainnet assets to this Safe",
+    message: "Rinkeby Version: Don't send mainnet assets to this Safe",
     options: { variant: INFO, persist: true, preventDuplicate: true },
   },
   WRONG_NETWORK_RINKEBY_MSG: {
-    description: 'Wrong network: Please use Rinkeby',
+    message: 'Wrong network: Please use Rinkeby',
     options: { variant: WARNING, persist: true, preventDuplicate: true },
   },
   WRONG_NETWOEK_MAINNET_MSG: {
-    description: 'Wrong network: Please use Mainnet',
+    message: 'Wrong network: Please use Mainnet',
     options: { variant: WARNING, persist: true, preventDuplicate: true },
   },
 }

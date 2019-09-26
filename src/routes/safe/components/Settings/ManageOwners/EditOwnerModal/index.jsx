@@ -58,7 +58,7 @@ const EditOwnerComponent = ({
     editSafeOwner({ safeAddress, ownerAddress, ownerName: values.ownerName })
 
     const notification = getNofiticationsFromTxType(NOTIFIED_TRANSACTIONS.OWNER_NAME_CHANGE_TX)
-    enqueueSnackbar(notification.afterExecution.description, notification.afterExecution.options)
+    enqueueSnackbar(notification.afterExecution.message, notification.afterExecution.options)
 
     onClose()
   }
