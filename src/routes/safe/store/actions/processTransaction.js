@@ -5,7 +5,14 @@ import { userAccountSelector } from '~/logic/wallets/store/selectors'
 import fetchTransactions from '~/routes/safe/store/actions/fetchTransactions'
 import { type GlobalState } from '~/store'
 import { getGnosisSafeInstanceAt } from '~/logic/contracts/safeContracts'
-import { approveTransaction, executeTransaction, CALL } from '~/logic/safe/transactions'
+import {
+  getApprovalTransaction,
+  getExecutionTransaction,
+  CALL,
+  saveTxToHistory,
+  TX_TYPE_EXECUTION,
+  TX_TYPE_CONFIRMATION,
+} from '~/logic/safe/transactions'
 
 // https://gnosis-safe.readthedocs.io/en/latest/contracts/signatures.html#pre-validated-signatures
 // https://github.com/gnosis/safe-contracts/blob/master/test/gnosisSafeTeamEdition.js#L26
@@ -45,15 +52,51 @@ const processTransaction = (
   const sigs = generateSignaturesFromTxConfirmations(tx, approveAndExecute && userAddress)
 
   let txHash
+  let transaction
   if (shouldExecute) {
-    openSnackbar('Transaction has been submitted', 'success')
-    txHash = await executeTransaction(safeInstance, tx.recipient, tx.value, tx.data, CALL, nonce, from, sigs)
-    openSnackbar('Transaction has been confirmed', 'success')
+    transaction = await getExecutionTransaction(safeInstance, tx.recipient, tx.value, tx.data, CALL, nonce, from, sigs)
   } else {
-    openSnackbar('Approval transaction has been submitted', 'success')
-    txHash = await approveTransaction(safeInstance, tx.recipient, tx.value, tx.data, CALL, nonce, from)
-    openSnackbar('Approval transaction has been confirmed', 'success')
+    transaction = await getApprovalTransaction(safeInstance, tx.recipient, tx.value, tx.data, CALL, nonce, from)
   }
+
+  const sendParams = {
+    from,
+  }
+
+  // if not set owner management tests will fail on ganache
+  if (process.env.NODE_ENV === 'test') {
+    sendParams.gas = '7000000'
+  }
+
+  await transaction
+    .send(sendParams)
+    .once('transactionHash', (hash) => {
+      txHash = hash
+      openSnackbar(
+        shouldExecute ? 'Transaction has been submitted' : 'Approval transaction has been submitted',
+        'success',
+      )
+    })
+    .on('error', (error) => {
+      console.error('Processing transaction error: ', error)
+    })
+    .then(async (receipt) => {
+      await saveTxToHistory(
+        safeInstance,
+        tx.recipient,
+        tx.value,
+        tx.data,
+        CALL,
+        nonce,
+        receipt.transactionHash,
+        from,
+        shouldExecute ? TX_TYPE_EXECUTION : TX_TYPE_CONFIRMATION,
+      )
+
+      return receipt.transactionHash
+    })
+
+  openSnackbar(shouldExecute ? 'Transaction has been confirmed' : 'Approval transaction has been confirmed', 'success')
 
   dispatch(fetchTransactions(safeAddress))
 

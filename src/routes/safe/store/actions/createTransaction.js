@@ -6,11 +6,14 @@ import fetchTransactions from '~/routes/safe/store/actions/fetchTransactions'
 import { type GlobalState } from '~/store'
 import { getGnosisSafeInstanceAt } from '~/logic/contracts/safeContracts'
 import {
-  approveTransaction,
-  executeTransaction,
+  getApprovalTransaction,
+  getExecutionTransaction,
   CALL,
   type Notifications,
   DEFAULT_NOTIFICATIONS,
+  TX_TYPE_CONFIRMATION,
+  TX_TYPE_EXECUTION,
+  saveTxToHistory,
 } from '~/logic/safe/transactions'
 
 const createTransaction = (
@@ -31,18 +34,54 @@ const createTransaction = (
   const isExecution = threshold.toNumber() === 1 || shouldExecute
 
   let txHash
+  let tx
   try {
     if (isExecution) {
-      openSnackbar(notifications.BEFORE_EXECUTION_OR_CREATION, 'success')
-      txHash = await executeTransaction(safeInstance, to, valueInWei, txData, CALL, nonce, from)
-      openSnackbar(notifications.AFTER_EXECUTION, 'success')
+      tx = await getExecutionTransaction(safeInstance, to, valueInWei, txData, CALL, nonce, from)
     } else {
-      openSnackbar(notifications.BEFORE_EXECUTION_OR_CREATION, 'success')
-      txHash = await approveTransaction(safeInstance, to, valueInWei, txData, CALL, nonce, from)
-      openSnackbar(notifications.CREATED_MORE_CONFIRMATIONS_NEEDED, 'success')
+      tx = await getApprovalTransaction(safeInstance, to, valueInWei, txData, CALL, nonce, from)
     }
+
+    const sendParams = {
+      from,
+    }
+
+    // if not set owner management tests will fail on ganache
+    if (process.env.NODE_ENV === 'test') {
+      sendParams.gas = '7000000'
+    }
+
+    await tx
+      .send(sendParams)
+      .once('transactionHash', (hash) => {
+        txHash = hash
+        openSnackbar(notifications.BEFORE_EXECUTION_OR_CREATION, 'success')
+      })
+      .on('error', (error) => {
+        console.error('Tx error: ', error)
+      })
+      .then(async (receipt) => {
+        await saveTxToHistory(
+          safeInstance,
+          to,
+          valueInWei,
+          txData,
+          CALL,
+          nonce,
+          receipt.transactionHash,
+          from,
+          isExecution ? TX_TYPE_EXECUTION : TX_TYPE_CONFIRMATION,
+        )
+
+        return receipt.transactionHash
+      })
+
+    openSnackbar(
+      isExecution ? notifications.AFTER_EXECUTION : notifications.CREATED_MORE_CONFIRMATIONS_NEEDED,
+      'success',
+    )
   } catch (err) {
-    openSnackbar(notifications.ERROR, '')
+    openSnackbar(notifications.ERROR, 'error')
     console.error(`Error while creating transaction: ${err}`)
   }
 

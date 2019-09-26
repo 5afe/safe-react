@@ -23,6 +23,11 @@ export const getTxData = (tx: Transaction): DecodedTxData => {
   if (tx.isTokenTransfer && tx.decodedParams) {
     txData.recipient = tx.decodedParams.recipient
     txData.value = fromWei(toBN(tx.decodedParams.value), 'ether')
+  } else if (tx.customTx) {
+    txData.recipient = tx.recipient
+    txData.value = fromWei(toBN(tx.value), 'ether')
+    txData.data = tx.data
+    txData.customTx = true
   } else if (Number(tx.value) > 0) {
     txData.recipient = tx.recipient
     txData.value = fromWei(toBN(tx.value), 'ether')
@@ -49,9 +54,6 @@ export const getTxData = (tx: Transaction): DecodedTxData => {
     }
   } else if (tx.cancellationTx) {
     txData.cancellationTx = true
-  } else if (tx.customTx) {
-    txData.data = tx.data
-    txData.customTx = true
   }
 
   return txData
