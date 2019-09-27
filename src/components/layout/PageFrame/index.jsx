@@ -67,9 +67,9 @@ const PageFrame = ({ children, classes }: Props) => (
         variantInfo: classes.info,
       }}
       iconVariant={{
-        success: <Img src={CheckLogo} />,
-        error: <Img src={ErrorLogo} />,
-        warning: <Img src={AlertLogo} />,
+        success: <Img src={CheckLogo} alt="Success" />,
+        error: <Img src={ErrorLogo} alt="Error" />,
+        warning: <Img src={AlertLogo} alt="Warning" />,
         info: '',
       }}
     >
