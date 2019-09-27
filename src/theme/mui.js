@@ -245,6 +245,10 @@ export default createMuiTheme({
         width: '60px',
         padding: `0 ${md} 0 0`,
       },
+      select: {
+        paddingRight: 30,
+        minWidth: '20px',
+      },
       actions: {
         order: 4,
         color: disabled,
