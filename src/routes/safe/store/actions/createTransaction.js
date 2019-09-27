@@ -6,9 +6,17 @@ import fetchTransactions from '~/routes/safe/store/actions/fetchTransactions'
 import { type GlobalState } from '~/store'
 import { getGnosisSafeInstanceAt } from '~/logic/contracts/safeContracts'
 import {
-  type NotifiedTransaction, approveTransaction, executeTransaction, CALL,
+  getApprovalTransaction,
+  getExecutionTransaction,
+  CALL,
+  type NotifiedTransaction,
+  TX_TYPE_CONFIRMATION,
+  TX_TYPE_EXECUTION,
+  saveTxToHistory,
 } from '~/logic/safe/transactions'
-import { getNofiticationsFromTxType } from '~/logic/notifications'
+import { getNofiticationsFromTxType, type NotificationsQueue } from '~/logic/notifications'
+import { getErrorMessage } from '~/test/utils/ethereumErrors'
+import { ZERO_ADDRESS } from '~/logic/wallets/ethAddresses'
 
 const createTransaction = (
   safeAddress: string,
@@ -28,39 +36,78 @@ const createTransaction = (
   const nonce = (await safeInstance.nonce()).toString()
   const isExecution = threshold.toNumber() === 1 || shouldExecute
 
-  const notificationsQueue = getNofiticationsFromTxType(notifiedTransaction)
+  // https://gnosis-safe.readthedocs.io/en/latest/contracts/signatures.html#pre-validated-signatures
+  const sigs = `0x000000000000000000000000${from.replace(
+    '0x',
+    '',
+  )}000000000000000000000000000000000000000000000000000000000000000001`
+
+  const notificationsQueue: NotificationsQueue = getNofiticationsFromTxType(notifiedTransaction)
+  const beforeExecutionKey = enqueueSnackbar(
+    notificationsQueue.beforeExecution.message,
+    notificationsQueue.beforeExecution.options,
+  )
+  let pendingExecutionKey
 
   let txHash
+  let tx
   try {
     if (isExecution) {
-      txHash = await executeTransaction(
-        notificationsQueue,
-        enqueueSnackbar,
-        closeSnackbar,
-        safeInstance,
-        to,
-        valueInWei,
-        txData,
-        CALL,
-        nonce,
-        from,
-      )
+      tx = await getExecutionTransaction(safeInstance, to, valueInWei, txData, CALL, nonce, from, sigs)
     } else {
-      txHash = await approveTransaction(
-        notificationsQueue,
-        enqueueSnackbar,
-        closeSnackbar,
-        safeInstance,
-        to,
-        valueInWei,
-        txData,
-        CALL,
-        nonce,
-        from,
-      )
+      tx = await getApprovalTransaction(safeInstance, to, valueInWei, txData, CALL, nonce, from)
     }
+
+    const sendParams = { from }
+    // if not set owner management tests will fail on ganache
+    if (process.env.NODE_ENV === 'test') {
+      sendParams.gas = '7000000'
+    }
+
+    await tx
+      .send(sendParams)
+      .once('transactionHash', (hash) => {
+        txHash = hash
+        closeSnackbar(beforeExecutionKey)
+        pendingExecutionKey = enqueueSnackbar(
+          (shouldExecute)
+            ? notificationsQueue.pendingExecution.single.message
+            : notificationsQueue.pendingExecution.multiple.message,
+          notificationsQueue.pendingExecution.single.options,
+        )
+      })
+      .on('error', (error) => {
+        console.error('Tx error: ', error)
+      })
+      .then(async (receipt) => {
+        closeSnackbar(pendingExecutionKey)
+        await saveTxToHistory(
+          safeInstance,
+          to,
+          valueInWei,
+          txData,
+          CALL,
+          nonce,
+          receipt.transactionHash,
+          from,
+          isExecution ? TX_TYPE_EXECUTION : TX_TYPE_CONFIRMATION,
+        )
+        if (isExecution) {
+          enqueueSnackbar(notificationsQueue.afterExecution.message, notificationsQueue.afterExecution.options)
+        }
+
+        return receipt.transactionHash
+      })
   } catch (err) {
-    console.error(`Error while creating transaction: ${err}`)
+    closeSnackbar(beforeExecutionKey)
+    closeSnackbar(pendingExecutionKey)
+    enqueueSnackbar(notificationsQueue.afterExecutionError.message, notificationsQueue.afterExecutionError.options)
+
+    const executeDataUsedSignatures = safeInstance.contract.methods
+      .execTransaction(to, valueInWei, txData, CALL, 0, 0, 0, ZERO_ADDRESS, ZERO_ADDRESS, sigs)
+      .encodeABI()
+    const errMsg = await getErrorMessage(safeInstance.address, 0, executeDataUsedSignatures, from)
+    console.error(`Error executing the TX: ${errMsg}`)
   }
 
   dispatch(fetchTransactions(safeAddress))
