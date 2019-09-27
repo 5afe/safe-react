@@ -123,8 +123,7 @@ const ReplaceOwner = ({
         replaceSafeOwner,
       )
     } catch (error) {
-      // eslint-disable-next-line
-      console.log('Error while removing an owner ' + error)
+      console.error('Error while removing an owner', error)
     }
   }
 

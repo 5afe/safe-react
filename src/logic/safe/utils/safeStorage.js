@@ -22,8 +22,7 @@ export const saveSafes = async (safes: Object) => {
   try {
     await saveToStorage(SAFES_KEY, safes)
   } catch (err) {
-    // eslint-disable-next-line
-    console.log('Error storing safe info in localstorage')
+    console.error('Error storing safe info in localstorage', err)
   }
 }
 
@@ -32,8 +31,7 @@ export const setOwners = async (safeAddress: string, owners: List<Owner>) => {
     const ownersAsMap = Map(owners.map((owner: Owner) => [owner.address.toLowerCase(), owner.name]))
     await saveToStorage(`${OWNERS_KEY}-${safeAddress}`, ownersAsMap)
   } catch (err) {
-    // eslint-disable-next-line
-    console.log('Error storing owners in localstorage')
+    console.error('Error storing owners in localstorage', err)
   }
 }
 

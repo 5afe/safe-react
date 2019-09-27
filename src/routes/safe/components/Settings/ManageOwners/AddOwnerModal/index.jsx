@@ -117,8 +117,7 @@ const AddOwner = ({
     try {
       sendAddOwner(values, safeAddress, owners, enqueueSnackbar, closeSnackbar, createTransaction, addSafeOwner)
     } catch (error) {
-      // eslint-disable-next-line
-      console.log('Error while removing an owner ' + error)
+      console.error('Error while removing an owner', error)
     }
   }
 
