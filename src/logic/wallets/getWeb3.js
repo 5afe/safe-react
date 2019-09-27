@@ -79,7 +79,7 @@ export const getProviderInfo: Function = async (): Promise<ProviderProps> => {
     try {
       const accounts = await web3Provider.enable()
       if (!accounts) {
-        console.error('Empty web3 provider')
+        throw new Error()
       }
     } catch (error) {
       console.error('Error when enabling web3 provider', error)
