@@ -143,6 +143,7 @@ class Tokens extends React.Component<Props, State> {
               size="small"
               color="primary"
               className={classes.add}
+              classes={{ label: classes.addBtnLabel }}
               onClick={switchToAddCustomTokenScreen}
               testId={ADD_CUSTOM_TOKEN_BUTTON_TEST_ID}
             >
@@ -161,7 +162,7 @@ class Tokens extends React.Component<Props, State> {
             const isActive = activeTokensAddresses.has(token.address)
 
             return (
-              <ListItem key={token.address} className={classes.token}>
+              <ListItem key={token.address} className={classes.token} classes={{ root: classes.tokenRoot }}>
                 <ListItemIcon className={classes.tokenIcon}>
                   <Img src={token.logoUri} height={28} alt={token.name} onError={setImageToPlaceholder} />
                 </ListItemIcon>

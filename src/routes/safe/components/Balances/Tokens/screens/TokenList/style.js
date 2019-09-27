@@ -20,6 +20,9 @@ export const styles = () => ({
     paddingRight: md,
     paddingLeft: md,
   },
+  addBtnLabel: {
+    fontSize: mediumFontSize,
+  },
   actions: {
     height: '50px',
   },
@@ -32,6 +35,10 @@ export const styles = () => ({
   token: {
     minHeight: '50px',
     borderBottom: `1px solid ${border}`,
+  },
+  tokenRoot: {
+    paddingTop: 0,
+    paddingBottom: 0,
   },
   searchInput: {
     backgroundColor: 'transparent',
