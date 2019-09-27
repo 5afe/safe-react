@@ -6,7 +6,6 @@ import fetchTransactions from '~/routes/safe/store/actions/fetchTransactions'
 import { type GlobalState } from '~/store'
 import { getGnosisSafeInstanceAt } from '~/logic/contracts/safeContracts'
 import {
-  type NotificationsQueue,
   getApprovalTransaction,
   getExecutionTransaction,
   CALL,
@@ -14,7 +13,12 @@ import {
   TX_TYPE_EXECUTION,
   TX_TYPE_CONFIRMATION,
 } from '~/logic/safe/transactions'
-import { getNofiticationsFromTxType } from '~/logic/notifications'
+import {
+  type Notification,
+  type NotificationsQueue,
+  getNofiticationsFromTxType,
+  showSnackbar,
+} from '~/logic/notifications'
 import { getErrorMessage } from '~/test/utils/ethereumErrors'
 
 // https://gnosis-safe.readthedocs.io/en/latest/contracts/signatures.html#pre-validated-signatures
@@ -65,10 +69,7 @@ const processTransaction = (
   }
 
   const notificationsQueue: NotificationsQueue = getNofiticationsFromTxType(notifiedTransaction)
-  const beforeExecutionKey = enqueueSnackbar(
-    notificationsQueue.beforeExecution.message,
-    notificationsQueue.beforeExecution.options,
-  )
+  const beforeExecutionKey = showSnackbar(notificationsQueue.beforeExecution, enqueueSnackbar, closeSnackbar)
   let pendingExecutionKey
 
   let txHash
@@ -100,10 +101,11 @@ const processTransaction = (
       .once('transactionHash', (hash) => {
         txHash = hash
         closeSnackbar(beforeExecutionKey)
-        pendingExecutionKey = enqueueSnackbar(
-          notificationsQueue.pendingExecution.single.message,
-          notificationsQueue.pendingExecution.single.options,
-        )
+        const notification: Notification = {
+          message: notificationsQueue.pendingExecution.single.message,
+          options: notificationsQueue.pendingExecution.single.options,
+        }
+        pendingExecutionKey = showSnackbar(notification, enqueueSnackbar, closeSnackbar)
       })
       .on('error', (error) => {
         console.error('Processing transaction error: ', error)
@@ -121,14 +123,14 @@ const processTransaction = (
           from,
           shouldExecute ? TX_TYPE_EXECUTION : TX_TYPE_CONFIRMATION,
         )
-        enqueueSnackbar(notificationsQueue.afterExecution.message, notificationsQueue.afterExecution.options)
+        showSnackbar(notificationsQueue.afterExecution, enqueueSnackbar, closeSnackbar)
 
         return receipt.transactionHash
       })
   } catch (err) {
     closeSnackbar(beforeExecutionKey)
     closeSnackbar(pendingExecutionKey)
-    enqueueSnackbar(notificationsQueue.afterExecutionError.message, notificationsQueue.afterExecutionError.options)
+    showSnackbar(notificationsQueue.afterExecutionError, enqueueSnackbar, closeSnackbar)
 
     const executeData = safeInstance.contract.methods.approveHash(txHash).encodeABI()
     const errMsg = await getErrorMessage(safeInstance.address, 0, executeData, from)

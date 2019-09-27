@@ -14,7 +14,12 @@ import {
   TX_TYPE_EXECUTION,
   saveTxToHistory,
 } from '~/logic/safe/transactions'
-import { getNofiticationsFromTxType, type NotificationsQueue } from '~/logic/notifications'
+import {
+  type Notification,
+  type NotificationsQueue,
+  getNofiticationsFromTxType,
+  showSnackbar,
+} from '~/logic/notifications'
 import { getErrorMessage } from '~/test/utils/ethereumErrors'
 import { ZERO_ADDRESS } from '~/logic/wallets/ethAddresses'
 
@@ -43,10 +48,7 @@ const createTransaction = (
   )}000000000000000000000000000000000000000000000000000000000000000001`
 
   const notificationsQueue: NotificationsQueue = getNofiticationsFromTxType(notifiedTransaction)
-  const beforeExecutionKey = enqueueSnackbar(
-    notificationsQueue.beforeExecution.message,
-    notificationsQueue.beforeExecution.options,
-  )
+  const beforeExecutionKey = showSnackbar(notificationsQueue.beforeExecution, enqueueSnackbar, closeSnackbar)
   let pendingExecutionKey
 
   let txHash
@@ -69,12 +71,13 @@ const createTransaction = (
       .once('transactionHash', (hash) => {
         txHash = hash
         closeSnackbar(beforeExecutionKey)
-        pendingExecutionKey = enqueueSnackbar(
-          (shouldExecute)
+        const pendingExecutionNotification: Notification = {
+          message: isExecution
             ? notificationsQueue.pendingExecution.single.message
             : notificationsQueue.pendingExecution.multiple.message,
-          notificationsQueue.pendingExecution.single.options,
-        )
+          options: notificationsQueue.pendingExecution.single.options,
+        }
+        pendingExecutionKey = showSnackbar(pendingExecutionNotification, enqueueSnackbar, closeSnackbar)
       })
       .on('error', (error) => {
         console.error('Tx error: ', error)
@@ -93,7 +96,7 @@ const createTransaction = (
           isExecution ? TX_TYPE_EXECUTION : TX_TYPE_CONFIRMATION,
         )
         if (isExecution) {
-          enqueueSnackbar(notificationsQueue.afterExecution.message, notificationsQueue.afterExecution.options)
+          showSnackbar(notificationsQueue.afterExecution, enqueueSnackbar, closeSnackbar)
         }
 
         return receipt.transactionHash
@@ -101,7 +104,7 @@ const createTransaction = (
   } catch (err) {
     closeSnackbar(beforeExecutionKey)
     closeSnackbar(pendingExecutionKey)
-    enqueueSnackbar(notificationsQueue.afterExecutionError.message, notificationsQueue.afterExecutionError.options)
+    showSnackbar(notificationsQueue.afterExecutionError, enqueueSnackbar, closeSnackbar)
 
     const executeDataUsedSignatures = safeInstance.contract.methods
       .execTransaction(to, valueInWei, txData, CALL, 0, 0, 0, ZERO_ADDRESS, ZERO_ADDRESS, sigs)

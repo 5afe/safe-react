@@ -5,7 +5,7 @@ import { withSnackbar } from 'notistack'
 import { logComponentStack, type Info } from '~/utils/logBoundaries'
 import { getProviderInfo } from '~/logic/wallets/getWeb3'
 import type { ProviderProps } from '~/logic/wallets/store/model/provider'
-import { NOTIFICATIONS } from '~/logic/notifications'
+import { NOTIFICATIONS, showSnackbar } from '~/logic/notifications'
 import ProviderAccesible from './component/ProviderInfo/ProviderAccesible'
 import UserDetails from './component/ProviderDetails/UserDetails'
 import ProviderDisconnected from './component/ProviderInfo/ProviderDisconnected'
@@ -39,20 +39,20 @@ class HeaderComponent extends React.PureComponent<Props, State> {
   }
 
   componentDidCatch(error: Error, info: Info) {
-    const { enqueueSnackbar } = this.props
+    const { enqueueSnackbar, closeSnackbar } = this.props
 
     this.setState({ hasError: true })
-    enqueueSnackbar(NOTIFICATIONS.CONNECT_WALLET_ERROR_MSG.message, NOTIFICATIONS.CONNECT_WALLET_ERROR_MSG.options)
+    showSnackbar(NOTIFICATIONS.CONNECT_WALLET_ERROR_MSG, enqueueSnackbar, closeSnackbar)
 
     logComponentStack(error, info)
   }
 
   onDisconnect = () => {
-    const { removeProvider, enqueueSnackbar } = this.props
+    const { removeProvider, enqueueSnackbar, closeSnackbar } = this.props
 
     clearInterval(this.providerListener)
 
-    removeProvider(enqueueSnackbar)
+    removeProvider(enqueueSnackbar, closeSnackbar)
   }
 
   onConnect = async () => {

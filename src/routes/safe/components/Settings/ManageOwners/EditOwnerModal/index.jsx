@@ -16,7 +16,7 @@ import TextField from '~/components/forms/TextField'
 import Paragraph from '~/components/layout/Paragraph'
 import Identicon from '~/components/Identicon'
 import { composeValidators, required, minMaxLength } from '~/components/forms/validator'
-import { getNofiticationsFromTxType } from '~/logic/notifications'
+import { getNofiticationsFromTxType, showSnackbar } from '~/logic/notifications'
 import { NOTIFIED_TRANSACTIONS } from '~/logic/safe/transactions'
 import { getEtherScanLink } from '~/logic/wallets/getWeb3'
 import Modal from '~/components/Modal'
@@ -41,6 +41,7 @@ type Props = {
   selectedOwnerName: string,
   editSafeOwner: Function,
   enqueueSnackbar: Function,
+  closeSnackbar: Function,
 }
 
 const EditOwnerComponent = ({
@@ -53,12 +54,13 @@ const EditOwnerComponent = ({
   editSafeOwner,
   network,
   enqueueSnackbar,
+  closeSnackbar,
 }: Props) => {
   const handleSubmit = (values) => {
     editSafeOwner({ safeAddress, ownerAddress, ownerName: values.ownerName })
 
     const notification = getNofiticationsFromTxType(NOTIFIED_TRANSACTIONS.OWNER_NAME_CHANGE_TX)
-    enqueueSnackbar(notification.afterExecution.message, notification.afterExecution.options)
+    showSnackbar(notification.afterExecution, enqueueSnackbar, closeSnackbar)
 
     onClose()
   }

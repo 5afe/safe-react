@@ -1,4 +1,7 @@
 // @flow
+import * as React from 'react'
+import { IconButton } from '@material-ui/core'
+import { Close as IconClose } from '@material-ui/icons'
 import { NOTIFIED_TRANSACTIONS } from '~/logic/safe/transactions'
 import { type Notification, NOTIFICATIONS } from './notificationTypes'
 
@@ -141,3 +144,16 @@ export const getNofiticationsFromTxType = (txType: string) => {
 
   return notificationsQueue
 }
+
+export const showSnackbar = (
+  notification: Notification,
+  enqueueSnackbar: Function,
+  closeSnackbar: Function,
+) => enqueueSnackbar(notification.message, {
+  ...notification.options,
+  action: (key) => (
+    <IconButton onClick={() => closeSnackbar(key)}>
+      <IconClose />
+    </IconButton>
+  ),
+})

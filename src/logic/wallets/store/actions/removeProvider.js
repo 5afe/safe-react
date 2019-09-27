@@ -1,10 +1,10 @@
 // @flow
 import type { Dispatch as ReduxDispatch } from 'redux'
 import { makeProvider, type ProviderProps, type Provider } from '~/logic/wallets/store/model/provider'
-import { NOTIFICATIONS } from '~/logic/notifications'
+import { NOTIFICATIONS, showSnackbar } from '~/logic/notifications'
 import addProvider from './addProvider'
 
-export default (enqueueSnackbar: Function) => async (dispatch: ReduxDispatch<*>) => {
+export default (enqueueSnackbar: Function, closeSnackbar: Function) => async (dispatch: ReduxDispatch<*>) => {
   const providerProps: ProviderProps = {
     name: '',
     available: false,
@@ -14,7 +14,7 @@ export default (enqueueSnackbar: Function) => async (dispatch: ReduxDispatch<*>)
   }
 
   const provider: Provider = makeProvider(providerProps)
-  enqueueSnackbar(NOTIFICATIONS.WALLET_DISCONNECTED_MSG.message, NOTIFICATIONS.WALLET_DISCONNECTED_MSG.options)
+  showSnackbar(NOTIFICATIONS.WALLET_DISCONNECTED_MSG, enqueueSnackbar, closeSnackbar)
 
   dispatch(addProvider(provider))
 }
