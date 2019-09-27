@@ -21,6 +21,7 @@ type Props<K> = {
   children: Function,
   size: number,
   defaultFixed: boolean,
+  defaultRowsPerPage: number,
   defaultOrder: 'desc' | 'asc',
   noBorder: boolean,
   disablePagination: boolean,
@@ -31,7 +32,7 @@ type State = {
   order?: Order,
   orderBy?: string,
   orderProp: boolean,
-  rowsPerPage: number,
+  rowsPerPage?: number,
   fixed?: boolean,
 }
 
@@ -83,7 +84,7 @@ class GnoTable<K> extends React.Component<Props<K>, State> {
       orderBy: undefined,
       fixed: undefined,
       orderProp: false,
-      rowsPerPage: 5,
+      rowsPerPage: undefined,
     }
   }
 
@@ -147,6 +148,7 @@ class GnoTable<K> extends React.Component<Props<K>, State> {
       defaultOrderBy,
       defaultOrder,
       defaultFixed,
+      defaultRowsPerPage,
       noBorder,
     } = this.props
     const {
@@ -154,6 +156,7 @@ class GnoTable<K> extends React.Component<Props<K>, State> {
     } = this.state
     const orderByParam = orderBy || defaultOrderBy
     const orderParam = order || defaultOrder
+    const displayRows = rowsPerPage || defaultRowsPerPage
     const fixedParam = typeof fixed !== 'undefined' ? fixed : !!defaultFixed
 
     const paginationClasses = {
@@ -165,10 +168,10 @@ class GnoTable<K> extends React.Component<Props<K>, State> {
     let sortedData = stableSort(data, getSorting(orderParam, orderByParam, orderProp), fixedParam)
 
     if (!disablePagination) {
-      sortedData = sortedData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+      sortedData = sortedData.slice(page * displayRows, page * displayRows + displayRows)
     }
 
-    const emptyRows = rowsPerPage - Math.min(rowsPerPage, data.length - page * rowsPerPage)
+    const emptyRows = displayRows - Math.min(displayRows, data.length - page * displayRows)
     const isEmpty = size === 0
 
     return (
@@ -191,7 +194,7 @@ class GnoTable<K> extends React.Component<Props<K>, State> {
           <TablePagination
             component="div"
             count={size}
-            rowsPerPage={rowsPerPage}
+            rowsPerPage={displayRows}
             rowsPerPageOptions={[5, 10, 25, 50, 100]}
             page={page}
             backIconButtonProps={backProps}
@@ -209,6 +212,7 @@ class GnoTable<K> extends React.Component<Props<K>, State> {
 GnoTable.defaultProps = {
   defaultOrder: 'asc',
   disablePagination: false,
+  defaultRowsPerPage: 5,
 }
 
 export default withStyles(styles)(GnoTable)

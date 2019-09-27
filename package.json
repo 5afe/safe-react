@@ -93,7 +93,7 @@
     "@storybook/addon-knobs": "5.2.1",
     "@storybook/addon-links": "5.2.1",
     "@storybook/react": "5.2.1",
-    "@testing-library/react": "9.1.4",
+    "@testing-library/react": "9.2.0",
     "autoprefixer": "9.6.1",
     "babel-core": "^7.0.0-bridge.0",
     "babel-eslint": "10.0.3",
@@ -132,15 +132,15 @@
     "storybook-host": "5.1.0",
     "storybook-router": "^0.3.3",
     "style-loader": "1.0.0",
-    "truffle": "5.0.37",
+    "truffle": "5.0.38",
     "truffle-contract": "4.0.31",
     "truffle-solidity-loader": "0.1.32",
     "uglifyjs-webpack-plugin": "2.2.0",
     "url-loader": "^2.1.0",
     "webpack": "4.41.0",
-    "webpack-bundle-analyzer": "3.5.1",
+    "webpack-bundle-analyzer": "3.5.2",
     "webpack-cli": "3.3.9",
     "webpack-dev-server": "3.8.1",
-    "webpack-manifest-plugin": "2.1.1"
+    "webpack-manifest-plugin": "2.1.2"
   }
 }
