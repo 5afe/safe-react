@@ -146,7 +146,7 @@ class Tokens extends React.Component<Props, State> {
               onClick={switchToAddCustomTokenScreen}
               testId={ADD_CUSTOM_TOKEN_BUTTON_TEST_ID}
             >
-              + ADD CUSTOM TOKEN
+              + Add custom token
             </Button>
           </Row>
           <Hairline />
