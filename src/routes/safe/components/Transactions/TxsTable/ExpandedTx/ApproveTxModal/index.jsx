@@ -75,6 +75,7 @@ const ApproveTxModal = ({
       NOTIFIED_TRANSACTIONS.CONFIRMATION_TX,
       enqueueSnackbar,
       closeSnackbar,
+      approveAndExecute,
     )
     onClose()
   }
