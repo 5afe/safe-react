@@ -102,8 +102,8 @@ const processTransaction = (
         txHash = hash
         closeSnackbar(beforeExecutionKey)
         const notification: Notification = {
-          message: notificationsQueue.pendingExecution.single.message,
-          options: notificationsQueue.pendingExecution.single.options,
+          message: notificationsQueue.pendingExecution.noMoreConfirmationsNeeded.message,
+          options: notificationsQueue.pendingExecution.noMoreConfirmationsNeeded.options,
         }
         pendingExecutionKey = showSnackbar(notification, enqueueSnackbar, closeSnackbar)
       })

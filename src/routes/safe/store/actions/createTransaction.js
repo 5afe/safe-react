@@ -71,11 +71,12 @@ const createTransaction = (
       .once('transactionHash', (hash) => {
         txHash = hash
         closeSnackbar(beforeExecutionKey)
-        const pendingExecutionNotification: Notification = {
-          message: isExecution
-            ? notificationsQueue.pendingExecution.single.message
-            : notificationsQueue.pendingExecution.multiple.message,
-          options: notificationsQueue.pendingExecution.single.options,
+        const pendingExecutionNotification: Notification = isExecution ? {
+          message: notificationsQueue.pendingExecution.noMoreConfirmationsNeeded.message,
+          options: notificationsQueue.pendingExecution.noMoreConfirmationsNeeded.options,
+        } : {
+          message: notificationsQueue.pendingExecution.moreConfirmationsNeeded.message,
+          options: notificationsQueue.pendingExecution.moreConfirmationsNeeded.options,
         }
         pendingExecutionKey = showSnackbar(pendingExecutionNotification, enqueueSnackbar, closeSnackbar)
       })

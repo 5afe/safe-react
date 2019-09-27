@@ -8,8 +8,8 @@ import { type Notification, NOTIFICATIONS } from './notificationTypes'
 type NotificationsQueue = {
   beforeExecution: Notification,
   pendingExecution: {
-    single: Notification,
-    multiple: Notification,
+    noMoreConfirmationsNeeded: Notification,
+    moreConfirmationsNeeded: Notification,
   },
   afterExecution: Notification,
   afterExecutionError: Notification,
@@ -19,8 +19,8 @@ type NotificationsQueue = {
 const standardTxNotificationsQueue: NotificationsQueue = {
   beforeExecution: NOTIFICATIONS.SIGN_TX_MSG,
   pendingExecution: {
-    single: NOTIFICATIONS.TX_PENDING_MSG,
-    multiple: NOTIFICATIONS.TX_PENDING_MORE_CONFIRMATIONS_MSG,
+    noMoreConfirmationsNeeded: NOTIFICATIONS.TX_PENDING_MSG,
+    moreConfirmationsNeeded: NOTIFICATIONS.TX_PENDING_MORE_CONFIRMATIONS_MSG,
   },
   afterRejection: NOTIFICATIONS.TX_REJECTED_MSG,
   afterExecution: NOTIFICATIONS.TX_EXECUTED_MSG,
@@ -30,8 +30,8 @@ const standardTxNotificationsQueue: NotificationsQueue = {
 const confirmationTxNotificationsQueue: NotificationsQueue = {
   beforeExecution: NOTIFICATIONS.SIGN_TX_MSG,
   pendingExecution: {
-    single: NOTIFICATIONS.TX_CONFIRMATION_PENDING_MSG,
-    multiple: null,
+    noMoreConfirmationsNeeded: NOTIFICATIONS.TX_CONFIRMATION_PENDING_MSG,
+    moreConfirmationsNeeded: null,
   },
   afterRejection: NOTIFICATIONS.TX_REJECTED_MSG,
   afterExecution: NOTIFICATIONS.TX_CONFIRMATION_EXECUTED_MSG,
@@ -41,8 +41,8 @@ const confirmationTxNotificationsQueue: NotificationsQueue = {
 const cancellationTxNotificationsQueue: NotificationsQueue = {
   beforeExecution: NOTIFICATIONS.SIGN_TX_MSG,
   pendingExecution: {
-    single: NOTIFICATIONS.TX_PENDING_MSG,
-    multiple: NOTIFICATIONS.TX_PENDING_MORE_CONFIRMATIONS_MSG,
+    noMoreConfirmationsNeeded: NOTIFICATIONS.TX_PENDING_MSG,
+    moreConfirmationsNeeded: NOTIFICATIONS.TX_PENDING_MORE_CONFIRMATIONS_MSG,
   },
   afterRejection: NOTIFICATIONS.TX_REJECTED_MSG,
   afterExecution: NOTIFICATIONS.TX_EXECUTED_MSG,
@@ -52,8 +52,8 @@ const cancellationTxNotificationsQueue: NotificationsQueue = {
 const ownerChangeTxNotificationsQueue: NotificationsQueue = {
   beforeExecution: NOTIFICATIONS.SIGN_OWNER_CHANGE_MSG,
   pendingExecution: {
-    single: NOTIFICATIONS.ONWER_CHANGE_PENDING_MSG,
-    multiple: NOTIFICATIONS.ONWER_CHANGE_PENDING_MORE_CONFIRMATIONS_MSG,
+    noMoreConfirmationsNeeded: NOTIFICATIONS.ONWER_CHANGE_PENDING_MSG,
+    moreConfirmationsNeeded: NOTIFICATIONS.ONWER_CHANGE_PENDING_MORE_CONFIRMATIONS_MSG,
   },
   afterRejection: NOTIFICATIONS.ONWER_CHANGE_REJECTED_MSG,
   afterExecution: NOTIFICATIONS.OWNER_CHANGE_EXECUTED_MSG,
@@ -63,8 +63,8 @@ const ownerChangeTxNotificationsQueue: NotificationsQueue = {
 const safeNameChangeNotificationsQueue: NotificationsQueue = {
   beforeExecution: null,
   pendingExecution: {
-    single: null,
-    multiple: null,
+    noMoreConfirmationsNeeded: null,
+    moreConfirmationsNeeded: null,
   },
   afterRejection: null,
   afterExecution: NOTIFICATIONS.SAFE_NAME_CHANGE_EXECUTED_MSG,
@@ -74,8 +74,8 @@ const safeNameChangeNotificationsQueue: NotificationsQueue = {
 const ownerNameChangeNotificationsQueue: NotificationsQueue = {
   beforeExecution: null,
   pendingExecution: {
-    single: null,
-    multiple: null,
+    noMoreConfirmationsNeeded: null,
+    moreConfirmationsNeeded: null,
   },
   afterRejection: null,
   afterExecution: NOTIFICATIONS.OWNER_NAME_CHANGE_EXECUTED_MSG,
@@ -85,8 +85,8 @@ const ownerNameChangeNotificationsQueue: NotificationsQueue = {
 const thresholdChangeTxNotificationsQueue: NotificationsQueue = {
   beforeExecution: NOTIFICATIONS.SIGN_THRESHOLD_CHANGE_MSG,
   pendingExecution: {
-    single: NOTIFICATIONS.THRESHOLD_CHANGE_PENDING_MSG,
-    multiple: NOTIFICATIONS.THRESHOLD_CHANGE_PENDING_MORE_CONFIRMATIONS_MSG,
+    noMoreConfirmationsNeeded: NOTIFICATIONS.THRESHOLD_CHANGE_PENDING_MSG,
+    moreConfirmationsNeeded: NOTIFICATIONS.THRESHOLD_CHANGE_PENDING_MORE_CONFIRMATIONS_MSG,
   },
   afterRejection: NOTIFICATIONS.THRESHOLD_CHANGE_REJECTED_MSG,
   afterExecution: NOTIFICATIONS.THRESHOLD_CHANGE_EXECUTED_MSG,
@@ -96,8 +96,8 @@ const thresholdChangeTxNotificationsQueue: NotificationsQueue = {
 const defaultNotificationsQueue: NotificationsQueue = {
   beforeExecution: NOTIFICATIONS.SIGN_TX_MSG,
   pendingExecution: {
-    single: NOTIFICATIONS.TX_PENDING_MSG,
-    multiple: NOTIFICATIONS.TX_PENDING_MORE_CONFIRMATIONS_MSG,
+    noMoreConfirmationsNeeded: NOTIFICATIONS.TX_PENDING_MSG,
+    moreConfirmationsNeeded: NOTIFICATIONS.TX_PENDING_MORE_CONFIRMATIONS_MSG,
   },
   afterRejection: NOTIFICATIONS.TX_REJECTED_MSG,
   afterExecution: NOTIFICATIONS.TX_EXECUTED_MSG,
