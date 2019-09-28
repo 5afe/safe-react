@@ -45,7 +45,7 @@
     "immortal-db": "^1.0.2",
     "immutable": "^4.0.0-rc.9",
     "material-ui-search-bar": "^1.0.0-beta.13",
-    "notistack": "^0.9.2",
+    "notistack": "https://github.com/gnosis/notistack.git#v0.9.4",
     "optimize-css-assets-webpack-plugin": "5.0.3",
     "qrcode.react": "^0.9.3",
     "react": "16.9.0",

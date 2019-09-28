@@ -12893,15 +12893,14 @@ normalize-url@^4.1.0:
   resolved "https://registry.yarnpkg.com/normalize-url/-/normalize-url-4.3.0.tgz#9c49e10fc1876aeb76dba88bf1b2b5d9fa57b2ee"
   integrity sha512-0NLtR71o4k6GLP+mr6Ty34c5GA6CMoEsncKJxvQd8NzPxaHRJNnb5gZE8R1XF4CPIS7QPHLJ74IFszwtNVAHVQ==
 
-notistack@^0.9.2:
-  version "0.9.2"
-  resolved "https://registry.yarnpkg.com/notistack/-/notistack-0.9.2.tgz#333ca7e08e85ae10867b1e8be5d82b149676aad6"
-  integrity sha512-Z2zi3ankqvwmrQvUx7SHM2X3P8llbPA/O1nM1hqn2fGuffn40Fi8isw701pdxczxA6S7huSyfOE/ZPgeTpWmrQ==
+"notistack@https://github.com/gnosis/notistack.git#v0.9.4":
+  version "0.9.4"
+  resolved "https://github.com/gnosis/notistack.git#077aa51fd066f2c3198b2f5ce773f741e21f24df"
   dependencies:
     classnames "^2.2.6"
     hoist-non-react-statics "^3.3.0"
     prop-types "^15.7.2"
-    react-is "^16.8.6"
+    react-is "^16.9.0"
 
 now-and-later@^2.0.0:
   version "2.0.1"
