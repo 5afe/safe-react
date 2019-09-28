@@ -33,7 +33,7 @@ const styles = () => ({
     boxShadow: '0 0 10px 0 rgba(33, 48, 77, 0.1)',
     minWidth: '280px',
     borderRadius: '8px',
-    marginTop: '12px',
+    marginTop: '11px',
   },
   summary: {
     borderBottom: `solid 2px ${border}`,
@@ -42,12 +42,14 @@ const styles = () => ({
     boxShadow: '0 2px 4px 0 rgba(212, 212, 211, 0.59)',
     backgroundColor: 'white',
     zIndex: 1301,
-    boxShadow: '0 2px 4px 0 rgba(212, 212, 211, 0.59)',
   },
   logo: {
     padding: `${sm} ${md}`,
     flexBasis: '95px',
     flexGrow: 0,
+  },
+  popper: {
+    zIndex: 2000,
   },
 })
 
@@ -67,7 +69,7 @@ const Layout = openHoc(({
       <Spacer />
       <Provider open={open} toggle={toggle} info={providerInfo}>
         {(providerRef) => (
-          <Popper open={open} anchorEl={providerRef.current} placement="bottom">
+          <Popper open={open} anchorEl={providerRef.current} placement="bottom" className={classes.popper}>
             {({ TransitionProps }) => (
               <Grow {...TransitionProps}>
                 <>
