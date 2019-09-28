@@ -204,16 +204,20 @@ export default createMuiTheme({
         color: secondaryText,
       },
     },
-    /* MuiSnackbar: {
-      anchorOriginTopRight: {
-        marginTop: '50px',
+    MuiSnackbar: {
+      root: {
+        width: '280px',
       },
-    }, */
+    },
     MuiSnackbarContent: {
       message: {
+        maxWidth: '260px',
         '& img': {
           marginRight: '5px',
         },
+      },
+      action: {
+        paddingLeft: 0,
       },
     },
     MuiTab: {
