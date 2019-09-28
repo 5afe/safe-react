@@ -17,7 +17,7 @@ import Paragraph from '~/components/layout/Paragraph'
 import Identicon from '~/components/Identicon'
 import { composeValidators, required, minMaxLength } from '~/components/forms/validator'
 import { getNofiticationsFromTxType, showSnackbar } from '~/logic/notifications'
-import { NOTIFIED_TRANSACTIONS } from '~/logic/safe/transactions'
+import { TX_NOTIFICATION_TYPES } from '~/logic/safe/transactions'
 import { getEtherScanLink } from '~/logic/wallets/getWeb3'
 import Modal from '~/components/Modal'
 import { styles } from './style'
@@ -59,7 +59,7 @@ const EditOwnerComponent = ({
   const handleSubmit = (values) => {
     editSafeOwner({ safeAddress, ownerAddress, ownerName: values.ownerName })
 
-    const notification = getNofiticationsFromTxType(NOTIFIED_TRANSACTIONS.OWNER_NAME_CHANGE_TX)
+    const notification = getNofiticationsFromTxType(TX_NOTIFICATION_TYPES.OWNER_NAME_CHANGE_TX)
     showSnackbar(notification.afterExecution, enqueueSnackbar, closeSnackbar)
 
     onClose()

@@ -4,7 +4,7 @@ import { List } from 'immutable'
 import { withStyles } from '@material-ui/core/styles'
 import { withSnackbar } from 'notistack'
 import Modal from '~/components/Modal'
-import { NOTIFIED_TRANSACTIONS } from '~/logic/safe/transactions'
+import { TX_NOTIFICATION_TYPES } from '~/logic/safe/transactions'
 import { getGnosisSafeInstanceAt, SENTINEL_ADDRESS } from '~/logic/contracts/safeContracts'
 import OwnerForm from './screens/OwnerForm'
 import ReviewReplaceOwner from './screens/Review'
@@ -59,7 +59,7 @@ export const sendReplaceOwner = async (
     safeAddress,
     0,
     txData,
-    NOTIFIED_TRANSACTIONS.OWNER_CHANGE_TX,
+    TX_NOTIFICATION_TYPES.OWNER_CHANGE_TX,
     enqueueSnackbar,
     closeSnackbar,
   )

@@ -4,8 +4,6 @@ import { ETHEREUM_NETWORK_IDS, ETHEREUM_NETWORK } from '~/logic/wallets/getWeb3'
 import type { ProviderProps } from '~/logic/wallets/store/model/provider'
 import { makeProvider } from '~/logic/wallets/store/model/provider'
 import { NOTIFICATIONS, showSnackbar } from '~/logic/notifications'
-// import enqueueSnackbar as enqueueSnackbarAction from '~/logic/notifications/store/actions/enqueueSnackbar'
-// import closeSnackbar as closeSnackbarAction from '~/logic/notifications/store/actions/closeSnackbar'
 import addProvider from './addProvider'
 
 export const processProviderResponse = (dispatch: ReduxDispatch<*>, provider: ProviderProps) => {

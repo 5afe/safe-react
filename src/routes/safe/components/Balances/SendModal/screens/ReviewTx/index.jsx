@@ -20,7 +20,7 @@ import { setImageToPlaceholder } from '~/routes/safe/components/Balances/utils'
 import { getStandardTokenContract } from '~/logic/tokens/store/actions/fetchTokens'
 import { EMPTY_DATA } from '~/logic/wallets/ethTransactions'
 import { getWeb3 } from '~/logic/wallets/getWeb3'
-import { NOTIFIED_TRANSACTIONS } from '~/logic/safe/transactions'
+import { TX_NOTIFICATION_TYPES } from '~/logic/safe/transactions'
 import ArrowDown from '../assets/arrow-down.svg'
 import { secondary } from '~/theme/variables'
 import { isEther } from '~/logic/tokens/utils/tokenHelpers'
@@ -81,7 +81,7 @@ const ReviewTx = ({
       txRecipient,
       txAmount,
       txData,
-      NOTIFIED_TRANSACTIONS.STANDARD_TX,
+      TX_NOTIFICATION_TYPES.STANDARD_TX,
       enqueueSnackbar,
       closeSnackbar,
     )

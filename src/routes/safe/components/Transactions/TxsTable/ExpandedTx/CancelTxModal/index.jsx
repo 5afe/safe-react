@@ -13,7 +13,7 @@ import Block from '~/components/layout/Block'
 import Paragraph from '~/components/layout/Paragraph'
 import { type Transaction } from '~/routes/safe/store/models/transaction'
 import { EMPTY_DATA } from '~/logic/wallets/ethTransactions'
-import { NOTIFIED_TRANSACTIONS } from '~/logic/safe/transactions'
+import { TX_NOTIFICATION_TYPES } from '~/logic/safe/transactions'
 import { styles } from './style'
 
 type Props = {
@@ -43,7 +43,7 @@ const CancelTxModal = ({
       safeAddress,
       0,
       EMPTY_DATA,
-      NOTIFIED_TRANSACTIONS.CANCELLATION_TX,
+      TX_NOTIFICATION_TYPES.CANCELLATION_TX,
       enqueueSnackbar,
       closeSnackbar,
     )

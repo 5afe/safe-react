@@ -10,7 +10,7 @@ import Block from '~/components/layout/Block'
 import Row from '~/components/layout/Row'
 import Modal from '~/components/Modal'
 import Paragraph from '~/components/layout/Paragraph'
-import { NOTIFIED_TRANSACTIONS } from '~/logic/safe/transactions'
+import { TX_NOTIFICATION_TYPES } from '~/logic/safe/transactions'
 import ChangeThreshold from './ChangeThreshold'
 import type { Owner } from '~/routes/safe/store/models/owner'
 import { getGnosisSafeInstanceAt } from '~/logic/contracts/safeContracts'
@@ -52,7 +52,7 @@ const ThresholdSettings = ({
       safeAddress,
       0,
       txData,
-      NOTIFIED_TRANSACTIONS.THRESHOLD_CHANGE_TX,
+      TX_NOTIFICATION_TYPES.THRESHOLD_CHANGE_TX,
       enqueueSnackbar,
       closeSnackbar,
     )

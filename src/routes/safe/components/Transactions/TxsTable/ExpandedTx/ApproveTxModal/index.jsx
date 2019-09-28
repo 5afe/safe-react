@@ -13,7 +13,7 @@ import Row from '~/components/layout/Row'
 import Bold from '~/components/layout/Bold'
 import Block from '~/components/layout/Block'
 import Paragraph from '~/components/layout/Paragraph'
-import { NOTIFIED_TRANSACTIONS } from '~/logic/safe/transactions'
+import { TX_NOTIFICATION_TYPES } from '~/logic/safe/transactions'
 import { type Transaction } from '~/routes/safe/store/models/transaction'
 import { styles } from './style'
 
@@ -72,7 +72,7 @@ const ApproveTxModal = ({
       safeAddress,
       tx,
       userAddress,
-      NOTIFIED_TRANSACTIONS.CONFIRMATION_TX,
+      TX_NOTIFICATION_TYPES.CONFIRMATION_TX,
       enqueueSnackbar,
       closeSnackbar,
       approveAndExecute,

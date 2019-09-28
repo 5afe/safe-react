@@ -18,7 +18,7 @@ import { copyToClipboard } from '~/utils/clipboard'
 import SafeInfo from '~/routes/safe/components/Balances/SendModal/SafeInfo'
 import { setImageToPlaceholder } from '~/routes/safe/components/Balances/utils'
 import { getWeb3 } from '~/logic/wallets/getWeb3'
-import { NOTIFIED_TRANSACTIONS } from '~/logic/safe/transactions'
+import { TX_NOTIFICATION_TYPES } from '~/logic/safe/transactions'
 import { getEthAsToken } from '~/logic/tokens/utils/tokenHelpers'
 import ArrowDown from '../assets/arrow-down.svg'
 import { secondary } from '~/theme/variables'
@@ -67,7 +67,7 @@ const ReviewCustomTx = ({
       txRecipient,
       txValue,
       txData,
-      NOTIFIED_TRANSACTIONS.STANDARD_TX,
+      TX_NOTIFICATION_TYPES.STANDARD_TX,
       enqueueSnackbar,
       closeSnackbar,
     )

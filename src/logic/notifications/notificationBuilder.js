@@ -2,7 +2,7 @@
 import * as React from 'react'
 import { IconButton } from '@material-ui/core'
 import { Close as IconClose } from '@material-ui/icons'
-import { NOTIFIED_TRANSACTIONS } from '~/logic/safe/transactions'
+import { TX_NOTIFICATION_TYPES } from '~/logic/safe/transactions'
 import { type Notification, NOTIFICATIONS } from './notificationTypes'
 
 type NotificationsQueue = {
@@ -108,31 +108,31 @@ export const getNofiticationsFromTxType = (txType: string) => {
   let notificationsQueue: NotificationsQueue
 
   switch (txType) {
-    case NOTIFIED_TRANSACTIONS.STANDARD_TX: {
+    case TX_NOTIFICATION_TYPES.STANDARD_TX: {
       notificationsQueue = standardTxNotificationsQueue
       break
     }
-    case NOTIFIED_TRANSACTIONS.CONFIRMATION_TX: {
+    case TX_NOTIFICATION_TYPES.CONFIRMATION_TX: {
       notificationsQueue = confirmationTxNotificationsQueue
       break
     }
-    case NOTIFIED_TRANSACTIONS.CANCELLATION_TX: {
+    case TX_NOTIFICATION_TYPES.CANCELLATION_TX: {
       notificationsQueue = cancellationTxNotificationsQueue
       break
     }
-    case NOTIFIED_TRANSACTIONS.OWNER_CHANGE_TX: {
+    case TX_NOTIFICATION_TYPES.OWNER_CHANGE_TX: {
       notificationsQueue = ownerChangeTxNotificationsQueue
       break
     }
-    case NOTIFIED_TRANSACTIONS.SAFE_NAME_CHANGE_TX: {
+    case TX_NOTIFICATION_TYPES.SAFE_NAME_CHANGE_TX: {
       notificationsQueue = safeNameChangeNotificationsQueue
       break
     }
-    case NOTIFIED_TRANSACTIONS.OWNER_NAME_CHANGE_TX: {
+    case TX_NOTIFICATION_TYPES.OWNER_NAME_CHANGE_TX: {
       notificationsQueue = ownerNameChangeNotificationsQueue
       break
     }
-    case NOTIFIED_TRANSACTIONS.THRESHOLD_CHANGE_TX: {
+    case TX_NOTIFICATION_TYPES.THRESHOLD_CHANGE_TX: {
       notificationsQueue = thresholdChangeTxNotificationsQueue
       break
     }

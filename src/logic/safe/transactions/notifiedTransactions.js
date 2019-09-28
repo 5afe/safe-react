@@ -10,7 +10,7 @@ export type NotifiedTransaction = {
   THRESHOLD_CHANGE_TX: string,
 }
 
-export const NOTIFIED_TRANSACTIONS: NotifiedTransaction = {
+export const TX_NOTIFICATION_TYPES: NotifiedTransaction = {
   STANDARD_TX: 'STANDARD_TX',
   CONFIRMATION_TX: 'CONFIRMATION_TX',
   CANCELLATION_TX: 'CANCELLATION_TX',

@@ -13,7 +13,7 @@ import Row from '~/components/layout/Row'
 import Paragraph from '~/components/layout/Paragraph'
 import Button from '~/components/layout/Button'
 import { getNofiticationsFromTxType, showSnackbar } from '~/logic/notifications'
-import { NOTIFIED_TRANSACTIONS } from '~/logic/safe/transactions'
+import { TX_NOTIFICATION_TYPES } from '~/logic/safe/transactions'
 import { styles } from './style'
 
 export const SAFE_NAME_INPUT_TEST_ID = 'safe-name-input'
@@ -36,7 +36,7 @@ const ChangeSafeName = (props: Props) => {
   const handleSubmit = (values) => {
     updateSafe({ address: safeAddress, name: values.safeName })
 
-    const notification = getNofiticationsFromTxType(NOTIFIED_TRANSACTIONS.SAFE_NAME_CHANGE_TX)
+    const notification = getNofiticationsFromTxType(TX_NOTIFICATION_TYPES.SAFE_NAME_CHANGE_TX)
     showSnackbar(notification.afterExecution, enqueueSnackbar, closeSnackbar)
   }
 

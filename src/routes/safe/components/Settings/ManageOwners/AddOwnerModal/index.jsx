@@ -6,7 +6,7 @@ import { withSnackbar } from 'notistack'
 import Modal from '~/components/Modal'
 import { type Owner } from '~/routes/safe/store/models/owner'
 import { getGnosisSafeInstanceAt } from '~/logic/contracts/safeContracts'
-import { NOTIFIED_TRANSACTIONS } from '~/logic/safe/transactions'
+import { TX_NOTIFICATION_TYPES } from '~/logic/safe/transactions'
 import OwnerForm from './screens/OwnerForm'
 import ThresholdForm from './screens/ThresholdForm'
 import ReviewAddOwner from './screens/Review'
@@ -52,7 +52,7 @@ export const sendAddOwner = async (
     safeAddress,
     0,
     txData,
-    NOTIFIED_TRANSACTIONS.OWNER_CHANGE_TX,
+    TX_NOTIFICATION_TYPES.OWNER_CHANGE_TX,
     enqueueSnackbar,
     closeSnackbar,
   )
