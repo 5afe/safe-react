@@ -1,7 +1,6 @@
 // @flow
 import * as React from 'react'
 import classNames from 'classnames/bind'
-import OpenInNew from '@material-ui/icons/OpenInNew'
 import Tabs from '@material-ui/core/Tabs'
 import Tab from '@material-ui/core/Tab'
 import CallMade from '@material-ui/icons/CallMade'
@@ -13,7 +12,8 @@ import Identicon from '~/components/Identicon'
 import Heading from '~/components/layout/Heading'
 import Row from '~/components/layout/Row'
 import Button from '~/components/layout/Button'
-import Link from '~/components/layout/Link'
+import EtherscanBtn from '~/components/EtherscanBtn'
+import CopyBtn from '~/components/CopyBtn'
 import Paragraph from '~/components/layout/Paragraph'
 import Modal from '~/components/Modal'
 import SendModal from './Balances/SendModal'
@@ -21,9 +21,7 @@ import Receive from './Balances/Receive'
 import NoSafe from '~/components/NoSafe'
 import { type SelectorProps } from '~/routes/safe/container/selector'
 import { getEtherScanLink } from '~/logic/wallets/getWeb3'
-import {
-  secondary, border,
-} from '~/theme/variables'
+import { border } from '~/theme/variables'
 import { copyToClipboard } from '~/utils/clipboard'
 import { type Actions } from '../container/actions'
 import Balances from './Balances'
@@ -49,13 +47,8 @@ type Props = SelectorProps &
     onShow: Function,
     onHide: Function,
     showSendFunds: Function,
-    hideSendFunds: Function
+    hideSendFunds: Function,
   }
-
-const openIconStyle = {
-  height: '16px',
-  color: secondary,
-}
 
 class Layout extends React.Component<Props, State> {
   constructor(props) {
@@ -120,12 +113,11 @@ class Layout extends React.Component<Props, State> {
               {!granted && <Block className={classes.readonly}>Read Only</Block>}
             </Row>
             <Block align="center" className={classes.user}>
-              <Paragraph size="md" color="disabled" onClick={this.copyAddress} title="Click to copy" noMargin>
+              <Paragraph size="md" color="disabled" className={classes.address} onClick={this.copyAddress} title="Click to copy" noMargin>
                 {address}
               </Paragraph>
-              <Link className={classes.open} to={etherScanLink} target="_blank">
-                <OpenInNew style={openIconStyle} />
-              </Link>
+              <CopyBtn content={address} />
+              <EtherscanBtn type="address" value={address} />
             </Block>
           </Block>
           <Block className={classes.balance}>
@@ -139,7 +131,7 @@ class Layout extends React.Component<Props, State> {
                 disabled={!granted}
               >
                 <CallMade alt="Send Transaction" className={classNames(classes.leftIcon, classes.iconSmall)} />
-                  Send
+                Send
               </Button>
               <Button
                 variant="contained"
@@ -149,7 +141,7 @@ class Layout extends React.Component<Props, State> {
                 onClick={onShow('Receive')}
               >
                 <CallReceived alt="Receive Transaction" className={classNames(classes.leftIcon, classes.iconSmall)} />
-                  Receive
+                Receive
               </Button>
             </Row>
           </Block>
@@ -221,12 +213,7 @@ class Layout extends React.Component<Props, State> {
           open={showReceive}
           paperClassName={classes.receiveModal}
         >
-          <Receive
-            safeName={name}
-            safeAddress={address}
-            etherScanLink={etherScanLink}
-            onClose={onHide('Receive')}
-          />
+          <Receive safeName={name} safeAddress={address} etherScanLink={etherScanLink} onClose={onHide('Receive')} />
         </Modal>
       </>
     )
