@@ -55,11 +55,11 @@ const TxsTable = ({
   const [expandedTx, setExpandedTx] = useState<string | null>(null)
 
   const handleTxExpand = (safeTxHash) => {
-    setExpandedTx(prevTx => (prevTx === safeTxHash ? null : safeTxHash))
+    setExpandedTx((prevTx) => (prevTx === safeTxHash ? null : safeTxHash))
   }
 
   const columns = generateColumns()
-  const autoColumns = columns.filter(c => !c.custom)
+  const autoColumns = columns.filter((c) => !c.custom)
   const filteredData = getTxTableData(transactions)
 
   return (
@@ -124,8 +124,7 @@ const TxsTable = ({
               </TableCell>
             </TableRow>
           </React.Fragment>
-        ))
-        }
+        ))}
       </Table>
     </Block>
   )

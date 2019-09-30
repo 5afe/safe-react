@@ -219,7 +219,6 @@ class ManageOwners extends React.Component<Props, State> {
           safeName={safeName}
           owners={owners}
           threshold={threshold}
-          network={network}
           userAddress={userAddress}
           createTransaction={createTransaction}
           addSafeOwner={addSafeOwner}
@@ -233,7 +232,6 @@ class ManageOwners extends React.Component<Props, State> {
           ownerName={selectedOwnerName}
           owners={owners}
           threshold={threshold}
-          network={network}
           userAddress={userAddress}
           createTransaction={createTransaction}
           removeSafeOwner={removeSafeOwner}
@@ -259,7 +257,6 @@ class ManageOwners extends React.Component<Props, State> {
           ownerAddress={selectedOwnerAddress}
           selectedOwnerName={selectedOwnerName}
           owners={owners}
-          network={network}
           editSafeOwner={editSafeOwner}
         />
       </>

@@ -27,7 +27,6 @@ type Props = {
   safeName: string,
   owners: List<Owner>,
   threshold: number,
-  network: string,
   addSafeOwner: Function,
   createTransaction: Function,
   enqueueSnackbar: Function,
@@ -70,7 +69,6 @@ const AddOwner = ({
   safeName,
   owners,
   threshold,
-  network,
   createTransaction,
   addSafeOwner,
   enqueueSnackbar,
@@ -147,7 +145,6 @@ const AddOwner = ({
             onClose={onClose}
             safeName={safeName}
             owners={owners}
-            network={network}
             values={values}
             onClickBack={onClickBack}
             onSubmit={onAddOwner}

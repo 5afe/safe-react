@@ -106,7 +106,7 @@ class Layout extends React.Component<Props, State> {
     }
 
     const { address, ethBalance, name } = safe
-    const etherScanLink = getEtherScanLink('address', address, network)
+    const etherScanLink = getEtherScanLink('address', address)
 
     return (
       <>
@@ -182,6 +182,7 @@ class Layout extends React.Component<Props, State> {
             fetchTransactions={fetchTransactions}
             safeAddress={address}
             userAddress={userAddress}
+            currentNetwork={network}
             granted={granted}
             createTransaction={createTransaction}
             processTransaction={processTransaction}

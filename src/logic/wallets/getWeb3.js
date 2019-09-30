@@ -2,12 +2,14 @@
 import Web3 from 'web3'
 import ENS from 'ethereum-ens'
 import type { ProviderProps } from '~/logic/wallets/store/model/provider'
+import { getNetwork } from '~/config/index'
 
 export const ETHEREUM_NETWORK = {
-  MAIN: 'MAIN',
+  MAINNET: 'MAINNET',
   MORDEN: 'MORDEN',
   ROPSTEN: 'ROPSTEN',
   RINKEBY: 'RINKEBY',
+  GOERLI: 'GOERLI',
   KOVAN: 'KOVAN',
   UNKNOWN: 'UNKNOWN',
 }
@@ -22,7 +24,7 @@ export const WALLET_PROVIDER = {
 
 export const ETHEREUM_NETWORK_IDS = {
   // $FlowFixMe
-  1: ETHEREUM_NETWORK.MAIN,
+  1: ETHEREUM_NETWORK.MAINNET,
   // $FlowFixMe
   2: ETHEREUM_NETWORK.MORDEN,
   // $FlowFixMe
@@ -30,10 +32,17 @@ export const ETHEREUM_NETWORK_IDS = {
   // $FlowFixMe
   4: ETHEREUM_NETWORK.RINKEBY,
   // $FlowFixMe
+  5: ETHEREUM_NETWORK.GOERLI,
+  // $FlowFixMe
   42: ETHEREUM_NETWORK.KOVAN,
 }
 
-export const getEtherScanLink = (type: 'address' | 'tx', value: string, network: string) => `https://${network === 'mainnet' ? '' : `${network}.`}etherscan.io/${type}/${value}`
+export const getEtherScanLink = (type: 'address' | 'tx', value: string) => {
+  const network = getNetwork()
+  return `https://${
+    network.toLowerCase() === 'mainnet' ? '' : `${network.toLowerCase()}.`
+  }etherscan.io/${type}/${value}`
+}
 
 let web3
 export const getWeb3 = () => web3 || (window.web3 && new Web3(window.web3.currentProvider)) || (window.ethereum && new Web3(window.ethereum))

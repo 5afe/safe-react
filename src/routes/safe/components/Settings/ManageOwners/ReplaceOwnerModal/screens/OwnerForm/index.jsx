@@ -46,13 +46,12 @@ type Props = {
   classes: Object,
   ownerAddress: string,
   ownerName: string,
-  network: string,
   onSubmit: Function,
   owners: List<Owner>,
 }
 
 const OwnerForm = ({
-  classes, onClose, ownerAddress, ownerName, network, onSubmit, owners,
+  classes, onClose, ownerAddress, ownerName, onSubmit, owners,
 }: Props) => {
   const handleSubmit = (values) => {
     onSubmit(values)
@@ -102,7 +101,7 @@ const OwnerForm = ({
                         </Paragraph>
                         <Link
                           className={classes.open}
-                          to={getEtherScanLink('address', ownerAddress, network)}
+                          to={getEtherScanLink('address', ownerAddress)}
                           target="_blank"
                         >
                           <OpenInNew style={openIconStyle} />

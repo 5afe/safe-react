@@ -31,7 +31,6 @@ type Props = {
   classes: Object,
   safeName: string,
   owners: List<Owner>,
-  network: string,
   values: Object,
   ownerAddress: string,
   ownerName: string,
@@ -44,7 +43,6 @@ const ReviewRemoveOwner = ({
   onClose,
   safeName,
   owners,
-  network,
   values,
   ownerAddress,
   ownerName,
@@ -91,10 +89,10 @@ const ReviewRemoveOwner = ({
                 <Paragraph size="lg" color="primary" noMargin weight="bolder" className={classes.name}>
                   {values.threshold}
                   {' '}
-out of
+                  out of
                   {owners.size - 1}
                   {' '}
-owner(s)
+                  owner(s)
                 </Paragraph>
               </Block>
             </Block>
@@ -104,7 +102,7 @@ owner(s)
               <Paragraph size="lg" color="primary" noMargin>
                 {owners.size - 1}
                 {' '}
-Safe owner(s)
+                Safe owner(s)
               </Paragraph>
             </Row>
             <Hairline />
@@ -126,7 +124,7 @@ Safe owner(s)
                           </Paragraph>
                           <Link
                             className={classes.open}
-                            to={getEtherScanLink('address', owner.address, network)}
+                            to={getEtherScanLink('address', owner.address)}
                             target="_blank"
                           >
                             <OpenInNew style={openIconStyle} />
@@ -160,7 +158,7 @@ Safe owner(s)
                     </Paragraph>
                     <Link
                       className={classes.open}
-                      to={getEtherScanLink('address', ownerAddress, network)}
+                      to={getEtherScanLink('address', ownerAddress)}
                       target="_blank"
                     >
                       <OpenInNew style={openIconStyle} />

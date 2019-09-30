@@ -29,7 +29,6 @@ type Props = {
   ownerName: string,
   owners: List<Owner>,
   threshold: number,
-  network: string,
   createTransaction: Function,
   removeSafeOwner: Function,
   enqueueSnackbar: Function,
@@ -84,7 +83,6 @@ const RemoveOwner = ({
   ownerName,
   owners,
   threshold,
-  network,
   createTransaction,
   removeSafeOwner,
   enqueueSnackbar,
@@ -148,7 +146,6 @@ const RemoveOwner = ({
             onClose={onClose}
             ownerAddress={ownerAddress}
             ownerName={ownerName}
-            network={network}
             onSubmit={ownerSubmitted}
           />
         )}
@@ -166,7 +163,6 @@ const RemoveOwner = ({
             onClose={onClose}
             safeName={safeName}
             owners={owners}
-            network={network}
             values={values}
             ownerAddress={ownerAddress}
             ownerName={ownerName}
