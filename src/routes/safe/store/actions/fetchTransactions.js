@@ -14,7 +14,7 @@ import { EMPTY_DATA } from '~/logic/wallets/ethTransactions'
 import { addTransactions } from './addTransactions'
 import { getHumanFriendlyToken } from '~/logic/tokens/store/actions/fetchTokens'
 import { isTokenTransfer } from '~/logic/tokens/utils/tokenHelpers'
-import { TX_TYPE_EXECUTION } from '~/logic/safe/transactions/send'
+import { TX_TYPE_EXECUTION } from '~/logic/safe/transactions'
 import { decodeParamsFromSafeMethod } from '~/logic/contracts/methodIds'
 
 let web3

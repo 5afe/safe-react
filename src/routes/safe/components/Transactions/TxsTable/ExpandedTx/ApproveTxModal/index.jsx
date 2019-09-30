@@ -5,7 +5,7 @@ import IconButton from '@material-ui/core/IconButton'
 import { withStyles } from '@material-ui/core/styles'
 import FormControlLabel from '@material-ui/core/FormControlLabel'
 import Checkbox from '@material-ui/core/Checkbox'
-import { SharedSnackbarConsumer } from '~/components/SharedSnackBar'
+import { withSnackbar } from 'notistack'
 import Modal from '~/components/Modal'
 import Hairline from '~/components/layout/Hairline'
 import Button from '~/components/layout/Button'
@@ -13,6 +13,7 @@ import Row from '~/components/layout/Row'
 import Bold from '~/components/layout/Bold'
 import Block from '~/components/layout/Block'
 import Paragraph from '~/components/layout/Paragraph'
+import { TX_NOTIFICATION_TYPES } from '~/logic/safe/transactions'
 import { type Transaction } from '~/routes/safe/store/models/transaction'
 import { styles } from './style'
 
@@ -29,6 +30,8 @@ type Props = {
   threshold: number,
   thresholdReached: boolean,
   userAddress: string,
+  enqueueSnackbar: Function,
+  closeSnackbar: Function,
 }
 
 const getModalTitleAndDescription = (thresholdReached: boolean) => {
@@ -55,6 +58,8 @@ const ApproveTxModal = ({
   threshold,
   thresholdReached,
   userAddress,
+  enqueueSnackbar,
+  closeSnackbar,
 }: Props) => {
   const [approveAndExecute, setApproveAndExecute] = useState<boolean>(false)
   const { title, description } = getModalTitleAndDescription(thresholdReached)
@@ -62,68 +67,70 @@ const ApproveTxModal = ({
 
   const handleExecuteCheckbox = () => setApproveAndExecute((prevApproveAndExecute) => !prevApproveAndExecute)
 
-  return (
-    <SharedSnackbarConsumer>
-      {({ openSnackbar }) => {
-        const approveTx = () => {
-          processTransaction(safeAddress, tx, openSnackbar, userAddress, approveAndExecute)
-          onClose()
-        }
+  const approveTx = () => {
+    processTransaction(
+      safeAddress,
+      tx,
+      userAddress,
+      TX_NOTIFICATION_TYPES.CONFIRMATION_TX,
+      enqueueSnackbar,
+      closeSnackbar,
+      approveAndExecute,
+    )
+    onClose()
+  }
 
-        return (
-          <Modal title={title} description={description} handleClose={onClose} open={isOpen}>
-            <Row align="center" grow className={classes.heading}>
-              <Paragraph weight="bolder" className={classes.headingText} noMargin>
-                {title}
+  return (
+    <Modal title={title} description={description} handleClose={onClose} open={isOpen}>
+      <Row align="center" grow className={classes.heading}>
+        <Paragraph weight="bolder" className={classes.headingText} noMargin>
+          {title}
+        </Paragraph>
+        <IconButton onClick={onClose} disableRipple>
+          <Close className={classes.closeIcon} />
+        </IconButton>
+      </Row>
+      <Hairline />
+      <Block className={classes.container}>
+        <Row>
+          <Paragraph>{description}</Paragraph>
+          <Paragraph size="sm" color="medium">
+            Transaction nonce:
+            <br />
+            <Bold className={classes.nonceNumber}>{tx.nonce}</Bold>
+          </Paragraph>
+          {!thresholdReached && oneConfirmationLeft && (
+            <>
+              <Paragraph color="error">
+                Approving transaction does not execute it immediately. If you want to approve and execute the
+                transaction right away, click on checkbox below.
               </Paragraph>
-              <IconButton onClick={onClose} disableRipple>
-                <Close className={classes.closeIcon} />
-              </IconButton>
-            </Row>
-            <Hairline />
-            <Block className={classes.container}>
-              <Row>
-                <Paragraph>{description}</Paragraph>
-                <Paragraph size="sm" color="medium">
-                  Transaction nonce:
-                  <br />
-                  <Bold className={classes.nonceNumber}>{tx.nonce}</Bold>
-                </Paragraph>
-                {!thresholdReached && oneConfirmationLeft && (
-                  <>
-                    <Paragraph color="error">
-                      Approving transaction does not execute it immediately. If you want to approve and execute the
-                      transaction right away, click on checkbox below.
-                    </Paragraph>
-                    <FormControlLabel
-                      control={<Checkbox onChange={handleExecuteCheckbox} checked={approveAndExecute} color="primary" />}
-                      label="Execute transaction"
-                    />
-                  </>
-                )}
-              </Row>
-            </Block>
-            <Row align="center" className={classes.buttonRow}>
-              <Button minWidth={140} minHeight={42} onClick={onClose}>
-                Exit
-              </Button>
-              <Button
-                type="submit"
-                variant="contained"
-                minWidth={214}
-                minHeight={42}
-                color="primary"
-                onClick={approveTx}
-                testId={APPROVE_TX_MODAL_SUBMIT_BTN_TEST_ID}
-              >
-                {title}
-              </Button>
-            </Row>
-          </Modal>
-        )
-      }}
-    </SharedSnackbarConsumer>
+              <FormControlLabel
+                control={<Checkbox onChange={handleExecuteCheckbox} checked={approveAndExecute} color="primary" />}
+                label="Execute transaction"
+              />
+            </>
+          )}
+        </Row>
+      </Block>
+      <Row align="center" className={classes.buttonRow}>
+        <Button minWidth={140} minHeight={42} onClick={onClose}>
+          Exit
+        </Button>
+        <Button
+          type="submit"
+          variant="contained"
+          minWidth={214}
+          minHeight={42}
+          color="primary"
+          onClick={approveTx}
+          testId={APPROVE_TX_MODAL_SUBMIT_BTN_TEST_ID}
+        >
+          {title}
+        </Button>
+      </Row>
+    </Modal>
   )
 }
 
-export default withStyles(styles)(ApproveTxModal)
+export default withStyles(styles)(withSnackbar(ApproveTxModal))
