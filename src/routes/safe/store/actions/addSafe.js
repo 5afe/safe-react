@@ -24,10 +24,7 @@ export const addSafe = createAction<string, Function, ActionReturn>(ADD_SAFE, (s
   safe,
 }))
 
-const saveSafe = (safe: Safe) => (
-  dispatch: ReduxDispatch<GlobalState>,
-  getState: GetState<GlobalState>,
-) => {
+const saveSafe = (safe: Safe) => (dispatch: ReduxDispatch<GlobalState>, getState: GetState<GlobalState>) => {
   const state = getState()
   const safeList = safesListSelector(state)
 

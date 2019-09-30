@@ -5,6 +5,7 @@ import IconButton from '@material-ui/core/IconButton'
 import ExpandLess from '@material-ui/icons/ExpandLess'
 import ExpandMore from '@material-ui/icons/ExpandMore'
 import Col from '~/components/layout/Col'
+import Divider from '~/components/layout/Divider'
 import { type Open } from '~/components/hoc/OpenHoc'
 import { sm, md } from '~/theme/variables'
 
@@ -20,7 +21,8 @@ const styles = () => ({
     height: '100%',
     display: 'flex',
     alignItems: 'center',
-    flexBasis: '250px',
+    flexBasis: '284px',
+    marginRight: '20px',
   },
   provider: {
     padding: `${sm} ${md}`,
@@ -54,12 +56,14 @@ class Provider extends React.Component<Props> {
     return (
       <>
         <div ref={this.myRef} className={classes.root}>
+          <Divider />
           <Col end="sm" middle="xs" className={classes.provider} onClick={toggle}>
             {info}
             <IconButton disableRipple className={classes.expand}>
               {open ? <ExpandLess /> : <ExpandMore />}
             </IconButton>
           </Col>
+          <Divider />
         </div>
         {children(this.myRef)}
       </>

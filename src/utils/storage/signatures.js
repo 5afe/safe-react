@@ -15,8 +15,7 @@ export const storeSignature = async (safeAddress: string, nonce: number, signatu
     const updatedSubjects = subjects.set(key, signatures)
     await saveToStorage(signaturesKey, updatedSubjects)
   } catch (err) {
-    // eslint-disable-next-line
-    console.log('Error storing signatures in localstorage')
+    console.error('Error storing signatures in localstorage', err)
   }
 }
 

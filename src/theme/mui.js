@@ -199,16 +199,25 @@ export default createMuiTheme({
         },
       },
     },
-    MuiSnackbarContent: {
-      root: {
-        boxShadow: '0 0 10px 0 rgba(33, 48, 77, 0.1)',
-        borderRadius: '3px',
-        color: primary,
-      },
-    },
     MuiSvgIcon: {
       colorSecondary: {
         color: secondaryText,
+      },
+    },
+    MuiSnackbar: {
+      root: {
+        width: '280px',
+      },
+    },
+    MuiSnackbarContent: {
+      message: {
+        maxWidth: '260px',
+        '& img': {
+          marginRight: '5px',
+        },
+      },
+      action: {
+        paddingLeft: 0,
       },
     },
     MuiTab: {

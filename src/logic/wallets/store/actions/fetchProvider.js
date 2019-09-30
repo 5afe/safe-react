@@ -3,6 +3,7 @@ import type { Dispatch as ReduxDispatch } from 'redux'
 import { ETHEREUM_NETWORK_IDS, ETHEREUM_NETWORK } from '~/logic/wallets/getWeb3'
 import type { ProviderProps } from '~/logic/wallets/store/model/provider'
 import { makeProvider } from '~/logic/wallets/store/model/provider'
+import { NOTIFICATIONS, showSnackbar } from '~/logic/notifications'
 import addProvider from './addProvider'
 
 export const processProviderResponse = (dispatch: ReduxDispatch<*>, provider: ProviderProps) => {
@@ -21,30 +22,40 @@ export const processProviderResponse = (dispatch: ReduxDispatch<*>, provider: Pr
   dispatch(addProvider(walletRecord))
 }
 
-const SUCCESS_MSG = 'Wallet connected sucessfully'
-const UNLOCK_MSG = 'Unlock your wallet to connect'
-const WRONG_NETWORK = 'You are connected to wrong network. Please use RINKEBY'
-export const WALLET_ERROR_MSG = 'Error connecting to your wallet'
-
-const handleProviderNotification = (openSnackbar: Function, provider: ProviderProps) => {
+const handleProviderNotification = (
+  dispatch: ReduxDispatch<*>,
+  provider: ProviderProps,
+  enqueueSnackbar: Function,
+  closeSnackbar: Function,
+) => {
   const { loaded, available, network } = provider
 
   if (!loaded) {
-    openSnackbar(WALLET_ERROR_MSG, 'error')
+    showSnackbar(NOTIFICATIONS.CONNECT_WALLET_ERROR_MSG, enqueueSnackbar, closeSnackbar)
     return
   }
 
   if (ETHEREUM_NETWORK_IDS[network] !== ETHEREUM_NETWORK.RINKEBY) {
-    openSnackbar(WRONG_NETWORK, 'error')
+    showSnackbar(NOTIFICATIONS.WRONG_NETWORK_RINKEBY_MSG, enqueueSnackbar, closeSnackbar)
     return
   }
+  showSnackbar(NOTIFICATIONS.RINKEBY_VERSION_MSG, enqueueSnackbar, closeSnackbar)
 
-  const msg = available ? SUCCESS_MSG : UNLOCK_MSG
-  const variant = available ? 'success' : 'warning'
-  openSnackbar(msg, variant)
+  if (available) {
+    // NOTE:
+    // if you want to be able to dispatch a `closeSnackbar` action later on,
+    // you SHOULD pass your own `key` in the options. `key` can be any sequence
+    // of number or characters, but it has to be unique to a given snackbar.
+
+    showSnackbar(NOTIFICATIONS.WALLET_CONNECTED_MSG, enqueueSnackbar, closeSnackbar)
+  } else {
+    showSnackbar(NOTIFICATIONS.UNLOCK_WALLET_MSG, enqueueSnackbar, closeSnackbar)
+  }
 }
 
-export default (provider: ProviderProps, openSnackbar: Function) => (dispatch: ReduxDispatch<*>) => {
-  handleProviderNotification(openSnackbar, provider)
+export default (provider: ProviderProps, enqueueSnackbar: Function, closeSnackbar: Function) => (
+  dispatch: ReduxDispatch<*>,
+) => {
+  handleProviderNotification(dispatch, provider, enqueueSnackbar, closeSnackbar)
   processProviderResponse(dispatch, provider)
 }

@@ -76,7 +76,14 @@ export const getProviderInfo: Function = async (): Promise<ProviderProps> => {
 
   if (window.ethereum) {
     web3Provider = window.ethereum
-    await web3Provider.enable()
+    try {
+      const accounts = await web3Provider.enable()
+      if (!accounts) {
+        throw new Error()
+      }
+    } catch (error) {
+      console.error('Error when enabling web3 provider', error)
+    }
   } else if (window.web3) {
     web3Provider = window.web3.currentProvider
   } else {
@@ -114,6 +121,10 @@ export const getAddressFromENS = async (name: string) => {
 }
 
 export const getBalanceInEtherOf = async (safeAddress: string) => {
+  if (!web3) {
+    return '0'
+  }
+
   const funds: String = await web3.eth.getBalance(safeAddress)
 
   if (!funds) {
