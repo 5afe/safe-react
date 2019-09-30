@@ -15,19 +15,20 @@ type Props = {
   tag: HeadingTag,
   truncate?: boolean,
   children: React.Node,
+  className?: string,
   testId?: string,
 }
 
-class Heading extends React.PureComponent<Props> {
-  render() {
-    const {
-      align, tag, truncate, margin, color, children, testId, ...props
-    } = this.props
+const Heading = (props: Props) => {
+  const {
+    align, tag, truncate, margin, color, children, testId, className = '', ...rest
+  } = props
 
-    const className = cx('heading', align, tag, margin ? capitalize(margin, 'margin') : undefined, color, { truncate })
+  const classes = cx(className, 'heading', align, tag, margin ? capitalize(margin, 'margin') : undefined, color, {
+    truncate,
+  })
 
-    return React.createElement(tag, { ...props, className, 'data-testid': testId || '' }, children)
-  }
+  return React.createElement(tag, { ...rest, className: classes, 'data-testid': testId || '' }, children)
 }
 
 export default Heading

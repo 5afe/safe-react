@@ -12,8 +12,11 @@ import Col from '~/components/layout/Col'
 import Img from '~/components/layout/Img'
 import Row from '~/components/layout/Row'
 import Spacer from '~/components/Spacer'
-import { border, sm, md } from '~/theme/variables'
+import {
+  border, sm, md, headerHeight,
+} from '~/theme/variables'
 import Provider from './Provider'
+import SafeListHeader from './SafeListHeader'
 
 const logo = require('../assets/gnosis-safe-logo.svg')
 
@@ -29,25 +32,31 @@ const styles = () => ({
     padding: 0,
     boxShadow: '0 0 10px 0 rgba(33, 48, 77, 0.1)',
     minWidth: '280px',
-    left: '4px',
+    borderRadius: '8px',
+    marginTop: '11px',
   },
   summary: {
-    borderBottom: `solid 1px ${border}`,
+    borderBottom: `solid 2px ${border}`,
     alignItems: 'center',
-    height: '53px',
+    height: headerHeight,
+    boxShadow: '0 2px 4px 0 rgba(212, 212, 211, 0.59)',
     backgroundColor: 'white',
+    zIndex: 1301,
   },
   logo: {
     padding: `${sm} ${md}`,
     flexBasis: '95px',
     flexGrow: 0,
   },
+  popper: {
+    zIndex: 2000,
+  },
 })
 
 const Layout = openHoc(({
   open, toggle, clickAway, classes, providerInfo, providerDetails,
 }: Props) => (
-  <React.Fragment>
+  <>
     <Row className={classes.summary}>
       <Col start="xs" middle="xs" className={classes.logo}>
         <Link to="/">
@@ -55,25 +64,28 @@ const Layout = openHoc(({
         </Link>
       </Col>
       <Divider />
-      <Spacer />
+      <SafeListHeader />
       <Divider />
+      <Spacer />
       <Provider open={open} toggle={toggle} info={providerInfo}>
-        {providerRef => (
-          <Popper open={open} anchorEl={providerRef.current} placement="bottom-end">
+        {(providerRef) => (
+          <Popper open={open} anchorEl={providerRef.current} placement="bottom" className={classes.popper}>
             {({ TransitionProps }) => (
               <Grow {...TransitionProps}>
-                <ClickAwayListener onClickAway={clickAway} mouseEvent="onClick" touchEvent={false}>
-                  <List className={classes.root} component="div">
-                    {providerDetails}
-                  </List>
-                </ClickAwayListener>
+                <>
+                  <ClickAwayListener onClickAway={clickAway} mouseEvent="onClick" touchEvent={false}>
+                    <List className={classes.root} component="div">
+                      {providerDetails}
+                    </List>
+                  </ClickAwayListener>
+                </>
               </Grow>
             )}
           </Popper>
         )}
       </Provider>
     </Row>
-  </React.Fragment>
+  </>
 ))
 
 export default withStyles(styles)(Layout)

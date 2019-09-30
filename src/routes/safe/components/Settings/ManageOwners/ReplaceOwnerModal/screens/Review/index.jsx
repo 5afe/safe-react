@@ -31,7 +31,6 @@ type Props = {
   classes: Object,
   safeName: string,
   owners: List<Owner>,
-  network: string,
   values: Object,
   ownerAddress: string,
   ownerName: string,
@@ -45,7 +44,6 @@ const ReviewRemoveOwner = ({
   onClose,
   safeName,
   owners,
-  network,
   values,
   ownerAddress,
   ownerName,
@@ -58,7 +56,7 @@ const ReviewRemoveOwner = ({
   }
 
   return (
-    <React.Fragment>
+    <>
       <Row align="center" grow className={classes.heading}>
         <Paragraph weight="bolder" className={classes.manage} noMargin>
           Replace owner
@@ -112,7 +110,7 @@ const ReviewRemoveOwner = ({
             </Row>
             <Hairline />
             {owners.map(
-              owner => owner.address !== ownerAddress && (
+              (owner) => owner.address !== ownerAddress && (
                 <React.Fragment key={owner.address}>
                   <Row className={classes.owner}>
                     <Col xs={1} align="center">
@@ -129,7 +127,7 @@ const ReviewRemoveOwner = ({
                           </Paragraph>
                           <Link
                             className={classes.open}
-                            to={getEtherScanLink('address', owner.address, network)}
+                            to={getEtherScanLink('address', owner.address)}
                             target="_blank"
                           >
                             <OpenInNew style={openIconStyle} />
@@ -161,7 +159,7 @@ const ReviewRemoveOwner = ({
                     <Paragraph size="md" color="disabled" noMargin>
                       {ownerAddress}
                     </Paragraph>
-                    <Link className={classes.open} to={getEtherScanLink('address', ownerAddress, network)} target="_blank">
+                    <Link className={classes.open} to={getEtherScanLink('address', ownerAddress)} target="_blank">
                       <OpenInNew style={openIconStyle} />
                     </Link>
                   </Block>
@@ -187,7 +185,7 @@ const ReviewRemoveOwner = ({
                     <Paragraph size="md" color="disabled" noMargin>
                       {values.ownerAddress}
                     </Paragraph>
-                    <Link className={classes.open} to={getEtherScanLink('address', values.ownerAddress, network)} target="_blank">
+                    <Link className={classes.open} to={getEtherScanLink('address', values.ownerAddress)} target="_blank">
                       <OpenInNew style={openIconStyle} />
                     </Link>
                   </Block>
@@ -200,14 +198,14 @@ const ReviewRemoveOwner = ({
       </Block>
       <Hairline />
       <Row align="center" className={classes.buttonRow}>
-        <Button className={classes.button} minWidth={140} onClick={onClickBack}>
+        <Button minWidth={140} minHeight={42} onClick={onClickBack}>
           Back
         </Button>
         <Button
           type="submit"
           onClick={handleSubmit}
-          className={classes.button}
           variant="contained"
+          minHeight={42}
           minWidth={140}
           color="primary"
           testId={REPLACE_OWNER_SUBMIT_BTN_TEST_ID}
@@ -215,7 +213,7 @@ const ReviewRemoveOwner = ({
           Submit
         </Button>
       </Row>
-    </React.Fragment>
+    </>
   )
 }
 

@@ -8,6 +8,7 @@ import { sm, boldFont } from '~/theme/variables'
 const controlStyle = {
   backgroundColor: 'white',
   padding: sm,
+  borderRadius: sm,
 }
 
 const firstButtonStyle = {
@@ -25,24 +26,34 @@ type Props = {
   lastPage: boolean,
   disabled: boolean,
   penultimate: boolean,
+  currentStep?: number,
+  buttonLabels?: Array<string>,
 }
 
 const Controls = ({
-  onPrevious, firstPage, penultimate, lastPage, disabled,
+  onPrevious,
+  firstPage,
+  penultimate,
+  lastPage,
+  disabled,
+  currentStep,
+  buttonLabels,
 }: Props) => {
-  // eslint-disable-next-line
-  const next = firstPage ? 'Start' : penultimate ? 'Review' : lastPage ? 'Submit' : 'Next'
   const back = firstPage ? 'Cancel' : 'Back'
+
+  let next
+  if (!buttonLabels) {
+    // eslint-disable-next-line
+    next = firstPage ? 'Start' : penultimate ? 'Review' : lastPage ? 'Submit' : 'Next'
+  } else {
+    // $FlowFixMe
+    next = buttonLabels[currentStep]
+  }
 
   return (
     <Row style={controlStyle} align="end" grow>
       <Col xs={12} end="xs">
-        <Button
-          style={firstButtonStyle}
-          type="button"
-          onClick={onPrevious}
-          size="small"
-        >
+        <Button style={firstButtonStyle} type="button" onClick={onPrevious} size="small">
           {back}
         </Button>
         <Button

@@ -18,7 +18,7 @@ const AssetTableCell = (props: Props) => {
   return (
     <Block align="left">
       <Img src={asset.logoUri} height={26} alt={asset.name} onError={setImageToPlaceholder} />
-      <Paragraph style={{ marginLeft: 10 }}>{asset.name}</Paragraph>
+      <Paragraph size="lg" style={{ marginLeft: 10 }} noMargin>{asset.name}</Paragraph>
     </Block>
   )
 }

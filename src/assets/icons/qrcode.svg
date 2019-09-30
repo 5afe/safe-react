@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 55.2 (78181) - https://sketchapp.com -->
+    <title>Group</title>
+    <desc>Created with Sketch.</desc>
+    <g id="Symbols" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Icon-/-QR-Icon" transform="translate(-11.000000, -11.000000)" fill="#B2B5B2">
+            <g id="QR-Icon" transform="translate(2.000000, 2.000000)">
+                <g id="Group" transform="translate(9.000000, 9.000000)">
+                    <path d="M2,2 L2,4 L4,4 L4,2 L2,2 Z M6,0 L6,6 L0,6 L0,0 L6,0 Z" id="Rectangle" fill-rule="nonzero"></path>
+                    <path d="M2,12 L2,14 L4,14 L4,12 L2,12 Z M6,10 L6,16 L0,16 L0,10 L6,10 Z" id="Rectangle-Copy-2" fill-rule="nonzero"></path>
+                    <path d="M12,2 L12,4 L14,4 L14,2 L12,2 Z M16,0 L16,6 L10,6 L10,0 L16,0 Z" id="Rectangle-Copy" fill-rule="nonzero"></path>
+                    <rect id="Rectangle" x="7" y="2" width="2" height="4"></rect>
+                    <path d="M7,9 L5,9 L5,7 L7,7 L9,7 L9,11 L7,11 L7,9 Z" id="Combined-Shape"></path>
+                    <rect id="Rectangle-Copy-4" x="0" y="7" width="2" height="2"></rect>
+                    <rect id="Rectangle-Copy-5" x="10" y="7" width="2" height="2"></rect>
+                    <rect id="Rectangle-Copy-6" x="14" y="7" width="2" height="2"></rect>
+                    <rect id="Rectangle-Copy-7" x="12" y="9" width="2" height="2"></rect>
+                    <rect id="Rectangle-Copy-10" x="12" y="14" width="2" height="2"></rect>
+                    <path d="M9,12 L10,12 L10,11 L12,11 L12,14 L10,14 L9,14 L9,16 L7,16 L7,12 L9,12 Z" id="Combined-Shape"></path>
+                    <rect id="Rectangle-Copy-9" x="14" y="11" width="2" height="3"></rect>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

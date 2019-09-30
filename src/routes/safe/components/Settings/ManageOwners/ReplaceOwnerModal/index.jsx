@@ -2,8 +2,10 @@
 import React, { useState, useEffect } from 'react'
 import { List } from 'immutable'
 import { withStyles } from '@material-ui/core/styles'
-import { SharedSnackbarConsumer } from '~/components/SharedSnackBar'
+import { withSnackbar } from 'notistack'
 import Modal from '~/components/Modal'
+import { type Owner } from '~/routes/safe/store/models/owner'
+import { TX_NOTIFICATION_TYPES } from '~/logic/safe/transactions'
 import { getGnosisSafeInstanceAt, SENTINEL_ADDRESS } from '~/logic/contracts/safeContracts'
 import OwnerForm from './screens/OwnerForm'
 import ReviewReplaceOwner from './screens/Review'
@@ -25,10 +27,11 @@ type Props = {
   ownerAddress: string,
   ownerName: string,
   owners: List<Owner>,
-  network: string,
   threshold: string,
   createTransaction: Function,
   replaceSafeOwner: Function,
+  enqueueSnackbar: Function,
+  closeSnackbar: Function,
 }
 type ActiveScreen = 'checkOwner' | 'reviewReplaceOwner'
 
@@ -36,21 +39,30 @@ export const sendReplaceOwner = async (
   values: Object,
   safeAddress: string,
   ownerAddressToRemove: string,
-  ownerNameToRemove: string,
-  ownersOld: List<Owner>,
-  openSnackbar: Function,
+  enqueueSnackbar: Function,
+  closeSnackbar: Function,
   createTransaction: Function,
   replaceSafeOwner: Function,
 ) => {
   const gnosisSafe = await getGnosisSafeInstanceAt(safeAddress)
   const safeOwners = await gnosisSafe.getOwners()
-  const index = safeOwners.findIndex(ownerAddress => ownerAddress.toLowerCase() === ownerAddressToRemove.toLowerCase())
+  const index = safeOwners.findIndex(
+    (ownerAddress) => ownerAddress.toLowerCase() === ownerAddressToRemove.toLowerCase(),
+  )
   const prevAddress = index === 0 ? SENTINEL_ADDRESS : safeOwners[index - 1]
   const txData = gnosisSafe.contract.methods
     .swapOwner(prevAddress, ownerAddressToRemove, values.ownerAddress)
     .encodeABI()
 
-  const txHash = await createTransaction(safeAddress, safeAddress, 0, txData, openSnackbar)
+  const txHash = await createTransaction(
+    safeAddress,
+    safeAddress,
+    0,
+    txData,
+    TX_NOTIFICATION_TYPES.OWNER_CHANGE_TX,
+    enqueueSnackbar,
+    closeSnackbar,
+  )
 
   if (txHash) {
     replaceSafeOwner({
@@ -71,10 +83,11 @@ const ReplaceOwner = ({
   ownerAddress,
   ownerName,
   owners,
-  network,
   threshold,
   createTransaction,
   replaceSafeOwner,
+  enqueueSnackbar,
+  closeSnackbar,
 }: Props) => {
   const [activeScreen, setActiveScreen] = useState<ActiveScreen>('checkOwner')
   const [values, setValues] = useState<Object>({})
@@ -96,69 +109,57 @@ const ReplaceOwner = ({
     setActiveScreen('reviewReplaceOwner')
   }
 
-  return (
-    <React.Fragment>
-      <SharedSnackbarConsumer>
-        {({ openSnackbar }) => {
-          const onReplaceOwner = () => {
-            onClose()
-            try {
-              sendReplaceOwner(
-                values,
-                safeAddress,
-                ownerAddress,
-                ownerName,
-                owners,
-                openSnackbar,
-                createTransaction,
-                replaceSafeOwner,
-              )
-            } catch (error) {
-              // eslint-disable-next-line
-              console.log('Error while removing an owner ' + error)
-            }
-          }
+  const onReplaceOwner = () => {
+    onClose()
+    try {
+      sendReplaceOwner(
+        values,
+        safeAddress,
+        ownerAddress,
+        enqueueSnackbar,
+        closeSnackbar,
+        createTransaction,
+        replaceSafeOwner,
+      )
+    } catch (error) {
+      console.error('Error while removing an owner', error)
+    }
+  }
 
-          return (
-            <Modal
-              title="Replace owner from Safe"
-              description="Replace owner from Safe"
-              handleClose={onClose}
-              open={isOpen}
-              paperClassName={classes.biggerModalWindow}
-            >
-              <React.Fragment>
-                {activeScreen === 'checkOwner' && (
-                  <OwnerForm
-                    onClose={onClose}
-                    ownerAddress={ownerAddress}
-                    ownerName={ownerName}
-                    owners={owners}
-                    network={network}
-                    onSubmit={ownerSubmitted}
-                  />
-                )}
-                {activeScreen === 'reviewReplaceOwner' && (
-                  <ReviewReplaceOwner
-                    onClose={onClose}
-                    safeName={safeName}
-                    owners={owners}
-                    network={network}
-                    values={values}
-                    ownerAddress={ownerAddress}
-                    ownerName={ownerName}
-                    onClickBack={onClickBack}
-                    onSubmit={onReplaceOwner}
-                    threshold={threshold}
-                  />
-                )}
-              </React.Fragment>
-            </Modal>
-          )
-        }}
-      </SharedSnackbarConsumer>
-    </React.Fragment>
+  return (
+    <Modal
+      title="Replace owner from Safe"
+      description="Replace owner from Safe"
+      handleClose={onClose}
+      open={isOpen}
+      paperClassName={classes.biggerModalWindow}
+    >
+      <>
+        {activeScreen === 'checkOwner' && (
+          <OwnerForm
+            onClose={onClose}
+            ownerAddress={ownerAddress}
+            ownerName={ownerName}
+            owners={owners}
+            onSubmit={ownerSubmitted}
+          />
+        )}
+        {activeScreen === 'reviewReplaceOwner' && (
+          <ReviewReplaceOwner
+            onClose={onClose}
+            safeName={safeName}
+            owners={owners}
+            values={values}
+            ownerAddress={ownerAddress}
+            ownerName={ownerName}
+            onClickBack={onClickBack}
+            onSubmit={onReplaceOwner}
+            threshold={threshold}
+          />
+        )}
+      </>
+    </Modal>
   )
 }
 
-export default withStyles(styles)(ReplaceOwner)
+export default withStyles(styles)(withSnackbar(ReplaceOwner))

@@ -12,6 +12,7 @@ type Props = {
   weight?: 'light' | 'regular' | 'bolder' | 'bold',
   color?: 'soft' | 'medium' | 'dark' | 'white' | 'fancy' | 'primary' | 'secondary' | 'warning' | 'disabled' | 'error',
   testId?: string,
+  className?: string,
 }
 
 const GnoButtonLink = ({
@@ -20,7 +21,8 @@ const GnoButtonLink = ({
   weight = 'regular',
   color = 'secondary',
   testId = '',
+  className = '',
   ...props
-}: Props) => <button type={type} className={cx(styles.btnLink, size, color, weight)} data-testid={testId} {...props} />
+}: Props) => <button type={type} className={cx(styles.btnLink, size, color, weight, className)} data-testid={testId} {...props} />
 
 export default GnoButtonLink

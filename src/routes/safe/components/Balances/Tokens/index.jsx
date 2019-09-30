@@ -40,7 +40,7 @@ const Tokens = (props: Props) => {
   } = props
 
   return (
-    <React.Fragment>
+    <>
       <Row align="center" grow className={classes.heading}>
         <Paragraph className={classes.manage} noMargin weight="bolder">
           Manage Tokens
@@ -72,7 +72,7 @@ const Tokens = (props: Props) => {
           tokens={tokens}
         />
       )}
-    </React.Fragment>
+    </>
   )
 }
 

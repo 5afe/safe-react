@@ -1,13 +1,10 @@
 // @flow
-import { sm, xs } from '~/theme/variables'
+import { sm } from '~/theme/variables'
 
 export const styles = (theme: Object) => ({
   root: {
     width: '20px',
     marginRight: sm,
-  },
-  zero: {
-    letterSpacing: '-0.5px',
   },
   message: {
     margin: `${sm} 0`,
@@ -17,6 +14,9 @@ export const styles = (theme: Object) => ({
   },
   iconSmall: {
     fontSize: 16,
+  },
+  receiveModal: {
+    height: '544px',
   },
   hide: {
     '&:hover': {
@@ -33,17 +33,25 @@ export const styles = (theme: Object) => ({
     justifyContent: 'flex-end',
     visibility: 'hidden',
   },
-  send: {
-    minWidth: '0px',
-    marginRight: sm,
-    width: '70px',
-  },
   receive: {
-    minWidth: '0px',
     width: '95px',
+    minWidth: '95px',
+    marginLeft: sm,
+    borderRadius: '4px',
+    '& > span': {
+      fontSize: '14px',
+    },
+  },
+  send: {
+    width: '75px',
+    minWidth: '75px',
+    borderRadius: '4px',
+    '& > span': {
+      fontSize: '14px',
+    },
   },
   leftIcon: {
-    marginRight: xs,
+    marginRight: sm,
   },
   links: {
     textDecoration: 'underline',

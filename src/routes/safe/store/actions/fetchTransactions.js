@@ -13,8 +13,8 @@ import { getWeb3 } from '~/logic/wallets/getWeb3'
 import { EMPTY_DATA } from '~/logic/wallets/ethTransactions'
 import { addTransactions } from './addTransactions'
 import { getHumanFriendlyToken } from '~/logic/tokens/store/actions/fetchTokens'
-import { isAddressAToken } from '~/logic/tokens/utils/tokenHelpers'
-import { TX_TYPE_EXECUTION } from '~/logic/safe/transactions/send'
+import { isTokenTransfer } from '~/logic/tokens/utils/tokenHelpers'
+import { TX_TYPE_EXECUTION } from '~/logic/safe/transactions'
 import { decodeParamsFromSafeMethod } from '~/logic/contracts/methodIds'
 
 let web3
@@ -32,8 +32,9 @@ type TxServiceModel = {
   data: string,
   operation: number,
   nonce: number,
-  submissionDate: Date,
-  executionDate: Date,
+  safeTxHash: string,
+  submissionDate: string,
+  executionDate: string,
   confirmations: ConfirmationServiceModel[],
   isExecuted: boolean,
 }
@@ -58,10 +59,11 @@ export const buildTransactionFrom = async (
   )
   const modifySettingsTx = tx.to === safeAddress && Number(tx.value) === 0 && !!tx.data
   const cancellationTx = tx.to === safeAddress && Number(tx.value) === 0 && !tx.data
-  const isTokenTransfer = await isAddressAToken(tx.to)
+  const customTx = tx.to !== safeAddress && !!tx.data
+  const isSendTokenTx = await isTokenTransfer(tx.data, tx.value)
 
   let executionTxHash
-  const executionTx = confirmations.find(conf => conf.type === TX_TYPE_EXECUTION)
+  const executionTx = confirmations.find((conf) => conf.type === TX_TYPE_EXECUTION)
 
   if (executionTx) {
     executionTxHash = executionTx.hash
@@ -69,7 +71,7 @@ export const buildTransactionFrom = async (
 
   let symbol = 'ETH'
   let decodedParams
-  if (isTokenTransfer) {
+  if (isSendTokenTx) {
     const tokenContract = await getHumanFriendlyToken()
     const tokenInstance = await tokenContract.at(tx.to)
     symbol = await tokenInstance.symbol()
@@ -80,6 +82,8 @@ export const buildTransactionFrom = async (
       value: params[1],
     }
   } else if (modifySettingsTx && tx.data) {
+    decodedParams = await decodeParamsFromSafeMethod(tx.data)
+  } else if (customTx && tx.data) {
     decodedParams = await decodeParamsFromSafeMethod(tx.data)
   }
 
@@ -96,9 +100,10 @@ export const buildTransactionFrom = async (
     executionDate: tx.executionDate,
     executionTxHash,
     safeTxHash: tx.safeTxHash,
-    isTokenTransfer,
+    isTokenTransfer: isSendTokenTx,
     decodedParams,
     modifySettingsTx,
+    customTx,
     cancellationTx,
   })
 }

@@ -1,32 +1,27 @@
 // @flow
 import {
-  fontColor, lg, smallFontSize, md,
+  fontColor, lg, smallFontSize, border, secondaryText,
 } from '~/theme/variables'
 
 export const styles = () => ({
   ownersText: {
-    fontSize: '26px',
-    color: '#8896b6',
+    color: secondaryText,
     '& b': {
       color: fontColor,
     },
   },
   container: {
-    height: '100%',
-    position: 'relative',
     padding: lg,
   },
   buttonRow: {
+    padding: lg,
     position: 'absolute',
-    bottom: '51px',
     left: 0,
-    height: '51px',
-    width: '100%',
-    paddingRight: md,
-    display: 'flex',
-    justifyContent: 'flex-end',
-    borderTop: 'solid 1px #e4e8f1',
+    bottom: 0,
     boxSizing: 'border-box',
+    width: '100%',
+    justifyContent: 'flex-end',
+    borderTop: `2px solid ${border}`,
   },
   modifyBtn: {
     height: '32px',

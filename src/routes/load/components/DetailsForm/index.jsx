@@ -1,24 +1,27 @@
 // @flow
 import * as React from 'react'
 import { withStyles } from '@material-ui/core/styles'
+import SafeProxy from '@gnosis.pm/safe-contracts/build/contracts/Proxy.json'
+import InputAdornment from '@material-ui/core/InputAdornment'
+import CheckCircle from '@material-ui/icons/CheckCircle'
 import Field from '~/components/forms/Field'
+import AddressInput from '~/components/forms/AddressInput'
 import {
   composeValidators, required, noErrorsOn, mustBeEthereumAddress,
 } from '~/components/forms/validator'
 import TextField from '~/components/forms/TextField'
-import InputAdornment from '@material-ui/core/InputAdornment'
-import CheckCircle from '@material-ui/icons/CheckCircle'
 import Block from '~/components/layout/Block'
 import Paragraph from '~/components/layout/Paragraph'
 import OpenPaper from '~/components/Stepper/OpenPaper'
 import { FIELD_LOAD_NAME, FIELD_LOAD_ADDRESS } from '~/routes/load/components/fields'
 import { getWeb3 } from '~/logic/wallets/getWeb3'
-import SafeProxy from '@gnosis.pm/safe-contracts/build/contracts/Proxy.json'
 import { getSafeMasterContract } from '~/logic/contracts/safeContracts'
+import { secondary } from '~/theme/variables'
 
 type Props = {
   classes: Object,
   errors: Object,
+  form: Object,
 }
 
 const styles = () => ({
@@ -30,6 +33,11 @@ const styles = () => ({
   check: {
     color: '#03AE60',
     height: '20px',
+  },
+  links: {
+    '&>a': {
+      color: secondary,
+    },
   },
 })
 
@@ -43,6 +51,7 @@ export const safeFieldsValidation = async (values: Object) => {
   const errors = {}
   const web3 = getWeb3()
   const safeAddress = values[FIELD_LOAD_ADDRESS]
+
   if (!safeAddress || mustBeEthereumAddress(safeAddress) !== undefined) {
     return errors
   }
@@ -80,12 +89,15 @@ export const safeFieldsValidation = async (values: Object) => {
   return errors
 }
 
-const Details = ({ classes, errors }: Props) => (
-  <React.Fragment>
-    <Block margin="sm">
+const Details = ({ classes, errors, form }: Props) => (
+  <>
+    <Block margin="md">
       <Paragraph noMargin size="md" color="primary">
-        Adding an existing Safe only requires the Safe address. Optionally you can give it a name. In case your
-        connected client is not the owner of the Safe, the interface will essentially provide you a read-only view.
+        You are about to load an existing Gnosis Safe. First, choose a name and enter the Safe address. The name is only
+        stored locally and will never be shared with Gnosis or any third parties.
+        <br />
+        Your connected wallet does not have to be the owner of this Safe. In this case, the interface will provide you a
+        read-only view.
       </Paragraph>
     </Block>
     <Block className={classes.root}>
@@ -99,9 +111,12 @@ const Details = ({ classes, errors }: Props) => (
       />
     </Block>
     <Block margin="lg" className={classes.root}>
-      <Field
+      <AddressInput
         name={FIELD_LOAD_ADDRESS}
         component={TextField}
+        fieldMutator={(val) => {
+          form.mutators.setValue(FIELD_LOAD_ADDRESS, val)
+        }}
         inputAdornment={
           noErrorsOn(FIELD_LOAD_ADDRESS, errors) && {
             endAdornment: (
@@ -117,17 +132,34 @@ const Details = ({ classes, errors }: Props) => (
         text="Safe Address"
       />
     </Block>
-  </React.Fragment>
+    <Block margin="sm">
+      <Paragraph noMargin size="md" color="primary" className={classes.links}>
+        By continuing you consent with the
+        {' '}
+        <a rel="noopener noreferrer" href="https://safe.gnosis.io/terms" target="_blank">
+          terms of use
+        </a>
+        {' '}
+        and
+        {' '}
+        <a rel="noopener noreferrer" href="https://safe.gnosis.io/privacy" target="_blank">
+          privacy policy
+        </a>
+        . Most importantly, you confirm that your funds are held securely in the Gnosis Safe, a smart contract on the
+        Ethereum blockchain. These funds cannot be accessed by Gnosis at any point.
+      </Paragraph>
+    </Block>
+  </>
 )
 
 const DetailsForm = withStyles(styles)(Details)
 
-const DetailsPage = () => (controls: React.Node, { errors }: Object) => (
-  <React.Fragment>
-    <OpenPaper controls={controls} container={605}>
-      <DetailsForm errors={errors} />
+const DetailsPage = () => (controls: React.Node, { errors, form }: Object) => (
+  <>
+    <OpenPaper controls={controls}>
+      <DetailsForm errors={errors} form={form} />
     </OpenPaper>
-  </React.Fragment>
+  </>
 )
 
 export default DetailsPage

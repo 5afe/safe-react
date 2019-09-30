@@ -104,12 +104,12 @@ const UserDetails = ({
   provider, connected, network, userAddress, classes, onDisconnect,
 }: Props) => {
   const status = connected ? 'Connected' : 'Connection error'
-  const address = userAddress ? shortVersionOf(userAddress, 6) : 'Address not available'
+  const address = userAddress ? shortVersionOf(userAddress, 4) : 'Address not available'
   const identiconAddress = userAddress || 'random'
   const color = connected ? 'primary' : 'warning'
 
   return (
-    <React.Fragment>
+    <>
       <Block className={classes.container}>
         <Row className={classes.identicon} margin="md" align="center">
           {connected ? (
@@ -119,11 +119,11 @@ const UserDetails = ({
           )}
         </Row>
         <Block align="center" className={classes.user}>
-          <Paragraph className={classes.address} size="sm" noMargin>
+          <Paragraph className={classes.address} size="xs" noMargin>
             {address}
           </Paragraph>
           {userAddress && (
-            <Link className={classes.open} to={getEtherScanLink('address', userAddress, network)} target="_blank">
+            <Link className={classes.open} to={getEtherScanLink('address', userAddress)} target="_blank">
               <OpenInNew style={openIconStyle} />
             </Link>
           )}
@@ -143,13 +143,12 @@ const UserDetails = ({
       <Hairline margin="xs" />
       <Row className={classes.details}>
         <Paragraph noMargin align="right" className={classes.labels}>
-          Client
+          Wallet
         </Paragraph>
         <Spacer />
         {provider === 'safe'
           ? <Img className={classes.logo} src={safeIcon} height={14} alt="Safe client" />
-          : <Img className={classes.logo} src={metamaskIcon} height={14} alt="Metamask client" />
-        }
+          : <Img className={classes.logo} src={metamaskIcon} height={14} alt="Metamask client" />}
         <Paragraph noMargin align="right" weight="bolder" className={classes.labels}>
           {upperFirst(provider)}
         </Paragraph>
@@ -168,12 +167,12 @@ const UserDetails = ({
       <Hairline margin="xs" />
       <Row className={classes.disconnect}>
         <Button onClick={onDisconnect} size="medium" variant="contained" color="primary" fullWidth>
-          <Paragraph className={classes.disconnectText} size="sm" weight="bold" color="white" noMargin>
-            DISCONNECT
+          <Paragraph className={classes.disconnectText} size="md" color="white" noMargin>
+            Disconnect
           </Paragraph>
         </Button>
       </Row>
-    </React.Fragment>
+    </>
   )
 }
 

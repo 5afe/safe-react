@@ -5,7 +5,6 @@ import Field from '~/components/forms/Field'
 import TextField from '~/components/forms/TextField'
 import { required } from '~/components/forms/validator'
 import Block from '~/components/layout/Block'
-import Row from '~/components/layout/Row'
 import { FIELD_NAME } from '~/routes/open/components/fields'
 import Paragraph from '~/components/layout/Paragraph'
 import OpenPaper from '~/components/Stepper/OpenPaper'
@@ -34,40 +33,13 @@ const styles = () => ({
 })
 
 const SafeName = ({ classes }: Props) => (
-  <React.Fragment>
+  <>
     <Block margin="lg">
-      <Paragraph noMargin size="md" color="primary" className={classes.links}>
-        This setup will create a Safe with one or more owners. Optionally give the Safe a local name. By continuing you
-        consent with the
-        {' '}
-        <a rel="noopener noreferrer" href="https://safe.gnosis.io/terms" target="_blank">
-          terms of use
-        </a>
-        {' '}
-        and
-        {' '}
-        <a rel="noopener noreferrer" href="https://safe.gnosis.io/privacy" target="_blank">
-          privacy policy
-        </a>
-        .
+      <Paragraph noMargin size="md" color="primary">
+        You are about to create a new Gnosis Safe wallet with one or more owners. First, let&apos;s give your new wallet
+        a name. This name is only stored locally and will never be shared with Gnosis or any third parties.
       </Paragraph>
     </Block>
-    <Row margin="md" className={classes.text}>
-      <Paragraph noMargin className={classes.dot} color="secondary">
-        &#9679;
-      </Paragraph>
-      <Paragraph noMargin size="md" color="primary" weight="bolder">
-        I understand that my funds are held securely in my Safe. They cannot be accessed by Gnosis.
-      </Paragraph>
-    </Row>
-    <Row margin="md">
-      <Paragraph noMargin className={classes.dot} color="secondary">
-        &#9679;
-      </Paragraph>
-      <Paragraph noMargin size="md" color="primary" weight="bolder">
-        My Safe is a smart contract on the Ethereum blockchain.
-      </Paragraph>
-    </Row>
     <Block margin="lg" className={classes.root}>
       <Field
         name={FIELD_NAME}
@@ -78,13 +50,30 @@ const SafeName = ({ classes }: Props) => (
         text="Safe name"
       />
     </Block>
-  </React.Fragment>
+    <Block margin="lg">
+      <Paragraph noMargin size="md" color="primary" className={classes.links}>
+        By continuing you consent with the
+        {' '}
+        <a rel="noopener noreferrer" href="https://safe.gnosis.io/terms" target="_blank">
+          terms of use
+        </a>
+        {' '}
+        and
+        {' '}
+        <a rel="noopener noreferrer" href="https://safe.gnosis.io/privacy" target="_blank">
+          privacy policy
+        </a>
+        . Most importantly, you confirm that your funds are held securely in the Gnosis Safe, a smart contract on the
+        Ethereum blockchain. These funds cannot be accessed by Gnosis at any point.
+      </Paragraph>
+    </Block>
+  </>
 )
 
 const SafeNameForm = withStyles(styles)(SafeName)
 
 const SafeNamePage = () => (controls: React.Node) => (
-  <OpenPaper controls={controls} container={600}>
+  <OpenPaper controls={controls}>
     <SafeNameForm />
   </OpenPaper>
 )

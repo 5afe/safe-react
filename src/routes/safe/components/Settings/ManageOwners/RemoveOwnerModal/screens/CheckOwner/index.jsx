@@ -29,24 +29,18 @@ type Props = {
   classes: Object,
   ownerAddress: string,
   ownerName: string,
-  network: string,
   onSubmit: Function,
 }
 
 const CheckOwner = ({
-  classes,
-  onClose,
-  ownerAddress,
-  ownerName,
-  network,
-  onSubmit,
+  classes, onClose, ownerAddress, ownerName, onSubmit,
 }: Props) => {
   const handleSubmit = (values) => {
     onSubmit(values)
   }
 
   return (
-    <React.Fragment>
+    <>
       <Row align="center" grow className={classes.heading}>
         <Paragraph weight="bolder" className={classes.manage} noMargin>
           Remove owner
@@ -59,9 +53,7 @@ const CheckOwner = ({
       <Hairline />
       <Block className={classes.formContainer}>
         <Row margin="md">
-          <Paragraph>
-            Review the owner you want to remove from the active Safe:
-          </Paragraph>
+          <Paragraph>Review the owner you want to remove from the active Safe:</Paragraph>
         </Row>
         <Row className={classes.owner}>
           <Col xs={1} align="center">
@@ -76,7 +68,7 @@ const CheckOwner = ({
                 <Paragraph size="md" color="disabled" noMargin>
                   {ownerAddress}
                 </Paragraph>
-                <Link className={classes.open} to={getEtherScanLink('address', ownerAddress, network)} target="_blank">
+                <Link className={classes.open} to={getEtherScanLink('address', ownerAddress)} target="_blank">
                   <OpenInNew style={openIconStyle} />
                 </Link>
               </Block>
@@ -86,13 +78,14 @@ const CheckOwner = ({
       </Block>
       <Hairline />
       <Row align="center" className={classes.buttonRow}>
-        <Button className={classes.button} minWidth={140} onClick={onClose}>
+        <Button minWidth={140} minHeight={42} onClick={onClose}>
           Cancel
         </Button>
         <Button
           type="submit"
           variant="contained"
           minWidth={140}
+          minHeight={42}
           color="primary"
           onClick={handleSubmit}
           testId={REMOVE_OWNER_MODAL_NEXT_BTN_TEST_ID}
@@ -100,7 +93,7 @@ const CheckOwner = ({
           Next
         </Button>
       </Row>
-    </React.Fragment>
+    </>
   )
 }
 

@@ -9,8 +9,8 @@ import Col from '~/components/layout/Col'
 import Row from '~/components/layout/Row'
 import Span from '~/components/layout/Span'
 import Img from '~/components/layout/Img'
+import ButtonLink from '~/components/layout/ButtonLink'
 import RemoveSafeModal from './RemoveSafeModal'
-import Paragraph from '~/components/layout/Paragraph'
 import Hairline from '~/components/layout/Hairline'
 import { type Owner } from '~/routes/safe/store/models/owner'
 import ChangeSafeName from './ChangeSafeName'
@@ -39,6 +39,7 @@ type Props = Actions & {
   createTransaction: Function,
   addSafeOwner: Function,
   removeSafeOwner: Function,
+  updateSafe: Function,
   replaceSafeOwner: Function,
   editSafeOwner: Function,
   userAddress: string,
@@ -47,12 +48,16 @@ type Props = Actions & {
 type Action = 'RemoveSafe'
 
 class Settings extends React.Component<Props, State> {
-  state = {
-    showRemoveSafe: false,
-    menuOptionIndex: 1,
+  constructor(props) {
+    super(props)
+
+    this.state = {
+      showRemoveSafe: false,
+      menuOptionIndex: 1,
+    }
   }
 
-  handleChange = menuOptionIndex => () => {
+  handleChange = (menuOptionIndex) => () => {
     this.setState({ menuOptionIndex })
   }
 
@@ -85,28 +90,19 @@ class Settings extends React.Component<Props, State> {
     } = this.props
 
     return (
-      <React.Fragment>
-        <Row align="center" className={classes.message}>
-          <Col xs={6}>
-            <Paragraph className={classes.settings} size="lg" weight="bolder">
-              Settings
-            </Paragraph>
-          </Col>
-          <Col xs={6} end="sm">
-            <Paragraph noMargin size="md" color="error" onClick={this.onShow('RemoveSafe')}>
-              <Span className={cn(classes.links, classes.removeSafeText)}>
-                Remove Safe
-              </Span>
-              <Img alt="Trash Icon" className={classes.removeSafeIcon} src={RemoveSafeIcon} />
-            </Paragraph>
-            <RemoveSafeModal
-              onClose={this.onHide('RemoveSafe')}
-              isOpen={showRemoveSafe}
-              etherScanLink={etherScanLink}
-              safeAddress={safeAddress}
-              safeName={safeName}
-            />
-          </Col>
+      <>
+        <Row className={classes.message}>
+          <ButtonLink size="lg" color="error" className={classes.removeSafeBtn} onClick={this.onShow('RemoveSafe')}>
+            <Span className={classes.links}>Remove Safe</Span>
+            <Img alt="Trash Icon" className={classes.removeSafeIcon} src={RemoveSafeIcon} />
+          </ButtonLink>
+          <RemoveSafeModal
+            onClose={this.onHide('RemoveSafe')}
+            isOpen={showRemoveSafe}
+            etherScanLink={etherScanLink}
+            safeAddress={safeAddress}
+            safeName={safeName}
+          />
         </Row>
         <Block className={classes.root}>
           <Col xs={3} layout="column">
@@ -128,17 +124,13 @@ class Settings extends React.Component<Props, State> {
 )
               </Row>
               <Hairline />
-              {granted && (
-                <React.Fragment>
-                  <Row
-                    className={cn(classes.menuOption, menuOptionIndex === 3 && classes.active)}
-                    onClick={this.handleChange(3)}
-                  >
-                    Required confirmations
-                  </Row>
-                  <Hairline />
-                </React.Fragment>
-              )}
+              <Row
+                className={cn(classes.menuOption, menuOptionIndex === 3 && classes.active)}
+                onClick={this.handleChange(3)}
+              >
+                Required confirmations
+              </Row>
+              <Hairline />
             </Block>
           </Col>
           <Col xs={9} layout="column">
@@ -162,18 +154,19 @@ class Settings extends React.Component<Props, State> {
                   granted={granted}
                 />
               )}
-              {granted && menuOptionIndex === 3 && (
+              {menuOptionIndex === 3 && (
                 <ThresholdSettings
                   owners={owners}
                   threshold={threshold}
                   createTransaction={createTransaction}
                   safeAddress={safeAddress}
+                  granted={granted}
                 />
               )}
             </Block>
           </Col>
         </Block>
-      </React.Fragment>
+      </>
     )
   }
 }

@@ -1,5 +1,5 @@
 // @flow
-import { fireEvent, cleanup } from '@testing-library/react'
+import { fireEvent, waitForElement } from '@testing-library/react'
 import { aNewStore } from '~/store'
 import { aMinedSafe } from '~/test/builder/safe.redux.builder'
 import { renderSafeView } from '~/test/builder/safe.dom.utils'
@@ -40,8 +40,6 @@ import {
 } from '~/routes/safe/components/Settings/ManageOwners/ReplaceOwnerModal/screens/OwnerForm'
 import { REPLACE_OWNER_SUBMIT_BTN_TEST_ID } from '~/routes/safe/components/Settings/ManageOwners/ReplaceOwnerModal/screens/Review'
 
-afterEach(cleanup)
-
 describe('DOM > Feature > Settings - Manage owners', () => {
   let store
   let safeAddress
@@ -57,17 +55,15 @@ describe('DOM > Feature > Settings - Manage owners', () => {
     await sleep(1300)
 
     // Travel to settings
-    const settingsBtn = SafeDom.getByTestId(SETTINGS_TAB_BTN_TEST_ID)
+    const settingsBtn = await waitForElement(() => SafeDom.getByTestId(SETTINGS_TAB_BTN_TEST_ID))
     fireEvent.click(settingsBtn)
-    await sleep(200)
 
     // click on owners settings
-    const ownersSettingsBtn = SafeDom.getByTestId(OWNERS_SETTINGS_TAB_TEST_ID)
+    const ownersSettingsBtn = await waitForElement(() => SafeDom.getByTestId(OWNERS_SETTINGS_TAB_TEST_ID))
     fireEvent.click(ownersSettingsBtn)
-    await sleep(200)
 
     // open rename owner modal
-    const renameOwnerBtn = SafeDom.getByTestId(RENAME_OWNER_BTN_TEST_ID)
+    const renameOwnerBtn = await waitForElement(() => SafeDom.getByTestId(RENAME_OWNER_BTN_TEST_ID))
     fireEvent.click(renameOwnerBtn)
 
     // rename owner

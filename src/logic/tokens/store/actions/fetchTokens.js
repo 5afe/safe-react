@@ -40,8 +40,7 @@ export const fetchTokens = () => async (dispatch: ReduxDispatch<GlobalState>) =>
 
     dispatch(saveTokens(tokens))
   } catch (err) {
-    // eslint-disable-next-line
-    console.log('Error fetching token list ' + err)
+    console.error('Error fetching token list', err)
 
     return Promise.resolve()
   }

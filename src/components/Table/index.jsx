@@ -20,14 +20,15 @@ type Props<K> = {
   classes: Object,
   children: Function,
   size: number,
-  defaultFixed?: boolean,
-  defaultOrder?: 'desc' | 'asc',
+  defaultFixed: boolean,
+  defaultOrder: 'desc' | 'asc',
   noBorder: boolean,
+  disablePagination: boolean,
 }
 
 type State = {
   page: number,
-  order: Order,
+  order?: Order,
   orderBy?: string,
   orderProp: boolean,
   rowsPerPage: number,
@@ -37,7 +38,8 @@ type State = {
 const styles = {
   root: {
     backgroundColor: 'white',
-    boxShadow: '0 -1px 4px 0 rgba(74, 85, 121, 0.5)',
+    borderRadius: '8px',
+    boxShadow: '1px 2px 10px 0 rgba(212, 212, 211, 0.59)',
   },
   selectRoot: {
     lineHeight: '40px',
@@ -48,8 +50,11 @@ const styles = {
   },
   paginationRoot: {
     backgroundColor: 'white',
-    boxShadow: '0 2px 4px 0 rgba(74, 85, 121, 0.5)',
+    boxShadow: '1px 2px 10px 0 rgba(212, 212, 211, 0.59)',
     marginBottom: xl,
+    borderRadius: '8px',
+    borderTopLeftRadius: 0,
+    borderTopRightRadius: 0,
   },
   loader: {
     alignItems: 'center',
@@ -69,13 +74,17 @@ const nextProps = {
 }
 
 class GnoTable<K> extends React.Component<Props<K>, State> {
-  state = {
-    page: 0,
-    order: undefined,
-    orderBy: undefined,
-    fixed: undefined,
-    orderProp: false,
-    rowsPerPage: 5,
+  constructor(props) {
+    super(props)
+
+    this.state = {
+      page: 0,
+      order: undefined,
+      orderBy: undefined,
+      fixed: undefined,
+      orderProp: false,
+      rowsPerPage: 5,
+    }
   }
 
   componentDidMount() {
@@ -128,7 +137,17 @@ class GnoTable<K> extends React.Component<Props<K>, State> {
 
   render() {
     const {
-      data, label, columns, classes, children, size, defaultOrderBy, defaultOrder, defaultFixed, noBorder,
+      data,
+      label,
+      columns,
+      classes,
+      children,
+      size,
+      disablePagination,
+      defaultOrderBy,
+      defaultOrder,
+      defaultFixed,
+      noBorder,
     } = this.props
     const {
       order, orderBy, page, orderProp, rowsPerPage, fixed,
@@ -143,16 +162,17 @@ class GnoTable<K> extends React.Component<Props<K>, State> {
       input: classes.white,
     }
 
-    const sortedData = stableSort(data, getSorting(orderParam, orderByParam, orderProp), fixedParam).slice(
-      page * rowsPerPage,
-      page * rowsPerPage + rowsPerPage,
-    )
+    let sortedData = stableSort(data, getSorting(orderParam, orderByParam, orderProp), fixedParam)
+
+    if (!disablePagination) {
+      sortedData = sortedData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+    }
 
     const emptyRows = rowsPerPage - Math.min(rowsPerPage, data.length - page * rowsPerPage)
     const isEmpty = size === 0
 
     return (
-      <React.Fragment>
+      <>
         {!isEmpty && (
           <Table aria-labelledby={label} className={noBorder ? '' : classes.root}>
             <TableHead columns={columns} order={order} orderBy={orderByParam} onSort={this.onSort} />
@@ -167,25 +187,28 @@ class GnoTable<K> extends React.Component<Props<K>, State> {
             <CircularProgress size={60} />
           </Row>
         )}
-        <TablePagination
-          component="div"
-          count={size}
-          rowsPerPage={rowsPerPage}
-          rowsPerPageOptions={[5, 10, 25, 50, 100]}
-          page={page}
-          backIconButtonProps={backProps}
-          nextIconButtonProps={nextProps}
-          onChangePage={this.handleChangePage}
-          onChangeRowsPerPage={this.handleChangeRowsPerPage}
-          classes={paginationClasses}
-        />
-      </React.Fragment>
+        {!disablePagination && (
+          <TablePagination
+            component="div"
+            count={size}
+            rowsPerPage={rowsPerPage}
+            rowsPerPageOptions={[5, 10, 25, 50, 100]}
+            page={page}
+            backIconButtonProps={backProps}
+            nextIconButtonProps={nextProps}
+            onChangePage={this.handleChangePage}
+            onChangeRowsPerPage={this.handleChangeRowsPerPage}
+            classes={paginationClasses}
+          />
+        )}
+      </>
     )
   }
 }
 
 GnoTable.defaultProps = {
   defaultOrder: 'asc',
+  disablePagination: false,
 }
 
 export default withStyles(styles)(GnoTable)
