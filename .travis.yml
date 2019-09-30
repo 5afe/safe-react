@@ -9,11 +9,20 @@ node_js:
 os:
   - linux
 env:
-  - DOCKER_COMPOSE_VERSION=1.22.0
+  global:
+    - DOCKER_COMPOSE_VERSION=1.22.0
+matrix:
+  include:
+  - env:
+    - REACT_APP_NETWORK='mainnet'
+    - STAGING_BUCKET_NAME=${STAGING_MAINNET_BUCKET_NAME}
+    if: (branch = master AND NOT type = pull_request) OR tag IS present
+  - env:
+    - REACT_APP_NETWORK='rinkeby'
 before_install:
   # Install custom docker-compose version
   - sudo rm /usr/local/bin/docker-compose
-  - curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > docker-compose
+  - curl -Ls https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > docker-compose
   - chmod +x docker-compose
   - sudo mv docker-compose /usr/local/bin
   # Shut down postgres because it blocks our db container's port map to :5432
@@ -50,6 +59,7 @@ after_success:
     else
       export NODE_ENV=development;
     fi
+  - if [[ -n "$TRAVIS_TAG" ]]; then export REACT_APP_ENV='production'; fi
   - yarn build-storybook
   - yarn build
   # Pull Request - Deploy it to a review environment
@@ -91,3 +101,18 @@ deploy:
   upload-dir: current
   on:
     branch: master
+
+  # Prepare production deployment
+- provider: s3
+  bucket: $STAGING_BUCKET_NAME
+  secret_access_key: $AWS_SECRET_ACCESS_KEY
+  access_key_id: $AWS_ACCESS_KEY_ID
+  skip_cleanup: true
+  local_dir: build_webpack
+  upload-dir: releases/$TRAVIS_TAG
+  on:
+    tags: true
+- provider: script
+  script: bash config/travis/prepare_production_deployment.sh
+  on:
+    tags: true

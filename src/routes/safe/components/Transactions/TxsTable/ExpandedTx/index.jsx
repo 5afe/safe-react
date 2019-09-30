@@ -74,7 +74,7 @@ const ExpandedTx = ({
               <Paragraph noMargin>
                 <Bold>TX hash: </Bold>
                 {tx.executionTxHash ? (
-                  <a href={getEtherScanLink('tx', tx.executionTxHash, 'rinkeby')} target="_blank" rel="noopener noreferrer">
+                  <a href={getEtherScanLink('tx', tx.executionTxHash)} target="_blank" rel="noopener noreferrer">
                     {shortVersionOf(tx.executionTxHash, 4)}
                     <OpenInNew style={openIconStyle} />
                   </a>

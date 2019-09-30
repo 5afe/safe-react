@@ -123,7 +123,7 @@ const UserDetails = ({
             {address}
           </Paragraph>
           {userAddress && (
-            <Link className={classes.open} to={getEtherScanLink('address', userAddress, network)} target="_blank">
+            <Link className={classes.open} to={getEtherScanLink('address', userAddress)} target="_blank">
               <OpenInNew style={openIconStyle} />
             </Link>
           )}
@@ -143,7 +143,7 @@ const UserDetails = ({
       <Hairline margin="xs" />
       <Row className={classes.details}>
         <Paragraph noMargin align="right" className={classes.labels}>
-          Client
+          Wallet
         </Paragraph>
         <Spacer />
         {provider === 'safe'

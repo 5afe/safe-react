@@ -14,8 +14,7 @@ export const saveActiveTokens = async (tokens: Map<string, Token>) => {
   try {
     await saveToStorage(ACTIVE_TOKENS_KEY, tokens.toJS())
   } catch (err) {
-    // eslint-disable-next-line
-    console.log('Error storing tokens in localstorage')
+    console.error('Error storing tokens in localstorage', err)
   }
 }
 
@@ -38,8 +37,7 @@ export const removeTokenFromStorage = async (safeAddress: string, token: Token) 
     const index = data.indexOf(token)
     await saveToStorage(CUSTOM_TOKENS_KEY, data.remove(index))
   } catch (err) {
-    // eslint-disable-next-line
-    console.log('Error removing token in localstorage')
+    console.error('Error removing token in localstorage', err)
   }
 }
 

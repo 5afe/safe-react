@@ -82,8 +82,7 @@ export const generateTxGasEstimateFrom = async (
     // Add 10k else we will fail in case of nested calls
     return txGasEstimate.toNumber() + 10000
   } catch (error) {
-    // eslint-disable-next-line
-    console.log('Error calculating tx gas estimation ' + error)
+    console.error('Error calculating tx gas estimation', error)
     return 0
   }
 }
@@ -128,8 +127,7 @@ export const calculateTxFee = async (
 
     return estimate
   } catch (error) {
-    // eslint-disable-next-line
-    console.log('Error calculating tx gas estimation ' + error)
+    console.error('Error calculating tx gas estimation', error)
     return 0
   }
 }

@@ -50,8 +50,7 @@ class Load extends React.Component<Props> {
       const url = `${SAFELIST_ADDRESS}/${safeAddress}`
       history.push(url)
     } catch (error) {
-      // eslint-disable-next-line
-      console.log('Error while loading the Safe' + error)
+      console.error('Error while loading the Safe', error)
     }
   }
 

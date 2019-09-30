@@ -1,17 +1,19 @@
 // @flow
 import React from 'react'
 import { withStyles } from '@material-ui/core/styles'
+import { withSnackbar } from 'notistack'
 import Block from '~/components/layout/Block'
 import Col from '~/components/layout/Col'
 import Field from '~/components/forms/Field'
 import Heading from '~/components/layout/Heading'
-import { SharedSnackbarConsumer } from '~/components/SharedSnackBar'
 import { composeValidators, required, minMaxLength } from '~/components/forms/validator'
 import TextField from '~/components/forms/TextField'
 import GnoForm from '~/components/forms/GnoForm'
 import Row from '~/components/layout/Row'
 import Paragraph from '~/components/layout/Paragraph'
 import Button from '~/components/layout/Button'
+import { getNofiticationsFromTxType, showSnackbar } from '~/logic/notifications'
+import { TX_NOTIFICATION_TYPES } from '~/logic/safe/transactions'
 import { styles } from './style'
 
 export const SAFE_NAME_INPUT_TEST_ID = 'safe-name-input'
@@ -22,17 +24,20 @@ type Props = {
   safeAddress: string,
   safeName: string,
   updateSafe: Function,
-  openSnackbar: Function,
+  enqueueSnackbar: Function,
+  closeSnackbar: Function,
 }
 
 const ChangeSafeName = (props: Props) => {
   const {
-    classes, safeAddress, safeName, updateSafe, openSnackbar,
+    classes, safeAddress, safeName, updateSafe, enqueueSnackbar, closeSnackbar,
   } = props
 
   const handleSubmit = (values) => {
     updateSafe({ address: safeAddress, name: values.safeName })
-    openSnackbar('Safe name changed', 'success')
+
+    const notification = getNofiticationsFromTxType(TX_NOTIFICATION_TYPES.SAFE_NAME_CHANGE_TX)
+    showSnackbar(notification.afterExecution, enqueueSnackbar, closeSnackbar)
   }
 
   return (
@@ -80,10 +85,4 @@ const ChangeSafeName = (props: Props) => {
   )
 }
 
-const withSnackbar = (props) => (
-  <SharedSnackbarConsumer>
-    {({ openSnackbar }) => <ChangeSafeName {...props} openSnackbar={openSnackbar} />}
-  </SharedSnackbarConsumer>
-)
-
-export default withStyles(styles)(withSnackbar)
+export default withStyles(styles)(withSnackbar(ChangeSafeName))

@@ -2,11 +2,9 @@
 import React from 'react'
 import Tooltip from '@material-ui/core/Tooltip'
 import { withStyles } from '@material-ui/core/styles'
-import { connect } from 'react-redux'
 import Img from '~/components/layout/Img'
 import { getEtherScanLink } from '~/logic/wallets/getWeb3'
 import { xs } from '~/theme/variables'
-import { networkSelector } from '~/logic/wallets/store/selectors'
 import SearchIcon from './search.svg'
 
 const styles = () => ({
@@ -26,17 +24,16 @@ const styles = () => ({
 type EtherscanBtnProps = {
   type: 'tx' | 'address',
   value: string,
-  currentNetwork: string,
   classes: Object,
 }
 
 const EtherscanBtn = ({
-  type, value, currentNetwork, classes,
+  type, value, classes,
 }: EtherscanBtnProps) => (
   <Tooltip title="Show details on Etherscan" placement="top">
     <a
       className={classes.container}
-      href={getEtherScanLink(type, value, currentNetwork)}
+      href={getEtherScanLink(type, value)}
       target="_blank"
       rel="noopener noreferrer"
       aria-label="Show details on Etherscan"
@@ -48,7 +45,4 @@ const EtherscanBtn = ({
 
 const EtherscanBtnWithStyles = withStyles(styles)(EtherscanBtn)
 
-export default connect<Object, Object, ?Function, ?Object>(
-  (state) => ({ currentNetwork: networkSelector(state) }),
-  null,
-)(EtherscanBtnWithStyles)
+export default EtherscanBtnWithStyles

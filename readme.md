@@ -18,7 +18,7 @@ yarn add flow-type // recommended usage of -g flag
 
 We use [yarn](https://yarnpkg.com) in our infrastacture, so we decided to go with yarn in the README
 
-### Installing
+### Installing and running
 
 A step by step series of examples that tell you have to get a development env running
 
@@ -30,8 +30,28 @@ ganache-cli -b 3
 Start the project in the other one
 ```
 yarn install
+```
+
+For Rinkeby:
+```
 yarn start
 ```
+For Mainnet:
+```
+yarn start-mainnet
+```
+
+### Building
+For Rinkeby:
+```
+yarn build
+```
+
+For Mainnet:
+```
+yarn build-mainnet
+```
+
 
 ## Running the tests
 

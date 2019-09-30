@@ -1,6 +1,7 @@
 // @flow
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, Suspense } from 'react'
 import { List } from 'immutable'
+import CircularProgress from '@material-ui/core/CircularProgress'
 import cn from 'classnames'
 import { withStyles } from '@material-ui/core/styles'
 import { type Token } from '~/logic/tokens/store/model/token'
@@ -29,7 +30,7 @@ type Props = {
   tokens: List<Token>,
   selectedToken: string,
   createTransaction: Function,
-  activeScreenType: ActiveScreen
+  activeScreenType: ActiveScreen,
 }
 
 type TxStateType =
@@ -50,6 +51,14 @@ const styles = () => ({
     position: 'static',
   },
 })
+
+const loaderStyle = {
+  height: '500px',
+  width: '100%',
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
+}
 
 const Send = ({
   onClose,
@@ -90,11 +99,15 @@ const Send = ({
       description="Send Tokens Form"
       handleClose={onClose}
       open={isOpen}
-      paperClassName={cn(
-        scalableModalSize ? classes.scalableStaticModalWindow : classes.scalableModalWindow,
-      )}
+      paperClassName={cn(scalableModalSize ? classes.scalableStaticModalWindow : classes.scalableModalWindow)}
     >
-      <>
+      <Suspense
+        fallback={(
+          <div style={loaderStyle}>
+            <CircularProgress size={40} />
+          </div>
+        )}
+      >
         {activeScreen === 'chooseTxType' && <ChooseTxType onClose={onClose} setActiveScreen={setActiveScreen} />}
         {activeScreen === 'sendFunds' && (
           <SendFunds
@@ -144,7 +157,7 @@ const Send = ({
             createTransaction={createTransaction}
           />
         )}
-      </>
+      </Suspense>
     </Modal>
   )
 }

@@ -1,5 +1,6 @@
 // @flow
 import { ImmortalStorage, IndexedDbStore, LocalStorageStore } from 'immortal-db'
+import { getNetwork } from '~/config'
 
 // Don't use sessionStorage and cookieStorage
 // https://github.com/gruns/ImmortalDB/issues/22
@@ -7,7 +8,7 @@ import { ImmortalStorage, IndexedDbStore, LocalStorageStore } from 'immortal-db'
 const stores = [IndexedDbStore, LocalStorageStore]
 export const storage = new ImmortalStorage(stores)
 
-const PREFIX = 'v1'
+const PREFIX = `v1_${getNetwork()}`
 
 export const loadFromStorage = async (key: string): Promise<*> => {
   try {

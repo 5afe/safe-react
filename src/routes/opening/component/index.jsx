@@ -39,7 +39,7 @@ const styles = {
 }
 
 const Opening = ({
-  classes, name = 'Safe creation process', tx, network,
+  classes, name = 'Safe creation process', tx,
 }: Props) => (
   <Page align="center">
     <Paragraph color="primary" size="xxl" weight="bold" align="center">
@@ -70,7 +70,7 @@ const Opening = ({
           Follow progress on
           {' '}
           <a
-            href={getEtherScanLink('tx', tx, network)}
+            href={getEtherScanLink('tx', tx)}
             target="_blank"
             rel="noopener noreferrer"
             className={classes.etherscan}
