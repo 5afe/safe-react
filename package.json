@@ -17,10 +17,12 @@
   },
   "scripts": {
     "build": "node scripts/build.js",
+    "build-mainnet": "REACT_APP_NETWORK=mainnet yarn build",
     "build-storybook": "build-storybook -o build_storybook",
     "flow": "flow",
     "precommit": "./precommit.sh",
     "start": "node scripts/start.js",
+    "start-mainnet": "REACT_APP_NETWORK=mainnet yarn start",
     "storybook": "start-storybook -p 6006",
     "test": "NODE_ENV=test && node scripts/test.js --env=jsdom",
     "format": "prettier-eslint \"src/**/*.js\" --write"
