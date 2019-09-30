@@ -14,7 +14,6 @@ import { EMPTY_DATA } from '~/logic/wallets/ethTransactions'
 import { addTransactions } from './addTransactions'
 import { getHumanFriendlyToken } from '~/logic/tokens/store/actions/fetchTokens'
 import { isTokenTransfer } from '~/logic/tokens/utils/tokenHelpers'
-import { TX_TYPE_EXECUTION } from '~/logic/safe/transactions'
 import { decodeParamsFromSafeMethod } from '~/logic/contracts/methodIds'
 import { ALTERNATIVE_TOKEN_ABI } from '~/logic/tokens/utils/alternativeAbi'
 
@@ -38,6 +37,7 @@ type TxServiceModel = {
   executionDate: string,
   confirmations: ConfirmationServiceModel[],
   isExecuted: boolean,
+  transactionHash: string,
 }
 
 export const buildTransactionFrom = async (
@@ -62,13 +62,6 @@ export const buildTransactionFrom = async (
   const cancellationTx = tx.to === safeAddress && Number(tx.value) === 0 && !tx.data
   const isSendTokenTx = await isTokenTransfer(tx.data, tx.value)
   const customTx = tx.to !== safeAddress && !!tx.data && !isSendTokenTx
-
-  let executionTxHash
-  const executionTx = confirmations.find((conf) => conf.type === TX_TYPE_EXECUTION)
-
-  if (executionTx) {
-    executionTxHash = executionTx.hash
-  }
 
   let symbol = 'ETH'
   let decimals = 18
@@ -112,7 +105,7 @@ export const buildTransactionFrom = async (
     isExecuted: tx.isExecuted,
     submissionDate: tx.submissionDate,
     executionDate: tx.executionDate,
-    executionTxHash,
+    executionTxHash: tx.transactionHash,
     safeTxHash: tx.safeTxHash,
     isTokenTransfer: isSendTokenTx,
     decodedParams,
