@@ -26,7 +26,7 @@ const configuration = () => {
   return process.env.REACT_APP_NETWORK === 'mainnet' ? mainnetDevConfig : devConfig
 }
 
-export const getNetwork = () => (process.env.REACT_APP_NETWORK === 'mainnet' ? ETHEREUM_NETWORK.MAIN : ETHEREUM_NETWORK.RINKEBY)
+export const getNetwork = () => (process.env.REACT_APP_NETWORK === 'mainnet' ? ETHEREUM_NETWORK.MAINNET : ETHEREUM_NETWORK.RINKEBY)
 
 const getConfig = ensureOnce(configuration)
 

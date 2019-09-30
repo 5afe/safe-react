@@ -5,7 +5,7 @@ import type { ProviderProps } from '~/logic/wallets/store/model/provider'
 import { getNetwork } from '~/config/index'
 
 export const ETHEREUM_NETWORK = {
-  MAIN: 'MAIN',
+  MAINNET: 'MAINNET',
   MORDEN: 'MORDEN',
   ROPSTEN: 'ROPSTEN',
   RINKEBY: 'RINKEBY',
@@ -24,7 +24,7 @@ export const WALLET_PROVIDER = {
 
 export const ETHEREUM_NETWORK_IDS = {
   // $FlowFixMe
-  1: ETHEREUM_NETWORK.MAIN,
+  1: ETHEREUM_NETWORK.MAINNET,
   // $FlowFixMe
   2: ETHEREUM_NETWORK.MORDEN,
   // $FlowFixMe

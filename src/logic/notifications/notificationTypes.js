@@ -1,4 +1,7 @@
 // @flow
+import { getNetwork } from '~/config'
+import { capitalize } from '~/utils/css'
+
 export const SUCCESS = 'success'
 export const ERROR = 'error'
 export const WARNING = 'warning'
@@ -65,8 +68,7 @@ export type Notifications = {
 
   // Rinkeby version
   RINKEBY_VERSION_MSG: Notification,
-  WRONG_NETWORK_RINKEBY_MSG: Notification,
-  WRONG_NETWOEK_MAINNET_MSG: Notification,
+  WRONG_NETWORK_MSG: Notification,
 }
 
 export const NOTIFICATIONS: Notifications = {
@@ -210,15 +212,11 @@ export const NOTIFICATIONS: Notifications = {
 
   // Network
   RINKEBY_VERSION_MSG: {
-    message: "Rinkeby Version: Don't send mainnet assets to this Safe",
+    message: "Rinkeby Version: Don't send Mainnet assets to this Safe",
     options: { variant: INFO, persist: true, preventDuplicate: true },
   },
-  WRONG_NETWORK_RINKEBY_MSG: {
-    message: 'Wrong network: Please use Rinkeby',
-    options: { variant: WARNING, persist: true, preventDuplicate: true },
-  },
-  WRONG_NETWOEK_MAINNET_MSG: {
-    message: 'Wrong network: Please use Mainnet',
+  WRONG_NETWORK_MSG: {
+    message: `Wrong network: Please use ${capitalize(getNetwork())}`,
     options: { variant: WARNING, persist: true, preventDuplicate: true },
   },
 }

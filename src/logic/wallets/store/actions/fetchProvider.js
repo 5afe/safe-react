@@ -1,6 +1,6 @@
 // @flow
 import type { Dispatch as ReduxDispatch } from 'redux'
-import { ETHEREUM_NETWORK_IDS } from '~/logic/wallets/getWeb3'
+import { ETHEREUM_NETWORK_IDS, ETHEREUM_NETWORK } from '~/logic/wallets/getWeb3'
 import { getNetwork } from '~/config'
 import type { ProviderProps } from '~/logic/wallets/store/model/provider'
 import { makeProvider } from '~/logic/wallets/store/model/provider'
@@ -39,7 +39,9 @@ const handleProviderNotification = (
     showSnackbar(NOTIFICATIONS.WRONG_NETWORK_MSG, enqueueSnackbar, closeSnackbar)
     return
   }
-  showSnackbar(NOTIFICATIONS.RINKEBY_VERSION_MSG, enqueueSnackbar, closeSnackbar)
+  if (ETHEREUM_NETWORK.RINKEBY === getNetwork()) {
+    showSnackbar(NOTIFICATIONS.RINKEBY_VERSION_MSG, enqueueSnackbar, closeSnackbar)
+  }
 
   if (available) {
     // NOTE:
