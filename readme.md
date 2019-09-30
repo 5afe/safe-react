@@ -30,22 +30,26 @@ ganache-cli -b 3
 Start the project in the other one
 ```
 yarn install
+```
+
+For Rinkeby:
+```
 yarn start
 ```
-For the mainnet version:
+For Mainnet:
 ```
-REACT_APP_NETWORK=mainnet yarn start
+yarn start-mainnet
 ```
 
 ### Building
-*For rinkeby:*
+For Rinkeby:
 ```
 yarn build
 ```
 
-*For mainnet:*
+For Mainnet:
 ```
-REACT_APP_NETWORK=mainnet yarn build
+yarn build-mainnet
 ```
 
 
