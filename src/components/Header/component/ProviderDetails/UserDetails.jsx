@@ -118,7 +118,7 @@ const UserDetails = ({
             <CircleDot keySize={30} circleSize={75} dotSize={25} dotTop={50} dotRight={25} mode="warning" hideDot />
           )}
         </Row>
-        <Block align="center" className={classes.user}>
+        <Block justify="center" className={classes.user}>
           <Paragraph className={classes.address} size="xs" noMargin>
             {address}
           </Paragraph>

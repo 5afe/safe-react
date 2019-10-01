@@ -47,7 +47,7 @@ export const getEtherScanLink = (type: 'address' | 'tx', value: string) => {
 let web3
 export const getWeb3 = () => web3 || (window.web3 && new Web3(window.web3.currentProvider)) || (window.ethereum && new Web3(window.ethereum))
 
-const getProviderName: Function = (web3Provider): boolean => {
+const getProviderName: Function = (web3Provider): string => {
   let name
 
   switch (web3Provider.currentProvider.constructor.name) {
@@ -58,7 +58,7 @@ const getProviderName: Function = (web3Provider): boolean => {
       name = WALLET_PROVIDER.METAMASK
       break
     default:
-      name = 'UNKNOWN'
+      name = 'Wallet'
   }
 
   return name
@@ -86,10 +86,7 @@ export const getProviderInfo: Function = async (): Promise<ProviderProps> => {
   if (window.ethereum) {
     web3Provider = window.ethereum
     try {
-      const accounts = await web3Provider.enable()
-      if (!accounts) {
-        throw new Error()
-      }
+      await web3Provider.enable()
     } catch (error) {
       console.error('Error when enabling web3 provider', error)
     }

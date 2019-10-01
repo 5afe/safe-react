@@ -112,7 +112,7 @@ class Layout extends React.Component<Props, State> {
               </Heading>
               {!granted && <Block className={classes.readonly}>Read Only</Block>}
             </Row>
-            <Block align="center" className={classes.user}>
+            <Block justify="center" className={classes.user}>
               <Paragraph size="md" color="disabled" className={classes.address} onClick={this.copyAddress} title="Click to copy" noMargin>
                 {address}
               </Paragraph>

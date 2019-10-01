@@ -154,7 +154,7 @@ class Tokens extends React.Component<Props, State> {
         </Block>
         <MuiList className={classes.list}>
           {!tokens.size && (
-            <Block align="center" className={classes.progressContainer}>
+            <Block justify="center" className={classes.progressContainer}>
               <CircularProgress />
             </Block>
           )}

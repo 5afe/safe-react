@@ -12,13 +12,15 @@ import Link from '~/components/layout/Link'
 import Spacer from '~/components/Spacer'
 import Hairline from '~/components/layout/Hairline'
 import Row from '~/components/layout/Row'
+import { WELCOME_ADDRESS } from '~/routes/routes'
 import { type Safe } from '~/routes/safe/store/models/safe'
 import { defaultSafeSelector } from '~/routes/safe/store/selectors'
 import setDefaultSafe from '~/routes/safe/store/actions/setDefaultSafe'
 import { sortedSafeListSelector } from './selectors'
-import useSidebarStyles from './style'
 import SafeList from './SafeList'
-import { WELCOME_ADDRESS } from '~/routes/routes'
+import LegalLinks from './LegalLinks'
+import useSidebarStyles from './style'
+
 
 const { useState, useEffect } = React
 
@@ -128,6 +130,7 @@ const Sidebar = ({
             setDefaultSafe={setDefaultSafeAction}
             defaultSafe={defaultSafe}
           />
+          <LegalLinks />
         </Drawer>
       </ClickAwayListener>
       {children}
