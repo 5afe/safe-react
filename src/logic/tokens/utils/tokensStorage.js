@@ -6,7 +6,7 @@ import { loadFromStorage, saveToStorage } from '~/utils/storage'
 export const ACTIVE_TOKENS_KEY = 'ACTIVE_TOKENS'
 export const CUSTOM_TOKENS_KEY = 'CUSTOM_TOKENS'
 
-// Tokens which are active at least in one of used safes in the app should be saved to localstorage
+// Tokens which are active at least in one of used Safes in the app should be saved to localstorage
 // to avoid iterating a large amount of data of tokens from the backend
 // Custom tokens should be saved too unless they're deleted (marking them as inactive doesn't count)
 

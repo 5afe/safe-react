@@ -107,7 +107,7 @@ const deploySafe = async (createSafeForm: any, threshold: number, numOwners: num
     fireEvent.submit(form)
   })
 
-  // giving some time to the component for updating its state with safe
+  // giving some time to the component for updating its state with Safe
   // before destroying its context
   return whenSafeDeployed()
 }
@@ -120,8 +120,8 @@ const aDeployedSafe = async (specificStore: Store<GlobalState>, threshold?: numb
   return safeAddress
 }
 
-describe('DOM > Feature > CREATE a safe', () => {
-  it('fills correctly the safe form with 4 owners and 4 threshold and creates a safe', async () => {
+describe('DOM > Feature > CREATE a Safe', () => {
+  it('fills correctly the Safe form with 4 owners and 4 threshold and creates a Safe', async () => {
     const owners = 4
     const threshold = 4
     const store = aNewStore()

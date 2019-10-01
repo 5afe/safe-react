@@ -17,7 +17,7 @@ describe('DOM > Feature > Settings - Name', () => {
     safeAddress = await aMinedSafe(store)
   })
 
-  it('Changes safe name', async () => {
+  it('Changes Safe name', async () => {
     const INITIAL_NAME = 'Safe Name'
     const NEW_NAME = 'NEW SAFE NAME'
 

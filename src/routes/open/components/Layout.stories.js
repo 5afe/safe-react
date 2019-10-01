@@ -17,7 +17,7 @@ const store = new Store({
 
 storiesOf('Routes /open', module)
   .addDecorator(FrameDecorator)
-  .add('Open safe with all props set', () => {
+  .add('Open Safe with all props set', () => {
     getProviderInfo()
     const provider = 'METAMASK'
     const userAccount = '0x03db1a8b26d08df23337e9276a36b474510f0023'

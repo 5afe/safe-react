@@ -9,7 +9,7 @@ const FrameDecorator = (story) => <div className={styles.frame}>{story()}</div>
 
 storiesOf('Routes /opening', module)
   .addDecorator(FrameDecorator)
-  .add('View while safe is being deployed', () => (
+  .add('View while Safe is being deployed', () => (
     <Component
       name="Super Vault 2000"
       tx="0xed163e50e2e85695f5edafeba51d6be1758549858d12611ed4dcc96feaa19fc9"
