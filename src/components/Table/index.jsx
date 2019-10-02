@@ -1,6 +1,5 @@
 // @flow
 import * as React from 'react'
-import classNames from 'classnames'
 import { List } from 'immutable'
 import Table from '@material-ui/core/Table'
 import TableBody from '@material-ui/core/TableBody'
@@ -39,7 +38,8 @@ type State = {
 const styles = {
   root: {
     backgroundColor: 'white',
-    borderRadius: '8px',
+    borderTopRightRadius: '8px',
+    borderTopLeftRadius: '8px',
     boxShadow: '1px 2px 10px 0 rgba(212, 212, 211, 0.59)',
   },
   selectRoot: {
@@ -56,11 +56,6 @@ const styles = {
     borderRadius: '8px',
     borderTopLeftRadius: 0,
     borderTopRightRadius: 0,
-  },
-  loader: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: 'white',
   },
 }
 
@@ -125,6 +120,13 @@ class GnoTable<K> extends React.Component<Props<K>, State> {
 
   getEmptyStyle = (emptyRows: number) => ({
     height: FIXED_HEIGHT * emptyRows,
+    borderTopRightRadius: '8px',
+    borderTopLeftRadius: '8px',
+    backgroundColor: 'white',
+    width: '100%',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
   })
 
   handleChangePage = (e: SyntheticInputEvent<HTMLInputElement>, page: number) => {
@@ -184,7 +186,7 @@ class GnoTable<K> extends React.Component<Props<K>, State> {
         )}
         {isEmpty && (
           <Row
-            className={classNames(classes.loader, !noBorder && classes.root)}
+            className={classes.loader}
             style={this.getEmptyStyle(emptyRows + 1)}
           >
             <CircularProgress size={60} />
