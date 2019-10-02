@@ -5,7 +5,7 @@ import {
 
 export const styles = () => ({
   root: {
-    minHeight: '48px',
+    minHeight: '52px',
   },
   search: {
     color: secondaryText,
