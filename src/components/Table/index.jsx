@@ -53,9 +53,8 @@ const styles = {
     backgroundColor: 'white',
     boxShadow: '1px 2px 10px 0 rgba(212, 212, 211, 0.59)',
     marginBottom: xl,
-    borderRadius: '8px',
-    borderTopLeftRadius: 0,
-    borderTopRightRadius: 0,
+    borderBottomRightRadius: '8px',
+    borderBottomLeftRadius: '8px',
   },
 }
 

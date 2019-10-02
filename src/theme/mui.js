@@ -255,7 +255,6 @@ export default createMuiTheme({
       input: {
         order: 2,
         width: '60px',
-        padding: `0 ${md} 0 0`,
       },
       select: {
         paddingRight: 30,
