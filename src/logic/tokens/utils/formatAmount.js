@@ -11,7 +11,8 @@ const lt100kFormatter = new Intl.NumberFormat([], { maximumFractionDigits: 3 })
 const lt1mFormatter = new Intl.NumberFormat([], { maximumFractionDigits: 2 })
 const lt10mFormatter = new Intl.NumberFormat([], { maximumFractionDigits: 1 })
 const lt100mFormatter = new Intl.NumberFormat([], { maximumFractionDigits: 0 })
-const lt1tFormatter = new Intl.NumberFormat([], { notation: 'compact' })
+// same format for billions and trillions
+const lt1000tFormatter = new Intl.NumberFormat([], { maximumFractionDigits: 3, notation: 'compact' })
 
 export const formatAmount = (number: string | number) => {
   let numberFloat = parseFloat(number)
@@ -28,8 +29,10 @@ export const formatAmount = (number: string | number) => {
     numberFloat = lt10mFormatter.format(numberFloat)
   } else if (numberFloat < 100000000) {
     numberFloat = lt100mFormatter.format(numberFloat)
-  } else if (numberFloat < 1000000000) {
-    numberFloat = lt1tFormatter.format(numberFloat)
+  } else if (numberFloat < 10 ** 15) {
+    numberFloat = lt1000tFormatter.format(numberFloat)
+  } else {
+    numberFloat = '> 1000T'
   }
 
   return numberFloat
