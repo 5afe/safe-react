@@ -22,7 +22,7 @@ import LegalLinks from './LegalLinks'
 import useSidebarStyles from './style'
 
 
-const { useState, useEffect } = React
+const { useState, useEffect, useMemo } = React
 
 type TSidebarContext = {
   isOpen: boolean,
@@ -85,7 +85,7 @@ const Sidebar = ({
     }
   }
 
-  const filteredSafes = filterBy(filter, safes)
+  const filteredSafes = useMemo(() => filterBy(filter, safes), [safes, filter])
 
   return (
     <SidebarContext.Provider value={{ isOpen, toggleSidebar }}>
