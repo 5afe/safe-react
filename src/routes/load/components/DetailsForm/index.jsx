@@ -41,8 +41,8 @@ const styles = () => ({
   },
 })
 
-export const SAFE_INSTANCE_ERROR = 'Address given is not a safe instance'
-export const SAFE_MASTERCOPY_ERROR = 'Mastercopy used by this safe is not the same'
+export const SAFE_INSTANCE_ERROR = 'Address given is not a Safe instance'
+export const SAFE_MASTERCOPY_ERROR = 'Mastercopy used by this Safe is not the same'
 
 // In case of an error here, it will be swallowed by final-form
 // So if you're experiencing any strang behaviours like freeze or hanging

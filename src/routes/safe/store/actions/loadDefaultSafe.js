@@ -11,7 +11,7 @@ const loadDefaultSafe = () => async (dispatch: ReduxDispatch<GlobalState>) => {
     dispatch(setDefaultSafe(defaultSafe))
   } catch (err) {
     // eslint-disable-next-line
-    console.error('Error while getting defautl safe from storage:', err)
+    console.error('Error while getting defautl Safe from storage:', err)
   }
 }
 

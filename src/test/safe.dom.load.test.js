@@ -42,8 +42,8 @@ const renderLoadSafe = async (localStore: Store<GlobalState>) => {
   )
 }
 
-describe('DOM > Feature > LOAD a safe', () => {
-  it('load correctly a created safe', async () => {
+describe('DOM > Feature > LOAD a Safe', () => {
+  it('load correctly a created Safe', async () => {
     const store = aNewStore()
     const address = await aMinedSafe(store)
     const LoadSafePage = await renderLoadSafe(store)

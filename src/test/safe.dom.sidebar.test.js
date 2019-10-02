@@ -16,7 +16,7 @@ describe('DOM > Feature > Sidebar', () => {
     safeAddress = await aMinedSafe(store)
   })
 
-  it('Shows "default" label for a single safe', async () => {
+  it('Shows "default" label for a single Safe', async () => {
     const SafeDom = await renderSafeView(store, safeAddress)
 
     act(() => {
@@ -29,7 +29,7 @@ describe('DOM > Feature > Sidebar', () => {
     expect(safes[0]).toContainElement(SafeDom.getByText('default'))
   })
 
-  it('Changes default safe', async () => {
+  it('Changes default Safe', async () => {
     const SafeDom = await renderSafeView(store, safeAddress)
     await aMinedSafe(store)
 

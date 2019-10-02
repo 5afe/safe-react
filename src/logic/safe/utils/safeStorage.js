@@ -22,7 +22,7 @@ export const saveSafes = async (safes: Object) => {
   try {
     await saveToStorage(SAFES_KEY, safes)
   } catch (err) {
-    console.error('Error storing safe info in localstorage', err)
+    console.error('Error storing Safe info in localstorage', err)
   }
 }
 
@@ -52,7 +52,7 @@ export const saveDefaultSafe = async (safeAddress: string): Promise<void> => {
     await saveToStorage(DEFAULT_SAFE_KEY, safeAddress)
   } catch (err) {
     // eslint-disable-next-line
-    console.error('Error saving default safe to storage: ', err)
+    console.error('Error saving default Safe to storage: ', err)
   }
 }
 
