@@ -2,30 +2,23 @@
 import * as React from 'react'
 import { List, Set } from 'immutable'
 import cn from 'classnames'
+import { FixedSizeList } from 'react-window'
 import SearchBar from 'material-ui-search-bar'
 import { withStyles } from '@material-ui/core/styles'
 import MuiList from '@material-ui/core/List'
-import ListItem from '@material-ui/core/ListItem'
-import ListItemIcon from '@material-ui/core/ListItemIcon'
 import CircularProgress from '@material-ui/core/CircularProgress'
-import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction'
-import ListItemText from '@material-ui/core/ListItemText'
-import Switch from '@material-ui/core/Switch'
 import Search from '@material-ui/icons/Search'
-import Img from '~/components/layout/Img'
 import Block from '~/components/layout/Block'
 import Button from '~/components/layout/Button'
 import Divider from '~/components/layout/Divider'
 import Hairline from '~/components/layout/Hairline'
 import Spacer from '~/components/Spacer'
 import Row from '~/components/layout/Row'
-import { ETH_ADDRESS } from '~/logic/tokens/utils/tokenHelpers'
 import { type Token } from '~/logic/tokens/store/model/token'
-import { setImageToPlaceholder } from '~/routes/safe/components/Balances/utils'
+import TokenRow from './TokenRow'
 import { styles } from './style'
 
 export const ADD_CUSTOM_TOKEN_BUTTON_TEST_ID = 'add-custom-token-btn'
-export const TOGGLE_TOKEN_TEST_ID = 'toggle-token-btn'
 
 type Props = {
   classes: Object,
@@ -110,6 +103,18 @@ class Tokens extends React.Component<Props, State> {
     }
   }
 
+  createItemData = (tokens, activeTokensAddresses) => ({
+    tokens,
+    activeTokensAddresses,
+    onSwitch: this.onSwitch,
+  })
+
+  getItemKey = (index, { tokens }) => {
+    const token: Token = tokens.get(index)
+
+    return token.address
+  }
+
   render() {
     const { classes, tokens, setActiveScreen } = this.props
     const { filter, activeTokensAddresses } = this.state
@@ -122,6 +127,7 @@ class Tokens extends React.Component<Props, State> {
     const switchToAddCustomTokenScreen = () => setActiveScreen('addCustomToken')
 
     const filteredTokens = filterBy(filter, tokens)
+    const itemData = this.createItemData(filteredTokens, activeTokensAddresses)
 
     return (
       <>
@@ -152,34 +158,25 @@ class Tokens extends React.Component<Props, State> {
           </Row>
           <Hairline />
         </Block>
-        <MuiList className={classes.list}>
-          {!tokens.size && (
-            <Block justify="center" className={classes.progressContainer}>
-              <CircularProgress />
-            </Block>
-          )}
-          {filteredTokens.map((token: Token) => {
-            const isActive = activeTokensAddresses.has(token.address)
-
-            return (
-              <ListItem key={token.address} className={classes.token} classes={{ root: classes.tokenRoot }}>
-                <ListItemIcon className={classes.tokenIcon}>
-                  <Img src={token.logoUri} height={28} alt={token.name} onError={setImageToPlaceholder} />
-                </ListItemIcon>
-                <ListItemText primary={token.symbol} secondary={token.name} />
-                {token.address !== ETH_ADDRESS && (
-                  <ListItemSecondaryAction>
-                    <Switch
-                      onChange={this.onSwitch(token)}
-                      checked={isActive}
-                      inputProps={{ 'data-testid': `${token.symbol}_${TOGGLE_TOKEN_TEST_ID}` }}
-                    />
-                  </ListItemSecondaryAction>
-                )}
-              </ListItem>
-            )
-          })}
-        </MuiList>
+        {!tokens.size && (
+          <Block justify="center" className={classes.progressContainer}>
+            <CircularProgress />
+          </Block>
+        )}
+        {tokens.size > 0 && (
+          <MuiList className={classes.list}>
+            <FixedSizeList
+              height={413}
+              width={500}
+              itemCount={filteredTokens.size}
+              itemData={itemData}
+              itemSize={51}
+              itemKey={this.getItemKey}
+            >
+              {TokenRow}
+            </FixedSizeList>
+          </MuiList>
+        )}
       </>
     )
   }

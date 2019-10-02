@@ -56,6 +56,8 @@ export const styles = () => ({
   },
   tokenIcon: {
     marginRight: md,
+    height: '28px',
+    width: '28px',
   },
   progressContainer: {
     width: '100%',
