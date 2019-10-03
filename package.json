@@ -115,7 +115,7 @@
     "eslint-plugin-import": "2.18.2",
     "eslint-plugin-jest": "22.17.0",
     "eslint-plugin-jsx-a11y": "6.2.3",
-    "eslint-plugin-react": "7.14.3",
+    "eslint-plugin-react": "7.15.0",
     "ethereumjs-abi": "0.6.8",
     "extract-text-webpack-plugin": "^4.0.0-beta.0",
     "file-loader": "4.2.0",

@@ -59,7 +59,7 @@ export default handleActions<SafeReducerState, *>(
     [ADD_SAFE]: (state: SafeReducerState, action: ActionType<Function>): SafeReducerState => {
       const { safe }: { safe: SafeProps } = action.payload
 
-      // if you add a new safe it needs to be set as a record
+      // if you add a new Safe it needs to be set as a record
       // in case of update it shouldn't, because a record would be initialized
       // with initial props and it would overwrite existing ones
 

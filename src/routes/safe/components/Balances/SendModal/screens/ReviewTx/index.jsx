@@ -72,7 +72,7 @@ const ReviewTx = ({
       txData = tokenInstance.contract.methods.transfer(tx.recipientAddress, txAmount).encodeABI()
       // txAmount should be 0 if we send tokens
       // the real value is encoded in txData and will be used by the contract
-      // if txAmount > 0 it would send ETH from the safe
+      // if txAmount > 0 it would send ETH from the Safe
       txAmount = 0
     }
 
