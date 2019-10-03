@@ -43,10 +43,12 @@ const filterBy = (filter: string, tokens: List<Token>): List<Token> => tokens.fi
 
 // OPTIMIZATION IDEA (Thanks Andre)
 // Calculate active tokens on component mount, store it in component state
-// After user closes modal, dispatch an action so we dont have 100500 actions
-// And selectors dont recalculate
+// After user closes modal, dispatch an action so we don't have 100500 actions
+// And selectors don't recalculate
 
 class Tokens extends React.Component<Props, State> {
+  renderCount = 0
+
   state = {
     filter: '',
     activeTokensAddresses: Set([]),
@@ -78,7 +80,7 @@ class Tokens extends React.Component<Props, State> {
     const { activeTokensAddresses } = this.state
     const { updateActiveTokens, safeAddress } = this.props
 
-    updateActiveTokens(safeAddress, activeTokensAddresses.toList())
+    updateActiveTokens(safeAddress, activeTokensAddresses)
   }
 
   onCancelSearch = () => {
@@ -168,6 +170,7 @@ class Tokens extends React.Component<Props, State> {
             <FixedSizeList
               height={413}
               width={500}
+              overscanCount={process.env.NODE_ENV === 'test' ? 100 : 10}
               itemCount={filteredTokens.size}
               itemData={itemData}
               itemSize={51}
