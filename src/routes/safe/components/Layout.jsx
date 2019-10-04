@@ -1,6 +1,7 @@
 // @flow
 import * as React from 'react'
 import classNames from 'classnames/bind'
+import { Switch, Redirect, Route } from 'react-router-dom'
 import OpenInNew from '@material-ui/icons/OpenInNew'
 import Tabs from '@material-ui/core/Tabs'
 import Tab from '@material-ui/core/Tab'
@@ -21,9 +22,7 @@ import Receive from './Balances/Receive'
 import NoSafe from '~/components/NoSafe'
 import { type SelectorProps } from '~/routes/safe/container/selector'
 import { getEtherScanLink } from '~/logic/wallets/getWeb3'
-import {
-  secondary, border,
-} from '~/theme/variables'
+import { secondary, border } from '~/theme/variables'
 import { copyToClipboard } from '~/utils/clipboard'
 import { type Actions } from '../container/actions'
 import Balances from './Balances'
@@ -49,7 +48,7 @@ type Props = SelectorProps &
     onShow: Function,
     onHide: Function,
     showSendFunds: Function,
-    hideSendFunds: Function
+    hideSendFunds: Function,
   }
 
 const openIconStyle = {
@@ -99,6 +98,7 @@ class Layout extends React.Component<Props, State> {
       showSendFunds,
       hideSendFunds,
     } = this.props
+    console.log(this.props)
     const { tabIndex } = this.state
 
     if (!safe) {
@@ -139,7 +139,7 @@ class Layout extends React.Component<Props, State> {
                 disabled={!granted}
               >
                 <CallMade alt="Send Transaction" className={classNames(classes.leftIcon, classes.iconSmall)} />
-                  Send
+                Send
               </Button>
               <Button
                 variant="contained"
@@ -149,7 +149,7 @@ class Layout extends React.Component<Props, State> {
                 onClick={onShow('Receive')}
               >
                 <CallReceived alt="Receive Transaction" className={classNames(classes.leftIcon, classes.iconSmall)} />
-                  Receive
+                Receive
               </Button>
             </Row>
           </Block>
@@ -162,46 +162,61 @@ class Layout extends React.Component<Props, State> {
           </Tabs>
         </Row>
         <Hairline color={border} style={{ marginTop: '-2px' }} />
-        {tabIndex === 0 && (
-          <Balances
-            ethBalance={ethBalance}
-            tokens={tokens}
-            activeTokens={activeTokens}
-            granted={granted}
-            safeAddress={address}
-            safeName={name}
-            etherScanLink={etherScanLink}
-            createTransaction={createTransaction}
+        <Switch>
+          <Route
+            exact
+            path="balances"
+            render={() => (
+              <Balances
+                ethBalance={ethBalance}
+                tokens={tokens}
+                activeTokens={activeTokens}
+                granted={granted}
+                safeAddress={address}
+                safeName={name}
+                etherScanLink={etherScanLink}
+                createTransaction={createTransaction}
+              />
+            )}
           />
-        )}
-        {tabIndex === 1 && (
-          <Transactions
-            threshold={safe.threshold}
-            owners={safe.owners}
-            transactions={transactions}
-            fetchTransactions={fetchTransactions}
-            safeAddress={address}
-            userAddress={userAddress}
-            currentNetwork={network}
-            granted={granted}
-            createTransaction={createTransaction}
-            processTransaction={processTransaction}
+          <Route
+            exact
+            path="transactions"
+            render={() => (
+              <Transactions
+                threshold={safe.threshold}
+                owners={safe.owners}
+                transactions={transactions}
+                fetchTransactions={fetchTransactions}
+                safeAddress={address}
+                userAddress={userAddress}
+                currentNetwork={network}
+                granted={granted}
+                createTransaction={createTransaction}
+                processTransaction={processTransaction}
+              />
+            )}
           />
-        )}
-        {tabIndex === 2 && (
-          <Settings
-            granted={granted}
-            safeAddress={address}
-            safeName={name}
-            etherScanLink={etherScanLink}
-            updateSafe={updateSafe}
-            threshold={safe.threshold}
-            owners={safe.owners}
-            network={network}
-            userAddress={userAddress}
-            createTransaction={createTransaction}
+          <Route
+            exact
+            path="settings"
+            render={() => (
+              <Settings
+                granted={granted}
+                safeAddress={address}
+                safeName={name}
+                etherScanLink={etherScanLink}
+                updateSafe={updateSafe}
+                threshold={safe.threshold}
+                owners={safe.owners}
+                network={network}
+                userAddress={userAddress}
+                createTransaction={createTransaction}
+              />
+            )}
           />
-        )}
+          <Redirect to="balances" />
+        </Switch>
         <SendModal
           onClose={hideSendFunds}
           isOpen={sendFunds.isOpen}
@@ -221,12 +236,7 @@ class Layout extends React.Component<Props, State> {
           open={showReceive}
           paperClassName={classes.receiveModal}
         >
-          <Receive
-            safeName={name}
-            safeAddress={address}
-            etherScanLink={etherScanLink}
-            onClose={onHide('Receive')}
-          />
+          <Receive safeName={name} safeAddress={address} etherScanLink={etherScanLink} onClose={onHide('Receive')} />
         </Modal>
       </>
     )
