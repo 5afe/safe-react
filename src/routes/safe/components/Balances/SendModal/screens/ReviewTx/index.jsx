@@ -1,5 +1,6 @@
 // @flow
 import React from 'react'
+import { BigNumber } from 'bignumber.js'
 import OpenInNew from '@material-ui/icons/OpenInNew'
 import { withStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
@@ -68,6 +69,8 @@ const ReviewTx = ({
     if (!isSendingETH) {
       const StandardToken = await getStandardTokenContract()
       const tokenInstance = await StandardToken.at(tx.token.address)
+      const decimals = await tokenInstance.decimals()
+      txAmount = new BigNumber(tx.amount).div(10 ** decimals).toString()
 
       txData = tokenInstance.contract.methods.transfer(tx.recipientAddress, txAmount).encodeABI()
       // txAmount should be 0 if we send tokens
