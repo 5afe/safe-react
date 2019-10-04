@@ -66,7 +66,7 @@ const ExpandedTx = ({
               <Block align="left">
                 <Bold>TX hash:</Bold>
                 {tx.executionTxHash ? (
-                  <EtherScanLink type="tx" value={tx.executionTxHash} cut={4} />
+                  <EtherScanLink type="tx" value={tx.executionTxHash} cut={8} />
                 ) : (
                   'n/a'
                 )}

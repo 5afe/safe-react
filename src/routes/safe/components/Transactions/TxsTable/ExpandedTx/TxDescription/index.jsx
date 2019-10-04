@@ -60,7 +60,7 @@ const TransferDescription = ({ value = '', symbol, recipient }: TransferDescProp
       {' '}
       to:
     </Bold>
-    <EtherscanLink type="address" value={recipient} cut={4} />
+    <EtherscanLink type="address" value={recipient} />
   </Block>
 )
 
@@ -69,13 +69,13 @@ const SettingsDescription = ({ removedOwner, addedOwner, newThreshold }: Descrip
     {removedOwner && (
       <Block data-testid={TRANSACTIONS_DESC_REMOVE_OWNER_TEST_ID}>
         <Bold>Remove owner:</Bold>
-        <EtherscanLink type="address" value={removedOwner} cut={4} />
+        <EtherscanLink type="address" value={removedOwner} />
       </Block>
     )}
     {addedOwner && (
       <Block data-testid={TRANSACTIONS_DESC_ADD_OWNER_TEST_ID}>
         <Bold>Add owner:</Bold>
-        <EtherscanLink type="address" value={addedOwner} cut={4} />
+        <EtherscanLink type="address" value={addedOwner} />
       </Block>
     )}
     {newThreshold && (
