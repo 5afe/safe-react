@@ -74,7 +74,7 @@ export const generateColumns = () => {
   const nonceColumn: Column = {
     id: TX_TABLE_NONCE_ID,
     disablePadding: false,
-    label: 'Nonce',
+    label: 'Id',
     custom: false,
     order: false,
     width: 50,

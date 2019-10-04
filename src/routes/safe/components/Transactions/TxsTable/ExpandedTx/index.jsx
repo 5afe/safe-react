@@ -64,7 +64,7 @@ const ExpandedTx = ({
           <Col xs={6} layout="column">
             <Block className={classes.txDataContainer}>
               <Block align="left">
-                <Bold>TX hash:</Bold>
+                <Bold className={classes.txHash}>TX hash:</Bold>
                 {tx.executionTxHash ? (
                   <EtherScanLink type="tx" value={tx.executionTxHash} cut={8} />
                 ) : (
@@ -73,7 +73,7 @@ const ExpandedTx = ({
               </Block>
               <Paragraph noMargin>
                 <Bold>TX status: </Bold>
-                <Span className={classes[tx.status]} style={{ fontWeight: 'bold' }}>
+                <Span>
                   {txStatusToLabel[tx.status]}
                 </Span>
               </Paragraph>

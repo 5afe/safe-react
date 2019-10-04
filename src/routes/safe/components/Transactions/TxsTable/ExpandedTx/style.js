@@ -19,4 +19,7 @@ export const styles = () => ({
   cancelled: {
     color: error,
   },
+  txHash: {
+    paddingRight: '3px',
+  },
 })

@@ -21,4 +21,8 @@ export const styles = () => ({
     },
     backgroundColor: '#fffaf4',
   },
+  actions: {
+    display: 'flex',
+    justifyContent: 'flex-end',
+  },
 })

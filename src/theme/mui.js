@@ -279,7 +279,6 @@ export default createMuiTheme({
       head: {
         letterSpacing: '1px',
         textTransform: 'uppercase',
-        fontWeight: boldFont,
       },
       body: {
         color: primary,
