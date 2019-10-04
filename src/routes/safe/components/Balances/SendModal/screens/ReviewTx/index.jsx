@@ -21,9 +21,9 @@ import { getStandardTokenContract } from '~/logic/tokens/store/actions/fetchToke
 import { EMPTY_DATA } from '~/logic/wallets/ethTransactions'
 import { getWeb3 } from '~/logic/wallets/getWeb3'
 import { TX_NOTIFICATION_TYPES } from '~/logic/safe/transactions'
-import ArrowDown from '../assets/arrow-down.svg'
 import { secondary } from '~/theme/variables'
 import { isEther } from '~/logic/tokens/utils/tokenHelpers'
+import ArrowDown from '../assets/arrow-down.svg'
 import { styles } from './style'
 
 type Props = {
