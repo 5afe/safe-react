@@ -24,7 +24,7 @@ const DefaultBadge = () => {
   const classes = useStyles()
 
   return (
-    <Block align="left" className={classes.container}>
+    <Block justify="left" className={classes.container}>
       <Img src={StarIcon} alt="Star Icon" />
       <Paragraph noMargin size="xs">
         default

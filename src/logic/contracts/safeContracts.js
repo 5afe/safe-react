@@ -36,7 +36,7 @@ const instanciateMasterCopies = async () => {
   const ProxyFactory = getCreateProxyFactoryContract(web3)
   proxyFactoryMaster = await ProxyFactory.deployed()
 
-  // Initialize safe master copy
+  // Initialize Safe master copy
   const GnosisSafe = getGnosisSafeContract(web3)
   safeMaster = await GnosisSafe.deployed()
 }

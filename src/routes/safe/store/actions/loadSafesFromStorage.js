@@ -18,7 +18,7 @@ const loadSafesFromStorage = () => async (dispatch: ReduxDispatch<GlobalState>) 
     }
   } catch (err) {
     // eslint-disable-next-line
-    console.error('Error while getting safes from storage:', err)
+    console.error('Error while getting Safes from storage:', err)
   }
 
   return Promise.resolve()

@@ -1,4 +1,5 @@
 // @flow
+import { waitForElement } from '@testing-library/react'
 import { List } from 'immutable'
 import { getWeb3 } from '~/logic/wallets/getWeb3'
 import { getFirstTokenContract, getSecondTokenContract } from '~/test/utils/tokenMovements'
@@ -52,26 +53,25 @@ describe('DOM > Feature > Enable and disable default tokens', () => {
 
     // WHEN
     const TokensDom = await renderSafeView(store, safeAddress)
-    await sleep(400)
 
     // Check if only ETH is enabled
-    let balanceRows = TokensDom.getAllByTestId(BALANCE_ROW_TEST_ID)
+    let balanceRows = await waitForElement(() => TokensDom.getAllByTestId(BALANCE_ROW_TEST_ID))
     expect(balanceRows.length).toBe(1)
 
     // THEN
     clickOnManageTokens(TokensDom)
-    toggleToken(TokensDom, 'FTE')
-    toggleToken(TokensDom, 'STE')
+    await toggleToken(TokensDom, 'FTE')
+    await toggleToken(TokensDom, 'STE')
     closeManageTokensModal(TokensDom)
+
+    // Wait for active tokens to save
+    await sleep(1500)
 
     // Check if tokens were enabled
     balanceRows = TokensDom.getAllByTestId(BALANCE_ROW_TEST_ID)
     expect(balanceRows.length).toBe(3)
     expect(balanceRows[1]).toHaveTextContent('FTE')
     expect(balanceRows[2]).toHaveTextContent('STE')
-
-    await sleep(1000)
-
     const tokensFromStorage = await getActiveTokens()
 
     expect(Object.keys(tokensFromStorage)).toContain(firstErc20Token.address)
@@ -79,9 +79,10 @@ describe('DOM > Feature > Enable and disable default tokens', () => {
 
     // disable tokens
     clickOnManageTokens(TokensDom)
-    toggleToken(TokensDom, 'FTE')
-    toggleToken(TokensDom, 'STE')
+    await toggleToken(TokensDom, 'FTE')
+    await toggleToken(TokensDom, 'STE')
     closeManageTokensModal(TokensDom)
+    await sleep(1500)
 
     // check if tokens were disabled
     balanceRows = TokensDom.getAllByTestId(BALANCE_ROW_TEST_ID)

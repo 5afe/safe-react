@@ -14,6 +14,9 @@ export const styles = () => ({
     overflow: 'hidden',
     whiteSpace: 'nowrap',
   },
+  address: {
+    marginRight: sm,
+  },
   user: {
     justifyContent: 'left',
   },

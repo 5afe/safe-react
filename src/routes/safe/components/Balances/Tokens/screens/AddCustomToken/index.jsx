@@ -174,7 +174,7 @@ const AddCustomToken = (props: Props) => {
                     className={classes.addressInput}
                     testId={ADD_CUSTOM_TOKEN_DECIMALS_INPUT_TEST_ID}
                   />
-                  <Block align="left">
+                  <Block justify="left">
                     <Field name="showForAllSafes" component={Checkbox} type="checkbox" className={classes.checkbox} />
                     <Paragraph weight="bolder" size="md" className={classes.checkboxLabel}>
                       Activate token for all Safes

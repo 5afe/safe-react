@@ -1,15 +1,12 @@
 // @flow
-import { lg, sm } from '~/theme/variables'
+import { lg, md } from '~/theme/variables'
 
 export const styles = () => ({
   heading: {
-    padding: `${sm} ${lg}`,
+    padding: `${md} ${lg}`,
     justifyContent: 'space-between',
     maxHeight: '75px',
     boxSizing: 'border-box',
-  },
-  manage: {
-    fontSize: '24px',
   },
   close: {
     height: '35px',

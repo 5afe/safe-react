@@ -11,7 +11,7 @@ const NoTransactions = () => (
   <Row data-testid={NO_TRANSACTION_ROW_TEST_ID}>
     <Col xs={12} center="xs" sm={10} smOffset={2} start="sm" margin="md">
       <Paragraph size="lg">
-        <Bold>No transactions found for this safe</Bold>
+        <Bold>No transactions found for this Safe</Bold>
       </Paragraph>
     </Col>
   </Row>

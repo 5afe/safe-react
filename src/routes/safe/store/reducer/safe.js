@@ -1,9 +1,8 @@
 // @flow
-import { Map, List } from 'immutable'
+import { Map, Set } from 'immutable'
 import { handleActions, type ActionType } from 'redux-actions'
 import { ADD_SAFE, buildOwnersFrom } from '~/routes/safe/store/actions/addSafe'
 import SafeRecord, { type SafeProps } from '~/routes/safe/store/models/safe'
-import TokenBalance from '~/routes/safe/store/models/tokenBalance'
 import { makeOwner, type OwnerProps } from '~/routes/safe/store/models/owner'
 import { UPDATE_SAFE } from '~/routes/safe/store/actions/updateSafe'
 import { ACTIVATE_TOKEN_FOR_ALL_SAFES } from '~/routes/safe/store/actions/activateTokenForAllSafes'
@@ -22,8 +21,8 @@ export const buildSafe = (storedSafe: SafeProps) => {
   const names = storedSafe.owners.map((owner: OwnerProps) => owner.name)
   const addresses = storedSafe.owners.map((owner: OwnerProps) => owner.address)
   const owners = buildOwnersFrom(Array.from(names), Array.from(addresses))
-  const activeTokens = List(storedSafe.activeTokens)
-  const balances = storedSafe.balances.map((balance) => TokenBalance(balance))
+  const activeTokens = Set(storedSafe.activeTokens)
+  const balances = Map(storedSafe.balances)
 
   const safe: SafeProps = {
     ...storedSafe,
@@ -60,7 +59,7 @@ export default handleActions<SafeReducerState, *>(
     [ADD_SAFE]: (state: SafeReducerState, action: ActionType<Function>): SafeReducerState => {
       const { safe }: { safe: SafeProps } = action.payload
 
-      // if you add a new safe it needs to be set as a record
+      // if you add a new Safe it needs to be set as a record
       // in case of update it shouldn't, because a record would be initialized
       // with initial props and it would overwrite existing ones
 

@@ -246,13 +246,17 @@ export default createMuiTheme({
       caption: {
         fontFamily: 'Averta, monospace',
         fontSize: mediumFontSize,
-        order: 3,
+        order: 2,
         color: disabled,
       },
       input: {
         order: 2,
         width: '60px',
         padding: `0 ${md} 0 0`,
+      },
+      select: {
+        paddingRight: 30,
+        minWidth: '20px',
       },
       actions: {
         order: 4,
