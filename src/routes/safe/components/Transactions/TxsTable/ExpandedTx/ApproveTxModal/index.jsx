@@ -61,7 +61,7 @@ const ApproveTxModal = ({
   enqueueSnackbar,
   closeSnackbar,
 }: Props) => {
-  const [approveAndExecute, setApproveAndExecute] = useState<boolean>(false)
+  const [approveAndExecute, setApproveAndExecute] = useState<boolean>(true)
   const { title, description } = getModalTitleAndDescription(thresholdReached)
   const oneConfirmationLeft = tx.confirmations.size + 1 === threshold
 
@@ -102,8 +102,8 @@ const ApproveTxModal = ({
           {!thresholdReached && oneConfirmationLeft && (
             <>
               <Paragraph color="error">
-                Approving transaction does not execute it immediately. If you want to approve and execute the
-                transaction right away, click on checkbox below.
+                Approving this transaction executes it right away. If you want approve but execute the transaction
+                manually later, click on the checkbox below.
               </Paragraph>
               <FormControlLabel
                 control={<Checkbox onChange={handleExecuteCheckbox} checked={approveAndExecute} color="primary" />}
