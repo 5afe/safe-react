@@ -43,7 +43,7 @@ export const styles = () => ({
     color: '#e8673c',
   },
   statusText: {
-    paddingLeft: '10px',
-    marginLeft: 'auto',
+    width: '100%',
+    textAlign: 'center',
   },
 })

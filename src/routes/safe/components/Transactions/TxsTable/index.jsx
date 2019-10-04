@@ -26,7 +26,7 @@ export const TRANSACTION_ROW_TEST_ID = 'transaction-row'
 
 const expandCellStyle = {
   paddingLeft: 0,
-  paddingRight: 0,
+  paddingRight: 15,
 }
 
 type Props = {

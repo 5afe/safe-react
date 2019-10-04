@@ -112,6 +112,7 @@ export const generateColumns = () => {
     disablePadding: false,
     label: 'Status',
     custom: true,
+    align: 'right',
   }
 
   const expandIconColumn: Column = {

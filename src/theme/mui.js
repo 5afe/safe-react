@@ -238,6 +238,7 @@ export default createMuiTheme({
     },
     MuiTablePagination: {
       toolbar: {
+        paddingRight: '15px',
         '& > span:nth-child(2)': {
           order: 1,
         },
@@ -268,6 +269,9 @@ export default createMuiTheme({
     MuiTableSortLabel: {
       root: {
         fontSize: extraSmallFontSize,
+      },
+      active: {
+        fontWeight: boldFont,
       },
     },
     MuiTableCell: {

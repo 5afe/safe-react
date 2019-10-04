@@ -56,6 +56,9 @@ const styles = {
     borderBottomRightRadius: '8px',
     borderBottomLeftRadius: '8px',
   },
+  loader: {
+    boxShadow: '1px 2px 10px 0 rgba(212, 212, 211, 0.59)',
+  },
 }
 
 const FIXED_HEIGHT = 49
@@ -172,7 +175,7 @@ class GnoTable<K> extends React.Component<Props<K>, State> {
       sortedData = sortedData.slice(page * displayRows, page * displayRows + displayRows)
     }
 
-    const emptyRows = displayRows - Math.min(displayRows, data.length - page * displayRows)
+    const emptyRows = displayRows - Math.min(displayRows, data.size - page * displayRows)
     const isEmpty = size === 0
 
     return (
