@@ -50,7 +50,7 @@ type CustomDescProps = {
 }
 
 const TransferDescription = ({ value = '', symbol, recipient }: TransferDescProps) => (
-  <Paragraph noMargin data-testid={TRANSACTIONS_DESC_SEND_TEST_ID}>
+  <Block data-testid={TRANSACTIONS_DESC_SEND_TEST_ID}>
     <Bold>
       Send
       {' '}
@@ -60,33 +60,31 @@ const TransferDescription = ({ value = '', symbol, recipient }: TransferDescProp
       {' '}
       to:
     </Bold>
-    <br />
-    <EtherscanLink type="address" value={recipient} />
-  </Paragraph>
+    <EtherscanLink type="address" value={recipient} cut={4} />
+  </Block>
 )
 
 const SettingsDescription = ({ removedOwner, addedOwner, newThreshold }: DescriptionDescProps) => (
   <>
     {removedOwner && (
-      <Paragraph data-testid={TRANSACTIONS_DESC_REMOVE_OWNER_TEST_ID}>
+      <Block data-testid={TRANSACTIONS_DESC_REMOVE_OWNER_TEST_ID}>
         <Bold>Remove owner:</Bold>
-        <br />
-        <EtherscanLink type="address" value={removedOwner} />
-      </Paragraph>
+        <EtherscanLink type="address" value={removedOwner} cut={4} />
+      </Block>
     )}
     {addedOwner && (
-      <Paragraph data-testid={TRANSACTIONS_DESC_ADD_OWNER_TEST_ID}>
+      <Block data-testid={TRANSACTIONS_DESC_ADD_OWNER_TEST_ID}>
         <Bold>Add owner:</Bold>
-        <br />
-        <EtherscanLink type="address" value={addedOwner} />
-      </Paragraph>
+        <EtherscanLink type="address" value={addedOwner} cut={4} />
+      </Block>
     )}
     {newThreshold && (
-      <Paragraph data-testid={TRANSACTIONS_DESC_CHANGE_THRESHOLD_TEST_ID}>
+      <Block data-testid={TRANSACTIONS_DESC_CHANGE_THRESHOLD_TEST_ID}>
         <Bold>Change required confirmations:</Bold>
-        <br />
-        {newThreshold}
-      </Paragraph>
+        <Paragraph size="md" noMargin>
+          {newThreshold}
+        </Paragraph>
+      </Block>
     )}
   </>
 )
@@ -95,7 +93,7 @@ const CustomDescription = ({
   data, value = 0, recipient, classes,
 }: CustomDescProps) => (
   <>
-    <Paragraph noMargin data-testid={TRANSACTIONS_DESC_CUSTOM_VALUE_TEST_ID}>
+    <Block data-testid={TRANSACTIONS_DESC_CUSTOM_VALUE_TEST_ID}>
       <Bold>
         Send
         {' '}
@@ -105,14 +103,14 @@ const CustomDescription = ({
         {' '}
         to:
       </Bold>
-      <br />
       <EtherscanLink type="address" value={recipient} />
-    </Paragraph>
-    <Paragraph className={classes.txData} data-testid={TRANSACTIONS_DESC_CUSTOM_DATA_TEST_ID}>
+    </Block>
+    <Block className={classes.txData} data-testid={TRANSACTIONS_DESC_CUSTOM_DATA_TEST_ID}>
       <Bold>Data (hex encoded):</Bold>
-      <br />
-      {data}
-    </Paragraph>
+      <Paragraph size="md" noMargin>
+        {data}
+      </Paragraph>
+    </Block>
   </>
 )
 
