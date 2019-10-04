@@ -119,7 +119,7 @@ const UserDetails = ({
           {userAddress && (
             <>
               <CopyBtn content={userAddress} increaseZindex />
-              <EtherscanBtn type="address" value={userAddress} />
+              <EtherscanBtn type="address" value={userAddress} increaseZindex />
             </>
           )}
         </Block>
