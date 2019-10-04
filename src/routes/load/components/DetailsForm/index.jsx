@@ -135,13 +135,13 @@ const Details = ({ classes, errors, form }: Props) => (
     <Block margin="sm">
       <Paragraph noMargin size="md" color="primary" className={classes.links}>
         By continuing you consent with the
-        {' '}
+
         <a rel="noopener noreferrer" href="https://safe.gnosis.io/terms" target="_blank">
           terms of use
         </a>
-        {' '}
+
         and
-        {' '}
+
         <a rel="noopener noreferrer" href="https://safe.gnosis.io/privacy" target="_blank">
           privacy policy
         </a>

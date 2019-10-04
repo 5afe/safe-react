@@ -14,6 +14,7 @@ import Identicon from '~/components/Identicon'
 import {
   mediumFontSize, sm, secondary, primary,
 } from '~/theme/variables'
+import { formatAmount } from '~/logic/tokens/utils/formatAmount'
 import { shortVersionOf, sameAddress } from '~/logic/wallets/ethAddresses'
 import { type Safe } from '~/routes/safe/store/models/safe'
 import { SAFELIST_ADDRESS } from '~/routes/routes'
@@ -71,7 +72,11 @@ const SafeList = ({
     <MuiList className={classes.list}>
       {safes.map((safe) => (
         <React.Fragment key={safe.address}>
-          <Link to={`${SAFELIST_ADDRESS}/${safe.address}`} onClick={onSafeClick} data-testid={SIDEBAR_SAFELIST_ROW_TESTID}>
+          <Link
+            to={`${SAFELIST_ADDRESS}/${safe.address}`}
+            onClick={onSafeClick}
+            data-testid={SIDEBAR_SAFELIST_ROW_TESTID}
+          >
             <ListItem classes={{ root: classes.listItemRoot }}>
               <ListItemIcon>
                 <Identicon address={safe.address} diameter={32} className={classes.icon} />
@@ -82,9 +87,7 @@ const SafeList = ({
                 classes={{ primary: classes.safeName, secondary: classes.safeAddress }}
               />
               <Paragraph size="lg" color="primary">
-                {safe.ethBalance}
-                {' '}
-ETH
+                {`${formatAmount(safe.ethBalance)} ETH`}
               </Paragraph>
               {sameAddress(defaultSafe, safe.address) ? (
                 <DefaultBadge />

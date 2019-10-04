@@ -1,13 +1,12 @@
 // @flow
 import { waitForElement } from '@testing-library/react'
-import { List } from 'immutable'
+import { Set, Map } from 'immutable'
 import { aNewStore } from '~/store'
 import { sleep } from '~/utils/timer'
 import { aMinedSafe } from '~/test/builder/safe.redux.builder'
 import { sendTokenTo, sendEtherTo } from '~/test/utils/tokenMovements'
 import { renderSafeView } from '~/test/builder/safe.dom.utils'
 import { dispatchAddTokenToList } from '~/test/utils/transactions/moveTokens.helper'
-import TokenBalanceRecord from '~/routes/safe/store/models/tokenBalance'
 import { calculateBalanceOf } from '~/routes/safe/store/actions/fetchTokenBalances'
 import updateActiveTokens from '~/routes/safe/store/actions/updateActiveTokens'
 import '@testing-library/jest-dom/extend-expect'
@@ -34,12 +33,11 @@ describe('DOM > Feature > Balances', () => {
     const safeTokenBalance = await calculateBalanceOf(tokenAddress, safeAddress, 18)
     expect(safeTokenBalance).toBe(tokensAmount)
 
-    const balanceAsRecord = TokenBalanceRecord({
-      address: tokenAddress,
-      balance: safeTokenBalance,
+    const balances = Map({
+      [tokenAddress]: safeTokenBalance,
     })
-    store.dispatch(updateActiveTokens(safeAddress, List([tokenAddress])))
-    store.dispatch(updateSafe({ address: safeAddress, balances: List([balanceAsRecord]) }))
+    store.dispatch(updateActiveTokens(safeAddress, Set([tokenAddress])))
+    store.dispatch(updateSafe({ address: safeAddress, balances }))
     await sleep(1000)
 
     const balanceRows = SafeDom.getAllByTestId(BALANCE_ROW_TEST_ID)

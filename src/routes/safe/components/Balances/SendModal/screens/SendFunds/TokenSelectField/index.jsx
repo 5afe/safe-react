@@ -12,6 +12,7 @@ import SelectField from '~/components/forms/SelectField'
 import { setImageToPlaceholder } from '~/routes/safe/components/Balances/utils'
 import { required } from '~/components/forms/validator'
 import { type Token } from '~/logic/tokens/store/model/token'
+import { formatAmount } from '~/logic/tokens/utils/formatAmount'
 import { selectedTokenStyles, selectStyles } from './style'
 
 type SelectFieldProps = {
@@ -35,7 +36,7 @@ const SelectedToken = ({ token, classes }: SelectedTokenProps) => (
         <ListItemText
           className={classes.tokenData}
           primary={token.name}
-          secondary={`${token.balance} ${token.symbol}`}
+          secondary={`${formatAmount(token.balance)} ${token.symbol}`}
         />
       </>
     ) : (
@@ -54,7 +55,7 @@ const TokenSelectField = ({ tokens, classes, initialValue }: SelectFieldProps) =
   const [initialToken, setInitialToken] = useState<InitialTokenType>('')
 
   useEffect(() => {
-    const selectedToken = tokens.find(token => token.name === initialValue)
+    const selectedToken = tokens.find((token) => token.name === initialValue)
     setInitialToken(selectedToken || '')
   }, [initialValue])
 
@@ -64,16 +65,16 @@ const TokenSelectField = ({ tokens, classes, initialValue }: SelectFieldProps) =
       component={SelectField}
       classes={{ selectMenu: classes.selectMenu }}
       validate={required}
-      renderValue={token => <SelectedTokenStyled token={token} />}
+      renderValue={(token) => <SelectedTokenStyled token={token} />}
       initialValue={initialToken}
       displayEmpty
     >
-      {tokens.map(token => (
+      {tokens.map((token) => (
         <MenuItem key={token.address} value={token}>
           <ListItemIcon>
             <Img src={token.logoUri} height={28} alt={token.name} onError={setImageToPlaceholder} />
           </ListItemIcon>
-          <ListItemText primary={token.name} secondary={`${token.balance} ${token.symbol}`} />
+          <ListItemText primary={token.name} secondary={`${formatAmount(token.balance)} ${token.symbol}`} />
         </MenuItem>
       ))}
     </Field>
