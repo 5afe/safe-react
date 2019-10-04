@@ -70,7 +70,7 @@ const ChangeThreshold = ({
                 <Col xs={2}>
                   <Field
                     name={THRESHOLD_FIELD_NAME}
-                    render={(props) => (
+                    render={(props: Object) => (
                       <>
                         <SelectField {...props} disableError>
                           {[...Array(Number(owners.size))].map((x, index) => (
@@ -92,11 +92,7 @@ const ChangeThreshold = ({
                 </Col>
                 <Col xs={10}>
                   <Paragraph size="lg" color="primary" noMargin className={classes.ownersText}>
-                    out of
-                    {' '}
-                    {owners.size}
-                    {' '}
-owner(s)
+                    {`out of ${owners.size} owner(s)`}
                   </Paragraph>
                 </Col>
               </Row>

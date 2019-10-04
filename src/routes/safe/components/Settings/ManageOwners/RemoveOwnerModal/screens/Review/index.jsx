@@ -87,12 +87,7 @@ const ReviewRemoveOwner = ({
                   Any transaction requires the confirmation of:
                 </Paragraph>
                 <Paragraph size="lg" color="primary" noMargin weight="bolder" className={classes.name}>
-                  {values.threshold}
-                  {' '}
-                  out of
-                  {owners.size - 1}
-                  {' '}
-                  owner(s)
+                  {`${values.threshold} out of ${owners.size - 1} owner(s)`}
                 </Paragraph>
               </Block>
             </Block>
