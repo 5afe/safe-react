@@ -118,7 +118,6 @@ const UserDetails = ({
           </Paragraph>
           {userAddress && (
             <>
-              {' '}
               <CopyBtn content={userAddress} />
               <EtherscanBtn type="address" value={userAddress} />
             </>
