@@ -118,7 +118,7 @@ const UserDetails = ({
           </Paragraph>
           {userAddress && (
             <>
-              <CopyBtn content={userAddress} />
+              <CopyBtn content={userAddress} increaseZindex />
               <EtherscanBtn type="address" value={userAddress} />
             </>
           )}
