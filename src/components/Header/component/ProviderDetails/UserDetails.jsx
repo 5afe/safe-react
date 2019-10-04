@@ -1,11 +1,11 @@
 // @flow
 import * as React from 'react'
 import classNames from 'classnames'
-import OpenInNew from '@material-ui/icons/OpenInNew'
 import { withStyles } from '@material-ui/core/styles'
 import Dot from '@material-ui/icons/FiberManualRecord'
+import EtherscanBtn from '~/components/EtherscanBtn'
+import CopyBtn from '~/components/CopyBtn'
 import Paragraph from '~/components/layout/Paragraph'
-import Link from '~/components/layout/Link'
 import Button from '~/components/layout/Button'
 import Identicon from '~/components/Identicon'
 import Hairline from '~/components/layout/Hairline'
@@ -14,11 +14,10 @@ import Row from '~/components/layout/Row'
 import Block from '~/components/layout/Block'
 import Spacer from '~/components/Spacer'
 import {
-  xs, sm, md, lg, background, secondary, warning, connected as connectedBg,
+  xs, sm, md, lg, background, warning, connected as connectedBg,
 } from '~/theme/variables'
 import { upperFirst } from '~/utils/css'
 import { shortVersionOf } from '~/logic/wallets/ethAddresses'
-import { getEtherScanLink } from '~/logic/wallets/getWeb3'
 import CircleDot from '~/components/Header/component/CircleDot'
 
 const metamaskIcon = require('../../assets/metamask-icon.svg')
@@ -32,11 +31,6 @@ type Props = {
   userAddress: string,
   classes: Object,
   onDisconnect: Function,
-}
-
-const openIconStyle = {
-  height: '16px',
-  color: secondary,
 }
 
 const styles = () => ({
@@ -65,7 +59,7 @@ const styles = () => ({
     flexGrow: 1,
     textAlign: 'center',
     letterSpacing: '-0.5px',
-    fontSize: '12px',
+    marginRight: sm,
   },
   labels: {
     fontSize: '12px',
@@ -119,13 +113,15 @@ const UserDetails = ({
           )}
         </Row>
         <Block justify="center" className={classes.user}>
-          <Paragraph className={classes.address} size="xs" noMargin>
+          <Paragraph className={classes.address} size="sm" noMargin>
             {address}
           </Paragraph>
           {userAddress && (
-            <Link className={classes.open} to={getEtherScanLink('address', userAddress)} target="_blank">
-              <OpenInNew style={openIconStyle} />
-            </Link>
+            <>
+              {' '}
+              <CopyBtn content={userAddress} />
+              <EtherscanBtn type="address" value={userAddress} />
+            </>
           )}
         </Block>
       </Block>
@@ -146,9 +142,11 @@ const UserDetails = ({
           Wallet
         </Paragraph>
         <Spacer />
-        {provider === 'safe'
-          ? <Img className={classes.logo} src={safeIcon} height={14} alt="Safe client" />
-          : <Img className={classes.logo} src={metamaskIcon} height={14} alt="Metamask client" />}
+        {provider === 'safe' ? (
+          <Img className={classes.logo} src={safeIcon} height={14} alt="Safe client" />
+        ) : (
+          <Img className={classes.logo} src={metamaskIcon} height={14} alt="Metamask client" />
+        )}
         <Paragraph noMargin align="right" weight="bolder" className={classes.labels}>
           {upperFirst(provider)}
         </Paragraph>
