@@ -1,5 +1,5 @@
 // @flow
-import React from 'react'
+import React, { useState } from 'react'
 import { List } from 'immutable'
 import { withStyles } from '@material-ui/core/styles'
 import { OnChange } from 'react-final-form-listeners'
@@ -13,6 +13,7 @@ import AddressInput from '~/components/forms/AddressInput'
 import Col from '~/components/layout/Col'
 import Button from '~/components/layout/Button'
 import Block from '~/components/layout/Block'
+import Img from '~/components/layout/Img'
 import Hairline from '~/components/layout/Hairline'
 import ButtonLink from '~/components/layout/ButtonLink'
 import Field from '~/components/forms/Field'
@@ -23,7 +24,9 @@ import {
 } from '~/components/forms/validator'
 import TokenSelectField from '~/routes/safe/components/Balances/SendModal/screens/SendFunds/TokenSelectField'
 import SafeInfo from '~/routes/safe/components/Balances/SendModal/SafeInfo'
+import ScanQRModal from '~/components/ScanQRModal'
 import ArrowDown from '../assets/arrow-down.svg'
+import QRIcon from '~/assets/icons/qrcode.svg'
 import { styles } from './style'
 
 type Props = {
@@ -39,6 +42,20 @@ type Props = {
   initialValues: Object,
 }
 
+const formMutators = {
+  setMax: (args, state, utils) => {
+    const { token } = state.formState.values
+
+    utils.changeValue(state, 'amount', () => token && token.balance)
+  },
+  onTokenChange: (args, state, utils) => {
+    utils.changeValue(state, 'amount', () => '')
+  },
+  setRecipient: (args, state, utils) => {
+    utils.changeValue(state, 'recipientAddress', () => args[0])
+  },
+}
+
 const SendFunds = ({
   classes,
   onClose,
@@ -51,22 +68,18 @@ const SendFunds = ({
   initialValues,
   onSubmit,
 }: Props) => {
+  const [qrModalOpen, setQrModalOpen] = useState<boolean>(false)
+
   const handleSubmit = (values) => {
     onSubmit(values)
   }
 
-  const formMutators = {
-    setMax: (args, state, utils) => {
-      const { token } = state.formState.values
+  const openQrModal = () => {
+    setQrModalOpen(true)
+  }
 
-      utils.changeValue(state, 'amount', () => token && token.balance)
-    },
-    onTokenChange: (args, state, utils) => {
-      utils.changeValue(state, 'amount', () => '')
-    },
-    setRecipient: (args, state, utils) => {
-      utils.changeValue(state, 'recipientAddress', () => args[0])
-    },
+  const closeQrModal = () => {
+    setQrModalOpen(false)
   }
 
   return (
@@ -86,6 +99,18 @@ const SendFunds = ({
           const formState = args[2]
           const mutators = args[3]
           const { token } = formState.values
+
+          const handleScan = (value) => {
+            let scannedAddress = value
+
+            if (scannedAddress.startsWith('ethereum:')) {
+              scannedAddress = scannedAddress.replace('ethereum:', '')
+            }
+
+            mutators.setRecipient(scannedAddress)
+            closeQrModal()
+          }
+
           return (
             <>
               <Block className={classes.formContainer}>
@@ -104,7 +129,7 @@ const SendFunds = ({
                   </Col>
                 </Row>
                 <Row margin="md">
-                  <Col xs={12}>
+                  <Col xs={11}>
                     <AddressInput
                       name="recipientAddress"
                       component={TextField}
@@ -112,6 +137,18 @@ const SendFunds = ({
                       text="Recipient*"
                       className={classes.addressInput}
                       fieldMutator={mutators.setRecipient}
+                    />
+                  </Col>
+                  <Col xs={1} center="xs" middle="xs" className={classes}>
+                    <Img
+                      src={QRIcon}
+                      className={classes.qrCodeBtn}
+                      role="button"
+                      height={20}
+                      alt="Scan QR"
+                      onClick={() => {
+                        openQrModal()
+                      }}
                     />
                   </Col>
                 </Row>
@@ -175,6 +212,7 @@ const SendFunds = ({
                   Review
                 </Button>
               </Row>
+              {qrModalOpen && <ScanQRModal isOpen={qrModalOpen} onScan={handleScan} onClose={closeQrModal} />}
             </>
           )
         }}

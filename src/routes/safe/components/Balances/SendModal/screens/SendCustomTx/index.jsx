@@ -1,5 +1,5 @@
 // @flow
-import React from 'react'
+import React, { useState } from 'react'
 import { withStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
 import InputAdornment from '@material-ui/core/InputAdornment'
@@ -10,19 +10,19 @@ import GnoForm from '~/components/forms/GnoForm'
 import AddressInput from '~/components/forms/AddressInput'
 import Col from '~/components/layout/Col'
 import Button from '~/components/layout/Button'
+import ScanQRModal from '~/components/ScanQRModal'
 import Block from '~/components/layout/Block'
+import Img from '~/components/layout/Img'
 import Hairline from '~/components/layout/Hairline'
 import ButtonLink from '~/components/layout/ButtonLink'
 import Field from '~/components/forms/Field'
 import TextField from '~/components/forms/TextField'
 import TextareaField from '~/components/forms/TextareaField'
 import {
-  composeValidators,
-  mustBeFloat,
-  maxValue,
-  mustBeEthereumContractAddress,
+  composeValidators, mustBeFloat, maxValue, mustBeEthereumContractAddress,
 } from '~/components/forms/validator'
 import SafeInfo from '~/routes/safe/components/Balances/SendModal/SafeInfo'
+import QRIcon from '~/assets/icons/qrcode.svg'
 import ArrowDown from '../assets/arrow-down.svg'
 import { styles } from './style'
 
@@ -47,10 +47,19 @@ const SendCustomTx = ({
   onSubmit,
   initialValues,
 }: Props) => {
+  const [qrModalOpen, setQrModalOpen] = useState<boolean>(false)
   const handleSubmit = (values: Object) => {
     if (values.data || values.value) {
       onSubmit(values)
     }
+  }
+
+  const openQrModal = () => {
+    setQrModalOpen(true)
+  }
+
+  const closeQrModal = () => {
+    setQrModalOpen(false)
   }
 
   const formMutators = {
@@ -78,6 +87,17 @@ const SendCustomTx = ({
         {(...args) => {
           const mutators = args[3]
 
+          const handleScan = (value) => {
+            let scannedAddress = value
+
+            if (scannedAddress.startsWith('ethereum:')) {
+              scannedAddress = scannedAddress.replace('ethereum:', '')
+            }
+
+            mutators.setRecipient(scannedAddress)
+            closeQrModal()
+          }
+
           return (
             <>
               <Block className={classes.formContainer}>
@@ -96,7 +116,7 @@ const SendCustomTx = ({
                   </Col>
                 </Row>
                 <Row margin="md">
-                  <Col xs={12}>
+                  <Col xs={11}>
                     <AddressInput
                       name="recipientAddress"
                       component={TextField}
@@ -105,6 +125,18 @@ const SendCustomTx = ({
                       className={classes.addressInput}
                       fieldMutator={mutators.setRecipient}
                       validators={[mustBeEthereumContractAddress]}
+                    />
+                  </Col>
+                  <Col xs={1} center="xs" middle="xs" className={classes}>
+                    <Img
+                      src={QRIcon}
+                      className={classes.qrCodeBtn}
+                      role="button"
+                      height={20}
+                      alt="Scan QR"
+                      onClick={() => {
+                        openQrModal()
+                      }}
                     />
                   </Col>
                 </Row>
@@ -124,10 +156,7 @@ const SendCustomTx = ({
                       name="value"
                       component={TextField}
                       type="text"
-                      validate={composeValidators(
-                        mustBeFloat,
-                        maxValue(ethBalance),
-                      )}
+                      validate={composeValidators(mustBeFloat, maxValue(ethBalance))}
                       placeholder="Value*"
                       text="Value*"
                       className={classes.addressInput}
@@ -164,6 +193,7 @@ const SendCustomTx = ({
                   Review
                 </Button>
               </Row>
+              {qrModalOpen && <ScanQRModal isOpen={qrModalOpen} onScan={handleScan} onClose={closeQrModal} />}
             </>
           )
         }}
