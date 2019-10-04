@@ -246,7 +246,7 @@ export default createMuiTheme({
       caption: {
         fontFamily: 'Averta, monospace',
         fontSize: mediumFontSize,
-        order: 3,
+        order: 2,
         color: disabled,
       },
       input: {
