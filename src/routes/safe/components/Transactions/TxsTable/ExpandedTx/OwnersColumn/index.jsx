@@ -4,8 +4,10 @@ import { List } from 'immutable'
 import { withStyles } from '@material-ui/core/styles'
 import Tabs from '@material-ui/core/Tabs'
 import Tab from '@material-ui/core/Tab'
+import Block from '~/components/layout/Block'
 import Col from '~/components/layout/Col'
 import Row from '~/components/layout/Row'
+import Img from '~/components/layout/Img'
 import Hairline from '~/components/layout/Hairline'
 import { type Owner } from '~/routes/safe/store/models/owner'
 import { type Transaction } from '~/routes/safe/store/models/transaction'
@@ -13,6 +15,9 @@ import { TX_TYPE_CONFIRMATION } from '~/logic/safe/transactions/send'
 import { EMPTY_DATA } from '~/logic/wallets/ethTransactions'
 import OwnersList from './List'
 import ButtonRow from './ButtonRow'
+import CheckGreen from './assets/check-green.svg'
+import ConfirmLargeBorder from './assets/confirm-large-border.svg'
+import ConfirmLargeGrey from './assets/confirm-large-grey.svg'
 import { styles } from './style'
 
 type Props = {
@@ -44,11 +49,6 @@ const OwnersColumn = ({
   onTxCancel,
   onTxExecute,
 }: Props) => {
-  const [tabIndex, setTabIndex] = useState(0)
-  const handleTabChange = (event, tabClicked) => {
-    setTabIndex(tabClicked)
-  }
-
   const cancellationTx = isCancellationTransaction(tx, safeAddress)
 
   const ownersWhoConfirmed = []
@@ -87,29 +87,37 @@ const OwnersColumn = ({
   if (tx.executionTxHash) {
     confirmedLabel = `Confirmed [${tx.confirmations.size}]`
   }
-  const unconfirmedLabel = `Unconfirmed [${ownersUnconfirmed.size}]`
 
   return (
     <Col xs={6} className={classes.rightCol} layout="block">
-      <Row>
-        <Tabs value={tabIndex} onChange={handleTabChange} indicatorColor="secondary" textColor="secondary">
-          <Tab label={confirmedLabel} />
-          <Tab label={unconfirmedLabel} />
-        </Tabs>
-        <Hairline color="#d4d53d" />
-      </Row>
-      <Row>
-        {tabIndex === 0 && <OwnersList owners={ownersWhoConfirmed} executionConfirmation={executionConfirmation} />}
-      </Row>
-      <Row>{tabIndex === 1 && <OwnersList owners={ownersUnconfirmed} />}</Row>
+      <Block className={classes.ownerListTitle}>
+        <div className={classes.iconState}>
+          {!thresholdReached && <Img src={ConfirmLargeBorder} />}
+          {thresholdReached && <Img src={CheckGreen} />}
+        </div>
+        {confirmedLabel}
+      </Block>
+      <OwnersList
+        ownersWhoConfirmed={ownersWhoConfirmed}
+        ownersUnconfirmed={ownersUnconfirmed}
+        executionConfirmation={executionConfirmation}
+        onTxConfirm={onTxConfirm}
+        showConfirmBtn={!tx.executionTxHash && !tx.cancelled && !currentUserAlreadyConfirmed && !thresholdReached}
+        onTxExecute={onTxExecute}
+        showExecuteBtn={tx.executionTxHash && thresholdReached}
+      />
+      <Block className={classes.ownerListTitle}>
+        <div className={classes.iconState}>
+          {!thresholdReached && <Img src={ConfirmLargeGrey} />}
+          {thresholdReached && !tx.executionTxHash && <Img src={ConfirmLargeBorder} />}
+          {thresholdReached && tx.executionTxHash && <Img src={CheckGreen} />}
+        </div>
+        Execute tx
+      </Block>
       {granted && displayButtonRow && (
         <ButtonRow
-          onTxConfirm={onTxConfirm}
           onTxCancel={onTxCancel}
-          showConfirmBtn={!currentUserAlreadyConfirmed && !thresholdReached}
           showCancelBtn={!cancellationTx}
-          showExecuteBtn={thresholdReached}
-          onTxExecute={onTxExecute}
         />
       )}
     </Col>

@@ -1,5 +1,5 @@
 // @flow
-import { border, sm } from '~/theme/variables'
+import { border, sm, boldFont } from '~/theme/variables'
 
 export const styles = () => ({
   ownersList: {
@@ -10,7 +10,7 @@ export const styles = () => ({
   },
   rightCol: {
     boxSizing: 'border-box',
-    borderLeft: 'solid 1px #d4d53d',
+    borderLeft: `2px solid ${border}`,
   },
   icon: {
     marginRight: sm,
@@ -18,4 +18,43 @@ export const styles = () => ({
   owner: {
     borderBottom: `1px solid ${border}`,
   },
+  container: {
+    display: 'flex',
+    alignItems: 'center',
+    padding: '5px',
+    paddingLeft: '20px',
+
+  },
+  ownerListTitle: {
+    display: 'flex',
+    alignItems: 'center',
+    padding: '15px',
+    paddingLeft: '20px',
+    fontSize: '11px',
+    fontWeight: boldFont,
+    lineHeight: 1.27,
+    textTransform: 'uppercase',
+    letterSpacing: '1px',
+  },
+  name: {
+    textOverflow: 'ellipsis',
+    overflow: 'hidden',
+    height: '20px',
+  },
+  address: {
+    height: '20px',
+  },
+  iconState: {
+    width: '20px',
+    display: 'flex',
+    justifyContent: 'center',
+    marginRight: '10px',
+    '& > img': {
+      display: 'block',
+    },
+  },
+  button: {
+    textAlign: 'center',
+    justifyContent: 'center',
+  }
 })
