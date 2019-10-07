@@ -24,7 +24,7 @@ const Opening = React.lazy(() => import('./opening/container'))
 
 const Load = React.lazy(() => import('./load/container/Load'))
 
-const SAFE_ADDRESS = `${SAFELIST_ADDRESS}/:${SAFE_PARAM_ADDRESS}`
+export const SAFE_ADDRESS = `${SAFELIST_ADDRESS}/:${SAFE_PARAM_ADDRESS}`
 
 type RoutesProps = {
   defaultSafe?: string,
@@ -64,10 +64,10 @@ const Routes = ({ defaultSafe, location }: RoutesProps) => {
       />
       <Route exact path={WELCOME_ADDRESS} component={Welcome} />
       <Route exact path={OPEN_ADDRESS} component={Open} />
-      <Route exact path={SAFE_ADDRESS} component={Safe} />
+      <Route path={SAFE_ADDRESS} component={Safe} />
       <Route exact path={OPENING_ADDRESS} component={Opening} />
       <Route exact path={LOAD_ADDRESS} component={Load} />
-      <Redirect to="/" />
+      {/* <Redirect to="/" /> */}
     </Switch>
   )
 }
