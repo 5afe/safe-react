@@ -67,7 +67,7 @@ const Routes = ({ defaultSafe, location }: RoutesProps) => {
       <Route path={SAFE_ADDRESS} component={Safe} />
       <Route exact path={OPENING_ADDRESS} component={Opening} />
       <Route exact path={LOAD_ADDRESS} component={Load} />
-      {/* <Redirect to="/" /> */}
+      <Redirect to="/" />
     </Switch>
   )
 }

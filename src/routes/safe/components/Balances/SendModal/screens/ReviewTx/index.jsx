@@ -1,5 +1,5 @@
 // @flow
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { BigNumber } from 'bignumber.js'
 import OpenInNew from '@material-ui/icons/OpenInNew'
 import { withStyles } from '@material-ui/core/styles'
@@ -19,6 +19,7 @@ import Hairline from '~/components/layout/Hairline'
 import SafeInfo from '~/routes/safe/components/Balances/SendModal/SafeInfo'
 import { setImageToPlaceholder } from '~/routes/safe/components/Balances/utils'
 import { getStandardTokenContract, getHumanFriendlyToken } from '~/logic/tokens/store/actions/fetchTokens'
+import { estimateApprovalTxGasCosts } from '~/logic/safe/transactions/gasNew'
 import { EMPTY_DATA } from '~/logic/wallets/ethTransactions'
 import { getWeb3 } from '~/logic/wallets/getWeb3'
 import { TX_NOTIFICATION_TYPES } from '~/logic/safe/transactions'
@@ -59,10 +60,42 @@ const ReviewTx = ({
   enqueueSnackbar,
   closeSnackbar,
 }: Props) => {
+  const [gasCosts, setGasCosts] = useState<string>('0.0')
+  const isSendingETH = isEther(tx.token.symbol)
+  const txRecipient = isSendingETH ? tx.recipientAddress : tx.token.address
+
+  useEffect(() => {
+    let isCurrent = true
+    const estimateGas = async () => {
+      const web3 = getWeb3()
+      const { fromWei, toBN } = web3.utils
+      let txData = EMPTY_DATA
+
+      if (!isSendingETH) {
+        const StandardToken = await getStandardTokenContract()
+        const tokenInstance = await StandardToken.at(tx.token.address)
+
+        txData = tokenInstance.contract.methods.transfer(tx.recipientAddress, 0).encodeABI()
+      }
+
+      const estimatedGasCosts = await estimateApprovalTxGasCosts(safeAddress, txRecipient, txData)
+      console.log({ estimatedGasCosts })
+      const gasCostsAsEth = fromWei(toBN(estimatedGasCosts), 'ether')
+      const roundedGasCosts = parseFloat(gasCostsAsEth).toFixed(3)
+      if (isCurrent) {
+        setGasCosts(roundedGasCosts)
+      }
+    }
+
+    estimateGas()
+
+    return () => {
+      isCurrent = false
+    }
+  }, [])
+
   const submitTx = async () => {
     const web3 = getWeb3()
-    const isSendingETH = isEther(tx.token.symbol)
-    const txRecipient = isSendingETH ? tx.recipientAddress : tx.token.address
     let txData = EMPTY_DATA
     let txAmount = web3.utils.toWei(tx.amount, 'ether')
 
@@ -106,12 +139,7 @@ const ReviewTx = ({
       </Row>
       <Hairline />
       <Block className={classes.container}>
-        <SafeInfo
-          safeAddress={safeAddress}
-          etherScanLink={etherScanLink}
-          safeName={safeName}
-          ethBalance={ethBalance}
-        />
+        <SafeInfo safeAddress={safeAddress} etherScanLink={etherScanLink} safeName={safeName} ethBalance={ethBalance} />
         <Row margin="md">
           <Col xs={1}>
             <img src={ArrowDown} alt="Arrow Down" style={{ marginLeft: '8px' }} />
@@ -152,6 +180,9 @@ const ReviewTx = ({
           </Paragraph>
         </Row>
       </Block>
+      <Row>
+        <Paragraph>{`Gas costs: ${gasCosts}`}</Paragraph>
+      </Row>
       <Hairline style={{ position: 'absolute', bottom: 85 }} />
       <Row align="center" className={classes.buttonRow}>
         <Button minWidth={140} onClick={() => setActiveScreen('sendFunds')}>

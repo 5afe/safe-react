@@ -64,7 +64,7 @@ const getProviderName: Function = (web3Provider): string => {
   return name
 }
 
-const getAccountFrom: Function = async (web3Provider): Promise<string | null> => {
+export const getAccountFrom: Function = async (web3Provider): Promise<string | null> => {
   const accounts = await web3Provider.eth.getAccounts()
 
   if (process.env.NODE_ENV === 'test' && window.testAccountIndex) {
