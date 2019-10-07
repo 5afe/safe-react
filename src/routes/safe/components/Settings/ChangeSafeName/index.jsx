@@ -12,7 +12,7 @@ import GnoForm from '~/components/forms/GnoForm'
 import Row from '~/components/layout/Row'
 import Paragraph from '~/components/layout/Paragraph'
 import Button from '~/components/layout/Button'
-import { getNofiticationsFromTxType, showSnackbar } from '~/logic/notifications'
+import { getNotificationsFromTxType, showSnackbar } from '~/logic/notifications'
 import { TX_NOTIFICATION_TYPES } from '~/logic/safe/transactions'
 import { styles } from './style'
 
@@ -36,7 +36,7 @@ const ChangeSafeName = (props: Props) => {
   const handleSubmit = (values) => {
     updateSafe({ address: safeAddress, name: values.safeName })
 
-    const notification = getNofiticationsFromTxType(TX_NOTIFICATION_TYPES.SAFE_NAME_CHANGE_TX)
+    const notification = getNotificationsFromTxType(TX_NOTIFICATION_TYPES.SAFE_NAME_CHANGE_TX)
     showSnackbar(notification.afterExecution, enqueueSnackbar, closeSnackbar)
   }
 

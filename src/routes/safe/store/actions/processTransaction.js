@@ -6,6 +6,7 @@ import fetchTransactions from '~/routes/safe/store/actions/fetchTransactions'
 import { type GlobalState } from '~/store'
 import { getGnosisSafeInstanceAt } from '~/logic/contracts/safeContracts'
 import {
+  type NotifiedTransaction,
   getApprovalTransaction,
   getExecutionTransaction,
   CALL,
@@ -16,7 +17,7 @@ import {
 import {
   type Notification,
   type NotificationsQueue,
-  getNofiticationsFromTxType,
+  getNotificationsFromTxType,
   showSnackbar,
 } from '~/logic/notifications'
 import { getErrorMessage } from '~/test/utils/ethereumErrors'
@@ -68,7 +69,7 @@ const processTransaction = (
     )}000000000000000000000000000000000000000000000000000000000000000001`
   }
 
-  const notificationsQueue: NotificationsQueue = getNofiticationsFromTxType(notifiedTransaction)
+  const notificationsQueue: NotificationsQueue = getNotificationsFromTxType(notifiedTransaction)
   const beforeExecutionKey = showSnackbar(notificationsQueue.beforeExecution, enqueueSnackbar, closeSnackbar)
   let pendingExecutionKey
 
@@ -124,6 +125,7 @@ const processTransaction = (
           shouldExecute ? TX_TYPE_EXECUTION : TX_TYPE_CONFIRMATION,
         )
         showSnackbar(notificationsQueue.afterExecution, enqueueSnackbar, closeSnackbar)
+        dispatch(fetchTransactions(safeAddress))
 
         return receipt.transactionHash
       })
@@ -136,8 +138,6 @@ const processTransaction = (
     const errMsg = await getErrorMessage(safeInstance.address, 0, executeData, from)
     console.error(`Error executing the TX: ${errMsg}`)
   }
-
-  dispatch(fetchTransactions(safeAddress))
 
   return txHash
 }
