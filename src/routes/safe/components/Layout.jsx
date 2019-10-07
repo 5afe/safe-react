@@ -16,7 +16,8 @@ import Identicon from '~/components/Identicon'
 import Heading from '~/components/layout/Heading'
 import Row from '~/components/layout/Row'
 import Button from '~/components/layout/Button'
-import Link from '~/components/layout/Link'
+import EtherscanBtn from '~/components/EtherscanBtn'
+import CopyBtn from '~/components/CopyBtn'
 import Paragraph from '~/components/layout/Paragraph'
 import Modal from '~/components/Modal'
 import SendModal from './Balances/SendModal'
@@ -105,13 +106,12 @@ const Layout = (props: Props) => {
             </Heading>
             {!granted && <Block className={classes.readonly}>Read Only</Block>}
           </Row>
-          <Block align="center" className={classes.user}>
-            <Paragraph size="md" color="disabled" noMargin>
+          <Block justify="center" className={classes.user}>
+            <Paragraph size="md" className={classes.address} color="disabled" noMargin>
               {address}
             </Paragraph>
-            <Link className={classes.open} to={etherScanLink} target="_blank">
-              <OpenInNew style={openIconStyle} />
-            </Link>
+            <CopyBtn content={address} />
+            <EtherscanBtn type="address" value={address} />
           </Block>
         </Block>
         <Block className={classes.balance}>

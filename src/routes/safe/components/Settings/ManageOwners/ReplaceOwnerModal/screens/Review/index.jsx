@@ -115,7 +115,7 @@ const ReviewRemoveOwner = ({
                         <Paragraph weight="bolder" size="lg" noMargin>
                           {owner.name}
                         </Paragraph>
-                        <Block align="center" className={classes.user}>
+                        <Block justify="center" className={classes.user}>
                           <Paragraph size="md" color="disabled" noMargin>
                             {owner.address}
                           </Paragraph>
@@ -149,7 +149,7 @@ const ReviewRemoveOwner = ({
                   <Paragraph weight="bolder" size="lg" noMargin>
                     {ownerName}
                   </Paragraph>
-                  <Block align="center" className={classes.user}>
+                  <Block justify="center" className={classes.user}>
                     <Paragraph size="md" color="disabled" noMargin>
                       {ownerAddress}
                     </Paragraph>
@@ -175,7 +175,7 @@ const ReviewRemoveOwner = ({
                   <Paragraph weight="bolder" size="lg" noMargin>
                     {values.ownerName}
                   </Paragraph>
-                  <Block align="center" className={classes.user}>
+                  <Block justify="center" className={classes.user}>
                     <Paragraph size="md" color="disabled" noMargin>
                       {values.ownerAddress}
                     </Paragraph>

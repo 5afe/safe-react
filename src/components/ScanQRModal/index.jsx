@@ -66,7 +66,7 @@ const ScanQRModal = ({
       <Hairline />
       <Col layout="column" middle="xs" className={classes.detailsContainer}>
         {hasWebcam === null ? (
-          <Block align="center" className={classes.loaderContainer}>
+          <Block justify="center" className={classes.loaderContainer}>
             <CircularProgress />
           </Block>
         ) : (

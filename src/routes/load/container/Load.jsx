@@ -19,7 +19,7 @@ type Props = SelectorProps & Actions
 export const loadSafe = async (
   safeName: string,
   safeAddress: string,
-  owners: Array,
+  owners: Array<*>,
   addSafe: Function,
 ) => {
   const safeProps = await buildSafe(safeAddress, safeName)

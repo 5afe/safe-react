@@ -12,7 +12,7 @@ const cx = classNames.bind(styles)
 type Props = {
   margin?: Size,
   padding?: Size,
-  align?: 'center' | 'right' | 'left',
+  justify?: 'center' | 'right' | 'left' | 'space-around',
   children: React.Node,
   className?: string,
 }
@@ -20,12 +20,12 @@ type Props = {
 class Block extends PureComponent<Props> {
   render() {
     const {
-      margin, padding, align, children, className, ...props
+      margin, padding, justify, children, className, ...props
     } = this.props
 
     const paddingStyle = padding ? capitalize(padding, 'padding') : undefined
     return (
-      <div className={cx(className, 'block', margin, paddingStyle, align)} {...props}>
+      <div className={cx(className, 'block', margin, paddingStyle, justify)} {...props}>
         {children}
       </div>
     )

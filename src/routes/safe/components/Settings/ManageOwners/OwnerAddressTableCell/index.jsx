@@ -11,7 +11,7 @@ type Props = {
 const OwnerAddressTableCell = (props: Props) => {
   const { address } = props
   return (
-    <Block align="left">
+    <Block justify="left">
       <Identicon address={address} diameter={32} />
       <Paragraph style={{ marginLeft: 10 }}>{address}</Paragraph>
     </Block>

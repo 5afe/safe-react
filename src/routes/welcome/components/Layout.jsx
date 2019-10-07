@@ -1,12 +1,13 @@
 // @flow
 import * as React from 'react'
+import OpenInNew from '@material-ui/icons/OpenInNew'
 import Block from '~/components/layout/Block'
 import Heading from '~/components/layout/Heading'
 import Img from '~/components/layout/Img'
 import Button from '~/components/layout/Button'
 import Link from '~/components/layout/Link'
 import { OPEN_ADDRESS, LOAD_ADDRESS } from '~/routes/routes'
-import { marginButtonImg } from '~/theme/variables'
+import { marginButtonImg, secondary } from '~/theme/variables'
 import styles from './Layout.scss'
 
 const safe = require('../assets/safe.svg')
@@ -14,6 +15,12 @@ const plus = require('../assets/new.svg')
 
 type Props = {
   provider: string,
+}
+
+const openIconStyle = {
+  height: '13px',
+  color: secondary,
+  marginBottom: '-2px',
 }
 
 type SafeProps = {
@@ -59,9 +66,9 @@ export const LoadSafe = ({ size, provider }: SafeProps) => (
 const Welcome = ({ provider }: Props) => (
   <Block className={styles.safe}>
     <Heading tag="h1" weight="bold" align="center" margin="lg">
-      Welcome to the Gnosis
+      Welcome to
       <br />
-      Safe Team Edition
+      Gnosis Safe For Teams
     </Heading>
     <Heading tag="h3" align="center" margin="xl">
       The Gnosis Safe for Teams is geared towards teams managing shared
@@ -71,6 +78,11 @@ const Welcome = ({ provider }: Props) => (
       wallet with redesigned smart contracts, cheaper setup and transaction
       <br />
       costs as well as an enhanced user experience.
+      {' '}
+      <a className={styles.learnMoreLink} href="https://safe.gnosis.io/teams" target="_blank" rel="noopener noreferrer">
+        Learn more
+        <OpenInNew style={openIconStyle} />
+      </a>
     </Heading>
     <Block className={styles.safeActions} margin="md">
       <CreateSafe size="large" provider={provider} />

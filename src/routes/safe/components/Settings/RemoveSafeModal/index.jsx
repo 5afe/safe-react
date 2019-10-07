@@ -58,7 +58,7 @@ const RemoveSafeComponent = ({
             <Paragraph size="lg" noMargin weight="bolder">
               {safeName}
             </Paragraph>
-            <Block align="center" className={classes.user}>
+            <Block justify="center" className={classes.user}>
               <Paragraph size="md" color="disabled" noMargin>
                 {safeAddress}
               </Paragraph>

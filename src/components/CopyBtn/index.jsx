@@ -1,13 +1,13 @@
 // @flow
 import React, { useState } from 'react'
 import Tooltip from '@material-ui/core/Tooltip'
-import { withStyles } from '@material-ui/core/styles'
+import { makeStyles } from '@material-ui/core/styles'
 import Img from '~/components/layout/Img'
 import { copyToClipboard } from '~/utils/clipboard'
 import { xs } from '~/theme/variables'
 import CopyIcon from './copy.svg'
 
-const styles = () => ({
+const useStyles = makeStyles({
   container: {
     display: 'flex',
     justifyContent: 'center',
@@ -20,19 +20,24 @@ const styles = () => ({
       backgroundColor: '#F0EFEE',
     },
   },
+  inreasedPopperZindex: {
+    zIndex: 2001,
+  },
 })
 
 type CopyBtnProps = {
   content: string,
-  classes: Object,
+  increaseZindex?: boolean,
 }
 
-const CopyBtn = ({ content, classes }: CopyBtnProps) => {
+const CopyBtn = ({ content, increaseZindex = false }: CopyBtnProps) => {
   if (!navigator.clipboard) {
     return null
   }
 
   const [clicked, setClicked] = useState<boolean>(false)
+  const classes = useStyles()
+  const customClasses = increaseZindex ? { popper: classes.inreasedPopperZindex } : {}
 
   return (
     <Tooltip
@@ -47,6 +52,7 @@ const CopyBtn = ({ content, classes }: CopyBtnProps) => {
           }
         }, 300)
       }}
+      classes={customClasses}
     >
       <div className={classes.container}>
         <Img
@@ -63,4 +69,4 @@ const CopyBtn = ({ content, classes }: CopyBtnProps) => {
   )
 }
 
-export default withStyles(styles)(CopyBtn)
+export default CopyBtn

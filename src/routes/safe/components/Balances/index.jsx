@@ -155,6 +155,7 @@ class Balances extends React.Component<Props, State> {
         <Table
           label="Balances"
           defaultOrderBy={BALANCE_TABLE_ASSET_ID}
+          defaultRowsPerPage={10}
           columns={columns}
           data={filteredData}
           size={filteredData.size}

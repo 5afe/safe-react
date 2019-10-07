@@ -98,7 +98,7 @@ const EditOwnerComponent = ({
                 />
               </Row>
               <Row>
-                <Block align="center" className={classes.user}>
+                <Block justify="center" className={classes.user}>
                   <Identicon address={ownerAddress} diameter={32} />
                   <Paragraph style={{ marginLeft: 10 }} size="md" color="disabled" noMargin>
                     {ownerAddress}

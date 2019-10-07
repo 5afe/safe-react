@@ -164,7 +164,7 @@ class ReviewComponent extends React.PureComponent<Props, State> {
                       <Paragraph size="lg" noMargin>
                         {values[getOwnerNameBy(index)]}
                       </Paragraph>
-                      <Block align="center" className={classes.user}>
+                      <Block justify="center" className={classes.user}>
                         <Paragraph size="md" color="disabled" noMargin>
                           {address}
                         </Paragraph>
