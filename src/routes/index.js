@@ -24,7 +24,7 @@ const Opening = React.lazy(() => import('./opening/container'))
 
 const Load = React.lazy(() => import('./load/container/Load'))
 
-export const SAFE_ADDRESS = `${SAFELIST_ADDRESS}/:${SAFE_PARAM_ADDRESS}`
+const SAFE_ADDRESS = `${SAFELIST_ADDRESS}/:${SAFE_PARAM_ADDRESS}`
 
 type RoutesProps = {
   defaultSafe?: string,
