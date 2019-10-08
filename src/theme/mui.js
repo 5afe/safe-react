@@ -256,10 +256,11 @@ export default createMuiTheme({
       input: {
         order: 2,
         width: '60px',
+        color: disabled,
       },
       select: {
         paddingRight: 30,
-        minWidth: '20px',
+        minWidth: '24px',
       },
       actions: {
         order: 4,
