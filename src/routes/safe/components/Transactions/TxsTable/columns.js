@@ -95,7 +95,7 @@ export const generateColumns = () => {
     disablePadding: false,
     label: 'Amount',
     custom: false,
-    width: 100,
+    width: 120,
   }
 
   const dateColumn: Column = {
