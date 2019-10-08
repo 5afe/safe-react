@@ -79,7 +79,6 @@ const ReviewTx = ({
       }
 
       const estimatedGasCosts = await estimateApprovalTxGasCosts(safeAddress, txRecipient, txData)
-      console.log({ estimatedGasCosts })
       const gasCostsAsEth = fromWei(toBN(estimatedGasCosts), 'ether')
       const roundedGasCosts = parseFloat(gasCostsAsEth).toFixed(3)
       if (isCurrent) {
@@ -180,9 +179,6 @@ const ReviewTx = ({
           </Paragraph>
         </Row>
       </Block>
-      <Row>
-        <Paragraph>{`Gas costs: ${gasCosts}`}</Paragraph>
-      </Row>
       <Hairline style={{ position: 'absolute', bottom: 85 }} />
       <Row align="center" className={classes.buttonRow}>
         <Button minWidth={140} onClick={() => setActiveScreen('sendFunds')}>
