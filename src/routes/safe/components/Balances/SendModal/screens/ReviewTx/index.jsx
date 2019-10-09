@@ -1,20 +1,19 @@
 // @flow
 import React, { useEffect, useState } from 'react'
 import { BigNumber } from 'bignumber.js'
-import OpenInNew from '@material-ui/icons/OpenInNew'
 import { withStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
 import IconButton from '@material-ui/core/IconButton'
 import { withSnackbar } from 'notistack'
 import Paragraph from '~/components/layout/Paragraph'
 import Row from '~/components/layout/Row'
-import Link from '~/components/layout/Link'
 import Col from '~/components/layout/Col'
 import Button from '~/components/layout/Button'
 import Img from '~/components/layout/Img'
 import Block from '~/components/layout/Block'
+import EtherscanBtn from '~/components/EtherscanBtn'
+import CopyBtn from '~/components/CopyBtn'
 import Identicon from '~/components/Identicon'
-import { copyToClipboard } from '~/utils/clipboard'
 import Hairline from '~/components/layout/Hairline'
 import SafeInfo from '~/routes/safe/components/Balances/SendModal/SafeInfo'
 import { setImageToPlaceholder } from '~/routes/safe/components/Balances/utils'
@@ -24,7 +23,6 @@ import { EMPTY_DATA } from '~/logic/wallets/ethTransactions'
 import { formatAmount } from '~/logic/tokens/utils/formatAmount'
 import { getWeb3 } from '~/logic/wallets/getWeb3'
 import { TX_NOTIFICATION_TYPES } from '~/logic/safe/transactions'
-import { secondary } from '~/theme/variables'
 import { isEther } from '~/logic/tokens/utils/tokenHelpers'
 import ArrowDown from '../assets/arrow-down.svg'
 import { styles } from './style'
@@ -34,7 +32,6 @@ type Props = {
   setActiveScreen: Function,
   classes: Object,
   safeAddress: string,
-  etherScanLink: string,
   safeName: string,
   ethBalance: string,
   tx: Object,
@@ -43,17 +40,11 @@ type Props = {
   closeSnackbar: Function,
 }
 
-const openIconStyle = {
-  height: '16px',
-  color: secondary,
-}
-
 const ReviewTx = ({
   onClose,
   setActiveScreen,
   classes,
   safeAddress,
-  etherScanLink,
   safeName,
   ethBalance,
   tx,
@@ -139,7 +130,7 @@ const ReviewTx = ({
       </Row>
       <Hairline />
       <Block className={classes.container}>
-        <SafeInfo safeAddress={safeAddress} etherScanLink={etherScanLink} safeName={safeName} ethBalance={ethBalance} />
+        <SafeInfo safeAddress={safeAddress} safeName={safeName} ethBalance={ethBalance} />
         <Row margin="md">
           <Col xs={1}>
             <img src={ArrowDown} alt="Arrow Down" style={{ marginLeft: '8px' }} />
@@ -158,12 +149,13 @@ const ReviewTx = ({
             <Identicon address={tx.recipientAddress} diameter={32} />
           </Col>
           <Col xs={11} layout="column">
-            <Paragraph weight="bolder" onClick={copyToClipboard} noMargin>
-              {tx.recipientAddress}
-              <Link to={etherScanLink} target="_blank">
-                <OpenInNew style={openIconStyle} />
-              </Link>
-            </Paragraph>
+            <Block justify="left">
+              <Paragraph weight="bolder" className={classes.address} noMargin>
+                {tx.recipientAddress}
+              </Paragraph>
+              <CopyBtn content={tx.recipientAddress} />
+              <EtherscanBtn type="address" value={tx.recipientAddress} />
+            </Block>
           </Col>
         </Row>
         <Row margin="xs">

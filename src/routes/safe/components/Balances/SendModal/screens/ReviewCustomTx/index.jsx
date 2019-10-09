@@ -1,5 +1,5 @@
 // @flow
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import OpenInNew from '@material-ui/icons/OpenInNew'
 import { withStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
@@ -17,9 +17,11 @@ import Hairline from '~/components/layout/Hairline'
 import { copyToClipboard } from '~/utils/clipboard'
 import SafeInfo from '~/routes/safe/components/Balances/SendModal/SafeInfo'
 import { setImageToPlaceholder } from '~/routes/safe/components/Balances/utils'
+import { estimateApprovalTxGasCosts } from '~/logic/safe/transactions/gasNew'
 import { getWeb3 } from '~/logic/wallets/getWeb3'
 import { TX_NOTIFICATION_TYPES } from '~/logic/safe/transactions'
 import { getEthAsToken } from '~/logic/tokens/utils/tokenHelpers'
+import { formatAmount } from '~/logic/tokens/utils/formatAmount'
 import ArrowDown from '../assets/arrow-down.svg'
 import { secondary } from '~/theme/variables'
 import { styles } from './style'
@@ -56,10 +58,33 @@ const ReviewCustomTx = ({
   enqueueSnackbar,
   closeSnackbar,
 }: Props) => {
+  const [gasCosts, setGasCosts] = useState<string>('< 0.001')
+
+  useEffect(() => {
+    let isCurrent = true
+    const estimateGas = async () => {
+      const web3 = getWeb3()
+      const { fromWei, toBN } = web3.utils
+
+      const estimatedGasCosts = await estimateApprovalTxGasCosts(safeAddress, tx.recipientAddress, tx.data.trim())
+      const gasCostsAsEth = fromWei(toBN(estimatedGasCosts), 'ether')
+      const formattedGasCosts = formatAmount(gasCostsAsEth)
+      if (isCurrent) {
+        setGasCosts(formattedGasCosts)
+      }
+    }
+
+    estimateGas()
+
+    return () => {
+      isCurrent = false
+    }
+  }, [])
+
   const submitTx = async () => {
     const web3 = getWeb3()
     const txRecipient = tx.recipientAddress
-    const txData = tx.data
+    const txData = tx.data.trim()
     const txValue = tx.value ? web3.utils.toWei(tx.value, 'ether') : 0
 
     createTransaction(
@@ -125,7 +150,7 @@ const ReviewCustomTx = ({
           </Paragraph>
         </Row>
         <Row margin="md" align="center">
-          <Img src={getEthAsToken().logoUri} height={28} alt="Ether" onError={setImageToPlaceholder} />
+          <Img src={getEthAsToken('0').logoUri} height={28} alt="Ether" onError={setImageToPlaceholder} />
           <Paragraph size="md" noMargin className={classes.value}>
             {tx.value || 0}
             {' ETH'}
@@ -142,6 +167,11 @@ const ReviewCustomTx = ({
               {tx.data}
             </Row>
           </Col>
+        </Row>
+        <Row>
+          <Paragraph>
+            {`You're about to create a transaction and will have to confirm it with your currently connected wallet. Make sure you have ${gasCosts} (fee price) ETH in this wallet to fund this confirmation.`}
+          </Paragraph>
         </Row>
       </Block>
       <Hairline />

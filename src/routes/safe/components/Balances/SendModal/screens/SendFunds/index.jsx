@@ -33,7 +33,6 @@ type Props = {
   onClose: () => void,
   classes: Object,
   safeAddress: string,
-  etherScanLink: string,
   safeName: string,
   ethBalance: string,
   selectedToken: string,
@@ -60,7 +59,6 @@ const SendFunds = ({
   classes,
   onClose,
   safeAddress,
-  etherScanLink,
   safeName,
   ethBalance,
   tokens,
@@ -114,12 +112,7 @@ const SendFunds = ({
           return (
             <>
               <Block className={classes.formContainer}>
-                <SafeInfo
-                  safeAddress={safeAddress}
-                  etherScanLink={etherScanLink}
-                  safeName={safeName}
-                  ethBalance={ethBalance}
-                />
+                <SafeInfo safeAddress={safeAddress} safeName={safeName} ethBalance={ethBalance} />
                 <Row margin="md">
                   <Col xs={1}>
                     <img src={ArrowDown} alt="Arrow Down" style={{ marginLeft: '8px' }} />

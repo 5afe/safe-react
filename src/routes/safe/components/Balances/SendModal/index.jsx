@@ -113,7 +113,6 @@ const Send = ({
           <SendFunds
             onClose={onClose}
             safeAddress={safeAddress}
-            etherScanLink={etherScanLink}
             safeName={safeName}
             ethBalance={ethBalance}
             tokens={tokens}
@@ -128,7 +127,6 @@ const Send = ({
             onClose={onClose}
             setActiveScreen={setActiveScreen}
             safeAddress={safeAddress}
-            etherScanLink={etherScanLink}
             safeName={safeName}
             ethBalance={ethBalance}
             createTransaction={createTransaction}
@@ -138,7 +136,6 @@ const Send = ({
           <SendCustomTx
             onClose={onClose}
             safeAddress={safeAddress}
-            etherScanLink={etherScanLink}
             safeName={safeName}
             ethBalance={ethBalance}
             onSubmit={handleCustomTxCreation}
