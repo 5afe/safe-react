@@ -21,6 +21,7 @@ import { setImageToPlaceholder } from '~/routes/safe/components/Balances/utils'
 import { getStandardTokenContract, getHumanFriendlyToken } from '~/logic/tokens/store/actions/fetchTokens'
 import { estimateApprovalTxGasCosts } from '~/logic/safe/transactions/gasNew'
 import { EMPTY_DATA } from '~/logic/wallets/ethTransactions'
+import { formatAmount } from '~/logic/tokens/utils/formatAmount'
 import { getWeb3 } from '~/logic/wallets/getWeb3'
 import { TX_NOTIFICATION_TYPES } from '~/logic/safe/transactions'
 import { secondary } from '~/theme/variables'
@@ -60,7 +61,7 @@ const ReviewTx = ({
   enqueueSnackbar,
   closeSnackbar,
 }: Props) => {
-  const [gasCosts, setGasCosts] = useState<string>('0.0')
+  const [gasCosts, setGasCosts] = useState<string>('< 0.001')
   const isSendingETH = isEther(tx.token.symbol)
   const txRecipient = isSendingETH ? tx.recipientAddress : tx.token.address
 
@@ -80,9 +81,9 @@ const ReviewTx = ({
 
       const estimatedGasCosts = await estimateApprovalTxGasCosts(safeAddress, txRecipient, txData)
       const gasCostsAsEth = fromWei(toBN(estimatedGasCosts), 'ether')
-      const roundedGasCosts = parseFloat(gasCostsAsEth).toFixed(3)
+      const formattedGasCosts = formatAmount(gasCostsAsEth)
       if (isCurrent) {
-        setGasCosts(roundedGasCosts)
+        setGasCosts(formattedGasCosts)
       }
     }
 
@@ -176,6 +177,11 @@ const ReviewTx = ({
             {tx.amount}
             {' '}
             {tx.token.symbol}
+          </Paragraph>
+        </Row>
+        <Row>
+          <Paragraph>
+            {`You're about to create a transaction and will have to confirm it with your currently connected wallet. Make sure you have ${gasCosts} (fee price) ETH in this wallet to fund this confirmation.`}
           </Paragraph>
         </Row>
       </Block>
