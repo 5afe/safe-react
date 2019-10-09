@@ -22,6 +22,9 @@ export const styles = () => ({
   manage: {
     fontSize: '24px',
   },
+  address: {
+    marginRight: sm,
+  },
   closeIcon: {
     height: '35px',
     width: '35px',
