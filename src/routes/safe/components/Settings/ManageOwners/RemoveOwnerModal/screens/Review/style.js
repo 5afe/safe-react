@@ -49,6 +49,9 @@ export const styles = () => ({
   ownersTitle: {
     padding: lg,
   },
+  address: {
+    marginRight: sm,
+  },
   owner: {
     padding: sm,
     alignItems: 'center',
