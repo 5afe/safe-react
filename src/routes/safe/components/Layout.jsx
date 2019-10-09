@@ -219,7 +219,7 @@ const Layout = (props: Props) => {
         open={showReceive}
         paperClassName={classes.receiveModal}
       >
-        <Receive safeName={name} safeAddress={address} etherScanLink={etherScanLink} onClose={onHide('Receive')} />
+        <Receive safeName={name} safeAddress={address} onClose={onHide('Receive')} />
       </Modal>
     </>
   )
