@@ -3,10 +3,10 @@ import React from 'react'
 import { withSnackbar } from 'notistack'
 import { withStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
-import OpenInNew from '@material-ui/icons/OpenInNew'
 import IconButton from '@material-ui/core/IconButton'
+import EtherscanBtn from '~/components/EtherscanBtn'
+import CopyBtn from '~/components/CopyBtn'
 import Row from '~/components/layout/Row'
-import Link from '~/components/layout/Link'
 import Block from '~/components/layout/Block'
 import GnoForm from '~/components/forms/GnoForm'
 import Button from '~/components/layout/Button'
@@ -18,18 +18,12 @@ import Identicon from '~/components/Identicon'
 import { composeValidators, required, minMaxLength } from '~/components/forms/validator'
 import { getNotificationsFromTxType, showSnackbar } from '~/logic/notifications'
 import { TX_NOTIFICATION_TYPES } from '~/logic/safe/transactions'
-import { getEtherScanLink } from '~/logic/wallets/getWeb3'
 import Modal from '~/components/Modal'
 import { styles } from './style'
-import { secondary } from '~/theme/variables'
+import { sm } from '~/theme/variables'
 
 export const RENAME_OWNER_INPUT_TEST_ID = 'rename-owner-input'
 export const SAVE_OWNER_CHANGES_BTN_TEST_ID = 'save-owner-changes-btn'
-
-const openIconStyle = {
-  height: '16px',
-  color: secondary,
-}
 
 type Props = {
   onClose: () => void,
@@ -100,12 +94,11 @@ const EditOwnerComponent = ({
               <Row>
                 <Block justify="center" className={classes.user}>
                   <Identicon address={ownerAddress} diameter={32} />
-                  <Paragraph style={{ marginLeft: 10 }} size="md" color="disabled" noMargin>
+                  <Paragraph style={{ marginLeft: sm, marginRight: sm }} size="md" color="disabled" noMargin>
                     {ownerAddress}
                   </Paragraph>
-                  <Link className={classes.open} to={getEtherScanLink('address', ownerAddress)} target="_blank">
-                    <OpenInNew style={openIconStyle} />
-                  </Link>
+                  <CopyBtn content={safeAddress} />
+                  <EtherscanBtn type="address" value={safeAddress} />
                 </Block>
               </Row>
             </Block>
@@ -114,7 +107,14 @@ const EditOwnerComponent = ({
               <Button minWidth={140} minHeight={42} onClick={onClose}>
                 Cancel
               </Button>
-              <Button type="submit" variant="contained" minWidth={140} minHeight={42} color="primary" testId={SAVE_OWNER_CHANGES_BTN_TEST_ID}>
+              <Button
+                type="submit"
+                variant="contained"
+                minWidth={140}
+                minHeight={42}
+                color="primary"
+                testId={SAVE_OWNER_CHANGES_BTN_TEST_ID}
+              >
                 Save
               </Button>
             </Row>
