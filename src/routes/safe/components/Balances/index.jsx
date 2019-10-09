@@ -43,7 +43,6 @@ type Props = {
   activeTokens: List<Token>,
   safeAddress: string,
   safeName: string,
-  etherScanLink: string,
   ethBalance: string,
   createTransaction: Function,
 }
@@ -107,7 +106,6 @@ class Balances extends React.Component<Props, State> {
       safeAddress,
       activeTokens,
       safeName,
-      etherScanLink,
       ethBalance,
       createTransaction,
     } = this.props
@@ -201,7 +199,6 @@ class Balances extends React.Component<Props, State> {
         <SendModal
           onClose={this.hideSendFunds}
           isOpen={sendFunds.isOpen}
-          etherScanLink={etherScanLink}
           safeAddress={safeAddress}
           safeName={safeName}
           ethBalance={ethBalance}

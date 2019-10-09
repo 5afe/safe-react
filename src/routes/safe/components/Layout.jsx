@@ -4,7 +4,6 @@ import classNames from 'classnames/bind'
 import {
   Switch, Redirect, Route, withRouter,
 } from 'react-router-dom'
-import OpenInNew from '@material-ui/icons/OpenInNew'
 import Tabs from '@material-ui/core/Tabs'
 import Tab from '@material-ui/core/Tab'
 import CallMade from '@material-ui/icons/CallMade'
@@ -25,7 +24,7 @@ import Receive from './Balances/Receive'
 import NoSafe from '~/components/NoSafe'
 import { type SelectorProps } from '~/routes/safe/container/selector'
 import { getEtherScanLink } from '~/logic/wallets/getWeb3'
-import { secondary, border } from '~/theme/variables'
+import { border } from '~/theme/variables'
 import { type Actions } from '../container/actions'
 import Balances from './Balances'
 import Transactions from './Transactions'
@@ -51,11 +50,6 @@ type Props = SelectorProps &
     location: Object,
     history: Object,
   }
-
-const openIconStyle = {
-  height: '16px',
-  color: secondary,
-}
 
 const Layout = (props: Props) => {
   const {
@@ -165,7 +159,6 @@ const Layout = (props: Props) => {
               granted={granted}
               safeAddress={address}
               safeName={name}
-              etherScanLink={etherScanLink}
               createTransaction={createTransaction}
             />
           )}
@@ -211,7 +204,6 @@ const Layout = (props: Props) => {
       <SendModal
         onClose={hideSendFunds}
         isOpen={sendFunds.isOpen}
-        etherScanLink={etherScanLink}
         safeAddress={address}
         safeName={name}
         ethBalance={ethBalance}

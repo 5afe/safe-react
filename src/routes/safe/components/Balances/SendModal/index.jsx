@@ -24,7 +24,6 @@ type Props = {
   classes: Object,
   isOpen: boolean,
   safeAddress: string,
-  etherScanLink: string,
   safeName: string,
   ethBalance: string,
   tokens: List<Token>,
@@ -65,7 +64,6 @@ const Send = ({
   isOpen,
   classes,
   safeAddress,
-  etherScanLink,
   safeName,
   ethBalance,
   tokens,
@@ -148,7 +146,6 @@ const Send = ({
             onClose={onClose}
             setActiveScreen={setActiveScreen}
             safeAddress={safeAddress}
-            etherScanLink={etherScanLink}
             safeName={safeName}
             ethBalance={ethBalance}
             createTransaction={createTransaction}
