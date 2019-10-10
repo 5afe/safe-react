@@ -1,57 +1,53 @@
 // @flow
 import GnosisSafeSol from '@gnosis.pm/safe-contracts/build/contracts/GnosisSafe.json'
 import { getWeb3, getAccountFrom } from '~/logic/wallets/getWeb3'
-import { type Operation } from '~/logic/safe/transactions'
 import { calculateGasOf, calculateGasPrice } from '~/logic/wallets/ethTransactions'
 import { ZERO_ADDRESS } from '~/logic/wallets/ethAddresses'
+import { type Transaction } from '~/routes/safe/store/models/transaction'
 import { CALL } from '.'
 
-export const estimateApprovalTxGasCosts = async (safeAddress: string, to: string, data: string): Promise<number> => {
+export const estimateTxGasCosts = async (
+  safeAddress: string,
+  to: string,
+  data: string,
+  tx?: Transaction,
+): Promise<number> => {
   try {
     const web3 = getWeb3()
     const from = await getAccountFrom(web3)
     const safeInstance = new web3.eth.Contract(GnosisSafeSol.abi, safeAddress)
     const nonce = await safeInstance.methods.nonce().call()
-    const txHash = await safeInstance.methods
-      .getTransactionHash(to, 0, data, CALL, 0, 0, 0, ZERO_ADDRESS, ZERO_ADDRESS, nonce)
-      .call({
-        from,
-      })
-    const approvalData = await safeInstance.methods.approveHash(txHash).encodeABI()
-    const gas = await calculateGasOf(approvalData, from, safeAddress)
-    const gasPrice = await calculateGasPrice()
+    const threshold = await safeInstance.methods.getThreshold().call()
 
-    return gas * parseInt(gasPrice, 10)
-  } catch (err) {
-    console.error(`Error while estimating approval transaction gas costs: ${err}`)
+    const isExecution = (tx && tx.confirmations.size) || threshold === '1'
 
-    return 1000000000000000
-  }
-}
+    let txData
+    if (isExecution) {
+      // https://gnosis-safe.readthedocs.io/en/latest/contracts/signatures.html#pre-validated-signatures
+      const signatures = tx
+        || `0x000000000000000000000000${from.replace(
+          '0x',
+          '',
+        )}000000000000000000000000000000000000000000000000000000000000000001`
+      txData = await safeInstance.methods
+        .execTransaction(to, 0, data, CALL, 0, 0, 0, ZERO_ADDRESS, ZERO_ADDRESS, signatures)
+        .encodeABI()
+    } else {
+      const txHash = await safeInstance.methods
+        .getTransactionHash(to, 0, data, CALL, 0, 0, 0, ZERO_ADDRESS, ZERO_ADDRESS, nonce)
+        .call({
+          from,
+        })
+      txData = await safeInstance.methods.approveHash(txHash).encodeABI()
+    }
 
-export const estimateExecuteTxGasCosts = async (
-  safeInstance: any,
-  to: string,
-  valueInWei: number | string,
-  data: string,
-  operation: Operation,
-  nonce: string | number,
-  sender: string,
-  sigs: string,
-): Promise<number> => {
-  try {
-    const web3 = getWeb3()
-    const contract = new web3.eth.Contract(GnosisSafeSol.abi, safeInstance.address)
-    const executionData = await contract.methods
-      .execTransaction(to, valueInWei, data, operation, 0, 0, 0, ZERO_ADDRESS, ZERO_ADDRESS)
-      .encodeABI()
-    const gas = await calculateGasOf(executionData, sender, safeInstance.address)
+    const gas = await calculateGasOf(txData, from, safeAddress)
     const gasPrice = await calculateGasPrice()
 
     return gas * parseInt(gasPrice, 10)
   } catch (err) {
     console.error(`Error while estimating transaction execution gas costs: ${err}`)
 
-    return 0.001
+    return 10000
   }
 }

@@ -16,7 +16,7 @@ import EtherscanBtn from '~/components/EtherscanBtn'
 import CopyBtn from '~/components/CopyBtn'
 import SafeInfo from '~/routes/safe/components/Balances/SendModal/SafeInfo'
 import { setImageToPlaceholder } from '~/routes/safe/components/Balances/utils'
-import { estimateApprovalTxGasCosts } from '~/logic/safe/transactions/gasNew'
+import { estimateTxGasCosts } from '~/logic/safe/transactions/gasNew'
 import { getWeb3 } from '~/logic/wallets/getWeb3'
 import { TX_NOTIFICATION_TYPES } from '~/logic/safe/transactions'
 import { getEthAsToken } from '~/logic/tokens/utils/tokenHelpers'
@@ -57,7 +57,7 @@ const ReviewCustomTx = ({
       const web3 = getWeb3()
       const { fromWei, toBN } = web3.utils
 
-      const estimatedGasCosts = await estimateApprovalTxGasCosts(safeAddress, tx.recipientAddress, tx.data.trim())
+      const estimatedGasCosts = await estimateTxGasCosts(safeAddress, tx.recipientAddress, tx.data.trim())
       const gasCostsAsEth = fromWei(toBN(estimatedGasCosts), 'ether')
       const formattedGasCosts = formatAmount(gasCostsAsEth)
       if (isCurrent) {

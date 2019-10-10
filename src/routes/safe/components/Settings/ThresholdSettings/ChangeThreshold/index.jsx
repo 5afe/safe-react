@@ -21,7 +21,7 @@ import type { Owner } from '~/routes/safe/store/models/owner'
 import { getWeb3 } from '~/logic/wallets/getWeb3'
 import { formatAmount } from '~/logic/tokens/utils/formatAmount'
 import { getGnosisSafeInstanceAt } from '~/logic/contracts/safeContracts'
-import { estimateApprovalTxGasCosts } from '~/logic/safe/transactions/gasNew'
+import { estimateTxGasCosts } from '~/logic/safe/transactions/gasNew'
 import { styles } from './style'
 
 type Props = {
@@ -48,7 +48,7 @@ const ChangeThreshold = ({
 
       const safeInstance = await getGnosisSafeInstanceAt(safeAddress)
       const txData = safeInstance.contract.methods.changeThreshold('1').encodeABI()
-      const estimatedGasCosts = await estimateApprovalTxGasCosts(safeAddress, safeAddress, txData)
+      const estimatedGasCosts = await estimateTxGasCosts(safeAddress, safeAddress, txData)
       const gasCostsAsEth = fromWei(toBN(estimatedGasCosts), 'ether')
       const formattedGasCosts = formatAmount(gasCostsAsEth)
       if (isCurrent) {

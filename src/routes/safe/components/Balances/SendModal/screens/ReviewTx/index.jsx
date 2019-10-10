@@ -18,7 +18,7 @@ import Hairline from '~/components/layout/Hairline'
 import SafeInfo from '~/routes/safe/components/Balances/SendModal/SafeInfo'
 import { setImageToPlaceholder } from '~/routes/safe/components/Balances/utils'
 import { getStandardTokenContract, getHumanFriendlyToken } from '~/logic/tokens/store/actions/fetchTokens'
-import { estimateApprovalTxGasCosts } from '~/logic/safe/transactions/gasNew'
+import { estimateTxGasCosts } from '~/logic/safe/transactions/gasNew'
 import { EMPTY_DATA } from '~/logic/wallets/ethTransactions'
 import { formatAmount } from '~/logic/tokens/utils/formatAmount'
 import { getWeb3 } from '~/logic/wallets/getWeb3'
@@ -70,7 +70,7 @@ const ReviewTx = ({
         txData = tokenInstance.contract.methods.transfer(tx.recipientAddress, 0).encodeABI()
       }
 
-      const estimatedGasCosts = await estimateApprovalTxGasCosts(safeAddress, txRecipient, txData)
+      const estimatedGasCosts = await estimateTxGasCosts(safeAddress, txRecipient, txData)
       const gasCostsAsEth = fromWei(toBN(estimatedGasCosts), 'ether')
       const formattedGasCosts = formatAmount(gasCostsAsEth)
       if (isCurrent) {
