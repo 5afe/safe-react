@@ -4,7 +4,7 @@ import { List } from 'immutable'
 import { connect } from 'react-redux'
 import { withSnackbar } from 'notistack'
 import { type Notification } from '~/logic/notifications/store/models/notification'
-import actions, {type Actions } from './actions'
+import actions, { type Actions } from './actions'
 import selector from './selector'
 
 type Props = Actions & {
@@ -14,7 +14,7 @@ type Props = Actions & {
 class Notifier extends Component<Props> {
   displayed = []
 
-  shouldComponentUpdate({ notifications: newSnacks = [] }) {
+  shouldComponentUpdate({ notifications: newSnacks = List() }) {
     const { notifications: currentSnacks, closeSnackbar, removeSnackbar } = this.props
 
     if (!newSnacks.size) {
@@ -33,7 +33,7 @@ class Notifier extends Component<Props> {
       if (notExists) {
         continue
       }
-      notExists = notExists || !currentSnacks.filter(({ key }) => newSnack.key === key).length
+      notExists = notExists || !currentSnacks.filter(({ key }) => newSnack.key === key).size
     }
     return notExists
   }
