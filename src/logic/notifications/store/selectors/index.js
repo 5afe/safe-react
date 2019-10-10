@@ -5,7 +5,7 @@ import { type GlobalState } from '~/store'
 import { NOTIFICATIONS_REDUCER_ID } from '~/logic/notifications/store/reducer/notifications'
 import { type Notification } from '~/logic/notifications/store/models/notification'
 
-export const notificationsMapSelector = (
+const notificationsMapSelector = (
   state: GlobalState,
 ): Map<string, Notification> => state[NOTIFICATIONS_REDUCER_ID]
 

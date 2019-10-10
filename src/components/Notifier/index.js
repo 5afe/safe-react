@@ -1,11 +1,17 @@
 // @flow
-import React, { Component } from 'react'
+import { Component } from 'react'
+import { List } from 'immutable'
 import { connect } from 'react-redux'
 import { withSnackbar } from 'notistack'
-import actions from './actions'
+import { type Notification } from '~/logic/notifications/store/models/notification'
+import actions, {type Actions } from './actions'
 import selector from './selector'
 
-class Notifier extends Component {
+type Props = Actions & {
+  notifications: List<Notification>,
+}
+
+class Notifier extends Component<Props> {
   displayed = []
 
   shouldComponentUpdate({ notifications: newSnacks = [] }) {

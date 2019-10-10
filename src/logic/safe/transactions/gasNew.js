@@ -1,16 +1,17 @@
 // @flow
 import GnosisSafeSol from '@gnosis.pm/safe-contracts/build/contracts/GnosisSafe.json'
+import { List } from 'immutable'
+import { type Confirmation } from '~/routes/safe/store/models/confirmation'
 import { getWeb3, getAccountFrom } from '~/logic/wallets/getWeb3'
 import { calculateGasOf, calculateGasPrice } from '~/logic/wallets/ethTransactions'
 import { ZERO_ADDRESS } from '~/logic/wallets/ethAddresses'
-import { type Transaction } from '~/routes/safe/store/models/transaction'
 import { CALL } from '.'
 
 export const estimateTxGasCosts = async (
   safeAddress: string,
   to: string,
   data: string,
-  tx?: Transaction,
+  confirmations?: List<Confirmation>,
 ): Promise<number> => {
   try {
     const web3 = getWeb3()
@@ -19,12 +20,12 @@ export const estimateTxGasCosts = async (
     const nonce = await safeInstance.methods.nonce().call()
     const threshold = await safeInstance.methods.getThreshold().call()
 
-    const isExecution = (tx && tx.confirmations.size) || threshold === '1'
+    const isExecution = (confirmations && confirmations.size) || threshold === '1'
 
     let txData
     if (isExecution) {
       // https://gnosis-safe.readthedocs.io/en/latest/contracts/signatures.html#pre-validated-signatures
-      const signatures = tx
+      const signatures = confirmations
         || `0x000000000000000000000000${from.replace(
           '0x',
           '',

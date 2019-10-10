@@ -1,5 +1,5 @@
 // @flow
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import Close from '@material-ui/icons/Close'
 import IconButton from '@material-ui/core/IconButton'
 import { withStyles } from '@material-ui/core/styles'
@@ -13,6 +13,9 @@ import Row from '~/components/layout/Row'
 import Bold from '~/components/layout/Bold'
 import Block from '~/components/layout/Block'
 import Paragraph from '~/components/layout/Paragraph'
+import { getWeb3 } from '~/logic/wallets/getWeb3'
+import { estimateTxGasCosts } from '~/logic/safe/transactions/gasNew'
+import { formatAmount } from '~/logic/tokens/utils/formatAmount'
 import { TX_NOTIFICATION_TYPES } from '~/logic/safe/transactions'
 import { type Transaction } from '~/routes/safe/store/models/transaction'
 import { styles } from './style'
@@ -62,8 +65,31 @@ const ApproveTxModal = ({
   closeSnackbar,
 }: Props) => {
   const [approveAndExecute, setApproveAndExecute] = useState<boolean>(true)
+  const [gasCosts, setGasCosts] = useState<string>('< 0.001')
   const { title, description } = getModalTitleAndDescription(thresholdReached)
   const oneConfirmationLeft = tx.confirmations.size + 1 === threshold
+
+  useEffect(() => {
+    let isCurrent = true
+
+    const estimateGas = async () => {
+      const web3 = getWeb3()
+      const { fromWei, toBN } = web3.utils
+
+      const estimatedGasCosts = await estimateTxGasCosts(safeAddress, tx.recipient, tx.data, tx.confirmations)
+      const gasCostsAsEth = fromWei(toBN(estimatedGasCosts), 'ether')
+      const formattedGasCosts = formatAmount(gasCostsAsEth)
+      if (isCurrent) {
+        setGasCosts(formattedGasCosts)
+      }
+    }
+
+    estimateGas()
+
+    return () => {
+      isCurrent = false
+    }
+  }, [approveAndExecute])
 
   const handleExecuteCheckbox = () => setApproveAndExecute((prevApproveAndExecute) => !prevApproveAndExecute)
 
@@ -111,6 +137,11 @@ const ApproveTxModal = ({
               />
             </>
           )}
+        </Row>
+        <Row>
+          <Paragraph>
+            {`You're about to ${approveAndExecute ? 'execute' : 'approve'} a transaction and will have to confirm it with your currently connected wallet. Make sure you have ${gasCosts} (fee price) ETH in this wallet to fund this confirmation.`}
+          </Paragraph>
         </Row>
       </Block>
       <Row align="center" className={classes.buttonRow}>
