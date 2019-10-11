@@ -21,7 +21,7 @@ export const estimateTxGasCosts = async (
     const nonce = await safeInstance.methods.nonce().call()
     const threshold = await safeInstance.methods.getThreshold().call()
 
-    const isExecution = (tx && tx.confirmations.size) || threshold === '1'
+    const isExecution = (tx && tx.confirmations.size === threshold) || preApprovingOwner || threshold === '1'
 
     let txData
     if (isExecution) {
@@ -37,7 +37,7 @@ export const estimateTxGasCosts = async (
         .encodeABI()
     } else {
       const txHash = await safeInstance.methods
-        .getTransactionHash(to, 0, data, CALL, 0, 0, 0, ZERO_ADDRESS, ZERO_ADDRESS, nonce)
+        .getTransactionHash(to, tx ? tx.value : 0, data, CALL, 0, 0, 0, ZERO_ADDRESS, ZERO_ADDRESS, nonce)
         .call({
           from,
         })
