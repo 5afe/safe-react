@@ -63,11 +63,11 @@ const ChangeThreshold = ({
     }
   }, [])
 
-  const handleSubmit = async (values) => {
+  const handleSubmit = (values) => {
     const newThreshold = values[THRESHOLD_FIELD_NAME]
 
-    await onChangeThreshold(newThreshold)
     onClose()
+    onChangeThreshold(newThreshold)
   }
 
   return (

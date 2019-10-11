@@ -76,7 +76,13 @@ const ApproveTxModal = ({
       const web3 = getWeb3()
       const { fromWei, toBN } = web3.utils
 
-      const estimatedGasCosts = await estimateTxGasCosts(safeAddress, tx.recipient, tx.data, tx.confirmations)
+      const estimatedGasCosts = await estimateTxGasCosts(
+        safeAddress,
+        tx.recipient,
+        tx.data,
+        tx,
+        approveAndExecute ? userAddress : undefined,
+      )
       const gasCostsAsEth = fromWei(toBN(estimatedGasCosts), 'ether')
       const formattedGasCosts = formatAmount(gasCostsAsEth)
       if (isCurrent) {
@@ -140,7 +146,9 @@ const ApproveTxModal = ({
         </Row>
         <Row>
           <Paragraph>
-            {`You're about to ${approveAndExecute ? 'execute' : 'approve'} a transaction and will have to confirm it with your currently connected wallet. Make sure you have ${gasCosts} (fee price) ETH in this wallet to fund this confirmation.`}
+            {`You're about to ${
+              approveAndExecute ? 'execute' : 'approve'
+            } a transaction and will have to confirm it with your currently connected wallet. Make sure you have ${gasCosts} (fee price) ETH in this wallet to fund this confirmation.`}
           </Paragraph>
         </Row>
       </Block>

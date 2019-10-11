@@ -1,5 +1,7 @@
 // @flow
 import type { Dispatch as ReduxDispatch, GetState } from 'redux'
+import { List } from 'immutable'
+import { type Confirmation } from '~/routes/safe/store/models/confirmation'
 import { type Transaction } from '~/routes/safe/store/models/transaction'
 import { userAccountSelector } from '~/logic/wallets/store/selectors'
 import fetchTransactions from '~/routes/safe/store/actions/fetchTransactions'
@@ -24,10 +26,10 @@ import { getErrorMessage } from '~/test/utils/ethereumErrors'
 
 // https://gnosis-safe.readthedocs.io/en/latest/contracts/signatures.html#pre-validated-signatures
 // https://github.com/gnosis/safe-contracts/blob/master/test/gnosisSafeTeamEdition.js#L26
-const generateSignaturesFromTxConfirmations = (tx: Transaction, preApprovingOwner?: string) => {
+export const generateSignaturesFromTxConfirmations = (confirmations: List<Confirmation>, preApprovingOwner?: string) => {
   // The constant parts need to be sorted so that the recovered signers are sorted ascending
   // (natural order) by address (not checksummed).
-  let confirmedAdresses = tx.confirmations.map((conf) => conf.owner.address)
+  let confirmedAdresses = confirmations.map((conf) => conf.owner.address)
 
   if (preApprovingOwner) {
     confirmedAdresses = confirmedAdresses.push(preApprovingOwner)
@@ -60,7 +62,7 @@ const processTransaction = (
   const threshold = (await safeInstance.getThreshold()).toNumber()
   const shouldExecute = threshold === tx.confirmations.size || approveAndExecute
 
-  let sigs = generateSignaturesFromTxConfirmations(tx, approveAndExecute && userAddress)
+  let sigs = generateSignaturesFromTxConfirmations(tx.confirmations, approveAndExecute && userAddress)
   // https://gnosis-safe.readthedocs.io/en/latest/contracts/signatures.html#pre-validated-signatures
   if (!sigs) {
     sigs = `0x000000000000000000000000${from.replace(
