@@ -18,7 +18,7 @@ import { copyToClipboard } from '~/utils/clipboard'
 import Hairline from '~/components/layout/Hairline'
 import SafeInfo from '~/routes/safe/components/Balances/SendModal/SafeInfo'
 import { setImageToPlaceholder } from '~/routes/safe/components/Balances/utils'
-import { getStandardTokenContract, getHumanFriendlyToken } from '~/logic/tokens/store/actions/fetchTokens'
+import { getHumanFriendlyToken } from '~/logic/tokens/store/actions/fetchTokens'
 import { EMPTY_DATA } from '~/logic/wallets/ethTransactions'
 import { getWeb3 } from '~/logic/wallets/getWeb3'
 import { TX_NOTIFICATION_TYPES } from '~/logic/safe/transactions'
@@ -67,11 +67,9 @@ const ReviewTx = ({
     let txAmount = web3.utils.toWei(tx.amount, 'ether')
 
     if (!isSendingETH) {
-      const StandardToken = await getStandardTokenContract()
       const HumanFriendlyToken = await getHumanFriendlyToken()
-      const tokenInstance = await StandardToken.at(tx.token.address)
-      const hfTokenInstance = await HumanFriendlyToken.at(tx.token.address)
-      const decimals = await hfTokenInstance.decimals()
+      const tokenInstance = await HumanFriendlyToken.at(tx.token.address)
+      const decimals = await tokenInstance.decimals()
       txAmount = new BigNumber(tx.amount).times(10 ** decimals.toNumber()).toString()
 
       txData = tokenInstance.contract.methods.transfer(tx.recipientAddress, txAmount).encodeABI()
