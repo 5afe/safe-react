@@ -5,6 +5,7 @@ import { ensureOnce } from '~/utils/singleton'
 import { toNative } from '~/logic/wallets/tokens'
 import TokenOMG from '../../../build/contracts/TokenOMG'
 import TokenRDN from '../../../build/contracts/TokenRDN'
+import Token6Decimals from '../../../build/contracts/Token6Decimals.json'
 
 export const sendEtherTo = async (address: string, eth: string, fromAccountIndex: number = 0) => {
   const web3 = getWeb3()
@@ -41,8 +42,20 @@ const createTokenRDNContract = async (web3: any, creator: string) => {
   return token.new(amount, { from: creator })
 }
 
+const create6DecimalsTokenContract = async (web3: any, creator: string) => {
+  const token = contract(Token6Decimals)
+  const { toBN } = web3.utils
+  const amount = toBN(50000)
+    .mul(toBN(10).pow(toBN(6)))
+    .toString()
+  token.setProvider(web3.currentProvider)
+
+  return token.new(amount, { from: creator })
+}
+
 export const getFirstTokenContract = ensureOnce(createTokenOMGContract)
 export const getSecondTokenContract = ensureOnce(createTokenRDNContract)
+export const get6DecimalsTokenContract = ensureOnce(create6DecimalsTokenContract)
 
 export const sendTokenTo = async (safe: string, value: string, tokenContract?: any) => {
   const web3 = getWeb3()
