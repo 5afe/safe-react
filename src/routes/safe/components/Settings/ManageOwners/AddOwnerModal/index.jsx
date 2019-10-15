@@ -146,6 +146,7 @@ const AddOwner = ({
             safeName={safeName}
             owners={owners}
             values={values}
+            safeAddress={safeAddress}
             onClickBack={onClickBack}
             onSubmit={onAddOwner}
           />

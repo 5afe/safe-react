@@ -1,5 +1,5 @@
 // @flow
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { List } from 'immutable'
 import classNames from 'classnames'
 import { withStyles } from '@material-ui/core/styles'
@@ -7,6 +7,7 @@ import Close from '@material-ui/icons/Close'
 import IconButton from '@material-ui/core/IconButton'
 import Identicon from '~/components/Identicon'
 import EtherscanBtn from '~/components/EtherscanBtn'
+import { getGnosisSafeInstanceAt } from '~/logic/contracts/safeContracts'
 import CopyBtn from '~/components/CopyBtn'
 import Paragraph from '~/components/layout/Paragraph'
 import Row from '~/components/layout/Row'
@@ -15,6 +16,9 @@ import Button from '~/components/layout/Button'
 import Block from '~/components/layout/Block'
 import Hairline from '~/components/layout/Hairline'
 import type { Owner } from '~/routes/safe/store/models/owner'
+import { getWeb3 } from '~/logic/wallets/getWeb3'
+import { formatAmount } from '~/logic/tokens/utils/formatAmount'
+import { estimateTxGasCosts } from '~/logic/safe/transactions/gasNew'
 import { styles } from './style'
 
 export const ADD_OWNER_SUBMIT_BTN_TEST_ID = 'add-owner-submit-btn'
@@ -27,11 +31,38 @@ type Props = {
   values: Object,
   onClickBack: Function,
   onSubmit: Function,
+  safeAddress: string,
 }
 
 const ReviewAddOwner = ({
-  classes, onClose, safeName, owners, values, onClickBack, onSubmit,
+  classes, onClose, safeName, owners, values, onClickBack, onSubmit, safeAddress,
 }: Props) => {
+  const [gasCosts, setGasCosts] = useState<string>('< 0.001')
+  useEffect(() => {
+    let isCurrent = true
+    const estimateGas = async () => {
+      const web3 = getWeb3()
+      const { fromWei, toBN } = web3.utils
+      const safeInstance = await getGnosisSafeInstanceAt(safeAddress)
+      const txData = safeInstance.contract.methods
+        .addOwnerWithThreshold(values.ownerAddress, values.threshold)
+        .encodeABI()
+
+      const estimatedGasCosts = await estimateTxGasCosts(safeAddress, safeAddress, txData)
+      const gasCostsAsEth = fromWei(toBN(estimatedGasCosts), 'ether')
+      const formattedGasCosts = formatAmount(gasCostsAsEth)
+      if (isCurrent) {
+        setGasCosts(formattedGasCosts)
+      }
+    }
+
+    estimateGas()
+
+    return () => {
+      isCurrent = false
+    }
+  }, [])
+
   const handleSubmit = () => {
     onSubmit()
   }
@@ -134,6 +165,10 @@ const ReviewAddOwner = ({
           </Col>
         </Row>
       </Block>
+      <Hairline />
+      <Row>
+        <Paragraph>{gasCosts}</Paragraph>
+      </Row>
       <Hairline />
       <Row align="center" className={classes.buttonRow}>
         <Button minWidth={140} minHeight={42} onClick={onClickBack}>
