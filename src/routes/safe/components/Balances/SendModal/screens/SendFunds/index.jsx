@@ -43,9 +43,7 @@ type Props = {
 
 const formMutators = {
   setMax: (args, state, utils) => {
-    const { token } = state.formState.values
-
-    utils.changeValue(state, 'amount', () => token && token.balance)
+    utils.changeValue(state, 'amount', () => args[0])
   },
   onTokenChange: (args, state, utils) => {
     utils.changeValue(state, 'amount', () => '')
@@ -156,7 +154,7 @@ const SendFunds = ({
                     <Paragraph size="md" color="disabled" style={{ letterSpacing: '-0.5px' }} noMargin>
                       Amount
                     </Paragraph>
-                    <ButtonLink weight="bold" onClick={mutators.setMax}>
+                    <ButtonLink weight="bold" onClick={() => mutators.setMax(selectedTokenRecord.balance)}>
                       Send max
                     </ButtonLink>
                   </Col>

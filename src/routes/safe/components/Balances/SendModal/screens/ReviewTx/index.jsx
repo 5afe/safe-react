@@ -1,5 +1,6 @@
 // @flow
 import React, { useEffect, useState } from 'react'
+import { List } from 'immutable'
 import { BigNumber } from 'bignumber.js'
 import { withStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
@@ -20,10 +21,11 @@ import { setImageToPlaceholder } from '~/routes/safe/components/Balances/utils'
 import { getHumanFriendlyToken } from '~/logic/tokens/store/actions/fetchTokens'
 import { estimateTxGasCosts } from '~/logic/safe/transactions/gasNew'
 import { EMPTY_DATA } from '~/logic/wallets/ethTransactions'
+import { type Token } from '~/logic/tokens/store/model/token'
 import { formatAmount } from '~/logic/tokens/utils/formatAmount'
 import { getWeb3 } from '~/logic/wallets/getWeb3'
 import { TX_NOTIFICATION_TYPES } from '~/logic/safe/transactions'
-import { isEther } from '~/logic/tokens/utils/tokenHelpers'
+import { ETH_ADDRESS } from '~/logic/tokens/utils/tokenHelpers'
 import ArrowDown from '../assets/arrow-down.svg'
 import { styles } from './style'
 
@@ -35,6 +37,7 @@ type Props = {
   safeName: string,
   ethBalance: string,
   tx: Object,
+  tokens: List<Token>,
   createTransaction: Function,
   enqueueSnackbar: Function,
   closeSnackbar: Function,
@@ -48,13 +51,15 @@ const ReviewTx = ({
   safeName,
   ethBalance,
   tx,
+  tokens,
   createTransaction,
   enqueueSnackbar,
   closeSnackbar,
 }: Props) => {
   const [gasCosts, setGasCosts] = useState<string>('< 0.001')
-  const isSendingETH = isEther(tx.token.symbol)
-  const txRecipient = isSendingETH ? tx.recipientAddress : tx.token.address
+  const txToken = tokens.find((token) => token.address === tx.token)
+  const isSendingETH = txToken.address === ETH_ADDRESS
+  const txRecipient = isSendingETH ? tx.recipientAddress : txToken.address
 
   useEffect(() => {
     let isCurrent = true
@@ -65,7 +70,7 @@ const ReviewTx = ({
 
       if (!isSendingETH) {
         const StandardToken = await getHumanFriendlyToken()
-        const tokenInstance = await StandardToken.at(tx.token.address)
+        const tokenInstance = await StandardToken.at(txToken.address)
 
         txData = tokenInstance.contract.methods.transfer(tx.recipientAddress, 0).encodeABI()
       }
@@ -92,7 +97,7 @@ const ReviewTx = ({
 
     if (!isSendingETH) {
       const HumanFriendlyToken = await getHumanFriendlyToken()
-      const tokenInstance = await HumanFriendlyToken.at(tx.token.address)
+      const tokenInstance = await HumanFriendlyToken.at(txToken.address)
       const decimals = await tokenInstance.decimals()
       txAmount = new BigNumber(tx.amount).times(10 ** decimals.toNumber()).toString()
 
@@ -162,11 +167,11 @@ const ReviewTx = ({
           </Paragraph>
         </Row>
         <Row margin="md" align="center">
-          <Img src={tx.token.logoUri} height={28} alt={tx.token.name} onError={setImageToPlaceholder} />
+          <Img src={txToken.logoUri} height={28} alt={txToken.name} onError={setImageToPlaceholder} />
           <Paragraph size="md" noMargin className={classes.amount}>
             {tx.amount}
             {' '}
-            {tx.token.symbol}
+            {txToken.symbol}
           </Paragraph>
         </Row>
         <Row>

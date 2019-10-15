@@ -128,6 +128,7 @@ const Send = ({
             safeName={safeName}
             ethBalance={ethBalance}
             createTransaction={createTransaction}
+            tokens={tokens}
           />
         )}
         {activeScreen === 'sendCustomTx' && (

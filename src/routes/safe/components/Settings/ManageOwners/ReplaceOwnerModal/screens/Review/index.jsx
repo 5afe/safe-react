@@ -90,31 +90,30 @@ const ReviewRemoveOwner = ({
           </Row>
           <Hairline />
           {owners.map(
-            (owner) =>
-              owner.address !== ownerAddress && (
-                <React.Fragment key={owner.address}>
-                  <Row className={classes.owner}>
-                    <Col xs={1} align="center">
-                      <Identicon address={owner.address} diameter={32} />
-                    </Col>
-                    <Col xs={11}>
-                      <Block className={classNames(classes.name, classes.userName)}>
-                        <Paragraph weight="bolder" size="lg" noMargin>
-                          {owner.name}
+            (owner) => owner.address !== ownerAddress && (
+              <React.Fragment key={owner.address}>
+                <Row className={classes.owner}>
+                  <Col xs={1} align="center">
+                    <Identicon address={owner.address} diameter={32} />
+                  </Col>
+                  <Col xs={11}>
+                    <Block className={classNames(classes.name, classes.userName)}>
+                      <Paragraph weight="bolder" size="lg" noMargin>
+                        {owner.name}
+                      </Paragraph>
+                      <Block justify="center" className={classes.user}>
+                        <Paragraph size="md" color="disabled" className={classes.address} noMargin>
+                          {owner.address}
                         </Paragraph>
-                        <Block justify="center" className={classes.user}>
-                          <Paragraph size="md" color="disabled" className={classes.address} noMargin>
-                            {owner.address}
-                          </Paragraph>
-                          <CopyBtn content={owner.address} />
-                          <EtherscanBtn type="address" value={owner.address} />
-                        </Block>
+                        <CopyBtn content={owner.address} />
+                        <EtherscanBtn type="address" value={owner.address} />
                       </Block>
-                    </Col>
-                  </Row>
-                  <Hairline />
-                </React.Fragment>
-              ),
+                    </Block>
+                  </Col>
+                </Row>
+                <Hairline />
+              </React.Fragment>
+            ),
           )}
           <Row className={classes.info} align="center">
             <Paragraph weight="bolder" noMargin color="primary" size="md">
