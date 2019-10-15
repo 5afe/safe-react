@@ -17,7 +17,7 @@ import Identicon from '~/components/Identicon'
 import Hairline from '~/components/layout/Hairline'
 import SafeInfo from '~/routes/safe/components/Balances/SendModal/SafeInfo'
 import { setImageToPlaceholder } from '~/routes/safe/components/Balances/utils'
-import { getStandardTokenContract, getHumanFriendlyToken } from '~/logic/tokens/store/actions/fetchTokens'
+import { getHumanFriendlyToken } from '~/logic/tokens/store/actions/fetchTokens'
 import { estimateTxGasCosts } from '~/logic/safe/transactions/gasNew'
 import { EMPTY_DATA } from '~/logic/wallets/ethTransactions'
 import { formatAmount } from '~/logic/tokens/utils/formatAmount'
@@ -64,7 +64,7 @@ const ReviewTx = ({
       let txData = EMPTY_DATA
 
       if (!isSendingETH) {
-        const StandardToken = await getStandardTokenContract()
+        const StandardToken = await getHumanFriendlyToken()
         const tokenInstance = await StandardToken.at(tx.token.address)
 
         txData = tokenInstance.contract.methods.transfer(tx.recipientAddress, 0).encodeABI()
@@ -91,11 +91,9 @@ const ReviewTx = ({
     let txAmount = web3.utils.toWei(tx.amount, 'ether')
 
     if (!isSendingETH) {
-      const StandardToken = await getStandardTokenContract()
       const HumanFriendlyToken = await getHumanFriendlyToken()
-      const tokenInstance = await StandardToken.at(tx.token.address)
-      const hfTokenInstance = await HumanFriendlyToken.at(tx.token.address)
-      const decimals = await hfTokenInstance.decimals()
+      const tokenInstance = await HumanFriendlyToken.at(tx.token.address)
+      const decimals = await tokenInstance.decimals()
       txAmount = new BigNumber(tx.amount).times(10 ** decimals.toNumber()).toString()
 
       txData = tokenInstance.contract.methods.transfer(tx.recipientAddress, txAmount).encodeABI()

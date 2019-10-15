@@ -46,7 +46,7 @@ type CustomDescProps = {
   value: string,
   recipient: string,
   data: String,
-  classes: Obeject,
+  classes: Object,
 }
 
 const TransferDescription = ({ value = '', symbol, recipient }: TransferDescProps) => (
