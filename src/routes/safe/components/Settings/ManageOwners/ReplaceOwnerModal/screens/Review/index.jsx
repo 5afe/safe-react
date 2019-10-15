@@ -47,7 +47,7 @@ const ReviewRemoveOwner = ({
   <>
     <Row align="center" grow className={classes.heading}>
       <Paragraph weight="bolder" className={classes.manage} noMargin>
-          Replace owner
+        Replace owner
       </Paragraph>
       <Paragraph className={classes.annotation}>2 of 2</Paragraph>
       <IconButton onClick={onClose} disableRipple>
@@ -61,12 +61,12 @@ const ReviewRemoveOwner = ({
           <Block className={classes.details}>
             <Block margin="lg">
               <Paragraph size="lg" color="primary" noMargin>
-                  Details
+                Details
               </Paragraph>
             </Block>
             <Block margin="lg">
               <Paragraph size="sm" color="disabled" noMargin>
-                  Safe name
+                Safe name
               </Paragraph>
               <Paragraph size="lg" color="primary" noMargin weight="bolder" className={classes.name}>
                 {safeName}
@@ -74,7 +74,7 @@ const ReviewRemoveOwner = ({
             </Block>
             <Block margin="lg">
               <Paragraph size="sm" color="disabled" noMargin>
-                  Any transaction requires the confirmation of:
+                Any transaction requires the confirmation of:
               </Paragraph>
               <Paragraph size="lg" color="primary" noMargin weight="bolder" className={classes.name}>
                 {`${threshold} out of ${owners.size} owner(s)`}
@@ -90,34 +90,35 @@ const ReviewRemoveOwner = ({
           </Row>
           <Hairline />
           {owners.map(
-            (owner) => owner.address !== ownerAddress && (
-              <React.Fragment key={owner.address}>
-                <Row className={classes.owner}>
-                  <Col xs={1} align="center">
-                    <Identicon address={owner.address} diameter={32} />
-                  </Col>
-                  <Col xs={11}>
-                    <Block className={classNames(classes.name, classes.userName)}>
-                      <Paragraph weight="bolder" size="lg" noMargin>
-                        {owner.name}
-                      </Paragraph>
-                      <Block justify="center" className={classes.user}>
-                        <Paragraph size="md" color="disabled" className={classes.address} noMargin>
-                          {owner.address}
+            (owner) =>
+              owner.address !== ownerAddress && (
+                <React.Fragment key={owner.address}>
+                  <Row className={classes.owner}>
+                    <Col xs={1} align="center">
+                      <Identicon address={owner.address} diameter={32} />
+                    </Col>
+                    <Col xs={11}>
+                      <Block className={classNames(classes.name, classes.userName)}>
+                        <Paragraph weight="bolder" size="lg" noMargin>
+                          {owner.name}
                         </Paragraph>
-                        <CopyBtn content={owner.address} />
-                        <EtherscanBtn type="address" value={owner.address} />
+                        <Block justify="center" className={classes.user}>
+                          <Paragraph size="md" color="disabled" className={classes.address} noMargin>
+                            {owner.address}
+                          </Paragraph>
+                          <CopyBtn content={owner.address} />
+                          <EtherscanBtn type="address" value={owner.address} />
+                        </Block>
                       </Block>
-                    </Block>
-                  </Col>
-                </Row>
-                <Hairline />
-              </React.Fragment>
-            ),
+                    </Col>
+                  </Row>
+                  <Hairline />
+                </React.Fragment>
+              ),
           )}
           <Row className={classes.info} align="center">
             <Paragraph weight="bolder" noMargin color="primary" size="md">
-                REMOVING OWNER &darr;
+              REMOVING OWNER &darr;
             </Paragraph>
           </Row>
           <Hairline />
@@ -142,7 +143,7 @@ const ReviewRemoveOwner = ({
           </Row>
           <Row className={classes.info} align="center">
             <Paragraph weight="bolder" noMargin color="primary" size="md">
-                ADDING NEW OWNER &darr;
+              ADDING NEW OWNER &darr;
             </Paragraph>
           </Row>
           <Hairline />
@@ -170,9 +171,13 @@ const ReviewRemoveOwner = ({
       </Row>
     </Block>
     <Hairline />
+    <Row>
+      <Paragraph>Yooo</Paragraph>
+    </Row>
+    <Hairline />
     <Row align="center" className={classes.buttonRow}>
       <Button minWidth={140} minHeight={42} onClick={onClickBack}>
-          Back
+        Back
       </Button>
       <Button
         type="submit"
@@ -183,7 +188,7 @@ const ReviewRemoveOwner = ({
         color="primary"
         testId={REPLACE_OWNER_SUBMIT_BTN_TEST_ID}
       >
-          Submit
+        Submit
       </Button>
     </Row>
   </>

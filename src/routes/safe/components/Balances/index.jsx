@@ -71,11 +71,11 @@ class Balances extends React.Component<Props, State> {
     this.setState(() => ({ [`show${action}`]: false }))
   }
 
-  showSendFunds = (token: Token) => {
+  showSendFunds = (tokenAddress: string) => {
     this.setState({
       sendFunds: {
         isOpen: true,
-        selectedToken: token,
+        selectedToken: tokenAddress,
       },
     })
   }
@@ -174,7 +174,7 @@ class Balances extends React.Component<Props, State> {
                       size="small"
                       color="primary"
                       className={classes.send}
-                      onClick={() => this.showSendFunds(row.asset.name)}
+                      onClick={() => this.showSendFunds(row.asset.address)}
                       testId="balance-send-btn"
                     >
                       <CallMade alt="Send Transaction" className={classNames(classes.leftIcon, classes.iconSmall)} />

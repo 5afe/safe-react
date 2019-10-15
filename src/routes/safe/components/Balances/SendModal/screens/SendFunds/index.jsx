@@ -96,7 +96,8 @@ const SendFunds = ({
         {(...args) => {
           const formState = args[2]
           const mutators = args[3]
-          const { token } = formState.values
+          const { token: tokenAddress } = formState.values
+          const selectedTokenRecord = tokens.find((token) => token.address === tokenAddress)
 
           const handleScan = (value) => {
             let scannedAddress = value
@@ -170,14 +171,14 @@ const SendFunds = ({
                         required,
                         mustBeFloat,
                         greaterThan(0),
-                        maxValue(token && token.balance),
+                        maxValue(selectedTokenRecord && selectedTokenRecord.balance),
                       )}
                       placeholder="Amount*"
                       text="Amount*"
                       className={classes.addressInput}
                       inputAdornment={
-                        token && {
-                          endAdornment: <InputAdornment position="end">{token.symbol}</InputAdornment>,
+                        selectedTokenRecord && {
+                          endAdornment: <InputAdornment position="end">{selectedTokenRecord.symbol}</InputAdornment>,
                         }
                       }
                     />
