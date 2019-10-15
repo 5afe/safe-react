@@ -115,8 +115,9 @@ const extendedTransactionsSelector: Selector<GlobalState, RouterProps, List<Tran
       let replacementTransaction
       if (!tx.isExecuted) {
         replacementTransaction = transactions.findLast(
-          (transaction) => transaction.nonce === tx.nonce
-            && isAfter(parseISO(transaction.submissionDate), parseISO(tx.submissionDate)),
+          (transaction) => (transaction.nonce === tx.nonce
+              && isAfter(parseISO(transaction.submissionDate), parseISO(tx.submissionDate)))
+            || transaction.nonce > tx.nonce,
         )
         if (replacementTransaction) {
           extendedTx = tx.set('cancelled', true)

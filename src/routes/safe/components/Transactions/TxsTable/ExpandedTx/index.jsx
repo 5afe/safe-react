@@ -123,16 +123,18 @@ const ExpandedTx = ({
         tx={tx}
         safeAddress={safeAddress}
       />
-      <ApproveTxModal
-        isOpen={openModal === 'approveTx'}
-        processTransaction={processTransaction}
-        onClose={closeModal}
-        tx={tx}
-        userAddress={userAddress}
-        safeAddress={safeAddress}
-        threshold={threshold}
-        thresholdReached={thresholdReached}
-      />
+      {openModal === 'approveTx' && (
+        <ApproveTxModal
+          isOpen
+          processTransaction={processTransaction}
+          onClose={closeModal}
+          tx={tx}
+          userAddress={userAddress}
+          safeAddress={safeAddress}
+          threshold={threshold}
+          thresholdReached={thresholdReached}
+        />
+      )}
     </>
   )
 }
