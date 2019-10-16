@@ -78,4 +78,7 @@ export const styles = () => ({
       cursor: 'pointer',
     },
   },
+  gasCostsContainer: {
+    padding: `0 ${lg}`,
+  },
 })

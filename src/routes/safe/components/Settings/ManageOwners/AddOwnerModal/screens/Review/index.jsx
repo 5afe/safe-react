@@ -44,11 +44,12 @@ const ReviewAddOwner = ({
       const web3 = getWeb3()
       const { fromWei, toBN } = web3.utils
       const safeInstance = await getGnosisSafeInstanceAt(safeAddress)
+
       const txData = safeInstance.contract.methods
         .addOwnerWithThreshold(values.ownerAddress, values.threshold)
         .encodeABI()
-
       const estimatedGasCosts = await estimateTxGasCosts(safeAddress, safeAddress, txData)
+
       const gasCostsAsEth = fromWei(toBN(estimatedGasCosts), 'ether')
       const formattedGasCosts = formatAmount(gasCostsAsEth)
       if (isCurrent) {
@@ -167,7 +168,9 @@ const ReviewAddOwner = ({
       </Block>
       <Hairline />
       <Row>
-        <Paragraph>{gasCosts}</Paragraph>
+        <Block className={classes.gasCostsContainer}>
+          <Paragraph>{`You're about to create a transaction and will have to confirm it with your currently connected wallet. Make sure you have ${gasCosts} (fee price) ETH in this wallet to fund this confirmation.`}</Paragraph>
+        </Block>
       </Row>
       <Hairline />
       <Row align="center" className={classes.buttonRow}>
