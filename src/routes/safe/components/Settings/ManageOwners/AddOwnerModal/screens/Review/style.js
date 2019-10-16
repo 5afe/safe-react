@@ -39,7 +39,7 @@ export const styles = () => ({
   },
   details: {
     padding: lg,
-    borderRight: `solid 1px ${border}`,
+    borderRight: `solid 2px ${border}`,
     height: '100%',
   },
   owners: {
@@ -80,5 +80,7 @@ export const styles = () => ({
   },
   gasCostsContainer: {
     padding: `0 ${lg}`,
+    textAlign: 'center',
+    width: '100%',
   },
 })

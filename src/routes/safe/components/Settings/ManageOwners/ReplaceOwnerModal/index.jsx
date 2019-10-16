@@ -155,6 +155,7 @@ const ReplaceOwner = ({
             onClickBack={onClickBack}
             onSubmit={onReplaceOwner}
             threshold={threshold}
+            safeAddress={safeAddress}
           />
         )}
       </>
