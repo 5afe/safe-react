@@ -15,6 +15,9 @@ import Button from '~/components/layout/Button'
 import Block from '~/components/layout/Block'
 import Hairline from '~/components/layout/Hairline'
 import type { Owner } from '~/routes/safe/store/models/owner'
+import { getWeb3 } from '~/logic/wallets/getWeb3'
+import { formatAmount } from '~/logic/tokens/utils/formatAmount'
+import { estimateTxGasCosts } from '~/logic/safe/transactions/gasNew'
 import { getGnosisSafeInstanceAt, SENTINEL_ADDRESS } from '~/logic/contracts/safeContracts'
 import { styles } from './style'
 
@@ -42,6 +45,7 @@ const ReviewRemoveOwner = ({
   values,
   ownerAddress,
   ownerName,
+  safeAddress,
   onClickBack,
   threshold,
   onSubmit,
@@ -50,17 +54,21 @@ const ReviewRemoveOwner = ({
 
   useEffect(() => {
     let isCurrent = true
-
     const estimateGas = async () => {
+      const web3 = getWeb3()
+      const { fromWei, toBN } = web3.utils
+
       const gnosisSafe = await getGnosisSafeInstanceAt(safeAddress)
       const safeOwners = await gnosisSafe.getOwners()
-      const index = safeOwners.findIndex(
-        (ownerAddress) => ownerAddress.toLowerCase() === ownerAddressToRemove.toLowerCase(),
-      )
+      const index = safeOwners.findIndex((owner) => owner.toLowerCase() === ownerAddress.toLowerCase())
       const prevAddress = index === 0 ? SENTINEL_ADDRESS : safeOwners[index - 1]
-      const txData = gnosisSafe.contract.methods
-        .swapOwner(prevAddress, ownerAddressToRemove, values.ownerAddress)
-        .encodeABI()
+      const txData = gnosisSafe.contract.methods.swapOwner(prevAddress, ownerAddress, values.ownerAddress).encodeABI()
+      const estimatedGasCosts = await estimateTxGasCosts(safeAddress, safeAddress, txData)
+      const gasCostsAsEth = fromWei(toBN(estimatedGasCosts), 'ether')
+      const formattedGasCosts = formatAmount(gasCostsAsEth)
+      if (isCurrent) {
+        setGasCosts(formattedGasCosts)
+      }
     }
 
     estimateGas()
@@ -196,8 +204,12 @@ const ReviewRemoveOwner = ({
         </Row>
       </Block>
       <Hairline />
-      <Block>
-        <Paragraph>Yooo</Paragraph>
+      <Block className={classes.gasCostsContainer}>
+        <Paragraph>
+          You&apos;re about to create a transaction and will have to confirm it with your currently connected wallet.
+          <br />
+          {`Make sure you have ${gasCosts} (fee price) ETH in this wallet to fund this confirmation.`}
+        </Paragraph>
       </Block>
       <Hairline />
       <Row align="center" className={classes.buttonRow}>
