@@ -1,5 +1,5 @@
 // @flow
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { List } from 'immutable'
 import classNames from 'classnames'
 import { withStyles } from '@material-ui/core/styles'
@@ -15,6 +15,10 @@ import Button from '~/components/layout/Button'
 import Block from '~/components/layout/Block'
 import Hairline from '~/components/layout/Hairline'
 import type { Owner } from '~/routes/safe/store/models/owner'
+import { getWeb3 } from '~/logic/wallets/getWeb3'
+import { formatAmount } from '~/logic/tokens/utils/formatAmount'
+import { getGnosisSafeInstanceAt, SENTINEL_ADDRESS } from '~/logic/contracts/safeContracts'
+import { estimateTxGasCosts } from '~/logic/safe/transactions/gasNew'
 import { styles } from './style'
 
 export const REMOVE_OWNER_REVIEW_BTN_TEST_ID = 'remove-owner-review-btn'
@@ -29,6 +33,7 @@ type Props = {
   ownerName: string,
   onClickBack: Function,
   onSubmit: Function,
+  safeAddress: string,
 }
 
 const ReviewRemoveOwner = ({
@@ -41,10 +46,36 @@ const ReviewRemoveOwner = ({
   ownerName,
   onClickBack,
   onSubmit,
+  safeAddress,
 }: Props) => {
-  const handleSubmit = () => {
-    onSubmit()
-  }
+  const [gasCosts, setGasCosts] = useState<string>('< 0.001')
+
+  useEffect(() => {
+    let isCurrent = true
+
+    const estimateGas = async () => {
+      const web3 = getWeb3()
+      const { fromWei, toBN } = web3.utils
+
+      const gnosisSafe = await getGnosisSafeInstanceAt(safeAddress)
+      const safeOwners = await gnosisSafe.getOwners()
+      const index = safeOwners.findIndex((owner) => owner.toLowerCase() === ownerAddress.toLowerCase())
+      const prevAddress = index === 0 ? SENTINEL_ADDRESS : safeOwners[index - 1]
+      const txData = gnosisSafe.contract.methods.removeOwner(prevAddress, ownerAddress, values.threshold).encodeABI()
+      const estimatedGasCosts = await estimateTxGasCosts(safeAddress, safeAddress, txData)
+      const gasCostsAsEth = fromWei(toBN(estimatedGasCosts), 'ether')
+      const formattedGasCosts = formatAmount(gasCostsAsEth)
+
+      if (isCurrent) {
+        setGasCosts(formattedGasCosts)
+      }
+    }
+
+    estimateGas()
+    return () => {
+      isCurrent = false
+    }
+  }, [])
 
   return (
     <>
@@ -148,13 +179,21 @@ const ReviewRemoveOwner = ({
         </Row>
       </Block>
       <Hairline />
+      <Block className={classes.gasCostsContainer}>
+        <Paragraph>
+          You&apos;re about to create a transaction and will have to confirm it with your currently connected wallet.
+          <br />
+          {`Make sure you have ${gasCosts} (fee price) ETH in this wallet to fund this confirmation.`}
+        </Paragraph>
+      </Block>
+      <Hairline />
       <Row align="center" className={classes.buttonRow}>
         <Button minWidth={140} minHeight={42} onClick={onClickBack}>
           Back
         </Button>
         <Button
           type="submit"
-          onClick={handleSubmit}
+          onClick={onSubmit}
           variant="contained"
           minHeight={42}
           minWidth={140}
