@@ -116,13 +116,15 @@ const ExpandedTx = ({
           />
         </Row>
       </Block>
-      <CancelTxModal
-        isOpen={openModal === 'cancelTx'}
-        createTransaction={createTransaction}
-        onClose={closeModal}
-        tx={tx}
-        safeAddress={safeAddress}
-      />
+      {openModal === 'cancelTx' && (
+        <CancelTxModal
+          isOpen
+          createTransaction={createTransaction}
+          onClose={closeModal}
+          tx={tx}
+          safeAddress={safeAddress}
+        />
+      )}
       {openModal === 'approveTx' && (
         <ApproveTxModal
           isOpen
