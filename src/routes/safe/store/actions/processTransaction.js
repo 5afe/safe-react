@@ -1,11 +1,14 @@
 // @flow
 import type { Dispatch as ReduxDispatch, GetState } from 'redux'
+import { List } from 'immutable'
+import { type Confirmation } from '~/routes/safe/store/models/confirmation'
 import { type Transaction } from '~/routes/safe/store/models/transaction'
 import { userAccountSelector } from '~/logic/wallets/store/selectors'
 import fetchTransactions from '~/routes/safe/store/actions/fetchTransactions'
 import { type GlobalState } from '~/store'
 import { getGnosisSafeInstanceAt } from '~/logic/contracts/safeContracts'
 import {
+  type NotifiedTransaction,
   getApprovalTransaction,
   getExecutionTransaction,
   CALL,
@@ -16,17 +19,17 @@ import {
 import {
   type Notification,
   type NotificationsQueue,
-  getNofiticationsFromTxType,
+  getNotificationsFromTxType,
   showSnackbar,
 } from '~/logic/notifications'
 import { getErrorMessage } from '~/test/utils/ethereumErrors'
 
 // https://gnosis-safe.readthedocs.io/en/latest/contracts/signatures.html#pre-validated-signatures
 // https://github.com/gnosis/safe-contracts/blob/master/test/gnosisSafeTeamEdition.js#L26
-const generateSignaturesFromTxConfirmations = (tx: Transaction, preApprovingOwner?: string) => {
+export const generateSignaturesFromTxConfirmations = (confirmations: List<Confirmation>, preApprovingOwner?: string) => {
   // The constant parts need to be sorted so that the recovered signers are sorted ascending
   // (natural order) by address (not checksummed).
-  let confirmedAdresses = tx.confirmations.map((conf) => conf.owner.address)
+  let confirmedAdresses = confirmations.map((conf) => conf.owner.address)
 
   if (preApprovingOwner) {
     confirmedAdresses = confirmedAdresses.push(preApprovingOwner)
@@ -59,7 +62,7 @@ const processTransaction = (
   const threshold = (await safeInstance.getThreshold()).toNumber()
   const shouldExecute = threshold === tx.confirmations.size || approveAndExecute
 
-  let sigs = generateSignaturesFromTxConfirmations(tx, approveAndExecute && userAddress)
+  let sigs = generateSignaturesFromTxConfirmations(tx.confirmations, approveAndExecute && userAddress)
   // https://gnosis-safe.readthedocs.io/en/latest/contracts/signatures.html#pre-validated-signatures
   if (!sigs) {
     sigs = `0x000000000000000000000000${from.replace(
@@ -68,7 +71,7 @@ const processTransaction = (
     )}000000000000000000000000000000000000000000000000000000000000000001`
   }
 
-  const notificationsQueue: NotificationsQueue = getNofiticationsFromTxType(notifiedTransaction)
+  const notificationsQueue: NotificationsQueue = getNotificationsFromTxType(notifiedTransaction)
   const beforeExecutionKey = showSnackbar(notificationsQueue.beforeExecution, enqueueSnackbar, closeSnackbar)
   let pendingExecutionKey
 
@@ -124,6 +127,7 @@ const processTransaction = (
           shouldExecute ? TX_TYPE_EXECUTION : TX_TYPE_CONFIRMATION,
         )
         showSnackbar(notificationsQueue.afterExecution, enqueueSnackbar, closeSnackbar)
+        dispatch(fetchTransactions(safeAddress))
 
         return receipt.transactionHash
       })
@@ -136,8 +140,6 @@ const processTransaction = (
     const errMsg = await getErrorMessage(safeInstance.address, 0, executeData, from)
     console.error(`Error executing the TX: ${errMsg}`)
   }
-
-  dispatch(fetchTransactions(safeAddress))
 
   return txHash
 }

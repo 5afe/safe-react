@@ -1,5 +1,5 @@
 // @flow
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import Close from '@material-ui/icons/Close'
 import IconButton from '@material-ui/core/IconButton'
 import { withStyles } from '@material-ui/core/styles'
@@ -14,6 +14,9 @@ import Paragraph from '~/components/layout/Paragraph'
 import { type Transaction } from '~/routes/safe/store/models/transaction'
 import { EMPTY_DATA } from '~/logic/wallets/ethTransactions'
 import { TX_NOTIFICATION_TYPES } from '~/logic/safe/transactions'
+import { getWeb3 } from '~/logic/wallets/getWeb3'
+import { formatAmount } from '~/logic/tokens/utils/formatAmount'
+import { estimateTxGasCosts } from '~/logic/safe/transactions/gasNew'
 import { styles } from './style'
 
 type Props = {
@@ -37,6 +40,29 @@ const CancelTxModal = ({
   enqueueSnackbar,
   closeSnackbar,
 }: Props) => {
+  const [gasCosts, setGasCosts] = useState<string>('< 0.001')
+
+  useEffect(() => {
+    let isCurrent = true
+    const estimateGasCosts = async () => {
+      const web3 = getWeb3()
+      const { fromWei, toBN } = web3.utils
+
+      const estimatedGasCosts = await estimateTxGasCosts(safeAddress, safeAddress, EMPTY_DATA)
+      const gasCostsAsEth = fromWei(toBN(estimatedGasCosts), 'ether')
+      const formattedGasCosts = formatAmount(gasCostsAsEth)
+      if (isCurrent) {
+        setGasCosts(formattedGasCosts)
+      }
+    }
+
+    estimateGasCosts()
+
+    return () => {
+      isCurrent = false
+    }
+  }, [])
+
   const sendReplacementTransaction = () => {
     createTransaction(
       safeAddress,
@@ -77,6 +103,11 @@ const CancelTxModal = ({
             Transaction nonce:
             <br />
             <Bold className={classes.nonceNumber}>{tx.nonce}</Bold>
+          </Paragraph>
+        </Row>
+        <Row>
+          <Paragraph>
+            {`You're about to create a transaction and will have to confirm it with your currently connected wallet. Make sure you have ${gasCosts} (fee price) ETH in this wallet to fund this confirmation.`}
           </Paragraph>
         </Row>
       </Block>

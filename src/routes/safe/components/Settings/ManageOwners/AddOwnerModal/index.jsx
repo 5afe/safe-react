@@ -16,6 +16,7 @@ const styles = () => ({
     width: '775px',
     minHeight: '500px',
     position: 'static',
+    height: 'auto',
   },
 })
 
@@ -146,6 +147,7 @@ const AddOwner = ({
             safeName={safeName}
             owners={owners}
             values={values}
+            safeAddress={safeAddress}
             onClickBack={onClickBack}
             onSubmit={onAddOwner}
           />

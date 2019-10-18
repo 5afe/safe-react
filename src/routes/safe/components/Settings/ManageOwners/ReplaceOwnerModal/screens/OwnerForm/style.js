@@ -16,6 +16,9 @@ export const styles = () => ({
     marginLeft: '20px',
     lineHeight: 'normal',
   },
+  address: {
+    marginRight: sm,
+  },
   manage: {
     fontSize: '24px',
   },

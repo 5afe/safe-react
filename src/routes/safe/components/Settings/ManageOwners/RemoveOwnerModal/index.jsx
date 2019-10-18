@@ -16,6 +16,7 @@ const styles = () => ({
     width: '775px',
     minHeight: '500px',
     position: 'static',
+    height: 'auto',
   },
 })
 
@@ -168,6 +169,7 @@ const RemoveOwner = ({
             ownerName={ownerName}
             onClickBack={onClickBack}
             onSubmit={onRemoveOwner}
+            safeAddress={safeAddress}
           />
         )}
       </>

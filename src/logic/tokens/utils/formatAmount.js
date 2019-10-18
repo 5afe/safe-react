@@ -17,7 +17,11 @@ const lt1000tFormatter = new Intl.NumberFormat([], { maximumFractionDigits: 3, n
 export const formatAmount = (number: string | number) => {
   let numberFloat = parseFloat(number)
 
-  if (numberFloat < 1000) {
+  if (numberFloat === 0) {
+    numberFloat = '0.000'
+  } else if (numberFloat < 0.001) {
+    numberFloat = '< 0.001'
+  } else if (numberFloat < 1000) {
     numberFloat = lt1kFormatter.format(numberFloat)
   } else if (numberFloat < 10000) {
     numberFloat = lt10kFormatter.format(numberFloat)

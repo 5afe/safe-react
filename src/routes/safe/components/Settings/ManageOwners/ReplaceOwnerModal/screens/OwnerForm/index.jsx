@@ -5,7 +5,8 @@ import { List } from 'immutable'
 import { withStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
 import IconButton from '@material-ui/core/IconButton'
-import OpenInNew from '@material-ui/icons/OpenInNew'
+import EtherscanBtn from '~/components/EtherscanBtn'
+import CopyBtn from '~/components/CopyBtn'
 import Paragraph from '~/components/layout/Paragraph'
 import Row from '~/components/layout/Row'
 import GnoForm from '~/components/forms/GnoForm'
@@ -17,23 +18,15 @@ import Hairline from '~/components/layout/Hairline'
 import Field from '~/components/forms/Field'
 import TextField from '~/components/forms/TextField'
 import Identicon from '~/components/Identicon'
-import Link from '~/components/layout/Link'
-import { getEtherScanLink } from '~/logic/wallets/getWeb3'
 import { type Owner } from '~/routes/safe/store/models/owner'
 import {
   composeValidators, required, minMaxLength, uniqueAddress,
 } from '~/components/forms/validator'
 import { styles } from './style'
-import { secondary } from '~/theme/variables'
 
 export const REPLACE_OWNER_NAME_INPUT_TEST_ID = 'replace-owner-name-input'
 export const REPLACE_OWNER_ADDRESS_INPUT_TEST_ID = 'replace-owner-address-testid'
 export const REPLACE_OWNER_NEXT_BTN_TEST_ID = 'replace-owner-next-btn'
-
-const openIconStyle = {
-  height: '16px',
-  color: secondary,
-}
 
 const formMutators = {
   setOwnerAddress: (args, state, utils) => {
@@ -96,16 +89,11 @@ const OwnerForm = ({
                         {ownerName}
                       </Paragraph>
                       <Block justify="center" className={classes.user}>
-                        <Paragraph size="md" color="disabled" noMargin>
+                        <Paragraph size="md" className={classes.address} color="disabled" noMargin>
                           {ownerAddress}
                         </Paragraph>
-                        <Link
-                          className={classes.open}
-                          to={getEtherScanLink('address', ownerAddress)}
-                          target="_blank"
-                        >
-                          <OpenInNew style={openIconStyle} />
-                        </Link>
+                        <CopyBtn content={ownerAddress} />
+                        <EtherscanBtn type="address" value={ownerAddress} />
                       </Block>
                     </Block>
                   </Col>

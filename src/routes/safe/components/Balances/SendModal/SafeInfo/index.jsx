@@ -1,23 +1,17 @@
 // @flow
 import React from 'react'
-import OpenInNew from '@material-ui/icons/OpenInNew'
-import { withStyles } from '@material-ui/core/styles'
+import { makeStyles } from '@material-ui/core/styles'
 import Row from '~/components/layout/Row'
 import Col from '~/components/layout/Col'
 import Paragraph from '~/components/layout/Paragraph'
-import Link from '~/components/layout/Link'
+import EtherscanBtn from '~/components/EtherscanBtn'
+import CopyBtn from '~/components/CopyBtn'
 import Bold from '~/components/layout/Bold'
 import Block from '~/components/layout/Block'
 import Identicon from '~/components/Identicon'
-import { copyToClipboard } from '~/utils/clipboard'
-import { secondary, xs, border } from '~/theme/variables'
+import { xs, border } from '~/theme/variables'
 
-const openIconStyle = {
-  height: '16px',
-  color: secondary,
-}
-
-const styles = () => ({
+const useStyles = makeStyles({
   balanceContainer: {
     fontSize: '12px',
     lineHeight: 1.08,
@@ -28,20 +22,22 @@ const styles = () => ({
     marginTop: xs,
     borderRadius: '3px',
   },
+  address: {
+    marginRight: xs,
+  },
 })
 
 type Props = {
-  classes: Object,
   safeAddress: string,
-  etherScanLink: string,
   safeName: string,
   ethBalance: string,
 }
 
 const SafeInfo = (props: Props) => {
   const {
-    safeAddress, safeName, etherScanLink, ethBalance, classes,
+    safeAddress, safeName, ethBalance,
   } = props
+  const classes = useStyles()
 
   return (
     <Row margin="md">
@@ -52,21 +48,18 @@ const SafeInfo = (props: Props) => {
         <Paragraph weight="bolder" noMargin style={{ lineHeight: 1 }}>
           {safeName}
         </Paragraph>
-        <Paragraph weight="bolder" onClick={copyToClipboard} noMargin>
-          {safeAddress}
-          <Link to={etherScanLink} target="_blank">
-            <OpenInNew style={openIconStyle} />
-          </Link>
-        </Paragraph>
+        <Block justify="left">
+          <Paragraph weight="bolder" className={classes.address} noMargin>
+            {safeAddress}
+          </Paragraph>
+          <CopyBtn content={safeAddress} />
+          <EtherscanBtn type="address" value={safeAddress} />
+        </Block>
         <Block className={classes.balanceContainer}>
           <Paragraph noMargin>
             Balance:
             {' '}
-            <Bold>
-              {ethBalance}
-              {' '}
-              ETH
-            </Bold>
+            <Bold>{`${ethBalance} ETH`}</Bold>
           </Paragraph>
         </Block>
       </Col>
@@ -74,4 +67,4 @@ const SafeInfo = (props: Props) => {
   )
 }
 
-export default withStyles(styles)(SafeInfo)
+export default SafeInfo

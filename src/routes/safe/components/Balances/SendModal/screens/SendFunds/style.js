@@ -21,6 +21,9 @@ export const styles = () => ({
     height: '35px',
     width: '35px',
   },
+  qrCodeBtn: {
+    cursor: 'pointer',
+  },
   formContainer: {
     padding: `${md} ${lg}`,
   },

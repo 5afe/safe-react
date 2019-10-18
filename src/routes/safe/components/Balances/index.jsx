@@ -43,7 +43,6 @@ type Props = {
   activeTokens: List<Token>,
   safeAddress: string,
   safeName: string,
-  etherScanLink: string,
   ethBalance: string,
   createTransaction: Function,
 }
@@ -72,11 +71,11 @@ class Balances extends React.Component<Props, State> {
     this.setState(() => ({ [`show${action}`]: false }))
   }
 
-  showSendFunds = (token: Token) => {
+  showSendFunds = (tokenAddress: string) => {
     this.setState({
       sendFunds: {
         isOpen: true,
-        selectedToken: token,
+        selectedToken: tokenAddress,
       },
     })
   }
@@ -107,7 +106,6 @@ class Balances extends React.Component<Props, State> {
       safeAddress,
       activeTokens,
       safeName,
-      etherScanLink,
       ethBalance,
       createTransaction,
     } = this.props
@@ -176,7 +174,7 @@ class Balances extends React.Component<Props, State> {
                       size="small"
                       color="primary"
                       className={classes.send}
-                      onClick={() => this.showSendFunds(row.asset.name)}
+                      onClick={() => this.showSendFunds(row.asset.address)}
                       testId="balance-send-btn"
                     >
                       <CallMade alt="Send Transaction" className={classNames(classes.leftIcon, classes.iconSmall)} />
@@ -201,7 +199,6 @@ class Balances extends React.Component<Props, State> {
         <SendModal
           onClose={this.hideSendFunds}
           isOpen={sendFunds.isOpen}
-          etherScanLink={etherScanLink}
           safeAddress={safeAddress}
           safeName={safeName}
           ethBalance={ethBalance}
