@@ -1,10 +1,10 @@
 // @flow
-import * as React from '~/components/Header/components/ProviderDetails/react'
-import { withStyles } from '~/components/Header/components/ProviderDetails/@material-ui/core/styles'
-import Paragraph from '~/components/Header/components/ProviderDetails/~/components/layout/Paragraph'
-import ConnectButton from '~/components/Header/components/ProviderDetails/~/components/ConnectButton'
-import Row from '~/components/Header/components/ProviderDetails/~/components/layout/Row'
-import { md, lg } from '~/components/Header/components/ProviderDetails/~/theme/variables'
+import * as React from 'react'
+import { withStyles } from '@material-ui/core/styles'
+import Paragraph from '~/components/layout/Paragraph'
+import ConnectButton from '~/components/ConnectButton'
+import Row from '~/components/layout/Row'
+import { md, lg } from '~/theme/variables'
 import CircleDot from '~/components/Header/components/CircleDot'
 
 type Props = {

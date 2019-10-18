@@ -8,7 +8,7 @@ import {
   required,
   mustBeEthereumAddress,
 } from '~/components/forms/validator'
-import { getAddressFromENS } from '~/logic/wallets/getWeb3'
+import Web3Integration from '~/logic/wallets/web3Integration'
 
 type Props = {
   className?: string,
@@ -56,7 +56,7 @@ const AddressInput = ({
       {async (value) => {
         if (isValidEnsName(value)) {
           try {
-            const resolverAddr = await getAddressFromENS(value)
+            const resolverAddr = await Web3Integration.getAddressFromENS(value)
             fieldMutator(resolverAddr)
           } catch (err) {
             console.error('Failed to resolve address for ENS name: ', err)

@@ -13,7 +13,7 @@ import Row from '~/components/layout/Row'
 import Bold from '~/components/layout/Bold'
 import Block from '~/components/layout/Block'
 import Paragraph from '~/components/layout/Paragraph'
-import { getWeb3 } from '~/logic/wallets/getWeb3'
+import Web3Integration from '~/logic/wallets/web3Integration'
 import { estimateTxGasCosts } from '~/logic/safe/transactions/gasNew'
 import { formatAmount } from '~/logic/tokens/utils/formatAmount'
 import { TX_NOTIFICATION_TYPES } from '~/logic/safe/transactions'
@@ -73,7 +73,7 @@ const ApproveTxModal = ({
     let isCurrent = true
 
     const estimateGas = async () => {
-      const web3 = getWeb3()
+      const { web3 } = Web3Integration
       const { fromWei, toBN } = web3.utils
 
       const estimatedGasCosts = await estimateTxGasCosts(

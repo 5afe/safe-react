@@ -17,7 +17,7 @@ import CopyBtn from '~/components/CopyBtn'
 import SafeInfo from '~/routes/safe/components/Balances/SendModal/SafeInfo'
 import { setImageToPlaceholder } from '~/routes/safe/components/Balances/utils'
 import { estimateTxGasCosts } from '~/logic/safe/transactions/gasNew'
-import { getWeb3 } from '~/logic/wallets/getWeb3'
+import Web3Integration from '~/logic/wallets/web3Integration'
 import { TX_NOTIFICATION_TYPES } from '~/logic/safe/transactions'
 import { getEthAsToken } from '~/logic/tokens/utils/tokenHelpers'
 import { formatAmount } from '~/logic/tokens/utils/formatAmount'
@@ -54,7 +54,7 @@ const ReviewCustomTx = ({
   useEffect(() => {
     let isCurrent = true
     const estimateGas = async () => {
-      const web3 = getWeb3()
+      const { web3 } = Web3Integration
       const { fromWei, toBN } = web3.utils
 
       const estimatedGasCosts = await estimateTxGasCosts(safeAddress, tx.recipientAddress, tx.data.trim())
@@ -73,7 +73,7 @@ const ReviewCustomTx = ({
   }, [])
 
   const submitTx = async () => {
-    const web3 = getWeb3()
+    const { web3 } = Web3Integration
     const txRecipient = tx.recipientAddress
     const txData = tx.data.trim()
     const txValue = tx.value ? web3.utils.toWei(tx.value, 'ether') : 0

@@ -12,7 +12,7 @@ import updateActiveTokens from '~/routes/safe/store/actions/updateActiveTokens'
 import '@testing-library/jest-dom/extend-expect'
 import updateSafe from '~/routes/safe/store/actions/updateSafe'
 import { BALANCE_ROW_TEST_ID } from '~/routes/safe/components/Balances'
-import { getBalanceInEtherOf } from '~/logic/wallets/getWeb3'
+import Web3Integration from '~/logic/wallets/web3Integration'
 
 describe('DOM > Feature > Balances', () => {
   let store
@@ -56,7 +56,7 @@ describe('DOM > Feature > Balances', () => {
 
     const SafeDom = await renderSafeView(store, safeAddress)
 
-    const safeEthBalance = await getBalanceInEtherOf(safeAddress)
+    const safeEthBalance = await Web3Integration.getBalanceInEtherOf(safeAddress)
     expect(safeEthBalance).toBe(etherAmount)
 
     const balanceRows = SafeDom.getAllByTestId(BALANCE_ROW_TEST_ID)

@@ -64,7 +64,7 @@ const ReviewTx = ({
   useEffect(() => {
     let isCurrent = true
     const estimateGas = async () => {
-      const web3 = getWeb3()
+      const { web3 } = Web3Integration
       const { fromWei, toBN } = web3.utils
       let txData = EMPTY_DATA
 

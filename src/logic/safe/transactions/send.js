@@ -2,7 +2,6 @@
 import GnosisSafeSol from '@gnosis.pm/safe-contracts/build/contracts/GnosisSafe.json'
 import Web3Integration from '~/logic/wallets/web3Integration'
 import { type Operation } from '~/logic/safe/transactions'
-import { getWeb3 } from '~/logic/wallets/getWeb3'
 import { ZERO_ADDRESS } from '~/logic/wallets/ethAddresses'
 
 export const CALL = 0
@@ -56,7 +55,7 @@ export const getExecutionTransaction = async (
   sigs: string,
 ) => {
   try {
-    const web3 = getWeb3()
+    const { web3 } = Web3Integration
     const contract = new web3.eth.Contract(GnosisSafeSol.abi, safeInstance.address)
 
     return contract.methods.execTransaction(to, valueInWei, data, operation, 0, 0, 0, ZERO_ADDRESS, ZERO_ADDRESS, sigs)

@@ -2,11 +2,11 @@
 import type { Dispatch as ReduxDispatch } from 'redux'
 import { type GlobalState } from '~/store/index'
 import updateSafe from '~/routes/safe/store/actions/updateSafe'
-import { getBalanceInEtherOf } from '~/logic/wallets/getWeb3'
+import Web3Integration from '~/logic/wallets/web3Integration'
 
 const fetchEtherBalance = (safeAddress: string) => async (dispatch: ReduxDispatch<GlobalState>) => {
   try {
-    const ethBalance = await getBalanceInEtherOf(safeAddress)
+    const ethBalance = await Web3Integration.getBalanceInEtherOf(safeAddress)
 
     dispatch(updateSafe({ address: safeAddress, ethBalance }))
   } catch (err) {

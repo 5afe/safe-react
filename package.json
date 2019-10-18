@@ -62,6 +62,7 @@
     "react-qr-reader": "^2.2.1",
     "react-redux": "7.1.1",
     "react-router-dom": "^5.0.1",
+    "react-window": "^1.8.5",
     "recompose": "^0.30.0",
     "redux": "4.0.4",
     "redux-actions": "^2.6.5",

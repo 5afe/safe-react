@@ -1,5 +1,6 @@
 // @flow
 import Web3 from 'web3'
+import ENS from 'ethereum-ens'
 import { fetchProvider, removeProvider } from '~/logic/wallets/store/actions'
 import { store } from '~/store'
 import type { ProviderProps } from '~/logic/wallets/store/model/provider'
@@ -38,6 +39,8 @@ export const ETHEREUM_NETWORK_IDS = {
 class Web3Integration {
   provider: Object
 
+  ens: Object
+
   // this is needed for Portis, Portis' web3 provider should be used only for signing tx
   // A separate provider should be used for getting data from the blockchain
   readOnlyProvider: Object
@@ -46,6 +49,7 @@ class Web3Integration {
 
   constructor() {
     this.provider = null
+    this.ens = null
     this.readOnlyProvider = new Web3(new Web3.providers.HttpProvider('https://rinkeby.infura.io:443/v3/5e7a225e60184afaa7b888303def93b8'))
   }
 
@@ -75,7 +79,7 @@ class Web3Integration {
   async getNetworkId() {
     // this approach was taken from web3connect example app
     // https://github.com/web3connect/web3connect/blob/master/example/src/helpers/utilities.ts#L144
-    // for some reason getId() call never resolves, the bug was reported to wallet conenct foundation
+    // for some reason getId() call never resolves, the bug was reported to walletconnect foundation
     // and should be fixed soon
     let networkId = 0
 
@@ -172,6 +176,16 @@ class Web3Integration {
     return this.readOnlyProvider
   }
 
+  async getAddressFromENS(name: string) {
+    let address = ''
+    if (this.ens) {
+      address = await this.ens.resolver(name).addr()
+    }
+  
+    return address
+  }
+  
+
   disconnect() {
     clearInterval(this.watcherInterval)
     this.resetWalletConnectSession()
@@ -184,6 +198,7 @@ class Web3Integration {
     }
 
     this.provider = new Web3(provider)
+    this.ens = new ENS(provider)
 
     const providerInfo = await this.getProviderInfo()
     store.dispatch(fetchProvider(providerInfo))

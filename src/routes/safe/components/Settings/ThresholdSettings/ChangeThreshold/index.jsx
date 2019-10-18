@@ -18,7 +18,7 @@ import Block from '~/components/layout/Block'
 import Row from '~/components/layout/Row'
 import Col from '~/components/layout/Col'
 import type { Owner } from '~/routes/safe/store/models/owner'
-import { getWeb3 } from '~/logic/wallets/getWeb3'
+import Web3Integration from '~/logic/wallets/web3Integration'
 import { formatAmount } from '~/logic/tokens/utils/formatAmount'
 import { getGnosisSafeInstanceAt } from '~/logic/contracts/safeContracts'
 import { estimateTxGasCosts } from '~/logic/safe/transactions/gasNew'
@@ -43,7 +43,7 @@ const ChangeThreshold = ({
   useEffect(() => {
     let isCurrent = true
     const estimateGasCosts = async () => {
-      const web3 = getWeb3()
+      const { web3 } = Web3Integration
       const { fromWei, toBN } = web3.utils
 
       const safeInstance = await getGnosisSafeInstanceAt(safeAddress)

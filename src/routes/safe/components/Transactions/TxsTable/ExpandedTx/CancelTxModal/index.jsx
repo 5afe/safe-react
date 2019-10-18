@@ -14,7 +14,7 @@ import Paragraph from '~/components/layout/Paragraph'
 import { type Transaction } from '~/routes/safe/store/models/transaction'
 import { EMPTY_DATA } from '~/logic/wallets/ethTransactions'
 import { TX_NOTIFICATION_TYPES } from '~/logic/safe/transactions'
-import { getWeb3 } from '~/logic/wallets/getWeb3'
+import Web3Integration from '~/logic/wallets/web3Integration'
 import { formatAmount } from '~/logic/tokens/utils/formatAmount'
 import { estimateTxGasCosts } from '~/logic/safe/transactions/gasNew'
 import { styles } from './style'
@@ -45,7 +45,7 @@ const CancelTxModal = ({
   useEffect(() => {
     let isCurrent = true
     const estimateGasCosts = async () => {
-      const web3 = getWeb3()
+      const { web3 } = Web3Integration
       const { fromWei, toBN } = web3.utils
 
       const estimatedGasCosts = await estimateTxGasCosts(safeAddress, safeAddress, EMPTY_DATA)

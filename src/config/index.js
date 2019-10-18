@@ -1,6 +1,6 @@
 // @flow
 import { ensureOnce } from '~/utils/singleton'
-import { ETHEREUM_NETWORK } from '~/logic/wallets/getWeb3'
+import { ETHEREUM_NETWORK } from '~/logic/wallets/web3Integration'
 import { TX_SERVICE_HOST, SIGNATURES_VIA_METAMASK, RELAY_API_URL } from '~/config/names'
 import devConfig from './development'
 import testConfig from './testing'

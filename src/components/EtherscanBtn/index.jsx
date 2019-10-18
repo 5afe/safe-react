@@ -3,7 +3,7 @@ import React from 'react'
 import Tooltip from '@material-ui/core/Tooltip'
 import { makeStyles } from '@material-ui/core/styles'
 import Img from '~/components/layout/Img'
-import { getEtherScanLink } from '~/logic/wallets/getWeb3'
+import { getEtherScanLink } from '~/logic/wallets/etherscan'
 import { xs } from '~/theme/variables'
 import SearchIcon from './search.svg'
 
