@@ -14,7 +14,6 @@ import { TRANSACTION_ROW_TEST_ID } from '~/routes/safe/components/Transactions/T
 import { useTestAccountAt, resetTestAccount } from './utils/accounts'
 import {
   CONFIRM_TX_BTN_TEST_ID,
-  EXECUTE_TX_BTN_TEST_ID,
 } from '~/routes/safe/components/Transactions/TxsTable/ExpandedTx/OwnersColumn/ButtonRow'
 import { APPROVE_TX_MODAL_SUBMIT_BTN_TEST_ID } from '~/routes/safe/components/Transactions/TxsTable/ExpandedTx/ApproveTxModal'
 
@@ -67,13 +66,7 @@ describe('DOM > Feature > Sending Funds', () => {
     const approveTxBtn = await waitForElement(() => SafeDom.getByTestId(APPROVE_TX_MODAL_SUBMIT_BTN_TEST_ID))
     fireEvent.click(approveTxBtn)
 
-    // EXECUTE TX
-    const executeTxBtn = await waitForElement(() => SafeDom.getByTestId(EXECUTE_TX_BTN_TEST_ID))
-    fireEvent.click(executeTxBtn)
-
-    const confirmReviewTxBtn = await waitForElement(() => SafeDom.getByTestId(APPROVE_TX_MODAL_SUBMIT_BTN_TEST_ID))
-    fireEvent.click(confirmReviewTxBtn)
-    await sleep(500)
+    await sleep(1000)
 
     // THEN
     const safeFunds = await Web3Integration.getBalanceInEtherOf(safeAddress)

@@ -15,7 +15,7 @@ import provider, { PROVIDER_REDUCER_ID, type State as ProviderState } from '~/lo
 import tokens, { TOKEN_REDUCER_ID, type State as TokensState } from '~/logic/tokens/store/reducer/tokens'
 import notifications, {
   NOTIFICATIONS_REDUCER_ID,
-  type State as NotificationsState,
+  type NotificationReducerState as NotificationsState,
 } from '~/logic/notifications/store/reducer/notifications'
 
 export const history = createBrowserHistory()

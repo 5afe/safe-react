@@ -1,5 +1,6 @@
 // @flow
 import type { Dispatch as ReduxDispatch, GetState } from 'redux'
+import { push } from 'connected-react-router'
 import { EMPTY_DATA } from '~/logic/wallets/ethTransactions'
 import { userAccountSelector } from '~/logic/wallets/store/selectors'
 import fetchTransactions from '~/routes/safe/store/actions/fetchTransactions'
@@ -17,11 +18,12 @@ import {
 import {
   type Notification,
   type NotificationsQueue,
-  getNofiticationsFromTxType,
+  getNotificationsFromTxType,
   showSnackbar,
 } from '~/logic/notifications'
 import { getErrorMessage } from '~/test/utils/ethereumErrors'
 import { ZERO_ADDRESS } from '~/logic/wallets/ethAddresses'
+import { SAFELIST_ADDRESS } from '~/routes/routes'
 
 const createTransaction = (
   safeAddress: string,
@@ -35,6 +37,8 @@ const createTransaction = (
 ) => async (dispatch: ReduxDispatch<GlobalState>, getState: GetState<GlobalState>) => {
   const state: GlobalState = getState()
 
+  dispatch(push(`${SAFELIST_ADDRESS}/${safeAddress}/transactions`))
+
   const safeInstance = await getGnosisSafeInstanceAt(safeAddress)
   const from = userAccountSelector(state)
   const threshold = await safeInstance.getThreshold()
@@ -47,7 +51,7 @@ const createTransaction = (
     '',
   )}000000000000000000000000000000000000000000000000000000000000000001`
 
-  const notificationsQueue: NotificationsQueue = getNofiticationsFromTxType(notifiedTransaction)
+  const notificationsQueue: NotificationsQueue = getNotificationsFromTxType(notifiedTransaction)
   const beforeExecutionKey = showSnackbar(notificationsQueue.beforeExecution, enqueueSnackbar, closeSnackbar)
   let pendingExecutionKey
 
@@ -99,6 +103,7 @@ const createTransaction = (
         if (isExecution) {
           showSnackbar(notificationsQueue.afterExecution, enqueueSnackbar, closeSnackbar)
         }
+        dispatch(fetchTransactions(safeAddress))
 
         return receipt.transactionHash
       })
@@ -113,8 +118,6 @@ const createTransaction = (
     const errMsg = await getErrorMessage(safeInstance.address, 0, executeDataUsedSignatures, from)
     console.error(`Error executing the TX: ${errMsg}`)
   }
-
-  dispatch(fetchTransactions(safeAddress))
 
   return txHash
 }

@@ -49,6 +49,9 @@ export const styles = () => ({
   ownersTitle: {
     padding: lg,
   },
+  address: {
+    marginRight: sm,
+  },
   owner: {
     padding: sm,
     alignItems: 'center',
@@ -74,5 +77,10 @@ export const styles = () => ({
     '&:hover': {
       cursor: 'pointer',
     },
+  },
+  gasCostsContainer: {
+    padding: `0 ${lg}`,
+    textAlign: 'center',
+    width: '100%',
   },
 })

@@ -24,7 +24,6 @@ type Props = {
   classes: Object,
   isOpen: boolean,
   safeAddress: string,
-  etherScanLink: string,
   safeName: string,
   ethBalance: string,
   tokens: List<Token>,
@@ -65,7 +64,6 @@ const Send = ({
   isOpen,
   classes,
   safeAddress,
-  etherScanLink,
   safeName,
   ethBalance,
   tokens,
@@ -113,7 +111,6 @@ const Send = ({
           <SendFunds
             onClose={onClose}
             safeAddress={safeAddress}
-            etherScanLink={etherScanLink}
             safeName={safeName}
             ethBalance={ethBalance}
             tokens={tokens}
@@ -128,17 +125,16 @@ const Send = ({
             onClose={onClose}
             setActiveScreen={setActiveScreen}
             safeAddress={safeAddress}
-            etherScanLink={etherScanLink}
             safeName={safeName}
             ethBalance={ethBalance}
             createTransaction={createTransaction}
+            tokens={tokens}
           />
         )}
         {activeScreen === 'sendCustomTx' && (
           <SendCustomTx
             onClose={onClose}
             safeAddress={safeAddress}
-            etherScanLink={etherScanLink}
             safeName={safeName}
             ethBalance={ethBalance}
             onSubmit={handleCustomTxCreation}
@@ -151,7 +147,6 @@ const Send = ({
             onClose={onClose}
             setActiveScreen={setActiveScreen}
             safeAddress={safeAddress}
-            etherScanLink={etherScanLink}
             safeName={safeName}
             ethBalance={ethBalance}
             createTransaction={createTransaction}

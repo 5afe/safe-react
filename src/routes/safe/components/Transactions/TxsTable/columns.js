@@ -1,5 +1,6 @@
 // @flow
 import { format, getTime, parseISO } from 'date-fns'
+import { BigNumber } from 'bignumber.js'
 import { List } from 'immutable'
 import { type Transaction } from '~/routes/safe/store/models/transaction'
 import { type SortRow, buildOrderFieldFrom } from '~/components/Table/sorting'
@@ -32,7 +33,7 @@ export const getTxAmount = (tx: Transaction) => {
   let txAmount = 'n/a'
 
   if (tx.isTokenTransfer && tx.decodedParams) {
-    txAmount = `${fromWei(toBN(tx.decodedParams.value), 'ether')} ${tx.symbol}`
+    txAmount = `${new BigNumber(tx.decodedParams.value).div(10 ** tx.decimals.toNumber()).toString()} ${tx.symbol}`
   } else if (Number(tx.value) > 0) {
     txAmount = `${fromWei(toBN(tx.value), 'ether')} ${tx.symbol}`
   }

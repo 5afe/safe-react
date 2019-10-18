@@ -5,7 +5,7 @@ import { Close as IconClose } from '@material-ui/icons'
 import { TX_NOTIFICATION_TYPES } from '~/logic/safe/transactions'
 import { type Notification, NOTIFICATIONS } from './notificationTypes'
 
-type NotificationsQueue = {
+export type NotificationsQueue = {
   beforeExecution: Notification,
   pendingExecution: {
     noMoreConfirmationsNeeded: Notification,
@@ -104,7 +104,7 @@ const defaultNotificationsQueue: NotificationsQueue = {
   afterExecutionError: NOTIFICATIONS.TX_FAILED_MSG,
 }
 
-export const getNofiticationsFromTxType = (txType: string) => {
+export const getNotificationsFromTxType = (txType: string) => {
   let notificationsQueue: NotificationsQueue
 
   switch (txType) {

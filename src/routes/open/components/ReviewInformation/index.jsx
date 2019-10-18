@@ -12,6 +12,7 @@ import OpenPaper from '~/components/Stepper/OpenPaper'
 import Col from '~/components/layout/Col'
 import Row from '~/components/layout/Row'
 import Paragraph from '~/components/layout/Paragraph'
+import { formatAmount } from '~/logic/tokens/utils/formatAmount'
 import {
   sm, md, lg, border, background,
 } from '~/theme/variables'
@@ -73,7 +74,7 @@ type Props = {
 }
 
 const ReviewComponent = ({ values, classes, userAccount }: Props) => {
-  const [gasCosts, setGasCosts] = useState<string>('0.00')
+  const [gasCosts, setGasCosts] = useState<string>('< 0.001')
   const names = getNamesFrom(values)
   const addresses = getAccountsFrom(values)
   const numOwners = getNumOwnersFrom(values)
@@ -85,9 +86,9 @@ const ReviewComponent = ({ values, classes, userAccount }: Props) => {
       const { fromWei, toBN } = web3.utils
       const estimatedGasCosts = await estimateGasForDeployingSafe(addresses, numOwners, userAccount)
       const gasCostsAsEth = fromWei(toBN(estimatedGasCosts), 'ether')
-      const roundedGasCosts = parseFloat(gasCostsAsEth).toFixed(3)
+      const formattedGasCosts = formatAmount(gasCostsAsEth)
       if (isCurrent) {
-        setGasCosts(roundedGasCosts)
+        setGasCosts(formattedGasCosts)
       }
     }
 

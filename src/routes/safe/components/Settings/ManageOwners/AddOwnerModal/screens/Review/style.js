@@ -39,7 +39,7 @@ export const styles = () => ({
   },
   details: {
     padding: lg,
-    borderRight: `solid 1px ${border}`,
+    borderRight: `solid 2px ${border}`,
     height: '100%',
   },
   owners: {
@@ -48,6 +48,9 @@ export const styles = () => ({
   },
   ownersTitle: {
     padding: lg,
+  },
+  address: {
+    marginRight: sm,
   },
   owner: {
     padding: sm,
@@ -74,5 +77,10 @@ export const styles = () => ({
     '&:hover': {
       cursor: 'pointer',
     },
+  },
+  gasCostsContainer: {
+    padding: `0 ${lg}`,
+    textAlign: 'center',
+    width: '100%',
   },
 })

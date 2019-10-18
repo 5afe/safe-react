@@ -1,13 +1,14 @@
 // @flow
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { List } from 'immutable'
 import classNames from 'classnames'
 import { withStyles } from '@material-ui/core/styles'
-import OpenInNew from '@material-ui/icons/OpenInNew'
 import Close from '@material-ui/icons/Close'
 import IconButton from '@material-ui/core/IconButton'
 import Identicon from '~/components/Identicon'
-import Link from '~/components/layout/Link'
+import EtherscanBtn from '~/components/EtherscanBtn'
+import { getGnosisSafeInstanceAt } from '~/logic/contracts/safeContracts'
+import CopyBtn from '~/components/CopyBtn'
 import Paragraph from '~/components/layout/Paragraph'
 import Row from '~/components/layout/Row'
 import Col from '~/components/layout/Col'
@@ -15,16 +16,12 @@ import Button from '~/components/layout/Button'
 import Block from '~/components/layout/Block'
 import Hairline from '~/components/layout/Hairline'
 import type { Owner } from '~/routes/safe/store/models/owner'
-import { getEtherScanLink } from '~/logic/wallets/etherscan'
-import { secondary } from '~/theme/variables'
+import Web3Integration from '~/logic/wallets/web3Integration'
+import { formatAmount } from '~/logic/tokens/utils/formatAmount'
+import { estimateTxGasCosts } from '~/logic/safe/transactions/gasNew'
 import { styles } from './style'
 
 export const ADD_OWNER_SUBMIT_BTN_TEST_ID = 'add-owner-submit-btn'
-
-const openIconStyle = {
-  height: '16px',
-  color: secondary,
-}
 
 type Props = {
   onClose: () => void,
@@ -34,11 +31,39 @@ type Props = {
   values: Object,
   onClickBack: Function,
   onSubmit: Function,
+  safeAddress: string,
 }
 
 const ReviewAddOwner = ({
-  classes, onClose, safeName, owners, values, onClickBack, onSubmit,
+  classes, onClose, safeName, owners, values, onClickBack, onSubmit, safeAddress,
 }: Props) => {
+  const [gasCosts, setGasCosts] = useState<string>('< 0.001')
+  useEffect(() => {
+    let isCurrent = true
+    const estimateGas = async () => {
+      const { web3 } = Web3Integration
+      const { fromWei, toBN } = web3.utils
+      const safeInstance = await getGnosisSafeInstanceAt(safeAddress)
+
+      const txData = safeInstance.contract.methods
+        .addOwnerWithThreshold(values.ownerAddress, values.threshold)
+        .encodeABI()
+      const estimatedGasCosts = await estimateTxGasCosts(safeAddress, safeAddress, txData)
+
+      const gasCostsAsEth = fromWei(toBN(estimatedGasCosts), 'ether')
+      const formattedGasCosts = formatAmount(gasCostsAsEth)
+      if (isCurrent) {
+        setGasCosts(formattedGasCosts)
+      }
+    }
+
+    estimateGas()
+
+    return () => {
+      isCurrent = false
+    }
+  }, [])
+
   const handleSubmit = () => {
     onSubmit()
   }
@@ -76,12 +101,7 @@ const ReviewAddOwner = ({
                   Any transaction requires the confirmation of:
                 </Paragraph>
                 <Paragraph size="lg" color="primary" noMargin weight="bolder" className={classes.name}>
-                  {values.threshold}
-                  {' '}
-                  out of
-                  {owners.size + 1}
-                  {' '}
-                  owner(s)
+                  {`${values.threshold} out of ${owners.size + 1} owner(s)`}
                 </Paragraph>
               </Block>
             </Block>
@@ -89,9 +109,7 @@ const ReviewAddOwner = ({
           <Col xs={8} layout="column" className={classes.owners}>
             <Row className={classes.ownersTitle}>
               <Paragraph size="lg" color="primary" noMargin>
-                {owners.size + 1}
-                {' '}
-                Safe owner(s)
+                {`${owners.size + 1} Safe owner(s)`}
               </Paragraph>
             </Row>
             <Hairline />
@@ -107,12 +125,11 @@ const ReviewAddOwner = ({
                         {owner.name}
                       </Paragraph>
                       <Block justify="center" className={classes.user}>
-                        <Paragraph size="md" color="disabled" noMargin>
+                        <Paragraph size="md" color="disabled" className={classes.address} noMargin>
                           {owner.address}
                         </Paragraph>
-                        <Link className={classes.open} to={getEtherScanLink('address', owner.address)} target="_blank">
-                          <OpenInNew style={openIconStyle} />
-                        </Link>
+                        <CopyBtn content={owner.address} />
+                        <EtherscanBtn type="address" value={owner.address} />
                       </Block>
                     </Block>
                   </Col>
@@ -136,16 +153,11 @@ const ReviewAddOwner = ({
                     {values.ownerName}
                   </Paragraph>
                   <Block justify="center" className={classes.user}>
-                    <Paragraph size="md" color="disabled" noMargin>
+                    <Paragraph size="md" color="disabled" className={classes.address} noMargin>
                       {values.ownerAddress}
                     </Paragraph>
-                    <Link
-                      className={classes.open}
-                      to={getEtherScanLink('address', values.ownerAddress)}
-                      target="_blank"
-                    >
-                      <OpenInNew style={openIconStyle} />
-                    </Link>
+                    <CopyBtn content={values.ownerAddress} />
+                    <EtherscanBtn type="address" value={values.ownerAddress} />
                   </Block>
                 </Block>
               </Col>
@@ -153,6 +165,14 @@ const ReviewAddOwner = ({
             <Hairline />
           </Col>
         </Row>
+      </Block>
+      <Hairline />
+      <Block className={classes.gasCostsContainer}>
+        <Paragraph>
+          You&apos;re about to create a transaction and will have to confirm it with your currently connected wallet.
+          <br />
+          {`Make sure you have ${gasCosts} (fee price) ETH in this wallet to fund this confirmation.`}
+        </Paragraph>
       </Block>
       <Hairline />
       <Row align="center" className={classes.buttonRow}>

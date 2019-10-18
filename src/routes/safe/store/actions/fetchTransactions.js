@@ -68,11 +68,12 @@ export const buildTransactionFrom = async (
   }
 
   let symbol = 'ETH'
+  let decimals = 18
   let decodedParams
   if (isSendTokenTx) {
     const tokenContract = await getHumanFriendlyToken()
-    const tokenInstance = await tokenContract.at(tx.to)
-    symbol = await tokenInstance.symbol()
+    const tokenInstance = await tokenContract.at(tx.to);
+    [symbol, decimals] = await Promise.all([tokenInstance.symbol(), tokenInstance.decimals()])
 
     const params = Web3Integration.web3.eth.abi.decodeParameters(['address', 'uint256'], tx.data.slice(10))
     decodedParams = {
@@ -91,6 +92,7 @@ export const buildTransactionFrom = async (
     nonce: tx.nonce,
     value: tx.value.toString(),
     confirmations,
+    decimals,
     recipient: tx.to,
     data: tx.data ? tx.data : EMPTY_DATA,
     isExecuted: tx.isExecuted,

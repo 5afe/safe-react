@@ -1,6 +1,9 @@
 // @flow
 import * as React from 'react'
 import classNames from 'classnames/bind'
+import {
+  Switch, Redirect, Route, withRouter,
+} from 'react-router-dom'
 import Tabs from '@material-ui/core/Tabs'
 import Tab from '@material-ui/core/Tab'
 import CallMade from '@material-ui/icons/CallMade'
@@ -22,7 +25,6 @@ import NoSafe from '~/components/NoSafe'
 import { type SelectorProps } from '~/routes/safe/container/selector'
 import { getEtherScanLink } from '~/logic/wallets/getWeb3'
 import { border } from '~/theme/variables'
-import { copyToClipboard } from '~/utils/clipboard'
 import { type Actions } from '../container/actions'
 import Balances from './Balances'
 import Transactions from './Transactions'
@@ -34,10 +36,6 @@ export const SETTINGS_TAB_BTN_TEST_ID = 'settings-tab-btn'
 export const TRANSACTIONS_TAB_BTN_TEST_ID = 'transactions-tab-btn'
 export const SAFE_VIEW_NAME_HEADING_TEST_ID = 'safe-name-heading'
 
-type State = {
-  tabIndex: number,
-}
-
 type Props = SelectorProps &
   Actions & {
     classes: Object,
@@ -48,176 +46,183 @@ type Props = SelectorProps &
     onHide: Function,
     showSendFunds: Function,
     hideSendFunds: Function,
+    match: Object,
+    location: Object,
+    history: Object,
   }
 
-class Layout extends React.Component<Props, State> {
-  constructor(props) {
-    super(props)
-    this.state = {
-      tabIndex: 0,
-    }
+const Layout = (props: Props) => {
+  const {
+    safe,
+    provider,
+    network,
+    classes,
+    granted,
+    tokens,
+    activeTokens,
+    createTransaction,
+    processTransaction,
+    fetchTransactions,
+    updateSafe,
+    transactions,
+    userAddress,
+    sendFunds,
+    showReceive,
+    onShow,
+    onHide,
+    showSendFunds,
+    hideSendFunds,
+    match,
+    location,
+  } = props
+
+  const handleCallToRouter = (_, value) => {
+    const { history } = props
+
+    history.push(value)
   }
 
-  handleChange = (event, tabIndex) => {
-    this.setState({ tabIndex })
+  if (!safe) {
+    return <NoSafe provider={provider} text="Safe not found" />
   }
 
-  copyAddress = () => {
-    const { safe } = this.props
+  const { address, ethBalance, name } = safe
+  const etherScanLink = getEtherScanLink('address', address)
 
-    if (safe.address) {
-      copyToClipboard(safe.address)
-    }
-  }
-
-  render() {
-    const {
-      safe,
-      provider,
-      network,
-      classes,
-      granted,
-      tokens,
-      activeTokens,
-      createTransaction,
-      processTransaction,
-      fetchTransactions,
-      updateSafe,
-      transactions,
-      userAddress,
-      sendFunds,
-      showReceive,
-      onShow,
-      onHide,
-      showSendFunds,
-      hideSendFunds,
-    } = this.props
-    const { tabIndex } = this.state
-
-    if (!safe) {
-      return <NoSafe provider={provider} text="Safe not found" />
-    }
-
-    const { address, ethBalance, name } = safe
-    const etherScanLink = getEtherScanLink('address', address)
-
-    return (
-      <>
-        <Block className={classes.container} margin="xl">
-          <Identicon address={address} diameter={50} />
-          <Block className={classes.name}>
-            <Row>
-              <Heading tag="h2" color="primary" testId={SAFE_VIEW_NAME_HEADING_TEST_ID}>
-                {name}
-              </Heading>
-              {!granted && <Block className={classes.readonly}>Read Only</Block>}
-            </Row>
-            <Block justify="center" className={classes.user}>
-              <Paragraph size="md" color="disabled" className={classes.address} onClick={this.copyAddress} title="Click to copy" noMargin>
-                {address}
-              </Paragraph>
-              <CopyBtn content={address} />
-              <EtherscanBtn type="address" value={address} />
-            </Block>
-          </Block>
-          <Block className={classes.balance}>
-            <Row align="end" className={classes.actions}>
-              <Button
-                variant="contained"
-                size="small"
-                color="primary"
-                className={classes.send}
-                onClick={() => showSendFunds('Ether')}
-                disabled={!granted}
-              >
-                <CallMade alt="Send Transaction" className={classNames(classes.leftIcon, classes.iconSmall)} />
-                Send
-              </Button>
-              <Button
-                variant="contained"
-                size="small"
-                color="primary"
-                className={classes.receive}
-                onClick={onShow('Receive')}
-              >
-                <CallReceived alt="Receive Transaction" className={classNames(classes.leftIcon, classes.iconSmall)} />
-                Receive
-              </Button>
-            </Row>
+  return (
+    <>
+      <Block className={classes.container} margin="xl">
+        <Identicon address={address} diameter={50} />
+        <Block className={classes.name}>
+          <Row>
+            <Heading tag="h2" color="primary" testId={SAFE_VIEW_NAME_HEADING_TEST_ID}>
+              {name}
+            </Heading>
+            {!granted && <Block className={classes.readonly}>Read Only</Block>}
+          </Row>
+          <Block justify="center" className={classes.user}>
+            <Paragraph size="md" className={classes.address} color="disabled" noMargin>
+              {address}
+            </Paragraph>
+            <CopyBtn content={address} />
+            <EtherscanBtn type="address" value={address} />
           </Block>
         </Block>
-        <Row>
-          <Tabs value={tabIndex} onChange={this.handleChange} indicatorColor="secondary" textColor="secondary">
-            <Tab label="Balances" data-testid={BALANCES_TAB_BTN_TEST_ID} />
-            <Tab label="Transactions" data-testid={TRANSACTIONS_TAB_BTN_TEST_ID} />
-            <Tab label="Settings" data-testid={SETTINGS_TAB_BTN_TEST_ID} />
-          </Tabs>
-        </Row>
-        <Hairline color={border} style={{ marginTop: '-2px' }} />
-        {tabIndex === 0 && (
-          <Balances
-            ethBalance={ethBalance}
-            tokens={tokens}
-            activeTokens={activeTokens}
-            granted={granted}
-            safeAddress={address}
-            safeName={name}
-            etherScanLink={etherScanLink}
-            createTransaction={createTransaction}
-          />
-        )}
-        {tabIndex === 1 && (
-          <Transactions
-            threshold={safe.threshold}
-            owners={safe.owners}
-            transactions={transactions}
-            fetchTransactions={fetchTransactions}
-            safeAddress={address}
-            userAddress={userAddress}
-            currentNetwork={network}
-            granted={granted}
-            createTransaction={createTransaction}
-            processTransaction={processTransaction}
-          />
-        )}
-        {tabIndex === 2 && (
-          <Settings
-            granted={granted}
-            safeAddress={address}
-            safeName={name}
-            etherScanLink={etherScanLink}
-            updateSafe={updateSafe}
-            threshold={safe.threshold}
-            owners={safe.owners}
-            network={network}
-            userAddress={userAddress}
-            createTransaction={createTransaction}
-          />
-        )}
-        <SendModal
-          onClose={hideSendFunds}
-          isOpen={sendFunds.isOpen}
-          etherScanLink={etherScanLink}
-          safeAddress={address}
-          safeName={name}
-          ethBalance={ethBalance}
-          tokens={activeTokens}
-          selectedToken={sendFunds.selectedToken}
-          createTransaction={createTransaction}
-          activeScreenType="chooseTxType"
-        />
-        <Modal
-          title="Receive Tokens"
-          description="Receive Tokens Form"
-          handleClose={onHide('Receive')}
-          open={showReceive}
-          paperClassName={classes.receiveModal}
+        <Block className={classes.balance}>
+          <Row align="end" className={classes.actions}>
+            <Button
+              variant="contained"
+              size="small"
+              color="primary"
+              className={classes.send}
+              onClick={() => showSendFunds('Ether')}
+              disabled={!granted}
+            >
+              <CallMade alt="Send Transaction" className={classNames(classes.leftIcon, classes.iconSmall)} />
+              Send
+            </Button>
+            <Button
+              variant="contained"
+              size="small"
+              color="primary"
+              className={classes.receive}
+              onClick={onShow('Receive')}
+            >
+              <CallReceived alt="Receive Transaction" className={classNames(classes.leftIcon, classes.iconSmall)} />
+              Receive
+            </Button>
+          </Row>
+        </Block>
+      </Block>
+      <Row>
+        <Tabs
+          value={location.pathname}
+          onChange={handleCallToRouter}
+          indicatorColor="secondary"
+          textColor="secondary"
         >
-          <Receive safeName={name} safeAddress={address} etherScanLink={etherScanLink} onClose={onHide('Receive')} />
-        </Modal>
-      </>
-    )
-  }
+          <Tab label="Balances" value={`${match.url}/balances`} data-testid={BALANCES_TAB_BTN_TEST_ID} />
+          <Tab label="Transactions" value={`${match.url}/transactions`} data-testid={TRANSACTIONS_TAB_BTN_TEST_ID} />
+          <Tab label="Settings" value={`${match.url}/settings`} data-testid={SETTINGS_TAB_BTN_TEST_ID} />
+        </Tabs>
+      </Row>
+      <Hairline color={border} style={{ marginTop: '-2px' }} />
+      <Switch>
+        <Route
+          exact
+          path={`${match.path}/balances`}
+          render={() => (
+            <Balances
+              ethBalance={ethBalance}
+              tokens={tokens}
+              activeTokens={activeTokens}
+              granted={granted}
+              safeAddress={address}
+              safeName={name}
+              createTransaction={createTransaction}
+            />
+          )}
+        />
+        <Route
+          exact
+          path={`${match.path}/transactions`}
+          render={() => (
+            <Transactions
+              threshold={safe.threshold}
+              owners={safe.owners}
+              transactions={transactions}
+              fetchTransactions={fetchTransactions}
+              safeAddress={address}
+              userAddress={userAddress}
+              currentNetwork={network}
+              granted={granted}
+              createTransaction={createTransaction}
+              processTransaction={processTransaction}
+            />
+          )}
+        />
+        <Route
+          exact
+          path={`${match.path}/settings`}
+          render={() => (
+            <Settings
+              granted={granted}
+              safeAddress={address}
+              safeName={name}
+              etherScanLink={etherScanLink}
+              updateSafe={updateSafe}
+              threshold={safe.threshold}
+              owners={safe.owners}
+              network={network}
+              userAddress={userAddress}
+              createTransaction={createTransaction}
+            />
+          )}
+        />
+        <Redirect to={`${match.path}/balances`} />
+      </Switch>
+      <SendModal
+        onClose={hideSendFunds}
+        isOpen={sendFunds.isOpen}
+        safeAddress={address}
+        safeName={name}
+        ethBalance={ethBalance}
+        tokens={activeTokens}
+        selectedToken={sendFunds.selectedToken}
+        createTransaction={createTransaction}
+        activeScreenType="chooseTxType"
+      />
+      <Modal
+        title="Receive Tokens"
+        description="Receive Tokens Form"
+        handleClose={onHide('Receive')}
+        open={showReceive}
+        paperClassName={classes.receiveModal}
+      >
+        <Receive safeName={name} safeAddress={address} onClose={onHide('Receive')} />
+      </Modal>
+    </>
+  )
 }
 
-export default withStyles(styles)(Layout)
+export default withStyles(styles)(withRouter(Layout))

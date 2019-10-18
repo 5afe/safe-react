@@ -21,6 +21,7 @@ export type TransactionProps = {
   customTx: boolean,
   safeTxHash: string,
   executionTxHash?: string,
+  decimals?: number,
   cancelled?: boolean,
   status?: TransactionStatus,
   isTokenTransfer: boolean,
@@ -45,6 +46,7 @@ export const makeTransaction: RecordFactory<TransactionProps> = Record({
   cancellationTx: false,
   customTx: false,
   status: 'awaiting',
+  decimals: 18,
   isTokenTransfer: false,
   decodedParams: {},
 })

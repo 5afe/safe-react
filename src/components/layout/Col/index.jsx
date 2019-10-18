@@ -1,6 +1,6 @@
 // @flow
+import * as React from 'react'
 import classNames from 'classnames/bind'
-import React from 'react'
 import { capitalize } from '~/utils/css'
 import styles from './index.scss'
 

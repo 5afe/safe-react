@@ -56,6 +56,6 @@ export const calculateGasOf = async (data: Object, from: string, to: string) => 
 
     return gas * 2
   } catch (err) {
-    return Promise.reject(new Error(err))
+    return Promise.reject(err)
   }
 }

@@ -18,7 +18,7 @@ export type BalanceRow = SortRow<BalanceData>
 
 export const getBalanceData = (activeTokens: List<Token>): List<BalanceRow> => {
   const rows = activeTokens.map((token: Token) => ({
-    [BALANCE_TABLE_ASSET_ID]: { name: token.name, logoUri: token.logoUri },
+    [BALANCE_TABLE_ASSET_ID]: { name: token.name, logoUri: token.logoUri, address: token.address },
     [buildOrderFieldFrom(BALANCE_TABLE_ASSET_ID)]: token.name,
     [BALANCE_TABLE_BALANCE_ID]: `${formatAmount(token.balance)} ${token.symbol}`,
     [buildOrderFieldFrom(BALANCE_TABLE_BALANCE_ID)]: Number(token.balance),

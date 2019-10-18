@@ -4,25 +4,18 @@ import classNames from 'classnames/bind'
 import { withStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
 import IconButton from '@material-ui/core/IconButton'
-import OpenInNew from '@material-ui/icons/OpenInNew'
 import Paragraph from '~/components/layout/Paragraph'
 import Row from '~/components/layout/Row'
 import Col from '~/components/layout/Col'
 import Button from '~/components/layout/Button'
 import Block from '~/components/layout/Block'
 import Hairline from '~/components/layout/Hairline'
-import Link from '~/components/layout/Link'
+import EtherscanBtn from '~/components/EtherscanBtn'
+import CopyBtn from '~/components/CopyBtn'
 import Identicon from '~/components/Identicon'
-import { getEtherScanLink } from '~/logic/wallets/etherscan'
 import { styles } from './style'
-import { secondary } from '~/theme/variables'
 
 export const REMOVE_OWNER_MODAL_NEXT_BTN_TEST_ID = 'remove-owner-next-btn'
-
-const openIconStyle = {
-  height: '16px',
-  color: secondary,
-}
 
 type Props = {
   onClose: () => void,
@@ -65,12 +58,11 @@ const CheckOwner = ({
                 {ownerName}
               </Paragraph>
               <Block justify="center" className={classes.user}>
-                <Paragraph size="md" color="disabled" noMargin>
+                <Paragraph size="md" color="disabled" className={classes.address} noMargin>
                   {ownerAddress}
                 </Paragraph>
-                <Link className={classes.open} to={getEtherScanLink('address', ownerAddress)} target="_blank">
-                  <OpenInNew style={openIconStyle} />
-                </Link>
+                <CopyBtn content={ownerAddress} />
+                <EtherscanBtn type="address" value={ownerAddress} />
               </Block>
             </Block>
           </Col>

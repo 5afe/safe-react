@@ -116,23 +116,27 @@ const ExpandedTx = ({
           />
         </Row>
       </Block>
-      <CancelTxModal
-        isOpen={openModal === 'cancelTx'}
-        createTransaction={createTransaction}
-        onClose={closeModal}
-        tx={tx}
-        safeAddress={safeAddress}
-      />
-      <ApproveTxModal
-        isOpen={openModal === 'approveTx'}
-        processTransaction={processTransaction}
-        onClose={closeModal}
-        tx={tx}
-        userAddress={userAddress}
-        safeAddress={safeAddress}
-        threshold={threshold}
-        thresholdReached={thresholdReached}
-      />
+      {openModal === 'cancelTx' && (
+        <CancelTxModal
+          isOpen
+          createTransaction={createTransaction}
+          onClose={closeModal}
+          tx={tx}
+          safeAddress={safeAddress}
+        />
+      )}
+      {openModal === 'approveTx' && (
+        <ApproveTxModal
+          isOpen
+          processTransaction={processTransaction}
+          onClose={closeModal}
+          tx={tx}
+          userAddress={userAddress}
+          safeAddress={safeAddress}
+          threshold={threshold}
+          thresholdReached={thresholdReached}
+        />
+      )}
     </>
   )
 }
