@@ -2,8 +2,10 @@
 import React, { useState, useEffect } from 'react'
 import { List } from 'immutable'
 import { withStyles } from '@material-ui/core/styles'
+import { withSnackbar } from 'notistack'
 import Modal from '~/components/Modal'
 import { type Owner } from '~/routes/safe/store/models/owner'
+import { TX_NOTIFICATION_TYPES } from '~/logic/safe/transactions'
 import { getGnosisSafeInstanceAt, SENTINEL_ADDRESS } from '~/logic/contracts/safeContracts'
 import OwnerForm from './screens/OwnerForm'
 import ReviewReplaceOwner from './screens/Review'
@@ -25,10 +27,11 @@ type Props = {
   ownerAddress: string,
   ownerName: string,
   owners: List<Owner>,
-  network: string,
   threshold: string,
   createTransaction: Function,
   replaceSafeOwner: Function,
+  enqueueSnackbar: Function,
+  closeSnackbar: Function,
 }
 type ActiveScreen = 'checkOwner' | 'reviewReplaceOwner'
 
@@ -36,20 +39,30 @@ const sendReplaceOwner = async (
   values: Object,
   safeAddress: string,
   ownerAddressToRemove: string,
-  ownerNameToRemove: string,
-  ownersOld: List<Owner>,
+  enqueueSnackbar: Function,
+  closeSnackbar: Function,
   createTransaction: Function,
   replaceSafeOwner: Function,
 ) => {
   const gnosisSafe = await getGnosisSafeInstanceAt(safeAddress)
   const safeOwners = await gnosisSafe.getOwners()
-  const index = safeOwners.findIndex(ownerAddress => ownerAddress.toLowerCase() === ownerAddressToRemove.toLowerCase())
+  const index = safeOwners.findIndex(
+    (ownerAddress) => ownerAddress.toLowerCase() === ownerAddressToRemove.toLowerCase(),
+  )
   const prevAddress = index === 0 ? SENTINEL_ADDRESS : safeOwners[index - 1]
   const txData = gnosisSafe.contract.methods
     .swapOwner(prevAddress, ownerAddressToRemove, values.ownerAddress)
     .encodeABI()
 
-  const txHash = await createTransaction(safeAddress, safeAddress, 0, txData)
+  const txHash = await createTransaction(
+    safeAddress,
+    safeAddress,
+    0,
+    txData,
+    TX_NOTIFICATION_TYPES.OWNER_CHANGE_TX,
+    enqueueSnackbar,
+    closeSnackbar,
+  )
 
   if (txHash) {
     replaceSafeOwner({
@@ -70,10 +83,11 @@ const ReplaceOwner = ({
   ownerAddress,
   ownerName,
   owners,
-  network,
   threshold,
   createTransaction,
   replaceSafeOwner,
+  enqueueSnackbar,
+  closeSnackbar,
 }: Props) => {
   const [activeScreen, setActiveScreen] = useState<ActiveScreen>('checkOwner')
   const [values, setValues] = useState<Object>({})
@@ -102,16 +116,16 @@ const ReplaceOwner = ({
         values,
         safeAddress,
         ownerAddress,
-        ownerName,
-        owners,
+        enqueueSnackbar,
+        closeSnackbar,
         createTransaction,
         replaceSafeOwner,
       )
     } catch (error) {
-      // eslint-disable-next-line
-      console.log('Error while removing an owner ' + error)
+      console.error('Error while removing an owner', error)
     }
   }
+
   return (
     <Modal
       title="Replace owner from Safe"
@@ -120,14 +134,13 @@ const ReplaceOwner = ({
       open={isOpen}
       paperClassName={classes.biggerModalWindow}
     >
-      <React.Fragment>
+      <>
         {activeScreen === 'checkOwner' && (
           <OwnerForm
             onClose={onClose}
             ownerAddress={ownerAddress}
             ownerName={ownerName}
             owners={owners}
-            network={network}
             onSubmit={ownerSubmitted}
           />
         )}
@@ -136,7 +149,6 @@ const ReplaceOwner = ({
             onClose={onClose}
             safeName={safeName}
             owners={owners}
-            network={network}
             values={values}
             ownerAddress={ownerAddress}
             ownerName={ownerName}
@@ -145,9 +157,9 @@ const ReplaceOwner = ({
             threshold={threshold}
           />
         )}
-      </React.Fragment>
+      </>
     </Modal>
   )
 }
 
-export default withStyles(styles)(ReplaceOwner)
+export default withStyles(styles)(withSnackbar(ReplaceOwner))

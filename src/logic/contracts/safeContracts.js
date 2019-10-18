@@ -36,7 +36,7 @@ const instanciateMasterCopies = async () => {
   const ProxyFactory = getCreateProxyFactoryContract(web3)
   proxyFactoryMaster = await ProxyFactory.deployed()
 
-  // Initialize safe master copy
+  // Initialize Safe master copy
   const GnosisSafe = getGnosisSafeContract(web3)
   safeMaster = await GnosisSafe.deployed()
 }
@@ -73,6 +73,23 @@ export const deploySafeContract = async (safeAccounts: string[], numConfirmation
   const gasPrice = await calculateGasPrice()
 
   return proxyFactoryMaster.createProxy(safeMaster.address, gnosisSafeData, { from: userAccount, gas, gasPrice })
+}
+
+export const estimateGasForDeployingSafe = async (
+  safeAccounts: string[],
+  numConfirmations: number,
+  userAccount: string,
+) => {
+  const gnosisSafeData = await safeMaster.contract.methods
+    .setup(safeAccounts, numConfirmations, ZERO_ADDRESS, '0x', ZERO_ADDRESS, 0, ZERO_ADDRESS)
+    .encodeABI()
+  const proxyFactoryData = proxyFactoryMaster.contract.methods
+    .createProxy(safeMaster.address, gnosisSafeData)
+    .encodeABI()
+  const gas = await calculateGasOf(proxyFactoryData, userAccount, proxyFactoryMaster.address)
+  const gasPrice = await calculateGasPrice()
+
+  return gas * parseInt(gasPrice, 10)
 }
 
 export const getGnosisSafeInstanceAt = async (safeAddress: string) => {

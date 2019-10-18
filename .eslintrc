@@ -1,7 +1,7 @@
 {
-  "extends": ["airbnb", "plugin:flowtype/recommended"],
+  "extends": ["airbnb", "plugin:flowtype/recommended", "plugin:jsx-a11y/recommended"],
   "parser": "babel-eslint",
-  "plugins": ["jest", "flowtype"],
+  "plugins": ["jsx-a11y", "jest", "flowtype"],
   "rules": {
     "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
     "react/forbid-prop-types": [1, { "forbid": ["object", "any"] }],
@@ -23,6 +23,8 @@
     "import/no-extraneous-dependencies": 0,
     "import/extensions": 0,
     "import/prefer-default-export": 0,
+    "react/default-props-match-prop-types": ["error", { "allowRequiredDefaults": true }],
+    // https://github.com/yannickcr/eslint-plugin-react/issues/1593 ^
     "jsx-a11y/label-has-for": 0,
     "indent": ["error", 2, { "SwitchCase": 1 }],
     "no-console": ["error", { "allow": ["warn", "error"] }],
@@ -42,7 +44,9 @@
       }
     ],
     "react/require-default-props": 0,
-    "react/no-array-index-key": 0
+    "react/no-array-index-key": 0,
+    "react/jsx-props-no-spreading": 0,
+    "react/state-in-constructor": 0
   },
   "env": {
     "jest/globals": true,

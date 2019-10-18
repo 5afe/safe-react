@@ -2,6 +2,7 @@
 import React, { useState } from 'react'
 import { withStyles } from '@material-ui/core/styles'
 import { List } from 'immutable'
+import { withSnackbar } from 'notistack'
 import Heading from '~/components/layout/Heading'
 import Button from '~/components/layout/Button'
 import Bold from '~/components/layout/Bold'
@@ -9,10 +10,11 @@ import Block from '~/components/layout/Block'
 import Row from '~/components/layout/Row'
 import Modal from '~/components/Modal'
 import Paragraph from '~/components/layout/Paragraph'
+import { TX_NOTIFICATION_TYPES } from '~/logic/safe/transactions'
 import ChangeThreshold from './ChangeThreshold'
 import type { Owner } from '~/routes/safe/store/models/owner'
-import { styles } from './style'
 import { getGnosisSafeInstanceAt } from '~/logic/contracts/safeContracts'
+import { styles } from './style'
 
 type Props = {
   owners: List<Owner>,
@@ -20,44 +22,60 @@ type Props = {
   classes: Object,
   createTransaction: Function,
   safeAddress: string,
+  granted: boolean,
+  enqueueSnackbar: Function,
+  closeSnackbar: Function,
 }
 
 const ThresholdSettings = ({
-  owners, threshold, classes, createTransaction, safeAddress,
+  owners,
+  threshold,
+  classes,
+  createTransaction,
+  safeAddress,
+  granted,
+  enqueueSnackbar,
+  closeSnackbar,
 }: Props) => {
   const [isModalOpen, setModalOpen] = useState(false)
 
   const toggleModal = () => {
-    setModalOpen(prevOpen => !prevOpen)
+    setModalOpen((prevOpen) => !prevOpen)
   }
 
   const onChangeThreshold = async (newThreshold) => {
     const safeInstance = await getGnosisSafeInstanceAt(safeAddress)
     const txData = safeInstance.contract.methods.changeThreshold(newThreshold).encodeABI()
 
-    createTransaction(safeAddress, safeAddress, 0, txData)
+    createTransaction(
+      safeAddress,
+      safeAddress,
+      0,
+      txData,
+      TX_NOTIFICATION_TYPES.THRESHOLD_CHANGE_TX,
+      enqueueSnackbar,
+      closeSnackbar,
+    )
   }
 
   return (
     <>
       <Block className={classes.container}>
-        <Heading tag="h3">Required confirmations</Heading>
+        <Heading tag="h2">Required confirmations</Heading>
         <Paragraph>
-          Any transaction over any daily limit
-          <br />
-          {' '}
-          requires the confirmation of:
+          Any transaction requires the confirmation of:
         </Paragraph>
-        <Paragraph size="xxl" className={classes.ownersText}>
+        <Paragraph size="lg" className={classes.ownersText}>
           <Bold>{threshold}</Bold>
           {' '}
           out of
+          {' '}
           <Bold>{owners.size}</Bold>
           {' '}
           owners
         </Paragraph>
-        {owners.size > 1 && (
-          <Row align="center" className={classes.buttonRow}>
+        {owners.size > 1 && granted && (
+          <Row className={classes.buttonRow}>
             <Button
               color="primary"
               minWidth={120}
@@ -87,4 +105,4 @@ const ThresholdSettings = ({
   )
 }
 
-export default withStyles(styles)(ThresholdSettings)
+export default withStyles(styles)(withSnackbar(ThresholdSettings))

@@ -7,6 +7,7 @@ import MenuItem from '@material-ui/core/MenuItem'
 import Field from '~/components/forms/Field'
 import TextField from '~/components/forms/TextField'
 import SelectField from '~/components/forms/SelectField'
+import AddressInput from '~/components/forms/AddressInput'
 import {
   required, composeValidators, noErrorsOn, mustBeInteger, minValue,
 } from '~/components/forms/validator'
@@ -28,7 +29,7 @@ import Hairline from '~/components/layout/Hairline'
 import trash from '~/assets/icons/trash.svg'
 import QRIcon from '~/assets/icons/qrcode.svg'
 import ScanQRModal from './ScanQRModal'
-import { getAddressValidators } from './validators'
+import { getAddressValidator } from './validators'
 import { styles } from './style'
 
 type Props = {
@@ -41,7 +42,7 @@ type Props = {
 
 const { useState } = React
 
-export const ADD_OWNER_BUTTON = '+ ADD ANOTHER OWNER'
+export const ADD_OWNER_BUTTON = '+ Add another owner'
 
 export const calculateValuesAfterRemoving = (index: number, notRemovedOwners: number, values: Object) => {
   const initialValues = { ...values }
@@ -105,10 +106,16 @@ const SafeOwners = (props: Props) => {
   }
 
   return (
-    <React.Fragment>
+    <>
       <Block className={classes.title}>
         <Paragraph noMargin size="md" color="primary">
-          Specify the owners of the Safe.
+          Your Safe will have one or more owners. We have prefilled the first owner with your connected wallet details,
+          but you are free to change this to a different owner.
+          <br />
+          <br />
+          Add additional owners (e.g. wallets of your teammates) and specify how many of them have to confirm a
+          transaction before it gets executed. In general, the more confirmations required, the more secure is your
+          Safe.
         </Paragraph>
       </Block>
       <Hairline />
@@ -135,7 +142,7 @@ const SafeOwners = (props: Props) => {
                 />
               </Col>
               <Col xs={6}>
-                <Field
+                <AddressInput
                   name={addressName}
                   component={TextField}
                   inputAdornment={
@@ -147,8 +154,11 @@ const SafeOwners = (props: Props) => {
                       ),
                     }
                   }
+                  fieldMutator={(val) => {
+                    form.mutators.setValue(addressName, val)
+                  }}
                   type="text"
-                  validate={getAddressValidators(otherAccounts, index)}
+                  validators={[getAddressValidator(otherAccounts, index)]}
                   placeholder="Owner Address*"
                   text="Owner Address"
                 />
@@ -172,7 +182,7 @@ const SafeOwners = (props: Props) => {
       </Block>
       <Row align="center" grow className={classes.add} margin="xl">
         <Button color="secondary" onClick={onAddOwner} data-testid="add-owner-btn">
-          <Paragraph weight="bold" size="md" noMargin>
+          <Paragraph size="md" noMargin>
             {ADD_OWNER_BUTTON}
           </Paragraph>
         </Button>
@@ -208,14 +218,14 @@ owner(s)
         </Row>
       </Block>
       {qrModalOpen && <ScanQRModal isOpen={qrModalOpen} onScan={handleScan} onClose={closeQrModal} />}
-    </React.Fragment>
+    </>
   )
 }
 
 const SafeOwnersForm = withStyles(styles)(SafeOwners)
 
 const SafeOwnersPage = ({ updateInitialProps }: Object) => (controls: React.Node, { values, errors, form }: Object) => (
-  <React.Fragment>
+  <>
     <OpenPaper controls={controls} padding={false}>
       <SafeOwnersForm
         otherAccounts={getAccountsFrom(values)}
@@ -225,7 +235,7 @@ const SafeOwnersPage = ({ updateInitialProps }: Object) => (controls: React.Node
         values={values}
       />
     </OpenPaper>
-  </React.Fragment>
+  </>
 )
 
 export default SafeOwnersPage

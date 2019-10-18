@@ -7,7 +7,4 @@ function resetTestAccount() {
   delete window.testAccountIndex
 }
 
-export {
-  useTestAccountAt,
-  resetTestAccount,
-}
+export { useTestAccountAt, resetTestAccount }

@@ -1,5 +1,7 @@
 // @flow
-import { lg, md, sm } from '~/theme/variables'
+import {
+  lg, md, sm, secondaryText,
+} from '~/theme/variables'
 
 export const styles = () => ({
   heading: {
@@ -9,8 +11,8 @@ export const styles = () => ({
     maxHeight: '75px',
   },
   annotation: {
-    letterSpacing: '-1px',
-    color: '#a2a8ba',
+    lineHeight: 'normal',
+    color: secondaryText,
     marginRight: 'auto',
     marginLeft: '20px',
   },

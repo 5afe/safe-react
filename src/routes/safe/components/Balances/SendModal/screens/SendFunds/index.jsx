@@ -9,6 +9,7 @@ import IconButton from '@material-ui/core/IconButton'
 import Paragraph from '~/components/layout/Paragraph'
 import Row from '~/components/layout/Row'
 import GnoForm from '~/components/forms/GnoForm'
+import AddressInput from '~/components/forms/AddressInput'
 import Col from '~/components/layout/Col'
 import Button from '~/components/layout/Button'
 import Block from '~/components/layout/Block'
@@ -18,12 +19,7 @@ import Field from '~/components/forms/Field'
 import TextField from '~/components/forms/TextField'
 import { type Token } from '~/logic/tokens/store/model/token'
 import {
-  composeValidators,
-  required,
-  mustBeEthereumAddress,
-  mustBeFloat,
-  maxValue,
-  greaterThan,
+  composeValidators, required, mustBeFloat, maxValue, greaterThan,
 } from '~/components/forms/validator'
 import TokenSelectField from '~/routes/safe/components/Balances/SendModal/screens/SendFunds/TokenSelectField'
 import SafeInfo from '~/routes/safe/components/Balances/SendModal/SafeInfo'
@@ -68,10 +64,13 @@ const SendFunds = ({
     onTokenChange: (args, state, utils) => {
       utils.changeValue(state, 'amount', () => '')
     },
+    setRecipient: (args, state, utils) => {
+      utils.changeValue(state, 'recipientAddress', () => args[0])
+    },
   }
 
   return (
-    <React.Fragment>
+    <>
       <Row align="center" grow className={classes.heading}>
         <Paragraph weight="bolder" className={classes.manage} noMargin>
           Send Funds
@@ -82,34 +81,37 @@ const SendFunds = ({
         </IconButton>
       </Row>
       <Hairline />
-      <Block className={classes.formContainer}>
-        <SafeInfo safeAddress={safeAddress} etherScanLink={etherScanLink} safeName={safeName} ethBalance={ethBalance} />
-        <Row margin="md">
-          <Col xs={1}>
-            <img src={ArrowDown} alt="Arrow Down" style={{ marginLeft: '8px' }} />
-          </Col>
-          <Col xs={11} center="xs" layout="column">
-            <Hairline />
-          </Col>
-        </Row>
-        <GnoForm onSubmit={handleSubmit} formMutators={formMutators} initialValues={initialValues}>
-          {(...args) => {
-            const formState = args[2]
-            const mutators = args[3]
-            const { token } = formState.values
-
-            return (
-              <React.Fragment>
+      <GnoForm onSubmit={handleSubmit} formMutators={formMutators} initialValues={initialValues}>
+        {(...args) => {
+          const formState = args[2]
+          const mutators = args[3]
+          const { token } = formState.values
+          return (
+            <>
+              <Block className={classes.formContainer}>
+                <SafeInfo
+                  safeAddress={safeAddress}
+                  etherScanLink={etherScanLink}
+                  safeName={safeName}
+                  ethBalance={ethBalance}
+                />
+                <Row margin="md">
+                  <Col xs={1}>
+                    <img src={ArrowDown} alt="Arrow Down" style={{ marginLeft: '8px' }} />
+                  </Col>
+                  <Col xs={11} center="xs" layout="column">
+                    <Hairline />
+                  </Col>
+                </Row>
                 <Row margin="md">
                   <Col xs={12}>
-                    <Field
+                    <AddressInput
                       name="recipientAddress"
                       component={TextField}
-                      type="text"
-                      validate={composeValidators(required, mustBeEthereumAddress)}
                       placeholder="Recipient*"
                       text="Recipient*"
                       className={classes.addressInput}
+                      fieldMutator={mutators.setRecipient}
                     />
                   </Col>
                 </Row>
@@ -156,28 +158,28 @@ const SendFunds = ({
                     </OnChange>
                   </Col>
                 </Row>
-                <Hairline />
-                <Row align="center" className={classes.buttonRow}>
-                  <Button className={classes.button} minWidth={140} minHeight={42} onClick={onClose}>
-                    Cancel
-                  </Button>
-                  <Button
-                    type="submit"
-                    variant="contained"
-                    minHeight={42}
-                    minWidth={140}
-                    color="primary"
-                    data-testid="review-tx-btn"
-                  >
-                    Review
-                  </Button>
-                </Row>
-              </React.Fragment>
-            )
-          }}
-        </GnoForm>
-      </Block>
-    </React.Fragment>
+              </Block>
+              <Hairline />
+              <Row align="center" className={classes.buttonRow}>
+                <Button minWidth={140} onClick={onClose}>
+                  Cancel
+                </Button>
+                <Button
+                  type="submit"
+                  variant="contained"
+                  minWidth={140}
+                  color="primary"
+                  data-testid="review-tx-btn"
+                  className={classes.submitButton}
+                >
+                  Review
+                </Button>
+              </Row>
+            </>
+          )
+        }}
+      </GnoForm>
+    </>
   )
 }
 

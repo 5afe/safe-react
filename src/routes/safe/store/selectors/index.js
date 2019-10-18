@@ -5,11 +5,10 @@ import { createSelector, createStructuredSelector, type Selector } from 'reselec
 import { type GlobalState } from '~/store/index'
 import { SAFE_PARAM_ADDRESS } from '~/routes/routes'
 import { type Safe } from '~/routes/safe/store/models/safe'
-import { safesMapSelector } from '~/routes/safeList/store/selectors'
 import { type State as TransactionsState, TRANSACTIONS_REDUCER_ID } from '~/routes/safe/store/reducer/transactions'
 import { type Transaction } from '~/routes/safe/store/models/transaction'
 import { type Confirmation } from '~/routes/safe/store/models/confirmation'
-import { safesListSelector } from '~/routes/safeList/store/selectors/'
+import { SAFE_REDUCER_ID } from '~/routes/safe/store/reducer/safe'
 
 export type RouterProps = {
   match: Match,
@@ -22,6 +21,25 @@ export type SafeProps = {
 type TransactionProps = {
   transaction: Transaction,
 }
+
+const safesStateSelector = (state: GlobalState): Map<string, *> => state[SAFE_REDUCER_ID]
+
+export const safesMapSelector = (state: GlobalState): Map<string, Safe> => state[SAFE_REDUCER_ID].get('safes')
+
+export const safesListSelector: Selector<GlobalState, {}, List<Safe>> = createSelector(
+  safesMapSelector,
+  (safes: Map<string, Safe>): List<Safe> => safes.toList(),
+)
+
+export const safesCountSelector: Selector<GlobalState, {}, number> = createSelector(
+  safesMapSelector,
+  (safes: Map<string, Safe>): number => safes.size,
+)
+
+export const defaultSafeSelector: Selector<GlobalState, {}, string> = createSelector(
+  safesStateSelector,
+  (safeState: Map<string, *>): string => safeState.get('defaultSafe'),
+)
 
 const transactionsSelector = (state: GlobalState): TransactionsState => state[TRANSACTIONS_REDUCER_ID]
 

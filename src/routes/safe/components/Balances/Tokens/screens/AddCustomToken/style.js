@@ -28,7 +28,4 @@ export const styles = () => ({
     height: '84px',
     justifyContent: 'center',
   },
-  button: {
-    height: '42px',
-  },
 })

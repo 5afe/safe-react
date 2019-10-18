@@ -12,8 +12,7 @@ export const storeSubject = async (safeAddress: string, nonce: number, subject: 
     const updatedSubjects = subjects.set(nonce, subject)
     saveToStorage(key, updatedSubjects)
   } catch (err) {
-    // eslint-disable-next-line
-    console.log('Error storing transaction subject in localstorage')
+    console.error('Error storing transaction subject in localstorage', err)
   }
 }
 

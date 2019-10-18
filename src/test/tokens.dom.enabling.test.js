@@ -1,4 +1,5 @@
 // @flow
+import { waitForElement } from '@testing-library/react'
 import { List } from 'immutable'
 import Web3Integration from '~/logic/wallets/web3Integration'
 import { getFirstTokenContract, getSecondTokenContract } from '~/test/utils/tokenMovements'
@@ -11,6 +12,7 @@ import { clickOnManageTokens, toggleToken, closeManageTokensModal } from './util
 import { BALANCE_ROW_TEST_ID } from '~/routes/safe/components/Balances'
 import { makeToken } from '~/logic/tokens/store/model/token'
 import '@testing-library/jest-dom/extend-expect'
+import { getActiveTokens } from '~/logic/tokens/utils/tokensStorage'
 
 describe('DOM > Feature > Enable and disable default tokens', () => {
   let web3
@@ -43,7 +45,7 @@ describe('DOM > Feature > Enable and disable default tokens', () => {
     ])
   })
 
-  it('allows to enable and disable tokens', async () => {
+  it('allows to enable and disable tokens, stores active ones in the local storage', async () => {
     // GIVEN
     const store = aNewStore()
     const safeAddress = await aMinedSafe(store)
@@ -51,29 +53,36 @@ describe('DOM > Feature > Enable and disable default tokens', () => {
 
     // WHEN
     const TokensDom = await renderSafeView(store, safeAddress)
-    await sleep(400)
 
     // Check if only ETH is enabled
-    let balanceRows = TokensDom.getAllByTestId(BALANCE_ROW_TEST_ID)
+    let balanceRows = await waitForElement(() => TokensDom.getAllByTestId(BALANCE_ROW_TEST_ID))
     expect(balanceRows.length).toBe(1)
 
     // THEN
     clickOnManageTokens(TokensDom)
-    toggleToken(TokensDom, 'FTE')
-    toggleToken(TokensDom, 'STE')
+    await toggleToken(TokensDom, 'FTE')
+    await toggleToken(TokensDom, 'STE')
     closeManageTokensModal(TokensDom)
+
+    // Wait for active tokens to save
+    await sleep(1500)
 
     // Check if tokens were enabled
     balanceRows = TokensDom.getAllByTestId(BALANCE_ROW_TEST_ID)
     expect(balanceRows.length).toBe(3)
     expect(balanceRows[1]).toHaveTextContent('FTE')
     expect(balanceRows[2]).toHaveTextContent('STE')
+    const tokensFromStorage = await getActiveTokens()
+
+    expect(Object.keys(tokensFromStorage)).toContain(firstErc20Token.address)
+    expect(Object.keys(tokensFromStorage)).toContain(secondErc20Token.address)
 
     // disable tokens
     clickOnManageTokens(TokensDom)
-    toggleToken(TokensDom, 'FTE')
-    toggleToken(TokensDom, 'STE')
+    await toggleToken(TokensDom, 'FTE')
+    await toggleToken(TokensDom, 'STE')
     closeManageTokensModal(TokensDom)
+    await sleep(1500)
 
     // check if tokens were disabled
     balanceRows = TokensDom.getAllByTestId(BALANCE_ROW_TEST_ID)

@@ -1,6 +1,8 @@
 // @flow
 import { type FieldValidator } from 'final-form'
+import { List } from 'immutable'
 import Web3Integration from '~/logic/wallets/web3Integration'
+import { sameAddress } from '~/logic/wallets/ethAddresses'
 
 export const simpleMemoize = (fn: Function) => {
   let lastArg
@@ -16,11 +18,11 @@ export const simpleMemoize = (fn: Function) => {
 
 type Field = boolean | string | null | typeof undefined
 
-export const required = simpleMemoize((value: Field) => (value ? undefined : 'Required'))
+export const required = (value: Field) => (value ? undefined : 'Required')
 
 export const mustBeInteger = (value: string) => (!Number.isInteger(Number(value)) || value.includes('.') ? 'Must be an integer' : undefined)
 
-export const mustBeFloat = (value: number) => (Number.isNaN(Number(value)) ? 'Must be a number' : undefined)
+export const mustBeFloat = (value: number) => (value && Number.isNaN(Number(value)) ? 'Must be a number' : undefined)
 
 export const greaterThan = (min: number) => (value: string) => {
   if (Number.isNaN(Number(value)) || Number.parseFloat(value) > Number(min)) {
@@ -48,8 +50,8 @@ export const minValue = (min: number) => (value: string) => {
   return `Should be at least ${min}`
 }
 
-export const maxValue = (max: number) => (value: string) => {
-  if (Number.isNaN(Number(value)) || Number.parseInt(value, 10) <= Number(max)) {
+export const maxValue = (max: number | string) => (value: string) => {
+  if (Number.isNaN(Number(value)) || parseFloat(value, 10) <= parseFloat(max, 10)) {
     return undefined
   }
 
@@ -61,14 +63,25 @@ export const ok = () => undefined
 export const mustBeEthereumAddress = simpleMemoize((address: Field) => {
   const isAddress: boolean = Web3Integration.web3.utils.isAddress(address)
 
-  return isAddress ? undefined : 'Address should be a valid Ethereum address'
+  return isAddress ? undefined : 'Address should be a valid Ethereum address or ENS name'
+})
+
+export const mustBeEthereumContractAddress = simpleMemoize(async (address: string) => {
+  const contractCode: string = await Web3Integration.web3.eth.getCode(address)
+
+  return !contractCode || contractCode.replace('0x', '').replace(/0/g, '') === ''
+    ? 'Address should be a valid Ethereum contract address or ENS name'
+    : undefined
 })
 
 export const minMaxLength = (minLen: string | number, maxLen: string | number) => (value: string) => (value.length >= +minLen && value.length <= +maxLen ? undefined : `Should be ${minLen} to ${maxLen} symbols`)
 
 export const ADDRESS_REPEATED_ERROR = 'Address already introduced'
 
-export const uniqueAddress = (addresses: string[]) => simpleMemoize((value: string) => (addresses.includes(value) ? ADDRESS_REPEATED_ERROR : undefined))
+export const uniqueAddress = (addresses: string[] | List<string>) => simpleMemoize((value: string) => {
+  const addressAlreadyExists = addresses.some((address) => sameAddress(value, address))
+  return addressAlreadyExists ? ADDRESS_REPEATED_ERROR : undefined
+})
 
 export const composeValidators = (...validators: Function[]): FieldValidator => (value: Field) => validators.reduce((error, validator) => error || validator(value), undefined)
 
@@ -82,7 +95,7 @@ export const inLimit = (limit: number, base: number, baseText: string, symbol: s
   return `Should not exceed ${max} ${symbol} (amount to reach ${baseText})`
 }
 
-export const differentFrom = (diffValue: string) => (value: string) => {
+export const differentFrom = (diffValue: string | number) => (value: string) => {
   if (value === diffValue.toString()) {
     return `Value should be different than ${value}`
   }

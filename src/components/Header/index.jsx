@@ -1,29 +1,37 @@
 // @flow
 import * as React from 'react'
 import { connect } from 'react-redux'
+import { withSnackbar } from 'notistack'
 import { logComponentStack, type Info } from '~/utils/logBoundaries'
-import { WALLET_ERROR_MSG } from '~/logic/wallets/store/actions'
 import Web3Integration from '~/logic/wallets/web3Integration'
 import showSnackbarMsgAction from '~/components/Snackbar/store/actions/showSnackbarMsg'
-import ProviderAccesible from './component/ProviderInfo/ProviderAccesible'
-import UserDetails from './component/ProviderDetails/UserDetails'
-import ProviderDisconnected from './component/ProviderInfo/ProviderDisconnected'
-import ConnectDetails from './component/ProviderDetails/ConnectDetails'
-import Layout from './component/Layout'
+import { getProviderInfo } from '~/logic/wallets/getWeb3'
+import type { ProviderProps } from '~/logic/wallets/store/model/provider'
+import { NOTIFICATIONS, showSnackbar } from '~/logic/notifications'
+import ProviderAccessible from './components/ProviderInfo/ProviderAccessible'
+import UserDetails from './components/ProviderDetails/UserDetails'
+import ProviderDisconnected from './components/ProviderInfo/ProviderDisconnected'
+import ConnectDetails from './components/ProviderDetails/ConnectDetails'
+import Layout from './components/Layout'
 import selector, { type SelectorProps } from './selector'
 
 type Props = SelectorProps & {
-  showSnackbarMsg: (message: string, variant: string) => void,
+  enqueueSnackbar: Function,
 }
 
 type State = {
   hasError: boolean,
 }
 
-
 class HeaderComponent extends React.PureComponent<Props, State> {
-  state = {
-    hasError: false,
+  providerListener: ?IntervalID
+
+  constructor(props) {
+    super(props)
+
+    this.state = {
+      hasError: false,
+    }
   }
 
   componentDidMount() {
@@ -32,15 +40,32 @@ class HeaderComponent extends React.PureComponent<Props, State> {
   }
 
   componentDidCatch(error: Error, info: Info) {
-    const { showSnackbarMsg } = this.props
+    const { enqueueSnackbar, closeSnackbar } = this.props
+
     this.setState({ hasError: true })
-    showSnackbarMsg(WALLET_ERROR_MSG, 'error')
+    showSnackbar(NOTIFICATIONS.CONNECT_WALLET_ERROR_MSG, enqueueSnackbar, closeSnackbar)
 
     logComponentStack(error, info)
   }
 
   onDisconnect = () => {
     Web3Integration.disconnect()
+  }
+
+  onConnect = async () => {
+    const { enqueueSnackbar, closeSnackbar } = this.props
+
+    clearInterval(this.providerListener)
+    // let currentProvider: ProviderProps = await getProviderInfo()
+    // fetchProvider(currentProvider, enqueueSnackbar, closeSnackbar)
+
+    // this.providerListener = setInterval(async () => {
+    //   const newProvider: ProviderProps = await getProviderInfo()
+    //   if (currentProvider && JSON.stringify(currentProvider) !== JSON.stringify(newProvider)) {
+    //     fetchProvider(newProvider, enqueueSnackbar, closeSnackbar)
+    //   }
+    //   currentProvider = newProvider
+    // }, 2000)
   }
 
   getProviderInfoBased = () => {
@@ -53,7 +78,7 @@ class HeaderComponent extends React.PureComponent<Props, State> {
       return <ProviderDisconnected />
     }
 
-    return <ProviderAccesible provider={provider} network={network} userAddress={userAddress} connected={available} />
+    return <ProviderAccessible provider={provider} network={network} userAddress={userAddress} connected={available} />
   }
 
   getProviderDetailsBased = () => {
@@ -90,6 +115,6 @@ const Header = connect<Object, Object, ?Function, ?Object>(
   {
     showSnackbarMsg: showSnackbarMsgAction,
   },
-)(HeaderComponent)
+)(withSnackbar(HeaderComponent))
 
 export default Header

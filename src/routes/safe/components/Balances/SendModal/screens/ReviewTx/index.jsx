@@ -1,9 +1,11 @@
 // @flow
 import React from 'react'
+import { BigNumber } from 'bignumber.js'
 import OpenInNew from '@material-ui/icons/OpenInNew'
 import { withStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
 import IconButton from '@material-ui/core/IconButton'
+import { withSnackbar } from 'notistack'
 import Paragraph from '~/components/layout/Paragraph'
 import Row from '~/components/layout/Row'
 import Link from '~/components/layout/Link'
@@ -16,9 +18,10 @@ import { copyToClipboard } from '~/utils/clipboard'
 import Hairline from '~/components/layout/Hairline'
 import SafeInfo from '~/routes/safe/components/Balances/SendModal/SafeInfo'
 import { setImageToPlaceholder } from '~/routes/safe/components/Balances/utils'
-import { getStandardTokenContract } from '~/logic/tokens/store/actions/fetchTokens'
+import { getHumanFriendlyToken } from '~/logic/tokens/store/actions/fetchTokens'
 import { EMPTY_DATA } from '~/logic/wallets/ethTransactions'
 import Web3Integration from '~/logic/wallets/web3Integration'
+import { TX_NOTIFICATION_TYPES } from '~/logic/safe/transactions'
 import ArrowDown from '../assets/arrow-down.svg'
 import { secondary } from '~/theme/variables'
 import { isEther } from '~/logic/tokens/utils/tokenHelpers'
@@ -26,14 +29,16 @@ import { styles } from './style'
 
 type Props = {
   onClose: () => void,
+  setActiveScreen: Function,
   classes: Object,
   safeAddress: string,
   etherScanLink: string,
   safeName: string,
-  onClickBack: Function,
   ethBalance: string,
   tx: Object,
   createTransaction: Function,
+  enqueueSnackbar: Function,
+  closeSnackbar: Function,
 }
 
 const openIconStyle = {
@@ -43,14 +48,16 @@ const openIconStyle = {
 
 const ReviewTx = ({
   onClose,
+  setActiveScreen,
   classes,
   safeAddress,
   etherScanLink,
   safeName,
   ethBalance,
   tx,
-  onClickBack,
   createTransaction,
+  enqueueSnackbar,
+  closeSnackbar,
 }: Props) => {
   const submitTx = async () => {
     const { web3 } = Web3Integration
@@ -60,22 +67,32 @@ const ReviewTx = ({
     let txAmount = web3.utils.toWei(tx.amount, 'ether')
 
     if (!isSendingETH) {
-      const StandardToken = await getStandardTokenContract()
-      const tokenInstance = await StandardToken.at(tx.token.address)
+      const HumanFriendlyToken = await getHumanFriendlyToken()
+      const tokenInstance = await HumanFriendlyToken.at(tx.token.address)
+      const decimals = await tokenInstance.decimals()
+      txAmount = new BigNumber(tx.amount).times(10 ** decimals.toNumber()).toString()
 
       txData = tokenInstance.contract.methods.transfer(tx.recipientAddress, txAmount).encodeABI()
       // txAmount should be 0 if we send tokens
       // the real value is encoded in txData and will be used by the contract
-      // if txAmount > 0 it would send ETH from the safe
+      // if txAmount > 0 it would send ETH from the Safe
       txAmount = 0
     }
 
-    createTransaction(safeAddress, txRecipient, txAmount, txData)
+    createTransaction(
+      safeAddress,
+      txRecipient,
+      txAmount,
+      txData,
+      TX_NOTIFICATION_TYPES.STANDARD_TX,
+      enqueueSnackbar,
+      closeSnackbar,
+    )
     onClose()
   }
 
   return (
-    <React.Fragment>
+    <>
       <Row align="center" grow className={classes.heading}>
         <Paragraph weight="bolder" className={classes.headingText} noMargin>
           Send Funds
@@ -87,7 +104,12 @@ const ReviewTx = ({
       </Row>
       <Hairline />
       <Block className={classes.container}>
-        <SafeInfo safeAddress={safeAddress} etherScanLink={etherScanLink} safeName={safeName} ethBalance={ethBalance} />
+        <SafeInfo
+          safeAddress={safeAddress}
+          etherScanLink={etherScanLink}
+          safeName={safeName}
+          ethBalance={ethBalance}
+        />
         <Row margin="md">
           <Col xs={1}>
             <img src={ArrowDown} alt="Arrow Down" style={{ marginLeft: '8px' }} />
@@ -130,24 +152,23 @@ const ReviewTx = ({
       </Block>
       <Hairline style={{ position: 'absolute', bottom: 85 }} />
       <Row align="center" className={classes.buttonRow}>
-        <Button className={classes.button} minWidth={140} minHeight={42} onClick={onClickBack}>
+        <Button minWidth={140} onClick={() => setActiveScreen('sendFunds')}>
           Back
         </Button>
         <Button
           type="submit"
-          className={classes.button}
           onClick={submitTx}
           variant="contained"
           minWidth={140}
-          minHeight={42}
           color="primary"
           data-testid="submit-tx-btn"
+          className={classes.submitButton}
         >
-          SUBMIT
+          Submit
         </Button>
       </Row>
-    </React.Fragment>
+    </>
   )
 }
 
-export default withStyles(styles)(ReviewTx)
+export default withStyles(styles)(withSnackbar(ReviewTx))

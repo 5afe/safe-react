@@ -148,6 +148,7 @@ module.exports = {
           },
         ],
       },
+      { test: /\.(woff|woff2)$/, loader: 'url-loader?limit=100000' },
       {
         test: /\.(jpe?g|png|svg)$/i,
         exclude: /node_modules/,

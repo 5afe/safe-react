@@ -72,6 +72,7 @@ export const aMinedSafe = async (
   store: Store<GlobalState>,
   owners: number = 1,
   threshold: number = 1,
+  name: string = 'Safe Name',
 ): Promise<string> => {
   const provider = await Web3Integration.getProviderInfo()
   const walletRecord = makeProvider(provider)
@@ -79,7 +80,7 @@ export const aMinedSafe = async (
 
   const accounts = await Web3Integration.web3.eth.getAccounts()
   const form = {
-    [FIELD_NAME]: 'Safe Name',
+    [FIELD_NAME]: name,
     [FIELD_CONFIRMATIONS]: `${threshold}`,
     [FIELD_OWNERS]: `${owners}`,
   }

@@ -18,20 +18,36 @@ yarn add flow-type // recommended usage of -g flag
 
 We use [yarn](https://yarnpkg.com) in our infrastacture, so we decided to go with yarn in the README
 
-### Installing
+### Installing and running
 
 A step by step series of examples that tell you have to get a development env running
 
-Run ganache in one terminal
-```
-ganache-cli -b 3
-```
-
-Start the project in the other one
+Install dependencies for the project:
 ```
 yarn install
+```
+
+For using the Rinkeby services:
+```
 yarn start
 ```
+
+If you prefer using Mainnet ones:
+```
+yarn start-mainnet
+```
+
+### Building
+For Rinkeby:
+```
+yarn build
+```
+
+For Mainnet:
+```
+yarn build-mainnet
+```
+
 
 ## Running the tests
 
@@ -102,9 +118,10 @@ We use [SemVer](http://semver.org/) for versioning. For the versions available, 
 
 ## Authors
 
-* **Adolfo Panizo** - [apanizo](https://github.com/apanizo)
+- Germán Martínez([germartinez](https://github.com/germartinez))
+- Mikhail Mikheev([mikheevm](https://github.com/mikheevm))
 
-See also the list of [contributors](https://github.com/gnosis/gnosis-team-safe/contributors) who participated in this project.
+See the full list of [contributors](https://github.com/gnosis/gnosis-team-safe/contributors) who participated in this project.
 
 ## License
 

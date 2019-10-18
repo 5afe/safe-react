@@ -13,10 +13,10 @@ import { getOwnerNameBy, getOwnerAddressBy, FIELD_CONFIRMATIONS } from '~/routes
 import { history } from '~/store'
 import { secondary } from '~/theme/variables'
 
-const getSteps = () => ['Start', 'Owners and confirmations', 'Review']
+const getSteps = () => ['Name', 'Owners and confirmations', 'Review']
 
 const initialValuesFrom = (userAccount: string) => ({
-  [getOwnerNameBy(0)]: 'My Metamask (me)',
+  [getOwnerNameBy(0)]: 'My Wallet',
   [getOwnerAddressBy(0)]: userAccount,
   [FIELD_CONFIRMATIONS]: '1',
 })
@@ -51,7 +51,7 @@ const Layout = ({
   const initialValues = initialValuesFrom(userAccount)
 
   return (
-    <React.Fragment>
+    <>
       {provider ? (
         <Block>
           <Row align="center">
@@ -69,13 +69,15 @@ const Layout = ({
           >
             <StepperPage>{SafeNameField}</StepperPage>
             <StepperPage>{SafeOwnersFields}</StepperPage>
-            <StepperPage network={network}>{Review}</StepperPage>
+            <StepperPage network={network} userAccount={userAccount}>
+              {Review}
+            </StepperPage>
           </Stepper>
         </Block>
       ) : (
         <div>No web3 provider detected</div>
       )}
-    </React.Fragment>
+    </>
   )
 }
 

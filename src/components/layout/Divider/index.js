@@ -4,7 +4,7 @@ import { border } from '~/theme/variables'
 
 const style = {
   height: '100%',
-  borderRight: `solid 1px ${border}`,
+  borderRight: `solid 2px ${border}`,
 }
 
 const Divider = () => <div style={style} />

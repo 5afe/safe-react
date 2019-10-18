@@ -3,8 +3,16 @@ import * as React from 'react'
 import { connect } from 'react-redux'
 import Page from '~/components/layout/Page'
 import Layout from '~/routes/safe/components/Layout'
+import { type Token } from '~/logic/tokens/store/model/token'
 import selector, { type SelectorProps } from './selector'
 import actions, { type Actions } from './actions'
+
+type State = {
+  showReceive: boolean,
+  sendFunds: Object,
+}
+
+type Action = 'Send' | 'Receive'
 
 export type Props = Actions &
   SelectorProps & {
@@ -13,7 +21,15 @@ export type Props = Actions &
 
 const TIMEOUT = process.env.NODE_ENV === 'test' ? 1500 : 5000
 
-class SafeView extends React.Component<Props> {
+class SafeView extends React.Component<Props, State> {
+  state = {
+    sendFunds: {
+      isOpen: false,
+      selectedToken: undefined,
+    },
+    showReceive: false,
+  }
+
   intervalId: IntervalID
 
   componentDidMount() {
@@ -23,6 +39,7 @@ class SafeView extends React.Component<Props> {
 
     fetchSafe(safeUrl)
     fetchTokenBalances(safeUrl, activeTokens)
+
     // fetch tokens there to get symbols for tokens in TXs list
     fetchTokens()
 
@@ -44,15 +61,43 @@ class SafeView extends React.Component<Props> {
     clearInterval(this.intervalId)
   }
 
+  onShow = (action: Action) => () => {
+    this.setState(() => ({ [`show${action}`]: true }))
+  }
+
+  onHide = (action: Action) => () => {
+    this.setState(() => ({ [`show${action}`]: false }))
+  }
+
+  showSendFunds = (token: Token) => {
+    this.setState({
+      sendFunds: {
+        isOpen: true,
+        selectedToken: token,
+      },
+    })
+  }
+
+  hideSendFunds = () => {
+    this.setState({
+      sendFunds: {
+        isOpen: false,
+        selectedToken: undefined,
+      },
+    })
+  }
+
   checkForUpdates() {
     const {
-      safeUrl, activeTokens, fetchTokenBalances,
+      safeUrl, activeTokens, fetchTokenBalances, fetchEtherBalance,
     } = this.props
 
     fetchTokenBalances(safeUrl, activeTokens)
+    fetchEtherBalance(safeUrl)
   }
 
   render() {
+    const { sendFunds, showReceive } = this.state
     const {
       safe,
       provider,
@@ -83,6 +128,12 @@ class SafeView extends React.Component<Props> {
           fetchTransactions={fetchTransactions}
           updateSafe={updateSafe}
           transactions={transactions}
+          sendFunds={sendFunds}
+          showReceive={showReceive}
+          onShow={this.onShow}
+          onHide={this.onHide}
+          showSendFunds={this.showSendFunds}
+          hideSendFunds={this.hideSendFunds}
         />
       </Page>
     )

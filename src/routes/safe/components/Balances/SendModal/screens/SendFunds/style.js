@@ -1,16 +1,16 @@
 // @flow
-import { lg, md, sm } from '~/theme/variables'
+import { lg, md, secondaryText } from '~/theme/variables'
 
 export const styles = () => ({
   heading: {
-    padding: `${sm} ${lg}`,
+    padding: `${md} ${lg}`,
     justifyContent: 'flex-start',
     boxSizing: 'border-box',
     maxHeight: '75px',
   },
   annotation: {
     letterSpacing: '-1px',
-    color: '#a2a8ba',
+    color: secondaryText,
     marginRight: 'auto',
     marginLeft: '20px',
   },
@@ -27,5 +27,13 @@ export const styles = () => ({
   buttonRow: {
     height: '84px',
     justifyContent: 'center',
+    '& > button': {
+      fontFamily: 'Averta',
+      fontSize: '16px',
+    },
+  },
+  submitButton: {
+    boxShadow: '1px 2px 10px 0 rgba(212, 212, 211, 0.59)',
+    marginLeft: '15px',
   },
 })

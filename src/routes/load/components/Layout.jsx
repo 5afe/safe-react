@@ -13,7 +13,7 @@ import { history } from '~/store'
 import { secondary } from '~/theme/variables'
 import { type SelectorProps } from '~/routes/load/container/selector'
 
-const getSteps = () => ['Details', 'Owners', 'Review']
+const getSteps = () => ['Name and address', 'Owners', 'Review']
 
 type Props = SelectorProps & {
   onLoadSafeSubmit: (values: Object) => Promise<void>,
@@ -29,6 +29,14 @@ const back = () => {
   history.goBack()
 }
 
+const formMutators = {
+  setValue: ([field, value], state, { changeValue }) => {
+    changeValue(state, field, () => value)
+  },
+}
+
+const buttonLabels = ['Next', 'Review', 'Load']
+
 const Layout = ({
   provider, onLoadSafeSubmit, network, userAddress,
 }: Props) => {
@@ -36,7 +44,7 @@ const Layout = ({
   const initialValues = {}
 
   return (
-    <React.Fragment>
+    <>
       {provider ? (
         <Block>
           <Row align="center">
@@ -45,7 +53,14 @@ const Layout = ({
             </IconButton>
             <Heading tag="h2">Load existing Safe</Heading>
           </Row>
-          <Stepper onSubmit={onLoadSafeSubmit} steps={steps} initialValues={initialValues} testId="load-safe-form">
+          <Stepper
+            onSubmit={onLoadSafeSubmit}
+            steps={steps}
+            initialValues={initialValues}
+            mutators={formMutators}
+            buttonLabels={buttonLabels}
+            testId="load-safe-form"
+          >
             <StepperPage validate={safeFieldsValidation}>{DetailsForm}</StepperPage>
             <StepperPage network={network}>{OwnerList}</StepperPage>
             <StepperPage network={network} userAddress={userAddress}>
@@ -56,7 +71,7 @@ const Layout = ({
       ) : (
         <div>No account detected</div>
       )}
-    </React.Fragment>
+    </>
   )
 }
 

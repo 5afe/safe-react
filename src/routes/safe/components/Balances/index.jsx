@@ -2,12 +2,12 @@
 import * as React from 'react'
 import { List } from 'immutable'
 import classNames from 'classnames/bind'
-import CallMade from '@material-ui/icons/CallMade'
-import CallReceived from '@material-ui/icons/CallReceived'
 import Checkbox from '@material-ui/core/Checkbox'
 import TableRow from '@material-ui/core/TableRow'
 import TableCell from '@material-ui/core/TableCell'
 import { withStyles } from '@material-ui/core/styles'
+import CallMade from '@material-ui/icons/CallMade'
+import CallReceived from '@material-ui/icons/CallReceived'
 import { type Token } from '~/logic/tokens/store/model/token'
 import Col from '~/components/layout/Col'
 import Row from '~/components/layout/Row'
@@ -51,14 +51,17 @@ type Props = {
 type Action = 'Token' | 'Send' | 'Receive'
 
 class Balances extends React.Component<Props, State> {
-  state = {
-    hideZero: false,
-    showToken: false,
-    sendFunds: {
-      isOpen: false,
-      selectedToken: undefined,
-    },
-    showReceive: false,
+  constructor(props) {
+    super(props)
+    this.state = {
+      hideZero: false,
+      showToken: false,
+      sendFunds: {
+        isOpen: false,
+        selectedToken: undefined,
+      },
+      showReceive: false,
+    }
   }
 
   onShow = (action: Action) => () => {
@@ -110,7 +113,7 @@ class Balances extends React.Component<Props, State> {
     } = this.props
 
     const columns = generateColumns()
-    const autoColumns = columns.filter(c => !c.custom)
+    const autoColumns = columns.filter((c) => !c.custom)
     const checkboxClasses = {
       root: classes.root,
     }
@@ -118,7 +121,7 @@ class Balances extends React.Component<Props, State> {
     const filteredData = filterByZero(getBalanceData(activeTokens), hideZero)
 
     return (
-      <React.Fragment>
+      <>
         <Row align="center" className={classes.message}>
           <Col xs={6}>
             <Checkbox
@@ -128,10 +131,12 @@ class Balances extends React.Component<Props, State> {
               color="secondary"
               disableRipple
             />
-            <Paragraph className={classes.zero}>Hide zero balances</Paragraph>
+            <Paragraph size="lg">Hide zero balances</Paragraph>
           </Col>
           <Col xs={6} end="sm">
-            <ButtonLink onClick={this.onShow('Token')} testId="manage-tokens-btn">Manage Tokens</ButtonLink>
+            <ButtonLink size="lg" onClick={this.onShow('Token')} testId="manage-tokens-btn">
+              Manage Tokens
+            </ButtonLink>
             <Modal
               title="Manage Tokens"
               description="Enable and disable tokens to be listed"
@@ -150,6 +155,7 @@ class Balances extends React.Component<Props, State> {
         <Table
           label="Balances"
           defaultOrderBy={BALANCE_TABLE_ASSET_ID}
+          defaultRowsPerPage={10}
           columns={columns}
           data={filteredData}
           size={filteredData.size}
@@ -171,10 +177,9 @@ class Balances extends React.Component<Props, State> {
                       color="primary"
                       className={classes.send}
                       onClick={() => this.showSendFunds(row.asset.name)}
-                      rounded
                       testId="balance-send-btn"
                     >
-                      <CallMade className={classNames(classes.leftIcon, classes.iconSmall)} />
+                      <CallMade alt="Send Transaction" className={classNames(classes.leftIcon, classes.iconSmall)} />
                         Send
                     </Button>
                   )}
@@ -184,16 +189,14 @@ class Balances extends React.Component<Props, State> {
                     color="primary"
                     className={classes.receive}
                     onClick={this.onShow('Receive')}
-                    rounded
                   >
-                    <CallReceived className={classNames(classes.leftIcon, classes.iconSmall)} />
+                    <CallReceived alt="Receive Transaction" className={classNames(classes.leftIcon, classes.iconSmall)} />
                       Receive
                   </Button>
                 </Row>
               </TableCell>
             </TableRow>
-          ))
-          }
+          ))}
         </Table>
         <SendModal
           onClose={this.hideSendFunds}
@@ -205,21 +208,22 @@ class Balances extends React.Component<Props, State> {
           tokens={activeTokens}
           selectedToken={sendFunds.selectedToken}
           createTransaction={createTransaction}
+          activeScreenType="sendFunds"
         />
         <Modal
           title="Receive Tokens"
           description="Receive Tokens Form"
           handleClose={this.onHide('Receive')}
+          paperClassName={classes.receiveModal}
           open={showReceive}
         >
           <Receive
             safeName={safeName}
             safeAddress={safeAddress}
-            etherScanLink={etherScanLink}
             onClose={this.onHide('Receive')}
           />
         </Modal>
-      </React.Fragment>
+      </>
     )
   }
 }

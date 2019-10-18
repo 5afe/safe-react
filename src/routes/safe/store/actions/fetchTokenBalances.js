@@ -1,10 +1,9 @@
 // @flow
 import type { Dispatch as ReduxDispatch } from 'redux'
-import { List } from 'immutable'
+import { Map, List } from 'immutable'
 import { BigNumber } from 'bignumber.js'
 import { type GlobalState } from '~/store/index'
 import { type Token } from '~/logic/tokens/store/model/token'
-import TokenBalanceRecord from '~/routes/safe/store/models/tokenBalance'
 import { getStandardTokenContract } from '~/logic/tokens/store/actions/fetchTokens'
 import updateSafe from './updateSafe'
 import { ETH_ADDRESS } from '~/logic/tokens/utils/tokenHelpers'
@@ -36,16 +35,23 @@ const fetchTokenBalances = (safeAddress: string, tokens: List<Token>) => async (
     const withBalances = await Promise.all(
       tokens.map(async (token) => {
         const balance = await calculateBalanceOf(token.address, safeAddress, token.decimals)
-        return TokenBalanceRecord({
+        return {
           address: token.address,
           balance,
-        })
+        }
       }),
     )
-    dispatch(updateSafe({ address: safeAddress, balances: List(withBalances) }))
+
+    const balances = Map().withMutations((map) => {
+      withBalances.forEach(({ address, balance }) => {
+        map.set(address, balance)
+      })
+    })
+
+    dispatch(updateSafe({ address: safeAddress, balances }))
   } catch (err) {
     // eslint-disable-next-line
-    console.error('Error while loading active tokens from storage:', err)
+    console.error('Error when fetching token balances:', err)
   }
 }
 

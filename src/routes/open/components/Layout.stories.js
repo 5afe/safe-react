@@ -8,7 +8,7 @@ import Web3Integration from '~/logic/wallets/web3Integration'
 import { sleep } from '~/utils/timer'
 import Component from './Layout'
 
-const FrameDecorator = story => <div className={styles.frame}>{story()}</div>
+const FrameDecorator = (story) => <div className={styles.frame}>{story()}</div>
 
 const store = new Store({
   safeAddress: '',

@@ -19,11 +19,12 @@ type Props = SelectorProps & Actions
 export const loadSafe = async (
   safeName: string,
   safeAddress: string,
-  owners: Array,
+  owners: Array<*>,
   addSafe: Function,
 ) => {
   const safeProps = await buildSafe(safeAddress, safeName)
   safeProps.owners = owners
+
   await addSafe(safeProps)
 
   const storedSafes = (await loadFromStorage(SAFES_KEY)) || {}
@@ -49,8 +50,7 @@ class Load extends React.Component<Props> {
       const url = `${SAFELIST_ADDRESS}/${safeAddress}`
       history.push(url)
     } catch (error) {
-      // eslint-disable-next-line
-      console.log('Error while loading the Safe' + error)
+      console.error('Error while loading the Safe', error)
     }
   }
 

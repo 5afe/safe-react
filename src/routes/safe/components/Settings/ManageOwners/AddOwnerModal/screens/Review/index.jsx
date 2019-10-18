@@ -31,20 +31,19 @@ type Props = {
   classes: Object,
   safeName: string,
   owners: List<Owner>,
-  network: string,
   values: Object,
   onClickBack: Function,
   onSubmit: Function,
 }
 
 const ReviewAddOwner = ({
-  classes, onClose, safeName, owners, network, values, onClickBack, onSubmit,
+  classes, onClose, safeName, owners, values, onClickBack, onSubmit,
 }: Props) => {
   const handleSubmit = () => {
     onSubmit()
   }
   return (
-    <React.Fragment>
+    <>
       <Row align="center" grow className={classes.heading}>
         <Paragraph weight="bolder" className={classes.manage} noMargin>
           Add new owner
@@ -80,7 +79,6 @@ const ReviewAddOwner = ({
                   {values.threshold}
                   {' '}
                   out of
-                  {' '}
                   {owners.size + 1}
                   {' '}
                   owner(s)
@@ -97,7 +95,7 @@ const ReviewAddOwner = ({
               </Paragraph>
             </Row>
             <Hairline />
-            {owners.map(owner => (
+            {owners.map((owner) => (
               <React.Fragment key={owner.address}>
                 <Row className={classes.owner}>
                   <Col xs={1} align="center">
@@ -108,11 +106,11 @@ const ReviewAddOwner = ({
                       <Paragraph weight="bolder" size="lg" noMargin>
                         {owner.name}
                       </Paragraph>
-                      <Block align="center" className={classes.user}>
+                      <Block justify="center" className={classes.user}>
                         <Paragraph size="md" color="disabled" noMargin>
                           {owner.address}
                         </Paragraph>
-                        <Link className={classes.open} to={getEtherScanLink('address', owner.address, network)} target="_blank">
+                        <Link className={classes.open} to={getEtherScanLink('address', owner.address)} target="_blank">
                           <OpenInNew style={openIconStyle} />
                         </Link>
                       </Block>
@@ -137,11 +135,15 @@ const ReviewAddOwner = ({
                   <Paragraph weight="bolder" size="lg" noMargin>
                     {values.ownerName}
                   </Paragraph>
-                  <Block align="center" className={classes.user}>
+                  <Block justify="center" className={classes.user}>
                     <Paragraph size="md" color="disabled" noMargin>
                       {values.ownerAddress}
                     </Paragraph>
-                    <Link className={classes.open} to={getEtherScanLink('address', values.ownerAddress, network)} target="_blank">
+                    <Link
+                      className={classes.open}
+                      to={getEtherScanLink('address', values.ownerAddress)}
+                      target="_blank"
+                    >
                       <OpenInNew style={openIconStyle} />
                     </Link>
                   </Block>
@@ -154,22 +156,22 @@ const ReviewAddOwner = ({
       </Block>
       <Hairline />
       <Row align="center" className={classes.buttonRow}>
-        <Button className={classes.button} minWidth={140} onClick={onClickBack}>
+        <Button minWidth={140} minHeight={42} onClick={onClickBack}>
           Back
         </Button>
         <Button
           type="submit"
           onClick={handleSubmit}
-          className={classes.button}
           variant="contained"
           minWidth={140}
+          minHeight={42}
           color="primary"
           testId={ADD_OWNER_SUBMIT_BTN_TEST_ID}
         >
           Submit
         </Button>
       </Row>
-    </React.Fragment>
+    </>
   )
 }
 

@@ -1,5 +1,5 @@
 // @flow
-import { List } from 'immutable'
+import { Set } from 'immutable'
 import type { Dispatch as ReduxDispatch } from 'redux'
 import { type GlobalState } from '~/store'
 import updateSafe from './updateSafe'
@@ -14,7 +14,7 @@ import updateSafe from './updateSafe'
 //   },
 // })
 
-const updateActiveTokens = (safeAddress: string, activeTokens: List<string>) => async (
+const updateActiveTokens = (safeAddress: string, activeTokens: Set<string>) => async (
   dispatch: ReduxDispatch<GlobalState>,
 ) => {
   dispatch(updateSafe({ address: safeAddress, activeTokens }))

@@ -1,7 +1,7 @@
 // @flow
 import { List, Map } from 'immutable'
 import { createSelector, createStructuredSelector, type Selector } from 'reselect'
-import { isAfter } from 'date-fns'
+import { isAfter, parseISO } from 'date-fns'
 import {
   safeSelector,
   safeActiveTokensSelector,
@@ -18,7 +18,6 @@ import { safeTransactionsSelector } from '~/routes/safe/store/selectors/index'
 import { orderedTokenListSelector, tokensSelector } from '~/logic/tokens/store/selectors'
 import { type Token } from '~/logic/tokens/store/model/token'
 import { type Transaction, type TransactionStatus } from '~/routes/safe/store/models/transaction'
-import { type TokenBalance } from '~/routes/safe/store/models/tokenBalance'
 import { safeParamAddressSelector } from '../store/selectors'
 import { getEthAsToken } from '~/logic/tokens/utils/tokenHelpers'
 
@@ -59,7 +58,7 @@ export const grantedSelector: Selector<GlobalState, RouterProps, boolean> = crea
       return false
     }
 
-    const owners: List<Owner> = safe.get('owners')
+    const { owners }: List<Owner> = safe
     if (!owners) {
       return false
     }
@@ -84,14 +83,14 @@ const extendedSafeTokensSelector: Selector<GlobalState, RouterProps, List<Token>
   safeBalancesSelector,
   tokensSelector,
   safeEthAsTokenSelector,
-  (safeTokens: List<string>, balances: List<TokenBalance>, tokensList: Map<string, Token>, ethAsToken: Token) => {
+  (safeTokens: List<string>, balances: Map<string, string>, tokensList: Map<string, Token>, ethAsToken: Token) => {
     const extendedTokens = Map().withMutations((map) => {
       safeTokens.forEach((tokenAddress: string) => {
         const baseToken = tokensList.get(tokenAddress)
-        const tokenBalance = balances.find(tknBalance => tknBalance.address === tokenAddress)
+        const tokenBalance = balances.get(tokenAddress)
 
         if (baseToken) {
-          map.set(tokenAddress, baseToken.set('balance', tokenBalance ? tokenBalance.balance : '0'))
+          map.set(tokenAddress, baseToken.set('balance', tokenBalance || '0'))
         }
       })
 
@@ -116,7 +115,8 @@ const extendedTransactionsSelector: Selector<GlobalState, RouterProps, List<Tran
       let replacementTransaction
       if (!tx.isExecuted) {
         replacementTransaction = transactions.findLast(
-          transaction => transaction.nonce === tx.nonce && isAfter(transaction.submissionDate, tx.submissionDate),
+          (transaction) => transaction.nonce === tx.nonce
+            && isAfter(parseISO(transaction.submissionDate), parseISO(tx.submissionDate)),
         )
         if (replacementTransaction) {
           extendedTx = tx.set('cancelled', true)

@@ -1,5 +1,6 @@
 // @flow
 import React from 'react'
+import { withSnackbar } from 'notistack'
 import { withStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
 import OpenInNew from '@material-ui/icons/OpenInNew'
@@ -14,8 +15,10 @@ import Field from '~/components/forms/Field'
 import TextField from '~/components/forms/TextField'
 import Paragraph from '~/components/layout/Paragraph'
 import Identicon from '~/components/Identicon'
-import { getEtherScanLink } from '~/logic/wallets/etherscan'
 import { composeValidators, required, minMaxLength } from '~/components/forms/validator'
+import { getNofiticationsFromTxType, showSnackbar } from '~/logic/notifications'
+import { TX_NOTIFICATION_TYPES } from '~/logic/safe/transactions'
+import { getEtherScanLink } from '~/logic/wallets/getWeb3'
 import Modal from '~/components/Modal'
 import { styles } from './style'
 import { secondary } from '~/theme/variables'
@@ -34,9 +37,10 @@ type Props = {
   isOpen: boolean,
   safeAddress: string,
   ownerAddress: string,
-  network: string,
   selectedOwnerName: string,
   editSafeOwner: Function,
+  enqueueSnackbar: Function,
+  closeSnackbar: Function,
 }
 
 const EditOwnerComponent = ({
@@ -47,10 +51,15 @@ const EditOwnerComponent = ({
   ownerAddress,
   selectedOwnerName,
   editSafeOwner,
-  network,
+  enqueueSnackbar,
+  closeSnackbar,
 }: Props) => {
   const handleSubmit = (values) => {
     editSafeOwner({ safeAddress, ownerAddress, ownerName: values.ownerName })
+
+    const notification = getNofiticationsFromTxType(TX_NOTIFICATION_TYPES.OWNER_NAME_CHANGE_TX)
+    showSnackbar(notification.afterExecution, enqueueSnackbar, closeSnackbar)
+
     onClose()
   }
 
@@ -73,7 +82,7 @@ const EditOwnerComponent = ({
       <Hairline />
       <GnoForm onSubmit={handleSubmit}>
         {() => (
-          <React.Fragment>
+          <>
             <Block className={classes.container}>
               <Row margin="md">
                 <Field
@@ -89,12 +98,12 @@ const EditOwnerComponent = ({
                 />
               </Row>
               <Row>
-                <Block align="center" className={classes.user}>
+                <Block justify="center" className={classes.user}>
                   <Identicon address={ownerAddress} diameter={32} />
                   <Paragraph style={{ marginLeft: 10 }} size="md" color="disabled" noMargin>
                     {ownerAddress}
                   </Paragraph>
-                  <Link className={classes.open} to={getEtherScanLink('address', ownerAddress, network)} target="_blank">
+                  <Link className={classes.open} to={getEtherScanLink('address', ownerAddress)} target="_blank">
                     <OpenInNew style={openIconStyle} />
                   </Link>
                 </Block>
@@ -102,20 +111,20 @@ const EditOwnerComponent = ({
             </Block>
             <Hairline />
             <Row align="center" className={classes.buttonRow}>
-              <Button className={classes.button} minWidth={140} onClick={onClose}>
+              <Button minWidth={140} minHeight={42} onClick={onClose}>
                 Cancel
               </Button>
-              <Button type="submit" className={classes.button} variant="contained" minWidth={140} color="primary" testId={SAVE_OWNER_CHANGES_BTN_TEST_ID}>
+              <Button type="submit" variant="contained" minWidth={140} minHeight={42} color="primary" testId={SAVE_OWNER_CHANGES_BTN_TEST_ID}>
                 Save
               </Button>
             </Row>
-          </React.Fragment>
+          </>
         )}
       </GnoForm>
     </Modal>
   )
 }
 
-const EditOwnerModal = withStyles(styles)(EditOwnerComponent)
+const EditOwnerModal = withStyles(styles)(withSnackbar(EditOwnerComponent))
 
 export default EditOwnerModal

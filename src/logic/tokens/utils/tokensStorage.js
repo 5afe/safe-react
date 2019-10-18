@@ -6,7 +6,7 @@ import { loadFromStorage, saveToStorage } from '~/utils/storage'
 export const ACTIVE_TOKENS_KEY = 'ACTIVE_TOKENS'
 export const CUSTOM_TOKENS_KEY = 'CUSTOM_TOKENS'
 
-// Tokens which are active at least in one of used safes in the app should be saved to localstorage
+// Tokens which are active at least in one of used Safes in the app should be saved to localstorage
 // to avoid iterating a large amount of data of tokens from the backend
 // Custom tokens should be saved too unless they're deleted (marking them as inactive doesn't count)
 
@@ -14,8 +14,7 @@ export const saveActiveTokens = async (tokens: Map<string, Token>) => {
   try {
     await saveToStorage(ACTIVE_TOKENS_KEY, tokens.toJS())
   } catch (err) {
-    // eslint-disable-next-line
-    console.log('Error storing tokens in localstorage')
+    console.error('Error storing tokens in localstorage', err)
   }
 }
 
@@ -31,17 +30,6 @@ export const getCustomTokens = async (): Promise<List<TokenProps>> => {
   return data ? List(data) : List()
 }
 
-export const setToken = async (safeAddress: string, token: Token) => {
-  const data: List<TokenProps> = await getCustomTokens()
-
-  try {
-    await saveToStorage(CUSTOM_TOKENS_KEY, data.push(token))
-  } catch (err) {
-    // eslint-disable-next-line
-    console.log('Error adding token in localstorage')
-  }
-}
-
 export const removeTokenFromStorage = async (safeAddress: string, token: Token) => {
   const data: List<TokenProps> = await getCustomTokens()
 
@@ -49,14 +37,13 @@ export const removeTokenFromStorage = async (safeAddress: string, token: Token) 
     const index = data.indexOf(token)
     await saveToStorage(CUSTOM_TOKENS_KEY, data.remove(index))
   } catch (err) {
-    // eslint-disable-next-line
-    console.log('Error removing token in localstorage')
+    console.error('Error removing token in localstorage', err)
   }
 }
 
 export const removeFromActiveTokens = async (safeAddress: string, token: Token) => {
   const activeTokens = await getActiveTokens()
-  const index = activeTokens.findIndex(activeToken => activeToken.name === token.name)
+  const index = activeTokens.findIndex((activeToken) => activeToken.name === token.name)
 
   if (index !== -1) {
     await saveActiveTokens(safeAddress, activeTokens.delete(index))

@@ -20,9 +20,6 @@ type Props = SelectorProps & {
 const vault = require('../assets/vault.svg')
 
 const styles = {
-  page: {
-    letterSpacing: '-1px',
-  },
   icon: {
     height: mediumFontSize,
     color: secondary,
@@ -38,15 +35,14 @@ const styles = {
     display: 'flex',
     alignItems: 'center',
     marginLeft: xs,
-    fontWeight: 'bolder',
   },
 }
 
 const Opening = ({
-  classes, name = 'Safe creation process', tx, network,
+  classes, name = 'Safe creation process', tx,
 }: Props) => (
   <Page align="center">
-    <Paragraph className={classes.page} color="secondary" size="xxl" weight="bolder" align="center">
+    <Paragraph color="primary" size="xxl" weight="bold" align="center">
       {name}
     </Paragraph>
     <Block margin="lg" align="center">
@@ -74,7 +70,7 @@ const Opening = ({
           Follow progress on
           {' '}
           <a
-            href={getEtherScanLink('tx', tx, network)}
+            href={getEtherScanLink('tx', tx)}
             target="_blank"
             rel="noopener noreferrer"
             className={classes.etherscan}

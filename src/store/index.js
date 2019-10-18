@@ -5,18 +5,18 @@ import {
   combineReducers, createStore, applyMiddleware, compose, type Reducer, type Store,
 } from 'redux'
 import thunk from 'redux-thunk'
-import provider, { PROVIDER_REDUCER_ID, type State as ProviderState } from '~/logic/wallets/store/reducer/provider'
-import safe, { SAFE_REDUCER_ID, type State as SafeState } from '~/routes/safe/store/reducer/safe'
+import safe, { SAFE_REDUCER_ID, type SafeReducerState as SafeState } from '~/routes/safe/store/reducer/safe'
 import safeStorage from '~/routes/safe/store/middleware/safeStorage'
-import tokens, { TOKEN_REDUCER_ID, type State as TokensState } from '~/logic/tokens/store/reducer/tokens'
 import transactions, {
   type State as TransactionsState,
   TRANSACTIONS_REDUCER_ID,
 } from '~/routes/safe/store/reducer/transactions'
-import snackbarMessages, {
-  type State as SnackbarState,
-  SNACKBAR_REDUCER_ID,
-} from '~/components/Snackbar/store/reducer'
+import provider, { PROVIDER_REDUCER_ID, type State as ProviderState } from '~/logic/wallets/store/reducer/provider'
+import tokens, { TOKEN_REDUCER_ID, type State as TokensState } from '~/logic/tokens/store/reducer/tokens'
+import notifications, {
+  NOTIFICATIONS_REDUCER_ID,
+  type State as NotificationsState,
+} from '~/logic/notifications/store/reducer/notifications'
 
 export const history = createBrowserHistory()
 
@@ -29,7 +29,7 @@ export type GlobalState = {
   safes: SafeState,
   tokens: TokensState,
   transactions: TransactionsState,
-  snackbar: SnackbarState,
+  notifications: NotificationsState,
 }
 
 export type GetState = () => GlobalState
@@ -40,9 +40,13 @@ const reducers: Reducer<GlobalState> = combineReducers({
   [SAFE_REDUCER_ID]: safe,
   [TOKEN_REDUCER_ID]: tokens,
   [TRANSACTIONS_REDUCER_ID]: transactions,
-  [SNACKBAR_REDUCER_ID]: snackbarMessages,
+  [NOTIFICATIONS_REDUCER_ID]: notifications,
 })
 
 export const store: Store<GlobalState> = createStore(reducers, finalCreateStore)
 
-export const aNewStore = (localState?: Object): Store<GlobalState> => createStore(reducers, localState, finalCreateStore)
+export const aNewStore = (localState?: Object): Store<GlobalState> => createStore(
+  reducers,
+  localState,
+  finalCreateStore,
+)

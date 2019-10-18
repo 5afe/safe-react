@@ -40,9 +40,9 @@ const Tokens = (props: Props) => {
   } = props
 
   return (
-    <React.Fragment>
+    <>
       <Row align="center" grow className={classes.heading}>
-        <Paragraph className={classes.manage} noMargin weight="bolder">
+        <Paragraph size="xl" noMargin weight="bolder">
           Manage Tokens
         </Paragraph>
         <IconButton onClick={onClose} disableRipple data-testid={MANAGE_TOKENS_MODAL_CLOSE_BUTTON_TEST_ID}>
@@ -72,7 +72,7 @@ const Tokens = (props: Props) => {
           tokens={tokens}
         />
       )}
-    </React.Fragment>
+    </>
   )
 }
 

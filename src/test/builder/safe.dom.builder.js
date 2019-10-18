@@ -17,14 +17,14 @@ export type DomSafe = {
 export const renderSafeInDom = async (owners: number = 1, threshold: number = 1): Promise<DomSafe> => {
   // create store
   const store = aNewStore()
-  // deploy safe updating store
+  // deploy Safe updating store
   const address = await aMinedSafe(store, owners, threshold)
   // have available accounts
   const accounts = await Web3Integration.web3().eth.getAccounts()
   // navigate to SAFE route
   const SafeDom = renderSafeView(store, address)
 
-  // add funds to safe
+  // add funds to Safe
   await sendEtherTo(address, '0.1')
   // wait until funds are displayed and buttons are enabled
   await sleep(3000)

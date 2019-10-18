@@ -1,5 +1,5 @@
 // @flow
-import { fireEvent, cleanup } from '@testing-library/react'
+import { fireEvent } from '@testing-library/react'
 import { aNewStore } from '~/store'
 import { aMinedSafe } from '~/test/builder/safe.redux.builder'
 import { renderSafeView } from '~/test/builder/safe.dom.utils'
@@ -7,8 +7,6 @@ import { sleep } from '~/utils/timer'
 import '@testing-library/jest-dom/extend-expect'
 import { SETTINGS_TAB_BTN_TEST_ID, SAFE_VIEW_NAME_HEADING_TEST_ID } from '~/routes/safe/components/Layout'
 import { SAFE_NAME_INPUT_TEST_ID, SAFE_NAME_SUBMIT_BTN_TEST_ID } from '~/routes/safe/components/Settings/ChangeSafeName'
-
-afterEach(cleanup)
 
 describe('DOM > Feature > Settings - Name', () => {
   let store
@@ -19,7 +17,7 @@ describe('DOM > Feature > Settings - Name', () => {
     safeAddress = await aMinedSafe(store)
   })
 
-  it('Changes safe name', async () => {
+  it('Changes Safe name', async () => {
     const INITIAL_NAME = 'Safe Name'
     const NEW_NAME = 'NEW SAFE NAME'
 
