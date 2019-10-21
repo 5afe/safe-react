@@ -152,10 +152,10 @@ class Web3Integration {
     if (this.ens) {
       address = await this.ens.resolver(name).addr()
     }
-  
+
     return address
   }
-  
+
 
   disconnect() {
     clearInterval(this.watcherInterval)
