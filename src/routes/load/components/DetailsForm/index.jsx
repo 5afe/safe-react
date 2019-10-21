@@ -1,7 +1,6 @@
 // @flow
 import * as React from 'react'
 import { withStyles } from '@material-ui/core/styles'
-import SafeProxy from '@gnosis.pm/safe-contracts/build/contracts/Proxy.json'
 import InputAdornment from '@material-ui/core/InputAdornment'
 import CheckCircle from '@material-ui/icons/CheckCircle'
 import Field from '~/components/forms/Field'
@@ -15,7 +14,7 @@ import Paragraph from '~/components/layout/Paragraph'
 import OpenPaper from '~/components/Stepper/OpenPaper'
 import { FIELD_LOAD_NAME, FIELD_LOAD_ADDRESS } from '~/routes/load/components/fields'
 import { getWeb3 } from '~/logic/wallets/getWeb3'
-import { getSafeMasterContract } from '~/logic/contracts/safeContracts'
+import { getSafeMasterContract, validateProxy } from '~/logic/contracts/safeContracts'
 import { secondary } from '~/theme/variables'
 
 type Props = {
@@ -56,15 +55,8 @@ export const safeFieldsValidation = async (values: Object) => {
     return errors
   }
 
-  // https://solidity.readthedocs.io/en/latest/metadata.html#usage-for-source-code-verification
-  const metaData = 'a165'
-
-  const code = await web3.eth.getCode(safeAddress)
-  const codeWithoutMetadata = code.substring(0, code.lastIndexOf(metaData))
-  const proxyCode = SafeProxy.deployedBytecode
-  const proxyCodeWithoutMetadata = proxyCode.substring(0, proxyCode.lastIndexOf(metaData))
-  const safeInstance = codeWithoutMetadata === proxyCodeWithoutMetadata
-  if (!safeInstance) {
+  const isValidProxy = await validateProxy(safeAddress)
+  if (!isValidProxy) {
     errors[FIELD_LOAD_ADDRESS] = SAFE_INSTANCE_ERROR
     return errors
   }
