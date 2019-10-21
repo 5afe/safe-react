@@ -2,39 +2,10 @@
 import Web3 from 'web3'
 import ENS from 'ethereum-ens'
 import { fetchProvider, removeProvider } from '~/logic/wallets/store/actions'
-import { store } from '~/store'
+// import { store } from '~/store'
 import type { ProviderProps } from '~/logic/wallets/store/model/provider'
 import { addHexPrefix, sanitizeHex, convertHexToNumber } from '~/utils/hex'
-
-export const ETHEREUM_NETWORK = {
-  MAIN: 'MAIN',
-  MORDEN: 'MORDEN',
-  ROPSTEN: 'ROPSTEN',
-  RINKEBY: 'RINKEBY',
-  KOVAN: 'KOVAN',
-  UNKNOWN: 'UNKNOWN',
-}
-
-export const WALLET_PROVIDER = {
-  SAFE: 'SAFE',
-  METAMASK: 'METAMASK',
-  PARITY: 'PARITY',
-  REMOTE: 'REMOTE',
-  UPORT: 'UPORT',
-}
-
-export const ETHEREUM_NETWORK_IDS = {
-  // $FlowFixMe
-  1: ETHEREUM_NETWORK.MAIN,
-  // $FlowFixMe
-  2: ETHEREUM_NETWORK.MORDEN,
-  // $FlowFixMe
-  3: ETHEREUM_NETWORK.ROPSTEN,
-  // $FlowFixMe
-  4: ETHEREUM_NETWORK.RINKEBY,
-  // $FlowFixMe
-  42: ETHEREUM_NETWORK.KOVAN,
-}
+import { WALLET_PROVIDER } from './constants'
 
 class Web3Integration {
   provider: Object
@@ -139,7 +110,7 @@ class Web3Integration {
     this.watcherInterval = setInterval(async () => {
       const providerInfo: ProviderProps = await this.getProviderInfo()
       if (JSON.stringify(currentProviderInfo) !== JSON.stringify(providerInfo)) {
-        store.dispatch(fetchProvider(providerInfo))
+        // store.dispatch(fetchProvider(providerInfo))
       }
       currentProviderInfo = providerInfo
     }, 2000)
@@ -189,7 +160,7 @@ class Web3Integration {
   disconnect() {
     clearInterval(this.watcherInterval)
     this.resetWalletConnectSession()
-    store.dispatch(removeProvider())
+    // store.dispatch(removeProvider())
   }
 
   async setWeb3(provider: Object) {
@@ -201,7 +172,7 @@ class Web3Integration {
     this.ens = new ENS(provider)
 
     const providerInfo = await this.getProviderInfo()
-    store.dispatch(fetchProvider(providerInfo))
+    // store.dispatch(fetchProvider(providerInfo))
     this.watch()
   }
 }
