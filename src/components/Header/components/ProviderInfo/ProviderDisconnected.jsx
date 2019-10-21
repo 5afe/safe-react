@@ -5,7 +5,7 @@ import Paragraph from '~/components/layout/Paragraph'
 import Col from '~/components/layout/Col'
 import { type Open } from '~/components/hoc/OpenHoc'
 import { sm } from '~/theme/variables'
-import CircleDot from '~/components/Header/component/CircleDot'
+import CircleDot from '~/components/Header/components/CircleDot'
 
 type Props = Open & {
   classes: Object,
@@ -29,7 +29,7 @@ const styles = () => ({
   },
 })
 
-const ProviderDesconnected = ({ classes }: Props) => (
+const ProviderDisconnected = ({ classes }: Props) => (
   <>
     <CircleDot keySize={17} circleSize={35} dotSize={16} dotTop={24} dotRight={11} mode="error" />
     <Col end="sm" middle="xs" layout="column" className={classes.account}>
@@ -43,4 +43,4 @@ const ProviderDesconnected = ({ classes }: Props) => (
   </>
 )
 
-export default withStyles(styles)(ProviderDesconnected)
+export default withStyles(styles)(ProviderDisconnected)

@@ -18,7 +18,7 @@ import {
 } from '~/theme/variables'
 import { upperFirst } from '~/utils/css'
 import { shortVersionOf } from '~/logic/wallets/ethAddresses'
-import CircleDot from '~/components/Header/component/CircleDot'
+import CircleDot from '~/components/Header/components/CircleDot'
 
 const metamaskIcon = require('../../assets/metamask-icon.svg')
 const safeIcon = require('../../assets/gnosis-safe-icon.svg')
