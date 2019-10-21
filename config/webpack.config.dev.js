@@ -147,19 +147,19 @@ module.exports = {
     }),
     new webpack.DefinePlugin(env),
     new webpack.HotModuleReplacementPlugin(),
-    // new CircularDependencyPlugin({
-    //   // exclude detection of files based on a RegExp
-    //   exclude: /a\.js|node_modules/,
-    //   // include specific files based on a RegExp
-    //   include: /src/,
-    //   // add errors to webpack instead of warnings
-    //   failOnError: true,
-    //   // allow import cycles that include an asyncronous import,
-    //   // e.g. via import(/* webpackMode: "weak" */ './file.js')
-    //   allowAsyncCycles: false,
-    //   // set the current working directory for displaying module paths
-    //   cwd: process.cwd(),
-    // })
+    new CircularDependencyPlugin({
+      // exclude detection of files based on a RegExp
+      exclude: /a\.js|node_modules/,
+      // include specific files based on a RegExp
+      include: /src/,
+      // add errors to webpack instead of warnings
+      failOnError: true,
+      // allow import cycles that include an asyncronous import,
+      // e.g. via import(/* webpackMode: "weak" */ './file.js')
+      allowAsyncCycles: false,
+      // set the current working directory for displaying module paths
+      cwd: process.cwd(),
+    })
   ],
   // Some libraries import Node modules but don't use them in the browser.
   // Tell Webpack to provide empty mocks for them so importing them works.
