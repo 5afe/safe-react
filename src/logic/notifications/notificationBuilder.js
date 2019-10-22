@@ -67,7 +67,7 @@ const safeNameChangeNotificationsQueue: NotificationsQueue = {
     moreConfirmationsNeeded: null,
   },
   afterRejection: null,
-  afterExecution: NOTIFICATIONS.SAFE_NAME_CHANGE_EXECUTED_MSG,
+  afterExecution: NOTIFICATIONS.SAFE_NAME_CHANGED_MSG,
   afterExecutionError: null,
 }
 

@@ -80,28 +80,7 @@ const getNetworkIdFrom = async (web3Provider) => {
   return networkId
 }
 
-export const getProviderInfo: Function = async (): Promise<ProviderProps> => {
-  let web3Provider
-
-  if (window.ethereum) {
-    web3Provider = window.ethereum
-    try {
-      await web3Provider.enable()
-    } catch (error) {
-      console.error('Error when enabling web3 provider', error)
-    }
-  } else if (window.web3) {
-    web3Provider = window.web3.currentProvider
-  } else {
-    return {
-      name: '',
-      available: false,
-      loaded: false,
-      account: '',
-      network: 0,
-    }
-  }
-
+export const getProviderInfo: Function = async (web3Provider): Promise<ProviderProps> => {
   web3 = new Web3(web3Provider)
 
   const name = getProviderName(web3)
