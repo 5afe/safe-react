@@ -95,7 +95,7 @@ const Welcome = ({ provider }: Props) => (
         </Block>
       </>
     ) : (
-      <Block margin="md">
+      <Block margin="md" className={styles.connectWallet}>
         <Heading tag="h3" align="center" margin="md">
           Get Started by Connecting a Wallet
         </Heading>

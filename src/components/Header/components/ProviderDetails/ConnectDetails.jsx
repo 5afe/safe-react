@@ -4,6 +4,7 @@ import { withStyles } from '@material-ui/core/styles'
 import Paragraph from '~/components/layout/Paragraph'
 import ConnectButton from '~/components/ConnectButton'
 import Row from '~/components/layout/Row'
+import Block from '~/components/layout/Block'
 import { md, lg } from '~/theme/variables'
 import CircleDot from '~/components/Header/components/CircleDot'
 
@@ -25,6 +26,7 @@ const styles = () => ({
   },
   connect: {
     padding: `${md} ${lg}`,
+    textAlign: 'center',
   },
   connectText: {
     letterSpacing: '1px',
@@ -46,9 +48,9 @@ const ConnectDetails = ({ classes }: Props) => (
     <Row className={classes.logo} margin="lg">
       <CircleDot keySize={32} circleSize={75} dotSize={25} dotTop={50} dotRight={25} center mode="error" />
     </Row>
-    <Row className={classes.connect}>
+    <Block className={classes.connect}>
       <ConnectButton />
-    </Row>
+    </Block>
   </>
 )
 
