@@ -8,9 +8,10 @@ import Portis from '@portis/web3'
 import Fortmatic from 'fortmatic'
 import Button from '~/components/layout/Button'
 import { fetchProvider } from '~/logic/wallets/store/actions'
+import { getNetwork } from '~/config'
 
 const web3Connect = new Web3Connect.Core({
-  network: 'rinkeby',
+  network: getNetwork().toLowerCase(),
   providerOptions: {
     walletconnect: {
       package: WalletConnectProvider,
@@ -39,15 +40,20 @@ type Props = {
   closeSnackbar: Function,
 }
 
+let web3connectEventListenerAdded = false
+
 const ConnectButton = ({
   registerProvider, enqueueSnackbar, closeSnackbar, ...props
 }: Props) => {
   useEffect(() => {
-    web3Connect.on('connect', (provider: any) => {
-      if (provider) {
-        registerProvider(provider, enqueueSnackbar, closeSnackbar)
-      }
-    })
+    if (!web3connectEventListenerAdded) {
+      web3Connect.on('connect', (provider: any) => {
+        if (provider) {
+          registerProvider(provider, enqueueSnackbar, closeSnackbar)
+        }
+      })
+      web3connectEventListenerAdded = true
+    }
   }, [])
 
   return (

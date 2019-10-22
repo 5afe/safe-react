@@ -52,12 +52,12 @@ const cancellationTxNotificationsQueue: NotificationsQueue = {
 const ownerChangeTxNotificationsQueue: NotificationsQueue = {
   beforeExecution: NOTIFICATIONS.SIGN_OWNER_CHANGE_MSG,
   pendingExecution: {
-    noMoreConfirmationsNeeded: NOTIFICATIONS.ONWER_CHANGE_PENDING_MSG,
-    moreConfirmationsNeeded: NOTIFICATIONS.ONWER_CHANGE_PENDING_MORE_CONFIRMATIONS_MSG,
+    noMoreConfirmationsNeeded: NOTIFICATIONS.OWNER_CHANGE_PENDING_MSG,
+    moreConfirmationsNeeded: NOTIFICATIONS.OWNER_CHANGE_PENDING_MORE_CONFIRMATIONS_MSG,
   },
-  afterRejection: NOTIFICATIONS.ONWER_CHANGE_REJECTED_MSG,
+  afterRejection: NOTIFICATIONS.OWNER_CHANGE_REJECTED_MSG,
   afterExecution: NOTIFICATIONS.OWNER_CHANGE_EXECUTED_MSG,
-  afterExecutionError: NOTIFICATIONS.ONWER_CHANGE_FAILED_MSG,
+  afterExecutionError: NOTIFICATIONS.OWNER_CHANGE_FAILED_MSG,
 }
 
 const safeNameChangeNotificationsQueue: NotificationsQueue = {
