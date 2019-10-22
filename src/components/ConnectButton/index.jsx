@@ -1,10 +1,13 @@
 // @flow
-import * as React from 'react'
+import React, { useEffect } from 'react'
+import { withSnackbar } from 'notistack'
+import { connect } from 'react-redux'
 import Web3Connect from 'web3connect'
 import WalletConnectProvider from '@walletconnect/web3-provider'
 import Portis from '@portis/web3'
 import Fortmatic from 'fortmatic'
 import Button from '~/components/layout/Button'
+import { fetchProvider } from '~/logic/wallets/store/actions'
 
 const web3Connect = new Web3Connect.Core({
   network: 'rinkeby',
@@ -30,24 +33,39 @@ const web3Connect = new Web3Connect.Core({
   },
 })
 
-web3Connect.on('connect', (provider: any) => {
-  if (provider) {
-    console.log('wop')
-  }
-})
+type Props = {
+  registerProvider: Function,
+  enqueueSnackbar: Function,
+  closeSnackbar: Function,
+}
 
-const ConnectButton = (props: Object) => (
-  <Button
-    color="primary"
-    variant="contained"
-    minWidth={140}
-    onClick={() => {
-      web3Connect.toggleModal()
-    }}
-    {...props}
-  >
-    Connect
-  </Button>
-)
+const ConnectButton = ({
+  registerProvider, enqueueSnackbar, closeSnackbar, ...props
+}: Props) => {
+  useEffect(() => {
+    web3Connect.on('connect', (provider: any) => {
+      if (provider) {
+        registerProvider(provider, enqueueSnackbar, closeSnackbar)
+      }
+    })
+  }, [])
 
-export default ConnectButton
+  return (
+    <Button
+      color="primary"
+      variant="contained"
+      minWidth={140}
+      onClick={() => {
+        web3Connect.toggleModal()
+      }}
+      {...props}
+    >
+      Connect
+    </Button>
+  )
+}
+
+export default connect(
+  null,
+  { registerProvider: fetchProvider },
+)(withSnackbar(ConnectButton))
