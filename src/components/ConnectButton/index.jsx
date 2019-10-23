@@ -13,8 +13,6 @@ import Button from '~/components/layout/Button'
 import { fetchProvider } from '~/logic/wallets/store/actions'
 import { getNetwork } from '~/config'
 
-console.log(process.env)
-
 const web3Connect = new Web3Connect.Core({
   network: getNetwork().toLowerCase(),
   providerOptions: {

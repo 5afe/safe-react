@@ -22,6 +22,7 @@ export const WALLET_PROVIDER = {
   PORTIS: 'PORTIS',
   FORTMATIC: 'FORTMATIC',
   SQUARELINK: 'SQUARELINK',
+  WALLETCONNECT: 'WALLETCONNECT',
 }
 
 export const ETHEREUM_NETWORK_IDS = {
@@ -49,9 +50,18 @@ export const getEtherScanLink = (type: 'address' | 'tx', value: string) => {
 let web3
 export const getWeb3 = () => web3 || (window.web3 && new Web3(window.web3.currentProvider)) || (window.ethereum && new Web3(window.ethereum))
 
+export const getInfuraUrl = () => {
+  const isMainnet = getNetwork() === ETHEREUM_NETWORK.MAINNET
+
+  return `https://${isMainnet ? '' : 'rinkeby.'}infura.io:443/v3/${process.env.REACT_APP_INFURA_TOKEN}`
+}
+
+// With some wallets from web3connect you have to use their provider instance only for signing
+// And our own one to fetch data
+export const web3RO = new Web3(new Web3.providers.HttpProvider(getInfuraUrl()))
+
 const getProviderName: Function = (web3Provider): string => {
   let name
-  console.log(web3Provider)
 
   switch (web3Provider.currentProvider.constructor.name) {
     case 'SafeWeb3Provider':
@@ -78,6 +88,10 @@ const getProviderName: Function = (web3Provider): string => {
 
   if (web3Provider.currentProvider.isSquarelink) {
     name = WALLET_PROVIDER.SQUARELINK
+  }
+
+  if (web3Provider.currentProvider.isWalletConnect) {
+    name = WALLET_PROVIDER.WALLETCONNECT
   }
 
   return name
