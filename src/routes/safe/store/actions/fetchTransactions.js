@@ -16,6 +16,7 @@ import { getHumanFriendlyToken } from '~/logic/tokens/store/actions/fetchTokens'
 import { isTokenTransfer } from '~/logic/tokens/utils/tokenHelpers'
 import { TX_TYPE_EXECUTION } from '~/logic/safe/transactions'
 import { decodeParamsFromSafeMethod } from '~/logic/contracts/methodIds'
+import { ALTERNATIVE_TOKEN_ABI } from '~/logic/tokens/utils/alternativeAbi'
 
 let web3
 
@@ -59,8 +60,8 @@ export const buildTransactionFrom = async (
   )
   const modifySettingsTx = tx.to === safeAddress && Number(tx.value) === 0 && !!tx.data
   const cancellationTx = tx.to === safeAddress && Number(tx.value) === 0 && !tx.data
-  const customTx = tx.to !== safeAddress && !!tx.data
   const isSendTokenTx = await isTokenTransfer(tx.data, tx.value)
+  const customTx = tx.to !== safeAddress && !!tx.data && !isSendTokenTx
 
   let executionTxHash
   const executionTx = confirmations.find((conf) => conf.type === TX_TYPE_EXECUTION)
@@ -70,11 +71,23 @@ export const buildTransactionFrom = async (
   }
 
   let symbol = 'ETH'
+  let decimals = 18
   let decodedParams
   if (isSendTokenTx) {
     const tokenContract = await getHumanFriendlyToken()
     const tokenInstance = await tokenContract.at(tx.to)
-    symbol = await tokenInstance.symbol()
+    try {
+      [symbol, decimals] = await Promise.all([tokenInstance.symbol(), tokenInstance.decimals()])
+    } catch (err) {
+      const alternativeTokenInstance = new web3.eth.Contract(ALTERNATIVE_TOKEN_ABI, tx.to)
+      const [tokenSymbol, tokenDecimals] = await Promise.all([
+        alternativeTokenInstance.methods.symbol().call(),
+        alternativeTokenInstance.methods.decimals().call(),
+      ])
+
+      symbol = web3.utils.toAscii(tokenSymbol)
+      decimals = tokenDecimals
+    }
 
     const params = web3.eth.abi.decodeParameters(['address', 'uint256'], tx.data.slice(10))
     decodedParams = {
