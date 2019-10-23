@@ -17,9 +17,11 @@ export const ETHEREUM_NETWORK = {
 export const WALLET_PROVIDER = {
   SAFE: 'SAFE',
   METAMASK: 'METAMASK',
-  PARITY: 'PARITY',
   REMOTE: 'REMOTE',
-  UPORT: 'UPORT',
+  TORUS: 'TORUS',
+  PORTIS: 'PORTIS',
+  FORTMATIC: 'FORTMATIC',
+  SQUARELINK: 'SQUARELINK',
 }
 
 export const ETHEREUM_NETWORK_IDS = {
@@ -49,6 +51,7 @@ export const getWeb3 = () => web3 || (window.web3 && new Web3(window.web3.curren
 
 const getProviderName: Function = (web3Provider): string => {
   let name
+  console.log(web3Provider)
 
   switch (web3Provider.currentProvider.constructor.name) {
     case 'SafeWeb3Provider':
@@ -56,9 +59,25 @@ const getProviderName: Function = (web3Provider): string => {
       break
     case 'MetamaskInpageProvider':
       name = WALLET_PROVIDER.METAMASK
+
+      if (web3Provider.currentProvider.isTorus) {
+        name = WALLET_PROVIDER.TORUS
+      }
       break
     default:
       name = 'Wallet'
+  }
+
+  if (web3Provider.currentProvider.isPortis) {
+    name = WALLET_PROVIDER.PORTIS
+  }
+
+  if (web3Provider.currentProvider.isFortmatic) {
+    name = WALLET_PROVIDER.FORTMATIC
+  }
+
+  if (web3Provider.currentProvider.isSquarelink) {
+    name = WALLET_PROVIDER.SQUARELINK
   }
 
   return name

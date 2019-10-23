@@ -6,6 +6,9 @@ import Web3Connect from 'web3connect'
 import WalletConnectProvider from '@walletconnect/web3-provider'
 import Portis from '@portis/web3'
 import Fortmatic from 'fortmatic'
+import Squarelink from 'squarelink'
+import Torus from '@toruslabs/torus-embed'
+import Arkane from '@arkane-network/web3-arkane-provider'
 import Button from '~/components/layout/Button'
 import { fetchProvider } from '~/logic/wallets/store/actions'
 import { getNetwork } from '~/config'
@@ -29,6 +32,27 @@ const web3Connect = new Web3Connect.Core({
       package: Fortmatic,
       options: {
         key: 'pk_test_43A53775AE976718',
+      },
+    },
+    squarelink: {
+      package: Squarelink, // required
+      options: {
+        id: 'dd56d364853963bbbe0f', // required
+      },
+    },
+    torus: {
+      package: Torus, // required
+      options: {
+        enableLogging: false,
+        buttonPosition: 'bottom-left',
+        buildEnv: process.env.NODE_ENV,
+        showTorusButton: true,
+      },
+    },
+    arkane: {
+      package: Arkane, // required
+      options: {
+        clientId: 'ARKANE_CLIENT_ID', // required, replace
       },
     },
   },
