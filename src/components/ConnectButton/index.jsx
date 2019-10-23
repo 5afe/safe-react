@@ -13,31 +13,33 @@ import Button from '~/components/layout/Button'
 import { fetchProvider } from '~/logic/wallets/store/actions'
 import { getNetwork } from '~/config'
 
+console.log(process.env)
+
 const web3Connect = new Web3Connect.Core({
   network: getNetwork().toLowerCase(),
   providerOptions: {
     walletconnect: {
       package: WalletConnectProvider,
       options: {
-        infuraId: process.env.INFURA_ID,
+        infuraId: process.env.REACT_APP_INFURA_TOKEN,
       },
     },
     portis: {
       package: Portis,
       options: {
-        id: '852b763d-f28b-4463-80cb-846d7ec5806b',
+        id: process.env.REACT_APP_PORTIS_ID,
       },
     },
     fortmatic: {
       package: Fortmatic,
       options: {
-        key: 'pk_test_43A53775AE976718',
+        key: process.env.REACT_APP_FORTMATIC_KEY,
       },
     },
     squarelink: {
       package: Squarelink, // required
       options: {
-        id: 'dd56d364853963bbbe0f', // required
+        id: process.env.REACT_APP_SQUARELINK_ID, // required
       },
     },
     torus: {
