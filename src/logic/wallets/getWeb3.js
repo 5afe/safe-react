@@ -50,8 +50,8 @@ export const getEtherScanLink = (type: 'address' | 'tx', value: string) => {
 let web3
 export const getWeb3 = () => web3 || (window.web3 && new Web3(window.web3.currentProvider)) || (window.ethereum && new Web3(window.ethereum))
 
-export const getInfuraUrl = () => {
-  const isMainnet = getNetwork() === ETHEREUM_NETWORK.MAINNET
+const getInfuraUrl = () => {
+  const isMainnet = process.env.REACT_APP_NETWORK === 'mainnet'
 
   return `https://${isMainnet ? '' : 'rinkeby.'}infura.io:443/v3/${process.env.REACT_APP_INFURA_TOKEN}`
 }
