@@ -1,6 +1,6 @@
 # Gnosis Team Safe
 
-Allowing crypto users manage funds in a safer way
+The most secure way to manage your crypto funds collectively
 
 ## Getting Started
 
