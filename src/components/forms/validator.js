@@ -50,8 +50,8 @@ export const minValue = (min: number) => (value: string) => {
   return `Should be at least ${min}`
 }
 
-export const maxValue = (max: number) => (value: string) => {
-  if (Number.isNaN(Number(value)) || Number.parseInt(value, 10) <= Number(max)) {
+export const maxValue = (max: number | string) => (value: string) => {
+  if (Number.isNaN(Number(value)) || parseFloat(value, 10) <= parseFloat(max, 10)) {
     return undefined
   }
 

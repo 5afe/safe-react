@@ -15,6 +15,7 @@ const styles = () => ({
     width: '775px',
     minHeight: '500px',
     position: 'static',
+    height: 'auto',
   },
 })
 
@@ -155,6 +156,7 @@ const ReplaceOwner = ({
             onClickBack={onClickBack}
             onSubmit={onReplaceOwner}
             threshold={threshold}
+            safeAddress={safeAddress}
           />
         )}
       </>

@@ -29,7 +29,5 @@ export default handleActions<NotificationReducerState, *>(
       return state.delete(key)
     },
   },
-  Map({
-    notifications: Map(),
-  }),
+  Map(),
 )

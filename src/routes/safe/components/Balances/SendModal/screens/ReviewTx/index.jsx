@@ -1,30 +1,32 @@
 // @flow
-import React from 'react'
+import React, { useEffect, useState } from 'react'
+import { List } from 'immutable'
 import { BigNumber } from 'bignumber.js'
-import OpenInNew from '@material-ui/icons/OpenInNew'
 import { withStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
 import IconButton from '@material-ui/core/IconButton'
 import { withSnackbar } from 'notistack'
 import Paragraph from '~/components/layout/Paragraph'
 import Row from '~/components/layout/Row'
-import Link from '~/components/layout/Link'
 import Col from '~/components/layout/Col'
 import Button from '~/components/layout/Button'
 import Img from '~/components/layout/Img'
 import Block from '~/components/layout/Block'
+import EtherscanBtn from '~/components/EtherscanBtn'
+import CopyBtn from '~/components/CopyBtn'
 import Identicon from '~/components/Identicon'
-import { copyToClipboard } from '~/utils/clipboard'
 import Hairline from '~/components/layout/Hairline'
 import SafeInfo from '~/routes/safe/components/Balances/SendModal/SafeInfo'
 import { setImageToPlaceholder } from '~/routes/safe/components/Balances/utils'
 import { getHumanFriendlyToken } from '~/logic/tokens/store/actions/fetchTokens'
+import { estimateTxGasCosts } from '~/logic/safe/transactions/gasNew'
 import { EMPTY_DATA } from '~/logic/wallets/ethTransactions'
+import { type Token } from '~/logic/tokens/store/model/token'
+import { formatAmount } from '~/logic/tokens/utils/formatAmount'
 import { getWeb3 } from '~/logic/wallets/getWeb3'
 import { TX_NOTIFICATION_TYPES } from '~/logic/safe/transactions'
+import { ETH_ADDRESS } from '~/logic/tokens/utils/tokenHelpers'
 import ArrowDown from '../assets/arrow-down.svg'
-import { secondary } from '~/theme/variables'
-import { isEther } from '~/logic/tokens/utils/tokenHelpers'
 import { styles } from './style'
 
 type Props = {
@@ -32,18 +34,13 @@ type Props = {
   setActiveScreen: Function,
   classes: Object,
   safeAddress: string,
-  etherScanLink: string,
   safeName: string,
   ethBalance: string,
   tx: Object,
+  tokens: List<Token>,
   createTransaction: Function,
   enqueueSnackbar: Function,
   closeSnackbar: Function,
-}
-
-const openIconStyle = {
-  height: '16px',
-  color: secondary,
 }
 
 const ReviewTx = ({
@@ -51,24 +48,56 @@ const ReviewTx = ({
   setActiveScreen,
   classes,
   safeAddress,
-  etherScanLink,
   safeName,
   ethBalance,
   tx,
+  tokens,
   createTransaction,
   enqueueSnackbar,
   closeSnackbar,
 }: Props) => {
+  const [gasCosts, setGasCosts] = useState<string>('< 0.001')
+  const txToken = tokens.find((token) => token.address === tx.token)
+  const isSendingETH = txToken.address === ETH_ADDRESS
+  const txRecipient = isSendingETH ? tx.recipientAddress : txToken.address
+
+  useEffect(() => {
+    let isCurrent = true
+    const estimateGas = async () => {
+      const web3 = getWeb3()
+      const { fromWei, toBN } = web3.utils
+      let txData = EMPTY_DATA
+
+      if (!isSendingETH) {
+        const StandardToken = await getHumanFriendlyToken()
+        const tokenInstance = await StandardToken.at(txToken.address)
+
+        txData = tokenInstance.contract.methods.transfer(tx.recipientAddress, 0).encodeABI()
+      }
+
+      const estimatedGasCosts = await estimateTxGasCosts(safeAddress, txRecipient, txData)
+      const gasCostsAsEth = fromWei(toBN(estimatedGasCosts), 'ether')
+      const formattedGasCosts = formatAmount(gasCostsAsEth)
+      if (isCurrent) {
+        setGasCosts(formattedGasCosts)
+      }
+    }
+
+    estimateGas()
+
+    return () => {
+      isCurrent = false
+    }
+  }, [])
+
   const submitTx = async () => {
     const web3 = getWeb3()
-    const isSendingETH = isEther(tx.token.symbol)
-    const txRecipient = isSendingETH ? tx.recipientAddress : tx.token.address
     let txData = EMPTY_DATA
     let txAmount = web3.utils.toWei(tx.amount, 'ether')
 
     if (!isSendingETH) {
       const HumanFriendlyToken = await getHumanFriendlyToken()
-      const tokenInstance = await HumanFriendlyToken.at(tx.token.address)
+      const tokenInstance = await HumanFriendlyToken.at(txToken.address)
       const decimals = await tokenInstance.decimals()
       txAmount = new BigNumber(tx.amount).times(10 ** decimals.toNumber()).toString()
 
@@ -104,12 +133,7 @@ const ReviewTx = ({
       </Row>
       <Hairline />
       <Block className={classes.container}>
-        <SafeInfo
-          safeAddress={safeAddress}
-          etherScanLink={etherScanLink}
-          safeName={safeName}
-          ethBalance={ethBalance}
-        />
+        <SafeInfo safeAddress={safeAddress} safeName={safeName} ethBalance={ethBalance} />
         <Row margin="md">
           <Col xs={1}>
             <img src={ArrowDown} alt="Arrow Down" style={{ marginLeft: '8px' }} />
@@ -128,12 +152,13 @@ const ReviewTx = ({
             <Identicon address={tx.recipientAddress} diameter={32} />
           </Col>
           <Col xs={11} layout="column">
-            <Paragraph weight="bolder" onClick={copyToClipboard} noMargin>
-              {tx.recipientAddress}
-              <Link to={etherScanLink} target="_blank">
-                <OpenInNew style={openIconStyle} />
-              </Link>
-            </Paragraph>
+            <Block justify="left">
+              <Paragraph weight="bolder" className={classes.address} noMargin>
+                {tx.recipientAddress}
+              </Paragraph>
+              <CopyBtn content={tx.recipientAddress} />
+              <EtherscanBtn type="address" value={tx.recipientAddress} />
+            </Block>
           </Col>
         </Row>
         <Row margin="xs">
@@ -142,11 +167,16 @@ const ReviewTx = ({
           </Paragraph>
         </Row>
         <Row margin="md" align="center">
-          <Img src={tx.token.logoUri} height={28} alt={tx.token.name} onError={setImageToPlaceholder} />
+          <Img src={txToken.logoUri} height={28} alt={txToken.name} onError={setImageToPlaceholder} />
           <Paragraph size="md" noMargin className={classes.amount}>
             {tx.amount}
             {' '}
-            {tx.token.symbol}
+            {txToken.symbol}
+          </Paragraph>
+        </Row>
+        <Row>
+          <Paragraph>
+            {`You're about to create a transaction and will have to confirm it with your currently connected wallet. Make sure you have ${gasCosts} (fee price) ETH in this wallet to fund this confirmation.`}
           </Paragraph>
         </Row>
       </Block>

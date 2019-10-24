@@ -28,7 +28,7 @@ import { getAccountsFrom } from '~/routes/open/utils/safeDataExtractor'
 import Hairline from '~/components/layout/Hairline'
 import trash from '~/assets/icons/trash.svg'
 import QRIcon from '~/assets/icons/qrcode.svg'
-import ScanQRModal from './ScanQRModal'
+import ScanQRModal from '~/components/ScanQRModal'
 import { getAddressValidator } from './validators'
 import { styles } from './style'
 

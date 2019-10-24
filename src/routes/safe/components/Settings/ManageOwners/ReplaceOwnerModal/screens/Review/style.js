@@ -22,6 +22,9 @@ export const styles = () => ({
   manage: {
     fontSize: '24px',
   },
+  address: {
+    marginRight: sm,
+  },
   closeIcon: {
     height: '35px',
     width: '35px',
@@ -79,5 +82,10 @@ export const styles = () => ({
     '&:hover': {
       cursor: 'pointer',
     },
+  },
+  gasCostsContainer: {
+    padding: `0 ${lg}`,
+    textAlign: 'center',
+    width: '100%',
   },
 })

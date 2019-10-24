@@ -64,7 +64,7 @@ const Routes = ({ defaultSafe, location }: RoutesProps) => {
       />
       <Route exact path={WELCOME_ADDRESS} component={Welcome} />
       <Route exact path={OPEN_ADDRESS} component={Open} />
-      <Route exact path={SAFE_ADDRESS} component={Safe} />
+      <Route path={SAFE_ADDRESS} component={Safe} />
       <Route exact path={OPENING_ADDRESS} component={Opening} />
       <Route exact path={LOAD_ADDRESS} component={Load} />
       <Redirect to="/" />

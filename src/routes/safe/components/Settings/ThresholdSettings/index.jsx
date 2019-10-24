@@ -98,6 +98,7 @@ const ThresholdSettings = ({
           onClose={toggleModal}
           owners={owners}
           threshold={threshold}
+          safeAddress={safeAddress}
           onChangeThreshold={onChangeThreshold}
         />
       </Modal>
