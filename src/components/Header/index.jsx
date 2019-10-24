@@ -3,8 +3,6 @@ import * as React from 'react'
 import { connect } from 'react-redux'
 import { withSnackbar } from 'notistack'
 import { logComponentStack, type Info } from '~/utils/logBoundaries'
-import { getProviderInfo } from '~/logic/wallets/getWeb3'
-import type { ProviderProps } from '~/logic/wallets/store/model/provider'
 import { NOTIFICATIONS, showSnackbar } from '~/logic/notifications'
 import ProviderAccessible from './components/ProviderInfo/ProviderAccessible'
 import UserDetails from './components/ProviderDetails/UserDetails'
@@ -25,18 +23,12 @@ type State = {
 }
 
 class HeaderComponent extends React.PureComponent<Props, State> {
-  providerListener: ?IntervalID
-
   constructor(props) {
     super(props)
 
     this.state = {
       hasError: false,
     }
-  }
-
-  componentDidMount() {
-    // this.onConnect()
   }
 
   componentDidCatch(error: Error, info: Info) {
@@ -51,25 +43,7 @@ class HeaderComponent extends React.PureComponent<Props, State> {
   onDisconnect = () => {
     const { removeProvider, enqueueSnackbar, closeSnackbar } = this.props
 
-    clearInterval(this.providerListener)
-
     removeProvider(enqueueSnackbar, closeSnackbar)
-  }
-
-  onConnect = async () => {
-    const { fetchProvider, enqueueSnackbar, closeSnackbar } = this.props
-
-    clearInterval(this.providerListener)
-    let currentProvider: ProviderProps = await getProviderInfo()
-    fetchProvider(currentProvider, enqueueSnackbar, closeSnackbar)
-
-    this.providerListener = setInterval(async () => {
-      const newProvider: ProviderProps = await getProviderInfo()
-      if (currentProvider && JSON.stringify(currentProvider) !== JSON.stringify(newProvider)) {
-        fetchProvider(newProvider, enqueueSnackbar, closeSnackbar)
-      }
-      currentProvider = newProvider
-    }, 2000)
   }
 
   getProviderInfoBased = () => {
