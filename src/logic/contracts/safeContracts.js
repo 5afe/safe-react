@@ -3,7 +3,7 @@ import contract from 'truffle-contract'
 import ProxyFactorySol from '@gnosis.pm/safe-contracts/build/contracts/ProxyFactory.json'
 import GnosisSafeSol from '@gnosis.pm/safe-contracts/build/contracts/GnosisSafe.json'
 import SafeProxy from '@gnosis.pm/safe-contracts/build/contracts/Proxy.json'
-import { ensureOnce } from '~/utils/singleton'
+import { simpleMemoize } from '~/components/forms/validator'
 import { getWeb3 } from '~/logic/wallets/getWeb3'
 import { calculateGasOf, calculateGasPrice } from '~/logic/wallets/ethTransactions'
 import { ZERO_ADDRESS } from '~/logic/wallets/ethAddresses'
@@ -27,8 +27,8 @@ const createProxyFactoryContract = (web3: any) => {
   return proxyFactory
 }
 
-export const getGnosisSafeContract = ensureOnce(createGnosisSafeContract)
-const getCreateProxyFactoryContract = ensureOnce(createProxyFactoryContract)
+export const getGnosisSafeContract = simpleMemoize(createGnosisSafeContract)
+const getCreateProxyFactoryContract = simpleMemoize(createProxyFactoryContract)
 
 const instanciateMasterCopies = async () => {
   const web3 = getWeb3()
@@ -55,7 +55,7 @@ const createMasterCopies = async () => {
   safeMaster = await GnosisSafe.new({ from: userAccount, gas: '7000000' })
 }
 
-export const initContracts = ensureOnce(process.env.NODE_ENV === 'test' ? createMasterCopies : instanciateMasterCopies)
+export const initContracts = process.env.NODE_ENV === 'test' ? createMasterCopies : instanciateMasterCopies
 
 export const getSafeMasterContract = async () => {
   await initContracts()
@@ -106,7 +106,7 @@ const cleanByteCodeMetadata = (bytecode: string): string => {
   return bytecode.substring(0, bytecode.lastIndexOf(metaData))
 }
 
-export const validateProxy = async (safeAddress: string): boolean => {
+export const validateProxy = async (safeAddress: string): Promise<boolean> => {
   // https://solidity.readthedocs.io/en/latest/metadata.html#usage-for-source-code-verification
   const web3 = getWeb3()
   const code = await web3.eth.getCode(safeAddress)

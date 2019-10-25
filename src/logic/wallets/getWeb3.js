@@ -56,18 +56,23 @@ export const getEtherScanLink = (type: 'address' | 'tx', value: string) => {
   }etherscan.io/${type}/${value}`
 }
 
-let web3
-export const getWeb3 = () => web3 || (window.web3 && new Web3(window.web3.currentProvider)) || (window.ethereum && new Web3(window.ethereum))
-
 const getInfuraUrl = () => {
   const isMainnet = process.env.REACT_APP_NETWORK === 'mainnet'
 
   return `https://${isMainnet ? '' : 'rinkeby.'}infura.io:443/v3/${process.env.REACT_APP_INFURA_TOKEN}`
 }
 
+export const web3RO = new Web3(new Web3.providers.HttpProvider(getInfuraUrl()))
+
+let web3 = web3RO
+export const getWeb3 = () => web3
+
 // With some wallets from web3connect you have to use their provider instance only for signing
 // And our own one to fetch data
-export const web3RO = new Web3(new Web3.providers.HttpProvider(getInfuraUrl()))
+
+export const resetWeb3 = () => {
+  web3 = web3RO
+}
 
 const getProviderName: Function = (web3Provider): string => {
   let name

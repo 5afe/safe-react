@@ -2,7 +2,7 @@
 import { createAction } from 'redux-actions'
 import type { Dispatch as ReduxDispatch } from 'redux'
 import { NOTIFICATIONS, showSnackbar } from '~/logic/notifications'
-import { getWeb3 } from '~/logic/wallets/getWeb3'
+import { getWeb3, resetWeb3 } from '~/logic/wallets/getWeb3'
 
 export const REMOVE_PROVIDER = 'REMOVE_PROVIDER'
 
@@ -17,5 +17,6 @@ export default (enqueueSnackbar: Function, closeSnackbar: Function) => (dispatch
     web3.currentProvider.close()
   }
 
+  resetWeb3()
   dispatch(removeProvider())
 }
