@@ -23,6 +23,7 @@ export const WALLET_PROVIDER = {
   FORTMATIC: 'FORTMATIC',
   SQUARELINK: 'SQUARELINK',
   WALLETCONNECT: 'WALLETCONNECT',
+  OPERA: 'OPERA',
 }
 
 export const ETHEREUM_NETWORK_IDS = {
@@ -74,6 +75,13 @@ const getProviderName: Function = (web3Provider): string => {
         name = WALLET_PROVIDER.TORUS
       }
       break
+    case 'Object':
+      if (navigator && /Opera|OPR\//.test(navigator.userAgent)) {
+        name = WALLET_PROVIDER.OPERA
+      } else {
+        name = 'Wallet'
+      }
+      break
     default:
       name = 'Wallet'
   }
@@ -97,7 +105,7 @@ const getProviderName: Function = (web3Provider): string => {
   return name
 }
 
-export const INJECTED_PROVIDERS = [WALLET_PROVIDER.SAFE, WALLET_PROVIDER.METAMASK]
+export const INJECTED_PROVIDERS = [WALLET_PROVIDER.SAFE, WALLET_PROVIDER.METAMASK, WALLET_PROVIDER.OPERA]
 
 export const getAccountFrom: Function = async (web3Provider): Promise<string | null> => {
   const accounts = await web3Provider.eth.getAccounts()
