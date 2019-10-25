@@ -13,7 +13,7 @@ import Button from '~/components/layout/Button'
 import { fetchProvider } from '~/logic/wallets/store/actions'
 import { getNetwork } from '~/config'
 
-const web3Connect = new Web3Connect.Core({
+export const web3Connect = new Web3Connect.Core({
   network: getNetwork().toLowerCase(),
   providerOptions: {
     walletconnect: {
