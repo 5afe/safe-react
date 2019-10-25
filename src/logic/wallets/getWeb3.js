@@ -62,13 +62,12 @@ const getInfuraUrl = () => {
   return `https://${isMainnet ? '' : 'rinkeby.'}infura.io:443/v3/${process.env.REACT_APP_INFURA_TOKEN}`
 }
 
+// With some wallets from web3connect you have to use their provider instance only for signing
+// And our own one to fetch data
 export const web3RO = new Web3(new Web3.providers.HttpProvider(getInfuraUrl()))
 
 let web3 = web3RO
 export const getWeb3 = () => web3
-
-// With some wallets from web3connect you have to use their provider instance only for signing
-// And our own one to fetch data
 
 export const resetWeb3 = () => {
   web3 = web3RO
