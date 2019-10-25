@@ -24,7 +24,15 @@ export const WALLET_PROVIDER = {
   SQUARELINK: 'SQUARELINK',
   WALLETCONNECT: 'WALLETCONNECT',
   OPERA: 'OPERA',
+  DAPPER: 'DAPPER',
 }
+
+export const INJECTED_PROVIDERS = [
+  WALLET_PROVIDER.SAFE,
+  WALLET_PROVIDER.METAMASK,
+  WALLET_PROVIDER.OPERA,
+  WALLET_PROVIDER.DAPPER,
+]
 
 export const ETHEREUM_NETWORK_IDS = {
   // $FlowFixMe
@@ -82,6 +90,9 @@ const getProviderName: Function = (web3Provider): string => {
         name = 'Wallet'
       }
       break
+    case 'DapperLegacyProvider':
+      name = WALLET_PROVIDER.DAPPER
+      break
     default:
       name = 'Wallet'
   }
@@ -104,8 +115,6 @@ const getProviderName: Function = (web3Provider): string => {
 
   return name
 }
-
-export const INJECTED_PROVIDERS = [WALLET_PROVIDER.SAFE, WALLET_PROVIDER.METAMASK, WALLET_PROVIDER.OPERA]
 
 export const getAccountFrom: Function = async (web3Provider): Promise<string | null> => {
   const accounts = await web3Provider.eth.getAccounts()
