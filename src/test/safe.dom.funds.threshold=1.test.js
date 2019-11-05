@@ -38,7 +38,7 @@ describe('DOM > Feature > Sending Funds', () => {
 
     // WHEN
     const SafeDom = renderSafeView(store, safeAddress)
-    await sleep(1300)
+    await sleep(3500)
 
     // Open send funds modal
     const balanceRows = SafeDom.getAllByTestId(BALANCE_ROW_TEST_ID)

@@ -64,7 +64,9 @@ const getInfuraUrl = () => {
 
 // With some wallets from web3connect you have to use their provider instance only for signing
 // And our own one to fetch data
-export const web3RO = new Web3(new Web3.providers.HttpProvider(getInfuraUrl()))
+export const web3RO = process.env.NODE_ENV !== 'test'
+  ? new Web3(new Web3.providers.HttpProvider(getInfuraUrl()))
+  : new Web3(window.web3.currentProvider)
 
 let web3 = web3RO
 export const getWeb3 = () => web3

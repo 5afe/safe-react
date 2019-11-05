@@ -102,7 +102,7 @@ const renderApp = (store: Store) => ({
 export const renderSafeView = (store: Store<GlobalState>, address: string) => {
   const app = renderApp(store)
 
-  const url = `${SAFELIST_ADDRESS}/${address}`
+  const url = `${SAFELIST_ADDRESS}/${address}/balances`
   history.push(url)
 
   return app

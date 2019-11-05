@@ -36,8 +36,7 @@ class HeaderComponent extends React.PureComponent<Props, State> {
 
   async componentDidMount() {
     const lastUsedProvider = await loadLastUsedProvider()
-
-    if (INJECTED_PROVIDERS.includes(lastUsedProvider)) {
+    if (INJECTED_PROVIDERS.includes(lastUsedProvider) || process.env.NODE_ENV === 'test') {
       web3Connect.connectToInjected()
     }
   }

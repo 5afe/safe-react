@@ -42,10 +42,9 @@ export const createSafe = async (values: Object, userAccount: string, addSafe: A
   safeProps.owners = owners
 
   addSafe(safeProps)
-
   if (stillInOpeningView()) {
     const url = {
-      pathname: `${SAFELIST_ADDRESS}/${safeContract.address}`,
+      pathname: `${SAFELIST_ADDRESS}/${safeContract.address}/balances`,
       state: {
         name,
         tx: safe.tx,

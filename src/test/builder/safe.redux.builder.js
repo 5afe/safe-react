@@ -1,4 +1,5 @@
 // @flow
+/* eslint-disable max-classes-per-file */
 import SafeRecord, { type Safe } from '~/routes/safe/store/models/safe'
 import addSafe, { buildOwnersFrom } from '~/routes/safe/store/actions/addSafe'
 import {
@@ -74,7 +75,7 @@ export const aMinedSafe = async (
   threshold: number = 1,
   name: string = 'Safe Name',
 ): Promise<string> => {
-  const provider = await getProviderInfo()
+  const provider = await getProviderInfo(window.web3.currentProvider)
   const walletRecord = makeProvider(provider)
   store.dispatch(addProvider(walletRecord))
 

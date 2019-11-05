@@ -73,7 +73,7 @@ const SafeList = ({
       {safes.map((safe) => (
         <React.Fragment key={safe.address}>
           <Link
-            to={`${SAFELIST_ADDRESS}/${safe.address}`}
+            to={`${SAFELIST_ADDRESS}/${safe.address}/balances`}
             onClick={onSafeClick}
             data-testid={SIDEBAR_SAFELIST_ROW_TESTID}
           >
