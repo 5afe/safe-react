@@ -3,6 +3,7 @@ import contract from 'truffle-contract'
 import ProxyFactorySol from '@gnosis.pm/safe-contracts/build/contracts/ProxyFactory.json'
 import GnosisSafeSol from '@gnosis.pm/safe-contracts/build/contracts/GnosisSafe.json'
 import SafeProxy from '@gnosis.pm/safe-contracts/build/contracts/Proxy.json'
+import { ensureOnce } from '~/utils/singleton'
 import { simpleMemoize } from '~/components/forms/validator'
 import { getWeb3 } from '~/logic/wallets/getWeb3'
 import { calculateGasOf, calculateGasPrice } from '~/logic/wallets/ethTransactions'
@@ -30,7 +31,7 @@ const createProxyFactoryContract = (web3: any) => {
 export const getGnosisSafeContract = simpleMemoize(createGnosisSafeContract)
 const getCreateProxyFactoryContract = simpleMemoize(createProxyFactoryContract)
 
-const instanciateMasterCopies = async () => {
+const instantiateMasterCopies = async () => {
   const web3 = getWeb3()
 
   // Create ProxyFactory Master Copy
@@ -55,7 +56,7 @@ const createMasterCopies = async () => {
   safeMaster = await GnosisSafe.new({ from: userAccount, gas: '7000000' })
 }
 
-export const initContracts = process.env.NODE_ENV === 'test' ? createMasterCopies : instanciateMasterCopies
+export const initContracts = process.env.NODE_ENV === 'test' ? ensureOnce(createMasterCopies) : instantiateMasterCopies
 
 export const getSafeMasterContract = async () => {
   await initContracts()
