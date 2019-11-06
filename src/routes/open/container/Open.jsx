@@ -25,10 +25,10 @@ export type OpenState = {
 }
 
 export const createSafe = async (values: Object, userAccount: string, addSafe: AddSafe): Promise<OpenState> => {
-  const ownerAddresses = getAccountsFrom(values)
   const numConfirmations = getThresholdFrom(values)
   const name = getSafeNameFrom(values)
   const ownersNames = getNamesFrom(values)
+  const ownerAddresses = getAccountsFrom(values)
 
   await initContracts()
 
@@ -38,7 +38,7 @@ export const createSafe = async (values: Object, userAccount: string, addSafe: A
   const safeAddress = safe.logs[0].args.proxy
   const safeContract = await getGnosisSafeInstanceAt(safeAddress)
   const safeProps = await buildSafe(safeAddress, name)
-  const owners = getOwnersFrom(ownersNames, ownerAddresses.sort())
+  const owners = getOwnersFrom(ownersNames, ownerAddresses)
   safeProps.owners = owners
 
   addSafe(safeProps)
