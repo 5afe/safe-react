@@ -6,7 +6,6 @@ import Web3Connect from 'web3connect'
 import WalletConnectProvider from '@walletconnect/web3-provider'
 import Portis from '@portis/web3'
 import Squarelink from 'squarelink'
-import Torus from '@toruslabs/torus-embed'
 import Button from '~/components/layout/Button'
 import { fetchProvider } from '~/logic/wallets/store/actions'
 import { getNetwork } from '~/config'
@@ -35,15 +34,15 @@ export const web3Connect = new Web3Connect.Core({
         id: SQUARELINK_CLIENT_ID,
       },
     },
-    torus: {
-      package: Torus,
-      options: {
-        enableLogging: false,
-        buttonPosition: 'bottom-left',
-        buildEnv: process.env.NODE_ENV,
-        showTorusButton: true,
-      },
-    },
+    // torus: {
+    //   package: Torus,
+    //   options: {
+    //     enableLogging: false,
+    //     buttonPosition: 'bottom-left',
+    //     buildEnv: process.env.NODE_ENV,
+    //     showTorusButton: true,
+    //   },
+    // },
   },
 })
 
