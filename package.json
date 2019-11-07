@@ -31,7 +31,6 @@
     "precommit"
   ],
   "dependencies": {
-    "@arkane-network/web3-arkane-provider": "^0.2.5",
     "@gnosis.pm/safe-contracts": "^1.0.0",
     "@gnosis.pm/util-contracts": "2.0.4",
     "@material-ui/core": "4.6.0",
@@ -47,7 +46,6 @@
     "date-fns": "2.6.0",
     "ethereum-ens": "0.7.8",
     "final-form": "4.18.5",
-    "fortmatic": "1.0.0",
     "history": "4.10.1",
     "immortal-db": "^1.0.2",
     "immutable": "^4.0.0-rc.9",

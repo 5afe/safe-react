@@ -5,13 +5,14 @@ import { connect } from 'react-redux'
 import Web3Connect from 'web3connect'
 import WalletConnectProvider from '@walletconnect/web3-provider'
 import Portis from '@portis/web3'
-import Fortmatic from 'fortmatic'
 import Squarelink from 'squarelink'
 import Torus from '@toruslabs/torus-embed'
-import Arkane from '@arkane-network/web3-arkane-provider'
 import Button from '~/components/layout/Button'
 import { fetchProvider } from '~/logic/wallets/store/actions'
 import { getNetwork } from '~/config'
+
+const PORTIS_DAPP_ID = process.env.REACT_APP_NETWORK === 'mainnet' ? process.env.REACT_APP_PORTIS_ID : '852b763d-f28b-4463-80cb-846d7ec5806b'
+const SQUARELINK_CLIENT_ID = process.env.REACT_APP_NETWORK === 'mainnet' ? process.env.REACT_APP_SQUARELINK_ID : '46ce08fe50913cfa1b78'
 
 export const web3Connect = new Web3Connect.Core({
   network: getNetwork().toLowerCase(),
@@ -25,34 +26,22 @@ export const web3Connect = new Web3Connect.Core({
     portis: {
       package: Portis,
       options: {
-        id: process.env.REACT_APP_PORTIS_ID,
-      },
-    },
-    fortmatic: {
-      package: Fortmatic,
-      options: {
-        key: process.env.REACT_APP_FORTMATIC_KEY,
+        id: PORTIS_DAPP_ID,
       },
     },
     squarelink: {
-      package: Squarelink, // required
+      package: Squarelink,
       options: {
-        id: process.env.REACT_APP_SQUARELINK_ID, // required
+        id: SQUARELINK_CLIENT_ID,
       },
     },
     torus: {
-      package: Torus, // required
+      package: Torus,
       options: {
         enableLogging: false,
         buttonPosition: 'bottom-left',
         buildEnv: process.env.NODE_ENV,
         showTorusButton: true,
-      },
-    },
-    arkane: {
-      package: Arkane, // required
-      options: {
-        clientId: 'ARKANE_CLIENT_ID', // required, replace
       },
     },
   },
