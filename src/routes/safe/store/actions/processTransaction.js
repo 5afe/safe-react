@@ -26,7 +26,10 @@ import { getErrorMessage } from '~/test/utils/ethereumErrors'
 
 // https://gnosis-safe.readthedocs.io/en/latest/contracts/signatures.html#pre-validated-signatures
 // https://github.com/gnosis/safe-contracts/blob/master/test/gnosisSafeTeamEdition.js#L26
-export const generateSignaturesFromTxConfirmations = (confirmations: List<Confirmation>, preApprovingOwner?: string) => {
+export const generateSignaturesFromTxConfirmations = (
+  confirmations: List<Confirmation>,
+  preApprovingOwner?: string,
+) => {
   // The constant parts need to be sorted so that the recovered signers are sorted ascending
   // (natural order) by address (not checksummed).
   let confirmedAdresses = confirmations.map((conf) => conf.owner.address)
@@ -115,17 +118,23 @@ const processTransaction = (
       })
       .then(async (receipt) => {
         closeSnackbar(pendingExecutionKey)
-        await saveTxToHistory(
-          safeInstance,
-          tx.recipient,
-          tx.value,
-          tx.data,
-          CALL,
-          nonce,
-          receipt.transactionHash,
-          from,
-          shouldExecute ? TX_TYPE_EXECUTION : TX_TYPE_CONFIRMATION,
-        )
+
+        try {
+          await saveTxToHistory(
+            safeInstance,
+            tx.recipient,
+            tx.value,
+            tx.data,
+            CALL,
+            nonce,
+            receipt.transactionHash,
+            from,
+            shouldExecute ? TX_TYPE_EXECUTION : TX_TYPE_CONFIRMATION,
+          )
+        } catch (err) {
+          console.log(err)
+        }
+
         showSnackbar(notificationsQueue.afterExecution, enqueueSnackbar, closeSnackbar)
         dispatch(fetchTransactions(safeAddress))
 

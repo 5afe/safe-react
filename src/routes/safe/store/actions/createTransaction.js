@@ -75,13 +75,15 @@ const createTransaction = (
       .once('transactionHash', (hash) => {
         txHash = hash
         closeSnackbar(beforeExecutionKey)
-        const pendingExecutionNotification: Notification = isExecution ? {
-          message: notificationsQueue.pendingExecution.noMoreConfirmationsNeeded.message,
-          options: notificationsQueue.pendingExecution.noMoreConfirmationsNeeded.options,
-        } : {
-          message: notificationsQueue.pendingExecution.moreConfirmationsNeeded.message,
-          options: notificationsQueue.pendingExecution.moreConfirmationsNeeded.options,
-        }
+        const pendingExecutionNotification: Notification = isExecution
+          ? {
+            message: notificationsQueue.pendingExecution.noMoreConfirmationsNeeded.message,
+            options: notificationsQueue.pendingExecution.noMoreConfirmationsNeeded.options,
+          }
+          : {
+            message: notificationsQueue.pendingExecution.moreConfirmationsNeeded.message,
+            options: notificationsQueue.pendingExecution.moreConfirmationsNeeded.options,
+          }
         pendingExecutionKey = showSnackbar(pendingExecutionNotification, enqueueSnackbar, closeSnackbar)
       })
       .on('error', (error) => {
@@ -89,17 +91,23 @@ const createTransaction = (
       })
       .then(async (receipt) => {
         closeSnackbar(pendingExecutionKey)
-        await saveTxToHistory(
-          safeInstance,
-          to,
-          valueInWei,
-          txData,
-          CALL,
-          nonce,
-          receipt.transactionHash,
-          from,
-          isExecution ? TX_TYPE_EXECUTION : TX_TYPE_CONFIRMATION,
-        )
+
+        try {
+          await saveTxToHistory(
+            safeInstance,
+            to,
+            valueInWei,
+            txData,
+            CALL,
+            nonce,
+            receipt.transactionHash,
+            from,
+            isExecution ? TX_TYPE_EXECUTION : TX_TYPE_CONFIRMATION,
+          )
+        } catch (err) {
+          console.log(err)
+        }
+
         if (isExecution) {
           showSnackbar(notificationsQueue.afterExecution, enqueueSnackbar, closeSnackbar)
         }
