@@ -152,7 +152,7 @@ export const enhanceSnackbarForAction = (notification: Notification) => ({
   options: {
     ...notification.options,
     action: (key) => (
-      <IconButton onClick={() => store.dispatch(closeSnackbarAction(key))}>
+      <IconButton onClick={() => store.dispatch(closeSnackbarAction({key}))}>
         <IconClose />
       </IconButton>
     ),
