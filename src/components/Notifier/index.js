@@ -9,6 +9,8 @@ import selector from './selector'
 
 type Props = Actions & {
   notifications: List<Notification>,
+  closeSnackbar: Function,
+  enqueueSnackbar: Function,
 }
 
 class Notifier extends Component<Props> {

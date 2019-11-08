@@ -15,6 +15,7 @@ const enqueueSnackbar = (notification: NotificationProps) => (
     ...notification,
     key: new Date().getTime(),
   }
+
   dispatch(addSnackbar(newNotification))
 }
 

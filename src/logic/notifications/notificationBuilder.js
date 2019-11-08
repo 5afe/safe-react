@@ -3,6 +3,8 @@ import * as React from 'react'
 import { IconButton } from '@material-ui/core'
 import { Close as IconClose } from '@material-ui/icons'
 import { TX_NOTIFICATION_TYPES } from '~/logic/safe/transactions'
+import { store } from '~/store'
+import closeSnackbarAction from '~/logic/notifications/store/actions/closeSnackbar'
 import { type Notification, NOTIFICATIONS } from './notificationTypes'
 
 export type NotificationsQueue = {
@@ -145,11 +147,20 @@ export const getNotificationsFromTxType = (txType: string) => {
   return notificationsQueue
 }
 
-export const showSnackbar = (
-  notification: Notification,
-  enqueueSnackbar: Function,
-  closeSnackbar: Function,
-) => enqueueSnackbar(notification.message, {
+export const enhanceSnackbarForAction = (notification: Notification) => ({
+  ...notification,
+  options: {
+    ...notification.options,
+    action: (key) => (
+      <IconButton onClick={() => store.dispatch(closeSnackbarAction(key))}>
+        {console.log(key, notification.message)}
+        <IconClose />
+      </IconButton>
+    ),
+  },
+})
+
+export const showSnackbar = (notification: Notification, enqueueSnackbar: Function, closeSnackbar: Function) => enqueueSnackbar(notification.message, {
   ...notification.options,
   action: (key) => (
     <IconButton onClick={() => closeSnackbar(key)}>

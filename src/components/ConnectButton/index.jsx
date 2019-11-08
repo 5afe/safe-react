@@ -1,6 +1,5 @@
 // @flow
-import React, { useEffect } from 'react'
-import { withSnackbar } from 'notistack'
+import React from 'react'
 import { connect } from 'react-redux'
 import Web3Connect from 'web3connect'
 import Torus from '@toruslabs/torus-embed'
@@ -10,6 +9,7 @@ import Squarelink from 'squarelink'
 import Button from '~/components/layout/Button'
 import { fetchProvider } from '~/logic/wallets/store/actions'
 import { getNetwork } from '~/config'
+import { store } from '~/store'
 
 const PORTIS_DAPP_ID = process.env.REACT_APP_NETWORK === 'mainnet' ? process.env.REACT_APP_PORTIS_ID : '852b763d-f28b-4463-80cb-846d7ec5806b'
 const SQUARELINK_CLIENT_ID = process.env.REACT_APP_NETWORK === 'mainnet' ? process.env.REACT_APP_SQUARELINK_ID : '46ce08fe50913cfa1b78'
@@ -47,44 +47,36 @@ export const web3Connect = new Web3Connect.Core({
   },
 })
 
+web3Connect.on('connect', (provider: any) => {
+  if (provider) {
+    store.dispatch(fetchProvider(provider))
+  }
+})
+
 type Props = {
   registerProvider: Function,
   enqueueSnackbar: Function,
   closeSnackbar: Function,
 }
 
-let web3connectEventListenerAdded = false
-
 const ConnectButton = ({
-  registerProvider, enqueueSnackbar, closeSnackbar, ...props
-}: Props) => {
-  useEffect(() => {
-    if (!web3connectEventListenerAdded) {
-      web3Connect.on('connect', (provider: any) => {
-        if (provider) {
-          registerProvider(provider, enqueueSnackbar, closeSnackbar)
-        }
-      })
-      web3connectEventListenerAdded = true
-    }
-  }, [])
+  registerProvider, ...props
+}: Props) => (
 
-  return (
-    <Button
-      color="primary"
-      variant="contained"
-      minWidth={140}
-      onClick={() => {
-        web3Connect.toggleModal()
-      }}
-      {...props}
-    >
-      Connect
-    </Button>
-  )
-}
+  <Button
+    color="primary"
+    variant="contained"
+    minWidth={140}
+    onClick={() => {
+      web3Connect.toggleModal()
+    }}
+    {...props}
+  >
+    Connect
+  </Button>
+)
 
 export default connect(
   null,
   { registerProvider: fetchProvider },
-)(withSnackbar(ConnectButton))
+)(ConnectButton)
