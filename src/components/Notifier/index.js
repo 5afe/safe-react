@@ -48,8 +48,10 @@ class Notifier extends Component<Props> {
       if (this.displayed.includes(notification.key)) {
         return
       }
+
       // Display snackbar using notistack
       enqueueSnackbar(notification.message, {
+        key: notification.key,
         ...notification.options,
         onClose: (event, reason, key) => {
           if (notification.options.onClose) {
