@@ -3,6 +3,7 @@ import React, { useEffect } from 'react'
 import { withSnackbar } from 'notistack'
 import { connect } from 'react-redux'
 import Web3Connect from 'web3connect'
+import Torus from '@toruslabs/torus-embed'
 import WalletConnectProvider from '@walletconnect/web3-provider'
 import Portis from '@portis/web3'
 import Squarelink from 'squarelink'
@@ -34,15 +35,15 @@ export const web3Connect = new Web3Connect.Core({
         id: SQUARELINK_CLIENT_ID,
       },
     },
-    // torus: {
-    //   package: Torus,
-    //   options: {
-    //     enableLogging: false,
-    //     buttonPosition: 'bottom-left',
-    //     buildEnv: process.env.NODE_ENV,
-    //     showTorusButton: true,
-    //   },
-    // },
+    torus: {
+      package: Torus,
+      options: {
+        enableLogging: false,
+        buttonPosition: 'bottom-left',
+        buildEnv: process.env.NODE_ENV,
+        showTorusButton: true,
+      },
+    },
   },
 })
 
