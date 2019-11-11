@@ -40,6 +40,31 @@ import {
 } from '~/routes/safe/components/Settings/ManageOwners/ReplaceOwnerModal/screens/OwnerForm'
 import { REPLACE_OWNER_SUBMIT_BTN_TEST_ID } from '~/routes/safe/components/Settings/ManageOwners/ReplaceOwnerModal/screens/Review'
 
+const originalError = console.error
+beforeAll(() => {
+  console.error = (...args) => {
+    if (/Warning.*not wrapped in act/.test(args[0])) {
+      return
+    }
+    originalError.call(console, ...args)
+  }
+})
+
+afterAll(() => {
+  console.error = originalError
+})
+
+const travelToOwnerSettings = async (dom) => {
+  const settingsBtn = await waitForElement(() => dom.getByTestId(SETTINGS_TAB_BTN_TEST_ID))
+  fireEvent.click(settingsBtn)
+
+  // click on owners settings
+  const ownersSettingsBtn = await waitForElement(() => dom.getByTestId(OWNERS_SETTINGS_TAB_TEST_ID))
+  fireEvent.click(ownersSettingsBtn)
+
+  await sleep(500)
+}
+
 describe('DOM > Feature > Settings - Manage owners', () => {
   let store
   let safeAddress
@@ -55,12 +80,7 @@ describe('DOM > Feature > Settings - Manage owners', () => {
     await sleep(1300)
 
     // Travel to settings
-    const settingsBtn = await waitForElement(() => SafeDom.getByTestId(SETTINGS_TAB_BTN_TEST_ID))
-    fireEvent.click(settingsBtn)
-
-    // click on owners settings
-    const ownersSettingsBtn = await waitForElement(() => SafeDom.getByTestId(OWNERS_SETTINGS_TAB_TEST_ID))
-    fireEvent.click(ownersSettingsBtn)
+    await travelToOwnerSettings(SafeDom)
 
     // open rename owner modal
     const renameOwnerBtn = await waitForElement(() => SafeDom.getByTestId(RENAME_OWNER_BTN_TEST_ID))
@@ -85,14 +105,7 @@ describe('DOM > Feature > Settings - Manage owners', () => {
     await sleep(1300)
 
     // Travel to settings
-    const settingsBtn = SafeDom.getByTestId(SETTINGS_TAB_BTN_TEST_ID)
-    fireEvent.click(settingsBtn)
-    await sleep(200)
-
-    // click on owners settings
-    const ownersSettingsBtn = SafeDom.getByTestId(OWNERS_SETTINGS_TAB_TEST_ID)
-    fireEvent.click(ownersSettingsBtn)
-    await sleep(200)
+    await travelToOwnerSettings(SafeDom)
 
     // check if there are 2 owners
     let ownerRows = SafeDom.getAllByTestId(OWNERS_ROW_TEST_ID)
@@ -118,6 +131,8 @@ describe('DOM > Feature > Settings - Manage owners', () => {
     await sleep(1300)
 
     // check if owner was removed
+    await travelToOwnerSettings(SafeDom)
+
     ownerRows = SafeDom.getAllByTestId(OWNERS_ROW_TEST_ID)
     expect(ownerRows.length).toBe(1)
     expect(ownerRows[0]).toHaveTextContent('Adol 1 Eth Account')
@@ -135,14 +150,7 @@ describe('DOM > Feature > Settings - Manage owners', () => {
     await sleep(1300)
 
     // Travel to settings
-    const settingsBtn = SafeDom.getByTestId(SETTINGS_TAB_BTN_TEST_ID)
-    fireEvent.click(settingsBtn)
-    await sleep(200)
-
-    // click on owners settings
-    const ownersSettingsBtn = SafeDom.getByTestId(OWNERS_SETTINGS_TAB_TEST_ID)
-    fireEvent.click(ownersSettingsBtn)
-    await sleep(200)
+    await travelToOwnerSettings(SafeDom)
 
     // check if there is 1 owner
     let ownerRows = SafeDom.getAllByTestId(OWNERS_ROW_TEST_ID)
@@ -169,13 +177,14 @@ describe('DOM > Feature > Settings - Manage owners', () => {
     await sleep(1500)
 
     // check if owner was added
+    await travelToOwnerSettings(SafeDom)
+
     ownerRows = SafeDom.getAllByTestId(OWNERS_ROW_TEST_ID)
     expect(ownerRows.length).toBe(2)
     expect(ownerRows[0]).toHaveTextContent('Adol 1 Eth Account')
     expect(ownerRows[0]).toHaveTextContent('0x90F8bf6A479f320ead074411a4B0e7944Ea8c9C1')
     expect(ownerRows[1]).toHaveTextContent(NEW_OWNER_NAME)
     expect(ownerRows[1]).toHaveTextContent(NEW_OWNER_ADDRESS)
-
     // Check that the transaction was registered
     await checkRegisteredTxAddOwner(SafeDom, NEW_OWNER_ADDRESS)
   })
@@ -190,14 +199,7 @@ describe('DOM > Feature > Settings - Manage owners', () => {
     await sleep(1300)
 
     // Travel to settings
-    const settingsBtn = SafeDom.getByTestId(SETTINGS_TAB_BTN_TEST_ID)
-    fireEvent.click(settingsBtn)
-    await sleep(200)
-
-    // click on owners settings
-    const ownersSettingsBtn = SafeDom.getByTestId(OWNERS_SETTINGS_TAB_TEST_ID)
-    fireEvent.click(ownersSettingsBtn)
-    await sleep(200)
+    await travelToOwnerSettings(SafeDom)
 
     // check if there are 2 owners
     let ownerRows = SafeDom.getAllByTestId(OWNERS_ROW_TEST_ID)
@@ -225,6 +227,8 @@ describe('DOM > Feature > Settings - Manage owners', () => {
     await sleep(1000)
 
     // check if the owner was replaced
+    await travelToOwnerSettings(SafeDom)
+
     ownerRows = SafeDom.getAllByTestId(OWNERS_ROW_TEST_ID)
     expect(ownerRows.length).toBe(2)
     expect(ownerRows[0]).toHaveTextContent('Adol 1 Eth Account')

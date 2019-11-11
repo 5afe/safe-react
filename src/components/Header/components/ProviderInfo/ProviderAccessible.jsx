@@ -7,7 +7,7 @@ import Col from '~/components/layout/Col'
 import { connected as connectedBg, sm } from '~/theme/variables'
 import Identicon from '~/components/Identicon'
 import { shortVersionOf } from '~/logic/wallets/ethAddresses'
-import CircleDot from '~/components/Header/component/CircleDot'
+import CircleDot from '~/components/Header/components/CircleDot'
 
 type Props = {
   provider: string,

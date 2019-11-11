@@ -56,7 +56,7 @@ const Routes = ({ defaultSafe, location }: RoutesProps) => {
 
           setInitialLoad(false)
           if (defaultSafe) {
-            return <Redirect to={`${SAFELIST_ADDRESS}/${defaultSafe}`} />
+            return <Redirect to={`${SAFELIST_ADDRESS}/${defaultSafe}/balances`} />
           }
 
           return <Redirect to={WELCOME_ADDRESS} />

@@ -72,34 +72,42 @@ const createTransaction = (
 
     await tx
       .send(sendParams)
-      .once('transactionHash', (hash) => {
+      .once('transactionHash', async (hash) => {
         txHash = hash
         closeSnackbar(beforeExecutionKey)
-        const pendingExecutionNotification: Notification = isExecution ? {
-          message: notificationsQueue.pendingExecution.noMoreConfirmationsNeeded.message,
-          options: notificationsQueue.pendingExecution.noMoreConfirmationsNeeded.options,
-        } : {
-          message: notificationsQueue.pendingExecution.moreConfirmationsNeeded.message,
-          options: notificationsQueue.pendingExecution.moreConfirmationsNeeded.options,
-        }
+        const pendingExecutionNotification: Notification = isExecution
+          ? {
+            message: notificationsQueue.pendingExecution.noMoreConfirmationsNeeded.message,
+            options: notificationsQueue.pendingExecution.noMoreConfirmationsNeeded.options,
+          }
+          : {
+            message: notificationsQueue.pendingExecution.moreConfirmationsNeeded.message,
+            options: notificationsQueue.pendingExecution.moreConfirmationsNeeded.options,
+          }
         pendingExecutionKey = showSnackbar(pendingExecutionNotification, enqueueSnackbar, closeSnackbar)
+
+        try {
+          await saveTxToHistory(
+            safeInstance,
+            to,
+            valueInWei,
+            txData,
+            CALL,
+            nonce,
+            txHash,
+            from,
+            isExecution ? TX_TYPE_EXECUTION : TX_TYPE_CONFIRMATION,
+          )
+        } catch (err) {
+          console.error(err)
+        }
       })
       .on('error', (error) => {
         console.error('Tx error: ', error)
       })
-      .then(async (receipt) => {
+      .then((receipt) => {
         closeSnackbar(pendingExecutionKey)
-        await saveTxToHistory(
-          safeInstance,
-          to,
-          valueInWei,
-          txData,
-          CALL,
-          nonce,
-          receipt.transactionHash,
-          from,
-          isExecution ? TX_TYPE_EXECUTION : TX_TYPE_CONFIRMATION,
-        )
+
         if (isExecution) {
           showSnackbar(notificationsQueue.afterExecution, enqueueSnackbar, closeSnackbar)
         }

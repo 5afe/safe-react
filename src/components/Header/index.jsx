@@ -3,20 +3,22 @@ import * as React from 'react'
 import { connect } from 'react-redux'
 import { withSnackbar } from 'notistack'
 import { logComponentStack, type Info } from '~/utils/logBoundaries'
-import { getProviderInfo } from '~/logic/wallets/getWeb3'
-import type { ProviderProps } from '~/logic/wallets/store/model/provider'
 import { NOTIFICATIONS, showSnackbar } from '~/logic/notifications'
-import ProviderAccesible from './component/ProviderInfo/ProviderAccesible'
-import UserDetails from './component/ProviderDetails/UserDetails'
-import ProviderDisconnected from './component/ProviderInfo/ProviderDisconnected'
-import ConnectDetails from './component/ProviderDetails/ConnectDetails'
-import Layout from './component/Layout'
+import { web3Connect } from '~/components/ConnectButton'
+import { INJECTED_PROVIDERS } from '~/logic/wallets/getWeb3'
+import { loadLastUsedProvider } from '~/logic/wallets/store/middlewares/providerWatcher'
+import ProviderAccessible from './components/ProviderInfo/ProviderAccessible'
+import UserDetails from './components/ProviderDetails/UserDetails'
+import ProviderDisconnected from './components/ProviderInfo/ProviderDisconnected'
+import ConnectDetails from './components/ProviderDetails/ConnectDetails'
+import Layout from './components/Layout'
 import actions, { type Actions } from './actions'
 import selector, { type SelectorProps } from './selector'
 
 type Props = Actions &
   SelectorProps & {
     enqueueSnackbar: Function,
+    closeSnackbar: Function,
   }
 
 type State = {
@@ -24,8 +26,6 @@ type State = {
 }
 
 class HeaderComponent extends React.PureComponent<Props, State> {
-  providerListener: ?IntervalID
-
   constructor(props) {
     super(props)
 
@@ -34,8 +34,11 @@ class HeaderComponent extends React.PureComponent<Props, State> {
     }
   }
 
-  componentDidMount() {
-    this.onConnect()
+  async componentDidMount() {
+    const lastUsedProvider = await loadLastUsedProvider()
+    if (INJECTED_PROVIDERS.includes(lastUsedProvider) || process.env.NODE_ENV === 'test') {
+      web3Connect.connectToInjected()
+    }
   }
 
   componentDidCatch(error: Error, info: Info) {
@@ -50,25 +53,7 @@ class HeaderComponent extends React.PureComponent<Props, State> {
   onDisconnect = () => {
     const { removeProvider, enqueueSnackbar, closeSnackbar } = this.props
 
-    clearInterval(this.providerListener)
-
     removeProvider(enqueueSnackbar, closeSnackbar)
-  }
-
-  onConnect = async () => {
-    const { fetchProvider, enqueueSnackbar, closeSnackbar } = this.props
-
-    clearInterval(this.providerListener)
-    let currentProvider: ProviderProps = await getProviderInfo()
-    fetchProvider(currentProvider, enqueueSnackbar, closeSnackbar)
-
-    this.providerListener = setInterval(async () => {
-      const newProvider: ProviderProps = await getProviderInfo()
-      if (currentProvider && JSON.stringify(currentProvider) !== JSON.stringify(newProvider)) {
-        fetchProvider(newProvider, enqueueSnackbar, closeSnackbar)
-      }
-      currentProvider = newProvider
-    }, 2000)
   }
 
   getProviderInfoBased = () => {
@@ -81,7 +66,7 @@ class HeaderComponent extends React.PureComponent<Props, State> {
       return <ProviderDisconnected />
     }
 
-    return <ProviderAccesible provider={provider} network={network} userAddress={userAddress} connected={available} />
+    return <ProviderAccessible provider={provider} network={network} userAddress={userAddress} connected={available} />
   }
 
   getProviderDetailsBased = () => {
@@ -91,7 +76,7 @@ class HeaderComponent extends React.PureComponent<Props, State> {
     } = this.props
 
     if (hasError || !loaded) {
-      return <ConnectDetails onConnect={this.onConnect} />
+      return <ConnectDetails />
     }
 
     return (

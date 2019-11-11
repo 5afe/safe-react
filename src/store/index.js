@@ -7,6 +7,7 @@ import {
 import thunk from 'redux-thunk'
 import safe, { SAFE_REDUCER_ID, type SafeReducerState as SafeState } from '~/routes/safe/store/reducer/safe'
 import safeStorage from '~/routes/safe/store/middleware/safeStorage'
+import providerWatcher from '~/logic/wallets/store/middlewares/providerWatcher'
 import transactions, {
   type State as TransactionsState,
   TRANSACTIONS_REDUCER_ID,
@@ -22,7 +23,9 @@ export const history = createBrowserHistory()
 
 // eslint-disable-next-line
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
-const finalCreateStore = composeEnhancers(applyMiddleware(thunk, routerMiddleware(history), safeStorage))
+const finalCreateStore = composeEnhancers(
+  applyMiddleware(thunk, routerMiddleware(history), safeStorage, providerWatcher),
+)
 
 export type GlobalState = {
   providers: ProviderState,
@@ -45,8 +48,4 @@ const reducers: Reducer<GlobalState> = combineReducers({
 
 export const store: Store<GlobalState> = createStore(reducers, finalCreateStore)
 
-export const aNewStore = (localState?: Object): Store<GlobalState> => createStore(
-  reducers,
-  localState,
-  finalCreateStore,
-)
+export const aNewStore = (localState?: Object): Store<GlobalState> => createStore(reducers, localState, finalCreateStore)

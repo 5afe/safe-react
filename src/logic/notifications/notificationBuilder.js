@@ -3,6 +3,8 @@ import * as React from 'react'
 import { IconButton } from '@material-ui/core'
 import { Close as IconClose } from '@material-ui/icons'
 import { TX_NOTIFICATION_TYPES } from '~/logic/safe/transactions'
+import { store } from '~/store'
+import closeSnackbarAction from '~/logic/notifications/store/actions/closeSnackbar'
 import { type Notification, NOTIFICATIONS } from './notificationTypes'
 
 export type NotificationsQueue = {
@@ -52,12 +54,12 @@ const cancellationTxNotificationsQueue: NotificationsQueue = {
 const ownerChangeTxNotificationsQueue: NotificationsQueue = {
   beforeExecution: NOTIFICATIONS.SIGN_OWNER_CHANGE_MSG,
   pendingExecution: {
-    noMoreConfirmationsNeeded: NOTIFICATIONS.ONWER_CHANGE_PENDING_MSG,
-    moreConfirmationsNeeded: NOTIFICATIONS.ONWER_CHANGE_PENDING_MORE_CONFIRMATIONS_MSG,
+    noMoreConfirmationsNeeded: NOTIFICATIONS.OWNER_CHANGE_PENDING_MSG,
+    moreConfirmationsNeeded: NOTIFICATIONS.OWNER_CHANGE_PENDING_MORE_CONFIRMATIONS_MSG,
   },
-  afterRejection: NOTIFICATIONS.ONWER_CHANGE_REJECTED_MSG,
+  afterRejection: NOTIFICATIONS.OWNER_CHANGE_REJECTED_MSG,
   afterExecution: NOTIFICATIONS.OWNER_CHANGE_EXECUTED_MSG,
-  afterExecutionError: NOTIFICATIONS.ONWER_CHANGE_FAILED_MSG,
+  afterExecutionError: NOTIFICATIONS.OWNER_CHANGE_FAILED_MSG,
 }
 
 const safeNameChangeNotificationsQueue: NotificationsQueue = {
@@ -67,7 +69,7 @@ const safeNameChangeNotificationsQueue: NotificationsQueue = {
     moreConfirmationsNeeded: null,
   },
   afterRejection: null,
-  afterExecution: NOTIFICATIONS.SAFE_NAME_CHANGE_EXECUTED_MSG,
+  afterExecution: NOTIFICATIONS.SAFE_NAME_CHANGED_MSG,
   afterExecutionError: null,
 }
 
@@ -145,11 +147,19 @@ export const getNotificationsFromTxType = (txType: string) => {
   return notificationsQueue
 }
 
-export const showSnackbar = (
-  notification: Notification,
-  enqueueSnackbar: Function,
-  closeSnackbar: Function,
-) => enqueueSnackbar(notification.message, {
+export const enhanceSnackbarForAction = (notification: Notification) => ({
+  ...notification,
+  options: {
+    ...notification.options,
+    action: (key) => (
+      <IconButton onClick={() => store.dispatch(closeSnackbarAction(key))}>
+        <IconClose />
+      </IconButton>
+    ),
+  },
+})
+
+export const showSnackbar = (notification: Notification, enqueueSnackbar: Function, closeSnackbar: Function) => enqueueSnackbar(notification.message, {
   ...notification.options,
   action: (key) => (
     <IconButton onClick={() => closeSnackbar(key)}>

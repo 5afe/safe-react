@@ -15,7 +15,7 @@ import { type SelectorProps } from '~/routes/load/container/selector'
 
 const getSteps = () => ['Name and address', 'Owners', 'Review']
 
-type Props = SelectorProps & {
+export type LayoutProps = SelectorProps & {
   onLoadSafeSubmit: (values: Object) => Promise<void>,
 }
 

@@ -18,10 +18,9 @@ import {
 } from '~/theme/variables'
 import { upperFirst } from '~/utils/css'
 import { shortVersionOf } from '~/logic/wallets/ethAddresses'
-import CircleDot from '~/components/Header/component/CircleDot'
+import CircleDot from '~/components/Header/components/CircleDot'
 
-const metamaskIcon = require('../../assets/metamask-icon.svg')
-const safeIcon = require('../../assets/gnosis-safe-icon.svg')
+const walletIcon = require('../../assets/wallet.svg')
 const dot = require('../../assets/dotRinkeby.svg')
 
 type Props = {
@@ -141,11 +140,7 @@ const UserDetails = ({
           Wallet
         </Paragraph>
         <Spacer />
-        {provider === 'safe' ? (
-          <Img className={classes.logo} src={safeIcon} height={14} alt="Safe client" />
-        ) : (
-          <Img className={classes.logo} src={metamaskIcon} height={14} alt="Metamask client" />
-        )}
+        <Img className={classes.logo} src={walletIcon} height={14} alt="Wallet icon" />
         <Paragraph noMargin align="right" weight="bolder" className={classes.labels}>
           {upperFirst(provider)}
         </Paragraph>

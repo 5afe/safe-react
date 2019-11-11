@@ -130,7 +130,11 @@ export const loadSafeTransactions = async (safeAddress: string) => {
 }
 
 export default (safeAddress: string) => async (dispatch: ReduxDispatch<GlobalState>) => {
-  const transactions: Map<string, List<Transaction>> = await loadSafeTransactions(safeAddress)
+  try {
+    const transactions: Map<string, List<Transaction>> = await loadSafeTransactions(safeAddress)
 
-  return dispatch(addTransactions(transactions))
+    return dispatch(addTransactions(transactions))
+  } catch (err) {
+    console.error(`Requests for transactions for ${safeAddress} failed with 404`)
+  }
 }

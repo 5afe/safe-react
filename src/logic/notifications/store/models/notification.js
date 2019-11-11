@@ -6,7 +6,7 @@ export type NotificationProps = {
   key?: number,
   message: string,
   options: Object,
-  dismissed: boolean,
+  dismissed?: boolean,
 }
 
 export const makeNotification: RecordFactory<NotificationProps> = Record({
