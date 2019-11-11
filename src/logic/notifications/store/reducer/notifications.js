@@ -18,10 +18,9 @@ export default handleActions<NotificationReducerState, *>(
       return state.set(notification.key, makeNotification(notification))
     },
     [CLOSE_SNACKBAR]: (state: NotificationReducerState, action: ActionType<Function>): NotificationReducerState => {
-      const { notification }: { notification: NotificationProps } = action.payload
-      notification.dismissed = true
+      const key = action.payload
 
-      return state.update(notification.key, (prev) => prev.merge(notification))
+      return state.update(key, (prev) => prev.set('dismissed', true))
     },
     [REMOVE_SNACKBAR]: (state: NotificationReducerState, action: ActionType<Function>): NotificationReducerState => {
       const key = action.payload

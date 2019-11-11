@@ -4,7 +4,10 @@ import { ETHEREUM_NETWORK_IDS, ETHEREUM_NETWORK, getProviderInfo } from '~/logic
 import { getNetwork } from '~/config'
 import type { ProviderProps } from '~/logic/wallets/store/model/provider'
 import { makeProvider } from '~/logic/wallets/store/model/provider'
-import { NOTIFICATIONS, showSnackbar } from '~/logic/notifications'
+import { NOTIFICATIONS, showSnackbar, enhanceSnackbarForAction } from '~/logic/notifications'
+import enqueueSnackbar from '~/logic/notifications/store/actions/enqueueSnackbar'
+import closeSnackbar from '~/logic/notifications/store/actions/closeSnackbar'
+
 import addProvider from './addProvider'
 
 export const processProviderResponse = (dispatch: ReduxDispatch<*>, provider: ProviderProps) => {
@@ -23,24 +26,20 @@ export const processProviderResponse = (dispatch: ReduxDispatch<*>, provider: Pr
   dispatch(addProvider(walletRecord))
 }
 
-const handleProviderNotification = (
-  provider: ProviderProps,
-  enqueueSnackbar: Function,
-  closeSnackbar: Function,
-) => {
+const handleProviderNotification = (provider: ProviderProps, dispatch: Function) => {
   const { loaded, network, available } = provider
 
   if (!loaded) {
-    showSnackbar(NOTIFICATIONS.CONNECT_WALLET_ERROR_MSG, enqueueSnackbar, closeSnackbar)
+    dispatch(enqueueSnackbar(enhanceSnackbarForAction(NOTIFICATIONS.CONNECT_WALLET_ERROR_MSG)))
     return
   }
 
   if (ETHEREUM_NETWORK_IDS[network] !== getNetwork()) {
-    showSnackbar(NOTIFICATIONS.WRONG_NETWORK_MSG, enqueueSnackbar, closeSnackbar)
+    dispatch(enqueueSnackbar(enhanceSnackbarForAction(NOTIFICATIONS.WRONG_NETWORK_MSG)))
     return
   }
   if (ETHEREUM_NETWORK.RINKEBY === getNetwork()) {
-    showSnackbar(NOTIFICATIONS.RINKEBY_VERSION_MSG, enqueueSnackbar, closeSnackbar)
+    dispatch(enqueueSnackbar(enhanceSnackbarForAction(NOTIFICATIONS.RINKEBY_VERSION_MSG)))
   }
 
   if (available) {
@@ -49,16 +48,14 @@ const handleProviderNotification = (
     // you SHOULD pass your own `key` in the options. `key` can be any sequence
     // of number or characters, but it has to be unique to a given snackbar.
 
-    showSnackbar(NOTIFICATIONS.WALLET_CONNECTED_MSG, enqueueSnackbar, closeSnackbar)
+    dispatch(enqueueSnackbar(enhanceSnackbarForAction(NOTIFICATIONS.WALLET_CONNECTED_MSG)))
   } else {
-    showSnackbar(NOTIFICATIONS.UNLOCK_WALLET_MSG, enqueueSnackbar, closeSnackbar)
+    dispatch(enqueueSnackbar(enhanceSnackbarForAction(NOTIFICATIONS.UNLOCK_WALLET_MSG)))
   }
 }
 
-export default (provider: Object, enqueueSnackbar: Function, closeSnackbar: Function) => async (
-  dispatch: ReduxDispatch<*>,
-) => {
+export default (provider: Object) => async (dispatch: ReduxDispatch<*>) => {
   const providerInfo: ProviderProps = await getProviderInfo(provider)
-  await handleProviderNotification(providerInfo, enqueueSnackbar, closeSnackbar)
+  await handleProviderNotification(providerInfo, dispatch)
   processProviderResponse(dispatch, providerInfo)
 }
