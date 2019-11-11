@@ -72,7 +72,7 @@ const createTransaction = (
 
     await tx
       .send(sendParams)
-      .once('transactionHash', (hash) => {
+      .once('transactionHash', async (hash) => {
         txHash = hash
         closeSnackbar(beforeExecutionKey)
         const pendingExecutionNotification: Notification = isExecution
@@ -85,12 +85,6 @@ const createTransaction = (
             options: notificationsQueue.pendingExecution.moreConfirmationsNeeded.options,
           }
         pendingExecutionKey = showSnackbar(pendingExecutionNotification, enqueueSnackbar, closeSnackbar)
-      })
-      .on('error', (error) => {
-        console.error('Tx error: ', error)
-      })
-      .then(async (receipt) => {
-        closeSnackbar(pendingExecutionKey)
 
         try {
           await saveTxToHistory(
@@ -100,13 +94,19 @@ const createTransaction = (
             txData,
             CALL,
             nonce,
-            receipt.transactionHash,
+            txHash,
             from,
             isExecution ? TX_TYPE_EXECUTION : TX_TYPE_CONFIRMATION,
           )
         } catch (err) {
-          console.log(err)
+          console.error(err)
         }
+      })
+      .on('error', (error) => {
+        console.error('Tx error: ', error)
+      })
+      .then((receipt) => {
+        closeSnackbar(pendingExecutionKey)
 
         if (isExecution) {
           showSnackbar(notificationsQueue.afterExecution, enqueueSnackbar, closeSnackbar)
