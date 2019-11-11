@@ -43,11 +43,11 @@ const providerWatcherMware = (store: Store<GlobalState>) => (next: Function) => 
 
           const networkChanged = currentProviderProps.network !== providerInfo.network
 
-          store.dispatch(closeSnackbar({ dismissAll: true }))
-          if (
-            currentProviderProps.account !== providerInfo.account
-            || networkChanged
-          ) {
+          if (networkChanged) {
+            store.dispatch(closeSnackbar({ dismissAll: true }))
+          }
+
+          if (currentProviderProps.account !== providerInfo.account || networkChanged) {
             store.dispatch(fetchProvider(web3))
           }
         }, 2000)
