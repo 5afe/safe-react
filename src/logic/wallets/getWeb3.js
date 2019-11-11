@@ -59,7 +59,7 @@ export const getEtherScanLink = (type: 'address' | 'tx', value: string) => {
 const getInfuraUrl = () => {
   const isMainnet = process.env.REACT_APP_NETWORK === 'mainnet'
 
-  return `https://${isMainnet ? '' : 'rinkeby.'}infura.io:443/v3/${process.env.REACT_APP_INFURA_TOKEN}`
+  return `https://${isMainnet ? 'mainnet' : 'rinkeby'}.infura.io:443/v3/${process.env.REACT_APP_INFURA_TOKEN}`
 }
 
 // With some wallets from web3connect you have to use their provider instance only for signing
