@@ -6,6 +6,7 @@ import Heading from '~/components/layout/Heading'
 import Img from '~/components/layout/Img'
 import Button from '~/components/layout/Button'
 import Link from '~/components/layout/Link'
+import ConnectButton from '~/components/ConnectButton'
 import { OPEN_ADDRESS, LOAD_ADDRESS } from '~/routes/routes'
 import { marginButtonImg, secondary } from '~/theme/variables'
 import styles from './Layout.scss'
@@ -84,12 +85,23 @@ const Welcome = ({ provider }: Props) => (
         <OpenInNew style={openIconStyle} />
       </a>
     </Heading>
-    <Block className={styles.safeActions} margin="md">
-      <CreateSafe size="large" provider={provider} />
-    </Block>
-    <Block className={styles.safeActions} margin="md">
-      <LoadSafe size="large" provider={provider} />
-    </Block>
+    {provider ? (
+      <>
+        <Block className={styles.safeActions} margin="md">
+          <CreateSafe size="large" provider={provider} />
+        </Block>
+        <Block className={styles.safeActions} margin="md">
+          <LoadSafe size="large" provider={provider} />
+        </Block>
+      </>
+    ) : (
+      <Block margin="md" className={styles.connectWallet}>
+        <Heading tag="h3" align="center" margin="md">
+          Get Started by Connecting a Wallet
+        </Heading>
+        <ConnectButton minWidth={240} minHeight={42} />
+      </Block>
+    )}
   </Block>
 )
 

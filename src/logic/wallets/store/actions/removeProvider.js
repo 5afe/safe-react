@@ -1,20 +1,22 @@
 // @flow
+import { createAction } from 'redux-actions'
 import type { Dispatch as ReduxDispatch } from 'redux'
-import { makeProvider, type ProviderProps, type Provider } from '~/logic/wallets/store/model/provider'
 import { NOTIFICATIONS, showSnackbar } from '~/logic/notifications'
-import addProvider from './addProvider'
+import { getWeb3, resetWeb3 } from '~/logic/wallets/getWeb3'
 
-export default (enqueueSnackbar: Function, closeSnackbar: Function) => async (dispatch: ReduxDispatch<*>) => {
-  const providerProps: ProviderProps = {
-    name: '',
-    available: false,
-    loaded: false,
-    account: '',
-    network: 0,
-  }
+export const REMOVE_PROVIDER = 'REMOVE_PROVIDER'
 
-  const provider: Provider = makeProvider(providerProps)
+const removeProvider = createAction<string, *, *>(REMOVE_PROVIDER)
+
+export default (enqueueSnackbar: Function, closeSnackbar: Function) => (dispatch: ReduxDispatch<*>) => {
   showSnackbar(NOTIFICATIONS.WALLET_DISCONNECTED_MSG, enqueueSnackbar, closeSnackbar)
 
-  dispatch(addProvider(provider))
+  const web3 = getWeb3()
+
+  if (web3.currentProvider && web3.currentProvider.close) {
+    web3.currentProvider.close()
+  }
+
+  resetWeb3()
+  dispatch(removeProvider())
 }

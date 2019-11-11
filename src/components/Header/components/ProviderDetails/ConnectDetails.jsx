@@ -2,14 +2,14 @@
 import * as React from 'react'
 import { withStyles } from '@material-ui/core/styles'
 import Paragraph from '~/components/layout/Paragraph'
-import Button from '~/components/layout/Button'
+import ConnectButton from '~/components/ConnectButton'
 import Row from '~/components/layout/Row'
+import Block from '~/components/layout/Block'
 import { md, lg } from '~/theme/variables'
-import CircleDot from '~/components/Header/component/CircleDot'
+import CircleDot from '~/components/Header/components/CircleDot'
 
 type Props = {
   classes: Object,
-  onConnect: Function,
 }
 
 const styles = () => ({
@@ -26,6 +26,7 @@ const styles = () => ({
   },
   connect: {
     padding: `${md} ${lg}`,
+    textAlign: 'center',
   },
   connectText: {
     letterSpacing: '1px',
@@ -35,7 +36,7 @@ const styles = () => ({
   },
 })
 
-const ConnectDetails = ({ classes, onConnect }: Props) => (
+const ConnectDetails = ({ classes }: Props) => (
   <>
     <div className={classes.container}>
       <Row margin="lg" align="center">
@@ -47,13 +48,9 @@ const ConnectDetails = ({ classes, onConnect }: Props) => (
     <Row className={classes.logo} margin="lg">
       <CircleDot keySize={32} circleSize={75} dotSize={25} dotTop={50} dotRight={25} center mode="error" />
     </Row>
-    <Row className={classes.connect}>
-      <Button onClick={onConnect} size="medium" variant="contained" color="primary" fullWidth>
-        <Paragraph className={classes.connectText} size="sm" weight="regular" color="white" noMargin>
-          CONNECT
-        </Paragraph>
-      </Button>
-    </Row>
+    <Block className={classes.connect}>
+      <ConnectButton />
+    </Block>
   </>
 )
 

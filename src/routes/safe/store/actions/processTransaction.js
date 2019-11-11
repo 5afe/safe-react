@@ -26,7 +26,10 @@ import { getErrorMessage } from '~/test/utils/ethereumErrors'
 
 // https://gnosis-safe.readthedocs.io/en/latest/contracts/signatures.html#pre-validated-signatures
 // https://github.com/gnosis/safe-contracts/blob/master/test/gnosisSafeTeamEdition.js#L26
-export const generateSignaturesFromTxConfirmations = (confirmations: List<Confirmation>, preApprovingOwner?: string) => {
+export const generateSignaturesFromTxConfirmations = (
+  confirmations: List<Confirmation>,
+  preApprovingOwner?: string,
+) => {
   // The constant parts need to be sorted so that the recovered signers are sorted ascending
   // (natural order) by address (not checksummed).
   let confirmedAdresses = confirmations.map((conf) => conf.owner.address)
@@ -101,7 +104,7 @@ const processTransaction = (
 
     await transaction
       .send(sendParams)
-      .once('transactionHash', (hash) => {
+      .once('transactionHash', async (hash) => {
         txHash = hash
         closeSnackbar(beforeExecutionKey)
         const notification: Notification = {
@@ -109,23 +112,29 @@ const processTransaction = (
           options: notificationsQueue.pendingExecution.noMoreConfirmationsNeeded.options,
         }
         pendingExecutionKey = showSnackbar(notification, enqueueSnackbar, closeSnackbar)
+
+        try {
+          await saveTxToHistory(
+            safeInstance,
+            tx.recipient,
+            tx.value,
+            tx.data,
+            CALL,
+            nonce,
+            txHash,
+            from,
+            shouldExecute ? TX_TYPE_EXECUTION : TX_TYPE_CONFIRMATION,
+          )
+        } catch (err) {
+          console.error(err)
+        }
       })
       .on('error', (error) => {
         console.error('Processing transaction error: ', error)
       })
-      .then(async (receipt) => {
+      .then((receipt) => {
         closeSnackbar(pendingExecutionKey)
-        await saveTxToHistory(
-          safeInstance,
-          tx.recipient,
-          tx.value,
-          tx.data,
-          CALL,
-          nonce,
-          receipt.transactionHash,
-          from,
-          shouldExecute ? TX_TYPE_EXECUTION : TX_TYPE_CONFIRMATION,
-        )
+
         showSnackbar(notificationsQueue.afterExecution, enqueueSnackbar, closeSnackbar)
         dispatch(fetchTransactions(safeAddress))
 

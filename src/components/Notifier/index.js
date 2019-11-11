@@ -9,6 +9,8 @@ import selector from './selector'
 
 type Props = Actions & {
   notifications: List<Notification>,
+  closeSnackbar: Function,
+  enqueueSnackbar: Function,
 }
 
 class Notifier extends Component<Props> {
@@ -46,8 +48,10 @@ class Notifier extends Component<Props> {
       if (this.displayed.includes(notification.key)) {
         return
       }
+
       // Display snackbar using notistack
       enqueueSnackbar(notification.message, {
+        key: notification.key,
         ...notification.options,
         onClose: (event, reason, key) => {
           if (notification.options.onClose) {

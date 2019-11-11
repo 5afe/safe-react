@@ -10,15 +10,15 @@ export const INFO = 'info'
 const shortDuration = 5000
 const longDuration = 10000
 
-export type Variant = SUCCESS | ERROR | WARNING | INFO
+export type Variant = 'success' | 'error' | 'warning' | 'info'
 
 export type Notification = {
   message: string,
   options: {
     variant: Variant,
     persist: boolean,
-    autoHideDuration?: shortDuration | longDuration,
-    preventDuplicate: boolean,
+    autoHideDuration?: 5000 | 10000,
+    preventDuplicate?: boolean,
   },
 }
 
@@ -52,11 +52,11 @@ export type Notifications = {
 
   // Owners
   SIGN_OWNER_CHANGE_MSG: Notification,
-  ONWER_CHANGE_PENDING_MSG: Notification,
-  ONWER_CHANGE_PENDING_MORE_CONFIRMATIONS_MSG: Notification,
-  ONWER_CHANGE_REJECTED_MSG: Notification,
-  ONWER_CHANGE_EXECUTED_MSG: Notification,
-  ONWER_CHANGE_FAILED_MSG: Notification,
+  OWNER_CHANGE_PENDING_MSG: Notification,
+  OWNER_CHANGE_PENDING_MORE_CONFIRMATIONS_MSG: Notification,
+  OWNER_CHANGE_REJECTED_MSG: Notification,
+  OWNER_CHANGE_EXECUTED_MSG: Notification,
+  OWNER_CHANGE_FAILED_MSG: Notification,
 
   // Threshold
   SIGN_THRESHOLD_CHANGE_MSG: Notification,
@@ -147,7 +147,7 @@ export const NOTIFICATIONS: Notifications = {
   },
 
   // Safe Name
-  SAFE_NAME_CHANGE_EXECUTED_MSG: {
+  SAFE_NAME_CHANGED_MSG: {
     message: 'Safe name changed',
     options: { variant: SUCCESS, persist: false, autoHideDuration: shortDuration },
   },
@@ -163,15 +163,15 @@ export const NOTIFICATIONS: Notifications = {
     message: 'Please sign the owner change',
     options: { variant: SUCCESS, persist: true },
   },
-  ONWER_CHANGE_PENDING_MSG: {
+  OWNER_CHANGE_PENDING_MSG: {
     message: 'Owner change pending',
     options: { variant: SUCCESS, persist: true },
   },
-  ONWER_CHANGE_PENDING_MORE_CONFIRMATIONS_MSG: {
+  OWNER_CHANGE_PENDING_MORE_CONFIRMATIONS_MSG: {
     message: 'Owner change pending: More confirmations required to execute',
     options: { variant: SUCCESS, persist: true },
   },
-  ONWER_CHANGE_REJECTED_MSG: {
+  OWNER_CHANGE_REJECTED_MSG: {
     message: 'Owner change rejected',
     options: { variant: ERROR, persist: false, autoHideDuration: longDuration },
   },
@@ -179,7 +179,7 @@ export const NOTIFICATIONS: Notifications = {
     message: 'Owner change successfully executed',
     options: { variant: SUCCESS, persist: false, autoHideDuration: longDuration },
   },
-  ONWER_CHANGE_FAILED_MSG: {
+  OWNER_CHANGE_FAILED_MSG: {
     message: 'Owner change failed',
     options: { variant: ERROR, persist: false, autoHideDuration: longDuration },
   },

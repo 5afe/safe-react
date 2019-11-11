@@ -102,7 +102,7 @@ const renderApp = (store: Store) => ({
 export const renderSafeView = (store: Store<GlobalState>, address: string) => {
   const app = renderApp(store)
 
-  const url = `${SAFELIST_ADDRESS}/${address}`
+  const url = `${SAFELIST_ADDRESS}/${address}/balances`
   history.push(url)
 
   return app
@@ -115,7 +115,7 @@ export const whenSafeDeployed = (): Promise<string> => new Promise((resolve, rej
   const interval = setInterval(() => {
     if (times >= MAX_TIMES_EXECUTED) {
       clearInterval(interval)
-      reject()
+      reject(new Error('Didn\'t load the safe'))
     }
     const url = `${window.location}`
     console.log(url)

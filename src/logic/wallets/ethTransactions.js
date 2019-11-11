@@ -1,7 +1,7 @@
 // @flow
 import { BigNumber } from 'bignumber.js'
 import axios from 'axios'
-import { getWeb3 } from '~/logic/wallets/getWeb3'
+import { getWeb3, web3ReadOnly } from '~/logic/wallets/getWeb3'
 
 // const MAINNET_NETWORK = 1
 export const EMPTY_DATA = '0x'
@@ -11,8 +11,7 @@ export const checkReceiptStatus = async (hash: string) => {
     return Promise.reject(new Error('No valid Tx hash to get receipt from'))
   }
 
-  const web3 = getWeb3()
-  const txReceipt = await web3.eth.getTransactionReceipt(hash)
+  const txReceipt = await web3ReadOnly.eth.getTransactionReceipt(hash)
 
   const { status } = txReceipt
   if (!status) {

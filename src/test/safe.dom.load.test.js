@@ -2,7 +2,7 @@
 import * as React from 'react'
 import { type Store } from 'redux'
 import { Provider } from 'react-redux'
-import { render, fireEvent } from '@testing-library/react'
+import { render, fireEvent, act } from '@testing-library/react'
 import { ConnectedRouter } from 'connected-react-router'
 import Load from '~/routes/load/container/Load'
 import { aNewStore, history, type GlobalState } from '~/store'
@@ -29,7 +29,7 @@ afterAll(() => {
 })
 
 const renderLoadSafe = async (localStore: Store<GlobalState>) => {
-  const provider = await getProviderInfo()
+  const provider = await getProviderInfo(window.web3.currentProvider)
   const walletRecord = makeProvider(provider)
   localStore.dispatch(addProvider(walletRecord))
 
@@ -52,19 +52,18 @@ describe('DOM > Feature > LOAD a Safe', () => {
     const safeAddressInput = LoadSafePage.getByPlaceholderText('Safe Address*')
 
     // Fill Safe's name
-    fireEvent.change(safeNameInput, { target: { value: 'A Safe To Load' } })
-    fireEvent.change(safeAddressInput, { target: { value: address } })
-    await sleep(400)
-    // Click next
-    fireEvent.submit(form)
-    await sleep(400)
+    await act(async () => {
+      fireEvent.change(safeNameInput, { target: { value: 'A Safe To Load' } })
+      fireEvent.change(safeAddressInput, { target: { value: address } })
+      fireEvent.submit(form)
 
-    // submit form with owners names
-    fireEvent.submit(form)
-    await sleep(400)
+      await sleep(500)
+      fireEvent.submit(form)
 
-    // Submit
-    fireEvent.submit(form)
+      await sleep(500)
+      fireEvent.submit(form)
+    })
+
     const deployedAddress = await whenSafeDeployed()
     expect(deployedAddress).toBe(address)
   })

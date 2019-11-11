@@ -17,10 +17,22 @@ export const ETHEREUM_NETWORK = {
 export const WALLET_PROVIDER = {
   SAFE: 'SAFE',
   METAMASK: 'METAMASK',
-  PARITY: 'PARITY',
   REMOTE: 'REMOTE',
-  UPORT: 'UPORT',
+  TORUS: 'TORUS',
+  PORTIS: 'PORTIS',
+  FORTMATIC: 'FORTMATIC',
+  SQUARELINK: 'SQUARELINK',
+  WALLETCONNECT: 'WALLETCONNECT',
+  OPERA: 'OPERA',
+  DAPPER: 'DAPPER',
 }
+
+export const INJECTED_PROVIDERS = [
+  WALLET_PROVIDER.SAFE,
+  WALLET_PROVIDER.METAMASK,
+  WALLET_PROVIDER.OPERA,
+  WALLET_PROVIDER.DAPPER,
+]
 
 export const ETHEREUM_NETWORK_IDS = {
   // $FlowFixMe
@@ -44,8 +56,24 @@ export const getEtherScanLink = (type: 'address' | 'tx', value: string) => {
   }etherscan.io/${type}/${value}`
 }
 
-let web3
-export const getWeb3 = () => web3 || (window.web3 && new Web3(window.web3.currentProvider)) || (window.ethereum && new Web3(window.ethereum))
+const getInfuraUrl = () => {
+  const isMainnet = process.env.REACT_APP_NETWORK === 'mainnet'
+
+  return `https://${isMainnet ? '' : 'rinkeby.'}infura.io:443/v3/${process.env.REACT_APP_INFURA_TOKEN}`
+}
+
+// With some wallets from web3connect you have to use their provider instance only for signing
+// And our own one to fetch data
+export const web3ReadOnly = process.env.NODE_ENV !== 'test'
+  ? new Web3(new Web3.providers.HttpProvider(getInfuraUrl()))
+  : new Web3(window.web3.currentProvider)
+
+let web3 = web3ReadOnly
+export const getWeb3 = () => web3
+
+export const resetWeb3 = () => {
+  web3 = web3ReadOnly
+}
 
 const getProviderName: Function = (web3Provider): string => {
   let name
@@ -56,9 +84,39 @@ const getProviderName: Function = (web3Provider): string => {
       break
     case 'MetamaskInpageProvider':
       name = WALLET_PROVIDER.METAMASK
+
+      if (web3Provider.currentProvider.isTorus) {
+        name = WALLET_PROVIDER.TORUS
+      }
+      break
+    case 'Object':
+      if (navigator && /Opera|OPR\//.test(navigator.userAgent)) {
+        name = WALLET_PROVIDER.OPERA
+      } else {
+        name = 'Wallet'
+      }
+      break
+    case 'DapperLegacyProvider':
+      name = WALLET_PROVIDER.DAPPER
       break
     default:
       name = 'Wallet'
+  }
+
+  if (web3Provider.currentProvider.isPortis) {
+    name = WALLET_PROVIDER.PORTIS
+  }
+
+  if (web3Provider.currentProvider.isFortmatic) {
+    name = WALLET_PROVIDER.FORTMATIC
+  }
+
+  if (web3Provider.currentProvider.isSquarelink) {
+    name = WALLET_PROVIDER.SQUARELINK
+  }
+
+  if (web3Provider.currentProvider.isWalletConnect) {
+    name = WALLET_PROVIDER.WALLETCONNECT
   }
 
   return name
@@ -80,28 +138,7 @@ const getNetworkIdFrom = async (web3Provider) => {
   return networkId
 }
 
-export const getProviderInfo: Function = async (): Promise<ProviderProps> => {
-  let web3Provider
-
-  if (window.ethereum) {
-    web3Provider = window.ethereum
-    try {
-      await web3Provider.enable()
-    } catch (error) {
-      console.error('Error when enabling web3 provider', error)
-    }
-  } else if (window.web3) {
-    web3Provider = window.web3.currentProvider
-  } else {
-    return {
-      name: '',
-      available: false,
-      loaded: false,
-      account: '',
-      network: 0,
-    }
-  }
-
+export const getProviderInfo: Function = async (web3Provider): Promise<ProviderProps> => {
   web3 = new Web3(web3Provider)
 
   const name = getProviderName(web3)
