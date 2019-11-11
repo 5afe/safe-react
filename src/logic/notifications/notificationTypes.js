@@ -34,9 +34,9 @@ export type Notifications = {
   // Regular/Custom Transactions
   SIGN_TX_MSG: Notification,
   TX_PENDING_MSG: Notification,
-  TX_PENDING_MORE_CONFIRMATIONS_MSG: Notification,
   TX_REJECTED_MSG: Notification,
   TX_EXECUTED_MSG: Notification,
+  TX_EXECUTED_MORE_CONFIRMATIONS_MSG: Notification,
   TX_FAILED_MSG: Notification,
 
   // Approval Transactions
@@ -113,11 +113,7 @@ export const NOTIFICATIONS: Notifications = {
   },
   TX_PENDING_MSG: {
     message: 'Transaction pending',
-    options: { variant: SUCCESS, persist: true },
-  },
-  TX_PENDING_MORE_CONFIRMATIONS_MSG: {
-    message: 'Transaction pending: More confirmations required to execute',
-    options: { variant: SUCCESS, persist: true },
+    options: { variant: INFO, persist: true },
   },
   TX_REJECTED_MSG: {
     message: 'Transaction rejected',
@@ -125,6 +121,10 @@ export const NOTIFICATIONS: Notifications = {
   },
   TX_EXECUTED_MSG: {
     message: 'Transaction successfully executed',
+    options: { variant: SUCCESS, persist: false, autoHideDuration: longDuration },
+  },
+  TX_EXECUTED_MORE_CONFIRMATIONS_MSG: {
+    message: 'Transaction successfully created. More confirmations needed to execute',
     options: { variant: SUCCESS, persist: false, autoHideDuration: longDuration },
   },
   TX_FAILED_MSG: {
@@ -158,28 +158,28 @@ export const NOTIFICATIONS: Notifications = {
     options: { variant: SUCCESS, persist: false, autoHideDuration: shortDuration },
   },
 
-  // Owners
-  SIGN_OWNER_CHANGE_MSG: {
-    message: 'Please sign the owner change',
+  // Settings
+  SETTINGS_CHANGE_MSG: {
+    message: 'Please sign settings change',
     options: { variant: SUCCESS, persist: true },
   },
-  OWNER_CHANGE_PENDING_MSG: {
-    message: 'Owner change pending',
-    options: { variant: SUCCESS, persist: true },
+  SETTINGS_CHANGE_PENDING_MSG: {
+    message: 'Settings change pending',
+    options: { variant: INFO, persist: true },
   },
-  OWNER_CHANGE_PENDING_MORE_CONFIRMATIONS_MSG: {
+  SETTINGS_CHANGE_PENDING_MORE_CONFIRMATIONS_MSG: {
     message: 'Owner change pending: More confirmations required to execute',
-    options: { variant: SUCCESS, persist: true },
+    options: { variant: INFO, persist: true },
   },
-  OWNER_CHANGE_REJECTED_MSG: {
+  SETTINGS_CHANGE_REJECTED_MSG: {
     message: 'Owner change rejected',
     options: { variant: ERROR, persist: false, autoHideDuration: longDuration },
   },
-  OWNER_CHANGE_EXECUTED_MSG: {
+  SETTINGS_CHANGE_EXECUTED_MSG: {
     message: 'Owner change successfully executed',
     options: { variant: SUCCESS, persist: false, autoHideDuration: longDuration },
   },
-  OWNER_CHANGE_FAILED_MSG: {
+  SETTINGS_CHANGE_FAILED_MSG: {
     message: 'Owner change failed',
     options: { variant: ERROR, persist: false, autoHideDuration: longDuration },
   },
@@ -191,11 +191,11 @@ export const NOTIFICATIONS: Notifications = {
   },
   THRESHOLD_CHANGE_PENDING_MSG: {
     message: 'Required confirmations change pending',
-    options: { variant: SUCCESS, persist: true },
+    options: { variant: INFO, persist: true },
   },
   THRESHOLD_CHANGE_PENDING_MORE_CONFIRMATIONS_MSG: {
     message: 'Required confirmations change pending: More confirmations required to execute',
-    options: { variant: SUCCESS, persist: true },
+    options: { variant: INFO, persist: true },
   },
   THRESHOLD_CHANGE_REJECTED_MSG: {
     message: 'Required confirmations change rejected',
