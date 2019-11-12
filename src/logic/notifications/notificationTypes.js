@@ -151,7 +151,7 @@ export const NOTIFICATIONS: Notifications = {
 
   // Settings
   SIGN_SETTINGS_CHANGE_MSG: {
-    message: 'Please sign settings change',
+    message: 'Please sign the settings change',
     options: { variant: SUCCESS, persist: true },
   },
   SETTINGS_CHANGE_PENDING_MSG: {

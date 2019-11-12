@@ -45,7 +45,7 @@ const notificationStyles = {
     fontFamily: 'Averta',
     fontSize: '14px',
     lineHeight: 1.43,
-    color: '#ffffff',
+    color: '#001428',
     minHeight: '58px',
     boxShadow: '0 0 10px 0 rgba(212, 212, 211, 0.59)',
   },
