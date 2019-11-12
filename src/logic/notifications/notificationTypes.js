@@ -100,7 +100,7 @@ export const NOTIFICATIONS: Notifications = {
   // Regular/Custom Transactions
   SIGN_TX_MSG: {
     message: 'Please sign the transaction',
-    options: { variant: SUCCESS, persist: true },
+    options: { variant: INFO, persist: true },
   },
   TX_PENDING_MSG: {
     message: 'Transaction pending',
@@ -126,7 +126,7 @@ export const NOTIFICATIONS: Notifications = {
   // Approval Transactions
   TX_CONFIRMATION_PENDING_MSG: {
     message: 'Confirmation transaction pending',
-    options: { variant: SUCCESS, persist: true },
+    options: { variant: INFO, persist: true },
   },
   TX_CONFIRMATION_EXECUTED_MSG: {
     message: 'Confirmation transaction succesful',
@@ -152,7 +152,7 @@ export const NOTIFICATIONS: Notifications = {
   // Settings
   SIGN_SETTINGS_CHANGE_MSG: {
     message: 'Please sign the settings change',
-    options: { variant: SUCCESS, persist: true },
+    options: { variant: INFO, persist: true },
   },
   SETTINGS_CHANGE_PENDING_MSG: {
     message: 'Settings change pending',
