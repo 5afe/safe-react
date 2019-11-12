@@ -51,20 +51,11 @@ export type Notifications = {
   OWNER_NAME_CHANGE_EXECUTED_MSG: Notification,
 
   // Owners
-  SIGN_OWNER_CHANGE_MSG: Notification,
-  OWNER_CHANGE_PENDING_MSG: Notification,
-  OWNER_CHANGE_PENDING_MORE_CONFIRMATIONS_MSG: Notification,
-  OWNER_CHANGE_REJECTED_MSG: Notification,
-  OWNER_CHANGE_EXECUTED_MSG: Notification,
-  OWNER_CHANGE_FAILED_MSG: Notification,
-
-  // Threshold
-  SIGN_THRESHOLD_CHANGE_MSG: Notification,
-  THRESHOLD_CHANGE_PENDING_MSG: Notification,
-  THRESHOLD_CHANGE_PENDING_MORE_CONFIRMATIONS_MSG: Notification,
-  THRESHOLD_CHANGE_REJECTED_MSG: Notification,
-  THRESHOLD_CHANGE_EXECUTED_MSG: Notification,
-  THRESHOLD_CHANGE_FAILED_MSG: Notification,
+  SIGN_SETTINGS_CHANGE_MSG: Notification,
+  SETTINGS_CHANGE_PENDING_MSG: Notification,
+  SETTINGS_CHANGE_REJECTED_MSG: Notification,
+  SETTINGS_CHANGE_EXECUTED_MORE_CONFIRMATIONS_MSG: Notification,
+  SETTINGS_CHANGE_FAILED_MSG: Notification,
 
   // Rinkeby version
   RINKEBY_VERSION_MSG: Notification,
@@ -159,7 +150,7 @@ export const NOTIFICATIONS: Notifications = {
   },
 
   // Settings
-  SETTINGS_CHANGE_MSG: {
+  SIGN_SETTINGS_CHANGE_MSG: {
     message: 'Please sign settings change',
     options: { variant: SUCCESS, persist: true },
   },
@@ -167,53 +158,27 @@ export const NOTIFICATIONS: Notifications = {
     message: 'Settings change pending',
     options: { variant: INFO, persist: true },
   },
-  SETTINGS_CHANGE_PENDING_MORE_CONFIRMATIONS_MSG: {
-    message: 'Owner change pending: More confirmations required to execute',
-    options: { variant: INFO, persist: true },
-  },
   SETTINGS_CHANGE_REJECTED_MSG: {
-    message: 'Owner change rejected',
+    message: 'Settings change rejected',
     options: { variant: ERROR, persist: false, autoHideDuration: longDuration },
   },
   SETTINGS_CHANGE_EXECUTED_MSG: {
-    message: 'Owner change successfully executed',
+    message: 'Settings change successfully executed',
+    options: { variant: SUCCESS, persist: false, autoHideDuration: longDuration },
+  },
+  SETTINGS_CHANGE_EXECUTED_MORE_CONFIRMATIONS_MSG: {
+    message: 'Settings change successfully created. More confirmations needed to execute',
     options: { variant: SUCCESS, persist: false, autoHideDuration: longDuration },
   },
   SETTINGS_CHANGE_FAILED_MSG: {
-    message: 'Owner change failed',
-    options: { variant: ERROR, persist: false, autoHideDuration: longDuration },
-  },
-
-  // Threshold
-  SIGN_THRESHOLD_CHANGE_MSG: {
-    message: 'Please sign the required confirmations change',
-    options: { variant: SUCCESS, persist: true },
-  },
-  THRESHOLD_CHANGE_PENDING_MSG: {
-    message: 'Required confirmations change pending',
-    options: { variant: INFO, persist: true },
-  },
-  THRESHOLD_CHANGE_PENDING_MORE_CONFIRMATIONS_MSG: {
-    message: 'Required confirmations change pending: More confirmations required to execute',
-    options: { variant: INFO, persist: true },
-  },
-  THRESHOLD_CHANGE_REJECTED_MSG: {
-    message: 'Required confirmations change rejected',
-    options: { variant: ERROR, persist: false, autoHideDuration: longDuration },
-  },
-  THRESHOLD_CHANGE_EXECUTED_MSG: {
-    message: 'Required confirmations change successfully executed',
-    options: { variant: SUCCESS, persist: false, autoHideDuration: longDuration },
-  },
-  THRESHOLD_CHANGE_FAILED_MSG: {
-    message: 'Required confirmations change failed',
+    message: 'Settings change failed',
     options: { variant: ERROR, persist: false, autoHideDuration: longDuration },
   },
 
   // Network
   RINKEBY_VERSION_MSG: {
     message: "Rinkeby Version: Don't send Mainnet assets to this Safe",
-    options: { variant: INFO, persist: true, preventDuplicate: true },
+    options: { variant: WARNING, persist: true, preventDuplicate: true },
   },
   WRONG_NETWORK_MSG: {
     message: `Wrong network: Please use ${capitalize(getNetwork())}`,

@@ -41,7 +41,7 @@ const notificationStyles = {
     boxShadow: '0 0 10px 0 rgba(212, 212, 211, 0.59)',
   },
   info: {
-    background: '#e8673c',
+    background: '#ffffff',
     fontFamily: 'Averta',
     fontSize: '14px',
     lineHeight: 1.43,

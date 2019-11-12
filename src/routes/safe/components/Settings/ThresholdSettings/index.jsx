@@ -52,7 +52,7 @@ const ThresholdSettings = ({
       safeAddress,
       0,
       txData,
-      TX_NOTIFICATION_TYPES.THRESHOLD_CHANGE_TX,
+      TX_NOTIFICATION_TYPES.SETTINGS_CHANGE_TX,
       enqueueSnackbar,
       closeSnackbar,
     )
