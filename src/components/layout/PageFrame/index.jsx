@@ -1,11 +1,16 @@
 // @flow
 import * as React from 'react'
+import { connect } from 'react-redux'
 import { SnackbarProvider } from 'notistack'
 import { withStyles } from '@material-ui/core/styles'
+import { getNetwork } from '~/config'
+import { ETHEREUM_NETWORK } from '~/logic/wallets/getWeb3'
 import SidebarProvider from '~/components/Sidebar'
 import Header from '~/components/Header'
+import Backdrop from '~/components/layout/Backdrop'
 import Img from '~/components/layout/Img'
 import Notifier from '~/components/Notifier'
+import { networkSelector } from '~/logic/wallets/store/selectors'
 import AlertLogo from './assets/alert.svg'
 import CheckLogo from './assets/check.svg'
 import ErrorLogo from './assets/error.svg'
@@ -53,33 +58,48 @@ const notificationStyles = {
 type Props = {
   children: React.Node,
   classes: Object,
+  currentNetwork: string,
 }
 
-const PageFrame = ({ children, classes }: Props) => (
-  <div className={styles.frame}>
-    <SnackbarProvider
-      maxSnack={5}
-      anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-      classes={{
-        variantSuccess: classes.success,
-        variantError: classes.error,
-        variantWarning: classes.warning,
-        variantInfo: classes.info,
-      }}
-      iconVariant={{
-        success: <Img src={CheckLogo} alt="Success" />,
-        error: <Img src={ErrorLogo} alt="Error" />,
-        warning: <Img src={AlertLogo} alt="Warning" />,
-        info: '',
-      }}
-    >
-      <Notifier />
-      <SidebarProvider>
-        <Header />
-        {children}
-      </SidebarProvider>
-    </SnackbarProvider>
-  </div>
-)
+const desiredNetwork = getNetwork()
 
-export default withStyles(notificationStyles)(PageFrame)
+const PageFrame = ({ children, classes, currentNetwork }: Props) => {
+  const isWrongNetwork = currentNetwork !== ETHEREUM_NETWORK.UNKNOWN && currentNetwork !== desiredNetwork
+
+  return (
+    <div className={styles.frame}>
+      <Backdrop isOpen={isWrongNetwork} />
+      <SnackbarProvider
+        maxSnack={5}
+        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+        classes={{
+          variantSuccess: classes.success,
+          variantError: classes.error,
+          variantWarning: classes.warning,
+          variantInfo: classes.info,
+        }}
+        iconVariant={{
+          success: <Img src={CheckLogo} alt="Success" />,
+          error: <Img src={ErrorLogo} alt="Error" />,
+          warning: <Img src={AlertLogo} alt="Warning" />,
+          info: '',
+        }}
+      >
+        <Notifier />
+        <SidebarProvider>
+          <Header />
+          {children}
+        </SidebarProvider>
+      </SnackbarProvider>
+    </div>
+  )
+}
+
+export default withStyles(notificationStyles)(
+  connect(
+    (state) => ({
+      currentNetwork: networkSelector(state),
+    }),
+    null,
+  )(PageFrame),
+)
