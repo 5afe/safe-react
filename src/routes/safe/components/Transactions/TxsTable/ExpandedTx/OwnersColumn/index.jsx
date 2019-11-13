@@ -1,14 +1,10 @@
 // @flow
-import React, { useState } from 'react'
+import React from 'react'
 import { List } from 'immutable'
 import { withStyles } from '@material-ui/core/styles'
-import Tabs from '@material-ui/core/Tabs'
-import Tab from '@material-ui/core/Tab'
 import Block from '~/components/layout/Block'
 import Col from '~/components/layout/Col'
-import Row from '~/components/layout/Row'
 import Img from '~/components/layout/Img'
-import Hairline from '~/components/layout/Hairline'
 import { type Owner } from '~/routes/safe/store/models/owner'
 import { type Transaction } from '~/routes/safe/store/models/transaction'
 import { TX_TYPE_CONFIRMATION } from '~/logic/safe/transactions/send'
@@ -34,7 +30,10 @@ type Props = {
   onTxExecute: Function,
 }
 
-const isCancellationTransaction = (tx: Transaction, safeAddress: string) => !tx.value && tx.data === EMPTY_DATA && tx.recipient === safeAddress
+const isCancellationTransaction = (
+  tx: Transaction,
+  safeAddress: string,
+) => !tx.value && tx.data === EMPTY_DATA && tx.recipient === safeAddress
 
 const OwnersColumn = ({
   tx,
@@ -69,6 +68,11 @@ const OwnersColumn = ({
   const ownersUnconfirmed = owners.filter(
     (owner) => tx.confirmations.findIndex((conf) => conf.owner.address === owner.address) === -1,
   )
+  let userIsUnconfirmedOwner
+  ownersUnconfirmed.some((owner) => {
+    userIsUnconfirmedOwner = owner.address === userAddress
+    return userIsUnconfirmedOwner
+  })
 
   let displayButtonRow = true
   if (tx.executionTxHash) {
@@ -88,6 +92,12 @@ const OwnersColumn = ({
     confirmedLabel = `Confirmed [${tx.confirmations.size}]`
   }
 
+  const showConfirmBtn = !tx.isExecuted
+    && !tx.cancelled
+    && userIsUnconfirmedOwner
+    && !currentUserAlreadyConfirmed
+    && !thresholdReached
+
   return (
     <Col xs={6} className={classes.rightCol} layout="block">
       <Block className={classes.ownerListTitle}>
@@ -98,13 +108,14 @@ const OwnersColumn = ({
         {confirmedLabel}
       </Block>
       <OwnersList
+        userAddress={userAddress}
         ownersWhoConfirmed={ownersWhoConfirmed}
         ownersUnconfirmed={ownersUnconfirmed}
         executionConfirmation={executionConfirmation}
         onTxConfirm={onTxConfirm}
-        showConfirmBtn={!tx.executionTxHash && !tx.cancelled && !currentUserAlreadyConfirmed && !thresholdReached}
+        showConfirmBtn={showConfirmBtn}
         onTxExecute={onTxExecute}
-        showExecuteBtn={tx.executionTxHash && thresholdReached}
+        showExecuteBtn={!tx.isExecuted && thresholdReached}
       />
       <Block className={classes.ownerListTitle}>
         <div className={classes.iconState}>

@@ -23,7 +23,6 @@ export const styles = () => ({
     alignItems: 'center',
     padding: '5px',
     paddingLeft: '20px',
-
   },
   ownerListTitle: {
     display: 'flex',
@@ -56,5 +55,5 @@ export const styles = () => ({
   button: {
     textAlign: 'center',
     justifyContent: 'center',
-  }
+  },
 })

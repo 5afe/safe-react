@@ -2,22 +2,12 @@
 import React from 'react'
 import { List } from 'immutable'
 import { withStyles } from '@material-ui/core/styles'
-import MuiList from '@material-ui/core/List'
-import ListItem from '@material-ui/core/ListItem'
-import ListItemIcon from '@material-ui/core/ListItemIcon'
-import ListItemText from '@material-ui/core/ListItemText'
-import Chip from '@material-ui/core/Chip'
-import Img from '~/components/layout/Img'
 import Button from '~/components/layout/Button'
 import EtherscanLink from '~/components/EtherscanLink'
 import Identicon from '~/components/Identicon'
-import Hairline from '~/components/layout/Hairline'
-import Row from '~/components/layout/Row'
 import Block from '~/components/layout/Block'
 import Paragraph from '~/components/layout/Paragraph'
 import { type Owner } from '~/routes/safe/store/models/owner'
-import ConfirmSmallGrey from './assets/confirm-small-grey.svg'
-import ConfirmedSmallFilled from './assets/confirmed-small-filled.svg'
 import { styles } from './style'
 
 export const CONFIRM_TX_BTN_TEST_ID = 'confirm-btn'
@@ -27,6 +17,8 @@ type ListProps = {
   ownersWhoConfirmed: List<Owner>,
   ownersUnconfirmed: List<Owner>,
   classes: Object,
+  isExecutor?: boolean,
+  userAddress: String,
   executionConfirmation?: Owner,
   onTxConfirm: Function,
   showConfirmBtn: boolean,
@@ -37,7 +29,7 @@ type ListProps = {
 type OwnerProps = {
   owner: Owner,
   classes: Object,
-  isExecutor?: boolean,
+  userAddress: String,
   onTxConfirm: Function,
   showConfirmBtn: boolean,
   onTxExecute: Function,
@@ -46,17 +38,15 @@ type OwnerProps = {
 
 const OwnerComponent = withStyles(styles)(({
   owner,
+  userAddress,
   classes,
-  isExecutor,
   onTxConfirm,
   showConfirmBtn,
   showExecuteBtn,
   onTxExecute,
 }: OwnerProps) => (
   <Block key={owner.address} className={classes.container}>
-    <div className={classes.iconState}>
-    
-    </div>
+    <div className={classes.iconState} />
     <Identicon address={owner.address} diameter={32} className={classes.icon} />
     <Block>
       <Paragraph className={classes.name} noMargin>
@@ -64,7 +54,7 @@ const OwnerComponent = withStyles(styles)(({
       </Paragraph>
       <EtherscanLink className={classes.address} type="address" value={owner.address} cut={4} />
     </Block>
-    {showConfirmBtn && (
+    {showConfirmBtn && owner.address === userAddress && (
       <Button
         className={classes.button}
         variant="contained"
@@ -92,9 +82,11 @@ const OwnerComponent = withStyles(styles)(({
 ))
 
 const OwnersList = ({
+  userAddress,
   ownersWhoConfirmed,
   ownersUnconfirmed,
   classes,
+  isExecutor,
   executionConfirmation,
   onTxConfirm,
   showConfirmBtn,
@@ -102,11 +94,13 @@ const OwnersList = ({
   onTxExecute,
 }: ListProps) => (
   <>
-    {executionConfirmation && <OwnerComponent owner={executionConfirmation} isExecutor />}
+    {executionConfirmation && <OwnerComponent owner={executionConfirmation} isExecutor={isExecutor} />}
     {ownersWhoConfirmed.map((owner) => (
       <OwnerComponent
         key={owner.address}
         owner={owner}
+        classes={classes}
+        userAddress={userAddress}
         showExecuteBtn={showExecuteBtn}
         onTxExecute={onTxExecute}
       />
@@ -116,6 +110,8 @@ const OwnersList = ({
       <OwnerComponent
         key={owner.address}
         owner={owner}
+        classes={classes}
+        userAddress={userAddress}
         onTxConfirm={onTxConfirm}
         showConfirmBtn={showConfirmBtn}
         showExecuteBtn={showExecuteBtn}
