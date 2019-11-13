@@ -6,9 +6,10 @@ import SidebarProvider from '~/components/Sidebar'
 import Header from '~/components/Header'
 import Img from '~/components/layout/Img'
 import Notifier from '~/components/Notifier'
-import AlertLogo from './assets/alert.svg'
-import CheckLogo from './assets/check.svg'
-import ErrorLogo from './assets/error.svg'
+import AlertIcon from './assets/alert.svg'
+import CheckIcon from './assets/check.svg'
+import ErrorIcon from './assets/error.svg'
+import InfoIcon from './assets/info.svg'
 import styles from './index.scss'
 
 const notificationStyles = {
@@ -40,11 +41,11 @@ const notificationStyles = {
     boxShadow: '0 0 10px 0 rgba(212, 212, 211, 0.59)',
   },
   info: {
-    background: '#e8673c',
+    background: '#ffffff',
     fontFamily: 'Averta',
     fontSize: '14px',
     lineHeight: 1.43,
-    color: '#ffffff',
+    color: '#001428',
     minHeight: '58px',
     boxShadow: '0 0 10px 0 rgba(212, 212, 211, 0.59)',
   },
@@ -67,10 +68,10 @@ const PageFrame = ({ children, classes }: Props) => (
         variantInfo: classes.info,
       }}
       iconVariant={{
-        success: <Img src={CheckLogo} alt="Success" />,
-        error: <Img src={ErrorLogo} alt="Error" />,
-        warning: <Img src={AlertLogo} alt="Warning" />,
-        info: '',
+        success: <Img src={CheckIcon} alt="Success" />,
+        error: <Img src={ErrorIcon} alt="Error" />,
+        warning: <Img src={AlertIcon} alt="Warning" />,
+        info: <Img src={InfoIcon} alt="Info" />,
       }}
     >
       <Notifier />
