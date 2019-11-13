@@ -171,7 +171,7 @@ class ManageOwners extends React.Component<Props, State> {
                       testId={RENAME_OWNER_BTN_TEST_ID}
                     />
                     {granted && (
-                      <Row align="end" className={classes.actions}>
+                      <>
                         <Img
                           alt="Replace owner"
                           className={classes.replaceOwnerIcon}
@@ -188,7 +188,7 @@ class ManageOwners extends React.Component<Props, State> {
                             testId={REMOVE_OWNER_BTN_TEST_ID}
                           />
                         )}
-                      </Row>
+                      </>
                     ) }
                   </Row>
                 </TableCell>
