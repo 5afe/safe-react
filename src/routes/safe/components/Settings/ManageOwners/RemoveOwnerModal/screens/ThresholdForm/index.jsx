@@ -65,7 +65,7 @@ const ThresholdForm = ({
                 </Row>
                 <Row>
                   <Paragraph weight="bolder">
-                    Any transaction over any daily limit requires the confirmation of:
+                    Any transaction requires the confirmation of:
                   </Paragraph>
                 </Row>
                 <Row margin="xl" align="center" className={classes.inputRow}>
