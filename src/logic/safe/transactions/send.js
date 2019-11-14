@@ -37,7 +37,7 @@ export const getApprovalTransaction = async (
     const web3 = getWeb3()
     const contract = new web3.eth.Contract(GnosisSafeSol.abi, safeInstance.address)
 
-    return contract.methods.approveHash(txHash, { value: 0 })
+    return contract.methods.approveHash(txHash)
   } catch (err) {
     console.error(`Error while approving transaction: ${err}`)
 
@@ -59,7 +59,7 @@ export const getExecutionTransaction = async (
     const web3 = getWeb3()
     const contract = new web3.eth.Contract(GnosisSafeSol.abi, safeInstance.address)
 
-    return contract.methods.execTransaction(to, valueInWei, data, operation, 0, 0, 0, ZERO_ADDRESS, ZERO_ADDRESS, sigs, { value: 0 })
+    return contract.methods.execTransaction(to, valueInWei, data, operation, 0, 0, 0, ZERO_ADDRESS, ZERO_ADDRESS, sigs)
   } catch (err) {
     console.error(`Error while creating transaction: ${err}`)
 
