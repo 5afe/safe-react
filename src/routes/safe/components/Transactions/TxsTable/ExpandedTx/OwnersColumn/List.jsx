@@ -3,12 +3,15 @@ import React from 'react'
 import { List } from 'immutable'
 import { withStyles } from '@material-ui/core/styles'
 import Button from '~/components/layout/Button'
+import Img from '~/components/layout/Img'
 import EtherscanLink from '~/components/EtherscanLink'
 import Identicon from '~/components/Identicon'
 import Block from '~/components/layout/Block'
 import Paragraph from '~/components/layout/Paragraph'
 import { type Owner } from '~/routes/safe/store/models/owner'
 import { styles } from './style'
+import ConfirmSmallGreyIcon from './assets/confirm-small-grey.svg'
+import ConfirmSmallFilledIcon from './assets/confirmed-small-filled.svg'
 
 export const CONFIRM_TX_BTN_TEST_ID = 'confirm-btn'
 export const EXECUTE_TX_BTN_TEST_ID = 'execute-btn'
@@ -34,6 +37,7 @@ type OwnerProps = {
   showConfirmBtn: boolean,
   onTxExecute: Function,
   showExecuteBtn: boolean,
+  confirmed?: boolean,
 }
 
 const OwnerComponent = withStyles(styles)(({
@@ -44,9 +48,12 @@ const OwnerComponent = withStyles(styles)(({
   showConfirmBtn,
   showExecuteBtn,
   onTxExecute,
+  confirmed,
 }: OwnerProps) => (
   <Block key={owner.address} className={classes.container}>
-    <div className={classes.iconState} />
+    <div className={classes.iconState}>
+      {confirmed ? <Img src={ConfirmSmallFilledIcon} /> : <Img src={ConfirmSmallGreyIcon} />}
+    </div>
     <Identicon address={owner.address} diameter={32} className={classes.icon} />
     <Block>
       <Paragraph className={classes.name} noMargin>
@@ -103,9 +110,9 @@ const OwnersList = ({
         userAddress={userAddress}
         showExecuteBtn={showExecuteBtn}
         onTxExecute={onTxExecute}
+        confirmed
       />
     ))}
-    ---
     {ownersUnconfirmed.map((owner) => (
       <OwnerComponent
         key={owner.address}

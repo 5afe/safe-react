@@ -11,9 +11,9 @@ import { TX_TYPE_CONFIRMATION } from '~/logic/safe/transactions/send'
 import { EMPTY_DATA } from '~/logic/wallets/ethTransactions'
 import OwnersList from './List'
 import ButtonRow from './ButtonRow'
-import CheckGreen from './assets/check-green.svg'
-import ConfirmLargeBorder from './assets/confirm-large-border.svg'
-import ConfirmLargeGrey from './assets/confirm-large-grey.svg'
+import CheckGreenIcon from './assets/check-green.svg'
+import ConfirmLargeBorderIcon from './assets/confirm-large-border.svg'
+import ConfirmLargeGreyIcon from './assets/confirm-large-grey.svg'
 import { styles } from './style'
 
 type Props = {
@@ -102,8 +102,8 @@ const OwnersColumn = ({
     <Col xs={6} className={classes.rightCol} layout="block">
       <Block className={classes.ownerListTitle}>
         <div className={classes.iconState}>
-          {!thresholdReached && <Img src={ConfirmLargeBorder} />}
-          {thresholdReached && <Img src={CheckGreen} />}
+          {!thresholdReached && <Img src={ConfirmLargeBorderIcon} />}
+          {thresholdReached && <Img src={CheckGreenIcon} />}
         </div>
         {confirmedLabel}
       </Block>
@@ -119,9 +119,9 @@ const OwnersColumn = ({
       />
       <Block className={classes.ownerListTitle}>
         <div className={classes.iconState}>
-          {!thresholdReached && <Img src={ConfirmLargeGrey} />}
-          {thresholdReached && !tx.executionTxHash && <Img src={ConfirmLargeBorder} />}
-          {thresholdReached && tx.executionTxHash && <Img src={CheckGreen} />}
+          {!thresholdReached && <Img src={ConfirmLargeGreyIcon} />}
+          {thresholdReached && !tx.executionTxHash && <Img src={ConfirmLargeBorderIcon} />}
+          {thresholdReached && tx.executionTxHash && <Img src={CheckGreenIcon} />}
         </div>
         Execute tx
       </Block>
