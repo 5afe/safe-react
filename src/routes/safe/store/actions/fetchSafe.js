@@ -9,7 +9,8 @@ import { getOwners, getSafeName, SAFES_KEY } from '~/logic/safe/utils'
 import { getGnosisSafeInstanceAt } from '~/logic/contracts/safeContracts'
 import { getBalanceInEtherOf } from '~/logic/wallets/getWeb3'
 import { loadFromStorage } from '~/utils/storage'
-import updateSafe from '~/routes/safe/store/actions/updateSafe'
+import removeSafeOwner from '~/routes/safe/store/actions/removeSafeOwner'
+import addSafeOwner from '~/routes/safe/store/actions/addSafeOwner'
 
 const buildOwnersFrom = (
   safeOwners: string[],
@@ -48,21 +49,22 @@ export const checkAndUpdateSafeOwners = (safeAddress: string) => async (
   // Check if the owner's safe did change and update them
   const [gnosisSafe, localSafe] = await Promise.all([getGnosisSafeInstanceAt(safeAddress), getLocalSafe(safeAddress)])
   const remoteOwners = await gnosisSafe.getOwners()
+  // Converts from [ { address, ownerName} ] to address array
   const localOwners = localSafe.owners.map((localOwner) => localOwner.address)
 
-  if (remoteOwners.length !== localOwners.length) {
-    dispatch(updateSafe({ address: safeAddress, owners: remoteOwners }))
-    return
-  }
-
-  // eslint-disable-next-line no-restricted-syntax
-  for (const remoteIterator of remoteOwners) {
-    if (!localOwners.includes(remoteIterator)) {
-      dispatch(updateSafe({ address: safeAddress, owners: remoteOwners }))
-
-      return
+  // If the remote owners does not contain a local address, we remove that local owner
+  localOwners.forEach((localAddress) => {
+    if (!remoteOwners.includes(localAddress)) {
+      dispatch(removeSafeOwner({ safeAddress, ownerAddress: localAddress }))
     }
-  }
+  })
+
+  // If the remote has an owner that we don't have locally, we add it
+  remoteOwners.forEach((remoteAddress) => {
+    if (!localOwners.includes(remoteAddress)) {
+      dispatch(addSafeOwner({ safeAddress, ownerAddress: remoteAddress, ownerName: 'UNKNOWN' }))
+    }
+  })
 }
 
 // eslint-disable-next-line consistent-return
