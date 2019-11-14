@@ -147,7 +147,7 @@ const processTransaction = (
     closeSnackbar(pendingExecutionKey)
     showSnackbar(notificationsQueue.afterExecutionError, enqueueSnackbar, closeSnackbar)
 
-    const executeData = safeInstance.contract.methods.approveHash(txHash, { value: 0 }).encodeABI()
+    const executeData = safeInstance.contract.methods.approveHash(txHash).encodeABI()
     const errMsg = await getErrorMessage(safeInstance.address, 0, executeData, from)
     console.error(`Error executing the TX: ${errMsg}`)
   }
