@@ -9,6 +9,7 @@ import { TX_NOTIFICATION_TYPES } from '~/logic/safe/transactions'
 import { getGnosisSafeInstanceAt, SENTINEL_ADDRESS } from '~/logic/contracts/safeContracts'
 import OwnerForm from './screens/OwnerForm'
 import ReviewReplaceOwner from './screens/Review'
+import type { Safe } from '~/routes/safe/store/models/safe'
 
 const styles = () => ({
   biggerModalWindow: {
@@ -33,6 +34,7 @@ type Props = {
   replaceSafeOwner: Function,
   enqueueSnackbar: Function,
   closeSnackbar: Function,
+  safe: Safe,
 }
 type ActiveScreen = 'checkOwner' | 'reviewReplaceOwner'
 
@@ -44,6 +46,7 @@ export const sendReplaceOwner = async (
   closeSnackbar: Function,
   createTransaction: Function,
   replaceSafeOwner: Function,
+  safe: Safe,
 ) => {
   const gnosisSafe = await getGnosisSafeInstanceAt(safeAddress)
   const safeOwners = await gnosisSafe.getOwners()
@@ -65,7 +68,7 @@ export const sendReplaceOwner = async (
     closeSnackbar,
   )
 
-  if (txHash) {
+  if (txHash && safe.threshold === 1) {
     replaceSafeOwner({
       safeAddress,
       oldOwnerAddress: ownerAddressToRemove,
@@ -89,6 +92,7 @@ const ReplaceOwner = ({
   replaceSafeOwner,
   enqueueSnackbar,
   closeSnackbar,
+  safe,
 }: Props) => {
   const [activeScreen, setActiveScreen] = useState<ActiveScreen>('checkOwner')
   const [values, setValues] = useState<Object>({})
@@ -121,6 +125,7 @@ const ReplaceOwner = ({
         closeSnackbar,
         createTransaction,
         replaceSafeOwner,
+        safe,
       )
     } catch (error) {
       console.error('Error while removing an owner', error)

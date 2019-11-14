@@ -253,6 +253,7 @@ class ManageOwners extends React.Component<Props, State> {
           userAddress={userAddress}
           createTransaction={createTransaction}
           replaceSafeOwner={replaceSafeOwner}
+          safe={safe}
         />
         <EditOwnerModal
           onClose={this.onHide('EditOwner')}
