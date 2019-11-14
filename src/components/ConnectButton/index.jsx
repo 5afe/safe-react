@@ -1,6 +1,5 @@
 // @flow
 import React from 'react'
-import { connect } from 'react-redux'
 import Web3Connect from 'web3connect'
 import Torus from '@toruslabs/torus-embed'
 import WalletConnectProvider from '@walletconnect/web3-provider'
@@ -54,15 +53,11 @@ web3Connect.on('connect', (provider: any) => {
 })
 
 type Props = {
-  registerProvider: Function,
   enqueueSnackbar: Function,
   closeSnackbar: Function,
 }
 
-const ConnectButton = ({
-  registerProvider, ...props
-}: Props) => (
-
+const ConnectButton = (props: Props) => (
   <Button
     color="primary"
     variant="contained"
@@ -76,7 +71,4 @@ const ConnectButton = ({
   </Button>
 )
 
-export default connect(
-  null,
-  { registerProvider: fetchProvider },
-)(ConnectButton)
+export default ConnectButton

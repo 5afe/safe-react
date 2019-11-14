@@ -162,33 +162,35 @@ class ManageOwners extends React.Component<Props, State> {
                   </TableCell>
                 ))}
                 <TableCell component="td">
-                  {granted && (
-                    <Row align="end" className={classes.actions}>
-                      <Img
-                        alt="Edit owner"
-                        className={classes.editOwnerIcon}
-                        src={RenameOwnerIcon}
-                        onClick={this.onShow('EditOwner', row)}
-                        testId={RENAME_OWNER_BTN_TEST_ID}
-                      />
-                      <Img
-                        alt="Replace owner"
-                        className={classes.replaceOwnerIcon}
-                        src={ReplaceOwnerIcon}
-                        onClick={this.onShow('ReplaceOwner', row)}
-                        testId={REPLACE_OWNER_BTN_TEST_ID}
-                      />
-                      {ownerData.size > 1 && (
+                  <Row align="end" className={classes.actions}>
+                    <Img
+                      alt="Edit owner"
+                      className={classes.editOwnerIcon}
+                      src={RenameOwnerIcon}
+                      onClick={this.onShow('EditOwner', row)}
+                      testId={RENAME_OWNER_BTN_TEST_ID}
+                    />
+                    {granted && (
+                      <>
                         <Img
-                          alt="Remove owner"
-                          className={classes.removeOwnerIcon}
-                          src={RemoveOwnerIcon}
-                          onClick={this.onShow('RemoveOwner', row)}
-                          testId={REMOVE_OWNER_BTN_TEST_ID}
+                          alt="Replace owner"
+                          className={classes.replaceOwnerIcon}
+                          src={ReplaceOwnerIcon}
+                          onClick={this.onShow('ReplaceOwner', row)}
+                          testId={REPLACE_OWNER_BTN_TEST_ID}
                         />
-                      )}
-                    </Row>
-                  )}
+                        {ownerData.size > 1 && (
+                          <Img
+                            alt="Remove owner"
+                            className={classes.removeOwnerIcon}
+                            src={RemoveOwnerIcon}
+                            onClick={this.onShow('RemoveOwner', row)}
+                            testId={REMOVE_OWNER_BTN_TEST_ID}
+                          />
+                        )}
+                      </>
+                    ) }
+                  </Row>
                 </TableCell>
               </TableRow>
             ))}

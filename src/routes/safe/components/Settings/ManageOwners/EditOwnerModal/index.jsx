@@ -52,7 +52,7 @@ const EditOwnerComponent = ({
     editSafeOwner({ safeAddress, ownerAddress, ownerName: values.ownerName })
 
     const notification = getNotificationsFromTxType(TX_NOTIFICATION_TYPES.OWNER_NAME_CHANGE_TX)
-    showSnackbar(notification.afterExecution, enqueueSnackbar, closeSnackbar)
+    showSnackbar(notification.afterExecution.noMoreConfirmationsNeeded, enqueueSnackbar, closeSnackbar)
 
     onClose()
   }

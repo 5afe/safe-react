@@ -8,101 +8,90 @@ import closeSnackbarAction from '~/logic/notifications/store/actions/closeSnackb
 import { type Notification, NOTIFICATIONS } from './notificationTypes'
 
 export type NotificationsQueue = {
-  beforeExecution: Notification,
-  pendingExecution: {
-    noMoreConfirmationsNeeded: Notification,
-    moreConfirmationsNeeded: Notification,
+  beforeExecution: Notification | null,
+  pendingExecution: Notification | null,
+  afterExecution: {
+    noMoreConfirmationsNeeded: Notification | null,
+    moreConfirmationsNeeded: Notification | null,
   },
-  afterExecution: Notification,
-  afterExecutionError: Notification,
-  afterRejection: Notification,
+  afterExecutionError: Notification | null,
+  afterRejection: Notification | null,
 }
 
 const standardTxNotificationsQueue: NotificationsQueue = {
   beforeExecution: NOTIFICATIONS.SIGN_TX_MSG,
-  pendingExecution: {
-    noMoreConfirmationsNeeded: NOTIFICATIONS.TX_PENDING_MSG,
-    moreConfirmationsNeeded: NOTIFICATIONS.TX_PENDING_MORE_CONFIRMATIONS_MSG,
-  },
+  pendingExecution: NOTIFICATIONS.TX_PENDING_MSG,
   afterRejection: NOTIFICATIONS.TX_REJECTED_MSG,
-  afterExecution: NOTIFICATIONS.TX_EXECUTED_MSG,
+  afterExecution: {
+    noMoreConfirmationsNeeded: NOTIFICATIONS.TX_EXECUTED_MSG,
+    moreConfirmationsNeeded: NOTIFICATIONS.TX_EXECUTED_MORE_CONFIRMATIONS_MSG,
+  },
   afterExecutionError: NOTIFICATIONS.TX_FAILED_MSG,
 }
 
 const confirmationTxNotificationsQueue: NotificationsQueue = {
   beforeExecution: NOTIFICATIONS.SIGN_TX_MSG,
-  pendingExecution: {
-    noMoreConfirmationsNeeded: NOTIFICATIONS.TX_CONFIRMATION_PENDING_MSG,
+  pendingExecution: NOTIFICATIONS.TX_CONFIRMATION_PENDING_MSG,
+  afterRejection: NOTIFICATIONS.TX_REJECTED_MSG,
+  afterExecution: {
+    noMoreConfirmationsNeeded: NOTIFICATIONS.TX_CONFIRMATION_EXECUTED_MSG,
     moreConfirmationsNeeded: null,
   },
-  afterRejection: NOTIFICATIONS.TX_REJECTED_MSG,
-  afterExecution: NOTIFICATIONS.TX_CONFIRMATION_EXECUTED_MSG,
   afterExecutionError: NOTIFICATIONS.TX_CONFIRMATION_FAILED_MSG,
 }
 
 const cancellationTxNotificationsQueue: NotificationsQueue = {
   beforeExecution: NOTIFICATIONS.SIGN_TX_MSG,
-  pendingExecution: {
-    noMoreConfirmationsNeeded: NOTIFICATIONS.TX_PENDING_MSG,
-    moreConfirmationsNeeded: NOTIFICATIONS.TX_PENDING_MORE_CONFIRMATIONS_MSG,
-  },
+  pendingExecution: NOTIFICATIONS.TX_PENDING_MSG,
   afterRejection: NOTIFICATIONS.TX_REJECTED_MSG,
-  afterExecution: NOTIFICATIONS.TX_EXECUTED_MSG,
-  afterExecutionError: NOTIFICATIONS.TX_FAILED_MSG,
-}
-
-const ownerChangeTxNotificationsQueue: NotificationsQueue = {
-  beforeExecution: NOTIFICATIONS.SIGN_OWNER_CHANGE_MSG,
-  pendingExecution: {
-    noMoreConfirmationsNeeded: NOTIFICATIONS.OWNER_CHANGE_PENDING_MSG,
-    moreConfirmationsNeeded: NOTIFICATIONS.OWNER_CHANGE_PENDING_MORE_CONFIRMATIONS_MSG,
+  afterExecution: {
+    noMoreConfirmationsNeeded: NOTIFICATIONS.TX_EXECUTED_MSG,
+    moreConfirmationsNeeded: NOTIFICATIONS.TX_EXECUTED_MORE_CONFIRMATIONS_MSG,
   },
-  afterRejection: NOTIFICATIONS.OWNER_CHANGE_REJECTED_MSG,
-  afterExecution: NOTIFICATIONS.OWNER_CHANGE_EXECUTED_MSG,
-  afterExecutionError: NOTIFICATIONS.OWNER_CHANGE_FAILED_MSG,
+  afterExecutionError: NOTIFICATIONS.TX_FAILED_MSG,
 }
 
 const safeNameChangeNotificationsQueue: NotificationsQueue = {
   beforeExecution: null,
-  pendingExecution: {
-    noMoreConfirmationsNeeded: null,
+  pendingExecution: null,
+  afterRejection: null,
+  afterExecution: {
+    noMoreConfirmationsNeeded: NOTIFICATIONS.SAFE_NAME_CHANGED_MSG,
     moreConfirmationsNeeded: null,
   },
-  afterRejection: null,
-  afterExecution: NOTIFICATIONS.SAFE_NAME_CHANGED_MSG,
   afterExecutionError: null,
 }
 
 const ownerNameChangeNotificationsQueue: NotificationsQueue = {
   beforeExecution: null,
-  pendingExecution: {
-    noMoreConfirmationsNeeded: null,
+  pendingExecution: null,
+  afterRejection: null,
+  afterExecution: {
+    noMoreConfirmationsNeeded: NOTIFICATIONS.OWNER_NAME_CHANGE_EXECUTED_MSG,
     moreConfirmationsNeeded: null,
   },
-  afterRejection: null,
-  afterExecution: NOTIFICATIONS.OWNER_NAME_CHANGE_EXECUTED_MSG,
   afterExecutionError: null,
 }
 
-const thresholdChangeTxNotificationsQueue: NotificationsQueue = {
-  beforeExecution: NOTIFICATIONS.SIGN_THRESHOLD_CHANGE_MSG,
-  pendingExecution: {
-    noMoreConfirmationsNeeded: NOTIFICATIONS.THRESHOLD_CHANGE_PENDING_MSG,
-    moreConfirmationsNeeded: NOTIFICATIONS.THRESHOLD_CHANGE_PENDING_MORE_CONFIRMATIONS_MSG,
+const settingsChangeTxNotificationsQueue: NotificationsQueue = {
+  beforeExecution: NOTIFICATIONS.SIGN_SETTINGS_CHANGE_MSG,
+  pendingExecution: NOTIFICATIONS.SETTINGS_CHANGE_PENDING_MSG,
+  afterRejection: NOTIFICATIONS.SETTINGS_CHANGE_REJECTED_MSG,
+  afterExecution: {
+    noMoreConfirmationsNeeded: NOTIFICATIONS.SETTINGS_CHANGE_EXECUTED_MSG,
+    moreConfirmationsNeeded: NOTIFICATIONS.SETTINGS_CHANGE_EXECUTED_MORE_CONFIRMATIONS_MSG,
   },
-  afterRejection: NOTIFICATIONS.THRESHOLD_CHANGE_REJECTED_MSG,
-  afterExecution: NOTIFICATIONS.THRESHOLD_CHANGE_EXECUTED_MSG,
-  afterExecutionError: NOTIFICATIONS.THRESHOLD_CHANGE_FAILED_MSG,
+  afterExecutionError: NOTIFICATIONS.SETTINGS_CHANGE_FAILED_MSG,
 }
 
 const defaultNotificationsQueue: NotificationsQueue = {
   beforeExecution: NOTIFICATIONS.SIGN_TX_MSG,
-  pendingExecution: {
-    noMoreConfirmationsNeeded: NOTIFICATIONS.TX_PENDING_MSG,
-    moreConfirmationsNeeded: NOTIFICATIONS.TX_PENDING_MORE_CONFIRMATIONS_MSG,
-  },
+  pendingExecution: NOTIFICATIONS.TX_PENDING_MSG,
   afterRejection: NOTIFICATIONS.TX_REJECTED_MSG,
-  afterExecution: NOTIFICATIONS.TX_EXECUTED_MSG,
+  afterExecution: {
+    noMoreConfirmationsNeeded: NOTIFICATIONS.TX_EXECUTED_MSG,
+    moreConfirmationsNeeded: NOTIFICATIONS.TX_EXECUTED_MORE_CONFIRMATIONS_MSG,
+  },
   afterExecutionError: NOTIFICATIONS.TX_FAILED_MSG,
 }
 
@@ -122,8 +111,8 @@ export const getNotificationsFromTxType = (txType: string) => {
       notificationsQueue = cancellationTxNotificationsQueue
       break
     }
-    case TX_NOTIFICATION_TYPES.OWNER_CHANGE_TX: {
-      notificationsQueue = ownerChangeTxNotificationsQueue
+    case TX_NOTIFICATION_TYPES.SETTINGS_CHANGE_TX: {
+      notificationsQueue = settingsChangeTxNotificationsQueue
       break
     }
     case TX_NOTIFICATION_TYPES.SAFE_NAME_CHANGE_TX: {
@@ -132,10 +121,6 @@ export const getNotificationsFromTxType = (txType: string) => {
     }
     case TX_NOTIFICATION_TYPES.OWNER_NAME_CHANGE_TX: {
       notificationsQueue = ownerNameChangeNotificationsQueue
-      break
-    }
-    case TX_NOTIFICATION_TYPES.THRESHOLD_CHANGE_TX: {
-      notificationsQueue = thresholdChangeTxNotificationsQueue
       break
     }
     default: {
@@ -151,8 +136,8 @@ export const enhanceSnackbarForAction = (notification: Notification) => ({
   ...notification,
   options: {
     ...notification.options,
-    action: (key) => (
-      <IconButton onClick={() => store.dispatch(closeSnackbarAction(key))}>
+    action: (key: number) => (
+      <IconButton onClick={() => store.dispatch(closeSnackbarAction({ key }))}>
         <IconClose />
       </IconButton>
     ),

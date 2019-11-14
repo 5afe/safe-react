@@ -15,12 +15,7 @@ import {
   TX_TYPE_EXECUTION,
   saveTxToHistory,
 } from '~/logic/safe/transactions'
-import {
-  type Notification,
-  type NotificationsQueue,
-  getNotificationsFromTxType,
-  showSnackbar,
-} from '~/logic/notifications'
+import { type NotificationsQueue, getNotificationsFromTxType, showSnackbar } from '~/logic/notifications'
 import { getErrorMessage } from '~/test/utils/ethereumErrors'
 import { ZERO_ADDRESS } from '~/logic/wallets/ethAddresses'
 import { SAFELIST_ADDRESS } from '~/routes/routes'
@@ -75,16 +70,8 @@ const createTransaction = (
       .once('transactionHash', async (hash) => {
         txHash = hash
         closeSnackbar(beforeExecutionKey)
-        const pendingExecutionNotification: Notification = isExecution
-          ? {
-            message: notificationsQueue.pendingExecution.noMoreConfirmationsNeeded.message,
-            options: notificationsQueue.pendingExecution.noMoreConfirmationsNeeded.options,
-          }
-          : {
-            message: notificationsQueue.pendingExecution.moreConfirmationsNeeded.message,
-            options: notificationsQueue.pendingExecution.moreConfirmationsNeeded.options,
-          }
-        pendingExecutionKey = showSnackbar(pendingExecutionNotification, enqueueSnackbar, closeSnackbar)
+
+        pendingExecutionKey = showSnackbar(notificationsQueue.pendingExecution, enqueueSnackbar, closeSnackbar)
 
         try {
           await saveTxToHistory(
@@ -108,9 +95,14 @@ const createTransaction = (
       .then((receipt) => {
         closeSnackbar(pendingExecutionKey)
 
-        if (isExecution) {
-          showSnackbar(notificationsQueue.afterExecution, enqueueSnackbar, closeSnackbar)
-        }
+        showSnackbar(
+          isExecution
+            ? notificationsQueue.afterExecution.noMoreConfirmationsNeeded
+            : notificationsQueue.afterExecution.moreConfirmationsNeeded,
+          enqueueSnackbar,
+          closeSnackbar,
+        )
+
         dispatch(fetchTransactions(safeAddress))
 
         return receipt.transactionHash

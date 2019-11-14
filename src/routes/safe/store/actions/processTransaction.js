@@ -17,7 +17,6 @@ import {
   TX_TYPE_CONFIRMATION,
 } from '~/logic/safe/transactions'
 import {
-  type Notification,
   type NotificationsQueue,
   getNotificationsFromTxType,
   showSnackbar,
@@ -107,11 +106,8 @@ const processTransaction = (
       .once('transactionHash', async (hash) => {
         txHash = hash
         closeSnackbar(beforeExecutionKey)
-        const notification: Notification = {
-          message: notificationsQueue.pendingExecution.noMoreConfirmationsNeeded.message,
-          options: notificationsQueue.pendingExecution.noMoreConfirmationsNeeded.options,
-        }
-        pendingExecutionKey = showSnackbar(notification, enqueueSnackbar, closeSnackbar)
+
+        pendingExecutionKey = showSnackbar(notificationsQueue.pendingExecution, enqueueSnackbar, closeSnackbar)
 
         try {
           await saveTxToHistory(
@@ -135,7 +131,13 @@ const processTransaction = (
       .then((receipt) => {
         closeSnackbar(pendingExecutionKey)
 
-        showSnackbar(notificationsQueue.afterExecution, enqueueSnackbar, closeSnackbar)
+        showSnackbar(
+          shouldExecute
+            ? notificationsQueue.afterExecution.noMoreConfirmationsNeeded
+            : notificationsQueue.afterExecution.moreConfirmationsNeeded,
+          enqueueSnackbar,
+          closeSnackbar,
+        )
         dispatch(fetchTransactions(safeAddress))
 
         return receipt.transactionHash
