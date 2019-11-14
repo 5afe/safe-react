@@ -86,12 +86,6 @@ const ChangeThreshold = ({
           <>
             <Block className={classes.modalContent}>
               <Row>
-                <Paragraph>
-                  Every transaction outside any specified daily limits, needs to be confirmed by all specified owners.
-                  If no daily limits are set, all owners will need to sign for transactions.
-                </Paragraph>
-              </Row>
-              <Row>
                 <Paragraph weight="bolder">Any transaction requires the confirmation of:</Paragraph>
               </Row>
               <Row margin="xl" align="center" className={classes.inputRow}>
