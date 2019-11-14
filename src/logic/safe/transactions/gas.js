@@ -48,7 +48,7 @@ export const estimateDataGas = (
     '',
   )}000000000000000000000000000000000000000000000000000000000000000001`
   const payload = safe.contract.methods
-    .execTransaction(to, valueInWei, data, operation, txGasEstimate, 0, gasPrice, gasToken, refundReceiver, sigs)
+    .execTransaction(to, valueInWei, data, operation, txGasEstimate, 0, gasPrice, gasToken, refundReceiver, sigs, { value: 0 })
     .encodeABI()
 
   // eslint-disable-next-line
@@ -122,7 +122,7 @@ export const calculateTxFee = async (
       '0x0000000000000000000000000000000000000000',
       '0x0000000000000000000000000000000000000000',
       sigs,
-      { from: '0xbc2BB26a6d821e69A38016f3858561a1D80d4182' },
+      { from: '0xbc2BB26a6d821e69A38016f3858561a1D80d4182', value: 0 },
     )
 
     return estimate

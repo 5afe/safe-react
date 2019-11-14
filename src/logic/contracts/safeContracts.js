@@ -74,7 +74,9 @@ export const deploySafeContract = async (safeAccounts: string[], numConfirmation
   const gas = await calculateGasOf(proxyFactoryData, userAccount, proxyFactoryMaster.address)
   const gasPrice = await calculateGasPrice()
 
-  return proxyFactoryMaster.createProxy(safeMaster.address, gnosisSafeData, { from: userAccount, gas, gasPrice })
+  return proxyFactoryMaster.createProxy(safeMaster.address, gnosisSafeData, {
+    from: userAccount, gas, gasPrice, value: 0,
+  })
 }
 
 export const estimateGasForDeployingSafe = async (

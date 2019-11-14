@@ -33,7 +33,7 @@ export const estimateTxGasCosts = async (
           '',
         )}000000000000000000000000000000000000000000000000000000000000000001`
       txData = await safeInstance.methods
-        .execTransaction(to, tx ? tx.value : 0, data, CALL, 0, 0, 0, ZERO_ADDRESS, ZERO_ADDRESS, signatures)
+        .execTransaction(to, tx ? tx.value : 0, data, CALL, 0, 0, 0, ZERO_ADDRESS, ZERO_ADDRESS, signatures, { value: 0 })
         .encodeABI()
     } else {
       const txHash = await safeInstance.methods
