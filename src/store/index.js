@@ -37,8 +37,6 @@ export type GlobalState = {
 
 export type GetState = () => GlobalState
 
-console.log({ provider, PROVIDER_REDUCER_ID })
-
 const reducers: Reducer<GlobalState> = combineReducers({
   router: connectRouter(history),
   [PROVIDER_REDUCER_ID]: provider,
