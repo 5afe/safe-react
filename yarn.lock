@@ -1352,15 +1352,13 @@
     "@ethersproject/constants" ">=5.0.0-beta.128"
     "@ethersproject/logger" ">=5.0.0-beta.129"
 
-"@gnosis.pm/safe-contracts@^1.0.0":
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/@gnosis.pm/safe-contracts/-/safe-contracts-1.1.0.tgz#84e579645249c3cb0001520f67c9ea0fdec2e121"
-  integrity sha512-SwODUJcO/NNh1KfMxWlb1/opcj2emuYVS+DJjrpMhfMbs8zgxE/1G/wXKEfgvhxBRd/xND6wVrG0UDd3U0C0Zw==
+"@gnosis.pm/safe-contracts@1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@gnosis.pm/safe-contracts/-/safe-contracts-1.0.0.tgz#2b562b1e23a0da1047a9f38ef71a70f811e75dd9"
+  integrity sha512-IT40DhKr1tAWRcSTpZ0wRfC9thrHzNzHzaPBQHP0Jq8fLVj+MIrRxY1adBZUppQ4W58XXnK0K/qj7IbyyigHlA==
   dependencies:
-    dotenv "^8.0.0"
     openzeppelin-solidity "^2.0.0"
-    shelljs "^0.8.3"
-    solc "^0.5.9"
+    solc "^0.5.0"
     truffle-hdwallet-provider "0.0.7-beta.1"
 
 "@gnosis.pm/util-contracts@2.0.4":
@@ -5126,9 +5124,9 @@ caniuse-api@^3.0.0:
     lodash.uniq "^4.5.0"
 
 caniuse-lite@^1.0.0, caniuse-lite@^1.0.30000844, caniuse-lite@^1.0.30000989, caniuse-lite@^1.0.30001004, caniuse-lite@^1.0.30001006:
-  version "1.0.30001009"
-  resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30001009.tgz#69b77997b882a7aee6af24c8d7d2fa27ee41f348"
-  integrity sha512-M3rEqHN6SaVjgo4bIik7HsGcWXsi+lI9WA0p51RPMFx5gXfduyOXWJrc0R4xBkSK1pgNf4CNgy5M+6H+WiEP8g==
+  version "1.0.30001010"
+  resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30001010.tgz#397a14034d384260453cc81994f494626d34b938"
+  integrity sha512-RA5GH9YjFNea4ZQszdWgh2SC+dpLiRAg4VDQS2b5JRI45OxmbGrYocYHTa9x0bKMQUE7uvHkNPNffUr+pCxSGw==
 
 capture-exit@^2.0.0:
   version "2.0.0"
@@ -15947,7 +15945,7 @@ sockjs@0.3.19:
     faye-websocket "^0.10.0"
     uuid "^3.0.1"
 
-solc@^0.5.0, solc@^0.5.9:
+solc@^0.5.0:
   version "0.5.12"
   resolved "https://registry.yarnpkg.com/solc/-/solc-0.5.12.tgz#e63047dce04c82ec6f469f6e28febfbde713b808"
   integrity sha512-OX/AGZT04tuUsagoVXSZBiBZYJReA02hdwZOfRkB03/eeYP9Dl3pr+M+au+1MhssgiuWBlFPN7sRXFiqwkAW2g==

@@ -95,7 +95,7 @@ const processTransaction = (
       transaction = await getApprovalTransaction(safeInstance, tx.recipient, tx.value, tx.data, CALL, nonce, from)
     }
 
-    const sendParams = { from }
+    const sendParams = { from, value: 0 }
     // if not set owner management tests will fail on ganache
     if (process.env.NODE_ENV === 'test') {
       sendParams.gas = '7000000'
