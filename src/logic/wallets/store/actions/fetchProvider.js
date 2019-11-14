@@ -4,9 +4,8 @@ import { ETHEREUM_NETWORK_IDS, ETHEREUM_NETWORK, getProviderInfo } from '~/logic
 import { getNetwork } from '~/config'
 import type { ProviderProps } from '~/logic/wallets/store/model/provider'
 import { makeProvider } from '~/logic/wallets/store/model/provider'
-import { NOTIFICATIONS, showSnackbar, enhanceSnackbarForAction } from '~/logic/notifications'
+import { NOTIFICATIONS, enhanceSnackbarForAction } from '~/logic/notifications'
 import enqueueSnackbar from '~/logic/notifications/store/actions/enqueueSnackbar'
-import closeSnackbar from '~/logic/notifications/store/actions/closeSnackbar'
 
 import addProvider from './addProvider'
 
@@ -35,7 +34,7 @@ const handleProviderNotification = (provider: ProviderProps, dispatch: Function)
   }
 
   if (ETHEREUM_NETWORK_IDS[network] !== getNetwork()) {
-    dispatch(enqueueSnackbar(enhanceSnackbarForAction(NOTIFICATIONS.WRONG_NETWORK_MSG)))
+    dispatch(enqueueSnackbar(NOTIFICATIONS.WRONG_NETWORK_MSG))
     return
   }
   if (ETHEREUM_NETWORK.RINKEBY === getNetwork()) {

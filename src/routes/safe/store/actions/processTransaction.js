@@ -17,7 +17,6 @@ import {
   TX_TYPE_CONFIRMATION,
 } from '~/logic/safe/transactions'
 import {
-  type Notification,
   type NotificationsQueue,
   getNotificationsFromTxType,
   showSnackbar,
@@ -96,7 +95,7 @@ const processTransaction = (
       transaction = await getApprovalTransaction(safeInstance, tx.recipient, tx.value, tx.data, CALL, nonce, from)
     }
 
-    const sendParams = { from }
+    const sendParams = { from, value: 0 }
     // if not set owner management tests will fail on ganache
     if (process.env.NODE_ENV === 'test') {
       sendParams.gas = '7000000'
@@ -104,14 +103,17 @@ const processTransaction = (
 
     await transaction
       .send(sendParams)
-      .once('transactionHash', async (hash) => {
+      .once('transactionHash', (hash) => {
         txHash = hash
         closeSnackbar(beforeExecutionKey)
-        const notification: Notification = {
-          message: notificationsQueue.pendingExecution.noMoreConfirmationsNeeded.message,
-          options: notificationsQueue.pendingExecution.noMoreConfirmationsNeeded.options,
-        }
-        pendingExecutionKey = showSnackbar(notification, enqueueSnackbar, closeSnackbar)
+
+        pendingExecutionKey = showSnackbar(notificationsQueue.pendingExecution, enqueueSnackbar, closeSnackbar)
+      })
+      .on('error', (error) => {
+        console.error('Processing transaction error: ', error)
+      })
+      .then(async (receipt) => {
+        closeSnackbar(pendingExecutionKey)
 
         try {
           await saveTxToHistory(
@@ -128,14 +130,14 @@ const processTransaction = (
         } catch (err) {
           console.error(err)
         }
-      })
-      .on('error', (error) => {
-        console.error('Processing transaction error: ', error)
-      })
-      .then((receipt) => {
-        closeSnackbar(pendingExecutionKey)
 
-        showSnackbar(notificationsQueue.afterExecution, enqueueSnackbar, closeSnackbar)
+        showSnackbar(
+          shouldExecute
+            ? notificationsQueue.afterExecution.noMoreConfirmationsNeeded
+            : notificationsQueue.afterExecution.moreConfirmationsNeeded,
+          enqueueSnackbar,
+          closeSnackbar,
+        )
         dispatch(fetchTransactions(safeAddress))
 
         return receipt.transactionHash

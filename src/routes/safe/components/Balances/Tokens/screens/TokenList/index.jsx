@@ -142,6 +142,7 @@ class Tokens extends React.Component<Props, State> {
               searchIcon={<div />}
               onChange={this.onChangeSearchBar}
               onCancelSearch={this.onCancelSearch}
+              value={filter}
             />
             <Spacer />
             <Divider />
