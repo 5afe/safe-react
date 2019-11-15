@@ -31,10 +31,6 @@ type CopyBtnProps = {
 }
 
 const CopyBtn = ({ content, increaseZindex = false }: CopyBtnProps) => {
-  if (!navigator.clipboard) {
-    return null
-  }
-
   const [clicked, setClicked] = useState<boolean>(false)
   const classes = useStyles()
   const customClasses = increaseZindex ? { popper: classes.inreasedPopperZindex } : {}
