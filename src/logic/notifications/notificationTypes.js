@@ -129,7 +129,7 @@ export const NOTIFICATIONS: Notifications = {
     options: { variant: INFO, persist: true },
   },
   TX_CONFIRMATION_EXECUTED_MSG: {
-    message: 'Confirmation transaction succesful',
+    message: 'Confirmation transaction was successful',
     options: { variant: SUCCESS, persist: false, autoHideDuration: longDuration },
   },
   TX_CONFIRMATION_FAILED_MSG: {

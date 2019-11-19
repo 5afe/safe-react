@@ -108,6 +108,7 @@ const createTransaction = (
         return receipt.transactionHash
       })
   } catch (err) {
+    console.error(err)
     closeSnackbar(beforeExecutionKey)
     closeSnackbar(pendingExecutionKey)
     showSnackbar(notificationsQueue.afterExecutionError, enqueueSnackbar, closeSnackbar)
@@ -116,7 +117,7 @@ const createTransaction = (
       .execTransaction(to, valueInWei, txData, CALL, 0, 0, 0, ZERO_ADDRESS, ZERO_ADDRESS, sigs)
       .encodeABI()
     const errMsg = await getErrorMessage(safeInstance.address, 0, executeDataUsedSignatures, from)
-    console.error(`Error executing the TX: ${errMsg}`)
+    console.error(`Error creating the TX: ${errMsg}`)
   }
 
   return txHash

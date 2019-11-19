@@ -143,6 +143,7 @@ const processTransaction = (
         return receipt.transactionHash
       })
   } catch (err) {
+    console.error(err)
     closeSnackbar(beforeExecutionKey)
     closeSnackbar(pendingExecutionKey)
     showSnackbar(notificationsQueue.afterExecutionError, enqueueSnackbar, closeSnackbar)

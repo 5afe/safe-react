@@ -60,10 +60,11 @@ export const maxValue = (max: number | string) => (value: string) => {
 
 export const ok = () => undefined
 
-export const mustBeEthereumAddress = simpleMemoize((address: Field) => {
+export const mustBeEthereumAddress = simpleMemoize((address: string) => {
+  const startsWith0x = address.startsWith('0x')
   const isAddress: boolean = getWeb3().utils.isAddress(address)
 
-  return isAddress ? undefined : 'Address should be a valid Ethereum address or ENS name'
+  return startsWith0x && isAddress ? undefined : 'Address should be a valid Ethereum address or ENS name'
 })
 
 export const mustBeEthereumContractAddress = simpleMemoize(async (address: string) => {

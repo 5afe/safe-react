@@ -34,8 +34,8 @@ const confirmationTxNotificationsQueue: NotificationsQueue = {
   pendingExecution: NOTIFICATIONS.TX_CONFIRMATION_PENDING_MSG,
   afterRejection: NOTIFICATIONS.TX_REJECTED_MSG,
   afterExecution: {
-    noMoreConfirmationsNeeded: NOTIFICATIONS.TX_CONFIRMATION_EXECUTED_MSG,
-    moreConfirmationsNeeded: null,
+    noMoreConfirmationsNeeded: NOTIFICATIONS.TX_EXECUTED_MSG,
+    moreConfirmationsNeeded: NOTIFICATIONS.TX_CONFIRMATION_EXECUTED_MSG,
   },
   afterExecutionError: NOTIFICATIONS.TX_CONFIRMATION_FAILED_MSG,
 }

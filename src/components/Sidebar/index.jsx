@@ -106,6 +106,7 @@ const Sidebar = ({
               searchIcon={<div />}
               onChange={handleFilterChange}
               onCancelSearch={handleFilterCancel}
+              value={filter}
             />
             <Spacer />
             <Divider />
