@@ -103,17 +103,11 @@ const processTransaction = (
 
     await transaction
       .send(sendParams)
-      .once('transactionHash', (hash) => {
+      .once('transactionHash', async (hash) => {
         txHash = hash
         closeSnackbar(beforeExecutionKey)
 
         pendingExecutionKey = showSnackbar(notificationsQueue.pendingExecution, enqueueSnackbar, closeSnackbar)
-      })
-      .on('error', (error) => {
-        console.error('Processing transaction error: ', error)
-      })
-      .then(async (receipt) => {
-        closeSnackbar(pendingExecutionKey)
 
         try {
           await saveTxToHistory(
@@ -130,6 +124,12 @@ const processTransaction = (
         } catch (err) {
           console.error(err)
         }
+      })
+      .on('error', (error) => {
+        console.error('Processing transaction error: ', error)
+      })
+      .then((receipt) => {
+        closeSnackbar(pendingExecutionKey)
 
         showSnackbar(
           shouldExecute

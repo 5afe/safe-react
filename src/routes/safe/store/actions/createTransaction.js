@@ -72,12 +72,6 @@ const createTransaction = (
         closeSnackbar(beforeExecutionKey)
 
         pendingExecutionKey = showSnackbar(notificationsQueue.pendingExecution, enqueueSnackbar, closeSnackbar)
-      })
-      .on('error', (error) => {
-        console.error('Tx error: ', error)
-      })
-      .then(async (receipt) => {
-        closeSnackbar(pendingExecutionKey)
 
         try {
           await saveTxToHistory(
@@ -94,6 +88,12 @@ const createTransaction = (
         } catch (err) {
           console.error(err)
         }
+      })
+      .on('error', (error) => {
+        console.error('Tx error: ', error)
+      })
+      .then((receipt) => {
+        closeSnackbar(pendingExecutionKey)
 
         showSnackbar(
           isExecution
