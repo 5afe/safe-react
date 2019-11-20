@@ -121,6 +121,7 @@ const processTransaction = (
             from,
             shouldExecute ? TX_TYPE_EXECUTION : TX_TYPE_CONFIRMATION,
           )
+          dispatch(fetchTransactions(safeAddress))
         } catch (err) {
           console.error(err)
         }

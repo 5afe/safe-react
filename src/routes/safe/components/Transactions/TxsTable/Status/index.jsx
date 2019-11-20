@@ -1,6 +1,7 @@
 // @flow
 import * as React from 'react'
 import { withStyles } from '@material-ui/core/styles'
+import CircularProgress from '@material-ui/core/CircularProgress'
 import Block from '~/components/layout/Block'
 import Paragraph from '~/components/layout/Paragraph/'
 import Img from '~/components/layout/Img'
@@ -12,14 +13,15 @@ import { styles } from './style'
 
 type Props = {
   classes: Object,
-  status: TransactionStatus,
-}
+  status: TransactionStatus
+};
 
 const statusToIcon = {
   success: OkIcon,
   cancelled: ErrorIcon,
   awaiting_confirmations: AwaitingIcon,
   awaiting_execution: AwaitingIcon,
+  pending: <CircularProgress size={14} />,
 }
 
 const statusToLabel = {
@@ -27,6 +29,7 @@ const statusToLabel = {
   cancelled: 'Cancelled',
   awaiting_confirmations: 'Awaiting',
   awaiting_execution: 'Awaiting',
+  pending: 'Pending',
 }
 
 const statusIconStyle = {
@@ -34,11 +37,21 @@ const statusIconStyle = {
   width: '14px',
 }
 
-const Status = ({ classes, status }: Props) => (
-  <Block className={`${classes.container} ${classes[status]}`}>
-    <Img src={statusToIcon[status]} alt="OK Icon" style={statusIconStyle} />
-    <Paragraph noMargin className={classes.statusText}>{statusToLabel[status]}</Paragraph>
-  </Block>
-)
+const Status = ({ classes, status }: Props) => {
+  const Icon = statusToIcon[status]
+
+  return (
+    <Block className={`${classes.container} ${classes[status]}`}>
+      {typeof Icon === 'object' ? (
+        Icon
+      ) : (
+        <Img src={Icon} alt="OK Icon" style={statusIconStyle} />
+      )}
+      <Paragraph noMargin className={classes.statusText}>
+        {statusToLabel[status]}
+      </Paragraph>
+    </Block>
+  )
+}
 
 export default withStyles(styles)(Status)
