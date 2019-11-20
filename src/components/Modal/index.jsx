@@ -20,6 +20,7 @@ const styles = () => ({
     alignItems: 'center',
     justifyContent: 'center',
     display: 'flex',
+    overflowY: 'scroll',
   },
   paper: {
     position: 'absolute',
