@@ -43,7 +43,7 @@ const Tokens = (props: Props) => {
     <>
       <Row align="center" grow className={classes.heading}>
         <Paragraph size="xl" noMargin weight="bolder">
-          Manage Tokens
+          Manage List
         </Paragraph>
         <IconButton onClick={onClose} disableRipple data-testid={MANAGE_TOKENS_MODAL_CLOSE_BUTTON_TEST_ID}>
           <Close className={classes.close} />

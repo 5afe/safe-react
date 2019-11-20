@@ -133,10 +133,10 @@ class Balances extends React.Component<Props, State> {
           </Col>
           <Col xs={6} end="sm">
             <ButtonLink size="lg" onClick={this.onShow('Token')} testId="manage-tokens-btn">
-              Manage Tokens
+              Manage List
             </ButtonLink>
             <Modal
-              title="Manage Tokens"
+              title="Manage List"
               description="Enable and disable tokens to be listed"
               handleClose={this.onHide('Token')}
               open={showToken}
