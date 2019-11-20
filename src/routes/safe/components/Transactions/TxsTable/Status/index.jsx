@@ -13,8 +13,8 @@ import { styles } from './style'
 
 type Props = {
   classes: Object,
-  status: TransactionStatus
-};
+  status: TransactionStatus,
+}
 
 const statusToIcon = {
   success: OkIcon,
