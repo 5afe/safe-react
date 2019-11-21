@@ -5,9 +5,12 @@ import { type GlobalState } from '~/store/index'
 import { makeOwner } from '~/routes/safe/store/models/owner'
 import type { SafeProps } from '~/routes/safe/store/models/safe'
 import addSafe from '~/routes/safe/store/actions/addSafe'
-import { getOwners, getSafeName } from '~/logic/safe/utils'
+import { getOwners, getSafeName, SAFES_KEY } from '~/logic/safe/utils'
 import { getGnosisSafeInstanceAt } from '~/logic/contracts/safeContracts'
 import { getBalanceInEtherOf } from '~/logic/wallets/getWeb3'
+import { loadFromStorage } from '~/utils/storage'
+import removeSafeOwner from '~/routes/safe/store/actions/removeSafeOwner'
+import addSafeOwner from '~/routes/safe/store/actions/addSafeOwner'
 
 const buildOwnersFrom = (
   safeOwners: string[],
@@ -35,6 +38,36 @@ export const buildSafe = async (safeAddress: string, safeName: string) => {
   return safe
 }
 
+const getLocalSafe = async (safeAddress: string) => {
+  const storedSafes = (await loadFromStorage(SAFES_KEY)) || {}
+  return storedSafes[safeAddress]
+}
+
+export const checkAndUpdateSafeOwners = (safeAddress: string) => async (
+  dispatch: ReduxDispatch<GlobalState>,
+) => {
+  // Check if the owner's safe did change and update them
+  const [gnosisSafe, localSafe] = await Promise.all([getGnosisSafeInstanceAt(safeAddress), getLocalSafe(safeAddress)])
+  const remoteOwners = await gnosisSafe.getOwners()
+  // Converts from [ { address, ownerName} ] to address array
+  const localOwners = localSafe.owners.map((localOwner) => localOwner.address)
+
+  // If the remote owners does not contain a local address, we remove that local owner
+  localOwners.forEach((localAddress) => {
+    if (!remoteOwners.includes(localAddress)) {
+      dispatch(removeSafeOwner({ safeAddress, ownerAddress: localAddress }))
+    }
+  })
+
+  // If the remote has an owner that we don't have locally, we add it
+  remoteOwners.forEach((remoteAddress) => {
+    if (!localOwners.includes(remoteAddress)) {
+      dispatch(addSafeOwner({ safeAddress, ownerAddress: remoteAddress, ownerName: 'UNKNOWN' }))
+    }
+  })
+}
+
+// eslint-disable-next-line consistent-return
 export default (safeAddress: string) => async (dispatch: ReduxDispatch<GlobalState>) => {
   try {
     const safeName = (await getSafeName(safeAddress)) || 'LOADED SAFE'
