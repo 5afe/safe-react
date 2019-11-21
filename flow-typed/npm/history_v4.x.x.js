@@ -1,7 +1,8 @@
+// @flow
 // flow-typed signature: 984f6785a321187ac15c3434bbd7f25d
 // flow-typed version: 568ec63cee/history_v4.x.x/flow_>=v0.25.x
 
-declare module "history/createBrowserHistory" {
+declare module 'history/createBrowserHistory' {
   declare function Unblock(): void;
 
   declare export type Action = "PUSH" | "REPLACE" | "POP";
@@ -42,7 +43,7 @@ declare module "history/createBrowserHistory" {
   declare export default (opts?: HistoryOpts) => BrowserHistory;
 }
 
-declare module "history/createMemoryHistory" {
+declare module 'history/createMemoryHistory' {
   declare function Unblock(): void;
 
   declare export type Action = "PUSH" | "REPLACE" | "POP";
@@ -88,7 +89,7 @@ declare module "history/createMemoryHistory" {
   declare export default (opts?: HistoryOpts) => MemoryHistory;
 }
 
-declare module "history/createHashHistory" {
+declare module 'history/createHashHistory' {
   declare function Unblock(): void;
 
   declare export type Action = "PUSH" | "REPLACE" | "POP";
