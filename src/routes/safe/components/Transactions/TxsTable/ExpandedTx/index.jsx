@@ -98,6 +98,26 @@ const ExpandedTx = ({
                   {formatDate(tx.executionDate)}
                 </Paragraph>
               )}
+              {tx.refundParams && (
+                <Paragraph noMargin>
+                  <Bold>TX refund: </Bold>
+                  max.
+                  {' '}
+                  {tx.refundParams.fee}
+                  {' '}
+                  {tx.refundParams.symbol}
+                </Paragraph>
+              )}
+              {tx.operation === 1 && (
+                <Paragraph noMargin>
+                  <Bold>Delegate Call</Bold>
+                </Paragraph>
+              )}
+              {tx.operation === 2 && (
+                <Paragraph noMargin>
+                  <Bold>Contract Creation</Bold>
+                </Paragraph>
+              )}
             </Block>
             <Hairline />
             <TxDescription tx={tx} />
