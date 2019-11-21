@@ -1,15 +1,19 @@
 [ignore]
-.*/node_modules/findup/*
-.*/node_modules/**
-.*/config/**
 .*/migrations/**
-.*/flow-typed/**
 .*/scripts/**
+
+[untyped]
+.*/config/**
+
+[declarations]
+.*/node_modules/**
+.*/flow-typed/**
 
 [include]
 <PROJECT_ROOT>/src/**
 
 [libs]
+<PROJECT_ROOT>/flow-typed
 
 [lints]
 
