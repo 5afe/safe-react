@@ -39,7 +39,7 @@ class SafeView extends React.Component<Props, State> {
       safeUrl,
       fetchTokenBalances,
       fetchTokens,
-      fetchTransactions
+      fetchTransactions,
     } = this.props
 
     fetchSafe(safeUrl)
@@ -84,7 +84,7 @@ class SafeView extends React.Component<Props, State> {
       sendFunds: {
         isOpen: true,
         selectedToken: token,
-      }
+      },
     })
   }
 
@@ -103,7 +103,7 @@ class SafeView extends React.Component<Props, State> {
       activeTokens,
       fetchTokenBalances,
       fetchEtherBalance,
-      checkAndUpdateSafeOwners
+      checkAndUpdateSafeOwners,
     } = this.props
     checkAndUpdateSafeOwners(safeUrl)
     fetchTokenBalances(safeUrl, activeTokens)
