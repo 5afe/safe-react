@@ -1,2 +1,4 @@
 node_modules/
 build_webpack/
+flow_typed/
+config/
