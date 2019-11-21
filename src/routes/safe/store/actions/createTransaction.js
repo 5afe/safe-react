@@ -85,6 +85,7 @@ const createTransaction = (
             from,
             isExecution ? TX_TYPE_EXECUTION : TX_TYPE_CONFIRMATION,
           )
+          dispatch(fetchTransactions(safeAddress))
         } catch (err) {
           console.error(err)
         }

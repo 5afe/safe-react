@@ -41,6 +41,8 @@ const getTxStatus = (tx: Transaction, safe: Safe): TransactionStatus => {
     txStatus = 'cancelled'
   } else if (tx.confirmations.size === safe.threshold) {
     txStatus = 'awaiting_execution'
+  } else if (!tx.confirmations.size) {
+    txStatus = 'pending'
   }
 
   return txStatus

@@ -3,10 +3,9 @@ import { List, Record } from 'immutable'
 import type { RecordFactory, RecordOf } from 'immutable'
 import { type Confirmation } from '~/routes/safe/store/models/confirmation'
 
-export type TransactionStatus = 'awaiting_confirmations' | 'success' | 'cancelled' | 'awaiting_execution'
+export type TransactionStatus = 'awaiting_confirmations' | 'success' | 'cancelled' | 'awaiting_execution' | 'pending'
 
 export type TransactionProps = {
-  name: string,
   nonce: number,
   value: string,
   confirmations: List<Confirmation>,
@@ -29,7 +28,6 @@ export type TransactionProps = {
 }
 
 export const makeTransaction: RecordFactory<TransactionProps> = Record({
-  name: '',
   nonce: 0,
   value: 0,
   confirmations: List([]),
