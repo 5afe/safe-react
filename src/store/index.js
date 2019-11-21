@@ -18,6 +18,7 @@ import notifications, {
   NOTIFICATIONS_REDUCER_ID,
   type NotificationReducerState as NotificationsState,
 } from '~/logic/notifications/store/reducer/notifications'
+import currencyValues, { CURRENCY_VALUES_KEY } from '~/logic/currencyValues/store/reducer/currencyValues'
 
 export const history = createBrowserHistory()
 
@@ -44,8 +45,10 @@ const reducers: Reducer<GlobalState> = combineReducers({
   [TOKEN_REDUCER_ID]: tokens,
   [TRANSACTIONS_REDUCER_ID]: transactions,
   [NOTIFICATIONS_REDUCER_ID]: notifications,
+  [CURRENCY_VALUES_KEY]: currencyValues,
 })
 
 export const store: Store<GlobalState> = createStore(reducers, finalCreateStore)
 
+// eslint-disable-next-line max-len
 export const aNewStore = (localState?: Object): Store<GlobalState> => createStore(reducers, localState, finalCreateStore)

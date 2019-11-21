@@ -74,6 +74,7 @@ const Layout = (props: Props) => {
     hideSendFunds,
     match,
     location,
+    currencySelected,
   } = props
 
   const handleCallToRouter = (_, value) => {
@@ -160,6 +161,7 @@ const Layout = (props: Props) => {
               safeAddress={address}
               safeName={name}
               createTransaction={createTransaction}
+              currencySelected={currencySelected}
             />
           )}
         />

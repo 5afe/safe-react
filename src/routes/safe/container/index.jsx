@@ -111,6 +111,7 @@ class SafeView extends React.Component<Props, State> {
       fetchTransactions,
       updateSafe,
       transactions,
+      currencySelected,
     } = this.props
 
     return (
@@ -134,6 +135,7 @@ class SafeView extends React.Component<Props, State> {
           onHide={this.onHide}
           showSendFunds={this.showSendFunds}
           hideSendFunds={this.hideSendFunds}
+          currencySelected={currencySelected}
         />
       </Page>
     )
