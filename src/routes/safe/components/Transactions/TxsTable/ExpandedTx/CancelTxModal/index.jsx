@@ -72,6 +72,8 @@ const CancelTxModal = ({
       TX_NOTIFICATION_TYPES.CANCELLATION_TX,
       enqueueSnackbar,
       closeSnackbar,
+      undefined,
+      tx.nonce,
     )
     onClose()
   }

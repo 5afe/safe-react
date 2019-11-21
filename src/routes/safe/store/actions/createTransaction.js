@@ -54,6 +54,7 @@ const createTransaction = (
   enqueueSnackbar: Function,
   closeSnackbar: Function,
   shouldExecute?: boolean,
+  txNonce?: number,
 ) => async (
   dispatch: ReduxDispatch<GlobalState>,
   getState: GetState<GlobalState>,
@@ -65,7 +66,7 @@ const createTransaction = (
   const from = userAccountSelector(state)
   const safeInstance = await getGnosisSafeInstanceAt(safeAddress)
   const threshold = await safeInstance.getThreshold()
-  const nonce = await getLastPendingTxNonce(safeAddress)
+  const nonce = txNonce || await getLastPendingTxNonce(safeAddress)
   const isExecution = threshold.toNumber() === 1 || shouldExecute
 
   // https://gnosis-safe.readthedocs.io/en/latest/contracts/signatures.html#pre-validated-signatures
