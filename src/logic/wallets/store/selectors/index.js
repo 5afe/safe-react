@@ -6,40 +6,25 @@ import { ETHEREUM_NETWORK_IDS, ETHEREUM_NETWORK } from '~/logic/wallets/getWeb3'
 
 const providerSelector = (state: any): Provider => state[PROVIDER_REDUCER_ID]
 
-export const userAccountSelector = createSelector(
-  providerSelector,
-  (provider: Provider) => {
-    const account = provider.get('account')
+export const userAccountSelector = createSelector(providerSelector, (provider: Provider) => {
+  const account = provider.get('account')
 
-    return account || ''
-  },
-)
+  return account || ''
+})
 
-export const providerNameSelector = createSelector(
-  providerSelector,
-  (provider: Provider) => {
-    const name = provider.get('name')
+export const providerNameSelector = createSelector(providerSelector, (provider: Provider) => {
+  const name = provider.get('name')
 
-    return name ? name.toLowerCase() : undefined
-  },
-)
+  return name ? name.toLowerCase() : undefined
+})
 
-export const networkSelector = createSelector(
-  providerSelector,
-  (provider: Provider) => {
-    const networkId = provider.get('network')
-    const network = ETHEREUM_NETWORK_IDS[networkId] || ETHEREUM_NETWORK.UNKNOWN
+export const networkSelector = createSelector(providerSelector, (provider: Provider) => {
+  const networkId = provider.get('network')
+  const network = ETHEREUM_NETWORK_IDS[networkId] || ETHEREUM_NETWORK.UNKNOWN
 
-    return network
-  },
-)
+  return network
+})
 
-export const loadedSelector = createSelector(
-  providerSelector,
-  (provider: Provider) => provider.get('loaded'),
-)
+export const loadedSelector = createSelector(providerSelector, (provider: Provider) => provider.get('loaded'))
 
-export const availableSelector = createSelector(
-  providerSelector,
-  (provider: Provider) => provider.get('available'),
-)
+export const availableSelector = createSelector(providerSelector, (provider: Provider) => provider.get('available'))
