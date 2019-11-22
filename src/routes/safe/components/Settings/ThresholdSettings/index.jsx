@@ -47,15 +47,15 @@ const ThresholdSettings = ({
     const safeInstance = await getGnosisSafeInstanceAt(safeAddress)
     const txData = safeInstance.contract.methods.changeThreshold(newThreshold).encodeABI()
 
-    createTransaction(
+    createTransaction({
       safeAddress,
-      safeAddress,
-      0,
+      to: safeAddress,
+      valueInWei: 0,
       txData,
-      TX_NOTIFICATION_TYPES.SETTINGS_CHANGE_TX,
+      notifiedTransaction: TX_NOTIFICATION_TYPES.SETTINGS_CHANGE_TX,
       enqueueSnackbar,
       closeSnackbar,
-    )
+    })
   }
 
   return (

@@ -64,17 +64,15 @@ const CancelTxModal = ({
   }, [])
 
   const sendReplacementTransaction = () => {
-    createTransaction(
+    createTransaction({
       safeAddress,
-      safeAddress,
-      0,
-      EMPTY_DATA,
-      TX_NOTIFICATION_TYPES.CANCELLATION_TX,
+      to: safeAddress,
+      valueInWei: 0,
+      notifiedTransaction: TX_NOTIFICATION_TYPES.CANCELLATION_TX,
       enqueueSnackbar,
       closeSnackbar,
-      undefined,
-      tx.nonce,
-    )
+      txNonce: tx.nonce,
+    })
     onClose()
   }
 

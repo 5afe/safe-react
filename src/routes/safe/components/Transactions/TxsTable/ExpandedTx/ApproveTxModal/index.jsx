@@ -34,7 +34,7 @@ type Props = {
   thresholdReached: boolean,
   userAddress: string,
   enqueueSnackbar: Function,
-  closeSnackbar: Function,
+  closeSnackbar: Function
 }
 
 const getModalTitleAndDescription = (thresholdReached: boolean) => {
@@ -100,20 +100,25 @@ const ApproveTxModal = ({
   const handleExecuteCheckbox = () => setApproveAndExecute((prevApproveAndExecute) => !prevApproveAndExecute)
 
   const approveTx = () => {
-    processTransaction(
+    processTransaction({
       safeAddress,
       tx,
       userAddress,
-      TX_NOTIFICATION_TYPES.CONFIRMATION_TX,
+      notifiedTransaction: TX_NOTIFICATION_TYPES.CONFIRMATION_TX,
       enqueueSnackbar,
       closeSnackbar,
       approveAndExecute,
-    )
+    })
     onClose()
   }
 
   return (
-    <Modal title={title} description={description} handleClose={onClose} open={isOpen}>
+    <Modal
+      title={title}
+      description={description}
+      handleClose={onClose}
+      open={isOpen}
+    >
       <Row align="center" grow className={classes.heading}>
         <Paragraph weight="bolder" className={classes.headingText} noMargin>
           {title}
@@ -134,11 +139,18 @@ const ApproveTxModal = ({
           {!thresholdReached && oneConfirmationLeft && (
             <>
               <Paragraph color="error">
-                Approving this transaction executes it right away. If you want approve but execute the transaction
-                manually later, click on the checkbox below.
+                Approving this transaction executes it right away. If you want
+                approve but execute the transaction manually later, click on the
+                checkbox below.
               </Paragraph>
               <FormControlLabel
-                control={<Checkbox onChange={handleExecuteCheckbox} checked={approveAndExecute} color="primary" />}
+                control={(
+                  <Checkbox
+                    onChange={handleExecuteCheckbox}
+                    checked={approveAndExecute}
+                    color="primary"
+                  />
+                )}
                 label="Execute transaction"
               />
             </>

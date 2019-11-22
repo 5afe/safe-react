@@ -45,17 +45,29 @@ const getLastPendingTxNonce = async (safeAddress: string): Promise<number> => {
   return nonce
 }
 
-const createTransaction = (
+type CreateTransactionArgs = {
   safeAddress: string,
   to: string,
   valueInWei: string,
-  txData: string = EMPTY_DATA,
+  txData: string,
   notifiedTransaction: NotifiedTransaction,
   enqueueSnackbar: Function,
   closeSnackbar: Function,
   shouldExecute?: boolean,
   txNonce?: number,
-) => async (
+}
+
+const createTransaction = ({
+  safeAddress,
+  to,
+  valueInWei,
+  txData = EMPTY_DATA,
+  notifiedTransaction,
+  enqueueSnackbar,
+  closeSnackbar,
+  shouldExecute = false,
+  txNonce,
+}: CreateTransactionArgs) => async (
   dispatch: ReduxDispatch<GlobalState>,
   getState: GetState<GlobalState>,
 ) => {
