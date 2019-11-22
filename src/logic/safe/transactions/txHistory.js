@@ -2,7 +2,6 @@
 import axios from 'axios'
 import { getWeb3 } from '~/logic/wallets/getWeb3'
 import { getTxServiceUriFrom, getTxServiceHost } from '~/config'
-import { ZERO_ADDRESS } from '~/logic/wallets/ethAddresses'
 
 export type TxServiceType = 'confirmation' | 'execution' | 'initialised'
 export type Operation = 0 | 1 | 2
@@ -14,6 +13,11 @@ const calculateBodyFrom = async (
   data: string,
   operation: Operation,
   nonce: string | number,
+  safeTxGas: string | number,
+  baseGas: string | number,
+  gasPrice: string | number,
+  gasToken: string,
+  refundReceiver: string,
   transactionHash: string,
   sender: string,
   confirmationType: TxServiceType,
@@ -23,11 +27,11 @@ const calculateBodyFrom = async (
     valueInWei,
     data,
     operation,
-    0,
-    0,
-    0,
-    ZERO_ADDRESS,
-    ZERO_ADDRESS,
+    safeTxGas,
+    baseGas,
+    gasPrice,
+    gasToken,
+    refundReceiver,
     nonce,
   )
 
@@ -37,11 +41,11 @@ const calculateBodyFrom = async (
     data,
     operation,
     nonce,
-    safeTxGas: 0,
-    baseGas: 0,
-    gasPrice: 0,
-    gasToken: ZERO_ADDRESS,
-    refundReceiver: ZERO_ADDRESS,
+    safeTxGas,
+    baseGas,
+    gasPrice,
+    gasToken,
+    refundReceiver,
     contractTransactionHash,
     transactionHash,
     sender: getWeb3().utils.toChecksumAddress(sender),
@@ -63,12 +67,32 @@ export const saveTxToHistory = async (
   data: string,
   operation: Operation,
   nonce: number | string,
+  safeTxGas: string | number,
+  baseGas: string | number,
+  gasPrice: string | number,
+  gasToken: string,
+  refundReceiver: string,
   txHash: string,
   sender: string,
   type: TxServiceType,
 ) => {
   const url = buildTxServiceUrl(safeInstance.address)
-  const body = await calculateBodyFrom(safeInstance, to, valueInWei, data, operation, nonce, txHash, sender, type)
+  const body = await calculateBodyFrom(
+    safeInstance,
+    to,
+    valueInWei,
+    data,
+    operation,
+    nonce,
+    safeTxGas,
+    baseGas,
+    gasPrice,
+    gasToken,
+    refundReceiver,
+    txHash,
+    sender,
+    type,
+  )
   const response = await axios.post(url, body)
 
   if (response.status !== 202) {

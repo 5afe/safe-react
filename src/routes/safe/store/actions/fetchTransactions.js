@@ -16,6 +16,7 @@ import { getHumanFriendlyToken } from '~/logic/tokens/store/actions/fetchTokens'
 import { isTokenTransfer } from '~/logic/tokens/utils/tokenHelpers'
 import { decodeParamsFromSafeMethod } from '~/logic/contracts/methodIds'
 import { ALTERNATIVE_TOKEN_ABI } from '~/logic/tokens/utils/alternativeAbi'
+import { ZERO_ADDRESS } from '~/logic/wallets/ethAddresses'
 
 let web3
 
@@ -32,6 +33,11 @@ type TxServiceModel = {
   data: string,
   operation: number,
   nonce: number,
+  safeTxGas: number,
+  baseGas: number,
+  gasPrice: number,
+  gasToken: string,
+  refundReceiver: string,
   safeTxHash: string,
   submissionDate: string,
   executionDate: string,
@@ -55,6 +61,7 @@ export const buildTransactionFrom = async (
         owner: makeOwner({ address: conf.owner, name: ownerName }),
         type: ((conf.confirmationType.toLowerCase(): any): TxServiceType),
         hash: conf.transactionHash,
+        signature: conf.signature,
       })
     }),
   )
@@ -62,6 +69,27 @@ export const buildTransactionFrom = async (
   const cancellationTx = tx.to === safeAddress && Number(tx.value) === 0 && !tx.data
   const isSendTokenTx = await isTokenTransfer(tx.data, tx.value)
   const customTx = tx.to !== safeAddress && !!tx.data && !isSendTokenTx
+
+  let refundParams = null
+  if (tx.gasPrice > 0) {
+    let refundSymbol = 'ETH'
+    let decimals = 18
+    if (tx.gasToken !== ZERO_ADDRESS) {
+      const gasToken = await (await getHumanFriendlyToken()).at(tx.gasToken)
+      refundSymbol = await gasToken.symbol()
+      decimals = await gasToken.decimals()
+    }
+
+    const feeString = (tx.gasPrice * (tx.baseGas + tx.safeTxGas)).toString().padStart(decimals, 0)
+    const whole = feeString.slice(0, feeString.length - decimals) || '0'
+    const fraction = feeString.slice(feeString.length - decimals)
+
+    const formattedFee = `${whole}.${fraction}`
+    refundParams = {
+      fee: formattedFee,
+      symbol: refundSymbol,
+    }
+  }
 
   let symbol = 'ETH'
   let decimals = 18
@@ -102,6 +130,13 @@ export const buildTransactionFrom = async (
     decimals,
     recipient: tx.to,
     data: tx.data ? tx.data : EMPTY_DATA,
+    operation: tx.operation,
+    safeTxGas: tx.safeTxGas,
+    baseGas: tx.baseGas,
+    gasPrice: tx.gasPrice,
+    gasToken: tx.gasToken,
+    refundReceiver: tx.refundReceiver,
+    refundParams,
     isExecuted: tx.isExecuted,
     submissionDate: tx.submissionDate,
     executionDate: tx.executionDate,

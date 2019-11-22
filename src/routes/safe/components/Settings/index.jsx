@@ -19,6 +19,7 @@ import ManageOwners from './ManageOwners'
 import actions, { type Actions } from './actions'
 import { styles } from './style'
 import RemoveSafeIcon from './assets/icons/bin.svg'
+import type { Safe } from '~/routes/safe/store/models/safe'
 
 export const OWNERS_SETTINGS_TAB_TEST_ID = 'owner-settings-tab'
 
@@ -43,6 +44,7 @@ type Props = Actions & {
   replaceSafeOwner: Function,
   editSafeOwner: Function,
   userAddress: string,
+  safe: Safe
 }
 
 type Action = 'RemoveSafe'
@@ -87,6 +89,7 @@ class Settings extends React.Component<Props, State> {
       removeSafeOwner,
       replaceSafeOwner,
       editSafeOwner,
+      safe,
     } = this.props
 
     return (
@@ -152,6 +155,7 @@ class Settings extends React.Component<Props, State> {
                   replaceSafeOwner={replaceSafeOwner}
                   editSafeOwner={editSafeOwner}
                   granted={granted}
+                  safe={safe}
                 />
               )}
               {menuOptionIndex === 3 && (

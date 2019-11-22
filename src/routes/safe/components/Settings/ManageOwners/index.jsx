@@ -32,6 +32,7 @@ import ReplaceOwnerIcon from './assets/icons/replace-owner.svg'
 import RenameOwnerIcon from './assets/icons/rename-owner.svg'
 import RemoveOwnerIcon from '../assets/icons/bin.svg'
 import Paragraph from '~/components/layout/Paragraph/index'
+import type { Safe } from '~/routes/safe/store/models/safe'
 
 export const RENAME_OWNER_BTN_TEST_ID = 'rename-owner-btn'
 export const REMOVE_OWNER_BTN_TEST_ID = 'remove-owner-btn'
@@ -53,6 +54,7 @@ type Props = {
   replaceSafeOwner: Function,
   editSafeOwner: Function,
   granted: boolean,
+  safe: Safe
 }
 
 type State = {
@@ -111,6 +113,7 @@ class ManageOwners extends React.Component<Props, State> {
       replaceSafeOwner,
       editSafeOwner,
       granted,
+      safe,
     } = this.props
     const {
       showAddOwner,
@@ -237,6 +240,7 @@ class ManageOwners extends React.Component<Props, State> {
           userAddress={userAddress}
           createTransaction={createTransaction}
           removeSafeOwner={removeSafeOwner}
+          safe={safe}
         />
         <ReplaceOwnerModal
           onClose={this.onHide('ReplaceOwner')}
@@ -251,6 +255,7 @@ class ManageOwners extends React.Component<Props, State> {
           userAddress={userAddress}
           createTransaction={createTransaction}
           replaceSafeOwner={replaceSafeOwner}
+          safe={safe}
         />
         <EditOwnerModal
           onClose={this.onHide('EditOwner')}
