@@ -4,6 +4,7 @@ import { List } from 'immutable'
 import { type Confirmation } from '~/routes/safe/store/models/confirmation'
 import { type Transaction } from '~/routes/safe/store/models/transaction'
 import { userAccountSelector } from '~/logic/wallets/store/selectors'
+import fetchSafe from '~/routes/safe/store/actions/fetchSafe'
 import fetchTransactions from '~/routes/safe/store/actions/fetchTransactions'
 import { type GlobalState } from '~/store'
 import { getGnosisSafeInstanceAt } from '~/logic/contracts/safeContracts'
@@ -198,6 +199,10 @@ const processTransaction = ({
           closeSnackbar,
         )
         dispatch(fetchTransactions(safeAddress))
+
+        if (shouldExecute) {
+          fetchSafe(safeAddress)
+        }
 
         return receipt.transactionHash
       })

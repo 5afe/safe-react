@@ -50,7 +50,13 @@ const ButtonRow = ({
 }: Props) => (
   <Row align="center" className={classes.buttonRow}>
     {showCancelBtn && (
-      <Button className={classes.button} variant="contained" minWidth={140} color="secondary" onClick={onTxCancel}>
+      <Button
+        className={classes.button}
+        variant="contained"
+        minWidth={140}
+        color="secondary"
+        onClick={onTxCancel}
+      >
         <BlockIcon className={classes.icon} />
         {' '}
         Cancel TX

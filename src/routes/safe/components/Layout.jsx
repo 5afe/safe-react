@@ -170,6 +170,7 @@ const Layout = (props: Props) => {
             <Transactions
               threshold={safe.threshold}
               owners={safe.owners}
+              nonce={safe.nonce}
               transactions={transactions}
               fetchTransactions={fetchTransactions}
               safeAddress={address}

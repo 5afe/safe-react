@@ -18,4 +18,7 @@ export const styles = () => ({
   owner: {
     borderBottom: `1px solid ${border}`,
   },
+  executeOlderFirst: {
+    width: '100%',
+  },
 })

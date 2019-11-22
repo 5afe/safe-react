@@ -25,6 +25,7 @@ export const buildSafe = async (safeAddress: string, safeName: string) => {
   const ethBalance = await getBalanceInEtherOf(safeAddress)
 
   const threshold = Number(await gnosisSafe.getThreshold())
+  const nonce = Number(await gnosisSafe.nonce())
   const owners = List(buildOwnersFrom(await gnosisSafe.getOwners(), await getOwners(safeAddress)))
 
   const safe: SafeProps = {
@@ -33,6 +34,7 @@ export const buildSafe = async (safeAddress: string, safeName: string) => {
     threshold,
     owners,
     ethBalance,
+    nonce,
   }
 
   return safe

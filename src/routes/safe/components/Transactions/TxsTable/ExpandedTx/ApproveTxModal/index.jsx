@@ -33,6 +33,7 @@ type Props = {
   threshold: number,
   thresholdReached: boolean,
   userAddress: string,
+  canExecute: boolean,
   enqueueSnackbar: Function,
   closeSnackbar: Function
 }
@@ -59,15 +60,16 @@ const ApproveTxModal = ({
   tx,
   safeAddress,
   threshold,
+  canExecute,
   thresholdReached,
   userAddress,
   enqueueSnackbar,
   closeSnackbar,
 }: Props) => {
-  const [approveAndExecute, setApproveAndExecute] = useState<boolean>(true)
+  const [approveAndExecute, setApproveAndExecute] = useState<boolean>(canExecute)
   const [gasCosts, setGasCosts] = useState<string>('< 0.001')
   const { title, description } = getModalTitleAndDescription(thresholdReached)
-  const oneConfirmationLeft = tx.confirmations.size + 1 === threshold
+  const oneConfirmationLeft = !thresholdReached && tx.confirmations.size + 1 === threshold
 
   useEffect(() => {
     let isCurrent = true
@@ -107,7 +109,7 @@ const ApproveTxModal = ({
       notifiedTransaction: TX_NOTIFICATION_TYPES.CONFIRMATION_TX,
       enqueueSnackbar,
       closeSnackbar,
-      approveAndExecute,
+      approveAndExecute: canExecute && approveAndExecute && oneConfirmationLeft,
     })
     onClose()
   }
@@ -136,7 +138,7 @@ const ApproveTxModal = ({
             <br />
             <Bold className={classes.nonceNumber}>{tx.nonce}</Bold>
           </Paragraph>
-          {!thresholdReached && oneConfirmationLeft && (
+          {oneConfirmationLeft && canExecute && (
             <>
               <Paragraph color="error">
                 Approving this transaction executes it right away. If you want

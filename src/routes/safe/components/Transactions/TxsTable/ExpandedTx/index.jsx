@@ -32,6 +32,7 @@ type Props = {
   safeAddress: string,
   createTransaction: Function,
   processTransaction: Function,
+  nonce: number,
 }
 
 type OpenModal = 'cancelTx' | 'approveTx' | null
@@ -58,12 +59,14 @@ const ExpandedTx = ({
   safeAddress,
   createTransaction,
   processTransaction,
+  nonce,
 }: Props) => {
   const [openModal, setOpenModal] = useState<OpenModal>(null)
   const openApproveModal = () => setOpenModal('approveTx')
   const openCancelModal = () => setOpenModal('cancelTx')
   const closeModal = () => setOpenModal(null)
   const thresholdReached = threshold <= tx.confirmations.size
+  const canExecute = nonce === tx.nonce
 
   return (
     <>
@@ -126,6 +129,7 @@ const ExpandedTx = ({
             tx={tx}
             owners={owners}
             granted={granted}
+            canExecute={canExecute}
             threshold={threshold}
             userAddress={userAddress}
             thresholdReached={thresholdReached}
@@ -150,6 +154,7 @@ const ExpandedTx = ({
           isOpen
           processTransaction={processTransaction}
           onClose={closeModal}
+          canExecute={canExecute}
           tx={tx}
           userAddress={userAddress}
           safeAddress={safeAddress}

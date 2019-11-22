@@ -13,6 +13,7 @@ export type SafeProps = {
   balances?: Map<string, string>,
   activeTokens: Set<string>,
   ethBalance?: string,
+  nonce?: number,
 }
 
 const SafeRecord: RecordFactory<SafeProps> = Record({
@@ -23,6 +24,7 @@ const SafeRecord: RecordFactory<SafeProps> = Record({
   owners: List([]),
   activeTokens: new Set(),
   balances: Map({}),
+  nonce: 0,
 })
 
 export type Safe = RecordOf<SafeProps>

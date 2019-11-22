@@ -17,6 +17,7 @@ type Props = {
   createTransaction: Function,
   processTransaction: Function,
   currentNetwork: string,
+  nonce: number,
 }
 
 const Transactions = ({
@@ -30,6 +31,7 @@ const Transactions = ({
   processTransaction,
   fetchTransactions,
   currentNetwork,
+  nonce,
 }: Props) => {
   useEffect(() => {
     fetchTransactions(safeAddress)
@@ -50,6 +52,7 @@ const Transactions = ({
           safeAddress={safeAddress}
           createTransaction={createTransaction}
           processTransaction={processTransaction}
+          nonce={nonce}
         />
       ) : (
         <NoTransactions />

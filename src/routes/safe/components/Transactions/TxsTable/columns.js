@@ -46,7 +46,6 @@ export type TransactionRow = SortRow<TxData>
 
 export const getTxTableData = (transactions: List<Transaction>): List<TransactionRow> => {
   const rows = transactions.map((tx: Transaction) => {
-    const txDate = tx.isExecuted ? tx.executionDate : tx.submissionDate
     let txType = 'Outgoing transfer'
     if (tx.modifySettingsTx) {
       txType = 'Modify Safe Settings'
@@ -59,8 +58,8 @@ export const getTxTableData = (transactions: List<Transaction>): List<Transactio
     return {
       [TX_TABLE_NONCE_ID]: tx.nonce,
       [TX_TABLE_TYPE_ID]: txType,
-      [TX_TABLE_DATE_ID]: formatDate(tx.isExecuted ? tx.executionDate : tx.submissionDate),
-      [buildOrderFieldFrom(TX_TABLE_DATE_ID)]: getTime(parseISO(txDate)),
+      [TX_TABLE_DATE_ID]: formatDate(tx.submissionDate),
+      [buildOrderFieldFrom(TX_TABLE_DATE_ID)]: getTime(parseISO(tx.submissionDate)),
       [TX_TABLE_AMOUNT_ID]: getTxAmount(tx),
       [TX_TABLE_STATUS_ID]: tx.status,
       [TX_TABLE_RAW_TX_ID]: tx,
