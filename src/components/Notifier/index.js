@@ -75,9 +75,4 @@ class Notifier extends Component<Props> {
   }
 }
 
-export default withSnackbar(
-  connect(
-    selector,
-    actions,
-  )(Notifier),
-)
+export default withSnackbar(connect(selector, actions)(Notifier))

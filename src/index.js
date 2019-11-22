@@ -19,9 +19,14 @@ if (process.env.NODE_ENV !== 'production') {
   whyDidYouRender(React)
 }
 
+// $FlowFixMe
 store.dispatch(loadActiveTokens())
 store.dispatch(loadSafesFromStorage())
 store.dispatch(loadDefaultSafe())
 store.dispatch(loadCookiesFromStorage())
 
-ReactDOM.render(<Root />, document.getElementById('root'))
+const root = document.getElementById('root')
+
+if (root !== null) {
+  ReactDOM.render(<Root />, root)
+}
