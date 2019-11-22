@@ -64,10 +64,10 @@ const ApproveTxModal = ({
   enqueueSnackbar,
   closeSnackbar,
 }: Props) => {
-  const [approveAndExecute, setApproveAndExecute] = useState<boolean>(true)
+  const oneConfirmationLeft = !thresholdReached && tx.confirmations.size + 1 === threshold
+  const [approveAndExecute, setApproveAndExecute] = useState<boolean>(oneConfirmationLeft || thresholdReached)
   const [gasCosts, setGasCosts] = useState<string>('< 0.001')
   const { title, description } = getModalTitleAndDescription(thresholdReached)
-  const oneConfirmationLeft = tx.confirmations.size + 1 === threshold
 
   useEffect(() => {
     let isCurrent = true
@@ -107,7 +107,7 @@ const ApproveTxModal = ({
       TX_NOTIFICATION_TYPES.CONFIRMATION_TX,
       enqueueSnackbar,
       closeSnackbar,
-      approveAndExecute,
+      approveAndExecute && oneConfirmationLeft,
     )
     onClose()
   }
@@ -131,7 +131,7 @@ const ApproveTxModal = ({
             <br />
             <Bold className={classes.nonceNumber}>{tx.nonce}</Bold>
           </Paragraph>
-          {!thresholdReached && oneConfirmationLeft && (
+          {oneConfirmationLeft && (
             <>
               <Paragraph color="error">
                 Approving this transaction executes it right away. If you want approve but execute the transaction
