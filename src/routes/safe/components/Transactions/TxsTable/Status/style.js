@@ -29,6 +29,10 @@ export const styles = () => ({
     backgroundColor: '#dfebff',
     color: disabled,
   },
+  pending: {
+    backgroundColor: '#fff3e2',
+    color: '#e8673c',
+  },
   statusText: {
     marginLeft: 'auto',
     textTransform: 'uppercase',

@@ -1,6 +1,6 @@
 {
   "name": "safe-react",
-  "version": "1.0.1",
+  "version": "1.4.3",
   "description": "Allowing crypto users manage funds in a safer way",
   "homepage": "https://github.com/gnosis/safe-react#readme",
   "bugs": {
@@ -55,7 +55,7 @@
     "qrcode.react": "1.0.0",
     "react": "16.12.0",
     "react-dom": "16.12.0",
-    "react-final-form": "6.3.2",
+    "react-final-form": "6.3.3",
     "react-final-form-listeners": "^1.0.2",
     "react-hot-loader": "4.12.18",
     "react-qr-reader": "^2.2.1",
