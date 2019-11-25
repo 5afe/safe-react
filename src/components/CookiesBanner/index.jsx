@@ -68,24 +68,32 @@ const useStyles = makeStyles({
   },
 })
 
-const acceptCookiesHandler = (newState: CookiesProps) => {
-  const dispatch = useDispatch()
-  // Aca tenes q pasarle el estado nuevo de los dos switches
-  dispatch(saveCookiesToStorage(newState))
-}
 
 const CookiesBanner = () => {
   const classes = useStyles()
   const cookiesState: CookiesProps = useSelector(cookiesSelector)
-  const { acceptedNecessary, acceptedAnalytics } = cookiesState
-  const showBanner = !acceptedNecessary || !acceptedAnalytics
+  const dispatch = useDispatch()
+  const { acceptedNecessary } = cookiesState
+  const showBanner = acceptedNecessary === false
   const [localNecessary, setLocalNecessary] = useState(true)
   const [localAnalytics, setLocalAnalytics] = useState(false)
+
+  const acceptCookiesHandler = (newState: CookiesProps) => {
+    dispatch(saveCookiesToStorage(newState))
+  }
+
+  const closeCookiesBannerHandler = () => {
+    const newState = {
+      acceptedNecessary: true,
+      acceptedAnalytics: false,
+    }
+    dispatch(saveCookiesToStorage(newState))
+  }
 
 
   return showBanner ? (
     <div className={classes.container}>
-      <IconButton onClick={() => {}} className={classes.close}><Close /></IconButton>
+      <IconButton onClick={() => closeCookiesBannerHandler()} className={classes.close}><Close /></IconButton>
       <div className={classes.content}>
         <p className={classes.text}>
 We use cookies to give you the best
