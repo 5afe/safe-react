@@ -1,7 +1,10 @@
 // @flow
 import React, { Component } from 'react'
 import GoogleAnalytics from 'react-ga'
+import { useSelector } from 'react-redux'
 import { getGoogleAnalyticsTrackingID } from '~/config'
+import type { CookiesProps } from '~/logic/cookies/store/model/cookie'
+import { cookiesSelector } from '~/logic/cookies/store/selectors'
 
 
 const trackingID = getGoogleAnalyticsTrackingID()
@@ -14,7 +17,12 @@ if (!trackingID) {
 
 
 const withTracker = (WrappedComponent, options = {}) => {
+  const cookiesState: CookiesProps = useSelector(cookiesSelector)
+  const { acceptedAnalytics } = cookiesState
   const trackPage = (page) => {
+    if (!acceptedAnalytics) {
+      return
+    }
     GoogleAnalytics.set({
       page,
       ...options,
