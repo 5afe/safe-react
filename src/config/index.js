@@ -1,7 +1,7 @@
 // @flow
 import { ensureOnce } from '~/utils/singleton'
 import { ETHEREUM_NETWORK } from '~/logic/wallets/getWeb3'
-import { TX_SERVICE_HOST, SIGNATURES_VIA_METAMASK, RELAY_API_URL } from '~/config/names'
+import { RELAY_API_URL, SIGNATURES_VIA_METAMASK, TX_SERVICE_HOST } from '~/config/names'
 import devConfig from './development'
 import testConfig from './testing'
 import stagingConfig from './staging'
@@ -45,3 +45,6 @@ export const signaturesViaMetamask = () => {
 
   return config[SIGNATURES_VIA_METAMASK]
 }
+
+// eslint-disable-next-line max-len
+export const getGoogleAnalyticsTrackingID = () => (getNetwork() === ETHEREUM_NETWORK.MAINNET ? process.env.REACT_APP_GOOGLE_ANALYTICS_ID_MAINNET : process.env.REACT_APP_GOOGLE_ANALYTICS_ID_RINKEBY)
