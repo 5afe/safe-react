@@ -8,7 +8,6 @@ const fancyColor = '#f02525'
 const fontColor = '#001428'
 const headerHeight = '53px'
 const lg = '24px'
-const mainFontFamily = 'Averta, sans-serif'
 const marginButtonImg = '12px'
 const md = '16px'
 const primary = '#001428'
@@ -42,7 +41,7 @@ module.exports = {
   largeFontSize: '16px',
   lg,
   lightFont: 300,
-  mainFontFamily,
+  mainFontFamily: 'Averta, sans-serif',
   marginButtonImg,
   md,
   mediumFontSize: '14px',
@@ -56,6 +55,7 @@ module.exports = {
   screenXs: 480,
   screenXsMax: 767,
   secondary,
+  secondaryFontFamily: 'Averta, monospace',
   secondaryText: secondaryTextOrSvg,
   sm,
   smallFontSize: '12px',
