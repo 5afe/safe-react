@@ -16,11 +16,7 @@ import {
   TX_TYPE_EXECUTION,
   TX_TYPE_CONFIRMATION,
 } from '~/logic/safe/transactions'
-import {
-  type NotificationsQueue,
-  getNotificationsFromTxType,
-  showSnackbar,
-} from '~/logic/notifications'
+import { type NotificationsQueue, getNotificationsFromTxType, showSnackbar } from '~/logic/notifications'
 import { getErrorMessage } from '~/test/utils/ethereumErrors'
 
 // https://gnosis-safe.readthedocs.io/en/latest/contracts/signatures.html#pre-validated-signatures

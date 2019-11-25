@@ -1,13 +1,12 @@
-// flow-typed signature: b2706d3b0f5dd8a525bfb666480ca78b
-// flow-typed version: 3b9d983701/storybook-router_v0.x.x/flow_>=v0.25.x
-
-import type { Element } from "react";
+// flow-typed signature: c2d42e89f2eeb1cdff2d4d7dea9fd97b
+// flow-typed version: c6154227d1/storybook-router_v0.x.x/flow_>=v0.104.x
 
 type LocationShape = {
   pathname?: string,
   search?: string,
   hash?: string,
-  state?: any
+  state?: any,
+  ...
 };
 
 type GetUserConfirmation = (
@@ -15,14 +14,21 @@ type GetUserConfirmation = (
   callback: (confirmed: boolean) => void
 ) => void;
 
-type Renderable = Element<*>;
-type RenderFunction = () => Renderable;
-type StoryDecorator = (story: RenderFunction) => Renderable;
-
 declare module "storybook-router" {
-  declare type Links = {
-    [key: string]: (kind: string, story: string) => Function
+  declare type Context = {
+    kind: string,
+    story: string,
+    ...
   };
+  declare type Renderable = React$Element<*>;
+  declare type RenderFunction = () => Renderable | Array<Renderable>;
+
+  declare type StoryDecorator = (
+    story: RenderFunction,
+    context: Context
+  ) => Renderable | null;
+
+  declare type Links = { [key: string]: (kind: string, story: string) => Function, ... };
 
   declare type RouterProps = {
     initialEntry?: Array<string>,
@@ -31,10 +37,9 @@ declare module "storybook-router" {
     initialIndex?: number,
     getUserConfirmation?: GetUserConfirmation,
     keyLength?: number,
-    children?: Element<*>
+    children?: React$Element<*>,
+    ...
   };
 
-  declare module.exports: {
-    (links?: Links, routerProps?: RouterProps): StoryDecorator
-  };
+  declare module.exports: { (links?: Links, routerProps?: RouterProps): StoryDecorator, ... };
 }

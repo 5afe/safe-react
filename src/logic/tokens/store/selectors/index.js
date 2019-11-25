@@ -13,7 +13,8 @@ export const tokenListSelector: Selector<GlobalState, Map<string, Token>, List<T
   (tokens: Map<string, Token>) => tokens.toList(),
 )
 
-export const orderedTokenListSelector: Selector<GlobalState, RouterProps, List<Token>> = createSelector(
-  tokenListSelector,
-  (tokens: List<Token>) => tokens.sortBy((token: Token) => token.get('symbol')),
-)
+export const orderedTokenListSelector: Selector<
+  GlobalState,
+  RouterProps,
+  List<Token>,
+> = createSelector(tokenListSelector, (tokens: List<Token>) => tokens.sortBy((token: Token) => token.get('symbol')))

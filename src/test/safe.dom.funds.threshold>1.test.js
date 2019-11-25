@@ -12,9 +12,7 @@ import { fillAndSubmitSendFundsForm } from './utils/transactions'
 import { TRANSACTIONS_TAB_BTN_TEST_ID } from '~/routes/safe/components/Layout'
 import { TRANSACTION_ROW_TEST_ID } from '~/routes/safe/components/Transactions/TxsTable'
 import { useTestAccountAt, resetTestAccount } from './utils/accounts'
-import {
-  CONFIRM_TX_BTN_TEST_ID,
-} from '~/routes/safe/components/Transactions/TxsTable/ExpandedTx/OwnersColumn/ButtonRow'
+import { CONFIRM_TX_BTN_TEST_ID } from '~/routes/safe/components/Transactions/TxsTable/ExpandedTx/OwnersColumn/ButtonRow'
 import { APPROVE_TX_MODAL_SUBMIT_BTN_TEST_ID } from '~/routes/safe/components/Transactions/TxsTable/ExpandedTx/ApproveTxModal'
 
 afterEach(resetTestAccount)
