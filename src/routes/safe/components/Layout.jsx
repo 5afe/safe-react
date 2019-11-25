@@ -196,6 +196,7 @@ const Layout = (props: Props) => {
               network={network}
               userAddress={userAddress}
               createTransaction={createTransaction}
+              safe={safe}
             />
           )}
         />

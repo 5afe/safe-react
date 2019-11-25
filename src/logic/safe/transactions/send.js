@@ -15,6 +15,11 @@ export const getApprovalTransaction = async (
   data: string,
   operation: Operation,
   nonce: number,
+  safeTxGas: number,
+  baseGas: number,
+  gasPrice: number,
+  gasToken: string,
+  refundReceiver: string,
   sender: string,
 ) => {
   const txHash = await safeInstance.getTransactionHash(
@@ -22,11 +27,11 @@ export const getApprovalTransaction = async (
     valueInWei,
     data,
     operation,
-    0,
-    0,
-    0,
-    ZERO_ADDRESS,
-    ZERO_ADDRESS,
+    safeTxGas,
+    baseGas,
+    gasPrice,
+    gasToken,
+    refundReceiver,
     nonce,
     {
       from: sender,
@@ -40,7 +45,6 @@ export const getApprovalTransaction = async (
     return contract.methods.approveHash(txHash)
   } catch (err) {
     console.error(`Error while approving transaction: ${err}`)
-
     throw err
   }
 }
@@ -52,6 +56,11 @@ export const getExecutionTransaction = async (
   data: string,
   operation: Operation,
   nonce: string | number,
+  safeTxGas: string | number,
+  baseGas: string | number,
+  gasPrice: string | number,
+  gasToken: string,
+  refundReceiver: string,
   sender: string,
   sigs: string,
 ) => {
@@ -59,7 +68,7 @@ export const getExecutionTransaction = async (
     const web3 = getWeb3()
     const contract = new web3.eth.Contract(GnosisSafeSol.abi, safeInstance.address)
 
-    return contract.methods.execTransaction(to, valueInWei, data, operation, 0, 0, 0, ZERO_ADDRESS, ZERO_ADDRESS, sigs)
+    return contract.methods.execTransaction(to, valueInWei, data, operation, safeTxGas, baseGas, gasPrice, gasToken, refundReceiver, sigs)
   } catch (err) {
     console.error(`Error while creating transaction: ${err}`)
 

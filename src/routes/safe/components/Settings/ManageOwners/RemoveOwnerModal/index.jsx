@@ -10,6 +10,7 @@ import { TX_NOTIFICATION_TYPES } from '~/logic/safe/transactions'
 import CheckOwner from './screens/CheckOwner'
 import ThresholdForm from './screens/ThresholdForm'
 import ReviewRemoveOwner from './screens/Review'
+import type { Safe } from '~/routes/safe/store/models/safe'
 
 const styles = () => ({
   biggerModalWindow: {
@@ -34,6 +35,7 @@ type Props = {
   removeSafeOwner: Function,
   enqueueSnackbar: Function,
   closeSnackbar: Function,
+  safe: Safe
 }
 
 type ActiveScreen = 'checkOwner' | 'selectThreshold' | 'reviewRemoveOwner'
@@ -48,6 +50,7 @@ export const sendRemoveOwner = async (
   closeSnackbar: Function,
   createTransaction: Function,
   removeSafeOwner: Function,
+  safe: Safe,
 ) => {
   const gnosisSafe = await getGnosisSafeInstanceAt(safeAddress)
   const safeOwners = await gnosisSafe.getOwners()
@@ -69,7 +72,7 @@ export const sendRemoveOwner = async (
     closeSnackbar,
   )
 
-  if (txHash) {
+  if (txHash && safe.threshold === 1) {
     removeSafeOwner({ safeAddress, ownerAddress: ownerAddressToRemove })
   }
 }
@@ -88,6 +91,7 @@ const RemoveOwner = ({
   removeSafeOwner,
   enqueueSnackbar,
   closeSnackbar,
+  safe,
 }: Props) => {
   const [activeScreen, setActiveScreen] = useState<ActiveScreen>('checkOwner')
   const [values, setValues] = useState<Object>({})
@@ -130,6 +134,7 @@ const RemoveOwner = ({
       closeSnackbar,
       createTransaction,
       removeSafeOwner,
+      safe,
     )
   }
 
