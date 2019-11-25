@@ -1,15 +1,14 @@
 // @flow
 import 'babel-polyfill'
-
 import React from 'react'
 import ReactDOM from 'react-dom'
 import { BigNumber } from 'bignumber.js'
 import Root from '~/components/Root'
-import { store } from '~/store'
-import loadSafesFromStorage from '~/routes/safe/store/actions/loadSafesFromStorage'
 import loadActiveTokens from '~/logic/tokens/store/actions/loadActiveTokens'
-import loadDefaultSafe from '~/routes/safe/store/actions/loadDefaultSafe'
 import loadCookiesFromStorage from '~/logic/cookies/store/actions/loadCookiesFromStorage'
+import loadDefaultSafe from '~/routes/safe/store/actions/loadDefaultSafe'
+import loadSafesFromStorage from '~/routes/safe/store/actions/loadSafesFromStorage'
+import { store } from '~/store'
 
 BigNumber.set({ EXPONENTIAL_AT: [-7, 50] })
 
