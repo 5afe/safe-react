@@ -34,6 +34,7 @@ const Tokens = (props: Props) => {
     activeTokens,
     fetchTokens,
     updateActiveTokens,
+    updateBlacklistedTokens,
     safeAddress,
     addToken,
     activateTokenForAllSafes,
@@ -56,6 +57,7 @@ const Tokens = (props: Props) => {
           activeTokens={activeTokens}
           fetchTokens={fetchTokens}
           updateActiveTokens={updateActiveTokens}
+          updateBlacklistedTokens={updateBlacklistedTokens}
           safeAddress={safeAddress}
           setActiveScreen={setActiveScreen}
         />

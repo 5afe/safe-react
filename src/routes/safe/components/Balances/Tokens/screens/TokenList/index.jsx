@@ -25,14 +25,17 @@ type Props = {
   tokens: List<Token>,
   safeAddress: string,
   activeTokens: List<Token>,
-  fetchTokens: Function,
+  blacklistedTokens: List<Token>,
   updateActiveTokens: Function,
+  updateBlacklistedTokens: Function,
   setActiveScreen: Function,
 }
 
 type State = {
   filter: string,
   activeTokensAddresses: Set<string>,
+  initialActiveTokensAddresses: Set<string>,
+  blacklistedTokensAddresses: Set<string>,
 }
 
 const filterBy = (filter: string, tokens: List<Token>): List<Token> => tokens.filter(
@@ -52,13 +55,9 @@ class Tokens extends React.Component<Props, State> {
   state = {
     filter: '',
     activeTokensAddresses: Set([]),
+    initialActiveTokensAddresses: Set([]),
+    blacklistedTokensAddresses: Set([]),
     activeTokensCalculated: false,
-  }
-
-  componentDidMount() {
-    const { fetchTokens } = this.props
-
-    fetchTokens()
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {
@@ -66,10 +65,12 @@ class Tokens extends React.Component<Props, State> {
     // the user would see Switches switch and this method fires before the component mounts
 
     if (!prevState.activeTokensCalculated) {
-      const { activeTokens } = nextProps
+      const { activeTokens, blacklistedTokens = [] } = nextProps
 
       return {
         activeTokensAddresses: Set(activeTokens.map(({ address }) => address)),
+        initialActiveTokensAddresses: Set(activeTokens.map(({ address }) => address)),
+        blacklistedTokensAddresses: Set(blacklistedTokens.map(({ address }) => address)),
         activeTokensCalculated: true,
       }
     }
@@ -77,10 +78,11 @@ class Tokens extends React.Component<Props, State> {
   }
 
   componentWillUnmount() {
-    const { activeTokensAddresses } = this.state
-    const { updateActiveTokens, safeAddress } = this.props
+    const { activeTokensAddresses, blacklistedTokensAddresses } = this.state
+    const { updateActiveTokens, updateBlacklistedTokens, safeAddress } = this.props
 
     updateActiveTokens(safeAddress, activeTokensAddresses)
+    updateBlacklistedTokens(safeAddress, blacklistedTokensAddresses)
   }
 
   onCancelSearch = () => {
@@ -92,17 +94,20 @@ class Tokens extends React.Component<Props, State> {
   }
 
   onSwitch = (token: Token) => () => {
-    const { activeTokensAddresses } = this.state
+    this.setState((prevState) => {
+      const activeTokensAddresses = prevState.activeTokensAddresses.has(token.address)
+        ? prevState.activeTokensAddresses.remove(token.address)
+        : prevState.activeTokensAddresses.add(token.address)
 
-    if (activeTokensAddresses.has(token.address)) {
-      this.setState({
-        activeTokensAddresses: activeTokensAddresses.remove(token.address),
-      })
-    } else {
-      this.setState({
-        activeTokensAddresses: activeTokensAddresses.add(token.address),
-      })
-    }
+      let { blacklistedTokensAddresses } = prevState
+      if (activeTokensAddresses.has(token.address)) {
+        blacklistedTokensAddresses = prevState.blacklistedTokensAddresses.remove(token.address)
+      } else if (prevState.initialActiveTokensAddresses.has(token.address)) {
+        blacklistedTokensAddresses = prevState.blacklistedTokensAddresses.add(token.address)
+      }
+
+      return ({ ...prevState, activeTokensAddresses, blacklistedTokensAddresses })
+    })
   }
 
   createItemData = (tokens, activeTokensAddresses) => ({
