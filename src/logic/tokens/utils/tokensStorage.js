@@ -4,6 +4,7 @@ import { type Token, type TokenProps } from '~/logic/tokens/store/model/token'
 import { loadFromStorage, saveToStorage } from '~/utils/storage'
 
 export const ACTIVE_TOKENS_KEY = 'ACTIVE_TOKENS'
+export const BLACKLISTED_TOKENS_KEY = 'BLACKLISTED_TOKENS'
 export const CUSTOM_TOKENS_KEY = 'CUSTOM_TOKENS'
 
 // Tokens which are active at least in one of used Safes in the app should be saved to localstorage
@@ -20,6 +21,20 @@ export const saveActiveTokens = async (tokens: Map<string, Token>) => {
 
 export const getActiveTokens = async (): Promise<Object<string, TokenProps>> => {
   const data = await loadFromStorage(ACTIVE_TOKENS_KEY)
+
+  return data || {}
+}
+
+export const saveBlacklistedTokens = async (tokens: Map<string, Token>) => {
+  try {
+    await saveToStorage(BLACKLISTED_TOKENS_KEY, tokens.toJS())
+  } catch (err) {
+    console.error('Error storing tokens in localstorage', err)
+  }
+}
+
+export const getBlacklistedTokens = async (): Promise<Object<string, TokenProps>> => {
+  const data = await loadFromStorage(BLACKLISTED_TOKENS_KEY)
 
   return data || {}
 }
@@ -47,5 +62,14 @@ export const removeFromActiveTokens = async (safeAddress: string, token: Token) 
 
   if (index !== -1) {
     await saveActiveTokens(safeAddress, activeTokens.delete(index))
+  }
+}
+
+export const removeFromBlacklistedTokens = async (safeAddress: string, token: Token) => {
+  const blacklistedTokens = await getBlacklistedTokens()
+  const index = blacklistedTokens.findIndex((blacklistedToken) => blacklistedToken.name === token.name)
+
+  if (index !== -1) {
+    await saveBlacklistedTokens(safeAddress, blacklistedTokens.delete(index))
   }
 }
