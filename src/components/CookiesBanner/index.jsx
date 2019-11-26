@@ -3,16 +3,14 @@ import Checkbox from '@material-ui/core/Checkbox'
 import Close from '@material-ui/icons/Close'
 import FormControlLabel from '@material-ui/core/FormControlLabel'
 import IconButton from '@material-ui/core/IconButton'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
-import { useSelector, useDispatch } from 'react-redux'
 import Link from '~/components/layout/Link'
 import { WELCOME_ADDRESS } from '~/routes/routes'
 import Button from '~/components/layout/Button'
 import { primary, mainFontFamily } from '~/theme/variables'
-import saveCookiesToStorage from '~/logic/cookies/store/actions/saveCookiesToStorage'
-import type { CookiesProps } from '~/logic/cookies/store/model/cookie'
-import { cookiesSelector } from '~/logic/cookies/store/selectors'
+import { loadFromStorage, saveToStorage } from '~/utils/storage'
+import { COOKIES_KEY } from '~/logic/cookies/utils/cookiesStorage'
 
 const useStyles = makeStyles({
   container: {
@@ -68,26 +66,45 @@ const useStyles = makeStyles({
   },
 })
 
+export type CookiesProps = {
+  acceptedNecessary: boolean,
+  acceptedAnalytics: boolean,
+}
 
 const CookiesBanner = () => {
   const classes = useStyles()
-  const cookiesState: CookiesProps = useSelector(cookiesSelector)
-  const dispatch = useDispatch()
-  const { acceptedNecessary } = cookiesState
-  const showBanner = acceptedNecessary === false
+
+  const [showBanner, setShowBanner] = useState(false)
   const [localNecessary, setLocalNecessary] = useState(true)
   const [localAnalytics, setLocalAnalytics] = useState(false)
 
-  const acceptCookiesHandler = (newState: CookiesProps) => {
-    dispatch(saveCookiesToStorage(newState))
+  useEffect(() => {
+    async function fetchCookiesFromStorage() {
+      const cookiesState: CookiesProps = await loadFromStorage(COOKIES_KEY)
+      if (cookiesState) {
+        const { acceptedNecessary, acceptedAnalytics } = cookiesState
+        setLocalAnalytics(acceptedAnalytics)
+        setLocalNecessary(acceptedNecessary)
+        setShowBanner(acceptedNecessary === false)
+      } else {
+        setShowBanner(true)
+      }
+    }
+    fetchCookiesFromStorage()
+  }, [])
+
+  const acceptCookiesHandler = async (newState: CookiesProps) => {
+    await saveToStorage(COOKIES_KEY, newState)
+    setShowBanner(false)
   }
 
-  const closeCookiesBannerHandler = () => {
+  const closeCookiesBannerHandler = async () => {
     const newState = {
       acceptedNecessary: true,
       acceptedAnalytics: false,
     }
-    dispatch(saveCookiesToStorage(newState))
+    await saveToStorage(COOKIES_KEY, newState)
+    setShowBanner(false)
   }
 
 
@@ -115,7 +132,7 @@ We use cookies to give you the best
               onChange={() => setLocalNecessary((prev) => !prev)}
               value={localNecessary}
               control={(
-                <Checkbox />
+                <Checkbox disabled />
               )}
             />
           </div>
@@ -134,7 +151,6 @@ We use cookies to give you the best
             <Button
               color="primary"
               component={Link}
-              disabled={!localNecessary}
               minWidth={180}
               variant="outlined"
               onClick={() => acceptCookiesHandler({
