@@ -6,6 +6,7 @@ import SafeRecord, { type SafeProps } from '~/routes/safe/store/models/safe'
 import { makeOwner, type OwnerProps } from '~/routes/safe/store/models/owner'
 import { UPDATE_SAFE } from '~/routes/safe/store/actions/updateSafe'
 import { ACTIVATE_TOKEN_FOR_ALL_SAFES } from '~/routes/safe/store/actions/activateTokenForAllSafes'
+import { BLACKLIST_TOKEN_FOR_ALL_SAFES } from '~/routes/safe/store/actions/blacklistTokenForAllSafes'
 import { REMOVE_SAFE } from '~/routes/safe/store/actions/removeSafe'
 import { ADD_SAFE_OWNER } from '~/routes/safe/store/actions/addSafeOwner'
 import { REMOVE_SAFE_OWNER } from '~/routes/safe/store/actions/removeSafeOwner'
@@ -22,6 +23,7 @@ export const buildSafe = (storedSafe: SafeProps) => {
   const addresses = storedSafe.owners.map((owner: OwnerProps) => owner.address)
   const owners = buildOwnersFrom(Array.from(names), Array.from(addresses))
   const activeTokens = Set(storedSafe.activeTokens)
+  const blacklistedTokens = Set(storedSafe.blacklistedTokens)
   const balances = Map(storedSafe.balances)
 
   const safe: SafeProps = {
@@ -29,6 +31,7 @@ export const buildSafe = (storedSafe: SafeProps) => {
     owners,
     balances,
     activeTokens,
+    blacklistedTokens,
   }
 
   return safe
@@ -51,6 +54,20 @@ export default handleActions<SafeReducerState, *>(
           const activeTokens = safeActiveTokens.add(tokenAddress)
 
           map.updateIn(['safes', safeAddress], (prevSafe) => prevSafe.merge({ activeTokens }))
+        })
+      })
+
+      return newState
+    },
+    [BLACKLIST_TOKEN_FOR_ALL_SAFES]: (state: SafeReducerState, action: ActionType<Function>): SafeReducerState => {
+      const tokenAddress = action.payload
+
+      const newState = state.withMutations((map) => {
+        map.get('safes').keySeq().forEach((safeAddress) => {
+          const safeBlacklistedTokens = map.getIn(['safes', safeAddress, 'blacklistedTokens'])
+          const blacklistedTokens = safeBlacklistedTokens.add(tokenAddress)
+
+          map.updateIn(['safes', safeAddress], (prevSafe) => prevSafe.merge({ blacklistedTokens }))
         })
       })
 
