@@ -10,7 +10,8 @@ import { WELCOME_ADDRESS } from '~/routes/routes'
 import Button from '~/components/layout/Button'
 import { primary, mainFontFamily } from '~/theme/variables'
 import { loadFromStorage, saveToStorage } from '~/utils/storage'
-import { COOKIES_KEY } from '~/logic/cookies/utils/cookiesStorage'
+import type { CookiesProps } from '~/logic/cookies/model/cookie'
+import { COOKIES_KEY } from '~/logic/cookies/model/cookie'
 
 const useStyles = makeStyles({
   container: {
@@ -65,11 +66,6 @@ const useStyles = makeStyles({
     top: '12px',
   },
 })
-
-export type CookiesProps = {
-  acceptedNecessary: boolean,
-  acceptedAnalytics: boolean,
-}
 
 const CookiesBanner = () => {
   const classes = useStyles()
