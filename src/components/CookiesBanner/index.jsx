@@ -126,6 +126,7 @@ We use cookies to give you the best
           <div className={classes.formItem}>
             <FormControlLabel
               checked={localNecessary}
+              disabled
               label="Necessary"
               name="Necessary"
               onChange={() => setLocalNecessary((prev) => !prev)}
