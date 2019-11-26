@@ -14609,6 +14609,11 @@ pocket-js-core@0.0.3:
   dependencies:
     axios "^0.18.0"
 
+polish@^0.2.3:
+  version "0.2.3"
+  resolved "https://registry.yarnpkg.com/polish/-/polish-0.2.3.tgz#4a95296b5501dd10d3b25b8e6ed8339ef4deb147"
+  integrity sha1-SpUpa1UB3RDTsluObtgznvTesUc=
+
 polished@^3.3.1:
   version "3.4.2"
   resolved "https://registry.yarnpkg.com/polished/-/polished-3.4.2.tgz#b4780dad81d64df55615fbfc77acb52fd17d88cd"

@@ -19,7 +19,6 @@ import notifications, {
   type NotificationReducerState as NotificationsState,
 } from '~/logic/notifications/store/reducer/notifications'
 
-import cookies, { COOKIE_REDUCER_ID, CookieReducerState as CookiesState } from '../logic/cookies/store/reducer/cookies'
 
 export const history = createBrowserHistory()
 
@@ -35,7 +34,6 @@ export type GlobalState = {
   tokens: TokensState,
   transactions: TransactionsState,
   notifications: NotificationsState,
-  cookies: CookiesState,
 }
 
 export type GetState = () => GlobalState
@@ -47,7 +45,6 @@ const reducers: Reducer<GlobalState> = combineReducers({
   [TOKEN_REDUCER_ID]: tokens,
   [TRANSACTIONS_REDUCER_ID]: transactions,
   [NOTIFICATIONS_REDUCER_ID]: notifications,
-  [COOKIE_REDUCER_ID]: cookies,
 })
 
 export const store: Store<GlobalState> = createStore(reducers, finalCreateStore)
