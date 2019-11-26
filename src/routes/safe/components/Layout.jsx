@@ -63,6 +63,8 @@ const Layout = (props: Props) => {
     createTransaction,
     processTransaction,
     fetchTransactions,
+    activeTokensByBalance,
+    fetchTokens,
     updateSafe,
     transactions,
     userAddress,
@@ -158,6 +160,8 @@ const Layout = (props: Props) => {
               activeTokens={activeTokens}
               granted={granted}
               safeAddress={address}
+              activeTokensByBalance={activeTokensByBalance}
+              fetchTokens={fetchTokens}
               safeName={name}
               createTransaction={createTransaction}
             />

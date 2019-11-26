@@ -41,6 +41,8 @@ type Props = {
   granted: boolean,
   tokens: List<Token>,
   activeTokens: List<Token>,
+  activeTokensByBalance: Function,
+  fetchTokens: Function,
   safeAddress: string,
   safeName: string,
   ethBalance: string,
@@ -61,6 +63,7 @@ class Balances extends React.Component<Props, State> {
       },
       showReceive: false,
     }
+    props.fetchTokens()
   }
 
   onShow = (action: Action) => () => {
@@ -93,6 +96,11 @@ class Balances extends React.Component<Props, State> {
     const { checked } = e.target
 
     this.setState(() => ({ hideZero: checked }))
+  }
+
+  componentDidMount(): void {
+    const { activeTokensByBalance, safeAddress } = this.props
+    activeTokensByBalance(safeAddress)
   }
 
   render() {

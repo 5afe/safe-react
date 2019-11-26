@@ -109,6 +109,8 @@ class SafeView extends React.Component<Props, State> {
       createTransaction,
       processTransaction,
       fetchTransactions,
+      activeTokensByBalance,
+      fetchTokens,
       updateSafe,
       transactions,
     } = this.props
@@ -126,6 +128,8 @@ class SafeView extends React.Component<Props, State> {
           createTransaction={createTransaction}
           processTransaction={processTransaction}
           fetchTransactions={fetchTransactions}
+          activeTokensByBalance={activeTokensByBalance}
+          fetchTokens={fetchTokens}
           updateSafe={updateSafe}
           transactions={transactions}
           sendFunds={sendFunds}
