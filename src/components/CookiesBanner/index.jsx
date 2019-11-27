@@ -89,7 +89,11 @@ const CookiesBanner = () => {
     fetchCookiesFromStorage()
   }, [])
 
-  const acceptCookiesHandler = async (newState: CookiesProps) => {
+  const acceptCookiesHandler = async () => {
+    const newState = {
+      acceptedNecessary: true,
+      acceptedAnalytics: true,
+    }
     await saveToStorage(COOKIES_KEY, newState)
     setShowBanner(false)
   }
@@ -97,7 +101,7 @@ const CookiesBanner = () => {
   const closeCookiesBannerHandler = async () => {
     const newState = {
       acceptedNecessary: true,
-      acceptedAnalytics: false,
+      acceptedAnalytics: localAnalytics,
     }
     await saveToStorage(COOKIES_KEY, newState)
     setShowBanner(false)
@@ -149,10 +153,7 @@ We use cookies to give you the best
               component={Link}
               minWidth={180}
               variant="outlined"
-              onClick={() => acceptCookiesHandler({
-                acceptedNecessary: localNecessary,
-                acceptedAnalytics: localAnalytics,
-              })}
+              onClick={() => acceptCookiesHandler()}
             >
               Accept Cookies
             </Button>
