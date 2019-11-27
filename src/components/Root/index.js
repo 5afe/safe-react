@@ -11,6 +11,7 @@ import Loader from '../Loader'
 import { history, store } from '~/store'
 import theme from '~/theme/mui'
 import AppRoutes from '~/routes'
+
 import './index.scss'
 import IntercomComponent from '~/utils/intercom'
 

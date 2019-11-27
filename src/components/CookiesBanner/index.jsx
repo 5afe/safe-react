@@ -89,7 +89,11 @@ const CookiesBanner = () => {
     fetchCookiesFromStorage()
   }, [])
 
-  const acceptCookiesHandler = async (newState: CookiesProps) => {
+  const acceptCookiesHandler = async () => {
+    const newState = {
+      acceptedNecessary: true,
+      acceptedAnalytics: true,
+    }
     await saveToStorage(COOKIES_KEY, newState)
     setShowBanner(false)
   }
@@ -97,7 +101,7 @@ const CookiesBanner = () => {
   const closeCookiesBannerHandler = async () => {
     const newState = {
       acceptedNecessary: true,
-      acceptedAnalytics: false,
+      acceptedAnalytics: localAnalytics,
     }
     await saveToStorage(COOKIES_KEY, newState)
     setShowBanner(false)
@@ -109,14 +113,12 @@ const CookiesBanner = () => {
       <IconButton onClick={() => closeCookiesBannerHandler()} className={classes.close}><Close /></IconButton>
       <div className={classes.content}>
         <p className={classes.text}>
-We use cookies to give you the best
-      experience and to help improve our website. Please read our
+      We use cookies to give you the best experience and to help improve our website. Please read our
           {' '}
           <Link className={classes.link} to={WELCOME_ADDRESS}>Cookie Policy</Link>
           {' '}
-      for more information. By clicking &quot;Accept cookies&quot;,
-      you agree to the storing of cookies on your device to enhance site
-      navigation and analyze site usage.
+      for more information. By clicking &quot;Accept all&quot;, you agree to the storing of cookies on your device
+      to enhance site navigation, analyze site usage and provide customer support.
         </p>
         <div className={classes.form}>
           <div className={classes.formItem}>
@@ -149,12 +151,9 @@ We use cookies to give you the best
               component={Link}
               minWidth={180}
               variant="outlined"
-              onClick={() => acceptCookiesHandler({
-                acceptedNecessary: localNecessary,
-                acceptedAnalytics: localAnalytics,
-              })}
+              onClick={() => acceptCookiesHandler()}
             >
-              Accept Cookies
+              Accept All
             </Button>
           </div>
         </div>
