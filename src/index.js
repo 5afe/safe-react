@@ -9,7 +9,7 @@ import loadDefaultSafe from '~/routes/safe/store/actions/loadDefaultSafe'
 import loadSafesFromStorage from '~/routes/safe/store/actions/loadSafesFromStorage'
 import { store } from '~/store'
 
-BigNumber.set({ EXPONENTIAL_AT: [-7, 50] })
+BigNumber.set({ EXPONENTIAL_AT: [-7, 255] })
 
 if (process.env.NODE_ENV !== 'production') {
   // eslint-disable-next-line
