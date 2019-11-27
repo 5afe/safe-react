@@ -46,4 +46,4 @@ export const signaturesViaMetamask = () => {
   return config[SIGNATURES_VIA_METAMASK]
 }
 
-export const getIntercomId = () => (getNetwork() === ETHEREUM_NETWORK.MAINNET ? process.env.REACT_APP_INTERCOM_ID_MAINNET : process.env.REACT_APP_INTERCOM_ID_RINKEBY)
+export const getIntercomId = () => (process.env.NODE_ENV === 'production' ? process.env.REACT_APP_INTERCOM_ID_PRODUCTION : process.env.REACT_APP_INTERCOM_ID_NON_PRODUCTION)
