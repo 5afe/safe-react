@@ -12,6 +12,7 @@ import { primary, mainFontFamily } from '~/theme/variables'
 import { loadFromStorage, saveToStorage } from '~/utils/storage'
 import type { CookiesProps } from '~/logic/cookies/model/cookie'
 import { COOKIES_KEY } from '~/logic/cookies/model/cookie'
+import IntercomComponent from '~/utils/intercom'
 
 const useStyles = makeStyles({
   container: {
@@ -71,6 +72,7 @@ const CookiesBanner = () => {
   const classes = useStyles()
 
   const [showBanner, setShowBanner] = useState(false)
+  const [showAnalytics, setShowAnalytics] = useState(false)
   const [localNecessary, setLocalNecessary] = useState(true)
   const [localAnalytics, setLocalAnalytics] = useState(false)
 
@@ -82,6 +84,7 @@ const CookiesBanner = () => {
         setLocalAnalytics(acceptedAnalytics)
         setLocalNecessary(acceptedNecessary)
         setShowBanner(acceptedNecessary === false)
+        setShowAnalytics(acceptedAnalytics)
       } else {
         setShowBanner(true)
       }
@@ -96,6 +99,7 @@ const CookiesBanner = () => {
     }
     await saveToStorage(COOKIES_KEY, newState)
     setShowBanner(false)
+    setShowAnalytics(true)
   }
 
   const closeCookiesBannerHandler = async () => {
@@ -105,20 +109,20 @@ const CookiesBanner = () => {
     }
     await saveToStorage(COOKIES_KEY, newState)
     setShowBanner(false)
+    setShowAnalytics(localAnalytics)
   }
 
-
-  return showBanner ? (
+  const cookieBannerContent = (
     <div className={classes.container}>
       <IconButton onClick={() => closeCookiesBannerHandler()} className={classes.close}><Close /></IconButton>
       <div className={classes.content}>
         <p className={classes.text}>
-      We use cookies to give you the best experience and to help improve our website. Please read our
+          We use cookies to give you the best experience and to help improve our website. Please read our
           {' '}
           <Link className={classes.link} to={WELCOME_ADDRESS}>Cookie Policy</Link>
           {' '}
-      for more information. By clicking &quot;Accept all&quot;, you agree to the storing of cookies on your device
-      to enhance site navigation, analyze site usage and provide customer support.
+          for more information. By clicking &quot;Accept all&quot;, you agree to the storing of cookies on your device
+          to enhance site navigation, analyze site usage and provide customer support.
         </p>
         <div className={classes.form}>
           <div className={classes.formItem}>
@@ -159,7 +163,10 @@ const CookiesBanner = () => {
         </div>
       </div>
     </div>
-  ) : null
+  )
+
+  const analyticsContent = showAnalytics ? <IntercomComponent /> : null
+  return showBanner ? cookieBannerContent : analyticsContent
 }
 
 export default CookiesBanner

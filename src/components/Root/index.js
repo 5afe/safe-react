@@ -13,7 +13,6 @@ import theme from '~/theme/mui'
 import AppRoutes from '~/routes'
 
 import './index.scss'
-import IntercomComponent from '~/utils/intercom'
 
 const Root = () => (
   <Provider store={store}>
@@ -22,7 +21,6 @@ const Root = () => (
         <PageFrame>
           <Suspense fallback={<Loader />}>
             <AppRoutes />
-            <IntercomComponent />
           </Suspense>
         </PageFrame>
       </ConnectedRouter>
