@@ -4,9 +4,9 @@ import { withStyles } from '@material-ui/core'
 
 import FormControl from '@material-ui/core/FormControl'
 import Select from '@material-ui/core/Select'
-import { useDispatch, useSelector } from 'react-redux'
-import { currencyValuesListSelector } from '~/logic/currencyValues/store/selectors'
+import { useDispatch } from 'react-redux'
 import { setCurrencySelected } from '~/logic/currencyValues/store/actions/setCurrencySelected'
+import { AVAILABLE_CURRENCIES } from '~/logic/currencyValues/store/model/currencyValues'
 
 const styles = () => ({
   dropdownContainer: {
@@ -17,30 +17,23 @@ const styles = () => ({
 const DropdownCurrency = ({
   classes,
 }: Props) => {
-  const currencyPairList = useSelector(currencyValuesListSelector)
+  const currenciesList = Object.values(AVAILABLE_CURRENCIES)
+
   const dispatch = useDispatch()
 
   const onCurrentCurrencyChangedHandler = (newCurrencySelectedName) => {
-    // eslint-disable-next-line no-restricted-syntax
-    for (const currencyPairListIterator of currencyPairList) {
-      const { currencyName } = currencyPairListIterator
-      if (currencyName === newCurrencySelectedName) {
-        dispatch(setCurrencySelected(currencyPairListIterator))
-        return
-      }
-    }
+    dispatch(setCurrencySelected(newCurrencySelectedName))
   }
 
 
   return (
     <FormControl variant="filled" className={classes.dropdownContainer}>
-
       <Select
         native
         onChange={(event) => onCurrentCurrencyChangedHandler(event.target.value)}
       >
-        {currencyPairList.valueSeq().map((dropdownValue) => (
-          <option key={dropdownValue.currencyName}>{dropdownValue.currencyName}</option>
+        {currenciesList.map((currency) => (
+          <option key={currency}>{currency}</option>
         ))}
       </Select>
     </FormControl>

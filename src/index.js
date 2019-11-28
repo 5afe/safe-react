@@ -8,7 +8,6 @@ import { store } from '~/store'
 import loadSafesFromStorage from '~/routes/safe/store/actions/loadSafesFromStorage'
 import loadActiveTokens from '~/logic/tokens/store/actions/loadActiveTokens'
 import loadDefaultSafe from '~/routes/safe/store/actions/loadDefaultSafe'
-import fetchCurencyValues from '~/logic/currencyValues/store/actions/fetchCurrencyValues'
 
 if (process.env.NODE_ENV !== 'production') {
   // eslint-disable-next-line
@@ -16,7 +15,6 @@ if (process.env.NODE_ENV !== 'production') {
   whyDidYouRender(React)
 }
 
-store.dispatch(fetchCurencyValues())
 store.dispatch(loadActiveTokens())
 store.dispatch(loadSafesFromStorage())
 store.dispatch(loadDefaultSafe())

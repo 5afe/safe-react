@@ -26,7 +26,7 @@ import SendModal from './SendModal'
 import Receive from './Receive'
 import { styles } from './style'
 import DropdownCurrency from '~/routes/safe/components/DropdownCurrency'
-import type { CurrencyValuesType } from '~/logic/currencyValues/store/model/currencyValues'
+import type { BalanceCurrencyType } from '~/logic/currencyValues/store/model/currencyValues'
 
 export const MANAGE_TOKENS_BUTTON_TEST_ID = 'manage-tokens-btn'
 export const BALANCE_ROW_TEST_ID = 'balance-row'
@@ -47,7 +47,9 @@ type Props = {
   safeName: string,
   ethBalance: string,
   createTransaction: Function,
-  currencySelected: CurrencyValuesType,
+  currencySelected: string,
+  fetchCurrencyValues: Function,
+  currencyValues: BalanceCurrencyType[],
 }
 
 type Action = 'Token' | 'Send' | 'Receive'
@@ -64,6 +66,11 @@ class Balances extends React.Component<Props, State> {
       },
       showReceive: false,
     }
+  }
+
+  componentDidMount(): void {
+    const { safeAddress, fetchCurrencyValues } = this.props
+    fetchCurrencyValues(safeAddress)
   }
 
   onShow = (action: Action) => () => {
@@ -112,6 +119,7 @@ class Balances extends React.Component<Props, State> {
       ethBalance,
       createTransaction,
       currencySelected,
+      currencyValues,
     } = this.props
 
     const columns = generateColumns()
@@ -120,7 +128,7 @@ class Balances extends React.Component<Props, State> {
       root: classes.root,
     }
 
-    const filteredData = filterByZero(getBalanceData(activeTokens, currencySelected), hideZero)
+    const filteredData = filterByZero(getBalanceData(activeTokens, currencySelected, currencyValues), hideZero)
 
     return (
       <>

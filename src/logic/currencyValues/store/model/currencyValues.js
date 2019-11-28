@@ -2,25 +2,27 @@
 import type { RecordOf } from 'immutable'
 import { Record } from 'immutable'
 
-type TokenPrice = {
-  currencyPrice: string;
-  tokenName: string;
-  tokenAddress: string;
+export const AVAILABLE_CURRENCIES = {
+  USD: 'USD',
+  EUR: 'EUR',
 }
 
-export type CurrencyValuesType = {
+
+export type BalanceCurrencyType = {
   currencyName: string;
-  tokensPrice: TokenPrice[]
+  tokenAddress: string,
+  balanceInCurrency: string,
 }
+
+export const makeBalanceCurrency = Record({
+  currencyName: '',
+  tokenAddress: '',
+  balanceInCurrency: '',
+})
 
 export type CurrencyValuesProps = {
-  currencyValueSelected: CurrencyValuesType;
-  currencyValuesList: CurrencyValuesType[]
+  currencyValueSelected: string;
+  currencyValuesList: BalanceCurrencyType[]
 }
-
-export const makeCurrencyValue = Record({
-  currencyName: '',
-  tokensPrice: [],
-})
 
 export type CurrencyValues = RecordOf<CurrencyValuesProps>
