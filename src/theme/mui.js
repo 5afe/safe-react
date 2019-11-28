@@ -40,7 +40,7 @@ const palette = {
 
 // see https://material-ui-next.com/customization/themes/
 // see https://github.com/mui-org/material-ui/blob/v1-beta/src/styles/createMuiTheme.js
-export default createMuiTheme({
+const theme = createMuiTheme({
   typography: {
     fontFamily: 'Averta,sans-serif',
     useNextVariants: true,
@@ -319,3 +319,37 @@ export default createMuiTheme({
   },
   palette,
 })
+
+export default theme
+
+export const DropdownListTheme = {
+  ...theme,
+  overrides: {
+    ...theme.overrides,
+    MuiPaper: {
+      root: {
+        marginTop: '10px',
+      },
+      elevation0: {
+        boxShadow: '1px 2px 10px 0 rgba(212, 212, 211, 0.59)',
+      },
+      rounded: {
+        borderRadius: '4px',
+      },
+    },
+    MuiList: {
+      padding: {
+        paddingBottom: '0',
+        paddingTop: '0',
+      },
+    },
+    MuiListItem: {
+      root: {
+        borderBottom: '2px solid #e8e7e6',
+        '&:last-child': {
+          borderBottom: 'none',
+        },
+      },
+    },
+  },
+}
