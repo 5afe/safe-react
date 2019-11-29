@@ -285,6 +285,9 @@ const theme = createMuiTheme({
         fontWeight: 'normal',
         paddingTop: xs,
         paddingBottom: xs,
+        overflow: 'hidden',
+        whiteSpace: 'nowrap',
+        textOverflow: 'ellipsis',
       },
     },
     MuiBackdrop: {

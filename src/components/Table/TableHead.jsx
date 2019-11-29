@@ -25,7 +25,7 @@ export const cellWidth = (width: number | typeof undefined) => {
   }
 
   return {
-    width: `${width}px`,
+    maxWidth: `${width}px`,
   }
 }
 

@@ -1,7 +1,6 @@
 // @flow
 import { List, Map } from 'immutable'
 import { createSelector, createStructuredSelector, type Selector } from 'reselect'
-import { isAfter, parseISO } from 'date-fns'
 import {
   safeSelector,
   safeActiveTokensSelector,
@@ -45,6 +44,8 @@ const getTxStatus = (tx: Transaction, safe: Safe): TransactionStatus => {
     txStatus = 'cancelled'
   } else if (tx.confirmations.size === safe.threshold) {
     txStatus = 'awaiting_execution'
+  } else if (!tx.confirmations.size) {
+    txStatus = 'pending'
   }
 
   return txStatus
@@ -119,9 +120,7 @@ const extendedTransactionsSelector: Selector<GlobalState, RouterProps, List<Tran
       let replacementTransaction
       if (!tx.isExecuted) {
         replacementTransaction = transactions.findLast(
-          (transaction) => (transaction.nonce === tx.nonce
-              && isAfter(parseISO(transaction.submissionDate), parseISO(tx.submissionDate)))
-            || transaction.nonce > tx.nonce,
+          (transaction) => transaction.isExecuted && transaction.nonce >= tx.nonce,
         )
         if (replacementTransaction) {
           extendedTx = tx.set('cancelled', true)
