@@ -77,6 +77,16 @@ export const generateColumns = () => {
     label: 'Value',
     custom: false,
     static: true,
+    style: {
+      fontSize: '11px',
+      color: '#5d6d74',
+      borderBottomWidth: '2px',
+      width: '125px',
+      fontFamily: 'Averta',
+      fontWeight: 'normal',
+      fontStyle: 'normal',
+      textAlign: 'right',
+    },
   }
 
   return List([assetColumn, balanceColumn, value, actions])

@@ -27,6 +27,7 @@ import Receive from './Receive'
 import { styles } from './style'
 import DropdownCurrency from '~/routes/safe/components/DropdownCurrency'
 import type { BalanceCurrencyType } from '~/logic/currencyValues/store/model/currencyValues'
+import { BALANCE_TABLE_BALANCE_ID, BALANCE_TABLE_VALUE_ID } from '~/routes/safe/components/Balances/dataFetcher'
 
 export const MANAGE_TOKENS_BUTTON_TEST_ID = 'manage-tokens-btn'
 export const BALANCE_ROW_TEST_ID = 'balance-row'
@@ -174,11 +175,42 @@ class Balances extends React.Component<Props, State> {
         >
           {(sortedData: Array<BalanceRow>) => sortedData.map((row: any, index: number) => (
             <TableRow tabIndex={-1} key={index} className={classes.hide} data-testid={BALANCE_ROW_TEST_ID}>
-              {autoColumns.map((column: Column) => (
-                <TableCell key={column.id} style={cellWidth(column.width)} align={column.align} component="td">
-                  {column.id === BALANCE_TABLE_ASSET_ID ? <AssetTableCell asset={row[column.id]} /> : row[column.id]}
-                </TableCell>
-              ))}
+              {autoColumns.map((column: Column) => {
+                const { id, width, align } = column
+                let rowItem
+                switch (id) {
+                  case BALANCE_TABLE_ASSET_ID: {
+                    rowItem = <AssetTableCell asset={row[id]} />
+                    break
+                  }
+                  case BALANCE_TABLE_BALANCE_ID: {
+                    rowItem = (
+                      <div>
+                        {row[id]}
+                      </div>
+                    )
+                    break
+                  }
+                  case BALANCE_TABLE_VALUE_ID: {
+                    rowItem = <div className={classes.currencyValueRow}>{row[id]}</div>
+                    break
+                  }
+                  default: {
+                    rowItem = null
+                    break
+                  }
+                }
+                return (
+                  <TableCell
+                    key={id}
+                    style={cellWidth(width)}
+                    align={align}
+                    component="td"
+                  >
+                    {rowItem}
+                  </TableCell>
+                )
+              })}
               <TableCell component="td">
                 <Row align="end" className={classes.actions}>
                   {granted && (

@@ -59,4 +59,8 @@ export const styles = (theme: Object) => ({
       cursor: 'pointer',
     },
   },
+  currencyValueRow: {
+    maxWidth: '125px',
+    textAlign: 'right',
+  },
 })
