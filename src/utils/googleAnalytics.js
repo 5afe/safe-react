@@ -47,11 +47,7 @@ const withTracker = (WrappedComponent, options = {}) => {
     useEffect(() => {
       const page = location.pathname + location.search
       trackPage(page)
-    }, [])
-    useEffect(() => {
-      const page = location.pathname + location.search
-      trackPage(page)
-    }, location.pathname)
+    }, [location.pathname])
     return <WrappedComponent {...props} />
   }
 
