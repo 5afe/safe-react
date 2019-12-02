@@ -52,6 +52,7 @@
     "material-ui-search-bar": "^1.0.0-beta.13",
     "notistack": "https://github.com/gnosis/notistack.git#v0.9.4",
     "optimize-css-assets-webpack-plugin": "5.0.3",
+    "polished": "^3.4.2",
     "qrcode.react": "1.0.0",
     "react": "16.12.0",
     "react-dom": "16.12.0",
