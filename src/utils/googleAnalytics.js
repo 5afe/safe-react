@@ -2,9 +2,9 @@
 import React, { Component, useEffect, useState } from 'react'
 import GoogleAnalytics from 'react-ga'
 import { getGoogleAnalyticsTrackingID } from '~/config'
-import { loadFromStorage } from '~/utils/storage'
 import { COOKIES_KEY } from '~/logic/cookies/model/cookie'
 import type { CookiesProps } from '~/logic/cookies/model/cookie'
+import { loadFromCookie } from '~/utils/cookies'
 
 const trackingID = getGoogleAnalyticsTrackingID()
 
@@ -20,7 +20,7 @@ const withTracker = (WrappedComponent, options = {}) => {
 
   useEffect(() => {
     async function fetchCookiesFromStorage() {
-      const cookiesState: CookiesProps = await loadFromStorage(COOKIES_KEY)
+      const cookiesState: CookiesProps = await loadFromCookie(COOKIES_KEY)
       if (cookiesState) {
         const { acceptedAnalytics } = cookiesState
         setUseAnalytics(acceptedAnalytics)
