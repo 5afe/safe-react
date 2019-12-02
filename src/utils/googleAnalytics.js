@@ -1,10 +1,11 @@
 // @flow
-import React, { Component, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import GoogleAnalytics from 'react-ga'
 import { getGoogleAnalyticsTrackingID } from '~/config'
 import { COOKIES_KEY } from '~/logic/cookies/model/cookie'
 import type { CookiesProps } from '~/logic/cookies/model/cookie'
 import { loadFromCookie } from '~/utils/cookies'
+import type { RouterProps } from '~/routes/safe/store/selectors'
 
 const trackingID = getGoogleAnalyticsTrackingID()
 
@@ -40,28 +41,18 @@ const withTracker = (WrappedComponent, options = {}) => {
     GoogleAnalytics.pageview(page)
   }
 
-  // eslint-disable-next-line
-  const HOC = class extends Component {
-    componentDidMount() {
-      // eslint-disable-next-line
-      const page = this.props.location.pathname + this.props.location.search;
+  const HOC = (props: RouterProps) => {
+    // eslint-disable-next-line react/prop-types
+    const { location } = props
+    useEffect(() => {
+      const page = location.pathname + location.search
       trackPage(page)
-    }
-
-    componentDidUpdate(prevProps) {
-      // eslint-disable-next-line react/prop-types
-      const currentPage = prevProps.location.pathname + prevProps.location.search
-      // eslint-disable-next-line react/prop-types,react/destructuring-assignment
-      const nextPage = this.props.location.pathname + this.props.location.search
-
-      if (currentPage !== nextPage) {
-        trackPage(nextPage)
-      }
-    }
-
-    render() {
-      return <WrappedComponent {...this.props} />
-    }
+    }, [])
+    useEffect(() => {
+      const page = location.pathname + location.search
+      trackPage(page)
+    }, location.pathname)
+    return <WrappedComponent {...props} />
   }
 
   return HOC
