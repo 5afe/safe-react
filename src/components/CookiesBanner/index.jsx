@@ -9,10 +9,10 @@ import Link from '~/components/layout/Link'
 import { WELCOME_ADDRESS } from '~/routes/routes'
 import Button from '~/components/layout/Button'
 import { primary, mainFontFamily } from '~/theme/variables'
-import { loadFromStorage, saveToStorage } from '~/utils/storage'
 import type { CookiesProps } from '~/logic/cookies/model/cookie'
 import { COOKIES_KEY } from '~/logic/cookies/model/cookie'
-import IntercomComponent from '~/utils/intercom'
+import { loadFromCookie, saveCookie } from '~/utils/cookies'
+import { loadIntercom } from '~/utils/intercom'
 
 const useStyles = makeStyles({
   container: {
@@ -78,7 +78,7 @@ const CookiesBanner = () => {
 
   useEffect(() => {
     async function fetchCookiesFromStorage() {
-      const cookiesState: CookiesProps = await loadFromStorage(COOKIES_KEY)
+      const cookiesState: CookiesProps = await loadFromCookie(COOKIES_KEY)
       if (cookiesState) {
         const { acceptedNecessary, acceptedAnalytics } = cookiesState
         setLocalAnalytics(acceptedAnalytics)
@@ -97,7 +97,7 @@ const CookiesBanner = () => {
       acceptedNecessary: true,
       acceptedAnalytics: true,
     }
-    await saveToStorage(COOKIES_KEY, newState)
+    await saveCookie(COOKIES_KEY, newState, 365)
     setShowBanner(false)
     setShowAnalytics(true)
   }
@@ -107,7 +107,8 @@ const CookiesBanner = () => {
       acceptedNecessary: true,
       acceptedAnalytics: localAnalytics,
     }
-    await saveToStorage(COOKIES_KEY, newState)
+    const expDays = localAnalytics ? 365 : 7
+    await saveCookie(COOKIES_KEY, newState, expDays)
     setShowBanner(false)
     setShowAnalytics(localAnalytics)
   }
@@ -165,8 +166,11 @@ const CookiesBanner = () => {
     </div>
   )
 
-  const analyticsContent = showAnalytics ? <IntercomComponent /> : null
-  return showBanner ? cookieBannerContent : analyticsContent
+  if (showAnalytics) {
+    loadIntercom()
+  }
+
+  return showBanner ? cookieBannerContent : null
 }
 
 export default CookiesBanner

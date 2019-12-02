@@ -46,4 +46,4 @@ export const signaturesViaMetamask = () => {
   return config[SIGNATURES_VIA_METAMASK]
 }
 
-export const getIntercomId = () => (process.env.REACT_APP_ENV === 'production' ? process.env.REACT_APP_INTERCOM_ID : 'km54f6ih')
+export const getIntercomId = () => (process.env.REACT_APP_ENV === 'production' ? process.env.REACT_APP_INTERCOM_ID : 'plssl1fl')
