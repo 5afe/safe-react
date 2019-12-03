@@ -21,9 +21,6 @@ const LegalLinks = () => {
       <Link className={classes.link} to="https://safe.gnosis.io/terms" target="_blank">
         Terms
       </Link>
-      <Link className={classes.link} to="https://safe.gnosis.io/cookie" target="_blank">
-        Cookies
-      </Link>
       <Link className={classes.link} to="https://safe.gnosis.io/privacy" target="_blank">
         Privacy
       </Link>
