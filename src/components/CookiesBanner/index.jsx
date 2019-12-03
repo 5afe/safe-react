@@ -6,7 +6,6 @@ import IconButton from '@material-ui/core/IconButton'
 import React, { useEffect, useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import Link from '~/components/layout/Link'
-import { WELCOME_ADDRESS } from '~/routes/routes'
 import Button from '~/components/layout/Button'
 import { primary, mainFontFamily } from '~/theme/variables'
 import type { CookiesProps } from '~/logic/cookies/model/cookie'
@@ -76,7 +75,7 @@ const CookiesBanner = () => {
 
   useEffect(() => {
     async function fetchCookiesFromStorage() {
-      const cookiesState: CookiesProps = await loadFromCookie(COOKIES_KEY)
+      const cookiesState: ?CookiesProps = await loadFromCookie(COOKIES_KEY)
       if (cookiesState) {
         const { acceptedNecessary, acceptedAnalytics } = cookiesState
         setLocalAnalytics(acceptedAnalytics)
@@ -116,7 +115,7 @@ const CookiesBanner = () => {
         <p className={classes.text}>
       We use cookies to give you the best experience and to help improve our website. Please read our
           {' '}
-          <Link className={classes.link} to={WELCOME_ADDRESS}>Cookie Policy</Link>
+          <Link className={classes.link} to="https://safe.gnosis.io/cookie">Cookie Policy</Link>
           {' '}
       for more information. By clicking &quot;Accept all&quot;, you agree to the storing of cookies on your device
       to enhance site navigation, analyze site usage and provide customer support.
