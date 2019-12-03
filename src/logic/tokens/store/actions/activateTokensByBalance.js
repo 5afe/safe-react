@@ -11,7 +11,10 @@ import {
 import fetchTokenBalanceList from '~/logic/tokens/api/fetchTokenBalanceList'
 import updateSafe from '~/routes/safe/store/actions/updateSafe'
 
-const activateTokensByBalance = (safeAddress: string) => async (dispatch: ReduxDispatch<GlobalState>, getState: GetState) => {
+const activateTokensByBalance = (safeAddress: string) => async (
+  dispatch: ReduxDispatch<GlobalState>,
+  getState: GetState,
+) => {
   try {
     const result = await fetchTokenBalanceList(safeAddress)
     const safes = safesMapSelector(getState())
@@ -38,9 +41,9 @@ const activateTokensByBalance = (safeAddress: string) => async (dispatch: ReduxD
     dispatch(updateActiveTokens(safeAddress, activeTokens))
   } catch (err) {
     console.error('Error fetching token list', err)
-
-    return Promise.resolve()
   }
+
+  return null
 }
 
 export default activateTokensByBalance
