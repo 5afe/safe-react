@@ -18,16 +18,19 @@ const LegalLinks = () => {
   const classes = useStyles()
   return (
     <Block className={classes.container} justify="space-around">
-      <Link className={classes.link} to="https://safe.gnosis.io/terms-of-use-072018.html" target="_blank">
+      <Link className={classes.link} to="https://safe.gnosis.io/terms" target="_blank">
         Terms
       </Link>
-      <Link className={classes.link} to="https://safe.gnosis.io/privacy-policy-052019.html" target="_blank">
+      <Link className={classes.link} to="https://safe.gnosis.io/cookie" target="_blank">
+        Cookies
+      </Link>
+      <Link className={classes.link} to="https://safe.gnosis.io/privacy" target="_blank">
         Privacy
       </Link>
-      <Link className={classes.link} to="https://safe.gnosis.io/licenses-092019.html" target="_blank">
+      <Link className={classes.link} to="https://safe.gnosis.io/licenses" target="_blank">
         Licenses
       </Link>
-      <Link className={classes.link} to="https://safe.gnosis.io/imprint.html" target="_blank">
+      <Link className={classes.link} to="https://safe.gnosis.io/imprint" target="_blank">
         Imprint
       </Link>
     </Block>
