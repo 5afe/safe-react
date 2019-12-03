@@ -61,7 +61,9 @@ export const getTxTableData = (transactions: List<Transaction>): List<Transactio
     return {
       [TX_TABLE_NONCE_ID]: tx.nonce,
       [TX_TABLE_TYPE_ID]: txType,
-      [TX_TABLE_DATE_ID]: tx.isExecuted ? formatDate(tx.executionDate) : tx.submissionDate && formatDate(tx.submissionDate),
+      [TX_TABLE_DATE_ID]: tx.isExecuted
+        ? formatDate(tx.executionDate)
+        : tx.submissionDate && formatDate(tx.submissionDate),
       [buildOrderFieldFrom(TX_TABLE_DATE_ID)]: txDate ? getTime(parseISO(txDate)) : null,
       [TX_TABLE_AMOUNT_ID]: getTxAmount(tx),
       [TX_TABLE_STATUS_ID]: tx.status,

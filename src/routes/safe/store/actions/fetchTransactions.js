@@ -172,7 +172,7 @@ const addMockSafeCreationTx = (transactions, safeAddress) => {
     to: '',
     transactionHash: null,
     value: 0,
-    creationTx: true
+    creationTx: true,
   })
 }
 

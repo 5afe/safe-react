@@ -99,33 +99,35 @@ const TxsTable = ({
               </TableCell>
               <TableCell style={expandCellStyle}>
                 {!row.tx.creationTx && (
-                  <IconButton disableRipple>{expandedTx === row.safeTxHash ? <ExpandLess /> : <ExpandMore />}</IconButton>
+                  <IconButton disableRipple>
+                    {expandedTx === row.safeTxHash ? <ExpandLess /> : <ExpandMore />}
+                  </IconButton>
                 )}
               </TableCell>
             </TableRow>
             {!row.tx.creationTx && (
-            <TableRow>
-              <TableCell
-                style={{ paddingBottom: 0, paddingTop: 0 }}
-                colSpan={6}
-                className={classes.extendedTxContainer}
-              >
-                <Collapse
-                  in={expandedTx === row.tx.safeTxHash}
-                  timeout="auto"
-                  component={ExpandedTxComponent}
-                  unmountOnExit
-                  tx={row[TX_TABLE_RAW_TX_ID]}
-                  threshold={threshold}
-                  owners={owners}
-                  granted={granted}
-                  userAddress={userAddress}
-                  createTransaction={createTransaction}
-                  processTransaction={processTransaction}
-                  safeAddress={safeAddress}
-                />
-              </TableCell>
-            </TableRow>
+              <TableRow>
+                <TableCell
+                  style={{ paddingBottom: 0, paddingTop: 0 }}
+                  colSpan={6}
+                  className={classes.extendedTxContainer}
+                >
+                  <Collapse
+                    in={expandedTx === row.tx.safeTxHash}
+                    timeout="auto"
+                    component={ExpandedTxComponent}
+                    unmountOnExit
+                    tx={row[TX_TABLE_RAW_TX_ID]}
+                    threshold={threshold}
+                    owners={owners}
+                    granted={granted}
+                    userAddress={userAddress}
+                    createTransaction={createTransaction}
+                    processTransaction={processTransaction}
+                    safeAddress={safeAddress}
+                  />
+                </TableCell>
+              </TableRow>
             )}
           </React.Fragment>
         ))}
