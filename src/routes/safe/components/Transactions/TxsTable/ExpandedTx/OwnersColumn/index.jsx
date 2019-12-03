@@ -31,7 +31,7 @@ type Props = {
   onTxCancel: Function,
   onTxExecute: Function
 }
-
+// eslint-disable-next-line max-len
 const isCancellationTransaction = (tx: Transaction, safeAddress: string) => !tx.value && tx.data === EMPTY_DATA && tx.recipient === safeAddress
 
 const OwnersColumn = ({
@@ -54,6 +54,7 @@ const OwnersColumn = ({
   }
 
   const cancellationTx = isCancellationTransaction(tx, safeAddress)
+  const showOlderTxAnnotation = thresholdReached && !canExecute && !tx.isExecuted
 
   const ownersWhoConfirmed = []
   let currentUserAlreadyConfirmed = false
@@ -122,7 +123,7 @@ const OwnersColumn = ({
         )}
       </Row>
       <Row>{tabIndex === 1 && <OwnersList owners={ownersUnconfirmed} />}</Row>
-      {thresholdReached && !canExecute && (
+      {showOlderTxAnnotation && (
         <Block justify="center" className={classes.executeOlderFirst}>
           <Paragraph>
             There are older tx that have to be executed first
