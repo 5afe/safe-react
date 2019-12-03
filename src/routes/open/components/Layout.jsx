@@ -2,6 +2,8 @@
 import * as React from 'react'
 import ChevronLeft from '@material-ui/icons/ChevronLeft'
 import IconButton from '@material-ui/core/IconButton'
+import { withRouter } from 'react-router-dom'
+import queryString from 'query-string'
 import Stepper, { StepperPage } from '~/components/Stepper'
 import Block from '~/components/layout/Block'
 import Heading from '~/components/layout/Heading'
@@ -26,6 +28,7 @@ type Props = {
   userAccount: string,
   network: string,
   onCallSafeContractSubmit: (values: Object) => Promise<void>,
+  location: Object,
 }
 
 const iconStyle = {
@@ -44,11 +47,25 @@ const formMutators = {
   },
 }
 
-const Layout = ({
-  provider, userAccount, onCallSafeContractSubmit, network,
-}: Props) => {
+type SafeProps = {
+  name: string,
+  owneraddresses: string[],
+  ownerNames: string[],
+  threshold: string,
+}
+
+const Layout = (props: Props) => {
+  const {
+    provider, userAccount, onCallSafeContractSubmit, network, location,
+  } = props
   const steps = getSteps()
   const initialValues = initialValuesFrom(userAccount)
+
+
+  const query: SafeProps = queryString.parse(location.search, { arrayFormat: 'comma' })
+  const {
+    name, owneraddresses, ownernames, threshold,
+  } = query
 
   return (
     <>
@@ -81,4 +98,4 @@ const Layout = ({
   )
 }
 
-export default Layout
+export default withRouter(Layout)
