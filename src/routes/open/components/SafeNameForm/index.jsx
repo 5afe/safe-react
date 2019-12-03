@@ -12,6 +12,7 @@ import { sm, secondary } from '~/theme/variables'
 
 type Props = {
   classes: Object,
+  safeName?: string,
 }
 
 const styles = () => ({
@@ -32,12 +33,13 @@ const styles = () => ({
   },
 })
 
-const SafeName = ({ classes }: Props) => (
+const SafeName = ({ classes, safeName }: Props) => (
   <>
     <Block margin="lg">
       <Paragraph noMargin size="md" color="primary">
-        You are about to create a new Gnosis Safe wallet with one or more owners. First, let&apos;s give your new wallet
-        a name. This name is only stored locally and will never be shared with Gnosis or any third parties.
+          You are about to create a new Gnosis Safe wallet with one or more owners. First, let&apos;s give your new
+          wallet
+          a name. This name is only stored locally and will never be shared with Gnosis or any third parties.
       </Paragraph>
     </Block>
     <Block margin="lg" className={classes.root}>
@@ -48,23 +50,24 @@ const SafeName = ({ classes }: Props) => (
         validate={required}
         placeholder="Name of the new Safe"
         text="Safe name"
+        defaultValue={safeName}
       />
     </Block>
     <Block margin="lg">
       <Paragraph noMargin size="md" color="primary" className={classes.links}>
-        By continuing you consent with the
+          By continuing you consent with the
         {' '}
         <a rel="noopener noreferrer" href="https://safe.gnosis.io/terms" target="_blank">
-          terms of use
+            terms of use
         </a>
         {' '}
-        and
+          and
         {' '}
         <a rel="noopener noreferrer" href="https://safe.gnosis.io/privacy" target="_blank">
-          privacy policy
+            privacy policy
         </a>
-        . Most importantly, you confirm that your funds are held securely in the Gnosis Safe, a smart contract on the
-        Ethereum blockchain. These funds cannot be accessed by Gnosis at any point.
+          . Most importantly, you confirm that your funds are held securely in the Gnosis Safe, a smart contract on the
+          Ethereum blockchain. These funds cannot be accessed by Gnosis at any point.
       </Paragraph>
     </Block>
   </>
@@ -72,10 +75,13 @@ const SafeName = ({ classes }: Props) => (
 
 const SafeNameForm = withStyles(styles)(SafeName)
 
-const SafeNamePage = () => (controls: React.Node) => (
-  <OpenPaper controls={controls}>
-    <SafeNameForm />
-  </OpenPaper>
-)
+const SafeNamePage = () => (controls: React.Node, { values }) => {
+  const { safeName } = values
+  return (
+    <OpenPaper controls={controls}>
+      <SafeNameForm safeName={safeName} />
+    </OpenPaper>
+  )
+}
 
 export default SafeNamePage

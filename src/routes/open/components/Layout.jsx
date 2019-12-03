@@ -11,17 +11,40 @@ import Row from '~/components/layout/Row'
 import Review from '~/routes/open/components/ReviewInformation'
 import SafeNameField from '~/routes/open/components/SafeNameForm'
 import SafeOwnersFields from '~/routes/open/components/SafeOwnersConfirmationsForm'
-import { getOwnerNameBy, getOwnerAddressBy, FIELD_CONFIRMATIONS } from '~/routes/open/components/fields'
+import {
+  getOwnerNameBy,
+  getOwnerAddressBy,
+  FIELD_CONFIRMATIONS,
+  FIELD_SAFE_NAME,
+} from '~/routes/open/components/fields'
 import { history } from '~/store'
 import { secondary } from '~/theme/variables'
 
 const getSteps = () => ['Name', 'Owners and confirmations', 'Review']
 
-const initialValuesFrom = (userAccount: string) => ({
-  [getOwnerNameBy(0)]: 'My Wallet',
-  [getOwnerAddressBy(0)]: userAccount,
-  [FIELD_CONFIRMATIONS]: '1',
-})
+const initialValuesFrom = (userAccount: string, ownerAddresses?: string[], ownerNames?: string[], threshold?: string, safeName?: string) => {
+  if (ownerAddresses && ownerNames) {
+    let obj = {}
+    for (const [index, value] of ownerAddresses.entries()) {
+      const name = ownerNames[index] ? ownerNames[index] : 'My Wallet'
+      obj = {
+        ...obj,
+        [getOwnerAddressBy(index)]: value,
+        [getOwnerNameBy(index)]: name,
+      }
+    }
+    return ({
+      ...obj,
+      [FIELD_CONFIRMATIONS]: threshold || '1',
+      [FIELD_SAFE_NAME]: safeName,
+    })
+  }
+  return ({
+    [getOwnerNameBy(0)]: 'My Wallet',
+    [getOwnerAddressBy(0)]: userAccount,
+    [FIELD_CONFIRMATIONS]: '1',
+  })
+}
 
 type Props = {
   provider: string,
@@ -47,7 +70,7 @@ const formMutators = {
   },
 }
 
-type SafeProps = {
+export type SafeProps = {
   name: string,
   owneraddresses: string[],
   ownerNames: string[],
@@ -59,13 +82,13 @@ const Layout = (props: Props) => {
     provider, userAccount, onCallSafeContractSubmit, network, location,
   } = props
   const steps = getSteps()
-  const initialValues = initialValuesFrom(userAccount)
-
-
   const query: SafeProps = queryString.parse(location.search, { arrayFormat: 'comma' })
   const {
     name, owneraddresses, ownernames, threshold,
   } = query
+
+  const initialValues = initialValuesFrom(userAccount, owneraddresses, ownernames, threshold, name)
+
 
   return (
     <>
