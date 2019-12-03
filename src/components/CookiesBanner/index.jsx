@@ -5,12 +5,15 @@ import FormControlLabel from '@material-ui/core/FormControlLabel'
 import IconButton from '@material-ui/core/IconButton'
 import React, { useEffect, useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
+import { useDispatch, useSelector } from 'react-redux'
 import Link from '~/components/layout/Link'
 import Button from '~/components/layout/Button'
 import { primary, mainFontFamily } from '~/theme/variables'
 import type { CookiesProps } from '~/logic/cookies/model/cookie'
 import { COOKIES_KEY } from '~/logic/cookies/model/cookie'
 import { loadFromCookie, saveCookie } from '~/utils/cookies'
+import { cookieBannerOpen } from '~/logic/cookies/store/selectors'
+import { openCookieBanner } from '~/logic/cookies/store/actions/openCookieBanner'
 
 const useStyles = makeStyles({
   container: {
@@ -68,10 +71,10 @@ const useStyles = makeStyles({
 
 const CookiesBanner = () => {
   const classes = useStyles()
-
-  const [showBanner, setShowBanner] = useState(false)
+  const dispatch = useDispatch()
   const [localNecessary, setLocalNecessary] = useState(true)
   const [localAnalytics, setLocalAnalytics] = useState(false)
+  const showBanner = useSelector(cookieBannerOpen)
 
   useEffect(() => {
     async function fetchCookiesFromStorage() {
@@ -80,13 +83,14 @@ const CookiesBanner = () => {
         const { acceptedNecessary, acceptedAnalytics } = cookiesState
         setLocalAnalytics(acceptedAnalytics)
         setLocalNecessary(acceptedNecessary)
-        setShowBanner(acceptedNecessary === false)
+        const openBanner = acceptedNecessary === false || showBanner
+        dispatch(openCookieBanner(openBanner))
       } else {
-        setShowBanner(true)
+        dispatch(openCookieBanner(true))
       }
     }
     fetchCookiesFromStorage()
-  }, [])
+  }, [showBanner])
 
   const acceptCookiesHandler = async () => {
     const newState = {
@@ -94,7 +98,7 @@ const CookiesBanner = () => {
       acceptedAnalytics: true,
     }
     await saveCookie(COOKIES_KEY, newState, 365)
-    setShowBanner(false)
+    dispatch(openCookieBanner(false))
   }
 
   const closeCookiesBannerHandler = async () => {
@@ -104,7 +108,7 @@ const CookiesBanner = () => {
     }
     const expDays = localAnalytics ? 365 : 7
     await saveCookie(COOKIES_KEY, newState, expDays)
-    setShowBanner(false)
+    dispatch(openCookieBanner(false))
   }
 
 
@@ -141,7 +145,7 @@ const CookiesBanner = () => {
               onChange={() => setLocalAnalytics((prev) => !prev)}
               value={localAnalytics}
               control={(
-                <Checkbox />
+                <Checkbox checked={localAnalytics} />
               )}
             />
           </div>
