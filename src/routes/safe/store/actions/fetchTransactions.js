@@ -147,6 +147,32 @@ export const buildTransactionFrom = async (
     modifySettingsTx,
     customTx,
     cancellationTx,
+    creationTx: tx.creationTx,
+  })
+}
+
+const addMockSafeCreationTx = (transactions, safeAddress) => {
+  transactions.push({
+    baseGas: 0,
+    confirmations: [],
+    data: null,
+    executionDate: null,
+    executor: null,
+    gasPrice: 0,
+    gasToken: '0x0000000000000000000000000000000000000000',
+    isExecuted: false,
+    nonce: null,
+    operation: 0,
+    refundReceiver: '0x0000000000000000000000000000000000000000',
+    safe: safeAddress,
+    safeTxGas: 0,
+    safeTxHash: '',
+    signatures: null,
+    submissionDate: null,
+    to: '',
+    transactionHash: null,
+    value: 0,
+    creationTx: true
   })
 }
 
@@ -156,11 +182,11 @@ export const loadSafeTransactions = async (safeAddress: string) => {
   const url = buildTxServiceUrl(safeAddress)
   const response = await axios.get(url)
   const transactions: TxServiceModel[] = response.data.results
+  addMockSafeCreationTx(transactions, safeAddress)
   const safeSubjects = loadSafeSubjects(safeAddress)
   const txsRecord = await Promise.all(
     transactions.map((tx: TxServiceModel) => buildTransactionFrom(safeAddress, tx, safeSubjects)),
   )
-
   return Map().set(safeAddress, List(txsRecord))
 }
 
@@ -170,6 +196,6 @@ export default (safeAddress: string) => async (dispatch: ReduxDispatch<GlobalSta
 
     return dispatch(addTransactions(transactions))
   } catch (err) {
-    console.error(`Requests for transactions for ${safeAddress} failed with 404`)
+    console.error(`Requests for transactions for ${safeAddress} failed with 404`, err)
   }
 }

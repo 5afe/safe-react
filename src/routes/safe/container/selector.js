@@ -42,6 +42,8 @@ const getTxStatus = (tx: Transaction, safe: Safe): TransactionStatus => {
     txStatus = 'awaiting_execution'
   } else if (!tx.confirmations.size) {
     txStatus = 'pending'
+  } else if (tx.creationTx) {
+    txStatus = 'success'
   }
 
   return txStatus

@@ -54,13 +54,15 @@ export const getTxTableData = (transactions: List<Transaction>): List<Transactio
       txType = 'Cancellation transaction'
     } else if (tx.customTx) {
       txType = 'Custom transaction'
+    } else if (tx.creationTx) {
+      txType = 'Safe creation'
     }
 
     return {
       [TX_TABLE_NONCE_ID]: tx.nonce,
       [TX_TABLE_TYPE_ID]: txType,
-      [TX_TABLE_DATE_ID]: formatDate(tx.isExecuted ? tx.executionDate : tx.submissionDate),
-      [buildOrderFieldFrom(TX_TABLE_DATE_ID)]: getTime(parseISO(txDate)),
+      [TX_TABLE_DATE_ID]: tx.isExecuted ? formatDate(tx.executionDate) : tx.submissionDate && formatDate(tx.submissionDate),
+      [buildOrderFieldFrom(TX_TABLE_DATE_ID)]: txDate ? getTime(parseISO(txDate)) : null,
       [TX_TABLE_AMOUNT_ID]: getTxAmount(tx),
       [TX_TABLE_STATUS_ID]: tx.status,
       [TX_TABLE_RAW_TX_ID]: tx,

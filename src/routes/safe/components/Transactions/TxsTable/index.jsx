@@ -98,9 +98,12 @@ const TxsTable = ({
                 </Row>
               </TableCell>
               <TableCell style={expandCellStyle}>
-                <IconButton disableRipple>{expandedTx === row.safeTxHash ? <ExpandLess /> : <ExpandMore />}</IconButton>
+                {!row.tx.creationTx && (
+                  <IconButton disableRipple>{expandedTx === row.safeTxHash ? <ExpandLess /> : <ExpandMore />}</IconButton>
+                )}
               </TableCell>
             </TableRow>
+            {!row.tx.creationTx && (
             <TableRow>
               <TableCell
                 style={{ paddingBottom: 0, paddingTop: 0 }}
@@ -123,6 +126,7 @@ const TxsTable = ({
                 />
               </TableCell>
             </TableRow>
+            )}
           </React.Fragment>
         ))}
       </Table>

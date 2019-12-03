@@ -116,9 +116,8 @@ const CustomDescription = ({
 
 const TxDescription = ({ tx, classes }: Props) => {
   const {
-    recipient, value, modifySettingsTx, removedOwner, addedOwner, newThreshold, cancellationTx, customTx, data,
+    recipient, value, modifySettingsTx, removedOwner, addedOwner, newThreshold, cancellationTx, customTx, creationTx, data,
   } = getTxData(tx)
-
   return (
     <Block className={classes.txDataContainer}>
       {modifySettingsTx && (
@@ -127,7 +126,7 @@ const TxDescription = ({ tx, classes }: Props) => {
       {customTx && (
         <CustomDescription data={data} value={value} recipient={recipient} classes={classes} />
       )}
-      {!cancellationTx && !modifySettingsTx && !customTx && (
+      {!cancellationTx && !modifySettingsTx && !customTx && !creationTx && (
         <TransferDescription value={value} symbol={tx.symbol} recipient={recipient} />
       )}
     </Block>
