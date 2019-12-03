@@ -17,7 +17,7 @@ import { type Transaction } from '~/routes/safe/store/models/transaction'
 import { type Owner } from '~/routes/safe/store/models/owner'
 import ExpandedTxComponent from './ExpandedTx'
 import {
-  getTxTableData, generateColumns, TX_TABLE_DATE_ID, type TransactionRow, TX_TABLE_RAW_TX_ID,
+  getTxTableData, generateColumns, TX_TABLE_NONCE_ID, type TransactionRow, TX_TABLE_RAW_TX_ID,
 } from './columns'
 import { styles } from './style'
 import Status from './Status'
@@ -68,7 +68,7 @@ const TxsTable = ({
     <Block className={classes.container}>
       <Table
         label="Transactions"
-        defaultOrderBy={TX_TABLE_DATE_ID}
+        defaultOrderBy={TX_TABLE_NONCE_ID}
         defaultOrder="desc"
         columns={columns}
         data={filteredData}
