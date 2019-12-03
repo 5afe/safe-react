@@ -7,7 +7,7 @@ import processTransaction from '~/routes/safe/store/actions/processTransaction'
 import fetchTransactions from '~/routes/safe/store/actions/fetchTransactions'
 import updateSafe from '~/routes/safe/store/actions/updateSafe'
 import fetchTokens from '~/logic/tokens/store/actions/fetchTokens'
-import activeTokensByBalance from '~/logic/tokens/store/actions/activeTokensByBalance'
+import activateTokensByBalance from '~/logic/tokens/store/actions/activateTokensByBalance'
 
 export type Actions = {
   fetchSafe: typeof fetchSafe,
@@ -18,7 +18,7 @@ export type Actions = {
   fetchTokens: typeof fetchTokens,
   processTransaction: typeof processTransaction,
   fetchEtherBalance: typeof fetchEtherBalance,
-  activeTokensByBalance: typeof activeTokensByBalance
+  activateTokensByBalance: typeof activateTokensByBalance
 }
 
 export default {
@@ -28,7 +28,7 @@ export default {
   processTransaction,
   fetchTokens,
   fetchTransactions,
-  activeTokensByBalance,
+  activateTokensByBalance,
   updateSafe,
   fetchEtherBalance,
   checkAndUpdateSafeOwners,

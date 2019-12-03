@@ -41,7 +41,7 @@ type Props = {
   granted: boolean,
   tokens: List<Token>,
   activeTokens: List<Token>,
-  activeTokensByBalance: Function,
+  activateTokensByBalance: Function,
   fetchTokens: Function,
   safeAddress: string,
   safeName: string,
@@ -99,8 +99,8 @@ class Balances extends React.Component<Props, State> {
   }
 
   componentDidMount(): void {
-    const { activeTokensByBalance, safeAddress } = this.props
-    activeTokensByBalance(safeAddress)
+    const { activateTokensByBalance, safeAddress } = this.props
+    activateTokensByBalance(safeAddress)
   }
 
   render() {
