@@ -39,6 +39,7 @@ const txStatusToLabel = {
   awaiting_confirmations: 'Awaiting confirmations',
   cancelled: 'Cancelled',
   awaiting_execution: 'Awaiting execution',
+  pending: 'Pending',
 }
 
 const ExpandedTx = ({

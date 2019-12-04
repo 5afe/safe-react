@@ -33,17 +33,16 @@ export type SelectorProps = {
 
 const getTxStatus = (tx: Transaction, userAddress: string, safe: Safe): TransactionStatus => {
   let txStatus
-
   if (tx.executionTxHash) {
     txStatus = 'success'
   } else if (tx.cancelled) {
     txStatus = 'cancelled'
   } else if (tx.confirmations.size === safe.threshold) {
     txStatus = 'awaiting_execution'
-  } else if (!tx.confirmations.size) {
-    txStatus = 'pending'
   } else if (tx.creationTx) {
     txStatus = 'success'
+  } else if (!tx.confirmations.size) {
+    txStatus = 'pending'
   } else {
     const userConfirmed = tx.confirmations.filter((conf) => conf.owner.address === userAddress).size === 1
     const userIsSafeOwner = safe.owners.filter((owner) => owner.address === userAddress).size === 1
