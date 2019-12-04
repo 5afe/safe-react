@@ -13,11 +13,7 @@ export default handleActions<State, *>(
     [OPEN_COOKIE_BANNER]: (state: State, action: ActionType<Function>): State => {
       const { cookieBannerOpen } = action.payload
 
-      const newState = state.withMutations((map) => {
-        map.set('cookieBannerOpen', cookieBannerOpen)
-      })
-
-      return newState
+      return state.set('cookieBannerOpen', cookieBannerOpen)
     },
   },
   Map(),
