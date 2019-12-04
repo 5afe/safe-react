@@ -35,6 +35,7 @@ type OpenModal = 'cancelTx' | 'approveTx' | null
 
 const txStatusToLabel = {
   success: 'Success',
+  awaiting_your_confirmation: 'Awaiting your confirmation',
   awaiting_confirmations: 'Awaiting confirmations',
   cancelled: 'Cancelled',
   awaiting_execution: 'Awaiting execution',

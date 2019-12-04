@@ -7,6 +7,9 @@ export const styles = () => ({
   txDataContainer: {
     padding: `${lg} ${md}`,
   },
+  awaiting_your_confirmation: {
+    color: disabled,
+  },
   awaiting_confirmations: {
     color: disabled,
   },

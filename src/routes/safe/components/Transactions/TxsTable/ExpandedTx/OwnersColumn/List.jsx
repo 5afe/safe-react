@@ -51,6 +51,7 @@ const OwnerComponent = withStyles(styles)(({
   confirmed,
 }: OwnerProps) => (
   <Block key={owner.address} className={classes.container}>
+    <div className={confirmed ? classes.verticalLineProgressDone : classes.verticalLineProgressPending} />
     <div className={classes.iconState}>
       {confirmed ? <Img src={ConfirmSmallFilledIcon} /> : <Img src={ConfirmSmallGreyIcon} />}
     </div>
@@ -61,6 +62,7 @@ const OwnerComponent = withStyles(styles)(({
       </Paragraph>
       <EtherscanLink className={classes.address} type="address" value={owner.address} cut={4} />
     </Block>
+    <Block className={classes.spacer} />
     {showConfirmBtn && owner.address === userAddress && (
       <Button
         className={classes.button}
@@ -73,7 +75,7 @@ const OwnerComponent = withStyles(styles)(({
         Confirm tx
       </Button>
     )}
-    {showExecuteBtn && (
+    {showExecuteBtn && owner.address === userAddress && (
       <Button
         className={classes.button}
         variant="contained"

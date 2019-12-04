@@ -1,5 +1,7 @@
 // @flow
-import { border, sm, boldFont } from '~/theme/variables'
+import {
+  border, sm, boldFont, secondary, secondaryText,
+} from '~/theme/variables'
 
 export const styles = () => ({
   ownersList: {
@@ -12,6 +14,22 @@ export const styles = () => ({
     boxSizing: 'border-box',
     borderLeft: `2px solid ${border}`,
   },
+  verticalLineProgressPending: {
+    position: 'absolute',
+    borderLeft: `2px solid ${secondaryText}`,
+    height: '52px',
+    top: '-26px',
+    left: '29px',
+    zIndex: '10',
+  },
+  verticalLineProgressDone: {
+    position: 'absolute',
+    borderLeft: `2px solid ${secondary}`,
+    height: '52px',
+    top: '-26px',
+    left: '29px',
+    zIndex: '10',
+  },
   icon: {
     marginRight: sm,
   },
@@ -19,12 +37,12 @@ export const styles = () => ({
     borderBottom: `1px solid ${border}`,
   },
   container: {
+    position: 'relative',
     display: 'flex',
-    alignItems: 'center',
-    padding: '5px',
-    paddingLeft: '20px',
+    padding: '5px 20px',
   },
   ownerListTitle: {
+    position: 'relative',
     display: 'flex',
     alignItems: 'center',
     padding: '15px',
@@ -35,6 +53,9 @@ export const styles = () => ({
     textTransform: 'uppercase',
     letterSpacing: '1px',
   },
+  ownerListTitleDone: {
+    color: secondary,
+  },
   name: {
     textOverflow: 'ellipsis',
     overflow: 'hidden',
@@ -43,17 +64,21 @@ export const styles = () => ({
   address: {
     height: '20px',
   },
+  spacer: {
+    flex: 'auto',
+  },
   iconState: {
     width: '20px',
     display: 'flex',
     justifyContent: 'center',
     marginRight: '10px',
+    zIndex: '100',
     '& > img': {
       display: 'block',
     },
   },
   button: {
-    textAlign: 'center',
     justifyContent: 'center',
+    alignSelf: 'center',
   },
 })

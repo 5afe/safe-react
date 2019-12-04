@@ -3,29 +3,23 @@ import React from 'react'
 import { withStyles } from '@material-ui/core/styles'
 import Row from '~/components/layout/Row'
 import Button from '~/components/layout/Button'
-import { sm, lg, background } from '~/theme/variables'
+import { sm, border } from '~/theme/variables'
 
 type Props = {
-  onTxConfirm: Function,
-  onTxCancel: Function,
-  onTxExecute: Function,
   classes: Object,
-  showConfirmBtn: boolean,
+  onTxCancel: Function,
   showCancelBtn: boolean,
-  showExecuteBtn: boolean,
 }
 
 const styles = () => ({
   buttonRow: {
-    height: '56px',
-    justifyContent: 'center',
-    backgroundColor: background,
+    borderTop: `2px solid ${border}`,
+    display: 'flex',
+    justifyContent: 'flex-end',
+    padding: '10px 20px',
   },
   button: {
     height: '32px',
-    '&:last-child': {
-      marginLeft: lg,
-    },
   },
   icon: {
     width: '14px',

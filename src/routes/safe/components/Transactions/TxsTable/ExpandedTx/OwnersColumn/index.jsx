@@ -1,5 +1,6 @@
 // @flow
 import React from 'react'
+import cn from 'classnames'
 import { List } from 'immutable'
 import { withStyles } from '@material-ui/core/styles'
 import Block from '~/components/layout/Block'
@@ -100,7 +101,7 @@ const OwnersColumn = ({
 
   return (
     <Col xs={6} className={classes.rightCol} layout="block">
-      <Block className={classes.ownerListTitle}>
+      <Block className={cn(classes.ownerListTitle, thresholdReached && classes.ownerListTitleDone)}>
         <div className={classes.iconState}>
           {!thresholdReached && <Img src={ConfirmLargeBorderIcon} />}
           {thresholdReached && <Img src={CheckGreenIcon} />}
@@ -117,7 +118,12 @@ const OwnersColumn = ({
         onTxExecute={onTxExecute}
         showExecuteBtn={!tx.isExecuted && thresholdReached}
       />
-      <Block className={classes.ownerListTitle}>
+      <Block className={cn(
+        classes.ownerListTitle,
+        thresholdReached && tx.executionTxHash && classes.ownerListTitleDone,
+      )}
+      >
+        <div className={thresholdReached ? classes.verticalLineProgressDone : classes.verticalLineProgressPending} />
         <div className={classes.iconState}>
           {!thresholdReached && <Img src={ConfirmLargeGreyIcon} />}
           {thresholdReached && !tx.executionTxHash && <Img src={ConfirmLargeBorderIcon} />}

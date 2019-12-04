@@ -4,7 +4,7 @@ import type { RecordFactory, RecordOf } from 'immutable'
 import { type Confirmation } from '~/routes/safe/store/models/confirmation'
 import { ZERO_ADDRESS } from '~/logic/wallets/ethAddresses'
 
-export type TransactionStatus = 'awaiting_confirmations' | 'success' | 'cancelled' | 'awaiting_execution' | 'pending'
+export type TransactionStatus = 'awaiting_your_confirmation' | 'awaiting_confirmations' | 'success' | 'cancelled' | 'awaiting_execution' | 'pending'
 
 export type TransactionProps = {
   nonce: number,

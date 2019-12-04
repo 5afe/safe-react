@@ -31,8 +31,8 @@ export type SelectorProps = {
   transactions: List<Transaction>,
 }
 
-const getTxStatus = (tx: Transaction, safe: Safe): TransactionStatus => {
-  let txStatus = 'awaiting_confirmations'
+const getTxStatus = (tx: Transaction, userAddress: string, safe: Safe): TransactionStatus => {
+  let txStatus
 
   if (tx.executionTxHash) {
     txStatus = 'success'
@@ -44,6 +44,10 @@ const getTxStatus = (tx: Transaction, safe: Safe): TransactionStatus => {
     txStatus = 'pending'
   } else if (tx.creationTx) {
     txStatus = 'success'
+  } else {
+    const userConfirmed = tx.confirmations.filter((conf) => conf.owner.address === userAddress).size === 1
+    const userIsSafeOwner = safe.owners.filter((owner) => owner.address === userAddress).size === 1
+    txStatus = !userConfirmed && userIsSafeOwner ? 'awaiting_your_confirmation' : 'awaiting_confirmations'
   }
 
   return txStatus
@@ -108,8 +112,9 @@ const extendedSafeTokensSelector: Selector<GlobalState, RouterProps, List<Token>
 
 const extendedTransactionsSelector: Selector<GlobalState, RouterProps, List<Transaction>> = createSelector(
   safeSelector,
+  userAccountSelector,
   safeTransactionsSelector,
-  (safe, transactions) => {
+  (safe, userAddress, transactions) => {
     const extendedTransactions = transactions.map((tx: Transaction) => {
       let extendedTx = tx
 
@@ -125,7 +130,7 @@ const extendedTransactionsSelector: Selector<GlobalState, RouterProps, List<Tran
         }
       }
 
-      return extendedTx.set('status', getTxStatus(extendedTx, safe))
+      return extendedTx.set('status', getTxStatus(extendedTx, userAddress, safe))
     })
 
     return extendedTransactions

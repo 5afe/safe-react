@@ -19,6 +19,7 @@ type Props = {
 const statusToIcon = {
   success: OkIcon,
   cancelled: ErrorIcon,
+  awaiting_your_confirmation: AwaitingIcon,
   awaiting_confirmations: AwaitingIcon,
   awaiting_execution: AwaitingIcon,
   pending: <CircularProgress size={14} />,
@@ -27,6 +28,7 @@ const statusToIcon = {
 const statusToLabel = {
   success: 'Success',
   cancelled: 'Failed',
+  awaiting_your_confirmation: 'Awaiting your confirmation',
   awaiting_confirmations: 'Awaiting confirmations',
   awaiting_execution: 'Awaiting execution',
   pending: 'Pending',

@@ -28,6 +28,11 @@ export const styles = () => ({
     border: `1px solid ${error}`,
     width: '84px',
   },
+  awaiting_your_confirmation: {
+    backgroundColor: '#d4d5d3',
+    color: disabled,
+    width: '190px',
+  },
   awaiting_confirmations: {
     backgroundColor: '#d4d5d3',
     color: disabled,
