@@ -84,7 +84,7 @@ const TxsTable = ({
               {autoColumns.map((column: Column) => (
                 <TableCell
                   key={column.id}
-                  className={classes.cell}
+                  className={cn(classes.cell, row.status === 'cancelled' && classes.cancelledRow)}
                   style={cellWidth(column.width)}
                   align={column.align}
                   component="td"

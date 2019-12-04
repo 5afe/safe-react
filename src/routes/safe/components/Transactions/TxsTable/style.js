@@ -14,6 +14,9 @@ export const styles = () => ({
   expandedRow: {
     backgroundColor: '#fff3e2',
   },
+  cancelledRow: {
+    opacity: 0.4,
+  },
   extendedTxContainer: {
     padding: 0,
     '&:last-child': {
