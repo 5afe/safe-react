@@ -1,5 +1,5 @@
 // @flow
-import type { Dispatch as ReduxDispatch, GetState } from 'redux'
+import type { Dispatch as ReduxDispatch } from 'redux'
 import { List } from 'immutable'
 import { type Confirmation } from '~/routes/safe/store/models/confirmation'
 import { type Transaction } from '~/routes/safe/store/models/transaction'
@@ -78,7 +78,7 @@ const processTransaction = ({
   approveAndExecute,
 }: ProcessTransactionArgs) => async (
   dispatch: ReduxDispatch<GlobalState>,
-  getState: GetState<GlobalState>,
+  getState: Function,
 ) => {
   const state: GlobalState = getState()
 
@@ -201,7 +201,7 @@ const processTransaction = ({
         dispatch(fetchTransactions(safeAddress))
 
         if (shouldExecute) {
-          fetchSafe(safeAddress)
+          dispatch(fetchSafe(safeAddress))
         }
 
         return receipt.transactionHash

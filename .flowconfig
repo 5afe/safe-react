@@ -3,7 +3,6 @@
 <PROJECT_ROOT>/contracts/**/.*
 <PROJECT_ROOT>/scripts/**/.*
 <PROJECT_ROOT>/public/**/.*
-<PROJECT_ROOT>/src/test/**/.*
 <PROJECT_ROOT>/babel.config.js
 <PROJECT_ROOT>/jest.config.js
 <PROJECT_ROOT>/truffle.js
