@@ -14,6 +14,7 @@ import { COOKIES_KEY } from '~/logic/cookies/model/cookie'
 import { loadFromCookie, saveCookie } from '~/logic/cookies/utils'
 import { cookieBannerOpen } from '~/logic/cookies/store/selectors'
 import { openCookieBanner } from '~/logic/cookies/store/actions/openCookieBanner'
+import { loadIntercom } from '~/utils/intercom'
 
 const useStyles = makeStyles({
   container: {
@@ -72,6 +73,8 @@ const useStyles = makeStyles({
 const CookiesBanner = () => {
   const classes = useStyles()
   const dispatch = useDispatch()
+
+  const [showAnalytics, setShowAnalytics] = useState(false)
   const [localNecessary, setLocalNecessary] = useState(true)
   const [localAnalytics, setLocalAnalytics] = useState(false)
   const showBanner = useSelector(cookieBannerOpen)
@@ -85,6 +88,7 @@ const CookiesBanner = () => {
         setLocalNecessary(acceptedNecessary)
         const openBanner = acceptedNecessary === false || showBanner
         dispatch(openCookieBanner(openBanner))
+        setShowAnalytics(acceptedAnalytics)
       } else {
         dispatch(openCookieBanner(true))
       }
@@ -99,6 +103,7 @@ const CookiesBanner = () => {
     }
     await saveCookie(COOKIES_KEY, newState, 365)
     dispatch(openCookieBanner(false))
+    setShowAnalytics(true)
   }
 
   const closeCookiesBannerHandler = async () => {
@@ -108,21 +113,21 @@ const CookiesBanner = () => {
     }
     const expDays = localAnalytics ? 365 : 7
     await saveCookie(COOKIES_KEY, newState, expDays)
+    setShowAnalytics(localAnalytics)
     dispatch(openCookieBanner(false))
   }
 
-
-  return showBanner ? (
+  const cookieBannerContent = (
     <div className={classes.container}>
       <IconButton onClick={() => closeCookiesBannerHandler()} className={classes.close}><Close /></IconButton>
       <div className={classes.content}>
         <p className={classes.text}>
-      We use cookies to give you the best experience and to help improve our website. Please read our
+          We use cookies to give you the best experience and to help improve our website. Please read our
           {' '}
           <Link className={classes.link} to="https://safe.gnosis.io/cookie">Cookie Policy</Link>
           {' '}
-      for more information. By clicking &quot;Accept all&quot;, you agree to the storing of cookies on your device
-      to enhance site navigation, analyze site usage and provide customer support.
+          for more information. By clicking &quot;Accept all&quot;, you agree to the storing of cookies on your device
+          to enhance site navigation, analyze site usage and provide customer support.
         </p>
         <div className={classes.form}>
           <div className={classes.formItem}>
@@ -163,7 +168,13 @@ const CookiesBanner = () => {
         </div>
       </div>
     </div>
-  ) : null
+  )
+
+  if (showAnalytics) {
+    loadIntercom()
+  }
+
+  return showBanner ? cookieBannerContent : null
 }
 
 export default CookiesBanner
