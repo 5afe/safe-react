@@ -43,9 +43,7 @@ const getLocalSafe = async (safeAddress: string) => {
   return storedSafes[safeAddress]
 }
 
-export const checkAndUpdateSafeOwners = (safeAddress: string) => async (
-  dispatch: ReduxDispatch<GlobalState>,
-) => {
+export const checkAndUpdateSafeOwners = (safeAddress: string) => async (dispatch: ReduxDispatch<GlobalState>) => {
   // Check if the owner's safe did change and update them
   const [gnosisSafe, localSafe] = await Promise.all([getGnosisSafeInstanceAt(safeAddress), getLocalSafe(safeAddress)])
   const remoteOwners = await gnosisSafe.getOwners()
