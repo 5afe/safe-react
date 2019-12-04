@@ -4,7 +4,7 @@ import GoogleAnalytics from 'react-ga'
 import { getGoogleAnalyticsTrackingID } from '~/config'
 import { COOKIES_KEY } from '~/logic/cookies/model/cookie'
 import type { CookiesProps } from '~/logic/cookies/model/cookie'
-import { loadFromCookie } from '~/utils/cookies'
+import { loadFromCookie } from '~/logic/cookies/utils'
 import type { RouterProps } from '~/routes/safe/store/selectors'
 
 const trackingID = getGoogleAnalyticsTrackingID()
