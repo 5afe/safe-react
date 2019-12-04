@@ -57,7 +57,6 @@
     "react-dom": "16.12.0",
     "react-final-form": "6.3.3",
     "react-final-form-listeners": "^1.0.2",
-    "react-headroom": "^3.0.0",
     "react-hot-loader": "4.12.18",
     "react-qr-reader": "^2.2.1",
     "react-redux": "7.1.3",

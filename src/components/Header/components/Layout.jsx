@@ -1,6 +1,5 @@
 // @flow
 import * as React from 'react'
-import Headroom from 'react-headroom'
 import { Link } from 'react-router-dom'
 import { withStyles } from '@material-ui/core/styles'
 import Grow from '@material-ui/core/Grow'
@@ -44,6 +43,8 @@ const styles = () => ({
     boxShadow: '0 2px 4px 0 rgba(212, 212, 211, 0.59)',
     backgroundColor: 'white',
     zIndex: 1301,
+    position: 'fixed',
+    width: '100%',
   },
   logo: {
     padding: `${sm} ${md}`,
@@ -58,37 +59,35 @@ const styles = () => ({
 const Layout = openHoc(({
   open, toggle, clickAway, classes, providerInfo, providerDetails,
 }: Props) => (
-  <Headroom>
-    <Row className={classes.summary}>
-      <Col start="xs" middle="xs" className={classes.logo}>
-        <Link to="/">
-          <Img src={logo} height={32} alt="Gnosis Team Safe" />
-        </Link>
-      </Col>
-      <Divider />
-      <SafeListHeader />
-      <Divider />
-      <EarlyAccessLabel />
-      <Spacer />
-      <Provider open={open} toggle={toggle} info={providerInfo}>
-        {(providerRef) => (
-          <Popper open={open} anchorEl={providerRef.current} placement="bottom" className={classes.popper}>
-            {({ TransitionProps }) => (
-              <Grow {...TransitionProps}>
-                <>
-                  <ClickAwayListener onClickAway={clickAway} mouseEvent="onClick" touchEvent={false}>
-                    <List className={classes.root} component="div">
-                      {providerDetails}
-                    </List>
-                  </ClickAwayListener>
-                </>
-              </Grow>
-            )}
-          </Popper>
-        )}
-      </Provider>
-    </Row>
-  </Headroom>
+  <Row className={classes.summary}>
+    <Col start="xs" middle="xs" className={classes.logo}>
+      <Link to="/">
+        <Img src={logo} height={32} alt="Gnosis Team Safe" />
+      </Link>
+    </Col>
+    <Divider />
+    <SafeListHeader />
+    <Divider />
+    <EarlyAccessLabel />
+    <Spacer />
+    <Provider open={open} toggle={toggle} info={providerInfo}>
+      {(providerRef) => (
+        <Popper open={open} anchorEl={providerRef.current} placement="bottom" className={classes.popper}>
+          {({ TransitionProps }) => (
+            <Grow {...TransitionProps}>
+              <>
+                <ClickAwayListener onClickAway={clickAway} mouseEvent="onClick" touchEvent={false}>
+                  <List className={classes.root} component="div">
+                    {providerDetails}
+                  </List>
+                </ClickAwayListener>
+              </>
+            </Grow>
+          )}
+        </Popper>
+      )}
+    </Provider>
+  </Row>
 ))
 
 export default withStyles(styles)(Layout)
