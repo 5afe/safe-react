@@ -12,6 +12,8 @@ const trackingID = getGoogleAnalyticsTrackingID()
 if (!trackingID) {
   console.error('[GoogleAnalytics] - In order to use google analytics you need to add an trackingID')
 } else {
+  // eslint-disable-next-line no-console
+  console.log(`Google analytics starts with id: ${trackingID}`)
   GoogleAnalytics.initialize(trackingID)
 }
 
