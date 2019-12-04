@@ -68,6 +68,7 @@ const TxsTable = ({
         label="Transactions"
         defaultOrderBy={TX_TABLE_DATE_ID}
         defaultOrder="desc"
+        defaultRowsPerPage={25}
         columns={columns}
         data={filteredData}
         size={filteredData.size}
