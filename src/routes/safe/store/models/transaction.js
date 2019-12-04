@@ -6,7 +6,13 @@ import { ZERO_ADDRESS } from '~/logic/wallets/ethAddresses'
 
 export type TransactionType = 'incoming' | 'outgoing' | 'settings' | 'custom' | 'creation' | 'cancellation'
 
-export type TransactionStatus = 'awaiting_your_confirmation' | 'awaiting_confirmations' | 'success' | 'cancelled' | 'awaiting_execution' | 'pending'
+export type TransactionStatus =
+  | 'awaiting_your_confirmation'
+  | 'awaiting_confirmations'
+  | 'success'
+  | 'cancelled'
+  | 'awaiting_execution'
+  | 'pending'
 
 export type TransactionProps = {
   nonce: number,

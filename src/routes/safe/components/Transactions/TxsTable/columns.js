@@ -60,8 +60,15 @@ export const getTxTableData = (transactions: List<Transaction>): List<Transactio
       txType = 'creation'
     }
 
+    let txIndex = 1
+    if (tx.nonce) {
+      txIndex = tx.nonce + 2
+    } else if (tx.nonce === 0) {
+      txIndex = 2
+    }
+
     return {
-      [TX_TABLE_NONCE_ID]: tx.nonce,
+      [TX_TABLE_NONCE_ID]: txIndex,
       [TX_TABLE_TYPE_ID]: <TxType txType={txType} />,
       [TX_TABLE_DATE_ID]: tx.isExecuted
         ? formatDate(tx.executionDate)
