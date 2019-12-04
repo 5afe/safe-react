@@ -22,27 +22,44 @@ import { secondary } from '~/theme/variables'
 
 const getSteps = () => ['Name', 'Owners and confirmations', 'Review']
 
+const validateQueryParams = (ownerAddresses?: string[], ownerNames?: string[], threshold?: string, safeName?: string) => {
+  if (!ownerAddresses || !ownerNames || !threshold || !safeName) {
+    return false
+  }
+  if (!ownerAddresses.length === 0 || ownerNames.length === 0) {
+    return false
+  }
+  // eslint-disable-next-line no-restricted-globals
+  if (isNaN(threshold)) {
+    return false
+  }
+  if (threshold > ownerAddresses.length) {
+    return false
+  }
+  return true
+}
+
 const initialValuesFrom = (userAccount: string, ownerAddresses?: string[], ownerNames?: string[], threshold?: string, safeName?: string) => {
-  if (ownerAddresses && ownerNames) {
-    let obj = {}
-    for (const [index, value] of ownerAddresses.entries()) {
-      const name = ownerNames[index] ? ownerNames[index] : 'My Wallet'
-      obj = {
-        ...obj,
-        [getOwnerAddressBy(index)]: value,
-        [getOwnerNameBy(index)]: name,
-      }
-    }
+  if (!validateQueryParams(ownerAddresses, ownerNames, threshold, safeName)) {
     return ({
-      ...obj,
-      [FIELD_CONFIRMATIONS]: threshold || '1',
-      [FIELD_SAFE_NAME]: safeName,
+      [getOwnerNameBy(0)]: 'My Wallet',
+      [getOwnerAddressBy(0)]: userAccount,
+      [FIELD_CONFIRMATIONS]: '1',
     })
   }
+  let obj = {}
+  for (const [index, value] of ownerAddresses.entries()) {
+    const name = ownerNames[index] ? ownerNames[index] : 'My Wallet'
+    obj = {
+      ...obj,
+      [getOwnerAddressBy(index)]: value,
+      [getOwnerNameBy(index)]: name,
+    }
+  }
   return ({
-    [getOwnerNameBy(0)]: 'My Wallet',
-    [getOwnerAddressBy(0)]: userAccount,
-    [FIELD_CONFIRMATIONS]: '1',
+    ...obj,
+    [FIELD_CONFIRMATIONS]: threshold || '1',
+    [FIELD_SAFE_NAME]: safeName,
   })
 }
 
