@@ -2,7 +2,6 @@
 import * as React from 'react'
 import { List } from 'immutable'
 import classNames from 'classnames/bind'
-import Checkbox from '@material-ui/core/Checkbox'
 import TableRow from '@material-ui/core/TableRow'
 import TableCell from '@material-ui/core/TableCell'
 import { withStyles } from '@material-ui/core/styles'
@@ -13,12 +12,11 @@ import Col from '~/components/layout/Col'
 import Row from '~/components/layout/Row'
 import Button from '~/components/layout/Button'
 import ButtonLink from '~/components/layout/ButtonLink'
-import Paragraph from '~/components/layout/Paragraph'
 import Modal from '~/components/Modal'
 import { type Column, cellWidth } from '~/components/Table/TableHead'
 import Table from '~/components/Table'
 import {
-  getBalanceData, generateColumns, BALANCE_TABLE_ASSET_ID, type BalanceRow, filterByZero,
+  getBalanceData, generateColumns, BALANCE_TABLE_ASSET_ID, type BalanceRow,
 } from './dataFetcher'
 import AssetTableCell from './AssetTableCell'
 import Tokens from './Tokens'
@@ -30,7 +28,6 @@ export const MANAGE_TOKENS_BUTTON_TEST_ID = 'manage-tokens-btn'
 export const BALANCE_ROW_TEST_ID = 'balance-row'
 
 type State = {
-  hideZero: boolean,
   showToken: boolean,
   showReceive: boolean,
   sendFunds: Object,
@@ -56,7 +53,6 @@ class Balances extends React.Component<Props, State> {
   constructor(props) {
     super(props)
     this.state = {
-      hideZero: false,
       showToken: false,
       sendFunds: {
         isOpen: false,
@@ -106,7 +102,7 @@ class Balances extends React.Component<Props, State> {
 
   render() {
     const {
-      hideZero, showToken, showReceive, sendFunds,
+      showToken, showReceive, sendFunds,
     } = this.state
     const {
       classes,
@@ -122,26 +118,13 @@ class Balances extends React.Component<Props, State> {
 
     const columns = generateColumns()
     const autoColumns = columns.filter((c) => !c.custom)
-    const checkboxClasses = {
-      root: classes.root,
-    }
 
-    const filteredData = filterByZero(getBalanceData(activeTokens), hideZero)
+    const filteredData = getBalanceData(activeTokens)
 
     return (
       <>
         <Row align="center" className={classes.message}>
-          <Col xs={6}>
-            <Checkbox
-              classes={checkboxClasses}
-              checked={hideZero}
-              onChange={this.handleChange}
-              color="secondary"
-              disableRipple
-            />
-            <Paragraph size="lg">Hide zero balances</Paragraph>
-          </Col>
-          <Col xs={6} end="sm">
+          <Col xs={12} end="sm">
             <ButtonLink size="lg" onClick={this.onShow('Token')} testId="manage-tokens-btn">
               Manage List
             </ButtonLink>

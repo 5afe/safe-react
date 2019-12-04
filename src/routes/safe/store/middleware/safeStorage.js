@@ -92,7 +92,10 @@ const safeStorageMware = (store: Store<GlobalState>) => (next: Function) => asyn
       case REMOVE_SAFE_OWNER: {
         const { safeAddress, ownerAddress } = action.payload
         const { owners } = safes.get(safeAddress)
-        setOwners(safeAddress, owners.filter((o) => o.address.toLowerCase() !== ownerAddress.toLowerCase()))
+        setOwners(
+          safeAddress,
+          owners.filter((o) => o.address.toLowerCase() !== ownerAddress.toLowerCase()),
+        )
         break
       }
       case REPLACE_SAFE_OWNER: {
@@ -112,7 +115,10 @@ const safeStorageMware = (store: Store<GlobalState>) => (next: Function) => asyn
         const { safeAddress, ownerAddress, ownerName } = action.payload
         const { owners } = safes.get(safeAddress)
         const ownerToUpdateIndex = owners.findIndex((o) => o.address.toLowerCase() === ownerAddress.toLowerCase())
-        setOwners(safeAddress, owners.update(ownerToUpdateIndex, (owner) => owner.set('name', ownerName)))
+        setOwners(
+          safeAddress,
+          owners.update(ownerToUpdateIndex, (owner) => owner.set('name', ownerName)),
+        )
         break
       }
       case SET_DEFAULT_SAFE: {
