@@ -1,7 +1,9 @@
 // @flow
+import React from 'react'
 import { format, getTime, parseISO } from 'date-fns'
 import { BigNumber } from 'bignumber.js'
 import { List } from 'immutable'
+import TxType from './TxType'
 import { type Transaction } from '~/routes/safe/store/models/transaction'
 import { type SortRow, buildOrderFieldFrom } from '~/components/Table/sorting'
 import { type Column } from '~/components/Table/TableHead'
@@ -17,7 +19,7 @@ export const TX_TABLE_EXPAND_ICON = 'expand'
 
 type TxData = {
   nonce: number,
-  type: string,
+  type: React.ReactNode,
   date: string,
   amount: number | string,
   tx: Transaction,
@@ -47,20 +49,20 @@ export type TransactionRow = SortRow<TxData>
 export const getTxTableData = (transactions: List<Transaction>): List<TransactionRow> => {
   const rows = transactions.map((tx: Transaction) => {
     const txDate = tx.isExecuted ? tx.executionDate : tx.submissionDate
-    let txType = 'Outgoing transfer'
+    let txType = 'outgoing'
     if (tx.modifySettingsTx) {
-      txType = 'Modify Safe Settings'
+      txType = 'settings'
     } else if (tx.cancellationTx) {
-      txType = 'Cancellation transaction'
+      txType = 'cancellation'
     } else if (tx.customTx) {
-      txType = 'Custom transaction'
+      txType = 'custom'
     } else if (tx.creationTx) {
-      txType = 'Safe creation'
+      txType = 'creation'
     }
 
     return {
       [TX_TABLE_NONCE_ID]: tx.nonce,
-      [TX_TABLE_TYPE_ID]: txType,
+      [TX_TABLE_TYPE_ID]: <TxType txType={txType} />,
       [TX_TABLE_DATE_ID]: tx.isExecuted
         ? formatDate(tx.executionDate)
         : tx.submissionDate && formatDate(tx.submissionDate),
