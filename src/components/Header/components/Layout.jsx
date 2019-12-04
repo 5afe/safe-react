@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react'
+import Headroom from 'react-headroom'
 import { Link } from 'react-router-dom'
 import { withStyles } from '@material-ui/core/styles'
 import Grow from '@material-ui/core/Grow'
@@ -57,7 +58,7 @@ const styles = () => ({
 const Layout = openHoc(({
   open, toggle, clickAway, classes, providerInfo, providerDetails,
 }: Props) => (
-  <>
+  <Headroom>
     <Row className={classes.summary}>
       <Col start="xs" middle="xs" className={classes.logo}>
         <Link to="/">
@@ -87,7 +88,7 @@ const Layout = openHoc(({
         )}
       </Provider>
     </Row>
-  </>
+  </Headroom>
 ))
 
 export default withStyles(styles)(Layout)
