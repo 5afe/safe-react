@@ -55,17 +55,6 @@ deploy:
   on:
     branch: development
 
-  # Development environment - Storybook
-- provider: s3
-  bucket: $DEV_BUCKET_NAME
-  access_key_id: $AWS_ACCESS_KEY_ID
-  secret_access_key: $AWS_SECRET_ACCESS_KEY
-  skip_cleanup: true
-  local_dir: build_storybook
-  upload-dir: storybook
-  on:
-    branch: development
-
   # Staging environment
 - provider: s3
   bucket: $STAGING_BUCKET_NAME
