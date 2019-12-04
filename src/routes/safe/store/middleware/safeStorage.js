@@ -10,20 +10,17 @@ import { REPLACE_SAFE_OWNER } from '~/routes/safe/store/actions/replaceSafeOwner
 import { EDIT_SAFE_OWNER } from '~/routes/safe/store/actions/editSafeOwner'
 import { type GlobalState } from '~/store/'
 import {
-  removeOwners, saveDefaultSafe, saveSafes, setOwners,
+  removeOwners,
+  saveDefaultSafe,
+  saveSafes,
+  setOwners,
 } from '~/logic/safe/utils'
-import {
-  getActiveTokensAddressesForAllSafes,
-  getBlacklistedTokensAddressesForAllSafes,
-  safesMapSelector,
-} from '~/routes/safe/store/selectors'
-
+import { getActiveTokensAddressesForAllSafes, safesMapSelector } from '~/routes/safe/store/selectors'
 import { tokensSelector } from '~/logic/tokens/store/selectors'
 import type { Token } from '~/logic/tokens/store/model/token'
 import { makeOwner } from '~/routes/safe/store/models/owner'
-import { saveActiveTokens, saveBlacklistedTokens } from '~/logic/tokens/utils/tokensStorage'
+import { saveActiveTokens } from '~/logic/tokens/utils/tokensStorage'
 import { ACTIVATE_TOKEN_FOR_ALL_SAFES } from '~/routes/safe/store/actions/activateTokenForAllSafes'
-import { BLACKLIST_TOKEN_FOR_ALL_SAFES } from '~/routes/safe/store/actions/blacklistTokenForAllSafes'
 import { SET_DEFAULT_SAFE } from '~/routes/safe/store/actions/setDefaultSafe'
 
 const watchedActions = [
@@ -35,7 +32,6 @@ const watchedActions = [
   REPLACE_SAFE_OWNER,
   EDIT_SAFE_OWNER,
   ACTIVATE_TOKEN_FOR_ALL_SAFES,
-  BLACKLIST_TOKEN_FOR_ALL_SAFES,
   SET_DEFAULT_SAFE,
 ]
 
@@ -54,21 +50,6 @@ const recalculateActiveTokens = (state: GlobalState): void => {
   saveActiveTokens(activeTokens)
 }
 
-const recalculateBlacklistedTokens = (state: GlobalState): void => {
-  const tokens = tokensSelector(state)
-  const blacklistedTokenAddresses = getBlacklistedTokensAddressesForAllSafes(state)
-
-  const blacklistedTokens: List<Token> = tokens.withMutations((map) => {
-    map.forEach((token: Token) => {
-      if (!blacklistedTokenAddresses.has(token.address)) {
-        map.remove(token.address)
-      }
-    })
-  })
-
-  saveBlacklistedTokens(blacklistedTokens)
-}
-
 const safeStorageMware = (store: Store<GlobalState>) => (next: Function) => async (action: AnyAction) => {
   const handledAction = next(action)
 
@@ -82,27 +63,18 @@ const safeStorageMware = (store: Store<GlobalState>) => (next: Function) => asyn
         recalculateActiveTokens(state)
         break
       }
-      case BLACKLIST_TOKEN_FOR_ALL_SAFES: {
-        recalculateBlacklistedTokens(state)
-        break
-      }
       case ADD_SAFE: {
         const { safe } = action.payload
         setOwners(safe.address, safe.owners)
         break
       }
       case UPDATE_SAFE: {
-        const {
-          safeAddress, owners, activeTokens, blacklistedTokens,
-        } = action.payload
+        const { safeAddress, owners, activeTokens } = action.payload
         if (safeAddress && owners) {
           setOwners(safeAddress, owners)
         }
         if (activeTokens) {
           recalculateActiveTokens(state)
-        }
-        if (blacklistedTokens) {
-          recalculateBlacklistedTokens(state)
         }
         break
       }

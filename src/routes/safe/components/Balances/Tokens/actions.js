@@ -8,7 +8,7 @@ import activateTokenForAllSafes from '~/routes/safe/store/actions/activateTokenF
 export type Actions = {
   fetchTokens: Function,
   updateActiveTokens: Function,
-  updateBlacklistedTokens: Function,
+  updateBlacklistedTokens: typeof updateBlacklistedTokens,
   addToken: Function,
   activateTokenForAllSafes: Function,
 }

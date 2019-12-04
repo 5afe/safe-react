@@ -22,6 +22,7 @@ type Props = Actions & {
   tokens: List<Token>,
   safeAddress: string,
   activeTokens: List<Token>,
+  blacklistedTokens: List<Token>,
 }
 type ActiveScreen = 'tokenList' | 'addCustomToken'
 
@@ -32,6 +33,7 @@ const Tokens = (props: Props) => {
     classes,
     tokens,
     activeTokens,
+    blacklistedTokens,
     fetchTokens,
     updateActiveTokens,
     updateBlacklistedTokens,
@@ -55,6 +57,7 @@ const Tokens = (props: Props) => {
         <TokenList
           tokens={tokens}
           activeTokens={activeTokens}
+          blacklistedTokens={blacklistedTokens}
           fetchTokens={fetchTokens}
           updateActiveTokens={updateActiveTokens}
           updateBlacklistedTokens={updateBlacklistedTokens}

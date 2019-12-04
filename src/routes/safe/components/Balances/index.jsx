@@ -41,6 +41,7 @@ type Props = {
   granted: boolean,
   tokens: List<Token>,
   activeTokens: List<Token>,
+  blacklistedTokens: List<Token>,
   activateTokensByBalance: Function,
   fetchTokens: Function,
   safeAddress: string,
@@ -113,6 +114,7 @@ class Balances extends React.Component<Props, State> {
       tokens,
       safeAddress,
       activeTokens,
+      blacklistedTokens,
       safeName,
       ethBalance,
       createTransaction,
@@ -154,6 +156,7 @@ class Balances extends React.Component<Props, State> {
                 onClose={this.onHide('Token')}
                 safeAddress={safeAddress}
                 activeTokens={activeTokens}
+                blacklistedTokens={blacklistedTokens}
               />
             </Modal>
           </Col>

@@ -58,6 +58,7 @@ class Tokens extends React.Component<Props, State> {
     initialActiveTokensAddresses: Set([]),
     blacklistedTokensAddresses: Set([]),
     activeTokensCalculated: false,
+    blacklistedTokensCalculated: false,
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {
@@ -65,15 +66,24 @@ class Tokens extends React.Component<Props, State> {
     // the user would see Switches switch and this method fires before the component mounts
 
     if (!prevState.activeTokensCalculated) {
-      const { activeTokens, blacklistedTokens = [] } = nextProps
+      const { activeTokens } = nextProps
 
       return {
         activeTokensAddresses: Set(activeTokens.map(({ address }) => address)),
         initialActiveTokensAddresses: Set(activeTokens.map(({ address }) => address)),
-        blacklistedTokensAddresses: Set(blacklistedTokens.map(({ address }) => address)),
         activeTokensCalculated: true,
       }
     }
+
+    if (!prevState.blacklistedTokensCalculated) {
+      const { blacklistedTokens } = nextProps
+
+      return {
+        blacklistedTokensAddresses: blacklistedTokens,
+        blacklistedTokensCalculated: true,
+      }
+    }
+
     return null
   }
 
