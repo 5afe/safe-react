@@ -21,9 +21,19 @@ const useStyles = makeStyles({
   },
 })
 
-const LegalLinks = () => {
+type Props = {
+  toggleSidebar: Function,
+}
+
+const LegalLinks = (props: Props) => {
   const classes = useStyles()
   const dispatch = useDispatch()
+
+  const openCookiesHandler = () => {
+    dispatch(openCookieBanner(true))
+    props.toggleSidebar()
+  }
+
   return (
     <Block className={classes.container} justify="space-around">
       <Link className={classes.link} to="https://safe.gnosis.io/terms" target="_blank">
@@ -38,7 +48,7 @@ const LegalLinks = () => {
       <Link className={classes.link} to="https://safe.gnosis.io/imprint" target="_blank">
         Imprint
       </Link>
-      <GnoButtonLink className={classes.buttonLink} onClick={() => dispatch(openCookieBanner(true))}>
+      <GnoButtonLink className={classes.buttonLink} onClick={openCookiesHandler}>
         Cookies
       </GnoButtonLink>
     </Block>

@@ -131,7 +131,7 @@ const Sidebar = ({
             setDefaultSafe={setDefaultSafeAction}
             defaultSafe={defaultSafe}
           />
-          <LegalLinks />
+          <LegalLinks toggleSidebar={toggleSidebar} />
         </Drawer>
       </ClickAwayListener>
       {children}
