@@ -15,7 +15,7 @@ import {
   OPENING_ADDRESS,
   LOAD_ADDRESS,
 } from './routes'
-import withTracker from '~/utils/googleAnalytics'
+import { withTracker } from '~/utils/googleAnalytics'
 
 const Safe = React.lazy(() => import('./safe/container'))
 

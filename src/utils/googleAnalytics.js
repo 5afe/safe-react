@@ -7,18 +7,25 @@ import type { CookiesProps } from '~/logic/cookies/model/cookie'
 import type { RouterProps } from '~/routes/safe/store/selectors'
 import { loadFromCookie } from '~/logic/cookies/utils'
 
-const trackingID = getGoogleAnalyticsTrackingID()
 
-if (!trackingID) {
-  console.error('[GoogleAnalytics] - In order to use google analytics you need to add an trackingID')
-} else {
+let analyticsLoaded = false
+export const loadGoogleAnalytics = () => {
+  if (analyticsLoaded) {
+    return
+  }
   // eslint-disable-next-line no-console
-  console.log(`Google analytics starts with id: ${trackingID}`)
-  GoogleAnalytics.initialize(trackingID)
+  console.log('Loading google analytics...')
+  const trackingID = getGoogleAnalyticsTrackingID()
+  if (!trackingID) {
+    console.error('[GoogleAnalytics] - In order to use google analytics you need to add an trackingID')
+  } else {
+    GoogleAnalytics.initialize(trackingID)
+    analyticsLoaded = true
+  }
 }
 
 
-const withTracker = (WrappedComponent, options = {}) => {
+export const withTracker = (WrappedComponent, options = {}) => {
   const [useAnalytics, setUseAnalytics] = useState(false)
 
   useEffect(() => {
@@ -33,7 +40,7 @@ const withTracker = (WrappedComponent, options = {}) => {
   }, [])
 
   const trackPage = (page) => {
-    if (!useAnalytics) {
+    if (!useAnalytics || !analyticsLoaded) {
       return
     }
     GoogleAnalytics.set({
@@ -55,5 +62,3 @@ const withTracker = (WrappedComponent, options = {}) => {
 
   return HOC
 }
-
-export default withTracker
