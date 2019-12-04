@@ -11,7 +11,7 @@ import Button from '~/components/layout/Button'
 import { primary, mainFontFamily } from '~/theme/variables'
 import type { CookiesProps } from '~/logic/cookies/model/cookie'
 import { COOKIES_KEY } from '~/logic/cookies/model/cookie'
-import { loadFromCookie, saveCookie } from '~/utils/cookies'
+import { loadFromCookie, saveCookie } from '~/logic/cookies/utils'
 import { cookieBannerOpen } from '~/logic/cookies/store/selectors'
 import { openCookieBanner } from '~/logic/cookies/store/actions/openCookieBanner'
 
