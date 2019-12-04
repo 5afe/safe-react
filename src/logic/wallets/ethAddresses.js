@@ -16,7 +16,5 @@ export const sameAddress = (firstAddress: string, secondAddress: string): boolea
 export const shortVersionOf = (value: string, cut: number) => {
   const final = value.length - cut
 
-  if (!address) return 'Unknown address'
-  if (address.length < final) return address
-  return `${address.substring(0, cut)}...${address.substring(final)}`
+  return `${value.substring(0, cut)}...${value.substring(final)}`
 }
