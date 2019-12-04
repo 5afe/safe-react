@@ -5,13 +5,15 @@ import FormControlLabel from '@material-ui/core/FormControlLabel'
 import IconButton from '@material-ui/core/IconButton'
 import React, { useEffect, useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
+import { useDispatch, useSelector } from 'react-redux'
 import Link from '~/components/layout/Link'
-import { WELCOME_ADDRESS } from '~/routes/routes'
 import Button from '~/components/layout/Button'
 import { primary, mainFontFamily } from '~/theme/variables'
 import type { CookiesProps } from '~/logic/cookies/model/cookie'
 import { COOKIES_KEY } from '~/logic/cookies/model/cookie'
-import { loadFromCookie, saveCookie } from '~/utils/cookies'
+import { loadFromCookie, saveCookie } from '~/logic/cookies/utils'
+import { cookieBannerOpen } from '~/logic/cookies/store/selectors'
+import { openCookieBanner } from '~/logic/cookies/store/actions/openCookieBanner'
 import { loadIntercom } from '~/utils/intercom'
 
 const useStyles = makeStyles({
@@ -70,27 +72,29 @@ const useStyles = makeStyles({
 
 const CookiesBanner = () => {
   const classes = useStyles()
+  const dispatch = useDispatch()
 
-  const [showBanner, setShowBanner] = useState(false)
   const [showAnalytics, setShowAnalytics] = useState(false)
   const [localNecessary, setLocalNecessary] = useState(true)
   const [localAnalytics, setLocalAnalytics] = useState(false)
+  const showBanner = useSelector(cookieBannerOpen)
 
   useEffect(() => {
     async function fetchCookiesFromStorage() {
-      const cookiesState: CookiesProps = await loadFromCookie(COOKIES_KEY)
+      const cookiesState: ?CookiesProps = await loadFromCookie(COOKIES_KEY)
       if (cookiesState) {
         const { acceptedNecessary, acceptedAnalytics } = cookiesState
         setLocalAnalytics(acceptedAnalytics)
         setLocalNecessary(acceptedNecessary)
-        setShowBanner(acceptedNecessary === false)
+        const openBanner = acceptedNecessary === false || showBanner
+        dispatch(openCookieBanner(openBanner))
         setShowAnalytics(acceptedAnalytics)
       } else {
-        setShowBanner(true)
+        dispatch(openCookieBanner(true))
       }
     }
     fetchCookiesFromStorage()
-  }, [])
+  }, [showBanner])
 
   const acceptCookiesHandler = async () => {
     const newState = {
@@ -98,7 +102,7 @@ const CookiesBanner = () => {
       acceptedAnalytics: true,
     }
     await saveCookie(COOKIES_KEY, newState, 365)
-    setShowBanner(false)
+    dispatch(openCookieBanner(false))
     setShowAnalytics(true)
   }
 
@@ -109,8 +113,8 @@ const CookiesBanner = () => {
     }
     const expDays = localAnalytics ? 365 : 7
     await saveCookie(COOKIES_KEY, newState, expDays)
-    setShowBanner(false)
     setShowAnalytics(localAnalytics)
+    dispatch(openCookieBanner(false))
   }
 
   const cookieBannerContent = (
@@ -120,7 +124,7 @@ const CookiesBanner = () => {
         <p className={classes.text}>
           We use cookies to give you the best experience and to help improve our website. Please read our
           {' '}
-          <Link className={classes.link} to={WELCOME_ADDRESS}>Cookie Policy</Link>
+          <Link className={classes.link} to="https://safe.gnosis.io/cookie">Cookie Policy</Link>
           {' '}
           for more information. By clicking &quot;Accept all&quot;, you agree to the storing of cookies on your device
           to enhance site navigation, analyze site usage and provide customer support.
@@ -146,7 +150,7 @@ const CookiesBanner = () => {
               onChange={() => setLocalAnalytics((prev) => !prev)}
               value={localAnalytics}
               control={(
-                <Checkbox />
+                <Checkbox checked={localAnalytics} />
               )}
             />
           </div>
