@@ -6,4 +6,7 @@ export const styles = () => ({
   img: {
     marginRight: '5px',
   },
+  typeLabel: {
+    height: '15px',
+  },
 })

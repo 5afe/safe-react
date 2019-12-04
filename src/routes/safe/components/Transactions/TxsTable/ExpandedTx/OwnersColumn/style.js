@@ -59,7 +59,7 @@ export const styles = () => ({
   name: {
     textOverflow: 'ellipsis',
     overflow: 'hidden',
-    height: '20px',
+    height: '15px',
   },
   address: {
     height: '20px',
