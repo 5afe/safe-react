@@ -41,7 +41,3 @@ body > div:first-child {
   display: flex;
   min-height: 100%;
 }
-
-:global(.headroom-wrapper) {
-  z-index: 1301;
-}
