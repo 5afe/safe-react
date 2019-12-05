@@ -19,7 +19,7 @@ export const calculateBalanceOf = async (tokenAddress: string, safeAddress: stri
     const token = await erc20Token.at(tokenAddress)
     balance = await token.balanceOf(safeAddress)
   } catch (err) {
-    console.error('Failed to fetch token balances: ', err)
+    console.error('Failed to fetch token balances: ', tokenAddress, err)
   }
 
   return new BigNumber(balance).div(10 ** decimals).toString()
@@ -50,7 +50,6 @@ const fetchTokenBalances = (safeAddress: string, tokens: List<Token>) => async (
 
     dispatch(updateSafe({ address: safeAddress, balances }))
   } catch (err) {
-    // eslint-disable-next-line
     console.error('Error when fetching token balances:', err)
   }
 }
