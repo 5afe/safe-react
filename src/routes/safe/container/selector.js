@@ -5,6 +5,7 @@ import {
   safeSelector,
   safeActiveTokensSelector,
   safeBalancesSelector,
+  safeBlacklistedTokensSelector,
   type RouterProps,
   type SafeSelectorProps,
 } from '~/routes/safe/store/selectors'
@@ -25,6 +26,7 @@ export type SelectorProps = {
   provider: string,
   tokens: List<Token>,
   activeTokens: List<Token>,
+  blacklistedTokens: List<Token>,
   userAddress: string,
   network: string,
   safeUrl: string,
@@ -135,6 +137,7 @@ export default createStructuredSelector<Object, *>({
   provider: providerNameSelector,
   tokens: orderedTokenListSelector,
   activeTokens: extendedSafeTokensSelector,
+  blacklistedTokens: safeBlacklistedTokensSelector,
   granted: grantedSelector,
   userAddress: userAccountSelector,
   network: networkSelector,

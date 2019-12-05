@@ -102,6 +102,7 @@ class SafeView extends React.Component<Props, State> {
       safe,
       provider,
       activeTokens,
+      blacklistedTokens,
       granted,
       userAddress,
       network,
@@ -109,6 +110,8 @@ class SafeView extends React.Component<Props, State> {
       createTransaction,
       processTransaction,
       fetchTransactions,
+      activateTokensByBalance,
+      fetchTokens,
       updateSafe,
       transactions,
     } = this.props
@@ -117,6 +120,7 @@ class SafeView extends React.Component<Props, State> {
       <Page>
         <Layout
           activeTokens={activeTokens}
+          blacklistedTokens={blacklistedTokens}
           tokens={tokens}
           provider={provider}
           safe={safe}
@@ -126,6 +130,8 @@ class SafeView extends React.Component<Props, State> {
           createTransaction={createTransaction}
           processTransaction={processTransaction}
           fetchTransactions={fetchTransactions}
+          activateTokensByBalance={activateTokensByBalance}
+          fetchTokens={fetchTokens}
           updateSafe={updateSafe}
           transactions={transactions}
           sendFunds={sendFunds}
