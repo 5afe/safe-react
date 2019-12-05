@@ -11,36 +11,26 @@ import Paragraph from '~/components/layout/Paragraph'
 import { type Owner } from '~/routes/safe/store/models/owner'
 import { styles } from './style'
 import ConfirmSmallGreyIcon from './assets/confirm-small-grey.svg'
-import ConfirmSmallFilledIcon from './assets/confirmed-small-filled.svg'
+import ConfirmSmallGreenIcon from './assets/confirm-small-green.svg'
+import ConfirmSmallFilledIcon from './assets/confirm-small-filled.svg'
 
 export const CONFIRM_TX_BTN_TEST_ID = 'confirm-btn'
 export const EXECUTE_TX_BTN_TEST_ID = 'execute-btn'
 
-type ListProps = {
-  ownersWhoConfirmed: List<Owner>,
-  ownersUnconfirmed: List<Owner>,
-  classes: Object,
-  isExecutor?: boolean,
-  userAddress: String,
-  executionConfirmation?: Owner,
-  onTxConfirm: Function,
-  showConfirmBtn: boolean,
-  onTxExecute: Function,
-  showExecuteBtn: boolean,
-}
-
 type OwnerProps = {
   owner: Owner,
   classes: Object,
-  userAddress: String,
-  onTxConfirm: Function,
-  showConfirmBtn: boolean,
-  onTxExecute: Function,
-  showExecuteBtn: boolean,
+  userAddress: string,
   confirmed?: boolean,
+  executor?: string,
+  thresholdReached: boolean,
+  showConfirmBtn: boolean,
+  showExecuteBtn: boolean,
+  onTxConfirm: Function,
+  onTxExecute: Function,
 }
 
-const OwnerComponent = withStyles(styles)(({
+const OwnerComponent = ({
   owner,
   userAddress,
   classes,
@@ -48,12 +38,17 @@ const OwnerComponent = withStyles(styles)(({
   showConfirmBtn,
   showExecuteBtn,
   onTxExecute,
+  executor,
   confirmed,
+  thresholdReached
 }: OwnerProps) => (
-  <Block key={owner.address} className={classes.container}>
-    <div className={confirmed ? classes.verticalLineProgressDone : classes.verticalLineProgressPending} />
+  <Block className={classes.container}>
+    <div className={confirmed || thresholdReached ? classes.verticalLineProgressDone : classes.verticalLineProgressPending} />
     <div className={classes.iconState}>
-      {confirmed ? <Img src={ConfirmSmallFilledIcon} /> : <Img src={ConfirmSmallGreyIcon} />}
+      {confirmed
+        ? <Img src={ConfirmSmallFilledIcon} />
+        : thresholdReached ? <Img src={ConfirmSmallGreenIcon} /> : <Img src={ConfirmSmallGreyIcon} />
+      }
     </div>
     <Identicon address={owner.address} diameter={32} className={classes.icon} />
     <Block>
@@ -87,47 +82,10 @@ const OwnerComponent = withStyles(styles)(({
         Execute tx
       </Button>
     )}
+    {owner.address === executor && (
+      <Block className={classes.executor}>Executor</Block>
+    )}
   </Block>
-))
-
-const OwnersList = ({
-  userAddress,
-  ownersWhoConfirmed,
-  ownersUnconfirmed,
-  classes,
-  isExecutor,
-  executionConfirmation,
-  onTxConfirm,
-  showConfirmBtn,
-  showExecuteBtn,
-  onTxExecute,
-}: ListProps) => (
-  <>
-    {executionConfirmation && <OwnerComponent owner={executionConfirmation} isExecutor={isExecutor} />}
-    {ownersWhoConfirmed.map((owner) => (
-      <OwnerComponent
-        key={owner.address}
-        owner={owner}
-        classes={classes}
-        userAddress={userAddress}
-        showExecuteBtn={showExecuteBtn}
-        onTxExecute={onTxExecute}
-        confirmed
-      />
-    ))}
-    {ownersUnconfirmed.map((owner) => (
-      <OwnerComponent
-        key={owner.address}
-        owner={owner}
-        classes={classes}
-        userAddress={userAddress}
-        onTxConfirm={onTxConfirm}
-        showConfirmBtn={showConfirmBtn}
-        showExecuteBtn={showExecuteBtn}
-        onTxExecute={onTxExecute}
-      />
-    ))}
-  </>
 )
 
-export default withStyles(styles)(OwnersList)
+export default withStyles(styles)(OwnerComponent)

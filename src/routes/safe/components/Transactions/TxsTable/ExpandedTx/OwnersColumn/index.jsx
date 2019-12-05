@@ -10,10 +10,10 @@ import { type Owner } from '~/routes/safe/store/models/owner'
 import { type Transaction } from '~/routes/safe/store/models/transaction'
 import { TX_TYPE_CONFIRMATION } from '~/logic/safe/transactions/send'
 import { EMPTY_DATA } from '~/logic/wallets/ethTransactions'
-import OwnersList from './List'
+import OwnersList from './OwnersList'
 import ButtonRow from './ButtonRow'
-import CheckGreenIcon from './assets/check-green.svg'
-import ConfirmLargeBorderIcon from './assets/confirm-large-border.svg'
+import CheckLargeFilledGreenIcon from './assets/check-large-filled-green.svg'
+import ConfirmLargeGreenIcon from './assets/confirm-large-green.svg'
 import ConfirmLargeGreyIcon from './assets/confirm-large-grey.svg'
 import { styles } from './style'
 
@@ -53,17 +53,12 @@ const OwnersColumn = ({
 
   const ownersWhoConfirmed = []
   let currentUserAlreadyConfirmed = false
-  let executionConfirmation
-
   tx.confirmations.forEach((conf) => {
     if (conf.owner.address === userAddress) {
       currentUserAlreadyConfirmed = true
     }
-
     if (conf.type === TX_TYPE_CONFIRMATION) {
       ownersWhoConfirmed.push(conf.owner)
-    } else {
-      executionConfirmation = conf.owner
     }
   })
   const ownersUnconfirmed = owners.filter(
@@ -88,11 +83,6 @@ const OwnersColumn = ({
     displayButtonRow = false
   }
 
-  let confirmedLabel = `Confirmed [${tx.confirmations.size}/${threshold}]`
-  if (tx.executionTxHash) {
-    confirmedLabel = `Confirmed [${tx.confirmations.size}]`
-  }
-
   const showConfirmBtn = !tx.isExecuted
     && !tx.cancelled
     && userIsUnconfirmedOwner
@@ -103,19 +93,19 @@ const OwnersColumn = ({
     <Col xs={6} className={classes.rightCol} layout="block">
       <Block className={cn(classes.ownerListTitle, thresholdReached && classes.ownerListTitleDone)}>
         <div className={classes.iconState}>
-          {!thresholdReached && <Img src={ConfirmLargeBorderIcon} />}
-          {thresholdReached && <Img src={CheckGreenIcon} />}
+          {!thresholdReached ? <Img src={ConfirmLargeGreenIcon} /> : <Img src={CheckLargeFilledGreenIcon} />}
         </div>
-        {confirmedLabel}
+        {`Confirmed [${tx.confirmations.size}/${threshold}]`}
       </Block>
       <OwnersList
         userAddress={userAddress}
         ownersWhoConfirmed={ownersWhoConfirmed}
         ownersUnconfirmed={ownersUnconfirmed}
-        executionConfirmation={executionConfirmation}
+        executor={tx.executor}
+        thresholdReached={thresholdReached}
         onTxConfirm={onTxConfirm}
-        showConfirmBtn={showConfirmBtn}
         onTxExecute={onTxExecute}
+        showConfirmBtn={showConfirmBtn}
         showExecuteBtn={!tx.isExecuted && thresholdReached}
       />
       <Block className={cn(
@@ -126,10 +116,10 @@ const OwnersColumn = ({
         <div className={thresholdReached ? classes.verticalLineProgressDone : classes.verticalLineProgressPending} />
         <div className={classes.iconState}>
           {!thresholdReached && <Img src={ConfirmLargeGreyIcon} />}
-          {thresholdReached && !tx.executionTxHash && <Img src={ConfirmLargeBorderIcon} />}
-          {thresholdReached && tx.executionTxHash && <Img src={CheckGreenIcon} />}
+          {thresholdReached && !tx.executionTxHash && <Img src={ConfirmLargeGreenIcon} />}
+          {thresholdReached && tx.executionTxHash && <Img src={CheckLargeFilledGreenIcon} />}
         </div>
-        Execute tx
+        Executed
       </Block>
       {granted && displayButtonRow && (
         <ButtonRow

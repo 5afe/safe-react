@@ -1,6 +1,6 @@
 // @flow
 import {
-  border, sm, boldFont, secondary, secondaryText,
+  border, sm, boldFont, primary, secondary, secondaryText,
 } from '~/theme/variables'
 
 export const styles = () => ({
@@ -80,5 +80,13 @@ export const styles = () => ({
   button: {
     justifyContent: 'center',
     alignSelf: 'center',
+  },
+  executor: {
+    borderRadius: '3px',
+    padding: '3px 5px',
+    background: border,
+    color: primary,
+    alignSelf: 'center',
+    fontSize: '11px',
   },
 })

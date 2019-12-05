@@ -121,8 +121,10 @@ const extendedTransactionsSelector: Selector<GlobalState, RouterProps, List<Tran
       // it means that the transaction was cancelled (Replaced) and shouldn't get executed
       let replacementTransaction
       if (!tx.isExecuted) {
-        replacementTransaction = transactions.findLast(
-          (transaction) => transaction.isExecuted && transaction.nonce >= tx.nonce,
+        replacementTransaction = transactions.size > 1 && transactions.findLast(
+          (transaction) => (
+            transaction.isExecuted && transaction.nonce && transaction.nonce >= tx.nonce
+          ),
         )
         if (replacementTransaction) {
           extendedTx = tx.set('cancelled', true)
