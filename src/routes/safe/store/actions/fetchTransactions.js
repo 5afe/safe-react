@@ -159,7 +159,7 @@ const addMockSafeCreationTx = (safeAddress) => [{
   executor: null,
   gasPrice: 0,
   gasToken: '0x0000000000000000000000000000000000000000',
-  isExecuted: false,
+  isExecuted: true,
   nonce: null,
   operation: 0,
   refundReceiver: '0x0000000000000000000000000000000000000000',
