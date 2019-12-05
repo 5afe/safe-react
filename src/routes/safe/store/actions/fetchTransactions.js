@@ -151,38 +151,42 @@ export const buildTransactionFrom = async (
   })
 }
 
-const addMockSafeCreationTx = (transactions, safeAddress) => {
-  transactions.push({
-    baseGas: 0,
-    confirmations: [],
-    data: null,
-    executionDate: null,
-    executor: null,
-    gasPrice: 0,
-    gasToken: '0x0000000000000000000000000000000000000000',
-    isExecuted: false,
-    nonce: null,
-    operation: 0,
-    refundReceiver: '0x0000000000000000000000000000000000000000',
-    safe: safeAddress,
-    safeTxGas: 0,
-    safeTxHash: '',
-    signatures: null,
-    submissionDate: null,
-    to: '',
-    transactionHash: null,
-    value: 0,
-    creationTx: true,
-  })
-}
+const addMockSafeCreationTx = (safeAddress) => [{
+  baseGas: 0,
+  confirmations: [],
+  data: null,
+  executionDate: null,
+  executor: null,
+  gasPrice: 0,
+  gasToken: '0x0000000000000000000000000000000000000000',
+  isExecuted: false,
+  nonce: null,
+  operation: 0,
+  refundReceiver: '0x0000000000000000000000000000000000000000',
+  safe: safeAddress,
+  safeTxGas: 0,
+  safeTxHash: '',
+  signatures: null,
+  submissionDate: null,
+  to: '',
+  transactionHash: null,
+  value: 0,
+  creationTx: true,
+}]
 
 export const loadSafeTransactions = async (safeAddress: string) => {
   web3 = await getWeb3()
 
-  const url = buildTxServiceUrl(safeAddress)
-  const response = await axios.get(url)
-  const transactions: TxServiceModel[] = response.data.results
-  addMockSafeCreationTx(transactions, safeAddress)
+  let transactions: TxServiceModel[] = addMockSafeCreationTx(safeAddress)
+  try {
+    const url = buildTxServiceUrl(safeAddress)
+    const response = await axios.get(url)
+    if (response.data.count > 0) {
+      transactions = transactions.concat(response.data.results)
+    }
+  } catch (err) {
+    console.error(`Requests for transactions for ${safeAddress} failed with 404`, err)
+  }
   const safeSubjects = loadSafeSubjects(safeAddress)
   const txsRecord = await Promise.all(
     transactions.map((tx: TxServiceModel) => buildTransactionFrom(safeAddress, tx, safeSubjects)),
@@ -191,11 +195,6 @@ export const loadSafeTransactions = async (safeAddress: string) => {
 }
 
 export default (safeAddress: string) => async (dispatch: ReduxDispatch<GlobalState>) => {
-  try {
-    const transactions: Map<string, List<Transaction>> = await loadSafeTransactions(safeAddress)
-
-    return dispatch(addTransactions(transactions))
-  } catch (err) {
-    console.error(`Requests for transactions for ${safeAddress} failed with 404`, err)
-  }
+  const transactions: Map<string, List<Transaction>> = await loadSafeTransactions(safeAddress)
+  return dispatch(addTransactions(transactions))
 }
