@@ -38,6 +38,9 @@ type Props = {
   granted: boolean,
   tokens: List<Token>,
   activeTokens: List<Token>,
+  blacklistedTokens: List<Token>,
+  activateTokensByBalance: Function,
+  fetchTokens: Function,
   safeAddress: string,
   safeName: string,
   ethBalance: string,
@@ -57,6 +60,7 @@ class Balances extends React.Component<Props, State> {
       },
       showReceive: false,
     }
+    props.fetchTokens()
   }
 
   onShow = (action: Action) => () => {
@@ -85,6 +89,17 @@ class Balances extends React.Component<Props, State> {
     })
   }
 
+  handleChange = (e: SyntheticInputEvent<HTMLInputElement>) => {
+    const { checked } = e.target
+
+    this.setState(() => ({ hideZero: checked }))
+  }
+
+  componentDidMount(): void {
+    const { activateTokensByBalance, safeAddress } = this.props
+    activateTokensByBalance(safeAddress)
+  }
+
   render() {
     const {
       showToken, showReceive, sendFunds,
@@ -95,6 +110,7 @@ class Balances extends React.Component<Props, State> {
       tokens,
       safeAddress,
       activeTokens,
+      blacklistedTokens,
       safeName,
       ethBalance,
       createTransaction,
@@ -110,10 +126,10 @@ class Balances extends React.Component<Props, State> {
         <Row align="center" className={classes.message}>
           <Col xs={12} end="sm">
             <ButtonLink size="lg" onClick={this.onShow('Token')} testId="manage-tokens-btn">
-              Manage Tokens
+              Manage List
             </ButtonLink>
             <Modal
-              title="Manage Tokens"
+              title="Manage List"
               description="Enable and disable tokens to be listed"
               handleClose={this.onHide('Token')}
               open={showToken}
@@ -123,6 +139,7 @@ class Balances extends React.Component<Props, State> {
                 onClose={this.onHide('Token')}
                 safeAddress={safeAddress}
                 activeTokens={activeTokens}
+                blacklistedTokens={blacklistedTokens}
               />
             </Modal>
           </Col>

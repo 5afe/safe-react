@@ -15,6 +15,7 @@ import { loadFromCookie, saveCookie } from '~/logic/cookies/utils'
 import { cookieBannerOpen } from '~/logic/cookies/store/selectors'
 import { openCookieBanner } from '~/logic/cookies/store/actions/openCookieBanner'
 import { loadIntercom } from '~/utils/intercom'
+import { loadGoogleAnalytics } from '~/utils/googleAnalytics'
 
 const useStyles = makeStyles({
   container: {
@@ -172,6 +173,7 @@ const CookiesBanner = () => {
 
   if (showAnalytics) {
     loadIntercom()
+    loadGoogleAnalytics()
   }
 
   return showBanner ? cookieBannerContent : null
