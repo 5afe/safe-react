@@ -1,9 +1,7 @@
 // @flow
-import { lg } from '~/theme/variables'
-
 export const styles = () => ({
   container: {
-    marginTop: lg,
+    marginTop: '70px',
   },
   row: {
     cursor: 'pointer',
