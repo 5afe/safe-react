@@ -2,7 +2,6 @@
 import * as React from 'react'
 import { List } from 'immutable'
 import classNames from 'classnames/bind'
-import Checkbox from '@material-ui/core/Checkbox'
 import TableRow from '@material-ui/core/TableRow'
 import TableCell from '@material-ui/core/TableCell'
 import { withStyles } from '@material-ui/core/styles'
@@ -13,12 +12,11 @@ import Col from '~/components/layout/Col'
 import Row from '~/components/layout/Row'
 import Button from '~/components/layout/Button'
 import ButtonLink from '~/components/layout/ButtonLink'
-import Paragraph from '~/components/layout/Paragraph'
 import Modal from '~/components/Modal'
 import { type Column, cellWidth } from '~/components/Table/TableHead'
 import Table from '~/components/Table'
 import {
-  getBalanceData, generateColumns, BALANCE_TABLE_ASSET_ID, type BalanceRow, filterByZero,
+  getBalanceData, generateColumns, BALANCE_TABLE_ASSET_ID, type BalanceRow,
 } from './dataFetcher'
 import AssetTableCell from './AssetTableCell'
 import Tokens from './Tokens'
@@ -33,7 +31,6 @@ export const MANAGE_TOKENS_BUTTON_TEST_ID = 'manage-tokens-btn'
 export const BALANCE_ROW_TEST_ID = 'balance-row'
 
 type State = {
-  hideZero: boolean,
   showToken: boolean,
   showReceive: boolean,
   sendFunds: Object,
@@ -44,6 +41,9 @@ type Props = {
   granted: boolean,
   tokens: List<Token>,
   activeTokens: List<Token>,
+  blacklistedTokens: List<Token>,
+  activateTokensByBalance: Function,
+  fetchTokens: Function,
   safeAddress: string,
   safeName: string,
   ethBalance: string,
@@ -59,7 +59,6 @@ class Balances extends React.Component<Props, State> {
   constructor(props) {
     super(props)
     this.state = {
-      hideZero: false,
       showToken: false,
       sendFunds: {
         isOpen: false,
@@ -67,11 +66,13 @@ class Balances extends React.Component<Props, State> {
       },
       showReceive: false,
     }
+    props.fetchTokens()
   }
 
   componentDidMount(): void {
-    const { safeAddress, fetchCurrencyValues } = this.props
+    const { safeAddress, fetchCurrencyValues, activateTokensByBalance } = this.props
     fetchCurrencyValues(safeAddress)
+    activateTokensByBalance(safeAddress)
   }
 
   onShow = (action: Action) => () => {
@@ -100,15 +101,9 @@ class Balances extends React.Component<Props, State> {
     })
   }
 
-  handleChange = (e: SyntheticInputEvent<HTMLInputElement>) => {
-    const { checked } = e.target
-
-    this.setState(() => ({ hideZero: checked }))
-  }
-
   render() {
     const {
-      hideZero, showToken, showReceive, sendFunds,
+      showToken, showReceive, sendFunds,
     } = this.state
     const {
       classes,
@@ -116,6 +111,7 @@ class Balances extends React.Component<Props, State> {
       tokens,
       safeAddress,
       activeTokens,
+      blacklistedTokens,
       safeName,
       ethBalance,
       createTransaction,
@@ -125,32 +121,19 @@ class Balances extends React.Component<Props, State> {
 
     const columns = generateColumns()
     const autoColumns = columns.filter((c) => !c.custom)
-    const checkboxClasses = {
-      root: classes.root,
-    }
 
-    const filteredData = filterByZero(getBalanceData(activeTokens, currencySelected, currencyValues), hideZero)
+    const filteredData = getBalanceData(activeTokens, currencySelected, currencyValues)
 
     return (
       <>
         <Row align="center" className={classes.message}>
-          <Col xs={6}>
-            <Checkbox
-              classes={checkboxClasses}
-              checked={hideZero}
-              onChange={this.handleChange}
-              color="secondary"
-              disableRipple
-            />
-            <Paragraph size="lg">Hide zero balances</Paragraph>
-          </Col>
-          <Col xs={6} end="sm">
+          <Col xs={12} end="sm">
             <DropdownCurrency />
             <ButtonLink size="lg" onClick={this.onShow('Token')} testId="manage-tokens-btn">
-              Manage Tokens
+              Manage List
             </ButtonLink>
             <Modal
-              title="Manage Tokens"
+              title="Manage List"
               description="Enable and disable tokens to be listed"
               handleClose={this.onHide('Token')}
               open={showToken}
@@ -160,6 +143,7 @@ class Balances extends React.Component<Props, State> {
                 onClose={this.onHide('Token')}
                 safeAddress={safeAddress}
                 activeTokens={activeTokens}
+                blacklistedTokens={blacklistedTokens}
               />
             </Modal>
           </Col>

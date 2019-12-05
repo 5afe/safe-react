@@ -44,7 +44,7 @@ const SelectedToken = ({ tokenAddress, tokens, classes }: SelectedTokenProps) =>
           />
         </>
       ) : (
-        <Paragraph color="disabled" size="lg" weight="light" style={{ opacity: 0.5 }}>
+        <Paragraph color="disabled" size="md" weight="light" style={{ opacity: 0.5 }}>
           Select an asset*
         </Paragraph>
       )}

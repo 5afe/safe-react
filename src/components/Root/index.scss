@@ -9,32 +9,34 @@ body {
   font-style: normal;
   font-weight: 400;
   font-display: swap;
-  src: local("Averta-Regular"), url(../../assets/fonts/Averta-normal.woff2) format('woff2');
+  src: local("Averta-Regular"),
+    url(../../assets/fonts/Averta-normal.woff2) format("woff2");
 }
 
 @font-face {
-  font-family: 'Averta';
+  font-family: "Averta";
   font-style: normal;
   font-weight: 800;
   font-display: swap;
-  src: local("Averta-Extrabold"), url(../../assets/fonts/Averta-ExtraBold.woff2) format('woff2');
+  src: local("Averta-Extrabold"),
+    url(../../assets/fonts/Averta-ExtraBold.woff2) format("woff2");
 }
 
 body {
-  position: absolute;
-  bottom: 0;
-  top: 0;
-  left: 0;
-  right: 0;
-  overflow-x: hidden;
-  color: $fontColor;
-  font-family: 'Averta', monospace;
-  font-size: $mediumFontSize;
-  margin: 0;
-  background-color: $background;
-  text-rendering: geometricPrecision;
-  -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+  background-color: $background;
+  bottom: 0;
+  color: $fontColor;
+  font-family: "Averta", monospace;
+  font-size: $mediumFontSize;
+  left: 0;
+  margin: 0;
+  overflow-x: hidden;
+  position: absolute;
+  right: 0;
+  text-rendering: geometricPrecision;
+  top: 0;
 }
 
 body > div:first-child {

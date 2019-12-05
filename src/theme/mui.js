@@ -1,23 +1,26 @@
 // @flow
 import { createMuiTheme } from '@material-ui/core/styles'
+import { rgba } from 'polished'
 import {
-  extraSmallFontSize,
-  mediumFontSize,
-  smallFontSize,
-  disabled,
-  primary,
-  secondary,
-  error,
-  sm,
-  md,
-  lg,
-  bolderFont,
-  regularFont,
   boldFont,
+  bolderFont,
   buttonLargeFontSize,
+  disabled,
+  error,
+  extraSmallFontSize,
   largeFontSize,
-  xs,
+  lg,
+  mainFontFamily,
+  md,
+  mediumFontSize,
+  primary,
+  regularFont,
+  secondary,
+  secondaryFontFamily,
   secondaryText,
+  sm,
+  smallFontSize,
+  xs,
 } from './variables'
 
 export type WithStyles = {
@@ -42,7 +45,7 @@ const palette = {
 // see https://github.com/mui-org/material-ui/blob/v1-beta/src/styles/createMuiTheme.js
 const theme = createMuiTheme({
   typography: {
-    fontFamily: 'Averta,sans-serif',
+    fontFamily: mainFontFamily,
     useNextVariants: true,
   },
   overrides: {
@@ -53,7 +56,7 @@ const theme = createMuiTheme({
         fontWeight: regularFont,
       },
       root: {
-        fontFamily: 'Averta, monospace',
+        fontFamily: secondaryFontFamily,
         letterSpacing: '0.9px',
         '&$disabled': {
           color: disabled,
@@ -109,7 +112,7 @@ const theme = createMuiTheme({
     },
     MuiChip: {
       root: {
-        fontFamily: 'Averta, monospace',
+        fontFamily: secondaryFontFamily,
       },
     },
     MuiStepIcon: {
@@ -132,30 +135,30 @@ const theme = createMuiTheme({
     },
     MuiTypography: {
       body1: {
-        fontFamily: 'Averta, monospace',
+        fontFamily: secondaryFontFamily,
         letterSpacing: '-0.5px',
         fontSize: mediumFontSize,
       },
       body2: {
-        fontFamily: 'Averta, monospace',
+        fontFamily: secondaryFontFamily,
       },
     },
     MuiFormHelperText: {
       root: {
-        fontFamily: 'Averta, monospace',
+        color: secondary,
+        fontFamily: secondaryFontFamily,
         fontSize: '12px',
+        marginTop: '0px',
+        order: 0,
         padding: `0 0 0 ${md}`,
         position: 'absolute',
         top: '5px',
-        color: secondary,
-        order: 0,
-        marginTop: '0px',
         zIndex: 1, // for firefox
       },
     },
     MuiInput: {
       root: {
-        fontFamily: 'Averta, monospace',
+        fontFamily: secondaryFontFamily,
         color: primary,
         fontSize: mediumFontSize,
         lineHeight: '56px',
@@ -222,7 +225,7 @@ const theme = createMuiTheme({
     },
     MuiTab: {
       root: {
-        fontFamily: 'Averta, monospace',
+        fontFamily: secondaryFontFamily,
         fontWeight: 'normal',
         fontSize: extraSmallFontSize,
         '&$selected': {
@@ -244,7 +247,7 @@ const theme = createMuiTheme({
         top: '0px',
       },
       caption: {
-        fontFamily: 'Averta, monospace',
+        fontFamily: secondaryFontFamily,
         fontSize: mediumFontSize,
         order: 2,
         color: disabled,
@@ -270,7 +273,7 @@ const theme = createMuiTheme({
     },
     MuiTableCell: {
       root: {
-        fontFamily: 'Averta, monospace',
+        fontFamily: secondaryFontFamily,
         fontSize: mediumFontSize,
         borderBottomWidth: '2px',
       },
@@ -298,7 +301,7 @@ const theme = createMuiTheme({
     },
     MuiMenuItem: {
       root: {
-        fontFamily: 'Averta, monospace',
+        fontFamily: secondaryFontFamily,
       },
     },
     MuiListItemIcon: {
@@ -308,15 +311,29 @@ const theme = createMuiTheme({
     },
     MuiListItemText: {
       primary: {
-        fontFamily: 'Averta, monospace',
+        fontFamily: secondaryFontFamily,
         fontSize: mediumFontSize,
         fontWeight: bolderFont,
         color: primary,
       },
       secondary: {
-        fontFamily: 'Averta, monospace',
+        fontFamily: secondaryFontFamily,
         fontSize: smallFontSize,
         color: disabled,
+      },
+    },
+    MuiCheckbox: {
+      colorSecondary: {
+        '&$disabled': {
+          color: rgba(secondary, 0.5),
+        },
+      },
+    },
+    MuiFormControlLabel: {
+      label: {
+        '&$disabled': {
+          color: primary,
+        },
       },
     },
   },

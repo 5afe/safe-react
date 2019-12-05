@@ -1,5 +1,5 @@
 // @flow
-import { sm } from '~/theme/variables'
+import { sm, md } from '~/theme/variables'
 
 export const styles = (theme: Object) => ({
   root: {
@@ -8,6 +8,10 @@ export const styles = (theme: Object) => ({
   },
   message: {
     margin: `${sm} 0`,
+    padding: `${md} 0`,
+    maxHeight: '54px',
+    boxSizing: 'border-box',
+    justifyContent: 'flex-end',
   },
   actionIcon: {
     marginRight: theme.spacing(1),

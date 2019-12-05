@@ -1,2 +1,7 @@
-node_modules/
-build_webpack/
+node_modules
+build_webpack
+flow-typed
+flow-typed/npm
+config
+scripts
+migrations
