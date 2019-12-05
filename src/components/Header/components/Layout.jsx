@@ -72,7 +72,15 @@ const Layout = openHoc(({
     <Spacer />
     <Provider open={open} toggle={toggle} info={providerInfo}>
       {(providerRef) => (
-        <Popper open={open} anchorEl={providerRef.current} placement="bottom" className={classes.popper}>
+        <Popper
+          open={open}
+          anchorEl={providerRef.current}
+          placement="bottom"
+          className={classes.popper}
+          popperOptions={{
+            positionFixed: true,
+          }}
+        >
           {({ TransitionProps }) => (
             <Grow {...TransitionProps}>
               <>
