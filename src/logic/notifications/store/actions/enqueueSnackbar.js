@@ -8,9 +8,7 @@ export const ENQUEUE_SNACKBAR = 'ENQUEUE_SNACKBAR'
 
 const addSnackbar = createAction<string, *>(ENQUEUE_SNACKBAR)
 
-const enqueueSnackbar = (notification: NotificationProps) => (
-  dispatch: ReduxDispatch<GlobalState>,
-) => {
+const enqueueSnackbar = (notification: NotificationProps) => (dispatch: ReduxDispatch<GlobalState>) => {
   const newNotification = {
     ...notification,
     key: new Date().getTime(),

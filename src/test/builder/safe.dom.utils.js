@@ -115,7 +115,7 @@ export const whenSafeDeployed = (): Promise<string> => new Promise((resolve, rej
   const interval = setInterval(() => {
     if (times >= MAX_TIMES_EXECUTED) {
       clearInterval(interval)
-      reject(new Error('Didn\'t load the safe'))
+      reject(new Error("Didn't load the safe"))
     }
     const url = `${window.location}`
     console.log(url)
