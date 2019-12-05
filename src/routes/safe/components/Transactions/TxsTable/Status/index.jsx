@@ -47,7 +47,7 @@ const Status = ({ classes, status }: Props) => {
       {typeof Icon === 'object' ? (
         Icon
       ) : (
-        <Img src={Icon} alt="OK Icon" style={statusIconStyle} />
+        <Img src={Icon} alt={statusToLabel[status]} style={statusIconStyle} />
       )}
       <Paragraph noMargin className={classes.statusText}>
         {statusToLabel[status]}

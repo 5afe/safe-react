@@ -46,6 +46,7 @@ export const styles = () => ({
   pending: {
     backgroundColor: '#fff3e2',
     color: '#e8673c',
+    width: '84px',
   },
   statusText: {
     width: '100%',

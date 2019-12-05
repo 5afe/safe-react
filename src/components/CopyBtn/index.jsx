@@ -13,14 +13,14 @@ const useStyles = makeStyles({
     justifyContent: 'center',
     alignItems: 'center',
     cursor: 'pointer',
-    padding: xs,
+    margin: `0 ${xs}`,
     borderRadius: '50%',
     transition: 'background-color .2s ease-in-out',
     '&:hover': {
       backgroundColor: '#F0EFEE',
     },
   },
-  inreasedPopperZindex: {
+  increasedPopperZindex: {
     zIndex: 2001,
   },
 })
@@ -33,7 +33,7 @@ type CopyBtnProps = {
 const CopyBtn = ({ content, increaseZindex = false }: CopyBtnProps) => {
   const [clicked, setClicked] = useState<boolean>(false)
   const classes = useStyles()
-  const customClasses = increaseZindex ? { popper: classes.inreasedPopperZindex } : {}
+  const customClasses = increaseZindex ? { popper: classes.increasedPopperZindex } : {}
 
   return (
     <Tooltip

@@ -10,6 +10,10 @@ export const styles = () => ({
   txDataContainer: {
     padding: `${lg} ${md}`,
   },
+  txData: {
+    display: 'flex',
+    alignItems: 'center',
+  },
   awaiting_your_confirmation: {
     color: disabled,
   },

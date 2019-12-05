@@ -65,7 +65,7 @@ const ExpandedTx = ({
         <Row>
           <Col xs={6} layout="column">
             <Block className={classes.txDataContainer}>
-              <Block align="left">
+              <Block align="left" className={classes.txData}>
                 <Bold className={classes.txHash}>TX hash:</Bold>
                 {tx.executionTxHash ? (
                   <EtherScanLink type="tx" value={tx.executionTxHash} cut={8} />
