@@ -15,6 +15,7 @@ import AlertIcon from './assets/alert.svg'
 import CheckIcon from './assets/check.svg'
 import ErrorIcon from './assets/error.svg'
 import InfoIcon from './assets/info.svg'
+import CookiesBanner from '~/components/CookiesBanner'
 import styles from './index.scss'
 
 const notificationStyles = {
@@ -92,6 +93,7 @@ const PageFrame = ({ children, classes, currentNetwork }: Props) => {
           {children}
         </SidebarProvider>
       </SnackbarProvider>
+      <CookiesBanner />
     </div>
   )
 }
