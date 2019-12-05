@@ -31,7 +31,7 @@ export const styles = () => ({
   awaiting_your_confirmation: {
     backgroundColor: '#d4d5d3',
     color: disabled,
-    width: '190px',
+    width: '175px',
   },
   awaiting_confirmations: {
     backgroundColor: '#d4d5d3',

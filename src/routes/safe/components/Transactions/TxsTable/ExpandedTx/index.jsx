@@ -61,7 +61,7 @@ const ExpandedTx = ({
 
   return (
     <>
-      <Block>
+      <Block className={classes.expandedTxBlock}>
         <Row>
           <Col xs={6} layout="column">
             <Block className={classes.txDataContainer}>

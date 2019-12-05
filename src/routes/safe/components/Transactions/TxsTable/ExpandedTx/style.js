@@ -1,9 +1,12 @@
 // @flow
 import {
-  md, lg, connected, error, disabled,
+  md, lg, connected, error, disabled, border
 } from '~/theme/variables'
 
 export const styles = () => ({
+  expandedTxBlock: {
+    borderBottom: `2px solid ${border}`
+  },
   txDataContainer: {
     padding: `${lg} ${md}`,
   },
