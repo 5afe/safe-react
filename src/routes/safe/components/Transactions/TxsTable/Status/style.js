@@ -1,25 +1,24 @@
 // @flow
 import {
-  boldFont, sm, error, disabled,
+  boldFont, sm, lg, error, disabled, extraSmallFontSize, secondary,
 } from '~/theme/variables'
 
 export const styles = () => ({
   container: {
     display: 'flex',
-    fontSize: '11px',
+    fontSize: extraSmallFontSize,
     fontWeight: boldFont,
-    // width: '100px',
     padding: sm,
     alignItems: 'center',
     boxSizing: 'border-box',
-    height: '24px',
-    marginTop: '8px',
-    marginBottom: '8px',
+    height: lg,
+    marginTop: sm,
+    marginBottom: sm,
     borderRadius: '3px',
   },
   success: {
     backgroundColor: '#A1D2CA',
-    color: '#008c73',
+    color: secondary,
     width: '84px',
   },
   cancelled: {

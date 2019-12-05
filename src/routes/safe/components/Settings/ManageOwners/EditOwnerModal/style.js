@@ -10,7 +10,7 @@ export const styles = () => ({
     boxSizing: 'border-box',
   },
   manage: {
-    fontSize: '24px',
+    fontSize: lg,
   },
   container: {
     padding: `${md} ${lg}`,

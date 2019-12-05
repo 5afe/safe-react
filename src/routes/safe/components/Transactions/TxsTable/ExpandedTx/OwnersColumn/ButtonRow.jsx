@@ -3,7 +3,7 @@ import React from 'react'
 import { withStyles } from '@material-ui/core/styles'
 import Row from '~/components/layout/Row'
 import Button from '~/components/layout/Button'
-import { sm, border } from '~/theme/variables'
+import { xl, sm, border } from '~/theme/variables'
 
 type Props = {
   classes: Object,
@@ -19,7 +19,7 @@ const styles = () => ({
     padding: '10px 20px',
   },
   button: {
-    height: '32px',
+    height: xl,
   },
   icon: {
     width: '14px',

@@ -63,7 +63,7 @@ export default createMuiTheme({
         },
         color: disabled,
         textTransform: 'none',
-        borderRadius: '8px',
+        borderRadius: sm,
       },
       contained: {
         boxShadow: '1px 2px 10px 0 rgba(212, 212, 211, 0.59)',
@@ -102,7 +102,7 @@ export default createMuiTheme({
     },
     MuiStepper: {
       root: {
-        padding: '24px 0 0 15px',
+        padding: `${lg} 0 0 15px`,
       },
     },
     MuiIconButton: {
@@ -260,7 +260,7 @@ export default createMuiTheme({
       },
       select: {
         paddingRight: 30,
-        minWidth: '24px',
+        minWidth: lg,
       },
       actions: {
         order: 4,

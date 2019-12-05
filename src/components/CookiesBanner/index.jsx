@@ -8,7 +8,7 @@ import { makeStyles } from '@material-ui/core/styles'
 import { useDispatch, useSelector } from 'react-redux'
 import Link from '~/components/layout/Link'
 import Button from '~/components/layout/Button'
-import { primary, mainFontFamily } from '~/theme/variables'
+import { primary, mainFontFamily, md } from '~/theme/variables'
 import type { CookiesProps } from '~/logic/cookies/model/cookie'
 import { COOKIES_KEY } from '~/logic/cookies/model/cookie'
 import { loadFromCookie, saveCookie } from '~/logic/cookies/utils'
@@ -37,7 +37,7 @@ const useStyles = makeStyles({
   text: {
     color: primary,
     fontFamily: mainFontFamily,
-    fontSize: '16px',
+    fontSize: md,
     fontWeight: 'normal',
     lineHeight: '1.38',
     margin: '0 0 25px',

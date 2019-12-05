@@ -9,7 +9,7 @@ import TablePagination from '@material-ui/core/TablePagination'
 import Row from '~/components/layout/Row'
 import { type Order, stableSort, getSorting } from '~/components/Table/sorting'
 import TableHead, { type Column } from '~/components/Table/TableHead'
-import { xl } from '~/theme/variables'
+import { xxl, xl, sm } from '~/theme/variables'
 
 type Props<K> = {
   label: string,
@@ -38,12 +38,12 @@ type State = {
 const styles = {
   root: {
     backgroundColor: 'white',
-    borderTopRightRadius: '8px',
-    borderTopLeftRadius: '8px',
+    borderTopRightRadius: sm,
+    borderTopLeftRadius: sm,
     boxShadow: '1px 2px 10px 0 rgba(212, 212, 211, 0.59)',
   },
   selectRoot: {
-    lineHeight: '40px',
+    lineHeight: xxl,
     backgroundColor: 'white',
   },
   white: {
@@ -53,8 +53,8 @@ const styles = {
     backgroundColor: 'white',
     boxShadow: '1px 2px 10px 0 rgba(212, 212, 211, 0.59)',
     marginBottom: xl,
-    borderBottomRightRadius: '8px',
-    borderBottomLeftRadius: '8px',
+    borderBottomRightRadius: sm,
+    borderBottomLeftRadius: sm,
   },
   loader: {
     boxShadow: '1px 2px 10px 0 rgba(212, 212, 211, 0.59)',
@@ -122,8 +122,8 @@ class GnoTable<K> extends React.Component<Props<K>, State> {
 
   getEmptyStyle = (emptyRows: number) => ({
     height: FIXED_HEIGHT * emptyRows,
-    borderTopRightRadius: '8px',
-    borderTopLeftRadius: '8px',
+    borderTopRightRadius: sm,
+    borderTopLeftRadius: sm,
     backgroundColor: 'white',
     width: '100%',
     display: 'flex',

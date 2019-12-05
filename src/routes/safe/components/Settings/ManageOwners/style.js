@@ -1,5 +1,5 @@
 // @flow
-import { lg } from '~/theme/variables'
+import { lg, sm } from '~/theme/variables'
 
 export const styles = () => ({
   formContainer: {
@@ -40,7 +40,7 @@ export const styles = () => ({
   controlsRow: {
     backgroundColor: 'white',
     padding: lg,
-    borderRadius: '8px',
+    borderRadius: sm,
   },
   removeOwnerIcon: {
     marginLeft: lg,
