@@ -22,6 +22,7 @@ export const buildSafe = (storedSafe: SafeProps) => {
   const addresses = storedSafe.owners.map((owner: OwnerProps) => owner.address)
   const owners = buildOwnersFrom(Array.from(names), Array.from(addresses))
   const activeTokens = Set(storedSafe.activeTokens)
+  const blacklistedTokens = Set(storedSafe.blacklistedTokens)
   const balances = Map(storedSafe.balances)
 
   const safe: SafeProps = {
@@ -29,6 +30,7 @@ export const buildSafe = (storedSafe: SafeProps) => {
     owners,
     balances,
     activeTokens,
+    blacklistedTokens,
   }
 
   return safe
@@ -46,12 +48,15 @@ export default handleActions<SafeReducerState, *>(
       const tokenAddress = action.payload
 
       const newState = state.withMutations((map) => {
-        map.get('safes').keySeq().forEach((safeAddress) => {
-          const safeActiveTokens = map.getIn(['safes', safeAddress, 'activeTokens'])
-          const activeTokens = safeActiveTokens.add(tokenAddress)
+        map
+          .get('safes')
+          .keySeq()
+          .forEach((safeAddress) => {
+            const safeActiveTokens = map.getIn(['safes', safeAddress, 'activeTokens'])
+            const activeTokens = safeActiveTokens.add(tokenAddress)
 
-          map.updateIn(['safes', safeAddress], (prevSafe) => prevSafe.merge({ activeTokens }))
-        })
+            map.updateIn(['safes', safeAddress], (prevSafe) => prevSafe.merge({ activeTokens }))
+          })
       })
 
       return newState

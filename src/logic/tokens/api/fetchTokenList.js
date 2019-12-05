@@ -4,7 +4,7 @@ import { getRelayUrl } from '~/config/index'
 
 const fetchTokenList = () => {
   const apiUrl = getRelayUrl()
-  const url = `${apiUrl}/tokens`
+  const url = `${apiUrl}tokens/`
 
   return axios.get(url, {
     params: {

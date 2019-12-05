@@ -18,6 +18,8 @@ import notifications, {
   NOTIFICATIONS_REDUCER_ID,
   type NotificationReducerState as NotificationsState,
 } from '~/logic/notifications/store/reducer/notifications'
+import cookies, { COOKIES_REDUCER_ID } from '~/logic/cookies/store/reducer/cookies'
+
 
 export const history = createBrowserHistory()
 
@@ -44,8 +46,10 @@ const reducers: Reducer<GlobalState> = combineReducers({
   [TOKEN_REDUCER_ID]: tokens,
   [TRANSACTIONS_REDUCER_ID]: transactions,
   [NOTIFICATIONS_REDUCER_ID]: notifications,
+  [COOKIES_REDUCER_ID]: cookies,
 })
 
 export const store: Store<GlobalState> = createStore(reducers, finalCreateStore)
 
+// eslint-disable-next-line max-len
 export const aNewStore = (localState?: Object): Store<GlobalState> => createStore(reducers, localState, finalCreateStore)
