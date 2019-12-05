@@ -1,5 +1,5 @@
 // @flow
-import type { Store, AnyAction } from 'redux'
+import type { AnyAction, Store } from 'redux'
 import { List } from 'immutable'
 import { ADD_SAFE } from '~/routes/safe/store/actions/addSafe'
 import { UPDATE_SAFE } from '~/routes/safe/store/actions/updateSafe'
@@ -10,10 +10,12 @@ import { REPLACE_SAFE_OWNER } from '~/routes/safe/store/actions/replaceSafeOwner
 import { EDIT_SAFE_OWNER } from '~/routes/safe/store/actions/editSafeOwner'
 import { type GlobalState } from '~/store/'
 import {
-  saveSafes, setOwners, removeOwners, saveDefaultSafe,
+  removeOwners,
+  saveDefaultSafe,
+  saveSafes,
+  setOwners,
 } from '~/logic/safe/utils'
-import { safesMapSelector, getActiveTokensAddressesForAllSafes } from '~/routes/safe/store/selectors'
-
+import { getActiveTokensAddressesForAllSafes, safesMapSelector } from '~/routes/safe/store/selectors'
 import { tokensSelector } from '~/logic/tokens/store/selectors'
 import type { Token } from '~/logic/tokens/store/model/token'
 import { makeOwner } from '~/routes/safe/store/models/owner'

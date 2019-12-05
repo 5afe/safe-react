@@ -60,9 +60,12 @@ const Layout = (props: Props) => {
     granted,
     tokens,
     activeTokens,
+    blacklistedTokens,
     createTransaction,
     processTransaction,
     fetchTransactions,
+    activateTokensByBalance,
+    fetchTokens,
     updateSafe,
     transactions,
     userAddress,
@@ -156,8 +159,11 @@ const Layout = (props: Props) => {
               ethBalance={ethBalance}
               tokens={tokens}
               activeTokens={activeTokens}
+              blacklistedTokens={blacklistedTokens}
               granted={granted}
               safeAddress={address}
+              activateTokensByBalance={activateTokensByBalance}
+              fetchTokens={fetchTokens}
               safeName={name}
               createTransaction={createTransaction}
             />
