@@ -17,6 +17,10 @@ import { isTokenTransfer } from '~/logic/tokens/utils/tokenHelpers'
 import { decodeParamsFromSafeMethod } from '~/logic/contracts/methodIds'
 import { ALTERNATIVE_TOKEN_ABI } from '~/logic/tokens/utils/alternativeAbi'
 import { ZERO_ADDRESS } from '~/logic/wallets/ethAddresses'
+import { getAwaitingTransactions } from '~/logic/safe/transactions/awaitingTransactions'
+import enqueueSnackbar from '~/logic/notifications/store/actions/enqueueSnackbar'
+import closeSnackbarAction from '~/logic/notifications/store/actions/closeSnackbar'
+import { enhanceSnackbarForAction, NOTIFICATIONS } from '~/logic/notifications'
 
 let web3
 
@@ -164,11 +168,25 @@ export const loadSafeTransactions = async (safeAddress: string) => {
   return Map().set(safeAddress, List(txsRecord))
 }
 
-export default (safeAddress: string) => async (dispatch: ReduxDispatch<GlobalState>) => {
+
+export default (safeAddress: string, userAddress: string, granted: boolean, onNotificationClosesCb: Function) => async (dispatch: ReduxDispatch<GlobalState>) => {
   try {
     const transactions: Map<string, List<Transaction>> = await loadSafeTransactions(safeAddress)
+    dispatch(addTransactions(transactions))
+    const awaitingTransactions = getAwaitingTransactions(transactions, userAddress, granted)
 
-    return dispatch(addTransactions(transactions))
+    const notificationKey = `${safeAddress}-${userAddress}`
+    const onNotificationClicked = () => {
+      dispatch(closeSnackbarAction({ key: notificationKey }))
+      onNotificationClosesCb()
+    }
+
+    awaitingTransactions.map((awaitingTransactionsList, safeAdd) => {
+      const convertedList = awaitingTransactionsList.toJS()
+      if (convertedList.length > 0) {
+        dispatch(enqueueSnackbar(enhanceSnackbarForAction(NOTIFICATIONS.TX_WAITING_MSG, notificationKey, onNotificationClicked)))
+      }
+    })
   } catch (err) {
     console.error(`Requests for transactions for ${safeAddress} failed with 404`)
   }

@@ -1,5 +1,5 @@
 // @flow
-import React, { useEffect } from 'react'
+import React from 'react'
 import { List } from 'immutable'
 import NoTransactions from '~/routes/safe/components/Transactions/NoTransactions'
 import TxsTable from '~/routes/safe/components/Transactions/TxsTable'
@@ -9,7 +9,6 @@ import { type Owner } from '~/routes/safe/store/models/owner'
 type Props = {
   safeAddress: string,
   threshold: number,
-  fetchTransactions: Function,
   transactions: List<Transaction>,
   owners: List<Owner>,
   userAddress: string,
@@ -28,13 +27,8 @@ const Transactions = ({
   safeAddress,
   createTransaction,
   processTransaction,
-  fetchTransactions,
   currentNetwork,
 }: Props) => {
-  useEffect(() => {
-    fetchTransactions(safeAddress)
-  }, [safeAddress])
-
   const hasTransactions = transactions.size > 0
 
   return (
