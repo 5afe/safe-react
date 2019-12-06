@@ -22,6 +22,7 @@ type Props = Actions & {
   tokens: List<Token>,
   safeAddress: string,
   activeTokens: List<Token>,
+  blacklistedTokens: List<Token>,
 }
 type ActiveScreen = 'tokenList' | 'addCustomToken'
 
@@ -32,8 +33,10 @@ const Tokens = (props: Props) => {
     classes,
     tokens,
     activeTokens,
+    blacklistedTokens,
     fetchTokens,
     updateActiveTokens,
+    updateBlacklistedTokens,
     safeAddress,
     addToken,
     activateTokenForAllSafes,
@@ -43,7 +46,7 @@ const Tokens = (props: Props) => {
     <>
       <Row align="center" grow className={classes.heading}>
         <Paragraph size="xl" noMargin weight="bolder">
-          Manage Tokens
+          Manage List
         </Paragraph>
         <IconButton onClick={onClose} disableRipple data-testid={MANAGE_TOKENS_MODAL_CLOSE_BUTTON_TEST_ID}>
           <Close className={classes.close} />
@@ -54,8 +57,10 @@ const Tokens = (props: Props) => {
         <TokenList
           tokens={tokens}
           activeTokens={activeTokens}
+          blacklistedTokens={blacklistedTokens}
           fetchTokens={fetchTokens}
           updateActiveTokens={updateActiveTokens}
+          updateBlacklistedTokens={updateBlacklistedTokens}
           safeAddress={safeAddress}
           setActiveScreen={setActiveScreen}
         />

@@ -12,6 +12,7 @@ export type SafeProps = {
   owners: List<Owner>,
   balances?: Map<string, string>,
   activeTokens: Set<string>,
+  blacklistedTokens: Set<string>,
   ethBalance?: string,
   nonce?: number,
 }
@@ -23,6 +24,7 @@ const SafeRecord: RecordFactory<SafeProps> = Record({
   ethBalance: 0,
   owners: List([]),
   activeTokens: new Set(),
+  blacklistedTokens: new Set(),
   balances: Map({}),
   nonce: 0,
 })

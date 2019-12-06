@@ -106,6 +106,21 @@ export const safeActiveTokensSelector: Selector<GlobalState, RouterProps, List<s
   },
 )
 
+export const safeBlacklistedTokensSelector: Selector<GlobalState, RouterProps, List<string>> = createSelector(
+  safeSelector,
+  (safe: Safe) => {
+    if (!safe) {
+      return List()
+    }
+
+    return safe.blacklistedTokens
+  },
+)
+
+export const safeActiveTokensSelectorBySafe = (safeAddress: string, safes: Map<string, Safe>): List<string> => safes.get(safeAddress).get('activeTokens')
+
+export const safeBlacklistedTokensSelectorBySafe = (safeAddress: string, safes: Map<string, Safe>): List<string> => safes.get(safeAddress).get('blacklistedTokens')
+
 export const safeBalancesSelector: Selector<GlobalState, RouterProps, Map<string, string>> = createSelector(
   safeSelector,
   (safe: Safe) => {
@@ -132,7 +147,23 @@ export const getActiveTokensAddressesForAllSafes: Selector<GlobalState, any, Set
   },
 )
 
+export const getBlacklistedTokensAddressesForAllSafes: Selector<GlobalState, any, Set<string>> = createSelector(
+  safesListSelector,
+  (safes: List<Safe>) => {
+    const addresses = Set().withMutations((set) => {
+      safes.forEach((safe: Safe) => {
+        safe.blacklistedTokens.forEach((tokenAddress) => {
+          set.add(tokenAddress)
+        })
+      })
+    })
+
+    return addresses
+  },
+)
+
 export default createStructuredSelector<Object, *>({
   safe: safeSelector,
   tokens: safeActiveTokensSelector,
+  blacklistedTokens: safeBlacklistedTokensSelector,
 })

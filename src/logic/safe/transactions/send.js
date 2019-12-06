@@ -68,7 +68,18 @@ export const getExecutionTransaction = async (
     const web3 = getWeb3()
     const contract = new web3.eth.Contract(GnosisSafeSol.abi, safeInstance.address)
 
-    return contract.methods.execTransaction(to, valueInWei, data, operation, safeTxGas, baseGas, gasPrice, gasToken, refundReceiver, sigs)
+    return contract.methods.execTransaction(
+      to,
+      valueInWei,
+      data,
+      operation,
+      safeTxGas,
+      baseGas,
+      gasPrice,
+      gasToken,
+      refundReceiver,
+      sigs,
+    )
   } catch (err) {
     console.error(`Error while creating transaction: ${err}`)
 
