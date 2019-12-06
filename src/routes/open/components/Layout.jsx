@@ -2,8 +2,6 @@
 import * as React from 'react'
 import ChevronLeft from '@material-ui/icons/ChevronLeft'
 import IconButton from '@material-ui/core/IconButton'
-import { withRouter } from 'react-router-dom'
-import queryString from 'query-string'
 import Stepper, { StepperPage } from '~/components/Stepper'
 import Block from '~/components/layout/Block'
 import Heading from '~/components/layout/Heading'
@@ -19,28 +17,13 @@ import {
 } from '~/routes/open/components/fields'
 import { history } from '~/store'
 import { secondary } from '~/theme/variables'
+import type { SafePropsType } from '~/routes/open/container/Open'
 
 const getSteps = () => ['Name', 'Owners and confirmations', 'Review']
 
-const validateQueryParams = (ownerAddresses?: string[], ownerNames?: string[], threshold?: string, safeName?: string) => {
-  if (!ownerAddresses || !ownerNames || !threshold || !safeName) {
-    return false
-  }
-  if (!ownerAddresses.length === 0 || ownerNames.length === 0) {
-    return false
-  }
-  // eslint-disable-next-line no-restricted-globals
-  if (isNaN(threshold)) {
-    return false
-  }
-  if (threshold > ownerAddresses.length) {
-    return false
-  }
-  return true
-}
 
-const initialValuesFrom = (userAccount: string, ownerAddresses?: string[], ownerNames?: string[], threshold?: string, safeName?: string) => {
-  if (!validateQueryParams(ownerAddresses, ownerNames, threshold, safeName)) {
+const initialValuesFrom = (userAccount: string, safeProps?: SafePropsType) => {
+  if (!safeProps) {
     return ({
       [getOwnerNameBy(0)]: 'My Wallet',
       [getOwnerAddressBy(0)]: userAccount,
@@ -48,18 +31,21 @@ const initialValuesFrom = (userAccount: string, ownerAddresses?: string[], owner
     })
   }
   let obj = {}
+  const {
+    ownerAddresses, ownerNames, threshold, name,
+  } = safeProps
   for (const [index, value] of ownerAddresses.entries()) {
-    const name = ownerNames[index] ? ownerNames[index] : 'My Wallet'
+    const safeName = ownerNames[index] ? ownerNames[index] : 'My Wallet'
     obj = {
       ...obj,
       [getOwnerAddressBy(index)]: value,
-      [getOwnerNameBy(index)]: name,
+      [getOwnerNameBy(index)]: safeName,
     }
   }
   return ({
     ...obj,
     [FIELD_CONFIRMATIONS]: threshold || '1',
-    [FIELD_SAFE_NAME]: safeName,
+    [FIELD_SAFE_NAME]: name,
   })
 }
 
@@ -68,7 +54,7 @@ type Props = {
   userAccount: string,
   network: string,
   onCallSafeContractSubmit: (values: Object) => Promise<void>,
-  location: Object,
+  safeProps?: SafePropsType,
 }
 
 const iconStyle = {
@@ -87,25 +73,14 @@ const formMutators = {
   },
 }
 
-export type SafeProps = {
-  name: string,
-  owneraddresses: string[],
-  ownerNames: string[],
-  threshold: string,
-}
 
 const Layout = (props: Props) => {
   const {
-    provider, userAccount, onCallSafeContractSubmit, network, location,
+    provider, userAccount, onCallSafeContractSubmit, network, safeProps,
   } = props
   const steps = getSteps()
-  const query: SafeProps = queryString.parse(location.search, { arrayFormat: 'comma' })
-  const {
-    name, owneraddresses, ownernames, threshold,
-  } = query
 
-  const initialValues = initialValuesFrom(userAccount, owneraddresses, ownernames, threshold, name)
-
+  const initialValues = initialValuesFrom(userAccount, safeProps)
 
   return (
     <>
@@ -138,4 +113,4 @@ const Layout = (props: Props) => {
   )
 }
 
-export default withRouter(Layout)
+export default Layout
