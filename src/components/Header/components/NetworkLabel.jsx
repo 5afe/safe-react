@@ -9,6 +9,7 @@ import {
 } from '~/theme/variables'
 
 const network = getNetwork()
+const formattedNetwork = network[0].toUpperCase() + network.substring(1).toLowerCase()
 
 const useStyles = makeStyles({
   container: {
@@ -30,7 +31,7 @@ const EarlyAccessLabel = () => {
   return (
     <Col start="xs" middle="xs" className={classes.container}>
       <Paragraph size="xs" className={classes.text}>
-        {network}
+        {formattedNetwork}
       </Paragraph>
     </Col>
   )
