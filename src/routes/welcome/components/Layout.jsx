@@ -16,6 +16,7 @@ const plus = require('../assets/new.svg')
 
 type Props = {
   provider: string,
+  isOpenSafe?: boolean,
 }
 
 const openIconStyle = {
@@ -64,14 +65,19 @@ export const LoadSafe = ({ size, provider }: SafeProps) => (
   </Button>
 )
 
-const Welcome = ({ provider }: Props) => (
-  <Block className={styles.safe}>
-    <Heading tag="h1" weight="bold" align="center" margin="lg">
-      Welcome to
+const Welcome = ({ provider, isOpenSafe }: Props) => {
+  const headingText = isOpenSafe ? (
+    <>
+      We will replicate the owner structure from your existing Gnosis Multisig
       <br />
-      Gnosis Safe For Teams
-    </Heading>
-    <Heading tag="h3" align="center" margin="xl">
+      to let you test the new interface.
+      <br />
+      As soon as you feel comfortable, start moving funds to your new Safe.
+      <br />
+      {' '}
+    </>
+  ) : (
+    <>
       The Gnosis Safe for Teams is geared towards teams managing shared
       <br />
       crypto funds. It is an improvement of the existing Gnosis MultiSig
@@ -80,29 +86,46 @@ const Welcome = ({ provider }: Props) => (
       <br />
       costs as well as an enhanced user experience.
       {' '}
-      <a className={styles.learnMoreLink} href="https://safe.gnosis.io/teams" target="_blank" rel="noopener noreferrer">
-        Learn more
-        <OpenInNew style={openIconStyle} />
-      </a>
-    </Heading>
-    {provider ? (
-      <>
-        <Block className={styles.safeActions} margin="md">
-          <CreateSafe size="large" provider={provider} />
+    </>
+  )
+  return (
+    <Block className={styles.safe}>
+      <Heading tag="h1" weight="bold" align="center" margin="lg">
+        Welcome to
+        <br />
+        Gnosis Safe For Teams
+      </Heading>
+      <Heading tag="h3" align="center" margin="xl">
+        { headingText }
+        <a
+          className={styles.learnMoreLink}
+          href="https://safe.gnosis.io/teams"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Learn more
+          <OpenInNew style={openIconStyle} />
+        </a>
+      </Heading>
+      {provider ? (
+        <>
+          <Block className={styles.safeActions} margin="md">
+            <CreateSafe size="large" provider={provider} />
+          </Block>
+          <Block className={styles.safeActions} margin="md">
+            <LoadSafe size="large" provider={provider} />
+          </Block>
+        </>
+      ) : (
+        <Block margin="md" className={styles.connectWallet}>
+          <Heading tag="h3" align="center" margin="md">
+            Get Started by Connecting a Wallet
+          </Heading>
+          <ConnectButton minWidth={240} minHeight={42} />
         </Block>
-        <Block className={styles.safeActions} margin="md">
-          <LoadSafe size="large" provider={provider} />
-        </Block>
-      </>
-    ) : (
-      <Block margin="md" className={styles.connectWallet}>
-        <Heading tag="h3" align="center" margin="md">
-          Get Started by Connecting a Wallet
-        </Heading>
-        <ConnectButton minWidth={240} minHeight={42} />
-      </Block>
-    )}
-  </Block>
-)
+      )}
+    </Block>
+  )
+}
 
 export default Welcome
