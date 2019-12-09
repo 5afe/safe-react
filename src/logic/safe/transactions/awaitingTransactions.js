@@ -2,8 +2,8 @@
 import { List } from 'immutable'
 import type { Transaction } from '~/routes/safe/store/models/transaction'
 
-export const getAwaitingTransactions = (allTransactions: List<Transaction>, userAccount: string, userIsOwner: boolean): List<Transaction> => {
-  if (!allTransactions || !userIsOwner) {
+export const getAwaitingTransactions = (allTransactions: List<Transaction>, userAccount: string): List<Transaction> => {
+  if (!allTransactions) {
     return List([])
   }
 
@@ -23,7 +23,7 @@ export const getAwaitingTransactions = (allTransactions: List<Transaction>, user
       // The transaction is not executed and is not cancelled, so it's still waiting confirmations
       if (!transaction.executionTxHash && !transaction.cancelled) {
         // Then we check if the waiting confirmations are not from the current user, otherwise, filters this transaction
-        const transactionWaitingUser = transaction.confirmations.filter((confirmation) => confirmation.owner.address !== userAccount)
+        const transactionWaitingUser = transaction.confirmations.filter((confirmation) => confirmation.owner && confirmation.owner.address !== userAccount)
 
         return transactionWaitingUser.size > 0
       }

@@ -1,7 +1,6 @@
 // @flow
 import * as React from 'react'
 import { connect } from 'react-redux'
-import { isEqual } from 'lodash'
 import Page from '~/components/layout/Page'
 import Layout from '~/routes/safe/components/Layout'
 import { type Token } from '~/logic/tokens/store/model/token'
@@ -47,11 +46,6 @@ class SafeView extends React.Component<Props, State> {
     this.intervalId = setInterval(() => {
       this.checkForUpdates()
     }, TIMEOUT)
-  }
-
-
-  shouldComponentUpdate(nextProps: Readonly<P>, nextState: Readonly<S>, nextContext: any): boolean {
-    return !isEqual(nextProps, this.props)
   }
 
   componentDidUpdate(prevProps) {

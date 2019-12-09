@@ -77,10 +77,11 @@ const Layout = (props: Props) => {
     hideSendFunds,
     match,
     location,
-    history,
   } = props
 
   const handleCallToRouter = (_, value) => {
+    const { history } = props
+
     history.push(value)
   }
 
@@ -91,12 +92,9 @@ const Layout = (props: Props) => {
   const { address, ethBalance, name } = safe
   const etherScanLink = getEtherScanLink('address', address)
 
-  const onNotificationClosesCb = () => {
-    history.push(`${match.url}/transactions`)
-  }
 
   useEffect(() => {
-    fetchTransactions(address, userAddress, granted, onNotificationClosesCb)
+    fetchTransactions(address, userAddress)
   }, [address, userAddress])
 
 
@@ -185,6 +183,7 @@ const Layout = (props: Props) => {
               threshold={safe.threshold}
               owners={safe.owners}
               transactions={transactions}
+              fetchTransactions={fetchTransactions}
               safeAddress={address}
               userAddress={userAddress}
               currentNetwork={network}
