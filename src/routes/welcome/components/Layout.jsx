@@ -16,7 +16,7 @@ const plus = require('../assets/new.svg')
 
 type Props = {
   provider: string,
-  isOpenSafe?: boolean,
+  isOldMultisigMigration?: boolean,
 }
 
 const openIconStyle = {
@@ -65,8 +65,8 @@ export const LoadSafe = ({ size, provider }: SafeProps) => (
   </Button>
 )
 
-const Welcome = ({ provider, isOpenSafe }: Props) => {
-  const headingText = isOpenSafe ? (
+const Welcome = ({ provider, isOldMultisigMigration }: Props) => {
+  const headingText = isOldMultisigMigration ? (
     <>
       We will replicate the owner structure from your existing Gnosis Multisig
       <br />

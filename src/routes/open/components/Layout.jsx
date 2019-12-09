@@ -109,7 +109,7 @@ const Layout = (props: Props) => {
           </Stepper>
         </Block>
       ) : (
-        <Welcome provider={provider} isOpenSafe />
+        <Welcome provider={provider} isOldMultisigMigration />
       )}
     </>
   )
