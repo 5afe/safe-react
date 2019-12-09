@@ -91,9 +91,12 @@ const OwnersColumn = ({
 
   return (
     <Col xs={6} className={classes.rightCol} layout="block">
-      <Block className={cn(classes.ownerListTitle, thresholdReached && classes.ownerListTitleDone)}>
+      <Block className={cn(classes.ownerListTitle, (thresholdReached || tx.isExecuted) && classes.ownerListTitleDone)}>
         <div className={classes.iconState}>
-          {!thresholdReached ? <Img src={ConfirmLargeGreenIcon} /> : <Img src={CheckLargeFilledGreenIcon} />}
+          {thresholdReached || tx.isExecuted
+            ? <Img src={CheckLargeFilledGreenIcon} />
+            : <Img src={ConfirmLargeGreenIcon} />
+          }
         </div>
         {`Confirmed [${tx.confirmations.size}/${threshold}]`}
       </Block>
@@ -108,16 +111,15 @@ const OwnersColumn = ({
         showConfirmBtn={showConfirmBtn}
         showExecuteBtn={!tx.isExecuted && thresholdReached}
       />
-      <Block className={cn(
-        classes.ownerListTitle,
-        thresholdReached && tx.executionTxHash && classes.ownerListTitleDone,
-      )}
-      >
-        <div className={thresholdReached ? classes.verticalLineProgressDone : classes.verticalLineProgressPending} />
+      <Block className={cn(classes.ownerListTitle, tx.isExecuted && classes.ownerListTitleDone)}>
+        <div className={thresholdReached || tx.isExecuted
+          ? classes.verticalLineProgressDone
+          : classes.verticalLineProgressPending}
+        />
         <div className={classes.iconState}>
-          {!thresholdReached && <Img src={ConfirmLargeGreyIcon} />}
-          {thresholdReached && !tx.executionTxHash && <Img src={ConfirmLargeGreenIcon} />}
-          {thresholdReached && tx.executionTxHash && <Img src={CheckLargeFilledGreenIcon} />}
+          {!thresholdReached && !tx.isExecuted && <Img src={ConfirmLargeGreyIcon} />}
+          {thresholdReached && !tx.isExecuted && <Img src={ConfirmLargeGreenIcon} />}
+          {tx.isExecuted && <Img src={CheckLargeFilledGreenIcon} />}
         </div>
         Executed
       </Block>

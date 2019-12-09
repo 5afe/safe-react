@@ -1,6 +1,5 @@
 // @flow
 import React from 'react'
-import { List } from 'immutable'
 import { withStyles } from '@material-ui/core/styles'
 import Button from '~/components/layout/Button'
 import Img from '~/components/layout/Img'
@@ -40,15 +39,17 @@ const OwnerComponent = ({
   onTxExecute,
   executor,
   confirmed,
-  thresholdReached
+  thresholdReached,
 }: OwnerProps) => (
   <Block className={classes.container}>
-    <div className={confirmed || thresholdReached ? classes.verticalLineProgressDone : classes.verticalLineProgressPending} />
+    <div className={confirmed || thresholdReached || executor
+      ? classes.verticalLineProgressDone
+      : classes.verticalLineProgressPending}
+    />
     <div className={classes.iconState}>
       {confirmed
         ? <Img src={ConfirmSmallFilledIcon} />
-        : thresholdReached ? <Img src={ConfirmSmallGreenIcon} /> : <Img src={ConfirmSmallGreyIcon} />
-      }
+        : thresholdReached || executor ? <Img src={ConfirmSmallGreenIcon} /> : <Img src={ConfirmSmallGreyIcon} />}
     </div>
     <Identicon address={owner.address} diameter={32} className={classes.icon} />
     <Block>
