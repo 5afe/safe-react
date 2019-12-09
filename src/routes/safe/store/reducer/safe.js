@@ -22,6 +22,7 @@ export const buildSafe = (storedSafe: SafeProps) => {
   const addresses = storedSafe.owners.map((owner: OwnerProps) => owner.address)
   const owners = buildOwnersFrom(Array.from(names), Array.from(addresses))
   const activeTokens = Set(storedSafe.activeTokens)
+  const blacklistedTokens = Set(storedSafe.blacklistedTokens)
   const balances = Map(storedSafe.balances)
 
   const safe: SafeProps = {
@@ -29,6 +30,7 @@ export const buildSafe = (storedSafe: SafeProps) => {
     owners,
     balances,
     activeTokens,
+    blacklistedTokens,
   }
 
   return safe

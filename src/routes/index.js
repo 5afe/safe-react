@@ -15,6 +15,7 @@ import {
   OPENING_ADDRESS,
   LOAD_ADDRESS,
 } from './routes'
+import { withTracker } from '~/utils/googleAnalytics'
 
 const Safe = React.lazy(() => import('./safe/container'))
 
@@ -62,11 +63,11 @@ const Routes = ({ defaultSafe, location }: RoutesProps) => {
           return <Redirect to={WELCOME_ADDRESS} />
         }}
       />
-      <Route exact path={WELCOME_ADDRESS} component={Welcome} />
-      <Route exact path={OPEN_ADDRESS} component={Open} />
-      <Route path={SAFE_ADDRESS} component={Safe} />
-      <Route exact path={OPENING_ADDRESS} component={Opening} />
-      <Route exact path={LOAD_ADDRESS} component={Load} />
+      <Route exact path={WELCOME_ADDRESS} component={withTracker(Welcome)} />
+      <Route exact path={OPEN_ADDRESS} component={withTracker(Open)} />
+      <Route path={SAFE_ADDRESS} component={withTracker(Safe)} />
+      <Route exact path={OPENING_ADDRESS} component={withTracker(Opening)} />
+      <Route exact path={LOAD_ADDRESS} component={withTracker(Load)} />
       <Redirect to="/" />
     </Switch>
   )
