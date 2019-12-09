@@ -41,7 +41,7 @@ const validateQueryParams = (ownerAddresses?: string[], ownerNames?: string[], t
     return false
   }
 
-  if (!Number.isInteger(threshold)) {
+  if (Number.isNaN(Number(threshold))) {
     return false
   }
   if (threshold > ownerAddresses.length) {
