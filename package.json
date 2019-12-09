@@ -33,11 +33,7 @@
   "dependencies": {
     "@gnosis.pm/safe-contracts": "1.0.0",
     "@gnosis.pm/util-contracts": "2.0.4",
-<<<<<<< HEAD
-    "@material-ui/core": "4.7.1",
-=======
     "@material-ui/core": "4.7.2",
->>>>>>> 75cc009896cf9f32eeb0c64aad956cfd4d79a008
     "@material-ui/icons": "4.5.1",
     "@portis/web3": "^2.0.0-beta.45",
     "@testing-library/jest-dom": "4.2.4",
