@@ -1,5 +1,5 @@
 // @flow
-import React, { useEffect } from 'react'
+import * as React from 'react'
 import classNames from 'classnames/bind'
 import {
   Switch, Redirect, Route, withRouter,
@@ -91,12 +91,6 @@ const Layout = (props: Props) => {
 
   const { address, ethBalance, name } = safe
   const etherScanLink = getEtherScanLink('address', address)
-
-
-  useEffect(() => {
-    fetchTransactions(address, userAddress)
-  }, [address, userAddress])
-
 
   return (
     <>
