@@ -181,7 +181,8 @@ module.exports = {
           {
             loader: "file-loader",
             options: {
-              name: "img/[hash].[ext]"
+              name: "img/[hash].[ext]",
+              esModule: false
             }
           }
         ]
