@@ -1,43 +1,44 @@
 /*eslint-disable*/
-const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
-const autoprefixer = require('autoprefixer')
-const cssmixins = require('postcss-mixins')
-const cssvars = require('postcss-simple-vars')
-const webpack = require('webpack')
+const BundleAnalyzerPlugin = require("webpack-bundle-analyzer")
+  .BundleAnalyzerPlugin
+const autoprefixer = require("autoprefixer")
+const cssmixins = require("postcss-mixins")
+const cssvars = require("postcss-simple-vars")
+const webpack = require("webpack")
 
-const UglifyJSPlugin = require('uglifyjs-webpack-plugin')
-const HtmlWebpackPlugin = require('html-webpack-plugin')
-const ExtractTextPlugin = require('extract-text-webpack-plugin')
-const ManifestPlugin = require('webpack-manifest-plugin')
-const MiniCssExtractPlugin = require('mini-css-extract-plugin')
-const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin')
+const TerserPlugin = require("terser-webpack-plugin")
+const HtmlWebpackPlugin = require("html-webpack-plugin")
+const ExtractTextPlugin = require("extract-text-webpack-plugin")
+const ManifestPlugin = require("webpack-manifest-plugin")
+const MiniCssExtractPlugin = require("mini-css-extract-plugin")
+const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin")
 
-const url = require('url')
-const paths = require('./paths')
-const getClientEnvironment = require('./env')
+const url = require("url")
+const paths = require("./paths")
+const getClientEnvironment = require("./env")
 
 const cssvariables = require(`${paths.appSrc}/theme/variables`)
 
 const postcssPlugins = [
   autoprefixer({
     overrideBrowserslist: [
-      '>1%',
-      'last 4 versions',
-      'Firefox ESR',
-      'not ie < 9', // React doesn't support IE8 anyway
-    ],
+      ">1%",
+      "last 4 versions",
+      "Firefox ESR",
+      "not ie < 9" // React doesn't support IE8 anyway
+    ]
   }),
   cssmixins,
   cssvars({
     variables() {
       return Object.assign({}, cssvariables)
     },
-    silent: true,
-  }),
+    silent: true
+  })
 ]
 
 function ensureSlash(path, needsSlash) {
-  const hasSlash = path.endsWith('/')
+  const hasSlash = path.endsWith("/")
   if (hasSlash && !needsSlash) {
     return path.substr(path, path.length - 1)
   } else if (!hasSlash && needsSlash) {
@@ -53,7 +54,7 @@ function ensureSlash(path, needsSlash) {
 // like /todos/42/static/js/bundle.7289d.js. We have to know the root.
 const homepagePath = require(paths.appPackageJson).homepage
 //  var homepagePathname = homepagePath ? url.parse(homepagePath).pathname : '/';
-const homepagePathname = '/'
+const homepagePathname = "/"
 // Webpack uses `publicPath` to determine where the app is being served from.
 // It requires a trailing slash, or the file assets will get an incorrect path.
 const publicPath = ensureSlash(homepagePathname, true)
@@ -66,20 +67,20 @@ const env = getClientEnvironment(publicUrl)
 
 // Assert this just to be safe.
 // Development builds of React are slow and not intended for production.
-if (env['process.env'].NODE_ENV !== '"production"') {
-  throw new Error('Production builds must have NODE_ENV=production.')
+if (env["process.env"].NODE_ENV !== '"production"') {
+  throw new Error("Production builds must have NODE_ENV=production.")
 }
 
 // This is the production configuration.
 // It compiles slowly and is focused on producing a fast and minimal bundle.
 // The development configuration is different and lives in a separate file.
 module.exports = {
-  mode: 'production',
+  mode: "production",
   // Don't attempt to continue if there are any errors.
   bail: true,
   optimization: {
     splitChunks: {
-      chunks: 'all',
+      chunks: "all"
       /* https://stackoverflow.com/questions/48985780/webpack-4-create-vendor-chunk
       cacheGroups: {
         vendor: {
@@ -92,31 +93,55 @@ module.exports = {
       },
       */
     },
-    minimizer: [new OptimizeCSSAssetsPlugin({})],
+    minimize: true,
+    minimizer: [
+      new TerserPlugin({
+        terserOptions: {
+          parse: {
+            ecma: 8
+          },
+          compress: {
+            ecma: 5,
+            warnings: false,
+            comparisons: false,
+            inline: 2,
+          },
+          mangle: {
+            safari10: true
+          },
+          output: {
+            ecma: 5,
+            comments: false,
+            ascii_only: true
+          }
+        }
+      }),
+      new OptimizeCSSAssetsPlugin({})
+    ]
   },
-  entry: [require.resolve('./polyfills'), paths.appIndexJs],
+  entry: [require.resolve("./polyfills"), paths.appIndexJs],
   output: {
     // The build folder.
     path: paths.appBuild,
     // Generated JS file names (with nested folders).
     // There will be one main bundle, and one file per asynchronous chunk.
     // We don't currently advertise code splitting but Webpack supports it.
-    filename: 'static/js/[name].[chunkhash:8].js',
-    chunkFilename: 'static/js/[name].[chunkhash:8].chunk.js',
+    filename: "static/js/[name].[chunkhash:8].js",
+    chunkFilename: "static/js/[name].[chunkhash:8].chunk.js",
     // We inferred the "public path" (such as / or /my-project) from homepage.
-    publicPath,
+    publicPath
   },
   resolve: {
-    modules: [paths.appSrc, 'node_modules', paths.appContracts],
+    modules: [paths.appSrc, "node_modules", paths.appContracts],
     // These are the reasonable defaults supported by the Node ecosystem.
     // We also include JSX as a common component filename extension to support
     // some tools, although we do not recommend using it, see:
     // https://github.com/facebookincubator/create-react-app/issues/290
-    extensions: ['.js', '.json', '.jsx'],
+    extensions: [".js", ".json", ".jsx"],
     alias: {
-      '~': paths.appSrc,
-      '#': paths.appContracts,
-    },
+      "~": paths.appSrc,
+      "#": paths.appContracts
+    }
   },
 
   module: {
@@ -125,44 +150,44 @@ module.exports = {
         test: /\.(js|jsx)$/,
         include: paths.appSrc,
         use: {
-          loader: 'babel-loader',
-        },
+          loader: "babel-loader"
+        }
       },
       {
         test: /\.(scss|css)$/,
         use: [
           MiniCssExtractPlugin.loader,
           {
-            loader: 'css-loader',
+            loader: "css-loader",
             options: {
               importLoaders: 1,
-              modules: true,
-            },
+              modules: true
+            }
           },
           {
-            loader: 'postcss-loader',
+            loader: "postcss-loader",
             options: {
               sourceMap: true,
-              plugins: postcssPlugins,
-            },
-          },
-        ],
+              plugins: postcssPlugins
+            }
+          }
+        ]
       },
-      { test: /\.(woff|woff2)$/, loader: 'url-loader?limit=100000' },
+      { test: /\.(woff|woff2)$/, loader: "url-loader?limit=100000" },
       {
         test: /\.(jpe?g|png|svg)$/i,
         exclude: /node_modules/,
         use: [
           {
-            loader: 'file-loader',
+            loader: "file-loader",
             options: {
-              name: 'img/[hash].[ext]',
-              esModule: false,
-            },
-          },
-        ],
-      },
-    ],
+              name: "img/[hash].[ext]",
+              esModule: false
+            }
+          }
+        ]
+      }
+    ]
   },
   plugins: [
     // Generates an `index.html` file with the <script> injected.
@@ -179,8 +204,8 @@ module.exports = {
         keepClosingSlash: true,
         minifyJS: true,
         minifyCSS: true,
-        minifyURLs: true,
-      },
+        minifyURLs: true
+      }
     }),
     // Makes some environment variables available to the JS code, for example:
     // if (process.env.NODE_ENV === 'production') { ... }. See `./env.js`.
@@ -188,22 +213,22 @@ module.exports = {
     // Otherwise React will be compiled in the very slow development mode.
     new webpack.DefinePlugin(env),
     new MiniCssExtractPlugin({
-      filename: 'static/css/[name].[hash:8].css',
-      allChunks: 'static/css/[id].[hash:8].css',
+      filename: "static/css/[name].[hash:8].css",
+      allChunks: "static/css/[id].[hash:8].css"
     }),
     // Generate a manifest file which contains a mapping of all asset filenames
     // to their corresponding output file so that tools can pick it up without
     // having to parse `index.html`.
     new ManifestPlugin({
-      fileName: 'asset-manifest.json',
-    }),
+      fileName: "asset-manifest.json"
+    })
     // new BundleAnalyzerPlugin()
   ],
   // Some libraries import Node modules but don't use them in the browser.
   // Tell Webpack to provide empty mocks for them so importing them works.
   node: {
-    fs: 'empty',
-    net: 'empty',
-    tls: 'empty',
-  },
+    fs: "empty",
+    net: "empty",
+    tls: "empty"
+  }
 }
