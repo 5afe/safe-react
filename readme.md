@@ -106,7 +106,7 @@ Add additional notes about how to deploy this on a live system
 * [React](https://reactjs.org/) - A JS library for building user interfaces
 * [Material UI 1.X](https://material-ui-next.com/) - React components that implement Google's Material Design
 * [redux, immutable, reselect, final-form](https://redux.js.org/) - React ecosystem libraries
-* [Flow](https://flow.org/) - Sttic Type Checker
+* [Flow](https://flow.org/) - Static Type Checker
 
 ## Contributing
 
