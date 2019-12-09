@@ -18,6 +18,7 @@ import {
 import { history } from '~/store'
 import { secondary } from '~/theme/variables'
 import type { SafePropsType } from '~/routes/open/container/Open'
+import Welcome from '~/routes/welcome/components/Layout'
 
 const getSteps = () => ['Name', 'Owners and confirmations', 'Review']
 
@@ -34,6 +35,7 @@ const initialValuesFrom = (userAccount: string, safeProps?: SafePropsType) => {
   const {
     ownerAddresses, ownerNames, threshold, name,
   } = safeProps
+  // eslint-disable-next-line no-restricted-syntax
   for (const [index, value] of ownerAddresses.entries()) {
     const safeName = ownerNames[index] ? ownerNames[index] : 'My Wallet'
     obj = {
@@ -107,7 +109,7 @@ const Layout = (props: Props) => {
           </Stepper>
         </Block>
       ) : (
-        <div>No web3 provider detected</div>
+        <Welcome provider={provider} />
       )}
     </>
   )
