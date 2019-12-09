@@ -135,6 +135,7 @@ module.exports = {
             options: {
               esModule: false,
               name: 'img/[hash].[ext]',
+              esModule: false
             },
           },
         ],

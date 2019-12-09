@@ -24,7 +24,7 @@ const logo = require('../assets/gnosis-safe-logo.svg')
 type Props = Open & {
   classes: Object,
   providerDetails: React.Node,
-  providerInfo: React.Node,
+  providerInfo: React.Node
 }
 
 const styles = () => ({
@@ -43,6 +43,8 @@ const styles = () => ({
     boxShadow: '0 2px 4px 0 rgba(212, 212, 211, 0.59)',
     backgroundColor: 'white',
     zIndex: 1301,
+    position: 'fixed',
+    width: '100%',
   },
   logo: {
     padding: `${sm} ${md}`,
@@ -54,10 +56,15 @@ const styles = () => ({
   },
 })
 
-const Layout = openHoc(({
-  open, toggle, clickAway, classes, providerInfo, providerDetails,
-}: Props) => (
-  <>
+const Layout = openHoc(
+  ({
+    open,
+    toggle,
+    clickAway,
+    classes,
+    providerInfo,
+    providerDetails,
+  }: Props) => (
     <Row className={classes.summary}>
       <Col start="xs" middle="xs" className={classes.logo}>
         <Link to="/">
@@ -71,11 +78,21 @@ const Layout = openHoc(({
       <Spacer />
       <Provider open={open} toggle={toggle} info={providerInfo}>
         {(providerRef) => (
-          <Popper open={open} anchorEl={providerRef.current} placement="bottom" className={classes.popper}>
+          <Popper
+            open={open}
+            anchorEl={providerRef.current}
+            placement="bottom"
+            className={classes.popper}
+            popperOptions={{ positionFixed: true }}
+          >
             {({ TransitionProps }) => (
               <Grow {...TransitionProps}>
                 <>
-                  <ClickAwayListener onClickAway={clickAway} mouseEvent="onClick" touchEvent={false}>
+                  <ClickAwayListener
+                    onClickAway={clickAway}
+                    mouseEvent="onClick"
+                    touchEvent={false}
+                  >
                     <List className={classes.root} component="div">
                       {providerDetails}
                     </List>
@@ -87,7 +104,7 @@ const Layout = openHoc(({
         )}
       </Provider>
     </Row>
-  </>
-))
+  ),
+)
 
 export default withStyles(styles)(Layout)
