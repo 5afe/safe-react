@@ -40,8 +40,8 @@ const validateQueryParams = (ownerAddresses?: string[], ownerNames?: string[], t
   if (!ownerAddresses.length === 0 || ownerNames.length === 0) {
     return false
   }
-  // eslint-disable-next-line no-restricted-globals
-  if (isNaN(threshold)) {
+
+  if (!Number.isInteger(threshold)) {
     return false
   }
   if (threshold > ownerAddresses.length) {
