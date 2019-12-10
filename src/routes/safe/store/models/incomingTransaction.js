@@ -4,7 +4,7 @@ import type { RecordFactory, RecordOf } from 'immutable'
 
 export type IncomingTransactionProps = {
   blockNumber: number,
-  transactionHash: string,
+  executionTxHash: string,
   to: string,
   value: number,
   tokenAddress: string,
@@ -16,7 +16,7 @@ export type IncomingTransactionProps = {
 
 export const makeIncomingTransaction: RecordFactory<IncomingTransactionProps> = Record({
   blockNumber: 0,
-  transactionHash: '',
+  executionTxHash: '',
   to: '',
   value: 0,
   tokenAddress: '',
