@@ -11,6 +11,7 @@ import { DropdownListTheme } from '~/theme/mui'
 import { setCurrencySelected } from '~/logic/currencyValues/store/actions/setCurrencySelected'
 import CheckIcon from './img/check.svg'
 import { AVAILABLE_CURRENCIES } from '~/logic/currencyValues/store/model/currencyValues'
+import fetchCurrencySelectedValue from '~/logic/currencyValues/store/actions/fetchCurrencySelectedValue'
 
 const buttonWidth = '140px'
 const useStyles = makeStyles({
@@ -84,7 +85,7 @@ const DropdownCurrency = () => {
   const currenciesList = Object.values(AVAILABLE_CURRENCIES)
   const dispatch = useDispatch()
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
-  const [currentCurrency, setCurrentCurrency] = useState('USD')
+  const [currentCurrency, setCurrentCurrency] = useState(AVAILABLE_CURRENCIES.USD)
   const classes = useStyles()
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -95,7 +96,8 @@ const DropdownCurrency = () => {
     setAnchorEl(null)
   }
 
-  const onCurrentCurrencyChangedHandler = (newCurrencySelectedName) => {
+  const onCurrentCurrencyChangedHandler = (newCurrencySelectedName: AVAILABLE_CURRENCIES) => {
+    dispatch(fetchCurrencySelectedValue(newCurrencySelectedName))
     dispatch(setCurrencySelected(newCurrencySelectedName))
     setCurrentCurrency(newCurrencySelectedName)
     handleClose()

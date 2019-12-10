@@ -5,6 +5,7 @@ import { buildOrderFieldFrom, FIXED, type SortRow } from '~/components/Table/sor
 import { type Column } from '~/components/Table/TableHead'
 import { formatAmount } from '~/logic/tokens/utils/formatAmount'
 import type { BalanceCurrencyType } from '~/logic/currencyValues/store/model/currencyValues'
+import { AVAILABLE_CURRENCIES } from '~/logic/currencyValues/store/model/currencyValues'
 
 export const BALANCE_TABLE_ASSET_ID = 'asset'
 export const BALANCE_TABLE_BALANCE_ID = 'balance'
@@ -18,12 +19,12 @@ type BalanceData = {
 export type BalanceRow = SortRow<BalanceData>
 
 // eslint-disable-next-line max-len
-const getTokenPriceInCurrency = (token: Token, currencySelected: string, currencyValues: List<BalanceCurrencyType>): string => {
+const getTokenPriceInCurrency = (token: Token, currencySelected: AVAILABLE_CURRENCIES, currencyValues: List<BalanceCurrencyType>): string => {
   // eslint-disable-next-line no-restricted-syntax
   for (const tokenPriceIterator of currencyValues) {
-    const { tokenAddress, balanceInCurrency, currencyName } = tokenPriceIterator
+    const { tokenAddress, balanceInSelectedCurrency, currencyName } = tokenPriceIterator
     if (token.address === tokenAddress && currencySelected === currencyName) {
-      return `${balanceInCurrency} ${currencySelected}`
+      return `${balanceInSelectedCurrency} ${currencySelected}`
     }
   }
   return null
