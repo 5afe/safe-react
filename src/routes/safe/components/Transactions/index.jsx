@@ -18,6 +18,8 @@ type Props = {
   currentNetwork: string,
 }
 
+const TIMEOUT = process.env.NODE_ENV === 'test' ? 1500 : 5000
+
 const Transactions = ({
   transactions = List(),
   owners,
@@ -30,8 +32,16 @@ const Transactions = ({
   fetchTransactions,
   currentNetwork,
 }: Props) => {
+  let intervalId: IntervalID
+
   useEffect(() => {
     fetchTransactions(safeAddress)
+
+    intervalId = setInterval(() => {
+      fetchTransactions(safeAddress)
+    }, TIMEOUT)
+
+    return () => clearInterval(intervalId)
   }, [safeAddress])
 
   return (

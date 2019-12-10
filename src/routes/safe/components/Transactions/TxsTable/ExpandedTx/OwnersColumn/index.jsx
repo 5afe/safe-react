@@ -95,10 +95,11 @@ const OwnersColumn = ({
         <div className={classes.iconState}>
           {thresholdReached || tx.isExecuted
             ? <Img src={CheckLargeFilledGreenIcon} />
-            : <Img src={ConfirmLargeGreenIcon} />
-          }
+            : <Img src={ConfirmLargeGreenIcon} />}
         </div>
-        {`Confirmed [${tx.confirmations.size}/${threshold}]`}
+        {tx.isExecuted
+          ? `Confirmed [${tx.confirmations.size}/${tx.confirmations.size}]`
+          : `Confirmed [${tx.confirmations.size}/${threshold}]`}
       </Block>
       <OwnersList
         userAddress={userAddress}
