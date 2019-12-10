@@ -63,7 +63,7 @@ const theme = createMuiTheme({
         },
         color: disabled,
         textTransform: 'none',
-        borderRadius: '8px',
+        borderRadius: sm,
       },
       contained: {
         boxShadow: '1px 2px 10px 0 rgba(212, 212, 211, 0.59)',
@@ -102,7 +102,7 @@ const theme = createMuiTheme({
     },
     MuiStepper: {
       root: {
-        padding: '24px 0 0 15px',
+        padding: `${lg} 0 0 15px`,
       },
     },
     MuiIconButton: {
@@ -238,6 +238,7 @@ const theme = createMuiTheme({
     },
     MuiTablePagination: {
       toolbar: {
+        paddingRight: '15px',
         '& > span:nth-child(2)': {
           order: 1,
         },
@@ -255,11 +256,11 @@ const theme = createMuiTheme({
       input: {
         order: 2,
         width: '60px',
-        padding: `0 ${md} 0 0`,
+        color: disabled,
       },
       select: {
         paddingRight: 30,
-        minWidth: '20px',
+        minWidth: lg,
       },
       actions: {
         order: 4,
@@ -269,6 +270,9 @@ const theme = createMuiTheme({
     MuiTableSortLabel: {
       root: {
         fontSize: extraSmallFontSize,
+      },
+      active: {
+        fontWeight: boldFont,
       },
     },
     MuiTableCell: {
@@ -280,7 +284,6 @@ const theme = createMuiTheme({
       head: {
         letterSpacing: '1px',
         textTransform: 'uppercase',
-        fontWeight: boldFont,
       },
       body: {
         color: primary,

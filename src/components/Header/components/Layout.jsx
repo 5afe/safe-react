@@ -33,7 +33,7 @@ const styles = () => ({
     padding: 0,
     boxShadow: '0 0 10px 0 rgba(33, 48, 77, 0.1)',
     minWidth: '280px',
-    borderRadius: '8px',
+    borderRadius: sm,
     marginTop: '11px',
   },
   summary: {

@@ -1,5 +1,5 @@
 // @flow
-import { sm, md } from '~/theme/variables'
+import { xs, sm, md } from '~/theme/variables'
 
 export const styles = (theme: Object) => ({
   root: {
@@ -41,7 +41,7 @@ export const styles = (theme: Object) => ({
     width: '95px',
     minWidth: '95px',
     marginLeft: sm,
-    borderRadius: '4px',
+    borderRadius: xs,
     '& > span': {
       fontSize: '14px',
     },
@@ -49,7 +49,7 @@ export const styles = (theme: Object) => ({
   send: {
     width: '75px',
     minWidth: '75px',
-    borderRadius: '4px',
+    borderRadius: xs,
     '& > span': {
       fontSize: '14px',
     },

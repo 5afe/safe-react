@@ -17,14 +17,14 @@ export const styles = () => ({
     marginLeft: '20px',
   },
   manage: {
-    fontSize: '24px',
+    fontSize: lg,
   },
   closeIcon: {
     height: '35px',
     width: '35px',
   },
   headingText: {
-    fontSize: '16px',
+    fontSize: md,
   },
   formContainer: {
     padding: `${md} ${lg}`,

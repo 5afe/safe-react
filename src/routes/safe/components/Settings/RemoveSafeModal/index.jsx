@@ -18,11 +18,11 @@ import Link from '~/components/layout/Link'
 import Paragraph from '~/components/layout/Paragraph'
 import Hairline from '~/components/layout/Hairline'
 import actions, { type Actions } from './actions'
-import { secondary } from '~/theme/variables'
+import { secondary, md } from '~/theme/variables'
 import { styles } from './style'
 
 const openIconStyle = {
-  height: '16px',
+  height: md,
   color: secondary,
 }
 
