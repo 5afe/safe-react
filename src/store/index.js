@@ -12,6 +12,10 @@ import transactions, {
   type State as TransactionsState,
   TRANSACTIONS_REDUCER_ID,
 } from '~/routes/safe/store/reducer/transactions'
+import incomingTransactions, {
+  type IncomingState as IncomingTransactionsState,
+  INCOMING_TRANSACTIONS_REDUCER_ID,
+} from '~/routes/safe/store/reducer/incomingTransactions'
 import provider, { PROVIDER_REDUCER_ID, type State as ProviderState } from '~/logic/wallets/store/reducer/provider'
 import tokens, { TOKEN_REDUCER_ID, type State as TokensState } from '~/logic/tokens/store/reducer/tokens'
 import notifications, {
@@ -34,6 +38,7 @@ export type GlobalState = {
   safes: SafeState,
   tokens: TokensState,
   transactions: TransactionsState,
+  incomingTransactions: IncomingTransactionsState,
   notifications: NotificationsState,
 }
 
@@ -45,6 +50,7 @@ const reducers: Reducer<GlobalState> = combineReducers({
   [SAFE_REDUCER_ID]: safe,
   [TOKEN_REDUCER_ID]: tokens,
   [TRANSACTIONS_REDUCER_ID]: transactions,
+  [INCOMING_TRANSACTIONS_REDUCER_ID]: incomingTransactions,
   [NOTIFICATIONS_REDUCER_ID]: notifications,
   [COOKIES_REDUCER_ID]: cookies,
 })

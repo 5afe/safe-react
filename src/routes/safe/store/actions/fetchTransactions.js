@@ -5,13 +5,16 @@ import type { Dispatch as ReduxDispatch } from 'redux'
 import { type GlobalState } from '~/store/index'
 import { makeOwner } from '~/routes/safe/store/models/owner'
 import { makeTransaction, type Transaction } from '~/routes/safe/store/models/transaction'
+import { makeIncomingTransaction, type IncomingTransaction } from '~/routes/safe/store/models/incomingTransaction'
 import { makeConfirmation } from '~/routes/safe/store/models/confirmation'
 import { loadSafeSubjects } from '~/utils/storage/transactions'
 import { buildTxServiceUrl, type TxServiceType } from '~/logic/safe/transactions/txHistory'
+import { buildIncomingTxServiceUrl } from '~/logic/safe/transactions/incomingTxHistory'
 import { getOwners } from '~/logic/safe/utils'
 import { getWeb3 } from '~/logic/wallets/getWeb3'
 import { EMPTY_DATA } from '~/logic/wallets/ethTransactions'
 import { addTransactions } from './addTransactions'
+import { addIncomingTransactions } from './addIncomingTransactions'
 import { getHumanFriendlyToken } from '~/logic/tokens/store/actions/fetchTokens'
 import { isTokenTransfer } from '~/logic/tokens/utils/tokenHelpers'
 import { decodeParamsFromSafeMethod } from '~/logic/contracts/methodIds'
@@ -45,6 +48,15 @@ type TxServiceModel = {
   confirmations: ConfirmationServiceModel[],
   isExecuted: boolean,
   transactionHash: string,
+}
+
+type IncomingTxServiceModel = {
+  blockNumber: number,
+  transactionHash: string,
+  to: string,
+  value: number,
+  tokenAddress: string,
+  from: string,
 }
 
 export const buildTransactionFrom = async (
@@ -152,6 +164,8 @@ export const buildTransactionFrom = async (
   })
 }
 
+export const buildIncomingTransactionFrom = async (tx: IncomingTxServiceModel) => makeIncomingTransaction(tx)
+
 export const loadSafeTransactions = async (safeAddress: string) => {
   web3 = await getWeb3()
 
@@ -166,11 +180,22 @@ export const loadSafeTransactions = async (safeAddress: string) => {
   return Map().set(safeAddress, List(txsRecord))
 }
 
+export const loadSafeIncomingTransactions = async (safeAddress: string) => {
+  const url = buildIncomingTxServiceUrl(safeAddress)
+  const response = await axios.get(url)
+  const incomingTransactions: IncomingTxServiceModel[] = response.data.results
+  const incomingTxsRecord = await Promise.all(incomingTransactions.map(buildIncomingTransactionFrom))
+
+  return Map().set(safeAddress, List(incomingTxsRecord))
+}
+
 export default (safeAddress: string) => async (dispatch: ReduxDispatch<GlobalState>) => {
   try {
     const transactions: Map<string, List<Transaction>> = await loadSafeTransactions(safeAddress)
+    const incomingTransactions: Map<string, List<IncomingTransaction>> = await loadSafeIncomingTransactions(safeAddress)
 
-    return dispatch(addTransactions(transactions))
+    dispatch(addTransactions(transactions))
+    dispatch(addIncomingTransactions(incomingTransactions))
   } catch (err) {
     console.error(`Requests for transactions for ${safeAddress} failed with 404`)
   }
