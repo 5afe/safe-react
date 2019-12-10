@@ -1,10 +1,10 @@
 // @flow
-import { lg } from '~/theme/variables'
+import { lg, md } from '~/theme/variables'
 
 export const styles = () => ({
   title: {
     padding: `${lg} 0 20px`,
-    fontSize: '16px',
+    fontSize: md,
   },
   formContainer: {
     padding: '0 20px',

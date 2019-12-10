@@ -124,8 +124,8 @@ const safeStorageMware = (store: Store<GlobalState>) => (next: Function) => asyn
       case SET_DEFAULT_SAFE: {
         if (action.payload) {
           saveDefaultSafe(action.payload)
-          break
         }
+        break
       }
       default:
         break

@@ -12,14 +12,14 @@ const useStyles = makeStyles({
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    padding: xs,
+    margin: `0 ${xs}`,
     borderRadius: '50%',
     transition: 'background-color .2s ease-in-out',
     '&:hover': {
       backgroundColor: '#F0EFEE',
     },
   },
-  inreasedPopperZindex: {
+  increasedPopperZindex: {
     zIndex: 2001,
   },
 })
@@ -32,7 +32,7 @@ type EtherscanBtnProps = {
 
 const EtherscanBtn = ({ type, value, increaseZindex = false }: EtherscanBtnProps) => {
   const classes = useStyles()
-  const customClasses = increaseZindex ? { popper: classes.inreasedPopperZindex } : {}
+  const customClasses = increaseZindex ? { popper: classes.increasedPopperZindex } : {}
 
   return (
     <Tooltip title="Show details on Etherscan" placement="top" classes={customClasses}>

@@ -1,7 +1,6 @@
 // @flow
 import React from 'react'
 import { List } from 'immutable'
-import NoTransactions from '~/routes/safe/components/Transactions/NoTransactions'
 import TxsTable from '~/routes/safe/components/Transactions/TxsTable'
 import { type Transaction } from '~/routes/safe/store/models/transaction'
 import { type Owner } from '~/routes/safe/store/models/owner'
@@ -28,28 +27,18 @@ const Transactions = ({
   createTransaction,
   processTransaction,
   currentNetwork,
-}: Props) => {
-  const hasTransactions = transactions.size > 0
-
-  return (
-    <>
-      {hasTransactions ? (
-        <TxsTable
-          transactions={transactions}
-          threshold={threshold}
-          owners={owners}
-          userAddress={userAddress}
-          currentNetwork={currentNetwork}
-          granted={granted}
-          safeAddress={safeAddress}
-          createTransaction={createTransaction}
-          processTransaction={processTransaction}
-        />
-      ) : (
-        <NoTransactions />
-      )}
-    </>
+}: Props) => (
+    <TxsTable
+      transactions={transactions}
+      threshold={threshold}
+      owners={owners}
+      userAddress={userAddress}
+      currentNetwork={currentNetwork}
+      granted={granted}
+      safeAddress={safeAddress}
+      createTransaction={createTransaction}
+      processTransaction={processTransaction}
+    />
   )
-}
 
 export default Transactions

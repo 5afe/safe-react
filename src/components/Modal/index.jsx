@@ -3,6 +3,7 @@ import * as React from 'react'
 import cn from 'classnames'
 import Modal from '@material-ui/core/Modal'
 import { withStyles } from '@material-ui/core/styles'
+import { sm } from '~/theme/variables'
 
 type Props = {
   title: string,
@@ -27,7 +28,7 @@ const styles = () => ({
     top: '120px',
     width: '500px',
     height: '530px',
-    borderRadius: '8px',
+    borderRadius: sm,
     backgroundColor: '#ffffff',
     boxShadow: '0 0 5px 0 rgba(74, 85, 121, 0.5)',
     '&:focus': {

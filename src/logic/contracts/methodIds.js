@@ -55,7 +55,7 @@ export const decodeParamsFromSafeMethod = async (data: string) => {
     case '0xe318b52b':
       return {
         methodName: METHOD_TO_ID[methodId],
-        args: web3.eth.abi.decodeParameters(['address', 'address', 'address'], params),
+        args: web3.eth.abi.decodeParameters(['uint', 'address', 'address'], params),
       }
 
     // addOwnerWithThreshold

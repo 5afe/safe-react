@@ -63,6 +63,11 @@ class Balances extends React.Component<Props, State> {
     props.fetchTokens()
   }
 
+  componentDidMount(): void {
+    const { activateTokensByBalance, safeAddress } = this.props
+    activateTokensByBalance(safeAddress)
+  }
+
   onShow = (action: Action) => () => {
     this.setState(() => ({ [`show${action}`]: true }))
   }
@@ -87,17 +92,6 @@ class Balances extends React.Component<Props, State> {
         selectedToken: undefined,
       },
     })
-  }
-
-  handleChange = (e: SyntheticInputEvent<HTMLInputElement>) => {
-    const { checked } = e.target
-
-    this.setState(() => ({ hideZero: checked }))
-  }
-
-  componentDidMount(): void {
-    const { activateTokensByBalance, safeAddress } = this.props
-    activateTokensByBalance(safeAddress)
   }
 
   render() {
