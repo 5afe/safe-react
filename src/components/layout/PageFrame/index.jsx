@@ -17,6 +17,7 @@ import ErrorIcon from './assets/error.svg'
 import InfoIcon from './assets/info.svg'
 import CookiesBanner from '~/components/CookiesBanner'
 import styles from './index.scss'
+import { fontColor } from '~/theme/variables'
 
 const notificationStyles = {
   success: {
@@ -24,7 +25,7 @@ const notificationStyles = {
     fontFamily: 'Averta',
     fontSize: '14px',
     lineHeight: 1.43,
-    color: '#001428',
+    color: fontColor,
     minHeight: '58px',
     boxShadow: '0 0 10px 0 rgba(212, 212, 211, 0.59)',
   },
@@ -33,7 +34,7 @@ const notificationStyles = {
     fontFamily: 'Averta',
     fontSize: '14px',
     lineHeight: 1.43,
-    color: '#001428',
+    color: fontColor,
     minHeight: '58px',
     boxShadow: '0 0 10px 0 rgba(212, 212, 211, 0.59)',
   },
@@ -42,7 +43,7 @@ const notificationStyles = {
     fontFamily: 'Averta',
     fontSize: '14px',
     lineHeight: 1.43,
-    color: '#001428',
+    color: fontColor,
     minHeight: '58px',
     boxShadow: '0 0 10px 0 rgba(212, 212, 211, 0.59)',
   },
@@ -51,7 +52,7 @@ const notificationStyles = {
     fontFamily: 'Averta',
     fontSize: '14px',
     lineHeight: 1.43,
-    color: '#001428',
+    color: fontColor,
     minHeight: '58px',
     boxShadow: '0 0 10px 0 rgba(212, 212, 211, 0.59)',
   },

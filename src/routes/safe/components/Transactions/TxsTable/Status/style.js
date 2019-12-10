@@ -1,32 +1,40 @@
 // @flow
 import {
-  smallFontSize, boldFont, sm, error, disabled, primary,
+  boldFont, sm, lg, error, disabled, extraSmallFontSize, secondary,
 } from '~/theme/variables'
 
 export const styles = () => ({
   container: {
     display: 'flex',
-    fontSize: smallFontSize,
+    fontSize: extraSmallFontSize,
     fontWeight: boldFont,
-    width: '100px',
     padding: sm,
     alignItems: 'center',
     boxSizing: 'border-box',
+    height: lg,
+    marginTop: sm,
+    marginBottom: sm,
+    borderRadius: '3px',
   },
   success: {
     backgroundColor: '#A1D2CA',
-    color: primary,
+    color: secondary,
   },
   cancelled: {
     backgroundColor: 'transparent',
     color: error,
+    border: `1px solid ${error}`,
+  },
+  awaiting_your_confirmation: {
+    backgroundColor: '#d4d5d3',
+    color: disabled,
   },
   awaiting_confirmations: {
-    backgroundColor: '#dfebff',
+    backgroundColor: '#d4d5d3',
     color: disabled,
   },
   awaiting_execution: {
-    backgroundColor: '#dfebff',
+    backgroundColor: '#d4d5d3',
     color: disabled,
   },
   pending: {
@@ -34,7 +42,6 @@ export const styles = () => ({
     color: '#e8673c',
   },
   statusText: {
-    marginLeft: 'auto',
-    textTransform: 'uppercase',
+    padding: '0 7px',
   },
 })

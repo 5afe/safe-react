@@ -13,10 +13,15 @@ export const sameAddress = (firstAddress: string, secondAddress: string): boolea
   return firstAddress.toLowerCase() === secondAddress.toLowerCase()
 }
 
-export const shortVersionOf = (address: string, cut: number) => {
-  const final = 42 - cut
+export const shortVersionOf = (value: string, cut: number) => {
+  if (!value) {
+    return 'Unknown'
+  }
 
-  if (!address) return 'Unknown address'
-  if (address.length < final) return address
-  return `${address.substring(0, cut)}...${address.substring(final)}`
+  const final = value.length - cut
+  if (value.length < final) {
+    return value
+  }
+
+  return `${value.substring(0, cut)}...${value.substring(final)}`
 }

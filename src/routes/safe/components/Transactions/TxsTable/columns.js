@@ -1,7 +1,9 @@
 // @flow
+import React from 'react'
 import { format, getTime, parseISO } from 'date-fns'
 import { BigNumber } from 'bignumber.js'
 import { List } from 'immutable'
+import TxType from './TxType'
 import { type Transaction } from '~/routes/safe/store/models/transaction'
 import { type SortRow, buildOrderFieldFrom } from '~/components/Table/sorting'
 import { type Column } from '~/components/Table/TableHead'
@@ -17,7 +19,7 @@ export const TX_TABLE_EXPAND_ICON = 'expand'
 
 type TxData = {
   nonce: number,
-  type: string,
+  type: React.ReactNode,
   date: string,
   amount: number | string,
   tx: Transaction,
@@ -47,20 +49,31 @@ export type TransactionRow = SortRow<TxData>
 export const getTxTableData = (transactions: List<Transaction>): List<TransactionRow> => {
   const rows = transactions.map((tx: Transaction) => {
     const txDate = tx.isExecuted ? tx.executionDate : tx.submissionDate
-    let txType = 'Outgoing transfer'
+    let txType = 'outgoing'
     if (tx.modifySettingsTx) {
-      txType = 'Modify Safe Settings'
+      txType = 'settings'
     } else if (tx.cancellationTx) {
-      txType = 'Cancellation transaction'
+      txType = 'cancellation'
     } else if (tx.customTx) {
-      txType = 'Custom transaction'
+      txType = 'custom'
+    } else if (tx.creationTx) {
+      txType = 'creation'
+    }
+
+    let txIndex = 1
+    if (tx.nonce) {
+      txIndex = tx.nonce + 2
+    } else if (tx.nonce === 0) {
+      txIndex = 2
     }
 
     return {
-      [TX_TABLE_NONCE_ID]: tx.nonce,
-      [TX_TABLE_TYPE_ID]: txType,
-      [TX_TABLE_DATE_ID]: formatDate(tx.isExecuted ? tx.executionDate : tx.submissionDate),
-      [buildOrderFieldFrom(TX_TABLE_DATE_ID)]: getTime(parseISO(txDate)),
+      [TX_TABLE_NONCE_ID]: txIndex,
+      [TX_TABLE_TYPE_ID]: <TxType txType={txType} />,
+      [TX_TABLE_DATE_ID]: tx.isExecuted
+        ? tx.executionDate && formatDate(tx.executionDate)
+        : tx.submissionDate && formatDate(tx.submissionDate),
+      [buildOrderFieldFrom(TX_TABLE_DATE_ID)]: txDate ? getTime(parseISO(txDate)) : null,
       [TX_TABLE_AMOUNT_ID]: getTxAmount(tx),
       [TX_TABLE_STATUS_ID]: tx.status,
       [TX_TABLE_RAW_TX_ID]: tx,
@@ -74,7 +87,7 @@ export const generateColumns = () => {
   const nonceColumn: Column = {
     id: TX_TABLE_NONCE_ID,
     disablePadding: false,
-    label: 'Nonce',
+    label: 'Id',
     custom: false,
     order: false,
     width: 50,
@@ -95,7 +108,7 @@ export const generateColumns = () => {
     disablePadding: false,
     label: 'Amount',
     custom: false,
-    width: 100,
+    width: 120,
   }
 
   const dateColumn: Column = {
@@ -112,6 +125,7 @@ export const generateColumns = () => {
     disablePadding: false,
     label: 'Status',
     custom: true,
+    align: 'right',
   }
 
   const expandIconColumn: Column = {
