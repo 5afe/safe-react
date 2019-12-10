@@ -27,8 +27,7 @@ export const history = createBrowserHistory()
 // eslint-disable-next-line
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
 const finalCreateStore = composeEnhancers(
-  applyMiddleware(thunk, routerMiddleware(history), safeStorage, providerWatcher),
-  applyMiddleware(thunk, routerMiddleware(history), notificationsMiddleware, providerWatcher),
+  applyMiddleware(thunk, routerMiddleware(history), safeStorage, providerWatcher, notificationsMiddleware),
 )
 
 export type GlobalState = {
