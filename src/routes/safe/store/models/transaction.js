@@ -8,6 +8,7 @@ export type TransactionStatus = 'awaiting_confirmations' | 'success' | 'cancelle
 
 export type TransactionProps = {
   nonce: number,
+  blockNumber: number,
   value: string,
   confirmations: List<Confirmation>,
   recipient: string,
@@ -37,6 +38,7 @@ export type TransactionProps = {
 
 export const makeTransaction: RecordFactory<TransactionProps> = Record({
   nonce: 0,
+  blockNumber: 0,
   value: 0,
   confirmations: List([]),
   recipient: '',
