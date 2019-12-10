@@ -39,7 +39,9 @@ class SafeView extends React.Component<Props, State> {
 
     fetchSafe(safeUrl)
     fetchTokenBalances(safeUrl, activeTokens)
-    fetchTransactions(safe.address)
+    if (safe && safe.address) {
+      fetchTransactions(safe.address)
+    }
 
     // fetch tokens there to get symbols for tokens in TXs list
     fetchTokens()
