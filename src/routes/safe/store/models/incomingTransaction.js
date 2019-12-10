@@ -9,6 +9,9 @@ export type IncomingTransactionProps = {
   value: number,
   tokenAddress: string,
   from: string,
+  symbol: string,
+  decimals: number,
+  executionDate: string,
 }
 
 export const makeIncomingTransaction: RecordFactory<IncomingTransactionProps> = Record({
@@ -18,6 +21,9 @@ export const makeIncomingTransaction: RecordFactory<IncomingTransactionProps> = 
   value: 0,
   tokenAddress: '',
   from: '',
+  symbol: '',
+  decimals: 18,
+  executionDate: '',
 })
 
 export type IncomingTransaction = RecordOf<IncomingTransactionProps>

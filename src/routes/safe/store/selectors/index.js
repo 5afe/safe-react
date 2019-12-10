@@ -6,9 +6,14 @@ import { type GlobalState } from '~/store/index'
 import { SAFE_PARAM_ADDRESS } from '~/routes/routes'
 import { type Safe } from '~/routes/safe/store/models/safe'
 import { type State as TransactionsState, TRANSACTIONS_REDUCER_ID } from '~/routes/safe/store/reducer/transactions'
+import {
+  type IncomingState as IncomingTransactionsState,
+  INCOMING_TRANSACTIONS_REDUCER_ID
+} from '~/routes/safe/store/reducer/incomingTransactions'
 import { type Transaction } from '~/routes/safe/store/models/transaction'
 import { type Confirmation } from '~/routes/safe/store/models/confirmation'
 import { SAFE_REDUCER_ID } from '~/routes/safe/store/reducer/safe'
+import type { IncomingTransaction } from '~/routes/safe/store/models/incomingTransaction'
 
 export type RouterProps = {
   match: Match,
@@ -43,6 +48,8 @@ export const defaultSafeSelector: Selector<GlobalState, {}, string> = createSele
 
 const transactionsSelector = (state: GlobalState): TransactionsState => state[TRANSACTIONS_REDUCER_ID]
 
+const incomingTransactionsSelector = (state: GlobalState): IncomingTransactionsState => state[INCOMING_TRANSACTIONS_REDUCER_ID]
+
 const oneTransactionSelector = (state: GlobalState, props: TransactionProps) => props.transaction
 
 export const safeParamAddressSelector = (state: GlobalState, props: RouterProps) => props.match.params[SAFE_PARAM_ADDRESS] || ''
@@ -61,6 +68,22 @@ export const safeTransactionsSelector: Selector<GlobalState, RouterProps, List<T
 
     return transactions.get(address) || List([])
   },
+)
+
+export const safeIncomingTransactionsSelector: Selector<GlobalState, RouterProps, List<IncomingTransaction>> = createSelector(
+  incomingTransactionsSelector,
+  safeParamAddressSelector,
+  (incomingTransactions: IncomingTransactionsState, address: string): List<IncomingTransaction> => {
+    if (!incomingTransactions) {
+      return List([])
+    }
+
+    if (!address) {
+      return List([])
+    }
+
+    return incomingTransactions.get(address) || List([])
+  }
 )
 
 export const confirmationsTransactionSelector: Selector<GlobalState, TransactionProps, number> = createSelector(

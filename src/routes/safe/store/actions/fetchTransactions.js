@@ -164,11 +164,38 @@ export const buildTransactionFrom = async (
   })
 }
 
-export const buildIncomingTransactionFrom = async (tx: IncomingTxServiceModel) => makeIncomingTransaction(tx)
+export const buildIncomingTransactionFrom = async (tx: IncomingTxServiceModel) => {
+  let symbol = 'ETH'
+  let decimals = 18
+
+  const executionDate = await web3.eth.getBlock(tx.blockNumber)
+    .then(({ timestamp }) => new Date(timestamp * 1000).toISOString())
+
+  if (tx.tokenAddress) {
+    try {
+      const tokenContract = await getHumanFriendlyToken()
+      const tokenInstance = await tokenContract.at(tx.tokenAddress)
+      const [tokenSymbol, tokenDecimals] = await Promise.all([tokenInstance.symbol(), tokenInstance.decimals()])
+      symbol = tokenSymbol
+      decimals = tokenDecimals
+    } catch (err) {
+      const { methods } = new web3.eth.Contract(ALTERNATIVE_TOKEN_ABI, tx.to)
+      const [tokenSymbol, tokenDecimals] = await Promise.all([methods.symbol, methods.decimals].map((m) => m().call()))
+      symbol = web3.utils.toAscii(tokenSymbol)
+      decimals = tokenDecimals
+    }
+  }
+
+  return makeIncomingTransaction({
+    ...tx,
+    symbol,
+    decimals,
+    executionDate,
+  })
+}
 
 export const loadSafeTransactions = async (safeAddress: string) => {
   web3 = await getWeb3()
-
   const url = buildTxServiceUrl(safeAddress)
   const response = await axios.get(url)
   const transactions: TxServiceModel[] = response.data.results

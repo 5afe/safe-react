@@ -14,10 +14,16 @@ import Row from '~/components/layout/Row'
 import { type Column, cellWidth } from '~/components/Table/TableHead'
 import Table from '~/components/Table'
 import { type Transaction } from '~/routes/safe/store/models/transaction'
+import { type IncomingTransaction } from '~/routes/safe/store/models/incomingTransaction'
 import { type Owner } from '~/routes/safe/store/models/owner'
 import ExpandedTxComponent from './ExpandedTx'
 import {
-  getTxTableData, generateColumns, TX_TABLE_DATE_ID, type TransactionRow, TX_TABLE_RAW_TX_ID,
+  getTxTableData,
+  getIncomingTxTableData,
+  generateColumns,
+  TX_TABLE_DATE_ID,
+  type TransactionRow,
+  TX_TABLE_RAW_TX_ID,
 } from './columns'
 import { styles } from './style'
 import Status from './Status'
@@ -32,6 +38,7 @@ const expandCellStyle = {
 type Props = {
   classes: Object,
   transactions: List<Transaction>,
+  incomingTransactions: List<IncomingTransaction>,
   threshold: number,
   owners: List<Owner>,
   userAddress: string,
@@ -44,6 +51,7 @@ type Props = {
 const TxsTable = ({
   classes,
   transactions,
+  incomingTransactions,
   threshold,
   owners,
   granted,
@@ -60,7 +68,9 @@ const TxsTable = ({
 
   const columns = generateColumns()
   const autoColumns = columns.filter((c) => !c.custom)
-  const filteredData = getTxTableData(transactions)
+  const filteredData = List([...getTxTableData(transactions), ...getIncomingTxTableData(incomingTransactions)])
+    .sort(({ id: a }, { id: b }) => a - b)
+    .map((tx, id) => ({ ...tx, id }))
 
   return (
     <Block className={classes.container}>

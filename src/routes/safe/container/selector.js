@@ -6,6 +6,8 @@ import {
   safeActiveTokensSelector,
   safeBalancesSelector,
   safeBlacklistedTokensSelector,
+  safeTransactionsSelector,
+  safeIncomingTransactionsSelector,
   type RouterProps,
   type SafeSelectorProps,
 } from '~/routes/safe/store/selectors'
@@ -14,7 +16,6 @@ import { type Safe } from '~/routes/safe/store/models/safe'
 import { type Owner } from '~/routes/safe/store/models/owner'
 import { type GlobalState } from '~/store'
 import { sameAddress } from '~/logic/wallets/ethAddresses'
-import { safeTransactionsSelector } from '~/routes/safe/store/selectors/index'
 import { orderedTokenListSelector, tokensSelector } from '~/logic/tokens/store/selectors'
 import { type Token } from '~/logic/tokens/store/model/token'
 import { type Transaction, type TransactionStatus } from '~/routes/safe/store/models/transaction'
@@ -143,4 +144,5 @@ export default createStructuredSelector<Object, *>({
   network: networkSelector,
   safeUrl: safeParamAddressSelector,
   transactions: extendedTransactionsSelector,
+  incomingTransactions: safeIncomingTransactionsSelector,
 })

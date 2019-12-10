@@ -3,11 +3,12 @@ import { format, getTime, parseISO } from 'date-fns'
 import { BigNumber } from 'bignumber.js'
 import { List } from 'immutable'
 import { type Transaction } from '~/routes/safe/store/models/transaction'
+import { type IncomingTransaction } from '~/routes/safe/store/models/incomingTransaction'
 import { type SortRow, buildOrderFieldFrom } from '~/components/Table/sorting'
 import { type Column } from '~/components/Table/TableHead'
 import { getWeb3 } from '~/logic/wallets/getWeb3'
 
-export const TX_TABLE_NONCE_ID = 'nonce'
+export const TX_TABLE_ID = 'id'
 export const TX_TABLE_TYPE_ID = 'type'
 export const TX_TABLE_DATE_ID = 'date'
 export const TX_TABLE_AMOUNT_ID = 'amount'
@@ -16,7 +17,7 @@ export const TX_TABLE_RAW_TX_ID = 'tx'
 export const TX_TABLE_EXPAND_ICON = 'expand'
 
 type TxData = {
-  nonce: number,
+  id: number,
   type: string,
   date: string,
   amount: number | string,
@@ -25,6 +26,14 @@ type TxData = {
 }
 
 export const formatDate = (date: string): string => format(parseISO(date), 'MMM d, yyyy - HH:mm:ss')
+
+export const getIncomingTxAmount = (tx: IncomingTransaction) => {
+  const {
+    utils: { toBN, fromWei },
+  } = getWeb3()
+
+  return Number(tx.value) > 0 ? `${fromWei(toBN(tx.value), 'ether')} ${tx.symbol || '???'}` : 'n/a'
+}
 
 export const getTxAmount = (tx: Transaction) => {
   const web3 = getWeb3()
@@ -44,9 +53,22 @@ export const getTxAmount = (tx: Transaction) => {
 
 export type TransactionRow = SortRow<TxData>
 
+export const getIncomingTxTableData = (incomingTransactions: List<IncomingTransaction>): List<TransactionRow> => {
+  return incomingTransactions.map((tx: IncomingTransaction) => ({
+    [TX_TABLE_ID]: tx.blockNumber,
+    [TX_TABLE_TYPE_ID]: 'Incoming transfer',
+    [TX_TABLE_DATE_ID]: formatDate(tx.executionDate),
+    [buildOrderFieldFrom(TX_TABLE_DATE_ID)]: getTime(parseISO(tx.executionDate)),
+    [TX_TABLE_AMOUNT_ID]: getIncomingTxAmount(tx),
+    [TX_TABLE_STATUS_ID]: 'success',
+    [TX_TABLE_RAW_TX_ID]: tx,
+  }))
+}
+
 export const getTxTableData = (transactions: List<Transaction>): List<TransactionRow> => {
-  const rows = transactions.map((tx: Transaction) => {
+  return transactions.map((tx: Transaction) => {
     const txDate = tx.isExecuted ? tx.executionDate : tx.submissionDate
+
     let txType = 'Outgoing transfer'
     if (tx.modifySettingsTx) {
       txType = 'Modify Safe Settings'
@@ -57,24 +79,22 @@ export const getTxTableData = (transactions: List<Transaction>): List<Transactio
     }
 
     return {
-      [TX_TABLE_NONCE_ID]: tx.nonce,
+      [TX_TABLE_ID]: tx.blockNumber,
       [TX_TABLE_TYPE_ID]: txType,
-      [TX_TABLE_DATE_ID]: formatDate(tx.isExecuted ? tx.executionDate : tx.submissionDate),
+      [TX_TABLE_DATE_ID]: formatDate(txDate),
       [buildOrderFieldFrom(TX_TABLE_DATE_ID)]: getTime(parseISO(txDate)),
       [TX_TABLE_AMOUNT_ID]: getTxAmount(tx),
       [TX_TABLE_STATUS_ID]: tx.status,
       [TX_TABLE_RAW_TX_ID]: tx,
     }
   })
-
-  return rows
 }
 
 export const generateColumns = () => {
   const nonceColumn: Column = {
-    id: TX_TABLE_NONCE_ID,
+    id: TX_TABLE_ID,
     disablePadding: false,
-    label: 'Nonce',
+    label: 'ID',
     custom: false,
     order: false,
     width: 50,
