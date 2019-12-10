@@ -9,11 +9,11 @@ export const getAwaitingTransactions = (allTransactions: List<Transaction>, user
 
   const allAwaitingTransactions = allTransactions.map((safeTransactions) => {
     const nonCancelledTransactions = safeTransactions.filter((transaction: Transaction) => {
-      // If transactions is not executed, but there's a transaction with the same nonce submitted later
+      // If transactions are not executed, but there's a transaction with the same nonce EXECUTED later
       // it means that the transaction was cancelled (Replaced) and shouldn't get executed
       if (!transaction.isExecuted) {
         const replacementTransaction = safeTransactions.findLast(
-          (tx) => tx.isExecuted && tx.nonce >= transaction.nonce,
+          (tx) => tx.isExecuted && tx.nonce === transaction.nonce,
         )
         if (replacementTransaction) {
           // eslint-disable-next-line no-param-reassign
