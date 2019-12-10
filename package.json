@@ -50,7 +50,6 @@
     "immortal-db": "^1.0.2",
     "immutable": "^4.0.0-rc.9",
     "js-cookie": "^2.2.1",
-    "lodash": "^4.17.15",
     "material-ui-search-bar": "^1.0.0-beta.13",
     "notistack": "https://github.com/gnosis/notistack.git#v0.9.4",
     "optimize-css-assets-webpack-plugin": "5.0.3",
