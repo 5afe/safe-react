@@ -3,7 +3,7 @@ import { format, getTime, parseISO } from 'date-fns'
 import { BigNumber } from 'bignumber.js'
 import { List } from 'immutable'
 import { type Transaction } from '~/routes/safe/store/models/transaction'
-import { type IncomingTransaction } from '~/routes/safe/store/models/incomingTransaction'
+import { INCOMING_TX_TYPE, type IncomingTransaction } from '~/routes/safe/store/models/incomingTransaction'
 import { type SortRow, buildOrderFieldFrom } from '~/components/Table/sorting'
 import { type Column } from '~/components/Table/TableHead'
 import { getWeb3 } from '~/logic/wallets/getWeb3'
@@ -56,11 +56,11 @@ export type TransactionRow = SortRow<TxData>
 export const getIncomingTxTableData = (incomingTransactions: List<IncomingTransaction>): List<TransactionRow> => {
   return incomingTransactions.map((tx: IncomingTransaction) => ({
     [TX_TABLE_ID]: tx.blockNumber,
-    [TX_TABLE_TYPE_ID]: 'Incoming transfer',
+    [TX_TABLE_TYPE_ID]: tx.type === INCOMING_TX_TYPE ? 'Incoming transfer' : 'Unknown',
     [TX_TABLE_DATE_ID]: formatDate(tx.executionDate),
     [buildOrderFieldFrom(TX_TABLE_DATE_ID)]: getTime(parseISO(tx.executionDate)),
     [TX_TABLE_AMOUNT_ID]: getIncomingTxAmount(tx),
-    [TX_TABLE_STATUS_ID]: 'success',
+    [TX_TABLE_STATUS_ID]: tx.status,
     [TX_TABLE_RAW_TX_ID]: tx,
   }))
 }

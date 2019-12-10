@@ -1,6 +1,7 @@
 // @flow
 import { List, Map } from 'immutable'
 import axios from 'axios'
+import bn from 'bignumber.js'
 import type { Dispatch as ReduxDispatch } from 'redux'
 import { type GlobalState } from '~/store/index'
 import { makeOwner } from '~/routes/safe/store/models/owner'
@@ -170,6 +171,7 @@ export const buildIncomingTransactionFrom = async (tx: IncomingTxServiceModel) =
 
   const executionDate = await web3.eth.getBlock(tx.blockNumber)
     .then(({ timestamp }) => new Date(timestamp * 1000).toISOString())
+  const fee = await web3.eth.getTransaction(tx.transactionHash).then((t) => bn(t.gas).div(t.gasPrice).toFixed())
 
   if (tx.tokenAddress) {
     try {
@@ -186,11 +188,16 @@ export const buildIncomingTransactionFrom = async (tx: IncomingTxServiceModel) =
     }
   }
 
+  const { transactionHash, ...incomingTx } = tx
+
   return makeIncomingTransaction({
-    ...tx,
+    ...incomingTx,
     symbol,
     decimals,
+    fee,
     executionDate,
+    executionTxHash: transactionHash,
+    safeTxHash: transactionHash,
   })
 }
 
