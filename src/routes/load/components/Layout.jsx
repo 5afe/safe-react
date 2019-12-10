@@ -10,7 +10,7 @@ import ReviewInformation from '~/routes/load/components/ReviewInformation'
 import OwnerList from '~/routes/load/components/OwnerList'
 import DetailsForm, { safeFieldsValidation } from '~/routes/load/components/DetailsForm'
 import { history } from '~/store'
-import { secondary } from '~/theme/variables'
+import { secondary, sm } from '~/theme/variables'
 import { type SelectorProps } from '~/routes/load/container/selector'
 
 const getSteps = () => ['Name and address', 'Owners', 'Review']
@@ -21,7 +21,7 @@ export type LayoutProps = SelectorProps & {
 
 const iconStyle = {
   color: secondary,
-  padding: '8px',
+  padding: sm,
   marginRight: '5px',
 }
 

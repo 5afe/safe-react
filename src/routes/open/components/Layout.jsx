@@ -16,7 +16,7 @@ import {
   FIELD_SAFE_NAME,
 } from '~/routes/open/components/fields'
 import { history } from '~/store'
-import { secondary } from '~/theme/variables'
+import { secondary, sm } from '~/theme/variables'
 import type { SafePropsType } from '~/routes/open/container/Open'
 import Welcome from '~/routes/welcome/components/Layout'
 
@@ -61,7 +61,7 @@ type Props = {
 
 const iconStyle = {
   color: secondary,
-  padding: '8px',
+  padding: sm,
   marginRight: '5px',
 }
 
