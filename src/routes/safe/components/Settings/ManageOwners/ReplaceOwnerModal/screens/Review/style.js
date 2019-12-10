@@ -20,7 +20,7 @@ export const styles = () => ({
     lineHeight: 'normal',
   },
   manage: {
-    fontSize: '24px',
+    fontSize: lg,
   },
   address: {
     marginRight: sm,

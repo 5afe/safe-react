@@ -50,7 +50,7 @@ type CustomDescProps = {
 }
 
 const TransferDescription = ({ value = '', symbol, recipient }: TransferDescProps) => (
-  <Paragraph noMargin data-testid={TRANSACTIONS_DESC_SEND_TEST_ID}>
+  <Block data-testid={TRANSACTIONS_DESC_SEND_TEST_ID}>
     <Bold>
       Send
       {' '}
@@ -60,33 +60,31 @@ const TransferDescription = ({ value = '', symbol, recipient }: TransferDescProp
       {' '}
       to:
     </Bold>
-    <br />
     <EtherscanLink type="address" value={recipient} />
-  </Paragraph>
+  </Block>
 )
 
 const SettingsDescription = ({ removedOwner, addedOwner, newThreshold }: DescriptionDescProps) => (
   <>
     {removedOwner && (
-      <Paragraph data-testid={TRANSACTIONS_DESC_REMOVE_OWNER_TEST_ID}>
+      <Block data-testid={TRANSACTIONS_DESC_REMOVE_OWNER_TEST_ID}>
         <Bold>Remove owner:</Bold>
-        <br />
         <EtherscanLink type="address" value={removedOwner} />
-      </Paragraph>
+      </Block>
     )}
     {addedOwner && (
-      <Paragraph data-testid={TRANSACTIONS_DESC_ADD_OWNER_TEST_ID}>
+      <Block data-testid={TRANSACTIONS_DESC_ADD_OWNER_TEST_ID}>
         <Bold>Add owner:</Bold>
-        <br />
         <EtherscanLink type="address" value={addedOwner} />
-      </Paragraph>
+      </Block>
     )}
     {newThreshold && (
-      <Paragraph data-testid={TRANSACTIONS_DESC_CHANGE_THRESHOLD_TEST_ID}>
+      <Block data-testid={TRANSACTIONS_DESC_CHANGE_THRESHOLD_TEST_ID}>
         <Bold>Change required confirmations:</Bold>
-        <br />
-        {newThreshold}
-      </Paragraph>
+        <Paragraph size="md" noMargin>
+          {newThreshold}
+        </Paragraph>
+      </Block>
     )}
   </>
 )
@@ -95,7 +93,7 @@ const CustomDescription = ({
   data, value = 0, recipient, classes,
 }: CustomDescProps) => (
   <>
-    <Paragraph noMargin data-testid={TRANSACTIONS_DESC_CUSTOM_VALUE_TEST_ID}>
+    <Block data-testid={TRANSACTIONS_DESC_CUSTOM_VALUE_TEST_ID}>
       <Bold>
         Send
         {' '}
@@ -105,22 +103,21 @@ const CustomDescription = ({
         {' '}
         to:
       </Bold>
-      <br />
       <EtherscanLink type="address" value={recipient} />
-    </Paragraph>
-    <Paragraph className={classes.txData} data-testid={TRANSACTIONS_DESC_CUSTOM_DATA_TEST_ID}>
+    </Block>
+    <Block className={classes.txData} data-testid={TRANSACTIONS_DESC_CUSTOM_DATA_TEST_ID}>
       <Bold>Data (hex encoded):</Bold>
-      <br />
-      {data}
-    </Paragraph>
+      <Paragraph size="md" noMargin>
+        {data}
+      </Paragraph>
+    </Block>
   </>
 )
 
 const TxDescription = ({ tx, classes }: Props) => {
   const {
-    recipient, value, modifySettingsTx, removedOwner, addedOwner, newThreshold, cancellationTx, customTx, data,
+    recipient, value, modifySettingsTx, removedOwner, addedOwner, newThreshold, cancellationTx, customTx, creationTx, data,
   } = getTxData(tx)
-
   return (
     <Block className={classes.txDataContainer}>
       {modifySettingsTx && (
@@ -129,7 +126,7 @@ const TxDescription = ({ tx, classes }: Props) => {
       {customTx && (
         <CustomDescription data={data} value={value} recipient={recipient} classes={classes} />
       )}
-      {!cancellationTx && !modifySettingsTx && !customTx && (
+      {!cancellationTx && !modifySettingsTx && !customTx && !creationTx && (
         <TransferDescription value={value} symbol={tx.symbol} recipient={recipient} />
       )}
     </Block>

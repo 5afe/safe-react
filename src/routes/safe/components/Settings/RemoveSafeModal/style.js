@@ -14,7 +14,7 @@ export const styles = () => ({
     minHeight: '369px',
   },
   manage: {
-    fontSize: '24px',
+    fontSize: lg,
   },
   close: {
     height: '35px',
