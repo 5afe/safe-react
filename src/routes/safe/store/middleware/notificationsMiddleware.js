@@ -52,18 +52,27 @@ const notificationsMiddleware = (store: Store<GlobalState>) => (next: Function) 
           const latestIncomingTxBlock = storedSafes ? storedSafes[safeAddress].latestIncomingTxBlock : 0
 
           const newIncomingTransactions = incomingTransactions.filter((tx) => tx.blockNumber > latestIncomingTxBlock)
+          const { message, ...TX_INCOMING_MSG } = NOTIFICATIONS.TX_INCOMING_MSG
 
-          newIncomingTransactions.forEach((tx) => {
-            const { message, ...TX_INCOMING_MSG } = NOTIFICATIONS.TX_INCOMING_MSG
-
+          if (newIncomingTransactions.size > 3) {
             dispatch(
               enqueueSnackbar(
                 enhanceSnackbarForAction({
-                  ...TX_INCOMING_MSG, message: `${message}${getIncomingTxAmount(tx)}`,
+                  ...TX_INCOMING_MSG, message: 'Multiple incoming transfers',
                 }),
               ),
             )
-          })
+          } else {
+            newIncomingTransactions.forEach((tx) => {
+              dispatch(
+                enqueueSnackbar(
+                  enhanceSnackbarForAction({
+                    ...TX_INCOMING_MSG, message: `${message}${getIncomingTxAmount(tx)}`,
+                  }),
+                ),
+              )
+            })
+          }
 
           dispatch(
             updateSafe({
