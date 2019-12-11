@@ -15,7 +15,7 @@ const safe = require('../assets/safe.svg')
 const plus = require('../assets/new.svg')
 
 type Props = {
-  provider: string,
+  provider: string
 }
 
 const openIconStyle = {
@@ -26,7 +26,7 @@ const openIconStyle = {
 
 type SafeProps = {
   provider: string,
-  size?: 'small' | 'medium' | 'large',
+  size?: "small" | "medium" | "large"
 }
 
 const buttonStyle = {
@@ -72,15 +72,25 @@ const Welcome = ({ provider }: Props) => (
       Gnosis Safe For Teams
     </Heading>
     <Heading tag="h3" align="center" margin="xl">
-      The Gnosis Safe for Teams is geared towards teams managing shared
+      Gnosis Safe for Teams is the most secure way to manage crypto funds
       <br />
-      crypto funds. It is an improvement of the existing Gnosis MultiSig
+      collectively. It is an improvement of the Gnosis MultiSig, which is used
+      by more than 3000 teams
       <br />
-      wallet with redesigned smart contracts, cheaper setup and transaction
-      <br />
-      costs as well as an enhanced user experience.
       {' '}
-      <a className={styles.learnMoreLink} href="https://safe.gnosis.io/teams" target="_blank" rel="noopener noreferrer">
+      and stores over $1B USD worth of digital assets. Gnosis Safe for
+      Teams features a modular
+      <br />
+      {' '}
+      design, formally verified smart contracts and vastly improved user
+      experience.
+      {' '}
+      <a
+        className={styles.learnMoreLink}
+        href="https://safe.gnosis.io/teams"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
         Learn more
         <OpenInNew style={openIconStyle} />
       </a>

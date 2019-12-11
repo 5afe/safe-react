@@ -11,7 +11,7 @@ import SafeNameField from '~/routes/open/components/SafeNameForm'
 import SafeOwnersFields from '~/routes/open/components/SafeOwnersConfirmationsForm'
 import { getOwnerNameBy, getOwnerAddressBy, FIELD_CONFIRMATIONS } from '~/routes/open/components/fields'
 import { history } from '~/store'
-import { secondary } from '~/theme/variables'
+import { secondary, sm } from '~/theme/variables'
 
 const getSteps = () => ['Name', 'Owners and confirmations', 'Review']
 
@@ -30,7 +30,7 @@ type Props = {
 
 const iconStyle = {
   color: secondary,
-  padding: '8px',
+  padding: sm,
   marginRight: '5px',
 }
 

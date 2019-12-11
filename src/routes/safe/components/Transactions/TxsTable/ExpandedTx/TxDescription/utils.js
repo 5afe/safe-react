@@ -11,6 +11,7 @@ type DecodedTxData = {
   addedOwner?: string,
   cancellationTx?: boolean,
   customTx?: boolean,
+  creationTx?: boolean,
   data: string,
 }
 
@@ -54,6 +55,8 @@ export const getTxData = (tx: Transaction): DecodedTxData => {
     }
   } else if (tx.cancellationTx) {
     txData.cancellationTx = true
+  } else if (tx.creationTx) {
+    txData.creationTx = true
   } else {
     txData.recipient = tx.recipient
     txData.value = 0

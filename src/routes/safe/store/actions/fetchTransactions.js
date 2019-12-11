@@ -48,6 +48,7 @@ type TxServiceModel = {
   refundReceiver: string,
   safeTxHash: string,
   submissionDate: string,
+  executor: string,
   executionDate: string,
   confirmations: ConfirmationServiceModel[],
   isExecuted: boolean,
@@ -157,6 +158,7 @@ export const buildTransactionFrom = async (
     refundParams,
     isExecuted: tx.isExecuted,
     submissionDate: tx.submissionDate,
+    executor: tx.executor,
     executionDate: tx.executionDate,
     executionTxHash: tx.transactionHash,
     safeTxHash: tx.safeTxHash,
@@ -165,8 +167,32 @@ export const buildTransactionFrom = async (
     modifySettingsTx,
     customTx,
     cancellationTx,
+    creationTx: tx.creationTx,
   })
 }
+
+const addMockSafeCreationTx = (safeAddress) => [{
+  baseGas: 0,
+  confirmations: [],
+  data: null,
+  executionDate: null,
+  gasPrice: 0,
+  gasToken: '0x0000000000000000000000000000000000000000',
+  isExecuted: true,
+  nonce: null,
+  operation: 0,
+  refundReceiver: '0x0000000000000000000000000000000000000000',
+  safe: safeAddress,
+  safeTxGas: 0,
+  safeTxHash: '',
+  signatures: null,
+  submissionDate: null,
+  executor: '',
+  to: '',
+  transactionHash: null,
+  value: 0,
+  creationTx: true,
+}]
 
 export const buildIncomingTransactionFrom = async (tx: IncomingTxServiceModel) => {
   let symbol = 'ETH'
@@ -206,9 +232,17 @@ export const buildIncomingTransactionFrom = async (tx: IncomingTxServiceModel) =
 
 export const loadSafeTransactions = async (safeAddress: string) => {
   web3 = await getWeb3()
-  const url = buildTxServiceUrl(safeAddress)
-  const response = await axios.get(url)
-  const transactions: TxServiceModel[] = response.data.results
+
+  let transactions: TxServiceModel[] = addMockSafeCreationTx(safeAddress)
+  try {
+    const url = buildTxServiceUrl(safeAddress)
+    const response = await axios.get(url)
+    if (response.data.count > 0) {
+      transactions = transactions.concat(response.data.results)
+    }
+  } catch (err) {
+    console.error(`Requests for transactions for ${safeAddress} failed with 404`, err)
+  }
   const safeSubjects = loadSafeSubjects(safeAddress)
   const txsRecord = await Promise.all(
     transactions.map((tx: TxServiceModel) => buildTransactionFrom(safeAddress, tx, safeSubjects)),
@@ -227,33 +261,29 @@ export const loadSafeIncomingTransactions = async (safeAddress: string) => {
 }
 
 export default (safeAddress: string) => async (dispatch: ReduxDispatch<GlobalState>, getState) => {
-  try {
-    const transactions: Map<string, List<Transaction>> = await loadSafeTransactions(safeAddress)
-    const incomingTransactions: Map<string, List<IncomingTransaction>> = await loadSafeIncomingTransactions(safeAddress)
-    const state = getState()
-    const storedIncoming = state.incomingTransactions.get(safeAddress) || Map()
-    const mergedIncomingTxs = storedIncoming.merge(incomingTransactions.get(safeAddress))
+  const transactions: Map<string, List<Transaction>> = await loadSafeTransactions(safeAddress)
+  const incomingTransactions: Map<string, List<IncomingTransaction>> = await loadSafeIncomingTransactions(safeAddress)
+  const state = getState()
+  const storedIncoming = state.incomingTransactions.get(safeAddress) || Map()
+  const mergedIncomingTxs = storedIncoming.merge(incomingTransactions.get(safeAddress))
 
-    if (!mergedIncomingTxs.equals(storedIncoming)) {
-      const blocks = storedIncoming.reduce((map, { blockNumber }) => map.set(blockNumber, true), Map())
-      incomingTransactions.get(safeAddress).forEach((tx) => {
-        if (!blocks.get(tx.blockNumber)) {
-          dispatch(enqueueSnackbar(enhanceSnackbarForAction({
-            message: `Incoming transfer: ${getIncomingTxAmount(tx)}`,
-            options: {
-              variant: SUCCESS,
-              autoHideDuration: 10000,
-              persist: false,
-              preventDuplicate: true,
-            },
-          })))
-        }
-      })
-    }
-
-    dispatch(addTransactions(transactions))
-    dispatch(addIncomingTransactions(incomingTransactions))
-  } catch (err) {
-    console.error(`Requests for transactions for ${safeAddress} failed with 404`)
+  if (!mergedIncomingTxs.equals(storedIncoming)) {
+    const blocks = storedIncoming.reduce((map, { blockNumber }) => map.set(blockNumber, true), Map())
+    incomingTransactions.get(safeAddress).forEach((tx) => {
+      if (!blocks.get(tx.blockNumber)) {
+        dispatch(enqueueSnackbar(enhanceSnackbarForAction({
+          message: `Incoming transfer: ${getIncomingTxAmount(tx)}`,
+          options: {
+            variant: SUCCESS,
+            autoHideDuration: 10000,
+            persist: false,
+            preventDuplicate: true,
+          },
+        })))
+      }
+    })
   }
+
+  dispatch(addTransactions(transactions))
+  dispatch(addIncomingTransactions(incomingTransactions))
 }

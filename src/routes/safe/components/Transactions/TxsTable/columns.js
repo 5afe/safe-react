@@ -1,7 +1,9 @@
 // @flow
+import React from 'react'
 import { format, getTime, parseISO } from 'date-fns'
 import { BigNumber } from 'bignumber.js'
 import { List } from 'immutable'
+import TxType from './TxType'
 import { type Transaction } from '~/routes/safe/store/models/transaction'
 import { INCOMING_TX_TYPE, type IncomingTransaction } from '~/routes/safe/store/models/incomingTransaction'
 import { type SortRow, buildOrderFieldFrom } from '~/components/Table/sorting'
@@ -18,7 +20,7 @@ export const TX_TABLE_EXPAND_ICON = 'expand'
 
 type TxData = {
   id: number,
-  type: string,
+  type: React.ReactNode,
   date: string,
   amount: number | string,
   tx: Transaction,
@@ -56,7 +58,7 @@ export type TransactionRow = SortRow<TxData>
 export const getIncomingTxTableData = (incomingTransactions: List<IncomingTransaction>): List<TransactionRow> => {
   return incomingTransactions.map((tx: IncomingTransaction) => ({
     [TX_TABLE_ID]: tx.blockNumber,
-    [TX_TABLE_TYPE_ID]: tx.type === INCOMING_TX_TYPE ? 'Incoming transfer' : 'Unknown',
+    [TX_TABLE_TYPE_ID]: <TxType txType="incoming" />,
     [TX_TABLE_DATE_ID]: formatDate(tx.executionDate),
     [buildOrderFieldFrom(TX_TABLE_DATE_ID)]: getTime(parseISO(tx.executionDate)),
     [TX_TABLE_AMOUNT_ID]: getIncomingTxAmount(tx),
@@ -69,20 +71,24 @@ export const getTxTableData = (transactions: List<Transaction>): List<Transactio
   return transactions.map((tx: Transaction) => {
     const txDate = tx.isExecuted ? tx.executionDate : tx.submissionDate
 
-    let txType = 'Outgoing transfer'
+    let txType = 'outgoing'
     if (tx.modifySettingsTx) {
-      txType = 'Modify Safe Settings'
+      txType = 'settings'
     } else if (tx.cancellationTx) {
-      txType = 'Cancellation transaction'
+      txType = 'cancellation'
     } else if (tx.customTx) {
-      txType = 'Custom transaction'
+      txType = 'custom'
+    } else if (tx.creationTx) {
+      txType = 'creation'
     }
 
     return {
       [TX_TABLE_ID]: tx.blockNumber,
-      [TX_TABLE_TYPE_ID]: txType,
-      [TX_TABLE_DATE_ID]: formatDate(txDate),
-      [buildOrderFieldFrom(TX_TABLE_DATE_ID)]: getTime(parseISO(txDate)),
+      [TX_TABLE_TYPE_ID]: <TxType txType={txType} />,
+      [TX_TABLE_DATE_ID]: tx.isExecuted
+        ? tx.executionDate && formatDate(tx.executionDate)
+        : tx.submissionDate && formatDate(tx.submissionDate),
+      [buildOrderFieldFrom(TX_TABLE_DATE_ID)]: txDate ? getTime(parseISO(txDate)) : null,
       [TX_TABLE_AMOUNT_ID]: getTxAmount(tx),
       [TX_TABLE_STATUS_ID]: tx.status,
       [TX_TABLE_RAW_TX_ID]: tx,
@@ -94,7 +100,7 @@ export const generateColumns = () => {
   const nonceColumn: Column = {
     id: TX_TABLE_ID,
     disablePadding: false,
-    label: 'ID',
+    label: 'Id',
     custom: false,
     order: false,
     width: 50,
@@ -115,7 +121,7 @@ export const generateColumns = () => {
     disablePadding: false,
     label: 'Amount',
     custom: false,
-    width: 100,
+    width: 120,
   }
 
   const dateColumn: Column = {
@@ -132,6 +138,7 @@ export const generateColumns = () => {
     disablePadding: false,
     label: 'Status',
     custom: true,
+    align: 'right',
   }
 
   const expandIconColumn: Column = {
