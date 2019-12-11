@@ -63,7 +63,6 @@ const Layout = (props: Props) => {
     blacklistedTokens,
     createTransaction,
     processTransaction,
-    fetchTransactions,
     activateTokensByBalance,
     fetchTokens,
     updateSafe,
@@ -179,7 +178,6 @@ const Layout = (props: Props) => {
               owners={safe.owners}
               transactions={transactions}
               incomingTransactions={incomingTransactions}
-              fetchTransactions={fetchTransactions}
               safeAddress={address}
               userAddress={userAddress}
               currentNetwork={network}

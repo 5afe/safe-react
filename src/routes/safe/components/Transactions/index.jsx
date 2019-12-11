@@ -9,7 +9,6 @@ import { type Owner } from '~/routes/safe/store/models/owner'
 type Props = {
   safeAddress: string,
   threshold: number,
-  fetchTransactions: Function,
   transactions: List<Transaction>,
   incomingTransactions: List<IncomingTransaction>,
   owners: List<Owner>,
@@ -32,18 +31,11 @@ const Transactions = ({
   safeAddress,
   createTransaction,
   processTransaction,
-  fetchTransactions,
   currentNetwork,
 }: Props) => {
   let intervalId: IntervalID
 
   useEffect(() => {
-    fetchTransactions(safeAddress)
-
-    intervalId = setInterval(() => {
-      fetchTransactions(safeAddress)
-    }, TIMEOUT)
-
     return () => clearInterval(intervalId)
   }, [safeAddress])
 

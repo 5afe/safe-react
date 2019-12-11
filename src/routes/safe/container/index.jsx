@@ -89,11 +89,12 @@ class SafeView extends React.Component<Props, State> {
 
   checkForUpdates() {
     const {
-      safeUrl, activeTokens, fetchTokenBalances, fetchEtherBalance, checkAndUpdateSafeOwners,
+      safeUrl, activeTokens, fetchTokenBalances, fetchEtherBalance, fetchTransactions, checkAndUpdateSafeOwners,
     } = this.props
     checkAndUpdateSafeOwners(safeUrl)
     fetchTokenBalances(safeUrl, activeTokens)
     fetchEtherBalance(safeUrl)
+    fetchTransactions(safeUrl)
   }
 
   render() {
@@ -109,7 +110,6 @@ class SafeView extends React.Component<Props, State> {
       tokens,
       createTransaction,
       processTransaction,
-      fetchTransactions,
       activateTokensByBalance,
       fetchTokens,
       updateSafe,
@@ -130,7 +130,6 @@ class SafeView extends React.Component<Props, State> {
           granted={granted}
           createTransaction={createTransaction}
           processTransaction={processTransaction}
-          fetchTransactions={fetchTransactions}
           activateTokensByBalance={activateTokensByBalance}
           fetchTokens={fetchTokens}
           updateSafe={updateSafe}

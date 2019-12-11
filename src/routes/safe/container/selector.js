@@ -19,6 +19,7 @@ import { sameAddress } from '~/logic/wallets/ethAddresses'
 import { orderedTokenListSelector, tokensSelector } from '~/logic/tokens/store/selectors'
 import { type Token } from '~/logic/tokens/store/model/token'
 import { type Transaction, type TransactionStatus } from '~/routes/safe/store/models/transaction'
+import { type IncomingTransaction } from '~/routes/safe/store/models/incomingTransaction'
 import { safeParamAddressSelector } from '../store/selectors'
 import { getEthAsToken } from '~/logic/tokens/utils/tokenHelpers'
 
@@ -32,6 +33,7 @@ export type SelectorProps = {
   network: string,
   safeUrl: string,
   transactions: List<Transaction>,
+  incomingTransactions: List<IncomingTransaction>,
 }
 
 const getTxStatus = (tx: Transaction, userAddress: string, safe: Safe): TransactionStatus => {
