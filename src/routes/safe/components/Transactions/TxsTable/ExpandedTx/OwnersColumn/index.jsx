@@ -50,7 +50,7 @@ const OwnersColumn = ({
   canExecute,
 }: Props) => {
   const cancellationTx = isCancellationTransaction(tx, safeAddress)
-  const showOlderTxAnnotation =    thresholdReached && !canExecute && !tx.isExecuted
+  const showOlderTxAnnotation = thresholdReached && !canExecute && !tx.isExecuted
 
   const ownersWhoConfirmed = []
   let currentUserAlreadyConfirmed = false
@@ -64,8 +64,8 @@ const OwnersColumn = ({
   })
   const ownersUnconfirmed = owners.filter(
     (owner) => tx.confirmations.findIndex(
-        (conf) => conf.owner.address === owner.address,
-      ) === -1,
+      (conf) => conf.owner.address === owner.address,
+    ) === -1,
   )
   let userIsUnconfirmedOwner
   ownersUnconfirmed.some((owner) => {
@@ -90,7 +90,7 @@ const OwnersColumn = ({
     displayButtonRow = false
   }
 
-  const showConfirmBtn =    !tx.isExecuted
+  const showConfirmBtn = !tx.isExecuted
     && tx.status !== 'pending'
     && !tx.cancelled
     && userIsUnconfirmedOwner
