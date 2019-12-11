@@ -18,11 +18,13 @@ import fetchCurrencySelectedValue from '~/logic/currencyValues/store/actions/fet
 const buttonWidth = '140px'
 const useStyles = makeStyles({
   listItem: {
-    minWidth: buttonWidth,
+    maxWidth: buttonWidth,
+    boxSizing: 'border-box',
   },
   listItemSearch: {
-    minWidth: buttonWidth,
+    maxWidth: buttonWidth,
     padding: '0',
+    boxSizing: 'border-box',
   },
   localFlag: {
     backgroundPosition: '50% 50%',

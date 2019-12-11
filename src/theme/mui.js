@@ -372,6 +372,12 @@ export const DropdownListTheme = {
         '&:last-child': {
           borderBottom: 'none',
         },
+        boxSizing: 'border-box',
+      },
+      button: {
+        '&:hover': {
+          backgroundColor: '#fff3e2',
+        },
       },
     },
   },
