@@ -19,7 +19,7 @@ import ExpandedTxComponent from './ExpandedTx'
 import {
   getTxTableData,
   generateColumns,
-  TX_TABLE_DATE_ID,
+  TX_TABLE_ID,
   TX_TABLE_RAW_TX_ID,
   type TransactionRow,
 } from './columns'
@@ -77,7 +77,7 @@ const TxsTable = ({
     <Block className={classes.container}>
       <Table
         label="Transactions"
-        defaultOrderBy={TX_TABLE_DATE_ID}
+        defaultOrderBy={TX_TABLE_ID}
         defaultOrder="desc"
         defaultRowsPerPage={25}
         columns={columns}
