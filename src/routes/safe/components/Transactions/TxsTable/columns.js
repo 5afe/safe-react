@@ -22,6 +22,7 @@ type TxData = {
   id: number,
   type: React.ReactNode,
   date: string,
+  dateOrder?: number,
   amount: number | string,
   tx: Transaction,
   status?: string,

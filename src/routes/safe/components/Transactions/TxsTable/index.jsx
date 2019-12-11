@@ -69,7 +69,12 @@ const TxsTable = ({
   const columns = generateColumns()
   const autoColumns = columns.filter((c) => !c.custom)
   const filteredData = List([...getTxTableData(transactions), ...getIncomingTxTableData(incomingTransactions)])
-    .sort(({ id: a }, { id: b }) => a - b)
+    .sort(({ dateOrder: a }, { dateOrder: b }) => {
+      if (!a || !b) {
+        return 0
+      }
+      return a - b
+    })
     .map((tx, id) => ({ ...tx, id }))
 
   return (
