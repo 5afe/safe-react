@@ -12,15 +12,14 @@ export const fetchCurrencyValues = (safeAddress: string) => async (dispatch: Red
   try {
     const tokensFetched = await fetchTokenCurrenciesBalances(safeAddress)
 
-
     // eslint-disable-next-line max-len
-    const currencyList = List(tokensFetched.data.filter((currencyBalance) => currencyBalance.balanceUSD).map((currencyBalance) => {
-      const { balanceUSD, tokenAddress } = currencyBalance
+    const currencyList = List(tokensFetched.data.filter((currencyBalance) => currencyBalance.balanceUsd).map((currencyBalance) => {
+      const { balanceUsd, tokenAddress } = currencyBalance
       return makeBalanceCurrency({
-        currencyName: balanceUSD ? AVAILABLE_CURRENCIES.USD : null,
+        currencyName: balanceUsd ? AVAILABLE_CURRENCIES.USD : null,
         tokenAddress,
-        balanceInBaseCurrency: balanceUSD,
-        balanceInSelectedCurrency: balanceUSD,
+        balanceInBaseCurrency: balanceUsd,
+        balanceInSelectedCurrency: balanceUsd,
       })
     }))
 
