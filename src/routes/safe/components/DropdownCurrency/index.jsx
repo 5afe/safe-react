@@ -79,6 +79,9 @@ const useStyles = makeStyles({
       borderTop: 'none',
     },
   },
+  dropdown: {
+    maxHeight: '300px',
+  },
 })
 
 const DropdownCurrency = () => {
@@ -119,12 +122,12 @@ const DropdownCurrency = () => {
         <Menu
           anchorEl={anchorEl}
           elevation={0}
-          rounded={0}
           getContentAnchorEl={null}
           id="customizedMenu"
           keepMounted
           onClose={handleClose}
           open={Boolean(anchorEl)}
+          rounded={0}
           anchorOrigin={{
             horizontal: 'center',
             vertical: 'bottom',
@@ -133,7 +136,7 @@ const DropdownCurrency = () => {
             horizontal: 'center',
             vertical: 'top',
           }}
-          style={{ maxHeight: '300px' }}
+          className={classes.dropdown}
         >
           {currenciesList.map((currencyName) => (
             <MenuItem
