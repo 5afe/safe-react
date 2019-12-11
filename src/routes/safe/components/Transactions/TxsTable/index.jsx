@@ -22,11 +22,13 @@ import {
   getIncomingTxTableData,
   generateColumns,
   TX_TABLE_DATE_ID,
-  type TransactionRow,
   TX_TABLE_RAW_TX_ID,
+  TX_TABLE_TYPE_ID,
+  type TransactionRow,
 } from './columns'
 import { styles } from './style'
 import Status from './Status'
+import TypeStatus from '~/routes/safe/components/Transactions/TxsTable/TypeStatus'
 
 export const TRANSACTION_ROW_TEST_ID = 'transaction-row'
 
@@ -99,7 +101,9 @@ const TxsTable = ({
                   align={column.align}
                   component="td"
                 >
-                  {row[column.id]}
+                  {column.id === TX_TABLE_TYPE_ID
+                    ? <TypeStatus label={row.type} status={row.tx.type} />
+                    : row[column.id]}
                 </TableCell>
               ))}
               <TableCell component="td">
