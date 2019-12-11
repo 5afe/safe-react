@@ -4,7 +4,15 @@ import type { RecordFactory, RecordOf } from 'immutable'
 import { type Confirmation } from '~/routes/safe/store/models/confirmation'
 import { ZERO_ADDRESS } from '~/logic/wallets/ethAddresses'
 
-export type TransactionStatus = 'awaiting_confirmations' | 'success' | 'cancelled' | 'awaiting_execution' | 'pending'
+export type TransactionType = 'incoming' | 'outgoing' | 'settings' | 'custom' | 'creation' | 'cancellation'
+
+export type TransactionStatus =
+  | 'awaiting_your_confirmation'
+  | 'awaiting_confirmations'
+  | 'success'
+  | 'cancelled'
+  | 'awaiting_execution'
+  | 'pending'
 
 export type TransactionProps = {
   nonce: number,
@@ -25,7 +33,9 @@ export type TransactionProps = {
   modifySettingsTx: boolean,
   cancellationTx: boolean,
   customTx: boolean,
+  creationTx: boolean,
   safeTxHash: string,
+  executor: string,
   executionTxHash?: string,
   decimals?: number,
   cancelled?: boolean,
@@ -49,6 +59,7 @@ export const makeTransaction: RecordFactory<TransactionProps> = Record({
   refundReceiver: ZERO_ADDRESS,
   isExecuted: false,
   submissionDate: '',
+  executor: '',
   executionDate: '',
   symbol: '',
   executionTxHash: undefined,
@@ -57,6 +68,7 @@ export const makeTransaction: RecordFactory<TransactionProps> = Record({
   modifySettingsTx: false,
   cancellationTx: false,
   customTx: false,
+  creationTx: false,
   status: 'awaiting',
   decimals: 18,
   isTokenTransfer: false,

@@ -22,7 +22,7 @@ const styles = () => ({
     maxHeight: '75px',
   },
   manage: {
-    fontSize: '24px',
+    fontSize: lg,
   },
   closeIcon: {
     height: '35px',
@@ -31,7 +31,7 @@ const styles = () => ({
   buttonColumn: {
     padding: '52px 0',
     '& > button': {
-      fontSize: '16px',
+      fontSize: md,
       fontFamily: 'Averta',
     },
   },

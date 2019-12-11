@@ -1,20 +1,20 @@
 // @flow
-import React, { useState } from 'react'
+import React from 'react'
+import cn from 'classnames'
 import { List } from 'immutable'
 import { withStyles } from '@material-ui/core/styles'
-import Tabs from '@material-ui/core/Tabs'
-import Tab from '@material-ui/core/Tab'
-import Col from '~/components/layout/Col'
-import Row from '~/components/layout/Row'
-import Hairline from '~/components/layout/Hairline'
-import Paragraph from '~/components/layout/Paragraph'
 import Block from '~/components/layout/Block'
+import Col from '~/components/layout/Col'
+import Img from '~/components/layout/Img'
 import { type Owner } from '~/routes/safe/store/models/owner'
 import { type Transaction } from '~/routes/safe/store/models/transaction'
 import { TX_TYPE_CONFIRMATION } from '~/logic/safe/transactions/send'
 import { EMPTY_DATA } from '~/logic/wallets/ethTransactions'
-import OwnersList from './List'
+import OwnersList from './OwnersList'
 import ButtonRow from './ButtonRow'
+import CheckLargeFilledGreenIcon from './assets/check-large-filled-green.svg'
+import ConfirmLargeGreenIcon from './assets/confirm-large-green.svg'
+import ConfirmLargeGreyIcon from './assets/confirm-large-grey.svg'
 import { styles } from './style'
 
 type Props = {
@@ -31,8 +31,11 @@ type Props = {
   onTxCancel: Function,
   onTxExecute: Function
 }
-// eslint-disable-next-line max-len
-const isCancellationTransaction = (tx: Transaction, safeAddress: string) => !tx.value && tx.data === EMPTY_DATA && tx.recipient === safeAddress
+
+const isCancellationTransaction = (
+  tx: Transaction,
+  safeAddress: string,
+) => !tx.value && tx.data === EMPTY_DATA && tx.recipient === safeAddress
 
 const OwnersColumn = ({
   tx,
@@ -48,27 +51,17 @@ const OwnersColumn = ({
   onTxExecute,
   canExecute,
 }: Props) => {
-  const [tabIndex, setTabIndex] = useState(0)
-  const handleTabChange = (event, tabClicked) => {
-    setTabIndex(tabClicked)
-  }
-
   const cancellationTx = isCancellationTransaction(tx, safeAddress)
   const showOlderTxAnnotation = thresholdReached && !canExecute && !tx.isExecuted
 
   const ownersWhoConfirmed = []
   let currentUserAlreadyConfirmed = false
-  let executionConfirmation
-
   tx.confirmations.forEach((conf) => {
     if (conf.owner.address === userAddress) {
       currentUserAlreadyConfirmed = true
     }
-
     if (conf.type === TX_TYPE_CONFIRMATION) {
       ownersWhoConfirmed.push(conf.owner)
-    } else {
-      executionConfirmation = conf.owner
     }
   })
   const ownersUnconfirmed = owners.filter(
@@ -76,6 +69,11 @@ const OwnersColumn = ({
       (conf) => conf.owner.address === owner.address,
     ) === -1,
   )
+  let userIsUnconfirmedOwner
+  ownersUnconfirmed.some((owner) => {
+    userIsUnconfirmedOwner = owner.address === userAddress
+    return userIsUnconfirmedOwner
+  })
 
   let displayButtonRow = true
   if (tx.executionTxHash) {
@@ -94,50 +92,51 @@ const OwnersColumn = ({
     displayButtonRow = false
   }
 
-  let confirmedLabel = `Confirmed [${tx.confirmations.size}/${threshold}]`
-  if (tx.executionTxHash) {
-    confirmedLabel = `Confirmed [${tx.confirmations.size}]`
-  }
-  const unconfirmedLabel = `Unconfirmed [${ownersUnconfirmed.size}]`
+  const showConfirmBtn = !tx.isExecuted
+    && !tx.cancelled
+    && userIsUnconfirmedOwner
+    && !currentUserAlreadyConfirmed
+    && !thresholdReached
 
   return (
     <Col xs={6} className={classes.rightCol} layout="block">
-      <Row>
-        <Tabs
-          value={tabIndex}
-          onChange={handleTabChange}
-          indicatorColor="secondary"
-          textColor="secondary"
-        >
-          <Tab label={confirmedLabel} />
-          <Tab label={unconfirmedLabel} />
-        </Tabs>
-        <Hairline color="#d4d53d" />
-      </Row>
-      <Row>
-        {tabIndex === 0 && (
-          <OwnersList
-            owners={ownersWhoConfirmed}
-            executionConfirmation={executionConfirmation}
-          />
-        )}
-      </Row>
-      <Row>{tabIndex === 1 && <OwnersList owners={ownersUnconfirmed} />}</Row>
-      {showOlderTxAnnotation && (
-        <Block justify="center" className={classes.executeOlderFirst}>
-          <Paragraph>
-            There are older tx that have to be executed first
-          </Paragraph>
-        </Block>
-      )}
+      <Block className={cn(classes.ownerListTitle, (thresholdReached || tx.isExecuted) && classes.ownerListTitleDone)}>
+        <div className={classes.iconState}>
+          {thresholdReached || tx.isExecuted
+            ? <Img src={CheckLargeFilledGreenIcon} />
+            : <Img src={ConfirmLargeGreenIcon} />}
+        </div>
+        {tx.isExecuted
+          ? `Confirmed [${tx.confirmations.size}/${tx.confirmations.size}]`
+          : `Confirmed [${tx.confirmations.size}/${threshold}]`}
+      </Block>
+      <OwnersList
+        userAddress={userAddress}
+        ownersWhoConfirmed={ownersWhoConfirmed}
+        ownersUnconfirmed={ownersUnconfirmed}
+        executor={tx.executor}
+        thresholdReached={thresholdReached}
+        onTxConfirm={onTxConfirm}
+        onTxExecute={onTxExecute}
+        showConfirmBtn={showConfirmBtn}
+        showExecuteBtn={!tx.isExecuted && thresholdReached}
+      />
+      <Block className={cn(classes.ownerListTitle, tx.isExecuted && classes.ownerListTitleDone)}>
+        <div className={thresholdReached || tx.isExecuted
+          ? classes.verticalLineProgressDone
+          : classes.verticalLineProgressPending}
+        />
+        <div className={classes.iconState}>
+          {!thresholdReached && !tx.isExecuted && <Img src={ConfirmLargeGreyIcon} alt="Confirm tx" />}
+          {thresholdReached && !tx.isExecuted && <Img src={ConfirmLargeGreenIcon} alt="Execute tx" />}
+          {tx.isExecuted && <Img src={CheckLargeFilledGreenIcon} alt="TX Executed icon" />}
+        </div>
+        Executed
+      </Block>
       {granted && displayButtonRow && (
         <ButtonRow
-          onTxConfirm={onTxConfirm}
           onTxCancel={onTxCancel}
-          showConfirmBtn={!currentUserAlreadyConfirmed && !thresholdReached}
           showCancelBtn={!cancellationTx}
-          showExecuteBtn={thresholdReached && canExecute}
-          onTxExecute={onTxExecute}
         />
       )}
     </Col>

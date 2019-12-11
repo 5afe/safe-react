@@ -17,7 +17,7 @@ export const styles = () => ({
     marginLeft: '20px',
   },
   headingText: {
-    fontSize: '24px',
+    fontSize: lg,
   },
   closeIcon: {
     height: '35px',
@@ -37,7 +37,7 @@ export const styles = () => ({
     justifyContent: 'center',
     '& > button': {
       fontFamily: 'Averta',
-      fontSize: '16px',
+      fontSize: md,
     },
   },
   submitButton: {

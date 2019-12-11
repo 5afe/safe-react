@@ -1,6 +1,5 @@
 // @flow
 import * as React from 'react'
-import classNames from 'classnames'
 import { List } from 'immutable'
 import Table from '@material-ui/core/Table'
 import TableBody from '@material-ui/core/TableBody'
@@ -10,7 +9,7 @@ import TablePagination from '@material-ui/core/TablePagination'
 import Row from '~/components/layout/Row'
 import { type Order, stableSort, getSorting } from '~/components/Table/sorting'
 import TableHead, { type Column } from '~/components/Table/TableHead'
-import { xl } from '~/theme/variables'
+import { xxl, xl, sm } from '~/theme/variables'
 
 type Props<K> = {
   label: string,
@@ -39,11 +38,12 @@ type State = {
 const styles = {
   root: {
     backgroundColor: 'white',
-    borderRadius: '8px',
+    borderTopRightRadius: sm,
+    borderTopLeftRadius: sm,
     boxShadow: '1px 2px 10px 0 rgba(212, 212, 211, 0.59)',
   },
   selectRoot: {
-    lineHeight: '40px',
+    lineHeight: xxl,
     backgroundColor: 'white',
   },
   white: {
@@ -53,14 +53,11 @@ const styles = {
     backgroundColor: 'white',
     boxShadow: '1px 2px 10px 0 rgba(212, 212, 211, 0.59)',
     marginBottom: xl,
-    borderRadius: '8px',
-    borderTopLeftRadius: 0,
-    borderTopRightRadius: 0,
+    borderBottomRightRadius: sm,
+    borderBottomLeftRadius: sm,
   },
   loader: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: 'white',
+    boxShadow: '1px 2px 10px 0 rgba(212, 212, 211, 0.59)',
   },
 }
 
@@ -125,6 +122,13 @@ class GnoTable<K> extends React.Component<Props<K>, State> {
 
   getEmptyStyle = (emptyRows: number) => ({
     height: FIXED_HEIGHT * emptyRows,
+    borderTopRightRadius: sm,
+    borderTopLeftRadius: sm,
+    backgroundColor: 'white',
+    width: '100%',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
   })
 
   handleChangePage = (e: SyntheticInputEvent<HTMLInputElement>, page: number) => {
@@ -171,7 +175,7 @@ class GnoTable<K> extends React.Component<Props<K>, State> {
       sortedData = sortedData.slice(page * displayRows, page * displayRows + displayRows)
     }
 
-    const emptyRows = displayRows - Math.min(displayRows, data.length - page * displayRows)
+    const emptyRows = displayRows - Math.min(displayRows, data.size - page * displayRows)
     const isEmpty = size === 0
 
     return (
@@ -184,7 +188,7 @@ class GnoTable<K> extends React.Component<Props<K>, State> {
         )}
         {isEmpty && (
           <Row
-            className={classNames(classes.loader, !noBorder && classes.root)}
+            className={classes.loader}
             style={this.getEmptyStyle(emptyRows + 1)}
           >
             <CircularProgress size={60} />

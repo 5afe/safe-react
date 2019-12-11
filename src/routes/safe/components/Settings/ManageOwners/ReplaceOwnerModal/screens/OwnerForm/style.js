@@ -20,7 +20,7 @@ export const styles = () => ({
     marginRight: sm,
   },
   manage: {
-    fontSize: '24px',
+    fontSize: lg,
   },
   closeIcon: {
     height: '35px',

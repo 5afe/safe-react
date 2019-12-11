@@ -2,7 +2,6 @@
 import React, { useState } from 'react'
 import { List } from 'immutable'
 import { withStyles } from '@material-ui/core/styles'
-import OpenInNew from '@material-ui/icons/OpenInNew'
 import Row from '~/components/layout/Row'
 import Block from '~/components/layout/Block'
 import Col from '~/components/layout/Col'
@@ -10,11 +9,9 @@ import Bold from '~/components/layout/Bold'
 import Span from '~/components/layout/Span'
 import Paragraph from '~/components/layout/Paragraph'
 import Hairline from '~/components/layout/Hairline'
+import EtherScanLink from '~/components/EtherscanLink'
 import { type Transaction } from '~/routes/safe/store/models/transaction'
 import { type Owner } from '~/routes/safe/store/models/owner'
-import { getEtherScanLink } from '~/logic/wallets/getWeb3'
-import { shortVersionOf } from '~/logic/wallets/ethAddresses'
-import { secondary } from '~/theme/variables'
 import TxDescription from './TxDescription'
 import OwnersColumn from './OwnersColumn'
 import CancelTxModal from './CancelTxModal'
@@ -37,16 +34,13 @@ type Props = {
 
 type OpenModal = 'cancelTx' | 'approveTx' | null
 
-const openIconStyle = {
-  height: '13px',
-  color: secondary,
-}
-
 const txStatusToLabel = {
   success: 'Success',
+  awaiting_your_confirmation: 'Awaiting your confirmation',
   awaiting_confirmations: 'Awaiting confirmations',
   cancelled: 'Cancelled',
   awaiting_execution: 'Awaiting execution',
+  pending: 'Pending',
 }
 
 const ExpandedTx = ({
@@ -70,24 +64,21 @@ const ExpandedTx = ({
 
   return (
     <>
-      <Block>
+      <Block className={classes.expandedTxBlock}>
         <Row>
           <Col xs={6} layout="column">
             <Block className={classes.txDataContainer}>
-              <Paragraph noMargin>
-                <Bold>TX hash: </Bold>
+              <Block align="left" className={classes.txData}>
+                <Bold className={classes.txHash}>TX hash:</Bold>
                 {tx.executionTxHash ? (
-                  <a href={getEtherScanLink('tx', tx.executionTxHash)} target="_blank" rel="noopener noreferrer">
-                    {shortVersionOf(tx.executionTxHash, 4)}
-                    <OpenInNew style={openIconStyle} />
-                  </a>
+                  <EtherScanLink type="tx" value={tx.executionTxHash} cut={8} />
                 ) : (
                   'n/a'
                 )}
-              </Paragraph>
+              </Block>
               <Paragraph noMargin>
                 <Bold>TX status: </Bold>
-                <Span className={classes[tx.status]} style={{ fontWeight: 'bold' }}>
+                <Span>
                   {txStatusToLabel[tx.status]}
                 </Span>
               </Paragraph>
