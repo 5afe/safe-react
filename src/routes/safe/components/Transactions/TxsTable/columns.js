@@ -53,44 +53,50 @@ export const getTxAmount = (tx: Transaction) => {
 
 export type TransactionRow = SortRow<TxData>
 
-export const getIncomingTxTableData = (incomingTransactions: List<IncomingTransaction>): List<TransactionRow> => {
-  return incomingTransactions.map((tx: IncomingTransaction) => ({
+const getIncomingTxTableData = (tx: IncomingTransaction): TransactionRow => ({
+  [TX_TABLE_ID]: tx.blockNumber,
+  [TX_TABLE_TYPE_ID]: <TxType txType="incoming" />,
+  [TX_TABLE_DATE_ID]: formatDate(tx.executionDate),
+  [buildOrderFieldFrom(TX_TABLE_DATE_ID)]: getTime(parseISO(tx.executionDate)),
+  [TX_TABLE_AMOUNT_ID]: getIncomingTxAmount(tx),
+  [TX_TABLE_STATUS_ID]: tx.status,
+  [TX_TABLE_RAW_TX_ID]: tx,
+})
+
+const getTransactionTableData = (tx: Transaction): TransactionRow => {
+  const txDate = tx.isExecuted ? tx.executionDate : tx.submissionDate
+
+  let txType = 'outgoing'
+  if (tx.modifySettingsTx) {
+    txType = 'settings'
+  } else if (tx.cancellationTx) {
+    txType = 'cancellation'
+  } else if (tx.customTx) {
+    txType = 'custom'
+  } else if (tx.creationTx) {
+    txType = 'creation'
+  }
+
+  return {
     [TX_TABLE_ID]: tx.blockNumber,
-    [TX_TABLE_TYPE_ID]: <TxType txType="incoming" />,
-    [TX_TABLE_DATE_ID]: formatDate(tx.executionDate),
-    [buildOrderFieldFrom(TX_TABLE_DATE_ID)]: getTime(parseISO(tx.executionDate)),
-    [TX_TABLE_AMOUNT_ID]: getIncomingTxAmount(tx),
+    [TX_TABLE_TYPE_ID]: <TxType txType={txType} />,
+    [TX_TABLE_DATE_ID]: tx.isExecuted
+      ? tx.executionDate && formatDate(tx.executionDate)
+      : tx.submissionDate && formatDate(tx.submissionDate),
+    [buildOrderFieldFrom(TX_TABLE_DATE_ID)]: txDate ? getTime(parseISO(txDate)) : null,
+    [TX_TABLE_AMOUNT_ID]: getTxAmount(tx),
     [TX_TABLE_STATUS_ID]: tx.status,
     [TX_TABLE_RAW_TX_ID]: tx,
-  }))
+  }
 }
 
-export const getTxTableData = (transactions: List<Transaction>): List<TransactionRow> => {
-  return transactions.map((tx: Transaction) => {
-    const txDate = tx.isExecuted ? tx.executionDate : tx.submissionDate
-
-    let txType = 'outgoing'
-    if (tx.modifySettingsTx) {
-      txType = 'settings'
-    } else if (tx.cancellationTx) {
-      txType = 'cancellation'
-    } else if (tx.customTx) {
-      txType = 'custom'
-    } else if (tx.creationTx) {
-      txType = 'creation'
+export const getTxTableData = (transactions: List<Transaction | IncomingTransaction>): List<TransactionRow> => {
+  return transactions.map((tx) => {
+    if (tx.type === 'incoming') {
+      return getIncomingTxTableData(tx)
     }
 
-    return {
-      [TX_TABLE_ID]: tx.blockNumber,
-      [TX_TABLE_TYPE_ID]: <TxType txType={txType} />,
-      [TX_TABLE_DATE_ID]: tx.isExecuted
-        ? tx.executionDate && formatDate(tx.executionDate)
-        : tx.submissionDate && formatDate(tx.submissionDate),
-      [buildOrderFieldFrom(TX_TABLE_DATE_ID)]: txDate ? getTime(parseISO(txDate)) : null,
-      [TX_TABLE_AMOUNT_ID]: getTxAmount(tx),
-      [TX_TABLE_STATUS_ID]: tx.status,
-      [TX_TABLE_RAW_TX_ID]: tx,
-    }
+    return getTransactionTableData(tx)
   })
 }
 

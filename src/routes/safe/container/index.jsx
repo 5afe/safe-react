@@ -117,7 +117,6 @@ class SafeView extends React.Component<Props, State> {
       fetchTokens,
       updateSafe,
       transactions,
-      incomingTransactions,
     } = this.props
 
     return (
@@ -137,7 +136,6 @@ class SafeView extends React.Component<Props, State> {
           fetchTokens={fetchTokens}
           updateSafe={updateSafe}
           transactions={transactions}
-          incomingTransactions={incomingTransactions}
           sendFunds={sendFunds}
           showReceive={showReceive}
           onShow={this.onShow}

@@ -19,9 +19,9 @@ import { sameAddress } from '~/logic/wallets/ethAddresses'
 import { orderedTokenListSelector, tokensSelector } from '~/logic/tokens/store/selectors'
 import { type Token } from '~/logic/tokens/store/model/token'
 import { type Transaction, type TransactionStatus } from '~/routes/safe/store/models/transaction'
-import { type IncomingTransaction } from '~/routes/safe/store/models/incomingTransaction'
 import { safeParamAddressSelector } from '../store/selectors'
 import { getEthAsToken } from '~/logic/tokens/utils/tokenHelpers'
+import type { IncomingTransaction } from '~/routes/safe/store/models/incomingTransaction'
 
 export type SelectorProps = {
   safe: SafeSelectorProps,
@@ -32,8 +32,7 @@ export type SelectorProps = {
   userAddress: string,
   network: string,
   safeUrl: string,
-  transactions: List<Transaction>,
-  incomingTransactions: List<IncomingTransaction>,
+  transactions: List<Transaction | IncomingTransaction>,
 }
 
 const getTxStatus = (tx: Transaction, userAddress: string, safe: Safe): TransactionStatus => {
@@ -114,11 +113,12 @@ const extendedSafeTokensSelector: Selector<GlobalState, RouterProps, List<Token>
   },
 )
 
-const extendedTransactionsSelector: Selector<GlobalState, RouterProps, List<Transaction>> = createSelector(
+const extendedTransactionsSelector: Selector<GlobalState, RouterProps, List<Transaction | IncomingTransaction>> = createSelector(
   safeSelector,
   userAccountSelector,
   safeTransactionsSelector,
-  (safe, userAddress, transactions) => {
+  safeIncomingTransactionsSelector,
+  (safe, userAddress, transactions, incomingTransactions) => {
     const extendedTransactions = transactions.map((tx: Transaction) => {
       let extendedTx = tx
 
@@ -139,7 +139,7 @@ const extendedTransactionsSelector: Selector<GlobalState, RouterProps, List<Tran
       return extendedTx.set('status', getTxStatus(extendedTx, userAddress, safe))
     })
 
-    return extendedTransactions
+    return List([...extendedTransactions, ...incomingTransactions])
   },
 )
 
@@ -154,5 +154,4 @@ export default createStructuredSelector<Object, *>({
   network: networkSelector,
   safeUrl: safeParamAddressSelector,
   transactions: extendedTransactionsSelector,
-  incomingTransactions: safeIncomingTransactionsSelector,
 })

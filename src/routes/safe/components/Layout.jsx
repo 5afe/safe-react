@@ -67,7 +67,6 @@ const Layout = (props: Props) => {
     fetchTokens,
     updateSafe,
     transactions,
-    incomingTransactions,
     userAddress,
     sendFunds,
     showReceive,
@@ -177,7 +176,6 @@ const Layout = (props: Props) => {
               threshold={safe.threshold}
               owners={safe.owners}
               transactions={transactions}
-              incomingTransactions={incomingTransactions}
               safeAddress={address}
               userAddress={userAddress}
               currentNetwork={network}

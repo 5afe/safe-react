@@ -9,8 +9,7 @@ import { type Owner } from '~/routes/safe/store/models/owner'
 type Props = {
   safeAddress: string,
   threshold: number,
-  transactions: List<Transaction>,
-  incomingTransactions: List<IncomingTransaction>,
+  transactions: List<Transaction | IncomingTransaction>,
   owners: List<Owner>,
   userAddress: string,
   granted: boolean,
@@ -21,7 +20,6 @@ type Props = {
 
 const Transactions = ({
   transactions = List(),
-  incomingTransactions = List(),
   owners,
   threshold,
   userAddress,
@@ -31,18 +29,17 @@ const Transactions = ({
   processTransaction,
   currentNetwork,
 }: Props) => (
-    <TxsTable
-      transactions={transactions}
-      incomingTransactions={incomingTransactions}
-      threshold={threshold}
-      owners={owners}
-      userAddress={userAddress}
-      currentNetwork={currentNetwork}
-      granted={granted}
-      safeAddress={safeAddress}
-      createTransaction={createTransaction}
-      processTransaction={processTransaction}
-    />
-  )
+  <TxsTable
+    transactions={transactions}
+    threshold={threshold}
+    owners={owners}
+    userAddress={userAddress}
+    currentNetwork={currentNetwork}
+    granted={granted}
+    safeAddress={safeAddress}
+    createTransaction={createTransaction}
+    processTransaction={processTransaction}
+  />
+)
 
 export default Transactions

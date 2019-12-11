@@ -14,12 +14,10 @@ import Row from '~/components/layout/Row'
 import { type Column, cellWidth } from '~/components/Table/TableHead'
 import Table from '~/components/Table'
 import { type Transaction } from '~/routes/safe/store/models/transaction'
-import { type IncomingTransaction } from '~/routes/safe/store/models/incomingTransaction'
 import { type Owner } from '~/routes/safe/store/models/owner'
 import ExpandedTxComponent from './ExpandedTx'
 import {
   getTxTableData,
-  getIncomingTxTableData,
   generateColumns,
   TX_TABLE_DATE_ID,
   TX_TABLE_RAW_TX_ID,
@@ -38,7 +36,6 @@ const expandCellStyle = {
 type Props = {
   classes: Object,
   transactions: List<Transaction>,
-  incomingTransactions: List<IncomingTransaction>,
   threshold: number,
   owners: List<Owner>,
   userAddress: string,
@@ -51,7 +48,6 @@ type Props = {
 const TxsTable = ({
   classes,
   transactions,
-  incomingTransactions,
   threshold,
   owners,
   granted,
@@ -68,7 +64,7 @@ const TxsTable = ({
 
   const columns = generateColumns()
   const autoColumns = columns.filter((c) => !c.custom)
-  const filteredData = List([...getTxTableData(transactions), ...getIncomingTxTableData(incomingTransactions)])
+  const filteredData = getTxTableData(transactions)
     .sort(({ dateOrder: a }, { dateOrder: b }) => {
       if (!a || !b) {
         return 0
