@@ -10,6 +10,7 @@ import { type Notification, NOTIFICATIONS } from './notificationTypes'
 export type NotificationsQueue = {
   beforeExecution: Notification | null,
   pendingExecution: Notification | null,
+  waitingConfirmation: Notification | null,
   afterExecution: {
     noMoreConfirmationsNeeded: Notification | null,
     moreConfirmationsNeeded: Notification | null,
@@ -27,6 +28,15 @@ const standardTxNotificationsQueue: NotificationsQueue = {
     moreConfirmationsNeeded: NOTIFICATIONS.TX_EXECUTED_MORE_CONFIRMATIONS_MSG,
   },
   afterExecutionError: NOTIFICATIONS.TX_FAILED_MSG,
+}
+
+const waitingTransactionNotificationsQueue: NotificationsQueue = {
+  beforeExecution: null,
+  pendingExecution: null,
+  afterRejection: null,
+  waitingConfirmation: NOTIFICATIONS.TX_WAITING_MSG,
+  afterExecution: null,
+  afterExecutionError: null,
 }
 
 const confirmationTxNotificationsQueue: NotificationsQueue = {
@@ -123,6 +133,10 @@ export const getNotificationsFromTxType = (txType: string) => {
       notificationsQueue = ownerNameChangeNotificationsQueue
       break
     }
+    case TX_NOTIFICATION_TYPES.WAITING_TX: {
+      notificationsQueue = waitingTransactionNotificationsQueue
+      break
+    }
     default: {
       notificationsQueue = defaultNotificationsQueue
       break
@@ -132,10 +146,12 @@ export const getNotificationsFromTxType = (txType: string) => {
   return notificationsQueue
 }
 
-export const enhanceSnackbarForAction = (notification: Notification) => ({
+export const enhanceSnackbarForAction = (notification: Notification, key?: string, onClick?: Function) => ({
   ...notification,
+  key,
   options: {
     ...notification.options,
+    onClick,
     action: (key: number) => (
       <IconButton onClick={() => store.dispatch(closeSnackbarAction({ key }))}>
         <IconClose />
