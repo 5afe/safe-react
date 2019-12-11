@@ -128,6 +128,7 @@ const TxsTable = ({
                     createTransaction={createTransaction}
                     processTransaction={processTransaction}
                     safeAddress={safeAddress}
+                    nonce={nonce}
                   />
                 </TableCell>
               </TableRow>

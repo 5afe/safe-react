@@ -8,18 +8,18 @@ import { type Owner } from '~/routes/safe/store/models/owner'
 type Props = {
   safeAddress: string,
   threshold: number,
-  fetchTransactions: Function,
   transactions: List<Transaction>,
   owners: List<Owner>,
   userAddress: string,
   granted: boolean,
   createTransaction: Function,
   processTransaction: Function,
+  fetchTransactions: Function,
   currentNetwork: string,
   nonce: number,
 }
 
-const TIMEOUT = process.env.NODE_ENV === 'test' ? 1500 : 5000
+const TIMEOUT = 5000
 
 const Transactions = ({
   transactions = List(),
@@ -57,6 +57,7 @@ const Transactions = ({
       safeAddress={safeAddress}
       createTransaction={createTransaction}
       processTransaction={processTransaction}
+      nonce={nonce}
     />
   )
 }

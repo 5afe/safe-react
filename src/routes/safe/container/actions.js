@@ -1,5 +1,5 @@
 // @flow
-import fetchSafe, { checkAndUpdateSafeOwners } from '~/routes/safe/store/actions/fetchSafe'
+import fetchSafe, { checkAndUpdateSafe } from '~/routes/safe/store/actions/fetchSafe'
 import fetchTokenBalances from '~/routes/safe/store/actions/fetchTokenBalances'
 import fetchEtherBalance from '~/routes/safe/store/actions/fetchEtherBalance'
 import createTransaction from '~/routes/safe/store/actions/createTransaction'
@@ -18,7 +18,8 @@ export type Actions = {
   fetchTokens: typeof fetchTokens,
   processTransaction: typeof processTransaction,
   fetchEtherBalance: typeof fetchEtherBalance,
-  activateTokensByBalance: typeof activateTokensByBalance
+  activateTokensByBalance: typeof activateTokensByBalance,
+  checkAndUpdateSafeOwners: typeof checkAndUpdateSafe
 }
 
 export default {
@@ -31,5 +32,5 @@ export default {
   activateTokensByBalance,
   updateSafe,
   fetchEtherBalance,
-  checkAndUpdateSafeOwners,
+  checkAndUpdateSafeOwners: checkAndUpdateSafe,
 }

@@ -1,20 +1,22 @@
 // @flow
 import * as React from 'react'
 import { makeStyles } from '@material-ui/core/styles'
+import { getNetwork } from '~/config'
 import Paragraph from '~/components/layout/Paragraph'
 import Col from '~/components/layout/Col'
 import {
   xs, sm, md, border,
 } from '~/theme/variables'
 
-export const TOGGLE_SIDEBAR_BTN_TESTID = 'TOGGLE_SIDEBAR_BTN'
+const network = getNetwork()
+const formattedNetwork = network[0].toUpperCase() + network.substring(1).toLowerCase()
 
 const useStyles = makeStyles({
   container: {
     flexGrow: 0,
     padding: `0 ${md}`,
   },
-  counter: {
+  text: {
     background: border,
     padding: `${xs} ${sm}`,
     borderRadius: '3px',
@@ -28,8 +30,8 @@ const EarlyAccessLabel = () => {
 
   return (
     <Col start="xs" middle="xs" className={classes.container}>
-      <Paragraph size="xs" className={classes.counter}>
-        Early access
+      <Paragraph size="xs" className={classes.text}>
+        {formattedNetwork}
       </Paragraph>
     </Col>
   )
