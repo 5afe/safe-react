@@ -7,6 +7,8 @@ import React, { useState } from 'react'
 import style from 'currency-flags/dist/currency-flags.min.css'
 import { makeStyles, MuiThemeProvider } from '@material-ui/core/styles'
 import { useDispatch } from 'react-redux'
+import SearchIcon from '@material-ui/icons/Search'
+import InputBase from '@material-ui/core/InputBase'
 import { DropdownListTheme } from '~/theme/mui'
 import { setCurrencySelected } from '~/logic/currencyValues/store/actions/setCurrencySelected'
 import CheckIcon from './img/check.svg'
@@ -17,6 +19,10 @@ const buttonWidth = '140px'
 const useStyles = makeStyles({
   listItem: {
     minWidth: buttonWidth,
+  },
+  listItemSearch: {
+    minWidth: buttonWidth,
+    padding: '0',
   },
   localFlag: {
     backgroundPosition: '50% 50%',
@@ -79,8 +85,48 @@ const useStyles = makeStyles({
       borderTop: 'none',
     },
   },
-  dropdown: {
-    maxHeight: '300px',
+  dropdownItemsScrollWrapper: {
+    maxHeight: '280px',
+    overflow: 'auto',
+  },
+  search: {
+    position: 'relative',
+    borderRadius: '0',
+    backgroundColor: '#fff',
+    '&:hover': {
+      backgroundColor: '#fff',
+    },
+    marginRight: 0,
+    width: '100%',
+  },
+  searchIcon: {
+    alignItems: 'center',
+    display: 'flex',
+    height: '100%',
+    justifyContent: 'center',
+    left: '12px',
+    margin: '0',
+    pointerEvents: 'none',
+    position: 'absolute',
+    top: '50%',
+    transform: 'translateY(-50%)',
+    width: '18px',
+    '& path': {
+      fill: '#b2b5b2',
+    },
+  },
+  inputRoot: {
+    color: '#5d6d74',
+    fontSize: '14px',
+    fontWeight: 'normal',
+    lineHeight: '1.43',
+    width: '100%',
+  },
+  inputInput: {
+    boxSizing: 'border-box',
+    height: '44px',
+    padding: '12px 12px 12px 40px',
+    width: '100%',
   },
 })
 
@@ -136,25 +182,44 @@ const DropdownCurrency = () => {
             horizontal: 'center',
             vertical: 'top',
           }}
-          className={classes.dropdown}
         >
-          {currenciesList.map((currencyName) => (
-            <MenuItem
-              className={classes.listItem}
-              key={currencyName}
-              value={currencyName}
-              onClick={() => onCurrentCurrencyChangedHandler(currencyName)}
-            >
-              <ListItemIcon className={classes.iconLeft}>
-                <div
-                  className={`${classes.localFlag} ${style['currency-flag']} ${style['currency-flag-lg']} ${style[`currency-flag-${currencyName.toLowerCase()}`]}`}
-                />
-              </ListItemIcon>
-              <ListItemText primary={currencyName} />
-              {currencyName === currentCurrency
-                ? <ListItemIcon className={classes.iconRight}><img src={CheckIcon} alt="" /></ListItemIcon> : null}
-            </MenuItem>
-          ))}
+          <MenuItem
+            className={classes.listItemSearch}
+            key="0"
+          >
+            <div className={classes.search}>
+              <div className={classes.searchIcon}>
+                <SearchIcon />
+              </div>
+              <InputBase
+                placeholder="Search…"
+                classes={{
+                  root: classes.inputRoot,
+                  input: classes.inputInput,
+                }}
+                inputProps={{ 'aria-label': 'search' }}
+              />
+            </div>
+          </MenuItem>
+          <li className={classes.dropdownItemsScrollWrapper}>
+            {currenciesList.map((currencyName) => (
+              <MenuItem
+                className={classes.listItem}
+                key={currencyName}
+                value={currencyName}
+                onClick={() => onCurrentCurrencyChangedHandler(currencyName)}
+              >
+                <ListItemIcon className={classes.iconLeft}>
+                  <div
+                    className={`${classes.localFlag} ${style['currency-flag']} ${style['currency-flag-lg']} ${style[`currency-flag-${currencyName.toLowerCase()}`]}`}
+                  />
+                </ListItemIcon>
+                <ListItemText primary={currencyName} />
+                {currencyName === currentCurrency
+                  ? <ListItemIcon className={classes.iconRight}><img src={CheckIcon} alt="" /></ListItemIcon> : null}
+              </MenuItem>
+            ))}
+          </li>
         </Menu>
       </>
     </MuiThemeProvider>
