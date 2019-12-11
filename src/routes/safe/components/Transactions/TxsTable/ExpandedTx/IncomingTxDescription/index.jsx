@@ -1,7 +1,7 @@
 // @flow
 import React from 'react'
-import { withStyles } from '@material-ui/core/styles'
-import { type Transaction } from '~/routes/safe/store/models/transaction'
+import { makeStyles } from '@material-ui/core/styles'
+import type { IncomingTransaction } from '~/routes/safe/store/models/incomingTransaction'
 import Bold from '~/components/layout/Bold'
 import EtherscanLink from '~/components/EtherscanLink'
 import Paragraph from '~/components/layout/Paragraph'
@@ -11,19 +11,15 @@ import { getIncomingTxAmount } from '~/routes/safe/components/Transactions/TxsTa
 
 export const TRANSACTIONS_DESC_INCOMING_TEST_ID = 'tx-description-incoming'
 
-export const styles = () => ({
+const useStyles = makeStyles({
   txDataContainer: {
     padding: `${lg} ${md}`,
     borderRight: '2px solid rgb(232, 231, 230)',
   },
-  txData: {
-    wordBreak: 'break-all',
-  },
 })
 
 type Props = {
-  classes: Object,
-  tx: Transaction,
+  tx: IncomingTransaction,
 }
 
 type TransferDescProps = {
@@ -45,10 +41,14 @@ const TransferDescription = ({ value = '', from }: TransferDescProps) => (
   </Paragraph>
 )
 
-const IncomingTxDescription = ({ tx, classes }: Props) => (
-  <Block className={classes.txDataContainer}>
-    <TransferDescription value={getIncomingTxAmount(tx)} from={tx.from} />
-  </Block>
-)
+const IncomingTxDescription = ({ tx }: Props) => {
+  const classes = useStyles()
 
-export default withStyles(styles)(IncomingTxDescription)
+  return (
+    <Block className={classes.txDataContainer}>
+      <TransferDescription value={getIncomingTxAmount(tx)} from={tx.from} />
+    </Block>
+  )
+}
+
+export default IncomingTxDescription
