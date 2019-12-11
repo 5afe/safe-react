@@ -133,6 +133,7 @@ const DropdownCurrency = () => {
             horizontal: 'center',
             vertical: 'top',
           }}
+          style={{ maxHeight: '300px' }}
         >
           {currenciesList.map((currencyName) => (
             <MenuItem
