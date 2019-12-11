@@ -1,5 +1,5 @@
 // @flow
-import React, { useEffect } from 'react'
+import React from 'react'
 import { List } from 'immutable'
 import TxsTable from '~/routes/safe/components/Transactions/TxsTable'
 import { type Transaction } from '~/routes/safe/store/models/transaction'
@@ -19,8 +19,6 @@ type Props = {
   currentNetwork: string,
 }
 
-const TIMEOUT = process.env.NODE_ENV === 'test' ? 1500 : 5000
-
 const Transactions = ({
   transactions = List(),
   incomingTransactions = List(),
@@ -32,14 +30,7 @@ const Transactions = ({
   createTransaction,
   processTransaction,
   currentNetwork,
-}: Props) => {
-  let intervalId: IntervalID
-
-  useEffect(() => {
-    return () => clearInterval(intervalId)
-  }, [safeAddress])
-
-  return (
+}: Props) => (
     <TxsTable
       transactions={transactions}
       incomingTransactions={incomingTransactions}
@@ -53,6 +44,5 @@ const Transactions = ({
       processTransaction={processTransaction}
     />
   )
-}
 
 export default Transactions

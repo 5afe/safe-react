@@ -15,7 +15,8 @@ const safe = require('../assets/safe.svg')
 const plus = require('../assets/new.svg')
 
 type Props = {
-  provider: string
+  provider: string,
+  isOldMultisigMigration?: boolean,
 }
 
 const openIconStyle = {
@@ -64,14 +65,20 @@ export const LoadSafe = ({ size, provider }: SafeProps) => (
   </Button>
 )
 
-const Welcome = ({ provider }: Props) => (
-  <Block className={styles.safe}>
-    <Heading tag="h1" weight="bold" align="center" margin="lg">
-      Welcome to
+
+const Welcome = ({ provider, isOldMultisigMigration }: Props) => {
+  const headingText = isOldMultisigMigration ? (
+    <>
+      We will replicate the owner structure from your existing Gnosis Multisig
       <br />
-      Gnosis Safe For Teams
-    </Heading>
-    <Heading tag="h3" align="center" margin="xl">
+      to let you test the new interface.
+      <br />
+      As soon as you feel comfortable, start moving funds to your new Safe.
+      <br />
+      {' '}
+    </>
+  ) : (
+    <>
       Gnosis Safe for Teams is the most secure way to manage crypto funds
       <br />
       collectively. It is an improvement of the Gnosis MultiSig, which is used
@@ -85,34 +92,46 @@ const Welcome = ({ provider }: Props) => (
       design, formally verified smart contracts and vastly improved user
       experience.
       {' '}
-      <a
-        className={styles.learnMoreLink}
-        href="https://safe.gnosis.io/teams"
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        Learn more
-        <OpenInNew style={openIconStyle} />
-      </a>
-    </Heading>
-    {provider ? (
-      <>
-        <Block className={styles.safeActions} margin="md">
-          <CreateSafe size="large" provider={provider} />
+    </>
+  )
+  return (
+    <Block className={styles.safe}>
+      <Heading tag="h1" weight="bold" align="center" margin="lg">
+        Welcome to
+        <br />
+        Gnosis Safe For Teams
+      </Heading>
+      <Heading tag="h3" align="center" margin="xl">
+        { headingText }
+        <a
+          className={styles.learnMoreLink}
+          href="https://safe.gnosis.io/teams"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Learn more
+          <OpenInNew style={openIconStyle} />
+        </a>
+      </Heading>
+      {provider ? (
+        <>
+          <Block className={styles.safeActions} margin="md">
+            <CreateSafe size="large" provider={provider} />
+          </Block>
+          <Block className={styles.safeActions} margin="md">
+            <LoadSafe size="large" provider={provider} />
+          </Block>
+        </>
+      ) : (
+        <Block margin="md" className={styles.connectWallet}>
+          <Heading tag="h3" align="center" margin="md">
+            Get Started by Connecting a Wallet
+          </Heading>
+          <ConnectButton minWidth={240} minHeight={42} />
         </Block>
-        <Block className={styles.safeActions} margin="md">
-          <LoadSafe size="large" provider={provider} />
-        </Block>
-      </>
-    ) : (
-      <Block margin="md" className={styles.connectWallet}>
-        <Heading tag="h3" align="center" margin="md">
-          Get Started by Connecting a Wallet
-        </Heading>
-        <ConnectButton minWidth={240} minHeight={42} />
-      </Block>
-    )}
-  </Block>
-)
+      )}
+    </Block>
+  )
+}
 
 export default Welcome

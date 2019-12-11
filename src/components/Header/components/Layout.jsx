@@ -16,7 +16,7 @@ import {
   border, sm, md, headerHeight,
 } from '~/theme/variables'
 import Provider from './Provider'
-import EarlyAccessLabel from './EarlyAccessLabel'
+import NetworkLabel from './NetworkLabel'
 import SafeListHeader from './SafeListHeader'
 
 const logo = require('../assets/gnosis-safe-logo.svg')
@@ -74,7 +74,7 @@ const Layout = openHoc(
       <Divider />
       <SafeListHeader />
       <Divider />
-      <EarlyAccessLabel />
+      <NetworkLabel />
       <Spacer />
       <Provider open={open} toggle={toggle} info={providerInfo}>
         {(providerRef) => (
