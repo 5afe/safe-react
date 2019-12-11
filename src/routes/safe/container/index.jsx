@@ -34,11 +34,14 @@ class SafeView extends React.Component<Props, State> {
 
   componentDidMount() {
     const {
-      fetchSafe, activeTokens, safeUrl, fetchTokenBalances, fetchTokens, fetchCurrencyValues,
+      fetchSafe, activeTokens, safeUrl, fetchTokenBalances, fetchTokens, fetchTransactions, safe, fetchCurrencyValues,
     } = this.props
 
     fetchSafe(safeUrl)
     fetchTokenBalances(safeUrl, activeTokens)
+    if (safe && safe.address) {
+      fetchTransactions(safe.address)
+    }
 
     // fetch tokens there to get symbols for tokens in TXs list
     fetchTokens()
