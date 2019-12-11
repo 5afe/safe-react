@@ -69,7 +69,7 @@ export const LoadSafe = ({ size, provider }: SafeProps) => (
 const Welcome = ({ provider, isOldMultisigMigration }: Props) => {
   const headingText = isOldMultisigMigration ? (
     <>
-      We will replicate the owner structure from your existing Gnosis Safe Multisig
+      We will replicate the owner structure from your existing Gnosis MultiSig
       <br />
       to let you test the new interface.
       <br />
