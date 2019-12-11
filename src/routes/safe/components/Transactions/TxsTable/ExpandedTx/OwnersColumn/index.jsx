@@ -16,6 +16,7 @@ import CheckLargeFilledGreenIcon from './assets/check-large-filled-green.svg'
 import ConfirmLargeGreenIcon from './assets/confirm-large-green.svg'
 import ConfirmLargeGreyIcon from './assets/confirm-large-grey.svg'
 import { styles } from './style'
+import Paragraph from '~/components/layout/Paragraph/index'
 
 type Props = {
   tx: Transaction,
@@ -32,10 +33,7 @@ type Props = {
   onTxExecute: Function
 }
 
-const isCancellationTransaction = (
-  tx: Transaction,
-  safeAddress: string,
-) => !tx.value && tx.data === EMPTY_DATA && tx.recipient === safeAddress
+const isCancellationTransaction = (tx: Transaction, safeAddress: string) => !tx.value && tx.data === EMPTY_DATA && tx.recipient === safeAddress
 
 const OwnersColumn = ({
   tx,
@@ -52,7 +50,7 @@ const OwnersColumn = ({
   canExecute,
 }: Props) => {
   const cancellationTx = isCancellationTransaction(tx, safeAddress)
-  const showOlderTxAnnotation = thresholdReached && !canExecute && !tx.isExecuted
+  const showOlderTxAnnotation =    thresholdReached && !canExecute && !tx.isExecuted
 
   const ownersWhoConfirmed = []
   let currentUserAlreadyConfirmed = false
@@ -66,8 +64,8 @@ const OwnersColumn = ({
   })
   const ownersUnconfirmed = owners.filter(
     (owner) => tx.confirmations.findIndex(
-      (conf) => conf.owner.address === owner.address,
-    ) === -1,
+        (conf) => conf.owner.address === owner.address,
+      ) === -1,
   )
   let userIsUnconfirmedOwner
   ownersUnconfirmed.some((owner) => {
@@ -92,19 +90,29 @@ const OwnersColumn = ({
     displayButtonRow = false
   }
 
-  const showConfirmBtn = !tx.isExecuted
+  const showConfirmBtn =    !tx.isExecuted
+    && tx.status !== 'pending'
     && !tx.cancelled
     && userIsUnconfirmedOwner
     && !currentUserAlreadyConfirmed
     && !thresholdReached
 
+  const showExecuteBtn = canExecute && !tx.isExecuted && thresholdReached
+
   return (
     <Col xs={6} className={classes.rightCol} layout="block">
-      <Block className={cn(classes.ownerListTitle, (thresholdReached || tx.isExecuted) && classes.ownerListTitleDone)}>
+      <Block
+        className={cn(
+          classes.ownerListTitle,
+          (thresholdReached || tx.isExecuted) && classes.ownerListTitleDone,
+        )}
+      >
         <div className={classes.iconState}>
-          {thresholdReached || tx.isExecuted
-            ? <Img src={CheckLargeFilledGreenIcon} />
-            : <Img src={ConfirmLargeGreenIcon} />}
+          {thresholdReached || tx.isExecuted ? (
+            <Img src={CheckLargeFilledGreenIcon} />
+          ) : (
+            <Img src={ConfirmLargeGreenIcon} />
+          )}
         </div>
         {tx.isExecuted
           ? `Confirmed [${tx.confirmations.size}/${tx.confirmations.size}]`
@@ -119,25 +127,43 @@ const OwnersColumn = ({
         onTxConfirm={onTxConfirm}
         onTxExecute={onTxExecute}
         showConfirmBtn={showConfirmBtn}
-        showExecuteBtn={!tx.isExecuted && thresholdReached}
+        showExecuteBtn={showExecuteBtn}
       />
-      <Block className={cn(classes.ownerListTitle, tx.isExecuted && classes.ownerListTitleDone)}>
-        <div className={thresholdReached || tx.isExecuted
-          ? classes.verticalLineProgressDone
-          : classes.verticalLineProgressPending}
+      <Block
+        className={cn(
+          classes.ownerListTitle,
+          tx.isExecuted && classes.ownerListTitleDone,
+        )}
+      >
+        <div
+          className={
+            thresholdReached || tx.isExecuted
+              ? classes.verticalLineProgressDone
+              : classes.verticalLineProgressPending
+          }
         />
         <div className={classes.iconState}>
-          {!thresholdReached && !tx.isExecuted && <Img src={ConfirmLargeGreyIcon} alt="Confirm tx" />}
-          {thresholdReached && !tx.isExecuted && <Img src={ConfirmLargeGreenIcon} alt="Execute tx" />}
-          {tx.isExecuted && <Img src={CheckLargeFilledGreenIcon} alt="TX Executed icon" />}
+          {!thresholdReached && !tx.isExecuted && (
+            <Img src={ConfirmLargeGreyIcon} alt="Confirm tx" />
+          )}
+          {thresholdReached && !tx.isExecuted && (
+            <Img src={ConfirmLargeGreenIcon} alt="Execute tx" />
+          )}
+          {tx.isExecuted && (
+            <Img src={CheckLargeFilledGreenIcon} alt="TX Executed icon" />
+          )}
         </div>
         Executed
       </Block>
+      {showOlderTxAnnotation && (
+        <Block className={classes.olderTxAnnotation}>
+          <Paragraph>
+            There are older transactions that need to be executed first
+          </Paragraph>
+        </Block>
+      )}
       {granted && displayButtonRow && (
-        <ButtonRow
-          onTxCancel={onTxCancel}
-          showCancelBtn={!cancellationTx}
-        />
+        <ButtonRow onTxCancel={onTxCancel} showCancelBtn={!cancellationTx} />
       )}
     </Col>
   )
