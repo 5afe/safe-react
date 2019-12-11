@@ -1,6 +1,8 @@
 // @flow
 import * as React from 'react'
 import { connect } from 'react-redux'
+import queryString from 'query-string'
+import { withRouter } from 'react-router-dom'
 import Page from '~/components/layout/Page'
 import {
   getAccountsFrom, getThresholdFrom, getNamesFrom, getSafeNameFrom, getOwnersFrom,
@@ -22,6 +24,30 @@ type Props = Actions & {
 
 export type OpenState = {
   safeAddress: string,
+}
+
+export type SafePropsType = {
+  name: string,
+  ownerAddresses: string[],
+  ownerNames: string[],
+  threshold: string,
+}
+
+const validateQueryParams = (ownerAddresses?: string[], ownerNames?: string[], threshold?: string, safeName?: string) => {
+  if (!ownerAddresses || !ownerNames || !threshold || !safeName) {
+    return false
+  }
+  if (!ownerAddresses.length === 0 || ownerNames.length === 0) {
+    return false
+  }
+
+  if (Number.isNaN(Number(threshold))) {
+    return false
+  }
+  if (threshold > ownerAddresses.length) {
+    return false
+  }
+  return true
 }
 
 export const createSafe = async (values: Object, userAccount: string, addSafe: AddSafe): Promise<OpenState> => {
@@ -75,8 +101,23 @@ class Open extends React.Component<Props> {
   }
 
   render() {
-    const { provider, userAccount, network } = this.props
+    const {
+      provider, userAccount, network, location,
+    } = this.props
+    const query: SafePropsType = queryString.parse(location.search, { arrayFormat: 'comma' })
+    const {
+      name, owneraddresses, ownernames, threshold,
+    } = query
 
+    let safeProps = null
+    if (validateQueryParams(owneraddresses, ownernames, threshold, name)) {
+      safeProps = {
+        name,
+        ownerAddresses: owneraddresses,
+        ownerNames: ownernames,
+        threshold,
+      }
+    }
     return (
       <Page>
         <Layout
@@ -84,10 +125,11 @@ class Open extends React.Component<Props> {
           provider={provider}
           userAccount={userAccount}
           onCallSafeContractSubmit={this.onCallSafeContractSubmit}
+          safeProps={safeProps}
         />
       </Page>
     )
   }
 }
 
-export default connect(selector, actions)(Open)
+export default connect(selector, actions)(withRouter(Open))
