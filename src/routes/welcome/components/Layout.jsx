@@ -69,7 +69,7 @@ export const LoadSafe = ({ size, provider }: SafeProps) => (
 const Welcome = ({ provider, isOldMultisigMigration }: Props) => {
   const headingText = isOldMultisigMigration ? (
     <>
-      We will replicate the owner structure from your existing Gnosis Multisig
+      We will replicate the owner structure from your existing Gnosis Safe Multisig
       <br />
       to let you test the new interface.
       <br />
@@ -79,7 +79,7 @@ const Welcome = ({ provider, isOldMultisigMigration }: Props) => {
     </>
   ) : (
     <>
-      Gnosis Safe for Teams is the most secure way to manage crypto funds
+      Gnosis Safe Multisig is the most secure way to manage crypto funds
       <br />
       collectively. It is an improvement of the Gnosis MultiSig, which is used
       by more than 3000 teams
@@ -99,7 +99,7 @@ const Welcome = ({ provider, isOldMultisigMigration }: Props) => {
       <Heading tag="h1" weight="bold" align="center" margin="lg">
         Welcome to
         <br />
-        Gnosis Safe For Teams
+        Gnosis Safe Multisig
       </Heading>
       <Heading tag="h3" align="center" margin="xl">
         { headingText }
