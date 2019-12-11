@@ -92,7 +92,7 @@ const getTransactionTableData = (tx: Transaction): TransactionRow => {
 
 export const getTxTableData = (transactions: List<Transaction | IncomingTransaction>): List<TransactionRow> => {
   return transactions.map((tx) => {
-    if (tx.type === 'incoming') {
+    if (tx.type === INCOMING_TX_TYPE) {
       return getIncomingTxTableData(tx)
     }
 
