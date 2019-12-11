@@ -261,29 +261,9 @@ export const loadSafeIncomingTransactions = async (safeAddress: string) => {
   return Map().set(safeAddress, List(incomingTxsRecord))
 }
 
-export default (safeAddress: string) => async (dispatch: ReduxDispatch<GlobalState>, getState) => {
+export default (safeAddress: string) => async (dispatch: ReduxDispatch<GlobalState>) => {
   const transactions: Map<string, List<Transaction>> = await loadSafeTransactions(safeAddress)
   const incomingTransactions: Map<string, List<IncomingTransaction>> = await loadSafeIncomingTransactions(safeAddress)
-  const state = getState()
-  const storedIncoming = state.incomingTransactions.get(safeAddress) || Map()
-  const mergedIncomingTxs = storedIncoming.merge(incomingTransactions.get(safeAddress))
-
-  if (!mergedIncomingTxs.equals(storedIncoming)) {
-    const blocks = storedIncoming.reduce((map, { blockNumber }) => map.set(blockNumber, true), Map())
-    incomingTransactions.get(safeAddress).forEach((tx) => {
-      if (!blocks.get(tx.blockNumber)) {
-        dispatch(enqueueSnackbar(enhanceSnackbarForAction({
-          message: `Incoming transfer: ${getIncomingTxAmount(tx)}`,
-          options: {
-            variant: SUCCESS,
-            autoHideDuration: 10000,
-            persist: false,
-            preventDuplicate: true,
-          },
-        })))
-      }
-    })
-  }
 
   dispatch(addTransactions(transactions))
   dispatch(addIncomingTransactions(incomingTransactions))

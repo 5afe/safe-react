@@ -14,6 +14,7 @@ export type SafeProps = {
   activeTokens: Set<string>,
   blacklistedTokens: Set<string>,
   ethBalance?: string,
+  latestIncomingTxBlock: number,
 }
 
 const SafeRecord: RecordFactory<SafeProps> = Record({
@@ -25,6 +26,7 @@ const SafeRecord: RecordFactory<SafeProps> = Record({
   activeTokens: new Set(),
   blacklistedTokens: new Set(),
   balances: Map({}),
+  latestIncomingTxBlock: 0,
 })
 
 export type Safe = RecordOf<SafeProps>
