@@ -14,6 +14,7 @@ import { getIncomingTxAmount } from '~/routes/safe/components/Transactions/TxsTa
 import updateSafe from '~/routes/safe/store/actions/updateSafe'
 import { loadFromStorage } from '~/utils/storage'
 import { SAFES_KEY } from '~/logic/safe/utils'
+import { RECURRING_USER_KEY } from '~/utils/verifyRecurringUser'
 
 const watchedActions = [
   ADD_TRANSACTIONS,
@@ -53,25 +54,30 @@ const notificationsMiddleware = (store: Store<GlobalState>) => (next: Function) 
 
           const newIncomingTransactions = incomingTransactions.filter((tx) => tx.blockNumber > latestIncomingTxBlock)
           const { message, ...TX_INCOMING_MSG } = NOTIFICATIONS.TX_INCOMING_MSG
+          const recurringUser = await loadFromStorage(RECURRING_USER_KEY)
 
-          if (newIncomingTransactions.size > 3) {
-            dispatch(
-              enqueueSnackbar(
-                enhanceSnackbarForAction({
-                  ...TX_INCOMING_MSG, message: 'Multiple incoming transfers',
-                }),
-              ),
-            )
-          } else {
-            newIncomingTransactions.forEach((tx) => {
+          if (recurringUser) {
+            if (newIncomingTransactions.size > 3) {
               dispatch(
                 enqueueSnackbar(
                   enhanceSnackbarForAction({
-                    ...TX_INCOMING_MSG, message: `${message}${getIncomingTxAmount(tx)}`,
-                  }),
-                ),
+                    ...TX_INCOMING_MSG,
+                    message: 'Multiple incoming transfers'
+                  })
+                )
               )
-            })
+            } else {
+              newIncomingTransactions.forEach((tx) => {
+                dispatch(
+                  enqueueSnackbar(
+                    enhanceSnackbarForAction({
+                      ...TX_INCOMING_MSG,
+                      message: `${message}${getIncomingTxAmount(tx)}`,
+                    }),
+                  ),
+                )
+              })
+            }
           }
 
           dispatch(
