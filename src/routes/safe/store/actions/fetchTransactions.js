@@ -21,6 +21,9 @@ import { isTokenTransfer } from '~/logic/tokens/utils/tokenHelpers'
 import { decodeParamsFromSafeMethod } from '~/logic/contracts/methodIds'
 import { ALTERNATIVE_TOKEN_ABI } from '~/logic/tokens/utils/alternativeAbi'
 import { ZERO_ADDRESS } from '~/logic/wallets/ethAddresses'
+import enqueueSnackbar from '~/logic/notifications/store/actions/enqueueSnackbar'
+import { enhanceSnackbarForAction, SUCCESS } from '~/logic/notifications'
+import { getIncomingTxAmount } from '~/routes/safe/components/Transactions/TxsTable/columns'
 
 let web3
 
@@ -223,10 +226,30 @@ export const loadSafeIncomingTransactions = async (safeAddress: string) => {
   return Map().set(safeAddress, List(incomingTxsRecord))
 }
 
-export default (safeAddress: string) => async (dispatch: ReduxDispatch<GlobalState>) => {
+export default (safeAddress: string) => async (dispatch: ReduxDispatch<GlobalState>, getState) => {
   try {
     const transactions: Map<string, List<Transaction>> = await loadSafeTransactions(safeAddress)
     const incomingTransactions: Map<string, List<IncomingTransaction>> = await loadSafeIncomingTransactions(safeAddress)
+    const state = getState()
+    const storedIncoming = state.incomingTransactions.get(safeAddress) || Map()
+    const mergedIncomingTxs = storedIncoming.merge(incomingTransactions.get(safeAddress))
+
+    if (!mergedIncomingTxs.equals(storedIncoming)) {
+      const blocks = storedIncoming.reduce((map, { blockNumber }) => map.set(blockNumber, true), Map())
+      incomingTransactions.get(safeAddress).forEach((tx) => {
+        if (!blocks.get(tx.blockNumber)) {
+          dispatch(enqueueSnackbar(enhanceSnackbarForAction({
+            message: `Incoming transfer: ${getIncomingTxAmount(tx)}`,
+            options: {
+              variant: SUCCESS,
+              autoHideDuration: 10000,
+              persist: false,
+              preventDuplicate: true,
+            },
+          })))
+        }
+      })
+    }
 
     dispatch(addTransactions(transactions))
     dispatch(addIncomingTransactions(incomingTransactions))
