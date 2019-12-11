@@ -3,17 +3,18 @@ import React from 'react'
 import Tooltip from '@material-ui/core/Tooltip'
 import { makeStyles } from '@material-ui/core/styles'
 import Img from '~/components/layout/Img'
+import EtherscanOpenIcon from './img/etherscan-open.svg'
 import { getEtherScanLink } from '~/logic/wallets/getWeb3'
 import { xs } from '~/theme/variables'
-import SearchIcon from './search.svg'
 
 const useStyles = makeStyles({
   container: {
+    alignItems: 'center',
+    borderRadius: '50%',
     display: 'flex',
     justifyContent: 'center',
-    alignItems: 'center',
     margin: `0 ${xs}`,
-    borderRadius: '50%',
+    padding: '0',
     transition: 'background-color .2s ease-in-out',
     '&:hover': {
       backgroundColor: '#F0EFEE',
@@ -37,13 +38,13 @@ const EtherscanBtn = ({ type, value, increaseZindex = false }: EtherscanBtnProps
   return (
     <Tooltip title="Show details on Etherscan" placement="top" classes={customClasses}>
       <a
+        aria-label="Show details on Etherscan"
         className={classes.container}
         href={getEtherScanLink(type, value)}
-        target="_blank"
         rel="noopener noreferrer"
-        aria-label="Show details on Etherscan"
+        target="_blank"
       >
-        <Img src={SearchIcon} height={20} alt="Etherscan" />
+        <Img src={EtherscanOpenIcon} height={20} alt="Show on Etherscan" />
       </a>
     </Tooltip>
   )
