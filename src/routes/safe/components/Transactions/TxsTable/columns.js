@@ -30,11 +30,8 @@ type TxData = {
 export const formatDate = (date: string): string => format(parseISO(date), 'MMM d, yyyy - HH:mm:ss')
 
 export const getIncomingTxAmount = (tx: IncomingTransaction) => {
-  const {
-    utils: { toBN, fromWei },
-  } = getWeb3()
-
-  return Number(tx.value) > 0 ? `${fromWei(toBN(tx.value), 'ether')} ${tx.symbol || '???'}` : 'n/a'
+  const txAmount = tx.value ? `${new BigNumber(tx.value).div(`1e${tx.decimals}`).toFixed()}` : 'n/a'
+  return `${txAmount} ${tx.symbol || 'n/a'}`
 }
 
 export const getTxAmount = (tx: Transaction) => {
