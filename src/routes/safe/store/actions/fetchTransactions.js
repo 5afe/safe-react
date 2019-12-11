@@ -198,9 +198,10 @@ export const buildIncomingTransactionFrom = async (tx: IncomingTxServiceModel) =
   let symbol = 'ETH'
   let decimals = 18
 
-  const executionDate = await web3.eth.getBlock(tx.blockNumber)
+  const whenExecutionDate = web3.eth.getBlock(tx.blockNumber)
     .then(({ timestamp }) => new Date(timestamp * 1000).toISOString())
-  const fee = await web3.eth.getTransaction(tx.transactionHash).then((t) => bn(t.gas).div(t.gasPrice).toFixed())
+  const whenFee = web3.eth.getTransaction(tx.transactionHash).then((t) => bn(t.gas).div(t.gasPrice).toFixed())
+  const [executionDate, fee] = await Promise.all([whenExecutionDate, whenFee])
 
   if (tx.tokenAddress) {
     try {
