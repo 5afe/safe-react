@@ -87,12 +87,11 @@ export const estimateGasForDeployingSafe = async (
   numConfirmations: number,
   userAccount: string,
 ) => {
-  const masterSafeContract = await getSafeMasterContract()
-  const gnosisSafeData = await masterSafeContract.contract.methods
+  const gnosisSafeData = await safeMaster.contract.methods
     .setup(safeAccounts, numConfirmations, ZERO_ADDRESS, '0x', ZERO_ADDRESS, 0, ZERO_ADDRESS)
     .encodeABI()
   const proxyFactoryData = proxyFactoryMaster.contract.methods
-    .createProxy(masterSafeContract.address, gnosisSafeData)
+    .createProxy(safeMaster.address, gnosisSafeData)
     .encodeABI()
   const gas = await calculateGasOf(proxyFactoryData, userAccount, proxyFactoryMaster.address)
   const gasPrice = await calculateGasPrice()

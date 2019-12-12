@@ -15,10 +15,13 @@ import {
   FIELD_CONFIRMATIONS,
   FIELD_SAFE_NAME,
 } from '~/routes/open/components/fields'
+import { initContracts } from '~/logic/contracts/safeContracts'
 import { history } from '~/store'
 import { secondary, sm } from '~/theme/variables'
 import type { SafePropsType } from '~/routes/open/container/Open'
 import Welcome from '~/routes/welcome/components/Layout'
+
+const { useEffect } = React
 
 const getSteps = () => ['Name', 'Owners and confirmations', 'Review']
 
@@ -80,6 +83,13 @@ const Layout = (props: Props) => {
   const {
     provider, userAccount, onCallSafeContractSubmit, network, safeProps,
   } = props
+
+  useEffect(() => {
+    if (provider) {
+      initContracts()
+    }
+  }, [provider])
+
   const steps = getSteps()
 
   const initialValues = initialValuesFrom(userAccount, safeProps)
