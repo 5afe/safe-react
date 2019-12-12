@@ -19,7 +19,7 @@ import Provider from './Provider'
 import NetworkLabel from './NetworkLabel'
 import SafeListHeader from './SafeListHeader'
 
-const logo = require('../assets/gnosis-safe-logo.svg')
+const logo = require('../assets/gnosis-safe-multisig-logo.svg')
 
 type Props = Open & {
   classes: Object,

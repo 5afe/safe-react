@@ -109,15 +109,15 @@ const ReviewTx = ({
       txAmount = 0
     }
 
-    createTransaction(
+    createTransaction({
       safeAddress,
-      txRecipient,
-      txAmount,
+      to: txRecipient,
+      valueInWei: txAmount,
       txData,
-      TX_NOTIFICATION_TYPES.STANDARD_TX,
+      notifiedTransaction: TX_NOTIFICATION_TYPES.STANDARD_TX,
       enqueueSnackbar,
       closeSnackbar,
-    )
+    })
     onClose()
   }
 

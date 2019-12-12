@@ -8,7 +8,6 @@ import { makeOwner } from '~/routes/safe/store/models/owner'
 import { makeTransaction, type Transaction } from '~/routes/safe/store/models/transaction'
 import { makeIncomingTransaction, type IncomingTransaction } from '~/routes/safe/store/models/incomingTransaction'
 import { makeConfirmation } from '~/routes/safe/store/models/confirmation'
-import { loadSafeSubjects } from '~/utils/storage/transactions'
 import { buildTxServiceUrl, type TxServiceType } from '~/logic/safe/transactions/txHistory'
 import { buildIncomingTxServiceUrl } from '~/logic/safe/transactions/incomingTxHistory'
 import { getOwners } from '~/logic/safe/utils'
@@ -67,9 +66,7 @@ type IncomingTxServiceModel = {
 export const buildTransactionFrom = async (
   safeAddress: string,
   tx: TxServiceModel,
-  safeSubjects: Map<string, string>,
 ) => {
-  const name = safeSubjects.get(String(tx.nonce)) || 'Unknown'
   const storedOwners = await getOwners(safeAddress)
   const confirmations = List(
     tx.confirmations.map((conf: ConfirmationServiceModel) => {
@@ -140,7 +137,6 @@ export const buildTransactionFrom = async (
   }
 
   return makeTransaction({
-    name,
     symbol,
     nonce: tx.nonce,
     blockNumber: tx.blockNumber,
@@ -244,9 +240,9 @@ export const loadSafeTransactions = async (safeAddress: string) => {
   } catch (err) {
     console.error(`Requests for transactions for ${safeAddress} failed with 404`, err)
   }
-  const safeSubjects = loadSafeSubjects(safeAddress)
+
   const txsRecord = await Promise.all(
-    transactions.map((tx: TxServiceModel) => buildTransactionFrom(safeAddress, tx, safeSubjects)),
+    transactions.map((tx: TxServiceModel) => buildTransactionFrom(safeAddress, tx)),
   )
 
   return Map().set(safeAddress, List(txsRecord))

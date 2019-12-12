@@ -16,6 +16,7 @@ type Props = {
   createTransaction: Function,
   processTransaction: Function,
   currentNetwork: string,
+  nonce: number,
 }
 
 const Transactions = ({
@@ -28,6 +29,7 @@ const Transactions = ({
   createTransaction,
   processTransaction,
   currentNetwork,
+  nonce,
 }: Props) => (
   <TxsTable
     transactions={transactions}
@@ -39,6 +41,7 @@ const Transactions = ({
     safeAddress={safeAddress}
     createTransaction={createTransaction}
     processTransaction={processTransaction}
+    nonce={nonce}
   />
 )
 

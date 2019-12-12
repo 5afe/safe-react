@@ -15,10 +15,3 @@ export const storeSubject = async (safeAddress: string, nonce: number, subject: 
     console.error('Error storing transaction subject in localstorage', err)
   }
 }
-
-export const loadSafeSubjects = (safeAddress: string): Map<string, string> => {
-  const key = getSubjectKeyFrom(safeAddress)
-  const data: any = loadFromStorage(key)
-
-  return data ? Map(data) : Map()
-}

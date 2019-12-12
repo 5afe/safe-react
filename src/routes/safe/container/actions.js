@@ -19,7 +19,7 @@ export type Actions = {
   processTransaction: typeof processTransaction,
   fetchEtherBalance: typeof fetchEtherBalance,
   activateTokensByBalance: typeof activateTokensByBalance,
-  checkAndUpdateSafeOwners: typeof checkAndUpdateSafeOwners
+  checkAndUpdateSafeOwners: typeof checkAndUpdateSafe
 }
 
 export default {

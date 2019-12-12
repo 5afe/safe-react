@@ -34,14 +34,12 @@ class SafeView extends React.Component<Props, State> {
 
   componentDidMount() {
     const {
-      fetchSafe, activeTokens, safeUrl, fetchTokenBalances, fetchTokens, fetchTransactions, safe,
+      fetchSafe, activeTokens, safeUrl, fetchTokenBalances, fetchTokens, fetchTransactions,
     } = this.props
 
     fetchSafe(safeUrl)
     fetchTokenBalances(safeUrl, activeTokens)
-    if (safe && safe.address) {
-      fetchTransactions(safe.address)
-    }
+    fetchTransactions(safeUrl)
 
     // fetch tokens there to get symbols for tokens in TXs list
     fetchTokens()
@@ -52,11 +50,15 @@ class SafeView extends React.Component<Props, State> {
   }
 
   componentDidUpdate(prevProps) {
-    const { activeTokens } = this.props
+    const { activeTokens, safeUrl, fetchTransactions } = this.props
     const oldActiveTokensSize = prevProps.activeTokens.size
 
     if (oldActiveTokensSize > 0 && activeTokens.size > oldActiveTokensSize) {
       this.checkForUpdates()
+    }
+
+    if (safeUrl !== prevProps.safeUrl) {
+      fetchTransactions(safeUrl)
     }
   }
 
@@ -92,7 +94,12 @@ class SafeView extends React.Component<Props, State> {
 
   checkForUpdates() {
     const {
-      safeUrl, activeTokens, fetchTokenBalances, fetchEtherBalance, fetchTransactions, checkAndUpdateSafeOwners,
+      safeUrl,
+      activeTokens,
+      fetchTokenBalances,
+      fetchEtherBalance,
+      fetchTransactions,
+      checkAndUpdateSafeOwners,
     } = this.props
     checkAndUpdateSafeOwners(safeUrl)
     fetchTokenBalances(safeUrl, activeTokens)

@@ -53,6 +53,9 @@ export const styles = () => ({
     textTransform: 'uppercase',
     letterSpacing: '1px',
   },
+  olderTxAnnotation: {
+    textAlign: 'center',
+  },
   ownerListTitleDone: {
     color: secondary,
   },
