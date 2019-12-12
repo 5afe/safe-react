@@ -33,8 +33,9 @@ type Props = {
   threshold: number,
   thresholdReached: boolean,
   userAddress: string,
+  canExecute: boolean,
   enqueueSnackbar: Function,
-  closeSnackbar: Function,
+  closeSnackbar: Function
 }
 
 const getModalTitleAndDescription = (thresholdReached: boolean) => {
@@ -59,15 +60,16 @@ const ApproveTxModal = ({
   tx,
   safeAddress,
   threshold,
+  canExecute,
   thresholdReached,
   userAddress,
   enqueueSnackbar,
   closeSnackbar,
 }: Props) => {
-  const oneConfirmationLeft = !thresholdReached && tx.confirmations.size + 1 === threshold
-  const [approveAndExecute, setApproveAndExecute] = useState<boolean>(oneConfirmationLeft || thresholdReached)
+  const [approveAndExecute, setApproveAndExecute] = useState<boolean>(canExecute)
   const [gasCosts, setGasCosts] = useState<string>('< 0.001')
   const { title, description } = getModalTitleAndDescription(thresholdReached)
+  const oneConfirmationLeft = !thresholdReached && tx.confirmations.size + 1 === threshold
 
   useEffect(() => {
     let isCurrent = true
@@ -100,20 +102,25 @@ const ApproveTxModal = ({
   const handleExecuteCheckbox = () => setApproveAndExecute((prevApproveAndExecute) => !prevApproveAndExecute)
 
   const approveTx = () => {
-    processTransaction(
+    processTransaction({
       safeAddress,
       tx,
       userAddress,
-      TX_NOTIFICATION_TYPES.CONFIRMATION_TX,
+      notifiedTransaction: TX_NOTIFICATION_TYPES.CONFIRMATION_TX,
       enqueueSnackbar,
       closeSnackbar,
-      approveAndExecute && oneConfirmationLeft,
-    )
+      approveAndExecute: canExecute && approveAndExecute && oneConfirmationLeft,
+    })
     onClose()
   }
 
   return (
-    <Modal title={title} description={description} handleClose={onClose} open={isOpen}>
+    <Modal
+      title={title}
+      description={description}
+      handleClose={onClose}
+      open={isOpen}
+    >
       <Row align="center" grow className={classes.heading}>
         <Paragraph weight="bolder" className={classes.headingText} noMargin>
           {title}
@@ -131,14 +138,21 @@ const ApproveTxModal = ({
             <br />
             <Bold className={classes.nonceNumber}>{tx.nonce}</Bold>
           </Paragraph>
-          {oneConfirmationLeft && (
+          {oneConfirmationLeft && canExecute && (
             <>
               <Paragraph color="error">
-                Approving this transaction executes it right away. If you want approve but execute the transaction
-                manually later, click on the checkbox below.
+                Approving this transaction executes it right away. If you want
+                approve but execute the transaction manually later, click on the
+                checkbox below.
               </Paragraph>
               <FormControlLabel
-                control={<Checkbox onChange={handleExecuteCheckbox} checked={approveAndExecute} color="primary" />}
+                control={(
+                  <Checkbox
+                    onChange={handleExecuteCheckbox}
+                    checked={approveAndExecute}
+                    color="primary"
+                  />
+                )}
                 label="Execute transaction"
               />
             </>

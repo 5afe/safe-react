@@ -47,15 +47,15 @@ export const sendAddOwner = async (
   const gnosisSafe = await getGnosisSafeInstanceAt(safeAddress)
   const txData = gnosisSafe.contract.methods.addOwnerWithThreshold(values.ownerAddress, values.threshold).encodeABI()
 
-  const txHash = await createTransaction(
+  const txHash = await createTransaction({
     safeAddress,
-    safeAddress,
-    0,
+    to: safeAddress,
+    valueInWei: 0,
     txData,
-    TX_NOTIFICATION_TYPES.SETTINGS_CHANGE_TX,
+    notifiedTransaction: TX_NOTIFICATION_TYPES.SETTINGS_CHANGE_TX,
     enqueueSnackbar,
     closeSnackbar,
-  )
+  })
 
   if (txHash) {
     addSafeOwner({ safeAddress, ownerName: values.ownerName, ownerAddress: values.ownerAddress })
