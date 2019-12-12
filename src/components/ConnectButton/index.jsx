@@ -38,7 +38,7 @@ export const web3Connect = new Web3Connect.Core({
         id: SQUARELINK_CLIENT_ID,
       },
     },
-    formatic: {
+    fortmatic: {
       package: Fortmatic,
       options: {
         key: FORTMATIC_API_KEY,
