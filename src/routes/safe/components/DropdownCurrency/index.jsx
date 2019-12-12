@@ -207,7 +207,7 @@ const DropdownCurrency = () => {
               />
             </div>
           </MenuItem>
-          <li className={classes.dropdownItemsScrollWrapper}>
+          <div className={classes.dropdownItemsScrollWrapper}>
             {currenciesListFiltered.map((currencyName) => (
               <MenuItem
                 className={classes.listItem}
@@ -225,7 +225,7 @@ const DropdownCurrency = () => {
                   ? <ListItemIcon className={classes.iconRight}><img src={CheckIcon} alt="" /></ListItemIcon> : null}
               </MenuItem>
             ))}
-          </li>
+          </div>
         </Menu>
       </>
     </MuiThemeProvider>
