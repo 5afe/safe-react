@@ -6,6 +6,9 @@ import { setCurrencyBalances } from '~/logic/currencyValues/store/actions/setCur
 import { AVAILABLE_CURRENCIES, makeBalanceCurrency } from '~/logic/currencyValues/store/model/currencyValues'
 import { setCurrencySelected } from '~/logic/currencyValues/store/actions/setCurrencySelected'
 import fetchTokenCurrenciesBalances from '~/logic/currencyValues/api/fetchTokenCurrenciesBalances'
+import { CURRENCY_SELECTED_KEY } from '~/logic/currencyValues/store/middlewares/currencySelected'
+import { loadFromStorage } from '~/utils/storage'
+import fetchCurrencySelectedValue from '~/logic/currencyValues/store/actions/fetchCurrencySelectedValue'
 
 
 export const fetchCurrencyValues = (safeAddress: string) => async (dispatch: ReduxDispatch<GlobalState>) => {
@@ -24,7 +27,13 @@ export const fetchCurrencyValues = (safeAddress: string) => async (dispatch: Red
     }))
 
     dispatch(setCurrencyBalances(currencyList))
-    dispatch(setCurrencySelected(AVAILABLE_CURRENCIES.USD))
+    const currencyStored = await loadFromStorage(CURRENCY_SELECTED_KEY)
+    if (!currencyStored) {
+      return dispatch(setCurrencySelected(AVAILABLE_CURRENCIES.USD))
+    }
+    const { currencyValueSelected } = currencyStored
+    dispatch(fetchCurrencySelectedValue(currencyValueSelected))
+    dispatch(setCurrencySelected(currencyValueSelected))
   } catch (err) {
     console.error('Error fetching tokens price list', err)
   }
