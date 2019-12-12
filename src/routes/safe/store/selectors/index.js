@@ -1,9 +1,9 @@
 // @flow
 import { Map, List, Set } from 'immutable'
-import { type Match } from 'react-router-dom'
+import { type Match, matchPath } from 'react-router-dom'
 import { createSelector, createStructuredSelector, type Selector } from 'reselect'
 import { type GlobalState } from '~/store/index'
-import { SAFE_PARAM_ADDRESS } from '~/routes/routes'
+import { SAFE_PARAM_ADDRESS, SAFELIST_ADDRESS } from '~/routes/routes'
 import { type Safe } from '~/routes/safe/store/models/safe'
 import { type State as TransactionsState, TRANSACTIONS_REDUCER_ID } from '~/routes/safe/store/reducer/transactions'
 import { type Transaction } from '~/routes/safe/store/models/transaction'
@@ -62,6 +62,15 @@ export const safeTransactionsSelector: Selector<GlobalState, RouterProps, List<T
     return transactions.get(address) || List([])
   },
 )
+
+export const safeParamAddressFromStateSelector = (state: GlobalState) => {
+  const match = matchPath(
+    state.router.location.pathname,
+    { path: `${SAFELIST_ADDRESS}/:safeAddress` },
+  )
+  const { safeAddress } = match.params
+  return safeAddress
+}
 
 export const confirmationsTransactionSelector: Selector<GlobalState, TransactionProps, number> = createSelector(
   oneTransactionSelector,

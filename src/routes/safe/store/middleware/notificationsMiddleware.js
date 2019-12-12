@@ -9,8 +9,7 @@ import enqueueSnackbar from '~/logic/notifications/store/actions/enqueueSnackbar
 import { enhanceSnackbarForAction, NOTIFICATIONS } from '~/logic/notifications'
 import closeSnackbarAction from '~/logic/notifications/store/actions/closeSnackbar'
 import { isUserOwner } from '~/logic/wallets/ethAddresses'
-import { safesMapSelector } from '~/routes/safe/store/selectors'
-
+import { safeParamAddressFromStateSelector, safesMapSelector } from '~/routes/safe/store/selectors'
 
 const watchedActions = [
   ADD_TRANSACTIONS,
@@ -28,19 +27,20 @@ const notificationsMiddleware = (store: Store<GlobalState>) => (next: Function) 
         const userAddress: string = userAccountSelector(state)
         const awaitingTransactions = getAwaitingTransactions(transactionsList, userAddress)
         const safes = safesMapSelector(state)
+        const safeAddress = safeParamAddressFromStateSelector(state)
+        const currentSafe = safes.get(safeAddress)
 
-        awaitingTransactions.map((awaitingTransactionsList, safeAddress) => {
-          const safe = safes.get(safeAddress)
-          // If the user is not an owner, do not send notifications
-          if (!isUserOwner(safe, userAddress)) {
-            return
-          }
+        // If the user is not an owner, do not send notifications
+        if (!isUserOwner(currentSafe, userAddress)) {
+          break
+        }
 
+        awaitingTransactions.map((awaitingTransactionsList, txSafeAddress) => {
           const convertedList = awaitingTransactionsList.toJS()
-          const notificationKey = `${safeAddress}-${userAddress}`
+          const notificationKey = `${txSafeAddress}-${userAddress}`
           const onNotificationClicked = () => {
             dispatch(closeSnackbarAction({ key: notificationKey }))
-            dispatch(push(`/safes/${safeAddress}/transactions`))
+            dispatch(push(`/safes/${txSafeAddress}/transactions`))
           }
           if (convertedList.length > 0) {
             dispatch(enqueueSnackbar(enhanceSnackbarForAction(NOTIFICATIONS.TX_WAITING_MSG, notificationKey, onNotificationClicked)))
