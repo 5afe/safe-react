@@ -137,7 +137,9 @@ const DropdownCurrency = () => {
   const dispatch = useDispatch()
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
   const [currentCurrency, setCurrentCurrency] = useState(AVAILABLE_CURRENCIES.USD)
+  const [searchParams, setSearchParams] = useState('')
   const classes = useStyles()
+  const currenciesListFiltered = currenciesList.filter((currency) => currency.toLowerCase().includes(searchParams.toLowerCase()))
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget)
@@ -200,11 +202,13 @@ const DropdownCurrency = () => {
                   input: classes.inputInput,
                 }}
                 inputProps={{ 'aria-label': 'search' }}
+                onChange={(event) => setSearchParams(event.target.value)}
+                value={searchParams}
               />
             </div>
           </MenuItem>
           <li className={classes.dropdownItemsScrollWrapper}>
-            {currenciesList.map((currencyName) => (
+            {currenciesListFiltered.map((currencyName) => (
               <MenuItem
                 className={classes.listItem}
                 key={currencyName}
