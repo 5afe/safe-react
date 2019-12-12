@@ -79,15 +79,15 @@ const ReviewCustomTx = ({
     const txData = tx.data.trim()
     const txValue = tx.value ? web3.utils.toWei(tx.value, 'ether') : 0
 
-    createTransaction(
+    createTransaction({
       safeAddress,
-      txRecipient,
-      txValue,
+      to: txRecipient,
+      valueInWei: txValue,
       txData,
-      TX_NOTIFICATION_TYPES.STANDARD_TX,
+      notifiedTransaction: TX_NOTIFICATION_TYPES.STANDARD_TX,
       enqueueSnackbar,
       closeSnackbar,
-    )
+    })
     onClose()
   }
 
