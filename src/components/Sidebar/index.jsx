@@ -14,7 +14,10 @@ import Hairline from '~/components/layout/Hairline'
 import Row from '~/components/layout/Row'
 import { WELCOME_ADDRESS } from '~/routes/routes'
 import { type Safe } from '~/routes/safe/store/models/safe'
-import { defaultSafeSelector } from '~/routes/safe/store/selectors'
+import {
+  defaultSafeSelector,
+  safeParamAddressFromStateSelector,
+} from '~/routes/safe/store/selectors'
 import setDefaultSafe from '~/routes/safe/store/actions/setDefaultSafe'
 import { sortedSafeListSelector } from './selectors'
 import SafeList from './SafeList'
@@ -39,6 +42,7 @@ type SidebarProps = {
   safes: List<Safe>,
   setDefaultSafeAction: Function,
   defaultSafe: string,
+  currentSafe: string,
 }
 
 const filterBy = (filter: string, safes: List<Safe>): List<Safe> => safes.filter(
@@ -48,7 +52,7 @@ const filterBy = (filter: string, safes: List<Safe>): List<Safe> => safes.filter
 )
 
 const Sidebar = ({
-  children, safes, setDefaultSafeAction, defaultSafe,
+  children, safes, setDefaultSafeAction, defaultSafe, currentSafe,
 }: SidebarProps) => {
   const [isOpen, setIsOpen] = useState<boolean>(false)
   const [filter, setFilter] = useState<string>('')
@@ -130,6 +134,7 @@ const Sidebar = ({
             onSafeClick={toggleSidebar}
             setDefaultSafe={setDefaultSafeAction}
             defaultSafe={defaultSafe}
+            currentSafe={currentSafe}
           />
           <LegalLinks toggleSidebar={toggleSidebar} />
         </Drawer>
@@ -141,6 +146,6 @@ const Sidebar = ({
 
 export default connect<Object, Object, ?Function, ?Object>(
   // $FlowFixMe
-  (state) => ({ safes: sortedSafeListSelector(state), defaultSafe: defaultSafeSelector(state) }),
+  (state) => ({ safes: sortedSafeListSelector(state), defaultSafe: defaultSafeSelector(state), currentSafe: safeParamAddressFromStateSelector(state) }),
   { setDefaultSafeAction: setDefaultSafe },
 )(Sidebar)

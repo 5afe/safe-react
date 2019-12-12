@@ -26,6 +26,7 @@ export const SIDEBAR_SAFELIST_ROW_TESTID = 'SIDEBAR_SAFELIST_ROW_TESTID'
 
 type SafeListProps = {
   safes: List<Safe>,
+  currentSafe: string,
   onSafeClick: Function,
   setDefaultSafe: Function,
   defaultSafe: string,
@@ -66,10 +67,14 @@ const useStyles = makeStyles({
     marginLeft: md,
     visibility: 'hidden',
   },
+  noIcon: {
+    visibility: 'hidden',
+    width: '28px',
+  },
 })
 
 const SafeList = ({
-  safes, onSafeClick, setDefaultSafe, defaultSafe,
+  safes, onSafeClick, setDefaultSafe, defaultSafe, currentSafe,
 }: SafeListProps) => {
   const classes = useStyles()
 
@@ -83,9 +88,11 @@ const SafeList = ({
             data-testid={SIDEBAR_SAFELIST_ROW_TESTID}
           >
             <ListItem classes={{ root: classes.listItemRoot }}>
-              <ListItemIcon>
-                <Img src={check} alt="check" className={classes.checkIcon} />
-              </ListItemIcon>
+              { sameAddress(currentSafe, safe.address) ? (
+                <ListItemIcon>
+                  <Img src={check} alt="check" className={classes.checkIcon} />
+                </ListItemIcon>
+              ) : <div className={classes.noIcon}>placeholder</div> }
               <ListItemIcon>
                 <Identicon address={safe.address} diameter={32} className={classes.icon} />
               </ListItemIcon>
