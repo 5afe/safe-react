@@ -9,9 +9,14 @@ const sidebarWidth = '400px'
 const useSidebarStyles = makeStyles({
   sidebar: {
     width: sidebarWidth,
+    marginLeft: '12px',
+    borderRadius: '8px',
   },
   sidebarPaper: {
     width: sidebarWidth,
+    marginLeft: '12px',
+    maxHeight: '946px',
+    borderRadius: '8px',
   },
   headerPlaceholder: {
     minHeight: headerHeight,

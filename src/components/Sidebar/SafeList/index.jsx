@@ -41,7 +41,7 @@ const useStyles = makeStyles({
   },
   list: {
     overflow: 'hidden',
-    overflowY: 'scroll',
+    overflowY: 'hidden',
     padding: 0,
     height: '100%',
   },
