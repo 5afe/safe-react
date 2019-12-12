@@ -85,8 +85,7 @@ const Welcome = ({ provider, isOldMultisigMigration }: Props) => {
       by more than 3000 teams
       <br />
       {' '}
-      and stores over $1B USD worth of digital assets. Gnosis Safe for
-      Teams features a modular
+      and stores over $1B USD worth of digital assets. Gnosis Safe Multisig features a modular
       <br />
       {' '}
       design, formally verified smart contracts and vastly improved user
