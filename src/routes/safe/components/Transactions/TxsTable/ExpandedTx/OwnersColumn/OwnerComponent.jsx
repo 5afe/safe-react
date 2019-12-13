@@ -26,7 +26,7 @@ type OwnerProps = {
   showConfirmBtn: boolean,
   showExecuteBtn: boolean,
   onTxConfirm: Function,
-  onTxExecute: Function,
+  onTxExecute: Function
 }
 
 const OwnerComponent = ({
@@ -42,21 +42,33 @@ const OwnerComponent = ({
   thresholdReached,
 }: OwnerProps) => (
   <Block className={classes.container}>
-    <div className={confirmed || thresholdReached || executor
-      ? classes.verticalLineProgressDone
-      : classes.verticalLineProgressPending}
+    <div
+      className={
+        confirmed || thresholdReached || executor
+          ? classes.verticalLineProgressDone
+          : classes.verticalLineProgressPending
+      }
     />
     <div className={classes.iconState}>
-      {confirmed
-        ? <Img src={ConfirmSmallFilledIcon} />
-        : thresholdReached || executor ? <Img src={ConfirmSmallGreenIcon} /> : <Img src={ConfirmSmallGreyIcon} />}
+      {confirmed ? (
+        <Img src={ConfirmSmallFilledIcon} />
+      ) : thresholdReached || executor ? (
+        <Img src={ConfirmSmallGreenIcon} />
+      ) : (
+        <Img src={ConfirmSmallGreyIcon} />
+      )}
     </div>
     <Identicon address={owner.address} diameter={32} className={classes.icon} />
     <Block>
       <Paragraph className={classes.name} noMargin>
         {owner.name}
       </Paragraph>
-      <EtherscanLink className={classes.address} type="address" value={owner.address} cut={4} />
+      <EtherscanLink
+        className={classes.address}
+        type="address"
+        value={owner.address}
+        cut={4}
+      />
     </Block>
     <Block className={classes.spacer} />
     {showConfirmBtn && owner.address === userAddress && (

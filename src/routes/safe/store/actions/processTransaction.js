@@ -1,9 +1,10 @@
 // @flow
-import type { Dispatch as ReduxDispatch, GetState } from 'redux'
+import type { Dispatch as ReduxDispatch } from 'redux'
 import { List } from 'immutable'
 import { type Confirmation } from '~/routes/safe/store/models/confirmation'
 import { type Transaction } from '~/routes/safe/store/models/transaction'
 import { userAccountSelector } from '~/logic/wallets/store/selectors'
+import fetchSafe from '~/routes/safe/store/actions/fetchSafe'
 import fetchTransactions from '~/routes/safe/store/actions/fetchTransactions'
 import { type GlobalState } from '~/store'
 import { getGnosisSafeInstanceAt } from '~/logic/contracts/safeContracts'
@@ -53,7 +54,7 @@ export const generateSignaturesFromTxConfirmations = (
   return sigs
 }
 
-const processTransaction = (
+type ProcessTransactionArgs = {
   safeAddress: string,
   tx: Transaction,
   userAddress: string,
@@ -61,7 +62,20 @@ const processTransaction = (
   enqueueSnackbar: Function,
   closeSnackbar: Function,
   approveAndExecute?: boolean,
-) => async (dispatch: ReduxDispatch<GlobalState>, getState: GetState<GlobalState>) => {
+}
+
+const processTransaction = ({
+  safeAddress,
+  tx,
+  userAddress,
+  notifiedTransaction,
+  enqueueSnackbar,
+  closeSnackbar,
+  approveAndExecute,
+}: ProcessTransactionArgs) => async (
+  dispatch: ReduxDispatch<GlobalState>,
+  getState: Function,
+) => {
   const state: GlobalState = getState()
 
   const safeInstance = await getGnosisSafeInstanceAt(safeAddress)
@@ -69,7 +83,10 @@ const processTransaction = (
   const threshold = (await safeInstance.getThreshold()).toNumber()
   const shouldExecute = threshold === tx.confirmations.size || approveAndExecute
 
-  let sigs = generateSignaturesFromTxConfirmations(tx.confirmations, approveAndExecute && userAddress)
+  let sigs = generateSignaturesFromTxConfirmations(
+    tx.confirmations,
+    approveAndExecute && userAddress,
+  )
   // https://gnosis-safe.readthedocs.io/en/latest/contracts/signatures.html#pre-validated-signatures
   if (!sigs) {
     sigs = `0x000000000000000000000000${from.replace(
@@ -78,8 +95,14 @@ const processTransaction = (
     )}000000000000000000000000000000000000000000000000000000000000000001`
   }
 
-  const notificationsQueue: NotificationsQueue = getNotificationsFromTxType(notifiedTransaction)
-  const beforeExecutionKey = showSnackbar(notificationsQueue.beforeExecution, enqueueSnackbar, closeSnackbar)
+  const notificationsQueue: NotificationsQueue = getNotificationsFromTxType(
+    notifiedTransaction,
+  )
+  const beforeExecutionKey = showSnackbar(
+    notificationsQueue.beforeExecution,
+    enqueueSnackbar,
+    closeSnackbar,
+  )
   let pendingExecutionKey
 
   let txHash
@@ -130,7 +153,11 @@ const processTransaction = (
         txHash = hash
         closeSnackbar(beforeExecutionKey)
 
-        pendingExecutionKey = showSnackbar(notificationsQueue.pendingExecution, enqueueSnackbar, closeSnackbar)
+        pendingExecutionKey = showSnackbar(
+          notificationsQueue.pendingExecution,
+          enqueueSnackbar,
+          closeSnackbar,
+        )
 
         try {
           await saveTxToHistory(
@@ -169,16 +196,31 @@ const processTransaction = (
         )
         dispatch(fetchTransactions(safeAddress))
 
+        if (shouldExecute) {
+          dispatch(fetchSafe(safeAddress))
+        }
+
         return receipt.transactionHash
       })
   } catch (err) {
     console.error(err)
     closeSnackbar(beforeExecutionKey)
     closeSnackbar(pendingExecutionKey)
-    showSnackbar(notificationsQueue.afterExecutionError, enqueueSnackbar, closeSnackbar)
+    showSnackbar(
+      notificationsQueue.afterExecutionError,
+      enqueueSnackbar,
+      closeSnackbar,
+    )
 
-    const executeData = safeInstance.contract.methods.approveHash(txHash).encodeABI()
-    const errMsg = await getErrorMessage(safeInstance.address, 0, executeData, from)
+    const executeData = safeInstance.contract.methods
+      .approveHash(txHash)
+      .encodeABI()
+    const errMsg = await getErrorMessage(
+      safeInstance.address,
+      0,
+      executeData,
+      from,
+    )
     console.error(`Error executing the TX: ${errMsg}`)
   }
 

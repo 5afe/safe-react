@@ -52,6 +52,9 @@ export const getTxServiceHost = () => {
 export const getTxServiceUriFrom = (safeAddress: string) =>
   `safes/${safeAddress}/transactions/`
 
+export const getIncomingTxServiceUriTo = (safeAddress: string) =>
+  `safes/${safeAddress}/incoming-transactions/`
+
 export const getRelayUrl = () => getConfig()[RELAY_API_URL]
 
 export const signaturesViaMetamask = () => {
@@ -69,3 +72,5 @@ export const getIntercomId = () =>
   process.env.REACT_APP_ENV === "production"
     ? process.env.REACT_APP_INTERCOM_ID
     : "plssl1fl"
+
+export const getExchangeRatesUrl = () => 'https://api.exchangeratesapi.io/latest'
