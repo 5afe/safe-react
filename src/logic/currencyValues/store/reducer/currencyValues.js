@@ -12,18 +12,14 @@ export default handleActions<State, *>(
     [SET_CURRENCY_BALANCES]: (state: State, action: ActionType<Function>): State => {
       const { currencyBalances } = action.payload
 
-      const newState = state.withMutations((map) => {
-        map.set('currencyBalances', currencyBalances)
-      })
+      const newState = state.set('currencyBalances', currencyBalances)
 
       return newState
     },
     [SET_CURRENT_CURRENCY]: (state: State, action: ActionType<Function>): State => {
       const { currencyValueSelected } = action.payload
 
-      const newState = state.withMutations((map) => {
-        map.set('currencyValueSelected', currencyValueSelected)
-      })
+      const newState = state.set('currencyValueSelected', currencyValueSelected)
 
       return newState
     },
