@@ -20,9 +20,6 @@ import { isTokenTransfer } from '~/logic/tokens/utils/tokenHelpers'
 import { decodeParamsFromSafeMethod } from '~/logic/contracts/methodIds'
 import { ALTERNATIVE_TOKEN_ABI } from '~/logic/tokens/utils/alternativeAbi'
 import { ZERO_ADDRESS } from '~/logic/wallets/ethAddresses'
-import enqueueSnackbar from '~/logic/notifications/store/actions/enqueueSnackbar'
-import { enhanceSnackbarForAction, SUCCESS } from '~/logic/notifications'
-import { getIncomingTxAmount } from '~/routes/safe/components/Transactions/TxsTable/columns'
 
 let web3
 
@@ -238,7 +235,7 @@ export const loadSafeTransactions = async (safeAddress: string) => {
       transactions = transactions.concat(response.data.results)
     }
   } catch (err) {
-    console.error(`Requests for transactions for ${safeAddress} failed with 404`, err)
+    console.error(`Requests for outgoing transactions for ${safeAddress} failed with 404`, err)
   }
 
   const txsRecord = await Promise.all(
@@ -249,9 +246,17 @@ export const loadSafeTransactions = async (safeAddress: string) => {
 }
 
 export const loadSafeIncomingTransactions = async (safeAddress: string) => {
-  const url = buildIncomingTxServiceUrl(safeAddress)
-  const response = await axios.get(url)
-  const incomingTransactions: IncomingTxServiceModel[] = response.data.results
+  let incomingTransactions: IncomingTxServiceModel[] = []
+  try {
+    const url = buildIncomingTxServiceUrl(safeAddress)
+    const response = await axios.get(url)
+    if (response.data.count > 0) {
+      incomingTransactions = response.data.results
+    }
+  } catch (err) {
+    console.error(`Requests for incomming transactions for ${safeAddress} failed with 404`, err)
+  }
+
   const incomingTxsRecord = await Promise.all(incomingTransactions.map(buildIncomingTransactionFrom))
 
   return Map().set(safeAddress, List(incomingTxsRecord))
