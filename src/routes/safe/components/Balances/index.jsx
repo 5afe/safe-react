@@ -161,14 +161,14 @@ class Balances extends React.Component<Props, State> {
             <TableRow tabIndex={-1} key={index} className={classes.hide} data-testid={BALANCE_ROW_TEST_ID}>
               {autoColumns.map((column: Column) => {
                 const { id, width, align } = column
-                let rowItem
+                let cellItem
                 switch (id) {
                   case BALANCE_TABLE_ASSET_ID: {
-                    rowItem = <AssetTableCell asset={row[id]} />
+                    cellItem = <AssetTableCell asset={row[id]} />
                     break
                   }
                   case BALANCE_TABLE_BALANCE_ID: {
-                    rowItem = (
+                    cellItem = (
                       <div>
                         {row[id]}
                       </div>
@@ -176,11 +176,11 @@ class Balances extends React.Component<Props, State> {
                     break
                   }
                   case BALANCE_TABLE_VALUE_ID: {
-                    rowItem = <div className={classes.currencyValueRow}>{row[id]}</div>
+                    cellItem = <div className={classes.currencyValueRow}>{row[id]}</div>
                     break
                   }
                   default: {
-                    rowItem = null
+                    cellItem = null
                     break
                   }
                 }
@@ -191,7 +191,7 @@ class Balances extends React.Component<Props, State> {
                     align={align}
                     component="td"
                   >
-                    {rowItem}
+                    {cellItem}
                   </TableCell>
                 )
               })}

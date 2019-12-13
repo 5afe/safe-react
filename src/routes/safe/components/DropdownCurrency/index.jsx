@@ -225,7 +225,7 @@ const DropdownCurrency = () => {
                     </ListItemIcon>
                     <ListItemText primary={currencyName} />
                     {currencyName === currencyValueSelected
-                      ? <ListItemIcon className={classes.iconRight}><img src={CheckIcon} alt="" /></ListItemIcon> : null}
+                      ? <ListItemIcon className={classes.iconRight}><img src={CheckIcon} alt="checked" /></ListItemIcon> : null}
                   </MenuItem>
                 ))}
               </div>

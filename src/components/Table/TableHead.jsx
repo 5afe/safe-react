@@ -58,7 +58,7 @@ class GnoTableHead extends React.PureComponent<Props> {
             >
               {column.static ? (
                 <div style={column.style}>
-                  { column.label }
+                  {column.label}
                 </div>
               ) : (
                 <TableSortLabel
