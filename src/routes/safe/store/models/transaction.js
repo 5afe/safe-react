@@ -4,6 +4,8 @@ import type { RecordFactory, RecordOf } from 'immutable'
 import { type Confirmation } from '~/routes/safe/store/models/confirmation'
 import { ZERO_ADDRESS } from '~/logic/wallets/ethAddresses'
 
+export const OUTGOING_TX_TYPE = 'outgoing'
+
 export type TransactionType = 'incoming' | 'outgoing' | 'settings' | 'custom' | 'creation' | 'cancellation'
 
 export type TransactionStatus =
@@ -16,6 +18,7 @@ export type TransactionStatus =
 
 export type TransactionProps = {
   nonce: number,
+  blockNumber: number,
   value: string,
   confirmations: List<Confirmation>,
   recipient: string,
@@ -43,10 +46,12 @@ export type TransactionProps = {
   isTokenTransfer: boolean,
   decodedParams?: Object,
   refundParams?: Object,
+  type: string,
 }
 
 export const makeTransaction: RecordFactory<TransactionProps> = Record({
   nonce: 0,
+  blockNumber: 0,
   value: 0,
   confirmations: List([]),
   recipient: '',
@@ -74,6 +79,7 @@ export const makeTransaction: RecordFactory<TransactionProps> = Record({
   isTokenTransfer: false,
   decodedParams: {},
   refundParams: null,
+  type: 'outgoing',
 })
 
 export type Transaction = RecordOf<TransactionProps>

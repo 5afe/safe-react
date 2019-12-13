@@ -18,6 +18,8 @@ import CancelTxModal from './CancelTxModal'
 import ApproveTxModal from './ApproveTxModal'
 import { styles } from './style'
 import { formatDate } from '../columns'
+import IncomingTxDescription from '~/routes/safe/components/Transactions/TxsTable/ExpandedTx/IncomingTxDescription'
+import { INCOMING_TX_TYPE } from '~/routes/safe/store/models/incomingTransaction'
 
 type Props = {
   classes: Object,
@@ -59,15 +61,15 @@ const ExpandedTx = ({
   const openApproveModal = () => setOpenModal('approveTx')
   const openCancelModal = () => setOpenModal('cancelTx')
   const closeModal = () => setOpenModal(null)
-  const thresholdReached = threshold <= tx.confirmations.size
-  const canExecute = nonce === tx.nonce
+  const thresholdReached = tx.type !== INCOMING_TX_TYPE && threshold <= tx.confirmations.size
+  const canExecute = tx.type !== INCOMING_TX_TYPE && nonce === tx.nonce
 
   return (
     <>
       <Block className={classes.expandedTxBlock}>
         <Row>
           <Col xs={6} layout="column">
-            <Block className={classes.txDataContainer}>
+            <Block className={classes.txDataContainer} style={tx.type === INCOMING_TX_TYPE ? { borderRight: '2px solid rgb(232, 231, 230)' } : {}}>
               <Block align="left" className={classes.txData}>
                 <Bold className={classes.txHash}>TX hash:</Bold>
                 {tx.executionTxHash ? (
@@ -82,53 +84,70 @@ const ExpandedTx = ({
                   {txStatusToLabel[tx.status]}
                 </Span>
               </Paragraph>
-              <Paragraph noMargin>
-                <Bold>TX created: </Bold>
-                {formatDate(tx.submissionDate)}
-              </Paragraph>
-              {tx.executionDate && (
-                <Paragraph noMargin>
-                  <Bold>TX executed: </Bold>
-                  {formatDate(tx.executionDate)}
-                </Paragraph>
-              )}
-              {tx.refundParams && (
-                <Paragraph noMargin>
-                  <Bold>TX refund: </Bold>
-                  max.
-                  {' '}
-                  {tx.refundParams.fee}
-                  {' '}
-                  {tx.refundParams.symbol}
-                </Paragraph>
-              )}
-              {tx.operation === 1 && (
-                <Paragraph noMargin>
-                  <Bold>Delegate Call</Bold>
-                </Paragraph>
-              )}
-              {tx.operation === 2 && (
-                <Paragraph noMargin>
-                  <Bold>Contract Creation</Bold>
-                </Paragraph>
+              {tx.type === INCOMING_TX_TYPE ? (
+                <>
+                  <Paragraph noMargin>
+                    <Bold>TX fee: </Bold>
+                    {tx.fee}
+                  </Paragraph>
+                  <Paragraph noMargin>
+                    <Bold>TX created: </Bold>
+                    {formatDate(tx.executionDate)}
+                  </Paragraph>
+                </>
+              ) : (
+                <>
+                  <Paragraph noMargin>
+                    <Bold>TX created: </Bold>
+                    {formatDate(tx.submissionDate)}
+                  </Paragraph>
+                  {tx.executionDate && (
+                    <Paragraph noMargin>
+                      <Bold>TX executed: </Bold>
+                      {formatDate(tx.executionDate)}
+                    </Paragraph>
+                  )}
+                  {tx.refundParams && (
+                    <Paragraph noMargin>
+                      <Bold>TX refund: </Bold>
+                      max.
+                      {' '}
+                      {tx.refundParams.fee}
+                      {' '}
+                      {tx.refundParams.symbol}
+                    </Paragraph>
+                  )}
+                  {tx.operation === 1 && (
+                    <Paragraph noMargin>
+                      <Bold>Delegate Call</Bold>
+                    </Paragraph>
+                  )}
+                  {tx.operation === 2 && (
+                    <Paragraph noMargin>
+                      <Bold>Contract Creation</Bold>
+                    </Paragraph>
+                  )}
+                </>
               )}
             </Block>
             <Hairline />
-            <TxDescription tx={tx} />
+            {tx.type === INCOMING_TX_TYPE ? <IncomingTxDescription tx={tx} /> : <TxDescription tx={tx} />}
           </Col>
-          <OwnersColumn
-            tx={tx}
-            owners={owners}
-            granted={granted}
-            canExecute={canExecute}
-            threshold={threshold}
-            userAddress={userAddress}
-            thresholdReached={thresholdReached}
-            safeAddress={safeAddress}
-            onTxConfirm={openApproveModal}
-            onTxCancel={openCancelModal}
-            onTxExecute={openApproveModal}
-          />
+          {tx.type !== INCOMING_TX_TYPE && (
+            <OwnersColumn
+              tx={tx}
+              owners={owners}
+              granted={granted}
+              canExecute={canExecute}
+              threshold={threshold}
+              userAddress={userAddress}
+              thresholdReached={thresholdReached}
+              safeAddress={safeAddress}
+              onTxConfirm={openApproveModal}
+              onTxCancel={openCancelModal}
+              onTxExecute={openApproveModal}
+            />
+          )}
         </Row>
       </Block>
       {openModal === 'cancelTx' && (

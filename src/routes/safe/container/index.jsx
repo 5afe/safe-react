@@ -37,10 +37,11 @@ class SafeView extends React.Component<Props, State> {
       fetchSafe, activeTokens, safeUrl, fetchTokenBalances, fetchTokens, fetchTransactions, fetchCurrencyValues,
     } = this.props
 
-    fetchSafe(safeUrl)
+    fetchSafe(safeUrl).then(() => {
+      // The safe needs to be loaded before fetching the transactions
+      fetchTransactions(safeUrl)
+    })
     fetchTokenBalances(safeUrl, activeTokens)
-    fetchTransactions(safeUrl)
-
     // fetch tokens there to get symbols for tokens in TXs list
     fetchTokens()
     fetchCurrencyValues(safeUrl)
@@ -99,11 +100,13 @@ class SafeView extends React.Component<Props, State> {
       activeTokens,
       fetchTokenBalances,
       fetchEtherBalance,
+      fetchTransactions,
       checkAndUpdateSafeOwners,
     } = this.props
     checkAndUpdateSafeOwners(safeUrl)
     fetchTokenBalances(safeUrl, activeTokens)
     fetchEtherBalance(safeUrl)
+    fetchTransactions(safeUrl)
   }
 
   render() {
@@ -119,7 +122,6 @@ class SafeView extends React.Component<Props, State> {
       tokens,
       createTransaction,
       processTransaction,
-      fetchTransactions,
       activateTokensByBalance,
       fetchTokens,
       updateSafe,
@@ -142,7 +144,6 @@ class SafeView extends React.Component<Props, State> {
           granted={granted}
           createTransaction={createTransaction}
           processTransaction={processTransaction}
-          fetchTransactions={fetchTransactions}
           activateTokensByBalance={activateTokensByBalance}
           fetchTokens={fetchTokens}
           updateSafe={updateSafe}
