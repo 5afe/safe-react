@@ -71,7 +71,6 @@ const Layout = openHoc(
           <Img src={logo} height={32} alt="Gnosis Team Safe" />
         </Link>
       </Col>
-      <Divider />
       <SafeListHeader />
       <Divider />
       <NetworkLabel />

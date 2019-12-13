@@ -19,6 +19,7 @@ const useStyles = makeStyles({
   container: {
     flexGrow: 0,
     padding: `0 ${md}`,
+    marginLeft: '160px',
   },
   counter: {
     background: border,
@@ -45,7 +46,6 @@ const SafeListHeader = ({ safesCount }: Props) => {
   return (
     <Col start="xs" middle="xs" className={classes.container}>
       Safes
-      {' '}
       <Paragraph size="xs" className={classes.counter}>
         {safesCount}
       </Paragraph>

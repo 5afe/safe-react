@@ -68,8 +68,8 @@ export const safeParamAddressFromStateSelector = (state: GlobalState): string =>
     state.router.location.pathname,
     { path: `${SAFELIST_ADDRESS}/:safeAddress` },
   )
-  const { safeAddress } = match.params
-  return safeAddress
+
+  return match ? match.params.safeAddress : null
 }
 
 export const confirmationsTransactionSelector: Selector<GlobalState, TransactionProps, number> = createSelector(
