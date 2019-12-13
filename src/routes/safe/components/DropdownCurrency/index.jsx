@@ -9,6 +9,7 @@ import { MuiThemeProvider } from '@material-ui/core/styles'
 import { useDispatch, useSelector } from 'react-redux'
 import SearchIcon from '@material-ui/icons/Search'
 import InputBase from '@material-ui/core/InputBase'
+import classNames from 'classnames'
 import { DropdownListTheme } from '~/theme/mui'
 import CheckIcon from './img/check.svg'
 import { AVAILABLE_CURRENCIES } from '~/logic/currencyValues/store/model/currencyValues'
@@ -42,7 +43,6 @@ const DropdownCurrency = () => {
     handleClose()
   }
 
-
   return (
     !currencyValueSelected ? null
       : (
@@ -53,7 +53,7 @@ const DropdownCurrency = () => {
               onClick={handleClick}
               type="button"
             >
-              <span className={`${classes.buttonInner} ${anchorEl ? classes.openMenuButton : ''}`}>
+              <span className={classNames(classes.buttonInner, anchorEl && classes.openMenuButton)}>
                 {currencyValueSelected}
               </span>
             </button>
@@ -105,7 +105,7 @@ const DropdownCurrency = () => {
                   >
                     <ListItemIcon className={classes.iconLeft}>
                       <div
-                        className={`${classes.localFlag} ${style['currency-flag']} ${style['currency-flag-lg']} ${style[`currency-flag-${currencyName.toLowerCase()}`]}`}
+                        className={classNames(classes.localFlag, style['currency-flag'], style['currency-flag-lg'], style[`currency-flag-${currencyName.toLowerCase()}`])}
                       />
                     </ListItemIcon>
                     <ListItemText primary={currencyName} />
