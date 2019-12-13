@@ -119,7 +119,7 @@ const extendedTransactionsSelector: Selector<GlobalState, RouterProps, List<Tran
     const extendedTransactions = transactions.map((tx: Transaction) => {
       let extendedTx = tx
 
-      // If transactions is not executed, but there's a transaction with the same nonce submitted later
+      // If transactions are not executed, but there's a transaction with the same nonce submitted later
       // it means that the transaction was cancelled (Replaced) and shouldn't get executed
       let replacementTransaction
       if (!tx.isExecuted) {
