@@ -6,9 +6,9 @@ import { setCurrencyBalances } from '~/logic/currencyValues/store/actions/setCur
 import { AVAILABLE_CURRENCIES, makeBalanceCurrency } from '~/logic/currencyValues/store/model/currencyValues'
 import { setCurrencySelected } from '~/logic/currencyValues/store/actions/setCurrencySelected'
 import fetchTokenCurrenciesBalances from '~/logic/currencyValues/api/fetchTokenCurrenciesBalances'
-import { CURRENCY_SELECTED_KEY } from '~/logic/currencyValues/store/middlewares/currencySelected'
 import { loadFromStorage } from '~/utils/storage'
 import fetchCurrencySelectedValue from '~/logic/currencyValues/store/actions/fetchCurrencySelectedValue'
+import { CURRENCY_SELECTED_KEY } from '~/logic/currencyValues/store/actions/saveCurrencySelected'
 
 
 export const fetchCurrencyValues = (safeAddress: string) => async (dispatch: ReduxDispatch<GlobalState>) => {

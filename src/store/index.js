@@ -21,7 +21,6 @@ import notifications, {
 import currencyValues, { CURRENCY_VALUES_KEY } from '~/logic/currencyValues/store/reducer/currencyValues'
 import cookies, { COOKIES_REDUCER_ID } from '~/logic/cookies/store/reducer/cookies'
 import notificationsMiddleware from '~/routes/safe/store/middleware/notificationsMiddleware'
-import currencyMiddleware from '~/logic/currencyValues/store/middlewares/currencySelected'
 
 
 export const history = createBrowserHistory()
@@ -29,7 +28,7 @@ export const history = createBrowserHistory()
 // eslint-disable-next-line
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
 const finalCreateStore = composeEnhancers(
-  applyMiddleware(thunk, routerMiddleware(history), safeStorage, providerWatcher, notificationsMiddleware, currencyMiddleware),
+  applyMiddleware(thunk, routerMiddleware(history), safeStorage, providerWatcher, notificationsMiddleware),
 )
 
 export type GlobalState = {

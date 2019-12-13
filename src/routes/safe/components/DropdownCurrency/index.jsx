@@ -5,133 +5,18 @@ import Menu from '@material-ui/core/Menu'
 import MenuItem from '@material-ui/core/MenuItem'
 import React, { useState } from 'react'
 import style from 'currency-flags/dist/currency-flags.min.css'
-import { makeStyles, MuiThemeProvider } from '@material-ui/core/styles'
+import { MuiThemeProvider } from '@material-ui/core/styles'
 import { useDispatch, useSelector } from 'react-redux'
 import SearchIcon from '@material-ui/icons/Search'
 import InputBase from '@material-ui/core/InputBase'
 import { DropdownListTheme } from '~/theme/mui'
-import { setCurrencySelected } from '~/logic/currencyValues/store/actions/setCurrencySelected'
 import CheckIcon from './img/check.svg'
 import { AVAILABLE_CURRENCIES } from '~/logic/currencyValues/store/model/currencyValues'
 import fetchCurrencySelectedValue from '~/logic/currencyValues/store/actions/fetchCurrencySelectedValue'
 import { currentCurrencySelector } from '~/logic/currencyValues/store/selectors'
+import { useDropdownStyles } from '~/routes/safe/components/DropdownCurrency/style'
+import saveCurrencySelected from '~/logic/currencyValues/store/actions/saveCurrencySelected'
 
-const buttonWidth = '140px'
-const useStyles = makeStyles({
-  listItem: {
-    maxWidth: buttonWidth,
-    boxSizing: 'border-box',
-  },
-  listItemSearch: {
-    maxWidth: buttonWidth,
-    padding: '0',
-    boxSizing: 'border-box',
-  },
-  localFlag: {
-    backgroundPosition: '50% 50%',
-    backgroundRepeat: 'no-repeat',
-    backgroundSize: 'contain',
-    height: '20px !important',
-    width: '26px !important',
-  },
-  iconLeft: {
-    marginRight: '10px',
-  },
-  iconRight: {
-    marginLeft: '18px',
-  },
-  button: {
-    backgroundColor: '#e8e7e6',
-    border: 'none',
-    borderRadius: '3px',
-    boxSizing: 'border-box',
-    color: '#5d6d74',
-    cursor: 'pointer',
-    fontSize: '12px',
-    fontWeight: 'normal',
-    height: '24px',
-    lineHeight: '1.33',
-    marginRight: '20px',
-    minWidth: buttonWidth,
-    outline: 'none',
-    padding: '0',
-    textAlign: 'left',
-    '&:active': {
-      opacity: '0.8',
-    },
-  },
-  buttonInner: {
-    boxSizing: 'border-box',
-    display: 'block',
-    height: '100%',
-    lineHeight: '24px',
-    padding: '0 22px 0 8px',
-    position: 'relative',
-    width: '100%',
-    '&::after': {
-      borderLeft: '5px solid transparent',
-      borderRight: '5px solid transparent',
-      borderTop: '5px solid #5d6d74',
-      content: '""',
-      height: '0',
-      position: 'absolute',
-      right: '8px',
-      top: '9px',
-      width: '0',
-    },
-  },
-  openMenuButton: {
-    '&::after': {
-      borderBottom: '5px solid #5d6d74',
-      borderLeft: '5px solid transparent',
-      borderRight: '5px solid transparent',
-      borderTop: 'none',
-    },
-  },
-  dropdownItemsScrollWrapper: {
-    maxHeight: '280px',
-    overflow: 'auto',
-  },
-  search: {
-    position: 'relative',
-    borderRadius: '0',
-    backgroundColor: '#fff',
-    '&:hover': {
-      backgroundColor: '#fff',
-    },
-    marginRight: 0,
-    width: '100%',
-  },
-  searchIcon: {
-    alignItems: 'center',
-    display: 'flex',
-    height: '100%',
-    justifyContent: 'center',
-    left: '12px',
-    margin: '0',
-    pointerEvents: 'none',
-    position: 'absolute',
-    top: '50%',
-    transform: 'translateY(-50%)',
-    width: '18px',
-    '& path': {
-      fill: '#b2b5b2',
-    },
-  },
-  inputRoot: {
-    color: '#5d6d74',
-    fontSize: '14px',
-    fontWeight: 'normal',
-    lineHeight: '1.43',
-    width: '100%',
-  },
-  inputInput: {
-    boxSizing: 'border-box',
-    height: '44px',
-    padding: '12px 12px 12px 40px',
-    width: '100%',
-  },
-})
 
 const DropdownCurrency = () => {
   const currenciesList = Object.values(AVAILABLE_CURRENCIES)
@@ -140,7 +25,7 @@ const DropdownCurrency = () => {
   const currencyValueSelected = useSelector(currentCurrencySelector)
 
   const [searchParams, setSearchParams] = useState('')
-  const classes = useStyles()
+  const classes = useDropdownStyles()
   const currenciesListFiltered = currenciesList.filter((currency) => currency.toLowerCase().includes(searchParams.toLowerCase()))
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -153,7 +38,7 @@ const DropdownCurrency = () => {
 
   const onCurrentCurrencyChangedHandler = (newCurrencySelectedName: AVAILABLE_CURRENCIES) => {
     dispatch(fetchCurrencySelectedValue(newCurrencySelectedName))
-    dispatch(setCurrencySelected(newCurrencySelectedName))
+    dispatch(saveCurrencySelected(newCurrencySelectedName))
     handleClose()
   }
 
