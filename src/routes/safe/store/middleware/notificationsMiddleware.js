@@ -10,6 +10,7 @@ import { enhanceSnackbarForAction, NOTIFICATIONS } from '~/logic/notifications'
 import closeSnackbarAction from '~/logic/notifications/store/actions/closeSnackbar'
 import { isUserOwner } from '~/logic/wallets/ethAddresses'
 import { safeParamAddressFromStateSelector, safesMapSelector } from '~/routes/safe/store/selectors'
+import type { Transaction } from '~/routes/safe/store/models/transaction'
 
 const watchedActions = [
   ADD_TRANSACTIONS,
@@ -35,14 +36,13 @@ const notificationsMiddleware = (store: Store<GlobalState>) => (next: Function) 
           break
         }
 
-        awaitingTransactions.map((awaitingTransactionsList, txSafeAddress) => {
-          const convertedList = awaitingTransactionsList.toJS()
+        awaitingTransactions.map((awaitingTransactionsList: List<Transaction>, txSafeAddress) => {
           const notificationKey = `${txSafeAddress}-${userAddress}`
           const onNotificationClicked = () => {
             dispatch(closeSnackbarAction({ key: notificationKey }))
             dispatch(push(`/safes/${txSafeAddress}/transactions`))
           }
-          if (convertedList.length > 0) {
+          if (awaitingTransactionsList.size > 0) {
             dispatch(enqueueSnackbar(enhanceSnackbarForAction(NOTIFICATIONS.TX_WAITING_MSG, notificationKey, onNotificationClicked)))
           }
         })
