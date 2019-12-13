@@ -1,12 +1,13 @@
 // @flow
 import { makeStyles } from '@material-ui/core/styles'
 import {
-  xs, mediumFontSize, secondaryText, md,
+  xs, mediumFontSize, secondaryText, md, headerHeight,
 } from '~/theme/variables'
 
 const sidebarWidth = '400px'
 const sidebarMarginLeft = '12px'
-const sidebarMarginTop = '67px'
+const sidebarMarginTop = '12px'
+const sidebarMarginBottom = '12px'
 const sidebarBorderRadius = '8px'
 
 const useSidebarStyles = makeStyles({
@@ -19,9 +20,12 @@ const useSidebarStyles = makeStyles({
   sidebarPaper: {
     width: sidebarWidth,
     marginLeft: sidebarMarginLeft,
-    maxHeight: '902px',
+    top: `calc(${headerHeight} + ${sidebarMarginTop})`,
+    maxHeight: `calc(100vh - ${headerHeight} - ${sidebarMarginTop} - ${sidebarMarginBottom})`,
     borderRadius: sidebarBorderRadius,
-    top: sidebarMarginTop,
+  },
+  headerPlaceholder: {
+    minHeight: headerHeight,
   },
   addSafeBtn: {
     fontSize: mediumFontSize,

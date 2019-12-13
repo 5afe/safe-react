@@ -19,7 +19,6 @@ const useStyles = makeStyles({
   container: {
     flexGrow: 0,
     padding: `0 ${md}`,
-    marginLeft: '160px',
   },
   counter: {
     background: border,
