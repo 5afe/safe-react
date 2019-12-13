@@ -102,35 +102,13 @@ const createTransaction = ({
   try {
     if (isExecution) {
       tx = await getExecutionTransaction(
-        safeInstance,
-        to,
-        valueInWei,
-        txData,
-        CALL,
-        nonce,
-        0,
-        0,
-        0,
-        ZERO_ADDRESS,
-        ZERO_ADDRESS,
-        from,
-        sigs,
+        safeInstance, to, valueInWei, txData, CALL, nonce,
+        0, 0, 0, ZERO_ADDRESS, ZERO_ADDRESS, from, sigs,
       )
     } else {
       tx = await getApprovalTransaction(
-        safeInstance,
-        to,
-        valueInWei,
-        txData,
-        CALL,
-        nonce,
-        0,
-        0,
-        0,
-        ZERO_ADDRESS,
-        ZERO_ADDRESS,
-        from,
-        sigs,
+        safeInstance, to, valueInWei, txData, CALL, nonce,
+        0, 0, 0, ZERO_ADDRESS, ZERO_ADDRESS, from, sigs,
       )
     }
 

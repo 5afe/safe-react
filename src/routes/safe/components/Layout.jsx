@@ -49,6 +49,7 @@ type Props = SelectorProps &
     match: Object,
     location: Object,
     history: Object,
+    fetchCurrencyValues: Function,
   }
 
 const Layout = (props: Props) => {
@@ -63,7 +64,6 @@ const Layout = (props: Props) => {
     blacklistedTokens,
     createTransaction,
     processTransaction,
-    fetchTransactions,
     activateTokensByBalance,
     fetchTokens,
     updateSafe,
@@ -77,6 +77,9 @@ const Layout = (props: Props) => {
     hideSendFunds,
     match,
     location,
+    currencySelected,
+    fetchCurrencyValues,
+    currencyValues,
   } = props
 
   const handleCallToRouter = (_, value) => {
@@ -166,6 +169,9 @@ const Layout = (props: Props) => {
               fetchTokens={fetchTokens}
               safeName={name}
               createTransaction={createTransaction}
+              currencySelected={currencySelected}
+              fetchCurrencyValues={fetchCurrencyValues}
+              currencyValues={currencyValues}
             />
           )}
         />
@@ -178,7 +184,6 @@ const Layout = (props: Props) => {
               owners={safe.owners}
               nonce={safe.nonce}
               transactions={transactions}
-              fetchTransactions={fetchTransactions}
               safeAddress={address}
               userAddress={userAddress}
               currentNetwork={network}

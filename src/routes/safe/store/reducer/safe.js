@@ -119,9 +119,7 @@ export default handleActions<SafeReducerState, *>(
     [UPDATE_SAFE_THRESHOLD]: (state: SafeReducerState, action: ActionType<Function>): SafeReducerState => {
       const { safeAddress, threshold } = action.payload
 
-      return state.updateIn(['safes', safeAddress], (prevSafe) => {
-        return prevSafe.set('threshold', threshold)
-      })
+      return state.updateIn(['safes', safeAddress], (prevSafe) => prevSafe.set('threshold', threshold))
     },
     [SET_DEFAULT_SAFE]: (state: SafeReducerState, action: ActionType<Function>): SafeReducerState => state.set('defaultSafe', action.payload),
   },
