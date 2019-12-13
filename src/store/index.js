@@ -22,6 +22,7 @@ import notifications, {
   NOTIFICATIONS_REDUCER_ID,
   type NotificationReducerState as NotificationsState,
 } from '~/logic/notifications/store/reducer/notifications'
+import currencyValues, { CURRENCY_VALUES_KEY } from '~/logic/currencyValues/store/reducer/currencyValues'
 import cookies, { COOKIES_REDUCER_ID } from '~/logic/cookies/store/reducer/cookies'
 import notificationsMiddleware from '~/routes/safe/store/middleware/notificationsMiddleware'
 
@@ -53,6 +54,7 @@ const reducers: Reducer<GlobalState> = combineReducers({
   [TRANSACTIONS_REDUCER_ID]: transactions,
   [INCOMING_TRANSACTIONS_REDUCER_ID]: incomingTransactions,
   [NOTIFICATIONS_REDUCER_ID]: notifications,
+  [CURRENCY_VALUES_KEY]: currencyValues,
   [COOKIES_REDUCER_ID]: cookies,
 })
 

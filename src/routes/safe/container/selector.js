@@ -21,6 +21,8 @@ import { type Token } from '~/logic/tokens/store/model/token'
 import { type Transaction, type TransactionStatus } from '~/routes/safe/store/models/transaction'
 import { safeParamAddressSelector } from '../store/selectors'
 import { getEthAsToken } from '~/logic/tokens/utils/tokenHelpers'
+import { currencyValuesListSelector, currentCurrencySelector } from '~/logic/currencyValues/store/selectors'
+import type { BalanceCurrencyType } from '~/logic/currencyValues/store/model/currencyValues'
 import type { IncomingTransaction } from '~/routes/safe/store/models/incomingTransaction'
 
 export type SelectorProps = {
@@ -32,6 +34,8 @@ export type SelectorProps = {
   userAddress: string,
   network: string,
   safeUrl: string,
+  currencySelected: string,
+  currencyValues: BalanceCurrencyType[],
   transactions: List<Transaction | IncomingTransaction>,
 }
 
@@ -154,4 +158,6 @@ export default createStructuredSelector<Object, *>({
   network: networkSelector,
   safeUrl: safeParamAddressSelector,
   transactions: extendedTransactionsSelector,
+  currencySelected: currentCurrencySelector,
+  currencyValues: currencyValuesListSelector,
 })

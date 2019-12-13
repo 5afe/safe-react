@@ -2,7 +2,6 @@
 import GnosisSafeSol from '@gnosis.pm/safe-contracts/build/contracts/GnosisSafe.json'
 import { getWeb3 } from '~/logic/wallets/getWeb3'
 import { type Operation } from '~/logic/safe/transactions'
-import { ZERO_ADDRESS } from '~/logic/wallets/ethAddresses'
 
 export const CALL = 0
 export const TX_TYPE_EXECUTION = 'execution'

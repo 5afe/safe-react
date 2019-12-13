@@ -72,3 +72,5 @@ export const getIntercomId = () =>
   process.env.REACT_APP_ENV === "production"
     ? process.env.REACT_APP_INTERCOM_ID
     : "plssl1fl"
+
+export const getExchangeRatesUrl = () => 'https://api.exchangeratesapi.io/latest'
