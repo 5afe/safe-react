@@ -1,7 +1,8 @@
 // @flow
 import React, { useState } from 'react'
 import { List } from 'immutable'
-import { withStyles } from '@material-ui/core/styles'
+import classNames from 'classnames'
+import { makeStyles } from '@material-ui/core/styles'
 import Row from '~/components/layout/Row'
 import Block from '~/components/layout/Block'
 import Col from '~/components/layout/Col'
@@ -22,7 +23,6 @@ import IncomingTxDescription from '~/routes/safe/components/Transactions/TxsTabl
 import { INCOMING_TX_TYPE } from '~/routes/safe/store/models/incomingTransaction'
 
 type Props = {
-  classes: Object,
   tx: Transaction,
   threshold: number,
   owners: List<Owner>,
@@ -45,8 +45,9 @@ const txStatusToLabel = {
   pending: 'Pending',
 }
 
+const useStyles = makeStyles(styles)
+
 const ExpandedTx = ({
-  classes,
   tx,
   threshold,
   owners,
@@ -57,6 +58,7 @@ const ExpandedTx = ({
   processTransaction,
   nonce,
 }: Props) => {
+  const classes = useStyles()
   const [openModal, setOpenModal] = useState<OpenModal>(null)
   const openApproveModal = () => setOpenModal('approveTx')
   const openCancelModal = () => setOpenModal('cancelTx')
@@ -69,7 +71,12 @@ const ExpandedTx = ({
       <Block className={classes.expandedTxBlock}>
         <Row>
           <Col xs={6} layout="column">
-            <Block className={classes.txDataContainer} style={tx.type === INCOMING_TX_TYPE ? { borderRight: '2px solid rgb(232, 231, 230)' } : {}}>
+            <Block
+              className={classNames(
+                classes.txDataContainer,
+                tx.type === INCOMING_TX_TYPE ? classes.incomingTxBlock : {},
+              )}
+            >
               <Block align="left" className={classes.txData}>
                 <Bold className={classes.txHash}>TX hash:</Bold>
                 {tx.executionTxHash ? (
@@ -176,4 +183,4 @@ const ExpandedTx = ({
   )
 }
 
-export default withStyles(styles)(ExpandedTx)
+export default ExpandedTx

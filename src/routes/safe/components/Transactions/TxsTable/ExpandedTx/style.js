@@ -32,4 +32,7 @@ export const styles = () => ({
   txHash: {
     paddingRight: '3px',
   },
+  incomingTxBlock: {
+    borderRight: '2px solid rgb(232, 231, 230)',
+  },
 })
