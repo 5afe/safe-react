@@ -101,7 +101,6 @@ const Sidebar = ({
           classes={{ paper: classes.sidebarPaper }}
           ModalProps={{ onBackdropClick: toggleSidebar }}
         >
-          <div className={classes.headerPlaceholder} />
           <Row align="center">
             <SearchIcon className={classes.searchIcon} />
             <SearchBar
