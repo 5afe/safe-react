@@ -43,7 +43,7 @@ const palette = {
 
 // see https://material-ui-next.com/customization/themes/
 // see https://github.com/mui-org/material-ui/blob/v1-beta/src/styles/createMuiTheme.js
-export default createMuiTheme({
+const theme = createMuiTheme({
   typography: {
     fontFamily: mainFontFamily,
     useNextVariants: true,
@@ -63,7 +63,7 @@ export default createMuiTheme({
         },
         color: disabled,
         textTransform: 'none',
-        borderRadius: '8px',
+        borderRadius: sm,
       },
       contained: {
         boxShadow: '1px 2px 10px 0 rgba(212, 212, 211, 0.59)',
@@ -102,7 +102,7 @@ export default createMuiTheme({
     },
     MuiStepper: {
       root: {
-        padding: '24px 0 0 15px',
+        padding: `${lg} 0 0 15px`,
       },
     },
     MuiIconButton: {
@@ -238,6 +238,7 @@ export default createMuiTheme({
     },
     MuiTablePagination: {
       toolbar: {
+        paddingRight: '15px',
         '& > span:nth-child(2)': {
           order: 1,
         },
@@ -255,11 +256,11 @@ export default createMuiTheme({
       input: {
         order: 2,
         width: '60px',
-        padding: `0 ${md} 0 0`,
+        color: disabled,
       },
       select: {
         paddingRight: 30,
-        minWidth: '20px',
+        minWidth: lg,
       },
       actions: {
         order: 4,
@@ -269,6 +270,9 @@ export default createMuiTheme({
     MuiTableSortLabel: {
       root: {
         fontSize: extraSmallFontSize,
+      },
+      active: {
+        fontWeight: boldFont,
       },
     },
     MuiTableCell: {
@@ -280,7 +284,6 @@ export default createMuiTheme({
       head: {
         letterSpacing: '1px',
         textTransform: 'uppercase',
-        fontWeight: boldFont,
       },
       body: {
         color: primary,
@@ -339,3 +342,43 @@ export default createMuiTheme({
   },
   palette,
 })
+
+export default theme
+
+export const DropdownListTheme = {
+  ...theme,
+  overrides: {
+    ...theme.overrides,
+    MuiPaper: {
+      root: {
+        marginTop: '10px',
+      },
+      elevation0: {
+        boxShadow: '1px 2px 10px 0 rgba(212, 212, 211, 0.59)',
+      },
+      rounded: {
+        borderRadius: '4px',
+      },
+    },
+    MuiList: {
+      padding: {
+        paddingBottom: '0',
+        paddingTop: '0',
+      },
+    },
+    MuiListItem: {
+      root: {
+        borderBottom: '2px solid #e8e7e6',
+        '&:last-child': {
+          borderBottom: 'none',
+        },
+        boxSizing: 'border-box',
+      },
+      button: {
+        '&:hover': {
+          backgroundColor: '#fff3e2',
+        },
+      },
+    },
+  },
+}

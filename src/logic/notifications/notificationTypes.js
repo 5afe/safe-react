@@ -14,6 +14,7 @@ export type Variant = 'success' | 'error' | 'warning' | 'info'
 
 export type Notification = {
   message: string,
+  key?: string,
   options: {
     variant: Variant,
     persist: boolean,
@@ -38,6 +39,8 @@ export type Notifications = {
   TX_EXECUTED_MSG: Notification,
   TX_EXECUTED_MORE_CONFIRMATIONS_MSG: Notification,
   TX_FAILED_MSG: Notification,
+  TX_WAITING_MSG: Notification,
+  TX_INCOMING_MSG: Notification,
 
   // Approval Transactions
   TX_CONFIRMATION_PENDING_MSG: Notification,
@@ -121,6 +124,20 @@ export const NOTIFICATIONS: Notifications = {
   TX_FAILED_MSG: {
     message: 'Transaction failed',
     options: { variant: ERROR, persist: false, autoHideDuration: longDuration },
+  },
+  TX_WAITING_MSG: {
+    message: 'A pending transaction requires your confirmation!',
+    key: 'TX_WAITING_MSG',
+    options: {
+      variant: WARNING, persist: true, preventDuplicate: true,
+    },
+  },
+  TX_INCOMING_MSG: {
+    message: 'Incoming transfer: ',
+    key: 'TX_INCOMING_MSG',
+    options: {
+      variant: SUCCESS, persist: false, autoHideDuration: longDuration, preventDuplicate: true,
+    },
   },
 
   // Approval Transactions

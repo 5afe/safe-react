@@ -26,8 +26,8 @@ const styles = () => ({
     boxSizing: 'border-box',
   },
   close: {
-    height: '24px',
-    width: '24px',
+    height: lg,
+    width: lg,
     fill: secondaryText,
   },
   qrContainer: {
@@ -48,7 +48,7 @@ const styles = () => ({
     justifyContent: 'center',
     '& > button': {
       fontFamily: 'Averta',
-      fontSize: '16px',
+      fontSize: md,
       boxShadow: '1px 2px 10px 0 rgba(212, 212, 211, 0.59)',
     },
   },

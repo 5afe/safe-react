@@ -23,6 +23,9 @@ import Tokens from './Tokens'
 import SendModal from './SendModal'
 import Receive from './Receive'
 import { styles } from './style'
+import DropdownCurrency from '~/routes/safe/components/DropdownCurrency'
+import type { BalanceCurrencyType } from '~/logic/currencyValues/store/model/currencyValues'
+import { BALANCE_TABLE_BALANCE_ID, BALANCE_TABLE_VALUE_ID } from '~/routes/safe/components/Balances/dataFetcher'
 
 export const MANAGE_TOKENS_BUTTON_TEST_ID = 'manage-tokens-btn'
 export const BALANCE_ROW_TEST_ID = 'balance-row'
@@ -45,6 +48,9 @@ type Props = {
   safeName: string,
   ethBalance: string,
   createTransaction: Function,
+  currencySelected: string,
+  fetchCurrencyValues: Function,
+  currencyValues: BalanceCurrencyType[],
 }
 
 type Action = 'Token' | 'Send' | 'Receive'
@@ -61,6 +67,12 @@ class Balances extends React.Component<Props, State> {
       showReceive: false,
     }
     props.fetchTokens()
+  }
+
+  componentDidMount(): void {
+    const { safeAddress, fetchCurrencyValues, activateTokensByBalance } = this.props
+    fetchCurrencyValues(safeAddress)
+    activateTokensByBalance(safeAddress)
   }
 
   onShow = (action: Action) => () => {
@@ -89,17 +101,6 @@ class Balances extends React.Component<Props, State> {
     })
   }
 
-  handleChange = (e: SyntheticInputEvent<HTMLInputElement>) => {
-    const { checked } = e.target
-
-    this.setState(() => ({ hideZero: checked }))
-  }
-
-  componentDidMount(): void {
-    const { activateTokensByBalance, safeAddress } = this.props
-    activateTokensByBalance(safeAddress)
-  }
-
   render() {
     const {
       showToken, showReceive, sendFunds,
@@ -114,17 +115,20 @@ class Balances extends React.Component<Props, State> {
       safeName,
       ethBalance,
       createTransaction,
+      currencySelected,
+      currencyValues,
     } = this.props
 
     const columns = generateColumns()
     const autoColumns = columns.filter((c) => !c.custom)
 
-    const filteredData = getBalanceData(activeTokens)
+    const filteredData = getBalanceData(activeTokens, currencySelected, currencyValues)
 
     return (
       <>
         <Row align="center" className={classes.message}>
           <Col xs={12} end="sm">
+            <DropdownCurrency />
             <ButtonLink size="lg" onClick={this.onShow('Token')} testId="manage-tokens-btn">
               Manage List
             </ButtonLink>
@@ -155,11 +159,42 @@ class Balances extends React.Component<Props, State> {
         >
           {(sortedData: Array<BalanceRow>) => sortedData.map((row: any, index: number) => (
             <TableRow tabIndex={-1} key={index} className={classes.hide} data-testid={BALANCE_ROW_TEST_ID}>
-              {autoColumns.map((column: Column) => (
-                <TableCell key={column.id} style={cellWidth(column.width)} align={column.align} component="td">
-                  {column.id === BALANCE_TABLE_ASSET_ID ? <AssetTableCell asset={row[column.id]} /> : row[column.id]}
-                </TableCell>
-              ))}
+              {autoColumns.map((column: Column) => {
+                const { id, width, align } = column
+                let cellItem
+                switch (id) {
+                  case BALANCE_TABLE_ASSET_ID: {
+                    cellItem = <AssetTableCell asset={row[id]} />
+                    break
+                  }
+                  case BALANCE_TABLE_BALANCE_ID: {
+                    cellItem = (
+                      <div>
+                        {row[id]}
+                      </div>
+                    )
+                    break
+                  }
+                  case BALANCE_TABLE_VALUE_ID: {
+                    cellItem = <div className={classes.currencyValueRow}>{row[id]}</div>
+                    break
+                  }
+                  default: {
+                    cellItem = null
+                    break
+                  }
+                }
+                return (
+                  <TableCell
+                    key={id}
+                    style={cellWidth(width)}
+                    align={align}
+                    component="td"
+                  >
+                    {cellItem}
+                  </TableCell>
+                )
+              })}
               <TableCell component="td">
                 <Row align="end" className={classes.actions}>
                   {granted && (

@@ -11,7 +11,7 @@ export const styles = () => ({
     maxHeight: '75px',
   },
   headingText: {
-    fontSize: '24px',
+    fontSize: lg,
   },
   closeIcon: {
     height: '35px',

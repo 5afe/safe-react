@@ -23,6 +23,7 @@ import { getEthAsToken } from '~/logic/tokens/utils/tokenHelpers'
 import { formatAmount } from '~/logic/tokens/utils/formatAmount'
 import ArrowDown from '../assets/arrow-down.svg'
 import { styles } from './style'
+import { sm } from '~/theme/variables'
 
 type Props = {
   onClose: () => void,
@@ -78,15 +79,15 @@ const ReviewCustomTx = ({
     const txData = tx.data.trim()
     const txValue = tx.value ? web3.utils.toWei(tx.value, 'ether') : 0
 
-    createTransaction(
+    createTransaction({
       safeAddress,
-      txRecipient,
-      txValue,
+      to: txRecipient,
+      valueInWei: txValue,
       txData,
-      TX_NOTIFICATION_TYPES.STANDARD_TX,
+      notifiedTransaction: TX_NOTIFICATION_TYPES.STANDARD_TX,
       enqueueSnackbar,
       closeSnackbar,
-    )
+    })
     onClose()
   }
 
@@ -106,7 +107,7 @@ const ReviewCustomTx = ({
         <SafeInfo safeAddress={safeAddress} safeName={safeName} ethBalance={ethBalance} />
         <Row margin="md">
           <Col xs={1}>
-            <img src={ArrowDown} alt="Arrow Down" style={{ marginLeft: '8px' }} />
+            <img src={ArrowDown} alt="Arrow Down" style={{ marginLeft: sm }} />
           </Col>
           <Col xs={11} center="xs" layout="column">
             <Hairline />

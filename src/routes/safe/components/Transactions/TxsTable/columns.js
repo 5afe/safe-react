@@ -1,13 +1,16 @@
 // @flow
+import React from 'react'
 import { format, getTime, parseISO } from 'date-fns'
 import { BigNumber } from 'bignumber.js'
 import { List } from 'immutable'
+import TxType from './TxType'
 import { type Transaction } from '~/routes/safe/store/models/transaction'
+import { INCOMING_TX_TYPE, type IncomingTransaction } from '~/routes/safe/store/models/incomingTransaction'
 import { type SortRow, buildOrderFieldFrom } from '~/components/Table/sorting'
 import { type Column } from '~/components/Table/TableHead'
 import { getWeb3 } from '~/logic/wallets/getWeb3'
 
-export const TX_TABLE_NONCE_ID = 'nonce'
+export const TX_TABLE_ID = 'id'
 export const TX_TABLE_TYPE_ID = 'type'
 export const TX_TABLE_DATE_ID = 'date'
 export const TX_TABLE_AMOUNT_ID = 'amount'
@@ -16,15 +19,21 @@ export const TX_TABLE_RAW_TX_ID = 'tx'
 export const TX_TABLE_EXPAND_ICON = 'expand'
 
 type TxData = {
-  nonce: number,
-  type: string,
+  id: number,
+  type: React.ReactNode,
   date: string,
+  dateOrder?: number,
   amount: number | string,
   tx: Transaction,
   status?: string,
 }
 
 export const formatDate = (date: string): string => format(parseISO(date), 'MMM d, yyyy - HH:mm:ss')
+
+export const getIncomingTxAmount = (tx: IncomingTransaction) => {
+  const txAmount = tx.value ? `${new BigNumber(tx.value).div(`1e${tx.decimals}`).toFixed()}` : 'n/a'
+  return `${txAmount} ${tx.symbol || 'n/a'}`
+}
 
 export const getTxAmount = (tx: Transaction) => {
   const web3 = getWeb3()
@@ -44,37 +53,56 @@ export const getTxAmount = (tx: Transaction) => {
 
 export type TransactionRow = SortRow<TxData>
 
-export const getTxTableData = (transactions: List<Transaction>): List<TransactionRow> => {
-  const rows = transactions.map((tx: Transaction) => {
-    const txDate = tx.isExecuted ? tx.executionDate : tx.submissionDate
-    let txType = 'Outgoing transfer'
-    if (tx.modifySettingsTx) {
-      txType = 'Modify Safe Settings'
-    } else if (tx.cancellationTx) {
-      txType = 'Cancellation transaction'
-    } else if (tx.customTx) {
-      txType = 'Custom transaction'
-    }
+const getIncomingTxTableData = (tx: IncomingTransaction): TransactionRow => ({
+  [TX_TABLE_ID]: tx.blockNumber,
+  [TX_TABLE_TYPE_ID]: <TxType txType="incoming" />,
+  [TX_TABLE_DATE_ID]: formatDate(tx.executionDate),
+  [buildOrderFieldFrom(TX_TABLE_DATE_ID)]: getTime(parseISO(tx.executionDate)),
+  [TX_TABLE_AMOUNT_ID]: getIncomingTxAmount(tx),
+  [TX_TABLE_STATUS_ID]: tx.status,
+  [TX_TABLE_RAW_TX_ID]: tx,
+})
 
-    return {
-      [TX_TABLE_NONCE_ID]: tx.nonce,
-      [TX_TABLE_TYPE_ID]: txType,
-      [TX_TABLE_DATE_ID]: formatDate(tx.isExecuted ? tx.executionDate : tx.submissionDate),
-      [buildOrderFieldFrom(TX_TABLE_DATE_ID)]: getTime(parseISO(txDate)),
-      [TX_TABLE_AMOUNT_ID]: getTxAmount(tx),
-      [TX_TABLE_STATUS_ID]: tx.status,
-      [TX_TABLE_RAW_TX_ID]: tx,
-    }
-  })
+const getTransactionTableData = (tx: Transaction): TransactionRow => {
+  const txDate = tx.isExecuted ? tx.executionDate : tx.submissionDate
 
-  return rows
+  let txType = 'outgoing'
+  if (tx.modifySettingsTx) {
+    txType = 'settings'
+  } else if (tx.cancellationTx) {
+    txType = 'cancellation'
+  } else if (tx.customTx) {
+    txType = 'custom'
+  } else if (tx.creationTx) {
+    txType = 'creation'
+  }
+
+  return {
+    [TX_TABLE_ID]: tx.blockNumber,
+    [TX_TABLE_TYPE_ID]: <TxType txType={txType} />,
+    [TX_TABLE_DATE_ID]: tx.isExecuted
+      ? tx.executionDate && formatDate(tx.executionDate)
+      : tx.submissionDate && formatDate(tx.submissionDate),
+    [buildOrderFieldFrom(TX_TABLE_DATE_ID)]: txDate ? getTime(parseISO(txDate)) : null,
+    [TX_TABLE_AMOUNT_ID]: getTxAmount(tx),
+    [TX_TABLE_STATUS_ID]: tx.status,
+    [TX_TABLE_RAW_TX_ID]: tx,
+  }
 }
+
+export const getTxTableData = (transactions: List<Transaction | IncomingTransaction>): List<TransactionRow> => transactions.map((tx) => {
+  if (tx.type === INCOMING_TX_TYPE) {
+    return getIncomingTxTableData(tx)
+  }
+
+  return getTransactionTableData(tx)
+})
 
 export const generateColumns = () => {
   const nonceColumn: Column = {
-    id: TX_TABLE_NONCE_ID,
+    id: TX_TABLE_ID,
     disablePadding: false,
-    label: 'Nonce',
+    label: 'Id',
     custom: false,
     order: false,
     width: 50,
@@ -95,7 +123,7 @@ export const generateColumns = () => {
     disablePadding: false,
     label: 'Amount',
     custom: false,
-    width: 100,
+    width: 120,
   }
 
   const dateColumn: Column = {
@@ -112,6 +140,7 @@ export const generateColumns = () => {
     disablePadding: false,
     label: 'Status',
     custom: true,
+    align: 'right',
   }
 
   const expandIconColumn: Column = {

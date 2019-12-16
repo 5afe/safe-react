@@ -1,12 +1,14 @@
 // @flow
 import * as React from 'react'
 import { connect } from 'react-redux'
+import queryString from 'query-string'
+import { withRouter } from 'react-router-dom'
 import Page from '~/components/layout/Page'
 import {
   getAccountsFrom, getThresholdFrom, getNamesFrom, getSafeNameFrom, getOwnersFrom,
 } from '~/routes/open/utils/safeDataExtractor'
 import { buildSafe } from '~/routes/safe/store/actions/fetchSafe'
-import { getGnosisSafeInstanceAt, deploySafeContract, initContracts } from '~/logic/contracts/safeContracts'
+import { getGnosisSafeInstanceAt, deploySafeContract } from '~/logic/contracts/safeContracts'
 import { checkReceiptStatus } from '~/logic/wallets/ethTransactions'
 import { history } from '~/store'
 import { OPENING_ADDRESS, stillInOpeningView, SAFELIST_ADDRESS } from '~/routes/routes'
@@ -24,13 +26,35 @@ export type OpenState = {
   safeAddress: string,
 }
 
+export type SafePropsType = {
+  name: string,
+  ownerAddresses: string[],
+  ownerNames: string[],
+  threshold: string,
+}
+
+const validateQueryParams = (ownerAddresses?: string[], ownerNames?: string[], threshold?: string, safeName?: string) => {
+  if (!ownerAddresses || !ownerNames || !threshold || !safeName) {
+    return false
+  }
+  if (!ownerAddresses.length === 0 || ownerNames.length === 0) {
+    return false
+  }
+
+  if (Number.isNaN(Number(threshold))) {
+    return false
+  }
+  if (threshold > ownerAddresses.length) {
+    return false
+  }
+  return true
+}
+
 export const createSafe = async (values: Object, userAccount: string, addSafe: AddSafe): Promise<OpenState> => {
   const numConfirmations = getThresholdFrom(values)
   const name = getSafeNameFrom(values)
   const ownersNames = getNamesFrom(values)
   const ownerAddresses = getAccountsFrom(values)
-
-  await initContracts()
 
   const safe = await deploySafeContract(ownerAddresses, numConfirmations, userAccount)
   await checkReceiptStatus(safe.tx)
@@ -59,10 +83,6 @@ export const createSafe = async (values: Object, userAccount: string, addSafe: A
 }
 
 class Open extends React.Component<Props> {
-  async componentDidMount() {
-    await initContracts()
-  }
-
   onCallSafeContractSubmit = async (values) => {
     try {
       const { userAccount, addSafe } = this.props
@@ -75,8 +95,23 @@ class Open extends React.Component<Props> {
   }
 
   render() {
-    const { provider, userAccount, network } = this.props
+    const {
+      provider, userAccount, network, location,
+    } = this.props
+    const query: SafePropsType = queryString.parse(location.search, { arrayFormat: 'comma' })
+    const {
+      name, owneraddresses, ownernames, threshold,
+    } = query
 
+    let safeProps = null
+    if (validateQueryParams(owneraddresses, ownernames, threshold, name)) {
+      safeProps = {
+        name,
+        ownerAddresses: owneraddresses,
+        ownerNames: ownernames,
+        threshold,
+      }
+    }
     return (
       <Page>
         <Layout
@@ -84,10 +119,11 @@ class Open extends React.Component<Props> {
           provider={provider}
           userAccount={userAccount}
           onCallSafeContractSubmit={this.onCallSafeContractSubmit}
+          safeProps={safeProps}
         />
       </Page>
     )
   }
 }
 
-export default connect(selector, actions)(Open)
+export default connect(selector, actions)(withRouter(Open))

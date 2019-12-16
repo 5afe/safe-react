@@ -57,6 +57,8 @@ git clone https://github.com/gnosis/safe-transaction-service.git
 cd safe-transaction-service
 git checkout develop
 docker-compose build
+# it comes enabled by default in docker-compose
+sudo service postgresql stop
 docker-compose up -d
 ```
 Check that the service is running at https://localhost:8000

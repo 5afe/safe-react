@@ -28,6 +28,7 @@ import { TX_NOTIFICATION_TYPES } from '~/logic/safe/transactions'
 import { ETH_ADDRESS } from '~/logic/tokens/utils/tokenHelpers'
 import ArrowDown from '../assets/arrow-down.svg'
 import { styles } from './style'
+import { sm } from '~/theme/variables'
 
 type Props = {
   onClose: () => void,
@@ -108,15 +109,15 @@ const ReviewTx = ({
       txAmount = 0
     }
 
-    createTransaction(
+    createTransaction({
       safeAddress,
-      txRecipient,
-      txAmount,
+      to: txRecipient,
+      valueInWei: txAmount,
       txData,
-      TX_NOTIFICATION_TYPES.STANDARD_TX,
+      notifiedTransaction: TX_NOTIFICATION_TYPES.STANDARD_TX,
       enqueueSnackbar,
       closeSnackbar,
-    )
+    })
     onClose()
   }
 
@@ -136,7 +137,7 @@ const ReviewTx = ({
         <SafeInfo safeAddress={safeAddress} safeName={safeName} ethBalance={ethBalance} />
         <Row margin="md">
           <Col xs={1}>
-            <img src={ArrowDown} alt="Arrow Down" style={{ marginLeft: '8px' }} />
+            <img src={ArrowDown} alt="Arrow Down" style={{ marginLeft: sm }} />
           </Col>
           <Col xs={11} center="xs" layout="column">
             <Hairline />

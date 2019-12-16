@@ -16,6 +16,7 @@ const plus = require('../assets/new.svg')
 
 type Props = {
   provider: string,
+  isOldMultisigMigration?: boolean,
 }
 
 const openIconStyle = {
@@ -26,7 +27,7 @@ const openIconStyle = {
 
 type SafeProps = {
   provider: string,
-  size?: 'small' | 'medium' | 'large',
+  size?: "small" | "medium" | "large"
 }
 
 const buttonStyle = {
@@ -64,45 +65,72 @@ export const LoadSafe = ({ size, provider }: SafeProps) => (
   </Button>
 )
 
-const Welcome = ({ provider }: Props) => (
-  <Block className={styles.safe}>
-    <Heading tag="h1" weight="bold" align="center" margin="lg">
-      Welcome to
+
+const Welcome = ({ provider, isOldMultisigMigration }: Props) => {
+  const headingText = isOldMultisigMigration ? (
+    <>
+      We will replicate the owner structure from your existing Gnosis MultiSig
       <br />
-      Gnosis Safe For Teams
-    </Heading>
-    <Heading tag="h3" align="center" margin="xl">
-      The Gnosis Safe for Teams is geared towards teams managing shared
+      to let you test the new interface.
       <br />
-      crypto funds. It is an improvement of the existing Gnosis MultiSig
+      As soon as you feel comfortable, start moving funds to your new Safe.
       <br />
-      wallet with redesigned smart contracts, cheaper setup and transaction
-      <br />
-      costs as well as an enhanced user experience.
       {' '}
-      <a className={styles.learnMoreLink} href="https://safe.gnosis.io/teams" target="_blank" rel="noopener noreferrer">
-        Learn more
-        <OpenInNew style={openIconStyle} />
-      </a>
-    </Heading>
-    {provider ? (
-      <>
-        <Block className={styles.safeActions} margin="md">
-          <CreateSafe size="large" provider={provider} />
+    </>
+  ) : (
+    <>
+      Gnosis Safe Multisig is the most secure way to manage crypto funds
+      <br />
+      collectively. It is an improvement of the Gnosis MultiSig, which is used
+      by more than 3000 teams
+      <br />
+      {' '}
+      and stores over $1B USD worth of digital assets. Gnosis Safe Multisig features a modular
+      <br />
+      {' '}
+      design, formally verified smart contracts and vastly improved user
+      experience.
+      {' '}
+    </>
+  )
+  return (
+    <Block className={styles.safe}>
+      <Heading tag="h1" weight="bold" align="center" margin="lg">
+        Welcome to
+        <br />
+        Gnosis Safe Multisig
+      </Heading>
+      <Heading tag="h3" align="center" margin="xl">
+        { headingText }
+        <a
+          className={styles.learnMoreLink}
+          href="https://safe.gnosis.io/teams"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Learn more
+          <OpenInNew style={openIconStyle} />
+        </a>
+      </Heading>
+      {provider ? (
+        <>
+          <Block className={styles.safeActions} margin="md">
+            <CreateSafe size="large" provider={provider} />
+          </Block>
+          <Block className={styles.safeActions} margin="md">
+            <LoadSafe size="large" provider={provider} />
+          </Block>
+        </>
+      ) : (
+        <Block margin="md" className={styles.connectWallet}>
+          <Heading tag="h3" align="center" margin="md">
+            Get Started by Connecting a Wallet
+          </Heading>
+          <ConnectButton minWidth={240} minHeight={42} />
         </Block>
-        <Block className={styles.safeActions} margin="md">
-          <LoadSafe size="large" provider={provider} />
-        </Block>
-      </>
-    ) : (
-      <Block margin="md" className={styles.connectWallet}>
-        <Heading tag="h3" align="center" margin="md">
-          Get Started by Connecting a Wallet
-        </Heading>
-        <ConnectButton minWidth={240} minHeight={42} />
-      </Block>
-    )}
-  </Block>
-)
+      )}
+    </Block>
+  )
+}
 
 export default Welcome

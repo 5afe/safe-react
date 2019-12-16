@@ -19,6 +19,7 @@ type Props = {
 const statusToIcon = {
   success: OkIcon,
   cancelled: ErrorIcon,
+  awaiting_your_confirmation: AwaitingIcon,
   awaiting_confirmations: AwaitingIcon,
   awaiting_execution: AwaitingIcon,
   pending: <CircularProgress size={14} />,
@@ -26,9 +27,10 @@ const statusToIcon = {
 
 const statusToLabel = {
   success: 'Success',
-  cancelled: 'Cancelled',
-  awaiting_confirmations: 'Awaiting',
-  awaiting_execution: 'Awaiting',
+  cancelled: 'Failed',
+  awaiting_your_confirmation: 'Awaiting your confirmation',
+  awaiting_confirmations: 'Awaiting confirmations',
+  awaiting_execution: 'Awaiting execution',
   pending: 'Pending',
 }
 
@@ -45,7 +47,7 @@ const Status = ({ classes, status }: Props) => {
       {typeof Icon === 'object' ? (
         Icon
       ) : (
-        <Img src={Icon} alt="OK Icon" style={statusIconStyle} />
+        <Img src={Icon} alt={statusToLabel[status]} style={statusIconStyle} />
       )}
       <Paragraph noMargin className={classes.statusText}>
         {statusToLabel[status]}
