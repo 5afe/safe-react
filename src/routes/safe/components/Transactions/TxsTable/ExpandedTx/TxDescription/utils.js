@@ -1,4 +1,5 @@
 // @flow
+import { BigNumber } from 'bignumber.js'
 import { type Transaction } from '~/routes/safe/store/models/transaction'
 import { getWeb3 } from '~/logic/wallets/getWeb3'
 
@@ -17,21 +18,21 @@ type DecodedTxData = {
 
 export const getTxData = (tx: Transaction): DecodedTxData => {
   const web3 = getWeb3()
-  const { toBN, fromWei } = web3.utils
+  const { fromWei } = web3.utils
 
   const txData = {}
 
   if (tx.isTokenTransfer && tx.decodedParams) {
     txData.recipient = tx.decodedParams.recipient
-    txData.value = fromWei(toBN(tx.decodedParams.value), 'ether')
+    txData.value = fromWei(BigNumber(tx.decodedParams.value).toString(), 'ether')
   } else if (tx.customTx) {
     txData.recipient = tx.recipient
-    txData.value = fromWei(toBN(tx.value), 'ether')
+    txData.value = fromWei(BigNumber(tx.value).toString(), 'ether')
     txData.data = tx.data
     txData.customTx = true
   } else if (Number(tx.value) > 0) {
     txData.recipient = tx.recipient
-    txData.value = fromWei(toBN(tx.value), 'ether')
+    txData.value = fromWei(BigNumber(tx.value).toString(), 'ether')
   } else if (tx.modifySettingsTx) {
     txData.recipient = tx.recipient
     txData.modifySettingsTx = true

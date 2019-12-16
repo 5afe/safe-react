@@ -5,6 +5,7 @@ import classNames from 'classnames'
 import { withStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
 import IconButton from '@material-ui/core/IconButton'
+import { BigNumber } from 'bignumber.js'
 import Identicon from '~/components/Identicon'
 import EtherscanBtn from '~/components/EtherscanBtn'
 import { getGnosisSafeInstanceAt } from '~/logic/contracts/safeContracts'
@@ -42,7 +43,7 @@ const ReviewAddOwner = ({
     let isCurrent = true
     const estimateGas = async () => {
       const web3 = getWeb3()
-      const { fromWei, toBN } = web3.utils
+      const { fromWei } = web3.utils
       const safeInstance = await getGnosisSafeInstanceAt(safeAddress)
 
       const txData = safeInstance.contract.methods
@@ -50,7 +51,7 @@ const ReviewAddOwner = ({
         .encodeABI()
       const estimatedGasCosts = await estimateTxGasCosts(safeAddress, safeAddress, txData)
 
-      const gasCostsAsEth = fromWei(toBN(estimatedGasCosts), 'ether')
+      const gasCostsAsEth = fromWei(BigNumber(estimatedGasCosts).toString(), 'ether')
       const formattedGasCosts = formatAmount(gasCostsAsEth)
       if (isCurrent) {
         setGasCosts(formattedGasCosts)

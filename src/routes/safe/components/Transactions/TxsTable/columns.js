@@ -37,7 +37,7 @@ export const getIncomingTxAmount = (tx: IncomingTransaction) => {
 
 export const getTxAmount = (tx: Transaction) => {
   const web3 = getWeb3()
-  const { toBN, fromWei } = web3.utils
+  const { fromWei } = web3.utils
 
   let txAmount = 'n/a'
 
@@ -45,7 +45,7 @@ export const getTxAmount = (tx: Transaction) => {
     const tokenDecimals = tx.decimals.toNumber ? tx.decimals.toNumber() : tx.decimals
     txAmount = `${new BigNumber(tx.decodedParams.value).div(10 ** tokenDecimals).toString()} ${tx.symbol}`
   } else if (Number(tx.value) > 0) {
-    txAmount = `${fromWei(toBN(tx.value), 'ether')} ${tx.symbol}`
+    txAmount = `${fromWei(BigNumber(tx.value).toString(), 'ether')} ${tx.symbol}`
   }
 
   return txAmount
