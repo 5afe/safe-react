@@ -158,7 +158,7 @@ const AddCustomToken = (props: Props) => {
                     name="symbol"
                     component={TextField}
                     type="text"
-                    validate={composeValidators(required, minMaxLength(3, 12))}
+                    validate={composeValidators(required, minMaxLength(2, 12))}
                     placeholder="Token symbol*"
                     text="Token symbol"
                     className={classes.addressInput}
