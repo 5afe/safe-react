@@ -90,15 +90,13 @@ const getTransactionTableData = (tx: Transaction): TransactionRow => {
   }
 }
 
-export const getTxTableData = (transactions: List<Transaction | IncomingTransaction>): List<TransactionRow> => {
-  return transactions.map((tx) => {
-    if (tx.type === INCOMING_TX_TYPE) {
-      return getIncomingTxTableData(tx)
-    }
+export const getTxTableData = (transactions: List<Transaction | IncomingTransaction>): List<TransactionRow> => transactions.map((tx) => {
+  if (tx.type === INCOMING_TX_TYPE) {
+    return getIncomingTxTableData(tx)
+  }
 
-    return getTransactionTableData(tx)
-  })
-}
+  return getTransactionTableData(tx)
+})
 
 export const generateColumns = () => {
   const nonceColumn: Column = {

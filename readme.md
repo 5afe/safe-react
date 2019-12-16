@@ -54,7 +54,7 @@ yarn build-mainnet
 1. Run `transaction-history-service`
 ```
 git clone https://github.com/gnosis/safe-transaction-service.git
-cd safe-transaction-history
+cd safe-transaction-service
 git checkout develop
 docker-compose build
 # it comes enabled by default in docker-compose
