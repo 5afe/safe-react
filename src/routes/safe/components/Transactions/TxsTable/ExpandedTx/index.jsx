@@ -1,7 +1,7 @@
 // @flow
 import React, { useState } from 'react'
 import { List } from 'immutable'
-import classNames from 'classnames'
+import cn from 'classnames'
 import { makeStyles } from '@material-ui/core/styles'
 import Row from '~/components/layout/Row'
 import Block from '~/components/layout/Block'
@@ -31,10 +31,10 @@ type Props = {
   safeAddress: string,
   createTransaction: Function,
   processTransaction: Function,
-  nonce: number,
+  nonce: number
 }
 
-type OpenModal = 'cancelTx' | 'approveTx' | null
+type OpenModal = "cancelTx" | "approveTx" | null
 
 const txStatusToLabel = {
   success: 'Success',
@@ -72,7 +72,7 @@ const ExpandedTx = ({
         <Row>
           <Col xs={6} layout="column">
             <Block
-              className={classNames(
+              className={cn(
                 classes.txDataContainer,
                 tx.type === INCOMING_TX_TYPE && classes.incomingTxBlock,
               )}
@@ -87,9 +87,7 @@ const ExpandedTx = ({
               </Block>
               <Paragraph noMargin>
                 <Bold>TX status: </Bold>
-                <Span>
-                  {txStatusToLabel[tx.status]}
-                </Span>
+                <Span>{txStatusToLabel[tx.status]}</Span>
               </Paragraph>
               {tx.type === INCOMING_TX_TYPE ? (
                 <>
@@ -138,7 +136,11 @@ const ExpandedTx = ({
               )}
             </Block>
             <Hairline />
-            {tx.type === INCOMING_TX_TYPE ? <IncomingTxDescription tx={tx} /> : <TxDescription tx={tx} />}
+            {tx.type === INCOMING_TX_TYPE ? (
+              <IncomingTxDescription tx={tx} />
+            ) : (
+              <TxDescription tx={tx} />
+            )}
           </Col>
           {tx.type !== INCOMING_TX_TYPE && (
             <OwnersColumn
