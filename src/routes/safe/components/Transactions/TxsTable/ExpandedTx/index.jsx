@@ -74,7 +74,7 @@ const ExpandedTx = ({
             <Block
               className={classNames(
                 classes.txDataContainer,
-                tx.type === INCOMING_TX_TYPE ? classes.incomingTxBlock : {},
+                tx.type === INCOMING_TX_TYPE && classes.incomingTxBlock,
               )}
             >
               <Block align="left" className={classes.txData}>
