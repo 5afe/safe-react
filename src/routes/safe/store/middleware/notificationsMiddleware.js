@@ -1,5 +1,6 @@
 // @flow
-import type { AnyAction, Store } from 'redux'
+import type { Action, Store } from 'redux'
+import { List } from 'immutable'
 import { push } from 'connected-react-router'
 import { type GlobalState } from '~/store/'
 import { ADD_TRANSACTIONS } from '~/routes/safe/store/actions/addTransactions'
@@ -14,15 +15,14 @@ import updateSafe from '~/routes/safe/store/actions/updateSafe'
 import { loadFromStorage } from '~/utils/storage'
 import { SAFES_KEY } from '~/logic/safe/utils'
 import { RECURRING_USER_KEY } from '~/utils/verifyRecurringUser'
-import { safeParamAddressFromStateSelector, safesMapSelector } from '~/routes/safe/store/selectors'
+import { safesMapSelector } from '~/routes/safe/store/selectors'
 import { isUserOwner } from '~/logic/wallets/ethAddresses'
 
-const watchedActions = [
-  ADD_TRANSACTIONS,
-  ADD_INCOMING_TRANSACTIONS,
-]
+const watchedActions = [ADD_TRANSACTIONS, ADD_INCOMING_TRANSACTIONS]
 
-const notificationsMiddleware = (store: Store<GlobalState>) => (next: Function) => async (action: AnyAction) => {
+const notificationsMiddleware = (store: Store<GlobalState>) => (
+  next: Function,
+) => async (action: Action<*>) => {
   const handledAction = next(action)
   const { dispatch } = store
 
@@ -32,34 +32,52 @@ const notificationsMiddleware = (store: Store<GlobalState>) => (next: Function) 
       case ADD_TRANSACTIONS: {
         const transactionsList = action.payload
         const userAddress: string = userAccountSelector(state)
-        const awaitingTransactions = getAwaitingTransactions(transactionsList, userAddress)
+        const safeAddress = action.payload.keySeq().get(0)
+        const awaitingTransactions = getAwaitingTransactions(
+          transactionsList,
+          userAddress,
+        )
+        const awaitingTransactionsList = awaitingTransactions.get(
+          safeAddress,
+          List([]),
+        )
         const safes = safesMapSelector(state)
-        const safeAddress = safeParamAddressFromStateSelector(state)
         const currentSafe = safes.get(safeAddress)
 
-        // If the user is not an owner, do not send notifications
-        if (!isUserOwner(currentSafe, userAddress)) {
+        if (
+          !isUserOwner(currentSafe, userAddress)
+          || awaitingTransactionsList.size === 0
+        ) {
           break
         }
 
-        awaitingTransactions.map((awaitingTransactionsList: List<Transaction>, txSafeAddress) => {
-          const notificationKey = `${txSafeAddress}-${userAddress}`
-          const onNotificationClicked = () => {
-            dispatch(closeSnackbarAction({ key: notificationKey }))
-            dispatch(push(`/safes/${txSafeAddress}/transactions`))
-          }
-          if (awaitingTransactionsList.size > 0) {
-            dispatch(enqueueSnackbar(enhanceSnackbarForAction(NOTIFICATIONS.TX_WAITING_MSG, notificationKey, onNotificationClicked)))
-          }
-        })
+        const notificationKey = `${safeAddress}-${userAddress}`
+        const onNotificationClicked = () => {
+          dispatch(closeSnackbarAction({ key: notificationKey }))
+          dispatch(push(`/safes/${safeAddress}/transactions`))
+        }
+        dispatch(
+          enqueueSnackbar(
+            enhanceSnackbarForAction(
+              NOTIFICATIONS.TX_WAITING_MSG,
+              notificationKey,
+              onNotificationClicked,
+            ),
+          ),
+        )
+
         break
       }
       case ADD_INCOMING_TRANSACTIONS: {
         action.payload.forEach(async (incomingTransactions, safeAddress) => {
           const storedSafes = await loadFromStorage(SAFES_KEY)
-          const latestIncomingTxBlock = storedSafes ? storedSafes[safeAddress].latestIncomingTxBlock : 0
+          const latestIncomingTxBlock = storedSafes
+            ? storedSafes[safeAddress].latestIncomingTxBlock
+            : 0
 
-          const newIncomingTransactions = incomingTransactions.filter((tx) => tx.blockNumber > latestIncomingTxBlock)
+          const newIncomingTransactions = incomingTransactions.filter(
+            (tx) => tx.blockNumber > latestIncomingTxBlock,
+          )
           const { message, ...TX_INCOMING_MSG } = NOTIFICATIONS.TX_INCOMING_MSG
           const recurringUser = await loadFromStorage(RECURRING_USER_KEY)
 

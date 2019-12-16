@@ -8,7 +8,7 @@ import { type Safe } from '~/routes/safe/store/models/safe'
 import { type State as TransactionsState, TRANSACTIONS_REDUCER_ID } from '~/routes/safe/store/reducer/transactions'
 import {
   type IncomingState as IncomingTransactionsState,
-  INCOMING_TRANSACTIONS_REDUCER_ID
+  INCOMING_TRANSACTIONS_REDUCER_ID,
 } from '~/routes/safe/store/reducer/incomingTransactions'
 import { type Transaction } from '~/routes/safe/store/models/transaction'
 import { type Confirmation } from '~/routes/safe/store/models/confirmation'
@@ -70,15 +70,6 @@ export const safeTransactionsSelector: Selector<GlobalState, RouterProps, List<T
   },
 )
 
-export const safeParamAddressFromStateSelector = (state: GlobalState) => {
-  const match = matchPath(
-    state.router.location.pathname,
-    { path: `${SAFELIST_ADDRESS}/:safeAddress` },
-  )
-  const { safeAddress } = match.params
-  return safeAddress
-}
-
 export const safeIncomingTransactionsSelector: Selector<GlobalState, RouterProps, List<IncomingTransaction>> = createSelector(
   incomingTransactionsSelector,
   safeParamAddressSelector,
@@ -92,7 +83,7 @@ export const safeIncomingTransactionsSelector: Selector<GlobalState, RouterProps
     }
 
     return incomingTransactions.get(address) || List([])
-  }
+  },
 )
 
 export const confirmationsTransactionSelector: Selector<GlobalState, TransactionProps, number> = createSelector(
