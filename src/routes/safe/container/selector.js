@@ -13,9 +13,8 @@ import {
 } from '~/routes/safe/store/selectors'
 import { providerNameSelector, userAccountSelector, networkSelector } from '~/logic/wallets/store/selectors'
 import { type Safe } from '~/routes/safe/store/models/safe'
-import { type Owner } from '~/routes/safe/store/models/owner'
 import { type GlobalState } from '~/store'
-import { sameAddress } from '~/logic/wallets/ethAddresses'
+import { isUserOwner } from '~/logic/wallets/ethAddresses'
 import { orderedTokenListSelector, tokensSelector } from '~/logic/tokens/store/selectors'
 import { type Token } from '~/logic/tokens/store/model/token'
 import { type Transaction, type TransactionStatus } from '~/routes/safe/store/models/transaction'
@@ -63,22 +62,7 @@ const getTxStatus = (tx: Transaction, userAddress: string, safe: Safe): Transact
 export const grantedSelector: Selector<GlobalState, RouterProps, boolean> = createSelector(
   userAccountSelector,
   safeSelector,
-  (userAccount: string, safe: Safe | typeof undefined): boolean => {
-    if (!safe) {
-      return false
-    }
-
-    if (!userAccount) {
-      return false
-    }
-
-    const { owners }: List<Owner> = safe
-    if (!owners) {
-      return false
-    }
-
-    return owners.find((owner: Owner) => sameAddress(owner.address, userAccount)) !== undefined
-  },
+  (userAccount: string, safe: Safe | typeof undefined): boolean => isUserOwner(safe, userAccount),
 )
 
 const safeEthAsTokenSelector: Selector<GlobalState, RouterProps, ?Token> = createSelector(
