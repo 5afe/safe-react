@@ -24,7 +24,7 @@ type TxData = {
   date: string,
   dateOrder?: number,
   amount: number | string,
-  tx: Transaction,
+  tx: Transaction | IncomingTransaction,
   status?: string,
 }
 
@@ -64,7 +64,7 @@ const getIncomingTxTableData = (tx: IncomingTransaction): TransactionRow => ({
 })
 
 const getTransactionTableData = (tx: Transaction): TransactionRow => {
-  const txDate = tx.isExecuted ? tx.executionDate : tx.submissionDate
+  const txDate = tx.submissionDate
 
   let txType = 'outgoing'
   if (tx.modifySettingsTx) {
@@ -80,9 +80,7 @@ const getTransactionTableData = (tx: Transaction): TransactionRow => {
   return {
     [TX_TABLE_ID]: tx.blockNumber,
     [TX_TABLE_TYPE_ID]: <TxType txType={txType} />,
-    [TX_TABLE_DATE_ID]: tx.isExecuted
-      ? tx.executionDate && formatDate(tx.executionDate)
-      : tx.submissionDate && formatDate(tx.submissionDate),
+    [TX_TABLE_DATE_ID]: txDate ? formatDate(txDate) : '',
     [buildOrderFieldFrom(TX_TABLE_DATE_ID)]: txDate ? getTime(parseISO(txDate)) : null,
     [TX_TABLE_AMOUNT_ID]: getTxAmount(tx),
     [TX_TABLE_STATUS_ID]: tx.status,
