@@ -4894,10 +4894,10 @@ css-declaration-sorter@^4.0.1:
     postcss "^7.0.1"
     timsort "^0.3.0"
 
-css-loader@3.3.2:
-  version "3.3.2"
-  resolved "https://registry.yarnpkg.com/css-loader/-/css-loader-3.3.2.tgz#41b2086528aa4fbf8c0692e874bc14f081129b21"
-  integrity sha512-4XSiURS+YEK2fQhmSaM1onnUm0VKWNf6WWBYjkp9YbSDGCBTVZ5XOM6Gkxo8tLgQlzkZOBJvk9trHlDk4gjEYg==
+css-loader@3.4.0:
+  version "3.4.0"
+  resolved "https://registry.yarnpkg.com/css-loader/-/css-loader-3.4.0.tgz#9fb263436783117a41d014e45e8eaeba54dd6670"
+  integrity sha512-JornYo4RAXl1Mzt0lOSVPmArzAMV3rGY2VuwtaDc732WTWjdwTaeS19nCGWMcSCf305Q396lhhDAJEWWM0SgPQ==
   dependencies:
     camelcase "^5.3.1"
     cssesc "^3.0.0"
@@ -7243,7 +7243,7 @@ find-cache-dir@^2.0.0, find-cache-dir@^2.1.0:
     make-dir "^2.0.0"
     pkg-dir "^3.0.0"
 
-find-cache-dir@^3.1.0:
+find-cache-dir@^3.2.0:
   version "3.2.0"
   resolved "https://registry.yarnpkg.com/find-cache-dir/-/find-cache-dir-3.2.0.tgz#e7fe44c1abc1299f516146e563108fd1006c1874"
   integrity sha512-1JKclkYYsf1q9WIJKLZa9S9muC+08RIjzAlLrK4QcYLJMS6mk9yombQ9qf+zJ7H9LS800k0s44L4sDq9VYzqyg==
@@ -10960,10 +10960,10 @@ mini-create-react-context@^0.3.0:
     gud "^1.0.0"
     tiny-warning "^1.0.2"
 
-mini-css-extract-plugin@0.8.0:
-  version "0.8.0"
-  resolved "https://registry.yarnpkg.com/mini-css-extract-plugin/-/mini-css-extract-plugin-0.8.0.tgz#81d41ec4fe58c713a96ad7c723cdb2d0bd4d70e1"
-  integrity sha512-MNpRGbNA52q6U92i0qbVpQNsgk7LExy41MdAlG84FeytfDOtRIf/mCHdEgG8rpTKOaNKiqUnZdlptF469hxqOw==
+mini-css-extract-plugin@0.8.1:
+  version "0.8.1"
+  resolved "https://registry.yarnpkg.com/mini-css-extract-plugin/-/mini-css-extract-plugin-0.8.1.tgz#0b3cd3f9610e60860c58493ed170ca6d3c35daf3"
+  integrity sha512-YOMfkqV07IlP3xVFMuTXze8K+fa5WXW8PE3rb2P01XAD5UxpbrwMHIYQ/DPfWaOmTnS16TD7d8CRi8AyOmgJ8g==
   dependencies:
     loader-utils "^1.1.0"
     normalize-url "1.9.1"
@@ -14969,10 +14969,10 @@ strip-json-comments@^3.0.1:
   resolved "https://registry.yarnpkg.com/strip-json-comments/-/strip-json-comments-3.0.1.tgz#85713975a91fb87bf1b305cca77395e40d2a64a7"
   integrity sha512-VTyMAUfdm047mwKl+u79WIdrZxtFtn+nBxHeb844XBQ9uMNTuTHdx2hc5RiAJYqwTj3wc/xe5HLSdJSkJ+WfZw==
 
-style-loader@1.0.1:
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/style-loader/-/style-loader-1.0.1.tgz#aec6d4c61d0ed8d0a442faed741d4dfc6573888a"
-  integrity sha512-CnpEkSR1C+REjudiTWCv4+ssP7SCiuaQZJTZDWBRwTJoS90mdqkB8uOGMHKgVeUzpaU7IfLWoyQbvvs5Joj3Xw==
+style-loader@1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/style-loader/-/style-loader-1.0.2.tgz#433d72eab8d1dd7d64c648b8ad7d9cbff3184111"
+  integrity sha512-xehHGWeCPrr+R/bU82To0j7L7ENzH30RHYmMhmAumbuIpQ/bHmv3SAj1aTRfBSszkXoqNtpKnJyWXEDydS+KeA==
   dependencies:
     loader-utils "^1.2.3"
     schema-utils "^2.0.1"
@@ -15179,18 +15179,18 @@ temp@^0.8.3:
   dependencies:
     rimraf "~2.6.2"
 
-terser-webpack-plugin@2.3.0:
-  version "2.3.0"
-  resolved "https://registry.yarnpkg.com/terser-webpack-plugin/-/terser-webpack-plugin-2.3.0.tgz#00fd8f792a330dc572e2e2b468fd7cb5ffd7ea51"
-  integrity sha512-yez0HdpDf/iQVYGf+e/o8ZYWLb1g9d1nRRi5FIOZ4KfXbfSPT259UoqxPiSLhCnr0mlDoh+bucpYQSFbU0cEsQ==
+terser-webpack-plugin@2.3.1:
+  version "2.3.1"
+  resolved "https://registry.yarnpkg.com/terser-webpack-plugin/-/terser-webpack-plugin-2.3.1.tgz#6a63c27debc15b25ffd2588562ee2eeabdcab923"
+  integrity sha512-dNxivOXmDgZqrGxOttBH6B4xaxT4zNC+Xd+2K8jwGDMK5q2CZI+KZMA1AAnSRT+BTRvuzKsDx+fpxzPAmAMVcA==
   dependencies:
     cacache "^13.0.1"
-    find-cache-dir "^3.1.0"
+    find-cache-dir "^3.2.0"
     jest-worker "^24.9.0"
     schema-utils "^2.6.1"
     serialize-javascript "^2.1.2"
     source-map "^0.6.1"
-    terser "^4.4.2"
+    terser "^4.4.3"
     webpack-sources "^1.4.3"
 
 terser-webpack-plugin@^1.4.3:
@@ -15208,7 +15208,7 @@ terser-webpack-plugin@^1.4.3:
     webpack-sources "^1.4.0"
     worker-farm "^1.7.0"
 
-terser@^4.1.2, terser@^4.4.2:
+terser@^4.1.2, terser@^4.4.3:
   version "4.4.3"
   resolved "https://registry.yarnpkg.com/terser/-/terser-4.4.3.tgz#401abc52b88869cf904412503b1eb7da093ae2f0"
   integrity sha512-0ikKraVtRDKGzHrzkCv5rUNDzqlhmhowOBqC0XqUHFpW+vJ45+20/IFBcebwKfiS2Z9fJin6Eo+F1zLZsxi8RA==
