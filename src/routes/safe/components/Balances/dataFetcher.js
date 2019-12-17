@@ -1,11 +1,16 @@
 // @flow
 import { List } from 'immutable'
 import { type Token } from '~/logic/tokens/store/model/token'
-import { buildOrderFieldFrom, FIXED, type SortRow } from '~/components/Table/sorting'
+import {
+  buildOrderFieldFrom,
+  FIXED,
+  type SortRow,
+} from '~/components/Table/sorting'
 import { type Column } from '~/components/Table/TableHead'
 import { formatAmount } from '~/logic/tokens/utils/formatAmount'
 import type { BalanceCurrencyType } from '~/logic/currencyValues/store/model/currencyValues'
 import { AVAILABLE_CURRENCIES } from '~/logic/currencyValues/store/model/currencyValues'
+import { ETH_ADDRESS } from '~/logic/tokens/utils/tokenHelpers'
 
 export const BALANCE_TABLE_ASSET_ID = 'asset'
 export const BALANCE_TABLE_BALANCE_ID = 'balance'
@@ -13,23 +18,35 @@ export const BALANCE_TABLE_VALUE_ID = 'value'
 
 type BalanceData = {
   asset: Object,
-  balance: string,
+  balance: string
 }
 
 export type BalanceRow = SortRow<BalanceData>
 
 // eslint-disable-next-line max-len
-const getTokenPriceInCurrency = (token: Token, currencySelected: AVAILABLE_CURRENCIES, currencyValues: List<BalanceCurrencyType>): string => {
+const getTokenPriceInCurrency = (
+  token: Token,
+  currencySelected: typeof AVAILABLE_CURRENCIES,
+  currencyValues: List<BalanceCurrencyType>,
+): string => {
   // eslint-disable-next-line no-restricted-syntax
   for (const tokenPriceIterator of currencyValues) {
-    const { tokenAddress, balanceInSelectedCurrency, currencyName } = tokenPriceIterator
+    const {
+      tokenAddress,
+      balanceInSelectedCurrency,
+      currencyName,
+    } = tokenPriceIterator
     if (token.address === tokenAddress && currencySelected === currencyName) {
-      const balance = balanceInSelectedCurrency ? parseFloat(balanceInSelectedCurrency, 10).toFixed(2) : balanceInSelectedCurrency
+      const balance = balanceInSelectedCurrency
+        ? parseFloat(balanceInSelectedCurrency, 10).toFixed(2)
+        : balanceInSelectedCurrency
       return `${balance} ${currencySelected}`
     }
     // ETH token
-    if (token.address === '0x000' && !tokenAddress) {
-      const balance = balanceInSelectedCurrency ? parseFloat(balanceInSelectedCurrency, 10).toFixed(2) : balanceInSelectedCurrency
+    if (token.address === ETH_ADDRESS && !tokenAddress) {
+      const balance = balanceInSelectedCurrency
+        ? parseFloat(balanceInSelectedCurrency, 10).toFixed(2)
+        : balanceInSelectedCurrency
       return `${balance} ${currencySelected}`
     }
   }
@@ -37,14 +54,28 @@ const getTokenPriceInCurrency = (token: Token, currencySelected: AVAILABLE_CURRE
 }
 
 // eslint-disable-next-line max-len
-export const getBalanceData = (activeTokens: List<Token>, currencySelected: string, currencyValues: List<BalanceCurrencyType>): List<BalanceRow> => {
+export const getBalanceData = (
+  activeTokens: List<Token>,
+  currencySelected: string,
+  currencyValues: List<BalanceCurrencyType>,
+): List<BalanceRow> => {
   const rows = activeTokens.map((token: Token) => ({
-    [BALANCE_TABLE_ASSET_ID]: { name: token.name, logoUri: token.logoUri, address: token.address },
+    [BALANCE_TABLE_ASSET_ID]: {
+      name: token.name,
+      logoUri: token.logoUri,
+      address: token.address,
+    },
     [buildOrderFieldFrom(BALANCE_TABLE_ASSET_ID)]: token.name,
-    [BALANCE_TABLE_BALANCE_ID]: `${formatAmount(token.balance)} ${token.symbol}`,
+    [BALANCE_TABLE_BALANCE_ID]: `${formatAmount(token.balance)} ${
+      token.symbol
+    }`,
     [buildOrderFieldFrom(BALANCE_TABLE_BALANCE_ID)]: Number(token.balance),
     [FIXED]: token.get('symbol') === 'ETH',
-    [BALANCE_TABLE_VALUE_ID]: getTokenPriceInCurrency(token, currencySelected, currencyValues),
+    [BALANCE_TABLE_VALUE_ID]: getTokenPriceInCurrency(
+      token,
+      currencySelected,
+      currencyValues,
+    ),
   }))
 
   return rows
@@ -100,4 +131,7 @@ export const generateColumns = () => {
 }
 
 // eslint-disable-next-line max-len
-export const filterByZero = (data: List<BalanceRow>, hideZero: boolean): List<BalanceRow> => data.filter((row: BalanceRow) => (hideZero ? row[buildOrderFieldFrom(BALANCE_TABLE_BALANCE_ID)] !== 0 : true))
+export const filterByZero = (
+  data: List<BalanceRow>,
+  hideZero: boolean,
+): List<BalanceRow> => data.filter((row: BalanceRow) => (hideZero ? row[buildOrderFieldFrom(BALANCE_TABLE_BALANCE_ID)] !== 0 : true))
