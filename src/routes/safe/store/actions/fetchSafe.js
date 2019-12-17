@@ -12,6 +12,7 @@ import { loadFromStorage } from '~/utils/storage'
 import removeSafeOwner from '~/routes/safe/store/actions/removeSafeOwner'
 import addSafeOwner from '~/routes/safe/store/actions/addSafeOwner'
 import updateSafeThreshold from '~/routes/safe/store/actions/updateSafeThreshold'
+import { sameAddress } from '~/logic/wallets/ethAddresses'
 
 const buildOwnersFrom = (
   safeOwners: string[],
@@ -59,16 +60,17 @@ export const checkAndUpdateSafe = (safeAddress: string) => async (dispatch: Redu
   localSafe.threshold = threshold.toNumber()
 
   dispatch(updateSafeThreshold({ safeAddress, threshold: threshold.toNumber() }))
+
   // If the remote owners does not contain a local address, we remove that local owner
   localOwners.forEach((localAddress) => {
-    if (!remoteOwners.includes(localAddress)) {
+    if (remoteOwners.findIndex((remoteAddress) => sameAddress(remoteAddress, localAddress)) !== -1) {
       dispatch(removeSafeOwner({ safeAddress, ownerAddress: localAddress }))
     }
   })
 
   // If the remote has an owner that we don't have locally, we add it
   remoteOwners.forEach((remoteAddress) => {
-    if (!localOwners.includes(remoteAddress)) {
+    if (localOwners.findIndex((localAddress) => sameAddress(remoteAddress, localAddress)) !== -1) {
       dispatch(addSafeOwner({ safeAddress, ownerAddress: remoteAddress, ownerName: 'UNKNOWN' }))
     }
   })
