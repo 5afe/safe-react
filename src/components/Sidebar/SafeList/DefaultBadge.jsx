@@ -4,19 +4,22 @@ import { makeStyles } from '@material-ui/core/styles'
 import Img from '~/components/layout/Img'
 import Block from '~/components/layout/Block'
 import Paragraph from '~/components/layout/Paragraph'
-import { primary, sm } from '~/theme/variables'
-import StarIcon from './assets/star.svg'
+import { primary, secondaryBackground, md } from '~/theme/variables'
+import HomeIcon from '~/assets/icons/shape.svg'
 
 const useStyles = makeStyles({
   container: {
-    background: primary,
+    background: secondaryBackground,
     padding: '5px',
     boxSizing: 'border-box',
-    width: '73px',
+    width: '76px',
     justifyContent: 'space-around',
-    marginLeft: sm,
+    marginLeft: md,
     color: '#fff',
     borderRadius: '3px',
+  },
+  defaultText: {
+    color: primary,
   },
 })
 
@@ -25,9 +28,9 @@ const DefaultBadge = () => {
 
   return (
     <Block justify="left" className={classes.container}>
-      <Img src={StarIcon} alt="Star Icon" />
-      <Paragraph noMargin size="xs">
-        default
+      <Img src={HomeIcon} alt="Home Icon" />
+      <Paragraph noMargin size="xs" className={classes.defaultText}>
+        Default
       </Paragraph>
     </Block>
   )
