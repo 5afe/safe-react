@@ -3,16 +3,16 @@ import { List, Map } from 'immutable'
 import axios from 'axios'
 import bn from 'bignumber.js'
 import type { Dispatch as ReduxDispatch } from 'redux'
-import { type GlobalState } from '~/store/index'
+import { type GlobalState } from '~/store'
 import { makeOwner } from '~/routes/safe/store/models/owner'
 import { makeTransaction, type Transaction } from '~/routes/safe/store/models/transaction'
 import { makeIncomingTransaction, type IncomingTransaction } from '~/routes/safe/store/models/incomingTransaction'
 import { makeConfirmation } from '~/routes/safe/store/models/confirmation'
 import { buildTxServiceUrl, type TxServiceType } from '~/logic/safe/transactions/txHistory'
 import { buildIncomingTxServiceUrl } from '~/logic/safe/transactions/incomingTxHistory'
-import { getOwners } from '~/logic/safe/utils'
 import { getWeb3 } from '~/logic/wallets/getWeb3'
 import { EMPTY_DATA } from '~/logic/wallets/ethTransactions'
+import { getLocalSafe } from '~/logic/safe/utils'
 import { addTransactions } from './addTransactions'
 import { addIncomingTransactions } from './addIncomingTransactions'
 import { getHumanFriendlyToken } from '~/logic/tokens/store/actions/fetchTokens'
@@ -64,7 +64,8 @@ export const buildTransactionFrom = async (
   safeAddress: string,
   tx: TxServiceModel,
 ) => {
-  const storedOwners = await getOwners(safeAddress)
+  const { owners } = await getLocalSafe(safeAddress)
+
   const confirmations = List(
     tx.confirmations.map((conf: ConfirmationServiceModel) => {
       const ownerName = storedOwners.get(conf.owner.toLowerCase()) || 'UNKNOWN'
