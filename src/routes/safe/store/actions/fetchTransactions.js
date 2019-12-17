@@ -225,8 +225,6 @@ export const buildIncomingTransactionFrom = async (tx: IncomingTxServiceModel) =
 }
 
 export const loadSafeTransactions = async (safeAddress: string) => {
-  web3 = await getWeb3()
-
   let transactions: TxServiceModel[] = addMockSafeCreationTx(safeAddress)
   try {
     const url = buildTxServiceUrl(safeAddress)
@@ -254,7 +252,7 @@ export const loadSafeIncomingTransactions = async (safeAddress: string) => {
       incomingTransactions = response.data.results
     }
   } catch (err) {
-    console.error(`Requests for incomming transactions for ${safeAddress} failed with 404`, err)
+    console.error(`Requests for incoming transactions for ${safeAddress} failed with 404`, err)
   }
 
   const incomingTxsRecord = await Promise.all(incomingTransactions.map(buildIncomingTransactionFrom))
@@ -263,6 +261,8 @@ export const loadSafeIncomingTransactions = async (safeAddress: string) => {
 }
 
 export default (safeAddress: string) => async (dispatch: ReduxDispatch<GlobalState>) => {
+  web3 = await getWeb3()
+
   const transactions: Map<string, List<Transaction>> = await loadSafeTransactions(safeAddress)
   const incomingTransactions: Map<string, List<IncomingTransaction>> = await loadSafeIncomingTransactions(safeAddress)
 
