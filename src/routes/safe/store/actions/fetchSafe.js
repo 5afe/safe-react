@@ -59,16 +59,21 @@ export const checkAndUpdateSafe = (safeAddress: string) => async (dispatch: Redu
   localSafe.threshold = threshold.toNumber()
 
   dispatch(updateSafeThreshold({ safeAddress, threshold: threshold.toNumber() }))
+
   // If the remote owners does not contain a local address, we remove that local owner
   localOwners.forEach((localAddress) => {
-    if (!remoteOwners.includes(localAddress)) {
+    const remoteLowerCased = remoteOwners.map((owner) => owner.toLowerCase && owner.toLowerCase())
+
+    if (localAddress.toLowerCase && !remoteLowerCased.includes(localAddress.toLowerCase())) {
       dispatch(removeSafeOwner({ safeAddress, ownerAddress: localAddress }))
     }
   })
 
   // If the remote has an owner that we don't have locally, we add it
   remoteOwners.forEach((remoteAddress) => {
-    if (!localOwners.includes(remoteAddress)) {
+    const localLowerCased = localOwners.map((owner) => owner.toLowerCase && owner.toLowerCase())
+
+    if (remoteAddress.toLowercase && !localLowerCased.includes(remoteAddress.toLowerCase())) {
       dispatch(addSafeOwner({ safeAddress, ownerAddress: remoteAddress, ownerName: 'UNKNOWN' }))
     }
   })
