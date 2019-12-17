@@ -79,7 +79,7 @@ export const buildTransactionFrom = async (
   )
   const modifySettingsTx = sameAddress(tx.to, safeAddress) && Number(tx.value) === 0 && !!tx.data
   const cancellationTx = sameAddress(tx.to, safeAddress) && Number(tx.value) === 0 && !tx.data
-  const isSendTokenTx = await isTokenTransfer(tx.data, tx.value)
+  const isSendTokenTx = await isTokenTransfer(tx.data, Number(tx.value))
   const customTx = !sameAddress(tx.to, safeAddress) && !!tx.data && !isSendTokenTx
 
   let refundParams = null
