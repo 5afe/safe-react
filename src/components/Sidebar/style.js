@@ -48,7 +48,7 @@ const useSidebarStyles = makeStyles({
     },
   },
   searchContainer: {
-    width: '180px',
+    width: '190px',
     marginLeft: xs,
     marginRight: xs,
   },

@@ -111,7 +111,6 @@ const Sidebar = ({
               onCancelSearch={handleFilterCancel}
               value={filter}
             />
-            <Spacer />
             <Divider />
             <Spacer />
             <Button
