@@ -45,7 +45,6 @@ const SafeListHeader = ({ safesCount }: Props) => {
   return (
     <Col start="xs" middle="xs" className={classes.container}>
       Safes
-      {' '}
       <Paragraph size="xs" className={classes.counter}>
         {safesCount}
       </Paragraph>
