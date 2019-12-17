@@ -138,7 +138,7 @@ const CustomDescription = ({
               {shortVersionOf(data, 20)}
               {' '}
               <LinkWithRef
-                aria-label="Show details of the transactions"
+                aria-label="Show details of the transaction"
                 onClick={() => setShowTxData(true)}
                 rel="noopener noreferrer"
                 target="_blank"
