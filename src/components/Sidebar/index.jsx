@@ -24,12 +24,11 @@ import SafeList from './SafeList'
 import LegalLinks from './LegalLinks'
 import useSidebarStyles from './style'
 
-
 const { useState, useEffect, useMemo } = React
 
 type TSidebarContext = {
   isOpen: boolean,
-  toggleSidebar: Function,
+  toggleSidebar: Function
 }
 
 export const SidebarContext = React.createContext<TSidebarContext>({
@@ -42,7 +41,7 @@ type SidebarProps = {
   safes: List<Safe>,
   setDefaultSafeAction: Function,
   defaultSafe: string,
-  currentSafe: string,
+  currentSafe: string
 }
 
 const filterBy = (filter: string, safes: List<Safe>): List<Safe> => safes.filter(
@@ -52,7 +51,11 @@ const filterBy = (filter: string, safes: List<Safe>): List<Safe> => safes.filter
 )
 
 const Sidebar = ({
-  children, safes, setDefaultSafeAction, defaultSafe, currentSafe,
+  children,
+  safes,
+  setDefaultSafeAction,
+  defaultSafe,
+  currentSafe,
 }: SidebarProps) => {
   const [isOpen, setIsOpen] = useState<boolean>(false)
   const [filter, setFilter] = useState<string>('')
@@ -144,6 +147,10 @@ const Sidebar = ({
 
 export default connect<Object, Object, ?Function, ?Object>(
   // $FlowFixMe
-  (state) => ({ safes: sortedSafeListSelector(state), defaultSafe: defaultSafeSelector(state), currentSafe: safeParamAddressFromStateSelector(state) }),
+  (state) => ({
+    safes: sortedSafeListSelector(state),
+    defaultSafe: defaultSafeSelector(state),
+    currentSafe: safeParamAddressFromStateSelector(state),
+  }),
   { setDefaultSafeAction: setDefaultSafe },
 )(Sidebar)
