@@ -204,7 +204,7 @@ export const buildIncomingTransactionFrom = async (tx: IncomingTxServiceModel) =
       symbol = tokenSymbol
       decimals = tokenDecimals
     } catch (err) {
-      const { methods } = new web3.eth.Contract(ALTERNATIVE_TOKEN_ABI, tx.to)
+      const { methods } = new web3.eth.Contract(ALTERNATIVE_TOKEN_ABI, tx.tokenAddress)
       const [tokenSymbol, tokenDecimals] = await Promise.all([methods.symbol, methods.decimals].map((m) => m().call()))
       symbol = web3.utils.toAscii(tokenSymbol)
       decimals = tokenDecimals
