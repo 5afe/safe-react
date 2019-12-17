@@ -21,10 +21,14 @@ export type BalanceRow = SortRow<BalanceData>
 // eslint-disable-next-line max-len
 const getTokenPriceInCurrency = (token: Token, currencySelected: AVAILABLE_CURRENCIES, currencyValues: List<BalanceCurrencyType>): string => {
   // eslint-disable-next-line no-restricted-syntax
-
   for (const tokenPriceIterator of currencyValues) {
     const { tokenAddress, balanceInSelectedCurrency, currencyName } = tokenPriceIterator
     if (token.address === tokenAddress && currencySelected === currencyName) {
+      const balance = balanceInSelectedCurrency ? parseFloat(balanceInSelectedCurrency, 10).toFixed(2) : balanceInSelectedCurrency
+      return `${balance} ${currencySelected}`
+    }
+    // ETH token
+    if (token.address === '0x000' && !tokenAddress) {
       const balance = balanceInSelectedCurrency ? parseFloat(balanceInSelectedCurrency, 10).toFixed(2) : balanceInSelectedCurrency
       return `${balance} ${currencySelected}`
     }
