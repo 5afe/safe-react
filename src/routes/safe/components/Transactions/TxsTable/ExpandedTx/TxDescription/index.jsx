@@ -119,39 +119,35 @@ const CustomDescription = ({
       <Block className={classes.txData} data-testid={TRANSACTIONS_DESC_CUSTOM_DATA_TEST_ID}>
         <Bold>Data (hex encoded):</Bold>
         <Paragraph size="md" noMargin className={classes.txDataParagraph}>
-
-          {
-            showTxData ? (
-              <>
-                {data}
-                {' '}
-                <LinkWithRef
-                  aria-label="Hide details of the transaction"
-                  onClick={() => setShowTxData(false)}
-                  rel="noopener noreferrer"
-                  target="_blank"
-                  className={classes.linkTxData}
-                >
-                  Show Less
-                </LinkWithRef>
-              </>
-            ) : (
-              <>
-                {shortVersionOf(data, 20)}
-                {' '}
-                <LinkWithRef
-                  aria-label="Show details of the transactions"
-                  onClick={() => setShowTxData(true)}
-                  rel="noopener noreferrer"
-                  target="_blank"
-                  className={classes.linkTxData}
-                >
-                  Show More
-                </LinkWithRef>
-              </>
-            )
-
-          }
+          {showTxData ? (
+            <>
+              {data}
+              {' '}
+              <LinkWithRef
+                aria-label="Hide details of the transaction"
+                onClick={() => setShowTxData(false)}
+                rel="noopener noreferrer"
+                target="_blank"
+                className={classes.linkTxData}
+              >
+                Show Less
+              </LinkWithRef>
+            </>
+          ) : (
+            <>
+              {shortVersionOf(data, 20)}
+              {' '}
+              <LinkWithRef
+                aria-label="Show details of the transactions"
+                onClick={() => setShowTxData(true)}
+                rel="noopener noreferrer"
+                target="_blank"
+                className={classes.linkTxData}
+              >
+                Show More
+              </LinkWithRef>
+            </>
+          )}
         </Paragraph>
       </Block>
     </>
