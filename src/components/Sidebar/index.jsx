@@ -14,19 +14,21 @@ import Hairline from '~/components/layout/Hairline'
 import Row from '~/components/layout/Row'
 import { WELCOME_ADDRESS } from '~/routes/routes'
 import { type Safe } from '~/routes/safe/store/models/safe'
-import { defaultSafeSelector } from '~/routes/safe/store/selectors'
+import {
+  defaultSafeSelector,
+  safeParamAddressFromStateSelector,
+} from '~/routes/safe/store/selectors'
 import setDefaultSafe from '~/routes/safe/store/actions/setDefaultSafe'
 import { sortedSafeListSelector } from './selectors'
 import SafeList from './SafeList'
 import LegalLinks from './LegalLinks'
 import useSidebarStyles from './style'
 
-
 const { useState, useEffect, useMemo } = React
 
 type TSidebarContext = {
   isOpen: boolean,
-  toggleSidebar: Function,
+  toggleSidebar: Function
 }
 
 export const SidebarContext = React.createContext<TSidebarContext>({
@@ -39,6 +41,7 @@ type SidebarProps = {
   safes: List<Safe>,
   setDefaultSafeAction: Function,
   defaultSafe: string,
+  currentSafe: string
 }
 
 const filterBy = (filter: string, safes: List<Safe>): List<Safe> => safes.filter(
@@ -48,7 +51,11 @@ const filterBy = (filter: string, safes: List<Safe>): List<Safe> => safes.filter
 )
 
 const Sidebar = ({
-  children, safes, setDefaultSafeAction, defaultSafe,
+  children,
+  safes,
+  setDefaultSafeAction,
+  defaultSafe,
+  currentSafe,
 }: SidebarProps) => {
   const [isOpen, setIsOpen] = useState<boolean>(false)
   const [filter, setFilter] = useState<string>('')
@@ -97,7 +104,6 @@ const Sidebar = ({
           classes={{ paper: classes.sidebarPaper }}
           ModalProps={{ onBackdropClick: toggleSidebar }}
         >
-          <div className={classes.headerPlaceholder} />
           <Row align="center">
             <SearchIcon className={classes.searchIcon} />
             <SearchBar
@@ -108,7 +114,6 @@ const Sidebar = ({
               onCancelSearch={handleFilterCancel}
               value={filter}
             />
-            <Spacer />
             <Divider />
             <Spacer />
             <Button
@@ -130,6 +135,7 @@ const Sidebar = ({
             onSafeClick={toggleSidebar}
             setDefaultSafe={setDefaultSafeAction}
             defaultSafe={defaultSafe}
+            currentSafe={currentSafe}
           />
           <LegalLinks toggleSidebar={toggleSidebar} />
         </Drawer>
@@ -141,6 +147,10 @@ const Sidebar = ({
 
 export default connect<Object, Object, ?Function, ?Object>(
   // $FlowFixMe
-  (state) => ({ safes: sortedSafeListSelector(state), defaultSafe: defaultSafeSelector(state) }),
+  (state) => ({
+    safes: sortedSafeListSelector(state),
+    defaultSafe: defaultSafeSelector(state),
+    currentSafe: safeParamAddressFromStateSelector(state),
+  }),
   { setDefaultSafeAction: setDefaultSafe },
 )(Sidebar)

@@ -12,18 +12,21 @@ import Paragraph from '~/components/layout/Paragraph'
 import ButtonLink from '~/components/layout/ButtonLink'
 import Identicon from '~/components/Identicon'
 import {
-  mediumFontSize, sm, secondary, primary,
+  mediumFontSize, sm, primary, disabled, md,
 } from '~/theme/variables'
 import { formatAmount } from '~/logic/tokens/utils/formatAmount'
 import { shortVersionOf, sameAddress } from '~/logic/wallets/ethAddresses'
 import { type Safe } from '~/routes/safe/store/models/safe'
 import { SAFELIST_ADDRESS } from '~/routes/routes'
 import DefaultBadge from './DefaultBadge'
+import Img from '~/components/layout/Img'
+import check from '~/assets/icons/check.svg'
 
 export const SIDEBAR_SAFELIST_ROW_TESTID = 'SIDEBAR_SAFELIST_ROW_TESTID'
 
 type SafeListProps = {
   safes: List<Safe>,
+  currentSafe: string,
   onSafeClick: Function,
   setDefaultSafe: Function,
   defaultSafe: string,
@@ -33,9 +36,12 @@ const useStyles = makeStyles({
   icon: {
     marginRight: sm,
   },
+  checkIcon: {
+    marginRight: '10px',
+  },
   list: {
     overflow: 'hidden',
-    overflowY: 'scroll',
+    overflowY: 'hidden',
     padding: 0,
     height: '100%',
   },
@@ -50,21 +56,25 @@ const useStyles = makeStyles({
     },
   },
   safeName: {
-    color: secondary,
+    color: primary,
   },
   safeAddress: {
-    color: primary,
+    color: disabled,
     fontSize: mediumFontSize,
   },
   makeDefaultBtn: {
     padding: 0,
-    marginLeft: sm,
+    marginLeft: md,
     visibility: 'hidden',
+  },
+  noIcon: {
+    visibility: 'hidden',
+    width: '28px',
   },
 })
 
 const SafeList = ({
-  safes, onSafeClick, setDefaultSafe, defaultSafe,
+  safes, onSafeClick, setDefaultSafe, defaultSafe, currentSafe,
 }: SafeListProps) => {
   const classes = useStyles()
 
@@ -78,6 +88,11 @@ const SafeList = ({
             data-testid={SIDEBAR_SAFELIST_ROW_TESTID}
           >
             <ListItem classes={{ root: classes.listItemRoot }}>
+              { sameAddress(currentSafe, safe.address) ? (
+                <ListItemIcon>
+                  <Img src={check} alt="check" className={classes.checkIcon} />
+                </ListItemIcon>
+              ) : <div className={classes.noIcon}>placeholder</div> }
               <ListItemIcon>
                 <Identicon address={safe.address} diameter={32} className={classes.icon} />
               </ListItemIcon>

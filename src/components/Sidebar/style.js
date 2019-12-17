@@ -5,13 +5,24 @@ import {
 } from '~/theme/variables'
 
 const sidebarWidth = '400px'
+const sidebarMarginLeft = '12px'
+const sidebarMarginTop = '12px'
+const sidebarMarginBottom = '12px'
+const sidebarBorderRadius = '8px'
 
 const useSidebarStyles = makeStyles({
   sidebar: {
     width: sidebarWidth,
+    marginLeft: sidebarMarginLeft,
+    borderRadius: sidebarBorderRadius,
+    top: sidebarMarginTop,
   },
   sidebarPaper: {
     width: sidebarWidth,
+    marginLeft: sidebarMarginLeft,
+    top: `calc(${headerHeight} + ${sidebarMarginTop})`,
+    maxHeight: `calc(100vh - ${headerHeight} - ${sidebarMarginTop} - ${sidebarMarginBottom})`,
+    borderRadius: sidebarBorderRadius,
   },
   headerPlaceholder: {
     minHeight: headerHeight,
@@ -37,7 +48,7 @@ const useSidebarStyles = makeStyles({
     },
   },
   searchContainer: {
-    width: '180px',
+    width: '190px',
     marginLeft: xs,
     marginRight: xs,
   },

@@ -13,6 +13,7 @@ const md = '16px'
 const primary = '#001428'
 const secondary = '#008C73'
 const secondaryTextOrSvg = '#B2B5B2'
+const secondaryBackground = '#f0efee'
 const sm = '8px'
 const warningColor = '#ffc05f'
 const xl = '32px'
@@ -57,6 +58,7 @@ module.exports = {
   secondary,
   secondaryFontFamily: 'Averta, monospace',
   secondaryText: secondaryTextOrSvg,
+  secondaryBackground,
   sm,
   smallFontSize: '12px',
   warning: warningColor,
