@@ -1,8 +1,9 @@
 // @flow
-import React from 'react'
+import React, { useEffect } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import { withSnackbar } from 'notistack'
 import semverLessThan from 'semver/functions/lt'
+import semverValid from 'semver/functions/valid'
 import Block from '~/components/layout/Block'
 import Col from '~/components/layout/Col'
 import Field from '~/components/forms/Field'
@@ -33,7 +34,7 @@ const useStyles = makeStyles(styles)
 
 const SafeDetails = (props: Props) => {
   const classes = useStyles()
-  const [safeVersions, setSafeVersions] = React.useState({ current: '0.0.0', latest: '0.0.0', needUpdate: false })
+  const [safeVersions, setSafeVersions] = React.useState({ current: null, latest: null, needUpdate: false })
   const {
     safeAddress, safeName, updateSafe, enqueueSnackbar, closeSnackbar,
   } = props
@@ -45,14 +46,22 @@ const SafeDetails = (props: Props) => {
     showSnackbar(notification.afterExecution.noMoreConfirmationsNeeded, enqueueSnackbar, closeSnackbar)
   }
 
-  React.useEffect(() => {
+  useEffect(() => {
     const getVersion = async () => {
-      const safeMaster = await getSafeMasterContract()
-      const current = await safeMaster.VERSION()
-      const latest = process.env.REACT_APP_LATEST_SAFE_VERSION
-      const needUpdate = semverLessThan(current, latest)
+      let current
+      let latest
+      try {
+        const safeMaster = await getSafeMasterContract()
+        const safeMasterVersion = await safeMaster.VERSION()
+        current = semverValid(safeMasterVersion)
+        latest = semverValid(process.env.REACT_APP_LATEST_SAFE_VERSION)
+        const needUpdate = semverLessThan(current, latest)
 
-      setSafeVersions({ current, latest, needUpdate })
+        setSafeVersions({ current, latest, needUpdate })
+      } catch (err) {
+        setSafeVersions({ current: current || 'Version not defined' })
+        console.error(err)
+      }
     }
     getVersion()
   }, [])
@@ -65,10 +74,10 @@ const SafeDetails = (props: Props) => {
             <Block className={classes.formContainer}>
               <Heading tag="h2">Safe Version</Heading>
               <Row align="end" grow>
-                <Block className={classes.root}>
+                <Paragraph className={classes.versionNumber}>
                   {safeVersions.current}
                   {safeVersions.needUpdate && ` (there's a newer version: ${safeVersions.latest})`}
-                </Block>
+                </Paragraph>
               </Row>
             </Block>
             <Block className={classes.formContainer}>
