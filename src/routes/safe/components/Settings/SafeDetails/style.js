@@ -23,4 +23,7 @@ export const styles = () => ({
     width: '100%',
     borderTop: `2px solid ${border}`,
   },
+  versionNumber: {
+    height: '21px',
+  },
 })
