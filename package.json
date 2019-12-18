@@ -16,8 +16,8 @@
     "test": "test"
   },
   "scripts": {
-    "build": "node scripts/build.js",
-    "build-mainnet": "REACT_APP_NETWORK=mainnet yarn build",
+    "build": "REACT_APP_APP_VERSION=$npm_package_version node scripts/build.js",
+    "build-mainnet": "REACT_APP_APP_VERSION=$npm_package_version REACT_APP_NETWORK=mainnet yarn build",
     "flow": "flow",
     "precommit": "./precommit.sh",
     "start": "node scripts/start.js",
