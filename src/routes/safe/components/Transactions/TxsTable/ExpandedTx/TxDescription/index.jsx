@@ -1,6 +1,7 @@
 // @flow
 import React, { useState } from 'react'
 import { withStyles } from '@material-ui/core/styles'
+import { getTxAmount } from '~/routes/safe/components/Transactions/TxsTable/columns'
 import { type Transaction } from '~/routes/safe/store/models/transaction'
 import Bold from '~/components/layout/Bold'
 import EtherscanLink from '~/components/EtherscanLink'
@@ -156,18 +157,27 @@ const CustomDescription = ({
 
 const TxDescription = ({ tx, classes }: Props) => {
   const {
-    recipient, value, modifySettingsTx, removedOwner, addedOwner, newThreshold, cancellationTx, customTx, creationTx, data,
+    recipient,
+    modifySettingsTx,
+    removedOwner,
+    addedOwner,
+    newThreshold,
+    cancellationTx,
+    customTx,
+    creationTx,
+    data,
   } = getTxData(tx)
+  const amount = getTxAmount(tx)
   return (
     <Block className={classes.txDataContainer}>
       {modifySettingsTx && (
         <SettingsDescription removedOwner={removedOwner} newThreshold={newThreshold} addedOwner={addedOwner} />
       )}
       {customTx && (
-        <CustomDescription data={data} value={value} recipient={recipient} classes={classes} />
+        <CustomDescription data={data} value={amount} recipient={recipient} classes={classes} />
       )}
       {!cancellationTx && !modifySettingsTx && !customTx && !creationTx && (
-        <TransferDescription value={value} symbol={tx.symbol} recipient={recipient} />
+        <TransferDescription value={amount} symbol={tx.symbol} recipient={recipient} />
       )}
     </Block>
   )
