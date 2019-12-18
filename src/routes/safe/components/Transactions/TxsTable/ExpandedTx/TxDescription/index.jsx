@@ -41,8 +41,7 @@ type Props = {
 }
 
 type TransferDescProps = {
-  value: string,
-  symbol: string,
+  amount: string,
   recipient: string,
 }
 
@@ -53,20 +52,18 @@ type DescriptionDescProps = {
 }
 
 type CustomDescProps = {
-  value: string,
+  amount: string,
   recipient: string,
   data: String,
   classes: Object,
 }
 
-const TransferDescription = ({ value = '', symbol, recipient }: TransferDescProps) => (
+const TransferDescription = ({ amount = '', recipient }: TransferDescProps) => (
   <Block data-testid={TRANSACTIONS_DESC_SEND_TEST_ID}>
     <Bold>
       Send
       {' '}
-      {value}
-      {' '}
-      {symbol}
+      {amount}
       {' '}
       to:
     </Bold>
@@ -100,7 +97,7 @@ const SettingsDescription = ({ removedOwner, addedOwner, newThreshold }: Descrip
 )
 
 const CustomDescription = ({
-  data, value = 0, recipient, classes,
+  data, amount = 0, recipient, classes,
 }: CustomDescProps) => {
   const [showTxData, setShowTxData] = useState(false)
   return (
@@ -109,9 +106,7 @@ const CustomDescription = ({
         <Bold>
           Send
           {' '}
-          {value}
-          {' '}
-          ETH
+          {amount}
           {' '}
           to:
         </Bold>
@@ -174,10 +169,10 @@ const TxDescription = ({ tx, classes }: Props) => {
         <SettingsDescription removedOwner={removedOwner} newThreshold={newThreshold} addedOwner={addedOwner} />
       )}
       {customTx && (
-        <CustomDescription data={data} value={amount} recipient={recipient} classes={classes} />
+        <CustomDescription data={data} amount={amount} recipient={recipient} classes={classes} />
       )}
       {!cancellationTx && !modifySettingsTx && !customTx && !creationTx && (
-        <TransferDescription value={amount} symbol={tx.symbol} recipient={recipient} />
+        <TransferDescription amount={amount} recipient={recipient} />
       )}
     </Block>
   )
