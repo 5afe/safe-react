@@ -25,7 +25,7 @@ type Props = {
   toggleSidebar: Function,
 }
 
-const appVersion = `v${process.env.REACT_APP_APP_VERSION || ''}`
+const appVersion = process.env.REACT_APP_APP_VERSION ? `v${process.env.REACT_APP_APP_VERSION}` : 'Versions'
 
 const LegalLinks = (props: Props) => {
   const classes = useStyles()
