@@ -11,6 +11,7 @@ import { makeConfirmation } from '~/routes/safe/store/models/confirmation'
 import { buildTxServiceUrl, type TxServiceType } from '~/logic/safe/transactions/txHistory'
 import { buildIncomingTxServiceUrl } from '~/logic/safe/transactions/incomingTxHistory'
 import { getWeb3 } from '~/logic/wallets/getWeb3'
+import { sameAddress, ZERO_ADDRESS } from '~/logic/wallets/ethAddresses'
 import { EMPTY_DATA } from '~/logic/wallets/ethTransactions'
 import { getLocalSafe } from '~/logic/safe/utils'
 import { addTransactions } from './addTransactions'
@@ -19,7 +20,7 @@ import { getHumanFriendlyToken } from '~/logic/tokens/store/actions/fetchTokens'
 import { isTokenTransfer } from '~/logic/tokens/utils/tokenHelpers'
 import { decodeParamsFromSafeMethod } from '~/logic/contracts/methodIds'
 import { ALTERNATIVE_TOKEN_ABI } from '~/logic/tokens/utils/alternativeAbi'
-import { ZERO_ADDRESS } from '~/logic/wallets/ethAddresses'
+
 
 let web3
 
@@ -68,7 +69,15 @@ export const buildTransactionFrom = async (
 
   const confirmations = List(
     tx.confirmations.map((conf: ConfirmationServiceModel) => {
-      const ownerName = storedOwners.get(conf.owner.toLowerCase()) || 'UNKNOWN'
+      let ownerName = 'UNKNOWN'
+
+      if (owners) {
+        const storedOwner = owners.find((owner) => sameAddress(conf.owner, owner.address))
+
+        if (storedOwner) {
+          ownerName = storedOwner.name
+        }
+      }
 
       return makeConfirmation({
         owner: makeOwner({ address: conf.owner, name: ownerName }),
