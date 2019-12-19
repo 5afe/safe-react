@@ -30,10 +30,12 @@ import Balances from './Balances'
 import Transactions from './Transactions'
 import Settings from './Settings'
 import { styles } from './style'
+import AddressBook from '~/routes/safe/components/AddressBook'
 
 export const BALANCES_TAB_BTN_TEST_ID = 'balances-tab-btn'
 export const SETTINGS_TAB_BTN_TEST_ID = 'settings-tab-btn'
 export const TRANSACTIONS_TAB_BTN_TEST_ID = 'transactions-tab-btn'
+export const ADDRESS_BOOK_TAB_BTN_TEST_ID = 'address-book-tab-btn'
 export const SAFE_VIEW_NAME_HEADING_TEST_ID = 'safe-name-heading'
 
 type Props = SelectorProps &
@@ -149,6 +151,7 @@ const Layout = (props: Props) => {
         >
           <Tab label="Balances" value={`${match.url}/balances`} data-testid={BALANCES_TAB_BTN_TEST_ID} />
           <Tab label="Transactions" value={`${match.url}/transactions`} data-testid={TRANSACTIONS_TAB_BTN_TEST_ID} />
+          <Tab label="Address Book" value={`${match.url}/addressBook`} data-testid={ADDRESS_BOOK_TAB_BTN_TEST_ID} />
           <Tab label="Settings" value={`${match.url}/settings`} data-testid={SETTINGS_TAB_BTN_TEST_ID} />
         </Tabs>
       </Row>
@@ -198,6 +201,25 @@ const Layout = (props: Props) => {
           path={`${match.path}/settings`}
           render={() => (
             <Settings
+              granted={granted}
+              safeAddress={address}
+              safeName={name}
+              etherScanLink={etherScanLink}
+              updateSafe={updateSafe}
+              threshold={safe.threshold}
+              owners={safe.owners}
+              network={network}
+              userAddress={userAddress}
+              createTransaction={createTransaction}
+              safe={safe}
+            />
+          )}
+        />
+        <Route
+          exact
+          path={`${match.path}/addressBook`}
+          render={() => (
+            <AddressBook
               granted={granted}
               safeAddress={address}
               safeName={name}
