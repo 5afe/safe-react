@@ -25,6 +25,8 @@ type Props = {
   toggleSidebar: Function,
 }
 
+const appVersion = process.env.REACT_APP_APP_VERSION ? `v${process.env.REACT_APP_APP_VERSION}` : 'Versions'
+
 const LegalLinks = (props: Props) => {
   const classes = useStyles()
   const dispatch = useDispatch()
@@ -51,6 +53,9 @@ const LegalLinks = (props: Props) => {
       <GnoButtonLink className={classes.buttonLink} onClick={openCookiesHandler}>
         Cookies
       </GnoButtonLink>
+      <Link className={classes.link} to="https://github.com/gnosis/safe-react/releases" target="_blank">
+        {appVersion}
+      </Link>
     </Block>
   )
 }

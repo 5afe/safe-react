@@ -13,7 +13,7 @@ import ButtonLink from '~/components/layout/ButtonLink'
 import RemoveSafeModal from './RemoveSafeModal'
 import Hairline from '~/components/layout/Hairline'
 import { type Owner } from '~/routes/safe/store/models/owner'
-import ChangeSafeName from './ChangeSafeName'
+import SafeDetails from './SafeDetails'
 import ThresholdSettings from './ThresholdSettings'
 import ManageOwners from './ManageOwners'
 import actions, { type Actions } from './actions'
@@ -114,7 +114,7 @@ class Settings extends React.Component<Props, State> {
                 className={cn(classes.menuOption, menuOptionIndex === 1 && classes.active)}
                 onClick={this.handleChange(1)}
               >
-                Safe name
+                Safe details
               </Row>
               <Hairline />
               <Row
@@ -139,7 +139,7 @@ class Settings extends React.Component<Props, State> {
           <Col xs={9} layout="column">
             <Block className={classes.container}>
               {menuOptionIndex === 1 && (
-                <ChangeSafeName safeAddress={safeAddress} safeName={safeName} updateSafe={updateSafe} />
+                <SafeDetails safeAddress={safeAddress} safeName={safeName} updateSafe={updateSafe} />
               )}
               {menuOptionIndex === 2 && (
                 <ManageOwners

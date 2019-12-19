@@ -47,7 +47,7 @@ const activateTokensByBalance = (safeAddress: string) => async (
     // update list of active tokens
     dispatch(updateActiveTokens(safeAddress, activeTokens))
   } catch (err) {
-    console.error('Error fetching token list', err)
+    console.error('Error fetching active token list', err)
   }
 
   return null

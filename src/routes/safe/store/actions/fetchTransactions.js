@@ -21,7 +21,6 @@ import { isTokenTransfer } from '~/logic/tokens/utils/tokenHelpers'
 import { decodeParamsFromSafeMethod } from '~/logic/contracts/methodIds'
 import { ALTERNATIVE_TOKEN_ABI } from '~/logic/tokens/utils/alternativeAbi'
 
-
 let web3
 
 type ConfirmationServiceModel = {
@@ -87,10 +86,10 @@ export const buildTransactionFrom = async (
       })
     }),
   )
-  const modifySettingsTx = tx.to === safeAddress && Number(tx.value) === 0 && !!tx.data
-  const cancellationTx = tx.to === safeAddress && Number(tx.value) === 0 && !tx.data
-  const isSendTokenTx = await isTokenTransfer(tx.data, tx.value)
-  const customTx = tx.to !== safeAddress && !!tx.data && !isSendTokenTx
+  const modifySettingsTx = sameAddress(tx.to, safeAddress) && Number(tx.value) === 0 && !!tx.data
+  const cancellationTx = sameAddress(tx.to, safeAddress) && Number(tx.value) === 0 && !tx.data
+  const isSendTokenTx = await isTokenTransfer(tx.data, Number(tx.value))
+  const customTx = !sameAddress(tx.to, safeAddress) && !!tx.data && !isSendTokenTx
 
   let refundParams = null
   if (tx.gasPrice > 0) {
@@ -214,7 +213,7 @@ export const buildIncomingTransactionFrom = async (tx: IncomingTxServiceModel) =
       symbol = tokenSymbol
       decimals = tokenDecimals
     } catch (err) {
-      const { methods } = new web3.eth.Contract(ALTERNATIVE_TOKEN_ABI, tx.to)
+      const { methods } = new web3.eth.Contract(ALTERNATIVE_TOKEN_ABI, tx.tokenAddress)
       const [tokenSymbol, tokenDecimals] = await Promise.all([methods.symbol, methods.decimals].map((m) => m().call()))
       symbol = web3.utils.toAscii(tokenSymbol)
       decimals = tokenDecimals
@@ -235,8 +234,6 @@ export const buildIncomingTransactionFrom = async (tx: IncomingTxServiceModel) =
 }
 
 export const loadSafeTransactions = async (safeAddress: string) => {
-  web3 = await getWeb3()
-
   let transactions: TxServiceModel[] = addMockSafeCreationTx(safeAddress)
   try {
     const url = buildTxServiceUrl(safeAddress)
@@ -264,7 +261,7 @@ export const loadSafeIncomingTransactions = async (safeAddress: string) => {
       incomingTransactions = response.data.results
     }
   } catch (err) {
-    console.error(`Requests for incomming transactions for ${safeAddress} failed with 404`, err)
+    console.error(`Requests for incoming transactions for ${safeAddress} failed with 404`, err)
   }
 
   const incomingTxsRecord = await Promise.all(incomingTransactions.map(buildIncomingTransactionFrom))
@@ -273,6 +270,8 @@ export const loadSafeIncomingTransactions = async (safeAddress: string) => {
 }
 
 export default (safeAddress: string) => async (dispatch: ReduxDispatch<GlobalState>) => {
+  web3 = await getWeb3()
+
   const transactions: Map<string, List<Transaction>> = await loadSafeTransactions(safeAddress)
   const incomingTransactions: Map<string, List<IncomingTransaction>> = await loadSafeIncomingTransactions(safeAddress)
 

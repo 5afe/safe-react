@@ -26,7 +26,7 @@ export type BalanceRow = SortRow<BalanceData>
 // eslint-disable-next-line max-len
 const getTokenPriceInCurrency = (
   token: Token,
-  currencySelected: AVAILABLE_CURRENCIES,
+  currencySelected: typeof AVAILABLE_CURRENCIES,
   currencyValues: List<BalanceCurrencyType>,
 ): string => {
   if (!currencySelected) {

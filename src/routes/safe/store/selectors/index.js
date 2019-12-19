@@ -70,6 +70,15 @@ export const safeTransactionsSelector: Selector<GlobalState, RouterProps, List<T
   },
 )
 
+export const safeParamAddressFromStateSelector = (state: GlobalState): string => {
+  const match = matchPath(
+    state.router.location.pathname,
+    { path: `${SAFELIST_ADDRESS}/:safeAddress` },
+  )
+
+  return match ? match.params.safeAddress : null
+}
+
 export const safeIncomingTransactionsSelector: Selector<GlobalState, RouterProps, List<IncomingTransaction>> = createSelector(
   incomingTransactionsSelector,
   safeParamAddressSelector,
