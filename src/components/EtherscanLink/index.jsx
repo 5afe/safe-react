@@ -2,7 +2,7 @@
 import React from 'react'
 import { withStyles } from '@material-ui/core/styles'
 import Block from '~/components/layout/Block'
-import Paragraph from '~/components/layout/Paragraph'
+import Span from '~/components/layout/Span'
 import CopyBtn from '~/components/CopyBtn'
 import EtherscanBtn from '~/components/EtherscanBtn'
 import { shortVersionOf } from '~/logic/wallets/ethAddresses'
@@ -19,9 +19,9 @@ const EtherscanLink = ({
   type, value, cut, classes,
 }: EtherscanLinkProps) => (
   <Block className={classes.etherscanLink}>
-    <Paragraph size="md" noMargin>
+    <Span size="md">
       {cut ? shortVersionOf(value, cut) : value}
-    </Paragraph>
+    </Span>
     <CopyBtn content={value} />
     <EtherscanBtn type={type} value={value} />
   </Block>
