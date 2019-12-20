@@ -8,6 +8,7 @@ export type NotifiedTransaction = {
   SETTINGS_CHANGE_TX: string,
   SAFE_NAME_CHANGE_TX: string,
   OWNER_NAME_CHANGE_TX: string,
+  ADDRESSBOOK_NEW_ENTRY: string,
 }
 
 export const TX_NOTIFICATION_TYPES: NotifiedTransaction = {
@@ -18,4 +19,5 @@ export const TX_NOTIFICATION_TYPES: NotifiedTransaction = {
   SETTINGS_CHANGE_TX: 'SETTINGS_CHANGE_TX',
   SAFE_NAME_CHANGE_TX: 'SAFE_NAME_CHANGE_TX',
   OWNER_NAME_CHANGE_TX: 'OWNER_NAME_CHANGE_TX',
+  ADDRESSBOOK_NEW_ENTRY: 'ADDRESSBOOK_NEW_ENTRY',
 }

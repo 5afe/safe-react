@@ -1,5 +1,5 @@
 // @flow
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 
 import cn from 'classnames'
 import { List } from 'immutable'
@@ -31,6 +31,7 @@ import loadAddressBook from '~/logic/addressBook/store/actions/loadAddressBook'
 import { getAddressBookListSelector } from '~/logic/addressBook/store/selectors'
 import Col from '~/components/layout/Col'
 import ButtonLink from '~/components/layout/ButtonLink'
+import CreateEntryModal from '~/routes/safe/components/AddressBook/AddressBookTable/CreateEntryModal'
 
 
 type Props = {
@@ -49,12 +50,14 @@ const AddressBookTable = ({
   }, [])
 
   const addressBook = useSelector(getAddressBookListSelector)
+  const [editModalOpen, setEditModalOpen] = useState(false)
+  const [createEntryModalOpen, setCreateEntryModalOpen] = useState(false)
 
   return (
     <>
       <Row align="center" className={classes.message}>
         <Col xs={12} end="sm">
-          <ButtonLink size="lg" onClick={() => {}} testId="manage-tokens-btn">
+          <ButtonLink size="lg" onClick={() => setCreateEntryModalOpen(!createEntryModalOpen)} testId="manage-tokens-btn">
             + Create entry
           </ButtonLink>
         </Col>
@@ -90,7 +93,7 @@ const AddressBookTable = ({
                     alt="Edit entry"
                     className={classes.editEntryButton}
                     src={RenameOwnerIcon}
-                    onClick={() => {}}
+                    onClick={() => setEditModalOpen(!editModalOpen)}
                     testId={EDIT_ENTRY_BUTTON}
                   />
                   <Img
@@ -117,6 +120,10 @@ const AddressBookTable = ({
           ))}
         </Table>
       </Block>
+      <CreateEntryModal
+        onClose={() => setCreateEntryModalOpen(false)}
+        isOpen={createEntryModalOpen}
+      />
     </>
   )
 }

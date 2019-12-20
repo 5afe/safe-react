@@ -105,6 +105,18 @@ const defaultNotificationsQueue: NotificationsQueue = {
   afterExecutionError: NOTIFICATIONS.TX_FAILED_MSG,
 }
 
+const addressBookQueue: NotificationsQueue = {
+  beforeExecution: null,
+  pendingExecution: null,
+  afterRejection: null,
+  waitingConfirmation: null,
+  afterExecution: {
+    noMoreConfirmationsNeeded: NOTIFICATIONS.ADDRESS_BOOK_NEW_ENTRY_SUCCESS,
+    moreConfirmationsNeeded: null,
+  },
+  afterExecutionError: null,
+}
+
 export const getNotificationsFromTxType = (txType: string) => {
   let notificationsQueue: NotificationsQueue
 
@@ -135,6 +147,10 @@ export const getNotificationsFromTxType = (txType: string) => {
     }
     case TX_NOTIFICATION_TYPES.WAITING_TX: {
       notificationsQueue = waitingTransactionNotificationsQueue
+      break
+    }
+    case TX_NOTIFICATION_TYPES.ADDRESSBOOK_NEW_ENTRY: {
+      notificationsQueue = addressBookQueue
       break
     }
     default: {
