@@ -15,8 +15,11 @@ const OwnerAddressTableCell = (props: Props) => {
   return (
     <Block justify="left">
       <Identicon address={address} diameter={32} />
-      <Paragraph style={{ marginLeft: 10 }}>{address}</Paragraph>
-      { showLinks ? <EtherScanLink type="address" value={address} cut={8} /> : null }
+      { showLinks ? (
+        <div style={{ marginLeft: 10}}>
+          <EtherScanLink type="address" value={address} />
+        </div>
+      ) : <Paragraph style={{ marginLeft: 10 }}>{address}</Paragraph> }
     </Block>
   )
 }

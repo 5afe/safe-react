@@ -8,7 +8,6 @@ const loadAddressBook = () => async (dispatch: ReduxDispatch<GlobalState>) => {
   try {
     const addressBook = await getAddressBookFromStorage()
 
-
     dispatch(updateAddressBook(addressBook))
   } catch (err) {
     // eslint-disable-next-line
