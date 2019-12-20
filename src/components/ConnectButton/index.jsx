@@ -3,6 +3,7 @@ import React from 'react'
 import Web3Connect from 'web3connect'
 import Torus from '@toruslabs/torus-embed'
 import WalletConnectProvider from '@walletconnect/web3-provider'
+import Fortmatic from 'fortmatic'
 import Portis from '@portis/web3'
 import Squarelink from 'squarelink'
 import Button from '~/components/layout/Button'
@@ -10,8 +11,11 @@ import { fetchProvider, removeProvider } from '~/logic/wallets/store/actions'
 import { getNetwork } from '~/config'
 import { store } from '~/store'
 
-const PORTIS_DAPP_ID = process.env.REACT_APP_NETWORK === 'mainnet' ? process.env.REACT_APP_PORTIS_ID : '852b763d-f28b-4463-80cb-846d7ec5806b'
-const SQUARELINK_CLIENT_ID = process.env.REACT_APP_NETWORK === 'mainnet' ? process.env.REACT_APP_SQUARELINK_ID : '46ce08fe50913cfa1b78'
+const isMainnet = process.env.REACT_APP_NETWORK === 'mainnet'
+
+const PORTIS_DAPP_ID = isMainnet ? process.env.REACT_APP_PORTIS_ID : '852b763d-f28b-4463-80cb-846d7ec5806b'
+const SQUARELINK_CLIENT_ID = isMainnet ? process.env.REACT_APP_SQUARELINK_ID : '46ce08fe50913cfa1b78'
+const FORTMATIC_API_KEY = isMainnet ? process.env.REACT_APP_FORTMATIC_KEY : 'pk_test_CAD437AA29BE0A40'
 
 export const web3Connect = new Web3Connect.Core({
   network: getNetwork().toLowerCase(),
@@ -32,6 +36,12 @@ export const web3Connect = new Web3Connect.Core({
       package: Squarelink,
       options: {
         id: SQUARELINK_CLIENT_ID,
+      },
+    },
+    fortmatic: {
+      package: Fortmatic,
+      options: {
+        key: FORTMATIC_API_KEY,
       },
     },
     torus: {

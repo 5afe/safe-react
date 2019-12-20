@@ -10,7 +10,7 @@ export const styles = () => ({
     minHeight: '505px',
     marginBottom: '54px',
     display: 'flex',
-    borderRadius: '8px',
+    borderRadius: sm,
   },
   settings: {
     letterSpacing: '-0.5px',
@@ -25,7 +25,7 @@ export const styles = () => ({
     alignItems: 'center',
     cursor: 'pointer',
     '&:first-child': {
-      borderTopLeftRadius: '8px',
+      borderTopLeftRadius: sm,
     },
   },
   active: {
@@ -57,7 +57,7 @@ export const styles = () => ({
   },
   removeSafeIcon: {
     marginLeft: sm,
-    height: '16px',
+    height: md,
     cursor: 'pointer',
   },
 })

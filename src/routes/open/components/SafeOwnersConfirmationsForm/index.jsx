@@ -4,6 +4,7 @@ import { withStyles } from '@material-ui/core/styles'
 import InputAdornment from '@material-ui/core/InputAdornment'
 import CheckCircle from '@material-ui/icons/CheckCircle'
 import MenuItem from '@material-ui/core/MenuItem'
+import { withRouter } from 'react-router-dom'
 import Field from '~/components/forms/Field'
 import TextField from '~/components/forms/TextField'
 import SelectField from '~/components/forms/SelectField'
@@ -70,6 +71,7 @@ const SafeOwners = (props: Props) => {
   } = props
 
   const validOwners = getNumOwnersFrom(values)
+
   const [numOwners, setNumOwners] = useState<number>(validOwners)
   const [qrModalOpen, setQrModalOpen] = useState<boolean>(false)
   const [scanQrForOwnerName, setScanQrForOwnerName] = useState<string | null>(null)
@@ -222,7 +224,7 @@ owner(s)
   )
 }
 
-const SafeOwnersForm = withStyles(styles)(SafeOwners)
+const SafeOwnersForm = withStyles(styles)(withRouter(SafeOwners))
 
 const SafeOwnersPage = ({ updateInitialProps }: Object) => (controls: React.Node, { values, errors, form }: Object) => (
   <>

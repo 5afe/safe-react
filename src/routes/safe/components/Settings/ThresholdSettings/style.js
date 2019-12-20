@@ -1,6 +1,6 @@
 // @flow
 import {
-  fontColor, lg, smallFontSize, border, secondaryText,
+  fontColor, xl, lg, smallFontSize, border, secondaryText,
 } from '~/theme/variables'
 
 export const styles = () => ({
@@ -24,7 +24,7 @@ export const styles = () => ({
     borderTop: `2px solid ${border}`,
   },
   modifyBtn: {
-    height: '32px',
+    height: xl,
     fontSize: smallFontSize,
   },
 })

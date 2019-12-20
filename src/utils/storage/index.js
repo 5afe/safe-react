@@ -8,7 +8,7 @@ import { getNetwork } from '~/config'
 const stores = [IndexedDbStore, LocalStorageStore]
 export const storage = new ImmortalStorage(stores)
 
-const PREFIX = `v1_${getNetwork()}`
+const PREFIX = `v2_${getNetwork()}`
 
 export const loadFromStorage = async (key: string): Promise<*> => {
   try {

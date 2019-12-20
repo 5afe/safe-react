@@ -9,28 +9,62 @@ import Row from '~/components/layout/Row'
 import Review from '~/routes/open/components/ReviewInformation'
 import SafeNameField from '~/routes/open/components/SafeNameForm'
 import SafeOwnersFields from '~/routes/open/components/SafeOwnersConfirmationsForm'
-import { getOwnerNameBy, getOwnerAddressBy, FIELD_CONFIRMATIONS } from '~/routes/open/components/fields'
+import {
+  getOwnerNameBy,
+  getOwnerAddressBy,
+  FIELD_CONFIRMATIONS,
+  FIELD_SAFE_NAME,
+} from '~/routes/open/components/fields'
+import { initContracts } from '~/logic/contracts/safeContracts'
 import { history } from '~/store'
-import { secondary } from '~/theme/variables'
+import { secondary, sm } from '~/theme/variables'
+import type { SafePropsType } from '~/routes/open/container/Open'
+import Welcome from '~/routes/welcome/components/Layout'
+
+const { useEffect } = React
 
 const getSteps = () => ['Name', 'Owners and confirmations', 'Review']
 
-const initialValuesFrom = (userAccount: string) => ({
-  [getOwnerNameBy(0)]: 'My Wallet',
-  [getOwnerAddressBy(0)]: userAccount,
-  [FIELD_CONFIRMATIONS]: '1',
-})
+
+const initialValuesFrom = (userAccount: string, safeProps?: SafePropsType) => {
+  if (!safeProps) {
+    return ({
+      [getOwnerNameBy(0)]: 'My Wallet',
+      [getOwnerAddressBy(0)]: userAccount,
+      [FIELD_CONFIRMATIONS]: '1',
+    })
+  }
+  let obj = {}
+  const {
+    ownerAddresses, ownerNames, threshold, name,
+  } = safeProps
+  // eslint-disable-next-line no-restricted-syntax
+  for (const [index, value] of ownerAddresses.entries()) {
+    const safeName = ownerNames[index] ? ownerNames[index] : 'My Wallet'
+    obj = {
+      ...obj,
+      [getOwnerAddressBy(index)]: value,
+      [getOwnerNameBy(index)]: safeName,
+    }
+  }
+  return ({
+    ...obj,
+    [FIELD_CONFIRMATIONS]: threshold || '1',
+    [FIELD_SAFE_NAME]: name,
+  })
+}
 
 type Props = {
   provider: string,
   userAccount: string,
   network: string,
   onCallSafeContractSubmit: (values: Object) => Promise<void>,
+  safeProps?: SafePropsType,
 }
 
 const iconStyle = {
   color: secondary,
-  padding: '8px',
+  padding: sm,
   marginRight: '5px',
 }
 
@@ -44,11 +78,21 @@ const formMutators = {
   },
 }
 
-const Layout = ({
-  provider, userAccount, onCallSafeContractSubmit, network,
-}: Props) => {
+
+const Layout = (props: Props) => {
+  const {
+    provider, userAccount, onCallSafeContractSubmit, network, safeProps,
+  } = props
+
+  useEffect(() => {
+    if (provider) {
+      initContracts()
+    }
+  }, [provider])
+
   const steps = getSteps()
-  const initialValues = initialValuesFrom(userAccount)
+
+  const initialValues = initialValuesFrom(userAccount, safeProps)
 
   return (
     <>
@@ -75,7 +119,7 @@ const Layout = ({
           </Stepper>
         </Block>
       ) : (
-        <div>No web3 provider detected</div>
+        <Welcome provider={provider} isOldMultisigMigration />
       )}
     </>
   )

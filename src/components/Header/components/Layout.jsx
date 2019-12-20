@@ -16,10 +16,10 @@ import {
   border, sm, md, headerHeight,
 } from '~/theme/variables'
 import Provider from './Provider'
-import EarlyAccessLabel from './EarlyAccessLabel'
+import NetworkLabel from './NetworkLabel'
 import SafeListHeader from './SafeListHeader'
 
-const logo = require('../assets/gnosis-safe-logo.svg')
+const logo = require('../assets/gnosis-safe-multisig-logo.svg')
 
 type Props = Open & {
   classes: Object,
@@ -33,7 +33,7 @@ const styles = () => ({
     padding: 0,
     boxShadow: '0 0 10px 0 rgba(33, 48, 77, 0.1)',
     minWidth: '280px',
-    borderRadius: '8px',
+    borderRadius: sm,
     marginTop: '11px',
   },
   summary: {
@@ -74,7 +74,7 @@ const Layout = openHoc(
       <Divider />
       <SafeListHeader />
       <Divider />
-      <EarlyAccessLabel />
+      <NetworkLabel />
       <Spacer />
       <Provider open={open} toggle={toggle} info={providerInfo}>
         {(providerRef) => (

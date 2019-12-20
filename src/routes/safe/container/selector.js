@@ -6,20 +6,23 @@ import {
   safeActiveTokensSelector,
   safeBalancesSelector,
   safeBlacklistedTokensSelector,
+  safeTransactionsSelector,
+  safeIncomingTransactionsSelector,
   type RouterProps,
   type SafeSelectorProps,
 } from '~/routes/safe/store/selectors'
 import { providerNameSelector, userAccountSelector, networkSelector } from '~/logic/wallets/store/selectors'
 import { type Safe } from '~/routes/safe/store/models/safe'
-import { type Owner } from '~/routes/safe/store/models/owner'
 import { type GlobalState } from '~/store'
-import { sameAddress } from '~/logic/wallets/ethAddresses'
-import { safeTransactionsSelector } from '~/routes/safe/store/selectors/index'
+import { isUserOwner } from '~/logic/wallets/ethAddresses'
 import { orderedTokenListSelector, tokensSelector } from '~/logic/tokens/store/selectors'
 import { type Token } from '~/logic/tokens/store/model/token'
 import { type Transaction, type TransactionStatus } from '~/routes/safe/store/models/transaction'
 import { safeParamAddressSelector } from '../store/selectors'
 import { getEthAsToken } from '~/logic/tokens/utils/tokenHelpers'
+import { currencyValuesListSelector, currentCurrencySelector } from '~/logic/currencyValues/store/selectors'
+import type { BalanceCurrencyType } from '~/logic/currencyValues/store/model/currencyValues'
+import type { IncomingTransaction } from '~/routes/safe/store/models/incomingTransaction'
 
 export type SelectorProps = {
   safe: SafeSelectorProps,
@@ -30,20 +33,27 @@ export type SelectorProps = {
   userAddress: string,
   network: string,
   safeUrl: string,
-  transactions: List<Transaction>,
+  currencySelected: string,
+  currencyValues: BalanceCurrencyType[],
+  transactions: List<Transaction | IncomingTransaction>,
 }
 
-const getTxStatus = (tx: Transaction, safe: Safe): TransactionStatus => {
-  let txStatus = 'awaiting_confirmations'
-
+const getTxStatus = (tx: Transaction, userAddress: string, safe: Safe): TransactionStatus => {
+  let txStatus
   if (tx.executionTxHash) {
     txStatus = 'success'
   } else if (tx.cancelled) {
     txStatus = 'cancelled'
   } else if (tx.confirmations.size === safe.threshold) {
     txStatus = 'awaiting_execution'
+  } else if (tx.creationTx) {
+    txStatus = 'success'
   } else if (!tx.confirmations.size) {
     txStatus = 'pending'
+  } else {
+    const userConfirmed = tx.confirmations.filter((conf) => conf.owner.address === userAddress).size === 1
+    const userIsSafeOwner = safe.owners.filter((owner) => owner.address === userAddress).size === 1
+    txStatus = !userConfirmed && userIsSafeOwner ? 'awaiting_your_confirmation' : 'awaiting_confirmations'
   }
 
   return txStatus
@@ -52,22 +62,7 @@ const getTxStatus = (tx: Transaction, safe: Safe): TransactionStatus => {
 export const grantedSelector: Selector<GlobalState, RouterProps, boolean> = createSelector(
   userAccountSelector,
   safeSelector,
-  (userAccount: string, safe: Safe | typeof undefined): boolean => {
-    if (!safe) {
-      return false
-    }
-
-    if (!userAccount) {
-      return false
-    }
-
-    const { owners }: List<Owner> = safe
-    if (!owners) {
-      return false
-    }
-
-    return owners.find((owner: Owner) => sameAddress(owner.address, userAccount)) !== undefined
-  },
+  (userAccount: string, safe: Safe | typeof undefined): boolean => isUserOwner(safe, userAccount),
 )
 
 const safeEthAsTokenSelector: Selector<GlobalState, RouterProps, ?Token> = createSelector(
@@ -106,29 +101,33 @@ const extendedSafeTokensSelector: Selector<GlobalState, RouterProps, List<Token>
   },
 )
 
-const extendedTransactionsSelector: Selector<GlobalState, RouterProps, List<Transaction>> = createSelector(
+const extendedTransactionsSelector: Selector<GlobalState, RouterProps, List<Transaction | IncomingTransaction>> = createSelector(
   safeSelector,
+  userAccountSelector,
   safeTransactionsSelector,
-  (safe, transactions) => {
+  safeIncomingTransactionsSelector,
+  (safe, userAddress, transactions, incomingTransactions) => {
     const extendedTransactions = transactions.map((tx: Transaction) => {
       let extendedTx = tx
 
-      // If transactions is not executed, but there's a transaction with the same nonce submitted later
+      // If transactions are not executed, but there's a transaction with the same nonce submitted later
       // it means that the transaction was cancelled (Replaced) and shouldn't get executed
       let replacementTransaction
       if (!tx.isExecuted) {
-        replacementTransaction = transactions.findLast(
-          (transaction) => transaction.isExecuted && transaction.nonce >= tx.nonce,
+        replacementTransaction = transactions.size > 1 && transactions.findLast(
+          (transaction) => (
+            transaction.isExecuted && transaction.nonce && transaction.nonce >= tx.nonce
+          ),
         )
         if (replacementTransaction) {
           extendedTx = tx.set('cancelled', true)
         }
       }
 
-      return extendedTx.set('status', getTxStatus(extendedTx, safe))
+      return extendedTx.set('status', getTxStatus(extendedTx, userAddress, safe))
     })
 
-    return extendedTransactions
+    return List([...extendedTransactions, ...incomingTransactions])
   },
 )
 
@@ -143,4 +142,6 @@ export default createStructuredSelector<Object, *>({
   network: networkSelector,
   safeUrl: safeParamAddressSelector,
   transactions: extendedTransactionsSelector,
+  currencySelected: currentCurrencySelector,
+  currencyValues: currencyValuesListSelector,
 })

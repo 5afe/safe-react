@@ -25,22 +25,29 @@ const activateTokensByBalance = (safeAddress: string) => async (
     // balances: tokens' balance returned by the backend
     const { addresses, balances } = result.data.reduce((acc, { tokenAddress, balance }) => ({
       addresses: [...acc.addresses, tokenAddress],
-      balances: [...acc.balances, balance],
-    }), { addresses: [], balances: [] })
+      balances: [[tokenAddress, balance]],
+    }), {
+      addresses: [],
+      balances: [],
+    })
 
     // update balance list for the safe
-    dispatch(updateSafe({ address: safeAddress, balances: Set(balances) }))
+    dispatch(updateSafe({
+      address: safeAddress,
+      balances: Set(balances),
+    }))
 
     // active tokens by balance, excluding those already blacklisted and the `null` address
     const activeByBalance = addresses.filter((address) => address !== null && !blacklistedTokens.includes(address))
 
     // need to persist those already active tokens, despite its balances
-    const activeTokens = alreadyActiveTokens.toSet().union(activeByBalance)
+    const activeTokens = alreadyActiveTokens.toSet()
+      .union(activeByBalance)
 
     // update list of active tokens
     dispatch(updateActiveTokens(safeAddress, activeTokens))
   } catch (err) {
-    console.error('Error fetching token list', err)
+    console.error('Error fetching active token list', err)
   }
 
   return null

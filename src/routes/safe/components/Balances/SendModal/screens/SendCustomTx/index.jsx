@@ -25,6 +25,7 @@ import SafeInfo from '~/routes/safe/components/Balances/SendModal/SafeInfo'
 import QRIcon from '~/assets/icons/qrcode.svg'
 import ArrowDown from '../assets/arrow-down.svg'
 import { styles } from './style'
+import { sm } from '~/theme/variables'
 
 type Props = {
   onClose: () => void,
@@ -102,7 +103,7 @@ const SendCustomTx = ({
                 <SafeInfo safeAddress={safeAddress} safeName={safeName} ethBalance={ethBalance} />
                 <Row margin="md">
                   <Col xs={1}>
-                    <img src={ArrowDown} alt="Arrow Down" style={{ marginLeft: '8px' }} />
+                    <img src={ArrowDown} alt="Arrow Down" style={{ marginLeft: sm }} />
                   </Col>
                   <Col xs={11} center="xs" layout="column">
                     <Hairline />

@@ -17,7 +17,11 @@ import { type Transaction } from '~/routes/safe/store/models/transaction'
 import { type Owner } from '~/routes/safe/store/models/owner'
 import ExpandedTxComponent from './ExpandedTx'
 import {
-  getTxTableData, generateColumns, TX_TABLE_DATE_ID, type TransactionRow, TX_TABLE_RAW_TX_ID,
+  getTxTableData,
+  generateColumns,
+  TX_TABLE_ID,
+  TX_TABLE_RAW_TX_ID,
+  type TransactionRow,
 } from './columns'
 import { styles } from './style'
 import Status from './Status'
@@ -26,7 +30,7 @@ export const TRANSACTION_ROW_TEST_ID = 'transaction-row'
 
 const expandCellStyle = {
   paddingLeft: 0,
-  paddingRight: 0,
+  paddingRight: 15,
 }
 
 type Props = {
@@ -37,6 +41,7 @@ type Props = {
   userAddress: string,
   granted: boolean,
   safeAddress: string,
+  nonce: number,
   createTransaction: Function,
   processTransaction: Function,
 }
@@ -51,6 +56,7 @@ const TxsTable = ({
   safeAddress,
   createTransaction,
   processTransaction,
+  nonce,
 }: Props) => {
   const [expandedTx, setExpandedTx] = useState<string | null>(null)
 
@@ -61,13 +67,21 @@ const TxsTable = ({
   const columns = generateColumns()
   const autoColumns = columns.filter((c) => !c.custom)
   const filteredData = getTxTableData(transactions)
+    .sort(({ dateOrder: a }, { dateOrder: b }) => {
+      if (!a || !b) {
+        return 0
+      }
+      return a - b
+    })
+    .map((tx, id) => ({ ...tx, id }))
 
   return (
     <Block className={classes.container}>
       <Table
         label="Transactions"
-        defaultOrderBy={TX_TABLE_DATE_ID}
+        defaultOrderBy={TX_TABLE_ID}
         defaultOrder="desc"
+        defaultRowsPerPage={25}
         columns={columns}
         data={filteredData}
         size={filteredData.size}
@@ -84,7 +98,7 @@ const TxsTable = ({
               {autoColumns.map((column: Column) => (
                 <TableCell
                   key={column.id}
-                  className={classes.cell}
+                  className={cn(classes.cell, row.status === 'cancelled' && classes.cancelledRow)}
                   style={cellWidth(column.width)}
                   align={column.align}
                   component="td"
@@ -98,31 +112,38 @@ const TxsTable = ({
                 </Row>
               </TableCell>
               <TableCell style={expandCellStyle}>
-                <IconButton disableRipple>{expandedTx === row.safeTxHash ? <ExpandLess /> : <ExpandMore />}</IconButton>
+                {!row.tx.creationTx && (
+                  <IconButton disableRipple>
+                    {expandedTx === row.safeTxHash ? <ExpandLess /> : <ExpandMore />}
+                  </IconButton>
+                )}
               </TableCell>
             </TableRow>
-            <TableRow>
-              <TableCell
-                style={{ paddingBottom: 0, paddingTop: 0 }}
-                colSpan={6}
-                className={classes.extendedTxContainer}
-              >
-                <Collapse
-                  in={expandedTx === row.tx.safeTxHash}
-                  timeout="auto"
-                  component={ExpandedTxComponent}
-                  unmountOnExit
-                  tx={row[TX_TABLE_RAW_TX_ID]}
-                  threshold={threshold}
-                  owners={owners}
-                  granted={granted}
-                  userAddress={userAddress}
-                  createTransaction={createTransaction}
-                  processTransaction={processTransaction}
-                  safeAddress={safeAddress}
-                />
-              </TableCell>
-            </TableRow>
+            {!row.tx.creationTx && (
+              <TableRow>
+                <TableCell
+                  style={{ paddingBottom: 0, paddingTop: 0 }}
+                  colSpan={6}
+                  className={classes.extendedTxContainer}
+                >
+                  <Collapse
+                    in={expandedTx === row.tx.safeTxHash}
+                    timeout="auto"
+                    component={ExpandedTxComponent}
+                    unmountOnExit
+                    tx={row[TX_TABLE_RAW_TX_ID]}
+                    threshold={threshold}
+                    owners={owners}
+                    granted={granted}
+                    userAddress={userAddress}
+                    createTransaction={createTransaction}
+                    processTransaction={processTransaction}
+                    safeAddress={safeAddress}
+                    nonce={nonce}
+                  />
+                </TableCell>
+              </TableRow>
+            )}
           </React.Fragment>
         ))}
       </Table>

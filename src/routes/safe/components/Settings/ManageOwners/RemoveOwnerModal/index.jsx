@@ -62,15 +62,15 @@ export const sendRemoveOwner = async (
     .removeOwner(prevAddress, ownerAddressToRemove, values.threshold)
     .encodeABI()
 
-  const txHash = await createTransaction(
+  const txHash = await createTransaction({
     safeAddress,
-    safeAddress,
-    0,
+    to: safeAddress,
+    valueInWei: 0,
     txData,
-    TX_NOTIFICATION_TYPES.SETTINGS_CHANGE_TX,
+    notifiedTransaction: TX_NOTIFICATION_TYPES.SETTINGS_CHANGE_TX,
     enqueueSnackbar,
     closeSnackbar,
-  )
+  })
 
   if (txHash && safe.threshold === 1) {
     removeSafeOwner({ safeAddress, ownerAddress: ownerAddressToRemove })

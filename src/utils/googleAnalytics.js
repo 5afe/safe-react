@@ -20,6 +20,7 @@ export const loadGoogleAnalytics = () => {
     console.error('[GoogleAnalytics] - In order to use google analytics you need to add an trackingID')
   } else {
     GoogleAnalytics.initialize(trackingID)
+    GoogleAnalytics.set({ anonymizeIp: true })
     analyticsLoaded = true
   }
 }

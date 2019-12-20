@@ -12,6 +12,7 @@ import { REMOVE_SAFE_OWNER } from '~/routes/safe/store/actions/removeSafeOwner'
 import { REPLACE_SAFE_OWNER } from '~/routes/safe/store/actions/replaceSafeOwner'
 import { EDIT_SAFE_OWNER } from '~/routes/safe/store/actions/editSafeOwner'
 import { SET_DEFAULT_SAFE } from '~/routes/safe/store/actions/setDefaultSafe'
+import { UPDATE_SAFE_THRESHOLD } from '~/routes/safe/store/actions/updateSafeThreshold'
 
 export const SAFE_REDUCER_ID = 'safes'
 
@@ -114,6 +115,11 @@ export default handleActions<SafeReducerState, *>(
         const updatedOwners = prevSafe.owners.update(ownerToUpdateIndex, (owner) => owner.set('name', ownerName))
         return prevSafe.merge({ owners: updatedOwners })
       })
+    },
+    [UPDATE_SAFE_THRESHOLD]: (state: SafeReducerState, action: ActionType<Function>): SafeReducerState => {
+      const { safeAddress, threshold } = action.payload
+
+      return state.updateIn(['safes', safeAddress], (prevSafe) => prevSafe.set('threshold', threshold))
     },
     [SET_DEFAULT_SAFE]: (state: SafeReducerState, action: ActionType<Function>): SafeReducerState => state.set('defaultSafe', action.payload),
   },
