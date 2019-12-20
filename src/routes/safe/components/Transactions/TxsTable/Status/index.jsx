@@ -27,7 +27,7 @@ const statusToIcon = {
 
 const statusToLabel = {
   success: 'Success',
-  cancelled: 'Failed',
+  cancelled: 'Cancelled',
   awaiting_your_confirmation: 'Awaiting your confirmation',
   awaiting_confirmations: 'Awaiting confirmations',
   awaiting_execution: 'Awaiting execution',
