@@ -1,5 +1,7 @@
 // @flow
-import { lg, sm } from '~/theme/variables'
+import {
+  lg, md, sm, marginButtonImg,
+} from '~/theme/variables'
 
 export const styles = () => ({
   formContainer: {
@@ -30,20 +32,40 @@ export const styles = () => ({
       borderBottom: 'none',
     },
   },
-  editOwnerIcon: {
-    cursor: 'pointer',
-  },
-  replaceOwnerIcon: {
-    marginLeft: lg,
-    cursor: 'pointer',
-  },
   controlsRow: {
     backgroundColor: 'white',
     padding: lg,
     borderRadius: sm,
   },
-  removeOwnerIcon: {
-    marginLeft: lg,
+  editEntryButton: {
     cursor: 'pointer',
+    marginBottom: marginButtonImg,
+  },
+  removeEntryButton: {
+    marginLeft: lg,
+    marginRight: lg,
+    marginBottom: marginButtonImg,
+    cursor: 'pointer',
+  },
+  message: {
+    margin: `${sm} 0`,
+    padding: `${md} 0`,
+    maxHeight: '54px',
+    boxSizing: 'border-box',
+    justifyContent: 'flex-end',
+  },
+  send: {
+    width: '75px',
+    minWidth: '75px',
+    borderRadius: '4px',
+    '& > span': {
+      fontSize: '14px',
+    },
+  },
+  leftIcon: {
+    marginRight: sm,
+  },
+  iconSmall: {
+    fontSize: 16,
   },
 })
