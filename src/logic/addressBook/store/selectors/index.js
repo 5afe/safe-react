@@ -6,7 +6,7 @@ import { ADDRESS_BOOK_REDUCER_ID } from '~/logic/addressBook/store/reducer/addre
 import type { GlobalState } from '~/store'
 import type { AddressBook } from '~/logic/addressBook/model/addressBook'
 
-export const getAddressBook = (state: any): Provider => state[ADDRESS_BOOK_REDUCER_ID].get('addressBook') || []
+export const getAddressBook = (state: any): Provider => List(state[ADDRESS_BOOK_REDUCER_ID].get('addressBook')) || List([])
 
 export const getAddressBookListSelector: Selector<GlobalState, AddressBook> = createSelector(
   getAddressBook,

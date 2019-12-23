@@ -5,7 +5,6 @@ import { withStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
 import IconButton from '@material-ui/core/IconButton'
 import { List } from 'immutable'
-import { useDispatch } from 'react-redux'
 import Row from '~/components/layout/Row'
 import Block from '~/components/layout/Block'
 import GnoForm from '~/components/forms/GnoForm'
@@ -22,7 +21,6 @@ import { TX_NOTIFICATION_TYPES } from '~/logic/safe/transactions'
 import Modal from '~/components/Modal'
 import { styles } from './style'
 import AddressInput from '~/components/forms/AddressInput'
-import { addAddressBookEntry } from '~/logic/addressBook/store/actions/addAddressBookEntry'
 
 export const CREATE_ENTRY_INPUT_NAME_ID = 'create-entry-input-name'
 export const CREATE_ENTRY_INPUT_ADDRESS_ID = 'create-entry-input-address'
@@ -34,6 +32,7 @@ type Props = {
   isOpen: boolean,
   enqueueSnackbar: Function,
   closeSnackbar: Function,
+  newEntryModalHandler: Function,
 }
 
 const CreateEntryModalComponent = ({
@@ -42,15 +41,12 @@ const CreateEntryModalComponent = ({
   classes,
   enqueueSnackbar,
   closeSnackbar,
+  newEntryModalHandler,
 }: Props) => {
-  const dispatch = useDispatch()
-
   const handleSubmit = (values) => {
-    const { name, ownerAddress } = values
     const notification = getNotificationsFromTxType(TX_NOTIFICATION_TYPES.ADDRESSBOOK_NEW_ENTRY)
     showSnackbar(notification.afterExecution.noMoreConfirmationsNeeded, enqueueSnackbar, closeSnackbar)
-    dispatch(addAddressBookEntry({ name, ownerAddress }))
-    onClose()
+    newEntryModalHandler(values)
   }
 
   const entries = List()
@@ -90,7 +86,7 @@ const CreateEntryModalComponent = ({
               </Row>
               <Row margin="md">
                 <AddressInput
-                  name="ownerAddress"
+                  name="address"
                   validators={[entryDoesntExist]}
                   placeholder="Owner address*"
                   text="Owner address*"

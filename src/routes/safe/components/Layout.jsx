@@ -30,7 +30,7 @@ import Balances from './Balances'
 import Transactions from './Transactions'
 import Settings from './Settings'
 import { styles } from './style'
-import AddressBook from '~/routes/safe/components/AddressBook'
+import AddressBookTable from '~/routes/safe/components/AddressBook/AddressBookTable'
 
 export const BALANCES_TAB_BTN_TEST_ID = 'balances-tab-btn'
 export const SETTINGS_TAB_BTN_TEST_ID = 'settings-tab-btn'
@@ -219,19 +219,7 @@ const Layout = (props: Props) => {
           exact
           path={`${match.path}/addressBook`}
           render={() => (
-            <AddressBook
-              granted={granted}
-              safeAddress={address}
-              safeName={name}
-              etherScanLink={etherScanLink}
-              updateSafe={updateSafe}
-              threshold={safe.threshold}
-              owners={safe.owners}
-              network={network}
-              userAddress={userAddress}
-              createTransaction={createTransaction}
-              safe={safe}
-            />
+            <AddressBookTable />
           )}
         />
         <Redirect to={`${match.path}/balances`} />

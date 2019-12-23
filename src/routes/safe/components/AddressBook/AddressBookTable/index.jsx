@@ -28,10 +28,12 @@ import {
   generateColumns, REMOVE_ENTRY_BUTTON, SEND_ENTRY_BUTTON,
 } from '~/routes/safe/components/AddressBook/AddressBookTable/columns'
 import loadAddressBook from '~/logic/addressBook/store/actions/loadAddressBook'
-import { getAddressBookListSelector } from '~/logic/addressBook/store/selectors'
 import Col from '~/components/layout/Col'
 import ButtonLink from '~/components/layout/ButtonLink'
 import CreateEntryModal from '~/routes/safe/components/AddressBook/AddressBookTable/CreateEntryModal'
+import { getAddressBook } from '~/logic/addressBook/store/selectors'
+import type { AddressBookEntryType } from '~/logic/addressBook/model/addressBook'
+import saveAndUpdateAddressBook from '~/logic/addressBook/store/actions/saveAndUpdateAddressBook'
 
 
 type Props = {
@@ -49,9 +51,16 @@ const AddressBookTable = ({
     dispatch(loadAddressBook())
   }, [])
 
-  const addressBook = useSelector(getAddressBookListSelector)
+  const addressBook = useSelector(getAddressBook)
+
   const [editModalOpen, setEditModalOpen] = useState(false)
   const [createEntryModalOpen, setCreateEntryModalOpen] = useState(false)
+
+  const newEntryModalHandler = (entry: AddressBookEntryType) => {
+    const updatedAddressBook = addressBook.push(entry)
+    setCreateEntryModalOpen(false)
+    dispatch(saveAndUpdateAddressBook(updatedAddressBook))
+  }
 
   return (
     <>
@@ -123,6 +132,7 @@ const AddressBookTable = ({
       <CreateEntryModal
         onClose={() => setCreateEntryModalOpen(false)}
         isOpen={createEntryModalOpen}
+        newEntryModalHandler={newEntryModalHandler}
       />
     </>
   )
