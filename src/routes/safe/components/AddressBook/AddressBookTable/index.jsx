@@ -30,7 +30,7 @@ import {
 import loadAddressBook from '~/logic/addressBook/store/actions/loadAddressBook'
 import Col from '~/components/layout/Col'
 import ButtonLink from '~/components/layout/ButtonLink'
-import CreateEntryModal from '~/routes/safe/components/AddressBook/AddressBookTable/CreateEntryModal'
+import CreateEditEntryModal from '~/routes/safe/components/AddressBook/AddressBookTable/CreateEditEntryModal'
 import { getAddressBook } from '~/logic/addressBook/store/selectors'
 import type { AddressBookEntryType } from '~/logic/addressBook/model/addressBook'
 import saveAndUpdateAddressBook from '~/logic/addressBook/store/actions/saveAndUpdateAddressBook'
@@ -47,26 +47,41 @@ const AddressBookTable = ({
   const columns = generateColumns()
   const autoColumns = columns.filter((c) => !c.custom)
   const dispatch = useDispatch()
+
   useEffect(() => {
     dispatch(loadAddressBook())
   }, [])
 
   const addressBook = useSelector(getAddressBook)
-
-  const [editModalOpen, setEditModalOpen] = useState(false)
-  const [createEntryModalOpen, setCreateEntryModalOpen] = useState(false)
+  const [entryToEdit, setEntryToEdit] = useState(null)
+  const [editCreateEntryModalOpen, setEditCreateEntryModalOpen] = useState(false)
 
   const newEntryModalHandler = (entry: AddressBookEntryType) => {
     const updatedAddressBook = addressBook.push(entry)
-    setCreateEntryModalOpen(false)
+    setEditCreateEntryModalOpen(false)
     dispatch(saveAndUpdateAddressBook(updatedAddressBook))
   }
+
+  const editEntryModalHandler = (entryRow: Object, index: number) => {
+    const updatedAddressBook = addressBook.set(index, entryRow)
+    setEntryToEdit(null)
+    setEditCreateEntryModalOpen(false)
+    dispatch(saveAndUpdateAddressBook(updatedAddressBook))
+  }
+
 
   return (
     <>
       <Row align="center" className={classes.message}>
         <Col xs={12} end="sm">
-          <ButtonLink size="lg" onClick={() => setCreateEntryModalOpen(!createEntryModalOpen)} testId="manage-tokens-btn">
+          <ButtonLink
+            size="lg"
+            onClick={() => {
+              setEntryToEdit(null)
+              setEditCreateEntryModalOpen(!editCreateEntryModalOpen)
+            }}
+            testId="manage-tokens-btn"
+          >
             + Create entry
           </ButtonLink>
         </Col>
@@ -103,7 +118,10 @@ const AddressBookTable = ({
                     alt="Edit entry"
                     className={classes.editEntryButton}
                     src={RenameOwnerIcon}
-                    onClick={() => setEditModalOpen(!editModalOpen)}
+                    onClick={() => {
+                      setEntryToEdit({ entry: row, index })
+                      setEditCreateEntryModalOpen(true)
+                    }}
                     testId={EDIT_ENTRY_BUTTON}
                   />
                   <Img
@@ -130,10 +148,12 @@ const AddressBookTable = ({
           ))}
         </Table>
       </Block>
-      <CreateEntryModal
-        onClose={() => setCreateEntryModalOpen(false)}
-        isOpen={createEntryModalOpen}
+      <CreateEditEntryModal
+        onClose={() => setEditCreateEntryModalOpen(false)}
+        isOpen={editCreateEntryModalOpen}
         newEntryModalHandler={newEntryModalHandler}
+        editEntryModalHandler={editEntryModalHandler}
+        entryToEdit={entryToEdit}
       />
     </>
   )

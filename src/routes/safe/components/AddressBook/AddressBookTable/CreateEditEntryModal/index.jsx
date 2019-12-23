@@ -21,6 +21,7 @@ import { TX_NOTIFICATION_TYPES } from '~/logic/safe/transactions'
 import Modal from '~/components/Modal'
 import { styles } from './style'
 import AddressInput from '~/components/forms/AddressInput'
+import type { AddressBookEntryType } from '~/logic/addressBook/model/addressBook'
 
 export const CREATE_ENTRY_INPUT_NAME_ID = 'create-entry-input-name'
 export const CREATE_ENTRY_INPUT_ADDRESS_ID = 'create-entry-input-address'
@@ -33,42 +34,59 @@ type Props = {
   enqueueSnackbar: Function,
   closeSnackbar: Function,
   newEntryModalHandler: Function,
+  editEntryModalHandler: Function,
+  entryToEdit?: AddressBookEntryType,
 }
 
-const CreateEntryModalComponent = ({
+const CreateEditEntryModalComponent = ({
   onClose,
   isOpen,
   classes,
   enqueueSnackbar,
   closeSnackbar,
   newEntryModalHandler,
+  entryToEdit,
+  editEntryModalHandler,
 }: Props) => {
-  const handleSubmit = (values) => {
+  const handleNewEntrySubmit = (values) => {
     const notification = getNotificationsFromTxType(TX_NOTIFICATION_TYPES.ADDRESSBOOK_NEW_ENTRY)
     showSnackbar(notification.afterExecution.noMoreConfirmationsNeeded, enqueueSnackbar, closeSnackbar)
     newEntryModalHandler(values)
+  }
+
+  const handleEditEntrySubmit = (values) => {
+    const notification = getNotificationsFromTxType(TX_NOTIFICATION_TYPES.ADDRESSBOOK_NEW_ENTRY)
+    showSnackbar(notification.afterExecution.noMoreConfirmationsNeeded, enqueueSnackbar, closeSnackbar)
+    editEntryModalHandler(values, entryToEdit.index)
+  }
+
+  const onFormSubmitted = (values) => {
+    if (entryToEdit) {
+      return handleEditEntrySubmit(values)
+    }
+    return handleNewEntrySubmit(values)
   }
 
   const entries = List()
   const entryDoesntExist = uniqueAddress(entries.map((o) => o.address))
   return (
     <Modal
-      title="Create new entry"
-      description="Create new addressBook entry"
+      title={entryToEdit ? 'Edit entry' : 'Create new entry'}
+      description={entryToEdit ? 'Edit addressBook entry' : 'Create new addressBook entry'}
       handleClose={onClose}
       open={isOpen}
       paperClassName={classes.smallerModalWindow}
     >
       <Row align="center" grow className={classes.heading}>
         <Paragraph className={classes.manage} noMargin weight="bolder">
-          Create entry
+          {entryToEdit ? 'Edit entry' : 'Create entry'}
         </Paragraph>
         <IconButton onClick={onClose} disableRipple>
           <Close className={classes.close} />
         </IconButton>
       </Row>
       <Hairline />
-      <GnoForm onSubmit={handleSubmit}>
+      <GnoForm onSubmit={onFormSubmitted}>
         {() => (
           <>
             <Block className={classes.container}>
@@ -78,10 +96,11 @@ const CreateEntryModalComponent = ({
                   component={TextField}
                   type="text"
                   validate={composeValidators(required, minMaxLength(1, 50))}
-                  placeholder="New entry"
-                  text="New entry*"
+                  placeholder={entryToEdit ? 'Entry name' : 'New entry'}
+                  text={entryToEdit ? 'Entry*' : 'New entry*'}
                   className={classes.addressInput}
                   testId={CREATE_ENTRY_INPUT_NAME_ID}
+                  defaultValue={entryToEdit ? entryToEdit.entry.name : undefined}
                 />
               </Row>
               <Row margin="md">
@@ -92,6 +111,7 @@ const CreateEntryModalComponent = ({
                   text="Owner address*"
                   className={classes.addressInput}
                   testId={CREATE_ENTRY_INPUT_ADDRESS_ID}
+                  defaultValue={entryToEdit ? entryToEdit.entry.address : undefined}
                 />
               </Row>
             </Block>
@@ -108,7 +128,7 @@ const CreateEntryModalComponent = ({
                 color="primary"
                 testId={SAVE_NEW_ENTRY_BTN_ID}
               >
-                Create
+                {entryToEdit ? 'Save' : 'Create'}
               </Button>
             </Row>
           </>
@@ -118,6 +138,6 @@ const CreateEntryModalComponent = ({
   )
 }
 
-const CreateEntryModal = withStyles(styles)(withSnackbar(CreateEntryModalComponent))
+const CreateEditEntryModal = withStyles(styles)(withSnackbar(CreateEditEntryModalComponent))
 
-export default CreateEntryModal
+export default CreateEditEntryModal
