@@ -1,6 +1,5 @@
 // @flow
 import React from 'react'
-import { withSnackbar } from 'notistack'
 import { withStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
 import IconButton from '@material-ui/core/IconButton'
@@ -16,8 +15,6 @@ import Paragraph from '~/components/layout/Paragraph'
 import {
   composeValidators, required, minMaxLength, uniqueAddress,
 } from '~/components/forms/validator'
-import { getNotificationsFromTxType, showSnackbar } from '~/logic/notifications'
-import { TX_NOTIFICATION_TYPES } from '~/logic/safe/transactions'
 import Modal from '~/components/Modal'
 import { styles } from './style'
 import AddressInput from '~/components/forms/AddressInput'
@@ -31,8 +28,6 @@ type Props = {
   onClose: () => void,
   classes: Object,
   isOpen: boolean,
-  enqueueSnackbar: Function,
-  closeSnackbar: Function,
   newEntryModalHandler: Function,
   editEntryModalHandler: Function,
   entryToEdit?: AddressBookEntryType,
@@ -42,22 +37,16 @@ const CreateEditEntryModalComponent = ({
   onClose,
   isOpen,
   classes,
-  enqueueSnackbar,
-  closeSnackbar,
   newEntryModalHandler,
   entryToEdit,
   editEntryModalHandler,
 }: Props) => {
   const handleNewEntrySubmit = (values) => {
-    const notification = getNotificationsFromTxType(TX_NOTIFICATION_TYPES.ADDRESSBOOK_NEW_ENTRY)
-    showSnackbar(notification.afterExecution.noMoreConfirmationsNeeded, enqueueSnackbar, closeSnackbar)
     newEntryModalHandler(values)
   }
 
   const handleEditEntrySubmit = (values) => {
-    const notification = getNotificationsFromTxType(TX_NOTIFICATION_TYPES.ADDRESSBOOK_EDIT_ENTRY)
-    showSnackbar(notification.afterExecution.noMoreConfirmationsNeeded, enqueueSnackbar, closeSnackbar)
-    editEntryModalHandler(values, entryToEdit.index)
+    editEntryModalHandler(values)
   }
 
   const onFormSubmitted = (values) => {
@@ -138,6 +127,6 @@ const CreateEditEntryModalComponent = ({
   )
 }
 
-const CreateEditEntryModal = withStyles(styles)(withSnackbar(CreateEditEntryModalComponent))
+const CreateEditEntryModal = withStyles(styles)(CreateEditEntryModalComponent)
 
 export default CreateEditEntryModal

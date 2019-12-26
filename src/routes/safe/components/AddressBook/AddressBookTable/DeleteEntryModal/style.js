@@ -1,6 +1,6 @@
 // @flow
 import {
-  lg, md,
+  lg, md, error,
 } from '~/theme/variables'
 
 export const styles = () => ({
@@ -22,6 +22,13 @@ export const styles = () => ({
   buttonRow: {
     height: '84px',
     justifyContent: 'center',
+  },
+  buttonDelete: {
+    color: '#fff',
+    backgroundColor: error,
+  },
+  buttonCancel: {
+    color: '#008c73',
   },
   smallerModalWindow: {
     height: 'auto',

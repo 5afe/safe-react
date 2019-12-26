@@ -9,6 +9,7 @@ import { withStyles } from '@material-ui/core/styles'
 import classNames from 'classnames/bind'
 import CallMade from '@material-ui/icons/CallMade'
 import { useDispatch, useSelector } from 'react-redux'
+import { withSnackbar } from 'notistack'
 import Block from '~/components/layout/Block'
 import Row from '~/components/layout/Row'
 import { type Column, cellWidth } from '~/components/Table/TableHead'
@@ -34,15 +35,22 @@ import CreateEditEntryModal from '~/routes/safe/components/AddressBook/AddressBo
 import { getAddressBook } from '~/logic/addressBook/store/selectors'
 import type { AddressBookEntryType } from '~/logic/addressBook/model/addressBook'
 import saveAndUpdateAddressBook from '~/logic/addressBook/store/actions/saveAndUpdateAddressBook'
+import DeleteEntryModal from '~/routes/safe/components/AddressBook/AddressBookTable/DeleteEntryModal'
+import { getNotificationsFromTxType, showSnackbar } from '~/logic/notifications'
+import { TX_NOTIFICATION_TYPES } from '~/logic/safe/transactions'
 
 
 type Props = {
-  classes: Object
+  classes: Object,
+  enqueueSnackbar: Function,
+  closeSnackbar: Function,
 }
 
 
 const AddressBookTable = ({
   classes,
+  enqueueSnackbar,
+  closeSnackbar,
 }: Props) => {
   const columns = generateColumns()
   const autoColumns = columns.filter((c) => !c.custom)
@@ -53,22 +61,35 @@ const AddressBookTable = ({
   }, [])
 
   const addressBook = useSelector(getAddressBook)
-  const [entryToEdit, setEntryToEdit] = useState(null)
+  const [selectedEntry, setSelectedEntry] = useState(null)
   const [editCreateEntryModalOpen, setEditCreateEntryModalOpen] = useState(false)
+  const [deleteEntryModalOpen, setDeleteEntryModalOpen] = useState(false)
 
   const newEntryModalHandler = (entry: AddressBookEntryType) => {
+    const notification = getNotificationsFromTxType(TX_NOTIFICATION_TYPES.ADDRESSBOOK_NEW_ENTRY)
+    showSnackbar(notification.afterExecution.noMoreConfirmationsNeeded, enqueueSnackbar, closeSnackbar)
     const updatedAddressBook = addressBook.push(entry)
     setEditCreateEntryModalOpen(false)
     dispatch(saveAndUpdateAddressBook(updatedAddressBook))
   }
 
-  const editEntryModalHandler = (entryRow: Object, index: number) => {
+  const editEntryModalHandler = (entryRow: Object) => {
+    const { index } = selectedEntry
+    const notification = getNotificationsFromTxType(TX_NOTIFICATION_TYPES.ADDRESSBOOK_EDIT_ENTRY)
+    showSnackbar(notification.afterExecution.noMoreConfirmationsNeeded, enqueueSnackbar, closeSnackbar)
     const updatedAddressBook = addressBook.set(index, entryRow)
-    setEntryToEdit(null)
+    setSelectedEntry(null)
     setEditCreateEntryModalOpen(false)
     dispatch(saveAndUpdateAddressBook(updatedAddressBook))
   }
 
+  const deleteEntryModalHandler = () => {
+    const { index } = selectedEntry
+    const updatedAddressBook = addressBook.delete(index)
+    setSelectedEntry(null)
+    setDeleteEntryModalOpen(false)
+    dispatch(saveAndUpdateAddressBook(updatedAddressBook))
+  }
 
   return (
     <>
@@ -77,7 +98,7 @@ const AddressBookTable = ({
           <ButtonLink
             size="lg"
             onClick={() => {
-              setEntryToEdit(null)
+              setSelectedEntry(null)
               setEditCreateEntryModalOpen(!editCreateEntryModalOpen)
             }}
             testId="manage-tokens-btn"
@@ -119,7 +140,7 @@ const AddressBookTable = ({
                     className={classes.editEntryButton}
                     src={RenameOwnerIcon}
                     onClick={() => {
-                      setEntryToEdit({ entry: row, index })
+                      setSelectedEntry({ entry: row, index })
                       setEditCreateEntryModalOpen(true)
                     }}
                     testId={EDIT_ENTRY_BUTTON}
@@ -128,7 +149,10 @@ const AddressBookTable = ({
                     alt="Remove entry"
                     className={classes.removeEntryButton}
                     src={RemoveOwnerIcon}
-                    onClick={() => {}}
+                    onClick={() => {
+                      setSelectedEntry({ entry: row, index })
+                      setDeleteEntryModalOpen(true)
+                    }}
                     testId={REMOVE_ENTRY_BUTTON}
                   />
                   <Button
@@ -136,7 +160,6 @@ const AddressBookTable = ({
                     size="small"
                     color="primary"
                     className={classes.send}
-                    onClick={() => {}}
                     testId={SEND_ENTRY_BUTTON}
                   >
                     <CallMade alt="Send Transaction" className={classNames(classes.leftIcon, classes.iconSmall)} />
@@ -153,10 +176,16 @@ const AddressBookTable = ({
         isOpen={editCreateEntryModalOpen}
         newEntryModalHandler={newEntryModalHandler}
         editEntryModalHandler={editEntryModalHandler}
-        entryToEdit={entryToEdit}
+        entryToEdit={selectedEntry}
+      />
+      <DeleteEntryModal
+        onClose={() => setDeleteEntryModalOpen(false)}
+        isOpen={deleteEntryModalOpen}
+        deleteEntryModalHandler={deleteEntryModalHandler}
+        entryToDelete={selectedEntry}
       />
     </>
   )
 }
 
-export default withStyles(styles)(AddressBookTable)
+export default withStyles(styles)(withSnackbar(AddressBookTable))

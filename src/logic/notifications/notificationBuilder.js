@@ -129,6 +129,18 @@ const addressBookEditEntry: NotificationsQueue = {
   afterExecutionError: null,
 }
 
+const addressBookDeleteEntry: NotificationsQueue = {
+  beforeExecution: null,
+  pendingExecution: null,
+  afterRejection: null,
+  waitingConfirmation: null,
+  afterExecution: {
+    noMoreConfirmationsNeeded: NOTIFICATIONS.ADDRESS_BOOK_DELETE_ENTRY_SUCCESS,
+    moreConfirmationsNeeded: null,
+  },
+  afterExecutionError: null,
+}
+
 export const getNotificationsFromTxType = (txType: string) => {
   let notificationsQueue: NotificationsQueue
 
@@ -167,6 +179,10 @@ export const getNotificationsFromTxType = (txType: string) => {
     }
     case TX_NOTIFICATION_TYPES.ADDRESSBOOK_EDIT_ENTRY: {
       notificationsQueue = addressBookEditEntry
+      break
+    }
+    case TX_NOTIFICATION_TYPES.ADDRESSBOOK_DELETE_ENTRY: {
+      notificationsQueue = addressBookDeleteEntry
       break
     }
     default: {

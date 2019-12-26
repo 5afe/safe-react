@@ -66,7 +66,8 @@ export type Notifications = {
 
   // AddressBook
   ADDRESS_BOOK_NEW_ENTRY_SUCCESS: Notification,
-  ADDRESS_BOOK_EDIT_ENTRY_SUCCESS: Notification
+  ADDRESS_BOOK_EDIT_ENTRY_SUCCESS: Notification,
+  ADDRESS_BOOK_DELETE_ENTRY_SUCCESS: Notification
 }
 
 export const NOTIFICATIONS: Notifications = {
@@ -213,6 +214,10 @@ export const NOTIFICATIONS: Notifications = {
   },
   ADDRESS_BOOK_EDIT_ENTRY_SUCCESS: {
     message: 'Entry saved successfully',
+    options: { variant: SUCCESS, persist: false, preventDuplicate: false },
+  },
+  ADDRESS_BOOK_DELETE_ENTRY_SUCCESS: {
+    message: 'Entry deleted successfully',
     options: { variant: SUCCESS, persist: false, preventDuplicate: false },
   },
 }
