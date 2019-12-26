@@ -76,7 +76,7 @@ const safeEthAsTokenSelector: Selector<GlobalState, RouterProps, ?Token> = creat
   },
 )
 
-const extendedSafeTokensSelector: Selector<GlobalState, RouterProps, List<Token>> = createSelector(
+export const extendedSafeTokensSelector: Selector<GlobalState, RouterProps, List<Token>> = createSelector(
   safeActiveTokensSelector,
   safeBalancesSelector,
   tokensSelector,

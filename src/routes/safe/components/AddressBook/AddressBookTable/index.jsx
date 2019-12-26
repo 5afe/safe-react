@@ -38,6 +38,11 @@ import DeleteEntryModal from '~/routes/safe/components/AddressBook/AddressBookTa
 import { updateAddressBookEntry } from '~/logic/addressBook/store/actions/updateAddressBookEntry'
 import { removeAddressBookEntry } from '~/logic/addressBook/store/actions/removeAddressBookEntry'
 import { addAddressBookEntry } from '~/logic/addressBook/store/actions/addAddressBookEntry'
+import SendModal from '~/routes/safe/components/Balances/SendModal'
+import {
+  safeSelector,
+} from '~/routes/safe/store/selectors'
+import { extendedSafeTokensSelector } from '~/routes/safe/container/selector'
 
 
 type Props = {
@@ -60,6 +65,15 @@ const AddressBookTable = ({
   const [selectedEntry, setSelectedEntry] = useState(null)
   const [editCreateEntryModalOpen, setEditCreateEntryModalOpen] = useState(false)
   const [deleteEntryModalOpen, setDeleteEntryModalOpen] = useState(false)
+  const [sendFundsModalOpen, setSendFundsModalOpen] = useState(false)
+
+
+  const safe = useSelector(safeSelector)
+  const activeTokens = useSelector(extendedSafeTokensSelector)
+  const {
+    address, ethBalance, name,
+  } = safe
+
 
   const newEntryModalHandler = (entry: AddressBookEntryType) => {
     setEditCreateEntryModalOpen(false)
@@ -150,6 +164,10 @@ const AddressBookTable = ({
                     color="primary"
                     className={classes.send}
                     testId={SEND_ENTRY_BUTTON}
+                    onClick={() => {
+                      setSelectedEntry({ entry: row, index })
+                      setSendFundsModalOpen(true)
+                    }}
                   >
                     <CallMade alt="Send Transaction" className={classNames(classes.leftIcon, classes.iconSmall)} />
                     Send
@@ -172,6 +190,16 @@ const AddressBookTable = ({
         isOpen={deleteEntryModalOpen}
         deleteEntryModalHandler={deleteEntryModalHandler}
         entryToDelete={selectedEntry}
+      />
+      <SendModal
+        onClose={() => setSendFundsModalOpen(false)}
+        isOpen={sendFundsModalOpen}
+        safeAddress={address}
+        safeName={name}
+        ethBalance={ethBalance}
+        tokens={activeTokens}
+        activeScreenType="sendFunds"
+        recipientAddress={selectedEntry && selectedEntry.entry ? selectedEntry.entry.address : undefined}
       />
     </>
   )
