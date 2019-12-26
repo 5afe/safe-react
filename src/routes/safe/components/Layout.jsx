@@ -30,7 +30,7 @@ import Balances from './Balances'
 import Transactions from './Transactions'
 import Settings from './Settings'
 import { styles } from './style'
-import AddressBookTable from '~/routes/safe/components/AddressBook/AddressBookTable'
+import AddressBookTable from '~/routes/safe/components/AddressBook'
 
 export const BALANCES_TAB_BTN_TEST_ID = 'balances-tab-btn'
 export const SETTINGS_TAB_BTN_TEST_ID = 'settings-tab-btn'
