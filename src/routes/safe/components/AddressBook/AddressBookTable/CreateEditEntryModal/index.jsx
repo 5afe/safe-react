@@ -55,7 +55,7 @@ const CreateEditEntryModalComponent = ({
   }
 
   const handleEditEntrySubmit = (values) => {
-    const notification = getNotificationsFromTxType(TX_NOTIFICATION_TYPES.ADDRESSBOOK_NEW_ENTRY)
+    const notification = getNotificationsFromTxType(TX_NOTIFICATION_TYPES.ADDRESSBOOK_EDIT_ENTRY)
     showSnackbar(notification.afterExecution.noMoreConfirmationsNeeded, enqueueSnackbar, closeSnackbar)
     editEntryModalHandler(values, entryToEdit.index)
   }
