@@ -67,6 +67,7 @@ const AddressBookTable = ({
           size={addressBook.size}
           defaultFixed
           disableLoadingOnEmptyTable
+          defaultRowsPerPage={25}
         >
           {(sortedData: List<OwnerRow>) => sortedData.map((row: any, index: number) => (
             <TableRow
