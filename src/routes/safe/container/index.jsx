@@ -34,13 +34,29 @@ class SafeView extends React.Component<Props, State> {
 
   componentDidMount() {
     const {
-      fetchSafe, activeTokens, safeUrl, fetchTokenBalances, fetchTokens, fetchTransactions, fetchCurrencyValues,
+      fetchSafe,
+      activeTokens,
+      safeUrl,
+      safe,
+      fetchTokenBalances,
+      fetchTokens,
+      fetchTransactions,
+      fetchCurrencyValues,
+      updateUserStatus,
     } = this.props
 
-    fetchSafe(safeUrl).then(() => {
+    fetchSafe(safeUrl)
       // The safe needs to be loaded before fetching the transactions
-      fetchTransactions(safeUrl)
-    })
+      .then(() => fetchTransactions(safeUrl))
+      .then(() => {
+        // It relies on the sessionStorage life-cycle as the component gets _mounted_
+        // several times while the user navigates across tabs (balances, transactions, settings)
+        if (sessionStorage.getItem('sameSession') === null) {
+          const recurringUser = safe ? safe.get('recurringUser') : undefined
+          updateUserStatus(safeUrl, recurringUser)
+        }
+        sessionStorage.setItem('sameSession', 'recurring')
+      })
     fetchTokenBalances(safeUrl, activeTokens)
     // fetch tokens there to get symbols for tokens in TXs list
     fetchTokens()

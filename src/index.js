@@ -8,7 +8,6 @@ import loadActiveTokens from '~/logic/tokens/store/actions/loadActiveTokens'
 import loadDefaultSafe from '~/routes/safe/store/actions/loadDefaultSafe'
 import loadSafesFromStorage from '~/routes/safe/store/actions/loadSafesFromStorage'
 import { store } from '~/store'
-import verifyRecurringUser from '~/utils/verifyRecurringUser'
 
 BigNumber.set({ EXPONENTIAL_AT: [-7, 255] })
 
@@ -20,9 +19,10 @@ if (process.env.NODE_ENV !== 'production') {
 
 // $FlowFixMe
 store.dispatch(loadActiveTokens())
+// $FlowFixMe
 store.dispatch(loadSafesFromStorage())
+// $FlowFixMe
 store.dispatch(loadDefaultSafe())
-verifyRecurringUser()
 
 const root = document.getElementById('root')
 
