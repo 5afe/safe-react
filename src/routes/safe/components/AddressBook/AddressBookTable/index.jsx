@@ -34,23 +34,19 @@ import ButtonLink from '~/components/layout/ButtonLink'
 import CreateEditEntryModal from '~/routes/safe/components/AddressBook/AddressBookTable/CreateEditEntryModal'
 import { getAddressBook } from '~/logic/addressBook/store/selectors'
 import type { AddressBookEntryType } from '~/logic/addressBook/model/addressBook'
-import saveAndUpdateAddressBook from '~/logic/addressBook/store/actions/saveAndUpdateAddressBook'
 import DeleteEntryModal from '~/routes/safe/components/AddressBook/AddressBookTable/DeleteEntryModal'
-import { getNotificationsFromTxType, showSnackbar } from '~/logic/notifications'
-import { TX_NOTIFICATION_TYPES } from '~/logic/safe/transactions'
+import { updateAddressBookEntry } from '~/logic/addressBook/store/actions/updateAddressBookEntry'
+import { removeAddressBookEntry } from '~/logic/addressBook/store/actions/removeAddressBookEntry'
+import { addAddressBookEntry } from '~/logic/addressBook/store/actions/addAddressBookEntry'
 
 
 type Props = {
   classes: Object,
-  enqueueSnackbar: Function,
-  closeSnackbar: Function,
 }
 
 
 const AddressBookTable = ({
   classes,
-  enqueueSnackbar,
-  closeSnackbar,
 }: Props) => {
   const columns = generateColumns()
   const autoColumns = columns.filter((c) => !c.custom)
@@ -66,29 +62,22 @@ const AddressBookTable = ({
   const [deleteEntryModalOpen, setDeleteEntryModalOpen] = useState(false)
 
   const newEntryModalHandler = (entry: AddressBookEntryType) => {
-    const notification = getNotificationsFromTxType(TX_NOTIFICATION_TYPES.ADDRESSBOOK_NEW_ENTRY)
-    showSnackbar(notification.afterExecution.noMoreConfirmationsNeeded, enqueueSnackbar, closeSnackbar)
-    const updatedAddressBook = addressBook.push(entry)
     setEditCreateEntryModalOpen(false)
-    dispatch(saveAndUpdateAddressBook(updatedAddressBook))
+    dispatch(addAddressBookEntry(entry))
   }
 
   const editEntryModalHandler = (entryRow: Object) => {
     const { index } = selectedEntry
-    const notification = getNotificationsFromTxType(TX_NOTIFICATION_TYPES.ADDRESSBOOK_EDIT_ENTRY)
-    showSnackbar(notification.afterExecution.noMoreConfirmationsNeeded, enqueueSnackbar, closeSnackbar)
-    const updatedAddressBook = addressBook.set(index, entryRow)
     setSelectedEntry(null)
     setEditCreateEntryModalOpen(false)
-    dispatch(saveAndUpdateAddressBook(updatedAddressBook))
+    dispatch(updateAddressBookEntry(entryRow, index))
   }
 
   const deleteEntryModalHandler = () => {
     const { index } = selectedEntry
-    const updatedAddressBook = addressBook.delete(index)
     setSelectedEntry(null)
     setDeleteEntryModalOpen(false)
-    dispatch(saveAndUpdateAddressBook(updatedAddressBook))
+    dispatch(removeAddressBookEntry(index))
   }
 
   return (

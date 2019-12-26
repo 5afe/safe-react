@@ -4,6 +4,8 @@ import { handleActions, type ActionType } from 'redux-actions'
 import { UPDATE_ADDRESS_BOOK } from '~/logic/addressBook/store/actions/updateAddressBook'
 import { ADD_ENTRY } from '~/logic/addressBook/store/actions/addAddressBookEntry'
 import type { AddressBookEntryType } from '~/logic/addressBook/model/addressBook'
+import { UPDATE_ENTRY } from '~/logic/addressBook/store/actions/updateAddressBookEntry'
+import { REMOVE_ENTRY } from '~/logic/addressBook/store/actions/removeAddressBookEntry'
 
 export const ADDRESS_BOOK_REDUCER_ID = 'addressBook'
 
@@ -22,8 +24,15 @@ export default handleActions<State, *>(
 
       const currentList = state.get('addressBook')
       currentList.push(entry)
-      const newState = state.set('addressBook', currentList)
-      return newState
+      return state.set('addressBook', currentList)
+    },
+    [UPDATE_ENTRY]: (state: State, action: ActionType<Function>): State => {
+      const { entry, entryIndex } = action.payload
+      return state.setIn(['addressBook', entryIndex], entry)
+    },
+    [REMOVE_ENTRY]: (state: State, action: ActionType<Function>): State => {
+      const { entryIndex } = action.payload
+      return state.deleteIn(['addressBook', entryIndex])
     },
   },
   Map(),

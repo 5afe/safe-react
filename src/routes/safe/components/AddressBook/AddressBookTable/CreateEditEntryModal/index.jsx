@@ -41,19 +41,12 @@ const CreateEditEntryModalComponent = ({
   entryToEdit,
   editEntryModalHandler,
 }: Props) => {
-  const handleNewEntrySubmit = (values) => {
-    newEntryModalHandler(values)
-  }
-
-  const handleEditEntrySubmit = (values) => {
-    editEntryModalHandler(values)
-  }
-
   const onFormSubmitted = (values) => {
     if (entryToEdit) {
-      return handleEditEntrySubmit(values)
+      editEntryModalHandler(values)
+    } else {
+      newEntryModalHandler(values)
     }
-    return handleNewEntrySubmit(values)
   }
 
   const entries = List()

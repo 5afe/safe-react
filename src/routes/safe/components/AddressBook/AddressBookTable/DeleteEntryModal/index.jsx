@@ -1,6 +1,5 @@
 // @flow
 import React from 'react'
-import { withSnackbar } from 'notistack'
 import { withStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
 import IconButton from '@material-ui/core/IconButton'
@@ -10,8 +9,6 @@ import GnoForm from '~/components/forms/GnoForm'
 import Button from '~/components/layout/Button'
 import Hairline from '~/components/layout/Hairline'
 import Paragraph from '~/components/layout/Paragraph'
-import { getNotificationsFromTxType, showSnackbar } from '~/logic/notifications'
-import { TX_NOTIFICATION_TYPES } from '~/logic/safe/transactions'
 import Modal from '~/components/Modal'
 import { styles } from './style'
 import type { AddressBookEntryType } from '~/logic/addressBook/model/addressBook'
@@ -22,8 +19,6 @@ type Props = {
   onClose: () => void,
   classes: Object,
   isOpen: boolean,
-  enqueueSnackbar: Function,
-  closeSnackbar: Function,
   deleteEntryModalHandler: Function,
   entryToDelete: AddressBookEntryType,
 }
@@ -32,17 +27,12 @@ const DeleteEntryModalComponent = ({
   onClose,
   isOpen,
   classes,
-  enqueueSnackbar,
-  closeSnackbar,
   entryToDelete,
   deleteEntryModalHandler,
 }: Props) => {
   const handleDeleteEntrySubmit = (values) => {
-    const notification = getNotificationsFromTxType(TX_NOTIFICATION_TYPES.ADDRESSBOOK_DELETE_ENTRY)
-    showSnackbar(notification.afterExecution.noMoreConfirmationsNeeded, enqueueSnackbar, closeSnackbar)
     deleteEntryModalHandler(values, entryToDelete.index)
   }
-
 
   return (
     <Modal
@@ -99,6 +89,6 @@ const DeleteEntryModalComponent = ({
   )
 }
 
-const DeleteEntryModal = withStyles(styles)(withSnackbar(DeleteEntryModalComponent))
+const DeleteEntryModal = withStyles(styles)(DeleteEntryModalComponent)
 
 export default DeleteEntryModal
