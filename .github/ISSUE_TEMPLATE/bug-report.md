@@ -18,13 +18,13 @@ A clear and concise description of what the bug is.
  - Wallet:
  - App Version:
  - Environment:
-   - [ ] dev (rinkeby)
-   - [ ] staging (rinkeby)
-   - [ ] production (mainnet)
-   - [ ] PR #
-     - PR Network:
-       - [ ] mainnet
-       - [ ] rinkeby
+    <!--
+    delete those who doesn't apply and complete the PR# if required
+    -->
+   - dev (rinkeby)
+   - staging (rinkeby)
+   - production (mainnet)
+   - PR #
 
 ### Steps to reproduce
 <!--
