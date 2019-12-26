@@ -6,7 +6,7 @@ process.env.NODE_ENV = 'production';
 // if this file is missing. dotenv will never modify any environment variables
 // that have already been set.
 // https://github.com/motdotla/dotenv
-require('dotenv').config({silent: true});
+require('dotenv-expand')(require('dotenv').config({ silent: true }));
 
 var chalk = require('chalk');
 var fs = require('fs-extra');
@@ -128,11 +128,11 @@ function build(previousSizeMap) {
       printErrors('Failed to compile A.', [err]);
       process.exit(1);
     }
-    
+
     if (stats.compilation.errors.length) {
       printErrors('Failed to compile B.', stats.compilation.errors);
       process.exit(1);
-    }    
+    }
 
     console.log(chalk.green('Compiled successfully.'));
     console.log();
