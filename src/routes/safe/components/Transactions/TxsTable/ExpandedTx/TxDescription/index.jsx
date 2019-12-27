@@ -11,6 +11,8 @@ import { md, lg } from '~/theme/variables'
 import { getTxData } from './utils'
 import { shortVersionOf } from '~/logic/wallets/ethAddresses'
 import LinkWithRef from '~/components/layout/Link'
+import OwnerAddressTableCell from '~/routes/safe/components/Settings/ManageOwners/OwnerAddressTableCell'
+import { getNameFromAddressBook } from '~/logic/addressBook/utils'
 
 export const TRANSACTIONS_DESC_ADD_OWNER_TEST_ID = 'tx-description-add-owner'
 export const TRANSACTIONS_DESC_REMOVE_OWNER_TEST_ID = 'tx-description-remove-owner'
@@ -43,6 +45,7 @@ type Props = {
 type TransferDescProps = {
   amount: string,
   recipient: string,
+  recipientName?: string,
 }
 
 type DescriptionDescProps = {
@@ -58,7 +61,7 @@ type CustomDescProps = {
   classes: Object,
 }
 
-const TransferDescription = ({ amount = '', recipient }: TransferDescProps) => (
+const TransferDescription = ({ amount = '', recipient, recipientName }: TransferDescProps) => (
   <Block data-testid={TRANSACTIONS_DESC_SEND_TEST_ID}>
     <Bold>
       Send
@@ -67,7 +70,7 @@ const TransferDescription = ({ amount = '', recipient }: TransferDescProps) => (
       {' '}
       to:
     </Bold>
-    <EtherscanLink type="address" value={recipient} />
+    { recipientName ? <OwnerAddressTableCell address={recipient} showLinks userName={recipientName} /> : <EtherscanLink type="address" value={recipient} />}
   </Block>
 )
 
@@ -163,6 +166,7 @@ const TxDescription = ({ tx, classes }: Props) => {
     data,
   } = getTxData(tx)
   const amount = getTxAmount(tx)
+  const recipientName = getNameFromAddressBook(recipient)
   return (
     <Block className={classes.txDataContainer}>
       {modifySettingsTx && (
@@ -172,7 +176,7 @@ const TxDescription = ({ tx, classes }: Props) => {
         <CustomDescription data={data} amount={amount} recipient={recipient} classes={classes} />
       )}
       {!cancellationTx && !modifySettingsTx && !customTx && !creationTx && (
-        <TransferDescription amount={amount} recipient={recipient} />
+        <TransferDescription amount={amount} recipient={recipient} recipientName={recipientName} />
       )}
     </Block>
   )

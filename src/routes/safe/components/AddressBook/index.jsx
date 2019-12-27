@@ -1,5 +1,5 @@
 // @flow
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 
 import cn from 'classnames'
 import { List } from 'immutable'
@@ -28,7 +28,6 @@ import {
   EDIT_ENTRY_BUTTON,
   generateColumns, REMOVE_ENTRY_BUTTON, SEND_ENTRY_BUTTON,
 } from '~/routes/safe/components/AddressBook/columns'
-import loadAddressBook from '~/logic/addressBook/store/actions/loadAddressBook'
 import Col from '~/components/layout/Col'
 import ButtonLink from '~/components/layout/ButtonLink'
 import CreateEditEntryModal from '~/routes/safe/components/AddressBook/CreateEditEntryModal'
@@ -56,10 +55,6 @@ const AddressBookTable = ({
   const columns = generateColumns()
   const autoColumns = columns.filter((c) => !c.custom)
   const dispatch = useDispatch()
-
-  useEffect(() => {
-    dispatch(loadAddressBook())
-  }, [])
 
   const addressBook = useSelector(getAddressBook)
   const [selectedEntry, setSelectedEntry] = useState(null)

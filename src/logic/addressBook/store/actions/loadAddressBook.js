@@ -1,8 +1,8 @@
 // @flow
 import type { Dispatch as ReduxDispatch } from 'redux'
 import { type GlobalState } from '~/store/index'
-import { getAddressBookFromStorage } from '~/logic/addressBook/utils'
 import { updateAddressBook } from '~/logic/addressBook/store/actions/updateAddressBook'
+import { getAddressBookFromStorage } from '~/logic/addressBook/utils'
 
 const loadAddressBook = () => async (dispatch: ReduxDispatch<GlobalState>) => {
   try {
