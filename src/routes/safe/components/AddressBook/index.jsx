@@ -96,7 +96,6 @@ const AddressBookTable = ({
     address, ethBalance, name,
   } = safe
 
-
   const newEntryModalHandler = (entry: AddressBookEntryType) => {
     setEditCreateEntryModalOpen(false)
     setDefaultNewEntryAddress(null)
