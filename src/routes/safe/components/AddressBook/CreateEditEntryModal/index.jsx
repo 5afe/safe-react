@@ -3,7 +3,7 @@ import React from 'react'
 import { withStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
 import IconButton from '@material-ui/core/IconButton'
-import { List } from 'immutable'
+import { useSelector } from 'react-redux'
 import Row from '~/components/layout/Row'
 import Block from '~/components/layout/Block'
 import GnoForm from '~/components/forms/GnoForm'
@@ -19,6 +19,7 @@ import Modal from '~/components/Modal'
 import { styles } from './style'
 import AddressInput from '~/components/forms/AddressInput'
 import type { AddressBookEntryType } from '~/logic/addressBook/model/addressBook'
+import { getAddressBookAddressesListSelector } from '~/logic/addressBook/store/selectors'
 
 export const CREATE_ENTRY_INPUT_NAME_ID = 'create-entry-input-name'
 export const CREATE_ENTRY_INPUT_ADDRESS_ID = 'create-entry-input-address'
@@ -49,8 +50,8 @@ const CreateEditEntryModalComponent = ({
     }
   }
 
-  const entries = List()
-  const entryDoesntExist = uniqueAddress(entries.map((o) => o.address))
+  const addressBookAddressesList = useSelector(getAddressBookAddressesListSelector)
+  const entryDoesntExist = uniqueAddress(addressBookAddressesList.map((address) => address))
   return (
     <Modal
       title={entryToEdit ? 'Edit entry' : 'Create new entry'}

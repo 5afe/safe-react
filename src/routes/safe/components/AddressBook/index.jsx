@@ -74,7 +74,6 @@ const AddressBookTable = ({
     address, ethBalance, name,
   } = safe
 
-
   const newEntryModalHandler = (entry: AddressBookEntryType) => {
     setEditCreateEntryModalOpen(false)
     dispatch(addAddressBookEntry(entry))
