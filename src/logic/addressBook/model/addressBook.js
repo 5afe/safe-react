@@ -1,13 +1,13 @@
 // @flow
 import type { RecordOf } from 'immutable'
 
-export type AddressBookType = {
+export type AddressBookEntry = {
   address: string;
   name: string;
 }
 
 export type AddressBookProps = {
-  addressBookList: AddressBookType[]
+  addressBookList: AddressBookEntry[]
 }
 
 export type AddressBook = RecordOf<AddressBookProps>
