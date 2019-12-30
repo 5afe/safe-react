@@ -23,7 +23,9 @@ export const TRANSACTIONS_DESC_CUSTOM_DATA_TEST_ID = 'tx-description-custom-data
 
 export const styles = () => ({
   txDataContainer: {
-    padding: `${lg} ${md}`,
+    paddingTop: lg,
+    paddingLeft: md,
+    paddingBottom: md,
   },
   txData: {
     wordBreak: 'break-all',
@@ -70,7 +72,7 @@ const TransferDescription = ({ amount = '', recipient, recipientName }: Transfer
       {' '}
       to:
     </Bold>
-    { recipientName ? <OwnerAddressTableCell address={recipient} showLinks userName={recipientName} /> : <EtherscanLink type="address" value={recipient} />}
+    { recipientName ? <OwnerAddressTableCell address={recipient} showLinks knownAddress userName={recipientName} /> : <EtherscanLink type="address" value={recipient} knownAddress={false} />}
   </Block>
 )
 

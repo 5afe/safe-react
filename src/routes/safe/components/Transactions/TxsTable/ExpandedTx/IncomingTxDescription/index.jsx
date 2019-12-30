@@ -14,7 +14,9 @@ export const TRANSACTIONS_DESC_INCOMING_TEST_ID = 'tx-description-incoming'
 
 const useStyles = makeStyles({
   txDataContainer: {
-    padding: `${lg} ${md}`,
+    paddingTop: lg,
+    paddingLeft: md,
+    paddingBottom: md,
     borderRight: '2px solid rgb(232, 231, 230)',
   },
 })
@@ -39,7 +41,8 @@ const TransferDescription = ({ value = '', from, txFromName }: TransferDescProps
       from:
     </Bold>
     <br />
-    { txFromName ? <OwnerAddressTableCell address={from} showLinks userName={txFromName} /> : <EtherscanLink type="address" value={from} />}
+    {txFromName ? <OwnerAddressTableCell address={from} showLinks userName={txFromName} knownAddress />
+      : <EtherscanLink type="address" value={from} knownAddress={false} />}
   </div>
 )
 
