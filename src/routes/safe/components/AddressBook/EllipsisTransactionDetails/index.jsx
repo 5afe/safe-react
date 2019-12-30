@@ -67,7 +67,7 @@ const EllipsisTransactionDetails = ({ knownAddress, address }: EllipsisTransacti
         >
           <MenuItem onClick={closeMenuHandler} disabled>Send Again</MenuItem>
           <Divider />
-          { knownAddress ? <MenuItem onClick={addOrEditEntryHandler}>Edit Entry</MenuItem> : <MenuItem onClick={addOrEditEntryHandler}>Add Entry</MenuItem>}
+          { knownAddress ? <MenuItem onClick={addOrEditEntryHandler}>Edit Address book Entry</MenuItem> : <MenuItem onClick={addOrEditEntryHandler}>Add to address book</MenuItem>}
         </Menu>
       </div>
     </ClickAwayListener>

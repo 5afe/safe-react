@@ -7,7 +7,7 @@ import Fortmatic from 'fortmatic'
 import Portis from '@portis/web3'
 import Squarelink from 'squarelink'
 import Button from '~/components/layout/Button'
-import { fetchProvider } from '~/logic/wallets/store/actions'
+import { fetchProvider, removeProvider } from '~/logic/wallets/store/actions'
 import { getNetwork } from '~/config'
 import { store } from '~/store'
 
@@ -60,6 +60,10 @@ web3Connect.on('connect', (provider: any) => {
   if (provider) {
     store.dispatch(fetchProvider(provider))
   }
+})
+
+web3Connect.on('disconnect', () => {
+  store.dispatch(removeProvider())
 })
 
 type Props = {
