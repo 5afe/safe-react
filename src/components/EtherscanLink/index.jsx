@@ -31,7 +31,7 @@ const EtherscanLink = ({
     </Paragraph>
     <CopyBtn content={value} />
     <EtherscanBtn type={type} value={value} />
-    {knownAddress !== undefined ? <EllipsisTransactionDetails knownAddress={knownAddress} /> : null}
+    {knownAddress !== undefined ? <EllipsisTransactionDetails knownAddress={knownAddress} address={value} /> : null}
   </Block>
 )
 

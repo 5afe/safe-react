@@ -1,5 +1,5 @@
 // @flow
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 import cn from 'classnames'
 import { List } from 'immutable'
@@ -39,6 +39,7 @@ import { removeAddressBookEntry } from '~/logic/addressBook/store/actions/remove
 import { addAddressBookEntry } from '~/logic/addressBook/store/actions/addAddressBookEntry'
 import SendModal from '~/routes/safe/components/Balances/SendModal'
 import {
+  addressBookQueryParamsSelector,
   safeSelector,
 } from '~/routes/safe/store/selectors'
 import { extendedSafeTokensSelector } from '~/routes/safe/container/selector'
@@ -61,6 +62,32 @@ const AddressBookTable = ({
   const [editCreateEntryModalOpen, setEditCreateEntryModalOpen] = useState(false)
   const [deleteEntryModalOpen, setDeleteEntryModalOpen] = useState(false)
   const [sendFundsModalOpen, setSendFundsModalOpen] = useState(false)
+  const [defaultNewEntryAddress, setDefaultNewEntryAddress] = useState(null)
+  const entryAddressToEditOrCreateNew = useSelector(addressBookQueryParamsSelector)
+
+
+  useEffect(() => {
+    if (entryAddressToEditOrCreateNew) {
+      setEditCreateEntryModalOpen(true)
+    }
+  }, [])
+
+  useEffect(() => {
+    if (entryAddressToEditOrCreateNew) {
+      const key = addressBook.findKey((entry) => entry.address === entryAddressToEditOrCreateNew)
+      if (key) {
+        // Edit old entry
+        const value = addressBook.get(key)
+
+        setSelectedEntry({ entry: value, index: key })
+      } else {
+        // Create new entry
+        setDefaultNewEntryAddress(entryAddressToEditOrCreateNew)
+        setSelectedEntry(null)
+      }
+    }
+  },
+  [addressBook])
 
 
   const safe = useSelector(safeSelector)
@@ -72,6 +99,7 @@ const AddressBookTable = ({
 
   const newEntryModalHandler = (entry: AddressBookEntryType) => {
     setEditCreateEntryModalOpen(false)
+    setDefaultNewEntryAddress(null)
     dispatch(addAddressBookEntry(entry))
   }
 
@@ -179,6 +207,7 @@ const AddressBookTable = ({
         newEntryModalHandler={newEntryModalHandler}
         editEntryModalHandler={editEntryModalHandler}
         entryToEdit={selectedEntry}
+        newEntryDefaultAddress={defaultNewEntryAddress}
       />
       <DeleteEntryModal
         onClose={() => setDeleteEntryModalOpen(false)}

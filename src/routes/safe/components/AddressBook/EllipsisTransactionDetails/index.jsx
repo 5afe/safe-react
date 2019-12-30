@@ -1,12 +1,17 @@
 // @flow
 import React from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import { makeStyles } from '@material-ui/core/styles'
 import MoreHorizIcon from '@material-ui/icons/MoreHoriz'
 import Menu from '@material-ui/core/Menu'
 import MenuItem from '@material-ui/core/MenuItem'
 import ClickAwayListener from '@material-ui/core/ClickAwayListener'
 import { Divider } from '@material-ui/core'
+import { push } from 'connected-react-router'
 import { xs } from '~/theme/variables'
+import { safeParamAddressFromStateSelector } from '~/routes/safe/store/selectors'
+import { SAFELIST_ADDRESS } from '~/routes/routes'
+
 
 const useStyles = makeStyles({
   container: {
@@ -28,26 +33,26 @@ const useStyles = makeStyles({
 
 type EllipsisTransactionDetailsProps = {
   knownAddress: boolean,
-
+  address: string,
 }
 
-const EllipsisTransactionDetails = ({ knownAddress }: EllipsisTransactionDetailsProps) => {
+const EllipsisTransactionDetails = ({ knownAddress, address }: EllipsisTransactionDetailsProps) => {
   const classes = useStyles()
   const [anchorEl, setAnchorEl] = React.useState(null)
 
+  const dispatch = useDispatch()
+  const currentSafeAddress = useSelector(safeParamAddressFromStateSelector)
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget)
   }
+
   const closeMenuHandler = () => setAnchorEl(null)
-  const editEntryHandler = () => {
+
+  const addOrEditEntryHandler = () => {
+    dispatch(push(`${SAFELIST_ADDRESS}/${currentSafeAddress}/addressBook?entryAddress=${address}`))
     closeMenuHandler()
   }
-
-  const addEntryHandler = () => {
-    closeMenuHandler()
-  }
-
 
   return (
     <ClickAwayListener onClickAway={closeMenuHandler}>
@@ -60,9 +65,9 @@ const EllipsisTransactionDetails = ({ knownAddress }: EllipsisTransactionDetails
           open={Boolean(anchorEl)}
           onClose={closeMenuHandler}
         >
-          <MenuItem onClick={closeMenuHandler}>Send Again</MenuItem>
+          <MenuItem onClick={closeMenuHandler} disabled>Send Again</MenuItem>
           <Divider />
-          { knownAddress ? <MenuItem onClick={editEntryHandler}>Edit Entry</MenuItem> : <MenuItem onClick={addEntryHandler}>Add Entry</MenuItem>}
+          { knownAddress ? <MenuItem onClick={addOrEditEntryHandler}>Edit Entry</MenuItem> : <MenuItem onClick={addOrEditEntryHandler}>Add Entry</MenuItem>}
         </Menu>
       </div>
     </ClickAwayListener>
