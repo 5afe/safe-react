@@ -6,7 +6,7 @@ import updateSafe from './updateSafe'
 const updateUserStatus = (safeAddress: string, recurrentUser?: boolean) => async (
   dispatch: ReduxDispatch<GlobalState>,
 ) => {
-  dispatch(updateSafe({ address: safeAddress, recurringUser: recurrentUser !== undefined }))
+  dispatch(updateSafe({ address: safeAddress, recurringUser: !recurrentUser }))
 }
 
 export default updateUserStatus

@@ -102,7 +102,7 @@ const notificationsMiddleware = (store: Store<GlobalState>) => (
             updateSafe({
               address: safeAddress,
               latestIncomingTxBlock: newIncomingTransactions.size
-                ? newIncomingTransactions.last().blockNumber
+                ? newIncomingTransactions.first().blockNumber
                 : latestIncomingTxBlock,
             }),
           )
