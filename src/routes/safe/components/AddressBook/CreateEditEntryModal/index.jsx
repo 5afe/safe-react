@@ -89,7 +89,7 @@ const CreateEditEntryModalComponent = ({
               <Row margin="md">
                 <AddressInput
                   name="address"
-                  validators={[entryDoesntExist]}
+                  validators={entryToEdit ? undefined : [entryDoesntExist]}
                   placeholder="Owner address*"
                   text="Owner address*"
                   className={classes.addressInput}
