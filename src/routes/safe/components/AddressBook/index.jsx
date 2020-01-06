@@ -9,7 +9,6 @@ import { withStyles } from '@material-ui/core/styles'
 import classNames from 'classnames/bind'
 import CallMade from '@material-ui/icons/CallMade'
 import { useDispatch, useSelector } from 'react-redux'
-import { withSnackbar } from 'notistack'
 import Block from '~/components/layout/Block'
 import Row from '~/components/layout/Row'
 import { type Column, cellWidth } from '~/components/Table/TableHead'
@@ -204,4 +203,4 @@ const AddressBookTable = ({
   )
 }
 
-export default withStyles(styles)(withSnackbar(AddressBookTable))
+export default withStyles(styles)(AddressBookTable)
