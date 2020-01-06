@@ -1,5 +1,5 @@
 // @flow
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 
 import cn from 'classnames'
 import { List } from 'immutable'
@@ -27,7 +27,6 @@ import {
   EDIT_ENTRY_BUTTON,
   generateColumns, REMOVE_ENTRY_BUTTON, SEND_ENTRY_BUTTON,
 } from '~/routes/safe/components/AddressBook/columns'
-import loadAddressBook from '~/logic/addressBook/store/actions/loadAddressBook'
 import Col from '~/components/layout/Col'
 import ButtonLink from '~/components/layout/ButtonLink'
 import CreateEditEntryModal from '~/routes/safe/components/AddressBook/CreateEditEntryModal'
@@ -56,11 +55,8 @@ const AddressBookTable = ({
   const autoColumns = columns.filter((c) => !c.custom)
   const dispatch = useDispatch()
 
-  useEffect(() => {
-    dispatch(loadAddressBook())
-  }, [])
-
-  const addressBook = useSelector(getAddressBook)
+  const addressBookObj = useSelector(getAddressBook)
+  const addressBook = List(addressBookObj)
   const [selectedEntry, setSelectedEntry] = useState(null)
   const [editCreateEntryModalOpen, setEditCreateEntryModalOpen] = useState(false)
   const [deleteEntryModalOpen, setDeleteEntryModalOpen] = useState(false)
@@ -75,21 +71,21 @@ const AddressBookTable = ({
 
   const newEntryModalHandler = (entry: AddressBookEntryType) => {
     setEditCreateEntryModalOpen(false)
-    dispatch(addAddressBookEntry(entry))
+    dispatch(addAddressBookEntry(entry, address))
   }
 
   const editEntryModalHandler = (entryRow: Object) => {
     const { index } = selectedEntry
     setSelectedEntry(null)
     setEditCreateEntryModalOpen(false)
-    dispatch(updateAddressBookEntry(entryRow, index))
+    dispatch(updateAddressBookEntry(entryRow, index, address))
   }
 
   const deleteEntryModalHandler = () => {
     const { index } = selectedEntry
     setSelectedEntry(null)
     setDeleteEntryModalOpen(false)
-    dispatch(removeAddressBookEntry(index))
+    dispatch(removeAddressBookEntry(index, address))
   }
 
   return (

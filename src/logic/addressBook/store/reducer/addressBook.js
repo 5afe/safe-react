@@ -15,24 +15,27 @@ export type State = Map<string, Map<AddressBookEntry>>
 export default handleActions<State, *>(
   {
     [ADD_ADDRESS_BOOK]: (state: State, action: ActionType<Function>): State => {
-      const { addressBook } = action.payload
-
-      return state.set('addressBook', addressBook)
+      const { addressBook, safeAddress } = action.payload
+      return state.setIn(['addressBook', safeAddress], addressBook)
     },
     [ADD_ENTRY]: (state: State, action: ActionType<Function>): State => {
-      const { entry } = action.payload
+      const { entry, safeAddress } = action.payload
 
-      const currentList = state.get('addressBook')
+      const currentList = state.getIn(['addressBook', safeAddress])
       currentList.push(entry)
-      return state.set('addressBook', currentList)
+      return state.setIn(['addressBook', safeAddress], currentList)
     },
     [UPDATE_ENTRY]: (state: State, action: ActionType<Function>): State => {
-      const { entry, entryIndex } = action.payload
-      return state.setIn(['addressBook', entryIndex], entry)
+      const { entry, entryIndex, safeAddress } = action.payload
+      const entriesList = state.getIn(['addressBook', safeAddress])
+      entriesList[entryIndex] = entry
+      return state.setIn(['addressBook', safeAddress], entriesList)
     },
     [REMOVE_ENTRY]: (state: State, action: ActionType<Function>): State => {
-      const { entryIndex } = action.payload
-      return state.deleteIn(['addressBook', entryIndex])
+      const { entryIndex, safeAddress } = action.payload
+      const entriesList = state.getIn(['addressBook', safeAddress])
+      entriesList.splice(entryIndex, 1)
+      return state.setIn(['addressBook', safeAddress], entriesList)
     },
   },
   Map(),

@@ -1,16 +1,23 @@
 // @flow
-import { List } from 'immutable'
+import { List, Map } from 'immutable'
 import { createSelector, Selector } from 'reselect'
-import type { Provider } from '~/logic/wallets/store/model/provider'
 import { ADDRESS_BOOK_REDUCER_ID } from '~/logic/addressBook/store/reducer/addressBook'
 import type { GlobalState } from '~/store'
 import type { AddressBook } from '~/logic/addressBook/model/addressBook'
+import { safeParamAddressFromStateSelector } from '~/routes/safe/store/selectors'
 
-export const getAddressBook = (state: any): Provider => List(state[ADDRESS_BOOK_REDUCER_ID].get('addressBook')) || List([])
+
+export const addressBookMapSelector = (state: GlobalState): Map<string, AddressBook> => state[ADDRESS_BOOK_REDUCER_ID].get('addressBook') || List([])
+
+export const getAddressBook: Selector<GlobalState, AddressBook> = createSelector(
+  addressBookMapSelector,
+  safeParamAddressFromStateSelector,
+  (addressBook: AddressBook, safeAddress: string) => addressBook.get(safeAddress) || List([]),
+)
 
 export const getAddressBookAddressesListSelector: Selector<GlobalState, AddressBook> = createSelector(
   getAddressBook,
-  (addressBook: AddressBook) => addressBook.map((entry) => entry.address)
+  (addressBook: AddressBook) => addressBook.map((entry) => entry.address),
 )
 
 
