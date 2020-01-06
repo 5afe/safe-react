@@ -54,6 +54,7 @@ type DescriptionDescProps = {
   removedOwner?: string,
   addedOwner?: string,
   newThreshold?: string,
+  recipientName?: string,
 }
 
 type CustomDescProps = {
@@ -61,6 +62,7 @@ type CustomDescProps = {
   recipient: string,
   data: String,
   classes: Object,
+  recipientName?: string,
 }
 
 const TransferDescription = ({ amount = '', recipient, recipientName }: TransferDescProps) => (
@@ -76,18 +78,20 @@ const TransferDescription = ({ amount = '', recipient, recipientName }: Transfer
   </Block>
 )
 
-const SettingsDescription = ({ removedOwner, addedOwner, newThreshold }: DescriptionDescProps) => (
+const SettingsDescription = ({
+  removedOwner, addedOwner, newThreshold, recipientName,
+}: DescriptionDescProps) => (
   <>
     {removedOwner && (
       <Block data-testid={TRANSACTIONS_DESC_REMOVE_OWNER_TEST_ID}>
         <Bold>Remove owner:</Bold>
-        <EtherscanLink type="address" value={removedOwner} />
+        { recipientName ? <OwnerAddressTableCell address={removedOwner} showLinks knownAddress userName={recipientName} /> : <EtherscanLink type="address" value={removedOwner} knownAddress={false} />}
       </Block>
     )}
     {addedOwner && (
       <Block data-testid={TRANSACTIONS_DESC_ADD_OWNER_TEST_ID}>
         <Bold>Add owner:</Bold>
-        <EtherscanLink type="address" value={addedOwner} />
+        { recipientName ? <OwnerAddressTableCell address={addedOwner} showLinks knownAddress userName={recipientName} /> : <EtherscanLink type="address" value={addedOwner} knownAddress={false} />}
       </Block>
     )}
     {newThreshold && (
@@ -102,7 +106,7 @@ const SettingsDescription = ({ removedOwner, addedOwner, newThreshold }: Descrip
 )
 
 const CustomDescription = ({
-  data, amount = 0, recipient, classes,
+  data, amount = 0, recipient, classes, recipientName,
 }: CustomDescProps) => {
   const [showTxData, setShowTxData] = useState(false)
   return (
@@ -115,7 +119,7 @@ const CustomDescription = ({
           {' '}
           to:
         </Bold>
-        <EtherscanLink type="address" value={recipient} />
+        { recipientName ? <OwnerAddressTableCell address={recipient} showLinks knownAddress userName={recipientName} /> : <EtherscanLink type="address" value={recipient} knownAddress={false} />}
       </Block>
       <Block className={classes.txData} data-testid={TRANSACTIONS_DESC_CUSTOM_DATA_TEST_ID}>
         <Bold>Data (hex encoded):</Bold>
@@ -172,10 +176,10 @@ const TxDescription = ({ tx, classes }: Props) => {
   return (
     <Block className={classes.txDataContainer}>
       {modifySettingsTx && (
-        <SettingsDescription removedOwner={removedOwner} newThreshold={newThreshold} addedOwner={addedOwner} />
+        <SettingsDescription removedOwner={removedOwner} newThreshold={newThreshold} addedOwner={addedOwner} recipientName={recipientName} />
       )}
       {customTx && (
-        <CustomDescription data={data} amount={amount} recipient={recipient} classes={classes} />
+        <CustomDescription data={data} amount={amount} recipient={recipient} classes={classes} recipientName={recipientName} />
       )}
       {!cancellationTx && !modifySettingsTx && !customTx && !creationTx && (
         <TransferDescription amount={amount} recipient={recipient} recipientName={recipientName} />
