@@ -82,6 +82,7 @@ const Layout = (props: Props) => {
     currencySelected,
     fetchCurrencyValues,
     currencyValues,
+    addressBook,
   } = props
 
   const handleCallToRouter = (_, value) => {
@@ -212,6 +213,7 @@ const Layout = (props: Props) => {
               userAddress={userAddress}
               createTransaction={createTransaction}
               safe={safe}
+              addressBook={addressBook}
             />
           )}
         />

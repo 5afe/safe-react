@@ -33,6 +33,8 @@ import RenameOwnerIcon from './assets/icons/rename-owner.svg'
 import RemoveOwnerIcon from '../assets/icons/bin.svg'
 import Paragraph from '~/components/layout/Paragraph/index'
 import type { Safe } from '~/routes/safe/store/models/safe'
+import { getOwnersWithNameFromAddressBook } from '~/logic/addressBook/utils'
+import type { AddressBook } from '~/logic/addressBook/model/addressBook'
 
 export const RENAME_OWNER_BTN_TEST_ID = 'rename-owner-btn'
 export const REMOVE_OWNER_BTN_TEST_ID = 'remove-owner-btn'
@@ -54,7 +56,8 @@ type Props = {
   replaceSafeOwner: Function,
   editSafeOwner: Function,
   granted: boolean,
-  safe: Safe
+  safe: Safe,
+  addressBook: AddressBook,
 }
 
 type State = {
@@ -114,6 +117,7 @@ class ManageOwners extends React.Component<Props, State> {
       editSafeOwner,
       granted,
       safe,
+      addressBook,
     } = this.props
     const {
       showAddOwner,
@@ -126,7 +130,8 @@ class ManageOwners extends React.Component<Props, State> {
 
     const columns = generateColumns()
     const autoColumns = columns.filter((c) => !c.custom)
-    const ownerData = getOwnerData(owners)
+    const ownersAdbk = getOwnersWithNameFromAddressBook(addressBook, owners)
+    const ownerData = getOwnerData(ownersAdbk)
 
     return (
       <>
