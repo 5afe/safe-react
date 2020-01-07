@@ -9,7 +9,6 @@ import { withStyles } from '@material-ui/core/styles'
 import classNames from 'classnames/bind'
 import CallMade from '@material-ui/icons/CallMade'
 import { useDispatch, useSelector } from 'react-redux'
-import { withSnackbar } from 'notistack'
 import Block from '~/components/layout/Block'
 import Row from '~/components/layout/Row'
 import { type Column, cellWidth } from '~/components/Table/TableHead'
@@ -57,7 +56,8 @@ const AddressBookTable = ({
   const autoColumns = columns.filter((c) => !c.custom)
   const dispatch = useDispatch()
 
-  const addressBook = useSelector(getAddressBook)
+  const addressBookObj = useSelector(getAddressBook)
+  const addressBook = List(addressBookObj)
   const [selectedEntry, setSelectedEntry] = useState(null)
   const [editCreateEntryModalOpen, setEditCreateEntryModalOpen] = useState(false)
   const [deleteEntryModalOpen, setDeleteEntryModalOpen] = useState(false)
@@ -99,21 +99,21 @@ const AddressBookTable = ({
   const newEntryModalHandler = (entry: AddressBookEntryType) => {
     setEditCreateEntryModalOpen(false)
     setDefaultNewEntryAddress(null)
-    dispatch(addAddressBookEntry(entry))
+    dispatch(addAddressBookEntry(entry, address))
   }
 
   const editEntryModalHandler = (entryRow: Object) => {
     const { index } = selectedEntry
     setSelectedEntry(null)
     setEditCreateEntryModalOpen(false)
-    dispatch(updateAddressBookEntry(entryRow, index))
+    dispatch(updateAddressBookEntry(entryRow, index, address))
   }
 
   const deleteEntryModalHandler = () => {
     const { index } = selectedEntry
     setSelectedEntry(null)
     setDeleteEntryModalOpen(false)
-    dispatch(removeAddressBookEntry(index))
+    dispatch(removeAddressBookEntry(index, address))
   }
 
   return (
@@ -228,4 +228,4 @@ const AddressBookTable = ({
   )
 }
 
-export default withStyles(styles)(withSnackbar(AddressBookTable))
+export default withStyles(styles)(AddressBookTable)

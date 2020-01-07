@@ -151,7 +151,7 @@ const Layout = (props: Props) => {
         >
           <Tab label="Balances" value={`${match.url}/balances`} data-testid={BALANCES_TAB_BTN_TEST_ID} />
           <Tab label="Transactions" value={`${match.url}/transactions`} data-testid={TRANSACTIONS_TAB_BTN_TEST_ID} />
-          <Tab label="Address Book" value={`${match.url}/addressBook`} data-testid={ADDRESS_BOOK_TAB_BTN_TEST_ID} />
+          <Tab label="Address Book" value={`${match.url}/address-book`} data-testid={ADDRESS_BOOK_TAB_BTN_TEST_ID} />
           <Tab label="Settings" value={`${match.url}/settings`} data-testid={SETTINGS_TAB_BTN_TEST_ID} />
         </Tabs>
       </Row>
@@ -217,7 +217,7 @@ const Layout = (props: Props) => {
         />
         <Route
           exact
-          path={`${match.path}/addressBook`}
+          path={`${match.path}/address-book`}
           render={() => (
             <AddressBookTable />
           )}
