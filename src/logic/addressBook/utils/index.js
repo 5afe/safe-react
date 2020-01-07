@@ -26,8 +26,8 @@ export const getNameFromAddressBook = (userAddress: string): string | null => {
   }
   const addressBook = useSelector(getAddressBook)
   const result = addressBook.filter((addressBookItem) => addressBookItem.address === userAddress)
-  if (result.size > 0) {
-    return result.get(0).name
+  if (result.length > 0) {
+    return result[0].name
   }
   return null
 }

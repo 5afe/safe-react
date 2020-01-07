@@ -47,14 +47,12 @@ type Props = {
 type TransferDescProps = {
   amount: string,
   recipient: string,
-  recipientName?: string,
 }
 
 type DescriptionDescProps = {
   removedOwner?: string,
   addedOwner?: string,
   newThreshold?: string,
-  recipientName?: string,
 }
 
 type CustomDescProps = {
@@ -62,53 +60,64 @@ type CustomDescProps = {
   recipient: string,
   data: String,
   classes: Object,
-  recipientName?: string,
 }
 
-const TransferDescription = ({ amount = '', recipient, recipientName }: TransferDescProps) => (
-  <Block data-testid={TRANSACTIONS_DESC_SEND_TEST_ID}>
-    <Bold>
-      Send
-      {' '}
-      {amount}
-      {' '}
-      to:
-    </Bold>
-    { recipientName ? <OwnerAddressTableCell address={recipient} showLinks knownAddress userName={recipientName} /> : <EtherscanLink type="address" value={recipient} knownAddress={false} />}
-  </Block>
-)
+const TransferDescription = ({ amount = '', recipient }: TransferDescProps) => {
+  const recipientName = getNameFromAddressBook(recipient)
+  return (
+    <Block data-testid={TRANSACTIONS_DESC_SEND_TEST_ID}>
+      <Bold>
+        Send
+        {' '}
+        {amount}
+        {' '}
+        to:
+      </Bold>
+      {recipientName ? <OwnerAddressTableCell address={recipient} showLinks knownAddress userName={recipientName} />
+        : <EtherscanLink type="address" value={recipient} knownAddress={false} />}
+    </Block>
+  )
+}
 
 const SettingsDescription = ({
-  removedOwner, addedOwner, newThreshold, recipientName,
-}: DescriptionDescProps) => (
-  <>
-    {removedOwner && (
-      <Block data-testid={TRANSACTIONS_DESC_REMOVE_OWNER_TEST_ID}>
-        <Bold>Remove owner:</Bold>
-        { recipientName ? <OwnerAddressTableCell address={removedOwner} showLinks knownAddress userName={recipientName} /> : <EtherscanLink type="address" value={removedOwner} knownAddress={false} />}
-      </Block>
-    )}
-    {addedOwner && (
-      <Block data-testid={TRANSACTIONS_DESC_ADD_OWNER_TEST_ID}>
-        <Bold>Add owner:</Bold>
-        { recipientName ? <OwnerAddressTableCell address={addedOwner} showLinks knownAddress userName={recipientName} /> : <EtherscanLink type="address" value={addedOwner} knownAddress={false} />}
-      </Block>
-    )}
-    {newThreshold && (
-      <Block data-testid={TRANSACTIONS_DESC_CHANGE_THRESHOLD_TEST_ID}>
-        <Bold>Change required confirmations:</Bold>
-        <Paragraph size="md" noMargin>
-          {newThreshold}
-        </Paragraph>
-      </Block>
-    )}
-  </>
-)
+  removedOwner, addedOwner, newThreshold,
+}: DescriptionDescProps) => {
+  const ownerChangedName = removedOwner ? getNameFromAddressBook(removedOwner) : getNameFromAddressBook(addedOwner)
+  return (
+    <>
+      {removedOwner && (
+        <Block data-testid={TRANSACTIONS_DESC_REMOVE_OWNER_TEST_ID}>
+          <Bold>Remove owner:</Bold>
+          {ownerChangedName
+            ? <OwnerAddressTableCell address={removedOwner} showLinks knownAddress userName={ownerChangedName} />
+            : <EtherscanLink type="address" value={removedOwner} knownAddress={false} />}
+        </Block>
+      )}
+      {addedOwner && (
+        <Block data-testid={TRANSACTIONS_DESC_ADD_OWNER_TEST_ID}>
+          <Bold>Add owner:</Bold>
+          {ownerChangedName
+            ? <OwnerAddressTableCell address={addedOwner} showLinks knownAddress userName={ownerChangedName} />
+            : <EtherscanLink type="address" value={addedOwner} knownAddress={false} />}
+        </Block>
+      )}
+      {newThreshold && (
+        <Block data-testid={TRANSACTIONS_DESC_CHANGE_THRESHOLD_TEST_ID}>
+          <Bold>Change required confirmations:</Bold>
+          <Paragraph size="md" noMargin>
+            {newThreshold}
+          </Paragraph>
+        </Block>
+      )}
+    </>
+  )
+}
 
 const CustomDescription = ({
-  data, amount = 0, recipient, classes, recipientName,
+  data, amount = 0, recipient, classes,
 }: CustomDescProps) => {
   const [showTxData, setShowTxData] = useState(false)
+  const recipientName = getNameFromAddressBook(recipient)
   return (
     <>
       <Block data-testid={TRANSACTIONS_DESC_CUSTOM_VALUE_TEST_ID}>
@@ -172,17 +181,16 @@ const TxDescription = ({ tx, classes }: Props) => {
     data,
   } = getTxData(tx)
   const amount = getTxAmount(tx)
-  const recipientName = getNameFromAddressBook(recipient)
   return (
     <Block className={classes.txDataContainer}>
       {modifySettingsTx && (
-        <SettingsDescription removedOwner={removedOwner} newThreshold={newThreshold} addedOwner={addedOwner} recipientName={recipientName} />
+        <SettingsDescription removedOwner={removedOwner} newThreshold={newThreshold} addedOwner={addedOwner} />
       )}
       {customTx && (
-        <CustomDescription data={data} amount={amount} recipient={recipient} classes={classes} recipientName={recipientName} />
+        <CustomDescription data={data} amount={amount} recipient={recipient} classes={classes} />
       )}
       {!cancellationTx && !modifySettingsTx && !customTx && !creationTx && (
-        <TransferDescription amount={amount} recipient={recipient} recipientName={recipientName} />
+        <TransferDescription amount={amount} recipient={recipient} />
       )}
     </Block>
   )
