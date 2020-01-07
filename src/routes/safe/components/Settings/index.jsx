@@ -46,7 +46,8 @@ type Props = Actions & {
   editSafeOwner: Function,
   userAddress: string,
   safe: Safe,
-  addressBook: AddressBook
+  addressBook: AddressBook,
+  updateAddressBookEntryName: Function,
 }
 
 type Action = 'RemoveSafe'
@@ -93,6 +94,7 @@ class Settings extends React.Component<Props, State> {
       editSafeOwner,
       safe,
       addressBook,
+      updateAddressBookEntryName,
     } = this.props
 
     return (
@@ -160,6 +162,7 @@ class Settings extends React.Component<Props, State> {
                   granted={granted}
                   safe={safe}
                   addressBook={addressBook}
+                  updateAddressBookEntryName={updateAddressBookEntryName}
                 />
               )}
               {menuOptionIndex === 3 && (

@@ -6,6 +6,7 @@ import { ADD_ENTRY } from '~/logic/addressBook/store/actions/addAddressBookEntry
 import { UPDATE_ENTRY } from '~/logic/addressBook/store/actions/updateAddressBookEntry'
 import { REMOVE_ENTRY } from '~/logic/addressBook/store/actions/removeAddressBookEntry'
 import { ADD_ADDRESS_BOOK } from '~/logic/addressBook/store/actions/addAddressBook'
+import { UPDATE_ENTRY_NAME } from '~/logic/addressBook/store/actions/updateAddressBookEntryName'
 
 export const ADDRESS_BOOK_REDUCER_ID = 'addressBook'
 
@@ -29,6 +30,20 @@ export default handleActions<State, *>(
       const { entry, entryIndex, safeAddress } = action.payload
       const entriesList = state.getIn(['addressBook', safeAddress])
       entriesList[entryIndex] = entry
+      return state.setIn(['addressBook', safeAddress], entriesList)
+    },
+    [UPDATE_ENTRY_NAME]: (state: State, action: ActionType<Function>): State => {
+      const {
+        entryName,
+        entryAddress,
+        safeAddress,
+      } = action.payload
+      const entriesList = state.getIn(['addressBook', safeAddress])
+      const entryIndex = entriesList.findIndex((entry) => entry.address === entryAddress)
+      entriesList[entryIndex] = {
+        address: entryAddress,
+        name: entryName,
+      }
       return state.setIn(['addressBook', safeAddress], entriesList)
     },
     [REMOVE_ENTRY]: (state: State, action: ActionType<Function>): State => {
