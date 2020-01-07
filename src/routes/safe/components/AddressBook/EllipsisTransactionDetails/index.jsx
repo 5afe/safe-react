@@ -50,7 +50,7 @@ const EllipsisTransactionDetails = ({ knownAddress, address }: EllipsisTransacti
   const closeMenuHandler = () => setAnchorEl(null)
 
   const addOrEditEntryHandler = () => {
-    dispatch(push(`${SAFELIST_ADDRESS}/${currentSafeAddress}/addressBook?entryAddress=${address}`))
+    dispatch(push(`${SAFELIST_ADDRESS}/${currentSafeAddress}/address-book?entryAddress=${address}`))
     closeMenuHandler()
   }
 
