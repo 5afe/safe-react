@@ -75,10 +75,9 @@ const AddressBookTable = ({
   useEffect(() => {
     if (entryAddressToEditOrCreateNew) {
       const key = addressBook.findKey((entry) => entry.address === entryAddressToEditOrCreateNew)
-      if (key) {
+      if (key >= 0) {
         // Edit old entry
         const value = addressBook.get(key)
-
         setSelectedEntry({ entry: value, index: key })
       } else {
         // Create new entry
@@ -87,7 +86,7 @@ const AddressBookTable = ({
       }
     }
   },
-  [addressBook])
+  [addressBookObj])
 
 
   const safe = useSelector(safeSelector)
