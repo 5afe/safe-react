@@ -62,7 +62,6 @@ const AddressBookTable = ({
   const [deleteEntryModalOpen, setDeleteEntryModalOpen] = useState(false)
   const [sendFundsModalOpen, setSendFundsModalOpen] = useState(false)
 
-
   const safe = useSelector(safeSelector)
   const activeTokens = useSelector(extendedSafeTokensSelector)
   const {
@@ -74,18 +73,17 @@ const AddressBookTable = ({
     dispatch(addAddressBookEntry(entry, address))
   }
 
-  const editEntryModalHandler = (entryRow: Object) => {
-    const { index } = selectedEntry
+  const editEntryModalHandler = (entry: AddressBookEntryType) => {
     setSelectedEntry(null)
     setEditCreateEntryModalOpen(false)
-    dispatch(updateAddressBookEntry(entryRow, index, address))
+    dispatch(updateAddressBookEntry(entry))
   }
 
   const deleteEntryModalHandler = () => {
-    const { index } = selectedEntry
+    const entryAddress = selectedEntry.entry.address
     setSelectedEntry(null)
     setDeleteEntryModalOpen(false)
-    dispatch(removeAddressBookEntry(index, address))
+    dispatch(removeAddressBookEntry(entryAddress))
   }
 
   return (
@@ -137,7 +135,7 @@ const AddressBookTable = ({
                     className={classes.editEntryButton}
                     src={RenameOwnerIcon}
                     onClick={() => {
-                      setSelectedEntry({ entry: row, index })
+                      setSelectedEntry({ entry: row })
                       setEditCreateEntryModalOpen(true)
                     }}
                     testId={EDIT_ENTRY_BUTTON}
@@ -147,7 +145,7 @@ const AddressBookTable = ({
                     className={classes.removeEntryButton}
                     src={RemoveOwnerIcon}
                     onClick={() => {
-                      setSelectedEntry({ entry: row, index })
+                      setSelectedEntry({ entry: row })
                       setDeleteEntryModalOpen(true)
                     }}
                     testId={REMOVE_ENTRY_BUTTON}
@@ -159,7 +157,7 @@ const AddressBookTable = ({
                     className={classes.send}
                     testId={SEND_ENTRY_BUTTON}
                     onClick={() => {
-                      setSelectedEntry({ entry: row, index })
+                      setSelectedEntry({ entry: row })
                       setSendFundsModalOpen(true)
                     }}
                   >
