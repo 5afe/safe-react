@@ -24,6 +24,7 @@ type Props<K> = {
   defaultOrder: 'desc' | 'asc',
   noBorder: boolean,
   disablePagination: boolean,
+  disableLoadingOnEmptyTable?: boolean,
 }
 
 type State = {
@@ -154,6 +155,7 @@ class GnoTable<K> extends React.Component<Props<K>, State> {
       defaultFixed,
       defaultRowsPerPage,
       noBorder,
+      disableLoadingOnEmptyTable,
     } = this.props
     const {
       order, orderBy, page, orderProp, rowsPerPage, fixed,
@@ -176,7 +178,7 @@ class GnoTable<K> extends React.Component<Props<K>, State> {
     }
 
     const emptyRows = displayRows - Math.min(displayRows, data.size - page * displayRows)
-    const isEmpty = size === 0
+    const isEmpty = size === 0 && !disableLoadingOnEmptyTable
 
     return (
       <>

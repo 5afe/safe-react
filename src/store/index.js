@@ -25,6 +25,7 @@ import notifications, {
 import currencyValues, { CURRENCY_VALUES_KEY } from '~/logic/currencyValues/store/reducer/currencyValues'
 import cookies, { COOKIES_REDUCER_ID } from '~/logic/cookies/store/reducer/cookies'
 import notificationsMiddleware from '~/routes/safe/store/middleware/notificationsMiddleware'
+import addressBook, { ADDRESS_BOOK_REDUCER_ID } from '~/logic/addressBook/store/reducer/addressBook'
 
 
 export const history = createBrowserHistory()
@@ -56,6 +57,7 @@ const reducers: Reducer<GlobalState> = combineReducers({
   [NOTIFICATIONS_REDUCER_ID]: notifications,
   [CURRENCY_VALUES_KEY]: currencyValues,
   [COOKIES_REDUCER_ID]: cookies,
+  [ADDRESS_BOOK_REDUCER_ID]: addressBook,
 })
 
 export const store: Store<GlobalState> = createStore(reducers, finalCreateStore)
