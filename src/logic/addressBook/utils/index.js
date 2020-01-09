@@ -17,3 +17,5 @@ export const saveAddressBook = async (addressBook: AddressBook) => {
     console.error('Error storing addressBook in localstorage', err)
   }
 }
+
+export const getAddressesListFromAdbk = (addressBook: AddressBook) => Array.from(addressBook).map((entry) => entry.address)

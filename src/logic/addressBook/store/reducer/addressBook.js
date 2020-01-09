@@ -8,6 +8,7 @@ import { REMOVE_ENTRY } from '~/logic/addressBook/store/actions/removeAddressBoo
 import { ADD_ADDRESS_BOOK } from '~/logic/addressBook/store/actions/addAddressBook'
 import { LOAD_ADDRESS_BOOK } from '~/logic/addressBook/store/actions/loadAddressBook'
 import { sameAddress } from '~/logic/wallets/ethAddresses'
+import { getAddressesListFromAdbk } from '~/logic/addressBook/utils'
 
 export const ADDRESS_BOOK_REDUCER_ID = 'addressBook'
 
@@ -22,21 +23,34 @@ export default handleActions<State, *>(
     },
     [ADD_ADDRESS_BOOK]: (state: State, action: ActionType<Function>): State => {
       const { addressBook, safeAddress } = action.payload
-      return state.setIn(['addressBook', safeAddress], addressBook)
+      // Adds the address book if it does not exists
+      const found = state.getIn(['addressBook', safeAddress])
+      if (!found) {
+        return state.setIn(['addressBook', safeAddress], addressBook)
+      }
+      return state
     },
     [ADD_ENTRY]: (state: State, action: ActionType<Function>): State => {
       const { entry } = action.payload
 
-      // Adds the entry to all the safes
+      // Adds the entry to all the safes (if it does not already exists)
       const newState = state.withMutations((map) => {
-        map
-          .get('addressBook')
-          .keySeq()
-          .forEach((safeAddress) => {
-            const currentList = state.getIn(['addressBook', safeAddress])
-            currentList.push(entry)
-            map.setIn(['addressBook', safeAddress], currentList)
-          })
+        const adbkMap = map.get('addressBook')
+
+        if (adbkMap) {
+          adbkMap.keySeq()
+            .forEach((safeAddress) => {
+              const safeAddressBook = state.getIn(['addressBook', safeAddress])
+              if (safeAddressBook) {
+                const adbkAddressList = getAddressesListFromAdbk(safeAddressBook)
+                const found = adbkAddressList.includes(entry.address)
+                if (!found) {
+                  safeAddressBook.push(entry)
+                  map.setIn(['addressBook', safeAddress], safeAddressBook)
+                }
+              }
+            })
+        }
       })
       return newState
     },

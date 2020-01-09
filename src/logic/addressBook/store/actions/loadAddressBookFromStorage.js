@@ -1,6 +1,6 @@
 // @flow
 import type { Dispatch as ReduxDispatch } from 'redux'
-import { Map } from 'immutable'
+import { Map, List } from 'immutable'
 import { type GlobalState } from '~/store/index'
 import { getAddressBookFromStorage } from '~/logic/addressBook/utils'
 import { loadAddressBook } from '~/logic/addressBook/store/actions/loadAddressBook'
@@ -18,7 +18,7 @@ const loadAddressBookFromStorage = () => async (dispatch: ReduxDispatch<GlobalSt
       const { address } = safe
       const found = adbkEntries.includes(address)
       if (!found) {
-        immutableAdbk = immutableAdbk.set(address, [])
+        immutableAdbk = immutableAdbk.set(address, List([]))
       }
     })
     dispatch(loadAddressBook(immutableAdbk))

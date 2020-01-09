@@ -70,7 +70,7 @@ const AddressBookTable = ({
 
   const newEntryModalHandler = (entry: AddressBookEntryType) => {
     setEditCreateEntryModalOpen(false)
-    dispatch(addAddressBookEntry(entry, address))
+    dispatch(addAddressBookEntry(entry))
   }
 
   const editEntryModalHandler = (entry: AddressBookEntryType) => {
