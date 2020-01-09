@@ -28,12 +28,12 @@ export const generateSignaturesFromTxConfirmations = (
   // The constant parts need to be sorted so that the recovered signers are sorted ascending
   // (natural order) by address (not checksummed).
   const confirmationsMap = confirmations.reduce((map, obj) => {
-    map[obj.owner.address.toLowerCase()] = obj // eslint-disable-line no-param-reassign
+    map[obj.owner.address] = obj // eslint-disable-line no-param-reassign
     return map
   }, {})
 
   if (preApprovingOwner) {
-    confirmationsMap[preApprovingOwner.toLowerCase()] = { owner: preApprovingOwner }
+    confirmationsMap[preApprovingOwner] = { owner: preApprovingOwner }
   }
 
   let sigs = '0x'
