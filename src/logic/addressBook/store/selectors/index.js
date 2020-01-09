@@ -14,14 +14,3 @@ export const getAddressBook: Selector<GlobalState, AddressBook> = createSelector
   safeParamAddressFromStateSelector,
   (addressBook: AddressBook, safeAddress: string) => addressBook.get(safeAddress) || List([]),
 )
-
-export const getAddressBookAddressesListSelector: Selector<GlobalState, AddressBook> = createSelector(
-  getAddressBook,
-  (addressBook: AddressBook) => addressBook.map((entry) => entry.address),
-)
-
-
-export const getAddressBookListSelector: Selector<GlobalState, AddressBook> = createSelector(
-  getAddressBook,
-  (addressBook: AddressBook) => (addressBook ? List(addressBook) : List([])),
-)

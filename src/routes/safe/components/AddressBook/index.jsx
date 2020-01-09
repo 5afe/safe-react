@@ -1,5 +1,5 @@
 // @flow
-import React, { useEffect, useState } from 'react'
+import React, { useState, useEffect } from 'react'
 
 import cn from 'classnames'
 import { List } from 'immutable'
@@ -25,7 +25,9 @@ import {
   AB_ADDRESS_ID,
   ADDRESS_BOOK_ROW_ID,
   EDIT_ENTRY_BUTTON,
-  generateColumns, REMOVE_ENTRY_BUTTON, SEND_ENTRY_BUTTON,
+  generateColumns,
+  REMOVE_ENTRY_BUTTON,
+  SEND_ENTRY_BUTTON,
 } from '~/routes/safe/components/AddressBook/columns'
 import Col from '~/components/layout/Col'
 import ButtonLink from '~/components/layout/ButtonLink'
@@ -37,21 +39,14 @@ import { updateAddressBookEntry } from '~/logic/addressBook/store/actions/update
 import { removeAddressBookEntry } from '~/logic/addressBook/store/actions/removeAddressBookEntry'
 import { addAddressBookEntry } from '~/logic/addressBook/store/actions/addAddressBookEntry'
 import SendModal from '~/routes/safe/components/Balances/SendModal'
-import {
-  addressBookQueryParamsSelector,
-  safeSelector,
-} from '~/routes/safe/store/selectors'
+import { addressBookQueryParamsSelector, safeSelector } from '~/routes/safe/store/selectors'
 import { extendedSafeTokensSelector } from '~/routes/safe/container/selector'
 
-
 type Props = {
-  classes: Object,
+  classes: Object
 }
 
-
-const AddressBookTable = ({
-  classes,
-}: Props) => {
+const AddressBookTable = ({ classes }: Props) => {
   const columns = generateColumns()
   const autoColumns = columns.filter((c) => !c.custom)
   const dispatch = useDispatch()
@@ -59,7 +54,9 @@ const AddressBookTable = ({
   const addressBookObj = useSelector(getAddressBook)
   const addressBook = List(addressBookObj)
   const [selectedEntry, setSelectedEntry] = useState(null)
-  const [editCreateEntryModalOpen, setEditCreateEntryModalOpen] = useState(false)
+  const [editCreateEntryModalOpen, setEditCreateEntryModalOpen] = useState(
+    false,
+  )
   const [deleteEntryModalOpen, setDeleteEntryModalOpen] = useState(false)
   const [sendFundsModalOpen, setSendFundsModalOpen] = useState(false)
   const [defaultNewEntryAddress, setDefaultNewEntryAddress] = useState(null)
@@ -88,31 +85,28 @@ const AddressBookTable = ({
   },
   [addressBookObj])
 
-
   const safe = useSelector(safeSelector)
   const activeTokens = useSelector(extendedSafeTokensSelector)
-  const {
-    address, ethBalance, name,
-  } = safe
+  const { address, ethBalance, name } = safe
 
   const newEntryModalHandler = (entry: AddressBookEntryType) => {
     setEditCreateEntryModalOpen(false)
+    dispatch(addAddressBookEntry(entry))
     setDefaultNewEntryAddress(null)
     dispatch(addAddressBookEntry(entry, address))
   }
 
-  const editEntryModalHandler = (entryRow: Object) => {
-    const { index } = selectedEntry
+  const editEntryModalHandler = (entry: AddressBookEntryType) => {
     setSelectedEntry(null)
     setEditCreateEntryModalOpen(false)
-    dispatch(updateAddressBookEntry(entryRow, index, address))
+    dispatch(updateAddressBookEntry(entry))
   }
 
   const deleteEntryModalHandler = () => {
-    const { index } = selectedEntry
+    const entryAddress = selectedEntry.entry.address
     setSelectedEntry(null)
     setDeleteEntryModalOpen(false)
-    dispatch(removeAddressBookEntry(index, address))
+    dispatch(removeAddressBookEntry(entryAddress))
   }
 
   return (
@@ -145,13 +139,26 @@ const AddressBookTable = ({
             <TableRow
               tabIndex={-1}
               key={index}
-              className={cn(classes.hide, index >= 3 && index === sortedData.size - 1 && classes.noBorderBottom)}
+              className={cn(
+                classes.hide,
+                index >= 3
+                    && index === sortedData.size - 1
+                    && classes.noBorderBottom,
+              )}
               data-testid={ADDRESS_BOOK_ROW_ID}
             >
               {autoColumns.map((column: Column) => (
-                <TableCell key={column.id} style={cellWidth(column.width)} align={column.align} component="td">
+                <TableCell
+                  key={column.id}
+                  style={cellWidth(column.width)}
+                  align={column.align}
+                  component="td"
+                >
                   {column.id === AB_ADDRESS_ID ? (
-                    <OwnerAddressTableCell address={row[column.id]} showLinks />
+                    <OwnerAddressTableCell
+                      address={row[column.id]}
+                      showLinks
+                    />
                   ) : (
                     row[column.id]
                   )}
@@ -164,7 +171,7 @@ const AddressBookTable = ({
                     className={classes.editEntryButton}
                     src={RenameOwnerIcon}
                     onClick={() => {
-                      setSelectedEntry({ entry: row, index })
+                      setSelectedEntry({ entry: row })
                       setEditCreateEntryModalOpen(true)
                     }}
                     testId={EDIT_ENTRY_BUTTON}
@@ -174,7 +181,7 @@ const AddressBookTable = ({
                     className={classes.removeEntryButton}
                     src={RemoveOwnerIcon}
                     onClick={() => {
-                      setSelectedEntry({ entry: row, index })
+                      setSelectedEntry({ entry: row })
                       setDeleteEntryModalOpen(true)
                     }}
                     testId={REMOVE_ENTRY_BUTTON}
@@ -186,12 +193,18 @@ const AddressBookTable = ({
                     className={classes.send}
                     testId={SEND_ENTRY_BUTTON}
                     onClick={() => {
-                      setSelectedEntry({ entry: row, index })
+                      setSelectedEntry({ entry: row })
                       setSendFundsModalOpen(true)
                     }}
                   >
-                    <CallMade alt="Send Transaction" className={classNames(classes.leftIcon, classes.iconSmall)} />
-                    Send
+                    <CallMade
+                      alt="Send Transaction"
+                      className={classNames(
+                        classes.leftIcon,
+                        classes.iconSmall,
+                      )}
+                    />
+                      Send
                   </Button>
                 </Row>
               </TableCell>
@@ -221,7 +234,11 @@ const AddressBookTable = ({
         ethBalance={ethBalance}
         tokens={activeTokens}
         activeScreenType="sendFunds"
-        recipientAddress={selectedEntry && selectedEntry.entry ? selectedEntry.entry.address : undefined}
+        recipientAddress={
+          selectedEntry && selectedEntry.entry
+            ? selectedEntry.entry.address
+            : undefined
+        }
       />
     </>
   )
