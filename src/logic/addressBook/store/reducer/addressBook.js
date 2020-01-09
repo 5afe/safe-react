@@ -12,8 +12,7 @@ import { getAddressesListFromAdbk } from '~/logic/addressBook/utils'
 
 export const ADDRESS_BOOK_REDUCER_ID = 'addressBook'
 
-
-export type State = Map<string, Map<AddressBookEntry>>
+export type State = Map<string, Map<string, AddressBookEntry>>
 
 export default handleActions<State, *>(
   {
