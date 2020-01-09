@@ -7,6 +7,10 @@ import { SAFE_PARAM_ADDRESS, SAFELIST_ADDRESS } from '~/routes/routes'
 import { type Safe } from '~/routes/safe/store/models/safe'
 import { type State as TransactionsState, TRANSACTIONS_REDUCER_ID } from '~/routes/safe/store/reducer/transactions'
 import {
+  type CancelState as CancelTransactionsState,
+  CANCEL_TRANSACTIONS_REDUCER_ID,
+} from '~/routes/safe/store/reducer/cancelTransactions'
+import {
   type IncomingState as IncomingTransactionsState,
   INCOMING_TRANSACTIONS_REDUCER_ID,
 } from '~/routes/safe/store/reducer/incomingTransactions'
@@ -48,13 +52,21 @@ export const defaultSafeSelector: Selector<GlobalState, {}, string> = createSele
 
 const transactionsSelector = (state: GlobalState): TransactionsState => state[TRANSACTIONS_REDUCER_ID]
 
-const incomingTransactionsSelector = (state: GlobalState): IncomingTransactionsState => state[INCOMING_TRANSACTIONS_REDUCER_ID]
+const cancelTransactionsSelector = (state: GlobalState): CancelTransactionsState => state[
+  CANCEL_TRANSACTIONS_REDUCER_ID
+]
+
+const incomingTransactionsSelector = (state: GlobalState): IncomingTransactionsState => state[
+  INCOMING_TRANSACTIONS_REDUCER_ID
+]
 
 const oneTransactionSelector = (state: GlobalState, props: TransactionProps) => props.transaction
 
 export const safeParamAddressSelector = (state: GlobalState, props: RouterProps) => props.match.params[SAFE_PARAM_ADDRESS] || ''
 
-export const safeTransactionsSelector: Selector<GlobalState, RouterProps, List<Transaction>> = createSelector(
+type TxSelectorType = Selector<GlobalState, RouterProps, List<Transaction>>
+
+export const safeTransactionsSelector: TxSelectorType = createSelector(
   transactionsSelector,
   safeParamAddressSelector,
   (transactions: TransactionsState, address: string): List<Transaction> => {
@@ -70,6 +82,22 @@ export const safeTransactionsSelector: Selector<GlobalState, RouterProps, List<T
   },
 )
 
+export const safeCancelTransactionsSelector: TxSelectorType = createSelector(
+  cancelTransactionsSelector,
+  safeParamAddressSelector,
+  (cancelTransactions: TransactionsState, address: string): List<Transaction> => {
+    if (!cancelTransactions) {
+      return List([])
+    }
+
+    if (!address) {
+      return List([])
+    }
+
+    return cancelTransactions.get(address) || List([])
+  },
+)
+
 export const safeParamAddressFromStateSelector = (state: GlobalState): string => {
   const match = matchPath(
     state.router.location.pathname,
@@ -79,7 +107,9 @@ export const safeParamAddressFromStateSelector = (state: GlobalState): string =>
   return match ? match.params.safeAddress : null
 }
 
-export const safeIncomingTransactionsSelector: Selector<GlobalState, RouterProps, List<IncomingTransaction>> = createSelector(
+type IncomingTxSelectorType = Selector<GlobalState, RouterProps, List<IncomingTransaction>>
+
+export const safeIncomingTransactionsSelector: IncomingTxSelectorType = createSelector(
   incomingTransactionsSelector,
   safeParamAddressSelector,
   (incomingTransactions: IncomingTransactionsState, address: string): List<IncomingTransaction> => {
