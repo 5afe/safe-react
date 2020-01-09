@@ -4,7 +4,6 @@ import { makeStyles } from '@material-ui/core/styles'
 import type { IncomingTransaction } from '~/routes/safe/store/models/incomingTransaction'
 import Bold from '~/components/layout/Bold'
 import EtherscanLink from '~/components/EtherscanLink'
-import Paragraph from '~/components/layout/Paragraph'
 import Block from '~/components/layout/Block'
 import { md, lg } from '~/theme/variables'
 import { getIncomingTxAmount } from '~/routes/safe/components/Transactions/TxsTable/columns'
@@ -28,7 +27,7 @@ type TransferDescProps = {
 }
 
 const TransferDescription = ({ value = '', from }: TransferDescProps) => (
-  <Paragraph noMargin data-testid={TRANSACTIONS_DESC_INCOMING_TEST_ID}>
+  <Block data-testid={TRANSACTIONS_DESC_INCOMING_TEST_ID}>
     <Bold>
       Received
       {' '}
@@ -38,7 +37,7 @@ const TransferDescription = ({ value = '', from }: TransferDescProps) => (
     </Bold>
     <br />
     <EtherscanLink type="address" value={from} />
-  </Paragraph>
+  </Block>
 )
 
 const IncomingTxDescription = ({ tx }: Props) => {

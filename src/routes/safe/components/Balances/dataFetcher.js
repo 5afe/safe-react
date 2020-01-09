@@ -29,6 +29,10 @@ const getTokenPriceInCurrency = (
   currencySelected: typeof AVAILABLE_CURRENCIES,
   currencyValues: List<BalanceCurrencyType>,
 ): string => {
+  if (!currencySelected) {
+    return ''
+  }
+
   // eslint-disable-next-line no-restricted-syntax
   for (const tokenPriceIterator of currencyValues) {
     const {
@@ -115,6 +119,7 @@ export const generateColumns = () => {
     label: 'Value',
     custom: false,
     static: true,
+    disablePadding: false,
     style: {
       fontSize: '11px',
       color: '#5d6d74',

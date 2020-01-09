@@ -9,8 +9,7 @@ import { ADD_ADDRESS_BOOK } from '~/logic/addressBook/store/actions/addAddressBo
 
 export const ADDRESS_BOOK_REDUCER_ID = 'addressBook'
 
-
-export type State = Map<string, Map<AddressBookEntry>>
+export type State = Map<string, Map<string, AddressBookEntry>>
 
 export default handleActions<State, *>(
   {
