@@ -7,6 +7,7 @@ import {
   safeBalancesSelector,
   safeBlacklistedTokensSelector,
   safeTransactionsSelector,
+  safeCancelTransactionsSelector,
   safeIncomingTransactionsSelector,
   type RouterProps,
   type SafeSelectorProps,
@@ -105,8 +106,9 @@ const extendedTransactionsSelector: Selector<GlobalState, RouterProps, List<Tran
   safeSelector,
   userAccountSelector,
   safeTransactionsSelector,
+  safeCancelTransactionsSelector,
   safeIncomingTransactionsSelector,
-  (safe, userAddress, transactions, incomingTransactions) => {
+  (safe, userAddress, transactions, cancelTransactions, incomingTransactions) => {
     const extendedTransactions = transactions.map((tx: Transaction) => {
       let extendedTx = tx
 
