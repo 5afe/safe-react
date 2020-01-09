@@ -18,8 +18,11 @@ import {
 import Modal from '~/components/Modal'
 import { styles } from './style'
 import AddressInput from '~/components/forms/AddressInput'
-import type { AddressBookEntryType } from '~/logic/addressBook/model/addressBook'
-import { getAddressBookAddressesListSelector } from '~/logic/addressBook/store/selectors'
+import type { AddressBookEntry } from '~/logic/addressBook/model/addressBook'
+import {
+  getAddressBook,
+} from '~/logic/addressBook/store/selectors'
+import { getAddressesListFromAdbk } from '~/logic/addressBook/utils'
 
 export const CREATE_ENTRY_INPUT_NAME_ID = 'create-entry-input-name'
 export const CREATE_ENTRY_INPUT_ADDRESS_ID = 'create-entry-input-address'
@@ -31,7 +34,7 @@ type Props = {
   isOpen: boolean,
   newEntryModalHandler: Function,
   editEntryModalHandler: Function,
-  entryToEdit?: AddressBookEntryType,
+  entryToEdit?: AddressBookEntry,
   newEntryDefaultAddress: string | null,
 }
 
@@ -52,7 +55,8 @@ const CreateEditEntryModalComponent = ({
     }
   }
 
-  const addressBookAddressesList = useSelector(getAddressBookAddressesListSelector)
+  const addressBook = useSelector(getAddressBook)
+  const addressBookAddressesList = getAddressesListFromAdbk(addressBook)
   const entryDoesntExist = uniqueAddress(addressBookAddressesList.map((address) => address))
   return (
     <Modal

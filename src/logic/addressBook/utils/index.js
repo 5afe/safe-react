@@ -8,7 +8,7 @@ import type { Owner } from '~/routes/safe/store/models/owner'
 
 const ADDRESS_BOOK_STORAGE_KEY = 'ADDRESS_BOOK_STORAGE_KEY'
 
-export const getAddressBookFromStorage = async (): Promise<AddressBookProps> => {
+export const getAddressBookFromStorage = async (): Promise<AddressBookProps | []> => {
   const data = await loadFromStorage(ADDRESS_BOOK_STORAGE_KEY)
 
   return data || []
@@ -52,3 +52,5 @@ export const getOwnersWithNameFromAddressBook = (addressBook: AddressBook, owner
   })
   return ownersListWithAdbkNames
 }
+
+export const getAddressesListFromAdbk = (addressBook: AddressBook) => Array.from(addressBook).map((entry) => entry.address)

@@ -10,5 +10,4 @@ export type AddressBookProps = {
   addressBookList: AddressBookEntry[]
 }
 
-
 export type AddressBook = RecordOf<AddressBookProps>

@@ -4,7 +4,7 @@ import { type GlobalState } from '~/store/'
 import { ADD_ENTRY } from '~/logic/addressBook/store/actions/addAddressBookEntry'
 import { REMOVE_ENTRY } from '~/logic/addressBook/store/actions/removeAddressBookEntry'
 import { UPDATE_ENTRY } from '~/logic/addressBook/store/actions/updateAddressBookEntry'
-import { getAddressBook } from '~/logic/addressBook/store/selectors'
+import { addressBookMapSelector } from '~/logic/addressBook/store/selectors'
 import { enhanceSnackbarForAction, getNotificationsFromTxType } from '~/logic/notifications'
 import { TX_NOTIFICATION_TYPES } from '~/logic/safe/transactions'
 import enqueueSnackbar from '~/logic/notifications/store/actions/enqueueSnackbar'
@@ -25,7 +25,7 @@ const addressBookMiddleware = (store: Store<GlobalState>) => (next: Function) =>
   if (watchedActions.includes(action.type)) {
     const state: GlobalState = store.getState()
     const { dispatch } = store
-    const addressBook = getAddressBook(state)
+    const addressBook = addressBookMapSelector(state)
     await saveAddressBook(addressBook)
 
     switch (action.type) {

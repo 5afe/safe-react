@@ -5,8 +5,6 @@ import type { AddressBookEntry } from '~/logic/addressBook/model/addressBook'
 export const UPDATE_ENTRY = 'UPDATE_ENTRY'
 
 
-export const updateAddressBookEntry = createAction<string, *, *>(UPDATE_ENTRY, (entry: AddressBookEntry, entryIndex: number, safeAddress: string): AddressBookEntry => ({
+export const updateAddressBookEntry = createAction<string, *, *>(UPDATE_ENTRY, (entry: AddressBookEntry): AddressBookEntry => ({
   entry,
-  entryIndex,
-  safeAddress,
 }))
