@@ -1,25 +1,35 @@
 // @flow
 import type { Dispatch as ReduxDispatch } from 'redux'
-import { List, Map } from 'immutable'
+import { List } from 'immutable'
 import { type GlobalState } from '~/store/index'
 import { makeOwner } from '~/routes/safe/store/models/owner'
 import type { SafeProps } from '~/routes/safe/store/models/safe'
 import addSafe from '~/routes/safe/store/actions/addSafe'
-import { getOwners, getSafeName, SAFES_KEY } from '~/logic/safe/utils'
+import { getSafeName, getLocalSafe } from '~/logic/safe/utils'
 import { getGnosisSafeInstanceAt } from '~/logic/contracts/safeContracts'
 import { getBalanceInEtherOf } from '~/logic/wallets/getWeb3'
-import { loadFromStorage } from '~/utils/storage'
+import { sameAddress } from '~/logic/wallets/ethAddresses'
 import removeSafeOwner from '~/routes/safe/store/actions/removeSafeOwner'
 import addSafeOwner from '~/routes/safe/store/actions/addSafeOwner'
 import updateSafeThreshold from '~/routes/safe/store/actions/updateSafeThreshold'
-import { sameAddress } from '~/logic/wallets/ethAddresses'
 
 const buildOwnersFrom = (
   safeOwners: string[],
-  storedOwners: Map<string, string>, // eslint-disable-next-line
+  localSafe: SafeProps | {}, // eslint-disable-next-line
 ) => safeOwners.map((ownerAddress: string) => {
-  const ownerName = storedOwners.get(ownerAddress.toLowerCase()) || 'UNKNOWN'
-  return makeOwner({ name: ownerName, address: ownerAddress })
+  if (!localSafe) {
+    return makeOwner({ name: 'UNKNOWN', address: ownerAddress })
+  }
+
+  const storedOwner = localSafe.owners.find(({ address }) => sameAddress(address, ownerAddress))
+  if (!storedOwner) {
+    return makeOwner({ name: 'UNKNOWN', address: ownerAddress })
+  }
+
+  return makeOwner({
+    name: storedOwner.name || 'UNKNOWN',
+    address: ownerAddress,
+  })
 })
 
 export const buildSafe = async (safeAddress: string, safeName: string) => {
@@ -28,7 +38,12 @@ export const buildSafe = async (safeAddress: string, safeName: string) => {
 
   const threshold = Number(await gnosisSafe.getThreshold())
   const nonce = Number(await gnosisSafe.nonce())
-  const owners = List(buildOwnersFrom(await gnosisSafe.getOwners(), await getOwners(safeAddress)))
+  const owners = List(
+    buildOwnersFrom(
+      await gnosisSafe.getOwners(),
+      await getLocalSafe(safeAddress),
+    ),
+  )
 
   const safe: SafeProps = {
     address: safeAddress,
@@ -42,14 +57,14 @@ export const buildSafe = async (safeAddress: string, safeName: string) => {
   return safe
 }
 
-const getLocalSafe = async (safeAddress: string) => {
-  const storedSafes = (await loadFromStorage(SAFES_KEY)) || {}
-  return storedSafes[safeAddress]
-}
-
-export const checkAndUpdateSafe = (safeAddress: string) => async (dispatch: ReduxDispatch<GlobalState>) => {
+export const checkAndUpdateSafe = (safeAddress: string) => async (
+  dispatch: ReduxDispatch<*>,
+) => {
   // Check if the owner's safe did change and update them
-  const [gnosisSafe, localSafe] = await Promise.all([getGnosisSafeInstanceAt(safeAddress), getLocalSafe(safeAddress)])
+  const [gnosisSafe, localSafe] = await Promise.all([
+    getGnosisSafeInstanceAt(safeAddress),
+    getLocalSafe(safeAddress),
+  ])
 
   const remoteOwners = await gnosisSafe.getOwners()
   // Converts from [ { address, ownerName} ] to address array
@@ -59,8 +74,9 @@ export const checkAndUpdateSafe = (safeAddress: string) => async (dispatch: Redu
   const threshold = await gnosisSafe.getThreshold()
   localSafe.threshold = threshold.toNumber()
 
-  dispatch(updateSafeThreshold({ safeAddress, threshold: threshold.toNumber() }))
-
+  dispatch(
+    updateSafeThreshold({ safeAddress, threshold: threshold.toNumber() }),
+  )
   // If the remote owners does not contain a local address, we remove that local owner
   localOwners.forEach((localAddress) => {
     const remoteOwnerIndex = remoteOwners.findIndex((remoteAddress) => sameAddress(remoteAddress, localAddress))
@@ -73,13 +89,21 @@ export const checkAndUpdateSafe = (safeAddress: string) => async (dispatch: Redu
   remoteOwners.forEach((remoteAddress) => {
     const localOwnerIndex = localOwners.findIndex((localAddress) => sameAddress(remoteAddress, localAddress))
     if (localOwnerIndex === -1) {
-      dispatch(addSafeOwner({ safeAddress, ownerAddress: remoteAddress, ownerName: 'UNKNOWN' }))
+      dispatch(
+        addSafeOwner({
+          safeAddress,
+          ownerAddress: remoteAddress,
+          ownerName: 'UNKNOWN',
+        }),
+      )
     }
   })
 }
 
 // eslint-disable-next-line consistent-return
-export default (safeAddress: string) => async (dispatch: ReduxDispatch<GlobalState>) => {
+export default (safeAddress: string) => async (
+  dispatch: ReduxDispatch<GlobalState>,
+) => {
   try {
     const safeName = (await getSafeName(safeAddress)) || 'LOADED SAFE'
     const safeProps: SafeProps = await buildSafe(safeAddress, safeName)
@@ -87,7 +111,7 @@ export default (safeAddress: string) => async (dispatch: ReduxDispatch<GlobalSta
     dispatch(addSafe(safeProps))
   } catch (err) {
     // eslint-disable-next-line
-    console.error('Error while updating Safe information: ', err)
+    console.error("Error while updating Safe information: ", err)
 
     return Promise.resolve()
   }
