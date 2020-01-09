@@ -108,81 +108,84 @@ const AddressBookTable = ({ classes }: Props) => {
           disableLoadingOnEmptyTable
           defaultRowsPerPage={25}
         >
-          {(sortedData: List<OwnerRow>) => sortedData.map((row: any, index: number) => (
-            <TableRow
-              tabIndex={-1}
-              key={index}
-              className={cn(
-                classes.hide,
-                index >= 3
-                    && index === sortedData.size - 1
-                    && classes.noBorderBottom,
-              )}
-              data-testid={ADDRESS_BOOK_ROW_ID}
-            >
-              {autoColumns.map((column: Column) => (
-                <TableCell
-                  key={column.id}
-                  style={cellWidth(column.width)}
-                  align={column.align}
-                  component="td"
-                >
-                  {column.id === AB_ADDRESS_ID ? (
-                    <OwnerAddressTableCell
-                      address={row[column.id]}
-                      showLinks
-                    />
-                  ) : (
-                    row[column.id]
-                  )}
-                </TableCell>
-              ))}
-              <TableCell component="td">
-                <Row align="end" className={classes.actions}>
-                  <Img
-                    alt="Edit entry"
-                    className={classes.editEntryButton}
-                    src={RenameOwnerIcon}
-                    onClick={() => {
-                      setSelectedEntry({ entry: row })
-                      setEditCreateEntryModalOpen(true)
-                    }}
-                    testId={EDIT_ENTRY_BUTTON}
-                  />
-                  <Img
-                    alt="Remove entry"
-                    className={classes.removeEntryButton}
-                    src={RemoveOwnerIcon}
-                    onClick={() => {
-                      setSelectedEntry({ entry: row })
-                      setDeleteEntryModalOpen(true)
-                    }}
-                    testId={REMOVE_ENTRY_BUTTON}
-                  />
-                  <Button
-                    variant="contained"
-                    size="small"
-                    color="primary"
-                    className={classes.send}
-                    testId={SEND_ENTRY_BUTTON}
-                    onClick={() => {
-                      setSelectedEntry({ entry: row })
-                      setSendFundsModalOpen(true)
-                    }}
+          {(sortedData: List<OwnerRow>) => sortedData.map((row: any, index: number) => {
+            const hideBorderBottom = index >= 3
+              && index === sortedData.size - 1
+              && classes.noBorderBottom
+            return (
+              <TableRow
+                tabIndex={-1}
+                key={index}
+                className={cn(
+                  classes.hide,
+                  hideBorderBottom,
+                )}
+                data-testid={ADDRESS_BOOK_ROW_ID}
+              >
+                {autoColumns.map((column: Column) => (
+                  <TableCell
+                    key={column.id}
+                    style={cellWidth(column.width)}
+                    align={column.align}
+                    component="td"
                   >
-                    <CallMade
-                      alt="Send Transaction"
-                      className={classNames(
-                        classes.leftIcon,
-                        classes.iconSmall,
-                      )}
+                    {column.id === AB_ADDRESS_ID ? (
+                      <OwnerAddressTableCell
+                        address={row[column.id]}
+                        showLinks
+                      />
+                    ) : (
+                      row[column.id]
+                    )}
+                  </TableCell>
+                ))}
+                <TableCell component="td">
+                  <Row align="end" className={classes.actions}>
+                    <Img
+                      alt="Edit entry"
+                      className={classes.editEntryButton}
+                      src={RenameOwnerIcon}
+                      onClick={() => {
+                        setSelectedEntry({ entry: row })
+                        setEditCreateEntryModalOpen(true)
+                      }}
+                      testId={EDIT_ENTRY_BUTTON}
                     />
+                    <Img
+                      alt="Remove entry"
+                      className={classes.removeEntryButton}
+                      src={RemoveOwnerIcon}
+                      onClick={() => {
+                        setSelectedEntry({ entry: row })
+                        setDeleteEntryModalOpen(true)
+                      }}
+                      testId={REMOVE_ENTRY_BUTTON}
+                    />
+                    <Button
+                      variant="contained"
+                      size="small"
+                      color="primary"
+                      className={classes.send}
+                      testId={SEND_ENTRY_BUTTON}
+                      onClick={() => {
+                        setSelectedEntry({ entry: row })
+                        setSendFundsModalOpen(true)
+                      }}
+                    >
+                      <CallMade
+                        alt="Send Transaction"
+                        className={classNames(
+                          classes.leftIcon,
+                          classes.iconSmall,
+                        )}
+                      />
                       Send
-                  </Button>
-                </Row>
-              </TableCell>
-            </TableRow>
-          ))}
+                    </Button>
+                  </Row>
+                </TableCell>
+              </TableRow>
+            )
+          })}
         </Table>
       </Block>
       <CreateEditEntryModal
