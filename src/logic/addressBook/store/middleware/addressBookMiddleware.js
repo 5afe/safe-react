@@ -24,7 +24,9 @@ const addressBookMiddleware = (store: Store<GlobalState>) => (next: Function) =>
     const state: GlobalState = store.getState()
     const { dispatch } = store
     const addressBook = addressBookMapSelector(state)
-    await saveAddressBook(addressBook)
+    if (addressBook) {
+      await saveAddressBook(addressBook)
+    }
 
     switch (action.type) {
       case ADD_ENTRY: {

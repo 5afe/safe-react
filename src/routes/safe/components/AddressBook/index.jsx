@@ -33,7 +33,7 @@ import {
 import Col from '~/components/layout/Col'
 import ButtonLink from '~/components/layout/ButtonLink'
 import CreateEditEntryModal from '~/routes/safe/components/AddressBook/CreateEditEntryModal'
-import { getAddressBook } from '~/logic/addressBook/store/selectors'
+import { getAddressBookListSelector } from '~/logic/addressBook/store/selectors'
 import type { AddressBookEntry } from '~/logic/addressBook/model/addressBook'
 import DeleteEntryModal from '~/routes/safe/components/AddressBook/DeleteEntryModal'
 import { updateAddressBookEntry } from '~/logic/addressBook/store/actions/updateAddressBookEntry'
@@ -52,9 +52,7 @@ const AddressBookTable = ({ classes }: Props) => {
   const columns = generateColumns()
   const autoColumns = columns.filter((c) => !c.custom)
   const dispatch = useDispatch()
-
-  const addressBookObj = useSelector(getAddressBook)
-  const addressBook = List(addressBookObj)
+  const addressBook = useSelector(getAddressBookListSelector)
   const [selectedEntry, setSelectedEntry] = useState(null)
   const [editCreateEntryModalOpen, setEditCreateEntryModalOpen] = useState(
     false,

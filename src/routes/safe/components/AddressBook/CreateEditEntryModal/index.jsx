@@ -18,7 +18,7 @@ import {
 import Modal from '~/components/Modal'
 import { styles } from './style'
 import AddressInput from '~/components/forms/AddressInput'
-import type { AddressBookEntryType } from '~/logic/addressBook/model/addressBook'
+import type { AddressBookEntry } from '~/logic/addressBook/model/addressBook'
 import {
   getAddressBook,
 } from '~/logic/addressBook/store/selectors'
@@ -34,7 +34,7 @@ type Props = {
   isOpen: boolean,
   newEntryModalHandler: Function,
   editEntryModalHandler: Function,
-  entryToEdit?: AddressBookEntryType,
+  entryToEdit?: AddressBookEntry,
 }
 
 const CreateEditEntryModalComponent = ({
