@@ -47,6 +47,12 @@ export const styles = () => ({
     marginBottom: marginButtonImg,
     cursor: 'pointer',
   },
+  removeEntryButtonDisabled: {
+    marginLeft: lg,
+    marginRight: lg,
+    marginBottom: marginButtonImg,
+    cursor: 'default',
+  },
   message: {
     margin: `${sm} 0`,
     padding: `${md} 0`,
