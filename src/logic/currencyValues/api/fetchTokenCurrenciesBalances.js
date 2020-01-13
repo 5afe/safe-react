@@ -7,7 +7,7 @@ const fetchTokenCurrenciesBalances = (safeAddress: string) => {
     return null
   }
   const apiUrl = getTxServiceHost()
-  const url = `${apiUrl}safes/${safeAddress}/balances/usd`
+  const url = `${apiUrl}safes/${safeAddress}/balances/usd/`
 
   return axios.get(url)
 }
