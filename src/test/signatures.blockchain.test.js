@@ -1,6 +1,8 @@
 // @flow
 import { List } from 'immutable'
-import { buildSignaturesFrom } from '~/logic/safe/safeTxSigner'
+import { generateSignaturesFromTxConfirmations } from '~/logic/safe/safeTxSigner'
+
+const makeMockConfirmation = (address: string) => ({ owner: { address } })
 
 describe('Signatures Blockchain Test', () => {
   it('generates signatures in natural order even checksumed', async () => {
@@ -8,39 +10,104 @@ describe('Signatures Blockchain Test', () => {
     const userA = 'baR'
     const userB = 'baz'
     const userC = 'foZa'
-    const sender = 'foZ'
+    const userD = 'foZ'
+
+    const confirmationA = makeMockConfirmation(userA)
+    const confirmationB = makeMockConfirmation(userB)
+    const confirmationC = makeMockConfirmation(userC)
+    const confirmationD = makeMockConfirmation(userD)
 
     // WHEN
     const result = '0x'
       // eslint-disable-next-line
-      + '000000000000000000000000' +
-      'baR'
+      + "000000000000000000000000" +
+      'bar'
       + '000000000000000000000000000000000000000000000000000000000000000001'
       // eslint-disable-next-line
-      + '000000000000000000000000' +
+      + "000000000000000000000000" +
       'baz'
       + '000000000000000000000000000000000000000000000000000000000000000001'
       // eslint-disable-next-line
-      + '000000000000000000000000' +
-      'foZ'
+      + "000000000000000000000000" +
+      'foz'
       + '000000000000000000000000000000000000000000000000000000000000000001'
       // eslint-disable-next-line
-      + '000000000000000000000000' +
-      'foZa'
+      + "000000000000000000000000" +
+      'foza'
       + '000000000000000000000000000000000000000000000000000000000000000001'
 
     // THEN
-    expect(buildSignaturesFrom(List([userA, userB, userC]), sender)).toEqual(result)
-    expect(buildSignaturesFrom(List([userB, userA, userC]), sender)).toEqual(result)
-    expect(buildSignaturesFrom(List([userA, sender, userC]), userB)).toEqual(result)
-    expect(buildSignaturesFrom(List([sender, userA, userC]), userB)).toEqual(result)
-    expect(buildSignaturesFrom(List([userB, sender, userC]), userA)).toEqual(result)
-    expect(buildSignaturesFrom(List([sender, userB, userC]), userA)).toEqual(result)
-    expect(buildSignaturesFrom(List([userA, userB, sender]), userC)).toEqual(result)
-    expect(buildSignaturesFrom(List([userB, userA, sender]), userC)).toEqual(result)
-    expect(buildSignaturesFrom(List([userA, sender, userB]), userC)).toEqual(result)
-    expect(buildSignaturesFrom(List([sender, userA, userB]), userC)).toEqual(result)
-    expect(buildSignaturesFrom(List([userB, sender, userA]), userC)).toEqual(result)
-    expect(buildSignaturesFrom(List([sender, userB, userA]), userC)).toEqual(result)
+    expect(
+      generateSignaturesFromTxConfirmations(
+        List([confirmationA, confirmationB, confirmationC]),
+        userD,
+      ),
+    ).toEqual(result)
+    expect(
+      generateSignaturesFromTxConfirmations(
+        List([confirmationB, confirmationA, confirmationC]),
+        userD,
+      ),
+    ).toEqual(result)
+    expect(
+      generateSignaturesFromTxConfirmations(
+        List([confirmationA, confirmationD, confirmationC]),
+        userB,
+      ),
+    ).toEqual(result)
+    expect(
+      generateSignaturesFromTxConfirmations(
+        List([confirmationD, confirmationA, confirmationC]),
+        userB,
+      ),
+    ).toEqual(result)
+    expect(
+      generateSignaturesFromTxConfirmations(
+        List([confirmationB, confirmationD, confirmationC]),
+        userA,
+      ),
+    ).toEqual(result)
+    expect(
+      generateSignaturesFromTxConfirmations(
+        List([confirmationD, confirmationB, confirmationC]),
+        userA,
+      ),
+    ).toEqual(result)
+    expect(
+      generateSignaturesFromTxConfirmations(
+        List([confirmationA, confirmationB, confirmationD]),
+        userC,
+      ),
+    ).toEqual(result)
+    expect(
+      generateSignaturesFromTxConfirmations(
+        List([confirmationB, confirmationA, confirmationD]),
+        userC,
+      ),
+    ).toEqual(result)
+    expect(
+      generateSignaturesFromTxConfirmations(
+        List([confirmationA, confirmationD, confirmationB]),
+        userC,
+      ),
+    ).toEqual(result)
+    expect(
+      generateSignaturesFromTxConfirmations(
+        List([confirmationD, confirmationA, confirmationB]),
+        userC,
+      ),
+    ).toEqual(result)
+    expect(
+      generateSignaturesFromTxConfirmations(
+        List([confirmationB, confirmationD, confirmationA]),
+        userC,
+      ),
+    ).toEqual(result)
+    expect(
+      generateSignaturesFromTxConfirmations(
+        List([confirmationD, confirmationB, confirmationA]),
+        userC,
+      ),
+    ).toEqual(result)
   })
 })
