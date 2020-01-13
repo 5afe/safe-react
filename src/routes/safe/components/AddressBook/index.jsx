@@ -21,6 +21,7 @@ import OwnerAddressTableCell from '~/routes/safe/components/Settings/ManageOwner
 import Img from '~/components/layout/Img'
 import RenameOwnerIcon from '~/routes/safe/components/Settings/ManageOwners/assets/icons/rename-owner.svg'
 import RemoveOwnerIcon from '~/routes/safe/components/Settings/assets/icons/bin.svg'
+import RemoveOwnerIconDisabled from '~/routes/safe/components/Settings/assets/icons/disabled-bin.svg'
 import {
   AB_ADDRESS_ID,
   ADDRESS_BOOK_ROW_ID,
@@ -32,15 +33,16 @@ import {
 import Col from '~/components/layout/Col'
 import ButtonLink from '~/components/layout/ButtonLink'
 import CreateEditEntryModal from '~/routes/safe/components/AddressBook/CreateEditEntryModal'
-import { getAddressBook } from '~/logic/addressBook/store/selectors'
-import type { AddressBookEntryType } from '~/logic/addressBook/model/addressBook'
+import { getAddressBookListSelector } from '~/logic/addressBook/store/selectors'
+import type { AddressBookEntry } from '~/logic/addressBook/model/addressBook'
 import DeleteEntryModal from '~/routes/safe/components/AddressBook/DeleteEntryModal'
 import { updateAddressBookEntry } from '~/logic/addressBook/store/actions/updateAddressBookEntry'
 import { removeAddressBookEntry } from '~/logic/addressBook/store/actions/removeAddressBookEntry'
 import { addAddressBookEntry } from '~/logic/addressBook/store/actions/addAddressBookEntry'
 import SendModal from '~/routes/safe/components/Balances/SendModal'
-import { addressBookQueryParamsSelector, safeSelector } from '~/routes/safe/store/selectors'
+import { safeSelector, safesListSelector, addressBookQueryParamsSelector } from '~/routes/safe/store/selectors'
 import { extendedSafeTokensSelector } from '~/routes/safe/container/selector'
+import { isUserOwnerOnAnySafe } from '~/logic/wallets/ethAddresses'
 
 type Props = {
   classes: Object
@@ -50,9 +52,7 @@ const AddressBookTable = ({ classes }: Props) => {
   const columns = generateColumns()
   const autoColumns = columns.filter((c) => !c.custom)
   const dispatch = useDispatch()
-
-  const addressBookObj = useSelector(getAddressBook)
-  const addressBook = List(addressBookObj)
+  const addressBook = useSelector(getAddressBookListSelector)
   const [selectedEntry, setSelectedEntry] = useState(null)
   const [editCreateEntryModalOpen, setEditCreateEntryModalOpen] = useState(
     false,
@@ -83,20 +83,20 @@ const AddressBookTable = ({ classes }: Props) => {
       }
     }
   },
-  [addressBookObj])
+  [addressBook])
 
   const safe = useSelector(safeSelector)
+  const safesList = useSelector(safesListSelector)
   const activeTokens = useSelector(extendedSafeTokensSelector)
   const { address, ethBalance, name } = safe
 
-  const newEntryModalHandler = (entry: AddressBookEntryType) => {
+  const newEntryModalHandler = (entry: AddressBookEntry) => {
     setEditCreateEntryModalOpen(false)
     dispatch(addAddressBookEntry(entry))
     setDefaultNewEntryAddress(null)
-    dispatch(addAddressBookEntry(entry, address))
   }
 
-  const editEntryModalHandler = (entry: AddressBookEntryType) => {
+  const editEntryModalHandler = (entry: AddressBookEntry) => {
     setSelectedEntry(null)
     setEditCreateEntryModalOpen(false)
     dispatch(updateAddressBookEntry(entry))
@@ -135,7 +135,8 @@ const AddressBookTable = ({ classes }: Props) => {
           disableLoadingOnEmptyTable
           defaultRowsPerPage={25}
         >
-          {(sortedData: List<OwnerRow>) => sortedData.map((row: any, index: number) => {
+          {(sortedData: List<OwnerRow>) => sortedData.map((row: AddressBookEntry, index: number) => {
+            const userOwner = isUserOwnerOnAnySafe(safesList, row.address)
             const hideBorderBottom = index >= 3
               && index === sortedData.size - 1
               && classes.noBorderBottom
@@ -180,11 +181,13 @@ const AddressBookTable = ({ classes }: Props) => {
                     />
                     <Img
                       alt="Remove entry"
-                      className={classes.removeEntryButton}
-                      src={RemoveOwnerIcon}
+                      className={userOwner ? classes.removeEntryButtonDisabled : classes.removeEntryButton}
+                      src={userOwner ? RemoveOwnerIconDisabled : RemoveOwnerIcon}
                       onClick={() => {
-                        setSelectedEntry({ entry: row })
-                        setDeleteEntryModalOpen(true)
+                        if (!userOwner) {
+                          setSelectedEntry({ entry: row })
+                          setDeleteEntryModalOpen(true)
+                        }
                       }}
                       testId={REMOVE_ENTRY_BUTTON}
                     />

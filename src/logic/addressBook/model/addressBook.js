@@ -7,7 +7,7 @@ export type AddressBookEntry = {
 }
 
 export type AddressBookProps = {
-  addressBookList: AddressBookEntry[]
+  addressBook: Map<string, AddressBookEntry>
 }
 
 export type AddressBook = RecordOf<AddressBookProps>
