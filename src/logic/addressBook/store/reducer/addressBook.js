@@ -1,7 +1,7 @@
 // @flow
-import { Map } from 'immutable'
+import { List, Map } from 'immutable'
 import { handleActions, type ActionType } from 'redux-actions'
-import type { AddressBookEntry } from '~/logic/addressBook/model/addressBook'
+import type { AddressBook, AddressBookEntry, AddressBookProps } from '~/logic/addressBook/model/addressBook'
 import { ADD_ENTRY } from '~/logic/addressBook/store/actions/addAddressBookEntry'
 import { UPDATE_ENTRY } from '~/logic/addressBook/store/actions/updateAddressBookEntry'
 import { REMOVE_ENTRY } from '~/logic/addressBook/store/actions/removeAddressBookEntry'
@@ -13,6 +13,17 @@ import { getAddressesListFromAdbk } from '~/logic/addressBook/utils'
 export const ADDRESS_BOOK_REDUCER_ID = 'addressBook'
 
 export type State = Map<string, Map<string, AddressBookEntry>>
+
+export const buildAddressBook = (storedAdbk: AddressBook): AddressBookProps => {
+  let addressBookBuilt = Map([])
+  Object.entries(storedAdbk).forEach((adbkProps: Array<string, AddressBookEntry[]>) => {
+    const safeAddress = adbkProps[0]
+    const adbkSafeEntries = List(adbkProps[1])
+    addressBookBuilt = addressBookBuilt.set(safeAddress, adbkSafeEntries)
+  })
+  return addressBookBuilt
+}
+
 
 export default handleActions<State, *>(
   {
@@ -40,12 +51,13 @@ export default handleActions<State, *>(
           adbkMap.keySeq()
             .forEach((safeAddress) => {
               const safeAddressBook = state.getIn(['addressBook', safeAddress])
+
               if (safeAddressBook) {
                 const adbkAddressList = getAddressesListFromAdbk(safeAddressBook)
                 const found = adbkAddressList.includes(entry.address)
                 if (!found) {
-                  safeAddressBook.push(entry)
-                  map.setIn(['addressBook', safeAddress], safeAddressBook)
+                  const updatedSafeAdbkList = safeAddressBook.push(entry)
+                  map.setIn(['addressBook', safeAddress], updatedSafeAdbkList)
                 }
               }
             })
@@ -62,10 +74,10 @@ export default handleActions<State, *>(
           .get('addressBook')
           .keySeq()
           .forEach((safeAddress) => {
-            const entriesList = state.getIn(['addressBook', safeAddress])
+            const entriesList: List<AddressBookEntry> = state.getIn(['addressBook', safeAddress])
             const entryIndex = entriesList.findIndex((entryItem) => sameAddress(entryItem.address, entry.address))
-            entriesList[entryIndex] = entry
-            map.setIn(['addressBook', safeAddress], entriesList)
+            const updatedEntriesList = entriesList.set(entryIndex, entry)
+            map.setIn(['addressBook', safeAddress], updatedEntriesList)
           })
       })
 
@@ -81,9 +93,8 @@ export default handleActions<State, *>(
           .forEach((safeAddress) => {
             const entriesList = state.getIn(['addressBook', safeAddress])
             const entryIndex = entriesList.findIndex((entry) => sameAddress(entry.address, entryAddress))
-            entriesList.splice(entryIndex, 1)
-            const currentList = state.getIn(['addressBook', safeAddress])
-            map.setIn(['addressBook', safeAddress], currentList)
+            const updatedEntriesList = entriesList.remove(entryIndex)
+            map.setIn(['addressBook', safeAddress], updatedEntriesList)
           })
       })
       return newState

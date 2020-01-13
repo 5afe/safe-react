@@ -9,13 +9,12 @@ import { enhanceSnackbarForAction, getNotificationsFromTxType } from '~/logic/no
 import { TX_NOTIFICATION_TYPES } from '~/logic/safe/transactions'
 import enqueueSnackbar from '~/logic/notifications/store/actions/enqueueSnackbar'
 import { saveAddressBook } from '~/logic/addressBook/utils'
-import { UPDATE_ENTRY_NAME } from '~/logic/addressBook/store/actions/updateAddressBookEntryName'
+import type { AddressBookProps } from '~/logic/addressBook/model/addressBook'
 
 const watchedActions = [
   ADD_ENTRY,
   REMOVE_ENTRY,
   UPDATE_ENTRY,
-  UPDATE_ENTRY_NAME,
 ]
 
 
@@ -25,8 +24,10 @@ const addressBookMiddleware = (store: Store<GlobalState>) => (next: Function) =>
   if (watchedActions.includes(action.type)) {
     const state: GlobalState = store.getState()
     const { dispatch } = store
-    const addressBook = addressBookMapSelector(state)
-    await saveAddressBook(addressBook)
+    const addressBook: AddressBookProps = addressBookMapSelector(state)
+    if (addressBook) {
+      await saveAddressBook(addressBook)
+    }
 
     switch (action.type) {
       case ADD_ENTRY: {

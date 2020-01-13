@@ -1,6 +1,5 @@
 // @flow
 import { useSelector } from 'react-redux'
-import { List } from 'immutable'
 import type { AddressBook, AddressBookProps } from '~/logic/addressBook/model/addressBook'
 import { loadFromStorage, saveToStorage } from '~/utils/storage'
 import { getAddressBook } from '~/logic/addressBook/store/selectors'
@@ -16,16 +15,18 @@ export const getAddressBookFromStorage = async (): Promise<AddressBookProps | []
 
 export const saveAddressBook = async (addressBook: AddressBook) => {
   try {
-    await saveToStorage(ADDRESS_BOOK_STORAGE_KEY, addressBook)
+    await saveToStorage(ADDRESS_BOOK_STORAGE_KEY, addressBook.toJSON())
   } catch (err) {
     console.error('Error storing addressBook in localstorage', err)
   }
 }
 
+export const getAddressesListFromAdbk = (addressBook: AddressBook) => Array.from(addressBook).map((entry) => entry.address)
+
 const getNameFromAdbk = (addressBook: AddressBook, userAddress: string): string | null => {
   const result = addressBook.filter((addressBookItem) => addressBookItem.address === userAddress)
-  if (result.length > 0) {
-    return result[0].name
+  if (result.size > 0) {
+    return result.get(0).name
   }
   return null
 }
@@ -52,5 +53,3 @@ export const getOwnersWithNameFromAddressBook = (addressBook: AddressBook, owner
   })
   return ownersListWithAdbkNames
 }
-
-export const getAddressesListFromAdbk = (addressBook: AddressBook) => Array.from(addressBook).map((entry) => entry.address)

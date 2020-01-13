@@ -20,7 +20,7 @@ import { styles } from './style'
 import AddressInput from '~/components/forms/AddressInput'
 import type { AddressBookEntry } from '~/logic/addressBook/model/addressBook'
 import {
-  getAddressBook,
+  getAddressBookListSelector,
 } from '~/logic/addressBook/store/selectors'
 import { getAddressesListFromAdbk } from '~/logic/addressBook/utils'
 
@@ -55,9 +55,9 @@ const CreateEditEntryModalComponent = ({
     }
   }
 
-  const addressBook = useSelector(getAddressBook)
+  const addressBook = useSelector(getAddressBookListSelector)
   const addressBookAddressesList = getAddressesListFromAdbk(addressBook)
-  const entryDoesntExist = uniqueAddress(addressBookAddressesList.map((address) => address))
+  const entryDoesntExist = uniqueAddress(addressBookAddressesList)
   return (
     <Modal
       title={entryToEdit ? 'Edit entry' : 'Create new entry'}
