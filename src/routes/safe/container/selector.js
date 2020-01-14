@@ -159,7 +159,7 @@ const extendedTransactionsSelector: Selector<
         replacementTransaction = transactions.size > 1
           && transactions.findLast(
             (transaction) => transaction.isExecuted
-              && typeof transaction.nonce !== 'undefined'
+              && transaction.nonce != null
               && transaction.nonce >= tx.nonce,
           )
         if (replacementTransaction) {
