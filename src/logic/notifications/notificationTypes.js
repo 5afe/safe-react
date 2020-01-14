@@ -89,6 +89,7 @@ export const NOTIFICATIONS: Notifications = {
       variant: SUCCESS,
       persist: false,
       autoHideDuration: shortDuration,
+      preventDuplicate: true,
     },
   },
   UNLOCK_WALLET_MSG: {
