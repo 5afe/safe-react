@@ -69,7 +69,8 @@ const ApproveTxModal = ({
   const [approveAndExecute, setApproveAndExecute] = useState<boolean>(canExecute)
   const [gasCosts, setGasCosts] = useState<string>('< 0.001')
   const { title, description } = getModalTitleAndDescription(thresholdReached)
-  const oneConfirmationLeft = !thresholdReached && tx.confirmations.size + 1 >= threshold
+  const oneConfirmationLeft = !thresholdReached && tx.confirmations.size + 1 === threshold
+  const isTheTxReadyToBeExecuted = oneConfirmationLeft ? true : thresholdReached && tx.confirmations.size + 1 >= threshold
 
   useEffect(() => {
     let isCurrent = true
@@ -109,7 +110,7 @@ const ApproveTxModal = ({
       notifiedTransaction: TX_NOTIFICATION_TYPES.CONFIRMATION_TX,
       enqueueSnackbar,
       closeSnackbar,
-      approveAndExecute: canExecute && approveAndExecute && oneConfirmationLeft,
+      approveAndExecute: canExecute && approveAndExecute && isTheTxReadyToBeExecuted,
     })
     onClose()
   }
