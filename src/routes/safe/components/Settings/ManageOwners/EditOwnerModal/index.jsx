@@ -35,7 +35,7 @@ type Props = {
   editSafeOwner: Function,
   enqueueSnackbar: Function,
   closeSnackbar: Function,
-  updateAddressBookEntryName: Function,
+  updateAddressBookEntry: Function,
 }
 
 const EditOwnerComponent = ({
@@ -48,16 +48,12 @@ const EditOwnerComponent = ({
   editSafeOwner,
   enqueueSnackbar,
   closeSnackbar,
-  updateAddressBookEntryName,
+  updateAddressBookEntry,
 }: Props) => {
   const handleSubmit = (values) => {
     const { ownerName } = values
     editSafeOwner({ safeAddress, ownerAddress, ownerName })
-    updateAddressBookEntryName(
-      ownerName,
-      ownerAddress,
-      safeAddress,
-    )
+    updateAddressBookEntry({ address: ownerAddress, name: ownerName })
     const notification = getNotificationsFromTxType(TX_NOTIFICATION_TYPES.OWNER_NAME_CHANGE_TX)
     showSnackbar(notification.afterExecution.noMoreConfirmationsNeeded, enqueueSnackbar, closeSnackbar)
 

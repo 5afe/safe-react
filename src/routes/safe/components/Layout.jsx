@@ -52,7 +52,7 @@ type Props = SelectorProps &
     location: Object,
     history: Object,
     fetchCurrencyValues: Function,
-    updateAddressBookEntryName: Function,
+    updateAddressBookEntry: Function,
   }
 
 const Layout = (props: Props) => {
@@ -84,7 +84,7 @@ const Layout = (props: Props) => {
     fetchCurrencyValues,
     currencyValues,
     addressBook,
-    updateAddressBookEntryName,
+    updateAddressBookEntry,
   } = props
 
   const handleCallToRouter = (_, value) => {
@@ -216,7 +216,7 @@ const Layout = (props: Props) => {
               createTransaction={createTransaction}
               safe={safe}
               addressBook={addressBook}
-              updateAddressBookEntryName={updateAddressBookEntryName}
+              updateAddressBookEntry={updateAddressBookEntry}
             />
           )}
         />

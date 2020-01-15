@@ -58,7 +58,7 @@ type Props = {
   granted: boolean,
   safe: Safe,
   addressBook: AddressBook,
-  updateAddressBookEntryName: Function,
+  updateAddressBookEntry: Function,
 }
 
 type State = {
@@ -119,7 +119,7 @@ class ManageOwners extends React.Component<Props, State> {
       granted,
       safe,
       addressBook,
-      updateAddressBookEntryName,
+      updateAddressBookEntry,
     } = this.props
     const {
       showAddOwner,
@@ -272,7 +272,7 @@ class ManageOwners extends React.Component<Props, State> {
           selectedOwnerName={selectedOwnerName}
           owners={owners}
           editSafeOwner={editSafeOwner}
-          updateAddressBookEntryName={updateAddressBookEntryName}
+          updateAddressBookEntry={updateAddressBookEntry}
         />
       </>
     )
