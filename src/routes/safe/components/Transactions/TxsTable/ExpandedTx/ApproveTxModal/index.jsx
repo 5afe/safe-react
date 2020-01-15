@@ -70,7 +70,7 @@ const ApproveTxModal = ({
   const [gasCosts, setGasCosts] = useState<string>('< 0.001')
   const { title, description } = getModalTitleAndDescription(thresholdReached)
   const oneConfirmationLeft = !thresholdReached && tx.confirmations.size + 1 === threshold
-  const isTheTxReadyToBeExecuted = oneConfirmationLeft ? true : thresholdReached && tx.confirmations.size + 1 >= threshold
+  const isTheTxReadyToBeExecuted = oneConfirmationLeft ? true : thresholdReached
 
   useEffect(() => {
     let isCurrent = true
