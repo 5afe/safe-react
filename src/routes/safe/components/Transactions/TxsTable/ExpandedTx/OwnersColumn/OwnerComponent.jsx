@@ -12,6 +12,8 @@ import { styles } from './style'
 import ConfirmSmallGreyIcon from './assets/confirm-small-grey.svg'
 import ConfirmSmallGreenIcon from './assets/confirm-small-green.svg'
 import ConfirmSmallFilledIcon from './assets/confirm-small-filled.svg'
+import { getNameFromAddressBook } from '~/logic/addressBook/store/selectors'
+
 
 export const CONFIRM_TX_BTN_TEST_ID = 'confirm-btn'
 export const EXECUTE_TX_BTN_TEST_ID = 'execute-btn'
@@ -40,65 +42,69 @@ const OwnerComponent = ({
   executor,
   confirmed,
   thresholdReached,
-}: OwnerProps) => (
-  <Block className={classes.container}>
-    <div
-      className={
-        confirmed || thresholdReached || executor
-          ? classes.verticalLineProgressDone
-          : classes.verticalLineProgressPending
-      }
-    />
-    <div className={classes.iconState}>
-      {confirmed ? (
-        <Img src={ConfirmSmallFilledIcon} />
-      ) : thresholdReached || executor ? (
-        <Img src={ConfirmSmallGreenIcon} />
-      ) : (
-        <Img src={ConfirmSmallGreyIcon} />
-      )}
-    </div>
-    <Identicon address={owner.address} diameter={32} className={classes.icon} />
-    <Block>
-      <Paragraph className={classes.name} noMargin>
-        {owner.name}
-      </Paragraph>
-      <EtherscanLink
-        className={classes.address}
-        type="address"
-        value={owner.address}
-        cut={4}
+}: OwnerProps) => {
+  const nameInAdbk = getNameFromAddressBook(owner.address)
+  const ownerName = owner.name === 'UNKNOWN' && nameInAdbk ? nameInAdbk : owner.name
+  return (
+    <Block className={classes.container}>
+      <div
+        className={
+          confirmed || thresholdReached || executor
+            ? classes.verticalLineProgressDone
+            : classes.verticalLineProgressPending
+        }
       />
+      <div className={classes.iconState}>
+        {confirmed ? (
+          <Img src={ConfirmSmallFilledIcon} />
+        ) : thresholdReached || executor ? (
+          <Img src={ConfirmSmallGreenIcon} />
+        ) : (
+          <Img src={ConfirmSmallGreyIcon} />
+        )}
+      </div>
+      <Identicon address={owner.address} diameter={32} className={classes.icon} />
+      <Block>
+        <Paragraph className={classes.name} noMargin>
+          {ownerName}
+        </Paragraph>
+        <EtherscanLink
+          className={classes.address}
+          type="address"
+          value={owner.address}
+          cut={4}
+        />
+      </Block>
+      <Block className={classes.spacer} />
+      {showConfirmBtn && owner.address === userAddress && (
+        <Button
+          className={classes.button}
+          variant="contained"
+          minWidth={140}
+          color="primary"
+          onClick={onTxConfirm}
+          testId={CONFIRM_TX_BTN_TEST_ID}
+        >
+          Confirm tx
+        </Button>
+      )}
+      {showExecuteBtn && owner.address === userAddress && (
+        <Button
+          className={classes.button}
+          variant="contained"
+          minWidth={140}
+          color="primary"
+          onClick={onTxExecute}
+          testId={EXECUTE_TX_BTN_TEST_ID}
+        >
+          Execute tx
+        </Button>
+      )}
+      {owner.address === executor && (
+        <Block className={classes.executor}>Executor</Block>
+      )}
     </Block>
-    <Block className={classes.spacer} />
-    {showConfirmBtn && owner.address === userAddress && (
-      <Button
-        className={classes.button}
-        variant="contained"
-        minWidth={140}
-        color="primary"
-        onClick={onTxConfirm}
-        testId={CONFIRM_TX_BTN_TEST_ID}
-      >
-        Confirm tx
-      </Button>
-    )}
-    {showExecuteBtn && owner.address === userAddress && (
-      <Button
-        className={classes.button}
-        variant="contained"
-        minWidth={140}
-        color="primary"
-        onClick={onTxExecute}
-        testId={EXECUTE_TX_BTN_TEST_ID}
-      >
-        Execute tx
-      </Button>
-    )}
-    {owner.address === executor && (
-      <Block className={classes.executor}>Executor</Block>
-    )}
-  </Block>
-)
+  )
+}
 
 export default withStyles(styles)(OwnerComponent)

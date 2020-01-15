@@ -11,6 +11,9 @@ import { md, lg } from '~/theme/variables'
 import { getTxData } from './utils'
 import { shortVersionOf } from '~/logic/wallets/ethAddresses'
 import LinkWithRef from '~/components/layout/Link'
+import OwnerAddressTableCell from '~/routes/safe/components/Settings/ManageOwners/OwnerAddressTableCell'
+import { getNameFromAddressBook } from '~/logic/addressBook/store/selectors'
+
 
 export const TRANSACTIONS_DESC_ADD_OWNER_TEST_ID = 'tx-description-add-owner'
 export const TRANSACTIONS_DESC_REMOVE_OWNER_TEST_ID = 'tx-description-remove-owner'
@@ -21,7 +24,9 @@ export const TRANSACTIONS_DESC_CUSTOM_DATA_TEST_ID = 'tx-description-custom-data
 
 export const styles = () => ({
   txDataContainer: {
-    padding: `${lg} ${md}`,
+    paddingTop: lg,
+    paddingLeft: md,
+    paddingBottom: md,
   },
   txData: {
     wordBreak: 'break-all',
@@ -58,48 +63,62 @@ type CustomDescProps = {
   classes: Object,
 }
 
-const TransferDescription = ({ amount = '', recipient }: TransferDescProps) => (
-  <Block data-testid={TRANSACTIONS_DESC_SEND_TEST_ID}>
-    <Bold>
-      Send
-      {' '}
-      {amount}
-      {' '}
-      to:
-    </Bold>
-    <EtherscanLink type="address" value={recipient} />
-  </Block>
-)
+const TransferDescription = ({ amount = '', recipient }: TransferDescProps) => {
+  const recipientName = getNameFromAddressBook(recipient)
+  return (
+    <Block data-testid={TRANSACTIONS_DESC_SEND_TEST_ID}>
+      <Bold>
+        Send
+        {' '}
+        {amount}
+        {' '}
+        to:
+      </Bold>
+      {recipientName ? <OwnerAddressTableCell address={recipient} showLinks knownAddress userName={recipientName} />
+        : <EtherscanLink type="address" value={recipient} knownAddress={false} />}
+    </Block>
+  )
+}
 
-const SettingsDescription = ({ removedOwner, addedOwner, newThreshold }: DescriptionDescProps) => (
-  <>
-    {removedOwner && (
-      <Block data-testid={TRANSACTIONS_DESC_REMOVE_OWNER_TEST_ID}>
-        <Bold>Remove owner:</Bold>
-        <EtherscanLink type="address" value={removedOwner} />
-      </Block>
-    )}
-    {addedOwner && (
-      <Block data-testid={TRANSACTIONS_DESC_ADD_OWNER_TEST_ID}>
-        <Bold>Add owner:</Bold>
-        <EtherscanLink type="address" value={addedOwner} />
-      </Block>
-    )}
-    {newThreshold && (
-      <Block data-testid={TRANSACTIONS_DESC_CHANGE_THRESHOLD_TEST_ID}>
-        <Bold>Change required confirmations:</Bold>
-        <Paragraph size="md" noMargin>
-          {newThreshold}
-        </Paragraph>
-      </Block>
-    )}
-  </>
-)
+const SettingsDescription = ({
+  removedOwner, addedOwner, newThreshold,
+}: DescriptionDescProps) => {
+  const ownerChangedName = removedOwner ? getNameFromAddressBook(removedOwner) : getNameFromAddressBook(addedOwner)
+  return (
+    <>
+      {removedOwner && (
+        <Block data-testid={TRANSACTIONS_DESC_REMOVE_OWNER_TEST_ID}>
+          <Bold>Remove owner:</Bold>
+          {ownerChangedName
+            ? <OwnerAddressTableCell address={removedOwner} showLinks knownAddress userName={ownerChangedName} />
+            : <EtherscanLink type="address" value={removedOwner} knownAddress={false} />}
+        </Block>
+      )}
+      {addedOwner && (
+        <Block data-testid={TRANSACTIONS_DESC_ADD_OWNER_TEST_ID}>
+          <Bold>Add owner:</Bold>
+          {ownerChangedName
+            ? <OwnerAddressTableCell address={addedOwner} showLinks knownAddress userName={ownerChangedName} />
+            : <EtherscanLink type="address" value={addedOwner} knownAddress={false} />}
+        </Block>
+      )}
+      {newThreshold && (
+        <Block data-testid={TRANSACTIONS_DESC_CHANGE_THRESHOLD_TEST_ID}>
+          <Bold>Change required confirmations:</Bold>
+          <Paragraph size="md" noMargin>
+            {newThreshold}
+          </Paragraph>
+        </Block>
+      )}
+    </>
+  )
+}
 
 const CustomDescription = ({
   data, amount = 0, recipient, classes,
 }: CustomDescProps) => {
   const [showTxData, setShowTxData] = useState(false)
+  const recipientName = getNameFromAddressBook(recipient)
   return (
     <>
       <Block data-testid={TRANSACTIONS_DESC_CUSTOM_VALUE_TEST_ID}>
@@ -110,7 +129,7 @@ const CustomDescription = ({
           {' '}
           to:
         </Bold>
-        <EtherscanLink type="address" value={recipient} />
+        { recipientName ? <OwnerAddressTableCell address={recipient} showLinks knownAddress userName={recipientName} /> : <EtherscanLink type="address" value={recipient} knownAddress={false} />}
       </Block>
       <Block className={classes.txData} data-testid={TRANSACTIONS_DESC_CUSTOM_DATA_TEST_ID}>
         <Bold>Data (hex encoded):</Bold>

@@ -70,6 +70,16 @@ export const safeTransactionsSelector: Selector<GlobalState, RouterProps, List<T
   },
 )
 
+export const addressBookQueryParamsSelector = (state: GlobalState): string => {
+  const { location } = state.router
+  let entryAddressToEditOrCreateNew = null
+  if (location && location.query) {
+    const { entryAddress } = location.query
+    entryAddressToEditOrCreateNew = entryAddress
+  }
+  return entryAddressToEditOrCreateNew
+}
+
 export const safeParamAddressFromStateSelector = (state: GlobalState): string => {
   const match = matchPath(
     state.router.location.pathname,
