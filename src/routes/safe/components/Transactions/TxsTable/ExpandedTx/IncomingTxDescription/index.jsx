@@ -8,7 +8,8 @@ import Block from '~/components/layout/Block'
 import { md, lg } from '~/theme/variables'
 import { getIncomingTxAmount } from '~/routes/safe/components/Transactions/TxsTable/columns'
 import OwnerAddressTableCell from '~/routes/safe/components/Settings/ManageOwners/OwnerAddressTableCell'
-import { getNameFromAddressBook } from '~/logic/addressBook/utils'
+import { getNameFromAddressBook } from '~/logic/addressBook/store/selectors'
+
 
 export const TRANSACTIONS_DESC_INCOMING_TEST_ID = 'tx-description-incoming'
 
@@ -32,7 +33,7 @@ type TransferDescProps = {
 }
 
 const TransferDescription = ({ value = '', from, txFromName }: TransferDescProps) => (
-  <div data-testid={TRANSACTIONS_DESC_INCOMING_TEST_ID}>
+  <Block data-testid={TRANSACTIONS_DESC_INCOMING_TEST_ID}>
     <Bold>
       Received
       {' '}
@@ -43,7 +44,7 @@ const TransferDescription = ({ value = '', from, txFromName }: TransferDescProps
     <br />
     {txFromName ? <OwnerAddressTableCell address={from} showLinks userName={txFromName} knownAddress />
       : <EtherscanLink type="address" value={from} knownAddress={false} />}
-  </div>
+  </Block>
 )
 
 
