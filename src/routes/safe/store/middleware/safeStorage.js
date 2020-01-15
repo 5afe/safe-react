@@ -19,6 +19,7 @@ import type { Token } from '~/logic/tokens/store/model/token'
 import { saveActiveTokens } from '~/logic/tokens/utils/tokensStorage'
 import { ACTIVATE_TOKEN_FOR_ALL_SAFES } from '~/routes/safe/store/actions/activateTokenForAllSafes'
 import { SET_DEFAULT_SAFE } from '~/routes/safe/store/actions/setDefaultSafe'
+import { addAddressBookEntry } from '~/logic/addressBook/store/actions/addAddressBookEntry'
 
 const watchedActions = [
   ADD_SAFE,
@@ -52,12 +53,22 @@ const safeStorageMware = (store: Store<GlobalState>) => (next: Function) => asyn
 
   if (watchedActions.includes(action.type)) {
     const state: GlobalState = store.getState()
+    const { dispatch } = store
     const safes = safesMapSelector(state)
     await saveSafes(safes.toJSON())
 
     switch (action.type) {
       case ACTIVATE_TOKEN_FOR_ALL_SAFES: {
         recalculateActiveTokens(state)
+        break
+      }
+      case ADD_SAFE: {
+        const { safe } = action.payload
+        const ownersArray = safe.owners.toJS()
+        // Adds the owners to the address book
+        ownersArray.forEach((owner) => {
+          dispatch(addAddressBookEntry(owner))
+        })
         break
       }
       case UPDATE_SAFE: {

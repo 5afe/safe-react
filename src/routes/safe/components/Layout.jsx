@@ -219,19 +219,7 @@ const Layout = (props: Props) => {
           exact
           path={`${match.path}/address-book`}
           render={() => (
-            <AddressBookTable
-              granted={granted}
-              safeAddress={address}
-              safeName={name}
-              etherScanLink={etherScanLink}
-              updateSafe={updateSafe}
-              threshold={safe.threshold}
-              owners={safe.owners}
-              network={network}
-              userAddress={userAddress}
-              createTransaction={createTransaction}
-              safe={safe}
-            />
+            <AddressBookTable />
           )}
         />
         <Redirect to={`${match.path}/balances`} />

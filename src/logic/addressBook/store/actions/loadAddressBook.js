@@ -1,18 +1,7 @@
 // @flow
-import type { Dispatch as ReduxDispatch } from 'redux'
-import { type GlobalState } from '~/store/index'
-import { getAddressBookFromStorage } from '~/logic/addressBook/utils'
-import { addAddressBook } from '~/logic/addressBook/store/actions/addAddressBook'
+import { createAction } from 'redux-actions'
+import type { AddressBook } from '~/logic/addressBook/model/addressBook'
 
-const loadAddressBook = () => async (dispatch: ReduxDispatch<GlobalState>) => {
-  try {
-    const addressBook = await getAddressBookFromStorage()
+export const LOAD_ADDRESS_BOOK = 'LOAD_ADDRESS_BOOK'
 
-    dispatch(addAddressBook(addressBook))
-  } catch (err) {
-    // eslint-disable-next-line
-    console.error('Error while loading active tokens from storage:', err)
-  }
-}
-
-export default loadAddressBook
+export const loadAddressBook = createAction<string, *, *>(LOAD_ADDRESS_BOOK, (addressBook: AddressBook) => ({ addressBook }))

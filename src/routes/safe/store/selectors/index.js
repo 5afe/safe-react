@@ -115,7 +115,7 @@ export type SafeSelectorProps = Safe | typeof undefined
 
 export const safeSelector: Selector<GlobalState, RouterProps, SafeSelectorProps> = createSelector(
   safesMapSelector,
-  safeParamAddressSelector,
+  safeParamAddressFromStateSelector,
   (safes: Map<string, Safe>, address: string) => {
     if (!address) {
       return undefined

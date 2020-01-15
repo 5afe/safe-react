@@ -30,6 +30,7 @@ type Props = {
   selectedToken: string,
   createTransaction: Function,
   activeScreenType: ActiveScreen,
+  recipientAddress?: string,
 }
 
 type TxStateType =
@@ -70,6 +71,7 @@ const Send = ({
   selectedToken,
   createTransaction,
   activeScreenType,
+  recipientAddress,
 }: Props) => {
   const [activeScreen, setActiveScreen] = useState<ActiveScreen>(activeScreenType || 'chooseTxType')
   const [tx, setTx] = useState<TxStateType>({})
@@ -117,6 +119,7 @@ const Send = ({
             selectedToken={selectedToken}
             onSubmit={handleTxCreation}
             initialValues={tx}
+            recipientAddress={recipientAddress}
           />
         )}
         {activeScreen === 'reviewTx' && (

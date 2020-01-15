@@ -34,7 +34,7 @@ class SafeView extends React.Component<Props, State> {
 
   componentDidMount() {
     const {
-      fetchSafe, activeTokens, safeUrl, fetchTokenBalances, fetchTokens, fetchTransactions, fetchCurrencyValues,
+      fetchSafe, activeTokens, safeUrl, fetchTokenBalances, fetchTokens, fetchTransactions, fetchCurrencyValues, loadAddressBook,
     } = this.props
 
     fetchSafe(safeUrl).then(() => {
@@ -45,6 +45,7 @@ class SafeView extends React.Component<Props, State> {
     // fetch tokens there to get symbols for tokens in TXs list
     fetchTokens()
     fetchCurrencyValues(safeUrl)
+    loadAddressBook()
 
     this.intervalId = setInterval(() => {
       this.checkForUpdates()
