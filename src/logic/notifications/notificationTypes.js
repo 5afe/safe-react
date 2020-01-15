@@ -63,6 +63,11 @@ export type Notifications = {
   // Rinkeby version
   RINKEBY_VERSION_MSG: Notification,
   WRONG_NETWORK_MSG: Notification,
+
+  // AddressBook
+  ADDRESS_BOOK_NEW_ENTRY_SUCCESS: Notification,
+  ADDRESS_BOOK_EDIT_ENTRY_SUCCESS: Notification,
+  ADDRESS_BOOK_DELETE_ENTRY_SUCCESS: Notification
 }
 
 export const NOTIFICATIONS: Notifications = {
@@ -201,5 +206,19 @@ export const NOTIFICATIONS: Notifications = {
   WRONG_NETWORK_MSG: {
     message: `Wrong network: Please use ${capitalize(getNetwork())}`,
     options: { variant: WARNING, persist: true, preventDuplicate: true },
+  },
+
+  // Address book
+  ADDRESS_BOOK_NEW_ENTRY_SUCCESS: {
+    message: 'Entry created successfully',
+    options: { variant: SUCCESS, persist: false, preventDuplicate: false },
+  },
+  ADDRESS_BOOK_EDIT_ENTRY_SUCCESS: {
+    message: 'Entry saved successfully',
+    options: { variant: SUCCESS, persist: false, preventDuplicate: false },
+  },
+  ADDRESS_BOOK_DELETE_ENTRY_SUCCESS: {
+    message: 'Entry deleted successfully',
+    options: { variant: SUCCESS, persist: false, preventDuplicate: false },
   },
 }

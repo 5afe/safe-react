@@ -1,19 +1,38 @@
 // @flow
 import { List } from 'immutable'
+import { type Confirmation } from '~/routes/safe/store/models/confirmation'
 
-const generateSignatureFrom = (account: string) => `000000000000000000000000${account.replace(
-  '0x',
-  '',
-)}000000000000000000000000000000000000000000000000000000000000000001`
+// https://gnosis-safe.readthedocs.io/en/latest/contracts/signatures.html#pre-validated-signatures
+// https://github.com/gnosis/safe-contracts/blob/master/test/gnosisSafeTeamEdition.js#L26
+export const generateSignaturesFromTxConfirmations = (
+  confirmations: List<Confirmation>,
+  preApprovingOwner?: string,
+) => {
+  // The constant parts need to be sorted so that the recovered signers are sorted ascending
+  // (natural order) by address (not checksummed).
+  const confirmationsMap = confirmations.reduce((map, obj) => {
+    map[obj.owner.address.toLowerCase()] = obj // eslint-disable-line no-param-reassign
+    return map
+  }, {})
 
-export const buildSignaturesFrom = (ownersWhoHasSigned: List<string>, sender: string) => {
-  const signatures = ownersWhoHasSigned.push(sender)
-  const orderedSignatures = signatures.sort() // JS by default sorts in a non case-senstive way
+  if (preApprovingOwner) {
+    confirmationsMap[preApprovingOwner.toLowerCase()] = { owner: preApprovingOwner }
+  }
 
   let sigs = '0x'
-  orderedSignatures.forEach((owner: string) => {
-    sigs += generateSignatureFrom(owner)
-  })
-
+  Object.keys(confirmationsMap)
+    .sort()
+    .forEach((addr) => {
+      const conf = confirmationsMap[addr]
+      if (conf.signature) {
+        sigs += conf.signature.slice(2)
+      } else {
+        // https://gnosis-safe.readthedocs.io/en/latest/contracts/signatures.html#pre-validated-signatures
+        sigs += `000000000000000000000000${addr.replace(
+          '0x',
+          '',
+        )}000000000000000000000000000000000000000000000000000000000000000001`
+      }
+    })
   return sigs
 }

@@ -40,6 +40,7 @@ type Props = {
   tokens: List<Token>,
   onSubmit: Function,
   initialValues: Object,
+  recipientAddress?: string,
 }
 
 const formMutators = {
@@ -64,6 +65,7 @@ const SendFunds = ({
   selectedToken,
   initialValues,
   onSubmit,
+  recipientAddress,
 }: Props) => {
   const [qrModalOpen, setQrModalOpen] = useState<boolean>(false)
 
@@ -130,6 +132,7 @@ const SendFunds = ({
                       text="Recipient*"
                       className={classes.addressInput}
                       fieldMutator={mutators.setRecipient}
+                      defaultValue={recipientAddress}
                     />
                   </Col>
                   <Col xs={1} center="xs" middle="xs" className={classes}>

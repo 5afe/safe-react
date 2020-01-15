@@ -25,6 +25,8 @@ import notifications, {
 import currencyValues, { CURRENCY_VALUES_KEY } from '~/logic/currencyValues/store/reducer/currencyValues'
 import cookies, { COOKIES_REDUCER_ID } from '~/logic/cookies/store/reducer/cookies'
 import notificationsMiddleware from '~/routes/safe/store/middleware/notificationsMiddleware'
+import addressBook, { ADDRESS_BOOK_REDUCER_ID } from '~/logic/addressBook/store/reducer/addressBook'
+import addressBookMiddleware from '~/logic/addressBook/store/middleware/addressBookMiddleware'
 
 
 export const history = createBrowserHistory()
@@ -32,7 +34,7 @@ export const history = createBrowserHistory()
 // eslint-disable-next-line
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
 const finalCreateStore = composeEnhancers(
-  applyMiddleware(thunk, routerMiddleware(history), safeStorage, providerWatcher, notificationsMiddleware),
+  applyMiddleware(thunk, routerMiddleware(history), safeStorage, providerWatcher, notificationsMiddleware, addressBookMiddleware),
 )
 
 export type GlobalState = {
@@ -56,6 +58,7 @@ const reducers: Reducer<GlobalState> = combineReducers({
   [NOTIFICATIONS_REDUCER_ID]: notifications,
   [CURRENCY_VALUES_KEY]: currencyValues,
   [COOKIES_REDUCER_ID]: cookies,
+  [ADDRESS_BOOK_REDUCER_ID]: addressBook,
 })
 
 export const store: Store<GlobalState> = createStore(reducers, finalCreateStore)
