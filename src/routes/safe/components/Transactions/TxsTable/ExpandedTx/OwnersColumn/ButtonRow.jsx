@@ -20,9 +20,6 @@ const styles = () => ({
   },
   button: {
     height: xl,
-    '&:hover': {
-      backgroundColor: '#d4d5d3',
-    },
   },
   icon: {
     width: '14px',
