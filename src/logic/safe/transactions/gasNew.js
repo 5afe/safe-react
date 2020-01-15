@@ -2,7 +2,7 @@
 import GnosisSafeSol from '@gnosis.pm/safe-contracts/build/contracts/GnosisSafe.json'
 import { type Transaction } from '~/routes/safe/store/models/transaction'
 import { getWeb3, getAccountFrom } from '~/logic/wallets/getWeb3'
-import { generateSignaturesFromTxConfirmations } from '~/routes/safe/store/actions/processTransaction'
+import { generateSignaturesFromTxConfirmations } from '~/logic/safe/safeTxSigner'
 import { calculateGasOf, calculateGasPrice } from '~/logic/wallets/ethTransactions'
 import { ZERO_ADDRESS } from '~/logic/wallets/ethAddresses'
 import { CALL } from '.'
