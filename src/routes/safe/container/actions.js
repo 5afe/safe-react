@@ -9,6 +9,7 @@ import updateSafe from '~/routes/safe/store/actions/updateSafe'
 import fetchTokens from '~/logic/tokens/store/actions/fetchTokens'
 import fetchCurrencyValues from '~/logic/currencyValues/store/actions/fetchCurrencyValues'
 import activateTokensByBalance from '~/logic/tokens/store/actions/activateTokensByBalance'
+import loadAddressBookFromStorage from '~/logic/addressBook/store/actions/loadAddressBookFromStorage'
 import updateUserStatus from '~/routes/safe/store/actions/updateUserStatus'
 
 export type Actions = {
@@ -23,7 +24,8 @@ export type Actions = {
   fetchEtherBalance: typeof fetchEtherBalance,
   activateTokensByBalance: typeof activateTokensByBalance,
   checkAndUpdateSafeOwners: typeof checkAndUpdateSafe,
-  fetchCurrencyValues: typeof fetchCurrencyValues
+  fetchCurrencyValues: typeof fetchCurrencyValues,
+  loadAddressBook: typeof loadAddressBookFromStorage
 }
 
 export default {
@@ -39,4 +41,5 @@ export default {
   fetchEtherBalance,
   fetchCurrencyValues,
   checkAndUpdateSafeOwners: checkAndUpdateSafe,
+  loadAddressBook: loadAddressBookFromStorage,
 }
