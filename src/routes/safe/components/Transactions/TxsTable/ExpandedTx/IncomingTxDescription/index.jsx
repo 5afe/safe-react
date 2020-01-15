@@ -32,7 +32,7 @@ type TransferDescProps = {
 }
 
 const TransferDescription = ({ value = '', from, txFromName }: TransferDescProps) => (
-  <div data-testid={TRANSACTIONS_DESC_INCOMING_TEST_ID}>
+  <Block data-testid={TRANSACTIONS_DESC_INCOMING_TEST_ID}>
     <Bold>
       Received
       {' '}
@@ -43,7 +43,7 @@ const TransferDescription = ({ value = '', from, txFromName }: TransferDescProps
     <br />
     {txFromName ? <OwnerAddressTableCell address={from} showLinks userName={txFromName} knownAddress />
       : <EtherscanLink type="address" value={from} knownAddress={false} />}
-  </div>
+  </Block>
 )
 
 
