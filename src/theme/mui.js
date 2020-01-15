@@ -73,6 +73,9 @@ const theme = createMuiTheme({
       },
       containedSecondary: {
         backgroundColor: error,
+        '&:hover': {
+          backgroundColor: '#d4d5d3',
+        },
       },
       outlinedPrimary: {
         border: `2px solid ${primary}`,
