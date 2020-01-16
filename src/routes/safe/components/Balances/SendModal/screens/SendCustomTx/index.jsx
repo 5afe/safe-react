@@ -2,12 +2,10 @@
 import React, { useState } from 'react'
 import { withStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
-import InputAdornment from '@material-ui/core/InputAdornment'
 import IconButton from '@material-ui/core/IconButton'
 import Paragraph from '~/components/layout/Paragraph'
 import Row from '~/components/layout/Row'
 import GnoForm from '~/components/forms/GnoForm'
-import AddressInput from '~/components/forms/AddressInput'
 import Col from '~/components/layout/Col'
 import Button from '~/components/layout/Button'
 import ScanQRModal from '~/components/ScanQRModal'
@@ -19,13 +17,15 @@ import Field from '~/components/forms/Field'
 import TextField from '~/components/forms/TextField'
 import TextareaField from '~/components/forms/TextareaField'
 import {
-  composeValidators, mustBeFloat, maxValue, mustBeEthereumContractAddress,
+  composeValidators, mustBeFloat, maxValue,
 } from '~/components/forms/validator'
 import SafeInfo from '~/routes/safe/components/Balances/SendModal/SafeInfo'
 import QRIcon from '~/assets/icons/qrcode.svg'
 import ArrowDown from '../assets/arrow-down.svg'
 import { styles } from './style'
 import { sm } from '~/theme/variables'
+import AddressBookInput from '~/routes/safe/components/Balances/SendModal/screens/AddressBookInput'
+
 
 type Props = {
   onClose: () => void,
@@ -96,7 +96,6 @@ const SendCustomTx = ({
             mutators.setRecipient(scannedAddress)
             closeQrModal()
           }
-
           return (
             <>
               <Block className={classes.formContainer}>
@@ -111,15 +110,7 @@ const SendCustomTx = ({
                 </Row>
                 <Row margin="md">
                   <Col xs={11}>
-                    <AddressInput
-                      name="recipientAddress"
-                      component={TextField}
-                      placeholder="Recipient*"
-                      text="Recipient*"
-                      className={classes.addressInput}
-                      fieldMutator={mutators.setRecipient}
-                      validators={[mustBeEthereumContractAddress]}
-                    />
+                    <AddressBookInput mutators={mutators} />
                   </Col>
                   <Col xs={1} center="xs" middle="xs" className={classes}>
                     <Img
@@ -154,9 +145,7 @@ const SendCustomTx = ({
                       placeholder="Value*"
                       text="Value*"
                       className={classes.addressInput}
-                      inputAdornment={{
-                        endAdornment: <InputAdornment position="end">ETH</InputAdornment>,
-                      }}
+                      fieldMutator={mutators.setRecipient}
                     />
                   </Col>
                 </Row>
