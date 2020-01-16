@@ -68,13 +68,13 @@ const notificationsMiddleware = (store: Store<GlobalState>) => (
       case ADD_INCOMING_TRANSACTIONS: {
         action.payload.forEach((incomingTransactions, safeAddress) => {
           const { latestIncomingTxBlock } = state.safes.get('safes').get(safeAddress)
-          const currentSession = state.currentSession.get('currentSession')
-          const viewedSafes = currentSession ? currentSession.get('viewedSafes') : []
-          const recurringUser = viewedSafes && viewedSafes.includes(safeAddress)
+          const viewedSafes = state.currentSession ? state.currentSession.get('viewedSafes') : []
+          const recurringUser = viewedSafes.includes(safeAddress)
 
           const newIncomingTransactions = incomingTransactions.filter(
             (tx) => tx.blockNumber > latestIncomingTxBlock,
           )
+
           const { message, ...TX_INCOMING_MSG } = NOTIFICATIONS.TX_INCOMING_MSG
 
           if (recurringUser) {
