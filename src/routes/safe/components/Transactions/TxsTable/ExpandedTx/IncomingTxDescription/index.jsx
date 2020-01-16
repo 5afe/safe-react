@@ -8,8 +8,7 @@ import Block from '~/components/layout/Block'
 import { md, lg } from '~/theme/variables'
 import { getIncomingTxAmount } from '~/routes/safe/components/Transactions/TxsTable/columns'
 import OwnerAddressTableCell from '~/routes/safe/components/Settings/ManageOwners/OwnerAddressTableCell'
-import { getNameFromAddressBook } from '~/logic/addressBook/store/selectors'
-
+import { getNameFromAddressBook } from '~/logic/addressBook/utils'
 
 export const TRANSACTIONS_DESC_INCOMING_TEST_ID = 'tx-description-incoming'
 

@@ -12,8 +12,7 @@ import { getTxData } from './utils'
 import { shortVersionOf } from '~/logic/wallets/ethAddresses'
 import LinkWithRef from '~/components/layout/Link'
 import OwnerAddressTableCell from '~/routes/safe/components/Settings/ManageOwners/OwnerAddressTableCell'
-import { getNameFromAddressBook } from '~/logic/addressBook/store/selectors'
-
+import { getNameFromAddressBook } from '~/logic/addressBook/utils'
 
 export const TRANSACTIONS_DESC_ADD_OWNER_TEST_ID = 'tx-description-add-owner'
 export const TRANSACTIONS_DESC_REMOVE_OWNER_TEST_ID = 'tx-description-remove-owner'

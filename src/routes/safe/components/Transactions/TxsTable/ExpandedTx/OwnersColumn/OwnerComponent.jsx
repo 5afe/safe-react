@@ -12,8 +12,7 @@ import { styles } from './style'
 import ConfirmSmallGreyIcon from './assets/confirm-small-grey.svg'
 import ConfirmSmallGreenIcon from './assets/confirm-small-green.svg'
 import ConfirmSmallFilledIcon from './assets/confirm-small-filled.svg'
-import { getNameFromAddressBook } from '~/logic/addressBook/store/selectors'
-
+import { getNameFromAddressBook } from '~/logic/addressBook/utils'
 
 export const CONFIRM_TX_BTN_TEST_ID = 'confirm-btn'
 export const EXECUTE_TX_BTN_TEST_ID = 'execute-btn'

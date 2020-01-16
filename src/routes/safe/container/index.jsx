@@ -130,6 +130,8 @@ class SafeView extends React.Component<Props, State> {
       currencySelected,
       fetchCurrencyValues,
       currencyValues,
+      addressBook,
+      updateAddressBookEntry,
     } = this.props
 
     return (
@@ -158,6 +160,8 @@ class SafeView extends React.Component<Props, State> {
           currencySelected={currencySelected}
           fetchCurrencyValues={fetchCurrencyValues}
           currencyValues={currencyValues}
+          addressBook={addressBook}
+          updateAddressBookEntry={updateAddressBookEntry}
         />
       </Page>
     )

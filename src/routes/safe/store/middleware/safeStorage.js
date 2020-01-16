@@ -67,7 +67,7 @@ const safeStorageMware = (store: Store<GlobalState>) => (next: Function) => asyn
         const ownersArray = safe.owners.toJS()
         // Adds the owners to the address book
         ownersArray.forEach((owner) => {
-          dispatch(addAddressBookEntry(owner))
+          dispatch(addAddressBookEntry({ ...owner, isOwner: true }))
         })
         break
       }
