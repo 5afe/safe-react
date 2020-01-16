@@ -42,15 +42,15 @@ class SafeView extends React.Component<Props, State> {
       fetchTransactions,
       fetchCurrencyValues,
       loadAddressBook,
-      loadCurrentSession,
       addViewedSafe,
     } = this.props
 
     fetchSafe(safeUrl)
-      // The safe needs to be loaded before fetching the transactions
-      .then(() => fetchTransactions(safeUrl))
-      .then(() => loadCurrentSession())
-      .then(() => addViewedSafe(safeUrl))
+      .then(() => {
+        // The safe needs to be loaded before fetching the transactions
+        fetchTransactions(safeUrl)
+        addViewedSafe(safeUrl)
+      })
     fetchTokenBalances(safeUrl, activeTokens)
     // fetch tokens there to get symbols for tokens in TXs list
     fetchTokens()

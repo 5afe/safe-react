@@ -7,6 +7,7 @@ import Root from '~/components/Root'
 import loadActiveTokens from '~/logic/tokens/store/actions/loadActiveTokens'
 import loadDefaultSafe from '~/routes/safe/store/actions/loadDefaultSafe'
 import loadSafesFromStorage from '~/routes/safe/store/actions/loadSafesFromStorage'
+import loadCurrentSessionFromStorage from '~/logic/currentSession/store/actions/loadCurrentSessionFromStorage'
 import { store } from '~/store'
 
 BigNumber.set({ EXPONENTIAL_AT: [-7, 255] })
@@ -23,6 +24,8 @@ store.dispatch(loadActiveTokens())
 store.dispatch(loadSafesFromStorage())
 // $FlowFixMe
 store.dispatch(loadDefaultSafe())
+// $FlowFixMe
+store.dispatch(loadCurrentSessionFromStorage())
 
 const root = document.getElementById('root')
 
