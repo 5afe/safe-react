@@ -20,6 +20,7 @@ import actions, { type Actions } from './actions'
 import { styles } from './style'
 import RemoveSafeIcon from './assets/icons/bin.svg'
 import type { Safe } from '~/routes/safe/store/models/safe'
+import type { AddressBook } from '~/logic/addressBook/model/addressBook'
 
 export const OWNERS_SETTINGS_TAB_TEST_ID = 'owner-settings-tab'
 
@@ -44,7 +45,9 @@ type Props = Actions & {
   replaceSafeOwner: Function,
   editSafeOwner: Function,
   userAddress: string,
-  safe: Safe
+  safe: Safe,
+  addressBook: AddressBook,
+  updateAddressBookEntry: Function,
 }
 
 type Action = 'RemoveSafe'
@@ -90,6 +93,8 @@ class Settings extends React.Component<Props, State> {
       replaceSafeOwner,
       editSafeOwner,
       safe,
+      addressBook,
+      updateAddressBookEntry,
     } = this.props
 
     return (
@@ -156,6 +161,8 @@ class Settings extends React.Component<Props, State> {
                   editSafeOwner={editSafeOwner}
                   granted={granted}
                   safe={safe}
+                  addressBook={addressBook}
+                  updateAddressBookEntry={updateAddressBookEntry}
                 />
               )}
               {menuOptionIndex === 3 && (

@@ -1,5 +1,5 @@
 // @flow
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 
 import cn from 'classnames'
 import { List } from 'immutable'
@@ -40,7 +40,7 @@ import { updateAddressBookEntry } from '~/logic/addressBook/store/actions/update
 import { removeAddressBookEntry } from '~/logic/addressBook/store/actions/removeAddressBookEntry'
 import { addAddressBookEntry } from '~/logic/addressBook/store/actions/addAddressBookEntry'
 import SendModal from '~/routes/safe/components/Balances/SendModal'
-import { safeSelector, safesListSelector } from '~/routes/safe/store/selectors'
+import { safeSelector, safesListSelector, addressBookQueryParamsSelector } from '~/routes/safe/store/selectors'
 import { extendedSafeTokensSelector } from '~/routes/safe/container/selector'
 import { isUserOwnerOnAnySafe } from '~/logic/wallets/ethAddresses'
 
@@ -59,6 +59,31 @@ const AddressBookTable = ({ classes }: Props) => {
   )
   const [deleteEntryModalOpen, setDeleteEntryModalOpen] = useState(false)
   const [sendFundsModalOpen, setSendFundsModalOpen] = useState(false)
+  const [defaultNewEntryAddress, setDefaultNewEntryAddress] = useState(null)
+  const entryAddressToEditOrCreateNew = useSelector(addressBookQueryParamsSelector)
+
+
+  useEffect(() => {
+    if (entryAddressToEditOrCreateNew) {
+      setEditCreateEntryModalOpen(true)
+    }
+  }, [])
+
+  useEffect(() => {
+    if (entryAddressToEditOrCreateNew) {
+      const key = addressBook.findKey((entry) => entry.address === entryAddressToEditOrCreateNew)
+      if (key >= 0) {
+        // Edit old entry
+        const value = addressBook.get(key)
+        setSelectedEntry({ entry: value, index: key })
+      } else {
+        // Create new entry
+        setDefaultNewEntryAddress(entryAddressToEditOrCreateNew)
+        setSelectedEntry(null)
+      }
+    }
+  },
+  [addressBook])
 
   const safe = useSelector(safeSelector)
   const safesList = useSelector(safesListSelector)
@@ -68,6 +93,7 @@ const AddressBookTable = ({ classes }: Props) => {
   const newEntryModalHandler = (entry: AddressBookEntry) => {
     setEditCreateEntryModalOpen(false)
     dispatch(addAddressBookEntry(entry))
+    setDefaultNewEntryAddress(null)
   }
 
   const editEntryModalHandler = (entry: AddressBookEntry) => {
@@ -198,6 +224,7 @@ const AddressBookTable = ({ classes }: Props) => {
         newEntryModalHandler={newEntryModalHandler}
         editEntryModalHandler={editEntryModalHandler}
         entryToEdit={selectedEntry}
+        newEntryDefaultAddress={defaultNewEntryAddress}
       />
       <DeleteEntryModal
         onClose={() => setDeleteEntryModalOpen(false)}
