@@ -8,7 +8,7 @@ import { makeCurrentSession } from '~/logic/currentSession/store/model/currentSe
 const loadCurrentSessionFromStorage = () => async (dispatch: ReduxDispatch<GlobalState>) => {
   const currentSession = (await getCurrentSessionFromStorage())
 
-  dispatch(loadCurrentSession(makeCurrentSession(currentSession ? currentSession.currentSession : {})))
+  dispatch(loadCurrentSession(makeCurrentSession(currentSession ? currentSession : {})))
 }
 
 export default loadCurrentSessionFromStorage

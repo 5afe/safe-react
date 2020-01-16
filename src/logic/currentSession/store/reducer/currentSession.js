@@ -14,12 +14,12 @@ export default handleActions<State, *>(
     [LOAD_CURRENT_SESSION]: (
       state: State,
       action: ActionType<Function>,
-    ): State => state.set(CURRENT_SESSION_REDUCER_ID, action.payload),
+    ): State => state.merge(Map(action.payload)),
     [UPDATE_VIEWED_SAFES]: (state: State, action: ActionType<Function>): State => {
       const safeAddress = action.payload
 
       const newState = state.updateIn(
-        [CURRENT_SESSION_REDUCER_ID, 'viewedSafes'],
+        ['viewedSafes'],
         (prev) => (prev.includes(safeAddress) ? prev : [...prev, safeAddress]),
       )
 
