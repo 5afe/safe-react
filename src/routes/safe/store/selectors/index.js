@@ -82,6 +82,16 @@ export const safeTransactionsSelector: TxSelectorType = createSelector(
   },
 )
 
+export const addressBookQueryParamsSelector = (state: GlobalState): string => {
+  const { location } = state.router
+  let entryAddressToEditOrCreateNew = null
+  if (location && location.query) {
+    const { entryAddress } = location.query
+    entryAddressToEditOrCreateNew = entryAddress
+  }
+  return entryAddressToEditOrCreateNew
+}
+
 export const safeCancelTransactionsSelector: TxSelectorType = createSelector(
   cancelTransactionsSelector,
   safeParamAddressSelector,
@@ -145,7 +155,7 @@ export type SafeSelectorProps = Safe | typeof undefined
 
 export const safeSelector: Selector<GlobalState, RouterProps, SafeSelectorProps> = createSelector(
   safesMapSelector,
-  safeParamAddressSelector,
+  safeParamAddressFromStateSelector,
   (safes: Map<string, Safe>, address: string) => {
     if (!address) {
       return undefined

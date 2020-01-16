@@ -30,10 +30,12 @@ import Balances from './Balances'
 import Transactions from './Transactions'
 import Settings from './Settings'
 import { styles } from './style'
+import AddressBookTable from '~/routes/safe/components/AddressBook'
 
 export const BALANCES_TAB_BTN_TEST_ID = 'balances-tab-btn'
 export const SETTINGS_TAB_BTN_TEST_ID = 'settings-tab-btn'
 export const TRANSACTIONS_TAB_BTN_TEST_ID = 'transactions-tab-btn'
+export const ADDRESS_BOOK_TAB_BTN_TEST_ID = 'address-book-tab-btn'
 export const SAFE_VIEW_NAME_HEADING_TEST_ID = 'safe-name-heading'
 
 type Props = SelectorProps &
@@ -50,6 +52,7 @@ type Props = SelectorProps &
     location: Object,
     history: Object,
     fetchCurrencyValues: Function,
+    updateAddressBookEntry: Function,
   }
 
 const Layout = (props: Props) => {
@@ -80,6 +83,8 @@ const Layout = (props: Props) => {
     currencySelected,
     fetchCurrencyValues,
     currencyValues,
+    addressBook,
+    updateAddressBookEntry,
   } = props
 
   const handleCallToRouter = (_, value) => {
@@ -149,6 +154,7 @@ const Layout = (props: Props) => {
         >
           <Tab label="Balances" value={`${match.url}/balances`} data-testid={BALANCES_TAB_BTN_TEST_ID} />
           <Tab label="Transactions" value={`${match.url}/transactions`} data-testid={TRANSACTIONS_TAB_BTN_TEST_ID} />
+          <Tab label="Address Book" value={`${match.url}/address-book`} data-testid={ADDRESS_BOOK_TAB_BTN_TEST_ID} />
           <Tab label="Settings" value={`${match.url}/settings`} data-testid={SETTINGS_TAB_BTN_TEST_ID} />
         </Tabs>
       </Row>
@@ -209,7 +215,16 @@ const Layout = (props: Props) => {
               userAddress={userAddress}
               createTransaction={createTransaction}
               safe={safe}
+              addressBook={addressBook}
+              updateAddressBookEntry={updateAddressBookEntry}
             />
+          )}
+        />
+        <Route
+          exact
+          path={`${match.path}/address-book`}
+          render={() => (
+            <AddressBookTable />
           )}
         />
         <Redirect to={`${match.path}/balances`} />

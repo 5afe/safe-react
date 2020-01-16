@@ -105,6 +105,42 @@ const defaultNotificationsQueue: NotificationsQueue = {
   afterExecutionError: NOTIFICATIONS.TX_FAILED_MSG,
 }
 
+const addressBookNewEntry: NotificationsQueue = {
+  beforeExecution: null,
+  pendingExecution: null,
+  afterRejection: null,
+  waitingConfirmation: null,
+  afterExecution: {
+    noMoreConfirmationsNeeded: NOTIFICATIONS.ADDRESS_BOOK_NEW_ENTRY_SUCCESS,
+    moreConfirmationsNeeded: null,
+  },
+  afterExecutionError: null,
+}
+
+const addressBookEditEntry: NotificationsQueue = {
+  beforeExecution: null,
+  pendingExecution: null,
+  afterRejection: null,
+  waitingConfirmation: null,
+  afterExecution: {
+    noMoreConfirmationsNeeded: NOTIFICATIONS.ADDRESS_BOOK_EDIT_ENTRY_SUCCESS,
+    moreConfirmationsNeeded: null,
+  },
+  afterExecutionError: null,
+}
+
+const addressBookDeleteEntry: NotificationsQueue = {
+  beforeExecution: null,
+  pendingExecution: null,
+  afterRejection: null,
+  waitingConfirmation: null,
+  afterExecution: {
+    noMoreConfirmationsNeeded: NOTIFICATIONS.ADDRESS_BOOK_DELETE_ENTRY_SUCCESS,
+    moreConfirmationsNeeded: null,
+  },
+  afterExecutionError: null,
+}
+
 export const getNotificationsFromTxType = (txType: string) => {
   let notificationsQueue: NotificationsQueue
 
@@ -135,6 +171,18 @@ export const getNotificationsFromTxType = (txType: string) => {
     }
     case TX_NOTIFICATION_TYPES.WAITING_TX: {
       notificationsQueue = waitingTransactionNotificationsQueue
+      break
+    }
+    case TX_NOTIFICATION_TYPES.ADDRESSBOOK_NEW_ENTRY: {
+      notificationsQueue = addressBookNewEntry
+      break
+    }
+    case TX_NOTIFICATION_TYPES.ADDRESSBOOK_EDIT_ENTRY: {
+      notificationsQueue = addressBookEditEntry
+      break
+    }
+    case TX_NOTIFICATION_TYPES.ADDRESSBOOK_DELETE_ENTRY: {
+      notificationsQueue = addressBookDeleteEntry
       break
     }
     default: {

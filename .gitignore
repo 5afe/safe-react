@@ -4,3 +4,4 @@ build_webpack/
 build/
 yarn-error.log
 .env*
+.idea/
