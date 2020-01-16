@@ -12,9 +12,6 @@ import { enhanceSnackbarForAction, NOTIFICATIONS } from '~/logic/notifications'
 import closeSnackbarAction from '~/logic/notifications/store/actions/closeSnackbar'
 import { getIncomingTxAmount } from '~/routes/safe/components/Transactions/TxsTable/columns'
 import updateSafe from '~/routes/safe/store/actions/updateSafe'
-import { loadFromStorage } from '~/utils/storage'
-import { SAFES_KEY } from '~/logic/safe/utils'
-import { RECURRING_USER_KEY } from '~/utils/verifyRecurringUser'
 import { safesMapSelector } from '~/routes/safe/store/selectors'
 import { isUserOwner } from '~/logic/wallets/ethAddresses'
 
@@ -69,17 +66,16 @@ const notificationsMiddleware = (store: Store<GlobalState>) => (
         break
       }
       case ADD_INCOMING_TRANSACTIONS: {
-        action.payload.forEach(async (incomingTransactions, safeAddress) => {
-          const storedSafes = await loadFromStorage(SAFES_KEY)
-          const latestIncomingTxBlock = storedSafes
-            ? storedSafes[safeAddress].latestIncomingTxBlock
-            : 0
+        action.payload.forEach((incomingTransactions, safeAddress) => {
+          const { latestIncomingTxBlock } = state.safes.get('safes').get(safeAddress)
+          const viewedSafes = state.currentSession ? state.currentSession.get('viewedSafes') : []
+          const recurringUser = viewedSafes.includes(safeAddress)
 
           const newIncomingTransactions = incomingTransactions.filter(
             (tx) => tx.blockNumber > latestIncomingTxBlock,
           )
+
           const { message, ...TX_INCOMING_MSG } = NOTIFICATIONS.TX_INCOMING_MSG
-          const recurringUser = await loadFromStorage(RECURRING_USER_KEY)
 
           if (recurringUser) {
             if (newIncomingTransactions.size > 3) {
@@ -109,7 +105,7 @@ const notificationsMiddleware = (store: Store<GlobalState>) => (
             updateSafe({
               address: safeAddress,
               latestIncomingTxBlock: newIncomingTransactions.size
-                ? newIncomingTransactions.last().blockNumber
+                ? newIncomingTransactions.first().blockNumber
                 : latestIncomingTxBlock,
             }),
           )
