@@ -6,6 +6,7 @@ import WalletConnectProvider from '@walletconnect/web3-provider'
 import Fortmatic from 'fortmatic'
 import Portis from '@portis/web3'
 import Squarelink from 'squarelink'
+import Authereum from 'authereum'
 import Button from '~/components/layout/Button'
 import { fetchProvider, removeProvider } from '~/logic/wallets/store/actions'
 import { getNetwork } from '~/config'
@@ -52,6 +53,10 @@ export const web3Connect = new Web3Connect.Core({
         buildEnv: process.env.NODE_ENV,
         showTorusButton: true,
       },
+    },
+    authereum: {
+      package: Authereum,
+      options: {},
     },
   },
 })
