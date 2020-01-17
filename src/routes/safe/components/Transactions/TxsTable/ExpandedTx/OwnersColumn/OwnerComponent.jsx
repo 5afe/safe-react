@@ -12,6 +12,8 @@ import { styles } from './style'
 import ConfirmSmallGreyIcon from './assets/confirm-small-grey.svg'
 import ConfirmSmallGreenIcon from './assets/confirm-small-green.svg'
 import ConfirmSmallFilledIcon from './assets/confirm-small-filled.svg'
+import ConfirmSmallRedIcon from './assets/confirm-small-red.svg'
+import CancelSmallFilledIcon from './assets/cancel-small-filled.svg'
 import { getNameFromAddressBook } from '~/logic/addressBook/utils'
 
 export const CONFIRM_TX_BTN_TEST_ID = 'confirm-btn'
@@ -27,7 +29,8 @@ type OwnerProps = {
   showConfirmBtn: boolean,
   showExecuteBtn: boolean,
   onTxConfirm: Function,
-  onTxExecute: Function
+  onTxExecute: Function,
+  isCancelTx?: boolean,
 }
 
 const OwnerComponent = ({
@@ -41,6 +44,7 @@ const OwnerComponent = ({
   executor,
   confirmed,
   thresholdReached,
+  isCancelTx,
 }: OwnerProps) => {
   const nameInAdbk = getNameFromAddressBook(owner.address)
   const ownerName = owner.name === 'UNKNOWN' && nameInAdbk ? nameInAdbk : owner.name
@@ -49,15 +53,15 @@ const OwnerComponent = ({
       <div
         className={
           confirmed || thresholdReached || executor
-            ? classes.verticalLineProgressDone
+            ? isCancelTx ? classes.verticalLineCancelProgressDone : classes.verticalLineProgressDone
             : classes.verticalLineProgressPending
         }
       />
       <div className={classes.iconState}>
         {confirmed ? (
-          <Img src={ConfirmSmallFilledIcon} />
+          <Img src={isCancelTx ? CancelSmallFilledIcon : ConfirmSmallFilledIcon} />
         ) : thresholdReached || executor ? (
-          <Img src={ConfirmSmallGreenIcon} />
+          <Img src={isCancelTx ? ConfirmSmallRedIcon : ConfirmSmallGreenIcon} />
         ) : (
           <Img src={ConfirmSmallGreyIcon} />
         )}

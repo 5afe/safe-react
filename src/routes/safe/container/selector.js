@@ -39,6 +39,7 @@ export type SelectorProps = {
   currencySelected: string,
   currencyValues: BalanceCurrencyType[],
   transactions: List<Transaction | IncomingTransaction>,
+  cancelTransactions: List<Transaction>,
   addressBook: AddressBook,
 }
 
@@ -109,9 +110,8 @@ const extendedTransactionsSelector: Selector<GlobalState, RouterProps, List<Tran
   safeSelector,
   userAccountSelector,
   safeTransactionsSelector,
-  safeCancelTransactionsSelector,
   safeIncomingTransactionsSelector,
-  (safe, userAddress, transactions, cancelTransactions, incomingTransactions) => {
+  (safe, userAddress, transactions, incomingTransactions) => {
     const extendedTransactions = transactions.map((tx: Transaction) => {
       let extendedTx = tx
 
@@ -147,6 +147,7 @@ export default createStructuredSelector<Object, *>({
   network: networkSelector,
   safeUrl: safeParamAddressSelector,
   transactions: extendedTransactionsSelector,
+  cancelTransactions: safeCancelTransactionsSelector,
   currencySelected: currentCurrencySelector,
   currencyValues: currencyValuesListSelector,
   addressBook: getAddressBook,

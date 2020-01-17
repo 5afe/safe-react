@@ -71,6 +71,7 @@ const Layout = (props: Props) => {
     fetchTokens,
     updateSafe,
     transactions,
+    cancelTransactions,
     userAddress,
     sendFunds,
     showReceive,
@@ -190,6 +191,7 @@ const Layout = (props: Props) => {
               owners={safe.owners}
               nonce={safe.nonce}
               transactions={transactions}
+              cancelTransactions={cancelTransactions}
               safeAddress={address}
               userAddress={userAddress}
               currentNetwork={network}

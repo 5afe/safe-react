@@ -17,6 +17,7 @@ type ListProps = {
   showExecuteBtn: boolean,
   onTxConfirm: Function,
   onTxExecute: Function,
+  isCancelTx?: boolean,
 }
 
 const OwnersList = ({
@@ -30,6 +31,7 @@ const OwnersList = ({
   showExecuteBtn,
   onTxConfirm,
   onTxExecute,
+  isCancelTx,
 }: ListProps) => (
   <>
     {ownersWhoConfirmed.map((owner) => (
@@ -43,6 +45,7 @@ const OwnersList = ({
         confirmed
         showExecuteBtn={showExecuteBtn}
         onTxExecute={onTxExecute}
+        isCancelTx={isCancelTx}
       />
     ))}
     {ownersUnconfirmed.map((owner) => (
@@ -57,6 +60,7 @@ const OwnersList = ({
         showConfirmBtn={showConfirmBtn}
         showExecuteBtn={showExecuteBtn}
         onTxExecute={onTxExecute}
+        isCancelTx={isCancelTx}
       />
     ))}
   </>

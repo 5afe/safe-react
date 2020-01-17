@@ -1,6 +1,6 @@
 // @flow
 import {
-  border, sm, boldFont, primary, secondary, secondaryText,
+  border, sm, boldFont, primary, secondary, secondaryText, error,
 } from '~/theme/variables'
 
 export const styles = () => ({
@@ -25,6 +25,14 @@ export const styles = () => ({
   verticalLineProgressDone: {
     position: 'absolute',
     borderLeft: `2px solid ${secondary}`,
+    height: '52px',
+    top: '-26px',
+    left: '29px',
+    zIndex: '10',
+  },
+  verticalLineCancelProgressDone: {
+    position: 'absolute',
+    borderLeft: `2px solid ${error}`,
     height: '52px',
     top: '-26px',
     left: '29px',
@@ -58,6 +66,9 @@ export const styles = () => ({
   },
   ownerListTitleDone: {
     color: secondary,
+  },
+  ownerListTitleCancelDone: {
+    color: error,
   },
   name: {
     textOverflow: 'ellipsis',
