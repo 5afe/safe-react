@@ -15,6 +15,7 @@ import Identicon from '~/components/Identicon'
 
 type Props = {
   classes: Object,
+  fieldMutator: Function,
 }
 
 
@@ -33,7 +34,7 @@ const textFieldInputStyle = makeStyles(() => ({
   },
 }))
 
-const AddressBookInput = ({ classes }: Props) => {
+const AddressBookInput = ({ classes, fieldMutator }: Props) => {
   const addressBook = useSelector(getAddressBookListSelector)
   const [addressInput, setAddressInput] = useState(null)
   const [isValidForm, setIsValidForm] = useState(true)
@@ -43,6 +44,7 @@ const AddressBookInput = ({ classes }: Props) => {
       const isValidText = mustBeEthereumAddress(addressInput)
       setIsValidForm(isValidText === undefined)
       setValidationText(isValidText)
+      fieldMutator(addressInput)
     }
   }, [addressInput])
 

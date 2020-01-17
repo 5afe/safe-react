@@ -110,7 +110,7 @@ const SendCustomTx = ({
                 </Row>
                 <Row margin="md">
                   <Col xs={11}>
-                    <AddressBookInput mutators={mutators} />
+                    <AddressBookInput fieldMutator={mutators.setRecipient} />
                   </Col>
                   <Col xs={1} center="xs" middle="xs" className={classes}>
                     <Img
