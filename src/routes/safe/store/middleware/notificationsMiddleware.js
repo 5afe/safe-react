@@ -1,6 +1,6 @@
 // @flow
 import type { Action, Store } from 'redux'
-import { List } from 'immutable'
+import { List, Map } from 'immutable'
 import { push } from 'connected-react-router'
 import { type GlobalState } from '~/store/'
 import { ADD_TRANSACTIONS } from '~/routes/safe/store/actions/addTransactions'
@@ -30,8 +30,11 @@ const notificationsMiddleware = (store: Store<GlobalState>) => (
         const transactionsList = action.payload
         const userAddress: string = userAccountSelector(state)
         const safeAddress = action.payload.keySeq().get(0)
+        const cancelTransactions = state.cancelTransactions.get(safeAddress)
+        const cancelTransactionsByNonce = cancelTransactions ? cancelTransactions.reduce((acc, tx) => acc.set(tx.nonce, tx), Map()) : Map()
         const awaitingTransactions = getAwaitingTransactions(
           transactionsList,
+          cancelTransactionsByNonce,
           userAddress,
         )
         const awaitingTransactionsList = awaitingTransactions.get(

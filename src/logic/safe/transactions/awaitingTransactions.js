@@ -4,6 +4,7 @@ import type { Transaction } from '~/routes/safe/store/models/transaction'
 
 export const getAwaitingTransactions = (
   allTransactions: Map<string, List<Transaction>>,
+  cancelTransactionsByNonce: Map<string | number, List<Transaction>>,
   userAccount: string,
 ): Map<string, List<Transaction>> => {
   if (!allTransactions) {
@@ -16,10 +17,7 @@ export const getAwaitingTransactions = (
         // If transactions are not executed, but there's a transaction with the same nonce EXECUTED later
         // it means that the transaction was cancelled (Replaced) and shouldn't get executed
         if (!transaction.isExecuted) {
-          const replacementTransaction = safeTransactions.findLast(
-            (tx) => tx.isExecuted && tx.nonce === transaction.nonce,
-          )
-          if (replacementTransaction) {
+          if (cancelTransactionsByNonce.get(transaction.nonce)) {
             // eslint-disable-next-line no-param-reassign
             transaction = transaction.set('cancelled', true)
           }

@@ -290,7 +290,7 @@ export default (safeAddress: string) => async (dispatch: ReduxDispatch<GlobalSta
   const { outgoing, cancel }: SafeTransactionsType = await loadSafeTransactions(safeAddress)
   const incomingTransactions: Map<string, List<IncomingTransaction>> = await loadSafeIncomingTransactions(safeAddress)
 
-  dispatch(addTransactions(outgoing))
   dispatch(addCancelTransactions(cancel))
+  dispatch(addTransactions(outgoing))
   dispatch(addIncomingTransactions(incomingTransactions))
 }
