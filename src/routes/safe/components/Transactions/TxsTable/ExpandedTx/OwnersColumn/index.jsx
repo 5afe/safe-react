@@ -221,7 +221,7 @@ const OwnersColumn = ({
           }
         />
         <div className={classes.iconState}>
-          {(!tx.isExecuted && (cancelTx && !cancelTx.isExecuted)) && (
+          {((!tx.isExecuted && (cancelTx && !cancelTx.isExecuted)) || (!cancelTx && !tx.isExecuted)) && (
             <Img src={ConfirmLargeGreyIcon} alt="Confirm / Execute tx" />
           )}
           {tx.isExecuted && (
