@@ -13,6 +13,7 @@ import theme from '~/theme/mui'
 import AppRoutes from '~/routes'
 
 import './index.scss'
+import './OnboardCustom.scss'
 
 const Root = () => (
   <Provider store={store}>

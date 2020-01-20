@@ -20,7 +20,6 @@ const FORTMATIC_API_KEY = isMainnet
   : 'pk_test_CAD437AA29BE0A40'
 
 const wallets = [
-  { walletName: 'coinbase' },
   { walletName: 'metamask', preferred: true },
   {
     walletName: 'walletConnect',
@@ -40,7 +39,8 @@ const wallets = [
     preferred: true,
     label: 'Login with Email',
   },
-  { walletName: 'authereum' },
+  { walletName: 'authereum', preferred: true },
+  { walletName: 'coinbase' },
   { walletName: 'opera' },
   { walletName: 'operaTouch' },
 ]
