@@ -102,7 +102,7 @@ const OwnersColumn = ({
 }: Props) => {
   // const cancellationTx = isCancellationTransaction(tx, safeAddress)
   let showOlderTxAnnotation: boolean
-  if (tx.isExecuted || cancelTx.isExecuted) {
+  if (tx.isExecuted || (cancelTx && cancelTx.isExecuted)) {
     showOlderTxAnnotation = false
   } else if (!tx.isExecuted) {
     showOlderTxAnnotation = thresholdReached && !canExecute
@@ -142,7 +142,8 @@ const OwnersColumn = ({
 
   const showExecuteBtn = canExecute && !tx.isExecuted && thresholdReached
 
-  const showConfirmCancelBtn = !cancelTx.isExecuted
+  const showConfirmCancelBtn = cancelTx
+    && !cancelTx.isExecuted
     && cancelTx.status !== 'pending'
     && userIsUnconfirmedCancelOwner
     && !currentUserAlreadyConfirmedCancel
@@ -217,14 +218,14 @@ const OwnersColumn = ({
         className={cn(
           classes.ownerListTitle,
           tx.isExecuted && classes.ownerListTitleDone,
-          cancelTx.isExecuted && classes.ownerListTitleCancelDone,
+          cancelTx && cancelTx.isExecuted && classes.ownerListTitleCancelDone,
         )}
       >
         <div
           className={
             tx.isExecuted
               ? classes.verticalLineProgressDone
-              : cancelTx.isExecuted
+              : cancelTx && cancelTx.isExecuted
                 ? classes.verticalLineCancelProgressDone
                 : classes.verticalLineProgressPending
           }
@@ -236,7 +237,7 @@ const OwnersColumn = ({
           {tx.isExecuted && (
             <Img src={CheckLargeFilledGreenIcon} alt="TX Executed icon" />
           )}
-          {cancelTx.isExecuted && (
+          {cancelTx && cancelTx.isExecuted && (
             <Img src={CheckLargeFilledRedIcon} alt="TX Executed icon" />
           )}
         </div>

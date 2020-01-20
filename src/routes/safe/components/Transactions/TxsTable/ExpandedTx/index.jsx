@@ -68,8 +68,10 @@ const ExpandedTx = ({
   const closeModal = () => setOpenModal(null)
   const thresholdReached = tx.type !== INCOMING_TX_TYPE && threshold <= tx.confirmations.size
   const canExecute = tx.type !== INCOMING_TX_TYPE && nonce === tx.nonce
-  const cancelThresholdReached = cancelTx.type !== INCOMING_TX_TYPE && threshold <= cancelTx.confirmations.size
-  const canExecuteCancel = cancelTx.type !== INCOMING_TX_TYPE && nonce === cancelTx.nonce
+  const cancelThresholdReached = cancelTx
+    ? cancelTx.type !== INCOMING_TX_TYPE && threshold <= cancelTx.confirmations.size
+    : false
+  const canExecuteCancel = cancelTx ? cancelTx.type !== INCOMING_TX_TYPE && nonce === cancelTx.nonce : false
 
   return (
     <>
