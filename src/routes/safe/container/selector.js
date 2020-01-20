@@ -118,7 +118,7 @@ const extendedTransactionsSelector: Selector<GlobalState, RouterProps, List<Tran
       let extendedTx = tx
 
       if (!tx.isExecuted) {
-        if (cancelTransactionsByNonce.get(tx.nonce)) {
+        if (cancelTransactionsByNonce.get(tx.nonce) && cancelTransactionsByNonce.get(tx.nonce).get('isExecuted')) {
           extendedTx = tx.set('cancelled', true)
         }
       }
