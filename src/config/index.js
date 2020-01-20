@@ -41,6 +41,9 @@ export const getNetwork = () =>
     ? ETHEREUM_NETWORK.MAINNET
     : ETHEREUM_NETWORK.RINKEBY
 
+export const getNetworkId = () =>
+  process.env.REACT_APP_NETWORK === "mainnet" ? 1 : 42
+
 const getConfig = ensureOnce(configuration)
 
 export const getTxServiceHost = () => {
@@ -73,4 +76,5 @@ export const getIntercomId = () =>
     ? process.env.REACT_APP_INTERCOM_ID
     : "plssl1fl"
 
-export const getExchangeRatesUrl = () => 'https://api.exchangeratesapi.io/latest'
+export const getExchangeRatesUrl = () =>
+  "https://api.exchangeratesapi.io/latest"

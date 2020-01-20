@@ -40,6 +40,7 @@
     "@welldone-software/why-did-you-render": "3.4.1",
     "axios": "0.19.0",
     "bignumber.js": "9.0.0",
+    "bnc-onboard": "^1.1.11",
     "connected-react-router": "6.6.1",
     "currency-flags": "^2.1.1",
     "date-fns": "2.8.1",
