@@ -133,6 +133,7 @@ const OwnersColumn = ({
 
   const showConfirmCancelBtn = cancelTx
     && !cancelTx.isExecuted
+    && !tx.isExecuted
     && cancelTx.status !== 'pending'
     && userIsUnconfirmedCancelOwner
     && !currentUserAlreadyConfirmedCancel
