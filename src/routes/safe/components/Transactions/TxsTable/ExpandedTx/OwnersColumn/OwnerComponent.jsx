@@ -52,6 +52,7 @@ const OwnerComponent = ({
     <Block className={classes.container}>
       <div
         className={
+          // eslint-disable-next-line no-nested-ternary
           confirmed || thresholdReached || executor
             ? isCancelTx ? classes.verticalLineCancelProgressDone : classes.verticalLineProgressDone
             : classes.verticalLineProgressPending
