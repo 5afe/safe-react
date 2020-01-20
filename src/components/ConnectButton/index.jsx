@@ -8,17 +8,51 @@ import { store } from '~/store'
 
 const isMainnet = process.env.REACT_APP_NETWORK === 'mainnet'
 
-const BLOCKNATIVE_API_KEY = isMainnet ? process.env.REACT_APP_BLOCKNATIVE_KEY : '7fbb9cee-7e97-4436-8770-8b29a9a8814c'
-const PORTIS_DAPP_ID = isMainnet ? process.env.REACT_APP_PORTIS_ID : '852b763d-f28b-4463-80cb-846d7ec5806b'
+const BLOCKNATIVE_API_KEY = isMainnet
+  ? process.env.REACT_APP_BLOCKNATIVE_KEY
+  : '7fbb9cee-7e97-4436-8770-8b29a9a8814c'
+const PORTIS_DAPP_ID = isMainnet
+  ? process.env.REACT_APP_PORTIS_ID
+  : '852b763d-f28b-4463-80cb-846d7ec5806b'
 // const SQUARELINK_CLIENT_ID = isMainnet ? process.env.REACT_APP_SQUARELINK_ID : '46ce08fe50913cfa1b78'
-const FORTMATIC_API_KEY = isMainnet ? process.env.REACT_APP_FORTMATIC_KEY : 'pk_test_CAD437AA29BE0A40'
-process.env.REACT_APP_INFURA_TOKEN
+const FORTMATIC_API_KEY = isMainnet
+  ? process.env.REACT_APP_FORTMATIC_KEY
+  : 'pk_test_CAD437AA29BE0A40'
+
+const wallets = [
+  { walletName: 'coinbase' },
+  { walletName: 'metamask', preferred: true },
+  {
+    walletName: 'walletConnect',
+    preferred: true,
+    infuraKey: process.env.REACT_APP_INFURA_TOKEN,
+  },
+  { walletName: 'trust', preferred: true },
+  { walletName: 'dapper', preferred: true },
+  {
+    walletName: 'fortmatic',
+    apiKey: FORTMATIC_API_KEY,
+    preferred: true,
+  },
+  {
+    walletName: 'portis',
+    apiKey: PORTIS_DAPP_ID,
+    preferred: true,
+    label: 'Login with Email',
+  },
+  { walletName: 'authereum' },
+  { walletName: 'opera' },
+  { walletName: 'operaTouch' },
+]
 
 export const onboard = new Onboard({
   dappId: BLOCKNATIVE_API_KEY,
-  network: getNetworkId(),
+  networkId: getNetworkId(),
   subscriptions: {
     wallet: (wallet) => store.dispatch(fetchProvider(wallet.provider)),
+  },
+  walletSelect: {
+    wallets,
   },
 })
 
@@ -28,7 +62,7 @@ export const onboard = new Onboard({
 
 type Props = {
   enqueueSnackbar: Function,
-  closeSnackbar: Function,
+  closeSnackbar: Function
 }
 
 const ConnectButton = (props: Props) => (
@@ -36,8 +70,9 @@ const ConnectButton = (props: Props) => (
     color="primary"
     variant="contained"
     minWidth={140}
-    onClick={() => {
-      onboard.walletSelect()
+    onClick={async () => {
+      await onboard.walletSelect()
+      await onboard.walletCheck()
     }}
     {...props}
   >

@@ -42,7 +42,7 @@ export const getNetwork = () =>
     : ETHEREUM_NETWORK.RINKEBY
 
 export const getNetworkId = () =>
-  process.env.REACT_APP_NETWORK === "mainnet" ? 1 : 42
+  process.env.REACT_APP_NETWORK === "mainnet" ? 1 : 4
 
 const getConfig = ensureOnce(configuration)
 

@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import { withSnackbar } from 'notistack'
 import { logComponentStack, type Info } from '~/utils/logBoundaries'
 import { NOTIFICATIONS, showSnackbar } from '~/logic/notifications'
-import { web3Connect } from '~/components/ConnectButton'
+import { onboard } from '~/components/ConnectButton'
 import { INJECTED_PROVIDERS } from '~/logic/wallets/getWeb3'
 import { loadLastUsedProvider } from '~/logic/wallets/store/middlewares/providerWatcher'
 import ProviderAccessible from './components/ProviderInfo/ProviderAccessible'
@@ -34,12 +34,12 @@ class HeaderComponent extends React.PureComponent<Props, State> {
     }
   }
 
-  async componentDidMount() {
-    const lastUsedProvider = await loadLastUsedProvider()
-    if (INJECTED_PROVIDERS.includes(lastUsedProvider) || process.env.NODE_ENV === 'test') {
-      web3Connect.connectToInjected()
-    }
-  }
+  // async componentDidMount() {
+  //   const lastUsedProvider = await loadLastUsedProvider()
+  //   if (INJECTED_PROVIDERS.includes(lastUsedProvider) || process.env.NODE_ENV === 'test') {
+  //     onboard.selectWallet()
+  //   }
+  // }
 
   componentDidCatch(error: Error, info: Info) {
     const { enqueueSnackbar, closeSnackbar } = this.props
