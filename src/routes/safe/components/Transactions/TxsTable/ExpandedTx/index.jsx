@@ -198,12 +198,12 @@ const ExpandedTx = ({
           isOpen
           processTransaction={processTransaction}
           onClose={closeModal}
-          canExecute={canExecute}
+          canExecute={canExecuteCancel}
           tx={cancelTx}
           userAddress={userAddress}
           safeAddress={safeAddress}
           threshold={threshold}
-          thresholdReached={thresholdReached}
+          thresholdReached={cancelThresholdReached}
         />
       )}
     </>
