@@ -9,7 +9,6 @@ import IconButton from '@material-ui/core/IconButton'
 import Paragraph from '~/components/layout/Paragraph'
 import Row from '~/components/layout/Row'
 import GnoForm from '~/components/forms/GnoForm'
-import AddressInput from '~/components/forms/AddressInput'
 import Col from '~/components/layout/Col'
 import Button from '~/components/layout/Button'
 import Block from '~/components/layout/Block'
@@ -29,6 +28,7 @@ import ArrowDown from '../assets/arrow-down.svg'
 import QRIcon from '~/assets/icons/qrcode.svg'
 import { styles } from './style'
 import { sm } from '~/theme/variables'
+import AddressBookInput from '~/routes/safe/components/Balances/SendModal/screens/AddressBookInput'
 
 type Props = {
   onClose: () => void,
@@ -125,15 +125,7 @@ const SendFunds = ({
                 </Row>
                 <Row margin="md">
                   <Col xs={11}>
-                    <AddressInput
-                      name="recipientAddress"
-                      component={TextField}
-                      placeholder="Recipient*"
-                      text="Recipient*"
-                      className={classes.addressInput}
-                      fieldMutator={mutators.setRecipient}
-                      defaultValue={recipientAddress}
-                    />
+                    <AddressBookInput fieldMutator={mutators.setRecipient} isCustomTx recipientAddress={recipientAddress} />
                   </Col>
                   <Col xs={1} center="xs" middle="xs" className={classes}>
                     <Img

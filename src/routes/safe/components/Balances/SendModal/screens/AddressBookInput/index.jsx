@@ -17,6 +17,7 @@ type Props = {
   classes: Object,
   fieldMutator: Function,
   isCustomTx?: boolean,
+  recipientAddress?: string,
 }
 
 
@@ -35,7 +36,9 @@ const textFieldInputStyle = makeStyles(() => ({
   },
 }))
 
-const AddressBookInput = ({ classes, fieldMutator, isCustomTx }: Props) => {
+const AddressBookInput = ({
+  classes, fieldMutator, isCustomTx, recipientAddress,
+}: Props) => {
   const addressBook = useSelector(getAddressBookListSelector)
   const [addressInput, setAddressInput] = useState(null)
   const [isValidForm, setIsValidForm] = useState(true)
@@ -68,7 +71,8 @@ const AddressBookInput = ({ classes, fieldMutator, isCustomTx }: Props) => {
         style={{ display: 'flex', flexGrow: 1 }}
         closeIcon={null}
         filterOptions={(optionsArray, { inputValue }) => optionsArray.filter((item) => item.name.includes(inputValue))}
-        getOptionLabel={(adbkEntry) => adbkEntry.address}
+        getOptionLabel={(adbkEntry) => adbkEntry.address || ''}
+        value={{ address: recipientAddress }}
         renderOption={(adbkEntry) => {
           const { name, address } = adbkEntry
           return (
