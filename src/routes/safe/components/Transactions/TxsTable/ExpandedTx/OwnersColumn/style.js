@@ -17,7 +17,7 @@ export const styles = () => ({
   verticalLineProgressPending: {
     borderLeft: `2px solid ${secondaryText}`,
     height: '52px',
-    left: '29px',
+    left: '27px',
     position: 'absolute',
     top: '-26px',
     zIndex: '10',
@@ -25,7 +25,7 @@ export const styles = () => ({
   verticalLineProgressDone: {
     borderLeft: `2px solid ${secondary}`,
     height: '52px',
-    left: '29px',
+    left: '27px',
     position: 'absolute',
     top: '-26px',
     zIndex: '10',
@@ -33,7 +33,7 @@ export const styles = () => ({
   verticalLineCancelProgressDone: {
     borderLeft: `2px solid ${error}`,
     height: '52px',
-    left: '29px',
+    left: '27px',
     position: 'absolute',
     top: '-26px',
     zIndex: '10',
@@ -46,7 +46,7 @@ export const styles = () => ({
   },
   container: {
     display: 'flex',
-    padding: '13px 20px',
+    padding: '13px 15px 13px 18px',
     position: 'relative',
   },
   ownerListTitle: {
@@ -55,9 +55,8 @@ export const styles = () => ({
     fontSize: '11px',
     fontWeight: boldFont,
     letterSpacing: '1px',
-    lineHeight: 1.27,
-    padding: '15px',
-    paddingLeft: '20px',
+    lineHeight: 1.3,
+    padding: '15px 15px 15px 18px',
     position: 'relative',
     textTransform: 'uppercase',
   },
@@ -84,16 +83,24 @@ export const styles = () => ({
   iconState: {
     display: 'flex',
     justifyContent: 'center',
-    marginRight: '20px',
+    marginRight: '18px',
     width: '20px',
     zIndex: '100',
+
     '& > img': {
       display: 'block',
     },
   },
   button: {
     alignSelf: 'center',
+    flexGrow: '0',
+    fontSize: '16px',
     justifyContent: 'center',
+    paddingLeft: '14px',
+    paddingRight: '14px',
+  },
+  lastButton: {
+    marginLeft: '10px',
   },
   executor: {
     alignSelf: 'center',

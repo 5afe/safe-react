@@ -36,7 +36,7 @@ const ButtonRow = ({
   <Row align="end" className={classes.buttonRow}>
     {showCancelBtn && (
       <Button className={classes.button} variant="contained" minWidth={140} color="secondary" onClick={onTxCancel}>
-        Cancel tx
+        Cancel
       </Button>
     )}
   </Row>

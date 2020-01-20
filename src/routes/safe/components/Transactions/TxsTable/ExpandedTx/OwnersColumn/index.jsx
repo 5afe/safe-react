@@ -23,22 +23,22 @@ import { styles } from './style'
 import Paragraph from '~/components/layout/Paragraph/index'
 
 type Props = {
-  tx: Transaction,
+  canExecute: boolean,
+  canExecuteCancel: boolean,
+  cancelThresholdReached: boolean,
   cancelTx: Transaction,
-  owners: List<Owner>,
   classes: Object,
   granted: boolean,
-  threshold: number,
-  userAddress: string,
-  thresholdReached: boolean,
-  cancelThresholdReached: boolean,
-  canExecute: boolean,
-  onTxConfirm: Function,
   onCancelTxConfirm: Function,
-  onTxCancel: Function,
-  onTxExecute: Function,
   onCancelTxExecute: Function,
-  canExecuteCancel: boolean
+  onTxCancel: Function,
+  onTxConfirm: Function,
+  onTxExecute: Function,
+  owners: List<Owner>,
+  threshold: number,
+  thresholdReached: boolean,
+  tx: Transaction,
+  userAddress: string,
 };
 
 function ownersConfirmations(tx = makeTransaction(), userAddress) {
@@ -171,10 +171,12 @@ const OwnersColumn = ({
       </Block>
       <OwnersList
         executor={tx.executor}
+        onTxCancel={onTxCancel}
         onTxConfirm={onTxConfirm}
         onTxExecute={onTxExecute}
         ownersUnconfirmed={ownersUnconfirmed}
         ownersWhoConfirmed={ownersWhoConfirmed}
+        showCancelBtn={granted && displayButtonRow && !cancelTx}
         showConfirmBtn={showConfirmBtn}
         showExecuteBtn={showExecuteBtn}
         thresholdReached={thresholdReached}
@@ -252,9 +254,6 @@ const OwnersColumn = ({
             There are older transactions that need to be executed first
           </Paragraph>
         </Block>
-      )}
-      {granted && displayButtonRow && (
-        <ButtonRow onTxCancel={onTxCancel} showCancelBtn={!cancelTx} />
       )}
     </Col>
   )

@@ -1,6 +1,7 @@
 // @flow
 import React from 'react'
 import { withStyles } from '@material-ui/core/styles'
+import cn from 'classnames'
 import Button from '~/components/layout/Button'
 import Img from '~/components/layout/Img'
 import EtherscanLink from '~/components/EtherscanLink'
@@ -18,36 +19,42 @@ import { getNameFromAddressBook } from '~/logic/addressBook/utils'
 
 export const CONFIRM_TX_BTN_TEST_ID = 'confirm-btn'
 export const EXECUTE_TX_BTN_TEST_ID = 'execute-btn'
+export const CANCEL_TX_BTN_TEST_ID = 'cancel-btn'
 
 type OwnerProps = {
-  owner: Owner,
   classes: Object,
-  userAddress: string,
   confirmed?: boolean,
   executor?: string,
-  thresholdReached: boolean,
-  showConfirmBtn: boolean,
-  showExecuteBtn: boolean,
+  isCancelTx?: boolean,
+  onTxCancel?: Function,
   onTxConfirm: Function,
   onTxExecute: Function,
-  isCancelTx?: boolean,
+  owner: Owner,
+  showCancelBtn: Boolean,
+  showConfirmBtn: boolean,
+  showExecuteBtn: boolean,
+  thresholdReached: boolean,
+  userAddress: string,
 }
 
 const OwnerComponent = ({
-  owner,
-  userAddress,
+  onTxCancel,
   classes,
+  confirmed,
+  executor,
+  isCancelTx,
   onTxConfirm,
+  onTxExecute,
+  owner,
+  showCancelBtn,
   showConfirmBtn,
   showExecuteBtn,
-  onTxExecute,
-  executor,
-  confirmed,
   thresholdReached,
-  isCancelTx,
+  userAddress,
 }: OwnerProps) => {
   const nameInAdbk = getNameFromAddressBook(owner.address)
   const ownerName = owner.name === 'UNKNOWN' && nameInAdbk ? nameInAdbk : owner.name
+
   return (
     <Block className={classes.container}>
       <div
@@ -83,25 +90,34 @@ const OwnerComponent = ({
       {showConfirmBtn && owner.address === userAddress && (
         <Button
           className={classes.button}
-          variant="contained"
-          minWidth={140}
           color="primary"
           onClick={onTxConfirm}
           testId={CONFIRM_TX_BTN_TEST_ID}
+          variant="contained"
         >
-          Confirm tx
+          Confirm
         </Button>
       )}
       {showExecuteBtn && owner.address === userAddress && (
         <Button
           className={classes.button}
-          variant="contained"
-          minWidth={140}
           color="primary"
           onClick={onTxExecute}
           testId={EXECUTE_TX_BTN_TEST_ID}
+          variant="contained"
         >
-          Execute tx
+          Execute
+        </Button>
+      )}
+      {(showExecuteBtn || showConfirmBtn) && showCancelBtn && owner.address === userAddress && (
+        <Button
+          className={cn(classes.button, classes.lastButton)}
+          color="secondary"
+          onClick={onTxCancel}
+          testId={CANCEL_TX_BTN_TEST_ID}
+          variant="contained"
+        >
+          Reject
         </Button>
       )}
       {owner.address === executor && (

@@ -7,60 +7,68 @@ import { type Owner } from '~/routes/safe/store/models/owner'
 import { styles } from './style'
 
 type ListProps = {
-  ownersWhoConfirmed: List<Owner>,
-  ownersUnconfirmed: List<Owner>,
   classes: Object,
-  userAddress: string,
   executor: string,
-  thresholdReached: boolean,
-  showConfirmBtn: boolean,
-  showExecuteBtn: boolean,
+  isCancelTx?: boolean,
+  onTxCancel?: Function,
   onTxConfirm: Function,
   onTxExecute: Function,
-  isCancelTx?: boolean,
+  ownersUnconfirmed: List<Owner>,
+  ownersWhoConfirmed: List<Owner>,
+  showCancelBtn: Boolean,
+  showConfirmBtn: boolean,
+  showExecuteBtn: boolean,
+  thresholdReached: boolean,
+  userAddress: string,
 }
 
 const OwnersList = ({
-  userAddress,
-  ownersWhoConfirmed,
-  ownersUnconfirmed,
+  onTxCancel,
   classes,
   executor,
-  thresholdReached,
-  showConfirmBtn,
-  showExecuteBtn,
+  isCancelTx,
   onTxConfirm,
   onTxExecute,
-  isCancelTx,
+  ownersUnconfirmed,
+  ownersWhoConfirmed,
+  showCancelBtn,
+  showConfirmBtn,
+  showExecuteBtn,
+  thresholdReached,
+  userAddress,
 }: ListProps) => (
   <>
     {ownersWhoConfirmed.map((owner) => (
       <OwnerComponent
-        key={owner.address}
-        owner={owner}
         classes={classes}
-        userAddress={userAddress}
-        executor={executor}
-        thresholdReached={thresholdReached}
         confirmed
-        showExecuteBtn={showExecuteBtn}
-        onTxExecute={onTxExecute}
+        executor={executor}
         isCancelTx={isCancelTx}
+        key={owner.address}
+        onTxCancel={onTxCancel}
+        onTxExecute={onTxExecute}
+        owner={owner}
+        showCancelBtn={showCancelBtn}
+        showExecuteBtn={showExecuteBtn}
+        thresholdReached={thresholdReached}
+        userAddress={userAddress}
       />
     ))}
     {ownersUnconfirmed.map((owner) => (
       <OwnerComponent
-        key={owner.address}
-        owner={owner}
         classes={classes}
-        userAddress={userAddress}
         executor={executor}
-        thresholdReached={thresholdReached}
+        isCancelTx={isCancelTx}
+        key={owner.address}
+        onTxCancel={onTxCancel}
         onTxConfirm={onTxConfirm}
+        onTxExecute={onTxExecute}
+        owner={owner}
+        showCancelBtn={showCancelBtn}
         showConfirmBtn={showConfirmBtn}
         showExecuteBtn={showExecuteBtn}
-        onTxExecute={onTxExecute}
-        isCancelTx={isCancelTx}
+        thresholdReached={thresholdReached}
+        userAddress={userAddress}
       />
     ))}
   </>
