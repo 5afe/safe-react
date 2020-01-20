@@ -72,7 +72,7 @@ const AddressBookInput = ({
         closeIcon={null}
         filterOptions={(optionsArray, { inputValue }) => optionsArray.filter((item) => item.name.includes(inputValue))}
         getOptionLabel={(adbkEntry) => adbkEntry.address || ''}
-        value={{ address: recipientAddress }}
+        defaultValue={{ address: recipientAddress }}
         renderOption={(adbkEntry) => {
           const { name, address } = adbkEntry
           return (
