@@ -108,6 +108,9 @@ export const styles = () => ({
     borderRadius: '3px',
     color: primary,
     fontSize: '11px',
-    padding: '3px 5px',
+    height: '24px',
+    lineHeight: '24px',
+    padding: '0 12px',
+
   },
 })
