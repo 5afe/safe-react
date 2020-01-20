@@ -118,9 +118,7 @@ const OwnersColumn = ({
   } else if (tx.status === 'cancelled') {
     // tx is cancelled (replaced) by another one
     displayButtonRow = false
-  } else if (currentUserAlreadyConfirmed && !thresholdReached) {
-    // the TX is the cancellation (replacement) transaction for previous TX,
-    // current user has already confirmed it and threshold is not reached (so he can't execute/cancel it)
+  } else if (currentUserAlreadyConfirmedCancel) {
     displayButtonRow = false
   }
 
@@ -222,7 +220,7 @@ const OwnersColumn = ({
           }
         />
         <div className={classes.iconState}>
-          {!thresholdReached && !tx.isExecuted && (
+          {(!tx.isExecuted || (cancelTx && !cancelTx.isExecuted)) && (
             <Img src={ConfirmLargeGreyIcon} alt="Confirm / Execute tx" />
           )}
           {tx.isExecuted && (
