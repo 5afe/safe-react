@@ -9,7 +9,6 @@ import Img from '~/components/layout/Img'
 import { type Owner } from '~/routes/safe/store/models/owner'
 import { makeTransaction, type Transaction } from '~/routes/safe/store/models/transaction'
 import { TX_TYPE_CONFIRMATION } from '~/logic/safe/transactions/send'
-// import { EMPTY_DATA } from '~/logic/wallets/ethTransactions'
 import OwnersList from './OwnersList'
 import ButtonRow from './ButtonRow'
 import CheckLargeFilledGreenIcon from './assets/check-large-filled-green.svg'
@@ -30,7 +29,6 @@ type Props = {
   userAddress: string,
   thresholdReached: boolean,
   cancelThresholdReached: boolean,
-  // safeAddress: string,
   canExecute: boolean,
   onTxConfirm: Function,
   onCancelTxConfirm: Function,
@@ -39,8 +37,6 @@ type Props = {
   onCancelTxExecute: Function,
   canExecuteCancel: boolean,
 }
-
-// const isCancellationTransaction = (tx: Transaction, safeAddress: string) => !tx.value && tx.data === EMPTY_DATA && tx.recipient === safeAddress
 
 function ownersConfirmations(tx = makeTransaction(), userAddress) {
   const ownersWhoConfirmed = []
@@ -91,7 +87,6 @@ const OwnersColumn = ({
   userAddress,
   thresholdReached,
   cancelThresholdReached,
-  // safeAddress,
   onTxConfirm,
   onCancelTxConfirm,
   onTxCancel,
@@ -100,7 +95,6 @@ const OwnersColumn = ({
   canExecute,
   canExecuteCancel,
 }: Props) => {
-  // const cancellationTx = isCancellationTransaction(tx, safeAddress)
   let showOlderTxAnnotation: boolean
   if (tx.isExecuted || (cancelTx && cancelTx.isExecuted)) {
     showOlderTxAnnotation = false
@@ -124,10 +118,7 @@ const OwnersColumn = ({
   } else if (tx.status === 'cancelled') {
     // tx is cancelled (replaced) by another one
     displayButtonRow = false
-  } else if (
-    // cancellationTx &&
-    currentUserAlreadyConfirmed && !thresholdReached
-  ) {
+  } else if (currentUserAlreadyConfirmed && !thresholdReached) {
     // the TX is the cancellation (replacement) transaction for previous TX,
     // current user has already confirmed it and threshold is not reached (so he can't execute/cancel it)
     displayButtonRow = false
