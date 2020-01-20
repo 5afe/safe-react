@@ -2,6 +2,7 @@
 import React, { useState } from 'react'
 import { withStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
+import InputAdornment from '@material-ui/core/InputAdornment'
 import IconButton from '@material-ui/core/IconButton'
 import Paragraph from '~/components/layout/Paragraph'
 import Row from '~/components/layout/Row'
@@ -96,6 +97,7 @@ const SendCustomTx = ({
             mutators.setRecipient(scannedAddress)
             closeQrModal()
           }
+
           return (
             <>
               <Block className={classes.formContainer}>
@@ -110,7 +112,7 @@ const SendCustomTx = ({
                 </Row>
                 <Row margin="md">
                   <Col xs={11}>
-                    <AddressBookInput fieldMutator={mutators.setRecipient} />
+                    <AddressBookInput fieldMutator={mutators.setRecipient} isCustomTx />
                   </Col>
                   <Col xs={1} center="xs" middle="xs" className={classes}>
                     <Img
@@ -145,7 +147,9 @@ const SendCustomTx = ({
                       placeholder="Value*"
                       text="Value*"
                       className={classes.addressInput}
-                      fieldMutator={mutators.setRecipient}
+                      inputAdornment={{
+                        endAdornment: <InputAdornment position="end">ETH</InputAdornment>,
+                      }}
                     />
                   </Col>
                 </Row>

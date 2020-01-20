@@ -9,13 +9,14 @@ import TextField from '@material-ui/core/TextField'
 import makeStyles from '@material-ui/core/styles/makeStyles'
 import { styles } from './style'
 import { getAddressBookListSelector } from '~/logic/addressBook/store/selectors'
-import { mustBeEthereumAddress } from '~/components/forms/validator'
+import { mustBeEthereumAddress, mustBeEthereumContractAddress } from '~/components/forms/validator'
 import Identicon from '~/components/Identicon'
 
 
 type Props = {
   classes: Object,
   fieldMutator: Function,
+  isCustomTx?: boolean,
 }
 
 
@@ -24,28 +25,34 @@ const textFieldLabelStyle = makeStyles(() => ({
     overflow: 'hidden',
     borderRadius: 4,
     fontSize: '15px',
+    width: '500px',
   },
 }))
 
 const textFieldInputStyle = makeStyles(() => ({
   root: {
     fontSize: '14px',
-    backgroundColor: 'red',
   },
 }))
 
-const AddressBookInput = ({ classes, fieldMutator }: Props) => {
+const AddressBookInput = ({ classes, fieldMutator, isCustomTx }: Props) => {
   const addressBook = useSelector(getAddressBookListSelector)
   const [addressInput, setAddressInput] = useState(null)
   const [isValidForm, setIsValidForm] = useState(true)
   const [validationTxt, setValidationText] = useState(true)
   useEffect(() => {
-    if (addressInput) {
-      const isValidText = mustBeEthereumAddress(addressInput)
-      setIsValidForm(isValidText === undefined)
-      setValidationText(isValidText)
-      fieldMutator(addressInput)
+    const validate = async () => {
+      if (addressInput) {
+        let isValidText = mustBeEthereumAddress(addressInput)
+        if (isCustomTx && isValidText === undefined) {
+          isValidText = await mustBeEthereumContractAddress(addressInput)
+        }
+        setIsValidForm(isValidText === undefined)
+        setValidationText(isValidText)
+        fieldMutator(addressInput)
+      }
     }
+    validate()
   }, [addressInput])
 
 
@@ -87,7 +94,9 @@ const AddressBookInput = ({ classes, fieldMutator }: Props) => {
             onChange={(event) => {
               setAddressInput(event.target.value)
             }}
-
+            InputProps={{
+              classes: txInputStyling,
+            }}
             InputLabelProps={{
               shrink: true,
               required: true,
