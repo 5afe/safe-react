@@ -31,7 +31,7 @@ const textFieldLabelStyle = makeStyles(() => ({
 
 const textFieldInputStyle = makeStyles(() => ({
   root: {
-    fontSize: '14px',
+    fontSize: '13.5px',
   },
 }))
 
@@ -94,9 +94,14 @@ const AddressBookInput = ({ classes, fieldMutator, isCustomTx }: Props) => {
             onChange={(event) => {
               setAddressInput(event.target.value)
             }}
-            InputProps={{
-              classes: txInputStyling,
-            }}
+            InputProps={
+              {
+                ...params.InputProps,
+                classes: {
+                  ...txInputStyling,
+                },
+              }
+            }
             InputLabelProps={{
               shrink: true,
               required: true,
