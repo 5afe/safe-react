@@ -27,7 +27,7 @@ const wallets = [
     infuraKey: process.env.REACT_APP_INFURA_TOKEN,
   },
   { walletName: 'trust', preferred: true },
-  { walletName: 'dapper', preferred: true },
+  { walletName: 'dapper' },
   {
     walletName: 'fortmatic',
     apiKey: FORTMATIC_API_KEY,
@@ -39,10 +39,10 @@ const wallets = [
     preferred: true,
     label: 'Login with Email',
   },
-  { walletName: 'authereum', preferred: true },
+  { walletName: 'authereum' },
   { walletName: 'coinbase' },
-  { walletName: 'opera' },
-  { walletName: 'operaTouch' },
+  { walletName: 'opera', preferred: true },
+  { walletName: 'operaTouch', preferred: true },
 ]
 
 export const onboard = new Onboard({
