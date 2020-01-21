@@ -13,12 +13,11 @@ import {
 } from '~/routes/safe/store/models/transaction'
 import { TX_TYPE_CONFIRMATION } from '~/logic/safe/transactions/send'
 import OwnersList from './OwnersList'
-import ButtonRow from './ButtonRow'
-import CheckLargeFilledGreenIcon from './assets/check-large-filled-green.svg'
-import ConfirmLargeGreenIcon from './assets/confirm-large-green.svg'
-import CheckLargeFilledRedIcon from './assets/check-large-filled-red.svg'
-import ConfirmLargeRedIcon from './assets/confirm-large-red.svg'
-import ConfirmLargeGreyIcon from './assets/confirm-large-grey.svg'
+import CheckLargeFilledGreenCircle from './assets/check-large-filled-green.svg'
+import ConfirmLargeGreenCircle from './assets/confirm-large-green.svg'
+import CheckLargeFilledRedCircle from './assets/check-large-filled-red.svg'
+import ConfirmLargeRedCircle from './assets/confirm-large-red.svg'
+import ConfirmLargeGreyCircle from './assets/confirm-large-grey.svg'
 import { styles } from './style'
 import Paragraph from '~/components/layout/Paragraph/index'
 
@@ -70,6 +69,7 @@ function pendingOwnersConfirmations(
   )
 
   let userIsUnconfirmedOwner = false
+
   ownersUnconfirmed.some((owner) => {
     userIsUnconfirmedOwner = owner.address === userAddress
     return userIsUnconfirmedOwner
@@ -158,12 +158,8 @@ const OwnersColumn = ({
           (thresholdReached || tx.isExecuted) && classes.ownerListTitleDone,
         )}
       >
-        <div className={classes.iconState}>
-          {thresholdReached || tx.isExecuted ? (
-            <Img src={CheckLargeFilledGreenIcon} alt="" />
-          ) : (
-            <Img src={ConfirmLargeGreenIcon} alt="" />
-          )}
+        <div className={classes.circleState}>
+          <Img src={thresholdReached || tx.isExecuted ? CheckLargeFilledGreenCircle : ConfirmLargeGreenCircle} alt="" />
         </div>
         {tx.isExecuted
           ? `Confirmed [${tx.confirmations.size}/${tx.confirmations.size}]`
@@ -191,13 +187,9 @@ const OwnersColumn = ({
                 && classes.ownerListTitleCancelDone,
             )}
           >
-            <div className={classes.verticalLineProgressPending} />
-            <div className={classes.iconState}>
-              {cancelThresholdReached || cancelTx.isExecuted ? (
-                <Img src={CheckLargeFilledRedIcon} alt="" />
-              ) : (
-                <Img src={ConfirmLargeRedIcon} alt="" />
-              )}
+            <div className={cn(classes.verticalLine, classes.verticalLineDone)} />
+            <div className={classes.circleState}>
+              <Img src={cancelThresholdReached || cancelTx.isExecuted ? CheckLargeFilledRedCircle : ConfirmLargeRedCircle} alt="" />
             </div>
             {cancelTx.isExecuted
               ? `Rejected [${cancelTx.confirmations.size}/${cancelTx.confirmations.size}]`
@@ -224,26 +216,17 @@ const OwnersColumn = ({
           cancelTx && cancelTx.isExecuted && classes.ownerListTitleCancelDone,
         )}
       >
-        <div
-          className={
-            // eslint-disable-next-line no-nested-ternary
-            tx.isExecuted
-              ? classes.verticalLineProgressDone
-              : cancelTx && cancelTx.isExecuted
-                ? classes.verticalLineCancelProgressDone
-                : classes.verticalLineProgressPending
-          }
-        />
-        <div className={classes.iconState}>
+        <div className={cn(classes.verticalLine, tx.isExecuted && classes.verticalLineDone, (cancelTx && cancelTx.isExecuted) && classes.verticalLineCancel)} />
+        <div className={classes.circleState}>
           {((!tx.isExecuted && cancelTx && !cancelTx.isExecuted)
             || (!cancelTx && !tx.isExecuted)) && (
-            <Img src={ConfirmLargeGreyIcon} alt="Confirm / Execute tx" />
+            <Img src={ConfirmLargeGreyCircle} alt="Confirm / Execute tx" />
           )}
           {tx.isExecuted && (
-            <Img src={CheckLargeFilledGreenIcon} alt="TX Executed icon" />
+            <Img src={CheckLargeFilledGreenCircle} alt="TX Executed icon" />
           )}
           {cancelTx && cancelTx.isExecuted && (
-            <Img src={CheckLargeFilledRedIcon} alt="TX Executed icon" />
+            <Img src={CheckLargeFilledRedCircle} alt="TX Executed icon" />
           )}
         </div>
         Executed

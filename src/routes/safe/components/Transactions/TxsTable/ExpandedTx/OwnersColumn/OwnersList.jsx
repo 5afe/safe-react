@@ -23,10 +23,10 @@ type ListProps = {
 }
 
 const OwnersList = ({
-  onTxCancel,
   classes,
   executor,
   isCancelTx,
+  onTxCancel,
   onTxConfirm,
   onTxExecute,
   ownersUnconfirmed,

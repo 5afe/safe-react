@@ -14,29 +14,23 @@ export const styles = () => ({
     borderLeft: `2px solid ${border}`,
     boxSizing: 'border-box',
   },
-  verticalLineProgressPending: {
-    borderLeft: `2px solid ${secondaryText}`,
-    height: '52px',
+  verticalLine: {
+    backgroundColor: secondaryText,
+    height: '55px',
     left: '27px',
     position: 'absolute',
-    top: '-26px',
+    top: '-27px',
+    width: '2px',
     zIndex: '10',
   },
-  verticalLineProgressDone: {
-    borderLeft: `2px solid ${secondary}`,
-    height: '52px',
-    left: '27px',
-    position: 'absolute',
-    top: '-26px',
-    zIndex: '10',
+  verticalLinePending: {
+    backgroundColor: secondaryText,
   },
-  verticalLineCancelProgressDone: {
-    borderLeft: `2px solid ${error}`,
-    height: '52px',
-    left: '27px',
-    position: 'absolute',
-    top: '-26px',
-    zIndex: '10',
+  verticalLineDone: {
+    backgroundColor: secondary,
+  },
+  verticalLineCancel: {
+    backgroundColor: error,
   },
   icon: {
     marginRight: sm,
@@ -45,6 +39,7 @@ export const styles = () => ({
     borderBottom: `1px solid ${border}`,
   },
   container: {
+    alignItems: 'center',
     display: 'flex',
     padding: '13px 15px 13px 18px',
     position: 'relative',
@@ -80,7 +75,7 @@ export const styles = () => ({
   spacer: {
     flex: 'auto',
   },
-  iconState: {
+  circleState: {
     display: 'flex',
     justifyContent: 'center',
     marginRight: '18px',
