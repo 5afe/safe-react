@@ -70,7 +70,13 @@ const AddressBookInput = ({
         options={addressBook.toArray()}
         style={{ display: 'flex', flexGrow: 1 }}
         closeIcon={null}
-        filterOptions={(optionsArray, { inputValue }) => optionsArray.filter((item) => item.name.includes(inputValue))}
+        filterOptions={(optionsArray, { inputValue }) => optionsArray.filter((item) => {
+          const inputLowerCase = inputValue.toLowerCase()
+          const foundName = item.name.toLowerCase()
+            .includes(inputLowerCase)
+          const foundAddress = item.address.toLowerCase().includes(inputLowerCase)
+          return foundName || foundAddress
+        })}
         getOptionLabel={(adbkEntry) => adbkEntry.address || ''}
         defaultValue={{ address: recipientAddress }}
         renderOption={(adbkEntry) => {
