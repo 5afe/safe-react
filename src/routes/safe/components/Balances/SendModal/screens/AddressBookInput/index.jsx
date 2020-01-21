@@ -32,7 +32,8 @@ const textFieldLabelStyle = makeStyles(() => ({
 
 const textFieldInputStyle = makeStyles(() => ({
   root: {
-    fontSize: '13.5px',
+    fontSize: '14px',
+    width: '420px',
   },
 }))
 
