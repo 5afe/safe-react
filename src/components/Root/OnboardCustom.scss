@@ -1,20 +1,6 @@
 /* Onboard.js custom styles */
-:global(.bn-onboard-custom.bn-onboard-select-wallet-definition) {
-  font-family: "Averta";
-}
 
 :global(.bn-onboard-custom.bn-onboard-modal) {
   font-family: "Averta";
-}
-
-:global(.bn-onboard-custom.bn-onboard-select-description) {
-  font-family: "Averta";
-}
-
-:global(.bn-onboard-custom.bn-onboard-button) {
-  font-family: "Averta";
-}
-
-:global(.bn-onboard-custom.bn-onboard-icon-button) {
-  font-family: "Averta";
+  z-index: 2001;
 }

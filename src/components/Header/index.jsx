@@ -34,12 +34,14 @@ class HeaderComponent extends React.PureComponent<Props, State> {
     }
   }
 
-  // async componentDidMount() {
-  //   const lastUsedProvider = await loadLastUsedProvider()
-  //   if (INJECTED_PROVIDERS.includes(lastUsedProvider) || process.env.NODE_ENV === 'test') {
-  //     onboard.selectWallet()
-  //   }
-  // }
+  async componentDidMount() {
+    const lastUsedProvider = await loadLastUsedProvider()
+
+    if (INJECTED_PROVIDERS.includes(lastUsedProvider) || process.env.NODE_ENV === 'test') {
+      await onboard.walletSelect(lastUsedProvider.toLowerCase())
+      await onboard.walletCheck()
+    }
+  }
 
   componentDidCatch(error: Error, info: Info) {
     const { enqueueSnackbar, closeSnackbar } = this.props

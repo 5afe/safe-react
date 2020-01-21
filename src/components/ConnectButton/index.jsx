@@ -49,16 +49,20 @@ export const onboard = new Onboard({
   dappId: BLOCKNATIVE_API_KEY,
   networkId: getNetworkId(),
   subscriptions: {
-    wallet: (wallet) => store.dispatch(fetchProvider(wallet.provider)),
+    wallet: (wallet) => {
+      store.dispatch(fetchProvider(wallet.provider))
+    },
+    address: (address) => {
+      // we don't have an unsubscribe event so we rely on this
+      if (!address) {
+        store.dispatch(removeProvider())
+      }
+    },
   },
   walletSelect: {
     wallets,
   },
 })
-
-// web3Connect.on('disconnect', () => {
-//   store.dispatch(removeProvider())
-// })
 
 type Props = {
   enqueueSnackbar: Function,
