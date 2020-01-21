@@ -26,6 +26,9 @@ import ArrowDown from '../assets/arrow-down.svg'
 import { styles } from './style'
 import { sm } from '~/theme/variables'
 import AddressBookInput from '~/routes/safe/components/Balances/SendModal/screens/AddressBookInput'
+import Identicon from '~/components/Identicon'
+import CopyBtn from '~/components/CopyBtn'
+import EtherscanBtn from '~/components/EtherscanBtn'
 
 
 type Props = {
@@ -48,6 +51,7 @@ const SendCustomTx = ({
   initialValues,
 }: Props) => {
   const [qrModalOpen, setQrModalOpen] = useState<boolean>(false)
+  const [selectedAddress, setSelectedAddress] = useState<string | null>(null)
   const handleSubmit = (values: Object) => {
     if (values.data || values.value) {
       onSubmit(values)
@@ -110,23 +114,49 @@ const SendCustomTx = ({
                     <Hairline />
                   </Col>
                 </Row>
-                <Row margin="md">
-                  <Col xs={11}>
-                    <AddressBookInput fieldMutator={mutators.setRecipient} isCustomTx />
-                  </Col>
-                  <Col xs={1} center="xs" middle="xs" className={classes}>
-                    <Img
-                      src={QRIcon}
-                      className={classes.qrCodeBtn}
-                      role="button"
-                      height={20}
-                      alt="Scan QR"
-                      onClick={() => {
-                        openQrModal()
-                      }}
-                    />
-                  </Col>
-                </Row>
+                { selectedAddress ? (
+                  <>
+                    <Row margin="xs">
+                      <Paragraph size="md" color="disabled" style={{ letterSpacing: '-0.5px' }} noMargin>
+                        Recipient
+                      </Paragraph>
+                    </Row>
+                    <Row margin="md" align="center">
+                      <Col xs={1}>
+                        <Identicon address={selectedAddress} diameter={32} />
+                      </Col>
+                      <Col xs={11} layout="column">
+                        <Block justify="left">
+                          <Paragraph weight="bolder" className={classes.address} noMargin onClick={() => setSelectedAddress(null)}>
+                            {selectedAddress}
+                          </Paragraph>
+                          <CopyBtn content={selectedAddress} />
+                          <EtherscanBtn type="address" value={selectedAddress} />
+                        </Block>
+                      </Col>
+                    </Row>
+                  </>
+                ) : (
+                  <>
+                    <Row margin="md">
+                      <Col xs={11}>
+                        <AddressBookInput fieldMutator={mutators.setRecipient} setSelectedAddress={setSelectedAddress} isCustomTx />
+                      </Col>
+                      <Col xs={1} center="xs" middle="xs" className={classes}>
+                        <Img
+                          src={QRIcon}
+                          className={classes.qrCodeBtn}
+                          role="button"
+                          height={20}
+                          alt="Scan QR"
+                          onClick={() => {
+                            openQrModal()
+                          }}
+                        />
+                      </Col>
+                    </Row>
+                  </>
+                )}
                 <Row margin="xs">
                   <Col between="lg">
                     <Paragraph size="md" color="disabled" style={{ letterSpacing: '-0.5px' }} noMargin>

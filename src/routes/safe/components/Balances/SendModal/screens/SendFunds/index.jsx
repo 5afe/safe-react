@@ -29,6 +29,9 @@ import QRIcon from '~/assets/icons/qrcode.svg'
 import { styles } from './style'
 import { sm } from '~/theme/variables'
 import AddressBookInput from '~/routes/safe/components/Balances/SendModal/screens/AddressBookInput'
+import Identicon from '~/components/Identicon'
+import CopyBtn from '~/components/CopyBtn'
+import EtherscanBtn from '~/components/EtherscanBtn'
 
 type Props = {
   onClose: () => void,
@@ -68,9 +71,15 @@ const SendFunds = ({
   recipientAddress,
 }: Props) => {
   const [qrModalOpen, setQrModalOpen] = useState<boolean>(false)
+  const [selectedAddress, setSelectedAddress] = useState<string | null>(recipientAddress)
 
   const handleSubmit = (values) => {
-    onSubmit(values)
+    let submitValues = values
+    // If the input wasn't modified, there was no mutation of the recipientAddress
+    if (!values.recipientAddress) {
+      submitValues.recipientAddress = selectedAddress
+    }
+    onSubmit(submitValues)
   }
 
   const openQrModal = () => {
@@ -123,23 +132,49 @@ const SendFunds = ({
                     <Hairline />
                   </Col>
                 </Row>
-                <Row margin="md">
-                  <Col xs={11}>
-                    <AddressBookInput fieldMutator={mutators.setRecipient} recipientAddress={recipientAddress} />
-                  </Col>
-                  <Col xs={1} center="xs" middle="xs" className={classes}>
-                    <Img
-                      src={QRIcon}
-                      className={classes.qrCodeBtn}
-                      role="button"
-                      height={20}
-                      alt="Scan QR"
-                      onClick={() => {
-                        openQrModal()
-                      }}
-                    />
-                  </Col>
-                </Row>
+                { selectedAddress ? (
+                  <>
+                    <Row margin="xs">
+                      <Paragraph size="md" color="disabled" style={{ letterSpacing: '-0.5px' }} noMargin>
+                        Recipient
+                      </Paragraph>
+                    </Row>
+                    <Row margin="md" align="center">
+                      <Col xs={1}>
+                        <Identicon address={selectedAddress} diameter={32} />
+                      </Col>
+                      <Col xs={11} layout="column">
+                        <Block justify="left">
+                          <Paragraph weight="bolder" className={classes.address} noMargin onClick={() => setSelectedAddress(null)}>
+                            {selectedAddress}
+                          </Paragraph>
+                          <CopyBtn content={selectedAddress} />
+                          <EtherscanBtn type="address" value={selectedAddress} />
+                        </Block>
+                      </Col>
+                    </Row>
+                  </>
+                ) : (
+                  <>
+                    <Row margin="md">
+                      <Col xs={11}>
+                        <AddressBookInput fieldMutator={mutators.setRecipient} recipientAddress={recipientAddress} setSelectedAddress={setSelectedAddress} />
+                      </Col>
+                      <Col xs={1} center="xs" middle="xs" className={classes}>
+                        <Img
+                          src={QRIcon}
+                          className={classes.qrCodeBtn}
+                          role="button"
+                          height={20}
+                          alt="Scan QR"
+                          onClick={() => {
+                            openQrModal()
+                          }}
+                        />
+                      </Col>
+                    </Row>
+                  </>
+                )}
                 <Row margin="sm">
                   <Col>
                     <TokenSelectField tokens={tokens} initialValue={selectedToken} />
@@ -196,6 +231,7 @@ const SendFunds = ({
                   color="primary"
                   data-testid="review-tx-btn"
                   className={classes.submitButton}
+                  disabled={!selectedAddress}
                 >
                   Review
                 </Button>
