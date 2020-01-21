@@ -40,7 +40,7 @@ const AddressBookInput = ({
   classes, fieldMutator, isCustomTx, recipientAddress,
 }: Props) => {
   const addressBook = useSelector(getAddressBookListSelector)
-  const [addressInput, setAddressInput] = useState(null)
+  const [addressInput, setAddressInput] = useState(recipientAddress)
   const [isValidForm, setIsValidForm] = useState(true)
   const [validationTxt, setValidationText] = useState(true)
   useEffect(() => {
@@ -79,6 +79,7 @@ const AddressBookInput = ({
         })}
         getOptionLabel={(adbkEntry) => adbkEntry.address || ''}
         defaultValue={{ address: recipientAddress }}
+        onChange={(event, value) => setAddressInput(value.address)}
         renderOption={(adbkEntry) => {
           const { name, address } = adbkEntry
           return (

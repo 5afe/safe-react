@@ -125,7 +125,7 @@ const SendFunds = ({
                 </Row>
                 <Row margin="md">
                   <Col xs={11}>
-                    <AddressBookInput fieldMutator={mutators.setRecipient} isCustomTx recipientAddress={recipientAddress} />
+                    <AddressBookInput fieldMutator={mutators.setRecipient} recipientAddress={recipientAddress} />
                   </Col>
                   <Col xs={1} center="xs" middle="xs" className={classes}>
                     <Img
