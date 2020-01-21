@@ -23,7 +23,7 @@ const EtherscanLink = ({
 }: EtherscanLinkProps) => (
   <Block className={classes.etherscanLink}>
     <Span
-      className={cn(knownAddress && classes.addressParagraph)}
+      className={cn(knownAddress && classes.addressParagraph, classes.address)}
       size="md"
     >
       {cut ? shortVersionOf(value, cut) : value}

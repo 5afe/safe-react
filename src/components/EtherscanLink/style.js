@@ -1,9 +1,20 @@
 // @flow
+import { secondaryText } from '~/theme/variables'
 
 export const styles = () => ({
   etherscanLink: {
     display: 'flex',
     alignItems: 'center',
+
+    '& svg': {
+      fill: secondaryText,
+    },
+  },
+  address: {
+    display: 'block',
+    flexShrink: '1',
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap',
   },
   addressParagraph: {
     fontSize: '13px',
