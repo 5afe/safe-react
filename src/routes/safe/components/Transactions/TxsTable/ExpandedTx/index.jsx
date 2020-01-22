@@ -36,15 +36,6 @@ type Props = {
 
 type OpenModal = "cancelTx" | "approveTx" | null
 
-const txStatusToLabel = {
-  success: 'Success',
-  awaiting_your_confirmation: 'Awaiting your confirmation',
-  awaiting_confirmations: 'Awaiting confirmations',
-  cancelled: 'Cancelled',
-  awaiting_execution: 'Awaiting execution',
-  pending: 'Pending',
-}
-
 const useStyles = makeStyles(styles)
 
 const ExpandedTx = ({
@@ -78,7 +69,7 @@ const ExpandedTx = ({
               )}
             >
               <Block align="left" className={classes.txData}>
-                <Bold className={classes.txHash}>TX hash:</Bold>
+                <Bold className={classes.txHash}>Hash:</Bold>
                 {tx.executionTxHash ? (
                   <EtherScanLink type="tx" value={tx.executionTxHash} cut={8} />
                 ) : (
@@ -86,35 +77,35 @@ const ExpandedTx = ({
                 )}
               </Block>
               <Paragraph noMargin>
-                <Bold>TX status: </Bold>
-                <Span>{txStatusToLabel[tx.status]}</Span>
+                <Bold>Nonce: </Bold>
+                <Span>{tx.nonce}</Span>
+              </Paragraph>
+              <Paragraph noMargin>
+                <Bold>Fee: </Bold>
+                {tx.fee ? tx.fee : 'n/a'}
               </Paragraph>
               {tx.type === INCOMING_TX_TYPE ? (
                 <>
                   <Paragraph noMargin>
-                    <Bold>TX fee: </Bold>
-                    {tx.fee}
-                  </Paragraph>
-                  <Paragraph noMargin>
-                    <Bold>TX created: </Bold>
+                    <Bold>Created: </Bold>
                     {formatDate(tx.executionDate)}
                   </Paragraph>
                 </>
               ) : (
                 <>
                   <Paragraph noMargin>
-                    <Bold>TX created: </Bold>
+                    <Bold>Created: </Bold>
                     {formatDate(tx.submissionDate)}
                   </Paragraph>
                   {tx.executionDate && (
                     <Paragraph noMargin>
-                      <Bold>TX executed: </Bold>
+                      <Bold>Executed: </Bold>
                       {formatDate(tx.executionDate)}
                     </Paragraph>
                   )}
                   {tx.refundParams && (
                     <Paragraph noMargin>
-                      <Bold>TX refund: </Bold>
+                      <Bold>Refund: </Bold>
                       max.
                       {' '}
                       {tx.refundParams.fee}
