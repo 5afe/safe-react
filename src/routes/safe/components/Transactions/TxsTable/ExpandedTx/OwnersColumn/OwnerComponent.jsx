@@ -92,38 +92,42 @@ const OwnerComponent = ({
         />
       </Block>
       <Block className={classes.spacer} />
-      {showConfirmBtn && owner.address === userAddress && (
-        <Button
-          className={classes.button}
-          color="primary"
-          onClick={onTxConfirm}
-          testId={CONFIRM_TX_BTN_TEST_ID}
-          variant="contained"
-        >
+      {!isCancelTx && (
+        <>
+          {showConfirmBtn && owner.address === userAddress && (
+            <Button
+              className={classes.button}
+              color="primary"
+              onClick={onTxConfirm}
+              testId={CONFIRM_TX_BTN_TEST_ID}
+              variant="contained"
+            >
           Confirm
-        </Button>
-      )}
-      {showExecuteBtn && owner.address === userAddress && (
-        <Button
-          className={classes.button}
-          color="primary"
-          onClick={onTxExecute}
-          testId={EXECUTE_TX_BTN_TEST_ID}
-          variant="contained"
-        >
+            </Button>
+          )}
+          {showExecuteBtn && owner.address === userAddress && (
+            <Button
+              className={classes.button}
+              color="primary"
+              onClick={onTxExecute}
+              testId={EXECUTE_TX_BTN_TEST_ID}
+              variant="contained"
+            >
           Execute
-        </Button>
-      )}
-      {(showExecuteBtn || showConfirmBtn) && showCancelBtn && owner.address === userAddress && (
-        <Button
-          className={cn(classes.button, classes.lastButton)}
-          color="secondary"
-          onClick={onTxCancel}
-          testId={CANCEL_TX_BTN_TEST_ID}
-          variant="contained"
-        >
+            </Button>
+          )}
+          {showCancelBtn && owner.address === userAddress && (
+            <Button
+              className={cn(classes.button, classes.lastButton)}
+              color="secondary"
+              onClick={onTxCancel}
+              testId={CANCEL_TX_BTN_TEST_ID}
+              variant="contained"
+            >
           Reject
-        </Button>
+            </Button>
+          )}
+        </>
       )}
       {owner.address === executor && (
         <Block className={classes.executor}>Executor</Block>
