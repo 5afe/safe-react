@@ -1,6 +1,6 @@
 {
   "name": "safe-react",
-  "version": "1.6.0",
+  "version": "1.6.3",
   "description": "Allowing crypto users manage funds in a safer way",
   "homepage": "https://github.com/gnosis/safe-react#readme",
   "bugs": {
@@ -38,6 +38,7 @@
     "@toruslabs/torus-embed": "0.2.10",
     "@walletconnect/web3-provider": "^1.0.0-beta.37",
     "@welldone-software/why-did-you-render": "3.4.1",
+    "authereum": "0.0.4-beta.68",
     "axios": "0.19.0",
     "bignumber.js": "9.0.0",
     "connected-react-router": "6.6.1",
