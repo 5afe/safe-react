@@ -16,7 +16,7 @@ import Identicon from '~/components/Identicon'
 type Props = {
   classes: Object,
   fieldMutator: Function,
-  setSelectedAddress: Function,
+  setSelectedEntry: Function,
   isCustomTx?: boolean,
   recipientAddress?: string,
 }
@@ -39,7 +39,7 @@ const textFieldInputStyle = makeStyles(() => ({
 }))
 
 const AddressBookInput = ({
-  classes, fieldMutator, isCustomTx, recipientAddress, setSelectedAddress,
+  classes, fieldMutator, isCustomTx, recipientAddress, setSelectedEntry,
 }: Props) => {
   const addressBook = useSelector(getAddressBookListSelector)
   const [addressInput, setAddressInput] = useState(recipientAddress)
@@ -80,12 +80,12 @@ const AddressBookInput = ({
           return foundName || foundAddress
         })}
         getOptionLabel={(adbkEntry) => adbkEntry.address || ''}
-        onOpen={() => setSelectedAddress(null)}
+        onOpen={() => setSelectedEntry(null)}
         defaultValue={{ address: recipientAddress }}
         onChange={(event, value) => {
-          const { address } = value
+          const { address, name } = value
           setAddressInput(address)
-          setSelectedAddress(address)
+          setSelectedEntry({ address, name })
           fieldMutator(address)
         }}
         renderOption={(adbkEntry) => {

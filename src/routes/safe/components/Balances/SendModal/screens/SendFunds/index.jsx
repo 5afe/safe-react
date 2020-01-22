@@ -71,13 +71,14 @@ const SendFunds = ({
   recipientAddress,
 }: Props) => {
   const [qrModalOpen, setQrModalOpen] = useState<boolean>(false)
-  const [selectedAddress, setSelectedAddress] = useState<string | null>(recipientAddress)
+  const [selectedEntry, setSelectedEntry] = useState<Object | null>({ address: recipientAddress, name: '' })
+
 
   const handleSubmit = (values) => {
-    let submitValues = values
+    const submitValues = values
     // If the input wasn't modified, there was no mutation of the recipientAddress
     if (!values.recipientAddress) {
-      submitValues.recipientAddress = selectedAddress
+      submitValues.recipientAddress = selectedEntry.address
     }
     onSubmit(submitValues)
   }
@@ -132,7 +133,7 @@ const SendFunds = ({
                     <Hairline />
                   </Col>
                 </Row>
-                { selectedAddress ? (
+                { selectedEntry && selectedEntry.address ? (
                   <>
                     <Row margin="xs">
                       <Paragraph size="md" color="disabled" style={{ letterSpacing: '-0.5px' }} noMargin>
@@ -141,15 +142,20 @@ const SendFunds = ({
                     </Row>
                     <Row margin="md" align="center">
                       <Col xs={1}>
-                        <Identicon address={selectedAddress} diameter={32} />
+                        <Identicon address={selectedEntry.address} diameter={32} />
                       </Col>
                       <Col xs={11} layout="column">
                         <Block justify="left">
-                          <Paragraph weight="bolder" className={classes.address} noMargin onClick={() => setSelectedAddress(null)}>
-                            {selectedAddress}
-                          </Paragraph>
-                          <CopyBtn content={selectedAddress} />
-                          <EtherscanBtn type="address" value={selectedAddress} />
+                          <Block>
+                            <Paragraph weight="bolder" className={classes.address} noMargin onClick={() => setSelectedEntry(null)}>
+                              {selectedEntry.name}
+                            </Paragraph>
+                            <Paragraph weight="bolder" className={classes.address} noMargin onClick={() => setSelectedEntry(null)}>
+                              {selectedEntry.address}
+                            </Paragraph>
+                          </Block>
+                          <CopyBtn content={selectedEntry.address} />
+                          <EtherscanBtn type="address" value={selectedEntry.address} />
                         </Block>
                       </Col>
                     </Row>
@@ -158,7 +164,7 @@ const SendFunds = ({
                   <>
                     <Row margin="md">
                       <Col xs={11}>
-                        <AddressBookInput fieldMutator={mutators.setRecipient} recipientAddress={recipientAddress} setSelectedAddress={setSelectedAddress} />
+                        <AddressBookInput fieldMutator={mutators.setRecipient} recipientAddress={recipientAddress} setSelectedEntry={setSelectedEntry} />
                       </Col>
                       <Col xs={1} center="xs" middle="xs" className={classes}>
                         <Img
@@ -231,7 +237,7 @@ const SendFunds = ({
                   color="primary"
                   data-testid="review-tx-btn"
                   className={classes.submitButton}
-                  disabled={!selectedAddress}
+                  disabled={!setSelectedEntry}
                 >
                   Review
                 </Button>

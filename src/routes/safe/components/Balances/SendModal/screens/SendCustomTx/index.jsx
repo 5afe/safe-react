@@ -51,7 +51,7 @@ const SendCustomTx = ({
   initialValues,
 }: Props) => {
   const [qrModalOpen, setQrModalOpen] = useState<boolean>(false)
-  const [selectedAddress, setSelectedAddress] = useState<string | null>(null)
+  const [selectedEntry, setSelectedEntry] = useState<Object | null>(null)
   const handleSubmit = (values: Object) => {
     if (values.data || values.value) {
       onSubmit(values)
@@ -114,7 +114,7 @@ const SendCustomTx = ({
                     <Hairline />
                   </Col>
                 </Row>
-                { selectedAddress ? (
+                { selectedEntry && selectedEntry.address ? (
                   <>
                     <Row margin="xs">
                       <Paragraph size="md" color="disabled" style={{ letterSpacing: '-0.5px' }} noMargin>
@@ -123,15 +123,20 @@ const SendCustomTx = ({
                     </Row>
                     <Row margin="md" align="center">
                       <Col xs={1}>
-                        <Identicon address={selectedAddress} diameter={32} />
+                        <Identicon address={selectedEntry.address} diameter={32} />
                       </Col>
                       <Col xs={11} layout="column">
                         <Block justify="left">
-                          <Paragraph weight="bolder" className={classes.address} noMargin onClick={() => setSelectedAddress(null)}>
-                            {selectedAddress}
-                          </Paragraph>
-                          <CopyBtn content={selectedAddress} />
-                          <EtherscanBtn type="address" value={selectedAddress} />
+                          <Block>
+                            <Paragraph weight="bolder" className={classes.address} noMargin onClick={() => setSelectedEntry(null)}>
+                              {selectedEntry.name}
+                            </Paragraph>
+                            <Paragraph weight="bolder" className={classes.address} noMargin onClick={() => setSelectedEntry(null)}>
+                              {selectedEntry.address}
+                            </Paragraph>
+                          </Block>
+                          <CopyBtn content={selectedEntry.address} />
+                          <EtherscanBtn type="address" value={selectedEntry.address} />
                         </Block>
                       </Col>
                     </Row>
@@ -140,7 +145,7 @@ const SendCustomTx = ({
                   <>
                     <Row margin="md">
                       <Col xs={11}>
-                        <AddressBookInput fieldMutator={mutators.setRecipient} setSelectedAddress={setSelectedAddress} isCustomTx />
+                        <AddressBookInput fieldMutator={mutators.setRecipient} setSelectedEntry={setSelectedEntry} isCustomTx />
                       </Col>
                       <Col xs={1} center="xs" middle="xs" className={classes}>
                         <Img
