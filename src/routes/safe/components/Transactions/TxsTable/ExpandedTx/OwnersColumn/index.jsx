@@ -187,7 +187,12 @@ const OwnersColumn = ({
                 && classes.ownerListTitleCancelDone,
             )}
           >
-            <div className={cn(classes.verticalLine, classes.verticalLineDone)} />
+            <div
+              className={cn(
+                classes.verticalLine,
+                tx.isExecuted ? classes.verticalLineDone : classes.verticalLinePending,
+              )}
+            />
             <div className={classes.circleState}>
               <Img src={cancelThresholdReached || cancelTx.isExecuted ? CheckLargeFilledRedCircle : ConfirmLargeRedCircle} alt="" />
             </div>
