@@ -50,7 +50,7 @@ const OwnersColumn = ({
   canExecute,
 }: Props) => {
   const cancellationTx = isCancellationTransaction(tx, safeAddress)
-  const showOlderTxAnnotation = thresholdReached && !canExecute && !tx.isExecuted
+  const showOlderTxAnnotation = thresholdReached && !canExecute && !tx.isExecuted && !tx.cancelled
 
   const ownersWhoConfirmed = []
   let currentUserAlreadyConfirmed = false
