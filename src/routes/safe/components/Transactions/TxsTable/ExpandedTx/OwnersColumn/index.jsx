@@ -97,17 +97,20 @@ const OwnersColumn = ({
   canExecuteCancel,
 }: Props) => {
   let showOlderTxAnnotation: boolean
-  if (tx.isExecuted || (cancelTx && cancelTx.isExecuted)) {
+  const cancelTxExecuted = !!cancelTx && cancelTx.isExecuted
+
+  if (tx.isExecuted || cancelTxExecuted) {
     showOlderTxAnnotation = false
   } else if (!tx.isExecuted) {
     showOlderTxAnnotation = thresholdReached && !canExecute
   } else {
     showOlderTxAnnotation = cancelThresholdReached && !canExecuteCancel
   }
-  const [ownersWhoConfirmed, currentUserAlreadyConfirmed] = ownersConfirmations(
-    tx,
-    userAddress,
-  )
+
+  const [
+    ownersWhoConfirmed,
+    currentUserAlreadyConfirmed,
+  ] = ownersConfirmations(tx, userAddress)
   const [
     ownersUnconfirmed,
     userIsUnconfirmedOwner,
@@ -141,14 +144,14 @@ const OwnersColumn = ({
 
   const showExecuteBtn = canExecute && !tx.isExecuted && thresholdReached
 
-  const showConfirmCancelBtn = cancelTx
-    && !cancelTx.isExecuted
+  const showConfirmCancelBtn = !cancelTxExecuted
     && !tx.isExecuted
     && cancelTx.status !== 'pending'
     && userIsUnconfirmedCancelOwner
     && !currentUserAlreadyConfirmedCancel
     && !cancelThresholdReached
-  const showExecuteCancelBtn = canExecuteCancel && !cancelTx.isExecuted && cancelThresholdReached
+
+  const showExecuteCancelBtn = canExecuteCancel && !cancelTxExecuted && cancelThresholdReached
 
   return (
     <Col xs={6} className={classes.rightCol} layout="block">
@@ -183,8 +186,7 @@ const OwnersColumn = ({
           <Block
             className={cn(
               classes.ownerListTitle,
-              (cancelThresholdReached || cancelTx.isExecuted)
-                && classes.ownerListTitleCancelDone,
+              (cancelThresholdReached || cancelTxExecuted) && classes.ownerListTitleCancelDone,
             )}
           >
             <div
@@ -194,9 +196,9 @@ const OwnersColumn = ({
               )}
             />
             <div className={classes.circleState}>
-              <Img src={cancelThresholdReached || cancelTx.isExecuted ? CheckLargeFilledRedCircle : ConfirmLargeRedCircle} alt="" />
+              <Img src={cancelThresholdReached || cancelTxExecuted ? CheckLargeFilledRedCircle : ConfirmLargeRedCircle} alt="" />
             </div>
-            {cancelTx.isExecuted
+            {cancelTxExecuted
               ? `Rejected [${cancelTx.confirmations.size}/${cancelTx.confirmations.size}]`
               : `Rejected [${cancelTx.confirmations.size}/${threshold}]`}
           </Block>
@@ -218,24 +220,31 @@ const OwnersColumn = ({
         className={cn(
           classes.ownerListTitle,
           tx.isExecuted && classes.ownerListTitleDone,
-          cancelTx && cancelTx.isExecuted && classes.ownerListTitleCancelDone,
+          cancelTxExecuted && classes.ownerListTitleCancelDone,
         )}
       >
-        <div className={cn(classes.verticalLine, tx.isExecuted && classes.verticalLineDone, (cancelTx && cancelTx.isExecuted) && classes.verticalLineCancel)} />
+        <div
+          className={cn(
+            classes.verticalLine,
+            tx.isExecuted && classes.verticalLineDone,
+            cancelTxExecuted && classes.verticalLineCancel,
+          )}
+        />
+
         <div className={classes.circleState}>
-          {((!tx.isExecuted && cancelTx && !cancelTx.isExecuted)
-            || (!cancelTx && !tx.isExecuted)) && (
+          {!tx.isExecuted && !cancelTxExecuted && (
             <Img src={ConfirmLargeGreyCircle} alt="Confirm / Execute tx" />
           )}
           {tx.isExecuted && (
             <Img src={CheckLargeFilledGreenCircle} alt="TX Executed icon" />
           )}
-          {cancelTx && cancelTx.isExecuted && (
+          {cancelTxExecuted && (
             <Img src={CheckLargeFilledRedCircle} alt="TX Executed icon" />
           )}
         </div>
         Executed
       </Block>
+
       {showOlderTxAnnotation && (
         <Block className={classes.olderTxAnnotation}>
           <Paragraph>
