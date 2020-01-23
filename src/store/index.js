@@ -12,10 +12,10 @@ import transactions, {
   type State as TransactionsState,
   TRANSACTIONS_REDUCER_ID,
 } from '~/routes/safe/store/reducer/transactions'
-import cancelTransactions, {
+import cancellationTransactions, {
   type CancelState as CancelTransactionsState,
-  CANCEL_TRANSACTIONS_REDUCER_ID,
-} from '~/routes/safe/store/reducer/cancelTransactions'
+  CANCELLATION_TRANSACTIONS_REDUCER_ID,
+} from '~/routes/safe/store/reducer/cancellationTransactions'
 import incomingTransactions, {
   type IncomingState as IncomingTransactionsState,
   INCOMING_TRANSACTIONS_REDUCER_ID,
@@ -49,7 +49,7 @@ export type GlobalState = {
   safes: SafeState,
   tokens: TokensState,
   transactions: TransactionsState,
-  cancelTransactions: CancelTransactionsState,
+  cancellationTransactions: CancelTransactionsState,
   incomingTransactions: IncomingTransactionsState,
   notifications: NotificationsState,
   currentSession: CurrentSessionState,
@@ -63,7 +63,7 @@ const reducers: Reducer<GlobalState> = combineReducers({
   [SAFE_REDUCER_ID]: safe,
   [TOKEN_REDUCER_ID]: tokens,
   [TRANSACTIONS_REDUCER_ID]: transactions,
-  [CANCEL_TRANSACTIONS_REDUCER_ID]: cancelTransactions,
+  [CANCELLATION_TRANSACTIONS_REDUCER_ID]: cancellationTransactions,
   [INCOMING_TRANSACTIONS_REDUCER_ID]: incomingTransactions,
   [NOTIFICATIONS_REDUCER_ID]: notifications,
   [CURRENCY_VALUES_KEY]: currencyValues,

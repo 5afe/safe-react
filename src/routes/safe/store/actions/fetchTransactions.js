@@ -21,7 +21,7 @@ import { isTokenTransfer } from '~/logic/tokens/utils/tokenHelpers'
 import { decodeParamsFromSafeMethod } from '~/logic/contracts/methodIds'
 import { ALTERNATIVE_TOKEN_ABI } from '~/logic/tokens/utils/alternativeAbi'
 import type { TransactionProps } from '~/routes/safe/store/models/transaction'
-import { addCancelTransactions } from '~/routes/safe/store/actions/addCancelTransactions'
+import { addCancellationTransactions } from '~/routes/safe/store/actions/addCancellationTransactions'
 
 let web3
 
@@ -290,7 +290,7 @@ export default (safeAddress: string) => async (dispatch: ReduxDispatch<GlobalSta
   const { outgoing, cancel }: SafeTransactionsType = await loadSafeTransactions(safeAddress)
   const incomingTransactions: Map<string, List<IncomingTransaction>> = await loadSafeIncomingTransactions(safeAddress)
 
-  dispatch(addCancelTransactions(cancel))
+  dispatch(addCancellationTransactions(cancel))
   dispatch(addTransactions(outgoing))
   dispatch(addIncomingTransactions(incomingTransactions))
 }

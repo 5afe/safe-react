@@ -37,7 +37,7 @@ const expandCellStyle = {
 type Props = {
   classes: Object,
   transactions: List<Transaction | IncomingTransaction>,
-  cancelTransactions: List<Transaction>,
+  cancellationTransactions: List<Transaction>,
   threshold: number,
   owners: List<Owner>,
   userAddress: string,
@@ -51,7 +51,7 @@ type Props = {
 const TxsTable = ({
   classes,
   transactions,
-  cancelTransactions,
+  cancellationTransactions,
   threshold,
   owners,
   granted,
@@ -69,7 +69,7 @@ const TxsTable = ({
 
   const columns = generateColumns()
   const autoColumns = columns.filter((c) => !c.custom)
-  const filteredData = getTxTableData(transactions, cancelTransactions)
+  const filteredData = getTxTableData(transactions, cancellationTransactions)
     .sort(({ dateOrder: a }, { dateOrder: b }) => {
       if (!a || !b) {
         return 0

@@ -1,16 +1,16 @@
 // @flow
 import { List, Map } from 'immutable'
 import { handleActions, type ActionType } from 'redux-actions'
-import { ADD_CANCEL_TRANSACTIONS } from '~/routes/safe/store/actions/addCancelTransactions'
+import { ADD_CANCELLATION_TRANSACTIONS } from '~/routes/safe/store/actions/addCancellationTransactions'
 import { type Transaction } from '~/routes/safe/store/models/transaction'
 
-export const CANCEL_TRANSACTIONS_REDUCER_ID = 'cancelTransactions'
+export const CANCELLATION_TRANSACTIONS_REDUCER_ID = 'cancellationTransactions'
 
 export type CancelState = Map<string, List<Transaction>>
 
 export default handleActions<CancelState, *>(
   {
-    [ADD_CANCEL_TRANSACTIONS]: (state: CancelState, action: ActionType<Function>): CancelState => action.payload,
+    [ADD_CANCELLATION_TRANSACTIONS]: (state: CancelState, action: ActionType<Function>): CancelState => action.payload,
   },
   Map(),
 )

@@ -30,11 +30,11 @@ const notificationsMiddleware = (store: Store<GlobalState>) => (
         const transactionsList = action.payload
         const userAddress: string = userAccountSelector(state)
         const safeAddress = action.payload.keySeq().get(0)
-        const cancelTransactions = state.cancelTransactions.get(safeAddress)
-        const cancelTransactionsByNonce = cancelTransactions ? cancelTransactions.reduce((acc, tx) => acc.set(tx.nonce, tx), Map()) : Map()
+        const cancellationTransactions = state.cancellationTransactions.get(safeAddress)
+        const cancellationTransactionsByNonce = cancellationTransactions ? cancellationTransactions.reduce((acc, tx) => acc.set(tx.nonce, tx), Map()) : Map()
         const awaitingTransactions = getAwaitingTransactions(
           transactionsList,
-          cancelTransactionsByNonce,
+          cancellationTransactionsByNonce,
           userAddress,
         )
         const awaitingTransactionsList = awaitingTransactions.get(
