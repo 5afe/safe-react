@@ -21,7 +21,8 @@ import {
   generateColumns,
   TX_TABLE_ID,
   TX_TABLE_RAW_TX_ID,
-  type TransactionRow, TX_TABLE_CANCEL_TX_ID
+  TX_TABLE_RAW_CANCEL_TX_ID,
+  type TransactionRow,
 } from './columns'
 import { styles } from './style'
 import Status from './Status'
@@ -135,7 +136,7 @@ const TxsTable = ({
                     component={ExpandedTxComponent}
                     unmountOnExit
                     tx={row[TX_TABLE_RAW_TX_ID]}
-                    cancelTx={row[TX_TABLE_CANCEL_TX_ID]}
+                    cancelTx={row[TX_TABLE_RAW_CANCEL_TX_ID]}
                     threshold={threshold}
                     owners={owners}
                     granted={granted}

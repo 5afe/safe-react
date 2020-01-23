@@ -92,42 +92,49 @@ const OwnerComponent = ({
         />
       </Block>
       <Block className={classes.spacer} />
-      {!isCancelTx && (
-        <>
-          {showConfirmBtn && owner.address === userAddress && (
-            <Button
-              className={classes.button}
-              color="primary"
-              onClick={onTxConfirm}
-              testId={CONFIRM_TX_BTN_TEST_ID}
-              variant="contained"
-            >
-          Confirm
-            </Button>
+      {owner.address === userAddress && (
+        <Block>
+          {isCancelTx ? (
+            <>
+              {showCancelBtn && (
+                <Button
+                  className={cn(classes.button, classes.lastButton)}
+                  color="secondary"
+                  onClick={onTxCancel}
+                  testId={CANCEL_TX_BTN_TEST_ID}
+                  variant="contained"
+                >
+                  Reject
+                </Button>
+              )}
+            </>
+          ) : (
+            <>
+              {showConfirmBtn && (
+                <Button
+                  className={classes.button}
+                  color="primary"
+                  onClick={onTxConfirm}
+                  testId={CONFIRM_TX_BTN_TEST_ID}
+                  variant="contained"
+                >
+                  Confirm
+                </Button>
+              )}
+              {showExecuteBtn && (
+                <Button
+                  className={classes.button}
+                  color="primary"
+                  onClick={onTxExecute}
+                  testId={EXECUTE_TX_BTN_TEST_ID}
+                  variant="contained"
+                >
+                  Execute
+                </Button>
+              )}
+            </>
           )}
-          {showExecuteBtn && owner.address === userAddress && (
-            <Button
-              className={classes.button}
-              color="primary"
-              onClick={onTxExecute}
-              testId={EXECUTE_TX_BTN_TEST_ID}
-              variant="contained"
-            >
-          Execute
-            </Button>
-          )}
-          {showCancelBtn && owner.address === userAddress && (
-            <Button
-              className={cn(classes.button, classes.lastButton)}
-              color="secondary"
-              onClick={onTxCancel}
-              testId={CANCEL_TX_BTN_TEST_ID}
-              variant="contained"
-            >
-          Reject
-            </Button>
-          )}
-        </>
+        </Block>
       )}
       {owner.address === executor && (
         <Block className={classes.executor}>Executor</Block>

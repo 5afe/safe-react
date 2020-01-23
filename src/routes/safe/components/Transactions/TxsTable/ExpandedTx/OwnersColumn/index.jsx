@@ -80,7 +80,7 @@ function getPendingOwnersConfirmations(
 
 const OwnersColumn = ({
   tx,
-  cancelTx,
+  cancelTx = makeTransaction(),
   owners,
   classes,
   granted,
@@ -97,9 +97,8 @@ const OwnersColumn = ({
   canExecuteCancel,
 }: Props) => {
   let showOlderTxAnnotation: boolean
-  const cancelTxExecuted = !!cancelTx && cancelTx.isExecuted
 
-  if (tx.isExecuted || cancelTxExecuted) {
+  if (tx.isExecuted || cancelTx.isExecuted) {
     showOlderTxAnnotation = false
   } else if (!tx.isExecuted) {
     showOlderTxAnnotation = thresholdReached && !canExecute
@@ -144,15 +143,14 @@ const OwnersColumn = ({
 
   const showExecuteBtn = canExecute && !tx.isExecuted && thresholdReached
 
-  const cancelTxPending = cancelTx && cancelTx.status === 'pending'
-  const showConfirmCancelBtn = !cancelTxExecuted
+  const showConfirmCancelBtn = !cancelTx.isExecuted
     && !tx.isExecuted
-    && !cancelTxPending
+    && cancelTx.status !== 'pending'
     && userIsUnconfirmedCancelOwner
     && !currentUserAlreadyConfirmedCancel
     && !cancelThresholdReached
 
-  const showExecuteCancelBtn = canExecuteCancel && !cancelTxExecuted && cancelThresholdReached
+  const showExecuteCancelBtn = canExecuteCancel && !cancelTx.isExecuted && cancelThresholdReached
 
   return (
     <Col xs={6} className={classes.rightCol} layout="block">
@@ -187,7 +185,7 @@ const OwnersColumn = ({
           <Block
             className={cn(
               classes.ownerListTitle,
-              (cancelThresholdReached || cancelTxExecuted) && classes.ownerListTitleCancelDone,
+              (cancelThresholdReached || cancelTx.isExecuted) && classes.ownerListTitleCancelDone,
             )}
           >
             <div
@@ -197,19 +195,20 @@ const OwnersColumn = ({
               )}
             />
             <div className={classes.circleState}>
-              <Img src={cancelThresholdReached || cancelTxExecuted ? CheckLargeFilledRedCircle : ConfirmLargeRedCircle} alt="" />
+              <Img src={cancelThresholdReached || cancelTx.isExecuted ? CheckLargeFilledRedCircle : ConfirmLargeRedCircle} alt="" />
             </div>
-            {cancelTxExecuted
+            {cancelTx.isExecuted
               ? `Rejected [${cancelTx.confirmations.size}/${cancelTx.confirmations.size}]`
               : `Rejected [${cancelTx.confirmations.size}/${threshold}]`}
           </Block>
           <OwnersList
-            executor={cancelTx.executor}
+            executor={cancelTx ? cancelTx.executor : null}
             isCancelTx
             onTxConfirm={onCancelTxConfirm}
             onTxExecute={onCancelTxExecute}
             ownersUnconfirmed={ownersUnconfirmedCancel}
             ownersWhoConfirmed={ownersWhoConfirmedCancel}
+            showCancelBtn={granted && displayButtonRow}
             showConfirmBtn={showConfirmCancelBtn}
             showExecuteBtn={showExecuteCancelBtn}
             thresholdReached={cancelThresholdReached}
@@ -221,25 +220,25 @@ const OwnersColumn = ({
         className={cn(
           classes.ownerListTitle,
           tx.isExecuted && classes.ownerListTitleDone,
-          cancelTxExecuted && classes.ownerListTitleCancelDone,
+          cancelTx.isExecuted && classes.ownerListTitleCancelDone,
         )}
       >
         <div
           className={cn(
             classes.verticalLine,
             tx.isExecuted && classes.verticalLineDone,
-            cancelTxExecuted && classes.verticalLineCancel,
+            cancelTx.isExecuted && classes.verticalLineCancel,
           )}
         />
 
         <div className={classes.circleState}>
-          {!tx.isExecuted && !cancelTxExecuted && (
+          {!tx.isExecuted && !cancelTx.isExecuted && (
             <Img src={ConfirmLargeGreyCircle} alt="Confirm / Execute tx" />
           )}
           {tx.isExecuted && (
             <Img src={CheckLargeFilledGreenCircle} alt="TX Executed icon" />
           )}
-          {cancelTxExecuted && (
+          {cancelTx.isExecuted && (
             <Img src={CheckLargeFilledRedCircle} alt="TX Executed icon" />
           )}
         </div>

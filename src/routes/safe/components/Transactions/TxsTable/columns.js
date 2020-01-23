@@ -16,7 +16,7 @@ export const TX_TABLE_DATE_ID = 'date'
 export const TX_TABLE_AMOUNT_ID = 'amount'
 export const TX_TABLE_STATUS_ID = 'status'
 export const TX_TABLE_RAW_TX_ID = 'tx'
-export const TX_TABLE_CANCEL_TX_ID = 'cancelTx'
+export const TX_TABLE_RAW_CANCEL_TX_ID = 'cancelTx'
 export const TX_TABLE_EXPAND_ICON = 'expand'
 
 type TxData = {
@@ -89,7 +89,7 @@ const getTransactionTableData = (
     [TX_TABLE_AMOUNT_ID]: getTxAmount(tx),
     [TX_TABLE_STATUS_ID]: tx.status,
     [TX_TABLE_RAW_TX_ID]: tx,
-    [TX_TABLE_CANCEL_TX_ID]: cancelTx,
+    [TX_TABLE_RAW_CANCEL_TX_ID]: cancelTx,
   }
 }
 

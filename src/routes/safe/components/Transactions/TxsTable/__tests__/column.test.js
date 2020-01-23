@@ -1,7 +1,7 @@
 // @flow
 import { List } from 'immutable'
 import { makeTransaction } from '~/routes/safe/store/models/transaction'
-import { getTxTableData, TX_TABLE_CANCEL_TX_ID } from '~/routes/safe/components/Transactions/TxsTable/columns'
+import { getTxTableData, TX_TABLE_RAW_CANCEL_TX_ID } from '~/routes/safe/components/Transactions/TxsTable/columns'
 
 describe('TxsTable Columns > getTxTableData', () => {
   it('should include CancelTx object inside TxTableData', () => {
@@ -14,7 +14,7 @@ describe('TxsTable Columns > getTxTableData', () => {
     const txRow = txTableData.first()
 
     // Then
-    expect(txRow[TX_TABLE_CANCEL_TX_ID]).toEqual(mockedCancelTransaction)
+    expect(txRow[TX_TABLE_RAW_CANCEL_TX_ID]).toEqual(mockedCancelTransaction)
   })
   it('should not include CancelTx object inside TxTableData', () => {
     // Given
@@ -26,6 +26,6 @@ describe('TxsTable Columns > getTxTableData', () => {
     const txRow = txTableData.first()
 
     // Then
-    expect(txRow[TX_TABLE_CANCEL_TX_ID]).toBeUndefined()
+    expect(txRow[TX_TABLE_RAW_CANCEL_TX_ID]).toBeUndefined()
   })
 })
