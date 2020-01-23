@@ -10,7 +10,7 @@ type Props = {
   safeAddress: string,
   threshold: number,
   transactions: List<Transaction | IncomingTransaction>,
-  cancelTransactions: List<Transaction>,
+  cancellationTransactions: List<Transaction>,
   owners: List<Owner>,
   userAddress: string,
   granted: boolean,
@@ -22,7 +22,7 @@ type Props = {
 
 const Transactions = ({
   transactions = List(),
-  cancelTransactions = List(),
+  cancellationTransactions = List(),
   owners,
   threshold,
   userAddress,
@@ -35,7 +35,7 @@ const Transactions = ({
 }: Props) => (
   <TxsTable
     transactions={transactions}
-    cancelTransactions={cancelTransactions}
+    cancellationTransactions={cancellationTransactions}
     threshold={threshold}
     owners={owners}
     userAddress={userAddress}

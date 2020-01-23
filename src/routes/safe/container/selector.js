@@ -7,7 +7,7 @@ import {
   safeBalancesSelector,
   safeBlacklistedTokensSelector,
   safeTransactionsSelector,
-  safeCancelTransactionsSelector,
+  safeCancellationTransactionsSelector,
   safeIncomingTransactionsSelector,
   type RouterProps,
   type SafeSelectorProps,
@@ -39,7 +39,7 @@ export type SelectorProps = {
   currencySelected: string,
   currencyValues: BalanceCurrencyType[],
   transactions: List<Transaction | IncomingTransaction>,
-  cancelTransactions: List<Transaction>,
+  cancellationTransactions: List<Transaction>,
   addressBook: AddressBook,
 }
 
@@ -110,15 +110,15 @@ const extendedTransactionsSelector: Selector<GlobalState, RouterProps, List<Tran
   safeSelector,
   userAccountSelector,
   safeTransactionsSelector,
-  safeCancelTransactionsSelector,
+  safeCancellationTransactionsSelector,
   safeIncomingTransactionsSelector,
-  (safe, userAddress, transactions, cancelTransactions, incomingTransactions) => {
-    const cancelTransactionsByNonce = cancelTransactions.reduce((acc, tx) => acc.set(tx.nonce, tx), Map())
+  (safe, userAddress, transactions, cancellationTransactions, incomingTransactions) => {
+    const cancellationTransactionsByNonce = cancellationTransactions.reduce((acc, tx) => acc.set(tx.nonce, tx), Map())
     const extendedTransactions = transactions.map((tx: Transaction) => {
       let extendedTx = tx
 
       if (!tx.isExecuted) {
-        if (cancelTransactionsByNonce.get(tx.nonce) && cancelTransactionsByNonce.get(tx.nonce).get('isExecuted')) {
+        if (cancellationTransactionsByNonce.get(tx.nonce) && cancellationTransactionsByNonce.get(tx.nonce).get('isExecuted')) {
           extendedTx = tx.set('cancelled', true)
         }
       }
@@ -141,7 +141,7 @@ export default createStructuredSelector<Object, *>({
   network: networkSelector,
   safeUrl: safeParamAddressSelector,
   transactions: extendedTransactionsSelector,
-  cancelTransactions: safeCancelTransactionsSelector,
+  cancellationTransactions: safeCancellationTransactionsSelector,
   currencySelected: currentCurrencySelector,
   currencyValues: currencyValuesListSelector,
   addressBook: getAddressBook,

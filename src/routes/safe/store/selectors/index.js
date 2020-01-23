@@ -8,8 +8,8 @@ import { type Safe } from '~/routes/safe/store/models/safe'
 import { type State as TransactionsState, TRANSACTIONS_REDUCER_ID } from '~/routes/safe/store/reducer/transactions'
 import {
   type CancelState as CancelTransactionsState,
-  CANCEL_TRANSACTIONS_REDUCER_ID,
-} from '~/routes/safe/store/reducer/cancelTransactions'
+  CANCELLATION_TRANSACTIONS_REDUCER_ID,
+} from '~/routes/safe/store/reducer/cancellationTransactions'
 import {
   type IncomingState as IncomingTransactionsState,
   INCOMING_TRANSACTIONS_REDUCER_ID,
@@ -52,8 +52,8 @@ export const defaultSafeSelector: Selector<GlobalState, {}, string> = createSele
 
 const transactionsSelector = (state: GlobalState): TransactionsState => state[TRANSACTIONS_REDUCER_ID]
 
-const cancelTransactionsSelector = (state: GlobalState): CancelTransactionsState => state[
-  CANCEL_TRANSACTIONS_REDUCER_ID
+const cancellationTransactionsSelector = (state: GlobalState): CancelTransactionsState => state[
+  CANCELLATION_TRANSACTIONS_REDUCER_ID
 ]
 
 const incomingTransactionsSelector = (state: GlobalState): IncomingTransactionsState => state[
@@ -92,11 +92,11 @@ export const addressBookQueryParamsSelector = (state: GlobalState): string => {
   return entryAddressToEditOrCreateNew
 }
 
-export const safeCancelTransactionsSelector: TxSelectorType = createSelector(
-  cancelTransactionsSelector,
+export const safeCancellationTransactionsSelector: TxSelectorType = createSelector(
+  cancellationTransactionsSelector,
   safeParamAddressSelector,
-  (cancelTransactions: TransactionsState, address: string): List<Transaction> => {
-    if (!cancelTransactions) {
+  (cancellationTransactions: TransactionsState, address: string): List<Transaction> => {
+    if (!cancellationTransactions) {
       return List([])
     }
 
@@ -104,7 +104,7 @@ export const safeCancelTransactionsSelector: TxSelectorType = createSelector(
       return List([])
     }
 
-    return cancelTransactions.get(address) || List([])
+    return cancellationTransactions.get(address) || List([])
   },
 )
 

@@ -5,38 +5,32 @@ import {
 
 export const styles = () => ({
   ownersList: {
-    width: '100%',
-    padding: 0,
     height: '192px',
     overflowY: 'scroll',
+    padding: 0,
+    width: '100%',
   },
   rightCol: {
-    boxSizing: 'border-box',
     borderLeft: `2px solid ${border}`,
+    boxSizing: 'border-box',
   },
-  verticalLineProgressPending: {
+  verticalLine: {
+    backgroundColor: secondaryText,
+    height: '55px',
+    left: '27px',
     position: 'absolute',
-    borderLeft: `2px solid ${secondaryText}`,
-    height: '52px',
-    top: '-26px',
-    left: '29px',
+    top: '-27px',
+    width: '2px',
     zIndex: '10',
   },
-  verticalLineProgressDone: {
-    position: 'absolute',
-    borderLeft: `2px solid ${secondary}`,
-    height: '52px',
-    top: '-26px',
-    left: '29px',
-    zIndex: '10',
+  verticalLinePending: {
+    backgroundColor: secondaryText,
   },
-  verticalLineCancelProgressDone: {
-    position: 'absolute',
-    borderLeft: `2px solid ${error}`,
-    height: '52px',
-    top: '-26px',
-    left: '29px',
-    zIndex: '10',
+  verticalLineDone: {
+    backgroundColor: secondary,
+  },
+  verticalLineCancel: {
+    backgroundColor: error,
   },
   icon: {
     marginRight: sm,
@@ -45,21 +39,21 @@ export const styles = () => ({
     borderBottom: `1px solid ${border}`,
   },
   container: {
-    position: 'relative',
+    alignItems: 'center',
     display: 'flex',
-    padding: '5px 20px',
+    padding: '13px 15px 13px 18px',
+    position: 'relative',
   },
   ownerListTitle: {
-    position: 'relative',
-    display: 'flex',
     alignItems: 'center',
-    padding: '15px',
-    paddingLeft: '20px',
+    display: 'flex',
     fontSize: '11px',
     fontWeight: boldFont,
-    lineHeight: 1.27,
-    textTransform: 'uppercase',
     letterSpacing: '1px',
+    lineHeight: 1.3,
+    padding: '15px 15px 15px 18px',
+    position: 'relative',
+    textTransform: 'uppercase',
   },
   olderTxAnnotation: {
     textAlign: 'center',
@@ -71,9 +65,9 @@ export const styles = () => ({
     color: error,
   },
   name: {
-    textOverflow: 'ellipsis',
-    overflow: 'hidden',
     height: '15px',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
   },
   address: {
     height: '20px',
@@ -81,26 +75,37 @@ export const styles = () => ({
   spacer: {
     flex: 'auto',
   },
-  iconState: {
-    width: '20px',
+  circleState: {
     display: 'flex',
     justifyContent: 'center',
-    marginRight: '10px',
+    marginRight: '18px',
+    width: '20px',
     zIndex: '100',
+
     '& > img': {
       display: 'block',
     },
   },
   button: {
-    justifyContent: 'center',
     alignSelf: 'center',
+    flexGrow: '0',
+    fontSize: '16px',
+    justifyContent: 'center',
+    paddingLeft: '14px',
+    paddingRight: '14px',
+  },
+  lastButton: {
+    marginLeft: '10px',
   },
   executor: {
-    borderRadius: '3px',
-    padding: '3px 5px',
-    background: border,
-    color: primary,
     alignSelf: 'center',
+    background: border,
+    borderRadius: '3px',
+    color: primary,
     fontSize: '11px',
+    height: '24px',
+    lineHeight: '24px',
+    padding: '0 12px',
+
   },
 })
