@@ -16,6 +16,7 @@ export type SafeProps = {
   ethBalance?: string,
   nonce: number,
   latestIncomingTxBlock: number,
+  recurringUser?: boolean,
 }
 
 const SafeRecord: RecordFactory<SafeProps> = Record({
@@ -29,6 +30,7 @@ const SafeRecord: RecordFactory<SafeProps> = Record({
   balances: Map({}),
   nonce: 0,
   latestIncomingTxBlock: 0,
+  recurringUser: undefined,
 })
 
 export type Safe = RecordOf<SafeProps>
