@@ -40,7 +40,7 @@ type Props = {
   userAddress: string,
 };
 
-function ownersConfirmations(tx = makeTransaction(), userAddress) {
+function getOwnersConfirmations(tx = makeTransaction(), userAddress) {
   const ownersWhoConfirmed = []
   let currentUserAlreadyConfirmed = false
 
@@ -57,7 +57,7 @@ function ownersConfirmations(tx = makeTransaction(), userAddress) {
   return [ownersWhoConfirmed, currentUserAlreadyConfirmed]
 }
 
-function pendingOwnersConfirmations(
+function getPendingOwnersConfirmations(
   owners,
   tx = makeTransaction(),
   userAddress,
@@ -110,19 +110,19 @@ const OwnersColumn = ({
   const [
     ownersWhoConfirmed,
     currentUserAlreadyConfirmed,
-  ] = ownersConfirmations(tx, userAddress)
+  ] = getOwnersConfirmations(tx, userAddress)
   const [
     ownersUnconfirmed,
     userIsUnconfirmedOwner,
-  ] = pendingOwnersConfirmations(owners, tx, userAddress)
+  ] = getPendingOwnersConfirmations(owners, tx, userAddress)
   const [
     ownersWhoConfirmedCancel,
     currentUserAlreadyConfirmedCancel,
-  ] = ownersConfirmations(cancelTx, userAddress)
+  ] = getOwnersConfirmations(cancelTx, userAddress)
   const [
     ownersUnconfirmedCancel,
     userIsUnconfirmedCancelOwner,
-  ] = pendingOwnersConfirmations(owners, cancelTx, userAddress)
+  ] = getPendingOwnersConfirmations(owners, cancelTx, userAddress)
 
   let displayButtonRow = true
   if (tx.executionTxHash) {
