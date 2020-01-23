@@ -2,7 +2,7 @@
 import { createBrowserHistory } from 'history'
 import { connectRouter, routerMiddleware } from 'connected-react-router'
 import {
-  combineReducers, createStore, applyMiddleware, compose, type Reducer, type Store,
+  combineReducers, createStore, applyMiddleware, compose, type CombinedReducer, type Store,
 } from 'redux'
 import thunk from 'redux-thunk'
 import safe, { SAFE_REDUCER_ID, type SafeReducerState as SafeState } from '~/routes/safe/store/reducer/safe'
@@ -40,9 +40,14 @@ export const history = createBrowserHistory()
 
 // eslint-disable-next-line
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
-const finalCreateStore = composeEnhancers(
-  applyMiddleware(thunk, routerMiddleware(history), safeStorage, providerWatcher, notificationsMiddleware, addressBookMiddleware),
-)
+const finalCreateStore = composeEnhancers(applyMiddleware(
+  thunk,
+  routerMiddleware(history),
+  safeStorage,
+  providerWatcher,
+  notificationsMiddleware,
+  addressBookMiddleware,
+))
 
 export type GlobalState = {
   providers: ProviderState,
@@ -57,7 +62,7 @@ export type GlobalState = {
 
 export type GetState = () => GlobalState
 
-const reducers: Reducer<GlobalState> = combineReducers({
+const reducers: CombinedReducer<GlobalState, *> = combineReducers({
   router: connectRouter(history),
   [PROVIDER_REDUCER_ID]: provider,
   [SAFE_REDUCER_ID]: safe,
@@ -72,7 +77,10 @@ const reducers: Reducer<GlobalState> = combineReducers({
   [CURRENT_SESSION_REDUCER_ID]: currentSession,
 })
 
-export const store: Store<GlobalState> = createStore(reducers, finalCreateStore)
+export const store: Store<GlobalState, *> = createStore(reducers, finalCreateStore)
 
-// eslint-disable-next-line max-len
-export const aNewStore = (localState?: Object): Store<GlobalState> => createStore(reducers, localState, finalCreateStore)
+export const aNewStore = (localState?: Object): Store<GlobalState, *> => createStore(
+  reducers,
+  localState,
+  finalCreateStore,
+)

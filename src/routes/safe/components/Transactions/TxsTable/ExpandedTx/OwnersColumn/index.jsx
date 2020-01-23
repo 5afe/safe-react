@@ -144,9 +144,10 @@ const OwnersColumn = ({
 
   const showExecuteBtn = canExecute && !tx.isExecuted && thresholdReached
 
+  const cancelTxPending = cancelTx && cancelTx.status === 'pending'
   const showConfirmCancelBtn = !cancelTxExecuted
     && !tx.isExecuted
-    && cancelTx.status !== 'pending'
+    && !cancelTxPending
     && userIsUnconfirmedCancelOwner
     && !currentUserAlreadyConfirmedCancel
     && !cancelThresholdReached
@@ -175,7 +176,7 @@ const OwnersColumn = ({
         onTxExecute={onTxExecute}
         ownersUnconfirmed={ownersUnconfirmed}
         ownersWhoConfirmed={ownersWhoConfirmed}
-        showCancelBtn={granted && displayButtonRow && !cancelTx}
+        showCancelBtn={granted && displayButtonRow}
         showConfirmBtn={showConfirmBtn}
         showExecuteBtn={showExecuteBtn}
         thresholdReached={thresholdReached}
