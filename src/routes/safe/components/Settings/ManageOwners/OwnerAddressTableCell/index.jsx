@@ -8,16 +8,21 @@ import EtherScanLink from '~/components/EtherscanLink'
 type Props = {
   address: string,
   showLinks?: boolean,
+  knownAddress?: boolean,
+  userName?: boolean,
 }
 
 const OwnerAddressTableCell = (props: Props) => {
-  const { address, showLinks } = props
+  const {
+    address, userName, showLinks, knownAddress,
+  } = props
   return (
     <Block justify="left">
       <Identicon address={address} diameter={32} />
       { showLinks ? (
         <div style={{ marginLeft: 10 }}>
-          <EtherScanLink type="address" value={address} />
+          { userName }
+          <EtherScanLink type="address" value={address} knownAddress={knownAddress} />
         </div>
       ) : <Paragraph style={{ marginLeft: 10 }}>{address}</Paragraph> }
     </Block>

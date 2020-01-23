@@ -10,6 +10,8 @@ import fetchTokens from '~/logic/tokens/store/actions/fetchTokens'
 import fetchCurrencyValues from '~/logic/currencyValues/store/actions/fetchCurrencyValues'
 import activateTokensByBalance from '~/logic/tokens/store/actions/activateTokensByBalance'
 import loadAddressBookFromStorage from '~/logic/addressBook/store/actions/loadAddressBookFromStorage'
+import { updateAddressBookEntry } from '~/logic/addressBook/store/actions/updateAddressBookEntry'
+import addViewedSafe from '~/logic/currentSession/store/actions/addViewedSafe'
 
 export type Actions = {
   fetchSafe: typeof fetchSafe,
@@ -23,7 +25,9 @@ export type Actions = {
   activateTokensByBalance: typeof activateTokensByBalance,
   checkAndUpdateSafeOwners: typeof checkAndUpdateSafe,
   fetchCurrencyValues: typeof fetchCurrencyValues,
-  loadAddressBook: typeof loadAddressBookFromStorage
+  loadAddressBook: typeof loadAddressBookFromStorage,
+  updateAddressBookEntry: typeof updateAddressBookEntry,
+  addViewedSafe: typeof addViewedSafe,
 }
 
 export default {
@@ -39,4 +43,6 @@ export default {
   fetchCurrencyValues,
   checkAndUpdateSafeOwners: checkAndUpdateSafe,
   loadAddressBook: loadAddressBookFromStorage,
+  updateAddressBookEntry,
+  addViewedSafe,
 }

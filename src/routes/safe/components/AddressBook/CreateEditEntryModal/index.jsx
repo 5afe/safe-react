@@ -35,6 +35,7 @@ type Props = {
   newEntryModalHandler: Function,
   editEntryModalHandler: Function,
   entryToEdit?: AddressBookEntry,
+  newEntryDefaultAddress: string | null,
 }
 
 const CreateEditEntryModalComponent = ({
@@ -43,6 +44,7 @@ const CreateEditEntryModalComponent = ({
   classes,
   newEntryModalHandler,
   entryToEdit,
+  newEntryDefaultAddress,
   editEntryModalHandler,
 }: Props) => {
   const onFormSubmitted = (values) => {
@@ -98,7 +100,7 @@ const CreateEditEntryModalComponent = ({
                   text="Owner address*"
                   className={classes.addressInput}
                   testId={CREATE_ENTRY_INPUT_ADDRESS_ID}
-                  defaultValue={entryToEdit ? entryToEdit.entry.address : undefined}
+                  defaultValue={entryToEdit ? entryToEdit.entry.address : newEntryDefaultAddress}
                 />
               </Row>
             </Block>

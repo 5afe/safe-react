@@ -5,4 +5,7 @@ export const styles = () => ({
     display: 'flex',
     alignItems: 'center',
   },
+  addressParagraph: {
+    fontSize: '13px',
+  },
 })

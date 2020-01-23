@@ -27,7 +27,10 @@ import cookies, { COOKIES_REDUCER_ID } from '~/logic/cookies/store/reducer/cooki
 import notificationsMiddleware from '~/routes/safe/store/middleware/notificationsMiddleware'
 import addressBook, { ADDRESS_BOOK_REDUCER_ID } from '~/logic/addressBook/store/reducer/addressBook'
 import addressBookMiddleware from '~/logic/addressBook/store/middleware/addressBookMiddleware'
-
+import currentSession, {
+  CURRENT_SESSION_REDUCER_ID,
+  type State as CurrentSessionState,
+} from '~/logic/currentSession/store/reducer/currentSession'
 
 export const history = createBrowserHistory()
 
@@ -44,6 +47,7 @@ export type GlobalState = {
   transactions: TransactionsState,
   incomingTransactions: IncomingTransactionsState,
   notifications: NotificationsState,
+  currentSession: CurrentSessionState,
 }
 
 export type GetState = () => GlobalState
@@ -59,6 +63,7 @@ const reducers: Reducer<GlobalState> = combineReducers({
   [CURRENCY_VALUES_KEY]: currencyValues,
   [COOKIES_REDUCER_ID]: cookies,
   [ADDRESS_BOOK_REDUCER_ID]: addressBook,
+  [CURRENT_SESSION_REDUCER_ID]: currentSession,
 })
 
 export const store: Store<GlobalState> = createStore(reducers, finalCreateStore)
