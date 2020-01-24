@@ -69,6 +69,7 @@ const AddressBookInput = ({
       <Autocomplete
         id="free-solo-demo"
         freeSolo
+        role="listbox"
         options={addressBook.toArray()}
         style={{ display: 'flex', flexGrow: 1 }}
         closeIcon={null}
