@@ -44,7 +44,7 @@ const AddressBookInput = ({
   const addressBook = useSelector(getAddressBookListSelector)
   const [addressInput, setAddressInput] = useState(recipientAddress)
   const [isValidForm, setIsValidForm] = useState(true)
-  const [validationTxt, setValidationText] = useState(true)
+  const [validationText, setValidationText] = useState(true)
   useEffect(() => {
     const validate = async () => {
       if (addressInput) {
@@ -106,7 +106,7 @@ const AddressBookInput = ({
         renderInput={(params) => (
           <TextField
             {...params}
-            label={!isValidForm ? validationTxt : 'Recipient'}
+            label={!isValidForm ? validationText : 'Recipient'}
             error={!isValidForm}
             fullWidth
             variant="filled"
