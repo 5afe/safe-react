@@ -31,8 +31,11 @@ const addressBookMiddleware = (store: Store<GlobalState>) => (next: Function) =>
 
     switch (action.type) {
       case ADD_ENTRY: {
-        const notification = getNotificationsFromTxType(TX_NOTIFICATION_TYPES.ADDRESSBOOK_NEW_ENTRY)
-        dispatch(enqueueSnackbar(enhanceSnackbarForAction(notification.afterExecution.noMoreConfirmationsNeeded)))
+        const { isOwner } = action.payload.entry
+        if (!isOwner) {
+          const notification = getNotificationsFromTxType(TX_NOTIFICATION_TYPES.ADDRESSBOOK_NEW_ENTRY)
+          dispatch(enqueueSnackbar(enhanceSnackbarForAction(notification.afterExecution.noMoreConfirmationsNeeded)))
+        }
         break
       }
       case REMOVE_ENTRY: {

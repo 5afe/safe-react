@@ -1,5 +1,6 @@
 // @flow
 import type { Dispatch as ReduxDispatch } from 'redux'
+import ReactGA from 'react-ga'
 import { ETHEREUM_NETWORK_IDS, ETHEREUM_NETWORK, getProviderInfo } from '~/logic/wallets/getWeb3'
 import { getNetwork } from '~/config'
 import type { ProviderProps } from '~/logic/wallets/store/model/provider'
@@ -47,6 +48,11 @@ const handleProviderNotification = (provider: ProviderProps, dispatch: Function)
     // you SHOULD pass your own `key` in the options. `key` can be any sequence
     // of number or characters, but it has to be unique to a given snackbar.
 
+    ReactGA.event({
+      category: 'Wallets',
+      action: 'Connect a wallet',
+      label: provider.name,
+    })
     dispatch(enqueueSnackbar(enhanceSnackbarForAction(NOTIFICATIONS.WALLET_CONNECTED_MSG)))
   } else {
     dispatch(enqueueSnackbar(enhanceSnackbarForAction(NOTIFICATIONS.UNLOCK_WALLET_MSG)))
