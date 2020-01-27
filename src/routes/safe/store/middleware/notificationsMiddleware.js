@@ -2,7 +2,7 @@
 import type { Action, Store } from 'redux'
 import { List } from 'immutable'
 import { push } from 'connected-react-router'
-import { type GlobalState } from '~/store/'
+import { type GlobalState } from '~/safeStore'
 import { ADD_TRANSACTIONS } from '~/routes/safe/store/actions/addTransactions'
 import { ADD_INCOMING_TRANSACTIONS } from '~/routes/safe/store/actions/addIncomingTransactions'
 import { getAwaitingTransactions } from '~/logic/safe/transactions/awaitingTransactions'

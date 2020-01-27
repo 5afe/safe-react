@@ -3,7 +3,7 @@ import { createAction } from 'redux-actions'
 import type { Dispatch as ReduxDispatch } from 'redux'
 import { type Token } from '~/logic/tokens/store/model/token'
 import { removeFromActiveTokens, removeTokenFromStorage } from '~/logic/tokens/utils/tokensStorage'
-import { type GlobalState } from '~/store/index'
+import { type GlobalState } from '~/safeStore'
 
 export const REMOVE_TOKEN = 'REMOVE_TOKEN'
 

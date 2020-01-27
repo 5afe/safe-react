@@ -1,6 +1,6 @@
 // @flow
 import { type Store } from 'redux'
-import { aNewStore, type GlobalState } from '~/store'
+import { aNewStore, type GlobalState } from '~/safeStore'
 import { sleep } from '~/utils/timer'
 import { getWeb3 } from '~/logic/wallets/getWeb3'
 import { sendEtherTo } from '~/test/utils/tokenMovements'

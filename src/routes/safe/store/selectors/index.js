@@ -2,7 +2,7 @@
 import { Map, List, Set } from 'immutable'
 import { type Match, matchPath } from 'react-router-dom'
 import { createSelector, createStructuredSelector, type Selector } from 'reselect'
-import { type GlobalState } from '~/store/index'
+import { type GlobalState } from '~/safeStore'
 import { SAFE_PARAM_ADDRESS, SAFELIST_ADDRESS } from '~/routes/routes'
 import { type Safe } from '~/routes/safe/store/models/safe'
 import { type State as TransactionsState, TRANSACTIONS_REDUCER_ID } from '~/routes/safe/store/reducer/transactions'

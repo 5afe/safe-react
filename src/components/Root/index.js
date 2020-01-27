@@ -8,7 +8,7 @@ import { ConnectedRouter } from 'connected-react-router'
 import { hot } from 'react-hot-loader/root'
 import PageFrame from '../layout/PageFrame'
 import Loader from '../Loader'
-import { history, store } from '~/store'
+import { history, store } from '~/safeStore'
 import theme from '~/theme/mui'
 import AppRoutes from '~/routes'
 

@@ -1,5 +1,5 @@
 // @flow
-import { history } from '~/store'
+import { history } from '~/safeStore'
 
 export const SAFE_PARAM_ADDRESS = 'address'
 export const SAFELIST_ADDRESS = '/safes'

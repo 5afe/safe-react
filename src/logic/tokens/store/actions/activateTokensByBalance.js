@@ -1,7 +1,7 @@
 // @flow
 import type { Dispatch as ReduxDispatch } from 'redux'
 import { Set } from 'immutable'
-import { type GetState, type GlobalState } from '~/store'
+import { type GetState, type GlobalState } from '~/safeStore'
 import updateActiveTokens from '~/routes/safe/store/actions/updateActiveTokens'
 import {
   safeActiveTokensSelectorBySafe,

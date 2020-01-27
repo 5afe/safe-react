@@ -1,7 +1,7 @@
 // @flow
 import { fireEvent } from '@testing-library/react'
 import { Map, Set, List } from 'immutable'
-import { aNewStore } from '~/store'
+import { aNewStore } from '~/safeStore'
 import { aMinedSafe } from '~/test/builder/safe.redux.builder'
 import { sendTokenTo, sendEtherTo, get6DecimalsTokenContract } from '~/test/utils/tokenMovements'
 import { renderSafeView } from '~/test/builder/safe.dom.utils'

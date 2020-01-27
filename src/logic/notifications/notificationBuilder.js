@@ -3,7 +3,7 @@ import * as React from 'react'
 import { IconButton } from '@material-ui/core'
 import { Close as IconClose } from '@material-ui/icons'
 import { TX_NOTIFICATION_TYPES } from '~/logic/safe/transactions'
-import { store } from '~/store'
+import { store } from '~/safeStore'
 import closeSnackbarAction from '~/logic/notifications/store/actions/closeSnackbar'
 import { type Notification, NOTIFICATIONS } from './notificationTypes'
 

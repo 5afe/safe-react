@@ -8,7 +8,7 @@ import { ADD_SAFE_OWNER } from '~/routes/safe/store/actions/addSafeOwner'
 import { REMOVE_SAFE_OWNER } from '~/routes/safe/store/actions/removeSafeOwner'
 import { REPLACE_SAFE_OWNER } from '~/routes/safe/store/actions/replaceSafeOwner'
 import { EDIT_SAFE_OWNER } from '~/routes/safe/store/actions/editSafeOwner'
-import { type GlobalState } from '~/store/'
+import { type GlobalState } from '~/safeStore'
 import {
   saveDefaultSafe,
   saveSafes,

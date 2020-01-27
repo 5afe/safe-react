@@ -8,7 +8,7 @@ import Portis from '@portis/web3'
 import Button from '~/components/layout/Button'
 import { fetchProvider, removeProvider } from '~/logic/wallets/store/actions'
 import { getNetwork } from '~/config'
-import { store } from '~/store'
+import { store } from '~/safeStore'
 
 const isMainnet = process.env.REACT_APP_NETWORK === 'mainnet'
 

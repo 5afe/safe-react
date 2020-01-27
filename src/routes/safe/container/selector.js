@@ -13,7 +13,7 @@ import {
 } from '~/routes/safe/store/selectors'
 import { providerNameSelector, userAccountSelector, networkSelector } from '~/logic/wallets/store/selectors'
 import { type Safe } from '~/routes/safe/store/models/safe'
-import { type GlobalState } from '~/store'
+import { type GlobalState } from '~/safeStore'
 import { isUserOwner } from '~/logic/wallets/ethAddresses'
 import { orderedTokenListSelector, tokensSelector } from '~/logic/tokens/store/selectors'
 import { type Token } from '~/logic/tokens/store/model/token'

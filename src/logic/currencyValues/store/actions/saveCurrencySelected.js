@@ -2,7 +2,7 @@
 
 import { Dispatch as ReduxDispatch } from 'redux'
 import { AVAILABLE_CURRENCIES } from '~/logic/currencyValues/store/model/currencyValues'
-import type { GlobalState } from '~/store'
+import type { GlobalState } from '~/safeStore'
 
 import { saveToStorage } from '~/utils/storage'
 import { setCurrencySelected } from '~/logic/currencyValues/store/actions/setCurrencySelected'

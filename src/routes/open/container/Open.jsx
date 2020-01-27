@@ -10,7 +10,7 @@ import {
 import { buildSafe } from '~/routes/safe/store/actions/fetchSafe'
 import { getGnosisSafeInstanceAt, deploySafeContract } from '~/logic/contracts/safeContracts'
 import { checkReceiptStatus } from '~/logic/wallets/ethTransactions'
-import { history } from '~/store'
+import { history } from '~/safeStore'
 import { OPENING_ADDRESS, stillInOpeningView, SAFELIST_ADDRESS } from '~/routes/routes'
 import selector from './selector'
 import actions, { type Actions, type AddSafe } from './actions'

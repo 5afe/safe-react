@@ -1,6 +1,6 @@
 // @flow
 import { type Dispatch as ReduxDispatch } from 'redux'
-import { type GlobalState } from '~/store'
+import { type GlobalState } from '~/safeStore'
 import { getCurrentSessionFromStorage } from '~/logic/currentSession/utils'
 import loadCurrentSession from '~/logic/currentSession/store/actions/loadCurrentSession'
 import { makeCurrentSession } from '~/logic/currentSession/store/model/currentSession'

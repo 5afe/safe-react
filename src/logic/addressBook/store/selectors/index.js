@@ -3,7 +3,7 @@ import { List, Map } from 'immutable'
 import { createSelector, Selector } from 'reselect'
 import { useSelector } from 'react-redux'
 import { ADDRESS_BOOK_REDUCER_ID } from '~/logic/addressBook/store/reducer/addressBook'
-import type { GlobalState } from '~/store'
+import type { GlobalState } from '~/safeStore'
 import type { AddressBook } from '~/logic/addressBook/model/addressBook'
 import { safeParamAddressFromStateSelector } from '~/routes/safe/store/selectors'
 

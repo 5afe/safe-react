@@ -4,7 +4,7 @@ import { type Transaction } from '~/routes/safe/store/models/transaction'
 import { userAccountSelector } from '~/logic/wallets/store/selectors'
 import fetchSafe from '~/routes/safe/store/actions/fetchSafe'
 import fetchTransactions from '~/routes/safe/store/actions/fetchTransactions'
-import { type GlobalState } from '~/store'
+import { type GlobalState } from '~/safeStore'
 import { getGnosisSafeInstanceAt } from '~/logic/contracts/safeContracts'
 import {
   type NotifiedTransaction,

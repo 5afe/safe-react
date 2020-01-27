@@ -1,7 +1,7 @@
 // @flow
 import { List, Map } from 'immutable'
 import { createSelector, type Selector } from 'reselect'
-import { type GlobalState } from '~/store'
+import { type GlobalState } from '~/safeStore'
 import { NOTIFICATIONS_REDUCER_ID } from '~/logic/notifications/store/reducer/notifications'
 import { type Notification } from '~/logic/notifications/store/models/notification'
 

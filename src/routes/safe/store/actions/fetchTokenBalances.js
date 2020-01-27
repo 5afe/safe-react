@@ -2,7 +2,7 @@
 import type { Dispatch as ReduxDispatch } from 'redux'
 import { Map, List } from 'immutable'
 import { BigNumber } from 'bignumber.js'
-import { type GlobalState } from '~/store/index'
+import { type GlobalState } from '~/safeStore'
 import { type Token } from '~/logic/tokens/store/model/token'
 import { getStandardTokenContract } from '~/logic/tokens/store/actions/fetchTokens'
 import updateSafe from './updateSafe'

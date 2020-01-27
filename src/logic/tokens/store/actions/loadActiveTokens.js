@@ -2,7 +2,7 @@
 import type { Dispatch as ReduxDispatch } from 'redux'
 import { Map, List } from 'immutable'
 import { type TokenProps, type Token, makeToken } from '~/logic/tokens/store/model/token'
-import { type GlobalState } from '~/store/index'
+import { type GlobalState } from '~/safeStore'
 import { getActiveTokens } from '~/logic/tokens/utils/tokensStorage'
 import saveTokens from './saveTokens'
 

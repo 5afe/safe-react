@@ -1,6 +1,6 @@
 // @flow
 import type { Dispatch as ReduxDispatch } from 'redux'
-import { type GlobalState } from '~/store/index'
+import { type GlobalState } from '~/safeStore'
 import updateSafe from '~/routes/safe/store/actions/updateSafe'
 import { getBalanceInEtherOf } from '~/logic/wallets/getWeb3'
 

@@ -16,7 +16,7 @@ import {
   FIELD_SAFE_NAME,
 } from '~/routes/open/components/fields'
 import { initContracts } from '~/logic/contracts/safeContracts'
-import { history } from '~/store'
+import { history } from '~/safeStore'
 import { secondary, sm } from '~/theme/variables'
 import type { SafePropsType } from '~/routes/open/container/Open'
 import Welcome from '~/routes/welcome/components/Layout'

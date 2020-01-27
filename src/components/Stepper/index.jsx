@@ -7,7 +7,7 @@ import StepContent from '@material-ui/core/StepContent'
 import { withStyles } from '@material-ui/core/styles'
 import GnoForm from '~/components/forms/GnoForm'
 import Hairline from '~/components/layout/Hairline'
-import { history } from '~/store'
+import { history } from '~/safeStore'
 import Controls from './Controls'
 
 const { useState, useEffect } = React

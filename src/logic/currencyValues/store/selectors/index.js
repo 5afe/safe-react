@@ -1,7 +1,7 @@
 // @flow
 
 import { List } from 'immutable'
-import { type GlobalState } from '~/store'
+import { type GlobalState } from '~/safeStore'
 import { CURRENCY_VALUES_KEY } from '~/logic/currencyValues/store/reducer/currencyValues'
 
 

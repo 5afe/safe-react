@@ -1,6 +1,6 @@
 // @flow
 import type { Dispatch as ReduxDispatch } from 'redux'
-import { type GlobalState } from '~/store/index'
+import { type GlobalState } from '~/safeStore'
 import { SAFES_KEY } from '~/logic/safe/utils'
 import { type SafeProps } from '~/routes/safe/store/models/safe'
 import { loadFromStorage } from '~/utils/storage'

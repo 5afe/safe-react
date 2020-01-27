@@ -1,7 +1,7 @@
 // @flow
 import type { Dispatch as ReduxDispatch } from 'redux'
 import { List } from 'immutable'
-import { type GlobalState } from '~/store/index'
+import { type GlobalState } from '~/safeStore'
 import { makeOwner } from '~/routes/safe/store/models/owner'
 import type { SafeProps } from '~/routes/safe/store/models/safe'
 import addSafe from '~/routes/safe/store/actions/addSafe'

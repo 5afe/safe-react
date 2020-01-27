@@ -1,6 +1,6 @@
 // @flow
 import { act, fireEvent } from '@testing-library/react'
-import { aNewStore } from '~/store'
+import { aNewStore } from '~/safeStore'
 import { aMinedSafe } from '~/test/builder/safe.redux.builder'
 import { renderSafeView } from '~/test/builder/safe.dom.utils'
 import '@testing-library/jest-dom/extend-expect'

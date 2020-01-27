@@ -1,7 +1,7 @@
 // @flow
 import type { Dispatch as ReduxDispatch } from 'redux'
 import { List } from 'immutable'
-import type { GlobalState } from '~/store'
+import type { GlobalState } from '~/safeStore'
 import { setCurrencyBalances } from '~/logic/currencyValues/store/actions/setCurrencyBalances'
 import { AVAILABLE_CURRENCIES, makeBalanceCurrency } from '~/logic/currencyValues/store/model/currencyValues'
 import { setCurrencySelected } from '~/logic/currencyValues/store/actions/setCurrencySelected'

@@ -1,7 +1,7 @@
 // @flow
 import { Set } from 'immutable'
 import type { Dispatch as ReduxDispatch } from 'redux'
-import { type GlobalState } from '~/store'
+import { type GlobalState } from '~/safeStore'
 import updateSafe from './updateSafe'
 
 // the selector uses ownProps argument/router props to get the address of the safe

@@ -1,7 +1,7 @@
 // @flow
 import { waitForElement } from '@testing-library/react'
 import { Set, Map } from 'immutable'
-import { aNewStore } from '~/store'
+import { aNewStore } from '~/safeStore'
 import { sleep } from '~/utils/timer'
 import { aMinedSafe } from '~/test/builder/safe.redux.builder'
 import { sendTokenTo, sendEtherTo } from '~/test/utils/tokenMovements'

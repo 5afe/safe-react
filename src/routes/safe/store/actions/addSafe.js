@@ -2,7 +2,7 @@
 import { List } from 'immutable'
 import { createAction } from 'redux-actions'
 import type { Dispatch as ReduxDispatch, GetState } from 'redux'
-import { type GlobalState } from '~/store'
+import { type GlobalState } from '~/safeStore'
 import { safesListSelector } from '~/routes/safe/store/selectors'
 import { type Safe } from '~/routes/safe/store/models/safe'
 import { makeOwner } from '~/routes/safe/store/models/owner'

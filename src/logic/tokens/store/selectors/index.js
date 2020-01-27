@@ -2,7 +2,7 @@
 import { List, Map } from 'immutable'
 import { createSelector, type Selector } from 'reselect'
 import { type RouterProps } from '~/routes/safe/store/selectors'
-import { type GlobalState } from '~/store'
+import { type GlobalState } from '~/safeStore'
 import { TOKEN_REDUCER_ID } from '~/logic/tokens/store/reducer/tokens'
 import { type Token } from '~/logic/tokens/store/model/token'
 

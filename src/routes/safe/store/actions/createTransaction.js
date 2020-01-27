@@ -5,7 +5,7 @@ import { push } from 'connected-react-router'
 import { EMPTY_DATA } from '~/logic/wallets/ethTransactions'
 import { userAccountSelector } from '~/logic/wallets/store/selectors'
 import fetchTransactions from '~/routes/safe/store/actions/fetchTransactions'
-import { type GlobalState } from '~/store'
+import { type GlobalState } from '~/safeStore'
 import { buildTxServiceUrl } from '~/logic/safe/transactions/txHistory'
 import { getGnosisSafeInstanceAt } from '~/logic/contracts/safeContracts'
 import {

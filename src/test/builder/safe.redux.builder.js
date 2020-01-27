@@ -11,7 +11,7 @@ import {
 } from '~/routes/open/components/fields'
 import { getWeb3, getProviderInfo } from '~/logic/wallets/getWeb3'
 import { createSafe, type OpenState } from '~/routes/open/container/Open'
-import { type GlobalState } from '~/store/index'
+import { type GlobalState } from '~/safeStore'
 import { makeProvider } from '~/logic/wallets/store/model/provider'
 import addProvider from '~/logic/wallets/store/actions/addProvider'
 

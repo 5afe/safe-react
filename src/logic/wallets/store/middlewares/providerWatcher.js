@@ -1,6 +1,6 @@
 // @flow
 import type { Store, AnyAction } from 'redux'
-import { type GlobalState } from '~/store/'
+import { type GlobalState } from '~/safeStore'
 import { ADD_PROVIDER, REMOVE_PROVIDER } from '../actions'
 import { getWeb3, getProviderInfo, WALLET_PROVIDER } from '~/logic/wallets/getWeb3'
 import { fetchProvider } from '~/logic/wallets/store/actions'

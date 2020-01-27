@@ -1,6 +1,6 @@
 // @flow
 import type { AnyAction, Store } from 'redux'
-import { type GlobalState } from '~/store/'
+import { type GlobalState } from '~/safeStore'
 import { ADD_ENTRY } from '~/logic/addressBook/store/actions/addAddressBookEntry'
 import { REMOVE_ENTRY } from '~/logic/addressBook/store/actions/removeAddressBookEntry'
 import { UPDATE_ENTRY } from '~/logic/addressBook/store/actions/updateAddressBookEntry'
