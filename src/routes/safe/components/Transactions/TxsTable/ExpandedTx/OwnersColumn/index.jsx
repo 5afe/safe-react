@@ -144,6 +144,9 @@ const OwnersColumn = ({
     && displayButtonRow
     && canExecuteCancel
 
+  const txThreshold = cancelTx.isExecuted ? tx.confirmations.size : threshold
+  const cancelThreshold = tx.isExecuted ? cancelTx.confirmations.size : threshold
+
   return (
     <Col xs={6} className={classes.rightCol} layout="block">
       <Block
@@ -157,7 +160,7 @@ const OwnersColumn = ({
         </div>
         {tx.isExecuted
           ? `Confirmed [${tx.confirmations.size}/${tx.confirmations.size}]`
-          : `Confirmed [${tx.confirmations.size}/${threshold}]`}
+          : `Confirmed [${tx.confirmations.size}/${txThreshold}]`}
       </Block>
       <OwnersList
         executor={tx.executor}
@@ -188,7 +191,7 @@ const OwnersColumn = ({
         </div>
         {cancelTx.isExecuted
           ? `Rejected [${cancelTx.confirmations.size}/${cancelTx.confirmations.size}]`
-          : `Rejected [${cancelTx.confirmations.size}/${threshold}]`}
+          : `Rejected [${cancelTx.confirmations.size}/${cancelThreshold}`}
       </Block>
       <OwnersList
         isCancelTx
