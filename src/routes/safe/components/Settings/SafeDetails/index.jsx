@@ -1,5 +1,5 @@
 // @flow
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import { withSnackbar } from 'notistack'
 import Block from '~/components/layout/Block'
@@ -16,9 +16,12 @@ import { getNotificationsFromTxType, showSnackbar } from '~/logic/notifications'
 import { TX_NOTIFICATION_TYPES } from '~/logic/safe/transactions'
 import { styles } from './style'
 import { getSafeVersion } from '~/logic/safe/utils/safeVersion'
+import UpdateSafeModal from '~/routes/safe/components/Settings/UpdateSafeModal'
+import Modal from '~/components/Modal'
 
 export const SAFE_NAME_INPUT_TEST_ID = 'safe-name-input'
 export const SAFE_NAME_SUBMIT_BTN_TEST_ID = 'change-safe-name-btn'
+export const SAFE_NAME_UPDATE_SAFE_BTN_TEST_ID = 'update-safe-name-btn'
 
 type Props = {
   safeAddress: string,
@@ -36,6 +39,12 @@ const SafeDetails = (props: Props) => {
   const {
     safeAddress, safeName, updateSafe, enqueueSnackbar, closeSnackbar,
   } = props
+
+  const [isModalOpen, setModalOpen] = useState(false)
+
+  const toggleModal = () => {
+    setModalOpen((prevOpen) => !prevOpen)
+  }
 
   const handleSubmit = (values) => {
     updateSafe({ address: safeAddress, name: values.safeName })
@@ -70,6 +79,22 @@ const SafeDetails = (props: Props) => {
                   {safeVersions.needUpdate && ` (there's a newer version: ${safeVersions.latest})`}
                 </Paragraph>
               </Row>
+              {safeVersions.needUpdate ? (
+                <Row align="end" grow>
+                  <Paragraph>
+                    <Button
+                      onClick={() => setModalOpen(true)}
+                      className={classes.saveBtn}
+                      size="small"
+                      variant="contained"
+                      color="primary"
+                      testId={SAFE_NAME_UPDATE_SAFE_BTN_TEST_ID}
+                    >
+                    Update Safe
+                    </Button>
+                  </Paragraph>
+                </Row>
+              ) : null}
             </Block>
             <Block className={classes.formContainer}>
               <Heading tag="h2">Modify Safe name</Heading>
@@ -104,6 +129,14 @@ const SafeDetails = (props: Props) => {
                 </Button>
               </Col>
             </Row>
+            <Modal
+              title="Update Safe"
+              description="Update Safe"
+              handleClose={toggleModal}
+              open={isModalOpen}
+            >
+              <UpdateSafeModal onClose={toggleModal} />
+            </Modal>
           </>
         )}
       </GnoForm>
