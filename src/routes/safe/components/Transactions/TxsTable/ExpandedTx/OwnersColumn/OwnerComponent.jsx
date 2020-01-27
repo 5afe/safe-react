@@ -26,11 +26,11 @@ type OwnerProps = {
   confirmed?: boolean,
   executor?: string,
   isCancelTx?: boolean,
-  onTxCancel?: Function,
+  onTxReject?: Function,
   onTxConfirm: Function,
   onTxExecute: Function,
   owner: Owner,
-  showCancelBtn: Boolean,
+  showRejectBtn: Boolean,
   showConfirmBtn: boolean,
   showExecuteBtn: boolean,
   thresholdReached: boolean,
@@ -38,7 +38,7 @@ type OwnerProps = {
 }
 
 const OwnerComponent = ({
-  onTxCancel,
+  onTxReject,
   classes,
   confirmed,
   executor,
@@ -46,7 +46,7 @@ const OwnerComponent = ({
   onTxConfirm,
   onTxExecute,
   owner,
-  showCancelBtn,
+  showRejectBtn,
   showConfirmBtn,
   showExecuteBtn,
   thresholdReached,
@@ -96,11 +96,11 @@ const OwnerComponent = ({
         <Block>
           {isCancelTx ? (
             <>
-              {showCancelBtn && (
+              {showRejectBtn && (
                 <Button
                   className={cn(classes.button, classes.lastButton)}
                   color="secondary"
-                  onClick={onTxCancel}
+                  onClick={onTxReject}
                   testId={CANCEL_TX_BTN_TEST_ID}
                   variant="contained"
                 >

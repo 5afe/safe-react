@@ -28,9 +28,7 @@ type Props = {
   cancelTx: Transaction,
   classes: Object,
   granted: boolean,
-  onCancelTxConfirm: Function,
-  onCancelTxExecute: Function,
-  onTxCancel: Function,
+  onTxReject: Function,
   onTxConfirm: Function,
   onTxExecute: Function,
   owners: List<Owner>,
@@ -40,7 +38,7 @@ type Props = {
   userAddress: string,
 };
 
-function getOwnersConfirmations(tx = makeTransaction(), userAddress) {
+function getOwnersConfirmations(tx, userAddress) {
   const ownersWhoConfirmed = []
   let currentUserAlreadyConfirmed = false
 
@@ -57,11 +55,7 @@ function getOwnersConfirmations(tx = makeTransaction(), userAddress) {
   return [ownersWhoConfirmed, currentUserAlreadyConfirmed]
 }
 
-function getPendingOwnersConfirmations(
-  owners,
-  tx = makeTransaction(),
-  userAddress,
-) {
+function getPendingOwnersConfirmations(owners, tx, userAddress) {
   const ownersUnconfirmed = owners.filter(
     (owner) => tx.confirmations.findIndex(
       (conf) => conf.owner.address === owner.address,
@@ -89,10 +83,8 @@ const OwnersColumn = ({
   thresholdReached,
   cancelThresholdReached,
   onTxConfirm,
-  onCancelTxConfirm,
-  onTxCancel,
   onTxExecute,
-  onCancelTxExecute,
+  onTxReject,
   canExecute,
   canExecuteCancel,
 }: Props) => {
@@ -143,14 +135,14 @@ const OwnersColumn = ({
 
   const showExecuteBtn = canExecute && !tx.isExecuted && thresholdReached
 
-  const showConfirmCancelBtn = !cancelTx.isExecuted
+  const showRejectBtn = !cancelTx.isExecuted
     && !tx.isExecuted
     && cancelTx.status !== 'pending'
     && userIsUnconfirmedCancelOwner
     && !currentUserAlreadyConfirmedCancel
     && !cancelThresholdReached
-
-  const showExecuteCancelBtn = canExecuteCancel && !cancelTx.isExecuted && cancelThresholdReached
+    && displayButtonRow
+    && canExecuteCancel
 
   return (
     <Col xs={6} className={classes.rightCol} layout="block">
@@ -169,53 +161,46 @@ const OwnersColumn = ({
       </Block>
       <OwnersList
         executor={tx.executor}
-        onTxCancel={onTxCancel}
         onTxConfirm={onTxConfirm}
         onTxExecute={onTxExecute}
         ownersUnconfirmed={ownersUnconfirmed}
         ownersWhoConfirmed={ownersWhoConfirmed}
-        showCancelBtn={granted && displayButtonRow}
         showConfirmBtn={showConfirmBtn}
         showExecuteBtn={showExecuteBtn}
         thresholdReached={thresholdReached}
         userAddress={userAddress}
       />
-      {cancelTx && (
-        <>
-          <Block
-            className={cn(
-              classes.ownerListTitle,
-              (cancelThresholdReached || cancelTx.isExecuted) && classes.ownerListTitleCancelDone,
-            )}
-          >
-            <div
-              className={cn(
-                classes.verticalLine,
-                tx.isExecuted ? classes.verticalLineDone : classes.verticalLinePending,
-              )}
-            />
-            <div className={classes.circleState}>
-              <Img src={cancelThresholdReached || cancelTx.isExecuted ? CheckLargeFilledRedCircle : ConfirmLargeRedCircle} alt="" />
-            </div>
-            {cancelTx.isExecuted
-              ? `Rejected [${cancelTx.confirmations.size}/${cancelTx.confirmations.size}]`
-              : `Rejected [${cancelTx.confirmations.size}/${threshold}]`}
-          </Block>
-          <OwnersList
-            executor={cancelTx ? cancelTx.executor : null}
-            isCancelTx
-            onTxConfirm={onCancelTxConfirm}
-            onTxExecute={onCancelTxExecute}
-            ownersUnconfirmed={ownersUnconfirmedCancel}
-            ownersWhoConfirmed={ownersWhoConfirmedCancel}
-            showCancelBtn={granted && displayButtonRow}
-            showConfirmBtn={showConfirmCancelBtn}
-            showExecuteBtn={showExecuteCancelBtn}
-            thresholdReached={cancelThresholdReached}
-            userAddress={userAddress}
-          />
-        </>
-      )}
+      {/* Cancel TX thread - START */}
+      <Block
+        className={cn(
+          classes.ownerListTitle,
+          (cancelThresholdReached || cancelTx.isExecuted) && classes.ownerListTitleCancelDone,
+        )}
+      >
+        <div
+          className={cn(
+            classes.verticalLine,
+            tx.isExecuted ? classes.verticalLineDone : classes.verticalLinePending,
+          )}
+        />
+        <div className={classes.circleState}>
+          <Img src={cancelThresholdReached || cancelTx.isExecuted ? CheckLargeFilledRedCircle : ConfirmLargeRedCircle} alt="" />
+        </div>
+        {cancelTx.isExecuted
+          ? `Rejected [${cancelTx.confirmations.size}/${cancelTx.confirmations.size}]`
+          : `Rejected [${cancelTx.confirmations.size}/${threshold}]`}
+      </Block>
+      <OwnersList
+        isCancelTx
+        executor={cancelTx.executor}
+        onTxReject={onTxReject}
+        ownersUnconfirmed={ownersUnconfirmedCancel}
+        ownersWhoConfirmed={ownersWhoConfirmedCancel}
+        showRejectBtn={showRejectBtn}
+        thresholdReached={cancelThresholdReached}
+        userAddress={userAddress}
+      />
+      {/* Cancel TX thread - END */}
       <Block
         className={cn(
           classes.ownerListTitle,

@@ -10,12 +10,12 @@ type ListProps = {
   classes: Object,
   executor: string,
   isCancelTx?: boolean,
-  onTxCancel?: Function,
+  onTxReject?: Function,
   onTxConfirm: Function,
   onTxExecute: Function,
   ownersUnconfirmed: List<Owner>,
   ownersWhoConfirmed: List<Owner>,
-  showCancelBtn: Boolean,
+  showRejectBtn: Boolean,
   showConfirmBtn: boolean,
   showExecuteBtn: boolean,
   thresholdReached: boolean,
@@ -26,12 +26,12 @@ const OwnersList = ({
   classes,
   executor,
   isCancelTx,
-  onTxCancel,
+  onTxReject,
   onTxConfirm,
   onTxExecute,
   ownersUnconfirmed,
   ownersWhoConfirmed,
-  showCancelBtn,
+  showRejectBtn,
   showConfirmBtn,
   showExecuteBtn,
   thresholdReached,
@@ -45,10 +45,10 @@ const OwnersList = ({
         executor={executor}
         isCancelTx={isCancelTx}
         key={owner.address}
-        onTxCancel={onTxCancel}
+        onTxReject={onTxReject}
         onTxExecute={onTxExecute}
         owner={owner}
-        showCancelBtn={showCancelBtn}
+        showRejectBtn={showRejectBtn}
         showExecuteBtn={showExecuteBtn}
         thresholdReached={thresholdReached}
         userAddress={userAddress}
@@ -60,11 +60,11 @@ const OwnersList = ({
         executor={executor}
         isCancelTx={isCancelTx}
         key={owner.address}
-        onTxCancel={onTxCancel}
+        onTxReject={onTxReject}
         onTxConfirm={onTxConfirm}
         onTxExecute={onTxExecute}
         owner={owner}
-        showCancelBtn={showCancelBtn}
+        showRejectBtn={showRejectBtn}
         showConfirmBtn={showConfirmBtn}
         showExecuteBtn={showExecuteBtn}
         thresholdReached={thresholdReached}

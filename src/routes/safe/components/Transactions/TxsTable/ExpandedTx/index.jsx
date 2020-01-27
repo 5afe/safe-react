@@ -15,7 +15,7 @@ import { type Transaction } from '~/routes/safe/store/models/transaction'
 import { type Owner } from '~/routes/safe/store/models/owner'
 import TxDescription from './TxDescription'
 import OwnersColumn from './OwnersColumn'
-import CancelTxModal from './CancelTxModal'
+import RejectTxModal from './RejectTxModal'
 import ApproveTxModal from './ApproveTxModal'
 import { styles } from './style'
 import { formatDate } from '../columns'
@@ -35,7 +35,7 @@ type Props = {
   nonce: number
 }
 
-type OpenModal = "cancelTx" | "approveTx" | "approveCancelTx" | null
+type OpenModal = "rejectTx" | "approveTx" | "executeRejectTx" | null
 
 const txStatusToLabel = {
   success: 'Success',
@@ -63,13 +63,19 @@ const ExpandedTx = ({
   const classes = useStyles()
   const [openModal, setOpenModal] = useState<OpenModal>(null)
   const openApproveModal = () => setOpenModal('approveTx')
-  const openApproveCancelModal = () => setOpenModal('approveCancelTx')
-  const openCancelModal = () => setOpenModal('cancelTx')
   const closeModal = () => setOpenModal(null)
   const thresholdReached = tx.type !== INCOMING_TX_TYPE && threshold <= tx.confirmations.size
   const canExecute = tx.type !== INCOMING_TX_TYPE && nonce === tx.nonce
   const cancelThresholdReached = !!cancelTx && threshold <= cancelTx.confirmations.size
-  const canExecuteCancel = !!cancelTx && nonce === cancelTx.nonce
+  const canExecuteCancel = nonce === tx.nonce
+
+  const openRejectModal = () => {
+    if (!!cancelTx && nonce === cancelTx.nonce) {
+      setOpenModal('executeRejectTx')
+    } else {
+      setOpenModal('rejectTx')
+    }
+  }
 
   return (
     <>
@@ -161,23 +167,12 @@ const ExpandedTx = ({
               cancelThresholdReached={cancelThresholdReached}
               safeAddress={safeAddress}
               onTxConfirm={openApproveModal}
-              onCancelTxConfirm={openApproveCancelModal}
-              onTxCancel={openCancelModal}
               onTxExecute={openApproveModal}
-              onCancelTxExecute={openApproveCancelModal}
+              onTxReject={openRejectModal}
             />
           )}
         </Row>
       </Block>
-      {openModal === 'cancelTx' && (
-        <CancelTxModal
-          isOpen
-          createTransaction={createTransaction}
-          onClose={closeModal}
-          tx={tx}
-          safeAddress={safeAddress}
-        />
-      )}
       {openModal === 'approveTx' && (
         <ApproveTxModal
           isOpen
@@ -191,9 +186,19 @@ const ExpandedTx = ({
           thresholdReached={thresholdReached}
         />
       )}
-      {openModal === 'approveCancelTx' && (
+      {openModal === 'rejectTx' && (
+        <RejectTxModal
+          isOpen
+          createTransaction={createTransaction}
+          onClose={closeModal}
+          tx={tx}
+          safeAddress={safeAddress}
+        />
+      )}
+      {openModal === 'executeRejectTx' && (
         <ApproveTxModal
           isOpen
+          isCancelTx
           processTransaction={processTransaction}
           onClose={closeModal}
           canExecute={canExecuteCancel}
