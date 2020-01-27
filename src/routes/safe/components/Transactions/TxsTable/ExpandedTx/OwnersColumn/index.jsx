@@ -191,7 +191,7 @@ const OwnersColumn = ({
         </div>
         {cancelTx.isExecuted
           ? `Rejected [${cancelTx.confirmations.size}/${cancelTx.confirmations.size}]`
-          : `Rejected [${cancelTx.confirmations.size}/${cancelThreshold}`}
+          : `Rejected [${cancelTx.confirmations.size}/${cancelThreshold}]`}
       </Block>
       <OwnersList
         isCancelTx
