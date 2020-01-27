@@ -115,7 +115,16 @@ const SendCustomTx = ({
                   </Col>
                 </Row>
                 { selectedEntry && selectedEntry.address ? (
-                  <>
+                  <div
+                    role="listbox"
+                    tabIndex="0"
+                    onClick={() => setSelectedEntry(null)}
+                    onKeyDown={(e) => {
+                      if (e.keyCode !== 9) {
+                        setSelectedEntry(null)
+                      }
+                    }}
+                  >
                     <Row margin="xs">
                       <Paragraph size="md" color="disabled" style={{ letterSpacing: '-0.5px' }} noMargin>
                         Recipient
@@ -140,7 +149,7 @@ const SendCustomTx = ({
                         </Block>
                       </Col>
                     </Row>
-                  </>
+                  </div>
                 ) : (
                   <>
                     <Row margin="md">
