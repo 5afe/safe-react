@@ -142,7 +142,8 @@ const OwnersColumn = ({
     && !currentUserAlreadyConfirmedCancel
     && !cancelThresholdReached
     && displayButtonRow
-    && canExecuteCancel
+
+  const showExecuteRejectBtn = !cancelTx.isExecuted && !tx.isExecuted && canExecuteCancel && cancelThresholdReached
 
   const txThreshold = cancelTx.isExecuted ? tx.confirmations.size : threshold
   const cancelThreshold = tx.isExecuted ? cancelTx.confirmations.size : threshold
@@ -200,6 +201,7 @@ const OwnersColumn = ({
         ownersUnconfirmed={ownersUnconfirmedCancel}
         ownersWhoConfirmed={ownersWhoConfirmedCancel}
         showRejectBtn={showRejectBtn}
+        showExecuteRejectBtn={showExecuteRejectBtn}
         thresholdReached={cancelThresholdReached}
         userAddress={userAddress}
       />

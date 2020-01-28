@@ -15,7 +15,8 @@ type ListProps = {
   onTxExecute: Function,
   ownersUnconfirmed: List<Owner>,
   ownersWhoConfirmed: List<Owner>,
-  showRejectBtn: Boolean,
+  showRejectBtn: boolean,
+  showExecuteRejectBtn: boolean,
   showConfirmBtn: boolean,
   showExecuteBtn: boolean,
   thresholdReached: boolean,
@@ -32,6 +33,7 @@ const OwnersList = ({
   ownersUnconfirmed,
   ownersWhoConfirmed,
   showRejectBtn,
+  showExecuteRejectBtn,
   showConfirmBtn,
   showExecuteBtn,
   thresholdReached,
@@ -49,6 +51,7 @@ const OwnersList = ({
         onTxExecute={onTxExecute}
         owner={owner}
         showRejectBtn={showRejectBtn}
+        showExecuteRejectBtn={showExecuteRejectBtn}
         showExecuteBtn={showExecuteBtn}
         thresholdReached={thresholdReached}
         userAddress={userAddress}
@@ -65,6 +68,7 @@ const OwnersList = ({
         onTxExecute={onTxExecute}
         owner={owner}
         showRejectBtn={showRejectBtn}
+        showExecuteRejectBtn={showExecuteRejectBtn}
         showConfirmBtn={showConfirmBtn}
         showExecuteBtn={showExecuteBtn}
         thresholdReached={thresholdReached}

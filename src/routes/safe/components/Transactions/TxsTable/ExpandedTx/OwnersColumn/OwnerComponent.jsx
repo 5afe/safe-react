@@ -19,7 +19,8 @@ import { getNameFromAddressBook } from '~/logic/addressBook/utils'
 
 export const CONFIRM_TX_BTN_TEST_ID = 'confirm-btn'
 export const EXECUTE_TX_BTN_TEST_ID = 'execute-btn'
-export const CANCEL_TX_BTN_TEST_ID = 'cancel-btn'
+export const REJECT_TX_BTN_TEST_ID = 'reject-btn'
+export const EXECUTE_REJECT_TX_BTN_TEST_ID = 'execute-reject-btn'
 
 type OwnerProps = {
   classes: Object,
@@ -30,7 +31,8 @@ type OwnerProps = {
   onTxConfirm: Function,
   onTxExecute: Function,
   owner: Owner,
-  showRejectBtn: Boolean,
+  showRejectBtn: boolean,
+  showExecuteRejectBtn: boolean,
   showConfirmBtn: boolean,
   showExecuteBtn: boolean,
   thresholdReached: boolean,
@@ -47,6 +49,7 @@ const OwnerComponent = ({
   onTxExecute,
   owner,
   showRejectBtn,
+  showExecuteRejectBtn,
   showConfirmBtn,
   showExecuteBtn,
   thresholdReached,
@@ -101,10 +104,21 @@ const OwnerComponent = ({
                   className={cn(classes.button, classes.lastButton)}
                   color="secondary"
                   onClick={onTxReject}
-                  testId={CANCEL_TX_BTN_TEST_ID}
+                  testId={REJECT_TX_BTN_TEST_ID}
                   variant="contained"
                 >
                   Reject
+                </Button>
+              )}
+              {showExecuteRejectBtn && (
+                <Button
+                  className={cn(classes.button, classes.lastButton)}
+                  color="secondary"
+                  onClick={onTxReject}
+                  testId={EXECUTE_REJECT_TX_BTN_TEST_ID}
+                  variant="contained"
+                >
+                  Execute
                 </Button>
               )}
             </>
