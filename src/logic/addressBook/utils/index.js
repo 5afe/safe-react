@@ -1,21 +1,21 @@
 // @flow
 import { useSelector } from 'react-redux'
 import type { AddressBook, AddressBookProps } from '~/logic/addressBook/model/addressBook'
-import { loadFromStorage, saveToStorage } from '~/utils/storage'
+import { loadFrom3Box, saveTo3box } from '~/utils/storage'
 import { getAddressBook } from '~/logic/addressBook/store/selectors'
 import type { Owner } from '~/routes/safe/store/models/owner'
 
 const ADDRESS_BOOK_STORAGE_KEY = 'ADDRESS_BOOK_STORAGE_KEY'
 
 export const getAddressBookFromStorage = async (): Promise<AddressBookProps | []> => {
-  const data = await loadFromStorage(ADDRESS_BOOK_STORAGE_KEY)
+  const data = await loadFrom3Box(ADDRESS_BOOK_STORAGE_KEY)
 
   return data || []
 }
 
 export const saveAddressBook = async (addressBook: AddressBook) => {
   try {
-    await saveToStorage(ADDRESS_BOOK_STORAGE_KEY, addressBook.toJSON())
+    await saveTo3box(ADDRESS_BOOK_STORAGE_KEY, addressBook.toJS())
   } catch (err) {
     console.error('Error storing addressBook in localstorage', err)
   }
