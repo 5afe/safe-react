@@ -1,11 +1,10 @@
 // @flow
 import Checkbox from '@material-ui/core/Checkbox'
-import Close from '@material-ui/icons/Close'
 import FormControlLabel from '@material-ui/core/FormControlLabel'
-import IconButton from '@material-ui/core/IconButton'
 import React, { useEffect, useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import { useDispatch, useSelector } from 'react-redux'
+import cn from 'classnames'
 import Link from '~/components/layout/Link'
 import Button from '~/components/layout/Button'
 import { primary, mainFontFamily, md } from '~/theme/variables'
@@ -64,10 +63,16 @@ const useStyles = makeStyles({
       textDecoration: 'none',
     },
   },
-  close: {
+  acceptPreferences: {
+    cursor: 'pointer',
     position: 'absolute',
-    right: '12px',
-    top: '12px',
+    right: '20px',
+    bottom: '-10px',
+    textDecoration: 'underline',
+
+    '&:hover': {
+      textDecoration: 'none',
+    },
   },
 })
 
@@ -120,12 +125,16 @@ const CookiesBanner = () => {
 
   const cookieBannerContent = (
     <div className={classes.container}>
-      <IconButton onClick={() => closeCookiesBannerHandler()} className={classes.close}><Close /></IconButton>
+      <span role="button" tabIndex="0" onClick={closeCookiesBannerHandler} onKeyDown={closeCookiesBannerHandler} className={cn(classes.acceptPreferences, classes.text)}>
+        Accept preferences &gt;
+      </span>
       <div className={classes.content}>
         <p className={classes.text}>
           We use cookies to give you the best experience and to help improve our website. Please read our
           {' '}
-          <Link className={classes.link} to="https://safe.gnosis.io/cookie">Cookie Policy</Link>
+          <Link className={classes.link} to="https://safe.gnosis.io/cookie">
+            Cookie Policy
+          </Link>
           {' '}
           for more information. By clicking &quot;Accept all&quot;, you agree to the storing of cookies on your device
           to enhance site navigation, analyze site usage and provide customer support.
@@ -139,9 +148,7 @@ const CookiesBanner = () => {
               name="Necessary"
               onChange={() => setLocalNecessary((prev) => !prev)}
               value={localNecessary}
-              control={(
-                <Checkbox disabled />
-              )}
+              control={<Checkbox disabled />}
             />
           </div>
           <div className={classes.formItem}>
@@ -150,9 +157,7 @@ const CookiesBanner = () => {
               name="Analytics"
               onChange={() => setLocalAnalytics((prev) => !prev)}
               value={localAnalytics}
-              control={(
-                <Checkbox checked={localAnalytics} />
-              )}
+              control={<Checkbox checked={localAnalytics} />}
             />
           </div>
           <div className={classes.formItem}>
