@@ -7,10 +7,11 @@ import { loadAddressBook } from '~/logic/addressBook/store/actions/loadAddressBo
 import { safesListSelector } from '~/routes/safe/store/selectors'
 import { buildAddressBook } from '~/logic/addressBook/store/reducer/addressBook'
 
-const loadAddressBookFromStorage = () => async (dispatch: ReduxDispatch<GlobalState>, getState: Function) => {
+const loadAddressBookFromStorage = (box?: boolean) => async (dispatch: ReduxDispatch<GlobalState>, getState: Function) => {
   try {
     const state = getState()
-    let addressBook = await getAddressBookFromStorage()
+    let addressBook = await getAddressBookFromStorage(box)
+    console.log('loading address book', addressBook)
     if (!addressBook) {
       addressBook = Map([])
     }

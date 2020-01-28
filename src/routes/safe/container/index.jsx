@@ -6,7 +6,6 @@ import Layout from '~/routes/safe/components/Layout'
 import { type Token } from '~/logic/tokens/store/model/token'
 import selector, { type SelectorProps } from './selector'
 import actions, { type Actions } from './actions'
-import { get3Box } from '~/utils/storage'
 
 type State = {
   showReceive: boolean,
@@ -56,8 +55,6 @@ class SafeView extends React.Component<Props, State> {
     // fetch tokens there to get symbols for tokens in TXs list
     fetchTokens()
     fetchCurrencyValues(safeUrl)
-    get3Box().then(loadAddressBook)
-
 
     this.intervalId = setInterval(() => {
       this.checkForUpdates()

@@ -13,8 +13,15 @@ const boxStore = { box: null, space: null }
 
 const PREFIX = `v2_${getNetwork()}`
 
-export const get3Box = async () => {
-  if (boxStore.box === null) {
+export const get3Box = async (force?: boolean) => {
+  if (!force) {
+    if (boxStore.box === null) {
+      throw new Error('no box3 enabled')
+    }
+    return boxStore
+  }
+
+  try {
     const web3 = getWeb3()
     const [
       { account: address },
@@ -23,16 +30,20 @@ export const get3Box = async () => {
     await box.auth(['safeStorage'], { address })
     const space = await box.openSpace('safeStorage')
     await box.syncDone
-
     boxStore.box = box
     boxStore.space = space
+    return boxStore
+  } catch (e) {
+    console.error('Something went wrong with 3box setup', e)
+    boxStore.box = null
+    boxStore.store = null
+    throw new Error(e)
   }
-
-  return boxStore
 }
 
 export const loadFrom3Box = async (key: string): Promise<*> => {
   try {
+    console.log('loadFrom3box', 'about to call get3Box')
     const { space } = await get3Box()
 
     const stringifiedValue = await space.private.get(`${PREFIX}__${key}`)
@@ -48,8 +59,9 @@ export const loadFrom3Box = async (key: string): Promise<*> => {
   }
 }
 
-export const saveTo3box = async (key: string, value: *): Promise<*> => {
+export const saveTo3Box = async (key: string, value: *): Promise<*> => {
   try {
+    console.log('saveTo3box', 'about to call get3Box')
     const { space } = await get3Box()
 
     const stringifiedValue = JSON.stringify(value)

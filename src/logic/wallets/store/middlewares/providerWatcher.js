@@ -4,8 +4,9 @@ import { type GlobalState } from '~/safeStore'
 import { ADD_PROVIDER, REMOVE_PROVIDER } from '../actions'
 import { getWeb3, getProviderInfo, WALLET_PROVIDER } from '~/logic/wallets/getWeb3'
 import { fetchProvider } from '~/logic/wallets/store/actions'
-import { loadFromStorage, saveToStorage, removeFromStorage } from '~/utils/storage'
+import { loadFromStorage, saveToStorage, removeFromStorage, get3Box } from '~/utils/storage'
 import closeSnackbar from '~/logic/notifications/store/actions/closeSnackbar'
+import loadAddressBookFromStorage from '~/logic/addressBook/store/actions/loadAddressBookFromStorage'
 
 const watchedActions = [ADD_PROVIDER, REMOVE_PROVIDER]
 
@@ -25,6 +26,12 @@ const providerWatcherMware = (store: Store<GlobalState>) => (next: Function) => 
   if (watchedActions.includes(action.type)) {
     switch (action.type) {
       case ADD_PROVIDER: {
+        console.log('ADD_PROVIDER', 'about to call get3Box')
+        get3Box(true)
+          .then(() => {
+            store.dispatch(loadAddressBookFromStorage(true))
+        })
+          .catch(() => store.dispatch(loadAddressBookFromStorage()))
         const currentProviderProps = action.payload.toJS()
 
         if (watcherInterval) {

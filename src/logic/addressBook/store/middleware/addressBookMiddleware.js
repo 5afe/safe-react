@@ -10,6 +10,7 @@ import { TX_NOTIFICATION_TYPES } from '~/logic/safe/transactions'
 import enqueueSnackbar from '~/logic/notifications/store/actions/enqueueSnackbar'
 import { saveAddressBook } from '~/logic/addressBook/utils'
 import type { AddressBookProps } from '~/logic/addressBook/model/addressBook'
+import { get3Box } from '~/utils/storage'
 
 const watchedActions = [
   ADD_ENTRY,
@@ -26,7 +27,12 @@ const addressBookMiddleware = (store: Store<GlobalState>) => (next: Function) =>
     const { dispatch } = store
     const addressBook: AddressBookProps = addressBookMapSelector(state)
     if (addressBook) {
-      await saveAddressBook(addressBook)
+      try {
+        await get3Box()
+        await saveAddressBook(addressBook, true)
+      } catch (e) {
+        await saveAddressBook(addressBook)
+      }
     }
 
     switch (action.type) {
