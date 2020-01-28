@@ -11,7 +11,7 @@ const loadAddressBookFromStorage = (box?: boolean) => async (dispatch: ReduxDisp
   try {
     const state = getState()
     let addressBook = await getAddressBookFromStorage(box)
-    console.log('loading address book', addressBook)
+
     if (!addressBook) {
       addressBook = Map([])
     }

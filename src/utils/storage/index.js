@@ -43,7 +43,6 @@ export const get3Box = async (force?: boolean) => {
 
 export const loadFrom3Box = async (key: string): Promise<*> => {
   try {
-    console.log('loadFrom3box', 'about to call get3Box')
     const { space } = await get3Box()
 
     const stringifiedValue = await space.private.get(`${PREFIX}__${key}`)
@@ -61,7 +60,6 @@ export const loadFrom3Box = async (key: string): Promise<*> => {
 
 export const saveTo3Box = async (key: string, value: *): Promise<*> => {
   try {
-    console.log('saveTo3box', 'about to call get3Box')
     const { space } = await get3Box()
 
     const stringifiedValue = JSON.stringify(value)
@@ -74,12 +72,10 @@ export const saveTo3Box = async (key: string, value: *): Promise<*> => {
 
 export const removeFrom3box = async (key: string): Promise<*> => {
   try {
-    if (boxStore.box === null) {
-      await initialize3Box()
-    }
+    const { space } = await get3Box()
 
-    await boxStore.space.private.remove(`${PREFIX}__${key}`)
-    await boxStore.box.syncDone
+    await space.private.remove(`${PREFIX}__${key}`)
+    await space.syncDone
   } catch (err) {
     console.error(`Failed to remove ${key} from the storage:`, err)
   }

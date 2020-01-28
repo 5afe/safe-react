@@ -26,7 +26,6 @@ const providerWatcherMware = (store: Store<GlobalState>) => (next: Function) => 
   if (watchedActions.includes(action.type)) {
     switch (action.type) {
       case ADD_PROVIDER: {
-        console.log('ADD_PROVIDER', 'about to call get3Box')
         get3Box(true)
           .then(() => {
             store.dispatch(loadAddressBookFromStorage(true))
