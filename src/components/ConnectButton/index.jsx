@@ -50,7 +50,7 @@ export const onboard = new Onboard({
   networkId: getNetworkId(),
   subscriptions: {
     wallet: (wallet) => {
-      store.dispatch(fetchProvider(wallet.provider))
+      store.dispatch(fetchProvider(wallet))
     },
     address: (address) => {
       // we don't have an unsubscribe event so we rely on this
