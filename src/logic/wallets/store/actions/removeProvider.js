@@ -11,10 +11,16 @@ export const REMOVE_PROVIDER = 'REMOVE_PROVIDER'
 const removeProvider = createAction<string, *, *>(REMOVE_PROVIDER)
 
 export default () => (dispatch: ReduxDispatch<*>) => {
-  dispatch(enqueueSnackbar(enhanceSnackbarForAction(NOTIFICATIONS.WALLET_DISCONNECTED_MSG)))
-
   onboard.walletReset()
   resetWeb3()
 
   dispatch(removeProvider())
+  dispatch(
+    enqueueSnackbar(
+      enhanceSnackbarForAction(
+        NOTIFICATIONS.WALLET_DISCONNECTED_MSG,
+        NOTIFICATIONS.WALLET_DISCONNECTED_MSG.key,
+      ),
+    ),
+  )
 }
