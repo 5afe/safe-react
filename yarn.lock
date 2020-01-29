@@ -1698,7 +1698,7 @@
     web3-eth-contract "^1.2.4"
     web3-utils "^1.2.4"
 
-"@toruslabs/torus-embed@0.2.12":
+"@toruslabs/torus-embed@0.2.12", "@toruslabs/torus-embed@^0.2.11":
   version "0.2.12"
   resolved "https://registry.yarnpkg.com/@toruslabs/torus-embed/-/torus-embed-0.2.12.tgz#d0a51669db7ef32051db232ba7b0cbe4ff47bbfa"
   integrity sha512-kA1J9BLCKT+y3pCgY8u7tI7Y6yGGs1GcjGeIqQKgFkIXn86ApW0fkORe5mXYFwjQAnOst96G5bjg8mackdvoYA==
@@ -3949,12 +3949,13 @@ bnc-notify@^0.2.1:
     lodash.debounce "^4.0.8"
     uuid "^3.3.3"
 
-bnc-onboard@1.2.0:
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/bnc-onboard/-/bnc-onboard-1.2.0.tgz#6bd13029c1e44e7c4ebd24803dd733924b3539f2"
-  integrity sha512-o8TzgBY8U0yhDwR1OUO/tLz1mAsEwv4RoVqP4vrcrURNjOW8eUxOTlqaVF2cTgqaC2MYCbd8QFpHF29jV8JJQA==
+bnc-onboard@1.2.1:
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/bnc-onboard/-/bnc-onboard-1.2.1.tgz#f240f04eb0b014cf3bf6a3d6166e41881018f26e"
+  integrity sha512-MJZuLzYFhhAHPjf7tHJsmMYgjO0eWRvj/L8GiOdpaTjZXV2JYn8tgbEf4PvugkImzKvJp0eMG4RDQdy48MfEPA==
   dependencies:
     "@portis/web3" "^2.0.0-beta.42"
+    "@toruslabs/torus-embed" "^0.2.11"
     "@walletconnect/web3-provider" "^1.0.0-beta.45"
     authereum "^0.0.4-beta.26"
     bignumber.js "^9.0.0"
@@ -7927,13 +7928,6 @@ form-data@~2.3.2:
     asynckit "^0.4.0"
     combined-stream "^1.0.6"
     mime-types "^2.1.12"
-
-fortmatic@1.1.1:
-  version "1.1.1"
-  resolved "https://registry.yarnpkg.com/fortmatic/-/fortmatic-1.1.1.tgz#26d0dd1a61b9f46d934ef87504d32fa0603daaa5"
-  integrity sha512-wGR5YpBDheY3AiMCY6PpQurMnP6X5LCrdLAmCPn04MEGdEywaJQzuDWv7Cxp0xPzAdlTsZ2kqzqrMGdh/LeMQg==
-  dependencies:
-    "@babel/runtime" "7.3.4"
 
 fortmatic@^0.8.2:
   version "0.8.2"
