@@ -43,7 +43,7 @@ const OwnerComponent = ({
   thresholdReached,
 }: OwnerProps) => {
   const nameInAdbk = getNameFromAddressBook(owner.address)
-  const ownerName = owner.name === 'UNKNOWN' && nameInAdbk ? nameInAdbk : owner.name
+  const ownerName = nameInAdbk || owner.name
   return (
     <Block className={classes.container}>
       <div
