@@ -19,6 +19,7 @@ type Props = {
   setSelectedEntry: Function,
   isCustomTx?: boolean,
   recipientAddress?: string,
+  pristine: boolean,
 }
 
 
@@ -39,13 +40,15 @@ const textFieldInputStyle = makeStyles(() => ({
 }))
 
 const AddressBookInput = ({
-  classes, fieldMutator, isCustomTx, recipientAddress, setSelectedEntry,
+  classes, fieldMutator, isCustomTx, recipientAddress, setSelectedEntry, pristine,
 }: Props) => {
   const addressBook = useSelector(getAddressBookListSelector)
   const [addressInput, setAddressInput] = useState(recipientAddress)
   const [isValidForm, setIsValidForm] = useState(true)
   const [validationText, setValidationText] = useState(true)
   const [inputTouched, setInputTouched] = useState(false)
+  const [blurred, setBlurred] = useState(pristine)
+
   useEffect(() => {
     const validate = async () => {
       if (inputTouched && !addressInput) {
@@ -64,7 +67,6 @@ const AddressBookInput = ({
     validate()
   }, [addressInput])
 
-
   const labelStyling = textFieldLabelStyle()
   const txInputStyling = textFieldInputStyle()
 
@@ -73,6 +75,8 @@ const AddressBookInput = ({
       <Autocomplete
         id="free-solo-demo"
         freeSolo
+        open={!blurred}
+        onClose={() => setBlurred(true)}
         role="listbox"
         options={addressBook.toArray()}
         style={{ display: 'flex', flexGrow: 1 }}
@@ -85,7 +89,10 @@ const AddressBookInput = ({
           return foundName || foundAddress
         })}
         getOptionLabel={(adbkEntry) => adbkEntry.address || ''}
-        onOpen={() => setSelectedEntry(null)}
+        onOpen={() => {
+          setSelectedEntry(null)
+          setBlurred(false)
+        }}
         defaultValue={{ address: recipientAddress }}
         onChange={(event, value) => {
           let address = ''
@@ -118,6 +125,7 @@ const AddressBookInput = ({
             label={!isValidForm ? validationText : 'Recipient'}
             error={!isValidForm}
             fullWidth
+            autoFocus={!blurred}
             variant="filled"
             id="filled-error-helper-text"
             onChange={(event) => {

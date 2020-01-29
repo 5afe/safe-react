@@ -79,6 +79,13 @@ const SendFunds = ({
     address: recipientAddress,
     name: '',
   })
+  const [pristine, setPristine] = useState<boolean>(true)
+
+  React.useMemo(() => {
+    if (selectedEntry === null && pristine) {
+      setPristine(false)
+    }
+  }, [selectedEntry, pristine])
 
   const handleSubmit = (values) => {
     const submitValues = values
@@ -213,6 +220,7 @@ const SendFunds = ({
                     <Row margin="md">
                       <Col xs={11}>
                         <AddressBookInput
+                          pristine={pristine}
                           fieldMutator={mutators.setRecipient}
                           recipientAddress={recipientAddress}
                           setSelectedEntry={setSelectedEntry}

@@ -51,7 +51,18 @@ const SendCustomTx = ({
   initialValues,
 }: Props) => {
   const [qrModalOpen, setQrModalOpen] = useState<boolean>(false)
-  const [selectedEntry, setSelectedEntry] = useState<Object | null>(null)
+  const [selectedEntry, setSelectedEntry] = useState<Object | null>({
+    address: '',
+    name: '',
+  })
+  const [pristine, setPristine] = useState<boolean>(true)
+
+  React.useMemo(() => {
+    if (selectedEntry === null && pristine) {
+      setPristine(false)
+    }
+  }, [selectedEntry, pristine])
+
   const handleSubmit = (values: Object) => {
     if (values.data || values.value) {
       onSubmit(values)
@@ -154,7 +165,12 @@ const SendCustomTx = ({
                   <>
                     <Row margin="md">
                       <Col xs={11}>
-                        <AddressBookInput fieldMutator={mutators.setRecipient} setSelectedEntry={setSelectedEntry} isCustomTx />
+                        <AddressBookInput
+                          pristine={pristine}
+                          fieldMutator={mutators.setRecipient}
+                          setSelectedEntry={setSelectedEntry}
+                          isCustomTx
+                        />
                       </Col>
                       <Col xs={1} center="xs" middle="xs" className={classes}>
                         <Img
