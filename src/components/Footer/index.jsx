@@ -16,7 +16,7 @@ const useStyles = makeStyles({
     justifyContent: 'center',
     margin: '0 auto',
     maxWidth: '100%',
-    padding: `40px ${sm} 30px`,
+    padding: `40px ${sm} 20px`,
     width: `${screenSm}px`,
   },
   item: {

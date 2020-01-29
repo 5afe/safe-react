@@ -143,7 +143,7 @@ const Sidebar = ({
   )
 }
 
-export default connect<Object, Object,?Function,?Object>(
+export default connect<Object, Object, ?Function, ?Object>(
   // $FlowFixMe
   (state) => ({
     safes: sortedSafeListSelector(state),

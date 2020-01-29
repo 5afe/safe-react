@@ -7,7 +7,9 @@ import { useDispatch, useSelector } from 'react-redux'
 import cn from 'classnames'
 import Link from '~/components/layout/Link'
 import Button from '~/components/layout/Button'
-import { primary, mainFontFamily, md } from '~/theme/variables'
+import {
+  primary, mainFontFamily, md, screenSm,
+} from '~/theme/variables'
 import type { CookiesProps } from '~/logic/cookies/model/cookie'
 import { COOKIES_KEY } from '~/logic/cookies/model/cookie'
 import { loadFromCookie, saveCookie } from '~/logic/cookies/utils'
@@ -47,9 +49,12 @@ const useStyles = makeStyles({
     columnGap: '10px',
     display: 'grid',
     gridTemplateColumns: '1fr',
+    paddingBottom: '30px',
     rowGap: '10px',
-    '@media (min-width: 960px)': {
+
+    [`@media (min-width: ${screenSm}px)`]: {
       gridTemplateColumns: '1fr 1fr 1fr',
+      paddingBottom: '0',
     },
   },
   formItem: {
@@ -64,11 +69,15 @@ const useStyles = makeStyles({
     },
   },
   acceptPreferences: {
-    bottom: '-10px',
+    bottom: '-20px',
     cursor: 'pointer',
     position: 'absolute',
     right: '20px',
     textDecoration: 'underline',
+
+    [`@media (min-width: ${screenSm}px)`]: {
+      bottom: '-10px',
+    },
 
     '&:hover': {
       textDecoration: 'none',
