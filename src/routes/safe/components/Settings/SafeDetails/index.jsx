@@ -29,6 +29,7 @@ type Props = {
   updateSafe: Function,
   enqueueSnackbar: Function,
   closeSnackbar: Function,
+  createTransaction: Function,
 }
 
 const useStyles = makeStyles(styles)
@@ -37,7 +38,7 @@ const SafeDetails = (props: Props) => {
   const classes = useStyles()
   const [safeVersions, setSafeVersions] = React.useState({ current: null, latest: null, needUpdate: false })
   const {
-    safeAddress, safeName, updateSafe, enqueueSnackbar, closeSnackbar,
+    safeAddress, safeName, updateSafe, enqueueSnackbar, closeSnackbar, createTransaction,
   } = props
 
   const [isModalOpen, setModalOpen] = useState(false)
@@ -51,6 +52,10 @@ const SafeDetails = (props: Props) => {
 
     const notification = getNotificationsFromTxType(TX_NOTIFICATION_TYPES.SAFE_NAME_CHANGE_TX)
     showSnackbar(notification.afterExecution.noMoreConfirmationsNeeded, enqueueSnackbar, closeSnackbar)
+  }
+
+  const handleUpdateSafe = () => {
+    setModalOpen(true)
   }
 
   useEffect(() => {
@@ -83,7 +88,7 @@ const SafeDetails = (props: Props) => {
                 <Row align="end" grow>
                   <Paragraph>
                     <Button
-                      onClick={() => setModalOpen(true)}
+                      onClick={handleUpdateSafe}
                       className={classes.saveBtn}
                       size="small"
                       variant="contained"
@@ -135,7 +140,7 @@ const SafeDetails = (props: Props) => {
               handleClose={toggleModal}
               open={isModalOpen}
             >
-              <UpdateSafeModal onClose={toggleModal} />
+              <UpdateSafeModal onClose={toggleModal} createTransaction={createTransaction} closeSnackbar={closeSnackbar} enqueueSnackbar={enqueueSnackbar} />
             </Modal>
           </>
         )}

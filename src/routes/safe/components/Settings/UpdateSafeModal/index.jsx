@@ -1,5 +1,6 @@
 // @flow
 import React from 'react'
+import { useSelector } from 'react-redux'
 import IconButton from '@material-ui/core/IconButton'
 import Close from '@material-ui/icons/Close'
 import { withStyles } from '@material-ui/styles'
@@ -10,17 +11,39 @@ import GnoForm from '~/components/forms/GnoForm'
 import Block from '~/components/layout/Block'
 import Button from '~/components/layout/Button'
 import { styles } from './style'
+import {
+  getUpgradeSafeTransaction,
+} from '~/logic/contracts/safeContracts'
+import { safeParamAddressFromStateSelector } from '~/routes/safe/store/selectors'
+import { TX_NOTIFICATION_TYPES } from '~/logic/safe/transactions'
 
 
 type Props = {
   onClose: Function,
+  createTransaction: Function,
+  enqueueSnackbar: Function,
+  closeSnackbar: Function,
   classes: Object,
 
 }
 
-const UpdateSafeModal = ({ onClose, classes }: Props) => {
-  const handleSubmit = () => {
+const UpdateSafeModal = ({
+  onClose, createTransaction, enqueueSnackbar,
+  closeSnackbar, classes,
+}: Props) => {
+  const safeAddress = useSelector(safeParamAddressFromStateSelector)
+  const handleSubmit = async () => {
     // Call the update safe method
+    const txData = await getUpgradeSafeTransaction(safeAddress)
+    createTransaction({
+      safeAddress,
+      to: safeAddress,
+      valueInWei: 0,
+      txData,
+      notifiedTransaction: TX_NOTIFICATION_TYPES.SETTINGS_CHANGE_TX,
+      enqueueSnackbar,
+      closeSnackbar,
+    })
     onClose()
   }
 
