@@ -306,7 +306,7 @@ const SendFunds = ({
                   color="primary"
                   data-testid="review-tx-btn"
                   className={classes.submitButton}
-                  disabled={!setSelectedEntry}
+                  disabled={!selectedEntry || !selectedEntry.address}
                 >
                   Review
                 </Button>

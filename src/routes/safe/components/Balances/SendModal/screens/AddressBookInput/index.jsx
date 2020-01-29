@@ -45,9 +45,13 @@ const AddressBookInput = ({
   const [addressInput, setAddressInput] = useState(recipientAddress)
   const [isValidForm, setIsValidForm] = useState(true)
   const [validationText, setValidationText] = useState(true)
+  const [inputTouched, setInputTouched] = useState(false)
   useEffect(() => {
     const validate = async () => {
-      if (addressInput) {
+      if (inputTouched && !addressInput) {
+        setIsValidForm(false)
+        setValidationText('Required')
+      } else if (addressInput) {
         let isValidText = mustBeEthereumAddress(addressInput)
         if (isCustomTx && isValidText === undefined) {
           isValidText = await mustBeEthereumContractAddress(addressInput)
@@ -84,7 +88,12 @@ const AddressBookInput = ({
         onOpen={() => setSelectedEntry(null)}
         defaultValue={{ address: recipientAddress }}
         onChange={(event, value) => {
-          const { address, name } = value
+          let address = ''
+          let name = ''
+          if (value) {
+            address = value.address
+            name = value.name
+          }
           setAddressInput(address)
           setSelectedEntry({ address, name })
           fieldMutator(address)
@@ -112,6 +121,7 @@ const AddressBookInput = ({
             variant="filled"
             id="filled-error-helper-text"
             onChange={(event) => {
+              setInputTouched(true)
               setAddressInput(event.target.value)
             }}
             InputProps={

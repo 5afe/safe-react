@@ -220,6 +220,7 @@ const SendCustomTx = ({
                   color="primary"
                   data-testid="review-tx-btn"
                   className={classes.submitButton}
+                  disabled={!selectedEntry || !selectedEntry.address}
                 >
                   Review
                 </Button>
