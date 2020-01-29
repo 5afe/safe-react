@@ -64,10 +64,10 @@ const useStyles = makeStyles({
     },
   },
   acceptPreferences: {
+    bottom: '-10px',
     cursor: 'pointer',
     position: 'absolute',
     right: '20px',
-    bottom: '-10px',
     textDecoration: 'underline',
 
     '&:hover': {

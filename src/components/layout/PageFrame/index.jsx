@@ -7,6 +7,7 @@ import { getNetwork } from '~/config'
 import { ETHEREUM_NETWORK } from '~/logic/wallets/getWeb3'
 import SidebarProvider from '~/components/Sidebar'
 import Header from '~/components/Header'
+import Footer from '~/components/Footer'
 import Backdrop from '~/components/layout/Backdrop'
 import Img from '~/components/layout/Img'
 import Notifier from '~/components/Notifier'
@@ -92,6 +93,7 @@ const PageFrame = ({ children, classes, currentNetwork }: Props) => {
         <SidebarProvider>
           <Header />
           {children}
+          <Footer />
         </SidebarProvider>
       </SnackbarProvider>
       <CookiesBanner />
