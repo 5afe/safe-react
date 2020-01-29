@@ -14,9 +14,13 @@ const boxStore = { box: null, space: null }
 const PREFIX = `v2_${getNetwork()}`
 
 export const get3Box = async (force?: boolean) => {
+  if (process.env.REACT_APP_3BOX_ENABLED !== 'true') {
+    throw new Error('3box disabled by setup')
+  }
+
   if (!force) {
     if (boxStore.box === null) {
-      throw new Error('no box3 enabled')
+      throw new Error('no 3box enabled')
     }
     return boxStore
   }
