@@ -92,10 +92,8 @@ const OwnersColumn = ({
 
   if (tx.isExecuted || cancelTx.isExecuted) {
     showOlderTxAnnotation = false
-  } else if (!tx.isExecuted) {
-    showOlderTxAnnotation = thresholdReached && !canExecute
   } else {
-    showOlderTxAnnotation = cancelThresholdReached && !canExecuteCancel
+    showOlderTxAnnotation = (thresholdReached && !canExecute) || (cancelThresholdReached && !canExecuteCancel)
   }
 
   const [
