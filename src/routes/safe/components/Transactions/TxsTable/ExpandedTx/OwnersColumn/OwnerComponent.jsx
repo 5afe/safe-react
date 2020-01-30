@@ -68,10 +68,6 @@ const OwnerComponent = ({
   }, [confirmed, thresholdReached, executor, isCancelTx])
 
   const getTimelineLine = () => (isCancelTx ? classes.verticalLineCancel : classes.verticalLineDone)
-  // // eslint-disable-next-line no-nested-ternary
-  // confirmed || thresholdReached || executor
-  // ? isCancelTx ? classes.verticalLineCancelProgressDone : classes.verticalLineProgressDone
-  // : classes.verticalLineProgressPending)
 
   return (
     <Block className={classes.container}>
