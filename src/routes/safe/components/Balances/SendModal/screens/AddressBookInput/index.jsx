@@ -17,6 +17,7 @@ type Props = {
   classes: Object,
   fieldMutator: Function,
   setSelectedEntry: Function,
+  setIsValidAddress: Function,
   isCustomTx?: boolean,
   recipientAddress?: string,
   pristine: boolean,
@@ -40,7 +41,7 @@ const textFieldInputStyle = makeStyles(() => ({
 }))
 
 const AddressBookInput = ({
-  classes, fieldMutator, isCustomTx, recipientAddress, setSelectedEntry, pristine,
+  classes, fieldMutator, isCustomTx, recipientAddress, setSelectedEntry, pristine, setIsValidAddress,
 }: Props) => {
   const addressBook = useSelector(getAddressBookListSelector)
   const [addressInput, setAddressInput] = useState(recipientAddress)
@@ -54,6 +55,7 @@ const AddressBookInput = ({
       if (inputTouched && !addressInput) {
         setIsValidForm(false)
         setValidationText('Required')
+        setIsValidAddress(false)
       } else if (addressInput) {
         let isValidText = mustBeEthereumAddress(addressInput)
         if (isCustomTx && isValidText === undefined) {
@@ -62,6 +64,7 @@ const AddressBookInput = ({
         setIsValidForm(isValidText === undefined)
         setValidationText(isValidText)
         fieldMutator(addressInput)
+        setIsValidAddress(isValidText === undefined)
       }
     }
     validate()

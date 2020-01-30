@@ -56,6 +56,7 @@ const SendCustomTx = ({
     name: '',
   })
   const [pristine, setPristine] = useState<boolean>(true)
+  const [isValidAddress, setIsValidAddress] = useState<boolean>(true)
 
   React.useMemo(() => {
     if (selectedEntry === null && pristine) {
@@ -86,6 +87,7 @@ const SendCustomTx = ({
     },
   }
 
+
   return (
     <>
       <Row align="center" grow className={classes.heading}>
@@ -101,6 +103,11 @@ const SendCustomTx = ({
       <GnoForm onSubmit={handleSubmit} formMutators={formMutators} initialValues={initialValues}>
         {(...args) => {
           const mutators = args[3]
+
+          let shouldDisableSubmitButton = !isValidAddress
+          if (selectedEntry) {
+            shouldDisableSubmitButton = !selectedEntry.address
+          }
 
           const handleScan = (value) => {
             let scannedAddress = value
@@ -169,6 +176,7 @@ const SendCustomTx = ({
                           pristine={pristine}
                           fieldMutator={mutators.setRecipient}
                           setSelectedEntry={setSelectedEntry}
+                          setIsValidAddress={setIsValidAddress}
                           isCustomTx
                         />
                       </Col>
@@ -236,7 +244,7 @@ const SendCustomTx = ({
                   color="primary"
                   data-testid="review-tx-btn"
                   className={classes.submitButton}
-                  disabled={!selectedEntry || !selectedEntry.address}
+                  disabled={shouldDisableSubmitButton}
                 >
                   Review
                 </Button>
