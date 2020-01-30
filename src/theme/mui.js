@@ -226,18 +226,6 @@ const theme = createMuiTheme({
         flexWrap: 'nowrap',
         padding: '20px',
         width: '100%',
-        '&[class*="variantError"]': {
-          background: '#ffe6ea',
-        },
-        '&[class*="variantInfo"]': {
-          background: '#fff',
-        },
-        '&[class*="variantSuccess"]': {
-          background: '#fff',
-        },
-        '&[class*="variantWarning"]': {
-          background: '#fff3e2',
-        },
       },
       message: {
         color: fontColor,

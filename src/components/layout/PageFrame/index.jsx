@@ -18,14 +18,30 @@ import ErrorIcon from './assets/error.svg'
 import InfoIcon from './assets/info.svg'
 import styles from './index.scss'
 
+const notificationStyles = {
+  success: {
+    background: '#fff',
+  },
+  error: {
+    background: '#ffe6ea',
+  },
+  warning: {
+    background: '#fff3e2',
+  },
+  info: {
+    background: '#fff',
+  },
+}
+
 type Props = {
   children: React.Node,
+  classes: Object,
   currentNetwork: string,
 }
 
 const desiredNetwork = getNetwork()
 
-const PageFrame = ({ children, currentNetwork }: Props) => {
+const PageFrame = ({ children, classes, currentNetwork }: Props) => {
   const isWrongNetwork = currentNetwork !== ETHEREUM_NETWORK.UNKNOWN && currentNetwork !== desiredNetwork
 
   return (
@@ -34,6 +50,12 @@ const PageFrame = ({ children, currentNetwork }: Props) => {
       <SnackbarProvider
         maxSnack={5}
         anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+        classes={{
+          variantSuccess: classes.success,
+          variantError: classes.error,
+          variantWarning: classes.warning,
+          variantInfo: classes.info,
+        }}
         iconVariant={{
           error: <Img src={ErrorIcon} alt="Error" />,
           info: <Img src={InfoIcon} alt="Info" />,
@@ -52,4 +74,11 @@ const PageFrame = ({ children, currentNetwork }: Props) => {
   )
 }
 
-export default connect((state) => ({ currentNetwork: networkSelector(state) }), null)(PageFrame)
+export default withStyles(notificationStyles)(
+  connect(
+    (state) => ({
+      currentNetwork: networkSelector(state),
+    }),
+    null,
+  )(PageFrame),
+)
