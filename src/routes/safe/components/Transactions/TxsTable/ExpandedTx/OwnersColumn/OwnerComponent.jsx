@@ -57,18 +57,15 @@ const OwnerComponent = ({
 }: OwnerProps) => {
   const nameInAdbk = getNameFromAddressBook(owner.address)
   const ownerName = nameInAdbk || owner.name
+  const [imgCircle, setImgCircle] = React.useState(ConfirmSmallGreyCircle)
 
-  const getTimelineCircle = (): string => {
-    let imgCircle = ConfirmSmallGreyCircle
-
+  React.useMemo(() => {
     if (confirmed) {
-      imgCircle = isCancelTx ? CancelSmallFilledCircle : ConfirmSmallFilledCircle
+      setImgCircle(isCancelTx ? CancelSmallFilledCircle : ConfirmSmallFilledCircle)
     } else if (thresholdReached || executor) {
-      imgCircle = isCancelTx ? ConfirmSmallRedCircle : ConfirmSmallGreenCircle
+      setImgCircle(isCancelTx ? ConfirmSmallRedCircle : ConfirmSmallGreenCircle)
     }
-
-    return imgCircle
-  }
+  }, [confirmed, thresholdReached, executor, isCancelTx])
 
   const getTimelineLine = () => (isCancelTx ? classes.verticalLineCancel : classes.verticalLineDone)
   // // eslint-disable-next-line no-nested-ternary
@@ -80,7 +77,7 @@ const OwnerComponent = ({
     <Block className={classes.container}>
       <div className={cn(classes.verticalLine, (confirmed || thresholdReached || executor) && getTimelineLine())} />
       <div className={classes.circleState}>
-        <Img src={getTimelineCircle()} alt="" />
+        <Img src={imgCircle} alt="" />
       </div>
       <Identicon address={owner.address} diameter={32} className={classes.icon} />
       <Block>
