@@ -106,7 +106,7 @@ export const getTxTableData = (
 
     return getTransactionTableData(
       tx,
-      Number.isInteger(tx.nonce) ? cancelTxsByNonce.get(tx.nonce) : undefined,
+      Number.isInteger(Number.parseInt(tx.nonce, 10)) ? cancelTxsByNonce.get(tx.nonce) : undefined,
     )
   })
 }
