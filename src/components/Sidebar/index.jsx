@@ -32,7 +32,7 @@ type TSidebarContext = {
 
 export const SidebarContext = React.createContext<TSidebarContext>({
   isOpen: false,
-  toggleSidebar: () => { },
+  toggleSidebar: () => {},
 })
 
 type SidebarProps = {
