@@ -106,7 +106,7 @@ export const getTxTableData = (
 
     return getTransactionTableData(
       tx,
-      ![undefined, null, ''].includes(tx.nonce) ? cancelTxsByNonce.get(tx.nonce) : undefined,
+      Number.isInteger(tx.nonce) ? cancelTxsByNonce.get(tx.nonce) : undefined,
     )
   })
 }
