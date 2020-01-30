@@ -75,6 +75,7 @@ const AddressBookInput = ({
       <Autocomplete
         id="free-solo-demo"
         freeSolo
+        disableOpenOnFocus
         open={!blurred}
         onClose={() => setBlurred(true)}
         role="listbox"
@@ -125,7 +126,7 @@ const AddressBookInput = ({
             label={!isValidForm ? validationText : 'Recipient'}
             error={!isValidForm}
             fullWidth
-            autoFocus={!blurred}
+            autoFocus={!blurred || pristine}
             variant="filled"
             id="filled-error-helper-text"
             onChange={(event) => {
