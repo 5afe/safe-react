@@ -56,7 +56,7 @@ const OwnerComponent = ({
   userAddress,
 }: OwnerProps) => {
   const nameInAdbk = getNameFromAddressBook(owner.address)
-  const ownerName = owner.name === 'UNKNOWN' && nameInAdbk ? nameInAdbk : owner.name
+  const ownerName = nameInAdbk || owner.name
 
   const getTimelineCircle = (): string => {
     let imgCircle = ConfirmSmallGreyCircle
