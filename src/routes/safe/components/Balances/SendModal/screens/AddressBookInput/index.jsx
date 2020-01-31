@@ -1,5 +1,5 @@
 // @flow
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import {
   withStyles,
 } from '@material-ui/core/styles'
@@ -11,6 +11,7 @@ import { styles } from './style'
 import { getAddressBookListSelector } from '~/logic/addressBook/store/selectors'
 import { mustBeEthereumAddress, mustBeEthereumContractAddress } from '~/components/forms/validator'
 import Identicon from '~/components/Identicon'
+import { getAddressFromENS } from '~/logic/wallets/getWeb3'
 
 
 type Props = {
@@ -40,35 +41,44 @@ const textFieldInputStyle = makeStyles(() => ({
   },
 }))
 
+const isValidEnsName = (name) => /^([\w-]+\.)+(eth|test|xyz|luxe)$/.test(name)
+
 const AddressBookInput = ({
   classes, fieldMutator, isCustomTx, recipientAddress, setSelectedEntry, pristine, setIsValidAddress,
 }: Props) => {
   const addressBook = useSelector(getAddressBookListSelector)
-  const [addressInput, setAddressInput] = useState(recipientAddress)
   const [isValidForm, setIsValidForm] = useState(true)
   const [validationText, setValidationText] = useState(true)
   const [inputTouched, setInputTouched] = useState(false)
   const [blurred, setBlurred] = useState(pristine)
 
-  useEffect(() => {
-    const validate = async () => {
-      if (inputTouched && !addressInput) {
-        setIsValidForm(false)
-        setValidationText('Required')
-        setIsValidAddress(false)
-      } else if (addressInput) {
-        let isValidText = mustBeEthereumAddress(addressInput)
-        if (isCustomTx && isValidText === undefined) {
-          isValidText = await mustBeEthereumContractAddress(addressInput)
-        }
-        setIsValidForm(isValidText === undefined)
-        setValidationText(isValidText)
-        fieldMutator(addressInput)
-        setIsValidAddress(isValidText === undefined)
+  const [inputAddValue, setInputAddValue] = useState(recipientAddress)
+
+  const onAddressInputChanged = async (addressValue) => {
+    setInputAddValue(addressValue)
+    let resolvedAddress = addressValue
+    let isValidText
+    if (inputTouched && !addressValue) {
+      setIsValidForm(false)
+      setValidationText('Required')
+      setIsValidAddress(false)
+      return
+    }
+    if (addressValue) {
+      if (isValidEnsName(addressValue)) {
+        resolvedAddress = await getAddressFromENS(addressValue)
+        setInputAddValue(resolvedAddress)
+      }
+      isValidText = mustBeEthereumAddress(resolvedAddress)
+      if (isCustomTx && isValidText === undefined) {
+        isValidText = await mustBeEthereumContractAddress(resolvedAddress)
       }
     }
-    validate()
-  }, [addressInput])
+    setIsValidForm(isValidText === undefined)
+    setValidationText(isValidText)
+    fieldMutator(resolvedAddress)
+    setIsValidAddress(isValidText === undefined)
+  }
 
   const labelStyling = textFieldLabelStyle()
   const txInputStyling = textFieldInputStyle()
@@ -97,7 +107,8 @@ const AddressBookInput = ({
           setSelectedEntry(null)
           setBlurred(false)
         }}
-        defaultValue={{ address: recipientAddress }}
+        //  defaultValue={{ address: recipientAddress }}
+        value={{ address: inputAddValue }}
         onChange={(event, value) => {
           let address = ''
           let name = ''
@@ -105,7 +116,6 @@ const AddressBookInput = ({
             address = value.address
             name = value.name
           }
-          setAddressInput(address)
           setSelectedEntry({ address, name })
           fieldMutator(address)
         }}
@@ -132,9 +142,10 @@ const AddressBookInput = ({
             autoFocus={!blurred || pristine}
             variant="filled"
             id="filled-error-helper-text"
+            value={{ address: inputAddValue }}
             onChange={(event) => {
               setInputTouched(true)
-              setAddressInput(event.target.value)
+              onAddressInputChanged(event.target.value)
             }}
             InputProps={
               {

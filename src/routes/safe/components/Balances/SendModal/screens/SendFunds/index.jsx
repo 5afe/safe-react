@@ -80,6 +80,7 @@ const SendFunds = ({
     name: '',
   })
   const [pristine, setPristine] = useState<boolean>(true)
+  const [isValidAddress, setIsValidAddress] = useState<boolean>(true)
 
   React.useMemo(() => {
     if (selectedEntry === null && pristine) {
@@ -138,6 +139,11 @@ const SendFunds = ({
 
             mutators.setRecipient(scannedAddress)
             closeQrModal()
+          }
+
+          let shouldDisableSubmitButton = !isValidAddress
+          if (selectedEntry) {
+            shouldDisableSubmitButton = !selectedEntry.address
           }
 
           return (
@@ -224,6 +230,7 @@ const SendFunds = ({
                           fieldMutator={mutators.setRecipient}
                           recipientAddress={recipientAddress}
                           setSelectedEntry={setSelectedEntry}
+                          setIsValidAddress={setIsValidAddress}
                         />
                       </Col>
                       <Col xs={1} center="xs" middle="xs" className={classes}>
@@ -314,7 +321,7 @@ const SendFunds = ({
                   color="primary"
                   data-testid="review-tx-btn"
                   className={classes.submitButton}
-                  disabled={!selectedEntry || !selectedEntry.address}
+                  disabled={shouldDisableSubmitButton}
                 >
                   Review
                 </Button>
