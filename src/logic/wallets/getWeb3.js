@@ -138,9 +138,7 @@ const getNetworkIdFrom = async (web3Provider) => {
   return networkId
 }
 
-export const getProviderInfo: Function = async (web3Provider): Promise<ProviderProps> => {
-  web3 = new Web3(web3Provider)
-
+export const getProviderInfo: Function = async (): Promise<ProviderProps> => {
   const name = getProviderName(web3)
   const account = await getAccountFrom(web3)
   const network = await getNetworkIdFrom(web3)
@@ -161,6 +159,10 @@ export const getAddressFromENS = async (name: string) => {
   const address = await ens.resolver(name).addr()
 
   return address
+}
+
+export const setWeb3 = (provider: Object) => {
+  web3 = new Web3(provider)
 }
 
 export const getBalanceInEtherOf = async (safeAddress: string) => {

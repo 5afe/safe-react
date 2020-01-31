@@ -3,6 +3,7 @@ import React from 'react'
 import Onboard from 'bnc-onboard'
 import Button from '~/components/layout/Button'
 import { fetchProvider, removeProvider } from '~/logic/wallets/store/actions'
+import { setWeb3 } from '~/logic/wallets/getWeb3'
 import { getNetworkId } from '~/config'
 import { store } from '~/store'
 
@@ -45,16 +46,24 @@ const wallets = [
   { walletName: 'operaTouch', preferred: true },
 ]
 
+let lastUsedAddress = ''
+
 export const onboard = new Onboard({
   dappId: BLOCKNATIVE_API_KEY,
   networkId: getNetworkId(),
   subscriptions: {
     wallet: (wallet) => {
-      store.dispatch(fetchProvider(wallet))
+      setWeb3(wallet.provider)
     },
     address: (address) => {
+      if (!lastUsedAddress && address) {
+        lastUsedAddress = address
+        store.dispatch(fetchProvider())
+      }
+
       // we don't have an unsubscribe event so we rely on this
-      if (!address) {
+      if (!address && lastUsedAddress) {
+        lastUsedAddress = ''
         store.dispatch(removeProvider())
       }
     },
