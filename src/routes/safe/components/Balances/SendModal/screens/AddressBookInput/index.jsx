@@ -1,5 +1,5 @@
 // @flow
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
   withStyles,
 } from '@material-ui/core/styles'
@@ -7,8 +7,11 @@ import { useSelector } from 'react-redux'
 import Autocomplete from '@material-ui/lab/Autocomplete'
 import TextField from '@material-ui/core/TextField'
 import makeStyles from '@material-ui/core/styles/makeStyles'
+import { List } from 'immutable'
 import { styles } from './style'
-import { getAddressBookListSelector } from '~/logic/addressBook/store/selectors'
+import {
+  getAddressBookListSelector,
+} from '~/logic/addressBook/store/selectors'
 import { mustBeEthereumAddress, mustBeEthereumContractAddress } from '~/components/forms/validator'
 import Identicon from '~/components/Identicon'
 import { getAddressFromENS } from '~/logic/wallets/getWeb3'
@@ -51,6 +54,7 @@ const AddressBookInput = ({
   const [validationText, setValidationText] = useState(true)
   const [inputTouched, setInputTouched] = useState(false)
   const [blurred, setBlurred] = useState(pristine)
+  const [adbkList, setADBKList] = useState(List([]))
 
   const [inputAddValue, setInputAddValue] = useState(recipientAddress)
 
@@ -80,6 +84,19 @@ const AddressBookInput = ({
     setIsValidAddress(isValidText === undefined)
   }
 
+  useEffect(() => {
+    const filterAdbkContractAddresses = async () => {
+      if (!isCustomTx) {
+        setADBKList(addressBook)
+        return
+      }
+      const abFlags = await Promise.all(addressBook.map(async ({ address }) => mustBeEthereumContractAddress(address) === undefined))
+      const filteredADBK = addressBook.filter((adbkEntry, index) => abFlags[index])
+      setADBKList(filteredADBK)
+    }
+    filterAdbkContractAddresses()
+  }, [addressBook])
+
   const labelStyling = textFieldLabelStyle()
   const txInputStyling = textFieldInputStyle()
 
@@ -92,7 +109,7 @@ const AddressBookInput = ({
         open={!blurred}
         onClose={() => setBlurred(true)}
         role="listbox"
-        options={addressBook.toArray()}
+        options={adbkList.toArray()}
         style={{ display: 'flex', flexGrow: 1 }}
         closeIcon={null}
         filterOptions={(optionsArray, { inputValue }) => optionsArray.filter((item) => {
