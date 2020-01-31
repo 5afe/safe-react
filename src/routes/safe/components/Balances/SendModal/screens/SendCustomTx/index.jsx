@@ -136,7 +136,6 @@ const SendCustomTx = ({
                   <div
                     role="listbox"
                     tabIndex="0"
-                    onClick={() => setSelectedEntry(null)}
                     onKeyDown={(e) => {
                       if (e.keyCode !== 9) {
                         setSelectedEntry(null)
@@ -155,10 +154,10 @@ const SendCustomTx = ({
                       <Col xs={11} layout="column">
                         <Block justify="left">
                           <Block>
-                            <Paragraph weight="bolder" className={classes.address} noMargin onClick={() => setSelectedEntry(null)}>
+                            <Paragraph weight="bolder" className={classes.selectAddress} noMargin onClick={() => setSelectedEntry(null)}>
                               {selectedEntry.name}
                             </Paragraph>
-                            <Paragraph weight="bolder" className={classes.address} noMargin onClick={() => setSelectedEntry(null)}>
+                            <Paragraph weight="bolder" className={classes.selectAddress} noMargin onClick={() => setSelectedEntry(null)}>
                               {selectedEntry.address}
                             </Paragraph>
                           </Block>

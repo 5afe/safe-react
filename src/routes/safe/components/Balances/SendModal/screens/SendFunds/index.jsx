@@ -170,7 +170,6 @@ const SendFunds = ({
                   <div
                     role="listbox"
                     tabIndex="0"
-                    onClick={() => setSelectedEntry(null)}
                     onKeyDown={(e) => {
                       if (e.keyCode !== 9) {
                         setSelectedEntry(null)
@@ -199,15 +198,17 @@ const SendFunds = ({
                           <Block>
                             <Paragraph
                               weight="bolder"
-                              className={classes.address}
+                              className={classes.selectAddress}
                               noMargin
+                              onClick={() => setSelectedEntry(null)}
                             >
                               {selectedEntry.name}
                             </Paragraph>
                             <Paragraph
                               weight="bolder"
-                              className={classes.address}
+                              className={classes.selectAddress}
                               noMargin
+                              onClick={() => setSelectedEntry(null)}
                             >
                               {selectedEntry.address}
                             </Paragraph>
