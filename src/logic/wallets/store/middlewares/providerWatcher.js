@@ -22,17 +22,22 @@ export const loadLastUsedProvider = async () => {
 
 let watcherInterval = null
 
+const loadAddressBook = async (dispatch) => {
+  try {
+    await get3Box(true)
+    dispatch(loadAddressBookFromStorage(true))
+  } catch (e) {
+    dispatch(loadAddressBookFromStorage())
+  }
+}
+
 const providerWatcherMware = (store: Store<GlobalState>) => (next: Function) => async (action: AnyAction) => {
   const handledAction = next(action)
 
   if (watchedActions.includes(action.type)) {
     switch (action.type) {
       case ADD_PROVIDER: {
-        get3Box(true)
-          .then(() => {
-            store.dispatch(loadAddressBookFromStorage(true))
-          })
-          .catch(() => store.dispatch(loadAddressBookFromStorage()))
+        loadAddressBook(store.dispatch)
         const currentProviderProps = action.payload.toJS()
 
         if (watcherInterval) {
