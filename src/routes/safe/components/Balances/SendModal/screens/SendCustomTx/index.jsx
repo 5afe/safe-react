@@ -7,7 +7,6 @@ import IconButton from '@material-ui/core/IconButton'
 import Paragraph from '~/components/layout/Paragraph'
 import Row from '~/components/layout/Row'
 import GnoForm from '~/components/forms/GnoForm'
-import AddressInput from '~/components/forms/AddressInput'
 import Col from '~/components/layout/Col'
 import Button from '~/components/layout/Button'
 import ScanQRModal from '~/components/ScanQRModal'
@@ -19,13 +18,18 @@ import Field from '~/components/forms/Field'
 import TextField from '~/components/forms/TextField'
 import TextareaField from '~/components/forms/TextareaField'
 import {
-  composeValidators, mustBeFloat, maxValue, mustBeEthereumContractAddress,
+  composeValidators, mustBeFloat, maxValue,
 } from '~/components/forms/validator'
 import SafeInfo from '~/routes/safe/components/Balances/SendModal/SafeInfo'
 import QRIcon from '~/assets/icons/qrcode.svg'
 import ArrowDown from '../assets/arrow-down.svg'
 import { styles } from './style'
 import { sm } from '~/theme/variables'
+import AddressBookInput from '~/routes/safe/components/Balances/SendModal/screens/AddressBookInput'
+import Identicon from '~/components/Identicon'
+import CopyBtn from '~/components/CopyBtn'
+import EtherscanBtn from '~/components/EtherscanBtn'
+
 
 type Props = {
   onClose: () => void,
@@ -47,6 +51,19 @@ const SendCustomTx = ({
   initialValues,
 }: Props) => {
   const [qrModalOpen, setQrModalOpen] = useState<boolean>(false)
+  const [selectedEntry, setSelectedEntry] = useState<Object | null>({
+    address: '',
+    name: '',
+  })
+  const [pristine, setPristine] = useState<boolean>(true)
+  const [isValidAddress, setIsValidAddress] = useState<boolean>(true)
+
+  React.useMemo(() => {
+    if (selectedEntry === null && pristine) {
+      setPristine(false)
+    }
+  }, [selectedEntry, pristine])
+
   const handleSubmit = (values: Object) => {
     if (values.data || values.value) {
       onSubmit(values)
@@ -70,6 +87,7 @@ const SendCustomTx = ({
     },
   }
 
+
   return (
     <>
       <Row align="center" grow className={classes.heading}>
@@ -85,6 +103,11 @@ const SendCustomTx = ({
       <GnoForm onSubmit={handleSubmit} formMutators={formMutators} initialValues={initialValues}>
         {(...args) => {
           const mutators = args[3]
+
+          let shouldDisableSubmitButton = !isValidAddress
+          if (selectedEntry) {
+            shouldDisableSubmitButton = !selectedEntry.address
+          }
 
           const handleScan = (value) => {
             let scannedAddress = value
@@ -109,31 +132,68 @@ const SendCustomTx = ({
                     <Hairline />
                   </Col>
                 </Row>
-                <Row margin="md">
-                  <Col xs={11}>
-                    <AddressInput
-                      name="recipientAddress"
-                      component={TextField}
-                      placeholder="Recipient*"
-                      text="Recipient*"
-                      className={classes.addressInput}
-                      fieldMutator={mutators.setRecipient}
-                      validators={[mustBeEthereumContractAddress]}
-                    />
-                  </Col>
-                  <Col xs={1} center="xs" middle="xs" className={classes}>
-                    <Img
-                      src={QRIcon}
-                      className={classes.qrCodeBtn}
-                      role="button"
-                      height={20}
-                      alt="Scan QR"
-                      onClick={() => {
-                        openQrModal()
-                      }}
-                    />
-                  </Col>
-                </Row>
+                { selectedEntry && selectedEntry.address ? (
+                  <div
+                    role="listbox"
+                    tabIndex="0"
+                    onKeyDown={(e) => {
+                      if (e.keyCode !== 9) {
+                        setSelectedEntry(null)
+                      }
+                    }}
+                  >
+                    <Row margin="xs">
+                      <Paragraph size="md" color="disabled" style={{ letterSpacing: '-0.5px' }} noMargin>
+                        Recipient
+                      </Paragraph>
+                    </Row>
+                    <Row margin="md" align="center">
+                      <Col xs={1}>
+                        <Identicon address={selectedEntry.address} diameter={32} />
+                      </Col>
+                      <Col xs={11} layout="column">
+                        <Block justify="left">
+                          <Block>
+                            <Paragraph weight="bolder" className={classes.selectAddress} noMargin onClick={() => setSelectedEntry(null)}>
+                              {selectedEntry.name}
+                            </Paragraph>
+                            <Paragraph weight="bolder" className={classes.selectAddress} noMargin onClick={() => setSelectedEntry(null)}>
+                              {selectedEntry.address}
+                            </Paragraph>
+                          </Block>
+                          <CopyBtn content={selectedEntry.address} />
+                          <EtherscanBtn type="address" value={selectedEntry.address} />
+                        </Block>
+                      </Col>
+                    </Row>
+                  </div>
+                ) : (
+                  <>
+                    <Row margin="md">
+                      <Col xs={11}>
+                        <AddressBookInput
+                          pristine={pristine}
+                          fieldMutator={mutators.setRecipient}
+                          setSelectedEntry={setSelectedEntry}
+                          setIsValidAddress={setIsValidAddress}
+                          isCustomTx
+                        />
+                      </Col>
+                      <Col xs={1} center="xs" middle="xs" className={classes}>
+                        <Img
+                          src={QRIcon}
+                          className={classes.qrCodeBtn}
+                          role="button"
+                          height={20}
+                          alt="Scan QR"
+                          onClick={() => {
+                            openQrModal()
+                          }}
+                        />
+                      </Col>
+                    </Row>
+                  </>
+                )}
                 <Row margin="xs">
                   <Col between="lg">
                     <Paragraph size="md" color="disabled" style={{ letterSpacing: '-0.5px' }} noMargin>
@@ -183,6 +243,7 @@ const SendCustomTx = ({
                   color="primary"
                   data-testid="review-tx-btn"
                   className={classes.submitButton}
+                  disabled={shouldDisableSubmitButton}
                 >
                   Review
                 </Button>

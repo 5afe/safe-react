@@ -7,7 +7,6 @@ import type { GlobalState } from '~/store'
 import type { AddressBook } from '~/logic/addressBook/model/addressBook'
 import { safeParamAddressFromStateSelector } from '~/routes/safe/store/selectors'
 
-
 export const addressBookMapSelector = (state: GlobalState): Map<string, AddressBook> => state[ADDRESS_BOOK_REDUCER_ID].get('addressBook')
 
 export const getAddressBook: Selector<GlobalState, AddressBook> = createSelector(
