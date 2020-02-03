@@ -9,6 +9,10 @@ import Tab from '@material-ui/core/Tab'
 import CallMade from '@material-ui/icons/CallMade'
 import CallReceived from '@material-ui/icons/CallReceived'
 import { withStyles } from '@material-ui/core/styles'
+import ImportContactsIcon from '@material-ui/icons/ImportContacts'
+import SettingsIcon from '@material-ui/icons/Settings'
+import SwapHorizIcon from '@material-ui/icons/SwapHoriz'
+import AssessmentIcon from '@material-ui/icons/Assessment'
 import Hairline from '~/components/layout/Hairline'
 import Block from '~/components/layout/Block'
 import Identicon from '~/components/Identicon'
@@ -41,50 +45,50 @@ export const SAFE_VIEW_NAME_HEADING_TEST_ID = 'safe-name-heading'
 type Props = SelectorProps &
   Actions & {
     classes: Object,
+    fetchCurrencyValues: Function,
     granted: boolean,
+    hideSendFunds: Function,
+    history: Object,
+    location: Object,
+    match: Object,
+    onHide: Function,
+    onShow: Function,
     sendFunds: Object,
     showReceive: boolean,
-    onShow: Function,
-    onHide: Function,
     showSendFunds: Function,
-    hideSendFunds: Function,
-    match: Object,
-    location: Object,
-    history: Object,
-    fetchCurrencyValues: Function,
     updateAddressBookEntry: Function,
   }
 
 const Layout = (props: Props) => {
   const {
-    safe,
-    provider,
-    network,
-    classes,
-    granted,
-    tokens,
-    activeTokens,
-    blacklistedTokens,
-    createTransaction,
-    processTransaction,
     activateTokensByBalance,
+    activeTokens,
+    addressBook,
+    blacklistedTokens,
+    classes,
+    createTransaction,
+    currencySelected,
+    currencyValues,
+    fetchCurrencyValues,
     fetchTokens,
-    updateSafe,
-    transactions,
-    userAddress,
+    granted,
+    hideSendFunds,
+    location,
+    match,
+    network,
+    onHide,
+    onShow,
+    processTransaction,
+    provider,
+    safe,
     sendFunds,
     showReceive,
-    onShow,
-    onHide,
     showSendFunds,
-    hideSendFunds,
-    match,
-    location,
-    currencySelected,
-    fetchCurrencyValues,
-    currencyValues,
-    addressBook,
+    tokens,
+    transactions,
     updateAddressBookEntry,
+    updateSafe,
+    userAddress,
   } = props
 
   const handleCallToRouter = (_, value) => {
@@ -99,6 +103,31 @@ const Layout = (props: Props) => {
 
   const { address, ethBalance, name } = safe
   const etherScanLink = getEtherScanLink('address', address)
+
+  const labelAddressBook = (
+    <>
+      <ImportContactsIcon />
+      Address Book
+    </>
+  )
+  const labelSettings = (
+    <>
+      <SettingsIcon />
+      Settings
+    </>
+  )
+  const labelBalances = (
+    <>
+      <AssessmentIcon />
+      Balances
+    </>
+  )
+  const labelTransactions = (
+    <>
+      <SwapHorizIcon />
+      Transactions
+    </>
+  )
 
   return (
     <>
@@ -122,22 +151,22 @@ const Layout = (props: Props) => {
         <Block className={classes.balance}>
           <Row align="end" className={classes.actions}>
             <Button
-              variant="contained"
-              size="small"
-              color="primary"
               className={classes.send}
-              onClick={() => showSendFunds('Ether')}
+              color="primary"
               disabled={!granted}
+              onClick={() => showSendFunds('Ether')}
+              size="small"
+              variant="contained"
             >
               <CallMade alt="Send Transaction" className={classNames(classes.leftIcon, classes.iconSmall)} />
               Send
             </Button>
             <Button
-              variant="contained"
-              size="small"
-              color="primary"
               className={classes.receive}
+              color="primary"
               onClick={onShow('Receive')}
+              size="small"
+              variant="contained"
             >
               <CallReceived alt="Receive Transaction" className={classNames(classes.leftIcon, classes.iconSmall)} />
               Receive
@@ -147,15 +176,43 @@ const Layout = (props: Props) => {
       </Block>
       <Row>
         <Tabs
-          value={location.pathname}
-          onChange={handleCallToRouter}
           indicatorColor="secondary"
+          onChange={handleCallToRouter}
           textColor="secondary"
+          value={location.pathname}
         >
-          <Tab label="Balances" value={`${match.url}/balances`} data-testid={BALANCES_TAB_BTN_TEST_ID} />
-          <Tab label="Transactions" value={`${match.url}/transactions`} data-testid={TRANSACTIONS_TAB_BTN_TEST_ID} />
-          <Tab label="Address Book" value={`${match.url}/address-book`} data-testid={ADDRESS_BOOK_TAB_BTN_TEST_ID} />
-          <Tab label="Settings" value={`${match.url}/settings`} data-testid={SETTINGS_TAB_BTN_TEST_ID} />
+          <Tab
+            classes={{
+              wrapper: classes.tabWrapper,
+            }}
+            data-testid={BALANCES_TAB_BTN_TEST_ID}
+            label={labelBalances}
+            value={`${match.url}/balances`}
+          />
+          <Tab
+            classes={{
+              wrapper: classes.tabWrapper,
+            }}
+            data-testid={TRANSACTIONS_TAB_BTN_TEST_ID}
+            label={labelTransactions}
+            value={`${match.url}/transactions`}
+          />
+          <Tab
+            classes={{
+              wrapper: classes.tabWrapper,
+            }}
+            data-testid={ADDRESS_BOOK_TAB_BTN_TEST_ID}
+            label={labelAddressBook}
+            value={`${match.url}/address-book`}
+          />
+          <Tab
+            classes={{
+              wrapper: classes.tabWrapper,
+            }}
+            data-testid={SETTINGS_TAB_BTN_TEST_ID}
+            label={labelSettings}
+            value={`${match.url}/settings`}
+          />
         </Tabs>
       </Row>
       <Hairline color={border} style={{ marginTop: '-2px' }} />
@@ -165,19 +222,19 @@ const Layout = (props: Props) => {
           path={`${match.path}/balances`}
           render={() => (
             <Balances
-              ethBalance={ethBalance}
-              tokens={tokens}
+              activateTokensByBalance={activateTokensByBalance}
               activeTokens={activeTokens}
               blacklistedTokens={blacklistedTokens}
-              granted={granted}
-              safeAddress={address}
-              activateTokensByBalance={activateTokensByBalance}
-              fetchTokens={fetchTokens}
-              safeName={name}
               createTransaction={createTransaction}
               currencySelected={currencySelected}
-              fetchCurrencyValues={fetchCurrencyValues}
               currencyValues={currencyValues}
+              ethBalance={ethBalance}
+              fetchCurrencyValues={fetchCurrencyValues}
+              fetchTokens={fetchTokens}
+              granted={granted}
+              safeAddress={address}
+              safeName={name}
+              tokens={tokens}
             />
           )}
         />
@@ -186,16 +243,16 @@ const Layout = (props: Props) => {
           path={`${match.path}/transactions`}
           render={() => (
             <Transactions
-              threshold={safe.threshold}
-              owners={safe.owners}
-              nonce={safe.nonce}
-              transactions={transactions}
-              safeAddress={address}
-              userAddress={userAddress}
+              createTransaction={createTransaction}
               currentNetwork={network}
               granted={granted}
-              createTransaction={createTransaction}
+              nonce={safe.nonce}
+              owners={safe.owners}
               processTransaction={processTransaction}
+              safeAddress={address}
+              threshold={safe.threshold}
+              transactions={transactions}
+              userAddress={userAddress}
             />
           )}
         />
@@ -204,19 +261,19 @@ const Layout = (props: Props) => {
           path={`${match.path}/settings`}
           render={() => (
             <Settings
+              addressBook={addressBook}
+              createTransaction={createTransaction}
+              etherScanLink={etherScanLink}
               granted={granted}
+              network={network}
+              owners={safe.owners}
+              safe={safe}
               safeAddress={address}
               safeName={name}
-              etherScanLink={etherScanLink}
-              updateSafe={updateSafe}
               threshold={safe.threshold}
-              owners={safe.owners}
-              network={network}
-              userAddress={userAddress}
-              createTransaction={createTransaction}
-              safe={safe}
-              addressBook={addressBook}
               updateAddressBookEntry={updateAddressBookEntry}
+              updateSafe={updateSafe}
+              userAddress={userAddress}
             />
           )}
         />
@@ -230,22 +287,22 @@ const Layout = (props: Props) => {
         <Redirect to={`${match.path}/balances`} />
       </Switch>
       <SendModal
-        onClose={hideSendFunds}
+        activeScreenType="chooseTxType"
+        createTransaction={createTransaction}
+        ethBalance={ethBalance}
         isOpen={sendFunds.isOpen}
+        onClose={hideSendFunds}
         safeAddress={address}
         safeName={name}
-        ethBalance={ethBalance}
-        tokens={activeTokens}
         selectedToken={sendFunds.selectedToken}
-        createTransaction={createTransaction}
-        activeScreenType="chooseTxType"
+        tokens={activeTokens}
       />
       <Modal
-        title="Receive Tokens"
         description="Receive Tokens Form"
         handleClose={onHide('Receive')}
         open={showReceive}
         paperClassName={classes.receiveModal}
+        title="Receive Tokens"
       >
         <Receive safeName={name} safeAddress={address} onClose={onHide('Receive')} />
       </Modal>

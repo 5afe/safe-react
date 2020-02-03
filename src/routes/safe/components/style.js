@@ -68,4 +68,14 @@ export const styles = () => ({
   leftIcon: {
     marginRight: sm,
   },
+  tabWrapper: {
+    display: 'flex',
+    flexDirection: 'row',
+    '& > svg': {
+      display: 'block',
+      height: '18px',
+      marginRight: '5px',
+      width: 'auto',
+    },
+  },
 })

@@ -1,6 +1,6 @@
 // @flow
 import {
-  sm, md, lg, border, secondary, bolderFont, background, largeFontSize,
+  sm, md, border, secondary, bolderFont, background, largeFontSize,
 } from '~/theme/variables'
 
 export const styles = () => ({
@@ -20,12 +20,19 @@ export const styles = () => ({
     height: '100%',
   },
   menuOption: {
-    fontSize: largeFontSize,
-    padding: `${md} 0 ${md} ${lg}`,
     alignItems: 'center',
     cursor: 'pointer',
+    fontSize: largeFontSize,
+    lineHeight: '1.2',
+    padding: `${md} 0 ${md} ${sm}`,
     '&:first-child': {
       borderTopLeftRadius: sm,
+    },
+    '& > svg': {
+      display: 'block',
+      height: '18px',
+      marginRight: '5px',
+      width: 'auto',
     },
   },
   active: {
@@ -59,5 +66,17 @@ export const styles = () => ({
     marginLeft: sm,
     height: md,
     cursor: 'pointer',
+  },
+  badgeRoot: {
+    marginLeft: 'auto',
+    marginRight: sm,
+  },
+  badge: {
+    height: '18px',
+    left: '0',
+    marginLeft: '0',
+    position: 'relative',
+    transform: 'none',
+    width: '18px',
   },
 })

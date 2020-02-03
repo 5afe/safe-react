@@ -4,6 +4,10 @@ import cn from 'classnames'
 import { List } from 'immutable'
 import { connect } from 'react-redux'
 import { withStyles } from '@material-ui/core/styles'
+import InfoIcon from '@material-ui/icons/Info'
+import PeopleIcon from '@material-ui/icons/People'
+import ThumbUpIcon from '@material-ui/icons/ThumbUp'
+import Badge from '@material-ui/core/Badge'
 import Block from '~/components/layout/Block'
 import Col from '~/components/layout/Col'
 import Row from '~/components/layout/Row'
@@ -30,24 +34,24 @@ type State = {
 }
 
 type Props = Actions & {
+  addSafeOwner: Function,
+  addressBook: AddressBook,
   classes: Object,
-  granted: boolean,
+  createTransaction: Function,
+  editSafeOwner: Function,
   etherScanLink: string,
+  granted: boolean,
+  network: string,
+  owners: List<Owner>,
+  removeSafeOwner: Function,
+  replaceSafeOwner: Function,
+  safe: Safe,
   safeAddress: string,
   safeName: string,
-  owners: List<Owner>,
   threshold: number,
-  network: string,
-  createTransaction: Function,
-  addSafeOwner: Function,
-  removeSafeOwner: Function,
-  updateSafe: Function,
-  replaceSafeOwner: Function,
-  editSafeOwner: Function,
-  userAddress: string,
-  safe: Safe,
-  addressBook: AddressBook,
   updateAddressBookEntry: Function,
+  updateSafe: Function,
+  userAddress: string,
 }
 
 type Action = 'RemoveSafe'
@@ -77,24 +81,24 @@ class Settings extends React.Component<Props, State> {
   render() {
     const { showRemoveSafe, menuOptionIndex } = this.state
     const {
+      addSafeOwner,
+      addressBook,
       classes,
-      granted,
+      createTransaction,
+      editSafeOwner,
       etherScanLink,
+      granted,
+      network,
+      owners,
+      removeSafeOwner,
+      replaceSafeOwner,
+      safe,
       safeAddress,
       safeName,
       threshold,
-      owners,
-      network,
-      userAddress,
-      createTransaction,
-      updateSafe,
-      addSafeOwner,
-      removeSafeOwner,
-      replaceSafeOwner,
-      editSafeOwner,
-      safe,
-      addressBook,
       updateAddressBookEntry,
+      updateSafe,
+      userAddress,
     } = this.props
 
     return (
@@ -119,6 +123,7 @@ class Settings extends React.Component<Props, State> {
                 className={cn(classes.menuOption, menuOptionIndex === 1 && classes.active)}
                 onClick={this.handleChange(1)}
               >
+                <InfoIcon />
                 Safe details
               </Row>
               <Hairline />
@@ -127,15 +132,16 @@ class Settings extends React.Component<Props, State> {
                 onClick={this.handleChange(2)}
                 testId={OWNERS_SETTINGS_TAB_TEST_ID}
               >
-                Owners (
-                {owners.size}
-)
+                <PeopleIcon />
+                Owners
+                <Badge classes={{ root: classes.badgeRoot, badge: classes.badge }} color="secondary" badgeContent={owners.size} max={999} />
               </Row>
               <Hairline />
               <Row
                 className={cn(classes.menuOption, menuOptionIndex === 3 && classes.active)}
                 onClick={this.handleChange(3)}
               >
+                <ThumbUpIcon />
                 Required confirmations
               </Row>
               <Hairline />
