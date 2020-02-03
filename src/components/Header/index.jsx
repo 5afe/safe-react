@@ -81,11 +81,11 @@ class HeaderComponent extends React.PureComponent<Props, State> {
 
     return (
       <UserDetails
-        provider={provider}
-        network={network}
-        userAddress={userAddress}
         connected={available}
+        network={network}
         onDisconnect={this.onDisconnect}
+        provider={provider}
+        userAddress={userAddress}
       />
     )
   }

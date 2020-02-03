@@ -7,7 +7,7 @@ import ExpandMore from '@material-ui/icons/ExpandMore'
 import Col from '~/components/layout/Col'
 import Divider from '~/components/layout/Divider'
 import { type Open } from '~/components/hoc/OpenHoc'
-import { sm, md } from '~/theme/variables'
+import { sm, md, screenSm } from '~/theme/variables'
 
 type Props = Open & {
   classes: Object,
@@ -18,22 +18,26 @@ type Props = Open & {
 
 const styles = () => ({
   root: {
-    height: '100%',
-    display: 'flex',
     alignItems: 'center',
+    display: 'flex',
     flexBasis: '284px',
+    height: '100%',
     marginRight: '20px',
   },
   provider: {
-    padding: `${sm} ${md}`,
     alignItems: 'center',
-    flex: '1 1 auto',
-    display: 'flex',
     cursor: 'pointer',
+    display: 'flex',
+    flex: '1 1 auto',
+    padding: sm,
+    [`@media (min-width: ${screenSm}px)`]: {
+      paddingLeft: md,
+      paddingRight: md,
+    },
   },
   expand: {
-    width: '30px',
     height: '30px',
+    width: '30px',
   },
 })
 
