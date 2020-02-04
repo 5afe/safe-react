@@ -35,9 +35,11 @@ type RoutesProps = {
 const Routes = ({ defaultSafe, location }: RoutesProps) => {
   const [isInitialLoad, setInitialLoad] = useState<boolean>(true)
 
-  if (location.search.replace('?', '').split('&').includes('secret3BoxIntegration=true')) {
-    window.sessionStorage.setItem('3BoxEnabled', 'true')
-  }
+  useEffect(() => {
+    if (location.search.replace('?', '').split('&').includes('secret3BoxIntegration=true')) {
+      window.sessionStorage.setItem('3BoxEnabled', 'true')
+    }
+  }, [])
 
   useEffect(() => {
     if (location.pathname !== '/') {
