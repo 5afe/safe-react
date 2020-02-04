@@ -180,14 +180,30 @@ export const getUpgradeSafeTransaction = async (safeAddress: string) => {
   const fallbackHandlerTxData = safeInstance.contract.methods.setFallbackHandler('0xd5D82B6aDDc9027B22dCA772Aa68D5d74cdBdF44').encodeABI()
   const updateSafeTxData = safeInstance.contract.methods.changeMasterCopy('0x34CfAC646f301356fAa8B21e94227e3583Fe3F5F').encodeABI()
 
-  // MultiSend approach
-  const encodedFallbackTxParams = web3.eth.abi.encodeParameters(['uint8', 'address', 'uint256', 'uint256', 'bytes'], [0, safeAddress, 0, fallbackHandlerTxData.length, fallbackHandlerTxData])
-  const encodedUpdateSafeTxParams = web3.eth.abi.encodeParameters(['uint8', 'address', 'uint256', 'uint256', 'bytes'], [0, safeAddress, 0, updateSafeTxData.length, updateSafeTxData])
-
-  const multiSendData = multiSendProxy.contract.methods.multiSend(
-    web3.eth.abi.encodeParameters(['bytes', 'bytes'], [encodedFallbackTxParams, encodedUpdateSafeTxParams]),
+  const encodeMultiSendCalldata = (txs) => multiSendProxy.contract.methods.multiSend(
+    `0x${txs.map((tx) => [
+      web3.eth.abi.encodeParameter('uint8', tx.operation).slice(-2),
+      web3.eth.abi.encodeParameter('address', tx.to).slice(-40),
+      web3.eth.abi.encodeParameter('uint256', tx.value).slice(-64),
+      web3.eth.abi.encodeParameter('uint256', web3.utils.hexToBytes(tx.data).length).slice(-64),
+      tx.data.replace(/^0x/, ''),
+    ].join('')).join('')}`,
   ).encodeABI()
 
+  const txs = [
+    {
+      operation: 0,
+      to: safeAddress,
+      value: 0,
+      data: fallbackHandlerTxData,
+    },
+    {
+      operation: 0,
+      to: safeAddress,
+      value: 0,
+      data: updateSafeTxData,
+    }
+  ]
 
-  return multiSendData
+  return encodeMultiSendCalldata(txs)
 }
