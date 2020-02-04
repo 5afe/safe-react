@@ -1,6 +1,6 @@
 // @flow
 import {
-  sm, xs, smallFontSize, secondaryText,
+  sm, xs, smallFontSize, secondaryText, secondary,
 } from '~/theme/variables'
 
 export const styles = () => ({
@@ -71,11 +71,17 @@ export const styles = () => ({
   tabWrapper: {
     display: 'flex',
     flexDirection: 'row',
-    '& > svg': {
+    '& svg': {
       display: 'block',
-      height: '18px',
       marginRight: '5px',
-      width: 'auto',
+    },
+    '& svg .fill': {
+      fill: 'rgba(0, 0, 0, 0.54)',
+    },
+  },
+  tabWrapperSelected: {
+    '& svg .fill': {
+      fill: secondary,
     },
   },
 })

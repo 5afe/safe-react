@@ -9,10 +9,10 @@ import Tab from '@material-ui/core/Tab'
 import CallMade from '@material-ui/icons/CallMade'
 import CallReceived from '@material-ui/icons/CallReceived'
 import { withStyles } from '@material-ui/core/styles'
-import ImportContactsIcon from '@material-ui/icons/ImportContacts'
-import SettingsIcon from '@material-ui/icons/Settings'
-import SwapHorizIcon from '@material-ui/icons/SwapHoriz'
-import AssessmentIcon from '@material-ui/icons/Assessment'
+import { SettingsIcon } from './assets/SettingsIcon'
+import { AddressBookIcon } from './assets/AddressBookIcon'
+import { TransactionsIcon } from './assets/TransactionsIcon'
+import { BalancesIcon } from './assets/BalancesIcon'
 import Hairline from '~/components/layout/Hairline'
 import Block from '~/components/layout/Block'
 import Identicon from '~/components/Identicon'
@@ -106,7 +106,7 @@ const Layout = (props: Props) => {
 
   const labelAddressBook = (
     <>
-      <ImportContactsIcon />
+      <AddressBookIcon />
       Address Book
     </>
   )
@@ -118,13 +118,13 @@ const Layout = (props: Props) => {
   )
   const labelBalances = (
     <>
-      <AssessmentIcon />
+      <BalancesIcon />
       Balances
     </>
   )
   const labelTransactions = (
     <>
-      <SwapHorizIcon />
+      <TransactionsIcon />
       Transactions
     </>
   )
@@ -175,14 +175,10 @@ const Layout = (props: Props) => {
         </Block>
       </Block>
       <Row>
-        <Tabs
-          indicatorColor="secondary"
-          onChange={handleCallToRouter}
-          textColor="secondary"
-          value={location.pathname}
-        >
+        <Tabs indicatorColor="secondary" onChange={handleCallToRouter} textColor="secondary" value={location.pathname}>
           <Tab
             classes={{
+              selected: classes.tabWrapperSelected,
               wrapper: classes.tabWrapper,
             }}
             data-testid={BALANCES_TAB_BTN_TEST_ID}
@@ -191,6 +187,7 @@ const Layout = (props: Props) => {
           />
           <Tab
             classes={{
+              selected: classes.tabWrapperSelected,
               wrapper: classes.tabWrapper,
             }}
             data-testid={TRANSACTIONS_TAB_BTN_TEST_ID}
@@ -199,6 +196,7 @@ const Layout = (props: Props) => {
           />
           <Tab
             classes={{
+              selected: classes.tabWrapperSelected,
               wrapper: classes.tabWrapper,
             }}
             data-testid={ADDRESS_BOOK_TAB_BTN_TEST_ID}
@@ -207,6 +205,7 @@ const Layout = (props: Props) => {
           />
           <Tab
             classes={{
+              selected: classes.tabWrapperSelected,
               wrapper: classes.tabWrapper,
             }}
             data-testid={SETTINGS_TAB_BTN_TEST_ID}
@@ -277,13 +276,7 @@ const Layout = (props: Props) => {
             />
           )}
         />
-        <Route
-          exact
-          path={`${match.path}/address-book`}
-          render={() => (
-            <AddressBookTable />
-          )}
-        />
+        <Route exact path={`${match.path}/address-book`} render={() => <AddressBookTable />} />
         <Redirect to={`${match.path}/balances`} />
       </Switch>
       <SendModal
