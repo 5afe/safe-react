@@ -26,10 +26,10 @@ const useStyles = makeStyles({
   },
   counter: {
     background: border,
-    padding: xs,
     borderRadius: '3px',
-    marginLeft: sm,
     lineHeight: 'normal',
+    marginLeft: sm,
+    padding: xs,
   },
   icon: {
     marginLeft: sm,

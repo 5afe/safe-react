@@ -1,6 +1,6 @@
 // @flow
 import {
-  sm, xs, smallFontSize, secondaryText,
+  sm, xs, smallFontSize, secondaryText, secondary,
 } from '~/theme/variables'
 
 export const styles = () => ({
@@ -67,5 +67,21 @@ export const styles = () => ({
   },
   leftIcon: {
     marginRight: sm,
+  },
+  tabWrapper: {
+    display: 'flex',
+    flexDirection: 'row',
+    '& svg': {
+      display: 'block',
+      marginRight: '5px',
+    },
+    '& .fill': {
+      fill: 'rgba(0, 0, 0, 0.54)',
+    },
+  },
+  tabWrapperSelected: {
+    '& .fill': {
+      fill: secondary,
+    },
   },
 })

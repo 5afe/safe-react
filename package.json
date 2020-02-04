@@ -23,7 +23,11 @@
     "start": "node scripts/start.js",
     "start-mainnet": "REACT_APP_NETWORK=mainnet yarn start",
     "test": "NODE_ENV=test && node scripts/test.js --env=jsdom",
-    "format": "prettier-eslint $PWD'/src/**/*.{js,jsx}' --write"
+    "format": "prettier-eslint $PWD'/src/**/*.{js,jsx}' --write",
+    "format:staged": "lint-staged"
+  },
+  "lint-staged": {
+    "./src/**/*.{js,jsx}": "prettier-eslint --write"
   },
   "pre-commit": [
     "precommit"
@@ -52,6 +56,7 @@
     "immortal-db": "^1.0.2",
     "immutable": "^4.0.0-rc.9",
     "js-cookie": "^2.2.1",
+    "lint-staged": "^10.0.7",
     "material-ui-search-bar": "^1.0.0-beta.13",
     "notistack": "https://github.com/gnosis/notistack.git#v0.9.4",
     "optimize-css-assets-webpack-plugin": "5.0.3",
