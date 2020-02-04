@@ -31,6 +31,10 @@ import Transactions from './Transactions'
 import Settings from './Settings'
 import { styles } from './style'
 import AddressBookTable from '~/routes/safe/components/AddressBook'
+import { SettingsIcon } from './assets/SettingsIcon'
+import { AddressBookIcon } from './assets/AddressBookIcon'
+import { TransactionsIcon } from './assets/TransactionsIcon'
+import { BalancesIcon } from './assets/BalancesIcon'
 
 export const BALANCES_TAB_BTN_TEST_ID = 'balances-tab-btn'
 export const SETTINGS_TAB_BTN_TEST_ID = 'settings-tab-btn'
@@ -101,6 +105,31 @@ const Layout = (props: Props) => {
   const { address, ethBalance, name } = safe
   const etherScanLink = getEtherScanLink('address', address)
 
+  const labelAddressBook = (
+    <>
+      <AddressBookIcon />
+      Address Book
+    </>
+  )
+  const labelSettings = (
+    <>
+      <SettingsIcon />
+      Settings
+    </>
+  )
+  const labelBalances = (
+    <>
+      <BalancesIcon />
+      Balances
+    </>
+  )
+  const labelTransactions = (
+    <>
+      <TransactionsIcon />
+      Transactions
+    </>
+  )
+
   return (
     <>
       <Block className={classes.container} margin="xl">
@@ -153,10 +182,42 @@ const Layout = (props: Props) => {
           indicatorColor="secondary"
           textColor="secondary"
         >
-          <Tab label="Balances" value={`${match.url}/balances`} data-testid={BALANCES_TAB_BTN_TEST_ID} />
-          <Tab label="Transactions" value={`${match.url}/transactions`} data-testid={TRANSACTIONS_TAB_BTN_TEST_ID} />
-          <Tab label="Address Book" value={`${match.url}/address-book`} data-testid={ADDRESS_BOOK_TAB_BTN_TEST_ID} />
-          <Tab label="Settings" value={`${match.url}/settings`} data-testid={SETTINGS_TAB_BTN_TEST_ID} />
+          <Tab
+            classes={{
+              selected: classes.tabWrapperSelected,
+              wrapper: classes.tabWrapper,
+            }}
+            label={labelBalances}
+            value={`${match.url}/balances`}
+            data-testid={BALANCES_TAB_BTN_TEST_ID}
+          />
+          <Tab
+            classes={{
+              selected: classes.tabWrapperSelected,
+              wrapper: classes.tabWrapper,
+            }}
+            label={labelTransactions}
+            value={`${match.url}/transactions`}
+            data-testid={TRANSACTIONS_TAB_BTN_TEST_ID}
+          />
+          <Tab
+            classes={{
+              selected: classes.tabWrapperSelected,
+              wrapper: classes.tabWrapper,
+            }}
+            label={labelAddressBook}
+            value={`${match.url}/address-book`}
+            data-testid={ADDRESS_BOOK_TAB_BTN_TEST_ID}
+          />
+          <Tab
+            classes={{
+              selected: classes.tabWrapperSelected,
+              wrapper: classes.tabWrapper,
+            }}
+            label={labelSettings}
+            value={`${match.url}/settings`}
+            data-testid={SETTINGS_TAB_BTN_TEST_ID}
+          />
         </Tabs>
       </Row>
       <Hairline color={border} style={{ marginTop: '-2px' }} />
