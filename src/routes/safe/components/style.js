@@ -75,12 +75,12 @@ export const styles = () => ({
       display: 'block',
       marginRight: '5px',
     },
-    '& svg .fill': {
+    '& .fill': {
       fill: 'rgba(0, 0, 0, 0.54)',
     },
   },
   tabWrapperSelected: {
-    '& svg .fill': {
+    '& .fill': {
       fill: secondary,
     },
   },
