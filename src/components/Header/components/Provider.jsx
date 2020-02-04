@@ -20,9 +20,12 @@ const styles = () => ({
   root: {
     alignItems: 'center',
     display: 'flex',
-    flexBasis: '284px',
     height: '100%',
-    marginRight: '20px',
+
+    [`@media (min-width: ${screenSm}px)`]: {
+      flexBasis: '284px',
+      marginRight: '20px',
+    },
   },
   provider: {
     alignItems: 'center',
