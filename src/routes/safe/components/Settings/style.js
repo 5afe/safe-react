@@ -76,8 +76,8 @@ export const styles = () => ({
     borderRadius: '3px',
     color: fontColor,
     lineHeight: 'normal',
-    marginLeft: 'auto',
-    marginRight: sm,
+    margin: `-2px 0 -2px ${sm}`,
     padding: xs,
+    fontSize: '11px',
   },
 })
