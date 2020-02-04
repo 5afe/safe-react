@@ -74,6 +74,7 @@ export const styles = () => ({
   counter: {
     background: border,
     borderRadius: '3px',
+    color: fontColor,
     lineHeight: 'normal',
     marginLeft: 'auto',
     marginRight: sm,
