@@ -24,13 +24,13 @@ export const styles = () => ({
     cursor: 'pointer',
     fontSize: largeFontSize,
     lineHeight: '1.2',
-    padding: `${md} 0 ${md} ${sm}`,
+    padding: `${md} 0 ${md} ${md}`,
     '&:first-child': {
       borderTopLeftRadius: sm,
     },
     '& svg': {
       display: 'block',
-      marginRight: '3px',
+      marginRight: sm,
     },
     '& .fill': {
       fill: fontColor,
