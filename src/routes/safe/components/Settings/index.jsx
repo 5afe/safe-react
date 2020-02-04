@@ -4,7 +4,7 @@ import cn from 'classnames'
 import { List } from 'immutable'
 import { connect } from 'react-redux'
 import { withStyles } from '@material-ui/core/styles'
-import Badge from '@material-ui/core/Badge'
+import Paragraph from '~/components/layout/Paragraph'
 import { OwnersIcon } from './assets/icons/OwnersIcon'
 import { RequiredConfirmationsIcon } from './assets/icons/RequiredConfirmationsIcon'
 import { SafeDetailsIcon } from './assets/icons/SafeDetailsIcon'
@@ -134,12 +134,9 @@ class Settings extends React.Component<Props, State> {
               >
                 <OwnersIcon />
                 Owners
-                <Badge
-                  classes={{ root: classes.badgeRoot, badge: classes.badge }}
-                  color="secondary"
-                  badgeContent={owners.size}
-                  max={999}
-                />
+                <Paragraph size="xs" className={classes.counter}>
+                  {owners.size}
+                </Paragraph>
               </Row>
               <Hairline />
               <Row

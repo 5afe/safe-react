@@ -1,6 +1,6 @@
 // @flow
 import {
-  sm, md, border, secondary, bolderFont, background, largeFontSize, fontColor,
+  xs, sm, md, border, secondary, bolderFont, background, largeFontSize, fontColor,
 } from '~/theme/variables'
 
 export const styles = () => ({
@@ -71,16 +71,12 @@ export const styles = () => ({
     height: md,
     cursor: 'pointer',
   },
-  badgeRoot: {
+  counter: {
+    background: border,
+    borderRadius: '3px',
+    lineHeight: 'normal',
     marginLeft: 'auto',
     marginRight: sm,
-  },
-  badge: {
-    height: '18px',
-    left: '0',
-    marginLeft: '0',
-    position: 'relative',
-    transform: 'none',
-    width: '18px',
+    padding: xs,
   },
 })
