@@ -136,6 +136,7 @@ class SafeView extends React.Component<Props, State> {
       fetchTokens,
       updateSafe,
       transactions,
+      cancellationTransactions,
       currencySelected,
       fetchCurrencyValues,
       currencyValues,
@@ -160,6 +161,7 @@ class SafeView extends React.Component<Props, State> {
           fetchTokens={fetchTokens}
           updateSafe={updateSafe}
           transactions={transactions}
+          cancellationTransactions={cancellationTransactions}
           sendFunds={sendFunds}
           showReceive={showReceive}
           onShow={this.onShow}

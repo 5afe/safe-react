@@ -7,6 +7,7 @@ import {
   safeBalancesSelector,
   safeBlacklistedTokensSelector,
   safeTransactionsSelector,
+  safeCancellationTransactionsSelector,
   safeIncomingTransactionsSelector,
   type RouterProps,
   type SafeSelectorProps,
@@ -38,6 +39,7 @@ export type SelectorProps = {
   currencySelected: string,
   currencyValues: BalanceCurrencyType[],
   transactions: List<Transaction | IncomingTransaction>,
+  cancellationTransactions: List<Transaction>,
   addressBook: AddressBook,
 }
 
@@ -108,21 +110,15 @@ const extendedTransactionsSelector: Selector<GlobalState, RouterProps, List<Tran
   safeSelector,
   userAccountSelector,
   safeTransactionsSelector,
+  safeCancellationTransactionsSelector,
   safeIncomingTransactionsSelector,
-  (safe, userAddress, transactions, incomingTransactions) => {
+  (safe, userAddress, transactions, cancellationTransactions, incomingTransactions) => {
+    const cancellationTransactionsByNonce = cancellationTransactions.reduce((acc, tx) => acc.set(tx.nonce, tx), Map())
     const extendedTransactions = transactions.map((tx: Transaction) => {
       let extendedTx = tx
 
-      // If transactions are not executed, but there's a transaction with the same nonce submitted later
-      // it means that the transaction was cancelled (Replaced) and shouldn't get executed
-      let replacementTransaction
       if (!tx.isExecuted) {
-        replacementTransaction = transactions.size > 1 && transactions.findLast(
-          (transaction) => (
-            transaction.isExecuted && transaction.nonce && transaction.nonce >= tx.nonce
-          ),
-        )
-        if (replacementTransaction) {
+        if (cancellationTransactionsByNonce.get(tx.nonce) && cancellationTransactionsByNonce.get(tx.nonce).get('isExecuted')) {
           extendedTx = tx.set('cancelled', true)
         }
       }
@@ -145,6 +141,7 @@ export default createStructuredSelector<Object, *>({
   network: networkSelector,
   safeUrl: safeParamAddressSelector,
   transactions: extendedTransactionsSelector,
+  cancellationTransactions: safeCancellationTransactionsSelector,
   currencySelected: currentCurrencySelector,
   currencyValues: currencyValuesListSelector,
   addressBook: getAddressBook,

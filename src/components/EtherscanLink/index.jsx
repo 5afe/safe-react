@@ -11,11 +11,11 @@ import EllipsisTransactionDetails from '~/routes/safe/components/AddressBook/Ell
 import Span from '~/components/layout/Span'
 
 type EtherscanLinkProps = {
-  type: 'tx' | 'address',
-  value: string,
+  classes: Object,
   cut?: number,
   knownAddress?: boolean,
-  classes: Object,
+  type: 'tx' | 'address',
+  value: string,
 }
 
 const EtherscanLink = ({
@@ -23,13 +23,13 @@ const EtherscanLink = ({
 }: EtherscanLinkProps) => (
   <Block className={classes.etherscanLink}>
     <Span
+      className={cn(knownAddress && classes.addressParagraph, classes.address)}
       size="md"
-      className={cn(knownAddress && classes.addressParagraph)}
     >
       {cut ? shortVersionOf(value, cut) : value}
     </Span>
-    <CopyBtn content={value} />
-    <EtherscanBtn type={type} value={value} />
+    <CopyBtn className={cn(classes.button, classes.firstButton)} content={value} />
+    <EtherscanBtn className={classes.button} type={type} value={value} />
     {knownAddress !== undefined ? <EllipsisTransactionDetails knownAddress={knownAddress} address={value} /> : null}
   </Block>
 )
