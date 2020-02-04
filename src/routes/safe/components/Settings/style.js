@@ -1,6 +1,6 @@
 // @flow
 import {
-  sm, md, border, secondary, bolderFont, background, largeFontSize,
+  sm, md, border, secondary, bolderFont, background, largeFontSize, fontColor,
 } from '~/theme/variables'
 
 export const styles = () => ({
@@ -28,17 +28,21 @@ export const styles = () => ({
     '&:first-child': {
       borderTopLeftRadius: sm,
     },
-    '& > svg': {
+    '& svg': {
       display: 'block',
-      height: '18px',
-      marginRight: '5px',
-      width: 'auto',
+      marginRight: '3px',
+    },
+    '& .fill': {
+      fill: fontColor,
     },
   },
   active: {
     backgroundColor: background,
     color: secondary,
     fontWeight: bolderFont,
+    '& .fill': {
+      fill: secondary,
+    },
   },
   container: {
     height: '100%',

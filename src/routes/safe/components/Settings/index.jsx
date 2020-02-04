@@ -4,10 +4,10 @@ import cn from 'classnames'
 import { List } from 'immutable'
 import { connect } from 'react-redux'
 import { withStyles } from '@material-ui/core/styles'
-import InfoIcon from '@material-ui/icons/Info'
-import PeopleIcon from '@material-ui/icons/People'
-import ThumbUpIcon from '@material-ui/icons/ThumbUp'
 import Badge from '@material-ui/core/Badge'
+import { OwnersIcon } from './assets/icons/OwnersIcon'
+import { RequiredConfirmationsIcon } from './assets/icons/RequiredConfirmationsIcon'
+import { SafeDetailsIcon } from './assets/icons/SafeDetailsIcon'
 import Block from '~/components/layout/Block'
 import Col from '~/components/layout/Col'
 import Row from '~/components/layout/Row'
@@ -123,7 +123,7 @@ class Settings extends React.Component<Props, State> {
                 className={cn(classes.menuOption, menuOptionIndex === 1 && classes.active)}
                 onClick={this.handleChange(1)}
               >
-                <InfoIcon />
+                <SafeDetailsIcon />
                 Safe details
               </Row>
               <Hairline />
@@ -132,16 +132,21 @@ class Settings extends React.Component<Props, State> {
                 onClick={this.handleChange(2)}
                 testId={OWNERS_SETTINGS_TAB_TEST_ID}
               >
-                <PeopleIcon />
+                <OwnersIcon />
                 Owners
-                <Badge classes={{ root: classes.badgeRoot, badge: classes.badge }} color="secondary" badgeContent={owners.size} max={999} />
+                <Badge
+                  classes={{ root: classes.badgeRoot, badge: classes.badge }}
+                  color="secondary"
+                  badgeContent={owners.size}
+                  max={999}
+                />
               </Row>
               <Hairline />
               <Row
                 className={cn(classes.menuOption, menuOptionIndex === 3 && classes.active)}
                 onClick={this.handleChange(3)}
               >
-                <ThumbUpIcon />
+                <RequiredConfirmationsIcon />
                 Required confirmations
               </Row>
               <Hairline />
@@ -190,7 +195,4 @@ class Settings extends React.Component<Props, State> {
 
 const settingsComponent = withStyles(styles)(Settings)
 
-export default connect(
-  undefined,
-  actions,
-)(settingsComponent)
+export default connect(undefined, actions)(settingsComponent)
