@@ -2,6 +2,7 @@
 import contract from 'truffle-contract'
 import ProxyFactorySol from '@gnosis.pm/safe-contracts/build/contracts/ProxyFactory.json'
 import GnosisSafeSol from '@gnosis.pm/safe-contracts/build/contracts/GnosisSafe.json'
+import MultiSendSol from '@gnosis.pm/safe-contracts/build/contracts/MultiSend.json'
 import SafeProxy from '@gnosis.pm/safe-contracts/build/contracts/Proxy.json'
 import { ensureOnce } from '~/utils/singleton'
 import { simpleMemoize } from '~/components/forms/validator'
@@ -15,21 +16,56 @@ let proxyFactoryMaster
 let safeMaster
 
 const createGnosisSafeContract = (web3: any) => {
-  const gnosisSafe = contract(GnosisSafeSol)
+  const gnosisSafeSol = { ...GnosisSafeSol }
+
+  if (!Object.keys(gnosisSafeSol.networks).length) {
+    gnosisSafeSol.networks = {
+      4: {
+        links: {},
+        events: {},
+        address: '0x34CfAC646f301356fAa8B21e94227e3583Fe3F5F',
+        updated_at: 1551107687797,
+      },
+    }
+  }
+
+  const gnosisSafe = contract(gnosisSafeSol)
   gnosisSafe.setProvider(web3.currentProvider)
 
   return gnosisSafe
 }
 
 const createProxyFactoryContract = (web3: any) => {
-  const proxyFactory = contract(ProxyFactorySol)
+  const proxyFactorySol = { ...ProxyFactorySol }
+
+  if (!Object.keys(proxyFactorySol.networks).length) {
+    proxyFactorySol.networks = {
+      4: {
+        links: {},
+        events: {},
+        address: '0x76E2cFc1F5Fa8F6a5b3fC4c8F4788F0116861F9B',
+        updated_at: 1551107687797,
+      },
+    }
+  }
+
+  const proxyFactory = contract(proxyFactorySol)
   proxyFactory.setProvider(web3.currentProvider)
 
   return proxyFactory
 }
 
+const createMultiSendContract = (web3: any) => {
+  const multiSend = { ...MultiSendSol }
+  const multiSendFactory = contract(multiSend)
+  multiSendFactory.setProvider(web3.currentProvider)
+
+  return multiSendFactory
+}
+
 export const getGnosisSafeContract = simpleMemoize(createGnosisSafeContract)
 const getCreateProxyFactoryContract = simpleMemoize(createProxyFactoryContract)
+const getMultiSendFactoryContract = simpleMemoize(createMultiSendContract)
 
 const instantiateMasterCopies = async () => {
   const web3 = getWeb3()
@@ -107,6 +143,11 @@ export const getGnosisSafeInstanceAt = async (safeAddress: string) => {
   return gnosisSafe
 }
 
+export const getMultiSendInstance = (web3: any) => {
+  const master = getMultiSendFactoryContract(web3)
+  return master.at('0x8D29bE29923b68abfDD21e541b9374737B49cdAD')
+}
+
 const cleanByteCodeMetadata = (bytecode: string): string => {
   const metaData = 'a165'
   return bytecode.substring(0, bytecode.lastIndexOf(metaData))
@@ -132,11 +173,21 @@ export const validateProxy = async (safeAddress: string): Promise<boolean> => {
 }
 
 export const getUpgradeSafeTransaction = async (safeAddress: string) => {
-  // const txData = safeInstance.contract.methods.changeMasterCopy('0x8D29bE29923b68abfDD21e541b9374737B49cdAD').encodeABI()
-  // const txData2 = safeInstance.contract.methods.setFallbackHandler('0xd5D82B6aDDc9027B22dCA772Aa68D5d74cdBdF44').encodeABI()
   const web3 = getWeb3()
-  const proxyFactoryData = proxyFactoryMaster.contract.methods
+  await initContracts()
   const safeInstance = await getGnosisSafeInstanceAt(safeAddress)
-  const txData = safeInstance.contract.methods.setFallbackHandler('0xd5D82B6aDDc9027B22dCA772Aa68D5d74cdBdF44').encodeABI()
-  return txData
+  const multiSendProxy = await getMultiSendInstance(web3)
+  const fallbackHandlerTxData = safeInstance.contract.methods.setFallbackHandler('0xd5D82B6aDDc9027B22dCA772Aa68D5d74cdBdF44').encodeABI()
+  const updateSafeTxData = safeInstance.contract.methods.changeMasterCopy('0x34CfAC646f301356fAa8B21e94227e3583Fe3F5F').encodeABI()
+
+  // MultiSend approach
+  const encodedFallbackTxParams = web3.eth.abi.encodeParameters(['uint8', 'address', 'uint256', 'uint256', 'bytes'], [0, safeAddress, 0, fallbackHandlerTxData.length, fallbackHandlerTxData])
+  const encodedUpdateSafeTxParams = web3.eth.abi.encodeParameters(['uint8', 'address', 'uint256', 'uint256', 'bytes'], [0, safeAddress, 0, updateSafeTxData.length, updateSafeTxData])
+
+  const multiSendData = multiSendProxy.contract.methods.multiSend(
+    web3.eth.abi.encodeParameters(['bytes', 'bytes'], [encodedFallbackTxParams, encodedUpdateSafeTxParams]),
+  ).encodeABI()
+
+
+  return multiSendData
 }
