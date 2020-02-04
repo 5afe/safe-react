@@ -1,6 +1,6 @@
 // @flow
 import type { Action, Store } from 'redux'
-import { List } from 'immutable'
+import { List, Map } from 'immutable'
 import { push } from 'connected-react-router'
 import { type GlobalState } from '~/store/'
 import { ADD_TRANSACTIONS } from '~/routes/safe/store/actions/addTransactions'
@@ -14,8 +14,10 @@ import { getIncomingTxAmount } from '~/routes/safe/components/Transactions/TxsTa
 import updateSafe from '~/routes/safe/store/actions/updateSafe'
 import { safesMapSelector } from '~/routes/safe/store/selectors'
 import { isUserOwner } from '~/logic/wallets/ethAddresses'
+import { ADD_SAFE } from '~/routes/safe/store/actions/addSafe'
+import { getSafeVersion } from '~/logic/safe/utils/safeVersion'
 
-const watchedActions = [ADD_TRANSACTIONS, ADD_INCOMING_TRANSACTIONS]
+const watchedActions = [ADD_TRANSACTIONS, ADD_INCOMING_TRANSACTIONS, ADD_SAFE]
 
 const notificationsMiddleware = (store: Store<GlobalState>) => (
   next: Function,
@@ -30,8 +32,11 @@ const notificationsMiddleware = (store: Store<GlobalState>) => (
         const transactionsList = action.payload
         const userAddress: string = userAccountSelector(state)
         const safeAddress = action.payload.keySeq().get(0)
+        const cancellationTransactions = state.cancellationTransactions.get(safeAddress)
+        const cancellationTransactionsByNonce = cancellationTransactions ? cancellationTransactions.reduce((acc, tx) => acc.set(tx.nonce, tx), Map()) : Map()
         const awaitingTransactions = getAwaitingTransactions(
           transactionsList,
+          cancellationTransactionsByNonce,
           userAddress,
         )
         const awaitingTransactionsList = awaitingTransactions.get(
@@ -110,6 +115,22 @@ const notificationsMiddleware = (store: Store<GlobalState>) => (
             }),
           )
         })
+        break
+      }
+      case ADD_SAFE: {
+        const { needUpdate } = await getSafeVersion()
+        const { safe } = action.payload
+        const notificationKey = `${safe.address}`
+        if (needUpdate) {
+          dispatch(
+            enqueueSnackbar(
+              enhanceSnackbarForAction(
+                NOTIFICATIONS.SAFE_NEW_VERSION_AVAILABLE,
+                notificationKey,
+              ),
+            ),
+          )
+        }
         break
       }
       default:

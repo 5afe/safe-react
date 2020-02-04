@@ -41,6 +41,7 @@ class SafeView extends React.Component<Props, State> {
       fetchTokens,
       fetchTransactions,
       fetchCurrencyValues,
+      loadAddressBook,
       addViewedSafe,
     } = this.props
 
@@ -54,6 +55,7 @@ class SafeView extends React.Component<Props, State> {
     // fetch tokens there to get symbols for tokens in TXs list
     fetchTokens()
     fetchCurrencyValues(safeUrl)
+    loadAddressBook()
 
     this.intervalId = setInterval(() => {
       this.checkForUpdates()
@@ -135,9 +137,12 @@ class SafeView extends React.Component<Props, State> {
       fetchTokens,
       updateSafe,
       transactions,
+      cancellationTransactions,
       currencySelected,
       fetchCurrencyValues,
       currencyValues,
+      addressBook,
+      updateAddressBookEntry,
     } = this.props
 
     return (
@@ -157,6 +162,7 @@ class SafeView extends React.Component<Props, State> {
           fetchTokens={fetchTokens}
           updateSafe={updateSafe}
           transactions={transactions}
+          cancellationTransactions={cancellationTransactions}
           sendFunds={sendFunds}
           showReceive={showReceive}
           onShow={this.onShow}
@@ -166,6 +172,8 @@ class SafeView extends React.Component<Props, State> {
           currencySelected={currencySelected}
           fetchCurrencyValues={fetchCurrencyValues}
           currencyValues={currencyValues}
+          addressBook={addressBook}
+          updateAddressBookEntry={updateAddressBookEntry}
         />
       </Page>
     )

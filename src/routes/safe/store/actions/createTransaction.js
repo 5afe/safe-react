@@ -78,7 +78,9 @@ const createTransaction = ({
   const from = userAccountSelector(state)
   const safeInstance = await getGnosisSafeInstanceAt(safeAddress)
   const threshold = await safeInstance.getThreshold()
-  const nonce = typeof txNonce !== 'undefined' ? txNonce : await getLastPendingTxNonce(safeAddress)
+  const nonce = !Number.isInteger(Number.parseInt(txNonce, 10))
+    ? await getLastPendingTxNonce(safeAddress)
+    : txNonce
   const isExecution = threshold.toNumber() === 1 || shouldExecute
 
   // https://gnosis-safe.readthedocs.io/en/latest/contracts/signatures.html#pre-validated-signatures

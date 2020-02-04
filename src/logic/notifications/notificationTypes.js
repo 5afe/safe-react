@@ -37,6 +37,7 @@ export type Notifications = {
   TX_PENDING_MSG: Notification,
   TX_REJECTED_MSG: Notification,
   TX_EXECUTED_MSG: Notification,
+  TX_CANCELLATION_EXECUTED_MSG: Notification,
   TX_EXECUTED_MORE_CONFIRMATIONS_MSG: Notification,
   TX_FAILED_MSG: Notification,
   TX_WAITING_MSG: Notification,
@@ -57,12 +58,21 @@ export type Notifications = {
   SIGN_SETTINGS_CHANGE_MSG: Notification,
   SETTINGS_CHANGE_PENDING_MSG: Notification,
   SETTINGS_CHANGE_REJECTED_MSG: Notification,
+  SETTINGS_CHANGE_EXECUTED_MSG: Notification,
   SETTINGS_CHANGE_EXECUTED_MORE_CONFIRMATIONS_MSG: Notification,
   SETTINGS_CHANGE_FAILED_MSG: Notification,
 
   // Rinkeby version
   RINKEBY_VERSION_MSG: Notification,
   WRONG_NETWORK_MSG: Notification,
+
+  // AddressBook
+  ADDRESS_BOOK_NEW_ENTRY_SUCCESS: Notification,
+  ADDRESS_BOOK_EDIT_ENTRY_SUCCESS: Notification,
+  ADDRESS_BOOK_DELETE_ENTRY_SUCCESS: Notification,
+
+  // Safe Version
+  SAFE_NEW_VERSION_AVAILABLE: Notification,
 }
 
 export const NOTIFICATIONS: Notifications = {
@@ -116,6 +126,10 @@ export const NOTIFICATIONS: Notifications = {
   },
   TX_EXECUTED_MSG: {
     message: 'Transaction successfully executed',
+    options: { variant: SUCCESS, persist: false, autoHideDuration: longDuration },
+  },
+  TX_CANCELLATION_EXECUTED_MSG: {
+    message: 'Rejection successfully submitted',
     options: { variant: SUCCESS, persist: false, autoHideDuration: longDuration },
   },
   TX_EXECUTED_MORE_CONFIRMATIONS_MSG: {
@@ -201,5 +215,25 @@ export const NOTIFICATIONS: Notifications = {
   WRONG_NETWORK_MSG: {
     message: `Wrong network: Please use ${capitalize(getNetwork())}`,
     options: { variant: WARNING, persist: true, preventDuplicate: true },
+  },
+
+  // Address book
+  ADDRESS_BOOK_NEW_ENTRY_SUCCESS: {
+    message: 'Entry created successfully',
+    options: { variant: SUCCESS, persist: false, preventDuplicate: false },
+  },
+  ADDRESS_BOOK_EDIT_ENTRY_SUCCESS: {
+    message: 'Entry saved successfully',
+    options: { variant: SUCCESS, persist: false, preventDuplicate: false },
+  },
+  ADDRESS_BOOK_DELETE_ENTRY_SUCCESS: {
+    message: 'Entry deleted successfully',
+    options: { variant: SUCCESS, persist: false, preventDuplicate: false },
+  },
+
+  // Safe Version
+  SAFE_NEW_VERSION_AVAILABLE: {
+    message: 'There is a new version available for this Safe',
+    options: { variant: WARNING, persist: false, preventDuplicate: true },
   },
 }

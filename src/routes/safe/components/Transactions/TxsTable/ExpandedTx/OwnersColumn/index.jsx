@@ -7,71 +7,111 @@ import Block from '~/components/layout/Block'
 import Col from '~/components/layout/Col'
 import Img from '~/components/layout/Img'
 import { type Owner } from '~/routes/safe/store/models/owner'
-import { type Transaction } from '~/routes/safe/store/models/transaction'
+import {
+  makeTransaction,
+  type Transaction,
+} from '~/routes/safe/store/models/transaction'
 import { TX_TYPE_CONFIRMATION } from '~/logic/safe/transactions/send'
-import { EMPTY_DATA } from '~/logic/wallets/ethTransactions'
 import OwnersList from './OwnersList'
-import ButtonRow from './ButtonRow'
-import CheckLargeFilledGreenIcon from './assets/check-large-filled-green.svg'
-import ConfirmLargeGreenIcon from './assets/confirm-large-green.svg'
-import ConfirmLargeGreyIcon from './assets/confirm-large-grey.svg'
+import CheckLargeFilledGreenCircle from './assets/check-large-filled-green.svg'
+import ConfirmLargeGreenCircle from './assets/confirm-large-green.svg'
+import CheckLargeFilledRedCircle from './assets/check-large-filled-red.svg'
+import ConfirmLargeRedCircle from './assets/confirm-large-red.svg'
+import ConfirmLargeGreyCircle from './assets/confirm-large-grey.svg'
 import { styles } from './style'
 import Paragraph from '~/components/layout/Paragraph/index'
 
 type Props = {
-  tx: Transaction,
-  owners: List<Owner>,
+  canExecute: boolean,
+  canExecuteCancel: boolean,
+  cancelThresholdReached: boolean,
+  cancelTx: Transaction,
   classes: Object,
   granted: boolean,
-  threshold: number,
-  userAddress: string,
-  thresholdReached: boolean,
-  safeAddress: string,
-  canExecute: boolean,
+  onTxReject: Function,
   onTxConfirm: Function,
-  onTxCancel: Function,
-  onTxExecute: Function
+  onTxExecute: Function,
+  owners: List<Owner>,
+  threshold: number,
+  thresholdReached: boolean,
+  tx: Transaction,
+  userAddress: string,
+};
+
+function getOwnersConfirmations(tx, userAddress) {
+  const ownersWhoConfirmed = []
+  let currentUserAlreadyConfirmed = false
+
+  tx.confirmations.forEach((conf) => {
+    if (conf.owner.address === userAddress) {
+      currentUserAlreadyConfirmed = true
+    }
+
+    if (conf.type === TX_TYPE_CONFIRMATION) {
+      ownersWhoConfirmed.push(conf.owner)
+    }
+  })
+
+  return [ownersWhoConfirmed, currentUserAlreadyConfirmed]
 }
 
-const isCancellationTransaction = (tx: Transaction, safeAddress: string) => !tx.value && tx.data === EMPTY_DATA && tx.recipient === safeAddress
+function getPendingOwnersConfirmations(owners, tx, userAddress) {
+  const ownersUnconfirmed = owners.filter(
+    (owner) => tx.confirmations.findIndex(
+      (conf) => conf.owner.address === owner.address,
+    ) === -1,
+  )
+
+  let userIsUnconfirmedOwner = false
+
+  ownersUnconfirmed.some((owner) => {
+    userIsUnconfirmedOwner = owner.address === userAddress
+    return userIsUnconfirmedOwner
+  })
+
+  return [ownersUnconfirmed, userIsUnconfirmedOwner]
+}
 
 const OwnersColumn = ({
   tx,
+  cancelTx = makeTransaction(),
   owners,
   classes,
   granted,
   threshold,
   userAddress,
   thresholdReached,
-  safeAddress,
+  cancelThresholdReached,
   onTxConfirm,
-  onTxCancel,
   onTxExecute,
+  onTxReject,
   canExecute,
+  canExecuteCancel,
 }: Props) => {
-  const cancellationTx = isCancellationTransaction(tx, safeAddress)
-  const showOlderTxAnnotation = thresholdReached && !canExecute && !tx.isExecuted
+  let showOlderTxAnnotation: boolean
 
-  const ownersWhoConfirmed = []
-  let currentUserAlreadyConfirmed = false
-  tx.confirmations.forEach((conf) => {
-    if (conf.owner.address === userAddress) {
-      currentUserAlreadyConfirmed = true
-    }
-    if (conf.type === TX_TYPE_CONFIRMATION) {
-      ownersWhoConfirmed.push(conf.owner)
-    }
-  })
-  const ownersUnconfirmed = owners.filter(
-    (owner) => tx.confirmations.findIndex(
-      (conf) => conf.owner.address === owner.address,
-    ) === -1,
-  )
-  let userIsUnconfirmedOwner
-  ownersUnconfirmed.some((owner) => {
-    userIsUnconfirmedOwner = owner.address === userAddress
-    return userIsUnconfirmedOwner
-  })
+  if (tx.isExecuted || cancelTx.isExecuted) {
+    showOlderTxAnnotation = false
+  } else {
+    showOlderTxAnnotation = (thresholdReached && !canExecute) || (cancelThresholdReached && !canExecuteCancel)
+  }
+
+  const [
+    ownersWhoConfirmed,
+    currentUserAlreadyConfirmed,
+  ] = getOwnersConfirmations(tx, userAddress)
+  const [
+    ownersUnconfirmed,
+    userIsUnconfirmedOwner,
+  ] = getPendingOwnersConfirmations(owners, tx, userAddress)
+  const [
+    ownersWhoConfirmedCancel,
+    currentUserAlreadyConfirmedCancel,
+  ] = getOwnersConfirmations(cancelTx, userAddress)
+  const [
+    ownersUnconfirmedCancel,
+    userIsUnconfirmedCancelOwner,
+  ] = getPendingOwnersConfirmations(owners, cancelTx, userAddress)
 
   let displayButtonRow = true
   if (tx.executionTxHash) {
@@ -80,13 +120,7 @@ const OwnersColumn = ({
   } else if (tx.status === 'cancelled') {
     // tx is cancelled (replaced) by another one
     displayButtonRow = false
-  } else if (
-    cancellationTx
-    && currentUserAlreadyConfirmed
-    && !thresholdReached
-  ) {
-    // the TX is the cancellation (replacement) transaction for previous TX,
-    // current user has already confirmed it and threshold is not reached (so he can't execute/cancel it)
+  } else if (currentUserAlreadyConfirmedCancel) {
     displayButtonRow = false
   }
 
@@ -99,6 +133,19 @@ const OwnersColumn = ({
 
   const showExecuteBtn = canExecute && !tx.isExecuted && thresholdReached
 
+  const showRejectBtn = !cancelTx.isExecuted
+    && !tx.isExecuted
+    && cancelTx.status !== 'pending'
+    && userIsUnconfirmedCancelOwner
+    && !currentUserAlreadyConfirmedCancel
+    && !cancelThresholdReached
+    && displayButtonRow
+
+  const showExecuteRejectBtn = !cancelTx.isExecuted && !tx.isExecuted && canExecuteCancel && cancelThresholdReached
+
+  const txThreshold = cancelTx.isExecuted ? tx.confirmations.size : threshold
+  const cancelThreshold = tx.isExecuted ? cancelTx.confirmations.size : threshold
+
   return (
     <Col xs={6} className={classes.rightCol} layout="block">
       <Block
@@ -107,63 +154,91 @@ const OwnersColumn = ({
           (thresholdReached || tx.isExecuted) && classes.ownerListTitleDone,
         )}
       >
-        <div className={classes.iconState}>
-          {thresholdReached || tx.isExecuted ? (
-            <Img src={CheckLargeFilledGreenIcon} />
-          ) : (
-            <Img src={ConfirmLargeGreenIcon} />
-          )}
+        <div className={classes.circleState}>
+          <Img src={thresholdReached || tx.isExecuted ? CheckLargeFilledGreenCircle : ConfirmLargeGreenCircle} alt="" />
         </div>
         {tx.isExecuted
           ? `Confirmed [${tx.confirmations.size}/${tx.confirmations.size}]`
-          : `Confirmed [${tx.confirmations.size}/${threshold}]`}
+          : `Confirmed [${tx.confirmations.size}/${txThreshold}]`}
       </Block>
       <OwnersList
-        userAddress={userAddress}
-        ownersWhoConfirmed={ownersWhoConfirmed}
-        ownersUnconfirmed={ownersUnconfirmed}
         executor={tx.executor}
-        thresholdReached={thresholdReached}
         onTxConfirm={onTxConfirm}
         onTxExecute={onTxExecute}
+        ownersUnconfirmed={ownersUnconfirmed}
+        ownersWhoConfirmed={ownersWhoConfirmed}
         showConfirmBtn={showConfirmBtn}
         showExecuteBtn={showExecuteBtn}
+        thresholdReached={thresholdReached}
+        userAddress={userAddress}
       />
+      {/* Cancel TX thread - START */}
+      <Block
+        className={cn(
+          classes.ownerListTitle,
+          (cancelThresholdReached || cancelTx.isExecuted) && classes.ownerListTitleCancelDone,
+        )}
+      >
+        <div
+          className={cn(
+            classes.verticalLine,
+            tx.isExecuted ? classes.verticalLineDone : classes.verticalLinePending,
+          )}
+        />
+        <div className={classes.circleState}>
+          <Img src={cancelThresholdReached || cancelTx.isExecuted ? CheckLargeFilledRedCircle : ConfirmLargeRedCircle} alt="" />
+        </div>
+        {cancelTx.isExecuted
+          ? `Rejected [${cancelTx.confirmations.size}/${cancelTx.confirmations.size}]`
+          : `Rejected [${cancelTx.confirmations.size}/${cancelThreshold}]`}
+      </Block>
+      <OwnersList
+        isCancelTx
+        executor={cancelTx.executor}
+        onTxReject={onTxReject}
+        ownersUnconfirmed={ownersUnconfirmedCancel}
+        ownersWhoConfirmed={ownersWhoConfirmedCancel}
+        showRejectBtn={showRejectBtn}
+        showExecuteRejectBtn={showExecuteRejectBtn}
+        thresholdReached={cancelThresholdReached}
+        userAddress={userAddress}
+      />
+      {/* Cancel TX thread - END */}
       <Block
         className={cn(
           classes.ownerListTitle,
           tx.isExecuted && classes.ownerListTitleDone,
+          cancelTx.isExecuted && classes.ownerListTitleCancelDone,
         )}
       >
         <div
-          className={
-            thresholdReached || tx.isExecuted
-              ? classes.verticalLineProgressDone
-              : classes.verticalLineProgressPending
-          }
-        />
-        <div className={classes.iconState}>
-          {!thresholdReached && !tx.isExecuted && (
-            <Img src={ConfirmLargeGreyIcon} alt="Confirm tx" />
+          className={cn(
+            classes.verticalLine,
+            tx.isExecuted && classes.verticalLineDone,
+            cancelTx.isExecuted && classes.verticalLineCancel,
           )}
-          {thresholdReached && !tx.isExecuted && (
-            <Img src={ConfirmLargeGreenIcon} alt="Execute tx" />
+        />
+
+        <div className={classes.circleState}>
+          {!tx.isExecuted && !cancelTx.isExecuted && (
+            <Img src={ConfirmLargeGreyCircle} alt="Confirm / Execute tx" />
           )}
           {tx.isExecuted && (
-            <Img src={CheckLargeFilledGreenIcon} alt="TX Executed icon" />
+            <Img src={CheckLargeFilledGreenCircle} alt="TX Executed icon" />
+          )}
+          {cancelTx.isExecuted && (
+            <Img src={CheckLargeFilledRedCircle} alt="TX Executed icon" />
           )}
         </div>
         Executed
       </Block>
+
       {showOlderTxAnnotation && (
         <Block className={classes.olderTxAnnotation}>
           <Paragraph>
             There are older transactions that need to be executed first
           </Paragraph>
         </Block>
-      )}
-      {granted && displayButtonRow && (
-        <ButtonRow onTxCancel={onTxCancel} showCancelBtn={!cancellationTx} />
       )}
     </Col>
   )

@@ -23,7 +23,7 @@
     "start": "node scripts/start.js",
     "start-mainnet": "REACT_APP_NETWORK=mainnet yarn start",
     "test": "NODE_ENV=test && node scripts/test.js --env=jsdom",
-    "format": "prettier-eslint \"src/**/*.js\" --write"
+    "format": "prettier-eslint $PWD'/src/**/*.{js,jsx}' --write"
   },
   "pre-commit": [
     "precommit"
@@ -33,6 +33,7 @@
     "@gnosis.pm/util-contracts": "2.0.4",
     "@material-ui/core": "4.8.0",
     "@material-ui/icons": "4.5.1",
+    "@material-ui/lab": "^4.0.0-alpha.39",
     "@portis/web3": "^2.0.0-beta.45",
     "@testing-library/jest-dom": "4.2.4",
     "@toruslabs/torus-embed": "0.2.10",

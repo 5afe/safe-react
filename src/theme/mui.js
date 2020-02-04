@@ -8,6 +8,7 @@ import {
   disabled,
   error,
   extraSmallFontSize,
+  fontColor,
   largeFontSize,
   lg,
   mainFontFamily,
@@ -193,7 +194,7 @@ const theme = createMuiTheme({
         },
       },
       formControl: {
-        marginTop: '0px !important',
+        marginTop: '0 !important',
       },
     },
     MuiStepLabel: {
@@ -212,18 +213,41 @@ const theme = createMuiTheme({
     },
     MuiSnackbar: {
       root: {
-        width: '280px',
+        maxWidth: '100%',
+        width: '340px',
       },
     },
     MuiSnackbarContent: {
+      root: {
+        borderRadius: '8px !important',
+        boxShadow: '0 0 10px 0 rgba(212, 212, 211, 0.59)',
+        display: 'flex',
+        flexDirection: 'row',
+        flexWrap: 'nowrap',
+        padding: '20px',
+        width: '100%',
+      },
       message: {
-        maxWidth: '260px',
-        '& img': {
-          marginRight: '5px',
+        color: fontColor,
+        flexGrow: '1',
+        fontFamily: 'Averta',
+        fontSize: '14px',
+        lineHeight: '1.43',
+        padding: '0 10px 0 0',
+        '& > span': {
+          display: 'flex',
+          flexDirection: 'row',
+          '& > img': {
+            display: 'block',
+            marginRight: '13px',
+          },
         },
       },
       action: {
         paddingLeft: 0,
+        '& > button': {
+          color: secondaryText,
+        },
       },
     },
     MuiTab: {
