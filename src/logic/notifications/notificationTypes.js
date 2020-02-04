@@ -37,6 +37,7 @@ export type Notifications = {
   TX_PENDING_MSG: Notification,
   TX_REJECTED_MSG: Notification,
   TX_EXECUTED_MSG: Notification,
+  TX_CANCELLATION_EXECUTED_MSG: Notification,
   TX_EXECUTED_MORE_CONFIRMATIONS_MSG: Notification,
   TX_FAILED_MSG: Notification,
   TX_WAITING_MSG: Notification,
@@ -57,6 +58,7 @@ export type Notifications = {
   SIGN_SETTINGS_CHANGE_MSG: Notification,
   SETTINGS_CHANGE_PENDING_MSG: Notification,
   SETTINGS_CHANGE_REJECTED_MSG: Notification,
+  SETTINGS_CHANGE_EXECUTED_MSG: Notification,
   SETTINGS_CHANGE_EXECUTED_MORE_CONFIRMATIONS_MSG: Notification,
   SETTINGS_CHANGE_FAILED_MSG: Notification,
 
@@ -124,6 +126,10 @@ export const NOTIFICATIONS: Notifications = {
   },
   TX_EXECUTED_MSG: {
     message: 'Transaction successfully executed',
+    options: { variant: SUCCESS, persist: false, autoHideDuration: longDuration },
+  },
+  TX_CANCELLATION_EXECUTED_MSG: {
+    message: 'Rejection successfully submitted',
     options: { variant: SUCCESS, persist: false, autoHideDuration: longDuration },
   },
   TX_EXECUTED_MORE_CONFIRMATIONS_MSG: {

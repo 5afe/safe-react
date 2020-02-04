@@ -2,6 +2,7 @@
 import React from 'react'
 import Tooltip from '@material-ui/core/Tooltip'
 import { makeStyles } from '@material-ui/core/styles'
+import cn from 'classnames'
 import Img from '~/components/layout/Img'
 import EtherscanOpenIcon from './img/etherscan-open.svg'
 import { getEtherScanLink } from '~/logic/wallets/getWeb3'
@@ -26,12 +27,15 @@ const useStyles = makeStyles({
 })
 
 type EtherscanBtnProps = {
+  className?: any,
+  increaseZindex?: boolean,
   type: 'tx' | 'address',
   value: string,
-  increaseZindex?: boolean,
 }
 
-const EtherscanBtn = ({ type, value, increaseZindex = false }: EtherscanBtnProps) => {
+const EtherscanBtn = ({
+  type, value, className, increaseZindex = false,
+}: EtherscanBtnProps) => {
   const classes = useStyles()
   const customClasses = increaseZindex ? { popper: classes.increasedPopperZindex } : {}
 
@@ -39,7 +43,7 @@ const EtherscanBtn = ({ type, value, increaseZindex = false }: EtherscanBtnProps
     <Tooltip title="Show details on Etherscan" placement="top" classes={customClasses}>
       <a
         aria-label="Show details on Etherscan"
-        className={classes.container}
+        className={cn(classes.container, className)}
         href={getEtherScanLink(type, value)}
         rel="noopener noreferrer"
         target="_blank"

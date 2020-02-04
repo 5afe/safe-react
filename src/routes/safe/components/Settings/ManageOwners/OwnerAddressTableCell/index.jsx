@@ -20,7 +20,7 @@ const OwnerAddressTableCell = (props: Props) => {
     <Block justify="left">
       <Identicon address={address} diameter={32} />
       { showLinks ? (
-        <div style={{ marginLeft: 10 }}>
+        <div style={{ marginLeft: 10, flexShrink: 1, minWidth: 0 }}>
           { userName }
           <EtherScanLink type="address" value={address} knownAddress={knownAddress} />
         </div>
