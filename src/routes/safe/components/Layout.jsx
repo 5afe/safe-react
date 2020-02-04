@@ -133,55 +133,50 @@ const Layout = (props: Props) => {
   return (
     <>
       <Block className={classes.container} margin="xl">
-        <Identicon address={address} diameter={50} />
-        <Block className={classes.name}>
-          <Row>
-            <Heading tag="h2" color="primary" testId={SAFE_VIEW_NAME_HEADING_TEST_ID}>
-              {name}
-            </Heading>
-            {!granted && <Block className={classes.readonly}>Read Only</Block>}
-          </Row>
-          <Block justify="center" className={classes.user}>
-            <Paragraph size="md" className={classes.address} color="disabled" noMargin>
-              {address}
-            </Paragraph>
-            <CopyBtn content={address} />
-            <EtherscanBtn type="address" value={address} />
+        <Row className={classes.userInfo}>
+          <Identicon address={address} diameter={50} />
+          <Block className={classes.name}>
+            <Row>
+              <Heading tag="h2" color="primary" testId={SAFE_VIEW_NAME_HEADING_TEST_ID}>
+                {name}
+              </Heading>
+              {!granted && <Block className={classes.readonly}>Read Only</Block>}
+            </Row>
+            <Block justify="center" className={classes.user}>
+              <Paragraph size="md" className={classes.address} color="disabled" noMargin>
+                {address}
+              </Paragraph>
+              <CopyBtn content={address} />
+              <EtherscanBtn type="address" value={address} />
+            </Block>
           </Block>
-        </Block>
+        </Row>
         <Block className={classes.balance}>
-          <Row align="end" className={classes.actions}>
-            <Button
-              variant="contained"
-              size="small"
-              color="primary"
-              className={classes.send}
-              onClick={() => showSendFunds('Ether')}
-              disabled={!granted}
-            >
-              <CallMade alt="Send Transaction" className={classNames(classes.leftIcon, classes.iconSmall)} />
-              Send
-            </Button>
-            <Button
-              variant="contained"
-              size="small"
-              color="primary"
-              className={classes.receive}
-              onClick={onShow('Receive')}
-            >
-              <CallReceived alt="Receive Transaction" className={classNames(classes.leftIcon, classes.iconSmall)} />
-              Receive
-            </Button>
-          </Row>
+          <Button
+            className={classes.send}
+            color="primary"
+            disabled={!granted}
+            onClick={() => showSendFunds('Ether')}
+            size="small"
+            variant="contained"
+          >
+            <CallMade alt="Send Transaction" className={classNames(classes.leftIcon, classes.iconSmall)} />
+            Send
+          </Button>
+          <Button
+            className={classes.receive}
+            color="primary"
+            onClick={onShow('Receive')}
+            size="small"
+            variant="contained"
+          >
+            <CallReceived alt="Receive Transaction" className={classNames(classes.leftIcon, classes.iconSmall)} />
+            Receive
+          </Button>
         </Block>
       </Block>
       <Row>
-        <Tabs
-          value={location.pathname}
-          onChange={handleCallToRouter}
-          indicatorColor="secondary"
-          textColor="secondary"
-        >
+        <Tabs value={location.pathname} onChange={handleCallToRouter} indicatorColor="secondary" textColor="secondary">
           <Tab
             classes={{
               selected: classes.tabWrapperSelected,
@@ -283,13 +278,7 @@ const Layout = (props: Props) => {
             />
           )}
         />
-        <Route
-          exact
-          path={`${match.path}/address-book`}
-          render={() => (
-            <AddressBookTable />
-          )}
-        />
+        <Route exact path={`${match.path}/address-book`} render={() => <AddressBookTable />} />
         <Redirect to={`${match.path}/balances`} />
       </Switch>
       <SendModal
