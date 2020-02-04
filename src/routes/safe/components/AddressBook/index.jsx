@@ -59,7 +59,6 @@ const AddressBookTable = ({ classes }: Props) => {
   )
   const [deleteEntryModalOpen, setDeleteEntryModalOpen] = useState(false)
   const [sendFundsModalOpen, setSendFundsModalOpen] = useState(false)
-  const [defaultNewEntryAddress, setDefaultNewEntryAddress] = useState(null)
   const entryAddressToEditOrCreateNew = useSelector(addressBookQueryParamsSelector)
 
 
@@ -78,7 +77,6 @@ const AddressBookTable = ({ classes }: Props) => {
         setSelectedEntry({ entry: value, index: key })
       } else {
         // Create new entry
-        setDefaultNewEntryAddress(entryAddressToEditOrCreateNew)
         setSelectedEntry(null)
       }
     }
@@ -93,7 +91,6 @@ const AddressBookTable = ({ classes }: Props) => {
   const newEntryModalHandler = (entry: AddressBookEntry) => {
     setEditCreateEntryModalOpen(false)
     dispatch(addAddressBookEntry(entry))
-    setDefaultNewEntryAddress(null)
   }
 
   const editEntryModalHandler = (entry: AddressBookEntry) => {
@@ -174,7 +171,7 @@ const AddressBookTable = ({ classes }: Props) => {
                       className={classes.editEntryButton}
                       src={RenameOwnerIcon}
                       onClick={() => {
-                        setSelectedEntry({ entry: row })
+                        setSelectedEntry({ entry: { ...row, isOwnerAddress: userOwner } })
                         setEditCreateEntryModalOpen(true)
                       }}
                       testId={EDIT_ENTRY_BUTTON}
@@ -224,7 +221,6 @@ const AddressBookTable = ({ classes }: Props) => {
         newEntryModalHandler={newEntryModalHandler}
         editEntryModalHandler={editEntryModalHandler}
         entryToEdit={selectedEntry}
-        newEntryDefaultAddress={defaultNewEntryAddress}
       />
       <DeleteEntryModal
         onClose={() => setDeleteEntryModalOpen(false)}

@@ -45,4 +45,7 @@ export const styles = () => ({
       border: 'green',
     },
   },
+  selectAddress: {
+    cursor: 'pointer',
+  },
 })

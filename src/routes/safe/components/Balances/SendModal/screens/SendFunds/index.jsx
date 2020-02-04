@@ -9,7 +9,6 @@ import IconButton from '@material-ui/core/IconButton'
 import Paragraph from '~/components/layout/Paragraph'
 import Row from '~/components/layout/Row'
 import GnoForm from '~/components/forms/GnoForm'
-import AddressInput from '~/components/forms/AddressInput'
 import Col from '~/components/layout/Col'
 import Button from '~/components/layout/Button'
 import Block from '~/components/layout/Block'
@@ -20,7 +19,11 @@ import Field from '~/components/forms/Field'
 import TextField from '~/components/forms/TextField'
 import { type Token } from '~/logic/tokens/store/model/token'
 import {
-  composeValidators, required, mustBeFloat, maxValue, greaterThan,
+  composeValidators,
+  required,
+  mustBeFloat,
+  maxValue,
+  greaterThan,
 } from '~/components/forms/validator'
 import TokenSelectField from '~/routes/safe/components/Balances/SendModal/screens/SendFunds/TokenSelectField'
 import SafeInfo from '~/routes/safe/components/Balances/SendModal/SafeInfo'
@@ -29,6 +32,10 @@ import ArrowDown from '../assets/arrow-down.svg'
 import QRIcon from '~/assets/icons/qrcode.svg'
 import { styles } from './style'
 import { sm } from '~/theme/variables'
+import AddressBookInput from '~/routes/safe/components/Balances/SendModal/screens/AddressBookInput'
+import Identicon from '~/components/Identicon'
+import CopyBtn from '~/components/CopyBtn'
+import EtherscanBtn from '~/components/EtherscanBtn'
 
 type Props = {
   onClose: () => void,
@@ -40,7 +47,7 @@ type Props = {
   tokens: List<Token>,
   onSubmit: Function,
   initialValues: Object,
-  recipientAddress?: string,
+  recipientAddress?: string
 }
 
 const formMutators = {
@@ -68,9 +75,26 @@ const SendFunds = ({
   recipientAddress,
 }: Props) => {
   const [qrModalOpen, setQrModalOpen] = useState<boolean>(false)
+  const [selectedEntry, setSelectedEntry] = useState<Object | null>({
+    address: recipientAddress,
+    name: '',
+  })
+  const [pristine, setPristine] = useState<boolean>(true)
+  const [isValidAddress, setIsValidAddress] = useState<boolean>(true)
+
+  React.useMemo(() => {
+    if (selectedEntry === null && pristine) {
+      setPristine(false)
+    }
+  }, [selectedEntry, pristine])
 
   const handleSubmit = (values) => {
-    onSubmit(values)
+    const submitValues = values
+    // If the input wasn't modified, there was no mutation of the recipientAddress
+    if (!values.recipientAddress) {
+      submitValues.recipientAddress = selectedEntry.address
+    }
+    onSubmit(submitValues)
   }
 
   const openQrModal = () => {
@@ -93,12 +117,18 @@ const SendFunds = ({
         </IconButton>
       </Row>
       <Hairline />
-      <GnoForm onSubmit={handleSubmit} formMutators={formMutators} initialValues={initialValues}>
+      <GnoForm
+        onSubmit={handleSubmit}
+        formMutators={formMutators}
+        initialValues={initialValues}
+      >
         {(...args) => {
           const formState = args[2]
           const mutators = args[3]
           const { token: tokenAddress } = formState.values
-          const selectedTokenRecord = tokens.find((token) => token.address === tokenAddress)
+          const selectedTokenRecord = tokens.find(
+            (token) => token.address === tokenAddress,
+          )
 
           const handleScan = (value) => {
             let scannedAddress = value
@@ -111,54 +141,136 @@ const SendFunds = ({
             closeQrModal()
           }
 
+          let shouldDisableSubmitButton = !isValidAddress
+          if (selectedEntry) {
+            shouldDisableSubmitButton = !selectedEntry.address
+          }
+
           return (
             <>
               <Block className={classes.formContainer}>
-                <SafeInfo safeAddress={safeAddress} safeName={safeName} ethBalance={ethBalance} />
+                <SafeInfo
+                  safeAddress={safeAddress}
+                  safeName={safeName}
+                  ethBalance={ethBalance}
+                />
                 <Row margin="md">
                   <Col xs={1}>
-                    <img src={ArrowDown} alt="Arrow Down" style={{ marginLeft: sm }} />
+                    <img
+                      src={ArrowDown}
+                      alt="Arrow Down"
+                      style={{ marginLeft: sm }}
+                    />
                   </Col>
                   <Col xs={11} center="xs" layout="column">
                     <Hairline />
                   </Col>
                 </Row>
-                <Row margin="md">
-                  <Col xs={11}>
-                    <AddressInput
-                      name="recipientAddress"
-                      component={TextField}
-                      placeholder="Recipient*"
-                      text="Recipient*"
-                      className={classes.addressInput}
-                      fieldMutator={mutators.setRecipient}
-                      defaultValue={recipientAddress}
-                    />
-                  </Col>
-                  <Col xs={1} center="xs" middle="xs" className={classes}>
-                    <Img
-                      src={QRIcon}
-                      className={classes.qrCodeBtn}
-                      role="button"
-                      height={20}
-                      alt="Scan QR"
-                      onClick={() => {
-                        openQrModal()
-                      }}
-                    />
-                  </Col>
-                </Row>
+                {selectedEntry && selectedEntry.address ? (
+                  <div
+                    role="listbox"
+                    tabIndex="0"
+                    onKeyDown={(e) => {
+                      if (e.keyCode !== 9) {
+                        setSelectedEntry(null)
+                      }
+                    }}
+                  >
+                    <Row margin="xs">
+                      <Paragraph
+                        size="md"
+                        color="disabled"
+                        style={{ letterSpacing: '-0.5px' }}
+                        noMargin
+                      >
+                        Recipient
+                      </Paragraph>
+                    </Row>
+                    <Row margin="md" align="center">
+                      <Col xs={1}>
+                        <Identicon
+                          address={selectedEntry.address}
+                          diameter={32}
+                        />
+                      </Col>
+                      <Col xs={11} layout="column">
+                        <Block justify="left">
+                          <Block>
+                            <Paragraph
+                              weight="bolder"
+                              className={classes.selectAddress}
+                              noMargin
+                              onClick={() => setSelectedEntry(null)}
+                            >
+                              {selectedEntry.name}
+                            </Paragraph>
+                            <Paragraph
+                              weight="bolder"
+                              className={classes.selectAddress}
+                              noMargin
+                              onClick={() => setSelectedEntry(null)}
+                            >
+                              {selectedEntry.address}
+                            </Paragraph>
+                          </Block>
+                          <CopyBtn content={selectedEntry.address} />
+                          <EtherscanBtn
+                            type="address"
+                            value={selectedEntry.address}
+                          />
+                        </Block>
+                      </Col>
+                    </Row>
+                  </div>
+                ) : (
+                  <>
+                    <Row margin="md">
+                      <Col xs={11}>
+                        <AddressBookInput
+                          pristine={pristine}
+                          fieldMutator={mutators.setRecipient}
+                          recipientAddress={recipientAddress}
+                          setSelectedEntry={setSelectedEntry}
+                          setIsValidAddress={setIsValidAddress}
+                        />
+                      </Col>
+                      <Col xs={1} center="xs" middle="xs" className={classes}>
+                        <Img
+                          src={QRIcon}
+                          className={classes.qrCodeBtn}
+                          role="button"
+                          height={20}
+                          alt="Scan QR"
+                          onClick={() => {
+                            openQrModal()
+                          }}
+                        />
+                      </Col>
+                    </Row>
+                  </>
+                )}
                 <Row margin="sm">
                   <Col>
-                    <TokenSelectField tokens={tokens} initialValue={selectedToken} />
+                    <TokenSelectField
+                      tokens={tokens}
+                      initialValue={selectedToken}
+                    />
                   </Col>
                 </Row>
                 <Row margin="xs">
                   <Col between="lg">
-                    <Paragraph size="md" color="disabled" style={{ letterSpacing: '-0.5px' }} noMargin>
+                    <Paragraph
+                      size="md"
+                      color="disabled"
+                      style={{ letterSpacing: '-0.5px' }}
+                      noMargin
+                    >
                       Amount
                     </Paragraph>
-                    <ButtonLink weight="bold" onClick={() => mutators.setMax(selectedTokenRecord.balance)}>
+                    <ButtonLink
+                      weight="bold"
+                      onClick={() => mutators.setMax(selectedTokenRecord.balance)}
+                    >
                       Send max
                     </ButtonLink>
                   </Col>
@@ -173,14 +285,20 @@ const SendFunds = ({
                         required,
                         mustBeFloat,
                         greaterThan(0),
-                        maxValue(selectedTokenRecord && selectedTokenRecord.balance),
+                        maxValue(
+                          selectedTokenRecord && selectedTokenRecord.balance,
+                        ),
                       )}
                       placeholder="Amount*"
                       text="Amount*"
                       className={classes.addressInput}
                       inputAdornment={
                         selectedTokenRecord && {
-                          endAdornment: <InputAdornment position="end">{selectedTokenRecord.symbol}</InputAdornment>,
+                          endAdornment: (
+                            <InputAdornment position="end">
+                              {selectedTokenRecord.symbol}
+                            </InputAdornment>
+                          ),
                         }
                       }
                     />
@@ -204,11 +322,18 @@ const SendFunds = ({
                   color="primary"
                   data-testid="review-tx-btn"
                   className={classes.submitButton}
+                  disabled={shouldDisableSubmitButton}
                 >
                   Review
                 </Button>
               </Row>
-              {qrModalOpen && <ScanQRModal isOpen={qrModalOpen} onScan={handleScan} onClose={closeQrModal} />}
+              {qrModalOpen && (
+                <ScanQRModal
+                  isOpen={qrModalOpen}
+                  onScan={handleScan}
+                  onClose={closeQrModal}
+                />
+              )}
             </>
           )
         }}
