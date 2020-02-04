@@ -48,7 +48,7 @@ export const getNameFromAddressBook = (userAddress: string): string | null => {
 
 
 export const getOwnersWithNameFromAddressBook = (addressBook: AddressBook, ownerList: List<Owner>) => {
-  if (!ownerList) {
+  if (!ownerList || !addressBook || !ownerList.size || !addressBook.size) {
     return []
   }
   const ownersListWithAdbkNames = ownerList.map((owner) => {
