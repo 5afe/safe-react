@@ -21,11 +21,13 @@ import { type Transaction } from '~/routes/safe/store/models/transaction'
 import { styles } from './style'
 
 export const APPROVE_TX_MODAL_SUBMIT_BTN_TEST_ID = 'approve-tx-modal-submit-btn'
+export const REJECT_TX_MODAL_SUBMIT_BTN_TEST_ID = 'reject-tx-modal-submit-btn'
 
 type Props = {
   onClose: () => void,
   classes: Object,
   isOpen: boolean,
+  isCancelTx?: boolean,
   processTransaction: Function,
   tx: Transaction,
   nonce: string,
@@ -38,23 +40,31 @@ type Props = {
   closeSnackbar: Function
 }
 
-const getModalTitleAndDescription = (thresholdReached: boolean) => {
-  const title = thresholdReached ? 'Execute Transaction' : 'Approve Transaction'
-  const description = `This action will ${
-    thresholdReached ? 'execute' : 'approve'
-  } this transaction. A separate transaction will be performed to submit the ${
-    thresholdReached ? 'execution' : 'approval'
-  }.`
-
-  return {
-    title,
-    description,
+const getModalTitleAndDescription = (thresholdReached: boolean, isCancelTx?: boolean) => {
+  const modalInfo = {
+    title: 'Execute Transaction Rejection',
+    description: 'This action will execute this transaction.',
   }
+
+  if (isCancelTx) {
+    return modalInfo
+  }
+
+  if (thresholdReached) {
+    modalInfo.title = 'Execute Transaction'
+    modalInfo.description = 'This action will execute this transaction. A separate Transaction will be performed to submit the execution.'
+  } else {
+    modalInfo.title = 'Approve Transaction'
+    modalInfo.description = 'This action will approve this transaction. A separate Transaction will be performed to submit the approval.'
+  }
+
+  return modalInfo
 }
 
 const ApproveTxModal = ({
   onClose,
   isOpen,
+  isCancelTx,
   classes,
   processTransaction,
   tx,
@@ -68,7 +78,7 @@ const ApproveTxModal = ({
 }: Props) => {
   const [approveAndExecute, setApproveAndExecute] = useState<boolean>(canExecute)
   const [gasCosts, setGasCosts] = useState<string>('< 0.001')
-  const { title, description } = getModalTitleAndDescription(thresholdReached)
+  const { title, description } = getModalTitleAndDescription(thresholdReached, isCancelTx)
   const oneConfirmationLeft = !thresholdReached && tx.confirmations.size + 1 === threshold
   const isTheTxReadyToBeExecuted = oneConfirmationLeft ? true : thresholdReached
 
@@ -132,7 +142,7 @@ const ApproveTxModal = ({
       </Row>
       <Hairline />
       <Block className={classes.container}>
-        <Row>
+        <Row style={{ flexDirection: 'column' }}>
           <Paragraph>{description}</Paragraph>
           <Paragraph size="sm" color="medium">
             Transaction nonce:
@@ -142,20 +152,22 @@ const ApproveTxModal = ({
           {oneConfirmationLeft && canExecute && (
             <>
               <Paragraph color="error">
-                Approving this transaction executes it right away. If you want
-                approve but execute the transaction manually later, click on the
-                checkbox below.
+                Approving this transaction executes it right away.
+                {!isCancelTx && ' If you want approve but execute the transaction manually later, click on the '
+                + 'checkbox below.'}
               </Paragraph>
-              <FormControlLabel
-                control={(
-                  <Checkbox
-                    onChange={handleExecuteCheckbox}
-                    checked={approveAndExecute}
-                    color="primary"
-                  />
-                )}
-                label="Execute transaction"
-              />
+              {!isCancelTx && (
+                <FormControlLabel
+                  control={(
+                    <Checkbox
+                      onChange={handleExecuteCheckbox}
+                      checked={approveAndExecute}
+                      color="primary"
+                    />
+                  )}
+                  label="Execute transaction"
+                />
+              )}
             </>
           )}
         </Row>
@@ -176,9 +188,9 @@ const ApproveTxModal = ({
           variant="contained"
           minWidth={214}
           minHeight={42}
-          color="primary"
+          color={isCancelTx ? 'secondary' : 'primary'}
           onClick={approveTx}
-          testId={APPROVE_TX_MODAL_SUBMIT_BTN_TEST_ID}
+          testId={isCancelTx ? REJECT_TX_MODAL_SUBMIT_BTN_TEST_ID : APPROVE_TX_MODAL_SUBMIT_BTN_TEST_ID}
         >
           {title}
         </Button>

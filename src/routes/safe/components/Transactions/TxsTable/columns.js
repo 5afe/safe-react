@@ -2,7 +2,7 @@
 import React from 'react'
 import { format, getTime, parseISO } from 'date-fns'
 import { BigNumber } from 'bignumber.js'
-import { List } from 'immutable'
+import { List, Map } from 'immutable'
 import TxType from './TxType'
 import { type Transaction } from '~/routes/safe/store/models/transaction'
 import { INCOMING_TX_TYPE, type IncomingTransaction } from '~/routes/safe/store/models/incomingTransaction'
@@ -16,10 +16,11 @@ export const TX_TABLE_DATE_ID = 'date'
 export const TX_TABLE_AMOUNT_ID = 'amount'
 export const TX_TABLE_STATUS_ID = 'status'
 export const TX_TABLE_RAW_TX_ID = 'tx'
+export const TX_TABLE_RAW_CANCEL_TX_ID = 'cancelTx'
 export const TX_TABLE_EXPAND_ICON = 'expand'
 
 type TxData = {
-  id: number,
+  id: ?number,
   type: React.ReactNode,
   date: string,
   dateOrder?: number,
@@ -63,7 +64,10 @@ const getIncomingTxTableData = (tx: IncomingTransaction): TransactionRow => ({
   [TX_TABLE_RAW_TX_ID]: tx,
 })
 
-const getTransactionTableData = (tx: Transaction): TransactionRow => {
+const getTransactionTableData = (
+  tx: Transaction,
+  cancelTx: ?Transaction,
+): TransactionRow => {
   const txDate = tx.submissionDate
 
   let txType = 'outgoing'
@@ -85,16 +89,27 @@ const getTransactionTableData = (tx: Transaction): TransactionRow => {
     [TX_TABLE_AMOUNT_ID]: getTxAmount(tx),
     [TX_TABLE_STATUS_ID]: tx.status,
     [TX_TABLE_RAW_TX_ID]: tx,
+    [TX_TABLE_RAW_CANCEL_TX_ID]: cancelTx,
   }
 }
 
-export const getTxTableData = (transactions: List<Transaction | IncomingTransaction>): List<TransactionRow> => transactions.map((tx) => {
-  if (tx.type === INCOMING_TX_TYPE) {
-    return getIncomingTxTableData(tx)
-  }
+export const getTxTableData = (
+  transactions: List<Transaction | IncomingTransaction>,
+  cancelTxs: List<Transaction>,
+): List<TransactionRow> => {
+  const cancelTxsByNonce = cancelTxs.reduce((acc, tx) => acc.set(tx.nonce, tx), Map())
 
-  return getTransactionTableData(tx)
-})
+  return transactions.map((tx) => {
+    if (tx.type === INCOMING_TX_TYPE) {
+      return getIncomingTxTableData(tx)
+    }
+
+    return getTransactionTableData(
+      tx,
+      Number.isInteger(Number.parseInt(tx.nonce, 10)) ? cancelTxsByNonce.get(tx.nonce) : undefined,
+    )
+  })
+}
 
 export const generateColumns = () => {
   const nonceColumn: Column = {

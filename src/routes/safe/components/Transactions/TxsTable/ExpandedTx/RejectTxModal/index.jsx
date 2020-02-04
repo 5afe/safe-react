@@ -30,7 +30,7 @@ type Props = {
   closeSnackbar: Function,
 }
 
-const CancelTxModal = ({
+const RejectTxModal = ({
   onClose,
   isOpen,
   classes,
@@ -78,15 +78,14 @@ const CancelTxModal = ({
 
   return (
     <Modal
-      title="Cancel Transaction"
-      description="Cancel Transaction"
+      title="Reject Transaction"
+      description="Reject Transaction"
       handleClose={onClose}
       open={isOpen}
-      // paperClassName={cn(smallerModalSize && classes.smallerModalWindow)}
     >
       <Row align="center" grow className={classes.heading}>
         <Paragraph weight="bolder" className={classes.headingText} noMargin>
-          Cancel transaction
+          Reject transaction
         </Paragraph>
         <IconButton onClick={onClose} disableRipple>
           <Close className={classes.closeIcon} />
@@ -96,8 +95,7 @@ const CancelTxModal = ({
       <Block className={classes.container}>
         <Row>
           <Paragraph>
-            This action will cancel this transaction. A separate transaction will be performed to submit the
-            cancellation.
+            This action will cancel this transaction. A separate transaction will be performed to submit the rejection.
           </Paragraph>
           <Paragraph size="sm" color="medium">
             Transaction nonce:
@@ -123,11 +121,11 @@ const CancelTxModal = ({
           color="secondary"
           onClick={sendReplacementTransaction}
         >
-          Cancel Transaction
+          Reject Transaction
         </Button>
       </Row>
     </Modal>
   )
 }
 
-export default withStyles(styles)(withSnackbar(CancelTxModal))
+export default withStyles(styles)(withSnackbar(RejectTxModal))

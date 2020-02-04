@@ -11,8 +11,9 @@ export const styles = () => ({
     padding: `${lg} ${md}`,
   },
   txData: {
-    display: 'flex',
     alignItems: 'center',
+    display: 'flex',
+    lineHeight: '1.6',
   },
   awaiting_your_confirmation: {
     color: disabled,
