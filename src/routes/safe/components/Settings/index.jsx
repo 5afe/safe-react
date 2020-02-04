@@ -144,7 +144,7 @@ class Settings extends React.Component<Props, State> {
                 onClick={this.handleChange(3)}
               >
                 <RequiredConfirmationsIcon />
-                Required confirmations
+                Policies
               </Row>
               <Hairline />
             </Block>
