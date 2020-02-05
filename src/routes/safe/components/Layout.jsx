@@ -15,6 +15,7 @@ import Identicon from '~/components/Identicon'
 import Heading from '~/components/layout/Heading'
 import Row from '~/components/layout/Row'
 import Button from '~/components/layout/Button'
+import Loader from '~/components/Loader'
 import EtherscanBtn from '~/components/EtherscanBtn'
 import CopyBtn from '~/components/CopyBtn'
 import Paragraph from '~/components/layout/Paragraph'
@@ -23,7 +24,7 @@ import SendModal from './Balances/SendModal'
 import Receive from './Balances/Receive'
 import NoSafe from '~/components/NoSafe'
 import { type SelectorProps } from '~/routes/safe/container/selector'
-import { getEtherScanLink } from '~/logic/wallets/getWeb3'
+import { getEtherScanLink, getWeb3 } from '~/logic/wallets/getWeb3'
 import { border } from '~/theme/variables'
 import { type Actions } from '../container/actions'
 import Balances from './Balances'
@@ -104,6 +105,18 @@ const Layout = (props: Props) => {
 
   const { address, ethBalance, name } = safe
   const etherScanLink = getEtherScanLink('address', address)
+  const web3Instance = getWeb3()
+
+  const RenderAppTab = () => {
+    // const Apps = React.useMemo(() => React.lazy(() => import('./Apps')), [])
+    const Apps = React.lazy(() => import('./Apps'))
+
+    return (
+      <React.Suspense fallback={<Loader />}>
+        <Apps safeAddress={address} web3={web3Instance} network={network} createTransaction={createTransaction} />
+      </React.Suspense>
+    )
+  }
 
   const labelAddressBook = (
     <>
@@ -176,12 +189,7 @@ const Layout = (props: Props) => {
         </Block>
       </Block>
       <Row>
-        <Tabs
-          value={location.pathname}
-          onChange={handleCallToRouter}
-          indicatorColor="secondary"
-          textColor="secondary"
-        >
+        <Tabs value={location.pathname} onChange={handleCallToRouter} indicatorColor="secondary" textColor="secondary">
           <Tab
             classes={{
               selected: classes.tabWrapperSelected,
@@ -200,6 +208,9 @@ const Layout = (props: Props) => {
             value={`${match.url}/transactions`}
             data-testid={TRANSACTIONS_TAB_BTN_TEST_ID}
           />
+          {process.env.REACT_APP_ENV !== 'production' && (
+            <Tab label="Apps" value={`${match.url}/apps`} data-testid={TRANSACTIONS_TAB_BTN_TEST_ID} />
+          )}
           <Tab
             classes={{
               selected: classes.tabWrapperSelected,
@@ -262,6 +273,9 @@ const Layout = (props: Props) => {
             />
           )}
         />
+        {process.env.REACT_APP_ENV !== 'production' && (
+          <Route exact path={`${match.path}/apps`} component={RenderAppTab} />
+        )}
         <Route
           exact
           path={`${match.path}/settings`}
@@ -283,13 +297,7 @@ const Layout = (props: Props) => {
             />
           )}
         />
-        <Route
-          exact
-          path={`${match.path}/address-book`}
-          render={() => (
-            <AddressBookTable />
-          )}
-        />
+        <Route exact path={`${match.path}/address-book`} render={() => <AddressBookTable />} />
         <Redirect to={`${match.path}/balances`} />
       </Switch>
       <SendModal

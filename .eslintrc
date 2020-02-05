@@ -7,6 +7,7 @@
     "react/forbid-prop-types": [1, { "forbid": ["object", "any"] }],
     "class-methods-use-this": 0,
     "semi": ["error", "never"],
+    "consistent-return": "off",
     "max-len": [
       "error",
       120,
