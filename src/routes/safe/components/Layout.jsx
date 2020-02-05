@@ -137,7 +137,7 @@ const Layout = (props: Props) => {
           <Identicon address={address} diameter={50} />
           <Block className={classes.name}>
             <Row>
-              <Heading tag="h2" color="primary" testId={SAFE_VIEW_NAME_HEADING_TEST_ID}>
+              <Heading className={classes.nameText} tag="h2" color="primary" testId={SAFE_VIEW_NAME_HEADING_TEST_ID}>
                 {name}
               </Heading>
               {!granted && <Block className={classes.readonly}>Read Only</Block>}

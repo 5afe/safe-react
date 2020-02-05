@@ -117,4 +117,8 @@ export const styles = () => ({
       fill: secondary,
     },
   },
+  nameText: {
+    overflowWrap: 'break-word',
+    wordBreak: 'break-word',
+  },
 })
