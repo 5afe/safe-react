@@ -120,5 +120,6 @@ export const styles = () => ({
   nameText: {
     overflowWrap: 'break-word',
     wordBreak: 'break-word',
+    whiteSpace: 'normal',
   },
 })
