@@ -69,10 +69,7 @@ export type Notifications = {
   // AddressBook
   ADDRESS_BOOK_NEW_ENTRY_SUCCESS: Notification,
   ADDRESS_BOOK_EDIT_ENTRY_SUCCESS: Notification,
-  ADDRESS_BOOK_DELETE_ENTRY_SUCCESS: Notification,
-
-  // Safe Version
-  SAFE_NEW_VERSION_AVAILABLE: Notification,
+  ADDRESS_BOOK_DELETE_ENTRY_SUCCESS: Notification
 }
 
 export const NOTIFICATIONS: Notifications = {
@@ -229,11 +226,5 @@ export const NOTIFICATIONS: Notifications = {
   ADDRESS_BOOK_DELETE_ENTRY_SUCCESS: {
     message: 'Entry deleted successfully',
     options: { variant: SUCCESS, persist: false, preventDuplicate: false },
-  },
-
-  // Safe Version
-  SAFE_NEW_VERSION_AVAILABLE: {
-    message: 'There is a new version available for this Safe',
-    options: { variant: WARNING, persist: false, preventDuplicate: true },
   },
 }

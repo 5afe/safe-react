@@ -2,6 +2,8 @@
 import React, { useEffect } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import { withSnackbar } from 'notistack'
+import semverLessThan from 'semver/functions/lt'
+import semverValid from 'semver/functions/valid'
 import Block from '~/components/layout/Block'
 import Col from '~/components/layout/Col'
 import Field from '~/components/forms/Field'
@@ -15,7 +17,7 @@ import Button from '~/components/layout/Button'
 import { getNotificationsFromTxType, showSnackbar } from '~/logic/notifications'
 import { TX_NOTIFICATION_TYPES } from '~/logic/safe/transactions'
 import { styles } from './style'
-import { getSafeVersion } from '~/logic/safe/utils/safeVersion'
+import { getSafeMasterContract } from '~/logic/contracts/safeContracts'
 
 export const SAFE_NAME_INPUT_TEST_ID = 'safe-name-input'
 export const SAFE_NAME_SUBMIT_BTN_TEST_ID = 'change-safe-name-btn'
@@ -46,11 +48,18 @@ const SafeDetails = (props: Props) => {
 
   useEffect(() => {
     const getVersion = async () => {
+      let current
+      let latest
       try {
-        const { current, latest, needUpdate } = await getSafeVersion()
+        const safeMaster = await getSafeMasterContract()
+        const safeMasterVersion = await safeMaster.VERSION()
+        current = semverValid(safeMasterVersion)
+        latest = semverValid(process.env.REACT_APP_LATEST_SAFE_VERSION)
+        const needUpdate = semverLessThan(current, latest)
+
         setSafeVersions({ current, latest, needUpdate })
       } catch (err) {
-        setSafeVersions({ current: 'Version not defined' })
+        setSafeVersions({ current: current || 'Version not defined' })
         console.error(err)
       }
     }
