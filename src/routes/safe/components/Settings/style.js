@@ -104,8 +104,8 @@ export const styles = () => ({
     },
   },
   container: {
-    height: '100%',
     flexGrow: '1',
+    height: '100%',
     position: 'relative',
   },
   message: {

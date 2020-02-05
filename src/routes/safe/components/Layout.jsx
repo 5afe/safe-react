@@ -175,46 +175,44 @@ const Layout = (props: Props) => {
           </Button>
         </Block>
       </Block>
-      <Row>
-        <Tabs value={location.pathname} onChange={handleCallToRouter} indicatorColor="secondary" textColor="secondary">
-          <Tab
-            classes={{
-              selected: classes.tabWrapperSelected,
-              wrapper: classes.tabWrapper,
-            }}
-            label={labelBalances}
-            value={`${match.url}/balances`}
-            data-testid={BALANCES_TAB_BTN_TEST_ID}
-          />
-          <Tab
-            classes={{
-              selected: classes.tabWrapperSelected,
-              wrapper: classes.tabWrapper,
-            }}
-            label={labelTransactions}
-            value={`${match.url}/transactions`}
-            data-testid={TRANSACTIONS_TAB_BTN_TEST_ID}
-          />
-          <Tab
-            classes={{
-              selected: classes.tabWrapperSelected,
-              wrapper: classes.tabWrapper,
-            }}
-            label={labelAddressBook}
-            value={`${match.url}/address-book`}
-            data-testid={ADDRESS_BOOK_TAB_BTN_TEST_ID}
-          />
-          <Tab
-            classes={{
-              selected: classes.tabWrapperSelected,
-              wrapper: classes.tabWrapper,
-            }}
-            label={labelSettings}
-            value={`${match.url}/settings`}
-            data-testid={SETTINGS_TAB_BTN_TEST_ID}
-          />
-        </Tabs>
-      </Row>
+      <Tabs variant="scrollable" value={location.pathname} onChange={handleCallToRouter} indicatorColor="secondary" textColor="secondary">
+        <Tab
+          classes={{
+            selected: classes.tabWrapperSelected,
+            wrapper: classes.tabWrapper,
+          }}
+          data-testid={BALANCES_TAB_BTN_TEST_ID}
+          label={labelBalances}
+          value={`${match.url}/balances`}
+        />
+        <Tab
+          classes={{
+            selected: classes.tabWrapperSelected,
+            wrapper: classes.tabWrapper,
+          }}
+          data-testid={TRANSACTIONS_TAB_BTN_TEST_ID}
+          label={labelTransactions}
+          value={`${match.url}/transactions`}
+        />
+        <Tab
+          classes={{
+            selected: classes.tabWrapperSelected,
+            wrapper: classes.tabWrapper,
+          }}
+          data-testid={ADDRESS_BOOK_TAB_BTN_TEST_ID}
+          label={labelAddressBook}
+          value={`${match.url}/address-book`}
+        />
+        <Tab
+          classes={{
+            selected: classes.tabWrapperSelected,
+            wrapper: classes.tabWrapper,
+          }}
+          data-testid={SETTINGS_TAB_BTN_TEST_ID}
+          label={labelSettings}
+          value={`${match.url}/settings`}
+        />
+      </Tabs>
       <Hairline color={border} style={{ marginTop: '-2px' }} />
       <Switch>
         <Route
