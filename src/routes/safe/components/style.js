@@ -37,7 +37,10 @@ export const styles = () => ({
     justifyContent: 'left',
   },
   receiveModal: {
-    height: '544px',
+    height: 'auto',
+    maxWidth: 'calc(100% - 30px)',
+    minHeight: '544px',
+    overflow: 'hidden',
   },
   open: {
     paddingLeft: sm,

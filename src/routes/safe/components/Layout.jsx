@@ -291,11 +291,11 @@ const Layout = (props: Props) => {
         activeScreenType="chooseTxType"
       />
       <Modal
-        title="Receive Tokens"
         description="Receive Tokens Form"
         handleClose={onHide('Receive')}
         open={showReceive}
         paperClassName={classes.receiveModal}
+        title="Receive Tokens"
       >
         <Receive safeName={name} safeAddress={address} onClose={onHide('Receive')} />
       </Modal>
