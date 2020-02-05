@@ -79,7 +79,9 @@ const createTransaction = ({
   const safeInstance = await getGnosisSafeInstanceAt(safeAddress)
   const threshold = await safeInstance.getThreshold()
   const lastTx = await getLastTx(safeAddress)
-  const nonce = txNonce || lastTx === null ? await getSafeNonce(safeAddress) : lastTx.nonce + 1
+  const nonce = !Number.isInteger(Number.parseInt(txNonce, 10))
+    ? await getSafeNonce(safeAddress)
+    : lastTx.nonce + 1
   const isExecution = (lastTx && lastTx.isExecuted && threshold.toNumber() === 1) || shouldExecute
 
   // https://gnosis-safe.readthedocs.io/en/latest/contracts/signatures.html#pre-validated-signatures
