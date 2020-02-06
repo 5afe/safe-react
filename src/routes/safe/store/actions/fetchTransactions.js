@@ -207,7 +207,7 @@ export const buildIncomingTransactionFrom = async (tx: IncomingTxServiceModel) =
   const fee = await web3.eth.getTransaction(tx.transactionHash)
     .then(({ gas, gasPrice }) => bn(gas).div(gasPrice).toFixed())
 
-  if (tx.tokenAddress && tx.tokenAddress !== '0xE0B7927c4aF23765Cb51314A0E0521A9645F0E2A') {
+  if (tx.tokenAddress) {
     try {
       const tokenContract = await getHumanFriendlyToken()
       const tokenInstance = await tokenContract.at(tx.tokenAddress)
