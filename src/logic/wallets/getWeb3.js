@@ -25,6 +25,7 @@ export const WALLET_PROVIDER = {
   WALLETCONNECT: 'WALLETCONNECT',
   OPERA: 'OPERA',
   DAPPER: 'DAPPER',
+  AUTHEREUM: 'AUTHEREUM',
 }
 
 export const INJECTED_PROVIDERS = [
@@ -117,6 +118,10 @@ const getProviderName: Function = (web3Provider): string => {
 
   if (web3Provider.currentProvider.isWalletConnect) {
     name = WALLET_PROVIDER.WALLETCONNECT
+  }
+
+  if (web3Provider.currentProvider.isAuthereum) {
+    name = WALLET_PROVIDER.AUTHEREUM
   }
 
   return name

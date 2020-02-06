@@ -10,8 +10,10 @@ import GnoButtonLink from '~/components/layout/ButtonLink'
 
 const useStyles = makeStyles({
   footer: {
+    boxSizing: 'border-box',
     display: 'flex',
     flexDirection: 'row',
+    flexShrink: '1',
     flexWrap: 'wrap',
     justifyContent: 'center',
     margin: '0 auto',
@@ -54,11 +56,10 @@ const Footer = () => {
   return (
     <footer className={classes.footer}>
       <span className={classes.item}>
-        ©
-        {' '}
+©
         {date.getFullYear()}
         {' '}
-        Gnosis
+Gnosis
       </span>
       <span className={classes.sep}>|</span>
       <Link className={cn(classes.item, classes.link)} to="https://safe.gnosis.io/terms" target="_blank">
@@ -85,7 +86,11 @@ const Footer = () => {
         Preferences
       </GnoButtonLink>
       <span className={classes.sep}>|</span>
-      <Link className={cn(classes.item, classes.link)} to="https://github.com/gnosis/safe-react/releases" target="_blank">
+      <Link
+        className={cn(classes.item, classes.link)}
+        to="https://github.com/gnosis/safe-react/releases"
+        target="_blank"
+      >
         {appVersion}
       </Link>
     </footer>

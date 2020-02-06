@@ -31,6 +31,10 @@ import Transactions from './Transactions'
 import Settings from './Settings'
 import { styles } from './style'
 import AddressBookTable from '~/routes/safe/components/AddressBook'
+import { SettingsIcon } from './assets/SettingsIcon'
+import { AddressBookIcon } from './assets/AddressBookIcon'
+import { TransactionsIcon } from './assets/TransactionsIcon'
+import { BalancesIcon } from './assets/BalancesIcon'
 
 export const BALANCES_TAB_BTN_TEST_ID = 'balances-tab-btn'
 export const SETTINGS_TAB_BTN_TEST_ID = 'settings-tab-btn'
@@ -71,6 +75,7 @@ const Layout = (props: Props) => {
     fetchTokens,
     updateSafe,
     transactions,
+    cancellationTransactions,
     userAddress,
     sendFunds,
     showReceive,
@@ -100,64 +105,114 @@ const Layout = (props: Props) => {
   const { address, ethBalance, name } = safe
   const etherScanLink = getEtherScanLink('address', address)
 
+  const labelAddressBook = (
+    <>
+      <AddressBookIcon />
+      Address Book
+    </>
+  )
+  const labelSettings = (
+    <>
+      <SettingsIcon />
+      Settings
+    </>
+  )
+  const labelBalances = (
+    <>
+      <BalancesIcon />
+      Balances
+    </>
+  )
+  const labelTransactions = (
+    <>
+      <TransactionsIcon />
+      Transactions
+    </>
+  )
+
   return (
     <>
       <Block className={classes.container} margin="xl">
-        <Identicon address={address} diameter={50} />
-        <Block className={classes.name}>
-          <Row>
-            <Heading tag="h2" color="primary" testId={SAFE_VIEW_NAME_HEADING_TEST_ID}>
-              {name}
-            </Heading>
-            {!granted && <Block className={classes.readonly}>Read Only</Block>}
-          </Row>
-          <Block justify="center" className={classes.user}>
-            <Paragraph size="md" className={classes.address} color="disabled" noMargin>
-              {address}
-            </Paragraph>
-            <CopyBtn content={address} />
-            <EtherscanBtn type="address" value={address} />
+        <Row className={classes.userInfo}>
+          <Identicon address={address} diameter={50} />
+          <Block className={classes.name}>
+            <Row>
+              <Heading className={classes.nameText} tag="h2" color="primary" testId={SAFE_VIEW_NAME_HEADING_TEST_ID}>
+                {name}
+              </Heading>
+              {!granted && <Block className={classes.readonly}>Read Only</Block>}
+            </Row>
+            <Block justify="center" className={classes.user}>
+              <Paragraph size="md" className={classes.address} color="disabled" noMargin>
+                {address}
+              </Paragraph>
+              <CopyBtn content={address} />
+              <EtherscanBtn type="address" value={address} />
+            </Block>
           </Block>
-        </Block>
+        </Row>
         <Block className={classes.balance}>
-          <Row align="end" className={classes.actions}>
-            <Button
-              variant="contained"
-              size="small"
-              color="primary"
-              className={classes.send}
-              onClick={() => showSendFunds('Ether')}
-              disabled={!granted}
-            >
-              <CallMade alt="Send Transaction" className={classNames(classes.leftIcon, classes.iconSmall)} />
-              Send
-            </Button>
-            <Button
-              variant="contained"
-              size="small"
-              color="primary"
-              className={classes.receive}
-              onClick={onShow('Receive')}
-            >
-              <CallReceived alt="Receive Transaction" className={classNames(classes.leftIcon, classes.iconSmall)} />
-              Receive
-            </Button>
-          </Row>
+          <Button
+            className={classes.send}
+            color="primary"
+            disabled={!granted}
+            onClick={() => showSendFunds('Ether')}
+            size="small"
+            variant="contained"
+          >
+            <CallMade alt="Send Transaction" className={classNames(classes.leftIcon, classes.iconSmall)} />
+            Send
+          </Button>
+          <Button
+            className={classes.receive}
+            color="primary"
+            onClick={onShow('Receive')}
+            size="small"
+            variant="contained"
+          >
+            <CallReceived alt="Receive Transaction" className={classNames(classes.leftIcon, classes.iconSmall)} />
+            Receive
+          </Button>
         </Block>
       </Block>
-      <Row>
-        <Tabs
-          value={location.pathname}
-          onChange={handleCallToRouter}
-          indicatorColor="secondary"
-          textColor="secondary"
-        >
-          <Tab label="Balances" value={`${match.url}/balances`} data-testid={BALANCES_TAB_BTN_TEST_ID} />
-          <Tab label="Transactions" value={`${match.url}/transactions`} data-testid={TRANSACTIONS_TAB_BTN_TEST_ID} />
-          <Tab label="Address Book" value={`${match.url}/address-book`} data-testid={ADDRESS_BOOK_TAB_BTN_TEST_ID} />
-          <Tab label="Settings" value={`${match.url}/settings`} data-testid={SETTINGS_TAB_BTN_TEST_ID} />
-        </Tabs>
-      </Row>
+      <Tabs variant="scrollable" value={location.pathname} onChange={handleCallToRouter} indicatorColor="secondary" textColor="secondary">
+        <Tab
+          classes={{
+            selected: classes.tabWrapperSelected,
+            wrapper: classes.tabWrapper,
+          }}
+          data-testid={BALANCES_TAB_BTN_TEST_ID}
+          label={labelBalances}
+          value={`${match.url}/balances`}
+        />
+        <Tab
+          classes={{
+            selected: classes.tabWrapperSelected,
+            wrapper: classes.tabWrapper,
+          }}
+          data-testid={TRANSACTIONS_TAB_BTN_TEST_ID}
+          label={labelTransactions}
+          value={`${match.url}/transactions`}
+        />
+        <Tab
+          classes={{
+            selected: classes.tabWrapperSelected,
+            wrapper: classes.tabWrapper,
+          }}
+          data-testid={ADDRESS_BOOK_TAB_BTN_TEST_ID}
+          label={labelAddressBook}
+          value={`${match.url}/address-book`}
+        />
+        <Tab
+          classes={{
+            selected: classes.tabWrapperSelected,
+            wrapper: classes.tabWrapper,
+          }}
+          data-testid={SETTINGS_TAB_BTN_TEST_ID}
+          label={labelSettings}
+          value={`${match.url}/settings`}
+        />
+      </Tabs>
       <Hairline color={border} style={{ marginTop: '-2px' }} />
       <Switch>
         <Route
@@ -190,6 +245,7 @@ const Layout = (props: Props) => {
               owners={safe.owners}
               nonce={safe.nonce}
               transactions={transactions}
+              cancellationTransactions={cancellationTransactions}
               safeAddress={address}
               userAddress={userAddress}
               currentNetwork={network}
@@ -220,13 +276,7 @@ const Layout = (props: Props) => {
             />
           )}
         />
-        <Route
-          exact
-          path={`${match.path}/address-book`}
-          render={() => (
-            <AddressBookTable />
-          )}
-        />
+        <Route exact path={`${match.path}/address-book`} render={() => <AddressBookTable />} />
         <Redirect to={`${match.path}/balances`} />
       </Switch>
       <SendModal
@@ -241,11 +291,11 @@ const Layout = (props: Props) => {
         activeScreenType="chooseTxType"
       />
       <Modal
-        title="Receive Tokens"
         description="Receive Tokens Form"
         handleClose={onHide('Receive')}
         open={showReceive}
         paperClassName={classes.receiveModal}
+        title="Receive Tokens"
       >
         <Receive safeName={name} safeAddress={address} onClose={onHide('Receive')} />
       </Modal>

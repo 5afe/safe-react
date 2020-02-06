@@ -132,7 +132,7 @@ const SafeOwners = (props: Props) => {
 
           return (
             <Row key={`owner${index}`} className={classes.owner}>
-              <Col xs={4}>
+              <Col className={classes.ownerName} xs={4}>
                 <Field
                   className={classes.name}
                   name={getOwnerNameBy(index)}
@@ -143,7 +143,7 @@ const SafeOwners = (props: Props) => {
                   text="Owner Name"
                 />
               </Col>
-              <Col xs={6}>
+              <Col className={classes.ownerAddress} xs={6}>
                 <AddressInput
                   name={addressName}
                   component={TextField}
@@ -193,8 +193,8 @@ const SafeOwners = (props: Props) => {
         <Paragraph size="md" color="primary">
           Any transaction requires the confirmation of:
         </Paragraph>
-        <Row margin="xl" align="center">
-          <Col xs={2}>
+        <Row className={classes.ownersAmount} margin="xl" align="center">
+          <Col className={classes.ownersAmountItem} xs={2}>
             <Field
               name={FIELD_CONFIRMATIONS}
               component={SelectField}
@@ -208,7 +208,7 @@ const SafeOwners = (props: Props) => {
               ))}
             </Field>
           </Col>
-          <Col xs={10}>
+          <Col className={classes.ownersAmountItem} xs={10}>
             <Paragraph size="lg" color="primary" noMargin className={classes.owners}>
               out of
               {' '}

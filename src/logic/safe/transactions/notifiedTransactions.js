@@ -9,7 +9,6 @@ export type NotifiedTransaction = {
   SAFE_NAME_CHANGE_TX: string,
   OWNER_NAME_CHANGE_TX: string,
   ADDRESSBOOK_NEW_ENTRY: string,
-  ADDRESSBOOK_EDIT_ENTRY: string,
   ADDRESSBOOK_DELETE_ENTRY: string,
 }
 

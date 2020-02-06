@@ -8,7 +8,7 @@ import ExpandLessIcon from '@material-ui/icons/ExpandLess'
 import Paragraph from '~/components/layout/Paragraph'
 import Col from '~/components/layout/Col'
 import {
-  xs, sm, md, border,
+  xs, sm, md, border, screenSm,
 } from '~/theme/variables'
 import { safesCountSelector } from '~/routes/safe/store/selectors'
 import { SidebarContext } from '~/components/Sidebar'
@@ -18,14 +18,18 @@ export const TOGGLE_SIDEBAR_BTN_TESTID = 'TOGGLE_SIDEBAR_BTN'
 const useStyles = makeStyles({
   container: {
     flexGrow: 0,
-    padding: `0 ${md}`,
+    padding: `0 ${sm}`,
+    [`@media (min-width: ${screenSm}px)`]: {
+      paddingLeft: md,
+      paddingRight: md,
+    },
   },
   counter: {
     background: border,
-    padding: xs,
     borderRadius: '3px',
-    marginLeft: sm,
     lineHeight: 'normal',
+    marginLeft: sm,
+    padding: xs,
   },
   icon: {
     marginLeft: sm,
@@ -60,7 +64,7 @@ const SafeListHeader = ({ safesCount }: Props) => {
   )
 }
 
-export default connect<Object, Object, ?Function, ?Object>(
+export default connect<Object, Object,?Function,?Object>(
   // $FlowFixMe
   (state) => ({ safesCount: safesCountSelector(state) }),
   null,
