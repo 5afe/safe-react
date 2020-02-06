@@ -95,7 +95,7 @@ const ReviewCustomTx = ({
     <>
       <Row align="center" grow className={classes.heading}>
         <Paragraph weight="bolder" className={classes.headingText} noMargin>
-          Send Funds
+          Send Custom Tx
         </Paragraph>
         <Paragraph className={classes.annotation}>2 of 2</Paragraph>
         <IconButton onClick={onClose} disableRipple>

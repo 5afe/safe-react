@@ -1,6 +1,6 @@
 // @flow
 import {
-  sm, md, lg, border, secondary, bolderFont, background, largeFontSize,
+  xs, sm, md, border, secondary, bolderFont, background, largeFontSize, fontColor,
 } from '~/theme/variables'
 
 export const styles = () => ({
@@ -20,18 +20,29 @@ export const styles = () => ({
     height: '100%',
   },
   menuOption: {
-    fontSize: largeFontSize,
-    padding: `${md} 0 ${md} ${lg}`,
     alignItems: 'center',
     cursor: 'pointer',
+    fontSize: largeFontSize,
+    lineHeight: '1.2',
+    padding: `${md} 0 ${md} ${md}`,
     '&:first-child': {
       borderTopLeftRadius: sm,
+    },
+    '& svg': {
+      display: 'block',
+      marginRight: sm,
+    },
+    '& .fill': {
+      fill: fontColor,
     },
   },
   active: {
     backgroundColor: background,
     color: secondary,
     fontWeight: bolderFont,
+    '& .fill': {
+      fill: secondary,
+    },
   },
   container: {
     height: '100%',
@@ -59,5 +70,14 @@ export const styles = () => ({
     marginLeft: sm,
     height: md,
     cursor: 'pointer',
+  },
+  counter: {
+    background: border,
+    borderRadius: '3px',
+    color: fontColor,
+    lineHeight: 'normal',
+    margin: `-2px 0 -2px ${sm}`,
+    padding: xs,
+    fontSize: '11px',
   },
 })

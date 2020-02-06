@@ -1,6 +1,6 @@
 {
   "name": "safe-react",
-  "version": "1.6.3",
+  "version": "1.7.0",
   "description": "Allowing crypto users manage funds in a safer way",
   "homepage": "https://github.com/gnosis/safe-react#readme",
   "bugs": {
@@ -23,7 +23,11 @@
     "start": "node scripts/start.js",
     "start-mainnet": "REACT_APP_NETWORK=mainnet yarn start",
     "test": "NODE_ENV=test && node scripts/test.js --env=jsdom",
-    "format": "prettier-eslint \"src/**/*.js\" --write"
+    "format": "prettier-eslint $PWD'/src/**/*.{js,jsx}' --write",
+    "format:staged": "lint-staged"
+  },
+  "lint-staged": {
+    "./src/**/*.{js,jsx}": "prettier-eslint --write"
   },
   "pre-commit": [
     "precommit"
@@ -33,6 +37,7 @@
     "@gnosis.pm/util-contracts": "2.0.4",
     "@material-ui/core": "4.8.0",
     "@material-ui/icons": "4.5.1",
+    "@material-ui/lab": "^4.0.0-alpha.39",
     "@portis/web3": "^2.0.0-beta.45",
     "@testing-library/jest-dom": "4.2.4",
     "@toruslabs/torus-embed": "0.2.10",
@@ -52,6 +57,7 @@
     "immortal-db": "^1.0.2",
     "immutable": "^4.0.0-rc.9",
     "js-cookie": "^2.2.1",
+    "lint-staged": "^10.0.7",
     "material-ui-search-bar": "^1.0.0-beta.13",
     "notistack": "https://github.com/gnosis/notistack.git#v0.9.4",
     "optimize-css-assets-webpack-plugin": "5.0.3",

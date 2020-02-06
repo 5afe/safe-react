@@ -10,11 +10,11 @@ import { type Notification, NOTIFICATIONS } from './notificationTypes'
 export type NotificationsQueue = {
   beforeExecution: Notification | null,
   pendingExecution: Notification | null,
-  waitingConfirmation: Notification | null,
+  waitingConfirmation?: Notification | null,
   afterExecution: {
     noMoreConfirmationsNeeded: Notification | null,
     moreConfirmationsNeeded: Notification | null,
-  },
+  } | null,
   afterExecutionError: Notification | null,
   afterRejection: Notification | null,
 }
@@ -56,7 +56,7 @@ const cancellationTxNotificationsQueue: NotificationsQueue = {
   afterRejection: NOTIFICATIONS.TX_REJECTED_MSG,
   afterExecution: {
     noMoreConfirmationsNeeded: NOTIFICATIONS.TX_EXECUTED_MSG,
-    moreConfirmationsNeeded: NOTIFICATIONS.TX_EXECUTED_MORE_CONFIRMATIONS_MSG,
+    moreConfirmationsNeeded: NOTIFICATIONS.TX_CANCELLATION_EXECUTED_MSG,
   },
   afterExecutionError: NOTIFICATIONS.TX_FAILED_MSG,
 }
@@ -105,6 +105,42 @@ const defaultNotificationsQueue: NotificationsQueue = {
   afterExecutionError: NOTIFICATIONS.TX_FAILED_MSG,
 }
 
+const addressBookNewEntry: NotificationsQueue = {
+  beforeExecution: null,
+  pendingExecution: null,
+  afterRejection: null,
+  waitingConfirmation: null,
+  afterExecution: {
+    noMoreConfirmationsNeeded: NOTIFICATIONS.ADDRESS_BOOK_NEW_ENTRY_SUCCESS,
+    moreConfirmationsNeeded: null,
+  },
+  afterExecutionError: null,
+}
+
+const addressBookEditEntry: NotificationsQueue = {
+  beforeExecution: null,
+  pendingExecution: null,
+  afterRejection: null,
+  waitingConfirmation: null,
+  afterExecution: {
+    noMoreConfirmationsNeeded: NOTIFICATIONS.ADDRESS_BOOK_EDIT_ENTRY_SUCCESS,
+    moreConfirmationsNeeded: null,
+  },
+  afterExecutionError: null,
+}
+
+const addressBookDeleteEntry: NotificationsQueue = {
+  beforeExecution: null,
+  pendingExecution: null,
+  afterRejection: null,
+  waitingConfirmation: null,
+  afterExecution: {
+    noMoreConfirmationsNeeded: NOTIFICATIONS.ADDRESS_BOOK_DELETE_ENTRY_SUCCESS,
+    moreConfirmationsNeeded: null,
+  },
+  afterExecutionError: null,
+}
+
 export const getNotificationsFromTxType = (txType: string) => {
   let notificationsQueue: NotificationsQueue
 
@@ -137,6 +173,18 @@ export const getNotificationsFromTxType = (txType: string) => {
       notificationsQueue = waitingTransactionNotificationsQueue
       break
     }
+    case TX_NOTIFICATION_TYPES.ADDRESSBOOK_NEW_ENTRY: {
+      notificationsQueue = addressBookNewEntry
+      break
+    }
+    case TX_NOTIFICATION_TYPES.ADDRESSBOOK_EDIT_ENTRY: {
+      notificationsQueue = addressBookEditEntry
+      break
+    }
+    case TX_NOTIFICATION_TYPES.ADDRESSBOOK_DELETE_ENTRY: {
+      notificationsQueue = addressBookDeleteEntry
+      break
+    }
     default: {
       notificationsQueue = defaultNotificationsQueue
       break
@@ -152,19 +200,26 @@ export const enhanceSnackbarForAction = (notification: Notification, key?: strin
   options: {
     ...notification.options,
     onClick,
-    action: (key: number) => (
-      <IconButton onClick={() => store.dispatch(closeSnackbarAction({ key }))}>
+    action: (actionKey: number) => (
+      <IconButton onClick={() => store.dispatch(closeSnackbarAction({ key: actionKey }))}>
         <IconClose />
       </IconButton>
     ),
   },
 })
 
-export const showSnackbar = (notification: Notification, enqueueSnackbar: Function, closeSnackbar: Function) => enqueueSnackbar(notification.message, {
-  ...notification.options,
-  action: (key) => (
-    <IconButton onClick={() => closeSnackbar(key)}>
-      <IconClose />
-    </IconButton>
-  ),
-})
+export const showSnackbar = (
+  notification: Notification,
+  enqueueSnackbar: Function,
+  closeSnackbar: Function,
+) => enqueueSnackbar(
+  notification.message,
+  {
+    ...notification.options,
+    action: (key) => (
+      <IconButton onClick={() => closeSnackbar(key)}>
+        <IconClose />
+      </IconButton>
+    ),
+  },
+)

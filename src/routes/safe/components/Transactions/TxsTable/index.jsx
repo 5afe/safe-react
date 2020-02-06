@@ -21,10 +21,12 @@ import {
   generateColumns,
   TX_TABLE_ID,
   TX_TABLE_RAW_TX_ID,
+  TX_TABLE_RAW_CANCEL_TX_ID,
   type TransactionRow,
 } from './columns'
 import { styles } from './style'
 import Status from './Status'
+import type { IncomingTransaction } from '~/routes/safe/store/models/incomingTransaction'
 
 export const TRANSACTION_ROW_TEST_ID = 'transaction-row'
 
@@ -35,7 +37,8 @@ const expandCellStyle = {
 
 type Props = {
   classes: Object,
-  transactions: List<Transaction>,
+  transactions: List<Transaction | IncomingTransaction>,
+  cancellationTransactions: List<Transaction>,
   threshold: number,
   owners: List<Owner>,
   userAddress: string,
@@ -49,6 +52,7 @@ type Props = {
 const TxsTable = ({
   classes,
   transactions,
+  cancellationTransactions,
   threshold,
   owners,
   granted,
@@ -66,7 +70,7 @@ const TxsTable = ({
 
   const columns = generateColumns()
   const autoColumns = columns.filter((c) => !c.custom)
-  const filteredData = getTxTableData(transactions)
+  const filteredData = getTxTableData(transactions, cancellationTransactions)
     .sort(({ dateOrder: a }, { dateOrder: b }) => {
       if (!a || !b) {
         return 0
@@ -132,6 +136,7 @@ const TxsTable = ({
                     component={ExpandedTxComponent}
                     unmountOnExit
                     tx={row[TX_TABLE_RAW_TX_ID]}
+                    cancelTx={row[TX_TABLE_RAW_CANCEL_TX_ID]}
                     threshold={threshold}
                     owners={owners}
                     granted={granted}

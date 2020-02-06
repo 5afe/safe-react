@@ -30,10 +30,16 @@ import Balances from './Balances'
 import Transactions from './Transactions'
 import Settings from './Settings'
 import { styles } from './style'
+import AddressBookTable from '~/routes/safe/components/AddressBook'
+import { SettingsIcon } from './assets/SettingsIcon'
+import { AddressBookIcon } from './assets/AddressBookIcon'
+import { TransactionsIcon } from './assets/TransactionsIcon'
+import { BalancesIcon } from './assets/BalancesIcon'
 
 export const BALANCES_TAB_BTN_TEST_ID = 'balances-tab-btn'
 export const SETTINGS_TAB_BTN_TEST_ID = 'settings-tab-btn'
 export const TRANSACTIONS_TAB_BTN_TEST_ID = 'transactions-tab-btn'
+export const ADDRESS_BOOK_TAB_BTN_TEST_ID = 'address-book-tab-btn'
 export const SAFE_VIEW_NAME_HEADING_TEST_ID = 'safe-name-heading'
 
 type Props = SelectorProps &
@@ -50,6 +56,7 @@ type Props = SelectorProps &
     location: Object,
     history: Object,
     fetchCurrencyValues: Function,
+    updateAddressBookEntry: Function,
   }
 
 const Layout = (props: Props) => {
@@ -68,6 +75,7 @@ const Layout = (props: Props) => {
     fetchTokens,
     updateSafe,
     transactions,
+    cancellationTransactions,
     userAddress,
     sendFunds,
     showReceive,
@@ -80,6 +88,8 @@ const Layout = (props: Props) => {
     currencySelected,
     fetchCurrencyValues,
     currencyValues,
+    addressBook,
+    updateAddressBookEntry,
   } = props
 
   const handleCallToRouter = (_, value) => {
@@ -94,6 +104,31 @@ const Layout = (props: Props) => {
 
   const { address, ethBalance, name } = safe
   const etherScanLink = getEtherScanLink('address', address)
+
+  const labelAddressBook = (
+    <>
+      <AddressBookIcon />
+      Address Book
+    </>
+  )
+  const labelSettings = (
+    <>
+      <SettingsIcon />
+      Settings
+    </>
+  )
+  const labelBalances = (
+    <>
+      <BalancesIcon />
+      Balances
+    </>
+  )
+  const labelTransactions = (
+    <>
+      <TransactionsIcon />
+      Transactions
+    </>
+  )
 
   return (
     <>
@@ -147,9 +182,42 @@ const Layout = (props: Props) => {
           indicatorColor="secondary"
           textColor="secondary"
         >
-          <Tab label="Balances" value={`${match.url}/balances`} data-testid={BALANCES_TAB_BTN_TEST_ID} />
-          <Tab label="Transactions" value={`${match.url}/transactions`} data-testid={TRANSACTIONS_TAB_BTN_TEST_ID} />
-          <Tab label="Settings" value={`${match.url}/settings`} data-testid={SETTINGS_TAB_BTN_TEST_ID} />
+          <Tab
+            classes={{
+              selected: classes.tabWrapperSelected,
+              wrapper: classes.tabWrapper,
+            }}
+            label={labelBalances}
+            value={`${match.url}/balances`}
+            data-testid={BALANCES_TAB_BTN_TEST_ID}
+          />
+          <Tab
+            classes={{
+              selected: classes.tabWrapperSelected,
+              wrapper: classes.tabWrapper,
+            }}
+            label={labelTransactions}
+            value={`${match.url}/transactions`}
+            data-testid={TRANSACTIONS_TAB_BTN_TEST_ID}
+          />
+          <Tab
+            classes={{
+              selected: classes.tabWrapperSelected,
+              wrapper: classes.tabWrapper,
+            }}
+            label={labelAddressBook}
+            value={`${match.url}/address-book`}
+            data-testid={ADDRESS_BOOK_TAB_BTN_TEST_ID}
+          />
+          <Tab
+            classes={{
+              selected: classes.tabWrapperSelected,
+              wrapper: classes.tabWrapper,
+            }}
+            label={labelSettings}
+            value={`${match.url}/settings`}
+            data-testid={SETTINGS_TAB_BTN_TEST_ID}
+          />
         </Tabs>
       </Row>
       <Hairline color={border} style={{ marginTop: '-2px' }} />
@@ -184,6 +252,7 @@ const Layout = (props: Props) => {
               owners={safe.owners}
               nonce={safe.nonce}
               transactions={transactions}
+              cancellationTransactions={cancellationTransactions}
               safeAddress={address}
               userAddress={userAddress}
               currentNetwork={network}
@@ -209,7 +278,16 @@ const Layout = (props: Props) => {
               userAddress={userAddress}
               createTransaction={createTransaction}
               safe={safe}
+              addressBook={addressBook}
+              updateAddressBookEntry={updateAddressBookEntry}
             />
+          )}
+        />
+        <Route
+          exact
+          path={`${match.path}/address-book`}
+          render={() => (
+            <AddressBookTable />
           )}
         />
         <Redirect to={`${match.path}/balances`} />

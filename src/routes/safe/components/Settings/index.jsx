@@ -4,6 +4,10 @@ import cn from 'classnames'
 import { List } from 'immutable'
 import { connect } from 'react-redux'
 import { withStyles } from '@material-ui/core/styles'
+import Paragraph from '~/components/layout/Paragraph'
+import { OwnersIcon } from './assets/icons/OwnersIcon'
+import { RequiredConfirmationsIcon } from './assets/icons/RequiredConfirmationsIcon'
+import { SafeDetailsIcon } from './assets/icons/SafeDetailsIcon'
 import Block from '~/components/layout/Block'
 import Col from '~/components/layout/Col'
 import Row from '~/components/layout/Row'
@@ -20,6 +24,7 @@ import actions, { type Actions } from './actions'
 import { styles } from './style'
 import RemoveSafeIcon from './assets/icons/bin.svg'
 import type { Safe } from '~/routes/safe/store/models/safe'
+import type { AddressBook } from '~/logic/addressBook/model/addressBook'
 
 export const OWNERS_SETTINGS_TAB_TEST_ID = 'owner-settings-tab'
 
@@ -29,22 +34,24 @@ type State = {
 }
 
 type Props = Actions & {
+  addSafeOwner: Function,
+  addressBook: AddressBook,
   classes: Object,
-  granted: boolean,
+  createTransaction: Function,
+  editSafeOwner: Function,
   etherScanLink: string,
+  granted: boolean,
+  network: string,
+  owners: List<Owner>,
+  removeSafeOwner: Function,
+  replaceSafeOwner: Function,
+  safe: Safe,
   safeAddress: string,
   safeName: string,
-  owners: List<Owner>,
   threshold: number,
-  network: string,
-  createTransaction: Function,
-  addSafeOwner: Function,
-  removeSafeOwner: Function,
+  updateAddressBookEntry: Function,
   updateSafe: Function,
-  replaceSafeOwner: Function,
-  editSafeOwner: Function,
   userAddress: string,
-  safe: Safe
 }
 
 type Action = 'RemoveSafe'
@@ -74,22 +81,24 @@ class Settings extends React.Component<Props, State> {
   render() {
     const { showRemoveSafe, menuOptionIndex } = this.state
     const {
+      addSafeOwner,
+      addressBook,
       classes,
-      granted,
+      createTransaction,
+      editSafeOwner,
       etherScanLink,
+      granted,
+      network,
+      owners,
+      removeSafeOwner,
+      replaceSafeOwner,
+      safe,
       safeAddress,
       safeName,
       threshold,
-      owners,
-      network,
-      userAddress,
-      createTransaction,
+      updateAddressBookEntry,
       updateSafe,
-      addSafeOwner,
-      removeSafeOwner,
-      replaceSafeOwner,
-      editSafeOwner,
-      safe,
+      userAddress,
     } = this.props
 
     return (
@@ -114,6 +123,7 @@ class Settings extends React.Component<Props, State> {
                 className={cn(classes.menuOption, menuOptionIndex === 1 && classes.active)}
                 onClick={this.handleChange(1)}
               >
+                <SafeDetailsIcon />
                 Safe details
               </Row>
               <Hairline />
@@ -122,16 +132,19 @@ class Settings extends React.Component<Props, State> {
                 onClick={this.handleChange(2)}
                 testId={OWNERS_SETTINGS_TAB_TEST_ID}
               >
-                Owners (
-                {owners.size}
-)
+                <OwnersIcon />
+                Owners
+                <Paragraph size="xs" className={classes.counter}>
+                  {owners.size}
+                </Paragraph>
               </Row>
               <Hairline />
               <Row
                 className={cn(classes.menuOption, menuOptionIndex === 3 && classes.active)}
                 onClick={this.handleChange(3)}
               >
-                Required confirmations
+                <RequiredConfirmationsIcon />
+                Policies
               </Row>
               <Hairline />
             </Block>
@@ -156,6 +169,8 @@ class Settings extends React.Component<Props, State> {
                   editSafeOwner={editSafeOwner}
                   granted={granted}
                   safe={safe}
+                  addressBook={addressBook}
+                  updateAddressBookEntry={updateAddressBookEntry}
                 />
               )}
               {menuOptionIndex === 3 && (
@@ -177,7 +192,4 @@ class Settings extends React.Component<Props, State> {
 
 const settingsComponent = withStyles(styles)(Settings)
 
-export default connect(
-  undefined,
-  actions,
-)(settingsComponent)
+export default connect(undefined, actions)(settingsComponent)

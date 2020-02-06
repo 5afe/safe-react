@@ -21,7 +21,6 @@ import {
 import setDefaultSafe from '~/routes/safe/store/actions/setDefaultSafe'
 import { sortedSafeListSelector } from './selectors'
 import SafeList from './SafeList'
-import LegalLinks from './LegalLinks'
 import useSidebarStyles from './style'
 
 const { useState, useEffect, useMemo } = React
@@ -46,8 +45,8 @@ type SidebarProps = {
 
 const filterBy = (filter: string, safes: List<Safe>): List<Safe> => safes.filter(
   (safe: Safe) => !filter
-      || safe.address.toLowerCase().includes(filter.toLowerCase())
-      || safe.name.toLowerCase().includes(filter.toLowerCase()),
+    || safe.address.toLowerCase().includes(filter.toLowerCase())
+    || safe.name.toLowerCase().includes(filter.toLowerCase()),
 )
 
 const Sidebar = ({
@@ -137,7 +136,6 @@ const Sidebar = ({
             defaultSafe={defaultSafe}
             currentSafe={currentSafe}
           />
-          <LegalLinks toggleSidebar={toggleSidebar} />
         </Drawer>
       </ClickAwayListener>
       {children}
