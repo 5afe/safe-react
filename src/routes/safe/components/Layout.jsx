@@ -42,10 +42,7 @@ export const TRANSACTIONS_TAB_BTN_TEST_ID = 'transactions-tab-btn'
 export const ADDRESS_BOOK_TAB_BTN_TEST_ID = 'address-book-tab-btn'
 export const SAFE_VIEW_NAME_HEADING_TEST_ID = 'safe-name-heading'
 
-const AppsLoader = React.memo((props: any) => {
-  const Apps = React.lazy(() => import('./Apps'))
-  return <Apps {...props} />
-})
+const Apps = React.lazy(() => import('./Apps'))
 
 type Props = SelectorProps &
   Actions & {
@@ -136,6 +133,12 @@ const Layout = (props: Props) => {
     </>
   )
 
+  const renderAppsTab = () => (
+    <React.Suspense>
+      <Apps safeAddress={address} web3={web3Instance} network={network} createTransaction={createTransaction} />
+    </React.Suspense>
+  )
+
   return (
     <>
       <Block className={classes.container} margin="xl">
@@ -202,7 +205,15 @@ const Layout = (props: Props) => {
             data-testid={TRANSACTIONS_TAB_BTN_TEST_ID}
           />
           {process.env.REACT_APP_ENV !== 'production' && (
-            <Tab label="Apps" value={`${match.url}/apps`} data-testid={TRANSACTIONS_TAB_BTN_TEST_ID} />
+            <Tab
+              classes={{
+                selected: classes.tabWrapperSelected,
+                wrapper: classes.tabWrapper,
+              }}
+              label="Apps"
+              value={`${match.url}/apps`}
+              data-testid={TRANSACTIONS_TAB_BTN_TEST_ID}
+            />
           )}
           <Tab
             classes={{
@@ -267,18 +278,7 @@ const Layout = (props: Props) => {
           )}
         />
         {process.env.REACT_APP_ENV !== 'production' && (
-          <Route
-            exact
-            path={`${match.path}/apps`}
-            render={() => (
-              <AppsLoader
-                safeAddress={address}
-                web3={web3Instance}
-                network={network}
-                createTransaction={createTransaction}
-              />
-            )}
-          />
+          <Route exact path={`${match.path}/apps`} render={renderAppsTab} />
         )}
         <Route
           exact
