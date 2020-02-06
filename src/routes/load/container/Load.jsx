@@ -13,6 +13,7 @@ import Layout from '../components/Layout'
 import { getNamesFrom, getOwnersFrom } from '~/routes/open/utils/safeDataExtractor'
 import { FIELD_LOAD_NAME, FIELD_LOAD_ADDRESS } from '../components/fields'
 import { getGnosisSafeInstanceAt } from '~/logic/contracts/safeContracts'
+import { getWeb3 } from '~/logic/wallets/getWeb3'
 
 type Props = SelectorProps & Actions
 
@@ -37,8 +38,13 @@ class Load extends React.Component<Props> {
   onLoadSafeSubmit = async (values: Object) => {
     try {
       const { addSafe } = this.props
+      const web3 = getWeb3()
       const safeName = values[FIELD_LOAD_NAME]
-      const safeAddress = values[FIELD_LOAD_ADDRESS]
+      const safeAddressNotChecksum = values[FIELD_LOAD_ADDRESS]
+      let safeAddress = safeAddressNotChecksum
+      if (safeAddress) {
+        safeAddress = web3.utils.toChecksumAddress(safeAddress)
+      }
       const ownerNames = getNamesFrom(values)
 
       const gnosisSafe = await getGnosisSafeInstanceAt(safeAddress)
