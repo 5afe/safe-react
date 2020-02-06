@@ -17,8 +17,8 @@ export type TransactionStatus =
   | 'pending'
 
 export type TransactionProps = {
-  nonce: number,
-  blockNumber: number,
+  nonce: ?number,
+  blockNumber: ?number,
   value: string,
   confirmations: List<Confirmation>,
   recipient: string,
@@ -30,8 +30,8 @@ export type TransactionProps = {
   gasToken: string,
   refundReceiver: string,
   isExecuted: boolean,
-  submissionDate: string,
-  executionDate: string,
+  submissionDate: ?string,
+  executionDate: ?string,
   symbol: string,
   modifySettingsTx: boolean,
   cancellationTx: boolean,
@@ -39,7 +39,7 @@ export type TransactionProps = {
   creationTx: boolean,
   safeTxHash: string,
   executor: string,
-  executionTxHash?: string,
+  executionTxHash?: ?string,
   decimals?: number,
   cancelled?: boolean,
   status?: TransactionStatus,
