@@ -40,8 +40,7 @@ class Load extends React.Component<Props> {
       const { addSafe } = this.props
       const web3 = getWeb3()
       const safeName = values[FIELD_LOAD_NAME]
-      const safeAddressNotChecksum = values[FIELD_LOAD_ADDRESS]
-      let safeAddress = safeAddressNotChecksum
+      let safeAddress = values[FIELD_LOAD_ADDRESS]
       if (safeAddress) {
         safeAddress = web3.utils.toChecksumAddress(safeAddress)
       }
