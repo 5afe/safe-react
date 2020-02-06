@@ -25,11 +25,11 @@ const wallets = [
     walletName: 'trezor',
     appUrl: 'gnosis-safe.io',
     email: 'safe@gnosis.io',
-    rpcUrl: 'rinkeby.infura.io/v3/b42c928da8fd4c1f90374b18aa9ac6ba',
+    rpcUrl: 'https://rinkeby.infura.io/v3/b42c928da8fd4c1f90374b18aa9ac6ba',
   },
   {
     walletName: 'ledger',
-    rpcUrl: 'rinkeby.infura.io/v3/b42c928da8fd4c1f90374b18aa9ac6ba',
+    rpcUrl: 'https://rinkeby.infura.io/v3/b42c928da8fd4c1f90374b18aa9ac6ba',
   },
   { walletName: 'metamask', preferred: true },
   {
