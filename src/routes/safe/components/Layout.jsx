@@ -15,7 +15,6 @@ import Identicon from '~/components/Identicon'
 import Heading from '~/components/layout/Heading'
 import Row from '~/components/layout/Row'
 import Button from '~/components/layout/Button'
-import Loader from '~/components/Loader'
 import EtherscanBtn from '~/components/EtherscanBtn'
 import CopyBtn from '~/components/CopyBtn'
 import Paragraph from '~/components/layout/Paragraph'
@@ -42,6 +41,11 @@ export const SETTINGS_TAB_BTN_TEST_ID = 'settings-tab-btn'
 export const TRANSACTIONS_TAB_BTN_TEST_ID = 'transactions-tab-btn'
 export const ADDRESS_BOOK_TAB_BTN_TEST_ID = 'address-book-tab-btn'
 export const SAFE_VIEW_NAME_HEADING_TEST_ID = 'safe-name-heading'
+
+const AppsLoader = React.memo((props: any) => {
+  const Apps = React.lazy(() => import('./Apps'))
+  return <Apps {...props} />
+})
 
 type Props = SelectorProps &
   Actions & {
@@ -106,17 +110,6 @@ const Layout = (props: Props) => {
   const { address, ethBalance, name } = safe
   const etherScanLink = getEtherScanLink('address', address)
   const web3Instance = getWeb3()
-
-  const RenderAppTab = () => {
-    // const Apps = React.useMemo(() => React.lazy(() => import('./Apps')), [])
-    const Apps = React.lazy(() => import('./Apps'))
-
-    return (
-      <React.Suspense fallback={<Loader />}>
-        <Apps safeAddress={address} web3={web3Instance} network={network} createTransaction={createTransaction} />
-      </React.Suspense>
-    )
-  }
 
   const labelAddressBook = (
     <>
@@ -274,7 +267,18 @@ const Layout = (props: Props) => {
           )}
         />
         {process.env.REACT_APP_ENV !== 'production' && (
-          <Route exact path={`${match.path}/apps`} component={RenderAppTab} />
+          <Route
+            exact
+            path={`${match.path}/apps`}
+            render={() => (
+              <AppsLoader
+                safeAddress={address}
+                web3={web3Instance}
+                network={network}
+                createTransaction={createTransaction}
+              />
+            )}
+          />
         )}
         <Route
           exact
