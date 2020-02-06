@@ -14,7 +14,7 @@ import Col from '~/components/layout/Col'
 import EtherscanBtn from '~/components/EtherscanBtn'
 import CopyBtn from '~/components/CopyBtn'
 import {
-  sm, lg, md, secondaryText,
+  sm, lg, md, secondaryText, screenSm,
 } from '~/theme/variables'
 import { copyToClipboard } from '~/utils/clipboard'
 
@@ -53,11 +53,23 @@ const styles = () => ({
     },
   },
   addressContainer: {
+    flexDirection: 'column',
+    justifyContent: 'center',
     margin: `${lg} 0`,
+
+    [`@media (min-width: ${screenSm}px)`]: {
+      flexDirection: 'row',
+    },
   },
   address: {
     marginLeft: sm,
     marginRight: sm,
+    maxWidth: '70%',
+    overflowWrap: 'break-word',
+
+    [`@media (min-width: ${screenSm}px)`]: {
+      maxWidth: 'none',
+    },
   },
 })
 
