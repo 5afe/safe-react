@@ -27,6 +27,7 @@ import { styles } from './style'
 import DropdownCurrency from '~/routes/safe/components/DropdownCurrency'
 import type { BalanceCurrencyType } from '~/logic/currencyValues/store/model/currencyValues'
 import { BALANCE_TABLE_BALANCE_ID, BALANCE_TABLE_VALUE_ID } from '~/routes/safe/components/Balances/dataFetcher'
+import Divider from '~/components/layout/Divider'
 
 export const MANAGE_TOKENS_BUTTON_TEST_ID = 'manage-tokens-btn'
 export const BALANCE_ROW_TEST_ID = 'balance-row'
@@ -124,11 +125,35 @@ class Balances extends React.Component<Props, State> {
     const autoColumns = columns.filter((c) => !c.custom)
 
     const filteredData = getBalanceData(activeTokens, currencySelected, currencyValues)
+    const coinsSelected = true
+    const collectiblesSelected = false
 
     return (
       <>
         <Row align="center" className={classes.message}>
-          <Col xs={12} end="sm">
+          <Col xs={4} start="sm" className={classes.assetSection}>
+            <ButtonLink
+              className={coinsSelected ? classes.assetSectionButtonActive : ''}
+              color={!coinsSelected ? 'medium' : 'secondary'}
+              onClick={this.onShow('Token')}
+              size="md"
+              testId="coins-assets-btn"
+              weight={coinsSelected ? 'bold' : 'regular'}
+            >
+              Coins
+            </ButtonLink>
+            <Divider className={classes.assetSectionDivider} />
+            <ButtonLink
+              color={!collectiblesSelected ? 'medium' : 'secondary'}
+              onClick={this.onShow('Token')}
+              size="md"
+              testId="collectible-assets-btn"
+              weight={collectiblesSelected ? 'bold' : 'regular'}
+            >
+              Collectibles
+            </ButtonLink>
+          </Col>
+          <Col xs={8} end="sm">
             <DropdownCurrency />
             <ButtonLink size="lg" onClick={this.onShow('Token')} testId="manage-tokens-btn">
               Manage List

@@ -1,5 +1,5 @@
 // @flow
-import { xs, sm, md } from '~/theme/variables'
+import { xs, sm, md, secondary } from '~/theme/variables'
 
 export const styles = (theme: Object) => ({
   root: {
@@ -69,5 +69,14 @@ export const styles = (theme: Object) => ({
   currencyValueRow: {
     maxWidth: '125px',
     textAlign: 'right',
+  },
+  assetSection: {
+    height: '18px',
+  },
+  assetSectionDivider: {
+    borderRight: `2px solid ${secondary} !important`,
+  },
+  assetSectionButtonActive: {
+    textDecoration: 'none',
   },
 })

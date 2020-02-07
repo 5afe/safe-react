@@ -120,7 +120,7 @@ const Layout = (props: Props) => {
   const labelBalances = (
     <>
       <BalancesIcon />
-      Balances
+      Assets
     </>
   )
   const labelTransactions = (
