@@ -23,6 +23,7 @@ import AssetTableCell from './AssetTableCell'
 import Tokens from './Tokens'
 import SendModal from './SendModal'
 import Receive from './Receive'
+import Collectibles from './Collectibles'
 import { styles } from './style'
 import DropdownCurrency from '~/routes/safe/components/DropdownCurrency'
 import type { BalanceCurrencyType } from '~/logic/currencyValues/store/model/currencyValues'
@@ -68,8 +69,8 @@ class Balances extends React.Component<Props, State> {
         isOpen: false,
         selectedToken: undefined,
       },
-      showCoins: true,
-      showCollectibles: false,
+      showCoins: false,
+      showCollectibles: true,
       showReceive: false,
     }
     props.fetchTokens()
@@ -297,7 +298,7 @@ class Balances extends React.Component<Props, State> {
           </TableContainer>
         )}
         { showCollectibles
-        && (<div>Hi y'all, I'm the collectibles section...</div>)}
+        && (<Collectibles />)}
         <SendModal
           activeScreenType="sendFunds"
           createTransaction={createTransaction}
