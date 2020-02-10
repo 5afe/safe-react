@@ -138,7 +138,7 @@ const getNetworkIdFrom = async (web3Provider) => {
   return networkId
 }
 
-export const getProviderInfo: Function = async (providerName?:string): Promise<ProviderProps> => {
+export const getProviderInfo: Function = async (providerName?: string): Promise<ProviderProps> => {
   const name = providerName || getProviderName(web3)
   const account = await getAccountFrom(web3)
   const network = await getNetworkIdFrom(web3)

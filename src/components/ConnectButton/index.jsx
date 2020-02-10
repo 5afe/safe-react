@@ -3,7 +3,7 @@ import React from 'react'
 import Onboard from 'bnc-onboard'
 import Button from '~/components/layout/Button'
 import { fetchProvider, removeProvider } from '~/logic/wallets/store/actions'
-import { setWeb3 } from '~/logic/wallets/getWeb3'
+import { setWeb3, getWeb3 } from '~/logic/wallets/getWeb3'
 import { getNetworkId } from '~/config'
 import { store } from '~/store'
 
@@ -47,7 +47,7 @@ const wallets = [
 ]
 
 let lastUsedAddress = ''
-let providerName = undefined
+let providerName
 
 export const onboard = new Onboard({
   dappId: BLOCKNATIVE_API_KEY,
@@ -55,11 +55,11 @@ export const onboard = new Onboard({
   subscriptions: {
     wallet: (wallet) => {
       if (wallet.provider) {
-        // this function will intialize web3 and store it somewhere available throughout the dapp and can also instantiate your contracts with the web3 instance
+        // this function will intialize web3 and store it somewhere available throughout the dapp and
+        // can also instantiate your contracts with the web3 instance
         setWeb3(wallet.provider)
         providerName = wallet.name
         store.dispatch(fetchProvider(providerName))
-
       } else {
         // there is no provider, so the wallet has been reset, set web3 back to undefined and reset contracts
         store.dispatch(removeProvider())
@@ -77,7 +77,7 @@ export const onboard = new Onboard({
         providerName = undefined
         store.dispatch(removeProvider())
       }
-    }
+    },
   },
   walletSelect: {
     wallets,
@@ -85,7 +85,10 @@ export const onboard = new Onboard({
 })
 
 export const onboardUser = async () => {
-  // before calling walletSelect you want to check if web3 has been instantiated which indicates that a wallet has already been selected and web3 has been instantiated with that provider
+  // before calling walletSelect you want to check if web3 has been instantiated
+  // which indicates that a wallet has already been selected
+  // and web3 has been instantiated with that provider
+  const web3 = getWeb3()
   const walletSelected = web3 ? true : await onboard.walletSelect()
   return walletSelected && onboard.walletCheck()
 }

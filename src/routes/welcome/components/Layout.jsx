@@ -78,21 +78,21 @@ const Welcome = ({ provider, isOldMultisigMigration }: Props) => {
       {' '}
     </>
   ) : (
-      <>
+    <>
         Gnosis Safe Multisig is the most secure way to manage crypto funds
       <br />
         collectively. It is an improvement of the Gnosis MultiSig, which is used
         by more than 3000 teams
       <br />
-        {' '}
+      {' '}
         and stores over $1B USD worth of digital assets. Gnosis Safe Multisig features a modular
       <br />
-        {' '}
+      {' '}
         design, formally verified smart contracts and vastly improved user
         experience.
       {' '}
-      </>
-    )
+    </>
+  )
   return (
     <Block className={styles.safe}>
       <Heading tag="h1" weight="bold" align="center" margin="lg">
@@ -122,13 +122,13 @@ const Welcome = ({ provider, isOldMultisigMigration }: Props) => {
           </Block>
         </>
       ) : (
-          <Block margin="md" className={styles.connectWallet}>
-            <Heading tag="h3" align="center" margin="md">
+        <Block margin="md" className={styles.connectWallet}>
+          <Heading tag="h3" align="center" margin="md">
               Get Started by Connecting a Wallet
           </Heading>
-            <ConnectButton minWidth={240} minHeight={42} />
-          </Block>
-        )}
+          <ConnectButton minWidth={240} minHeight={42} />
+        </Block>
+      )}
     </Block>
   )
 }

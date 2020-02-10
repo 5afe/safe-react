@@ -17,7 +17,7 @@ export const estimateTxGasCosts = async (
 ): Promise<number> => {
   try {
     const ready = await onboardUser()
-    if(!ready) return
+    if (!ready) return 0
     const web3 = getWeb3()
     const from = await getAccountFrom(web3)
     const safeInstance = new web3.eth.Contract(GnosisSafeSol.abi, safeAddress)

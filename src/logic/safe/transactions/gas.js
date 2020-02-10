@@ -69,7 +69,7 @@ export const generateTxGasEstimateFrom = async (
   try {
     let safeInstance = safe
     const ready = await onboardUser()
-    if(!ready) return
+    if (!ready) return 0
     if (!safeInstance) {
       safeInstance = await getGnosisSafeInstanceAt(safeAddress)
     }

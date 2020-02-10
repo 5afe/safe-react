@@ -40,7 +40,7 @@ export const getApprovalTransaction = async (
 
   try {
     const ready = await onboardUser()
-    if(!ready) return
+    if (!ready) return null
     const web3 = getWeb3()
     const contract = new web3.eth.Contract(GnosisSafeSol.abi, safeInstance.address)
 
@@ -68,7 +68,7 @@ export const getExecutionTransaction = async (
 ) => {
   try {
     const ready = await onboardUser()
-    if(!ready) return
+    if (!ready) return null
     const web3 = getWeb3()
     const contract = new web3.eth.Contract(GnosisSafeSol.abi, safeInstance.address)
 

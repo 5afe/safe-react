@@ -53,7 +53,7 @@ const handleProviderNotification = (provider: ProviderProps, dispatch: Function)
     ReactGA.event({
       category: 'Wallets',
       action: 'Connect a wallet',
-      label: provider.name
+      label: provider.name,
     })
     dispatch(enqueueSnackbar(enhanceSnackbarForAction(NOTIFICATIONS.WALLET_CONNECTED_MSG)))
   } else {
@@ -61,7 +61,7 @@ const handleProviderNotification = (provider: ProviderProps, dispatch: Function)
   }
 }
 
-export default (providerName?:string) => async (dispatch: ReduxDispatch<*>) => {
+export default (providerName?: string) => async (dispatch: ReduxDispatch<*>) => {
   const providerInfo: ProviderProps = await getProviderInfo(providerName)
   await handleProviderNotification(providerInfo, dispatch)
   processProviderResponse(dispatch, providerInfo)

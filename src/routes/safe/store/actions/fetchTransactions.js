@@ -123,7 +123,7 @@ export const buildTransactionFrom = async (
       [symbol, decimals] = await Promise.all([tokenInstance.symbol(), tokenInstance.decimals()])
     } catch (err) {
       const ready = await onboardUser()
-      if(!ready) return
+      if (!ready) return null
       const alternativeTokenInstance = new web3.eth.Contract(ALTERNATIVE_TOKEN_ABI, tx.to)
       const [tokenSymbol, tokenDecimals] = await Promise.all([
         alternativeTokenInstance.methods.symbol().call(),

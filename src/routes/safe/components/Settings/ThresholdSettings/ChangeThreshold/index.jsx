@@ -4,8 +4,8 @@ import { List } from 'immutable'
 import { withStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
 import IconButton from '@material-ui/core/IconButton'
-import { onboardUser } from '~/components/ConnectButton'
 import MenuItem from '@material-ui/core/MenuItem'
+import { onboardUser } from '~/components/ConnectButton'
 import SelectField from '~/components/forms/SelectField'
 import {
   composeValidators, minValue, mustBeInteger, required, differentFrom,
