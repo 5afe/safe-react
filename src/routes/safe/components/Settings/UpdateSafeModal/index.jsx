@@ -10,17 +10,57 @@ import GnoForm from '~/components/forms/GnoForm'
 import Block from '~/components/layout/Block'
 import Button from '~/components/layout/Button'
 import { styles } from './style'
+import { DELEGATE_CALL } from '~/logic/safe/transactions'
+import { getEncodedMultiSendCallData, getGnosisSafeInstanceAt, multiSendAddress } from '~/logic/contracts/safeContracts'
+import type { MultiSendTransactionInstanceType } from '~/logic/contracts/safeContracts'
 
 
 type Props = {
   onClose: Function,
+  createTransaction: Function,
   classes: Object,
-
+  safeAddress: string,
 }
 
-const UpdateSafeModal = ({ onClose, classes }: Props) => {
-  const handleSubmit = () => {
+
+const UpdateSafeModal = ({
+  onClose, classes, safeAddress, createTransaction,
+}: Props) => {
+  const handleSubmit = async () => {
     // Call the update safe method
+    const sendTransactions = async (txs: Array<MultiSendTransactionInstanceType>) => {
+      const encodeMultiSendCallData = getEncodedMultiSendCallData(txs)
+      createTransaction({
+        safeAddress,
+        to: multiSendAddress,
+        valueInWei: 0,
+        txData: encodeMultiSendCallData,
+        notifiedTransaction: 'STANDARD_TX',
+        enqueueSnackbar: () => {},
+        closeSnackbar: () => {},
+        operation: DELEGATE_CALL,
+      })
+    }
+    const safeInstance = await getGnosisSafeInstanceAt(safeAddress)
+    const fallbackHandlerTxData = safeInstance.contract.methods.setFallbackHandler('0xd5D82B6aDDc9027B22dCA772Aa68D5d74cdBdF44').encodeABI()
+    const updateSafeTxData = safeInstance.contract.methods.changeMasterCopy('0x34CfAC646f301356fAa8B21e94227e3583Fe3F5F').encodeABI()
+    const txs = [
+      {
+        operation: 0,
+        to: safeAddress,
+        value: 0,
+        data: fallbackHandlerTxData,
+      },
+      {
+        operation: 0,
+        to: safeAddress,
+        value: 0,
+        data: updateSafeTxData,
+      },
+    ]
+
+
+    await sendTransactions(txs)
     onClose()
   }
 
@@ -43,14 +83,14 @@ const UpdateSafeModal = ({ onClose, classes }: Props) => {
                 <Paragraph>
                   Update now to take advantage of new features and the highest security standards available.
                 </Paragraph>
-                <Paragraph>
+                <Block>
                   This update includes:
                   <ul>
                     <li>Compatibility with new asset types (ERC-721 / ERC-1155)</li>
                     <li>Improved interoperability with modules</li>
                     <li>Minor security improvements</li>
                   </ul>
-                </Paragraph>
+                </Block>
                 <Paragraph>
                   You will need to confirm this update just like any other transaction. This means other owners will have to confirm the update in case more than one confirmation is required for this Safe.
                 </Paragraph>

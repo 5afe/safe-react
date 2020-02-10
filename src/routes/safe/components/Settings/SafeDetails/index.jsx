@@ -28,6 +28,7 @@ type Props = {
   safeName: string,
   updateSafe: Function,
   enqueueSnackbar: Function,
+  createTransaction: Function,
   closeSnackbar: Function,
 }
 
@@ -37,7 +38,7 @@ const SafeDetails = (props: Props) => {
   const classes = useStyles()
   const [safeVersions, setSafeVersions] = React.useState({ current: null, latest: null, needUpdate: false })
   const {
-    safeAddress, safeName, updateSafe, enqueueSnackbar, closeSnackbar,
+    safeAddress, safeName, updateSafe, enqueueSnackbar, closeSnackbar, createTransaction,
   } = props
 
   const [isModalOpen, setModalOpen] = useState(false)
@@ -56,7 +57,7 @@ const SafeDetails = (props: Props) => {
   useEffect(() => {
     const getVersion = async () => {
       try {
-        const { current, latest, needUpdate } = await getSafeVersion()
+        const { current, latest, needUpdate } = await getSafeVersion(safeAddress)
         setSafeVersions({ current, latest, needUpdate })
       } catch (err) {
         setSafeVersions({ current: 'Version not defined' })
@@ -135,7 +136,7 @@ const SafeDetails = (props: Props) => {
               handleClose={toggleModal}
               open={isModalOpen}
             >
-              <UpdateSafeModal onClose={toggleModal} />
+              <UpdateSafeModal onClose={toggleModal} safeAddress={safeAddress} createTransaction={createTransaction} />
             </Modal>
           </>
         )}

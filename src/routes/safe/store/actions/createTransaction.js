@@ -55,6 +55,7 @@ type CreateTransactionArgs = {
   closeSnackbar: Function,
   shouldExecute?: boolean,
   txNonce?: number,
+  operation?: 0 | 1
 }
 
 const createTransaction = ({
@@ -67,6 +68,7 @@ const createTransaction = ({
   closeSnackbar,
   shouldExecute = false,
   txNonce,
+  operation = CALL,
 }: CreateTransactionArgs) => async (
   dispatch: ReduxDispatch<GlobalState>,
   getState: GetState<GlobalState>,
@@ -104,17 +106,17 @@ const createTransaction = ({
   try {
     if (isExecution) {
       tx = await getExecutionTransaction(
-        safeInstance, to, valueInWei, txData, CALL, nonce,
+        safeInstance, to, valueInWei, txData, operation, nonce,
         0, 0, 0, ZERO_ADDRESS, ZERO_ADDRESS, from, sigs,
       )
     } else {
       tx = await getApprovalTransaction(
-        safeInstance, to, valueInWei, txData, CALL, nonce,
+        safeInstance, to, valueInWei, txData, operation, nonce,
         0, 0, 0, ZERO_ADDRESS, ZERO_ADDRESS, from, sigs,
       )
     }
 
-    const sendParams = { from, value: 0 }
+    const sendParams = { from, value: 0, gasLimit: 1000000 }
     // if not set owner management tests will fail on ganache
     if (process.env.NODE_ENV === 'test') {
       sendParams.gas = '7000000'

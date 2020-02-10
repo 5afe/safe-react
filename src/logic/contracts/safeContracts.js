@@ -10,19 +10,46 @@ import { calculateGasOf, calculateGasPrice } from '~/logic/wallets/ethTransactio
 import { ZERO_ADDRESS } from '~/logic/wallets/ethAddresses'
 
 export const SENTINEL_ADDRESS = '0x0000000000000000000000000000000000000001'
+export const multiSendAddress = '0xB522a9f781924eD250A11C54105E51840B138AdD'
 
 let proxyFactoryMaster
 let safeMaster
 
 const createGnosisSafeContract = (web3: any) => {
-  const gnosisSafe = contract(GnosisSafeSol)
+  const gnosisSafeSol = { ...GnosisSafeSol }
+
+  if (!Object.keys(gnosisSafeSol.networks).length) {
+    gnosisSafeSol.networks = {
+      4: {
+        links: {},
+        events: {},
+        address: '0x34CfAC646f301356fAa8B21e94227e3583Fe3F5F',
+        updated_at: 1551107687797,
+      },
+    }
+  }
+
+  const gnosisSafe = contract(gnosisSafeSol)
   gnosisSafe.setProvider(web3.currentProvider)
 
   return gnosisSafe
 }
 
 const createProxyFactoryContract = (web3: any) => {
-  const proxyFactory = contract(ProxyFactorySol)
+  const proxyFactorySol = { ...ProxyFactorySol }
+
+  if (!Object.keys(proxyFactorySol.networks).length) {
+    proxyFactorySol.networks = {
+      4: {
+        links: {},
+        events: {},
+        address: '0x76E2cFc1F5Fa8F6a5b3fC4c8F4788F0116861F9B',
+        updated_at: 1551107687797,
+      },
+    }
+  }
+
+  const proxyFactory = contract(proxyFactorySol)
   proxyFactory.setProvider(web3.currentProvider)
 
   return proxyFactory
@@ -129,4 +156,47 @@ export const validateProxy = async (safeAddress: string): Promise<boolean> => {
   // Old PayingProxyCode
   const oldProxyCode = '0x60806040526004361061004c576000357c0100000000000000000000000000000000000000000000000000000000900463ffffffff1680634555d5c91461008b5780635c60da1b146100b6575b73ffffffffffffffffffffffffffffffffffffffff600054163660008037600080366000845af43d6000803e6000811415610086573d6000fd5b3d6000f35b34801561009757600080fd5b506100a061010d565b6040518082815260200191505060405180910390f35b3480156100c257600080fd5b506100cb610116565b604051808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200191505060405180910390f35b60006002905090565b60008060009054906101000a900473ffffffffffffffffffffffffffffffffffffffff169050905600'
   return codeWithoutMetadata === oldProxyCode
+}
+
+export type MultiSendTransactionInstanceType = {
+    operation: number,
+    to: string,
+    value: number,
+    data: string,
+}
+
+export const getEncodedMultiSendCallData = (txs: Array<MultiSendTransactionInstanceType>) => {
+  const multiSendAbi = [
+    {
+      type: 'function',
+      name: 'multiSend',
+      constant: false,
+      payable: false,
+      stateMutability: 'nonpayable',
+      inputs: [{ type: 'bytes', name: 'transactions' }],
+      outputs: [],
+    },
+  ]
+  const web3 = getWeb3()
+  const multiSend = new web3.eth.Contract(multiSendAbi, multiSendAddress)
+  const encodeMultiSendCallData = multiSend.methods
+    .multiSend(
+      `0x${txs
+        .map((tx) => [
+          web3.eth.abi.encodeParameter('uint8', 0).slice(-2),
+          web3.eth.abi.encodeParameter('address', tx.to).slice(-40),
+          web3.eth.abi.encodeParameter('uint256', tx.value).slice(-64),
+          web3.eth.abi
+            .encodeParameter(
+              'uint256',
+              web3.utils.hexToBytes(tx.data).length,
+            )
+            .slice(-64),
+          tx.data.replace(/^0x/, ''),
+        ].join(''))
+        .join('')}`,
+    )
+    .encodeABI()
+
+  return encodeMultiSendCallData
 }
