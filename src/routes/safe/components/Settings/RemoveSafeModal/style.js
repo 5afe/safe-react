@@ -5,10 +5,10 @@ import {
 
 export const styles = () => ({
   heading: {
-    padding: `${sm} ${lg}`,
+    boxSizing: 'border-box',
     justifyContent: 'space-between',
     maxHeight: '75px',
-    boxSizing: 'border-box',
+    padding: `${sm} ${lg}`,
   },
   container: {
     minHeight: '369px',
@@ -53,5 +53,10 @@ export const styles = () => ({
     '&:hover': {
       cursor: 'pointer',
     },
+  },
+  modal: {
+    height: 'auto',
+    maxWidth: 'calc(100% - 30px)',
+    overflow: 'hidden',
   },
 })

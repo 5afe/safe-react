@@ -12,16 +12,19 @@ const calculateStyleFrom = (color?: string, margin?: Size) => ({
 })
 
 type Props = {
-  margin?: Size,
+  className?: string,
   color?: string,
+  margin?: Size,
   style?: Object,
 }
 
-const Hairline = ({ margin, color, style }: Props) => {
+const Hairline = ({
+  margin, color, style, className,
+}: Props) => {
   const calculatedStyles = calculateStyleFrom(color, margin)
   const mergedStyles = { ...calculatedStyles, ...(style || {}) }
 
-  return <div style={mergedStyles} />
+  return <div style={mergedStyles} className={className} />
 }
 
 export default Hairline
