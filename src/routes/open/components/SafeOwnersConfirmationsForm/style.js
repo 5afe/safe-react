@@ -1,6 +1,6 @@
 // @flow
 import {
-  md, lg, sm, disabled, extraSmallFontSize,
+  md, lg, sm, disabled, extraSmallFontSize, screenSm,
 } from '~/theme/variables'
 
 export const styles = () => ({
@@ -11,10 +11,31 @@ export const styles = () => ({
     padding: `${md} ${lg}`,
   },
   owner: {
-    padding: `0 ${lg}`,
+    flexDirection: 'column',
     marginTop: '12px',
+    padding: `0 ${lg}`,
     '&:first-child': {
       marginTop: 0,
+    },
+
+    [`@media (min-width: ${screenSm}px)`]: {
+      flexDirection: 'row',
+    },
+  },
+  ownerName: {
+    marginBottom: '5px',
+    minWidth: '100%',
+    [`@media (min-width: ${screenSm}px)`]: {
+      marginBottom: '0',
+      minWidth: '0',
+    },
+  },
+  ownerAddress: {
+    marginBottom: '15px',
+    minWidth: '100%',
+    [`@media (min-width: ${screenSm}px)`]: {
+      marginBottom: '0',
+      minWidth: '0',
     },
   },
   header: {
@@ -44,5 +65,17 @@ export const styles = () => ({
   },
   owners: {
     paddingLeft: md,
+  },
+  ownersAmount: {
+    flexDirection: 'column',
+    [`@media (min-width: ${screenSm}px)`]: {
+      flexDirection: 'row',
+    },
+  },
+  ownersAmountItem: {
+    minWidth: '100%',
+    [`@media (min-width: ${screenSm}px)`]: {
+      minWidth: '0',
+    },
   },
 })

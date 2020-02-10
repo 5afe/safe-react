@@ -57,6 +57,7 @@ const useStyles = makeStyles({
   },
   safeName: {
     color: primary,
+    overflowWrap: 'break-word',
   },
   safeAddress: {
     color: disabled,

@@ -4,6 +4,7 @@ import { List } from 'immutable'
 import classNames from 'classnames/bind'
 import TableRow from '@material-ui/core/TableRow'
 import TableCell from '@material-ui/core/TableCell'
+import TableContainer from '@material-ui/core/TableContainer'
 import { withStyles } from '@material-ui/core/styles'
 import CallMade from '@material-ui/icons/CallMade'
 import CallReceived from '@material-ui/icons/CallReceived'
@@ -148,93 +149,95 @@ class Balances extends React.Component<Props, State> {
             </Modal>
           </Col>
         </Row>
-        <Table
-          label="Balances"
-          defaultOrderBy={BALANCE_TABLE_ASSET_ID}
-          defaultRowsPerPage={10}
-          columns={columns}
-          data={filteredData}
-          size={filteredData.size}
-          defaultFixed
-        >
-          {(sortedData: Array<BalanceRow>) => sortedData.map((row: any, index: number) => (
-            <TableRow tabIndex={-1} key={index} className={classes.hide} data-testid={BALANCE_ROW_TEST_ID}>
-              {autoColumns.map((column: Column) => {
-                const { id, width, align } = column
-                let cellItem
-                switch (id) {
-                  case BALANCE_TABLE_ASSET_ID: {
-                    cellItem = <AssetTableCell asset={row[id]} />
-                    break
+        <TableContainer>
+          <Table
+            columns={columns}
+            data={filteredData}
+            defaultFixed
+            defaultOrderBy={BALANCE_TABLE_ASSET_ID}
+            defaultRowsPerPage={10}
+            label="Balances"
+            size={filteredData.size}
+          >
+            {(sortedData: Array<BalanceRow>) => sortedData.map((row: any, index: number) => (
+              <TableRow tabIndex={-1} key={index} className={classes.hide} data-testid={BALANCE_ROW_TEST_ID}>
+                {autoColumns.map((column: Column) => {
+                  const { id, width, align } = column
+                  let cellItem
+                  switch (id) {
+                    case BALANCE_TABLE_ASSET_ID: {
+                      cellItem = <AssetTableCell asset={row[id]} />
+                      break
+                    }
+                    case BALANCE_TABLE_BALANCE_ID: {
+                      cellItem = (
+                        <div>
+                          {row[id]}
+                        </div>
+                      )
+                      break
+                    }
+                    case BALANCE_TABLE_VALUE_ID: {
+                      cellItem = <div className={classes.currencyValueRow}>{row[id]}</div>
+                      break
+                    }
+                    default: {
+                      cellItem = null
+                      break
+                    }
                   }
-                  case BALANCE_TABLE_BALANCE_ID: {
-                    cellItem = (
-                      <div>
-                        {row[id]}
-                      </div>
-                    )
-                    break
-                  }
-                  case BALANCE_TABLE_VALUE_ID: {
-                    cellItem = <div className={classes.currencyValueRow}>{row[id]}</div>
-                    break
-                  }
-                  default: {
-                    cellItem = null
-                    break
-                  }
-                }
-                return (
-                  <TableCell
-                    key={id}
-                    style={cellWidth(width)}
-                    align={align}
-                    component="td"
-                  >
-                    {cellItem}
-                  </TableCell>
-                )
-              })}
-              <TableCell component="td">
-                <Row align="end" className={classes.actions}>
-                  {granted && (
+                  return (
+                    <TableCell
+                      key={id}
+                      style={cellWidth(width)}
+                      align={align}
+                      component="td"
+                    >
+                      {cellItem}
+                    </TableCell>
+                  )
+                })}
+                <TableCell component="td">
+                  <Row align="end" className={classes.actions}>
+                    {granted && (
+                      <Button
+                        variant="contained"
+                        size="small"
+                        color="primary"
+                        className={classes.send}
+                        onClick={() => this.showSendFunds(row.asset.address)}
+                        testId="balance-send-btn"
+                      >
+                        <CallMade alt="Send Transaction" className={classNames(classes.leftIcon, classes.iconSmall)} />
+                        Send
+                      </Button>
+                    )}
                     <Button
                       variant="contained"
                       size="small"
                       color="primary"
-                      className={classes.send}
-                      onClick={() => this.showSendFunds(row.asset.address)}
-                      testId="balance-send-btn"
+                      className={classes.receive}
+                      onClick={this.onShow('Receive')}
                     >
-                      <CallMade alt="Send Transaction" className={classNames(classes.leftIcon, classes.iconSmall)} />
-                        Send
-                    </Button>
-                  )}
-                  <Button
-                    variant="contained"
-                    size="small"
-                    color="primary"
-                    className={classes.receive}
-                    onClick={this.onShow('Receive')}
-                  >
-                    <CallReceived alt="Receive Transaction" className={classNames(classes.leftIcon, classes.iconSmall)} />
+                      <CallReceived alt="Receive Transaction" className={classNames(classes.leftIcon, classes.iconSmall)} />
                       Receive
-                  </Button>
-                </Row>
-              </TableCell>
-            </TableRow>
-          ))}
-        </Table>
+                    </Button>
+                  </Row>
+                </TableCell>
+              </TableRow>
+            ))}
+          </Table>
+        </TableContainer>
         <SendModal
-          onClose={this.hideSendFunds}
+          activeScreenType="sendFunds"
+          createTransaction={createTransaction}
+          ethBalance={ethBalance}
           isOpen={sendFunds.isOpen}
+          onClose={this.hideSendFunds}
           safeAddress={safeAddress}
           safeName={safeName}
-          ethBalance={ethBalance}
-          tokens={activeTokens}
           selectedToken={sendFunds.selectedToken}
-          createTransaction={createTransaction}
-          activeScreenType="sendFunds"
+          tokens={activeTokens}
         />
         <Modal
           title="Receive Tokens"
