@@ -1,12 +1,41 @@
 {
-  "extends": ["airbnb", "plugin:flowtype/recommended", "plugin:jsx-a11y/recommended", "plugin:prettier/recommended", "prettier/react"],
+  "extends": [
+    "airbnb",
+    "plugin:flowtype/recommended",
+    "plugin:jsx-a11y/recommended",
+    "plugin:prettier/recommended",
+    "prettier/react"
+  ],
   "parser": "babel-eslint",
-  "plugins": ["jsx-a11y", "jest", "flowtype"],
+  "plugins": [
+    "jsx-a11y",
+    "jest",
+    "flowtype"
+  ],
   "rules": {
-    "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
-    "react/forbid-prop-types": [1, { "forbid": ["object", "any"] }],
+    "react/jsx-filename-extension": [
+      1,
+      {
+        "extensions": [
+          ".js",
+          ".jsx"
+        ]
+      }
+    ],
+    "react/forbid-prop-types": [
+      1,
+      {
+        "forbid": [
+          "object",
+          "any"
+        ]
+      }
+    ],
     "class-methods-use-this": 0,
-    "semi": ["error", "never"],
+    "semi": [
+      "error",
+      "never"
+    ],
     "consistent-return": "off",
     "max-len": [
       "error",
@@ -24,11 +53,30 @@
     "import/no-extraneous-dependencies": 0,
     "import/extensions": 0,
     "import/prefer-default-export": 0,
-    "react/default-props-match-prop-types": ["error", { "allowRequiredDefaults": true }],
+    "react/default-props-match-prop-types": [
+      "error",
+      {
+        "allowRequiredDefaults": true
+      }
+    ],
     // https://github.com/yannickcr/eslint-plugin-react/issues/1593 ^
     "jsx-a11y/label-has-for": 0,
-    "indent": ["error", 2, { "SwitchCase": 1 }],
-    "no-console": ["error", { "allow": ["warn", "error"] }],
+    "indent": [
+      "error",
+      2,
+      {
+        "SwitchCase": 1
+      }
+    ],
+    "no-console": [
+      "error",
+      {
+        "allow": [
+          "warn",
+          "error"
+        ]
+      }
+    ],
     "flowtype/require-valid-file-annotation": [
       2,
       "always",
@@ -36,12 +84,23 @@
         "annotationStyle": "line"
       }
     ],
+    "flowtype/generic-spacing": 0,
     "jsx-a11y/anchor-is-valid": [
       "error",
       {
-        "components": ["Link"],
-        "specialLink": ["to", "hrefLeft", "hrefRight"],
-        "aspects": ["noHref", "invalidHref", "preferButton"]
+        "components": [
+          "Link"
+        ],
+        "specialLink": [
+          "to",
+          "hrefLeft",
+          "hrefRight"
+        ],
+        "aspects": [
+          "noHref",
+          "invalidHref",
+          "preferButton"
+        ]
       }
     ],
     "react/require-default-props": 0,

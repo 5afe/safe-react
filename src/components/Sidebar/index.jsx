@@ -27,7 +27,7 @@ const { useState, useEffect, useMemo } = React
 
 type TSidebarContext = {
   isOpen: boolean,
-  toggleSidebar: Function
+  toggleSidebar: Function,
 }
 
 export const SidebarContext = React.createContext<TSidebarContext>({
@@ -40,14 +40,16 @@ type SidebarProps = {
   safes: List<Safe>,
   setDefaultSafeAction: Function,
   defaultSafe: string,
-  currentSafe: string
+  currentSafe: string,
 }
 
-const filterBy = (filter: string, safes: List<Safe>): List<Safe> => safes.filter(
-  (safe: Safe) => !filter
-    || safe.address.toLowerCase().includes(filter.toLowerCase())
-    || safe.name.toLowerCase().includes(filter.toLowerCase()),
-)
+const filterBy = (filter: string, safes: List<Safe>): List<Safe> =>
+  safes.filter(
+    (safe: Safe) =>
+      !filter ||
+      safe.address.toLowerCase().includes(filter.toLowerCase()) ||
+      safe.name.toLowerCase().includes(filter.toLowerCase())
+  )
 
 const Sidebar = ({
   children,
@@ -74,7 +76,7 @@ const Sidebar = ({
   }
 
   const toggleSidebar = () => {
-    setIsOpen((prevIsOpen) => !prevIsOpen)
+    setIsOpen(prevIsOpen => !prevIsOpen)
   }
 
   const handleFilterChange = (value: string) => {
@@ -97,32 +99,34 @@ const Sidebar = ({
     <SidebarContext.Provider value={{ isOpen, toggleSidebar }}>
       <ClickAwayListener onClickAway={toggleSidebar}>
         <Drawer
-          className={classes.sidebar}
-          open={isOpen}
-          onKeyDown={handleEsc}
-          classes={{ paper: classes.sidebarPaper }}
           ModalProps={{ onBackdropClick: toggleSidebar }}
+          className={classes.sidebar}
+          classes={{ paper: classes.sidebarPaper }}
+          onKeyDown={handleEsc}
+          open={isOpen}
         >
-          <Row align="center">
-            <SearchIcon className={classes.searchIcon} />
-            <SearchBar
-              classes={searchClasses}
-              placeholder="Search by name or address"
-              searchIcon={<div />}
-              onChange={handleFilterChange}
-              onCancelSearch={handleFilterCancel}
-              value={filter}
-            />
-            <Divider />
-            <Spacer />
+          <Row className={classes.topComponents} align="center">
+            <Row className={classes.searchWrapper} align="center">
+              <SearchIcon className={classes.searchIcon} />
+              <SearchBar
+                classes={searchClasses}
+                onCancelSearch={handleFilterCancel}
+                onChange={handleFilterChange}
+                placeholder="Search by name or address"
+                searchIcon={<div />}
+                value={filter}
+              />
+            </Row>
+            <Divider className={classes.divider} />
+            <Spacer className={classes.spacer} />
             <Button
-              component={Link}
-              to={WELCOME_ADDRESS}
               className={classes.addSafeBtn}
-              variant="contained"
-              size="small"
               color="primary"
+              component={Link}
               onClick={toggleSidebar}
+              size="small"
+              to={WELCOME_ADDRESS}
+              variant="contained"
             >
               + Add Safe
             </Button>
@@ -145,10 +149,10 @@ const Sidebar = ({
 
 export default connect<Object, Object, ?Function, ?Object>(
   // $FlowFixMe
-  (state) => ({
+  state => ({
     safes: sortedSafeListSelector(state),
     defaultSafe: defaultSafeSelector(state),
     currentSafe: safeParamAddressFromStateSelector(state),
   }),
-  { setDefaultSafeAction: setDefaultSafe },
+  { setDefaultSafeAction: setDefaultSafe }
 )(Sidebar)

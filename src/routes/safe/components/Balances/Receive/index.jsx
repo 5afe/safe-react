@@ -13,9 +13,7 @@ import Hairline from '~/components/layout/Hairline'
 import Col from '~/components/layout/Col'
 import EtherscanBtn from '~/components/EtherscanBtn'
 import CopyBtn from '~/components/CopyBtn'
-import {
-  sm, lg, md, secondaryText,
-} from '~/theme/variables'
+import { sm, lg, md, secondaryText, screenSm } from '~/theme/variables'
 import { copyToClipboard } from '~/utils/clipboard'
 
 const styles = () => ({
@@ -53,11 +51,23 @@ const styles = () => ({
     },
   },
   addressContainer: {
+    flexDirection: 'column',
+    justifyContent: 'center',
     margin: `${lg} 0`,
+
+    [`@media (min-width: ${screenSm}px)`]: {
+      flexDirection: 'row',
+    },
   },
   address: {
     marginLeft: sm,
     marginRight: sm,
+    maxWidth: '70%',
+    overflowWrap: 'break-word',
+
+    [`@media (min-width: ${screenSm}px)`]: {
+      maxWidth: 'none',
+    },
   },
 })
 
@@ -68,9 +78,7 @@ type Props = {
   safeAddress: string,
 }
 
-const Receive = ({
-  classes, onClose, safeAddress, safeName,
-}: Props) => (
+const Receive = ({ classes, onClose, safeAddress, safeName }: Props) => (
   <>
     <Row align="center" grow className={classes.heading}>
       <Paragraph className={classes.manage} size="xl" weight="bolder" noMargin>
@@ -82,8 +90,9 @@ const Receive = ({
     </Row>
     <Hairline />
     <Paragraph className={classes.annotation} size="lg" noMargin>
-      This is the address of your Safe. Deposit funds by scanning the QR code or copying the address below. Only send
-      ETH and ERC-20 tokens to this address!
+      This is the address of your Safe. Deposit funds by scanning the QR code or
+      copying the address below. Only send ETH and ERC-20 tokens to this
+      address!
     </Paragraph>
     <Col layout="column" middle="xs">
       <Paragraph className={classes.safeName} weight="bold" size="lg" noMargin>
@@ -108,7 +117,12 @@ const Receive = ({
     </Col>
     <Hairline />
     <Row align="center" className={classes.buttonRow}>
-      <Button color="primary" minWidth={130} onClick={onClose} variant="contained">
+      <Button
+        color="primary"
+        minWidth={130}
+        onClick={onClose}
+        variant="contained"
+      >
         Done
       </Button>
     </Row>

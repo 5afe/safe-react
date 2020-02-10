@@ -10,7 +10,11 @@ import TextField from '~/components/forms/TextField'
 import SelectField from '~/components/forms/SelectField'
 import AddressInput from '~/components/forms/AddressInput'
 import {
-  required, composeValidators, noErrorsOn, mustBeInteger, minValue,
+  required,
+  composeValidators,
+  noErrorsOn,
+  mustBeInteger,
+  minValue,
 } from '~/components/forms/validator'
 import Block from '~/components/layout/Block'
 import Button from '~/components/layout/Button'
@@ -45,7 +49,11 @@ const { useState } = React
 
 export const ADD_OWNER_BUTTON = '+ Add another owner'
 
-export const calculateValuesAfterRemoving = (index: number, notRemovedOwners: number, values: Object) => {
+export const calculateValuesAfterRemoving = (
+  index: number,
+  notRemovedOwners: number,
+  values: Object
+) => {
   const initialValues = { ...values }
 
   const numOwnersAfterRemoving = notRemovedOwners - 1
@@ -66,17 +74,17 @@ export const calculateValuesAfterRemoving = (index: number, notRemovedOwners: nu
 }
 
 const SafeOwners = (props: Props) => {
-  const {
-    classes, errors, otherAccounts, values, form,
-  } = props
+  const { classes, errors, otherAccounts, values, form } = props
 
   const validOwners = getNumOwnersFrom(values)
 
   const [numOwners, setNumOwners] = useState<number>(validOwners)
   const [qrModalOpen, setQrModalOpen] = useState<boolean>(false)
-  const [scanQrForOwnerName, setScanQrForOwnerName] = useState<string | null>(null)
+  const [scanQrForOwnerName, setScanQrForOwnerName] = useState<string | null>(
+    null
+  )
 
-  const openQrModal = (ownerName) => {
+  const openQrModal = ownerName => {
     setScanQrForOwnerName(ownerName)
     setQrModalOpen(true)
   }
@@ -96,7 +104,7 @@ const SafeOwners = (props: Props) => {
     setNumOwners(numOwners + 1)
   }
 
-  const handleScan = (value) => {
+  const handleScan = value => {
     let scannedAddress = value
 
     if (scannedAddress.startsWith('ethereum:')) {
@@ -111,12 +119,14 @@ const SafeOwners = (props: Props) => {
     <>
       <Block className={classes.title}>
         <Paragraph noMargin size="md" color="primary">
-          Your Safe will have one or more owners. We have prefilled the first owner with your connected wallet details,
-          but you are free to change this to a different owner.
+          Your Safe will have one or more owners. We have prefilled the first
+          owner with your connected wallet details, but you are free to change
+          this to a different owner.
           <br />
           <br />
-          Add additional owners (e.g. wallets of your teammates) and specify how many of them have to confirm a
-          transaction before it gets executed. In general, the more confirmations required, the more secure is your
+          Add additional owners (e.g. wallets of your teammates) and specify how
+          many of them have to confirm a transaction before it gets executed. In
+          general, the more confirmations required, the more secure is your
           Safe.
         </Paragraph>
       </Block>
@@ -132,7 +142,7 @@ const SafeOwners = (props: Props) => {
 
           return (
             <Row key={`owner${index}`} className={classes.owner}>
-              <Col xs={4}>
+              <Col className={classes.ownerName} xs={4}>
                 <Field
                   className={classes.name}
                   name={getOwnerNameBy(index)}
@@ -143,7 +153,7 @@ const SafeOwners = (props: Props) => {
                   text="Owner Name"
                 />
               </Col>
-              <Col xs={6}>
+              <Col className={classes.ownerAddress} xs={6}>
                 <AddressInput
                   name={addressName}
                   component={TextField}
@@ -156,7 +166,7 @@ const SafeOwners = (props: Props) => {
                       ),
                     }
                   }
-                  fieldMutator={(val) => {
+                  fieldMutator={val => {
                     form.mutators.setValue(addressName, val)
                   }}
                   type="text"
@@ -176,14 +186,25 @@ const SafeOwners = (props: Props) => {
                 />
               </Col>
               <Col xs={1} center="xs" middle="xs" className={classes.remove}>
-                {index > 0 && <Img src={trash} height={20} alt="Delete" onClick={onRemoveRow(index)} />}
+                {index > 0 && (
+                  <Img
+                    src={trash}
+                    height={20}
+                    alt="Delete"
+                    onClick={onRemoveRow(index)}
+                  />
+                )}
               </Col>
             </Row>
           )
         })}
       </Block>
       <Row align="center" grow className={classes.add} margin="xl">
-        <Button color="secondary" onClick={onAddOwner} data-testid="add-owner-btn">
+        <Button
+          color="secondary"
+          onClick={onAddOwner}
+          data-testid="add-owner-btn"
+        >
           <Paragraph size="md" noMargin>
             {ADD_OWNER_BUTTON}
           </Paragraph>
@@ -193,8 +214,8 @@ const SafeOwners = (props: Props) => {
         <Paragraph size="md" color="primary">
           Any transaction requires the confirmation of:
         </Paragraph>
-        <Row margin="xl" align="center">
-          <Col xs={2}>
+        <Row className={classes.ownersAmount} margin="xl" align="center">
+          <Col className={classes.ownersAmountItem} xs={2}>
             <Field
               name={FIELD_CONFIRMATIONS}
               component={SelectField}
@@ -208,25 +229,35 @@ const SafeOwners = (props: Props) => {
               ))}
             </Field>
           </Col>
-          <Col xs={10}>
-            <Paragraph size="lg" color="primary" noMargin className={classes.owners}>
-              out of
-              {' '}
-              {validOwners}
-              {' '}
-owner(s)
+          <Col className={classes.ownersAmountItem} xs={10}>
+            <Paragraph
+              size="lg"
+              color="primary"
+              noMargin
+              className={classes.owners}
+            >
+              out of {validOwners} owner(s)
             </Paragraph>
           </Col>
         </Row>
       </Block>
-      {qrModalOpen && <ScanQRModal isOpen={qrModalOpen} onScan={handleScan} onClose={closeQrModal} />}
+      {qrModalOpen && (
+        <ScanQRModal
+          isOpen={qrModalOpen}
+          onScan={handleScan}
+          onClose={closeQrModal}
+        />
+      )}
     </>
   )
 }
 
 const SafeOwnersForm = withStyles(styles)(withRouter(SafeOwners))
 
-const SafeOwnersPage = ({ updateInitialProps }: Object) => (controls: React.Node, { values, errors, form }: Object) => (
+const SafeOwnersPage = ({ updateInitialProps }: Object) => (
+  controls: React.Node,
+  { values, errors, form }: Object
+) => (
   <>
     <OpenPaper controls={controls} padding={false}>
       <SafeOwnersForm

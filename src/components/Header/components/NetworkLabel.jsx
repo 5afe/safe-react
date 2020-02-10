@@ -4,24 +4,31 @@ import { makeStyles } from '@material-ui/core/styles'
 import { getNetwork } from '~/config'
 import Paragraph from '~/components/layout/Paragraph'
 import Col from '~/components/layout/Col'
-import {
-  xs, sm, md, border,
-} from '~/theme/variables'
+import { xs, sm, md, border, screenSm } from '~/theme/variables'
 
 const network = getNetwork()
-const formattedNetwork = network[0].toUpperCase() + network.substring(1).toLowerCase()
+const formattedNetwork =
+  network[0].toUpperCase() + network.substring(1).toLowerCase()
 
 const useStyles = makeStyles({
   container: {
     flexGrow: 0,
-    padding: `0 ${md}`,
+    padding: `0 ${sm}`,
+    [`@media (min-width: ${screenSm}px)`]: {
+      paddingLeft: md,
+      paddingRight: md,
+    },
   },
   text: {
     background: border,
-    padding: `${xs} ${sm}`,
     borderRadius: '3px',
-    marginLeft: sm,
     lineHeight: 'normal',
+    margin: '0',
+    padding: `${xs} ${sm}`,
+
+    [`@media (min-width: ${screenSm}px)`]: {
+      marginLeft: '8px',
+    },
   },
 })
 

@@ -2,6 +2,7 @@
 import * as React from 'react'
 import classNames from 'classnames'
 import { withStyles } from '@material-ui/core/styles'
+import TableContainer from '@material-ui/core/TableContainer'
 import Block from '~/components/layout/Block'
 import Identicon from '~/components/Identicon'
 import OpenPaper from '~/components/Stepper/OpenPaper'
@@ -11,18 +12,40 @@ import EtherscanBtn from '~/components/EtherscanBtn'
 import Paragraph from '~/components/layout/Paragraph'
 import CopyBtn from '~/components/CopyBtn'
 import Hairline from '~/components/layout/Hairline'
-import {
-  xs, sm, lg, border,
-} from '~/theme/variables'
+import { xs, sm, lg, border, screenSm } from '~/theme/variables'
 import { shortVersionOf } from '~/logic/wallets/ethAddresses'
 import { getAccountsFrom } from '~/routes/open/utils/safeDataExtractor'
-import { getOwnerNameBy, getOwnerAddressBy, getNumOwnersFrom } from '~/routes/open/components/fields'
-import { FIELD_LOAD_NAME, FIELD_LOAD_ADDRESS, THRESHOLD } from '~/routes/load/components/fields'
+import {
+  getOwnerNameBy,
+  getOwnerAddressBy,
+  getNumOwnersFrom,
+} from '~/routes/open/components/fields'
+import {
+  FIELD_LOAD_NAME,
+  FIELD_LOAD_ADDRESS,
+  THRESHOLD,
+} from '~/routes/load/components/fields'
 import type { LayoutProps } from '../Layout'
 
 const styles = () => ({
   root: {
+    flexDirection: 'column',
     minHeight: '300px',
+    [`@media (min-width: ${screenSm}px)`]: {
+      flexDirection: 'row',
+    },
+  },
+  detailsColumn: {
+    minWidth: '100%',
+    [`@media (min-width: ${screenSm}px)`]: {
+      minWidth: '0',
+    },
+  },
+  ownersColumn: {
+    minWidth: '100%',
+    [`@media (min-width: ${screenSm}px)`]: {
+      minWidth: '0',
+    },
   },
   details: {
     padding: lg,
@@ -40,9 +63,10 @@ const styles = () => ({
     whiteSpace: 'nowrap',
   },
   owner: {
+    alignItems: 'center',
+    minWidth: 'fit-content',
     padding: sm,
     paddingLeft: lg,
-    alignItems: 'center',
   },
   user: {
     justifyContent: 'left',
@@ -77,7 +101,10 @@ type State = {
   isOwner: boolean,
 }
 
-const checkUserAddressOwner = (values: Object, userAddress: string): boolean => {
+const checkUserAddressOwner = (
+  values: Object,
+  userAddress: string
+): boolean => {
   let isOwner: boolean = false
 
   for (let i = 0; i < getNumOwnersFrom(values); i += 1) {
@@ -101,7 +128,7 @@ class ReviewComponent extends React.PureComponent<Props, State> {
     return (
       <>
         <Row className={classes.root}>
-          <Col xs={4} layout="column">
+          <Col className={classes.detailsColumn} xs={4} layout="column">
             <Block className={classes.details}>
               <Block margin="lg">
                 <Paragraph size="lg" color="primary" noMargin>
@@ -112,7 +139,13 @@ class ReviewComponent extends React.PureComponent<Props, State> {
                 <Paragraph size="sm" color="disabled" noMargin>
                   Name of the Safe
                 </Paragraph>
-                <Paragraph size="lg" color="primary" noMargin weight="bolder" className={classes.name}>
+                <Paragraph
+                  size="lg"
+                  color="primary"
+                  noMargin
+                  weight="bolder"
+                  className={classes.name}
+                >
                   {values[FIELD_LOAD_NAME]}
                 </Paragraph>
               </Block>
@@ -122,7 +155,12 @@ class ReviewComponent extends React.PureComponent<Props, State> {
                 </Paragraph>
                 <Row className={classes.container}>
                   <Identicon address={safeAddress} diameter={32} />
-                  <Paragraph size="md" color="disabled" noMargin className={classes.address}>
+                  <Paragraph
+                    size="md"
+                    color="disabled"
+                    noMargin
+                    className={classes.address}
+                  >
                     {shortVersionOf(safeAddress, 4)}
                   </Paragraph>
                   <CopyBtn content={safeAddress} />
@@ -133,7 +171,13 @@ class ReviewComponent extends React.PureComponent<Props, State> {
                 <Paragraph size="sm" color="disabled" noMargin>
                   Connected wallet client is owner?
                 </Paragraph>
-                <Paragraph size="lg" color="primary" noMargin weight="bolder" className={classes.name}>
+                <Paragraph
+                  size="lg"
+                  color="primary"
+                  noMargin
+                  weight="bolder"
+                  className={classes.name}
+                >
                   {isOwner ? 'Yes' : 'No (read-only)'}
                 </Paragraph>
               </Block>
@@ -141,43 +185,55 @@ class ReviewComponent extends React.PureComponent<Props, State> {
                 <Paragraph size="sm" color="disabled" noMargin>
                   Any transaction requires the confirmation of:
                 </Paragraph>
-                <Paragraph size="lg" color="primary" noMargin weight="bolder" className={classes.name}>
-                  {`${values[THRESHOLD]} out of ${getNumOwnersFrom(values)} owners`}
+                <Paragraph
+                  size="lg"
+                  color="primary"
+                  noMargin
+                  weight="bolder"
+                  className={classes.name}
+                >
+                  {`${values[THRESHOLD]} out of ${getNumOwnersFrom(
+                    values
+                  )} owners`}
                 </Paragraph>
               </Block>
             </Block>
           </Col>
-          <Col xs={8} layout="column">
-            <Block className={classes.owners}>
-              <Paragraph size="lg" color="primary" noMargin>
-                {`${getNumOwnersFrom(values)} Safe owners`}
-              </Paragraph>
-            </Block>
-            <Hairline />
-            {owners.map((address, index) => (
-              <React.Fragment key={address}>
-                <Row className={classes.owner}>
-                  <Col xs={1} align="center">
-                    <Identicon address={address} diameter={32} />
-                  </Col>
-                  <Col xs={11}>
-                    <Block className={classNames(classes.name, classes.userName)}>
-                      <Paragraph size="lg" noMargin>
-                        {values[getOwnerNameBy(index)]}
-                      </Paragraph>
-                      <Block justify="center" className={classes.user}>
-                        <Paragraph size="md" color="disabled" noMargin>
-                          {address}
+          <Col className={classes.ownersColumn} xs={8} layout="column">
+            <TableContainer>
+              <Block className={classes.owners}>
+                <Paragraph size="lg" color="primary" noMargin>
+                  {`${getNumOwnersFrom(values)} Safe owners`}
+                </Paragraph>
+              </Block>
+              <Hairline />
+              {owners.map((address, index) => (
+                <>
+                  <Row className={classes.owner}>
+                    <Col xs={1} align="center">
+                      <Identicon address={address} diameter={32} />
+                    </Col>
+                    <Col xs={11}>
+                      <Block
+                        className={classNames(classes.name, classes.userName)}
+                      >
+                        <Paragraph size="lg" noMargin>
+                          {values[getOwnerNameBy(index)]}
                         </Paragraph>
-                        <CopyBtn content={address} />
-                        <EtherscanBtn type="address" value={address} />
+                        <Block justify="center" className={classes.user}>
+                          <Paragraph size="md" color="disabled" noMargin>
+                            {address}
+                          </Paragraph>
+                          <CopyBtn content={address} />
+                          <EtherscanBtn type="address" value={address} />
+                        </Block>
                       </Block>
-                    </Block>
-                  </Col>
-                </Row>
-                {index !== owners.length - 1 && <Hairline />}
-              </React.Fragment>
-            ))}
+                    </Col>
+                  </Row>
+                  {index !== owners.length - 1 && <Hairline />}
+                </>
+              ))}
+            </TableContainer>
           </Col>
         </Row>
       </>
@@ -187,7 +243,10 @@ class ReviewComponent extends React.PureComponent<Props, State> {
 
 const ReviewPage = withStyles(styles)(ReviewComponent)
 
-const Review = ({ network, userAddress }: LayoutProps) => (controls: React.Node, { values }: Object) => (
+const Review = ({ network, userAddress }: LayoutProps) => (
+  controls: React.Node,
+  { values }: Object
+) => (
   <>
     <OpenPaper controls={controls} padding={false}>
       <ReviewPage network={network} values={values} userAddress={userAddress} />

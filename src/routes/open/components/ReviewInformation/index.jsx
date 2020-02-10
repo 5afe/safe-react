@@ -2,8 +2,12 @@
 import * as React from 'react'
 import classNames from 'classnames'
 import { withStyles } from '@material-ui/core/styles'
+import TableContainer from '@material-ui/core/TableContainer'
 import { estimateGasForDeployingSafe } from '~/logic/contracts/safeContracts'
-import { getNamesFrom, getAccountsFrom } from '~/routes/open/utils/safeDataExtractor'
+import {
+  getNamesFrom,
+  getAccountsFrom,
+} from '~/routes/open/utils/safeDataExtractor'
 import Block from '~/components/layout/Block'
 import EtherscanBtn from '~/components/EtherscanBtn'
 import CopyBtn from '~/components/CopyBtn'
@@ -13,9 +17,7 @@ import Col from '~/components/layout/Col'
 import Row from '~/components/layout/Row'
 import Paragraph from '~/components/layout/Paragraph'
 import { formatAmount } from '~/logic/tokens/utils/formatAmount'
-import {
-  sm, md, lg, border, background,
-} from '~/theme/variables'
+import { sm, lg, border, background, screenSm } from '~/theme/variables'
 import Hairline from '~/components/layout/Hairline'
 import { getWeb3 } from '~/logic/wallets/getWeb3'
 import { FIELD_NAME, FIELD_CONFIRMATIONS, getNumOwnersFrom } from '../fields'
@@ -25,6 +27,21 @@ const { useEffect, useState } = React
 const styles = () => ({
   root: {
     minHeight: '300px',
+    [`@media (min-width: ${screenSm}px)`]: {
+      flexDirection: 'row',
+    },
+  },
+  detailsColumn: {
+    minWidth: '100%',
+    [`@media (min-width: ${screenSm}px)`]: {
+      minWidth: '0',
+    },
+  },
+  ownersColumn: {
+    minWidth: '100%',
+    [`@media (min-width: ${screenSm}px)`]: {
+      minWidth: '0',
+    },
   },
   details: {
     padding: lg,
@@ -33,10 +50,10 @@ const styles = () => ({
   },
   info: {
     backgroundColor: background,
-    padding: lg,
-    justifyContent: 'center',
-    textAlign: 'center',
     flexDirection: 'column',
+    justifyContent: 'center',
+    padding: lg,
+    textAlign: 'center',
   },
   owners: {
     padding: lg,
@@ -49,8 +66,10 @@ const styles = () => ({
     whiteSpace: 'nowrap',
   },
   owner: {
-    padding: md,
     alignItems: 'center',
+    minWidth: 'fit-content',
+    padding: sm,
+    paddingLeft: lg,
   },
   user: {
     justifyContent: 'left',
@@ -84,7 +103,11 @@ const ReviewComponent = ({ values, classes, userAccount }: Props) => {
     const estimateGas = async () => {
       const web3 = getWeb3()
       const { fromWei, toBN } = web3.utils
-      const estimatedGasCosts = await estimateGasForDeployingSafe(addresses, numOwners, userAccount)
+      const estimatedGasCosts = await estimateGasForDeployingSafe(
+        addresses,
+        numOwners,
+        userAccount
+      )
       const gasCostsAsEth = fromWei(toBN(estimatedGasCosts), 'ether')
       const formattedGasCosts = formatAmount(gasCostsAsEth)
       if (isCurrent) {
@@ -102,7 +125,7 @@ const ReviewComponent = ({ values, classes, userAccount }: Props) => {
   return (
     <>
       <Row className={classes.root}>
-        <Col xs={4} layout="column">
+        <Col className={classes.detailsColumn} xs={4} layout="column">
           <Block className={classes.details}>
             <Block margin="lg">
               <Paragraph size="lg" color="primary" noMargin>
@@ -113,7 +136,13 @@ const ReviewComponent = ({ values, classes, userAccount }: Props) => {
               <Paragraph size="sm" color="disabled" noMargin>
                 Name of new Safe
               </Paragraph>
-              <Paragraph size="lg" color="primary" noMargin weight="bolder" className={classes.name}>
+              <Paragraph
+                size="lg"
+                color="primary"
+                noMargin
+                weight="bolder"
+                className={classes.name}
+              >
                 {values[FIELD_NAME]}
               </Paragraph>
             </Block>
@@ -127,48 +156,49 @@ const ReviewComponent = ({ values, classes, userAccount }: Props) => {
             </Block>
           </Block>
         </Col>
-        <Col xs={8} layout="column">
-          <Block className={classes.owners}>
-            <Paragraph size="lg" color="primary" noMargin>
-              {`${numOwners} Safe owners`}
-            </Paragraph>
-          </Block>
-          <Hairline />
-          {names.map((name, index) => (
-            <React.Fragment key={`name${index}`}>
-              <Row className={classes.owner}>
-                <Col xs={1} align="center">
-                  <Identicon address={addresses[index]} diameter={32} />
-                </Col>
-                <Col xs={11}>
-                  <Block className={classNames(classes.name, classes.userName)}>
-                    <Paragraph size="lg" noMargin>
-                      {name}
-                    </Paragraph>
-                    <Block justify="center" className={classes.user}>
-                      <Paragraph size="md" color="disabled" noMargin>
-                        {addresses[index]}
+        <Col className={classes.ownersColumn} xs={8} layout="column">
+          <TableContainer>
+            <Block className={classes.owners}>
+              <Paragraph size="lg" color="primary" noMargin>
+                {`${numOwners} Safe owners`}
+              </Paragraph>
+            </Block>
+            <Hairline />
+            {names.map((name, index) => (
+              <React.Fragment key={`name${index}`}>
+                <Row className={classes.owner}>
+                  <Col xs={1} align="center">
+                    <Identicon address={addresses[index]} diameter={32} />
+                  </Col>
+                  <Col xs={11}>
+                    <Block
+                      className={classNames(classes.name, classes.userName)}
+                    >
+                      <Paragraph size="lg" noMargin>
+                        {name}
                       </Paragraph>
-                      <CopyBtn content={addresses[index]} />
-                      <EtherscanBtn type="address" value={addresses[index]} />
+                      <Block justify="center" className={classes.user}>
+                        <Paragraph size="md" color="disabled" noMargin>
+                          {addresses[index]}
+                        </Paragraph>
+                        <CopyBtn content={addresses[index]} />
+                        <EtherscanBtn type="address" value={addresses[index]} />
+                      </Block>
                     </Block>
-                  </Block>
-                </Col>
-              </Row>
-              <Hairline />
-            </React.Fragment>
-          ))}
+                  </Col>
+                </Row>
+                <Hairline />
+              </React.Fragment>
+            ))}
+          </TableContainer>
         </Col>
       </Row>
       <Row className={classes.info} align="center">
         <Paragraph noMargin color="primary" size="md">
-          You&apos;re about to create a new Safe and will have to confirm a transaction with your currently connected
-          wallet. The creation will cost approximately
-          {' '}
-          {gasCosts}
-          {' '}
-          ETH. The exact amount will be determined by your
-          wallet.
+          You&apos;re about to create a new Safe and will have to confirm a
+          transaction with your currently connected wallet. The creation will
+          cost approximately {gasCosts} ETH. The exact amount will be determined
+          by your wallet.
         </Paragraph>
       </Row>
     </>

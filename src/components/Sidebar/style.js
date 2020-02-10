@@ -1,7 +1,12 @@
 // @flow
 import { makeStyles } from '@material-ui/core/styles'
 import {
-  xs, mediumFontSize, secondaryText, md, headerHeight,
+  xs,
+  mediumFontSize,
+  secondaryText,
+  md,
+  headerHeight,
+  screenSm,
 } from '~/theme/variables'
 
 const sidebarWidth = '400px'
@@ -12,17 +17,50 @@ const sidebarBorderRadius = '8px'
 
 const useSidebarStyles = makeStyles({
   sidebar: {
-    width: sidebarWidth,
-    marginLeft: sidebarMarginLeft,
     borderRadius: sidebarBorderRadius,
+    marginLeft: sidebarMarginLeft,
     top: sidebarMarginTop,
+    width: sidebarWidth,
   },
   sidebarPaper: {
-    width: sidebarWidth,
-    marginLeft: sidebarMarginLeft,
-    top: `calc(${headerHeight} + ${sidebarMarginTop})`,
-    maxHeight: `calc(100vh - ${headerHeight} - ${sidebarMarginTop} - ${sidebarMarginBottom})`,
     borderRadius: sidebarBorderRadius,
+    marginLeft: sidebarMarginLeft,
+    maxHeight: `calc(100vh - ${headerHeight} - ${sidebarMarginTop} - ${sidebarMarginBottom})`,
+    top: `calc(${headerHeight} + ${sidebarMarginTop})`,
+    width: sidebarWidth,
+    maxWidth: `calc(100% - ${sidebarMarginLeft} - ${sidebarMarginLeft})`,
+
+    [`@media (min-width: ${screenSm}px)`]: {
+      maxWidth: 'none',
+    },
+  },
+  topComponents: {
+    alignItems: 'center',
+    flexFlow: 'column',
+    paddingBottom: '30px',
+
+    [`@media (min-width: ${screenSm}px)`]: {
+      flexFlow: 'row',
+      paddingBottom: '0',
+    },
+  },
+  searchWrapper: {
+    width: '100%',
+    [`@media (min-width: ${screenSm}px)`]: {
+      width: 'auto',
+    },
+  },
+  divider: {
+    display: 'none',
+    [`@media (min-width: ${screenSm}px)`]: {
+      display: 'block',
+    },
+  },
+  spacer: {
+    display: 'none',
+    [`@media (min-width: ${screenSm}px)`]: {
+      display: 'block',
+    },
   },
   headerPlaceholder: {
     minHeight: headerHeight,
@@ -48,14 +86,16 @@ const useSidebarStyles = makeStyles({
     },
   },
   searchContainer: {
-    width: '190px',
+    flexGrow: '1',
     marginLeft: xs,
     marginRight: xs,
+    minWidth: '190px',
   },
   searchRoot: {
     letterSpacing: '-0.5px',
     border: 'none',
     boxShadow: 'none',
+    flexGrow: '1',
     '& > button': {
       display: 'none',
     },

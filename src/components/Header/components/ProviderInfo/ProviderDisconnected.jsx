@@ -17,23 +17,37 @@ const styles = () => ({
     fontFamily: 'Averta, sans-serif',
   },
   account: {
-    paddingRight: sm,
+    alignItems: 'start',
     display: 'flex',
     flexDirection: 'column',
-    justifyContent: 'center',
-    alignItems: 'start',
     flexGrow: 1,
+    justifyContent: 'center',
+    paddingRight: sm,
   },
   connect: {
     letterSpacing: '-0.5px',
+    whiteSpace: 'nowrap',
   },
 })
 
 const ProviderDisconnected = ({ classes }: Props) => (
   <>
-    <CircleDot keySize={17} circleSize={35} dotSize={16} dotTop={24} dotRight={11} mode="error" />
+    <CircleDot
+      keySize={17}
+      circleSize={35}
+      dotSize={16}
+      dotTop={24}
+      dotRight={11}
+      mode="error"
+    />
     <Col end="sm" middle="xs" layout="column" className={classes.account}>
-      <Paragraph size="sm" transform="capitalize" className={classes.network} noMargin weight="bold">
+      <Paragraph
+        size="sm"
+        transform="capitalize"
+        className={classes.network}
+        noMargin
+        weight="bold"
+      >
         Not Connected
       </Paragraph>
       <Paragraph size="sm" color="fancy" className={classes.connect} noMargin>

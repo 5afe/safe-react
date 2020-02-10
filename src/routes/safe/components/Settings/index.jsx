@@ -66,7 +66,7 @@ class Settings extends React.Component<Props, State> {
     }
   }
 
-  handleChange = (menuOptionIndex) => () => {
+  handleChange = menuOptionIndex => () => {
     this.setState({ menuOptionIndex })
   }
 
@@ -104,9 +104,18 @@ class Settings extends React.Component<Props, State> {
     return (
       <>
         <Row className={classes.message}>
-          <ButtonLink size="lg" color="error" className={classes.removeSafeBtn} onClick={this.onShow('RemoveSafe')}>
+          <ButtonLink
+            size="lg"
+            color="error"
+            className={classes.removeSafeBtn}
+            onClick={this.onShow('RemoveSafe')}
+          >
             <Span className={classes.links}>Remove Safe</Span>
-            <Img alt="Trash Icon" className={classes.removeSafeIcon} src={RemoveSafeIcon} />
+            <Img
+              alt="Trash Icon"
+              className={classes.removeSafeIcon}
+              src={RemoveSafeIcon}
+            />
           </ButtonLink>
           <RemoveSafeModal
             onClose={this.onHide('RemoveSafe')}
@@ -117,18 +126,24 @@ class Settings extends React.Component<Props, State> {
           />
         </Row>
         <Block className={classes.root}>
-          <Col xs={3} layout="column">
+          <Col className={classes.menuWrapper} layout="column">
             <Block className={classes.menu}>
               <Row
-                className={cn(classes.menuOption, menuOptionIndex === 1 && classes.active)}
+                className={cn(
+                  classes.menuOption,
+                  menuOptionIndex === 1 && classes.active
+                )}
                 onClick={this.handleChange(1)}
               >
                 <SafeDetailsIcon />
                 Safe details
               </Row>
-              <Hairline />
+              <Hairline className={classes.hairline} />
               <Row
-                className={cn(classes.menuOption, menuOptionIndex === 2 && classes.active)}
+                className={cn(
+                  classes.menuOption,
+                  menuOptionIndex === 2 && classes.active
+                )}
                 onClick={this.handleChange(2)}
                 testId={OWNERS_SETTINGS_TAB_TEST_ID}
               >
@@ -138,21 +153,28 @@ class Settings extends React.Component<Props, State> {
                   {owners.size}
                 </Paragraph>
               </Row>
-              <Hairline />
+              <Hairline className={classes.hairline} />
               <Row
-                className={cn(classes.menuOption, menuOptionIndex === 3 && classes.active)}
+                className={cn(
+                  classes.menuOption,
+                  menuOptionIndex === 3 && classes.active
+                )}
                 onClick={this.handleChange(3)}
               >
                 <RequiredConfirmationsIcon />
                 Policies
               </Row>
-              <Hairline />
+              <Hairline className={classes.hairline} />
             </Block>
           </Col>
-          <Col xs={9} layout="column">
+          <Col className={classes.contents} layout="column">
             <Block className={classes.container}>
               {menuOptionIndex === 1 && (
-                <SafeDetails safeAddress={safeAddress} safeName={safeName} updateSafe={updateSafe} />
+                <SafeDetails
+                  safeAddress={safeAddress}
+                  safeName={safeName}
+                  updateSafe={updateSafe}
+                />
               )}
               {menuOptionIndex === 2 && (
                 <ManageOwners

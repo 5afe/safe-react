@@ -25,24 +25,31 @@ import {
 import { getErrorMessage } from '~/test/utils/ethereumErrors'
 import { ZERO_ADDRESS } from '~/logic/wallets/ethAddresses'
 import { SAFELIST_ADDRESS } from '~/routes/routes'
+import type { TransactionProps } from '~/routes/safe/store/models/transaction'
 
-const getLastPendingTxNonce = async (safeAddress: string): Promise<number> => {
-  let nonce
-
+const getLastTx = async (safeAddress: string): Promise<TransactionProps> => {
   try {
     const url = buildTxServiceUrl(safeAddress)
-
     const response = await axios.get(url, { params: { limit: 1 } })
-    const lastTx = response.data.results[0]
 
-    nonce = lastTx.nonce + 1
-  } catch (err) {
-    // use current's safe nonce as fallback
-    const safeInstance = await getGnosisSafeInstanceAt(safeAddress)
-    nonce = (await safeInstance.nonce()).toString()
+    return response.data.results[0]
+  } catch (e) {
+    console.error('failed to retrieve last Tx from server', e)
+    return null
   }
+}
 
-  return nonce
+const getSafeNonce = async (safeAddress: string): Promise<string> => {
+  // use current's safe nonce as fallback
+  const safeInstance = await getGnosisSafeInstanceAt(safeAddress)
+  return (await safeInstance.nonce()).toString()
+}
+
+const getNewTxNonce = async (txNonce, lastTx, safeAddress) => {
+  if (!Number.isInteger(Number.parseInt(txNonce, 10))) {
+    return lastTx === null ? getSafeNonce(safeAddress) : lastTx.nonce + 1
+  }
+  return txNonce
 }
 
 type CreateTransactionArgs = {
@@ -83,10 +90,10 @@ const createTransaction = ({
   const from = userAccountSelector(state)
   const safeInstance = await getGnosisSafeInstanceAt(safeAddress)
   const threshold = await safeInstance.getThreshold()
-  const nonce = !Number.isInteger(Number.parseInt(txNonce, 10))
-    ? await getLastPendingTxNonce(safeAddress)
-    : txNonce
-  const isExecution = threshold.toNumber() === 1 || shouldExecute
+  const lastTx = await getLastTx(safeAddress)
+  const nonce = await getNewTxNonce(txNonce, lastTx, safeAddress)
+  const isExecution =
+    (lastTx && lastTx.isExecuted && threshold.toNumber() === 1) || shouldExecute
 
   // https://gnosis-safe.readthedocs.io/en/latest/contracts/signatures.html#pre-validated-signatures
   const sigs = `0x000000000000000000000000${from.replace(

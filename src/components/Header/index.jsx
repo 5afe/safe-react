@@ -36,7 +36,10 @@ class HeaderComponent extends React.PureComponent<Props, State> {
 
   async componentDidMount() {
     const lastUsedProvider = await loadLastUsedProvider()
-    if (INJECTED_PROVIDERS.includes(lastUsedProvider) || process.env.NODE_ENV === 'test') {
+    if (
+      INJECTED_PROVIDERS.includes(lastUsedProvider) ||
+      process.env.NODE_ENV === 'test'
+    ) {
       web3Connect.connectToInjected()
     }
   }
@@ -45,7 +48,11 @@ class HeaderComponent extends React.PureComponent<Props, State> {
     const { enqueueSnackbar, closeSnackbar } = this.props
 
     this.setState({ hasError: true })
-    showSnackbar(NOTIFICATIONS.CONNECT_WALLET_ERROR_MSG, enqueueSnackbar, closeSnackbar)
+    showSnackbar(
+      NOTIFICATIONS.CONNECT_WALLET_ERROR_MSG,
+      enqueueSnackbar,
+      closeSnackbar
+    )
 
     logComponentStack(error, info)
   }
@@ -58,22 +65,25 @@ class HeaderComponent extends React.PureComponent<Props, State> {
 
   getProviderInfoBased = () => {
     const { hasError } = this.state
-    const {
-      loaded, available, provider, network, userAddress,
-    } = this.props
+    const { loaded, available, provider, network, userAddress } = this.props
 
     if (hasError || !loaded) {
       return <ProviderDisconnected />
     }
 
-    return <ProviderAccessible provider={provider} network={network} userAddress={userAddress} connected={available} />
+    return (
+      <ProviderAccessible
+        provider={provider}
+        network={network}
+        userAddress={userAddress}
+        connected={available}
+      />
+    )
   }
 
   getProviderDetailsBased = () => {
     const { hasError } = this.state
-    const {
-      loaded, available, provider, network, userAddress,
-    } = this.props
+    const { loaded, available, provider, network, userAddress } = this.props
 
     if (hasError || !loaded) {
       return <ConnectDetails />
@@ -81,11 +91,11 @@ class HeaderComponent extends React.PureComponent<Props, State> {
 
     return (
       <UserDetails
-        provider={provider}
-        network={network}
-        userAddress={userAddress}
         connected={available}
+        network={network}
         onDisconnect={this.onDisconnect}
+        provider={provider}
+        userAddress={userAddress}
       />
     )
   }
@@ -98,7 +108,4 @@ class HeaderComponent extends React.PureComponent<Props, State> {
   }
 }
 
-export default connect(
-  selector,
-  actions,
-)(withSnackbar(HeaderComponent))
+export default connect(selector, actions)(withSnackbar(HeaderComponent))

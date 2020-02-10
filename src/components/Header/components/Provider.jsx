@@ -7,7 +7,7 @@ import ExpandMore from '@material-ui/icons/ExpandMore'
 import Col from '~/components/layout/Col'
 import Divider from '~/components/layout/Divider'
 import { type Open } from '~/components/hoc/OpenHoc'
-import { sm, md } from '~/theme/variables'
+import { sm, md, screenSm } from '~/theme/variables'
 
 type Props = Open & {
   classes: Object,
@@ -18,22 +18,29 @@ type Props = Open & {
 
 const styles = () => ({
   root: {
-    height: '100%',
-    display: 'flex',
     alignItems: 'center',
-    flexBasis: '284px',
-    marginRight: '20px',
+    display: 'flex',
+    height: '100%',
+
+    [`@media (min-width: ${screenSm}px)`]: {
+      flexBasis: '284px',
+      marginRight: '20px',
+    },
   },
   provider: {
-    padding: `${sm} ${md}`,
     alignItems: 'center',
-    flex: '1 1 auto',
-    display: 'flex',
     cursor: 'pointer',
+    display: 'flex',
+    flex: '1 1 auto',
+    padding: sm,
+    [`@media (min-width: ${screenSm}px)`]: {
+      paddingLeft: md,
+      paddingRight: md,
+    },
   },
   expand: {
-    width: '30px',
     height: '30px',
+    width: '30px',
   },
 })
 
@@ -49,15 +56,18 @@ class Provider extends React.Component<Props> {
   }
 
   render() {
-    const {
-      open, toggle, children, classes, info,
-    } = this.props
+    const { open, toggle, children, classes, info } = this.props
 
     return (
       <>
         <div ref={this.myRef} className={classes.root}>
           <Divider />
-          <Col end="sm" middle="xs" className={classes.provider} onClick={toggle}>
+          <Col
+            end="sm"
+            middle="xs"
+            className={classes.provider}
+            onClick={toggle}
+          >
             {info}
             <IconButton disableRipple className={classes.expand}>
               {open ? <ExpandLess /> : <ExpandMore />}
