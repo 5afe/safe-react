@@ -2,6 +2,7 @@
 import { BigNumber } from 'bignumber.js'
 import { getWeb3 } from '~/logic/wallets/getWeb3'
 import { EMPTY_DATA } from '~/logic/wallets/ethTransactions'
+import { onboardUser } from '~/components/ConnectButton'
 import { getGnosisSafeInstanceAt } from '~/logic/contracts/safeContracts'
 
 const estimateDataGasCosts = (data) => {
@@ -67,6 +68,8 @@ export const generateTxGasEstimateFrom = async (
 ) => {
   try {
     let safeInstance = safe
+    const ready = await onboardUser()
+    if(!ready) return
     if (!safeInstance) {
       safeInstance = await getGnosisSafeInstanceAt(safeAddress)
     }

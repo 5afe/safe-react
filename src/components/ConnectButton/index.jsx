@@ -47,31 +47,48 @@ const wallets = [
 ]
 
 let lastUsedAddress = ''
+let providerName = undefined
 
 export const onboard = new Onboard({
   dappId: BLOCKNATIVE_API_KEY,
   networkId: getNetworkId(),
   subscriptions: {
     wallet: (wallet) => {
-      setWeb3(wallet.provider)
+      if (wallet.provider) {
+        // this function will intialize web3 and store it somewhere available throughout the dapp and can also instantiate your contracts with the web3 instance
+        setWeb3(wallet.provider)
+        providerName = wallet.name
+        store.dispatch(fetchProvider(providerName))
+
+      } else {
+        // there is no provider, so the wallet has been reset, set web3 back to undefined and reset contracts
+        store.dispatch(removeProvider())
+        providerName = undefined
+      }
     },
     address: (address) => {
       if (!lastUsedAddress && address) {
         lastUsedAddress = address
-        store.dispatch(fetchProvider())
+        store.dispatch(fetchProvider(providerName))
       }
-
       // we don't have an unsubscribe event so we rely on this
       if (!address && lastUsedAddress) {
         lastUsedAddress = ''
+        providerName = undefined
         store.dispatch(removeProvider())
       }
-    },
+    }
   },
   walletSelect: {
     wallets,
   },
 })
+
+export const onboardUser = async () => {
+  // before calling walletSelect you want to check if web3 has been instantiated which indicates that a wallet has already been selected and web3 has been instantiated with that provider
+  const walletSelected = web3 ? true : await onboard.walletSelect()
+  return walletSelected && onboard.walletCheck()
+}
 
 type Props = {
   enqueueSnackbar: Function,

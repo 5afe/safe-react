@@ -31,10 +31,9 @@ const providerWatcherMware = (store: Store<GlobalState>) => (next: Function) => 
           clearInterval(watcherInterval)
         }
 
-        if (currentProviderProps.name === WALLET_PROVIDER.METAMASK && window.ethereum) {
+        if (currentProviderProps.name.toUpperCase() === WALLET_PROVIDER.METAMASK && window.ethereum) {
           window.ethereum.autoRefreshOnNetworkChange = false
         }
-
         saveToStorage(LAST_USED_PROVIDER_KEY, currentProviderProps.name)
 
         watcherInterval = setInterval(async () => {
@@ -48,7 +47,7 @@ const providerWatcherMware = (store: Store<GlobalState>) => (next: Function) => 
           }
 
           if (currentProviderProps.account !== providerInfo.account || networkChanged) {
-            store.dispatch(fetchProvider(web3))
+            store.dispatch(fetchProvider(currentProviderProps.name))
           }
         }, 2000)
 

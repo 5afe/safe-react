@@ -4,6 +4,7 @@ import { List } from 'immutable'
 import { withStyles } from '@material-ui/core/styles'
 import { withSnackbar } from 'notistack'
 import Modal from '~/components/Modal'
+import { onboardUser } from '~/components/ConnectButton'
 import { type Owner } from '~/routes/safe/store/models/owner'
 import { getGnosisSafeInstanceAt } from '~/logic/contracts/safeContracts'
 import { TX_NOTIFICATION_TYPES } from '~/logic/safe/transactions'
@@ -44,6 +45,8 @@ export const sendAddOwner = async (
   createTransaction: Function,
   addSafeOwner: Function,
 ) => {
+  const ready = await onboardUser()
+  if (!ready) return
   const gnosisSafe = await getGnosisSafeInstanceAt(safeAddress)
   const txData = gnosisSafe.contract.methods.addOwnerWithThreshold(values.ownerAddress, values.threshold).encodeABI()
 

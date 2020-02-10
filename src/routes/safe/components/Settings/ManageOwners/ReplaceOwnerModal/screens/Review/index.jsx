@@ -5,6 +5,7 @@ import classNames from 'classnames'
 import { withStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
 import IconButton from '@material-ui/core/IconButton'
+import { onboardUser } from '~/components/ConnectButton'
 import EtherscanBtn from '~/components/EtherscanBtn'
 import CopyBtn from '~/components/CopyBtn'
 import Identicon from '~/components/Identicon'
@@ -56,8 +57,9 @@ const ReviewRemoveOwner = ({
     let isCurrent = true
     const estimateGas = async () => {
       const web3 = getWeb3()
+      const ready = await onboardUser()
+      if (!ready) return
       const { fromWei, toBN } = web3.utils
-
       const gnosisSafe = await getGnosisSafeInstanceAt(safeAddress)
       const safeOwners = await gnosisSafe.getOwners()
       const index = safeOwners.findIndex((owner) => owner.toLowerCase() === ownerAddress.toLowerCase())

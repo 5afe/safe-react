@@ -5,6 +5,7 @@ import bn from 'bignumber.js'
 import type { Dispatch as ReduxDispatch } from 'redux'
 import { type GlobalState } from '~/store'
 import { makeOwner } from '~/routes/safe/store/models/owner'
+import { onboardUser } from '~/components/ConnectButton'
 import { makeTransaction, type Transaction } from '~/routes/safe/store/models/transaction'
 import { makeIncomingTransaction, type IncomingTransaction } from '~/routes/safe/store/models/incomingTransaction'
 import { makeConfirmation } from '~/routes/safe/store/models/confirmation'
@@ -121,6 +122,8 @@ export const buildTransactionFrom = async (
     try {
       [symbol, decimals] = await Promise.all([tokenInstance.symbol(), tokenInstance.decimals()])
     } catch (err) {
+      const ready = await onboardUser()
+      if(!ready) return
       const alternativeTokenInstance = new web3.eth.Contract(ALTERNATIVE_TOKEN_ABI, tx.to)
       const [tokenSymbol, tokenDecimals] = await Promise.all([
         alternativeTokenInstance.methods.symbol().call(),

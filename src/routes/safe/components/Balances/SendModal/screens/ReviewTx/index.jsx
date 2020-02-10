@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { List } from 'immutable'
 import { BigNumber } from 'bignumber.js'
 import { withStyles } from '@material-ui/core/styles'
+import { onboardUser } from '~/components/ConnectButton'
 import Close from '@material-ui/icons/Close'
 import IconButton from '@material-ui/core/IconButton'
 import { withSnackbar } from 'notistack'
@@ -65,10 +66,12 @@ const ReviewTx = ({
   useEffect(() => {
     let isCurrent = true
     const estimateGas = async () => {
+      const ready = await onboardUser()
+      if (!ready) return
+
       const web3 = getWeb3()
       const { fromWei, toBN } = web3.utils
       let txData = EMPTY_DATA
-
       if (!isSendingETH) {
         const StandardToken = await getHumanFriendlyToken()
         const tokenInstance = await StandardToken.at(txToken.address)
@@ -93,9 +96,10 @@ const ReviewTx = ({
 
   const submitTx = async () => {
     const web3 = getWeb3()
+    const ready = await onboardUser()
+    if (!ready) return
     let txData = EMPTY_DATA
     let txAmount = web3.utils.toWei(tx.amount, 'ether')
-
     if (!isSendingETH) {
       const HumanFriendlyToken = await getHumanFriendlyToken()
       const tokenInstance = await HumanFriendlyToken.at(txToken.address)

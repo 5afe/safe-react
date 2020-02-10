@@ -4,6 +4,7 @@ import { List } from 'immutable'
 import { withStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
 import IconButton from '@material-ui/core/IconButton'
+import { onboardUser } from '~/components/ConnectButton'
 import MenuItem from '@material-ui/core/MenuItem'
 import SelectField from '~/components/forms/SelectField'
 import {
@@ -44,8 +45,9 @@ const ChangeThreshold = ({
     let isCurrent = true
     const estimateGasCosts = async () => {
       const web3 = getWeb3()
+      const ready = await onboardUser()
+      if (!ready) return
       const { fromWei, toBN } = web3.utils
-
       const safeInstance = await getGnosisSafeInstanceAt(safeAddress)
       const txData = safeInstance.contract.methods.changeThreshold('1').encodeABI()
       const estimatedGasCosts = await estimateTxGasCosts(safeAddress, safeAddress, txData)
