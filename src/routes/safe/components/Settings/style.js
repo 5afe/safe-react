@@ -25,6 +25,7 @@ export const styles = () => ({
     flexDirection: 'row',
     flexGrow: '0',
     maxWidth: '100%',
+
     [`@media (min-width: ${screenSm}px)`]: {
       flexDirection: 'row',
       maxWidth: 'unset',

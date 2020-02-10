@@ -175,7 +175,13 @@ const Layout = (props: Props) => {
           </Button>
         </Block>
       </Block>
-      <Tabs variant="scrollable" value={location.pathname} onChange={handleCallToRouter} indicatorColor="secondary" textColor="secondary">
+      <Tabs
+        variant="scrollable"
+        value={location.pathname}
+        onChange={handleCallToRouter}
+        indicatorColor="secondary"
+        textColor="secondary"
+      >
         <Tab
           classes={{
             selected: classes.tabWrapperSelected,
