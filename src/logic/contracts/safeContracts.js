@@ -11,6 +11,8 @@ import { ZERO_ADDRESS } from '~/logic/wallets/ethAddresses'
 
 export const SENTINEL_ADDRESS = '0x0000000000000000000000000000000000000001'
 export const multiSendAddress = '0xB522a9f781924eD250A11C54105E51840B138AdD'
+export const safeMasterCopyAddress = '0x34CfAC646f301356fAa8B21e94227e3583Fe3F5F'
+export const defaultFallbackHandlerAddress = '0xd5D82B6aDDc9027B22dCA772Aa68D5d74cdBdF44'
 
 let proxyFactoryMaster
 let safeMaster
@@ -23,7 +25,7 @@ const createGnosisSafeContract = (web3: any) => {
       4: {
         links: {},
         events: {},
-        address: '0x34CfAC646f301356fAa8B21e94227e3583Fe3F5F',
+        address: safeMasterCopyAddress,
         updated_at: 1551107687797,
       },
     }
@@ -93,7 +95,7 @@ export const getSafeMasterContract = async () => {
 
 export const deploySafeContract = async (safeAccounts: string[], numConfirmations: number, userAccount: string) => {
   const gnosisSafeData = await safeMaster.contract.methods
-    .setup(safeAccounts, numConfirmations, ZERO_ADDRESS, '0x', ZERO_ADDRESS, 0, ZERO_ADDRESS)
+    .setup(safeAccounts, numConfirmations, ZERO_ADDRESS, '0x', defaultFallbackHandlerAddress, ZERO_ADDRESS, 0, ZERO_ADDRESS)
     .encodeABI()
   const proxyFactoryData = proxyFactoryMaster.contract.methods
     .createProxy(safeMaster.address, gnosisSafeData)
@@ -115,7 +117,7 @@ export const estimateGasForDeployingSafe = async (
   userAccount: string,
 ) => {
   const gnosisSafeData = await safeMaster.contract.methods
-    .setup(safeAccounts, numConfirmations, ZERO_ADDRESS, '0x', ZERO_ADDRESS, 0, ZERO_ADDRESS)
+    .setup(safeAccounts, numConfirmations, ZERO_ADDRESS, '0x', defaultFallbackHandlerAddress, ZERO_ADDRESS, 0, ZERO_ADDRESS)
     .encodeABI()
   const proxyFactoryData = proxyFactoryMaster.contract.methods
     .createProxy(safeMaster.address, gnosisSafeData)

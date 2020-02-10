@@ -11,7 +11,13 @@ import Block from '~/components/layout/Block'
 import Button from '~/components/layout/Button'
 import { styles } from './style'
 import { DELEGATE_CALL } from '~/logic/safe/transactions'
-import { getEncodedMultiSendCallData, getGnosisSafeInstanceAt, multiSendAddress } from '~/logic/contracts/safeContracts'
+import {
+  defaultFallbackHandlerAddress,
+  getEncodedMultiSendCallData,
+  getGnosisSafeInstanceAt,
+  multiSendAddress,
+  safeMasterCopyAddress,
+} from '~/logic/contracts/safeContracts'
 import type { MultiSendTransactionInstanceType } from '~/logic/contracts/safeContracts'
 
 
@@ -42,8 +48,8 @@ const UpdateSafeModal = ({
       })
     }
     const safeInstance = await getGnosisSafeInstanceAt(safeAddress)
-    const fallbackHandlerTxData = safeInstance.contract.methods.setFallbackHandler('0xd5D82B6aDDc9027B22dCA772Aa68D5d74cdBdF44').encodeABI()
-    const updateSafeTxData = safeInstance.contract.methods.changeMasterCopy('0x34CfAC646f301356fAa8B21e94227e3583Fe3F5F').encodeABI()
+    const fallbackHandlerTxData = safeInstance.contract.methods.setFallbackHandler(defaultFallbackHandlerAddress).encodeABI()
+    const updateSafeTxData = safeInstance.contract.methods.changeMasterCopy(safeMasterCopyAddress).encodeABI()
     const txs = [
       {
         operation: 0,
