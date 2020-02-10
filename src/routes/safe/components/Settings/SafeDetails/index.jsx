@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import { withSnackbar } from 'notistack'
+import { useSelector } from 'react-redux'
 import Block from '~/components/layout/Block'
 import Col from '~/components/layout/Col'
 import Field from '~/components/forms/Field'
@@ -18,6 +19,7 @@ import { styles } from './style'
 import { getSafeVersion } from '~/logic/safe/utils/safeVersion'
 import UpdateSafeModal from '~/routes/safe/components/Settings/UpdateSafeModal'
 import Modal from '~/components/Modal'
+import { grantedSelector } from '~/routes/safe/container/selector'
 
 export const SAFE_NAME_INPUT_TEST_ID = 'safe-name-input'
 export const SAFE_NAME_SUBMIT_BTN_TEST_ID = 'change-safe-name-btn'
@@ -37,6 +39,7 @@ const useStyles = makeStyles(styles)
 const SafeDetails = (props: Props) => {
   const classes = useStyles()
   const [safeVersions, setSafeVersions] = React.useState({ current: null, latest: null, needUpdate: false })
+  const isUserOwner = useSelector(grantedSelector)
   const {
     safeAddress, safeName, updateSafe, enqueueSnackbar, closeSnackbar, createTransaction,
   } = props
@@ -52,6 +55,10 @@ const SafeDetails = (props: Props) => {
 
     const notification = getNotificationsFromTxType(TX_NOTIFICATION_TYPES.SAFE_NAME_CHANGE_TX)
     showSnackbar(notification.afterExecution.noMoreConfirmationsNeeded, enqueueSnackbar, closeSnackbar)
+  }
+
+  const handleUpdateSafe = () => {
+    setModalOpen(true)
   }
 
   useEffect(() => {
@@ -80,11 +87,11 @@ const SafeDetails = (props: Props) => {
                   {safeVersions.needUpdate && ` (there's a newer version: ${safeVersions.latest})`}
                 </Paragraph>
               </Row>
-              {safeVersions.needUpdate ? (
+              {safeVersions.needUpdate && isUserOwner ? (
                 <Row align="end" grow>
                   <Paragraph>
                     <Button
-                      onClick={() => setModalOpen(true)}
+                      onClick={handleUpdateSafe}
                       className={classes.saveBtn}
                       size="small"
                       variant="contained"
