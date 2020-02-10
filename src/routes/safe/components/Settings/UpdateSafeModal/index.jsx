@@ -10,15 +10,7 @@ import GnoForm from '~/components/forms/GnoForm'
 import Block from '~/components/layout/Block'
 import Button from '~/components/layout/Button'
 import { styles } from './style'
-import { DELEGATE_CALL } from '~/logic/safe/transactions'
-import {
-  defaultFallbackHandlerAddress,
-  getEncodedMultiSendCallData,
-  getGnosisSafeInstanceAt,
-  multiSendAddress,
-  safeMasterCopyAddress,
-} from '~/logic/contracts/safeContracts'
-import type { MultiSendTransactionInstanceType } from '~/logic/contracts/safeContracts'
+import { upgradeSafeToLastVersion } from '~/logic/safe/utils/updateSafe'
 
 
 type Props = {
@@ -34,39 +26,7 @@ const UpdateSafeModal = ({
 }: Props) => {
   const handleSubmit = async () => {
     // Call the update safe method
-    const sendTransactions = async (txs: Array<MultiSendTransactionInstanceType>) => {
-      const encodeMultiSendCallData = getEncodedMultiSendCallData(txs)
-      createTransaction({
-        safeAddress,
-        to: multiSendAddress,
-        valueInWei: 0,
-        txData: encodeMultiSendCallData,
-        notifiedTransaction: 'STANDARD_TX',
-        enqueueSnackbar: () => {},
-        closeSnackbar: () => {},
-        operation: DELEGATE_CALL,
-      })
-    }
-    const safeInstance = await getGnosisSafeInstanceAt(safeAddress)
-    const fallbackHandlerTxData = safeInstance.contract.methods.setFallbackHandler(defaultFallbackHandlerAddress).encodeABI()
-    const updateSafeTxData = safeInstance.contract.methods.changeMasterCopy(safeMasterCopyAddress).encodeABI()
-    const txs = [
-      {
-        operation: 0,
-        to: safeAddress,
-        value: 0,
-        data: fallbackHandlerTxData,
-      },
-      {
-        operation: 0,
-        to: safeAddress,
-        value: 0,
-        data: updateSafeTxData,
-      },
-    ]
-
-
-    await sendTransactions(txs)
+    await upgradeSafeToLastVersion(safeAddress, createTransaction)
     onClose()
   }
 

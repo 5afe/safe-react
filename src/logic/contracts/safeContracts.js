@@ -10,9 +10,10 @@ import { calculateGasOf, calculateGasPrice } from '~/logic/wallets/ethTransactio
 import { ZERO_ADDRESS } from '~/logic/wallets/ethAddresses'
 
 export const SENTINEL_ADDRESS = '0x0000000000000000000000000000000000000001'
-export const multiSendAddress = '0xB522a9f781924eD250A11C54105E51840B138AdD'
-export const safeMasterCopyAddress = '0x34CfAC646f301356fAa8B21e94227e3583Fe3F5F'
-export const defaultFallbackHandlerAddress = '0xd5D82B6aDDc9027B22dCA772Aa68D5d74cdBdF44'
+export const MULTI_SEND_ADDRESS = '0xB522a9f781924eD250A11C54105E51840B138AdD'
+export const SAFE_MASTER_COPY_ADDRESS = '0x34CfAC646f301356fAa8B21e94227e3583Fe3F5F'
+export const DEFAULT_FALLBACK_HANDLER_ADDRESS = '0xd5D82B6aDDc9027B22dCA772Aa68D5d74cdBdF44'
+export const SAFE_PROXY_FACTORY_ADDRESS = '0x76E2cFc1F5Fa8F6a5b3fC4c8F4788F0116861F9B'
 
 let proxyFactoryMaster
 let safeMaster
@@ -22,10 +23,16 @@ const createGnosisSafeContract = (web3: any) => {
 
   if (!Object.keys(gnosisSafeSol.networks).length) {
     gnosisSafeSol.networks = {
+      1: {
+        links: {},
+        events: {},
+        address: SAFE_MASTER_COPY_ADDRESS,
+        updated_at: 1551107687797,
+      },
       4: {
         links: {},
         events: {},
-        address: safeMasterCopyAddress,
+        address: SAFE_MASTER_COPY_ADDRESS,
         updated_at: 1551107687797,
       },
     }
@@ -42,10 +49,16 @@ const createProxyFactoryContract = (web3: any) => {
 
   if (!Object.keys(proxyFactorySol.networks).length) {
     proxyFactorySol.networks = {
+      1: {
+        links: {},
+        events: {},
+        address: SAFE_PROXY_FACTORY_ADDRESS,
+        updated_at: 1551107687797,
+      },
       4: {
         links: {},
         events: {},
-        address: '0x76E2cFc1F5Fa8F6a5b3fC4c8F4788F0116861F9B',
+        address: SAFE_PROXY_FACTORY_ADDRESS,
         updated_at: 1551107687797,
       },
     }
@@ -180,7 +193,7 @@ export const getEncodedMultiSendCallData = (txs: Array<MultiSendTransactionInsta
     },
   ]
   const web3 = getWeb3()
-  const multiSend = new web3.eth.Contract(multiSendAbi, multiSendAddress)
+  const multiSend = new web3.eth.Contract(multiSendAbi, MULTI_SEND_ADDRESS)
   const encodeMultiSendCallData = multiSend.methods
     .multiSend(
       `0x${txs
