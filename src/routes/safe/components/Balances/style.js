@@ -1,17 +1,54 @@
 // @flow
-import { xs, sm, md, secondary } from '~/theme/variables'
+import {
+  xs, sm, md, secondary, screenSm,
+} from '~/theme/variables'
 
 export const styles = (theme: Object) => ({
   root: {
-    width: '20px',
     marginRight: sm,
+    width: '20px',
   },
-  message: {
-    margin: `${sm} 0`,
-    padding: `${md} 0`,
-    maxHeight: '54px',
+  controls: {
+    alignItems: 'center',
     boxSizing: 'border-box',
-    justifyContent: 'flex-end',
+    justifyContent: 'space-between',
+    padding: `${md} 0`,
+  },
+  assetTabs: {
+    alignItems: 'center',
+    display: 'flex',
+    order: '2',
+
+    [`@media (min-width: ${screenSm}px)`]: {
+      order: '1',
+    },
+  },
+  assetDivider: {
+    borderRightColor: `${secondary} !important`,
+    height: '18px !important',
+  },
+  assetTabActive: {
+    textDecoration: 'none',
+  },
+  tokenControls: {
+    alignItems: 'center',
+    display: 'flex',
+    justifyContent: 'space-between',
+    order: '1',
+    padding: '0 0 10px',
+
+    [`@media (min-width: ${screenSm}px)`]: {
+      justifyContent: 'flex-end',
+      order: '2',
+      padding: '0',
+    },
+  },
+  manageTokensButton: {
+    marginLeft: 'auto',
+
+    [`@media (min-width: ${screenSm}px)`]: {
+      marginLeft: '0',
+    },
   },
   actionIcon: {
     marginRight: theme.spacing(1),
@@ -69,14 +106,5 @@ export const styles = (theme: Object) => ({
   currencyValueRow: {
     maxWidth: '125px',
     textAlign: 'right',
-  },
-  assetSection: {
-    height: '18px',
-  },
-  assetSectionDivider: {
-    borderRight: `2px solid ${secondary} !important`,
-  },
-  assetSectionButtonActive: {
-    textDecoration: 'none',
   },
 })

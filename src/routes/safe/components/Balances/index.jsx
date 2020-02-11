@@ -170,8 +170,8 @@ class Balances extends React.Component<Props, State> {
 
     return (
       <>
-        <Row align="center" className={classes.message}>
-          <Col xs={4} start="sm" className={classes.assetSection}>
+        <Row align="center" className={classes.controls}>
+          <Col sm={6} xs={12} start="sm" className={classes.assetTabs}>
             <ButtonLink
               className={showCoins ? classes.assetSectionButtonActive : ''}
               color={!showCoins ? 'medium' : 'secondary'}
@@ -182,9 +182,9 @@ class Balances extends React.Component<Props, State> {
             >
               Coins
             </ButtonLink>
-            <Divider className={classes.assetSectionDivider} />
+            <Divider className={classes.assetDivider} />
             <ButtonLink
-              className={showCollectibles ? classes.assetSectionButtonActive : ''}
+              className={showCollectibles ? classes.assetTabActive : ''}
               color={!showCollectibles ? 'medium' : 'secondary'}
               onClick={this.viewCollectibles}
               size="md"
@@ -194,9 +194,9 @@ class Balances extends React.Component<Props, State> {
               Collectibles
             </ButtonLink>
           </Col>
-          <Col xs={8} end="sm">
+          <Col sm={6} xs={12} className={classes.tokenControls} end="sm">
             { showCoins && <DropdownCurrency /> }
-            <ButtonLink size="lg" onClick={this.onShow('Token')} testId="manage-tokens-btn">
+            <ButtonLink className={classes.manageTokensButton} size="lg" onClick={this.onShow('Token')} testId="manage-tokens-btn">
               Manage Tokens
             </ButtonLink>
             <Modal
