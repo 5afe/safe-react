@@ -195,7 +195,7 @@ class Balances extends React.Component<Props, State> {
             </ButtonLink>
           </Col>
           <Col xs={8} end="sm">
-            <DropdownCurrency />
+            { showCoins && <DropdownCurrency /> }
             <ButtonLink size="lg" onClick={this.onShow('Token')} testId="manage-tokens-btn">
               Manage List
             </ButtonLink>

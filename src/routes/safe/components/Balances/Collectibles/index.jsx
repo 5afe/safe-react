@@ -6,8 +6,9 @@ import Card from '@material-ui/core/Card'
 import {
   screenSm, fontColor,
 } from '~/theme/variables'
-import Cryptokitty from './components/Cryptokitty'
+import Item from './components/Item'
 import CryptoKittiesAvatar from './img/cryptokitties.png'
+import MarbleCardsAvatar from './img/marblecards.png'
 
 const styles = () => ({
   cardInner: {
@@ -20,21 +21,17 @@ const styles = () => ({
     columnGap: '30px',
     display: 'grid',
     gridTemplateColumns: '1fr',
+    marginBottom: '45px',
     maxWidth: '100%',
     rowGap: '45px',
+
+    '&:last-child': {
+      marginBottom: '0',
+    },
 
     [`@media (min-width: ${screenSm}px)`]: {
       gridTemplateColumns: '1fr 1fr 1fr 1fr',
     },
-  },
-  item: {
-    backgroundColor: '#fff',
-    borderRadius: '8px',
-    boxSizing: 'border-box',
-    boxShadow: '1px 2px 10px 0 rgba(212, 212, 211, 0.59)',
-    display: 'flex',
-    minHeight: '250px',
-    minWidth: '0',
   },
   title: {
     alignItems: 'center',
@@ -57,6 +54,12 @@ const styles = () => ({
     lineHeight: '1.2',
     margin: '0',
   },
+  titleFiller: {
+    backgroundColor: '#e8e7e6',
+    flexGrow: '1',
+    height: '2px',
+    marginLeft: '40px',
+  },
 })
 
 type Props = {
@@ -67,66 +70,67 @@ const data = [
   {
     image: CryptoKittiesAvatar,
     title: 'CryptoKitties',
-    type: 'cryptokitties',
     data: [
       {
-        backgroundColor: '#f0efee',
         image: 'https://via.placeholder.com/155',
         text: 'Serpent Gen 123456',
         title: 'Mystical Potato',
       },
       {
-        backgroundColor: '#d1eeeb',
-        image: 'https://via.placeholder.com/155',
+        image: 'https://via.placeholder.com/50',
         text: 'Asdf Lpopop',
         title: 'Androgynous Android',
       },
       {
-        backgroundColor: '#ffe0e5',
-        image: 'https://via.placeholder.com/155',
+        image: 'https://via.placeholder.com/500',
         text: 'Misunderstood',
         title: 'Topical Carebear',
       },
       {
-        backgroundColor: '#d3e8ff',
-        image: 'https://via.placeholder.com/155',
+        image: 'https://via.placeholder.com/1024x768',
         text: 'Candlestick Tomato',
         title: 'Native Dreamer',
       },
       {
-        backgroundColor: '#c5eefa',
-        image: 'https://via.placeholder.com/155',
+        image: 'https://via.placeholder.com/768x1280',
         text: 'Could Be',
         title: 'Past Tense',
       },
     ],
   },
+  {
+    image: MarbleCardsAvatar,
+    title: 'MarbleCards',
+    data: [
+      {
+        image: 'https://via.placeholder.com/800x600',
+      },
+      {
+        image: 'https://via.placeholder.com/1280x720',
+      },
+      {
+        image: 'https://via.placeholder.com/500x200',
+      },
+    ],
+  },
 ]
-
-const getItemTemplate = (itemData: any, type: string): any => {
-  switch (type) {
-    case 'cryptokitties':
-      return <Cryptokitty data={itemData} />
-    default:
-      return null
-  }
-}
 
 const Collectibles = ({ classes }: Props) => (
   <Card>
     <div className={classes.cardInner}>
       {data.map((item, index) => (
-        <>
+        <React.Fragment key={index}>
           <div className={classes.title}>
-            <div className={classes.titleImg} style={{ backgroundImage: `url(${CryptoKittiesAvatar})` }} />
+            <div className={classes.titleImg} style={{ backgroundImage: `url(${item.image})` }} />
             <h2 className={classes.titleText}>{item.title}</h2>
+            <div className={classes.titleFiller} />
           </div>
           <div key={index} className={classes.gridRow}>
             {item.data.map((item2, index2) => (
-              <div key={index2} className={classes.item}>{getItemTemplate(item2, item.type)}</div>
+              <Item key={index2} data={item2} />
             ))}
           </div>
-        </>
+        </React.Fragment>
       ))}
     </div>
     <TablePagination
