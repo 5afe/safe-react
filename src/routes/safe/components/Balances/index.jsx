@@ -197,13 +197,13 @@ class Balances extends React.Component<Props, State> {
           <Col xs={8} end="sm">
             { showCoins && <DropdownCurrency /> }
             <ButtonLink size="lg" onClick={this.onShow('Token')} testId="manage-tokens-btn">
-              Manage List
+              Manage Tokens
             </ButtonLink>
             <Modal
               description="Enable and disable tokens to be listed"
               handleClose={this.onHide('Token')}
               open={showToken}
-              title="Manage List"
+              title="Manage Tokens"
             >
               <Tokens
                 activeTokens={activeTokens}
@@ -297,8 +297,7 @@ class Balances extends React.Component<Props, State> {
             </Table>
           </TableContainer>
         )}
-        { showCollectibles
-        && (<Collectibles />)}
+        { showCollectibles && (<Collectibles />)}
         <SendModal
           activeScreenType="sendFunds"
           createTransaction={createTransaction}
@@ -311,11 +310,11 @@ class Balances extends React.Component<Props, State> {
           tokens={activeTokens}
         />
         <Modal
-          title="Receive Tokens"
           description="Receive Tokens Form"
           handleClose={this.onHide('Receive')}
-          paperClassName={classes.receiveModal}
           open={showReceive}
+          paperClassName={classes.receiveModal}
+          title="Receive Tokens"
         >
           <Receive
             safeName={safeName}
