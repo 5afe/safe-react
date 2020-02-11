@@ -38,7 +38,7 @@ type Props = Actions & {
 const RemoveSafeComponent = ({
   onClose, isOpen, classes, safeAddress, etherScanLink, safeName, removeSafe,
 }: Props) => (
-  <Modal title="Remove Safe" description="Remove the selected Safe" handleClose={onClose} open={isOpen}>
+  <Modal paperClassName={classes.modal} title="Remove Safe" description="Remove the selected Safe" handleClose={onClose} open={isOpen}>
     <Row align="center" grow className={classes.heading}>
       <Paragraph className={classes.manage} noMargin weight="bolder">
         Remove Safe

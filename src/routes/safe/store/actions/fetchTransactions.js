@@ -204,10 +204,8 @@ export const buildIncomingTransactionFrom = async (tx: IncomingTxServiceModel) =
   let symbol = 'ETH'
   let decimals = 18
 
-  const whenExecutionDate = web3.eth.getBlock(tx.blockNumber)
-    .then(({ timestamp }) => new Date(timestamp * 1000).toISOString())
-  const whenFee = web3.eth.getTransaction(tx.transactionHash).then((t) => bn(t.gas).div(t.gasPrice).toFixed())
-  const [executionDate, fee] = await Promise.all([whenExecutionDate, whenFee])
+  const fee = await web3.eth.getTransaction(tx.transactionHash)
+    .then(({ gas, gasPrice }) => bn(gas).div(gasPrice).toFixed())
 
   if (tx.tokenAddress) {
     try {
@@ -217,10 +215,20 @@ export const buildIncomingTransactionFrom = async (tx: IncomingTxServiceModel) =
       symbol = tokenSymbol
       decimals = tokenDecimals
     } catch (err) {
-      const { methods } = new web3.eth.Contract(ALTERNATIVE_TOKEN_ABI, tx.tokenAddress)
-      const [tokenSymbol, tokenDecimals] = await Promise.all([methods.symbol, methods.decimals].map((m) => m().call()))
-      symbol = web3.utils.toAscii(tokenSymbol)
-      decimals = tokenDecimals
+      try {
+        const { methods } = new web3.eth.Contract(ALTERNATIVE_TOKEN_ABI, tx.tokenAddress)
+        const [tokenSymbol, tokenDecimals] = await Promise.all([methods.symbol, methods.decimals].map((m) => m()
+          .call()))
+        symbol = web3.utils.hexToString(tokenSymbol)
+        decimals = tokenDecimals
+      } catch (e) {
+        // this is a particular treatment for the DCD token, as it seems to lack of symbol and decimal methods
+        if (tx.tokenAddress && tx.tokenAddress.toLowerCase() === '0xe0b7927c4af23765cb51314a0e0521a9645f0e2a') {
+          symbol = 'DCD'
+          decimals = 9
+        }
+        // if it's not DCD, then we fall to the default values
+      }
     }
   }
 
@@ -231,7 +239,6 @@ export const buildIncomingTransactionFrom = async (tx: IncomingTxServiceModel) =
     symbol,
     decimals,
     fee,
-    executionDate,
     executionTxHash: transactionHash,
     safeTxHash: transactionHash,
   })

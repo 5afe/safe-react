@@ -2,11 +2,15 @@
 import * as React from 'react'
 import { border } from '~/theme/variables'
 
-const style = {
-  height: '100%',
-  borderRight: `solid 2px ${border}`,
+type Props = {
+  className?: string,
 }
 
-const Divider = () => <div style={style} />
+const style = {
+  borderRight: `solid 2px ${border}`,
+  height: '100%',
+}
+
+const Divider = ({ className }: Props) => <div className={className} style={style} />
 
 export default Divider

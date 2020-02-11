@@ -20,7 +20,10 @@ export const styles = (theme: Object) => ({
     fontSize: 16,
   },
   receiveModal: {
-    height: '544px',
+    height: 'auto',
+    maxWidth: 'calc(100% - 30px)',
+    minHeight: '544px',
+    overflow: 'hidden',
   },
   hide: {
     '&:hover': {
