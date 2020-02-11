@@ -21,7 +21,6 @@ import {
 import setDefaultSafe from '~/routes/safe/store/actions/setDefaultSafe'
 import { sortedSafeListSelector } from './selectors'
 import SafeList from './SafeList'
-import LegalLinks from './LegalLinks'
 import useSidebarStyles from './style'
 
 const { useState, useEffect, useMemo } = React
@@ -46,8 +45,8 @@ type SidebarProps = {
 
 const filterBy = (filter: string, safes: List<Safe>): List<Safe> => safes.filter(
   (safe: Safe) => !filter
-      || safe.address.toLowerCase().includes(filter.toLowerCase())
-      || safe.name.toLowerCase().includes(filter.toLowerCase()),
+    || safe.address.toLowerCase().includes(filter.toLowerCase())
+    || safe.name.toLowerCase().includes(filter.toLowerCase()),
 )
 
 const Sidebar = ({
@@ -98,32 +97,34 @@ const Sidebar = ({
     <SidebarContext.Provider value={{ isOpen, toggleSidebar }}>
       <ClickAwayListener onClickAway={toggleSidebar}>
         <Drawer
-          className={classes.sidebar}
-          open={isOpen}
-          onKeyDown={handleEsc}
-          classes={{ paper: classes.sidebarPaper }}
           ModalProps={{ onBackdropClick: toggleSidebar }}
+          className={classes.sidebar}
+          classes={{ paper: classes.sidebarPaper }}
+          onKeyDown={handleEsc}
+          open={isOpen}
         >
-          <Row align="center">
-            <SearchIcon className={classes.searchIcon} />
-            <SearchBar
-              classes={searchClasses}
-              placeholder="Search by name or address"
-              searchIcon={<div />}
-              onChange={handleFilterChange}
-              onCancelSearch={handleFilterCancel}
-              value={filter}
-            />
-            <Divider />
-            <Spacer />
+          <Row className={classes.topComponents} align="center">
+            <Row className={classes.searchWrapper} align="center">
+              <SearchIcon className={classes.searchIcon} />
+              <SearchBar
+                classes={searchClasses}
+                onCancelSearch={handleFilterCancel}
+                onChange={handleFilterChange}
+                placeholder="Search by name or address"
+                searchIcon={<div />}
+                value={filter}
+              />
+            </Row>
+            <Divider className={classes.divider} />
+            <Spacer className={classes.spacer} />
             <Button
-              component={Link}
-              to={WELCOME_ADDRESS}
               className={classes.addSafeBtn}
-              variant="contained"
-              size="small"
               color="primary"
+              component={Link}
               onClick={toggleSidebar}
+              size="small"
+              to={WELCOME_ADDRESS}
+              variant="contained"
             >
               + Add Safe
             </Button>
@@ -137,7 +138,6 @@ const Sidebar = ({
             defaultSafe={defaultSafe}
             currentSafe={currentSafe}
           />
-          <LegalLinks toggleSidebar={toggleSidebar} />
         </Drawer>
       </ClickAwayListener>
       {children}

@@ -13,7 +13,7 @@ import Img from '~/components/layout/Img'
 import Row from '~/components/layout/Row'
 import Spacer from '~/components/Spacer'
 import {
-  border, sm, md, headerHeight,
+  border, sm, md, headerHeight, screenSm,
 } from '~/theme/variables'
 import Provider from './Provider'
 import NetworkLabel from './NetworkLabel'
@@ -30,26 +30,34 @@ type Props = Open & {
 const styles = () => ({
   root: {
     backgroundColor: 'white',
-    padding: 0,
-    boxShadow: '0 0 10px 0 rgba(33, 48, 77, 0.1)',
-    minWidth: '280px',
     borderRadius: sm,
+    boxShadow: '0 0 10px 0 rgba(33, 48, 77, 0.1)',
     marginTop: '11px',
+    minWidth: '280px',
+    padding: 0,
   },
   summary: {
-    borderBottom: `solid 2px ${border}`,
     alignItems: 'center',
-    height: headerHeight,
-    boxShadow: '0 2px 4px 0 rgba(212, 212, 211, 0.59)',
     backgroundColor: 'white',
-    zIndex: 1301,
+    borderBottom: `solid 2px ${border}`,
+    boxShadow: '0 2px 4px 0 rgba(212, 212, 211, 0.59)',
+    flexWrap: 'nowrap',
+    height: headerHeight,
     position: 'fixed',
     width: '100%',
+    zIndex: 1301,
   },
   logo: {
-    padding: `${sm} ${md}`,
     flexBasis: '95px',
-    flexGrow: 0,
+    flexShrink: '0',
+    flexGrow: '0',
+    maxWidth: '55px',
+    padding: sm,
+    [`@media (min-width: ${screenSm}px)`]: {
+      maxWidth: 'none',
+      paddingLeft: md,
+      paddingRight: md,
+    },
   },
   popper: {
     zIndex: 2000,
@@ -79,10 +87,10 @@ const Layout = openHoc(
       <Provider open={open} toggle={toggle} info={providerInfo}>
         {(providerRef) => (
           <Popper
-            open={open}
             anchorEl={providerRef.current}
-            placement="bottom"
             className={classes.popper}
+            open={open}
+            placement="bottom"
             popperOptions={{ positionFixed: true }}
           >
             {({ TransitionProps }) => (

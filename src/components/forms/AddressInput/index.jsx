@@ -20,6 +20,7 @@ type Props = {
   validators?: Function[],
   inputAdornment?: React.Element,
   defaultValue?: string,
+  disabled?: boolean,
 }
 
 const isValidEnsName = (name) => /^([\w-]+\.)+(eth|test|xyz|luxe)$/.test(name)
@@ -37,6 +38,7 @@ const AddressInput = ({
   inputAdornment,
   validators = [],
   defaultValue,
+  disabled,
 }: Props): React.Element<*> => (
   <>
     <Field
@@ -54,6 +56,7 @@ const AddressInput = ({
       className={className}
       testId={testId}
       defaultValue={defaultValue}
+      disabled={disabled}
     />
     <OnChange name={name}>
       {async (value) => {

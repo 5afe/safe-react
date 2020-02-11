@@ -12,6 +12,9 @@ export const styles = () => ({
   },
   addressInput: {
     marginBottom: '15px',
+    display: 'flex',
+    flexGrow: 1,
+    backgroundColor: 'red',
   },
   tokenImageHeading: {
     margin: '0 0 15px',

@@ -2,6 +2,7 @@
 import * as React from 'react'
 import classNames from 'classnames'
 import { withStyles } from '@material-ui/core/styles'
+import TableContainer from '@material-ui/core/TableContainer'
 import { estimateGasForDeployingSafe } from '~/logic/contracts/safeContracts'
 import { getNamesFrom, getAccountsFrom } from '~/routes/open/utils/safeDataExtractor'
 import Block from '~/components/layout/Block'
@@ -14,7 +15,7 @@ import Row from '~/components/layout/Row'
 import Paragraph from '~/components/layout/Paragraph'
 import { formatAmount } from '~/logic/tokens/utils/formatAmount'
 import {
-  sm, md, lg, border, background,
+  sm, lg, border, background, screenSm,
 } from '~/theme/variables'
 import Hairline from '~/components/layout/Hairline'
 import { getWeb3 } from '~/logic/wallets/getWeb3'
@@ -25,6 +26,21 @@ const { useEffect, useState } = React
 const styles = () => ({
   root: {
     minHeight: '300px',
+    [`@media (min-width: ${screenSm}px)`]: {
+      flexDirection: 'row',
+    },
+  },
+  detailsColumn: {
+    minWidth: '100%',
+    [`@media (min-width: ${screenSm}px)`]: {
+      minWidth: '0',
+    },
+  },
+  ownersColumn: {
+    minWidth: '100%',
+    [`@media (min-width: ${screenSm}px)`]: {
+      minWidth: '0',
+    },
   },
   details: {
     padding: lg,
@@ -33,10 +49,10 @@ const styles = () => ({
   },
   info: {
     backgroundColor: background,
-    padding: lg,
-    justifyContent: 'center',
-    textAlign: 'center',
     flexDirection: 'column',
+    justifyContent: 'center',
+    padding: lg,
+    textAlign: 'center',
   },
   owners: {
     padding: lg,
@@ -49,8 +65,10 @@ const styles = () => ({
     whiteSpace: 'nowrap',
   },
   owner: {
-    padding: md,
     alignItems: 'center',
+    minWidth: 'fit-content',
+    padding: sm,
+    paddingLeft: lg,
   },
   user: {
     justifyContent: 'left',
@@ -102,7 +120,7 @@ const ReviewComponent = ({ values, classes, userAccount }: Props) => {
   return (
     <>
       <Row className={classes.root}>
-        <Col xs={4} layout="column">
+        <Col className={classes.detailsColumn} xs={4} layout="column">
           <Block className={classes.details}>
             <Block margin="lg">
               <Paragraph size="lg" color="primary" noMargin>
@@ -127,37 +145,39 @@ const ReviewComponent = ({ values, classes, userAccount }: Props) => {
             </Block>
           </Block>
         </Col>
-        <Col xs={8} layout="column">
-          <Block className={classes.owners}>
-            <Paragraph size="lg" color="primary" noMargin>
-              {`${numOwners} Safe owners`}
-            </Paragraph>
-          </Block>
-          <Hairline />
-          {names.map((name, index) => (
-            <React.Fragment key={`name${index}`}>
-              <Row className={classes.owner}>
-                <Col xs={1} align="center">
-                  <Identicon address={addresses[index]} diameter={32} />
-                </Col>
-                <Col xs={11}>
-                  <Block className={classNames(classes.name, classes.userName)}>
-                    <Paragraph size="lg" noMargin>
-                      {name}
-                    </Paragraph>
-                    <Block justify="center" className={classes.user}>
-                      <Paragraph size="md" color="disabled" noMargin>
-                        {addresses[index]}
+        <Col className={classes.ownersColumn} xs={8} layout="column">
+          <TableContainer>
+            <Block className={classes.owners}>
+              <Paragraph size="lg" color="primary" noMargin>
+                {`${numOwners} Safe owners`}
+              </Paragraph>
+            </Block>
+            <Hairline />
+            {names.map((name, index) => (
+              <React.Fragment key={`name${index}`}>
+                <Row className={classes.owner}>
+                  <Col xs={1} align="center">
+                    <Identicon address={addresses[index]} diameter={32} />
+                  </Col>
+                  <Col xs={11}>
+                    <Block className={classNames(classes.name, classes.userName)}>
+                      <Paragraph size="lg" noMargin>
+                        {name}
                       </Paragraph>
-                      <CopyBtn content={addresses[index]} />
-                      <EtherscanBtn type="address" value={addresses[index]} />
+                      <Block justify="center" className={classes.user}>
+                        <Paragraph size="md" color="disabled" noMargin>
+                          {addresses[index]}
+                        </Paragraph>
+                        <CopyBtn content={addresses[index]} />
+                        <EtherscanBtn type="address" value={addresses[index]} />
+                      </Block>
                     </Block>
-                  </Block>
-                </Col>
-              </Row>
-              <Hairline />
-            </React.Fragment>
-          ))}
+                  </Col>
+                </Row>
+                <Hairline />
+              </React.Fragment>
+            ))}
+          </TableContainer>
         </Col>
       </Row>
       <Row className={classes.info} align="center">
