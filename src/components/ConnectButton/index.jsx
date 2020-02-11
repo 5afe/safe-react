@@ -2,7 +2,7 @@
 import React from 'react'
 import Onboard from 'bnc-onboard'
 import Button from '~/components/layout/Button'
-import { fetchProvider, removeProvider } from '~/logic/wallets/store/actions'
+import { fetchProvider } from '~/logic/wallets/store/actions'
 import { setWeb3, getWeb3 } from '~/logic/wallets/getWeb3'
 import { getNetworkId } from '~/config'
 import { store } from '~/store'
@@ -59,11 +59,7 @@ export const onboard = new Onboard({
         // can also instantiate your contracts with the web3 instance
         setWeb3(wallet.provider)
         providerName = wallet.name
-        store.dispatch(fetchProvider(providerName))
-      } else {
-        // there is no provider, so the wallet has been reset, set web3 back to undefined and reset contracts
-        store.dispatch(removeProvider())
-        providerName = undefined
+        // store.dispatch(fetchProvider(providerName))
       }
     },
     address: (address) => {
@@ -75,7 +71,7 @@ export const onboard = new Onboard({
       if (!address && lastUsedAddress) {
         lastUsedAddress = ''
         providerName = undefined
-        store.dispatch(removeProvider())
+        // store.dispatch(removeProvider())
       }
     },
   },

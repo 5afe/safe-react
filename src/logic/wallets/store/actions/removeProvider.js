@@ -13,7 +13,6 @@ const removeProvider = createAction<string, *, *>(REMOVE_PROVIDER)
 export default () => (dispatch: ReduxDispatch<*>) => {
   onboard.walletReset()
   resetWeb3()
-
   dispatch(removeProvider())
   dispatch(
     enqueueSnackbar(
