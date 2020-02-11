@@ -1,6 +1,7 @@
 // @flow
 import React, { useState, useEffect } from 'react'
 import { withStyles } from '@material-ui/core/styles'
+import TableContainer from '@material-ui/core/TableContainer'
 import Block from '~/components/layout/Block'
 import Field from '~/components/forms/Field'
 import { required } from '~/components/forms/validator'
@@ -14,7 +15,7 @@ import Hairline from '~/components/layout/Hairline'
 import EtherscanBtn from '~/components/EtherscanBtn'
 import CopyBtn from '~/components/CopyBtn'
 import {
-  sm, md, lg, border, disabled, extraSmallFontSize,
+  sm, md, lg, border, disabled, extraSmallFontSize, screenSm,
 } from '~/theme/variables'
 import { getOwnerNameBy, getOwnerAddressBy } from '~/routes/open/components/fields'
 import { FIELD_LOAD_ADDRESS, THRESHOLD } from '~/routes/load/components/fields'
@@ -30,8 +31,13 @@ const styles = () => ({
     display: 'flex',
     justifyContent: 'flex-start',
   },
-  ownerNames: {
-    maxWidth: '400px',
+  ownerName: {
+    marginBottom: '15px',
+    minWidth: '100%',
+    [`@media (min-width: ${screenSm}px)`]: {
+      marginBottom: '0',
+      minWidth: '0',
+    },
   },
   ownerAddresses: {
     alignItems: 'center',
@@ -118,39 +124,41 @@ const OwnerListComponent = (props: Props) => {
         </Paragraph>
       </Block>
       <Hairline />
-      <Row className={classes.header}>
-        <Col xs={4}>NAME</Col>
-        <Col xs={8}>ADDRESS</Col>
-      </Row>
-      <Hairline />
-      <Block margin="md" padding="md">
-        {owners.map((address, index) => (
-          <Row key={address} className={classes.owner}>
-            <Col xs={4}>
-              <Field
-                className={classes.name}
-                name={getOwnerNameBy(index)}
-                component={TextField}
-                type="text"
-                validate={required}
-                initialValue={`Owner #${index + 1}`}
-                placeholder="Owner Name*"
-                text="Owner Name"
-              />
-            </Col>
-            <Col xs={8}>
-              <Row className={classes.ownerAddresses}>
-                <Identicon address={address} diameter={32} />
-                <Paragraph size="md" color="disabled" noMargin className={classes.address}>
-                  {address}
-                </Paragraph>
-                <CopyBtn content={address} />
-                <EtherscanBtn type="address" value={address} />
-              </Row>
-            </Col>
-          </Row>
-        ))}
-      </Block>
+      <TableContainer>
+        <Row className={classes.header}>
+          <Col xs={4}>NAME</Col>
+          <Col xs={8}>ADDRESS</Col>
+        </Row>
+        <Hairline />
+        <Block margin="md" padding="md">
+          {owners.map((address, index) => (
+            <Row key={address} className={classes.owner}>
+              <Col className={classes.ownerName} xs={4}>
+                <Field
+                  className={classes.name}
+                  component={TextField}
+                  initialValue={`Owner #${index + 1}`}
+                  name={getOwnerNameBy(index)}
+                  placeholder="Owner Name*"
+                  text="Owner Name"
+                  type="text"
+                  validate={required}
+                />
+              </Col>
+              <Col xs={8}>
+                <Row className={classes.ownerAddresses}>
+                  <Identicon address={address} diameter={32} />
+                  <Paragraph size="md" color="disabled" noMargin className={classes.address}>
+                    {address}
+                  </Paragraph>
+                  <CopyBtn content={address} />
+                  <EtherscanBtn type="address" value={address} />
+                </Row>
+              </Col>
+            </Row>
+          ))}
+        </Block>
+      </TableContainer>
     </>
   )
 }

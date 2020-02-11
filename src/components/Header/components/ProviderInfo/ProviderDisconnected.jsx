@@ -17,15 +17,16 @@ const styles = () => ({
     fontFamily: 'Averta, sans-serif',
   },
   account: {
-    paddingRight: sm,
+    alignItems: 'start',
     display: 'flex',
     flexDirection: 'column',
-    justifyContent: 'center',
-    alignItems: 'start',
     flexGrow: 1,
+    justifyContent: 'center',
+    paddingRight: sm,
   },
   connect: {
     letterSpacing: '-0.5px',
+    whiteSpace: 'nowrap',
   },
 })
 

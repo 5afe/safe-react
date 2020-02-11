@@ -5,6 +5,7 @@ import { List } from 'immutable'
 import { withStyles } from '@material-ui/core/styles'
 import TableRow from '@material-ui/core/TableRow'
 import TableCell from '@material-ui/core/TableCell'
+import TableContainer from '@material-ui/core/TableContainer'
 import Block from '~/components/layout/Block'
 import Col from '~/components/layout/Col'
 import Table from '~/components/Table'
@@ -145,66 +146,68 @@ class ManageOwners extends React.Component<Props, State> {
             Add, remove and replace owners or rename existing owners. Owner names are only stored locally and never
             shared with Gnosis or any third parties.
           </Paragraph>
-          <Table
-            label="Owners"
-            defaultOrderBy={OWNERS_TABLE_NAME_ID}
-            columns={columns}
-            data={ownerData}
-            size={ownerData.size}
-            disablePagination
-            defaultFixed
-            noBorder
-          >
-            {(sortedData: List<OwnerRow>) => sortedData.map((row: any, index: number) => (
-              <TableRow
-                tabIndex={-1}
-                key={index}
-                className={cn(classes.hide, index >= 3 && index === sortedData.size - 1 && classes.noBorderBottom)}
-                data-testid={OWNERS_ROW_TEST_ID}
-              >
-                {autoColumns.map((column: Column) => (
-                  <TableCell key={column.id} style={cellWidth(column.width)} align={column.align} component="td">
-                    {column.id === OWNERS_TABLE_ADDRESS_ID ? (
-                      <OwnerAddressTableCell address={row[column.id]} />
-                    ) : (
-                      row[column.id]
-                    )}
-                  </TableCell>
-                ))}
-                <TableCell component="td">
-                  <Row align="end" className={classes.actions}>
-                    <Img
-                      alt="Edit owner"
-                      className={classes.editOwnerIcon}
-                      src={RenameOwnerIcon}
-                      onClick={this.onShow('EditOwner', row)}
-                      testId={RENAME_OWNER_BTN_TEST_ID}
-                    />
-                    {granted && (
-                      <>
-                        <Img
-                          alt="Replace owner"
-                          className={classes.replaceOwnerIcon}
-                          src={ReplaceOwnerIcon}
-                          onClick={this.onShow('ReplaceOwner', row)}
-                          testId={REPLACE_OWNER_BTN_TEST_ID}
-                        />
-                        {ownerData.size > 1 && (
+          <TableContainer>
+            <Table
+              label="Owners"
+              defaultOrderBy={OWNERS_TABLE_NAME_ID}
+              columns={columns}
+              data={ownerData}
+              size={ownerData.size}
+              disablePagination
+              defaultFixed
+              noBorder
+            >
+              {(sortedData: List<OwnerRow>) => sortedData.map((row: any, index: number) => (
+                <TableRow
+                  tabIndex={-1}
+                  key={index}
+                  className={cn(classes.hide, index >= 3 && index === sortedData.size - 1 && classes.noBorderBottom)}
+                  data-testid={OWNERS_ROW_TEST_ID}
+                >
+                  {autoColumns.map((column: Column) => (
+                    <TableCell key={column.id} style={cellWidth(column.width)} align={column.align} component="td">
+                      {column.id === OWNERS_TABLE_ADDRESS_ID ? (
+                        <OwnerAddressTableCell address={row[column.id]} />
+                      ) : (
+                        row[column.id]
+                      )}
+                    </TableCell>
+                  ))}
+                  <TableCell component="td">
+                    <Row align="end" className={classes.actions}>
+                      <Img
+                        alt="Edit owner"
+                        className={classes.editOwnerIcon}
+                        src={RenameOwnerIcon}
+                        onClick={this.onShow('EditOwner', row)}
+                        testId={RENAME_OWNER_BTN_TEST_ID}
+                      />
+                      {granted && (
+                        <>
                           <Img
-                            alt="Remove owner"
-                            className={classes.removeOwnerIcon}
-                            src={RemoveOwnerIcon}
-                            onClick={this.onShow('RemoveOwner', row)}
-                            testId={REMOVE_OWNER_BTN_TEST_ID}
+                            alt="Replace owner"
+                            className={classes.replaceOwnerIcon}
+                            src={ReplaceOwnerIcon}
+                            onClick={this.onShow('ReplaceOwner', row)}
+                            testId={REPLACE_OWNER_BTN_TEST_ID}
                           />
-                        )}
-                      </>
-                    ) }
-                  </Row>
-                </TableCell>
-              </TableRow>
-            ))}
-          </Table>
+                          {ownerData.size > 1 && (
+                            <Img
+                              alt="Remove owner"
+                              className={classes.removeOwnerIcon}
+                              src={RemoveOwnerIcon}
+                              onClick={this.onShow('RemoveOwner', row)}
+                              testId={REMOVE_OWNER_BTN_TEST_ID}
+                            />
+                          )}
+                        </>
+                      ) }
+                    </Row>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </Table>
+          </TableContainer>
         </Block>
         {granted && (
           <>
