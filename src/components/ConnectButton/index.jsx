@@ -57,7 +57,7 @@ const wallets = [
 ]
 
 let lastUsedAddress = ''
-let providerName = undefined
+let providerName
 
 export const onboard = new Onboard({
   dappId: BLOCKNATIVE_API_KEY,
