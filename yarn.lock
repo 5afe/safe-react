@@ -1126,10 +1126,10 @@
     "@ethersproject/constants" ">=5.0.0-beta.128"
     "@ethersproject/logger" ">=5.0.0-beta.129"
 
-"@gnosis.pm/safe-contracts@1.1.1":
-  version "1.1.1"
-  resolved "https://registry.yarnpkg.com/@gnosis.pm/safe-contracts/-/safe-contracts-1.1.1.tgz#d85bf2026a5405316bee623c0e6f193c3ace89cd"
-  integrity sha512-NT+7JtNym5I6wEKVuhEZ+Ush9ZTtJfLEeQ7SwQTKGgjG9Ww3uMVOPMlufifOyhZyDX/Aakxj0jEKwkuqONHAxA==
+"@gnosis.pm/safe-contracts@1.1.1-dev.1":
+  version "1.1.1-dev.1"
+  resolved "https://registry.yarnpkg.com/@gnosis.pm/safe-contracts/-/safe-contracts-1.1.1-dev.1.tgz#e6bf50a30bc78a91fdba87173972fe83c7af156e"
+  integrity sha512-uNk7asBLrULCB722Uv3sHjWxmqQ32UlOuK99Moh1lHpF+zUEuYuaqQ6wbpX6Z1MGN4PipyfsiVWnl3rWlKhlHg==
   dependencies:
     dotenv "^8.0.0"
     openzeppelin-solidity "^2.0.0"

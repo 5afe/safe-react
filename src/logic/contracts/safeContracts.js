@@ -1,8 +1,8 @@
 // @flow
 import contract from 'truffle-contract'
-import ProxyFactorySol from '@gnosis.pm/safe-contracts/build/contracts/ProxyFactory.json'
+import ProxyFactorySol from '@gnosis.pm/safe-contracts/build/contracts/GnosisSafeProxyFactory.json'
 import GnosisSafeSol from '@gnosis.pm/safe-contracts/build/contracts/GnosisSafe.json'
-import SafeProxy from '@gnosis.pm/safe-contracts/build/contracts/Proxy.json'
+import SafeProxy from '@gnosis.pm/safe-contracts/build/contracts/GnosisSafeProxy.json'
 import { ensureOnce } from '~/utils/singleton'
 import { simpleMemoize } from '~/components/forms/validator'
 import { getWeb3 } from '~/logic/wallets/getWeb3'
