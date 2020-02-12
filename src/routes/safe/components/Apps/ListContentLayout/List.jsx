@@ -24,7 +24,7 @@ const IconImg = styled.img`
   margin-right: 10px;
 `
 
-function List({ items, activeItem, onItemClick, classes }: any) {
+const List = ({ items, activeItem, onItemClick, classes }: any) => {
   return (
     <Wrapper>
       {items.map(i => (

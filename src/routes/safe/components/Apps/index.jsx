@@ -2,7 +2,7 @@
 import React, { useState, useEffect, useCallback } from 'react'
 import styled from 'styled-components'
 
-import ButtonLink from '../../../../components/layout/ButtonLink'
+import ButtonLink from '~/components/layout/ButtonLink'
 import Loader from './ListContentLayout/Loader'
 import sendTransactions from './sendTransactions'
 import { Wrapper, Menu, Content, Footer, Nav } from './ListContentLayout/Layout'
@@ -22,12 +22,12 @@ const operations = {
 
 type Props = {
   web3: any,
-  safeAddress: String,
-  network: String,
+  safeAddress: string,
+  network: string,
   createTransaction: any,
 }
 
-function Apps({ web3, safeAddress, network, createTransaction }: Props) {
+const Apps = ({ web3, safeAddress, network, createTransaction }: Props) => {
   const apps = [
     {
       id: 1,
