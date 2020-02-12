@@ -19,18 +19,6 @@ let safeMaster
 
 const createGnosisSafeContract = (web3: any) => {
   const gnosisSafeSol = { ...GnosisSafeSol }
-
-  if (!Object.keys(gnosisSafeSol.networks).length) {
-    gnosisSafeSol.networks = {
-      4: {
-        links: {},
-        events: {},
-        address: safeMasterCopyAddress,
-        updated_at: 1551107687797,
-      },
-    }
-  }
-
   const gnosisSafe = contract(gnosisSafeSol)
   gnosisSafe.setProvider(web3.currentProvider)
 
@@ -39,18 +27,6 @@ const createGnosisSafeContract = (web3: any) => {
 
 const createProxyFactoryContract = (web3: any) => {
   const proxyFactorySol = { ...ProxyFactorySol }
-
-  if (!Object.keys(proxyFactorySol.networks).length) {
-    proxyFactorySol.networks = {
-      4: {
-        links: {},
-        events: {},
-        address: '0x76E2cFc1F5Fa8F6a5b3fC4c8F4788F0116861F9B',
-        updated_at: 1551107687797,
-      },
-    }
-  }
-
   const proxyFactory = contract(proxyFactorySol)
   proxyFactory.setProvider(web3.currentProvider)
 
