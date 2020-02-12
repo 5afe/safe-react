@@ -9,3 +9,5 @@ node_modules
 public
 scripts
 src/assets
+src/config
+src/test
