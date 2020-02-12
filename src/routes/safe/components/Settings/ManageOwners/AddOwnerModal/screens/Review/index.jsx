@@ -34,9 +34,7 @@ type Props = {
   safeAddress: string,
 }
 
-const ReviewAddOwner = ({
-  classes, onClose, safeName, owners, values, onClickBack, onSubmit, safeAddress,
-}: Props) => {
+const ReviewAddOwner = ({ classes, onClose, safeName, owners, values, onClickBack, onSubmit, safeAddress }: Props) => {
   const [gasCosts, setGasCosts] = useState<string>('< 0.001')
   useEffect(() => {
     let isCurrent = true
@@ -113,7 +111,7 @@ const ReviewAddOwner = ({
               </Paragraph>
             </Row>
             <Hairline />
-            {owners.map((owner) => (
+            {owners.map(owner => (
               <React.Fragment key={owner.address}>
                 <Row className={classes.owner}>
                   <Col xs={1} align="center">

@@ -1,9 +1,7 @@
 // @flow
 import * as React from 'react'
 import classNames from 'classnames/bind'
-import {
-  Switch, Redirect, Route, withRouter,
-} from 'react-router-dom'
+import { Switch, Redirect, Route, withRouter } from 'react-router-dom'
 import Tabs from '@material-ui/core/Tabs'
 import Tab from '@material-ui/core/Tab'
 import CallMade from '@material-ui/icons/CallMade'

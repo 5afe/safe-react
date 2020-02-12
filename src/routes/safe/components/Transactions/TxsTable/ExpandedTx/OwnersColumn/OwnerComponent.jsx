@@ -80,12 +80,7 @@ const OwnerComponent = ({
         <Paragraph className={classes.name} noMargin>
           {ownerName}
         </Paragraph>
-        <EtherscanLink
-          className={classes.address}
-          type="address"
-          value={owner.address}
-          cut={4}
-        />
+        <EtherscanLink className={classes.address} type="address" value={owner.address} cut={4} />
       </Block>
       <Block className={classes.spacer} />
       {owner.address === userAddress && (
@@ -143,9 +138,7 @@ const OwnerComponent = ({
           )}
         </Block>
       )}
-      {owner.address === executor && (
-        <Block className={classes.executor}>Executor</Block>
-      )}
+      {owner.address === executor && <Block className={classes.executor}>Executor</Block>}
     </Block>
   )
 }

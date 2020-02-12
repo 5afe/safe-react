@@ -37,9 +37,7 @@ const formMutators = {
 
 const buttonLabels = ['Next', 'Review', 'Load']
 
-const Layout = ({
-  provider, onLoadSafeSubmit, network, userAddress,
-}: Props) => {
+const Layout = ({ provider, onLoadSafeSubmit, network, userAddress }: Props) => {
   const steps = getSteps()
   const initialValues = {}
 

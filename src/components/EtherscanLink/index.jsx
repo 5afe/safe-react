@@ -18,14 +18,9 @@ type EtherscanLinkProps = {
   value: string,
 }
 
-const EtherscanLink = ({
-  type, value, cut, classes, knownAddress,
-}: EtherscanLinkProps) => (
+const EtherscanLink = ({ type, value, cut, classes, knownAddress }: EtherscanLinkProps) => (
   <Block className={classes.etherscanLink}>
-    <Span
-      className={cn(knownAddress && classes.addressParagraph, classes.address)}
-      size="md"
-    >
+    <Span className={cn(knownAddress && classes.addressParagraph, classes.address)} size="md">
       {cut ? shortVersionOf(value, cut) : value}
     </Span>
     <CopyBtn className={cn(classes.button, classes.firstButton)} content={value} />

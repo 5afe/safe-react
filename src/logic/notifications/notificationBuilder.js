@@ -208,18 +208,12 @@ export const enhanceSnackbarForAction = (notification: Notification, key?: strin
   },
 })
 
-export const showSnackbar = (
-  notification: Notification,
-  enqueueSnackbar: Function,
-  closeSnackbar: Function,
-) => enqueueSnackbar(
-  notification.message,
-  {
+export const showSnackbar = (notification: Notification, enqueueSnackbar: Function, closeSnackbar: Function) =>
+  enqueueSnackbar(notification.message, {
     ...notification.options,
-    action: (key) => (
+    action: key => (
       <IconButton onClick={() => closeSnackbar(key)}>
         <IconClose />
       </IconButton>
     ),
-  },
-)
+  })

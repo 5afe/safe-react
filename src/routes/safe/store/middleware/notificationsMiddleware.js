@@ -19,9 +19,7 @@ import { getSafeVersion } from '~/logic/safe/utils/safeVersion'
 
 const watchedActions = [ADD_TRANSACTIONS, ADD_INCOMING_TRANSACTIONS, ADD_SAFE]
 
-const notificationsMiddleware = (store: Store<GlobalState>) => (
-  next: Function,
-) => async (action: Action<*>) => {
+const notificationsMiddleware = (store: Store<GlobalState>) => (next: Function) => async (action: Action<*>) => {
   const handledAction = next(action)
   const { dispatch } = store
 
@@ -33,23 +31,19 @@ const notificationsMiddleware = (store: Store<GlobalState>) => (
         const userAddress: string = userAccountSelector(state)
         const safeAddress = action.payload.keySeq().get(0)
         const cancellationTransactions = state.cancellationTransactions.get(safeAddress)
-        const cancellationTransactionsByNonce = cancellationTransactions ? cancellationTransactions.reduce((acc, tx) => acc.set(tx.nonce, tx), Map()) : Map()
+        const cancellationTransactionsByNonce = cancellationTransactions
+          ? cancellationTransactions.reduce((acc, tx) => acc.set(tx.nonce, tx), Map())
+          : Map()
         const awaitingTransactions = getAwaitingTransactions(
           transactionsList,
           cancellationTransactionsByNonce,
           userAddress,
         )
-        const awaitingTransactionsList = awaitingTransactions.get(
-          safeAddress,
-          List([]),
-        )
+        const awaitingTransactionsList = awaitingTransactions.get(safeAddress, List([]))
         const safes = safesMapSelector(state)
         const currentSafe = safes.get(safeAddress)
 
-        if (
-          !isUserOwner(currentSafe, userAddress)
-          || awaitingTransactionsList.size === 0
-        ) {
+        if (!isUserOwner(currentSafe, userAddress) || awaitingTransactionsList.size === 0) {
           break
         }
 
@@ -60,11 +54,7 @@ const notificationsMiddleware = (store: Store<GlobalState>) => (
         }
         dispatch(
           enqueueSnackbar(
-            enhanceSnackbarForAction(
-              NOTIFICATIONS.TX_WAITING_MSG,
-              notificationKey,
-              onNotificationClicked,
-            ),
+            enhanceSnackbarForAction(NOTIFICATIONS.TX_WAITING_MSG, notificationKey, onNotificationClicked),
           ),
         )
 
@@ -76,9 +66,7 @@ const notificationsMiddleware = (store: Store<GlobalState>) => (
           const viewedSafes = state.currentSession ? state.currentSession.get('viewedSafes') : []
           const recurringUser = viewedSafes.includes(safeAddress)
 
-          const newIncomingTransactions = incomingTransactions.filter(
-            (tx) => tx.blockNumber > latestIncomingTxBlock,
-          )
+          const newIncomingTransactions = incomingTransactions.filter(tx => tx.blockNumber > latestIncomingTxBlock)
 
           const { message, ...TX_INCOMING_MSG } = NOTIFICATIONS.TX_INCOMING_MSG
 
@@ -93,7 +81,7 @@ const notificationsMiddleware = (store: Store<GlobalState>) => (
                 ),
               )
             } else {
-              newIncomingTransactions.forEach((tx) => {
+              newIncomingTransactions.forEach(tx => {
                 dispatch(
                   enqueueSnackbar(
                     enhanceSnackbarForAction({
@@ -122,14 +110,7 @@ const notificationsMiddleware = (store: Store<GlobalState>) => (
         const { safe } = action.payload
         const notificationKey = `${safe.address}`
         if (needUpdate) {
-          dispatch(
-            enqueueSnackbar(
-              enhanceSnackbarForAction(
-                NOTIFICATIONS.SAFE_NEW_VERSION_AVAILABLE,
-                notificationKey,
-              ),
-            ),
-          )
+          dispatch(enqueueSnackbar(enhanceSnackbarForAction(NOTIFICATIONS.SAFE_NEW_VERSION_AVAILABLE, notificationKey)))
         }
         break
       }

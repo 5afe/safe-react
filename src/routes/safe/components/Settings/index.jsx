@@ -66,7 +66,7 @@ class Settings extends React.Component<Props, State> {
     }
   }
 
-  handleChange = (menuOptionIndex) => () => {
+  handleChange = menuOptionIndex => () => {
     this.setState({ menuOptionIndex })
   }
 

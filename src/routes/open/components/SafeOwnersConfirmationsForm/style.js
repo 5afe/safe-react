@@ -1,7 +1,5 @@
 // @flow
-import {
-  md, lg, sm, disabled, extraSmallFontSize, screenSm,
-} from '~/theme/variables'
+import { md, lg, sm, disabled, extraSmallFontSize, screenSm } from '~/theme/variables'
 
 export const styles = () => ({
   root: {

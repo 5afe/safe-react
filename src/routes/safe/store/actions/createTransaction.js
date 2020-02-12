@@ -17,11 +17,7 @@ import {
   TX_TYPE_EXECUTION,
   saveTxToHistory,
 } from '~/logic/safe/transactions'
-import {
-  type NotificationsQueue,
-  getNotificationsFromTxType,
-  showSnackbar,
-} from '~/logic/notifications'
+import { type NotificationsQueue, getNotificationsFromTxType, showSnackbar } from '~/logic/notifications'
 import { getErrorMessage } from '~/test/utils/ethereumErrors'
 import { ZERO_ADDRESS } from '~/logic/wallets/ethAddresses'
 import { SAFELIST_ADDRESS } from '~/routes/routes'
@@ -74,10 +70,7 @@ const createTransaction = ({
   closeSnackbar,
   shouldExecute = false,
   txNonce,
-}: CreateTransactionArgs) => async (
-  dispatch: ReduxDispatch<GlobalState>,
-  getState: GetState<GlobalState>,
-) => {
+}: CreateTransactionArgs) => async (dispatch: ReduxDispatch<GlobalState>, getState: GetState<GlobalState>) => {
   const state: GlobalState = getState()
 
   dispatch(push(`${SAFELIST_ADDRESS}/${safeAddress}/transactions`))
@@ -95,14 +88,8 @@ const createTransaction = ({
     '',
   )}000000000000000000000000000000000000000000000000000000000000000001`
 
-  const notificationsQueue: NotificationsQueue = getNotificationsFromTxType(
-    notifiedTransaction,
-  )
-  const beforeExecutionKey = showSnackbar(
-    notificationsQueue.beforeExecution,
-    enqueueSnackbar,
-    closeSnackbar,
-  )
+  const notificationsQueue: NotificationsQueue = getNotificationsFromTxType(notifiedTransaction)
+  const beforeExecutionKey = showSnackbar(notificationsQueue.beforeExecution, enqueueSnackbar, closeSnackbar)
   let pendingExecutionKey
 
   let txHash
@@ -110,13 +97,35 @@ const createTransaction = ({
   try {
     if (isExecution) {
       tx = await getExecutionTransaction(
-        safeInstance, to, valueInWei, txData, CALL, nonce,
-        0, 0, 0, ZERO_ADDRESS, ZERO_ADDRESS, from, sigs,
+        safeInstance,
+        to,
+        valueInWei,
+        txData,
+        CALL,
+        nonce,
+        0,
+        0,
+        0,
+        ZERO_ADDRESS,
+        ZERO_ADDRESS,
+        from,
+        sigs,
       )
     } else {
       tx = await getApprovalTransaction(
-        safeInstance, to, valueInWei, txData, CALL, nonce,
-        0, 0, 0, ZERO_ADDRESS, ZERO_ADDRESS, from, sigs,
+        safeInstance,
+        to,
+        valueInWei,
+        txData,
+        CALL,
+        nonce,
+        0,
+        0,
+        0,
+        ZERO_ADDRESS,
+        ZERO_ADDRESS,
+        from,
+        sigs,
       )
     }
 
@@ -128,15 +137,11 @@ const createTransaction = ({
 
     await tx
       .send(sendParams)
-      .once('transactionHash', async (hash) => {
+      .once('transactionHash', async hash => {
         txHash = hash
         closeSnackbar(beforeExecutionKey)
 
-        pendingExecutionKey = showSnackbar(
-          notificationsQueue.pendingExecution,
-          enqueueSnackbar,
-          closeSnackbar,
-        )
+        pendingExecutionKey = showSnackbar(notificationsQueue.pendingExecution, enqueueSnackbar, closeSnackbar)
 
         try {
           await saveTxToHistory(
@@ -160,10 +165,10 @@ const createTransaction = ({
           console.error(err)
         }
       })
-      .on('error', (error) => {
+      .on('error', error => {
         console.error('Tx error: ', error)
       })
-      .then((receipt) => {
+      .then(receipt => {
         closeSnackbar(pendingExecutionKey)
         showSnackbar(
           isExecution
@@ -181,32 +186,12 @@ const createTransaction = ({
     console.error(err)
     closeSnackbar(beforeExecutionKey)
     closeSnackbar(pendingExecutionKey)
-    showSnackbar(
-      notificationsQueue.afterExecutionError,
-      enqueueSnackbar,
-      closeSnackbar,
-    )
+    showSnackbar(notificationsQueue.afterExecutionError, enqueueSnackbar, closeSnackbar)
 
     const executeDataUsedSignatures = safeInstance.contract.methods
-      .execTransaction(
-        to,
-        valueInWei,
-        txData,
-        CALL,
-        0,
-        0,
-        0,
-        ZERO_ADDRESS,
-        ZERO_ADDRESS,
-        sigs,
-      )
+      .execTransaction(to, valueInWei, txData, CALL, 0, 0, 0, ZERO_ADDRESS, ZERO_ADDRESS, sigs)
       .encodeABI()
-    const errMsg = await getErrorMessage(
-      safeInstance.address,
-      0,
-      executeDataUsedSignatures,
-      from,
-    )
+    const errMsg = await getErrorMessage(safeInstance.address, 0, executeDataUsedSignatures, from)
     console.error(`Error creating the TX: ${errMsg}`)
   }
 

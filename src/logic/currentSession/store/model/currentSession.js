@@ -1,7 +1,5 @@
 // @flow
-import {
-  Record, type RecordFactory, type RecordOf,
-} from 'immutable'
+import { Record, type RecordFactory, type RecordOf } from 'immutable'
 
 export type CurrentSessionProps = {
   viewedSafes: Array<string>,

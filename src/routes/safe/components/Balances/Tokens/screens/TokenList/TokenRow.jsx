@@ -26,9 +26,7 @@ type Props = {
   classes: Object,
 }
 
-const TokenRow = memo(({
-  data, index, classes, style,
-}: Props) => {
+const TokenRow = memo(({ data, index, classes, style }: Props) => {
   const { tokens, activeTokensAddresses, onSwitch } = data
   const token: Token = tokens.get(index)
   const isActive = activeTokensAddresses.has(token.address)

@@ -14,10 +14,7 @@ import Hairline from '~/components/layout/Hairline'
 import Row from '~/components/layout/Row'
 import { WELCOME_ADDRESS } from '~/routes/routes'
 import { type Safe } from '~/routes/safe/store/models/safe'
-import {
-  defaultSafeSelector,
-  safeParamAddressFromStateSelector,
-} from '~/routes/safe/store/selectors'
+import { defaultSafeSelector, safeParamAddressFromStateSelector } from '~/routes/safe/store/selectors'
 import setDefaultSafe from '~/routes/safe/store/actions/setDefaultSafe'
 import { sortedSafeListSelector } from './selectors'
 import SafeList from './SafeList'
@@ -27,7 +24,7 @@ const { useState, useEffect, useMemo } = React
 
 type TSidebarContext = {
   isOpen: boolean,
-  toggleSidebar: Function
+  toggleSidebar: Function,
 }
 
 export const SidebarContext = React.createContext<TSidebarContext>({
@@ -40,22 +37,18 @@ type SidebarProps = {
   safes: List<Safe>,
   setDefaultSafeAction: Function,
   defaultSafe: string,
-  currentSafe: string
+  currentSafe: string,
 }
 
-const filterBy = (filter: string, safes: List<Safe>): List<Safe> => safes.filter(
-  (safe: Safe) => !filter
-    || safe.address.toLowerCase().includes(filter.toLowerCase())
-    || safe.name.toLowerCase().includes(filter.toLowerCase()),
-)
+const filterBy = (filter: string, safes: List<Safe>): List<Safe> =>
+  safes.filter(
+    (safe: Safe) =>
+      !filter ||
+      safe.address.toLowerCase().includes(filter.toLowerCase()) ||
+      safe.name.toLowerCase().includes(filter.toLowerCase()),
+  )
 
-const Sidebar = ({
-  children,
-  safes,
-  setDefaultSafeAction,
-  defaultSafe,
-  currentSafe,
-}: SidebarProps) => {
+const Sidebar = ({ children, safes, setDefaultSafeAction, defaultSafe, currentSafe }: SidebarProps) => {
   const [isOpen, setIsOpen] = useState<boolean>(false)
   const [filter, setFilter] = useState<string>('')
   const classes = useSidebarStyles()
@@ -74,7 +67,7 @@ const Sidebar = ({
   }
 
   const toggleSidebar = () => {
-    setIsOpen((prevIsOpen) => !prevIsOpen)
+    setIsOpen(prevIsOpen => !prevIsOpen)
   }
 
   const handleFilterChange = (value: string) => {
@@ -147,7 +140,7 @@ const Sidebar = ({
 
 export default connect<Object, Object, ?Function, ?Object>(
   // $FlowFixMe
-  (state) => ({
+  state => ({
     safes: sortedSafeListSelector(state),
     defaultSafe: defaultSafeSelector(state),
     currentSafe: safeParamAddressFromStateSelector(state),

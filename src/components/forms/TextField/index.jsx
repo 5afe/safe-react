@@ -21,9 +21,7 @@ const styles = () => ({
 class TextField extends React.PureComponent<TextFieldProps> {
   render() {
     const {
-      input: {
-        name, onChange, value, ...restInput
-      },
+      input: { name, onChange, value, ...restInput },
       meta,
       render,
       text,

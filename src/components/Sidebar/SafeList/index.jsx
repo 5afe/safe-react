@@ -11,9 +11,7 @@ import Hairline from '~/components/layout/Hairline'
 import Paragraph from '~/components/layout/Paragraph'
 import ButtonLink from '~/components/layout/ButtonLink'
 import Identicon from '~/components/Identicon'
-import {
-  mediumFontSize, sm, primary, disabled, md,
-} from '~/theme/variables'
+import { mediumFontSize, sm, primary, disabled, md } from '~/theme/variables'
 import { formatAmount } from '~/logic/tokens/utils/formatAmount'
 import { shortVersionOf, sameAddress } from '~/logic/wallets/ethAddresses'
 import { type Safe } from '~/routes/safe/store/models/safe'
@@ -74,14 +72,12 @@ const useStyles = makeStyles({
   },
 })
 
-const SafeList = ({
-  safes, onSafeClick, setDefaultSafe, defaultSafe, currentSafe,
-}: SafeListProps) => {
+const SafeList = ({ safes, onSafeClick, setDefaultSafe, defaultSafe, currentSafe }: SafeListProps) => {
   const classes = useStyles()
 
   return (
     <MuiList className={classes.list}>
-      {safes.map((safe) => (
+      {safes.map(safe => (
         <React.Fragment key={safe.address}>
           <Link
             to={`${SAFELIST_ADDRESS}/${safe.address}/balances`}
@@ -89,11 +85,13 @@ const SafeList = ({
             data-testid={SIDEBAR_SAFELIST_ROW_TESTID}
           >
             <ListItem classes={{ root: classes.listItemRoot }}>
-              { sameAddress(currentSafe, safe.address) ? (
+              {sameAddress(currentSafe, safe.address) ? (
                 <ListItemIcon>
                   <Img src={check} alt="check" className={classes.checkIcon} />
                 </ListItemIcon>
-              ) : <div className={classes.noIcon}>placeholder</div> }
+              ) : (
+                <div className={classes.noIcon}>placeholder</div>
+              )}
               <ListItemIcon>
                 <Identicon address={safe.address} diameter={32} className={classes.icon} />
               </ListItemIcon>
@@ -111,7 +109,7 @@ const SafeList = ({
                 <ButtonLink
                   className={classes.makeDefaultBtn}
                   size="sm"
-                  onClick={(e) => {
+                  onClick={e => {
                     e.preventDefault()
                     e.stopPropagation()
 

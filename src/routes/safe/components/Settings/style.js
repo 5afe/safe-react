@@ -1,6 +1,15 @@
 // @flow
 import {
-  xs, sm, md, border, secondary, bolderFont, background, largeFontSize, fontColor, screenSm,
+  xs,
+  sm,
+  md,
+  border,
+  secondary,
+  bolderFont,
+  background,
+  largeFontSize,
+  fontColor,
+  screenSm,
 } from '~/theme/variables'
 
 export const styles = () => ({

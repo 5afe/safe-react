@@ -12,16 +12,12 @@ import Hairline from '~/components/layout/Hairline'
 import Field from '~/components/forms/Field'
 import TextField from '~/components/forms/TextField'
 import Paragraph from '~/components/layout/Paragraph'
-import {
-  composeValidators, required, minMaxLength, uniqueAddress,
-} from '~/components/forms/validator'
+import { composeValidators, required, minMaxLength, uniqueAddress } from '~/components/forms/validator'
 import Modal from '~/components/Modal'
 import { styles } from './style'
 import AddressInput from '~/components/forms/AddressInput'
 import type { AddressBookEntry } from '~/logic/addressBook/model/addressBook'
-import {
-  getAddressBookListSelector,
-} from '~/logic/addressBook/store/selectors'
+import { getAddressBookListSelector } from '~/logic/addressBook/store/selectors'
 import { getAddressesListFromAdbk } from '~/logic/addressBook/utils'
 
 export const CREATE_ENTRY_INPUT_NAME_ID = 'create-entry-input-name'
@@ -45,7 +41,7 @@ const CreateEditEntryModalComponent = ({
   entryToEdit,
   editEntryModalHandler,
 }: Props) => {
-  const onFormSubmitted = (values) => {
+  const onFormSubmitted = values => {
     if (entryToEdit) {
       editEntryModalHandler(values)
     } else {

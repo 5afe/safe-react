@@ -15,9 +15,7 @@ import Block from '~/components/layout/Block'
 import Hairline from '~/components/layout/Hairline'
 import Field from '~/components/forms/Field'
 import type { Owner } from '~/routes/safe/store/models/owner'
-import {
-  composeValidators, required, minValue, maxValue, mustBeInteger,
-} from '~/components/forms/validator'
+import { composeValidators, required, minValue, maxValue, mustBeInteger } from '~/components/forms/validator'
 import { styles } from './style'
 
 export const REMOVE_OWNER_THRESHOLD_NEXT_BTN_TEST_ID = 'remove-owner-threshold-next-btn'
@@ -31,10 +29,8 @@ type Props = {
   onSubmit: Function,
 }
 
-const ThresholdForm = ({
-  classes, onClose, owners, threshold, onClickBack, onSubmit,
-}: Props) => {
-  const handleSubmit = (values) => {
+const ThresholdForm = ({ classes, onClose, owners, threshold, onClickBack, onSubmit }: Props) => {
+  const handleSubmit = values => {
     onSubmit(values)
   }
   const defaultThreshold = threshold > 1 ? threshold - 1 : threshold
@@ -64,15 +60,13 @@ const ThresholdForm = ({
                   </Paragraph>
                 </Row>
                 <Row>
-                  <Paragraph weight="bolder">
-                    Any transaction requires the confirmation of:
-                  </Paragraph>
+                  <Paragraph weight="bolder">Any transaction requires the confirmation of:</Paragraph>
                 </Row>
                 <Row margin="xl" align="center" className={classes.inputRow}>
                   <Col xs={2}>
                     <Field
                       name="threshold"
-                      render={(props) => (
+                      render={props => (
                         <>
                           <SelectField {...props} disableError>
                             {[...Array(Number(numOptions))].map((x, index) => (
@@ -94,11 +88,7 @@ const ThresholdForm = ({
                   </Col>
                   <Col xs={10}>
                     <Paragraph size="lg" color="primary" noMargin className={classes.ownersText}>
-                      out of
-                      {' '}
-                      {owners.size - 1}
-                      {' '}
-owner(s)
+                      out of {owners.size - 1} owner(s)
                     </Paragraph>
                   </Col>
                 </Row>

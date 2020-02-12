@@ -20,24 +20,16 @@ const styles = {
 
 class ListItemText extends React.PureComponent<Props> {
   render() {
-    const {
-      primary, secondary, classes, cut = false,
-    } = this.props
+    const { primary, secondary, classes, cut = false } = this.props
 
-    const cutStyle = cut ? {
-      secondary: classes.itemTextSecondary,
-    } : undefined
+    const cutStyle = cut
+      ? {
+          secondary: classes.itemTextSecondary,
+        }
+      : undefined
 
-    return (
-      <MuiListItemText
-        classes={cutStyle}
-        inset
-        primary={primary}
-        secondary={secondary}
-      />
-    )
+    return <MuiListItemText classes={cutStyle} inset primary={primary} secondary={secondary} />
   }
 }
-
 
 export default withStyles(styles)(ListItemText)

@@ -10,6 +10,7 @@ import { history } from '~/store'
 import selector, { type SelectorProps } from './selector'
 import actions, { type Actions } from './actions'
 import Layout from '../components/Layout'
+
 import { getNamesFrom, getOwnersFrom } from '~/routes/open/utils/safeDataExtractor'
 import { FIELD_LOAD_NAME, FIELD_LOAD_ADDRESS } from '../components/fields'
 import { getGnosisSafeInstanceAt } from '~/logic/contracts/safeContracts'
@@ -17,12 +18,7 @@ import { getWeb3 } from '~/logic/wallets/getWeb3'
 
 type Props = SelectorProps & Actions
 
-export const loadSafe = async (
-  safeName: string,
-  safeAddress: string,
-  owners: Array<*>,
-  addSafe: Function,
-) => {
+export const loadSafe = async (safeName: string, safeAddress: string, owners: Array<*>, addSafe: Function) => {
   const safeProps = await buildSafe(safeAddress, safeName)
   safeProps.owners = owners
 
@@ -75,7 +71,4 @@ class Load extends React.Component<Props> {
   }
 }
 
-export default connect<Object, Object, ?Function, ?Object>(
-  selector,
-  actions,
-)(Load)
+export default connect<Object, Object, ?Function, ?Object>(selector, actions)(Load)

@@ -38,11 +38,13 @@ type State = {
   blacklistedTokensAddresses: Set<string>,
 }
 
-const filterBy = (filter: string, tokens: List<Token>): List<Token> => tokens.filter(
-  (token: Token) => !filter
-      || token.symbol.toLowerCase().includes(filter.toLowerCase())
-      || token.name.toLowerCase().includes(filter.toLowerCase()),
-)
+const filterBy = (filter: string, tokens: List<Token>): List<Token> =>
+  tokens.filter(
+    (token: Token) =>
+      !filter ||
+      token.symbol.toLowerCase().includes(filter.toLowerCase()) ||
+      token.name.toLowerCase().includes(filter.toLowerCase()),
+  )
 
 // OPTIMIZATION IDEA (Thanks Andre)
 // Calculate active tokens on component mount, store it in component state
@@ -99,12 +101,12 @@ class Tokens extends React.Component<Props, State> {
     this.setState(() => ({ filter: '' }))
   }
 
-  onChangeSearchBar = (value) => {
+  onChangeSearchBar = value => {
     this.setState(() => ({ filter: value }))
   }
 
   onSwitch = (token: Token) => () => {
-    this.setState((prevState) => {
+    this.setState(prevState => {
       const activeTokensAddresses = prevState.activeTokensAddresses.has(token.address)
         ? prevState.activeTokensAddresses.remove(token.address)
         : prevState.activeTokensAddresses.add(token.address)
@@ -116,7 +118,7 @@ class Tokens extends React.Component<Props, State> {
         blacklistedTokensAddresses = prevState.blacklistedTokensAddresses.add(token.address)
       }
 
-      return ({ ...prevState, activeTokensAddresses, blacklistedTokensAddresses })
+      return { ...prevState, activeTokensAddresses, blacklistedTokensAddresses }
     })
   }
 

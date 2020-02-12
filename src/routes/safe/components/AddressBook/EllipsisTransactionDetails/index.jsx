@@ -12,7 +12,6 @@ import { xs } from '~/theme/variables'
 import { safeParamAddressFromStateSelector } from '~/routes/safe/store/selectors'
 import { SAFELIST_ADDRESS } from '~/routes/routes'
 
-
 const useStyles = makeStyles({
   container: {
     display: 'flex',
@@ -43,7 +42,7 @@ const EllipsisTransactionDetails = ({ knownAddress, address }: EllipsisTransacti
   const dispatch = useDispatch()
   const currentSafeAddress = useSelector(safeParamAddressFromStateSelector)
 
-  const handleClick = (event) => {
+  const handleClick = event => {
     setAnchorEl(event.currentTarget)
   }
 
@@ -58,16 +57,16 @@ const EllipsisTransactionDetails = ({ knownAddress, address }: EllipsisTransacti
     <ClickAwayListener onClickAway={closeMenuHandler}>
       <div className={classes.container} onClick={handleClick}>
         <MoreHorizIcon />
-        <Menu
-          id="simple-menu"
-          anchorEl={anchorEl}
-          keepMounted
-          open={Boolean(anchorEl)}
-          onClose={closeMenuHandler}
-        >
-          <MenuItem onClick={closeMenuHandler} disabled>Send Again</MenuItem>
+        <Menu id="simple-menu" anchorEl={anchorEl} keepMounted open={Boolean(anchorEl)} onClose={closeMenuHandler}>
+          <MenuItem onClick={closeMenuHandler} disabled>
+            Send Again
+          </MenuItem>
           <Divider />
-          { knownAddress ? <MenuItem onClick={addOrEditEntryHandler}>Edit Address book Entry</MenuItem> : <MenuItem onClick={addOrEditEntryHandler}>Add to address book</MenuItem>}
+          {knownAddress ? (
+            <MenuItem onClick={addOrEditEntryHandler}>Edit Address book Entry</MenuItem>
+          ) : (
+            <MenuItem onClick={addOrEditEntryHandler}>Add to address book</MenuItem>
+          )}
         </Menu>
       </div>
     </ClickAwayListener>

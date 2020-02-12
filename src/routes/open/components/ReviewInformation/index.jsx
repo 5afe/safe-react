@@ -14,9 +14,7 @@ import Col from '~/components/layout/Col'
 import Row from '~/components/layout/Row'
 import Paragraph from '~/components/layout/Paragraph'
 import { formatAmount } from '~/logic/tokens/utils/formatAmount'
-import {
-  sm, md, lg, border, background, screenSm,
-} from '~/theme/variables'
+import { sm, md, lg, border, background, screenSm } from '~/theme/variables'
 import Hairline from '~/components/layout/Hairline'
 import { getWeb3 } from '~/logic/wallets/getWeb3'
 import { FIELD_NAME, FIELD_CONFIRMATIONS, getNumOwnersFrom } from '../fields'
@@ -183,11 +181,7 @@ const ReviewComponent = ({ values, classes, userAccount }: Props) => {
       <Row className={classes.info} align="center">
         <Paragraph noMargin color="primary" size="md">
           You&apos;re about to create a new Safe and will have to confirm a transaction with your currently connected
-          wallet. The creation will cost approximately
-          {' '}
-          {gasCosts}
-          {' '}
-          ETH. The exact amount will be determined by your
+          wallet. The creation will cost approximately {gasCosts} ETH. The exact amount will be determined by your
           wallet.
         </Paragraph>
       </Row>

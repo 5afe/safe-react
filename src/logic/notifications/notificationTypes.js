@@ -144,14 +144,19 @@ export const NOTIFICATIONS: Notifications = {
     message: 'A pending transaction requires your confirmation!',
     key: 'TX_WAITING_MSG',
     options: {
-      variant: WARNING, persist: true, preventDuplicate: true,
+      variant: WARNING,
+      persist: true,
+      preventDuplicate: true,
     },
   },
   TX_INCOMING_MSG: {
     message: 'Incoming transfer: ',
     key: 'TX_INCOMING_MSG',
     options: {
-      variant: SUCCESS, persist: false, autoHideDuration: longDuration, preventDuplicate: true,
+      variant: SUCCESS,
+      persist: false,
+      autoHideDuration: longDuration,
+      preventDuplicate: true,
     },
   },
 

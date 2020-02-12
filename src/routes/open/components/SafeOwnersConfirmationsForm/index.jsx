@@ -9,9 +9,7 @@ import Field from '~/components/forms/Field'
 import TextField from '~/components/forms/TextField'
 import SelectField from '~/components/forms/SelectField'
 import AddressInput from '~/components/forms/AddressInput'
-import {
-  required, composeValidators, noErrorsOn, mustBeInteger, minValue,
-} from '~/components/forms/validator'
+import { required, composeValidators, noErrorsOn, mustBeInteger, minValue } from '~/components/forms/validator'
 import Block from '~/components/layout/Block'
 import Button from '~/components/layout/Button'
 import Row from '~/components/layout/Row'
@@ -66,9 +64,7 @@ export const calculateValuesAfterRemoving = (index: number, notRemovedOwners: nu
 }
 
 const SafeOwners = (props: Props) => {
-  const {
-    classes, errors, otherAccounts, values, form,
-  } = props
+  const { classes, errors, otherAccounts, values, form } = props
 
   const validOwners = getNumOwnersFrom(values)
 
@@ -76,7 +72,7 @@ const SafeOwners = (props: Props) => {
   const [qrModalOpen, setQrModalOpen] = useState<boolean>(false)
   const [scanQrForOwnerName, setScanQrForOwnerName] = useState<string | null>(null)
 
-  const openQrModal = (ownerName) => {
+  const openQrModal = ownerName => {
     setScanQrForOwnerName(ownerName)
     setQrModalOpen(true)
   }
@@ -96,7 +92,7 @@ const SafeOwners = (props: Props) => {
     setNumOwners(numOwners + 1)
   }
 
-  const handleScan = (value) => {
+  const handleScan = value => {
     let scannedAddress = value
 
     if (scannedAddress.startsWith('ethereum:')) {
@@ -156,7 +152,7 @@ const SafeOwners = (props: Props) => {
                       ),
                     }
                   }
-                  fieldMutator={(val) => {
+                  fieldMutator={val => {
                     form.mutators.setValue(addressName, val)
                   }}
                   type="text"
@@ -210,11 +206,7 @@ const SafeOwners = (props: Props) => {
           </Col>
           <Col className={classes.ownersAmountItem} xs={10}>
             <Paragraph size="lg" color="primary" noMargin className={classes.owners}>
-              out of
-              {' '}
-              {validOwners}
-              {' '}
-owner(s)
+              out of {validOwners} owner(s)
             </Paragraph>
           </Col>
         </Row>

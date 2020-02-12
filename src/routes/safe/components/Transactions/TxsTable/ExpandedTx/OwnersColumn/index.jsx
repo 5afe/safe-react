@@ -7,10 +7,7 @@ import Block from '~/components/layout/Block'
 import Col from '~/components/layout/Col'
 import Img from '~/components/layout/Img'
 import { type Owner } from '~/routes/safe/store/models/owner'
-import {
-  makeTransaction,
-  type Transaction,
-} from '~/routes/safe/store/models/transaction'
+import { makeTransaction, type Transaction } from '~/routes/safe/store/models/transaction'
 import { TX_TYPE_CONFIRMATION } from '~/logic/safe/transactions/send'
 import OwnersList from './OwnersList'
 import CheckLargeFilledGreenCircle from './assets/check-large-filled-green.svg'
@@ -36,13 +33,13 @@ type Props = {
   thresholdReached: boolean,
   tx: Transaction,
   userAddress: string,
-};
+}
 
 function getOwnersConfirmations(tx, userAddress) {
   const ownersWhoConfirmed = []
   let currentUserAlreadyConfirmed = false
 
-  tx.confirmations.forEach((conf) => {
+  tx.confirmations.forEach(conf => {
     if (conf.owner.address === userAddress) {
       currentUserAlreadyConfirmed = true
     }
@@ -57,14 +54,12 @@ function getOwnersConfirmations(tx, userAddress) {
 
 function getPendingOwnersConfirmations(owners, tx, userAddress) {
   const ownersUnconfirmed = owners.filter(
-    (owner) => tx.confirmations.findIndex(
-      (conf) => conf.owner.address === owner.address,
-    ) === -1,
+    owner => tx.confirmations.findIndex(conf => conf.owner.address === owner.address) === -1,
   )
 
   let userIsUnconfirmedOwner = false
 
-  ownersUnconfirmed.some((owner) => {
+  ownersUnconfirmed.some(owner => {
     userIsUnconfirmedOwner = owner.address === userAddress
     return userIsUnconfirmedOwner
   })
@@ -96,22 +91,14 @@ const OwnersColumn = ({
     showOlderTxAnnotation = (thresholdReached && !canExecute) || (cancelThresholdReached && !canExecuteCancel)
   }
 
-  const [
-    ownersWhoConfirmed,
-    currentUserAlreadyConfirmed,
-  ] = getOwnersConfirmations(tx, userAddress)
-  const [
-    ownersUnconfirmed,
-    userIsUnconfirmedOwner,
-  ] = getPendingOwnersConfirmations(owners, tx, userAddress)
-  const [
-    ownersWhoConfirmedCancel,
-    currentUserAlreadyConfirmedCancel,
-  ] = getOwnersConfirmations(cancelTx, userAddress)
-  const [
-    ownersUnconfirmedCancel,
-    userIsUnconfirmedCancelOwner,
-  ] = getPendingOwnersConfirmations(owners, cancelTx, userAddress)
+  const [ownersWhoConfirmed, currentUserAlreadyConfirmed] = getOwnersConfirmations(tx, userAddress)
+  const [ownersUnconfirmed, userIsUnconfirmedOwner] = getPendingOwnersConfirmations(owners, tx, userAddress)
+  const [ownersWhoConfirmedCancel, currentUserAlreadyConfirmedCancel] = getOwnersConfirmations(cancelTx, userAddress)
+  const [ownersUnconfirmedCancel, userIsUnconfirmedCancelOwner] = getPendingOwnersConfirmations(
+    owners,
+    cancelTx,
+    userAddress,
+  )
 
   let displayButtonRow = true
   if (tx.executionTxHash) {
@@ -124,22 +111,24 @@ const OwnersColumn = ({
     displayButtonRow = false
   }
 
-  const showConfirmBtn = !tx.isExecuted
-    && tx.status !== 'pending'
-    && !tx.cancelled
-    && userIsUnconfirmedOwner
-    && !currentUserAlreadyConfirmed
-    && !thresholdReached
+  const showConfirmBtn =
+    !tx.isExecuted &&
+    tx.status !== 'pending' &&
+    !tx.cancelled &&
+    userIsUnconfirmedOwner &&
+    !currentUserAlreadyConfirmed &&
+    !thresholdReached
 
   const showExecuteBtn = canExecute && !tx.isExecuted && thresholdReached
 
-  const showRejectBtn = !cancelTx.isExecuted
-    && !tx.isExecuted
-    && cancelTx.status !== 'pending'
-    && userIsUnconfirmedCancelOwner
-    && !currentUserAlreadyConfirmedCancel
-    && !cancelThresholdReached
-    && displayButtonRow
+  const showRejectBtn =
+    !cancelTx.isExecuted &&
+    !tx.isExecuted &&
+    cancelTx.status !== 'pending' &&
+    userIsUnconfirmedCancelOwner &&
+    !currentUserAlreadyConfirmedCancel &&
+    !cancelThresholdReached &&
+    displayButtonRow
 
   const showExecuteRejectBtn = !cancelTx.isExecuted && !tx.isExecuted && canExecuteCancel && cancelThresholdReached
 
@@ -148,12 +137,7 @@ const OwnersColumn = ({
 
   return (
     <Col xs={6} className={classes.rightCol} layout="block">
-      <Block
-        className={cn(
-          classes.ownerListTitle,
-          (thresholdReached || tx.isExecuted) && classes.ownerListTitleDone,
-        )}
-      >
+      <Block className={cn(classes.ownerListTitle, (thresholdReached || tx.isExecuted) && classes.ownerListTitleDone)}>
         <div className={classes.circleState}>
           <Img src={thresholdReached || tx.isExecuted ? CheckLargeFilledGreenCircle : ConfirmLargeGreenCircle} alt="" />
         </div>
@@ -180,13 +164,13 @@ const OwnersColumn = ({
         )}
       >
         <div
-          className={cn(
-            classes.verticalLine,
-            tx.isExecuted ? classes.verticalLineDone : classes.verticalLinePending,
-          )}
+          className={cn(classes.verticalLine, tx.isExecuted ? classes.verticalLineDone : classes.verticalLinePending)}
         />
         <div className={classes.circleState}>
-          <Img src={cancelThresholdReached || cancelTx.isExecuted ? CheckLargeFilledRedCircle : ConfirmLargeRedCircle} alt="" />
+          <Img
+            src={cancelThresholdReached || cancelTx.isExecuted ? CheckLargeFilledRedCircle : ConfirmLargeRedCircle}
+            alt=""
+          />
         </div>
         {cancelTx.isExecuted
           ? `Rejected [${cancelTx.confirmations.size}/${cancelTx.confirmations.size}]`
@@ -218,26 +202,17 @@ const OwnersColumn = ({
             cancelTx.isExecuted && classes.verticalLineCancel,
           )}
         />
-
         <div className={classes.circleState}>
-          {!tx.isExecuted && !cancelTx.isExecuted && (
-            <Img src={ConfirmLargeGreyCircle} alt="Confirm / Execute tx" />
-          )}
-          {tx.isExecuted && (
-            <Img src={CheckLargeFilledGreenCircle} alt="TX Executed icon" />
-          )}
-          {cancelTx.isExecuted && (
-            <Img src={CheckLargeFilledRedCircle} alt="TX Executed icon" />
-          )}
+          {!tx.isExecuted && !cancelTx.isExecuted && <Img src={ConfirmLargeGreyCircle} alt="Confirm / Execute tx" />}
+          {tx.isExecuted && <Img src={CheckLargeFilledGreenCircle} alt="TX Executed icon" />}
+          {cancelTx.isExecuted && <Img src={CheckLargeFilledRedCircle} alt="TX Executed icon" />}
         </div>
         Executed
       </Block>
 
       {showOlderTxAnnotation && (
         <Block className={classes.olderTxAnnotation}>
-          <Paragraph>
-            There are older transactions that need to be executed first
-          </Paragraph>
+          <Paragraph>There are older transactions that need to be executed first</Paragraph>
         </Block>
       )}
     </Col>

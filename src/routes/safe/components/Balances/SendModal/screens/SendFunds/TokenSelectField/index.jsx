@@ -60,11 +60,11 @@ const TokenSelectField = ({ tokens, classes, initialValue }: SelectFieldProps) =
     component={SelectField}
     classes={{ selectMenu: classes.selectMenu }}
     validate={required}
-    renderValue={(tokenAddress) => <SelectedTokenStyled tokenAddress={tokenAddress} tokens={tokens} />}
+    renderValue={tokenAddress => <SelectedTokenStyled tokenAddress={tokenAddress} tokens={tokens} />}
     initialValue={initialValue}
     displayEmpty
   >
-    {tokens.map((token) => (
+    {tokens.map(token => (
       <MenuItem key={token.address} value={token.address}>
         <ListItemIcon>
           <Img src={token.logoUri} height={28} alt={token.name} onError={setImageToPlaceholder} />

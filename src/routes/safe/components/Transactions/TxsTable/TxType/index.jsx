@@ -37,7 +37,9 @@ const typeToLabel = {
 const TxType = ({ classes, txType }: Props) => (
   <Block className={classes.container}>
     <Img src={typeToIcon[txType]} alt={typeToLabel[txType]} className={classes.img} />
-    <Paragraph className={classes.type} noMargin>{typeToLabel[txType]}</Paragraph>
+    <Paragraph className={classes.type} noMargin>
+      {typeToLabel[txType]}
+    </Paragraph>
   </Block>
 )
 

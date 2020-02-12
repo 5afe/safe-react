@@ -20,9 +20,7 @@ type Props = {
 
 class Paragraph extends React.PureComponent<Props> {
   render() {
-    const {
-      weight, children, color, align, size, transform, noMargin, className, dot, ...props
-    } = this.props
+    const { weight, children, color, align, size, transform, noMargin, className, dot, ...props } = this.props
 
     return (
       <p

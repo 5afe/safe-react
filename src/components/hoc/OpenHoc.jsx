@@ -7,10 +7,7 @@ export type Open = {
   clickAway: () => void,
 }
 
-export default withStateHandlers(
-  () => ({ open: false }),
-  {
-    toggle: ({ open }) => () => ({ open: !open }),
-    clickAway: () => () => ({ open: false }),
-  },
-)
+export default withStateHandlers(() => ({ open: false }), {
+  toggle: ({ open }) => () => ({ open: !open }),
+  clickAway: () => () => ({ open: false }),
+})

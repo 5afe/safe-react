@@ -37,7 +37,7 @@ type Props = {
   userAddress: string,
   canExecute: boolean,
   enqueueSnackbar: Function,
-  closeSnackbar: Function
+  closeSnackbar: Function,
 }
 
 const getModalTitleAndDescription = (thresholdReached: boolean, isCancelTx?: boolean) => {
@@ -52,10 +52,12 @@ const getModalTitleAndDescription = (thresholdReached: boolean, isCancelTx?: boo
 
   if (thresholdReached) {
     modalInfo.title = 'Execute Transaction'
-    modalInfo.description = 'This action will execute this transaction. A separate Transaction will be performed to submit the execution.'
+    modalInfo.description =
+      'This action will execute this transaction. A separate Transaction will be performed to submit the execution.'
   } else {
     modalInfo.title = 'Approve Transaction'
-    modalInfo.description = 'This action will approve this transaction. A separate Transaction will be performed to submit the approval.'
+    modalInfo.description =
+      'This action will approve this transaction. A separate Transaction will be performed to submit the approval.'
   }
 
   return modalInfo
@@ -110,7 +112,7 @@ const ApproveTxModal = ({
     }
   }, [approveAndExecute])
 
-  const handleExecuteCheckbox = () => setApproveAndExecute((prevApproveAndExecute) => !prevApproveAndExecute)
+  const handleExecuteCheckbox = () => setApproveAndExecute(prevApproveAndExecute => !prevApproveAndExecute)
 
   const approveTx = () => {
     processTransaction({
@@ -126,12 +128,7 @@ const ApproveTxModal = ({
   }
 
   return (
-    <Modal
-      title={title}
-      description={description}
-      handleClose={onClose}
-      open={isOpen}
-    >
+    <Modal title={title} description={description} handleClose={onClose} open={isOpen}>
       <Row align="center" grow className={classes.heading}>
         <Paragraph weight="bolder" className={classes.headingText} noMargin>
           {title}
@@ -153,18 +150,12 @@ const ApproveTxModal = ({
             <>
               <Paragraph color="error">
                 Approving this transaction executes it right away.
-                {!isCancelTx && ' If you want approve but execute the transaction manually later, click on the '
-                + 'checkbox below.'}
+                {!isCancelTx &&
+                  ' If you want approve but execute the transaction manually later, click on the ' + 'checkbox below.'}
               </Paragraph>
               {!isCancelTx && (
                 <FormControlLabel
-                  control={(
-                    <Checkbox
-                      onChange={handleExecuteCheckbox}
-                      checked={approveAndExecute}
-                      color="primary"
-                    />
-                  )}
+                  control={<Checkbox onChange={handleExecuteCheckbox} checked={approveAndExecute} color="primary" />}
                   label="Execute transaction"
                 />
               )}

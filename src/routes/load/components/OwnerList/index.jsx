@@ -14,9 +14,7 @@ import Paragraph from '~/components/layout/Paragraph'
 import Hairline from '~/components/layout/Hairline'
 import EtherscanBtn from '~/components/EtherscanBtn'
 import CopyBtn from '~/components/CopyBtn'
-import {
-  sm, md, lg, border, disabled, extraSmallFontSize, screenSm,
-} from '~/theme/variables'
+import { sm, md, lg, border, disabled, extraSmallFontSize, screenSm } from '~/theme/variables'
 import { getOwnerNameBy, getOwnerAddressBy } from '~/routes/open/components/fields'
 import { FIELD_LOAD_ADDRESS, THRESHOLD } from '~/routes/load/components/fields'
 import { getGnosisSafeInstanceAt } from '~/logic/contracts/safeContracts'
@@ -88,9 +86,7 @@ const calculateSafeValues = (owners: Array<string>, threshold: Number, values: O
 
 const OwnerListComponent = (props: Props) => {
   const [owners, setOwners] = useState<Array<string>>([])
-  const {
-    values, updateInitialProps, classes,
-  } = props
+  const { values, updateInitialProps, classes } = props
 
   useEffect(() => {
     let isCurrent = true

@@ -23,6 +23,8 @@ const GnoButtonLink = ({
   testId = '',
   className = '',
   ...props
-}: Props) => <button type={type} className={cx(styles.btnLink, size, color, weight, className)} data-testid={testId} {...props} />
+}: Props) => (
+  <button type={type} className={cx(styles.btnLink, size, color, weight, className)} data-testid={testId} {...props} />
+)
 
 export default GnoButtonLink

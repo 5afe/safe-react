@@ -33,11 +33,9 @@ const useStyles = makeStyles(styles)
 const SafeDetails = (props: Props) => {
   const classes = useStyles()
   const [safeVersions, setSafeVersions] = React.useState({ current: null, latest: null, needUpdate: false })
-  const {
-    safeAddress, safeName, updateSafe, enqueueSnackbar, closeSnackbar,
-  } = props
+  const { safeAddress, safeName, updateSafe, enqueueSnackbar, closeSnackbar } = props
 
-  const handleSubmit = (values) => {
+  const handleSubmit = values => {
     updateSafe({ address: safeAddress, name: values.safeName })
 
     const notification = getNotificationsFromTxType(TX_NOTIFICATION_TYPES.SAFE_NAME_CHANGE_TX)

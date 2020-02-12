@@ -12,9 +12,7 @@ import Col from '~/components/layout/Col'
 import Img from '~/components/layout/Img'
 import Row from '~/components/layout/Row'
 import Spacer from '~/components/Spacer'
-import {
-  border, sm, md, headerHeight, screenSm,
-} from '~/theme/variables'
+import { border, sm, md, headerHeight, screenSm } from '~/theme/variables'
 import Provider from './Provider'
 import NetworkLabel from './NetworkLabel'
 import SafeListHeader from './SafeListHeader'
@@ -24,7 +22,7 @@ const logo = require('../assets/gnosis-safe-multisig-logo.svg')
 type Props = Open & {
   classes: Object,
   providerDetails: React.Node,
-  providerInfo: React.Node
+  providerInfo: React.Node,
 }
 
 const styles = () => ({
@@ -64,55 +62,42 @@ const styles = () => ({
   },
 })
 
-const Layout = openHoc(
-  ({
-    open,
-    toggle,
-    clickAway,
-    classes,
-    providerInfo,
-    providerDetails,
-  }: Props) => (
-      <Row className={classes.summary}>
-        <Col start="xs" middle="xs" className={classes.logo}>
-          <Link to="/">
-            <Img src={logo} height={32} alt="Gnosis Team Safe" />
-          </Link>
-        </Col>
-        <Divider />
-        <SafeListHeader />
-        <Divider />
-        <NetworkLabel />
-        <Spacer />
-        <Provider open={open} toggle={toggle} info={providerInfo}>
-          {(providerRef) => (
-            <Popper
-              anchorEl={providerRef.current}
-              className={classes.popper}
-              open={open}
-              placement="bottom"
-              popperOptions={{ positionFixed: true }}
-            >
-              {({ TransitionProps }) => (
-                <Grow {...TransitionProps}>
-                  <>
-                    <ClickAwayListener
-                      onClickAway={clickAway}
-                      mouseEvent="onClick"
-                      touchEvent={false}
-                    >
-                      <List className={classes.root} component="div">
-                        {providerDetails}
-                      </List>
-                    </ClickAwayListener>
-                  </>
-                </Grow>
-              )}
-            </Popper>
+const Layout = openHoc(({ open, toggle, clickAway, classes, providerInfo, providerDetails }: Props) => (
+  <Row className={classes.summary}>
+    <Col start="xs" middle="xs" className={classes.logo}>
+      <Link to="/">
+        <Img src={logo} height={32} alt="Gnosis Team Safe" />
+      </Link>
+    </Col>
+    <Divider />
+    <SafeListHeader />
+    <Divider />
+    <NetworkLabel />
+    <Spacer />
+    <Provider open={open} toggle={toggle} info={providerInfo}>
+      {providerRef => (
+        <Popper
+          anchorEl={providerRef.current}
+          className={classes.popper}
+          open={open}
+          placement="bottom"
+          popperOptions={{ positionFixed: true }}
+        >
+          {({ TransitionProps }) => (
+            <Grow {...TransitionProps}>
+              <>
+                <ClickAwayListener onClickAway={clickAway} mouseEvent="onClick" touchEvent={false}>
+                  <List className={classes.root} component="div">
+                    {providerDetails}
+                  </List>
+                </ClickAwayListener>
+              </>
+            </Grow>
           )}
-        </Provider>
-      </Row>
-    ),
-)
+        </Popper>
+      )}
+    </Provider>
+  </Row>
+))
 
 export default withStyles(styles)(Layout)

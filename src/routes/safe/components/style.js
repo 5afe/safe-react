@@ -1,7 +1,5 @@
 // @flow
-import {
-  sm, xs, smallFontSize, secondaryText, secondary, screenSm,
-} from '~/theme/variables'
+import { sm, xs, smallFontSize, secondaryText, secondary, screenSm } from '~/theme/variables'
 
 export const styles = () => ({
   container: {

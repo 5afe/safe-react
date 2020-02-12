@@ -40,7 +40,7 @@ const OwnersList = ({
   userAddress,
 }: ListProps) => (
   <>
-    {ownersWhoConfirmed.map((owner) => (
+    {ownersWhoConfirmed.map(owner => (
       <OwnerComponent
         classes={classes}
         confirmed
@@ -57,7 +57,7 @@ const OwnersList = ({
         userAddress={userAddress}
       />
     ))}
-    {ownersUnconfirmed.map((owner) => (
+    {ownersUnconfirmed.map(owner => (
       <OwnerComponent
         classes={classes}
         executor={executor}
