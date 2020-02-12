@@ -21,6 +21,16 @@ const FORTMATIC_API_KEY = isMainnet
   : 'pk_test_CAD437AA29BE0A40'
 
 const wallets = [
+  {
+    walletName: 'trezor',
+    appUrl: 'gnosis-safe.io',
+    email: 'safe@gnosis.io',
+    rpcUrl: 'https://rinkeby.infura.io/v3/b42c928da8fd4c1f90374b18aa9ac6ba',
+  },
+  {
+    walletName: 'ledger',
+    rpcUrl: 'https://rinkeby.infura.io/v3/b42c928da8fd4c1f90374b18aa9ac6ba',
+  },
   { walletName: 'metamask', preferred: true },
   {
     walletName: 'walletConnect',
@@ -47,7 +57,7 @@ const wallets = [
 ]
 
 let lastUsedAddress = ''
-let providerName
+let providerName = undefined
 
 export const onboard = new Onboard({
   dappId: BLOCKNATIVE_API_KEY,

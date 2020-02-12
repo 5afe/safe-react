@@ -45,7 +45,7 @@
     "@welldone-software/why-did-you-render": "3.5.0",
     "axios": "0.19.1",
     "bignumber.js": "9.0.0",
-    "bnc-onboard": "1.2.3",
+    "bnc-onboard": "https://github.com/blocknative/onboard/#feature/hardware-wallets",
     "connected-react-router": "6.6.1",
     "currency-flags": "^2.1.1",
     "date-fns": "2.9.0",
