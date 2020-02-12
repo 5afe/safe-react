@@ -72,7 +72,6 @@ const OwnersColumn = ({
   cancelTx = makeTransaction(),
   owners,
   classes,
-  granted,
   threshold,
   userAddress,
   thresholdReached,

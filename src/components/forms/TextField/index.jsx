@@ -23,7 +23,6 @@ class TextField extends React.PureComponent<TextFieldProps> {
     const {
       input: { name, onChange, value, ...restInput },
       meta,
-      render,
       text,
       inputAdornment,
       classes,

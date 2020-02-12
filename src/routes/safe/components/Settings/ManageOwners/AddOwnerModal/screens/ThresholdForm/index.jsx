@@ -21,15 +21,16 @@ import { styles } from './style'
 export const ADD_OWNER_THRESHOLD_NEXT_BTN_TEST_ID = 'add-owner-threshold-next-btn'
 
 type Props = {
-  onClose: () => void,
   classes: Object,
+  meta: any,
+  onClickBack: Function,
+  onClose: () => void,
+  onSubmit: Function,
   owners: List<Owner>,
   threshold: number,
-  onClickBack: Function,
-  onSubmit: Function,
 }
 
-const ThresholdForm = ({ classes, onClose, owners, threshold, onClickBack, onSubmit }: Props) => {
+const ThresholdForm = ({ classes, onClose, owners, threshold, onClickBack, onSubmit, meta }: Props) => {
   const handleSubmit = values => {
     onSubmit(values)
   }
@@ -71,9 +72,9 @@ const ThresholdForm = ({ classes, onClose, owners, threshold, onClickBack, onSub
                             </MenuItem>
                           ))}
                         </SelectField>
-                        {props.meta.error && props.meta.touched && (
+                        {meta.error && meta.touched && (
                           <Paragraph className={classes.errorText} noMargin color="error">
-                            {props.meta.error}
+                            {meta.error}
                           </Paragraph>
                         )}
                       </>

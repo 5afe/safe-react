@@ -156,13 +156,14 @@ const AddressBookInput = ({
         renderInput={params => (
           <TextField
             {...params}
-            label={!isValidForm ? validationText : 'Recipient'}
+            // eslint-disable-next-line jsx-a11y/no-autofocus
+            autoFocus={!blurred || pristine}
             error={!isValidForm}
             fullWidth
-            autoFocus={!blurred || pristine}
-            variant="filled"
             id="filled-error-helper-text"
+            label={!isValidForm ? validationText : 'Recipient'}
             value={{ address: inputAddValue }}
+            variant="filled"
             onChange={event => {
               setInputTouched(true)
               onAddressInputChanged(event.target.value)

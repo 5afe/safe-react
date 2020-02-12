@@ -10,4 +10,6 @@ public
 scripts
 src/assets
 src/config
-src/test
+test
+*.spec*
+*.test*

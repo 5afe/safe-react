@@ -26,6 +26,7 @@ type Props = {
   classes: Object,
 }
 
+// eslint-disable-next-line react/display-name
 const TokenRow = memo(({ data, index, classes, style }: Props) => {
   const { tokens, activeTokensAddresses, onSwitch } = data
   const token: Token = tokens.get(index)

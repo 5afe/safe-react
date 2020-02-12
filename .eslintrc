@@ -16,10 +16,9 @@
     "plugin:import/errors",
     "plugin:import/warnings",
     "plugin:jsx-a11y/recommended",
-    "prettier",
     "plugin:prettier/recommended",
-    "prettier/flowtype",
-    "prettier/react"
+    "prettier/react",
+    "prettier/flowtype"
   ],
   "parserOptions": {
     "ecmaFeatures": {
@@ -29,17 +28,11 @@
   "env": {
     "browser": true,
     "amd": true,
-    "node": true
+    "node": true,
+    "es6": true
   },
   "rules": {
     "class-methods-use-this": 0,
-    "indent": [
-      "error",
-      2,
-      {
-        "SwitchCase": 1
-      }
-    ],
     "max-len": [
       "error",
       120,

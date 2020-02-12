@@ -6,7 +6,6 @@ class GnoCheckbox extends React.PureComponent<CheckoxProps> {
   render() {
     const {
       input: { checked, name, onChange, ...restInput },
-      meta,
       ...rest
     } = this.props
 

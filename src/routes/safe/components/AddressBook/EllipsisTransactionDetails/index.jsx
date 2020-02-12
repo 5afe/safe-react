@@ -55,7 +55,7 @@ const EllipsisTransactionDetails = ({ knownAddress, address }: EllipsisTransacti
 
   return (
     <ClickAwayListener onClickAway={closeMenuHandler}>
-      <div className={classes.container} onClick={handleClick}>
+      <div role="menu" tabIndex={0} className={classes.container} onClick={handleClick} onKeyDown={handleClick}>
         <MoreHorizIcon />
         <Menu id="simple-menu" anchorEl={anchorEl} keepMounted open={Boolean(anchorEl)} onClose={closeMenuHandler}>
           <MenuItem onClick={closeMenuHandler} disabled>

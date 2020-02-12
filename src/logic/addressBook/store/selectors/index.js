@@ -1,3 +1,4 @@
+/* eslint-disable import/named */
 // @flow
 import { List, Map } from 'immutable'
 import { createSelector, Selector } from 'reselect'
