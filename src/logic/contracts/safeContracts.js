@@ -1,8 +1,8 @@
 // @flow
 import contract from 'truffle-contract'
-import ProxyFactorySol from '@gnosis.pm/safe-contracts/build/contracts/ProxyFactory.json'
+import ProxyFactorySol from '@gnosis.pm/safe-contracts/build/contracts/GnosisSafeProxyFactory.json'
 import GnosisSafeSol from '@gnosis.pm/safe-contracts/build/contracts/GnosisSafe.json'
-import SafeProxy from '@gnosis.pm/safe-contracts/build/contracts/Proxy.json'
+import SafeProxy from '@gnosis.pm/safe-contracts/build/contracts/GnosisSafeProxy.json'
 import { ensureOnce } from '~/utils/singleton'
 import { simpleMemoize } from '~/components/forms/validator'
 import { getWeb3 } from '~/logic/wallets/getWeb3'
@@ -20,24 +20,6 @@ let safeMaster
 
 const createGnosisSafeContract = (web3: any) => {
   const gnosisSafeSol = { ...GnosisSafeSol }
-
-  if (!Object.keys(gnosisSafeSol.networks).length) {
-    gnosisSafeSol.networks = {
-      1: {
-        links: {},
-        events: {},
-        address: SAFE_MASTER_COPY_ADDRESS,
-        updated_at: 1551107687797,
-      },
-      4: {
-        links: {},
-        events: {},
-        address: SAFE_MASTER_COPY_ADDRESS,
-        updated_at: 1551107687797,
-      },
-    }
-  }
-
   const gnosisSafe = contract(gnosisSafeSol)
   gnosisSafe.setProvider(web3.currentProvider)
 
@@ -46,24 +28,6 @@ const createGnosisSafeContract = (web3: any) => {
 
 const createProxyFactoryContract = (web3: any) => {
   const proxyFactorySol = { ...ProxyFactorySol }
-
-  if (!Object.keys(proxyFactorySol.networks).length) {
-    proxyFactorySol.networks = {
-      1: {
-        links: {},
-        events: {},
-        address: SAFE_PROXY_FACTORY_ADDRESS,
-        updated_at: 1551107687797,
-      },
-      4: {
-        links: {},
-        events: {},
-        address: SAFE_PROXY_FACTORY_ADDRESS,
-        updated_at: 1551107687797,
-      },
-    }
-  }
-
   const proxyFactory = contract(proxyFactorySol)
   proxyFactory.setProvider(web3.currentProvider)
 
