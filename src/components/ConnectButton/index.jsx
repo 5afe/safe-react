@@ -21,39 +21,39 @@ const FORTMATIC_API_KEY = isMainnet
   : 'pk_test_CAD437AA29BE0A40'
 
 const wallets = [
-  {
-    walletName: 'trezor',
-    appUrl: 'gnosis-safe.io',
-    email: 'safe@gnosis.io',
-    rpcUrl: 'https://rinkeby.infura.io/v3/b42c928da8fd4c1f90374b18aa9ac6ba',
-  },
-  {
-    walletName: 'ledger',
-    rpcUrl: 'https://rinkeby.infura.io/v3/b42c928da8fd4c1f90374b18aa9ac6ba',
-  },
   { walletName: 'metamask', preferred: true },
   {
     walletName: 'walletConnect',
     preferred: true,
     infuraKey: process.env.REACT_APP_INFURA_TOKEN,
   },
+  {
+    walletName: 'trezor',
+    appUrl: 'gnosis-safe.io',
+    preferred: true,
+    email: 'safe@gnosis.io',
+    rpcUrl: 'https://rinkeby.infura.io/v3/b42c928da8fd4c1f90374b18aa9ac6ba',
+  },
+  {
+    walletName: 'ledger',
+    preferred: true,
+    rpcUrl: 'https://rinkeby.infura.io/v3/b42c928da8fd4c1f90374b18aa9ac6ba',
+  },
   { walletName: 'trust', preferred: true },
   { walletName: 'dapper' },
   {
     walletName: 'fortmatic',
     apiKey: FORTMATIC_API_KEY,
-    preferred: true,
   },
   {
     walletName: 'portis',
     apiKey: PORTIS_DAPP_ID,
-    preferred: true,
     label: 'Login with Email',
   },
   { walletName: 'authereum' },
   { walletName: 'coinbase' },
-  { walletName: 'opera', preferred: true },
-  { walletName: 'operaTouch', preferred: true },
+  { walletName: 'opera' },
+  { walletName: 'operaTouch' },
 ]
 
 let lastUsedAddress = ''
