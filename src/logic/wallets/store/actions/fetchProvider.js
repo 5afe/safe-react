@@ -2,21 +2,25 @@
 import type { Dispatch as ReduxDispatch } from 'redux'
 import ReactGA from 'react-ga'
 import {
-  ETHEREUM_NETWORK_IDS, ETHEREUM_NETWORK, getProviderInfo,
+  ETHEREUM_NETWORK_IDS,
+  ETHEREUM_NETWORK,
+  getProviderInfo,
+  getWeb3,
 } from '~/logic/wallets/getWeb3'
 import { getNetwork } from '~/config'
 import type { ProviderProps } from '~/logic/wallets/store/model/provider'
 import { makeProvider } from '~/logic/wallets/store/model/provider'
-import { getWeb3 } from '~/logic/wallets/getWeb3'
+
 import { NOTIFICATIONS, enhanceSnackbarForAction } from '~/logic/notifications'
 import enqueueSnackbar from '~/logic/notifications/store/actions/enqueueSnackbar'
 
 import addProvider from './addProvider'
 
-export const processProviderResponse = (dispatch: ReduxDispatch<*>, provider: ProviderProps) => {
-  const {
-    name, available, loaded, account, network,
-  } = provider
+export const processProviderResponse = (
+  dispatch: ReduxDispatch<*>,
+  provider: ProviderProps
+) => {
+  const { name, available, loaded, account, network } = provider
 
   const walletRecord = makeProvider({
     name,
@@ -29,11 +33,18 @@ export const processProviderResponse = (dispatch: ReduxDispatch<*>, provider: Pr
   dispatch(addProvider(walletRecord))
 }
 
-const handleProviderNotification = (provider: ProviderProps, dispatch: Function) => {
+const handleProviderNotification = (
+  provider: ProviderProps,
+  dispatch: Function
+) => {
   const { loaded, network, available } = provider
 
   if (!loaded) {
-    dispatch(enqueueSnackbar(enhanceSnackbarForAction(NOTIFICATIONS.CONNECT_WALLET_ERROR_MSG)))
+    dispatch(
+      enqueueSnackbar(
+        enhanceSnackbarForAction(NOTIFICATIONS.CONNECT_WALLET_ERROR_MSG)
+      )
+    )
     return
   }
 
@@ -42,7 +53,11 @@ const handleProviderNotification = (provider: ProviderProps, dispatch: Function)
     return
   }
   if (ETHEREUM_NETWORK.RINKEBY === getNetwork()) {
-    dispatch(enqueueSnackbar(enhanceSnackbarForAction(NOTIFICATIONS.RINKEBY_VERSION_MSG)))
+    dispatch(
+      enqueueSnackbar(
+        enhanceSnackbarForAction(NOTIFICATIONS.RINKEBY_VERSION_MSG)
+      )
+    )
   }
 
   if (available) {
@@ -56,15 +71,23 @@ const handleProviderNotification = (provider: ProviderProps, dispatch: Function)
       action: 'Connect a wallet',
       label: provider.name,
     })
-    dispatch(enqueueSnackbar(enhanceSnackbarForAction(NOTIFICATIONS.WALLET_CONNECTED_MSG)))
+    dispatch(
+      enqueueSnackbar(
+        enhanceSnackbarForAction(NOTIFICATIONS.WALLET_CONNECTED_MSG)
+      )
+    )
   } else {
-    dispatch(enqueueSnackbar(enhanceSnackbarForAction(NOTIFICATIONS.UNLOCK_WALLET_MSG)))
+    dispatch(
+      enqueueSnackbar(enhanceSnackbarForAction(NOTIFICATIONS.UNLOCK_WALLET_MSG))
+    )
   }
 }
 
-export default (providerName?: string) => async (dispatch: ReduxDispatch<*>) => {
+export default (providerName?: string) => async (
+  dispatch: ReduxDispatch<*>
+) => {
   const web3 = getWeb3()
-  const providerInfo: ProviderProps = await getProviderInfo(web3,providerName)
+  const providerInfo: ProviderProps = await getProviderInfo(web3, providerName)
   await handleProviderNotification(providerInfo, dispatch)
   processProviderResponse(dispatch, providerInfo)
 }

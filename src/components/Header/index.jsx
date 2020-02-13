@@ -36,7 +36,10 @@ class HeaderComponent extends React.PureComponent<Props, State> {
 
   async componentDidMount() {
     const lastUsedProvider = await loadLastUsedProvider()
-    if (INJECTED_PROVIDERS.includes(lastUsedProvider.toUpperCase()) || process.env.NODE_ENV === 'test') {
+    if (
+      INJECTED_PROVIDERS.includes(lastUsedProvider.toUpperCase()) ||
+      process.env.NODE_ENV === 'test'
+    ) {
       const hasSelectedWallet = await onboard.walletSelect(lastUsedProvider)
       if (hasSelectedWallet) {
         await onboard.walletCheck()
