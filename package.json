@@ -31,15 +31,14 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "lint-staged"
+      "pre-commit": "lint-staged --allow-empty"
     }
   },
   "lint-staged": {
     "src/**/*.{js,jsx}": [
       "eslint --fix",
       "prettier --write"
-    ],
-    "allowEmpty": "true"
+    ]
   },
   "dependencies": {
     "@gnosis.pm/safe-contracts": "1.0.0",
