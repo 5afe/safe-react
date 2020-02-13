@@ -1,5 +1,5 @@
 // @flow
-import * as React from 'react'
+import React, { useState } from 'react'
 import classNames from 'classnames/bind'
 import { Switch, Redirect, Route, withRouter } from 'react-router-dom'
 import Tabs from '@material-ui/core/Tabs'
@@ -20,6 +20,7 @@ import Modal from '~/components/Modal'
 import SendModal from './Balances/SendModal'
 import Receive from './Balances/Receive'
 import NoSafe from '~/components/NoSafe'
+import { GenericModal } from '~/components-v2'
 import { type SelectorProps } from '~/routes/safe/container/selector'
 import { getEtherScanLink, getWeb3 } from '~/logic/wallets/getWeb3'
 import { border } from '~/theme/variables'
@@ -92,6 +93,14 @@ const Layout = (props: Props) => {
     updateAddressBookEntry,
   } = props
 
+  const [modal, setModal] = useState({
+    isOpen: false,
+    title: null,
+    body: null,
+    footer: null,
+    onClose: null,
+  })
+
   const handleCallToRouter = (_, value) => {
     const { history } = props
 
@@ -105,6 +114,24 @@ const Layout = (props: Props) => {
   const { address, ethBalance, name } = safe
   const etherScanLink = getEtherScanLink('address', address)
   const web3Instance = getWeb3()
+
+  const openGenericModal = modalConfig => {
+    setModal({ ...modalConfig, isOpen: true })
+  }
+
+  const closeGenericModal = () => {
+    if (modal.onClose) {
+      modal.onClose()
+    }
+
+    setModal({
+      isOpen: false,
+      title: null,
+      body: null,
+      footer: null,
+      onClose: null,
+    })
+  }
 
   const labelAddressBook = (
     <>
@@ -135,9 +162,13 @@ const Layout = (props: Props) => {
     <React.Suspense>
       <Apps
         safeAddress={address}
+        safeName={name}
+        ethBalance={ethBalance}
         web3={web3Instance}
         network={network}
         createTransaction={createTransaction}
+        openModal={openGenericModal}
+        closeModal={closeGenericModal}
       />
     </React.Suspense>
   )
@@ -357,6 +388,8 @@ const Layout = (props: Props) => {
           onClose={onHide('Receive')}
         />
       </Modal>
+
+      {modal.isOpen && <GenericModal {...modal} onClose={closeGenericModal} />}
     </>
   )
 }

@@ -2,11 +2,12 @@
 import React, { useState, useEffect, useCallback } from 'react'
 import styled from 'styled-components'
 
-import ButtonLink from '~/components/layout/ButtonLink'
-import Loader from './ListContentLayout/Loader'
+import ButtonLink from '../../../../components/layout/ButtonLink'
+import { Loader, ListContentLayout as LCL } from '~/components-v2'
+import confirmTransactions from './confirmTransactions'
 import sendTransactions from './sendTransactions'
-import { Wrapper, Menu, Content, Footer, Nav } from './ListContentLayout/Layout'
-import List from './ListContentLayout/List'
+
+import appsList from './appsList'
 
 const StyledIframe = styled.iframe`
   width: 100%;
@@ -22,58 +23,30 @@ const operations = {
 
 type Props = {
   web3: any,
-  safeAddress: string,
-  network: string,
+  safeAddress: String,
+  safeName: String,
+  ethBalance: String,
+  network: String,
   createTransaction: any,
+  openModal: () => {},
+  closeModal: () => {},
 }
 
-const Apps = ({ web3, safeAddress, network, createTransaction }: Props) => {
-  const apps = [
-    {
-      id: 1,
-      name: 'Compound',
-      // url: 'http://localhost:3002',
-      url: 'https://gnosis-apps.netlify.com/',
-      iconUrl: 'https://compound.finance/images/compound-mark.svg',
-      description: '',
-      providedBy: { name: 'Gnosis', url: '' },
-    },
-    {
-      id: 2,
-      name: 'ENS Manager',
-      url: '',
-      iconUrl: 'https://app.ens.domains/static/media/ensIconLogo.4d995d23.svg',
-      description: '',
-      providedBy: { name: 'Gnosis', url: '' },
-    },
-    {
-      id: 3,
-      name: 'Uniswap',
-      url: '',
-      iconUrl:
-        'https://blobscdn.gitbook.com/v0/b/gitbook-28427.appspot.com/o/spaces%2F-LNun-MDdANv-PeRglM0%2Favatar.png?generation=1538584950851432&alt=media',
-      description: '',
-      providedBy: { name: 'Gnosis', url: '' },
-    },
-    {
-      id: 4,
-      name: 'Nexus Mutual',
-      url: '',
-      iconUrl:
-        'https://blobscdn.gitbook.com/v0/b/gitbook-28427.appspot.com/o/spaces%2F-LK136DM17k-0Gl82Q9B%2Favatar.png?generation=1534411701476772&alt=media',
-      description: '',
-      providedBy: {
-        name: 'Gnosis',
-        url: '',
-      },
-    },
-  ]
-
+function Apps({
+  web3,
+  safeAddress,
+  safeName,
+  ethBalance,
+  network,
+  createTransaction,
+  openModal,
+  closeModal,
+}: Props) {
   const [selectedApp, setSelectedApp] = useState(1)
   const [appIsLoading, setAppIsLoading] = useState(true)
   const [iframeEl, setframeEl] = useState(null)
 
-  const getSelectedApp = () => apps.find(e => e.id === selectedApp)
+  const getSelectedApp = () => appsList.find(e => e.id === selectedApp)
 
   const sendMessageToIframe = (messageId, data) => {
     iframeEl.contentWindow.postMessage(
@@ -90,19 +63,33 @@ const Apps = ({ web3, safeAddress, network, createTransaction }: Props) => {
 
     switch (data.messageId) {
       case operations.SEND_TRANSACTIONS: {
-        const txHash = await sendTransactions(
-          web3,
-          createTransaction,
-          safeAddress,
-          data.data
-        )
+        const onConfirm = async () => {
+          closeModal()
 
-        if (txHash) {
-          sendMessageToIframe(operations.ON_TX_UPDATE, {
-            txHash,
-            status: 'pending',
-          })
+          const txHash = await sendTransactions(
+            web3,
+            createTransaction,
+            safeAddress,
+            data.data
+          )
+
+          if (txHash) {
+            sendMessageToIframe(operations.ON_TX_UPDATE, {
+              txHash,
+              status: 'pending',
+            })
+          }
         }
+
+        confirmTransactions(
+          safeAddress,
+          safeName,
+          ethBalance,
+          data.data,
+          openModal,
+          closeModal,
+          onConfirm
+        )
 
         break
       }
@@ -183,17 +170,21 @@ const Apps = ({ web3, safeAddress, network, createTransaction }: Props) => {
   }
 
   return (
-    <Wrapper>
-      <Nav>
+    <LCL.Wrapper>
+      <LCL.Nav>
         <ButtonLink size="lg" onClick={() => {}} testId="manage-tokens-btn">
           Manage Apps
         </ButtonLink>
-      </Nav>
-      <Menu>
-        <List items={apps} activeItem={selectedApp} onItemClick={onSelectApp} />
-      </Menu>
-      <Content>{getContent()}</Content>
-      <Footer>
+      </LCL.Nav>
+      <LCL.Menu>
+        <LCL.List
+          items={appsList}
+          activeItem={selectedApp}
+          onItemClick={onSelectApp}
+        />
+      </LCL.Menu>
+      <LCL.Content>{getContent()}</LCL.Content>
+      <LCL.Footer>
         This App is provided by{' '}
         <ButtonLink
           size="lg"
@@ -202,8 +193,8 @@ const Apps = ({ web3, safeAddress, network, createTransaction }: Props) => {
         >
           {getSelectedApp().providedBy.name}
         </ButtonLink>
-      </Footer>
-    </Wrapper>
+      </LCL.Footer>
+    </LCL.Wrapper>
   )
 }
 

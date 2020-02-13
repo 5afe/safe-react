@@ -18,7 +18,9 @@ import Field from '~/components/forms/Field'
 import TextField from '~/components/forms/TextField'
 import TextareaField from '~/components/forms/TextareaField'
 import {
-  composeValidators, mustBeFloat, maxValue,
+  composeValidators,
+  mustBeFloat,
+  maxValue,
 } from '~/components/forms/validator'
 import SafeInfo from '~/routes/safe/components/Balances/SendModal/SafeInfo'
 import QRIcon from '~/assets/icons/qrcode.svg'
@@ -29,7 +31,6 @@ import AddressBookInput from '~/routes/safe/components/Balances/SendModal/screen
 import Identicon from '~/components/Identicon'
 import CopyBtn from '~/components/CopyBtn'
 import EtherscanBtn from '~/components/EtherscanBtn'
-
 
 type Props = {
   onClose: () => void,
@@ -87,7 +88,6 @@ const SendCustomTx = ({
     },
   }
 
-
   return (
     <>
       <Row align="center" grow className={classes.heading}>
@@ -100,7 +100,11 @@ const SendCustomTx = ({
         </IconButton>
       </Row>
       <Hairline />
-      <GnoForm onSubmit={handleSubmit} formMutators={formMutators} initialValues={initialValues}>
+      <GnoForm
+        onSubmit={handleSubmit}
+        formMutators={formMutators}
+        initialValues={initialValues}
+      >
         {(...args) => {
           const mutators = args[3]
 
@@ -109,7 +113,7 @@ const SendCustomTx = ({
             shouldDisableSubmitButton = !selectedEntry.address
           }
 
-          const handleScan = (value) => {
+          const handleScan = value => {
             let scannedAddress = value
 
             if (scannedAddress.startsWith('ethereum:')) {
@@ -123,46 +127,75 @@ const SendCustomTx = ({
           return (
             <>
               <Block className={classes.formContainer}>
-                <SafeInfo safeAddress={safeAddress} safeName={safeName} ethBalance={ethBalance} />
+                <SafeInfo
+                  safeAddress={safeAddress}
+                  safeName={safeName}
+                  ethBalance={ethBalance}
+                />
                 <Row margin="md">
                   <Col xs={1}>
-                    <img src={ArrowDown} alt="Arrow Down" style={{ marginLeft: sm }} />
+                    <img
+                      src={ArrowDown}
+                      alt="Arrow Down"
+                      style={{ marginLeft: sm }}
+                    />
                   </Col>
                   <Col xs={11} center="xs" layout="column">
                     <Hairline />
                   </Col>
                 </Row>
-                { selectedEntry && selectedEntry.address ? (
+                {selectedEntry && selectedEntry.address ? (
                   <div
                     role="listbox"
                     tabIndex="0"
-                    onKeyDown={(e) => {
+                    onKeyDown={e => {
                       if (e.keyCode !== 9) {
                         setSelectedEntry(null)
                       }
                     }}
                   >
                     <Row margin="xs">
-                      <Paragraph size="md" color="disabled" style={{ letterSpacing: '-0.5px' }} noMargin>
+                      <Paragraph
+                        size="md"
+                        color="disabled"
+                        style={{ letterSpacing: '-0.5px' }}
+                        noMargin
+                      >
                         Recipient
                       </Paragraph>
                     </Row>
                     <Row margin="md" align="center">
                       <Col xs={1}>
-                        <Identicon address={selectedEntry.address} diameter={32} />
+                        <Identicon
+                          address={selectedEntry.address}
+                          diameter={32}
+                        />
                       </Col>
                       <Col xs={11} layout="column">
                         <Block justify="left">
                           <Block>
-                            <Paragraph weight="bolder" className={classes.selectAddress} noMargin onClick={() => setSelectedEntry(null)}>
+                            <Paragraph
+                              weight="bolder"
+                              className={classes.selectAddress}
+                              noMargin
+                              onClick={() => setSelectedEntry(null)}
+                            >
                               {selectedEntry.name}
                             </Paragraph>
-                            <Paragraph weight="bolder" className={classes.selectAddress} noMargin onClick={() => setSelectedEntry(null)}>
+                            <Paragraph
+                              weight="bolder"
+                              className={classes.selectAddress}
+                              noMargin
+                              onClick={() => setSelectedEntry(null)}
+                            >
                               {selectedEntry.address}
                             </Paragraph>
                           </Block>
                           <CopyBtn content={selectedEntry.address} />
-                          <EtherscanBtn type="address" value={selectedEntry.address} />
+                          <EtherscanBtn
+                            type="address"
+                            value={selectedEntry.address}
+                          />
                         </Block>
                       </Col>
                     </Row>
@@ -196,7 +229,12 @@ const SendCustomTx = ({
                 )}
                 <Row margin="xs">
                   <Col between="lg">
-                    <Paragraph size="md" color="disabled" style={{ letterSpacing: '-0.5px' }} noMargin>
+                    <Paragraph
+                      size="md"
+                      color="disabled"
+                      style={{ letterSpacing: '-0.5px' }}
+                      noMargin
+                    >
                       Value
                     </Paragraph>
                     <ButtonLink weight="bold" onClick={mutators.setMax}>
@@ -210,12 +248,17 @@ const SendCustomTx = ({
                       name="value"
                       component={TextField}
                       type="text"
-                      validate={composeValidators(mustBeFloat, maxValue(ethBalance))}
+                      validate={composeValidators(
+                        mustBeFloat,
+                        maxValue(ethBalance)
+                      )}
                       placeholder="Value*"
                       text="Value*"
                       className={classes.addressInput}
                       inputAdornment={{
-                        endAdornment: <InputAdornment position="end">ETH</InputAdornment>,
+                        endAdornment: (
+                          <InputAdornment position="end">ETH</InputAdornment>
+                        ),
                       }}
                     />
                   </Col>
@@ -225,6 +268,7 @@ const SendCustomTx = ({
                     <TextareaField
                       name="data"
                       type="text"
+                      rows={3}
                       placeholder="Data (hex encoded)*"
                       text="Data (hex encoded)*"
                     />
@@ -248,7 +292,13 @@ const SendCustomTx = ({
                   Review
                 </Button>
               </Row>
-              {qrModalOpen && <ScanQRModal isOpen={qrModalOpen} onScan={handleScan} onClose={closeQrModal} />}
+              {qrModalOpen && (
+                <ScanQRModal
+                  isOpen={qrModalOpen}
+                  onScan={handleScan}
+                  onClose={closeQrModal}
+                />
+              )}
             </>
           )
         }}
