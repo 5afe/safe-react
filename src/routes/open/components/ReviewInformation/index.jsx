@@ -4,7 +4,10 @@ import classNames from 'classnames'
 import { withStyles } from '@material-ui/core/styles'
 import TableContainer from '@material-ui/core/TableContainer'
 import { estimateGasForDeployingSafe } from '~/logic/contracts/safeContracts'
-import { getNamesFrom, getAccountsFrom } from '~/routes/open/utils/safeDataExtractor'
+import {
+  getNamesFrom,
+  getAccountsFrom,
+} from '~/routes/open/utils/safeDataExtractor'
 import Block from '~/components/layout/Block'
 import EtherscanBtn from '~/components/EtherscanBtn'
 import CopyBtn from '~/components/CopyBtn'
@@ -14,9 +17,7 @@ import Col from '~/components/layout/Col'
 import Row from '~/components/layout/Row'
 import Paragraph from '~/components/layout/Paragraph'
 import { formatAmount } from '~/logic/tokens/utils/formatAmount'
-import {
-  sm, lg, border, background, screenSm,
-} from '~/theme/variables'
+import { sm, lg, border, background, screenSm } from '~/theme/variables'
 import Hairline from '~/components/layout/Hairline'
 import { getWeb3 } from '~/logic/wallets/getWeb3'
 import { FIELD_NAME, FIELD_CONFIRMATIONS, getNumOwnersFrom } from '../fields'
@@ -102,7 +103,11 @@ const ReviewComponent = ({ values, classes, userAccount }: Props) => {
     const estimateGas = async () => {
       const web3 = getWeb3()
       const { fromWei, toBN } = web3.utils
-      const estimatedGasCosts = await estimateGasForDeployingSafe(addresses, numOwners, userAccount)
+      const estimatedGasCosts = await estimateGasForDeployingSafe(
+        addresses,
+        numOwners,
+        userAccount
+      )
       const gasCostsAsEth = fromWei(toBN(estimatedGasCosts), 'ether')
       const formattedGasCosts = formatAmount(gasCostsAsEth)
       if (isCurrent) {
@@ -131,7 +136,13 @@ const ReviewComponent = ({ values, classes, userAccount }: Props) => {
               <Paragraph size="sm" color="disabled" noMargin>
                 Name of new Safe
               </Paragraph>
-              <Paragraph size="lg" color="primary" noMargin weight="bolder" className={classes.name}>
+              <Paragraph
+                size="lg"
+                color="primary"
+                noMargin
+                weight="bolder"
+                className={classes.name}
+              >
                 {values[FIELD_NAME]}
               </Paragraph>
             </Block>
@@ -160,7 +171,9 @@ const ReviewComponent = ({ values, classes, userAccount }: Props) => {
                     <Identicon address={addresses[index]} diameter={32} />
                   </Col>
                   <Col xs={11}>
-                    <Block className={classNames(classes.name, classes.userName)}>
+                    <Block
+                      className={classNames(classes.name, classes.userName)}
+                    >
                       <Paragraph size="lg" noMargin>
                         {name}
                       </Paragraph>
@@ -182,13 +195,10 @@ const ReviewComponent = ({ values, classes, userAccount }: Props) => {
       </Row>
       <Row className={classes.info} align="center">
         <Paragraph noMargin color="primary" size="md">
-          You&apos;re about to create a new Safe and will have to confirm a transaction with your currently connected
-          wallet. The creation will cost approximately
-          {' '}
-          {gasCosts}
-          {' '}
-          ETH. The exact amount will be determined by your
-          wallet.
+          You&apos;re about to create a new Safe and will have to confirm a
+          transaction with your currently connected wallet. The creation will
+          cost approximately {gasCosts} ETH. The exact amount will be determined
+          by your wallet.
         </Paragraph>
       </Row>
     </>

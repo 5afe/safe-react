@@ -1,7 +1,12 @@
 // @flow
 import { makeStyles } from '@material-ui/core/styles'
 import {
-  xs, mediumFontSize, secondaryText, md, headerHeight, screenSm,
+  xs,
+  mediumFontSize,
+  secondaryText,
+  md,
+  headerHeight,
+  screenSm,
 } from '~/theme/variables'
 
 const sidebarWidth = '400px'

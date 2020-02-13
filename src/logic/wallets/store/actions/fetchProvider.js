@@ -7,6 +7,7 @@ import {
 import { getNetwork } from '~/config'
 import type { ProviderProps } from '~/logic/wallets/store/model/provider'
 import { makeProvider } from '~/logic/wallets/store/model/provider'
+import { getWeb3 } from '~/logic/wallets/getWeb3'
 import { NOTIFICATIONS, enhanceSnackbarForAction } from '~/logic/notifications'
 import enqueueSnackbar from '~/logic/notifications/store/actions/enqueueSnackbar'
 
@@ -62,7 +63,8 @@ const handleProviderNotification = (provider: ProviderProps, dispatch: Function)
 }
 
 export default (providerName?: string) => async (dispatch: ReduxDispatch<*>) => {
-  const providerInfo: ProviderProps = await getProviderInfo(providerName)
+  const web3 = getWeb3()
+  const providerInfo: ProviderProps = await getProviderInfo(web3,providerName)
   await handleProviderNotification(providerInfo, dispatch)
   processProviderResponse(dispatch, providerInfo)
 }

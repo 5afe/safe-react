@@ -60,14 +60,17 @@ export const getEtherScanLink = (type: 'address' | 'tx', value: string) => {
 const getInfuraUrl = () => {
   const isMainnet = process.env.REACT_APP_NETWORK === 'mainnet'
 
-  return `https://${isMainnet ? 'mainnet' : 'rinkeby'}.infura.io:443/v3/${process.env.REACT_APP_INFURA_TOKEN}`
+  return `https://${isMainnet ? 'mainnet' : 'rinkeby'}.infura.io:443/v3/${
+    process.env.REACT_APP_INFURA_TOKEN
+  }`
 }
 
 // With some wallets from web3connect you have to use their provider instance only for signing
 // And our own one to fetch data
-export const web3ReadOnly = process.env.NODE_ENV !== 'test'
-  ? new Web3(new Web3.providers.HttpProvider(getInfuraUrl()))
-  : new Web3(window.web3.currentProvider)
+export const web3ReadOnly =
+  process.env.NODE_ENV !== 'test'
+    ? new Web3(new Web3.providers.HttpProvider(getInfuraUrl()))
+    : new Web3(window.web3.currentProvider)
 
 let web3 = web3ReadOnly
 export const getWeb3 = () => web3
@@ -127,7 +130,9 @@ const getProviderName: Function = (web3Provider): string => {
   return name
 }
 
-export const getAccountFrom: Function = async (web3Provider): Promise<string | null> => {
+export const getAccountFrom: Function = async (
+  web3Provider
+): Promise<string | null> => {
   const accounts = await web3Provider.eth.getAccounts()
 
   if (process.env.NODE_ENV === 'test' && window.testAccountIndex) {
@@ -137,13 +142,18 @@ export const getAccountFrom: Function = async (web3Provider): Promise<string | n
   return accounts && accounts.length > 0 ? accounts[0] : null
 }
 
-const getNetworkIdFrom = async (web3Provider) => {
+const getNetworkIdFrom = async web3Provider => {
   const networkId = await web3Provider.eth.net.getId()
 
   return networkId
 }
 
-export const getProviderInfo: Function = async (providerName?: string): Promise<ProviderProps> => {
+export const getProviderInfo: Function = async (
+  web3Provider,
+  providerName?: string
+): Promise<ProviderProps> => {
+  web3 = new Web3(web3Provider)
+
   const name = providerName || getProviderName(web3)
   const account = await getAccountFrom(web3)
   const network = await getNetworkIdFrom(web3)
@@ -175,7 +185,7 @@ export const getBalanceInEtherOf = async (safeAddress: string) => {
     return '0'
   }
 
-  const funds: String = await web3.eth.getBalance(safeAddress)
+  const funds: string = await web3.eth.getBalance(safeAddress)
 
   if (!funds) {
     return '0'

@@ -19,7 +19,7 @@ function transactionDataCheck() {
                   `,
       }
     }
-    return {}
+    return null
   }
 }
 
