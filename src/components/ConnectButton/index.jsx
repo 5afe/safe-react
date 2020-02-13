@@ -3,6 +3,7 @@ import React from 'react'
 import Onboard from 'bnc-onboard'
 import Button from '~/components/layout/Button'
 import { fetchProvider } from '~/logic/wallets/store/actions'
+import transactionDataCheck from '~/logic/wallets/transactionDataCheck'
 import { setWeb3, getWeb3 } from '~/logic/wallets/getWeb3'
 import { getNetworkId } from '~/config'
 import { store } from '~/store'
@@ -88,6 +89,12 @@ export const onboard = new Onboard({
   walletSelect: {
     wallets,
   },
+  walletCheck: [
+    { checkName: 'connect' },
+    transactionDataCheck(),
+    { checkName: 'network' },
+    { checkName: 'accounts' },
+  ],
 })
 
 export const onboardUser = async () => {
