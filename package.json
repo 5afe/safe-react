@@ -19,8 +19,8 @@
     "build": "REACT_APP_APP_VERSION=$npm_package_version node scripts/build.js",
     "build-mainnet": "REACT_APP_NETWORK=mainnet yarn build",
     "flow": "flow",
-    "lint:check": "eslint './src/**/*.{js,jsx}'",
     "format:staged": "lint-staged",
+    "lint:check": "eslint './src/**/*.{js,jsx}'",
     "lint:fix": "yarn lint:check --fix",
     "prettier": "prettier './src/**/*.{js,jsx}'",
     "prettier:check": "yarn prettier --check",
@@ -38,7 +38,8 @@
     "src/**/*.{js,jsx}": [
       "eslint --fix",
       "prettier --write"
-    ]
+    ],
+    "allow-empty": "true"
   },
   "dependencies": {
     "@gnosis.pm/safe-contracts": "1.0.0",
