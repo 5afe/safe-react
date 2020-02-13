@@ -6,7 +6,7 @@ import Hairline from '~/components/layout/Hairline'
 import { sm, md } from '~/theme/variables'
 import ArrowDown from './arrow-down.svg'
 
-const Warpper = styled.div`
+const Wrapper = styled.div`
   display: flex;
   align-items: center;
   margin: ${md} 0;
@@ -21,10 +21,10 @@ type Props = {
 }
 
 const DividerLine = ({ withArrow }: Props) => (
-  <Warpper>
+  <Wrapper>
     {withArrow && <img src={ArrowDown} alt="Arrow Down" />}
     <Hairline />
-  </Warpper>
+  </Wrapper>
 )
 
 export default DividerLine
