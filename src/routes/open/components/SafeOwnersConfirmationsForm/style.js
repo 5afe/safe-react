@@ -1,6 +1,11 @@
 // @flow
 import {
-  md, lg, sm, disabled, extraSmallFontSize, screenSm,
+  md,
+  lg,
+  sm,
+  disabled,
+  extraSmallFontSize,
+  screenSm,
 } from '~/theme/variables'
 
 export const styles = () => ({

@@ -7,9 +7,7 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
 import ExpandLessIcon from '@material-ui/icons/ExpandLess'
 import Paragraph from '~/components/layout/Paragraph'
 import Col from '~/components/layout/Col'
-import {
-  xs, sm, md, border, screenSm,
-} from '~/theme/variables'
+import { xs, sm, md, border, screenSm } from '~/theme/variables'
 import { safesCountSelector } from '~/routes/safe/store/selectors'
 import { SidebarContext } from '~/components/Sidebar'
 
@@ -64,8 +62,8 @@ const SafeListHeader = ({ safesCount }: Props) => {
   )
 }
 
-export default connect<Object, Object,?Function,?Object>(
+export default connect<Object, Object, ?Function, ?Object>(
   // $FlowFixMe
-  (state) => ({ safesCount: safesCountSelector(state) }),
-  null,
+  state => ({ safesCount: safesCountSelector(state) }),
+  null
 )(SafeListHeader)
