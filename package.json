@@ -19,17 +19,26 @@
     "build": "REACT_APP_APP_VERSION=$npm_package_version node scripts/build.js",
     "build-mainnet": "REACT_APP_NETWORK=mainnet yarn build",
     "flow": "flow",
-    "format:staged": "lint-staged",
     "lint:check": "eslint './src/**/*.{js,jsx}'",
-    "lint:fix": "eslint --fix './src/**/*.{js,jsx}'",
-    "prettier:check": "prettier --check './src/**/*.{js,jsx}'",
-    "prettier:fix": "prettier --write './src/**/*.{js,jsx}'",
+    "format:staged": "lint-staged",
+    "lint:fix": "yarn lint:check --fix",
+    "prettier": "prettier './src/**/*.{js,jsx}'",
+    "prettier:check": "yarn prettier --check",
+    "prettier:fix": "yarn prettier --write",
     "start": "node scripts/start.js",
     "start-mainnet": "REACT_APP_NETWORK=mainnet yarn start",
     "test": "NODE_ENV=test && node scripts/test.js --env=jsdom"
   },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
   "lint-staged": {
-    "./src/**/*.{js,jsx}": "prettier-eslint --write"
+    "src/**/*.{js,jsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ]
   },
   "dependencies": {
     "@gnosis.pm/safe-contracts": "1.0.0",
