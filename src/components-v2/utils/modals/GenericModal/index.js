@@ -14,7 +14,9 @@ const TitleSection = styled.div`
   margin: 10px 20px;
 `
 const BodySection = styled.div`
-  margin: 10px 20px;
+  padding: 10px 20px;
+  max-height: 460px;
+  overflow-y: auto;
 `
 const FooterSection = styled.div`
   margin: 10px 20px;

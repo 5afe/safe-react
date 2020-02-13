@@ -3,6 +3,7 @@ import React from 'react'
 import styled from 'styled-components'
 
 import Paragraph from '~/components/layout/Paragraph'
+import Button from '~/components/layout/Button'
 import { lg } from '~/theme/variables'
 
 const StyledParagraph = styled(Paragraph)`
@@ -10,11 +11,7 @@ const StyledParagraph = styled(Paragraph)`
     font-size: ${lg};
   }
 `
-type ModalTitleProps = {
-  title: string,
-}
-
-export const ModalTitle = ({ title }: ModalTitleProps) => {
+export const ModalTitle = ({ title }: { title: string }) => {
   return (
     <StyledParagraph weight="bolder" noMargin>
       {title}
@@ -22,27 +19,35 @@ export const ModalTitle = ({ title }: ModalTitleProps) => {
   )
 }
 
-type ModalFooterConfirmationProps = {
-  okText: string,
-  cancelText: string,
-  handleOk: () => void,
-  handleCancel: () => void,
-}
+const FooterWrapper = styled.div`
+  display: flex;
+  justify-content: space-around;
+`
 
 export const ModalFooterConfirmation = ({
   okText,
   cancelText,
   handleOk,
   handleCancel,
-}: ModalFooterConfirmationProps) => {
+}: {
+  okText: string,
+  cancelText: string,
+  handleOk: () => void,
+  handleCancel: () => void,
+}) => {
   return (
-    <div>
-      <button type="button" onClick={handleCancel}>
+    <FooterWrapper>
+      <Button minWidth={130} onClick={handleCancel}>
         {cancelText}
-      </button>
-      <button type="button" onClick={handleOk}>
+      </Button>
+      <Button
+        color="primary"
+        minWidth={130}
+        onClick={handleOk}
+        variant="contained"
+      >
         {okText}
-      </button>
-    </div>
+      </Button>
+    </FooterWrapper>
   )
 }

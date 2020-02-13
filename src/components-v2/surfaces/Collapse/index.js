@@ -22,7 +22,7 @@ type Props = {
 }
 
 const Collapse = ({ title, description, children }: Props) => {
-  const [open, setOpen] = React.useState(true)
+  const [open, setOpen] = React.useState(false)
 
   const handleClick = () => {
     setOpen(!open)

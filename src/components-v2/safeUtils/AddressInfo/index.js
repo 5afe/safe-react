@@ -50,9 +50,11 @@ const AddressInfo = ({ safeName, safeAddress, ethBalance }: Props) => {
         <Identicon address={safeAddress} diameter={32} />
       </div>
       <div className="data-section">
-        <Paragraph weight="bolder" noMargin>
-          {safeName}
-        </Paragraph>
+        {safeName && (
+          <Paragraph weight="bolder" noMargin>
+            {safeName}
+          </Paragraph>
+        )}
         <div className="address">
           <Paragraph weight="bolder" noMargin>
             {safeAddress}
@@ -60,11 +62,13 @@ const AddressInfo = ({ safeName, safeAddress, ethBalance }: Props) => {
           <CopyBtn content={safeAddress} />
           <EtherscanBtn type="address" value={safeAddress} />
         </div>
-        <StyledBlock>
-          <Paragraph noMargin>
-            Balance: <Bold>{`${ethBalance} ETH`}</Bold>
-          </Paragraph>
-        </StyledBlock>
+        {ethBalance && (
+          <StyledBlock>
+            <Paragraph noMargin>
+              Balance: <Bold>{`${ethBalance} ETH`}</Bold>
+            </Paragraph>
+          </StyledBlock>
+        )}
       </div>
     </Wrapper>
   )
