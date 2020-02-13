@@ -39,7 +39,7 @@
       "eslint --fix",
       "prettier --write"
     ],
-    "allow-empty": "true"
+    "allowEmpty": "true"
   },
   "dependencies": {
     "@gnosis.pm/safe-contracts": "1.0.0",
