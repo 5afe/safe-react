@@ -98,7 +98,10 @@ const SafeList = ({ safes, onSafeClick, setDefaultSafe, defaultSafe, currentSafe
               <ListItemText
                 primary={safe.name}
                 secondary={shortVersionOf(safe.address, 4)}
-                classes={{ primary: classes.safeName, secondary: classes.safeAddress }}
+                classes={{
+                  primary: classes.safeName,
+                  secondary: classes.safeAddress,
+                }}
               />
               <Paragraph size="lg" color="primary">
                 {`${formatAmount(safe.ethBalance)} ETH`}

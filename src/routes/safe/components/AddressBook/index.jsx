@@ -157,7 +157,9 @@ const AddressBookTable = ({ classes }: Props) => {
                           className={classes.editEntryButton}
                           src={RenameOwnerIcon}
                           onClick={() => {
-                            setSelectedEntry({ entry: { ...row, isOwnerAddress: userOwner } })
+                            setSelectedEntry({
+                              entry: { ...row, isOwnerAddress: userOwner },
+                            })
                             setEditCreateEntryModalOpen(true)
                           }}
                           testId={EDIT_ENTRY_BUTTON}

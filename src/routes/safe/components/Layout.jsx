@@ -21,7 +21,7 @@ import SendModal from './Balances/SendModal'
 import Receive from './Balances/Receive'
 import NoSafe from '~/components/NoSafe'
 import { type SelectorProps } from '~/routes/safe/container/selector'
-import { getEtherScanLink } from '~/logic/wallets/getWeb3'
+import { getEtherScanLink, getWeb3 } from '~/logic/wallets/getWeb3'
 import { border } from '~/theme/variables'
 import { type Actions } from '../container/actions'
 import Balances from './Balances'
@@ -39,6 +39,8 @@ export const SETTINGS_TAB_BTN_TEST_ID = 'settings-tab-btn'
 export const TRANSACTIONS_TAB_BTN_TEST_ID = 'transactions-tab-btn'
 export const ADDRESS_BOOK_TAB_BTN_TEST_ID = 'address-book-tab-btn'
 export const SAFE_VIEW_NAME_HEADING_TEST_ID = 'safe-name-heading'
+
+const Apps = React.lazy(() => import('./Apps'))
 
 type Props = SelectorProps &
   Actions & {
@@ -102,6 +104,7 @@ const Layout = (props: Props) => {
 
   const { address, ethBalance, name } = safe
   const etherScanLink = getEtherScanLink('address', address)
+  const web3Instance = getWeb3()
 
   const labelAddressBook = (
     <>
@@ -126,6 +129,12 @@ const Layout = (props: Props) => {
       <TransactionsIcon />
       Transactions
     </>
+  )
+
+  const renderAppsTab = () => (
+    <React.Suspense>
+      <Apps safeAddress={address} web3={web3Instance} network={network} createTransaction={createTransaction} />
+    </React.Suspense>
   )
 
   return (
@@ -198,6 +207,17 @@ const Layout = (props: Props) => {
           label={labelTransactions}
           value={`${match.url}/transactions`}
         />
+        {process.env.REACT_APP_ENV !== 'production' && (
+          <Tab
+            classes={{
+              selected: classes.tabWrapperSelected,
+              wrapper: classes.tabWrapper,
+            }}
+            label="Apps"
+            value={`${match.url}/apps`}
+            data-testid={TRANSACTIONS_TAB_BTN_TEST_ID}
+          />
+        )}
         <Tab
           classes={{
             selected: classes.tabWrapperSelected,
@@ -259,6 +279,9 @@ const Layout = (props: Props) => {
             />
           )}
         />
+        {process.env.REACT_APP_ENV !== 'production' && (
+          <Route exact path={`${match.path}/apps`} render={renderAppsTab} />
+        )}
         <Route
           exact
           path={`${match.path}/settings`}

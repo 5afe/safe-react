@@ -58,7 +58,7 @@ type DescriptionDescProps = {
 type CustomDescProps = {
   amount: string,
   recipient: string,
-  data: String,
+  data: string,
   classes: Object,
 }
 

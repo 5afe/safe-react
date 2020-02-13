@@ -10,7 +10,6 @@ import { history } from '~/store'
 import selector, { type SelectorProps } from './selector'
 import actions, { type Actions } from './actions'
 import Layout from '../components/Layout'
-
 import { getNamesFrom, getOwnersFrom } from '~/routes/open/utils/safeDataExtractor'
 import { FIELD_LOAD_NAME, FIELD_LOAD_ADDRESS } from '../components/fields'
 import { getGnosisSafeInstanceAt } from '~/logic/contracts/safeContracts'

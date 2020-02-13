@@ -58,6 +58,7 @@ type CreateTransactionArgs = {
   closeSnackbar: Function,
   shouldExecute?: boolean,
   txNonce?: number,
+  operation?: 0 | 1,
 }
 
 const createTransaction = ({
@@ -70,10 +71,14 @@ const createTransaction = ({
   closeSnackbar,
   shouldExecute = false,
   txNonce,
+  operation = CALL,
+  navigateToTransactionsTab = true,
 }: CreateTransactionArgs) => async (dispatch: ReduxDispatch<GlobalState>, getState: GetState<GlobalState>) => {
   const state: GlobalState = getState()
 
-  dispatch(push(`${SAFELIST_ADDRESS}/${safeAddress}/transactions`))
+  if (navigateToTransactionsTab) {
+    dispatch(push(`${SAFELIST_ADDRESS}/${safeAddress}/transactions`))
+  }
 
   const from = userAccountSelector(state)
   const safeInstance = await getGnosisSafeInstanceAt(safeAddress)
@@ -101,7 +106,7 @@ const createTransaction = ({
         to,
         valueInWei,
         txData,
-        CALL,
+        operation,
         nonce,
         0,
         0,
@@ -117,7 +122,7 @@ const createTransaction = ({
         to,
         valueInWei,
         txData,
-        CALL,
+        operation,
         nonce,
         0,
         0,
@@ -130,6 +135,12 @@ const createTransaction = ({
     }
 
     const sendParams = { from, value: 0 }
+
+    // TODO find a better solution for this in dev and production.
+    if (process.env.REACT_APP_ENV !== 'production') {
+      sendParams.gasLimit = 1000000
+    }
+
     // if not set owner management tests will fail on ganache
     if (process.env.NODE_ENV === 'test') {
       sendParams.gas = '7000000'

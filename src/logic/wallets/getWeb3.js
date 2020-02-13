@@ -174,7 +174,7 @@ export const getBalanceInEtherOf = async (safeAddress: string) => {
     return '0'
   }
 
-  const funds: String = await web3.eth.getBalance(safeAddress)
+  const funds: string = await web3.eth.getBalance(safeAddress)
 
   if (!funds) {
     return '0'
