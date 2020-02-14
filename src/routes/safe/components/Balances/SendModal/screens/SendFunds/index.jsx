@@ -47,7 +47,7 @@ type Props = {
   tokens: List<Token>,
   onSubmit: Function,
   initialValues: Object,
-  recipientAddress?: string
+  recipientAddress?: string,
 }
 
 const formMutators = {
@@ -88,7 +88,7 @@ const SendFunds = ({
     }
   }, [selectedEntry, pristine])
 
-  const handleSubmit = (values) => {
+  const handleSubmit = values => {
     const submitValues = values
     // If the input wasn't modified, there was no mutation of the recipientAddress
     if (!values.recipientAddress) {
@@ -127,10 +127,10 @@ const SendFunds = ({
           const mutators = args[3]
           const { token: tokenAddress } = formState.values
           const selectedTokenRecord = tokens.find(
-            (token) => token.address === tokenAddress,
+            token => token.address === tokenAddress
           )
 
-          const handleScan = (value) => {
+          const handleScan = value => {
             let scannedAddress = value
 
             if (scannedAddress.startsWith('ethereum:')) {
@@ -170,7 +170,7 @@ const SendFunds = ({
                   <div
                     role="listbox"
                     tabIndex="0"
-                    onKeyDown={(e) => {
+                    onKeyDown={e => {
                       if (e.keyCode !== 9) {
                         setSelectedEntry(null)
                       }
@@ -197,18 +197,18 @@ const SendFunds = ({
                         <Block justify="left">
                           <Block>
                             <Paragraph
-                              weight="bolder"
                               className={classes.selectAddress}
                               noMargin
                               onClick={() => setSelectedEntry(null)}
+                              weight="bolder"
                             >
                               {selectedEntry.name}
                             </Paragraph>
                             <Paragraph
-                              weight="bolder"
                               className={classes.selectAddress}
                               noMargin
                               onClick={() => setSelectedEntry(null)}
+                              weight="bolder"
                             >
                               {selectedEntry.address}
                             </Paragraph>
@@ -227,20 +227,20 @@ const SendFunds = ({
                     <Row margin="md">
                       <Col xs={11}>
                         <AddressBookInput
-                          pristine={pristine}
                           fieldMutator={mutators.setRecipient}
+                          pristine={pristine}
                           recipientAddress={recipientAddress}
-                          setSelectedEntry={setSelectedEntry}
                           setIsValidAddress={setIsValidAddress}
+                          setSelectedEntry={setSelectedEntry}
                         />
                       </Col>
                       <Col xs={1} center="xs" middle="xs" className={classes}>
                         <Img
-                          src={QRIcon}
-                          className={classes.qrCodeBtn}
-                          role="button"
-                          height={20}
                           alt="Scan QR"
+                          className={classes.qrCodeBtn}
+                          height={20}
+                          role="button"
+                          src={QRIcon}
                           onClick={() => {
                             openQrModal()
                           }}
@@ -252,8 +252,12 @@ const SendFunds = ({
                 <Row margin="sm">
                   <Col>
                     <TokenSelectField
-                      tokens={tokens}
                       initialValue={selectedToken}
+                      isValid={
+                        tokenAddress &&
+                        String(tokenAddress.toUpperCase()) !== 'ETHER'
+                      }
+                      tokens={tokens}
                     />
                   </Col>
                 </Row>
@@ -269,7 +273,9 @@ const SendFunds = ({
                     </Paragraph>
                     <ButtonLink
                       weight="bold"
-                      onClick={() => mutators.setMax(selectedTokenRecord.balance)}
+                      onClick={() =>
+                        mutators.setMax(selectedTokenRecord.balance)
+                      }
                     >
                       Send max
                     </ButtonLink>
@@ -278,20 +284,19 @@ const SendFunds = ({
                 <Row margin="md">
                   <Col>
                     <Field
-                      name="amount"
                       component={TextField}
+                      name="amount"
                       type="text"
                       validate={composeValidators(
                         required,
                         mustBeFloat,
                         greaterThan(0),
                         maxValue(
-                          selectedTokenRecord && selectedTokenRecord.balance,
-                        ),
+                          selectedTokenRecord && selectedTokenRecord.balance
+                        )
                       )}
                       placeholder="Amount*"
                       text="Amount*"
-                      className={classes.addressInput}
                       inputAdornment={
                         selectedTokenRecord && {
                           endAdornment: (
@@ -316,13 +321,13 @@ const SendFunds = ({
                   Cancel
                 </Button>
                 <Button
-                  type="submit"
-                  variant="contained"
-                  minWidth={140}
+                  className={classes.submitButton}
                   color="primary"
                   data-testid="review-tx-btn"
-                  className={classes.submitButton}
                   disabled={shouldDisableSubmitButton}
+                  minWidth={140}
+                  type="submit"
+                  variant="contained"
                 >
                   Review
                 </Button>

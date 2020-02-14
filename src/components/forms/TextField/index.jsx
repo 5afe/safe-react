@@ -21,42 +21,58 @@ const styles = () => ({
 class TextField extends React.PureComponent<TextFieldProps> {
   render() {
     const {
-      input: {
-        name, onChange, value, ...restInput
-      },
-      meta,
-      render,
-      text,
-      inputAdornment,
       classes,
-      testId,
-      rows,
+      input: { name, onChange, value, ...restInput },
+      inputAdornment,
+      meta,
       multiline,
+      render,
+      rows,
+      testId,
+      text,
       ...rest
     } = this.props
     const helperText = value ? text : undefined
     const showError = (meta.touched || !meta.pristine) && !meta.valid
-    const underline = meta.active || (meta.visited && !meta.valid)
+    const isInactiveAndPristineOrUntouched =
+      !meta.active && (meta.pristine || !meta.touched)
+    const isInvalidAndUntouched =
+      typeof meta.error === 'undefined' ? true : !meta.touched
 
-    const inputRoot = helperText ? classes.root : undefined
-    const inputProps = { ...restInput, autoComplete: 'off', 'data-testid': testId }
-    const inputRootProps = { ...inputAdornment, disableUnderline: !underline, className: inputRoot }
+    const disableUnderline =
+      isInactiveAndPristineOrUntouched && isInvalidAndUntouched
+
+    const inputRoot = helperText ? classes.root : ''
+    const statusClasses = meta.valid
+      ? 'isValid'
+      : meta.error && (meta.dirty || meta.touched)
+      ? 'isInvalid'
+      : ''
+    const inputProps = {
+      ...restInput,
+      autoComplete: 'off',
+      'data-testid': testId,
+    }
+    const inputRootProps = {
+      ...inputAdornment,
+      className: `${inputRoot} ${statusClasses}`,
+      disableUnderline: disableUnderline,
+    }
 
     return (
       <MuiTextField
-        style={overflowStyle}
-        {...rest}
-        name={name}
-        helperText={showError ? meta.error : helperText || ' '} // blank in order to force to have helper text
-        error={meta.error && (meta.touched || !meta.pristine)}
         InputProps={inputRootProps}
+        error={meta.error && (meta.touched || !meta.pristine)}
+        helperText={showError ? meta.error : helperText || ' '} // blank in order to force to have helper text
         // eslint-disable-next-line
         inputProps={inputProps}
-        onChange={onChange}
-        value={value}
-        // data-testid={testId}
-        rows={rows}
         multiline={multiline}
+        name={name}
+        onChange={onChange}
+        rows={rows}
+        style={overflowStyle}
+        value={value}
+        {...rest}
       />
     )
   }
