@@ -9,7 +9,7 @@ import {
 import { ZERO_ADDRESS } from '~/logic/wallets/ethAddresses'
 
 
-describe('DOM > Feature > Upgrade a Safe', () => {
+describe('Upgrade a Safe', () => {
   it('Calls getEncodedMultiSendCallData with a list of MultiSendTransactionInstanceType and returns the multiSend data encoded', async () => {
     const safeAddress = ZERO_ADDRESS
     const web3 = new Web3(new Web3.providers.HttpProvider(''))

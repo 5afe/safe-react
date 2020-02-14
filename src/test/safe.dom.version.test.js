@@ -4,7 +4,7 @@ import GnosisSafeSol from '@gnosis.pm/safe-contracts/build/contracts/GnosisSafe.
 import { checkIfSafeNeedUpdate } from '~/logic/safe/utils/safeVersion'
 
 
-describe('DOM > Feature > Check safe version', () => {
+describe('Check safe version', () => {
   it('Calls checkIfSafeNeedUpdate, should return true if the safe version is bellow the target one', async () => {
     const web3 = new Web3(new Web3.providers.HttpProvider(''))
     const safeInstance = new web3.eth.Contract(GnosisSafeSol.abi)
