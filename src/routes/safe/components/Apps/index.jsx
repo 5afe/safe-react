@@ -85,6 +85,7 @@ function Apps({
           safeAddress,
           safeName,
           ethBalance,
+          getSelectedApp().iconUrl,
           data.data,
           openModal,
           closeModal,

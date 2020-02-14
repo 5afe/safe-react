@@ -35,12 +35,13 @@ const confirmTransactions = (
   safeAddress: string,
   safeName: string,
   ethBalance: string,
+  iconApp: string,
   txs: Array<any>,
   openModal: () => void,
   closeModal: () => void,
   onConfirm: () => void
 ) => {
-  const title = <ModalTitle title="Compound" />
+  const title = <ModalTitle title="Compound" iconUrl={iconApp} />
 
   const body = (
     <>
