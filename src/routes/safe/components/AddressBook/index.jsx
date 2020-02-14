@@ -85,7 +85,6 @@ const AddressBookTable = ({ classes }: Props) => {
         setSelectedEntry({ entry: value, index: key })
       } else {
         // Create new entry
-        setSelectedEntry(null)
         setSelectedEntry({
           entry: {
             name: '',
