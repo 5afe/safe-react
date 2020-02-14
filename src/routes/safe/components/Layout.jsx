@@ -34,6 +34,7 @@ import { SettingsIcon } from './assets/SettingsIcon'
 import { AddressBookIcon } from './assets/AddressBookIcon'
 import { TransactionsIcon } from './assets/TransactionsIcon'
 import { BalancesIcon } from './assets/BalancesIcon'
+import { AppsIcon } from './assets/AppsIcon'
 
 export const BALANCES_TAB_BTN_TEST_ID = 'balances-tab-btn'
 export const SETTINGS_TAB_BTN_TEST_ID = 'settings-tab-btn'
@@ -139,6 +140,14 @@ const Layout = (props: Props) => {
       Address Book
     </>
   )
+
+  const labelApps = (
+    <>
+      <AppsIcon />
+      Apps
+    </>
+  )
+
   const labelSettings = (
     <>
       <SettingsIcon />
@@ -267,7 +276,7 @@ const Layout = (props: Props) => {
               selected: classes.tabWrapperSelected,
               wrapper: classes.tabWrapper,
             }}
-            label="Apps"
+            label={labelApps}
             value={`${match.url}/apps`}
             data-testid={TRANSACTIONS_TAB_BTN_TEST_ID}
           />
