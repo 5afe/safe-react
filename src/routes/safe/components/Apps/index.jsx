@@ -115,11 +115,12 @@ function Apps({
         return
       }
 
-      console.error('IFRAME MESSAGE')
-      console.error(origin)
-      console.error(getSelectedApp().url)
-
       if (origin !== getSelectedApp().url) {
+        console.error(
+          `Message from ${origin} is different to the App URL ${
+            getSelectedApp().url
+          }`
+        )
         return
       }
 
