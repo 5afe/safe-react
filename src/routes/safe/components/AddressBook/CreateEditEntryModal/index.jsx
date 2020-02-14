@@ -42,7 +42,7 @@ const CreateEditEntryModalComponent = ({
   editEntryModalHandler,
 }: Props) => {
   const onFormSubmitted = values => {
-    if (entryToEdit) {
+    if (entryToEdit && !entryToEdit.entry.isNew) {
       editEntryModalHandler(values)
     } else {
       newEntryModalHandler(values)
