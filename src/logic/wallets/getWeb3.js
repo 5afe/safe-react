@@ -170,8 +170,12 @@ export const getProviderInfo: Function = async (
 
 export const getAddressFromENS = async (name: string) => {
   const ens = new ENS(web3)
-  const address = await ens.resolver(name).addr()
-
+  let address = null
+  try {
+    address = await ens.resolver(name).addr()
+  } catch (error) {
+    console.error('Error fetching resolved DNS', error)
+  }
   return address
 }
 
