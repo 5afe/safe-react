@@ -86,7 +86,7 @@ const AddressBookInput = ({
         const { name, address } = adbkEntry
         return (
           name.toLowerCase().includes(addressValue.toLowerCase()) ||
-          address.includes(addressValue)
+          address.toLowerCase().includes(addressValue.toLowerCase())
         )
       })
       setADBKList(filteredADBK)
