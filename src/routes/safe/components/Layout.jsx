@@ -1,9 +1,7 @@
 // @flow
 import * as React from 'react'
 import classNames from 'classnames/bind'
-import {
-  Switch, Redirect, Route, withRouter,
-} from 'react-router-dom'
+import { Switch, Redirect, Route, withRouter } from 'react-router-dom'
 import Tabs from '@material-ui/core/Tabs'
 import Tab from '@material-ui/core/Tab'
 import CallMade from '@material-ui/icons/CallMade'
@@ -23,7 +21,7 @@ import SendModal from './Balances/SendModal'
 import Receive from './Balances/Receive'
 import NoSafe from '~/components/NoSafe'
 import { type SelectorProps } from '~/routes/safe/container/selector'
-import { getEtherScanLink } from '~/logic/wallets/getWeb3'
+import { getEtherScanLink, getWeb3 } from '~/logic/wallets/getWeb3'
 import { border } from '~/theme/variables'
 import { type Actions } from '../container/actions'
 import Balances from './Balances'
@@ -41,6 +39,8 @@ export const SETTINGS_TAB_BTN_TEST_ID = 'settings-tab-btn'
 export const TRANSACTIONS_TAB_BTN_TEST_ID = 'transactions-tab-btn'
 export const ADDRESS_BOOK_TAB_BTN_TEST_ID = 'address-book-tab-btn'
 export const SAFE_VIEW_NAME_HEADING_TEST_ID = 'safe-name-heading'
+
+const Apps = React.lazy(() => import('./Apps'))
 
 type Props = SelectorProps &
   Actions & {
@@ -104,6 +104,7 @@ const Layout = (props: Props) => {
 
   const { address, ethBalance, name } = safe
   const etherScanLink = getEtherScanLink('address', address)
+  const web3Instance = getWeb3()
 
   const labelAddressBook = (
     <>
@@ -130,6 +131,17 @@ const Layout = (props: Props) => {
     </>
   )
 
+  const renderAppsTab = () => (
+    <React.Suspense>
+      <Apps
+        safeAddress={address}
+        web3={web3Instance}
+        network={network}
+        createTransaction={createTransaction}
+      />
+    </React.Suspense>
+  )
+
   return (
     <>
       <Block className={classes.container} margin="xl">
@@ -137,13 +149,25 @@ const Layout = (props: Props) => {
           <Identicon address={address} diameter={50} />
           <Block className={classes.name}>
             <Row>
-              <Heading className={classes.nameText} tag="h2" color="primary" testId={SAFE_VIEW_NAME_HEADING_TEST_ID}>
+              <Heading
+                className={classes.nameText}
+                tag="h2"
+                color="primary"
+                testId={SAFE_VIEW_NAME_HEADING_TEST_ID}
+              >
                 {name}
               </Heading>
-              {!granted && <Block className={classes.readonly}>Read Only</Block>}
+              {!granted && (
+                <Block className={classes.readonly}>Read Only</Block>
+              )}
             </Row>
             <Block justify="center" className={classes.user}>
-              <Paragraph size="md" className={classes.address} color="disabled" noMargin>
+              <Paragraph
+                size="md"
+                className={classes.address}
+                color="disabled"
+                noMargin
+              >
                 {address}
               </Paragraph>
               <CopyBtn content={address} />
@@ -160,7 +184,10 @@ const Layout = (props: Props) => {
             size="small"
             variant="contained"
           >
-            <CallMade alt="Send Transaction" className={classNames(classes.leftIcon, classes.iconSmall)} />
+            <CallMade
+              alt="Send Transaction"
+              className={classNames(classes.leftIcon, classes.iconSmall)}
+            />
             Send
           </Button>
           <Button
@@ -170,12 +197,21 @@ const Layout = (props: Props) => {
             size="small"
             variant="contained"
           >
-            <CallReceived alt="Receive Transaction" className={classNames(classes.leftIcon, classes.iconSmall)} />
+            <CallReceived
+              alt="Receive Transaction"
+              className={classNames(classes.leftIcon, classes.iconSmall)}
+            />
             Receive
           </Button>
         </Block>
       </Block>
-      <Tabs variant="scrollable" value={location.pathname} onChange={handleCallToRouter} indicatorColor="secondary" textColor="secondary">
+      <Tabs
+        variant="scrollable"
+        value={location.pathname}
+        onChange={handleCallToRouter}
+        indicatorColor="secondary"
+        textColor="secondary"
+      >
         <Tab
           classes={{
             selected: classes.tabWrapperSelected,
@@ -194,6 +230,17 @@ const Layout = (props: Props) => {
           label={labelTransactions}
           value={`${match.url}/transactions`}
         />
+        {process.env.REACT_APP_ENV !== 'production' && (
+          <Tab
+            classes={{
+              selected: classes.tabWrapperSelected,
+              wrapper: classes.tabWrapper,
+            }}
+            label="Apps"
+            value={`${match.url}/apps`}
+            data-testid={TRANSACTIONS_TAB_BTN_TEST_ID}
+          />
+        )}
         <Tab
           classes={{
             selected: classes.tabWrapperSelected,
@@ -255,6 +302,9 @@ const Layout = (props: Props) => {
             />
           )}
         />
+        {process.env.REACT_APP_ENV !== 'production' && (
+          <Route exact path={`${match.path}/apps`} render={renderAppsTab} />
+        )}
         <Route
           exact
           path={`${match.path}/settings`}
@@ -276,7 +326,11 @@ const Layout = (props: Props) => {
             />
           )}
         />
-        <Route exact path={`${match.path}/address-book`} render={() => <AddressBookTable />} />
+        <Route
+          exact
+          path={`${match.path}/address-book`}
+          render={() => <AddressBookTable />}
+        />
         <Redirect to={`${match.path}/balances`} />
       </Switch>
       <SendModal
@@ -297,7 +351,11 @@ const Layout = (props: Props) => {
         paperClassName={classes.receiveModal}
         title="Receive Tokens"
       >
-        <Receive safeName={name} safeAddress={address} onClose={onHide('Receive')} />
+        <Receive
+          safeName={name}
+          safeAddress={address}
+          onClose={onHide('Receive')}
+        />
       </Modal>
     </>
   )

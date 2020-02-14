@@ -18,9 +18,7 @@ type Props = {
   style?: Object,
 }
 
-const Hairline = ({
-  margin, color, style, className,
-}: Props) => {
+const Hairline = ({ margin, color, style, className }: Props) => {
   const calculatedStyles = calculateStyleFrom(color, margin)
   const mergedStyles = { ...calculatedStyles, ...(style || {}) }
 

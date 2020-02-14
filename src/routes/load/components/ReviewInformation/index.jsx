@@ -12,13 +12,19 @@ import EtherscanBtn from '~/components/EtherscanBtn'
 import Paragraph from '~/components/layout/Paragraph'
 import CopyBtn from '~/components/CopyBtn'
 import Hairline from '~/components/layout/Hairline'
-import {
-  xs, sm, lg, border, screenSm,
-} from '~/theme/variables'
+import { xs, sm, lg, border, screenSm } from '~/theme/variables'
 import { shortVersionOf } from '~/logic/wallets/ethAddresses'
 import { getAccountsFrom } from '~/routes/open/utils/safeDataExtractor'
-import { getOwnerNameBy, getOwnerAddressBy, getNumOwnersFrom } from '~/routes/open/components/fields'
-import { FIELD_LOAD_NAME, FIELD_LOAD_ADDRESS, THRESHOLD } from '~/routes/load/components/fields'
+import {
+  getOwnerNameBy,
+  getOwnerAddressBy,
+  getNumOwnersFrom,
+} from '~/routes/open/components/fields'
+import {
+  FIELD_LOAD_NAME,
+  FIELD_LOAD_ADDRESS,
+  THRESHOLD,
+} from '~/routes/load/components/fields'
 import type { LayoutProps } from '../Layout'
 
 const styles = () => ({
@@ -95,7 +101,10 @@ type State = {
   isOwner: boolean,
 }
 
-const checkUserAddressOwner = (values: Object, userAddress: string): boolean => {
+const checkUserAddressOwner = (
+  values: Object,
+  userAddress: string
+): boolean => {
   let isOwner: boolean = false
 
   for (let i = 0; i < getNumOwnersFrom(values); i += 1) {
@@ -130,7 +139,13 @@ class ReviewComponent extends React.PureComponent<Props, State> {
                 <Paragraph size="sm" color="disabled" noMargin>
                   Name of the Safe
                 </Paragraph>
-                <Paragraph size="lg" color="primary" noMargin weight="bolder" className={classes.name}>
+                <Paragraph
+                  size="lg"
+                  color="primary"
+                  noMargin
+                  weight="bolder"
+                  className={classes.name}
+                >
                   {values[FIELD_LOAD_NAME]}
                 </Paragraph>
               </Block>
@@ -140,7 +155,12 @@ class ReviewComponent extends React.PureComponent<Props, State> {
                 </Paragraph>
                 <Row className={classes.container}>
                   <Identicon address={safeAddress} diameter={32} />
-                  <Paragraph size="md" color="disabled" noMargin className={classes.address}>
+                  <Paragraph
+                    size="md"
+                    color="disabled"
+                    noMargin
+                    className={classes.address}
+                  >
                     {shortVersionOf(safeAddress, 4)}
                   </Paragraph>
                   <CopyBtn content={safeAddress} />
@@ -151,7 +171,13 @@ class ReviewComponent extends React.PureComponent<Props, State> {
                 <Paragraph size="sm" color="disabled" noMargin>
                   Connected wallet client is owner?
                 </Paragraph>
-                <Paragraph size="lg" color="primary" noMargin weight="bolder" className={classes.name}>
+                <Paragraph
+                  size="lg"
+                  color="primary"
+                  noMargin
+                  weight="bolder"
+                  className={classes.name}
+                >
                   {isOwner ? 'Yes' : 'No (read-only)'}
                 </Paragraph>
               </Block>
@@ -159,8 +185,16 @@ class ReviewComponent extends React.PureComponent<Props, State> {
                 <Paragraph size="sm" color="disabled" noMargin>
                   Any transaction requires the confirmation of:
                 </Paragraph>
-                <Paragraph size="lg" color="primary" noMargin weight="bolder" className={classes.name}>
-                  {`${values[THRESHOLD]} out of ${getNumOwnersFrom(values)} owners`}
+                <Paragraph
+                  size="lg"
+                  color="primary"
+                  noMargin
+                  weight="bolder"
+                  className={classes.name}
+                >
+                  {`${values[THRESHOLD]} out of ${getNumOwnersFrom(
+                    values
+                  )} owners`}
                 </Paragraph>
               </Block>
             </Block>
@@ -180,7 +214,9 @@ class ReviewComponent extends React.PureComponent<Props, State> {
                       <Identicon address={address} diameter={32} />
                     </Col>
                     <Col xs={11}>
-                      <Block className={classNames(classes.name, classes.userName)}>
+                      <Block
+                        className={classNames(classes.name, classes.userName)}
+                      >
                         <Paragraph size="lg" noMargin>
                           {values[getOwnerNameBy(index)]}
                         </Paragraph>
@@ -207,7 +243,10 @@ class ReviewComponent extends React.PureComponent<Props, State> {
 
 const ReviewPage = withStyles(styles)(ReviewComponent)
 
-const Review = ({ network, userAddress }: LayoutProps) => (controls: React.Node, { values }: Object) => (
+const Review = ({ network, userAddress }: LayoutProps) => (
+  controls: React.Node,
+  { values }: Object
+) => (
   <>
     <OpenPaper controls={controls} padding={false}>
       <ReviewPage network={network} values={values} userAddress={userAddress} />

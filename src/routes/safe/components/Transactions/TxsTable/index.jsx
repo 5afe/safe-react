@@ -65,12 +65,12 @@ const TxsTable = ({
 }: Props) => {
   const [expandedTx, setExpandedTx] = useState<string | null>(null)
 
-  const handleTxExpand = (safeTxHash) => {
-    setExpandedTx((prevTx) => (prevTx === safeTxHash ? null : safeTxHash))
+  const handleTxExpand = safeTxHash => {
+    setExpandedTx(prevTx => (prevTx === safeTxHash ? null : safeTxHash))
   }
 
   const columns = generateColumns()
-  const autoColumns = columns.filter((c) => !c.custom)
+  const autoColumns = columns.filter(c => !c.custom)
   const filteredData = getTxTableData(transactions, cancellationTransactions)
     .sort(({ dateOrder: a }, { dateOrder: b }) => {
       if (!a || !b) {
@@ -93,66 +93,78 @@ const TxsTable = ({
           size={filteredData.size}
           defaultFixed
         >
-          {(sortedData: Array<TransactionRow>) => sortedData.map((row: any, index: number) => (
-            <React.Fragment key={index}>
-              <TableRow
-                tabIndex={-1}
-                className={cn(classes.row, expandedTx === row.tx.safeTxHash && classes.expandedRow)}
-                onClick={() => handleTxExpand(row.tx.safeTxHash)}
-                data-testid={TRANSACTION_ROW_TEST_ID}
-              >
-                {autoColumns.map((column: Column) => (
-                  <TableCell
-                    key={column.id}
-                    className={cn(classes.cell, row.status === 'cancelled' && classes.cancelledRow)}
-                    style={cellWidth(column.width)}
-                    align={column.align}
-                    component="td"
-                  >
-                    {row[column.id]}
-                  </TableCell>
-                ))}
-                <TableCell component="td">
-                  <Row align="end" className={classes.actions}>
-                    <Status status={row.status} />
-                  </Row>
-                </TableCell>
-                <TableCell style={expandCellStyle}>
-                  {!row.tx.creationTx && (
-                    <IconButton disableRipple>
-                      {expandedTx === row.safeTxHash ? <ExpandLess /> : <ExpandMore />}
-                    </IconButton>
+          {(sortedData: Array<TransactionRow>) =>
+            sortedData.map((row: any, index: number) => (
+              <React.Fragment key={index}>
+                <TableRow
+                  tabIndex={-1}
+                  className={cn(
+                    classes.row,
+                    expandedTx === row.tx.safeTxHash && classes.expandedRow
                   )}
-                </TableCell>
-              </TableRow>
-              {!row.tx.creationTx && (
-                <TableRow>
-                  <TableCell
-                    style={{ paddingBottom: 0, paddingTop: 0 }}
-                    colSpan={6}
-                    className={classes.extendedTxContainer}
-                  >
-                    <Collapse
-                      in={expandedTx === row.tx.safeTxHash}
-                      timeout="auto"
-                      component={ExpandedTxComponent}
-                      unmountOnExit
-                      tx={row[TX_TABLE_RAW_TX_ID]}
-                      cancelTx={row[TX_TABLE_RAW_CANCEL_TX_ID]}
-                      threshold={threshold}
-                      owners={owners}
-                      granted={granted}
-                      userAddress={userAddress}
-                      createTransaction={createTransaction}
-                      processTransaction={processTransaction}
-                      safeAddress={safeAddress}
-                      nonce={nonce}
-                    />
+                  onClick={() => handleTxExpand(row.tx.safeTxHash)}
+                  data-testid={TRANSACTION_ROW_TEST_ID}
+                >
+                  {autoColumns.map((column: Column) => (
+                    <TableCell
+                      key={column.id}
+                      className={cn(
+                        classes.cell,
+                        row.status === 'cancelled' && classes.cancelledRow
+                      )}
+                      style={cellWidth(column.width)}
+                      align={column.align}
+                      component="td"
+                    >
+                      {row[column.id]}
+                    </TableCell>
+                  ))}
+                  <TableCell component="td">
+                    <Row align="end" className={classes.actions}>
+                      <Status status={row.status} />
+                    </Row>
+                  </TableCell>
+                  <TableCell style={expandCellStyle}>
+                    {!row.tx.creationTx && (
+                      <IconButton disableRipple>
+                        {expandedTx === row.safeTxHash ? (
+                          <ExpandLess />
+                        ) : (
+                          <ExpandMore />
+                        )}
+                      </IconButton>
+                    )}
                   </TableCell>
                 </TableRow>
-              )}
-            </React.Fragment>
-          ))}
+                {!row.tx.creationTx && (
+                  <TableRow>
+                    <TableCell
+                      style={{ paddingBottom: 0, paddingTop: 0 }}
+                      colSpan={6}
+                      className={classes.extendedTxContainer}
+                    >
+                      <Collapse
+                        in={expandedTx === row.tx.safeTxHash}
+                        timeout="auto"
+                        component={ExpandedTxComponent}
+                        unmountOnExit
+                        tx={row[TX_TABLE_RAW_TX_ID]}
+                        cancelTx={row[TX_TABLE_RAW_CANCEL_TX_ID]}
+                        threshold={threshold}
+                        owners={owners}
+                        granted={granted}
+                        userAddress={userAddress}
+                        createTransaction={createTransaction}
+                        processTransaction={processTransaction}
+                        safeAddress={safeAddress}
+                        nonce={nonce}
+                      />
+                    </TableCell>
+                  </TableRow>
+                )}
+              </React.Fragment>
+            ))
+          }
         </Table>
       </TableContainer>
     </Block>

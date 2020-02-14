@@ -15,9 +15,18 @@ import Hairline from '~/components/layout/Hairline'
 import EtherscanBtn from '~/components/EtherscanBtn'
 import CopyBtn from '~/components/CopyBtn'
 import {
-  sm, md, lg, border, disabled, extraSmallFontSize, screenSm,
+  sm,
+  md,
+  lg,
+  border,
+  disabled,
+  extraSmallFontSize,
+  screenSm,
 } from '~/theme/variables'
-import { getOwnerNameBy, getOwnerAddressBy } from '~/routes/open/components/fields'
+import {
+  getOwnerNameBy,
+  getOwnerAddressBy,
+} from '~/routes/open/components/fields'
 import { FIELD_LOAD_ADDRESS, THRESHOLD } from '~/routes/load/components/fields'
 import { getGnosisSafeInstanceAt } from '~/logic/contracts/safeContracts'
 
@@ -77,7 +86,11 @@ type Props = {
   updateInitialProps: (initialValues: Object) => void,
 }
 
-const calculateSafeValues = (owners: Array<string>, threshold: Number, values: Object) => {
+const calculateSafeValues = (
+  owners: Array<string>,
+  threshold: Number,
+  values: Object
+) => {
   const initialValues = { ...values }
   for (let i = 0; i < owners.length; i += 1) {
     initialValues[getOwnerAddressBy(i)] = owners[i]
@@ -88,9 +101,7 @@ const calculateSafeValues = (owners: Array<string>, threshold: Number, values: O
 
 const OwnerListComponent = (props: Props) => {
   const [owners, setOwners] = useState<Array<string>>([])
-  const {
-    values, updateInitialProps, classes,
-  } = props
+  const { values, updateInitialProps, classes } = props
 
   useEffect(() => {
     let isCurrent = true
@@ -103,7 +114,11 @@ const OwnerListComponent = (props: Props) => {
 
       if (isCurrent && owners) {
         const sortedOwners = safeOwners.sort()
-        const initialValues = calculateSafeValues(sortedOwners, threshold, values)
+        const initialValues = calculateSafeValues(
+          sortedOwners,
+          threshold,
+          values
+        )
         updateInitialProps(initialValues)
         setOwners(sortedOwners)
       }
@@ -148,7 +163,12 @@ const OwnerListComponent = (props: Props) => {
               <Col xs={8}>
                 <Row className={classes.ownerAddresses}>
                   <Identicon address={address} diameter={32} />
-                  <Paragraph size="md" color="disabled" noMargin className={classes.address}>
+                  <Paragraph
+                    size="md"
+                    color="disabled"
+                    noMargin
+                    className={classes.address}
+                  >
                     {address}
                   </Paragraph>
                   <CopyBtn content={address} />
@@ -165,10 +185,17 @@ const OwnerListComponent = (props: Props) => {
 
 const OwnerListPage = withStyles(styles)(OwnerListComponent)
 
-const OwnerList = ({ updateInitialProps }: Object, network: string) => (controls: React$Node, { values }: Object) => (
+const OwnerList = ({ updateInitialProps }: Object, network: string) => (
+  controls: React$Node,
+  { values }: Object
+) => (
   <>
     <OpenPaper controls={controls} padding={false}>
-      <OwnerListPage network={network} updateInitialProps={updateInitialProps} values={values} />
+      <OwnerListPage
+        network={network}
+        updateInitialProps={updateInitialProps}
+        values={values}
+      />
     </OpenPaper>
   </>
 )
