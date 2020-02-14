@@ -64,7 +64,7 @@ export const onboard = new Onboard({
   dappId: BLOCKNATIVE_API_KEY,
   networkId: getNetworkId(),
   subscriptions: {
-    wallet: (wallet) => {
+    wallet: wallet => {
       console.log('fired wallet callback', wallet)
       if (wallet.provider) {
         // this function will intialize web3 and store it somewhere available throughout the dapp and
@@ -74,7 +74,7 @@ export const onboard = new Onboard({
         // store.dispatch(fetchProvider(providerName))
       }
     },
-    address: (address) => {
+    address: address => {
       console.log('fired address callback', address)
       if (!lastUsedAddress && address) {
         console.log('address branch true')
@@ -112,7 +112,7 @@ export const onboardUser = async () => {
 
 type Props = {
   enqueueSnackbar: Function,
-  closeSnackbar: Function
+  closeSnackbar: Function,
 }
 
 const ConnectButton = (props: Props) => (
