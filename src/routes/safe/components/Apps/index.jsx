@@ -111,6 +111,7 @@ function Apps({
 
   useEffect(() => {
     const onIframeMessage = async ({ origin, data }) => {
+      console.error('IFRAME MESSAGE')
       if (origin !== getSelectedApp().url) {
         return
       }
