@@ -132,7 +132,7 @@ class ManageOwners extends React.Component<Props, State> {
     } = this.state
 
     const columns = generateColumns()
-    const autoColumns = columns.filter((c) => !c.custom)
+    const autoColumns = columns.filter(c => !c.custom)
     const ownersAdbk = getOwnersWithNameFromAddressBook(addressBook, owners)
     const ownerData = getOwnerData(ownersAdbk)
 
@@ -143,8 +143,9 @@ class ManageOwners extends React.Component<Props, State> {
             Manage Safe Owners
           </Heading>
           <Paragraph className={classes.annotation}>
-            Add, remove and replace owners or rename existing owners. Owner names are only stored locally and never
-            shared with Gnosis or any third parties.
+            Add, remove and replace owners or rename existing owners. Owner
+            names are only stored locally and never shared with Gnosis or any
+            third parties.
           </Paragraph>
           <TableContainer>
             <Table
@@ -157,55 +158,67 @@ class ManageOwners extends React.Component<Props, State> {
               defaultFixed
               noBorder
             >
-              {(sortedData: List<OwnerRow>) => sortedData.map((row: any, index: number) => (
-                <TableRow
-                  tabIndex={-1}
-                  key={index}
-                  className={cn(classes.hide, index >= 3 && index === sortedData.size - 1 && classes.noBorderBottom)}
-                  data-testid={OWNERS_ROW_TEST_ID}
-                >
-                  {autoColumns.map((column: Column) => (
-                    <TableCell key={column.id} style={cellWidth(column.width)} align={column.align} component="td">
-                      {column.id === OWNERS_TABLE_ADDRESS_ID ? (
-                        <OwnerAddressTableCell address={row[column.id]} />
-                      ) : (
-                        row[column.id]
-                      )}
-                    </TableCell>
-                  ))}
-                  <TableCell component="td">
-                    <Row align="end" className={classes.actions}>
-                      <Img
-                        alt="Edit owner"
-                        className={classes.editOwnerIcon}
-                        src={RenameOwnerIcon}
-                        onClick={this.onShow('EditOwner', row)}
-                        testId={RENAME_OWNER_BTN_TEST_ID}
-                      />
-                      {granted && (
-                        <>
-                          <Img
-                            alt="Replace owner"
-                            className={classes.replaceOwnerIcon}
-                            src={ReplaceOwnerIcon}
-                            onClick={this.onShow('ReplaceOwner', row)}
-                            testId={REPLACE_OWNER_BTN_TEST_ID}
-                          />
-                          {ownerData.size > 1 && (
+              {(sortedData: List<OwnerRow>) =>
+                sortedData.map((row: any, index: number) => (
+                  <TableRow
+                    tabIndex={-1}
+                    key={index}
+                    className={cn(
+                      classes.hide,
+                      index >= 3 &&
+                        index === sortedData.size - 1 &&
+                        classes.noBorderBottom
+                    )}
+                    data-testid={OWNERS_ROW_TEST_ID}
+                  >
+                    {autoColumns.map((column: Column) => (
+                      <TableCell
+                        key={column.id}
+                        style={cellWidth(column.width)}
+                        align={column.align}
+                        component="td"
+                      >
+                        {column.id === OWNERS_TABLE_ADDRESS_ID ? (
+                          <OwnerAddressTableCell address={row[column.id]} />
+                        ) : (
+                          row[column.id]
+                        )}
+                      </TableCell>
+                    ))}
+                    <TableCell component="td">
+                      <Row align="end" className={classes.actions}>
+                        <Img
+                          alt="Edit owner"
+                          className={classes.editOwnerIcon}
+                          src={RenameOwnerIcon}
+                          onClick={this.onShow('EditOwner', row)}
+                          testId={RENAME_OWNER_BTN_TEST_ID}
+                        />
+                        {granted && (
+                          <>
                             <Img
-                              alt="Remove owner"
-                              className={classes.removeOwnerIcon}
-                              src={RemoveOwnerIcon}
-                              onClick={this.onShow('RemoveOwner', row)}
-                              testId={REMOVE_OWNER_BTN_TEST_ID}
+                              alt="Replace owner"
+                              className={classes.replaceOwnerIcon}
+                              src={ReplaceOwnerIcon}
+                              onClick={this.onShow('ReplaceOwner', row)}
+                              testId={REPLACE_OWNER_BTN_TEST_ID}
                             />
-                          )}
-                        </>
-                      ) }
-                    </Row>
-                  </TableCell>
-                </TableRow>
-              ))}
+                            {ownerData.size > 1 && (
+                              <Img
+                                alt="Remove owner"
+                                className={classes.removeOwnerIcon}
+                                src={RemoveOwnerIcon}
+                                onClick={this.onShow('RemoveOwner', row)}
+                                testId={REMOVE_OWNER_BTN_TEST_ID}
+                              />
+                            )}
+                          </>
+                        )}
+                      </Row>
+                    </TableCell>
+                  </TableRow>
+                ))
+              }
             </Table>
           </TableContainer>
         </Block>

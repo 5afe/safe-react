@@ -17,7 +17,10 @@ import Modal from '~/components/Modal'
 import { type Column, cellWidth } from '~/components/Table/TableHead'
 import Table from '~/components/Table'
 import {
-  getBalanceData, generateColumns, BALANCE_TABLE_ASSET_ID, type BalanceRow,
+  getBalanceData,
+  generateColumns,
+  BALANCE_TABLE_ASSET_ID,
+  type BalanceRow,
 } from './dataFetcher'
 import AssetTableCell from './AssetTableCell'
 import Tokens from './Tokens'
@@ -27,7 +30,10 @@ import Collectibles from './Collectibles'
 import { styles } from './style'
 import DropdownCurrency from '~/routes/safe/components/DropdownCurrency'
 import type { BalanceCurrencyType } from '~/logic/currencyValues/store/model/currencyValues'
-import { BALANCE_TABLE_BALANCE_ID, BALANCE_TABLE_VALUE_ID } from '~/routes/safe/components/Balances/dataFetcher'
+import {
+  BALANCE_TABLE_BALANCE_ID,
+  BALANCE_TABLE_VALUE_ID,
+} from '~/routes/safe/components/Balances/dataFetcher'
 import Divider from '~/components/layout/Divider'
 
 export const MANAGE_TOKENS_BUTTON_TEST_ID = 'manage-tokens-btn'
@@ -77,7 +83,11 @@ class Balances extends React.Component<Props, State> {
   }
 
   componentDidMount(): void {
-    const { safeAddress, fetchCurrencyValues, activateTokensByBalance } = this.props
+    const {
+      safeAddress,
+      fetchCurrencyValues,
+      activateTokensByBalance,
+    } = this.props
     fetchCurrencyValues(safeAddress)
     activateTokensByBalance(safeAddress)
   }
@@ -165,8 +175,13 @@ class Balances extends React.Component<Props, State> {
     } = this.props
 
     const columns = generateColumns()
-    const autoColumns = columns.filter((c) => !c.custom)
-    const filteredData = getBalanceData(activeTokens, currencySelected, currencyValues)
+    const autoColumns = columns.filter(c => !c.custom)
+
+    const filteredData = getBalanceData(
+      activeTokens,
+      currencySelected,
+      currencyValues
+    )
 
     return (
       <>
