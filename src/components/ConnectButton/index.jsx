@@ -65,26 +65,23 @@ export const onboard = new Onboard({
   networkId: getNetworkId(),
   subscriptions: {
     wallet: wallet => {
-      console.log('fired wallet callback', wallet)
       if (wallet.provider) {
         // this function will intialize web3 and store it somewhere available throughout the dapp and
         // can also instantiate your contracts with the web3 instance
         setWeb3(wallet.provider)
         providerName = wallet.name
-        // store.dispatch(fetchProvider(providerName))
+        //store.dispatch(fetchProvider(providerName))
       }
     },
     address: address => {
-      console.log('fired address callback', address)
       if (!lastUsedAddress && address) {
-        console.log('address branch true')
         lastUsedAddress = address
         store.dispatch(fetchProvider(providerName))
       }
+
       // we don't have an unsubscribe event so we rely on this
       if (!address && lastUsedAddress) {
         lastUsedAddress = ''
-        console.log('address branch false')
         providerName = undefined
         // store.dispatch(removeProvider())
       }
@@ -121,10 +118,8 @@ const ConnectButton = (props: Props) => (
     variant="contained"
     minWidth={140}
     onClick={async () => {
-      const walletSelect = await onboard.walletSelect()
-      const walletCheck = await onboard.walletCheck()
-      console.log('walletSelect', walletSelect)
-      console.log('walletCheck', walletCheck)
+      await onboard.walletSelect()
+      await onboard.walletCheck()
     }}
     {...props}
   >

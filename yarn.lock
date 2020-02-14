@@ -3845,7 +3845,7 @@ bnc-notify@^0.2.1:
 
 "bnc-onboard@https://github.com/blocknative/onboard/#feature/hardware-wallets":
   version "1.2.3"
-  resolved "https://github.com/blocknative/onboard/#a90be314644f456f35d0cf6d379234531cc00b86"
+  resolved "https://github.com/blocknative/onboard/#0d15b83a560ea39b1436ee553609983debae4ec9"
   dependencies:
     "@ledgerhq/hw-app-eth" "^5.7.0"
     "@ledgerhq/hw-transport-u2f" "^5.7.0"
