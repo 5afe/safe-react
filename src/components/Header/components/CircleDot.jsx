@@ -4,9 +4,7 @@ import { withStyles } from '@material-ui/core/styles'
 import Dot from '@material-ui/icons/FiberManualRecord'
 import Block from '~/components/layout/Block'
 import Img from '~/components/layout/Img'
-import {
-  fancy, border, warning, screenSm,
-} from '~/theme/variables'
+import { fancy, border, warning, screenSm } from '~/theme/variables'
 
 const key = require('../assets/key.svg')
 const triangle = require('../assets/triangle.svg')
@@ -56,7 +54,12 @@ const buildKeyStyleFrom = (size: number, center: boolean, dotSize: number) => ({
   borderRadius: `${size}px`,
 })
 
-const buildDotStyleFrom = (size: number, top: number, right: number, mode: Mode) => ({
+const buildDotStyleFrom = (
+  size: number,
+  top: number,
+  right: number,
+  mode: Mode
+) => ({
   width: `${size}px`,
   height: `${size}px`,
   borderRadius: `${size}px`,
