@@ -116,6 +116,8 @@ function Apps({
       }
 
       console.error('IFRAME MESSAGE')
+      console.error(origin)
+      console.error(getSelectedApp().url)
 
       if (origin !== getSelectedApp().url) {
         return
