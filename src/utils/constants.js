@@ -14,4 +14,4 @@ export const LATEST_SAFE_VERSION =
 export const APP_VERSION = process.env.REACT_APP_APP_VERSION || 'not-defined'
 export const OPENSEA_API_KEY = process.env.REACT_APP_OPENSEA_API_KEY || ''
 export const COLLECTIBLES_SOURCE =
-  process.env.REACT_APP_COLLECTIBLES_SOURCE || 'mocked'
+  process.env.REACT_APP_COLLECTIBLES_SOURCE || 'mockedOpenSea'

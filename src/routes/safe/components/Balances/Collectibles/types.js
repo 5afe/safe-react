@@ -160,7 +160,8 @@ export type OpenSeaAsset = {
 
 export type AssetCollectible = {
   tokenId: string,
-  name: string,
+  title: string,
+  text: ?string,
   color: string,
   image: string,
   assetUrl: string,

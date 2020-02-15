@@ -4,9 +4,7 @@ import { withStyles } from '@material-ui/core/styles'
 import cn from 'classnames'
 import CallMade from '@material-ui/icons/CallMade'
 import Button from '~/components/layout/Button'
-import {
-  fontColor, sm, xs,
-} from '~/theme/variables'
+import { fontColor, sm, xs } from '~/theme/variables'
 
 const styles = () => ({
   item: {
@@ -104,15 +102,25 @@ type Props = {
   key: string,
 }
 
-
 const Item = ({ classes, data, key }: Props) => (
   <div key={key} className={classes.item}>
     <div className={classes.mainContent}>
-      <div className={classes.image} style={{ backgroundImage: `url(${data.image})` }} />
-      { data.title && classes.text && (
+      <div
+        className={classes.image}
+        style={{ backgroundImage: `url(${data.image})` }}
+      />
+      {data.title && data.text && (
         <div className={classes.textContainer}>
-          {data.title && <h3 className={classes.title} title={data.title}>{data.title}</h3>}
-          {classes.text && <p className={classes.text} title={data.text}>{data.text}</p>}
+          {data.title && (
+            <h3 className={classes.title} title={data.title}>
+              {data.title}
+            </h3>
+          )}
+          {data.text && (
+            <p className={classes.text} title={data.text}>
+              {data.text}
+            </p>
+          )}
         </div>
       )}
     </div>
@@ -123,9 +131,7 @@ const Item = ({ classes, data, key }: Props) => (
         size="small"
         variant="contained"
       >
-        <CallMade alt="Send" className={classes.buttonIcon} />
-        {' '}
-Send
+        <CallMade alt="Send" className={classes.buttonIcon} /> Send
       </Button>
     </div>
   </div>

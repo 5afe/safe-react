@@ -46,7 +46,8 @@ class OpenSea implements CollectibleMetadataSource {
   static getAssetAsCollectible(asset: OpenSeaAsset): AssetCollectible {
     return {
       tokenId: asset.token_id,
-      name: asset.name || `${asset.asset_contract.name} - #${asset.token_id}`,
+      title: asset.name || `${asset.asset_contract.name} - #${asset.token_id}`,
+      text: asset.description,
       color: asset.background_color ? `#${asset.background_color}` : '',
       image: asset.image_url,
       assetUrl: asset.external_link,
@@ -57,22 +58,7 @@ class OpenSea implements CollectibleMetadataSource {
     }
   }
 
-  /**
-   * Fetches from OpenSea the list of collectibles for the provided Safe Address in the specified Network
-   * @param {string} safeAddress
-   * @param {string} networkName
-   * @returns {Promise<Array<CollectibleData>>}
-   */
-  async fetchAllUserCollectiblesAsync(
-    safeAddress: string,
-    networkName: string
-  ) {
-    // eslint-disable-next-line no-underscore-dangle
-    const metadataSourceUrl = this._endpointsUrls[networkName]
-    const url = `${metadataSourceUrl}/assets?owner=${safeAddress}`
-    // eslint-disable-next-line no-underscore-dangle
-    const assetsResponse = await this._fetch(url)
-    const assetsResponseJson = await assetsResponse.json()
+  static groupCollectibles(assetsResponseJson: { assets: OpenSeaAsset[] }) {
     const groupedCollectibles: GroupedCollectibles = OpenSea.getAssetsAsCollectible(
       assetsResponseJson.assets
     ).reduce((acc, el) => {
@@ -99,6 +85,25 @@ class OpenSea implements CollectibleMetadataSource {
         }
       }
     )
+  }
+
+  /**
+   * Fetches from OpenSea the list of collectibles for the provided Safe Address in the specified Network
+   * @param {string} safeAddress
+   * @param {string} networkName
+   * @returns {Promise<Array<CollectibleData>>}
+   */
+  async fetchAllUserCollectiblesAsync(
+    safeAddress: string,
+    networkName: string
+  ) {
+    // eslint-disable-next-line no-underscore-dangle
+    const metadataSourceUrl = this._endpointsUrls[networkName]
+    const url = `${metadataSourceUrl}/assets/?owner=${safeAddress}`
+    // eslint-disable-next-line no-underscore-dangle
+    const assetsResponse = await this._fetch(url)
+    const assetsResponseJson = await assetsResponse.json()
+    return OpenSea.groupCollectibles(assetsResponseJson)
   }
 }
 

@@ -3,6 +3,8 @@ import type {
   CollectibleData,
   CollectibleMetadataSource,
 } from '~/routes/safe/components/Balances/Collectibles/types'
+import OpenSea from '~/routes/safe/components/Balances/Collectibles/sources/opensea'
+import mockedOpenSea from '~/routes/safe/components/Balances/Collectibles/sources/mocked_opensea'
 
 const kittyAssetContract = {
   address: '0x16baf0de678e52367adc69fd067e5edd1d33e3bf',
@@ -38,7 +40,8 @@ const allCollectibles: CollectibleData[] = [
     data: [
       {
         tokenId: '0',
-        name: 'Glitter',
+        title: 'Glitter',
+        text: 'Glitter',
         order: null,
         color: '#F6FEFC',
         image:
@@ -50,7 +53,8 @@ const allCollectibles: CollectibleData[] = [
       },
       {
         tokenId: '1',
-        name: 'Furbeard',
+        title: 'Furbeard',
+        text: 'Furbeard',
         order: null,
         color: '#F6C68A',
         image:
@@ -62,7 +66,8 @@ const allCollectibles: CollectibleData[] = [
       },
       {
         tokenId: '2',
-        name: 'Glasswalker',
+        title: 'Glasswalker',
+        text: 'Glasswalker',
         order: null,
         color: '#CAFAF7',
         image:
@@ -74,7 +79,8 @@ const allCollectibles: CollectibleData[] = [
       },
       {
         tokenId: '3',
-        name: 'Ande',
+        title: 'Ande',
+        text: 'Ande',
         order: null,
         color: '#B8F1B9',
         image:
@@ -86,7 +92,8 @@ const allCollectibles: CollectibleData[] = [
       },
       {
         tokenId: '4',
-        name: 'Squib',
+        title: 'Squib',
+        text: 'Squib',
         order: null,
         color: '#CFD4F9',
         image:
@@ -98,7 +105,8 @@ const allCollectibles: CollectibleData[] = [
       },
       {
         tokenId: '10',
-        name: 'Negato',
+        title: 'Negato',
+        text: 'Negato',
         order: null,
         color: '#D7BBF3',
         image:
@@ -110,7 +118,8 @@ const allCollectibles: CollectibleData[] = [
       },
       {
         tokenId: '11',
-        name: 'DuCat',
+        title: 'DuCat',
+        text: 'DuCat',
         order: null,
         color: '#D6DDD8',
         image:
@@ -122,7 +131,8 @@ const allCollectibles: CollectibleData[] = [
       },
       {
         tokenId: '12',
-        name: 'Berry',
+        title: 'Berry',
+        text: 'Berry',
         order: null,
         color: '#F7B4D5',
         image:
@@ -135,6 +145,12 @@ const allCollectibles: CollectibleData[] = [
     ],
   },
 ]
+
+export class MockedOpenSea extends OpenSea {
+  _fetch = async () => {
+    return { json: () => mockedOpenSea }
+  }
+}
 
 class Mocked implements CollectibleMetadataSource {
   async fetchAllUserCollectiblesAsync(): Promise<CollectibleData[]> {
