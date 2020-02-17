@@ -53,9 +53,8 @@ const confirmTransactions = (
       <DividerLine withArrow />
       {txs.map((tx, index) => {
         return (
-          <Wrapper>
+          <Wrapper key={index}>
             <Collapse
-              key={index}
               title={`Transaction ${index + 1}`}
               description={<AddressInfo safeAddress={tx.to} />}
             >
