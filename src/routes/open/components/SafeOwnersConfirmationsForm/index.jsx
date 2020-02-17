@@ -47,7 +47,7 @@ export const calculateValuesAfterRemoving = (index: number, notRemovedOwners: nu
   const initialValues = { ...values }
 
   const numOwnersAfterRemoving = notRemovedOwners - 1
-  // muevo indices
+
   for (let i = index; i < numOwnersAfterRemoving; i += 1) {
     initialValues[getOwnerNameBy(i)] = values[getOwnerNameBy(i + 1)]
     initialValues[getOwnerAddressBy(i)] = values[getOwnerAddressBy(i + 1)]

@@ -12,7 +12,7 @@ import Paragraph from '~/components/layout/Paragraph'
 import OpenPaper from '~/components/Stepper/OpenPaper'
 import { FIELD_LOAD_NAME, FIELD_LOAD_ADDRESS } from '~/routes/load/components/fields'
 import { getWeb3 } from '~/logic/wallets/getWeb3'
-import { getSafeMasterContract, validateProxy } from '~/logic/contracts/safeContracts'
+import { getSafeMasterContract, SAFE_MASTER_COPY_ADDRESS_V10, validateProxy } from '~/logic/contracts/safeContracts'
 import { secondary } from '~/theme/variables'
 
 type Props = {
@@ -70,8 +70,7 @@ export const safeFieldsValidation = async (values: Object) => {
   )
   const safeMaster = await getSafeMasterContract()
   const masterCopy = safeMaster.address
-
-  const sameMasterCopy = checksummedProxyAddress === masterCopy
+  const sameMasterCopy = checksummedProxyAddress === masterCopy || checksummedProxyAddress === SAFE_MASTER_COPY_ADDRESS_V10
   if (!sameMasterCopy) {
     errors[FIELD_LOAD_ADDRESS] = SAFE_MASTERCOPY_ERROR
   }

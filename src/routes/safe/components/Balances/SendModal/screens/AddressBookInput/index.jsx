@@ -8,7 +8,10 @@ import makeStyles from '@material-ui/core/styles/makeStyles'
 import { List } from 'immutable'
 import { styles } from './style'
 import { getAddressBookListSelector } from '~/logic/addressBook/store/selectors'
-import { mustBeEthereumAddress, mustBeEthereumContractAddress } from '~/components/forms/validator'
+import {
+  mustBeEthereumAddress,
+  mustBeEthereumContractAddress,
+} from '~/components/forms/validator'
 import Identicon from '~/components/Identicon'
 import { getAddressFromENS } from '~/logic/wallets/getWeb3'
 
@@ -77,6 +80,16 @@ const AddressBookInput = ({
       if (isCustomTx && isValidText === undefined) {
         isValidText = await mustBeEthereumContractAddress(resolvedAddress)
       }
+
+      // Filters the entries based on the input of the user
+      const filteredADBK = addressBook.filter(adbkEntry => {
+        const { name, address } = adbkEntry
+        return (
+          name.toLowerCase().includes(addressValue.toLowerCase()) ||
+          address.toLowerCase().includes(addressValue.toLowerCase())
+        )
+      })
+      setADBKList(filteredADBK)
     }
     setIsValidForm(isValidText === undefined)
     setValidationText(isValidText)
@@ -91,9 +104,14 @@ const AddressBookInput = ({
         return
       }
       const abFlags = await Promise.all(
-        addressBook.map(async ({ address }) => mustBeEthereumContractAddress(address) === undefined),
+        addressBook.map(
+          async ({ address }) =>
+            mustBeEthereumContractAddress(address) === undefined
+        )
       )
-      const filteredADBK = addressBook.filter((adbkEntry, index) => abFlags[index])
+      const filteredADBK = addressBook.filter(
+        (adbkEntry, index) => abFlags[index]
+      )
       setADBKList(filteredADBK)
     }
     filterAdbkContractAddresses()
@@ -118,7 +136,9 @@ const AddressBookInput = ({
           optionsArray.filter(item => {
             const inputLowerCase = inputValue.toLowerCase()
             const foundName = item.name.toLowerCase().includes(inputLowerCase)
-            const foundAddress = item.address.toLowerCase().includes(inputLowerCase)
+            const foundAddress = item.address
+              .toLowerCase()
+              .includes(inputLowerCase)
             return foundName || foundAddress
           })
         }
@@ -156,14 +176,13 @@ const AddressBookInput = ({
         renderInput={params => (
           <TextField
             {...params}
-            // eslint-disable-next-line jsx-a11y/no-autofocus
-            autoFocus={!blurred || pristine}
+            label={!isValidForm ? validationText : 'Recipient'}
             error={!isValidForm}
             fullWidth
-            id="filled-error-helper-text"
-            label={!isValidForm ? validationText : 'Recipient'}
-            value={{ address: inputAddValue }}
+            autoFocus={!blurred || pristine}
             variant="filled"
+            id="filled-error-helper-text"
+            value={{ address: inputAddValue }}
             onChange={event => {
               setInputTouched(true)
               onAddressInputChanged(event.target.value)
