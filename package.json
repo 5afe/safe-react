@@ -58,7 +58,7 @@
     "currency-flags": "^2.1.1",
     "date-fns": "2.8.1",
     "dotenv": "^8.2.0",
-    "ethereum-ens": "0.7.8",
+    "ethereum-ens": "0.8.0",
     "final-form": "4.18.6",
     "fortmatic": "^1.0.1",
     "history": "4.10.1",

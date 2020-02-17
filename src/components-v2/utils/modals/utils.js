@@ -11,11 +11,29 @@ const StyledParagraph = styled(Paragraph)`
     font-size: ${lg};
   }
 `
-export const ModalTitle = ({ title }: { title: string }) => {
+const IconImg = styled.img`
+  width: 20px;
+  margin-right: 10px;
+`
+const TitleWrapper = styled.div`
+  display: flex;
+  align-items: center;
+`
+
+export const ModalTitle = ({
+  title,
+  iconUrl,
+}: {
+  title: string,
+  iconUrl: string,
+}) => {
   return (
-    <StyledParagraph weight="bolder" noMargin>
-      {title}
-    </StyledParagraph>
+    <TitleWrapper>
+      {iconUrl && <IconImg src={iconUrl} alt={title} />}
+      <StyledParagraph weight="bolder" noMargin>
+        {title}
+      </StyledParagraph>
+    </TitleWrapper>
   )
 }
 

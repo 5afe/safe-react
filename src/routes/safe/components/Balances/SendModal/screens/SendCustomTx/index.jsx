@@ -17,7 +17,11 @@ import ButtonLink from '~/components/layout/ButtonLink'
 import Field from '~/components/forms/Field'
 import TextField from '~/components/forms/TextField'
 import TextareaField from '~/components/forms/TextareaField'
-import { composeValidators, mustBeFloat, maxValue } from '~/components/forms/validator'
+import {
+  composeValidators,
+  mustBeFloat,
+  maxValue,
+} from '~/components/forms/validator'
 import SafeInfo from '~/routes/safe/components/Balances/SendModal/SafeInfo'
 import QRIcon from '~/assets/icons/qrcode.svg'
 import ArrowDown from '../assets/arrow-down.svg'
@@ -38,7 +42,15 @@ type Props = {
   initialValues: Object,
 }
 
-const SendCustomTx = ({ classes, onClose, safeAddress, safeName, ethBalance, onSubmit, initialValues }: Props) => {
+const SendCustomTx = ({
+  classes,
+  onClose,
+  safeAddress,
+  safeName,
+  ethBalance,
+  onSubmit,
+  initialValues,
+}: Props) => {
   const [qrModalOpen, setQrModalOpen] = useState<boolean>(false)
   const [selectedEntry, setSelectedEntry] = useState<Object | null>({
     address: '',
@@ -88,7 +100,11 @@ const SendCustomTx = ({ classes, onClose, safeAddress, safeName, ethBalance, onS
         </IconButton>
       </Row>
       <Hairline />
-      <GnoForm onSubmit={handleSubmit} formMutators={formMutators} initialValues={initialValues}>
+      <GnoForm
+        onSubmit={handleSubmit}
+        formMutators={formMutators}
+        initialValues={initialValues}
+      >
         {(...args) => {
           const mutators = args[3]
 
@@ -111,10 +127,18 @@ const SendCustomTx = ({ classes, onClose, safeAddress, safeName, ethBalance, onS
           return (
             <>
               <Block className={classes.formContainer}>
-                <SafeInfo safeAddress={safeAddress} safeName={safeName} ethBalance={ethBalance} />
+                <SafeInfo
+                  safeAddress={safeAddress}
+                  safeName={safeName}
+                  ethBalance={ethBalance}
+                />
                 <Row margin="md">
                   <Col xs={1}>
-                    <img src={ArrowDown} alt="Arrow Down" style={{ marginLeft: sm }} />
+                    <img
+                      src={ArrowDown}
+                      alt="Arrow Down"
+                      style={{ marginLeft: sm }}
+                    />
                   </Col>
                   <Col xs={11} center="xs" layout="column">
                     <Hairline />
@@ -131,13 +155,21 @@ const SendCustomTx = ({ classes, onClose, safeAddress, safeName, ethBalance, onS
                     }}
                   >
                     <Row margin="xs">
-                      <Paragraph size="md" color="disabled" style={{ letterSpacing: '-0.5px' }} noMargin>
+                      <Paragraph
+                        size="md"
+                        color="disabled"
+                        style={{ letterSpacing: '-0.5px' }}
+                        noMargin
+                      >
                         Recipient
                       </Paragraph>
                     </Row>
                     <Row margin="md" align="center">
                       <Col xs={1}>
-                        <Identicon address={selectedEntry.address} diameter={32} />
+                        <Identicon
+                          address={selectedEntry.address}
+                          diameter={32}
+                        />
                       </Col>
                       <Col xs={11} layout="column">
                         <Block justify="left">
@@ -160,7 +192,10 @@ const SendCustomTx = ({ classes, onClose, safeAddress, safeName, ethBalance, onS
                             </Paragraph>
                           </Block>
                           <CopyBtn content={selectedEntry.address} />
-                          <EtherscanBtn type="address" value={selectedEntry.address} />
+                          <EtherscanBtn
+                            type="address"
+                            value={selectedEntry.address}
+                          />
                         </Block>
                       </Col>
                     </Row>
@@ -194,7 +229,12 @@ const SendCustomTx = ({ classes, onClose, safeAddress, safeName, ethBalance, onS
                 )}
                 <Row margin="xs">
                   <Col between="lg">
-                    <Paragraph size="md" color="disabled" style={{ letterSpacing: '-0.5px' }} noMargin>
+                    <Paragraph
+                      size="md"
+                      color="disabled"
+                      style={{ letterSpacing: '-0.5px' }}
+                      noMargin
+                    >
                       Value
                     </Paragraph>
                     <ButtonLink weight="bold" onClick={mutators.setMax}>
@@ -208,12 +248,17 @@ const SendCustomTx = ({ classes, onClose, safeAddress, safeName, ethBalance, onS
                       name="value"
                       component={TextField}
                       type="text"
-                      validate={composeValidators(mustBeFloat, maxValue(ethBalance))}
+                      validate={composeValidators(
+                        mustBeFloat,
+                        maxValue(ethBalance)
+                      )}
                       placeholder="Value*"
                       text="Value*"
                       className={classes.addressInput}
                       inputAdornment={{
-                        endAdornment: <InputAdornment position="end">ETH</InputAdornment>,
+                        endAdornment: (
+                          <InputAdornment position="end">ETH</InputAdornment>
+                        ),
                       }}
                     />
                   </Col>
@@ -223,6 +268,7 @@ const SendCustomTx = ({ classes, onClose, safeAddress, safeName, ethBalance, onS
                     <TextareaField
                       name="data"
                       type="text"
+                      rows={3}
                       placeholder="Data (hex encoded)*"
                       text="Data (hex encoded)*"
                     />
@@ -246,7 +292,13 @@ const SendCustomTx = ({ classes, onClose, safeAddress, safeName, ethBalance, onS
                   Review
                 </Button>
               </Row>
-              {qrModalOpen && <ScanQRModal isOpen={qrModalOpen} onScan={handleScan} onClose={closeQrModal} />}
+              {qrModalOpen && (
+                <ScanQRModal
+                  isOpen={qrModalOpen}
+                  onScan={handleScan}
+                  onClose={closeQrModal}
+                />
+              )}
             </>
           )
         }}
