@@ -52,7 +52,7 @@ const GnoStepper = (props: Props) => {
 
   const getPageProps = (pages: React.Node): PageProps => React.Children.toArray(pages)[page].props
 
-  const updateInitialProps = (newInitialProps) => {
+  const updateInitialProps = newInitialProps => {
     setValues(newInitialProps)
   }
 
@@ -105,14 +105,12 @@ const GnoStepper = (props: Props) => {
     return next(formValues)
   }
 
-  const isLastPage = (pageNumber) => {
+  const isLastPage = pageNumber => {
     const { steps } = props
     return pageNumber === steps.length - 1
   }
 
-  const {
-    steps, children, classes, disabledWhenValidating = false, testId, mutators, buttonLabels,
-  } = props
+  const { steps, children, classes, disabledWhenValidating = false, testId, mutators, buttonLabels } = props
   const activePage = getActivePageFrom(children)
 
   const lastPage = isLastPage(page)

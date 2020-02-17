@@ -11,12 +11,7 @@ import enqueueSnackbar from '~/logic/notifications/store/actions/enqueueSnackbar
 import { saveAddressBook } from '~/logic/addressBook/utils'
 import type { AddressBookProps } from '~/logic/addressBook/model/addressBook'
 
-const watchedActions = [
-  ADD_ENTRY,
-  REMOVE_ENTRY,
-  UPDATE_ENTRY,
-]
-
+const watchedActions = [ADD_ENTRY, REMOVE_ENTRY, UPDATE_ENTRY]
 
 const addressBookMiddleware = (store: Store<GlobalState>) => (next: Function) => async (action: AnyAction) => {
   const handledAction = next(action)

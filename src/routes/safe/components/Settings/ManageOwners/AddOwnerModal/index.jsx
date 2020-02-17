@@ -95,7 +95,7 @@ const AddOwner = ({
   }
 
   const ownerSubmitted = (newValues: Object) => {
-    setValues((stateValues) => ({
+    setValues(stateValues => ({
       ...stateValues,
       ownerName: newValues.ownerName,
       ownerAddress: newValues.ownerAddress,
@@ -104,7 +104,7 @@ const AddOwner = ({
   }
 
   const thresholdSubmitted = (newValues: Object) => {
-    setValues((stateValues) => ({
+    setValues(stateValues => ({
       ...stateValues,
       threshold: newValues.threshold,
     }))
@@ -129,9 +129,7 @@ const AddOwner = ({
       paperClassName={classes.biggerModalWindow}
     >
       <>
-        {activeScreen === 'selectOwner' && (
-          <OwnerForm onClose={onClose} onSubmit={ownerSubmitted} owners={owners} />
-        )}
+        {activeScreen === 'selectOwner' && <OwnerForm onClose={onClose} onSubmit={ownerSubmitted} owners={owners} />}
         {activeScreen === 'selectThreshold' && (
           <ThresholdForm
             onClose={onClose}

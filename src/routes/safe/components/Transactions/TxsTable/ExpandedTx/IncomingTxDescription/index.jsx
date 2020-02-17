@@ -33,19 +33,15 @@ type TransferDescProps = {
 
 const TransferDescription = ({ value = '', from, txFromName }: TransferDescProps) => (
   <Block data-testid={TRANSACTIONS_DESC_INCOMING_TEST_ID}>
-    <Bold>
-      Received
-      {' '}
-      {value}
-      {' '}
-      from:
-    </Bold>
+    <Bold>Received {value} from:</Bold>
     <br />
-    {txFromName ? <OwnerAddressTableCell address={from} showLinks userName={txFromName} knownAddress />
-      : <EtherscanLink type="address" value={from} knownAddress={false} />}
+    {txFromName ? (
+      <OwnerAddressTableCell address={from} showLinks userName={txFromName} knownAddress />
+    ) : (
+      <EtherscanLink type="address" value={from} knownAddress={false} />
+    )}
   </Block>
 )
-
 
 const IncomingTxDescription = ({ tx }: Props) => {
   const classes = useStyles()

@@ -16,9 +16,7 @@ type Props = {
   innerRef?: React.ElementRef<any>,
 }
 
-const GnosisLink = ({
-  to, children, color, className, padding, innerRef, ...props
-}: Props) => {
+const GnosisLink = ({ to, children, color, className, padding, innerRef, ...props }: Props) => {
   const internal = /^\/(?!\/)/.test(to)
   const classes = cx(styles.link, color || 'regular', padding ? capitalize(padding, 'padding') : undefined, className)
   const LinkElement = internal ? Link : 'a'
@@ -29,13 +27,7 @@ const GnosisLink = ({
   }
 
   return (
-    <LinkElement
-      className={classes}
-      href={internal ? null : to}
-      to={internal ? to : null}
-      {...refs}
-      {...props}
-    >
+    <LinkElement className={classes} href={internal ? null : to} to={internal ? to : null} {...refs} {...props}>
       {children}
     </LinkElement>
   )

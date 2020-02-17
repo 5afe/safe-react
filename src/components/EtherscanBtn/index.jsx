@@ -33,9 +33,7 @@ type EtherscanBtnProps = {
   value: string,
 }
 
-const EtherscanBtn = ({
-  type, value, className, increaseZindex = false,
-}: EtherscanBtnProps) => {
+const EtherscanBtn = ({ type, value, className, increaseZindex = false }: EtherscanBtnProps) => {
   const classes = useStyles()
   const customClasses = increaseZindex ? { popper: classes.increasedPopperZindex } : {}
 

@@ -10,21 +10,24 @@ import { loadFromStorage } from '~/utils/storage'
 import fetchCurrencySelectedValue from '~/logic/currencyValues/store/actions/fetchCurrencySelectedValue'
 import { CURRENCY_SELECTED_KEY } from '~/logic/currencyValues/store/actions/saveCurrencySelected'
 
-
 export const fetchCurrencyValues = (safeAddress: string) => async (dispatch: ReduxDispatch<GlobalState>) => {
   try {
     const tokensFetched = await fetchTokenCurrenciesBalances(safeAddress)
 
     // eslint-disable-next-line max-len
-    const currencyList = List(tokensFetched.data.filter((currencyBalance) => currencyBalance.balanceUsd).map((currencyBalance) => {
-      const { balanceUsd, tokenAddress } = currencyBalance
-      return makeBalanceCurrency({
-        currencyName: balanceUsd ? AVAILABLE_CURRENCIES.USD : null,
-        tokenAddress,
-        balanceInBaseCurrency: balanceUsd,
-        balanceInSelectedCurrency: balanceUsd,
-      })
-    }))
+    const currencyList = List(
+      tokensFetched.data
+        .filter(currencyBalance => currencyBalance.balanceUsd)
+        .map(currencyBalance => {
+          const { balanceUsd, tokenAddress } = currencyBalance
+          return makeBalanceCurrency({
+            currencyName: balanceUsd ? AVAILABLE_CURRENCIES.USD : null,
+            tokenAddress,
+            balanceInBaseCurrency: balanceUsd,
+            balanceInSelectedCurrency: balanceUsd,
+          })
+        }),
+    )
 
     dispatch(setCurrencyBalances(currencyList))
     const currencyStored = await loadFromStorage(CURRENCY_SELECTED_KEY)

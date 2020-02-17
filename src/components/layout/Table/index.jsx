@@ -6,13 +6,11 @@ import TableCell from '@material-ui/core/TableCell'
 import TableHead from '@material-ui/core/TableHead'
 import TableRow from '@material-ui/core/TableRow'
 
-export {
-  TableBody, TableCell, TableHead, TableRow,
-}
+export { TableBody, TableCell, TableHead, TableRow }
 
 type Props = {
   children: React.Node,
-  size?: number
+  size?: number,
 }
 
 const buildWidthFrom = (size: number) => ({
@@ -29,9 +27,7 @@ const GnoTable = ({ size, children }: Props) => {
 
   return (
     <div style={overflowStyle}>
-      <Table style={style}>
-        {children}
-      </Table>
+      <Table style={style}>{children}</Table>
     </div>
   )
 }

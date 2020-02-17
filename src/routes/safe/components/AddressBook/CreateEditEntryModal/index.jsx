@@ -12,12 +12,7 @@ import Hairline from '~/components/layout/Hairline'
 import Field from '~/components/forms/Field'
 import TextField from '~/components/forms/TextField'
 import Paragraph from '~/components/layout/Paragraph'
-import {
-  composeValidators,
-  required,
-  minMaxLength,
-  uniqueAddress,
-} from '~/components/forms/validator'
+import { composeValidators, required, minMaxLength, uniqueAddress } from '~/components/forms/validator'
 import Modal from '~/components/Modal'
 import { styles } from './style'
 import AddressInput from '~/components/forms/AddressInput'

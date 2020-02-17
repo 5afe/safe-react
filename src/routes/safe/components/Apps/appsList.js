@@ -3,9 +3,7 @@ export default [
   {
     id: 1,
     name: 'Compound',
-    url:
-      process.env.REACT_APP_GNOSIS_APPS_URL ||
-      'https://gnosis-apps.netlify.com',
+    url: process.env.REACT_APP_GNOSIS_APPS_URL || 'https://gnosis-apps.netlify.com',
     iconUrl: 'https://compound.finance/images/compound-mark.svg',
     description: '',
     providedBy: { name: 'Gnosis', url: '' },

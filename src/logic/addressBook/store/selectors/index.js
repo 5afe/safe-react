@@ -1,3 +1,4 @@
+/* eslint-disable import/named */
 // @flow
 import { List, Map } from 'immutable'
 import { createSelector, Selector } from 'reselect'
@@ -7,7 +8,8 @@ import type { GlobalState } from '~/store'
 import type { AddressBook } from '~/logic/addressBook/model/addressBook'
 import { safeParamAddressFromStateSelector } from '~/routes/safe/store/selectors'
 
-export const addressBookMapSelector = (state: GlobalState): Map<string, AddressBook> => state[ADDRESS_BOOK_REDUCER_ID].get('addressBook')
+export const addressBookMapSelector = (state: GlobalState): Map<string, AddressBook> =>
+  state[ADDRESS_BOOK_REDUCER_ID].get('addressBook')
 
 export const getAddressBook: Selector<GlobalState, AddressBook> = createSelector(
   addressBookMapSelector,
@@ -38,7 +40,7 @@ export const getNameFromAddressBook = (userAddress: string): string | null => {
     return null
   }
   const addressBook = useSelector(getAddressBook)
-  const result = addressBook.filter((addressBookItem) => addressBookItem.address === userAddress)
+  const result = addressBook.filter(addressBookItem => addressBookItem.address === userAddress)
   if (result.size > 0) {
     return result.get(0).name
   }

@@ -35,7 +35,7 @@ const useStyles = makeStyles(() =>
       height: 'auto',
       position: 'static',
     },
-  })
+  }),
 )
 
 type Props = {
@@ -49,13 +49,7 @@ const GenericModal = ({ title, body, footer, onClose }: Props) => {
   const classes = useStyles()
 
   return (
-    <Modal
-      title="GenericModal"
-      description="GenericModal"
-      handleClose={onClose}
-      paperClassName={classes.paper}
-      open
-    >
+    <Modal title="GenericModal" description="GenericModal" handleClose={onClose} paperClassName={classes.paper} open>
       <TitleSection>
         {title}
         <IconButton onClick={onClose} disableRipple>

@@ -9,10 +9,7 @@ import { REMOVE_SAFE_OWNER } from '~/routes/safe/store/actions/removeSafeOwner'
 import { REPLACE_SAFE_OWNER } from '~/routes/safe/store/actions/replaceSafeOwner'
 import { EDIT_SAFE_OWNER } from '~/routes/safe/store/actions/editSafeOwner'
 import { type GlobalState } from '~/store/'
-import {
-  saveDefaultSafe,
-  saveSafes,
-} from '~/logic/safe/utils'
+import { saveDefaultSafe, saveSafes } from '~/logic/safe/utils'
 import { getActiveTokensAddressesForAllSafes, safesMapSelector } from '~/routes/safe/store/selectors'
 import { tokensSelector } from '~/logic/tokens/store/selectors'
 import type { Token } from '~/logic/tokens/store/model/token'
@@ -37,7 +34,7 @@ const recalculateActiveTokens = (state: GlobalState): void => {
   const tokens = tokensSelector(state)
   const activeTokenAddresses = getActiveTokensAddressesForAllSafes(state)
 
-  const activeTokens: List<Token> = tokens.withMutations((map) => {
+  const activeTokens: List<Token> = tokens.withMutations(map => {
     map.forEach((token: Token) => {
       if (!activeTokenAddresses.has(token.address)) {
         map.remove(token.address)
@@ -66,7 +63,7 @@ const safeStorageMware = (store: Store<GlobalState>) => (next: Function) => asyn
         const { safe } = action.payload
         const ownersArray = safe.owners.toJS()
         // Adds the owners to the address book
-        ownersArray.forEach((owner) => {
+        ownersArray.forEach(owner => {
           dispatch(addAddressBookEntry({ ...owner, isOwner: true }))
         })
         break

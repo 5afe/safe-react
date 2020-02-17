@@ -5,9 +5,7 @@ import InputAdornment from '@material-ui/core/InputAdornment'
 import CheckCircle from '@material-ui/icons/CheckCircle'
 import Field from '~/components/forms/Field'
 import AddressInput from '~/components/forms/AddressInput'
-import {
-  composeValidators, required, noErrorsOn, mustBeEthereumAddress,
-} from '~/components/forms/validator'
+import { composeValidators, required, noErrorsOn, mustBeEthereumAddress } from '~/components/forms/validator'
 import TextField from '~/components/forms/TextField'
 import Block from '~/components/layout/Block'
 import Paragraph from '~/components/layout/Paragraph'
@@ -72,7 +70,8 @@ export const safeFieldsValidation = async (values: Object) => {
   )
   const safeMaster = await getSafeMasterContract()
   const masterCopy = safeMaster.address
-  const sameMasterCopy = checksummedProxyAddress === masterCopy || checksummedProxyAddress === SAFE_MASTER_COPY_ADDRESS_V10
+  const sameMasterCopy =
+    checksummedProxyAddress === masterCopy || checksummedProxyAddress === SAFE_MASTER_COPY_ADDRESS_V10
   if (!sameMasterCopy) {
     errors[FIELD_LOAD_ADDRESS] = SAFE_MASTERCOPY_ERROR
   }
@@ -105,7 +104,7 @@ const Details = ({ classes, errors, form }: Props) => (
       <AddressInput
         name={FIELD_LOAD_ADDRESS}
         component={TextField}
-        fieldMutator={(val) => {
+        fieldMutator={val => {
           form.mutators.setValue(FIELD_LOAD_ADDRESS, val)
         }}
         inputAdornment={
@@ -125,14 +124,11 @@ const Details = ({ classes, errors, form }: Props) => (
     </Block>
     <Block margin="sm">
       <Paragraph noMargin size="md" color="primary" className={classes.links}>
-        By continuing you consent with the
-        {' '}
+        By continuing you consent with the{' '}
         <a rel="noopener noreferrer" href="https://safe.gnosis.io/terms" target="_blank">
           terms of use
-        </a>
-        {' '}
-        and
-        {' '}
+        </a>{' '}
+        and{' '}
         <a rel="noopener noreferrer" href="https://safe.gnosis.io/privacy" target="_blank">
           privacy policy
         </a>

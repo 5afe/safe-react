@@ -1,9 +1,7 @@
 // @flow
 import React, { useState, useEffect } from 'react'
 import { connect } from 'react-redux'
-import {
-  Switch, Redirect, Route, withRouter,
-} from 'react-router-dom'
+import { Switch, Redirect, Route, withRouter } from 'react-router-dom'
 import { defaultSafeSelector } from '~/routes/safe/store/selectors'
 import Loader from '~/components/Loader'
 import Welcome from './welcome/container'
@@ -75,6 +73,6 @@ const Routes = ({ defaultSafe, location }: RoutesProps) => {
 
 // $FlowFixMe
 export default connect<Object, Object, ?Function, ?Object>(
-  (state) => ({ defaultSafe: defaultSafeSelector(state) }),
+  state => ({ defaultSafe: defaultSafeSelector(state) }),
   null,
 )(withRouter(Routes))

@@ -11,4 +11,6 @@ export const notificationsListSelector: Selector<
   GlobalState,
   {},
   List<Notification>,
-> = createSelector(notificationsMapSelector, (notifications: Map<string, Notification>): List<Notification> => notifications.toList())
+> = createSelector(notificationsMapSelector, (notifications: Map<string, Notification>): List<Notification> =>
+  notifications.toList(),
+)

@@ -90,9 +90,8 @@ const Receive = ({ classes, onClose, safeAddress, safeName }: Props) => (
     </Row>
     <Hairline />
     <Paragraph className={classes.annotation} size="lg" noMargin>
-      This is the address of your Safe. Deposit funds by scanning the QR code or
-      copying the address below. Only send ETH and ERC-20 tokens to this
-      address!
+      This is the address of your Safe. Deposit funds by scanning the QR code or copying the address below. Only send
+      ETH and ERC-20 tokens to this address!
     </Paragraph>
     <Col layout="column" middle="xs">
       <Paragraph className={classes.safeName} weight="bold" size="lg" noMargin>
@@ -117,12 +116,7 @@ const Receive = ({ classes, onClose, safeAddress, safeName }: Props) => (
     </Col>
     <Hairline />
     <Row align="center" className={classes.buttonRow}>
-      <Button
-        color="primary"
-        minWidth={130}
-        onClick={onClose}
-        variant="contained"
-      >
+      <Button color="primary" minWidth={130} onClick={onClose} variant="contained">
         Done
       </Button>
     </Row>

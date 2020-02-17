@@ -189,25 +189,13 @@ const Layout = (props: Props) => {
           <Identicon address={address} diameter={50} />
           <Block className={classes.name}>
             <Row>
-              <Heading
-                className={classes.nameText}
-                tag="h2"
-                color="primary"
-                testId={SAFE_VIEW_NAME_HEADING_TEST_ID}
-              >
+              <Heading className={classes.nameText} tag="h2" color="primary" testId={SAFE_VIEW_NAME_HEADING_TEST_ID}>
                 {name}
               </Heading>
-              {!granted && (
-                <Block className={classes.readonly}>Read Only</Block>
-              )}
+              {!granted && <Block className={classes.readonly}>Read Only</Block>}
             </Row>
             <Block justify="center" className={classes.user}>
-              <Paragraph
-                size="md"
-                className={classes.address}
-                color="disabled"
-                noMargin
-              >
+              <Paragraph size="md" className={classes.address} color="disabled" noMargin>
                 {address}
               </Paragraph>
               <CopyBtn content={address} />
@@ -224,10 +212,7 @@ const Layout = (props: Props) => {
             size="small"
             variant="contained"
           >
-            <CallMade
-              alt="Send Transaction"
-              className={classNames(classes.leftIcon, classes.iconSmall)}
-            />
+            <CallMade alt="Send Transaction" className={classNames(classes.leftIcon, classes.iconSmall)} />
             Send
           </Button>
           <Button
@@ -237,10 +222,7 @@ const Layout = (props: Props) => {
             size="small"
             variant="contained"
           >
-            <CallReceived
-              alt="Receive Transaction"
-              className={classNames(classes.leftIcon, classes.iconSmall)}
-            />
+            <CallReceived alt="Receive Transaction" className={classNames(classes.leftIcon, classes.iconSmall)} />
             Receive
           </Button>
         </Block>
@@ -366,11 +348,7 @@ const Layout = (props: Props) => {
             />
           )}
         />
-        <Route
-          exact
-          path={`${match.path}/address-book`}
-          render={() => <AddressBookTable />}
-        />
+        <Route exact path={`${match.path}/address-book`} render={() => <AddressBookTable />} />
         <Redirect to={`${match.path}/balances`} />
       </Switch>
       <SendModal
@@ -391,11 +369,7 @@ const Layout = (props: Props) => {
         paperClassName={classes.receiveModal}
         title="Receive Tokens"
       >
-        <Receive
-          safeName={name}
-          safeAddress={address}
-          onClose={onHide('Receive')}
-        />
+        <Receive safeName={name} safeAddress={address} onClose={onHide('Receive')} />
       </Modal>
 
       {modal.isOpen && <GenericModal {...modal} onClose={closeGenericModal} />}

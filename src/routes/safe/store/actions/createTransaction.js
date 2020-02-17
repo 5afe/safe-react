@@ -17,11 +17,7 @@ import {
   TX_TYPE_EXECUTION,
   saveTxToHistory,
 } from '~/logic/safe/transactions'
-import {
-  type NotificationsQueue,
-  getNotificationsFromTxType,
-  showSnackbar,
-} from '~/logic/notifications'
+import { type NotificationsQueue, getNotificationsFromTxType, showSnackbar } from '~/logic/notifications'
 import { getErrorMessage } from '~/test/utils/ethereumErrors'
 import { ZERO_ADDRESS } from '~/logic/wallets/ethAddresses'
 import { SAFELIST_ADDRESS } from '~/routes/routes'
@@ -77,10 +73,7 @@ const createTransaction = ({
   txNonce,
   operation = CALL,
   navigateToTransactionsTab = true,
-}: CreateTransactionArgs) => async (
-  dispatch: ReduxDispatch<GlobalState>,
-  getState: GetState<GlobalState>
-) => {
+}: CreateTransactionArgs) => async (dispatch: ReduxDispatch<GlobalState>, getState: GetState<GlobalState>) => {
   const state: GlobalState = getState()
 
   if (navigateToTransactionsTab) {
@@ -92,23 +85,16 @@ const createTransaction = ({
   const threshold = await safeInstance.getThreshold()
   const lastTx = await getLastTx(safeAddress)
   const nonce = await getNewTxNonce(txNonce, lastTx, safeAddress)
-  const isExecution =
-    (lastTx && lastTx.isExecuted && threshold.toNumber() === 1) || shouldExecute
+  const isExecution = (lastTx && lastTx.isExecuted && threshold.toNumber() === 1) || shouldExecute
 
   // https://gnosis-safe.readthedocs.io/en/latest/contracts/signatures.html#pre-validated-signatures
   const sigs = `0x000000000000000000000000${from.replace(
     '0x',
-    ''
+    '',
   )}000000000000000000000000000000000000000000000000000000000000000001`
 
-  const notificationsQueue: NotificationsQueue = getNotificationsFromTxType(
-    notifiedTransaction
-  )
-  const beforeExecutionKey = showSnackbar(
-    notificationsQueue.beforeExecution,
-    enqueueSnackbar,
-    closeSnackbar
-  )
+  const notificationsQueue: NotificationsQueue = getNotificationsFromTxType(notifiedTransaction)
+  const beforeExecutionKey = showSnackbar(notificationsQueue.beforeExecution, enqueueSnackbar, closeSnackbar)
   let pendingExecutionKey
 
   let txHash
@@ -116,13 +102,35 @@ const createTransaction = ({
   try {
     if (isExecution) {
       tx = await getExecutionTransaction(
-        safeInstance, to, valueInWei, txData, operation, nonce,
-        0, 0, 0, ZERO_ADDRESS, ZERO_ADDRESS, from, sigs,
+        safeInstance,
+        to,
+        valueInWei,
+        txData,
+        operation,
+        nonce,
+        0,
+        0,
+        0,
+        ZERO_ADDRESS,
+        ZERO_ADDRESS,
+        from,
+        sigs,
       )
     } else {
       tx = await getApprovalTransaction(
-        safeInstance, to, valueInWei, txData, operation, nonce,
-        0, 0, 0, ZERO_ADDRESS, ZERO_ADDRESS, from, sigs,
+        safeInstance,
+        to,
+        valueInWei,
+        txData,
+        operation,
+        nonce,
+        0,
+        0,
+        0,
+        ZERO_ADDRESS,
+        ZERO_ADDRESS,
+        from,
+        sigs,
       )
     }
 
@@ -144,11 +152,7 @@ const createTransaction = ({
         txHash = hash
         closeSnackbar(beforeExecutionKey)
 
-        pendingExecutionKey = showSnackbar(
-          notificationsQueue.pendingExecution,
-          enqueueSnackbar,
-          closeSnackbar
-        )
+        pendingExecutionKey = showSnackbar(notificationsQueue.pendingExecution, enqueueSnackbar, closeSnackbar)
 
         try {
           await saveTxToHistory(
@@ -165,7 +169,7 @@ const createTransaction = ({
             ZERO_ADDRESS,
             txHash,
             from,
-            isExecution ? TX_TYPE_EXECUTION : TX_TYPE_CONFIRMATION
+            isExecution ? TX_TYPE_EXECUTION : TX_TYPE_CONFIRMATION,
           )
           dispatch(fetchTransactions(safeAddress))
         } catch (err) {
@@ -182,7 +186,7 @@ const createTransaction = ({
             ? notificationsQueue.afterExecution.noMoreConfirmationsNeeded
             : notificationsQueue.afterExecution.moreConfirmationsNeeded,
           enqueueSnackbar,
-          closeSnackbar
+          closeSnackbar,
         )
 
         dispatch(fetchTransactions(safeAddress))
@@ -193,32 +197,12 @@ const createTransaction = ({
     console.error(err)
     closeSnackbar(beforeExecutionKey)
     closeSnackbar(pendingExecutionKey)
-    showSnackbar(
-      notificationsQueue.afterExecutionError,
-      enqueueSnackbar,
-      closeSnackbar
-    )
+    showSnackbar(notificationsQueue.afterExecutionError, enqueueSnackbar, closeSnackbar)
 
     const executeDataUsedSignatures = safeInstance.contract.methods
-      .execTransaction(
-        to,
-        valueInWei,
-        txData,
-        CALL,
-        0,
-        0,
-        0,
-        ZERO_ADDRESS,
-        ZERO_ADDRESS,
-        sigs
-      )
+      .execTransaction(to, valueInWei, txData, CALL, 0, 0, 0, ZERO_ADDRESS, ZERO_ADDRESS, sigs)
       .encodeABI()
-    const errMsg = await getErrorMessage(
-      safeInstance.address,
-      0,
-      executeDataUsedSignatures,
-      from
-    )
+    const errMsg = await getErrorMessage(safeInstance.address, 0, executeDataUsedSignatures, from)
     console.error(`Error creating the TX: ${errMsg}`)
   }
 

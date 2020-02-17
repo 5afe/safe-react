@@ -78,7 +78,7 @@ const PageFrame = ({ children, classes, currentNetwork }: Props) => {
 
 export default withStyles(notificationStyles)(
   connect(
-    (state) => ({
+    state => ({
       currentNetwork: networkSelector(state),
     }),
     null,
