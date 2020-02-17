@@ -170,11 +170,7 @@ class Settings extends React.Component<Props, State> {
           <Col className={classes.contents} layout="column">
             <Block className={classes.container}>
               {menuOptionIndex === 1 && (
-                <SafeDetails
-                  safeAddress={safeAddress}
-                  safeName={safeName}
-                  updateSafe={updateSafe}
-                />
+                <SafeDetails safeAddress={safeAddress} safeName={safeName} updateSafe={updateSafe} createTransaction={createTransaction} />
               )}
               {menuOptionIndex === 2 && (
                 <ManageOwners

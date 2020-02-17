@@ -118,8 +118,9 @@ const notificationsMiddleware = (store: Store<GlobalState>) => (
         break
       }
       case ADD_SAFE: {
-        const { needUpdate } = await getSafeVersion()
         const { safe } = action.payload
+        const { needUpdate } = await getSafeVersion(safe.address)
+
         const notificationKey = `${safe.address}`
         if (needUpdate) {
           dispatch(
