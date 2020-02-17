@@ -4,17 +4,21 @@ import semverLessThan from 'semver/functions/lt'
 import { getGnosisSafeInstanceAt } from '~/logic/contracts/safeContracts'
 import { getSafeLastVersion } from '~/config'
 
+export const checkIfSafeNeedsUpdate = async (gnosisSafeInstance, lastSafeVersion) => {
+  if (!gnosisSafeInstance || !lastSafeVersion) {
+    return null
+  }
+  const safeMasterVersion = await gnosisSafeInstance.VERSION()
+  const current = semverValid(safeMasterVersion)
+  const latest = semverValid(lastSafeVersion)
+  const needUpdate = latest ? semverLessThan(current, latest) : false
+  return { current, latest, needUpdate }
+}
+
 export const getSafeVersion = async (safeAddress: string) => {
-  let current
-  let latest
   try {
     const safeMaster = await getGnosisSafeInstanceAt(safeAddress)
-    const safeMasterVersion = await safeMaster.VERSION()
-    current = semverValid(safeMasterVersion)
-    latest = semverValid(getSafeLastVersion())
-    const needUpdate = latest ? semverLessThan(current, latest) : false
-
-    return { current, latest, needUpdate }
+    return checkIfSafeNeedsUpdate(safeMaster, getSafeLastVersion())
   } catch (err) {
     console.error(err)
     throw err
