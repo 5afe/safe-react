@@ -88,6 +88,7 @@
       }
     ],
     "react/jsx-props-no-spreading": 0,
-    "prettier/prettier": "error"
+    "prettier/prettier": "error",
+    "jsx-a11y/no-autofocus": "warn"
   }
 }
