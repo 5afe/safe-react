@@ -3,7 +3,8 @@ import {
   DEFAULT_FALLBACK_HANDLER_ADDRESS,
   getEncodedMultiSendCallData,
   getGnosisSafeInstanceAt,
-  MULTI_SEND_ADDRESS, SAFE_MASTER_COPY_ADDRESS,
+  MULTI_SEND_ADDRESS,
+  SAFE_MASTER_COPY_ADDRESS,
 } from '~/logic/contracts/safeContracts'
 import type { MultiSendTransactionInstanceType } from '~/logic/contracts/safeContracts'
 import { DELEGATE_CALL } from '~/logic/safe/transactions'
@@ -25,7 +26,9 @@ export const upgradeSafeToLastVersion = async (safeAddress: string, createTransa
     })
   }
   const safeInstance = await getGnosisSafeInstanceAt(safeAddress)
-  const fallbackHandlerTxData = safeInstance.contract.methods.setFallbackHandler(DEFAULT_FALLBACK_HANDLER_ADDRESS).encodeABI()
+  const fallbackHandlerTxData = safeInstance.contract.methods
+    .setFallbackHandler(DEFAULT_FALLBACK_HANDLER_ADDRESS)
+    .encodeABI()
   const updateSafeTxData = safeInstance.contract.methods.changeMasterCopy(SAFE_MASTER_COPY_ADDRESS).encodeABI()
   const txs = [
     {

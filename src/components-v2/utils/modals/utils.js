@@ -20,13 +20,7 @@ const TitleWrapper = styled.div`
   align-items: center;
 `
 
-export const ModalTitle = ({
-  title,
-  iconUrl,
-}: {
-  title: string,
-  iconUrl: string,
-}) => {
+export const ModalTitle = ({ title, iconUrl }: { title: string, iconUrl: string }) => {
   return (
     <TitleWrapper>
       {iconUrl && <IconImg src={iconUrl} alt={title} />}
@@ -58,12 +52,7 @@ export const ModalFooterConfirmation = ({
       <Button minWidth={130} onClick={handleCancel}>
         {cancelText}
       </Button>
-      <Button
-        color="primary"
-        minWidth={130}
-        onClick={handleOk}
-        variant="contained"
-      >
+      <Button color="primary" minWidth={130} onClick={handleOk} variant="contained">
         {okText}
       </Button>
     </FooterWrapper>

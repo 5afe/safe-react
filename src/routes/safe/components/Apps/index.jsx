@@ -32,16 +32,7 @@ type Props = {
   closeModal: () => {},
 }
 
-function Apps({
-  web3,
-  safeAddress,
-  safeName,
-  ethBalance,
-  network,
-  createTransaction,
-  openModal,
-  closeModal,
-}: Props) {
+function Apps({ web3, safeAddress, safeName, ethBalance, network, createTransaction, openModal, closeModal }: Props) {
   const [selectedApp, setSelectedApp] = useState(1)
   const [appIsLoading, setAppIsLoading] = useState(true)
   const [iframeEl, setframeEl] = useState(null)
@@ -49,10 +40,7 @@ function Apps({
   const getSelectedApp = () => appsList.find(e => e.id === selectedApp)
 
   const sendMessageToIframe = (messageId, data) => {
-    iframeEl.contentWindow.postMessage(
-      { messageId, data },
-      getSelectedApp().url
-    )
+    iframeEl.contentWindow.postMessage({ messageId, data }, getSelectedApp().url)
   }
 
   const handleIframeMessage = async data => {
@@ -66,12 +54,7 @@ function Apps({
         const onConfirm = async () => {
           closeModal()
 
-          const txHash = await sendTransactions(
-            web3,
-            createTransaction,
-            safeAddress,
-            data.data
-          )
+          const txHash = await sendTransactions(web3, createTransaction, safeAddress, data.data)
 
           if (txHash) {
             sendMessageToIframe(operations.ON_TX_UPDATE, {
@@ -89,7 +72,7 @@ function Apps({
           data.data,
           openModal,
           closeModal,
-          onConfirm
+          onConfirm,
         )
 
         break
@@ -117,11 +100,7 @@ function Apps({
       }
 
       if (origin !== getSelectedApp().url) {
-        console.error(
-          `Message from ${origin} is different to the App URL ${
-            getSelectedApp().url
-          }`
-        )
+        console.error(`Message from ${origin} is different to the App URL ${getSelectedApp().url}`)
         return
       }
 
@@ -187,11 +166,7 @@ function Apps({
         </ButtonLink>
       </LCL.Nav>
       <LCL.Menu>
-        <LCL.List
-          items={appsList}
-          activeItem={selectedApp}
-          onItemClick={onSelectApp}
-        />
+        <LCL.List items={appsList} activeItem={selectedApp} onItemClick={onSelectApp} />
       </LCL.Menu>
       <LCL.Content>{getContent()}</LCL.Content>
       <LCL.Footer>

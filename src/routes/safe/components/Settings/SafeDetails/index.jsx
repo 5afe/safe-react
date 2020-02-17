@@ -40,17 +40,15 @@ const SafeDetails = (props: Props) => {
   const classes = useStyles()
   const [safeVersions, setSafeVersions] = React.useState({ current: null, latest: null, needUpdate: false })
   const isUserOwner = useSelector(grantedSelector)
-  const {
-    safeAddress, safeName, updateSafe, enqueueSnackbar, closeSnackbar, createTransaction,
-  } = props
+  const { safeAddress, safeName, updateSafe, enqueueSnackbar, closeSnackbar, createTransaction } = props
 
   const [isModalOpen, setModalOpen] = useState(false)
 
   const toggleModal = () => {
-    setModalOpen((prevOpen) => !prevOpen)
+    setModalOpen(prevOpen => !prevOpen)
   }
 
-  const handleSubmit = (values) => {
+  const handleSubmit = values => {
     updateSafe({ address: safeAddress, name: values.safeName })
 
     const notification = getNotificationsFromTxType(TX_NOTIFICATION_TYPES.SAFE_NAME_CHANGE_TX)
@@ -98,7 +96,7 @@ const SafeDetails = (props: Props) => {
                       color="primary"
                       testId={SAFE_NAME_UPDATE_SAFE_BTN_TEST_ID}
                     >
-                    Update Safe
+                      Update Safe
                     </Button>
                   </Paragraph>
                 </Row>
@@ -137,12 +135,7 @@ const SafeDetails = (props: Props) => {
                 </Button>
               </Col>
             </Row>
-            <Modal
-              title="Update Safe"
-              description="Update Safe"
-              handleClose={toggleModal}
-              open={isModalOpen}
-            >
+            <Modal title="Update Safe" description="Update Safe" handleClose={toggleModal} open={isModalOpen}>
               <UpdateSafeModal onClose={toggleModal} safeAddress={safeAddress} createTransaction={createTransaction} />
             </Modal>
           </>

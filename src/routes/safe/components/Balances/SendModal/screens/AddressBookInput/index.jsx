@@ -8,10 +8,7 @@ import makeStyles from '@material-ui/core/styles/makeStyles'
 import { List } from 'immutable'
 import { styles } from './style'
 import { getAddressBookListSelector } from '~/logic/addressBook/store/selectors'
-import {
-  mustBeEthereumAddress,
-  mustBeEthereumContractAddress,
-} from '~/components/forms/validator'
+import { mustBeEthereumAddress, mustBeEthereumContractAddress } from '~/components/forms/validator'
 import Identicon from '~/components/Identicon'
 import { getAddressFromENS } from '~/logic/wallets/getWeb3'
 
@@ -104,14 +101,9 @@ const AddressBookInput = ({
         return
       }
       const abFlags = await Promise.all(
-        addressBook.map(
-          async ({ address }) =>
-            mustBeEthereumContractAddress(address) === undefined
-        )
+        addressBook.map(async ({ address }) => mustBeEthereumContractAddress(address) === undefined),
       )
-      const filteredADBK = addressBook.filter(
-        (adbkEntry, index) => abFlags[index]
-      )
+      const filteredADBK = addressBook.filter((adbkEntry, index) => abFlags[index])
       setADBKList(filteredADBK)
     }
     filterAdbkContractAddresses()
@@ -136,9 +128,7 @@ const AddressBookInput = ({
           optionsArray.filter(item => {
             const inputLowerCase = inputValue.toLowerCase()
             const foundName = item.name.toLowerCase().includes(inputLowerCase)
-            const foundAddress = item.address
-              .toLowerCase()
-              .includes(inputLowerCase)
+            const foundAddress = item.address.toLowerCase().includes(inputLowerCase)
             return foundName || foundAddress
           })
         }

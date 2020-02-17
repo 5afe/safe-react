@@ -12,7 +12,6 @@ import Button from '~/components/layout/Button'
 import { styles } from './style'
 import { upgradeSafeToLastVersion } from '~/logic/safe/utils/updateSafe'
 
-
 type Props = {
   onClose: Function,
   createTransaction: Function,
@@ -20,10 +19,7 @@ type Props = {
   safeAddress: string,
 }
 
-
-const UpdateSafeModal = ({
-  onClose, classes, safeAddress, createTransaction,
-}: Props) => {
+const UpdateSafeModal = ({ onClose, classes, safeAddress, createTransaction }: Props) => {
   const handleSubmit = async () => {
     // Call the update safe method
     await upgradeSafeToLastVersion(safeAddress, createTransaction)
@@ -58,7 +54,8 @@ const UpdateSafeModal = ({
                   </ul>
                 </Block>
                 <Paragraph>
-                  You will need to confirm this update just like any other transaction. This means other owners will have to confirm the update in case more than one confirmation is required for this Safe.
+                  You will need to confirm this update just like any other transaction. This means other owners will
+                  have to confirm the update in case more than one confirmation is required for this Safe.
                 </Paragraph>
               </Row>
             </Block>

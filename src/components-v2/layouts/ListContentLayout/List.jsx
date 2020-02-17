@@ -40,10 +40,7 @@ const List = ({ items, activeItem, onItemClick, classes }: Props) => {
       {items.map(i => (
         <Item
           key={i.id}
-          className={cn(
-            classes.menuOption,
-            activeItem === i.id && classes.active
-          )}
+          className={cn(classes.menuOption, activeItem === i.id && classes.active)}
           onClick={() => onItemClick(i.id)}
         >
           <div className="container">
