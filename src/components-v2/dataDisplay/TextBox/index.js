@@ -2,6 +2,8 @@
 import React from 'react'
 import styled from 'styled-components'
 
+import { border } from '~/theme/variables'
+
 type Props = {
   children: React.Node,
 }
@@ -9,7 +11,7 @@ type Props = {
 const Box = styled.div`
   padding: 10px;
   word-wrap: break-word;
-  border: solid 2px #e8e7e6;
+  border: solid 2px ${border};
 `
 
 const TextBox = ({ children }: Props) => {
