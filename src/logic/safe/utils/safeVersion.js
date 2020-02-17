@@ -4,7 +4,7 @@ import semverLessThan from 'semver/functions/lt'
 import { getGnosisSafeInstanceAt } from '~/logic/contracts/safeContracts'
 import { getSafeLastVersion } from '~/config'
 
-export const checkIfSafeNeedUpdate = async (gnosisSafeInstance, lastSafeVersion) => {
+export const checkIfSafeNeedsUpdate = async (gnosisSafeInstance, lastSafeVersion) => {
   if (!gnosisSafeInstance || !lastSafeVersion) {
     return null
   }
@@ -18,7 +18,7 @@ export const checkIfSafeNeedUpdate = async (gnosisSafeInstance, lastSafeVersion)
 export const getSafeVersion = async (safeAddress: string) => {
   try {
     const safeMaster = await getGnosisSafeInstanceAt(safeAddress)
-    return checkIfSafeNeedUpdate(safeMaster, getSafeLastVersion())
+    return checkIfSafeNeedsUpdate(safeMaster, getSafeLastVersion())
   } catch (err) {
     console.error(err)
     throw err

@@ -20,16 +20,14 @@ let proxyFactoryMaster
 let safeMaster
 
 const createGnosisSafeContract = (web3: any) => {
-  const gnosisSafeSol = { ...GnosisSafeSol }
-  const gnosisSafe = contract(gnosisSafeSol)
+  const gnosisSafe = contract(GnosisSafeSol)
   gnosisSafe.setProvider(web3.currentProvider)
 
   return gnosisSafe
 }
 
 const createProxyFactoryContract = (web3: any) => {
-  const proxyFactorySol = { ...ProxyFactorySol }
-  const proxyFactory = contract(proxyFactorySol)
+  const proxyFactory = contract(ProxyFactorySol)
   proxyFactory.setProvider(web3.currentProvider)
 
   return proxyFactory
