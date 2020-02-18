@@ -59,6 +59,7 @@ type CreateTransactionArgs = {
   shouldExecute?: boolean,
   txNonce?: number,
   operation?: 0 | 1,
+  origin?: string | null,
 }
 
 const createTransaction = ({
@@ -73,6 +74,7 @@ const createTransaction = ({
   txNonce,
   operation = CALL,
   navigateToTransactionsTab = true,
+  origin = null,
 }: CreateTransactionArgs) => async (dispatch: ReduxDispatch<GlobalState>, getState: GetState<GlobalState>) => {
   const state: GlobalState = getState()
 
@@ -99,38 +101,54 @@ const createTransaction = ({
 
   let txHash
   let tx
+  const txArgs = {
+    safeInstance,
+    to,
+    valueInWei,
+    txData,
+    operation,
+    nonce,
+    safeTxGas: 0,
+    baseGas: 0,
+    gasPrice: 0,
+    gasToken: ZERO_ADDRESS,
+    refundReceiver: ZERO_ADDRESS,
+    from,
+    sigs,
+  }
+
   try {
     if (isExecution) {
       tx = await getExecutionTransaction(
-        safeInstance,
-        to,
-        valueInWei,
-        txData,
-        operation,
-        nonce,
-        0,
-        0,
-        0,
-        ZERO_ADDRESS,
-        ZERO_ADDRESS,
-        from,
-        sigs,
+        txArgs.safeInstance,
+        txArgs.to,
+        txArgs.valueInWei,
+        txArgs.txData,
+        txArgs.operation,
+        txArgs.nonce,
+        txArgs.safeTxGas,
+        txArgs.baseGas,
+        txArgs.gasPrice,
+        txArgs.gasToken,
+        txArgs.refundReceiver,
+        txArgs.from,
+        txArgs.sigs,
       )
     } else {
       tx = await getApprovalTransaction(
-        safeInstance,
-        to,
-        valueInWei,
-        txData,
-        operation,
-        nonce,
-        0,
-        0,
-        0,
-        ZERO_ADDRESS,
-        ZERO_ADDRESS,
-        from,
-        sigs,
+        txArgs.safeInstance,
+        txArgs.to,
+        txArgs.valueInWei,
+        txArgs.txData,
+        txArgs.operation,
+        txArgs.nonce,
+        txArgs.safeTxGas,
+        txArgs.baseGas,
+        txArgs.gasPrice,
+        txArgs.gasToken,
+        txArgs.refundReceiver,
+        txArgs.from,
+        txArgs.sigs,
       )
     }
 
@@ -156,20 +174,21 @@ const createTransaction = ({
 
         try {
           await saveTxToHistory(
-            safeInstance,
-            to,
-            valueInWei,
-            txData,
-            operation,
-            nonce,
-            0,
-            0,
-            0,
-            ZERO_ADDRESS,
-            ZERO_ADDRESS,
+            txArgs.safeInstance,
+            txArgs.to,
+            txArgs.valueInWei,
+            txArgs.txData,
+            txArgs.operation,
+            txArgs.nonce,
+            txArgs.safeTxGas,
+            txArgs.baseGas,
+            txArgs.gasPrice,
+            txArgs.gasToken,
+            txArgs.refundReceiver,
             txHash,
             from,
             isExecution ? TX_TYPE_EXECUTION : TX_TYPE_CONFIRMATION,
+            origin,
           )
           dispatch(fetchTransactions(safeAddress))
         } catch (err) {
