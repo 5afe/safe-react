@@ -30,7 +30,8 @@ const getCurrentMasterContractLastVersion = async () => {
 export const getSafeVersion = async (safeAddress: string) => {
   try {
     const safeMaster = await getGnosisSafeInstanceAt(safeAddress)
-    return checkIfSafeNeedsUpdate(safeMaster, getCurrentMasterContractLastVersion())
+    const lastSafeVersion = await getCurrentMasterContractLastVersion()
+    return checkIfSafeNeedsUpdate(safeMaster, lastSafeVersion)
   } catch (err) {
     console.error(err)
     throw err
