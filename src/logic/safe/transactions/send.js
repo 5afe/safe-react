@@ -6,7 +6,6 @@ import { type Operation } from '~/logic/safe/transactions'
 
 export const CALL = 0
 export const DELEGATE_CALL = 1
-
 export const TX_TYPE_EXECUTION = 'execution'
 export const TX_TYPE_CONFIRMATION = 'confirmation'
 
@@ -22,7 +21,7 @@ export const getApprovalTransaction = async (
   gasPrice: number,
   gasToken: string,
   refundReceiver: string,
-  sender: string
+  sender: string,
 ) => {
   const txHash = await safeInstance.getTransactionHash(
     to,
@@ -37,17 +36,14 @@ export const getApprovalTransaction = async (
     nonce,
     {
       from: sender,
-    }
+    },
   )
 
   try {
     const ready = await onboardUser()
     if (!ready) return null
     const web3 = getWeb3()
-    const contract = new web3.eth.Contract(
-      GnosisSafeSol.abi,
-      safeInstance.address
-    )
+    const contract = new web3.eth.Contract(GnosisSafeSol.abi, safeInstance.address)
 
     return contract.methods.approveHash(txHash)
   } catch (err) {
@@ -69,16 +65,13 @@ export const getExecutionTransaction = async (
   gasToken: string,
   refundReceiver: string,
   sender: string,
-  sigs: string
+  sigs: string,
 ) => {
   try {
     const ready = await onboardUser()
     if (!ready) return null
     const web3 = getWeb3()
-    const contract = new web3.eth.Contract(
-      GnosisSafeSol.abi,
-      safeInstance.address
-    )
+    const contract = new web3.eth.Contract(GnosisSafeSol.abi, safeInstance.address)
 
     return contract.methods.execTransaction(
       to,
@@ -90,7 +83,7 @@ export const getExecutionTransaction = async (
       gasPrice,
       gasToken,
       refundReceiver,
-      sigs
+      sigs,
     )
   } catch (err) {
     console.error(`Error while creating transaction: ${err}`)

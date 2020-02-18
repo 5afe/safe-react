@@ -11,8 +11,6 @@ const style = {
   height: '100%',
 }
 
-const Divider = ({ className }: Props) => (
-  <div className={className} style={style} />
-)
+const Divider = ({ className }: Props) => <div className={className} style={style} />
 
 export default Divider

@@ -7,13 +7,14 @@ import fetchCurrenciesRates from '~/logic/currencyValues/api/fetchCurrenciesRate
 import { currencyValuesListSelector } from '~/logic/currencyValues/store/selectors'
 import { setCurrencyBalances } from '~/logic/currencyValues/store/actions/setCurrencyBalances'
 
-
 // eslint-disable-next-line max-len
-const fetchCurrencySelectedValue = (currencyValueSelected: AVAILABLE_CURRENCIES) => async (dispatch: ReduxDispatch<GlobalState>, getState: Function) => {
+const fetchCurrencySelectedValue = (currencyValueSelected: AVAILABLE_CURRENCIES) => async (
+  dispatch: ReduxDispatch<GlobalState>,
+  getState: Function,
+) => {
   const state = getState()
   const currencyBalancesList = currencyValuesListSelector(state)
   const selectedCurrencyRateInBaseCurrency = await fetchCurrenciesRates(AVAILABLE_CURRENCIES.USD, currencyValueSelected)
-
 
   const newList = []
   for (const currencyValue of currencyBalancesList) {

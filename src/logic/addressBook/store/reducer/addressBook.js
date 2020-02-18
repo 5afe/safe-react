@@ -24,7 +24,6 @@ export const buildAddressBook = (storedAdbk: AddressBook): AddressBookProps => {
   return addressBookBuilt
 }
 
-
 export default handleActions<State, *>(
   {
     [LOAD_ADDRESS_BOOK]: (state: State, action: ActionType<Function>): State => {
@@ -44,23 +43,22 @@ export default handleActions<State, *>(
       const { entry } = action.payload
 
       // Adds the entry to all the safes (if it does not already exists)
-      const newState = state.withMutations((map) => {
+      const newState = state.withMutations(map => {
         const adbkMap = map.get('addressBook')
 
         if (adbkMap) {
-          adbkMap.keySeq()
-            .forEach((safeAddress) => {
-              const safeAddressBook = state.getIn(['addressBook', safeAddress])
+          adbkMap.keySeq().forEach(safeAddress => {
+            const safeAddressBook = state.getIn(['addressBook', safeAddress])
 
-              if (safeAddressBook) {
-                const adbkAddressList = getAddressesListFromAdbk(safeAddressBook)
-                const found = adbkAddressList.includes(entry.address)
-                if (!found) {
-                  const updatedSafeAdbkList = safeAddressBook.push(entry)
-                  map.setIn(['addressBook', safeAddress], updatedSafeAdbkList)
-                }
+            if (safeAddressBook) {
+              const adbkAddressList = getAddressesListFromAdbk(safeAddressBook)
+              const found = adbkAddressList.includes(entry.address)
+              if (!found) {
+                const updatedSafeAdbkList = safeAddressBook.push(entry)
+                map.setIn(['addressBook', safeAddress], updatedSafeAdbkList)
               }
-            })
+            }
+          })
         }
       })
       return newState
@@ -69,13 +67,13 @@ export default handleActions<State, *>(
       const { entry } = action.payload
 
       // Updates the entry from all the safes
-      const newState = state.withMutations((map) => {
+      const newState = state.withMutations(map => {
         map
           .get('addressBook')
           .keySeq()
-          .forEach((safeAddress) => {
+          .forEach(safeAddress => {
             const entriesList: List<AddressBookEntry> = state.getIn(['addressBook', safeAddress])
-            const entryIndex = entriesList.findIndex((entryItem) => sameAddress(entryItem.address, entry.address))
+            const entryIndex = entriesList.findIndex(entryItem => sameAddress(entryItem.address, entry.address))
             const updatedEntriesList = entriesList.set(entryIndex, entry)
             map.setIn(['addressBook', safeAddress], updatedEntriesList)
           })
@@ -86,13 +84,13 @@ export default handleActions<State, *>(
     [REMOVE_ENTRY]: (state: State, action: ActionType<Function>): State => {
       const { entryAddress } = action.payload
       // Removes the entry from all the safes
-      const newState = state.withMutations((map) => {
+      const newState = state.withMutations(map => {
         map
           .get('addressBook')
           .keySeq()
-          .forEach((safeAddress) => {
+          .forEach(safeAddress => {
             const entriesList = state.getIn(['addressBook', safeAddress])
-            const entryIndex = entriesList.findIndex((entry) => sameAddress(entry.address, entryAddress))
+            const entryIndex = entriesList.findIndex(entry => sameAddress(entry.address, entryAddress))
             const updatedEntriesList = entriesList.remove(entryIndex)
             map.setIn(['addressBook', safeAddress], updatedEntriesList)
           })

@@ -14,10 +14,7 @@ import Hairline from '~/components/layout/Hairline'
 import Row from '~/components/layout/Row'
 import { WELCOME_ADDRESS } from '~/routes/routes'
 import { type Safe } from '~/routes/safe/store/models/safe'
-import {
-  defaultSafeSelector,
-  safeParamAddressFromStateSelector,
-} from '~/routes/safe/store/selectors'
+import { defaultSafeSelector, safeParamAddressFromStateSelector } from '~/routes/safe/store/selectors'
 import setDefaultSafe from '~/routes/safe/store/actions/setDefaultSafe'
 import { sortedSafeListSelector } from './selectors'
 import SafeList from './SafeList'
@@ -48,16 +45,10 @@ const filterBy = (filter: string, safes: List<Safe>): List<Safe> =>
     (safe: Safe) =>
       !filter ||
       safe.address.toLowerCase().includes(filter.toLowerCase()) ||
-      safe.name.toLowerCase().includes(filter.toLowerCase())
+      safe.name.toLowerCase().includes(filter.toLowerCase()),
   )
 
-const Sidebar = ({
-  children,
-  safes,
-  setDefaultSafeAction,
-  defaultSafe,
-  currentSafe,
-}: SidebarProps) => {
+const Sidebar = ({ children, safes, setDefaultSafeAction, defaultSafe, currentSafe }: SidebarProps) => {
   const [isOpen, setIsOpen] = useState<boolean>(false)
   const [filter, setFilter] = useState<string>('')
   const classes = useSidebarStyles()
@@ -154,5 +145,5 @@ export default connect<Object, Object, ?Function, ?Object>(
     defaultSafe: defaultSafeSelector(state),
     currentSafe: safeParamAddressFromStateSelector(state),
   }),
-  { setDefaultSafeAction: setDefaultSafe }
+  { setDefaultSafeAction: setDefaultSafe },
 )(Sidebar)

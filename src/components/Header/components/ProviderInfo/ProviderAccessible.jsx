@@ -54,17 +54,9 @@ const styles = () => ({
   },
 })
 
-const ProviderInfo = ({
-  provider,
-  network,
-  userAddress,
-  connected,
-  classes,
-}: Props) => {
+const ProviderInfo = ({ provider, network, userAddress, connected, classes }: Props) => {
   const providerText = `${provider} [${network}]`
-  const cutAddress = connected
-    ? shortVersionOf(userAddress, 4)
-    : 'Connection Error'
+  const cutAddress = connected ? shortVersionOf(userAddress, 4) : 'Connection Error'
   const color = connected ? 'primary' : 'warning'
   const identiconAddress = userAddress || 'random'
 
@@ -72,32 +64,13 @@ const ProviderInfo = ({
     <>
       {connected && (
         <>
-          <Identicon
-            className={classes.identicon}
-            address={identiconAddress}
-            diameter={30}
-          />
+          <Identicon className={classes.identicon} address={identiconAddress} diameter={30} />
           <Dot className={classes.dot} />
         </>
       )}
-      {!connected && (
-        <CircleDot
-          keySize={14}
-          circleSize={35}
-          dotSize={16}
-          dotTop={24}
-          dotRight={11}
-          mode="warning"
-        />
-      )}
+      {!connected && <CircleDot keySize={14} circleSize={35} dotSize={16} dotTop={24} dotRight={11} mode="warning" />}
       <Col start="sm" layout="column" className={classes.account}>
-        <Paragraph
-          size="xs"
-          transform="capitalize"
-          className={classes.network}
-          noMargin
-          weight="bolder"
-        >
+        <Paragraph size="xs" transform="capitalize" className={classes.network} noMargin weight="bolder">
           {providerText}
         </Paragraph>
         <Paragraph size="xs" className={classes.address} noMargin color={color}>

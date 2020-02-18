@@ -29,12 +29,13 @@ export const estimateTxGasCosts = async (
     let txData
     if (isExecution) {
       // https://gnosis-safe.readthedocs.io/en/latest/contracts/signatures.html#pre-validated-signatures
-      const signatures = tx && tx.confirmations
-        ? generateSignaturesFromTxConfirmations(tx.confirmations, preApprovingOwner)
-        : `0x000000000000000000000000${from.replace(
-          '0x',
-          '',
-        )}000000000000000000000000000000000000000000000000000000000000000001`
+      const signatures =
+        tx && tx.confirmations
+          ? generateSignaturesFromTxConfirmations(tx.confirmations, preApprovingOwner)
+          : `0x000000000000000000000000${from.replace(
+              '0x',
+              '',
+            )}000000000000000000000000000000000000000000000000000000000000000001`
       txData = await safeInstance.methods
         .execTransaction(to, tx ? tx.value : 0, data, CALL, 0, 0, 0, ZERO_ADDRESS, ZERO_ADDRESS, signatures)
         .encodeABI()

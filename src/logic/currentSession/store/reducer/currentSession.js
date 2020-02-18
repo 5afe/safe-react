@@ -11,16 +11,12 @@ export type State = Map<string, *>
 
 export default handleActions<State, *>(
   {
-    [LOAD_CURRENT_SESSION]: (
-      state: State,
-      action: ActionType<Function>,
-    ): State => state.merge(Map(action.payload)),
+    [LOAD_CURRENT_SESSION]: (state: State, action: ActionType<Function>): State => state.merge(Map(action.payload)),
     [UPDATE_VIEWED_SAFES]: (state: State, action: ActionType<Function>): State => {
       const safeAddress = action.payload
 
-      const newState = state.updateIn(
-        ['viewedSafes'],
-        (prev) => (prev.includes(safeAddress) ? prev : [...prev, safeAddress]),
+      const newState = state.updateIn(['viewedSafes'], prev =>
+        prev.includes(safeAddress) ? prev : [...prev, safeAddress],
       )
 
       saveCurrentSessionToStorage(newState)

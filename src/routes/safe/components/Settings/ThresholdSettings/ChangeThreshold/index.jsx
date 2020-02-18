@@ -7,9 +7,7 @@ import IconButton from '@material-ui/core/IconButton'
 import MenuItem from '@material-ui/core/MenuItem'
 import { onboardUser } from '~/components/ConnectButton'
 import SelectField from '~/components/forms/SelectField'
-import {
-  composeValidators, minValue, mustBeInteger, required, differentFrom,
-} from '~/components/forms/validator'
+import { composeValidators, minValue, mustBeInteger, required, differentFrom } from '~/components/forms/validator'
 import Field from '~/components/forms/Field'
 import GnoForm from '~/components/forms/GnoForm'
 import Hairline from '~/components/layout/Hairline'
@@ -36,9 +34,7 @@ type Props = {
 
 const THRESHOLD_FIELD_NAME = 'threshold'
 
-const ChangeThreshold = ({
-  onClose, owners, threshold, classes, onChangeThreshold, safeAddress,
-}: Props) => {
+const ChangeThreshold = ({ onClose, owners, threshold, classes, onChangeThreshold, safeAddress }: Props) => {
   const [gasCosts, setGasCosts] = useState<string>('< 0.001')
 
   useEffect(() => {
@@ -65,7 +61,7 @@ const ChangeThreshold = ({
     }
   }, [])
 
-  const handleSubmit = (values) => {
+  const handleSubmit = values => {
     const newThreshold = values[THRESHOLD_FIELD_NAME]
 
     onClose()

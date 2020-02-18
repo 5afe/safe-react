@@ -33,7 +33,7 @@ const fetchTokenBalances = (safeAddress: string, tokens: List<Token>) => async (
   }
   try {
     const withBalances = await Promise.all(
-      tokens.map(async (token) => {
+      tokens.map(async token => {
         const balance = await calculateBalanceOf(token.address, safeAddress, token.decimals)
         return {
           address: token.address,
@@ -42,7 +42,7 @@ const fetchTokenBalances = (safeAddress: string, tokens: List<Token>) => async (
       }),
     )
 
-    const balances = Map().withMutations((map) => {
+    const balances = Map().withMutations(map => {
       withBalances.forEach(({ address, balance }) => {
         map.set(address, balance)
       })

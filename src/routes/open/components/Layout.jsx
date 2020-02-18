@@ -25,19 +25,16 @@ const { useEffect } = React
 
 const getSteps = () => ['Name', 'Owners and confirmations', 'Review']
 
-
 const initialValuesFrom = (userAccount: string, safeProps?: SafePropsType) => {
   if (!safeProps) {
-    return ({
+    return {
       [getOwnerNameBy(0)]: 'My Wallet',
       [getOwnerAddressBy(0)]: userAccount,
       [FIELD_CONFIRMATIONS]: '1',
-    })
+    }
   }
   let obj = {}
-  const {
-    ownerAddresses, ownerNames, threshold, name,
-  } = safeProps
+  const { ownerAddresses, ownerNames, threshold, name } = safeProps
   // eslint-disable-next-line no-restricted-syntax
   for (const [index, value] of ownerAddresses.entries()) {
     const safeName = ownerNames[index] ? ownerNames[index] : 'My Wallet'
@@ -47,11 +44,11 @@ const initialValuesFrom = (userAccount: string, safeProps?: SafePropsType) => {
       [getOwnerNameBy(index)]: safeName,
     }
   }
-  return ({
+  return {
     ...obj,
     [FIELD_CONFIRMATIONS]: threshold || '1',
     [FIELD_SAFE_NAME]: name,
-  })
+  }
 }
 
 type Props = {
@@ -78,11 +75,8 @@ const formMutators = {
   },
 }
 
-
 const Layout = (props: Props) => {
-  const {
-    provider, userAccount, onCallSafeContractSubmit, network, safeProps,
-  } = props
+  const { provider, userAccount, onCallSafeContractSubmit, network, safeProps } = props
 
   useEffect(() => {
     if (provider) {

@@ -41,10 +41,10 @@ const ThresholdSettings = ({
   const [isModalOpen, setModalOpen] = useState(false)
 
   const toggleModal = () => {
-    setModalOpen((prevOpen) => !prevOpen)
+    setModalOpen(prevOpen => !prevOpen)
   }
 
-  const onChangeThreshold = async (newThreshold) => {
+  const onChangeThreshold = async newThreshold => {
     const ready = await onboardUser()
     if (!ready) return
     const safeInstance = await getGnosisSafeInstanceAt(safeAddress)
@@ -65,17 +65,9 @@ const ThresholdSettings = ({
     <>
       <Block className={classes.container}>
         <Heading tag="h2">Required confirmations</Heading>
-        <Paragraph>
-          Any transaction requires the confirmation of:
-        </Paragraph>
+        <Paragraph>Any transaction requires the confirmation of:</Paragraph>
         <Paragraph size="lg" className={classes.ownersText}>
-          <Bold>{threshold}</Bold>
-          {' '}
-          out of
-          {' '}
-          <Bold>{owners.size}</Bold>
-          {' '}
-          owners
+          <Bold>{threshold}</Bold> out of <Bold>{owners.size}</Bold> owners
         </Paragraph>
         {owners.size > 1 && granted && (
           <Row className={classes.buttonRow}>

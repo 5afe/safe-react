@@ -22,7 +22,7 @@ export const generateSignaturesFromTxConfirmations = (
   let sigs = '0x'
   Object.keys(confirmationsMap)
     .sort()
-    .forEach((addr) => {
+    .forEach(addr => {
       const conf = confirmationsMap[addr]
       if (conf.signature) {
         sigs += conf.signature.slice(2)

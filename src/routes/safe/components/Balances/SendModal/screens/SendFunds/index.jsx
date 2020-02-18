@@ -18,13 +18,7 @@ import ButtonLink from '~/components/layout/ButtonLink'
 import Field from '~/components/forms/Field'
 import TextField from '~/components/forms/TextField'
 import { type Token } from '~/logic/tokens/store/model/token'
-import {
-  composeValidators,
-  required,
-  mustBeFloat,
-  maxValue,
-  greaterThan,
-} from '~/components/forms/validator'
+import { composeValidators, required, mustBeFloat, maxValue, greaterThan } from '~/components/forms/validator'
 import TokenSelectField from '~/routes/safe/components/Balances/SendModal/screens/SendFunds/TokenSelectField'
 import SafeInfo from '~/routes/safe/components/Balances/SendModal/SafeInfo'
 import ScanQRModal from '~/components/ScanQRModal'
@@ -47,7 +41,7 @@ type Props = {
   tokens: List<Token>,
   onSubmit: Function,
   initialValues: Object,
-  recipientAddress?: string
+  recipientAddress?: string,
 }
 
 const formMutators = {
@@ -88,7 +82,7 @@ const SendFunds = ({
     }
   }, [selectedEntry, pristine])
 
-  const handleSubmit = (values) => {
+  const handleSubmit = values => {
     const submitValues = values
     // If the input wasn't modified, there was no mutation of the recipientAddress
     if (!values.recipientAddress) {
@@ -117,20 +111,14 @@ const SendFunds = ({
         </IconButton>
       </Row>
       <Hairline />
-      <GnoForm
-        onSubmit={handleSubmit}
-        formMutators={formMutators}
-        initialValues={initialValues}
-      >
+      <GnoForm onSubmit={handleSubmit} formMutators={formMutators} initialValues={initialValues}>
         {(...args) => {
           const formState = args[2]
           const mutators = args[3]
           const { token: tokenAddress } = formState.values
-          const selectedTokenRecord = tokens.find(
-            (token) => token.address === tokenAddress,
-          )
+          const selectedTokenRecord = tokens.find(token => token.address === tokenAddress)
 
-          const handleScan = (value) => {
+          const handleScan = value => {
             let scannedAddress = value
 
             if (scannedAddress.startsWith('ethereum:')) {
@@ -149,18 +137,10 @@ const SendFunds = ({
           return (
             <>
               <Block className={classes.formContainer}>
-                <SafeInfo
-                  safeAddress={safeAddress}
-                  safeName={safeName}
-                  ethBalance={ethBalance}
-                />
+                <SafeInfo safeAddress={safeAddress} safeName={safeName} ethBalance={ethBalance} />
                 <Row margin="md">
                   <Col xs={1}>
-                    <img
-                      src={ArrowDown}
-                      alt="Arrow Down"
-                      style={{ marginLeft: sm }}
-                    />
+                    <img src={ArrowDown} alt="Arrow Down" style={{ marginLeft: sm }} />
                   </Col>
                   <Col xs={11} center="xs" layout="column">
                     <Hairline />
@@ -170,28 +150,20 @@ const SendFunds = ({
                   <div
                     role="listbox"
                     tabIndex="0"
-                    onKeyDown={(e) => {
+                    onKeyDown={e => {
                       if (e.keyCode !== 9) {
                         setSelectedEntry(null)
                       }
                     }}
                   >
                     <Row margin="xs">
-                      <Paragraph
-                        size="md"
-                        color="disabled"
-                        style={{ letterSpacing: '-0.5px' }}
-                        noMargin
-                      >
+                      <Paragraph size="md" color="disabled" style={{ letterSpacing: '-0.5px' }} noMargin>
                         Recipient
                       </Paragraph>
                     </Row>
                     <Row margin="md" align="center">
                       <Col xs={1}>
-                        <Identicon
-                          address={selectedEntry.address}
-                          diameter={32}
-                        />
+                        <Identicon address={selectedEntry.address} diameter={32} />
                       </Col>
                       <Col xs={11} layout="column">
                         <Block justify="left">
@@ -214,10 +186,7 @@ const SendFunds = ({
                             </Paragraph>
                           </Block>
                           <CopyBtn content={selectedEntry.address} />
-                          <EtherscanBtn
-                            type="address"
-                            value={selectedEntry.address}
-                          />
+                          <EtherscanBtn type="address" value={selectedEntry.address} />
                         </Block>
                       </Col>
                     </Row>
@@ -251,26 +220,15 @@ const SendFunds = ({
                 )}
                 <Row margin="sm">
                   <Col>
-                    <TokenSelectField
-                      tokens={tokens}
-                      initialValue={selectedToken}
-                    />
+                    <TokenSelectField tokens={tokens} initialValue={selectedToken} />
                   </Col>
                 </Row>
                 <Row margin="xs">
                   <Col between="lg">
-                    <Paragraph
-                      size="md"
-                      color="disabled"
-                      style={{ letterSpacing: '-0.5px' }}
-                      noMargin
-                    >
+                    <Paragraph size="md" color="disabled" style={{ letterSpacing: '-0.5px' }} noMargin>
                       Amount
                     </Paragraph>
-                    <ButtonLink
-                      weight="bold"
-                      onClick={() => mutators.setMax(selectedTokenRecord.balance)}
-                    >
+                    <ButtonLink weight="bold" onClick={() => mutators.setMax(selectedTokenRecord.balance)}>
                       Send max
                     </ButtonLink>
                   </Col>
@@ -285,20 +243,14 @@ const SendFunds = ({
                         required,
                         mustBeFloat,
                         greaterThan(0),
-                        maxValue(
-                          selectedTokenRecord && selectedTokenRecord.balance,
-                        ),
+                        maxValue(selectedTokenRecord && selectedTokenRecord.balance),
                       )}
                       placeholder="Amount*"
                       text="Amount*"
                       className={classes.addressInput}
                       inputAdornment={
                         selectedTokenRecord && {
-                          endAdornment: (
-                            <InputAdornment position="end">
-                              {selectedTokenRecord.symbol}
-                            </InputAdornment>
-                          ),
+                          endAdornment: <InputAdornment position="end">{selectedTokenRecord.symbol}</InputAdornment>,
                         }
                       }
                     />
@@ -327,13 +279,7 @@ const SendFunds = ({
                   Review
                 </Button>
               </Row>
-              {qrModalOpen && (
-                <ScanQRModal
-                  isOpen={qrModalOpen}
-                  onScan={handleScan}
-                  onClose={closeQrModal}
-                />
-              )}
+              {qrModalOpen && <ScanQRModal isOpen={qrModalOpen} onScan={handleScan} onClose={closeQrModal} />}
             </>
           )
         }}

@@ -6,7 +6,7 @@ import cn from 'classnames'
 import { withStyles } from '@material-ui/core/styles'
 
 // TODO: move these styles to a generic place
-import { styles } from '../../Settings/style'
+import styles from './style'
 
 const Wrapper = styled.div``
 
@@ -23,17 +23,24 @@ const IconImg = styled.img`
   width: 20px;
   margin-right: 10px;
 `
+type Props = {
+  items: Array<{
+    id: string,
+    name: string,
+    iconUrl?: string,
+  }>,
+  activeItem: string,
+  onItemClick: () => void,
+  classes: Object,
+}
 
-const List = ({ items, activeItem, onItemClick, classes }: any) => {
+const List = ({ items, activeItem, onItemClick, classes }: Props) => {
   return (
     <Wrapper>
       {items.map(i => (
         <Item
           key={i.id}
-          className={cn(
-            classes.menuOption,
-            activeItem === i.id && classes.active
-          )}
+          className={cn(classes.menuOption, activeItem === i.id && classes.active)}
           onClick={() => onItemClick(i.id)}
         >
           <div className="container">
