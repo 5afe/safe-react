@@ -72,13 +72,7 @@ const useStyles = makeStyles({
   },
 })
 
-const SafeList = ({
-  safes,
-  onSafeClick,
-  setDefaultSafe,
-  defaultSafe,
-  currentSafe,
-}: SafeListProps) => {
+const SafeList = ({ safes, onSafeClick, setDefaultSafe, defaultSafe, currentSafe }: SafeListProps) => {
   const classes = useStyles()
 
   return (
@@ -99,11 +93,7 @@ const SafeList = ({
                 <div className={classes.noIcon}>placeholder</div>
               )}
               <ListItemIcon>
-                <Identicon
-                  address={safe.address}
-                  diameter={32}
-                  className={classes.icon}
-                />
+                <Identicon address={safe.address} diameter={32} className={classes.icon} />
               </ListItemIcon>
               <ListItemText
                 primary={safe.name}

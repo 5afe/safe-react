@@ -39,13 +39,14 @@ export const stableSort = (dataArray: List<any>, cmp: any, fixed: boolean): List
     return a[1] - b[1]
   })
 
-  const sortedElems: List<any> = stabilizedThis.map((el) => el[0])
+  const sortedElems: List<any> = stabilizedThis.map(el => el[0])
 
   return fixedElems.concat(sortedElems)
 }
 
 export type Order = 'asc' | 'desc'
 
-export const getSorting = (order: Order, orderBy: string, orderProp: boolean) => (order === 'desc'
-  ? (a: any, b: any) => desc(a, b, orderBy, orderProp)
-  : (a: any, b: any) => -desc(a, b, orderBy, orderProp))
+export const getSorting = (order: Order, orderBy: string, orderProp: boolean) =>
+  order === 'desc'
+    ? (a: any, b: any) => desc(a, b, orderBy, orderProp)
+    : (a: any, b: any) => -desc(a, b, orderBy, orderProp)

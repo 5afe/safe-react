@@ -38,9 +38,7 @@ const styles = {
   },
 }
 
-const Opening = ({
-  classes, name = 'Safe creation process', tx,
-}: Props) => (
+const Opening = ({ classes, name = 'Safe creation process', tx }: Props) => (
   <Page align="center">
     <Paragraph color="primary" size="xxl" weight="bold" align="center">
       {name}
@@ -61,20 +59,12 @@ const Opening = ({
     </Block>
     <Block margin="md">
       <Paragraph size="md" align="center" weight="light" noMargin>
-        This process should take a couple of minutes.
-        {' '}
-        <br />
+        This process should take a couple of minutes. <br />
       </Paragraph>
       {tx && (
         <Paragraph className={classes.follow} size="md" align="center" weight="light" noMargin>
-          Follow progress on
-          {' '}
-          <a
-            href={getEtherScanLink('tx', tx)}
-            target="_blank"
-            rel="noopener noreferrer"
-            className={classes.etherscan}
-          >
+          Follow progress on{' '}
+          <a href={getEtherScanLink('tx', tx)} target="_blank" rel="noopener noreferrer" className={classes.etherscan}>
             Etherscan.io
             <OpenInNew className={classes.icon} />
           </a>

@@ -4,7 +4,7 @@ import { getWeb3 } from '~/logic/wallets/getWeb3'
 import { EMPTY_DATA } from '~/logic/wallets/ethTransactions'
 import { getGnosisSafeInstanceAt } from '~/logic/contracts/safeContracts'
 
-const estimateDataGasCosts = (data) => {
+const estimateDataGasCosts = data => {
   const reducer = (accumulator, currentValue) => {
     if (currentValue === EMPTY_DATA) {
       return accumulator + 0

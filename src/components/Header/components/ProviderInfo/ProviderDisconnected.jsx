@@ -32,22 +32,9 @@ const styles = () => ({
 
 const ProviderDisconnected = ({ classes }: Props) => (
   <>
-    <CircleDot
-      keySize={17}
-      circleSize={35}
-      dotSize={16}
-      dotTop={24}
-      dotRight={11}
-      mode="error"
-    />
+    <CircleDot keySize={17} circleSize={35} dotSize={16} dotTop={24} dotRight={11} mode="error" />
     <Col end="sm" middle="xs" layout="column" className={classes.account}>
-      <Paragraph
-        size="sm"
-        transform="capitalize"
-        className={classes.network}
-        noMargin
-        weight="bold"
-      >
+      <Paragraph size="sm" transform="capitalize" className={classes.network} noMargin weight="bold">
         Not Connected
       </Paragraph>
       <Paragraph size="sm" color="fancy" className={classes.connect} noMargin>

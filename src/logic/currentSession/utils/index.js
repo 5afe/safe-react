@@ -4,7 +4,8 @@ import { loadFromStorage, saveToStorage } from '~/utils/storage'
 
 const CURRENT_SESSION_STORAGE_KEY = 'CURRENT_SESSION'
 
-export const getCurrentSessionFromStorage = async (): Promise<CurrentSessionProps | *> => loadFromStorage(CURRENT_SESSION_STORAGE_KEY)
+export const getCurrentSessionFromStorage = async (): Promise<CurrentSessionProps | *> =>
+  loadFromStorage(CURRENT_SESSION_STORAGE_KEY)
 
 export const saveCurrentSessionToStorage = async (currentSession: CurrentSession): Promise<*> => {
   try {

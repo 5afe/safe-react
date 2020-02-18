@@ -6,7 +6,7 @@ import Layout from '../components/Layout'
 import selector from './selector'
 
 type Props = {
-  provider: string
+  provider: string,
 }
 
 const Welcome = ({ provider }: Props) => (

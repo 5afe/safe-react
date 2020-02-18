@@ -1,7 +1,5 @@
 // @flow
-import {
-  border, sm, boldFont, primary, secondary, secondaryText, error,
-} from '~/theme/variables'
+import { border, sm, boldFont, primary, secondary, secondaryText, error } from '~/theme/variables'
 
 export const styles = () => ({
   ownersList: {
@@ -106,6 +104,5 @@ export const styles = () => ({
     height: '24px',
     lineHeight: '24px',
     padding: '0 12px',
-
   },
 })

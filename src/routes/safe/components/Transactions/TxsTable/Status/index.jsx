@@ -44,11 +44,7 @@ const Status = ({ classes, status }: Props) => {
 
   return (
     <Block className={`${classes.container} ${classes[status]}`}>
-      {typeof Icon === 'object' ? (
-        Icon
-      ) : (
-        <Img src={Icon} alt={statusToLabel[status]} style={statusIconStyle} />
-      )}
+      {typeof Icon === 'object' ? Icon : <Img src={Icon} alt={statusToLabel[status]} style={statusIconStyle} />}
       <Paragraph noMargin className={classes.statusText}>
         {statusToLabel[status]}
       </Paragraph>

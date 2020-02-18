@@ -60,7 +60,7 @@ const ReviewRemoveOwner = ({
 
       const gnosisSafe = await getGnosisSafeInstanceAt(safeAddress)
       const safeOwners = await gnosisSafe.getOwners()
-      const index = safeOwners.findIndex((owner) => owner.toLowerCase() === ownerAddress.toLowerCase())
+      const index = safeOwners.findIndex(owner => owner.toLowerCase() === ownerAddress.toLowerCase())
       const prevAddress = index === 0 ? SENTINEL_ADDRESS : safeOwners[index - 1]
       const txData = gnosisSafe.contract.methods.swapOwner(prevAddress, ownerAddress, values.ownerAddress).encodeABI()
       const estimatedGasCosts = await estimateTxGasCosts(safeAddress, safeAddress, txData)
@@ -124,30 +124,31 @@ const ReviewRemoveOwner = ({
             </Row>
             <Hairline />
             {owners.map(
-              (owner) => owner.address !== ownerAddress && (
-                <React.Fragment key={owner.address}>
-                  <Row className={classes.owner}>
-                    <Col xs={1} align="center">
-                      <Identicon address={owner.address} diameter={32} />
-                    </Col>
-                    <Col xs={11}>
-                      <Block className={classNames(classes.name, classes.userName)}>
-                        <Paragraph weight="bolder" size="lg" noMargin>
-                          {owner.name}
-                        </Paragraph>
-                        <Block justify="center" className={classes.user}>
-                          <Paragraph size="md" color="disabled" className={classes.address} noMargin>
-                            {owner.address}
+              owner =>
+                owner.address !== ownerAddress && (
+                  <React.Fragment key={owner.address}>
+                    <Row className={classes.owner}>
+                      <Col xs={1} align="center">
+                        <Identicon address={owner.address} diameter={32} />
+                      </Col>
+                      <Col xs={11}>
+                        <Block className={classNames(classes.name, classes.userName)}>
+                          <Paragraph weight="bolder" size="lg" noMargin>
+                            {owner.name}
                           </Paragraph>
-                          <CopyBtn content={owner.address} />
-                          <EtherscanBtn type="address" value={owner.address} />
+                          <Block justify="center" className={classes.user}>
+                            <Paragraph size="md" color="disabled" className={classes.address} noMargin>
+                              {owner.address}
+                            </Paragraph>
+                            <CopyBtn content={owner.address} />
+                            <EtherscanBtn type="address" value={owner.address} />
+                          </Block>
                         </Block>
-                      </Block>
-                    </Col>
-                  </Row>
-                  <Hairline />
-                </React.Fragment>
-              ),
+                      </Col>
+                    </Row>
+                    <Hairline />
+                  </React.Fragment>
+                ),
             )}
             <Row className={classes.info} align="center">
               <Paragraph weight="bolder" noMargin color="primary" size="md">

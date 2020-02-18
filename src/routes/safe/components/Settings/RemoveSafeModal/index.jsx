@@ -35,15 +35,7 @@ type Props = Actions & {
   safeName: string,
 }
 
-const RemoveSafeComponent = ({
-  onClose,
-  isOpen,
-  classes,
-  safeAddress,
-  etherScanLink,
-  safeName,
-  removeSafe,
-}: Props) => (
+const RemoveSafeComponent = ({ onClose, isOpen, classes, safeAddress, etherScanLink, safeName, removeSafe }: Props) => (
   <Modal
     paperClassName={classes.modal}
     title="Remove Safe"
@@ -84,9 +76,8 @@ const RemoveSafeComponent = ({
       <Hairline />
       <Row className={classes.description}>
         <Paragraph noMargin>
-          Removing a Safe only removes it from your interface.{' '}
-          <b>It does not delete the Safe</b>. You can always add it back using
-          the Safe&apos;s address.
+          Removing a Safe only removes it from your interface. <b>It does not delete the Safe</b>. You can always add it
+          back using the Safe&apos;s address.
         </Paragraph>
       </Row>
     </Block>

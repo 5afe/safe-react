@@ -98,20 +98,14 @@ const TxsTable = ({
               <React.Fragment key={index}>
                 <TableRow
                   tabIndex={-1}
-                  className={cn(
-                    classes.row,
-                    expandedTx === row.tx.safeTxHash && classes.expandedRow
-                  )}
+                  className={cn(classes.row, expandedTx === row.tx.safeTxHash && classes.expandedRow)}
                   onClick={() => handleTxExpand(row.tx.safeTxHash)}
                   data-testid={TRANSACTION_ROW_TEST_ID}
                 >
                   {autoColumns.map((column: Column) => (
                     <TableCell
                       key={column.id}
-                      className={cn(
-                        classes.cell,
-                        row.status === 'cancelled' && classes.cancelledRow
-                      )}
+                      className={cn(classes.cell, row.status === 'cancelled' && classes.cancelledRow)}
                       style={cellWidth(column.width)}
                       align={column.align}
                       component="td"
@@ -127,11 +121,7 @@ const TxsTable = ({
                   <TableCell style={expandCellStyle}>
                     {!row.tx.creationTx && (
                       <IconButton disableRipple>
-                        {expandedTx === row.safeTxHash ? (
-                          <ExpandLess />
-                        ) : (
-                          <ExpandMore />
-                        )}
+                        {expandedTx === row.safeTxHash ? <ExpandLess /> : <ExpandMore />}
                       </IconButton>
                     )}
                   </TableCell>

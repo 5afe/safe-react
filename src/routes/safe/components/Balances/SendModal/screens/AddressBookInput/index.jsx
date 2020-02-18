@@ -80,6 +80,16 @@ const AddressBookInput = ({
       if (isCustomTx && isValidText === undefined) {
         isValidText = await mustBeEthereumContractAddress(resolvedAddress)
       }
+
+      // Filters the entries based on the input of the user
+      const filteredADBK = addressBook.filter(adbkEntry => {
+        const { name, address } = adbkEntry
+        return (
+          name.toLowerCase().includes(addressValue.toLowerCase()) ||
+          address.toLowerCase().includes(addressValue.toLowerCase())
+        )
+      })
+      setADBKList(filteredADBK)
     }
     setIsValidForm(isValidText === undefined)
     setValidationText(isValidText)

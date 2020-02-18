@@ -32,10 +32,10 @@ type Props = {
   safeAddress: string,
   createTransaction: Function,
   processTransaction: Function,
-  nonce: number
+  nonce: number,
 }
 
-type OpenModal = "rejectTx" | "approveTx" | "executeRejectTx" | null
+type OpenModal = 'rejectTx' | 'approveTx' | 'executeRejectTx' | null
 
 const useStyles = makeStyles(styles)
 
@@ -73,19 +73,10 @@ const ExpandedTx = ({
       <Block className={classes.expandedTxBlock}>
         <Row>
           <Col xs={6} layout="column">
-            <Block
-              className={cn(
-                classes.txDataContainer,
-                tx.type === INCOMING_TX_TYPE && classes.incomingTxBlock,
-              )}
-            >
+            <Block className={cn(classes.txDataContainer, tx.type === INCOMING_TX_TYPE && classes.incomingTxBlock)}>
               <Block align="left" className={classes.txData}>
                 <Bold className={classes.txHash}>Hash:</Bold>
-                {tx.executionTxHash ? (
-                  <EtherScanLink type="tx" value={tx.executionTxHash} cut={8} />
-                ) : (
-                  'n/a'
-                )}
+                {tx.executionTxHash ? <EtherScanLink type="tx" value={tx.executionTxHash} cut={8} /> : 'n/a'}
               </Block>
               <Paragraph noMargin>
                 <Bold>Nonce: </Bold>
@@ -117,11 +108,7 @@ const ExpandedTx = ({
                   {tx.refundParams && (
                     <Paragraph noMargin>
                       <Bold>Refund: </Bold>
-                      max.
-                      {' '}
-                      {tx.refundParams.fee}
-                      {' '}
-                      {tx.refundParams.symbol}
+                      max. {tx.refundParams.fee} {tx.refundParams.symbol}
                     </Paragraph>
                   )}
                   {tx.operation === 1 && (
@@ -138,11 +125,7 @@ const ExpandedTx = ({
               )}
             </Block>
             <Hairline />
-            {tx.type === INCOMING_TX_TYPE ? (
-              <IncomingTxDescription tx={tx} />
-            ) : (
-              <TxDescription tx={tx} />
-            )}
+            {tx.type === INCOMING_TX_TYPE ? <IncomingTxDescription tx={tx} /> : <TxDescription tx={tx} />}
           </Col>
           {tx.type !== INCOMING_TX_TYPE && (
             <OwnersColumn

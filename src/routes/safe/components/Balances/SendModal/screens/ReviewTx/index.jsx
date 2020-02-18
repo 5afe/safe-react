@@ -58,7 +58,7 @@ const ReviewTx = ({
   closeSnackbar,
 }: Props) => {
   const [gasCosts, setGasCosts] = useState<string>('< 0.001')
-  const txToken = tokens.find((token) => token.address === tx.token)
+  const txToken = tokens.find(token => token.address === tx.token)
   const isSendingETH = txToken.address === ETH_ADDRESS
   const txRecipient = isSendingETH ? tx.recipientAddress : txToken.address
 
@@ -170,9 +170,7 @@ const ReviewTx = ({
         <Row margin="md" align="center">
           <Img src={txToken.logoUri} height={28} alt={txToken.name} onError={setImageToPlaceholder} />
           <Paragraph size="md" noMargin className={classes.amount}>
-            {tx.amount}
-            {' '}
-            {txToken.symbol}
+            {tx.amount} {txToken.symbol}
           </Paragraph>
         </Row>
         <Row>

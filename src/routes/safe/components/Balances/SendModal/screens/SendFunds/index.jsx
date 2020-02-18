@@ -18,13 +18,7 @@ import ButtonLink from '~/components/layout/ButtonLink'
 import Field from '~/components/forms/Field'
 import TextField from '~/components/forms/TextField'
 import { type Token } from '~/logic/tokens/store/model/token'
-import {
-  composeValidators,
-  required,
-  mustBeFloat,
-  maxValue,
-  greaterThan,
-} from '~/components/forms/validator'
+import { composeValidators, required, mustBeFloat, maxValue, greaterThan } from '~/components/forms/validator'
 import TokenSelectField from '~/routes/safe/components/Balances/SendModal/screens/SendFunds/TokenSelectField'
 import SafeInfo from '~/routes/safe/components/Balances/SendModal/SafeInfo'
 import ScanQRModal from '~/components/ScanQRModal'
@@ -117,11 +111,7 @@ const SendFunds = ({
         </IconButton>
       </Row>
       <Hairline />
-      <GnoForm
-        onSubmit={handleSubmit}
-        formMutators={formMutators}
-        initialValues={initialValues}
-      >
+      <GnoForm onSubmit={handleSubmit} formMutators={formMutators} initialValues={initialValues}>
         {(...args) => {
           const formState = args[2]
           const mutators = args[3]

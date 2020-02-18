@@ -60,9 +60,7 @@ export const getEtherScanLink = (type: 'address' | 'tx', value: string) => {
 const getInfuraUrl = () => {
   const isMainnet = process.env.REACT_APP_NETWORK === 'mainnet'
 
-  return `https://${isMainnet ? 'mainnet' : 'rinkeby'}.infura.io:443/v3/${
-    process.env.REACT_APP_INFURA_TOKEN
-  }`
+  return `https://${isMainnet ? 'mainnet' : 'rinkeby'}.infura.io:443/v3/${process.env.REACT_APP_INFURA_TOKEN}`
 }
 
 // With some wallets from web3connect you have to use their provider instance only for signing
@@ -130,9 +128,7 @@ const getProviderName: Function = (web3Provider): string => {
   return name
 }
 
-export const getAccountFrom: Function = async (
-  web3Provider
-): Promise<string | null> => {
+export const getAccountFrom: Function = async (web3Provider): Promise<string | null> => {
   const accounts = await web3Provider.eth.getAccounts()
 
   if (process.env.NODE_ENV === 'test' && window.testAccountIndex) {
@@ -148,9 +144,7 @@ const getNetworkIdFrom = async web3Provider => {
   return networkId
 }
 
-export const getProviderInfo: Function = async (
-  web3Provider
-): Promise<ProviderProps> => {
+export const getProviderInfo: Function = async (web3Provider): Promise<ProviderProps> => {
   web3 = new Web3(web3Provider)
 
   const name = getProviderName(web3)
