@@ -19,25 +19,33 @@
     "build": "REACT_APP_APP_VERSION=$npm_package_version node scripts/build.js",
     "build-mainnet": "REACT_APP_NETWORK=mainnet yarn build",
     "flow": "flow",
-    "precommit": "./precommit.sh",
+    "format:staged": "lint-staged",
+    "lint:check": "eslint './src/**/*.{js,jsx}'",
+    "lint:fix": "yarn lint:check --fix",
+    "prettier": "prettier './src/**/*.{js,jsx}'",
+    "prettier:check": "yarn prettier --check",
+    "prettier:fix": "yarn prettier --write",
     "start": "node scripts/start.js",
     "start-mainnet": "REACT_APP_NETWORK=mainnet yarn start",
-    "test": "NODE_ENV=test && node scripts/test.js --env=jsdom",
-    "format": "prettier-eslint $PWD'/src/**/*.{js,jsx}' --write",
-    "format:staged": "lint-staged"
+    "test": "NODE_ENV=test && node scripts/test.js --env=jsdom"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged --allow-empty"
+    }
   },
   "lint-staged": {
-    "./src/**/*.{js,jsx}": "prettier-eslint --write"
+    "src/**/*.{js,jsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ]
   },
-  "pre-commit": [
-    "precommit"
-  ],
   "dependencies": {
-    "@gnosis.pm/safe-contracts": "1.0.0",
-    "@gnosis.pm/util-contracts": "2.0.4",
+    "@gnosis.pm/safe-contracts": "1.1.1-dev.1",
+    "@gnosis.pm/util-contracts": "2.0.6",
     "@material-ui/core": "4.8.0",
     "@material-ui/icons": "4.5.1",
-    "@material-ui/lab": "^4.0.0-alpha.39",
+    "@material-ui/lab": "4.0.0-alpha.39",
     "@portis/web3": "^2.0.0-beta.45",
     "@testing-library/jest-dom": "4.2.4",
     "@toruslabs/torus-embed": "0.2.10",
@@ -50,7 +58,7 @@
     "currency-flags": "^2.1.1",
     "date-fns": "2.8.1",
     "dotenv": "^8.2.0",
-    "ethereum-ens": "0.7.8",
+    "ethereum-ens": "0.8.0",
     "final-form": "4.18.6",
     "fortmatic": "^1.0.1",
     "history": "4.10.1",
@@ -83,7 +91,7 @@
     "semver": "^7.1.1",
     "styled-components": "^5.0.1",
     "web3": "1.2.4",
-    "web3connect": "^1.0.0-beta.25"
+    "web3connect": "1.0.0-beta.25"
   },
   "devDependencies": {
     "@babel/cli": "7.7.5",
@@ -124,15 +132,13 @@
     "css-loader": "3.4.0",
     "detect-port": "^1.3.0",
     "dotenv-expand": "^5.1.0",
-    "eslint": "6.7.2",
-    "eslint-config-airbnb": "18.0.1",
+    "eslint": "^6.8.0",
     "eslint-config-prettier": "^6.10.0",
-    "eslint-plugin-flowtype": "4.5.2",
-    "eslint-plugin-import": "2.19.1",
-    "eslint-plugin-jest": "23.1.1",
-    "eslint-plugin-jsx-a11y": "6.2.3",
+    "eslint-plugin-flowtype": "^4.6.0",
+    "eslint-plugin-import": "^2.20.1",
+    "eslint-plugin-jsx-a11y": "^6.2.3",
     "eslint-plugin-prettier": "^3.1.2",
-    "eslint-plugin-react": "7.17.0",
+    "eslint-plugin-react": "^7.18.3",
     "ethereumjs-abi": "0.6.8",
     "extract-text-webpack-plugin": "^4.0.0-beta.0",
     "file-loader": "5.0.2",
@@ -140,6 +146,7 @@
     "fs-extra": "8.1.0",
     "html-loader": "^0.5.5",
     "html-webpack-plugin": "^3.2.0",
+    "husky": "^4.2.2",
     "jest": "24.9.0",
     "jest-dom": "4.0.0",
     "json-loader": "^0.5.7",
@@ -147,9 +154,7 @@
     "postcss-loader": "^3.0.0",
     "postcss-mixins": "6.2.3",
     "postcss-simple-vars": "^5.0.2",
-    "pre-commit": "^1.2.2",
     "prettier": "^1.19.1",
-    "prettier-eslint-cli": "5.0.0",
     "run-with-testrpc": "0.3.1",
     "style-loader": "1.0.2",
     "terser-webpack-plugin": "2.3.1",

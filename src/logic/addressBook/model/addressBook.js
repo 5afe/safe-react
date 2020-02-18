@@ -2,13 +2,13 @@
 import type { RecordOf } from 'immutable'
 
 export type AddressBookEntry = {
-  address: string;
-  name: string;
-  isOwner: boolean;
+  address: string,
+  name: string,
+  isOwner: boolean,
 }
 
 export type AddressBookProps = {
-  addressBook: Map<string, AddressBookEntry>
+  addressBook: Map<string, AddressBookEntry>,
 }
 
 export type AddressBook = RecordOf<AddressBookProps>

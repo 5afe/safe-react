@@ -77,12 +77,7 @@ const RejectTxModal = ({
   }
 
   return (
-    <Modal
-      title="Reject Transaction"
-      description="Reject Transaction"
-      handleClose={onClose}
-      open={isOpen}
-    >
+    <Modal title="Reject Transaction" description="Reject Transaction" handleClose={onClose} open={isOpen}>
       <Row align="center" grow className={classes.heading}>
         <Paragraph weight="bolder" className={classes.headingText} noMargin>
           Reject transaction

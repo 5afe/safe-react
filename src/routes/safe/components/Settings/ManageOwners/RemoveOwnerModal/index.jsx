@@ -35,7 +35,7 @@ type Props = {
   removeSafeOwner: Function,
   enqueueSnackbar: Function,
   closeSnackbar: Function,
-  safe: Safe
+  safe: Safe,
 }
 
 type ActiveScreen = 'checkOwner' | 'selectThreshold' | 'reviewRemoveOwner'
@@ -54,9 +54,7 @@ export const sendRemoveOwner = async (
 ) => {
   const gnosisSafe = await getGnosisSafeInstanceAt(safeAddress)
   const safeOwners = await gnosisSafe.getOwners()
-  const index = safeOwners.findIndex(
-    (ownerAddress) => ownerAddress.toLowerCase() === ownerAddressToRemove.toLowerCase(),
-  )
+  const index = safeOwners.findIndex(ownerAddress => ownerAddress.toLowerCase() === ownerAddressToRemove.toLowerCase())
   const prevAddress = index === 0 ? SENTINEL_ADDRESS : safeOwners[index - 1]
   const txData = gnosisSafe.contract.methods
     .removeOwner(prevAddress, ownerAddressToRemove, values.threshold)
@@ -148,12 +146,7 @@ const RemoveOwner = ({
     >
       <>
         {activeScreen === 'checkOwner' && (
-          <CheckOwner
-            onClose={onClose}
-            ownerAddress={ownerAddress}
-            ownerName={ownerName}
-            onSubmit={ownerSubmitted}
-          />
+          <CheckOwner onClose={onClose} ownerAddress={ownerAddress} ownerName={ownerName} onSubmit={ownerSubmitted} />
         )}
         {activeScreen === 'selectThreshold' && (
           <ThresholdForm

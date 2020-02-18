@@ -18,7 +18,6 @@ import { currentCurrencySelector } from '~/logic/currencyValues/store/selectors'
 import { useDropdownStyles } from '~/routes/safe/components/DropdownCurrency/style'
 import saveCurrencySelected from '~/logic/currencyValues/store/actions/saveCurrencySelected'
 
-
 const DropdownCurrency = () => {
   const currenciesList = Object.values(AVAILABLE_CURRENCIES)
   const dispatch = useDispatch()
@@ -27,7 +26,9 @@ const DropdownCurrency = () => {
 
   const [searchParams, setSearchParams] = useState('')
   const classes = useDropdownStyles()
-  const currenciesListFiltered = currenciesList.filter((currency) => currency.toLowerCase().includes(searchParams.toLowerCase()))
+  const currenciesListFiltered = currenciesList.filter(currency =>
+    currency.toLowerCase().includes(searchParams.toLowerCase()),
+  )
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget)
@@ -43,81 +44,79 @@ const DropdownCurrency = () => {
     handleClose()
   }
 
-  return (
-    !currencyValueSelected ? null
-      : (
-        <MuiThemeProvider theme={DropdownListTheme}>
-          <>
-            <button
-              className={classes.button}
-              onClick={handleClick}
-              type="button"
-            >
-              <span className={classNames(classes.buttonInner, anchorEl && classes.openMenuButton)}>
-                {currencyValueSelected}
-              </span>
-            </button>
-            <Menu
-              anchorEl={anchorEl}
-              elevation={0}
-              getContentAnchorEl={null}
-              id="customizedMenu"
-              keepMounted
-              onClose={handleClose}
-              open={Boolean(anchorEl)}
-              rounded={0}
-              anchorOrigin={{
-                horizontal: 'center',
-                vertical: 'bottom',
-              }}
-              transformOrigin={{
-                horizontal: 'center',
-                vertical: 'top',
-              }}
-            >
-              <MenuItem
-                className={classes.listItemSearch}
-                key="0"
-              >
-                <div className={classes.search}>
-                  <div className={classes.searchIcon}>
-                    <SearchIcon />
-                  </div>
-                  <InputBase
-                    placeholder="Search…"
-                    classes={{
-                      root: classes.inputRoot,
-                      input: classes.inputInput,
-                    }}
-                    inputProps={{ 'aria-label': 'search' }}
-                    onChange={(event) => setSearchParams(event.target.value)}
-                    value={searchParams}
-                  />
-                </div>
-              </MenuItem>
-              <div className={classes.dropdownItemsScrollWrapper}>
-                {currenciesListFiltered.map((currencyName) => (
-                  <MenuItem
-                    className={classes.listItem}
-                    key={currencyName}
-                    value={currencyName}
-                    onClick={() => onCurrentCurrencyChangedHandler(currencyName)}
-                  >
-                    <ListItemIcon className={classes.iconLeft}>
-                      <div
-                        className={classNames(classes.localFlag, style['currency-flag'], style['currency-flag-lg'], style[`currency-flag-${currencyName.toLowerCase()}`])}
-                      />
-                    </ListItemIcon>
-                    <ListItemText primary={currencyName} />
-                    {currencyName === currencyValueSelected
-                      ? <ListItemIcon className={classes.iconRight}><img src={CheckIcon} alt="checked" /></ListItemIcon> : null}
-                  </MenuItem>
-                ))}
+  return !currencyValueSelected ? null : (
+    <MuiThemeProvider theme={DropdownListTheme}>
+      <>
+        <button className={classes.button} onClick={handleClick} type="button">
+          <span className={classNames(classes.buttonInner, anchorEl && classes.openMenuButton)}>
+            {currencyValueSelected}
+          </span>
+        </button>
+        <Menu
+          anchorEl={anchorEl}
+          elevation={0}
+          getContentAnchorEl={null}
+          id="customizedMenu"
+          keepMounted
+          onClose={handleClose}
+          open={Boolean(anchorEl)}
+          rounded={0}
+          anchorOrigin={{
+            horizontal: 'center',
+            vertical: 'bottom',
+          }}
+          transformOrigin={{
+            horizontal: 'center',
+            vertical: 'top',
+          }}
+        >
+          <MenuItem className={classes.listItemSearch} key="0">
+            <div className={classes.search}>
+              <div className={classes.searchIcon}>
+                <SearchIcon />
               </div>
-            </Menu>
-          </>
-        </MuiThemeProvider>
-      )
+              <InputBase
+                placeholder="Search…"
+                classes={{
+                  root: classes.inputRoot,
+                  input: classes.inputInput,
+                }}
+                inputProps={{ 'aria-label': 'search' }}
+                onChange={event => setSearchParams(event.target.value)}
+                value={searchParams}
+              />
+            </div>
+          </MenuItem>
+          <div className={classes.dropdownItemsScrollWrapper}>
+            {currenciesListFiltered.map(currencyName => (
+              <MenuItem
+                className={classes.listItem}
+                key={currencyName}
+                value={currencyName}
+                onClick={() => onCurrentCurrencyChangedHandler(currencyName)}
+              >
+                <ListItemIcon className={classes.iconLeft}>
+                  <div
+                    className={classNames(
+                      classes.localFlag,
+                      style['currency-flag'],
+                      style['currency-flag-lg'],
+                      style[`currency-flag-${currencyName.toLowerCase()}`],
+                    )}
+                  />
+                </ListItemIcon>
+                <ListItemText primary={currencyName} />
+                {currencyName === currencyValueSelected ? (
+                  <ListItemIcon className={classes.iconRight}>
+                    <img src={CheckIcon} alt="checked" />
+                  </ListItemIcon>
+                ) : null}
+              </MenuItem>
+            ))}
+          </div>
+        </Menu>
+      </>
+    </MuiThemeProvider>
   )
 }
 

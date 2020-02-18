@@ -54,12 +54,7 @@ const buildKeyStyleFrom = (size: number, center: boolean, dotSize: number) => ({
   borderRadius: `${size}px`,
 })
 
-const buildDotStyleFrom = (
-  size: number,
-  top: number,
-  right: number,
-  mode: Mode
-) => ({
+const buildDotStyleFrom = (size: number, top: number, right: number, mode: Mode) => ({
   width: `${size}px`,
   height: `${size}px`,
   borderRadius: `${size}px`,

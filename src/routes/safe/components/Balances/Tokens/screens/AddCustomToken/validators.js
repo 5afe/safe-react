@@ -25,10 +25,11 @@ export const addressIsTokenContract = simpleMemoize(async (tokenAddress: string)
 })
 
 // eslint-disable-next-line
-export const doesntExistInTokenList = (tokenList: List<Token>) => simpleMemoize((tokenAddress: string) => {
-  const tokenIndex = tokenList.findIndex(({ address }) => sameAddress(address, tokenAddress))
+export const doesntExistInTokenList = (tokenList: List<Token>) =>
+  simpleMemoize((tokenAddress: string) => {
+    const tokenIndex = tokenList.findIndex(({ address }) => sameAddress(address, tokenAddress))
 
-  if (tokenIndex !== -1) {
-    return 'Token already exists in your token list'
-  }
-})
+    if (tokenIndex !== -1) {
+      return 'Token already exists in your token list'
+    }
+  })

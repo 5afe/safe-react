@@ -43,7 +43,7 @@ class Notifier extends Component<Props> {
   componentDidUpdate() {
     const { notifications = [], enqueueSnackbar, removeSnackbar } = this.props
 
-    notifications.forEach((notification) => {
+    notifications.forEach(notification => {
       // Do nothing if snackbar is already displayed
       if (this.displayed.includes(notification.key)) {
         return
@@ -66,7 +66,7 @@ class Notifier extends Component<Props> {
     })
   }
 
-  storeDisplayed = (id) => {
+  storeDisplayed = id => {
     this.displayed = [...this.displayed, id]
   }
 

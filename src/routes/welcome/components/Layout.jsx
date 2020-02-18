@@ -27,7 +27,7 @@ const openIconStyle = {
 
 type SafeProps = {
   provider: string,
-  size?: "small" | "medium" | "large"
+  size?: 'small' | 'medium' | 'large',
 }
 
 const buttonStyle = {
@@ -65,7 +65,6 @@ export const LoadSafe = ({ size, provider }: SafeProps) => (
   </Button>
 )
 
-
 const Welcome = ({ provider, isOldMultisigMigration }: Props) => {
   const headingText = isOldMultisigMigration ? (
     <>
@@ -74,23 +73,15 @@ const Welcome = ({ provider, isOldMultisigMigration }: Props) => {
       to let you test the new interface.
       <br />
       As soon as you feel comfortable, start moving funds to your new Safe.
-      <br />
-      {' '}
+      <br />{' '}
     </>
   ) : (
     <>
       Gnosis Safe Multisig is the most secure way to manage crypto funds
       <br />
-      collectively. It is an improvement of the Gnosis MultiSig, which is used
-      by more than 3000 teams
-      <br />
-      {' '}
-      and stores over $1B USD worth of digital assets. Gnosis Safe Multisig features a modular
-      <br />
-      {' '}
-      design, formally verified smart contracts and vastly improved user
-      experience.
-      {' '}
+      collectively. It is an improvement of the Gnosis MultiSig, which is used by more than 3000 teams
+      <br /> and stores over $1B USD worth of digital assets. Gnosis Safe Multisig features a modular
+      <br /> design, formally verified smart contracts and vastly improved user experience.{' '}
     </>
   )
   return (
@@ -101,7 +92,7 @@ const Welcome = ({ provider, isOldMultisigMigration }: Props) => {
         Gnosis Safe Multisig
       </Heading>
       <Heading tag="h3" align="center" margin="xl">
-        { headingText }
+        {headingText}
         <a
           className={styles.learnMoreLink}
           href="https://safe.gnosis.io/teams"

@@ -143,9 +143,8 @@ class ManageOwners extends React.Component<Props, State> {
             Manage Safe Owners
           </Heading>
           <Paragraph className={classes.annotation}>
-            Add, remove and replace owners or rename existing owners. Owner
-            names are only stored locally and never shared with Gnosis or any
-            third parties.
+            Add, remove and replace owners or rename existing owners. Owner names are only stored locally and never
+            shared with Gnosis or any third parties.
           </Paragraph>
           <TableContainer>
             <Table
@@ -163,21 +162,11 @@ class ManageOwners extends React.Component<Props, State> {
                   <TableRow
                     tabIndex={-1}
                     key={index}
-                    className={cn(
-                      classes.hide,
-                      index >= 3 &&
-                        index === sortedData.size - 1 &&
-                        classes.noBorderBottom
-                    )}
+                    className={cn(classes.hide, index >= 3 && index === sortedData.size - 1 && classes.noBorderBottom)}
                     data-testid={OWNERS_ROW_TEST_ID}
                   >
                     {autoColumns.map((column: Column) => (
-                      <TableCell
-                        key={column.id}
-                        style={cellWidth(column.width)}
-                        align={column.align}
-                        component="td"
-                      >
+                      <TableCell key={column.id} style={cellWidth(column.width)} align={column.align} component="td">
                         {column.id === OWNERS_TABLE_ADDRESS_ID ? (
                           <OwnerAddressTableCell address={row[column.id]} />
                         ) : (

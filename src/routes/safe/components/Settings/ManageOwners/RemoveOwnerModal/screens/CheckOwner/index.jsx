@@ -25,10 +25,8 @@ type Props = {
   onSubmit: Function,
 }
 
-const CheckOwner = ({
-  classes, onClose, ownerAddress, ownerName, onSubmit,
-}: Props) => {
-  const handleSubmit = (values) => {
+const CheckOwner = ({ classes, onClose, ownerAddress, ownerName, onSubmit }: Props) => {
+  const handleSubmit = values => {
     onSubmit(values)
   }
 

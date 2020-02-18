@@ -36,10 +36,7 @@ class HeaderComponent extends React.PureComponent<Props, State> {
 
   async componentDidMount() {
     const lastUsedProvider = await loadLastUsedProvider()
-    if (
-      INJECTED_PROVIDERS.includes(lastUsedProvider) ||
-      process.env.NODE_ENV === 'test'
-    ) {
+    if (INJECTED_PROVIDERS.includes(lastUsedProvider) || process.env.NODE_ENV === 'test') {
       web3Connect.connectToInjected()
     }
   }
@@ -48,11 +45,7 @@ class HeaderComponent extends React.PureComponent<Props, State> {
     const { enqueueSnackbar, closeSnackbar } = this.props
 
     this.setState({ hasError: true })
-    showSnackbar(
-      NOTIFICATIONS.CONNECT_WALLET_ERROR_MSG,
-      enqueueSnackbar,
-      closeSnackbar
-    )
+    showSnackbar(NOTIFICATIONS.CONNECT_WALLET_ERROR_MSG, enqueueSnackbar, closeSnackbar)
 
     logComponentStack(error, info)
   }
@@ -71,14 +64,7 @@ class HeaderComponent extends React.PureComponent<Props, State> {
       return <ProviderDisconnected />
     }
 
-    return (
-      <ProviderAccessible
-        provider={provider}
-        network={network}
-        userAddress={userAddress}
-        connected={available}
-      />
-    )
+    return <ProviderAccessible provider={provider} network={network} userAddress={userAddress} connected={available} />
   }
 
   getProviderDetailsBased = () => {

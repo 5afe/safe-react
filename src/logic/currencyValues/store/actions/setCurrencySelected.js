@@ -1,13 +1,12 @@
 // @flow
 import { createAction } from 'redux-actions'
-import type {
-  CurrencyValuesProps,
-} from '~/logic/currencyValues/store/model/currencyValues'
+import type { CurrencyValuesProps } from '~/logic/currencyValues/store/model/currencyValues'
 import { AVAILABLE_CURRENCIES } from '~/logic/currencyValues/store/model/currencyValues'
-
 
 export const SET_CURRENT_CURRENCY = 'SET_CURRENT_CURRENCY'
 
-
 // eslint-disable-next-line max-len
-export const setCurrencySelected = createAction<string, *>(SET_CURRENT_CURRENCY, (currencyValueSelected: AVAILABLE_CURRENCIES): CurrencyValuesProps => ({ currencyValueSelected }))
+export const setCurrencySelected = createAction<string, *>(
+  SET_CURRENT_CURRENCY,
+  (currencyValueSelected: AVAILABLE_CURRENCIES): CurrencyValuesProps => ({ currencyValueSelected }),
+)

@@ -24,9 +24,7 @@ type Props = {
   isOpen: boolean,
 }
 
-const ScanQRModal = ({
-  classes, onClose, isOpen, onScan,
-}: Props) => {
+const ScanQRModal = ({ classes, onClose, isOpen, onScan }: Props) => {
   const [hasWebcam, setHasWebcam] = useState(null)
   const scannerRef: Object = React.createRef()
   const openImageDialog = () => {
@@ -73,10 +71,10 @@ const ScanQRModal = ({
           <QrReader
             ref={scannerRef}
             legacyMode={!hasWebcam}
-            onScan={(data) => {
+            onScan={data => {
               if (data) onScan(data)
             }}
-            onError={(err) => {
+            onError={err => {
               console.error(err)
             }}
             style={{ width: '400px', height: '400px' }}
@@ -85,12 +83,7 @@ const ScanQRModal = ({
       </Col>
       <Hairline />
       <Row align="center" className={classes.buttonRow}>
-        <Button
-          color="secondary"
-          className={classes.button}
-          minWidth={154}
-          onClick={onClose}
-        >
+        <Button color="secondary" className={classes.button} minWidth={154} onClick={onClose}>
           Close
         </Button>
         <Button

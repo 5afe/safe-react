@@ -14,9 +14,7 @@ import Checkbox from '~/components/forms/Checkbox'
 import GnoForm from '~/components/forms/GnoForm'
 import TextField from '~/components/forms/TextField'
 import Hairline from '~/components/layout/Hairline'
-import {
-  composeValidators, required, mustBeEthereumAddress, minMaxLength,
-} from '~/components/forms/validator'
+import { composeValidators, required, mustBeEthereumAddress, minMaxLength } from '~/components/forms/validator'
 import { type TokenProps, type Token } from '~/logic/tokens/store/model/token'
 import TokenPlaceholder from '~/routes/safe/components/Balances/assets/token_placeholder.svg'
 import { addressIsTokenContract, doesntExistInTokenList } from './validators'
@@ -61,7 +59,7 @@ const AddCustomToken = (props: Props) => {
   } = props
   const [formValues, setFormValues] = useState(INITIAL_FORM_STATE)
 
-  const handleSubmit = (values) => {
+  const handleSubmit = values => {
     const token = {
       address: values.address,
       decimals: values.decimals,
@@ -95,10 +93,8 @@ const AddCustomToken = (props: Props) => {
     }
   }
 
-  const formSpyOnChangeHandler = async (state) => {
-    const {
-      errors, validating, values, dirty, submitSucceeded,
-    } = state
+  const formSpyOnChangeHandler = async state => {
+    const { errors, validating, values, dirty, submitSucceeded } = state
     // for some reason this is called after submitting, we don't need to update the values
     // after submit
     if (submitSucceeded) {

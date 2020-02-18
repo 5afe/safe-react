@@ -157,9 +157,7 @@ class GnoTable<K> extends React.Component<Props<K>, State> {
       noBorder,
       disableLoadingOnEmptyTable,
     } = this.props
-    const {
-      order, orderBy, page, orderProp, rowsPerPage, fixed,
-    } = this.state
+    const { order, orderBy, page, orderProp, rowsPerPage, fixed } = this.state
     const orderByParam = orderBy || defaultOrderBy
     const orderParam = order || defaultOrder
     const displayRows = rowsPerPage || defaultRowsPerPage
@@ -189,10 +187,7 @@ class GnoTable<K> extends React.Component<Props<K>, State> {
           </Table>
         )}
         {isEmpty && (
-          <Row
-            className={classes.loader}
-            style={this.getEmptyStyle(emptyRows + 1)}
-          >
+          <Row className={classes.loader} style={this.getEmptyStyle(emptyRows + 1)}>
             <CircularProgress size={60} />
           </Row>
         )}

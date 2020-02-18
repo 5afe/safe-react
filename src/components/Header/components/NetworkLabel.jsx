@@ -7,8 +7,7 @@ import Col from '~/components/layout/Col'
 import { xs, sm, md, border, screenSm } from '~/theme/variables'
 
 const network = getNetwork()
-const formattedNetwork =
-  network[0].toUpperCase() + network.substring(1).toLowerCase()
+const formattedNetwork = network[0].toUpperCase() + network.substring(1).toLowerCase()
 
 const useStyles = makeStyles({
   container: {

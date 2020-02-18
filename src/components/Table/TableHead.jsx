@@ -57,9 +57,7 @@ class GnoTableHead extends React.PureComponent<Props> {
               sortDirection={orderBy === column.id ? order : false}
             >
               {column.static ? (
-                <div style={column.style}>
-                  {column.label}
-                </div>
+                <div style={column.style}>{column.label}</div>
               ) : (
                 <TableSortLabel
                   active={orderBy === column.id}

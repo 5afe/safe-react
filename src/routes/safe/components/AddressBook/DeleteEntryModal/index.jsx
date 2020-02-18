@@ -23,14 +23,8 @@ type Props = {
   entryToDelete: AddressBookEntryType,
 }
 
-const DeleteEntryModalComponent = ({
-  onClose,
-  isOpen,
-  classes,
-  entryToDelete,
-  deleteEntryModalHandler,
-}: Props) => {
-  const handleDeleteEntrySubmit = (values) => {
+const DeleteEntryModalComponent = ({ onClose, isOpen, classes, entryToDelete, deleteEntryModalHandler }: Props) => {
+  const handleDeleteEntrySubmit = values => {
     deleteEntryModalHandler(values, entryToDelete.index)
   }
 
@@ -56,13 +50,7 @@ const DeleteEntryModalComponent = ({
           <>
             <Block className={classes.container}>
               <Row margin="md">
-                <Paragraph>
-                  This action will delete
-                  {' '}
-                  {entryToDelete.entry.name}
-                  {' '}
-                  from the address book.
-                </Paragraph>
+                <Paragraph>This action will delete {entryToDelete.entry.name} from the address book.</Paragraph>
               </Row>
             </Block>
             <Hairline />

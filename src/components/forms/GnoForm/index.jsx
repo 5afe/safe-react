@@ -6,7 +6,7 @@ import { Form } from 'react-final-form'
 export type OnSubmit = (
   values: Object,
   form: FormApi,
-  callback: ?(errors: ?Object) => ?Object
+  callback: ?(errors: ?Object) => ?Object,
 ) => ?Object | Promise<?Object> | void
 
 type Props = {
@@ -25,9 +25,7 @@ const stylesBasedOn = (padding: number): $Shape<CSSStyleDeclaration> => ({
   flex: '1 0 auto',
 })
 
-const GnoForm = ({
-  onSubmit, validation, initialValues, children, padding = 0, formMutators, testId = '',
-}: Props) => (
+const GnoForm = ({ onSubmit, validation, initialValues, children, padding = 0, formMutators, testId = '' }: Props) => (
   <Form
     validate={validation}
     onSubmit={onSubmit}

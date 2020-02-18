@@ -34,9 +34,7 @@ type Props = {
 }
 
 const SafeInfo = (props: Props) => {
-  const {
-    safeAddress, safeName, ethBalance,
-  } = props
+  const { safeAddress, safeName, ethBalance } = props
   const classes = useStyles()
 
   return (
@@ -57,9 +55,7 @@ const SafeInfo = (props: Props) => {
         </Block>
         <Block className={classes.balanceContainer}>
           <Paragraph noMargin>
-            Balance:
-            {' '}
-            <Bold>{`${ethBalance} ETH`}</Bold>
+            Balance: <Bold>{`${ethBalance} ETH`}</Bold>
           </Paragraph>
         </Block>
       </Col>
