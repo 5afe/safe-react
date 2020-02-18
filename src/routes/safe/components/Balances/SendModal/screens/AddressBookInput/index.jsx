@@ -1,21 +1,19 @@
 // @flow
 import React, { useEffect, useState } from 'react'
-import {
-  withStyles,
-} from '@material-ui/core/styles'
+import { withStyles } from '@material-ui/core/styles'
 import { useSelector } from 'react-redux'
 import Autocomplete from '@material-ui/lab/Autocomplete'
-import TextField from '@material-ui/core/TextField'
+import MuiTextField from '@material-ui/core/TextField'
 import makeStyles from '@material-ui/core/styles/makeStyles'
 import { List } from 'immutable'
 import { styles } from './style'
+import { getAddressBookListSelector } from '~/logic/addressBook/store/selectors'
 import {
-  getAddressBookListSelector,
-} from '~/logic/addressBook/store/selectors'
-import { mustBeEthereumAddress, mustBeEthereumContractAddress } from '~/components/forms/validator'
+  mustBeEthereumAddress,
+  mustBeEthereumContractAddress,
+} from '~/components/forms/validator'
 import Identicon from '~/components/Identicon'
 import { getAddressFromENS } from '~/logic/wallets/getWeb3'
-
 
 type Props = {
   classes: Object,
@@ -26,7 +24,6 @@ type Props = {
   recipientAddress?: string,
   pristine: boolean,
 }
-
 
 const textFieldLabelStyle = makeStyles(() => ({
   root: {
@@ -44,10 +41,16 @@ const textFieldInputStyle = makeStyles(() => ({
   },
 }))
 
-const isValidEnsName = (name) => /^([\w-]+\.)+(eth|test|xyz|luxe)$/.test(name)
+const isValidEnsName = name => /^([\w-]+\.)+(eth|test|xyz|luxe)$/.test(name)
 
 const AddressBookInput = ({
-  classes, fieldMutator, isCustomTx, recipientAddress, setSelectedEntry, pristine, setIsValidAddress,
+  classes,
+  fieldMutator,
+  isCustomTx,
+  recipientAddress,
+  setSelectedEntry,
+  pristine,
+  setIsValidAddress,
 }: Props) => {
   const addressBook = useSelector(getAddressBookListSelector)
   const [isValidForm, setIsValidForm] = useState(true)
@@ -58,7 +61,7 @@ const AddressBookInput = ({
 
   const [inputAddValue, setInputAddValue] = useState(recipientAddress)
 
-  const onAddressInputChanged = async (addressValue) => {
+  const onAddressInputChanged = async addressValue => {
     setInputAddValue(addressValue)
     let resolvedAddress = addressValue
     let isValidText
@@ -90,8 +93,15 @@ const AddressBookInput = ({
         setADBKList(addressBook)
         return
       }
-      const abFlags = await Promise.all(addressBook.map(async ({ address }) => mustBeEthereumContractAddress(address) === undefined))
-      const filteredADBK = addressBook.filter((adbkEntry, index) => abFlags[index])
+      const abFlags = await Promise.all(
+        addressBook.map(
+          async ({ address }) =>
+            mustBeEthereumContractAddress(address) === undefined
+        )
+      )
+      const filteredADBK = addressBook.filter(
+        (adbkEntry, index) => abFlags[index]
+      )
       setADBKList(filteredADBK)
     }
     filterAdbkContractAddresses()
@@ -99,6 +109,14 @@ const AddressBookInput = ({
 
   const labelStyling = textFieldLabelStyle()
   const txInputStyling = textFieldInputStyle()
+
+  let statusClasses = ''
+  if (!isValidForm) {
+    statusClasses = 'isInvalid'
+  }
+  if (isValidForm && inputTouched) {
+    statusClasses = 'isValid'
+  }
 
   return (
     <>
@@ -112,14 +130,17 @@ const AddressBookInput = ({
         options={adbkList.toArray()}
         style={{ display: 'flex', flexGrow: 1 }}
         closeIcon={null}
-        filterOptions={(optionsArray, { inputValue }) => optionsArray.filter((item) => {
-          const inputLowerCase = inputValue.toLowerCase()
-          const foundName = item.name.toLowerCase()
-            .includes(inputLowerCase)
-          const foundAddress = item.address.toLowerCase().includes(inputLowerCase)
-          return foundName || foundAddress
-        })}
-        getOptionLabel={(adbkEntry) => adbkEntry.address || ''}
+        filterOptions={(optionsArray, { inputValue }) =>
+          optionsArray.filter(item => {
+            const inputLowerCase = inputValue.toLowerCase()
+            const foundName = item.name.toLowerCase().includes(inputLowerCase)
+            const foundAddress = item.address
+              .toLowerCase()
+              .includes(inputLowerCase)
+            return foundName || foundAddress
+          })
+        }
+        getOptionLabel={adbkEntry => adbkEntry.address || ''}
         onOpen={() => {
           setSelectedEntry(null)
           setBlurred(false)
@@ -136,7 +157,7 @@ const AddressBookInput = ({
           setSelectedEntry({ address, name })
           fieldMutator(address)
         }}
-        renderOption={(adbkEntry) => {
+        renderOption={adbkEntry => {
           const { name, address } = adbkEntry
           return (
             <div className={classes.itemOptionList}>
@@ -150,8 +171,8 @@ const AddressBookInput = ({
             </div>
           )
         }}
-        renderInput={(params) => (
-          <TextField
+        renderInput={params => (
+          <MuiTextField
             {...params}
             label={!isValidForm ? validationText : 'Recipient'}
             error={!isValidForm}
@@ -160,18 +181,17 @@ const AddressBookInput = ({
             variant="filled"
             id="filled-error-helper-text"
             value={{ address: inputAddValue }}
-            onChange={(event) => {
+            onChange={event => {
               setInputTouched(true)
               onAddressInputChanged(event.target.value)
             }}
-            InputProps={
-              {
-                ...params.InputProps,
-                classes: {
-                  ...txInputStyling,
-                },
-              }
-            }
+            InputProps={{
+              ...params.InputProps,
+              classes: {
+                ...txInputStyling,
+              },
+              className: `${statusClasses}`,
+            }}
             InputLabelProps={{
               shrink: true,
               required: true,
