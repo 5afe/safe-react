@@ -11,7 +11,6 @@ export const EDIT_ENTRY_BUTTON = 'edit-entry-btn'
 export const REMOVE_ENTRY_BUTTON = 'remove-entry-btn'
 export const SEND_ENTRY_BUTTON = 'send-entry-btn'
 
-
 export const generateColumns = () => {
   const nameColumn: Column = {
     id: AB_NAME_ID,

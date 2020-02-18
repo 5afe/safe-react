@@ -5,7 +5,6 @@ import { type Operation } from '~/logic/safe/transactions'
 
 export const CALL = 0
 export const DELEGATE_CALL = 1
-
 export const TX_TYPE_EXECUTION = 'execution'
 export const TX_TYPE_CONFIRMATION = 'confirmation'
 

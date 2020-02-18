@@ -16,12 +16,7 @@ const NoRights = () => (
       </Paragraph>
     </Col>
     <Col xs={12} center="xs" sm={10} smOffset={2} start="sm" margin="md">
-      <Button
-        component={Link}
-        to={SAFELIST_ADDRESS}
-        variant="contained"
-        color="primary"
-      >
+      <Button component={Link} to={SAFELIST_ADDRESS} variant="contained" color="primary">
         Safe List
       </Button>
     </Col>

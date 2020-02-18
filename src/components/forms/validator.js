@@ -20,7 +20,8 @@ type Field = boolean | string | null | typeof undefined
 
 export const required = (value: Field) => (value ? undefined : 'Required')
 
-export const mustBeInteger = (value: string) => (!Number.isInteger(Number(value)) || value.includes('.') ? 'Must be an integer' : undefined)
+export const mustBeInteger = (value: string) =>
+  !Number.isInteger(Number(value)) || value.includes('.') ? 'Must be an integer' : undefined
 
 export const mustBeFloat = (value: number) => (value && Number.isNaN(Number(value)) ? 'Must be a number' : undefined)
 
@@ -75,16 +76,19 @@ export const mustBeEthereumContractAddress = simpleMemoize(async (address: strin
     : undefined
 })
 
-export const minMaxLength = (minLen: string | number, maxLen: string | number) => (value: string) => (value.length >= +minLen && value.length <= +maxLen ? undefined : `Should be ${minLen} to ${maxLen} symbols`)
+export const minMaxLength = (minLen: string | number, maxLen: string | number) => (value: string) =>
+  value.length >= +minLen && value.length <= +maxLen ? undefined : `Should be ${minLen} to ${maxLen} symbols`
 
 export const ADDRESS_REPEATED_ERROR = 'Address already introduced'
 
-export const uniqueAddress = (addresses: string[] | List<string>) => simpleMemoize((value: string) => {
-  const addressAlreadyExists = addresses.some((address) => sameAddress(value, address))
-  return addressAlreadyExists ? ADDRESS_REPEATED_ERROR : undefined
-})
+export const uniqueAddress = (addresses: string[] | List<string>) =>
+  simpleMemoize((value: string) => {
+    const addressAlreadyExists = addresses.some(address => sameAddress(value, address))
+    return addressAlreadyExists ? ADDRESS_REPEATED_ERROR : undefined
+  })
 
-export const composeValidators = (...validators: Function[]): FieldValidator => (value: Field) => validators.reduce((error, validator) => error || validator(value), undefined)
+export const composeValidators = (...validators: Function[]): FieldValidator => (value: Field) =>
+  validators.reduce((error, validator) => error || validator(value), undefined)
 
 export const inLimit = (limit: number, base: number, baseText: string, symbol: string = 'ETH') => (value: string) => {
   const amount = Number(value)

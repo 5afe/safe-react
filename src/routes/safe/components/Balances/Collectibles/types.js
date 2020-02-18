@@ -1,9 +1,5 @@
 // @flow
-export type AssetContractType =
-  | 'fungible'
-  | 'non-fungible'
-  | 'semi-fungible'
-  | 'unknown'
+export type AssetContractType = 'fungible' | 'non-fungible' | 'semi-fungible' | 'unknown'
 
 export type CollectibleContract = {
   address: string,
@@ -178,8 +174,5 @@ export type CollectibleData = {
 }
 
 export interface CollectibleMetadataSource {
-  fetchAllUserCollectiblesAsync(
-    safeAddress: string,
-    networkName: string
-  ): Promise<CollectibleData[]>;
+  fetchAllUserCollectiblesAsync(safeAddress: string, networkName: string): Promise<CollectibleData[]>;
 }

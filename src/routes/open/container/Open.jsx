@@ -5,7 +5,11 @@ import queryString from 'query-string'
 import { withRouter } from 'react-router-dom'
 import Page from '~/components/layout/Page'
 import {
-  getAccountsFrom, getThresholdFrom, getNamesFrom, getSafeNameFrom, getOwnersFrom,
+  getAccountsFrom,
+  getThresholdFrom,
+  getNamesFrom,
+  getSafeNameFrom,
+  getOwnersFrom,
 } from '~/routes/open/utils/safeDataExtractor'
 import { buildSafe } from '~/routes/safe/store/actions/fetchSafe'
 import { getGnosisSafeInstanceAt, deploySafeContract } from '~/logic/contracts/safeContracts'
@@ -33,7 +37,12 @@ export type SafePropsType = {
   threshold: string,
 }
 
-const validateQueryParams = (ownerAddresses?: string[], ownerNames?: string[], threshold?: string, safeName?: string) => {
+const validateQueryParams = (
+  ownerAddresses?: string[],
+  ownerNames?: string[],
+  threshold?: string,
+  safeName?: string,
+) => {
   if (!ownerAddresses || !ownerNames || !threshold || !safeName) {
     return false
   }
@@ -83,7 +92,7 @@ export const createSafe = async (values: Object, userAccount: string, addSafe: A
 }
 
 class Open extends React.Component<Props> {
-  onCallSafeContractSubmit = async (values) => {
+  onCallSafeContractSubmit = async values => {
     try {
       const { userAccount, addSafe } = this.props
       createSafe(values, userAccount, addSafe)
@@ -95,13 +104,9 @@ class Open extends React.Component<Props> {
   }
 
   render() {
-    const {
-      provider, userAccount, network, location,
-    } = this.props
+    const { provider, userAccount, network, location } = this.props
     const query: SafePropsType = queryString.parse(location.search, { arrayFormat: 'comma' })
-    const {
-      name, owneraddresses, ownernames, threshold,
-    } = query
+    const { name, owneraddresses, ownernames, threshold } = query
 
     let safeProps = null
     if (validateQueryParams(owneraddresses, ownernames, threshold, name)) {

@@ -41,11 +41,7 @@ import { updateAddressBookEntry } from '~/logic/addressBook/store/actions/update
 import { removeAddressBookEntry } from '~/logic/addressBook/store/actions/removeAddressBookEntry'
 import { addAddressBookEntry } from '~/logic/addressBook/store/actions/addAddressBookEntry'
 import SendModal from '~/routes/safe/components/Balances/SendModal'
-import {
-  safeSelector,
-  safesListSelector,
-  addressBookQueryParamsSelector,
-} from '~/routes/safe/store/selectors'
+import { safeSelector, safesListSelector, addressBookQueryParamsSelector } from '~/routes/safe/store/selectors'
 import { extendedSafeTokensSelector } from '~/routes/safe/container/selector'
 import { isUserOwnerOnAnySafe } from '~/logic/wallets/ethAddresses'
 
@@ -59,14 +55,10 @@ const AddressBookTable = ({ classes }: Props) => {
   const dispatch = useDispatch()
   const addressBook = useSelector(getAddressBookListSelector)
   const [selectedEntry, setSelectedEntry] = useState(null)
-  const [editCreateEntryModalOpen, setEditCreateEntryModalOpen] = useState(
-    false
-  )
+  const [editCreateEntryModalOpen, setEditCreateEntryModalOpen] = useState(false)
   const [deleteEntryModalOpen, setDeleteEntryModalOpen] = useState(false)
   const [sendFundsModalOpen, setSendFundsModalOpen] = useState(false)
-  const entryAddressToEditOrCreateNew = useSelector(
-    addressBookQueryParamsSelector
-  )
+  const entryAddressToEditOrCreateNew = useSelector(addressBookQueryParamsSelector)
 
   useEffect(() => {
     if (entryAddressToEditOrCreateNew) {
@@ -76,16 +68,20 @@ const AddressBookTable = ({ classes }: Props) => {
 
   useEffect(() => {
     if (entryAddressToEditOrCreateNew) {
-      const key = addressBook.findKey(
-        entry => entry.address === entryAddressToEditOrCreateNew
-      )
+      const key = addressBook.findKey(entry => entry.address === entryAddressToEditOrCreateNew)
       if (key >= 0) {
         // Edit old entry
         const value = addressBook.get(key)
         setSelectedEntry({ entry: value, index: key })
       } else {
         // Create new entry
-        setSelectedEntry(null)
+        setSelectedEntry({
+          entry: {
+            name: '',
+            address: entryAddressToEditOrCreateNew,
+            isNew: true,
+          },
+        })
       }
     }
   }, [addressBook])
@@ -143,10 +139,7 @@ const AddressBookTable = ({ classes }: Props) => {
             {(sortedData: List<OwnerRow>) =>
               sortedData.map((row: AddressBookEntry, index: number) => {
                 const userOwner = isUserOwnerOnAnySafe(safesList, row.address)
-                const hideBorderBottom =
-                  index >= 3 &&
-                  index === sortedData.size - 1 &&
-                  classes.noBorderBottom
+                const hideBorderBottom = index >= 3 && index === sortedData.size - 1 && classes.noBorderBottom
                 return (
                   <TableRow
                     tabIndex={-1}
@@ -155,17 +148,9 @@ const AddressBookTable = ({ classes }: Props) => {
                     data-testid={ADDRESS_BOOK_ROW_ID}
                   >
                     {autoColumns.map((column: Column) => (
-                      <TableCell
-                        key={column.id}
-                        style={cellWidth(column.width)}
-                        align={column.align}
-                        component="td"
-                      >
+                      <TableCell key={column.id} style={cellWidth(column.width)} align={column.align} component="td">
                         {column.id === AB_ADDRESS_ID ? (
-                          <OwnerAddressTableCell
-                            address={row[column.id]}
-                            showLinks
-                          />
+                          <OwnerAddressTableCell address={row[column.id]} showLinks />
                         ) : (
                           row[column.id]
                         )}
@@ -187,16 +172,8 @@ const AddressBookTable = ({ classes }: Props) => {
                         />
                         <Img
                           alt="Remove entry"
-                          className={
-                            userOwner
-                              ? classes.removeEntryButtonDisabled
-                              : classes.removeEntryButton
-                          }
-                          src={
-                            userOwner
-                              ? RemoveOwnerIconDisabled
-                              : RemoveOwnerIcon
-                          }
+                          className={userOwner ? classes.removeEntryButtonDisabled : classes.removeEntryButton}
+                          src={userOwner ? RemoveOwnerIconDisabled : RemoveOwnerIcon}
                           onClick={() => {
                             if (!userOwner) {
                               setSelectedEntry({ entry: row })
@@ -218,10 +195,7 @@ const AddressBookTable = ({ classes }: Props) => {
                         >
                           <CallMade
                             alt="Send Transaction"
-                            className={classNames(
-                              classes.leftIcon,
-                              classes.iconSmall
-                            )}
+                            className={classNames(classes.leftIcon, classes.iconSmall)}
                           />
                           Send
                         </Button>
@@ -255,11 +229,7 @@ const AddressBookTable = ({ classes }: Props) => {
         ethBalance={ethBalance}
         tokens={activeTokens}
         activeScreenType="sendFunds"
-        recipientAddress={
-          selectedEntry && selectedEntry.entry
-            ? selectedEntry.entry.address
-            : undefined
-        }
+        recipientAddress={selectedEntry && selectedEntry.entry ? selectedEntry.entry.address : undefined}
       />
     </>
   )

@@ -11,5 +11,4 @@ const sources: { [key: string]: CollectibleMetadataSource } = {
   mockedopensea: new MockedOpenSea({ rps: 5 }),
 }
 
-export const getConfiguredSource = () =>
-  sources[COLLECTIBLES_SOURCE.toLowerCase()]
+export const getConfiguredSource = () => sources[COLLECTIBLES_SOURCE.toLowerCase()]

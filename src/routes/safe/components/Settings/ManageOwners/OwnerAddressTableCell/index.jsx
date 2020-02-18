@@ -13,18 +13,18 @@ type Props = {
 }
 
 const OwnerAddressTableCell = (props: Props) => {
-  const {
-    address, userName, showLinks, knownAddress,
-  } = props
+  const { address, userName, showLinks, knownAddress } = props
   return (
     <Block justify="left">
       <Identicon address={address} diameter={32} />
-      { showLinks ? (
+      {showLinks ? (
         <div style={{ marginLeft: 10, flexShrink: 1, minWidth: 0 }}>
-          { userName }
+          {userName}
           <EtherScanLink type="address" value={address} knownAddress={knownAddress} />
         </div>
-      ) : <Paragraph style={{ marginLeft: 10 }}>{address}</Paragraph> }
+      ) : (
+        <Paragraph style={{ marginLeft: 10 }}>{address}</Paragraph>
+      )}
     </Block>
   )
 }

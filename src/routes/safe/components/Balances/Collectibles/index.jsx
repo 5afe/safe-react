@@ -67,19 +67,13 @@ type Props = {
   safeAddress: string,
 }
 
-const Collectibles = ({
-  classes,
-  safeAddress,
-  networkName = ETHEREUM_NETWORK.RINKEBY,
-}: Props) => {
+const Collectibles = ({ classes, safeAddress, networkName = ETHEREUM_NETWORK.RINKEBY }: Props) => {
   const [data, setData] = React.useState<CollectibleData[]>([])
 
   React.useEffect(() => {
     const retrieveCollectibleInfo = async () => {
       const source = getConfiguredSource()
-      setData(
-        await source.fetchAllUserCollectiblesAsync(safeAddress, networkName)
-      )
+      setData(await source.fetchAllUserCollectiblesAsync(safeAddress, networkName))
     }
     retrieveCollectibleInfo()
   }, [])
@@ -90,10 +84,7 @@ const Collectibles = ({
         {data.map((item, index) => (
           <React.Fragment key={index}>
             <div className={classes.title}>
-              <div
-                className={classes.titleImg}
-                style={{ backgroundImage: `url(${item.image || ''})` }}
-              />
+              <div className={classes.titleImg} style={{ backgroundImage: `url(${item.image || ''})` }} />
               <h2 className={classes.titleText}>{item.title}</h2>
               <div className={classes.titleFiller} />
             </div>

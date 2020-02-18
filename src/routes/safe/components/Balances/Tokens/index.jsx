@@ -83,7 +83,4 @@ const Tokens = (props: Props) => {
 
 const TokenComponent = withStyles(styles)(Tokens)
 
-export default connect(
-  undefined,
-  actions,
-)(TokenComponent)
+export default connect(undefined, actions)(TokenComponent)

@@ -19,9 +19,7 @@ type Props = {
 
 class Block extends PureComponent<Props> {
   render() {
-    const {
-      margin, padding, justify, children, className, ...props
-    } = this.props
+    const { margin, padding, justify, children, className, ...props } = this.props
 
     const paddingStyle = padding ? capitalize(padding, 'padding') : undefined
     return (

@@ -13,9 +13,7 @@ import Img from '~/components/layout/Img'
 import Row from '~/components/layout/Row'
 import Block from '~/components/layout/Block'
 import Spacer from '~/components/Spacer'
-import {
-  xs, sm, md, lg, background, warning, connected as connectedBg,
-} from '~/theme/variables'
+import { xs, sm, md, lg, background, warning, connected as connectedBg } from '~/theme/variables'
 import { upperFirst } from '~/utils/css'
 import { shortVersionOf } from '~/logic/wallets/ethAddresses'
 import CircleDot from '~/components/Header/components/CircleDot'
@@ -93,9 +91,7 @@ const styles = () => ({
   },
 })
 
-const UserDetails = ({
-  provider, connected, network, userAddress, classes, onDisconnect,
-}: Props) => {
+const UserDetails = ({ provider, connected, network, userAddress, classes, onDisconnect }: Props) => {
   const status = connected ? 'Connected' : 'Connection error'
   const address = userAddress ? shortVersionOf(userAddress, 4) : 'Address not available'
   const identiconAddress = userAddress || 'random'

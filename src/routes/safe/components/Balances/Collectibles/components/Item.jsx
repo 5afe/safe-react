@@ -105,10 +105,7 @@ type Props = {
 const Item = ({ classes, data, key }: Props) => (
   <div key={key} className={classes.item}>
     <div className={classes.mainContent}>
-      <div
-        className={classes.image}
-        style={{ backgroundImage: `url(${data.image})` }}
-      />
+      <div className={classes.image} style={{ backgroundImage: `url(${data.image})` }} />
       {data.title && data.text && (
         <div className={classes.textContainer}>
           {data.title && (
@@ -125,12 +122,7 @@ const Item = ({ classes, data, key }: Props) => (
       )}
     </div>
     <div className={cn(classes.extraContent, 'showOnHover')}>
-      <Button
-        className={classes.sendButton}
-        color="primary"
-        size="small"
-        variant="contained"
-      >
+      <Button className={classes.sendButton} color="primary" size="small" variant="contained">
         <CallMade alt="Send" className={classes.buttonIcon} /> Send
       </Button>
     </div>

@@ -17,9 +17,7 @@ import ButtonLink from '~/components/layout/ButtonLink'
 import Field from '~/components/forms/Field'
 import TextField from '~/components/forms/TextField'
 import TextareaField from '~/components/forms/TextareaField'
-import {
-  composeValidators, mustBeFloat, maxValue,
-} from '~/components/forms/validator'
+import { composeValidators, mustBeFloat, maxValue } from '~/components/forms/validator'
 import SafeInfo from '~/routes/safe/components/Balances/SendModal/SafeInfo'
 import QRIcon from '~/assets/icons/qrcode.svg'
 import ArrowDown from '../assets/arrow-down.svg'
@@ -29,7 +27,6 @@ import AddressBookInput from '~/routes/safe/components/Balances/SendModal/screen
 import Identicon from '~/components/Identicon'
 import CopyBtn from '~/components/CopyBtn'
 import EtherscanBtn from '~/components/EtherscanBtn'
-
 
 type Props = {
   onClose: () => void,
@@ -41,15 +38,7 @@ type Props = {
   initialValues: Object,
 }
 
-const SendCustomTx = ({
-  classes,
-  onClose,
-  safeAddress,
-  safeName,
-  ethBalance,
-  onSubmit,
-  initialValues,
-}: Props) => {
+const SendCustomTx = ({ classes, onClose, safeAddress, safeName, ethBalance, onSubmit, initialValues }: Props) => {
   const [qrModalOpen, setQrModalOpen] = useState<boolean>(false)
   const [selectedEntry, setSelectedEntry] = useState<Object | null>({
     address: '',
@@ -87,7 +76,6 @@ const SendCustomTx = ({
     },
   }
 
-
   return (
     <>
       <Row align="center" grow className={classes.heading}>
@@ -109,7 +97,7 @@ const SendCustomTx = ({
             shouldDisableSubmitButton = !selectedEntry.address
           }
 
-          const handleScan = (value) => {
+          const handleScan = value => {
             let scannedAddress = value
 
             if (scannedAddress.startsWith('ethereum:')) {
@@ -132,11 +120,11 @@ const SendCustomTx = ({
                     <Hairline />
                   </Col>
                 </Row>
-                { selectedEntry && selectedEntry.address ? (
+                {selectedEntry && selectedEntry.address ? (
                   <div
                     role="listbox"
                     tabIndex="0"
-                    onKeyDown={(e) => {
+                    onKeyDown={e => {
                       if (e.keyCode !== 9) {
                         setSelectedEntry(null)
                       }
@@ -154,10 +142,20 @@ const SendCustomTx = ({
                       <Col xs={11} layout="column">
                         <Block justify="left">
                           <Block>
-                            <Paragraph weight="bolder" className={classes.selectAddress} noMargin onClick={() => setSelectedEntry(null)}>
+                            <Paragraph
+                              weight="bolder"
+                              className={classes.selectAddress}
+                              noMargin
+                              onClick={() => setSelectedEntry(null)}
+                            >
                               {selectedEntry.name}
                             </Paragraph>
-                            <Paragraph weight="bolder" className={classes.selectAddress} noMargin onClick={() => setSelectedEntry(null)}>
+                            <Paragraph
+                              weight="bolder"
+                              className={classes.selectAddress}
+                              noMargin
+                              onClick={() => setSelectedEntry(null)}
+                            >
                               {selectedEntry.address}
                             </Paragraph>
                           </Block>
@@ -225,6 +223,7 @@ const SendCustomTx = ({
                     <TextareaField
                       name="data"
                       type="text"
+                      rows={3}
                       placeholder="Data (hex encoded)*"
                       text="Data (hex encoded)*"
                     />

@@ -59,32 +59,31 @@ class OpenSea implements CollectibleMetadataSource {
   }
 
   static groupCollectibles(assetsResponseJson: { assets: OpenSeaAsset[] }) {
-    const groupedCollectibles: GroupedCollectibles = OpenSea.getAssetsAsCollectible(
-      assetsResponseJson.assets
-    ).reduce((acc, el) => {
-      const family = acc[el.assetAddress]
+    const groupedCollectibles: GroupedCollectibles = OpenSea.getAssetsAsCollectible(assetsResponseJson.assets).reduce(
+      (acc, el) => {
+        const family = acc[el.assetAddress]
 
-      if (family) {
-        acc[el.assetAddress] = [...family, el]
-      } else {
-        acc[el.assetAddress] = [el]
-      }
-
-      return acc
-    }, {})
-
-    return Object.keys(groupedCollectibles).map<CollectibleData>(
-      collectibleAddress => {
-        const collectibles = groupedCollectibles[collectibleAddress]
-        const { image_url: image, name: title } = collectibles[0].asset
-
-        return {
-          image,
-          title,
-          data: collectibles,
+        if (family) {
+          acc[el.assetAddress] = [...family, el]
+        } else {
+          acc[el.assetAddress] = [el]
         }
-      }
+
+        return acc
+      },
+      {},
     )
+
+    return Object.keys(groupedCollectibles).map<CollectibleData>(collectibleAddress => {
+      const collectibles = groupedCollectibles[collectibleAddress]
+      const { image_url: image, name: title } = collectibles[0].asset
+
+      return {
+        image,
+        title,
+        data: collectibles,
+      }
+    })
   }
 
   /**
@@ -93,10 +92,7 @@ class OpenSea implements CollectibleMetadataSource {
    * @param {string} networkName
    * @returns {Promise<Array<CollectibleData>>}
    */
-  async fetchAllUserCollectiblesAsync(
-    safeAddress: string,
-    networkName: string
-  ) {
+  async fetchAllUserCollectiblesAsync(safeAddress: string, networkName: string) {
     // eslint-disable-next-line no-underscore-dangle
     const metadataSourceUrl = this._endpointsUrls[networkName]
     const url = `${metadataSourceUrl}/assets/?owner=${safeAddress}`

@@ -1,7 +1,5 @@
 // @flow
-import {
-  lg, sm, background, secondaryText,
-} from '~/theme/variables'
+import { lg, sm, background, secondaryText } from '~/theme/variables'
 
 export const styles = () => ({
   heading: {

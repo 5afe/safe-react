@@ -45,7 +45,6 @@ const styles = () => ({
   leftIcon: {
     marginRight: sm,
   },
-
 })
 
 type Props = {
