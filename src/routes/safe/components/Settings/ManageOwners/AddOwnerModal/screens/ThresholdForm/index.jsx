@@ -22,7 +22,6 @@ export const ADD_OWNER_THRESHOLD_NEXT_BTN_TEST_ID = 'add-owner-threshold-next-bt
 
 type Props = {
   classes: Object,
-  meta: any,
   onClickBack: Function,
   onClose: () => void,
   onSubmit: Function,
@@ -30,7 +29,7 @@ type Props = {
   threshold: number,
 }
 
-const ThresholdForm = ({ classes, onClose, owners, threshold, onClickBack, onSubmit, meta }: Props) => {
+const ThresholdForm = ({ classes, onClose, owners, threshold, onClickBack, onSubmit }: Props) => {
   const handleSubmit = values => {
     onSubmit(values)
   }
@@ -63,7 +62,7 @@ const ThresholdForm = ({ classes, onClose, owners, threshold, onClickBack, onSub
                 <Col xs={2}>
                   <Field
                     name="threshold"
-                    render={props => (
+                    render={(props: any) => (
                       <>
                         <SelectField {...props} disableError>
                           {[...Array(Number(owners.size + 1))].map((x, index) => (
@@ -72,9 +71,9 @@ const ThresholdForm = ({ classes, onClose, owners, threshold, onClickBack, onSub
                             </MenuItem>
                           ))}
                         </SelectField>
-                        {meta.error && meta.touched && (
+                        {props.meta.error && props.meta.touched && (
                           <Paragraph className={classes.errorText} noMargin color="error">
-                            {meta.error}
+                            {props.meta.error}
                           </Paragraph>
                         )}
                       </>
