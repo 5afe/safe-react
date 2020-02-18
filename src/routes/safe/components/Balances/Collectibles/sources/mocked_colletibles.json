@@ -1,0 +1,229 @@
+[
+  {
+    "primary_asset_contracts": [
+      {
+        "address": "0x16baf0de678e52367adc69fd067e5edd1d33e3bf",
+        "asset_contract_type": "non-fungible",
+        "created_date": "2018-01-23T04:50:03.948541",
+        "name": "CryptoKittiesRinkeby",
+        "nft_version": "1.0",
+        "opensea_version": null,
+        "owner": 8995,
+        "schema_name": "ERC721",
+        "symbol": "KITTYR",
+        "total_supply": null,
+        "description": "The Rinkeby version of CryptoKitties",
+        "external_link": null,
+        "image_url": "https://storage.googleapis.com/opensea-static/cryptokitties-logo.png",
+        "default_to_fiat": false,
+        "dev_buyer_fee_basis_points": 0,
+        "dev_seller_fee_basis_points": 0,
+        "only_proxied_transfers": false,
+        "opensea_buyer_fee_basis_points": 0,
+        "opensea_seller_fee_basis_points": 250,
+        "buyer_fee_basis_points": 0,
+        "seller_fee_basis_points": 250,
+        "payout_address": null
+      }
+    ],
+    "traits": {
+      "cooldown_index": {
+        "min": 0,
+        "max": 7
+      },
+      "generation": {
+        "min": 0,
+        "max": 12
+      },
+      "fancy_ranking": {
+        "min": 1,
+        "max": 21
+      }
+    },
+    "stats": {
+      "seven_day_volume": 4.44,
+      "seven_day_change": 21.2,
+      "total_volume": 371.84192881733,
+      "count": 7172,
+      "num_owners": 432,
+      "market_cap": 1155.7165714285704,
+      "average_price": 1.00226934991194,
+      "items_sold": 371
+    },
+    "banner_image_url": null,
+    "chat_url": null,
+    "created_date": "2019-04-26T22:01:15.323664",
+    "default_to_fiat": false,
+    "description": "The Rinkeby version of CryptoKitties",
+    "dev_buyer_fee_basis_points": "0",
+    "dev_seller_fee_basis_points": "0",
+    "display_data": {
+      "images": [
+        "https://storage.googleapis.com/ck-kitty-image/0x06012c8cf97bead5deae237070f9587f8e7a266d/52.svg",
+        "https://storage.googleapis.com/ck-kitty-image/0x06012c8cf97bead5deae237070f9587f8e7a266d/7119.svg",
+        "https://storage.googleapis.com/ck-kitty-image/0x06012c8cf97bead5deae237070f9587f8e7a266d/7130.svg",
+        "https://storage.googleapis.com/ck-kitty-image/0x06012c8cf97bead5deae237070f9587f8e7a266d/7125.svg",
+        "https://storage.googleapis.com/ck-kitty-image/0x06012c8cf97bead5deae237070f9587f8e7a266d/7129.svg",
+        "https://user-images.githubusercontent.com/613881/34621969-0afee35a-f200-11e7-99a9-86088f2aabfe.png"
+      ]
+    },
+    "external_url": null,
+    "featured": true,
+    "featured_image_url": "https://storage.googleapis.com/opensea-static/Category-Thumb-CryptoKittes.png",
+    "hidden": false,
+    "image_url": "https://storage.googleapis.com/opensea-static/cryptokitties-logo.png",
+    "is_subject_to_whitelist": false,
+    "large_image_url": null,
+    "name": "CryptoKittiesRinkeby",
+    "only_proxied_transfers": false,
+    "opensea_buyer_fee_basis_points": "0",
+    "opensea_seller_fee_basis_points": "250",
+    "payout_address": null,
+    "require_email": false,
+    "short_description": null,
+    "slug": "cryptokittiesrinkeby",
+    "wiki_url": null,
+    "owned_asset_count": 1
+  },
+  {
+    "primary_asset_contracts": [
+      {
+        "address": "0x2fdffe9cad323d3922195292e8806987b1fc1aad",
+        "asset_contract_type": "non-fungible",
+        "created_date": "2019-11-03T12:34:42.887325",
+        "name": "Artminer",
+        "nft_version": "3.0",
+        "opensea_version": null,
+        "owner": 17142,
+        "schema_name": "ERC721",
+        "symbol": "",
+        "total_supply": "0",
+        "description": "Making your art profitable. \nProtecting your exclusive author rights",
+        "external_link": "",
+        "image_url": "https://rinkeby-storage.opensea.io/artminer-1-1572784772.jpg",
+        "default_to_fiat": false,
+        "dev_buyer_fee_basis_points": 0,
+        "dev_seller_fee_basis_points": 1000,
+        "only_proxied_transfers": false,
+        "opensea_buyer_fee_basis_points": 0,
+        "opensea_seller_fee_basis_points": 250,
+        "buyer_fee_basis_points": 0,
+        "seller_fee_basis_points": 1250,
+        "payout_address": "0x6a7e56b81afa7427cbad62f0219c6bdb354fbc6d"
+      }
+    ],
+    "traits": {},
+    "stats": {
+      "seven_day_volume": 0.11,
+      "seven_day_change": -0.8981481481481481,
+      "total_volume": 8.231,
+      "count": 89,
+      "num_owners": 30,
+      "market_cap": 13.35,
+      "average_price": 0.265516129032258,
+      "items_sold": 31
+    },
+    "banner_image_url": null,
+    "chat_url": null,
+    "created_date": "2019-11-03T12:34:42.902031",
+    "default_to_fiat": false,
+    "description": "Making your art profitable. \nProtecting your exclusive author rights",
+    "dev_buyer_fee_basis_points": "0",
+    "dev_seller_fee_basis_points": "1000",
+    "display_data": {
+      "card_display_style": "padded",
+      "images": [
+        "https://rinkeby-storage.opensea.io/0x2fdffe9cad323d3922195292e8806987b1fc1aad/7-1573403361.png",
+        "https://rinkeby-storage.opensea.io/0x2fdffe9cad323d3922195292e8806987b1fc1aad/11-1573277900.png",
+        "https://rinkeby-storage.opensea.io/0x2fdffe9cad323d3922195292e8806987b1fc1aad/5-1572866385.png",
+        "https://rinkeby-storage.opensea.io/0x2fdffe9cad323d3922195292e8806987b1fc1aad/3-1573090392.png",
+        "https://rinkeby-storage.opensea.io/0x2fdffe9cad323d3922195292e8806987b1fc1aad/12-1573040692.png",
+        "https://rinkeby-storage.opensea.io/0x2fdffe9cad323d3922195292e8806987b1fc1aad/10-1572890930.png"
+      ]
+    },
+    "external_url": "",
+    "featured": false,
+    "featured_image_url": null,
+    "hidden": true,
+    "image_url": "https://rinkeby-storage.opensea.io/artminer-1-1572784772.jpg",
+    "is_subject_to_whitelist": false,
+    "large_image_url": "https://rinkeby-storage.opensea.io/artminer-1-large-1572784772.jpg",
+    "name": "Artminer",
+    "only_proxied_transfers": false,
+    "opensea_buyer_fee_basis_points": "0",
+    "opensea_seller_fee_basis_points": "250",
+    "payout_address": "0x6a7e56b81afa7427cbad62f0219c6bdb354fbc6d",
+    "require_email": false,
+    "short_description": null,
+    "slug": "artminer-1",
+    "wiki_url": null,
+    "owned_asset_count": 1
+  },
+  {
+    "primary_asset_contracts": [
+      {
+        "address": "0x8c64017cdd6b318f29610bb92ac9973ed1b85f44",
+        "asset_contract_type": "non-fungible",
+        "created_date": "2020-01-17T08:56:16.792975",
+        "name": "Unidentified contract",
+        "nft_version": "3.0",
+        "opensea_version": null,
+        "owner": null,
+        "schema_name": "ERC721",
+        "symbol": "",
+        "total_supply": "1",
+        "description": null,
+        "external_link": null,
+        "image_url": null,
+        "default_to_fiat": false,
+        "dev_buyer_fee_basis_points": 0,
+        "dev_seller_fee_basis_points": 0,
+        "only_proxied_transfers": false,
+        "opensea_buyer_fee_basis_points": 0,
+        "opensea_seller_fee_basis_points": 250,
+        "buyer_fee_basis_points": 0,
+        "seller_fee_basis_points": 250,
+        "payout_address": null
+      }
+    ],
+    "traits": {},
+    "stats": {
+      "seven_day_volume": 0,
+      "seven_day_change": 0,
+      "total_volume": 0,
+      "count": 28,
+      "num_owners": 22,
+      "market_cap": 0,
+      "average_price": 0,
+      "items_sold": 0
+    },
+    "banner_image_url": null,
+    "chat_url": null,
+    "created_date": "2020-01-17T08:56:17.192271",
+    "default_to_fiat": false,
+    "description": null,
+    "dev_buyer_fee_basis_points": "0",
+    "dev_seller_fee_basis_points": "0",
+    "display_data": {
+      "card_display_style": "padded",
+      "images": []
+    },
+    "external_url": null,
+    "featured": false,
+    "featured_image_url": null,
+    "hidden": true,
+    "image_url": null,
+    "is_subject_to_whitelist": false,
+    "large_image_url": null,
+    "name": "Unidentified contract V107",
+    "only_proxied_transfers": false,
+    "opensea_buyer_fee_basis_points": "0",
+    "opensea_seller_fee_basis_points": "250",
+    "payout_address": null,
+    "require_email": false,
+    "short_description": null,
+    "slug": "unidentified-contract-v107",
+    "wiki_url": null,
+    "owned_asset_count": 1
+  }
+]
