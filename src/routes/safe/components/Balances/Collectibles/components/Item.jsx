@@ -1,12 +1,12 @@
 // @flow
 import * as React from 'react'
-import { withStyles } from '@material-ui/core/styles'
+import { makeStyles } from '@material-ui/core/styles'
 import cn from 'classnames'
 import CallMade from '@material-ui/icons/CallMade'
 import Button from '~/components/layout/Button'
 import { fontColor, sm, xs } from '~/theme/variables'
 
-const styles = () => ({
+const useStyles = makeStyles({
   item: {
     backgroundColor: '#fff',
     borderRadius: '8px',
@@ -50,7 +50,7 @@ const styles = () => ({
     zIndex: '5',
   },
   image: {
-    backgroundColor: '#f0efee',
+    backgroundColor: props => props.backgroundColor || '#f0efee',
     backgroundPosition: '50% 50%',
     backgroundRepeat: 'no-repeat',
     backgroundSize: 'contain',
@@ -102,31 +102,35 @@ type Props = {
   key: string,
 }
 
-const Item = ({ classes, data, key }: Props) => (
-  <div key={key} className={classes.item}>
-    <div className={classes.mainContent}>
-      <div className={classes.image} style={{ backgroundImage: `url(${data.image})` }} />
-      {data.title && data.text && (
-        <div className={classes.textContainer}>
-          {data.title && (
-            <h3 className={classes.title} title={data.title}>
-              {data.title}
-            </h3>
-          )}
-          {data.text && (
-            <p className={classes.text} title={data.text}>
-              {data.text}
-            </p>
-          )}
-        </div>
-      )}
-    </div>
-    <div className={cn(classes.extraContent, 'showOnHover')}>
-      <Button className={classes.sendButton} color="primary" size="small" variant="contained">
-        <CallMade alt="Send" className={classes.buttonIcon} /> Send
-      </Button>
-    </div>
-  </div>
-)
+const Item = ({ data, key }: Props) => {
+  const classes = useStyles({ backgroundColor: data.color })
 
-export default withStyles(styles)(Item)
+  return (
+    <div key={key} className={classes.item}>
+      <div className={classes.mainContent}>
+        <div className={classes.image} style={{ backgroundImage: `url(${data.image})` }} />
+        {data.title && data.text && (
+          <div className={classes.textContainer}>
+            {data.title && (
+              <h3 className={classes.title} title={data.title}>
+                {data.title}
+              </h3>
+            )}
+            {data.text && (
+              <p className={classes.text} title={data.text}>
+                {data.text}
+              </p>
+            )}
+          </div>
+        )}
+      </div>
+      <div className={cn(classes.extraContent, 'showOnHover')}>
+        <Button className={classes.sendButton} color="primary" size="small" variant="contained">
+          <CallMade alt="Send" className={classes.buttonIcon} /> Send
+        </Button>
+      </div>
+    </div>
+  )
+}
+
+export default Item
