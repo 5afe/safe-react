@@ -105,7 +105,7 @@ const createTransaction = ({
     safeInstance,
     to,
     valueInWei,
-    txData,
+    data: txData,
     operation,
     nonce,
     safeTxGas: 0,
@@ -113,44 +113,12 @@ const createTransaction = ({
     gasPrice: 0,
     gasToken: ZERO_ADDRESS,
     refundReceiver: ZERO_ADDRESS,
-    from,
+    sender: from,
     sigs,
   }
 
   try {
-    if (isExecution) {
-      tx = await getExecutionTransaction(
-        txArgs.safeInstance,
-        txArgs.to,
-        txArgs.valueInWei,
-        txArgs.txData,
-        txArgs.operation,
-        txArgs.nonce,
-        txArgs.safeTxGas,
-        txArgs.baseGas,
-        txArgs.gasPrice,
-        txArgs.gasToken,
-        txArgs.refundReceiver,
-        txArgs.from,
-        txArgs.sigs,
-      )
-    } else {
-      tx = await getApprovalTransaction(
-        txArgs.safeInstance,
-        txArgs.to,
-        txArgs.valueInWei,
-        txArgs.txData,
-        txArgs.operation,
-        txArgs.nonce,
-        txArgs.safeTxGas,
-        txArgs.baseGas,
-        txArgs.gasPrice,
-        txArgs.gasToken,
-        txArgs.refundReceiver,
-        txArgs.from,
-        txArgs.sigs,
-      )
-    }
+    tx = isExecution ? await getExecutionTransaction(txArgs) : await getApprovalTransaction(txArgs)
 
     const sendParams = { from, value: 0 }
 
@@ -173,23 +141,12 @@ const createTransaction = ({
         pendingExecutionKey = showSnackbar(notificationsQueue.pendingExecution, enqueueSnackbar, closeSnackbar)
 
         try {
-          await saveTxToHistory(
-            txArgs.safeInstance,
-            txArgs.to,
-            txArgs.valueInWei,
-            txArgs.txData,
-            txArgs.operation,
-            txArgs.nonce,
-            txArgs.safeTxGas,
-            txArgs.baseGas,
-            txArgs.gasPrice,
-            txArgs.gasToken,
-            txArgs.refundReceiver,
+          await saveTxToHistory({
+            ...txArgs,
             txHash,
-            from,
-            isExecution ? TX_TYPE_EXECUTION : TX_TYPE_CONFIRMATION,
+            type: isExecution ? TX_TYPE_EXECUTION : TX_TYPE_CONFIRMATION,
             origin,
-          )
+          })
           dispatch(fetchTransactions(safeAddress))
         } catch (err) {
           console.error(err)

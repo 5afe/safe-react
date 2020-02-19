@@ -59,39 +59,24 @@ const processTransaction = ({
 
   let txHash
   let transaction
+  const txArgs = {
+    safeInstance,
+    to: tx.recipient,
+    valueInWei: tx.value,
+    data: tx.data,
+    operation: tx.operation,
+    nonce: tx.nonce,
+    safeTxGas: tx.safeTxGas,
+    baseGas: tx.baseGas,
+    gasPrice: tx.gasPrice || '0',
+    gasToken: tx.gasToken,
+    refundReceiver: tx.refundReceiver,
+    sender: from,
+    sigs,
+  }
+
   try {
-    if (shouldExecute) {
-      transaction = await getExecutionTransaction(
-        safeInstance,
-        tx.recipient,
-        tx.value,
-        tx.data,
-        tx.operation,
-        tx.nonce,
-        tx.safeTxGas,
-        tx.baseGas,
-        tx.gasPrice || '0',
-        tx.gasToken,
-        tx.refundReceiver,
-        from,
-        sigs,
-      )
-    } else {
-      transaction = await getApprovalTransaction(
-        safeInstance,
-        tx.recipient,
-        tx.value,
-        tx.data,
-        tx.operation,
-        tx.nonce,
-        tx.safeTxGas,
-        tx.baseGas,
-        tx.gasPrice || '0',
-        tx.gasToken,
-        tx.refundReceiver,
-        from,
-      )
-    }
+    transaction = shouldExecute ? await getExecutionTransaction(txArgs) : await getApprovalTransaction(txArgs)
 
     const sendParams = { from, value: 0 }
     // if not set owner management tests will fail on ganache
@@ -108,22 +93,12 @@ const processTransaction = ({
         pendingExecutionKey = showSnackbar(notificationsQueue.pendingExecution, enqueueSnackbar, closeSnackbar)
 
         try {
-          await saveTxToHistory(
-            safeInstance,
-            tx.recipient,
-            tx.value,
-            tx.data,
-            tx.operation,
-            tx.nonce,
-            tx.safeTxGas,
-            tx.baseGas,
-            tx.gasPrice || '0',
-            tx.gasToken,
-            tx.refundReceiver,
+          await saveTxToHistory({
+            ...txArgs,
             txHash,
             from,
-            shouldExecute ? TX_TYPE_EXECUTION : TX_TYPE_CONFIRMATION,
-          )
+            type: shouldExecute ? TX_TYPE_EXECUTION : TX_TYPE_CONFIRMATION,
+          })
           dispatch(fetchTransactions(safeAddress))
         } catch (err) {
           console.error(err)
