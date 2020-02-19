@@ -55,6 +55,7 @@ class OpenSea implements CollectibleMetadataSource {
       order: null,
       assetAddress: asset.asset_contract.address,
       asset: asset.asset_contract,
+      collection: asset.collection,
     }
   }
 
@@ -77,10 +78,16 @@ class OpenSea implements CollectibleMetadataSource {
     return Object.keys(groupedCollectibles).map<CollectibleData>(collectibleAddress => {
       const collectibles = groupedCollectibles[collectibleAddress]
       const { image_url: image, name: title } = collectibles[0].asset
+      const { name: collectionTitle } = collectibles[0].collection
 
       return {
         image,
-        title,
+        title: title
+          .toLowerCase()
+          .trim()
+          .startsWith('unidentified')
+          ? collectionTitle
+          : title,
         data: collectibles,
       }
     })

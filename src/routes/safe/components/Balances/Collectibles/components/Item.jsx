@@ -109,7 +109,7 @@ const Item = ({ data, key }: Props) => {
     <div key={key} className={classes.item}>
       <div className={classes.mainContent}>
         <div className={classes.image} style={{ backgroundImage: `url(${data.image})` }} />
-        {data.title && data.text && (
+        {data.title && (
           <div className={classes.textContainer}>
             {data.title && (
               <h3 className={classes.title} title={data.title}>

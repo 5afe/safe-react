@@ -165,6 +165,7 @@ export type AssetCollectible = {
   order?: ?string,
   assetAddress: string,
   asset: CollectibleContract,
+  collection: OpenSeaCollection,
 }
 
 export type CollectibleData = {
