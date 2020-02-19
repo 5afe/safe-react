@@ -2756,6 +2756,11 @@ async@^2.0.1, async@^2.1.2, async@^2.4.0, async@^2.4.1, async@^2.5.0, async@^2.6
   dependencies:
     lodash "^4.17.14"
 
+async@^3.1.0:
+  version "3.1.1"
+  resolved "https://registry.yarnpkg.com/async/-/async-3.1.1.tgz#dd3542db03de837979c9ebbca64ca01b06dc98df"
+  integrity sha512-X5Dj8hK1pJNC2Wzo2Rcp9FBVdJMGRR/S7V+lH46s8GVFhtbo5O4Le5GECCF/8PISVdkUA6mMPvgz7qTTD1rf1g==
+
 asynckit@^0.4.0:
   version "0.4.0"
   resolved "https://registry.yarnpkg.com/asynckit/-/asynckit-0.4.0.tgz#c79ed97f7f34cb8f2ba1bc9790bcc366474b4b79"
@@ -2766,15 +2771,17 @@ atob@^2.1.2:
   resolved "https://registry.yarnpkg.com/atob/-/atob-2.1.2.tgz#6d9517eb9e030d2436666651e86bd9f6f13533c9"
   integrity sha512-Wm6ukoaOGJi/73p/cl2GvLjTI5JM1k/O14isD73YML8StrH/7/lRFgmg8nICZgD3bZZvjwCGxtMOD3wWNAu8cg==
 
-authereum@0.0.4-beta.68:
-  version "0.0.4-beta.68"
-  resolved "https://registry.yarnpkg.com/authereum/-/authereum-0.0.4-beta.68.tgz#dd704e0dde0153fe8c8f7d1ec60645c178018464"
-  integrity sha512-C/mRXgGrGqdM5DfA0scPIe+84EV10KhLspCccxaCNLWIGzav0WsGIjd0u9A7Qj0npdsSC6UY1hDaLa/e899pqA==
+authereum@^0.0.4-beta.83:
+  version "0.0.4-beta.96"
+  resolved "https://registry.yarnpkg.com/authereum/-/authereum-0.0.4-beta.96.tgz#4ec54a136152e41b6dba4353bd78bded638c04c8"
+  integrity sha512-Tv8UGhwuWVCLBW5Jh2uHpQJ9+MbesgYZMRKF2OK+9V8gfkyPRrnPa8/vUo9wgQByQytSS3Y/ivhWZp2F1FpsWA==
   dependencies:
+    async "^3.1.0"
     bnc-notify "^0.2.1"
     ethereum-private-key-to-address "0.0.3"
     ethers "^4.0.36"
     eventemitter3 "^4.0.0"
+    is-buffer "^2.0.4"
     moment "^2.24.0"
     penpal "^4.1.1"
     pify "^4.0.1"
@@ -8810,7 +8817,7 @@ is-buffer@^1.1.5:
   resolved "https://registry.yarnpkg.com/is-buffer/-/is-buffer-1.1.6.tgz#efaa2ea9daa0d7ab2ea13a97b2b8ad51fefbe8be"
   integrity sha512-NcdALwpXkTm5Zvvbk7owOUSvVvBKDgKP5/ewfXEznmQFfs4ZRmanOeKBTjRVjka3QFoN6XJ+9F3USqfHqTaU5w==
 
-is-buffer@^2.0.2:
+is-buffer@^2.0.2, is-buffer@^2.0.4:
   version "2.0.4"
   resolved "https://registry.yarnpkg.com/is-buffer/-/is-buffer-2.0.4.tgz#3e572f23c8411a5cfd9557c849e3665e0b290623"
   integrity sha512-Kq1rokWXOPXWuaMAqZiJW4XxsmD9zGx9q4aePabbn3qCRGedtH7Cm+zV8WETitMfu1wdh+Rvd6w5egwSngUX2A==
