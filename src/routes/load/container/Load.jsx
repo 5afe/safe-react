@@ -17,12 +17,7 @@ import { getWeb3 } from '~/logic/wallets/getWeb3'
 
 type Props = SelectorProps & Actions
 
-export const loadSafe = async (
-  safeName: string,
-  safeAddress: string,
-  owners: Array<*>,
-  addSafe: Function,
-) => {
+export const loadSafe = async (safeName: string, safeAddress: string, owners: Array<*>, addSafe: Function) => {
   const safeProps = await buildSafe(safeAddress, safeName)
   safeProps.owners = owners
 
@@ -75,7 +70,4 @@ class Load extends React.Component<Props> {
   }
 }
 
-export default connect<Object, Object, ?Function, ?Object>(
-  selector,
-  actions,
-)(Load)
+export default connect<Object, Object, ?Function, ?Object>(selector, actions)(Load)

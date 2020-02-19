@@ -11,9 +11,7 @@ import enqueueSnackbar from '~/logic/notifications/store/actions/enqueueSnackbar
 import addProvider from './addProvider'
 
 export const processProviderResponse = (dispatch: ReduxDispatch<*>, provider: ProviderProps) => {
-  const {
-    name, available, loaded, account, network,
-  } = provider
+  const { name, available, loaded, account, network } = provider
 
   const walletRecord = makeProvider({
     name,

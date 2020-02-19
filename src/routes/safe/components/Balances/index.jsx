@@ -16,9 +16,7 @@ import ButtonLink from '~/components/layout/ButtonLink'
 import Modal from '~/components/Modal'
 import { type Column, cellWidth } from '~/components/Table/TableHead'
 import Table from '~/components/Table'
-import {
-  getBalanceData, generateColumns, BALANCE_TABLE_ASSET_ID, type BalanceRow,
-} from './dataFetcher'
+import { getBalanceData, generateColumns, BALANCE_TABLE_ASSET_ID, type BalanceRow } from './dataFetcher'
 import AssetTableCell from './AssetTableCell'
 import Tokens from './Tokens'
 import SendModal from './SendModal'
@@ -103,9 +101,7 @@ class Balances extends React.Component<Props, State> {
   }
 
   render() {
-    const {
-      showToken, showReceive, sendFunds,
-    } = this.state
+    const { showToken, showReceive, sendFunds } = this.state
     const {
       classes,
       granted,
@@ -121,7 +117,7 @@ class Balances extends React.Component<Props, State> {
     } = this.props
 
     const columns = generateColumns()
-    const autoColumns = columns.filter((c) => !c.custom)
+    const autoColumns = columns.filter(c => !c.custom)
 
     const filteredData = getBalanceData(activeTokens, currencySelected, currencyValues)
 
@@ -159,73 +155,72 @@ class Balances extends React.Component<Props, State> {
             label="Balances"
             size={filteredData.size}
           >
-            {(sortedData: Array<BalanceRow>) => sortedData.map((row: any, index: number) => (
-              <TableRow tabIndex={-1} key={index} className={classes.hide} data-testid={BALANCE_ROW_TEST_ID}>
-                {autoColumns.map((column: Column) => {
-                  const { id, width, align } = column
-                  let cellItem
-                  switch (id) {
-                    case BALANCE_TABLE_ASSET_ID: {
-                      cellItem = <AssetTableCell asset={row[id]} />
-                      break
+            {(sortedData: Array<BalanceRow>) =>
+              sortedData.map((row: any, index: number) => (
+                <TableRow tabIndex={-1} key={index} className={classes.hide} data-testid={BALANCE_ROW_TEST_ID}>
+                  {autoColumns.map((column: Column) => {
+                    const { id, width, align } = column
+                    let cellItem
+                    switch (id) {
+                      case BALANCE_TABLE_ASSET_ID: {
+                        cellItem = <AssetTableCell asset={row[id]} />
+                        break
+                      }
+                      case BALANCE_TABLE_BALANCE_ID: {
+                        cellItem = <div>{row[id]}</div>
+                        break
+                      }
+                      case BALANCE_TABLE_VALUE_ID: {
+                        cellItem = <div className={classes.currencyValueRow}>{row[id]}</div>
+                        break
+                      }
+                      default: {
+                        cellItem = null
+                        break
+                      }
                     }
-                    case BALANCE_TABLE_BALANCE_ID: {
-                      cellItem = (
-                        <div>
-                          {row[id]}
-                        </div>
-                      )
-                      break
-                    }
-                    case BALANCE_TABLE_VALUE_ID: {
-                      cellItem = <div className={classes.currencyValueRow}>{row[id]}</div>
-                      break
-                    }
-                    default: {
-                      cellItem = null
-                      break
-                    }
-                  }
-                  return (
-                    <TableCell
-                      key={id}
-                      style={cellWidth(width)}
-                      align={align}
-                      component="td"
-                    >
-                      {cellItem}
-                    </TableCell>
-                  )
-                })}
-                <TableCell component="td">
-                  <Row align="end" className={classes.actions}>
-                    {granted && (
+                    return (
+                      <TableCell key={id} style={cellWidth(width)} align={align} component="td">
+                        {cellItem}
+                      </TableCell>
+                    )
+                  })}
+                  <TableCell component="td">
+                    <Row align="end" className={classes.actions}>
+                      {granted && (
+                        <Button
+                          variant="contained"
+                          size="small"
+                          color="primary"
+                          className={classes.send}
+                          onClick={() => this.showSendFunds(row.asset.address)}
+                          testId="balance-send-btn"
+                        >
+                          <CallMade
+                            alt="Send Transaction"
+                            className={classNames(classes.leftIcon, classes.iconSmall)}
+                          />
+                          Send
+                        </Button>
+                      )}
                       <Button
                         variant="contained"
                         size="small"
                         color="primary"
-                        className={classes.send}
-                        onClick={() => this.showSendFunds(row.asset.address)}
-                        testId="balance-send-btn"
+                        className={classes.receive}
+                        onClick={this.onShow('Receive')}
                       >
-                        <CallMade alt="Send Transaction" className={classNames(classes.leftIcon, classes.iconSmall)} />
-                        Send
+                        <CallReceived
+                          alt="Receive Transaction"
+                          className={classNames(classes.leftIcon, classes.iconSmall)}
+                        />
+                        Receive
                       </Button>
-                    )}
-                    <Button
-                      variant="contained"
-                      size="small"
-                      color="primary"
-                      className={classes.receive}
-                      onClick={this.onShow('Receive')}
-                    >
-                      <CallReceived alt="Receive Transaction" className={classNames(classes.leftIcon, classes.iconSmall)} />
-                      Receive
-                    </Button>
-                  </Row>
-                </TableCell>
-              </TableRow>
-            ))}
+                    </Row>
+                  </TableCell>
+                </TableRow>
+              ))
+            }
           </Table>
         </TableContainer>
         <SendModal
@@ -246,11 +241,7 @@ class Balances extends React.Component<Props, State> {
           paperClassName={classes.receiveModal}
           open={showReceive}
         >
-          <Receive
-            safeName={safeName}
-            safeAddress={safeAddress}
-            onClose={this.onHide('Receive')}
-          />
+          <Receive safeName={safeName} safeAddress={safeAddress} onClose={this.onHide('Receive')} />
         </Modal>
       </>
     )

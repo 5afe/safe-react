@@ -40,7 +40,14 @@ const styles = () => ({
 })
 
 const GnoModal = ({
-  title, description, open, children, handleClose, modalClassName, classes, paperClassName,
+  title,
+  description,
+  open,
+  children,
+  handleClose,
+  modalClassName,
+  classes,
+  paperClassName,
 }: Props) => (
   <Modal
     aria-labelledby={title}

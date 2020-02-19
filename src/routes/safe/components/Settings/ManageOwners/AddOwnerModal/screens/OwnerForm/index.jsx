@@ -15,9 +15,7 @@ import Hairline from '~/components/layout/Hairline'
 import Field from '~/components/forms/Field'
 import TextField from '~/components/forms/TextField'
 import { type Owner } from '~/routes/safe/store/models/owner'
-import {
-  composeValidators, required, minMaxLength, uniqueAddress,
-} from '~/components/forms/validator'
+import { composeValidators, required, minMaxLength, uniqueAddress } from '~/components/forms/validator'
 import { styles } from './style'
 
 export const ADD_OWNER_NAME_INPUT_TEST_ID = 'add-owner-name-input'
@@ -37,13 +35,11 @@ type Props = {
   owners: List<Owner>,
 }
 
-const OwnerForm = ({
-  classes, onClose, onSubmit, owners,
-}: Props) => {
-  const handleSubmit = (values) => {
+const OwnerForm = ({ classes, onClose, onSubmit, owners }: Props) => {
+  const handleSubmit = values => {
     onSubmit(values)
   }
-  const ownerDoesntExist = uniqueAddress(owners.map((o) => o.address))
+  const ownerDoesntExist = uniqueAddress(owners.map(o => o.address))
 
   return (
     <>

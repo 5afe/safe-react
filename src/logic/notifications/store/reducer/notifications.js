@@ -21,10 +21,10 @@ export default handleActions<NotificationReducerState, *>(
       const { key, dismissAll } = action.payload
 
       if (key) {
-        return state.update(key, (prev) => prev.set('dismissed', true))
+        return state.update(key, prev => prev.set('dismissed', true))
       }
       if (dismissAll) {
-        return state.withMutations((map) => {
+        return state.withMutations(map => {
           map.forEach((notification, notificationKey) => {
             map.set(notificationKey, notification.set('dismissed', true))
           })

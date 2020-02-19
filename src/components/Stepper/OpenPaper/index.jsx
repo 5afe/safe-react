@@ -23,9 +23,7 @@ type Props = {
   padding?: boolean,
 }
 
-const OpenPaper = ({
-  classes, children, controls, padding = true,
-}: Props) => (
+const OpenPaper = ({ classes, children, controls, padding = true }: Props) => (
   <Paper className={classes.root} elevation={1}>
     <Block className={padding ? classes.padding : ''}>{children}</Block>
     {controls}

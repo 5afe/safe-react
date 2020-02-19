@@ -7,9 +7,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import cn from 'classnames'
 import Link from '~/components/layout/Link'
 import Button from '~/components/layout/Button'
-import {
-  primary, mainFontFamily, md, screenSm,
-} from '~/theme/variables'
+import { primary, mainFontFamily, md, screenSm } from '~/theme/variables'
 import type { CookiesProps } from '~/logic/cookies/model/cookie'
 import { COOKIES_KEY } from '~/logic/cookies/model/cookie'
 import { loadFromCookie, saveCookie } from '~/logic/cookies/utils'
@@ -134,17 +132,21 @@ const CookiesBanner = () => {
 
   const cookieBannerContent = (
     <div className={classes.container}>
-      <span role="button" tabIndex="0" onClick={closeCookiesBannerHandler} onKeyDown={closeCookiesBannerHandler} className={cn(classes.acceptPreferences, classes.text)}>
+      <span
+        role="button"
+        tabIndex="0"
+        onClick={closeCookiesBannerHandler}
+        onKeyDown={closeCookiesBannerHandler}
+        className={cn(classes.acceptPreferences, classes.text)}
+      >
         Accept preferences &gt;
       </span>
       <div className={classes.content}>
         <p className={classes.text}>
-          We use cookies to give you the best experience and to help improve our website. Please read our
-          {' '}
+          We use cookies to give you the best experience and to help improve our website. Please read our{' '}
           <Link className={classes.link} to="https://safe.gnosis.io/cookie">
             Cookie Policy
-          </Link>
-          {' '}
+          </Link>{' '}
           for more information. By clicking &quot;Accept all&quot;, you agree to the storing of cookies on your device
           to enhance site navigation, analyze site usage and provide customer support.
         </p>
@@ -155,7 +157,7 @@ const CookiesBanner = () => {
               disabled
               label="Necessary"
               name="Necessary"
-              onChange={() => setLocalNecessary((prev) => !prev)}
+              onChange={() => setLocalNecessary(prev => !prev)}
               value={localNecessary}
               control={<Checkbox disabled />}
             />
@@ -164,7 +166,7 @@ const CookiesBanner = () => {
             <FormControlLabel
               label="Analytics"
               name="Analytics"
-              onChange={() => setLocalAnalytics((prev) => !prev)}
+              onChange={() => setLocalAnalytics(prev => !prev)}
               value={localAnalytics}
               control={<Checkbox checked={localAnalytics} />}
             />

@@ -17,11 +17,7 @@ import {
   TX_TYPE_EXECUTION,
   saveTxToHistory,
 } from '~/logic/safe/transactions'
-import {
-  type NotificationsQueue,
-  getNotificationsFromTxType,
-  showSnackbar,
-} from '~/logic/notifications'
+import { type NotificationsQueue, getNotificationsFromTxType, showSnackbar } from '~/logic/notifications'
 import { getErrorMessage } from '~/test/utils/ethereumErrors'
 import { ZERO_ADDRESS } from '~/logic/wallets/ethAddresses'
 import { SAFELIST_ADDRESS } from '~/routes/routes'
@@ -62,6 +58,7 @@ type CreateTransactionArgs = {
   closeSnackbar: Function,
   shouldExecute?: boolean,
   txNonce?: number,
+  operation?: 0 | 1,
 }
 
 const createTransaction = ({
@@ -74,13 +71,14 @@ const createTransaction = ({
   closeSnackbar,
   shouldExecute = false,
   txNonce,
-}: CreateTransactionArgs) => async (
-  dispatch: ReduxDispatch<GlobalState>,
-  getState: GetState<GlobalState>,
-) => {
+  operation = CALL,
+  navigateToTransactionsTab = true,
+}: CreateTransactionArgs) => async (dispatch: ReduxDispatch<GlobalState>, getState: GetState<GlobalState>) => {
   const state: GlobalState = getState()
 
-  dispatch(push(`${SAFELIST_ADDRESS}/${safeAddress}/transactions`))
+  if (navigateToTransactionsTab) {
+    dispatch(push(`${SAFELIST_ADDRESS}/${safeAddress}/transactions`))
+  }
 
   const from = userAccountSelector(state)
   const safeInstance = await getGnosisSafeInstanceAt(safeAddress)
@@ -95,14 +93,8 @@ const createTransaction = ({
     '',
   )}000000000000000000000000000000000000000000000000000000000000000001`
 
-  const notificationsQueue: NotificationsQueue = getNotificationsFromTxType(
-    notifiedTransaction,
-  )
-  const beforeExecutionKey = showSnackbar(
-    notificationsQueue.beforeExecution,
-    enqueueSnackbar,
-    closeSnackbar,
-  )
+  const notificationsQueue: NotificationsQueue = getNotificationsFromTxType(notifiedTransaction)
+  const beforeExecutionKey = showSnackbar(notificationsQueue.beforeExecution, enqueueSnackbar, closeSnackbar)
   let pendingExecutionKey
 
   let txHash
@@ -110,17 +102,45 @@ const createTransaction = ({
   try {
     if (isExecution) {
       tx = await getExecutionTransaction(
-        safeInstance, to, valueInWei, txData, CALL, nonce,
-        0, 0, 0, ZERO_ADDRESS, ZERO_ADDRESS, from, sigs,
+        safeInstance,
+        to,
+        valueInWei,
+        txData,
+        operation,
+        nonce,
+        0,
+        0,
+        0,
+        ZERO_ADDRESS,
+        ZERO_ADDRESS,
+        from,
+        sigs,
       )
     } else {
       tx = await getApprovalTransaction(
-        safeInstance, to, valueInWei, txData, CALL, nonce,
-        0, 0, 0, ZERO_ADDRESS, ZERO_ADDRESS, from, sigs,
+        safeInstance,
+        to,
+        valueInWei,
+        txData,
+        operation,
+        nonce,
+        0,
+        0,
+        0,
+        ZERO_ADDRESS,
+        ZERO_ADDRESS,
+        from,
+        sigs,
       )
     }
 
     const sendParams = { from, value: 0 }
+
+    // TODO find a better solution for this in dev and production.
+    if (process.env.REACT_APP_ENV !== 'production') {
+      sendParams.gasLimit = 1000000
+    }
+
     // if not set owner management tests will fail on ganache
     if (process.env.NODE_ENV === 'test') {
       sendParams.gas = '7000000'
@@ -128,15 +148,11 @@ const createTransaction = ({
 
     await tx
       .send(sendParams)
-      .once('transactionHash', async (hash) => {
+      .once('transactionHash', async hash => {
         txHash = hash
         closeSnackbar(beforeExecutionKey)
 
-        pendingExecutionKey = showSnackbar(
-          notificationsQueue.pendingExecution,
-          enqueueSnackbar,
-          closeSnackbar,
-        )
+        pendingExecutionKey = showSnackbar(notificationsQueue.pendingExecution, enqueueSnackbar, closeSnackbar)
 
         try {
           await saveTxToHistory(
@@ -144,7 +160,7 @@ const createTransaction = ({
             to,
             valueInWei,
             txData,
-            CALL,
+            operation,
             nonce,
             0,
             0,
@@ -160,10 +176,10 @@ const createTransaction = ({
           console.error(err)
         }
       })
-      .on('error', (error) => {
+      .on('error', error => {
         console.error('Tx error: ', error)
       })
-      .then((receipt) => {
+      .then(receipt => {
         closeSnackbar(pendingExecutionKey)
         showSnackbar(
           isExecution
@@ -181,32 +197,12 @@ const createTransaction = ({
     console.error(err)
     closeSnackbar(beforeExecutionKey)
     closeSnackbar(pendingExecutionKey)
-    showSnackbar(
-      notificationsQueue.afterExecutionError,
-      enqueueSnackbar,
-      closeSnackbar,
-    )
+    showSnackbar(notificationsQueue.afterExecutionError, enqueueSnackbar, closeSnackbar)
 
     const executeDataUsedSignatures = safeInstance.contract.methods
-      .execTransaction(
-        to,
-        valueInWei,
-        txData,
-        CALL,
-        0,
-        0,
-        0,
-        ZERO_ADDRESS,
-        ZERO_ADDRESS,
-        sigs,
-      )
+      .execTransaction(to, valueInWei, txData, operation, 0, 0, 0, ZERO_ADDRESS, ZERO_ADDRESS, sigs)
       .encodeABI()
-    const errMsg = await getErrorMessage(
-      safeInstance.address,
-      0,
-      executeDataUsedSignatures,
-      from,
-    )
+    const errMsg = await getErrorMessage(safeInstance.address, 0, executeDataUsedSignatures, from)
     console.error(`Error creating the TX: ${errMsg}`)
   }
 

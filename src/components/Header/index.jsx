@@ -58,9 +58,7 @@ class HeaderComponent extends React.PureComponent<Props, State> {
 
   getProviderInfoBased = () => {
     const { hasError } = this.state
-    const {
-      loaded, available, provider, network, userAddress,
-    } = this.props
+    const { loaded, available, provider, network, userAddress } = this.props
 
     if (hasError || !loaded) {
       return <ProviderDisconnected />
@@ -71,9 +69,7 @@ class HeaderComponent extends React.PureComponent<Props, State> {
 
   getProviderDetailsBased = () => {
     const { hasError } = this.state
-    const {
-      loaded, available, provider, network, userAddress,
-    } = this.props
+    const { loaded, available, provider, network, userAddress } = this.props
 
     if (hasError || !loaded) {
       return <ConnectDetails />
@@ -98,7 +94,4 @@ class HeaderComponent extends React.PureComponent<Props, State> {
   }
 }
 
-export default connect(
-  selector,
-  actions,
-)(withSnackbar(HeaderComponent))
+export default connect(selector, actions)(withSnackbar(HeaderComponent))

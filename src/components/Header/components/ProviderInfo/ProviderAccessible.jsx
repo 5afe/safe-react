@@ -54,9 +54,7 @@ const styles = () => ({
   },
 })
 
-const ProviderInfo = ({
-  provider, network, userAddress, connected, classes,
-}: Props) => {
+const ProviderInfo = ({ provider, network, userAddress, connected, classes }: Props) => {
   const providerText = `${provider} [${network}]`
   const cutAddress = connected ? shortVersionOf(userAddress, 4) : 'Connection Error'
   const color = connected ? 'primary' : 'warning'

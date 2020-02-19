@@ -1,9 +1,7 @@
 // @flow
-import * as React from 'react'
+import React, { useState } from 'react'
 import classNames from 'classnames/bind'
-import {
-  Switch, Redirect, Route, withRouter,
-} from 'react-router-dom'
+import { Switch, Redirect, Route, withRouter } from 'react-router-dom'
 import Tabs from '@material-ui/core/Tabs'
 import Tab from '@material-ui/core/Tab'
 import CallMade from '@material-ui/icons/CallMade'
@@ -22,8 +20,9 @@ import Modal from '~/components/Modal'
 import SendModal from './Balances/SendModal'
 import Receive from './Balances/Receive'
 import NoSafe from '~/components/NoSafe'
+import { GenericModal } from '~/components-v2'
 import { type SelectorProps } from '~/routes/safe/container/selector'
-import { getEtherScanLink } from '~/logic/wallets/getWeb3'
+import { getEtherScanLink, getWeb3 } from '~/logic/wallets/getWeb3'
 import { border } from '~/theme/variables'
 import { type Actions } from '../container/actions'
 import Balances from './Balances'
@@ -35,12 +34,15 @@ import { SettingsIcon } from './assets/SettingsIcon'
 import { AddressBookIcon } from './assets/AddressBookIcon'
 import { TransactionsIcon } from './assets/TransactionsIcon'
 import { BalancesIcon } from './assets/BalancesIcon'
+import { AppsIcon } from './assets/AppsIcon'
 
 export const BALANCES_TAB_BTN_TEST_ID = 'balances-tab-btn'
 export const SETTINGS_TAB_BTN_TEST_ID = 'settings-tab-btn'
 export const TRANSACTIONS_TAB_BTN_TEST_ID = 'transactions-tab-btn'
 export const ADDRESS_BOOK_TAB_BTN_TEST_ID = 'address-book-tab-btn'
 export const SAFE_VIEW_NAME_HEADING_TEST_ID = 'safe-name-heading'
+
+const Apps = React.lazy(() => import('./Apps'))
 
 type Props = SelectorProps &
   Actions & {
@@ -92,6 +94,14 @@ const Layout = (props: Props) => {
     updateAddressBookEntry,
   } = props
 
+  const [modal, setModal] = useState({
+    isOpen: false,
+    title: null,
+    body: null,
+    footer: null,
+    onClose: null,
+  })
+
   const handleCallToRouter = (_, value) => {
     const { history } = props
 
@@ -104,6 +114,25 @@ const Layout = (props: Props) => {
 
   const { address, ethBalance, name } = safe
   const etherScanLink = getEtherScanLink('address', address)
+  const web3Instance = getWeb3()
+
+  const openGenericModal = modalConfig => {
+    setModal({ ...modalConfig, isOpen: true })
+  }
+
+  const closeGenericModal = () => {
+    if (modal.onClose) {
+      modal.onClose()
+    }
+
+    setModal({
+      isOpen: false,
+      title: null,
+      body: null,
+      footer: null,
+      onClose: null,
+    })
+  }
 
   const labelAddressBook = (
     <>
@@ -111,6 +140,14 @@ const Layout = (props: Props) => {
       Address Book
     </>
   )
+
+  const labelApps = (
+    <>
+      <AppsIcon />
+      Apps
+    </>
+  )
+
   const labelSettings = (
     <>
       <SettingsIcon />
@@ -128,6 +165,21 @@ const Layout = (props: Props) => {
       <TransactionsIcon />
       Transactions
     </>
+  )
+
+  const renderAppsTab = () => (
+    <React.Suspense>
+      <Apps
+        safeAddress={address}
+        safeName={name}
+        ethBalance={ethBalance}
+        web3={web3Instance}
+        network={network}
+        createTransaction={createTransaction}
+        openModal={openGenericModal}
+        closeModal={closeGenericModal}
+      />
+    </React.Suspense>
   )
 
   return (
@@ -200,6 +252,17 @@ const Layout = (props: Props) => {
           label={labelTransactions}
           value={`${match.url}/transactions`}
         />
+        {process.env.REACT_APP_ENV !== 'production' && (
+          <Tab
+            classes={{
+              selected: classes.tabWrapperSelected,
+              wrapper: classes.tabWrapper,
+            }}
+            label={labelApps}
+            value={`${match.url}/apps`}
+            data-testid={TRANSACTIONS_TAB_BTN_TEST_ID}
+          />
+        )}
         <Tab
           classes={{
             selected: classes.tabWrapperSelected,
@@ -261,6 +324,9 @@ const Layout = (props: Props) => {
             />
           )}
         />
+        {process.env.REACT_APP_ENV !== 'production' && (
+          <Route exact path={`${match.path}/apps`} render={renderAppsTab} />
+        )}
         <Route
           exact
           path={`${match.path}/settings`}
@@ -305,6 +371,8 @@ const Layout = (props: Props) => {
       >
         <Receive safeName={name} safeAddress={address} onClose={onHide('Receive')} />
       </Modal>
+
+      {modal.isOpen && <GenericModal {...modal} onClose={closeGenericModal} />}
     </>
   )
 }

@@ -200,6 +200,7 @@ export const enhanceSnackbarForAction = (notification: Notification, key?: strin
   options: {
     ...notification.options,
     onClick,
+    // eslint-disable-next-line react/display-name
     action: (actionKey: number) => (
       <IconButton onClick={() => store.dispatch(closeSnackbarAction({ key: actionKey }))}>
         <IconClose />
@@ -208,18 +209,13 @@ export const enhanceSnackbarForAction = (notification: Notification, key?: strin
   },
 })
 
-export const showSnackbar = (
-  notification: Notification,
-  enqueueSnackbar: Function,
-  closeSnackbar: Function,
-) => enqueueSnackbar(
-  notification.message,
-  {
+export const showSnackbar = (notification: Notification, enqueueSnackbar: Function, closeSnackbar: Function) =>
+  enqueueSnackbar(notification.message, {
     ...notification.options,
-    action: (key) => (
+    // eslint-disable-next-line react/display-name
+    action: key => (
       <IconButton onClick={() => closeSnackbar(key)}>
         <IconClose />
       </IconButton>
     ),
-  },
-)
+  })

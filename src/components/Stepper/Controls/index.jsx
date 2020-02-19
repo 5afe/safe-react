@@ -30,15 +30,7 @@ type Props = {
   buttonLabels?: Array<string>,
 }
 
-const Controls = ({
-  onPrevious,
-  firstPage,
-  penultimate,
-  lastPage,
-  disabled,
-  currentStep,
-  buttonLabels,
-}: Props) => {
+const Controls = ({ onPrevious, firstPage, penultimate, lastPage, disabled, currentStep, buttonLabels }: Props) => {
   const back = firstPage ? 'Cancel' : 'Back'
 
   let next
