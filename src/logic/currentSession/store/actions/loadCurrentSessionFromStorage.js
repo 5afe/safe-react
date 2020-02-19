@@ -6,7 +6,7 @@ import loadCurrentSession from '~/logic/currentSession/store/actions/loadCurrent
 import { makeCurrentSession } from '~/logic/currentSession/store/model/currentSession'
 
 const loadCurrentSessionFromStorage = () => async (dispatch: ReduxDispatch<GlobalState>) => {
-  const currentSession = (await getCurrentSessionFromStorage())
+  const currentSession = await getCurrentSessionFromStorage()
 
   dispatch(loadCurrentSession(makeCurrentSession(currentSession ? currentSession : {})))
 }

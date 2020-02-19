@@ -63,10 +63,7 @@ type IncomingTxServiceModel = {
   from: string,
 }
 
-export const buildTransactionFrom = async (
-  safeAddress: string,
-  tx: TxServiceModel,
-): Promise<Transaction> => {
+export const buildTransactionFrom = async (safeAddress: string, tx: TxServiceModel): Promise<Transaction> => {
   const { owners } = await getLocalSafe(safeAddress)
 
   const confirmations = List(
@@ -74,7 +71,7 @@ export const buildTransactionFrom = async (
       let ownerName = 'UNKNOWN'
 
       if (owners) {
-        const storedOwner = owners.find((owner) => sameAddress(conf.owner, owner.address))
+        const storedOwner = owners.find(owner => sameAddress(conf.owner, owner.address))
 
         if (storedOwner) {
           ownerName = storedOwner.name
@@ -122,7 +119,7 @@ export const buildTransactionFrom = async (
     const tokenContract = await getHumanFriendlyToken()
     const tokenInstance = await tokenContract.at(tx.to)
     try {
-      [symbol, decimals] = await Promise.all([tokenInstance.symbol(), tokenInstance.decimals()])
+      ;[symbol, decimals] = await Promise.all([tokenInstance.symbol(), tokenInstance.decimals()])
     } catch (err) {
       const alternativeTokenInstance = new web3.eth.Contract(ALTERNATIVE_TOKEN_ABI, tx.to)
       const [tokenSymbol, tokenDecimals] = await Promise.all([
@@ -176,36 +173,41 @@ export const buildTransactionFrom = async (
   })
 }
 
-const addMockSafeCreationTx = (safeAddress): Array<TxServiceModel> => [{
-  blockNumber: null,
-  baseGas: 0,
-  confirmations: [],
-  data: null,
-  executionDate: null,
-  gasPrice: 0,
-  gasToken: '0x0000000000000000000000000000000000000000',
-  isExecuted: true,
-  nonce: null,
-  operation: 0,
-  refundReceiver: '0x0000000000000000000000000000000000000000',
-  safe: safeAddress,
-  safeTxGas: 0,
-  safeTxHash: '',
-  signatures: null,
-  submissionDate: null,
-  executor: '',
-  to: '',
-  transactionHash: null,
-  value: 0,
-  creationTx: true,
-}]
+const addMockSafeCreationTx = (safeAddress): Array<TxServiceModel> => [
+  {
+    blockNumber: null,
+    baseGas: 0,
+    confirmations: [],
+    data: null,
+    executionDate: null,
+    gasPrice: 0,
+    gasToken: '0x0000000000000000000000000000000000000000',
+    isExecuted: true,
+    nonce: null,
+    operation: 0,
+    refundReceiver: '0x0000000000000000000000000000000000000000',
+    safe: safeAddress,
+    safeTxGas: 0,
+    safeTxHash: '',
+    signatures: null,
+    submissionDate: null,
+    executor: '',
+    to: '',
+    transactionHash: null,
+    value: 0,
+    creationTx: true,
+  },
+]
 
 export const buildIncomingTransactionFrom = async (tx: IncomingTxServiceModel) => {
   let symbol = 'ETH'
   let decimals = 18
 
-  const fee = await web3.eth.getTransaction(tx.transactionHash)
-    .then(({ gas, gasPrice }) => bn(gas).div(gasPrice).toFixed())
+  const fee = await web3.eth.getTransaction(tx.transactionHash).then(({ gas, gasPrice }) =>
+    bn(gas)
+      .div(gasPrice)
+      .toFixed(),
+  )
 
   if (tx.tokenAddress) {
     try {
@@ -217,8 +219,7 @@ export const buildIncomingTransactionFrom = async (tx: IncomingTxServiceModel) =
     } catch (err) {
       try {
         const { methods } = new web3.eth.Contract(ALTERNATIVE_TOKEN_ABI, tx.tokenAddress)
-        const [tokenSymbol, tokenDecimals] = await Promise.all([methods.symbol, methods.decimals].map((m) => m()
-          .call()))
+        const [tokenSymbol, tokenDecimals] = await Promise.all([methods.symbol, methods.decimals].map(m => m().call()))
         symbol = web3.utils.hexToString(tokenSymbol)
         decimals = tokenDecimals
       } catch (e) {
@@ -266,7 +267,7 @@ export const loadSafeTransactions = async (safeAddress: string): Promise<SafeTra
     transactions.map((tx: TxServiceModel) => buildTransactionFrom(safeAddress, tx)),
   )
 
-  const groupedTxs = List(txsRecord).groupBy((tx) => (tx.get('cancellationTx') ? 'cancel' : 'outgoing'))
+  const groupedTxs = List(txsRecord).groupBy(tx => (tx.get('cancellationTx') ? 'cancel' : 'outgoing'))
 
   return {
     outgoing: Map().set(safeAddress, groupedTxs.get('outgoing')),

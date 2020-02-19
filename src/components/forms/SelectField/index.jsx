@@ -10,9 +10,7 @@ const style = {
 }
 
 const SelectInput = ({
-  input: {
-    name, value, onChange, ...restInput
-  },
+  input: { name, value, onChange, ...restInput },
   meta,
   label,
   formControlProps,

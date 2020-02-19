@@ -15,9 +15,7 @@ type Props = {
   testId?: string,
 }
 
-const Row = ({
-  children, className, margin, align, grow, testId = '', ...props
-}: Props) => {
+const Row = ({ children, className, margin, align, grow, testId = '', ...props }: Props) => {
   const rowClassNames = cx(
     styles.row,
     margin ? capitalize(margin, 'margin') : undefined,

@@ -65,9 +65,10 @@ const getInfuraUrl = () => {
 
 // With some wallets from web3connect you have to use their provider instance only for signing
 // And our own one to fetch data
-export const web3ReadOnly = process.env.NODE_ENV !== 'test'
-  ? new Web3(new Web3.providers.HttpProvider(getInfuraUrl()))
-  : new Web3(window.web3.currentProvider)
+export const web3ReadOnly =
+  process.env.NODE_ENV !== 'test'
+    ? new Web3(new Web3.providers.HttpProvider(getInfuraUrl()))
+    : new Web3(window.web3.currentProvider)
 
 let web3 = web3ReadOnly
 export const getWeb3 = () => web3
@@ -137,7 +138,7 @@ export const getAccountFrom: Function = async (web3Provider): Promise<string | n
   return accounts && accounts.length > 0 ? accounts[0] : null
 }
 
-const getNetworkIdFrom = async (web3Provider) => {
+const getNetworkIdFrom = async web3Provider => {
   const networkId = await web3Provider.eth.net.getId()
 
   return networkId
@@ -173,7 +174,7 @@ export const getBalanceInEtherOf = async (safeAddress: string) => {
     return '0'
   }
 
-  const funds: String = await web3.eth.getBalance(safeAddress)
+  const funds: string = await web3.eth.getBalance(safeAddress)
 
   if (!funds) {
     return '0'

@@ -15,8 +15,8 @@ export default handleActions<State, *>(
     [ADD_TOKENS]: (state: State, action: ActionType<Function>): State => {
       const { tokens } = action.payload
 
-      const newState = state.withMutations((map) => {
-        tokens.forEach((token) => {
+      const newState = state.withMutations(map => {
+        tokens.forEach(token => {
           map.set(token.address, token)
         })
       })

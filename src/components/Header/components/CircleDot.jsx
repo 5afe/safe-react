@@ -4,9 +4,7 @@ import { withStyles } from '@material-ui/core/styles'
 import Dot from '@material-ui/icons/FiberManualRecord'
 import Block from '~/components/layout/Block'
 import Img from '~/components/layout/Img'
-import {
-  fancy, border, warning, screenSm,
-} from '~/theme/variables'
+import { fancy, border, warning, screenSm } from '~/theme/variables'
 
 const key = require('../assets/key.svg')
 const triangle = require('../assets/triangle.svg')

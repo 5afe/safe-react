@@ -52,17 +52,16 @@ export const defaultSafeSelector: Selector<GlobalState, {}, string> = createSele
 
 const transactionsSelector = (state: GlobalState): TransactionsState => state[TRANSACTIONS_REDUCER_ID]
 
-const cancellationTransactionsSelector = (state: GlobalState): CancelTransactionsState => state[
-  CANCELLATION_TRANSACTIONS_REDUCER_ID
-]
+const cancellationTransactionsSelector = (state: GlobalState): CancelTransactionsState =>
+  state[CANCELLATION_TRANSACTIONS_REDUCER_ID]
 
-const incomingTransactionsSelector = (state: GlobalState): IncomingTransactionsState => state[
-  INCOMING_TRANSACTIONS_REDUCER_ID
-]
+const incomingTransactionsSelector = (state: GlobalState): IncomingTransactionsState =>
+  state[INCOMING_TRANSACTIONS_REDUCER_ID]
 
 const oneTransactionSelector = (state: GlobalState, props: TransactionProps) => props.transaction
 
-export const safeParamAddressSelector = (state: GlobalState, props: RouterProps) => props.match.params[SAFE_PARAM_ADDRESS] || ''
+export const safeParamAddressSelector = (state: GlobalState, props: RouterProps) =>
+  props.match.params[SAFE_PARAM_ADDRESS] || ''
 
 type TxSelectorType = Selector<GlobalState, RouterProps, List<Transaction>>
 
@@ -109,10 +108,7 @@ export const safeCancellationTransactionsSelector: TxSelectorType = createSelect
 )
 
 export const safeParamAddressFromStateSelector = (state: GlobalState): string => {
-  const match = matchPath(
-    state.router.location.pathname,
-    { path: `${SAFELIST_ADDRESS}/:safeAddress` },
-  )
+  const match = matchPath(state.router.location.pathname, { path: `${SAFELIST_ADDRESS}/:safeAddress` })
 
   return match ? match.params.safeAddress : null
 }
@@ -189,9 +185,11 @@ export const safeBlacklistedTokensSelector: Selector<GlobalState, RouterProps, L
   },
 )
 
-export const safeActiveTokensSelectorBySafe = (safeAddress: string, safes: Map<string, Safe>): List<string> => safes.get(safeAddress).get('activeTokens')
+export const safeActiveTokensSelectorBySafe = (safeAddress: string, safes: Map<string, Safe>): List<string> =>
+  safes.get(safeAddress).get('activeTokens')
 
-export const safeBlacklistedTokensSelectorBySafe = (safeAddress: string, safes: Map<string, Safe>): List<string> => safes.get(safeAddress).get('blacklistedTokens')
+export const safeBlacklistedTokensSelectorBySafe = (safeAddress: string, safes: Map<string, Safe>): List<string> =>
+  safes.get(safeAddress).get('blacklistedTokens')
 
 export const safeBalancesSelector: Selector<GlobalState, RouterProps, Map<string, string>> = createSelector(
   safeSelector,
@@ -207,9 +205,9 @@ export const safeBalancesSelector: Selector<GlobalState, RouterProps, Map<string
 export const getActiveTokensAddressesForAllSafes: Selector<GlobalState, any, Set<string>> = createSelector(
   safesListSelector,
   (safes: List<Safe>) => {
-    const addresses = Set().withMutations((set) => {
+    const addresses = Set().withMutations(set => {
       safes.forEach((safe: Safe) => {
-        safe.activeTokens.forEach((tokenAddress) => {
+        safe.activeTokens.forEach(tokenAddress => {
           set.add(tokenAddress)
         })
       })
@@ -222,9 +220,9 @@ export const getActiveTokensAddressesForAllSafes: Selector<GlobalState, any, Set
 export const getBlacklistedTokensAddressesForAllSafes: Selector<GlobalState, any, Set<string>> = createSelector(
   safesListSelector,
   (safes: List<Safe>) => {
-    const addresses = Set().withMutations((set) => {
+    const addresses = Set().withMutations(set => {
       safes.forEach((safe: Safe) => {
-        safe.blacklistedTokens.forEach((tokenAddress) => {
+        safe.blacklistedTokens.forEach(tokenAddress => {
           set.add(tokenAddress)
         })
       })

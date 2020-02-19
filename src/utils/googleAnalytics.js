@@ -7,7 +7,6 @@ import type { CookiesProps } from '~/logic/cookies/model/cookie'
 import type { RouterProps } from '~/routes/safe/store/selectors'
 import { loadFromCookie } from '~/logic/cookies/utils'
 
-
 let analyticsLoaded = false
 export const loadGoogleAnalytics = () => {
   if (analyticsLoaded) {
@@ -25,7 +24,6 @@ export const loadGoogleAnalytics = () => {
   }
 }
 
-
 export const withTracker = (WrappedComponent, options = {}) => {
   const [useAnalytics, setUseAnalytics] = useState(false)
 
@@ -40,7 +38,7 @@ export const withTracker = (WrappedComponent, options = {}) => {
     fetchCookiesFromStorage()
   }, [])
 
-  const trackPage = (page) => {
+  const trackPage = page => {
     if (!useAnalytics || !analyticsLoaded) {
       return
     }

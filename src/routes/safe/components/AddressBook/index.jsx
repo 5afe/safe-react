@@ -46,22 +46,19 @@ import { extendedSafeTokensSelector } from '~/routes/safe/container/selector'
 import { isUserOwnerOnAnySafe } from '~/logic/wallets/ethAddresses'
 
 type Props = {
-  classes: Object
+  classes: Object,
 }
 
 const AddressBookTable = ({ classes }: Props) => {
   const columns = generateColumns()
-  const autoColumns = columns.filter((c) => !c.custom)
+  const autoColumns = columns.filter(c => !c.custom)
   const dispatch = useDispatch()
   const addressBook = useSelector(getAddressBookListSelector)
   const [selectedEntry, setSelectedEntry] = useState(null)
-  const [editCreateEntryModalOpen, setEditCreateEntryModalOpen] = useState(
-    false,
-  )
+  const [editCreateEntryModalOpen, setEditCreateEntryModalOpen] = useState(false)
   const [deleteEntryModalOpen, setDeleteEntryModalOpen] = useState(false)
   const [sendFundsModalOpen, setSendFundsModalOpen] = useState(false)
   const entryAddressToEditOrCreateNew = useSelector(addressBookQueryParamsSelector)
-
 
   useEffect(() => {
     if (entryAddressToEditOrCreateNew) {
@@ -71,18 +68,23 @@ const AddressBookTable = ({ classes }: Props) => {
 
   useEffect(() => {
     if (entryAddressToEditOrCreateNew) {
-      const key = addressBook.findKey((entry) => entry.address === entryAddressToEditOrCreateNew)
+      const key = addressBook.findKey(entry => entry.address === entryAddressToEditOrCreateNew)
       if (key >= 0) {
         // Edit old entry
         const value = addressBook.get(key)
         setSelectedEntry({ entry: value, index: key })
       } else {
         // Create new entry
-        setSelectedEntry(null)
+        setSelectedEntry({
+          entry: {
+            name: '',
+            address: entryAddressToEditOrCreateNew,
+            isNew: true,
+          },
+        })
       }
     }
-  },
-  [addressBook])
+  }, [addressBook])
 
   const safe = useSelector(safeSelector)
   const safesList = useSelector(safesListSelector)
@@ -134,87 +136,75 @@ const AddressBookTable = ({ classes }: Props) => {
             disableLoadingOnEmptyTable
             defaultRowsPerPage={25}
           >
-            {(sortedData: List<OwnerRow>) => sortedData.map((row: AddressBookEntry, index: number) => {
-              const userOwner = isUserOwnerOnAnySafe(safesList, row.address)
-              const hideBorderBottom = index >= 3
-              && index === sortedData.size - 1
-              && classes.noBorderBottom
-              return (
-                <TableRow
-                  tabIndex={-1}
-                  key={index}
-                  className={cn(
-                    classes.hide,
-                    hideBorderBottom,
-                  )}
-                  data-testid={ADDRESS_BOOK_ROW_ID}
-                >
-                  {autoColumns.map((column: Column) => (
-                    <TableCell
-                      key={column.id}
-                      style={cellWidth(column.width)}
-                      align={column.align}
-                      component="td"
-                    >
-                      {column.id === AB_ADDRESS_ID ? (
-                        <OwnerAddressTableCell
-                          address={row[column.id]}
-                          showLinks
+            {(sortedData: List<OwnerRow>) =>
+              sortedData.map((row: AddressBookEntry, index: number) => {
+                const userOwner = isUserOwnerOnAnySafe(safesList, row.address)
+                const hideBorderBottom = index >= 3 && index === sortedData.size - 1 && classes.noBorderBottom
+                return (
+                  <TableRow
+                    tabIndex={-1}
+                    key={index}
+                    className={cn(classes.hide, hideBorderBottom)}
+                    data-testid={ADDRESS_BOOK_ROW_ID}
+                  >
+                    {autoColumns.map((column: Column) => (
+                      <TableCell key={column.id} style={cellWidth(column.width)} align={column.align} component="td">
+                        {column.id === AB_ADDRESS_ID ? (
+                          <OwnerAddressTableCell address={row[column.id]} showLinks />
+                        ) : (
+                          row[column.id]
+                        )}
+                      </TableCell>
+                    ))}
+                    <TableCell component="td">
+                      <Row align="end" className={classes.actions}>
+                        <Img
+                          alt="Edit entry"
+                          className={classes.editEntryButton}
+                          src={RenameOwnerIcon}
+                          onClick={() => {
+                            setSelectedEntry({
+                              entry: { ...row, isOwnerAddress: userOwner },
+                            })
+                            setEditCreateEntryModalOpen(true)
+                          }}
+                          testId={EDIT_ENTRY_BUTTON}
                         />
-                      ) : (
-                        row[column.id]
-                      )}
-                    </TableCell>
-                  ))}
-                  <TableCell component="td">
-                    <Row align="end" className={classes.actions}>
-                      <Img
-                        alt="Edit entry"
-                        className={classes.editEntryButton}
-                        src={RenameOwnerIcon}
-                        onClick={() => {
-                          setSelectedEntry({ entry: { ...row, isOwnerAddress: userOwner } })
-                          setEditCreateEntryModalOpen(true)
-                        }}
-                        testId={EDIT_ENTRY_BUTTON}
-                      />
-                      <Img
-                        alt="Remove entry"
-                        className={userOwner ? classes.removeEntryButtonDisabled : classes.removeEntryButton}
-                        src={userOwner ? RemoveOwnerIconDisabled : RemoveOwnerIcon}
-                        onClick={() => {
-                          if (!userOwner) {
+                        <Img
+                          alt="Remove entry"
+                          className={userOwner ? classes.removeEntryButtonDisabled : classes.removeEntryButton}
+                          src={userOwner ? RemoveOwnerIconDisabled : RemoveOwnerIcon}
+                          onClick={() => {
+                            if (!userOwner) {
+                              setSelectedEntry({ entry: row })
+                              setDeleteEntryModalOpen(true)
+                            }
+                          }}
+                          testId={REMOVE_ENTRY_BUTTON}
+                        />
+                        <Button
+                          variant="contained"
+                          size="small"
+                          color="primary"
+                          className={classes.send}
+                          testId={SEND_ENTRY_BUTTON}
+                          onClick={() => {
                             setSelectedEntry({ entry: row })
-                            setDeleteEntryModalOpen(true)
-                          }
-                        }}
-                        testId={REMOVE_ENTRY_BUTTON}
-                      />
-                      <Button
-                        variant="contained"
-                        size="small"
-                        color="primary"
-                        className={classes.send}
-                        testId={SEND_ENTRY_BUTTON}
-                        onClick={() => {
-                          setSelectedEntry({ entry: row })
-                          setSendFundsModalOpen(true)
-                        }}
-                      >
-                        <CallMade
-                          alt="Send Transaction"
-                          className={classNames(
-                            classes.leftIcon,
-                            classes.iconSmall,
-                          )}
-                        />
-                      Send
-                      </Button>
-                    </Row>
-                  </TableCell>
-                </TableRow>
-              )
-            })}
+                            setSendFundsModalOpen(true)
+                          }}
+                        >
+                          <CallMade
+                            alt="Send Transaction"
+                            className={classNames(classes.leftIcon, classes.iconSmall)}
+                          />
+                          Send
+                        </Button>
+                      </Row>
+                    </TableCell>
+                  </TableRow>
+                )
+              })
+            }
           </Table>
         </TableContainer>
       </Block>
@@ -239,11 +229,7 @@ const AddressBookTable = ({ classes }: Props) => {
         ethBalance={ethBalance}
         tokens={activeTokens}
         activeScreenType="sendFunds"
-        recipientAddress={
-          selectedEntry && selectedEntry.entry
-            ? selectedEntry.entry.address
-            : undefined
-        }
+        recipientAddress={selectedEntry && selectedEntry.entry ? selectedEntry.entry.address : undefined}
       />
     </>
   )

@@ -83,12 +83,12 @@ const Send = ({
 
   const scalableModalSize = activeScreen === 'chooseTxType'
 
-  const handleTxCreation = (txInfo) => {
+  const handleTxCreation = txInfo => {
     setActiveScreen('reviewTx')
     setTx(txInfo)
   }
 
-  const handleCustomTxCreation = (customTxInfo) => {
+  const handleCustomTxCreation = customTxInfo => {
     setActiveScreen('reviewCustomTx')
     setTx(customTxInfo)
   }
@@ -102,11 +102,11 @@ const Send = ({
       paperClassName={cn(scalableModalSize ? classes.scalableStaticModalWindow : classes.scalableModalWindow)}
     >
       <Suspense
-        fallback={(
+        fallback={
           <div style={loaderStyle}>
             <CircularProgress size={40} />
           </div>
-        )}
+        }
       >
         {activeScreen === 'chooseTxType' && <ChooseTxType onClose={onClose} setActiveScreen={setActiveScreen} />}
         {activeScreen === 'sendFunds' && (

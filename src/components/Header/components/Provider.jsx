@@ -56,9 +56,7 @@ class Provider extends React.Component<Props> {
   }
 
   render() {
-    const {
-      open, toggle, children, classes, info,
-    } = this.props
+    const { open, toggle, children, classes, info } = this.props
 
     return (
       <>

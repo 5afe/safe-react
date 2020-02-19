@@ -20,9 +20,7 @@ type Props = {
 }
 
 const Heading = (props: Props) => {
-  const {
-    align, tag, truncate, margin, color, children, testId, className = '', ...rest
-  } = props
+  const { align, tag, truncate, margin, color, children, testId, className = '', ...rest } = props
 
   const classes = cx(className, 'heading', align, tag, margin ? capitalize(margin, 'margin') : undefined, color, {
     truncate,

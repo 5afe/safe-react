@@ -64,10 +64,7 @@ const getIncomingTxTableData = (tx: IncomingTransaction): TransactionRow => ({
   [TX_TABLE_RAW_TX_ID]: tx,
 })
 
-const getTransactionTableData = (
-  tx: Transaction,
-  cancelTx: ?Transaction,
-): TransactionRow => {
+const getTransactionTableData = (tx: Transaction, cancelTx: ?Transaction): TransactionRow => {
   const txDate = tx.submissionDate
 
   let txType = 'outgoing'
@@ -99,7 +96,7 @@ export const getTxTableData = (
 ): List<TransactionRow> => {
   const cancelTxsByNonce = cancelTxs.reduce((acc, tx) => acc.set(tx.nonce, tx), Map())
 
-  return transactions.map((tx) => {
+  return transactions.map(tx => {
     if (tx.type === INCOMING_TX_TYPE) {
       return getIncomingTxTableData(tx)
     }

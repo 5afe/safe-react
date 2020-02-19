@@ -4,9 +4,7 @@ import { makeStyles } from '@material-ui/core/styles'
 import { getNetwork } from '~/config'
 import Paragraph from '~/components/layout/Paragraph'
 import Col from '~/components/layout/Col'
-import {
-  xs, sm, md, border, screenSm,
-} from '~/theme/variables'
+import { xs, sm, md, border, screenSm } from '~/theme/variables'
 
 const network = getNetwork()
 const formattedNetwork = network[0].toUpperCase() + network.substring(1).toLowerCase()

@@ -13,9 +13,7 @@ import Hairline from '~/components/layout/Hairline'
 import Col from '~/components/layout/Col'
 import EtherscanBtn from '~/components/EtherscanBtn'
 import CopyBtn from '~/components/CopyBtn'
-import {
-  sm, lg, md, secondaryText, screenSm,
-} from '~/theme/variables'
+import { sm, lg, md, secondaryText, screenSm } from '~/theme/variables'
 import { copyToClipboard } from '~/utils/clipboard'
 
 const styles = () => ({
@@ -80,9 +78,7 @@ type Props = {
   safeAddress: string,
 }
 
-const Receive = ({
-  classes, onClose, safeAddress, safeName,
-}: Props) => (
+const Receive = ({ classes, onClose, safeAddress, safeName }: Props) => (
   <>
     <Row align="center" grow className={classes.heading}>
       <Paragraph className={classes.manage} size="xl" weight="bolder" noMargin>

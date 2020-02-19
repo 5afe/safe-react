@@ -12,9 +12,7 @@ import EtherscanBtn from '~/components/EtherscanBtn'
 import Paragraph from '~/components/layout/Paragraph'
 import CopyBtn from '~/components/CopyBtn'
 import Hairline from '~/components/layout/Hairline'
-import {
-  xs, sm, lg, border, screenSm,
-} from '~/theme/variables'
+import { xs, sm, lg, border, screenSm } from '~/theme/variables'
 import { shortVersionOf } from '~/logic/wallets/ethAddresses'
 import { getAccountsFrom } from '~/routes/open/utils/safeDataExtractor'
 import { getOwnerNameBy, getOwnerAddressBy, getNumOwnersFrom } from '~/routes/open/components/fields'
