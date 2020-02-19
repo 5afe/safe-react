@@ -1,6 +1,7 @@
 // @flow
-import * as React from 'react'
-import { withStyles } from '@material-ui/core/styles'
+import React from 'react'
+import { useSelector } from 'react-redux'
+import { makeStyles } from '@material-ui/core/styles'
 import TablePagination from '@material-ui/core/TablePagination'
 import Card from '@material-ui/core/Card'
 import { screenSm, fontColor } from '~/theme/variables'
@@ -8,8 +9,9 @@ import Item from './components/Item'
 import { getConfiguredSource } from '~/routes/safe/components/Balances/Collectibles/sources'
 import type { CollectibleData } from '~/routes/safe/components/Balances/Collectibles/types'
 import { ETHEREUM_NETWORK } from '~/logic/wallets/getWeb3'
+import { safeParamAddressFromStateSelector } from '~/routes/safe/store/selectors'
 
-const styles = () => ({
+const useStyles = makeStyles({
   cardInner: {
     boxSizing: 'border-box',
     maxWidth: '100%',
@@ -62,12 +64,12 @@ const styles = () => ({
 })
 
 type Props = {
-  classes: Object,
   networkName: $Values<typeof ETHEREUM_NETWORK>,
-  safeAddress: string,
 }
 
-const Collectibles = ({ classes, safeAddress, networkName = ETHEREUM_NETWORK.RINKEBY }: Props) => {
+const Collectibles = ({ networkName = ETHEREUM_NETWORK.RINKEBY }: Props) => {
+  const classes = useStyles()
+  const safeAddress = useSelector(safeParamAddressFromStateSelector)
   const [data, setData] = React.useState<CollectibleData[]>([])
 
   React.useEffect(() => {
@@ -109,4 +111,4 @@ const Collectibles = ({ classes, safeAddress, networkName = ETHEREUM_NETWORK.RIN
   )
 }
 
-export default withStyles(styles)(Collectibles)
+export default Collectibles

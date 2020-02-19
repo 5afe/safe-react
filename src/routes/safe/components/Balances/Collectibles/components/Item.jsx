@@ -97,7 +97,6 @@ const useStyles = makeStyles({
 })
 
 type Props = {
-  classes: Object,
   data: any,
   key: string,
 }
