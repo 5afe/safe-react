@@ -75,4 +75,4 @@ export const getIntercomId = () =>
 
 export const getExchangeRatesUrl = () => 'https://api.exchangeratesapi.io/latest'
 
-export const getSafeLastVersion = () => process.env.REACT_APP_LATEST_SAFE_VERSION
+export const getSafeLastVersion = () => process.env.REACT_APP_LATEST_SAFE_VERSION  || '1.1.1'
