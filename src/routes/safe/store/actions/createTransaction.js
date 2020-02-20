@@ -59,6 +59,7 @@ type CreateTransactionArgs = {
   shouldExecute?: boolean,
   txNonce?: number,
   operation?: 0 | 1,
+  navigateToTransactionsTab?: boolean,
   origin?: string | null,
 }
 

@@ -96,7 +96,6 @@ const processTransaction = ({
           await saveTxToHistory({
             ...txArgs,
             txHash,
-            from,
             type: shouldExecute ? TX_TYPE_EXECUTION : TX_TYPE_CONFIRMATION,
           })
           dispatch(fetchTransactions(safeAddress))
