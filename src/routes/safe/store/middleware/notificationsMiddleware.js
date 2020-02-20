@@ -12,7 +12,7 @@ import { enhanceSnackbarForAction, NOTIFICATIONS } from '~/logic/notifications'
 import closeSnackbarAction from '~/logic/notifications/store/actions/closeSnackbar'
 import { getIncomingTxAmount } from '~/routes/safe/components/Transactions/TxsTable/columns'
 import updateSafe from '~/routes/safe/store/actions/updateSafe'
-import { safesMapSelector } from '~/routes/safe/store/selectors'
+import { safeParamAddressFromStateSelector, safesMapSelector } from '~/routes/safe/store/selectors'
 import { isUserOwner } from '~/logic/wallets/ethAddresses'
 import { ADD_SAFE } from '~/routes/safe/store/actions/addSafe'
 import { getSafeVersion } from '~/logic/safe/utils/safeVersion'
@@ -106,10 +106,11 @@ const notificationsMiddleware = (store: Store<GlobalState>) => (next: Function) 
         break
       }
       case ADD_SAFE: {
-        const { safe } = action.payload
-        const { needUpdate } = await getSafeVersion(safe.address)
+        const state: GlobalState = store.getState()
+        const currentSafeAddress = safeParamAddressFromStateSelector(state)
+        const { needUpdate } = await getSafeVersion(currentSafeAddress)
 
-        const notificationKey = `${safe.address}`
+        const notificationKey = `${currentSafeAddress}`
         if (needUpdate) {
           dispatch(enqueueSnackbar(enhanceSnackbarForAction(NOTIFICATIONS.SAFE_NEW_VERSION_AVAILABLE, notificationKey)))
         }
