@@ -3,6 +3,7 @@ import * as React from 'react'
 import cn from 'classnames'
 import { List } from 'immutable'
 import { connect } from 'react-redux'
+import Badge from '@material-ui/core/Badge'
 import { withStyles } from '@material-ui/core/styles'
 import Paragraph from '~/components/layout/Paragraph'
 import { OwnersIcon } from './assets/icons/OwnersIcon'
@@ -25,12 +26,14 @@ import { styles } from './style'
 import RemoveSafeIcon from './assets/icons/bin.svg'
 import type { Safe } from '~/routes/safe/store/models/safe'
 import type { AddressBook } from '~/logic/addressBook/model/addressBook'
+import { getSafeVersion } from '~/logic/safe/utils/safeVersion'
 
 export const OWNERS_SETTINGS_TAB_TEST_ID = 'owner-settings-tab'
 
 type State = {
   showRemoveSafe: boolean,
   menuOptionIndex: number,
+  needUpdate: boolean,
 }
 
 type Props = Actions & {
@@ -63,7 +66,23 @@ class Settings extends React.Component<Props, State> {
     this.state = {
       showRemoveSafe: false,
       menuOptionIndex: 1,
+      needUpdate: false,
     }
+  }
+
+  componentDidMount(): void {
+    const checkUpdateRequirement = async () => {
+      let safeVersion = {}
+
+      try {
+        safeVersion = await getSafeVersion(this.props.safe.address)
+      } catch (e) {
+        console.error('failed to check version', e)
+      }
+      this.setState({ needUpdate: safeVersion.needUpdate })
+    }
+
+    checkUpdateRequirement()
   }
 
   handleChange = menuOptionIndex => () => {
@@ -124,7 +143,9 @@ class Settings extends React.Component<Props, State> {
                 onClick={this.handleChange(1)}
               >
                 <SafeDetailsIcon />
-                Safe details
+                <Badge badgeContent=" " variant="dot" invisible={!this.state.needUpdate} color="error">
+                  Safe details
+                </Badge>
               </Row>
               <Hairline className={classes.hairline} />
               <Row
