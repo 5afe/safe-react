@@ -28,9 +28,46 @@ const kittyAssetContract = {
   payout_address: null,
 }
 
+const kittyCollection = {
+  banner_image_url: null,
+  chat_url: null,
+  created_date: '2019-04-26T22:01:15.323664',
+  default_to_fiat: false,
+  description: 'The Rinkeby version of CryptoKitties',
+  dev_buyer_fee_basis_points: '0',
+  dev_seller_fee_basis_points: '0',
+  display_data: {
+    images: [
+      'https://storage.googleapis.com/ck-kitty-image/0x06012c8cf97bead5deae237070f9587f8e7a266d/52.svg',
+      'https://storage.googleapis.com/ck-kitty-image/0x06012c8cf97bead5deae237070f9587f8e7a266d/7119.svg',
+      'https://storage.googleapis.com/ck-kitty-image/0x06012c8cf97bead5deae237070f9587f8e7a266d/7130.svg',
+      'https://storage.googleapis.com/ck-kitty-image/0x06012c8cf97bead5deae237070f9587f8e7a266d/7125.svg',
+      'https://storage.googleapis.com/ck-kitty-image/0x06012c8cf97bead5deae237070f9587f8e7a266d/7129.svg',
+      'https://user-images.githubusercontent.com/613881/34621969-0afee35a-f200-11e7-99a9-86088f2aabfe.png',
+    ],
+  },
+  external_url: null,
+  featured: true,
+  featured_image_url: 'https://storage.googleapis.com/opensea-static/Category-Thumb-CryptoKittes.png',
+  hidden: false,
+  image_url: 'https://storage.googleapis.com/opensea-static/cryptokitties-logo.png',
+  is_subject_to_whitelist: false,
+  large_image_url: null,
+  name: 'CryptoKittiesRinkeby',
+  only_proxied_transfers: false,
+  opensea_buyer_fee_basis_points: '0',
+  opensea_seller_fee_basis_points: '250',
+  payout_address: null,
+  require_email: false,
+  short_description: null,
+  slug: 'cryptokittiesrinkeby',
+  wiki_url: null,
+}
+
 const allCollectibles: CollectibleData[] = [
   {
     image: 'https://storage.googleapis.com/opensea-static/cryptokitties-logo.png',
+    slug: kittyCollection.slug,
     title: 'CryptoKittiesRinkeby',
     data: [
       {
@@ -44,6 +81,7 @@ const allCollectibles: CollectibleData[] = [
         description: '',
         assetAddress: '0x16baf0de678e52367adc69fd067e5edd1d33e3bf',
         asset: kittyAssetContract,
+        collection: kittyCollection,
       },
       {
         tokenId: '1',
@@ -56,6 +94,7 @@ const allCollectibles: CollectibleData[] = [
         description: '',
         assetAddress: '0x16baf0de678e52367adc69fd067e5edd1d33e3bf',
         asset: kittyAssetContract,
+        collection: kittyCollection,
       },
       {
         tokenId: '2',
@@ -68,6 +107,7 @@ const allCollectibles: CollectibleData[] = [
         description: '',
         assetAddress: '0x16baf0de678e52367adc69fd067e5edd1d33e3bf',
         asset: kittyAssetContract,
+        collection: kittyCollection,
       },
       {
         tokenId: '3',
@@ -80,6 +120,7 @@ const allCollectibles: CollectibleData[] = [
         description: '',
         assetAddress: '0x16baf0de678e52367adc69fd067e5edd1d33e3bf',
         asset: kittyAssetContract,
+        collection: kittyCollection,
       },
       {
         tokenId: '4',
@@ -92,6 +133,7 @@ const allCollectibles: CollectibleData[] = [
         description: '',
         assetAddress: '0x16baf0de678e52367adc69fd067e5edd1d33e3bf',
         asset: kittyAssetContract,
+        collection: kittyCollection,
       },
       {
         tokenId: '10',
@@ -104,6 +146,7 @@ const allCollectibles: CollectibleData[] = [
         description: '',
         assetAddress: '0x16baf0de678e52367adc69fd067e5edd1d33e3bf',
         asset: kittyAssetContract,
+        collection: kittyCollection,
       },
       {
         tokenId: '11',
@@ -116,6 +159,7 @@ const allCollectibles: CollectibleData[] = [
         description: '',
         assetAddress: '0x16baf0de678e52367adc69fd067e5edd1d33e3bf',
         asset: kittyAssetContract,
+        collection: kittyCollection,
       },
       {
         tokenId: '12',
@@ -128,6 +172,7 @@ const allCollectibles: CollectibleData[] = [
         description: '',
         assetAddress: '0x16baf0de678e52367adc69fd067e5edd1d33e3bf',
         asset: kittyAssetContract,
+        collection: kittyCollection,
       },
     ],
   },
@@ -140,7 +185,7 @@ export class MockedOpenSea extends OpenSea {
 }
 
 class Mocked implements CollectibleMetadataSource {
-  async fetchAllUserCollectiblesAsync(): Promise<CollectibleData[]> {
+  async fetchAllUserCollectiblesByCategoryAsync(): Promise<CollectibleData[]> {
     return allCollectibles
   }
 }

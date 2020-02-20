@@ -98,14 +98,13 @@ const useStyles = makeStyles({
 
 type Props = {
   data: any,
-  key: string,
 }
 
-const Item = ({ data, key }: Props) => {
+const Item = ({ data }: Props) => {
   const classes = useStyles({ backgroundColor: data.color })
 
   return (
-    <div key={key} className={classes.item}>
+    <div className={classes.item}>
       <div className={classes.mainContent}>
         <div className={classes.image} style={{ backgroundImage: `url(${data.image})` }} />
         {data.title && (

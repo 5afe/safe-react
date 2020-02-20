@@ -78,10 +78,11 @@ class OpenSea implements CollectibleMetadataSource {
     return Object.keys(groupedCollectibles).map<CollectibleData>(collectibleAddress => {
       const collectibles = groupedCollectibles[collectibleAddress]
       const { image_url: image, name: title } = collectibles[0].asset
-      const { name: collectionTitle } = collectibles[0].collection
+      const { name: collectionTitle, slug } = collectibles[0].collection
 
       return {
         image,
+        slug,
         title: title
           .toLowerCase()
           .trim()
@@ -94,12 +95,13 @@ class OpenSea implements CollectibleMetadataSource {
   }
 
   /**
-   * Fetches from OpenSea the list of collectibles for the provided Safe Address in the specified Network
+   * Fetches from OpenSea the list of collectibles, grouped by category,
+   * for the provided Safe Address in the specified Network
    * @param {string} safeAddress
    * @param {string} networkName
    * @returns {Promise<Array<CollectibleData>>}
    */
-  async fetchAllUserCollectiblesAsync(safeAddress: string, networkName: string) {
+  async fetchAllUserCollectiblesByCategoryAsync(safeAddress: string, networkName: string) {
     // eslint-disable-next-line no-underscore-dangle
     const metadataSourceUrl = this._endpointsUrls[networkName]
     const url = `${metadataSourceUrl}/assets/?owner=${safeAddress}`

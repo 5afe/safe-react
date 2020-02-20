@@ -7,7 +7,7 @@ import Card from '@material-ui/core/Card'
 import { screenSm, fontColor } from '~/theme/variables'
 import Item from './components/Item'
 import { getConfiguredSource } from '~/routes/safe/components/Balances/Collectibles/sources'
-import type { CollectibleData } from '~/routes/safe/components/Balances/Collectibles/types'
+import type { AssetCollectible, CollectibleData } from '~/routes/safe/components/Balances/Collectibles/types'
 import { ETHEREUM_NETWORK } from '~/logic/wallets/getWeb3'
 import { safeParamAddressFromStateSelector } from '~/routes/safe/store/selectors'
 
@@ -70,12 +70,12 @@ type Props = {
 const Collectibles = ({ networkName = ETHEREUM_NETWORK.RINKEBY }: Props) => {
   const classes = useStyles()
   const safeAddress = useSelector(safeParamAddressFromStateSelector)
-  const [data, setData] = React.useState<CollectibleData[]>([])
+  const [collectibleCategories, setCollectibleCategories] = React.useState<CollectibleData[]>([])
 
   React.useEffect(() => {
     const retrieveCollectibleInfo = async () => {
       const source = getConfiguredSource()
-      setData(await source.fetchAllUserCollectiblesAsync(safeAddress, networkName))
+      setCollectibleCategories(await source.fetchAllUserCollectiblesByCategoryAsync(safeAddress, networkName))
     }
     retrieveCollectibleInfo()
   }, [])
@@ -83,16 +83,16 @@ const Collectibles = ({ networkName = ETHEREUM_NETWORK.RINKEBY }: Props) => {
   return (
     <Card>
       <div className={classes.cardInner}>
-        {data.map((item, index) => (
-          <React.Fragment key={index}>
+        {collectibleCategories.map(categories => (
+          <React.Fragment key={categories.slug}>
             <div className={classes.title}>
-              <div className={classes.titleImg} style={{ backgroundImage: `url(${item.image || ''})` }} />
-              <h2 className={classes.titleText}>{item.title}</h2>
+              <div className={classes.titleImg} style={{ backgroundImage: `url(${categories.image || ''})` }} />
+              <h2 className={classes.titleText}>{categories.title}</h2>
               <div className={classes.titleFiller} />
             </div>
-            <div key={index} className={classes.gridRow}>
-              {item.data.map((item2, index2) => (
-                <Item key={index2} data={item2} />
+            <div className={classes.gridRow}>
+              {categories.data.map((collectible: AssetCollectible) => (
+                <Item key={`${collectible.assetAddress}_${collectible.tokenId}`} data={collectible} />
               ))}
             </div>
           </React.Fragment>

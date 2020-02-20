@@ -49,14 +49,14 @@ export type Stats = {
 }
 
 export type DisplayData = {
-  card_display_style: ?string,
+  card_display_style?: ?string,
   images: ?(string[]),
 }
 
 export type OpenSeaCollection = {
-  primary_asset_contracts: CollectibleContract[],
-  traits: Traits | {},
-  stats: Stats,
+  primary_asset_contracts?: CollectibleContract[],
+  traits?: Traits | {},
+  stats?: Stats,
   banner_image_url: ?string,
   chat_url: ?string,
   created_date: string,
@@ -81,7 +81,7 @@ export type OpenSeaCollection = {
   short_description: ?string,
   slug: string,
   wiki_url: ?string,
-  owned_asset_count: number,
+  owned_asset_count?: number,
 }
 
 export type OpenSeaAccount = {
@@ -170,10 +170,11 @@ export type AssetCollectible = {
 
 export type CollectibleData = {
   image: ?string,
+  slug: string,
   title: string,
   data: AssetCollectible[],
 }
 
 export interface CollectibleMetadataSource {
-  fetchAllUserCollectiblesAsync(safeAddress: string, networkName: string): Promise<CollectibleData[]>;
+  fetchAllUserCollectiblesByCategoryAsync(safeAddress: string, networkName: string): Promise<CollectibleData[]>;
 }
