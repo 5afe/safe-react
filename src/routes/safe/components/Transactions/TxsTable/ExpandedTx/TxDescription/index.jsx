@@ -171,6 +171,7 @@ const TxDescription = ({ tx, classes }: Props) => {
     cancellationTx,
     customTx,
     creationTx,
+    upgradeTx,
     data,
   } = getTxData(tx)
   const amount = getTxAmount(tx)
@@ -179,8 +180,11 @@ const TxDescription = ({ tx, classes }: Props) => {
       {modifySettingsTx && (
         <SettingsDescription removedOwner={removedOwner} newThreshold={newThreshold} addedOwner={addedOwner} />
       )}
-      {customTx && <CustomDescription data={data} amount={amount} recipient={recipient} classes={classes} />}
-      {!cancellationTx && !modifySettingsTx && !customTx && !creationTx && (
+      {!upgradeTx && customTx && (
+        <CustomDescription data={data} amount={amount} recipient={recipient} classes={classes} />
+      )}
+      {upgradeTx && <div>{data}</div>}
+      {!cancellationTx && !modifySettingsTx && !customTx && !creationTx && !upgradeTx && (
         <TransferDescription amount={amount} recipient={recipient} />
       )}
     </Block>

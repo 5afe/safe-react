@@ -76,6 +76,8 @@ const getTransactionTableData = (tx: Transaction, cancelTx: ?Transaction): Trans
     txType = 'custom'
   } else if (tx.creationTx) {
     txType = 'creation'
+  } else if (tx.upgradeTx) {
+    txType = 'upgrade'
   }
 
   return {

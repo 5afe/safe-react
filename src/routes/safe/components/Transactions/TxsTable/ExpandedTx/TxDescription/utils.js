@@ -15,6 +15,16 @@ type DecodedTxData = {
   data: string,
 }
 
+const getSafeVersion = (data: string) => {
+  const contractAddress = data.substr(582, 40).toLowerCase()
+
+  return (
+    {
+      '34cfac646f301356faa8b21e94227e3583fe3f5f': '1.1.1',
+    }[contractAddress] || 'X.x.x'
+  )
+}
+
 export const getTxData = (tx: Transaction): DecodedTxData => {
   const web3 = getWeb3()
   const { toBN, fromWei } = web3.utils
@@ -57,6 +67,9 @@ export const getTxData = (tx: Transaction): DecodedTxData => {
     txData.cancellationTx = true
   } else if (tx.creationTx) {
     txData.creationTx = true
+  } else if (tx.upgradeTx) {
+    txData.upgradeTx = true
+    txData.data = `The contract of this Safe is upgraded to Version ${getSafeVersion(tx.data)}`
   } else {
     txData.recipient = tx.recipient
     txData.value = 0
