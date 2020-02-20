@@ -16,6 +16,7 @@ import { safeParamAddressFromStateSelector, safesMapSelector } from '~/routes/sa
 import { isUserOwner } from '~/logic/wallets/ethAddresses'
 import { ADD_SAFE } from '~/routes/safe/store/actions/addSafe'
 import { getSafeVersion } from '~/logic/safe/utils/safeVersion'
+import { grantedSelector } from '~/routes/safe/container/selector'
 
 const watchedActions = [ADD_TRANSACTIONS, ADD_INCOMING_TRANSACTIONS, ADD_SAFE]
 
@@ -108,11 +109,25 @@ const notificationsMiddleware = (store: Store<GlobalState>) => (next: Function) 
       case ADD_SAFE: {
         const state: GlobalState = store.getState()
         const currentSafeAddress = safeParamAddressFromStateSelector(state)
+        const isUserOwner = grantedSelector(state)
         const { needUpdate } = await getSafeVersion(currentSafeAddress)
 
         const notificationKey = `${currentSafeAddress}`
-        if (needUpdate) {
-          dispatch(enqueueSnackbar(enhanceSnackbarForAction(NOTIFICATIONS.SAFE_NEW_VERSION_AVAILABLE, notificationKey)))
+        const onNotificationClicked = () => {
+          dispatch(closeSnackbarAction({ key: notificationKey }))
+          dispatch(push(`/safes/${currentSafeAddress}/settings`))
+        }
+
+        if (needUpdate && isUserOwner) {
+          dispatch(
+            enqueueSnackbar(
+              enhanceSnackbarForAction(
+                NOTIFICATIONS.SAFE_NEW_VERSION_AVAILABLE,
+                notificationKey,
+                onNotificationClicked,
+              ),
+            ),
+          )
         }
         break
       }

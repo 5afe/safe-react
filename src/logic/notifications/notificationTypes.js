@@ -238,7 +238,7 @@ export const NOTIFICATIONS: Notifications = {
 
   // Safe Version
   SAFE_NEW_VERSION_AVAILABLE: {
-    message: 'There is a new version available for this Safe',
+    message: 'There is a new version available for this Safe. Update now!',
     options: { variant: WARNING, persist: false, preventDuplicate: true },
   },
 }
