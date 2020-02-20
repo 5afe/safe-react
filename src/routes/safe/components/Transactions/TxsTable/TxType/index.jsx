@@ -1,6 +1,6 @@
 // @flow
 import * as React from 'react'
-import { withStyles } from '@material-ui/core/styles'
+import { makeStyles } from '@material-ui/core/styles'
 import Block from '~/components/layout/Block'
 import Paragraph from '~/components/layout/Paragraph/'
 import Img from '~/components/layout/Img'
@@ -12,7 +12,6 @@ import SettingsTxIcon from './assets/settings.svg'
 import { styles } from './style'
 
 type Props = {
-  classes: Object,
   txType: TransactionType,
 }
 
@@ -23,6 +22,7 @@ const typeToIcon = {
   settings: SettingsTxIcon,
   creation: SettingsTxIcon,
   cancellation: SettingsTxIcon,
+  upgrade: SettingsTxIcon,
 }
 
 const typeToLabel = {
@@ -32,15 +32,22 @@ const typeToLabel = {
   settings: 'Modify settings',
   creation: 'Safe created',
   cancellation: 'Cancellation transaction',
+  upgrade: 'Contract Upgrade',
 }
 
-const TxType = ({ classes, txType }: Props) => (
-  <Block className={classes.container}>
-    <Img src={typeToIcon[txType]} alt={typeToLabel[txType]} className={classes.img} />
-    <Paragraph className={classes.type} noMargin>
-      {typeToLabel[txType]}
-    </Paragraph>
-  </Block>
-)
+const useStyles = makeStyles(styles)
 
-export default withStyles(styles)(TxType)
+const TxType = ({ txType }: Props) => {
+  const classes = useStyles()
+
+  return (
+    <Block className={classes.container}>
+      <Img src={typeToIcon[txType]} alt={typeToLabel[txType]} className={classes.img} />
+      <Paragraph className={classes.type} noMargin>
+        {typeToLabel[txType]}
+      </Paragraph>
+    </Block>
+  )
+}
+
+export default TxType
