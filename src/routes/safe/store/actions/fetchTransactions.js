@@ -256,6 +256,7 @@ export const loadSafeTransactions = async (safeAddress: string): Promise<SafeTra
   try {
     const url = buildTxServiceUrl(safeAddress)
     const response = await axios.get(url)
+ //   console.log("load safe respnose ", response)
     if (response.data.count > 0) {
       transactions = transactions.concat(response.data.results)
     }
@@ -280,6 +281,7 @@ export const loadSafeIncomingTransactions = async (safeAddress: string) => {
   try {
     const url = buildIncomingTxServiceUrl(safeAddress)
     const response = await axios.get(url)
+  //  console.log("response test ", response)
     if (response.data.count > 0) {
       incomingTransactions = response.data.results
     }
@@ -297,7 +299,6 @@ export default (safeAddress: string) => async (dispatch: ReduxDispatch<GlobalSta
 
   const { outgoing, cancel }: SafeTransactionsType = await loadSafeTransactions(safeAddress)
   const incomingTransactions: Map<string, List<IncomingTransaction>> = await loadSafeIncomingTransactions(safeAddress)
-
   dispatch(addCancellationTransactions(cancel))
   dispatch(addTransactions(outgoing))
   dispatch(addIncomingTransactions(incomingTransactions))

@@ -160,7 +160,7 @@ const createTransaction = ({
             to,
             valueInWei,
             txData,
-            CALL,
+            operation,
             nonce,
             0,
             0,
@@ -200,7 +200,7 @@ const createTransaction = ({
     showSnackbar(notificationsQueue.afterExecutionError, enqueueSnackbar, closeSnackbar)
 
     const executeDataUsedSignatures = safeInstance.contract.methods
-      .execTransaction(to, valueInWei, txData, CALL, 0, 0, 0, ZERO_ADDRESS, ZERO_ADDRESS, sigs)
+      .execTransaction(to, valueInWei, txData, operation, 0, 0, 0, ZERO_ADDRESS, ZERO_ADDRESS, sigs)
       .encodeABI()
     const errMsg = await getErrorMessage(safeInstance.address, 0, executeDataUsedSignatures, from)
     console.error(`Error creating the TX: ${errMsg}`)
