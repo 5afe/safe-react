@@ -43,9 +43,19 @@ const getSafeNonce = async (safeAddress: string): Promise<string> => {
 
 const getNewTxNonce = async (txNonce, lastTx, safeAddress) => {
   if (!Number.isInteger(Number.parseInt(txNonce, 10))) {
-    return lastTx === null ? getSafeNonce(safeAddress) : lastTx.nonce + 1
+    return lastTx === null ? getSafeNonce(safeAddress) : `${lastTx.nonce + 1}`
   }
   return txNonce
+}
+
+const shouldExecuteTx = async (safeInstance, nonce, lastTx) => {
+  const threshold = await safeInstance.getThreshold()
+
+  if (threshold.toNumber() === 1) {
+    return Number.parseInt(nonce) === 0 || (lastTx && lastTx.isExecuted)
+  }
+
+  return false
 }
 
 type CreateTransactionArgs = {
@@ -71,7 +81,6 @@ const createTransaction = ({
   notifiedTransaction,
   enqueueSnackbar,
   closeSnackbar,
-  shouldExecute = false,
   txNonce,
   operation = CALL,
   navigateToTransactionsTab = true,
@@ -85,10 +94,9 @@ const createTransaction = ({
 
   const from = userAccountSelector(state)
   const safeInstance = await getGnosisSafeInstanceAt(safeAddress)
-  const threshold = await safeInstance.getThreshold()
   const lastTx = await getLastTx(safeAddress)
   const nonce = await getNewTxNonce(txNonce, lastTx, safeAddress)
-  const isExecution = (lastTx && lastTx.isExecuted && threshold.toNumber() === 1) || shouldExecute
+  const isExecution = await shouldExecuteTx(safeInstance, nonce, lastTx)
 
   // https://gnosis-safe.readthedocs.io/en/latest/contracts/signatures.html#pre-validated-signatures
   const sigs = `0x000000000000000000000000${from.replace(
