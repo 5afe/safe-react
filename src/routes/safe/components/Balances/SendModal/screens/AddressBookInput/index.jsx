@@ -8,10 +8,7 @@ import makeStyles from '@material-ui/core/styles/makeStyles'
 import { List } from 'immutable'
 import { styles } from './style'
 import { getAddressBookListSelector } from '~/logic/addressBook/store/selectors'
-import {
-  mustBeEthereumAddress,
-  mustBeEthereumContractAddress,
-} from '~/components/forms/validator'
+import { mustBeEthereumAddress, mustBeEthereumContractAddress } from '~/components/forms/validator'
 import Identicon from '~/components/Identicon'
 import { getAddressFromENS } from '~/logic/wallets/getWeb3'
 
@@ -40,6 +37,15 @@ const textFieldInputStyle = makeStyles(() => ({
     width: '420px',
   },
 }))
+
+const filterAddressBookWithContractAddresses = async addressBook => {
+  const abFlags = await Promise.all(
+    addressBook.map(async ({ address }) => {
+      return (await mustBeEthereumContractAddress(address)) === undefined
+    }),
+  )
+  return addressBook.filter((adbkEntry, index) => abFlags[index])
+}
 
 const isValidEnsName = name => /^([\w-]+\.)+(eth|test|xyz|luxe)$/.test(name)
 
@@ -81,8 +87,10 @@ const AddressBookInput = ({
         isValidText = await mustBeEthereumContractAddress(resolvedAddress)
       }
 
-      // Filters the entries based on the input of the user
-      const filteredADBK = addressBook.filter(adbkEntry => {
+      // First removes the entries that are not contracts if the operation is custom tx
+      const adbkToFilter = isCustomTx ? await filterAddressBookWithContractAddresses(addressBook) : addressBook
+      // Then Filters the entries based on the input of the user
+      const filteredADBK = adbkToFilter.filter(adbkEntry => {
         const { name, address } = adbkEntry
         return (
           name.toLowerCase().includes(addressValue.toLowerCase()) ||
@@ -103,15 +111,8 @@ const AddressBookInput = ({
         setADBKList(addressBook)
         return
       }
-      const abFlags = await Promise.all(
-        addressBook.map(
-          async ({ address }) =>
-            mustBeEthereumContractAddress(address) === undefined
-        )
-      )
-      const filteredADBK = addressBook.filter(
-        (adbkEntry, index) => abFlags[index]
-      )
+
+      const filteredADBK = await filterAddressBookWithContractAddresses(addressBook)
       setADBKList(filteredADBK)
     }
     filterAdbkContractAddresses()
@@ -144,9 +145,7 @@ const AddressBookInput = ({
           optionsArray.filter(item => {
             const inputLowerCase = inputValue.toLowerCase()
             const foundName = item.name.toLowerCase().includes(inputLowerCase)
-            const foundAddress = item.address
-              .toLowerCase()
-              .includes(inputLowerCase)
+            const foundAddress = item.address.toLowerCase().includes(inputLowerCase)
             return foundName || foundAddress
           })
         }
