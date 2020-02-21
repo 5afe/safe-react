@@ -7,7 +7,7 @@ import type { SafeProps } from '~/routes/safe/store/models/safe'
 import addSafe from '~/routes/safe/store/actions/addSafe'
 import { getSafeName, getLocalSafe } from '~/logic/safe/utils'
 import { getGnosisSafeInstanceAt } from '~/logic/contracts/safeContracts'
-import { getBalanceInEtherOf } from '~/logic/wallets/getWeb3'
+import { getBalanceInEtherOf, getWeb3 } from '~/logic/wallets/getWeb3'
 import { sameAddress } from '~/logic/wallets/ethAddresses'
 import removeSafeOwner from '~/routes/safe/store/actions/removeSafeOwner'
 import addSafeOwner from '~/routes/safe/store/actions/addSafeOwner'
@@ -33,7 +33,8 @@ const buildOwnersFrom = (
     })
   })
 
-export const buildSafe = async (safeAddress: string, safeName: string) => {
+export const buildSafe = async (safeAdd: string, safeName: string) => {
+  const safeAddress = getWeb3().utils.toChecksumAddress(safeAdd)
   const gnosisSafe = await getGnosisSafeInstanceAt(safeAddress)
   const ethBalance = await getBalanceInEtherOf(safeAddress)
 
@@ -53,7 +54,8 @@ export const buildSafe = async (safeAddress: string, safeName: string) => {
   return safe
 }
 
-export const checkAndUpdateSafe = (safeAddress: string) => async (dispatch: ReduxDispatch<*>) => {
+export const checkAndUpdateSafe = (safeAdd: string) => async (dispatch: ReduxDispatch<*>) => {
+  const safeAddress = getWeb3().utils.toChecksumAddress(safeAdd)
   // Check if the owner's safe did change and update them
   const [gnosisSafe, localSafe] = await Promise.all([getGnosisSafeInstanceAt(safeAddress), getLocalSafe(safeAddress)])
 
@@ -90,8 +92,9 @@ export const checkAndUpdateSafe = (safeAddress: string) => async (dispatch: Redu
 }
 
 // eslint-disable-next-line consistent-return
-export default (safeAddress: string) => async (dispatch: ReduxDispatch<GlobalState>) => {
+export default (safeAdd: string) => async (dispatch: ReduxDispatch<GlobalState>) => {
   try {
+    const safeAddress = getWeb3().utils.toChecksumAddress(safeAdd)
     const safeName = (await getSafeName(safeAddress)) || 'LOADED SAFE'
     const safeProps: SafeProps = await buildSafe(safeAddress, safeName)
 

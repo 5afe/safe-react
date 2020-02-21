@@ -13,6 +13,7 @@ import { REPLACE_SAFE_OWNER } from '~/routes/safe/store/actions/replaceSafeOwner
 import { EDIT_SAFE_OWNER } from '~/routes/safe/store/actions/editSafeOwner'
 import { SET_DEFAULT_SAFE } from '~/routes/safe/store/actions/setDefaultSafe'
 import { UPDATE_SAFE_THRESHOLD } from '~/routes/safe/store/actions/updateSafeThreshold'
+import { getWeb3 } from '~/logic/wallets/getWeb3'
 
 export const SAFE_REDUCER_ID = 'safes'
 
@@ -20,7 +21,10 @@ export type SafeReducerState = Map<string, *>
 
 export const buildSafe = (storedSafe: SafeProps) => {
   const names = storedSafe.owners.map((owner: OwnerProps) => owner.name)
-  const addresses = storedSafe.owners.map((owner: OwnerProps) => owner.address)
+  const addresses = storedSafe.owners.map((owner: OwnerProps) => {
+    const checksumed = getWeb3().utils.toChecksumAddress(owner.address)
+    return checksumed
+  })
   const owners = buildOwnersFrom(Array.from(names), Array.from(addresses))
   const activeTokens = Set(storedSafe.activeTokens)
   const blacklistedTokens = Set(storedSafe.blacklistedTokens)
