@@ -21,7 +21,8 @@ const getCurrentMasterContractLastVersion = async () => {
   try {
     safeMasterVersion = await safeMaster.VERSION()
   } catch (err) {
-    // Default in case that it's not possible to obtain the version from the contract, returns a hardcoded value or an env variable
+    // Default in case that it's not possible to obtain the version from the contract, returns a hardcoded value or an
+    // env variable
     safeMasterVersion = getSafeLastVersion()
   }
   return safeMasterVersion
