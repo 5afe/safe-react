@@ -73,7 +73,7 @@ const getTransactionTableData = (tx: Transaction, cancelTx: ?Transaction): Trans
   } else if (tx.cancellationTx) {
     txType = 'cancellation'
   } else if (tx.customTx) {
-    txType = 'custom'
+    txType = tx.origin ? 'third-party-app' : 'custom'
   } else if (tx.creationTx) {
     txType = 'creation'
   } else if (tx.upgradeTx) {
@@ -82,7 +82,7 @@ const getTransactionTableData = (tx: Transaction, cancelTx: ?Transaction): Trans
 
   return {
     [TX_TABLE_ID]: tx.blockNumber,
-    [TX_TABLE_TYPE_ID]: <TxType txType={txType} />,
+    [TX_TABLE_TYPE_ID]: <TxType txType={txType} origin={tx.origin} />,
     [TX_TABLE_DATE_ID]: txDate ? formatDate(txDate) : '',
     [buildOrderFieldFrom(TX_TABLE_DATE_ID)]: txDate ? getTime(parseISO(txDate)) : null,
     [TX_TABLE_AMOUNT_ID]: getTxAmount(tx),
