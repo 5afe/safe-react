@@ -8,7 +8,8 @@ import { getWeb3 } from '~/logic/wallets/getWeb3'
 const loadDefaultSafe = () => async (dispatch: ReduxDispatch<GlobalState>) => {
   try {
     const defaultSafe: string = await getDefaultSafe()
-    const checksumed = getWeb3().utils.toChecksumAddress(defaultSafe)
+    const checksumed =
+      defaultSafe && defaultSafe.length > 0 ? getWeb3().utils.toChecksumAddress(defaultSafe) : defaultSafe
     dispatch(setDefaultSafe(checksumed))
   } catch (err) {
     // eslint-disable-next-line
