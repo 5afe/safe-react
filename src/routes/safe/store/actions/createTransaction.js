@@ -1,12 +1,10 @@
 // @flow
-import axios from 'axios'
 import type { Dispatch as ReduxDispatch, GetState } from 'redux'
 import { push } from 'connected-react-router'
 import { EMPTY_DATA } from '~/logic/wallets/ethTransactions'
 import { userAccountSelector } from '~/logic/wallets/store/selectors'
 import fetchTransactions from '~/routes/safe/store/actions/fetchTransactions'
 import { type GlobalState } from '~/store'
-import { buildTxServiceUrl } from '~/logic/safe/transactions/txHistory'
 import { getGnosisSafeInstanceAt } from '~/logic/contracts/safeContracts'
 import {
   getApprovalTransaction,
@@ -21,42 +19,7 @@ import { type NotificationsQueue, getNotificationsFromTxType, showSnackbar } fro
 import { getErrorMessage } from '~/test/utils/ethereumErrors'
 import { ZERO_ADDRESS } from '~/logic/wallets/ethAddresses'
 import { SAFELIST_ADDRESS } from '~/routes/routes'
-import type { TransactionProps } from '~/routes/safe/store/models/transaction'
-
-const getLastTx = async (safeAddress: string): Promise<TransactionProps> => {
-  try {
-    const url = buildTxServiceUrl(safeAddress)
-    const response = await axios.get(url, { params: { limit: 1 } })
-
-    return response.data.results[0]
-  } catch (e) {
-    console.error('failed to retrieve last Tx from server', e)
-    return null
-  }
-}
-
-const getSafeNonce = async (safeAddress: string): Promise<string> => {
-  // use current's safe nonce as fallback
-  const safeInstance = await getGnosisSafeInstanceAt(safeAddress)
-  return (await safeInstance.nonce()).toString()
-}
-
-const getNewTxNonce = async (txNonce, lastTx, safeAddress) => {
-  if (!Number.isInteger(Number.parseInt(txNonce, 10))) {
-    return lastTx === null ? getSafeNonce(safeAddress) : `${lastTx.nonce + 1}`
-  }
-  return txNonce
-}
-
-const shouldExecuteTx = async (safeInstance, nonce, lastTx) => {
-  const threshold = await safeInstance.getThreshold()
-
-  if (threshold.toNumber() === 1) {
-    return Number.parseInt(nonce) === 0 || (lastTx && lastTx.isExecuted)
-  }
-
-  return false
-}
+import { getLastTx, doesTxNeedApproval, getNewTxNonce } from './utils'
 
 type CreateTransactionArgs = {
   safeAddress: string,
@@ -66,7 +29,6 @@ type CreateTransactionArgs = {
   notifiedTransaction: NotifiedTransaction,
   enqueueSnackbar: Function,
   closeSnackbar: Function,
-  shouldExecute?: boolean,
   txNonce?: number,
   operation?: 0 | 1,
   navigateToTransactionsTab?: boolean,
@@ -96,7 +58,7 @@ const createTransaction = ({
   const safeInstance = await getGnosisSafeInstanceAt(safeAddress)
   const lastTx = await getLastTx(safeAddress)
   const nonce = await getNewTxNonce(txNonce, lastTx, safeAddress)
-  const isExecution = await shouldExecuteTx(safeInstance, nonce, lastTx)
+  const needsApproval = await doesTxNeedApproval(safeInstance, nonce, lastTx)
 
   // https://gnosis-safe.readthedocs.io/en/latest/contracts/signatures.html#pre-validated-signatures
   const sigs = `0x000000000000000000000000${from.replace(
@@ -127,7 +89,7 @@ const createTransaction = ({
   }
 
   try {
-    tx = isExecution ? await getExecutionTransaction(txArgs) : await getApprovalTransaction(txArgs)
+    tx = needsApproval ? await getApprovalTransaction(txArgs) : await getExecutionTransaction(txArgs)
 
     const sendParams = { from, value: 0 }
 
@@ -153,7 +115,7 @@ const createTransaction = ({
           await saveTxToHistory({
             ...txArgs,
             txHash,
-            type: isExecution ? TX_TYPE_EXECUTION : TX_TYPE_CONFIRMATION,
+            type: needsApproval ? TX_TYPE_CONFIRMATION : TX_TYPE_EXECUTION,
             origin,
           })
           dispatch(fetchTransactions(safeAddress))
@@ -167,9 +129,9 @@ const createTransaction = ({
       .then(receipt => {
         closeSnackbar(pendingExecutionKey)
         showSnackbar(
-          isExecution
-            ? notificationsQueue.afterExecution.noMoreConfirmationsNeeded
-            : notificationsQueue.afterExecution.moreConfirmationsNeeded,
+          needsApproval
+            ? notificationsQueue.afterExecution.moreConfirmationsNeeded
+            : notificationsQueue.afterExecution.noMoreConfirmationsNeeded,
           enqueueSnackbar,
           closeSnackbar,
         )

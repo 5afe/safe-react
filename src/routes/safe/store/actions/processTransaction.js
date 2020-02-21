@@ -1,5 +1,6 @@
 // @flow
 import type { Dispatch as ReduxDispatch } from 'redux'
+
 import { type Transaction } from '~/routes/safe/store/models/transaction'
 import { userAccountSelector } from '~/logic/wallets/store/selectors'
 import fetchSafe from '~/routes/safe/store/actions/fetchSafe'
@@ -17,6 +18,7 @@ import {
 import { generateSignaturesFromTxConfirmations } from '~/logic/safe/safeTxSigner'
 import { type NotificationsQueue, getNotificationsFromTxType, showSnackbar } from '~/logic/notifications'
 import { getErrorMessage } from '~/test/utils/ethereumErrors'
+import { getLastTx, doesTxNeedApproval, getNewTxNonce } from './utils'
 
 type ProcessTransactionArgs = {
   safeAddress: string,
@@ -39,10 +41,11 @@ const processTransaction = ({
 }: ProcessTransactionArgs) => async (dispatch: ReduxDispatch<GlobalState>, getState: Function) => {
   const state: GlobalState = getState()
 
-  const safeInstance = await getGnosisSafeInstanceAt(safeAddress)
   const from = userAccountSelector(state)
-  const threshold = (await safeInstance.getThreshold()).toNumber()
-  const shouldExecute = threshold === tx.confirmations.size || approveAndExecute
+  const safeInstance = await getGnosisSafeInstanceAt(safeAddress)
+  const lastTx = await getLastTx(safeAddress)
+  const nonce = await getNewTxNonce(null, lastTx, safeAddress)
+  const needsApproval = (await doesTxNeedApproval(safeInstance, nonce, lastTx)) || approveAndExecute
 
   let sigs = generateSignaturesFromTxConfirmations(tx.confirmations, approveAndExecute && userAddress)
   // https://gnosis-safe.readthedocs.io/en/latest/contracts/signatures.html#pre-validated-signatures
@@ -76,7 +79,7 @@ const processTransaction = ({
   }
 
   try {
-    transaction = shouldExecute ? await getExecutionTransaction(txArgs) : await getApprovalTransaction(txArgs)
+    transaction = needsApproval ? await getApprovalTransaction(txArgs) : await getExecutionTransaction(txArgs)
 
     const sendParams = { from, value: 0 }
     // if not set owner management tests will fail on ganache
@@ -96,7 +99,7 @@ const processTransaction = ({
           await saveTxToHistory({
             ...txArgs,
             txHash,
-            type: shouldExecute ? TX_TYPE_EXECUTION : TX_TYPE_CONFIRMATION,
+            type: needsApproval ? TX_TYPE_CONFIRMATION : TX_TYPE_EXECUTION,
           })
           dispatch(fetchTransactions(safeAddress))
         } catch (err) {
@@ -110,15 +113,15 @@ const processTransaction = ({
         closeSnackbar(pendingExecutionKey)
 
         showSnackbar(
-          shouldExecute
-            ? notificationsQueue.afterExecution.noMoreConfirmationsNeeded
-            : notificationsQueue.afterExecution.moreConfirmationsNeeded,
+          needsApproval
+            ? notificationsQueue.afterExecution.moreConfirmationsNeeded
+            : notificationsQueue.afterExecution.noMoreConfirmationsNeeded,
           enqueueSnackbar,
           closeSnackbar,
         )
         dispatch(fetchTransactions(safeAddress))
 
-        if (shouldExecute) {
+        if (!needsApproval) {
           dispatch(fetchSafe(safeAddress))
         }
 
