@@ -116,9 +116,7 @@ const SendFunds = ({
           const formState = args[2]
           const mutators = args[3]
           const { token: tokenAddress } = formState.values
-          const selectedTokenRecord = tokens.find(
-            token => token.address === tokenAddress
-          )
+          const selectedTokenRecord = tokens.find(token => token.address === tokenAddress)
 
           const handleScan = value => {
             let scannedAddress = value
@@ -139,18 +137,10 @@ const SendFunds = ({
           return (
             <>
               <Block className={classes.formContainer}>
-                <SafeInfo
-                  safeAddress={safeAddress}
-                  safeName={safeName}
-                  ethBalance={ethBalance}
-                />
+                <SafeInfo safeAddress={safeAddress} safeName={safeName} ethBalance={ethBalance} />
                 <Row margin="md">
                   <Col xs={1}>
-                    <img
-                      src={ArrowDown}
-                      alt="Arrow Down"
-                      style={{ marginLeft: sm }}
-                    />
+                    <img src={ArrowDown} alt="Arrow Down" style={{ marginLeft: sm }} />
                   </Col>
                   <Col xs={11} center="xs" layout="column">
                     <Hairline />
@@ -167,21 +157,13 @@ const SendFunds = ({
                     }}
                   >
                     <Row margin="xs">
-                      <Paragraph
-                        size="md"
-                        color="disabled"
-                        style={{ letterSpacing: '-0.5px' }}
-                        noMargin
-                      >
+                      <Paragraph size="md" color="disabled" style={{ letterSpacing: '-0.5px' }} noMargin>
                         Recipient
                       </Paragraph>
                     </Row>
                     <Row margin="md" align="center">
                       <Col xs={1}>
-                        <Identicon
-                          address={selectedEntry.address}
-                          diameter={32}
-                        />
+                        <Identicon address={selectedEntry.address} diameter={32} />
                       </Col>
                       <Col xs={11} layout="column">
                         <Block justify="left">
@@ -204,10 +186,7 @@ const SendFunds = ({
                             </Paragraph>
                           </Block>
                           <CopyBtn content={selectedEntry.address} />
-                          <EtherscanBtn
-                            type="address"
-                            value={selectedEntry.address}
-                          />
+                          <EtherscanBtn type="address" value={selectedEntry.address} />
                         </Block>
                       </Col>
                     </Row>
@@ -243,30 +222,17 @@ const SendFunds = ({
                   <Col>
                     <TokenSelectField
                       initialValue={selectedToken}
-                      isValid={
-                        tokenAddress &&
-                        String(tokenAddress.toUpperCase()) !== 'ETHER'
-                      }
+                      isValid={tokenAddress && String(tokenAddress.toUpperCase()) !== 'ETHER'}
                       tokens={tokens}
                     />
                   </Col>
                 </Row>
                 <Row margin="xs">
                   <Col between="lg">
-                    <Paragraph
-                      size="md"
-                      color="disabled"
-                      style={{ letterSpacing: '-0.5px' }}
-                      noMargin
-                    >
+                    <Paragraph size="md" color="disabled" style={{ letterSpacing: '-0.5px' }} noMargin>
                       Amount
                     </Paragraph>
-                    <ButtonLink
-                      weight="bold"
-                      onClick={() =>
-                        mutators.setMax(selectedTokenRecord.balance)
-                      }
-                    >
+                    <ButtonLink weight="bold" onClick={() => mutators.setMax(selectedTokenRecord.balance)}>
                       Send max
                     </ButtonLink>
                   </Col>
@@ -281,19 +247,13 @@ const SendFunds = ({
                         required,
                         mustBeFloat,
                         greaterThan(0),
-                        maxValue(
-                          selectedTokenRecord && selectedTokenRecord.balance
-                        )
+                        maxValue(selectedTokenRecord && selectedTokenRecord.balance),
                       )}
                       placeholder="Amount*"
                       text="Amount*"
                       inputAdornment={
                         selectedTokenRecord && {
-                          endAdornment: (
-                            <InputAdornment position="end">
-                              {selectedTokenRecord.symbol}
-                            </InputAdornment>
-                          ),
+                          endAdornment: <InputAdornment position="end">{selectedTokenRecord.symbol}</InputAdornment>,
                         }
                       }
                     />
@@ -322,13 +282,7 @@ const SendFunds = ({
                   Review
                 </Button>
               </Row>
-              {qrModalOpen && (
-                <ScanQRModal
-                  isOpen={qrModalOpen}
-                  onScan={handleScan}
-                  onClose={closeQrModal}
-                />
-              )}
+              {qrModalOpen && <ScanQRModal isOpen={qrModalOpen} onScan={handleScan} onClose={closeQrModal} />}
             </>
           )
         }}

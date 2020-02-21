@@ -28,11 +28,7 @@ type SelectedTokenProps = {
   tokens: List<Token>,
 }
 
-const SelectedToken = ({
-  classes,
-  tokenAddress,
-  tokens,
-}: SelectedTokenProps) => {
+const SelectedToken = ({ classes, tokenAddress, tokens }: SelectedTokenProps) => {
   const token = tokens.find(({ address }) => address === tokenAddress)
 
   return (
@@ -40,12 +36,7 @@ const SelectedToken = ({
       {token ? (
         <>
           <ListItemIcon className={classes.tokenImage}>
-            <Img
-              alt={token.name}
-              height={28}
-              onError={setImageToPlaceholder}
-              src={token.logoUri}
-            />
+            <Img alt={token.name} height={28} onError={setImageToPlaceholder} src={token.logoUri} />
           </ListItemIcon>
           <ListItemText
             className={classes.tokenData}
@@ -54,12 +45,7 @@ const SelectedToken = ({
           />
         </>
       ) : (
-        <Paragraph
-          color="disabled"
-          size="md"
-          style={{ opacity: 0.5 }}
-          weight="light"
-        >
+        <Paragraph color="disabled" size="md" style={{ opacity: 0.5 }} weight="light">
           Select an asset*
         </Paragraph>
       )}
@@ -68,12 +54,7 @@ const SelectedToken = ({
 }
 const SelectedTokenStyled = withStyles(selectedTokenStyles)(SelectedToken)
 
-const TokenSelectField = ({
-  classes,
-  initialValue,
-  isValid,
-  tokens,
-}: SelectFieldProps) => (
+const TokenSelectField = ({ classes, initialValue, isValid, tokens }: SelectFieldProps) => (
   <Field
     className={isValid ? 'isValid' : 'isInvalid'}
     classes={{ selectMenu: classes.selectMenu }}
@@ -81,25 +62,15 @@ const TokenSelectField = ({
     displayEmpty
     initialValue={initialValue}
     name="token"
-    renderValue={tokenAddress => (
-      <SelectedTokenStyled tokenAddress={tokenAddress} tokens={tokens} />
-    )}
+    renderValue={tokenAddress => <SelectedTokenStyled tokenAddress={tokenAddress} tokens={tokens} />}
     validate={required}
   >
     {tokens.map(token => (
       <MenuItem key={token.address} value={token.address}>
         <ListItemIcon>
-          <Img
-            alt={token.name}
-            height={28}
-            onError={setImageToPlaceholder}
-            src={token.logoUri}
-          />
+          <Img alt={token.name} height={28} onError={setImageToPlaceholder} src={token.logoUri} />
         </ListItemIcon>
-        <ListItemText
-          primary={token.name}
-          secondary={`${formatAmount(token.balance)} ${token.symbol}`}
-        />
+        <ListItemText primary={token.name} secondary={`${formatAmount(token.balance)} ${token.symbol}`} />
       </MenuItem>
     ))}
   </Field>

@@ -34,20 +34,13 @@ class TextField extends React.PureComponent<TextFieldProps> {
     } = this.props
     const helperText = value ? text : undefined
     const showError = (meta.touched || !meta.pristine) && !meta.valid
-    const isInactiveAndPristineOrUntouched =
-      !meta.active && (meta.pristine || !meta.touched)
-    const isInvalidAndUntouched =
-      typeof meta.error === 'undefined' ? true : !meta.touched
+    const isInactiveAndPristineOrUntouched = !meta.active && (meta.pristine || !meta.touched)
+    const isInvalidAndUntouched = typeof meta.error === 'undefined' ? true : !meta.touched
 
-    const disableUnderline =
-      isInactiveAndPristineOrUntouched && isInvalidAndUntouched
+    const disableUnderline = isInactiveAndPristineOrUntouched && isInvalidAndUntouched
 
     const inputRoot = helperText ? classes.root : ''
-    const statusClasses = meta.valid
-      ? 'isValid'
-      : meta.error && (meta.dirty || meta.touched)
-      ? 'isInvalid'
-      : ''
+    const statusClasses = meta.valid ? 'isValid' : meta.error && (meta.dirty || meta.touched) ? 'isInvalid' : ''
     const inputProps = {
       ...restInput,
       autoComplete: 'off',

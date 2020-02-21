@@ -256,7 +256,6 @@ export const loadSafeTransactions = async (safeAddress: string): Promise<SafeTra
   try {
     const url = buildTxServiceUrl(safeAddress)
     const response = await axios.get(url)
- //   console.log("load safe respnose ", response)
     if (response.data.count > 0) {
       transactions = transactions.concat(response.data.results)
     }
@@ -281,7 +280,6 @@ export const loadSafeIncomingTransactions = async (safeAddress: string) => {
   try {
     const url = buildIncomingTxServiceUrl(safeAddress)
     const response = await axios.get(url)
-  //  console.log("response test ", response)
     if (response.data.count > 0) {
       incomingTransactions = response.data.results
     }
