@@ -49,6 +49,7 @@ export type TransactionProps = {
   decodedParams?: Object,
   refundParams?: Object,
   type: string,
+  origin: string | null,
 }
 
 export const makeTransaction: RecordFactory<TransactionProps> = Record({
@@ -84,6 +85,7 @@ export const makeTransaction: RecordFactory<TransactionProps> = Record({
   decodedParams: {},
   refundParams: null,
   type: 'outgoing',
+  origin: null,
 })
 
 export type Transaction = RecordOf<TransactionProps>

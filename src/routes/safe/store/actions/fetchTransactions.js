@@ -174,6 +174,7 @@ export const buildTransactionFrom = async (safeAddress: string, tx: TxServiceMod
     customTx,
     cancellationTx,
     creationTx: tx.creationTx,
+    origin: tx.origin,
   })
 }
 
