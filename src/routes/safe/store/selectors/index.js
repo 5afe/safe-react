@@ -18,6 +18,7 @@ import { type Transaction } from '~/routes/safe/store/models/transaction'
 import { type Confirmation } from '~/routes/safe/store/models/confirmation'
 import { SAFE_REDUCER_ID } from '~/routes/safe/store/reducer/safe'
 import type { IncomingTransaction } from '~/routes/safe/store/models/incomingTransaction'
+import { getWeb3 } from '~/logic/wallets/getWeb3'
 
 export type RouterProps = {
   match: Match,
@@ -60,8 +61,10 @@ const incomingTransactionsSelector = (state: GlobalState): IncomingTransactionsS
 
 const oneTransactionSelector = (state: GlobalState, props: TransactionProps) => props.transaction
 
-export const safeParamAddressSelector = (state: GlobalState, props: RouterProps) =>
-  props.match.params[SAFE_PARAM_ADDRESS] || ''
+export const safeParamAddressSelector = (state: GlobalState, props: RouterProps) => {
+  const urlAdd = props.match.params[SAFE_PARAM_ADDRESS]
+  return urlAdd ? getWeb3().utils.toChecksumAddress(urlAdd) : ''
+}
 
 type TxSelectorType = Selector<GlobalState, RouterProps, List<Transaction>>
 
@@ -156,8 +159,8 @@ export const safeSelector: Selector<GlobalState, RouterProps, SafeSelectorProps>
     if (!address) {
       return undefined
     }
-
-    const safe = safes.get(address)
+    const checksumed = getWeb3().utils.toChecksumAddress(address)
+    const safe = safes.get(checksumed)
 
     return safe
   },
