@@ -166,11 +166,17 @@ const Layout = (props: Props) => {
       Apps
     </>
   )
-
+  
   const labelSettings = (
     <>
       <SettingsIcon />
-      <Badge badgeContent=" " variant="dot" invisible={!needUpdate} color="error">
+      <Badge
+        badgeContent=""
+        variant="dot"
+        invisible={!needUpdate || !granted}
+        color="error"
+        style={{ paddingRight: '10px' }}
+      >
         Settings
       </Badge>
     </>
