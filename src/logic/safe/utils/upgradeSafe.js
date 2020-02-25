@@ -10,7 +10,7 @@ import type { MultiSendTransactionInstanceType } from '~/logic/contracts/safeCon
 import { DELEGATE_CALL } from '~/logic/safe/transactions'
 import { getWeb3 } from '~/logic/wallets/getWeb3'
 
-export const upgradeSafeToLastVersion = async (safeAddress: string, createTransaction: Function) => {
+export const upgradeSafeToLatestVersion = async (safeAddress: string, createTransaction: Function) => {
   const sendTransactions = async (txs: Array<MultiSendTransactionInstanceType>) => {
     const web3 = getWeb3()
     const encodeMultiSendCallData = getEncodedMultiSendCallData(txs, web3)
@@ -35,13 +35,13 @@ export const upgradeSafeToLastVersion = async (safeAddress: string, createTransa
       operation: 0,
       to: safeAddress,
       value: 0,
-      data: fallbackHandlerTxData,
+      data: updateSafeTxData,
     },
     {
       operation: 0,
       to: safeAddress,
       value: 0,
-      data: updateSafeTxData,
+      data: fallbackHandlerTxData,
     },
   ]
   return sendTransactions(txs)
