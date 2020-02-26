@@ -10,7 +10,7 @@ import GnoForm from '~/components/forms/GnoForm'
 import Block from '~/components/layout/Block'
 import Button from '~/components/layout/Button'
 import { styles } from './style'
-import { upgradeSafeToLastVersion } from '~/logic/safe/utils/updateSafe'
+import { upgradeSafeToLatestVersion } from '~/logic/safe/utils/upgradeSafe'
 
 type Props = {
   onClose: Function,
@@ -22,7 +22,7 @@ type Props = {
 const UpdateSafeModal = ({ onClose, classes, safeAddress, createTransaction }: Props) => {
   const handleSubmit = async () => {
     // Call the update safe method
-    await upgradeSafeToLastVersion(safeAddress, createTransaction)
+    await upgradeSafeToLatestVersion(safeAddress, createTransaction)
     onClose()
   }
 

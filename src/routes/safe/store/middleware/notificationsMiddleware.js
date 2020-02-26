@@ -12,10 +12,11 @@ import { enhanceSnackbarForAction, NOTIFICATIONS } from '~/logic/notifications'
 import closeSnackbarAction from '~/logic/notifications/store/actions/closeSnackbar'
 import { getIncomingTxAmount } from '~/routes/safe/components/Transactions/TxsTable/columns'
 import updateSafe from '~/routes/safe/store/actions/updateSafe'
-import { safesMapSelector } from '~/routes/safe/store/selectors'
+import { safeParamAddressFromStateSelector, safesMapSelector } from '~/routes/safe/store/selectors'
 import { isUserOwner } from '~/logic/wallets/ethAddresses'
 import { ADD_SAFE } from '~/routes/safe/store/actions/addSafe'
 import { getSafeVersion } from '~/logic/safe/utils/safeVersion'
+import { grantedSelector } from '~/routes/safe/container/selector'
 
 const watchedActions = [ADD_TRANSACTIONS, ADD_INCOMING_TRANSACTIONS, ADD_SAFE]
 
@@ -106,12 +107,27 @@ const notificationsMiddleware = (store: Store<GlobalState>) => (next: Function) 
         break
       }
       case ADD_SAFE: {
-        const { safe } = action.payload
-        const { needUpdate } = await getSafeVersion(safe.address)
+        const state: GlobalState = store.getState()
+        const currentSafeAddress = safeParamAddressFromStateSelector(state)
+        const isUserOwner = grantedSelector(state)
+        const { needUpdate } = await getSafeVersion(currentSafeAddress)
 
-        const notificationKey = `${safe.address}`
-        if (needUpdate) {
-          dispatch(enqueueSnackbar(enhanceSnackbarForAction(NOTIFICATIONS.SAFE_NEW_VERSION_AVAILABLE, notificationKey)))
+        const notificationKey = `${currentSafeAddress}`
+        const onNotificationClicked = () => {
+          dispatch(closeSnackbarAction({ key: notificationKey }))
+          dispatch(push(`/safes/${currentSafeAddress}/settings`))
+        }
+
+        if (needUpdate && isUserOwner) {
+          dispatch(
+            enqueueSnackbar(
+              enhanceSnackbarForAction(
+                NOTIFICATIONS.SAFE_NEW_VERSION_AVAILABLE,
+                notificationKey,
+                onNotificationClicked,
+              ),
+            ),
+          )
         }
         break
       }
