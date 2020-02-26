@@ -169,18 +169,18 @@ const SendFunds = ({
                         <Block justify="left">
                           <Block>
                             <Paragraph
-                              weight="bolder"
                               className={classes.selectAddress}
                               noMargin
                               onClick={() => setSelectedEntry(null)}
+                              weight="bolder"
                             >
                               {selectedEntry.name}
                             </Paragraph>
                             <Paragraph
-                              weight="bolder"
                               className={classes.selectAddress}
                               noMargin
                               onClick={() => setSelectedEntry(null)}
+                              weight="bolder"
                             >
                               {selectedEntry.address}
                             </Paragraph>
@@ -196,20 +196,20 @@ const SendFunds = ({
                     <Row margin="md">
                       <Col xs={11}>
                         <AddressBookInput
-                          pristine={pristine}
                           fieldMutator={mutators.setRecipient}
+                          pristine={pristine}
                           recipientAddress={recipientAddress}
-                          setSelectedEntry={setSelectedEntry}
                           setIsValidAddress={setIsValidAddress}
+                          setSelectedEntry={setSelectedEntry}
                         />
                       </Col>
                       <Col xs={1} center="xs" middle="xs" className={classes}>
                         <Img
-                          src={QRIcon}
-                          className={classes.qrCodeBtn}
-                          role="button"
-                          height={20}
                           alt="Scan QR"
+                          className={classes.qrCodeBtn}
+                          height={20}
+                          role="button"
+                          src={QRIcon}
                           onClick={() => {
                             openQrModal()
                           }}
@@ -220,7 +220,11 @@ const SendFunds = ({
                 )}
                 <Row margin="sm">
                   <Col>
-                    <TokenSelectField tokens={tokens} initialValue={selectedToken} />
+                    <TokenSelectField
+                      initialValue={selectedToken}
+                      isValid={tokenAddress && String(tokenAddress).toUpperCase() !== 'ETHER'}
+                      tokens={tokens}
+                    />
                   </Col>
                 </Row>
                 <Row margin="xs">
@@ -236,8 +240,8 @@ const SendFunds = ({
                 <Row margin="md">
                   <Col>
                     <Field
-                      name="amount"
                       component={TextField}
+                      name="amount"
                       type="text"
                       validate={composeValidators(
                         required,
@@ -247,7 +251,6 @@ const SendFunds = ({
                       )}
                       placeholder="Amount*"
                       text="Amount*"
-                      className={classes.addressInput}
                       inputAdornment={
                         selectedTokenRecord && {
                           endAdornment: <InputAdornment position="end">{selectedTokenRecord.symbol}</InputAdornment>,
@@ -268,13 +271,13 @@ const SendFunds = ({
                   Cancel
                 </Button>
                 <Button
-                  type="submit"
-                  variant="contained"
-                  minWidth={140}
+                  className={classes.submitButton}
                   color="primary"
                   data-testid="review-tx-btn"
-                  className={classes.submitButton}
                   disabled={shouldDisableSubmitButton}
+                  minWidth={140}
+                  type="submit"
+                  variant="contained"
                 >
                   Review
                 </Button>
