@@ -18,6 +18,7 @@ import {
   primary,
   regularFont,
   secondary,
+  secondaryBackground,
   secondaryFontFamily,
   secondaryText,
   sm,
@@ -166,7 +167,7 @@ const theme = createMuiTheme({
     },
     MuiInput: {
       root: {
-        backgroundColor: '#F0EFEE',
+        backgroundColor: secondaryBackground,
         borderRadius: '5px',
         color: primary,
         fontFamily: secondaryFontFamily,
