@@ -199,7 +199,7 @@ const AddressBookInput = ({
               classes: {
                 ...txInputStyling,
               },
-              className: `${statusClasses}`,
+              className: statusClasses,
             }}
             InputLabelProps={{
               shrink: true,
