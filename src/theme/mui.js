@@ -4,6 +4,7 @@ import { rgba } from 'polished'
 import {
   boldFont,
   bolderFont,
+  border,
   buttonLargeFontSize,
   disabled,
   error,
@@ -17,6 +18,7 @@ import {
   primary,
   regularFont,
   secondary,
+  secondaryBackground,
   secondaryFontFamily,
   secondaryText,
   sm,
@@ -38,6 +40,9 @@ const palette = {
   error: {
     main: error,
   },
+  success: {
+    main: secondary,
+  },
   contrastThreshold: 3,
   tonalOffset: 0.2,
 }
@@ -52,7 +57,7 @@ const theme = createMuiTheme({
   overrides: {
     MuiButton: {
       label: {
-        lineHeight: 1,
+        lineHeight: '1',
         fontSize: largeFontSize,
         fontWeight: regularFont,
       },
@@ -111,7 +116,7 @@ const theme = createMuiTheme({
     },
     MuiIconButton: {
       root: {
-        padding: 0,
+        padding: '0',
       },
     },
     MuiChip: {
@@ -153,7 +158,7 @@ const theme = createMuiTheme({
         fontFamily: secondaryFontFamily,
         fontSize: '12px',
         marginTop: '0px',
-        order: 0,
+        order: '0',
         padding: `0 0 0 ${md}`,
         position: 'absolute',
         top: '5px',
@@ -162,39 +167,79 @@ const theme = createMuiTheme({
     },
     MuiInput: {
       root: {
-        fontFamily: secondaryFontFamily,
+        backgroundColor: secondaryBackground,
+        borderRadius: '5px',
         color: primary,
+        fontFamily: secondaryFontFamily,
         fontSize: mediumFontSize,
         lineHeight: '56px',
-        order: 1,
+        order: '1',
         padding: `0 ${md}`,
-        backgroundColor: '#F0EFEE',
-        borderRadius: '5px',
         '&:$disabled': {
           color: '#0000ff',
         },
+        '&:active': {
+          borderBottomLeftRadius: '0',
+          borderBottomRightRadius: '0',
+        },
       },
       input: {
-        padding: 0,
-        letterSpacing: '0.5px',
         color: primary,
-        height: 'auto',
-        textOverflow: 'ellipsis',
         display: 'flex',
+        height: 'auto',
+        letterSpacing: '0.5px',
+        padding: '0',
+        textOverflow: 'ellipsis',
         '&::-webkit-input-placeholder': {
           color: disabled,
         },
       },
       underline: {
-        '&:before': {
-          borderBottom: `2px solid ${secondary}`,
+        '&::before': {
+          borderBottomColor: primary,
+          borderBottomStyle: 'solid',
+          borderBottomWidth: '2px !important',
         },
-        '&:hover:not($disabled):not($focused):not($error):before': {
-          borderBottom: `2px solid ${secondary}`,
+        '&::after': {
+          borderBottomColor: primary,
+          borderBottomStyle: 'solid',
+          borderBottomWidth: '2px !important',
+        },
+        '&.isValid::before': {
+          borderBottomColor: `${secondary} !important`,
+        },
+        '&.isInvalid::after': {
+          borderBottomColor: `${error} !important`,
+        },
+        '&.isValid::after': {
+          display: 'none',
         },
       },
       formControl: {
         marginTop: '0 !important',
+      },
+    },
+    MuiFilledInput: {
+      underline: {
+        '&::before': {
+          borderBottomColor: primary,
+          borderBottomStyle: 'solid',
+          borderBottomWidth: '2px !important',
+        },
+        '&::after': {
+          borderBottomColor: primary,
+          borderBottomStyle: 'solid',
+          borderBottomWidth: '2px !important',
+        },
+        '&.isValid::before': {
+          borderBottomColor: `${secondary} !important`,
+        },
+        '&.isInvalid::after': {
+          borderBottomColor: `${error} !important`,
+        },
+        '&.isValid::after': {
+          display: 'none',
+        },
       },
     },
     MuiStepLabel: {
@@ -219,7 +264,7 @@ const theme = createMuiTheme({
     },
     MuiSnackbarContent: {
       root: {
-        borderRadius: '8px !important',
+        borderRadius: `${sm} !important`,
         boxShadow: '0 0 10px 0 rgba(212, 212, 211, 0.59)',
         display: 'flex',
         flexDirection: 'row',
@@ -244,7 +289,7 @@ const theme = createMuiTheme({
         },
       },
       action: {
-        paddingLeft: 0,
+        paddingLeft: '0',
         '& > button': {
           color: secondaryText,
         },
@@ -275,23 +320,23 @@ const theme = createMuiTheme({
         top: '0px',
       },
       caption: {
+        color: disabled,
         fontFamily: secondaryFontFamily,
         fontSize: mediumFontSize,
-        order: 2,
-        color: disabled,
+        order: '2',
       },
       input: {
-        order: 2,
-        width: '60px',
         color: disabled,
+        order: '2',
+        width: '60px',
       },
       select: {
-        paddingRight: 30,
         minWidth: lg,
+        paddingRight: '30',
       },
       actions: {
-        order: 4,
         color: disabled,
+        order: '4',
       },
     },
     MuiTableSortLabel: {
@@ -304,9 +349,9 @@ const theme = createMuiTheme({
     },
     MuiTableCell: {
       root: {
+        borderBottomWidth: '2px',
         fontFamily: secondaryFontFamily,
         fontSize: mediumFontSize,
-        borderBottomWidth: '2px',
       },
       head: {
         letterSpacing: '1px',
@@ -314,13 +359,13 @@ const theme = createMuiTheme({
       },
       body: {
         color: primary,
-        letterSpacing: 'normal',
         fontWeight: 'normal',
-        paddingTop: xs,
-        paddingBottom: xs,
+        letterSpacing: 'normal',
         overflow: 'hidden',
-        whiteSpace: 'nowrap',
+        paddingBottom: xs,
+        paddingTop: xs,
         textOverflow: 'ellipsis',
+        whiteSpace: 'nowrap',
       },
     },
     MuiBackdrop: {
@@ -341,15 +386,15 @@ const theme = createMuiTheme({
     },
     MuiListItemText: {
       primary: {
+        color: primary,
         fontFamily: secondaryFontFamily,
         fontSize: mediumFontSize,
         fontWeight: bolderFont,
-        color: primary,
       },
       secondary: {
+        color: disabled,
         fontFamily: secondaryFontFamily,
         fontSize: smallFontSize,
-        color: disabled,
       },
     },
     MuiCheckbox: {
@@ -384,7 +429,7 @@ export const DropdownListTheme = {
         boxShadow: '1px 2px 10px 0 rgba(212, 212, 211, 0.59)',
       },
       rounded: {
-        borderRadius: '4px',
+        borderRadius: xs,
       },
     },
     MuiList: {
@@ -395,7 +440,7 @@ export const DropdownListTheme = {
     },
     MuiListItem: {
       root: {
-        borderBottom: '2px solid #e8e7e6',
+        borderBottom: `2px solid ${border}`,
         '&:last-child': {
           borderBottom: 'none',
         },
