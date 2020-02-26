@@ -222,7 +222,7 @@ const SendFunds = ({
                   <Col>
                     <TokenSelectField
                       initialValue={selectedToken}
-                      isValid={tokenAddress && String(tokenAddress.toUpperCase()) !== 'ETHER'}
+                      isValid={tokenAddress && String(tokenAddress).toUpperCase() !== 'ETHER'}
                       tokens={tokens}
                     />
                   </Col>
