@@ -16,18 +16,19 @@ import { formatAmount } from '~/logic/tokens/utils/formatAmount'
 import { selectedTokenStyles, selectStyles } from './style'
 
 type SelectFieldProps = {
-  tokens: List<Token>,
   classes: Object,
   initialValue: string,
+  isValid: boolean,
+  tokens: List<Token>,
 }
 
 type SelectedTokenProps = {
-  tokenAddress?: string,
   classes: Object,
+  tokenAddress?: string,
   tokens: List<Token>,
 }
 
-const SelectedToken = ({ tokenAddress, tokens, classes }: SelectedTokenProps) => {
+const SelectedToken = ({ classes, tokenAddress, tokens }: SelectedTokenProps) => {
   const token = tokens.find(({ address }) => address === tokenAddress)
 
   return (
@@ -35,7 +36,7 @@ const SelectedToken = ({ tokenAddress, tokens, classes }: SelectedTokenProps) =>
       {token ? (
         <>
           <ListItemIcon className={classes.tokenImage}>
-            <Img src={token.logoUri} height={28} alt={token.name} onError={setImageToPlaceholder} />
+            <Img alt={token.name} height={28} onError={setImageToPlaceholder} src={token.logoUri} />
           </ListItemIcon>
           <ListItemText
             className={classes.tokenData}
@@ -44,30 +45,30 @@ const SelectedToken = ({ tokenAddress, tokens, classes }: SelectedTokenProps) =>
           />
         </>
       ) : (
-        <Paragraph color="disabled" size="md" weight="light" style={{ opacity: 0.5 }}>
+        <Paragraph color="disabled" size="md" style={{ opacity: 0.5 }} weight="light">
           Select an asset*
         </Paragraph>
       )}
     </MenuItem>
   )
 }
-
 const SelectedTokenStyled = withStyles(selectedTokenStyles)(SelectedToken)
 
-const TokenSelectField = ({ tokens, classes, initialValue }: SelectFieldProps) => (
+const TokenSelectField = ({ classes, initialValue, isValid, tokens }: SelectFieldProps) => (
   <Field
-    name="token"
-    component={SelectField}
+    className={isValid ? 'isValid' : 'isInvalid'}
     classes={{ selectMenu: classes.selectMenu }}
-    validate={required}
-    renderValue={tokenAddress => <SelectedTokenStyled tokenAddress={tokenAddress} tokens={tokens} />}
-    initialValue={initialValue}
+    component={SelectField}
     displayEmpty
+    initialValue={initialValue}
+    name="token"
+    renderValue={tokenAddress => <SelectedTokenStyled tokenAddress={tokenAddress} tokens={tokens} />}
+    validate={required}
   >
     {tokens.map(token => (
       <MenuItem key={token.address} value={token.address}>
         <ListItemIcon>
-          <Img src={token.logoUri} height={28} alt={token.name} onError={setImageToPlaceholder} />
+          <Img alt={token.name} height={28} onError={setImageToPlaceholder} src={token.logoUri} />
         </ListItemIcon>
         <ListItemText primary={token.name} secondary={`${formatAmount(token.balance)} ${token.symbol}`} />
       </MenuItem>
