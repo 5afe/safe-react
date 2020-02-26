@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { withStyles } from '@material-ui/core/styles'
 import { useSelector } from 'react-redux'
 import Autocomplete from '@material-ui/lab/Autocomplete'
-import TextField from '@material-ui/core/TextField'
+import MuiTextField from '@material-ui/core/TextField'
 import makeStyles from '@material-ui/core/styles/makeStyles'
 import { List } from 'immutable'
 import { styles } from './style'
@@ -37,6 +37,15 @@ const textFieldInputStyle = makeStyles(() => ({
     width: '420px',
   },
 }))
+
+const filterAddressBookWithContractAddresses = async addressBook => {
+  const abFlags = await Promise.all(
+    addressBook.map(async ({ address }) => {
+      return (await mustBeEthereumContractAddress(address)) === undefined
+    }),
+  )
+  return addressBook.filter((adbkEntry, index) => abFlags[index])
+}
 
 const isValidEnsName = name => /^([\w-]+\.)+(eth|test|xyz|luxe)$/.test(name)
 
@@ -78,8 +87,10 @@ const AddressBookInput = ({
         isValidText = await mustBeEthereumContractAddress(resolvedAddress)
       }
 
-      // Filters the entries based on the input of the user
-      const filteredADBK = addressBook.filter(adbkEntry => {
+      // First removes the entries that are not contracts if the operation is custom tx
+      const adbkToFilter = isCustomTx ? await filterAddressBookWithContractAddresses(addressBook) : addressBook
+      // Then Filters the entries based on the input of the user
+      const filteredADBK = adbkToFilter.filter(adbkEntry => {
         const { name, address } = adbkEntry
         return (
           name.toLowerCase().includes(addressValue.toLowerCase()) ||
@@ -100,10 +111,8 @@ const AddressBookInput = ({
         setADBKList(addressBook)
         return
       }
-      const abFlags = await Promise.all(
-        addressBook.map(async ({ address }) => mustBeEthereumContractAddress(address) === undefined),
-      )
-      const filteredADBK = addressBook.filter((adbkEntry, index) => abFlags[index])
+
+      const filteredADBK = await filterAddressBookWithContractAddresses(addressBook)
       setADBKList(filteredADBK)
     }
     filterAdbkContractAddresses()
@@ -111,6 +120,14 @@ const AddressBookInput = ({
 
   const labelStyling = textFieldLabelStyle()
   const txInputStyling = textFieldInputStyle()
+
+  let statusClasses = ''
+  if (!isValidForm) {
+    statusClasses = 'isInvalid'
+  }
+  if (isValidForm && inputTouched) {
+    statusClasses = 'isValid'
+  }
 
   return (
     <>
@@ -164,7 +181,7 @@ const AddressBookInput = ({
           )
         }}
         renderInput={params => (
-          <TextField
+          <MuiTextField
             {...params}
             label={!isValidForm ? validationText : 'Recipient'}
             error={!isValidForm}
@@ -182,6 +199,7 @@ const AddressBookInput = ({
               classes: {
                 ...txInputStyling,
               },
+              className: statusClasses,
             }}
             InputLabelProps={{
               shrink: true,

@@ -223,7 +223,6 @@ const SendCustomTx = ({ classes, onClose, safeAddress, safeName, ethBalance, onS
                     <TextareaField
                       name="data"
                       type="text"
-                      rows={3}
                       placeholder="Data (hex encoded)*"
                       text="Data (hex encoded)*"
                     />
