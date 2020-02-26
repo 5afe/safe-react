@@ -5,7 +5,6 @@ import { withStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
 import IconButton from '@material-ui/core/IconButton'
 import MenuItem from '@material-ui/core/MenuItem'
-import { onboardUser } from '~/components/ConnectButton'
 import SelectField from '~/components/forms/SelectField'
 import { composeValidators, minValue, mustBeInteger, required, differentFrom } from '~/components/forms/validator'
 import Field from '~/components/forms/Field'
@@ -41,8 +40,6 @@ const ChangeThreshold = ({ onClose, owners, threshold, classes, onChangeThreshol
     let isCurrent = true
     const estimateGasCosts = async () => {
       const web3 = getWeb3()
-      const ready = await onboardUser()
-      if (!ready) return
       const { fromWei, toBN } = web3.utils
       const safeInstance = await getGnosisSafeInstanceAt(safeAddress)
       const txData = safeInstance.contract.methods.changeThreshold('1').encodeABI()

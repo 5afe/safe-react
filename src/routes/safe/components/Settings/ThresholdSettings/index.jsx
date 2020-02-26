@@ -9,7 +9,6 @@ import Bold from '~/components/layout/Bold'
 import Block from '~/components/layout/Block'
 import Row from '~/components/layout/Row'
 import Modal from '~/components/Modal'
-import { onboardUser } from '~/components/ConnectButton'
 import Paragraph from '~/components/layout/Paragraph'
 import { TX_NOTIFICATION_TYPES } from '~/logic/safe/transactions'
 import ChangeThreshold from './ChangeThreshold'
@@ -45,8 +44,6 @@ const ThresholdSettings = ({
   }
 
   const onChangeThreshold = async newThreshold => {
-    const ready = await onboardUser()
-    if (!ready) return
     const safeInstance = await getGnosisSafeInstanceAt(safeAddress)
     const txData = safeInstance.contract.methods.changeThreshold(newThreshold).encodeABI()
 

@@ -1,6 +1,5 @@
 // @flow
 import GnosisSafeSol from '@gnosis.pm/safe-contracts/build/contracts/GnosisSafe.json'
-import { onboardUser } from '~/components/ConnectButton'
 import { getWeb3 } from '~/logic/wallets/getWeb3'
 import { type Operation } from '~/logic/safe/transactions'
 
@@ -40,8 +39,6 @@ export const getApprovalTransaction = async (
   )
 
   try {
-    const ready = await onboardUser()
-    if (!ready) return null
     const web3 = getWeb3()
     const contract = new web3.eth.Contract(GnosisSafeSol.abi, safeInstance.address)
 
@@ -68,8 +65,6 @@ export const getExecutionTransaction = async (
   sigs: string,
 ) => {
   try {
-    const ready = await onboardUser()
-    if (!ready) return null
     const web3 = getWeb3()
     const contract = new web3.eth.Contract(GnosisSafeSol.abi, safeInstance.address)
 

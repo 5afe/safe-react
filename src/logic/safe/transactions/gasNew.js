@@ -2,7 +2,6 @@
 import GnosisSafeSol from '@gnosis.pm/safe-contracts/build/contracts/GnosisSafe.json'
 import { type Transaction } from '~/routes/safe/store/models/transaction'
 import { getWeb3, getAccountFrom } from '~/logic/wallets/getWeb3'
-import { onboardUser } from '~/components/ConnectButton'
 import { generateSignaturesFromTxConfirmations } from '~/logic/safe/safeTxSigner'
 import { calculateGasOf, calculateGasPrice } from '~/logic/wallets/ethTransactions'
 import { ZERO_ADDRESS } from '~/logic/wallets/ethAddresses'
@@ -16,8 +15,6 @@ export const estimateTxGasCosts = async (
   preApprovingOwner?: string,
 ): Promise<number> => {
   try {
-    const ready = await onboardUser()
-    if (!ready) return 0
     const web3 = getWeb3()
     const from = await getAccountFrom(web3)
     const safeInstance = new web3.eth.Contract(GnosisSafeSol.abi, safeAddress)

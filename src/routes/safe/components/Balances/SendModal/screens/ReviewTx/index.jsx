@@ -6,7 +6,6 @@ import { withStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
 import IconButton from '@material-ui/core/IconButton'
 import { withSnackbar } from 'notistack'
-import { onboardUser } from '~/components/ConnectButton'
 import Paragraph from '~/components/layout/Paragraph'
 import Row from '~/components/layout/Row'
 import Col from '~/components/layout/Col'
@@ -21,6 +20,7 @@ import SafeInfo from '~/routes/safe/components/Balances/SendModal/SafeInfo'
 import { setImageToPlaceholder } from '~/routes/safe/components/Balances/utils'
 import { getHumanFriendlyToken } from '~/logic/tokens/store/actions/fetchTokens'
 import { estimateTxGasCosts } from '~/logic/safe/transactions/gasNew'
+import { onboardUser } from '~/components/ConnectButton'
 import { EMPTY_DATA } from '~/logic/wallets/ethTransactions'
 import { type Token } from '~/logic/tokens/store/model/token'
 import { formatAmount } from '~/logic/tokens/utils/formatAmount'
@@ -66,9 +66,6 @@ const ReviewTx = ({
   useEffect(() => {
     let isCurrent = true
     const estimateGas = async () => {
-      const ready = await onboardUser()
-      if (!ready) return
-
       const web3 = getWeb3()
       const { fromWei, toBN } = web3.utils
       let txData = EMPTY_DATA
