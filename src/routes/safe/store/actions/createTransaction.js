@@ -19,7 +19,7 @@ import { type NotificationsQueue, getNotificationsFromTxType, showSnackbar } fro
 import { getErrorMessage } from '~/test/utils/ethereumErrors'
 import { ZERO_ADDRESS } from '~/logic/wallets/ethAddresses'
 import { SAFELIST_ADDRESS } from '~/routes/routes'
-import { getLastTx, doesTxNeedApproval, getNewTxNonce } from './utils'
+import { getLastTx, getNewTxNonce, shouldAutomaticallyExecuteTransaction } from '~/routes/safe/store/actions/utils'
 
 type CreateTransactionArgs = {
   safeAddress: string,
@@ -58,7 +58,7 @@ const createTransaction = ({
   const safeInstance = await getGnosisSafeInstanceAt(safeAddress)
   const lastTx = await getLastTx(safeAddress)
   const nonce = await getNewTxNonce(txNonce, lastTx, safeAddress)
-  const needsApproval = await doesTxNeedApproval(safeInstance, nonce, lastTx)
+  const shouldAutomaticallyExecuteTx = await shouldAutomaticallyExecuteTransaction(safeInstance, nonce, lastTx)
 
   // https://gnosis-safe.readthedocs.io/en/latest/contracts/signatures.html#pre-validated-signatures
   const sigs = `0x000000000000000000000000${from.replace(
@@ -89,7 +89,7 @@ const createTransaction = ({
   }
 
   try {
-    tx = needsApproval ? await getApprovalTransaction(txArgs) : await getExecutionTransaction(txArgs)
+    tx = shouldAutomaticallyExecuteTx ? await getExecutionTransaction(txArgs) : await getApprovalTransaction(txArgs)
 
     const sendParams = { from, value: 0 }
 
@@ -115,7 +115,7 @@ const createTransaction = ({
           await saveTxToHistory({
             ...txArgs,
             txHash,
-            type: needsApproval ? TX_TYPE_CONFIRMATION : TX_TYPE_EXECUTION,
+            type: shouldAutomaticallyExecuteTx ? TX_TYPE_EXECUTION : TX_TYPE_CONFIRMATION,
             origin,
           })
           dispatch(fetchTransactions(safeAddress))
@@ -129,9 +129,9 @@ const createTransaction = ({
       .then(receipt => {
         closeSnackbar(pendingExecutionKey)
         showSnackbar(
-          needsApproval
-            ? notificationsQueue.afterExecution.moreConfirmationsNeeded
-            : notificationsQueue.afterExecution.noMoreConfirmationsNeeded,
+          shouldAutomaticallyExecuteTx
+            ? notificationsQueue.afterExecution.noMoreConfirmationsNeeded
+            : notificationsQueue.afterExecution.moreConfirmationsNeeded,
           enqueueSnackbar,
           closeSnackbar,
         )

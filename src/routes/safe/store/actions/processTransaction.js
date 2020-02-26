@@ -18,7 +18,7 @@ import {
 import { generateSignaturesFromTxConfirmations } from '~/logic/safe/safeTxSigner'
 import { type NotificationsQueue, getNotificationsFromTxType, showSnackbar } from '~/logic/notifications'
 import { getErrorMessage } from '~/test/utils/ethereumErrors'
-import { getLastTx, doesTxNeedApproval, getNewTxNonce } from './utils'
+import { getLastTx, getNewTxNonce, shouldAutomaticallyExecuteTransaction } from '~/routes/safe/store/actions/utils'
 
 type ProcessTransactionArgs = {
   safeAddress: string,
@@ -45,7 +45,8 @@ const processTransaction = ({
   const safeInstance = await getGnosisSafeInstanceAt(safeAddress)
   const lastTx = await getLastTx(safeAddress)
   const nonce = await getNewTxNonce(null, lastTx, safeAddress)
-  const needsApproval = (await doesTxNeedApproval(safeInstance, nonce, lastTx)) || approveAndExecute
+  const shouldAutomaticallyExecuteTx =
+    approveAndExecute || (await shouldAutomaticallyExecuteTransaction(safeInstance, nonce, lastTx))
 
   let sigs = generateSignaturesFromTxConfirmations(tx.confirmations, approveAndExecute && userAddress)
   // https://gnosis-safe.readthedocs.io/en/latest/contracts/signatures.html#pre-validated-signatures
@@ -79,7 +80,9 @@ const processTransaction = ({
   }
 
   try {
-    transaction = needsApproval ? await getApprovalTransaction(txArgs) : await getExecutionTransaction(txArgs)
+    transaction = shouldAutomaticallyExecuteTx
+      ? await getExecutionTransaction(txArgs)
+      : await getApprovalTransaction(txArgs)
 
     const sendParams = { from, value: 0 }
     // if not set owner management tests will fail on ganache
@@ -99,7 +102,7 @@ const processTransaction = ({
           await saveTxToHistory({
             ...txArgs,
             txHash,
-            type: needsApproval ? TX_TYPE_CONFIRMATION : TX_TYPE_EXECUTION,
+            type: shouldAutomaticallyExecuteTx ? TX_TYPE_EXECUTION : TX_TYPE_CONFIRMATION,
           })
           dispatch(fetchTransactions(safeAddress))
         } catch (err) {
@@ -113,15 +116,15 @@ const processTransaction = ({
         closeSnackbar(pendingExecutionKey)
 
         showSnackbar(
-          needsApproval
-            ? notificationsQueue.afterExecution.moreConfirmationsNeeded
-            : notificationsQueue.afterExecution.noMoreConfirmationsNeeded,
+          shouldAutomaticallyExecuteTx
+            ? notificationsQueue.afterExecution.noMoreConfirmationsNeeded
+            : notificationsQueue.afterExecution.moreConfirmationsNeeded,
           enqueueSnackbar,
           closeSnackbar,
         )
         dispatch(fetchTransactions(safeAddress))
 
-        if (!needsApproval) {
+        if (shouldAutomaticallyExecuteTx) {
           dispatch(fetchSafe(safeAddress))
         }
 

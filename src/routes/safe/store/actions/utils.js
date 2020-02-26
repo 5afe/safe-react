@@ -29,23 +29,19 @@ export const getNewTxNonce = async (txNonce, lastTx, safeAddress) => {
   return txNonce
 }
 
-export const doesTxNeedApproval = async (safeInstance, nonce, lastTx) => {
+export const shouldAutomaticallyExecuteTransaction = async (safeInstance, nonce, lastTx) => {
   const threshold = await safeInstance.getThreshold()
 
-  // if treshold is grater than one, it always needs approval
-  if (threshold.toNumber() > 1) {
-    return true
+  // Tx will automatically be executed if and only if the threshold is 1
+  if (threshold.toNumber() === 1) {
+    const isFirstTransaction = Number.parseInt(nonce) === 0
+    // if the previous tx is not executed, it's delayed using the approval mechanisms,
+    // once the previous tx is executed, the current tx will be available to be executed
+    // by the user using the exec button.
+    const canExecuteCurrentTransaction = lastTx && lastTx.isExecuted
+
+    return isFirstTransaction || canExecuteCurrentTransaction
   }
 
-  // if treshold is 1, and is the first TX, it does not need approval
-  if (!Number.parseInt(nonce) === 0) {
-    return false
-  }
-
-  // if threshold is 1, but the previous tx is not executed, it's delayed
-  // using the approval mechanisims, once the previous tx is executed, the
-  // current tx will be abailable to be executed by the user using the exec button.
-  if (lastTx && !lastTx.isExecuted) {
-    return false
-  }
+  return false
 }
