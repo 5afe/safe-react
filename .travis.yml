@@ -36,7 +36,12 @@ after_success:
     else
       export NODE_ENV=development;
     fi
-  - if [[ -n "$TRAVIS_TAG" ]]; then export REACT_APP_ENV='production'; fi
+  - |
+
+    if [[ -n "$TRAVIS_TAG" ]]; then
+      export PRODUCTION_DEPLOYMENT=true;
+      export REACT_APP_ENV='production';
+    fi
   - yarn build
   # Pull Request - Deploy it to a review environment
   # Travis doesn't do deploy step with pull requests builds
