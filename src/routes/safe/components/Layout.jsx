@@ -4,6 +4,7 @@ import classNames from 'classnames/bind'
 import { Switch, Redirect, Route, withRouter } from 'react-router-dom'
 import Tabs from '@material-ui/core/Tabs'
 import Tab from '@material-ui/core/Tab'
+import Badge from '@material-ui/core/Badge'
 import CallMade from '@material-ui/icons/CallMade'
 import CallReceived from '@material-ui/icons/CallReceived'
 import { withStyles } from '@material-ui/core/styles'
@@ -35,6 +36,7 @@ import { AddressBookIcon } from './assets/AddressBookIcon'
 import { TransactionsIcon } from './assets/TransactionsIcon'
 import { BalancesIcon } from './assets/BalancesIcon'
 import { AppsIcon } from './assets/AppsIcon'
+import { getSafeVersion } from '~/logic/safe/utils/safeVersion'
 
 export const BALANCES_TAB_BTN_TEST_ID = 'balances-tab-btn'
 export const SETTINGS_TAB_BTN_TEST_ID = 'settings-tab-btn'
@@ -102,6 +104,23 @@ const Layout = (props: Props) => {
     onClose: null,
   })
 
+  const [needUpdate, setNeedUpdate] = useState(false)
+
+  React.useEffect(() => {
+    const checkUpdateRequirement = async () => {
+      let safeVersion = {}
+
+      try {
+        safeVersion = await getSafeVersion(safe.address)
+      } catch (e) {
+        console.error('failed to check version', e)
+      }
+      setNeedUpdate(safeVersion.needUpdate)
+    }
+
+    checkUpdateRequirement()
+  }, [safe && safe.address])
+
   const handleCallToRouter = (_, value) => {
     const { history } = props
 
@@ -151,7 +170,15 @@ const Layout = (props: Props) => {
   const labelSettings = (
     <>
       <SettingsIcon />
-      Settings
+      <Badge
+        badgeContent=""
+        variant="dot"
+        invisible={!needUpdate || !granted}
+        color="error"
+        style={{ paddingRight: '10px' }}
+      >
+        Settings
+      </Badge>
     </>
   )
   const labelBalances = (

@@ -17,7 +17,7 @@ import { getLocalSafe } from '~/logic/safe/utils'
 import { addTransactions } from './addTransactions'
 import { addIncomingTransactions } from './addIncomingTransactions'
 import { getHumanFriendlyToken } from '~/logic/tokens/store/actions/fetchTokens'
-import { isTokenTransfer } from '~/logic/tokens/utils/tokenHelpers'
+import { isMultisendTransaction, isTokenTransfer, isUpgradeTransaction } from '~/logic/tokens/utils/tokenHelpers'
 import { decodeParamsFromSafeMethod } from '~/logic/contracts/methodIds'
 import { ALTERNATIVE_TOKEN_ABI } from '~/logic/tokens/utils/alternativeAbi'
 import type { TransactionProps } from '~/routes/safe/store/models/transaction'
@@ -89,7 +89,9 @@ export const buildTransactionFrom = async (safeAddress: string, tx: TxServiceMod
   const modifySettingsTx = sameAddress(tx.to, safeAddress) && Number(tx.value) === 0 && !!tx.data
   const cancellationTx = sameAddress(tx.to, safeAddress) && Number(tx.value) === 0 && !tx.data
   const isSendTokenTx = isTokenTransfer(tx.data, Number(tx.value))
-  const customTx = !sameAddress(tx.to, safeAddress) && !!tx.data && !isSendTokenTx
+  const isMultiSendTx = isMultisendTransaction(tx.data, Number(tx.value))
+  const customTx = !sameAddress(tx.to, safeAddress) && !!tx.data && !isSendTokenTx && !isMultiSendTx
+  const isUpgradeTx = isMultiSendTx && isUpgradeTransaction(tx.data)
 
   let refundParams = null
   if (tx.gasPrice > 0) {
@@ -165,6 +167,8 @@ export const buildTransactionFrom = async (safeAddress: string, tx: TxServiceMod
     executionTxHash: tx.transactionHash,
     safeTxHash: tx.safeTxHash,
     isTokenTransfer: isSendTokenTx,
+    multiSendTx: isMultiSendTx,
+    upgradeTx: isUpgradeTx,
     decodedParams,
     modifySettingsTx,
     customTx,
@@ -297,7 +301,6 @@ export default (safeAddress: string) => async (dispatch: ReduxDispatch<GlobalSta
 
   const { outgoing, cancel }: SafeTransactionsType = await loadSafeTransactions(safeAddress)
   const incomingTransactions: Map<string, List<IncomingTransaction>> = await loadSafeIncomingTransactions(safeAddress)
-
   dispatch(addCancellationTransactions(cancel))
   dispatch(addTransactions(outgoing))
   dispatch(addIncomingTransactions(incomingTransactions))
