@@ -26,7 +26,6 @@ class TextField extends React.PureComponent<TextFieldProps> {
       inputAdornment,
       meta,
       multiline,
-      render,
       rows,
       testId,
       text,

@@ -143,7 +143,13 @@ class Settings extends React.Component<Props, State> {
                 onClick={this.handleChange(1)}
               >
                 <SafeDetailsIcon />
-                <Badge badgeContent=" " variant="dot" invisible={!this.state.needUpdate || !granted} color="error" style={{paddingRight: '10px'}}>
+                <Badge
+                  badgeContent=" "
+                  variant="dot"
+                  invisible={!this.state.needUpdate || !granted}
+                  color="error"
+                  style={{ paddingRight: '10px' }}
+                >
                   Safe details
                 </Badge>
               </Row>
