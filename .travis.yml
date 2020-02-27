@@ -63,7 +63,7 @@ deploy:
   secret_access_key: $AWS_SECRET_ACCESS_KEY
   skip_cleanup: true
   local_dir: build_webpack
-  upload-dir: current
+  upload-dir: current/app
   on:
     branch: master
 

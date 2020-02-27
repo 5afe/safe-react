@@ -19,7 +19,7 @@ function deploy_pull_request {
 }
 
 function publish_pull_request_urls_in_github {
-  REVIEW_FEATURE_URL="https://$PULL_REQUEST_NAME--$REPO_NAME_ALPHANUMERIC.$REVIEW_ENVIRONMENT_DOMAIN"
+  REVIEW_FEATURE_URL="https://$PULL_REQUEST_NAME--$REPO_NAME_ALPHANUMERIC.$REVIEW_ENVIRONMENT_DOMAIN/app"
 
   # Using the Issues api instead of the PR api
   # Done so because every PR is an issue, and the issues api allows to post general comments,
