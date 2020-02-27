@@ -24,12 +24,12 @@ export const getSafeNonce = async (safeAddress: string): Promise<string> => {
 
 export const getNewTxNonce = async (txNonce, lastTx, safeAddress) => {
   if (!Number.isInteger(Number.parseInt(txNonce, 10))) {
-    return lastTx === null ? getSafeNonce(safeAddress) : `${lastTx.nonce + 1}`
+    return lastTx === null ? await getSafeNonce(safeAddress) : `${lastTx.nonce + 1}`
   }
   return txNonce
 }
 
-export const shouldAutomaticallyExecuteTransaction = async (safeInstance, nonce, lastTx) => {
+export const shouldExecuteTransaction = async (safeInstance, nonce, lastTx) => {
   const threshold = await safeInstance.getThreshold()
 
   // Tx will automatically be executed if and only if the threshold is 1
