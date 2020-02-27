@@ -11,7 +11,7 @@ const Icon = styled.img`
   max-height: 15px;
   margin-right: 5px;
 `
-const Text = styled.div`
+const Text = styled.span`
   height: 17px;
 `
 
