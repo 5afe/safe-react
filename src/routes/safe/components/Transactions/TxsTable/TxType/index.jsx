@@ -30,15 +30,10 @@ const typeToLabel = {
 }
 
 const TxType = ({ txType, origin }: { txType: TransactionType, origin: string | null }) => {
-  const getIcon = type => {
-    return type === 'third-party-app' ? getAppInfo(origin).iconUrl : typeToIcon[type]
-  }
+  const iconUrl = txType === 'third-party-app' ? getAppInfo(origin).iconUrl : typeToIcon[txType]
+  const text = txType === 'third-party-app' ? origin : typeToLabel[txType]
 
-  const getLabel = type => {
-    return type === 'third-party-app' ? origin : typeToLabel[type]
-  }
-
-  return <IconText iconUrl={getIcon(txType)} text={getLabel(txType)} />
+  return <IconText iconUrl={iconUrl} text={text} />
 }
 
 export default TxType
