@@ -1,5 +1,5 @@
 // @flow
-import { boldFont, sm, lg, error, disabled, extraSmallFontSize, secondary } from '~/theme/variables'
+import { boldFont, disabled, error, extraSmallFontSize, lg, secondary, sm } from '~/theme/variables'
 
 export const styles = () => ({
   container: {

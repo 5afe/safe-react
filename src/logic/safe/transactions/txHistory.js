@@ -1,7 +1,8 @@
 // @flow
 import axios from 'axios'
+
+import { getTxServiceHost, getTxServiceUriFrom } from '~/config'
 import { getWeb3 } from '~/logic/wallets/getWeb3'
-import { getTxServiceUriFrom, getTxServiceHost } from '~/config'
 
 export type TxServiceType = 'confirmation' | 'execution' | 'initialised'
 export type Operation = 0 | 1 | 2

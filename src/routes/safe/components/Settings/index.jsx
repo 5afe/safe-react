@@ -1,32 +1,34 @@
 // @flow
-import * as React from 'react'
-import cn from 'classnames'
-import { List } from 'immutable'
-import { connect } from 'react-redux'
 import Badge from '@material-ui/core/Badge'
 import { withStyles } from '@material-ui/core/styles'
-import Paragraph from '~/components/layout/Paragraph'
+import cn from 'classnames'
+import { List } from 'immutable'
+import * as React from 'react'
+import { connect } from 'react-redux'
+
+import ManageOwners from './ManageOwners'
+import RemoveSafeModal from './RemoveSafeModal'
+import SafeDetails from './SafeDetails'
+import ThresholdSettings from './ThresholdSettings'
+import actions, { type Actions } from './actions'
 import { OwnersIcon } from './assets/icons/OwnersIcon'
 import { RequiredConfirmationsIcon } from './assets/icons/RequiredConfirmationsIcon'
 import { SafeDetailsIcon } from './assets/icons/SafeDetailsIcon'
+import RemoveSafeIcon from './assets/icons/bin.svg'
+import { styles } from './style'
+
 import Block from '~/components/layout/Block'
+import ButtonLink from '~/components/layout/ButtonLink'
 import Col from '~/components/layout/Col'
+import Hairline from '~/components/layout/Hairline'
+import Img from '~/components/layout/Img'
+import Paragraph from '~/components/layout/Paragraph'
 import Row from '~/components/layout/Row'
 import Span from '~/components/layout/Span'
-import Img from '~/components/layout/Img'
-import ButtonLink from '~/components/layout/ButtonLink'
-import RemoveSafeModal from './RemoveSafeModal'
-import Hairline from '~/components/layout/Hairline'
-import { type Owner } from '~/routes/safe/store/models/owner'
-import SafeDetails from './SafeDetails'
-import ThresholdSettings from './ThresholdSettings'
-import ManageOwners from './ManageOwners'
-import actions, { type Actions } from './actions'
-import { styles } from './style'
-import RemoveSafeIcon from './assets/icons/bin.svg'
-import type { Safe } from '~/routes/safe/store/models/safe'
 import type { AddressBook } from '~/logic/addressBook/model/addressBook'
 import { getSafeVersion } from '~/logic/safe/utils/safeVersion'
+import { type Owner } from '~/routes/safe/store/models/owner'
+import type { Safe } from '~/routes/safe/store/models/safe'
 
 export const OWNERS_SETTINGS_TAB_TEST_ID = 'owner-settings-tab'
 
@@ -98,7 +100,7 @@ class Settings extends React.Component<Props, State> {
   }
 
   render() {
-    const { showRemoveSafe, menuOptionIndex } = this.state
+    const { menuOptionIndex, showRemoveSafe } = this.state
     const {
       addSafeOwner,
       addressBook,
@@ -123,14 +125,14 @@ class Settings extends React.Component<Props, State> {
     return (
       <>
         <Row className={classes.message}>
-          <ButtonLink size="lg" color="error" className={classes.removeSafeBtn} onClick={this.onShow('RemoveSafe')}>
+          <ButtonLink className={classes.removeSafeBtn} color="error" onClick={this.onShow('RemoveSafe')} size="lg">
             <Span className={classes.links}>Remove Safe</Span>
             <Img alt="Trash Icon" className={classes.removeSafeIcon} src={RemoveSafeIcon} />
           </ButtonLink>
           <RemoveSafeModal
-            onClose={this.onHide('RemoveSafe')}
-            isOpen={showRemoveSafe}
             etherScanLink={etherScanLink}
+            isOpen={showRemoveSafe}
+            onClose={this.onHide('RemoveSafe')}
             safeAddress={safeAddress}
             safeName={safeName}
           />
@@ -143,7 +145,13 @@ class Settings extends React.Component<Props, State> {
                 onClick={this.handleChange(1)}
               >
                 <SafeDetailsIcon />
-                <Badge badgeContent=" " variant="dot" invisible={!this.state.needUpdate || !granted} color="error" style={{paddingRight: '10px'}}>
+                <Badge
+                  badgeContent=" "
+                  color="error"
+                  invisible={!this.state.needUpdate || !granted}
+                  style={{ paddingRight: '10px' }}
+                  variant="dot"
+                >
                   Safe details
                 </Badge>
               </Row>
@@ -155,7 +163,7 @@ class Settings extends React.Component<Props, State> {
               >
                 <OwnersIcon />
                 Owners
-                <Paragraph size="xs" className={classes.counter}>
+                <Paragraph className={classes.counter} size="xs">
                   {owners.size}
                 </Paragraph>
               </Row>
@@ -174,38 +182,38 @@ class Settings extends React.Component<Props, State> {
             <Block className={classes.container}>
               {menuOptionIndex === 1 && (
                 <SafeDetails
+                  createTransaction={createTransaction}
                   safeAddress={safeAddress}
                   safeName={safeName}
                   updateSafe={updateSafe}
-                  createTransaction={createTransaction}
                 />
               )}
               {menuOptionIndex === 2 && (
                 <ManageOwners
-                  owners={owners}
-                  threshold={threshold}
-                  safeAddress={safeAddress}
-                  safeName={safeName}
-                  network={network}
-                  createTransaction={createTransaction}
-                  userAddress={userAddress}
+                  addressBook={addressBook}
                   addSafeOwner={addSafeOwner}
-                  removeSafeOwner={removeSafeOwner}
-                  replaceSafeOwner={replaceSafeOwner}
+                  createTransaction={createTransaction}
                   editSafeOwner={editSafeOwner}
                   granted={granted}
+                  network={network}
+                  owners={owners}
+                  removeSafeOwner={removeSafeOwner}
+                  replaceSafeOwner={replaceSafeOwner}
                   safe={safe}
-                  addressBook={addressBook}
+                  safeAddress={safeAddress}
+                  safeName={safeName}
+                  threshold={threshold}
                   updateAddressBookEntry={updateAddressBookEntry}
+                  userAddress={userAddress}
                 />
               )}
               {menuOptionIndex === 3 && (
                 <ThresholdSettings
-                  owners={owners}
-                  threshold={threshold}
                   createTransaction={createTransaction}
-                  safeAddress={safeAddress}
                   granted={granted}
+                  owners={owners}
+                  safeAddress={safeAddress}
+                  threshold={threshold}
                 />
               )}
             </Block>

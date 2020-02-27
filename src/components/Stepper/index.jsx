@@ -1,16 +1,18 @@
 // @flow
-import * as React from 'react'
-import Stepper from '@material-ui/core/Stepper'
 import FormStep from '@material-ui/core/Step'
-import StepLabel from '@material-ui/core/StepLabel'
 import StepContent from '@material-ui/core/StepContent'
+import StepLabel from '@material-ui/core/StepLabel'
+import Stepper from '@material-ui/core/Stepper'
 import { withStyles } from '@material-ui/core/styles'
+import * as React from 'react'
+
+import Controls from './Controls'
+
 import GnoForm from '~/components/forms/GnoForm'
 import Hairline from '~/components/layout/Hairline'
 import { history } from '~/store'
-import Controls from './Controls'
 
-const { useState, useEffect } = React
+const { useEffect, useState } = React
 
 export { default as Step } from './Step'
 
@@ -110,7 +112,7 @@ const GnoStepper = (props: Props) => {
     return pageNumber === steps.length - 1
   }
 
-  const { steps, children, classes, disabledWhenValidating = false, testId, mutators, buttonLabels } = props
+  const { buttonLabels, children, classes, disabledWhenValidating = false, mutators, steps, testId } = props
   const activePage = getActivePageFrom(children)
 
   const lastPage = isLastPage(page)
@@ -119,11 +121,11 @@ const GnoStepper = (props: Props) => {
   return (
     <>
       <GnoForm
-        onSubmit={handleSubmit}
-        initialValues={values}
-        validation={validate}
-        testId={testId}
         formMutators={mutators}
+        initialValues={values}
+        onSubmit={handleSubmit}
+        testId={testId}
+        validation={validate}
       >
         {(submitting: boolean, validating: boolean, ...rest: any) => {
           const disabled = disabledWhenValidating ? submitting || validating : submitting
@@ -131,19 +133,19 @@ const GnoStepper = (props: Props) => {
             <>
               <Hairline />
               <Controls
-                disabled={disabled}
-                onPrevious={previous}
-                firstPage={page === 0}
-                lastPage={lastPage}
-                penultimate={penultimate}
                 buttonLabels={buttonLabels}
                 currentStep={page}
+                disabled={disabled}
+                firstPage={page === 0}
+                lastPage={lastPage}
+                onPrevious={previous}
+                penultimate={penultimate}
               />
             </>
           )
 
           return (
-            <Stepper classes={{ root: classes.root }} activeStep={page} orientation="vertical">
+            <Stepper activeStep={page} classes={{ root: classes.root }} orientation="vertical">
               {steps.map((label, index) => {
                 const labelProps = {}
                 const isClickable = index < page

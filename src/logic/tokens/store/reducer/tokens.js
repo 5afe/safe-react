@@ -1,10 +1,11 @@
 // @flow
 import { Map } from 'immutable'
-import { handleActions, type ActionType } from 'redux-actions'
-import { type Token, makeToken } from '~/logic/tokens/store/model/token'
+import { type ActionType, handleActions } from 'redux-actions'
+
 import { ADD_TOKEN } from '~/logic/tokens/store/actions/addToken'
 import { REMOVE_TOKEN } from '~/logic/tokens/store/actions/removeToken'
 import { ADD_TOKENS } from '~/logic/tokens/store/actions/saveTokens'
+import { type Token, makeToken } from '~/logic/tokens/store/model/token'
 
 export const TOKEN_REDUCER_ID = 'tokens'
 

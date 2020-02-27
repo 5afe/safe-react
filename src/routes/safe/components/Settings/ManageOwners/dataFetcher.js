@@ -1,8 +1,9 @@
 // @flow
 import { List } from 'immutable'
-import type { Owner } from '~/routes/safe/store/models/owner'
-import { type SortRow } from '~/components/Table/sorting'
+
 import { type Column } from '~/components/Table/TableHead'
+import { type SortRow } from '~/components/Table/sorting'
+import type { Owner } from '~/routes/safe/store/models/owner'
 
 export const OWNERS_TABLE_NAME_ID = 'name'
 export const OWNERS_TABLE_ADDRESS_ID = 'address'

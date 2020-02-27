@@ -1,21 +1,23 @@
 // @flow
+import ClickAwayListener from '@material-ui/core/ClickAwayListener'
+import Grow from '@material-ui/core/Grow'
+import List from '@material-ui/core/List'
+import Popper from '@material-ui/core/Popper'
+import { withStyles } from '@material-ui/core/styles'
 import * as React from 'react'
 import { Link } from 'react-router-dom'
-import { withStyles } from '@material-ui/core/styles'
-import Grow from '@material-ui/core/Grow'
-import ClickAwayListener from '@material-ui/core/ClickAwayListener'
-import Popper from '@material-ui/core/Popper'
-import List from '@material-ui/core/List'
-import Divider from '~/components/layout/Divider'
+
+import NetworkLabel from './NetworkLabel'
+import Provider from './Provider'
+import SafeListHeader from './SafeListHeader'
+
+import Spacer from '~/components/Spacer'
 import openHoc, { type Open } from '~/components/hoc/OpenHoc'
 import Col from '~/components/layout/Col'
+import Divider from '~/components/layout/Divider'
 import Img from '~/components/layout/Img'
 import Row from '~/components/layout/Row'
-import Spacer from '~/components/Spacer'
-import { border, sm, md, headerHeight, screenSm } from '~/theme/variables'
-import Provider from './Provider'
-import NetworkLabel from './NetworkLabel'
-import SafeListHeader from './SafeListHeader'
+import { border, headerHeight, md, screenSm, sm } from '~/theme/variables'
 
 const logo = require('../assets/gnosis-safe-multisig-logo.svg')
 
@@ -62,11 +64,11 @@ const styles = () => ({
   },
 })
 
-const Layout = openHoc(({ open, toggle, clickAway, classes, providerInfo, providerDetails }: Props) => (
+const Layout = openHoc(({ classes, clickAway, open, providerDetails, providerInfo, toggle }: Props) => (
   <Row className={classes.summary}>
-    <Col start="xs" middle="xs" className={classes.logo}>
+    <Col className={classes.logo} middle="xs" start="xs">
       <Link to="/">
-        <Img src={logo} height={32} alt="Gnosis Team Safe" />
+        <Img alt="Gnosis Team Safe" height={32} src={logo} />
       </Link>
     </Col>
     <Divider />
@@ -74,7 +76,7 @@ const Layout = openHoc(({ open, toggle, clickAway, classes, providerInfo, provid
     <Divider />
     <NetworkLabel />
     <Spacer />
-    <Provider open={open} toggle={toggle} info={providerInfo}>
+    <Provider info={providerInfo} open={open} toggle={toggle}>
       {providerRef => (
         <Popper
           anchorEl={providerRef.current}
@@ -86,7 +88,7 @@ const Layout = openHoc(({ open, toggle, clickAway, classes, providerInfo, provid
           {({ TransitionProps }) => (
             <Grow {...TransitionProps}>
               <>
-                <ClickAwayListener onClickAway={clickAway} mouseEvent="onClick" touchEvent={false}>
+                <ClickAwayListener mouseEvent="onClick" onClickAway={clickAway} touchEvent={false}>
                   <List className={classes.root} component="div">
                     {providerDetails}
                   </List>

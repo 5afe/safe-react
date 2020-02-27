@@ -1,27 +1,28 @@
 // @flow
 import axios from 'axios'
-import type { Dispatch as ReduxDispatch, GetState } from 'redux'
 import { push } from 'connected-react-router'
-import { EMPTY_DATA } from '~/logic/wallets/ethTransactions'
-import { userAccountSelector } from '~/logic/wallets/store/selectors'
-import fetchTransactions from '~/routes/safe/store/actions/fetchTransactions'
-import { type GlobalState } from '~/store'
-import { buildTxServiceUrl } from '~/logic/safe/transactions/txHistory'
+import type { GetState, Dispatch as ReduxDispatch } from 'redux'
+
 import { getGnosisSafeInstanceAt } from '~/logic/contracts/safeContracts'
+import { type NotificationsQueue, getNotificationsFromTxType, showSnackbar } from '~/logic/notifications'
 import {
-  getApprovalTransaction,
-  getExecutionTransaction,
   CALL,
   type NotifiedTransaction,
   TX_TYPE_CONFIRMATION,
   TX_TYPE_EXECUTION,
+  getApprovalTransaction,
+  getExecutionTransaction,
   saveTxToHistory,
 } from '~/logic/safe/transactions'
-import { type NotificationsQueue, getNotificationsFromTxType, showSnackbar } from '~/logic/notifications'
-import { getErrorMessage } from '~/test/utils/ethereumErrors'
+import { buildTxServiceUrl } from '~/logic/safe/transactions/txHistory'
 import { ZERO_ADDRESS } from '~/logic/wallets/ethAddresses'
+import { EMPTY_DATA } from '~/logic/wallets/ethTransactions'
+import { userAccountSelector } from '~/logic/wallets/store/selectors'
 import { SAFELIST_ADDRESS } from '~/routes/routes'
+import fetchTransactions from '~/routes/safe/store/actions/fetchTransactions'
 import type { TransactionProps } from '~/routes/safe/store/models/transaction'
+import { type GlobalState } from '~/store'
+import { getErrorMessage } from '~/test/utils/ethereumErrors'
 
 const getLastTx = async (safeAddress: string): Promise<TransactionProps> => {
   try {

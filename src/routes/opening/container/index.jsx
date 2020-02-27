@@ -1,6 +1,8 @@
 // @flow
 import { connect } from 'react-redux'
-import selector from './selector'
+
 import Layout from '../component'
+
+import selector from './selector'
 
 export default connect(selector)(Layout)

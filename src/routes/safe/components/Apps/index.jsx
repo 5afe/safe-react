@@ -1,13 +1,14 @@
 // @flow
-import React, { useState, useEffect, useCallback } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import styled from 'styled-components'
 
 import ButtonLink from '../../../../components/layout/ButtonLink'
-import { Loader, ListContentLayout as LCL } from '~/components-v2'
+
+import appsList from './appsList'
 import confirmTransactions from './confirmTransactions'
 import sendTransactions from './sendTransactions'
 
-import appsList from './appsList'
+import { ListContentLayout as LCL, Loader } from '~/components-v2'
 
 const StyledIframe = styled.iframe`
   width: 100%;
@@ -32,7 +33,7 @@ type Props = {
   closeModal: () => {},
 }
 
-function Apps({ web3, safeAddress, safeName, ethBalance, network, createTransaction, openModal, closeModal }: Props) {
+function Apps({ closeModal, createTransaction, ethBalance, network, openModal, safeAddress, safeName, web3 }: Props) {
   const [selectedApp, setSelectedApp] = useState(1)
   const [appIsLoading, setAppIsLoading] = useState(true)
   const [iframeEl, setframeEl] = useState(null)
@@ -94,7 +95,7 @@ function Apps({ web3, safeAddress, safeName, ethBalance, network, createTransact
   }, [])
 
   useEffect(() => {
-    const onIframeMessage = async ({ origin, data }) => {
+    const onIframeMessage = async ({ data, origin }) => {
       if (origin === window.origin) {
         return
       }
@@ -147,12 +148,12 @@ function Apps({ web3, safeAddress, safeName, ethBalance, network, createTransact
       <>
         {appIsLoading && <Loader />}
         <StyledIframe
-          shouldDisplay={!appIsLoading}
-          id="iframeId"
           frameBorder="0"
-          title="app"
+          id="iframeId"
           ref={iframeRef}
+          shouldDisplay={!appIsLoading}
           src={getSelectedApp().url}
+          title="app"
         />
       </>
     )
@@ -161,19 +162,19 @@ function Apps({ web3, safeAddress, safeName, ethBalance, network, createTransact
   return (
     <LCL.Wrapper>
       <LCL.Nav>
-        <ButtonLink size="lg" onClick={() => {}} testId="manage-tokens-btn">
+        <ButtonLink onClick={() => {}} size="lg" testId="manage-tokens-btn">
           Manage Apps
         </ButtonLink>
       </LCL.Nav>
       <LCL.Menu>
-        <LCL.List items={appsList} activeItem={selectedApp} onItemClick={onSelectApp} />
+        <LCL.List activeItem={selectedApp} items={appsList} onItemClick={onSelectApp} />
       </LCL.Menu>
       <LCL.Content>{getContent()}</LCL.Content>
       <LCL.Footer>
         This App is provided by{' '}
         <ButtonLink
-          size="lg"
           onClick={() => window.open(getSelectedApp().providedBy.url, '_blank')}
+          size="lg"
           testId="manage-tokens-btn"
         >
           {getSelectedApp().providedBy.name}
