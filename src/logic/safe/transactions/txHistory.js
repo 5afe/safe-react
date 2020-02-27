@@ -21,6 +21,7 @@ const calculateBodyFrom = async (
   transactionHash: string,
   sender: string,
   confirmationType: TxServiceType,
+  origin: string | null,
 ) => {
   const contractTransactionHash = await safeInstance.getTransactionHash(
     to,
@@ -50,6 +51,7 @@ const calculateBodyFrom = async (
     transactionHash,
     sender: getWeb3().utils.toChecksumAddress(sender),
     confirmationType,
+    origin,
   }
 }
 
@@ -60,7 +62,23 @@ export const buildTxServiceUrl = (safeAddress: string) => {
   return `${host}${base}`
 }
 
-export const saveTxToHistory = async (
+export const saveTxToHistory = async ({
+  safeInstance,
+  to,
+  valueInWei,
+  data,
+  operation,
+  nonce,
+  safeTxGas,
+  baseGas,
+  gasPrice,
+  gasToken,
+  refundReceiver,
+  txHash,
+  sender,
+  type,
+  origin,
+}: {
   safeInstance: any,
   to: string,
   valueInWei: number | string,
@@ -75,7 +93,8 @@ export const saveTxToHistory = async (
   txHash: string,
   sender: string,
   type: TxServiceType,
-) => {
+  origin: string | null,
+}) => {
   const url = buildTxServiceUrl(safeInstance.address)
   const body = await calculateBodyFrom(
     safeInstance,
@@ -92,6 +111,7 @@ export const saveTxToHistory = async (
     txHash,
     sender,
     type,
+    origin || null,
   )
   const response = await axios.post(url, body)
 

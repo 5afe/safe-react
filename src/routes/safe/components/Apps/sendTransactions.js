@@ -14,7 +14,7 @@ const multiSendAbi = [
   },
 ]
 
-const sendTransactions = (web3: any, createTransaction: any, safeAddress: String, txs: Array<any>) => {
+const sendTransactions = (web3: any, createTransaction: any, safeAddress: String, txs: Array<any>, origin: string) => {
   const multiSend = new web3.eth.Contract(multiSendAbi, multiSendAddress)
 
   const encodeMultiSendCalldata = multiSend.methods
@@ -43,6 +43,7 @@ const sendTransactions = (web3: any, createTransaction: any, safeAddress: String
     closeSnackbar: () => {},
     operation: DELEGATE_CALL,
     navigateToTransactionsTab: false,
+    origin,
   })
 }
 export default sendTransactions
