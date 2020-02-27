@@ -27,6 +27,8 @@ before_install:
   # Install truffle
   - yarn global add truffle
 script:
+  - yarn lint:check
+  - yarn prettier:check
   - yarn build
 after_success:
   - |
