@@ -1,14 +1,14 @@
 // @flow
 import React, { useCallback, useEffect, useState } from 'react'
 import styled from 'styled-components'
-
-import ButtonLink from '../../../../components/layout/ButtonLink'
+import { withSnackbar } from 'notistack'
 
 import appsList from './appsList'
 import confirmTransactions from './confirmTransactions'
 import sendTransactions from './sendTransactions'
 
 import { ListContentLayout as LCL, Loader } from '~/components-v2'
+import ButtonLink from '~/components/layout/ButtonLink'
 
 const StyledIframe = styled.iframe`
   width: 100%;
@@ -29,11 +29,24 @@ type Props = {
   ethBalance: String,
   network: String,
   createTransaction: any,
+  enqueueSnackbar: Function,
+  closeSnackbar: Function,
   openModal: () => {},
   closeModal: () => {},
 }
 
-function Apps({ closeModal, createTransaction, ethBalance, network, openModal, safeAddress, safeName, web3 }: Props) {
+function Apps({
+  web3,
+  safeAddress,
+  safeName,
+  ethBalance,
+  network,
+  createTransaction,
+  openModal,
+  closeModal,
+  enqueueSnackbar,
+  closeSnackbar,
+}: Props) {
   const [selectedApp, setSelectedApp] = useState(1)
   const [appIsLoading, setAppIsLoading] = useState(true)
   const [iframeEl, setframeEl] = useState(null)
@@ -55,7 +68,15 @@ function Apps({ closeModal, createTransaction, ethBalance, network, openModal, s
         const onConfirm = async () => {
           closeModal()
 
-          const txHash = await sendTransactions(web3, createTransaction, safeAddress, data.data, getSelectedApp().name)
+          const txHash = await sendTransactions(
+            web3,
+            createTransaction,
+            safeAddress,
+            data.data,
+            enqueueSnackbar,
+            closeSnackbar,
+            getSelectedApp().name,
+          )
 
           if (txHash) {
             sendMessageToIframe(operations.ON_TX_UPDATE, {
@@ -184,4 +205,4 @@ function Apps({ closeModal, createTransaction, ethBalance, network, openModal, s
   )
 }
 
-export default Apps
+export default withSnackbar(Apps)

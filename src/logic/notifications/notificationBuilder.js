@@ -21,15 +21,26 @@ export type NotificationsQueue = {
   afterRejection: Notification | null,
 }
 
-const standardTxNotificationsQueue: NotificationsQueue = {
-  beforeExecution: NOTIFICATIONS.SIGN_TX_MSG,
-  pendingExecution: NOTIFICATIONS.TX_PENDING_MSG,
-  afterRejection: NOTIFICATIONS.TX_REJECTED_MSG,
-  afterExecution: {
-    noMoreConfirmationsNeeded: NOTIFICATIONS.TX_EXECUTED_MSG,
-    moreConfirmationsNeeded: NOTIFICATIONS.TX_EXECUTED_MORE_CONFIRMATIONS_MSG,
-  },
-  afterExecutionError: NOTIFICATIONS.TX_FAILED_MSG,
+const customizeNotification = (notification: Notification, origin: string): Notification => {
+  if (!origin) {
+    return notification
+  }
+
+  const appName = 'Compound'
+  return { ...notification, message: `${appName}: ${notification.message}` }
+}
+
+const getStandardTxNotificationsQueue = (origin?: string): NotificationsQueue => {
+  return {
+    beforeExecution: customizeNotification(NOTIFICATIONS.SIGN_TX_MSG, origin),
+    pendingExecution: customizeNotification(NOTIFICATIONS.TX_PENDING_MSG, origin),
+    afterRejection: customizeNotification(NOTIFICATIONS.TX_REJECTED_MSG, origin),
+    afterExecution: {
+      noMoreConfirmationsNeeded: customizeNotification(NOTIFICATIONS.TX_EXECUTED_MSG, origin),
+      moreConfirmationsNeeded: customizeNotification(NOTIFICATIONS.TX_EXECUTED_MORE_CONFIRMATIONS_MSG, origin),
+    },
+    afterExecutionError: customizeNotification(NOTIFICATIONS.TX_FAILED_MSG, origin),
+  }
 }
 
 const waitingTransactionNotificationsQueue: NotificationsQueue = {
@@ -41,26 +52,30 @@ const waitingTransactionNotificationsQueue: NotificationsQueue = {
   afterExecutionError: null,
 }
 
-const confirmationTxNotificationsQueue: NotificationsQueue = {
-  beforeExecution: NOTIFICATIONS.SIGN_TX_MSG,
-  pendingExecution: NOTIFICATIONS.TX_CONFIRMATION_PENDING_MSG,
-  afterRejection: NOTIFICATIONS.TX_REJECTED_MSG,
-  afterExecution: {
-    noMoreConfirmationsNeeded: NOTIFICATIONS.TX_EXECUTED_MSG,
-    moreConfirmationsNeeded: NOTIFICATIONS.TX_CONFIRMATION_EXECUTED_MSG,
-  },
-  afterExecutionError: NOTIFICATIONS.TX_CONFIRMATION_FAILED_MSG,
+const getConfirmationTxNotificationsQueue = (origin?: string): NotificationsQueue => {
+  return {
+    beforeExecution: customizeNotification(NOTIFICATIONS.SIGN_TX_MSG, origin),
+    pendingExecution: customizeNotification(NOTIFICATIONS.TX_CONFIRMATION_PENDING_MSG, origin),
+    afterRejection: customizeNotification(NOTIFICATIONS.TX_REJECTED_MSG, origin),
+    afterExecution: {
+      noMoreConfirmationsNeeded: customizeNotification(NOTIFICATIONS.TX_EXECUTED_MSG, origin),
+      moreConfirmationsNeeded: customizeNotification(NOTIFICATIONS.TX_CONFIRMATION_EXECUTED_MSG, origin),
+    },
+    afterExecutionError: customizeNotification(NOTIFICATIONS.TX_CONFIRMATION_FAILED_MSG, origin),
+  }
 }
 
-const cancellationTxNotificationsQueue: NotificationsQueue = {
-  beforeExecution: NOTIFICATIONS.SIGN_TX_MSG,
-  pendingExecution: NOTIFICATIONS.TX_PENDING_MSG,
-  afterRejection: NOTIFICATIONS.TX_REJECTED_MSG,
-  afterExecution: {
-    noMoreConfirmationsNeeded: NOTIFICATIONS.TX_EXECUTED_MSG,
-    moreConfirmationsNeeded: NOTIFICATIONS.TX_CANCELLATION_EXECUTED_MSG,
-  },
-  afterExecutionError: NOTIFICATIONS.TX_FAILED_MSG,
+const getTancellationTxNotificationsQueue = (origin?: string): NotificationsQueue => {
+  return {
+    beforeExecution: customizeNotification(NOTIFICATIONS.SIGN_TX_MSG, origin),
+    pendingExecution: customizeNotification(NOTIFICATIONS.TX_PENDING_MSG, origin),
+    afterRejection: customizeNotification(NOTIFICATIONS.TX_REJECTED_MSG, origin),
+    afterExecution: {
+      noMoreConfirmationsNeeded: customizeNotification(NOTIFICATIONS.TX_EXECUTED_MSG, origin),
+      moreConfirmationsNeeded: customizeNotification(NOTIFICATIONS.TX_CANCELLATION_EXECUTED_MSG, origin),
+    },
+    afterExecutionError: customizeNotification(NOTIFICATIONS.TX_FAILED_MSG, origin),
+  }
 }
 
 const safeNameChangeNotificationsQueue: NotificationsQueue = {
@@ -143,20 +158,20 @@ const addressBookDeleteEntry: NotificationsQueue = {
   afterExecutionError: null,
 }
 
-export const getNotificationsFromTxType = (txType: string) => {
+export const getNotificationsFromTxType = (txType: string, origin?: string) => {
   let notificationsQueue: NotificationsQueue
 
   switch (txType) {
     case TX_NOTIFICATION_TYPES.STANDARD_TX: {
-      notificationsQueue = standardTxNotificationsQueue
+      notificationsQueue = getStandardTxNotificationsQueue(origin)
       break
     }
     case TX_NOTIFICATION_TYPES.CONFIRMATION_TX: {
-      notificationsQueue = confirmationTxNotificationsQueue
+      notificationsQueue = getConfirmationTxNotificationsQueue(origin)
       break
     }
     case TX_NOTIFICATION_TYPES.CANCELLATION_TX: {
-      notificationsQueue = cancellationTxNotificationsQueue
+      notificationsQueue = getTancellationTxNotificationsQueue(origin)
       break
     }
     case TX_NOTIFICATION_TYPES.SETTINGS_CHANGE_TX: {
