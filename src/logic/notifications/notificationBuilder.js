@@ -7,6 +7,7 @@ import { NOTIFICATIONS, type Notification } from './notificationTypes'
 
 import closeSnackbarAction from '~/logic/notifications/store/actions/closeSnackbar'
 import { TX_NOTIFICATION_TYPES } from '~/logic/safe/transactions'
+import { getAppInfo } from '~/routes/safe/components/Apps/appsList'
 import { store } from '~/store'
 
 export type NotificationsQueue = {
@@ -26,8 +27,8 @@ const customizeNotification = (notification: Notification, origin: string): Noti
     return notification
   }
 
-  const appName = 'Compound'
-  return { ...notification, message: `${appName}: ${notification.message}` }
+  const appInfo = getAppInfo(origin)
+  return { ...notification, message: `${appInfo.name}: ${notification.message}` }
 }
 
 const getStandardTxNotificationsQueue = (origin?: string): NotificationsQueue => {

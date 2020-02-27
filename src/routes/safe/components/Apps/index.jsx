@@ -75,7 +75,7 @@ function Apps({
             data.data,
             enqueueSnackbar,
             closeSnackbar,
-            getSelectedApp().name,
+            getSelectedApp().id,
           )
 
           if (txHash) {

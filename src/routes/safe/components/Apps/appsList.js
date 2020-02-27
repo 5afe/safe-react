@@ -41,4 +41,20 @@ const appList = [
 
 export default appList
 
-export const getAppInfo = (appName: string) => appList.find(app => app.name === appName)
+export const getAppInfo = (appId: string) => {
+  const res = appList.find(app => app.id === appId)
+  if (!res) {
+    return {
+      id: 0,
+      name: 'Unknown',
+      url: '',
+      iconUrl: '',
+      description: '',
+      providedBy: {
+        name: '',
+        url: '',
+      },
+    }
+  }
+  return res
+}
