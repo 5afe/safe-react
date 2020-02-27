@@ -96,11 +96,11 @@ export const extendedSafeTokensSelector: Selector<GlobalState, RouterProps, List
           map.set(tokenAddress, baseToken.set('balance', tokenBalance || '0'))
         }
       })
-
-      if (ethAsToken) {
-        map.set(ethAsToken.address, ethAsToken)
-      }
     })
+
+    if (ethAsToken) {
+      return extendedTokens.set(ethAsToken.address, ethAsToken).toList()
+    }
 
     return extendedTokens.toList()
   },
