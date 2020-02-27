@@ -34,7 +34,7 @@ import currentSession, {
   type State as CurrentSessionState,
 } from '~/logic/currentSession/store/reducer/currentSession'
 
-export const history = createBrowserHistory()
+export const history = createBrowserHistory({ basename: '/app/' })
 
 // eslint-disable-next-line
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
