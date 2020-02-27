@@ -55,7 +55,7 @@ function Apps({ closeModal, createTransaction, ethBalance, network, openModal, s
         const onConfirm = async () => {
           closeModal()
 
-          const txHash = await sendTransactions(web3, createTransaction, safeAddress, data.data)
+          const txHash = await sendTransactions(web3, createTransaction, safeAddress, data.data, getSelectedApp().name)
 
           if (txHash) {
             sendMessageToIframe(operations.ON_TX_UPDATE, {

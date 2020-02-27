@@ -15,6 +15,7 @@ import {
 import { userAccountSelector } from '~/logic/wallets/store/selectors'
 import fetchSafe from '~/routes/safe/store/actions/fetchSafe'
 import fetchTransactions from '~/routes/safe/store/actions/fetchTransactions'
+import { getLastTx, getNewTxNonce, shouldExecuteTransaction } from '~/routes/safe/store/actions/utils'
 import { type Transaction } from '~/routes/safe/store/models/transaction'
 import { type GlobalState } from '~/store'
 import { getErrorMessage } from '~/test/utils/ethereumErrors'
@@ -40,10 +41,11 @@ const processTransaction = ({
 }: ProcessTransactionArgs) => async (dispatch: ReduxDispatch<GlobalState>, getState: Function) => {
   const state: GlobalState = getState()
 
-  const safeInstance = await getGnosisSafeInstanceAt(safeAddress)
   const from = userAccountSelector(state)
-  const threshold = (await safeInstance.getThreshold()).toNumber()
-  const shouldExecute = threshold === tx.confirmations.size || approveAndExecute
+  const safeInstance = await getGnosisSafeInstanceAt(safeAddress)
+  const lastTx = await getLastTx(safeAddress)
+  const nonce = await getNewTxNonce(null, lastTx, safeInstance)
+  const isExecution = approveAndExecute || (await shouldExecuteTransaction(safeInstance, nonce, lastTx))
 
   let sigs = generateSignaturesFromTxConfirmations(tx.confirmations, approveAndExecute && userAddress)
   // https://gnosis-safe.readthedocs.io/en/latest/contracts/signatures.html#pre-validated-signatures
@@ -60,39 +62,24 @@ const processTransaction = ({
 
   let txHash
   let transaction
+  const txArgs = {
+    safeInstance,
+    to: tx.recipient,
+    valueInWei: tx.value,
+    data: tx.data,
+    operation: tx.operation,
+    nonce: tx.nonce,
+    safeTxGas: tx.safeTxGas,
+    baseGas: tx.baseGas,
+    gasPrice: tx.gasPrice || '0',
+    gasToken: tx.gasToken,
+    refundReceiver: tx.refundReceiver,
+    sender: from,
+    sigs,
+  }
+
   try {
-    if (shouldExecute) {
-      transaction = await getExecutionTransaction(
-        safeInstance,
-        tx.recipient,
-        tx.value,
-        tx.data,
-        tx.operation,
-        tx.nonce,
-        tx.safeTxGas,
-        tx.baseGas,
-        tx.gasPrice || '0',
-        tx.gasToken,
-        tx.refundReceiver,
-        from,
-        sigs,
-      )
-    } else {
-      transaction = await getApprovalTransaction(
-        safeInstance,
-        tx.recipient,
-        tx.value,
-        tx.data,
-        tx.operation,
-        tx.nonce,
-        tx.safeTxGas,
-        tx.baseGas,
-        tx.gasPrice || '0',
-        tx.gasToken,
-        tx.refundReceiver,
-        from,
-      )
-    }
+    transaction = isExecution ? await getExecutionTransaction(txArgs) : await getApprovalTransaction(txArgs)
 
     const sendParams = { from, value: 0 }
     // if not set owner management tests will fail on ganache
@@ -109,22 +96,11 @@ const processTransaction = ({
         pendingExecutionKey = showSnackbar(notificationsQueue.pendingExecution, enqueueSnackbar, closeSnackbar)
 
         try {
-          await saveTxToHistory(
-            safeInstance,
-            tx.recipient,
-            tx.value,
-            tx.data,
-            tx.operation,
-            tx.nonce,
-            tx.safeTxGas,
-            tx.baseGas,
-            tx.gasPrice || '0',
-            tx.gasToken,
-            tx.refundReceiver,
+          await saveTxToHistory({
+            ...txArgs,
             txHash,
-            from,
-            shouldExecute ? TX_TYPE_EXECUTION : TX_TYPE_CONFIRMATION,
-          )
+            type: isExecution ? TX_TYPE_EXECUTION : TX_TYPE_CONFIRMATION,
+          })
           dispatch(fetchTransactions(safeAddress))
         } catch (err) {
           console.error(err)
@@ -137,7 +113,7 @@ const processTransaction = ({
         closeSnackbar(pendingExecutionKey)
 
         showSnackbar(
-          shouldExecute
+          isExecution
             ? notificationsQueue.afterExecution.noMoreConfirmationsNeeded
             : notificationsQueue.afterExecution.moreConfirmationsNeeded,
           enqueueSnackbar,
@@ -145,7 +121,7 @@ const processTransaction = ({
         )
         dispatch(fetchTransactions(safeAddress))
 
-        if (shouldExecute) {
+        if (isExecution) {
           dispatch(fetchSafe(safeAddress))
         }
 
