@@ -1,4 +1,3 @@
-jest.mock('~/logic/contracts/safeContracts')
 import { getNewTxNonce, shouldExecuteTransaction } from '~/routes/safe/store/actions/utils'
 
 describe('Store actions utils > getNewTxNonce', () => {
@@ -8,10 +7,14 @@ describe('Store actions utils > getNewTxNonce', () => {
     const lastTx = {
       nonce: 44
     }
-    const safeAddress = '0x7d6F142F15f152417FCf8E2573AD75C0ed1BE542'
+    const safeInstance = {
+      nonce: () => Promise.resolve({
+        toString: () => Promise.resolve('45')
+      })
+    }
 
     // When
-    const nonce = await getNewTxNonce(txNonce, lastTx, safeAddress)
+    const nonce = await getNewTxNonce(txNonce, lastTx, safeInstance)
 
     // Then
     expect(nonce).toBe('45')
@@ -23,10 +26,14 @@ describe('Store actions utils > getNewTxNonce', () => {
     const lastTx = {
       nonce: 44
     }
-    const safeAddress = '0x7d6F142F15f152417FCf8E2573AD75C0ed1BE542'
+    const safeInstance = {
+      nonce: () => Promise.resolve({
+        toString: () => Promise.resolve('45')
+      })
+    }
 
     // When
-    const nonce = await getNewTxNonce(txNonce, lastTx, safeAddress)
+    const nonce = await getNewTxNonce(txNonce, lastTx, safeInstance)
 
     // Then
     expect(nonce).toBe('45')
@@ -36,10 +43,14 @@ describe('Store actions utils > getNewTxNonce', () => {
     // Given
     const txNonce = ''
     const lastTx = null
-    const safeAddress = '0x7d6F142F15f152417FCf8E2573AD75C0ed1BE542'
+    const safeInstance = {
+      nonce: () => Promise.resolve({
+        toString: () => Promise.resolve('45')
+      })
+    }
 
     // When
-    const nonce = await getNewTxNonce(txNonce, lastTx, safeAddress)
+    const nonce = await getNewTxNonce(txNonce, lastTx, safeInstance)
 
     // Then
     expect(nonce).toBe('45')
