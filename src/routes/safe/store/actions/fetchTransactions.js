@@ -90,8 +90,8 @@ export const buildTransactionFrom = async (safeAddress: string, tx: TxServiceMod
   const cancellationTx = sameAddress(tx.to, safeAddress) && Number(tx.value) === 0 && !tx.data
   const isSendTokenTx = isTokenTransfer(tx.data, Number(tx.value))
   const isMultiSendTx = isMultisendTransaction(tx.data, Number(tx.value))
-  const customTx = !sameAddress(tx.to, safeAddress) && !!tx.data && !isSendTokenTx && !isMultiSendTx
   const isUpgradeTx = isMultiSendTx && isUpgradeTransaction(tx.data)
+  const customTx = !sameAddress(tx.to, safeAddress) && !!tx.data && !isSendTokenTx && !isUpgradeTx
 
   let refundParams = null
   if (tx.gasPrice > 0) {
