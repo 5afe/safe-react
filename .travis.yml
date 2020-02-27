@@ -27,17 +27,11 @@ before_install:
   # Install truffle
   - yarn global add truffle
 script:
-  - yarn build
-after_success:
   - |
-
-    if [ ${TRAVIS_BRANCH} = "master" ]; then
-      export NODE_ENV=production;
-    else
-      export NODE_ENV=development;
-    fi
+    export NODE_ENV=production;
   - if [[ -n "$TRAVIS_TAG" ]]; then export REACT_APP_ENV='production'; fi
   - yarn build
+after_success:
   # Pull Request - Deploy it to a review environment
   # Travis doesn't do deploy step with pull requests builds
   - ./config/travis/deploy_pull_request.sh
