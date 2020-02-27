@@ -57,7 +57,7 @@ const createTransaction = ({
   const from = userAccountSelector(state)
   const safeInstance = await getGnosisSafeInstanceAt(safeAddress)
   const lastTx = await getLastTx(safeAddress)
-  const nonce = await getNewTxNonce(txNonce, lastTx, safeAddress)
+  const nonce = await getNewTxNonce(txNonce, lastTx, safeInstance)
   const isExecution = await shouldExecuteTransaction(safeInstance, nonce, lastTx)
 
   // https://gnosis-safe.readthedocs.io/en/latest/contracts/signatures.html#pre-validated-signatures

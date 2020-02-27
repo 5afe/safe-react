@@ -2,7 +2,6 @@
 import axios from 'axios'
 
 import { buildTxServiceUrl } from '~/logic/safe/transactions/txHistory'
-import { getGnosisSafeInstanceAt } from '~/logic/contracts/safeContracts'
 
 export const getLastTx = async (safeAddress: string): Promise<TransactionProps> => {
   try {
@@ -16,15 +15,12 @@ export const getLastTx = async (safeAddress: string): Promise<TransactionProps> 
   }
 }
 
-export const getSafeNonce = async (safeAddress: string): Promise<string> => {
-  // use current's safe nonce as fallback
-  const safeInstance = await getGnosisSafeInstanceAt(safeAddress)
-  return (await safeInstance.nonce()).toString()
-}
-
-export const getNewTxNonce = async (txNonce, lastTx, safeAddress) => {
+export const getNewTxNonce = async (txNonce, lastTx, safeInstance) => {
   if (!Number.isInteger(Number.parseInt(txNonce, 10))) {
-    return lastTx === null ? await getSafeNonce(safeAddress) : `${lastTx.nonce + 1}`
+    return lastTx === null
+      ? // use current's safe nonce as fallback
+        (await safeInstance.nonce()).toString()
+      : `${lastTx.nonce + 1}`
   }
   return txNonce
 }

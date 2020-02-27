@@ -44,7 +44,7 @@ const processTransaction = ({
   const from = userAccountSelector(state)
   const safeInstance = await getGnosisSafeInstanceAt(safeAddress)
   const lastTx = await getLastTx(safeAddress)
-  const nonce = await getNewTxNonce(null, lastTx, safeAddress)
+  const nonce = await getNewTxNonce(null, lastTx, safeInstance)
   const isExecution = approveAndExecute || (await shouldExecuteTransaction(safeInstance, nonce, lastTx))
 
   let sigs = generateSignaturesFromTxConfirmations(tx.confirmations, approveAndExecute && userAddress)
