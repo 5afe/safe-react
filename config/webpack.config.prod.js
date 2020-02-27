@@ -54,7 +54,7 @@ function ensureSlash(path, needsSlash) {
 // like /todos/42/static/js/bundle.7289d.js. We have to know the root.
 const homepagePath = require(paths.appPackageJson).homepage
 //  var homepagePathname = homepagePath ? url.parse(homepagePath).pathname : '/';
-const homepagePathname = "/"
+const homepagePathname = "/app/"
 // Webpack uses `publicPath` to determine where the app is being served from.
 // It requires a trailing slash, or the file assets will get an incorrect path.
 const publicPath = ensureSlash(homepagePathname, true)
