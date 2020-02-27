@@ -64,7 +64,7 @@ const useStyles = makeStyles({
 })
 
 type Props = {
-  networkName: $Values<typeof ETHEREUM_NETWORK>,
+  networkName?: $Values<typeof ETHEREUM_NETWORK>,
 }
 
 const Collectibles = ({ networkName = ETHEREUM_NETWORK.RINKEBY }: Props) => {
