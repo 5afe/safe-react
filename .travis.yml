@@ -27,9 +27,11 @@ before_install:
   # Install truffle
   - yarn global add truffle
 script:
-  - |
-    export NODE_ENV=production;
+  - export NODE_ENV=production;
   - if [[ -n "$TRAVIS_TAG" ]]; then export REACT_APP_ENV='production'; fi
+  - yarn lint:check
+  - yarn prettier:check
+  - yarn build
   - yarn build
 after_success:
   # Pull Request - Deploy it to a review environment
