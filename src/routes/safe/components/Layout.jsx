@@ -166,7 +166,7 @@ const Layout = (props: Props) => {
       Apps
     </>
   )
-  
+
   const labelSettings = (
     <>
       <SettingsIcon />
