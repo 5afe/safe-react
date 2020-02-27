@@ -27,7 +27,7 @@ before_install:
   # Install truffle
   - yarn global add truffle
 script:
-  - ./config/travis/build.sh
+  - bash ./config/travis/build.sh
 after_success:
   # Pull Request - Deploy it to a review environment
   # Travis doesn't do deploy step with pull requests builds
