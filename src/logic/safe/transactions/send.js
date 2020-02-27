@@ -8,20 +8,33 @@ export const DELEGATE_CALL = 1
 export const TX_TYPE_EXECUTION = 'execution'
 export const TX_TYPE_CONFIRMATION = 'confirmation'
 
-export const getApprovalTransaction = async (
+type Transaction = {
   safeInstance: any,
   to: string,
   valueInWei: number | string,
   data: string,
   operation: Operation,
-  nonce: number,
   safeTxGas: number,
   baseGas: number,
   gasPrice: number,
   gasToken: string,
   refundReceiver: string,
-  sender: string,
-) => {
+}
+
+export const getApprovalTransaction = async ({
+  safeInstance,
+  to,
+  valueInWei,
+  data,
+  operation,
+  nonce,
+  safeTxGas,
+  baseGas,
+  gasPrice,
+  gasToken,
+  refundReceiver,
+  sender,
+}: Transaction & { nonce: number | string, sender: string }) => {
   const txHash = await safeInstance.getTransactionHash(
     to,
     valueInWei,
@@ -49,21 +62,19 @@ export const getApprovalTransaction = async (
   }
 }
 
-export const getExecutionTransaction = async (
-  safeInstance: any,
-  to: string,
-  valueInWei: number | string,
-  data: string,
-  operation: Operation,
-  nonce: string | number,
-  safeTxGas: string | number,
-  baseGas: string | number,
-  gasPrice: string | number,
-  gasToken: string,
-  refundReceiver: string,
-  sender: string,
-  sigs: string,
-) => {
+export const getExecutionTransaction = async ({
+  safeInstance,
+  to,
+  valueInWei,
+  data,
+  operation,
+  safeTxGas,
+  baseGas,
+  gasPrice,
+  gasToken,
+  refundReceiver,
+  sigs,
+}: Transaction & { sigs: string }) => {
   try {
     const web3 = getWeb3()
     const contract = new web3.eth.Contract(GnosisSafeSol.abi, safeInstance.address)

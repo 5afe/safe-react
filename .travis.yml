@@ -27,17 +27,8 @@ before_install:
   # Install truffle
   - yarn global add truffle
 script:
-  - yarn build
+  - bash ./config/travis/build.sh
 after_success:
-  - |
-
-    if [ ${TRAVIS_BRANCH} = "master" ]; then
-      export NODE_ENV=production;
-    else
-      export NODE_ENV=development;
-    fi
-  - if [[ -n "$TRAVIS_TAG" ]]; then export REACT_APP_ENV='production'; fi
-  - yarn build
   # Pull Request - Deploy it to a review environment
   # Travis doesn't do deploy step with pull requests builds
   - ./config/travis/deploy_pull_request.sh
@@ -63,7 +54,7 @@ deploy:
   secret_access_key: $AWS_SECRET_ACCESS_KEY
   skip_cleanup: true
   local_dir: build_webpack
-  upload-dir: current
+  upload-dir: current/app
   on:
     branch: master
 

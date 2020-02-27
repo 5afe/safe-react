@@ -1073,9 +1073,9 @@
     "@emotion/memoize" "0.7.1"
 
 "@emotion/is-prop-valid@^0.8.3":
-  version "0.8.6"
-  resolved "https://registry.yarnpkg.com/@emotion/is-prop-valid/-/is-prop-valid-0.8.6.tgz#4757646f0a58e9dec614c47c838e7147d88c263c"
-  integrity sha512-mnZMho3Sq8BfzkYYRVc8ilQTnc8U02Ytp6J1AwM6taQStZ3AhsEJBX2LzhA/LJirNCwM2VtHL3VFIZ+sNJUgUQ==
+  version "0.8.7"
+  resolved "https://registry.yarnpkg.com/@emotion/is-prop-valid/-/is-prop-valid-0.8.7.tgz#803449993f436f9a6c67752251ea3fc492a1044c"
+  integrity sha512-OPkKzUeiid0vEKjZqnGcy2mzxjIlCffin+L2C02pdz/bVlt5zZZE2VzO0D3XOPnH0NEeF21QNKSXiZphjr4xiQ==
   dependencies:
     "@emotion/memoize" "0.7.4"
 
@@ -1719,10 +1719,10 @@
     loglevel "^1.6.7"
     web3-utils "^1.2.6"
 
-"@truffle/artifactor@^4.0.49":
-  version "4.0.49"
-  resolved "https://registry.yarnpkg.com/@truffle/artifactor/-/artifactor-4.0.49.tgz#624cc54eeb3c01b71d97ec6f198245db8d116766"
-  integrity sha512-HQnTU1xsxwCfZ9QJJsrLCTbkJQobCXFBzBU0Jj/IrdX6XYUSXWwnE6XY4KZ+gzxD5OMTWi3fcHCu2NBLtqluuw==
+"@truffle/artifactor@^4.0.50":
+  version "4.0.50"
+  resolved "https://registry.yarnpkg.com/@truffle/artifactor/-/artifactor-4.0.50.tgz#835097d6461379c0b8028d88a8d5801491ae5ccf"
+  integrity sha512-rj1ssd3vB9QNRSkoLUd0PsShcGBd6w9QmNgFPOsgnb9DkOxbH5KsBTV0mERaTD5fVAKfDwjDuh4/DEu85RmzOQ==
   dependencies:
     "@truffle/contract-schema" "^3.0.23"
     fs-extra "6.0.1"
@@ -1757,10 +1757,10 @@
   resolved "https://registry.yarnpkg.com/@truffle/code-utils/-/code-utils-1.2.13.tgz#3db581b7d06961630ee30d809a967ce8bf812c5f"
   integrity sha512-nN/zcG2mW26QZd6V6B/uTIxlAXiRhe2lAJug0qfSuTS5suK0XojcHsXLo92zA6Ad7DFJdS7fcsFuliYX8ovHRw==
 
-"@truffle/compile-solidity@^4.2.22":
-  version "4.2.22"
-  resolved "https://registry.yarnpkg.com/@truffle/compile-solidity/-/compile-solidity-4.2.22.tgz#a3e11379692392f20b88c92dc798adf6b2388d5c"
-  integrity sha512-DYpZTdHU9yq/mIcQMOT9IceP0fe4VLT6V2TJ6nQupOnD5KxPqoGz7Hs8gJiquOXFyllWLPQqnxbUitjrVXqaUA==
+"@truffle/compile-solidity@^4.2.23":
+  version "4.2.23"
+  resolved "https://registry.yarnpkg.com/@truffle/compile-solidity/-/compile-solidity-4.2.23.tgz#ae8a6b4bab000c6aa7dcca86649792425b1b7571"
+  integrity sha512-yogZk8UK5EfAKxrP9dSP1g7PBfmba9Q5ck9NH1s/BRMbPByvFVhwPLtDf53qomYiZpVAYFIPgQPV78Jm7U7zWw==
   dependencies:
     "@truffle/config" "^1.2.15"
     "@truffle/contract-sources" "^0.1.7"
@@ -1777,12 +1777,12 @@
     semver "^5.6.0"
     solc "^0.6.0"
 
-"@truffle/compile-vyper@^1.0.46":
-  version "1.0.46"
-  resolved "https://registry.yarnpkg.com/@truffle/compile-vyper/-/compile-vyper-1.0.46.tgz#a59bf394198d758fb6c815df607b12766a774be0"
-  integrity sha512-OfsaBPnPlQgoZw7vhIVewZFfJ4cZXIAu9f/fJdf9tAduE+eq4QeG73J9VSlzqma83rNi7OtXWeXUnZmIX2ifMg==
+"@truffle/compile-vyper@^1.0.47":
+  version "1.0.47"
+  resolved "https://registry.yarnpkg.com/@truffle/compile-vyper/-/compile-vyper-1.0.47.tgz#5649b95a9a354448b81def1b8d1078357537d769"
+  integrity sha512-G4zRSMnMVHudpYBsFzl+W6cY3KBAnhKDxuJcO9tEteIl6RxVfH0OwD7dXruGoU8V5jvoAVZXewGI4UxDXqb3CA==
   dependencies:
-    "@truffle/compile-solidity" "^4.2.22"
+    "@truffle/compile-solidity" "^4.2.23"
     async "2.6.1"
     colors "^1.1.2"
     eslint "^5.5.0"
@@ -1821,10 +1821,10 @@
     debug "^4.1.0"
     glob "^7.1.2"
 
-"@truffle/contract@^4.1.10":
-  version "4.1.10"
-  resolved "https://registry.yarnpkg.com/@truffle/contract/-/contract-4.1.10.tgz#640b41159306e44c1dfa4227145759dd92108d1f"
-  integrity sha512-TRec+7oQyrxfJizYbOCGM9+Jbl2rA8JvBmMudoYmw7ZImJPerD2pJwrfBOOAG4oA3Z4uhW9+rvG80yuilAiu3g==
+"@truffle/contract@^4.1.11":
+  version "4.1.11"
+  resolved "https://registry.yarnpkg.com/@truffle/contract/-/contract-4.1.11.tgz#660718e253e81d97c65fc93a1fa248bb1d400774"
+  integrity sha512-gU+DXYlxpywmfTUMkbKb/mPENkMtNValxAFPjPY34rxKzMN4LbCzoEXPRUZJd4zBsoMY9ap20l2AptqETIlwUA==
   dependencies:
     "@truffle/blockchain-utils" "^0.0.17"
     "@truffle/contract-schema" "^3.0.23"
@@ -1935,12 +1935,12 @@
     original-require "1.0.1"
     web3 "1.2.1"
 
-"@truffle/resolver@^5.1.3":
-  version "5.1.3"
-  resolved "https://registry.yarnpkg.com/@truffle/resolver/-/resolver-5.1.3.tgz#bfe349b495092b663394155d28ffb86a3be48fe6"
-  integrity sha512-0cImGHxFWafTy5Oj2gs83h1Om5QWJz9W/kYD5MUgBkN6UcxbkC085LQv24LIdUtHTlLBjo4fejVUtHvMGw6puw==
+"@truffle/resolver@^5.1.4":
+  version "5.1.4"
+  resolved "https://registry.yarnpkg.com/@truffle/resolver/-/resolver-5.1.4.tgz#b3a5f994f72ff1891207064b352b0c1d4c8dadeb"
+  integrity sha512-persrHPioNE+6cPrbxDfE2vELdXtXLx4mFuBXRSjejcsau92LC9zpZzunRaHoqx0PMYpluIrXaN+fBLO0uZH4g==
   dependencies:
-    "@truffle/contract" "^4.1.10"
+    "@truffle/contract" "^4.1.11"
     "@truffle/expect" "^0.0.13"
     "@truffle/provisioner" "^0.2.0"
     debug "^4.1.1"
@@ -1957,17 +1957,17 @@
     debug "^4.1.1"
 
 "@truffle/workflow-compile@^2.1.4":
-  version "2.1.23"
-  resolved "https://registry.yarnpkg.com/@truffle/workflow-compile/-/workflow-compile-2.1.23.tgz#ac10a856bf4a5b16f3b79102a40cc0a0cd393333"
-  integrity sha512-aYDWuG0uQmvux1ue3V4ndYncIjuFtzLZkhCWe8Yk2TE568lyodxCLwQgaIJ2iUh5thPO3AVP9pcWOvkL3hPDPQ==
+  version "2.1.24"
+  resolved "https://registry.yarnpkg.com/@truffle/workflow-compile/-/workflow-compile-2.1.24.tgz#c88de161aab11c6f8461165d6298967d91811a96"
+  integrity sha512-tDtBYJy148wp/2vS6qM1Zs07TDrEYjEJRUg0SEdtA0D7nYEg0wrkCsgJkeQMMFNLlCT8FitnQtu2F+wPFIEpvw==
   dependencies:
-    "@truffle/artifactor" "^4.0.49"
-    "@truffle/compile-solidity" "^4.2.22"
-    "@truffle/compile-vyper" "^1.0.46"
+    "@truffle/artifactor" "^4.0.50"
+    "@truffle/compile-solidity" "^4.2.23"
+    "@truffle/compile-vyper" "^1.0.47"
     "@truffle/config" "^1.2.15"
     "@truffle/expect" "^0.0.13"
     "@truffle/external-compile" "^1.0.28"
-    "@truffle/resolver" "^5.1.3"
+    "@truffle/resolver" "^5.1.4"
     fs-extra "^7.0.1"
     mkdirp "^0.5.1"
 
