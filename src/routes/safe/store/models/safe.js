@@ -1,6 +1,7 @@
 // @flow
-import { List, Record, Map, Set } from 'immutable'
+import { List, Map, Record, Set } from 'immutable'
 import type { RecordFactory, RecordOf } from 'immutable'
+
 import type { Owner } from '~/routes/safe/store/models/owner'
 
 export type SafeProps = {

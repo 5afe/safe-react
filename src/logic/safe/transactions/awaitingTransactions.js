@@ -1,5 +1,6 @@
 // @flow
-import { Map, List } from 'immutable'
+import { List, Map } from 'immutable'
+
 import type { Transaction } from '~/routes/safe/store/models/transaction'
 
 export const getAwaitingTransactions = (

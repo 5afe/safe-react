@@ -1,5 +1,5 @@
 // @flow
-import { md, lg, connected, error, disabled, border } from '~/theme/variables'
+import { border, connected, disabled, error, lg, md } from '~/theme/variables'
 
 export const styles = () => ({
   expandedTxBlock: {

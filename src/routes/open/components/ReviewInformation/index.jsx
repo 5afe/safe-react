@@ -1,23 +1,25 @@
 // @flow
-import * as React from 'react'
-import classNames from 'classnames'
-import { withStyles } from '@material-ui/core/styles'
 import TableContainer from '@material-ui/core/TableContainer'
-import { estimateGasForDeployingSafe } from '~/logic/contracts/safeContracts'
-import { getNamesFrom, getAccountsFrom } from '~/routes/open/utils/safeDataExtractor'
-import Block from '~/components/layout/Block'
-import EtherscanBtn from '~/components/EtherscanBtn'
+import { withStyles } from '@material-ui/core/styles'
+import classNames from 'classnames'
+import * as React from 'react'
+
+import { FIELD_CONFIRMATIONS, FIELD_NAME, getNumOwnersFrom } from '../fields'
+
 import CopyBtn from '~/components/CopyBtn'
+import EtherscanBtn from '~/components/EtherscanBtn'
 import Identicon from '~/components/Identicon'
 import OpenPaper from '~/components/Stepper/OpenPaper'
+import Block from '~/components/layout/Block'
 import Col from '~/components/layout/Col'
-import Row from '~/components/layout/Row'
-import Paragraph from '~/components/layout/Paragraph'
-import { formatAmount } from '~/logic/tokens/utils/formatAmount'
-import { sm, lg, border, background, screenSm } from '~/theme/variables'
 import Hairline from '~/components/layout/Hairline'
+import Paragraph from '~/components/layout/Paragraph'
+import Row from '~/components/layout/Row'
+import { estimateGasForDeployingSafe } from '~/logic/contracts/safeContracts'
+import { formatAmount } from '~/logic/tokens/utils/formatAmount'
 import { getWeb3 } from '~/logic/wallets/getWeb3'
-import { FIELD_NAME, FIELD_CONFIRMATIONS, getNumOwnersFrom } from '../fields'
+import { getAccountsFrom, getNamesFrom } from '~/routes/open/utils/safeDataExtractor'
+import { background, border, lg, screenSm, sm } from '~/theme/variables'
 
 const { useEffect, useState } = React
 
@@ -89,7 +91,7 @@ type Props = {
   userAccount: string,
 }
 
-const ReviewComponent = ({ values, classes, userAccount }: Props) => {
+const ReviewComponent = ({ classes, userAccount, values }: Props) => {
   const [gasCosts, setGasCosts] = useState<string>('< 0.001')
   const names = getNamesFrom(values)
   const addresses = getAccountsFrom(values)
@@ -118,35 +120,35 @@ const ReviewComponent = ({ values, classes, userAccount }: Props) => {
   return (
     <>
       <Row className={classes.root}>
-        <Col className={classes.detailsColumn} xs={4} layout="column">
+        <Col className={classes.detailsColumn} layout="column" xs={4}>
           <Block className={classes.details}>
             <Block margin="lg">
-              <Paragraph size="lg" color="primary" noMargin>
+              <Paragraph color="primary" noMargin size="lg">
                 Details
               </Paragraph>
             </Block>
             <Block margin="lg">
-              <Paragraph size="sm" color="disabled" noMargin>
+              <Paragraph color="disabled" noMargin size="sm">
                 Name of new Safe
               </Paragraph>
-              <Paragraph size="lg" color="primary" noMargin weight="bolder" className={classes.name}>
+              <Paragraph className={classes.name} color="primary" noMargin size="lg" weight="bolder">
                 {values[FIELD_NAME]}
               </Paragraph>
             </Block>
             <Block margin="lg">
-              <Paragraph size="sm" color="disabled" noMargin>
+              <Paragraph color="disabled" noMargin size="sm">
                 Any transaction requires the confirmation of:
               </Paragraph>
-              <Paragraph size="lg" color="primary" noMargin weight="bolder">
+              <Paragraph color="primary" noMargin size="lg" weight="bolder">
                 {`${values[FIELD_CONFIRMATIONS]} out of ${numOwners} owners`}
               </Paragraph>
             </Block>
           </Block>
         </Col>
-        <Col className={classes.ownersColumn} xs={8} layout="column">
+        <Col className={classes.ownersColumn} layout="column" xs={8}>
           <TableContainer>
             <Block className={classes.owners}>
-              <Paragraph size="lg" color="primary" noMargin>
+              <Paragraph color="primary" noMargin size="lg">
                 {`${numOwners} Safe owners`}
               </Paragraph>
             </Block>
@@ -154,16 +156,16 @@ const ReviewComponent = ({ values, classes, userAccount }: Props) => {
             {names.map((name, index) => (
               <React.Fragment key={`name${index}`}>
                 <Row className={classes.owner}>
-                  <Col xs={1} align="center">
+                  <Col align="center" xs={1}>
                     <Identicon address={addresses[index]} diameter={32} />
                   </Col>
                   <Col xs={11}>
                     <Block className={classNames(classes.name, classes.userName)}>
-                      <Paragraph size="lg" noMargin>
+                      <Paragraph noMargin size="lg">
                         {name}
                       </Paragraph>
-                      <Block justify="center" className={classes.user}>
-                        <Paragraph size="md" color="disabled" noMargin>
+                      <Block className={classes.user} justify="center">
+                        <Paragraph color="disabled" noMargin size="md">
                           {addresses[index]}
                         </Paragraph>
                         <CopyBtn content={addresses[index]} />
@@ -178,8 +180,8 @@ const ReviewComponent = ({ values, classes, userAccount }: Props) => {
           </TableContainer>
         </Col>
       </Row>
-      <Row className={classes.info} align="center">
-        <Paragraph noMargin color="primary" size="md">
+      <Row align="center" className={classes.info}>
+        <Paragraph color="primary" noMargin size="md">
           You&apos;re about to create a new Safe and will have to confirm a transaction with your currently connected
           wallet. The creation will cost approximately {gasCosts} ETH. The exact amount will be determined by your
           wallet.

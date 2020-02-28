@@ -1,6 +1,7 @@
 // @flow
-import React from 'react'
 import classNames from 'classnames/bind'
+import React from 'react'
+
 import styles from './index.scss'
 
 const cx = classNames.bind(styles)
@@ -14,10 +15,10 @@ type Props = {
   testId?: string,
 }
 
-const Img = ({ fullwidth, alt, bordered, className, style, testId = '', ...props }: Props) => {
+const Img = ({ alt, bordered, className, fullwidth, style, testId = '', ...props }: Props) => {
   const classes = cx(styles.img, { fullwidth, bordered }, className)
 
-  return <img alt={alt} style={style} className={classes} data-testid={testId} {...props} />
+  return <img alt={alt} className={classes} data-testid={testId} style={style} {...props} />
 }
 
 export default Img

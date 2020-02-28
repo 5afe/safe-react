@@ -1,18 +1,20 @@
 // @flow
-import React, { useState, useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { connect } from 'react-redux'
-import { Switch, Redirect, Route, withRouter } from 'react-router-dom'
-import { defaultSafeSelector } from '~/routes/safe/store/selectors'
-import Loader from '~/components/Loader'
-import Welcome from './welcome/container'
+import { Redirect, Route, Switch, withRouter } from 'react-router-dom'
+
 import {
-  SAFELIST_ADDRESS,
+  LOAD_ADDRESS,
+  OPENING_ADDRESS,
   OPEN_ADDRESS,
+  SAFELIST_ADDRESS,
   SAFE_PARAM_ADDRESS,
   WELCOME_ADDRESS,
-  OPENING_ADDRESS,
-  LOAD_ADDRESS,
 } from './routes'
+import Welcome from './welcome/container'
+
+import Loader from '~/components/Loader'
+import { defaultSafeSelector } from '~/routes/safe/store/selectors'
 import { withTracker } from '~/utils/googleAnalytics'
 
 const Safe = React.lazy(() => import('./safe/container'))
@@ -61,11 +63,11 @@ const Routes = ({ defaultSafe, location }: RoutesProps) => {
           return <Redirect to={WELCOME_ADDRESS} />
         }}
       />
-      <Route exact path={WELCOME_ADDRESS} component={withTracker(Welcome)} />
-      <Route exact path={OPEN_ADDRESS} component={withTracker(Open)} />
-      <Route path={SAFE_ADDRESS} component={withTracker(Safe)} />
-      <Route exact path={OPENING_ADDRESS} component={withTracker(Opening)} />
-      <Route exact path={LOAD_ADDRESS} component={withTracker(Load)} />
+      <Route component={withTracker(Welcome)} exact path={WELCOME_ADDRESS} />
+      <Route component={withTracker(Open)} exact path={OPEN_ADDRESS} />
+      <Route component={withTracker(Safe)} path={SAFE_ADDRESS} />
+      <Route component={withTracker(Opening)} exact path={OPENING_ADDRESS} />
+      <Route component={withTracker(Load)} exact path={LOAD_ADDRESS} />
       <Redirect to="/" />
     </Switch>
   )

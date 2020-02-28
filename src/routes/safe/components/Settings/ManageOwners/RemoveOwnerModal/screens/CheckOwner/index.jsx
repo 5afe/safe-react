@@ -1,19 +1,21 @@
 // @flow
-import React from 'react'
-import classNames from 'classnames/bind'
+import IconButton from '@material-ui/core/IconButton'
 import { withStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
-import IconButton from '@material-ui/core/IconButton'
+import classNames from 'classnames/bind'
+import React from 'react'
+
+import { styles } from './style'
+
+import CopyBtn from '~/components/CopyBtn'
+import EtherscanBtn from '~/components/EtherscanBtn'
+import Identicon from '~/components/Identicon'
+import Block from '~/components/layout/Block'
+import Button from '~/components/layout/Button'
+import Col from '~/components/layout/Col'
+import Hairline from '~/components/layout/Hairline'
 import Paragraph from '~/components/layout/Paragraph'
 import Row from '~/components/layout/Row'
-import Col from '~/components/layout/Col'
-import Button from '~/components/layout/Button'
-import Block from '~/components/layout/Block'
-import Hairline from '~/components/layout/Hairline'
-import EtherscanBtn from '~/components/EtherscanBtn'
-import CopyBtn from '~/components/CopyBtn'
-import Identicon from '~/components/Identicon'
-import { styles } from './style'
 
 export const REMOVE_OWNER_MODAL_NEXT_BTN_TEST_ID = 'remove-owner-next-btn'
 
@@ -25,19 +27,19 @@ type Props = {
   onSubmit: Function,
 }
 
-const CheckOwner = ({ classes, onClose, ownerAddress, ownerName, onSubmit }: Props) => {
+const CheckOwner = ({ classes, onClose, onSubmit, ownerAddress, ownerName }: Props) => {
   const handleSubmit = values => {
     onSubmit(values)
   }
 
   return (
     <>
-      <Row align="center" grow className={classes.heading}>
-        <Paragraph weight="bolder" className={classes.manage} noMargin>
+      <Row align="center" className={classes.heading} grow>
+        <Paragraph className={classes.manage} noMargin weight="bolder">
           Remove owner
         </Paragraph>
         <Paragraph className={classes.annotation}>1 of 3</Paragraph>
-        <IconButton onClick={onClose} disableRipple>
+        <IconButton disableRipple onClick={onClose}>
           <Close className={classes.closeIcon} />
         </IconButton>
       </Row>
@@ -47,16 +49,16 @@ const CheckOwner = ({ classes, onClose, ownerAddress, ownerName, onSubmit }: Pro
           <Paragraph>Review the owner you want to remove from the active Safe:</Paragraph>
         </Row>
         <Row className={classes.owner}>
-          <Col xs={1} align="center">
+          <Col align="center" xs={1}>
             <Identicon address={ownerAddress} diameter={32} />
           </Col>
           <Col xs={7}>
             <Block className={classNames(classes.name, classes.userName)}>
-              <Paragraph size="lg" noMargin weight="bolder">
+              <Paragraph noMargin size="lg" weight="bolder">
                 {ownerName}
               </Paragraph>
-              <Block justify="center" className={classes.user}>
-                <Paragraph size="md" color="disabled" className={classes.address} noMargin>
+              <Block className={classes.user} justify="center">
+                <Paragraph className={classes.address} color="disabled" noMargin size="md">
                   {ownerAddress}
                 </Paragraph>
                 <CopyBtn content={ownerAddress} />
@@ -68,17 +70,17 @@ const CheckOwner = ({ classes, onClose, ownerAddress, ownerName, onSubmit }: Pro
       </Block>
       <Hairline />
       <Row align="center" className={classes.buttonRow}>
-        <Button minWidth={140} minHeight={42} onClick={onClose}>
+        <Button minHeight={42} minWidth={140} onClick={onClose}>
           Cancel
         </Button>
         <Button
-          type="submit"
-          variant="contained"
-          minWidth={140}
-          minHeight={42}
           color="primary"
+          minHeight={42}
+          minWidth={140}
           onClick={handleSubmit}
           testId={REMOVE_OWNER_MODAL_NEXT_BTN_TEST_ID}
+          type="submit"
+          variant="contained"
         >
           Next
         </Button>

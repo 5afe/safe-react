@@ -1,23 +1,24 @@
 // @flow
-import React, { useState, useEffect } from 'react'
-import { withStyles } from '@material-ui/core/styles'
 import TableContainer from '@material-ui/core/TableContainer'
-import Block from '~/components/layout/Block'
-import Field from '~/components/forms/Field'
-import { required } from '~/components/forms/validator'
-import TextField from '~/components/forms/TextField'
+import { withStyles } from '@material-ui/core/styles'
+import React, { useEffect, useState } from 'react'
+
+import CopyBtn from '~/components/CopyBtn'
+import EtherscanBtn from '~/components/EtherscanBtn'
 import Identicon from '~/components/Identicon'
 import OpenPaper from '~/components/Stepper/OpenPaper'
+import Field from '~/components/forms/Field'
+import TextField from '~/components/forms/TextField'
+import { required } from '~/components/forms/validator'
+import Block from '~/components/layout/Block'
 import Col from '~/components/layout/Col'
-import Row from '~/components/layout/Row'
-import Paragraph from '~/components/layout/Paragraph'
 import Hairline from '~/components/layout/Hairline'
-import EtherscanBtn from '~/components/EtherscanBtn'
-import CopyBtn from '~/components/CopyBtn'
-import { sm, md, lg, border, disabled, extraSmallFontSize, screenSm } from '~/theme/variables'
-import { getOwnerNameBy, getOwnerAddressBy } from '~/routes/open/components/fields'
-import { FIELD_LOAD_ADDRESS, THRESHOLD } from '~/routes/load/components/fields'
+import Paragraph from '~/components/layout/Paragraph'
+import Row from '~/components/layout/Row'
 import { getGnosisSafeInstanceAt } from '~/logic/contracts/safeContracts'
+import { FIELD_LOAD_ADDRESS, THRESHOLD } from '~/routes/load/components/fields'
+import { getOwnerAddressBy, getOwnerNameBy } from '~/routes/open/components/fields'
+import { border, disabled, extraSmallFontSize, lg, md, screenSm, sm } from '~/theme/variables'
 
 const styles = () => ({
   details: {
@@ -86,7 +87,7 @@ const calculateSafeValues = (owners: Array<string>, threshold: Number, values: O
 
 const OwnerListComponent = (props: Props) => {
   const [owners, setOwners] = useState<Array<string>>([])
-  const { values, updateInitialProps, classes } = props
+  const { classes, updateInitialProps, values } = props
 
   useEffect(() => {
     let isCurrent = true
@@ -115,7 +116,7 @@ const OwnerListComponent = (props: Props) => {
   return (
     <>
       <Block className={classes.title}>
-        <Paragraph noMargin size="md" color="primary">
+        <Paragraph color="primary" noMargin size="md">
           {`This Safe has ${owners.length} owners. Optional: Provide a name for each owner.`}
         </Paragraph>
       </Block>
@@ -128,7 +129,7 @@ const OwnerListComponent = (props: Props) => {
         <Hairline />
         <Block margin="md" padding="md">
           {owners.map((address, index) => (
-            <Row key={address} className={classes.owner}>
+            <Row className={classes.owner} key={address}>
               <Col className={classes.ownerName} xs={4}>
                 <Field
                   className={classes.name}
@@ -144,7 +145,7 @@ const OwnerListComponent = (props: Props) => {
               <Col xs={8}>
                 <Row className={classes.ownerAddresses}>
                   <Identicon address={address} diameter={32} />
-                  <Paragraph size="md" color="disabled" noMargin className={classes.address}>
+                  <Paragraph className={classes.address} color="disabled" noMargin size="md">
                     {address}
                   </Paragraph>
                   <CopyBtn content={address} />

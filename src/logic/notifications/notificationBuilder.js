@@ -1,11 +1,13 @@
 // @flow
-import * as React from 'react'
 import { IconButton } from '@material-ui/core'
 import { Close as IconClose } from '@material-ui/icons'
+import * as React from 'react'
+
+import { NOTIFICATIONS, type Notification } from './notificationTypes'
+
+import closeSnackbarAction from '~/logic/notifications/store/actions/closeSnackbar'
 import { TX_NOTIFICATION_TYPES } from '~/logic/safe/transactions'
 import { store } from '~/store'
-import closeSnackbarAction from '~/logic/notifications/store/actions/closeSnackbar'
-import { type Notification, NOTIFICATIONS } from './notificationTypes'
 
 export type NotificationsQueue = {
   beforeExecution: Notification | null,

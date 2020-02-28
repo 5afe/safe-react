@@ -1,27 +1,29 @@
 // @flow
-import { List, Map, type RecordInstance } from 'immutable'
 import axios from 'axios'
 import bn from 'bignumber.js'
+import { List, Map, type RecordInstance } from 'immutable'
 import type { Dispatch as ReduxDispatch } from 'redux'
-import { type GlobalState } from '~/store'
-import { makeOwner } from '~/routes/safe/store/models/owner'
-import { makeTransaction, type Transaction } from '~/routes/safe/store/models/transaction'
-import { makeIncomingTransaction, type IncomingTransaction } from '~/routes/safe/store/models/incomingTransaction'
-import { makeConfirmation } from '~/routes/safe/store/models/confirmation'
-import { buildTxServiceUrl, type TxServiceType } from '~/logic/safe/transactions/txHistory'
-import { buildIncomingTxServiceUrl } from '~/logic/safe/transactions/incomingTxHistory'
-import { getWeb3 } from '~/logic/wallets/getWeb3'
-import { sameAddress, ZERO_ADDRESS } from '~/logic/wallets/ethAddresses'
-import { EMPTY_DATA } from '~/logic/wallets/ethTransactions'
-import { getLocalSafe } from '~/logic/safe/utils'
-import { addTransactions } from './addTransactions'
+
 import { addIncomingTransactions } from './addIncomingTransactions'
-import { getHumanFriendlyToken } from '~/logic/tokens/store/actions/fetchTokens'
-import { isMultisendTransaction, isTokenTransfer, isUpgradeTransaction } from '~/logic/tokens/utils/tokenHelpers'
+import { addTransactions } from './addTransactions'
+
 import { decodeParamsFromSafeMethod } from '~/logic/contracts/methodIds'
+import { buildIncomingTxServiceUrl } from '~/logic/safe/transactions/incomingTxHistory'
+import { type TxServiceType, buildTxServiceUrl } from '~/logic/safe/transactions/txHistory'
+import { getLocalSafe } from '~/logic/safe/utils'
+import { getHumanFriendlyToken } from '~/logic/tokens/store/actions/fetchTokens'
 import { ALTERNATIVE_TOKEN_ABI } from '~/logic/tokens/utils/alternativeAbi'
-import type { TransactionProps } from '~/routes/safe/store/models/transaction'
+import { isMultisendTransaction, isTokenTransfer, isUpgradeTransaction } from '~/logic/tokens/utils/tokenHelpers'
+import { ZERO_ADDRESS, sameAddress } from '~/logic/wallets/ethAddresses'
+import { EMPTY_DATA } from '~/logic/wallets/ethTransactions'
+import { getWeb3 } from '~/logic/wallets/getWeb3'
 import { addCancellationTransactions } from '~/routes/safe/store/actions/addCancellationTransactions'
+import { makeConfirmation } from '~/routes/safe/store/models/confirmation'
+import { type IncomingTransaction, makeIncomingTransaction } from '~/routes/safe/store/models/incomingTransaction'
+import { makeOwner } from '~/routes/safe/store/models/owner'
+import type { TransactionProps } from '~/routes/safe/store/models/transaction'
+import { type Transaction, makeTransaction } from '~/routes/safe/store/models/transaction'
+import { type GlobalState } from '~/store'
 
 let web3
 
@@ -300,7 +302,7 @@ export const loadSafeIncomingTransactions = async (safeAddress: string) => {
 export default (safeAddress: string) => async (dispatch: ReduxDispatch<GlobalState>) => {
   web3 = await getWeb3()
 
-  const { outgoing, cancel }: SafeTransactionsType = await loadSafeTransactions(safeAddress)
+  const { cancel, outgoing }: SafeTransactionsType = await loadSafeTransactions(safeAddress)
   const incomingTransactions: Map<string, List<IncomingTransaction>> = await loadSafeIncomingTransactions(safeAddress)
   dispatch(addCancellationTransactions(cancel))
   dispatch(addTransactions(outgoing))

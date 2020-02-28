@@ -1,6 +1,6 @@
 // @flow
-import React from 'react'
 import Checkbox, { type CheckoxProps } from '@material-ui/core/Checkbox'
+import React from 'react'
 
 class GnoCheckbox extends React.PureComponent<CheckoxProps> {
   render() {
@@ -9,7 +9,7 @@ class GnoCheckbox extends React.PureComponent<CheckoxProps> {
       ...rest
     } = this.props
 
-    return <Checkbox {...rest} name={name} inputProps={restInput} onChange={onChange} checked={!!checked} />
+    return <Checkbox {...rest} checked={!!checked} inputProps={restInput} name={name} onChange={onChange} />
   }
 }
 
