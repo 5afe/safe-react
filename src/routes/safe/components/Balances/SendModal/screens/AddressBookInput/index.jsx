@@ -1,15 +1,17 @@
 // @flow
-import React, { useEffect, useState } from 'react'
-import { withStyles } from '@material-ui/core/styles'
-import { useSelector } from 'react-redux'
-import Autocomplete from '@material-ui/lab/Autocomplete'
 import MuiTextField from '@material-ui/core/TextField'
+import { withStyles } from '@material-ui/core/styles'
 import makeStyles from '@material-ui/core/styles/makeStyles'
+import Autocomplete from '@material-ui/lab/Autocomplete'
 import { List } from 'immutable'
+import React, { useEffect, useState } from 'react'
+import { useSelector } from 'react-redux'
+
 import { styles } from './style'
-import { getAddressBookListSelector } from '~/logic/addressBook/store/selectors'
-import { mustBeEthereumAddress, mustBeEthereumContractAddress } from '~/components/forms/validator'
+
 import Identicon from '~/components/Identicon'
+import { mustBeEthereumAddress, mustBeEthereumContractAddress } from '~/components/forms/validator'
+import { getAddressBookListSelector } from '~/logic/addressBook/store/selectors'
 import { getAddressFromENS } from '~/logic/wallets/getWeb3'
 
 type Props = {
@@ -53,10 +55,10 @@ const AddressBookInput = ({
   classes,
   fieldMutator,
   isCustomTx,
-  recipientAddress,
-  setSelectedEntry,
   pristine,
+  recipientAddress,
   setIsValidAddress,
+  setSelectedEntry,
 }: Props) => {
   const addressBook = useSelector(getAddressBookListSelector)
   const [isValidForm, setIsValidForm] = useState(true)
@@ -91,7 +93,7 @@ const AddressBookInput = ({
       const adbkToFilter = isCustomTx ? await filterAddressBookWithContractAddresses(addressBook) : addressBook
       // Then Filters the entries based on the input of the user
       const filteredADBK = adbkToFilter.filter(adbkEntry => {
-        const { name, address } = adbkEntry
+        const { address, name } = adbkEntry
         return (
           name.toLowerCase().includes(addressValue.toLowerCase()) ||
           address.toLowerCase().includes(addressValue.toLowerCase())
@@ -132,15 +134,8 @@ const AddressBookInput = ({
   return (
     <>
       <Autocomplete
-        id="free-solo-demo"
-        freeSolo
-        disableOpenOnFocus
-        open={!blurred}
-        onClose={() => setBlurred(true)}
-        role="listbox"
-        options={adbkList.toArray()}
-        style={{ display: 'flex', flexGrow: 1 }}
         closeIcon={null}
+        disableOpenOnFocus
         filterOptions={(optionsArray, { inputValue }) =>
           optionsArray.filter(item => {
             const inputLowerCase = inputValue.toLowerCase()
@@ -149,13 +144,9 @@ const AddressBookInput = ({
             return foundName || foundAddress
           })
         }
+        freeSolo
         getOptionLabel={adbkEntry => adbkEntry.address || ''}
-        onOpen={() => {
-          setSelectedEntry(null)
-          setBlurred(false)
-        }}
-        //  defaultValue={{ address: recipientAddress }}
-        value={{ address: inputAddValue }}
+        id="free-solo-demo"
         onChange={(event, value) => {
           let address = ''
           let name = ''
@@ -166,8 +157,44 @@ const AddressBookInput = ({
           setSelectedEntry({ address, name })
           fieldMutator(address)
         }}
+        onClose={() => setBlurred(true)}
+        onOpen={() => {
+          setSelectedEntry(null)
+          setBlurred(false)
+        }}
+        open={!blurred}
+        options={adbkList.toArray()}
+        renderInput={params => (
+          <MuiTextField
+            {...params}
+            // eslint-disable-next-line
+            autoFocus={!blurred || pristine}
+            error={!isValidForm}
+            fullWidth
+            id="filled-error-helper-text"
+            InputLabelProps={{
+              shrink: true,
+              required: true,
+              classes: labelStyling,
+            }}
+            InputProps={{
+              ...params.InputProps,
+              classes: {
+                ...txInputStyling,
+              },
+              className: statusClasses,
+            }}
+            label={!isValidForm ? validationText : 'Recipient'}
+            onChange={event => {
+              setInputTouched(true)
+              onAddressInputChanged(event.target.value)
+            }}
+            value={{ address: inputAddValue }}
+            variant="filled"
+          />
+        )}
         renderOption={adbkEntry => {
-          const { name, address } = adbkEntry
+          const { address, name } = adbkEntry
           return (
             <div className={classes.itemOptionList}>
               <div className={classes.identicon}>
@@ -180,34 +207,9 @@ const AddressBookInput = ({
             </div>
           )
         }}
-        renderInput={params => (
-          <MuiTextField
-            {...params}
-            label={!isValidForm ? validationText : 'Recipient'}
-            error={!isValidForm}
-            fullWidth
-            autoFocus={!blurred || pristine}
-            variant="filled"
-            id="filled-error-helper-text"
-            value={{ address: inputAddValue }}
-            onChange={event => {
-              setInputTouched(true)
-              onAddressInputChanged(event.target.value)
-            }}
-            InputProps={{
-              ...params.InputProps,
-              classes: {
-                ...txInputStyling,
-              },
-              className: statusClasses,
-            }}
-            InputLabelProps={{
-              shrink: true,
-              required: true,
-              classes: labelStyling,
-            }}
-          />
-        )}
+        role="listbox"
+        style={{ display: 'flex', flexGrow: 1 }}
+        value={{ address: inputAddValue }}
       />
     </>
   )

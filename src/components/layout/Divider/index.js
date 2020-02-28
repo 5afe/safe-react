@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react'
+
 import { border } from '~/theme/variables'
 
 type Props = {

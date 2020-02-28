@@ -2,8 +2,8 @@
 import React from 'react'
 import styled from 'styled-components'
 
-import Paragraph from '~/components/layout/Paragraph'
 import Button from '~/components/layout/Button'
+import Paragraph from '~/components/layout/Paragraph'
 import { lg } from '~/theme/variables'
 
 const StyledParagraph = styled(Paragraph)`
@@ -20,11 +20,11 @@ const TitleWrapper = styled.div`
   align-items: center;
 `
 
-export const ModalTitle = ({ title, iconUrl }: { title: string, iconUrl: string }) => {
+export const ModalTitle = ({ iconUrl, title }: { title: string, iconUrl: string }) => {
   return (
     <TitleWrapper>
-      {iconUrl && <IconImg src={iconUrl} alt={title} />}
-      <StyledParagraph weight="bolder" noMargin>
+      {iconUrl && <IconImg alt={title} src={iconUrl} />}
+      <StyledParagraph noMargin weight="bolder">
         {title}
       </StyledParagraph>
     </TitleWrapper>
@@ -37,10 +37,10 @@ const FooterWrapper = styled.div`
 `
 
 export const ModalFooterConfirmation = ({
-  okText,
   cancelText,
-  handleOk,
   handleCancel,
+  handleOk,
+  okText,
 }: {
   okText: string,
   cancelText: string,

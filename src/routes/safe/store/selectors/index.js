@@ -1,24 +1,25 @@
 // @flow
-import { Map, List, Set } from 'immutable'
+import { List, Map, Set } from 'immutable'
 import { type Match, matchPath } from 'react-router-dom'
-import { createSelector, createStructuredSelector, type Selector } from 'reselect'
-import { type GlobalState } from '~/store/index'
-import { SAFE_PARAM_ADDRESS, SAFELIST_ADDRESS } from '~/routes/routes'
+import { type Selector, createSelector, createStructuredSelector } from 'reselect'
+
+import { getWeb3 } from '~/logic/wallets/getWeb3'
+import { SAFELIST_ADDRESS, SAFE_PARAM_ADDRESS } from '~/routes/routes'
+import { type Confirmation } from '~/routes/safe/store/models/confirmation'
+import type { IncomingTransaction } from '~/routes/safe/store/models/incomingTransaction'
 import { type Safe } from '~/routes/safe/store/models/safe'
-import { type State as TransactionsState, TRANSACTIONS_REDUCER_ID } from '~/routes/safe/store/reducer/transactions'
+import { type Transaction } from '~/routes/safe/store/models/transaction'
 import {
-  type CancelState as CancelTransactionsState,
   CANCELLATION_TRANSACTIONS_REDUCER_ID,
+  type CancelState as CancelTransactionsState,
 } from '~/routes/safe/store/reducer/cancellationTransactions'
 import {
-  type IncomingState as IncomingTransactionsState,
   INCOMING_TRANSACTIONS_REDUCER_ID,
+  type IncomingState as IncomingTransactionsState,
 } from '~/routes/safe/store/reducer/incomingTransactions'
-import { type Transaction } from '~/routes/safe/store/models/transaction'
-import { type Confirmation } from '~/routes/safe/store/models/confirmation'
 import { SAFE_REDUCER_ID } from '~/routes/safe/store/reducer/safe'
-import type { IncomingTransaction } from '~/routes/safe/store/models/incomingTransaction'
-import { getWeb3 } from '~/logic/wallets/getWeb3'
+import { TRANSACTIONS_REDUCER_ID, type State as TransactionsState } from '~/routes/safe/store/reducer/transactions'
+import { type GlobalState } from '~/store/index'
 
 export type RouterProps = {
   match: Match,

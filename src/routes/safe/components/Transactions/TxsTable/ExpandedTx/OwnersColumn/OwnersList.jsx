@@ -1,10 +1,12 @@
 // @flow
-import React from 'react'
-import { List } from 'immutable'
 import { withStyles } from '@material-ui/core/styles'
+import { List } from 'immutable'
+import React from 'react'
+
 import OwnerComponent from './OwnerComponent'
-import { type Owner } from '~/routes/safe/store/models/owner'
 import { styles } from './style'
+
+import { type Owner } from '~/routes/safe/store/models/owner'
 
 type ListProps = {
   classes: Object,
@@ -27,15 +29,15 @@ const OwnersList = ({
   classes,
   executor,
   isCancelTx,
-  onTxReject,
   onTxConfirm,
   onTxExecute,
+  onTxReject,
   ownersUnconfirmed,
   ownersWhoConfirmed,
-  showRejectBtn,
-  showExecuteRejectBtn,
   showConfirmBtn,
   showExecuteBtn,
+  showExecuteRejectBtn,
+  showRejectBtn,
   thresholdReached,
   userAddress,
 }: ListProps) => (
@@ -47,12 +49,12 @@ const OwnersList = ({
         executor={executor}
         isCancelTx={isCancelTx}
         key={owner.address}
-        onTxReject={onTxReject}
         onTxExecute={onTxExecute}
+        onTxReject={onTxReject}
         owner={owner}
-        showRejectBtn={showRejectBtn}
-        showExecuteRejectBtn={showExecuteRejectBtn}
         showExecuteBtn={showExecuteBtn}
+        showExecuteRejectBtn={showExecuteRejectBtn}
+        showRejectBtn={showRejectBtn}
         thresholdReached={thresholdReached}
         userAddress={userAddress}
       />
@@ -63,14 +65,14 @@ const OwnersList = ({
         executor={executor}
         isCancelTx={isCancelTx}
         key={owner.address}
-        onTxReject={onTxReject}
         onTxConfirm={onTxConfirm}
         onTxExecute={onTxExecute}
+        onTxReject={onTxReject}
         owner={owner}
-        showRejectBtn={showRejectBtn}
-        showExecuteRejectBtn={showExecuteRejectBtn}
         showConfirmBtn={showConfirmBtn}
         showExecuteBtn={showExecuteBtn}
+        showExecuteRejectBtn={showExecuteRejectBtn}
+        showRejectBtn={showRejectBtn}
         thresholdReached={thresholdReached}
         userAddress={userAddress}
       />

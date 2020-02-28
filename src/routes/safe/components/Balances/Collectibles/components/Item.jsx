@@ -1,8 +1,9 @@
 // @flow
-import * as React from 'react'
 import { makeStyles } from '@material-ui/core/styles'
-import cn from 'classnames'
 import CallMade from '@material-ui/icons/CallMade'
+import cn from 'classnames'
+import * as React from 'react'
+
 import Button from '~/components/layout/Button'
 import { fontColor, sm, xs } from '~/theme/variables'
 

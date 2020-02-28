@@ -1,18 +1,19 @@
 // @flow
-import * as React from 'react'
-import { withStyles } from '@material-ui/core/styles'
 import InputAdornment from '@material-ui/core/InputAdornment'
+import { withStyles } from '@material-ui/core/styles'
 import CheckCircle from '@material-ui/icons/CheckCircle'
-import Field from '~/components/forms/Field'
+import * as React from 'react'
+
+import OpenPaper from '~/components/Stepper/OpenPaper'
 import AddressInput from '~/components/forms/AddressInput'
-import { composeValidators, required, noErrorsOn, mustBeEthereumAddress } from '~/components/forms/validator'
+import Field from '~/components/forms/Field'
 import TextField from '~/components/forms/TextField'
+import { composeValidators, mustBeEthereumAddress, noErrorsOn, required } from '~/components/forms/validator'
 import Block from '~/components/layout/Block'
 import Paragraph from '~/components/layout/Paragraph'
-import OpenPaper from '~/components/Stepper/OpenPaper'
-import { FIELD_LOAD_NAME, FIELD_LOAD_ADDRESS } from '~/routes/load/components/fields'
+import { SAFE_MASTER_COPY_ADDRESS_V10, getSafeMasterContract, validateProxy } from '~/logic/contracts/safeContracts'
 import { getWeb3 } from '~/logic/wallets/getWeb3'
-import { getSafeMasterContract, SAFE_MASTER_COPY_ADDRESS_V10, validateProxy } from '~/logic/contracts/safeContracts'
+import { FIELD_LOAD_ADDRESS, FIELD_LOAD_NAME } from '~/routes/load/components/fields'
 import { secondary } from '~/theme/variables'
 
 type Props = {
@@ -82,7 +83,7 @@ export const safeFieldsValidation = async (values: Object) => {
 const Details = ({ classes, errors, form }: Props) => (
   <>
     <Block margin="md">
-      <Paragraph noMargin size="md" color="primary">
+      <Paragraph color="primary" noMargin size="md">
         You are about to load an existing Gnosis Safe. First, choose a name and enter the Safe address. The name is only
         stored locally and will never be shared with Gnosis or any third parties.
         <br />
@@ -92,17 +93,16 @@ const Details = ({ classes, errors, form }: Props) => (
     </Block>
     <Block className={classes.root}>
       <Field
-        name={FIELD_LOAD_NAME}
         component={TextField}
-        type="text"
-        validate={required}
+        name={FIELD_LOAD_NAME}
         placeholder="Name of the Safe"
         text="Safe name"
+        type="text"
+        validate={required}
       />
     </Block>
-    <Block margin="lg" className={classes.root}>
+    <Block className={classes.root} margin="lg">
       <AddressInput
-        name={FIELD_LOAD_ADDRESS}
         component={TextField}
         fieldMutator={val => {
           form.mutators.setValue(FIELD_LOAD_ADDRESS, val)
@@ -116,20 +116,21 @@ const Details = ({ classes, errors, form }: Props) => (
             ),
           }
         }
-        type="text"
-        validate={composeValidators(required, mustBeEthereumAddress)}
+        name={FIELD_LOAD_ADDRESS}
         placeholder="Safe Address*"
         text="Safe Address"
+        type="text"
+        validate={composeValidators(required, mustBeEthereumAddress)}
       />
     </Block>
     <Block margin="sm">
-      <Paragraph noMargin size="md" color="primary" className={classes.links}>
+      <Paragraph className={classes.links} color="primary" noMargin size="md">
         By continuing you consent with the{' '}
-        <a rel="noopener noreferrer" href="https://safe.gnosis.io/terms" target="_blank">
+        <a href="https://safe.gnosis.io/terms" rel="noopener noreferrer" target="_blank">
           terms of use
         </a>{' '}
         and{' '}
-        <a rel="noopener noreferrer" href="https://safe.gnosis.io/privacy" target="_blank">
+        <a href="https://safe.gnosis.io/privacy" rel="noopener noreferrer" target="_blank">
           privacy policy
         </a>
         . Most importantly, you confirm that your funds are held securely in the Gnosis Safe, a smart contract on the

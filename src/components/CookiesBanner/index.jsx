@@ -1,20 +1,21 @@
 // @flow
 import Checkbox from '@material-ui/core/Checkbox'
 import FormControlLabel from '@material-ui/core/FormControlLabel'
-import React, { useEffect, useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
-import { useDispatch, useSelector } from 'react-redux'
 import cn from 'classnames'
-import Link from '~/components/layout/Link'
+import React, { useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+
 import Button from '~/components/layout/Button'
-import { primary, mainFontFamily, md, screenSm } from '~/theme/variables'
+import Link from '~/components/layout/Link'
 import type { CookiesProps } from '~/logic/cookies/model/cookie'
 import { COOKIES_KEY } from '~/logic/cookies/model/cookie'
-import { loadFromCookie, saveCookie } from '~/logic/cookies/utils'
-import { cookieBannerOpen } from '~/logic/cookies/store/selectors'
 import { openCookieBanner } from '~/logic/cookies/store/actions/openCookieBanner'
-import { loadIntercom } from '~/utils/intercom'
+import { cookieBannerOpen } from '~/logic/cookies/store/selectors'
+import { loadFromCookie, saveCookie } from '~/logic/cookies/utils'
+import { mainFontFamily, md, primary, screenSm } from '~/theme/variables'
 import { loadGoogleAnalytics } from '~/utils/googleAnalytics'
+import { loadIntercom } from '~/utils/intercom'
 
 const useStyles = makeStyles({
   container: {
@@ -97,7 +98,7 @@ const CookiesBanner = () => {
     async function fetchCookiesFromStorage() {
       const cookiesState: ?CookiesProps = await loadFromCookie(COOKIES_KEY)
       if (cookiesState) {
-        const { acceptedNecessary, acceptedAnalytics } = cookiesState
+        const { acceptedAnalytics, acceptedNecessary } = cookiesState
         setLocalAnalytics(acceptedAnalytics)
         setLocalNecessary(acceptedNecessary)
         const openBanner = acceptedNecessary === false || showBanner
@@ -134,11 +135,11 @@ const CookiesBanner = () => {
   const cookieBannerContent = (
     <div className={classes.container}>
       <span
-        role="button"
-        tabIndex="0"
+        className={cn(classes.acceptPreferences, classes.text)}
         onClick={closeCookiesBannerHandler}
         onKeyDown={closeCookiesBannerHandler}
-        className={cn(classes.acceptPreferences, classes.text)}
+        role="button"
+        tabIndex="0"
       >
         Accept preferences &gt;
       </span>
@@ -155,21 +156,21 @@ const CookiesBanner = () => {
           <div className={classes.formItem}>
             <FormControlLabel
               checked={localNecessary}
+              control={<Checkbox disabled />}
               disabled
               label="Necessary"
               name="Necessary"
               onChange={() => setLocalNecessary(prev => !prev)}
               value={localNecessary}
-              control={<Checkbox disabled />}
             />
           </div>
           <div className={classes.formItem}>
             <FormControlLabel
+              control={<Checkbox checked={localAnalytics} />}
               label="Analytics"
               name="Analytics"
               onChange={() => setLocalAnalytics(prev => !prev)}
               value={localAnalytics}
-              control={<Checkbox checked={localAnalytics} />}
             />
           </div>
           <div className={classes.formItem}>
@@ -177,8 +178,8 @@ const CookiesBanner = () => {
               color="primary"
               component={Link}
               minWidth={180}
-              variant="outlined"
               onClick={() => acceptCookiesHandler()}
+              variant="outlined"
             >
               Accept All
             </Button>

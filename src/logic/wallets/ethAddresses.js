@@ -1,7 +1,8 @@
 // @flow
 import { List } from 'immutable'
-import type { Safe } from '~/routes/safe/store/models/safe'
+
 import type { Owner } from '~/routes/safe/store/models/owner'
+import type { Safe } from '~/routes/safe/store/models/safe'
 
 export const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'
 

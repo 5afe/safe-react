@@ -1,13 +1,14 @@
 // @flow
 import { RateLimit } from 'async-sema'
-import { OPENSEA_API_KEY } from '~/utils/constants'
+
+import { ETHEREUM_NETWORK } from '~/logic/wallets/getWeb3'
 import type {
   AssetCollectible,
   CollectibleData,
   CollectibleMetadataSource,
   OpenSeaAsset,
 } from '~/routes/safe/components/Balances/Collectibles/types'
-import { ETHEREUM_NETWORK } from '~/logic/wallets/getWeb3'
+import { OPENSEA_API_KEY } from '~/utils/constants'
 
 type GroupedCollectibles = {
   [key: string]: AssetCollectible[],

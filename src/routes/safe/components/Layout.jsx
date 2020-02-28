@@ -1,42 +1,45 @@
 // @flow
-import React, { useState } from 'react'
-import classNames from 'classnames/bind'
-import { Switch, Redirect, Route, withRouter } from 'react-router-dom'
-import Tabs from '@material-ui/core/Tabs'
-import Tab from '@material-ui/core/Tab'
 import Badge from '@material-ui/core/Badge'
+import Tab from '@material-ui/core/Tab'
+import Tabs from '@material-ui/core/Tabs'
+import { withStyles } from '@material-ui/core/styles'
 import CallMade from '@material-ui/icons/CallMade'
 import CallReceived from '@material-ui/icons/CallReceived'
-import { withStyles } from '@material-ui/core/styles'
-import Hairline from '~/components/layout/Hairline'
-import Block from '~/components/layout/Block'
-import Identicon from '~/components/Identicon'
-import Heading from '~/components/layout/Heading'
-import Row from '~/components/layout/Row'
-import Button from '~/components/layout/Button'
-import EtherscanBtn from '~/components/EtherscanBtn'
-import CopyBtn from '~/components/CopyBtn'
-import Paragraph from '~/components/layout/Paragraph'
-import Modal from '~/components/Modal'
-import SendModal from '~/routes/safe/components/Balances/SendModal'
-import Receive from './Balances/Receive'
-import NoSafe from '~/components/NoSafe'
-import { GenericModal } from '~/components-v2'
-import { type SelectorProps } from '~/routes/safe/container/selector'
-import { getEtherScanLink, getWeb3 } from '~/logic/wallets/getWeb3'
-import { border } from '~/theme/variables'
+import classNames from 'classnames/bind'
+import React, { useState } from 'react'
+import { Redirect, Route, Switch, withRouter } from 'react-router-dom'
+
 import { type Actions } from '../container/actions'
+
 import Balances from './Balances'
-import Transactions from './Transactions'
+import Receive from './Balances/Receive'
+import SendModal from './Balances/SendModal'
 import Settings from './Settings'
-import { styles } from './style'
-import AddressBookTable from '~/routes/safe/components/AddressBook'
-import { SettingsIcon } from './assets/SettingsIcon'
+import Transactions from './Transactions'
 import { AddressBookIcon } from './assets/AddressBookIcon'
-import { TransactionsIcon } from './assets/TransactionsIcon'
-import { BalancesIcon } from './assets/BalancesIcon'
 import { AppsIcon } from './assets/AppsIcon'
+import { BalancesIcon } from './assets/BalancesIcon'
+import { SettingsIcon } from './assets/SettingsIcon'
+import { TransactionsIcon } from './assets/TransactionsIcon'
+import { styles } from './style'
+
+import { GenericModal } from '~/components-v2'
+import CopyBtn from '~/components/CopyBtn'
+import EtherscanBtn from '~/components/EtherscanBtn'
+import Identicon from '~/components/Identicon'
+import Modal from '~/components/Modal'
+import NoSafe from '~/components/NoSafe'
+import Block from '~/components/layout/Block'
+import Button from '~/components/layout/Button'
+import Hairline from '~/components/layout/Hairline'
+import Heading from '~/components/layout/Heading'
+import Paragraph from '~/components/layout/Paragraph'
+import Row from '~/components/layout/Row'
 import { getSafeVersion } from '~/logic/safe/utils/safeVersion'
+import { getEtherScanLink, getWeb3 } from '~/logic/wallets/getWeb3'
+import AddressBookTable from '~/routes/safe/components/AddressBook'
+import { type SelectorProps } from '~/routes/safe/container/selector'
+import { border } from '~/theme/variables'
 
 export const BALANCES_TAB_BTN_TEST_ID = 'balances-tab-btn'
 export const SETTINGS_TAB_BTN_TEST_ID = 'settings-tab-btn'
@@ -65,35 +68,35 @@ type Props = SelectorProps &
 
 const Layout = (props: Props) => {
   const {
-    safe,
-    provider,
-    network,
-    classes,
-    granted,
-    tokens,
-    activeTokens,
-    blacklistedTokens,
-    createTransaction,
-    processTransaction,
     activateTokensByBalance,
-    fetchTokens,
-    updateSafe,
-    transactions,
+    activeTokens,
+    addressBook,
+    blacklistedTokens,
     cancellationTransactions,
-    userAddress,
+    classes,
+    createTransaction,
+    currencySelected,
+    currencyValues,
+    fetchCurrencyValues,
+    fetchTokens,
+    granted,
+    hideSendFunds,
+    location,
+    match,
+    network,
+    onHide,
+    onShow,
+    processTransaction,
+    provider,
+    safe,
     sendFunds,
     showReceive,
-    onShow,
-    onHide,
     showSendFunds,
-    hideSendFunds,
-    match,
-    location,
-    currencySelected,
-    fetchCurrencyValues,
-    currencyValues,
-    addressBook,
+    tokens,
+    transactions,
     updateAddressBookEntry,
+    updateSafe,
+    userAddress,
   } = props
 
   const [modal, setModal] = useState({
@@ -172,10 +175,10 @@ const Layout = (props: Props) => {
       <SettingsIcon />
       <Badge
         badgeContent=""
-        variant="dot"
-        invisible={!needUpdate || !granted}
         color="error"
+        invisible={!needUpdate || !granted}
         style={{ paddingRight: '10px' }}
+        variant="dot"
       >
         Settings
       </Badge>
@@ -197,14 +200,14 @@ const Layout = (props: Props) => {
   const renderAppsTab = () => (
     <React.Suspense>
       <Apps
+        closeModal={closeGenericModal}
+        createTransaction={createTransaction}
+        ethBalance={ethBalance}
+        network={network}
+        openModal={openGenericModal}
         safeAddress={address}
         safeName={name}
-        ethBalance={ethBalance}
         web3={web3Instance}
-        network={network}
-        createTransaction={createTransaction}
-        openModal={openGenericModal}
-        closeModal={closeGenericModal}
       />
     </React.Suspense>
   )
@@ -216,13 +219,13 @@ const Layout = (props: Props) => {
           <Identicon address={address} diameter={50} />
           <Block className={classes.name}>
             <Row>
-              <Heading className={classes.nameText} tag="h2" color="primary" testId={SAFE_VIEW_NAME_HEADING_TEST_ID}>
+              <Heading className={classes.nameText} color="primary" tag="h2" testId={SAFE_VIEW_NAME_HEADING_TEST_ID}>
                 {name}
               </Heading>
               {!granted && <Block className={classes.readonly}>Read Only</Block>}
             </Row>
-            <Block justify="center" className={classes.user}>
-              <Paragraph size="md" className={classes.address} color="disabled" noMargin>
+            <Block className={classes.user} justify="center">
+              <Paragraph className={classes.address} color="disabled" noMargin size="md">
                 {address}
               </Paragraph>
               <CopyBtn content={address} />
@@ -255,11 +258,11 @@ const Layout = (props: Props) => {
         </Block>
       </Block>
       <Tabs
-        variant="scrollable"
-        value={location.pathname}
-        onChange={handleCallToRouter}
         indicatorColor="secondary"
+        onChange={handleCallToRouter}
         textColor="secondary"
+        value={location.pathname}
+        variant="scrollable"
       >
         <Tab
           classes={{
@@ -285,9 +288,9 @@ const Layout = (props: Props) => {
               selected: classes.tabWrapperSelected,
               wrapper: classes.tabWrapper,
             }}
+            data-testid={TRANSACTIONS_TAB_BTN_TEST_ID}
             label={labelApps}
             value={`${match.url}/apps`}
-            data-testid={TRANSACTIONS_TAB_BTN_TEST_ID}
           />
         )}
         <Tab
@@ -316,19 +319,19 @@ const Layout = (props: Props) => {
           path={`${match.path}/balances`}
           render={() => (
             <Balances
-              ethBalance={ethBalance}
-              tokens={tokens}
+              activateTokensByBalance={activateTokensByBalance}
               activeTokens={activeTokens}
               blacklistedTokens={blacklistedTokens}
-              granted={granted}
-              safeAddress={address}
-              activateTokensByBalance={activateTokensByBalance}
-              fetchTokens={fetchTokens}
-              safeName={name}
               createTransaction={createTransaction}
               currencySelected={currencySelected}
-              fetchCurrencyValues={fetchCurrencyValues}
               currencyValues={currencyValues}
+              ethBalance={ethBalance}
+              fetchCurrencyValues={fetchCurrencyValues}
+              fetchTokens={fetchTokens}
+              granted={granted}
+              safeAddress={address}
+              safeName={name}
+              tokens={tokens}
             />
           )}
         />
@@ -337,17 +340,17 @@ const Layout = (props: Props) => {
           path={`${match.path}/transactions`}
           render={() => (
             <Transactions
-              threshold={safe.threshold}
-              owners={safe.owners}
-              nonce={safe.nonce}
-              transactions={transactions}
               cancellationTransactions={cancellationTransactions}
-              safeAddress={address}
-              userAddress={userAddress}
+              createTransaction={createTransaction}
               currentNetwork={network}
               granted={granted}
-              createTransaction={createTransaction}
+              nonce={safe.nonce}
+              owners={safe.owners}
               processTransaction={processTransaction}
+              safeAddress={address}
+              threshold={safe.threshold}
+              transactions={transactions}
+              userAddress={userAddress}
             />
           )}
         />
@@ -359,19 +362,19 @@ const Layout = (props: Props) => {
           path={`${match.path}/settings`}
           render={() => (
             <Settings
+              addressBook={addressBook}
+              createTransaction={createTransaction}
+              etherScanLink={etherScanLink}
               granted={granted}
+              network={network}
+              owners={safe.owners}
+              safe={safe}
               safeAddress={address}
               safeName={name}
-              etherScanLink={etherScanLink}
-              updateSafe={updateSafe}
               threshold={safe.threshold}
-              owners={safe.owners}
-              network={network}
-              userAddress={userAddress}
-              createTransaction={createTransaction}
-              safe={safe}
-              addressBook={addressBook}
               updateAddressBookEntry={updateAddressBookEntry}
+              updateSafe={updateSafe}
+              userAddress={userAddress}
             />
           )}
         />
@@ -379,15 +382,15 @@ const Layout = (props: Props) => {
         <Redirect to={`${match.path}/balances`} />
       </Switch>
       <SendModal
-        onClose={hideSendFunds}
+        activeScreenType="chooseTxType"
+        createTransaction={createTransaction}
+        ethBalance={ethBalance}
         isOpen={sendFunds.isOpen}
+        onClose={hideSendFunds}
         safeAddress={address}
         safeName={name}
-        ethBalance={ethBalance}
-        tokens={activeTokens}
         selectedToken={sendFunds.selectedToken}
-        createTransaction={createTransaction}
-        activeScreenType="chooseTxType"
+        tokens={activeTokens}
       />
       <Modal
         description="Receive Tokens Form"
@@ -396,7 +399,7 @@ const Layout = (props: Props) => {
         paperClassName={classes.receiveModal}
         title="Receive Tokens"
       >
-        <Receive safeName={name} safeAddress={address} onClose={onHide('Receive')} />
+        <Receive onClose={onHide('Receive')} safeAddress={address} safeName={name} />
       </Modal>
 
       {modal.isOpen && <GenericModal {...modal} onClose={closeGenericModal} />}

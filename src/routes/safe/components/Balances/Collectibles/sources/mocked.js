@@ -1,7 +1,7 @@
 // @flow
-import type { CollectibleData, CollectibleMetadataSource } from '~/routes/safe/components/Balances/Collectibles/types'
-import OpenSea from '~/routes/safe/components/Balances/Collectibles/sources/opensea'
 import mockedOpenSea from '~/routes/safe/components/Balances/Collectibles/sources/mocked_opensea'
+import OpenSea from '~/routes/safe/components/Balances/Collectibles/sources/opensea'
+import type { CollectibleData, CollectibleMetadataSource } from '~/routes/safe/components/Balances/Collectibles/types'
 
 const kittyAssetContract = {
   address: '0x16baf0de678e52367adc69fd067e5edd1d33e3bf',

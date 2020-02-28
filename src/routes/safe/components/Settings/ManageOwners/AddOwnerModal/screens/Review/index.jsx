@@ -1,25 +1,27 @@
 // @flow
-import React, { useState, useEffect } from 'react'
-import { List } from 'immutable'
-import classNames from 'classnames'
+import IconButton from '@material-ui/core/IconButton'
 import { withStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
-import IconButton from '@material-ui/core/IconButton'
-import Identicon from '~/components/Identicon'
-import EtherscanBtn from '~/components/EtherscanBtn'
-import { getGnosisSafeInstanceAt } from '~/logic/contracts/safeContracts'
+import classNames from 'classnames'
+import { List } from 'immutable'
+import React, { useEffect, useState } from 'react'
+
+import { styles } from './style'
+
 import CopyBtn from '~/components/CopyBtn'
+import EtherscanBtn from '~/components/EtherscanBtn'
+import Identicon from '~/components/Identicon'
+import Block from '~/components/layout/Block'
+import Button from '~/components/layout/Button'
+import Col from '~/components/layout/Col'
+import Hairline from '~/components/layout/Hairline'
 import Paragraph from '~/components/layout/Paragraph'
 import Row from '~/components/layout/Row'
-import Col from '~/components/layout/Col'
-import Button from '~/components/layout/Button'
-import Block from '~/components/layout/Block'
-import Hairline from '~/components/layout/Hairline'
-import type { Owner } from '~/routes/safe/store/models/owner'
-import { getWeb3 } from '~/logic/wallets/getWeb3'
-import { formatAmount } from '~/logic/tokens/utils/formatAmount'
+import { getGnosisSafeInstanceAt } from '~/logic/contracts/safeContracts'
 import { estimateTxGasCosts } from '~/logic/safe/transactions/gasNew'
-import { styles } from './style'
+import { formatAmount } from '~/logic/tokens/utils/formatAmount'
+import { getWeb3 } from '~/logic/wallets/getWeb3'
+import type { Owner } from '~/routes/safe/store/models/owner'
 
 export const ADD_OWNER_SUBMIT_BTN_TEST_ID = 'add-owner-submit-btn'
 
@@ -34,7 +36,7 @@ type Props = {
   safeAddress: string,
 }
 
-const ReviewAddOwner = ({ classes, onClose, safeName, owners, values, onClickBack, onSubmit, safeAddress }: Props) => {
+const ReviewAddOwner = ({ classes, onClickBack, onClose, onSubmit, owners, safeAddress, safeName, values }: Props) => {
   const [gasCosts, setGasCosts] = useState<string>('< 0.001')
   useEffect(() => {
     let isCurrent = true
@@ -67,46 +69,46 @@ const ReviewAddOwner = ({ classes, onClose, safeName, owners, values, onClickBac
   }
   return (
     <>
-      <Row align="center" grow className={classes.heading}>
-        <Paragraph weight="bolder" className={classes.manage} noMargin>
+      <Row align="center" className={classes.heading} grow>
+        <Paragraph className={classes.manage} noMargin weight="bolder">
           Add new owner
         </Paragraph>
         <Paragraph className={classes.annotation}>3 of 3</Paragraph>
-        <IconButton onClick={onClose} disableRipple>
+        <IconButton disableRipple onClick={onClose}>
           <Close className={classes.closeIcon} />
         </IconButton>
       </Row>
       <Hairline />
       <Block className={classes.formContainer}>
         <Row className={classes.root}>
-          <Col xs={4} layout="column">
+          <Col layout="column" xs={4}>
             <Block className={classes.details}>
               <Block margin="lg">
-                <Paragraph size="lg" color="primary" noMargin>
+                <Paragraph color="primary" noMargin size="lg">
                   Details
                 </Paragraph>
               </Block>
               <Block margin="lg">
-                <Paragraph size="sm" color="disabled" noMargin>
+                <Paragraph color="disabled" noMargin size="sm">
                   Safe name
                 </Paragraph>
-                <Paragraph size="lg" color="primary" noMargin weight="bolder" className={classes.name}>
+                <Paragraph className={classes.name} color="primary" noMargin size="lg" weight="bolder">
                   {safeName}
                 </Paragraph>
               </Block>
               <Block margin="lg">
-                <Paragraph size="sm" color="disabled" noMargin>
+                <Paragraph color="disabled" noMargin size="sm">
                   Any transaction requires the confirmation of:
                 </Paragraph>
-                <Paragraph size="lg" color="primary" noMargin weight="bolder" className={classes.name}>
+                <Paragraph className={classes.name} color="primary" noMargin size="lg" weight="bolder">
                   {`${values.threshold} out of ${owners.size + 1} owner(s)`}
                 </Paragraph>
               </Block>
             </Block>
           </Col>
-          <Col xs={8} layout="column" className={classes.owners}>
+          <Col className={classes.owners} layout="column" xs={8}>
             <Row className={classes.ownersTitle}>
-              <Paragraph size="lg" color="primary" noMargin>
+              <Paragraph color="primary" noMargin size="lg">
                 {`${owners.size + 1} Safe owner(s)`}
               </Paragraph>
             </Row>
@@ -114,16 +116,16 @@ const ReviewAddOwner = ({ classes, onClose, safeName, owners, values, onClickBac
             {owners.map(owner => (
               <React.Fragment key={owner.address}>
                 <Row className={classes.owner}>
-                  <Col xs={1} align="center">
+                  <Col align="center" xs={1}>
                     <Identicon address={owner.address} diameter={32} />
                   </Col>
                   <Col xs={11}>
                     <Block className={classNames(classes.name, classes.userName)}>
-                      <Paragraph weight="bolder" size="lg" noMargin>
+                      <Paragraph noMargin size="lg" weight="bolder">
                         {owner.name}
                       </Paragraph>
-                      <Block justify="center" className={classes.user}>
-                        <Paragraph size="md" color="disabled" className={classes.address} noMargin>
+                      <Block className={classes.user} justify="center">
+                        <Paragraph className={classes.address} color="disabled" noMargin size="md">
                           {owner.address}
                         </Paragraph>
                         <CopyBtn content={owner.address} />
@@ -135,23 +137,23 @@ const ReviewAddOwner = ({ classes, onClose, safeName, owners, values, onClickBac
                 <Hairline />
               </React.Fragment>
             ))}
-            <Row className={classes.info} align="center">
-              <Paragraph weight="bolder" noMargin color="primary" size="md">
+            <Row align="center" className={classes.info}>
+              <Paragraph color="primary" noMargin size="md" weight="bolder">
                 ADDING NEW OWNER &darr;
               </Paragraph>
             </Row>
             <Hairline />
             <Row className={classes.selectedOwner}>
-              <Col xs={1} align="center">
+              <Col align="center" xs={1}>
                 <Identicon address={values.ownerAddress} diameter={32} />
               </Col>
               <Col xs={11}>
                 <Block className={classNames(classes.name, classes.userName)}>
-                  <Paragraph weight="bolder" size="lg" noMargin>
+                  <Paragraph noMargin size="lg" weight="bolder">
                     {values.ownerName}
                   </Paragraph>
-                  <Block justify="center" className={classes.user}>
-                    <Paragraph size="md" color="disabled" className={classes.address} noMargin>
+                  <Block className={classes.user} justify="center">
+                    <Paragraph className={classes.address} color="disabled" noMargin size="md">
                       {values.ownerAddress}
                     </Paragraph>
                     <CopyBtn content={values.ownerAddress} />
@@ -174,17 +176,17 @@ const ReviewAddOwner = ({ classes, onClose, safeName, owners, values, onClickBac
       </Block>
       <Hairline />
       <Row align="center" className={classes.buttonRow}>
-        <Button minWidth={140} minHeight={42} onClick={onClickBack}>
+        <Button minHeight={42} minWidth={140} onClick={onClickBack}>
           Back
         </Button>
         <Button
-          type="submit"
-          onClick={handleSubmit}
-          variant="contained"
-          minWidth={140}
-          minHeight={42}
           color="primary"
+          minHeight={42}
+          minWidth={140}
+          onClick={handleSubmit}
           testId={ADD_OWNER_SUBMIT_BTN_TEST_ID}
+          type="submit"
+          variant="contained"
         >
           Submit
         </Button>

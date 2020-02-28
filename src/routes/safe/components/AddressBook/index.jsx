@@ -1,49 +1,49 @@
 // @flow
-import React, { useState, useEffect } from 'react'
-
-import cn from 'classnames'
-import { List } from 'immutable'
-import TableRow from '@material-ui/core/TableRow'
 import TableCell from '@material-ui/core/TableCell'
-import { withStyles } from '@material-ui/core/styles'
-import classNames from 'classnames/bind'
-import CallMade from '@material-ui/icons/CallMade'
-import { useDispatch, useSelector } from 'react-redux'
 import TableContainer from '@material-ui/core/TableContainer'
-import Block from '~/components/layout/Block'
-import Row from '~/components/layout/Row'
-import { type Column, cellWidth } from '~/components/Table/TableHead'
-import Table from '~/components/Table'
-import Button from '~/components/layout/Button'
+import TableRow from '@material-ui/core/TableRow'
+import { withStyles } from '@material-ui/core/styles'
+import CallMade from '@material-ui/icons/CallMade'
+import cn from 'classnames'
+import classNames from 'classnames/bind'
+import { List } from 'immutable'
+import React, { useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 
 import { styles } from './style'
-import type { OwnerRow } from '~/routes/safe/components/Settings/ManageOwners/dataFetcher'
-import OwnerAddressTableCell from '~/routes/safe/components/Settings/ManageOwners/OwnerAddressTableCell'
+
+import Table from '~/components/Table'
+import { type Column, cellWidth } from '~/components/Table/TableHead'
+import Block from '~/components/layout/Block'
+import Button from '~/components/layout/Button'
+import ButtonLink from '~/components/layout/ButtonLink'
+import Col from '~/components/layout/Col'
 import Img from '~/components/layout/Img'
-import RenameOwnerIcon from '~/routes/safe/components/Settings/ManageOwners/assets/icons/rename-owner.svg'
-import RemoveOwnerIcon from '~/routes/safe/components/Settings/assets/icons/bin.svg'
-import RemoveOwnerIconDisabled from '~/routes/safe/components/Settings/assets/icons/disabled-bin.svg'
+import Row from '~/components/layout/Row'
+import type { AddressBookEntry } from '~/logic/addressBook/model/addressBook'
+import { addAddressBookEntry } from '~/logic/addressBook/store/actions/addAddressBookEntry'
+import { removeAddressBookEntry } from '~/logic/addressBook/store/actions/removeAddressBookEntry'
+import { updateAddressBookEntry } from '~/logic/addressBook/store/actions/updateAddressBookEntry'
+import { getAddressBookListSelector } from '~/logic/addressBook/store/selectors'
+import { isUserOwnerOnAnySafe } from '~/logic/wallets/ethAddresses'
+import CreateEditEntryModal from '~/routes/safe/components/AddressBook/CreateEditEntryModal'
+import DeleteEntryModal from '~/routes/safe/components/AddressBook/DeleteEntryModal'
 import {
   AB_ADDRESS_ID,
   ADDRESS_BOOK_ROW_ID,
   EDIT_ENTRY_BUTTON,
-  generateColumns,
   REMOVE_ENTRY_BUTTON,
   SEND_ENTRY_BUTTON,
+  generateColumns,
 } from '~/routes/safe/components/AddressBook/columns'
-import Col from '~/components/layout/Col'
-import ButtonLink from '~/components/layout/ButtonLink'
-import CreateEditEntryModal from '~/routes/safe/components/AddressBook/CreateEditEntryModal'
-import { getAddressBookListSelector } from '~/logic/addressBook/store/selectors'
-import type { AddressBookEntry } from '~/logic/addressBook/model/addressBook'
-import DeleteEntryModal from '~/routes/safe/components/AddressBook/DeleteEntryModal'
-import { updateAddressBookEntry } from '~/logic/addressBook/store/actions/updateAddressBookEntry'
-import { removeAddressBookEntry } from '~/logic/addressBook/store/actions/removeAddressBookEntry'
-import { addAddressBookEntry } from '~/logic/addressBook/store/actions/addAddressBookEntry'
 import SendModal from '~/routes/safe/components/Balances/SendModal'
-import { safeSelector, safesListSelector, addressBookQueryParamsSelector } from '~/routes/safe/store/selectors'
+import OwnerAddressTableCell from '~/routes/safe/components/Settings/ManageOwners/OwnerAddressTableCell'
+import RenameOwnerIcon from '~/routes/safe/components/Settings/ManageOwners/assets/icons/rename-owner.svg'
+import type { OwnerRow } from '~/routes/safe/components/Settings/ManageOwners/dataFetcher'
+import RemoveOwnerIcon from '~/routes/safe/components/Settings/assets/icons/bin.svg'
+import RemoveOwnerIconDisabled from '~/routes/safe/components/Settings/assets/icons/disabled-bin.svg'
 import { extendedSafeTokensSelector } from '~/routes/safe/container/selector'
-import { isUserOwnerOnAnySafe } from '~/logic/wallets/ethAddresses'
+import { addressBookQueryParamsSelector, safeSelector, safesListSelector } from '~/routes/safe/store/selectors'
 
 type Props = {
   classes: Object,
@@ -112,13 +112,13 @@ const AddressBookTable = ({ classes }: Props) => {
   return (
     <>
       <Row align="center" className={classes.message}>
-        <Col xs={12} end="sm">
+        <Col end="sm" xs={12}>
           <ButtonLink
-            size="lg"
             onClick={() => {
               setSelectedEntry(null)
               setEditCreateEntryModalOpen(!editCreateEntryModalOpen)
             }}
+            size="lg"
             testId="manage-tokens-btn"
           >
             + Create entry
@@ -128,13 +128,13 @@ const AddressBookTable = ({ classes }: Props) => {
       <Block className={classes.formContainer}>
         <TableContainer>
           <Table
-            label="Owners"
             columns={columns}
             data={addressBook}
-            size={addressBook.size}
             defaultFixed
-            disableLoadingOnEmptyTable
             defaultRowsPerPage={25}
+            disableLoadingOnEmptyTable
+            label="Owners"
+            size={addressBook.size}
           >
             {(sortedData: List<OwnerRow>) =>
               sortedData.map((row: AddressBookEntry, index: number) => {
@@ -142,13 +142,13 @@ const AddressBookTable = ({ classes }: Props) => {
                 const hideBorderBottom = index >= 3 && index === sortedData.size - 1 && classes.noBorderBottom
                 return (
                   <TableRow
-                    tabIndex={-1}
-                    key={index}
                     className={cn(classes.hide, hideBorderBottom)}
                     data-testid={ADDRESS_BOOK_ROW_ID}
+                    key={index}
+                    tabIndex={-1}
                   >
                     {autoColumns.map((column: Column) => (
-                      <TableCell key={column.id} style={cellWidth(column.width)} align={column.align} component="td">
+                      <TableCell align={column.align} component="td" key={column.id} style={cellWidth(column.width)}>
                         {column.id === AB_ADDRESS_ID ? (
                           <OwnerAddressTableCell address={row[column.id]} showLinks />
                         ) : (
@@ -161,37 +161,37 @@ const AddressBookTable = ({ classes }: Props) => {
                         <Img
                           alt="Edit entry"
                           className={classes.editEntryButton}
-                          src={RenameOwnerIcon}
                           onClick={() => {
                             setSelectedEntry({
                               entry: { ...row, isOwnerAddress: userOwner },
                             })
                             setEditCreateEntryModalOpen(true)
                           }}
+                          src={RenameOwnerIcon}
                           testId={EDIT_ENTRY_BUTTON}
                         />
                         <Img
                           alt="Remove entry"
                           className={userOwner ? classes.removeEntryButtonDisabled : classes.removeEntryButton}
-                          src={userOwner ? RemoveOwnerIconDisabled : RemoveOwnerIcon}
                           onClick={() => {
                             if (!userOwner) {
                               setSelectedEntry({ entry: row })
                               setDeleteEntryModalOpen(true)
                             }
                           }}
+                          src={userOwner ? RemoveOwnerIconDisabled : RemoveOwnerIcon}
                           testId={REMOVE_ENTRY_BUTTON}
                         />
                         <Button
-                          variant="contained"
-                          size="small"
-                          color="primary"
                           className={classes.send}
-                          testId={SEND_ENTRY_BUTTON}
+                          color="primary"
                           onClick={() => {
                             setSelectedEntry({ entry: row })
                             setSendFundsModalOpen(true)
                           }}
+                          size="small"
+                          testId={SEND_ENTRY_BUTTON}
+                          variant="contained"
                         >
                           <CallMade
                             alt="Send Transaction"
@@ -209,27 +209,27 @@ const AddressBookTable = ({ classes }: Props) => {
         </TableContainer>
       </Block>
       <CreateEditEntryModal
-        onClose={() => setEditCreateEntryModalOpen(false)}
-        isOpen={editCreateEntryModalOpen}
-        newEntryModalHandler={newEntryModalHandler}
         editEntryModalHandler={editEntryModalHandler}
         entryToEdit={selectedEntry}
+        isOpen={editCreateEntryModalOpen}
+        newEntryModalHandler={newEntryModalHandler}
+        onClose={() => setEditCreateEntryModalOpen(false)}
       />
       <DeleteEntryModal
-        onClose={() => setDeleteEntryModalOpen(false)}
-        isOpen={deleteEntryModalOpen}
         deleteEntryModalHandler={deleteEntryModalHandler}
         entryToDelete={selectedEntry}
+        isOpen={deleteEntryModalOpen}
+        onClose={() => setDeleteEntryModalOpen(false)}
       />
       <SendModal
-        onClose={() => setSendFundsModalOpen(false)}
+        activeScreenType="sendFunds"
+        ethBalance={ethBalance}
         isOpen={sendFundsModalOpen}
+        onClose={() => setSendFundsModalOpen(false)}
+        recipientAddress={selectedEntry && selectedEntry.entry ? selectedEntry.entry.address : undefined}
         safeAddress={address}
         safeName={name}
-        ethBalance={ethBalance}
         tokens={activeTokens}
-        activeScreenType="sendFunds"
-        recipientAddress={selectedEntry && selectedEntry.entry ? selectedEntry.entry.address : undefined}
       />
     </>
   )

@@ -1,24 +1,26 @@
 // @flow
-import React, { useEffect, useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import { withSnackbar } from 'notistack'
+import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
-import Block from '~/components/layout/Block'
-import Col from '~/components/layout/Col'
+
+import { styles } from './style'
+
+import Modal from '~/components/Modal'
 import Field from '~/components/forms/Field'
-import Heading from '~/components/layout/Heading'
-import { composeValidators, required, minMaxLength } from '~/components/forms/validator'
-import TextField from '~/components/forms/TextField'
 import GnoForm from '~/components/forms/GnoForm'
-import Row from '~/components/layout/Row'
-import Paragraph from '~/components/layout/Paragraph'
+import TextField from '~/components/forms/TextField'
+import { composeValidators, minMaxLength, required } from '~/components/forms/validator'
+import Block from '~/components/layout/Block'
 import Button from '~/components/layout/Button'
+import Col from '~/components/layout/Col'
+import Heading from '~/components/layout/Heading'
+import Paragraph from '~/components/layout/Paragraph'
+import Row from '~/components/layout/Row'
 import { getNotificationsFromTxType, showSnackbar } from '~/logic/notifications'
 import { TX_NOTIFICATION_TYPES } from '~/logic/safe/transactions'
-import { styles } from './style'
 import { getSafeVersion } from '~/logic/safe/utils/safeVersion'
 import UpdateSafeModal from '~/routes/safe/components/Settings/UpdateSafeModal'
-import Modal from '~/components/Modal'
 import { grantedSelector } from '~/routes/safe/container/selector'
 
 export const SAFE_NAME_INPUT_TEST_ID = 'safe-name-input'
@@ -40,7 +42,7 @@ const SafeDetails = (props: Props) => {
   const classes = useStyles()
   const [safeVersions, setSafeVersions] = React.useState({ current: null, latest: null, needUpdate: false })
   const isUserOwner = useSelector(grantedSelector)
-  const { safeAddress, safeName, updateSafe, enqueueSnackbar, closeSnackbar, createTransaction } = props
+  const { closeSnackbar, createTransaction, enqueueSnackbar, safeAddress, safeName, updateSafe } = props
 
   const [isModalOpen, setModalOpen] = useState(false)
 
@@ -89,12 +91,12 @@ const SafeDetails = (props: Props) => {
                 <Row align="end" grow>
                   <Paragraph>
                     <Button
-                      onClick={handleUpdateSafe}
                       className={classes.saveBtn}
-                      size="small"
-                      variant="contained"
                       color="primary"
+                      onClick={handleUpdateSafe}
+                      size="small"
                       testId={SAFE_NAME_UPDATE_SAFE_BTN_TEST_ID}
+                      variant="contained"
                     >
                       Update Safe
                     </Button>
@@ -110,33 +112,33 @@ const SafeDetails = (props: Props) => {
               </Paragraph>
               <Block className={classes.root}>
                 <Field
-                  name="safeName"
                   component={TextField}
+                  defaultValue={safeName}
+                  name="safeName"
+                  placeholder="Safe name*"
+                  testId={SAFE_NAME_INPUT_TEST_ID}
+                  text="Safe name*"
                   type="text"
                   validate={composeValidators(required, minMaxLength(1, 50))}
-                  placeholder="Safe name*"
-                  text="Safe name*"
-                  defaultValue={safeName}
-                  testId={SAFE_NAME_INPUT_TEST_ID}
                 />
               </Block>
             </Block>
-            <Row className={classes.controlsRow} align="end" grow>
+            <Row align="end" className={classes.controlsRow} grow>
               <Col end="xs">
                 <Button
-                  type="submit"
                   className={classes.saveBtn}
-                  size="small"
-                  variant="contained"
                   color="primary"
+                  size="small"
                   testId={SAFE_NAME_SUBMIT_BTN_TEST_ID}
+                  type="submit"
+                  variant="contained"
                 >
                   Save
                 </Button>
               </Col>
             </Row>
-            <Modal title="Update Safe" description="Update Safe" handleClose={toggleModal} open={isModalOpen}>
-              <UpdateSafeModal onClose={toggleModal} safeAddress={safeAddress} createTransaction={createTransaction} />
+            <Modal description="Update Safe" handleClose={toggleModal} open={isModalOpen} title="Update Safe">
+              <UpdateSafeModal createTransaction={createTransaction} onClose={toggleModal} safeAddress={safeAddress} />
             </Modal>
           </>
         )}

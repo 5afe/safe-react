@@ -1,17 +1,18 @@
 // @flow
-import type { Dispatch as ReduxDispatch } from 'redux'
 import { List } from 'immutable'
-import { type GlobalState } from '~/store/index'
+import type { Dispatch as ReduxDispatch } from 'redux'
+
+import { getGnosisSafeInstanceAt } from '~/logic/contracts/safeContracts'
+import { getLocalSafe, getSafeName } from '~/logic/safe/utils'
+import { sameAddress } from '~/logic/wallets/ethAddresses'
+import { getBalanceInEtherOf, getWeb3 } from '~/logic/wallets/getWeb3'
+import addSafe from '~/routes/safe/store/actions/addSafe'
+import addSafeOwner from '~/routes/safe/store/actions/addSafeOwner'
+import removeSafeOwner from '~/routes/safe/store/actions/removeSafeOwner'
+import updateSafeThreshold from '~/routes/safe/store/actions/updateSafeThreshold'
 import { makeOwner } from '~/routes/safe/store/models/owner'
 import type { SafeProps } from '~/routes/safe/store/models/safe'
-import addSafe from '~/routes/safe/store/actions/addSafe'
-import { getSafeName, getLocalSafe } from '~/logic/safe/utils'
-import { getGnosisSafeInstanceAt } from '~/logic/contracts/safeContracts'
-import { getBalanceInEtherOf, getWeb3 } from '~/logic/wallets/getWeb3'
-import { sameAddress } from '~/logic/wallets/ethAddresses'
-import removeSafeOwner from '~/routes/safe/store/actions/removeSafeOwner'
-import addSafeOwner from '~/routes/safe/store/actions/addSafeOwner'
-import updateSafeThreshold from '~/routes/safe/store/actions/updateSafeThreshold'
+import { type GlobalState } from '~/store/index'
 
 const buildOwnersFrom = (
   safeOwners: string[],

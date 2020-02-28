@@ -1,15 +1,17 @@
 // @flow
+import Card from '@material-ui/core/Card'
+import TablePagination from '@material-ui/core/TablePagination'
+import { makeStyles } from '@material-ui/core/styles'
 import React from 'react'
 import { useSelector } from 'react-redux'
-import { makeStyles } from '@material-ui/core/styles'
-import TablePagination from '@material-ui/core/TablePagination'
-import Card from '@material-ui/core/Card'
-import { screenSm, fontColor } from '~/theme/variables'
+
 import Item from './components/Item'
+
+import { ETHEREUM_NETWORK } from '~/logic/wallets/getWeb3'
 import { getConfiguredSource } from '~/routes/safe/components/Balances/Collectibles/sources'
 import type { AssetCollectible, CollectibleData } from '~/routes/safe/components/Balances/Collectibles/types'
-import { ETHEREUM_NETWORK } from '~/logic/wallets/getWeb3'
 import { safeParamAddressFromStateSelector } from '~/routes/safe/store/selectors'
+import { fontColor, screenSm } from '~/theme/variables'
 
 const useStyles = makeStyles({
   cardInner: {
@@ -92,7 +94,7 @@ const Collectibles = ({ networkName = ETHEREUM_NETWORK.RINKEBY }: Props) => {
             </div>
             <div className={classes.gridRow}>
               {categories.data.map((collectible: AssetCollectible) => (
-                <Item key={`${collectible.assetAddress}_${collectible.tokenId}`} data={collectible} />
+                <Item data={collectible} key={`${collectible.assetAddress}_${collectible.tokenId}`} />
               ))}
             </div>
           </React.Fragment>

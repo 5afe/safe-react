@@ -1,10 +1,11 @@
 // @flow
 import { List, Map } from 'immutable'
-import { createSelector, type Selector } from 'reselect'
+import { type Selector, createSelector } from 'reselect'
+
+import { type Token } from '~/logic/tokens/store/model/token'
+import { TOKEN_REDUCER_ID } from '~/logic/tokens/store/reducer/tokens'
 import { type RouterProps } from '~/routes/safe/store/selectors'
 import { type GlobalState } from '~/store'
-import { TOKEN_REDUCER_ID } from '~/logic/tokens/store/reducer/tokens'
-import { type Token } from '~/logic/tokens/store/model/token'
 
 export const tokensSelector = (state: GlobalState) => state[TOKEN_REDUCER_ID]
 

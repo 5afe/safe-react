@@ -1,13 +1,14 @@
 // @flow
-import * as React from 'react'
-import { withStyles } from '@material-ui/core/styles'
 import IconButton from '@material-ui/core/IconButton'
+import { withStyles } from '@material-ui/core/styles'
 import ExpandLess from '@material-ui/icons/ExpandLess'
 import ExpandMore from '@material-ui/icons/ExpandMore'
+import * as React from 'react'
+
+import { type Open } from '~/components/hoc/OpenHoc'
 import Col from '~/components/layout/Col'
 import Divider from '~/components/layout/Divider'
-import { type Open } from '~/components/hoc/OpenHoc'
-import { sm, md, screenSm } from '~/theme/variables'
+import { md, screenSm, sm } from '~/theme/variables'
 
 type Props = Open & {
   classes: Object,
@@ -56,15 +57,15 @@ class Provider extends React.Component<Props> {
   }
 
   render() {
-    const { open, toggle, children, classes, info } = this.props
+    const { children, classes, info, open, toggle } = this.props
 
     return (
       <>
-        <div ref={this.myRef} className={classes.root}>
+        <div className={classes.root} ref={this.myRef}>
           <Divider />
-          <Col end="sm" middle="xs" className={classes.provider} onClick={toggle}>
+          <Col className={classes.provider} end="sm" middle="xs" onClick={toggle}>
             {info}
-            <IconButton disableRipple className={classes.expand}>
+            <IconButton className={classes.expand} disableRipple>
               {open ? <ExpandLess /> : <ExpandMore />}
             </IconButton>
           </Col>
