@@ -1,35 +1,37 @@
 // @flow
-import * as React from 'react'
-import { withStyles } from '@material-ui/core/styles'
 import InputAdornment from '@material-ui/core/InputAdornment'
-import CheckCircle from '@material-ui/icons/CheckCircle'
 import MenuItem from '@material-ui/core/MenuItem'
+import { withStyles } from '@material-ui/core/styles'
+import CheckCircle from '@material-ui/icons/CheckCircle'
+import * as React from 'react'
 import { withRouter } from 'react-router-dom'
-import Field from '~/components/forms/Field'
-import TextField from '~/components/forms/TextField'
-import SelectField from '~/components/forms/SelectField'
+
+import { styles } from './style'
+import { getAddressValidator } from './validators'
+
+import QRIcon from '~/assets/icons/qrcode.svg'
+import trash from '~/assets/icons/trash.svg'
+import ScanQRModal from '~/components/ScanQRModal'
+import OpenPaper from '~/components/Stepper/OpenPaper'
 import AddressInput from '~/components/forms/AddressInput'
-import { required, composeValidators, noErrorsOn, mustBeInteger, minValue } from '~/components/forms/validator'
+import Field from '~/components/forms/Field'
+import SelectField from '~/components/forms/SelectField'
+import TextField from '~/components/forms/TextField'
+import { composeValidators, minValue, mustBeInteger, noErrorsOn, required } from '~/components/forms/validator'
 import Block from '~/components/layout/Block'
 import Button from '~/components/layout/Button'
-import Row from '~/components/layout/Row'
-import Img from '~/components/layout/Img'
 import Col from '~/components/layout/Col'
+import Hairline from '~/components/layout/Hairline'
+import Img from '~/components/layout/Img'
+import Paragraph from '~/components/layout/Paragraph'
+import Row from '~/components/layout/Row'
 import {
   FIELD_CONFIRMATIONS,
-  getOwnerNameBy,
-  getOwnerAddressBy,
   getNumOwnersFrom,
+  getOwnerAddressBy,
+  getOwnerNameBy,
 } from '~/routes/open/components/fields'
-import Paragraph from '~/components/layout/Paragraph'
-import OpenPaper from '~/components/Stepper/OpenPaper'
 import { getAccountsFrom } from '~/routes/open/utils/safeDataExtractor'
-import Hairline from '~/components/layout/Hairline'
-import trash from '~/assets/icons/trash.svg'
-import QRIcon from '~/assets/icons/qrcode.svg'
-import ScanQRModal from '~/components/ScanQRModal'
-import { getAddressValidator } from './validators'
-import { styles } from './style'
 
 type Props = {
   classes: Object,
@@ -64,7 +66,7 @@ export const calculateValuesAfterRemoving = (index: number, notRemovedOwners: nu
 }
 
 const SafeOwners = (props: Props) => {
-  const { classes, errors, otherAccounts, values, form } = props
+  const { classes, errors, form, otherAccounts, values } = props
 
   const validOwners = getNumOwnersFrom(values)
 
@@ -106,7 +108,7 @@ const SafeOwners = (props: Props) => {
   return (
     <>
       <Block className={classes.title}>
-        <Paragraph noMargin size="md" color="primary">
+        <Paragraph color="primary" noMargin size="md">
           Your Safe will have one or more owners. We have prefilled the first owner with your connected wallet details,
           but you are free to change this to a different owner.
           <br />
@@ -127,22 +129,24 @@ const SafeOwners = (props: Props) => {
           const addressName = getOwnerAddressBy(index)
 
           return (
-            <Row key={`owner${index}`} className={classes.owner}>
+            <Row className={classes.owner} key={`owner${index}`}>
               <Col className={classes.ownerName} xs={4}>
                 <Field
                   className={classes.name}
-                  name={getOwnerNameBy(index)}
                   component={TextField}
-                  type="text"
-                  validate={required}
+                  name={getOwnerNameBy(index)}
                   placeholder="Owner Name*"
                   text="Owner Name"
+                  type="text"
+                  validate={required}
                 />
               </Col>
               <Col className={classes.ownerAddress} xs={6}>
                 <AddressInput
-                  name={addressName}
                   component={TextField}
+                  fieldMutator={val => {
+                    form.mutators.setValue(addressName, val)
+                  }}
                   inputAdornment={
                     noErrorsOn(addressName, errors) && {
                       endAdornment: (
@@ -152,50 +156,48 @@ const SafeOwners = (props: Props) => {
                       ),
                     }
                   }
-                  fieldMutator={val => {
-                    form.mutators.setValue(addressName, val)
-                  }}
-                  type="text"
-                  validators={[getAddressValidator(otherAccounts, index)]}
+                  name={addressName}
                   placeholder="Owner Address*"
                   text="Owner Address"
+                  type="text"
+                  validators={[getAddressValidator(otherAccounts, index)]}
                 />
               </Col>
-              <Col xs={1} center="xs" middle="xs" className={classes.remove}>
+              <Col center="xs" className={classes.remove} middle="xs" xs={1}>
                 <Img
-                  src={QRIcon}
-                  height={20}
                   alt="Scan QR"
+                  height={20}
                   onClick={() => {
                     openQrModal(addressName)
                   }}
+                  src={QRIcon}
                 />
               </Col>
-              <Col xs={1} center="xs" middle="xs" className={classes.remove}>
-                {index > 0 && <Img src={trash} height={20} alt="Delete" onClick={onRemoveRow(index)} />}
+              <Col center="xs" className={classes.remove} middle="xs" xs={1}>
+                {index > 0 && <Img alt="Delete" height={20} onClick={onRemoveRow(index)} src={trash} />}
               </Col>
             </Row>
           )
         })}
       </Block>
-      <Row align="center" grow className={classes.add} margin="xl">
-        <Button color="secondary" onClick={onAddOwner} data-testid="add-owner-btn">
-          <Paragraph size="md" noMargin>
+      <Row align="center" className={classes.add} grow margin="xl">
+        <Button color="secondary" data-testid="add-owner-btn" onClick={onAddOwner}>
+          <Paragraph noMargin size="md">
             {ADD_OWNER_BUTTON}
           </Paragraph>
         </Button>
       </Row>
-      <Block margin="md" padding="md" className={classes.owner}>
-        <Paragraph size="md" color="primary">
+      <Block className={classes.owner} margin="md" padding="md">
+        <Paragraph color="primary" size="md">
           Any transaction requires the confirmation of:
         </Paragraph>
-        <Row className={classes.ownersAmount} margin="xl" align="center">
+        <Row align="center" className={classes.ownersAmount} margin="xl">
           <Col className={classes.ownersAmountItem} xs={2}>
             <Field
-              name={FIELD_CONFIRMATIONS}
               component={SelectField}
-              validate={composeValidators(required, mustBeInteger, minValue(1))}
               data-testid="threshold-select-input"
+              name={FIELD_CONFIRMATIONS}
+              validate={composeValidators(required, mustBeInteger, minValue(1))}
             >
               {[...Array(Number(validOwners))].map((x, index) => (
                 <MenuItem key={`selectOwner${index}`} value={`${index + 1}`}>
@@ -205,26 +207,26 @@ const SafeOwners = (props: Props) => {
             </Field>
           </Col>
           <Col className={classes.ownersAmountItem} xs={10}>
-            <Paragraph size="lg" color="primary" noMargin className={classes.owners}>
+            <Paragraph className={classes.owners} color="primary" noMargin size="lg">
               out of {validOwners} owner(s)
             </Paragraph>
           </Col>
         </Row>
       </Block>
-      {qrModalOpen && <ScanQRModal isOpen={qrModalOpen} onScan={handleScan} onClose={closeQrModal} />}
+      {qrModalOpen && <ScanQRModal isOpen={qrModalOpen} onClose={closeQrModal} onScan={handleScan} />}
     </>
   )
 }
 
 const SafeOwnersForm = withStyles(styles)(withRouter(SafeOwners))
 
-const SafeOwnersPage = ({ updateInitialProps }: Object) => (controls: React.Node, { values, errors, form }: Object) => (
+const SafeOwnersPage = ({ updateInitialProps }: Object) => (controls: React.Node, { errors, form, values }: Object) => (
   <>
     <OpenPaper controls={controls} padding={false}>
       <SafeOwnersForm
-        otherAccounts={getAccountsFrom(values)}
         errors={errors}
         form={form}
+        otherAccounts={getAccountsFrom(values)}
         updateInitialProps={updateInitialProps}
         values={values}
       />

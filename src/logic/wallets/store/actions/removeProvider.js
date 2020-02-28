@@ -1,10 +1,11 @@
 // @flow
-import { createAction } from 'redux-actions'
 import type { Dispatch as ReduxDispatch } from 'redux'
-import { NOTIFICATIONS, enhanceSnackbarForAction } from '~/logic/notifications'
-import { resetWeb3 } from '~/logic/wallets/getWeb3'
+import { createAction } from 'redux-actions'
+
 import { onboard } from '~/components/ConnectButton'
+import { NOTIFICATIONS, enhanceSnackbarForAction } from '~/logic/notifications'
 import enqueueSnackbar from '~/logic/notifications/store/actions/enqueueSnackbar'
+import { resetWeb3 } from '~/logic/wallets/getWeb3'
 
 export const REMOVE_PROVIDER = 'REMOVE_PROVIDER'
 
@@ -16,10 +17,7 @@ export default () => (dispatch: ReduxDispatch<*>) => {
   dispatch(removeProvider())
   dispatch(
     enqueueSnackbar(
-      enhanceSnackbarForAction(
-        NOTIFICATIONS.WALLET_DISCONNECTED_MSG,
-        NOTIFICATIONS.WALLET_DISCONNECTED_MSG.key,
-      ),
+      enhanceSnackbarForAction(NOTIFICATIONS.WALLET_DISCONNECTED_MSG, NOTIFICATIONS.WALLET_DISCONNECTED_MSG.key),
     ),
   )
 }

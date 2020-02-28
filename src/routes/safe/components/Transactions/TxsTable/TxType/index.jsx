@@ -1,15 +1,17 @@
 // @flow
-import * as React from 'react'
 import { makeStyles } from '@material-ui/core/styles'
-import Block from '~/components/layout/Block'
-import Paragraph from '~/components/layout/Paragraph/'
-import Img from '~/components/layout/Img'
-import { type TransactionType } from '~/routes/safe/store/models/transaction'
-import OutgoingTxIcon from './assets/outgoing.svg'
-import IncomingTxIcon from './assets/incoming.svg'
+import * as React from 'react'
+
 import CustomTxIcon from './assets/custom.svg'
+import IncomingTxIcon from './assets/incoming.svg'
+import OutgoingTxIcon from './assets/outgoing.svg'
 import SettingsTxIcon from './assets/settings.svg'
 import { styles } from './style'
+
+import Block from '~/components/layout/Block'
+import Img from '~/components/layout/Img'
+import Paragraph from '~/components/layout/Paragraph/'
+import { type TransactionType } from '~/routes/safe/store/models/transaction'
 
 type Props = {
   txType: TransactionType,
@@ -42,7 +44,7 @@ const TxType = ({ txType }: Props) => {
 
   return (
     <Block className={classes.container}>
-      <Img src={typeToIcon[txType]} alt={typeToLabel[txType]} className={classes.img} />
+      <Img alt={typeToLabel[txType]} className={classes.img} src={typeToIcon[txType]} />
       <Paragraph className={classes.type} noMargin>
         {typeToLabel[txType]}
       </Paragraph>

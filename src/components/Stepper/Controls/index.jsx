@@ -1,9 +1,10 @@
 // @flow
 import * as React from 'react'
+
 import Button from '~/components/layout/Button'
 import Col from '~/components/layout/Col'
 import Row from '~/components/layout/Row'
-import { sm, boldFont } from '~/theme/variables'
+import { boldFont, sm } from '~/theme/variables'
 
 const controlStyle = {
   backgroundColor: 'white',
@@ -30,7 +31,7 @@ type Props = {
   buttonLabels?: Array<string>,
 }
 
-const Controls = ({ onPrevious, firstPage, penultimate, lastPage, disabled, currentStep, buttonLabels }: Props) => {
+const Controls = ({ buttonLabels, currentStep, disabled, firstPage, lastPage, onPrevious, penultimate }: Props) => {
   const back = firstPage ? 'Cancel' : 'Back'
 
   let next
@@ -43,18 +44,18 @@ const Controls = ({ onPrevious, firstPage, penultimate, lastPage, disabled, curr
   }
 
   return (
-    <Row style={controlStyle} align="end" grow>
-      <Col xs={12} end="xs">
-        <Button style={firstButtonStyle} type="button" onClick={onPrevious} size="small">
+    <Row align="end" grow style={controlStyle}>
+      <Col end="xs" xs={12}>
+        <Button onClick={onPrevious} size="small" style={firstButtonStyle} type="button">
           {back}
         </Button>
         <Button
-          style={secondButtonStyle}
-          size="small"
-          variant="contained"
           color="primary"
-          type="submit"
           disabled={disabled}
+          size="small"
+          style={secondButtonStyle}
+          type="submit"
+          variant="contained"
         >
           {next}
         </Button>

@@ -1,15 +1,17 @@
 // @flow
-import React from 'react'
 import IconButton from '@material-ui/core/IconButton'
 import Close from '@material-ui/icons/Close'
 import { withStyles } from '@material-ui/styles'
-import Row from '~/components/layout/Row'
-import Paragraph from '~/components/layout/Paragraph'
-import Hairline from '~/components/layout/Hairline'
+import React from 'react'
+
+import { styles } from './style'
+
 import GnoForm from '~/components/forms/GnoForm'
 import Block from '~/components/layout/Block'
 import Button from '~/components/layout/Button'
-import { styles } from './style'
+import Hairline from '~/components/layout/Hairline'
+import Paragraph from '~/components/layout/Paragraph'
+import Row from '~/components/layout/Row'
 import { upgradeSafeToLatestVersion } from '~/logic/safe/utils/upgradeSafe'
 
 type Props = {
@@ -19,7 +21,7 @@ type Props = {
   safeAddress: string,
 }
 
-const UpdateSafeModal = ({ onClose, classes, safeAddress, createTransaction }: Props) => {
+const UpdateSafeModal = ({ classes, createTransaction, onClose, safeAddress }: Props) => {
   const handleSubmit = async () => {
     // Call the update safe method
     await upgradeSafeToLatestVersion(safeAddress, createTransaction)
@@ -28,11 +30,11 @@ const UpdateSafeModal = ({ onClose, classes, safeAddress, createTransaction }: P
 
   return (
     <>
-      <Row align="center" grow className={classes.heading}>
-        <Paragraph className={classes.headingText} weight="bolder" noMargin>
+      <Row align="center" className={classes.heading} grow>
+        <Paragraph className={classes.headingText} noMargin weight="bolder">
           Change required confirmations
         </Paragraph>
-        <IconButton onClick={onClose} disableRipple>
+        <IconButton disableRipple onClick={onClose}>
           <Close className={classes.close} />
         </IconButton>
       </Row>
@@ -64,7 +66,7 @@ const UpdateSafeModal = ({ onClose, classes, safeAddress, createTransaction }: P
               <Button minWidth={140} onClick={onClose}>
                 Back
               </Button>
-              <Button type="submit" color="primary" minWidth={140} variant="contained">
+              <Button color="primary" minWidth={140} type="submit" variant="contained">
                 Update Safe
               </Button>
             </Row>

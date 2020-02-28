@@ -1,22 +1,24 @@
 // @flow
-import React from 'react'
+import { withStyles } from '@material-ui/core/styles'
 import cn from 'classnames'
 import { List } from 'immutable'
-import { withStyles } from '@material-ui/core/styles'
+import React from 'react'
+
+import OwnersList from './OwnersList'
+import CheckLargeFilledGreenCircle from './assets/check-large-filled-green.svg'
+import CheckLargeFilledRedCircle from './assets/check-large-filled-red.svg'
+import ConfirmLargeGreenCircle from './assets/confirm-large-green.svg'
+import ConfirmLargeGreyCircle from './assets/confirm-large-grey.svg'
+import ConfirmLargeRedCircle from './assets/confirm-large-red.svg'
+import { styles } from './style'
+
 import Block from '~/components/layout/Block'
 import Col from '~/components/layout/Col'
 import Img from '~/components/layout/Img'
-import { type Owner } from '~/routes/safe/store/models/owner'
-import { makeTransaction, type Transaction } from '~/routes/safe/store/models/transaction'
-import { TX_TYPE_CONFIRMATION } from '~/logic/safe/transactions/send'
-import OwnersList from './OwnersList'
-import CheckLargeFilledGreenCircle from './assets/check-large-filled-green.svg'
-import ConfirmLargeGreenCircle from './assets/confirm-large-green.svg'
-import CheckLargeFilledRedCircle from './assets/check-large-filled-red.svg'
-import ConfirmLargeRedCircle from './assets/confirm-large-red.svg'
-import ConfirmLargeGreyCircle from './assets/confirm-large-grey.svg'
-import { styles } from './style'
 import Paragraph from '~/components/layout/Paragraph/index'
+import { TX_TYPE_CONFIRMATION } from '~/logic/safe/transactions/send'
+import { type Owner } from '~/routes/safe/store/models/owner'
+import { type Transaction, makeTransaction } from '~/routes/safe/store/models/transaction'
 
 type Props = {
   canExecute: boolean,
@@ -134,10 +136,10 @@ const OwnersColumn = ({
   const cancelThreshold = tx.isExecuted ? cancelTx.confirmations.size : threshold
 
   return (
-    <Col xs={6} className={classes.rightCol} layout="block">
+    <Col className={classes.rightCol} layout="block" xs={6}>
       <Block className={cn(classes.ownerListTitle, (thresholdReached || tx.isExecuted) && classes.ownerListTitleDone)}>
         <div className={classes.circleState}>
-          <Img src={thresholdReached || tx.isExecuted ? CheckLargeFilledGreenCircle : ConfirmLargeGreenCircle} alt="" />
+          <Img alt="" src={thresholdReached || tx.isExecuted ? CheckLargeFilledGreenCircle : ConfirmLargeGreenCircle} />
         </div>
         {tx.isExecuted
           ? `Confirmed [${tx.confirmations.size}/${tx.confirmations.size}]`
@@ -166,8 +168,8 @@ const OwnersColumn = ({
         />
         <div className={classes.circleState}>
           <Img
-            src={cancelThresholdReached || cancelTx.isExecuted ? CheckLargeFilledRedCircle : ConfirmLargeRedCircle}
             alt=""
+            src={cancelThresholdReached || cancelTx.isExecuted ? CheckLargeFilledRedCircle : ConfirmLargeRedCircle}
           />
         </div>
         {cancelTx.isExecuted
@@ -175,13 +177,13 @@ const OwnersColumn = ({
           : `Rejected [${cancelTx.confirmations.size}/${cancelThreshold}]`}
       </Block>
       <OwnersList
-        isCancelTx
         executor={cancelTx.executor}
+        isCancelTx
         onTxReject={onTxReject}
         ownersUnconfirmed={ownersUnconfirmedCancel}
         ownersWhoConfirmed={ownersWhoConfirmedCancel}
-        showRejectBtn={showRejectBtn}
         showExecuteRejectBtn={showExecuteRejectBtn}
+        showRejectBtn={showRejectBtn}
         thresholdReached={cancelThresholdReached}
         userAddress={userAddress}
       />
@@ -201,9 +203,9 @@ const OwnersColumn = ({
           )}
         />
         <div className={classes.circleState}>
-          {!tx.isExecuted && !cancelTx.isExecuted && <Img src={ConfirmLargeGreyCircle} alt="Confirm / Execute tx" />}
-          {tx.isExecuted && <Img src={CheckLargeFilledGreenCircle} alt="TX Executed icon" />}
-          {cancelTx.isExecuted && <Img src={CheckLargeFilledRedCircle} alt="TX Executed icon" />}
+          {!tx.isExecuted && !cancelTx.isExecuted && <Img alt="Confirm / Execute tx" src={ConfirmLargeGreyCircle} />}
+          {tx.isExecuted && <Img alt="TX Executed icon" src={CheckLargeFilledGreenCircle} />}
+          {cancelTx.isExecuted && <Img alt="TX Executed icon" src={CheckLargeFilledRedCircle} />}
         </div>
         Executed
       </Block>

@@ -1,18 +1,20 @@
 // @flow
-import * as React from 'react'
 import OpenInNew from '@material-ui/icons/OpenInNew'
-import Block from '~/components/layout/Block'
-import Heading from '~/components/layout/Heading'
-import Img from '~/components/layout/Img'
-import Button from '~/components/layout/Button'
-import Link from '~/components/layout/Link'
-import ConnectButton from '~/components/ConnectButton'
-import { OPEN_ADDRESS, LOAD_ADDRESS } from '~/routes/routes'
-import { marginButtonImg, secondary } from '~/theme/variables'
+import * as React from 'react'
+
 import styles from './Layout.scss'
 
-const safe = require('../assets/safe.svg')
+import ConnectButton from '~/components/ConnectButton'
+import Block from '~/components/layout/Block'
+import Button from '~/components/layout/Button'
+import Heading from '~/components/layout/Heading'
+import Img from '~/components/layout/Img'
+import Link from '~/components/layout/Link'
+import { LOAD_ADDRESS, OPEN_ADDRESS } from '~/routes/routes'
+import { marginButtonImg, secondary } from '~/theme/variables'
+
 const plus = require('../assets/new.svg')
+const safe = require('../assets/safe.svg')
 
 type Props = {
   provider: string,
@@ -34,38 +36,38 @@ const buttonStyle = {
   marginLeft: marginButtonImg,
 }
 
-export const CreateSafe = ({ size, provider }: SafeProps) => (
+export const CreateSafe = ({ provider, size }: SafeProps) => (
   <Button
+    color="primary"
     component={Link}
+    disabled={!provider}
+    minHeight={42}
+    minWidth={240}
+    size={size || 'medium'}
     to={OPEN_ADDRESS}
     variant="contained"
-    size={size || 'medium'}
-    color="primary"
-    disabled={!provider}
-    minWidth={240}
-    minHeight={42}
   >
-    <Img src={plus} height={14} alt="Safe" />
+    <Img alt="Safe" height={14} src={plus} />
     <div style={buttonStyle}>Create new Safe</div>
   </Button>
 )
 
-export const LoadSafe = ({ size, provider }: SafeProps) => (
+export const LoadSafe = ({ provider, size }: SafeProps) => (
   <Button
-    component={Link}
-    to={LOAD_ADDRESS}
-    variant="outlined"
-    size={size || 'medium'}
     color="primary"
+    component={Link}
     disabled={!provider}
     minWidth={240}
+    size={size || 'medium'}
+    to={LOAD_ADDRESS}
+    variant="outlined"
   >
-    <Img src={safe} height={14} alt="Safe" />
+    <Img alt="Safe" height={14} src={safe} />
     <div style={buttonStyle}>Load existing Safe</div>
   </Button>
 )
 
-const Welcome = ({ provider, isOldMultisigMigration }: Props) => {
+const Welcome = ({ isOldMultisigMigration, provider }: Props) => {
   const headingText = isOldMultisigMigration ? (
     <>
       We will replicate the owner structure from your existing Gnosis MultiSig
@@ -86,18 +88,18 @@ const Welcome = ({ provider, isOldMultisigMigration }: Props) => {
   )
   return (
     <Block className={styles.safe}>
-      <Heading tag="h1" weight="bold" align="center" margin="lg">
+      <Heading align="center" margin="lg" tag="h1" weight="bold">
         Welcome to
         <br />
         Gnosis Safe Multisig
       </Heading>
-      <Heading tag="h3" align="center" margin="xl">
+      <Heading align="center" margin="xl" tag="h3">
         {headingText}
         <a
           className={styles.learnMoreLink}
           href="https://safe.gnosis.io/teams"
-          target="_blank"
           rel="noopener noreferrer"
+          target="_blank"
         >
           Learn more
           <OpenInNew style={openIconStyle} />
@@ -106,18 +108,18 @@ const Welcome = ({ provider, isOldMultisigMigration }: Props) => {
       {provider ? (
         <>
           <Block className={styles.safeActions} margin="md">
-            <CreateSafe size="large" provider={provider} />
+            <CreateSafe provider={provider} size="large" />
           </Block>
           <Block className={styles.safeActions} margin="md">
-            <LoadSafe size="large" provider={provider} />
+            <LoadSafe provider={provider} size="large" />
           </Block>
         </>
       ) : (
-        <Block margin="md" className={styles.connectWallet}>
-          <Heading tag="h3" align="center" margin="md">
+        <Block className={styles.connectWallet} margin="md">
+          <Heading align="center" margin="md" tag="h3">
             Get Started by Connecting a Wallet
           </Heading>
-          <ConnectButton minWidth={240} minHeight={42} />
+          <ConnectButton minHeight={42} minWidth={240} />
         </Block>
       )}
     </Block>

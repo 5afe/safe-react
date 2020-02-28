@@ -1,24 +1,26 @@
 // @flow
-import React, { useState, useEffect } from 'react'
-import Close from '@material-ui/icons/Close'
+import Checkbox from '@material-ui/core/Checkbox'
+import FormControlLabel from '@material-ui/core/FormControlLabel'
 import IconButton from '@material-ui/core/IconButton'
 import { withStyles } from '@material-ui/core/styles'
-import FormControlLabel from '@material-ui/core/FormControlLabel'
-import Checkbox from '@material-ui/core/Checkbox'
+import Close from '@material-ui/icons/Close'
 import { withSnackbar } from 'notistack'
+import React, { useEffect, useState } from 'react'
+
+import { styles } from './style'
+
 import Modal from '~/components/Modal'
-import Hairline from '~/components/layout/Hairline'
-import Button from '~/components/layout/Button'
-import Row from '~/components/layout/Row'
-import Bold from '~/components/layout/Bold'
 import Block from '~/components/layout/Block'
+import Bold from '~/components/layout/Bold'
+import Button from '~/components/layout/Button'
+import Hairline from '~/components/layout/Hairline'
 import Paragraph from '~/components/layout/Paragraph'
-import { getWeb3 } from '~/logic/wallets/getWeb3'
+import Row from '~/components/layout/Row'
+import { TX_NOTIFICATION_TYPES } from '~/logic/safe/transactions'
 import { estimateTxGasCosts } from '~/logic/safe/transactions/gasNew'
 import { formatAmount } from '~/logic/tokens/utils/formatAmount'
-import { TX_NOTIFICATION_TYPES } from '~/logic/safe/transactions'
+import { getWeb3 } from '~/logic/wallets/getWeb3'
 import { type Transaction } from '~/routes/safe/store/models/transaction'
-import { styles } from './style'
 
 export const APPROVE_TX_MODAL_SUBMIT_BTN_TEST_ID = 'approve-tx-modal-submit-btn'
 export const REJECT_TX_MODAL_SUBMIT_BTN_TEST_ID = 'reject-tx-modal-submit-btn'
@@ -64,23 +66,23 @@ const getModalTitleAndDescription = (thresholdReached: boolean, isCancelTx?: boo
 }
 
 const ApproveTxModal = ({
-  onClose,
-  isOpen,
-  isCancelTx,
+  canExecute,
   classes,
+  closeSnackbar,
+  enqueueSnackbar,
+  isCancelTx,
+  isOpen,
+  onClose,
   processTransaction,
-  tx,
   safeAddress,
   threshold,
-  canExecute,
   thresholdReached,
+  tx,
   userAddress,
-  enqueueSnackbar,
-  closeSnackbar,
 }: Props) => {
   const [approveAndExecute, setApproveAndExecute] = useState<boolean>(canExecute)
   const [gasCosts, setGasCosts] = useState<string>('< 0.001')
-  const { title, description } = getModalTitleAndDescription(thresholdReached, isCancelTx)
+  const { description, title } = getModalTitleAndDescription(thresholdReached, isCancelTx)
   const oneConfirmationLeft = !thresholdReached && tx.confirmations.size + 1 === threshold
   const isTheTxReadyToBeExecuted = oneConfirmationLeft ? true : thresholdReached
 
@@ -128,12 +130,12 @@ const ApproveTxModal = ({
   }
 
   return (
-    <Modal title={title} description={description} handleClose={onClose} open={isOpen}>
-      <Row align="center" grow className={classes.heading}>
-        <Paragraph weight="bolder" className={classes.headingText} noMargin>
+    <Modal description={description} handleClose={onClose} open={isOpen} title={title}>
+      <Row align="center" className={classes.heading} grow>
+        <Paragraph className={classes.headingText} noMargin weight="bolder">
           {title}
         </Paragraph>
-        <IconButton onClick={onClose} disableRipple>
+        <IconButton disableRipple onClick={onClose}>
           <Close className={classes.closeIcon} />
         </IconButton>
       </Row>
@@ -141,7 +143,7 @@ const ApproveTxModal = ({
       <Block className={classes.container}>
         <Row style={{ flexDirection: 'column' }}>
           <Paragraph>{description}</Paragraph>
-          <Paragraph size="sm" color="medium">
+          <Paragraph color="medium" size="sm">
             Transaction nonce:
             <br />
             <Bold className={classes.nonceNumber}>{tx.nonce}</Bold>
@@ -155,7 +157,7 @@ const ApproveTxModal = ({
               </Paragraph>
               {!isCancelTx && (
                 <FormControlLabel
-                  control={<Checkbox onChange={handleExecuteCheckbox} checked={approveAndExecute} color="primary" />}
+                  control={<Checkbox checked={approveAndExecute} color="primary" onChange={handleExecuteCheckbox} />}
                   label="Execute transaction"
                 />
               )}
@@ -171,17 +173,17 @@ const ApproveTxModal = ({
         </Row>
       </Block>
       <Row align="center" className={classes.buttonRow}>
-        <Button minWidth={140} minHeight={42} onClick={onClose}>
+        <Button minHeight={42} minWidth={140} onClick={onClose}>
           Exit
         </Button>
         <Button
-          type="submit"
-          variant="contained"
-          minWidth={214}
-          minHeight={42}
           color={isCancelTx ? 'secondary' : 'primary'}
+          minHeight={42}
+          minWidth={214}
           onClick={approveTx}
           testId={isCancelTx ? REJECT_TX_MODAL_SUBMIT_BTN_TEST_ID : APPROVE_TX_MODAL_SUBMIT_BTN_TEST_ID}
+          type="submit"
+          variant="contained"
         >
           {title}
         </Button>

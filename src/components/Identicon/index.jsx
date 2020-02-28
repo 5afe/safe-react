@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react'
+
 import { toDataUrl } from './blockies'
 
 type Props = {
@@ -63,9 +64,9 @@ export default class Identicon extends React.PureComponent<Props> {
   }
 
   render() {
-    const { diameter, className } = this.props
+    const { className, diameter } = this.props
     const style = this.getStyleFrom(diameter)
 
-    return <div className={className} style={style} ref={this.identicon} />
+    return <div className={className} ref={this.identicon} style={style} />
   }
 }

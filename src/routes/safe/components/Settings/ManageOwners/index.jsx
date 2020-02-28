@@ -1,41 +1,44 @@
 // @flow
-import React from 'react'
-import cn from 'classnames'
-import { List } from 'immutable'
-import { withStyles } from '@material-ui/core/styles'
-import TableRow from '@material-ui/core/TableRow'
 import TableCell from '@material-ui/core/TableCell'
 import TableContainer from '@material-ui/core/TableContainer'
-import Block from '~/components/layout/Block'
-import Col from '~/components/layout/Col'
-import Table from '~/components/Table'
-import { type Column, cellWidth } from '~/components/Table/TableHead'
-import Row from '~/components/layout/Row'
-import Heading from '~/components/layout/Heading'
-import Hairline from '~/components/layout/Hairline'
-import Button from '~/components/layout/Button'
-import Img from '~/components/layout/Img'
+import TableRow from '@material-ui/core/TableRow'
+import { withStyles } from '@material-ui/core/styles'
+import cn from 'classnames'
+import { List } from 'immutable'
+import React from 'react'
+
+import RemoveOwnerIcon from '../assets/icons/bin.svg'
+
 import AddOwnerModal from './AddOwnerModal'
-import RemoveOwnerModal from './RemoveOwnerModal'
-import ReplaceOwnerModal from './ReplaceOwnerModal'
 import EditOwnerModal from './EditOwnerModal'
 import OwnerAddressTableCell from './OwnerAddressTableCell'
-import type { Owner } from '~/routes/safe/store/models/owner'
+import RemoveOwnerModal from './RemoveOwnerModal'
+import ReplaceOwnerModal from './ReplaceOwnerModal'
+import RenameOwnerIcon from './assets/icons/rename-owner.svg'
+import ReplaceOwnerIcon from './assets/icons/replace-owner.svg'
 import {
-  getOwnerData,
-  generateColumns,
-  OWNERS_TABLE_NAME_ID,
   OWNERS_TABLE_ADDRESS_ID,
+  OWNERS_TABLE_NAME_ID,
   type OwnerRow,
+  generateColumns,
+  getOwnerData,
 } from './dataFetcher'
 import { styles } from './style'
-import ReplaceOwnerIcon from './assets/icons/replace-owner.svg'
-import RenameOwnerIcon from './assets/icons/rename-owner.svg'
-import RemoveOwnerIcon from '../assets/icons/bin.svg'
+
+import Table from '~/components/Table'
+import { type Column, cellWidth } from '~/components/Table/TableHead'
+import Block from '~/components/layout/Block'
+import Button from '~/components/layout/Button'
+import Col from '~/components/layout/Col'
+import Hairline from '~/components/layout/Hairline'
+import Heading from '~/components/layout/Heading'
+import Img from '~/components/layout/Img'
 import Paragraph from '~/components/layout/Paragraph/index'
-import type { Safe } from '~/routes/safe/store/models/safe'
-import { getOwnersWithNameFromAddressBook } from '~/logic/addressBook/utils'
+import Row from '~/components/layout/Row'
 import type { AddressBook } from '~/logic/addressBook/model/addressBook'
+import { getOwnersWithNameFromAddressBook } from '~/logic/addressBook/utils'
+import type { Owner } from '~/routes/safe/store/models/owner'
+import type { Safe } from '~/routes/safe/store/models/safe'
 
 export const RENAME_OWNER_BTN_TEST_ID = 'rename-owner-btn'
 export const REMOVE_OWNER_BTN_TEST_ID = 'remove-owner-btn'
@@ -105,30 +108,30 @@ class ManageOwners extends React.Component<Props, State> {
 
   render() {
     const {
-      classes,
-      safeAddress,
-      safeName,
-      owners,
-      threshold,
-      network,
-      userAddress,
-      createTransaction,
       addSafeOwner,
-      removeSafeOwner,
-      replaceSafeOwner,
+      addressBook,
+      classes,
+      createTransaction,
       editSafeOwner,
       granted,
+      network,
+      owners,
+      removeSafeOwner,
+      replaceSafeOwner,
       safe,
-      addressBook,
+      safeAddress,
+      safeName,
+      threshold,
       updateAddressBookEntry,
+      userAddress,
     } = this.props
     const {
+      selectedOwnerAddress,
+      selectedOwnerName,
       showAddOwner,
+      showEditOwner,
       showRemoveOwner,
       showReplaceOwner,
-      showEditOwner,
-      selectedOwnerName,
-      selectedOwnerAddress,
     } = this.state
 
     const columns = generateColumns()
@@ -139,7 +142,7 @@ class ManageOwners extends React.Component<Props, State> {
     return (
       <>
         <Block className={classes.formContainer}>
-          <Heading tag="h2" className={classes.title}>
+          <Heading className={classes.title} tag="h2">
             Manage Safe Owners
           </Heading>
           <Paragraph className={classes.annotation}>
@@ -148,25 +151,25 @@ class ManageOwners extends React.Component<Props, State> {
           </Paragraph>
           <TableContainer>
             <Table
-              label="Owners"
-              defaultOrderBy={OWNERS_TABLE_NAME_ID}
               columns={columns}
               data={ownerData}
-              size={ownerData.size}
-              disablePagination
               defaultFixed
+              defaultOrderBy={OWNERS_TABLE_NAME_ID}
+              disablePagination
+              label="Owners"
               noBorder
+              size={ownerData.size}
             >
               {(sortedData: List<OwnerRow>) =>
                 sortedData.map((row: any, index: number) => (
                   <TableRow
-                    tabIndex={-1}
-                    key={index}
                     className={cn(classes.hide, index >= 3 && index === sortedData.size - 1 && classes.noBorderBottom)}
                     data-testid={OWNERS_ROW_TEST_ID}
+                    key={index}
+                    tabIndex={-1}
                   >
                     {autoColumns.map((column: Column) => (
-                      <TableCell key={column.id} style={cellWidth(column.width)} align={column.align} component="td">
+                      <TableCell align={column.align} component="td" key={column.id} style={cellWidth(column.width)}>
                         {column.id === OWNERS_TABLE_ADDRESS_ID ? (
                           <OwnerAddressTableCell address={row[column.id]} />
                         ) : (
@@ -179,8 +182,8 @@ class ManageOwners extends React.Component<Props, State> {
                         <Img
                           alt="Edit owner"
                           className={classes.editOwnerIcon}
-                          src={RenameOwnerIcon}
                           onClick={this.onShow('EditOwner', row)}
+                          src={RenameOwnerIcon}
                           testId={RENAME_OWNER_BTN_TEST_ID}
                         />
                         {granted && (
@@ -188,16 +191,16 @@ class ManageOwners extends React.Component<Props, State> {
                             <Img
                               alt="Replace owner"
                               className={classes.replaceOwnerIcon}
-                              src={ReplaceOwnerIcon}
                               onClick={this.onShow('ReplaceOwner', row)}
+                              src={ReplaceOwnerIcon}
                               testId={REPLACE_OWNER_BTN_TEST_ID}
                             />
                             {ownerData.size > 1 && (
                               <Img
                                 alt="Remove owner"
                                 className={classes.removeOwnerIcon}
-                                src={RemoveOwnerIcon}
                                 onClick={this.onShow('RemoveOwner', row)}
+                                src={RemoveOwnerIcon}
                                 testId={REMOVE_OWNER_BTN_TEST_ID}
                               />
                             )}
@@ -214,14 +217,14 @@ class ManageOwners extends React.Component<Props, State> {
         {granted && (
           <>
             <Hairline />
-            <Row className={classes.controlsRow} align="end" grow>
+            <Row align="end" className={classes.controlsRow} grow>
               <Col end="xs">
                 <Button
-                  size="small"
-                  variant="contained"
                   color="primary"
                   onClick={this.onShow('AddOwner')}
+                  size="small"
                   testId={ADD_OWNER_BTN_TEST_ID}
+                  variant="contained"
                 >
                   Add new owner
                 </Button>
@@ -230,53 +233,53 @@ class ManageOwners extends React.Component<Props, State> {
           </>
         )}
         <AddOwnerModal
-          onClose={this.onHide('AddOwner')}
+          addSafeOwner={addSafeOwner}
+          createTransaction={createTransaction}
           isOpen={showAddOwner}
+          onClose={this.onHide('AddOwner')}
+          owners={owners}
           safeAddress={safeAddress}
           safeName={safeName}
-          owners={owners}
           threshold={threshold}
           userAddress={userAddress}
-          createTransaction={createTransaction}
-          addSafeOwner={addSafeOwner}
         />
         <RemoveOwnerModal
-          onClose={this.onHide('RemoveOwner')}
+          createTransaction={createTransaction}
           isOpen={showRemoveOwner}
-          safeAddress={safeAddress}
-          safeName={safeName}
+          onClose={this.onHide('RemoveOwner')}
           ownerAddress={selectedOwnerAddress}
           ownerName={selectedOwnerName}
           owners={owners}
-          threshold={threshold}
-          userAddress={userAddress}
-          createTransaction={createTransaction}
           removeSafeOwner={removeSafeOwner}
           safe={safe}
-        />
-        <ReplaceOwnerModal
-          onClose={this.onHide('ReplaceOwner')}
-          isOpen={showReplaceOwner}
           safeAddress={safeAddress}
           safeName={safeName}
+          threshold={threshold}
+          userAddress={userAddress}
+        />
+        <ReplaceOwnerModal
+          createTransaction={createTransaction}
+          isOpen={showReplaceOwner}
+          network={network}
+          onClose={this.onHide('ReplaceOwner')}
           ownerAddress={selectedOwnerAddress}
           ownerName={selectedOwnerName}
           owners={owners}
-          network={network}
-          threshold={threshold}
-          userAddress={userAddress}
-          createTransaction={createTransaction}
           replaceSafeOwner={replaceSafeOwner}
           safe={safe}
+          safeAddress={safeAddress}
+          safeName={safeName}
+          threshold={threshold}
+          userAddress={userAddress}
         />
         <EditOwnerModal
-          onClose={this.onHide('EditOwner')}
-          isOpen={showEditOwner}
-          safeAddress={safeAddress}
-          ownerAddress={selectedOwnerAddress}
-          selectedOwnerName={selectedOwnerName}
-          owners={owners}
           editSafeOwner={editSafeOwner}
+          isOpen={showEditOwner}
+          onClose={this.onHide('EditOwner')}
+          ownerAddress={selectedOwnerAddress}
+          owners={owners}
+          safeAddress={safeAddress}
+          selectedOwnerName={selectedOwnerName}
           updateAddressBookEntry={updateAddressBookEntry}
         />
       </>

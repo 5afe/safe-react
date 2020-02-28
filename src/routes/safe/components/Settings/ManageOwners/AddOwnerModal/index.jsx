@@ -1,15 +1,17 @@
 // @flow
-import React, { useState, useEffect } from 'react'
-import { List } from 'immutable'
 import { withStyles } from '@material-ui/core/styles'
+import { List } from 'immutable'
 import { withSnackbar } from 'notistack'
+import React, { useEffect, useState } from 'react'
+
+import OwnerForm from './screens/OwnerForm'
+import ReviewAddOwner from './screens/Review'
+import ThresholdForm from './screens/ThresholdForm'
+
 import Modal from '~/components/Modal'
-import { type Owner } from '~/routes/safe/store/models/owner'
 import { getGnosisSafeInstanceAt } from '~/logic/contracts/safeContracts'
 import { TX_NOTIFICATION_TYPES } from '~/logic/safe/transactions'
-import OwnerForm from './screens/OwnerForm'
-import ThresholdForm from './screens/ThresholdForm'
-import ReviewAddOwner from './screens/Review'
+import { type Owner } from '~/routes/safe/store/models/owner'
 
 const styles = () => ({
   biggerModalWindow: {
@@ -63,17 +65,17 @@ export const sendAddOwner = async (
 }
 
 const AddOwner = ({
-  onClose,
-  isOpen,
+  addSafeOwner,
   classes,
+  closeSnackbar,
+  createTransaction,
+  enqueueSnackbar,
+  isOpen,
+  onClose,
+  owners,
   safeAddress,
   safeName,
-  owners,
   threshold,
-  createTransaction,
-  addSafeOwner,
-  enqueueSnackbar,
-  closeSnackbar,
 }: Props) => {
   const [activeScreen, setActiveScreen] = useState<ActiveScreen>('selectOwner')
   const [values, setValues] = useState<Object>({})
@@ -122,32 +124,32 @@ const AddOwner = ({
 
   return (
     <Modal
-      title="Add owner to Safe"
       description="Add owner to Safe"
       handleClose={onClose}
       open={isOpen}
       paperClassName={classes.biggerModalWindow}
+      title="Add owner to Safe"
     >
       <>
         {activeScreen === 'selectOwner' && <OwnerForm onClose={onClose} onSubmit={ownerSubmitted} owners={owners} />}
         {activeScreen === 'selectThreshold' && (
           <ThresholdForm
+            onClickBack={onClickBack}
             onClose={onClose}
+            onSubmit={thresholdSubmitted}
             owners={owners}
             threshold={threshold}
-            onClickBack={onClickBack}
-            onSubmit={thresholdSubmitted}
           />
         )}
         {activeScreen === 'reviewAddOwner' && (
           <ReviewAddOwner
-            onClose={onClose}
-            safeName={safeName}
-            owners={owners}
-            values={values}
-            safeAddress={safeAddress}
             onClickBack={onClickBack}
+            onClose={onClose}
             onSubmit={onAddOwner}
+            owners={owners}
+            safeAddress={safeAddress}
+            safeName={safeName}
+            values={values}
           />
         )}
       </>

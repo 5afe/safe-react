@@ -2,15 +2,17 @@
 import 'babel-polyfill'
 
 import { MuiThemeProvider } from '@material-ui/core/styles'
-import React, { Suspense } from 'react'
-import { Provider } from 'react-redux'
 import { ConnectedRouter } from 'connected-react-router'
+import React, { Suspense } from 'react'
 import { hot } from 'react-hot-loader/root'
-import PageFrame from '../layout/PageFrame'
+import { Provider } from 'react-redux'
+
 import Loader from '../Loader'
+import PageFrame from '../layout/PageFrame'
+
+import AppRoutes from '~/routes'
 import { history, store } from '~/store'
 import theme from '~/theme/mui'
-import AppRoutes from '~/routes'
 
 import './index.scss'
 import './OnboardCustom.scss'

@@ -1,11 +1,12 @@
 // @flow
 import { List } from 'immutable'
-import { type Token } from '~/logic/tokens/store/model/token'
-import { buildOrderFieldFrom, FIXED, type SortRow } from '~/components/Table/sorting'
+
 import { type Column } from '~/components/Table/TableHead'
-import { formatAmount } from '~/logic/tokens/utils/formatAmount'
+import { FIXED, type SortRow, buildOrderFieldFrom } from '~/components/Table/sorting'
 import type { BalanceCurrencyType } from '~/logic/currencyValues/store/model/currencyValues'
 import { AVAILABLE_CURRENCIES } from '~/logic/currencyValues/store/model/currencyValues'
+import { type Token } from '~/logic/tokens/store/model/token'
+import { formatAmount } from '~/logic/tokens/utils/formatAmount'
 import { ETH_ADDRESS } from '~/logic/tokens/utils/tokenHelpers'
 
 export const BALANCE_TABLE_ASSET_ID = 'asset'
@@ -31,7 +32,7 @@ const getTokenPriceInCurrency = (
 
   // eslint-disable-next-line no-restricted-syntax
   for (const tokenPriceIterator of currencyValues) {
-    const { tokenAddress, balanceInSelectedCurrency, currencyName } = tokenPriceIterator
+    const { balanceInSelectedCurrency, currencyName, tokenAddress } = tokenPriceIterator
     if (token.address === tokenAddress && currencySelected === currencyName) {
       const balance = balanceInSelectedCurrency
         ? parseFloat(balanceInSelectedCurrency, 10).toFixed(2)

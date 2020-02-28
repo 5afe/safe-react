@@ -1,30 +1,32 @@
 // @flow
-import * as React from 'react'
-import { List } from 'immutable'
-import classNames from 'classnames/bind'
-import TableRow from '@material-ui/core/TableRow'
 import TableCell from '@material-ui/core/TableCell'
 import TableContainer from '@material-ui/core/TableContainer'
+import TableRow from '@material-ui/core/TableRow'
 import { withStyles } from '@material-ui/core/styles'
 import CallMade from '@material-ui/icons/CallMade'
 import CallReceived from '@material-ui/icons/CallReceived'
-import { type Token } from '~/logic/tokens/store/model/token'
-import Col from '~/components/layout/Col'
-import Row from '~/components/layout/Row'
+import classNames from 'classnames/bind'
+import { List } from 'immutable'
+import * as React from 'react'
+
+import AssetTableCell from './AssetTableCell'
+import Receive from './Receive'
+import SendModal from './SendModal'
+import Tokens from './Tokens'
+import { BALANCE_TABLE_ASSET_ID, type BalanceRow, generateColumns, getBalanceData } from './dataFetcher'
+import { styles } from './style'
+
+import Modal from '~/components/Modal'
+import Table from '~/components/Table'
+import { type Column, cellWidth } from '~/components/Table/TableHead'
 import Button from '~/components/layout/Button'
 import ButtonLink from '~/components/layout/ButtonLink'
-import Modal from '~/components/Modal'
-import { type Column, cellWidth } from '~/components/Table/TableHead'
-import Table from '~/components/Table'
-import { getBalanceData, generateColumns, BALANCE_TABLE_ASSET_ID, type BalanceRow } from './dataFetcher'
-import AssetTableCell from './AssetTableCell'
-import Tokens from './Tokens'
-import SendModal from './SendModal'
-import Receive from './Receive'
-import { styles } from './style'
-import DropdownCurrency from '~/routes/safe/components/DropdownCurrency'
+import Col from '~/components/layout/Col'
+import Row from '~/components/layout/Row'
 import type { BalanceCurrencyType } from '~/logic/currencyValues/store/model/currencyValues'
+import { type Token } from '~/logic/tokens/store/model/token'
 import { BALANCE_TABLE_BALANCE_ID, BALANCE_TABLE_VALUE_ID } from '~/routes/safe/components/Balances/dataFetcher'
+import DropdownCurrency from '~/routes/safe/components/DropdownCurrency'
 
 export const MANAGE_TOKENS_BUTTON_TEST_ID = 'manage-tokens-btn'
 export const BALANCE_ROW_TEST_ID = 'balance-row'
@@ -69,7 +71,7 @@ class Balances extends React.Component<Props, State> {
   }
 
   componentDidMount(): void {
-    const { safeAddress, fetchCurrencyValues, activateTokensByBalance } = this.props
+    const { activateTokensByBalance, fetchCurrencyValues, safeAddress } = this.props
     fetchCurrencyValues(safeAddress)
     activateTokensByBalance(safeAddress)
   }
@@ -101,19 +103,19 @@ class Balances extends React.Component<Props, State> {
   }
 
   render() {
-    const { showToken, showReceive, sendFunds } = this.state
+    const { sendFunds, showReceive, showToken } = this.state
     const {
-      classes,
-      granted,
-      tokens,
-      safeAddress,
       activeTokens,
       blacklistedTokens,
-      safeName,
-      ethBalance,
+      classes,
       createTransaction,
       currencySelected,
       currencyValues,
+      ethBalance,
+      granted,
+      safeAddress,
+      safeName,
+      tokens,
     } = this.props
 
     const columns = generateColumns()
@@ -124,23 +126,23 @@ class Balances extends React.Component<Props, State> {
     return (
       <>
         <Row align="center" className={classes.message}>
-          <Col xs={12} end="sm">
+          <Col end="sm" xs={12}>
             <DropdownCurrency />
-            <ButtonLink size="lg" onClick={this.onShow('Token')} testId="manage-tokens-btn">
+            <ButtonLink onClick={this.onShow('Token')} size="lg" testId="manage-tokens-btn">
               Manage List
             </ButtonLink>
             <Modal
-              title="Manage List"
               description="Enable and disable tokens to be listed"
               handleClose={this.onHide('Token')}
               open={showToken}
+              title="Manage List"
             >
               <Tokens
-                tokens={tokens}
-                onClose={this.onHide('Token')}
-                safeAddress={safeAddress}
                 activeTokens={activeTokens}
                 blacklistedTokens={blacklistedTokens}
+                onClose={this.onHide('Token')}
+                safeAddress={safeAddress}
+                tokens={tokens}
               />
             </Modal>
           </Col>
@@ -157,9 +159,9 @@ class Balances extends React.Component<Props, State> {
           >
             {(sortedData: Array<BalanceRow>) =>
               sortedData.map((row: any, index: number) => (
-                <TableRow tabIndex={-1} key={index} className={classes.hide} data-testid={BALANCE_ROW_TEST_ID}>
+                <TableRow className={classes.hide} data-testid={BALANCE_ROW_TEST_ID} key={index} tabIndex={-1}>
                   {autoColumns.map((column: Column) => {
-                    const { id, width, align } = column
+                    const { align, id, width } = column
                     let cellItem
                     switch (id) {
                       case BALANCE_TABLE_ASSET_ID: {
@@ -180,7 +182,7 @@ class Balances extends React.Component<Props, State> {
                       }
                     }
                     return (
-                      <TableCell key={id} style={cellWidth(width)} align={align} component="td">
+                      <TableCell align={align} component="td" key={id} style={cellWidth(width)}>
                         {cellItem}
                       </TableCell>
                     )
@@ -189,12 +191,12 @@ class Balances extends React.Component<Props, State> {
                     <Row align="end" className={classes.actions}>
                       {granted && (
                         <Button
-                          variant="contained"
-                          size="small"
-                          color="primary"
                           className={classes.send}
+                          color="primary"
                           onClick={() => this.showSendFunds(row.asset.address)}
+                          size="small"
                           testId="balance-send-btn"
+                          variant="contained"
                         >
                           <CallMade
                             alt="Send Transaction"
@@ -204,11 +206,11 @@ class Balances extends React.Component<Props, State> {
                         </Button>
                       )}
                       <Button
-                        variant="contained"
-                        size="small"
-                        color="primary"
                         className={classes.receive}
+                        color="primary"
                         onClick={this.onShow('Receive')}
+                        size="small"
+                        variant="contained"
                       >
                         <CallReceived
                           alt="Receive Transaction"
@@ -235,13 +237,13 @@ class Balances extends React.Component<Props, State> {
           tokens={activeTokens}
         />
         <Modal
-          title="Receive Tokens"
           description="Receive Tokens Form"
           handleClose={this.onHide('Receive')}
-          paperClassName={classes.receiveModal}
           open={showReceive}
+          paperClassName={classes.receiveModal}
+          title="Receive Tokens"
         >
-          <Receive safeName={safeName} safeAddress={safeAddress} onClose={this.onHide('Receive')} />
+          <Receive onClose={this.onHide('Receive')} safeAddress={safeAddress} safeName={safeName} />
         </Modal>
       </>
     )
