@@ -1,9 +1,10 @@
 // @flow
 import { useSelector } from 'react-redux'
+
 import type { AddressBook, AddressBookProps } from '~/logic/addressBook/model/addressBook'
-import { loadFromStorage, saveToStorage } from '~/utils/storage'
 import { getAddressBook } from '~/logic/addressBook/store/selectors'
 import type { Owner } from '~/routes/safe/store/models/owner'
+import { loadFromStorage, saveToStorage } from '~/utils/storage'
 
 const ADDRESS_BOOK_STORAGE_KEY = 'ADDRESS_BOOK_STORAGE_KEY'
 

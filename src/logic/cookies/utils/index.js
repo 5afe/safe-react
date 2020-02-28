@@ -1,5 +1,6 @@
 // @flow
 import Cookies from 'js-cookie'
+
 import { getNetwork } from '~/config'
 
 const PREFIX = `v1_${getNetwork()}`

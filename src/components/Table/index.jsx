@@ -1,15 +1,16 @@
 // @flow
-import * as React from 'react'
-import { List } from 'immutable'
+import CircularProgress from '@material-ui/core/CircularProgress'
 import Table from '@material-ui/core/Table'
 import TableBody from '@material-ui/core/TableBody'
-import { withStyles } from '@material-ui/core/styles'
-import CircularProgress from '@material-ui/core/CircularProgress'
 import TablePagination from '@material-ui/core/TablePagination'
-import Row from '~/components/layout/Row'
-import { type Order, stableSort, getSorting } from '~/components/Table/sorting'
+import { withStyles } from '@material-ui/core/styles'
+import { List } from 'immutable'
+import * as React from 'react'
+
 import TableHead, { type Column } from '~/components/Table/TableHead'
-import { xxl, xl, sm } from '~/theme/variables'
+import { type Order, getSorting, stableSort } from '~/components/Table/sorting'
+import Row from '~/components/layout/Row'
+import { sm, xl, xxl } from '~/theme/variables'
 
 type Props<K> = {
   label: string,
@@ -87,7 +88,7 @@ class GnoTable<K> extends React.Component<Props<K>, State> {
   }
 
   componentDidMount() {
-    const { defaultOrderBy, columns } = this.props
+    const { columns, defaultOrderBy } = this.props
 
     if (defaultOrderBy && columns) {
       const defaultOrderCol = columns.find(({ id }) => id === defaultOrderBy)
@@ -143,21 +144,21 @@ class GnoTable<K> extends React.Component<Props<K>, State> {
 
   render() {
     const {
-      data,
-      label,
-      columns,
-      classes,
       children,
-      size,
-      disablePagination,
-      defaultOrderBy,
-      defaultOrder,
+      classes,
+      columns,
+      data,
       defaultFixed,
+      defaultOrder,
+      defaultOrderBy,
       defaultRowsPerPage,
-      noBorder,
       disableLoadingOnEmptyTable,
+      disablePagination,
+      label,
+      noBorder,
+      size,
     } = this.props
-    const { order, orderBy, page, orderProp, rowsPerPage, fixed } = this.state
+    const { fixed, order, orderBy, orderProp, page, rowsPerPage } = this.state
     const orderByParam = orderBy || defaultOrderBy
     const orderParam = order || defaultOrder
     const displayRows = rowsPerPage || defaultRowsPerPage
@@ -182,7 +183,7 @@ class GnoTable<K> extends React.Component<Props<K>, State> {
       <>
         {!isEmpty && (
           <Table aria-labelledby={label} className={noBorder ? '' : classes.root}>
-            <TableHead columns={columns} order={order} orderBy={orderByParam} onSort={this.onSort} />
+            <TableHead columns={columns} onSort={this.onSort} order={order} orderBy={orderByParam} />
             <TableBody>{children(sortedData)}</TableBody>
           </Table>
         )}
@@ -193,16 +194,16 @@ class GnoTable<K> extends React.Component<Props<K>, State> {
         )}
         {!disablePagination && (
           <TablePagination
+            backIconButtonProps={backProps}
+            classes={paginationClasses}
             component="div"
             count={size}
-            rowsPerPage={displayRows}
-            rowsPerPageOptions={[5, 10, 25, 50, 100]}
-            page={page}
-            backIconButtonProps={backProps}
             nextIconButtonProps={nextProps}
             onChangePage={this.handleChangePage}
             onChangeRowsPerPage={this.handleChangeRowsPerPage}
-            classes={paginationClasses}
+            page={page}
+            rowsPerPage={displayRows}
+            rowsPerPageOptions={[5, 10, 25, 50, 100]}
           />
         )}
       </>

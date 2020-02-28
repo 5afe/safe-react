@@ -1,14 +1,15 @@
 // @flow
 import { List, Map } from 'immutable'
-import { handleActions, type ActionType } from 'redux-actions'
+import { type ActionType, handleActions } from 'redux-actions'
+
 import type { AddressBook, AddressBookEntry, AddressBookProps } from '~/logic/addressBook/model/addressBook'
-import { ADD_ENTRY } from '~/logic/addressBook/store/actions/addAddressBookEntry'
-import { UPDATE_ENTRY } from '~/logic/addressBook/store/actions/updateAddressBookEntry'
-import { REMOVE_ENTRY } from '~/logic/addressBook/store/actions/removeAddressBookEntry'
 import { ADD_ADDRESS_BOOK } from '~/logic/addressBook/store/actions/addAddressBook'
+import { ADD_ENTRY } from '~/logic/addressBook/store/actions/addAddressBookEntry'
 import { LOAD_ADDRESS_BOOK } from '~/logic/addressBook/store/actions/loadAddressBook'
-import { sameAddress } from '~/logic/wallets/ethAddresses'
+import { REMOVE_ENTRY } from '~/logic/addressBook/store/actions/removeAddressBookEntry'
+import { UPDATE_ENTRY } from '~/logic/addressBook/store/actions/updateAddressBookEntry'
 import { getAddressesListFromAdbk } from '~/logic/addressBook/utils'
+import { sameAddress } from '~/logic/wallets/ethAddresses'
 
 export const ADDRESS_BOOK_REDUCER_ID = 'addressBook'
 

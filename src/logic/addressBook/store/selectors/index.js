@@ -1,12 +1,13 @@
 /* eslint-disable import/named */
 // @flow
 import { List, Map } from 'immutable'
-import { createSelector, Selector } from 'reselect'
 import { useSelector } from 'react-redux'
-import { ADDRESS_BOOK_REDUCER_ID } from '~/logic/addressBook/store/reducer/addressBook'
-import type { GlobalState } from '~/store'
+import { Selector, createSelector } from 'reselect'
+
 import type { AddressBook } from '~/logic/addressBook/model/addressBook'
+import { ADDRESS_BOOK_REDUCER_ID } from '~/logic/addressBook/store/reducer/addressBook'
 import { safeParamAddressFromStateSelector } from '~/routes/safe/store/selectors'
+import type { GlobalState } from '~/store'
 
 export const addressBookMapSelector = (state: GlobalState): Map<string, AddressBook> =>
   state[ADDRESS_BOOK_REDUCER_ID].get('addressBook')

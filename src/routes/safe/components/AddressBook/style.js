@@ -1,5 +1,5 @@
 // @flow
-import { lg, md, sm, marginButtonImg } from '~/theme/variables'
+import { lg, marginButtonImg, md, sm } from '~/theme/variables'
 
 export const styles = () => ({
   formContainer: {

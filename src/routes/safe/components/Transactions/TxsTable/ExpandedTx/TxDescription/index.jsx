@@ -1,18 +1,20 @@
 // @flow
-import React, { useState } from 'react'
 import { withStyles } from '@material-ui/core/styles'
+import React, { useState } from 'react'
+
+import { getTxData } from './utils'
+
+import EtherscanLink from '~/components/EtherscanLink'
+import Block from '~/components/layout/Block'
+import Bold from '~/components/layout/Bold'
+import LinkWithRef from '~/components/layout/Link'
+import Paragraph from '~/components/layout/Paragraph'
+import { getNameFromAddressBook } from '~/logic/addressBook/utils'
+import { shortVersionOf } from '~/logic/wallets/ethAddresses'
+import OwnerAddressTableCell from '~/routes/safe/components/Settings/ManageOwners/OwnerAddressTableCell'
 import { getTxAmount } from '~/routes/safe/components/Transactions/TxsTable/columns'
 import { type Transaction } from '~/routes/safe/store/models/transaction'
-import Bold from '~/components/layout/Bold'
-import EtherscanLink from '~/components/EtherscanLink'
-import Paragraph from '~/components/layout/Paragraph'
-import Block from '~/components/layout/Block'
-import { md, lg } from '~/theme/variables'
-import { getTxData } from './utils'
-import { shortVersionOf } from '~/logic/wallets/ethAddresses'
-import LinkWithRef from '~/components/layout/Link'
-import OwnerAddressTableCell from '~/routes/safe/components/Settings/ManageOwners/OwnerAddressTableCell'
-import { getNameFromAddressBook } from '~/logic/addressBook/utils'
+import { lg, md } from '~/theme/variables'
 
 export const TRANSACTIONS_DESC_ADD_OWNER_TEST_ID = 'tx-description-add-owner'
 export const TRANSACTIONS_DESC_REMOVE_OWNER_TEST_ID = 'tx-description-remove-owner'
@@ -68,15 +70,15 @@ const TransferDescription = ({ amount = '', recipient }: TransferDescProps) => {
     <Block data-testid={TRANSACTIONS_DESC_SEND_TEST_ID}>
       <Bold>Send {amount} to:</Bold>
       {recipientName ? (
-        <OwnerAddressTableCell address={recipient} showLinks knownAddress userName={recipientName} />
+        <OwnerAddressTableCell address={recipient} knownAddress showLinks userName={recipientName} />
       ) : (
-        <EtherscanLink type="address" value={recipient} knownAddress={false} />
+        <EtherscanLink knownAddress={false} type="address" value={recipient} />
       )}
     </Block>
   )
 }
 
-const SettingsDescription = ({ removedOwner, addedOwner, newThreshold }: DescriptionDescProps) => {
+const SettingsDescription = ({ addedOwner, newThreshold, removedOwner }: DescriptionDescProps) => {
   const ownerChangedName = removedOwner ? getNameFromAddressBook(removedOwner) : getNameFromAddressBook(addedOwner)
   return (
     <>
@@ -84,9 +86,9 @@ const SettingsDescription = ({ removedOwner, addedOwner, newThreshold }: Descrip
         <Block data-testid={TRANSACTIONS_DESC_REMOVE_OWNER_TEST_ID}>
           <Bold>Remove owner:</Bold>
           {ownerChangedName ? (
-            <OwnerAddressTableCell address={removedOwner} showLinks knownAddress userName={ownerChangedName} />
+            <OwnerAddressTableCell address={removedOwner} knownAddress showLinks userName={ownerChangedName} />
           ) : (
-            <EtherscanLink type="address" value={removedOwner} knownAddress={false} />
+            <EtherscanLink knownAddress={false} type="address" value={removedOwner} />
           )}
         </Block>
       )}
@@ -94,16 +96,16 @@ const SettingsDescription = ({ removedOwner, addedOwner, newThreshold }: Descrip
         <Block data-testid={TRANSACTIONS_DESC_ADD_OWNER_TEST_ID}>
           <Bold>Add owner:</Bold>
           {ownerChangedName ? (
-            <OwnerAddressTableCell address={addedOwner} showLinks knownAddress userName={ownerChangedName} />
+            <OwnerAddressTableCell address={addedOwner} knownAddress showLinks userName={ownerChangedName} />
           ) : (
-            <EtherscanLink type="address" value={addedOwner} knownAddress={false} />
+            <EtherscanLink knownAddress={false} type="address" value={addedOwner} />
           )}
         </Block>
       )}
       {newThreshold && (
         <Block data-testid={TRANSACTIONS_DESC_CHANGE_THRESHOLD_TEST_ID}>
           <Bold>Change required confirmations:</Bold>
-          <Paragraph size="md" noMargin>
+          <Paragraph noMargin size="md">
             {newThreshold}
           </Paragraph>
         </Block>
@@ -112,7 +114,7 @@ const SettingsDescription = ({ removedOwner, addedOwner, newThreshold }: Descrip
   )
 }
 
-const CustomDescription = ({ data, amount = 0, recipient, classes }: CustomDescProps) => {
+const CustomDescription = ({ amount = 0, classes, data, recipient }: CustomDescProps) => {
   const [showTxData, setShowTxData] = useState(false)
   const recipientName = getNameFromAddressBook(recipient)
   return (
@@ -120,23 +122,23 @@ const CustomDescription = ({ data, amount = 0, recipient, classes }: CustomDescP
       <Block data-testid={TRANSACTIONS_DESC_CUSTOM_VALUE_TEST_ID}>
         <Bold>Send {amount} to:</Bold>
         {recipientName ? (
-          <OwnerAddressTableCell address={recipient} showLinks knownAddress userName={recipientName} />
+          <OwnerAddressTableCell address={recipient} knownAddress showLinks userName={recipientName} />
         ) : (
-          <EtherscanLink type="address" value={recipient} knownAddress={false} />
+          <EtherscanLink knownAddress={false} type="address" value={recipient} />
         )}
       </Block>
       <Block className={classes.txData} data-testid={TRANSACTIONS_DESC_CUSTOM_DATA_TEST_ID}>
         <Bold>Data (hex encoded):</Bold>
-        <Paragraph size="md" noMargin className={classes.txDataParagraph}>
+        <Paragraph className={classes.txDataParagraph} noMargin size="md">
           {showTxData ? (
             <>
               {data}{' '}
               <LinkWithRef
                 aria-label="Hide details of the transaction"
+                className={classes.linkTxData}
                 onClick={() => setShowTxData(false)}
                 rel="noopener noreferrer"
                 target="_blank"
-                className={classes.linkTxData}
               >
                 Show Less
               </LinkWithRef>
@@ -146,10 +148,10 @@ const CustomDescription = ({ data, amount = 0, recipient, classes }: CustomDescP
               {shortVersionOf(data, 20)}{' '}
               <LinkWithRef
                 aria-label="Show details of the transaction"
+                className={classes.linkTxData}
                 onClick={() => setShowTxData(true)}
                 rel="noopener noreferrer"
                 target="_blank"
-                className={classes.linkTxData}
               >
                 Show More
               </LinkWithRef>
@@ -161,27 +163,27 @@ const CustomDescription = ({ data, amount = 0, recipient, classes }: CustomDescP
   )
 }
 
-const TxDescription = ({ tx, classes }: Props) => {
+const TxDescription = ({ classes, tx }: Props) => {
   const {
-    recipient,
-    modifySettingsTx,
-    removedOwner,
     addedOwner,
-    newThreshold,
     cancellationTx,
-    customTx,
     creationTx,
-    upgradeTx,
+    customTx,
     data,
+    modifySettingsTx,
+    newThreshold,
+    recipient,
+    removedOwner,
+    upgradeTx,
   } = getTxData(tx)
   const amount = getTxAmount(tx)
   return (
     <Block className={classes.txDataContainer}>
       {modifySettingsTx && (
-        <SettingsDescription removedOwner={removedOwner} newThreshold={newThreshold} addedOwner={addedOwner} />
+        <SettingsDescription addedOwner={addedOwner} newThreshold={newThreshold} removedOwner={removedOwner} />
       )}
       {!upgradeTx && customTx && (
-        <CustomDescription data={data} amount={amount} recipient={recipient} classes={classes} />
+        <CustomDescription amount={amount} classes={classes} data={data} recipient={recipient} />
       )}
       {upgradeTx && <div>{data}</div>}
       {!cancellationTx && !modifySettingsTx && !customTx && !creationTx && !upgradeTx && (

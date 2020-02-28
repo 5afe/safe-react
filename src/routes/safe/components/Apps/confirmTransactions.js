@@ -2,11 +2,11 @@
 import React from 'react'
 import styled from 'styled-components'
 
-import Img from '~/components/layout/Img'
-import Heading from '~/components/layout/Heading'
+import { AddressInfo, Collapse, DividerLine, ModalFooterConfirmation, ModalTitle, TextBox } from '~/components-v2'
 import Bold from '~/components/layout/Bold'
+import Heading from '~/components/layout/Heading'
+import Img from '~/components/layout/Img'
 import { getEthAsToken } from '~/logic/tokens/utils/tokenHelpers'
-import { ModalTitle, ModalFooterConfirmation, AddressInfo, DividerLine, Collapse, TextBox } from '~/components-v2'
 
 const Wrapper = styled.div`
   margin-bottom: 15px;
@@ -34,21 +34,21 @@ const confirmTransactions = (
   closeModal: () => void,
   onConfirm: () => void,
 ) => {
-  const title = <ModalTitle title="Compound" iconUrl={iconApp} />
+  const title = <ModalTitle iconUrl={iconApp} title="Compound" />
 
   const body = (
     <>
-      <AddressInfo safeAddress={safeAddress} safeName={safeName} ethBalance={ethBalance} />
+      <AddressInfo ethBalance={ethBalance} safeAddress={safeAddress} safeName={safeName} />
       <DividerLine withArrow />
       {txs.map((tx, index) => {
         return (
           <Wrapper key={index}>
-            <Collapse title={`Transaction ${index + 1}`} description={<AddressInfo safeAddress={tx.to} />}>
+            <Collapse description={<AddressInfo safeAddress={tx.to} />} title={`Transaction ${index + 1}`}>
               <CollapseContent>
                 <div className="section">
                   <Heading tag="h3">Value</Heading>
                   <div className="value-section">
-                    <Img src={getEthAsToken('0').logoUri} height={40} alt="Ether" />
+                    <Img alt="Ether" height={40} src={getEthAsToken('0').logoUri} />
                     <Bold>{tx.value} ETH</Bold>
                   </div>
                 </div>
@@ -64,7 +64,7 @@ const confirmTransactions = (
     </>
   )
   const footer = (
-    <ModalFooterConfirmation okText="Submit" cancelText="Cancel" handleOk={onConfirm} handleCancel={closeModal} />
+    <ModalFooterConfirmation cancelText="Cancel" handleCancel={closeModal} handleOk={onConfirm} okText="Submit" />
   )
 
   openModal({

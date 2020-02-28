@@ -1,19 +1,21 @@
 // @flow
-import React from 'react'
-import { List } from 'immutable'
-import { withStyles } from '@material-ui/core/styles'
-import MenuItem from '@material-ui/core/MenuItem'
 import ListItemIcon from '@material-ui/core/ListItemIcon'
 import ListItemText from '@material-ui/core/ListItemText'
+import MenuItem from '@material-ui/core/MenuItem'
+import { withStyles } from '@material-ui/core/styles'
+import { List } from 'immutable'
+import React from 'react'
+
+import { selectStyles, selectedTokenStyles } from './style'
+
 import Field from '~/components/forms/Field'
+import SelectField from '~/components/forms/SelectField'
+import { required } from '~/components/forms/validator'
 import Img from '~/components/layout/Img'
 import Paragraph from '~/components/layout/Paragraph'
-import SelectField from '~/components/forms/SelectField'
-import { setImageToPlaceholder } from '~/routes/safe/components/Balances/utils'
-import { required } from '~/components/forms/validator'
 import { type Token } from '~/logic/tokens/store/model/token'
 import { formatAmount } from '~/logic/tokens/utils/formatAmount'
-import { selectedTokenStyles, selectStyles } from './style'
+import { setImageToPlaceholder } from '~/routes/safe/components/Balances/utils'
 
 type SelectFieldProps = {
   classes: Object,
@@ -56,8 +58,8 @@ const SelectedTokenStyled = withStyles(selectedTokenStyles)(SelectedToken)
 
 const TokenSelectField = ({ classes, initialValue, isValid, tokens }: SelectFieldProps) => (
   <Field
-    className={isValid ? 'isValid' : 'isInvalid'}
     classes={{ selectMenu: classes.selectMenu }}
+    className={isValid ? 'isValid' : 'isInvalid'}
     component={SelectField}
     displayEmpty
     initialValue={initialValue}

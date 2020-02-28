@@ -1,10 +1,11 @@
 // @flow
-import * as React from 'react'
 import { makeStyles } from '@material-ui/core/styles'
-import { getNetwork } from '~/config'
-import Paragraph from '~/components/layout/Paragraph'
+import * as React from 'react'
+
 import Col from '~/components/layout/Col'
-import { xs, sm, md, border, screenSm } from '~/theme/variables'
+import Paragraph from '~/components/layout/Paragraph'
+import { getNetwork } from '~/config'
+import { border, md, screenSm, sm, xs } from '~/theme/variables'
 
 const network = getNetwork()
 const formattedNetwork = network[0].toUpperCase() + network.substring(1).toLowerCase()
@@ -35,8 +36,8 @@ const EarlyAccessLabel = () => {
   const classes = useStyles()
 
   return (
-    <Col start="xs" middle="xs" className={classes.container}>
-      <Paragraph size="xs" className={classes.text}>
+    <Col className={classes.container} middle="xs" start="xs">
+      <Paragraph className={classes.text} size="xs">
         {formattedNetwork}
       </Paragraph>
     </Col>

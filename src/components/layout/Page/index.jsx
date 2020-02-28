@@ -1,6 +1,7 @@
 // @flow
 import classNames from 'classnames/bind'
 import React from 'react'
+
 import styles from './index.scss'
 
 const cx = classNames.bind(styles)
@@ -11,7 +12,7 @@ type Props = {
   overflow?: boolean,
 }
 
-const Page = ({ children, align, overflow }: Props) => (
+const Page = ({ align, children, overflow }: Props) => (
   <main className={cx(styles.page, align, { overflow })}>{children}</main>
 )
 

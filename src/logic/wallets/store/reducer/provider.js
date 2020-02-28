@@ -1,8 +1,9 @@
 // @flow
-import { handleActions, type ActionType } from 'redux-actions'
-import { makeProvider, type Provider } from '~/logic/wallets/store/model/provider'
+import { type ActionType, handleActions } from 'redux-actions'
+
 import addProvider, { ADD_PROVIDER } from '~/logic/wallets/store/actions/addProvider'
 import { REMOVE_PROVIDER } from '~/logic/wallets/store/actions/removeProvider'
+import { type Provider, makeProvider } from '~/logic/wallets/store/model/provider'
 
 export const PROVIDER_REDUCER_ID = 'providers'
 

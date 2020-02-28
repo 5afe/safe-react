@@ -1,12 +1,14 @@
 // @flow
-import React, { useState } from 'react'
 import Tooltip from '@material-ui/core/Tooltip'
 import { makeStyles } from '@material-ui/core/styles'
 import cn from 'classnames'
-import Img from '~/components/layout/Img'
-import { copyToClipboard } from '~/utils/clipboard'
-import { xs } from '~/theme/variables'
+import React, { useState } from 'react'
+
 import CopyIcon from './copy.svg'
+
+import Img from '~/components/layout/Img'
+import { xs } from '~/theme/variables'
+import { copyToClipboard } from '~/utils/clipboard'
 
 const useStyles = makeStyles({
   container: {
@@ -39,8 +41,7 @@ const CopyBtn = ({ className, content, increaseZindex = false }: CopyBtnProps) =
 
   return (
     <Tooltip
-      title={clicked ? 'Copied' : 'Copy to clipboard'}
-      placement="top"
+      classes={customClasses}
       onClose={() => {
         // this is fired before tooltip is closed
         // added setTimeout so the user doesn't see the text changing/jumping
@@ -50,17 +51,18 @@ const CopyBtn = ({ className, content, increaseZindex = false }: CopyBtnProps) =
           }
         }, 300)
       }}
-      classes={customClasses}
+      placement="top"
+      title={clicked ? 'Copied' : 'Copy to clipboard'}
     >
       <div className={cn(classes.container, className)}>
         <Img
-          src={CopyIcon}
-          height={20}
           alt="Copy to clipboard"
+          height={20}
           onClick={() => {
             copyToClipboard(content)
             setClicked(true)
           }}
+          src={CopyIcon}
         />
       </div>
     </Tooltip>

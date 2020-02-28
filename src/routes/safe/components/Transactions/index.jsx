@@ -1,10 +1,11 @@
 // @flow
-import React from 'react'
 import { List } from 'immutable'
+import React from 'react'
+
 import TxsTable from '~/routes/safe/components/Transactions/TxsTable'
-import { type Transaction } from '~/routes/safe/store/models/transaction'
 import { type IncomingTransaction } from '~/routes/safe/store/models/incomingTransaction'
 import { type Owner } from '~/routes/safe/store/models/owner'
+import { type Transaction } from '~/routes/safe/store/models/transaction'
 
 type Props = {
   safeAddress: string,
@@ -34,17 +35,17 @@ const Transactions = ({
   nonce,
 }: Props) => (
   <TxsTable
-    transactions={transactions}
     cancellationTransactions={cancellationTransactions}
-    threshold={threshold}
-    owners={owners}
-    userAddress={userAddress}
+    createTransaction={createTransaction}
     currentNetwork={currentNetwork}
     granted={granted}
-    safeAddress={safeAddress}
-    createTransaction={createTransaction}
-    processTransaction={processTransaction}
     nonce={nonce}
+    owners={owners}
+    processTransaction={processTransaction}
+    safeAddress={safeAddress}
+    threshold={threshold}
+    transactions={transactions}
+    userAddress={userAddress}
   />
 )
 

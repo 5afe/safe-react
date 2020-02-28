@@ -1,14 +1,15 @@
 // @flow
-import * as React from 'react'
 import { withStyles } from '@material-ui/core/styles'
+import * as React from 'react'
+
+import OpenPaper from '~/components/Stepper/OpenPaper'
 import Field from '~/components/forms/Field'
 import TextField from '~/components/forms/TextField'
 import { required } from '~/components/forms/validator'
 import Block from '~/components/layout/Block'
-import { FIELD_NAME } from '~/routes/open/components/fields'
 import Paragraph from '~/components/layout/Paragraph'
-import OpenPaper from '~/components/Stepper/OpenPaper'
-import { sm, secondary } from '~/theme/variables'
+import { FIELD_NAME } from '~/routes/open/components/fields'
+import { secondary, sm } from '~/theme/variables'
 
 type Props = {
   classes: Object,
@@ -36,30 +37,30 @@ const styles = () => ({
 const SafeName = ({ classes, safeName }: Props) => (
   <>
     <Block margin="lg">
-      <Paragraph noMargin size="md" color="primary">
+      <Paragraph color="primary" noMargin size="md">
         You are about to create a new Gnosis Safe wallet with one or more owners. First, let&apos;s give your new wallet
         a name. This name is only stored locally and will never be shared with Gnosis or any third parties.
       </Paragraph>
     </Block>
-    <Block margin="lg" className={classes.root}>
+    <Block className={classes.root} margin="lg">
       <Field
-        name={FIELD_NAME}
         component={TextField}
-        type="text"
-        validate={required}
+        defaultValue={safeName}
+        name={FIELD_NAME}
         placeholder="Name of the new Safe"
         text="Safe name"
-        defaultValue={safeName}
+        type="text"
+        validate={required}
       />
     </Block>
     <Block margin="lg">
-      <Paragraph noMargin size="md" color="primary" className={classes.links}>
+      <Paragraph className={classes.links} color="primary" noMargin size="md">
         By continuing you consent with the{' '}
-        <a rel="noopener noreferrer" href="https://safe.gnosis.io/terms" target="_blank">
+        <a href="https://safe.gnosis.io/terms" rel="noopener noreferrer" target="_blank">
           terms of use
         </a>{' '}
         and{' '}
-        <a rel="noopener noreferrer" href="https://safe.gnosis.io/privacy" target="_blank">
+        <a href="https://safe.gnosis.io/privacy" rel="noopener noreferrer" target="_blank">
           privacy policy
         </a>
         . Most importantly, you confirm that your funds are held securely in the Gnosis Safe, a smart contract on the

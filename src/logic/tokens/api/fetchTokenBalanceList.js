@@ -1,5 +1,6 @@
 // @flow
 import axios from 'axios'
+
 import { getTxServiceHost } from '~/config/index'
 
 const fetchTokenBalanceList = (safeAddress: string) => {
