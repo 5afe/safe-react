@@ -1,25 +1,26 @@
 // @flow
-import * as React from 'react'
-import ChevronLeft from '@material-ui/icons/ChevronLeft'
 import IconButton from '@material-ui/core/IconButton'
+import ChevronLeft from '@material-ui/icons/ChevronLeft'
+import * as React from 'react'
+
 import Stepper, { StepperPage } from '~/components/Stepper'
 import Block from '~/components/layout/Block'
 import Heading from '~/components/layout/Heading'
 import Row from '~/components/layout/Row'
+import { initContracts } from '~/logic/contracts/safeContracts'
 import Review from '~/routes/open/components/ReviewInformation'
 import SafeNameField from '~/routes/open/components/SafeNameForm'
 import SafeOwnersFields from '~/routes/open/components/SafeOwnersConfirmationsForm'
 import {
-  getOwnerNameBy,
-  getOwnerAddressBy,
   FIELD_CONFIRMATIONS,
   FIELD_SAFE_NAME,
+  getOwnerAddressBy,
+  getOwnerNameBy,
 } from '~/routes/open/components/fields'
-import { initContracts } from '~/logic/contracts/safeContracts'
-import { history } from '~/store'
-import { secondary, sm } from '~/theme/variables'
 import type { SafePropsType } from '~/routes/open/container/Open'
 import Welcome from '~/routes/welcome/components/Layout'
+import { history } from '~/store'
+import { secondary, sm } from '~/theme/variables'
 
 const { useEffect } = React
 
@@ -34,7 +35,7 @@ const initialValuesFrom = (userAccount: string, safeProps?: SafePropsType) => {
     }
   }
   let obj = {}
-  const { ownerAddresses, ownerNames, threshold, name } = safeProps
+  const { name, ownerAddresses, ownerNames, threshold } = safeProps
   // eslint-disable-next-line no-restricted-syntax
   for (const [index, value] of ownerAddresses.entries()) {
     const safeName = ownerNames[index] ? ownerNames[index] : 'My Wallet'
@@ -76,7 +77,7 @@ const formMutators = {
 }
 
 const Layout = (props: Props) => {
-  const { provider, userAccount, onCallSafeContractSubmit, network, safeProps } = props
+  const { network, onCallSafeContractSubmit, provider, safeProps, userAccount } = props
 
   useEffect(() => {
     if (provider) {
@@ -93,16 +94,16 @@ const Layout = (props: Props) => {
       {provider ? (
         <Block>
           <Row align="center">
-            <IconButton onClick={back} style={iconStyle} disableRipple>
+            <IconButton disableRipple onClick={back} style={iconStyle}>
               <ChevronLeft />
             </IconButton>
             <Heading tag="h2">Create New Safe</Heading>
           </Row>
           <Stepper
-            onSubmit={onCallSafeContractSubmit}
-            steps={steps}
             initialValues={initialValues}
             mutators={formMutators}
+            onSubmit={onCallSafeContractSubmit}
+            steps={steps}
             testId="create-safe-form"
           >
             <StepperPage>{SafeNameField}</StepperPage>
@@ -113,7 +114,7 @@ const Layout = (props: Props) => {
           </Stepper>
         </Block>
       ) : (
-        <Welcome provider={provider} isOldMultisigMigration />
+        <Welcome isOldMultisigMigration provider={provider} />
       )}
     </>
   )

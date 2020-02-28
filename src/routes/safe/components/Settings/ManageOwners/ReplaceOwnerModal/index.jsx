@@ -1,14 +1,16 @@
 // @flow
-import React, { useState, useEffect } from 'react'
-import { List } from 'immutable'
 import { withStyles } from '@material-ui/core/styles'
+import { List } from 'immutable'
 import { withSnackbar } from 'notistack'
-import Modal from '~/components/Modal'
-import { type Owner } from '~/routes/safe/store/models/owner'
-import { TX_NOTIFICATION_TYPES } from '~/logic/safe/transactions'
-import { getGnosisSafeInstanceAt, SENTINEL_ADDRESS } from '~/logic/contracts/safeContracts'
+import React, { useEffect, useState } from 'react'
+
 import OwnerForm from './screens/OwnerForm'
 import ReviewReplaceOwner from './screens/Review'
+
+import Modal from '~/components/Modal'
+import { SENTINEL_ADDRESS, getGnosisSafeInstanceAt } from '~/logic/contracts/safeContracts'
+import { TX_NOTIFICATION_TYPES } from '~/logic/safe/transactions'
+import { type Owner } from '~/routes/safe/store/models/owner'
 import type { Safe } from '~/routes/safe/store/models/safe'
 
 const styles = () => ({
@@ -77,20 +79,20 @@ export const sendReplaceOwner = async (
 }
 
 const ReplaceOwner = ({
-  onClose,
-  isOpen,
   classes,
-  safeAddress,
-  safeName,
+  closeSnackbar,
+  createTransaction,
+  enqueueSnackbar,
+  isOpen,
+  onClose,
   ownerAddress,
   ownerName,
   owners,
-  threshold,
-  createTransaction,
   replaceSafeOwner,
-  enqueueSnackbar,
-  closeSnackbar,
   safe,
+  safeAddress,
+  safeName,
+  threshold,
 }: Props) => {
   const [activeScreen, setActiveScreen] = useState<ActiveScreen>('checkOwner')
   const [values, setValues] = useState<Object>({})
@@ -132,34 +134,34 @@ const ReplaceOwner = ({
 
   return (
     <Modal
-      title="Replace owner from Safe"
       description="Replace owner from Safe"
       handleClose={onClose}
       open={isOpen}
       paperClassName={classes.biggerModalWindow}
+      title="Replace owner from Safe"
     >
       <>
         {activeScreen === 'checkOwner' && (
           <OwnerForm
             onClose={onClose}
+            onSubmit={ownerSubmitted}
             ownerAddress={ownerAddress}
             ownerName={ownerName}
             owners={owners}
-            onSubmit={ownerSubmitted}
           />
         )}
         {activeScreen === 'reviewReplaceOwner' && (
           <ReviewReplaceOwner
+            onClickBack={onClickBack}
             onClose={onClose}
-            safeName={safeName}
-            owners={owners}
-            values={values}
+            onSubmit={onReplaceOwner}
             ownerAddress={ownerAddress}
             ownerName={ownerName}
-            onClickBack={onClickBack}
-            onSubmit={onReplaceOwner}
-            threshold={threshold}
+            owners={owners}
             safeAddress={safeAddress}
+            safeName={safeName}
+            threshold={threshold}
+            values={values}
           />
         )}
       </>

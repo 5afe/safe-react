@@ -1,11 +1,13 @@
 // @flow
 import * as React from 'react'
 import { connect } from 'react-redux'
-import Page from '~/components/layout/Page'
-import Layout from '~/routes/safe/components/Layout'
-import { type Token } from '~/logic/tokens/store/model/token'
-import selector, { type SelectorProps } from './selector'
+
 import actions, { type Actions } from './actions'
+import selector, { type SelectorProps } from './selector'
+
+import Page from '~/components/layout/Page'
+import { type Token } from '~/logic/tokens/store/model/token'
+import Layout from '~/routes/safe/components/Layout'
 
 type State = {
   showReceive: boolean,
@@ -34,15 +36,15 @@ class SafeView extends React.Component<Props, State> {
 
   componentDidMount() {
     const {
-      fetchSafe,
       activeTokens,
-      safeUrl,
+      addViewedSafe,
+      fetchCurrencyValues,
+      fetchSafe,
       fetchTokenBalances,
       fetchTokens,
       fetchTransactions,
-      fetchCurrencyValues,
       loadAddressBook,
-      addViewedSafe,
+      safeUrl,
     } = this.props
 
     fetchSafe(safeUrl).then(() => {
@@ -62,7 +64,7 @@ class SafeView extends React.Component<Props, State> {
   }
 
   componentDidUpdate(prevProps) {
-    const { activeTokens, safeUrl, fetchTransactions } = this.props
+    const { activeTokens, fetchTransactions, safeUrl } = this.props
     const oldActiveTokensSize = prevProps.activeTokens.size
 
     if (oldActiveTokensSize > 0 && activeTokens.size > oldActiveTokensSize) {
@@ -106,12 +108,12 @@ class SafeView extends React.Component<Props, State> {
 
   checkForUpdates() {
     const {
-      safeUrl,
       activeTokens,
-      fetchTokenBalances,
-      fetchEtherBalance,
-      fetchTransactions,
       checkAndUpdateSafeOwners,
+      fetchEtherBalance,
+      fetchTokenBalances,
+      fetchTransactions,
+      safeUrl,
     } = this.props
     checkAndUpdateSafeOwners(safeUrl)
     fetchTokenBalances(safeUrl, activeTokens)
@@ -122,57 +124,57 @@ class SafeView extends React.Component<Props, State> {
   render() {
     const { sendFunds, showReceive } = this.state
     const {
-      safe,
-      provider,
-      activeTokens,
-      blacklistedTokens,
-      granted,
-      userAddress,
-      network,
-      tokens,
-      createTransaction,
-      processTransaction,
       activateTokensByBalance,
-      fetchTokens,
-      updateSafe,
-      transactions,
-      cancellationTransactions,
-      currencySelected,
-      fetchCurrencyValues,
-      currencyValues,
+      activeTokens,
       addressBook,
+      blacklistedTokens,
+      cancellationTransactions,
+      createTransaction,
+      currencySelected,
+      currencyValues,
+      fetchCurrencyValues,
+      fetchTokens,
+      granted,
+      network,
+      processTransaction,
+      provider,
+      safe,
+      tokens,
+      transactions,
       updateAddressBookEntry,
+      updateSafe,
+      userAddress,
     } = this.props
 
     return (
       <Page>
         <Layout
+          activateTokensByBalance={activateTokensByBalance}
           activeTokens={activeTokens}
+          addressBook={addressBook}
           blacklistedTokens={blacklistedTokens}
-          tokens={tokens}
+          cancellationTransactions={cancellationTransactions}
+          createTransaction={createTransaction}
+          currencySelected={currencySelected}
+          currencyValues={currencyValues}
+          fetchCurrencyValues={fetchCurrencyValues}
+          fetchTokens={fetchTokens}
+          granted={granted}
+          hideSendFunds={this.hideSendFunds}
+          network={network}
+          onHide={this.onHide}
+          onShow={this.onShow}
+          processTransaction={processTransaction}
           provider={provider}
           safe={safe}
-          userAddress={userAddress}
-          network={network}
-          granted={granted}
-          createTransaction={createTransaction}
-          processTransaction={processTransaction}
-          activateTokensByBalance={activateTokensByBalance}
-          fetchTokens={fetchTokens}
-          updateSafe={updateSafe}
-          transactions={transactions}
-          cancellationTransactions={cancellationTransactions}
           sendFunds={sendFunds}
           showReceive={showReceive}
-          onShow={this.onShow}
-          onHide={this.onHide}
           showSendFunds={this.showSendFunds}
-          hideSendFunds={this.hideSendFunds}
-          currencySelected={currencySelected}
-          fetchCurrencyValues={fetchCurrencyValues}
-          currencyValues={currencyValues}
-          addressBook={addressBook}
+          tokens={tokens}
+          transactions={transactions}
           updateAddressBookEntry={updateAddressBookEntry}
+          updateSafe={updateSafe}
+          userAddress={userAddress}
         />
       </Page>
     )

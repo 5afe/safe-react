@@ -1,6 +1,7 @@
 // @flow
-import { BigNumber } from 'bignumber.js'
 import axios from 'axios'
+import { BigNumber } from 'bignumber.js'
+
 import { getWeb3, web3ReadOnly } from '~/logic/wallets/getWeb3'
 
 // const MAINNET_NETWORK = 1

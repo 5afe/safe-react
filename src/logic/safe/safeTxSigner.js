@@ -1,5 +1,6 @@
 // @flow
 import { List } from 'immutable'
+
 import { type Confirmation } from '~/routes/safe/store/models/confirmation'
 
 // https://gnosis-safe.readthedocs.io/en/latest/contracts/signatures.html#pre-validated-signatures

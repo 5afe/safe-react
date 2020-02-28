@@ -1,14 +1,15 @@
 // @flow
-import React from 'react'
-import Web3Connect from 'web3connect'
+import Portis from '@portis/web3'
 import Torus from '@toruslabs/torus-embed'
 import WalletConnectProvider from '@walletconnect/web3-provider'
-import Fortmatic from 'fortmatic'
-import Portis from '@portis/web3'
 import Authereum from 'authereum'
+import Fortmatic from 'fortmatic'
+import React from 'react'
+import Web3Connect from 'web3connect'
+
 import Button from '~/components/layout/Button'
-import { fetchProvider, removeProvider } from '~/logic/wallets/store/actions'
 import { getNetwork } from '~/config'
+import { fetchProvider, removeProvider } from '~/logic/wallets/store/actions'
 import { store } from '~/store'
 
 const isMainnet = process.env.REACT_APP_NETWORK === 'mainnet'
@@ -72,11 +73,11 @@ type Props = {
 const ConnectButton = (props: Props) => (
   <Button
     color="primary"
-    variant="contained"
     minWidth={140}
     onClick={() => {
       web3Connect.toggleModal()
     }}
+    variant="contained"
     {...props}
   >
     Connect

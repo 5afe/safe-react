@@ -1,6 +1,7 @@
 // @flow
 import { List, Map } from 'immutable'
-import { handleActions, type ActionType } from 'redux-actions'
+import { type ActionType, handleActions } from 'redux-actions'
+
 import { ADD_INCOMING_TRANSACTIONS } from '~/routes/safe/store/actions/addIncomingTransactions'
 import type { IncomingTransaction } from '~/routes/safe/store/models/incomingTransaction'
 

@@ -1,6 +1,7 @@
 // @flow
 import { List, Map } from 'immutable'
-import { handleActions, type ActionType } from 'redux-actions'
+import { type ActionType, handleActions } from 'redux-actions'
+
 import { ADD_CANCELLATION_TRANSACTIONS } from '~/routes/safe/store/actions/addCancellationTransactions'
 import { type Transaction } from '~/routes/safe/store/models/transaction'
 

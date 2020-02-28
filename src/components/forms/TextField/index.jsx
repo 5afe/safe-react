@@ -1,7 +1,8 @@
 // @flow
-import React from 'react'
 import MuiTextField, { TextFieldProps } from '@material-ui/core/TextField'
 import { withStyles } from '@material-ui/core/styles'
+import React from 'react'
+
 import { lg } from '~/theme/variables'
 
 // Neded for solving a fix in Windows browsers
@@ -53,11 +54,10 @@ class TextField extends React.PureComponent<TextFieldProps> {
 
     return (
       <MuiTextField
-        InputProps={inputRootProps}
         error={meta.error && (meta.touched || !meta.pristine)}
-        helperText={showError ? meta.error : helperText || ' '} // blank in order to force to have helper text
-        // eslint-disable-next-line
-        inputProps={inputProps}
+        helperText={showError ? meta.error : helperText || ' '}
+        inputProps={inputProps} // blank in order to force to have helper text
+        InputProps={inputRootProps}
         multiline={multiline}
         name={name}
         onChange={onChange}

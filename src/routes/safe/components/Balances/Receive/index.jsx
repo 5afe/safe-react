@@ -1,19 +1,20 @@
 // @flow
-import * as React from 'react'
+import IconButton from '@material-ui/core/IconButton'
 import { withStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
-import IconButton from '@material-ui/core/IconButton'
 import QRCode from 'qrcode.react'
-import Paragraph from '~/components/layout/Paragraph'
-import Identicon from '~/components/Identicon'
-import Button from '~/components/layout/Button'
-import Block from '~/components/layout/Block'
-import Row from '~/components/layout/Row'
-import Hairline from '~/components/layout/Hairline'
-import Col from '~/components/layout/Col'
-import EtherscanBtn from '~/components/EtherscanBtn'
+import * as React from 'react'
+
 import CopyBtn from '~/components/CopyBtn'
-import { sm, lg, md, secondaryText, screenSm } from '~/theme/variables'
+import EtherscanBtn from '~/components/EtherscanBtn'
+import Identicon from '~/components/Identicon'
+import Block from '~/components/layout/Block'
+import Button from '~/components/layout/Button'
+import Col from '~/components/layout/Col'
+import Hairline from '~/components/layout/Hairline'
+import Paragraph from '~/components/layout/Paragraph'
+import Row from '~/components/layout/Row'
+import { lg, md, screenSm, secondaryText, sm } from '~/theme/variables'
 import { copyToClipboard } from '~/utils/clipboard'
 
 const styles = () => ({
@@ -80,33 +81,33 @@ type Props = {
 
 const Receive = ({ classes, onClose, safeAddress, safeName }: Props) => (
   <>
-    <Row align="center" grow className={classes.heading}>
-      <Paragraph className={classes.manage} size="xl" weight="bolder" noMargin>
+    <Row align="center" className={classes.heading} grow>
+      <Paragraph className={classes.manage} noMargin size="xl" weight="bolder">
         Receive funds
       </Paragraph>
-      <IconButton onClick={onClose} disableRipple>
+      <IconButton disableRipple onClick={onClose}>
         <Close className={classes.close} />
       </IconButton>
     </Row>
     <Hairline />
-    <Paragraph className={classes.annotation} size="lg" noMargin>
+    <Paragraph className={classes.annotation} noMargin size="lg">
       This is the address of your Safe. Deposit funds by scanning the QR code or copying the address below. Only send
       ETH and ERC-20 tokens to this address!
     </Paragraph>
     <Col layout="column" middle="xs">
-      <Paragraph className={classes.safeName} weight="bold" size="lg" noMargin>
+      <Paragraph className={classes.safeName} noMargin size="lg" weight="bold">
         {safeName}
       </Paragraph>
       <Block className={classes.qrContainer}>
-        <QRCode value={safeAddress} size={135} />
+        <QRCode size={135} value={safeAddress} />
       </Block>
-      <Block justify="center" className={classes.addressContainer}>
+      <Block className={classes.addressContainer} justify="center">
         <Identicon address={safeAddress} diameter={32} />
         <Paragraph
+          className={classes.address}
           onClick={() => {
             copyToClipboard(safeAddress)
           }}
-          className={classes.address}
         >
           {safeAddress}
         </Paragraph>

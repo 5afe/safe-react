@@ -1,24 +1,24 @@
 // @flow
 import type { Dispatch as ReduxDispatch } from 'redux'
 
-import { type Transaction } from '~/routes/safe/store/models/transaction'
-import { userAccountSelector } from '~/logic/wallets/store/selectors'
-import fetchSafe from '~/routes/safe/store/actions/fetchSafe'
-import fetchTransactions from '~/routes/safe/store/actions/fetchTransactions'
-import { type GlobalState } from '~/store'
 import { getGnosisSafeInstanceAt } from '~/logic/contracts/safeContracts'
+import { type NotificationsQueue, getNotificationsFromTxType, showSnackbar } from '~/logic/notifications'
+import { generateSignaturesFromTxConfirmations } from '~/logic/safe/safeTxSigner'
 import {
   type NotifiedTransaction,
+  TX_TYPE_CONFIRMATION,
+  TX_TYPE_EXECUTION,
   getApprovalTransaction,
   getExecutionTransaction,
   saveTxToHistory,
-  TX_TYPE_EXECUTION,
-  TX_TYPE_CONFIRMATION,
 } from '~/logic/safe/transactions'
-import { generateSignaturesFromTxConfirmations } from '~/logic/safe/safeTxSigner'
-import { type NotificationsQueue, getNotificationsFromTxType, showSnackbar } from '~/logic/notifications'
-import { getErrorMessage } from '~/test/utils/ethereumErrors'
+import { userAccountSelector } from '~/logic/wallets/store/selectors'
+import fetchSafe from '~/routes/safe/store/actions/fetchSafe'
+import fetchTransactions from '~/routes/safe/store/actions/fetchTransactions'
 import { getLastTx, getNewTxNonce, shouldExecuteTransaction } from '~/routes/safe/store/actions/utils'
+import { type Transaction } from '~/routes/safe/store/models/transaction'
+import { type GlobalState } from '~/store'
+import { getErrorMessage } from '~/test/utils/ethereumErrors'
 
 type ProcessTransactionArgs = {
   safeAddress: string,
@@ -31,13 +31,13 @@ type ProcessTransactionArgs = {
 }
 
 const processTransaction = ({
+  approveAndExecute,
+  closeSnackbar,
+  enqueueSnackbar,
+  notifiedTransaction,
   safeAddress,
   tx,
   userAddress,
-  notifiedTransaction,
-  enqueueSnackbar,
-  closeSnackbar,
-  approveAndExecute,
 }: ProcessTransactionArgs) => async (dispatch: ReduxDispatch<GlobalState>, getState: Function) => {
   const state: GlobalState = getState()
 

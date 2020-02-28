@@ -1,5 +1,6 @@
 // @flow
 import { createAction } from 'redux-actions'
+
 import type { AddressBook } from '~/logic/addressBook/model/addressBook'
 
 export const ADD_ADDRESS_BOOK = 'ADD_ADDRESS_BOOK'

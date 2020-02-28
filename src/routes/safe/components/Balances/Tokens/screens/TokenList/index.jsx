@@ -1,22 +1,24 @@
 // @flow
-import * as React from 'react'
-import { List, Set } from 'immutable'
-import cn from 'classnames'
-import { FixedSizeList } from 'react-window'
-import SearchBar from 'material-ui-search-bar'
-import { withStyles } from '@material-ui/core/styles'
-import MuiList from '@material-ui/core/List'
 import CircularProgress from '@material-ui/core/CircularProgress'
+import MuiList from '@material-ui/core/List'
+import { withStyles } from '@material-ui/core/styles'
 import Search from '@material-ui/icons/Search'
+import cn from 'classnames'
+import { List, Set } from 'immutable'
+import SearchBar from 'material-ui-search-bar'
+import * as React from 'react'
+import { FixedSizeList } from 'react-window'
+
+import TokenRow from './TokenRow'
+import { styles } from './style'
+
+import Spacer from '~/components/Spacer'
 import Block from '~/components/layout/Block'
 import Button from '~/components/layout/Button'
 import Divider from '~/components/layout/Divider'
 import Hairline from '~/components/layout/Hairline'
-import Spacer from '~/components/Spacer'
 import Row from '~/components/layout/Row'
 import { type Token } from '~/logic/tokens/store/model/token'
-import TokenRow from './TokenRow'
-import { styles } from './style'
 
 export const ADD_CUSTOM_TOKEN_BUTTON_TEST_ID = 'add-custom-token-btn'
 
@@ -91,7 +93,7 @@ class Tokens extends React.Component<Props, State> {
 
   componentWillUnmount() {
     const { activeTokensAddresses, blacklistedTokensAddresses } = this.state
-    const { updateActiveTokens, updateBlacklistedTokens, safeAddress } = this.props
+    const { safeAddress, updateActiveTokens, updateBlacklistedTokens } = this.props
 
     updateActiveTokens(safeAddress, activeTokensAddresses)
     updateBlacklistedTokens(safeAddress, blacklistedTokensAddresses)
@@ -135,8 +137,8 @@ class Tokens extends React.Component<Props, State> {
   }
 
   render() {
-    const { classes, tokens, setActiveScreen } = this.props
-    const { filter, activeTokensAddresses } = this.state
+    const { classes, setActiveScreen, tokens } = this.props
+    const { activeTokensAddresses, filter } = this.state
     const searchClasses = {
       input: classes.searchInput,
       root: classes.searchRoot,
@@ -154,24 +156,24 @@ class Tokens extends React.Component<Props, State> {
           <Row align="center" className={cn(classes.padding, classes.actions)}>
             <Search className={classes.search} />
             <SearchBar
-              placeholder="Search by name or symbol"
               classes={searchClasses}
-              searchIcon={<div />}
-              onChange={this.onChangeSearchBar}
               onCancelSearch={this.onCancelSearch}
+              onChange={this.onChangeSearchBar}
+              placeholder="Search by name or symbol"
+              searchIcon={<div />}
               value={filter}
             />
             <Spacer />
             <Divider />
             <Spacer />
             <Button
-              variant="contained"
-              size="small"
-              color="primary"
-              className={classes.add}
               classes={{ label: classes.addBtnLabel }}
+              className={classes.add}
+              color="primary"
               onClick={switchToAddCustomTokenScreen}
+              size="small"
               testId={ADD_CUSTOM_TOKEN_BUTTON_TEST_ID}
+              variant="contained"
             >
               + Add custom token
             </Button>
@@ -179,7 +181,7 @@ class Tokens extends React.Component<Props, State> {
           <Hairline />
         </Block>
         {!tokens.size && (
-          <Block justify="center" className={classes.progressContainer}>
+          <Block className={classes.progressContainer} justify="center">
             <CircularProgress />
           </Block>
         )}
@@ -187,12 +189,12 @@ class Tokens extends React.Component<Props, State> {
           <MuiList className={classes.list}>
             <FixedSizeList
               height={413}
-              width={500}
-              overscanCount={process.env.NODE_ENV === 'test' ? 100 : 10}
               itemCount={filteredTokens.size}
               itemData={itemData}
-              itemSize={51}
               itemKey={this.getItemKey}
+              itemSize={51}
+              overscanCount={process.env.NODE_ENV === 'test' ? 100 : 10}
+              width={500}
             >
               {TokenRow}
             </FixedSizeList>

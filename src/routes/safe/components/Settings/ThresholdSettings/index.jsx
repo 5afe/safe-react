@@ -1,20 +1,22 @@
 // @flow
-import React, { useState } from 'react'
 import { withStyles } from '@material-ui/core/styles'
 import { List } from 'immutable'
 import { withSnackbar } from 'notistack'
-import Heading from '~/components/layout/Heading'
-import Button from '~/components/layout/Button'
-import Bold from '~/components/layout/Bold'
-import Block from '~/components/layout/Block'
-import Row from '~/components/layout/Row'
-import Modal from '~/components/Modal'
-import Paragraph from '~/components/layout/Paragraph'
-import { TX_NOTIFICATION_TYPES } from '~/logic/safe/transactions'
+import React, { useState } from 'react'
+
 import ChangeThreshold from './ChangeThreshold'
-import type { Owner } from '~/routes/safe/store/models/owner'
-import { getGnosisSafeInstanceAt } from '~/logic/contracts/safeContracts'
 import { styles } from './style'
+
+import Modal from '~/components/Modal'
+import Block from '~/components/layout/Block'
+import Bold from '~/components/layout/Bold'
+import Button from '~/components/layout/Button'
+import Heading from '~/components/layout/Heading'
+import Paragraph from '~/components/layout/Paragraph'
+import Row from '~/components/layout/Row'
+import { getGnosisSafeInstanceAt } from '~/logic/contracts/safeContracts'
+import { TX_NOTIFICATION_TYPES } from '~/logic/safe/transactions'
+import type { Owner } from '~/routes/safe/store/models/owner'
 
 type Props = {
   owners: List<Owner>,
@@ -28,14 +30,14 @@ type Props = {
 }
 
 const ThresholdSettings = ({
-  owners,
-  threshold,
   classes,
-  createTransaction,
-  safeAddress,
-  granted,
-  enqueueSnackbar,
   closeSnackbar,
+  createTransaction,
+  enqueueSnackbar,
+  granted,
+  owners,
+  safeAddress,
+  threshold,
 }: Props) => {
   const [isModalOpen, setModalOpen] = useState(false)
 
@@ -63,15 +65,15 @@ const ThresholdSettings = ({
       <Block className={classes.container}>
         <Heading tag="h2">Required confirmations</Heading>
         <Paragraph>Any transaction requires the confirmation of:</Paragraph>
-        <Paragraph size="lg" className={classes.ownersText}>
+        <Paragraph className={classes.ownersText} size="lg">
           <Bold>{threshold}</Bold> out of <Bold>{owners.size}</Bold> owners
         </Paragraph>
         {owners.size > 1 && granted && (
           <Row className={classes.buttonRow}>
             <Button
+              className={classes.modifyBtn}
               color="primary"
               minWidth={120}
-              className={classes.modifyBtn}
               onClick={toggleModal}
               variant="contained"
             >
@@ -81,17 +83,17 @@ const ThresholdSettings = ({
         )}
       </Block>
       <Modal
-        title="Change Required Confirmations"
         description="Change Required Confirmations Form"
         handleClose={toggleModal}
         open={isModalOpen}
+        title="Change Required Confirmations"
       >
         <ChangeThreshold
+          onChangeThreshold={onChangeThreshold}
           onClose={toggleModal}
           owners={owners}
-          threshold={threshold}
           safeAddress={safeAddress}
-          onChangeThreshold={onChangeThreshold}
+          threshold={threshold}
         />
       </Modal>
     </>

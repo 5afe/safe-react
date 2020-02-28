@@ -1,9 +1,11 @@
 // @flow
-import * as React from 'react'
 import classNames from 'classnames/bind'
+import * as React from 'react'
 import { Link } from 'react-router-dom'
-import { capitalize } from '~/utils/css'
+
 import styles from './index.scss'
+
+import { capitalize } from '~/utils/css'
 
 const cx = classNames.bind(styles)
 
@@ -16,7 +18,7 @@ type Props = {
   innerRef?: React.ElementRef<any>,
 }
 
-const GnosisLink = ({ to, children, color, className, padding, innerRef, ...props }: Props) => {
+const GnosisLink = ({ children, className, color, innerRef, padding, to, ...props }: Props) => {
   const internal = /^\/(?!\/)/.test(to)
   const classes = cx(styles.link, color || 'regular', padding ? capitalize(padding, 'padding') : undefined, className)
   const LinkElement = internal ? Link : 'a'

@@ -1,9 +1,10 @@
 // @flow
 import * as React from 'react'
+
 import Bold from '~/components/layout/Bold'
 import Col from '~/components/layout/Col'
-import Row from '~/components/layout/Row'
 import Paragraph from '~/components/layout/Paragraph/index'
+import Row from '~/components/layout/Row'
 import { CreateSafe } from '~/routes/welcome/components/Layout'
 
 type Props = {
@@ -11,14 +12,14 @@ type Props = {
   provider: string,
 }
 
-const NoSafe = ({ text, provider }: Props) => (
+const NoSafe = ({ provider, text }: Props) => (
   <Row>
-    <Col xs={12} center="xs" sm={10} smOffset={2} start="sm" margin="md">
+    <Col center="xs" margin="md" sm={10} smOffset={2} start="sm" xs={12}>
       <Paragraph size="lg">
         <Bold>{text}</Bold>
       </Paragraph>
     </Col>
-    <Col xs={12} center="xs" sm={10} smOffset={2} start="sm" margin="md">
+    <Col center="xs" margin="md" sm={10} smOffset={2} start="sm" xs={12}>
       <CreateSafe provider={provider} />
     </Col>
   </Row>

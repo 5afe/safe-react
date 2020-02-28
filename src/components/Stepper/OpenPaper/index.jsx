@@ -1,7 +1,8 @@
 // @flow
-import * as React from 'react'
-import { withStyles } from '@material-ui/core/styles'
 import Paper from '@material-ui/core/Paper'
+import { withStyles } from '@material-ui/core/styles'
+import * as React from 'react'
+
 import Block from '~/components/layout/Block'
 import { lg } from '~/theme/variables'
 
@@ -23,7 +24,7 @@ type Props = {
   padding?: boolean,
 }
 
-const OpenPaper = ({ classes, children, controls, padding = true }: Props) => (
+const OpenPaper = ({ children, classes, controls, padding = true }: Props) => (
   <Paper className={classes.root} elevation={1}>
     <Block className={padding ? classes.padding : ''}>{children}</Block>
     {controls}
