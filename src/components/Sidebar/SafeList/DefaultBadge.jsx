@@ -1,11 +1,12 @@
 // @flow
-import * as React from 'react'
 import { makeStyles } from '@material-ui/core/styles'
-import Img from '~/components/layout/Img'
-import Block from '~/components/layout/Block'
-import Paragraph from '~/components/layout/Paragraph'
-import { primary, secondaryBackground, md } from '~/theme/variables'
+import * as React from 'react'
+
 import HomeIcon from '~/assets/icons/shape.svg'
+import Block from '~/components/layout/Block'
+import Img from '~/components/layout/Img'
+import Paragraph from '~/components/layout/Paragraph'
+import { md, primary, secondaryBackground } from '~/theme/variables'
 
 const useStyles = makeStyles({
   container: {
@@ -27,9 +28,9 @@ const DefaultBadge = () => {
   const classes = useStyles()
 
   return (
-    <Block justify="left" className={classes.container}>
-      <Img src={HomeIcon} alt="Home Icon" />
-      <Paragraph noMargin size="xs" className={classes.defaultText}>
+    <Block className={classes.container} justify="left">
+      <Img alt="Home Icon" src={HomeIcon} />
+      <Paragraph className={classes.defaultText} noMargin size="xs">
         Default
       </Paragraph>
     </Block>

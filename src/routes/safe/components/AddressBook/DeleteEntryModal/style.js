@@ -1,5 +1,5 @@
 // @flow
-import { lg, md, error } from '~/theme/variables'
+import { error, lg, md } from '~/theme/variables'
 
 export const styles = () => ({
   heading: {

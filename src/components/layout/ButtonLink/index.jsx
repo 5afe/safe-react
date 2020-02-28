@@ -1,7 +1,8 @@
 // @flow
 /* eslint-disable react/button-has-type  */
-import * as React from 'react'
 import cn from 'classnames/bind'
+import * as React from 'react'
+
 import styles from './index.scss'
 
 const cx = cn.bind(styles)
@@ -16,15 +17,15 @@ type Props = {
 }
 
 const GnoButtonLink = ({
-  type = 'button',
-  size = 'md',
-  weight = 'regular',
-  color = 'secondary',
-  testId = '',
   className = '',
+  color = 'secondary',
+  size = 'md',
+  testId = '',
+  type = 'button',
+  weight = 'regular',
   ...props
 }: Props) => (
-  <button type={type} className={cx(styles.btnLink, size, color, weight, className)} data-testid={testId} {...props} />
+  <button className={cx(styles.btnLink, size, color, weight, className)} data-testid={testId} type={type} {...props} />
 )
 
 export default GnoButtonLink

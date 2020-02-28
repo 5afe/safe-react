@@ -1,8 +1,10 @@
 // @flow
-import * as React from 'react'
 import classNames from 'classnames/bind'
-import { capitalize } from '~/utils/css'
+import * as React from 'react'
+
 import styles from './index.scss'
+
+import { capitalize } from '~/utils/css'
 
 const cx = classNames.bind(styles)
 
@@ -31,27 +33,27 @@ type Props = {
 }
 
 const Col = ({
-  children,
-  margin,
-  layout = 'inherit',
-  overflow,
-  xs,
-  sm,
-  md,
-  lg,
-  start,
-  center,
-  end,
-  top,
-  middle,
-  bottom,
   around,
   between,
-  xsOffset,
-  smOffset,
-  mdOffset,
-  lgOffset,
+  bottom,
+  center,
+  children,
   className,
+  end,
+  layout = 'inherit',
+  lg,
+  lgOffset,
+  margin,
+  md,
+  mdOffset,
+  middle,
+  overflow,
+  sm,
+  smOffset,
+  start,
+  top,
+  xs,
+  xsOffset,
   ...props
 }: Props) => {
   const colClassNames = cx(

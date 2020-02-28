@@ -1,33 +1,36 @@
 // @flow
-import React, { useEffect, useState } from 'react'
-import { List } from 'immutable'
-import { BigNumber } from 'bignumber.js'
+import IconButton from '@material-ui/core/IconButton'
 import { withStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
-import IconButton from '@material-ui/core/IconButton'
+import { BigNumber } from 'bignumber.js'
+import { List } from 'immutable'
 import { withSnackbar } from 'notistack'
+import React, { useEffect, useState } from 'react'
+
+import ArrowDown from '../assets/arrow-down.svg'
+
+import { styles } from './style'
+
+import CopyBtn from '~/components/CopyBtn'
+import EtherscanBtn from '~/components/EtherscanBtn'
+import Identicon from '~/components/Identicon'
+import Block from '~/components/layout/Block'
+import Button from '~/components/layout/Button'
+import Col from '~/components/layout/Col'
+import Hairline from '~/components/layout/Hairline'
+import Img from '~/components/layout/Img'
 import Paragraph from '~/components/layout/Paragraph'
 import Row from '~/components/layout/Row'
-import Col from '~/components/layout/Col'
-import Button from '~/components/layout/Button'
-import Img from '~/components/layout/Img'
-import Block from '~/components/layout/Block'
-import EtherscanBtn from '~/components/EtherscanBtn'
-import CopyBtn from '~/components/CopyBtn'
-import Identicon from '~/components/Identicon'
-import Hairline from '~/components/layout/Hairline'
-import SafeInfo from '~/routes/safe/components/Balances/SendModal/SafeInfo'
-import { setImageToPlaceholder } from '~/routes/safe/components/Balances/utils'
-import { getHumanFriendlyToken } from '~/logic/tokens/store/actions/fetchTokens'
+import { TX_NOTIFICATION_TYPES } from '~/logic/safe/transactions'
 import { estimateTxGasCosts } from '~/logic/safe/transactions/gasNew'
-import { EMPTY_DATA } from '~/logic/wallets/ethTransactions'
+import { getHumanFriendlyToken } from '~/logic/tokens/store/actions/fetchTokens'
 import { type Token } from '~/logic/tokens/store/model/token'
 import { formatAmount } from '~/logic/tokens/utils/formatAmount'
-import { getWeb3 } from '~/logic/wallets/getWeb3'
-import { TX_NOTIFICATION_TYPES } from '~/logic/safe/transactions'
 import { ETH_ADDRESS } from '~/logic/tokens/utils/tokenHelpers'
-import ArrowDown from '../assets/arrow-down.svg'
-import { styles } from './style'
+import { EMPTY_DATA } from '~/logic/wallets/ethTransactions'
+import { getWeb3 } from '~/logic/wallets/getWeb3'
+import SafeInfo from '~/routes/safe/components/Balances/SendModal/SafeInfo'
+import { setImageToPlaceholder } from '~/routes/safe/components/Balances/utils'
 import { sm } from '~/theme/variables'
 
 type Props = {
@@ -45,17 +48,17 @@ type Props = {
 }
 
 const ReviewTx = ({
-  onClose,
-  setActiveScreen,
   classes,
-  safeAddress,
-  safeName,
-  ethBalance,
-  tx,
-  tokens,
+  closeSnackbar,
   createTransaction,
   enqueueSnackbar,
-  closeSnackbar,
+  ethBalance,
+  onClose,
+  safeAddress,
+  safeName,
+  setActiveScreen,
+  tokens,
+  tx,
 }: Props) => {
   const [gasCosts, setGasCosts] = useState<string>('< 0.001')
   const txToken = tokens.find(token => token.address === tx.token)
@@ -123,38 +126,38 @@ const ReviewTx = ({
 
   return (
     <>
-      <Row align="center" grow className={classes.heading}>
-        <Paragraph weight="bolder" className={classes.headingText} noMargin>
+      <Row align="center" className={classes.heading} grow>
+        <Paragraph className={classes.headingText} noMargin weight="bolder">
           Send Funds
         </Paragraph>
         <Paragraph className={classes.annotation}>2 of 2</Paragraph>
-        <IconButton onClick={onClose} disableRipple>
+        <IconButton disableRipple onClick={onClose}>
           <Close className={classes.closeIcon} />
         </IconButton>
       </Row>
       <Hairline />
       <Block className={classes.container}>
-        <SafeInfo safeAddress={safeAddress} safeName={safeName} ethBalance={ethBalance} />
+        <SafeInfo ethBalance={ethBalance} safeAddress={safeAddress} safeName={safeName} />
         <Row margin="md">
           <Col xs={1}>
-            <img src={ArrowDown} alt="Arrow Down" style={{ marginLeft: sm }} />
+            <img alt="Arrow Down" src={ArrowDown} style={{ marginLeft: sm }} />
           </Col>
-          <Col xs={11} center="xs" layout="column">
+          <Col center="xs" layout="column" xs={11}>
             <Hairline />
           </Col>
         </Row>
         <Row margin="xs">
-          <Paragraph size="md" color="disabled" style={{ letterSpacing: '-0.5px' }} noMargin>
+          <Paragraph color="disabled" noMargin size="md" style={{ letterSpacing: '-0.5px' }}>
             Recipient
           </Paragraph>
         </Row>
-        <Row margin="md" align="center">
+        <Row align="center" margin="md">
           <Col xs={1}>
             <Identicon address={tx.recipientAddress} diameter={32} />
           </Col>
-          <Col xs={11} layout="column">
+          <Col layout="column" xs={11}>
             <Block justify="left">
-              <Paragraph weight="bolder" className={classes.address} noMargin>
+              <Paragraph className={classes.address} noMargin weight="bolder">
                 {tx.recipientAddress}
               </Paragraph>
               <CopyBtn content={tx.recipientAddress} />
@@ -163,13 +166,13 @@ const ReviewTx = ({
           </Col>
         </Row>
         <Row margin="xs">
-          <Paragraph size="md" color="disabled" style={{ letterSpacing: '-0.5px' }} noMargin>
+          <Paragraph color="disabled" noMargin size="md" style={{ letterSpacing: '-0.5px' }}>
             Amount
           </Paragraph>
         </Row>
-        <Row margin="md" align="center">
-          <Img src={txToken.logoUri} height={28} alt={txToken.name} onError={setImageToPlaceholder} />
-          <Paragraph size="md" noMargin className={classes.amount}>
+        <Row align="center" margin="md">
+          <Img alt={txToken.name} height={28} onError={setImageToPlaceholder} src={txToken.logoUri} />
+          <Paragraph className={classes.amount} noMargin size="md">
             {tx.amount} {txToken.symbol}
           </Paragraph>
         </Row>
@@ -185,13 +188,13 @@ const ReviewTx = ({
           Back
         </Button>
         <Button
-          type="submit"
-          onClick={submitTx}
-          variant="contained"
-          minWidth={140}
+          className={classes.submitButton}
           color="primary"
           data-testid="submit-tx-btn"
-          className={classes.submitButton}
+          minWidth={140}
+          onClick={submitTx}
+          type="submit"
+          variant="contained"
         >
           Submit
         </Button>

@@ -2,9 +2,10 @@
 import React from 'react'
 import styled from 'styled-components'
 
-import Hairline from '~/components/layout/Hairline'
-import { sm, md } from '~/theme/variables'
 import ArrowDown from './arrow-down.svg'
+
+import Hairline from '~/components/layout/Hairline'
+import { md, sm } from '~/theme/variables'
 
 const Wrapper = styled.div`
   display: flex;
@@ -22,7 +23,7 @@ type Props = {
 
 const DividerLine = ({ withArrow }: Props) => (
   <Wrapper>
-    {withArrow && <img src={ArrowDown} alt="Arrow Down" />}
+    {withArrow && <img alt="Arrow Down" src={ArrowDown} />}
     <Hairline />
   </Wrapper>
 )

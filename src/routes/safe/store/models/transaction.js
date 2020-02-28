@@ -1,8 +1,9 @@
 // @flow
 import { List, Record } from 'immutable'
 import type { RecordFactory, RecordOf } from 'immutable'
-import { type Confirmation } from '~/routes/safe/store/models/confirmation'
+
 import { ZERO_ADDRESS } from '~/logic/wallets/ethAddresses'
+import { type Confirmation } from '~/routes/safe/store/models/confirmation'
 
 export const OUTGOING_TX_TYPE = 'outgoing'
 

@@ -1,23 +1,25 @@
 // @flow
-import React, { useEffect, useState } from 'react'
-import Close from '@material-ui/icons/Close'
 import IconButton from '@material-ui/core/IconButton'
 import { withStyles } from '@material-ui/core/styles'
+import Close from '@material-ui/icons/Close'
 import { withSnackbar } from 'notistack'
-import Modal from '~/components/Modal'
-import Hairline from '~/components/layout/Hairline'
-import Button from '~/components/layout/Button'
-import Row from '~/components/layout/Row'
-import Bold from '~/components/layout/Bold'
-import Block from '~/components/layout/Block'
-import Paragraph from '~/components/layout/Paragraph'
-import { type Transaction } from '~/routes/safe/store/models/transaction'
-import { EMPTY_DATA } from '~/logic/wallets/ethTransactions'
-import { TX_NOTIFICATION_TYPES } from '~/logic/safe/transactions'
-import { getWeb3 } from '~/logic/wallets/getWeb3'
-import { formatAmount } from '~/logic/tokens/utils/formatAmount'
-import { estimateTxGasCosts } from '~/logic/safe/transactions/gasNew'
+import React, { useEffect, useState } from 'react'
+
 import { styles } from './style'
+
+import Modal from '~/components/Modal'
+import Block from '~/components/layout/Block'
+import Bold from '~/components/layout/Bold'
+import Button from '~/components/layout/Button'
+import Hairline from '~/components/layout/Hairline'
+import Paragraph from '~/components/layout/Paragraph'
+import Row from '~/components/layout/Row'
+import { TX_NOTIFICATION_TYPES } from '~/logic/safe/transactions'
+import { estimateTxGasCosts } from '~/logic/safe/transactions/gasNew'
+import { formatAmount } from '~/logic/tokens/utils/formatAmount'
+import { EMPTY_DATA } from '~/logic/wallets/ethTransactions'
+import { getWeb3 } from '~/logic/wallets/getWeb3'
+import { type Transaction } from '~/routes/safe/store/models/transaction'
 
 type Props = {
   onClose: () => void,
@@ -31,14 +33,14 @@ type Props = {
 }
 
 const RejectTxModal = ({
-  onClose,
-  isOpen,
   classes,
-  createTransaction,
-  tx,
-  safeAddress,
-  enqueueSnackbar,
   closeSnackbar,
+  createTransaction,
+  enqueueSnackbar,
+  isOpen,
+  onClose,
+  safeAddress,
+  tx,
 }: Props) => {
   const [gasCosts, setGasCosts] = useState<string>('< 0.001')
 
@@ -77,12 +79,12 @@ const RejectTxModal = ({
   }
 
   return (
-    <Modal title="Reject Transaction" description="Reject Transaction" handleClose={onClose} open={isOpen}>
-      <Row align="center" grow className={classes.heading}>
-        <Paragraph weight="bolder" className={classes.headingText} noMargin>
+    <Modal description="Reject Transaction" handleClose={onClose} open={isOpen} title="Reject Transaction">
+      <Row align="center" className={classes.heading} grow>
+        <Paragraph className={classes.headingText} noMargin weight="bolder">
           Reject transaction
         </Paragraph>
-        <IconButton onClick={onClose} disableRipple>
+        <IconButton disableRipple onClick={onClose}>
           <Close className={classes.closeIcon} />
         </IconButton>
       </Row>
@@ -92,7 +94,7 @@ const RejectTxModal = ({
           <Paragraph>
             This action will cancel this transaction. A separate transaction will be performed to submit the rejection.
           </Paragraph>
-          <Paragraph size="sm" color="medium">
+          <Paragraph color="medium" size="sm">
             Transaction nonce:
             <br />
             <Bold className={classes.nonceNumber}>{tx.nonce}</Bold>
@@ -105,16 +107,16 @@ const RejectTxModal = ({
         </Row>
       </Block>
       <Row align="center" className={classes.buttonRow}>
-        <Button minWidth={140} minHeight={42} onClick={onClose}>
+        <Button minHeight={42} minWidth={140} onClick={onClose}>
           Exit
         </Button>
         <Button
+          color="secondary"
+          minHeight={42}
+          minWidth={214}
+          onClick={sendReplacementTransaction}
           type="submit"
           variant="contained"
-          minWidth={214}
-          minHeight={42}
-          color="secondary"
-          onClick={sendReplacementTransaction}
         >
           Reject Transaction
         </Button>

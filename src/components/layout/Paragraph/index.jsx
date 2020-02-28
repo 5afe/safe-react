@@ -1,6 +1,7 @@
 // @flow
-import * as React from 'react'
 import classNames from 'classnames/bind'
+import * as React from 'react'
+
 import styles from './index.scss'
 
 const cx = classNames.bind(styles)
@@ -20,7 +21,7 @@ type Props = {
 
 class Paragraph extends React.PureComponent<Props> {
   render() {
-    const { weight, children, color, align, size, transform, noMargin, className, dot, ...props } = this.props
+    const { align, children, className, color, dot, noMargin, size, transform, weight, ...props } = this.props
 
     return (
       <p

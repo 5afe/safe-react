@@ -1,21 +1,23 @@
 // @flow
-import React from 'react'
 import { withStyles } from '@material-ui/core/styles'
 import cn from 'classnames'
-import Button from '~/components/layout/Button'
-import Img from '~/components/layout/Img'
+import React from 'react'
+
+import CancelSmallFilledCircle from './assets/cancel-small-filled.svg'
+import ConfirmSmallFilledCircle from './assets/confirm-small-filled.svg'
+import ConfirmSmallGreenCircle from './assets/confirm-small-green.svg'
+import ConfirmSmallGreyCircle from './assets/confirm-small-grey.svg'
+import ConfirmSmallRedCircle from './assets/confirm-small-red.svg'
+import { styles } from './style'
+
 import EtherscanLink from '~/components/EtherscanLink'
 import Identicon from '~/components/Identicon'
 import Block from '~/components/layout/Block'
+import Button from '~/components/layout/Button'
+import Img from '~/components/layout/Img'
 import Paragraph from '~/components/layout/Paragraph'
-import { type Owner } from '~/routes/safe/store/models/owner'
-import { styles } from './style'
-import ConfirmSmallGreyCircle from './assets/confirm-small-grey.svg'
-import ConfirmSmallGreenCircle from './assets/confirm-small-green.svg'
-import ConfirmSmallFilledCircle from './assets/confirm-small-filled.svg'
-import ConfirmSmallRedCircle from './assets/confirm-small-red.svg'
-import CancelSmallFilledCircle from './assets/cancel-small-filled.svg'
 import { getNameFromAddressBook } from '~/logic/addressBook/utils'
+import { type Owner } from '~/routes/safe/store/models/owner'
 
 export const CONFIRM_TX_BTN_TEST_ID = 'confirm-btn'
 export const EXECUTE_TX_BTN_TEST_ID = 'execute-btn'
@@ -40,18 +42,18 @@ type OwnerProps = {
 }
 
 const OwnerComponent = ({
-  onTxReject,
   classes,
   confirmed,
   executor,
   isCancelTx,
   onTxConfirm,
   onTxExecute,
+  onTxReject,
   owner,
-  showRejectBtn,
-  showExecuteRejectBtn,
   showConfirmBtn,
   showExecuteBtn,
+  showExecuteRejectBtn,
+  showRejectBtn,
   thresholdReached,
   userAddress,
 }: OwnerProps) => {
@@ -73,14 +75,14 @@ const OwnerComponent = ({
     <Block className={classes.container}>
       <div className={cn(classes.verticalLine, (confirmed || thresholdReached || executor) && getTimelineLine())} />
       <div className={classes.circleState}>
-        <Img src={imgCircle} alt="" />
+        <Img alt="" src={imgCircle} />
       </div>
-      <Identicon address={owner.address} diameter={32} className={classes.icon} />
+      <Identicon address={owner.address} className={classes.icon} diameter={32} />
       <Block>
         <Paragraph className={classes.name} noMargin>
           {ownerName}
         </Paragraph>
-        <EtherscanLink className={classes.address} type="address" value={owner.address} cut={4} />
+        <EtherscanLink className={classes.address} cut={4} type="address" value={owner.address} />
       </Block>
       <Block className={classes.spacer} />
       {owner.address === userAddress && (

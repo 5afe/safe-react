@@ -1,9 +1,11 @@
 // @flow
 import { Map } from 'immutable'
-import { handleActions, type ActionType } from 'redux-actions'
+import { type ActionType, handleActions } from 'redux-actions'
+
 import { SET_CURRENCY_BALANCES } from '../actions/setCurrencyBalances'
-import type { State } from '~/logic/tokens/store/reducer/tokens'
+
 import { SET_CURRENT_CURRENCY } from '~/logic/currencyValues/store/actions/setCurrencySelected'
+import type { State } from '~/logic/tokens/store/reducer/tokens'
 
 export const CURRENCY_VALUES_KEY = 'currencyValues'
 

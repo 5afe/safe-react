@@ -1,25 +1,27 @@
 // @flow
-import React from 'react'
-import { withSnackbar } from 'notistack'
+import IconButton from '@material-ui/core/IconButton'
 import { withStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
-import IconButton from '@material-ui/core/IconButton'
-import EtherscanBtn from '~/components/EtherscanBtn'
+import { withSnackbar } from 'notistack'
+import React from 'react'
+
+import { styles } from './style'
+
 import CopyBtn from '~/components/CopyBtn'
-import Row from '~/components/layout/Row'
-import Block from '~/components/layout/Block'
+import EtherscanBtn from '~/components/EtherscanBtn'
+import Identicon from '~/components/Identicon'
+import Modal from '~/components/Modal'
+import Field from '~/components/forms/Field'
 import GnoForm from '~/components/forms/GnoForm'
+import TextField from '~/components/forms/TextField'
+import { composeValidators, minMaxLength, required } from '~/components/forms/validator'
+import Block from '~/components/layout/Block'
 import Button from '~/components/layout/Button'
 import Hairline from '~/components/layout/Hairline'
-import Field from '~/components/forms/Field'
-import TextField from '~/components/forms/TextField'
 import Paragraph from '~/components/layout/Paragraph'
-import Identicon from '~/components/Identicon'
-import { composeValidators, required, minMaxLength } from '~/components/forms/validator'
+import Row from '~/components/layout/Row'
 import { getNotificationsFromTxType, showSnackbar } from '~/logic/notifications'
 import { TX_NOTIFICATION_TYPES } from '~/logic/safe/transactions'
-import Modal from '~/components/Modal'
-import { styles } from './style'
 import { sm } from '~/theme/variables'
 
 export const RENAME_OWNER_INPUT_TEST_ID = 'rename-owner-input'
@@ -39,15 +41,15 @@ type Props = {
 }
 
 const EditOwnerComponent = ({
-  onClose,
-  isOpen,
   classes,
-  safeAddress,
-  ownerAddress,
-  selectedOwnerName,
+  closeSnackbar,
   editSafeOwner,
   enqueueSnackbar,
-  closeSnackbar,
+  isOpen,
+  onClose,
+  ownerAddress,
+  safeAddress,
+  selectedOwnerName,
   updateAddressBookEntry,
 }: Props) => {
   const handleSubmit = values => {
@@ -62,17 +64,17 @@ const EditOwnerComponent = ({
 
   return (
     <Modal
-      title="Edit owner from Safe"
       description="Edit owner from Safe"
       handleClose={onClose}
       open={isOpen}
       paperClassName={classes.smallerModalWindow}
+      title="Edit owner from Safe"
     >
-      <Row align="center" grow className={classes.heading}>
+      <Row align="center" className={classes.heading} grow>
         <Paragraph className={classes.manage} noMargin weight="bolder">
           Edit owner name
         </Paragraph>
-        <IconButton onClick={onClose} disableRipple>
+        <IconButton disableRipple onClick={onClose}>
           <Close className={classes.close} />
         </IconButton>
       </Row>
@@ -83,21 +85,21 @@ const EditOwnerComponent = ({
             <Block className={classes.container}>
               <Row margin="md">
                 <Field
-                  name="ownerName"
+                  className={classes.addressInput}
                   component={TextField}
+                  initialValue={selectedOwnerName}
+                  name="ownerName"
+                  placeholder="Owner name*"
+                  testId={RENAME_OWNER_INPUT_TEST_ID}
+                  text="Owner name*"
                   type="text"
                   validate={composeValidators(required, minMaxLength(1, 50))}
-                  placeholder="Owner name*"
-                  text="Owner name*"
-                  initialValue={selectedOwnerName}
-                  className={classes.addressInput}
-                  testId={RENAME_OWNER_INPUT_TEST_ID}
                 />
               </Row>
               <Row>
-                <Block justify="center" className={classes.user}>
+                <Block className={classes.user} justify="center">
                   <Identicon address={ownerAddress} diameter={32} />
-                  <Paragraph style={{ marginLeft: sm, marginRight: sm }} size="md" color="disabled" noMargin>
+                  <Paragraph color="disabled" noMargin size="md" style={{ marginLeft: sm, marginRight: sm }}>
                     {ownerAddress}
                   </Paragraph>
                   <CopyBtn content={safeAddress} />
@@ -107,16 +109,16 @@ const EditOwnerComponent = ({
             </Block>
             <Hairline />
             <Row align="center" className={classes.buttonRow}>
-              <Button minWidth={140} minHeight={42} onClick={onClose}>
+              <Button minHeight={42} minWidth={140} onClick={onClose}>
                 Cancel
               </Button>
               <Button
+                color="primary"
+                minHeight={42}
+                minWidth={140}
+                testId={SAVE_OWNER_CHANGES_BTN_TEST_ID}
                 type="submit"
                 variant="contained"
-                minWidth={140}
-                minHeight={42}
-                color="primary"
-                testId={SAVE_OWNER_CHANGES_BTN_TEST_ID}
               >
                 Save
               </Button>

@@ -1,25 +1,27 @@
 // @flow
-import React from 'react'
-import classNames from 'classnames'
-import { connect } from 'react-redux'
+import IconButton from '@material-ui/core/IconButton'
 import { withStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
-import IconButton from '@material-ui/core/IconButton'
 import OpenInNew from '@material-ui/icons/OpenInNew'
-import { SAFELIST_ADDRESS } from '~/routes/routes'
-import { history } from '~/store'
-import Block from '~/components/layout/Block'
-import Modal from '~/components/Modal'
+import classNames from 'classnames'
+import React from 'react'
+import { connect } from 'react-redux'
+
+import actions, { type Actions } from './actions'
+import { styles } from './style'
+
 import Identicon from '~/components/Identicon'
-import Col from '~/components/layout/Col'
-import Row from '~/components/layout/Row'
+import Modal from '~/components/Modal'
+import Block from '~/components/layout/Block'
 import Button from '~/components/layout/Button'
+import Col from '~/components/layout/Col'
+import Hairline from '~/components/layout/Hairline'
 import Link from '~/components/layout/Link'
 import Paragraph from '~/components/layout/Paragraph'
-import Hairline from '~/components/layout/Hairline'
-import actions, { type Actions } from './actions'
-import { secondary, md } from '~/theme/variables'
-import { styles } from './style'
+import Row from '~/components/layout/Row'
+import { SAFELIST_ADDRESS } from '~/routes/routes'
+import { history } from '~/store'
+import { md, secondary } from '~/theme/variables'
 
 const openIconStyle = {
   height: md,
@@ -35,38 +37,38 @@ type Props = Actions & {
   safeName: string,
 }
 
-const RemoveSafeComponent = ({ onClose, isOpen, classes, safeAddress, etherScanLink, safeName, removeSafe }: Props) => (
+const RemoveSafeComponent = ({ classes, etherScanLink, isOpen, onClose, removeSafe, safeAddress, safeName }: Props) => (
   <Modal
-    paperClassName={classes.modal}
-    title="Remove Safe"
     description="Remove the selected Safe"
     handleClose={onClose}
     open={isOpen}
+    paperClassName={classes.modal}
+    title="Remove Safe"
   >
-    <Row align="center" grow className={classes.heading}>
+    <Row align="center" className={classes.heading} grow>
       <Paragraph className={classes.manage} noMargin weight="bolder">
         Remove Safe
       </Paragraph>
-      <IconButton onClick={onClose} disableRipple>
+      <IconButton disableRipple onClick={onClose}>
         <Close className={classes.close} />
       </IconButton>
     </Row>
     <Hairline />
     <Block className={classes.container}>
       <Row className={classes.owner}>
-        <Col xs={1} align="center">
+        <Col align="center" xs={1}>
           <Identicon address={safeAddress} diameter={32} />
         </Col>
         <Col xs={11}>
           <Block className={classNames(classes.name, classes.userName)}>
-            <Paragraph size="lg" noMargin weight="bolder">
+            <Paragraph noMargin size="lg" weight="bolder">
               {safeName}
             </Paragraph>
-            <Block justify="center" className={classes.user}>
-              <Paragraph size="md" color="disabled" noMargin>
+            <Block className={classes.user} justify="center">
+              <Paragraph color="disabled" noMargin size="md">
                 {safeAddress}
               </Paragraph>
-              <Link className={classes.open} to={etherScanLink} target="_blank">
+              <Link className={classes.open} target="_blank" to={etherScanLink}>
                 <OpenInNew style={openIconStyle} />
               </Link>
             </Block>
@@ -83,19 +85,19 @@ const RemoveSafeComponent = ({ onClose, isOpen, classes, safeAddress, etherScanL
     </Block>
     <Hairline />
     <Row align="center" className={classes.buttonRow}>
-      <Button minWidth={140} minHeight={42} onClick={onClose}>
+      <Button minHeight={42} minWidth={140} onClick={onClose}>
         Cancel
       </Button>
       <Button
-        type="submit"
         className={classes.buttonRemove}
+        minWidth={140}
         onClick={() => {
           removeSafe(safeAddress)
           onClose()
           history.push(SAFELIST_ADDRESS)
         }}
+        type="submit"
         variant="contained"
-        minWidth={140}
       >
         Remove
       </Button>

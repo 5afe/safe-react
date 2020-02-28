@@ -1,5 +1,6 @@
 // @flow
 import { List, Map } from 'immutable'
+
 import { type Token, type TokenProps } from '~/logic/tokens/store/model/token'
 import { loadFromStorage, saveToStorage } from '~/utils/storage'
 

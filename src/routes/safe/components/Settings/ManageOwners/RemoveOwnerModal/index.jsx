@@ -1,15 +1,17 @@
 // @flow
-import React, { useState, useEffect } from 'react'
-import { List } from 'immutable'
 import { withStyles } from '@material-ui/core/styles'
+import { List } from 'immutable'
 import { withSnackbar } from 'notistack'
-import Modal from '~/components/Modal'
-import { type Owner } from '~/routes/safe/store/models/owner'
-import { getGnosisSafeInstanceAt, SENTINEL_ADDRESS } from '~/logic/contracts/safeContracts'
-import { TX_NOTIFICATION_TYPES } from '~/logic/safe/transactions'
+import React, { useEffect, useState } from 'react'
+
 import CheckOwner from './screens/CheckOwner'
-import ThresholdForm from './screens/ThresholdForm'
 import ReviewRemoveOwner from './screens/Review'
+import ThresholdForm from './screens/ThresholdForm'
+
+import Modal from '~/components/Modal'
+import { SENTINEL_ADDRESS, getGnosisSafeInstanceAt } from '~/logic/contracts/safeContracts'
+import { TX_NOTIFICATION_TYPES } from '~/logic/safe/transactions'
+import { type Owner } from '~/routes/safe/store/models/owner'
 import type { Safe } from '~/routes/safe/store/models/safe'
 
 const styles = () => ({
@@ -76,20 +78,20 @@ export const sendRemoveOwner = async (
 }
 
 const RemoveOwner = ({
-  onClose,
-  isOpen,
   classes,
-  safeAddress,
-  safeName,
+  closeSnackbar,
+  createTransaction,
+  enqueueSnackbar,
+  isOpen,
+  onClose,
   ownerAddress,
   ownerName,
   owners,
-  threshold,
-  createTransaction,
   removeSafeOwner,
-  enqueueSnackbar,
-  closeSnackbar,
   safe,
+  safeAddress,
+  safeName,
+  threshold,
 }: Props) => {
   const [activeScreen, setActiveScreen] = useState<ActiveScreen>('checkOwner')
   const [values, setValues] = useState<Object>({})
@@ -138,36 +140,36 @@ const RemoveOwner = ({
 
   return (
     <Modal
-      title="Remove owner from Safe"
       description="Remove owner from Safe"
       handleClose={onClose}
       open={isOpen}
       paperClassName={classes.biggerModalWindow}
+      title="Remove owner from Safe"
     >
       <>
         {activeScreen === 'checkOwner' && (
-          <CheckOwner onClose={onClose} ownerAddress={ownerAddress} ownerName={ownerName} onSubmit={ownerSubmitted} />
+          <CheckOwner onClose={onClose} onSubmit={ownerSubmitted} ownerAddress={ownerAddress} ownerName={ownerName} />
         )}
         {activeScreen === 'selectThreshold' && (
           <ThresholdForm
+            onClickBack={onClickBack}
             onClose={onClose}
+            onSubmit={thresholdSubmitted}
             owners={owners}
             threshold={threshold}
-            onClickBack={onClickBack}
-            onSubmit={thresholdSubmitted}
           />
         )}
         {activeScreen === 'reviewRemoveOwner' && (
           <ReviewRemoveOwner
+            onClickBack={onClickBack}
             onClose={onClose}
-            safeName={safeName}
-            owners={owners}
-            values={values}
+            onSubmit={onRemoveOwner}
             ownerAddress={ownerAddress}
             ownerName={ownerName}
-            onClickBack={onClickBack}
-            onSubmit={onRemoveOwner}
+            owners={owners}
             safeAddress={safeAddress}
+            safeName={safeName}
+            values={values}
           />
         )}
       </>
