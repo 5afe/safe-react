@@ -38,10 +38,10 @@ const useStyles = makeStyles({
     marginRight: '10px',
   },
   list: {
-    overflow: 'hidden',
-    overflowY: 'hidden',
-    padding: 0,
     height: '100%',
+    overflowX: 'hidden',
+    overflowY: 'auto',
+    padding: 0,
   },
   listItemRoot: {
     paddingTop: 0,
