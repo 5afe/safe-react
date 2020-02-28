@@ -1,5 +1,5 @@
 // @flow
-export default [
+const appList = [
   {
     id: 1,
     name: 'Compound',
@@ -38,3 +38,7 @@ export default [
     },
   },
 ]
+
+export default appList
+
+export const getAppInfo = (appName: string) => appList.find(app => app.name === appName)
