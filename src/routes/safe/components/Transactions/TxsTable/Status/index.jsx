@@ -1,15 +1,17 @@
 // @flow
-import * as React from 'react'
-import { withStyles } from '@material-ui/core/styles'
 import CircularProgress from '@material-ui/core/CircularProgress'
-import Block from '~/components/layout/Block'
-import Paragraph from '~/components/layout/Paragraph/'
-import Img from '~/components/layout/Img'
-import { type TransactionStatus } from '~/routes/safe/store/models/transaction'
+import { withStyles } from '@material-ui/core/styles'
+import * as React from 'react'
+
+import AwaitingIcon from './assets/awaiting.svg'
 import ErrorIcon from './assets/error.svg'
 import OkIcon from './assets/ok.svg'
-import AwaitingIcon from './assets/awaiting.svg'
 import { styles } from './style'
+
+import Block from '~/components/layout/Block'
+import Img from '~/components/layout/Img'
+import Paragraph from '~/components/layout/Paragraph/'
+import { type TransactionStatus } from '~/routes/safe/store/models/transaction'
 
 type Props = {
   classes: Object,
@@ -44,8 +46,8 @@ const Status = ({ classes, status }: Props) => {
 
   return (
     <Block className={`${classes.container} ${classes[status]}`}>
-      {typeof Icon === 'object' ? Icon : <Img src={Icon} alt={statusToLabel[status]} style={statusIconStyle} />}
-      <Paragraph noMargin className={classes.statusText}>
+      {typeof Icon === 'object' ? Icon : <Img alt={statusToLabel[status]} src={Icon} style={statusIconStyle} />}
+      <Paragraph className={classes.statusText} noMargin>
         {statusToLabel[status]}
       </Paragraph>
     </Block>

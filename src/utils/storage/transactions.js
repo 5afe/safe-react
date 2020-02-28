@@ -1,5 +1,6 @@
 // @flow
 import { Map } from 'immutable'
+
 import { loadFromStorage, saveToStorage } from '~/utils/storage'
 
 const getSubjectKeyFrom = (safeAddress: string) => `TXS-SUBJECTS-${safeAddress}`

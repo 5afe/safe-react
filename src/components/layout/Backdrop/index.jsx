@@ -1,8 +1,8 @@
 // @flow
-import React from 'react'
-import { makeStyles } from '@material-ui/core/styles'
-import ReactDOM from 'react-dom'
 import Backdrop from '@material-ui/core/Backdrop'
+import { makeStyles } from '@material-ui/core/styles'
+import React from 'react'
+import ReactDOM from 'react-dom'
 
 const useStyles = makeStyles({
   root: {

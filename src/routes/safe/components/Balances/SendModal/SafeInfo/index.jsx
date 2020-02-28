@@ -1,15 +1,16 @@
 // @flow
-import React from 'react'
 import { makeStyles } from '@material-ui/core/styles'
-import Row from '~/components/layout/Row'
+import React from 'react'
+
+import CopyBtn from '~/components/CopyBtn'
+import EtherscanBtn from '~/components/EtherscanBtn'
+import Identicon from '~/components/Identicon'
+import Block from '~/components/layout/Block'
+import Bold from '~/components/layout/Bold'
 import Col from '~/components/layout/Col'
 import Paragraph from '~/components/layout/Paragraph'
-import EtherscanBtn from '~/components/EtherscanBtn'
-import CopyBtn from '~/components/CopyBtn'
-import Bold from '~/components/layout/Bold'
-import Block from '~/components/layout/Block'
-import Identicon from '~/components/Identicon'
-import { xs, border } from '~/theme/variables'
+import Row from '~/components/layout/Row'
+import { border, xs } from '~/theme/variables'
 
 const useStyles = makeStyles({
   balanceContainer: {
@@ -34,7 +35,7 @@ type Props = {
 }
 
 const SafeInfo = (props: Props) => {
-  const { safeAddress, safeName, ethBalance } = props
+  const { ethBalance, safeAddress, safeName } = props
   const classes = useStyles()
 
   return (
@@ -42,12 +43,12 @@ const SafeInfo = (props: Props) => {
       <Col xs={1}>
         <Identicon address={safeAddress} diameter={32} />
       </Col>
-      <Col xs={11} layout="column">
-        <Paragraph weight="bolder" noMargin style={{ lineHeight: 1 }}>
+      <Col layout="column" xs={11}>
+        <Paragraph noMargin style={{ lineHeight: 1 }} weight="bolder">
           {safeName}
         </Paragraph>
         <Block justify="left">
-          <Paragraph weight="bolder" className={classes.address} noMargin>
+          <Paragraph className={classes.address} noMargin weight="bolder">
             {safeAddress}
           </Paragraph>
           <CopyBtn content={safeAddress} />

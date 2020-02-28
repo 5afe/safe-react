@@ -1,10 +1,10 @@
 // @flow
 import {
   DEFAULT_FALLBACK_HANDLER_ADDRESS,
-  getEncodedMultiSendCallData,
-  getGnosisSafeInstanceAt,
   MULTI_SEND_ADDRESS,
   SAFE_MASTER_COPY_ADDRESS,
+  getEncodedMultiSendCallData,
+  getGnosisSafeInstanceAt,
 } from '~/logic/contracts/safeContracts'
 import type { MultiSendTransactionInstanceType } from '~/logic/contracts/safeContracts'
 import { DELEGATE_CALL } from '~/logic/safe/transactions'

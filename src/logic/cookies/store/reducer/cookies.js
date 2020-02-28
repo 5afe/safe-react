@@ -1,6 +1,7 @@
 // @flow
 import { Map } from 'immutable'
-import { handleActions, type ActionType } from 'redux-actions'
+import { type ActionType, handleActions } from 'redux-actions'
+
 import type { Cookie } from '~/logic/cookies/model/cookie'
 import { OPEN_COOKIE_BANNER } from '~/logic/cookies/store/actions/openCookieBanner'
 

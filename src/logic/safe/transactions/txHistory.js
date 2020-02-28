@@ -1,7 +1,8 @@
 // @flow
 import axios from 'axios'
+
+import { getTxServiceHost, getTxServiceUriFrom } from '~/config'
 import { getWeb3 } from '~/logic/wallets/getWeb3'
-import { getTxServiceUriFrom, getTxServiceHost } from '~/config'
 
 export type TxServiceType = 'confirmation' | 'execution' | 'initialised'
 export type Operation = 0 | 1 | 2
@@ -63,21 +64,21 @@ export const buildTxServiceUrl = (safeAddress: string) => {
 }
 
 export const saveTxToHistory = async ({
-  safeInstance,
-  to,
-  valueInWei,
-  data,
-  operation,
-  nonce,
-  safeTxGas,
   baseGas,
+  data,
   gasPrice,
   gasToken,
-  refundReceiver,
-  txHash,
-  sender,
-  type,
+  nonce,
+  operation,
   origin,
+  refundReceiver,
+  safeInstance,
+  safeTxGas,
+  sender,
+  to,
+  txHash,
+  type,
+  valueInWei,
 }: {
   safeInstance: any,
   to: string,

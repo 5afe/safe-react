@@ -1,15 +1,16 @@
 // @flow
-import type { Dispatch as ReduxDispatch } from 'redux'
 import { Set } from 'immutable'
-import { type GetState, type GlobalState } from '~/store'
+import type { Dispatch as ReduxDispatch } from 'redux'
+
+import fetchTokenBalanceList from '~/logic/tokens/api/fetchTokenBalanceList'
 import updateActiveTokens from '~/routes/safe/store/actions/updateActiveTokens'
+import updateSafe from '~/routes/safe/store/actions/updateSafe'
 import {
   safeActiveTokensSelectorBySafe,
   safeBlacklistedTokensSelectorBySafe,
   safesMapSelector,
 } from '~/routes/safe/store/selectors'
-import fetchTokenBalanceList from '~/logic/tokens/api/fetchTokenBalanceList'
-import updateSafe from '~/routes/safe/store/actions/updateSafe'
+import { type GetState, type GlobalState } from '~/store'
 
 const activateTokensByBalance = (safeAddress: string) => async (
   dispatch: ReduxDispatch<GlobalState>,
@@ -24,7 +25,7 @@ const activateTokensByBalance = (safeAddress: string) => async (
     // addresses: potentially active tokens by balance
     // balances: tokens' balance returned by the backend
     const { addresses, balances } = result.data.reduce(
-      (acc, { tokenAddress, balance }) => ({
+      (acc, { balance, tokenAddress }) => ({
         addresses: [...acc.addresses, tokenAddress],
         balances: [[tokenAddress, balance]],
       }),

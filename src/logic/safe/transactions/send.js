@@ -1,7 +1,8 @@
 // @flow
 import GnosisSafeSol from '@gnosis.pm/safe-contracts/build/contracts/GnosisSafe.json'
-import { getWeb3 } from '~/logic/wallets/getWeb3'
+
 import { type Operation } from '~/logic/safe/transactions'
+import { getWeb3 } from '~/logic/wallets/getWeb3'
 
 export const CALL = 0
 export const DELEGATE_CALL = 1
@@ -22,18 +23,18 @@ type Transaction = {
 }
 
 export const getApprovalTransaction = async ({
-  safeInstance,
-  to,
-  valueInWei,
-  data,
-  operation,
-  nonce,
-  safeTxGas,
   baseGas,
+  data,
   gasPrice,
   gasToken,
+  nonce,
+  operation,
   refundReceiver,
+  safeInstance,
+  safeTxGas,
   sender,
+  to,
+  valueInWei,
 }: Transaction & { nonce: number | string, sender: string }) => {
   const txHash = await safeInstance.getTransactionHash(
     to,
@@ -63,17 +64,17 @@ export const getApprovalTransaction = async ({
 }
 
 export const getExecutionTransaction = async ({
-  safeInstance,
-  to,
-  valueInWei,
-  data,
-  operation,
-  safeTxGas,
   baseGas,
+  data,
   gasPrice,
   gasToken,
+  operation,
   refundReceiver,
+  safeInstance,
+  safeTxGas,
   sigs,
+  to,
+  valueInWei,
 }: Transaction & { sigs: string }) => {
   try {
     const web3 = getWeb3()

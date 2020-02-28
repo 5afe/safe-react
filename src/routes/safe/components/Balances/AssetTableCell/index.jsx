@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react'
+
 import Block from '~/components/layout/Block'
 import Img from '~/components/layout/Img'
 import Paragraph from '~/components/layout/Paragraph'
@@ -17,8 +18,8 @@ const AssetTableCell = (props: Props) => {
 
   return (
     <Block justify="left">
-      <Img src={asset.logoUri} height={26} alt={asset.name} onError={setImageToPlaceholder} />
-      <Paragraph size="lg" style={{ marginLeft: 10 }} noMargin>
+      <Img alt={asset.name} height={26} onError={setImageToPlaceholder} src={asset.logoUri} />
+      <Paragraph noMargin size="lg" style={{ marginLeft: 10 }}>
         {asset.name}
       </Paragraph>
     </Block>

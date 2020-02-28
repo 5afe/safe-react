@@ -1,25 +1,27 @@
 // @flow
-import React, { useState } from 'react'
-import { List } from 'immutable'
-import { FormSpy } from 'react-final-form'
 import { withStyles } from '@material-ui/core/styles'
-import Block from '~/components/layout/Block'
-import Paragraph from '~/components/layout/Paragraph'
-import Row from '~/components/layout/Row'
-import Col from '~/components/layout/Col'
-import Img from '~/components/layout/Img'
-import Button from '~/components/layout/Button'
-import Field from '~/components/forms/Field'
-import Checkbox from '~/components/forms/Checkbox'
-import GnoForm from '~/components/forms/GnoForm'
-import TextField from '~/components/forms/TextField'
-import Hairline from '~/components/layout/Hairline'
-import { composeValidators, required, mustBeEthereumAddress, minMaxLength } from '~/components/forms/validator'
-import { type TokenProps, type Token } from '~/logic/tokens/store/model/token'
-import TokenPlaceholder from '~/routes/safe/components/Balances/assets/token_placeholder.svg'
-import { addressIsTokenContract, doesntExistInTokenList } from './validators'
+import { List } from 'immutable'
+import React, { useState } from 'react'
+import { FormSpy } from 'react-final-form'
+
 import { styles } from './style'
 import { getSymbolAndDecimalsFromContract } from './utils'
+import { addressIsTokenContract, doesntExistInTokenList } from './validators'
+
+import Checkbox from '~/components/forms/Checkbox'
+import Field from '~/components/forms/Field'
+import GnoForm from '~/components/forms/GnoForm'
+import TextField from '~/components/forms/TextField'
+import { composeValidators, minMaxLength, mustBeEthereumAddress, required } from '~/components/forms/validator'
+import Block from '~/components/layout/Block'
+import Button from '~/components/layout/Button'
+import Col from '~/components/layout/Col'
+import Hairline from '~/components/layout/Hairline'
+import Img from '~/components/layout/Img'
+import Paragraph from '~/components/layout/Paragraph'
+import Row from '~/components/layout/Row'
+import { type Token, type TokenProps } from '~/logic/tokens/store/model/token'
+import TokenPlaceholder from '~/routes/safe/components/Balances/assets/token_placeholder.svg'
 
 export const ADD_CUSTOM_TOKEN_ADDRESS_INPUT_TEST_ID = 'add-custom-token-address-input'
 export const ADD_CUSTOM_TOKEN_SYMBOLS_INPUT_TEST_ID = 'add-custom-token-symbols-input'
@@ -47,15 +49,15 @@ const INITIAL_FORM_STATE = {
 
 const AddCustomToken = (props: Props) => {
   const {
-    classes,
-    setActiveScreen,
-    onClose,
-    addToken,
-    updateActiveTokens,
-    safeAddress,
-    activeTokens,
-    tokens,
     activateTokenForAllSafes,
+    activeTokens,
+    addToken,
+    classes,
+    onClose,
+    safeAddress,
+    setActiveScreen,
+    tokens,
+    updateActiveTokens,
   } = props
   const [formValues, setFormValues] = useState(INITIAL_FORM_STATE)
 
@@ -94,7 +96,7 @@ const AddCustomToken = (props: Props) => {
   }
 
   const formSpyOnChangeHandler = async state => {
-    const { errors, validating, values, dirty, submitSucceeded } = state
+    const { dirty, errors, submitSucceeded, validating, values } = state
     // for some reason this is called after submitting, we don't need to update the values
     // after submit
     if (submitSucceeded) {
@@ -116,16 +118,20 @@ const AddCustomToken = (props: Props) => {
 
   return (
     <>
-      <GnoForm onSubmit={handleSubmit} initialValues={formValues} testId={ADD_CUSTOM_TOKEN_FORM}>
+      <GnoForm initialValues={formValues} onSubmit={handleSubmit} testId={ADD_CUSTOM_TOKEN_FORM}>
         {() => (
           <>
             <Block className={classes.formContainer}>
-              <Paragraph noMargin className={classes.title} weight="bolder" size="lg">
+              <Paragraph className={classes.title} noMargin size="lg" weight="bolder">
                 Add custom token
               </Paragraph>
               <Field
-                name="address"
+                className={classes.addressInput}
                 component={TextField}
+                name="address"
+                placeholder="Token contract address*"
+                testId={ADD_CUSTOM_TOKEN_ADDRESS_INPUT_TEST_ID}
+                text="Token contract address*"
                 type="text"
                 validate={composeValidators(
                   required,
@@ -133,12 +139,9 @@ const AddCustomToken = (props: Props) => {
                   doesntExistInTokenList(tokens),
                   addressIsTokenContract,
                 )}
-                placeholder="Token contract address*"
-                text="Token contract address*"
-                className={classes.addressInput}
-                testId={ADD_CUSTOM_TOKEN_ADDRESS_INPUT_TEST_ID}
               />
               <FormSpy
+                onChange={formSpyOnChangeHandler}
                 subscription={{
                   values: true,
                   errors: true,
@@ -146,40 +149,39 @@ const AddCustomToken = (props: Props) => {
                   dirty: true,
                   submitSucceeded: true,
                 }}
-                onChange={formSpyOnChangeHandler}
               />
               <Row>
-                <Col xs={6} layout="column">
+                <Col layout="column" xs={6}>
                   <Field
-                    name="symbol"
+                    className={classes.addressInput}
                     component={TextField}
+                    name="symbol"
+                    placeholder="Token symbol*"
+                    testId={ADD_CUSTOM_TOKEN_SYMBOLS_INPUT_TEST_ID}
+                    text="Token symbol"
                     type="text"
                     validate={composeValidators(required, minMaxLength(2, 12))}
-                    placeholder="Token symbol*"
-                    text="Token symbol"
-                    className={classes.addressInput}
-                    testId={ADD_CUSTOM_TOKEN_SYMBOLS_INPUT_TEST_ID}
                   />
                   <Field
-                    name="decimals"
+                    className={classes.addressInput}
                     component={TextField}
                     disabled
-                    type="text"
+                    name="decimals"
                     placeholder="Token decimals*"
-                    text="Token decimals*"
-                    className={classes.addressInput}
                     testId={ADD_CUSTOM_TOKEN_DECIMALS_INPUT_TEST_ID}
+                    text="Token decimals*"
+                    type="text"
                   />
                   <Block justify="left">
-                    <Field name="showForAllSafes" component={Checkbox} type="checkbox" className={classes.checkbox} />
-                    <Paragraph weight="bolder" size="md" className={classes.checkboxLabel}>
+                    <Field className={classes.checkbox} component={Checkbox} name="showForAllSafes" type="checkbox" />
+                    <Paragraph className={classes.checkboxLabel} size="md" weight="bolder">
                       Activate token for all Safes
                     </Paragraph>
                   </Block>
                 </Col>
-                <Col xs={6} layout="column" align="center">
+                <Col align="center" layout="column" xs={6}>
                   <Paragraph className={classes.tokenImageHeading}>Token Image</Paragraph>
-                  <Img src={TokenPlaceholder} alt="Token image" height={100} />
+                  <Img alt="Token image" height={100} src={TokenPlaceholder} />
                 </Col>
               </Row>
             </Block>
@@ -188,7 +190,7 @@ const AddCustomToken = (props: Props) => {
               <Button minHeight={42} minWidth={140} onClick={goBackToTokenList}>
                 Cancel
               </Button>
-              <Button type="submit" variant="contained" minWidth={140} minHeight={42} color="primary">
+              <Button color="primary" minHeight={42} minWidth={140} type="submit" variant="contained">
                 Save
               </Button>
             </Row>

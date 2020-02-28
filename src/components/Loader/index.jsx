@@ -1,6 +1,7 @@
 // @flow
-import * as React from 'react'
 import CircularProgress from '@material-ui/core/CircularProgress'
+import * as React from 'react'
+
 import Page from '~/components/layout/Page'
 
 const centerStyle = {
@@ -9,7 +10,7 @@ const centerStyle = {
 
 const Loader = () => (
   <Page align="center">
-    <CircularProgress style={centerStyle} size={60} />
+    <CircularProgress size={60} style={centerStyle} />
   </Page>
 )
 

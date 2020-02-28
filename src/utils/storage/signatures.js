@@ -1,5 +1,6 @@
 // @flow
 import { Map } from 'immutable'
+
 import { loadFromStorage, saveToStorage } from '~/utils/storage'
 
 const getSignaturesKeyFrom = (safeAddress: string) => `TXS-SIGNATURES-${safeAddress}`

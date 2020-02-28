@@ -8,7 +8,7 @@
     "import/extensions": [".js", ".jsx"]
   },
   "parser": "babel-eslint",
-  "plugins": ["react", "flowtype", "import", "jsx-a11y", "prettier"],
+  "plugins": ["react", "flowtype", "import", "jsx-a11y", "sort-destructure-keys", "prettier"],
   "extends": [
     "eslint:recommended",
     "plugin:react/recommended",
@@ -52,6 +52,12 @@
       }
     ],
     "semi": ["error", "never"],
+    "sort-imports": [
+      "error",
+      {
+        "ignoreDeclarationSort": true
+      }
+    ],
     "flowtype/require-valid-file-annotation": [
       2,
       "always",
@@ -62,6 +68,16 @@
     "import/extensions": 0,
     "import/no-extraneous-dependencies": 0,
     "import/no-unresolved": 0,
+    "import/order": [
+      "error",
+      {
+        "groups": ["builtin", "external", "parent", "sibling", "index"],
+        "newlines-between": "always",
+        "alphabetize": {
+          "order": "asc"
+        }
+      }
+    ],
     "import/prefer-default-export": 0,
     "jsx-a11y/anchor-is-valid": [
       "error",
@@ -88,7 +104,9 @@
       }
     ],
     "react/jsx-props-no-spreading": 0,
+    "react/jsx-sort-props": 2,
     "prettier/prettier": "error",
-    "jsx-a11y/no-autofocus": "warn"
+    "jsx-a11y/no-autofocus": "warn",
+    "sort-destructure-keys/sort-destructure-keys": 2
   }
 }

@@ -1,26 +1,28 @@
 // @flow
-import React from 'react'
-import classNames from 'classnames/bind'
-import { List } from 'immutable'
+import IconButton from '@material-ui/core/IconButton'
 import { withStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
-import IconButton from '@material-ui/core/IconButton'
-import EtherscanBtn from '~/components/EtherscanBtn'
+import classNames from 'classnames/bind'
+import { List } from 'immutable'
+import React from 'react'
+
+import { styles } from './style'
+
 import CopyBtn from '~/components/CopyBtn'
+import EtherscanBtn from '~/components/EtherscanBtn'
+import Identicon from '~/components/Identicon'
+import AddressInput from '~/components/forms/AddressInput'
+import Field from '~/components/forms/Field'
+import GnoForm from '~/components/forms/GnoForm'
+import TextField from '~/components/forms/TextField'
+import { composeValidators, minMaxLength, required, uniqueAddress } from '~/components/forms/validator'
+import Block from '~/components/layout/Block'
+import Button from '~/components/layout/Button'
+import Col from '~/components/layout/Col'
+import Hairline from '~/components/layout/Hairline'
 import Paragraph from '~/components/layout/Paragraph'
 import Row from '~/components/layout/Row'
-import GnoForm from '~/components/forms/GnoForm'
-import AddressInput from '~/components/forms/AddressInput'
-import Col from '~/components/layout/Col'
-import Button from '~/components/layout/Button'
-import Block from '~/components/layout/Block'
-import Hairline from '~/components/layout/Hairline'
-import Field from '~/components/forms/Field'
-import TextField from '~/components/forms/TextField'
-import Identicon from '~/components/Identicon'
 import { type Owner } from '~/routes/safe/store/models/owner'
-import { composeValidators, required, minMaxLength, uniqueAddress } from '~/components/forms/validator'
-import { styles } from './style'
 
 export const REPLACE_OWNER_NAME_INPUT_TEST_ID = 'replace-owner-name-input'
 export const REPLACE_OWNER_ADDRESS_INPUT_TEST_ID = 'replace-owner-address-testid'
@@ -41,7 +43,7 @@ type Props = {
   owners: List<Owner>,
 }
 
-const OwnerForm = ({ classes, onClose, ownerAddress, ownerName, onSubmit, owners }: Props) => {
+const OwnerForm = ({ classes, onClose, onSubmit, ownerAddress, ownerName, owners }: Props) => {
   const handleSubmit = values => {
     onSubmit(values)
   }
@@ -49,17 +51,17 @@ const OwnerForm = ({ classes, onClose, ownerAddress, ownerName, onSubmit, owners
 
   return (
     <>
-      <Row align="center" grow className={classes.heading}>
-        <Paragraph weight="bolder" className={classes.manage} noMargin>
+      <Row align="center" className={classes.heading} grow>
+        <Paragraph className={classes.manage} noMargin weight="bolder">
           Replace owner
         </Paragraph>
         <Paragraph className={classes.annotation}>1 of 2</Paragraph>
-        <IconButton onClick={onClose} disableRipple>
+        <IconButton disableRipple onClick={onClose}>
           <Close className={classes.closeIcon} />
         </IconButton>
       </Row>
       <Hairline />
-      <GnoForm onSubmit={handleSubmit} formMutators={formMutators}>
+      <GnoForm formMutators={formMutators} onSubmit={handleSubmit}>
         {(...args) => {
           const mutators = args[3]
 
@@ -76,16 +78,16 @@ const OwnerForm = ({ classes, onClose, ownerAddress, ownerName, onSubmit, owners
                   <Paragraph>Current owner</Paragraph>
                 </Row>
                 <Row className={classes.owner}>
-                  <Col xs={1} align="center">
+                  <Col align="center" xs={1}>
                     <Identicon address={ownerAddress} diameter={32} />
                   </Col>
                   <Col xs={7}>
                     <Block className={classNames(classes.name, classes.userName)}>
-                      <Paragraph size="lg" noMargin weight="bolder">
+                      <Paragraph noMargin size="lg" weight="bolder">
                         {ownerName}
                       </Paragraph>
-                      <Block justify="center" className={classes.user}>
-                        <Paragraph size="md" className={classes.address} color="disabled" noMargin>
+                      <Block className={classes.user} justify="center">
+                        <Paragraph className={classes.address} color="disabled" noMargin size="md">
                           {ownerAddress}
                         </Paragraph>
                         <CopyBtn content={ownerAddress} />
@@ -100,28 +102,28 @@ const OwnerForm = ({ classes, onClose, ownerAddress, ownerName, onSubmit, owners
                 <Row margin="md">
                   <Col xs={8}>
                     <Field
-                      name="ownerName"
+                      className={classes.addressInput}
                       component={TextField}
+                      name="ownerName"
+                      placeholder="Owner name*"
+                      testId={REPLACE_OWNER_NAME_INPUT_TEST_ID}
+                      text="Owner name*"
                       type="text"
                       validate={composeValidators(required, minMaxLength(1, 50))}
-                      placeholder="Owner name*"
-                      text="Owner name*"
-                      className={classes.addressInput}
-                      testId={REPLACE_OWNER_NAME_INPUT_TEST_ID}
                     />
                   </Col>
                 </Row>
                 <Row margin="md">
                   <Col xs={8}>
                     <AddressInput
-                      name="ownerAddress"
-                      component={TextField}
-                      validators={[ownerDoesntExist]}
-                      placeholder="Owner address*"
-                      text="Owner address*"
                       className={classes.addressInput}
+                      component={TextField}
                       fieldMutator={mutators.setOwnerAddress}
+                      name="ownerAddress"
+                      placeholder="Owner address*"
                       testId={REPLACE_OWNER_ADDRESS_INPUT_TEST_ID}
+                      text="Owner address*"
+                      validators={[ownerDoesntExist]}
                     />
                   </Col>
                 </Row>
@@ -132,12 +134,12 @@ const OwnerForm = ({ classes, onClose, ownerAddress, ownerName, onSubmit, owners
                   Cancel
                 </Button>
                 <Button
-                  type="submit"
                   className={classes.button}
-                  variant="contained"
-                  minWidth={140}
                   color="primary"
+                  minWidth={140}
                   testId={REPLACE_OWNER_NEXT_BTN_TEST_ID}
+                  type="submit"
+                  variant="contained"
                 >
                   Next
                 </Button>
