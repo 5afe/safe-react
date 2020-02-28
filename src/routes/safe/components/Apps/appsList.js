@@ -1,4 +1,6 @@
 // @flow
+import appsIconSvg from '../Transactions/TxsTable/TxType/assets/appsIcon.svg'
+
 const appList = [
   {
     id: 1,
@@ -42,17 +44,17 @@ const appList = [
 export default appList
 
 export const getAppInfo = (appId: string) => {
-  const res = appList.find(app => app.id === appId)
+  const res = appList.find(app => app.id.toString() === appId)
   if (!res) {
     return {
       id: 0,
-      name: 'Unknown',
-      url: '',
-      iconUrl: '',
-      description: '',
+      name: 'External App',
+      url: null,
+      iconUrl: appsIconSvg,
+      description: null,
       providedBy: {
-        name: '',
-        url: '',
+        name: null,
+        url: null,
       },
     }
   }
