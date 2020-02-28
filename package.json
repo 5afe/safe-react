@@ -25,7 +25,7 @@
     "prettier": "prettier './src/**/*.{js,jsx}'",
     "prettier:check": "yarn prettier --check",
     "prettier:fix": "yarn prettier --write",
-    "start": "HTTPS=true node scripts/start.js",
+    "start": "node scripts/start.js",
     "start-mainnet": "REACT_APP_NETWORK=mainnet yarn start",
     "test": "NODE_ENV=test && node scripts/test.js --env=jsdom"
   },
