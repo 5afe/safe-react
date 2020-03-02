@@ -1,11 +1,15 @@
 // @flow
 import appsIconSvg from '../Transactions/TxsTable/TxType/assets/appsIcon.svg'
 
+const appsUrl = process.env.REACT_APP_GNOSIS_APPS_URL
+  ? process.env.REACT_APP_GNOSIS_APPS_URL
+  : 'https://gnosis-apps.netlify.com'
+
 const appList = [
   {
     id: '1',
     name: 'Compound',
-    url: `${process.env.REACT_APP_GNOSIS_APPS_URL}/compound` || 'https://gnosis-apps.netlify.com/compound',
+    url: `${appsUrl}/compound`,
     iconUrl: 'https://compound.finance/images/compound-mark.svg',
     description: '',
     providedBy: { name: 'Gnosis', url: '' },
@@ -13,7 +17,7 @@ const appList = [
   {
     id: '2',
     name: 'ENS Manager',
-    url: `${process.env.REACT_APP_GNOSIS_APPS_URL}/ens` || 'https://gnosis-apps.netlify.com/ens',
+    url: `${appsUrl}/ens`,
     iconUrl: 'https://app.ens.domains/static/media/ensIconLogo.4d995d23.svg',
     description: '',
     providedBy: { name: 'Gnosis', url: '' },
@@ -21,7 +25,7 @@ const appList = [
   {
     id: '3',
     name: 'Uniswap',
-    url: `${process.env.REACT_APP_GNOSIS_APPS_URL}/uniswap` || 'https://gnosis-apps.netlify.com/uniswap',
+    url: `${appsUrl}/uniswap`,
     iconUrl:
       'https://blobscdn.gitbook.com/v0/b/gitbook-28427.appspot.com/o/spaces%2F-LNun-MDdANv-PeRglM0%2Favatar.png?generation=1538584950851432&alt=media',
     description: '',
