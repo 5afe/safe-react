@@ -1,21 +1,14 @@
 // @flow
-import { makeStyles } from '@material-ui/core/styles'
 import * as React from 'react'
 
 import CustomTxIcon from './assets/custom.svg'
 import IncomingTxIcon from './assets/incoming.svg'
 import OutgoingTxIcon from './assets/outgoing.svg'
 import SettingsTxIcon from './assets/settings.svg'
-import { styles } from './style'
 
-import Block from '~/components/layout/Block'
-import Img from '~/components/layout/Img'
-import Paragraph from '~/components/layout/Paragraph/'
+import { IconText } from '~/components-v2'
+import { getAppInfo } from '~/routes/safe/components/Apps/appsList'
 import { type TransactionType } from '~/routes/safe/store/models/transaction'
-
-type Props = {
-  txType: TransactionType,
-}
 
 const typeToIcon = {
   outgoing: OutgoingTxIcon,
@@ -37,19 +30,11 @@ const typeToLabel = {
   upgrade: 'Contract Upgrade',
 }
 
-const useStyles = makeStyles(styles)
+const TxType = ({ origin, txType }: { txType: TransactionType, origin: string | null }) => {
+  const iconUrl = txType === 'third-party-app' ? getAppInfo(origin).iconUrl : typeToIcon[txType]
+  const text = txType === 'third-party-app' ? origin : typeToLabel[txType]
 
-const TxType = ({ txType }: Props) => {
-  const classes = useStyles()
-
-  return (
-    <Block className={classes.container}>
-      <Img alt={typeToLabel[txType]} className={classes.img} src={typeToIcon[txType]} />
-      <Paragraph className={classes.type} noMargin>
-        {typeToLabel[txType]}
-      </Paragraph>
-    </Block>
-  )
+  return <IconText iconUrl={iconUrl} text={text} />
 }
 
 export default TxType
