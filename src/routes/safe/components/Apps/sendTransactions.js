@@ -14,7 +14,15 @@ const multiSendAbi = [
   },
 ]
 
-const sendTransactions = (web3: any, createTransaction: any, safeAddress: String, txs: Array<any>, origin: string) => {
+const sendTransactions = (
+  web3: any,
+  createTransaction: any,
+  safeAddress: String,
+  txs: Array<any>,
+  enqueueSnackbar: Function,
+  closeSnackbar: Function,
+  origin: string,
+) => {
   const multiSend = new web3.eth.Contract(multiSendAbi, multiSendAddress)
 
   const encodeMultiSendCalldata = multiSend.methods
@@ -39,8 +47,8 @@ const sendTransactions = (web3: any, createTransaction: any, safeAddress: String
     valueInWei: 0,
     txData: encodeMultiSendCalldata,
     notifiedTransaction: 'STANDARD_TX',
-    enqueueSnackbar: () => {},
-    closeSnackbar: () => {},
+    enqueueSnackbar,
+    closeSnackbar,
     operation: DELEGATE_CALL,
     navigateToTransactionsTab: false,
     origin,

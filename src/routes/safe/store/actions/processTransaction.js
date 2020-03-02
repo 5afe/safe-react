@@ -56,7 +56,7 @@ const processTransaction = ({
     )}000000000000000000000000000000000000000000000000000000000000000001`
   }
 
-  const notificationsQueue: NotificationsQueue = getNotificationsFromTxType(notifiedTransaction)
+  const notificationsQueue: NotificationsQueue = getNotificationsFromTxType(notifiedTransaction, tx.origin)
   const beforeExecutionKey = showSnackbar(notificationsQueue.beforeExecution, enqueueSnackbar, closeSnackbar)
   let pendingExecutionKey
 
