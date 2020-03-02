@@ -1,25 +1,20 @@
 // @flow
-import React from 'react'
 import Onboard from 'bnc-onboard'
+import React from 'react'
+
 import Button from '~/components/layout/Button'
+import { getNetworkId } from '~/config'
+import { getWeb3, setWeb3 } from '~/logic/wallets/getWeb3'
 import { fetchProvider } from '~/logic/wallets/store/actions'
 import transactionDataCheck from '~/logic/wallets/transactionDataCheck'
-import { setWeb3, getWeb3 } from '~/logic/wallets/getWeb3'
-import { getNetworkId } from '~/config'
 import { store } from '~/store'
 
 const isMainnet = process.env.REACT_APP_NETWORK === 'mainnet'
 
-const BLOCKNATIVE_API_KEY = isMainnet
-  ? process.env.REACT_APP_BLOCKNATIVE_KEY
-  : '7fbb9cee-7e97-4436-8770-8b29a9a8814c'
-const PORTIS_DAPP_ID = isMainnet
-  ? process.env.REACT_APP_PORTIS_ID
-  : '852b763d-f28b-4463-80cb-846d7ec5806b'
+const BLOCKNATIVE_API_KEY = isMainnet ? process.env.REACT_APP_BLOCKNATIVE_KEY : '7fbb9cee-7e97-4436-8770-8b29a9a8814c'
+const PORTIS_DAPP_ID = isMainnet ? process.env.REACT_APP_PORTIS_ID : '852b763d-f28b-4463-80cb-846d7ec5806b'
 // const SQUARELINK_CLIENT_ID = isMainnet ? process.env.REACT_APP_SQUARELINK_ID : '46ce08fe50913cfa1b78'
-const FORTMATIC_API_KEY = isMainnet
-  ? process.env.REACT_APP_FORTMATIC_KEY
-  : 'pk_test_CAD437AA29BE0A40'
+const FORTMATIC_API_KEY = isMainnet ? process.env.REACT_APP_FORTMATIC_KEY : 'pk_test_CAD437AA29BE0A40'
 
 const wallets = [
   { walletName: 'metamask', preferred: true },
@@ -90,12 +85,7 @@ export const onboard = new Onboard({
   walletSelect: {
     wallets,
   },
-  walletCheck: [
-    { checkName: 'connect' },
-    transactionDataCheck(),
-    { checkName: 'network' },
-    { checkName: 'accounts' },
-  ],
+  walletCheck: [{ checkName: 'connect' }, transactionDataCheck(), { checkName: 'network' }, { checkName: 'accounts' }],
 })
 
 export const onboardUser = async () => {
@@ -115,12 +105,12 @@ type Props = {
 const ConnectButton = (props: Props) => (
   <Button
     color="primary"
-    variant="contained"
     minWidth={140}
     onClick={async () => {
       await onboard.walletSelect()
       await onboard.walletCheck()
     }}
+    variant="contained"
     {...props}
   >
     Connect

@@ -1,13 +1,14 @@
 // @flow
-import * as React from 'react'
 import { withStyles } from '@material-ui/core/styles'
 import Dot from '@material-ui/icons/FiberManualRecord'
-import Paragraph from '~/components/layout/Paragraph'
-import Col from '~/components/layout/Col'
-import { screenSm, connected as connectedBg, sm } from '~/theme/variables'
-import Identicon from '~/components/Identicon'
-import { shortVersionOf } from '~/logic/wallets/ethAddresses'
+import * as React from 'react'
+
 import CircleDot from '~/components/Header/components/CircleDot'
+import Identicon from '~/components/Identicon'
+import Col from '~/components/layout/Col'
+import Paragraph from '~/components/layout/Paragraph'
+import { shortVersionOf } from '~/logic/wallets/ethAddresses'
+import { connected as connectedBg, screenSm, sm } from '~/theme/variables'
 
 type Props = {
   provider: string,
@@ -54,7 +55,7 @@ const styles = () => ({
   },
 })
 
-const ProviderInfo = ({ provider, network, userAddress, connected, classes }: Props) => {
+const ProviderInfo = ({ classes, connected, network, provider, userAddress }: Props) => {
   const providerText = `${provider} [${network}]`
   const cutAddress = connected ? shortVersionOf(userAddress, 4) : 'Connection Error'
   const color = connected ? 'primary' : 'warning'
@@ -64,16 +65,16 @@ const ProviderInfo = ({ provider, network, userAddress, connected, classes }: Pr
     <>
       {connected && (
         <>
-          <Identicon className={classes.identicon} address={identiconAddress} diameter={30} />
+          <Identicon address={identiconAddress} className={classes.identicon} diameter={30} />
           <Dot className={classes.dot} />
         </>
       )}
-      {!connected && <CircleDot keySize={14} circleSize={35} dotSize={16} dotTop={24} dotRight={11} mode="warning" />}
-      <Col start="sm" layout="column" className={classes.account}>
-        <Paragraph size="xs" transform="capitalize" className={classes.network} noMargin weight="bolder">
+      {!connected && <CircleDot circleSize={35} dotRight={11} dotSize={16} dotTop={24} keySize={14} mode="warning" />}
+      <Col className={classes.account} layout="column" start="sm">
+        <Paragraph className={classes.network} noMargin size="xs" transform="capitalize" weight="bolder">
           {providerText}
         </Paragraph>
-        <Paragraph size="xs" className={classes.address} noMargin color={color}>
+        <Paragraph className={classes.address} color={color} noMargin size="xs">
           {cutAddress}
         </Paragraph>
       </Col>

@@ -1,12 +1,13 @@
 // @flow
 import { List } from 'immutable'
+import type { GetState, Dispatch as ReduxDispatch } from 'redux'
 import { createAction } from 'redux-actions'
-import type { Dispatch as ReduxDispatch, GetState } from 'redux'
-import { type GlobalState } from '~/store'
-import { safesListSelector } from '~/routes/safe/store/selectors'
-import { type Safe } from '~/routes/safe/store/models/safe'
-import { makeOwner } from '~/routes/safe/store/models/owner'
+
 import setDefaultSafe from '~/routes/safe/store/actions/setDefaultSafe'
+import { makeOwner } from '~/routes/safe/store/models/owner'
+import { type Safe } from '~/routes/safe/store/models/safe'
+import { safesListSelector } from '~/routes/safe/store/selectors'
+import { type GlobalState } from '~/store'
 
 export const ADD_SAFE = 'ADD_SAFE'
 

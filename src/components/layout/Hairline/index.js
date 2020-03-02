@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react'
+
 import { type Size, getSize } from '~/theme/size'
 import { border } from '~/theme/variables'
 
@@ -18,11 +19,11 @@ type Props = {
   style?: Object,
 }
 
-const Hairline = ({ margin, color, style, className }: Props) => {
+const Hairline = ({ className, color, margin, style }: Props) => {
   const calculatedStyles = calculateStyleFrom(color, margin)
   const mergedStyles = { ...calculatedStyles, ...(style || {}) }
 
-  return <div style={mergedStyles} className={className} />
+  return <div className={className} style={mergedStyles} />
 }
 
 export default Hairline

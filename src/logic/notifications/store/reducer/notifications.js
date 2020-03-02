@@ -1,10 +1,12 @@
 // @flow
 import { Map } from 'immutable'
-import { handleActions, type ActionType } from 'redux-actions'
-import { makeNotification, type NotificationProps } from '~/logic/notifications/store/models/notification'
-import { ENQUEUE_SNACKBAR } from '../actions/enqueueSnackbar'
+import { type ActionType, handleActions } from 'redux-actions'
+
 import { CLOSE_SNACKBAR } from '../actions/closeSnackbar'
+import { ENQUEUE_SNACKBAR } from '../actions/enqueueSnackbar'
 import { REMOVE_SNACKBAR } from '../actions/removeSnackbar'
+
+import { type NotificationProps, makeNotification } from '~/logic/notifications/store/models/notification'
 
 export const NOTIFICATIONS_REDUCER_ID = 'notifications'
 
@@ -18,7 +20,7 @@ export default handleActions<NotificationReducerState, *>(
       return state.set(notification.key, makeNotification(notification))
     },
     [CLOSE_SNACKBAR]: (state: NotificationReducerState, action: ActionType<Function>): NotificationReducerState => {
-      const { key, dismissAll } = action.payload
+      const { dismissAll, key } = action.payload
 
       if (key) {
         return state.update(key, prev => prev.set('dismissed', true))

@@ -1,6 +1,6 @@
 // @flow
-import * as React from 'react'
 import { type FormApi } from 'final-form'
+import * as React from 'react'
 import { Form } from 'react-final-form'
 
 export type OnSubmit = (
@@ -25,17 +25,17 @@ const stylesBasedOn = (padding: number): $Shape<CSSStyleDeclaration> => ({
   flex: '1 0 auto',
 })
 
-const GnoForm = ({ onSubmit, validation, initialValues, children, padding = 0, formMutators, testId = '' }: Props) => (
+const GnoForm = ({ children, formMutators, initialValues, onSubmit, padding = 0, testId = '', validation }: Props) => (
   <Form
-    validate={validation}
-    onSubmit={onSubmit}
     initialValues={initialValues}
     mutators={formMutators}
+    onSubmit={onSubmit}
     render={({ handleSubmit, ...rest }) => (
-      <form onSubmit={handleSubmit} style={stylesBasedOn(padding)} data-testid={testId}>
+      <form data-testid={testId} onSubmit={handleSubmit} style={stylesBasedOn(padding)}>
         {children(rest.submitting, rest.validating, rest, rest.form.mutators)}
       </form>
     )}
+    validate={validation}
   />
 )
 

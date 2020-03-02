@@ -1,8 +1,9 @@
 // @flow
-import Web3 from 'web3'
 import ENS from 'ethereum-ens'
-import type { ProviderProps } from '~/logic/wallets/store/model/provider'
+import Web3 from 'web3'
+
 import { getNetwork } from '~/config/index'
+import type { ProviderProps } from '~/logic/wallets/store/model/provider'
 
 export const ETHEREUM_NETWORK = {
   MAINNET: 'MAINNET',

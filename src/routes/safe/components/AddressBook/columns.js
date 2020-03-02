@@ -1,5 +1,6 @@
 // @flow
 import { List } from 'immutable'
+
 import { type Column } from '~/components/Table/TableHead'
 
 export const ADDRESS_BOOK_ROW_ID = 'address-book-row'

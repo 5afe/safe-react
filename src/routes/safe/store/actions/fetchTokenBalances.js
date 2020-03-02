@@ -1,12 +1,14 @@
 // @flow
-import type { Dispatch as ReduxDispatch } from 'redux'
-import { Map, List } from 'immutable'
 import { BigNumber } from 'bignumber.js'
-import { type GlobalState } from '~/store/index'
-import { type Token } from '~/logic/tokens/store/model/token'
-import { getStandardTokenContract } from '~/logic/tokens/store/actions/fetchTokens'
+import { List, Map } from 'immutable'
+import type { Dispatch as ReduxDispatch } from 'redux'
+
 import updateSafe from './updateSafe'
+
+import { getStandardTokenContract } from '~/logic/tokens/store/actions/fetchTokens'
+import { type Token } from '~/logic/tokens/store/model/token'
 import { ETH_ADDRESS } from '~/logic/tokens/utils/tokenHelpers'
+import { type GlobalState } from '~/store/index'
 
 export const calculateBalanceOf = async (tokenAddress: string, safeAddress: string, decimals: number = 18) => {
   if (tokenAddress === ETH_ADDRESS) {

@@ -1,11 +1,13 @@
 // @flow
-import type { Store, AnyAction } from 'redux'
-import { type GlobalState } from '~/store/'
-import { ADD_PROVIDER, REMOVE_PROVIDER } from '../actions'
-import { getWeb3, getProviderInfo, WALLET_PROVIDER } from '~/logic/wallets/getWeb3'
-import { fetchProvider } from '~/logic/wallets/store/actions'
-import { loadFromStorage, saveToStorage, removeFromStorage } from '~/utils/storage'
+import type { AnyAction, Store } from 'redux'
+
 import closeSnackbar from '~/logic/notifications/store/actions/closeSnackbar'
+import { WALLET_PROVIDER, getProviderInfo, getWeb3 } from '~/logic/wallets/getWeb3'
+import { fetchProvider } from '~/logic/wallets/store/actions'
+import { ADD_PROVIDER } from '~/logic/wallets/store/actions/addProvider'
+import { REMOVE_PROVIDER } from '~/logic/wallets/store/actions/removeProvider'
+import { type GlobalState } from '~/store/'
+import { loadFromStorage, removeFromStorage, saveToStorage } from '~/utils/storage'
 
 const watchedActions = [ADD_PROVIDER, REMOVE_PROVIDER]
 

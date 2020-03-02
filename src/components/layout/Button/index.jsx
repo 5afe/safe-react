@@ -1,6 +1,6 @@
 // @flow
-import * as React from 'react'
 import Button from '@material-ui/core/Button'
+import * as React from 'react'
 
 type Props = {
   minWidth?: number,
@@ -17,7 +17,7 @@ const calculateStyleBased = (minWidth, minHeight) => ({
 const GnoButton = ({ minWidth, minHeight = 35, testId = '', style = {}, ...props }: Props) => {
   const calculatedStyle = calculateStyleBased(minWidth, minHeight)
 
-  return <Button style={{ ...calculatedStyle, ...style }} data-testid={testId} {...props} />
+  return <Button data-testid={testId} style={{ ...calculatedStyle, ...style }} {...props} />
 }
 
 export default GnoButton

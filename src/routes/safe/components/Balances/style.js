@@ -1,5 +1,5 @@
 // @flow
-import { xs, sm, md } from '~/theme/variables'
+import { md, sm, xs } from '~/theme/variables'
 
 export const styles = (theme: Object) => ({
   root: {

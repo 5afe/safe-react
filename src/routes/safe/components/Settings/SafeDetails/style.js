@@ -1,5 +1,5 @@
 // @flow
-import { lg, sm, boldFont, border } from '~/theme/variables'
+import { boldFont, border, lg, sm } from '~/theme/variables'
 
 export const styles = () => ({
   formContainer: {

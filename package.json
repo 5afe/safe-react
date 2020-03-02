@@ -1,6 +1,6 @@
 {
   "name": "safe-react",
-  "version": "1.7.2",
+  "version": "1.7.3",
   "description": "Allowing crypto users manage funds in a safer way",
   "homepage": "https://github.com/gnosis/safe-react#readme",
   "bugs": {
@@ -25,7 +25,7 @@
     "prettier": "prettier './src/**/*.{js,jsx}'",
     "prettier:check": "yarn prettier --check",
     "prettier:fix": "yarn prettier --write",
-    "start": "HTTPS=true node scripts/start.js",
+    "start": "node scripts/start.js",
     "start-mainnet": "REACT_APP_NETWORK=mainnet yarn start",
     "test": "NODE_ENV=test && node scripts/test.js --env=jsdom"
   },
@@ -138,6 +138,7 @@
     "eslint-plugin-jsx-a11y": "^6.2.3",
     "eslint-plugin-prettier": "^3.1.2",
     "eslint-plugin-react": "^7.18.3",
+    "eslint-plugin-sort-destructure-keys": "^1.3.3",
     "ethereumjs-abi": "0.6.8",
     "extract-text-webpack-plugin": "^4.0.0-beta.0",
     "file-loader": "5.0.2",
