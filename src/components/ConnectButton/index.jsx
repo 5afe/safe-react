@@ -65,7 +65,6 @@ export const onboard = new Onboard({
         // can also instantiate your contracts with the web3 instance
         setWeb3(wallet.provider)
         providerName = wallet.name
-        // store.dispatch(fetchProvider(providerName))
       }
     },
     address: address => {
@@ -78,7 +77,6 @@ export const onboard = new Onboard({
       if (!address && lastUsedAddress) {
         lastUsedAddress = ''
         providerName = undefined
-        // store.dispatch(removeProvider())
       }
     },
   },

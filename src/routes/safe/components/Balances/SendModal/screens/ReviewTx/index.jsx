@@ -11,7 +11,6 @@ import ArrowDown from '../assets/arrow-down.svg'
 
 import { styles } from './style'
 
-import { onboardUser } from '~/components/ConnectButton'
 import CopyBtn from '~/components/CopyBtn'
 import EtherscanBtn from '~/components/EtherscanBtn'
 import Identicon from '~/components/Identicon'
@@ -96,8 +95,6 @@ const ReviewTx = ({
 
   const submitTx = async () => {
     const web3 = getWeb3()
-    const ready = await onboardUser()
-    if (!ready) return
     let txData = EMPTY_DATA
     let txAmount = web3.utils.toWei(tx.amount, 'ether')
     if (!isSendingETH) {
