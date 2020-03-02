@@ -1,7 +1,7 @@
 // @flow
+import { withSnackbar } from 'notistack'
 import React, { useCallback, useEffect, useState } from 'react'
 import styled from 'styled-components'
-import { withSnackbar } from 'notistack'
 
 import appsList from './appsList'
 import confirmTransactions from './confirmTransactions'
@@ -36,18 +36,18 @@ type Props = {
 }
 
 function Apps({
-  web3,
-  safeAddress,
-  safeName,
+  closeModal,
+  closeSnackbar,
+  createTransaction,
+  enqueueSnackbar,
   ethBalance,
   network,
-  createTransaction,
   openModal,
-  closeModal,
-  enqueueSnackbar,
-  closeSnackbar,
+  safeAddress,
+  safeName,
+  web3,
 }: Props) {
-  const [selectedApp, setSelectedApp] = useState(1)
+  const [selectedApp, setSelectedApp] = useState('1')
   const [appIsLoading, setAppIsLoading] = useState(true)
   const [iframeEl, setframeEl] = useState(null)
 

@@ -3,7 +3,7 @@ import appsIconSvg from '../Transactions/TxsTable/TxType/assets/appsIcon.svg'
 
 const appList = [
   {
-    id: 1,
+    id: '1',
     name: 'Compound',
     url: process.env.REACT_APP_GNOSIS_APPS_URL || 'https://gnosis-apps.netlify.com',
     iconUrl: 'https://compound.finance/images/compound-mark.svg',
@@ -11,7 +11,7 @@ const appList = [
     providedBy: { name: 'Gnosis', url: '' },
   },
   {
-    id: 2,
+    id: '2',
     name: 'ENS Manager',
     url: '',
     iconUrl: 'https://app.ens.domains/static/media/ensIconLogo.4d995d23.svg',
@@ -19,7 +19,7 @@ const appList = [
     providedBy: { name: 'Gnosis', url: '' },
   },
   {
-    id: 3,
+    id: '3',
     name: 'Uniswap',
     url: '',
     iconUrl:
@@ -28,7 +28,7 @@ const appList = [
     providedBy: { name: 'Gnosis', url: '' },
   },
   {
-    id: 4,
+    id: '4',
     name: 'Nexus Mutual',
     url: '',
     iconUrl:
@@ -44,7 +44,7 @@ const appList = [
 export default appList
 
 export const getAppInfo = (appId: string) => {
-  const res = appList.find(app => app.id.toString() === appId)
+  const res = appList.find(app => app.id === appId.toString())
   if (!res) {
     return {
       id: 0,
