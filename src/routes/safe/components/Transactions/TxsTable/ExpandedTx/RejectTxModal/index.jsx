@@ -74,6 +74,7 @@ const RejectTxModal = ({
       enqueueSnackbar,
       closeSnackbar,
       txNonce: tx.nonce,
+      origin: tx.origin,
     })
     onClose()
   }
