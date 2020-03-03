@@ -1,6 +1,218 @@
 {
   "assets": [
     {
+      "token_id": "80",
+      "num_sales": 0,
+      "background_color": null,
+      "image_url": "",
+      "image_preview_url": null,
+      "image_thumbnail_url": null,
+      "image_original_url": null,
+      "animation_url": null,
+      "animation_original_url": null,
+      "name": null,
+      "description": null,
+      "external_link": null,
+      "asset_contract": {
+        "address": "0x247f9c2da9871b6aa8ecc030679c6135b5cdeebb",
+        "asset_contract_type": "non-fungible",
+        "created_date": "2020-01-17T10:34:04.314370",
+        "name": "Spells of Genesis Rikeby",
+        "nft_version": "3.0",
+        "opensea_version": null,
+        "owner": 46636,
+        "schema_name": "ERC721",
+        "symbol": "",
+        "total_supply": "0",
+        "description": null,
+        "external_link": null,
+        "image_url": null,
+        "default_to_fiat": false,
+        "dev_buyer_fee_basis_points": 0,
+        "dev_seller_fee_basis_points": 0,
+        "only_proxied_transfers": false,
+        "opensea_buyer_fee_basis_points": 0,
+        "opensea_seller_fee_basis_points": 250,
+        "buyer_fee_basis_points": 0,
+        "seller_fee_basis_points": 250,
+        "payout_address": null
+      },
+      "owner": {
+        "user": null,
+        "profile_img_url": "https://storage.googleapis.com/opensea-static/opensea-profile/16.png",
+        "address": "0x441e604ad49602c0b9c0b08d0781ecf96740786a",
+        "config": "",
+        "discord_id": ""
+      },
+      "permalink": "https://rinkeby.opensea.io/assets/0x247f9c2da9871b6aa8ecc030679c6135b5cdeebb/80",
+      "collection": {
+        "banner_image_url": null,
+        "chat_url": null,
+        "created_date": "2020-01-17T10:34:04.340901",
+        "default_to_fiat": false,
+        "description": null,
+        "dev_buyer_fee_basis_points": "0",
+        "dev_seller_fee_basis_points": "0",
+        "display_data": {
+          "card_display_style": "padded",
+          "images": []
+        },
+        "external_url": null,
+        "featured": false,
+        "featured_image_url": null,
+        "hidden": true,
+        "image_url": null,
+        "is_subject_to_whitelist": false,
+        "large_image_url": null,
+        "name": "Spells of Genesis Rikeby",
+        "only_proxied_transfers": false,
+        "opensea_buyer_fee_basis_points": "0",
+        "opensea_seller_fee_basis_points": "250",
+        "payout_address": null,
+        "require_email": false,
+        "short_description": null,
+        "slug": "spells-of-genesis-rikeby",
+        "wiki_url": null
+      },
+      "decimals": 0,
+      "auctions": null,
+      "sell_orders": [],
+      "traits": [],
+      "last_sale": null,
+      "top_bid": null,
+      "current_price": null,
+      "current_escrow_price": null,
+      "listing_date": null,
+      "is_presale": false,
+      "transfer_fee_payment_token": null,
+      "transfer_fee": null
+    },
+    {
+      "token_id": "1",
+      "num_sales": 5,
+      "background_color": null,
+      "image_url": "https://lh3.googleusercontent.com/Sh20gMkwD0EnAKdjZFmVwdt0je248Nl7i1Bpmh7Xy7i0WsQJdym3I_P0mZRNmgC2IvnIwe0m7lr1XWh1WLjQTlixUw",
+      "image_preview_url": "https://lh3.googleusercontent.com/Sh20gMkwD0EnAKdjZFmVwdt0je248Nl7i1Bpmh7Xy7i0WsQJdym3I_P0mZRNmgC2IvnIwe0m7lr1XWh1WLjQTlixUw=s250",
+      "image_thumbnail_url": "https://lh3.googleusercontent.com/Sh20gMkwD0EnAKdjZFmVwdt0je248Nl7i1Bpmh7Xy7i0WsQJdym3I_P0mZRNmgC2IvnIwe0m7lr1XWh1WLjQTlixUw=s128",
+      "image_original_url": null,
+      "animation_url": null,
+      "animation_original_url": null,
+      "name": "Fruit one",
+      "description": "Testing storefronts yo!",
+      "external_link": "https://www.google.com/",
+      "asset_contract": {
+        "address": "0x0d967f8ca4d695e8e0b62c60054a826f0b34ae29",
+        "asset_contract_type": "non-fungible",
+        "created_date": "2020-03-02T00:53:04.278961",
+        "name": "CryptoFruit",
+        "nft_version": "3.0",
+        "opensea_version": "1.2.0",
+        "owner": 49,
+        "schema_name": "ERC721",
+        "symbol": "",
+        "total_supply": "0",
+        "description": "Fruit-tastic!",
+        "external_link": null,
+        "image_url": "https://lh3.googleusercontent.com/y7cnIj1rNctqC-df5CdyjoVD4Fd7M7a6Lxkj7Kns0SBnqdFmDtTNNMHfAEbQ7Kggn5wRZZyjTujKTgiFY1ynTos=s60",
+        "default_to_fiat": false,
+        "dev_buyer_fee_basis_points": 0,
+        "dev_seller_fee_basis_points": 0,
+        "only_proxied_transfers": false,
+        "opensea_buyer_fee_basis_points": 0,
+        "opensea_seller_fee_basis_points": 250,
+        "buyer_fee_basis_points": 0,
+        "seller_fee_basis_points": 250,
+        "payout_address": null
+      },
+      "owner": {
+        "user": null,
+        "profile_img_url": "https://storage.googleapis.com/opensea-static/opensea-profile/16.png",
+        "address": "0x441e604ad49602c0b9c0b08d0781ecf96740786a",
+        "config": "",
+        "discord_id": ""
+      },
+      "permalink": "https://rinkeby.opensea.io/assets/0x0d967f8ca4d695e8e0b62c60054a826f0b34ae29/1",
+      "collection": {
+        "banner_image_url": null,
+        "chat_url": null,
+        "created_date": "2020-03-02T00:53:04.305560",
+        "default_to_fiat": false,
+        "description": "Fruit-tastic!",
+        "dev_buyer_fee_basis_points": "0",
+        "dev_seller_fee_basis_points": "0",
+        "display_data": {
+          "card_display_style": "padded",
+          "images": []
+        },
+        "external_url": null,
+        "featured": false,
+        "featured_image_url": null,
+        "hidden": true,
+        "image_url": "https://lh3.googleusercontent.com/y7cnIj1rNctqC-df5CdyjoVD4Fd7M7a6Lxkj7Kns0SBnqdFmDtTNNMHfAEbQ7Kggn5wRZZyjTujKTgiFY1ynTos=s60",
+        "is_subject_to_whitelist": false,
+        "large_image_url": "https://lh3.googleusercontent.com/y7cnIj1rNctqC-df5CdyjoVD4Fd7M7a6Lxkj7Kns0SBnqdFmDtTNNMHfAEbQ7Kggn5wRZZyjTujKTgiFY1ynTos",
+        "name": "CryptoFruit",
+        "only_proxied_transfers": false,
+        "opensea_buyer_fee_basis_points": "0",
+        "opensea_seller_fee_basis_points": "250",
+        "payout_address": null,
+        "require_email": false,
+        "short_description": null,
+        "slug": "cryptofruit",
+        "wiki_url": null
+      },
+      "decimals": 0,
+      "auctions": null,
+      "sell_orders": [],
+      "traits": [],
+      "last_sale": {
+        "event_type": "successful",
+        "event_timestamp": "2020-03-03T12:50:32",
+        "auction_type": null,
+        "total_price": "100000000000000000",
+        "transaction": {
+          "id": 528938,
+          "from_account": {
+            "user": null,
+            "profile_img_url": "https://storage.googleapis.com/opensea-static/opensea-profile/30.png",
+            "address": "0x0e24b6e3beff0b44b773f068343bc2cb56cb3769",
+            "config": "",
+            "discord_id": ""
+          },
+          "to_account": {
+            "user": null,
+            "profile_img_url": "https://storage.googleapis.com/opensea-static/opensea-profile/17.png",
+            "address": "0x5206e78b21ce315ce284fb24cf05e0585a93b1d9",
+            "config": "",
+            "discord_id": ""
+          },
+          "created_date": "2020-03-03T12:50:34.446850",
+          "modified_date": "2020-03-03T13:15:34.944299",
+          "transaction_hash": "0x63e151bdb01d4f4a2cc170007775e5003f1b43ca673e5fbc8665a805c8969208",
+          "transaction_index": "3",
+          "block_number": "6073260",
+          "block_hash": "b\"M\\x9d'\\xa7\\xa5\\x86\\r\\x97 \\x14\\xb7\\xa8\\xd3;\\xc4Dt\\x8aeQ\\xa8V\\x85\\xa6e\\x03?\\xba\\x1a\\xee\\x8cD\"",
+          "timestamp": "2020-03-03T12:50:32"
+        },
+        "payment_token": {
+          "symbol": "ETH",
+          "address": "0x0000000000000000000000000000000000000000",
+          "image_url": null,
+          "name": "Ether",
+          "decimals": 18,
+          "eth_price": "1.000000000000000",
+          "usd_price": "222.860000000000013642"
+        }
+      },
+      "top_bid": null,
+      "current_price": null,
+      "current_escrow_price": null,
+      "listing_date": null,
+      "is_presale": false,
+      "transfer_fee_payment_token": null,
+      "transfer_fee": null
+    },
+    {
       "token_id": "73350453981638397229828480902275940391628533349614653130397882891258950638056",
       "num_sales": 0,
       "background_color": null,
@@ -39,8 +251,8 @@
       },
       "owner": {
         "user": null,
-        "profile_img_url": "https://storage.googleapis.com/opensea-static/opensea-profile/30.png",
-        "address": "0x0e24b6e3beff0b44b773f068343bc2cb56cb3769",
+        "profile_img_url": "https://storage.googleapis.com/opensea-static/opensea-profile/16.png",
+        "address": "0x441e604ad49602c0b9c0b08d0781ecf96740786a",
         "config": "",
         "discord_id": ""
       },
@@ -126,8 +338,8 @@
       },
       "owner": {
         "user": null,
-        "profile_img_url": "https://storage.googleapis.com/opensea-static/opensea-profile/30.png",
-        "address": "0x0e24b6e3beff0b44b773f068343bc2cb56cb3769",
+        "profile_img_url": "https://storage.googleapis.com/opensea-static/opensea-profile/16.png",
+        "address": "0x441e604ad49602c0b9c0b08d0781ecf96740786a",
         "config": "",
         "discord_id": ""
       },
@@ -175,6 +387,195 @@
       "transfer_fee": null
     },
     {
+      "token_id": "599",
+      "num_sales": 3,
+      "background_color": "000000",
+      "image_url": "https://lh3.googleusercontent.com/ZBD3SOJimAenB5ibCMMsGjpXHDvmawPR1ZW013IKVemDjS21w6C7N6oM4Jp5OH9Q3xDoKehi0MMbtt6knpq9ECLw",
+      "image_preview_url": "https://lh3.googleusercontent.com/ZBD3SOJimAenB5ibCMMsGjpXHDvmawPR1ZW013IKVemDjS21w6C7N6oM4Jp5OH9Q3xDoKehi0MMbtt6knpq9ECLw=s250",
+      "image_thumbnail_url": "https://lh3.googleusercontent.com/ZBD3SOJimAenB5ibCMMsGjpXHDvmawPR1ZW013IKVemDjS21w6C7N6oM4Jp5OH9Q3xDoKehi0MMbtt6knpq9ECLw=s128",
+      "image_original_url": "https://tv-inventory.s3.eu-west-2.amazonaws.com/paramount/posters/images/large/gf_vitog.png",
+      "animation_url": null,
+      "animation_original_url": null,
+      "name": "Vito - Gold",
+      "description": "The classic image of the Godfather, Vito Corleone.",
+      "external_link": "http://store.terravirtua.io/?utm_source=OpenSea&utm_medium=Auction&utm_campaign=Godfather&utm_content=GFVITOG100019",
+      "asset_contract": {
+        "address": "0x1571d1a3e1f09fc5ec2a9fa91e5069c1e50a900f",
+        "asset_contract_type": "non-fungible",
+        "created_date": "2019-12-03T17:53:48.462992",
+        "name": "TerraNFT",
+        "nft_version": "3.0",
+        "opensea_version": "1.2.0",
+        "owner": 36536,
+        "schema_name": "ERC721",
+        "symbol": "",
+        "total_supply": "30",
+        "description": "Terra Virtua is building an innovative 3D platform for NFTs which will allow you to display, share and interact with your collectibles. Coming on PC, mobile AR and VR, this will take your collecting experience to the next level. This will be the first immersive collectibles platform for your digital assets.",
+        "external_link": "http://store.terravirtua.io/",
+        "image_url": "https://rinkeby-storage.opensea.io/terranft-11-1575471799.jpg",
+        "default_to_fiat": false,
+        "dev_buyer_fee_basis_points": 0,
+        "dev_seller_fee_basis_points": 0,
+        "only_proxied_transfers": false,
+        "opensea_buyer_fee_basis_points": 0,
+        "opensea_seller_fee_basis_points": 250,
+        "buyer_fee_basis_points": 0,
+        "seller_fee_basis_points": 250,
+        "payout_address": ""
+      },
+      "owner": {
+        "user": null,
+        "profile_img_url": "https://storage.googleapis.com/opensea-static/opensea-profile/16.png",
+        "address": "0x441e604ad49602c0b9c0b08d0781ecf96740786a",
+        "config": "",
+        "discord_id": ""
+      },
+      "permalink": "https://rinkeby.opensea.io/assets/0x1571d1a3e1f09fc5ec2a9fa91e5069c1e50a900f/599",
+      "collection": {
+        "banner_image_url": null,
+        "chat_url": null,
+        "created_date": "2019-12-03T17:53:50.035889",
+        "default_to_fiat": false,
+        "description": "Terra Virtua is building an innovative 3D platform for NFTs which will allow you to display, share and interact with your collectibles. Coming on PC, mobile AR and VR, this will take your collecting experience to the next level. This will be the first immersive collectibles platform for your digital assets.",
+        "dev_buyer_fee_basis_points": "0",
+        "dev_seller_fee_basis_points": "0",
+        "display_data": {
+          "card_display_style": "cover",
+          "images": [
+            "https://rinkeby-storage.opensea.io/0x1571d1a3e1f09fc5ec2a9fa91e5069c1e50a900f/2001-1575442608.png",
+            "https://rinkeby-storage.opensea.io/0x1571d1a3e1f09fc5ec2a9fa91e5069c1e50a900f/2015-1575442595.png",
+            "https://rinkeby-storage.opensea.io/0x1571d1a3e1f09fc5ec2a9fa91e5069c1e50a900f/1768-1575407208.png",
+            "https://rinkeby-storage.opensea.io/0x1571d1a3e1f09fc5ec2a9fa91e5069c1e50a900f/218-1575407204.png",
+            "https://rinkeby-storage.opensea.io/0x1571d1a3e1f09fc5ec2a9fa91e5069c1e50a900f/1791-1575407200.png",
+            "https://rinkeby-storage.opensea.io/0x1571d1a3e1f09fc5ec2a9fa91e5069c1e50a900f/1740-1575407196.png"
+          ]
+        },
+        "external_url": "http://store.terravirtua.io/",
+        "featured": false,
+        "featured_image_url": null,
+        "hidden": true,
+        "image_url": "https://rinkeby-storage.opensea.io/terranft-11-1575471799.jpg",
+        "is_subject_to_whitelist": false,
+        "large_image_url": "https://rinkeby-storage.opensea.io/terranft-11-large-1575471799.jpg",
+        "name": "Terra Virtua",
+        "only_proxied_transfers": false,
+        "opensea_buyer_fee_basis_points": "0",
+        "opensea_seller_fee_basis_points": "250",
+        "payout_address": "",
+        "require_email": false,
+        "short_description": null,
+        "slug": "terranft-11",
+        "wiki_url": null
+      },
+      "decimals": 0,
+      "auctions": null,
+      "sell_orders": [],
+      "traits": [
+        {
+          "trait_type": "category",
+          "value": "posters",
+          "display_type": null,
+          "max_value": null,
+          "trait_count": 2015,
+          "order": null
+        },
+        {
+          "trait_type": "set",
+          "value": "vito",
+          "display_type": null,
+          "max_value": null,
+          "trait_count": 275,
+          "order": null
+        },
+        {
+          "trait_type": "serial number",
+          "value": "gfvitog100019",
+          "display_type": null,
+          "max_value": null,
+          "trait_count": 1,
+          "order": null
+        },
+        {
+          "trait_type": "rarity",
+          "value": "golden",
+          "display_type": null,
+          "max_value": null,
+          "trait_count": 98,
+          "order": null
+        },
+        {
+          "trait_type": "series",
+          "value": "2019 premiere series",
+          "display_type": null,
+          "max_value": null,
+          "trait_count": 2014,
+          "order": null
+        },
+        {
+          "trait_type": "brand",
+          "value": "paramount",
+          "display_type": null,
+          "max_value": null,
+          "trait_count": 2015,
+          "order": null
+        },
+        {
+          "trait_type": "collection",
+          "value": "the godfather",
+          "display_type": null,
+          "max_value": null,
+          "trait_count": 2015,
+          "order": null
+        }
+      ],
+      "last_sale": {
+        "event_type": "successful",
+        "event_timestamp": "2020-03-03T12:55:02",
+        "auction_type": null,
+        "total_price": "700000000000000000",
+        "transaction": {
+          "id": 528943,
+          "from_account": {
+            "user": null,
+            "profile_img_url": "https://storage.googleapis.com/opensea-static/opensea-profile/30.png",
+            "address": "0x0e24b6e3beff0b44b773f068343bc2cb56cb3769",
+            "config": "",
+            "discord_id": ""
+          },
+          "to_account": {
+            "user": null,
+            "profile_img_url": "https://storage.googleapis.com/opensea-static/opensea-profile/17.png",
+            "address": "0x5206e78b21ce315ce284fb24cf05e0585a93b1d9",
+            "config": "",
+            "discord_id": ""
+          },
+          "created_date": "2020-03-03T12:55:04.346248",
+          "modified_date": "2020-03-03T13:20:04.600996",
+          "transaction_hash": "0xbec875d06e4a294350b11b5b261ce5cfea9231bf61b31110b9933aeac153ad22",
+          "transaction_index": "2",
+          "block_number": "6073278",
+          "block_hash": "b'HaS`y\\xe8\\x1c\\x9e\\x1b\\xa7^\\xee\\xf9_R2\\x16S\\xd0\\xf1\\xb0l\\xfbT\\xfc\\x9c\\xa4\\x91, \\x1d\\x12'",
+          "timestamp": "2020-03-03T12:55:02"
+        },
+        "payment_token": {
+          "symbol": "ETH",
+          "address": "0x0000000000000000000000000000000000000000",
+          "image_url": null,
+          "name": "Ether",
+          "decimals": 18,
+          "eth_price": "1.000000000000000",
+          "usd_price": "222.860000000000013642"
+        }
+      },
+      "top_bid": null,
+      "current_price": null,
+      "current_escrow_price": null,
+      "listing_date": null,
+      "is_presale": false,
+      "transfer_fee_payment_token": null,
+      "transfer_fee": null
+    },
+    {
       "token_id": "22",
       "num_sales": 1,
       "background_color": null,
@@ -213,8 +614,8 @@
       },
       "owner": {
         "user": null,
-        "profile_img_url": "https://storage.googleapis.com/opensea-static/opensea-profile/30.png",
-        "address": "0x0e24b6e3beff0b44b773f068343bc2cb56cb3769",
+        "profile_img_url": "https://storage.googleapis.com/opensea-static/opensea-profile/16.png",
+        "address": "0x441e604ad49602c0b9c0b08d0781ecf96740786a",
         "config": "",
         "discord_id": ""
       },
@@ -295,7 +696,7 @@
           "name": "Ether",
           "decimals": 18,
           "eth_price": "1.000000000000000",
-          "usd_price": "282.899999999999977263"
+          "usd_price": "222.860000000000013642"
         }
       },
       "top_bid": null,
@@ -345,8 +746,8 @@
       },
       "owner": {
         "user": null,
-        "profile_img_url": "https://storage.googleapis.com/opensea-static/opensea-profile/30.png",
-        "address": "0x0e24b6e3beff0b44b773f068343bc2cb56cb3769",
+        "profile_img_url": "https://storage.googleapis.com/opensea-static/opensea-profile/16.png",
+        "address": "0x441e604ad49602c0b9c0b08d0781ecf96740786a",
         "config": "",
         "discord_id": ""
       },
@@ -395,7 +796,7 @@
           "value": "mintgreen",
           "display_type": null,
           "max_value": null,
-          "trait_count": 48,
+          "trait_count": 90,
           "order": null
         },
         {
@@ -403,7 +804,7 @@
           "value": "fast (1 min)",
           "display_type": null,
           "max_value": null,
-          "trait_count": 240,
+          "trait_count": 409,
           "order": null
         },
         {
@@ -411,7 +812,7 @@
           "value": "royalpurple",
           "display_type": null,
           "max_value": null,
-          "trait_count": 43,
+          "trait_count": 81,
           "order": null
         },
         {
@@ -419,7 +820,7 @@
           "value": "kittencream",
           "display_type": null,
           "max_value": null,
-          "trait_count": 106,
+          "trait_count": 181,
           "order": null
         },
         {
@@ -427,7 +828,7 @@
           "value": "himalayan",
           "display_type": null,
           "max_value": null,
-          "trait_count": 56,
+          "trait_count": 95,
           "order": null
         },
         {
@@ -435,7 +836,7 @@
           "value": "thicccbrowz",
           "display_type": null,
           "max_value": null,
-          "trait_count": 71,
+          "trait_count": 131,
           "order": null
         },
         {
@@ -443,7 +844,7 @@
           "value": "salmon",
           "display_type": null,
           "max_value": null,
-          "trait_count": 32,
+          "trait_count": 64,
           "order": null
         },
         {
@@ -515,7 +916,7 @@
           "name": "Ether",
           "decimals": 18,
           "eth_price": "1.000000000000000",
-          "usd_price": "282.899999999999977263"
+          "usd_price": "222.860000000000013642"
         }
       },
       "top_bid": null,
@@ -565,8 +966,8 @@
       },
       "owner": {
         "user": null,
-        "profile_img_url": "https://storage.googleapis.com/opensea-static/opensea-profile/30.png",
-        "address": "0x0e24b6e3beff0b44b773f068343bc2cb56cb3769",
+        "profile_img_url": "https://storage.googleapis.com/opensea-static/opensea-profile/16.png",
+        "address": "0x441e604ad49602c0b9c0b08d0781ecf96740786a",
         "config": "",
         "discord_id": ""
       },
@@ -615,7 +1016,7 @@
           "value": "granitegrey",
           "display_type": null,
           "max_value": null,
-          "trait_count": 111,
+          "trait_count": 202,
           "order": null
         },
         {
@@ -623,7 +1024,7 @@
           "value": "fast (1 min)",
           "display_type": null,
           "max_value": null,
-          "trait_count": 240,
+          "trait_count": 409,
           "order": null
         },
         {
@@ -631,7 +1032,7 @@
           "value": "crazy",
           "display_type": null,
           "max_value": null,
-          "trait_count": 95,
+          "trait_count": 138,
           "order": null
         },
         {
@@ -639,7 +1040,7 @@
           "value": "topaz",
           "display_type": null,
           "max_value": null,
-          "trait_count": 55,
+          "trait_count": 82,
           "order": null
         },
         {
@@ -647,7 +1048,7 @@
           "value": "munchkin",
           "display_type": null,
           "max_value": null,
-          "trait_count": 54,
+          "trait_count": 88,
           "order": null
         },
         {
@@ -655,7 +1056,7 @@
           "value": "swampgreen",
           "display_type": null,
           "max_value": null,
-          "trait_count": 44,
+          "trait_count": 74,
           "order": null
         },
         {
@@ -663,7 +1064,7 @@
           "value": "aquamarine",
           "display_type": null,
           "max_value": null,
-          "trait_count": 41,
+          "trait_count": 82,
           "order": null
         },
         {
@@ -735,7 +1136,7 @@
           "name": "Ether",
           "decimals": 18,
           "eth_price": "1.000000000000000",
-          "usd_price": "282.899999999999977263"
+          "usd_price": "222.860000000000013642"
         }
       },
       "top_bid": null,

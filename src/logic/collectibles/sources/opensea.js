@@ -7,6 +7,7 @@ import type {
   CollectibleMetadataSource,
   OpenSeaAsset,
 } from '~/routes/safe/components/Balances/Collectibles/types'
+import NFTIcon from '~/routes/safe/components/Balances/assets/nft_icon.png'
 import { OPENSEA_API_KEY } from '~/utils/constants'
 
 type GroupedCollectibles = {
@@ -79,11 +80,11 @@ class OpenSea implements CollectibleMetadataSource {
 
     return Object.keys(groupedCollectibles).map<CollectibleData>(collectibleAddress => {
       const collectibles = groupedCollectibles[collectibleAddress]
-      const { image_url: image, name: title } = collectibles[0].asset
+      const { image_url, name: title } = collectibles[0].asset
       const { name: collectionTitle, slug } = collectibles[0].collection
 
       return {
-        image,
+        image: image_url || NFTIcon,
         slug,
         title: title
           .toLowerCase()

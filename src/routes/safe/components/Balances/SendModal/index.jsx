@@ -1,16 +1,19 @@
 // @flow
 import CircularProgress from '@material-ui/core/CircularProgress'
-import { withStyles } from '@material-ui/core/styles'
+import { makeStyles } from '@material-ui/core/styles'
 import cn from 'classnames'
 import { List } from 'immutable'
 import React, { Suspense, useEffect, useState } from 'react'
 
 import Modal from '~/components/Modal'
 import { type Token } from '~/logic/tokens/store/model/token'
+import SendCollectible from '~/routes/safe/components/Balances/SendModal/screens/SendCollectible'
 
 const ChooseTxType = React.lazy(() => import('./screens/ChooseTxType'))
 
 const SendFunds = React.lazy(() => import('./screens/SendFunds'))
+
+// const SendCollectible = React.lazy(() => import('./screens/SendCollectible'))
 
 const ReviewTx = React.lazy(() => import('./screens/ReviewTx'))
 
@@ -22,13 +25,12 @@ type ActiveScreen = 'chooseTxType' | 'sendFunds' | 'reviewTx' | 'sendCustomTx' |
 
 type Props = {
   onClose: () => void,
-  classes: Object,
   isOpen: boolean,
   safeAddress: string,
   safeName: string,
   ethBalance: string,
   tokens: List<Token>,
-  selectedToken: string,
+  selectedToken?: string,
   createTransaction: Function,
   activeScreenType: ActiveScreen,
   recipientAddress?: string,
@@ -43,7 +45,7 @@ type TxStateType =
     }
   | Object
 
-const styles = () => ({
+const useStyles = makeStyles({
   scalableModalWindow: {
     height: 'auto',
   },
@@ -51,19 +53,17 @@ const styles = () => ({
     height: 'auto',
     position: 'static',
   },
+  loaderStyle: {
+    height: '500px',
+    width: '100%',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
 })
 
-const loaderStyle = {
-  height: '500px',
-  width: '100%',
-  display: 'flex',
-  justifyContent: 'center',
-  alignItems: 'center',
-}
-
-const Send = ({
+const SendModal = ({
   activeScreenType,
-  classes,
   createTransaction,
   ethBalance,
   isOpen,
@@ -74,6 +74,7 @@ const Send = ({
   selectedToken,
   tokens,
 }: Props) => {
+  const classes = useStyles()
   const [activeScreen, setActiveScreen] = useState<ActiveScreen>(activeScreenType || 'chooseTxType')
   const [tx, setTx] = useState<TxStateType>({})
 
@@ -104,7 +105,7 @@ const Send = ({
     >
       <Suspense
         fallback={
-          <div style={loaderStyle}>
+          <div className={classes.loaderStyle}>
             <CircularProgress size={40} />
           </div>
         }
@@ -112,6 +113,19 @@ const Send = ({
         {activeScreen === 'chooseTxType' && <ChooseTxType onClose={onClose} setActiveScreen={setActiveScreen} />}
         {activeScreen === 'sendFunds' && (
           <SendFunds
+            ethBalance={ethBalance}
+            initialValues={tx}
+            onClose={onClose}
+            onSubmit={handleTxCreation}
+            recipientAddress={recipientAddress}
+            safeAddress={safeAddress}
+            safeName={safeName}
+            selectedToken={selectedToken}
+            tokens={tokens}
+          />
+        )}
+        {activeScreen === 'sendCollectible' && (
+          <SendCollectible
             ethBalance={ethBalance}
             initialValues={tx}
             onClose={onClose}
@@ -161,4 +175,4 @@ const Send = ({
   )
 }
 
-export default withStyles(styles)(Send)
+export default SendModal
