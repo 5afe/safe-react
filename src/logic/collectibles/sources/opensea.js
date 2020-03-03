@@ -1,7 +1,6 @@
 // @flow
 import { RateLimit } from 'async-sema'
 
-import { ETHEREUM_NETWORK } from '~/logic/wallets/getWeb3'
 import type {
   AssetCollectible,
   CollectibleData,
@@ -17,9 +16,11 @@ type GroupedCollectibles = {
 class OpenSea implements CollectibleMetadataSource {
   _rateLimit = async () => {}
 
-  _endpointsUrls: { [key: string]: string } = {
-    [ETHEREUM_NETWORK.MAINNET]: 'https://api.opensea.io/api/v1',
-    [ETHEREUM_NETWORK.RINKEBY]: 'https://rinkeby-api.opensea.io/api/v1',
+  _endpointsUrls: { [key: number]: string } = {
+    // $FlowFixMe
+    1: 'https://api.opensea.io/api/v1',
+    // $FlowFixMe
+    4: 'https://rinkeby-api.opensea.io/api/v1',
   }
 
   _fetch = async (url: string) => {
@@ -37,7 +38,7 @@ class OpenSea implements CollectibleMetadataSource {
    */
   constructor(options: { rps: number }) {
     // eslint-disable-next-line no-underscore-dangle
-    this._rateLimit = RateLimit(options.rps)
+    this._rateLimit = RateLimit(options.rps, { timeUnit: 60 * 1000, uniformDistribution: true })
   }
 
   static getAssetsAsCollectible(assets: OpenSeaAsset[]): AssetCollectible[] {
@@ -50,7 +51,7 @@ class OpenSea implements CollectibleMetadataSource {
       title: asset.name || `${asset.asset_contract.name} - #${asset.token_id}`,
       text: asset.description,
       color: asset.background_color ? `#${asset.background_color}` : '',
-      image: asset.image_url,
+      image: asset.image_thumbnail_url,
       assetUrl: asset.external_link,
       description: asset.name,
       order: null,
@@ -99,12 +100,12 @@ class OpenSea implements CollectibleMetadataSource {
    * Fetches from OpenSea the list of collectibles, grouped by category,
    * for the provided Safe Address in the specified Network
    * @param {string} safeAddress
-   * @param {string} networkName
+   * @param {number} networkId
    * @returns {Promise<Array<CollectibleData>>}
    */
-  async fetchAllUserCollectiblesByCategoryAsync(safeAddress: string, networkName: string) {
+  async fetchAllUserCollectiblesByCategoryAsync(safeAddress: string, networkId: number) {
     // eslint-disable-next-line no-underscore-dangle
-    const metadataSourceUrl = this._endpointsUrls[networkName]
+    const metadataSourceUrl = this._endpointsUrls[networkId]
     const url = `${metadataSourceUrl}/assets/?owner=${safeAddress}`
     // eslint-disable-next-line no-underscore-dangle
     const assetsResponse = await this._fetch(url)

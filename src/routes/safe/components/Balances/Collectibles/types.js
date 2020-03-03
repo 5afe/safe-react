@@ -176,5 +176,5 @@ export type CollectibleData = {
 }
 
 export interface CollectibleMetadataSource {
-  fetchAllUserCollectiblesByCategoryAsync(safeAddress: string, networkName: string): Promise<CollectibleData[]>;
+  fetchAllUserCollectiblesByCategoryAsync(safeAddress: string, networkId: number): Promise<CollectibleData[]>;
 }

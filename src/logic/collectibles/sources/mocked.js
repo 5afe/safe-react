@@ -1,6 +1,6 @@
 // @flow
-import mockedOpenSea from '~/routes/safe/components/Balances/Collectibles/sources/mocked_opensea'
-import OpenSea from '~/routes/safe/components/Balances/Collectibles/sources/opensea'
+import mockedOpenSea from '~/logic/collectibles/sources/mocked_opensea'
+import OpenSea from '~/logic/collectibles/sources/opensea'
 import type { CollectibleData, CollectibleMetadataSource } from '~/routes/safe/components/Balances/Collectibles/types'
 
 const kittyAssetContract = {
@@ -180,6 +180,7 @@ const allCollectibles: CollectibleData[] = [
 
 export class MockedOpenSea extends OpenSea {
   _fetch = async () => {
+    await this._rateLimit()
     return { json: () => mockedOpenSea }
   }
 }

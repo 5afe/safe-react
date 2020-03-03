@@ -7,11 +7,9 @@ import { useSelector } from 'react-redux'
 
 import Item from './components/Item'
 
-import { ETHEREUM_NETWORK } from '~/logic/wallets/getWeb3'
-import { getConfiguredSource } from '~/routes/safe/components/Balances/Collectibles/sources'
-import type { AssetCollectible, CollectibleData } from '~/routes/safe/components/Balances/Collectibles/types'
-import { safeParamAddressFromStateSelector } from '~/routes/safe/store/selectors'
-import { fontColor, screenSm } from '~/theme/variables'
+import { collectiblesSelector } from '~/logic/collectibles/store/selectors'
+import type { AssetCollectible } from '~/routes/safe/components/Balances/Collectibles/types'
+import { fontColor, screenSm, screenXs } from '~/theme/variables'
 
 const useStyles = makeStyles({
   cardInner: {
@@ -30,6 +28,10 @@ const useStyles = makeStyles({
 
     '&:last-child': {
       marginBottom: '0',
+    },
+
+    [`@media (min-width: ${screenXs}px)`]: {
+      gridTemplateColumns: '1fr 1fr',
     },
 
     [`@media (min-width: ${screenSm}px)`]: {
@@ -65,40 +67,28 @@ const useStyles = makeStyles({
   },
 })
 
-type Props = {
-  networkName?: $Values<typeof ETHEREUM_NETWORK>,
-}
-
-const Collectibles = ({ networkName = ETHEREUM_NETWORK.RINKEBY }: Props) => {
+const Collectibles = () => {
   const classes = useStyles()
-  const safeAddress = useSelector(safeParamAddressFromStateSelector)
-  const [collectibleCategories, setCollectibleCategories] = React.useState<CollectibleData[]>([])
-
-  React.useEffect(() => {
-    const retrieveCollectibleInfo = async () => {
-      const source = getConfiguredSource()
-      setCollectibleCategories(await source.fetchAllUserCollectiblesByCategoryAsync(safeAddress, networkName))
-    }
-    retrieveCollectibleInfo()
-  }, [])
+  const collectibleCategories = useSelector(collectiblesSelector)
 
   return (
     <Card>
       <div className={classes.cardInner}>
-        {collectibleCategories.map(categories => (
-          <React.Fragment key={categories.slug}>
-            <div className={classes.title}>
-              <div className={classes.titleImg} style={{ backgroundImage: `url(${categories.image || ''})` }} />
-              <h2 className={classes.titleText}>{categories.title}</h2>
-              <div className={classes.titleFiller} />
-            </div>
-            <div className={classes.gridRow}>
-              {categories.data.map((collectible: AssetCollectible) => (
-                <Item data={collectible} key={`${collectible.assetAddress}_${collectible.tokenId}`} />
-              ))}
-            </div>
-          </React.Fragment>
-        ))}
+        {collectibleCategories &&
+          collectibleCategories.valueSeq().map(category => (
+            <React.Fragment key={category.slug}>
+              <div className={classes.title}>
+                <div className={classes.titleImg} style={{ backgroundImage: `url(${category.image || ''})` }} />
+                <h2 className={classes.titleText}>{category.title}</h2>
+                <div className={classes.titleFiller} />
+              </div>
+              <div className={classes.gridRow}>
+                {category.data.map((collectible: AssetCollectible) => (
+                  <Item data={collectible} key={`${collectible.assetAddress}_${collectible.tokenId}`} />
+                ))}
+              </div>
+            </React.Fragment>
+          ))}
       </div>
       <TablePagination
         component="div"

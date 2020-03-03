@@ -1,6 +1,7 @@
 // @flow
 import loadAddressBookFromStorage from '~/logic/addressBook/store/actions/loadAddressBookFromStorage'
 import { updateAddressBookEntry } from '~/logic/addressBook/store/actions/updateAddressBookEntry'
+import fetchCollectibles from '~/logic/collectibles/store/actions/fetchCollectibles'
 import fetchCurrencyValues from '~/logic/currencyValues/store/actions/fetchCurrencyValues'
 import addViewedSafe from '~/logic/currentSession/store/actions/addViewedSafe'
 import activateTokensByBalance from '~/logic/tokens/store/actions/activateTokensByBalance'
@@ -19,6 +20,7 @@ export type Actions = {
   createTransaction: typeof createTransaction,
   fetchTransactions: typeof fetchTransactions,
   updateSafe: typeof updateSafe,
+  fetchCollectibles: typeof fetchCollectibles,
   fetchTokens: typeof fetchTokens,
   processTransaction: typeof processTransaction,
   fetchEtherBalance: typeof fetchEtherBalance,
@@ -35,6 +37,7 @@ export default {
   fetchTokenBalances,
   createTransaction,
   processTransaction,
+  fetchCollectibles,
   fetchTokens,
   fetchTransactions,
   activateTokensByBalance,

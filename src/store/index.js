@@ -6,6 +6,10 @@ import thunk from 'redux-thunk'
 
 import addressBookMiddleware from '~/logic/addressBook/store/middleware/addressBookMiddleware'
 import addressBook, { ADDRESS_BOOK_REDUCER_ID } from '~/logic/addressBook/store/reducer/addressBook'
+import collectibles, {
+  COLLECTIBLE_REDUCER_ID,
+  type State as CollectibleState,
+} from '~/logic/collectibles/store/reducer/collectibles'
 import cookies, { COOKIES_REDUCER_ID } from '~/logic/cookies/store/reducer/cookies'
 import currencyValues, { CURRENCY_VALUES_KEY } from '~/logic/currencyValues/store/reducer/currencyValues'
 import currentSession, {
@@ -53,6 +57,7 @@ const finalCreateStore = composeEnhancers(
 export type GlobalState = {
   providers: ProviderState,
   safes: SafeState,
+  collectibles: CollectibleState,
   tokens: TokensState,
   transactions: TransactionsState,
   cancellationTransactions: CancelTransactionsState,
@@ -67,6 +72,7 @@ const reducers: CombinedReducer<GlobalState, *> = combineReducers({
   router: connectRouter(history),
   [PROVIDER_REDUCER_ID]: provider,
   [SAFE_REDUCER_ID]: safe,
+  [COLLECTIBLE_REDUCER_ID]: collectibles,
   [TOKEN_REDUCER_ID]: tokens,
   [TRANSACTIONS_REDUCER_ID]: transactions,
   [CANCELLATION_TRANSACTIONS_REDUCER_ID]: cancellationTransactions,
