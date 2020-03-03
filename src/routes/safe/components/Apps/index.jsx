@@ -121,7 +121,7 @@ function Apps({
         return
       }
 
-      if (origin !== getSelectedApp().url) {
+      if (!getSelectedApp().url.includes(origin)) {
         console.error(`Message from ${origin} is different to the App URL ${getSelectedApp().url}`)
         return
       }
