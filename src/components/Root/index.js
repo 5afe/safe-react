@@ -15,6 +15,7 @@ import { history, store } from '~/store'
 import theme from '~/theme/mui'
 
 import './index.scss'
+import './OnboardCustom.scss'
 
 const Root = () => (
   <Provider store={store}>
