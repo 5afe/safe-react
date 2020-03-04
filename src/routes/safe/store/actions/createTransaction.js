@@ -2,6 +2,7 @@
 import { push } from 'connected-react-router'
 import type { GetState, Dispatch as ReduxDispatch } from 'redux'
 
+import { onboardUser } from '~/components/ConnectButton'
 import { getGnosisSafeInstanceAt } from '~/logic/contracts/safeContracts'
 import { type NotificationsQueue, getNotificationsFromTxType, showSnackbar } from '~/logic/notifications'
 import {
@@ -55,6 +56,9 @@ const createTransaction = ({
     dispatch(push(`${SAFELIST_ADDRESS}/${safeAddress}/transactions`))
   }
 
+  const ready = await onboardUser()
+  if (!ready) return
+
   const from = userAccountSelector(state)
   const safeInstance = await getGnosisSafeInstanceAt(safeAddress)
   const lastTx = await getLastTx(safeAddress)
@@ -67,7 +71,7 @@ const createTransaction = ({
     '',
   )}000000000000000000000000000000000000000000000000000000000000000001`
 
-  const notificationsQueue: NotificationsQueue = getNotificationsFromTxType(notifiedTransaction)
+  const notificationsQueue: NotificationsQueue = getNotificationsFromTxType(notifiedTransaction, origin)
   const beforeExecutionKey = showSnackbar(notificationsQueue.beforeExecution, enqueueSnackbar, closeSnackbar)
   let pendingExecutionKey
 
