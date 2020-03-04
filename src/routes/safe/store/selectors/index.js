@@ -161,14 +161,12 @@ export type SafeSelectorProps = Safe | typeof undefined
 export const safeSelector: Selector<GlobalState, RouterProps, SafeSelectorProps> = createSelector(
   safesMapSelector,
   safeParamAddressFromStateSelector,
-  (safes: Map<string, Safe>, address: string) => {
+  (safes: Map<string, Safe>, address: string | null) => {
     if (!address) {
       return undefined
     }
-    const checksumed = getWeb3().utils.toChecksumAddress(address)
-    const safe = safes.get(checksumed)
 
-    return safe
+    return safes.get(address)
   },
 )
 
