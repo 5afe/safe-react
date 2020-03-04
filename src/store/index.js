@@ -1,6 +1,7 @@
 // @flow
 import { connectRouter, routerMiddleware } from 'connected-react-router'
 import { createBrowserHistory } from 'history'
+import type { RouterHistory } from 'react-router-dom'
 import { type CombinedReducer, type Store, applyMiddleware, combineReducers, compose, createStore } from 'redux'
 import thunk from 'redux-thunk'
 
@@ -52,6 +53,7 @@ const finalCreateStore = composeEnhancers(
 
 export type GlobalState = {
   providers: ProviderState,
+  router: RouterHistory,
   safes: SafeState,
   tokens: TokensState,
   transactions: TransactionsState,

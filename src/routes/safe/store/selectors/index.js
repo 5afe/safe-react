@@ -111,10 +111,15 @@ export const safeCancellationTransactionsSelector: TxSelectorType = createSelect
   },
 )
 
-export const safeParamAddressFromStateSelector = (state: GlobalState): string => {
+export const safeParamAddressFromStateSelector = (state: GlobalState): string | null => {
   const match = matchPath(state.router.location.pathname, { path: `${SAFELIST_ADDRESS}/:safeAddress` })
 
-  return match ? match.params.safeAddress : null
+  if (match) {
+    const web3 = getWeb3()
+    return web3.utils.toChecksumAddress(match.params.safeAddress)
+  }
+
+  return null
 }
 
 type IncomingTxSelectorType = Selector<GlobalState, RouterProps, List<IncomingTransaction>>
