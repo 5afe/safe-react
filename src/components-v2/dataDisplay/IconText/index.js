@@ -17,7 +17,7 @@ const Text = styled.span`
 
 const IconText = ({ iconUrl, text }: { iconUrl: string, text: string }) => (
   <Wrapper>
-    <Icon src={iconUrl} alt={text} />
+    <Icon alt={text} src={iconUrl} />
     <Text>{text}</Text>
   </Wrapper>
 )

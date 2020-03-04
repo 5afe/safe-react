@@ -71,7 +71,6 @@ const ReviewTx = ({
       const web3 = getWeb3()
       const { fromWei, toBN } = web3.utils
       let txData = EMPTY_DATA
-
       if (!isSendingETH) {
         const StandardToken = await getHumanFriendlyToken()
         const tokenInstance = await StandardToken.at(txToken.address)
@@ -98,7 +97,6 @@ const ReviewTx = ({
     const web3 = getWeb3()
     let txData = EMPTY_DATA
     let txAmount = web3.utils.toWei(tx.amount, 'ether')
-
     if (!isSendingETH) {
       const HumanFriendlyToken = await getHumanFriendlyToken()
       const tokenInstance = await HumanFriendlyToken.at(txToken.address)

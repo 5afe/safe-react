@@ -1,13 +1,14 @@
 // @flow
 import * as React from 'react'
-import { type TransactionType } from '~/routes/safe/store/models/transaction'
-import { getAppInfo } from '~/routes/safe/components/Apps/appsList'
-import { IconText } from '~/components-v2'
 
-import OutgoingTxIcon from './assets/outgoing.svg'
-import IncomingTxIcon from './assets/incoming.svg'
 import CustomTxIcon from './assets/custom.svg'
+import IncomingTxIcon from './assets/incoming.svg'
+import OutgoingTxIcon from './assets/outgoing.svg'
 import SettingsTxIcon from './assets/settings.svg'
+
+import { IconText } from '~/components-v2'
+import { getAppInfo } from '~/routes/safe/components/Apps/appsList'
+import { type TransactionType } from '~/routes/safe/store/models/transaction'
 
 const typeToIcon = {
   outgoing: OutgoingTxIcon,
@@ -29,7 +30,7 @@ const typeToLabel = {
   upgrade: 'Contract Upgrade',
 }
 
-const TxType = ({ txType, origin }: { txType: TransactionType, origin: string | null }) => {
+const TxType = ({ origin, txType }: { txType: TransactionType, origin: string | null }) => {
   const iconUrl = txType === 'third-party-app' ? getAppInfo(origin).iconUrl : typeToIcon[txType]
   const text = txType === 'third-party-app' ? getAppInfo(origin).name : typeToLabel[txType]
 

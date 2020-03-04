@@ -26,7 +26,6 @@ type Props = {
   cancelThresholdReached: boolean,
   cancelTx: Transaction,
   classes: Object,
-  granted: boolean,
   onTxReject: Function,
   onTxConfirm: Function,
   onTxExecute: Function,
