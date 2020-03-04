@@ -7,7 +7,7 @@ import addProvider from './addProvider'
 import { getNetwork } from '~/config'
 import { NOTIFICATIONS, enhanceSnackbarForAction } from '~/logic/notifications'
 import enqueueSnackbar from '~/logic/notifications/store/actions/enqueueSnackbar'
-import { ETHEREUM_NETWORK, ETHEREUM_NETWORK_IDS, getProviderInfo } from '~/logic/wallets/getWeb3'
+import { ETHEREUM_NETWORK, ETHEREUM_NETWORK_IDS, getProviderInfo, getWeb3 } from '~/logic/wallets/getWeb3'
 import type { ProviderProps } from '~/logic/wallets/store/model/provider'
 import { makeProvider } from '~/logic/wallets/store/model/provider'
 
@@ -58,8 +58,9 @@ const handleProviderNotification = (provider: ProviderProps, dispatch: Function)
   }
 }
 
-export default (provider: Object) => async (dispatch: ReduxDispatch<*>) => {
-  const providerInfo: ProviderProps = await getProviderInfo(provider)
+export default (providerName?: string) => async (dispatch: ReduxDispatch<*>) => {
+  const web3 = getWeb3()
+  const providerInfo: ProviderProps = await getProviderInfo(web3, providerName)
   await handleProviderNotification(providerInfo, dispatch)
   processProviderResponse(dispatch, providerInfo)
 }
