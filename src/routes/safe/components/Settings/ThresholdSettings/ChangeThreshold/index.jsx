@@ -43,7 +43,6 @@ const ChangeThreshold = ({ classes, onChangeThreshold, onClose, owners, safeAddr
     const estimateGasCosts = async () => {
       const web3 = getWeb3()
       const { fromWei, toBN } = web3.utils
-
       const safeInstance = await getGnosisSafeInstanceAt(safeAddress)
       const txData = safeInstance.contract.methods.changeThreshold('1').encodeABI()
       const estimatedGasCosts = await estimateTxGasCosts(safeAddress, safeAddress, txData)

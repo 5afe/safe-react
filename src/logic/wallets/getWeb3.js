@@ -78,57 +78,6 @@ export const resetWeb3 = () => {
   web3 = web3ReadOnly
 }
 
-const getProviderName: Function = (web3Provider): string => {
-  let name
-
-  switch (web3Provider.currentProvider.constructor.name) {
-    case 'SafeWeb3Provider':
-      name = WALLET_PROVIDER.SAFE
-      break
-    case 'MetamaskInpageProvider':
-      name = WALLET_PROVIDER.METAMASK
-
-      if (web3Provider.currentProvider.isTorus) {
-        name = WALLET_PROVIDER.TORUS
-      }
-      break
-    case 'Object':
-      if (navigator && /Opera|OPR\//.test(navigator.userAgent)) {
-        name = WALLET_PROVIDER.OPERA
-      } else {
-        name = 'Wallet'
-      }
-      break
-    case 'DapperLegacyProvider':
-      name = WALLET_PROVIDER.DAPPER
-      break
-    default:
-      name = 'Wallet'
-  }
-
-  if (web3Provider.currentProvider.isPortis) {
-    name = WALLET_PROVIDER.PORTIS
-  }
-
-  if (web3Provider.currentProvider.isFortmatic) {
-    name = WALLET_PROVIDER.FORTMATIC
-  }
-
-  if (web3Provider.currentProvider.isSquarelink) {
-    name = WALLET_PROVIDER.SQUARELINK
-  }
-
-  if (web3Provider.currentProvider.isWalletConnect) {
-    name = WALLET_PROVIDER.WALLETCONNECT
-  }
-
-  if (web3Provider.currentProvider.isAuthereum) {
-    name = WALLET_PROVIDER.AUTHEREUM
-  }
-
-  return name
-}
-
 export const getAccountFrom: Function = async (web3Provider): Promise<string | null> => {
   const accounts = await web3Provider.eth.getAccounts()
 
@@ -145,10 +94,13 @@ const getNetworkIdFrom = async web3Provider => {
   return networkId
 }
 
-export const getProviderInfo: Function = async (web3Provider): Promise<ProviderProps> => {
+export const getProviderInfo: Function = async (
+  web3Provider,
+  providerName?: string = 'Wallet',
+): Promise<ProviderProps> => {
   web3 = new Web3(web3Provider)
 
-  const name = getProviderName(web3)
+  const name = providerName
   const account = await getAccountFrom(web3)
   const network = await getNetworkIdFrom(web3)
 
@@ -168,6 +120,10 @@ export const getAddressFromENS = async (name: string) => {
   const address = await ens.resolver(name).addr()
 
   return address
+}
+
+export const setWeb3 = (provider: Object) => {
+  web3 = new Web3(provider)
 }
 
 export const getBalanceInEtherOf = async (safeAddress: string) => {

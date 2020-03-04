@@ -58,7 +58,6 @@ const ReviewRemoveOwner = ({
     const estimateGas = async () => {
       const web3 = getWeb3()
       const { fromWei, toBN } = web3.utils
-
       const gnosisSafe = await getGnosisSafeInstanceAt(safeAddress)
       const safeOwners = await gnosisSafe.getOwners()
       const index = safeOwners.findIndex(owner => owner.toLowerCase() === ownerAddress.toLowerCase())
