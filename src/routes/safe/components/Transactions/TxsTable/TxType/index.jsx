@@ -1,20 +1,14 @@
 // @flow
 import * as React from 'react'
-import { withStyles } from '@material-ui/core/styles'
-import Block from '~/components/layout/Block'
-import Paragraph from '~/components/layout/Paragraph/'
-import Img from '~/components/layout/Img'
-import { type TransactionType } from '~/routes/safe/store/models/transaction'
-import OutgoingTxIcon from './assets/outgoing.svg'
-import IncomingTxIcon from './assets/incoming.svg'
-import CustomTxIcon from './assets/custom.svg'
-import SettingsTxIcon from './assets/settings.svg'
-import { styles } from './style'
 
-type Props = {
-  classes: Object,
-  txType: TransactionType,
-}
+import CustomTxIcon from './assets/custom.svg'
+import IncomingTxIcon from './assets/incoming.svg'
+import OutgoingTxIcon from './assets/outgoing.svg'
+import SettingsTxIcon from './assets/settings.svg'
+
+import { IconText } from '~/components-v2'
+import { getAppInfo } from '~/routes/safe/components/Apps/appsList'
+import { type TransactionType } from '~/routes/safe/store/models/transaction'
 
 const typeToIcon = {
   outgoing: OutgoingTxIcon,
@@ -23,6 +17,7 @@ const typeToIcon = {
   settings: SettingsTxIcon,
   creation: SettingsTxIcon,
   cancellation: SettingsTxIcon,
+  upgrade: SettingsTxIcon,
 }
 
 const typeToLabel = {
@@ -32,15 +27,14 @@ const typeToLabel = {
   settings: 'Modify settings',
   creation: 'Safe created',
   cancellation: 'Cancellation transaction',
+  upgrade: 'Contract Upgrade',
 }
 
-const TxType = ({ classes, txType }: Props) => (
-  <Block className={classes.container}>
-    <Img src={typeToIcon[txType]} alt={typeToLabel[txType]} className={classes.img} />
-    <Paragraph className={classes.type} noMargin>
-      {typeToLabel[txType]}
-    </Paragraph>
-  </Block>
-)
+const TxType = ({ origin, txType }: { txType: TransactionType, origin: string | null }) => {
+  const iconUrl = txType === 'third-party-app' ? getAppInfo(origin).iconUrl : typeToIcon[txType]
+  const text = txType === 'third-party-app' ? getAppInfo(origin).name : typeToLabel[txType]
 
-export default withStyles(styles)(TxType)
+  return <IconText iconUrl={iconUrl} text={text} />
+}
+
+export default TxType

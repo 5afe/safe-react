@@ -1,11 +1,13 @@
 // @flow
-import { Component } from 'react'
 import { List } from 'immutable'
-import { connect } from 'react-redux'
 import { withSnackbar } from 'notistack'
-import { type Notification } from '~/logic/notifications/store/models/notification'
+import { Component } from 'react'
+import { connect } from 'react-redux'
+
 import actions, { type Actions } from './actions'
 import selector from './selector'
+
+import { type Notification } from '~/logic/notifications/store/models/notification'
 
 type Props = Actions & {
   notifications: List<Notification>,
@@ -17,7 +19,7 @@ class Notifier extends Component<Props> {
   displayed = []
 
   shouldComponentUpdate({ notifications: newSnacks = List() }) {
-    const { notifications: currentSnacks, closeSnackbar, removeSnackbar } = this.props
+    const { closeSnackbar, notifications: currentSnacks, removeSnackbar } = this.props
 
     if (!newSnacks.size) {
       this.displayed = []

@@ -1,28 +1,31 @@
 // @flow
-import React, { useState, useEffect } from 'react'
+import IconButton from '@material-ui/core/IconButton'
 import { withStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
-import IconButton from '@material-ui/core/IconButton'
 import { withSnackbar } from 'notistack'
+import React, { useEffect, useState } from 'react'
+
+import ArrowDown from '../assets/arrow-down.svg'
+
+import { styles } from './style'
+
+import CopyBtn from '~/components/CopyBtn'
+import EtherscanBtn from '~/components/EtherscanBtn'
+import Identicon from '~/components/Identicon'
+import Block from '~/components/layout/Block'
+import Button from '~/components/layout/Button'
+import Col from '~/components/layout/Col'
+import Hairline from '~/components/layout/Hairline'
+import Img from '~/components/layout/Img'
 import Paragraph from '~/components/layout/Paragraph'
 import Row from '~/components/layout/Row'
-import Col from '~/components/layout/Col'
-import Button from '~/components/layout/Button'
-import Img from '~/components/layout/Img'
-import Block from '~/components/layout/Block'
-import Identicon from '~/components/Identicon'
-import Hairline from '~/components/layout/Hairline'
-import EtherscanBtn from '~/components/EtherscanBtn'
-import CopyBtn from '~/components/CopyBtn'
+import { TX_NOTIFICATION_TYPES } from '~/logic/safe/transactions'
+import { estimateTxGasCosts } from '~/logic/safe/transactions/gasNew'
+import { formatAmount } from '~/logic/tokens/utils/formatAmount'
+import { getEthAsToken } from '~/logic/tokens/utils/tokenHelpers'
+import { getWeb3 } from '~/logic/wallets/getWeb3'
 import SafeInfo from '~/routes/safe/components/Balances/SendModal/SafeInfo'
 import { setImageToPlaceholder } from '~/routes/safe/components/Balances/utils'
-import { estimateTxGasCosts } from '~/logic/safe/transactions/gasNew'
-import { getWeb3 } from '~/logic/wallets/getWeb3'
-import { TX_NOTIFICATION_TYPES } from '~/logic/safe/transactions'
-import { getEthAsToken } from '~/logic/tokens/utils/tokenHelpers'
-import { formatAmount } from '~/logic/tokens/utils/formatAmount'
-import ArrowDown from '../assets/arrow-down.svg'
-import { styles } from './style'
 import { sm } from '~/theme/variables'
 
 type Props = {
@@ -39,16 +42,16 @@ type Props = {
 }
 
 const ReviewCustomTx = ({
-  onClose,
-  setActiveScreen,
   classes,
-  safeAddress,
-  safeName,
-  ethBalance,
-  tx,
+  closeSnackbar,
   createTransaction,
   enqueueSnackbar,
-  closeSnackbar,
+  ethBalance,
+  onClose,
+  safeAddress,
+  safeName,
+  setActiveScreen,
+  tx,
 }: Props) => {
   const [gasCosts, setGasCosts] = useState<string>('< 0.001')
 
@@ -93,38 +96,38 @@ const ReviewCustomTx = ({
 
   return (
     <>
-      <Row align="center" grow className={classes.heading}>
-        <Paragraph weight="bolder" className={classes.headingText} noMargin>
+      <Row align="center" className={classes.heading} grow>
+        <Paragraph className={classes.headingText} noMargin weight="bolder">
           Send Custom Tx
         </Paragraph>
         <Paragraph className={classes.annotation}>2 of 2</Paragraph>
-        <IconButton onClick={onClose} disableRipple>
+        <IconButton disableRipple onClick={onClose}>
           <Close className={classes.closeIcon} />
         </IconButton>
       </Row>
       <Hairline />
       <Block className={classes.container}>
-        <SafeInfo safeAddress={safeAddress} safeName={safeName} ethBalance={ethBalance} />
+        <SafeInfo ethBalance={ethBalance} safeAddress={safeAddress} safeName={safeName} />
         <Row margin="md">
           <Col xs={1}>
-            <img src={ArrowDown} alt="Arrow Down" style={{ marginLeft: sm }} />
+            <img alt="Arrow Down" src={ArrowDown} style={{ marginLeft: sm }} />
           </Col>
-          <Col xs={11} center="xs" layout="column">
+          <Col center="xs" layout="column" xs={11}>
             <Hairline />
           </Col>
         </Row>
         <Row margin="xs">
-          <Paragraph size="md" color="disabled" style={{ letterSpacing: '-0.5px' }} noMargin>
+          <Paragraph color="disabled" noMargin size="md" style={{ letterSpacing: '-0.5px' }}>
             Recipient
           </Paragraph>
         </Row>
-        <Row margin="md" align="center">
+        <Row align="center" margin="md">
           <Col xs={1}>
             <Identicon address={tx.recipientAddress} diameter={32} />
           </Col>
-          <Col xs={11} layout="column">
+          <Col layout="column" xs={11}>
             <Block justify="left">
-              <Paragraph weight="bolder" className={classes.address} noMargin>
+              <Paragraph className={classes.address} noMargin weight="bolder">
                 {tx.recipientAddress}
               </Paragraph>
               <CopyBtn content={tx.recipientAddress} />
@@ -133,25 +136,25 @@ const ReviewCustomTx = ({
           </Col>
         </Row>
         <Row margin="xs">
-          <Paragraph size="md" color="disabled" style={{ letterSpacing: '-0.5px' }} noMargin>
+          <Paragraph color="disabled" noMargin size="md" style={{ letterSpacing: '-0.5px' }}>
             Value
           </Paragraph>
         </Row>
-        <Row margin="md" align="center">
-          <Img src={getEthAsToken('0').logoUri} height={28} alt="Ether" onError={setImageToPlaceholder} />
-          <Paragraph size="md" noMargin className={classes.value}>
+        <Row align="center" margin="md">
+          <Img alt="Ether" height={28} onError={setImageToPlaceholder} src={getEthAsToken('0').logoUri} />
+          <Paragraph className={classes.value} noMargin size="md">
             {tx.value || 0}
             {' ETH'}
           </Paragraph>
         </Row>
         <Row margin="xs">
-          <Paragraph size="md" color="disabled" style={{ letterSpacing: '-0.5px' }} noMargin>
+          <Paragraph color="disabled" noMargin size="md" style={{ letterSpacing: '-0.5px' }}>
             Data (hex encoded)
           </Paragraph>
         </Row>
-        <Row margin="md" align="center">
+        <Row align="center" margin="md">
           <Col className={classes.outerData}>
-            <Row size="md" className={classes.data}>
+            <Row className={classes.data} size="md">
               {tx.data}
             </Row>
           </Col>
@@ -168,13 +171,13 @@ const ReviewCustomTx = ({
           Back
         </Button>
         <Button
-          type="submit"
-          onClick={submitTx}
-          variant="contained"
-          minWidth={140}
+          className={classes.submitButton}
           color="primary"
           data-testid="submit-tx-btn"
-          className={classes.submitButton}
+          minWidth={140}
+          onClick={submitTx}
+          type="submit"
+          variant="contained"
         >
           Submit
         </Button>

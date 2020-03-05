@@ -1,8 +1,9 @@
 // @flow
 import { List } from 'immutable'
-import { getWeb3 } from '~/logic/wallets/getWeb3'
-import { makeToken, type Token } from '~/logic/tokens/store/model/token'
+
 import logo from '~/assets/icons/icon_etherTokens.svg'
+import { type Token, makeToken } from '~/logic/tokens/store/model/token'
+import { getWeb3 } from '~/logic/wallets/getWeb3'
 
 export const ETH_ADDRESS = '0x000'
 export const isEther = (symbol: string) => symbol === 'ETH'
@@ -53,3 +54,11 @@ export const isAddressAToken = async (tokenAddress: string) => {
 
 export const isTokenTransfer = (data: string, value: number): boolean =>
   !!data && data.substring(0, 10) === '0xa9059cbb' && value === 0
+
+export const isMultisendTransaction = (data: string, value: number): boolean =>
+  !!data && data.substring(0, 10) === '0x8d80ff0a' && value === 0
+
+// f08a0323 - setFallbackHandler (308, 8)
+// 7de7edef - changeMasterCopy (550, 8)
+export const isUpgradeTransaction = (data: string) =>
+  !!data && data.substr(308, 8) === 'f08a0323' && data.substr(550, 8) === '7de7edef'

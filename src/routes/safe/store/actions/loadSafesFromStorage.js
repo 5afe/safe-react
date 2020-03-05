@@ -1,11 +1,13 @@
 // @flow
 import type { Dispatch as ReduxDispatch } from 'redux'
-import { type GlobalState } from '~/store/index'
+
+import { addSafe } from './addSafe'
+
 import { SAFES_KEY } from '~/logic/safe/utils'
 import { type SafeProps } from '~/routes/safe/store/models/safe'
-import { loadFromStorage } from '~/utils/storage'
-import { addSafe } from './addSafe'
 import { buildSafe } from '~/routes/safe/store/reducer/safe'
+import { type GlobalState } from '~/store/index'
+import { loadFromStorage } from '~/utils/storage'
 
 const loadSafesFromStorage = () => async (dispatch: ReduxDispatch<GlobalState>) => {
   try {

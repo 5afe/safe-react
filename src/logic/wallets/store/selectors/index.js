@@ -1,8 +1,9 @@
 // @flow
 import { createSelector } from 'reselect'
+
+import { ETHEREUM_NETWORK, ETHEREUM_NETWORK_IDS } from '~/logic/wallets/getWeb3'
 import type { Provider } from '~/logic/wallets/store/model/provider'
 import { PROVIDER_REDUCER_ID } from '~/logic/wallets/store/reducer/provider'
-import { ETHEREUM_NETWORK_IDS, ETHEREUM_NETWORK } from '~/logic/wallets/getWeb3'
 
 const providerSelector = (state: any): Provider => state[PROVIDER_REDUCER_ID]
 

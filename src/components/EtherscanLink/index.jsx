@@ -1,14 +1,16 @@
 // @flow
-import React from 'react'
 import { withStyles } from '@material-ui/core/styles'
 import cn from 'classnames'
-import Block from '~/components/layout/Block'
+import React from 'react'
+
+import { styles } from './style.js'
+
 import CopyBtn from '~/components/CopyBtn'
 import EtherscanBtn from '~/components/EtherscanBtn'
-import { shortVersionOf } from '~/logic/wallets/ethAddresses'
-import { styles } from './style.js'
-import EllipsisTransactionDetails from '~/routes/safe/components/AddressBook/EllipsisTransactionDetails'
+import Block from '~/components/layout/Block'
 import Span from '~/components/layout/Span'
+import { shortVersionOf } from '~/logic/wallets/ethAddresses'
+import EllipsisTransactionDetails from '~/routes/safe/components/AddressBook/EllipsisTransactionDetails'
 
 type EtherscanLinkProps = {
   classes: Object,
@@ -18,14 +20,14 @@ type EtherscanLinkProps = {
   value: string,
 }
 
-const EtherscanLink = ({ type, value, cut, classes, knownAddress }: EtherscanLinkProps) => (
+const EtherscanLink = ({ classes, cut, knownAddress, type, value }: EtherscanLinkProps) => (
   <Block className={classes.etherscanLink}>
     <Span className={cn(knownAddress && classes.addressParagraph, classes.address)} size="md">
       {cut ? shortVersionOf(value, cut) : value}
     </Span>
     <CopyBtn className={cn(classes.button, classes.firstButton)} content={value} />
     <EtherscanBtn className={classes.button} type={type} value={value} />
-    {knownAddress !== undefined ? <EllipsisTransactionDetails knownAddress={knownAddress} address={value} /> : null}
+    {knownAddress !== undefined ? <EllipsisTransactionDetails address={value} knownAddress={knownAddress} /> : null}
   </Block>
 )
 

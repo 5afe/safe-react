@@ -1,15 +1,17 @@
 // @flow
-import { List } from 'immutable'
-import contract from 'truffle-contract'
-import type { Dispatch as ReduxDispatch } from 'redux'
 import StandardToken from '@gnosis.pm/util-contracts/build/contracts/GnosisStandardToken.json'
 import HumanFriendlyToken from '@gnosis.pm/util-contracts/build/contracts/HumanFriendlyToken.json'
+import { List } from 'immutable'
+import type { Dispatch as ReduxDispatch } from 'redux'
+import contract from 'truffle-contract'
+
+import saveTokens from './saveTokens'
+
+import { fetchTokenList } from '~/logic/tokens/api'
+import { type TokenProps, makeToken } from '~/logic/tokens/store/model/token'
 import { getWeb3 } from '~/logic/wallets/getWeb3'
 import { type GlobalState } from '~/store'
-import { makeToken, type TokenProps } from '~/logic/tokens/store/model/token'
-import { fetchTokenList } from '~/logic/tokens/api'
 import { ensureOnce } from '~/utils/singleton'
-import saveTokens from './saveTokens'
 
 const createStandardTokenContract = async () => {
   const web3 = getWeb3()

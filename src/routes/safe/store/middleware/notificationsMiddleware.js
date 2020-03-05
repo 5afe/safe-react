@@ -1,21 +1,23 @@
 // @flow
-import type { Action, Store } from 'redux'
-import { List, Map } from 'immutable'
 import { push } from 'connected-react-router'
-import { type GlobalState } from '~/store/'
-import { ADD_TRANSACTIONS } from '~/routes/safe/store/actions/addTransactions'
-import { ADD_INCOMING_TRANSACTIONS } from '~/routes/safe/store/actions/addIncomingTransactions'
-import { getAwaitingTransactions } from '~/logic/safe/transactions/awaitingTransactions'
-import { userAccountSelector } from '~/logic/wallets/store/selectors'
-import enqueueSnackbar from '~/logic/notifications/store/actions/enqueueSnackbar'
-import { enhanceSnackbarForAction, NOTIFICATIONS } from '~/logic/notifications'
+import { List, Map } from 'immutable'
+import type { Action, Store } from 'redux'
+
+import { NOTIFICATIONS, enhanceSnackbarForAction } from '~/logic/notifications'
 import closeSnackbarAction from '~/logic/notifications/store/actions/closeSnackbar'
-import { getIncomingTxAmount } from '~/routes/safe/components/Transactions/TxsTable/columns'
-import updateSafe from '~/routes/safe/store/actions/updateSafe'
-import { safesMapSelector } from '~/routes/safe/store/selectors'
-import { isUserOwner } from '~/logic/wallets/ethAddresses'
-import { ADD_SAFE } from '~/routes/safe/store/actions/addSafe'
+import enqueueSnackbar from '~/logic/notifications/store/actions/enqueueSnackbar'
+import { getAwaitingTransactions } from '~/logic/safe/transactions/awaitingTransactions'
 import { getSafeVersion } from '~/logic/safe/utils/safeVersion'
+import { isUserOwner } from '~/logic/wallets/ethAddresses'
+import { userAccountSelector } from '~/logic/wallets/store/selectors'
+import { getIncomingTxAmount } from '~/routes/safe/components/Transactions/TxsTable/columns'
+import { grantedSelector } from '~/routes/safe/container/selector'
+import { ADD_INCOMING_TRANSACTIONS } from '~/routes/safe/store/actions/addIncomingTransactions'
+import { ADD_SAFE } from '~/routes/safe/store/actions/addSafe'
+import { ADD_TRANSACTIONS } from '~/routes/safe/store/actions/addTransactions'
+import updateSafe from '~/routes/safe/store/actions/updateSafe'
+import { safeParamAddressFromStateSelector, safesMapSelector } from '~/routes/safe/store/selectors'
+import { type GlobalState } from '~/store/'
 
 const watchedActions = [ADD_TRANSACTIONS, ADD_INCOMING_TRANSACTIONS, ADD_SAFE]
 
@@ -106,12 +108,27 @@ const notificationsMiddleware = (store: Store<GlobalState>) => (next: Function) 
         break
       }
       case ADD_SAFE: {
-        const { safe } = action.payload
-        const { needUpdate } = await getSafeVersion(safe.address)
+        const state: GlobalState = store.getState()
+        const currentSafeAddress = safeParamAddressFromStateSelector(state)
+        const isUserOwner = grantedSelector(state)
+        const { needUpdate } = await getSafeVersion(currentSafeAddress)
 
-        const notificationKey = `${safe.address}`
-        if (needUpdate) {
-          dispatch(enqueueSnackbar(enhanceSnackbarForAction(NOTIFICATIONS.SAFE_NEW_VERSION_AVAILABLE, notificationKey)))
+        const notificationKey = `${currentSafeAddress}`
+        const onNotificationClicked = () => {
+          dispatch(closeSnackbarAction({ key: notificationKey }))
+          dispatch(push(`/safes/${currentSafeAddress}/settings`))
+        }
+
+        if (needUpdate && isUserOwner) {
+          dispatch(
+            enqueueSnackbar(
+              enhanceSnackbarForAction(
+                NOTIFICATIONS.SAFE_NEW_VERSION_AVAILABLE,
+                notificationKey,
+                onNotificationClicked,
+              ),
+            ),
+          )
         }
         break
       }

@@ -1,25 +1,26 @@
 // @flow
-import * as React from 'react'
-import classNames from 'classnames'
 import { withStyles } from '@material-ui/core/styles'
 import Dot from '@material-ui/icons/FiberManualRecord'
-import EtherscanBtn from '~/components/EtherscanBtn'
+import classNames from 'classnames'
+import * as React from 'react'
+
 import CopyBtn from '~/components/CopyBtn'
-import Paragraph from '~/components/layout/Paragraph'
-import Button from '~/components/layout/Button'
+import EtherscanBtn from '~/components/EtherscanBtn'
+import CircleDot from '~/components/Header/components/CircleDot'
 import Identicon from '~/components/Identicon'
+import Spacer from '~/components/Spacer'
+import Block from '~/components/layout/Block'
+import Button from '~/components/layout/Button'
 import Hairline from '~/components/layout/Hairline'
 import Img from '~/components/layout/Img'
+import Paragraph from '~/components/layout/Paragraph'
 import Row from '~/components/layout/Row'
-import Block from '~/components/layout/Block'
-import Spacer from '~/components/Spacer'
-import { xs, sm, md, lg, background, warning, connected as connectedBg } from '~/theme/variables'
-import { upperFirst } from '~/utils/css'
 import { shortVersionOf } from '~/logic/wallets/ethAddresses'
-import CircleDot from '~/components/Header/components/CircleDot'
+import { background, connected as connectedBg, lg, md, sm, warning, xs } from '~/theme/variables'
+import { upperFirst } from '~/utils/css'
 
-const walletIcon = require('../../assets/wallet.svg')
 const dot = require('../../assets/dotRinkeby.svg')
+const walletIcon = require('../../assets/wallet.svg')
 
 type Props = {
   provider: string,
@@ -91,7 +92,7 @@ const styles = () => ({
   },
 })
 
-const UserDetails = ({ provider, connected, network, userAddress, classes, onDisconnect }: Props) => {
+const UserDetails = ({ classes, connected, network, onDisconnect, provider, userAddress }: Props) => {
   const status = connected ? 'Connected' : 'Connection error'
   const address = userAddress ? shortVersionOf(userAddress, 4) : 'Address not available'
   const identiconAddress = userAddress || 'random'
@@ -100,62 +101,62 @@ const UserDetails = ({ provider, connected, network, userAddress, classes, onDis
   return (
     <>
       <Block className={classes.container}>
-        <Row className={classes.identicon} margin="md" align="center">
+        <Row align="center" className={classes.identicon} margin="md">
           {connected ? (
             <Identicon address={identiconAddress} diameter={60} />
           ) : (
-            <CircleDot keySize={30} circleSize={75} dotSize={25} dotTop={50} dotRight={25} mode="warning" hideDot />
+            <CircleDot circleSize={75} dotRight={25} dotSize={25} dotTop={50} hideDot keySize={30} mode="warning" />
           )}
         </Row>
-        <Block justify="center" className={classes.user}>
-          <Paragraph className={classes.address} size="sm" noMargin>
+        <Block className={classes.user} justify="center">
+          <Paragraph className={classes.address} noMargin size="sm">
             {address}
           </Paragraph>
           {userAddress && (
             <>
               <CopyBtn content={userAddress} increaseZindex />
-              <EtherscanBtn type="address" value={userAddress} increaseZindex />
+              <EtherscanBtn increaseZindex type="address" value={userAddress} />
             </>
           )}
         </Block>
       </Block>
       <Hairline margin="xs" />
       <Row className={classes.details}>
-        <Paragraph noMargin align="right" className={classes.labels}>
+        <Paragraph align="right" className={classes.labels} noMargin>
           Status
         </Paragraph>
         <Spacer />
         <Dot className={classNames(classes.dot, connected ? classes.connected : classes.warning)} />
-        <Paragraph noMargin align="right" color={color} weight="bolder" className={classes.labels}>
+        <Paragraph align="right" className={classes.labels} color={color} noMargin weight="bolder">
           {status}
         </Paragraph>
       </Row>
       <Hairline margin="xs" />
       <Row className={classes.details}>
-        <Paragraph noMargin align="right" className={classes.labels}>
+        <Paragraph align="right" className={classes.labels} noMargin>
           Wallet
         </Paragraph>
         <Spacer />
-        <Img className={classes.logo} src={walletIcon} height={14} alt="Wallet icon" />
-        <Paragraph noMargin align="right" weight="bolder" className={classes.labels}>
+        <Img alt="Wallet icon" className={classes.logo} height={14} src={walletIcon} />
+        <Paragraph align="right" className={classes.labels} noMargin weight="bolder">
           {upperFirst(provider)}
         </Paragraph>
       </Row>
       <Hairline margin="xs" />
       <Row className={classes.details}>
-        <Paragraph noMargin align="right" className={classes.labels}>
+        <Paragraph align="right" className={classes.labels} noMargin>
           Network
         </Paragraph>
         <Spacer />
-        <Img className={classes.logo} src={dot} height={14} alt="Network" />
-        <Paragraph noMargin align="right" weight="bolder" className={classes.labels}>
+        <Img alt="Network" className={classes.logo} height={14} src={dot} />
+        <Paragraph align="right" className={classes.labels} noMargin weight="bolder">
           {upperFirst(network)}
         </Paragraph>
       </Row>
       <Hairline margin="xs" />
       <Row className={classes.disconnect}>
-        <Button onClick={onDisconnect} size="medium" variant="contained" color="primary" fullWidth>
-          <Paragraph className={classes.disconnectText} size="md" color="white" noMargin>
+        <Button color="primary" fullWidth onClick={onDisconnect} size="medium" variant="contained">
+          <Paragraph className={classes.disconnectText} color="white" noMargin size="md">
             Disconnect
           </Paragraph>
         </Button>

@@ -18,5 +18,5 @@ then
   REVIEW_RELEASE_FOLDER="$REPO_NAME_ALPHANUMERIC/$TRAVIS_TAG_ALPHANUMERIC"
 
   # Deploy safe-team release project
-  aws s3 sync build_webpack s3://${REVIEW_BUCKET_NAME}/${REVIEW_RELEASE_FOLDER} --delete
+  aws s3 sync build_webpack s3://${REVIEW_BUCKET_NAME}/${REVIEW_RELEASE_FOLDER}/app --delete
 fi

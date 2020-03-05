@@ -1,35 +1,38 @@
 // @flow
-import React, { useState } from 'react'
-import { List } from 'immutable'
-import { withStyles } from '@material-ui/core/styles'
-import { OnChange } from 'react-final-form-listeners'
-import Close from '@material-ui/icons/Close'
-import InputAdornment from '@material-ui/core/InputAdornment'
 import IconButton from '@material-ui/core/IconButton'
-import Paragraph from '~/components/layout/Paragraph'
-import Row from '~/components/layout/Row'
-import GnoForm from '~/components/forms/GnoForm'
-import Col from '~/components/layout/Col'
-import Button from '~/components/layout/Button'
-import Block from '~/components/layout/Block'
-import Img from '~/components/layout/Img'
-import Hairline from '~/components/layout/Hairline'
-import ButtonLink from '~/components/layout/ButtonLink'
-import Field from '~/components/forms/Field'
-import TextField from '~/components/forms/TextField'
-import { type Token } from '~/logic/tokens/store/model/token'
-import { composeValidators, required, mustBeFloat, maxValue, greaterThan } from '~/components/forms/validator'
-import TokenSelectField from '~/routes/safe/components/Balances/SendModal/screens/SendFunds/TokenSelectField'
-import SafeInfo from '~/routes/safe/components/Balances/SendModal/SafeInfo'
-import ScanQRModal from '~/components/ScanQRModal'
+import InputAdornment from '@material-ui/core/InputAdornment'
+import { withStyles } from '@material-ui/core/styles'
+import Close from '@material-ui/icons/Close'
+import { List } from 'immutable'
+import React, { useState } from 'react'
+import { OnChange } from 'react-final-form-listeners'
+
 import ArrowDown from '../assets/arrow-down.svg'
-import QRIcon from '~/assets/icons/qrcode.svg'
+
 import { styles } from './style'
-import { sm } from '~/theme/variables'
-import AddressBookInput from '~/routes/safe/components/Balances/SendModal/screens/AddressBookInput'
-import Identicon from '~/components/Identicon'
+
+import QRIcon from '~/assets/icons/qrcode.svg'
 import CopyBtn from '~/components/CopyBtn'
 import EtherscanBtn from '~/components/EtherscanBtn'
+import Identicon from '~/components/Identicon'
+import ScanQRModal from '~/components/ScanQRModal'
+import Field from '~/components/forms/Field'
+import GnoForm from '~/components/forms/GnoForm'
+import TextField from '~/components/forms/TextField'
+import { composeValidators, greaterThan, maxValue, mustBeFloat, required } from '~/components/forms/validator'
+import Block from '~/components/layout/Block'
+import Button from '~/components/layout/Button'
+import ButtonLink from '~/components/layout/ButtonLink'
+import Col from '~/components/layout/Col'
+import Hairline from '~/components/layout/Hairline'
+import Img from '~/components/layout/Img'
+import Paragraph from '~/components/layout/Paragraph'
+import Row from '~/components/layout/Row'
+import { type Token } from '~/logic/tokens/store/model/token'
+import SafeInfo from '~/routes/safe/components/Balances/SendModal/SafeInfo'
+import AddressBookInput from '~/routes/safe/components/Balances/SendModal/screens/AddressBookInput'
+import TokenSelectField from '~/routes/safe/components/Balances/SendModal/screens/SendFunds/TokenSelectField'
+import { sm } from '~/theme/variables'
 
 type Props = {
   onClose: () => void,
@@ -58,15 +61,15 @@ const formMutators = {
 
 const SendFunds = ({
   classes,
-  onClose,
-  safeAddress,
-  safeName,
   ethBalance,
-  tokens,
-  selectedToken,
   initialValues,
+  onClose,
   onSubmit,
   recipientAddress,
+  safeAddress,
+  safeName,
+  selectedToken,
+  tokens,
 }: Props) => {
   const [qrModalOpen, setQrModalOpen] = useState<boolean>(false)
   const [selectedEntry, setSelectedEntry] = useState<Object | null>({
@@ -101,17 +104,17 @@ const SendFunds = ({
 
   return (
     <>
-      <Row align="center" grow className={classes.heading}>
-        <Paragraph weight="bolder" className={classes.manage} noMargin>
+      <Row align="center" className={classes.heading} grow>
+        <Paragraph className={classes.manage} noMargin weight="bolder">
           Send Funds
         </Paragraph>
         <Paragraph className={classes.annotation}>1 of 2</Paragraph>
-        <IconButton onClick={onClose} disableRipple>
+        <IconButton disableRipple onClick={onClose}>
           <Close className={classes.closeIcon} />
         </IconButton>
       </Row>
       <Hairline />
-      <GnoForm onSubmit={handleSubmit} formMutators={formMutators} initialValues={initialValues}>
+      <GnoForm formMutators={formMutators} initialValues={initialValues} onSubmit={handleSubmit}>
         {(...args) => {
           const formState = args[2]
           const mutators = args[3]
@@ -137,50 +140,50 @@ const SendFunds = ({
           return (
             <>
               <Block className={classes.formContainer}>
-                <SafeInfo safeAddress={safeAddress} safeName={safeName} ethBalance={ethBalance} />
+                <SafeInfo ethBalance={ethBalance} safeAddress={safeAddress} safeName={safeName} />
                 <Row margin="md">
                   <Col xs={1}>
-                    <img src={ArrowDown} alt="Arrow Down" style={{ marginLeft: sm }} />
+                    <img alt="Arrow Down" src={ArrowDown} style={{ marginLeft: sm }} />
                   </Col>
-                  <Col xs={11} center="xs" layout="column">
+                  <Col center="xs" layout="column" xs={11}>
                     <Hairline />
                   </Col>
                 </Row>
                 {selectedEntry && selectedEntry.address ? (
                   <div
-                    role="listbox"
-                    tabIndex="0"
                     onKeyDown={e => {
                       if (e.keyCode !== 9) {
                         setSelectedEntry(null)
                       }
                     }}
+                    role="listbox"
+                    tabIndex="0"
                   >
                     <Row margin="xs">
-                      <Paragraph size="md" color="disabled" style={{ letterSpacing: '-0.5px' }} noMargin>
+                      <Paragraph color="disabled" noMargin size="md" style={{ letterSpacing: '-0.5px' }}>
                         Recipient
                       </Paragraph>
                     </Row>
-                    <Row margin="md" align="center">
+                    <Row align="center" margin="md">
                       <Col xs={1}>
                         <Identicon address={selectedEntry.address} diameter={32} />
                       </Col>
-                      <Col xs={11} layout="column">
+                      <Col layout="column" xs={11}>
                         <Block justify="left">
                           <Block>
                             <Paragraph
-                              weight="bolder"
                               className={classes.selectAddress}
                               noMargin
                               onClick={() => setSelectedEntry(null)}
+                              weight="bolder"
                             >
                               {selectedEntry.name}
                             </Paragraph>
                             <Paragraph
-                              weight="bolder"
                               className={classes.selectAddress}
                               noMargin
                               onClick={() => setSelectedEntry(null)}
+                              weight="bolder"
                             >
                               {selectedEntry.address}
                             </Paragraph>
@@ -196,23 +199,23 @@ const SendFunds = ({
                     <Row margin="md">
                       <Col xs={11}>
                         <AddressBookInput
-                          pristine={pristine}
                           fieldMutator={mutators.setRecipient}
+                          pristine={pristine}
                           recipientAddress={recipientAddress}
-                          setSelectedEntry={setSelectedEntry}
                           setIsValidAddress={setIsValidAddress}
+                          setSelectedEntry={setSelectedEntry}
                         />
                       </Col>
-                      <Col xs={1} center="xs" middle="xs" className={classes}>
+                      <Col center="xs" className={classes} middle="xs" xs={1}>
                         <Img
-                          src={QRIcon}
-                          className={classes.qrCodeBtn}
-                          role="button"
-                          height={20}
                           alt="Scan QR"
+                          className={classes.qrCodeBtn}
+                          height={20}
                           onClick={() => {
                             openQrModal()
                           }}
+                          role="button"
+                          src={QRIcon}
                         />
                       </Col>
                     </Row>
@@ -220,15 +223,19 @@ const SendFunds = ({
                 )}
                 <Row margin="sm">
                   <Col>
-                    <TokenSelectField tokens={tokens} initialValue={selectedToken} />
+                    <TokenSelectField
+                      initialValue={selectedToken}
+                      isValid={tokenAddress && String(tokenAddress).toUpperCase() !== 'ETHER'}
+                      tokens={tokens}
+                    />
                   </Col>
                 </Row>
                 <Row margin="xs">
                   <Col between="lg">
-                    <Paragraph size="md" color="disabled" style={{ letterSpacing: '-0.5px' }} noMargin>
+                    <Paragraph color="disabled" noMargin size="md" style={{ letterSpacing: '-0.5px' }}>
                       Amount
                     </Paragraph>
-                    <ButtonLink weight="bold" onClick={() => mutators.setMax(selectedTokenRecord.balance)}>
+                    <ButtonLink onClick={() => mutators.setMax(selectedTokenRecord.balance)} weight="bold">
                       Send max
                     </ButtonLink>
                   </Col>
@@ -236,8 +243,15 @@ const SendFunds = ({
                 <Row margin="md">
                   <Col>
                     <Field
-                      name="amount"
                       component={TextField}
+                      inputAdornment={
+                        selectedTokenRecord && {
+                          endAdornment: <InputAdornment position="end">{selectedTokenRecord.symbol}</InputAdornment>,
+                        }
+                      }
+                      name="amount"
+                      placeholder="Amount*"
+                      text="Amount*"
                       type="text"
                       validate={composeValidators(
                         required,
@@ -245,14 +259,6 @@ const SendFunds = ({
                         greaterThan(0),
                         maxValue(selectedTokenRecord && selectedTokenRecord.balance),
                       )}
-                      placeholder="Amount*"
-                      text="Amount*"
-                      className={classes.addressInput}
-                      inputAdornment={
-                        selectedTokenRecord && {
-                          endAdornment: <InputAdornment position="end">{selectedTokenRecord.symbol}</InputAdornment>,
-                        }
-                      }
                     />
                     <OnChange name="token">
                       {() => {
@@ -268,18 +274,18 @@ const SendFunds = ({
                   Cancel
                 </Button>
                 <Button
-                  type="submit"
-                  variant="contained"
-                  minWidth={140}
+                  className={classes.submitButton}
                   color="primary"
                   data-testid="review-tx-btn"
-                  className={classes.submitButton}
                   disabled={shouldDisableSubmitButton}
+                  minWidth={140}
+                  type="submit"
+                  variant="contained"
                 >
                   Review
                 </Button>
               </Row>
-              {qrModalOpen && <ScanQRModal isOpen={qrModalOpen} onScan={handleScan} onClose={closeQrModal} />}
+              {qrModalOpen && <ScanQRModal isOpen={qrModalOpen} onClose={closeQrModal} onScan={handleScan} />}
             </>
           )
         }}

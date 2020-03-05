@@ -1,24 +1,27 @@
 // @flow
+import queryString from 'query-string'
 import * as React from 'react'
 import { connect } from 'react-redux'
-import queryString from 'query-string'
 import { withRouter } from 'react-router-dom'
+
+import Layout from '../components/Layout'
+
+import actions, { type Actions, type AddSafe } from './actions'
+import selector from './selector'
+
 import Page from '~/components/layout/Page'
+import { deploySafeContract, getGnosisSafeInstanceAt } from '~/logic/contracts/safeContracts'
+import { checkReceiptStatus } from '~/logic/wallets/ethTransactions'
 import {
   getAccountsFrom,
-  getThresholdFrom,
   getNamesFrom,
-  getSafeNameFrom,
   getOwnersFrom,
+  getSafeNameFrom,
+  getThresholdFrom,
 } from '~/routes/open/utils/safeDataExtractor'
+import { OPENING_ADDRESS, SAFELIST_ADDRESS, stillInOpeningView } from '~/routes/routes'
 import { buildSafe } from '~/routes/safe/store/actions/fetchSafe'
-import { getGnosisSafeInstanceAt, deploySafeContract } from '~/logic/contracts/safeContracts'
-import { checkReceiptStatus } from '~/logic/wallets/ethTransactions'
 import { history } from '~/store'
-import { OPENING_ADDRESS, stillInOpeningView, SAFELIST_ADDRESS } from '~/routes/routes'
-import selector from './selector'
-import actions, { type Actions, type AddSafe } from './actions'
-import Layout from '../components/Layout'
 
 type Props = Actions & {
   provider: string,
@@ -94,7 +97,7 @@ export const createSafe = async (values: Object, userAccount: string, addSafe: A
 class Open extends React.Component<Props> {
   onCallSafeContractSubmit = async values => {
     try {
-      const { userAccount, addSafe } = this.props
+      const { addSafe, userAccount } = this.props
       createSafe(values, userAccount, addSafe)
       history.push(OPENING_ADDRESS)
     } catch (error) {
@@ -104,7 +107,7 @@ class Open extends React.Component<Props> {
   }
 
   render() {
-    const { provider, userAccount, network, location } = this.props
+    const { location, network, provider, userAccount } = this.props
     const query: SafePropsType = queryString.parse(location.search, { arrayFormat: 'comma' })
     const { name, owneraddresses, ownernames, threshold } = query
 
@@ -121,10 +124,10 @@ class Open extends React.Component<Props> {
       <Page>
         <Layout
           network={network}
-          provider={provider}
-          userAccount={userAccount}
           onCallSafeContractSubmit={this.onCallSafeContractSubmit}
+          provider={provider}
           safeProps={safeProps}
+          userAccount={userAccount}
         />
       </Page>
     )

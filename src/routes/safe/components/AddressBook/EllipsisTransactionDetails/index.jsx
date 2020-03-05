@@ -1,16 +1,17 @@
 // @flow
-import React from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import { makeStyles } from '@material-ui/core/styles'
-import MoreHorizIcon from '@material-ui/icons/MoreHoriz'
+import { Divider } from '@material-ui/core'
+import ClickAwayListener from '@material-ui/core/ClickAwayListener'
 import Menu from '@material-ui/core/Menu'
 import MenuItem from '@material-ui/core/MenuItem'
-import ClickAwayListener from '@material-ui/core/ClickAwayListener'
-import { Divider } from '@material-ui/core'
+import { makeStyles } from '@material-ui/core/styles'
+import MoreHorizIcon from '@material-ui/icons/MoreHoriz'
 import { push } from 'connected-react-router'
-import { xs } from '~/theme/variables'
-import { safeParamAddressFromStateSelector } from '~/routes/safe/store/selectors'
+import React from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+
 import { SAFELIST_ADDRESS } from '~/routes/routes'
+import { safeParamAddressFromStateSelector } from '~/routes/safe/store/selectors'
+import { xs } from '~/theme/variables'
 
 const useStyles = makeStyles({
   container: {
@@ -35,7 +36,7 @@ type EllipsisTransactionDetailsProps = {
   address: string,
 }
 
-const EllipsisTransactionDetails = ({ knownAddress, address }: EllipsisTransactionDetailsProps) => {
+const EllipsisTransactionDetails = ({ address, knownAddress }: EllipsisTransactionDetailsProps) => {
   const classes = useStyles()
   const [anchorEl, setAnchorEl] = React.useState(null)
 
@@ -55,10 +56,10 @@ const EllipsisTransactionDetails = ({ knownAddress, address }: EllipsisTransacti
 
   return (
     <ClickAwayListener onClickAway={closeMenuHandler}>
-      <div role="menu" tabIndex={0} className={classes.container} onClick={handleClick} onKeyDown={handleClick}>
+      <div className={classes.container} onClick={handleClick} onKeyDown={handleClick} role="menu" tabIndex={0}>
         <MoreHorizIcon />
-        <Menu id="simple-menu" anchorEl={anchorEl} keepMounted open={Boolean(anchorEl)} onClose={closeMenuHandler}>
-          <MenuItem onClick={closeMenuHandler} disabled>
+        <Menu anchorEl={anchorEl} id="simple-menu" keepMounted onClose={closeMenuHandler} open={Boolean(anchorEl)}>
+          <MenuItem disabled onClick={closeMenuHandler}>
             Send Again
           </MenuItem>
           <Divider />
