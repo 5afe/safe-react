@@ -25,7 +25,7 @@ export const estimateTxGasCosts = async (
 
     let txData
     if (isExecution) {
-      // https://gnosis-safe.readthedocs.io/en/latest/contracts/signatures.html#pre-validated-signatures
+      // https://docs.gnosis.io/safe/docs/docs5/#pre-validated-signatures
       const signatures =
         tx && tx.confirmations
           ? generateSignaturesFromTxConfirmations(tx.confirmations, preApprovingOwner)

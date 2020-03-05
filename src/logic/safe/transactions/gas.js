@@ -20,7 +20,7 @@ const estimateDataGasCosts = data => {
   return data.match(/.{2}/g).reduce(reducer, 0)
 }
 
-// https://gnosis-safe.readthedocs.io/en/latest/contracts/transactions.html#safe-transaction-data-gas-estimation
+// https://docs.gnosis.io/safe/docs/docs4/#safe-transaction-data-gas-estimation
 // https://github.com/gnosis/safe-contracts/blob/a97c6fd24f79c0b159ddd25a10a2ebd3ea2ef926/test/utils/execution.js
 export const estimateDataGas = (
   safe: any,
@@ -42,7 +42,7 @@ export const estimateDataGas = (
   const gasPrice = 0 // no need to get refund when we submit txs to metamask
   const signatureCost = signatureCount * (68 + 2176 + 2176 + 6000) // array count (3 -> r, s, v) * signature count
 
-  // https://gnosis-safe.readthedocs.io/en/latest/contracts/signatures.html#pre-validated-signatures
+  // https://docs.gnosis.io/safe/docs/docs5/#pre-validated-signatures
   const sigs = `0x000000000000000000000000${from.replace(
     '0x',
     '',
@@ -102,7 +102,7 @@ export const calculateTxFee = async (
       safeInstance = await getGnosisSafeInstanceAt(safeAddress)
     }
 
-    // https://gnosis-safe.readthedocs.io/en/latest/contracts/signatures.html#pre-validated-signatures
+    // https://docs.gnosis.io/safe/docs/docs5/#pre-validated-signatures
     const sigs = `0x000000000000000000000000${from.replace(
       '0x',
       '',

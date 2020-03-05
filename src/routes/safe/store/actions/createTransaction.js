@@ -87,7 +87,7 @@ const createTransaction = ({
   const nonce = await getNewTxNonce(txNonce, lastTx, safeAddress)
   const isExecution = (lastTx && lastTx.isExecuted && threshold.toNumber() === 1) || shouldExecute
 
-  // https://gnosis-safe.readthedocs.io/en/latest/contracts/signatures.html#pre-validated-signatures
+  // https://docs.gnosis.io/safe/docs/docs5/#pre-validated-signatures
   const sigs = `0x000000000000000000000000${from.replace(
     '0x',
     '',

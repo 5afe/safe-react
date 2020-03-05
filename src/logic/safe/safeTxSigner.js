@@ -2,7 +2,7 @@
 import { List } from 'immutable'
 import { type Confirmation } from '~/routes/safe/store/models/confirmation'
 
-// https://gnosis-safe.readthedocs.io/en/latest/contracts/signatures.html#pre-validated-signatures
+// https://docs.gnosis.io/safe/docs/docs5/#pre-validated-signatures
 // https://github.com/gnosis/safe-contracts/blob/master/test/gnosisSafeTeamEdition.js#L26
 export const generateSignaturesFromTxConfirmations = (
   confirmations: List<Confirmation>,
@@ -27,7 +27,7 @@ export const generateSignaturesFromTxConfirmations = (
       if (conf.signature) {
         sigs += conf.signature.slice(2)
       } else {
-        // https://gnosis-safe.readthedocs.io/en/latest/contracts/signatures.html#pre-validated-signatures
+        // https://docs.gnosis.io/safe/docs/docs5/#pre-validated-signatures
         sigs += `000000000000000000000000${addr.replace(
           '0x',
           '',
