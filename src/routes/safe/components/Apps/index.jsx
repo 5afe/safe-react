@@ -141,6 +141,7 @@ function Apps({
       sendMessageToIframe(operations.ON_SAFE_INFO, {
         safeAddress,
         network,
+        ethBalance,
       })
     }
 
