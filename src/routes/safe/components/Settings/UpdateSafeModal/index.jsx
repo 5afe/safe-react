@@ -32,7 +32,7 @@ const UpdateSafeModal = ({ classes, createTransaction, onClose, safeAddress }: P
     <>
       <Row align="center" className={classes.heading} grow>
         <Paragraph className={classes.headingText} noMargin weight="bolder">
-          Change required confirmations
+          Update to new Safe version
         </Paragraph>
         <IconButton disableRipple onClick={onClose}>
           <Close className={classes.close} />
