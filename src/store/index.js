@@ -1,5 +1,5 @@
 // @flow
-import { createBrowserHistory } from 'history'
+import { createHashHistory } from 'history'
 import { connectRouter, routerMiddleware } from 'connected-react-router'
 import { combineReducers, createStore, applyMiddleware, compose, type CombinedReducer, type Store } from 'redux'
 import thunk from 'redux-thunk'
@@ -34,7 +34,7 @@ import currentSession, {
   type State as CurrentSessionState,
 } from '~/logic/currentSession/store/reducer/currentSession'
 
-export const history = createBrowserHistory({ basename: '/app/' })
+export const history = createHashHistory({ hashType: 'slash' })
 
 // eslint-disable-next-line
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
