@@ -11,7 +11,7 @@ import { decodeParamsFromSafeMethod } from '~/logic/contracts/methodIds'
 import { buildIncomingTxServiceUrl } from '~/logic/safe/transactions/incomingTxHistory'
 import { type TxServiceType, buildTxServiceUrl } from '~/logic/safe/transactions/txHistory'
 import { getLocalSafe } from '~/logic/safe/utils'
-import { getHumanFriendlyToken } from '~/logic/tokens/store/actions/fetchTokens'
+import { getTokenInstance } from '~/logic/tokens/store/actions/fetchTokens'
 import { ALTERNATIVE_TOKEN_ABI } from '~/logic/tokens/utils/alternativeAbi'
 import { isMultisendTransaction, isTokenTransfer, isUpgradeTransaction } from '~/logic/tokens/utils/tokenHelpers'
 import { ZERO_ADDRESS, sameAddress } from '~/logic/wallets/ethAddresses'
@@ -100,7 +100,7 @@ export const buildTransactionFrom = async (safeAddress: string, tx: TxServiceMod
     let refundSymbol = 'ETH'
     let decimals = 18
     if (tx.gasToken !== ZERO_ADDRESS) {
-      const gasToken = await (await getHumanFriendlyToken()).at(tx.gasToken)
+      const gasToken = await getTokenInstance(tx.gasToken)
       refundSymbol = await gasToken.symbol()
       decimals = await gasToken.decimals()
     }
@@ -120,8 +120,7 @@ export const buildTransactionFrom = async (safeAddress: string, tx: TxServiceMod
   let decimals = 18
   let decodedParams
   if (isSendTokenTx) {
-    const tokenContract = await getHumanFriendlyToken()
-    const tokenInstance = await tokenContract.at(tx.to)
+    const tokenInstance = await getTokenInstance(tx.to)
     try {
       ;[symbol, decimals] = await Promise.all([tokenInstance.symbol(), tokenInstance.decimals()])
     } catch (err) {
@@ -218,8 +217,7 @@ export const buildIncomingTransactionFrom = async (tx: IncomingTxServiceModel) =
 
   if (tx.tokenAddress) {
     try {
-      const tokenContract = await getHumanFriendlyToken()
-      const tokenInstance = await tokenContract.at(tx.tokenAddress)
+      const tokenInstance = await getTokenInstance(tx.tokenAddress)
       const [tokenSymbol, tokenDecimals] = await Promise.all([tokenInstance.symbol(), tokenInstance.decimals()])
       symbol = tokenSymbol
       decimals = tokenDecimals

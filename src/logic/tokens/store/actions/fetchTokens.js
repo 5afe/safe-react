@@ -32,6 +32,27 @@ export const getHumanFriendlyToken = ensureOnce(createHumanFriendlyTokenContract
 
 export const getStandardTokenContract = ensureOnce(createStandardTokenContract)
 
+let tokensInstanceCache = {}
+
+export const getTokenInstance = async (tokenAddress: string) => {
+  if (!tokenAddress) {
+    return null
+  }
+  let tokenInstance = tokensInstanceCache[tokenAddress]
+  // If the token is inside the cache we return the cached token
+  if (tokenInstance) {
+    return tokenInstance
+  }
+  // Otherwise we fetch it, save it to the cache and return it
+  const tokenContract = await getHumanFriendlyToken()
+  tokenInstance = await tokenContract.at(tokenAddress)
+  const [tokenSymbol, tokenDecimals] = await Promise.all([tokenInstance.symbol(), tokenInstance.decimals()])
+  tokenInstance.symbol = () => tokenSymbol
+  tokenInstance.tokenDecimals = () => tokenDecimals
+  tokensInstanceCache[tokenAddress] = tokenInstance
+  return tokenInstance
+}
+
 export const fetchTokens = () => async (dispatch: ReduxDispatch<GlobalState>) => {
   try {
     const {
