@@ -1,6 +1,7 @@
 // @flow
 import { List } from 'immutable'
-import { makeOwner, type Owner } from '~/routes/safe/store/models/owner'
+
+import { type Owner, makeOwner } from '~/routes/safe/store/models/owner'
 
 export const getAccountsFrom = (values: Object): string[] => {
   const accounts = Object.keys(values)

@@ -95,6 +95,7 @@ export const NOTIFICATIONS: Notifications = {
   },
   WALLET_DISCONNECTED_MSG: {
     message: 'Wallet disconnected',
+    key: 'WALLET_DISCONNECTED_MSG',
     options: {
       variant: SUCCESS,
       persist: false,

@@ -1,31 +1,33 @@
 // @flow
 import { List, Map } from 'immutable'
-import { createSelector, createStructuredSelector, type Selector } from 'reselect'
+import { type Selector, createSelector, createStructuredSelector } from 'reselect'
+
+import { safeParamAddressSelector } from '../store/selectors'
+
+import type { AddressBook } from '~/logic/addressBook/model/addressBook'
+import { getAddressBook } from '~/logic/addressBook/store/selectors'
+import type { BalanceCurrencyType } from '~/logic/currencyValues/store/model/currencyValues'
+import { currencyValuesListSelector, currentCurrencySelector } from '~/logic/currencyValues/store/selectors'
+import { type Token } from '~/logic/tokens/store/model/token'
+import { orderedTokenListSelector, tokensSelector } from '~/logic/tokens/store/selectors'
+import { getEthAsToken } from '~/logic/tokens/utils/tokenHelpers'
+import { isUserOwner } from '~/logic/wallets/ethAddresses'
+import { networkSelector, providerNameSelector, userAccountSelector } from '~/logic/wallets/store/selectors'
+import type { IncomingTransaction } from '~/routes/safe/store/models/incomingTransaction'
+import { type Safe } from '~/routes/safe/store/models/safe'
+import { type Transaction, type TransactionStatus } from '~/routes/safe/store/models/transaction'
 import {
-  safeSelector,
+  type RouterProps,
+  type SafeSelectorProps,
   safeActiveTokensSelector,
   safeBalancesSelector,
   safeBlacklistedTokensSelector,
-  safeTransactionsSelector,
   safeCancellationTransactionsSelector,
   safeIncomingTransactionsSelector,
-  type RouterProps,
-  type SafeSelectorProps,
+  safeSelector,
+  safeTransactionsSelector,
 } from '~/routes/safe/store/selectors'
-import { providerNameSelector, userAccountSelector, networkSelector } from '~/logic/wallets/store/selectors'
-import { type Safe } from '~/routes/safe/store/models/safe'
 import { type GlobalState } from '~/store'
-import { isUserOwner } from '~/logic/wallets/ethAddresses'
-import { orderedTokenListSelector, tokensSelector } from '~/logic/tokens/store/selectors'
-import { type Token } from '~/logic/tokens/store/model/token'
-import { type Transaction, type TransactionStatus } from '~/routes/safe/store/models/transaction'
-import { safeParamAddressSelector } from '../store/selectors'
-import { getEthAsToken } from '~/logic/tokens/utils/tokenHelpers'
-import { currencyValuesListSelector, currentCurrencySelector } from '~/logic/currencyValues/store/selectors'
-import type { BalanceCurrencyType } from '~/logic/currencyValues/store/model/currencyValues'
-import type { IncomingTransaction } from '~/routes/safe/store/models/incomingTransaction'
-import type { AddressBook } from '~/logic/addressBook/model/addressBook'
-import { getAddressBook } from '~/logic/addressBook/store/selectors'
 
 export type SelectorProps = {
   safe: SafeSelectorProps,

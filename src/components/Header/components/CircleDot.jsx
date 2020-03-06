@@ -1,10 +1,11 @@
 // @flow
-import * as React from 'react'
 import { withStyles } from '@material-ui/core/styles'
 import Dot from '@material-ui/icons/FiberManualRecord'
+import * as React from 'react'
+
 import Block from '~/components/layout/Block'
 import Img from '~/components/layout/Img'
-import { fancy, border, warning, screenSm } from '~/theme/variables'
+import { border, fancy, screenSm, warning } from '~/theme/variables'
 
 const key = require('../assets/key.svg')
 const triangle = require('../assets/triangle.svg')
@@ -64,15 +65,15 @@ const buildDotStyleFrom = (size: number, top: number, right: number, mode: Mode)
 })
 
 const KeyRing = ({
-  classes,
+  center = false,
   circleSize,
-  keySize,
+  classes,
+  dotRight,
   dotSize,
   dotTop,
-  dotRight,
-  mode,
-  center = false,
   hideDot = false,
+  keySize,
+  mode,
 }: Props) => {
   const keyStyle = buildKeyStyleFrom(circleSize, center, dotSize)
   const dotStyle = buildDotStyleFrom(dotSize, dotTop, dotRight, mode)
@@ -84,11 +85,11 @@ const KeyRing = ({
       <Block className={classes.root}>
         <Block className={classes.key} style={keyStyle}>
           <Img
-            src={img}
-            height={keySize}
-            width={isWarning ? keySize + 2 : keySize}
             alt="Status connection"
             className={isWarning ? classes.warning : undefined}
+            height={keySize}
+            src={img}
+            width={isWarning ? keySize + 2 : keySize}
           />
         </Block>
         {!hideDot && <Dot className={classes.dot} style={dotStyle} />}

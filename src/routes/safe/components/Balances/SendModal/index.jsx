@@ -1,11 +1,12 @@
 // @flow
-import React, { useState, useEffect, Suspense } from 'react'
-import { List } from 'immutable'
 import CircularProgress from '@material-ui/core/CircularProgress'
-import cn from 'classnames'
 import { withStyles } from '@material-ui/core/styles'
-import { type Token } from '~/logic/tokens/store/model/token'
+import cn from 'classnames'
+import { List } from 'immutable'
+import React, { Suspense, useEffect, useState } from 'react'
+
 import Modal from '~/components/Modal'
+import { type Token } from '~/logic/tokens/store/model/token'
 
 const ChooseTxType = React.lazy(() => import('./screens/ChooseTxType'))
 
@@ -61,17 +62,17 @@ const loaderStyle = {
 }
 
 const Send = ({
-  onClose,
-  isOpen,
+  activeScreenType,
   classes,
+  createTransaction,
+  ethBalance,
+  isOpen,
+  onClose,
+  recipientAddress,
   safeAddress,
   safeName,
-  ethBalance,
-  tokens,
   selectedToken,
-  createTransaction,
-  activeScreenType,
-  recipientAddress,
+  tokens,
 }: Props) => {
   const [activeScreen, setActiveScreen] = useState<ActiveScreen>(activeScreenType || 'chooseTxType')
   const [tx, setTx] = useState<TxStateType>({})
@@ -95,11 +96,11 @@ const Send = ({
 
   return (
     <Modal
-      title="Send Tokens"
       description="Send Tokens Form"
       handleClose={onClose}
       open={isOpen}
       paperClassName={cn(scalableModalSize ? classes.scalableStaticModalWindow : classes.scalableModalWindow)}
+      title="Send Tokens"
     >
       <Suspense
         fallback={
@@ -111,48 +112,48 @@ const Send = ({
         {activeScreen === 'chooseTxType' && <ChooseTxType onClose={onClose} setActiveScreen={setActiveScreen} />}
         {activeScreen === 'sendFunds' && (
           <SendFunds
+            ethBalance={ethBalance}
+            initialValues={tx}
             onClose={onClose}
+            onSubmit={handleTxCreation}
+            recipientAddress={recipientAddress}
             safeAddress={safeAddress}
             safeName={safeName}
-            ethBalance={ethBalance}
-            tokens={tokens}
             selectedToken={selectedToken}
-            onSubmit={handleTxCreation}
-            initialValues={tx}
-            recipientAddress={recipientAddress}
+            tokens={tokens}
           />
         )}
         {activeScreen === 'reviewTx' && (
           <ReviewTx
-            tx={tx}
+            createTransaction={createTransaction}
+            ethBalance={ethBalance}
             onClose={onClose}
-            setActiveScreen={setActiveScreen}
             safeAddress={safeAddress}
             safeName={safeName}
-            ethBalance={ethBalance}
-            createTransaction={createTransaction}
+            setActiveScreen={setActiveScreen}
             tokens={tokens}
+            tx={tx}
           />
         )}
         {activeScreen === 'sendCustomTx' && (
           <SendCustomTx
+            ethBalance={ethBalance}
+            initialValues={tx}
             onClose={onClose}
+            onSubmit={handleCustomTxCreation}
             safeAddress={safeAddress}
             safeName={safeName}
-            ethBalance={ethBalance}
-            onSubmit={handleCustomTxCreation}
-            initialValues={tx}
           />
         )}
         {activeScreen === 'reviewCustomTx' && (
           <ReviewCustomTx
-            tx={tx}
+            createTransaction={createTransaction}
+            ethBalance={ethBalance}
             onClose={onClose}
-            setActiveScreen={setActiveScreen}
             safeAddress={safeAddress}
             safeName={safeName}
-            ethBalance={ethBalance}
-            createTransaction={createTransaction}
+            setActiveScreen={setActiveScreen}
+            tx={tx}
           />
         )}
       </Suspense>

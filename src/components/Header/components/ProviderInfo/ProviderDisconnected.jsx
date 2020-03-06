@@ -1,11 +1,12 @@
 // @flow
-import * as React from 'react'
 import { withStyles } from '@material-ui/core/styles'
-import Paragraph from '~/components/layout/Paragraph'
-import Col from '~/components/layout/Col'
-import { type Open } from '~/components/hoc/OpenHoc'
-import { sm } from '~/theme/variables'
+import * as React from 'react'
+
 import CircleDot from '~/components/Header/components/CircleDot'
+import { type Open } from '~/components/hoc/OpenHoc'
+import Col from '~/components/layout/Col'
+import Paragraph from '~/components/layout/Paragraph'
+import { sm } from '~/theme/variables'
 
 type Props = Open & {
   classes: Object,
@@ -32,12 +33,12 @@ const styles = () => ({
 
 const ProviderDisconnected = ({ classes }: Props) => (
   <>
-    <CircleDot keySize={17} circleSize={35} dotSize={16} dotTop={24} dotRight={11} mode="error" />
-    <Col end="sm" middle="xs" layout="column" className={classes.account}>
-      <Paragraph size="sm" transform="capitalize" className={classes.network} noMargin weight="bold">
+    <CircleDot circleSize={35} dotRight={11} dotSize={16} dotTop={24} keySize={17} mode="error" />
+    <Col className={classes.account} end="sm" layout="column" middle="xs">
+      <Paragraph className={classes.network} noMargin size="sm" transform="capitalize" weight="bold">
         Not Connected
       </Paragraph>
-      <Paragraph size="sm" color="fancy" className={classes.connect} noMargin>
+      <Paragraph className={classes.connect} color="fancy" noMargin size="sm">
         Connect Wallet
       </Paragraph>
     </Col>

@@ -1,6 +1,7 @@
 // @flow
 import { Map } from 'immutable'
-import { handleActions, type ActionType } from 'redux-actions'
+import { type ActionType, handleActions } from 'redux-actions'
+
 import { LOAD_CURRENT_SESSION } from '~/logic/currentSession/store/actions/loadCurrentSession'
 import { UPDATE_VIEWED_SAFES } from '~/logic/currentSession/store/actions/updateViewedSafes'
 import { saveCurrentSessionToStorage } from '~/logic/currentSession/utils'

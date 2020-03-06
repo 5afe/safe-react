@@ -2,8 +2,9 @@
 import * as React from 'react'
 import { Field } from 'react-final-form'
 import { OnChange } from 'react-final-form-listeners'
+
 import TextField from '~/components/forms/TextField'
-import { composeValidators, required, mustBeEthereumAddress } from '~/components/forms/validator'
+import { composeValidators, mustBeEthereumAddress, required } from '~/components/forms/validator'
 import { getAddressFromENS } from '~/logic/wallets/getWeb3'
 
 type Props = {
@@ -38,17 +39,17 @@ const AddressInput = ({
 }: Props): React.Element<*> => (
   <>
     <Field
-      name={name}
-      component={TextField}
-      type="text"
-      validate={composeValidators(required, mustBeEthereumAddress, ...validators)}
-      inputAdornment={inputAdornment}
-      placeholder={placeholder}
-      text={text}
       className={className}
-      testId={testId}
+      component={TextField}
       defaultValue={defaultValue}
       disabled={disabled}
+      inputAdornment={inputAdornment}
+      name={name}
+      placeholder={placeholder}
+      testId={testId}
+      text={text}
+      type="text"
+      validate={composeValidators(required, mustBeEthereumAddress, ...validators)}
     />
     <OnChange name={name}>
       {async value => {

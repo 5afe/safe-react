@@ -1,19 +1,21 @@
 // @flow
+import { withSnackbar } from 'notistack'
 import * as React from 'react'
 import { connect } from 'react-redux'
-import { withSnackbar } from 'notistack'
-import { logComponentStack, type Info } from '~/utils/logBoundaries'
+
+import actions, { type Actions } from './actions'
+import Layout from './components/Layout'
+import ConnectDetails from './components/ProviderDetails/ConnectDetails'
+import UserDetails from './components/ProviderDetails/UserDetails'
+import ProviderAccessible from './components/ProviderInfo/ProviderAccessible'
+import ProviderDisconnected from './components/ProviderInfo/ProviderDisconnected'
+import selector, { type SelectorProps } from './selector'
+
+import { onboard } from '~/components/ConnectButton'
 import { NOTIFICATIONS, showSnackbar } from '~/logic/notifications'
-import { web3Connect } from '~/components/ConnectButton'
 import { INJECTED_PROVIDERS } from '~/logic/wallets/getWeb3'
 import { loadLastUsedProvider } from '~/logic/wallets/store/middlewares/providerWatcher'
-import ProviderAccessible from './components/ProviderInfo/ProviderAccessible'
-import UserDetails from './components/ProviderDetails/UserDetails'
-import ProviderDisconnected from './components/ProviderInfo/ProviderDisconnected'
-import ConnectDetails from './components/ProviderDetails/ConnectDetails'
-import Layout from './components/Layout'
-import actions, { type Actions } from './actions'
-import selector, { type SelectorProps } from './selector'
+import { type Info, logComponentStack } from '~/utils/logBoundaries'
 
 type Props = Actions &
   SelectorProps & {
@@ -36,13 +38,16 @@ class HeaderComponent extends React.PureComponent<Props, State> {
 
   async componentDidMount() {
     const lastUsedProvider = await loadLastUsedProvider()
-    if (INJECTED_PROVIDERS.includes(lastUsedProvider) || process.env.NODE_ENV === 'test') {
-      web3Connect.connectToInjected()
+    if (INJECTED_PROVIDERS.includes(lastUsedProvider.toUpperCase()) || process.env.NODE_ENV === 'test') {
+      const hasSelectedWallet = await onboard.walletSelect(lastUsedProvider)
+      if (hasSelectedWallet) {
+        await onboard.walletCheck()
+      }
     }
   }
 
   componentDidCatch(error: Error, info: Info) {
-    const { enqueueSnackbar, closeSnackbar } = this.props
+    const { closeSnackbar, enqueueSnackbar } = this.props
 
     this.setState({ hasError: true })
     showSnackbar(NOTIFICATIONS.CONNECT_WALLET_ERROR_MSG, enqueueSnackbar, closeSnackbar)
@@ -51,25 +56,25 @@ class HeaderComponent extends React.PureComponent<Props, State> {
   }
 
   onDisconnect = () => {
-    const { removeProvider, enqueueSnackbar, closeSnackbar } = this.props
+    const { closeSnackbar, enqueueSnackbar, removeProvider } = this.props
 
     removeProvider(enqueueSnackbar, closeSnackbar)
   }
 
   getProviderInfoBased = () => {
     const { hasError } = this.state
-    const { loaded, available, provider, network, userAddress } = this.props
+    const { available, loaded, network, provider, userAddress } = this.props
 
     if (hasError || !loaded) {
       return <ProviderDisconnected />
     }
 
-    return <ProviderAccessible provider={provider} network={network} userAddress={userAddress} connected={available} />
+    return <ProviderAccessible connected={available} network={network} provider={provider} userAddress={userAddress} />
   }
 
   getProviderDetailsBased = () => {
     const { hasError } = this.state
-    const { loaded, available, provider, network, userAddress } = this.props
+    const { available, loaded, network, provider, userAddress } = this.props
 
     if (hasError || !loaded) {
       return <ConnectDetails />
@@ -90,7 +95,7 @@ class HeaderComponent extends React.PureComponent<Props, State> {
     const info = this.getProviderInfoBased()
     const details = this.getProviderDetailsBased()
 
-    return <Layout providerInfo={info} providerDetails={details} />
+    return <Layout providerDetails={details} providerInfo={info} />
   }
 }
 

@@ -1,9 +1,10 @@
 // @flow
 import { List } from 'immutable'
-import { type Token } from '~/logic/tokens/store/model/token'
-import { sameAddress } from '~/logic/wallets/ethAddresses'
-import { isAddressAToken } from '~/logic/tokens/utils/tokenHelpers'
+
 import { simpleMemoize } from '~/components/forms/validator'
+import { type Token } from '~/logic/tokens/store/model/token'
+import { isAddressAToken } from '~/logic/tokens/utils/tokenHelpers'
+import { sameAddress } from '~/logic/wallets/ethAddresses'
 // import { getStandardTokenContract } from '~/logic/tokens/store/actions/fetchTokens'
 
 // eslint-disable-next-line

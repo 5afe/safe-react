@@ -1,17 +1,19 @@
 // @flow
-import * as React from 'react'
-import classNames from 'classnames/bind'
+import IconButton from '@material-ui/core/IconButton'
 import { withStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
-import IconButton from '@material-ui/core/IconButton'
-import Paragraph from '~/components/layout/Paragraph'
+import classNames from 'classnames/bind'
+import * as React from 'react'
+
+import Code from '../assets/code.svg'
+import Token from '../assets/token.svg'
+
 import Button from '~/components/layout/Button'
-import Row from '~/components/layout/Row'
 import Col from '~/components/layout/Col'
 import Hairline from '~/components/layout/Hairline'
 import Img from '~/components/layout/Img'
-import Token from '../assets/token.svg'
-import Code from '../assets/code.svg'
+import Paragraph from '~/components/layout/Paragraph'
+import Row from '~/components/layout/Row'
 import { lg, md, sm } from '~/theme/variables'
 
 const styles = () => ({
@@ -55,36 +57,36 @@ type Props = {
 
 const ChooseTxType = ({ classes, onClose, setActiveScreen }: Props) => (
   <>
-    <Row align="center" grow className={classes.heading}>
-      <Paragraph weight="bolder" className={classes.manage} noMargin>
+    <Row align="center" className={classes.heading} grow>
+      <Paragraph className={classes.manage} noMargin weight="bolder">
         Send
       </Paragraph>
-      <IconButton onClick={onClose} disableRipple>
+      <IconButton disableRipple onClick={onClose}>
         <Close className={classes.closeIcon} />
       </IconButton>
     </Row>
     <Hairline />
     <Row align="center">
-      <Col layout="column" middle="xs" className={classes.buttonColumn}>
+      <Col className={classes.buttonColumn} layout="column" middle="xs">
         <Button
+          className={classes.firstButton}
           color="primary"
-          minWidth={260}
           minHeight={52}
+          minWidth={260}
           onClick={() => setActiveScreen('sendFunds')}
           variant="contained"
-          className={classes.firstButton}
         >
-          <Img src={Token} alt="Send funds" className={classNames(classes.leftIcon, classes.iconSmall)} />
+          <Img alt="Send funds" className={classNames(classes.leftIcon, classes.iconSmall)} src={Token} />
           Send funds
         </Button>
         <Button
           color="primary"
-          minWidth={260}
           minHeight={52}
+          minWidth={260}
           onClick={() => setActiveScreen('sendCustomTx')}
           variant="outlined"
         >
-          <Img src={Code} alt="Send custom transaction" className={classNames(classes.leftIcon, classes.iconSmall)} />
+          <Img alt="Send custom transaction" className={classNames(classes.leftIcon, classes.iconSmall)} src={Code} />
           Send custom transaction
         </Button>
       </Col>

@@ -1,6 +1,6 @@
 // @flow
-import { type Transaction } from '~/routes/safe/store/models/transaction'
 import { getWeb3 } from '~/logic/wallets/getWeb3'
+import { type Transaction } from '~/routes/safe/store/models/transaction'
 
 type DecodedTxData = {
   recipient: string,
@@ -13,6 +13,7 @@ type DecodedTxData = {
   customTx?: boolean,
   creationTx?: boolean,
   data: string,
+  upgradeTx: boolean,
 }
 
 const getSafeVersion = (data: string) => {
@@ -27,7 +28,7 @@ const getSafeVersion = (data: string) => {
 
 export const getTxData = (tx: Transaction): DecodedTxData => {
   const web3 = getWeb3()
-  const { toBN, fromWei } = web3.utils
+  const { fromWei, toBN } = web3.utils
 
   const txData = {}
 

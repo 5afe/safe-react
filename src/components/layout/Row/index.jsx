@@ -1,8 +1,10 @@
 // @flow
 import classNames from 'classnames/bind'
 import * as React from 'react'
-import { capitalize } from '~/utils/css'
+
 import styles from './index.scss'
+
+import { capitalize } from '~/utils/css'
 
 const cx = classNames.bind(styles)
 
@@ -15,7 +17,7 @@ type Props = {
   testId?: string,
 }
 
-const Row = ({ children, className, margin, align, grow, testId = '', ...props }: Props) => {
+const Row = ({ align, children, className, grow, margin, testId = '', ...props }: Props) => {
   const rowClassNames = cx(
     styles.row,
     margin ? capitalize(margin, 'margin') : undefined,

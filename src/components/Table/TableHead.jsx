@@ -1,10 +1,11 @@
 // @flow
-import * as React from 'react'
-import { List } from 'immutable'
 import TableCell from '@material-ui/core/TableCell'
 import TableHead from '@material-ui/core/TableHead'
 import TableRow from '@material-ui/core/TableRow'
 import TableSortLabel from '@material-ui/core/TableSortLabel'
+import { List } from 'immutable'
+import * as React from 'react'
+
 import { type Order } from '~/components/Table/sorting'
 
 export type Column = {
@@ -51,8 +52,8 @@ class GnoTableHead extends React.PureComponent<Props> {
         <TableRow>
           {columns.map((column: Column) => (
             <TableCell
-              key={column.id}
               align={column.align}
+              key={column.id}
               padding={column.disablePadding ? 'none' : 'default'}
               sortDirection={orderBy === column.id ? order : false}
             >

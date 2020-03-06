@@ -1,24 +1,25 @@
 // @flow
-import { Map, List, Set } from 'immutable'
+import { List, Map, Set } from 'immutable'
 import { type Match, matchPath } from 'react-router-dom'
-import { createSelector, createStructuredSelector, type Selector } from 'reselect'
-import { type GlobalState } from '~/store/index'
-import { SAFE_PARAM_ADDRESS, SAFELIST_ADDRESS } from '~/routes/routes'
+import { type OutputSelector, createSelector, createStructuredSelector } from 'reselect'
+
+import { getWeb3 } from '~/logic/wallets/getWeb3'
+import { SAFELIST_ADDRESS, SAFE_PARAM_ADDRESS } from '~/routes/routes'
+import { type Confirmation } from '~/routes/safe/store/models/confirmation'
+import type { IncomingTransaction } from '~/routes/safe/store/models/incomingTransaction'
 import { type Safe } from '~/routes/safe/store/models/safe'
-import { type State as TransactionsState, TRANSACTIONS_REDUCER_ID } from '~/routes/safe/store/reducer/transactions'
+import { type Transaction } from '~/routes/safe/store/models/transaction'
 import {
-  type CancelState as CancelTransactionsState,
   CANCELLATION_TRANSACTIONS_REDUCER_ID,
+  type CancelState as CancelTransactionsState,
 } from '~/routes/safe/store/reducer/cancellationTransactions'
 import {
-  type IncomingState as IncomingTransactionsState,
   INCOMING_TRANSACTIONS_REDUCER_ID,
+  type IncomingState as IncomingTransactionsState,
 } from '~/routes/safe/store/reducer/incomingTransactions'
-import { type Transaction } from '~/routes/safe/store/models/transaction'
-import { type Confirmation } from '~/routes/safe/store/models/confirmation'
 import { SAFE_REDUCER_ID } from '~/routes/safe/store/reducer/safe'
-import type { IncomingTransaction } from '~/routes/safe/store/models/incomingTransaction'
-import { getWeb3 } from '~/logic/wallets/getWeb3'
+import { TRANSACTIONS_REDUCER_ID, type State as TransactionsState } from '~/routes/safe/store/reducer/transactions'
+import { type GlobalState } from '~/store/index'
 
 export type RouterProps = {
   match: Match,
@@ -36,17 +37,17 @@ const safesStateSelector = (state: GlobalState): Map<string, *> => state[SAFE_RE
 
 export const safesMapSelector = (state: GlobalState): Map<string, Safe> => state[SAFE_REDUCER_ID].get('safes')
 
-export const safesListSelector: Selector<GlobalState, {}, List<Safe>> = createSelector(
+export const safesListSelector: OutputSelector<GlobalState, {}, List<Safe>> = createSelector(
   safesMapSelector,
   (safes: Map<string, Safe>): List<Safe> => safes.toList(),
 )
 
-export const safesCountSelector: Selector<GlobalState, {}, number> = createSelector(
+export const safesCountSelector: OutputSelector<GlobalState, {}, number> = createSelector(
   safesMapSelector,
   (safes: Map<string, Safe>): number => safes.size,
 )
 
-export const defaultSafeSelector: Selector<GlobalState, {}, string> = createSelector(
+export const defaultSafeSelector: OutputSelector<GlobalState, {}, string> = createSelector(
   safesStateSelector,
   (safeState: Map<string, *>): string => safeState.get('defaultSafe'),
 )
@@ -66,7 +67,7 @@ export const safeParamAddressSelector = (state: GlobalState, props: RouterProps)
   return urlAdd ? getWeb3().utils.toChecksumAddress(urlAdd) : ''
 }
 
-type TxSelectorType = Selector<GlobalState, RouterProps, List<Transaction>>
+type TxSelectorType = OutputSelector<GlobalState, RouterProps, List<Transaction>>
 
 export const safeTransactionsSelector: TxSelectorType = createSelector(
   transactionsSelector,
@@ -116,7 +117,7 @@ export const safeParamAddressFromStateSelector = (state: GlobalState): string =>
   return match ? match.params.safeAddress : null
 }
 
-type IncomingTxSelectorType = Selector<GlobalState, RouterProps, List<IncomingTransaction>>
+type IncomingTxSelectorType = OutputSelector<GlobalState, RouterProps, List<IncomingTransaction>>
 
 export const safeIncomingTransactionsSelector: IncomingTxSelectorType = createSelector(
   incomingTransactionsSelector,
@@ -134,7 +135,7 @@ export const safeIncomingTransactionsSelector: IncomingTxSelectorType = createSe
   },
 )
 
-export const confirmationsTransactionSelector: Selector<GlobalState, TransactionProps, number> = createSelector(
+export const confirmationsTransactionSelector: OutputSelector<GlobalState, TransactionProps, number> = createSelector(
   oneTransactionSelector,
   (tx: Transaction) => {
     if (!tx) {
@@ -152,7 +153,7 @@ export const confirmationsTransactionSelector: Selector<GlobalState, Transaction
 
 export type SafeSelectorProps = Safe | typeof undefined
 
-export const safeSelector: Selector<GlobalState, RouterProps, SafeSelectorProps> = createSelector(
+export const safeSelector: OutputSelector<GlobalState, RouterProps, SafeSelectorProps> = createSelector(
   safesMapSelector,
   safeParamAddressFromStateSelector,
   (safes: Map<string, Safe>, address: string) => {
@@ -166,7 +167,7 @@ export const safeSelector: Selector<GlobalState, RouterProps, SafeSelectorProps>
   },
 )
 
-export const safeActiveTokensSelector: Selector<GlobalState, RouterProps, List<string>> = createSelector(
+export const safeActiveTokensSelector: OutputSelector<GlobalState, RouterProps, List<string>> = createSelector(
   safeSelector,
   (safe: Safe) => {
     if (!safe) {
@@ -177,7 +178,7 @@ export const safeActiveTokensSelector: Selector<GlobalState, RouterProps, List<s
   },
 )
 
-export const safeBlacklistedTokensSelector: Selector<GlobalState, RouterProps, List<string>> = createSelector(
+export const safeBlacklistedTokensSelector: OutputSelector<GlobalState, RouterProps, List<string>> = createSelector(
   safeSelector,
   (safe: Safe) => {
     if (!safe) {
@@ -194,7 +195,7 @@ export const safeActiveTokensSelectorBySafe = (safeAddress: string, safes: Map<s
 export const safeBlacklistedTokensSelectorBySafe = (safeAddress: string, safes: Map<string, Safe>): List<string> =>
   safes.get(safeAddress).get('blacklistedTokens')
 
-export const safeBalancesSelector: Selector<GlobalState, RouterProps, Map<string, string>> = createSelector(
+export const safeBalancesSelector: OutputSelector<GlobalState, RouterProps, Map<string, string>> = createSelector(
   safeSelector,
   (safe: Safe) => {
     if (!safe) {
@@ -205,7 +206,7 @@ export const safeBalancesSelector: Selector<GlobalState, RouterProps, Map<string
   },
 )
 
-export const getActiveTokensAddressesForAllSafes: Selector<GlobalState, any, Set<string>> = createSelector(
+export const getActiveTokensAddressesForAllSafes: OutputSelector<GlobalState, any, Set<string>> = createSelector(
   safesListSelector,
   (safes: List<Safe>) => {
     const addresses = Set().withMutations(set => {
@@ -220,7 +221,7 @@ export const getActiveTokensAddressesForAllSafes: Selector<GlobalState, any, Set
   },
 )
 
-export const getBlacklistedTokensAddressesForAllSafes: Selector<GlobalState, any, Set<string>> = createSelector(
+export const getBlacklistedTokensAddressesForAllSafes: OutputSelector<GlobalState, any, Set<string>> = createSelector(
   safesListSelector,
   (safes: List<Safe>) => {
     const addresses = Set().withMutations(set => {

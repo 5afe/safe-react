@@ -1,8 +1,9 @@
 // @flow
 import { List, Record } from 'immutable'
 import type { RecordFactory, RecordOf } from 'immutable'
-import { type Confirmation } from '~/routes/safe/store/models/confirmation'
+
 import { ZERO_ADDRESS } from '~/logic/wallets/ethAddresses'
+import { type Confirmation } from '~/routes/safe/store/models/confirmation'
 
 export const OUTGOING_TX_TYPE = 'outgoing'
 
@@ -15,6 +16,7 @@ export type TransactionStatus =
   | 'cancelled'
   | 'awaiting_execution'
   | 'pending'
+  | 'third-party-app'
 
 export type TransactionProps = {
   nonce: ?number,
@@ -49,6 +51,7 @@ export type TransactionProps = {
   decodedParams?: Object,
   refundParams?: Object,
   type: string,
+  origin: string | null,
 }
 
 export const makeTransaction: RecordFactory<TransactionProps> = Record({
@@ -84,6 +87,7 @@ export const makeTransaction: RecordFactory<TransactionProps> = Record({
   decodedParams: {},
   refundParams: null,
   type: 'outgoing',
+  origin: null,
 })
 
 export type Transaction = RecordOf<TransactionProps>

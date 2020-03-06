@@ -2,13 +2,13 @@
 import React from 'react'
 import styled from 'styled-components'
 
-import Paragraph from '~/components/layout/Paragraph'
-import EtherscanBtn from '~/components/EtherscanBtn'
 import CopyBtn from '~/components/CopyBtn'
+import EtherscanBtn from '~/components/EtherscanBtn'
 import Identicon from '~/components/Identicon'
-import Bold from '~/components/layout/Bold'
-import { xs, border } from '~/theme/variables'
 import Block from '~/components/layout/Block'
+import Bold from '~/components/layout/Bold'
+import Paragraph from '~/components/layout/Paragraph'
+import { border, xs } from '~/theme/variables'
 
 const Wrapper = styled.div`
   display: flex;
@@ -43,7 +43,7 @@ type Props = {
   ethBalance: string,
 }
 
-const AddressInfo = ({ safeName, safeAddress, ethBalance }: Props) => {
+const AddressInfo = ({ ethBalance, safeAddress, safeName }: Props) => {
   return (
     <Wrapper>
       <div className="icon-section">
@@ -51,12 +51,12 @@ const AddressInfo = ({ safeName, safeAddress, ethBalance }: Props) => {
       </div>
       <div className="data-section">
         {safeName && (
-          <Paragraph weight="bolder" noMargin>
+          <Paragraph noMargin weight="bolder">
             {safeName}
           </Paragraph>
         )}
         <div className="address">
-          <Paragraph weight="bolder" noMargin>
+          <Paragraph noMargin weight="bolder">
             {safeAddress}
           </Paragraph>
           <CopyBtn content={safeAddress} />
