@@ -49,7 +49,7 @@ const notificationsMiddleware = (store: Store<GlobalState>) => (next: Function) 
           break
         }
 
-        const notificationKey = `${safeAddress}-${userAddress}`
+        const notificationKey = `${safeAddress}-awaiting`
         const onNotificationClicked = () => {
           dispatch(closeSnackbarAction({ key: notificationKey }))
           dispatch(push(`/safes/${safeAddress}/transactions`))
