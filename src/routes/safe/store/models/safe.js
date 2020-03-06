@@ -14,7 +14,7 @@ export type SafeProps = {
   blacklistedTokens: Set<string>,
   ethBalance?: string,
   nonce: number,
-  latestIncomingTxBlock: number,
+  latestIncomingTxBlock?: number,
   recurringUser?: boolean,
 }
 
