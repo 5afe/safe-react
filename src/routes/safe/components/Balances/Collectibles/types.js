@@ -175,6 +175,35 @@ export type CollectibleData = {
   data: AssetCollectible[],
 }
 
+export type NFTAsset = {
+  address: string,
+  assetContract: CollectibleContract,
+  collection: OpenSeaCollection,
+  description: ?string,
+  image: ?string,
+  name: string,
+  numberOfTokens: number,
+  slug: string,
+  symbol: string,
+}
+
+export type NFTToken = {
+  assetAddress: string,
+  color: ?string,
+  description: string,
+  image: string,
+  name: string,
+  tokenId: string,
+}
+
+export type NFTAssets = { [key: string]: NFTAsset }
+
+export type CollectiblesInfo = {
+  nftAssets: NFTAssets,
+  nftTokens: NFTToken[],
+}
+
 export interface CollectibleMetadataSource {
-  fetchAllUserCollectiblesByCategoryAsync(safeAddress: string, networkId: number): Promise<CollectibleData[]>;
+  constructor(options: { rps: number }): void;
+  fetchAllUserCollectiblesByCategoryAsync(safeAddress: string, networkId: number): Promise<CollectiblesInfo>;
 }

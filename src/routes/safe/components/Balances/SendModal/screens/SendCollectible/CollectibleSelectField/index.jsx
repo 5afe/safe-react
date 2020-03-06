@@ -12,19 +12,21 @@ import SelectField from '~/components/forms/SelectField'
 import { required } from '~/components/forms/validator'
 import Img from '~/components/layout/Img'
 import Paragraph from '~/components/layout/Paragraph'
-import type { CollectibleData } from '~/routes/safe/components/Balances/Collectibles/types'
+import type { NFTTokensState } from '~/logic/collectibles/store/reducer/collectibles'
 import { setImageToPlaceholder } from '~/routes/safe/components/Balances/utils'
+import { textShortener } from '~/utils/strings'
 
 type SelectedCollectibleProps = {
-  asset?: CollectibleData,
-  tokenId?: string | number,
+  tokens: NFTTokensState,
+  tokenId: string | number,
 }
 
 const useSelectedCollectibleStyles = makeStyles(selectedTokenStyles)
 
-const SelectedCollectible = ({ asset, tokenId }: SelectedCollectibleProps) => {
+const SelectedCollectible = ({ tokenId, tokens }: SelectedCollectibleProps) => {
   const classes = useSelectedCollectibleStyles()
-  const token = tokenId ? asset && asset.data.find(({ tokenId: id }) => tokenId === id) : null
+  const token = tokenId && tokens ? tokens.find(({ tokenId: id }) => tokenId === id) : null
+  const shortener = textShortener({ charsStart: 40, charsEnd: 0 })
 
   return (
     <MenuItem className={classes.container}>
@@ -35,8 +37,8 @@ const SelectedCollectible = ({ asset, tokenId }: SelectedCollectibleProps) => {
           </ListItemIcon>
           <ListItemText
             className={classes.tokenData}
-            primary={token.title}
-            secondary={`${token.tokenId} ${token.asset.symbol}`}
+            primary={shortener(token.name)}
+            secondary={`token ID: ${shortener(token.tokenId)}`}
           />
         </>
       ) : (
@@ -49,13 +51,13 @@ const SelectedCollectible = ({ asset, tokenId }: SelectedCollectibleProps) => {
 }
 
 type SelectFieldProps = {
-  asset?: CollectibleData,
   initialValue: string,
+  tokens: NFTTokensState,
 }
 
 const useCollectibleSelectFieldStyles = makeStyles(selectStyles)
 
-const CollectibleSelectField = ({ asset, initialValue }: SelectFieldProps) => {
+const CollectibleSelectField = ({ initialValue, tokens }: SelectFieldProps) => {
   const classes = useCollectibleSelectFieldStyles()
 
   return (
@@ -64,17 +66,17 @@ const CollectibleSelectField = ({ asset, initialValue }: SelectFieldProps) => {
       component={SelectField}
       displayEmpty
       initialValue={initialValue}
-      name="collectible"
-      renderValue={tokenId => <SelectedCollectible asset={asset} tokenId={tokenId} />}
+      name="nftTokenId"
+      renderValue={nftTokenId => <SelectedCollectible tokenId={nftTokenId} tokens={tokens} />}
       validate={required}
     >
-      {asset &&
-        asset.data.map(token => (
+      {tokens &&
+        tokens.map(token => (
           <MenuItem key={`${token.assetAddress}-${token.tokenId}`} value={token.tokenId}>
             <ListItemIcon>
-              <Img alt={token.title} height={28} onError={setImageToPlaceholder} src={token.image} />
+              <Img alt={token.description} height={28} onError={setImageToPlaceholder} src={token.image} />
             </ListItemIcon>
-            <ListItemText primary={token.title} secondary={`${token.tokenId} ${token.asset.symbol}`} />
+            <ListItemText primary={token.description} secondary={`token ID: ${token.tokenId}`} />
           </MenuItem>
         ))}
     </Field>

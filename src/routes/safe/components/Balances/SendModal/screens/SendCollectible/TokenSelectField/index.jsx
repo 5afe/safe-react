@@ -12,32 +12,34 @@ import SelectField from '~/components/forms/SelectField'
 import { required } from '~/components/forms/validator'
 import Img from '~/components/layout/Img'
 import Paragraph from '~/components/layout/Paragraph'
-import { type State as CollectiblesState } from '~/logic/collectibles/store/reducer/collectibles'
+import type { NFTAssetsState } from '~/logic/collectibles/store/reducer/collectibles'
 import { formatAmount } from '~/logic/tokens/utils/formatAmount'
 import { setImageToPlaceholder } from '~/routes/safe/components/Balances/utils'
+import { textShortener } from '~/utils/strings'
 
 type SelectedTokenProps = {
   assetAddress?: string,
-  collectibles: CollectiblesState,
+  assets: NFTAssetsState,
 }
 
 const useSelectedTokenStyles = makeStyles(selectedTokenStyles)
 
-const SelectedToken = ({ assetAddress, collectibles }: SelectedTokenProps) => {
+const SelectedToken = ({ assetAddress, assets }: SelectedTokenProps) => {
   const classes = useSelectedTokenStyles()
-  const asset = assetAddress ? collectibles.get(assetAddress) : null
+  const asset = assetAddress ? assets[assetAddress] : null
+  const shortener = textShortener({ charsStart: 40, charsEnd: 0 })
 
   return (
     <MenuItem className={classes.container}>
-      {asset && asset.data && asset.data.length ? (
+      {asset && asset.numberOfTokens ? (
         <>
           <ListItemIcon className={classes.tokenImage}>
-            <Img alt={asset.title} height={28} onError={setImageToPlaceholder} src={asset.image} />
+            <Img alt={asset.name} height={28} onError={setImageToPlaceholder} src={asset.image} />
           </ListItemIcon>
           <ListItemText
             className={classes.tokenData}
-            primary={asset.title}
-            secondary={`${formatAmount(asset.data.length)} ${asset.data[0].asset.symbol}`}
+            primary={shortener(asset.name)}
+            secondary={`${formatAmount(asset.numberOfTokens)} ${asset.symbol}`}
           />
         </>
       ) : (
@@ -50,14 +52,13 @@ const SelectedToken = ({ assetAddress, collectibles }: SelectedTokenProps) => {
 }
 
 type SelectFieldProps = {
-  collectibles: CollectiblesState,
-  initialValue: string,
-  setSelectedCollectible: Function,
+  assets: NFTAssetsState,
+  initialValue: ?string,
 }
 
 const useTokenSelectFieldStyles = makeStyles(selectStyles)
 
-const TokenSelectField = ({ collectibles, initialValue, setSelectedCollectible }: SelectFieldProps) => {
+const TokenSelectField = ({ assets, initialValue }: SelectFieldProps) => {
   const classes = useTokenSelectFieldStyles()
 
   return (
@@ -66,24 +67,27 @@ const TokenSelectField = ({ collectibles, initialValue, setSelectedCollectible }
       component={SelectField}
       displayEmpty
       initialValue={initialValue}
-      name="asset"
-      renderValue={assetAddress => {
-        setSelectedCollectible(assetAddress)
-        return <SelectedToken assetAddress={assetAddress} collectibles={collectibles} />
-      }}
+      name="assetAddress"
+      renderValue={assetAddress => <SelectedToken assetAddress={assetAddress} assets={assets} />}
       validate={required}
     >
-      {collectibles.valueSeq().map(asset => (
-        <MenuItem key={asset.slug} value={asset.data[0].assetAddress}>
-          <ListItemIcon>
-            <Img alt={asset.title} height={28} onError={setImageToPlaceholder} src={asset.image} />
-          </ListItemIcon>
-          <ListItemText
-            primary={asset.title}
-            secondary={`${formatAmount(asset.data.length)} ${asset.data[0].asset.symbol}`}
-          />
-        </MenuItem>
-      ))}
+      {!assets
+        ? null
+        : Object.keys(assets).map(assetAddress => {
+            const asset = assets[assetAddress]
+
+            return (
+              <MenuItem key={asset.slug} value={assetAddress}>
+                <ListItemIcon>
+                  <Img alt={asset.name} height={28} onError={setImageToPlaceholder} src={asset.image} />
+                </ListItemIcon>
+                <ListItemText
+                  primary={asset.name}
+                  secondary={`${formatAmount(asset.numberOfTokens)} ${asset.symbol}`}
+                />
+              </MenuItem>
+            )
+          })}
     </Field>
   )
 }

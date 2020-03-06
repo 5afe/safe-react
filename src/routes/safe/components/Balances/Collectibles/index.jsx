@@ -7,8 +7,8 @@ import { useSelector } from 'react-redux'
 
 import Item from './components/Item'
 
-import { collectiblesSelector } from '~/logic/collectibles/store/selectors'
-import type { AssetCollectible } from '~/routes/safe/components/Balances/Collectibles/types'
+import type { NFTAssetsState, NFTTokensState } from '~/logic/collectibles/store/reducer/collectibles'
+import { nftAssetsSelector, nftTokensSelector } from '~/logic/collectibles/store/selectors'
 import { fontColor, screenSm, screenXs } from '~/theme/variables'
 
 const useStyles = makeStyles({
@@ -69,26 +69,32 @@ const useStyles = makeStyles({
 
 const Collectibles = () => {
   const classes = useStyles()
-  const collectibleCategories = useSelector(collectiblesSelector)
+  const nftAssets: NFTAssetsState = useSelector(nftAssetsSelector)
+  const nftTokens: NFTTokensState = useSelector(nftTokensSelector)
 
   return (
     <Card>
       <div className={classes.cardInner}>
-        {collectibleCategories &&
-          collectibleCategories.valueSeq().map(category => (
-            <React.Fragment key={category.slug}>
-              <div className={classes.title}>
-                <div className={classes.titleImg} style={{ backgroundImage: `url(${category.image || ''})` }} />
-                <h2 className={classes.titleText}>{category.title}</h2>
-                <div className={classes.titleFiller} />
-              </div>
-              <div className={classes.gridRow}>
-                {category.data.map((collectible: AssetCollectible) => (
-                  <Item data={collectible} key={`${collectible.assetAddress}_${collectible.tokenId}`} />
-                ))}
-              </div>
-            </React.Fragment>
-          ))}
+        {nftAssets &&
+          Object.keys(nftAssets).map(assetAddress => {
+            const nftAsset = nftAssets[assetAddress]
+
+            return (
+              <React.Fragment key={nftAsset.slug}>
+                <div className={classes.title}>
+                  <div className={classes.titleImg} style={{ backgroundImage: `url(${nftAsset.image || ''})` }} />
+                  <h2 className={classes.titleText}>{nftAsset.name}</h2>
+                  <div className={classes.titleFiller} />
+                </div>
+                <div className={classes.gridRow}>
+                  {nftTokens &&
+                    nftTokens
+                      .filter(({ assetAddress }) => nftAsset.address === assetAddress)
+                      .map(nftToken => <Item data={nftToken} key={`${nftAsset.slug}_${nftToken.tokenId}`} />)}
+                </div>
+              </React.Fragment>
+            )
+          })}
       </div>
       <TablePagination
         component="div"

@@ -1,12 +1,15 @@
 // @flow
 import { createAction } from 'redux-actions'
 
-import type { CollectibleData } from '~/routes/safe/components/Balances/Collectibles/types'
+import type { NFTAssets, NFTToken } from '~/routes/safe/components/Balances/Collectibles/types'
 
-export const ADD_COLLECTIBLES = 'ADD_COLLECTIBLES'
+export const ADD_NFT_ASSETS = 'ADD_NFT_ASSETS'
+export const ADD_NFT_TOKENS = 'ADD_NFT_TOKENS'
 
-const addCollectibles = createAction<string, *, *>(ADD_COLLECTIBLES, (collectibles: CollectibleData[]) => ({
-  collectibles,
+export const addNftAssets = createAction<string, *, *>(ADD_NFT_ASSETS, (nftAssets: NFTAssets) => ({
+  nftAssets,
 }))
 
-export default addCollectibles
+export const addNftTokens = createAction<string, *, *>(ADD_NFT_TOKENS, (nftTokens: NFTToken[]) => ({
+  nftTokens,
+}))

@@ -133,7 +133,7 @@ const SendModal = ({
             recipientAddress={recipientAddress}
             safeAddress={safeAddress}
             safeName={safeName}
-            selectedToken={selectedToken}
+            selectedToken={''}
             tokens={tokens}
           />
         )}

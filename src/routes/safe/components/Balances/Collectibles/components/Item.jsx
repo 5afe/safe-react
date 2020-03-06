@@ -5,6 +5,7 @@ import cn from 'classnames'
 import * as React from 'react'
 
 import Button from '~/components/layout/Button'
+import type { NFTToken } from '~/routes/safe/components/Balances/Collectibles/types'
 import { fontColor, sm, xs } from '~/theme/variables'
 
 const useStyles = makeStyles({
@@ -98,7 +99,7 @@ const useStyles = makeStyles({
 })
 
 type Props = {
-  data: any,
+  data: NFTToken,
 }
 
 const Item = ({ data }: Props) => {
@@ -108,20 +109,18 @@ const Item = ({ data }: Props) => {
     <div className={classes.item}>
       <div className={classes.mainContent}>
         <div className={classes.image} style={{ backgroundImage: `url(${data.image})` }} />
-        {data.title && (
-          <div className={classes.textContainer}>
-            {data.title && (
-              <h3 className={classes.title} title={data.title}>
-                {data.title}
-              </h3>
-            )}
-            {data.text && (
-              <p className={classes.text} title={data.text}>
-                {data.text}
-              </p>
-            )}
-          </div>
-        )}
+        <div className={classes.textContainer}>
+          {data.name && (
+            <h3 className={classes.title} title={data.name}>
+              {data.name}
+            </h3>
+          )}
+          {data.description && (
+            <p className={classes.text} title={data.description}>
+              {data.description}
+            </p>
+          )}
+        </div>
       </div>
       <div className={cn(classes.extraContent, 'showOnHover')}>
         <Button className={classes.sendButton} color="primary" size="small" variant="contained">

@@ -1,25 +1,33 @@
 // @flow
-import { Map } from 'immutable'
 import { type ActionType, handleActions } from 'redux-actions'
 
-import { ADD_COLLECTIBLES } from '~/logic/collectibles/store/actions/addCollectibles'
-import type { CollectibleData } from '~/routes/safe/components/Balances/Collectibles/types'
+import { ADD_NFT_ASSETS, ADD_NFT_TOKENS } from '~/logic/collectibles/store/actions/addCollectibles'
+import type { NFTAssets, NFTToken } from '~/routes/safe/components/Balances/Collectibles/types'
 
-export const COLLECTIBLE_REDUCER_ID = 'collectibles'
+export const NFT_ASSETS_REDUCER_ID = 'nftAssets'
+export const NFT_TOKENS_REDUCER_ID = 'nftTokens'
 
-export type State = Map<string, CollectibleData>
+export type NFTAssetsState = NFTAssets | null
+export type NFTTokensState = NFTToken[] | null
 
-export default handleActions<State, *>(
+export const nftAssetReducer = handleActions<NFTAssetsState, *>(
   {
-    [ADD_COLLECTIBLES]: (state: State, action: ActionType<Function>): State => {
-      const { collectibles }: { collectibles: [CollectibleData] } = action.payload
+    [ADD_NFT_ASSETS]: (state: NFTAssetsState, action: ActionType<Function>): NFTAssetsState => {
+      const { nftAssets } = action.payload
 
-      return state.withMutations(map => {
-        collectibles.forEach(collectible => {
-          map.set(collectible.data[0].assetAddress, collectible)
-        })
-      })
+      return nftAssets
     },
   },
-  Map(),
+  null,
+)
+
+export const nftTokensReducer = handleActions<NFTTokensState, *>(
+  {
+    [ADD_NFT_TOKENS]: (state: NFTTokensState, action: ActionType<Function>): NFTTokensState => {
+      const { nftTokens } = action.payload
+
+      return nftTokens
+    },
+  },
+  null,
 )

@@ -23,7 +23,8 @@ import Hairline from '~/components/layout/Hairline'
 import Img from '~/components/layout/Img'
 import Paragraph from '~/components/layout/Paragraph'
 import Row from '~/components/layout/Row'
-import { collectiblesSelector } from '~/logic/collectibles/store/selectors'
+import type { NFTAssetsState, NFTTokensState } from '~/logic/collectibles/store/reducer/collectibles'
+import { nftAssetsSelector, nftTokensSelector } from '~/logic/collectibles/store/selectors'
 import { type Token } from '~/logic/tokens/store/model/token'
 import SafeInfo from '~/routes/safe/components/Balances/SendModal/SafeInfo'
 import AddressBookInput from '~/routes/safe/components/Balances/SendModal/screens/AddressBookInput'
@@ -68,9 +69,9 @@ const SendCollectible = ({
   selectedToken,
 }: Props) => {
   const classes = useStyles()
-  const collectibleCategories = useSelector(collectiblesSelector)
+  const nftAssets: NFTAssetsState = useSelector(nftAssetsSelector)
+  const nftTokens: NFTTokensState = useSelector(nftTokensSelector)
   const [qrModalOpen, setQrModalOpen] = useState<boolean>(false)
-  const [selectedCollectible, setSelectedCollectible] = useState<Object | null>(null)
   const [selectedEntry, setSelectedEntry] = useState<Object | null>({
     address: recipientAddress,
     name: '',
@@ -117,8 +118,10 @@ const SendCollectible = ({
         {(...args) => {
           const formState = args[2]
           const mutators = args[3]
-          const { asset: collectibleAddress } = formState.values
-          const selectedCollectibleAsset = collectibleCategories.get(collectibleAddress)
+          const { assetAddress } = formState.values
+          const selectedNFTTokens = nftTokens
+            ? nftTokens.filter(nftToken => nftToken.assetAddress === assetAddress)
+            : []
 
           const handleScan = value => {
             let scannedAddress = value
@@ -230,11 +233,7 @@ const SendCollectible = ({
                 </Row>
                 <Row margin="sm">
                   <Col>
-                    <TokenSelectField
-                      collectibles={collectibleCategories}
-                      initialValue={selectedToken}
-                      setSelectedCollectible={setSelectedCollectible}
-                    />
+                    <TokenSelectField assets={nftAssets} initialValue={''} />
                   </Col>
                 </Row>
                 <Row margin="xs">
@@ -246,9 +245,7 @@ const SendCollectible = ({
                 </Row>
                 <Row margin="md">
                   <Col>
-                    {selectedCollectibleAsset !== undefined && selectedCollectible && (
-                      <CollectibleSelectField asset={selectedCollectibleAsset} initialValue={selectedCollectible} />
-                    )}
+                    <CollectibleSelectField initialValue={selectedToken} tokens={selectedNFTTokens} />
                   </Col>
                 </Row>
               </Block>
