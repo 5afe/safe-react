@@ -74,13 +74,31 @@ const TxsTable = ({
   const columns = generateColumns()
   const autoColumns = columns.filter(c => !c.custom)
   const filteredData = getTxTableData(transactions, cancellationTransactions)
-    .sort(({ dateOrder: a }, { dateOrder: b }) => {
-      if (!a || !b) {
+    .sort((tx1, tx2) => {
+      // First order by nonce
+      const aNonce = tx1.tx.nonce
+      const bNonce = tx1.tx.nonce
+      if (aNonce && bNonce) {
+        const difference = aNonce - bNonce
+        if (difference !== 0) {
+          return difference
+        }
+      }
+      // If can't be ordered by nonce, order by date
+      const aDateOrder = tx1.dateOrder
+      const bDateOrder = tx2.dateOrder
+      // Second by date
+      if (!aDateOrder || !bDateOrder) {
         return 0
       }
-      return a - b
+      return aDateOrder - bDateOrder
     })
-    .map((tx, id) => ({ ...tx, id }))
+    .map((tx, id) => {
+      return {
+        ...tx,
+        id,
+      }
+    })
 
   return (
     <Block className={classes.container}>
