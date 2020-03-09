@@ -16,6 +16,7 @@ export type TransactionStatus =
   | 'cancelled'
   | 'awaiting_execution'
   | 'pending'
+  | 'third-party-app'
 
 export type TransactionProps = {
   nonce: ?number,
