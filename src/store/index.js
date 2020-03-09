@@ -52,6 +52,7 @@ const finalCreateStore = composeEnhancers(
 
 export type GlobalState = {
   providers: ProviderState,
+  router: RouterHistory,
   safes: SafeState,
   tokens: TokensState,
   transactions: TransactionsState,
