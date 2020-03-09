@@ -52,7 +52,7 @@ const useStyles = makeStyles({
     zIndex: '5',
   },
   image: {
-    backgroundColor: props => props.backgroundColor || '#f0efee',
+    backgroundColor: props => `#${props.backgroundColor}` || '#f0efee',
     backgroundPosition: '50% 50%',
     backgroundRepeat: 'no-repeat',
     backgroundSize: 'contain',
