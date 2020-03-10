@@ -74,9 +74,9 @@ const CollectibleSelectField = ({ initialValue, tokens }: SelectFieldProps) => {
         tokens.map(token => (
           <MenuItem key={`${token.assetAddress}-${token.tokenId}`} value={token.tokenId}>
             <ListItemIcon>
-              <Img alt={token.description} height={28} onError={setImageToPlaceholder} src={token.image} />
+              <Img alt={token.name} height={28} onError={setImageToPlaceholder} src={token.image} />
             </ListItemIcon>
-            <ListItemText primary={token.description} secondary={`token ID: ${token.tokenId}`} />
+            <ListItemText primary={token.name} secondary={`token ID: ${token.tokenId}`} />
           </MenuItem>
         ))}
     </Field>
