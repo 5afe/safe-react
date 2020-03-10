@@ -15,6 +15,7 @@ import CopyBtn from '~/components/CopyBtn'
 import EtherscanBtn from '~/components/EtherscanBtn'
 import Identicon from '~/components/Identicon'
 import ScanQRModal from '~/components/ScanQRModal'
+import WhenFieldChanges from '~/components/WhenFieldChanges'
 import GnoForm from '~/components/forms/GnoForm'
 import Block from '~/components/layout/Block'
 import Button from '~/components/layout/Button'
@@ -142,6 +143,7 @@ const SendCollectible = ({
 
           return (
             <>
+              <WhenFieldChanges field="assetAddress" set="nftTokenId" to={''} />
               <Block className={classes.formContainer}>
                 <SafeInfo ethBalance={ethBalance} safeAddress={safeAddress} safeName={safeName} />
                 <Row margin="md">
