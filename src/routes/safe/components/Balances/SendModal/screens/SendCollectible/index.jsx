@@ -2,7 +2,6 @@
 import IconButton from '@material-ui/core/IconButton'
 import { makeStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
-import { List } from 'immutable'
 import React, { useState } from 'react'
 import { useSelector } from 'react-redux'
 
@@ -26,7 +25,7 @@ import Paragraph from '~/components/layout/Paragraph'
 import Row from '~/components/layout/Row'
 import type { NFTAssetsState, NFTTokensState } from '~/logic/collectibles/store/reducer/collectibles'
 import { nftAssetsSelector, nftTokensSelector } from '~/logic/collectibles/store/selectors'
-import { type Token } from '~/logic/tokens/store/model/token'
+import type { NFTToken } from '~/routes/safe/components/Balances/Collectibles/types'
 import SafeInfo from '~/routes/safe/components/Balances/SendModal/SafeInfo'
 import AddressBookInput from '~/routes/safe/components/Balances/SendModal/screens/AddressBookInput'
 import CollectibleSelectField from '~/routes/safe/components/Balances/SendModal/screens/SendCollectible/CollectibleSelectField'
@@ -34,15 +33,14 @@ import TokenSelectField from '~/routes/safe/components/Balances/SendModal/screen
 import { sm } from '~/theme/variables'
 
 type Props = {
+  ethBalance: string,
+  initialValues: Object,
   onClose: () => void,
+  onSubmit: Function,
+  recipientAddress?: string,
   safeAddress: string,
   safeName: string,
-  ethBalance: string,
-  selectedToken: string,
-  tokens: List<Token>,
-  onSubmit: Function,
-  initialValues: Object,
-  recipientAddress?: string,
+  selectedToken?: NFTToken | {},
 }
 
 const formMutators = {
@@ -67,7 +65,7 @@ const SendCollectible = ({
   recipientAddress,
   safeAddress,
   safeName,
-  selectedToken,
+  selectedToken = {},
 }: Props) => {
   const classes = useStyles()
   const nftAssets: NFTAssetsState = useSelector(nftAssetsSelector)
@@ -235,7 +233,7 @@ const SendCollectible = ({
                 </Row>
                 <Row margin="sm">
                   <Col>
-                    <TokenSelectField assets={nftAssets} initialValue={''} />
+                    <TokenSelectField assets={nftAssets} initialValue={selectedToken.assetAddress} />
                   </Col>
                 </Row>
                 <Row margin="xs">
@@ -247,7 +245,7 @@ const SendCollectible = ({
                 </Row>
                 <Row margin="md">
                   <Col>
-                    <CollectibleSelectField initialValue={selectedToken} tokens={selectedNFTTokens} />
+                    <CollectibleSelectField initialValue={selectedToken.tokenId} tokens={selectedNFTTokens} />
                   </Col>
                 </Row>
               </Block>

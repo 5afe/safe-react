@@ -100,9 +100,10 @@ const useStyles = makeStyles({
 
 type Props = {
   data: NFTToken,
+  onSend: Function,
 }
 
-const Item = ({ data }: Props) => {
+const Item = ({ data, onSend }: Props) => {
   const classes = useStyles({ backgroundColor: data.color })
 
   return (
@@ -123,7 +124,7 @@ const Item = ({ data }: Props) => {
         </div>
       </div>
       <div className={cn(classes.extraContent, 'showOnHover')}>
-        <Button className={classes.sendButton} color="primary" size="small" variant="contained">
+        <Button className={classes.sendButton} color="primary" onClick={onSend} size="small" variant="contained">
           <CallMade alt="Send" className={classes.buttonIcon} /> Send
         </Button>
       </div>

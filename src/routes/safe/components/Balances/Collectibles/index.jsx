@@ -9,6 +9,8 @@ import Item from './components/Item'
 
 import type { NFTAssetsState, NFTTokensState } from '~/logic/collectibles/store/reducer/collectibles'
 import { nftAssetsSelector, nftTokensSelector } from '~/logic/collectibles/store/selectors'
+import SendModal from '~/routes/safe/components/Balances/SendModal'
+import { safeSelector } from '~/routes/safe/store/selectors'
 import { fontColor, screenSm, screenXs } from '~/theme/variables'
 
 const useStyles = makeStyles({
@@ -69,8 +71,16 @@ const useStyles = makeStyles({
 
 const Collectibles = () => {
   const classes = useStyles()
+  const [selectedToken, setSelectedToken] = React.useState({})
+  const [sendNFTsModalOpen, setSendNFTsModalOpen] = React.useState(false)
+  const { address, ethBalance, name } = useSelector(safeSelector)
   const nftAssets: NFTAssetsState = useSelector(nftAssetsSelector)
   const nftTokens: NFTTokensState = useSelector(nftTokensSelector)
+
+  const handleItemSend = nftToken => {
+    setSelectedToken(nftToken)
+    setSendNFTsModalOpen(true)
+  }
 
   return (
     <Card>
@@ -90,12 +100,27 @@ const Collectibles = () => {
                   {nftTokens &&
                     nftTokens
                       .filter(({ assetAddress }) => nftAsset.address === assetAddress)
-                      .map(nftToken => <Item data={nftToken} key={`${nftAsset.slug}_${nftToken.tokenId}`} />)}
+                      .map(nftToken => (
+                        <Item
+                          data={nftToken}
+                          key={`${nftAsset.slug}_${nftToken.tokenId}`}
+                          onSend={() => handleItemSend(nftToken)}
+                        />
+                      ))}
                 </div>
               </React.Fragment>
             )
           })}
       </div>
+      <SendModal
+        activeScreenType="sendCollectible"
+        ethBalance={ethBalance}
+        isOpen={sendNFTsModalOpen}
+        onClose={() => setSendNFTsModalOpen(false)}
+        safeAddress={address}
+        safeName={name}
+        selectedToken={selectedToken}
+      />
       <TablePagination
         component="div"
         count={11}

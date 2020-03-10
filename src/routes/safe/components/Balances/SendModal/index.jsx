@@ -7,6 +7,7 @@ import React, { Suspense, useEffect, useState } from 'react'
 
 import Modal from '~/components/Modal'
 import { type Token } from '~/logic/tokens/store/model/token'
+import type { NFTToken } from '~/routes/safe/components/Balances/Collectibles/types'
 import SendCollectible from '~/routes/safe/components/Balances/SendModal/screens/SendCollectible'
 
 const ChooseTxType = React.lazy(() => import('./screens/ChooseTxType'))
@@ -21,7 +22,7 @@ const SendCustomTx = React.lazy(() => import('./screens/SendCustomTx'))
 
 const ReviewCustomTx = React.lazy(() => import('./screens/ReviewCustomTx'))
 
-type ActiveScreen = 'chooseTxType' | 'sendFunds' | 'reviewTx' | 'sendCustomTx' | 'reviewCustomTx'
+type ActiveScreen = 'chooseTxType' | 'sendFunds' | 'reviewTx' | 'sendCustomTx' | 'reviewCustomTx' | 'sendCollectible'
 
 type Props = {
   onClose: () => void,
@@ -30,8 +31,8 @@ type Props = {
   safeName: string,
   ethBalance: string,
   tokens: List<Token>,
-  selectedToken?: string,
-  createTransaction: Function,
+  selectedToken?: string | NFTToken | {},
+  createTransaction?: Function,
   activeScreenType: ActiveScreen,
   recipientAddress?: string,
 }
@@ -133,8 +134,7 @@ const SendModal = ({
             recipientAddress={recipientAddress}
             safeAddress={safeAddress}
             safeName={safeName}
-            selectedToken={''}
-            tokens={tokens}
+            selectedToken={selectedToken}
           />
         )}
         {activeScreen === 'reviewTx' && (

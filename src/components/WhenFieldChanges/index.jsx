@@ -16,7 +16,7 @@ const WhenFieldChanges = ({ field, set, to }: Props) => (
       { input: { onChange } },
     ) => (
       <OnChange name={field}>
-        {value => {
+        {() => {
           onChange(to)
         }}
       </OnChange>
