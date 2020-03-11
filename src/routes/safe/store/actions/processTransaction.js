@@ -48,7 +48,7 @@ const processTransaction = ({
   const isExecution = approveAndExecute || (await shouldExecuteTransaction(safeInstance, nonce, lastTx))
 
   let sigs = generateSignaturesFromTxConfirmations(tx.confirmations, approveAndExecute && userAddress)
-  // https://gnosis-safe.readthedocs.io/en/latest/contracts/signatures.html#pre-validated-signatures
+  // https://docs.gnosis.io/safe/docs/docs5/#pre-validated-signatures
   if (!sigs) {
     sigs = `0x000000000000000000000000${from.replace(
       '0x',
