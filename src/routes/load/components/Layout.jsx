@@ -1,17 +1,18 @@
 // @flow
-import * as React from 'react'
-import ChevronLeft from '@material-ui/icons/ChevronLeft'
 import IconButton from '@material-ui/core/IconButton'
+import ChevronLeft from '@material-ui/icons/ChevronLeft'
+import * as React from 'react'
+
 import Stepper, { StepperPage } from '~/components/Stepper'
 import Block from '~/components/layout/Block'
 import Heading from '~/components/layout/Heading'
 import Row from '~/components/layout/Row'
-import ReviewInformation from '~/routes/load/components/ReviewInformation'
-import OwnerList from '~/routes/load/components/OwnerList'
 import DetailsForm, { safeFieldsValidation } from '~/routes/load/components/DetailsForm'
+import OwnerList from '~/routes/load/components/OwnerList'
+import ReviewInformation from '~/routes/load/components/ReviewInformation'
+import { type SelectorProps } from '~/routes/load/container/selector'
 import { history } from '~/store'
 import { secondary, sm } from '~/theme/variables'
-import { type SelectorProps } from '~/routes/load/container/selector'
 
 const getSteps = () => ['Name and address', 'Owners', 'Review']
 
@@ -37,7 +38,7 @@ const formMutators = {
 
 const buttonLabels = ['Next', 'Review', 'Load']
 
-const Layout = ({ provider, onLoadSafeSubmit, network, userAddress }: Props) => {
+const Layout = ({ network, onLoadSafeSubmit, provider, userAddress }: Props) => {
   const steps = getSteps()
   const initialValues = {}
 
@@ -46,17 +47,17 @@ const Layout = ({ provider, onLoadSafeSubmit, network, userAddress }: Props) => 
       {provider ? (
         <Block>
           <Row align="center">
-            <IconButton onClick={back} style={iconStyle} disableRipple>
+            <IconButton disableRipple onClick={back} style={iconStyle}>
               <ChevronLeft />
             </IconButton>
             <Heading tag="h2">Load existing Safe</Heading>
           </Row>
           <Stepper
-            onSubmit={onLoadSafeSubmit}
-            steps={steps}
+            buttonLabels={buttonLabels}
             initialValues={initialValues}
             mutators={formMutators}
-            buttonLabels={buttonLabels}
+            onSubmit={onLoadSafeSubmit}
+            steps={steps}
             testId="load-safe-form"
           >
             <StepperPage validate={safeFieldsValidation}>{DetailsForm}</StepperPage>

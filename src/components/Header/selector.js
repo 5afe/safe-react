@@ -1,11 +1,12 @@
 // @flow
 import { createStructuredSelector } from 'reselect'
+
 import {
-  providerNameSelector,
-  userAccountSelector,
-  networkSelector,
   availableSelector,
   loadedSelector,
+  networkSelector,
+  providerNameSelector,
+  userAccountSelector,
 } from '~/logic/wallets/store/selectors'
 
 export type SelectorProps = {

@@ -1,15 +1,16 @@
 // @flow
+import IconButton from '@material-ui/core/IconButton'
+import { makeStyles } from '@material-ui/core/styles'
+import ExpandLessIcon from '@material-ui/icons/ExpandLess'
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
 import * as React from 'react'
 import { connect } from 'react-redux'
-import { makeStyles } from '@material-ui/core/styles'
-import IconButton from '@material-ui/core/IconButton'
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
-import ExpandLessIcon from '@material-ui/icons/ExpandLess'
-import Paragraph from '~/components/layout/Paragraph'
-import Col from '~/components/layout/Col'
-import { xs, sm, md, border, screenSm } from '~/theme/variables'
-import { safesCountSelector } from '~/routes/safe/store/selectors'
+
 import { SidebarContext } from '~/components/Sidebar'
+import Col from '~/components/layout/Col'
+import Paragraph from '~/components/layout/Paragraph'
+import { safesCountSelector } from '~/routes/safe/store/selectors'
+import { border, md, screenSm, sm, xs } from '~/theme/variables'
 
 export const TOGGLE_SIDEBAR_BTN_TESTID = 'TOGGLE_SIDEBAR_BTN'
 
@@ -42,19 +43,19 @@ const { useContext } = React
 
 const SafeListHeader = ({ safesCount }: Props) => {
   const classes = useStyles()
-  const { toggleSidebar, isOpen } = useContext(SidebarContext)
+  const { isOpen, toggleSidebar } = useContext(SidebarContext)
 
   return (
-    <Col start="xs" middle="xs" className={classes.container}>
+    <Col className={classes.container} middle="xs" start="xs">
       Safes
-      <Paragraph size="xs" className={classes.counter}>
+      <Paragraph className={classes.counter} size="xs">
         {safesCount}
       </Paragraph>
       <IconButton
-        onClick={toggleSidebar}
-        className={classes.icon}
         aria-label="Expand Safe List"
+        className={classes.icon}
         data-testid={TOGGLE_SIDEBAR_BTN_TESTID}
+        onClick={toggleSidebar}
       >
         {isOpen ? <ExpandLessIcon /> : <ExpandMoreIcon color="secondary" />}
       </IconButton>

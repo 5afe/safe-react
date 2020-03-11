@@ -1,12 +1,13 @@
 // @flow
-import * as React from 'react'
 import { makeStyles } from '@material-ui/core/styles'
-import { useDispatch } from 'react-redux'
 import cn from 'classnames'
-import Link from '~/components/layout/Link'
-import { secondary, screenSm, sm } from '~/theme/variables'
-import { openCookieBanner } from '~/logic/cookies/store/actions/openCookieBanner'
+import * as React from 'react'
+import { useDispatch } from 'react-redux'
+
 import GnoButtonLink from '~/components/layout/ButtonLink'
+import Link from '~/components/layout/Link'
+import { openCookieBanner } from '~/logic/cookies/store/actions/openCookieBanner'
+import { screenSm, secondary, sm } from '~/theme/variables'
 
 const useStyles = makeStyles({
   footer: {
@@ -57,23 +58,23 @@ const Footer = () => {
     <footer className={classes.footer}>
       <span className={classes.item}>©{date.getFullYear()} Gnosis</span>
       <span className={classes.sep}>|</span>
-      <Link className={cn(classes.item, classes.link)} to="https://safe.gnosis.io/terms" target="_blank">
+      <Link className={cn(classes.item, classes.link)} target="_blank" to="https://safe.gnosis.io/terms">
         Terms
       </Link>
       <span className={classes.sep}>|</span>
-      <Link className={cn(classes.item, classes.link)} to="https://safe.gnosis.io/privacy" target="_blank">
+      <Link className={cn(classes.item, classes.link)} target="_blank" to="https://safe.gnosis.io/privacy">
         Privacy
       </Link>
       <span className={classes.sep}>|</span>
-      <Link className={cn(classes.item, classes.link)} to="https://safe.gnosis.io/licenses" target="_blank">
+      <Link className={cn(classes.item, classes.link)} target="_blank" to="https://safe.gnosis.io/licenses">
         Licenses
       </Link>
       <span className={classes.sep}>|</span>
-      <Link className={cn(classes.item, classes.link)} to="https://safe.gnosis.io/imprint" target="_blank">
+      <Link className={cn(classes.item, classes.link)} target="_blank" to="https://safe.gnosis.io/imprint">
         Imprint
       </Link>
       <span className={classes.sep}>|</span>
-      <Link className={cn(classes.item, classes.link)} to="https://safe.gnosis.io/cookie" target="_blank">
+      <Link className={cn(classes.item, classes.link)} target="_blank" to="https://safe.gnosis.io/cookie">
         Cookie Policy
       </Link>
       <span className={classes.sep}>-</span>
@@ -83,8 +84,8 @@ const Footer = () => {
       <span className={classes.sep}>|</span>
       <Link
         className={cn(classes.item, classes.link)}
-        to="https://github.com/gnosis/safe-react/releases"
         target="_blank"
+        to="https://github.com/gnosis/safe-react/releases"
       >
         {appVersion}
       </Link>

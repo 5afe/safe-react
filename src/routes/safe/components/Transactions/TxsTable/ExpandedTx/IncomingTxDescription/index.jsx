@@ -1,14 +1,15 @@
 // @flow
-import React from 'react'
 import { makeStyles } from '@material-ui/core/styles'
-import type { IncomingTransaction } from '~/routes/safe/store/models/incomingTransaction'
-import Bold from '~/components/layout/Bold'
+import React from 'react'
+
 import EtherscanLink from '~/components/EtherscanLink'
 import Block from '~/components/layout/Block'
-import { md, lg } from '~/theme/variables'
-import { getIncomingTxAmount } from '~/routes/safe/components/Transactions/TxsTable/columns'
-import OwnerAddressTableCell from '~/routes/safe/components/Settings/ManageOwners/OwnerAddressTableCell'
+import Bold from '~/components/layout/Bold'
 import { getNameFromAddressBook } from '~/logic/addressBook/utils'
+import OwnerAddressTableCell from '~/routes/safe/components/Settings/ManageOwners/OwnerAddressTableCell'
+import { getIncomingTxAmount } from '~/routes/safe/components/Transactions/TxsTable/columns'
+import type { IncomingTransaction } from '~/routes/safe/store/models/incomingTransaction'
+import { lg, md } from '~/theme/variables'
 
 export const TRANSACTIONS_DESC_INCOMING_TEST_ID = 'tx-description-incoming'
 
@@ -31,14 +32,14 @@ type TransferDescProps = {
   txFromName?: string,
 }
 
-const TransferDescription = ({ value = '', from, txFromName }: TransferDescProps) => (
+const TransferDescription = ({ from, txFromName, value = '' }: TransferDescProps) => (
   <Block data-testid={TRANSACTIONS_DESC_INCOMING_TEST_ID}>
     <Bold>Received {value} from:</Bold>
     <br />
     {txFromName ? (
-      <OwnerAddressTableCell address={from} showLinks userName={txFromName} knownAddress />
+      <OwnerAddressTableCell address={from} knownAddress showLinks userName={txFromName} />
     ) : (
-      <EtherscanLink type="address" value={from} knownAddress={false} />
+      <EtherscanLink knownAddress={false} type="address" value={from} />
     )}
   </Block>
 )
@@ -48,7 +49,7 @@ const IncomingTxDescription = ({ tx }: Props) => {
   const txFromName = getNameFromAddressBook(tx.from)
   return (
     <Block className={classes.txDataContainer}>
-      <TransferDescription value={getIncomingTxAmount(tx)} from={tx.from} txFromName={txFromName} />
+      <TransferDescription from={tx.from} txFromName={txFromName} value={getIncomingTxAmount(tx)} />
     </Block>
   )
 }

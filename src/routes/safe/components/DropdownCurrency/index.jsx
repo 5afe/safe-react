@@ -1,22 +1,24 @@
 // @flow
+import InputBase from '@material-ui/core/InputBase'
 import ListItemIcon from '@material-ui/core/ListItemIcon'
 import ListItemText from '@material-ui/core/ListItemText'
 import Menu from '@material-ui/core/Menu'
 import MenuItem from '@material-ui/core/MenuItem'
-import React, { useState } from 'react'
-import style from 'currency-flags/dist/currency-flags.min.css'
 import { MuiThemeProvider } from '@material-ui/core/styles'
-import { useDispatch, useSelector } from 'react-redux'
 import SearchIcon from '@material-ui/icons/Search'
-import InputBase from '@material-ui/core/InputBase'
 import classNames from 'classnames'
-import { DropdownListTheme } from '~/theme/mui'
+import style from 'currency-flags/dist/currency-flags.min.css'
+import React, { useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+
 import CheckIcon from './img/check.svg'
-import { AVAILABLE_CURRENCIES } from '~/logic/currencyValues/store/model/currencyValues'
+
 import fetchCurrencySelectedValue from '~/logic/currencyValues/store/actions/fetchCurrencySelectedValue'
+import saveCurrencySelected from '~/logic/currencyValues/store/actions/saveCurrencySelected'
+import { AVAILABLE_CURRENCIES } from '~/logic/currencyValues/store/model/currencyValues'
 import { currentCurrencySelector } from '~/logic/currencyValues/store/selectors'
 import { useDropdownStyles } from '~/routes/safe/components/DropdownCurrency/style'
-import saveCurrencySelected from '~/logic/currencyValues/store/actions/saveCurrencySelected'
+import { DropdownListTheme } from '~/theme/mui'
 
 const DropdownCurrency = () => {
   const currenciesList = Object.values(AVAILABLE_CURRENCIES)
@@ -54,6 +56,10 @@ const DropdownCurrency = () => {
         </button>
         <Menu
           anchorEl={anchorEl}
+          anchorOrigin={{
+            horizontal: 'center',
+            vertical: 'bottom',
+          }}
           elevation={0}
           getContentAnchorEl={null}
           id="customizedMenu"
@@ -61,10 +67,6 @@ const DropdownCurrency = () => {
           onClose={handleClose}
           open={Boolean(anchorEl)}
           rounded={0}
-          anchorOrigin={{
-            horizontal: 'center',
-            vertical: 'bottom',
-          }}
           transformOrigin={{
             horizontal: 'center',
             vertical: 'top',
@@ -76,13 +78,13 @@ const DropdownCurrency = () => {
                 <SearchIcon />
               </div>
               <InputBase
-                placeholder="Search…"
                 classes={{
                   root: classes.inputRoot,
                   input: classes.inputInput,
                 }}
                 inputProps={{ 'aria-label': 'search' }}
                 onChange={event => setSearchParams(event.target.value)}
+                placeholder="Search…"
                 value={searchParams}
               />
             </div>
@@ -92,8 +94,8 @@ const DropdownCurrency = () => {
               <MenuItem
                 className={classes.listItem}
                 key={currencyName}
-                value={currencyName}
                 onClick={() => onCurrentCurrencyChangedHandler(currencyName)}
+                value={currencyName}
               >
                 <ListItemIcon className={classes.iconLeft}>
                   <div
@@ -108,7 +110,7 @@ const DropdownCurrency = () => {
                 <ListItemText primary={currencyName} />
                 {currencyName === currencyValueSelected ? (
                   <ListItemIcon className={classes.iconRight}>
-                    <img src={CheckIcon} alt="checked" />
+                    <img alt="checked" src={CheckIcon} />
                   </ListItemIcon>
                 ) : null}
               </MenuItem>

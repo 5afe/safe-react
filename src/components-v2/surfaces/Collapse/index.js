@@ -1,10 +1,10 @@
 // @flow
-import React from 'react'
-import styled from 'styled-components'
 import CollapseMUI from '@material-ui/core/Collapse'
 import IconButton from '@material-ui/core/IconButton'
 import ExpandLess from '@material-ui/icons/ExpandLess'
 import ExpandMore from '@material-ui/icons/ExpandMore'
+import React from 'react'
+import styled from 'styled-components'
 
 const Wrapper = styled.div``
 
@@ -21,7 +21,7 @@ type Props = {
   description: React.Node,
 }
 
-const Collapse = ({ title, description, children }: Props) => {
+const Collapse = ({ children, description, title }: Props) => {
   const [open, setOpen] = React.useState(false)
 
   const handleClick = () => {
@@ -32,7 +32,7 @@ const Collapse = ({ title, description, children }: Props) => {
     <Wrapper>
       <Title>{title}</Title>
       <Header>
-        <IconButton disableRipple size="small" onClick={handleClick}>
+        <IconButton disableRipple onClick={handleClick} size="small">
           {open ? <ExpandLess /> : <ExpandMore />}
         </IconButton>
         {description}

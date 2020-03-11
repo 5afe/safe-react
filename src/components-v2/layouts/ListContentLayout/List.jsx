@@ -1,9 +1,9 @@
 // @flow
 
+import { withStyles } from '@material-ui/core/styles'
+import cn from 'classnames'
 import React from 'react'
 import styled from 'styled-components'
-import cn from 'classnames'
-import { withStyles } from '@material-ui/core/styles'
 
 // TODO: move these styles to a generic place
 import styles from './style'
@@ -34,17 +34,17 @@ type Props = {
   classes: Object,
 }
 
-const List = ({ items, activeItem, onItemClick, classes }: Props) => {
+const List = ({ activeItem, classes, items, onItemClick }: Props) => {
   return (
     <Wrapper>
       {items.map(i => (
         <Item
-          key={i.id}
           className={cn(classes.menuOption, activeItem === i.id && classes.active)}
+          key={i.id}
           onClick={() => onItemClick(i.id)}
         >
           <div className="container">
-            {i.iconUrl && <IconImg src={i.iconUrl} alt={i.name} />}
+            {i.iconUrl && <IconImg alt={i.name} src={i.iconUrl} />}
             <span>{i.name}</span>
           </div>
         </Item>

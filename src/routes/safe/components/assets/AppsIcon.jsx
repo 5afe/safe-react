@@ -2,13 +2,13 @@
 import React from 'react'
 
 export const AppsIcon = () => (
-  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
+  <svg height="16" viewBox="0 0 16 16" width="16" xmlns="http://www.w3.org/2000/svg">
     <g fill="none" fillRule="evenodd">
       <path d="M0 0h16v16H0z" />
       <path
         className="fill"
-        fillRule="nonzero"
         d="M2 1h4a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1zm1 2v2h2V3H3zM10 9h4a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1h-4a1 1 0 0 1-1-1v-4a1 1 0 0 1 1-1zm1 2v2h2v-2h-2zM12 7a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm0-1.9a1.1 1.1 0 1 1 0-2.2 1.1 1.1 0 0 1 0 2.2z"
+        fillRule="nonzero"
       />
       <path
         className="fill"

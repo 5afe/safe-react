@@ -1,8 +1,9 @@
 // @flow
-import semverValid from 'semver/functions/valid'
 import semverLessThan from 'semver/functions/lt'
-import { getGnosisSafeInstanceAt, getSafeMasterContract } from '~/logic/contracts/safeContracts'
+import semverValid from 'semver/functions/valid'
+
 import { getSafeLastVersion } from '~/config'
+import { getGnosisSafeInstanceAt, getSafeMasterContract } from '~/logic/contracts/safeContracts'
 
 export const checkIfSafeNeedsUpdate = async (gnosisSafeInstance, lastSafeVersion) => {
   if (!gnosisSafeInstance || !lastSafeVersion) {

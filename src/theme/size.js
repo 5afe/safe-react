@@ -1,5 +1,5 @@
 // @flow
-import { xs, sm, md, lg, xl } from '~/theme/variables'
+import { lg, md, sm, xl, xs } from '~/theme/variables'
 
 export type Size = 'xs' | 'sm' | 'md' | 'lg' | 'xl'
 

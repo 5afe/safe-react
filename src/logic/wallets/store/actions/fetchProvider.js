@@ -1,17 +1,18 @@
 // @flow
-import type { Dispatch as ReduxDispatch } from 'redux'
 import ReactGA from 'react-ga'
-import { ETHEREUM_NETWORK_IDS, ETHEREUM_NETWORK, getProviderInfo } from '~/logic/wallets/getWeb3'
-import { getNetwork } from '~/config'
-import type { ProviderProps } from '~/logic/wallets/store/model/provider'
-import { makeProvider } from '~/logic/wallets/store/model/provider'
-import { NOTIFICATIONS, enhanceSnackbarForAction } from '~/logic/notifications'
-import enqueueSnackbar from '~/logic/notifications/store/actions/enqueueSnackbar'
+import type { Dispatch as ReduxDispatch } from 'redux'
 
 import addProvider from './addProvider'
 
+import { getNetwork } from '~/config'
+import { NOTIFICATIONS, enhanceSnackbarForAction } from '~/logic/notifications'
+import enqueueSnackbar from '~/logic/notifications/store/actions/enqueueSnackbar'
+import { ETHEREUM_NETWORK, ETHEREUM_NETWORK_IDS, getProviderInfo, getWeb3 } from '~/logic/wallets/getWeb3'
+import type { ProviderProps } from '~/logic/wallets/store/model/provider'
+import { makeProvider } from '~/logic/wallets/store/model/provider'
+
 export const processProviderResponse = (dispatch: ReduxDispatch<*>, provider: ProviderProps) => {
-  const { name, available, loaded, account, network } = provider
+  const { account, available, loaded, name, network } = provider
 
   const walletRecord = makeProvider({
     name,
@@ -25,7 +26,7 @@ export const processProviderResponse = (dispatch: ReduxDispatch<*>, provider: Pr
 }
 
 const handleProviderNotification = (provider: ProviderProps, dispatch: Function) => {
-  const { loaded, network, available } = provider
+  const { available, loaded, network } = provider
 
   if (!loaded) {
     dispatch(enqueueSnackbar(enhanceSnackbarForAction(NOTIFICATIONS.CONNECT_WALLET_ERROR_MSG)))
@@ -57,8 +58,9 @@ const handleProviderNotification = (provider: ProviderProps, dispatch: Function)
   }
 }
 
-export default (provider: Object) => async (dispatch: ReduxDispatch<*>) => {
-  const providerInfo: ProviderProps = await getProviderInfo(provider)
+export default (providerName?: string) => async (dispatch: ReduxDispatch<*>) => {
+  const web3 = getWeb3()
+  const providerInfo: ProviderProps = await getProviderInfo(web3, providerName)
   await handleProviderNotification(providerInfo, dispatch)
   processProviderResponse(dispatch, providerInfo)
 }

@@ -1,25 +1,27 @@
 // @flow
-import React, { useState, useEffect } from 'react'
-import { List } from 'immutable'
-import classNames from 'classnames'
+import IconButton from '@material-ui/core/IconButton'
 import { withStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
-import IconButton from '@material-ui/core/IconButton'
-import EtherscanBtn from '~/components/EtherscanBtn'
+import classNames from 'classnames'
+import { List } from 'immutable'
+import React, { useEffect, useState } from 'react'
+
+import { styles } from './style'
+
 import CopyBtn from '~/components/CopyBtn'
+import EtherscanBtn from '~/components/EtherscanBtn'
 import Identicon from '~/components/Identicon'
+import Block from '~/components/layout/Block'
+import Button from '~/components/layout/Button'
+import Col from '~/components/layout/Col'
+import Hairline from '~/components/layout/Hairline'
 import Paragraph from '~/components/layout/Paragraph'
 import Row from '~/components/layout/Row'
-import Col from '~/components/layout/Col'
-import Button from '~/components/layout/Button'
-import Block from '~/components/layout/Block'
-import Hairline from '~/components/layout/Hairline'
-import type { Owner } from '~/routes/safe/store/models/owner'
-import { getWeb3 } from '~/logic/wallets/getWeb3'
-import { formatAmount } from '~/logic/tokens/utils/formatAmount'
+import { SENTINEL_ADDRESS, getGnosisSafeInstanceAt } from '~/logic/contracts/safeContracts'
 import { estimateTxGasCosts } from '~/logic/safe/transactions/gasNew'
-import { getGnosisSafeInstanceAt, SENTINEL_ADDRESS } from '~/logic/contracts/safeContracts'
-import { styles } from './style'
+import { formatAmount } from '~/logic/tokens/utils/formatAmount'
+import { getWeb3 } from '~/logic/wallets/getWeb3'
+import type { Owner } from '~/routes/safe/store/models/owner'
 
 export const REPLACE_OWNER_SUBMIT_BTN_TEST_ID = 'replace-owner-submit-btn'
 
@@ -39,16 +41,16 @@ type Props = {
 
 const ReviewRemoveOwner = ({
   classes,
+  onClickBack,
   onClose,
-  safeName,
-  owners,
-  values,
+  onSubmit,
   ownerAddress,
   ownerName,
+  owners,
   safeAddress,
-  onClickBack,
+  safeName,
   threshold,
-  onSubmit,
+  values,
 }: Props) => {
   const [gasCosts, setGasCosts] = useState<string>('< 0.001')
 
@@ -57,7 +59,6 @@ const ReviewRemoveOwner = ({
     const estimateGas = async () => {
       const web3 = getWeb3()
       const { fromWei, toBN } = web3.utils
-
       const gnosisSafe = await getGnosisSafeInstanceAt(safeAddress)
       const safeOwners = await gnosisSafe.getOwners()
       const index = safeOwners.findIndex(owner => owner.toLowerCase() === ownerAddress.toLowerCase())
@@ -79,46 +80,46 @@ const ReviewRemoveOwner = ({
 
   return (
     <>
-      <Row align="center" grow className={classes.heading}>
-        <Paragraph weight="bolder" className={classes.manage} noMargin>
+      <Row align="center" className={classes.heading} grow>
+        <Paragraph className={classes.manage} noMargin weight="bolder">
           Replace owner
         </Paragraph>
         <Paragraph className={classes.annotation}>2 of 2</Paragraph>
-        <IconButton onClick={onClose} disableRipple>
+        <IconButton disableRipple onClick={onClose}>
           <Close className={classes.closeIcon} />
         </IconButton>
       </Row>
       <Hairline />
       <Block className={classes.formContainer}>
         <Row className={classes.root}>
-          <Col xs={4} layout="column">
+          <Col layout="column" xs={4}>
             <Block className={classes.details}>
               <Block margin="lg">
-                <Paragraph size="lg" color="primary" noMargin>
+                <Paragraph color="primary" noMargin size="lg">
                   Details
                 </Paragraph>
               </Block>
               <Block margin="lg">
-                <Paragraph size="sm" color="disabled" noMargin>
+                <Paragraph color="disabled" noMargin size="sm">
                   Safe name
                 </Paragraph>
-                <Paragraph size="lg" color="primary" noMargin weight="bolder" className={classes.name}>
+                <Paragraph className={classes.name} color="primary" noMargin size="lg" weight="bolder">
                   {safeName}
                 </Paragraph>
               </Block>
               <Block margin="lg">
-                <Paragraph size="sm" color="disabled" noMargin>
+                <Paragraph color="disabled" noMargin size="sm">
                   Any transaction requires the confirmation of:
                 </Paragraph>
-                <Paragraph size="lg" color="primary" noMargin weight="bolder" className={classes.name}>
+                <Paragraph className={classes.name} color="primary" noMargin size="lg" weight="bolder">
                   {`${threshold} out of ${owners.size} owner(s)`}
                 </Paragraph>
               </Block>
             </Block>
           </Col>
-          <Col xs={8} layout="column" className={classes.owners}>
+          <Col className={classes.owners} layout="column" xs={8}>
             <Row className={classes.ownersTitle}>
-              <Paragraph size="lg" color="primary" noMargin>
+              <Paragraph color="primary" noMargin size="lg">
                 {`${owners.size} Safe owner(s)`}
               </Paragraph>
             </Row>
@@ -128,16 +129,16 @@ const ReviewRemoveOwner = ({
                 owner.address !== ownerAddress && (
                   <React.Fragment key={owner.address}>
                     <Row className={classes.owner}>
-                      <Col xs={1} align="center">
+                      <Col align="center" xs={1}>
                         <Identicon address={owner.address} diameter={32} />
                       </Col>
                       <Col xs={11}>
                         <Block className={classNames(classes.name, classes.userName)}>
-                          <Paragraph weight="bolder" size="lg" noMargin>
+                          <Paragraph noMargin size="lg" weight="bolder">
                             {owner.name}
                           </Paragraph>
-                          <Block justify="center" className={classes.user}>
-                            <Paragraph size="md" color="disabled" className={classes.address} noMargin>
+                          <Block className={classes.user} justify="center">
+                            <Paragraph className={classes.address} color="disabled" noMargin size="md">
                               {owner.address}
                             </Paragraph>
                             <CopyBtn content={owner.address} />
@@ -150,23 +151,23 @@ const ReviewRemoveOwner = ({
                   </React.Fragment>
                 ),
             )}
-            <Row className={classes.info} align="center">
-              <Paragraph weight="bolder" noMargin color="primary" size="md">
+            <Row align="center" className={classes.info}>
+              <Paragraph color="primary" noMargin size="md" weight="bolder">
                 REMOVING OWNER &darr;
               </Paragraph>
             </Row>
             <Hairline />
             <Row className={classes.selectedOwnerRemoved}>
-              <Col xs={1} align="center">
+              <Col align="center" xs={1}>
                 <Identicon address={ownerAddress} diameter={32} />
               </Col>
               <Col xs={11}>
                 <Block className={classNames(classes.name, classes.userName)}>
-                  <Paragraph weight="bolder" size="lg" noMargin>
+                  <Paragraph noMargin size="lg" weight="bolder">
                     {ownerName}
                   </Paragraph>
-                  <Block justify="center" className={classes.user}>
-                    <Paragraph size="md" color="disabled" className={classes.address} noMargin>
+                  <Block className={classes.user} justify="center">
+                    <Paragraph className={classes.address} color="disabled" noMargin size="md">
                       {ownerAddress}
                     </Paragraph>
                     <CopyBtn content={ownerAddress} />
@@ -175,23 +176,23 @@ const ReviewRemoveOwner = ({
                 </Block>
               </Col>
             </Row>
-            <Row className={classes.info} align="center">
-              <Paragraph weight="bolder" noMargin color="primary" size="md">
+            <Row align="center" className={classes.info}>
+              <Paragraph color="primary" noMargin size="md" weight="bolder">
                 ADDING NEW OWNER &darr;
               </Paragraph>
             </Row>
             <Hairline />
             <Row className={classes.selectedOwnerAdded}>
-              <Col xs={1} align="center">
+              <Col align="center" xs={1}>
                 <Identicon address={values.ownerAddress} diameter={32} />
               </Col>
               <Col xs={11}>
                 <Block className={classNames(classes.name, classes.userName)}>
-                  <Paragraph weight="bolder" size="lg" noMargin>
+                  <Paragraph noMargin size="lg" weight="bolder">
                     {values.ownerName}
                   </Paragraph>
-                  <Block justify="center" className={classes.user}>
-                    <Paragraph size="md" color="disabled" className={classes.address} noMargin>
+                  <Block className={classes.user} justify="center">
+                    <Paragraph className={classes.address} color="disabled" noMargin size="md">
                       {values.ownerAddress}
                     </Paragraph>
                     <CopyBtn content={values.ownerAddress} />
@@ -214,17 +215,17 @@ const ReviewRemoveOwner = ({
       </Block>
       <Hairline />
       <Row align="center" className={classes.buttonRow}>
-        <Button minWidth={140} minHeight={42} onClick={onClickBack}>
+        <Button minHeight={42} minWidth={140} onClick={onClickBack}>
           Back
         </Button>
         <Button
-          type="submit"
-          onClick={onSubmit}
-          variant="contained"
+          color="primary"
           minHeight={42}
           minWidth={140}
-          color="primary"
+          onClick={onSubmit}
           testId={REPLACE_OWNER_SUBMIT_BTN_TEST_ID}
+          type="submit"
+          variant="contained"
         >
           Submit
         </Button>

@@ -1,7 +1,8 @@
 // @flow
-import React from 'react'
-import { withStyles } from '@material-ui/core/styles'
 import { TextFieldProps } from '@material-ui/core/TextField'
+import { withStyles } from '@material-ui/core/styles'
+import React from 'react'
+
 import Field from '~/components/forms/Field'
 import TextField from '~/components/forms/TextField'
 
@@ -23,7 +24,7 @@ const styles = () => ({
 })
 
 const TextareaField = ({ classes, ...props }: TextFieldProps) => (
-  <Field {...props} component={TextField} multiline rows="5" className={classes.textarea} />
+  <Field {...props} className={classes.textarea} component={TextField} multiline rows="5" />
 )
 
 export default withStyles(styles)(TextareaField)

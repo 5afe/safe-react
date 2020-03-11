@@ -1,14 +1,16 @@
 // @flow
-import React from 'react'
-import { format, getTime, parseISO } from 'date-fns'
 import { BigNumber } from 'bignumber.js'
+import { format, getTime, parseISO } from 'date-fns'
 import { List, Map } from 'immutable'
+import React from 'react'
+
 import TxType from './TxType'
-import { type Transaction } from '~/routes/safe/store/models/transaction'
-import { INCOMING_TX_TYPE, type IncomingTransaction } from '~/routes/safe/store/models/incomingTransaction'
-import { type SortRow, buildOrderFieldFrom } from '~/components/Table/sorting'
+
 import { type Column } from '~/components/Table/TableHead'
+import { type SortRow, buildOrderFieldFrom } from '~/components/Table/sorting'
 import { getWeb3 } from '~/logic/wallets/getWeb3'
+import { INCOMING_TX_TYPE, type IncomingTransaction } from '~/routes/safe/store/models/incomingTransaction'
+import { type Transaction } from '~/routes/safe/store/models/transaction'
 
 export const TX_TABLE_ID = 'id'
 export const TX_TABLE_TYPE_ID = 'type'
@@ -38,7 +40,7 @@ export const getIncomingTxAmount = (tx: IncomingTransaction) => {
 
 export const getTxAmount = (tx: Transaction) => {
   const web3 = getWeb3()
-  const { toBN, fromWei } = web3.utils
+  const { fromWei, toBN } = web3.utils
 
   let txAmount = 'n/a'
 
@@ -73,7 +75,7 @@ const getTransactionTableData = (tx: Transaction, cancelTx: ?Transaction): Trans
   } else if (tx.cancellationTx) {
     txType = 'cancellation'
   } else if (tx.customTx) {
-    txType = 'custom'
+    txType = tx.origin ? 'third-party-app' : 'custom'
   } else if (tx.creationTx) {
     txType = 'creation'
   } else if (tx.upgradeTx) {
@@ -82,7 +84,7 @@ const getTransactionTableData = (tx: Transaction, cancelTx: ?Transaction): Trans
 
   return {
     [TX_TABLE_ID]: tx.blockNumber,
-    [TX_TABLE_TYPE_ID]: <TxType txType={txType} />,
+    [TX_TABLE_TYPE_ID]: <TxType origin={tx.origin} txType={txType} />,
     [TX_TABLE_DATE_ID]: txDate ? formatDate(txDate) : '',
     [buildOrderFieldFrom(TX_TABLE_DATE_ID)]: txDate ? getTime(parseISO(txDate)) : null,
     [TX_TABLE_AMOUNT_ID]: getTxAmount(tx),

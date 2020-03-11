@@ -1,22 +1,24 @@
 // @flow
-import React from 'react'
-import { List } from 'immutable'
+import IconButton from '@material-ui/core/IconButton'
 import { withStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
-import IconButton from '@material-ui/core/IconButton'
+import { List } from 'immutable'
+import React from 'react'
+
+import { styles } from './style'
+
+import AddressInput from '~/components/forms/AddressInput'
+import Field from '~/components/forms/Field'
+import GnoForm from '~/components/forms/GnoForm'
+import TextField from '~/components/forms/TextField'
+import { composeValidators, minMaxLength, required, uniqueAddress } from '~/components/forms/validator'
+import Block from '~/components/layout/Block'
+import Button from '~/components/layout/Button'
+import Col from '~/components/layout/Col'
+import Hairline from '~/components/layout/Hairline'
 import Paragraph from '~/components/layout/Paragraph'
 import Row from '~/components/layout/Row'
-import AddressInput from '~/components/forms/AddressInput'
-import GnoForm from '~/components/forms/GnoForm'
-import Col from '~/components/layout/Col'
-import Button from '~/components/layout/Button'
-import Block from '~/components/layout/Block'
-import Hairline from '~/components/layout/Hairline'
-import Field from '~/components/forms/Field'
-import TextField from '~/components/forms/TextField'
 import { type Owner } from '~/routes/safe/store/models/owner'
-import { composeValidators, required, minMaxLength, uniqueAddress } from '~/components/forms/validator'
-import { styles } from './style'
 
 export const ADD_OWNER_NAME_INPUT_TEST_ID = 'add-owner-name-input'
 export const ADD_OWNER_ADDRESS_INPUT_TEST_ID = 'add-owner-address-testid'
@@ -43,17 +45,17 @@ const OwnerForm = ({ classes, onClose, onSubmit, owners }: Props) => {
 
   return (
     <>
-      <Row align="center" grow className={classes.heading}>
-        <Paragraph weight="bolder" className={classes.manage} noMargin>
+      <Row align="center" className={classes.heading} grow>
+        <Paragraph className={classes.manage} noMargin weight="bolder">
           Add new owner
         </Paragraph>
         <Paragraph className={classes.annotation}>1 of 3</Paragraph>
-        <IconButton onClick={onClose} disableRipple>
+        <IconButton disableRipple onClick={onClose}>
           <Close className={classes.closeIcon} />
         </IconButton>
       </Row>
       <Hairline />
-      <GnoForm onSubmit={handleSubmit} formMutators={formMutators}>
+      <GnoForm formMutators={formMutators} onSubmit={handleSubmit}>
         {(...args) => {
           const mutators = args[3]
 
@@ -66,27 +68,27 @@ const OwnerForm = ({ classes, onClose, onSubmit, owners }: Props) => {
                 <Row margin="md">
                   <Col xs={8}>
                     <Field
-                      name="ownerName"
+                      className={classes.addressInput}
                       component={TextField}
+                      name="ownerName"
+                      placeholder="Owner name*"
+                      testId={ADD_OWNER_NAME_INPUT_TEST_ID}
+                      text="Owner name*"
                       type="text"
                       validate={composeValidators(required, minMaxLength(1, 50))}
-                      placeholder="Owner name*"
-                      text="Owner name*"
-                      className={classes.addressInput}
-                      testId={ADD_OWNER_NAME_INPUT_TEST_ID}
                     />
                   </Col>
                 </Row>
                 <Row margin="md">
                   <Col xs={8}>
                     <AddressInput
-                      name="ownerAddress"
-                      validators={[ownerDoesntExist]}
-                      placeholder="Owner address*"
-                      text="Owner address*"
                       className={classes.addressInput}
                       fieldMutator={mutators.setOwnerAddress}
+                      name="ownerAddress"
+                      placeholder="Owner address*"
                       testId={ADD_OWNER_ADDRESS_INPUT_TEST_ID}
+                      text="Owner address*"
+                      validators={[ownerDoesntExist]}
                     />
                   </Col>
                 </Row>
@@ -97,12 +99,12 @@ const OwnerForm = ({ classes, onClose, onSubmit, owners }: Props) => {
                   Cancel
                 </Button>
                 <Button
-                  type="submit"
                   className={classes.button}
-                  variant="contained"
-                  minWidth={140}
                   color="primary"
+                  minWidth={140}
                   testId={ADD_OWNER_NEXT_BTN_TEST_ID}
+                  type="submit"
+                  variant="contained"
                 >
                   Next
                 </Button>
