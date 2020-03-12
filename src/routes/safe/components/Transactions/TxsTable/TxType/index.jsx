@@ -36,5 +36,4 @@ const TxType = ({ origin, txType }: { txType: TransactionType, origin: string | 
 
   return <IconText iconUrl={iconUrl} text={text} />
 }
-
 export default TxType
