@@ -1,5 +1,5 @@
 // @flow
-import { md, screenSm, secondary, sm, xs } from '~/theme/variables'
+import { md, screenSm, secondary, xs } from '~/theme/variables'
 
 export const styles = () => ({
   controls: {
@@ -49,26 +49,6 @@ export const styles = () => ({
     maxWidth: 'calc(100% - 30px)',
     minHeight: '544px',
     overflow: 'hidden',
-  },
-  hide: {
-    '&:hover': {
-      backgroundColor: '#fff3e2',
-    },
-    '&:hover $actions': {
-      visibility: 'initial',
-    },
-    '&:focus $actions': {
-      visibility: 'initial',
-    },
-  },
-  receive: {
-    width: '95px',
-    minWidth: '95px',
-    marginLeft: sm,
-    borderRadius: xs,
-    '& > span': {
-      fontSize: '14px',
-    },
   },
   send: {
     width: '75px',
