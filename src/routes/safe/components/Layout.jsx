@@ -329,14 +329,11 @@ const Layout = (props: Props) => {
             <Balances
               activateTokensByBalance={activateTokensByBalance}
               activeTokens={activeTokens}
-              blacklistedTokens={blacklistedTokens}
               createTransaction={createTransaction}
-              currencySelected={currencySelected}
               currencyValues={currencyValues}
               ethBalance={ethBalance}
               fetchCurrencyValues={fetchCurrencyValues}
               fetchTokens={fetchTokens}
-              granted={granted}
               safeAddress={address}
               safeName={name}
               tokens={tokens}

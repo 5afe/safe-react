@@ -1,11 +1,7 @@
 // @flow
 import { md, screenSm, secondary, sm, xs } from '~/theme/variables'
 
-export const styles = (theme: Object) => ({
-  root: {
-    marginRight: sm,
-    width: '20px',
-  },
+export const styles = () => ({
   controls: {
     alignItems: 'center',
     boxSizing: 'border-box',
@@ -48,12 +44,6 @@ export const styles = (theme: Object) => ({
       marginLeft: '0',
     },
   },
-  actionIcon: {
-    marginRight: theme.spacing(1),
-  },
-  iconSmall: {
-    fontSize: 16,
-  },
   receiveModal: {
     height: 'auto',
     maxWidth: 'calc(100% - 30px)',
@@ -71,10 +61,6 @@ export const styles = (theme: Object) => ({
       visibility: 'initial',
     },
   },
-  actions: {
-    justifyContent: 'flex-end',
-    visibility: 'hidden',
-  },
   receive: {
     width: '95px',
     minWidth: '95px',
@@ -91,18 +77,5 @@ export const styles = (theme: Object) => ({
     '& > span': {
       fontSize: '14px',
     },
-  },
-  leftIcon: {
-    marginRight: sm,
-  },
-  links: {
-    textDecoration: 'underline',
-    '&:hover': {
-      cursor: 'pointer',
-    },
-  },
-  currencyValueRow: {
-    maxWidth: '125px',
-    textAlign: 'right',
   },
 })
