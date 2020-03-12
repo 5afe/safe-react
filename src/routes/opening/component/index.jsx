@@ -1,79 +1,51 @@
 // @flow
-import LinearProgress from '@material-ui/core/LinearProgress'
-import { withStyles } from '@material-ui/core/styles'
-import OpenInNew from '@material-ui/icons/OpenInNew'
-import * as React from 'react'
+import React from 'react'
+import styled from 'styled-components'
 
-import { type SelectorProps } from '../container/selector'
-
-import Block from '~/components/layout/Block'
-import Img from '~/components/layout/Img'
+import { Stepper } from '~/components-v2'
 import Page from '~/components/layout/Page'
-import Paragraph from '~/components/layout/Paragraph'
-import { getEtherScanLink } from '~/logic/wallets/getWeb3'
-import { mediumFontSize, secondary, xs } from '~/theme/variables'
 
-type Props = SelectorProps & {
-  name: string,
-  tx: string,
-  classes: Object,
-}
+const Wrapper = styled.div`
+  display: grid;
+  grid-template-columns: 245px auto;
+  grid-template-rows: 62px auto;
+  height: 500px;
+`
 
-const vault = require('../assets/vault.svg')
+const Title = styled.div`
+  grid-column: 1/3;
+  grid-row: 1;
+`
 
-const styles = {
-  icon: {
-    height: mediumFontSize,
-    color: secondary,
-  },
-  follow: {
-    display: 'flex',
-    justifyContent: 'center',
-    marginTop: xs,
-  },
-  etherscan: {
-    color: secondary,
-    textDecoration: 'underline',
-    display: 'flex',
-    alignItems: 'center',
-    marginLeft: xs,
-  },
-}
+export const Nav = styled.div`
+  grid-column: 1;
+  grid-row: 2;
+`
 
-const Opening = ({ classes, name = 'Safe creation process', tx }: Props) => (
+export const Body = styled.div`
+  grid-column: 2;
+  grid-row: 2;
+`
+const steps = [
+  { id: '1', label: 'Transaction submitted' },
+  { id: '2', label: 'Validating transaction' },
+  { id: '3', label: 'Deploying smart contract' },
+  { id: '4', label: 'Generating your Safe' },
+  { id: '5', label: 'Result' },
+]
+
+const SafeDeployment = () => (
   <Page align="center">
-    <Paragraph align="center" color="primary" size="xxl" weight="bold">
-      {name}
-    </Paragraph>
-    <Block align="center" margin="lg">
-      <Img alt="Vault" height={90} src={vault} />
-    </Block>
-    <Block margin="lg">
-      <LinearProgress color="secondary" />
-    </Block>
-    <Block margin="md">
-      <Paragraph align="center" className={classes.page} noMargin size="xl">
-        Transaction submitted
-      </Paragraph>
-      <Paragraph align="center" className={classes.page} noMargin size="xl" weight="bolder">
-        Deploying your new Safe...
-      </Paragraph>
-    </Block>
-    <Block margin="md">
-      <Paragraph align="center" noMargin size="md" weight="light">
-        This process should take a couple of minutes. <br />
-      </Paragraph>
-      {tx && (
-        <Paragraph align="center" className={classes.follow} noMargin size="md" weight="light">
-          Follow progress on{' '}
-          <a className={classes.etherscan} href={getEtherScanLink('tx', tx)} rel="noopener noreferrer" target="_blank">
-            Etherscan.io
-            <OpenInNew className={classes.icon} />
-          </a>
-        </Paragraph>
-      )}
-    </Block>
+    <Wrapper>
+      <Title>some Title</Title>
+      <Nav>
+        <Stepper activeStepIndex={1} orientation="vertical" steps={steps} />
+      </Nav>
+      <Body>
+        <div>something</div>
+      </Body>
+    </Wrapper>
   </Page>
 )
 
-export default withStyles(styles)(Opening)
+export default SafeDeployment
