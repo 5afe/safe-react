@@ -10,7 +10,7 @@ import actions, { type Actions, type AddSafe } from './actions'
 import selector from './selector'
 
 import Page from '~/components/layout/Page'
-import { deploySafeContract, getGnosisSafeInstanceAt } from '~/logic/contracts/safeContracts'
+import { getGnosisSafeInstanceAt, getSafeDeploymentTransaction } from '~/logic/contracts/safeContracts'
 import { checkReceiptStatus } from '~/logic/wallets/ethTransactions'
 import {
   getAccountsFrom,
@@ -68,30 +68,40 @@ export const createSafe = async (values: Object, userAccount: string, addSafe: A
   const ownersNames = getNamesFrom(values)
   const ownerAddresses = getAccountsFrom(values)
 
-  const safe = await deploySafeContract(ownerAddresses, numConfirmations, userAccount)
-  await checkReceiptStatus(safe.tx)
+  const deploymentTx = await getSafeDeploymentTransaction(ownerAddresses, numConfirmations, userAccount)
+  console.log({ deploymentTx })
 
-  const safeAddress = safe.logs[0].args.proxy
-  const safeContract = await getGnosisSafeInstanceAt(safeAddress)
-  const safeProps = await buildSafe(safeAddress, name)
-  const owners = getOwnersFrom(ownersNames, ownerAddresses)
-  safeProps.owners = owners
+  deploymentTx
+    .send({ from: userAccount, value: 0 })
+    .once('transactionHash', hash => {
+      console.log({ hash })
+    })
+    .then(async receipt => {
+      console.log({ receipt })
+      await checkReceiptStatus(receipt.tx)
 
-  addSafe(safeProps)
-  if (stillInOpeningView()) {
-    const url = {
-      pathname: `${SAFELIST_ADDRESS}/${safeContract.address}/balances`,
-      state: {
-        name,
-        tx: safe.tx,
-      },
-    }
+      const safeAddress = receipt.logs[0].args.proxy
+      const safeContract = await getGnosisSafeInstanceAt(safeAddress)
+      const safeProps = await buildSafe(safeAddress, name)
+      const owners = getOwnersFrom(ownersNames, ownerAddresses)
+      safeProps.owners = owners
 
-    history.push(url)
-  }
+      addSafe(safeProps)
+      if (stillInOpeningView()) {
+        const url = {
+          pathname: `${SAFELIST_ADDRESS}/${safeContract.address}/balances`,
+          state: {
+            name,
+            tx: receipt.tx,
+          },
+        }
 
-  // returning info for testing purposes, in app is fully async
-  return { safeAddress: safeContract.address, safeTx: safe }
+        history.push(url)
+      }
+
+      // returning info for testing purposes, in app is fully async
+      return { safeAddress: safeContract.address, safeTx: receipt }
+    })
 }
 
 class Open extends React.Component<Props> {

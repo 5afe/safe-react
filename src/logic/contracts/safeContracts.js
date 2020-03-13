@@ -5,7 +5,7 @@ import GnosisSafeSol from '@gnosis.pm/safe-contracts/build/contracts/GnosisSafe.
 import SafeProxy from '@gnosis.pm/safe-contracts/build/contracts/GnosisSafeProxy.json'
 import { ensureOnce } from '~/utils/singleton'
 import { simpleMemoize } from '~/components/forms/validator'
-import { getWeb3 } from '~/logic/wallets/getWeb3'
+import { getWeb3, getNetworkIdFrom } from '~/logic/wallets/getWeb3'
 import { calculateGasOf, calculateGasPrice } from '~/logic/wallets/ethTransactions'
 import { ZERO_ADDRESS } from '~/logic/wallets/ethAddresses'
 import { isProxyCode } from '~/logic/contracts/historicProxyCode'
@@ -27,9 +27,9 @@ const createGnosisSafeContract = (web3: any) => {
   return gnosisSafe
 }
 
-const createProxyFactoryContract = (web3: any) => {
-  const proxyFactory = contract(ProxyFactorySol)
-  proxyFactory.setProvider(web3.currentProvider)
+const createProxyFactoryContract = (web3: any, networkId: number) => {
+  const contractAddress = ProxyFactorySol.networks[networkId].address
+  const proxyFactory = new web3.eth.Contract(ProxyFactorySol.abi, contractAddress)
 
   return proxyFactory
 }
@@ -39,10 +39,10 @@ const getCreateProxyFactoryContract = simpleMemoize(createProxyFactoryContract)
 
 const instantiateMasterCopies = async () => {
   const web3 = getWeb3()
+  const networkId = await getNetworkIdFrom(web3)
 
   // Create ProxyFactory Master Copy
-  const ProxyFactory = getCreateProxyFactoryContract(web3)
-  proxyFactoryMaster = await ProxyFactory.deployed()
+  proxyFactoryMaster = getCreateProxyFactoryContract(web3, networkId)
 
   // Initialize Safe master copy
   const GnosisSafe = getGnosisSafeContract(web3)
@@ -70,22 +70,15 @@ export const getSafeMasterContract = async () => {
   return safeMaster
 }
 
-export const deploySafeContract = async (safeAccounts: string[], numConfirmations: number, userAccount: string) => {
-  const gnosisSafeData = await safeMaster.contract.methods
+export const getSafeDeploymentTransaction = async (safeAccounts: string[], numConfirmations: number, userAccount: string) => {
+  const gnosisSafeData = safeMaster.contract.methods
     .setup(safeAccounts, numConfirmations, ZERO_ADDRESS, '0x', DEFAULT_FALLBACK_HANDLER_ADDRESS, ZERO_ADDRESS, 0, ZERO_ADDRESS)
     .encodeABI()
-  const proxyFactoryData = proxyFactoryMaster.contract.methods
+  const proxyFactoryData = proxyFactoryMaster.methods
     .createProxy(safeMaster.address, gnosisSafeData)
     .encodeABI()
-  const gas = await calculateGasOf(proxyFactoryData, userAccount, proxyFactoryMaster.address)
-  const gasPrice = await calculateGasPrice()
 
-  return proxyFactoryMaster.createProxy(safeMaster.address, gnosisSafeData, {
-    from: userAccount,
-    gas,
-    gasPrice,
-    value: 0,
-  })
+  return proxyFactoryMaster.methods.createProxy(safeMaster.address, gnosisSafeData)
 }
 
 export const estimateGasForDeployingSafe = async (
@@ -93,10 +86,11 @@ export const estimateGasForDeployingSafe = async (
   numConfirmations: number,
   userAccount: string,
 ) => {
+  console.log(proxyFactoryMaster)
   const gnosisSafeData = await safeMaster.contract.methods
     .setup(safeAccounts, numConfirmations, ZERO_ADDRESS, '0x', DEFAULT_FALLBACK_HANDLER_ADDRESS, ZERO_ADDRESS, 0, ZERO_ADDRESS)
     .encodeABI()
-  const proxyFactoryData = proxyFactoryMaster.contract.methods
+  const proxyFactoryData = proxyFactoryMaster.methods
     .createProxy(safeMaster.address, gnosisSafeData)
     .encodeABI()
   const gas = await calculateGasOf(proxyFactoryData, userAccount, proxyFactoryMaster.address)
