@@ -1,9 +1,10 @@
 // @flow
-import React from 'react'
+import React, { useState } from 'react'
 import styled from 'styled-components'
 
 import { Stepper } from '~/components-v2'
 import Loader from '~/components/Loader'
+import Button from '~/components/layout/Button'
 import Heading from '~/components/layout/Heading'
 import Img from '~/components/layout/Img'
 import Page from '~/components/layout/Page'
@@ -13,7 +14,7 @@ const vault = require('../assets/vault.svg')
 
 const Wrapper = styled.div`
   display: grid;
-  grid-template-columns: 165px auto;
+  grid-template-columns: 250px auto;
   grid-template-rows: 62px auto;
   height: 600px;
   margin-bottom: 30px;
@@ -49,35 +50,87 @@ const FullParagraph = styled(Paragraph)`
   padding: 24px;
   font-size: 16px;
 `
+
+const genericFooter = (
+  <span>
+    <p>This process should take a couple of minutes.</p>
+    <p>Follow the progress on Etherscan.io.</p>
+  </span>
+)
+
 const steps = [
-  { id: '1', label: 'Waiting fot transaction confirmation' },
-  { id: '2', label: 'Transaction submitted' },
-  { id: '3', label: 'Validating transaction' },
-  { id: '4', label: 'Deploying smart contract' },
-  { id: '5', label: 'Generating your Safe' },
-  { id: '6', label: 'Success' },
+  {
+    id: '1',
+    label: 'Waiting fot transaction confirmation',
+    instruction: 'Please confirm the Safe creation in your wallet',
+    duration: -1,
+    footer: <div></div>,
+  },
+  {
+    id: '2',
+    label: 'Transaction submitted',
+    instruction: 'Please do not leave the page',
+    duration: 5000,
+    footer: genericFooter,
+  },
+  {
+    id: '3',
+    label: 'Validating transaction',
+    instruction: 'Please do not leave the page',
+    duration: 5000,
+    footer: genericFooter,
+  },
+  {
+    id: '4',
+    label: 'Deploying smart contract',
+    instruction: 'Please do not leave the page',
+    duration: 5000,
+    footer: genericFooter,
+  },
+  {
+    id: '5',
+    label: 'Generating your Safe',
+    instruction: 'Please do not leave the page',
+    duration: 5000,
+    footer: genericFooter,
+  },
+  {
+    id: '6',
+    label: 'Success',
+    instruction: 'Click Below to get started',
+    duration: 5000,
+    footer: (
+      <Button color="primary" variant="contained">
+        Continue
+      </Button>
+    ),
+  },
 ]
 
-const SafeDeployment = () => (
-  <Page align="center">
-    <Wrapper>
-      <Title tag="h2">Safe creation proccess</Title>
-      <Nav>
-        <Stepper activeStepIndex={1} orientation="vertical" steps={steps} />
-      </Nav>
-      <Body>
-        <div>
+const SafeDeployment = () => {
+  const [stepIndex] = useState(0)
+
+  return (
+    <Page align="center">
+      <Wrapper>
+        <Title tag="h2">Safe creation proccess</Title>
+        <Nav>
+          <Stepper activeStepIndex={stepIndex} orientation="vertical" steps={steps} />
+        </Nav>
+        <Body>
           <Img alt="Vault" height={75} src={vault} />
 
-          <CardTitle>Waiting for transaction confirmation</CardTitle>
+          <CardTitle>{steps[stepIndex].label}</CardTitle>
+
           <Loader />
+
           <FullParagraph color="primary" noMargin size="md">
-            Please confirm the Safe creation in your wallet.
+            {steps[stepIndex].instruction}
           </FullParagraph>
-        </div>
-      </Body>
-    </Wrapper>
-  </Page>
-)
+        </Body>
+      </Wrapper>
+    </Page>
+  )
+}
 
 export default SafeDeployment
