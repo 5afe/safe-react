@@ -12,7 +12,7 @@ const useStyles = makeStyles({
   item: {
     backgroundColor: '#fff',
     borderRadius: '8px',
-    boxShadow: '1px 2px 10px 0 rgba(212, 212, 211, 0.59)',
+    boxShadow: '0 0 10px 0 rgba(33, 48, 77, 0.10)',
     boxSizing: 'border-box',
     cursor: 'pointer',
     display: 'flex',
