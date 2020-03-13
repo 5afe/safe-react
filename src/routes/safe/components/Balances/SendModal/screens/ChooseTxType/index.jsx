@@ -6,6 +6,7 @@ import classNames from 'classnames/bind'
 import * as React from 'react'
 
 import Code from '../assets/code.svg'
+import Collectible from '../assets/collectibles.svg'
 import Token from '../assets/token.svg'
 
 import { mustBeEthereumContractAddress } from '~/components/forms/validator'
@@ -60,7 +61,7 @@ const useStyles = makeStyles({
 
 type Props = {
   onClose: () => void,
-  recipientAddress: string,
+  recipientAddress?: string,
   setActiveScreen: Function,
 }
 
@@ -124,7 +125,7 @@ const ChooseTxType = ({ onClose, recipientAddress, setActiveScreen }: Props) => 
             onClick={() => setActiveScreen('sendCollectible')}
             variant="contained"
           >
-            <Img alt="Send collectible" className={classNames(classes.leftIcon, classes.iconSmall)} src={Token} />
+            <Img alt="Send collectible" className={classNames(classes.leftIcon, classes.iconSmall)} src={Collectible} />
             Send collectible
           </Button>
           <Button
