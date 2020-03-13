@@ -1,6 +1,6 @@
 // @flow
 import queryString from 'query-string'
-import * as React from 'react'
+import React, { useEffect, useState } from 'react'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
 
@@ -69,43 +69,52 @@ export const createSafe = async (values: Object, userAccount: string, addSafe: A
   const ownerAddresses = getAccountsFrom(values)
 
   const deploymentTx = await getSafeDeploymentTransaction(ownerAddresses, numConfirmations, userAccount)
-  console.log({ deploymentTx })
 
-  deploymentTx
-    .send({ from: userAccount, value: 0 })
-    .once('transactionHash', hash => {
-      console.log({ hash })
-    })
-    .then(async receipt => {
-      console.log({ receipt })
-      await checkReceiptStatus(receipt.tx)
+  deploymentTx.send({ from: userAccount, value: 0 }).then(async receipt => {
+    await checkReceiptStatus(receipt.tx)
 
-      const safeAddress = receipt.logs[0].args.proxy
-      const safeContract = await getGnosisSafeInstanceAt(safeAddress)
-      const safeProps = await buildSafe(safeAddress, name)
-      const owners = getOwnersFrom(ownersNames, ownerAddresses)
-      safeProps.owners = owners
+    const safeAddress = receipt.logs[0].args.proxy
+    const safeContract = await getGnosisSafeInstanceAt(safeAddress)
+    const safeProps = await buildSafe(safeAddress, name)
+    const owners = getOwnersFrom(ownersNames, ownerAddresses)
+    safeProps.owners = owners
 
-      addSafe(safeProps)
-      if (stillInOpeningView()) {
-        const url = {
-          pathname: `${SAFELIST_ADDRESS}/${safeContract.address}/balances`,
-          state: {
-            name,
-            tx: receipt.tx,
-          },
-        }
-
-        history.push(url)
+    addSafe(safeProps)
+    if (stillInOpeningView()) {
+      const url = {
+        pathname: `${SAFELIST_ADDRESS}/${safeContract.address}/balances`,
+        state: {
+          name,
+          tx: receipt.tx,
+        },
       }
 
-      // returning info for testing purposes, in app is fully async
-      return { safeAddress: safeContract.address, safeTx: receipt }
-    })
+      history.push(url)
+    }
+
+    // returning info for testing purposes, in app is fully async
+    return { safeAddress: safeContract.address, safeTx: receipt }
+  })
 }
 
-class Open extends React.Component<Props> {
-  onCallSafeContractSubmit = async values => {
+const Open = ({ location, network, provider, userAccount }: Props) => {
+  const [safeProps, setSafeProps] = useState(null)
+
+  useEffect(() => {
+    const query: SafePropsType = queryString.parse(location.search, { arrayFormat: 'comma' })
+    const { name, owneraddresses, ownernames, threshold } = query
+
+    if (validateQueryParams(owneraddresses, ownernames, threshold, name)) {
+      setSafeProps({
+        name,
+        ownerAddresses: owneraddresses,
+        ownerNames: ownernames,
+        threshold,
+      })
+    }
+  }, [])
+
+  const onCallSafeContractSubmit = async values => {
     try {
       const { addSafe, userAccount } = this.props
       createSafe(values, userAccount, addSafe)
@@ -116,32 +125,17 @@ class Open extends React.Component<Props> {
     }
   }
 
-  render() {
-    const { location, network, provider, userAccount } = this.props
-    const query: SafePropsType = queryString.parse(location.search, { arrayFormat: 'comma' })
-    const { name, owneraddresses, ownernames, threshold } = query
-
-    let safeProps = null
-    if (validateQueryParams(owneraddresses, ownernames, threshold, name)) {
-      safeProps = {
-        name,
-        ownerAddresses: owneraddresses,
-        ownerNames: ownernames,
-        threshold,
-      }
-    }
-    return (
-      <Page>
-        <Layout
-          network={network}
-          onCallSafeContractSubmit={this.onCallSafeContractSubmit}
-          provider={provider}
-          safeProps={safeProps}
-          userAccount={userAccount}
-        />
-      </Page>
-    )
-  }
+  return (
+    <Page>
+      <Layout
+        network={network}
+        onCallSafeContractSubmit={onCallSafeContractSubmit}
+        provider={provider}
+        safeProps={safeProps}
+        userAccount={userAccount}
+      />
+    </Page>
+  )
 }
 
 export default connect(selector, actions)(withRouter(Open))
