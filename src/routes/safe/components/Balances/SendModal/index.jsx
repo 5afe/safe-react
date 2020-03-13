@@ -8,6 +8,7 @@ import React, { Suspense, useEffect, useState } from 'react'
 import Modal from '~/components/Modal'
 import { type Token } from '~/logic/tokens/store/model/token'
 import type { NFTToken } from '~/routes/safe/components/Balances/Collectibles/types'
+import ReviewCollectible from '~/routes/safe/components/Balances/SendModal/screens/ReviewCollectible'
 import SendCollectible from '~/routes/safe/components/Balances/SendModal/screens/SendCollectible'
 
 const ChooseTxType = React.lazy(() => import('./screens/ChooseTxType'))
@@ -16,13 +17,22 @@ const SendFunds = React.lazy(() => import('./screens/SendFunds'))
 
 // const SendCollectible = React.lazy(() => import('./screens/SendCollectible'))
 
+// const ReviewCollectible = React.lazy(() => import('./screens/ReviewCollectible'))
+
 const ReviewTx = React.lazy(() => import('./screens/ReviewTx'))
 
 const SendCustomTx = React.lazy(() => import('./screens/SendCustomTx'))
 
 const ReviewCustomTx = React.lazy(() => import('./screens/ReviewCustomTx'))
 
-type ActiveScreen = 'chooseTxType' | 'sendFunds' | 'reviewTx' | 'sendCustomTx' | 'reviewCustomTx' | 'sendCollectible'
+type ActiveScreen =
+  | 'chooseTxType'
+  | 'sendFunds'
+  | 'reviewTx'
+  | 'sendCustomTx'
+  | 'reviewCustomTx'
+  | 'sendCollectible'
+  | 'reviewCollectible'
 
 type Props = {
   onClose: () => void,
@@ -96,6 +106,11 @@ const SendModal = ({
     setTx(customTxInfo)
   }
 
+  const handleSendCollectible = txInfo => {
+    setActiveScreen('reviewCollectible')
+    setTx(txInfo)
+  }
+
   return (
     <Modal
       description="Send Tokens Form"
@@ -123,18 +138,6 @@ const SendModal = ({
             safeName={safeName}
             selectedToken={selectedToken}
             tokens={tokens}
-          />
-        )}
-        {activeScreen === 'sendCollectible' && (
-          <SendCollectible
-            ethBalance={ethBalance}
-            initialValues={tx}
-            onClose={onClose}
-            onSubmit={handleTxCreation}
-            recipientAddress={recipientAddress}
-            safeAddress={safeAddress}
-            safeName={safeName}
-            selectedToken={selectedToken}
           />
         )}
         {activeScreen === 'reviewTx' && (
@@ -169,6 +172,18 @@ const SendModal = ({
             setActiveScreen={setActiveScreen}
             tx={tx}
           />
+        )}
+        {activeScreen === 'sendCollectible' && (
+          <SendCollectible
+            initialValues={tx}
+            onClose={onClose}
+            onNext={handleSendCollectible}
+            recipientAddress={recipientAddress}
+            selectedToken={selectedToken}
+          />
+        )}
+        {activeScreen === 'reviewCollectible' && (
+          <ReviewCollectible onClose={onClose} onPrev={() => setActiveScreen('sendCollectible')} tx={tx} />
         )}
       </Suspense>
     </Modal>

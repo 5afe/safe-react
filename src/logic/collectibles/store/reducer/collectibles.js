@@ -7,8 +7,8 @@ import type { NFTAssets, NFTToken } from '~/routes/safe/components/Balances/Coll
 export const NFT_ASSETS_REDUCER_ID = 'nftAssets'
 export const NFT_TOKENS_REDUCER_ID = 'nftTokens'
 
-export type NFTAssetsState = NFTAssets | null
-export type NFTTokensState = NFTToken[] | null
+export type NFTAssetsState = NFTAssets | {}
+export type NFTTokensState = NFTToken[]
 
 export const nftAssetReducer = handleActions<NFTAssetsState, *>(
   {
@@ -18,7 +18,7 @@ export const nftAssetReducer = handleActions<NFTAssetsState, *>(
       return nftAssets
     },
   },
-  null,
+  {},
 )
 
 export const nftTokensReducer = handleActions<NFTTokensState, *>(
@@ -29,5 +29,5 @@ export const nftTokensReducer = handleActions<NFTTokensState, *>(
       return nftTokens
     },
   },
-  null,
+  [],
 )

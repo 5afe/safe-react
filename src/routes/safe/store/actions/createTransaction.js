@@ -28,7 +28,7 @@ type CreateTransactionArgs = {
   to: string,
   valueInWei: string,
   txData: string,
-  notifiedTransaction: NotifiedTransaction,
+  notifiedTransaction: $Values<NotifiedTransaction>,
   enqueueSnackbar: Function,
   closeSnackbar: Function,
   txNonce?: number,

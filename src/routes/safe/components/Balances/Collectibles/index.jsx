@@ -85,32 +85,30 @@ const Collectibles = () => {
   return (
     <Card>
       <div className={classes.cardInner}>
-        {nftAssets &&
-          Object.keys(nftAssets).map(assetAddress => {
-            const nftAsset = nftAssets[assetAddress]
+        {Object.keys(nftAssets).map(assetAddress => {
+          const nftAsset = nftAssets[assetAddress]
 
-            return (
-              <React.Fragment key={nftAsset.slug}>
-                <div className={classes.title}>
-                  <div className={classes.titleImg} style={{ backgroundImage: `url(${nftAsset.image || ''})` }} />
-                  <h2 className={classes.titleText}>{nftAsset.name}</h2>
-                  <div className={classes.titleFiller} />
-                </div>
-                <div className={classes.gridRow}>
-                  {nftTokens &&
-                    nftTokens
-                      .filter(({ assetAddress }) => nftAsset.address === assetAddress)
-                      .map(nftToken => (
-                        <Item
-                          data={nftToken}
-                          key={`${nftAsset.slug}_${nftToken.tokenId}`}
-                          onSend={() => handleItemSend(nftToken)}
-                        />
-                      ))}
-                </div>
-              </React.Fragment>
-            )
-          })}
+          return (
+            <React.Fragment key={nftAsset.slug}>
+              <div className={classes.title}>
+                <div className={classes.titleImg} style={{ backgroundImage: `url(${nftAsset.image || ''})` }} />
+                <h2 className={classes.titleText}>{nftAsset.name}</h2>
+                <div className={classes.titleFiller} />
+              </div>
+              <div className={classes.gridRow}>
+                {nftTokens
+                  .filter(({ assetAddress }) => nftAsset.address === assetAddress)
+                  .map(nftToken => (
+                    <Item
+                      data={nftToken}
+                      key={`${nftAsset.slug}_${nftToken.tokenId}`}
+                      onSend={() => handleItemSend(nftToken)}
+                    />
+                  ))}
+              </div>
+            </React.Fragment>
+          )
+        })}
       </div>
       <SendModal
         activeScreenType="sendCollectible"

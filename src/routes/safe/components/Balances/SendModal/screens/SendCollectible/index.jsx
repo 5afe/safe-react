@@ -118,9 +118,7 @@ const SendCollectible = ({
           const formState = args[2]
           const mutators = args[3]
           const { assetAddress } = formState.values
-          const selectedNFTTokens = nftTokens
-            ? nftTokens.filter(nftToken => nftToken.assetAddress === assetAddress)
-            : []
+          const selectedNFTTokens = nftTokens.filter(nftToken => nftToken.assetAddress === assetAddress)
 
           const handleScan = value => {
             let scannedAddress = value
