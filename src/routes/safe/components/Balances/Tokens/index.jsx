@@ -15,6 +15,7 @@ import Row from '~/components/layout/Row'
 import { type Token } from '~/logic/tokens/store/model/token'
 import { orderedTokenListSelector } from '~/logic/tokens/store/selectors'
 import AddCustomToken from '~/routes/safe/components/Balances/Tokens/screens/AddCustomToken'
+import AssetsList from '~/routes/safe/components/Balances/Tokens/screens/AssetsList'
 import TokenList from '~/routes/safe/components/Balances/Tokens/screens/TokenList'
 import { extendedSafeTokensSelector } from '~/routes/safe/container/selector'
 import { safeBlacklistedTokensSelector } from '~/routes/safe/store/selectors'
@@ -73,18 +74,7 @@ const Tokens = (props: Props) => {
           updateBlacklistedTokens={updateBlacklistedTokens}
         />
       )}
-      {activeScreen === 'assetsList' && (
-        <TokenList
-          activeTokens={activeTokens}
-          blacklistedTokens={blacklistedTokens}
-          fetchTokens={fetchTokens}
-          safeAddress={safeAddress}
-          setActiveScreen={setActiveScreen}
-          tokens={tokens}
-          updateActiveTokens={updateActiveTokens}
-          updateBlacklistedTokens={updateBlacklistedTokens}
-        />
-      )}
+      {activeScreen === 'assetsList' && <AssetsList setActiveScreen={setActiveScreen} />}
       {activeScreen === 'addCustomToken' && (
         <AddCustomToken
           activateTokenForAllSafes={activateTokenForAllSafes}
