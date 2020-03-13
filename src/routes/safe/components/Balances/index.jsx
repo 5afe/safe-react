@@ -69,8 +69,8 @@ class Balances extends React.Component<Props, State> {
         isOpen: false,
         selectedToken: undefined,
       },
-      showCoins: false,
-      showCollectibles: true,
+      showCoins: true,
+      showCollectibles: false,
       showReceive: false,
     }
     props.fetchTokens()
@@ -172,7 +172,7 @@ class Balances extends React.Component<Props, State> {
         <Row align="center" className={classes.controls}>
           <Col className={classes.assetTabs} sm={6} start="sm" xs={12}>
             <ButtonLink
-              className={showCoins ? classes.assetSectionButtonActive : ''}
+              className={showCoins ? classes.assetTabActive : ''}
               color={!showCoins ? 'medium' : 'secondary'}
               onClick={this.viewCoins}
               size="md"
