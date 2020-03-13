@@ -1,17 +1,17 @@
 // @flow
 import Card from '@material-ui/core/Card'
-import TablePagination from '@material-ui/core/TablePagination'
 import { makeStyles } from '@material-ui/core/styles'
 import React from 'react'
 import { useSelector } from 'react-redux'
 
 import Item from './components/Item'
 
+import Paragraph from '~/components/layout/Paragraph'
 import type { NFTAssetsState, NFTTokensState } from '~/logic/collectibles/store/reducer/collectibles'
 import { nftAssetsSelector, nftTokensSelector } from '~/logic/collectibles/store/selectors'
 import SendModal from '~/routes/safe/components/Balances/SendModal'
 import { safeSelector } from '~/routes/safe/store/selectors'
-import { fontColor, screenSm, screenXs } from '~/theme/variables'
+import { fontColor, lg, screenSm, screenXs } from '~/theme/variables'
 
 const useStyles = makeStyles({
   cardInner: {
@@ -67,6 +67,10 @@ const useStyles = makeStyles({
     height: '2px',
     marginLeft: '40px',
   },
+  noData: {
+    fontSize: lg,
+    textAlign: 'center',
+  },
 })
 
 const Collectibles = () => {
@@ -76,6 +80,7 @@ const Collectibles = () => {
   const { address, ethBalance, name } = useSelector(safeSelector)
   const nftAssets: NFTAssetsState = useSelector(nftAssetsSelector)
   const nftTokens: NFTTokensState = useSelector(nftTokensSelector)
+  const nftAssetsKeys = Object.keys(nftAssets)
 
   const handleItemSend = nftToken => {
     setSelectedToken(nftToken)
@@ -85,30 +90,34 @@ const Collectibles = () => {
   return (
     <Card>
       <div className={classes.cardInner}>
-        {Object.keys(nftAssets).map(assetAddress => {
-          const nftAsset = nftAssets[assetAddress]
+        {nftAssetsKeys.length ? (
+          nftAssetsKeys.map(assetAddress => {
+            const nftAsset = nftAssets[assetAddress]
 
-          return (
-            <React.Fragment key={nftAsset.slug}>
-              <div className={classes.title}>
-                <div className={classes.titleImg} style={{ backgroundImage: `url(${nftAsset.image || ''})` }} />
-                <h2 className={classes.titleText}>{nftAsset.name}</h2>
-                <div className={classes.titleFiller} />
-              </div>
-              <div className={classes.gridRow}>
-                {nftTokens
-                  .filter(({ assetAddress }) => nftAsset.address === assetAddress)
-                  .map(nftToken => (
-                    <Item
-                      data={nftToken}
-                      key={`${nftAsset.slug}_${nftToken.tokenId}`}
-                      onSend={() => handleItemSend(nftToken)}
-                    />
-                  ))}
-              </div>
-            </React.Fragment>
-          )
-        })}
+            return (
+              <React.Fragment key={nftAsset.slug}>
+                <div className={classes.title}>
+                  <div className={classes.titleImg} style={{ backgroundImage: `url(${nftAsset.image || ''})` }} />
+                  <h2 className={classes.titleText}>{nftAsset.name}</h2>
+                  <div className={classes.titleFiller} />
+                </div>
+                <div className={classes.gridRow}>
+                  {nftTokens
+                    .filter(({ assetAddress }) => nftAsset.address === assetAddress)
+                    .map(nftToken => (
+                      <Item
+                        data={nftToken}
+                        key={`${nftAsset.slug}_${nftToken.tokenId}`}
+                        onSend={() => handleItemSend(nftToken)}
+                      />
+                    ))}
+                </div>
+              </React.Fragment>
+            )
+          })
+        ) : (
+          <Paragraph className={classes.noData}>No collectibles available</Paragraph>
+        )}
       </div>
       <SendModal
         activeScreenType="sendCollectible"
@@ -118,15 +127,6 @@ const Collectibles = () => {
         safeAddress={address}
         safeName={name}
         selectedToken={selectedToken}
-      />
-      <TablePagination
-        component="div"
-        count={11}
-        onChangePage={() => {}}
-        onChangeRowsPerPage={() => {}}
-        page={1}
-        rowsPerPage={10}
-        rowsPerPageOptions={[5, 10, 25, 50, 100]}
       />
     </Card>
   )
