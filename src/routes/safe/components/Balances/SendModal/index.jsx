@@ -126,7 +126,9 @@ const SendModal = ({
           </div>
         }
       >
-        {activeScreen === 'chooseTxType' && <ChooseTxType onClose={onClose} setActiveScreen={setActiveScreen} />}
+        {activeScreen === 'chooseTxType' && (
+          <ChooseTxType onClose={onClose} recipientAddress={recipientAddress} setActiveScreen={setActiveScreen} />
+        )}
         {activeScreen === 'sendFunds' && (
           <SendFunds
             ethBalance={ethBalance}
@@ -158,6 +160,7 @@ const SendModal = ({
             initialValues={tx}
             onClose={onClose}
             onSubmit={handleCustomTxCreation}
+            recipientAddress={recipientAddress}
             safeAddress={safeAddress}
             safeName={safeName}
           />

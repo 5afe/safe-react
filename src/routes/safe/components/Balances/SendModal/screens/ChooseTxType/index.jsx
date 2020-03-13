@@ -8,6 +8,7 @@ import * as React from 'react'
 import Code from '../assets/code.svg'
 import Token from '../assets/token.svg'
 
+import { mustBeEthereumContractAddress } from '~/components/forms/validator'
 import Button from '~/components/layout/Button'
 import Col from '~/components/layout/Col'
 import Hairline from '~/components/layout/Hairline'
@@ -25,6 +26,14 @@ const useStyles = makeStyles({
   },
   manage: {
     fontSize: lg,
+  },
+  disclaimer: {
+    marginBottom: `-${md}`,
+    paddingTop: md,
+    textAlign: 'center',
+  },
+  disclaimerText: {
+    fontSize: md,
   },
   closeIcon: {
     height: '35px',
@@ -51,11 +60,28 @@ const useStyles = makeStyles({
 
 type Props = {
   onClose: () => void,
+  recipientAddress: string,
   setActiveScreen: Function,
 }
 
-const ChooseTxType = ({ onClose, setActiveScreen }: Props) => {
+const ChooseTxType = ({ onClose, recipientAddress, setActiveScreen }: Props) => {
   const classes = useStyles()
+  const [disableCustomTx, setDisableCustomTx] = React.useState(!!recipientAddress)
+
+  React.useEffect(() => {
+    let isCurrent = true
+    const isContract = async () => {
+      if (recipientAddress && isCurrent) {
+        setDisableCustomTx(!!(await mustBeEthereumContractAddress(recipientAddress)))
+      }
+    }
+
+    isContract()
+
+    return () => {
+      isCurrent = false
+    }
+  }, [recipientAddress])
 
   return (
     <>
@@ -68,6 +94,15 @@ const ChooseTxType = ({ onClose, setActiveScreen }: Props) => {
         </IconButton>
       </Row>
       <Hairline />
+      {!!recipientAddress && (
+        <Row align="center">
+          <Col className={classes.disclaimer} layout="column" middle="xs">
+            <Paragraph className={classes.disclaimerText} noMargin>
+              Please select what you will send to {recipientAddress}
+            </Paragraph>
+          </Col>
+        </Row>
+      )}
       <Row align="center">
         <Col className={classes.buttonColumn} layout="column" middle="xs">
           <Button
@@ -94,6 +129,7 @@ const ChooseTxType = ({ onClose, setActiveScreen }: Props) => {
           </Button>
           <Button
             color="primary"
+            disabled={disableCustomTx}
             minHeight={52}
             minWidth={260}
             onClick={() => setActiveScreen('sendCustomTx')}
