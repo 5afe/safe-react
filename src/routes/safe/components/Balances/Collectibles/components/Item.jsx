@@ -3,9 +3,11 @@ import { makeStyles } from '@material-ui/core/styles'
 import CallMade from '@material-ui/icons/CallMade'
 import cn from 'classnames'
 import * as React from 'react'
+import { useSelector } from 'react-redux'
 
 import Button from '~/components/layout/Button'
 import type { NFTToken } from '~/routes/safe/components/Balances/Collectibles/types'
+import { grantedSelector } from '~/routes/safe/container/selector'
 import { fontColor, sm, xs } from '~/theme/variables'
 
 const useStyles = makeStyles({
@@ -14,7 +16,7 @@ const useStyles = makeStyles({
     borderRadius: '8px',
     boxShadow: '0 0 10px 0 rgba(33, 48, 77, 0.10)',
     boxSizing: 'border-box',
-    cursor: 'pointer',
+    cursor: props => (props.granted ? 'pointer' : 'default'),
     display: 'flex',
     flexDirection: 'column',
     flexGrow: '1',
@@ -104,7 +106,8 @@ type Props = {
 }
 
 const Item = ({ data, onSend }: Props) => {
-  const classes = useStyles({ backgroundColor: data.color })
+  const granted = useSelector(grantedSelector)
+  const classes = useStyles({ backgroundColor: data.color, granted })
 
   return (
     <div className={classes.item}>
@@ -123,11 +126,13 @@ const Item = ({ data, onSend }: Props) => {
           )}
         </div>
       </div>
-      <div className={cn(classes.extraContent, 'showOnHover')}>
-        <Button className={classes.sendButton} color="primary" onClick={onSend} size="small" variant="contained">
-          <CallMade alt="Send" className={classes.buttonIcon} /> Send
-        </Button>
-      </div>
+      {granted && (
+        <div className={cn(classes.extraContent, 'showOnHover')}>
+          <Button className={classes.sendButton} color="primary" onClick={onSend} size="small" variant="contained">
+            <CallMade alt="Send" className={classes.buttonIcon} /> Send
+          </Button>
+        </div>
+      )}
     </div>
   )
 }
