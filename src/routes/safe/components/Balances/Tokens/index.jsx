@@ -81,6 +81,7 @@ const Tokens = (props: Props) => {
           activeTokens={activeTokens}
           addToken={addToken}
           onClose={onClose}
+          parentList={'tokenList'}
           safeAddress={safeAddress}
           setActiveScreen={setActiveScreen}
           tokens={tokens}
@@ -93,6 +94,7 @@ const Tokens = (props: Props) => {
           activeTokens={activeTokens}
           addToken={addToken}
           onClose={onClose}
+          parentList={'assetsList'}
           safeAddress={safeAddress}
           setActiveScreen={setActiveScreen}
           tokens={tokens}

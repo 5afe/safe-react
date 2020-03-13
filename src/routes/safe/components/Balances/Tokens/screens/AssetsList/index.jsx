@@ -65,7 +65,7 @@ const AssetsList = (props: Props) => {
   }
 
   const itemData = createItemData(nftAssetsList, nftAssetsList)
-  const switchToAddCustomAssetScreen = () => props.setActiveScreen('addCustomToken')
+  const switchToAddCustomAssetScreen = () => props.setActiveScreen('addCustomAsset')
   return (
     <>
       <Block className={classes.root}>
