@@ -30,16 +30,14 @@ import SafeInfo from '~/routes/safe/components/Balances/SendModal/SafeInfo'
 import AddressBookInput from '~/routes/safe/components/Balances/SendModal/screens/AddressBookInput'
 import CollectibleSelectField from '~/routes/safe/components/Balances/SendModal/screens/SendCollectible/CollectibleSelectField'
 import TokenSelectField from '~/routes/safe/components/Balances/SendModal/screens/SendCollectible/TokenSelectField'
+import { safeSelector } from '~/routes/safe/store/selectors'
 import { sm } from '~/theme/variables'
 
 type Props = {
-  ethBalance: string,
   initialValues: Object,
   onClose: () => void,
-  onSubmit: Function,
+  onNext: any => void,
   recipientAddress?: string,
-  safeAddress: string,
-  safeName: string,
   selectedToken?: NFTToken | {},
 }
 
@@ -57,22 +55,14 @@ const formMutators = {
 
 const useStyles = makeStyles(styles)
 
-const SendCollectible = ({
-  ethBalance,
-  initialValues,
-  onClose,
-  onSubmit,
-  recipientAddress,
-  safeAddress,
-  safeName,
-  selectedToken = {},
-}: Props) => {
+const SendCollectible = ({ initialValues, onClose, onNext, recipientAddress, selectedToken = {} }: Props) => {
   const classes = useStyles()
+  const { address: safeAddress, ethBalance, name: safeName } = useSelector(safeSelector)
   const nftAssets: NFTAssetsState = useSelector(nftAssetsSelector)
   const nftTokens: NFTTokensState = useSelector(nftTokensSelector)
   const [qrModalOpen, setQrModalOpen] = useState<boolean>(false)
   const [selectedEntry, setSelectedEntry] = useState<Object | null>({
-    address: recipientAddress,
+    address: recipientAddress || initialValues.recipientAddress,
     name: '',
   })
   const [pristine, setPristine] = useState<boolean>(true)
@@ -85,12 +75,14 @@ const SendCollectible = ({
   }, [selectedEntry, pristine])
 
   const handleSubmit = values => {
-    const submitValues = values
     // If the input wasn't modified, there was no mutation of the recipientAddress
     if (!values.recipientAddress) {
-      submitValues.recipientAddress = selectedEntry.address
+      values.recipientAddress = selectedEntry.address
     }
-    onSubmit(submitValues)
+
+    values.assetName = nftAssets[values.assetAddress].name
+
+    onNext(values)
   }
 
   const openQrModal = () => {
