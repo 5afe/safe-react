@@ -88,7 +88,7 @@ export const getAccountFrom: Function = async (web3Provider): Promise<string | n
   return accounts && accounts.length > 0 ? accounts[0] : null
 }
 
-const getNetworkIdFrom = async web3Provider => {
+export const getNetworkIdFrom = async web3Provider => {
   const networkId = await web3Provider.eth.net.getId()
 
   return networkId
