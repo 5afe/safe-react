@@ -9,6 +9,7 @@ import Heading from '~/components/layout/Heading'
 import Img from '~/components/layout/Img'
 import Page from '~/components/layout/Page'
 import Paragraph from '~/components/layout/Paragraph'
+import { getWeb3 } from '~/logic/wallets/getWeb3'
 
 const vault = require('./assets/vault.svg')
 
@@ -58,77 +59,130 @@ const genericFooter = (
   </span>
 )
 
-const steps = [
-  {
-    id: '1',
-    label: 'Waiting fot transaction confirmation',
-    instruction: 'Please confirm the Safe creation in your wallet',
-    duration: -1,
-    footer: <div></div>,
-  },
-  {
-    id: '2',
-    label: 'Transaction submitted',
-    instruction: 'Please do not leave the page',
-    duration: 5000,
-    footer: genericFooter,
-  },
-  {
-    id: '3',
-    label: 'Validating transaction',
-    instruction: 'Please do not leave the page',
-    duration: 5000,
-    footer: genericFooter,
-  },
-  {
-    id: '4',
-    label: 'Deploying smart contract',
-    instruction: 'Please do not leave the page',
-    duration: 5000,
-    footer: genericFooter,
-  },
-  {
-    id: '5',
-    label: 'Generating your Safe',
-    instruction: 'Please do not leave the page',
-    duration: 5000,
-    footer: genericFooter,
-  },
-  {
-    id: '6',
-    label: 'Success',
-    instruction: 'Click Below to get started',
-    duration: 5000,
-    footer: (
-      <Button color="primary" variant="contained">
-        Continue
-      </Button>
-    ),
-  },
-]
-
 type Props = {
-  creatingTxPromise: Promise<any>,
-  reTryValues: string,
-  network: string,
+  creationTxHash: Promise<any>,
+  submittedPromise: Promise<any>,
+  onRetry: () => void,
+  onSuccess: () => void,
 }
 
-const SafeDeployment = ({ creatingTxPromise }: Props) => {
-  const [stepIndex, setStepIndex] = useState(0)
-  const [error, setError] = useState()
+const SafeDeployment = ({ creationTxHash, onRetry, onSuccess, submittedPromise }: Props) => {
+  const steps = [
+    {
+      id: '1',
+      label: 'Waiting fot transaction confirmation',
+      instruction: 'Please confirm the Safe creation in your wallet',
+      duration: -1,
+      footer: <div></div>,
+    },
+    {
+      id: '2',
+      label: 'Transaction submitted',
+      instruction: 'Please do not leave the page',
+      duration: 5000,
+      footer: genericFooter,
+    },
+    {
+      id: '3',
+      label: 'Validating transaction',
+      instruction: 'Please do not leave the page',
+      duration: 5000,
+      footer: genericFooter,
+    },
+    {
+      id: '4',
+      label: 'Deploying smart contract',
+      instruction: 'Please do not leave the page',
+      duration: 5000,
+      footer: genericFooter,
+    },
+    {
+      id: '5',
+      label: 'Generating your Safe',
+      instruction: 'Please do not leave the page',
+      duration: 5000,
+      footer: genericFooter,
+    },
+    {
+      id: '6',
+      label: 'Success',
+      instruction: 'Click Below to get started',
+      duration: 5000,
+      footer: (
+        <Button color="primary" onClick={onSuccess} variant="contained">
+          Continue
+        </Button>
+      ),
+    },
+  ]
 
+  const [stepIndex, setStepIndex] = useState()
+  const [error, setError] = useState()
+  const [interval, setInterval] = useState()
+
+  // creating safe from from submission
   useEffect(() => {
-    creatingTxPromise
+    if (submittedPromise === undefined) {
+      return
+    }
+
+    setStepIndex(0)
+    submittedPromise
       .once('transactionHash', () => {
-        setStepIndex('2')
+        setStepIndex(1)
       })
       .then(() => {
-        setStepIndex('6')
+        setStepIndex(5)
       })
       .catch(error => {
+        debugger
         setError(error)
+        console.log('un error', error)
       })
-  }, [])
+  }, [submittedPromise])
+
+  // recovering safe creation from txHash
+  useEffect(() => {
+    if (!creationTxHash) {
+      return
+    }
+
+    const web3 = getWeb3()
+
+    const isTxMined = async txHash => {
+      const txResult = await web3.eth.getTransaction(txHash)
+      // blockNumber is null when TX is pending.
+      return txResult.blockNumber !== null
+    }
+
+    const waitToTx = async () => {
+      // on each interval check tx status
+      const intervalInstance = setInterval(async () => {
+        const isMined = await isTxMined(creationTxHash)
+        if (isMined) {
+          clearInterval(intervalInstance)
+          setStepIndex(5)
+        } else {
+          setInterval(intervalInstance)
+          if (stepIndex < 5) {
+            setStepIndex(stepIndex + 1)
+          }
+        }
+      }, 1000)
+    }
+
+    // tx sign was already done
+    setStepIndex(1)
+    waitToTx()
+
+    return () => {
+      clearInterval(interval)
+    }
+  }, [creationTxHash])
+
+  if (stepIndex === undefined) {
+    return <div>loading</div>
+  }
 
   return (
     <Page align="center">
@@ -147,6 +201,8 @@ const SafeDeployment = ({ creatingTxPromise }: Props) => {
           <FullParagraph color="primary" noMargin size="md">
             {steps[stepIndex].instruction}
           </FullParagraph>
+
+          {steps[stepIndex].footer}
         </Body>
       </Wrapper>
     </Page>
