@@ -28,13 +28,13 @@ import EtherscanBtn from '~/components/EtherscanBtn'
 import Identicon from '~/components/Identicon'
 import Modal from '~/components/Modal'
 import NoSafe from '~/components/NoSafe'
+import { SafeVersionContext } from '~/components/SafeVersionProvider'
 import Block from '~/components/layout/Block'
 import Button from '~/components/layout/Button'
 import Hairline from '~/components/layout/Hairline'
 import Heading from '~/components/layout/Heading'
 import Paragraph from '~/components/layout/Paragraph'
 import Row from '~/components/layout/Row'
-import { getSafeVersion } from '~/logic/safe/utils/safeVersion'
 import { getEtherScanLink, getWeb3 } from '~/logic/wallets/getWeb3'
 import AddressBookTable from '~/routes/safe/components/AddressBook'
 import SendModal from '~/routes/safe/components/Balances/SendModal'
@@ -106,31 +106,7 @@ const Layout = (props: Props) => {
     footer: null,
     onClose: null,
   })
-
-  const [needUpdate, setNeedUpdate] = useState(false)
-
-  React.useEffect(() => {
-    let isMounted = true
-
-    const checkUpdateRequirement = async () => {
-      let safeVersion = {}
-
-      try {
-        safeVersion = await getSafeVersion(safe.address)
-      } catch (e) {
-        console.error('failed to check version', e)
-      }
-      if (isMounted) {
-        setNeedUpdate(safeVersion.needUpdate)
-      }
-    }
-
-    checkUpdateRequirement()
-
-    return () => {
-      isMounted = false
-    }
-  }, [safe && safe.address])
+  const { needsUpdate } = React.useContext(SafeVersionContext)
 
   const handleCallToRouter = (_, value) => {
     const { history } = props
@@ -184,7 +160,7 @@ const Layout = (props: Props) => {
       <Badge
         badgeContent=""
         color="error"
-        invisible={!needUpdate || !granted}
+        invisible={!needsUpdate || !granted}
         style={{ paddingRight: '10px' }}
         variant="dot"
       >

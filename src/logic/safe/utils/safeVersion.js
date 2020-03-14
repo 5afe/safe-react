@@ -16,7 +16,7 @@ export const checkIfSafeNeedsUpdate = async (gnosisSafeInstance, lastSafeVersion
   return { current, latest, needUpdate }
 }
 
-const getCurrentMasterContractLastVersion = async () => {
+export const getCurrentMasterContractLastVersion = async () => {
   const safeMaster = await getSafeMasterContract()
   let safeMasterVersion
   try {

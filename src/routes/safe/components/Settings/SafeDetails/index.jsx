@@ -1,12 +1,12 @@
 // @flow
 import { makeStyles } from '@material-ui/core/styles'
 import { withSnackbar } from 'notistack'
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import { useSelector } from 'react-redux'
 
 import { styles } from './style'
 
-import Modal from '~/components/Modal'
+import { SafeVersionContext } from '~/components/SafeVersionProvider'
 import Field from '~/components/forms/Field'
 import GnoForm from '~/components/forms/GnoForm'
 import TextField from '~/components/forms/TextField'
@@ -19,8 +19,6 @@ import Paragraph from '~/components/layout/Paragraph'
 import Row from '~/components/layout/Row'
 import { getNotificationsFromTxType, showSnackbar } from '~/logic/notifications'
 import { TX_NOTIFICATION_TYPES } from '~/logic/safe/transactions'
-import { getSafeVersion } from '~/logic/safe/utils/safeVersion'
-import UpdateSafeModal from '~/routes/safe/components/Settings/UpdateSafeModal'
 import { grantedSelector } from '~/routes/safe/container/selector'
 
 export const SAFE_NAME_INPUT_TEST_ID = 'safe-name-input'
@@ -39,16 +37,10 @@ type Props = {
 const useStyles = makeStyles(styles)
 
 const SafeDetails = (props: Props) => {
+  const { currentVersion, lastVersion, needsUpdate, upgradeSafe } = React.useContext(SafeVersionContext)
   const classes = useStyles()
-  const [safeVersions, setSafeVersions] = React.useState({ current: null, latest: null, needUpdate: false })
   const isUserOwner = useSelector(grantedSelector)
-  const { closeSnackbar, createTransaction, enqueueSnackbar, safeAddress, safeName, updateSafe } = props
-
-  const [isModalOpen, setModalOpen] = useState(false)
-
-  const toggleModal = () => {
-    setModalOpen(prevOpen => !prevOpen)
-  }
+  const { closeSnackbar, enqueueSnackbar, safeAddress, safeName, updateSafe } = props
 
   const handleSubmit = values => {
     updateSafe({ address: safeAddress, name: values.safeName })
@@ -56,23 +48,6 @@ const SafeDetails = (props: Props) => {
     const notification = getNotificationsFromTxType(TX_NOTIFICATION_TYPES.SAFE_NAME_CHANGE_TX)
     showSnackbar(notification.afterExecution.noMoreConfirmationsNeeded, enqueueSnackbar, closeSnackbar)
   }
-
-  const handleUpdateSafe = () => {
-    setModalOpen(true)
-  }
-
-  useEffect(() => {
-    const getVersion = async () => {
-      try {
-        const { current, latest, needUpdate } = await getSafeVersion(safeAddress)
-        setSafeVersions({ current, latest, needUpdate })
-      } catch (err) {
-        setSafeVersions({ current: 'Version not defined' })
-        console.error(err)
-      }
-    }
-    getVersion()
-  }, [])
 
   return (
     <>
@@ -83,17 +58,17 @@ const SafeDetails = (props: Props) => {
               <Heading tag="h2">Safe Version</Heading>
               <Row align="end" grow>
                 <Paragraph className={classes.versionNumber}>
-                  {safeVersions.current}
-                  {safeVersions.needUpdate && ` (there's a newer version: ${safeVersions.latest})`}
+                  {currentVersion}
+                  {needsUpdate && ` (there's a newer version: ${lastVersion})`}
                 </Paragraph>
               </Row>
-              {safeVersions.needUpdate && isUserOwner ? (
+              {needsUpdate && isUserOwner ? (
                 <Row align="end" grow>
                   <Paragraph>
                     <Button
                       className={classes.saveBtn}
                       color="primary"
-                      onClick={handleUpdateSafe}
+                      onClick={upgradeSafe}
                       size="small"
                       testId={SAFE_NAME_UPDATE_SAFE_BTN_TEST_ID}
                       variant="contained"
@@ -137,9 +112,6 @@ const SafeDetails = (props: Props) => {
                 </Button>
               </Col>
             </Row>
-            <Modal description="Update Safe" handleClose={toggleModal} open={isModalOpen} title="Update Safe">
-              <UpdateSafeModal createTransaction={createTransaction} onClose={toggleModal} safeAddress={safeAddress} />
-            </Modal>
           </>
         )}
       </GnoForm>
