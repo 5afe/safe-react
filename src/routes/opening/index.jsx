@@ -1,5 +1,5 @@
 // @flow
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 
 import { Stepper } from '~/components-v2'
@@ -10,7 +10,7 @@ import Img from '~/components/layout/Img'
 import Page from '~/components/layout/Page'
 import Paragraph from '~/components/layout/Paragraph'
 
-const vault = require('../assets/vault.svg')
+const vault = require('./assets/vault.svg')
 
 const Wrapper = styled.div`
   display: grid;
@@ -107,15 +107,35 @@ const steps = [
   },
 ]
 
-const SafeDeployment = () => {
-  const [stepIndex] = useState(0)
+type Props = {
+  creatingTxPromise: Promise<any>,
+  reTryValues: string,
+  network: string,
+}
+
+const SafeDeployment = ({ creatingTxPromise }: Props) => {
+  const [stepIndex, setStepIndex] = useState(0)
+  const [error, setError] = useState()
+
+  useEffect(() => {
+    creatingTxPromise
+      .once('transactionHash', () => {
+        setStepIndex('2')
+      })
+      .then(() => {
+        setStepIndex('6')
+      })
+      .catch(error => {
+        setError(error)
+      })
+  }, [])
 
   return (
     <Page align="center">
       <Wrapper>
         <Title tag="h2">Safe creation proccess</Title>
         <Nav>
-          <Stepper activeStepIndex={stepIndex} orientation="vertical" steps={steps} />
+          <Stepper activeStepIndex={stepIndex} error={error} orientation="vertical" steps={steps} />
         </Nav>
         <Body>
           <Img alt="Vault" height={75} src={vault} />

@@ -34,7 +34,7 @@ const StyledStepLabel = styled.p`
 `
 
 type Props = {
-  steps: Array<{ id: string, label: string }>,
+  steps: Array<{ id: string | number, label: string }>,
   activeStepIndex: number,
   error?: boolean,
   orientation: 'vertical' | 'horizontal',

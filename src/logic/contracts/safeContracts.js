@@ -70,7 +70,7 @@ export const getSafeMasterContract = async () => {
   return safeMaster
 }
 
-export const getSafeDeploymentTransaction = async (safeAccounts: string[], numConfirmations: number, userAccount: string) => {
+export const getSafeDeploymentTransaction = (safeAccounts: string[], numConfirmations: number, userAccount: string) => {
   const gnosisSafeData = safeMaster.contract.methods
     .setup(safeAccounts, numConfirmations, ZERO_ADDRESS, '0x', DEFAULT_FALLBACK_HANDLER_ADDRESS, ZERO_ADDRESS, 0, ZERO_ADDRESS)
     .encodeABI()
