@@ -133,66 +133,7 @@ const Open = ({ addSafe, /* location, */ network, provider, userAccount }: Props
   //       threshold,
   //     })
   //   }
-  // }, [])
-
-  // removeFromStorage(SAFE_PENDING_CREATION_HASH_STORAGE_KEY)
-
-  // saveToStorage('SAFES', {
-  //   '0x9B333A19Ecf0F2f5Fb61469FB17633AAE57972D7': {
-  //     name: 'single:ac1',
-  //     address: '0x9B333A19Ecf0F2f5Fb61469FB17633AAE57972D7',
-  //     threshold: 1,
-  //     ethBalance: '0',
-  //     owners: [{ name: 'My Wallet', address: '0x9cf2288d8FA37051970AeBa88E8b4Fb5960c2385' }],
-  //     activeTokens: [],
-  //     blacklistedTokens: [],
-  //     balances: { '0x000': '0' },
-  //     nonce: 0,
-  //     latestIncomingTxBlock: 0,
-  //   },
-  //   '0x1de8f9874A5b60C94304888f8B42dB21f06813e6': {
-  //     name: 'single:ac2',
-  //     address: '0x1de8f9874A5b60C94304888f8B42dB21f06813e6',
-  //     threshold: 1,
-  //     ethBalance: '0.91',
-  //     owners: [{ name: 'UNKNOWN', address: '0xDe75665F3BE46D696e5579628fA17b662e6fC04e' }],
-  //     activeTokens: [
-  //       '0xEBe09eB3411D18F4FF8D859e096C533CAC5c6B60',
-  //       '0xddea378A6dDC8AfeC82C36E9b0078826bf9e68B6',
-  //       '0x4DBCdF9B62e891a7cec5A2568C3F4FAF9E8Abe2b',
-  //       '0x5592EC0cfb4dbc12D3aB100b257153436a1f0FEa',
-  //       '0xEBf1A11532b93a529b5bC942B4bAA98647913002',
-  //       '0x6e894660985207feb7cf89Faf048998c71E8EE89',
-  //       '0xbF7A7169562078c96f0eC1A8aFD6aE50f12e5A99',
-  //       '0xd6801a1DfFCd0a410336Ef88DeF4320D6DF1883e',
-  //       '0x577D296678535e4903D59A4C929B718e1D575e0A',
-  //       '0x6D7F0754FFeb405d23C51CE938289d4835bE3b14',
-  //     ],
-  //     blacklistedTokens: [],
-  //     balances: {
-  //       '0x4DBCdF9B62e891a7cec5A2568C3F4FAF9E8Abe2b': '400',
-  //       '0x5592EC0cfb4dbc12D3aB100b257153436a1f0FEa': '1',
-  //       '0x000': '0',
-  //     },
-  //     nonce: 19,
-  //     latestIncomingTxBlock: 6114840,
-  //   },
-  //   '0xF5DeC41B8597Bded2706a8D57FE011d25A138d6A': {
-  //     name: 'multi:ac1-ac2',
-  //     address: '0xF5DeC41B8597Bded2706a8D57FE011d25A138d6A',
-  //     threshold: 2,
-  //     ethBalance: '0',
-  //     owners: [
-  //       { name: 'ac1', address: '0x9cf2288d8FA37051970AeBa88E8b4Fb5960c2385' },
-  //       { name: 'ac2', address: '0xDe75665F3BE46D696e5579628fA17b662e6fC04e' },
-  //     ],
-  //     activeTokens: ['0x5592EC0cfb4dbc12D3aB100b257153436a1f0FEa'],
-  //     blacklistedTokens: [],
-  //     balances: { '0x5592EC0cfb4dbc12D3aB100b257153436a1f0FEa': '2', '0x000': '0' },
-  //     nonce: 1,
-  //     latestIncomingTxBlock: 6116050,
-  //   },
-  // })
+  // }, [])  
 
   // check if there is a safe being created
   useEffect(() => {
