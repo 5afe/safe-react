@@ -204,29 +204,33 @@ class Balances extends React.Component<Props, State> {
                   )}
                 </Col>
                 <Col className={classes.tokenControls} end="sm" sm={6} xs={12}>
-                  {showCoins && <DropdownCurrency />}
-                  <ButtonLink
-                    className={classes.manageTokensButton}
-                    onClick={this.onShow('Token')}
-                    size="lg"
-                    testId="manage-tokens-btn"
-                  >
-                    Manage List
-                  </ButtonLink>
-                  <Modal
-                    description="Enable and disable tokens to be listed"
-                    handleClose={this.onHide('Token')}
-                    open={showToken}
-                    title="Manage List"
-                  >
-                    <Tokens
-                      activeTokens={activeTokens}
-                      blacklistedTokens={blacklistedTokens}
-                      onClose={this.onHide('Token')}
-                      safeAddress={safeAddress}
-                      tokens={tokens}
-                    />
-                  </Modal>
+                  {showCoins && (
+                    <>
+                      <DropdownCurrency />
+                      <ButtonLink
+                        className={classes.manageTokensButton}
+                        onClick={this.onShow('Token')}
+                        size="lg"
+                        testId="manage-tokens-btn"
+                      >
+                        Manage List
+                      </ButtonLink>
+                      <Modal
+                        description="Enable and disable tokens to be listed"
+                        handleClose={this.onHide('Token')}
+                        open={showToken}
+                        title="Manage List"
+                      >
+                        <Tokens
+                          activeTokens={activeTokens}
+                          blacklistedTokens={blacklistedTokens}
+                          onClose={this.onHide('Token')}
+                          safeAddress={safeAddress}
+                          tokens={tokens}
+                        />
+                      </Modal>
+                    </>
+                  )}
                 </Col>
               </Row>
               {showCoins && (
