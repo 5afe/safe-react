@@ -3,14 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { connect } from 'react-redux'
 import { Redirect, Route, Switch, withRouter } from 'react-router-dom'
 
-import {
-  LOAD_ADDRESS,
-  OPENING_ADDRESS,
-  OPEN_ADDRESS,
-  SAFELIST_ADDRESS,
-  SAFE_PARAM_ADDRESS,
-  WELCOME_ADDRESS,
-} from './routes'
+import { LOAD_ADDRESS, OPEN_ADDRESS, SAFELIST_ADDRESS, SAFE_PARAM_ADDRESS, WELCOME_ADDRESS } from './routes'
 import Welcome from './welcome/container'
 
 import Loader from '~/components/Loader'
@@ -20,8 +13,6 @@ import { withTracker } from '~/utils/googleAnalytics'
 const Safe = React.lazy(() => import('./safe/container'))
 
 const Open = React.lazy(() => import('./open/container/Open'))
-
-const Opening = React.lazy(() => import('./opening/container'))
 
 const Load = React.lazy(() => import('./load/container/Load'))
 
@@ -66,7 +57,6 @@ const Routes = ({ defaultSafe, location }: RoutesProps) => {
       <Route component={withTracker(Welcome)} exact path={WELCOME_ADDRESS} />
       <Route component={withTracker(Open)} exact path={OPEN_ADDRESS} />
       <Route component={withTracker(Safe)} path={SAFE_ADDRESS} />
-      <Route component={withTracker(Opening)} exact path={OPENING_ADDRESS} />
       <Route component={withTracker(Load)} exact path={LOAD_ADDRESS} />
       <Redirect to="/" />
     </Switch>

@@ -62,52 +62,47 @@ const genericFooter = (
 type Props = {
   creationTxHash: Promise<any>,
   submittedPromise: Promise<any>,
-  // onRetry: () => void,
+  onRetry: () => void,
   onSuccess: () => void,
+  onCancel: () => void,
 }
 
-const SafeDeployment = ({ creationTxHash /* , onRetry */, onSuccess, submittedPromise }: Props) => {
+const SafeDeployment = ({ creationTxHash, onCancel, onRetry, onSuccess, submittedPromise }: Props) => {
   const steps = [
     {
       id: '1',
       label: 'Waiting fot transaction confirmation',
       instruction: 'Please confirm the Safe creation in your wallet',
-      duration: -1,
-      footer: <div></div>,
+      footer: null,
     },
     {
       id: '2',
       label: 'Transaction submitted',
       instruction: 'Please do not leave the page',
-      duration: 5000,
       footer: genericFooter,
     },
     {
       id: '3',
       label: 'Validating transaction',
       instruction: 'Please do not leave the page',
-      duration: 5000,
       footer: genericFooter,
     },
     {
       id: '4',
       label: 'Deploying smart contract',
       instruction: 'Please do not leave the page',
-      duration: 5000,
       footer: genericFooter,
     },
     {
       id: '5',
       label: 'Generating your Safe',
       instruction: 'Please do not leave the page',
-      duration: 5000,
       footer: genericFooter,
     },
     {
       id: '6',
       label: 'Success',
       instruction: 'Click Below to get started',
-      duration: 5000,
       footer: (
         <Button color="primary" onClick={onSuccess} variant="contained">
           Continue
@@ -118,7 +113,7 @@ const SafeDeployment = ({ creationTxHash /* , onRetry */, onSuccess, submittedPr
 
   const [stepIndex, setStepIndex] = useState()
   const [intervalStarted, setIntervalStarted] = useState(false)
-  const [error /* , setError */] = useState()
+  const [error, setError] = useState()
 
   // creating safe from from submission
   useEffect(() => {
@@ -127,10 +122,12 @@ const SafeDeployment = ({ creationTxHash /* , onRetry */, onSuccess, submittedPr
     }
 
     setStepIndex(0)
-    submittedPromise.once('transactionHash', () => {
-      setStepIndex(1)
-      setIntervalStarted(true)
-    })
+    submittedPromise
+      .once('transactionHash', () => {
+        setStepIndex(1)
+        setIntervalStarted(true)
+      })
+      .on('error', setError)
   }, [submittedPromise])
 
   // recovering safe creation from txHash
@@ -169,25 +166,29 @@ const SafeDeployment = ({ creationTxHash /* , onRetry */, onSuccess, submittedPr
             setStepIndex(5)
           }
         } catch (error) {
-          console.error(error)
+          setError(error)
         }
       }
 
       if (submittedPromise !== undefined) {
-        submittedPromise
-          .then(() => {
-            setIntervalStarted(false)
-            clearInterval(interval)
-            setStepIndex(5)
-          })
-          .catch(error => console.error(error))
+        submittedPromise.then(() => {
+          setIntervalStarted(false)
+          clearInterval(interval)
+          setStepIndex(5)
+        })
       }
     }, 3000)
 
     return () => {
       clearInterval(interval)
     }
-  }, [creationTxHash, submittedPromise, intervalStarted, stepIndex])
+  }, [creationTxHash, submittedPromise, intervalStarted, stepIndex, setError])
+
+  // discard click event value
+  const onRetryTx = () => {
+    setError(false)
+    onRetry()
+  }
 
   if (stepIndex === undefined) {
     return <div>loading</div>
@@ -205,13 +206,22 @@ const SafeDeployment = ({ creationTxHash /* , onRetry */, onSuccess, submittedPr
 
           <CardTitle>{steps[stepIndex].label}</CardTitle>
 
-          <Loader />
+          {!error && stepIndex <= 4 && <Loader />}
 
           <FullParagraph color="primary" noMargin size="md">
             {steps[stepIndex].instruction}
           </FullParagraph>
 
           {steps[stepIndex].footer}
+
+          {error && (
+            <>
+              <Button onClick={onCancel}>cancel</Button>
+              <Button color="primary" onClick={onRetryTx}>
+                Retry
+              </Button>
+            </>
+          )}
         </Body>
       </Wrapper>
     </Page>

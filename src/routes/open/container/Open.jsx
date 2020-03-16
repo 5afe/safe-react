@@ -22,7 +22,7 @@ import {
   getSafeNameFrom,
   getThresholdFrom,
 } from '~/routes/open/utils/safeDataExtractor'
-import { SAFELIST_ADDRESS /* , OPENING_ADDRESS, stillInOpeningView */ } from '~/routes/routes'
+import { SAFELIST_ADDRESS, WELCOME_ADDRESS } from '~/routes/routes'
 import { buildSafe } from '~/routes/safe/store/actions/fetchSafe'
 import { history } from '~/store'
 import { loadFromStorage, removeFromStorage, saveToStorage } from '~/utils/storage'
@@ -77,18 +77,18 @@ export const getSafeProps = async (safeAddress, safeName, ownersNames, ownerAddr
 }
 
 export const createSafe = (values: Object, userAccount: string): Promise<OpenState> => {
-  const numConfirmations = getThresholdFrom(values)
+  const confirmations = getThresholdFrom(values)
   const name = getSafeNameFrom(values)
   const ownersNames = getNamesFrom(values)
   const ownerAddresses = getAccountsFrom(values)
 
-  const deploymentTxMethod = getSafeDeploymentTransaction(ownerAddresses, numConfirmations, userAccount)
+  const deploymentTxMethod = getSafeDeploymentTransaction(ownerAddresses, confirmations, userAccount)
 
   const promiEvent = deploymentTxMethod.send({ from: userAccount, value: 0 })
 
   promiEvent
     .once('transactionHash', txHash => {
-      saveToStorage(SAFE_PENDING_CREATION_STORAGE_KEY, { txHash, name, ownerAddresses, ownersNames })
+      saveToStorage(SAFE_PENDING_CREATION_STORAGE_KEY, { txHash, ...values })
     })
     .then(async receipt => {
       await checkReceiptStatus(receipt.transactionHash)
@@ -102,13 +102,12 @@ export const createSafe = (values: Object, userAccount: string): Promise<OpenSta
   return promiEvent
 }
 
-const Open = ({ addSafe, /* location, */ network, provider, userAccount }: Props) => {
-  // const [safeProps, setSafeProps] = useState(null)
+const Open = ({ addSafe, network, provider, userAccount }: Props) => {
+  //removeFromStorage(SAFE_PENDING_CREATION_STORAGE_KEY)
   const [loading, setLoading] = useState(false)
   const [showProgress, setShowProgress] = useState()
   const [creationTxPromise, setCreationTxPromise] = useState()
   const [safeCreationPendingInfo, setSafeCreationPendingInfo] = useState()
-  const [formValues, setFormValues] = useState()
   const [safePropsFromUrl, setSafePropsFromUrl] = useState()
 
   useEffect(() => {
@@ -129,7 +128,7 @@ const Open = ({ addSafe, /* location, */ network, provider, userAccount }: Props
   useEffect(() => {
     const load = async () => {
       const pendingCreation = await loadFromStorage(SAFE_PENDING_CREATION_STORAGE_KEY)
-      if (pendingCreation) {
+      if (pendingCreation && pendingCreation.txHash) {
         setSafeCreationPendingInfo(pendingCreation)
         setShowProgress(true)
       } else {
@@ -141,8 +140,17 @@ const Open = ({ addSafe, /* location, */ network, provider, userAccount }: Props
     load()
   }, [])
 
-  const createSafeProxy = (values = formValues) => {
-    setFormValues(values)
+  const createSafeProxy = async formValues => {
+    let values = formValues
+
+    // save form values, used when the user rejects the TX and wants to retry
+    if (formValues) {
+      const copy = { ...formValues }
+      saveToStorage(SAFE_PENDING_CREATION_STORAGE_KEY, copy)
+    } else {
+      values = await loadFromStorage(SAFE_PENDING_CREATION_STORAGE_KEY)
+    }
+
     const promiEvent = createSafe(values, userAccount, addSafe)
     setCreationTxPromise(promiEvent)
     setShowProgress(true)
@@ -165,14 +173,12 @@ const Open = ({ addSafe, /* location, */ network, provider, userAccount }: Props
       receipt.logs[0].data,
       receipt.logs[0].topics,
     )
-    const safeAddress = events[0]
 
-    const safeProps = await getSafeProps(
-      safeAddress,
-      pendingCreation.name,
-      pendingCreation.ownersNames,
-      pendingCreation.ownerAddresses,
-    )
+    const safeAddress = events[0]
+    const name = getSafeNameFrom(pendingCreation)
+    const ownersNames = getNamesFrom(pendingCreation)
+    const ownerAddresses = getAccountsFrom(pendingCreation)
+    const safeProps = await getSafeProps(safeAddress, name, ownersNames, ownerAddresses)
     addSafe(safeProps)
 
     removeFromStorage(SAFE_PENDING_CREATION_STORAGE_KEY)
@@ -187,6 +193,13 @@ const Open = ({ addSafe, /* location, */ network, provider, userAccount }: Props
     history.push(url)
   }
 
+  const onCancel = () => {
+    removeFromStorage(SAFE_PENDING_CREATION_STORAGE_KEY)
+    history.push({
+      pathname: `${WELCOME_ADDRESS}`,
+    })
+  }
+
   if (loading || showProgress === undefined) {
     return <Loader />
   }
@@ -196,6 +209,7 @@ const Open = ({ addSafe, /* location, */ network, provider, userAccount }: Props
       {showProgress ? (
         <Opening
           creationTxHash={safeCreationPendingInfo ? safeCreationPendingInfo.txHash : undefined}
+          onCancel={onCancel}
           onRetry={createSafeProxy}
           onSuccess={onSafeCreated}
           submittedPromise={creationTxPromise}
