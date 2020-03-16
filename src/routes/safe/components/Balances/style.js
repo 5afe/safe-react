@@ -25,7 +25,18 @@ export const styles = (theme: Object) => ({
     borderRightColor: `${secondary} !important`,
     height: '18px !important',
   },
+  assetTab: {
+    margin: '2px 0',
+    padding: '0 10px',
+    textDecoration: 'underline',
+
+    '&:hover': {
+      cursor: 'pointer',
+    },
+  },
   assetTabActive: {
+    margin: '2px 0',
+    padding: '0 10px',
     textDecoration: 'none',
   },
   tokenControls: {

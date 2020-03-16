@@ -23,6 +23,7 @@ import Button from '~/components/layout/Button'
 import ButtonLink from '~/components/layout/ButtonLink'
 import Col from '~/components/layout/Col'
 import Divider from '~/components/layout/Divider'
+import Paragraph from '~/components/layout/Paragraph'
 import Row from '~/components/layout/Row'
 import type { BalanceCurrencyType } from '~/logic/currencyValues/store/model/currencyValues'
 import { type Token } from '~/logic/tokens/store/model/token'
@@ -184,16 +185,17 @@ class Balances extends React.Component<Props, State> {
                     subMenuOptions.map(({ enabled, legend, onClick }, index) => (
                       <React.Fragment key={`legend-${index}`}>
                         {index > 0 && <Divider className={classes.assetDivider} />}
-                        <ButtonLink
-                          className={enabled ? classes.assetTabActive : ''}
+                        <Paragraph
+                          className={enabled ? classes.assetTabActive : classes.assetTab}
                           color={enabled ? 'secondary' : 'medium'}
-                          onClick={onClick}
+                          noMargin
+                          onClick={() => !enabled && onClick()}
                           size="md"
-                          testId="coins-assets-btn"
+                          testId={`${legend.toLowerCase()}'-assets-btn'`}
                           weight={enabled ? 'bold' : 'regular'}
                         >
                           {legend}
-                        </ButtonLink>
+                        </Paragraph>
                       </React.Fragment>
                     ))}
                 </Col>
