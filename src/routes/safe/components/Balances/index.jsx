@@ -193,9 +193,8 @@ class Balances extends React.Component<Props, State> {
                         {index > 0 && <Divider className={classes.assetDivider} />}
                         <Link
                           className={enabled ? classes.assetTabActive : classes.assetTab}
-                          noMargin
+                          data-testid={`${legend.toLowerCase()}'-assets-btn'`}
                           size="md"
-                          testId={`${legend.toLowerCase()}'-assets-btn'`}
                           to={url}
                           weight={enabled ? 'bold' : 'regular'}
                         >
