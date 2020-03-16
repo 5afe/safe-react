@@ -14,8 +14,7 @@ export const nftTokensSelector = (state: GlobalState) => state[NFT_TOKENS_REDUCE
 export const nftAssetsListSelector: Selector<GlobalState, NFTAssets, List<NFTAssets>> = createSelector(
   nftAssetsSelector,
   (assets: NFTAssets) => {
-    const list = assets ? Object.entries(assets).map(item => item[1]) : List([])
-    return List(list)
+    return assets ? Object.entries(assets).map(item => item[1]) : List([])
   },
 )
 

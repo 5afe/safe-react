@@ -34,6 +34,7 @@ import { sm } from '~/theme/variables'
 type Props = {
   onClose: () => void,
   classes: Object,
+  recipientAddress: string,
   safeAddress: string,
   safeName: string,
   ethBalance: string,
@@ -41,10 +42,19 @@ type Props = {
   initialValues: Object,
 }
 
-const SendCustomTx = ({ classes, ethBalance, initialValues, onClose, onSubmit, safeAddress, safeName }: Props) => {
+const SendCustomTx = ({
+  classes,
+  ethBalance,
+  initialValues,
+  onClose,
+  onSubmit,
+  recipientAddress,
+  safeAddress,
+  safeName,
+}: Props) => {
   const [qrModalOpen, setQrModalOpen] = useState<boolean>(false)
   const [selectedEntry, setSelectedEntry] = useState<Object | null>({
-    address: '',
+    address: recipientAddress || initialValues.recipientAddress,
     name: '',
   })
   const [pristine, setPristine] = useState<boolean>(true)

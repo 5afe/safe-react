@@ -24,7 +24,6 @@ class OpenSea implements CollectibleMetadataSource {
 
   _fetch = async (url: string) => {
     // eslint-disable-next-line no-underscore-dangle
-    await this._rateLimit()
     return fetch(url, {
       headers: { 'X-API-KEY': OPENSEA_API_KEY || '' },
     })

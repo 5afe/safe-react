@@ -7,11 +7,12 @@ import { useSelector } from 'react-redux'
 
 import Item from './components/Item'
 
+import Paragraph from '~/components/layout/Paragraph'
 import type { NFTTokensState } from '~/logic/collectibles/store/reducer/collectibles'
 import { activeNftAssetsListSelector, nftTokensSelector } from '~/logic/collectibles/store/selectors'
 import SendModal from '~/routes/safe/components/Balances/SendModal'
 import { safeSelector } from '~/routes/safe/store/selectors'
-import { fontColor, screenSm, screenXs } from '~/theme/variables'
+import { fontColor, lg, screenSm, screenXs } from '~/theme/variables'
 
 const useStyles = makeStyles({
   cardInner: {
@@ -67,6 +68,10 @@ const useStyles = makeStyles({
     height: '2px',
     marginLeft: '40px',
   },
+  noData: {
+    fontSize: lg,
+    textAlign: 'center',
+  },
 })
 
 const Collectibles = () => {
@@ -85,7 +90,7 @@ const Collectibles = () => {
   return (
     <Card>
       <div className={classes.cardInner}>
-        {activeAssetsList &&
+        {activeAssetsList ? (
           activeAssetsList.map(nftAsset => {
             return (
               <React.Fragment key={nftAsset.slug}>
@@ -108,7 +113,10 @@ const Collectibles = () => {
                 </div>
               </React.Fragment>
             )
-          })}
+          })
+        ) : (
+          <Paragraph className={classes.noData}>No collectibles available</Paragraph>
+        )}
       </div>
       <SendModal
         activeScreenType="sendCollectible"

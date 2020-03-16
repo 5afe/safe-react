@@ -94,7 +94,7 @@ const AssetsList = (props: Props) => {
     }
   }
 
-  const itemData = createItemData(nftAssetsList, nftAssetsList)
+  const itemData = createItemData(nftAssetsList)
   const switchToAddCustomAssetScreen = () => props.setActiveScreen('addCustomAsset')
   return (
     <>
