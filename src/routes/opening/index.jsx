@@ -117,7 +117,8 @@ const SafeDeployment = ({ creationTxHash /* , onRetry */, onSuccess, submittedPr
   ]
 
   const [stepIndex, setStepIndex] = useState()
-  const [error, setError] = useState()
+  const [intervalStarted, setIntervalStarted] = useState(false)
+  const [error /* , setError */] = useState()
 
   // creating safe from from submission
   useEffect(() => {
@@ -126,68 +127,67 @@ const SafeDeployment = ({ creationTxHash /* , onRetry */, onSuccess, submittedPr
     }
 
     setStepIndex(0)
-    let intervalInstance
-    submittedPromise
-      .once('transactionHash', () => {
-        setStepIndex(1)
-        intervalInstance = setInterval(() => {
-          if (stepIndex < 5) {
-            setStepIndex(stepIndex + 1)
-          }
-        }, 1000)
-      })
-      .then(() => {
-        setStepIndex(5)
-        clearInterval(intervalInstance)
-      })
-      .catch(error => {
-        setError(error)
-        console.error('un error', error)
-      })
-
-    return () => {
-      clearInterval(intervalInstance)
-    }
+    submittedPromise.once('transactionHash', () => {
+      setStepIndex(1)
+      setIntervalStarted(true)
+    })
   }, [submittedPromise])
 
   // recovering safe creation from txHash
   useEffect(() => {
-    if (!creationTxHash) {
+    if (creationTxHash === undefined) {
       return
     }
 
-    const web3 = getWeb3()
-    let intervalInstance
+    setStepIndex(1)
+    setIntervalStarted(true)
+  }, [creationTxHash])
+
+  useEffect(() => {
+    if (!intervalStarted) {
+      return
+    }
 
     const isTxMined = async txHash => {
+      const web3 = getWeb3()
       const txResult = await web3.eth.getTransaction(txHash)
       // blockNumber is null when TX is pending.
       return txResult.blockNumber !== null
     }
 
-    const waitToTx = async () => {
-      // on each interval check tx status
-      intervalInstance = setInterval(async () => {
-        const isMined = await isTxMined(creationTxHash)
-        if (isMined) {
-          clearInterval(intervalInstance)
-          setStepIndex(5)
-        } else {
-          if (stepIndex < 5) {
-            setStepIndex(stepIndex + 1)
-          }
-        }
-      }, 1000)
-    }
+    let interval = setInterval(async () => {
+      if (stepIndex < 4) {
+        setStepIndex(stepIndex + 1)
+      }
 
-    // tx sign was already done
-    setStepIndex(1)
-    waitToTx()
+      if (creationTxHash !== undefined) {
+        try {
+          const res = await isTxMined(creationTxHash)
+          if (res) {
+            setIntervalStarted(false)
+            clearInterval(interval)
+            setStepIndex(5)
+          }
+        } catch (error) {
+          console.error(error)
+        }
+      }
+
+      if (submittedPromise !== undefined) {
+        submittedPromise
+          .then(() => {
+            setIntervalStarted(false)
+            clearInterval(interval)
+            setStepIndex(5)
+          })
+          .catch(error => console.error(error))
+      }
+    }, 3000)
 
     return () => {
-      clearInterval(intervalInstance)
+      clearInterval(interval)
     }
-  }, [creationTxHash])
+  }, [creationTxHash, submittedPromise, intervalStarted, stepIndex])
 
   if (stepIndex === undefined) {
     return <div>loading</div>
