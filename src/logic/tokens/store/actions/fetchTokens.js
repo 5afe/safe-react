@@ -43,6 +43,13 @@ export const getStandardTokenContract = ensureOnce(createStandardTokenContract)
 
 export const getERC721TokenContract = ensureOnce(createERC721TokenContract)
 
+export const containsMethodByHash = async (contractAddress: string, methodHash: string) => {
+  const web3 = getWeb3()
+  const byteCode = await web3.eth.getCode(contractAddress)
+
+  return byteCode.indexOf(methodHash.replace('0x', '')) !== -1
+}
+
 export const fetchTokens = () => async (dispatch: ReduxDispatch<GlobalState>) => {
   try {
     const {

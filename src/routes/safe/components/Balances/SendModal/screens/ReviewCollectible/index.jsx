@@ -25,7 +25,7 @@ import type { NFTTokensState } from '~/logic/collectibles/store/reducer/collecti
 import { nftTokensSelector } from '~/logic/collectibles/store/selectors'
 import { TX_NOTIFICATION_TYPES } from '~/logic/safe/transactions'
 import { estimateTxGasCosts } from '~/logic/safe/transactions/gasNew'
-import { getERC721TokenContract } from '~/logic/tokens/store/actions/fetchTokens'
+import { containsMethodByHash, getERC721TokenContract } from '~/logic/tokens/store/actions/fetchTokens'
 import { type Token } from '~/logic/tokens/store/model/token'
 import { formatAmount } from '~/logic/tokens/utils/formatAmount'
 import { getWeb3 } from '~/logic/wallets/getWeb3'
@@ -39,6 +39,7 @@ import { textShortener } from '~/utils/strings'
 const useStyles = makeStyles(styles)
 
 const SAFE_TRANSFER_FROM_WITHOUT_DATA_HASH = '0x42842e0e'
+const TRASNFER_FROM_HASH = '0x23b872dd'
 
 type Props = {
   onClose: () => void,
@@ -61,6 +62,7 @@ const ReviewCollectible = ({ closeSnackbar, enqueueSnackbar, onClose, onPrev, tx
   const txToken = nftTokens.find(
     ({ assetAddress, tokenId }) => assetAddress === tx.assetAddress && tokenId === tx.nftTokenId,
   )
+  const [data, setData] = useState('')
 
   useEffect(() => {
     let isCurrent = true
@@ -68,8 +70,10 @@ const ReviewCollectible = ({ closeSnackbar, enqueueSnackbar, onClose, onPrev, tx
     const estimateGas = async () => {
       const { fromWei, toBN } = getWeb3().utils
       const ERC721Token = await getERC721TokenContract()
+      const supportsSafeTransfer = await containsMethodByHash(tx.assetAddress, SAFE_TRANSFER_FROM_WITHOUT_DATA_HASH)
+      const methodToCall = supportsSafeTransfer ? SAFE_TRANSFER_FROM_WITHOUT_DATA_HASH : TRASNFER_FROM_HASH
       const tokenInstance = await ERC721Token.at(tx.assetAddress)
-      const txData = tokenInstance.contract.methods[SAFE_TRANSFER_FROM_WITHOUT_DATA_HASH](
+      const txData = tokenInstance.contract.methods[methodToCall](
         safeAddress,
         tx.recipientAddress,
         tx.nftTokenId,
@@ -81,6 +85,7 @@ const ReviewCollectible = ({ closeSnackbar, enqueueSnackbar, onClose, onPrev, tx
 
       if (isCurrent) {
         setGasCosts(formattedGasCosts)
+        setData(txData)
       }
     }
 
@@ -92,20 +97,12 @@ const ReviewCollectible = ({ closeSnackbar, enqueueSnackbar, onClose, onPrev, tx
   }, [])
 
   const submitTx = async () => {
-    const ERC721Token = await getERC721TokenContract()
-    const tokenInstance = await ERC721Token.at(tx.assetAddress)
-    const txData = tokenInstance.contract.methods[SAFE_TRANSFER_FROM_WITHOUT_DATA_HASH](
-      safeAddress,
-      tx.recipientAddress,
-      tx.nftTokenId,
-    ).encodeABI()
-
     dispatch(
       createTransaction({
         safeAddress,
         to: tx.assetAddress,
         valueInWei: '0',
-        txData,
+        txData: data,
         notifiedTransaction: TX_NOTIFICATION_TYPES.STANDARD_TX,
         enqueueSnackbar,
         closeSnackbar,
@@ -183,6 +180,7 @@ const ReviewCollectible = ({ closeSnackbar, enqueueSnackbar, onClose, onPrev, tx
           className={classes.submitButton}
           color="primary"
           data-testid="submit-tx-btn"
+          disabled={!data}
           minWidth={140}
           onClick={submitTx}
           type="submit"
