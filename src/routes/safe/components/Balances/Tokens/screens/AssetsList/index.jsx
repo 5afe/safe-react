@@ -74,10 +74,9 @@ const AssetsList = (props: Props) => {
     const activeAssetsAddressesResult = activeAssetsAddresses.contains(address)
       ? activeAssetsAddresses.remove(address)
       : activeAssetsAddresses.add(address)
-    const blacklistedAssetsAddressesResult = activeAssetsAddressesResult.has(address)
+    const blacklistedAssetsAddressesResult = activeAssetsAddresses.has(address)
       ? blacklistedAssetsAddresses.add(address)
       : blacklistedAssetsAddresses.remove(address)
-
     setActiveAssetsAddresses(activeAssetsAddressesResult)
     setBlacklistedAssetsAddresses(blacklistedAssetsAddressesResult)
     return {

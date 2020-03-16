@@ -54,7 +54,6 @@ class SafeView extends React.Component<Props, State> {
       // The safe needs to be loaded before fetching the transactions
       fetchTransactions(safeUrl)
       addViewedSafe(safeUrl)
-      fetchCollectibles()
     })
     fetchTokenBalances(safeUrl, activeTokens)
     // fetch tokens there to get symbols for tokens in TXs list
@@ -62,9 +61,9 @@ class SafeView extends React.Component<Props, State> {
     fetchCurrencyValues(safeUrl)
     loadAddressBook()
 
-    this.intervalId = setInterval(() => {
+    /*    this.intervalId = setInterval(() => {
       this.checkForUpdates()
-    }, TIMEOUT)
+    }, TIMEOUT)*/
 
     this.longIntervalId = setInterval(() => {
       fetchCollectibles()
@@ -76,7 +75,7 @@ class SafeView extends React.Component<Props, State> {
     const oldActiveTokensSize = prevProps.activeTokens.size
 
     if (oldActiveTokensSize > 0 && activeTokens.size > oldActiveTokensSize) {
-      this.checkForUpdates()
+      //this.checkForUpdates()
     }
 
     if (safeUrl !== prevProps.safeUrl) {
@@ -133,6 +132,7 @@ class SafeView extends React.Component<Props, State> {
   render() {
     const { sendFunds, showReceive } = this.state
     const {
+      activateAssetsByBalance,
       activateTokensByBalance,
       activeTokens,
       addressBook,
@@ -158,6 +158,7 @@ class SafeView extends React.Component<Props, State> {
     return (
       <Page>
         <Layout
+          activateAssetsByBalance={activateAssetsByBalance}
           activateTokensByBalance={activateTokensByBalance}
           activeTokens={activeTokens}
           addressBook={addressBook}

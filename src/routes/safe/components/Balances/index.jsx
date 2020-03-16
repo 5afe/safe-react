@@ -34,6 +34,7 @@ type State = {
 
 type Props = {
   activateTokensByBalance: Function,
+  activateAssetsByBalance: Function,
   activeTokens: List<Token>,
   classes: Object,
   createTransaction: Function,
@@ -68,9 +69,10 @@ class Balances extends React.Component<Props, State> {
   }
 
   componentDidMount(): void {
-    const { activateTokensByBalance, fetchCurrencyValues, safeAddress } = this.props
+    const { activateAssetsByBalance, activateTokensByBalance, fetchCurrencyValues, safeAddress } = this.props
     fetchCurrencyValues(safeAddress)
     activateTokensByBalance(safeAddress)
+    activateAssetsByBalance(safeAddress)
   }
 
   onShow = (action: Action) => () => {
