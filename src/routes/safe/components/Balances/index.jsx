@@ -26,10 +26,12 @@ import Divider from '~/components/layout/Divider'
 import Row from '~/components/layout/Row'
 import type { BalanceCurrencyType } from '~/logic/currencyValues/store/model/currencyValues'
 import { type Token } from '~/logic/tokens/store/model/token'
+import { SAFELIST_ADDRESS } from '~/routes/routes'
 import Collectibles from '~/routes/safe/components/Balances/Collectibles'
 import SendModal from '~/routes/safe/components/Balances/SendModal'
 import { BALANCE_TABLE_BALANCE_ID, BALANCE_TABLE_VALUE_ID } from '~/routes/safe/components/Balances/dataFetcher'
 import DropdownCurrency from '~/routes/safe/components/DropdownCurrency'
+import { history } from '~/store'
 
 export const MANAGE_TOKENS_BUTTON_TEST_ID = 'manage-tokens-btn'
 export const BALANCE_ROW_TEST_ID = 'balance-row'
@@ -77,10 +79,18 @@ class Balances extends React.Component<Props, State> {
     props.fetchTokens()
   }
 
+  static isCoinsLocation = /\/balances\/?$/
+  static isCollectiblesLocation = /\/balances\/collectibles$/
+
   componentDidMount(): void {
     const { activateTokensByBalance, fetchCurrencyValues, safeAddress } = this.props
     fetchCurrencyValues(safeAddress)
     activateTokensByBalance(safeAddress)
+
+    this.setState({
+      showCoins: Balances.isCoinsLocation.test(history.location.pathname),
+      showCollectibles: Balances.isCollectiblesLocation.test(history.location.pathname),
+    })
   }
 
   onShow = (action: Action) => () => {
@@ -109,42 +119,19 @@ class Balances extends React.Component<Props, State> {
     })
   }
 
-  showCoinsList = () => {
-    this.setState({ showCoins: true })
-  }
+  viewCoins = (replace = false) => {
+    const url = `${SAFELIST_ADDRESS}/${this.props.safeAddress}/balances`
 
-  hideCoinsList = () => {
-    this.setState({ showCoins: false })
-  }
-
-  showCollectiblesList = () => {
-    this.setState({ showCollectibles: true })
-  }
-
-  hideCollectiblesList = () => {
-    this.setState({ showCollectibles: false })
-  }
-
-  viewCoins = () => {
-    const { showCoins } = this.state
-
-    if (showCoins) {
-      return
+    if (replace) {
+      history.replace(url)
+    } else {
+      history.push(url)
     }
-
-    this.hideCollectiblesList()
-    this.showCoinsList()
   }
 
   viewCollectibles = () => {
-    const { showCollectibles } = this.state
-
-    if (showCollectibles) {
-      return
-    }
-
-    this.hideCoinsList()
-    this.showCollectiblesList()
+    const url = `${SAFELIST_ADDRESS}/${this.props.safeAddress}/balances/collectibles`
+    history.push(url)
   }
 
   render() {
@@ -171,37 +158,37 @@ class Balances extends React.Component<Props, State> {
     return (
       <SafeVersionContext.Consumer>
         {value => {
+          const subMenuOptions = [{ enabled: showCoins, legend: 'Coins', onClick: this.viewCoins }]
           const erc721Enabled = value.featuresEnabled.includes('ERC721')
+
+          if (erc721Enabled) {
+            subMenuOptions.push({ enabled: showCollectibles, legend: 'Collectibles', onClick: this.viewCollectibles })
+          } else {
+            if (this.state.showCollectibles) {
+              this.viewCoins(true)
+            }
+          }
 
           return (
             <>
               <Row align="center" className={classes.controls}>
                 <Col className={classes.assetTabs} sm={6} start="sm" xs={12}>
-                  <ButtonLink
-                    className={showCoins ? classes.assetTabActive : ''}
-                    color={!showCoins ? 'medium' : 'secondary'}
-                    onClick={this.viewCoins}
-                    size="md"
-                    testId="coins-assets-btn"
-                    weight={showCoins ? 'bold' : 'regular'}
-                  >
-                    Coins
-                  </ButtonLink>
-                  {erc721Enabled && (
-                    <>
-                      <Divider className={classes.assetDivider} />
-                      <ButtonLink
-                        className={showCollectibles ? classes.assetTabActive : ''}
-                        color={!showCollectibles ? 'medium' : 'secondary'}
-                        onClick={this.viewCollectibles}
-                        size="md"
-                        testId="collectible-assets-btn"
-                        weight={showCollectibles ? 'bold' : 'regular'}
-                      >
-                        Collectibles
-                      </ButtonLink>
-                    </>
-                  )}
+                  {subMenuOptions.length > 1 &&
+                    subMenuOptions.map(({ enabled, legend, onClick }, index) => (
+                      <React.Fragment key={`legend-${index}`}>
+                        {index > 0 && <Divider className={classes.assetDivider} />}
+                        <ButtonLink
+                          className={enabled ? classes.assetTabActive : ''}
+                          color={enabled ? 'secondary' : 'medium'}
+                          onClick={onClick}
+                          size="md"
+                          testId="coins-assets-btn"
+                          weight={enabled ? 'bold' : 'regular'}
+                        >
+                          {legend}
+                        </ButtonLink>
+                      </React.Fragment>
+                    ))}
                 </Col>
                 <Col className={classes.tokenControls} end="sm" sm={6} xs={12}>
                   {showCoins && (

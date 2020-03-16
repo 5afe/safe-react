@@ -196,6 +196,18 @@ const Layout = (props: Props) => {
     </React.Suspense>
   )
 
+  const tabsValue = () => {
+    const balanceLocation = `${match.url}/balances`
+    const isInBalance = new RegExp(`^${balanceLocation}.*$`)
+    const { pathname } = location
+
+    if (isInBalance.test(pathname)) {
+      return balanceLocation
+    }
+
+    return pathname
+  }
+
   return (
     <>
       <Block className={classes.container} margin="xl">
@@ -245,7 +257,7 @@ const Layout = (props: Props) => {
         indicatorColor="secondary"
         onChange={handleCallToRouter}
         textColor="secondary"
-        value={location.pathname}
+        value={tabsValue()}
         variant="scrollable"
       >
         <Tab
@@ -300,7 +312,7 @@ const Layout = (props: Props) => {
       <Switch>
         <Route
           exact
-          path={`${match.path}/balances`}
+          path={`${match.path}/balances/:assetType?`}
           render={() => (
             <Balances
               activateTokensByBalance={activateTokensByBalance}
