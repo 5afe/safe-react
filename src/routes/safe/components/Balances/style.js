@@ -26,6 +26,7 @@ export const styles = (theme: Object) => ({
     height: '18px !important',
   },
   assetTab: {
+    color: '#686868',
     margin: '2px 0',
     padding: '0 10px',
     textDecoration: 'underline',
@@ -35,6 +36,8 @@ export const styles = (theme: Object) => ({
     },
   },
   assetTabActive: {
+    color: secondary,
+    fontWeight: 'bold',
     margin: '2px 0',
     padding: '0 10px',
     textDecoration: 'none',

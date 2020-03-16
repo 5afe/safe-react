@@ -23,7 +23,7 @@ import Button from '~/components/layout/Button'
 import ButtonLink from '~/components/layout/ButtonLink'
 import Col from '~/components/layout/Col'
 import Divider from '~/components/layout/Divider'
-import Paragraph from '~/components/layout/Paragraph'
+import Link from '~/components/layout/Link'
 import Row from '~/components/layout/Row'
 import type { BalanceCurrencyType } from '~/logic/currencyValues/store/model/currencyValues'
 import { type Token } from '~/logic/tokens/store/model/token'
@@ -166,14 +166,20 @@ class Balances extends React.Component<Props, State> {
     return (
       <SafeVersionContext.Consumer>
         {value => {
-          const subMenuOptions = [{ enabled: showCoins, legend: 'Coins', onClick: this.viewCoins }]
+          const subMenuOptions = [
+            { enabled: showCoins, legend: 'Coins', url: `${SAFELIST_ADDRESS}/${this.props.safeAddress}/balances` },
+          ]
           const erc721Enabled = value.featuresEnabled.includes('ERC721')
 
           if (erc721Enabled) {
-            subMenuOptions.push({ enabled: showCollectibles, legend: 'Collectibles', onClick: this.viewCollectibles })
+            subMenuOptions.push({
+              enabled: showCollectibles,
+              legend: 'Collectibles',
+              url: `${SAFELIST_ADDRESS}/${this.props.safeAddress}/balances/collectibles`,
+            })
           } else {
             if (this.state.showCollectibles) {
-              this.viewCoins(true)
+              history.replace(subMenuOptions[0].url)
             }
           }
 
@@ -182,20 +188,19 @@ class Balances extends React.Component<Props, State> {
               <Row align="center" className={classes.controls}>
                 <Col className={classes.assetTabs} sm={6} start="sm" xs={12}>
                   {subMenuOptions.length > 1 &&
-                    subMenuOptions.map(({ enabled, legend, onClick }, index) => (
+                    subMenuOptions.map(({ enabled, legend, url }, index) => (
                       <React.Fragment key={`legend-${index}`}>
                         {index > 0 && <Divider className={classes.assetDivider} />}
-                        <Paragraph
+                        <Link
                           className={enabled ? classes.assetTabActive : classes.assetTab}
-                          color={enabled ? 'secondary' : 'medium'}
                           noMargin
-                          onClick={() => !enabled && onClick()}
                           size="md"
                           testId={`${legend.toLowerCase()}'-assets-btn'`}
+                          to={url}
                           weight={enabled ? 'bold' : 'regular'}
                         >
                           {legend}
-                        </Paragraph>
+                        </Link>
                       </React.Fragment>
                     ))}
                 </Col>
