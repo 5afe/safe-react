@@ -39,3 +39,15 @@ export const getSafeVersion = async (safeAddress: string) => {
     throw err
   }
 }
+
+export const getCurrentSafeVersion = async (safeAddress: string) => {
+  try {
+    const safeInstance = await getGnosisSafeInstanceAt(safeAddress)
+    const safeInstanceVersion = await safeInstance.VERSION()
+
+    return safeInstanceVersion
+  } catch (err) {
+    console.error(err)
+    throw err
+  }
+}
