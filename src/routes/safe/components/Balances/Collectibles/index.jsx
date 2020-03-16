@@ -19,6 +19,9 @@ const useStyles = makeStyles({
     maxWidth: '100%',
     padding: '52px 54px',
   },
+  cardOuter: {
+    boxShadow: '1px 2px 10px 0 rgba(212, 212, 211, 0.59)',
+  },
   gridRow: {
     boxSizing: 'border-box',
     columnGap: '30px',
@@ -88,7 +91,7 @@ const Collectibles = () => {
   }
 
   return (
-    <Card>
+    <Card className={classes.cardOuter}>
       <div className={classes.cardInner}>
         {nftAssetsKeys.length ? (
           nftAssetsKeys.map(assetAddress => {
