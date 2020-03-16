@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
-//import queryString from 'query-string'
+import queryString from 'query-string'
 
 import Opening from '../../opening'
 import Layout from '../components/Layout'
@@ -27,7 +27,7 @@ import { buildSafe } from '~/routes/safe/store/actions/fetchSafe'
 import { history } from '~/store'
 import { loadFromStorage, removeFromStorage, saveToStorage } from '~/utils/storage'
 
-const SAFE_PENDING_CREATION_HASH_STORAGE_KEY = 'SAFE_PENDING_CREATION_HASH_STORAGE_KEY'
+const SAFE_PENDING_CREATION_STORAGE_KEY = 'SAFE_PENDING_CREATION_STORAGE_KEY'
 
 type Props = Actions & {
   provider: string,
@@ -46,27 +46,27 @@ export type SafePropsType = {
   threshold: string,
 }
 
-// const validateQueryParams = (
-//   ownerAddresses?: string[],
-//   ownerNames?: string[],
-//   threshold?: string,
-//   safeName?: string,
-// ) => {
-//   if (!ownerAddresses || !ownerNames || !threshold || !safeName) {
-//     return false
-//   }
-//   if (!ownerAddresses.length === 0 || ownerNames.length === 0) {
-//     return false
-//   }
+const validateQueryParams = (
+  ownerAddresses?: string[],
+  ownerNames?: string[],
+  threshold?: string,
+  safeName?: string,
+) => {
+  if (!ownerAddresses || !ownerNames || !threshold || !safeName) {
+    return false
+  }
+  if (!ownerAddresses.length === 0 || ownerNames.length === 0) {
+    return false
+  }
 
-//   if (Number.isNaN(Number(threshold))) {
-//     return false
-//   }
-//   if (threshold > ownerAddresses.length) {
-//     return false
-//   }
-//   return true
-// }
+  if (Number.isNaN(Number(threshold))) {
+    return false
+  }
+  if (threshold > ownerAddresses.length) {
+    return false
+  }
+  return true
+}
 
 export const getSafeProps = async (safeAddress, safeName, ownersNames, ownerAddresses) => {
   const safeProps = await buildSafe(safeAddress, safeName)
@@ -76,7 +76,7 @@ export const getSafeProps = async (safeAddress, safeName, ownersNames, ownerAddr
   return safeProps
 }
 
-export const createSafe = (values: Object, userAccount: string, addSafe: AddSafe): Promise<OpenState> => {
+export const createSafe = (values: Object, userAccount: string): Promise<OpenState> => {
   const numConfirmations = getThresholdFrom(values)
   const name = getSafeNameFrom(values)
   const ownersNames = getNamesFrom(values)
@@ -88,7 +88,7 @@ export const createSafe = (values: Object, userAccount: string, addSafe: AddSafe
 
   promiEvent
     .once('transactionHash', txHash => {
-      saveToStorage(SAFE_PENDING_CREATION_HASH_STORAGE_KEY, { txHash, name, ownerAddresses, ownersNames })
+      saveToStorage(SAFE_PENDING_CREATION_STORAGE_KEY, { txHash, name, ownerAddresses, ownersNames })
     })
     .then(async receipt => {
       //-------------------------------
@@ -116,29 +116,26 @@ const Open = ({ addSafe, /* location, */ network, provider, userAccount }: Props
   const [creationTxPromise, setCreationTxPromise] = useState()
   const [safeCreationPendingInfo, setSafeCreationPendingInfo] = useState()
   const [formValues, setFormValues] = useState()
+  const [safePropsFromUrl, setSafePropsFromUrl] = useState()
 
-  //------------------------------------------------
-  // Check with Mikhail,
-  // I think is is not being used.
-  // at least, these params are not sent from the app
-  // useEffect(() => {
-  //   const query: SafePropsType = queryString.parse(location.search, { arrayFormat: 'comma' })
-  //   const { name, owneraddresses, ownernames, threshold } = query
-
-  //   if (validateQueryParams(owneraddresses, ownernames, threshold, name)) {
-  //     setSafeProps({
-  //       name,
-  //       ownerAddresses: owneraddresses,
-  //       ownerNames: ownernames,
-  //       threshold,
-  //     })
-  //   }
-  // }, [])  
+  useEffect(() => {
+    // #122: Allow to migrate an old Multisig by passing the parameters to the URL.
+    const query: SafePropsType = queryString.parse(location.search, { arrayFormat: 'comma' })
+    const { name, owneraddresses, ownernames, threshold } = query
+    if (validateQueryParams(owneraddresses, ownernames, threshold, name)) {
+      setSafePropsFromUrl({
+        name,
+        ownerAddresses: owneraddresses,
+        ownerNames: ownernames,
+        threshold,
+      })
+    }
+  })
 
   // check if there is a safe being created
   useEffect(() => {
     const load = async () => {
-      const pendingCreation = await loadFromStorage(SAFE_PENDING_CREATION_HASH_STORAGE_KEY)
+      const pendingCreation = await loadFromStorage(SAFE_PENDING_CREATION_STORAGE_KEY)
       if (pendingCreation) {
         setSafeCreationPendingInfo(pendingCreation)
         setShowProgress(true)
@@ -160,18 +157,8 @@ const Open = ({ addSafe, /* location, */ network, provider, userAccount }: Props
 
   const onSafeCreated = async () => {
     const web3 = getWeb3()
-    //let safeProps
-    //let receipt
 
-    // if (formValues) {
-    //   const name = getSafeNameFrom(formValues)
-    //   const ownersNames = getNamesFrom(formValues)
-    //   const ownerAddresses = getAccountsFrom(formValues)
-    //   receipt = await creationTxPromise
-    //   safeProps = getSafeProps(receipt, name, ownersNames, ownerAddresses)
-    //   addSafe(safeProps)
-    // } else {
-    const pendingCreation = await loadFromStorage(SAFE_PENDING_CREATION_HASH_STORAGE_KEY)
+    const pendingCreation = await loadFromStorage(SAFE_PENDING_CREATION_STORAGE_KEY)
     const receipt = await web3.eth.getTransactionReceipt(pendingCreation.txHash)
 
     // get the address for the just created safe
@@ -196,7 +183,7 @@ const Open = ({ addSafe, /* location, */ network, provider, userAccount }: Props
     )
     addSafe(safeProps)
 
-    removeFromStorage(SAFE_PENDING_CREATION_HASH_STORAGE_KEY)
+    removeFromStorage(SAFE_PENDING_CREATION_STORAGE_KEY)
     const url = {
       pathname: `${SAFELIST_ADDRESS}/${safeProps.address}/balances`,
       state: {
@@ -226,7 +213,7 @@ const Open = ({ addSafe, /* location, */ network, provider, userAccount }: Props
           network={network}
           onCallSafeContractSubmit={createSafeProxy}
           provider={provider}
-          // safeProps={safeProps}
+          safeProps={safePropsFromUrl}
           userAccount={userAccount}
         />
       )}
