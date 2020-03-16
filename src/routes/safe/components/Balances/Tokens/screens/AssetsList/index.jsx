@@ -24,7 +24,7 @@ import AssetRow from '~/routes/safe/components/Balances/Tokens/screens/AssetsLis
 import updateActiveAssets from '~/routes/safe/store/actions/updateActiveAssets'
 import updateBlacklistedAssets from '~/routes/safe/store/actions/updateBlacklistedAssets'
 import {
-  safeActiveAssetsSelector,
+  safeActiveAssetsListSelector,
   safeBlacklistedTokensSelector,
   safeParamAddressFromStateSelector,
 } from '~/routes/safe/store/selectors'
@@ -44,7 +44,7 @@ const AssetsList = (props: Props) => {
     searchContainer: classes.searchContainer,
   }
   const dispatch = useDispatch()
-  const activeAssetsList = useSelector(safeActiveAssetsSelector)
+  const activeAssetsList = useSelector(safeActiveAssetsListSelector)
   const blacklistedTokens = useSelector(safeBlacklistedTokensSelector)
   const safeAddress = useSelector(safeParamAddressFromStateSelector)
   const [filterValue, setFilterValue] = useState('')

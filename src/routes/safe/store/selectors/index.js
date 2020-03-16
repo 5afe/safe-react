@@ -193,6 +193,16 @@ export const safeActiveAssetsSelector: OutputSelector<GlobalState, RouterProps, 
   },
 )
 
+export const safeActiveAssetsListSelector: OutputSelector<GlobalState, RouterProps, List<string>> = createSelector(
+  safeActiveAssetsSelector,
+  (safeList: []) => {
+    if (!safeList) {
+      return Set([])
+    }
+    return Set(safeList)
+  },
+)
+
 export const safeBlacklistedTokensSelector: OutputSelector<GlobalState, RouterProps, List<string>> = createSelector(
   safeSelector,
   (safe: Safe) => {

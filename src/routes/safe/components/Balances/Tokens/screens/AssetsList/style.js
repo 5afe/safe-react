@@ -1,5 +1,5 @@
 // @flow
-import { border, md, mediumFontSize, secondaryText, sm, xs } from '~/theme/variables'
+import { md, mediumFontSize, secondaryText, sm, xs } from '~/theme/variables'
 
 export const styles = () => ({
   root: {
@@ -30,14 +30,6 @@ export const styles = () => ({
     padding: 0,
     height: '100%',
   },
-  token: {
-    minHeight: '50px',
-    borderBottom: `1px solid ${border}`,
-  },
-  tokenRoot: {
-    paddingTop: 0,
-    paddingBottom: 0,
-  },
   searchInput: {
     backgroundColor: 'transparent',
     lineHeight: 'initial',
@@ -51,11 +43,6 @@ export const styles = () => ({
     '& > input': {
       letterSpacing: '-0.5px',
     },
-  },
-  tokenIcon: {
-    marginRight: md,
-    height: '28px',
-    width: '28px',
   },
   progressContainer: {
     width: '100%',
