@@ -62,11 +62,11 @@ const genericFooter = (
 type Props = {
   creationTxHash: Promise<any>,
   submittedPromise: Promise<any>,
-  onRetry: () => void,
+  // onRetry: () => void,
   onSuccess: () => void,
 }
 
-const SafeDeployment = ({ creationTxHash, onRetry, onSuccess, submittedPromise }: Props) => {
+const SafeDeployment = ({ creationTxHash /* , onRetry */, onSuccess, submittedPromise }: Props) => {
   const steps = [
     {
       id: '1',
@@ -118,7 +118,6 @@ const SafeDeployment = ({ creationTxHash, onRetry, onSuccess, submittedPromise }
 
   const [stepIndex, setStepIndex] = useState()
   const [error, setError] = useState()
-  const [interval, setInterval] = useState()
 
   // creating safe from from submission
   useEffect(() => {
@@ -127,18 +126,28 @@ const SafeDeployment = ({ creationTxHash, onRetry, onSuccess, submittedPromise }
     }
 
     setStepIndex(0)
+    let intervalInstance
     submittedPromise
       .once('transactionHash', () => {
         setStepIndex(1)
+        intervalInstance = setInterval(() => {
+          if (stepIndex < 5) {
+            setStepIndex(stepIndex + 1)
+          }
+        }, 1000)
       })
       .then(() => {
         setStepIndex(5)
+        clearInterval(intervalInstance)
       })
       .catch(error => {
-        debugger
         setError(error)
-        console.log('un error', error)
+        console.error('un error', error)
       })
+
+    return () => {
+      clearInterval(intervalInstance)
+    }
   }, [submittedPromise])
 
   // recovering safe creation from txHash
@@ -148,6 +157,7 @@ const SafeDeployment = ({ creationTxHash, onRetry, onSuccess, submittedPromise }
     }
 
     const web3 = getWeb3()
+    let intervalInstance
 
     const isTxMined = async txHash => {
       const txResult = await web3.eth.getTransaction(txHash)
@@ -157,13 +167,12 @@ const SafeDeployment = ({ creationTxHash, onRetry, onSuccess, submittedPromise }
 
     const waitToTx = async () => {
       // on each interval check tx status
-      const intervalInstance = setInterval(async () => {
+      intervalInstance = setInterval(async () => {
         const isMined = await isTxMined(creationTxHash)
         if (isMined) {
           clearInterval(intervalInstance)
           setStepIndex(5)
         } else {
-          setInterval(intervalInstance)
           if (stepIndex < 5) {
             setStepIndex(stepIndex + 1)
           }
@@ -176,7 +185,7 @@ const SafeDeployment = ({ creationTxHash, onRetry, onSuccess, submittedPromise }
     waitToTx()
 
     return () => {
-      clearInterval(interval)
+      clearInterval(intervalInstance)
     }
   }, [creationTxHash])
 

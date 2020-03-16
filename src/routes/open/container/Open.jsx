@@ -1,19 +1,19 @@
 // @flow
+import queryString from 'query-string'
 import React, { useEffect, useState } from 'react'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
-import queryString from 'query-string'
 
 import Opening from '../../opening'
 import Layout from '../components/Layout'
 
-import actions, { type Actions, type AddSafe } from './actions'
+import actions, { type Actions /* , type AddSafe */ } from './actions'
 import selector from './selector'
 
 import { Loader } from '~/components-v2'
 import Page from '~/components/layout/Page'
 import { /* getGnosisSafeInstanceAt, */ getSafeDeploymentTransaction } from '~/logic/contracts/safeContracts'
-import { checkReceiptStatus } from '~/logic/wallets/ethTransactions'
+// import { checkReceiptStatus } from '~/logic/wallets/ethTransactions'
 import { getWeb3 } from '~/logic/wallets/getWeb3'
 import {
   getAccountsFrom,
@@ -90,20 +90,19 @@ export const createSafe = (values: Object, userAccount: string): Promise<OpenSta
     .once('transactionHash', txHash => {
       saveToStorage(SAFE_PENDING_CREATION_STORAGE_KEY, { txHash, name, ownerAddresses, ownersNames })
     })
-    .then(async receipt => {
-      //-------------------------------
-      // check if this is really needed
-      await checkReceiptStatus(receipt.transactionHash)
+    // .then(async receipt => {
+    //   //-------------------------------
+    //   // check if this is really needed
+    //   await checkReceiptStatus(receipt.transactionHash)
 
-      const safeAddress = receipt.events.ProxyCreation.address
-      const safeProps = await getSafeProps(safeAddress, name, ownersNames, ownerAddresses)
+    //   const safeAddress = receipt.events.ProxyCreation.address
+    //   const safeProps = await getSafeProps(safeAddress, name, ownersNames, ownerAddresses)
 
-      // returning info for testing purposes, in app is fully async
-      return { safeAddress: safeProps.address, safeTx: receipt }
-    })
+    //   // returning info for testing purposes, in app is fully async
+    //   return { safeAddress: safeProps.address, safeTx: receipt }
+    // })
     .catch(error => {
-      debugger
-      console.log(error)
+      console.error(error)
     })
 
   return promiEvent
@@ -172,14 +171,13 @@ const Open = ({ addSafe, /* location, */ network, provider, userAccount }: Props
       receipt.logs[0].data,
       receipt.logs[0].topics,
     )
-
     const safeAddress = events[0]
 
     const safeProps = await getSafeProps(
       safeAddress,
-      safeCreationPendingInfo.name,
-      safeCreationPendingInfo.ownersNames,
-      safeCreationPendingInfo.ownerAddresses,
+      pendingCreation.name,
+      pendingCreation.ownersNames,
+      pendingCreation.ownerAddresses,
     )
     addSafe(safeProps)
 
@@ -188,7 +186,7 @@ const Open = ({ addSafe, /* location, */ network, provider, userAccount }: Props
       pathname: `${SAFELIST_ADDRESS}/${safeProps.address}/balances`,
       state: {
         name,
-        tx: safeCreationPendingInfo.txHash,
+        tx: pendingCreation.txHash,
       },
     }
 
