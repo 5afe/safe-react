@@ -13,7 +13,7 @@ import selector from './selector'
 import { Loader } from '~/components-v2'
 import Page from '~/components/layout/Page'
 import { /* getGnosisSafeInstanceAt, */ getSafeDeploymentTransaction } from '~/logic/contracts/safeContracts'
-// import { checkReceiptStatus } from '~/logic/wallets/ethTransactions'
+import { checkReceiptStatus } from '~/logic/wallets/ethTransactions'
 import { getWeb3 } from '~/logic/wallets/getWeb3'
 import {
   getAccountsFrom,
@@ -90,19 +90,13 @@ export const createSafe = (values: Object, userAccount: string): Promise<OpenSta
     .once('transactionHash', txHash => {
       saveToStorage(SAFE_PENDING_CREATION_STORAGE_KEY, { txHash, name, ownerAddresses, ownersNames })
     })
-    // .then(async receipt => {
-    //   //-------------------------------
-    //   // check if this is really needed
-    //   await checkReceiptStatus(receipt.transactionHash)
+    .then(async receipt => {
+      await checkReceiptStatus(receipt.transactionHash)
 
-    //   const safeAddress = receipt.events.ProxyCreation.address
-    //   const safeProps = await getSafeProps(safeAddress, name, ownersNames, ownerAddresses)
-
-    //   // returning info for testing purposes, in app is fully async
-    //   return { safeAddress: safeProps.address, safeTx: receipt }
-    // })
-    .catch(error => {
-      console.error(error)
+      const safeAddress = receipt.events.ProxyCreation.returnValues.proxy
+      const safeProps = await getSafeProps(safeAddress, name, ownersNames, ownerAddresses)
+      // returning info for testing purposes, in app is fully async
+      return { safeAddress: safeProps.address, safeTx: receipt }
     })
 
   return promiEvent
