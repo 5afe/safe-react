@@ -178,6 +178,16 @@ export const safeActiveTokensSelector: OutputSelector<GlobalState, RouterProps, 
   },
 )
 
+export const safeActiveAssetsSelector: OutputSelector<GlobalState, RouterProps, List<string>> = createSelector(
+  safeSelector,
+  (safe: Safe) => {
+    if (!safe) {
+      return List()
+    }
+    return safe.activeAssets
+  },
+)
+
 export const safeBlacklistedTokensSelector: OutputSelector<GlobalState, RouterProps, List<string>> = createSelector(
   safeSelector,
   (safe: Safe) => {
@@ -186,6 +196,17 @@ export const safeBlacklistedTokensSelector: OutputSelector<GlobalState, RouterPr
     }
 
     return safe.blacklistedTokens
+  },
+)
+
+export const safeBlacklistedAssetsSelector: OutputSelector<GlobalState, RouterProps, List<string>> = createSelector(
+  safeSelector,
+  (safe: Safe) => {
+    if (!safe) {
+      return List()
+    }
+
+    return safe.blacklistedAssets
   },
 )
 

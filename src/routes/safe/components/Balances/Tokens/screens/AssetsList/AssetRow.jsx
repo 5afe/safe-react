@@ -14,8 +14,9 @@ import { styles } from './style'
 import Img from '~/components/layout/Img'
 import { ETH_ADDRESS } from '~/logic/tokens/utils/tokenHelpers'
 import type { NFTAsset } from '~/routes/safe/components/Balances/Collectibles/types'
-import { TOGGLE_TOKEN_TEST_ID } from '~/routes/safe/components/Balances/Tokens/screens/TokenList/TokenRow'
 import { setImageToPlaceholder } from '~/routes/safe/components/Balances/utils'
+
+export const TOGGLE_ASSET_TEST_ID = 'toggle-asset-btn'
 
 type Props = {
   data: {
@@ -28,23 +29,12 @@ type Props = {
   classes: Object,
 }
 
-const isAssetActive = (activeAssets: List[], asset) => {
-  let isActive = false
-  for (let activeAssetIterator of activeAssets) {
-    if (activeAssetIterator.address === asset.address) {
-      isActive = true
-      break
-    }
-  }
-  return isActive
-}
-
 // eslint-disable-next-line react/display-name
 const AssetRow = memo(({ classes, data, index, style }: Props) => {
   const { activeAssetsAddresses, assets, onSwitch } = data
   const asset: NFTAsset = assets.get(index)
   const { address, image, name, symbol } = asset
-  const isActive = isAssetActive(activeAssetsAddresses, asset)
+  const isActive = activeAssetsAddresses.has(asset.address)
 
   return (
     <div style={style}>
@@ -57,8 +47,8 @@ const AssetRow = memo(({ classes, data, index, style }: Props) => {
           <ListItemSecondaryAction>
             <Switch
               checked={isActive}
-              inputProps={{ 'data-testid': `${symbol}_${TOGGLE_TOKEN_TEST_ID}` }}
-              onChange={() => onSwitch(asset)}
+              inputProps={{ 'data-testid': `${symbol}_${TOGGLE_ASSET_TEST_ID}` }}
+              onChange={onSwitch(asset)}
             />
           </ListItemSecondaryAction>
         )}

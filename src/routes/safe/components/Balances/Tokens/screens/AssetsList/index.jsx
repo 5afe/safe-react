@@ -4,10 +4,9 @@ import MuiList from '@material-ui/core/List'
 import { makeStyles } from '@material-ui/core/styles'
 import Search from '@material-ui/icons/Search'
 import cn from 'classnames'
-import { List } from 'immutable'
 import SearchBar from 'material-ui-search-bar'
-import React, { useState } from 'react'
-import { useSelector } from 'react-redux'
+import React, { useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import { FixedSizeList } from 'react-window'
 
 import { styles } from './style'
@@ -22,9 +21,16 @@ import type { NFTAssetsState } from '~/logic/collectibles/store/reducer/collecti
 import { nftAssetsListSelector } from '~/logic/collectibles/store/selectors'
 import type { NFTAsset } from '~/routes/safe/components/Balances/Collectibles/types'
 import AssetRow from '~/routes/safe/components/Balances/Tokens/screens/AssetsList/AssetRow'
-import { ADD_CUSTOM_TOKEN_BUTTON_TEST_ID } from '~/routes/safe/components/Balances/Tokens/screens/TokenList'
+import updateActiveAssets from '~/routes/safe/store/actions/updateActiveAssets'
+import updateBlacklistedAssets from '~/routes/safe/store/actions/updateBlacklistedAssets'
+import {
+  safeActiveAssetsSelector,
+  safeBlacklistedTokensSelector,
+  safeParamAddressFromStateSelector,
+} from '~/routes/safe/store/selectors'
 const useStyles = makeStyles(styles)
 
+export const ADD_CUSTOM_ASSET_BUTTON_TEST_ID = 'add-custom-asset-btn'
 type Props = {
   setActiveScreen: Function,
 }
@@ -37,8 +43,19 @@ const AssetsList = (props: Props) => {
     iconButton: classes.searchIcon,
     searchContainer: classes.searchContainer,
   }
+  const dispatch = useDispatch()
+  const activeAssetsList = useSelector(safeActiveAssetsSelector)
+  const blacklistedTokens = useSelector(safeBlacklistedTokensSelector)
+  const safeAddress = useSelector(safeParamAddressFromStateSelector)
   const [filterValue, setFilterValue] = useState('')
+  const [activeAssetsAddresses, setActiveAssetsAddresses] = useState(activeAssetsList)
+  const [blacklistedAssetsAddresses, setBlacklistedAssetsAddresses] = useState(blacklistedTokens)
   const nftAssetsList: NFTAssetsState = useSelector(nftAssetsListSelector)
+
+  useEffect(() => {
+    dispatch(updateActiveAssets(safeAddress, activeAssetsAddresses))
+    dispatch(updateBlacklistedAssets(safeAddress, blacklistedAssetsAddresses))
+  }, [activeAssetsAddresses, blacklistedAssetsAddresses])
 
   const onCancelSearch = () => {
     setFilterValue('')
@@ -52,15 +69,28 @@ const AssetsList = (props: Props) => {
     return index
   }
 
-  const onSwitch = (asset: NFTAsset, activeAssetsList: List[]) => {
-    return { ...activeAssetsList }
+  const onSwitch = (asset: NFTAsset) => () => {
+    const { address } = asset
+    const activeAssetsAddressesResult = activeAssetsAddresses.contains(address)
+      ? activeAssetsAddresses.remove(address)
+      : activeAssetsAddresses.add(address)
+    const blacklistedAssetsAddressesResult = activeAssetsAddressesResult.has(address)
+      ? blacklistedAssetsAddresses.add(address)
+      : blacklistedAssetsAddresses.remove(address)
+
+    setActiveAssetsAddresses(activeAssetsAddressesResult)
+    setBlacklistedAssetsAddresses(blacklistedAssetsAddressesResult)
+    return {
+      activeAssetsAddresses: activeAssetsAddressesResult,
+      blacklistedAssetsAddresses: blacklistedAssetsAddressesResult,
+    }
   }
 
-  const createItemData = (assetsList, activeAssetsList) => {
+  const createItemData = assetsList => {
     return {
       assets: assetsList,
-      activeAssetsAddresses: assetsList,
-      onSwitch: asset => onSwitch(asset, activeAssetsList),
+      activeAssetsAddresses,
+      onSwitch,
     }
   }
 
@@ -88,7 +118,7 @@ const AssetsList = (props: Props) => {
             color="primary"
             onClick={switchToAddCustomAssetScreen}
             size="small"
-            testId={ADD_CUSTOM_TOKEN_BUTTON_TEST_ID}
+            testId={ADD_CUSTOM_ASSET_BUTTON_TEST_ID}
             variant="contained"
           >
             + Add custom token
