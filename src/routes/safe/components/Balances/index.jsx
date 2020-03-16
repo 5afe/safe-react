@@ -87,9 +87,16 @@ class Balances extends React.Component<Props, State> {
     fetchCurrencyValues(safeAddress)
     activateTokensByBalance(safeAddress)
 
+    const showCollectibles = Balances.isCollectiblesLocation.test(history.location.pathname)
+    const showCoins = Balances.isCoinsLocation.test(history.location.pathname)
+
+    if (!showCollectibles && !showCoins) {
+      history.replace(`${SAFELIST_ADDRESS}/${this.props.safeAddress}/balances`)
+    }
+
     this.setState({
-      showCoins: Balances.isCoinsLocation.test(history.location.pathname),
-      showCollectibles: Balances.isCollectiblesLocation.test(history.location.pathname),
+      showCoins,
+      showCollectibles,
     })
   }
 
