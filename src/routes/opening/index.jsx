@@ -8,7 +8,7 @@ import Button from '~/components/layout/Button'
 import Heading from '~/components/layout/Heading'
 import Img from '~/components/layout/Img'
 import Paragraph from '~/components/layout/Paragraph'
-import { getWeb3 } from '~/logic/wallets/getWeb3'
+import { getEtherScanLink, getWeb3 } from '~/logic/wallets/getWeb3'
 
 const vaulterror = require('./assets/vault-error.svg')
 const vault = require('./assets/vault.svg')
@@ -56,15 +56,6 @@ const ButtonMargin = styled(Button)`
   margin-right: 16px;
 `
 
-const genericFooter = (
-  <span>
-    <p>This process should take a couple of minutes.</p>
-    <p>
-      Follow the progress on <a href="http://etherscan.io">Etherscan.io.</a>
-    </p>
-  </span>
-)
-
 type Props = {
   creationTxHash: Promise<any>,
   submittedPromise: Promise<any>,
@@ -74,6 +65,29 @@ type Props = {
 }
 
 const SafeDeployment = ({ creationTxHash, onCancel, onRetry, onSuccess, submittedPromise }: Props) => {
+  const [stepIndex, setStepIndex] = useState()
+  const [intervalStarted, setIntervalStarted] = useState(false)
+  const [error, setError] = useState(false)
+  const [safeCreationTxHash, setSafeCreationTxHash] = useState()
+
+  const genericFooter = (
+    <span>
+      <p>This process should take a couple of minutes.</p>
+      <p>
+        Follow the progress on{' '}
+        <a
+          aria-label="Show details on Etherscan"
+          href={getEtherScanLink('tx', safeCreationTxHash)}
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          {/* <Img alt="Show on Etherscan" height={20} src={EtherscanOpenIcon} /> */}
+          Etherscan.io.
+        </a>
+      </p>
+    </span>
+  )
+
   const steps = [
     {
       id: '1',
@@ -123,10 +137,6 @@ const SafeDeployment = ({ creationTxHash, onCancel, onRetry, onSuccess, submitte
     },
   ]
 
-  const [stepIndex, setStepIndex] = useState()
-  const [intervalStarted, setIntervalStarted] = useState(false)
-  const [error, setError] = useState(false)
-
   // creating safe from from submission
   useEffect(() => {
     if (submittedPromise === undefined) {
@@ -135,7 +145,8 @@ const SafeDeployment = ({ creationTxHash, onCancel, onRetry, onSuccess, submitte
 
     setStepIndex(0)
     submittedPromise
-      .once('transactionHash', () => {
+      .once('transactionHash', txHash => {
+        setSafeCreationTxHash(txHash)
         setStepIndex(1)
         setIntervalStarted(true)
       })
@@ -147,7 +158,7 @@ const SafeDeployment = ({ creationTxHash, onCancel, onRetry, onSuccess, submitte
     if (creationTxHash === undefined) {
       return
     }
-
+    setSafeCreationTxHash(creationTxHash)
     setStepIndex(1)
     setIntervalStarted(true)
   }, [creationTxHash])
