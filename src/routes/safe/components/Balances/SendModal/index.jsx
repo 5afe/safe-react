@@ -8,16 +8,14 @@ import React, { Suspense, useEffect, useState } from 'react'
 import Modal from '~/components/Modal'
 import { type Token } from '~/logic/tokens/store/model/token'
 import type { NFTToken } from '~/routes/safe/components/Balances/Collectibles/types'
-import ReviewCollectible from '~/routes/safe/components/Balances/SendModal/screens/ReviewCollectible'
-import SendCollectible from '~/routes/safe/components/Balances/SendModal/screens/SendCollectible'
 
 const ChooseTxType = React.lazy(() => import('./screens/ChooseTxType'))
 
 const SendFunds = React.lazy(() => import('./screens/SendFunds'))
 
-// const SendCollectible = React.lazy(() => import('./screens/SendCollectible'))
+const SendCollectible = React.lazy(() => import('./screens/SendCollectible'))
 
-// const ReviewCollectible = React.lazy(() => import('./screens/ReviewCollectible'))
+const ReviewCollectible = React.lazy(() => import('./screens/ReviewCollectible'))
 
 const ReviewTx = React.lazy(() => import('./screens/ReviewTx'))
 
