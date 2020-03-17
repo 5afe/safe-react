@@ -42,7 +42,7 @@ const generateTypedDataFrom = async ({
     primaryType: 'SafeTx',
     message: {
       to,
-      value: Number(valueInWei),
+      value: valueInWei,
       data,
       operation,
       safeTxGas,
@@ -71,8 +71,13 @@ export const generateEIP712Signature = async txArgs => {
     from: txArgs.sender,
   }
 
-  web3.currentProvider.sendAsync(signedTypedData, (err, res) => {
-    console.log(err, res)
-    return res.replace(EMPTY_DATA, '')
+  return new Promise((resolve, reject) => {
+    web3.currentProvider.sendAsync(signedTypedData, (err, signature) => {
+      if (err) {
+        reject(err)
+      }
+
+      resolve(signature.result.replace(EMPTY_DATA, ''))
+    })
   })
 }

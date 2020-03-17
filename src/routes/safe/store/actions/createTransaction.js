@@ -14,7 +14,7 @@ import {
   getExecutionTransaction,
   saveTxToHistory,
 } from '~/logic/safe/transactions'
-import { trySigningViaEIP712 } from '~/logic/safe/transactions/offchainSigning'
+import { trySigningViaEIP712 } from '~/logic/safe/transactions/offchainSigner'
 import { ZERO_ADDRESS } from '~/logic/wallets/ethAddresses'
 import { EMPTY_DATA } from '~/logic/wallets/ethTransactions'
 import { userAccountSelector } from '~/logic/wallets/store/selectors'
@@ -93,12 +93,13 @@ const createTransaction = ({
     sender: from,
     sigs,
   }
-  console.log({ isExecution })
+
   try {
     if (!isExecution) {
+      let signature: ?string
       console.log('trying to sign via eip712')
       // 1. we try to sign via EIP-712 if user's wallet supports it
-      trySigningViaEIP712({ ...txArgs, safeAddress })
+      signature = await trySigningViaEIP712({ ...txArgs, safeAddress })
       // 2. If not, try to use eth_sign (Safe version has to be >1.1.1)
       // If eth_sign, doesn't work continue with the regular flow
     }
