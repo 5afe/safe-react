@@ -3,14 +3,14 @@ import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 
 import { Stepper } from '~/components-v2'
-import Loader from '~/components/Loader'
+import LoaderDots from '~/components-v2/feedback/Loader-dots/assets/loader-dots.svg'
 import Button from '~/components/layout/Button'
 import Heading from '~/components/layout/Heading'
 import Img from '~/components/layout/Img'
-import Page from '~/components/layout/Page'
 import Paragraph from '~/components/layout/Paragraph'
 import { getWeb3 } from '~/logic/wallets/getWeb3'
 
+const vaulterror = require('./assets/vault-error.svg')
 const vault = require('./assets/vault.svg')
 
 const Wrapper = styled.div`
@@ -50,12 +50,18 @@ const FullParagraph = styled(Paragraph)`
   background-color: #f5f5f5;
   padding: 24px;
   font-size: 16px;
+  margin-bottom: 16px;
+`
+const ButtonMargin = styled(Button)`
+  margin-right: 16px;
 `
 
 const genericFooter = (
   <span>
     <p>This process should take a couple of minutes.</p>
-    <p>Follow the progress on Etherscan.io.</p>
+    <p>
+      Follow the progress on <a href="http://etherscan.io">Etherscan.io.</a>
+    </p>
   </span>
 )
 
@@ -113,7 +119,7 @@ const SafeDeployment = ({ creationTxHash, onCancel, onRetry, onSuccess, submitte
 
   const [stepIndex, setStepIndex] = useState()
   const [intervalStarted, setIntervalStarted] = useState(false)
-  const [error, setError] = useState()
+  const [error, setError] = useState(true)
 
   // creating safe from from submission
   useEffect(() => {
@@ -195,36 +201,41 @@ const SafeDeployment = ({ creationTxHash, onCancel, onRetry, onSuccess, submitte
   }
 
   return (
-    <Page align="center">
-      <Wrapper>
-        <Title tag="h2">Safe creation proccess</Title>
-        <Nav>
-          <Stepper activeStepIndex={stepIndex} error={error} orientation="vertical" steps={steps} />
-        </Nav>
-        <Body>
-          <Img alt="Vault" height={75} src={vault} />
+    <Wrapper>
+      <Title tag="h2">Safe creation process</Title>
+      <Nav>
+        <Stepper activeStepIndex={stepIndex} error={error} orientation="vertical" steps={steps} />
+      </Nav>
+      <Body>
+        <Img alt="Vault" height={75} src={vault} />
 
-          <CardTitle>{steps[stepIndex].label}</CardTitle>
+        <CardTitle>{steps[stepIndex].label}</CardTitle>
 
-          {!error && stepIndex <= 4 && <Loader />}
+        {!error && stepIndex <= 4 && <Img alt="LoaderDots" src={LoaderDots} />}
 
-          <FullParagraph color="primary" noMargin size="md">
-            {steps[stepIndex].instruction}
-          </FullParagraph>
+        <FullParagraph color="primary" noMargin size="md">
+          {steps[stepIndex].instruction}
+        </FullParagraph>
 
-          {steps[stepIndex].footer}
+        {steps[stepIndex].footer}
 
-          {error && (
-            <>
-              <Button onClick={onCancel}>cancel</Button>
-              <Button color="primary" onClick={onRetryTx}>
-                Retry
-              </Button>
-            </>
-          )}
-        </Body>
-      </Wrapper>
-    </Page>
+        {error && (
+          <>
+            <Img alt="Vault-error" height={75} src={vaulterror} />
+            <CardTitle>{steps[stepIndex].label}</CardTitle>
+            <FullParagraph color="primary" noMargin size="md">
+              You can Cancel or Retry the Safe creation process.
+            </FullParagraph>
+            <ButtonMargin onClick={onCancel} variant="contained">
+              Cancel
+            </ButtonMargin>
+            <Button color="primary" onClick={onRetryTx} variant="contained">
+              Retry
+            </Button>
+          </>
+        )}
+      </Body>
+    </Wrapper>
   )
 }
 

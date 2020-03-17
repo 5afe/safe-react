@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="margin: auto; background: none; display: block; shape-rendering: auto;" width="91px" height="91px" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid">
 <circle cx="84" cy="50" r="0.271746" fill="#d4d5d3">
     <animate attributeName="r" repeatCount="indefinite" dur="1.7857142857142856s" calcMode="spline" keyTimes="0;1" values="10;0" keySplines="0 0.5 0.5 1" begin="0s"></animate>
