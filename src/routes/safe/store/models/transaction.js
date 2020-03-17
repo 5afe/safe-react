@@ -20,6 +20,7 @@ export type TransactionStatus =
   | 'awaiting_your_confirmation'
   | 'awaiting_confirmations'
   | 'success'
+  | 'failed'
   | 'cancelled'
   | 'awaiting_execution'
   | 'pending'
@@ -39,6 +40,7 @@ export type TransactionProps = {
   gasToken: string,
   refundReceiver: string,
   isExecuted: boolean,
+  isSuccessful: boolean,
   submissionDate: ?string,
   executionDate: ?string,
   symbol: string,
@@ -75,6 +77,7 @@ export const makeTransaction: RecordFactory<TransactionProps> = Record({
   gasToken: ZERO_ADDRESS,
   refundReceiver: ZERO_ADDRESS,
   isExecuted: false,
+  isSuccessful: false,
   submissionDate: '',
   executor: '',
   executionDate: '',

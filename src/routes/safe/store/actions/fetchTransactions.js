@@ -52,6 +52,7 @@ type TxServiceModel = {
   executionDate: ?string,
   confirmations: ConfirmationServiceModel[],
   isExecuted: boolean,
+  isSuccessful: boolean,
   transactionHash: ?string,
   creationTx?: boolean,
 }
@@ -165,6 +166,7 @@ export const buildTransactionFrom = async (safeAddress: string, tx: TxServiceMod
     refundReceiver: tx.refundReceiver,
     refundParams,
     isExecuted: tx.isExecuted,
+    isSuccessful: tx.isSuccessful,
     submissionDate: tx.submissionDate,
     executor: tx.executor,
     executionDate: tx.executionDate,

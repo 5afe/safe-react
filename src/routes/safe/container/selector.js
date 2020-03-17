@@ -63,6 +63,10 @@ const getTxStatus = (tx: Transaction, userAddress: string, safe: Safe): Transact
     txStatus = !userConfirmed && userIsSafeOwner ? 'awaiting_your_confirmation' : 'awaiting_confirmations'
   }
 
+  if (tx.isSuccessful === false) {
+    txStatus = 'failed'
+  }
+
   return txStatus
 }
 
