@@ -52,6 +52,7 @@ type TxServiceModel = {
   executionDate: ?string,
   confirmations: ConfirmationServiceModel[],
   isExecuted: boolean,
+  isSuccessful: boolean,
   transactionHash: ?string,
   creationTx?: boolean,
 }
@@ -90,10 +91,13 @@ export const buildTransactionFrom = async (safeAddress: string, tx: TxServiceMod
   )
   const modifySettingsTx = sameAddress(tx.to, safeAddress) && Number(tx.value) === 0 && !!tx.data
   const cancellationTx = sameAddress(tx.to, safeAddress) && Number(tx.value) === 0 && !tx.data
-  const isSendTokenTx = isTokenTransfer(tx.data, Number(tx.value))
+  const code = tx.to ? await web3.eth.getCode(tx.to) : ''
+  const isERC721Token =
+    code.includes('42842e0e') || (isTokenTransfer(tx.data, Number(tx.value)) && code.includes('06fdde03'))
+  const isSendTokenTx = !isERC721Token && isTokenTransfer(tx.data, Number(tx.value))
   const isMultiSendTx = isMultisendTransaction(tx.data, Number(tx.value))
   const isUpgradeTx = isMultiSendTx && isUpgradeTransaction(tx.data)
-  const customTx = !sameAddress(tx.to, safeAddress) && !!tx.data && !isSendTokenTx && !isUpgradeTx
+  const customTx = !sameAddress(tx.to, safeAddress) && !!tx.data && !isSendTokenTx && !isUpgradeTx && !isERC721Token
 
   let refundParams = null
   if (tx.gasPrice > 0) {
@@ -163,6 +167,7 @@ export const buildTransactionFrom = async (safeAddress: string, tx: TxServiceMod
     refundReceiver: tx.refundReceiver,
     refundParams,
     isExecuted: tx.isExecuted,
+    isSuccessful: tx.isSuccessful,
     submissionDate: tx.submissionDate,
     executor: tx.executor,
     executionDate: tx.executionDate,

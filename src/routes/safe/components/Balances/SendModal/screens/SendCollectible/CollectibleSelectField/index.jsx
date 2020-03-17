@@ -43,7 +43,7 @@ const SelectedCollectible = ({ tokenId, tokens }: SelectedCollectibleProps) => {
         </>
       ) : (
         <Paragraph color="disabled" size="md" style={{ opacity: 0.5 }} weight="light">
-          Select an asset*
+          Select a token*
         </Paragraph>
       )}
     </MenuItem>
@@ -64,7 +64,7 @@ const CollectibleSelectField = ({ initialValue, tokens }: SelectFieldProps) => {
     <Field
       className={classes.selectMenu}
       component={SelectField}
-      displayEmpty
+      disabled={!tokens.length}
       initialValue={initialValue}
       name="nftTokenId"
       renderValue={nftTokenId => <SelectedCollectible tokenId={nftTokenId} tokens={tokens} />}
@@ -72,7 +72,7 @@ const CollectibleSelectField = ({ initialValue, tokens }: SelectFieldProps) => {
     >
       {tokens.map(token => (
         <MenuItem key={`${token.assetAddress}-${token.tokenId}`} value={token.tokenId}>
-          <ListItemIcon>
+          <ListItemIcon className={classes.tokenImage}>
             <Img alt={token.name} height={28} onError={setImageToPlaceholder} src={token.image} />
           </ListItemIcon>
           <ListItemText primary={token.name} secondary={`token ID: ${token.tokenId}`} />

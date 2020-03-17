@@ -1,7 +1,7 @@
 // @flow
-import ERC721 from '@openzeppelin/contracts/build/contracts/ERC721'
 import StandardToken from '@gnosis.pm/util-contracts/build/contracts/GnosisStandardToken.json'
 import HumanFriendlyToken from '@gnosis.pm/util-contracts/build/contracts/HumanFriendlyToken.json'
+import ERC721 from '@openzeppelin/contracts/build/contracts/ERC721'
 import { List } from 'immutable'
 import type { Dispatch as ReduxDispatch } from 'redux'
 import contract from 'truffle-contract'
@@ -42,6 +42,13 @@ export const getHumanFriendlyToken = ensureOnce(createHumanFriendlyTokenContract
 export const getStandardTokenContract = ensureOnce(createStandardTokenContract)
 
 export const getERC721TokenContract = ensureOnce(createERC721TokenContract)
+
+export const containsMethodByHash = async (contractAddress: string, methodHash: string) => {
+  const web3 = getWeb3()
+  const byteCode = await web3.eth.getCode(contractAddress)
+
+  return byteCode.indexOf(methodHash.replace('0x', '')) !== -1
+}
 
 export const fetchTokens = () => async (dispatch: ReduxDispatch<GlobalState>) => {
   try {

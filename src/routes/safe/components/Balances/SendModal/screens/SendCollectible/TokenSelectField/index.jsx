@@ -60,34 +60,33 @@ const useTokenSelectFieldStyles = makeStyles(selectStyles)
 
 const TokenSelectField = ({ assets, initialValue }: SelectFieldProps) => {
   const classes = useTokenSelectFieldStyles()
+  const assetsAddresses = Object.keys(assets)
 
   return (
     <Field
       className={classes.selectMenu}
       component={SelectField}
-      displayEmpty
+      disabled={!assetsAddresses.length}
       initialValue={initialValue}
       name="assetAddress"
       renderValue={assetAddress => <SelectedToken assetAddress={assetAddress} assets={assets} />}
       validate={required}
     >
-      {!assets
-        ? null
-        : Object.keys(assets).map(assetAddress => {
-            const asset = assets[assetAddress]
+      {assetsAddresses.map(assetAddress => {
+        const asset = assets[assetAddress]
 
-            return (
-              <MenuItem key={asset.slug} value={assetAddress}>
-                <ListItemIcon>
-                  <Img alt={asset.name} height={28} onError={setImageToPlaceholder} src={asset.image} />
-                </ListItemIcon>
-                <ListItemText
-                  primary={asset.name}
-                  secondary={`${formatAmount(asset.numberOfTokens)} ${asset.symbol}`}
-                />
-              </MenuItem>
-            )
-          })}
+        return (
+          <MenuItem key={asset.slug} value={assetAddress}>
+            <ListItemIcon className={classes.tokenImage}>
+              <Img alt={asset.name} height={28} onError={setImageToPlaceholder} src={asset.image} />
+            </ListItemIcon>
+            <ListItemText
+              primary={asset.name}
+              secondary={`Count: ${formatAmount(asset.numberOfTokens)} ${asset.symbol}`}
+            />
+          </MenuItem>
+        )
+      })}
     </Field>
   )
 }

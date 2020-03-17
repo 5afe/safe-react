@@ -23,6 +23,11 @@ export const styles = () => ({
     color: error,
     border: `1px solid ${error}`,
   },
+  failed: {
+    backgroundColor: 'transparent',
+    color: error,
+    border: `1px solid ${error}`,
+  },
   awaiting_your_confirmation: {
     backgroundColor: '#d4d5d3',
     color: disabled,

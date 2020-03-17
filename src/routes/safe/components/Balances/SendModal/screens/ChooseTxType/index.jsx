@@ -9,6 +9,7 @@ import Code from '../assets/code.svg'
 import Collectible from '../assets/collectibles.svg'
 import Token from '../assets/token.svg'
 
+import { SafeVersionContext } from '~/components/SafeVersionProvider'
 import { mustBeEthereumContractAddress } from '~/components/forms/validator'
 import Button from '~/components/layout/Button'
 import Col from '~/components/layout/Col'
@@ -67,6 +68,8 @@ type Props = {
 
 const ChooseTxType = ({ onClose, recipientAddress, setActiveScreen }: Props) => {
   const classes = useStyles()
+  const { featuresEnabled } = React.useContext(SafeVersionContext)
+  const erc721Enabled = featuresEnabled.includes('ERC721')
   const [disableCustomTx, setDisableCustomTx] = React.useState(!!recipientAddress)
 
   React.useEffect(() => {
@@ -117,17 +120,23 @@ const ChooseTxType = ({ onClose, recipientAddress, setActiveScreen }: Props) => 
             <Img alt="Send funds" className={classNames(classes.leftIcon, classes.iconSmall)} src={Token} />
             Send funds
           </Button>
-          <Button
-            className={classes.firstButton}
-            color="primary"
-            minHeight={52}
-            minWidth={260}
-            onClick={() => setActiveScreen('sendCollectible')}
-            variant="contained"
-          >
-            <Img alt="Send collectible" className={classNames(classes.leftIcon, classes.iconSmall)} src={Collectible} />
-            Send collectible
-          </Button>
+          {erc721Enabled && (
+            <Button
+              className={classes.firstButton}
+              color="primary"
+              minHeight={52}
+              minWidth={260}
+              onClick={() => setActiveScreen('sendCollectible')}
+              variant="contained"
+            >
+              <Img
+                alt="Send collectible"
+                className={classNames(classes.leftIcon, classes.iconSmall)}
+                src={Collectible}
+              />
+              Send collectible
+            </Button>
+          )}
           <Button
             color="primary"
             disabled={disableCustomTx}

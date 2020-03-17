@@ -21,7 +21,21 @@ export const styles = () => ({
     borderRightColor: `${secondary} !important`,
     height: '18px !important',
   },
+  assetTab: {
+    color: '#686868',
+    margin: '2px 0',
+    padding: '0 10px',
+    textDecoration: 'underline',
+
+    '&:hover': {
+      cursor: 'pointer',
+    },
+  },
   assetTabActive: {
+    color: secondary,
+    fontWeight: 'bold',
+    margin: '2px 0',
+    padding: '0 10px',
     textDecoration: 'none',
   },
   tokenControls: {
