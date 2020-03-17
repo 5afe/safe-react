@@ -78,36 +78,42 @@ const SafeDeployment = ({ creationTxHash, onCancel, onRetry, onSuccess, submitte
     {
       id: '1',
       label: 'Waiting fot transaction confirmation',
+      description: undefined,
       instruction: 'Please confirm the Safe creation in your wallet',
       footer: null,
     },
     {
       id: '2',
       label: 'Transaction submitted',
+      description: undefined,
       instruction: 'Please do not leave the page',
       footer: genericFooter,
     },
     {
       id: '3',
       label: 'Validating transaction',
+      description: undefined,
       instruction: 'Please do not leave the page',
       footer: genericFooter,
     },
     {
       id: '4',
       label: 'Deploying smart contract',
+      description: undefined,
       instruction: 'Please do not leave the page',
       footer: genericFooter,
     },
     {
       id: '5',
       label: 'Generating your Safe',
+      description: undefined,
       instruction: 'Please do not leave the page',
       footer: genericFooter,
     },
     {
       id: '6',
       label: 'Success',
+      description: 'Your Safe was created successfully',
       instruction: 'Click Below to get started',
       footer: (
         <Button color="primary" onClick={onSuccess} variant="contained">
@@ -209,7 +215,7 @@ const SafeDeployment = ({ creationTxHash, onCancel, onRetry, onSuccess, submitte
       <Body>
         <Img alt="Vault" height={75} src={error ? vaulterror : vault} />
 
-        <CardTitle>{steps[stepIndex].label}</CardTitle>
+        <CardTitle>{steps[stepIndex].description || steps[stepIndex].label}</CardTitle>
 
         {!error && stepIndex <= 4 && <Img alt="LoaderDots" src={LoaderDots} />}
 
