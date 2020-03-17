@@ -146,7 +146,7 @@ class Balances extends React.Component<Props, State> {
     return (
       <SafeVersionContext.Consumer>
         {value => {
-          const erc721Enabled = !value.featuresEnabled.includes('ERC721')
+          const erc721Enabled = value.featuresEnabled.includes('ERC721')
           return (
             <>
               <Row align="center" className={classes.controls}>
