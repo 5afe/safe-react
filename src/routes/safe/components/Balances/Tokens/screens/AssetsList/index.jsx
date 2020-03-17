@@ -115,12 +115,13 @@ const AssetsList = (props: Props) => {
             classes={{ label: classes.addBtnLabel }}
             className={classes.add}
             color="primary"
+            disabled
             onClick={switchToAddCustomAssetScreen}
             size="small"
             testId={ADD_CUSTOM_ASSET_BUTTON_TEST_ID}
             variant="contained"
           >
-            + Add custom token
+            + Add custom asset
           </Button>
         </Row>
         <Hairline />

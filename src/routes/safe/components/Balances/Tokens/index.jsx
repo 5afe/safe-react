@@ -14,6 +14,7 @@ import Paragraph from '~/components/layout/Paragraph'
 import Row from '~/components/layout/Row'
 import { type Token } from '~/logic/tokens/store/model/token'
 import { orderedTokenListSelector } from '~/logic/tokens/store/selectors'
+import AddCustomAssetComponent from '~/routes/safe/components/Balances/Tokens/screens/AddCustomAsset'
 import AddCustomToken from '~/routes/safe/components/Balances/Tokens/screens/AddCustomToken'
 import AssetsList from '~/routes/safe/components/Balances/Tokens/screens/AssetsList'
 import TokenList from '~/routes/safe/components/Balances/Tokens/screens/TokenList'
@@ -89,17 +90,7 @@ const Tokens = (props: Props) => {
         />
       )}
       {activeScreen === 'addCustomAsset' && (
-        <AddCustomToken
-          activateTokenForAllSafes={activateTokenForAllSafes}
-          activeTokens={activeTokens}
-          addToken={addToken}
-          onClose={onClose}
-          parentList={'assetsList'}
-          safeAddress={safeAddress}
-          setActiveScreen={setActiveScreen}
-          tokens={tokens}
-          updateActiveTokens={updateActiveTokens}
-        />
+        <AddCustomAssetComponent onClose={onClose} parentList={'assetsList'} setActiveScreen={setActiveScreen} />
       )}
     </>
   )

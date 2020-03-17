@@ -30,11 +30,11 @@ const activateAssetsByBalance = (safeAddress: string) => async (
       return address !== null && !blacklistedAssets.has(address) && numberOfTokens > 0
     })
 
-    // need to persist those already active tokens, despite its balances
-    const activeTokens = alreadyActiveAssets.union(activeByBalance)
+    // need to persist those already active assets, despite its balances
+    const activeAssets = alreadyActiveAssets.union(activeByBalance)
 
     // update list of active tokens
-    dispatch(updateActiveAssets(safeAddress, activeTokens))
+    dispatch(updateActiveAssets(safeAddress, activeAssets))
   } catch (err) {
     console.error('Error fetching active assets list', err)
   }
