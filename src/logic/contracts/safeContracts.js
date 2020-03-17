@@ -73,10 +73,7 @@ export const getSafeMasterContract = async () => {
 export const getSafeDeploymentTransaction = (safeAccounts: string[], numConfirmations: number, userAccount: string) => {
   const gnosisSafeData = safeMaster.contract.methods
     .setup(safeAccounts, numConfirmations, ZERO_ADDRESS, '0x', DEFAULT_FALLBACK_HANDLER_ADDRESS, ZERO_ADDRESS, 0, ZERO_ADDRESS)
-    .encodeABI()
-  const proxyFactoryData = proxyFactoryMaster.methods
-    .createProxy(safeMaster.address, gnosisSafeData)
-    .encodeABI()
+    .encodeABI()  
 
   return proxyFactoryMaster.methods.createProxy(safeMaster.address, gnosisSafeData)
 }

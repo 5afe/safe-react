@@ -64,50 +64,45 @@ type Props = {
   submittedPromise: Promise<any>,
   onRetry: () => void,
   onSuccess: () => void,
+  onCancel: () => void,
 }
 
-const SafeDeployment = ({ creationTxHash, onRetry, onSuccess, submittedPromise }: Props) => {
+const SafeDeployment = ({ creationTxHash, onCancel, onRetry, onSuccess, submittedPromise }: Props) => {
   const steps = [
     {
       id: '1',
       label: 'Waiting fot transaction confirmation',
       instruction: 'Please confirm the Safe creation in your wallet',
-      duration: -1,
-      footer: <div></div>,
+      footer: null,
     },
     {
       id: '2',
       label: 'Transaction submitted',
       instruction: 'Please do not leave the page',
-      duration: 5000,
       footer: genericFooter,
     },
     {
       id: '3',
       label: 'Validating transaction',
       instruction: 'Please do not leave the page',
-      duration: 5000,
       footer: genericFooter,
     },
     {
       id: '4',
       label: 'Deploying smart contract',
       instruction: 'Please do not leave the page',
-      duration: 5000,
       footer: genericFooter,
     },
     {
       id: '5',
       label: 'Generating your Safe',
       instruction: 'Please do not leave the page',
-      duration: 5000,
       footer: genericFooter,
     },
     {
       id: '6',
       label: 'Success',
       instruction: 'Click Below to get started',
-      duration: 5000,
       footer: (
         <Button color="primary" onClick={onSuccess} variant="contained">
           Continue
@@ -117,8 +112,8 @@ const SafeDeployment = ({ creationTxHash, onRetry, onSuccess, submittedPromise }
   ]
 
   const [stepIndex, setStepIndex] = useState()
+  const [intervalStarted, setIntervalStarted] = useState(false)
   const [error, setError] = useState()
-  const [interval, setInterval] = useState()
 
   // creating safe from from submission
   useEffect(() => {
@@ -130,55 +125,70 @@ const SafeDeployment = ({ creationTxHash, onRetry, onSuccess, submittedPromise }
     submittedPromise
       .once('transactionHash', () => {
         setStepIndex(1)
+        setIntervalStarted(true)
       })
-      .then(() => {
-        setStepIndex(5)
-      })
-      .catch(error => {
-        debugger
-        setError(error)
-        console.log('un error', error)
-      })
+      .on('error', setError)
   }, [submittedPromise])
 
   // recovering safe creation from txHash
   useEffect(() => {
-    if (!creationTxHash) {
+    if (creationTxHash === undefined) {
       return
     }
 
-    const web3 = getWeb3()
+    setStepIndex(1)
+    setIntervalStarted(true)
+  }, [creationTxHash])
+
+  useEffect(() => {
+    if (!intervalStarted) {
+      return
+    }
 
     const isTxMined = async txHash => {
+      const web3 = getWeb3()
       const txResult = await web3.eth.getTransaction(txHash)
       // blockNumber is null when TX is pending.
       return txResult.blockNumber !== null
     }
 
-    const waitToTx = async () => {
-      // on each interval check tx status
-      const intervalInstance = setInterval(async () => {
-        const isMined = await isTxMined(creationTxHash)
-        if (isMined) {
-          clearInterval(intervalInstance)
-          setStepIndex(5)
-        } else {
-          setInterval(intervalInstance)
-          if (stepIndex < 5) {
-            setStepIndex(stepIndex + 1)
-          }
-        }
-      }, 1000)
-    }
+    let interval = setInterval(async () => {
+      if (stepIndex < 4) {
+        setStepIndex(stepIndex + 1)
+      }
 
-    // tx sign was already done
-    setStepIndex(1)
-    waitToTx()
+      if (creationTxHash !== undefined) {
+        try {
+          const res = await isTxMined(creationTxHash)
+          if (res) {
+            setIntervalStarted(false)
+            clearInterval(interval)
+            setStepIndex(5)
+          }
+        } catch (error) {
+          setError(error)
+        }
+      }
+
+      if (submittedPromise !== undefined) {
+        submittedPromise.then(() => {
+          setIntervalStarted(false)
+          clearInterval(interval)
+          setStepIndex(5)
+        })
+      }
+    }, 3000)
 
     return () => {
       clearInterval(interval)
     }
-  }, [creationTxHash])
+  }, [creationTxHash, submittedPromise, intervalStarted, stepIndex, setError])
+
+  // discard click event value
+  const onRetryTx = () => {
+    setError(false)
+    onRetry()
+  }
 
   if (stepIndex === undefined) {
     return <div>loading</div>
@@ -196,13 +206,22 @@ const SafeDeployment = ({ creationTxHash, onRetry, onSuccess, submittedPromise }
 
           <CardTitle>{steps[stepIndex].label}</CardTitle>
 
-          <Loader />
+          {!error && stepIndex <= 4 && <Loader />}
 
           <FullParagraph color="primary" noMargin size="md">
             {steps[stepIndex].instruction}
           </FullParagraph>
 
           {steps[stepIndex].footer}
+
+          {error && (
+            <>
+              <Button onClick={onCancel}>cancel</Button>
+              <Button color="primary" onClick={onRetryTx}>
+                Retry
+              </Button>
+            </>
+          )}
         </Body>
       </Wrapper>
     </Page>
