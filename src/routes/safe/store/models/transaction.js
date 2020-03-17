@@ -77,7 +77,7 @@ export const makeTransaction: RecordFactory<TransactionProps> = Record({
   gasToken: ZERO_ADDRESS,
   refundReceiver: ZERO_ADDRESS,
   isExecuted: false,
-  isSuccessful: false,
+  isSuccessful: true,
   submissionDate: '',
   executor: '',
   executionDate: '',
