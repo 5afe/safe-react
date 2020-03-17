@@ -25,7 +25,11 @@ import type { NFTTokensState } from '~/logic/collectibles/store/reducer/collecti
 import { nftTokensSelector } from '~/logic/collectibles/store/selectors'
 import { TX_NOTIFICATION_TYPES } from '~/logic/safe/transactions'
 import { estimateTxGasCosts } from '~/logic/safe/transactions/gasNew'
-import { containsMethodByHash, getERC721TokenContract } from '~/logic/tokens/store/actions/fetchTokens'
+import {
+  containsMethodByHash,
+  getERC721TokenContract,
+  getHumanFriendlyToken,
+} from '~/logic/tokens/store/actions/fetchTokens'
 import { type Token } from '~/logic/tokens/store/model/token'
 import { formatAmount } from '~/logic/tokens/utils/formatAmount'
 import { getWeb3 } from '~/logic/wallets/getWeb3'
@@ -39,7 +43,6 @@ import { textShortener } from '~/utils/strings'
 const useStyles = makeStyles(styles)
 
 const SAFE_TRANSFER_FROM_WITHOUT_DATA_HASH = '0x42842e0e'
-const TRASNFER_FROM_HASH = '0x23b872dd'
 
 type Props = {
   onClose: () => void,
@@ -69,15 +72,15 @@ const ReviewCollectible = ({ closeSnackbar, enqueueSnackbar, onClose, onPrev, tx
 
     const estimateGas = async () => {
       const { fromWei, toBN } = getWeb3().utils
-      const ERC721Token = await getERC721TokenContract()
+
       const supportsSafeTransfer = await containsMethodByHash(tx.assetAddress, SAFE_TRANSFER_FROM_WITHOUT_DATA_HASH)
-      const methodToCall = supportsSafeTransfer ? SAFE_TRANSFER_FROM_WITHOUT_DATA_HASH : TRASNFER_FROM_HASH
+      const methodToCall = supportsSafeTransfer ? SAFE_TRANSFER_FROM_WITHOUT_DATA_HASH : 'transfer'
+      const transferParams = [tx.recipientAddress, tx.nftTokenId]
+      const params = methodToCall === 'transfer' ? transferParams : [safeAddress, ...transferParams]
+
+      const ERC721Token = methodToCall === 'transfer' ? await getHumanFriendlyToken() : await getERC721TokenContract()
       const tokenInstance = await ERC721Token.at(tx.assetAddress)
-      const txData = tokenInstance.contract.methods[methodToCall](
-        safeAddress,
-        tx.recipientAddress,
-        tx.nftTokenId,
-      ).encodeABI()
+      const txData = tokenInstance.contract.methods[methodToCall](...params).encodeABI()
 
       const estimatedGasCosts = await estimateTxGasCosts(safeAddress, tx.recipientAddress, txData)
       const gasCostsAsEth = fromWei(toBN(estimatedGasCosts), 'ether')
