@@ -9,6 +9,7 @@ import Heading from '~/components/layout/Heading'
 import Img from '~/components/layout/Img'
 import Paragraph from '~/components/layout/Paragraph'
 import { getEtherScanLink, getWeb3 } from '~/logic/wallets/getWeb3'
+import { background, connected } from '~/theme/variables'
 
 const vaulterror = require('./assets/vault-error.svg')
 const vault = require('./assets/vault.svg')
@@ -26,12 +27,12 @@ const Title = styled(Heading)`
   grid-row: 1;
 `
 
-export const Nav = styled.div`
+const Nav = styled.div`
   grid-column: 1;
   grid-row: 2;
 `
 
-export const Body = styled.div`
+const Body = styled.div`
   grid-column: 2;
   grid-row: 2;
   text-align: center;
@@ -42,12 +43,16 @@ export const Body = styled.div`
   margin-bottom: 38px;
   box-shadow: 0 0 10px 0 rgba(33, 48, 77, 0.1);
 `
+const EtherScanLink = styled.a`
+  color: ${connected};
+`
+
 const CardTitle = styled.div`
   font-size: 20px;
   margin: 16px;
 `
 const FullParagraph = styled(Paragraph)`
-  background-color: #f5f5f5;
+  background-color: ${background};
   padding: 24px;
   font-size: 16px;
   margin-bottom: 16px;
@@ -75,15 +80,15 @@ const SafeDeployment = ({ creationTxHash, onCancel, onRetry, onSuccess, submitte
       <p>This process should take a couple of minutes.</p>
       <p>
         Follow the progress on{' '}
-        <a
+        <EtherScanLink
           aria-label="Show details on Etherscan"
           href={getEtherScanLink('tx', safeCreationTxHash)}
           rel="noopener noreferrer"
           target="_blank"
         >
-          {/* <Img alt="Show on Etherscan" height={20} src={EtherscanOpenIcon} /> */}
-          Etherscan.io.
-        </a>
+          Etherscan.io
+        </EtherScanLink>
+        .
       </p>
     </span>
   )
@@ -180,25 +185,25 @@ const SafeDeployment = ({ creationTxHash, onCancel, onRetry, onSuccess, submitte
         setStepIndex(stepIndex + 1)
       }
 
-      if (creationTxHash !== undefined) {
-        try {
-          const res = await isTxMined(creationTxHash)
-          if (res) {
-            setIntervalStarted(false)
-            clearInterval(interval)
-            setStepIndex(5)
-          }
-        } catch (error) {
-          setError(error)
-        }
-      }
-
       if (submittedPromise !== undefined) {
         submittedPromise.then(() => {
           setIntervalStarted(false)
           clearInterval(interval)
           setStepIndex(5)
         })
+      }
+
+      if (creationTxHash !== undefined) {
+        try {
+          const res = await isTxMined(creationTxHash)
+          if (res) {
+            setIntervalStarted(false)
+            clearInterval(interval)
+            //setStepIndex(5)
+          }
+        } catch (error) {
+          setError(error)
+        }
       }
     }, 3000)
 
@@ -225,7 +230,6 @@ const SafeDeployment = ({ creationTxHash, onCancel, onRetry, onSuccess, submitte
       </Nav>
       <Body>
         <Img alt="Vault" height={75} src={error ? vaulterror : vault} />
-
         <CardTitle>{steps[stepIndex].description || steps[stepIndex].label}</CardTitle>
 
         {!error && stepIndex <= 4 && <Img alt="LoaderDots" src={LoaderDots} />}
