@@ -14,6 +14,7 @@ import {
   getExecutionTransaction,
   saveTxToHistory,
 } from '~/logic/safe/transactions'
+import { trySigningViaEIP712 } from '~/logic/safe/transactions/offchainSigning'
 import { ZERO_ADDRESS } from '~/logic/wallets/ethAddresses'
 import { EMPTY_DATA } from '~/logic/wallets/ethTransactions'
 import { userAccountSelector } from '~/logic/wallets/store/selectors'
@@ -23,7 +24,7 @@ import { getLastTx, getNewTxNonce, shouldExecuteTransaction } from '~/routes/saf
 import { type GlobalState } from '~/store'
 import { getErrorMessage } from '~/test/utils/ethereumErrors'
 
-type CreateTransactionArgs = {
+export type CreateTransactionArgs = {
   safeAddress: string,
   to: string,
   valueInWei: string,
@@ -51,7 +52,7 @@ const createTransaction = ({
   origin = null,
 }: CreateTransactionArgs) => async (dispatch: ReduxDispatch<GlobalState>, getState: GetState<GlobalState>) => {
   const state: GlobalState = getState()
-
+  console.log('creating transaction')
   if (navigateToTransactionsTab) {
     dispatch(push(`${SAFELIST_ADDRESS}/${safeAddress}/transactions`))
   }
@@ -92,14 +93,16 @@ const createTransaction = ({
     sender: from,
     sigs,
   }
-
+  console.log({ isExecution })
   try {
     if (!isExecution) {
+      console.log('trying to sign via eip712')
       // 1. we try to sign via EIP-712 if user's wallet supports it
+      trySigningViaEIP712({ ...txArgs, safeAddress })
       // 2. If not, try to use eth_sign (Safe version has to be >1.1.1)
       // If eth_sign, doesn't work continue with the regular flow
     }
-
+    console.log('im next')
     tx = isExecution ? await getExecutionTransaction(txArgs) : await getApprovalTransaction(txArgs)
 
     const sendParams = { from, value: 0 }

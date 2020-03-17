@@ -2,22 +2,19 @@
 import { EMPTY_DATA } from '~/logic/wallets/ethTransactions'
 import { getWeb3 } from '~/logic/wallets/getWeb3'
 
-const generateTypedDataFrom = async (
-  safe: any,
-  safeAddress: string,
-  to: string,
-  valueInWei: number,
-  nonce: number,
-  data: string,
-  operation: number,
-  txGasEstimate: number,
-) => {
-  const txGasToken = 0
-  // const threshold = await safe.getThreshold()
-  // estimateDataGas(safe, to, valueInWei, data, operation, txGasEstimate, txGasToken, nonce, threshold)
-  const dataGasEstimate = 0
-  const gasPrice = 0
-  const refundReceiver = 0
+const generateTypedDataFrom = async ({
+  baseGas,
+  data,
+  gasPrice,
+  gasToken,
+  nonce,
+  operation,
+  refundReceiver,
+  safeAddress,
+  safeTxGas,
+  to,
+  valueInWei,
+}) => {
   const typedData = {
     types: {
       EIP712Domain: [
@@ -32,7 +29,7 @@ const generateTypedDataFrom = async (
         { type: 'bytes', name: 'data' },
         { type: 'uint8', name: 'operation' },
         { type: 'uint256', name: 'safeTxGas' },
-        { type: 'uint256', name: 'dataGas' },
+        { type: 'uint256', name: 'baseGas' },
         { type: 'uint256', name: 'gasPrice' },
         { type: 'address', name: 'gasToken' },
         { type: 'address', name: 'refundReceiver' },
@@ -48,10 +45,10 @@ const generateTypedDataFrom = async (
       value: Number(valueInWei),
       data,
       operation,
-      safeTxGas: txGasEstimate,
-      dataGas: dataGasEstimate,
+      safeTxGas,
+      baseGas,
       gasPrice,
-      gasToken: txGasToken,
+      gasToken,
       refundReceiver,
       nonce: Number(nonce),
     },
@@ -60,28 +57,9 @@ const generateTypedDataFrom = async (
   return typedData
 }
 
-export const generateMetamaskSignature = async (
-  safe: any,
-  safeAddress: string,
-  sender: string,
-  to: string,
-  valueInWei: number,
-  nonce: number,
-  data: string,
-  operation: number,
-  txGasEstimate: number,
-) => {
+export const generateEIP712Signature = async txArgs => {
   const web3 = getWeb3()
-  const typedData = await generateTypedDataFrom(
-    safe,
-    safeAddress,
-    to,
-    valueInWei,
-    nonce,
-    data,
-    operation,
-    txGasEstimate,
-  )
+  const typedData = await generateTypedDataFrom(txArgs)
 
   const jsonTypedData = JSON.stringify(typedData)
   const signedTypedData = {
@@ -89,10 +67,12 @@ export const generateMetamaskSignature = async (
     // To change once Metamask fixes their status
     // https://github.com/MetaMask/metamask-extension/pull/5368
     // https://github.com/MetaMask/metamask-extension/issues/5366
-    params: [sender, jsonTypedData],
-    from: sender,
+    params: [txArgs.sender, jsonTypedData],
+    from: txArgs.sender,
   }
-  const txSignedResponse = await web3.currentProvider.sendAsync(signedTypedData)
 
-  return txSignedResponse.result.replace(EMPTY_DATA, '')
+  web3.currentProvider.sendAsync(signedTypedData, (err, res) => {
+    console.log(err, res)
+    return res.replace(EMPTY_DATA, '')
+  })
 }
