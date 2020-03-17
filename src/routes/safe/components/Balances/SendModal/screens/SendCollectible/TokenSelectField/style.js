@@ -21,4 +21,7 @@ export const selectStyles = () => ({
   selectMenu: {
     paddingRight: 0,
   },
+  tokenImage: {
+    marginRight: sm,
+  },
 })
