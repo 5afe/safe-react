@@ -91,8 +91,9 @@ export const buildTransactionFrom = async (safeAddress: string, tx: TxServiceMod
   )
   const modifySettingsTx = sameAddress(tx.to, safeAddress) && Number(tx.value) === 0 && !!tx.data
   const cancellationTx = sameAddress(tx.to, safeAddress) && Number(tx.value) === 0 && !tx.data
+  const code = tx.to ? await web3.eth.getCode(tx.to) : ''
   const isERC721Token =
-    isTokenTransfer(tx.data, Number(tx.value)) && (await web3.eth.getCode(tx.to)).includes('06fdde03')
+    code.includes('42842e0e') || (isTokenTransfer(tx.data, Number(tx.value)) && code.includes('06fdde03'))
   const isSendTokenTx = !isERC721Token && isTokenTransfer(tx.data, Number(tx.value))
   const isMultiSendTx = isMultisendTransaction(tx.data, Number(tx.value))
   const isUpgradeTx = isMultiSendTx && isUpgradeTransaction(tx.data)
