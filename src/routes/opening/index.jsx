@@ -11,8 +11,9 @@ import Paragraph from '~/components/layout/Paragraph'
 import { getEtherScanLink, getWeb3 } from '~/logic/wallets/getWeb3'
 import { background, connected } from '~/theme/variables'
 
-const vaulterror = require('./assets/vault-error.svg')
-const vault = require('./assets/vault.svg')
+const successSvg = require('./assets/success.svg')
+const vaultErrorSvg = require('./assets/vault-error.svg')
+const vaultSvg = require('./assets/vault.svg')
 
 const Wrapper = styled.div`
   display: grid;
@@ -242,6 +243,18 @@ const SafeDeployment = ({ creationTxHash, onCancel, onRetry, onSuccess, submitte
     onRetry()
   }
 
+  const getImage = () => {
+    if (error) {
+      return vaultErrorSvg
+    }
+
+    if (stepIndex <= 4) {
+      return vaultSvg
+    }
+
+    return successSvg
+  }
+
   if (stepIndex === undefined) {
     return <div>loading</div>
   }
@@ -254,7 +267,7 @@ const SafeDeployment = ({ creationTxHash, onCancel, onRetry, onSuccess, submitte
       </Nav>
       <Body>
         <BodyImage>
-          <Img alt="Vault" height={75} src={error ? vaulterror : vault} />
+          <Img alt="Vault" height={75} src={getImage()} />
         </BodyImage>
 
         <BodyDesctiption>
