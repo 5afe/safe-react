@@ -43,7 +43,7 @@ const Body = styled.div`
   box-shadow: 0 0 10px 0 rgba(33, 48, 77, 0.1);
 
   display: grid;
-  grid-template-rows: 100px 50px 150px 70px auto;
+  grid-template-rows: 100px 50px 70px 60px 100px;
 `
 const EtherScanLink = styled.a`
   color: ${connected};
