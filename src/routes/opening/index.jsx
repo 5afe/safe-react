@@ -119,7 +119,7 @@ const SafeDeployment = ({ creationTxHash, onCancel, onRetry, onSuccess, submitte
 
   const [stepIndex, setStepIndex] = useState()
   const [intervalStarted, setIntervalStarted] = useState(false)
-  const [error, setError] = useState(true)
+  const [error, setError] = useState(false)
 
   // creating safe from from submission
   useEffect(() => {
@@ -207,25 +207,20 @@ const SafeDeployment = ({ creationTxHash, onCancel, onRetry, onSuccess, submitte
         <Stepper activeStepIndex={stepIndex} error={error} orientation="vertical" steps={steps} />
       </Nav>
       <Body>
-        <Img alt="Vault" height={75} src={vault} />
+        <Img alt="Vault" height={75} src={error ? vaulterror : vault} />
 
         <CardTitle>{steps[stepIndex].label}</CardTitle>
 
         {!error && stepIndex <= 4 && <Img alt="LoaderDots" src={LoaderDots} />}
 
         <FullParagraph color="primary" noMargin size="md">
-          {steps[stepIndex].instruction}
+          {error ? 'You can Cancel or Retry the Safe creation process.' : steps[stepIndex].instruction}
         </FullParagraph>
 
         {steps[stepIndex].footer}
 
         {error && (
           <>
-            <Img alt="Vault-error" height={75} src={vaulterror} />
-            <CardTitle>{steps[stepIndex].label}</CardTitle>
-            <FullParagraph color="primary" noMargin size="md">
-              You can Cancel or Retry the Safe creation process.
-            </FullParagraph>
             <ButtonMargin onClick={onCancel} variant="contained">
               Cancel
             </ButtonMargin>
