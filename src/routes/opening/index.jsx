@@ -18,7 +18,6 @@ const Wrapper = styled.div`
   display: grid;
   grid-template-columns: 250px auto;
   grid-template-rows: 62px auto;
-  height: 600px;
   margin-bottom: 30px;
 `
 
@@ -38,10 +37,12 @@ const Body = styled.div`
   text-align: center;
   background-color: #ffffff;
   border-radius: 5px;
-  min-width: 770px;
-  padding: 30px 0;
-  margin-bottom: 38px;
+  min-width: 700px;
+  padding-top: 50px;
   box-shadow: 0 0 10px 0 rgba(33, 48, 77, 0.1);
+
+  display: grid;
+  grid-template-rows: 100px 50px 150px 70px auto;
 `
 const EtherScanLink = styled.a`
   color: ${connected};
@@ -49,7 +50,6 @@ const EtherScanLink = styled.a`
 
 const CardTitle = styled.div`
   font-size: 20px;
-  margin: 16px;
 `
 const FullParagraph = styled(Paragraph)`
   background-color: ${background};
@@ -59,6 +59,30 @@ const FullParagraph = styled(Paragraph)`
 `
 const ButtonMargin = styled(Button)`
   margin-right: 16px;
+`
+
+const BodyImage = styled.div`
+  grid-row: 1;
+`
+const BodyDesctiption = styled.div`
+  grid-row: 2;
+`
+const BodyLoader = styled.div`
+  grid-row: 3;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`
+const BodyInstruction = styled.div`
+  grid-row: 4;
+`
+const BodyFooter = styled.div`
+  grid-row: 5;
+
+  padding: 10px 0;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
 `
 
 type Props = {
@@ -199,7 +223,7 @@ const SafeDeployment = ({ creationTxHash, onCancel, onRetry, onSuccess, submitte
           if (res) {
             setIntervalStarted(false)
             clearInterval(interval)
-            //setStepIndex(5)
+            setStepIndex(5)
           }
         } catch (error) {
           setError(error)
@@ -229,27 +253,36 @@ const SafeDeployment = ({ creationTxHash, onCancel, onRetry, onSuccess, submitte
         <Stepper activeStepIndex={stepIndex} error={error} orientation="vertical" steps={steps} />
       </Nav>
       <Body>
-        <Img alt="Vault" height={75} src={error ? vaulterror : vault} />
-        <CardTitle>{steps[stepIndex].description || steps[stepIndex].label}</CardTitle>
+        <BodyImage>
+          <Img alt="Vault" height={75} src={error ? vaulterror : vault} />
+        </BodyImage>
 
-        {!error && stepIndex <= 4 && <Img alt="LoaderDots" src={LoaderDots} />}
+        <BodyDesctiption>
+          <CardTitle>{steps[stepIndex].description || steps[stepIndex].label}</CardTitle>
+        </BodyDesctiption>
 
-        <FullParagraph color="primary" noMargin size="md">
-          {error ? 'You can Cancel or Retry the Safe creation process.' : steps[stepIndex].instruction}
-        </FullParagraph>
+        <BodyLoader>{!error && stepIndex <= 4 && <Img alt="LoaderDots" src={LoaderDots} />}</BodyLoader>
 
-        {steps[stepIndex].footer}
+        <BodyInstruction>
+          <FullParagraph color="primary" noMargin size="md">
+            {error ? 'You can Cancel or Retry the Safe creation process.' : steps[stepIndex].instruction}
+          </FullParagraph>
+        </BodyInstruction>
 
-        {error && (
-          <>
-            <ButtonMargin onClick={onCancel} variant="contained">
-              Cancel
-            </ButtonMargin>
-            <Button color="primary" onClick={onRetryTx} variant="contained">
-              Retry
-            </Button>
-          </>
-        )}
+        <BodyFooter>
+          {error ? (
+            <>
+              <ButtonMargin onClick={onCancel} variant="contained">
+                Cancel
+              </ButtonMargin>
+              <Button color="primary" onClick={onRetryTx} variant="contained">
+                Retry
+              </Button>
+            </>
+          ) : (
+            steps[stepIndex].footer
+          )}
+        </BodyFooter>
       </Body>
     </Wrapper>
   )
