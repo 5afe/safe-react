@@ -1,5 +1,5 @@
 // @flow
-import { List, Map, Set } from 'immutable'
+import { Map, List, Set } from 'immutable'
 import { type Match, matchPath } from 'react-router-dom'
 import { type OutputSelector, createSelector, createStructuredSelector } from 'reselect'
 

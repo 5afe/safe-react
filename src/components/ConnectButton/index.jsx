@@ -105,12 +105,8 @@ const ConnectButton = (props: Props) => (
     color="primary"
     minWidth={140}
     onClick={async () => {
-      const walletSelected = await onboard.walletSelect()
-
-      // perform wallet checks only if user selected a wallet
-      if (walletSelected) {
-        await onboard.walletCheck()
-      }
+      await onboard.walletSelect()
+      await onboard.walletCheck()
     }}
     variant="contained"
     {...props}

@@ -1,7 +1,7 @@
 // @flow
+import ERC721 from '@openzeppelin/contracts/build/contracts/ERC721'
 import StandardToken from '@gnosis.pm/util-contracts/build/contracts/GnosisStandardToken.json'
 import HumanFriendlyToken from '@gnosis.pm/util-contracts/build/contracts/HumanFriendlyToken.json'
-import ERC721 from '@openzeppelin/contracts/build/contracts/ERC721'
 import { List } from 'immutable'
 import type { Dispatch as ReduxDispatch } from 'redux'
 import contract from 'truffle-contract'

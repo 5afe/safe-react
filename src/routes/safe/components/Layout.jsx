@@ -40,6 +40,7 @@ import AddressBookTable from '~/routes/safe/components/AddressBook'
 import SendModal from '~/routes/safe/components/Balances/SendModal'
 import { type SelectorProps } from '~/routes/safe/container/selector'
 import { border } from '~/theme/variables'
+import { getSafeVersion } from '~/logic/safe/utils/safeVersion'
 
 export const BALANCES_TAB_BTN_TEST_ID = 'balances-tab-btn'
 export const SETTINGS_TAB_BTN_TEST_ID = 'settings-tab-btn'
@@ -106,6 +107,23 @@ const Layout = (props: Props) => {
     onClose: null,
   })
   const { needsUpdate } = React.useContext(SafeVersionContext)
+
+  const [needUpdate, setNeedUpdate] = useState(false)
+
+  React.useEffect(() => {
+    const checkUpdateRequirement = async () => {
+      let safeVersion = {}
+
+      try {
+        safeVersion = await getSafeVersion(safe.address)
+      } catch (e) {
+        console.error('failed to check version', e)
+      }
+      setNeedUpdate(safeVersion.needUpdate)
+    }
+
+    checkUpdateRequirement()
+  }, [safe && safe.address])
 
   const handleCallToRouter = (_, value) => {
     const { history } = props

@@ -40,7 +40,13 @@ const SafeDetails = (props: Props) => {
   const { currentVersion, lastVersion, needsUpdate, upgradeSafe } = React.useContext(SafeVersionContext)
   const classes = useStyles()
   const isUserOwner = useSelector(grantedSelector)
-  const { closeSnackbar, enqueueSnackbar, safeAddress, safeName, updateSafe } = props
+  const { closeSnackbar, createTransaction, enqueueSnackbar, safeAddress, safeName, updateSafe } = props
+
+  const [isModalOpen, setModalOpen] = useState(false)
+
+  const toggleModal = () => {
+    setModalOpen(prevOpen => !prevOpen)
+  }
 
   const handleSubmit = values => {
     updateSafe({ address: safeAddress, name: values.safeName })
@@ -112,6 +118,9 @@ const SafeDetails = (props: Props) => {
                 </Button>
               </Col>
             </Row>
+            <Modal title="Update Safe" description="Update Safe" handleClose={toggleModal} open={isModalOpen}>
+              <UpdateSafeModal onClose={toggleModal} safeAddress={safeAddress} createTransaction={createTransaction} />
+            </Modal>
           </>
         )}
       </GnoForm>

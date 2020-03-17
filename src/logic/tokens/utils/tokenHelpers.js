@@ -1,10 +1,8 @@
 // @flow
 import { List } from 'immutable'
-
-import logo from '~/assets/icons/icon_etherTokens.svg'
-import { getStandardTokenContract } from '~/logic/tokens/store/actions/fetchTokens'
-import { type Token, makeToken } from '~/logic/tokens/store/model/token'
 import { getWeb3 } from '~/logic/wallets/getWeb3'
+import { makeToken, type Token } from '~/logic/tokens/store/model/token'
+import logo from '~/assets/icons/icon_etherTokens.svg'
 
 export const ETH_ADDRESS = '0x000'
 export const isEther = (symbol: string) => symbol === 'ETH'
