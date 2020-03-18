@@ -1,16 +1,21 @@
 // @flow
 import CircularProgress from '@material-ui/core/CircularProgress'
-import { withStyles } from '@material-ui/core/styles'
+import { makeStyles } from '@material-ui/core/styles'
 import cn from 'classnames'
 import { List } from 'immutable'
 import React, { Suspense, useEffect, useState } from 'react'
 
 import Modal from '~/components/Modal'
 import { type Token } from '~/logic/tokens/store/model/token'
+import type { NFTToken } from '~/routes/safe/components/Balances/Collectibles/types'
 
 const ChooseTxType = React.lazy(() => import('./screens/ChooseTxType'))
 
 const SendFunds = React.lazy(() => import('./screens/SendFunds'))
+
+const SendCollectible = React.lazy(() => import('./screens/SendCollectible'))
+
+const ReviewCollectible = React.lazy(() => import('./screens/ReviewCollectible'))
 
 const ReviewTx = React.lazy(() => import('./screens/ReviewTx'))
 
@@ -18,18 +23,24 @@ const SendCustomTx = React.lazy(() => import('./screens/SendCustomTx'))
 
 const ReviewCustomTx = React.lazy(() => import('./screens/ReviewCustomTx'))
 
-type ActiveScreen = 'chooseTxType' | 'sendFunds' | 'reviewTx' | 'sendCustomTx' | 'reviewCustomTx'
+type ActiveScreen =
+  | 'chooseTxType'
+  | 'sendFunds'
+  | 'reviewTx'
+  | 'sendCustomTx'
+  | 'reviewCustomTx'
+  | 'sendCollectible'
+  | 'reviewCollectible'
 
 type Props = {
   onClose: () => void,
-  classes: Object,
   isOpen: boolean,
   safeAddress: string,
   safeName: string,
   ethBalance: string,
   tokens: List<Token>,
-  selectedToken: string,
-  createTransaction: Function,
+  selectedToken?: string | NFTToken | {},
+  createTransaction?: Function,
   activeScreenType: ActiveScreen,
   recipientAddress?: string,
 }
@@ -43,7 +54,7 @@ type TxStateType =
     }
   | Object
 
-const styles = () => ({
+const useStyles = makeStyles({
   scalableModalWindow: {
     height: 'auto',
   },
@@ -51,19 +62,17 @@ const styles = () => ({
     height: 'auto',
     position: 'static',
   },
+  loaderStyle: {
+    height: '500px',
+    width: '100%',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
 })
 
-const loaderStyle = {
-  height: '500px',
-  width: '100%',
-  display: 'flex',
-  justifyContent: 'center',
-  alignItems: 'center',
-}
-
-const Send = ({
+const SendModal = ({
   activeScreenType,
-  classes,
   createTransaction,
   ethBalance,
   isOpen,
@@ -74,6 +83,7 @@ const Send = ({
   selectedToken,
   tokens,
 }: Props) => {
+  const classes = useStyles()
   const [activeScreen, setActiveScreen] = useState<ActiveScreen>(activeScreenType || 'chooseTxType')
   const [tx, setTx] = useState<TxStateType>({})
 
@@ -94,6 +104,11 @@ const Send = ({
     setTx(customTxInfo)
   }
 
+  const handleSendCollectible = txInfo => {
+    setActiveScreen('reviewCollectible')
+    setTx(txInfo)
+  }
+
   return (
     <Modal
       description="Send Tokens Form"
@@ -104,12 +119,14 @@ const Send = ({
     >
       <Suspense
         fallback={
-          <div style={loaderStyle}>
+          <div className={classes.loaderStyle}>
             <CircularProgress size={40} />
           </div>
         }
       >
-        {activeScreen === 'chooseTxType' && <ChooseTxType onClose={onClose} setActiveScreen={setActiveScreen} />}
+        {activeScreen === 'chooseTxType' && (
+          <ChooseTxType onClose={onClose} recipientAddress={recipientAddress} setActiveScreen={setActiveScreen} />
+        )}
         {activeScreen === 'sendFunds' && (
           <SendFunds
             ethBalance={ethBalance}
@@ -141,6 +158,7 @@ const Send = ({
             initialValues={tx}
             onClose={onClose}
             onSubmit={handleCustomTxCreation}
+            recipientAddress={recipientAddress}
             safeAddress={safeAddress}
             safeName={safeName}
           />
@@ -156,9 +174,21 @@ const Send = ({
             tx={tx}
           />
         )}
+        {activeScreen === 'sendCollectible' && (
+          <SendCollectible
+            initialValues={tx}
+            onClose={onClose}
+            onNext={handleSendCollectible}
+            recipientAddress={recipientAddress}
+            selectedToken={selectedToken}
+          />
+        )}
+        {activeScreen === 'reviewCollectible' && (
+          <ReviewCollectible onClose={onClose} onPrev={() => setActiveScreen('sendCollectible')} tx={tx} />
+        )}
       </Suspense>
     </Modal>
   )
 }
 
-export default withStyles(styles)(Send)
+export default SendModal
