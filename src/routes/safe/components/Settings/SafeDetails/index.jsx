@@ -6,7 +6,7 @@ import { useSelector } from 'react-redux'
 
 import { styles } from './style'
 
-import { SafeVersionContext } from '~/components/SafeVersionProvider'
+import Modal from '~/components/Modal'
 import Field from '~/components/forms/Field'
 import GnoForm from '~/components/forms/GnoForm'
 import TextField from '~/components/forms/TextField'
@@ -19,7 +19,9 @@ import Paragraph from '~/components/layout/Paragraph'
 import Row from '~/components/layout/Row'
 import { getNotificationsFromTxType, showSnackbar } from '~/logic/notifications'
 import { TX_NOTIFICATION_TYPES } from '~/logic/safe/transactions'
+import UpdateSafeModal from '~/routes/safe/components/Settings/UpdateSafeModal'
 import { grantedSelector } from '~/routes/safe/container/selector'
+import { latestMasterContractVersionSelector } from '~/routes/safe/store/selectors'
 
 export const SAFE_NAME_INPUT_TEST_ID = 'safe-name-input'
 export const SAFE_NAME_SUBMIT_BTN_TEST_ID = 'change-safe-name-btn'
@@ -27,7 +29,9 @@ export const SAFE_NAME_UPDATE_SAFE_BTN_TEST_ID = 'update-safe-name-btn'
 
 type Props = {
   safeAddress: string,
+  safeCurrentVersion: string,
   safeName: string,
+  safeNeedsUpdate: boolean,
   updateSafe: Function,
   enqueueSnackbar: Function,
   createTransaction: Function,
@@ -37,16 +41,34 @@ type Props = {
 const useStyles = makeStyles(styles)
 
 const SafeDetails = (props: Props) => {
-  const { currentVersion, lastVersion, needsUpdate, upgradeSafe } = React.useContext(SafeVersionContext)
   const classes = useStyles()
   const isUserOwner = useSelector(grantedSelector)
-  const { closeSnackbar, enqueueSnackbar, safeAddress, safeName, updateSafe } = props
+  const latestMasterContractVersion = useSelector(latestMasterContractVersionSelector)
+  const {
+    closeSnackbar,
+    enqueueSnackbar,
+    safeAddress,
+    safeCurrentVersion,
+    safeName,
+    safeNeedsUpdate,
+    updateSafe,
+  } = props
+
+  const [isModalOpen, setModalOpen] = React.useState(false)
+
+  const toggleModal = () => {
+    setModalOpen(prevOpen => !prevOpen)
+  }
 
   const handleSubmit = values => {
     updateSafe({ address: safeAddress, name: values.safeName })
 
     const notification = getNotificationsFromTxType(TX_NOTIFICATION_TYPES.SAFE_NAME_CHANGE_TX)
     showSnackbar(notification.afterExecution.noMoreConfirmationsNeeded, enqueueSnackbar, closeSnackbar)
+  }
+
+  const handleUpdateSafe = () => {
+    setModalOpen(true)
   }
 
   return (
@@ -58,17 +80,17 @@ const SafeDetails = (props: Props) => {
               <Heading tag="h2">Safe Version</Heading>
               <Row align="end" grow>
                 <Paragraph className={classes.versionNumber}>
-                  {currentVersion}
-                  {needsUpdate && ` (there's a newer version: ${lastVersion})`}
+                  {safeCurrentVersion}
+                  {safeNeedsUpdate && ` (there's a newer version: ${latestMasterContractVersion})`}
                 </Paragraph>
               </Row>
-              {needsUpdate && isUserOwner ? (
+              {safeNeedsUpdate && isUserOwner ? (
                 <Row align="end" grow>
                   <Paragraph>
                     <Button
                       className={classes.saveBtn}
                       color="primary"
-                      onClick={upgradeSafe}
+                      onClick={handleUpdateSafe}
                       size="small"
                       testId={SAFE_NAME_UPDATE_SAFE_BTN_TEST_ID}
                       variant="contained"
@@ -112,6 +134,9 @@ const SafeDetails = (props: Props) => {
                 </Button>
               </Col>
             </Row>
+            <Modal description="Update Safe" handleClose={toggleModal} open={isModalOpen} title="Update Safe">
+              <UpdateSafeModal onClose={toggleModal} safeAddress={safeAddress} />
+            </Modal>
           </>
         )}
       </GnoForm>
