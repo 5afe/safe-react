@@ -11,16 +11,19 @@ const wallets = [
     walletName: 'walletConnect',
     preferred: true,
     infuraKey: process.env.REACT_APP_INFURA_TOKEN,
+    desktop: true,
   },
   {
     walletName: 'trezor',
     appUrl: 'gnosis-safe.io',
     preferred: true,
     email: 'safe@gnosis.io',
+    desktop: true,
     rpcUrl: 'https://rinkeby.infura.io/v3/b42c928da8fd4c1f90374b18aa9ac6ba',
   },
   {
     walletName: 'ledger',
+    desktop: true,
     preferred: true,
     rpcUrl: 'https://rinkeby.infura.io/v3/b42c928da8fd4c1f90374b18aa9ac6ba',
     LedgerTransport: window.TransportNodeHid,
@@ -30,11 +33,13 @@ const wallets = [
   {
     walletName: 'fortmatic',
     apiKey: FORTMATIC_API_KEY,
+    desktop: true,
   },
   {
     walletName: 'portis',
     apiKey: PORTIS_DAPP_ID,
     label: 'Login with Email',
+    desktop: true,
   },
   { walletName: 'authereum', desktop: false },
   { walletName: 'coinbase', desktop: false },
@@ -46,7 +51,10 @@ const isDesktop = () => window && window.process && window.process.type
 
 export const selectWallets = () => {
   const desktopMode = isDesktop()
+  //eslint-disable-next-line
+  console.log('desktop', desktopMode)
   /* eslint-disable no-unused-vars */
+
   if (desktopMode) return wallets.filter(wallet => wallet.desktop).map(({ desktop, ...rest }) => rest)
 
   return wallets.map(({ desktop, ...rest }) => rest)
