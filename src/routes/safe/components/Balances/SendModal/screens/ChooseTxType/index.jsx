@@ -4,12 +4,12 @@ import { makeStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
 import classNames from 'classnames/bind'
 import * as React from 'react'
+import { useSelector } from 'react-redux'
 
 import Code from '../assets/code.svg'
 import Collectible from '../assets/collectibles.svg'
 import Token from '../assets/token.svg'
 
-import { SafeVersionContext } from '~/components/SafeVersionProvider'
 import { mustBeEthereumContractAddress } from '~/components/forms/validator'
 import Button from '~/components/layout/Button'
 import Col from '~/components/layout/Col'
@@ -17,6 +17,7 @@ import Hairline from '~/components/layout/Hairline'
 import Img from '~/components/layout/Img'
 import Paragraph from '~/components/layout/Paragraph'
 import Row from '~/components/layout/Row'
+import { safeSelector } from '~/routes/safe/store/selectors'
 import { lg, md, sm } from '~/theme/variables'
 
 const useStyles = makeStyles({
@@ -68,7 +69,7 @@ type Props = {
 
 const ChooseTxType = ({ onClose, recipientAddress, setActiveScreen }: Props) => {
   const classes = useStyles()
-  const { featuresEnabled } = React.useContext(SafeVersionContext)
+  const { featuresEnabled } = useSelector(safeSelector)
   const erc721Enabled = featuresEnabled.includes('ERC721')
   const [disableCustomTx, setDisableCustomTx] = React.useState(!!recipientAddress)
 
