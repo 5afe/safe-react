@@ -82,7 +82,6 @@ const processTransaction = ({
   try {
     if (!isExecution) {
       let signature: ?string
-      console.log('trying to sign via eip712')
       // 1. we try to sign via EIP-712 if user's wallet supports it
       signature = await tryOffchainSigning({ ...txArgs, safeAddress })
       // 2. If not, try to use eth_sign (Safe version has to be >1.1.1)

@@ -17,7 +17,7 @@ export const generateEthSignature = async ({
   valueInWei,
 }) => {
   const web3 = await getWeb3()
-
+  console.log('trying to sign via eth_sign')
   const txHash = await safeInstance.getTransactionHash(
     to,
     valueInWei,

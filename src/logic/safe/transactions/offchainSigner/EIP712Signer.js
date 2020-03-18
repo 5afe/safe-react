@@ -60,6 +60,7 @@ const generateTypedDataFrom = async ({
 }
 
 export const generateEIP712Signature = async txArgs => {
+  console.log('trying to sign via eip712')
   const web3 = getWeb3()
   const typedData = await generateTypedDataFrom(txArgs)
 
