@@ -2,7 +2,7 @@
 import IconButton from '@material-ui/core/IconButton'
 import { createStyles, makeStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
-import React from 'react'
+import React, { type Node } from 'react'
 import styled from 'styled-components'
 
 import Modal from '~/components/Modal'
@@ -40,8 +40,8 @@ const useStyles = makeStyles(() =>
 
 type Props = {
   title: string,
-  body: React.Node,
-  footer: React.Node,
+  body: Node,
+  footer: Node,
   onClose: () => void,
 }
 

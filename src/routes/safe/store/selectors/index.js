@@ -52,6 +52,14 @@ export const defaultSafeSelector: OutputSelector<GlobalState, {}, string> = crea
   (safeState: Map<string, *>): string => safeState.get('defaultSafe'),
 )
 
+export const latestMasterContractVersionSelector: OutputSelector<
+  GlobalState,
+  {},
+  string,
+> = createSelector(safesStateSelector, (safeState: Map<string, *>): string =>
+  safeState.get('latestMasterContractVersion'),
+)
+
 const transactionsSelector = (state: GlobalState): TransactionsState => state[TRANSACTIONS_REDUCER_ID]
 
 const cancellationTransactionsSelector = (state: GlobalState): CancelTransactionsState =>
