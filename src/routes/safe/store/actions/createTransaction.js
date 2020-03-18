@@ -93,7 +93,7 @@ const createTransaction = ({
     sender: from,
     sigs,
   }
-
+  console.log({ isExecution })
   try {
     if (!isExecution) {
       let signature: ?string
@@ -102,6 +102,19 @@ const createTransaction = ({
       signature = await tryOffchainSigning({ ...txArgs, safeAddress })
       // 2. If not, try to use eth_sign (Safe version has to be >1.1.1)
       // If eth_sign, doesn't work continue with the regular flow
+
+      if (signature) {
+        await saveTxToHistory({
+          ...txArgs,
+          signature,
+          type: TX_TYPE_CONFIRMATION,
+          origin,
+        })
+        showSnackbar(notificationsQueue.afterExecution.moreConfirmationsNeeded, enqueueSnackbar, closeSnackbar)
+
+        dispatch(fetchTransactions(safeAddress))
+        return
+      }
     }
     console.log('im next')
     tx = isExecution ? await getExecutionTransaction(txArgs) : await getApprovalTransaction(txArgs)

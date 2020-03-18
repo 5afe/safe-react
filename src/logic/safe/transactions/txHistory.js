@@ -19,10 +19,11 @@ const calculateBodyFrom = async (
   gasPrice: string | number,
   gasToken: string,
   refundReceiver: string,
-  transactionHash: string,
+  transactionHash: string | null,
   sender: string,
   confirmationType: TxServiceType,
   origin: string | null,
+  signature: ?string,
 ) => {
   const contractTransactionHash = await safeInstance.getTransactionHash(
     to,
@@ -53,6 +54,7 @@ const calculateBodyFrom = async (
     sender: getWeb3().utils.toChecksumAddress(sender),
     confirmationType,
     origin,
+    signature,
   }
 }
 
@@ -75,6 +77,7 @@ export const saveTxToHistory = async ({
   safeInstance,
   safeTxGas,
   sender,
+  signature,
   to,
   txHash,
   type,
@@ -91,10 +94,11 @@ export const saveTxToHistory = async ({
   gasPrice: string | number,
   gasToken: string,
   refundReceiver: string,
-  txHash: string,
+  txHash: string | null,
   sender: string,
   type: TxServiceType,
   origin: string | null,
+  signature: ?string,
 }) => {
   const url = buildTxServiceUrl(safeInstance.address)
   const body = await calculateBodyFrom(
@@ -109,10 +113,11 @@ export const saveTxToHistory = async ({
     gasPrice,
     gasToken,
     refundReceiver,
-    txHash,
+    txHash || null,
     sender,
     type,
     origin || null,
+    signature,
   )
   const response = await axios.post(url, body)
 
