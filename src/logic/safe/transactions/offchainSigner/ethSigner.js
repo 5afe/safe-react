@@ -47,7 +47,7 @@ export const generateEthSignature = async ({
           return reject(err)
         }
 
-        resolve(signature.result.replace(EMPTY_DATA))
+        resolve(signature.result.replace(EMPTY_DATA, ''))
       },
     )
   })
