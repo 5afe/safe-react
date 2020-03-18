@@ -118,7 +118,7 @@ const Layout = (props: Props) => {
     return <NoSafe provider={provider} text="Safe not found" />
   }
 
-  const { address, ethBalance, name } = safe
+  const { address, ethBalance, featuresEnabled, name } = safe
   const etherScanLink = getEtherScanLink('address', address)
   const web3Instance = getWeb3()
 
@@ -322,6 +322,7 @@ const Layout = (props: Props) => {
               currencySelected={currencySelected}
               currencyValues={currencyValues}
               ethBalance={ethBalance}
+              featuresEnabled={featuresEnabled}
               fetchCurrencyValues={fetchCurrencyValues}
               fetchTokens={fetchTokens}
               granted={granted}

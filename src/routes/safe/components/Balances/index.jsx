@@ -16,7 +16,6 @@ import { BALANCE_TABLE_ASSET_ID, type BalanceRow, generateColumns, getBalanceDat
 import { styles } from './style'
 
 import Modal from '~/components/Modal'
-import { SafeVersionContext } from '~/components/SafeVersionProvider'
 import Table from '~/components/Table'
 import { type Column, cellWidth } from '~/components/Table/TableHead'
 import Button from '~/components/layout/Button'
@@ -38,6 +37,8 @@ export const MANAGE_TOKENS_BUTTON_TEST_ID = 'manage-tokens-btn'
 export const BALANCE_ROW_TEST_ID = 'balance-row'
 
 type State = {
+  erc721Enabled: boolean,
+  subMenuOptions: string[],
   sendFunds: Object,
   showCoins: boolean,
   showCollectibles: boolean,
@@ -54,6 +55,7 @@ type Props = {
   currencySelected: string,
   currencyValues: BalanceCurrencyType[],
   ethBalance: string,
+  featuresEnabled: string[],
   fetchCurrencyValues: Function,
   fetchTokens: Function,
   granted: boolean,
@@ -68,6 +70,8 @@ class Balances extends React.Component<Props, State> {
   constructor(props) {
     super(props)
     this.state = {
+      erc721Enabled: false,
+      subMenuOptions: [],
       showToken: false,
       sendFunds: {
         isOpen: false,
@@ -95,9 +99,28 @@ class Balances extends React.Component<Props, State> {
       history.replace(`${SAFELIST_ADDRESS}/${this.props.safeAddress}/balances`)
     }
 
+    const subMenuOptions = [
+      { enabled: showCoins, legend: 'Coins', url: `${SAFELIST_ADDRESS}/${this.props.safeAddress}/balances` },
+    ]
+    const erc721Enabled = this.props.featuresEnabled.includes('ERC721')
+
+    if (erc721Enabled) {
+      subMenuOptions.push({
+        enabled: showCollectibles,
+        legend: 'Collectibles',
+        url: `${SAFELIST_ADDRESS}/${this.props.safeAddress}/balances/collectibles`,
+      })
+    } else {
+      if (showCollectibles) {
+        history.replace(subMenuOptions[0].url)
+      }
+    }
+
     this.setState({
       showCoins,
       showCollectibles,
+      erc721Enabled,
+      subMenuOptions,
     })
   }
 
@@ -127,23 +150,8 @@ class Balances extends React.Component<Props, State> {
     })
   }
 
-  viewCoins = (replace = false) => {
-    const url = `${SAFELIST_ADDRESS}/${this.props.safeAddress}/balances`
-
-    if (replace) {
-      history.replace(url)
-    } else {
-      history.push(url)
-    }
-  }
-
-  viewCollectibles = () => {
-    const url = `${SAFELIST_ADDRESS}/${this.props.safeAddress}/balances/collectibles`
-    history.push(url)
-  }
-
   render() {
-    const { sendFunds, showCoins, showCollectibles, showReceive, showToken } = this.state
+    const { erc721Enabled, sendFunds, showCoins, showCollectibles, showReceive, showToken, subMenuOptions } = this.state
     const {
       activeTokens,
       blacklistedTokens,
@@ -164,180 +172,157 @@ class Balances extends React.Component<Props, State> {
     const filteredData = getBalanceData(activeTokens, currencySelected, currencyValues)
 
     return (
-      <SafeVersionContext.Consumer>
-        {value => {
-          const subMenuOptions = [
-            { enabled: showCoins, legend: 'Coins', url: `${SAFELIST_ADDRESS}/${this.props.safeAddress}/balances` },
-          ]
-          const erc721Enabled = value.featuresEnabled.includes('ERC721')
-
-          if (erc721Enabled) {
-            subMenuOptions.push({
-              enabled: showCollectibles,
-              legend: 'Collectibles',
-              url: `${SAFELIST_ADDRESS}/${this.props.safeAddress}/balances/collectibles`,
-            })
-          } else {
-            if (this.state.showCollectibles) {
-              history.replace(subMenuOptions[0].url)
-            }
-          }
-
-          return (
-            <>
-              <Row align="center" className={classes.controls}>
-                <Col className={classes.assetTabs} sm={6} start="sm" xs={12}>
-                  {subMenuOptions.length > 1 &&
-                    subMenuOptions.map(({ enabled, legend, url }, index) => (
-                      <React.Fragment key={`legend-${index}`}>
-                        {index > 0 && <Divider className={classes.assetDivider} />}
-                        <Link
-                          className={enabled ? classes.assetTabActive : classes.assetTab}
-                          data-testid={`${legend.toLowerCase()}'-assets-btn'`}
-                          size="md"
-                          to={url}
-                          weight={enabled ? 'bold' : 'regular'}
-                        >
-                          {legend}
-                        </Link>
-                      </React.Fragment>
-                    ))}
-                </Col>
-                <Col className={classes.tokenControls} end="sm" sm={6} xs={12}>
-                  {showCoins && (
-                    <>
-                      <DropdownCurrency />
-                      <ButtonLink
-                        className={classes.manageTokensButton}
-                        onClick={this.onShow('Token')}
-                        size="lg"
-                        testId="manage-tokens-btn"
-                      >
-                        Manage List
-                      </ButtonLink>
-                      <Modal
-                        description="Enable and disable tokens to be listed"
-                        handleClose={this.onHide('Token')}
-                        open={showToken}
-                        title="Manage List"
-                      >
-                        <Tokens
-                          activeTokens={activeTokens}
-                          blacklistedTokens={blacklistedTokens}
-                          onClose={this.onHide('Token')}
-                          safeAddress={safeAddress}
-                          tokens={tokens}
-                        />
-                      </Modal>
-                    </>
-                  )}
-                </Col>
-              </Row>
-              {showCoins && (
-                <TableContainer>
-                  <Table
-                    columns={columns}
-                    data={filteredData}
-                    defaultFixed
-                    defaultOrderBy={BALANCE_TABLE_ASSET_ID}
-                    defaultRowsPerPage={10}
-                    label="Balances"
-                    size={filteredData.size}
+      <>
+        <Row align="center" className={classes.controls}>
+          <Col className={classes.assetTabs} sm={6} start="sm" xs={12}>
+            {subMenuOptions.length > 1 &&
+              subMenuOptions.map(({ enabled, legend, url }, index) => (
+                <React.Fragment key={`legend-${index}`}>
+                  {index > 0 && <Divider className={classes.assetDivider} />}
+                  <Link
+                    className={enabled ? classes.assetTabActive : classes.assetTab}
+                    data-testid={`${legend.toLowerCase()}'-assets-btn'`}
+                    size="md"
+                    to={url}
+                    weight={enabled ? 'bold' : 'regular'}
                   >
-                    {(sortedData: Array<BalanceRow>) =>
-                      sortedData.map((row: any, index: number) => (
-                        <TableRow className={classes.hide} data-testid={BALANCE_ROW_TEST_ID} key={index} tabIndex={-1}>
-                          {autoColumns.map((column: Column) => {
-                            const { align, id, width } = column
-                            let cellItem
-                            switch (id) {
-                              case BALANCE_TABLE_ASSET_ID: {
-                                cellItem = <AssetTableCell asset={row[id]} />
-                                break
-                              }
-                              case BALANCE_TABLE_BALANCE_ID: {
-                                cellItem = <div>{row[id]}</div>
-                                break
-                              }
-                              case BALANCE_TABLE_VALUE_ID: {
-                                cellItem = <div className={classes.currencyValueRow}>{row[id]}</div>
-                                break
-                              }
-                              default: {
-                                cellItem = null
-                                break
-                              }
-                            }
-                            return (
-                              <TableCell align={align} component="td" key={id} style={cellWidth(width)}>
-                                {cellItem}
-                              </TableCell>
-                            )
-                          })}
-                          <TableCell component="td">
-                            <Row align="end" className={classes.actions}>
-                              {granted && (
-                                <Button
-                                  className={classes.send}
-                                  color="primary"
-                                  onClick={() => this.showSendFunds(row.asset.address)}
-                                  size="small"
-                                  testId="balance-send-btn"
-                                  variant="contained"
-                                >
-                                  <CallMade
-                                    alt="Send Transaction"
-                                    className={classNames(classes.leftIcon, classes.iconSmall)}
-                                  />
-                                  Send
-                                </Button>
-                              )}
-                              <Button
-                                className={classes.receive}
-                                color="primary"
-                                onClick={this.onShow('Receive')}
-                                size="small"
-                                variant="contained"
-                              >
-                                <CallReceived
-                                  alt="Receive Transaction"
-                                  className={classNames(classes.leftIcon, classes.iconSmall)}
-                                />
-                                Receive
-                              </Button>
-                            </Row>
-                          </TableCell>
-                        </TableRow>
-                      ))
-                    }
-                  </Table>
-                </TableContainer>
-              )}
-              {erc721Enabled && showCollectibles && <Collectibles />}
-              <SendModal
-                activeScreenType="sendFunds"
-                createTransaction={createTransaction}
-                ethBalance={ethBalance}
-                isOpen={sendFunds.isOpen}
-                onClose={this.hideSendFunds}
-                safeAddress={safeAddress}
-                safeName={safeName}
-                selectedToken={sendFunds.selectedToken}
-                tokens={activeTokens}
-              />
-              <Modal
-                description="Receive Tokens Form"
-                handleClose={this.onHide('Receive')}
-                open={showReceive}
-                paperClassName={classes.receiveModal}
-                title="Receive Tokens"
-              >
-                <Receive onClose={this.onHide('Receive')} safeAddress={safeAddress} safeName={safeName} />
-              </Modal>
-            </>
-          )
-        }}
-      </SafeVersionContext.Consumer>
+                    {legend}
+                  </Link>
+                </React.Fragment>
+              ))}
+          </Col>
+          <Col className={classes.tokenControls} end="sm" sm={6} xs={12}>
+            {showCoins && (
+              <>
+                <DropdownCurrency />
+                <ButtonLink
+                  className={classes.manageTokensButton}
+                  onClick={this.onShow('Token')}
+                  size="lg"
+                  testId="manage-tokens-btn"
+                >
+                  Manage List
+                </ButtonLink>
+                <Modal
+                  description="Enable and disable tokens to be listed"
+                  handleClose={this.onHide('Token')}
+                  open={showToken}
+                  title="Manage List"
+                >
+                  <Tokens
+                    activeTokens={activeTokens}
+                    blacklistedTokens={blacklistedTokens}
+                    onClose={this.onHide('Token')}
+                    safeAddress={safeAddress}
+                    tokens={tokens}
+                  />
+                </Modal>
+              </>
+            )}
+          </Col>
+        </Row>
+        {showCoins && (
+          <TableContainer>
+            <Table
+              columns={columns}
+              data={filteredData}
+              defaultFixed
+              defaultOrderBy={BALANCE_TABLE_ASSET_ID}
+              defaultRowsPerPage={10}
+              label="Balances"
+              size={filteredData.size}
+            >
+              {(sortedData: Array<BalanceRow>) =>
+                sortedData.map((row: any, index: number) => (
+                  <TableRow className={classes.hide} data-testid={BALANCE_ROW_TEST_ID} key={index} tabIndex={-1}>
+                    {autoColumns.map((column: Column) => {
+                      const { align, id, width } = column
+                      let cellItem
+                      switch (id) {
+                        case BALANCE_TABLE_ASSET_ID: {
+                          cellItem = <AssetTableCell asset={row[id]} />
+                          break
+                        }
+                        case BALANCE_TABLE_BALANCE_ID: {
+                          cellItem = <div>{row[id]}</div>
+                          break
+                        }
+                        case BALANCE_TABLE_VALUE_ID: {
+                          cellItem = <div className={classes.currencyValueRow}>{row[id]}</div>
+                          break
+                        }
+                        default: {
+                          cellItem = null
+                          break
+                        }
+                      }
+                      return (
+                        <TableCell align={align} component="td" key={id} style={cellWidth(width)}>
+                          {cellItem}
+                        </TableCell>
+                      )
+                    })}
+                    <TableCell component="td">
+                      <Row align="end" className={classes.actions}>
+                        {granted && (
+                          <Button
+                            className={classes.send}
+                            color="primary"
+                            onClick={() => this.showSendFunds(row.asset.address)}
+                            size="small"
+                            testId="balance-send-btn"
+                            variant="contained"
+                          >
+                            <CallMade
+                              alt="Send Transaction"
+                              className={classNames(classes.leftIcon, classes.iconSmall)}
+                            />
+                            Send
+                          </Button>
+                        )}
+                        <Button
+                          className={classes.receive}
+                          color="primary"
+                          onClick={this.onShow('Receive')}
+                          size="small"
+                          variant="contained"
+                        >
+                          <CallReceived
+                            alt="Receive Transaction"
+                            className={classNames(classes.leftIcon, classes.iconSmall)}
+                          />
+                          Receive
+                        </Button>
+                      </Row>
+                    </TableCell>
+                  </TableRow>
+                ))
+              }
+            </Table>
+          </TableContainer>
+        )}
+        {erc721Enabled && showCollectibles && <Collectibles />}
+        <SendModal
+          activeScreenType="sendFunds"
+          createTransaction={createTransaction}
+          ethBalance={ethBalance}
+          isOpen={sendFunds.isOpen}
+          onClose={this.hideSendFunds}
+          safeAddress={safeAddress}
+          safeName={safeName}
+          selectedToken={sendFunds.selectedToken}
+          tokens={activeTokens}
+        />
+        <Modal
+          description="Receive Tokens Form"
+          handleClose={this.onHide('Receive')}
+          open={showReceive}
+          paperClassName={classes.receiveModal}
+          title="Receive Tokens"
+        >
+          <Receive onClose={this.onHide('Receive')} safeAddress={safeAddress} safeName={safeName} />
+        </Modal>
+      </>
     )
   }
 }
