@@ -1,17 +1,66 @@
 // @flow
-import { md, sm, xs } from '~/theme/variables'
+import { md, screenSm, secondary, sm, xs } from '~/theme/variables'
 
 export const styles = (theme: Object) => ({
   root: {
-    width: '20px',
     marginRight: sm,
+    width: '20px',
   },
-  message: {
-    margin: `${sm} 0`,
-    padding: `${md} 0`,
-    maxHeight: '54px',
+  controls: {
+    alignItems: 'center',
     boxSizing: 'border-box',
-    justifyContent: 'flex-end',
+    justifyContent: 'space-between',
+    padding: `${md} 0`,
+  },
+  assetTabs: {
+    alignItems: 'center',
+    display: 'flex',
+    order: '2',
+
+    [`@media (min-width: ${screenSm}px)`]: {
+      order: '1',
+    },
+  },
+  assetDivider: {
+    borderRightColor: `${secondary} !important`,
+    height: '18px !important',
+  },
+  assetTab: {
+    color: '#686868',
+    margin: '2px 0',
+    padding: '0 10px',
+    textDecoration: 'underline',
+
+    '&:hover': {
+      cursor: 'pointer',
+    },
+  },
+  assetTabActive: {
+    color: secondary,
+    fontWeight: 'bold',
+    margin: '2px 0',
+    padding: '0 10px',
+    textDecoration: 'none',
+  },
+  tokenControls: {
+    alignItems: 'center',
+    display: 'flex',
+    justifyContent: 'space-between',
+    order: '1',
+    padding: '0 0 10px',
+
+    [`@media (min-width: ${screenSm}px)`]: {
+      justifyContent: 'flex-end',
+      order: '2',
+      padding: '0',
+    },
+  },
+  manageTokensButton: {
+    marginLeft: 'auto',
+
+    [`@media (min-width: ${screenSm}px)`]: {
+      marginLeft: '0',
+    },
   },
   actionIcon: {
     marginRight: theme.spacing(1),

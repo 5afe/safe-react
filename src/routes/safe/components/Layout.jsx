@@ -13,7 +13,6 @@ import { type Actions } from '../container/actions'
 
 import Balances from './Balances'
 import Receive from './Balances/Receive'
-import SendModal from './Balances/SendModal'
 import Settings from './Settings'
 import Transactions from './Transactions'
 import { AddressBookIcon } from './assets/AddressBookIcon'
@@ -35,9 +34,9 @@ import Hairline from '~/components/layout/Hairline'
 import Heading from '~/components/layout/Heading'
 import Paragraph from '~/components/layout/Paragraph'
 import Row from '~/components/layout/Row'
-import { getSafeVersion } from '~/logic/safe/utils/safeVersion'
 import { getEtherScanLink, getWeb3 } from '~/logic/wallets/getWeb3'
 import AddressBookTable from '~/routes/safe/components/AddressBook'
+import SendModal from '~/routes/safe/components/Balances/SendModal'
 import { type SelectorProps } from '~/routes/safe/container/selector'
 import { border } from '~/theme/variables'
 
@@ -107,23 +106,6 @@ const Layout = (props: Props) => {
     onClose: null,
   })
 
-  const [needUpdate, setNeedUpdate] = useState(false)
-
-  React.useEffect(() => {
-    const checkUpdateRequirement = async () => {
-      let safeVersion = {}
-
-      try {
-        safeVersion = await getSafeVersion(safe.address)
-      } catch (e) {
-        console.error('failed to check version', e)
-      }
-      setNeedUpdate(safeVersion.needUpdate)
-    }
-
-    checkUpdateRequirement()
-  }, [safe && safe.address])
-
   const handleCallToRouter = (_, value) => {
     const { history } = props
 
@@ -134,7 +116,7 @@ const Layout = (props: Props) => {
     return <NoSafe provider={provider} text="Safe not found" />
   }
 
-  const { address, ethBalance, name } = safe
+  const { address, ethBalance, featuresEnabled, name } = safe
   const etherScanLink = getEtherScanLink('address', address)
   const web3Instance = getWeb3()
 
@@ -176,7 +158,7 @@ const Layout = (props: Props) => {
       <Badge
         badgeContent=""
         color="error"
-        invisible={!needUpdate || !granted}
+        invisible={!safe.needsUpdate || !granted}
         style={{ paddingRight: '10px' }}
         variant="dot"
       >
@@ -187,7 +169,7 @@ const Layout = (props: Props) => {
   const labelBalances = (
     <>
       <BalancesIcon />
-      Balances
+      Assets
     </>
   )
   const labelTransactions = (
@@ -211,6 +193,18 @@ const Layout = (props: Props) => {
       />
     </React.Suspense>
   )
+
+  const tabsValue = () => {
+    const balanceLocation = `${match.url}/balances`
+    const isInBalance = new RegExp(`^${balanceLocation}.*$`)
+    const { pathname } = location
+
+    if (isInBalance.test(pathname)) {
+      return balanceLocation
+    }
+
+    return pathname
+  }
 
   return (
     <>
@@ -261,7 +255,7 @@ const Layout = (props: Props) => {
         indicatorColor="secondary"
         onChange={handleCallToRouter}
         textColor="secondary"
-        value={location.pathname}
+        value={tabsValue()}
         variant="scrollable"
       >
         <Tab
@@ -316,7 +310,7 @@ const Layout = (props: Props) => {
       <Switch>
         <Route
           exact
-          path={`${match.path}/balances`}
+          path={`${match.path}/balances/:assetType?`}
           render={() => (
             <Balances
               activateTokensByBalance={activateTokensByBalance}
@@ -326,6 +320,7 @@ const Layout = (props: Props) => {
               currencySelected={currencySelected}
               currencyValues={currencyValues}
               ethBalance={ethBalance}
+              featuresEnabled={featuresEnabled}
               fetchCurrencyValues={fetchCurrencyValues}
               fetchTokens={fetchTokens}
               granted={granted}

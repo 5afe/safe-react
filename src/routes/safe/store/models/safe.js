@@ -16,6 +16,9 @@ export type SafeProps = {
   nonce: number,
   latestIncomingTxBlock?: number,
   recurringUser?: boolean,
+  currentVersion: string,
+  needsUpdate: boolean,
+  featuresEnabled: string[],
 }
 
 const SafeRecord: RecordFactory<SafeProps> = Record({
@@ -30,6 +33,9 @@ const SafeRecord: RecordFactory<SafeProps> = Record({
   nonce: 0,
   latestIncomingTxBlock: 0,
   recurringUser: undefined,
+  currentVersion: '',
+  needsUpdate: false,
+  featuresEnabled: [],
 })
 
 export type Safe = RecordOf<SafeProps>

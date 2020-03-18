@@ -63,6 +63,10 @@ const getTxStatus = (tx: Transaction, userAddress: string, safe: Safe): Transact
     txStatus = !userConfirmed && userIsSafeOwner ? 'awaiting_your_confirmation' : 'awaiting_confirmations'
   }
 
+  if (tx.isSuccessful === false) {
+    txStatus = 'failed'
+  }
+
   return txStatus
 }
 
@@ -98,11 +102,11 @@ export const extendedSafeTokensSelector: Selector<GlobalState, RouterProps, List
           map.set(tokenAddress, baseToken.set('balance', tokenBalance || '0'))
         }
       })
-
-      if (ethAsToken) {
-        map.set(ethAsToken.address, ethAsToken)
-      }
     })
+
+    if (ethAsToken) {
+      return extendedTokens.set(ethAsToken.address, ethAsToken).toList()
+    }
 
     return extendedTokens.toList()
   },

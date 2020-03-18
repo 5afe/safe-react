@@ -21,6 +21,7 @@ type Props = {
 const statusToIcon = {
   success: OkIcon,
   cancelled: ErrorIcon,
+  failed: ErrorIcon,
   awaiting_your_confirmation: AwaitingIcon,
   awaiting_confirmations: AwaitingIcon,
   awaiting_execution: AwaitingIcon,
@@ -30,6 +31,7 @@ const statusToIcon = {
 const statusToLabel = {
   success: 'Success',
   cancelled: 'Cancelled',
+  failed: 'Failed',
   awaiting_your_confirmation: 'Awaiting your confirmation',
   awaiting_confirmations: 'Awaiting confirmations',
   awaiting_execution: 'Awaiting execution',

@@ -309,6 +309,16 @@ const theme = createMuiTheme({
         },
       },
     },
+    MuiTableContainer: {
+      root: {
+        marginLeft: '-10px',
+        marginRight: '-10px',
+        marginTop: '-10px',
+        paddingLeft: '10px',
+        paddingRight: '10px',
+        paddingTop: '10px',
+      },
+    },
     MuiTablePagination: {
       toolbar: {
         paddingRight: '15px',
