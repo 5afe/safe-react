@@ -42,7 +42,16 @@ type Props = {
   initialValues: Object,
 }
 
-const SendCustomTx = ({ classes, onClose, safeAddress, safeName, ethBalance, onSubmit, initialValues }: Props) => {
+const SendCustomTx = ({
+  classes,
+  ethBalance,
+  initialValues,
+  onClose,
+  onSubmit,
+  recipientAddress,
+  safeAddress,
+  safeName,
+}: Props) => {
   const [qrModalOpen, setQrModalOpen] = useState<boolean>(false)
   const [selectedEntry, setSelectedEntry] = useState<Object | null>({
     address: recipientAddress || initialValues.recipientAddress,

@@ -1,6 +1,5 @@
 // @flow
 import Card from '@material-ui/core/Card'
-import TablePagination from '@material-ui/core/TablePagination'
 import { makeStyles } from '@material-ui/core/styles'
 import React from 'react'
 import { useSelector } from 'react-redux'
@@ -19,6 +18,9 @@ const useStyles = makeStyles({
     boxSizing: 'border-box',
     maxWidth: '100%',
     padding: '52px 54px',
+  },
+  cardOuter: {
+    boxShadow: '1px 2px 10px 0 rgba(212, 212, 211, 0.59)',
   },
   gridRow: {
     boxSizing: 'border-box',
@@ -88,9 +90,9 @@ const Collectibles = () => {
   }
 
   return (
-    <Card>
+    <Card className={classes.cardOuter}>
       <div className={classes.cardInner}>
-        {activeAssetsList ? (
+        {activeAssetsList.size ? (
           activeAssetsList.map(nftAsset => {
             return (
               <React.Fragment key={nftAsset.slug}>
@@ -100,16 +102,15 @@ const Collectibles = () => {
                   <div className={classes.titleFiller} />
                 </div>
                 <div className={classes.gridRow}>
-                  {nftTokens &&
-                    nftTokens
-                      .filter(({ assetAddress }) => nftAsset.address === assetAddress)
-                      .map(nftToken => (
-                        <Item
-                          data={nftToken}
-                          key={`${nftAsset.slug}_${nftToken.tokenId}`}
-                          onSend={() => handleItemSend(nftToken)}
-                        />
-                      ))}
+                  {nftTokens
+                    .filter(({ assetAddress }) => nftAsset.address === assetAddress)
+                    .map(nftToken => (
+                      <Item
+                        data={nftToken}
+                        key={`${nftAsset.slug}_${nftToken.tokenId}`}
+                        onSend={() => handleItemSend(nftToken)}
+                      />
+                    ))}
                 </div>
               </React.Fragment>
             )
@@ -126,15 +127,6 @@ const Collectibles = () => {
         safeAddress={address}
         safeName={name}
         selectedToken={selectedToken}
-      />
-      <TablePagination
-        component="div"
-        count={11}
-        onChangePage={() => {}}
-        onChangeRowsPerPage={() => {}}
-        page={1}
-        rowsPerPage={10}
-        rowsPerPageOptions={[5, 10, 25, 50, 100]}
       />
     </Card>
   )
