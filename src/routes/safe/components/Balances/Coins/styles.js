@@ -9,6 +9,9 @@ export const styles = () => ({
     '&:hover': {
       backgroundColor: '#fff3e2',
     },
+    '&:hover $actions': {
+      visibility: 'initial',
+    },
     '&:focus $actions': {
       visibility: 'initial',
     },
