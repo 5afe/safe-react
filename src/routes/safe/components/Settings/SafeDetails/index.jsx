@@ -62,16 +62,27 @@ const SafeDetails = (props: Props) => {
   }
 
   useEffect(() => {
+    let isCurrent = true
+
     const getVersion = async () => {
       try {
         const { current, latest, needUpdate } = await getSafeVersion(safeAddress)
-        setSafeVersions({ current, latest, needUpdate })
+
+        if (isCurrent) {
+          setSafeVersions({ current, latest, needUpdate })
+        }
       } catch (err) {
-        setSafeVersions({ current: 'Version not defined' })
+        if (isCurrent) {
+          setSafeVersions({ current: 'Version not defined' })
+        }
         console.error(err)
       }
     }
     getVersion()
+
+    return () => {
+      isCurrent = false
+    }
   }, [])
 
   return (

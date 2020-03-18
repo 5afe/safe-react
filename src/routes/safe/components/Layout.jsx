@@ -113,6 +113,10 @@ const Layout = (props: Props) => {
     const checkUpdateRequirement = async () => {
       let safeVersion = {}
 
+      if (!safe.address) {
+        return
+      }
+
       try {
         safeVersion = await getSafeVersion(safe.address)
       } catch (e) {
