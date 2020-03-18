@@ -47,7 +47,7 @@ const wallets = [
   { walletName: 'operaTouch', desktop: false },
 ]
 
-const isDesktop = () => window && window.process && window.process.type
+const isDesktop = () => window.isDesktop
 
 export const selectWallets = () => {
   const desktopMode = isDesktop()
