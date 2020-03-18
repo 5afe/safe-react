@@ -30,6 +30,11 @@ export const styles = () => ({
     padding: 0,
     height: '100%',
   },
+  tokenIcon: {
+    marginRight: sm,
+    height: '28px',
+    width: '28px',
+  },
   searchInput: {
     backgroundColor: 'transparent',
     lineHeight: 'initial',

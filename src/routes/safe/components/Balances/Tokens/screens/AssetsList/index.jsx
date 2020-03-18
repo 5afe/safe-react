@@ -4,6 +4,7 @@ import MuiList from '@material-ui/core/List'
 import { makeStyles } from '@material-ui/core/styles'
 import Search from '@material-ui/icons/Search'
 import cn from 'classnames'
+import { List } from 'immutable'
 import SearchBar from 'material-ui-search-bar'
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
@@ -34,6 +35,15 @@ export const ADD_CUSTOM_ASSET_BUTTON_TEST_ID = 'add-custom-asset-btn'
 type Props = {
   setActiveScreen: Function,
 }
+
+const filterBy = (filter: string, nfts: List<NFTAsset>): List<NFTAsset> =>
+  nfts.filter(
+    (asset: NFTAsset) =>
+      !filter ||
+      asset.description.toLowerCase().includes(filter.toLowerCase()) ||
+      asset.name.toLowerCase().includes(filter.toLowerCase()) ||
+      asset.symbol.toLowerCase().includes(filter.toLowerCase()),
+  )
 
 const AssetsList = (props: Props) => {
   const classes = useStyles()
@@ -93,7 +103,8 @@ const AssetsList = (props: Props) => {
     }
   }
 
-  const itemData = createItemData(nftAssetsList)
+  const nftAssetsFilteredList = filterBy(filterValue, nftAssetsList)
+  const itemData = createItemData(nftAssetsFilteredList)
   const switchToAddCustomAssetScreen = () => props.setActiveScreen('addCustomAsset')
   return (
     <>
@@ -135,7 +146,7 @@ const AssetsList = (props: Props) => {
         <MuiList className={classes.list}>
           <FixedSizeList
             height={413}
-            itemCount={nftAssetsList.size}
+            itemCount={nftAssetsFilteredList.size}
             itemData={itemData}
             itemKey={getItemKey}
             itemSize={51}
