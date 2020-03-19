@@ -12,7 +12,7 @@ import selector from './selector'
 
 import { Loader } from '~/components-v2'
 import Page from '~/components/layout/Page'
-import { /* getGnosisSafeInstanceAt, */ getSafeDeploymentTransaction } from '~/logic/contracts/safeContracts'
+import { getSafeDeploymentTransaction } from '~/logic/contracts/safeContracts'
 import { checkReceiptStatus } from '~/logic/wallets/ethTransactions'
 import { getWeb3 } from '~/logic/wallets/getWeb3'
 import {
