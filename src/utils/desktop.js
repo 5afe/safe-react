@@ -51,7 +51,7 @@ const wallets = [
 
 const isDesktop = () => window.isDesktop
 
-export const selectWallets = () => {
+export const getSupportedWallets = () => {
   const desktopMode = isDesktop()
   /* eslint-disable no-unused-vars */
 

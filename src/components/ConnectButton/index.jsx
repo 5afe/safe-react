@@ -8,7 +8,7 @@ import { getWeb3, setWeb3 } from '~/logic/wallets/getWeb3'
 import { fetchProvider } from '~/logic/wallets/store/actions'
 import transactionDataCheck from '~/logic/wallets/transactionDataCheck'
 import { store } from '~/store'
-import { selectWallets } from '~/utils/desktop'
+import { getSupportedWallets } from '~/utils/desktop'
 
 const isMainnet = process.env.REACT_APP_NETWORK === 'mainnet'
 
@@ -17,7 +17,7 @@ const BLOCKNATIVE_API_KEY = isMainnet ? process.env.REACT_APP_BLOCKNATIVE_KEY : 
 let lastUsedAddress = ''
 let providerName
 
-const wallets = selectWallets()
+const wallets = getSupportedWallets()
 
 export const onboard = new Onboard({
   dappId: BLOCKNATIVE_API_KEY,
