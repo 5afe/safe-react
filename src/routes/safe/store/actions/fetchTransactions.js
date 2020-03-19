@@ -260,17 +260,36 @@ export type SafeTransactionsType = {
   cancel: Map<string, List<TransactionProps>>,
 }
 
+let cachedSafeTransactions = null
+let cachedSafeIncommingTransactions = null
+let etagSafeTransactions = null
+let etagCachedSafeIncommingTransactions = null
 export const loadSafeTransactions = async (safeAddress: string): Promise<SafeTransactionsType> => {
   let transactions: TxServiceModel[] = addMockSafeCreationTx(safeAddress)
 
   try {
+    const config = etagSafeTransactions
+      ? {
+          headers: {
+            'If-None-Match': etagSafeTransactions,
+          },
+        }
+      : undefined
+
     const url = buildTxServiceUrl(safeAddress)
-    const response = await axios.get(url)
+    const response = await axios.get(url, config)
     if (response.data.count > 0) {
       transactions = transactions.concat(response.data.results)
+      cachedSafeTransactions = transactions
+      etagSafeTransactions = response.headers.etag
     }
   } catch (err) {
-    console.error(`Requests for outgoing transactions for ${safeAddress} failed with 404`, err)
+    if (err && err.response && err.response.status === 304) {
+      // We return cached transactions
+      transactions = cachedSafeTransactions
+    } else {
+      console.error(`Requests for outgoing transactions for ${safeAddress} failed with 404`, err)
+    }
   }
 
   const txsRecord: Array<RecordInstance<TransactionProps>> = await Promise.all(
@@ -279,22 +298,37 @@ export const loadSafeTransactions = async (safeAddress: string): Promise<SafeTra
 
   const groupedTxs = List(txsRecord).groupBy(tx => (tx.get('cancellationTx') ? 'cancel' : 'outgoing'))
 
-  return {
+  const result = {
     outgoing: Map().set(safeAddress, groupedTxs.get('outgoing')),
     cancel: Map().set(safeAddress, groupedTxs.get('cancel')),
   }
+  return result
 }
 
 export const loadSafeIncomingTransactions = async (safeAddress: string) => {
   let incomingTransactions: IncomingTxServiceModel[] = []
   try {
+    const config = etagCachedSafeIncommingTransactions
+      ? {
+          headers: {
+            'If-None-Match': etagCachedSafeIncommingTransactions,
+          },
+        }
+      : undefined
     const url = buildIncomingTxServiceUrl(safeAddress)
-    const response = await axios.get(url)
+    const response = await axios.get(url, config)
     if (response.data.count > 0) {
       incomingTransactions = response.data.results
+      etagCachedSafeIncommingTransactions = response.headers.etag
+      cachedSafeIncommingTransactions = incomingTransactions
     }
   } catch (err) {
-    console.error(`Requests for incoming transactions for ${safeAddress} failed with 404`, err)
+    if (err && err.response && err.response.status === 304) {
+      // We return cached transactions
+      incomingTransactions = cachedSafeIncommingTransactions
+    } else {
+      console.error(`Requests for incoming transactions for ${safeAddress} failed with 404`, err)
+    }
   }
 
   const incomingTxsRecord = await Promise.all(incomingTransactions.map(buildIncomingTransactionFrom))
