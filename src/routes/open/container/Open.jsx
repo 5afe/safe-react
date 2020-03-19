@@ -7,7 +7,7 @@ import { withRouter } from 'react-router-dom'
 import Opening from '../../opening'
 import Layout from '../components/Layout'
 
-import actions, { type Actions /* , type AddSafe */ } from './actions'
+import actions, { type Actions } from './actions'
 import selector from './selector'
 
 import { Loader } from '~/components-v2'
@@ -103,7 +103,6 @@ export const createSafe = (values: Object, userAccount: string): Promise<OpenSta
 }
 
 const Open = ({ addSafe, network, provider, userAccount }: Props) => {
-  //removeFromStorage(SAFE_PENDING_CREATION_STORAGE_KEY)
   const [loading, setLoading] = useState(false)
   const [showProgress, setShowProgress] = useState()
   const [creationTxPromise, setCreationTxPromise] = useState()
