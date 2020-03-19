@@ -42,6 +42,8 @@ const wallets = [
     desktop: true,
   },
   { walletName: 'authereum', desktop: false },
+  { walletName: 'torus', desktop: true },
+
   { walletName: 'coinbase', desktop: false },
   { walletName: 'opera', desktop: false },
   { walletName: 'operaTouch', desktop: false },
@@ -51,8 +53,6 @@ const isDesktop = () => window.isDesktop
 
 export const selectWallets = () => {
   const desktopMode = isDesktop()
-  //eslint-disable-next-line
-  console.log('desktop', desktopMode)
   /* eslint-disable no-unused-vars */
 
   if (desktopMode) return wallets.filter(wallet => wallet.desktop).map(({ desktop, ...rest }) => rest)
