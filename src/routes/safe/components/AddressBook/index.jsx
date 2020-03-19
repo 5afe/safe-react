@@ -222,7 +222,7 @@ const AddressBookTable = ({ classes }: Props) => {
         onClose={() => setDeleteEntryModalOpen(false)}
       />
       <SendModal
-        activeScreenType="sendFunds"
+        activeScreenType="chooseTxType"
         ethBalance={ethBalance}
         isOpen={sendFundsModalOpen}
         onClose={() => setSendFundsModalOpen(false)}

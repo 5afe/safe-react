@@ -13,6 +13,7 @@ type DecodedTxData = {
   customTx?: boolean,
   creationTx?: boolean,
   data: string,
+  upgradeTx: boolean,
 }
 
 const getSafeVersion = (data: string) => {

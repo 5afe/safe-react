@@ -1,11 +1,19 @@
 // @flow
 import { connectRouter, routerMiddleware } from 'connected-react-router'
-import { createBrowserHistory } from 'history'
+import { createHashHistory } from 'history'
 import { type CombinedReducer, type Store, applyMiddleware, combineReducers, compose, createStore } from 'redux'
 import thunk from 'redux-thunk'
 
 import addressBookMiddleware from '~/logic/addressBook/store/middleware/addressBookMiddleware'
 import addressBook, { ADDRESS_BOOK_REDUCER_ID } from '~/logic/addressBook/store/reducer/addressBook'
+import {
+  type NFTAssetsState,
+  type NFTTokensState,
+  NFT_ASSETS_REDUCER_ID,
+  NFT_TOKENS_REDUCER_ID,
+  nftAssetReducer,
+  nftTokensReducer,
+} from '~/logic/collectibles/store/reducer/collectibles'
 import cookies, { COOKIES_REDUCER_ID } from '~/logic/cookies/store/reducer/cookies'
 import currencyValues, { CURRENCY_VALUES_KEY } from '~/logic/currencyValues/store/reducer/currencyValues'
 import currentSession, {
@@ -35,7 +43,7 @@ import transactions, {
   type State as TransactionsState,
 } from '~/routes/safe/store/reducer/transactions'
 
-export const history = createBrowserHistory({ basename: '/app/' })
+export const history = createHashHistory({ hashType: 'slash' })
 
 // eslint-disable-next-line
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
@@ -52,7 +60,10 @@ const finalCreateStore = composeEnhancers(
 
 export type GlobalState = {
   providers: ProviderState,
+  router: RouterHistory,
   safes: SafeState,
+  nftAssets: NFTAssetsState,
+  nftTokens: NFTTokensState,
   tokens: TokensState,
   transactions: TransactionsState,
   cancellationTransactions: CancelTransactionsState,
@@ -67,6 +78,8 @@ const reducers: CombinedReducer<GlobalState, *> = combineReducers({
   router: connectRouter(history),
   [PROVIDER_REDUCER_ID]: provider,
   [SAFE_REDUCER_ID]: safe,
+  [NFT_ASSETS_REDUCER_ID]: nftAssetReducer,
+  [NFT_TOKENS_REDUCER_ID]: nftTokensReducer,
   [TOKEN_REDUCER_ID]: tokens,
   [TRANSACTIONS_REDUCER_ID]: transactions,
   [CANCELLATION_TRANSACTIONS_REDUCER_ID]: cancellationTransactions,

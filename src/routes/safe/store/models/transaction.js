@@ -7,15 +7,24 @@ import { type Confirmation } from '~/routes/safe/store/models/confirmation'
 
 export const OUTGOING_TX_TYPE = 'outgoing'
 
-export type TransactionType = 'incoming' | 'outgoing' | 'settings' | 'custom' | 'creation' | 'cancellation'
+export type TransactionType =
+  | 'incoming'
+  | 'outgoing'
+  | 'settings'
+  | 'custom'
+  | 'creation'
+  | 'cancellation'
+  | 'third-party-app'
 
 export type TransactionStatus =
   | 'awaiting_your_confirmation'
   | 'awaiting_confirmations'
   | 'success'
+  | 'failed'
   | 'cancelled'
   | 'awaiting_execution'
   | 'pending'
+  | 'third-party-app'
 
 export type TransactionProps = {
   nonce: ?number,
@@ -31,6 +40,7 @@ export type TransactionProps = {
   gasToken: string,
   refundReceiver: string,
   isExecuted: boolean,
+  isSuccessful: boolean,
   submissionDate: ?string,
   executionDate: ?string,
   symbol: string,
@@ -67,6 +77,7 @@ export const makeTransaction: RecordFactory<TransactionProps> = Record({
   gasToken: ZERO_ADDRESS,
   refundReceiver: ZERO_ADDRESS,
   isExecuted: false,
+  isSuccessful: true,
   submissionDate: '',
   executor: '',
   executionDate: '',
