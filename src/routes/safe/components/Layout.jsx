@@ -28,7 +28,6 @@ import EtherscanBtn from '~/components/EtherscanBtn'
 import Identicon from '~/components/Identicon'
 import Modal from '~/components/Modal'
 import NoSafe from '~/components/NoSafe'
-import { SafeVersionContext } from '~/components/SafeVersionProvider'
 import Block from '~/components/layout/Block'
 import Button from '~/components/layout/Button'
 import Hairline from '~/components/layout/Hairline'
@@ -107,7 +106,6 @@ const Layout = (props: Props) => {
     footer: null,
     onClose: null,
   })
-  const { needsUpdate } = React.useContext(SafeVersionContext)
 
   const handleCallToRouter = (_, value) => {
     const { history } = props
@@ -119,7 +117,7 @@ const Layout = (props: Props) => {
     return <NoSafe provider={provider} text="Safe not found" />
   }
 
-  const { address, ethBalance, name } = safe
+  const { address, ethBalance, featuresEnabled, name } = safe
   const etherScanLink = getEtherScanLink('address', address)
   const web3Instance = getWeb3()
 
@@ -161,7 +159,7 @@ const Layout = (props: Props) => {
       <Badge
         badgeContent=""
         color="error"
-        invisible={!needsUpdate || !granted}
+        invisible={!safe.needsUpdate || !granted}
         style={{ paddingRight: '10px' }}
         variant="dot"
       >
@@ -324,6 +322,7 @@ const Layout = (props: Props) => {
               currencySelected={currencySelected}
               currencyValues={currencyValues}
               ethBalance={ethBalance}
+              featuresEnabled={featuresEnabled}
               fetchCurrencyValues={fetchCurrencyValues}
               fetchTokens={fetchTokens}
               granted={granted}

@@ -17,7 +17,6 @@ import { SafeDetailsIcon } from './assets/icons/SafeDetailsIcon'
 import RemoveSafeIcon from './assets/icons/bin.svg'
 import { styles } from './style'
 
-import { SafeVersionContext } from '~/components/SafeVersionProvider'
 import Block from '~/components/layout/Block'
 import ButtonLink from '~/components/layout/ButtonLink'
 import Col from '~/components/layout/Col'
@@ -106,107 +105,105 @@ class Settings extends React.Component<Props, State> {
     } = this.props
 
     return (
-      <SafeVersionContext.Consumer>
-        {({ needsUpdate }) => (
-          <>
-            <Row className={classes.message}>
-              <ButtonLink className={classes.removeSafeBtn} color="error" onClick={this.onShow('RemoveSafe')} size="lg">
-                <Span className={classes.links}>Remove Safe</Span>
-                <Img alt="Trash Icon" className={classes.removeSafeIcon} src={RemoveSafeIcon} />
-              </ButtonLink>
-              <RemoveSafeModal
-                etherScanLink={etherScanLink}
-                isOpen={showRemoveSafe}
-                onClose={this.onHide('RemoveSafe')}
-                safeAddress={safeAddress}
-                safeName={safeName}
-              />
-            </Row>
-            <Block className={classes.root}>
-              <Col className={classes.menuWrapper} layout="column">
-                <Block className={classes.menu}>
-                  <Row
-                    className={cn(classes.menuOption, menuOptionIndex === 1 && classes.active)}
-                    onClick={this.handleChange(1)}
-                  >
-                    <SafeDetailsIcon />
-                    <Badge
-                      badgeContent=" "
-                      color="error"
-                      invisible={!needsUpdate || !granted}
-                      style={{ paddingRight: '10px' }}
-                      variant="dot"
-                    >
-                      Safe details
-                    </Badge>
-                  </Row>
-                  <Hairline className={classes.hairline} />
-                  <Row
-                    className={cn(classes.menuOption, menuOptionIndex === 2 && classes.active)}
-                    onClick={this.handleChange(2)}
-                    testId={OWNERS_SETTINGS_TAB_TEST_ID}
-                  >
-                    <OwnersIcon />
-                    Owners
-                    <Paragraph className={classes.counter} size="xs">
-                      {owners.size}
-                    </Paragraph>
-                  </Row>
-                  <Hairline className={classes.hairline} />
-                  <Row
-                    className={cn(classes.menuOption, menuOptionIndex === 3 && classes.active)}
-                    onClick={this.handleChange(3)}
-                  >
-                    <RequiredConfirmationsIcon />
-                    Policies
-                  </Row>
-                  <Hairline className={classes.hairline} />
-                </Block>
-              </Col>
-              <Col className={classes.contents} layout="column">
-                <Block className={classes.container}>
-                  {menuOptionIndex === 1 && (
-                    <SafeDetails
-                      createTransaction={createTransaction}
-                      safeAddress={safeAddress}
-                      safeName={safeName}
-                      updateSafe={updateSafe}
-                    />
-                  )}
-                  {menuOptionIndex === 2 && (
-                    <ManageOwners
-                      addressBook={addressBook}
-                      addSafeOwner={addSafeOwner}
-                      createTransaction={createTransaction}
-                      editSafeOwner={editSafeOwner}
-                      granted={granted}
-                      network={network}
-                      owners={owners}
-                      removeSafeOwner={removeSafeOwner}
-                      replaceSafeOwner={replaceSafeOwner}
-                      safe={safe}
-                      safeAddress={safeAddress}
-                      safeName={safeName}
-                      threshold={threshold}
-                      updateAddressBookEntry={updateAddressBookEntry}
-                      userAddress={userAddress}
-                    />
-                  )}
-                  {menuOptionIndex === 3 && (
-                    <ThresholdSettings
-                      createTransaction={createTransaction}
-                      granted={granted}
-                      owners={owners}
-                      safeAddress={safeAddress}
-                      threshold={threshold}
-                    />
-                  )}
-                </Block>
-              </Col>
+      <>
+        <Row className={classes.message}>
+          <ButtonLink className={classes.removeSafeBtn} color="error" onClick={this.onShow('RemoveSafe')} size="lg">
+            <Span className={classes.links}>Remove Safe</Span>
+            <Img alt="Trash Icon" className={classes.removeSafeIcon} src={RemoveSafeIcon} />
+          </ButtonLink>
+          <RemoveSafeModal
+            etherScanLink={etherScanLink}
+            isOpen={showRemoveSafe}
+            onClose={this.onHide('RemoveSafe')}
+            safeAddress={safeAddress}
+            safeName={safeName}
+          />
+        </Row>
+        <Block className={classes.root}>
+          <Col className={classes.menuWrapper} layout="column">
+            <Block className={classes.menu}>
+              <Row
+                className={cn(classes.menuOption, menuOptionIndex === 1 && classes.active)}
+                onClick={this.handleChange(1)}
+              >
+                <SafeDetailsIcon />
+                <Badge
+                  badgeContent=" "
+                  color="error"
+                  invisible={!safe.needsUpdate || !granted}
+                  style={{ paddingRight: '10px' }}
+                  variant="dot"
+                >
+                  Safe details
+                </Badge>
+              </Row>
+              <Hairline className={classes.hairline} />
+              <Row
+                className={cn(classes.menuOption, menuOptionIndex === 2 && classes.active)}
+                onClick={this.handleChange(2)}
+                testId={OWNERS_SETTINGS_TAB_TEST_ID}
+              >
+                <OwnersIcon />
+                Owners
+                <Paragraph className={classes.counter} size="xs">
+                  {owners.size}
+                </Paragraph>
+              </Row>
+              <Hairline className={classes.hairline} />
+              <Row
+                className={cn(classes.menuOption, menuOptionIndex === 3 && classes.active)}
+                onClick={this.handleChange(3)}
+              >
+                <RequiredConfirmationsIcon />
+                Policies
+              </Row>
+              <Hairline className={classes.hairline} />
             </Block>
-          </>
-        )}
-      </SafeVersionContext.Consumer>
+          </Col>
+          <Col className={classes.contents} layout="column">
+            <Block className={classes.container}>
+              {menuOptionIndex === 1 && (
+                <SafeDetails
+                  createTransaction={createTransaction}
+                  safeAddress={safeAddress}
+                  safeCurrentVersion={safe.currentVersion}
+                  safeName={safeName}
+                  safeNeedsUpdate={safe.needsUpdate}
+                  updateSafe={updateSafe}
+                />
+              )}
+              {menuOptionIndex === 2 && (
+                <ManageOwners
+                  addressBook={addressBook}
+                  addSafeOwner={addSafeOwner}
+                  createTransaction={createTransaction}
+                  editSafeOwner={editSafeOwner}
+                  granted={granted}
+                  network={network}
+                  owners={owners}
+                  removeSafeOwner={removeSafeOwner}
+                  replaceSafeOwner={replaceSafeOwner}
+                  safe={safe}
+                  safeAddress={safeAddress}
+                  safeName={safeName}
+                  threshold={threshold}
+                  updateAddressBookEntry={updateAddressBookEntry}
+                  userAddress={userAddress}
+                />
+              )}
+              {menuOptionIndex === 3 && (
+                <ThresholdSettings
+                  createTransaction={createTransaction}
+                  granted={granted}
+                  owners={owners}
+                  safeAddress={safeAddress}
+                  threshold={threshold}
+                />
+              )}
+            </Block>
+          </Col>
+        </Block>
+      </>
     )
   }
 }

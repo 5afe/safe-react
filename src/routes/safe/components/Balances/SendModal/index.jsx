@@ -1,6 +1,6 @@
 // @flow
 import CircularProgress from '@material-ui/core/CircularProgress'
-import makeStyles from '@material-ui/core/styles/makeStyles'
+import { makeStyles } from '@material-ui/core/styles'
 import cn from 'classnames'
 import { List } from 'immutable'
 import React, { Suspense, useEffect, useState } from 'react'

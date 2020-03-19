@@ -6,6 +6,14 @@ import thunk from 'redux-thunk'
 
 import addressBookMiddleware from '~/logic/addressBook/store/middleware/addressBookMiddleware'
 import addressBook, { ADDRESS_BOOK_REDUCER_ID } from '~/logic/addressBook/store/reducer/addressBook'
+import {
+  type NFTAssetsState,
+  type NFTTokensState,
+  NFT_ASSETS_REDUCER_ID,
+  NFT_TOKENS_REDUCER_ID,
+  nftAssetReducer,
+  nftTokensReducer,
+} from '~/logic/collectibles/store/reducer/collectibles'
 import cookies, { COOKIES_REDUCER_ID } from '~/logic/cookies/store/reducer/cookies'
 import currencyValues, { CURRENCY_VALUES_KEY } from '~/logic/currencyValues/store/reducer/currencyValues'
 import currentSession, {
@@ -34,13 +42,6 @@ import transactions, {
   TRANSACTIONS_REDUCER_ID,
   type State as TransactionsState,
 } from '~/routes/safe/store/reducer/transactions'
-import {
-  NFT_ASSETS_REDUCER_ID,
-  NFT_TOKENS_REDUCER_ID,
-  nftAssetReducer,
-  nftTokensReducer,
-} from '~/logic/collectibles/store/reducer/collectibles'
-import type { NFTAssetsState, NFTTokensState } from '~/logic/collectibles/store/reducer/collectibles'
 
 export const history = createHashHistory({ hashType: 'slash' })
 

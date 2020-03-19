@@ -1,5 +1,5 @@
 // @flow
-import { Map, List, Set } from 'immutable'
+import { List, Map, Set } from 'immutable'
 import { type Match, matchPath } from 'react-router-dom'
 import { type OutputSelector, createSelector, createStructuredSelector } from 'reselect'
 
@@ -50,6 +50,14 @@ export const safesCountSelector: OutputSelector<GlobalState, {}, number> = creat
 export const defaultSafeSelector: OutputSelector<GlobalState, {}, string> = createSelector(
   safesStateSelector,
   (safeState: Map<string, *>): string => safeState.get('defaultSafe'),
+)
+
+export const latestMasterContractVersionSelector: OutputSelector<
+  GlobalState,
+  {},
+  string,
+> = createSelector(safesStateSelector, (safeState: Map<string, *>): string =>
+  safeState.get('latestMasterContractVersion'),
 )
 
 const transactionsSelector = (state: GlobalState): TransactionsState => state[TRANSACTIONS_REDUCER_ID]
