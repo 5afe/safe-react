@@ -25,33 +25,33 @@ const watchedActions = [ADD_TRANSACTIONS, ADD_INCOMING_TRANSACTIONS, ADD_SAFE]
 const sendAwaitingTransactionNotification = async (
   dispatch: Function,
   safeAddress: string,
-  awaitingTransactionList: List[],
+  awaitingTxsSubmissionDateList: List[],
   notificationKey: string,
   notificationClickedCb: Function,
 ) => {
-  const NOTIFICATIONS_DISPLAYED_STORAGE_ID = 'NOTIFICATIONS_DISPLAYED_STORAGE_ID'
-  if (!dispatch || !safeAddress || !awaitingTransactionList || !notificationKey) {
+  const LAST_TIME_USED_LOGGED_IN_ID = 'LAST_TIME_USED_LOGGED_IN_ID'
+  if (!dispatch || !safeAddress || !awaitingTxsSubmissionDateList || !notificationKey) {
     return
   }
-  if (awaitingTransactionList.size === 0) {
+  if (awaitingTxsSubmissionDateList.size === 0) {
     return
   }
-  let displayedNotifications = (await loadFromStorage(NOTIFICATIONS_DISPLAYED_STORAGE_ID)) || []
-  let newDisplayedNotificationsArray = displayedNotifications
-  const filteredDuplicatedAwaitingTxList = awaitingTransactionList.filter(txHash => {
-    const includes = displayedNotifications.includes(txHash)
-    if (!includes) {
-      newDisplayedNotificationsArray.push(txHash)
-    }
-    return !includes
+
+  let lastTimeUserLoggedIn = (await loadFromStorage(LAST_TIME_USED_LOGGED_IN_ID)) || null
+
+  const filteredDuplicatedAwaitingTxList = awaitingTxsSubmissionDateList.filter(submissionDate => {
+    return lastTimeUserLoggedIn ? submissionDate > lastTimeUserLoggedIn : true
   })
+
   if (filteredDuplicatedAwaitingTxList.size === 0) {
     return
   }
   dispatch(
     enqueueSnackbar(enhanceSnackbarForAction(NOTIFICATIONS.TX_WAITING_MSG, notificationKey, notificationClickedCb)),
   )
-  await saveToStorage(NOTIFICATIONS_DISPLAYED_STORAGE_ID, newDisplayedNotificationsArray)
+  //await saveToStorage(NOTIFICATIONS_DISPLAYED_STORAGE_ID, newDisplayedNotificationsArray)
+  lastTimeUserLoggedIn = lastTimeUserLoggedIn || new Date()
+  await saveToStorage(LAST_TIME_USED_LOGGED_IN_ID, lastTimeUserLoggedIn)
 }
 
 const notificationsMiddleware = (store: Store<GlobalState>) => (next: Function) => async (action: Action<*>) => {
@@ -74,11 +74,12 @@ const notificationsMiddleware = (store: Store<GlobalState>) => (next: Function) 
           cancellationTransactionsByNonce,
           userAddress,
         )
-        const awaitingTxsHashList = awaitingTransactions.get(safeAddress, List([])).map(tx => tx.safeTxHash)
+        const awaitingTxsSubmissionDateList = awaitingTransactions.get(safeAddress, List([])).map(tx => tx.submissionDate)
+
         const safes = safesMapSelector(state)
         const currentSafe = safes.get(safeAddress)
 
-        if (!isUserOwner(currentSafe, userAddress) || awaitingTxsHashList.size === 0) {
+        if (!isUserOwner(currentSafe, userAddress) || awaitingTxsSubmissionDateList.size === 0) {
           break
         }
         const notificationKey = `${safeAddress}-awaiting`
@@ -90,7 +91,7 @@ const notificationsMiddleware = (store: Store<GlobalState>) => (next: Function) 
         await sendAwaitingTransactionNotification(
           dispatch,
           safeAddress,
-          awaitingTxsHashList,
+          awaitingTxsSubmissionDateList,
           notificationKey,
           onNotificationClicked,
         )
