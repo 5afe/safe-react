@@ -34,11 +34,15 @@ class SafeView extends React.Component<Props, State> {
 
   intervalId: IntervalID
 
+  longIntervalId: IntervalID
+
   componentDidMount() {
     const {
       activeTokens,
       addViewedSafe,
+      fetchCollectibles,
       fetchCurrencyValues,
+      fetchLatestMasterContractVersion,
       fetchSafe,
       fetchTokenBalances,
       fetchTokens,
@@ -47,11 +51,14 @@ class SafeView extends React.Component<Props, State> {
       safeUrl,
     } = this.props
 
-    fetchSafe(safeUrl).then(() => {
-      // The safe needs to be loaded before fetching the transactions
-      fetchTransactions(safeUrl)
-      addViewedSafe(safeUrl)
-    })
+    fetchLatestMasterContractVersion()
+      .then(() => fetchSafe(safeUrl))
+      .then(() => {
+        // The safe needs to be loaded before fetching the transactions
+        fetchTransactions(safeUrl)
+        addViewedSafe(safeUrl)
+        fetchCollectibles()
+      })
     fetchTokenBalances(safeUrl, activeTokens)
     // fetch tokens there to get symbols for tokens in TXs list
     fetchTokens()
@@ -61,6 +68,10 @@ class SafeView extends React.Component<Props, State> {
     this.intervalId = setInterval(() => {
       this.checkForUpdates()
     }, TIMEOUT)
+
+    this.longIntervalId = setInterval(() => {
+      fetchCollectibles()
+    }, TIMEOUT * 3)
   }
 
   componentDidUpdate(prevProps) {
@@ -78,6 +89,7 @@ class SafeView extends React.Component<Props, State> {
 
   componentWillUnmount() {
     clearInterval(this.intervalId)
+    clearInterval(this.longIntervalId)
   }
 
   onShow = (action: Action) => () => {
