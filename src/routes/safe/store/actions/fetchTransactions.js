@@ -280,29 +280,34 @@ export const loadSafeTransactions = async (safeAddress: string): Promise<SafeTra
     const response = await axios.get(url, config)
     if (response.data.count > 0) {
       transactions = transactions.concat(response.data.results)
-      cachedSafeTransactions = transactions
+      if (etagSafeTransactions === response.headers.etag && cachedSafeTransactions) {
+        // The txs are the same, we can return the cached ones
+        return cachedSafeTransactions
+      }
       etagSafeTransactions = response.headers.etag
     }
   } catch (err) {
     if (err && err.response && err.response.status === 304) {
-      // We return cached transactions
-      transactions = cachedSafeTransactions
+      // NOTE: this is the expected implementation, currently the backend is not returning 304.
+      // So I check if the returned etag is the same instead (see above)
+      return cachedSafeTransactions ? cachedSafeTransactions : transactions
     } else {
       console.error(`Requests for outgoing transactions for ${safeAddress} failed with 404`, err)
     }
   }
 
+  // In case that the etags don't match, we parse the new transactions and save them to the cache
   const txsRecord: Array<RecordInstance<TransactionProps>> = await Promise.all(
     transactions.map((tx: TxServiceModel) => buildTransactionFrom(safeAddress, tx)),
   )
 
   const groupedTxs = List(txsRecord).groupBy(tx => (tx.get('cancellationTx') ? 'cancel' : 'outgoing'))
 
-  const result = {
+  cachedSafeTransactions = {
     outgoing: Map().set(safeAddress, groupedTxs.get('outgoing')),
     cancel: Map().set(safeAddress, groupedTxs.get('cancel')),
   }
-  return result
+  return cachedSafeTransactions
 }
 
 export const loadSafeIncomingTransactions = async (safeAddress: string) => {
@@ -319,21 +324,24 @@ export const loadSafeIncomingTransactions = async (safeAddress: string) => {
     const response = await axios.get(url, config)
     if (response.data.count > 0) {
       incomingTransactions = response.data.results
+      if (etagCachedSafeIncommingTransactions === response.headers.etag && cachedSafeIncommingTransactions) {
+        // The txs are the same, we can return the cached ones
+        return cachedSafeIncommingTransactions
+      }
       etagCachedSafeIncommingTransactions = response.headers.etag
-      cachedSafeIncommingTransactions = incomingTransactions
     }
   } catch (err) {
     if (err && err.response && err.response.status === 304) {
       // We return cached transactions
-      incomingTransactions = cachedSafeIncommingTransactions
+      return cachedSafeIncommingTransactions ? cachedSafeIncommingTransactions : incomingTransactions
     } else {
       console.error(`Requests for incoming transactions for ${safeAddress} failed with 404`, err)
     }
   }
 
   const incomingTxsRecord = await Promise.all(incomingTransactions.map(buildIncomingTransactionFrom))
-
-  return Map().set(safeAddress, List(incomingTxsRecord))
+  cachedSafeIncommingTransactions = Map().set(safeAddress, List(incomingTxsRecord))
+  return cachedSafeIncommingTransactions
 }
 
 export default (safeAddress: string) => async (dispatch: ReduxDispatch<GlobalState>) => {
