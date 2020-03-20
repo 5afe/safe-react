@@ -8,6 +8,7 @@ import Button from '~/components/layout/Button'
 import Heading from '~/components/layout/Heading'
 import Img from '~/components/layout/Img'
 import Paragraph from '~/components/layout/Paragraph'
+import { EMPTY_DATA } from '~/logic/wallets/ethTransactions'
 import { getEtherScanLink, getWeb3 } from '~/logic/wallets/getWeb3'
 import { background, connected } from '~/theme/variables'
 
@@ -273,7 +274,7 @@ const SafeDeployment = ({ creationTxHash, onCancel, onRetry, onSuccess, submitte
 
       interval = setInterval(async () => {
         const code = await web3.eth.getCode(safeAddress)
-        if (code !== '0x0') {
+        if (code !== EMPTY_DATA) {
           setStepIndex(5)
           clearInterval(interval)
         }
