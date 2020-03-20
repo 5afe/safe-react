@@ -9,8 +9,6 @@ import { type NotificationsQueue, getNotificationsFromTxType, showSnackbar } fro
 import {
   CALL,
   type NotifiedTransaction,
-  TX_TYPE_CONFIRMATION,
-  TX_TYPE_EXECUTION,
   getApprovalTransaction,
   getExecutionTransaction,
   saveTxToHistory,
@@ -108,7 +106,6 @@ const createTransaction = ({
         await saveTxToHistory({
           ...txArgs,
           signature,
-          type: TX_TYPE_CONFIRMATION,
           origin,
         })
         showSnackbar(notificationsQueue.afterExecution.moreConfirmationsNeeded, enqueueSnackbar, closeSnackbar)
@@ -144,7 +141,6 @@ const createTransaction = ({
           await saveTxToHistory({
             ...txArgs,
             txHash,
-            type: isExecution ? TX_TYPE_EXECUTION : TX_TYPE_CONFIRMATION,
             origin,
           })
           dispatch(fetchTransactions(safeAddress))

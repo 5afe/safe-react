@@ -7,8 +7,6 @@ import { type NotificationsQueue, getNotificationsFromTxType, showSnackbar } fro
 import { generateSignaturesFromTxConfirmations } from '~/logic/safe/safeTxSigner'
 import {
   type NotifiedTransaction,
-  TX_TYPE_CONFIRMATION,
-  TX_TYPE_EXECUTION,
   getApprovalTransaction,
   getExecutionTransaction,
   saveTxToHistory,
@@ -93,7 +91,6 @@ const processTransaction = ({
         await saveTxToHistory({
           ...txArgs,
           signature,
-          type: TX_TYPE_CONFIRMATION,
           origin,
         })
         showSnackbar(notificationsQueue.afterExecution.moreConfirmationsNeeded, enqueueSnackbar, closeSnackbar)
@@ -129,7 +126,6 @@ const processTransaction = ({
           await saveTxToHistory({
             ...txArgs,
             txHash,
-            type: isExecution ? TX_TYPE_EXECUTION : TX_TYPE_CONFIRMATION,
           })
           dispatch(fetchTransactions(safeAddress))
         } catch (err) {

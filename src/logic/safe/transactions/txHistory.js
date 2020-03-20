@@ -21,7 +21,6 @@ const calculateBodyFrom = async (
   refundReceiver: string,
   transactionHash: string | null,
   sender: string,
-  confirmationType: TxServiceType,
   origin: string | null,
   signature: ?string,
 ) => {
@@ -52,7 +51,6 @@ const calculateBodyFrom = async (
     contractTransactionHash,
     transactionHash,
     sender: getWeb3().utils.toChecksumAddress(sender),
-    confirmationType,
     origin,
     signature,
   }
@@ -80,7 +78,6 @@ export const saveTxToHistory = async ({
   signature,
   to,
   txHash,
-  type,
   valueInWei,
 }: {
   safeInstance: any,
@@ -96,7 +93,6 @@ export const saveTxToHistory = async ({
   refundReceiver: string,
   txHash: string | null,
   sender: string,
-  type: TxServiceType,
   origin: string | null,
   signature: ?string,
 }) => {
@@ -115,7 +111,6 @@ export const saveTxToHistory = async ({
     refundReceiver,
     txHash || null,
     sender,
-    type,
     origin || null,
     signature,
   )
