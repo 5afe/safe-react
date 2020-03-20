@@ -182,6 +182,13 @@ const Open = ({ addSafe, network, provider, userAccount }: Props) => {
     })
   }
 
+  const onRetry = async () => {
+    const values = await loadFromStorage(SAFE_PENDING_CREATION_STORAGE_KEY)
+    delete values.txHash
+    await saveToStorage(SAFE_PENDING_CREATION_STORAGE_KEY, values)
+    createSafeProxy()
+  }
+
   if (loading || showProgress === undefined) {
     return <Loader />
   }
@@ -192,8 +199,9 @@ const Open = ({ addSafe, network, provider, userAccount }: Props) => {
         <Opening
           creationTxHash={safeCreationPendingInfo ? safeCreationPendingInfo.txHash : undefined}
           onCancel={onCancel}
-          onRetry={createSafeProxy}
+          onRetry={onRetry}
           onSuccess={onSafeCreated}
+          provider={provider}
           submittedPromise={creationTxPromise}
         />
       ) : (

@@ -2,12 +2,13 @@
 import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 
-import { Stepper } from '~/components-v2'
+import { Loader, Stepper } from '~/components-v2'
 import LoaderDots from '~/components-v2/feedback/Loader-dots/assets/loader-dots.svg'
 import Button from '~/components/layout/Button'
 import Heading from '~/components/layout/Heading'
 import Img from '~/components/layout/Img'
 import Paragraph from '~/components/layout/Paragraph'
+import { initContracts } from '~/logic/contracts/safeContracts'
 import { EMPTY_DATA } from '~/logic/wallets/ethTransactions'
 import { getEtherScanLink, getWeb3 } from '~/logic/wallets/getWeb3'
 import { background, connected } from '~/theme/variables'
@@ -66,7 +67,7 @@ const ButtonMargin = styled(Button)`
 const BodyImage = styled.div`
   grid-row: 1;
 `
-const BodyDesctiption = styled.div`
+const BodyDescription = styled.div`
   grid-row: 2;
 `
 const BodyLoader = styled.div`
@@ -88,6 +89,7 @@ const BodyFooter = styled.div`
 `
 
 type Props = {
+  provider: string,
   creationTxHash: Promise<any>,
   submittedPromise: Promise<any>,
   onRetry: () => void,
@@ -95,13 +97,15 @@ type Props = {
   onCancel: () => void,
 }
 
-const SafeDeployment = ({ creationTxHash, onCancel, onRetry, onSuccess, submittedPromise }: Props) => {
+const SafeDeployment = ({ creationTxHash, onCancel, onRetry, onSuccess, provider, submittedPromise }: Props) => {
+  const [loading, setLoading] = useState(true)
   const [stepIndex, setStepIndex] = useState()
-  const [intervalStarted, setIntervalStarted] = useState(false)
-  const [waitingSafeDeployed, setWaitingSafeDeployed] = useState(false)
-  const [error, setError] = useState(false)
   const [safeCreationTxHash, setSafeCreationTxHash] = useState()
   const [createdSafeAddress, setCreatedSafeAddress] = useState()
+
+  const [error, setError] = useState(false)
+  const [intervalStarted, setIntervalStarted] = useState(false)
+  const [waitingSafeDeployed, setWaitingSafeDeployed] = useState(false)
   const [continueButtonDisabled, setContinueButtonDisabled] = useState(false)
 
   const genericFooter = (
@@ -176,6 +180,44 @@ const SafeDeployment = ({ creationTxHash, onCancel, onRetry, onSuccess, submitte
     },
   ]
 
+  const onError = error => {
+    setIntervalStarted(false)
+    setWaitingSafeDeployed(false)
+    setContinueButtonDisabled(false)
+    setError(true)
+    console.error(error)
+  }
+
+  // discard click event value
+  const onRetryTx = () => {
+    setStepIndex(0)
+    setError(false)
+    onRetry()
+  }
+
+  const getImage = () => {
+    if (error) {
+      return vaultErrorSvg
+    }
+
+    if (stepIndex <= 4) {
+      return vaultSvg
+    }
+
+    return successSvg
+  }
+
+  useEffect(() => {
+    const loadContracts = async () => {
+      await initContracts()
+      setLoading(false)
+    }
+
+    if (provider) {
+      loadContracts()
+    }
+  }, [provider])
+
   // creating safe from from submission
   useEffect(() => {
     if (submittedPromise === undefined) {
@@ -189,7 +231,7 @@ const SafeDeployment = ({ creationTxHash, onCancel, onRetry, onSuccess, submitte
         setStepIndex(1)
         setIntervalStarted(true)
       })
-      .on('error', setError)
+      .on('error', onError)
   }, [submittedPromise])
 
   // recovering safe creation from txHash
@@ -209,8 +251,12 @@ const SafeDeployment = ({ creationTxHash, onCancel, onRetry, onSuccess, submitte
 
     const isTxMined = async txHash => {
       const web3 = getWeb3()
+
+      const receipt = await web3.eth.getTransactionReceipt(txHash)
+      if (!receipt.status) {
+        throw Error('TX status reverted')
+      }
       const txResult = await web3.eth.getTransaction(txHash)
-      // blockNumber is null when TX is pending.
       return txResult.blockNumber !== null
     }
 
@@ -225,7 +271,6 @@ const SafeDeployment = ({ creationTxHash, onCancel, onRetry, onSuccess, submitte
           setStepIndex(4)
           setWaitingSafeDeployed(true)
           setIntervalStarted(false)
-          clearInterval(interval)
         })
       }
 
@@ -237,10 +282,9 @@ const SafeDeployment = ({ creationTxHash, onCancel, onRetry, onSuccess, submitte
             setStepIndex(4)
             setWaitingSafeDeployed(true)
             setIntervalStarted(false)
-            clearInterval(interval)
           }
         } catch (error) {
-          setError(error)
+          onError(error)
         }
       }
     }, 3000)
@@ -248,7 +292,7 @@ const SafeDeployment = ({ creationTxHash, onCancel, onRetry, onSuccess, submitte
     return () => {
       clearInterval(interval)
     }
-  }, [creationTxHash, submittedPromise, intervalStarted, stepIndex, setError])
+  }, [creationTxHash, submittedPromise, intervalStarted, stepIndex, error])
 
   useEffect(() => {
     let interval
@@ -269,7 +313,6 @@ const SafeDeployment = ({ creationTxHash, onCancel, onRetry, onSuccess, submitte
           receipt.logs[0].data,
           receipt.logs[0].topics,
         )
-
         const safeAddress = events[0]
         setCreatedSafeAddress(safeAddress)
 
@@ -277,11 +320,10 @@ const SafeDeployment = ({ creationTxHash, onCancel, onRetry, onSuccess, submitte
           const code = await web3.eth.getCode(safeAddress)
           if (code !== EMPTY_DATA) {
             setStepIndex(5)
-            clearInterval(interval)
           }
         }, 1000)
       } catch (error) {
-        setError(error)
+        onError(error)
       }
     }
 
@@ -296,26 +338,8 @@ const SafeDeployment = ({ creationTxHash, onCancel, onRetry, onSuccess, submitte
     }
   }, [waitingSafeDeployed])
 
-  // discard click event value
-  const onRetryTx = () => {
-    setError(false)
-    onRetry()
-  }
-
-  const getImage = () => {
-    if (error) {
-      return vaultErrorSvg
-    }
-
-    if (stepIndex <= 4) {
-      return vaultSvg
-    }
-
-    return successSvg
-  }
-
-  if (stepIndex === undefined) {
-    return <div>loading</div>
+  if (loading || stepIndex === undefined) {
+    return <Loader />
   }
 
   return (
@@ -329,9 +353,9 @@ const SafeDeployment = ({ creationTxHash, onCancel, onRetry, onSuccess, submitte
           <Img alt="Vault" height={75} src={getImage()} />
         </BodyImage>
 
-        <BodyDesctiption>
+        <BodyDescription>
           <CardTitle>{steps[stepIndex].description || steps[stepIndex].label}</CardTitle>
-        </BodyDesctiption>
+        </BodyDescription>
 
         <BodyLoader>{!error && stepIndex <= 4 && <Img alt="LoaderDots" src={LoaderDots} />}</BodyLoader>
 
