@@ -32,6 +32,7 @@ import {
 } from '~/logic/tokens/store/actions/fetchTokens'
 import { type Token } from '~/logic/tokens/store/model/token'
 import { formatAmount } from '~/logic/tokens/utils/formatAmount'
+import { SAFE_TRANSFER_FROM_WITHOUT_DATA_HASH } from '~/logic/tokens/utils/tokenHelpers'
 import { getWeb3 } from '~/logic/wallets/getWeb3'
 import SafeInfo from '~/routes/safe/components/Balances/SendModal/SafeInfo'
 import { setImageToPlaceholder } from '~/routes/safe/components/Balances/utils'
@@ -41,8 +42,6 @@ import { sm } from '~/theme/variables'
 import { textShortener } from '~/utils/strings'
 
 const useStyles = makeStyles(styles)
-
-const SAFE_TRANSFER_FROM_WITHOUT_DATA_HASH = '0x42842e0e'
 
 type Props = {
   onClose: () => void,
