@@ -260,8 +260,6 @@ export type SafeTransactionsType = {
   cancel: Map<string, List<TransactionProps>>,
 }
 
-let cachedSafeTransactions = null
-let cachedSafeIncommingTransactions = null
 let etagSafeTransactions = null
 let etagCachedSafeIncommingTransactions = null
 export const loadSafeTransactions = async (safeAddress: string): Promise<SafeTransactionsType> => {
@@ -280,9 +278,9 @@ export const loadSafeTransactions = async (safeAddress: string): Promise<SafeTra
     const response = await axios.get(url, config)
     if (response.data.count > 0) {
       transactions = transactions.concat(response.data.results)
-      if (etagSafeTransactions === response.headers.etag && cachedSafeTransactions) {
+      if (etagSafeTransactions === response.headers.etag) {
         // The txs are the same, we can return the cached ones
-        return cachedSafeTransactions
+        return
       }
       etagSafeTransactions = response.headers.etag
     }
@@ -290,7 +288,7 @@ export const loadSafeTransactions = async (safeAddress: string): Promise<SafeTra
     if (err && err.response && err.response.status === 304) {
       // NOTE: this is the expected implementation, currently the backend is not returning 304.
       // So I check if the returned etag is the same instead (see above)
-      return cachedSafeTransactions ? cachedSafeTransactions : transactions
+      return
     } else {
       console.error(`Requests for outgoing transactions for ${safeAddress} failed with 404`, err)
     }
@@ -303,11 +301,10 @@ export const loadSafeTransactions = async (safeAddress: string): Promise<SafeTra
 
   const groupedTxs = List(txsRecord).groupBy(tx => (tx.get('cancellationTx') ? 'cancel' : 'outgoing'))
 
-  cachedSafeTransactions = {
+  return {
     outgoing: Map().set(safeAddress, groupedTxs.get('outgoing')),
     cancel: Map().set(safeAddress, groupedTxs.get('cancel')),
   }
-  return cachedSafeTransactions
 }
 
 export const loadSafeIncomingTransactions = async (safeAddress: string) => {
@@ -324,32 +321,38 @@ export const loadSafeIncomingTransactions = async (safeAddress: string) => {
     const response = await axios.get(url, config)
     if (response.data.count > 0) {
       incomingTransactions = response.data.results
-      if (etagCachedSafeIncommingTransactions === response.headers.etag && cachedSafeIncommingTransactions) {
+      if (etagCachedSafeIncommingTransactions === response.headers.etag) {
         // The txs are the same, we can return the cached ones
-        return cachedSafeIncommingTransactions
+        return
       }
       etagCachedSafeIncommingTransactions = response.headers.etag
     }
   } catch (err) {
     if (err && err.response && err.response.status === 304) {
       // We return cached transactions
-      return cachedSafeIncommingTransactions ? cachedSafeIncommingTransactions : incomingTransactions
+      return
     } else {
       console.error(`Requests for incoming transactions for ${safeAddress} failed with 404`, err)
     }
   }
 
   const incomingTxsRecord = await Promise.all(incomingTransactions.map(buildIncomingTransactionFrom))
-  cachedSafeIncommingTransactions = Map().set(safeAddress, List(incomingTxsRecord))
-  return cachedSafeIncommingTransactions
+  return Map().set(safeAddress, List(incomingTxsRecord))
 }
 
 export default (safeAddress: string) => async (dispatch: ReduxDispatch<GlobalState>) => {
   web3 = await getWeb3()
 
-  const { cancel, outgoing }: SafeTransactionsType = await loadSafeTransactions(safeAddress)
-  const incomingTransactions: Map<string, List<IncomingTransaction>> = await loadSafeIncomingTransactions(safeAddress)
-  dispatch(addCancellationTransactions(cancel))
-  dispatch(addTransactions(outgoing))
-  dispatch(addIncomingTransactions(incomingTransactions))
+  const transactions: SafeTransactionsType | undefined = await loadSafeTransactions(safeAddress)
+  const incomingTransactions: Map<string, List<IncomingTransaction>> | undefined = await loadSafeIncomingTransactions(
+    safeAddress,
+  )
+  if (transactions) {
+    const { cancel, outgoing } = transactions
+    dispatch(addCancellationTransactions(cancel))
+    dispatch(addTransactions(outgoing))
+  }
+  if (incomingTransactions) {
+    dispatch(addIncomingTransactions(incomingTransactions))
+  }
 }
