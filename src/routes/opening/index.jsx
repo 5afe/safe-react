@@ -254,31 +254,35 @@ const SafeDeployment = ({ creationTxHash, onCancel, onRetry, onSuccess, submitte
     let interval
 
     const awaitUntilSafeIsDeployed = async () => {
-      const web3 = getWeb3()
-      const receipt = await web3.eth.getTransactionReceipt(safeCreationTxHash)
+      try {
+        const web3 = getWeb3()
+        const receipt = await web3.eth.getTransactionReceipt(safeCreationTxHash)
 
-      // get the address for the just created safe
-      const events = web3.eth.abi.decodeLog(
-        [
-          {
-            type: 'address',
-            name: 'ProxyCreation',
-          },
-        ],
-        receipt.logs[0].data,
-        receipt.logs[0].topics,
-      )
+        // get the address for the just created safe
+        const events = web3.eth.abi.decodeLog(
+          [
+            {
+              type: 'address',
+              name: 'ProxyCreation',
+            },
+          ],
+          receipt.logs[0].data,
+          receipt.logs[0].topics,
+        )
 
-      const safeAddress = events[0]
-      setCreatedSafeAddress(safeAddress)
+        const safeAddress = events[0]
+        setCreatedSafeAddress(safeAddress)
 
-      interval = setInterval(async () => {
-        const code = await web3.eth.getCode(safeAddress)
-        if (code !== EMPTY_DATA) {
-          setStepIndex(5)
-          clearInterval(interval)
-        }
-      }, 1000)
+        interval = setInterval(async () => {
+          const code = await web3.eth.getCode(safeAddress)
+          if (code !== EMPTY_DATA) {
+            setStepIndex(5)
+            clearInterval(interval)
+          }
+        }, 1000)
+      } catch (error) {
+        setError(error)
+      }
     }
 
     if (!waitingSafeDeployed) {
