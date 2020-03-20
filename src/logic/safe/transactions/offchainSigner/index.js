@@ -17,6 +17,7 @@ export const tryOffchainSigning = async txArgs => {
 
       break
     } catch (err) {
+      console.error(err)
       if (err.code === 4001) {
         throw new Error('User denied sign request')
       }

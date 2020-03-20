@@ -57,7 +57,7 @@ export const getCurrentMasterContractLastVersion = async () => {
   return safeMasterVersion
 }
 
-export const getSafeVersion = async (safeAddress: string) => {
+export const getSafeVersionInfo = async (safeAddress: string) => {
   try {
     const safeMaster = await getGnosisSafeInstanceAt(safeAddress)
     const lastSafeVersion = await getCurrentMasterContractLastVersion()

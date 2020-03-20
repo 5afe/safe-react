@@ -9,7 +9,7 @@ import { fetchProvider } from '~/logic/wallets/store/actions'
 import transactionDataCheck from '~/logic/wallets/transactionDataCheck'
 import { store } from '~/store'
 
-const isMainnet = process.env.REACT_APP_NETWORK === 'mainnet'
+const isMainnet = false
 
 const BLOCKNATIVE_API_KEY = isMainnet ? process.env.REACT_APP_BLOCKNATIVE_KEY : '7fbb9cee-7e97-4436-8770-8b29a9a8814c'
 const PORTIS_DAPP_ID = isMainnet ? process.env.REACT_APP_PORTIS_ID : '852b763d-f28b-4463-80cb-846d7ec5806b'
