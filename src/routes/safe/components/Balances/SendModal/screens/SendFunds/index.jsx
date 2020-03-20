@@ -1,11 +1,11 @@
 // @flow
 import IconButton from '@material-ui/core/IconButton'
 import InputAdornment from '@material-ui/core/InputAdornment'
-import { withStyles } from '@material-ui/core/styles'
+import { makeStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
-import { List } from 'immutable'
 import React, { useState } from 'react'
 import { OnChange } from 'react-final-form-listeners'
+import { useSelector } from 'react-redux'
 
 import ArrowDown from '../assets/arrow-down.svg'
 
@@ -32,19 +32,16 @@ import { type Token } from '~/logic/tokens/store/model/token'
 import SafeInfo from '~/routes/safe/components/Balances/SendModal/SafeInfo'
 import AddressBookInput from '~/routes/safe/components/Balances/SendModal/screens/AddressBookInput'
 import TokenSelectField from '~/routes/safe/components/Balances/SendModal/screens/SendFunds/TokenSelectField'
+import { extendedSafeTokensSelector } from '~/routes/safe/container/selector'
+import { safeSelector } from '~/routes/safe/store/selectors'
 import { sm } from '~/theme/variables'
 
 type Props = {
-  onClose: () => void,
-  classes: Object,
-  safeAddress: string,
-  safeName: string,
-  ethBalance: string,
-  selectedToken: string,
-  tokens: List<Token>,
-  onSubmit: Function,
   initialValues: Object,
+  onClose: () => void,
+  onNext: any => void,
   recipientAddress?: string,
+  selectedToken: string,
 }
 
 const formMutators = {
@@ -59,21 +56,15 @@ const formMutators = {
   },
 }
 
-const SendFunds = ({
-  classes,
-  ethBalance,
-  initialValues,
-  onClose,
-  onSubmit,
-  recipientAddress,
-  safeAddress,
-  safeName,
-  selectedToken,
-  tokens,
-}: Props) => {
+const useStyles = makeStyles(styles)
+
+const SendFunds = ({ initialValues, onClose, onNext, recipientAddress, selectedToken = '' }: Props) => {
+  const classes = useStyles()
+  const { address: safeAddress, ethBalance, name: safeName } = useSelector(safeSelector)
+  const tokens: Token = useSelector(extendedSafeTokensSelector)
   const [qrModalOpen, setQrModalOpen] = useState<boolean>(false)
   const [selectedEntry, setSelectedEntry] = useState<Object | null>({
-    address: recipientAddress,
+    address: recipientAddress || initialValues.recipientAddress,
     name: '',
   })
   const [pristine, setPristine] = useState<boolean>(true)
@@ -91,7 +82,7 @@ const SendFunds = ({
     if (!values.recipientAddress) {
       submitValues.recipientAddress = selectedEntry.address
     }
-    onSubmit(submitValues)
+    onNext(submitValues)
   }
 
   const openQrModal = () => {
@@ -294,4 +285,4 @@ const SendFunds = ({
   )
 }
 
-export default withStyles(styles)(SendFunds)
+export default SendFunds

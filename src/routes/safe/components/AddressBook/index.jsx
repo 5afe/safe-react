@@ -42,8 +42,7 @@ import RenameOwnerIcon from '~/routes/safe/components/Settings/ManageOwners/asse
 import type { OwnerRow } from '~/routes/safe/components/Settings/ManageOwners/dataFetcher'
 import RemoveOwnerIcon from '~/routes/safe/components/Settings/assets/icons/bin.svg'
 import RemoveOwnerIconDisabled from '~/routes/safe/components/Settings/assets/icons/disabled-bin.svg'
-import { extendedSafeTokensSelector } from '~/routes/safe/container/selector'
-import { addressBookQueryParamsSelector, safeSelector, safesListSelector } from '~/routes/safe/store/selectors'
+import { addressBookQueryParamsSelector, safesListSelector } from '~/routes/safe/store/selectors'
 
 type Props = {
   classes: Object,
@@ -86,10 +85,7 @@ const AddressBookTable = ({ classes }: Props) => {
     }
   }, [addressBook])
 
-  const safe = useSelector(safeSelector)
   const safesList = useSelector(safesListSelector)
-  const activeTokens = useSelector(extendedSafeTokensSelector)
-  const { address, ethBalance, name } = safe
 
   const newEntryModalHandler = (entry: AddressBookEntry) => {
     setEditCreateEntryModalOpen(false)
@@ -223,13 +219,9 @@ const AddressBookTable = ({ classes }: Props) => {
       />
       <SendModal
         activeScreenType="chooseTxType"
-        ethBalance={ethBalance}
         isOpen={sendFundsModalOpen}
         onClose={() => setSendFundsModalOpen(false)}
         recipientAddress={selectedEntry && selectedEntry.entry ? selectedEntry.entry.address : undefined}
-        safeAddress={address}
-        safeName={name}
-        tokens={activeTokens}
       />
     </>
   )
