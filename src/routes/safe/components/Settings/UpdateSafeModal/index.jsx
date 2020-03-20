@@ -3,6 +3,8 @@ import IconButton from '@material-ui/core/IconButton'
 import Close from '@material-ui/icons/Close'
 import { withStyles } from '@material-ui/styles'
 import React from 'react'
+import { useDispatch } from 'react-redux'
+import { bindActionCreators } from 'redux'
 
 import { styles } from './style'
 
@@ -13,18 +15,19 @@ import Hairline from '~/components/layout/Hairline'
 import Paragraph from '~/components/layout/Paragraph'
 import Row from '~/components/layout/Row'
 import { upgradeSafeToLatestVersion } from '~/logic/safe/utils/upgradeSafe'
+import createTransaction from '~/routes/safe/store/actions/createTransaction'
 
 type Props = {
   onClose: Function,
-  createTransaction: Function,
   classes: Object,
   safeAddress: string,
 }
 
-const UpdateSafeModal = ({ classes, createTransaction, onClose, safeAddress }: Props) => {
+const UpdateSafeModal = ({ classes, onClose, safeAddress }: Props) => {
+  const dispatch = useDispatch()
   const handleSubmit = async () => {
     // Call the update safe method
-    await upgradeSafeToLatestVersion(safeAddress, createTransaction)
+    await upgradeSafeToLatestVersion(safeAddress, bindActionCreators(createTransaction, dispatch))
     onClose()
   }
 

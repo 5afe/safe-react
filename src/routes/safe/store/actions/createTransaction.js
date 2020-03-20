@@ -28,7 +28,7 @@ type CreateTransactionArgs = {
   to: string,
   valueInWei: string,
   txData: string,
-  notifiedTransaction: NotifiedTransaction,
+  notifiedTransaction: $Values<NotifiedTransaction>,
   enqueueSnackbar: Function,
   closeSnackbar: Function,
   txNonce?: number,
@@ -65,7 +65,7 @@ const createTransaction = ({
   const nonce = await getNewTxNonce(txNonce, lastTx, safeInstance)
   const isExecution = await shouldExecuteTransaction(safeInstance, nonce, lastTx)
 
-  // https://gnosis-safe.readthedocs.io/en/latest/contracts/signatures.html#pre-validated-signatures
+  // https://docs.gnosis.io/safe/docs/docs5/#pre-validated-signatures
   const sigs = `0x000000000000000000000000${from.replace(
     '0x',
     '',

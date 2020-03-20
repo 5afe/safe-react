@@ -26,7 +26,6 @@ import Paragraph from '~/components/layout/Paragraph'
 import Row from '~/components/layout/Row'
 import Span from '~/components/layout/Span'
 import type { AddressBook } from '~/logic/addressBook/model/addressBook'
-import { getSafeVersion } from '~/logic/safe/utils/safeVersion'
 import { type Owner } from '~/routes/safe/store/models/owner'
 import type { Safe } from '~/routes/safe/store/models/safe'
 
@@ -35,7 +34,6 @@ export const OWNERS_SETTINGS_TAB_TEST_ID = 'owner-settings-tab'
 type State = {
   showRemoveSafe: boolean,
   menuOptionIndex: number,
-  needUpdate: boolean,
 }
 
 type Props = Actions & {
@@ -68,24 +66,7 @@ class Settings extends React.Component<Props, State> {
     this.state = {
       showRemoveSafe: false,
       menuOptionIndex: 1,
-      needUpdate: false,
     }
-  }
-
-  componentDidMount(): void {
-    const checkUpdateRequirement = async () => {
-      let safeVersion = {}
-
-      try {
-        const { safeAddress } = this.props
-        safeVersion = await getSafeVersion(safeAddress)
-      } catch (e) {
-        console.error('failed to check version', e)
-      }
-      this.setState({ needUpdate: safeVersion.needUpdate })
-    }
-
-    checkUpdateRequirement()
   }
 
   handleChange = menuOptionIndex => () => {
@@ -149,7 +130,7 @@ class Settings extends React.Component<Props, State> {
                 <Badge
                   badgeContent=" "
                   color="error"
-                  invisible={!this.state.needUpdate || !granted}
+                  invisible={!safe.needsUpdate || !granted}
                   style={{ paddingRight: '10px' }}
                   variant="dot"
                 >
@@ -185,7 +166,9 @@ class Settings extends React.Component<Props, State> {
                 <SafeDetails
                   createTransaction={createTransaction}
                   safeAddress={safeAddress}
+                  safeCurrentVersion={safe.currentVersion}
                   safeName={safeName}
+                  safeNeedsUpdate={safe.needsUpdate}
                   updateSafe={updateSafe}
                 />
               )}

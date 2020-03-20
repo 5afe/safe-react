@@ -4,6 +4,7 @@ import type { Dispatch as ReduxDispatch } from 'redux'
 
 import { getGnosisSafeInstanceAt } from '~/logic/contracts/safeContracts'
 import { getLocalSafe, getSafeName } from '~/logic/safe/utils'
+import { enabledFeatures, safeNeedsUpdate } from '~/logic/safe/utils/safeVersion'
 import { sameAddress } from '~/logic/wallets/ethAddresses'
 import { getBalanceInEtherOf, getWeb3 } from '~/logic/wallets/getWeb3'
 import addSafe from '~/routes/safe/store/actions/addSafe'
@@ -34,7 +35,7 @@ const buildOwnersFrom = (
     })
   })
 
-export const buildSafe = async (safeAdd: string, safeName: string) => {
+export const buildSafe = async (safeAdd: string, safeName: string, latestMasterContractVersion: string) => {
   const safeAddress = getWeb3().utils.toChecksumAddress(safeAdd)
   const gnosisSafe = await getGnosisSafeInstanceAt(safeAddress)
   const ethBalance = await getBalanceInEtherOf(safeAddress)
@@ -42,6 +43,9 @@ export const buildSafe = async (safeAdd: string, safeName: string) => {
   const threshold = Number(await gnosisSafe.getThreshold())
   const nonce = Number(await gnosisSafe.nonce())
   const owners = List(buildOwnersFrom(await gnosisSafe.getOwners(), await getLocalSafe(safeAddress)))
+  const currentVersion = await gnosisSafe.VERSION()
+  const needsUpdate = await safeNeedsUpdate(currentVersion, latestMasterContractVersion)
+  const featuresEnabled = enabledFeatures(currentVersion)
 
   const safe: SafeProps = {
     address: safeAddress,
@@ -50,6 +54,9 @@ export const buildSafe = async (safeAdd: string, safeName: string) => {
     owners,
     ethBalance,
     nonce,
+    currentVersion,
+    needsUpdate,
+    featuresEnabled,
   }
 
   return safe
@@ -93,11 +100,12 @@ export const checkAndUpdateSafe = (safeAdd: string) => async (dispatch: ReduxDis
 }
 
 // eslint-disable-next-line consistent-return
-export default (safeAdd: string) => async (dispatch: ReduxDispatch<GlobalState>) => {
+export default (safeAdd: string) => async (dispatch: ReduxDispatch<GlobalState>, getState: () => GlobalState) => {
   try {
     const safeAddress = getWeb3().utils.toChecksumAddress(safeAdd)
     const safeName = (await getSafeName(safeAddress)) || 'LOADED SAFE'
-    const safeProps: SafeProps = await buildSafe(safeAddress, safeName)
+    const latestMasterContractVersion = getState().safes.get('latestMasterContractVersion')
+    const safeProps: SafeProps = await buildSafe(safeAddress, safeName, latestMasterContractVersion)
 
     dispatch(addSafe(safeProps))
   } catch (err) {

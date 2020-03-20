@@ -1,22 +1,26 @@
 // @flow
 import IconButton from '@material-ui/core/IconButton'
-import { withStyles } from '@material-ui/core/styles'
+import { makeStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
 import classNames from 'classnames/bind'
 import * as React from 'react'
+import { useSelector } from 'react-redux'
 
 import Code from '../assets/code.svg'
+import Collectible from '../assets/collectibles.svg'
 import Token from '../assets/token.svg'
 
+import { mustBeEthereumContractAddress } from '~/components/forms/validator'
 import Button from '~/components/layout/Button'
 import Col from '~/components/layout/Col'
 import Hairline from '~/components/layout/Hairline'
 import Img from '~/components/layout/Img'
 import Paragraph from '~/components/layout/Paragraph'
 import Row from '~/components/layout/Row'
+import { safeSelector } from '~/routes/safe/store/selectors'
 import { lg, md, sm } from '~/theme/variables'
 
-const styles = () => ({
+const useStyles = makeStyles({
   heading: {
     padding: `${md} ${lg}`,
     justifyContent: 'space-between',
@@ -25,6 +29,14 @@ const styles = () => ({
   },
   manage: {
     fontSize: lg,
+  },
+  disclaimer: {
+    marginBottom: `-${md}`,
+    paddingTop: md,
+    textAlign: 'center',
+  },
+  disclaimerText: {
+    fontSize: md,
   },
   closeIcon: {
     height: '35px',
@@ -51,47 +63,96 @@ const styles = () => ({
 
 type Props = {
   onClose: () => void,
-  classes: Object,
+  recipientAddress?: string,
   setActiveScreen: Function,
 }
 
-const ChooseTxType = ({ classes, onClose, setActiveScreen }: Props) => (
-  <>
-    <Row align="center" className={classes.heading} grow>
-      <Paragraph className={classes.manage} noMargin weight="bolder">
-        Send
-      </Paragraph>
-      <IconButton disableRipple onClick={onClose}>
-        <Close className={classes.closeIcon} />
-      </IconButton>
-    </Row>
-    <Hairline />
-    <Row align="center">
-      <Col className={classes.buttonColumn} layout="column" middle="xs">
-        <Button
-          className={classes.firstButton}
-          color="primary"
-          minHeight={52}
-          minWidth={260}
-          onClick={() => setActiveScreen('sendFunds')}
-          variant="contained"
-        >
-          <Img alt="Send funds" className={classNames(classes.leftIcon, classes.iconSmall)} src={Token} />
-          Send funds
-        </Button>
-        <Button
-          color="primary"
-          minHeight={52}
-          minWidth={260}
-          onClick={() => setActiveScreen('sendCustomTx')}
-          variant="outlined"
-        >
-          <Img alt="Send custom transaction" className={classNames(classes.leftIcon, classes.iconSmall)} src={Code} />
-          Send custom transaction
-        </Button>
-      </Col>
-    </Row>
-  </>
-)
+const ChooseTxType = ({ onClose, recipientAddress, setActiveScreen }: Props) => {
+  const classes = useStyles()
+  const { featuresEnabled } = useSelector(safeSelector)
+  const erc721Enabled = featuresEnabled.includes('ERC721')
+  const [disableCustomTx, setDisableCustomTx] = React.useState(!!recipientAddress)
 
-export default withStyles(styles)(ChooseTxType)
+  React.useEffect(() => {
+    let isCurrent = true
+    const isContract = async () => {
+      if (recipientAddress && isCurrent) {
+        setDisableCustomTx(!!(await mustBeEthereumContractAddress(recipientAddress)))
+      }
+    }
+
+    isContract()
+
+    return () => {
+      isCurrent = false
+    }
+  }, [recipientAddress])
+
+  return (
+    <>
+      <Row align="center" className={classes.heading} grow>
+        <Paragraph className={classes.manage} noMargin weight="bolder">
+          Send
+        </Paragraph>
+        <IconButton disableRipple onClick={onClose}>
+          <Close className={classes.closeIcon} />
+        </IconButton>
+      </Row>
+      <Hairline />
+      {!!recipientAddress && (
+        <Row align="center">
+          <Col className={classes.disclaimer} layout="column" middle="xs">
+            <Paragraph className={classes.disclaimerText} noMargin>
+              Please select what you will send to {recipientAddress}
+            </Paragraph>
+          </Col>
+        </Row>
+      )}
+      <Row align="center">
+        <Col className={classes.buttonColumn} layout="column" middle="xs">
+          <Button
+            className={classes.firstButton}
+            color="primary"
+            minHeight={52}
+            minWidth={260}
+            onClick={() => setActiveScreen('sendFunds')}
+            variant="contained"
+          >
+            <Img alt="Send funds" className={classNames(classes.leftIcon, classes.iconSmall)} src={Token} />
+            Send funds
+          </Button>
+          {erc721Enabled && (
+            <Button
+              className={classes.firstButton}
+              color="primary"
+              minHeight={52}
+              minWidth={260}
+              onClick={() => setActiveScreen('sendCollectible')}
+              variant="contained"
+            >
+              <Img
+                alt="Send collectible"
+                className={classNames(classes.leftIcon, classes.iconSmall)}
+                src={Collectible}
+              />
+              Send collectible
+            </Button>
+          )}
+          <Button
+            color="primary"
+            disabled={disableCustomTx}
+            minHeight={52}
+            minWidth={260}
+            onClick={() => setActiveScreen('sendCustomTx')}
+            variant="outlined"
+          >
+            <Img alt="Send custom transaction" className={classNames(classes.leftIcon, classes.iconSmall)} src={Code} />
+            Send custom transaction
+          </Button>
+        </Col>
+      </Row>
+    </>
+  )
+}
+
+export default ChooseTxType

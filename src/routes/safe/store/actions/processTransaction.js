@@ -48,7 +48,7 @@ const processTransaction = ({
   const isExecution = approveAndExecute || (await shouldExecuteTransaction(safeInstance, nonce, lastTx))
 
   let sigs = generateSignaturesFromTxConfirmations(tx.confirmations, approveAndExecute && userAddress)
-  // https://gnosis-safe.readthedocs.io/en/latest/contracts/signatures.html#pre-validated-signatures
+  // https://docs.gnosis.io/safe/docs/docs5/#pre-validated-signatures
   if (!sigs) {
     sigs = `0x000000000000000000000000${from.replace(
       '0x',
@@ -82,6 +82,12 @@ const processTransaction = ({
     transaction = isExecution ? await getExecutionTransaction(txArgs) : await getApprovalTransaction(txArgs)
 
     const sendParams = { from, value: 0 }
+
+    // TODO find a better solution for this in dev and production.
+    if (process.env.REACT_APP_ENV !== 'production') {
+      sendParams.gasLimit = 1000000
+    }
+
     // if not set owner management tests will fail on ganache
     if (process.env.NODE_ENV === 'test') {
       sendParams.gas = '7000000'
