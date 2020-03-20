@@ -37,10 +37,14 @@ const sendAwaitingTransactionNotification = async (
     return
   }
 
-  let lastTimeUserLoggedIn = (await loadFromStorage(LAST_TIME_USED_LOGGED_IN_ID)) || null
+  let lastTimeUserLoggedInForSafes = (await loadFromStorage(LAST_TIME_USED_LOGGED_IN_ID)) || []
+  let lastTimeUserLoggedIn =
+    lastTimeUserLoggedInForSafes && lastTimeUserLoggedInForSafes[safeAddress]
+      ? lastTimeUserLoggedInForSafes[safeAddress]
+      : null
 
   const filteredDuplicatedAwaitingTxList = awaitingTxsSubmissionDateList.filter(submissionDate => {
-    return lastTimeUserLoggedIn ? submissionDate > lastTimeUserLoggedIn : true
+    return lastTimeUserLoggedIn ? new Date(submissionDate) > new Date(lastTimeUserLoggedIn) : true
   })
 
   if (filteredDuplicatedAwaitingTxList.size === 0) {
@@ -49,9 +53,12 @@ const sendAwaitingTransactionNotification = async (
   dispatch(
     enqueueSnackbar(enhanceSnackbarForAction(NOTIFICATIONS.TX_WAITING_MSG, notificationKey, notificationClickedCb)),
   )
-  //await saveToStorage(NOTIFICATIONS_DISPLAYED_STORAGE_ID, newDisplayedNotificationsArray)
-  lastTimeUserLoggedIn = lastTimeUserLoggedIn || new Date()
-  await saveToStorage(LAST_TIME_USED_LOGGED_IN_ID, lastTimeUserLoggedIn)
+
+  lastTimeUserLoggedInForSafes = {
+    ...lastTimeUserLoggedInForSafes,
+    [safeAddress]: lastTimeUserLoggedIn || new Date(),
+  }
+  await saveToStorage(LAST_TIME_USED_LOGGED_IN_ID, lastTimeUserLoggedInForSafes)
 }
 
 const notificationsMiddleware = (store: Store<GlobalState>) => (next: Function) => async (action: Action<*>) => {
@@ -74,7 +81,9 @@ const notificationsMiddleware = (store: Store<GlobalState>) => (next: Function) 
           cancellationTransactionsByNonce,
           userAddress,
         )
-        const awaitingTxsSubmissionDateList = awaitingTransactions.get(safeAddress, List([])).map(tx => tx.submissionDate)
+        const awaitingTxsSubmissionDateList = awaitingTransactions
+          .get(safeAddress, List([]))
+          .map(tx => tx.submissionDate)
 
         const safes = safesMapSelector(state)
         const currentSafe = safes.get(safeAddress)

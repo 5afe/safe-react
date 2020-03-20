@@ -77,7 +77,8 @@ class Settings extends React.Component<Props, State> {
       let safeVersion = {}
 
       try {
-        safeVersion = await getSafeVersion(this.props.safe.address)
+        const { safeAddress } = this.props
+        safeVersion = await getSafeVersion(safeAddress)
       } catch (e) {
         console.error('failed to check version', e)
       }
