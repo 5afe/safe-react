@@ -51,10 +51,10 @@ type Props = {
   activeTokens: List<Token>,
   blacklistedTokens: List<Token>,
   classes: Object,
-  createTransaction: Function,
+  createTransaction?: Function,
   currencySelected: string,
   currencyValues: BalanceCurrencyType[],
-  ethBalance: string,
+  ethBalance?: string,
   featuresEnabled: string[],
   fetchCurrencyValues: Function,
   fetchTokens: Function,
@@ -156,10 +156,8 @@ class Balances extends React.Component<Props, State> {
       activeTokens,
       blacklistedTokens,
       classes,
-      createTransaction,
       currencySelected,
       currencyValues,
-      ethBalance,
       granted,
       safeAddress,
       safeName,
@@ -304,14 +302,9 @@ class Balances extends React.Component<Props, State> {
         {erc721Enabled && showCollectibles && <Collectibles />}
         <SendModal
           activeScreenType="sendFunds"
-          createTransaction={createTransaction}
-          ethBalance={ethBalance}
           isOpen={sendFunds.isOpen}
           onClose={this.hideSendFunds}
-          safeAddress={safeAddress}
-          safeName={safeName}
           selectedToken={sendFunds.selectedToken}
-          tokens={activeTokens}
         />
         <Modal
           description="Receive Tokens Form"

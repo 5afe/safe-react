@@ -2,7 +2,6 @@
 import IconButton from '@material-ui/core/IconButton'
 import { makeStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
-import { List } from 'immutable'
 import { withSnackbar } from 'notistack'
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
@@ -30,7 +29,6 @@ import {
   getERC721TokenContract,
   getHumanFriendlyToken,
 } from '~/logic/tokens/store/actions/fetchTokens'
-import { type Token } from '~/logic/tokens/store/model/token'
 import { formatAmount } from '~/logic/tokens/utils/formatAmount'
 import { SAFE_TRANSFER_FROM_WITHOUT_DATA_HASH } from '~/logic/tokens/utils/tokenHelpers'
 import { getWeb3 } from '~/logic/wallets/getWeb3'
@@ -44,14 +42,11 @@ import { textShortener } from '~/utils/strings'
 const useStyles = makeStyles(styles)
 
 type Props = {
+  closeSnackbar: Function,
+  enqueueSnackbar: Function,
   onClose: () => void,
   onPrev: () => void,
-  classes: Object,
   tx: Object,
-  tokens: List<Token>,
-  createTransaction: Function,
-  enqueueSnackbar: Function,
-  closeSnackbar: Function,
 }
 
 const ReviewCollectible = ({ closeSnackbar, enqueueSnackbar, onClose, onPrev, tx }: Props) => {
