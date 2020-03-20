@@ -1,4 +1,5 @@
 // @flow
+import { sameAddress } from '~/logic/wallets/ethAddresses'
 import { EMPTY_DATA } from '~/logic/wallets/ethTransactions'
 import { getWeb3 } from '~/logic/wallets/getWeb3'
 
@@ -44,20 +45,13 @@ export const generateEthSignature = async ({
         params: [sender, txHash],
         id: new Date().getTime(),
       },
-      function(err, signature) {
+      async function(err, signature) {
         if (err) {
           return reject(err)
         }
 
         if (signature.result == null) {
           reject(new Error(ETH_SIGN_NOT_SUPPORTED_ERROR_MSG))
-          return
-        }
-
-        // Auethereum returns a diffirent signature since it's a smart-contract wallet
-        // It's length is greater than usual signature (65 bytes)
-        if (signature.result.length > 132) {
-          reject(new Error('Bad signature'))
           return
         }
 

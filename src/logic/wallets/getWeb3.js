@@ -94,6 +94,12 @@ const getNetworkIdFrom = async web3Provider => {
   return networkId
 }
 
+const isSmartContractWallet = async (web3Provider, account) => {
+  const contractCode: string = await web3Provider.eth.getCode(account)
+
+  return contractCode.replace('0x', '').replace(/0/g, '') !== ''
+}
+
 export const getProviderInfo: Function = async (
   web3Provider,
   providerName?: string = 'Wallet',
@@ -103,6 +109,7 @@ export const getProviderInfo: Function = async (
   const name = providerName
   const account = await getAccountFrom(web3)
   const network = await getNetworkIdFrom(web3)
+  const smartContractWallet = await isSmartContractWallet(web3, account)
 
   const available = account !== null
 
@@ -112,6 +119,7 @@ export const getProviderInfo: Function = async (
     loaded: true,
     account,
     network,
+    smartContractWallet,
   }
 }
 

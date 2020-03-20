@@ -85,13 +85,6 @@ export const generateEIP712Signature = async txArgs => {
         return
       }
 
-      // Auethereum returns a diffirent signature since it's a smart-contract wallet
-      // It's length is greater than usual signature (65 bytes)
-      if (signature.result.length > 132) {
-        reject(new Error('Bad signature'))
-        return
-      }
-
       resolve(signature.result.replace(EMPTY_DATA, ''))
     })
   })

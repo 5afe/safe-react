@@ -13,7 +13,7 @@ import {
   saveTxToHistory,
 } from '~/logic/safe/transactions'
 import { tryOffchainSigning } from '~/logic/safe/transactions/offchainSigner'
-import { userAccountSelector } from '~/logic/wallets/store/selectors'
+import { isSmartContractWalletSelector, userAccountSelector } from '~/logic/wallets/store/selectors'
 import fetchSafe from '~/routes/safe/store/actions/fetchSafe'
 import fetchTransactions from '~/routes/safe/store/actions/fetchTransactions'
 import { getLastTx, getNewTxNonce, shouldExecuteTransaction } from '~/routes/safe/store/actions/utils'
@@ -43,6 +43,7 @@ const processTransaction = ({
   const state: GlobalState = getState()
 
   const from = userAccountSelector(state)
+  const isSmartContractWallet = isSmartContractWalletSelector(state)
   const safeInstance = await getGnosisSafeInstanceAt(safeAddress)
   const lastTx = await getLastTx(safeAddress)
   const nonce = await getNewTxNonce(null, lastTx, safeInstance)
@@ -80,7 +81,7 @@ const processTransaction = ({
   }
 
   try {
-    if (!isExecution) {
+    if (!isExecution && !isSmartContractWallet) {
       let signature: ?string
       // 1. we try to sign via EIP-712 if user's wallet supports it
       signature = await tryOffchainSigning({ ...txArgs, safeAddress })

@@ -17,7 +17,7 @@ import {
 import { tryOffchainSigning } from '~/logic/safe/transactions/offchainSigner'
 import { ZERO_ADDRESS } from '~/logic/wallets/ethAddresses'
 import { EMPTY_DATA } from '~/logic/wallets/ethTransactions'
-import { userAccountSelector } from '~/logic/wallets/store/selectors'
+import { isSmartContractWalletSelector, userAccountSelector } from '~/logic/wallets/store/selectors'
 import { SAFELIST_ADDRESS } from '~/routes/routes'
 import fetchTransactions from '~/routes/safe/store/actions/fetchTransactions'
 import { getLastTx, getNewTxNonce, shouldExecuteTransaction } from '~/routes/safe/store/actions/utils'
@@ -61,6 +61,7 @@ const createTransaction = ({
   if (!ready) return
 
   const from = userAccountSelector(state)
+  const isSmartContractWallet = isSmartContractWalletSelector(state)
   const safeInstance = await getGnosisSafeInstanceAt(safeAddress)
   const lastTx = await getLastTx(safeAddress)
   const nonce = await getNewTxNonce(txNonce, lastTx, safeInstance)
@@ -95,7 +96,7 @@ const createTransaction = ({
   }
 
   try {
-    if (!isExecution) {
+    if (!isExecution && !isSmartContractWallet) {
       let signature: ?string
       // 1. we try to sign via EIP-712 if user's wallet supports it
       signature = await tryOffchainSigning({ ...txArgs, safeAddress })

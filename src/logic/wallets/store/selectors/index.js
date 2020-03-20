@@ -26,6 +26,11 @@ export const networkSelector = createSelector(providerSelector, (provider: Provi
   return network
 })
 
+export const isSmartContractWalletSelector = createSelector(
+  providerSelector,
+  (provider: Provider) => provider.smartContractWallet,
+)
+
 export const loadedSelector = createSelector(providerSelector, (provider: Provider) => provider.get('loaded'))
 
 export const availableSelector = createSelector(providerSelector, (provider: Provider) => provider.get('available'))
