@@ -52,8 +52,9 @@ const ReviewCustomTx = ({ closeSnackbar, enqueueSnackbar, onClose, onPrev, tx }:
 
     const estimateGas = async () => {
       const { fromWei, toBN } = getWeb3().utils
+      const txData = tx.data ? tx.data.trim() : ''
 
-      const estimatedGasCosts = await estimateTxGasCosts(safeAddress, tx.recipientAddress, tx.data.trim())
+      const estimatedGasCosts = await estimateTxGasCosts(safeAddress, tx.recipientAddress, txData)
       const gasCostsAsEth = fromWei(toBN(estimatedGasCosts), 'ether')
       const formattedGasCosts = formatAmount(gasCostsAsEth)
 
@@ -72,7 +73,7 @@ const ReviewCustomTx = ({ closeSnackbar, enqueueSnackbar, onClose, onPrev, tx }:
   const submitTx = async () => {
     const web3 = getWeb3()
     const txRecipient = tx.recipientAddress
-    const txData = tx.data.trim()
+    const txData = tx.data ? tx.data.trim() : ''
     const txValue = tx.value ? web3.utils.toWei(tx.value, 'ether') : '0'
 
     dispatch(
