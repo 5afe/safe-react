@@ -1,5 +1,4 @@
 // @flow
-import { sameAddress } from '~/logic/wallets/ethAddresses'
 import { EMPTY_DATA } from '~/logic/wallets/ethTransactions'
 import { getWeb3 } from '~/logic/wallets/getWeb3'
 
@@ -20,7 +19,6 @@ export const generateEthSignature = async ({
   valueInWei,
 }) => {
   const web3 = await getWeb3()
-  console.log('trying to sign via eth_sign')
   const txHash = await safeInstance.getTransactionHash(
     to,
     valueInWei,

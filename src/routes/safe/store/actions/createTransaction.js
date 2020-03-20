@@ -116,7 +116,7 @@ const createTransaction = ({
         return
       }
     }
-    console.log('im next')
+
     tx = isExecution ? await getExecutionTransaction(txArgs) : await getApprovalTransaction(txArgs)
 
     const sendParams = { from, value: 0 }
