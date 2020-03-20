@@ -97,8 +97,11 @@ type Props = {
 const SafeDeployment = ({ creationTxHash, onCancel, onRetry, onSuccess, submittedPromise }: Props) => {
   const [stepIndex, setStepIndex] = useState()
   const [intervalStarted, setIntervalStarted] = useState(false)
+  const [waitingSafeDeployed, setWaitingSafeDeployed] = useState(false)
   const [error, setError] = useState(false)
   const [safeCreationTxHash, setSafeCreationTxHash] = useState()
+  const [createdSafeAddress, setCreatedSafeAddress] = useState()
+  const [continueButtonDisabled, setContinueButtonDisabled] = useState(false)
 
   const genericFooter = (
     <span>
@@ -117,6 +120,11 @@ const SafeDeployment = ({ creationTxHash, onCancel, onRetry, onSuccess, submitte
       </p>
     </span>
   )
+
+  const navigateToSafe = () => {
+    setContinueButtonDisabled(true)
+    onSuccess(createdSafeAddress)
+  }
 
   const steps = [
     {
@@ -160,7 +168,7 @@ const SafeDeployment = ({ creationTxHash, onCancel, onRetry, onSuccess, submitte
       description: 'Your Safe was created successfully',
       instruction: 'Click Below to get started',
       footer: (
-        <Button color="primary" onClick={onSuccess} variant="contained">
+        <Button color="primary" disabled={continueButtonDisabled} onClick={navigateToSafe} variant="contained">
           Continue
         </Button>
       ),
@@ -210,21 +218,25 @@ const SafeDeployment = ({ creationTxHash, onCancel, onRetry, onSuccess, submitte
         setStepIndex(stepIndex + 1)
       }
 
+      // safe created using the form
       if (submittedPromise !== undefined) {
         submittedPromise.then(() => {
+          setStepIndex(4)
+          setWaitingSafeDeployed(true)
           setIntervalStarted(false)
           clearInterval(interval)
-          setStepIndex(5)
         })
       }
 
+      // safe pending creation recovered from storage
       if (creationTxHash !== undefined) {
         try {
           const res = await isTxMined(creationTxHash)
           if (res) {
+            setStepIndex(4)
+            setWaitingSafeDeployed(true)
             setIntervalStarted(false)
             clearInterval(interval)
-            setStepIndex(5)
           }
         } catch (error) {
           setError(error)
@@ -236,6 +248,48 @@ const SafeDeployment = ({ creationTxHash, onCancel, onRetry, onSuccess, submitte
       clearInterval(interval)
     }
   }, [creationTxHash, submittedPromise, intervalStarted, stepIndex, setError])
+
+  useEffect(() => {
+    let interval
+
+    const awaitUntilSafeIsDeployed = async () => {
+      const web3 = getWeb3()
+      const receipt = await web3.eth.getTransactionReceipt(safeCreationTxHash)
+
+      // get the address for the just created safe
+      const events = web3.eth.abi.decodeLog(
+        [
+          {
+            type: 'address',
+            name: 'ProxyCreation',
+          },
+        ],
+        receipt.logs[0].data,
+        receipt.logs[0].topics,
+      )
+
+      const safeAddress = events[0]
+      setCreatedSafeAddress(safeAddress)
+
+      interval = setInterval(async () => {
+        const code = await web3.eth.getCode(safeAddress)
+        if (code !== '0x0') {
+          setStepIndex(5)
+          clearInterval(interval)
+        }
+      }, 1000)
+    }
+
+    if (!waitingSafeDeployed) {
+      return
+    }
+
+    awaitUntilSafeIsDeployed()
+
+    return () => {
+      clearInterval(interval)
+    }
+  }, [waitingSafeDeployed])
 
   // discard click event value
   const onRetryTx = () => {

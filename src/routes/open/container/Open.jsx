@@ -14,7 +14,6 @@ import { Loader } from '~/components-v2'
 import Page from '~/components/layout/Page'
 import { getSafeDeploymentTransaction } from '~/logic/contracts/safeContracts'
 import { checkReceiptStatus } from '~/logic/wallets/ethTransactions'
-import { getWeb3 } from '~/logic/wallets/getWeb3'
 import {
   getAccountsFrom,
   getNamesFrom,
@@ -155,25 +154,9 @@ const Open = ({ addSafe, network, provider, userAccount }: Props) => {
     setShowProgress(true)
   }
 
-  const onSafeCreated = async () => {
-    const web3 = getWeb3()
-
+  const onSafeCreated = async safeAddress => {
     const pendingCreation = await loadFromStorage(SAFE_PENDING_CREATION_STORAGE_KEY)
-    const receipt = await web3.eth.getTransactionReceipt(pendingCreation.txHash)
 
-    // get the address for the just created safe
-    const events = web3.eth.abi.decodeLog(
-      [
-        {
-          type: 'address',
-          name: 'ProxyCreation',
-        },
-      ],
-      receipt.logs[0].data,
-      receipt.logs[0].topics,
-    )
-
-    const safeAddress = events[0]
     const name = getSafeNameFrom(pendingCreation)
     const ownersNames = getNamesFrom(pendingCreation)
     const ownerAddresses = getAccountsFrom(pendingCreation)
