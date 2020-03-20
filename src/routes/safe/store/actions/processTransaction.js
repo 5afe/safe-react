@@ -13,7 +13,7 @@ import {
   getExecutionTransaction,
   saveTxToHistory,
 } from '~/logic/safe/transactions'
-import { tryOffchainSigning } from '~/logic/safe/transactions/offchainSigner'
+import { SAFE_VERSION_FOR_OFFCHAIN_SIGNATURES, tryOffchainSigning } from '~/logic/safe/transactions/offchainSigner'
 import { getCurrentSafeVersion } from '~/logic/safe/utils/safeVersion'
 import { isSmartContractWalletSelector, userAccountSelector } from '~/logic/wallets/store/selectors'
 import fetchSafe from '~/routes/safe/store/actions/fetchSafe'
@@ -84,7 +84,8 @@ const processTransaction = ({
   }
 
   try {
-    const canTryOffchainSigning = !isExecution && !isSmartContractWallet && semverSatisfies(safeVersion, '>=1.1.1')
+    const canTryOffchainSigning =
+      !isExecution && !isSmartContractWallet && semverSatisfies(safeVersion, SAFE_VERSION_FOR_OFFCHAIN_SIGNATURES)
     if (canTryOffchainSigning) {
       const signature = await tryOffchainSigning({ ...txArgs, safeAddress })
 

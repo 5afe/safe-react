@@ -2,6 +2,8 @@
 import ENS from 'ethereum-ens'
 import Web3 from 'web3'
 
+import { EMPTY_DATA } from './ethTransactions'
+
 import { getNetwork } from '~/config/index'
 import type { ProviderProps } from '~/logic/wallets/store/model/provider'
 
@@ -97,7 +99,7 @@ const getNetworkIdFrom = async web3Provider => {
 const isSmartContractWallet = async (web3Provider, account) => {
   const contractCode: string = await web3Provider.eth.getCode(account)
 
-  return contractCode.replace('0x', '').replace(/0/g, '') !== ''
+  return contractCode.replace(EMPTY_DATA, '').replace(/0/g, '') !== ''
 }
 
 export const getProviderInfo: Function = async (

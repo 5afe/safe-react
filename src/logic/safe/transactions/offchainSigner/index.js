@@ -9,6 +9,8 @@ import { generateEthSignature } from './ethSigner'
 
 const signingFuncs = [getEIP712Signer('v3'), getEIP712Signer(), generateEthSignature]
 
+export const SAFE_VERSION_FOR_OFFCHAIN_SIGNATURES = '>=1.1.1'
+
 export const tryOffchainSigning = async txArgs => {
   let signature
   for (let signingFunc of signingFuncs) {
