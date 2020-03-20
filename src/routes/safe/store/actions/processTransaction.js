@@ -84,7 +84,8 @@ const processTransaction = ({
   }
 
   try {
-    if (!isExecution && !isSmartContractWallet && semverSatisfies(safeVersion, '>=1.1.1')) {
+    const canTryOffchainSigning = !isExecution && !isSmartContractWallet && semverSatisfies(safeVersion, '>=1.1.1')
+    if (canTryOffchainSigning) {
       const signature = await tryOffchainSigning({ ...txArgs, safeAddress })
 
       if (signature) {
