@@ -1,5 +1,6 @@
 // @flow
 import type { Dispatch as ReduxDispatch } from 'redux'
+import semverSatisfies from 'semver/functions/satisfies'
 
 import { getGnosisSafeInstanceAt } from '~/logic/contracts/safeContracts'
 import { type NotificationsQueue, getNotificationsFromTxType, showSnackbar } from '~/logic/notifications'
@@ -13,6 +14,7 @@ import {
   saveTxToHistory,
 } from '~/logic/safe/transactions'
 import { tryOffchainSigning } from '~/logic/safe/transactions/offchainSigner'
+import { getCurrentSafeVersion } from '~/logic/safe/utils/safeVersion'
 import { isSmartContractWalletSelector, userAccountSelector } from '~/logic/wallets/store/selectors'
 import fetchSafe from '~/routes/safe/store/actions/fetchSafe'
 import fetchTransactions from '~/routes/safe/store/actions/fetchTransactions'
@@ -48,6 +50,7 @@ const processTransaction = ({
   const lastTx = await getLastTx(safeAddress)
   const nonce = await getNewTxNonce(null, lastTx, safeInstance)
   const isExecution = approveAndExecute || (await shouldExecuteTransaction(safeInstance, nonce, lastTx))
+  const safeVersion = getCurrentSafeVersion(safeInstance)
 
   let sigs = generateSignaturesFromTxConfirmations(tx.confirmations, approveAndExecute && userAddress)
   // https://docs.gnosis.io/safe/docs/docs5/#pre-validated-signatures
@@ -81,12 +84,8 @@ const processTransaction = ({
   }
 
   try {
-    if (!isExecution && !isSmartContractWallet) {
-      let signature: ?string
-      // 1. we try to sign via EIP-712 if user's wallet supports it
-      signature = await tryOffchainSigning({ ...txArgs, safeAddress })
-      // 2. If not, try to use eth_sign (Safe version has to be >1.1.1)
-      // If eth_sign, doesn't work continue with the regular flow
+    if (!isExecution && !isSmartContractWallet && semverSatisfies(safeVersion, '>=1.1.1')) {
+      const signature = await tryOffchainSigning({ ...txArgs, safeAddress })
 
       if (signature) {
         await saveTxToHistory({
