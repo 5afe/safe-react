@@ -7,7 +7,7 @@ import { NOTIFICATIONS, enhanceSnackbarForAction } from '~/logic/notifications'
 import closeSnackbarAction from '~/logic/notifications/store/actions/closeSnackbar'
 import enqueueSnackbar from '~/logic/notifications/store/actions/enqueueSnackbar'
 import { getAwaitingTransactions } from '~/logic/safe/transactions/awaitingTransactions'
-import { getSafeVersion } from '~/logic/safe/utils/safeVersion'
+import { getSafeVersionInfo } from '~/logic/safe/utils/safeVersion'
 import { isUserOwner } from '~/logic/wallets/ethAddresses'
 import { userAccountSelector } from '~/logic/wallets/store/selectors'
 import { getIncomingTxAmount } from '~/routes/safe/components/Transactions/TxsTable/columns'
@@ -111,7 +111,7 @@ const notificationsMiddleware = (store: Store<GlobalState>) => (next: Function) 
         const state: GlobalState = store.getState()
         const currentSafeAddress = safeParamAddressFromStateSelector(state)
         const isUserOwner = grantedSelector(state)
-        const { needUpdate } = await getSafeVersion(currentSafeAddress)
+        const { needUpdate } = await getSafeVersionInfo(currentSafeAddress)
 
         const notificationKey = `${currentSafeAddress}`
         const onNotificationClicked = () => {
