@@ -1,6 +1,7 @@
 // @flow
 import { RateLimit } from 'async-sema'
 
+import { ETHEREUM_NETWORK } from '~/logic/wallets/getWeb3'
 import type {
   CollectibleMetadataSource,
   CollectiblesInfo,
@@ -15,11 +16,9 @@ import { OPENSEA_API_KEY } from '~/utils/constants'
 class OpenSea implements CollectibleMetadataSource {
   _rateLimit = async () => {}
 
-  _endpointsUrls: { [key: number]: string } = {
-    // $FlowFixMe
-    1: 'https://api.opensea.io/api/v1',
-    // $FlowFixMe
-    4: 'https://rinkeby-api.opensea.io/api/v1',
+  _endpointsUrls: { [key: string]: string } = {
+    [ETHEREUM_NETWORK.MAINNET]: 'https://api.opensea.io/api/v1',
+    [ETHEREUM_NETWORK.RINKEBY]: 'https://rinkeby-api.opensea.io/api/v1',
   }
 
   _fetch = async (url: string) => {
@@ -91,12 +90,12 @@ class OpenSea implements CollectibleMetadataSource {
    * Fetches from OpenSea the list of collectibles, grouped by category,
    * for the provided Safe Address in the specified Network
    * @param {string} safeAddress
-   * @param {number} networkId
+   * @param {string} network
    * @returns {Promise<{ nftAssets: Map<string, NFTAsset>, nftTokens: Array<NFTToken> }>}
    */
-  async fetchAllUserCollectiblesByCategoryAsync(safeAddress: string, networkId: number) {
+  async fetchAllUserCollectiblesByCategoryAsync(safeAddress: string, network: string) {
     // eslint-disable-next-line no-underscore-dangle
-    const metadataSourceUrl = this._endpointsUrls[networkId]
+    const metadataSourceUrl = this._endpointsUrls[network]
     const url = `${metadataSourceUrl}/assets/?owner=${safeAddress}`
     // eslint-disable-next-line no-underscore-dangle
     const assetsResponse = await this._fetch(url)

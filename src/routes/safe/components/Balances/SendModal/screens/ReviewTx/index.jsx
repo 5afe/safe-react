@@ -1,11 +1,11 @@
 // @flow
 import IconButton from '@material-ui/core/IconButton'
-import { withStyles } from '@material-ui/core/styles'
+import { makeStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
 import { BigNumber } from 'bignumber.js'
-import { List } from 'immutable'
 import { withSnackbar } from 'notistack'
 import React, { useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 
 import ArrowDown from '../assets/arrow-down.svg'
 
@@ -24,65 +24,63 @@ import Row from '~/components/layout/Row'
 import { TX_NOTIFICATION_TYPES } from '~/logic/safe/transactions'
 import { estimateTxGasCosts } from '~/logic/safe/transactions/gasNew'
 import { getHumanFriendlyToken } from '~/logic/tokens/store/actions/fetchTokens'
-import { type Token } from '~/logic/tokens/store/model/token'
 import { formatAmount } from '~/logic/tokens/utils/formatAmount'
 import { ETH_ADDRESS } from '~/logic/tokens/utils/tokenHelpers'
 import { EMPTY_DATA } from '~/logic/wallets/ethTransactions'
 import { getWeb3 } from '~/logic/wallets/getWeb3'
 import SafeInfo from '~/routes/safe/components/Balances/SendModal/SafeInfo'
 import { setImageToPlaceholder } from '~/routes/safe/components/Balances/utils'
+import { extendedSafeTokensSelector } from '~/routes/safe/container/selector'
+import createTransaction from '~/routes/safe/store/actions/createTransaction'
+import { safeSelector } from '~/routes/safe/store/selectors'
 import { sm } from '~/theme/variables'
 
 type Props = {
-  onClose: () => void,
-  setActiveScreen: Function,
-  classes: Object,
-  safeAddress: string,
-  safeName: string,
-  ethBalance: string,
-  tx: Object,
-  tokens: List<Token>,
-  createTransaction: Function,
-  enqueueSnackbar: Function,
   closeSnackbar: Function,
+  enqueueSnackbar: Function,
+  onClose: () => void,
+  onPrev: () => void,
+  tx: Object,
 }
 
-const ReviewTx = ({
-  classes,
-  closeSnackbar,
-  createTransaction,
-  enqueueSnackbar,
-  ethBalance,
-  onClose,
-  safeAddress,
-  safeName,
-  setActiveScreen,
-  tokens,
-  tx,
-}: Props) => {
+const useStyles = makeStyles(styles)
+
+const ReviewTx = ({ closeSnackbar, enqueueSnackbar, onClose, onPrev, tx }: Props) => {
+  const classes = useStyles()
+  const dispatch = useDispatch()
+  const { address: safeAddress, ethBalance, name: safeName } = useSelector(safeSelector)
+  const tokens = useSelector(extendedSafeTokensSelector)
   const [gasCosts, setGasCosts] = useState<string>('< 0.001')
+  const [data, setData] = useState('')
+
   const txToken = tokens.find(token => token.address === tx.token)
   const isSendingETH = txToken.address === ETH_ADDRESS
   const txRecipient = isSendingETH ? tx.recipientAddress : txToken.address
 
   useEffect(() => {
     let isCurrent = true
+
     const estimateGas = async () => {
-      const web3 = getWeb3()
-      const { fromWei, toBN } = web3.utils
+      const { fromWei, toBN } = getWeb3().utils
+
       let txData = EMPTY_DATA
+
       if (!isSendingETH) {
         const StandardToken = await getHumanFriendlyToken()
         const tokenInstance = await StandardToken.at(txToken.address)
+        const decimals = await tokenInstance.decimals()
+        const txAmount = new BigNumber(tx.amount).times(10 ** decimals.toNumber()).toString()
 
-        txData = tokenInstance.contract.methods.transfer(tx.recipientAddress, 0).encodeABI()
+        txData = tokenInstance.contract.methods.transfer(tx.recipientAddress, txAmount).encodeABI()
       }
 
       const estimatedGasCosts = await estimateTxGasCosts(safeAddress, txRecipient, txData)
       const gasCostsAsEth = fromWei(toBN(estimatedGasCosts), 'ether')
       const formattedGasCosts = formatAmount(gasCostsAsEth)
+
       if (isCurrent) {
         setGasCosts(formattedGasCosts)
+        setData(txData)
       }
     }
 
@@ -95,30 +93,22 @@ const ReviewTx = ({
 
   const submitTx = async () => {
     const web3 = getWeb3()
-    let txData = EMPTY_DATA
-    let txAmount = web3.utils.toWei(tx.amount, 'ether')
-    if (!isSendingETH) {
-      const HumanFriendlyToken = await getHumanFriendlyToken()
-      const tokenInstance = await HumanFriendlyToken.at(txToken.address)
-      const decimals = await tokenInstance.decimals()
-      txAmount = new BigNumber(tx.amount).times(10 ** decimals.toNumber()).toString()
+    // txAmount should be 0 if we send tokens
+    // the real value is encoded in txData and will be used by the contract
+    // if txAmount > 0 it would send ETH from the Safe
+    const txAmount = isSendingETH ? web3.utils.toWei(tx.amount, 'ether') : '0'
 
-      txData = tokenInstance.contract.methods.transfer(tx.recipientAddress, txAmount).encodeABI()
-      // txAmount should be 0 if we send tokens
-      // the real value is encoded in txData and will be used by the contract
-      // if txAmount > 0 it would send ETH from the Safe
-      txAmount = 0
-    }
-
-    createTransaction({
-      safeAddress,
-      to: txRecipient,
-      valueInWei: txAmount,
-      txData,
-      notifiedTransaction: TX_NOTIFICATION_TYPES.STANDARD_TX,
-      enqueueSnackbar,
-      closeSnackbar,
-    })
+    dispatch(
+      createTransaction({
+        safeAddress,
+        to: txRecipient,
+        valueInWei: txAmount,
+        txData: data,
+        notifiedTransaction: TX_NOTIFICATION_TYPES.STANDARD_TX,
+        enqueueSnackbar,
+        closeSnackbar,
+      }),
+    )
     onClose()
   }
 
@@ -182,13 +172,14 @@ const ReviewTx = ({
       </Block>
       <Hairline style={{ position: 'absolute', bottom: 85 }} />
       <Row align="center" className={classes.buttonRow}>
-        <Button minWidth={140} onClick={() => setActiveScreen('sendFunds')}>
+        <Button minWidth={140} onClick={onPrev}>
           Back
         </Button>
         <Button
           className={classes.submitButton}
           color="primary"
           data-testid="submit-tx-btn"
+          disabled={!data}
           minWidth={140}
           onClick={submitTx}
           type="submit"
@@ -201,4 +192,4 @@ const ReviewTx = ({
   )
 }
 
-export default withStyles(styles)(withSnackbar(ReviewTx))
+export default withSnackbar(ReviewTx)
