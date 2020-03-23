@@ -316,10 +316,8 @@ const Layout = (props: Props) => {
               activateTokensByBalance={activateTokensByBalance}
               activeTokens={activeTokens}
               blacklistedTokens={blacklistedTokens}
-              createTransaction={createTransaction}
               currencySelected={currencySelected}
               currencyValues={currencyValues}
-              ethBalance={ethBalance}
               featuresEnabled={featuresEnabled}
               fetchCurrencyValues={fetchCurrencyValues}
               fetchTokens={fetchTokens}
@@ -378,14 +376,9 @@ const Layout = (props: Props) => {
       </Switch>
       <SendModal
         activeScreenType="chooseTxType"
-        createTransaction={createTransaction}
-        ethBalance={ethBalance}
         isOpen={sendFunds.isOpen}
         onClose={hideSendFunds}
-        safeAddress={address}
-        safeName={name}
         selectedToken={sendFunds.selectedToken}
-        tokens={activeTokens}
       />
       <Modal
         description="Receive Tokens Form"
