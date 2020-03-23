@@ -82,6 +82,8 @@ const processTransaction = ({
   }
 
   try {
+    // Here we're checking that safe contract version is greater or equal 1.1.1, but
+    // theoretically EIP712 should also work for 1.0.0 contracts
     const canTryOffchainSigning =
       !isExecution && !isSmartContractWallet && semverSatisfies(safeVersion, SAFE_VERSION_FOR_OFFCHAIN_SIGNATURES)
     if (canTryOffchainSigning) {
