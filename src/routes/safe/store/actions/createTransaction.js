@@ -105,6 +105,8 @@ const createTransaction = ({
       const signature = await tryOffchainSigning({ ...txArgs, safeAddress })
 
       if (signature) {
+        closeSnackbar(beforeExecutionKey)
+
         await saveTxToHistory({
           ...txArgs,
           signature,
