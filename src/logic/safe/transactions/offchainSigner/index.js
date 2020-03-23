@@ -7,11 +7,11 @@ import { generateEthSignature } from './ethSigner'
 // 2. If not, try to use eth_sign (Safe version has to be >1.1.1)
 // If eth_sign, doesn't work continue with the regular flow (on-chain signatures, more in createTransaction.js)
 
-const signingFuncs = [getEIP712Signer('v3'), getEIP712Signer(), generateEthSignature]
+const signingFuncs = [getEIP712Signer('v3'), getEIP712Signer('v4'), getEIP712Signer(), generateEthSignature]
 
 export const SAFE_VERSION_FOR_OFFCHAIN_SIGNATURES = '>=1.1.1'
 
-export const tryOffchainSigning = async txArgs => {
+export const tryOffchainSigning = async (txArgs) => {
   let signature
   for (let signingFunc of signingFuncs) {
     try {

@@ -48,7 +48,7 @@ const processTransaction = ({
   const lastTx = await getLastTx(safeAddress)
   const nonce = await getNewTxNonce(null, lastTx, safeInstance)
   const isExecution = approveAndExecute || (await shouldExecuteTransaction(safeInstance, nonce, lastTx))
-  const safeVersion = getCurrentSafeVersion(safeInstance)
+  const safeVersion = await getCurrentSafeVersion(safeInstance)
 
   let sigs = generateSignaturesFromTxConfirmations(tx.confirmations, approveAndExecute && userAddress)
   // https://docs.gnosis.io/safe/docs/docs5/#pre-validated-signatures
@@ -116,7 +116,7 @@ const processTransaction = ({
 
     await transaction
       .send(sendParams)
-      .once('transactionHash', async hash => {
+      .once('transactionHash', async (hash) => {
         txHash = hash
         closeSnackbar(beforeExecutionKey)
 
@@ -132,10 +132,10 @@ const processTransaction = ({
           console.error(err)
         }
       })
-      .on('error', error => {
+      .on('error', (error) => {
         console.error('Processing transaction error: ', error)
       })
-      .then(receipt => {
+      .then((receipt) => {
         closeSnackbar(pendingExecutionKey)
 
         showSnackbar(

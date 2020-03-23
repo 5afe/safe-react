@@ -59,17 +59,25 @@ const generateTypedDataFrom = async ({
   return typedData
 }
 
-type EIP712RpcCallVersion = 'v3'
+type EIP712RpcCallVersion = 'v3' | 'v4'
 
-export const getEIP712Signer = (version: ?EIP712RpcCallVersion) => async txArgs => {
+export const getEIP712Signer = (version: ?EIP712RpcCallVersion) => async (txArgs) => {
   const web3 = getWeb3()
   const typedData = await generateTypedDataFrom(txArgs)
+
+  let method = 'eth_signTypedData_v3'
+  if (version === 'v4') {
+    method = 'eth_signTypedData_v4'
+  }
+  if (!version) {
+    method = 'eth_signTypedData'
+  }
 
   const jsonTypedData = JSON.stringify(typedData)
   const signedTypedData = {
     jsonrpc: '2.0',
-    method: version === 'v3' ? 'eth_signTypedData_v3' : 'eth_signTypedData',
-    params: version === 'v3' ? [txArgs.sender, jsonTypedData] : [jsonTypedData, txArgs.sender],
+    method,
+    params: version === 'v3' || version === 'v4' ? [txArgs.sender, jsonTypedData] : [jsonTypedData, txArgs.sender],
     from: txArgs.sender,
     id: new Date().getTime(),
   }

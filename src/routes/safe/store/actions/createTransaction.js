@@ -66,7 +66,7 @@ const createTransaction = ({
   const lastTx = await getLastTx(safeAddress)
   const nonce = await getNewTxNonce(txNonce, lastTx, safeInstance)
   const isExecution = await shouldExecuteTransaction(safeInstance, nonce, lastTx)
-  const safeVersion = getCurrentSafeVersion(safeInstance)
+  const safeVersion = await getCurrentSafeVersion(safeInstance)
 
   // https://docs.gnosis.io/safe/docs/docs5/#pre-validated-signatures
   const sigs = `0x000000000000000000000000${from.replace(
@@ -131,7 +131,7 @@ const createTransaction = ({
 
     await tx
       .send(sendParams)
-      .once('transactionHash', async hash => {
+      .once('transactionHash', async (hash) => {
         txHash = hash
         closeSnackbar(beforeExecutionKey)
 
@@ -148,10 +148,10 @@ const createTransaction = ({
           console.error(err)
         }
       })
-      .on('error', error => {
+      .on('error', (error) => {
         console.error('Tx error: ', error)
       })
-      .then(receipt => {
+      .then((receipt) => {
         closeSnackbar(pendingExecutionKey)
         showSnackbar(
           isExecution
