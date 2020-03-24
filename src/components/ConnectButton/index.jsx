@@ -7,8 +7,8 @@ import { getNetworkId } from '~/config'
 import { getWeb3, setWeb3 } from '~/logic/wallets/getWeb3'
 import { fetchProvider } from '~/logic/wallets/store/actions'
 import transactionDataCheck from '~/logic/wallets/transactionDataCheck'
+import { getSupportedWallets } from '~/logic/wallets/utils/walletList'
 import { store } from '~/store'
-import { getSupportedWallets } from '~/utils/desktop'
 
 const isMainnet = process.env.REACT_APP_NETWORK === 'mainnet'
 
