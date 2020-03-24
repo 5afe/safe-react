@@ -58,7 +58,7 @@ export const getEtherScanLink = (type: 'address' | 'tx', value: string) => {
   }etherscan.io/${type}/${value}`
 }
 
-const getInfuraUrl = () => {
+export const getInfuraUrl = () => {
   const isMainnet = process.env.REACT_APP_NETWORK === 'mainnet'
 
   return `https://${isMainnet ? 'mainnet' : 'rinkeby'}.infura.io:443/v3/${process.env.REACT_APP_INFURA_TOKEN}`
