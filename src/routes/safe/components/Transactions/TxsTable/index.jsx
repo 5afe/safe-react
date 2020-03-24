@@ -125,7 +125,7 @@ const TxsTable = ({
                   {autoColumns.map((column: Column) => (
                     <TableCell
                       align={column.align}
-                      className={cn(classes.cell, row.status === 'cancelled' && classes.cancelledRow)}
+                      className={cn(classes.cell, ['cancelled', 'failed'].includes(row.status) && classes.cancelledRow)}
                       component="td"
                       key={column.id}
                       style={cellWidth(column.width)}
