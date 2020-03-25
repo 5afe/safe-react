@@ -10,6 +10,7 @@ import saveTokens from './saveTokens'
 
 import { fetchTokenList } from '~/logic/tokens/api'
 import { type TokenProps, makeToken } from '~/logic/tokens/store/model/token'
+import { tokensSelector } from '~/logic/tokens/store/selectors'
 import { getWeb3 } from '~/logic/wallets/getWeb3'
 import { type GlobalState } from '~/store'
 import { store } from '~/store/index'
@@ -87,11 +88,17 @@ export const getTokenInstance = async (tokenAddress: string) => {
   return tokenInstance
 }
 
-export const fetchTokens = () => async (dispatch: ReduxDispatch<GlobalState>) => {
+export const fetchTokens = () => async (dispatch: ReduxDispatch<GlobalState>, getState: Function) => {
   try {
+    const currentSavedTokens = tokensSelector(getState())
+
     const {
       data: { results: tokenList },
     } = await fetchTokenList()
+
+    if (currentSavedTokens && currentSavedTokens.size === tokenList.length) {
+      return Promise.resolve
+    }
 
     const tokens = List(tokenList.map((token: TokenProps) => makeToken(token)))
 
