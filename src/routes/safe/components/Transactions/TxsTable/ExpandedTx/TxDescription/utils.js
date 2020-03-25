@@ -3,6 +3,7 @@ import { getWeb3 } from '~/logic/wallets/getWeb3'
 import { type Transaction } from '~/routes/safe/store/models/transaction'
 
 type DecodedTxData = {
+  action?: string,
   recipient: string,
   value?: string,
   modifySettingsTx?: boolean,
@@ -48,20 +49,20 @@ export const getTxData = (tx: Transaction): DecodedTxData => {
     txData.modifySettingsTx = true
 
     if (tx.decodedParams) {
-      /* eslint-disable */
-      if (tx.decodedParams.methodName === 'removeOwner') {
+      txData.action = tx.decodedParams.methodName
+
+      if (txData.action === 'removeOwner') {
         txData.removedOwner = tx.decodedParams.args[1]
         txData.newThreshold = tx.decodedParams.args[2]
-      } else if (tx.decodedParams.methodName === 'changeThreshold') {
+      } else if (txData.action === 'changeThreshold') {
         txData.newThreshold = tx.decodedParams.args[0]
-      } else if (tx.decodedParams.methodName === 'addOwnerWithThreshold') {
+      } else if (txData.action === 'addOwnerWithThreshold') {
         txData.addedOwner = tx.decodedParams.args[0]
         txData.newThreshold = tx.decodedParams.args[1]
-      } else if (tx.decodedParams.methodName === 'swapOwner') {
+      } else if (txData.action === 'swapOwner') {
         txData.removedOwner = tx.decodedParams.args[1]
         txData.addedOwner = tx.decodedParams.args[2]
       }
-      /* eslint-enable */
     }
   } else if (tx.cancellationTx) {
     txData.cancellationTx = true

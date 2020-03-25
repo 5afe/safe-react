@@ -22,6 +22,7 @@ export const TRANSACTIONS_DESC_CHANGE_THRESHOLD_TEST_ID = 'tx-description-change
 export const TRANSACTIONS_DESC_SEND_TEST_ID = 'tx-description-send'
 export const TRANSACTIONS_DESC_CUSTOM_VALUE_TEST_ID = 'tx-description-custom-value'
 export const TRANSACTIONS_DESC_CUSTOM_DATA_TEST_ID = 'tx-description-custom-data'
+export const TRANSACTIONS_DESC_NO_DATA = 'tx-description-no-data'
 
 export const styles = () => ({
   txDataContainer: {
@@ -52,9 +53,10 @@ type TransferDescProps = {
 }
 
 type DescriptionDescProps = {
-  removedOwner?: string,
+  action: string,
   addedOwner?: string,
   newThreshold?: string,
+  removedOwner?: string,
 }
 
 type CustomDescProps = {
@@ -78,39 +80,81 @@ const TransferDescription = ({ amount = '', recipient }: TransferDescProps) => {
   )
 }
 
-const SettingsDescription = ({ addedOwner, newThreshold, removedOwner }: DescriptionDescProps) => {
-  const ownerChangedName = removedOwner ? getNameFromAddressBook(removedOwner) : getNameFromAddressBook(addedOwner)
+const RemovedOwner = ({ removedOwner }: { removedOwner: string }) => {
+  const ownerChangedName = getNameFromAddressBook(removedOwner)
+
   return (
-    <>
-      {removedOwner && (
-        <Block data-testid={TRANSACTIONS_DESC_REMOVE_OWNER_TEST_ID}>
-          <Bold>Remove owner:</Bold>
-          {ownerChangedName ? (
-            <OwnerAddressTableCell address={removedOwner} knownAddress showLinks userName={ownerChangedName} />
-          ) : (
-            <EtherscanLink knownAddress={false} type="address" value={removedOwner} />
-          )}
-        </Block>
+    <Block data-testid={TRANSACTIONS_DESC_REMOVE_OWNER_TEST_ID}>
+      <Bold>Remove owner:</Bold>
+      {ownerChangedName ? (
+        <OwnerAddressTableCell address={removedOwner} knownAddress showLinks userName={ownerChangedName} />
+      ) : (
+        <EtherscanLink knownAddress={false} type="address" value={removedOwner} />
       )}
-      {addedOwner && (
-        <Block data-testid={TRANSACTIONS_DESC_ADD_OWNER_TEST_ID}>
-          <Bold>Add owner:</Bold>
-          {ownerChangedName ? (
-            <OwnerAddressTableCell address={addedOwner} knownAddress showLinks userName={ownerChangedName} />
-          ) : (
-            <EtherscanLink knownAddress={false} type="address" value={addedOwner} />
-          )}
-        </Block>
+    </Block>
+  )
+}
+
+const AddedOwner = ({ addedOwner }: { addedOwner: string }) => {
+  const ownerChangedName = getNameFromAddressBook(addedOwner)
+
+  return (
+    <Block data-testid={TRANSACTIONS_DESC_ADD_OWNER_TEST_ID}>
+      <Bold>Add owner:</Bold>
+      {ownerChangedName ? (
+        <OwnerAddressTableCell address={addedOwner} knownAddress showLinks userName={ownerChangedName} />
+      ) : (
+        <EtherscanLink knownAddress={false} type="address" value={addedOwner} />
       )}
-      {newThreshold && (
-        <Block data-testid={TRANSACTIONS_DESC_CHANGE_THRESHOLD_TEST_ID}>
-          <Bold>Change required confirmations:</Bold>
-          <Paragraph noMargin size="md">
-            {newThreshold}
-          </Paragraph>
-        </Block>
-      )}
-    </>
+    </Block>
+  )
+}
+
+const NewThreshold = ({ newThreshold }: { newThreshold: string }) => (
+  <Block data-testid={TRANSACTIONS_DESC_CHANGE_THRESHOLD_TEST_ID}>
+    <Bold>Change required confirmations:</Bold>
+    <Paragraph noMargin size="md">
+      {newThreshold}
+    </Paragraph>
+  </Block>
+)
+
+const SettingsDescription = ({ action, addedOwner, newThreshold, removedOwner }: DescriptionDescProps) => {
+  if (action === 'removeOwner' && removedOwner && newThreshold) {
+    return (
+      <>
+        <RemovedOwner removedOwner={removedOwner} />
+        <NewThreshold newThreshold={newThreshold} />
+      </>
+    )
+  }
+
+  if (action === 'changedThreshold' && newThreshold) {
+    return <NewThreshold newThreshold={newThreshold} />
+  }
+
+  if (action === 'addOwnerWithThreshold' && addedOwner && newThreshold) {
+    return (
+      <>
+        <AddedOwner addedOwner={addedOwner} />
+        <NewThreshold newThreshold={newThreshold} />
+      </>
+    )
+  }
+
+  if (action === 'swapOwner' && removedOwner && addedOwner) {
+    return (
+      <>
+        <RemovedOwner removedOwner={removedOwner} />
+        <AddedOwner addedOwner={addedOwner} />
+      </>
+    )
+  }
+
+  return (
+    <Block data-testid={TRANSACTIONS_DESC_NO_DATA}>
+      <Bold>No data available for current transaction</Bold>
+    </Block>
   )
 }
 
@@ -165,6 +209,7 @@ const CustomDescription = ({ amount = 0, classes, data, recipient }: CustomDescP
 
 const TxDescription = ({ classes, tx }: Props) => {
   const {
+    action,
     addedOwner,
     cancellationTx,
     creationTx,
@@ -179,8 +224,13 @@ const TxDescription = ({ classes, tx }: Props) => {
   const amount = getTxAmount(tx)
   return (
     <Block className={classes.txDataContainer}>
-      {modifySettingsTx && (
-        <SettingsDescription addedOwner={addedOwner} newThreshold={newThreshold} removedOwner={removedOwner} />
+      {modifySettingsTx && action && (
+        <SettingsDescription
+          action={action}
+          addedOwner={addedOwner}
+          newThreshold={newThreshold}
+          removedOwner={removedOwner}
+        />
       )}
       {!upgradeTx && customTx && (
         <CustomDescription amount={amount} classes={classes} data={data} recipient={recipient} />
