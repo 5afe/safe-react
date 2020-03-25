@@ -3,10 +3,10 @@ import { withStyles } from '@material-ui/core/styles'
 import { List } from 'immutable'
 import React, { useState } from 'react'
 import { FormSpy } from 'react-final-form'
+import { useSelector } from 'react-redux'
 
 import { styles } from './style'
 import { getSymbolAndDecimalsFromContract } from './utils'
-import { addressIsTokenContract, doesntExistInTokenList } from './validators'
 
 import Checkbox from '~/components/forms/Checkbox'
 import Field from '~/components/forms/Field'
@@ -20,13 +20,19 @@ import Hairline from '~/components/layout/Hairline'
 import Img from '~/components/layout/Img'
 import Paragraph from '~/components/layout/Paragraph'
 import Row from '~/components/layout/Row'
+import type { NFTAssetsState } from '~/logic/collectibles/store/reducer/collectibles'
+import { nftAssetsListSelector } from '~/logic/collectibles/store/selectors'
 import { type Token, type TokenProps } from '~/logic/tokens/store/model/token'
+import {
+  addressIsAssetContract,
+  doesntExistInAssetsList,
+} from '~/routes/safe/components/Balances/Tokens/screens/AddCustomAsset/validators'
 import TokenPlaceholder from '~/routes/safe/components/Balances/assets/token_placeholder.svg'
 
-export const ADD_CUSTOM_TOKEN_ADDRESS_INPUT_TEST_ID = 'add-custom-token-address-input'
-export const ADD_CUSTOM_TOKEN_SYMBOLS_INPUT_TEST_ID = 'add-custom-token-symbols-input'
-export const ADD_CUSTOM_TOKEN_DECIMALS_INPUT_TEST_ID = 'add-custom-token-decimals-input'
-export const ADD_CUSTOM_TOKEN_FORM = 'add-custom-token-form'
+export const ADD_CUSTOM_ASSET_ADDRESS_INPUT_TEST_ID = 'add-custom-asset-address-input'
+export const ADD_CUSTOM_ASSET_SYMBOLS_INPUT_TEST_ID = 'add-custom-asset-symbols-input'
+export const ADD_CUSTOM_ASSET_DECIMALS_INPUT_TEST_ID = 'add-custom-asset-decimals-input'
+export const ADD_CUSTOM_ASSET_FORM = 'add-custom-asset-form'
 
 type Props = {
   classes: Object,
@@ -48,37 +54,13 @@ const INITIAL_FORM_STATE = {
   logoUri: '',
 }
 
-const AddCustomToken = (props: Props) => {
-  const {
-    activateTokenForAllSafes,
-    activeTokens,
-    addToken,
-    classes,
-    onClose,
-    parentList,
-    safeAddress,
-    setActiveScreen,
-    tokens,
-    updateActiveTokens,
-  } = props
+const AddCustomAsset = (props: Props) => {
+  const { classes, onClose, parentList, setActiveScreen } = props
+
+  const nftAssetsList: NFTAssetsState = useSelector(nftAssetsListSelector)
   const [formValues, setFormValues] = useState(INITIAL_FORM_STATE)
 
-  const handleSubmit = values => {
-    const token = {
-      address: values.address,
-      decimals: values.decimals,
-      symbol: values.symbol,
-      name: values.symbol,
-    }
-
-    addToken(token)
-    if (values.showForAllSafes) {
-      activateTokenForAllSafes(token.address)
-    } else {
-      const activeTokensAddresses = activeTokens.map(({ address }) => address)
-      updateActiveTokens(safeAddress, activeTokensAddresses.push(token.address))
-    }
-
+  const handleSubmit = () => {
     onClose()
   }
 
@@ -120,26 +102,26 @@ const AddCustomToken = (props: Props) => {
 
   return (
     <>
-      <GnoForm initialValues={formValues} onSubmit={handleSubmit} testId={ADD_CUSTOM_TOKEN_FORM}>
+      <GnoForm initialValues={formValues} onSubmit={handleSubmit} testId={ADD_CUSTOM_ASSET_FORM}>
         {() => (
           <>
             <Block className={classes.formContainer}>
               <Paragraph className={classes.title} noMargin size="lg" weight="bolder">
-                Add custom token
+                Add custom asset
               </Paragraph>
               <Field
                 className={classes.addressInput}
                 component={TextField}
                 name="address"
-                placeholder="Token contract address*"
-                testId={ADD_CUSTOM_TOKEN_ADDRESS_INPUT_TEST_ID}
+                placeholder="Asset contract address*"
+                testId={ADD_CUSTOM_ASSET_ADDRESS_INPUT_TEST_ID}
                 text="Token contract address*"
                 type="text"
                 validate={composeValidators(
                   required,
                   mustBeEthereumAddress,
-                  doesntExistInTokenList(tokens),
-                  addressIsTokenContract,
+                  doesntExistInAssetsList(nftAssetsList),
+                  addressIsAssetContract,
                 )}
               />
               <FormSpy
@@ -159,7 +141,7 @@ const AddCustomToken = (props: Props) => {
                     component={TextField}
                     name="symbol"
                     placeholder="Token symbol*"
-                    testId={ADD_CUSTOM_TOKEN_SYMBOLS_INPUT_TEST_ID}
+                    testId={ADD_CUSTOM_ASSET_SYMBOLS_INPUT_TEST_ID}
                     text="Token symbol"
                     type="text"
                     validate={composeValidators(required, minMaxLength(2, 12))}
@@ -170,14 +152,14 @@ const AddCustomToken = (props: Props) => {
                     disabled
                     name="decimals"
                     placeholder="Token decimals*"
-                    testId={ADD_CUSTOM_TOKEN_DECIMALS_INPUT_TEST_ID}
+                    testId={ADD_CUSTOM_ASSET_DECIMALS_INPUT_TEST_ID}
                     text="Token decimals*"
                     type="text"
                   />
                   <Block justify="left">
                     <Field className={classes.checkbox} component={Checkbox} name="showForAllSafes" type="checkbox" />
                     <Paragraph className={classes.checkboxLabel} size="md" weight="bolder">
-                      Activate token for all Safes
+                      Activate assets for all Safes
                     </Paragraph>
                   </Block>
                 </Col>
@@ -203,6 +185,6 @@ const AddCustomToken = (props: Props) => {
   )
 }
 
-const AddCustomTokenComponent = withStyles(styles)(AddCustomToken)
+const AddCustomAssetComponent = withStyles(styles)(AddCustomAsset)
 
-export default AddCustomTokenComponent
+export default AddCustomAssetComponent

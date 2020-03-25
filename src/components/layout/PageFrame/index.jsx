@@ -14,6 +14,7 @@ import CookiesBanner from '~/components/CookiesBanner'
 import Footer from '~/components/Footer'
 import Header from '~/components/Header'
 import Notifier from '~/components/Notifier'
+import SafeVersionProvider from '~/components/SafeVersionProvider'
 import SidebarProvider from '~/components/Sidebar'
 import Backdrop from '~/components/layout/Backdrop'
 import Img from '~/components/layout/Img'
@@ -67,11 +68,13 @@ const PageFrame = ({ children, classes, currentNetwork }: Props) => {
         maxSnack={5}
       >
         <Notifier />
-        <SidebarProvider>
-          <Header />
-          {children}
-          <Footer />
-        </SidebarProvider>
+        <SafeVersionProvider>
+          <SidebarProvider>
+            <Header />
+            {children}
+            <Footer />
+          </SidebarProvider>
+        </SafeVersionProvider>
       </SnackbarProvider>
       <CookiesBanner />
     </div>
