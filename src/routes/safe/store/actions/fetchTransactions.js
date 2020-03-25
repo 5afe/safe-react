@@ -105,8 +105,8 @@ export const buildTransactionFrom = async (safeAddress: string, tx: TxServiceMod
     let decimals = 18
     if (tx.gasToken !== ZERO_ADDRESS) {
       const gasToken = await getTokenInstance(tx.gasToken)
-      refundSymbol = await gasToken.symbol()
-      decimals = await gasToken.decimals()
+      refundSymbol = gasToken.symbol
+      decimals = gasToken.decimals
     }
 
     const feeString = (tx.gasPrice * (tx.baseGas + tx.safeTxGas)).toString().padStart(decimals, 0)
@@ -126,7 +126,7 @@ export const buildTransactionFrom = async (safeAddress: string, tx: TxServiceMod
   if (isSendTokenTx) {
     const tokenInstance = await getTokenInstance(tx.to)
     try {
-      ;[symbol, decimals] = await Promise.all([tokenInstance.symbol(), tokenInstance.decimals()])
+      ;[symbol, decimals] = tokenInstance
     } catch (err) {
       const alternativeTokenInstance = new web3.eth.Contract(ALTERNATIVE_TOKEN_ABI, tx.to)
       const [tokenSymbol, tokenDecimals] = await Promise.all([
@@ -223,9 +223,8 @@ export const buildIncomingTransactionFrom = async (tx: IncomingTxServiceModel) =
   if (tx.tokenAddress) {
     try {
       const tokenInstance = await getTokenInstance(tx.tokenAddress)
-      const [tokenSymbol, tokenDecimals] = await Promise.all([tokenInstance.symbol(), tokenInstance.decimals()])
-      symbol = tokenSymbol
-      decimals = tokenDecimals
+      symbol = tokenInstance.symbol
+      decimals = tokenInstance.decimals
     } catch (err) {
       try {
         const { methods } = new web3.eth.Contract(ALTERNATIVE_TOKEN_ABI, tx.tokenAddress)
