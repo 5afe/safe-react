@@ -180,7 +180,7 @@ class Balances extends React.Component<Props, State> {
             {showCoins && <DropdownCurrency />}
             <ButtonLink
               className={classes.manageTokensButton}
-              onClick={erc721Enabled ? this.onShow('ManageCollectibleModal') : this.onShow('Token')}
+              onClick={erc721Enabled && showCollectibles ? this.onShow('ManageCollectibleModal') : this.onShow('Token')}
               size="lg"
               testId="manage-tokens-btn"
             >

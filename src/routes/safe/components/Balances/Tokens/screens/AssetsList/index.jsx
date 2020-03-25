@@ -26,7 +26,7 @@ import updateActiveAssets from '~/routes/safe/store/actions/updateActiveAssets'
 import updateBlacklistedAssets from '~/routes/safe/store/actions/updateBlacklistedAssets'
 import {
   safeActiveAssetsListSelector,
-  safeBlacklistedTokensSelector,
+  safeBlacklistedAssetsSelector,
   safeParamAddressFromStateSelector,
 } from '~/routes/safe/store/selectors'
 const useStyles = makeStyles(styles)
@@ -55,11 +55,11 @@ const AssetsList = (props: Props) => {
   }
   const dispatch = useDispatch()
   const activeAssetsList = useSelector(safeActiveAssetsListSelector)
-  const blacklistedTokens = useSelector(safeBlacklistedTokensSelector)
+  const blacklistedAssets = useSelector(safeBlacklistedAssetsSelector)
   const safeAddress = useSelector(safeParamAddressFromStateSelector)
   const [filterValue, setFilterValue] = useState('')
   const [activeAssetsAddresses, setActiveAssetsAddresses] = useState(activeAssetsList)
-  const [blacklistedAssetsAddresses, setBlacklistedAssetsAddresses] = useState(blacklistedTokens)
+  const [blacklistedAssetsAddresses, setBlacklistedAssetsAddresses] = useState(blacklistedAssets)
   const nftAssetsList: NFTAssetsState = useSelector(nftAssetsListSelector)
 
   useEffect(() => {
