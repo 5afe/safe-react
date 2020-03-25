@@ -3,11 +3,13 @@ import { withStyles } from '@material-ui/core/styles'
 import { List } from 'immutable'
 import { withSnackbar } from 'notistack'
 import React, { useEffect, useState } from 'react'
+import { useDispatch } from 'react-redux'
 
 import OwnerForm from './screens/OwnerForm'
 import ReviewReplaceOwner from './screens/Review'
 
 import Modal from '~/components/Modal'
+import { addOrUpdateAddressBookEntry } from '~/logic/addressBook/store/actions/addOrUpdateAddressBookEntry'
 import { SENTINEL_ADDRESS, getGnosisSafeInstanceAt } from '~/logic/contracts/safeContracts'
 import { TX_NOTIFICATION_TYPES } from '~/logic/safe/transactions'
 import { type Owner } from '~/routes/safe/store/models/owner'
@@ -94,6 +96,7 @@ const ReplaceOwner = ({
   safeName,
   threshold,
 }: Props) => {
+  const dispatch = useDispatch()
   const [activeScreen, setActiveScreen] = useState<ActiveScreen>('checkOwner')
   const [values, setValues] = useState<Object>({})
 
@@ -126,7 +129,14 @@ const ReplaceOwner = ({
         createTransaction,
         replaceSafeOwner,
         safe,
-      )
+      ).then(() => {
+        const entry = {
+          name: values.ownerName,
+          address: values.ownerAddress,
+          isOwner: false,
+        }
+        dispatch(addOrUpdateAddressBookEntry(entry))
+      })
     } catch (error) {
       console.error('Error while removing an owner', error)
     }
