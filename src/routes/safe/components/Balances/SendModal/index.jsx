@@ -2,7 +2,6 @@
 import CircularProgress from '@material-ui/core/CircularProgress'
 import { makeStyles } from '@material-ui/core/styles'
 import cn from 'classnames'
-import { List } from 'immutable'
 import React, { Suspense, useEffect, useState } from 'react'
 
 import Modal from '~/components/Modal'
@@ -33,16 +32,11 @@ type ActiveScreen =
   | 'reviewCollectible'
 
 type Props = {
-  onClose: () => void,
-  isOpen: boolean,
-  safeAddress: string,
-  safeName: string,
-  ethBalance: string,
-  tokens: List<Token>,
-  selectedToken?: string | NFTToken | {},
-  createTransaction?: Function,
   activeScreenType: ActiveScreen,
+  isOpen: boolean,
+  onClose: () => void,
   recipientAddress?: string,
+  selectedToken?: string | NFTToken | {},
 }
 
 type TxStateType =
@@ -71,18 +65,7 @@ const useStyles = makeStyles({
   },
 })
 
-const SendModal = ({
-  activeScreenType,
-  createTransaction,
-  ethBalance,
-  isOpen,
-  onClose,
-  recipientAddress,
-  safeAddress,
-  safeName,
-  selectedToken,
-  tokens,
-}: Props) => {
+const SendModal = ({ activeScreenType, isOpen, onClose, recipientAddress, selectedToken }: Props) => {
   const classes = useStyles()
   const [activeScreen, setActiveScreen] = useState<ActiveScreen>(activeScreenType || 'chooseTxType')
   const [tx, setTx] = useState<TxStateType>({})
@@ -129,50 +112,26 @@ const SendModal = ({
         )}
         {activeScreen === 'sendFunds' && (
           <SendFunds
-            ethBalance={ethBalance}
             initialValues={tx}
             onClose={onClose}
-            onSubmit={handleTxCreation}
+            onNext={handleTxCreation}
             recipientAddress={recipientAddress}
-            safeAddress={safeAddress}
-            safeName={safeName}
             selectedToken={selectedToken}
-            tokens={tokens}
           />
         )}
         {activeScreen === 'reviewTx' && (
-          <ReviewTx
-            createTransaction={createTransaction}
-            ethBalance={ethBalance}
-            onClose={onClose}
-            safeAddress={safeAddress}
-            safeName={safeName}
-            setActiveScreen={setActiveScreen}
-            tokens={tokens}
-            tx={tx}
-          />
+          <ReviewTx onClose={onClose} onPrev={() => setActiveScreen('sendFunds')} tx={tx} />
         )}
         {activeScreen === 'sendCustomTx' && (
           <SendCustomTx
-            ethBalance={ethBalance}
             initialValues={tx}
             onClose={onClose}
-            onSubmit={handleCustomTxCreation}
+            onNext={handleCustomTxCreation}
             recipientAddress={recipientAddress}
-            safeAddress={safeAddress}
-            safeName={safeName}
           />
         )}
         {activeScreen === 'reviewCustomTx' && (
-          <ReviewCustomTx
-            createTransaction={createTransaction}
-            ethBalance={ethBalance}
-            onClose={onClose}
-            safeAddress={safeAddress}
-            safeName={safeName}
-            setActiveScreen={setActiveScreen}
-            tx={tx}
-          />
+          <ReviewCustomTx onClose={onClose} onPrev={() => setActiveScreen('sendCustomTx')} tx={tx} />
         )}
         {activeScreen === 'sendCollectible' && (
           <SendCollectible

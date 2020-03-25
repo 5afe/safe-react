@@ -7,6 +7,9 @@ import { type Token, makeToken } from '~/logic/tokens/store/model/token'
 import { getWeb3 } from '~/logic/wallets/getWeb3'
 
 export const ETH_ADDRESS = '0x000'
+export const SAFE_TRANSFER_FROM_WITHOUT_DATA_HASH = '0x42842e0e'
+export const DECIMALS_METHOD_HASH = '313ce567'
+
 export const isEther = (symbol: string) => symbol === 'ETH'
 
 export const getEthAsToken = (balance: string) => {
