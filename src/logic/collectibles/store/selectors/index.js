@@ -25,3 +25,14 @@ export const activeNftAssetsListSelector: Selector<GlobalState, NFTAssets, List<
     return assets.filter(asset => activeAssetsList.has(asset.address))
   },
 )
+
+export const safeActiveSelectorMap: Selector<GlobalState, NFTAssets, List<NFTAssets>> = createSelector(
+  activeNftAssetsListSelector,
+  (activeAssets: List<NFTAssets>) => {
+    let assetsMap = {}
+    activeAssets.forEach(asset => {
+      assetsMap[asset.address] = asset
+    })
+    return assetsMap
+  },
+)
