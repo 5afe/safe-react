@@ -58,7 +58,6 @@ export const getTxData = (tx: Transaction): DecodedTxData => {
         txData.addedOwner = tx.decodedParams.args[0]
         txData.newThreshold = tx.decodedParams.args[1]
       } else if (tx.decodedParams.methodName === 'swapOwner') {
-        txData.newThreshold = tx.decodedParams.args[0]
         txData.removedOwner = tx.decodedParams.args[1]
         txData.addedOwner = tx.decodedParams.args[2]
       }
