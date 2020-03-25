@@ -2,10 +2,14 @@
 import { List } from 'immutable'
 
 import logo from '~/assets/icons/icon_etherTokens.svg'
+import { getStandardTokenContract } from '~/logic/tokens/store/actions/fetchTokens'
 import { type Token, makeToken } from '~/logic/tokens/store/model/token'
 import { getWeb3 } from '~/logic/wallets/getWeb3'
 
 export const ETH_ADDRESS = '0x000'
+export const SAFE_TRANSFER_FROM_WITHOUT_DATA_HASH = '0x42842e0e'
+export const DECIMALS_METHOD_HASH = '313ce567'
+
 export const isEther = (symbol: string) => symbol === 'ETH'
 
 export const getEthAsToken = (balance: string) => {
@@ -62,3 +66,15 @@ export const isMultisendTransaction = (data: string, value: number): boolean =>
 // 7de7edef - changeMasterCopy (550, 8)
 export const isUpgradeTransaction = (data: string) =>
   !!data && data.substr(308, 8) === 'f08a0323' && data.substr(550, 8) === '7de7edef'
+
+export const isERC721Contract = async (contractAddress: string): boolean => {
+  const ERC721Token = await getStandardTokenContract()
+  let isERC721 = false
+  try {
+    isERC721 = true
+    await ERC721Token.at(contractAddress)
+  } catch (error) {
+    console.warn('Asset not found')
+  }
+  return isERC721
+}

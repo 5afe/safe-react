@@ -13,7 +13,13 @@ import { type TxServiceType, buildTxServiceUrl } from '~/logic/safe/transactions
 import { getLocalSafe } from '~/logic/safe/utils'
 import { getHumanFriendlyToken } from '~/logic/tokens/store/actions/fetchTokens'
 import { ALTERNATIVE_TOKEN_ABI } from '~/logic/tokens/utils/alternativeAbi'
-import { isMultisendTransaction, isTokenTransfer, isUpgradeTransaction } from '~/logic/tokens/utils/tokenHelpers'
+import {
+  DECIMALS_METHOD_HASH,
+  SAFE_TRANSFER_FROM_WITHOUT_DATA_HASH,
+  isMultisendTransaction,
+  isTokenTransfer,
+  isUpgradeTransaction,
+} from '~/logic/tokens/utils/tokenHelpers'
 import { ZERO_ADDRESS, sameAddress } from '~/logic/wallets/ethAddresses'
 import { EMPTY_DATA } from '~/logic/wallets/ethTransactions'
 import { getWeb3 } from '~/logic/wallets/getWeb3'
@@ -52,6 +58,7 @@ type TxServiceModel = {
   executionDate: ?string,
   confirmations: ConfirmationServiceModel[],
   isExecuted: boolean,
+  isSuccessful: boolean,
   transactionHash: ?string,
   creationTx?: boolean,
 }
@@ -90,10 +97,14 @@ export const buildTransactionFrom = async (safeAddress: string, tx: TxServiceMod
   )
   const modifySettingsTx = sameAddress(tx.to, safeAddress) && Number(tx.value) === 0 && !!tx.data
   const cancellationTx = sameAddress(tx.to, safeAddress) && Number(tx.value) === 0 && !tx.data
-  const isSendTokenTx = isTokenTransfer(tx.data, Number(tx.value))
+  const code = tx.to ? await web3.eth.getCode(tx.to) : ''
+  const isERC721Token =
+    code.includes(SAFE_TRANSFER_FROM_WITHOUT_DATA_HASH) ||
+    (isTokenTransfer(tx.data, Number(tx.value)) && !code.includes(DECIMALS_METHOD_HASH))
+  const isSendTokenTx = !isERC721Token && isTokenTransfer(tx.data, Number(tx.value))
   const isMultiSendTx = isMultisendTransaction(tx.data, Number(tx.value))
   const isUpgradeTx = isMultiSendTx && isUpgradeTransaction(tx.data)
-  const customTx = !sameAddress(tx.to, safeAddress) && !!tx.data && !isSendTokenTx && !isUpgradeTx
+  const customTx = !sameAddress(tx.to, safeAddress) && !!tx.data && !isSendTokenTx && !isUpgradeTx && !isERC721Token
 
   let refundParams = null
   if (tx.gasPrice > 0) {
@@ -163,6 +174,7 @@ export const buildTransactionFrom = async (safeAddress: string, tx: TxServiceMod
     refundReceiver: tx.refundReceiver,
     refundParams,
     isExecuted: tx.isExecuted,
+    isSuccessful: tx.isSuccessful,
     submissionDate: tx.submissionDate,
     executor: tx.executor,
     executionDate: tx.executionDate,

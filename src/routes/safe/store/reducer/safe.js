@@ -11,9 +11,10 @@ import { REMOVE_SAFE } from '~/routes/safe/store/actions/removeSafe'
 import { REMOVE_SAFE_OWNER } from '~/routes/safe/store/actions/removeSafeOwner'
 import { REPLACE_SAFE_OWNER } from '~/routes/safe/store/actions/replaceSafeOwner'
 import { SET_DEFAULT_SAFE } from '~/routes/safe/store/actions/setDefaultSafe'
+import { SET_LATEST_MASTER_CONTRACT_VERSION } from '~/routes/safe/store/actions/setLatestMasterContractVersion'
 import { UPDATE_SAFE } from '~/routes/safe/store/actions/updateSafe'
 import { UPDATE_SAFE_THRESHOLD } from '~/routes/safe/store/actions/updateSafeThreshold'
-import { type OwnerProps, makeOwner } from '~/routes/safe/store/models/owner'
+import { makeOwner } from '~/routes/safe/store/models/owner'
 import SafeRecord, { type SafeProps } from '~/routes/safe/store/models/safe'
 
 export const SAFE_REDUCER_ID = 'safes'
@@ -21,14 +22,13 @@ export const SAFE_REDUCER_ID = 'safes'
 export type SafeReducerState = Map<string, *>
 
 export const buildSafe = (storedSafe: SafeProps) => {
-  const names = storedSafe.owners.map((owner: OwnerProps) => owner.name)
-  const addresses = storedSafe.owners.map((owner: OwnerProps) => {
-    const checksumed = getWeb3().utils.toChecksumAddress(owner.address)
-    return checksumed
-  })
+  const names = storedSafe.owners.map(owner => owner.name)
+  const addresses = storedSafe.owners.map(owner => getWeb3().utils.toChecksumAddress(owner.address))
   const owners = buildOwnersFrom(Array.from(names), Array.from(addresses))
   const activeTokens = Set(storedSafe.activeTokens)
+  const activeAssets = Set(storedSafe.activeAssets)
   const blacklistedTokens = Set(storedSafe.blacklistedTokens)
+  const blacklistedAssets = Set(storedSafe.blacklistedAssets)
   const balances = Map(storedSafe.balances)
 
   const safe: SafeProps = {
@@ -37,6 +37,8 @@ export const buildSafe = (storedSafe: SafeProps) => {
     balances,
     activeTokens,
     blacklistedTokens,
+    activeAssets,
+    blacklistedAssets,
   }
 
   return safe
@@ -53,7 +55,7 @@ export default handleActions<SafeReducerState, *>(
     [ACTIVATE_TOKEN_FOR_ALL_SAFES]: (state: SafeReducerState, action: ActionType<Function>): SafeReducerState => {
       const tokenAddress = action.payload
 
-      const newState = state.withMutations(map => {
+      return state.withMutations(map => {
         map
           .get('safes')
           .keySeq()
@@ -64,8 +66,6 @@ export default handleActions<SafeReducerState, *>(
             map.updateIn(['safes', safeAddress], prevSafe => prevSafe.merge({ activeTokens }))
           })
       })
-
-      return newState
     },
     [ADD_SAFE]: (state: SafeReducerState, action: ActionType<Function>): SafeReducerState => {
       const { safe }: { safe: SafeProps } = action.payload
@@ -132,10 +132,14 @@ export default handleActions<SafeReducerState, *>(
     },
     [SET_DEFAULT_SAFE]: (state: SafeReducerState, action: ActionType<Function>): SafeReducerState =>
       state.set('defaultSafe', action.payload),
+    [SET_LATEST_MASTER_CONTRACT_VERSION]: (state: SafeReducerState, action: ActionType<Function>): SafeReducerState =>
+      state.set('latestMasterContractVersion', action.payload),
   },
   Map({
     // $FlowFixMe
     defaultSafe: undefined,
     safes: Map(),
+    // $FlowFixMe
+    latestMasterContractVersion: '',
   }),
 )

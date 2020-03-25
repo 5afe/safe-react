@@ -1,9 +1,10 @@
 // @flow
 import IconButton from '@material-ui/core/IconButton'
 import InputAdornment from '@material-ui/core/InputAdornment'
-import { withStyles } from '@material-ui/core/styles'
+import { makeStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
 import React, { useState } from 'react'
+import { useSelector } from 'react-redux'
 
 import ArrowDown from '../assets/arrow-down.svg'
 
@@ -29,22 +30,24 @@ import Paragraph from '~/components/layout/Paragraph'
 import Row from '~/components/layout/Row'
 import SafeInfo from '~/routes/safe/components/Balances/SendModal/SafeInfo'
 import AddressBookInput from '~/routes/safe/components/Balances/SendModal/screens/AddressBookInput'
+import { safeSelector } from '~/routes/safe/store/selectors'
 import { sm } from '~/theme/variables'
 
 type Props = {
-  onClose: () => void,
-  classes: Object,
-  safeAddress: string,
-  safeName: string,
-  ethBalance: string,
-  onSubmit: Function,
   initialValues: Object,
+  onClose: () => void,
+  onNext: any => void,
+  recipientAddress: string,
 }
 
-const SendCustomTx = ({ classes, ethBalance, initialValues, onClose, onSubmit, safeAddress, safeName }: Props) => {
+const useStyles = makeStyles(styles)
+
+const SendCustomTx = ({ initialValues, onClose, onNext, recipientAddress }: Props) => {
+  const classes = useStyles()
+  const { address: safeAddress, ethBalance, name: safeName } = useSelector(safeSelector)
   const [qrModalOpen, setQrModalOpen] = useState<boolean>(false)
   const [selectedEntry, setSelectedEntry] = useState<Object | null>({
-    address: '',
+    address: recipientAddress || initialValues.recipientAddress,
     name: '',
   })
   const [pristine, setPristine] = useState<boolean>(true)
@@ -58,7 +61,7 @@ const SendCustomTx = ({ classes, ethBalance, initialValues, onClose, onSubmit, s
 
   const handleSubmit = (values: Object) => {
     if (values.data || values.value) {
-      onSubmit(values)
+      onNext(values)
     }
   }
 
@@ -258,4 +261,4 @@ const SendCustomTx = ({ classes, ethBalance, initialValues, onClose, onSubmit, s
   )
 }
 
-export default withStyles(styles)(SendCustomTx)
+export default SendCustomTx

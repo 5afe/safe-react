@@ -11,11 +11,16 @@ export type SafeProps = {
   owners: List<Owner>,
   balances?: Map<string, string>,
   activeTokens: Set<string>,
+  activeAssets: Set<string>,
   blacklistedTokens: Set<string>,
+  blacklistedAssets: Set<string>,
   ethBalance?: string,
   nonce: number,
   latestIncomingTxBlock?: number,
   recurringUser?: boolean,
+  currentVersion: string,
+  needsUpdate: boolean,
+  featuresEnabled: string[],
 }
 
 const SafeRecord: RecordFactory<SafeProps> = Record({
@@ -25,11 +30,16 @@ const SafeRecord: RecordFactory<SafeProps> = Record({
   ethBalance: 0,
   owners: List([]),
   activeTokens: new Set(),
+  activeAssets: new Set(),
   blacklistedTokens: new Set(),
+  blacklistedAssets: new Set(),
   balances: Map({}),
   nonce: 0,
   latestIncomingTxBlock: 0,
   recurringUser: undefined,
+  currentVersion: '',
+  needsUpdate: false,
+  featuresEnabled: [],
 })
 
 export type Safe = RecordOf<SafeProps>

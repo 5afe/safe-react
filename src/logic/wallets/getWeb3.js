@@ -58,7 +58,7 @@ export const getEtherScanLink = (type: 'address' | 'tx', value: string) => {
   }etherscan.io/${type}/${value}`
 }
 
-const getInfuraUrl = () => {
+export const getInfuraUrl = () => {
   const isMainnet = process.env.REACT_APP_NETWORK === 'mainnet'
 
   return `https://${isMainnet ? 'mainnet' : 'rinkeby'}.infura.io:443/v3/${process.env.REACT_APP_INFURA_TOKEN}`
@@ -88,15 +88,11 @@ export const getAccountFrom: Function = async (web3Provider): Promise<string | n
   return accounts && accounts.length > 0 ? accounts[0] : null
 }
 
-export const getNetworkIdFrom = async web3Provider => {
-  const networkId = await web3Provider.eth.net.getId()
-
-  return networkId
-}
+export const getNetworkIdFrom = web3Provider => web3Provider.eth.net.getId()
 
 export const getProviderInfo: Function = async (
   web3Provider,
-  providerName?: string = 'Wallet',
+  providerName: string = 'Wallet',
 ): Promise<ProviderProps> => {
   web3 = new Web3(web3Provider)
 
@@ -117,9 +113,7 @@ export const getProviderInfo: Function = async (
 
 export const getAddressFromENS = async (name: string) => {
   const ens = new ENS(web3)
-  const address = await ens.resolver(name).addr()
-
-  return address
+  return await ens.resolver(name).addr()
 }
 
 export const setWeb3 = (provider: Object) => {
