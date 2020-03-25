@@ -18,8 +18,48 @@ import { ADD_TRANSACTIONS } from '~/routes/safe/store/actions/addTransactions'
 import updateSafe from '~/routes/safe/store/actions/updateSafe'
 import { safeParamAddressFromStateSelector, safesMapSelector } from '~/routes/safe/store/selectors'
 import { type GlobalState } from '~/store/'
+import { loadFromStorage, saveToStorage } from '~/utils/storage'
 
 const watchedActions = [ADD_TRANSACTIONS, ADD_INCOMING_TRANSACTIONS, ADD_SAFE]
+
+const sendAwaitingTransactionNotification = async (
+  dispatch: Function,
+  safeAddress: string,
+  awaitingTxsSubmissionDateList: List[],
+  notificationKey: string,
+  notificationClickedCb: Function,
+) => {
+  const LAST_TIME_USED_LOGGED_IN_ID = 'LAST_TIME_USED_LOGGED_IN_ID'
+  if (!dispatch || !safeAddress || !awaitingTxsSubmissionDateList || !notificationKey) {
+    return
+  }
+  if (awaitingTxsSubmissionDateList.size === 0) {
+    return
+  }
+
+  let lastTimeUserLoggedInForSafes = (await loadFromStorage(LAST_TIME_USED_LOGGED_IN_ID)) || []
+  let lastTimeUserLoggedIn =
+    lastTimeUserLoggedInForSafes && lastTimeUserLoggedInForSafes[safeAddress]
+      ? lastTimeUserLoggedInForSafes[safeAddress]
+      : null
+
+  const filteredDuplicatedAwaitingTxList = awaitingTxsSubmissionDateList.filter(submissionDate => {
+    return lastTimeUserLoggedIn ? new Date(submissionDate) > new Date(lastTimeUserLoggedIn) : true
+  })
+
+  if (filteredDuplicatedAwaitingTxList.size === 0) {
+    return
+  }
+  dispatch(
+    enqueueSnackbar(enhanceSnackbarForAction(NOTIFICATIONS.TX_WAITING_MSG, notificationKey, notificationClickedCb)),
+  )
+
+  lastTimeUserLoggedInForSafes = {
+    ...lastTimeUserLoggedInForSafes,
+    [safeAddress]: lastTimeUserLoggedIn || new Date(),
+  }
+  await saveToStorage(LAST_TIME_USED_LOGGED_IN_ID, lastTimeUserLoggedInForSafes)
+}
 
 const notificationsMiddleware = (store: Store<GlobalState>) => (next: Function) => async (action: Action<*>) => {
   const handledAction = next(action)
@@ -41,23 +81,28 @@ const notificationsMiddleware = (store: Store<GlobalState>) => (next: Function) 
           cancellationTransactionsByNonce,
           userAddress,
         )
-        const awaitingTransactionsList = awaitingTransactions.get(safeAddress, List([]))
+        const awaitingTxsSubmissionDateList = awaitingTransactions
+          .get(safeAddress, List([]))
+          .map(tx => tx.submissionDate)
+
         const safes = safesMapSelector(state)
         const currentSafe = safes.get(safeAddress)
 
-        if (!isUserOwner(currentSafe, userAddress) || awaitingTransactionsList.size === 0) {
+        if (!isUserOwner(currentSafe, userAddress) || awaitingTxsSubmissionDateList.size === 0) {
           break
         }
-
-        const notificationKey = `${safeAddress}-${userAddress}`
+        const notificationKey = `${safeAddress}-awaiting`
         const onNotificationClicked = () => {
           dispatch(closeSnackbarAction({ key: notificationKey }))
           dispatch(push(`/safes/${safeAddress}/transactions`))
         }
-        dispatch(
-          enqueueSnackbar(
-            enhanceSnackbarForAction(NOTIFICATIONS.TX_WAITING_MSG, notificationKey, onNotificationClicked),
-          ),
+
+        await sendAwaitingTransactionNotification(
+          dispatch,
+          safeAddress,
+          awaitingTxsSubmissionDateList,
+          notificationKey,
+          onNotificationClicked,
         )
 
         break
