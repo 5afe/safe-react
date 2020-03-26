@@ -3760,10 +3760,10 @@ bn.js@^5.1.1:
   resolved "https://registry.yarnpkg.com/bn.js/-/bn.js-5.1.1.tgz#48efc4031a9c4041b9c99c6941d903463ab62eb5"
   integrity sha512-IUTD/REb78Z2eodka1QZyyEk66pciRcP6Sroka0aI3tG/iwIdYLrBD62RsubR7vqdt3WyX8p4jxeatzmRSphtA==
 
-bnc-onboard@1.3.5:
-  version "1.3.5"
-  resolved "https://registry.yarnpkg.com/bnc-onboard/-/bnc-onboard-1.3.5.tgz#0c82cc645653a46558b3a54da245e14e8bf87e3b"
-  integrity sha512-xYiOa1ver3wg/ON0pBBIZymryUoX3eXAZCQeOVYyFn/R7ynwSEJDUFvL/dwVJ0pTdxleMsDtn0SQV4v/ogqt+g==
+bnc-onboard@1.4.0:
+  version "1.4.0"
+  resolved "https://registry.yarnpkg.com/bnc-onboard/-/bnc-onboard-1.4.0.tgz#2645b3cc940addfd856c2952d63512e1ed23fc40"
+  integrity sha512-wPoVpvHe1Y4e97FuLUps/UZ+SFmS1Bzgxvg1JS6tPfapEA9QMg69qz4ye8WpcnbIroqrnB/wivOWxjkNLlthDg==
   dependencies:
     "@ledgerhq/hw-app-eth" "^5.7.0"
     "@ledgerhq/hw-transport-u2f" "^5.7.0"
@@ -3775,7 +3775,10 @@ bnc-onboard@1.3.5:
     bnc-sdk "1.1.0"
     bowser "^2.5.2"
     ethereumjs-tx "^2.1.2"
+    ethereumjs-util "^6.2.0"
+    ethereumjs-wallet "^0.6.3"
     fortmatic "^0.8.2"
+    hdkey "^1.1.1"
     regenerator-runtime "^0.13.3"
     squarelink "^1.1.4"
     trezor-connect "7.0.1"
@@ -6848,7 +6851,7 @@ ethereumjs-util@6.1.0:
     safe-buffer "^5.1.1"
     secp256k1 "^3.0.1"
 
-ethereumjs-util@^6.0.0, ethereumjs-util@^6.1.0:
+ethereumjs-util@^6.0.0, ethereumjs-util@^6.1.0, ethereumjs-util@^6.2.0:
   version "6.2.0"
   resolved "https://registry.yarnpkg.com/ethereumjs-util/-/ethereumjs-util-6.2.0.tgz#23ec79b2488a7d041242f01e25f24e5ad0357960"
   integrity sha512-vb0XN9J2QGdZGIEKG2vXM+kUdEivUfU6Wmi5y0cg+LRhDYKnXIZ/Lz7XjFbHRR9VIKq2lVGLzGBkA++y2nOdOQ==
@@ -8376,7 +8379,7 @@ hdkey@^0.7.0:
     coinstring "^2.0.0"
     secp256k1 "^3.0.1"
 
-hdkey@^1.1.0:
+hdkey@^1.1.0, hdkey@^1.1.1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/hdkey/-/hdkey-1.1.1.tgz#c2b3bfd5883ff9529b72f2f08b28be0972a9f64a"
   integrity sha512-DvHZ5OuavsfWs5yfVJZestsnc3wzPvLWNk6c2nRUfo6X+OtxypGt20vDDf7Ba+MJzjL3KS1og2nw2eBbLCOUTA==
@@ -17584,6 +17587,7 @@ websocket@1.0.29, "websocket@github:web3-js/WebSocket-Node#polyfill/globalThis":
   dependencies:
     debug "^2.2.0"
     es5-ext "^0.10.50"
+    gulp "^4.0.2"
     nan "^2.14.0"
     typedarray-to-buffer "^3.1.5"
     yaeti "^0.0.6"

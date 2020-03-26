@@ -38,6 +38,7 @@ type Props = {
   setActiveScreen: Function,
   onClose: Function,
   activateTokenForAllSafes: Function,
+  parentList: 'assetsList' | 'tokenList',
 }
 
 const INITIAL_FORM_STATE = {
@@ -54,6 +55,7 @@ const AddCustomToken = (props: Props) => {
     addToken,
     classes,
     onClose,
+    parentList,
     safeAddress,
     setActiveScreen,
     tokens,
@@ -112,8 +114,8 @@ const AddCustomToken = (props: Props) => {
     }
   }
 
-  const goBackToTokenList = () => {
-    setActiveScreen('tokenList')
+  const goBack = () => {
+    setActiveScreen(parentList)
   }
 
   return (
@@ -187,7 +189,7 @@ const AddCustomToken = (props: Props) => {
             </Block>
             <Hairline />
             <Row align="center" className={classes.buttonRow}>
-              <Button minHeight={42} minWidth={140} onClick={goBackToTokenList}>
+              <Button minHeight={42} minWidth={140} onClick={goBack}>
                 Cancel
               </Button>
               <Button color="primary" minHeight={42} minWidth={140} type="submit" variant="contained">

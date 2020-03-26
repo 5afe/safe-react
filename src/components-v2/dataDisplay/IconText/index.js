@@ -9,16 +9,16 @@ const Wrapper = styled.div`
 const Icon = styled.img`
   max-width: 15px;
   max-height: 15px;
-  margin-right: 5px;
 `
 const Text = styled.span`
+  margin-left: 5px;
   height: 17px;
 `
 
-const IconText = ({ iconUrl, text }: { iconUrl: string, text: string }) => (
+const IconText = ({ iconUrl, text }: { iconUrl: string, text?: string }) => (
   <Wrapper>
     <Icon alt={text} src={iconUrl} />
-    <Text>{text}</Text>
+    {text && <Text>{text}</Text>}
   </Wrapper>
 )
 
