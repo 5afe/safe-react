@@ -2,6 +2,8 @@
 import { withStyles } from '@material-ui/core/styles'
 import { List } from 'immutable'
 import * as React from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { bindActionCreators } from 'redux'
 
 import Receive from './Receive'
 import Tokens from './Tokens'
@@ -13,13 +15,22 @@ import Col from '~/components/layout/Col'
 import Divider from '~/components/layout/Divider'
 import Link from '~/components/layout/Link'
 import Row from '~/components/layout/Row'
+import { fetchCurrencyValues } from '~/logic/currencyValues/store/actions/fetchCurrencyValues'
 import type { BalanceCurrencyType } from '~/logic/currencyValues/store/model/currencyValues'
+import { currencyValuesListSelector, currentCurrencySelector } from '~/logic/currencyValues/store/selectors'
+import activateAssetsByBalance from '~/logic/tokens/store/actions/activateAssetsByBalance'
+import activateTokensByBalance from '~/logic/tokens/store/actions/activateTokensByBalance'
+import { fetchTokens } from '~/logic/tokens/store/actions/fetchTokens'
 import { type Token } from '~/logic/tokens/store/model/token'
+import { orderedTokenListSelector } from '~/logic/tokens/store/selectors'
 import { SAFELIST_ADDRESS } from '~/routes/routes'
 import Coins from '~/routes/safe/components/Balances/Coins'
 import Collectibles from '~/routes/safe/components/Balances/Collectibles'
 import SendModal from '~/routes/safe/components/Balances/SendModal'
 import DropdownCurrency from '~/routes/safe/components/DropdownCurrency'
+import { extendedSafeTokensSelector, grantedSelector } from '~/routes/safe/container/selector'
+import fetchTokenBalances from '~/routes/safe/store/actions/fetchTokenBalances'
+import { safeBlacklistedTokensSelector, safeSelector } from '~/routes/safe/store/selectors'
 import { history } from '~/store'
 
 export const MANAGE_TOKENS_BUTTON_TEST_ID = 'manage-tokens-btn'
@@ -229,4 +240,44 @@ class Balances extends React.Component<Props, State> {
   }
 }
 
-export default withStyles(styles)(Balances)
+const BalancesWithStyles = withStyles(styles)(Balances)
+
+const BalancesWrapper = () => {
+  const dispatch = useDispatch()
+
+  const activeTokens = useSelector(extendedSafeTokensSelector)
+  const blacklistedTokens = useSelector(safeBlacklistedTokensSelector)
+  const currencySelected = useSelector(currentCurrencySelector)
+  const currencyValues = useSelector(currencyValuesListSelector)
+  const granted = useSelector(grantedSelector)
+  const { address, featuresEnabled, name } = useSelector(safeSelector)
+  const tokens = useSelector(orderedTokenListSelector)
+
+  React.useEffect(() => {
+    const intervalID = setInterval(() => {
+      dispatch(fetchTokenBalances(address, activeTokens))
+    }, 5000)
+
+    return () => clearInterval(intervalID)
+  }, [])
+
+  return (
+    <BalancesWithStyles
+      activateAssetsByBalance={bindActionCreators(activateAssetsByBalance, dispatch)}
+      activateTokensByBalance={bindActionCreators(activateTokensByBalance, dispatch)}
+      activeTokens={activeTokens}
+      blacklistedTokens={blacklistedTokens}
+      currencySelected={currencySelected}
+      currencyValues={currencyValues}
+      featuresEnabled={featuresEnabled}
+      fetchCurrencyValues={bindActionCreators(fetchCurrencyValues, dispatch)}
+      fetchTokens={bindActionCreators(fetchTokens, dispatch)}
+      granted={granted}
+      safeAddress={address}
+      safeName={name}
+      tokens={tokens}
+    />
+  )
+}
+
+export default BalancesWrapper

@@ -67,18 +67,10 @@ type Props = SelectorProps &
 
 const Layout = (props: Props) => {
   const {
-    activateAssetsByBalance,
-    activateTokensByBalance,
-    activeTokens,
     addressBook,
-    blacklistedTokens,
     cancellationTransactions,
     classes,
     createTransaction,
-    currencySelected,
-    currencyValues,
-    fetchCurrencyValues,
-    fetchTokens,
     granted,
     hideSendFunds,
     location,
@@ -92,7 +84,6 @@ const Layout = (props: Props) => {
     sendFunds,
     showReceive,
     showSendFunds,
-    tokens,
     transactions,
     updateAddressBookEntry,
     updateSafe,
@@ -117,7 +108,7 @@ const Layout = (props: Props) => {
     return <NoSafe provider={provider} text="Safe not found" />
   }
 
-  const { address, ethBalance, featuresEnabled, name } = safe
+  const { address, ethBalance, name } = safe
   const etherScanLink = getEtherScanLink('address', address)
   const web3Instance = getWeb3()
 
@@ -309,27 +300,7 @@ const Layout = (props: Props) => {
       </Tabs>
       <Hairline color={border} style={{ marginTop: '-2px' }} />
       <Switch>
-        <Route
-          exact
-          path={`${match.path}/balances/:assetType?`}
-          render={() => (
-            <Balances
-              activateAssetsByBalance={activateAssetsByBalance}
-              activateTokensByBalance={activateTokensByBalance}
-              activeTokens={activeTokens}
-              blacklistedTokens={blacklistedTokens}
-              currencySelected={currencySelected}
-              currencyValues={currencyValues}
-              featuresEnabled={featuresEnabled}
-              fetchCurrencyValues={fetchCurrencyValues}
-              fetchTokens={fetchTokens}
-              granted={granted}
-              safeAddress={address}
-              safeName={name}
-              tokens={tokens}
-            />
-          )}
-        />
+        <Route exact path={`${match.path}/balances/:assetType?`} render={() => <Balances />} />
         <Route
           exact
           path={`${match.path}/transactions`}
