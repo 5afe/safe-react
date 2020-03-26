@@ -45,6 +45,7 @@ export const onboard = new Onboard({
     },
   },
   walletSelect: {
+    description: 'Please select a wallet to connect to Gnosis Safe Multisig',
     wallets,
   },
   walletCheck: [{ checkName: 'connect' }, transactionDataCheck(), { checkName: 'network' }, { checkName: 'accounts' }],
