@@ -39,11 +39,48 @@ const createERC721TokenContract = async () => {
   return erc721Token
 }
 
+const OnlyBalanceToken = {
+  contractName: 'OnlyBalanceToken',
+  abi: [
+    {
+      constant: true,
+      inputs: [
+        {
+          name: 'owner',
+          type: 'address',
+        },
+      ],
+      name: 'balanceOf',
+      outputs: [
+        {
+          name: '',
+          type: 'uint256',
+        },
+      ],
+      payable: false,
+      stateMutability: 'view',
+      type: 'function',
+    },
+  ],
+}
+
+// For the `batchRequest` of balances, we're just using the `balanceOf` method call.
+// So having a simple ABI only with `balanceOf` prevents errors
+// when instantiating non-standard ERC-20 Tokens.
+const createOnlyBalanceToken = async () => {
+  const web3 = getWeb3()
+  const token = await contract(OnlyBalanceToken)
+  token.setProvider(web3.currentProvider)
+  return token
+}
+
 export const getHumanFriendlyToken = ensureOnce(createHumanFriendlyTokenContract)
 
 export const getStandardTokenContract = ensureOnce(createStandardTokenContract)
 
 export const getERC721TokenContract = ensureOnce(createERC721TokenContract)
+
+export const getOnlyBalanceToken = ensureOnce(createOnlyBalanceToken)
 
 export const containsMethodByHash = async (contractAddress: string, methodHash: string) => {
   const web3 = getWeb3()

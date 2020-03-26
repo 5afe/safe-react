@@ -5,14 +5,14 @@ import type { Dispatch as ReduxDispatch } from 'redux'
 
 import updateSafe from './updateSafe'
 
-import { getStandardTokenContract } from '~/logic/tokens/store/actions/fetchTokens'
+import { getOnlyBalanceToken, getStandardTokenContract } from '~/logic/tokens/store/actions/fetchTokens'
 import { type Token } from '~/logic/tokens/store/model/token'
 import { ETH_ADDRESS } from '~/logic/tokens/utils/tokenHelpers'
 import { getWeb3 } from '~/logic/wallets/getWeb3'
 import { type GlobalState } from '~/store/index'
 
 const getBatchBalances = async (tokens: List<Token>, safeAddress: string) => {
-  const erc20Token = await getStandardTokenContract()
+  const erc20Token = await getOnlyBalanceToken()
   const web3 = getWeb3()
   const batch = new web3.BatchRequest()
 
