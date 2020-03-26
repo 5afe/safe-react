@@ -8,32 +8,46 @@ import updateSafe from './updateSafe'
 import { getOnlyBalanceToken, getStandardTokenContract } from '~/logic/tokens/store/actions/fetchTokens'
 import { type Token } from '~/logic/tokens/store/model/token'
 import { ETH_ADDRESS } from '~/logic/tokens/utils/tokenHelpers'
+import { sameAddress } from '~/logic/wallets/ethAddresses'
 import { getWeb3 } from '~/logic/wallets/getWeb3'
 import { type GlobalState } from '~/store/index'
 
-const getBatchBalances = async (tokens: List<Token>, safeAddress: string) => {
-  const erc20Token = await getOnlyBalanceToken()
+const getBatchBalances = (tokens: List<Token>, safeAddress: string) => {
   const web3 = getWeb3()
   const batch = new web3.BatchRequest()
 
-  const balances = tokens
-    .toJS()
-    .filter(({ address }) => address !== ETH_ADDRESS)
-    .map(async ({ address, decimals }: any) => {
-      const tokenInstance = await erc20Token.at(address)
-      const request = tokenInstance.balanceOf(safeAddress).then(balance => ({
-        address,
-        balance: new BigNumber(balance).div(10 ** decimals).toString(),
-      }))
+  const safeTokens = tokens.toJS().filter(({ address }) => address !== ETH_ADDRESS)
+  const safeTokensBalances = safeTokens.map(({ address, decimals }: any) => {
+    const onlyBalanceToken = getOnlyBalanceToken()
+    onlyBalanceToken.options.address = address
+
+    // This is done due to issues with DATAcoin contract in Rinkeby
+    // https://rinkeby.etherscan.io/address/0x0cf0ee63788a0849fe5297f3407f701e122cc023#readContract
+    // It doesn't have a `balanceOf` method implemented.
+    // As a fallback, we're using `balances`
+    const method = sameAddress(address, '0x0cf0ee63788a0849fe5297f3407f701e122cc023') ? 'balances' : 'balanceOf'
+
+    return new Promise(resolve => {
+      const request = onlyBalanceToken.methods[method](safeAddress).call.request((error, balance) => {
+        if (error) {
+          // if there's no balance, we log the error, but `resolve` with a default '0'
+          console.error('No balance method found', error)
+          resolve('0')
+        } else {
+          resolve({
+            address,
+            balance: new BigNumber(balance).div(`1e${decimals}`).toFixed(),
+          })
+        }
+      })
 
       batch.add(request)
-
-      return request
     })
+  })
 
   batch.execute()
 
-  return Promise.all(balances)
+  return Promise.all(safeTokensBalances)
 }
 
 export const calculateBalanceOf = async (tokenAddress: string, safeAddress: string, decimals: number = 18) => {
