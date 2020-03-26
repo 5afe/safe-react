@@ -1,9 +1,10 @@
 // @flow
 import IconButton from '@material-ui/core/IconButton'
-import { withStyles } from '@material-ui/core/styles'
+import { makeStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
 import { withSnackbar } from 'notistack'
 import React, { useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 
 import ArrowDown from '../assets/arrow-down.svg'
 
@@ -26,44 +27,37 @@ import { getEthAsToken } from '~/logic/tokens/utils/tokenHelpers'
 import { getWeb3 } from '~/logic/wallets/getWeb3'
 import SafeInfo from '~/routes/safe/components/Balances/SendModal/SafeInfo'
 import { setImageToPlaceholder } from '~/routes/safe/components/Balances/utils'
+import createTransaction from '~/routes/safe/store/actions/createTransaction'
+import { safeSelector } from '~/routes/safe/store/selectors'
 import { sm } from '~/theme/variables'
 
 type Props = {
+  closeSnackbar: () => void,
+  enqueueSnackbar: () => void,
   onClose: () => void,
-  setActiveScreen: Function,
-  classes: Object,
-  safeAddress: string,
-  safeName: string,
-  ethBalance: string,
+  onPrev: () => void,
   tx: Object,
-  createTransaction: Function,
-  enqueueSnackbar: Function,
-  closeSnackbar: Function,
 }
 
-const ReviewCustomTx = ({
-  classes,
-  closeSnackbar,
-  createTransaction,
-  enqueueSnackbar,
-  ethBalance,
-  onClose,
-  safeAddress,
-  safeName,
-  setActiveScreen,
-  tx,
-}: Props) => {
+const useStyles = makeStyles(styles)
+
+const ReviewCustomTx = ({ closeSnackbar, enqueueSnackbar, onClose, onPrev, tx }: Props) => {
+  const classes = useStyles()
+  const dispatch = useDispatch()
+  const { address: safeAddress, ethBalance, name: safeName } = useSelector(safeSelector)
   const [gasCosts, setGasCosts] = useState<string>('< 0.001')
 
   useEffect(() => {
     let isCurrent = true
-    const estimateGas = async () => {
-      const web3 = getWeb3()
-      const { fromWei, toBN } = web3.utils
 
-      const estimatedGasCosts = await estimateTxGasCosts(safeAddress, tx.recipientAddress, tx.data.trim())
+    const estimateGas = async () => {
+      const { fromWei, toBN } = getWeb3().utils
+      const txData = tx.data ? tx.data.trim() : ''
+
+      const estimatedGasCosts = await estimateTxGasCosts(safeAddress, tx.recipientAddress, txData)
       const gasCostsAsEth = fromWei(toBN(estimatedGasCosts), 'ether')
       const formattedGasCosts = formatAmount(gasCostsAsEth)
+
       if (isCurrent) {
         setGasCosts(formattedGasCosts)
       }
@@ -79,18 +73,21 @@ const ReviewCustomTx = ({
   const submitTx = async () => {
     const web3 = getWeb3()
     const txRecipient = tx.recipientAddress
-    const txData = tx.data.trim()
-    const txValue = tx.value ? web3.utils.toWei(tx.value, 'ether') : 0
+    const txData = tx.data ? tx.data.trim() : ''
+    const txValue = tx.value ? web3.utils.toWei(tx.value, 'ether') : '0'
 
-    createTransaction({
-      safeAddress,
-      to: txRecipient,
-      valueInWei: txValue,
-      txData,
-      notifiedTransaction: TX_NOTIFICATION_TYPES.STANDARD_TX,
-      enqueueSnackbar,
-      closeSnackbar,
-    })
+    dispatch(
+      createTransaction({
+        safeAddress,
+        to: txRecipient,
+        valueInWei: txValue,
+        txData,
+        notifiedTransaction: TX_NOTIFICATION_TYPES.STANDARD_TX,
+        enqueueSnackbar,
+        closeSnackbar,
+      }),
+    )
+
     onClose()
   }
 
@@ -167,7 +164,7 @@ const ReviewCustomTx = ({
       </Block>
       <Hairline />
       <Row align="center" className={classes.buttonRow}>
-        <Button minWidth={140} onClick={() => setActiveScreen('sendCustomTx')}>
+        <Button minWidth={140} onClick={onPrev}>
           Back
         </Button>
         <Button
@@ -186,4 +183,4 @@ const ReviewCustomTx = ({
   )
 }
 
-export default withStyles(styles)(withSnackbar(ReviewCustomTx))
+export default withSnackbar(ReviewCustomTx)

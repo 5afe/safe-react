@@ -7,8 +7,8 @@ import { useSelector } from 'react-redux'
 import Item from './components/Item'
 
 import Paragraph from '~/components/layout/Paragraph'
-import type { NFTAssetsState, NFTTokensState } from '~/logic/collectibles/store/reducer/collectibles'
-import { nftAssetsSelector, nftTokensSelector } from '~/logic/collectibles/store/selectors'
+import type { NFTTokensState } from '~/logic/collectibles/store/reducer/collectibles'
+import { activeNftAssetsListSelector, nftTokensSelector } from '~/logic/collectibles/store/selectors'
 import SendModal from '~/routes/safe/components/Balances/SendModal'
 import { safeSelector } from '~/routes/safe/store/selectors'
 import { fontColor, lg, screenSm, screenXs } from '~/theme/variables'
@@ -81,9 +81,8 @@ const Collectibles = () => {
   const [selectedToken, setSelectedToken] = React.useState({})
   const [sendNFTsModalOpen, setSendNFTsModalOpen] = React.useState(false)
   const { address, ethBalance, name } = useSelector(safeSelector)
-  const nftAssets: NFTAssetsState = useSelector(nftAssetsSelector)
   const nftTokens: NFTTokensState = useSelector(nftTokensSelector)
-  const nftAssetsKeys = Object.keys(nftAssets)
+  const activeAssetsList = useSelector(activeNftAssetsListSelector)
 
   const handleItemSend = nftToken => {
     setSelectedToken(nftToken)
@@ -93,10 +92,8 @@ const Collectibles = () => {
   return (
     <Card className={classes.cardOuter}>
       <div className={classes.cardInner}>
-        {nftAssetsKeys.length ? (
-          nftAssetsKeys.map(assetAddress => {
-            const nftAsset = nftAssets[assetAddress]
-
+        {activeAssetsList.size ? (
+          activeAssetsList.map(nftAsset => {
             return (
               <React.Fragment key={nftAsset.slug}>
                 <div className={classes.title}>

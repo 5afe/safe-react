@@ -205,5 +205,5 @@ export type CollectiblesInfo = {
 
 export interface CollectibleMetadataSource {
   constructor(options: { rps: number }): void;
-  fetchAllUserCollectiblesByCategoryAsync(safeAddress: string, networkId: number): Promise<CollectiblesInfo>;
+  fetchAllUserCollectiblesByCategoryAsync(safeAddress: string, network: string): Promise<CollectiblesInfo>;
 }

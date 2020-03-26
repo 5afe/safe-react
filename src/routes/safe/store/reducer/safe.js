@@ -26,7 +26,9 @@ export const buildSafe = (storedSafe: SafeProps) => {
   const addresses = storedSafe.owners.map(owner => getWeb3().utils.toChecksumAddress(owner.address))
   const owners = buildOwnersFrom(Array.from(names), Array.from(addresses))
   const activeTokens = Set(storedSafe.activeTokens)
+  const activeAssets = Set(storedSafe.activeAssets)
   const blacklistedTokens = Set(storedSafe.blacklistedTokens)
+  const blacklistedAssets = Set(storedSafe.blacklistedAssets)
   const balances = Map(storedSafe.balances)
 
   const safe: SafeProps = {
@@ -35,6 +37,8 @@ export const buildSafe = (storedSafe: SafeProps) => {
     balances,
     activeTokens,
     blacklistedTokens,
+    activeAssets,
+    blacklistedAssets,
   }
 
   return safe
