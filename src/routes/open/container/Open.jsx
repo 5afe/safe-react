@@ -186,6 +186,7 @@ const Open = ({ addSafe, network, provider, userAccount }: Props) => {
     const values = await loadFromStorage(SAFE_PENDING_CREATION_STORAGE_KEY)
     delete values.txHash
     await saveToStorage(SAFE_PENDING_CREATION_STORAGE_KEY, values)
+    setSafeCreationPendingInfo(values)
     createSafeProxy()
   }
 
