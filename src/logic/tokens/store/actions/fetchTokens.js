@@ -65,12 +65,16 @@ export const getTokenInstance = async (tokenAddress: string) => {
   // Otherwise we fetch it, save it to the cache and return it
   const tokenContract = await getHumanFriendlyToken()
   tokenInstance = await tokenContract.at(tokenAddress)
-  const [tokenSymbol, tokenDecimals] = await Promise.all([tokenInstance.symbol(), tokenInstance.decimals()])
+  const [tokenSymbol, tokenDecimals, name] = await Promise.all([
+    tokenInstance.symbol(),
+    tokenInstance.decimals(),
+    tokenInstance.name(),
+  ])
   tokenInstance.symbol = tokenSymbol
   tokenInstance.tokenDecimals = tokenDecimals
   const savedToken = makeToken({
     address: tokenAddress,
-    name,
+    name: name ? name : tokenSymbol,
     symbol: tokenSymbol,
     decimals: tokenDecimals,
     logoUri: '',
