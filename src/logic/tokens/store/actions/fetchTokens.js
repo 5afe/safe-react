@@ -95,11 +95,11 @@ export const getTokenInstance = async (tokenAddress: string) => {
   }
   const { tokens } = store.getState()
   let tokenInstance = tokens.get(tokenAddress)
-  // If the token is inside the cache we return the cached token
+  // If the token is inside the store we return the store token
   if (tokenInstance) {
     return tokenInstance
   }
-  // Otherwise we fetch it, save it to the cache and return it
+  // Otherwise we fetch it, save it to the store and return it
   const tokenContract = await getHumanFriendlyToken()
   tokenInstance = await tokenContract.at(tokenAddress)
   const [tokenSymbol, tokenDecimals, name] = await Promise.all([
@@ -117,8 +117,7 @@ export const getTokenInstance = async (tokenAddress: string) => {
     logoUri: '',
   })
   const newTokens = tokens.set(tokenAddress, savedToken)
-  const dispatch = store.dispatch
-  dispatch(saveTokens(newTokens))
+  store.dispatch(savedToken(newTokens))
 
   return tokenInstance
 }
