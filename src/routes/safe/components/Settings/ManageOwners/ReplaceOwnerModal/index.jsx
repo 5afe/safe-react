@@ -117,10 +117,11 @@ const ReplaceOwner = ({
     setActiveScreen('reviewReplaceOwner')
   }
 
-  const onReplaceOwner = () => {
+  const onReplaceOwner = async () => {
     onClose()
+
     try {
-      sendReplaceOwner(
+      await sendReplaceOwner(
         values,
         safeAddress,
         ownerAddress,
@@ -129,14 +130,15 @@ const ReplaceOwner = ({
         createTransaction,
         replaceSafeOwner,
         safe,
-      ).then(() => {
-        const entry = {
-          name: values.ownerName,
-          address: values.ownerAddress,
-          isOwner: false,
-        }
-        dispatch(addOrUpdateAddressBookEntry(entry))
-      })
+      )
+
+      const entry = {
+        name: values.ownerName,
+        address: values.ownerAddress,
+        isOwner: false,
+      }
+
+      dispatch(addOrUpdateAddressBookEntry(entry))
     } catch (error) {
       console.error('Error while removing an owner', error)
     }
