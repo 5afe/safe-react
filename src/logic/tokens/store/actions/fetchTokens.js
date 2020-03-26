@@ -135,7 +135,7 @@ export const getTokenInstance = async (tokenAddress: string) => {
     logoUri: '',
   })
   const newTokens = tokens.set(tokenAddress, savedToken)
-  store.dispatch(savedToken(newTokens))
+  store.dispatch(saveTokens(newTokens))
 
   return tokenInstance
 }
