@@ -89,7 +89,7 @@ export const containsMethodByHash = async (contractAddress: string, methodHash: 
   return byteCode.indexOf(methodHash.replace('0x', '')) !== -1
 }
 
-export const getTokenInstance = async (tokenAddress: string) => {
+export const getTokenInfos = async (tokenAddress: string) => {
   if (!tokenAddress) {
     return null
   }
@@ -117,7 +117,7 @@ export const getTokenInstance = async (tokenAddress: string) => {
     logoUri: '',
   })
   const newTokens = tokens.set(tokenAddress, savedToken)
-  store.dispatch(savedToken(newTokens))
+  store.dispatch(saveTokens(newTokens))
 
   return tokenInstance
 }

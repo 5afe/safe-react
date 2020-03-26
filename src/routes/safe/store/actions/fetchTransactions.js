@@ -11,7 +11,7 @@ import { decodeParamsFromSafeMethod } from '~/logic/contracts/methodIds'
 import { buildIncomingTxServiceUrl } from '~/logic/safe/transactions/incomingTxHistory'
 import { type TxServiceType, buildTxServiceUrl } from '~/logic/safe/transactions/txHistory'
 import { getLocalSafe } from '~/logic/safe/utils'
-import { getTokenInstance } from '~/logic/tokens/store/actions/fetchTokens'
+import { getTokenInfos } from '~/logic/tokens/store/actions/fetchTokens'
 import { ALTERNATIVE_TOKEN_ABI } from '~/logic/tokens/utils/alternativeAbi'
 import {
   DECIMALS_METHOD_HASH,
@@ -111,7 +111,7 @@ export const buildTransactionFrom = async (safeAddress: string, tx: TxServiceMod
     let refundSymbol = 'ETH'
     let decimals = 18
     if (tx.gasToken !== ZERO_ADDRESS) {
-      const gasToken = await getTokenInstance(tx.gasToken)
+      const gasToken = await getTokenInfos(tx.gasToken)
       refundSymbol = gasToken.symbol
       decimals = gasToken.decimals
     }
@@ -131,7 +131,7 @@ export const buildTransactionFrom = async (safeAddress: string, tx: TxServiceMod
   let decimals = 18
   let decodedParams
   if (isSendTokenTx) {
-    const tokenInstance = await getTokenInstance(tx.to)
+    const tokenInstance = await getTokenInfos(tx.to)
     try {
       ;[symbol, decimals] = tokenInstance
     } catch (err) {
@@ -229,7 +229,7 @@ export const buildIncomingTransactionFrom = async (tx: IncomingTxServiceModel) =
 
   if (tx.tokenAddress) {
     try {
-      const tokenInstance = await getTokenInstance(tx.tokenAddress)
+      const tokenInstance = await getTokenInfos(tx.tokenAddress)
       symbol = tokenInstance.symbol
       decimals = tokenInstance.decimals
     } catch (err) {
@@ -350,14 +350,15 @@ export default (safeAddress: string) => async (dispatch: ReduxDispatch<GlobalSta
   web3 = await getWeb3()
 
   const transactions: SafeTransactionsType | undefined = await loadSafeTransactions(safeAddress)
-  const incomingTransactions: Map<string, List<IncomingTransaction>> | undefined = await loadSafeIncomingTransactions(
-    safeAddress,
-  )
   if (transactions) {
     const { cancel, outgoing } = transactions
     dispatch(addCancellationTransactions(cancel))
     dispatch(addTransactions(outgoing))
   }
+  const incomingTransactions: Map<string, List<IncomingTransaction>> | undefined = await loadSafeIncomingTransactions(
+    safeAddress,
+  )
+
   if (incomingTransactions) {
     dispatch(addIncomingTransactions(incomingTransactions))
   }
