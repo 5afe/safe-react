@@ -112,14 +112,14 @@ export const getTokenInfos = async (tokenAddress: string) => {
     return null
   }
   const { tokens } = store.getState()
-  let tokenInstance = tokens.get(tokenAddress)
+  const localToken = tokens.get(tokenAddress)
   // If the token is inside the store we return the store token
-  if (tokenInstance) {
-    return tokenInstance
+  if (localToken) {
+    return localToken
   }
   // Otherwise we fetch it, save it to the store and return it
   const tokenContract = await getHumanFriendlyToken()
-  tokenInstance = await tokenContract.at(tokenAddress)
+  let tokenInstance = await tokenContract.at(tokenAddress)
   const [tokenSymbol, tokenDecimals, name] = await Promise.all([
     tokenInstance.symbol(),
     tokenInstance.decimals(),

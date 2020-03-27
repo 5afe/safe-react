@@ -9,7 +9,7 @@ import TxType from './TxType'
 import { type Column } from '~/components/Table/TableHead'
 import { type SortRow, buildOrderFieldFrom } from '~/components/Table/sorting'
 import { getWeb3 } from '~/logic/wallets/getWeb3'
-import { INCOMING_TX_TYPE, type IncomingTransaction } from '~/routes/safe/store/models/incomingTransaction'
+import { INCOMING_TX_TYPES, type IncomingTransaction } from '~/routes/safe/store/models/incomingTransaction'
 import { type Transaction } from '~/routes/safe/store/models/transaction'
 
 export const TX_TABLE_ID = 'id'
@@ -101,7 +101,7 @@ export const getTxTableData = (
   const cancelTxsByNonce = cancelTxs.reduce((acc, tx) => acc.set(tx.nonce, tx), Map())
 
   return transactions.map(tx => {
-    if (INCOMING_TX_TYPE.includes(tx.type)) {
+    if (INCOMING_TX_TYPES.includes(tx.type)) {
       return getIncomingTxTableData(tx)
     }
 
