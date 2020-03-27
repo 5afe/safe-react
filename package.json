@@ -134,10 +134,12 @@
     "history": "4.10.1",
     "immortal-db": "^1.0.2",
     "immutable": "^4.0.0-rc.9",
+    "install": "^0.13.0",
     "js-cookie": "^2.2.1",
     "lint-staged": "^10.0.7",
     "material-ui-search-bar": "^1.0.0-beta.13",
     "notistack": "https://github.com/gnosis/notistack.git#v0.9.4",
+    "npm": "^6.14.4",
     "optimize-css-assets-webpack-plugin": "5.0.3",
     "polished": "^3.4.2",
     "qrcode.react": "1.0.0",
@@ -161,6 +163,7 @@
     "semver": "^7.1.1",
     "styled-components": "^5.0.1",
     "update-electron-app": "^1.5.0",
+    "usb": "^1.6.2",
     "web3": "1.2.6"
   },
   "devDependencies": {

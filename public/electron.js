@@ -1,5 +1,7 @@
 const electron = require("electron");
 const  express = require('express');
+const fs = require('fs');
+const https = require('https');
 
 const url = require('url');
 const app = electron.app;
@@ -8,13 +10,16 @@ const BrowserWindow = electron.BrowserWindow;
 const path = require("path");
 const isDev = require("electron-is-dev");
 
-const PORT = 3333;
+const PORT = 5000;
 
 const createServer = () => {
-  const server = express();
+  const app = express();
   const staticRoute = path.join(__dirname, '../build_webpack');
-  server.use(express.static(staticRoute));
-  server.listen(PORT);
+  app.use(express.static(staticRoute));
+  https.createServer({
+    key: fs.readFileSync(path.join(__dirname, './localhost.key')),
+    cert: fs.readFileSync(path.join(__dirname, './localhost.crt'))
+  }, app).listen(PORT);
 }
 
 
@@ -32,7 +37,7 @@ function createWindow() {
     webPreferences: {
       preload: path.join(__dirname, '../scripts/preload.js'),
       nodeIntegration: false,
-      webSecurity:true
+      webSecurity:false
     },
     icon: path.join(__dirname, './build/safe.png'),
   });
@@ -40,7 +45,7 @@ function createWindow() {
   mainWindow.loadURL(
     isDev
       ? "http://localhost:3000"
-      : `http://localhost:${PORT}`
+      : `https://localhost:${PORT}`
       )
 
   if (isDev) {
