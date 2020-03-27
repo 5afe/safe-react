@@ -126,7 +126,7 @@ export const getTokenInfos = async (tokenAddress: string) => {
     tokenInstance.name(),
   ])
   tokenInstance.symbol = tokenSymbol
-  tokenInstance.tokenDecimals = tokenDecimals
+  tokenInstance.decimals = tokenDecimals
   const savedToken = makeToken({
     address: tokenAddress,
     name: name ? name : tokenSymbol,
