@@ -10,16 +10,19 @@ const BrowserWindow = electron.BrowserWindow;
 const path = require("path");
 const isDev = require("electron-is-dev");
 
+const options = {
+  key:  fs.readFileSync(path.join(__dirname, './ssl/server.key')),
+  cert: fs.readFileSync(path.join(__dirname, './ssl/server.crt')),
+  ca:   fs.readFileSync(path.join(__dirname, './ssl/rootCA.crt'))
+};
+
 const PORT = 5000;
 
 const createServer = () => {
   const app = express();
   const staticRoute = path.join(__dirname, '../build_webpack');
   app.use(express.static(staticRoute));
-  https.createServer({
-    key: fs.readFileSync(path.join(__dirname, './localhost.key')),
-    cert: fs.readFileSync(path.join(__dirname, './localhost.crt'))
-  }, app).listen(PORT);
+  https.createServer(options, app).listen(PORT);
 }
 
 
@@ -36,8 +39,8 @@ function createWindow() {
     height: 768,
     webPreferences: {
       preload: path.join(__dirname, '../scripts/preload.js'),
-      nodeIntegration: false,
-      webSecurity:false
+      nodeIntegration: true,
+      allowRunningInsecureContent: true
     },
     icon: path.join(__dirname, './build/safe.png'),
   });
@@ -51,12 +54,15 @@ function createWindow() {
   if (isDev) {
     // Open the DevTools.
     //BrowserWindow.addDevToolsExtension('<location to your react chrome extension>');
-    mainWindow.webContents.openDevTools();
   }
+
+  mainWindow.webContents.openDevTools();
+
 
   mainWindow.on("closed", () => (mainWindow = null));
 }
 
+app.commandLine.appendSwitch('ignore-certificate-errors');
 app.on("ready", () =>{
   if(!isDev) createServer();
   createWindow();
