@@ -133,7 +133,8 @@ export const buildTransactionFrom = async (safeAddress: string, tx: TxServiceMod
   if (isSendTokenTx) {
     const tokenInstance = await getTokenInfos(tx.to)
     try {
-      ;[symbol, decimals] = tokenInstance
+      symbol = tokenInstance.symbol
+      decimals = tokenInstance.decimals
     } catch (err) {
       const alternativeTokenInstance = new web3.eth.Contract(ALTERNATIVE_TOKEN_ABI, tx.to)
       const [tokenSymbol, tokenDecimals] = await Promise.all([
