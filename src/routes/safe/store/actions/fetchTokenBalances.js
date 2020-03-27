@@ -23,7 +23,7 @@ const nonStandardERC20 = [
 // https://rinkeby.etherscan.io/address/0x0cf0ee63788a0849fe5297f3407f701e122cc023#readContract
 // It doesn't have a `balanceOf` method implemented.
 const isStandardERC20 = (address: string): boolean => {
-  return !!nonStandardERC20.find(token => sameAddress(address, token.address) && sameAddress(NETWORK, token.network))
+  return !nonStandardERC20.find(token => sameAddress(address, token.address) && sameAddress(NETWORK, token.network))
 }
 
 const getBatchBalances = (tokens: List<Token>, safeAddress: string) => {
