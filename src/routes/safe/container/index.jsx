@@ -38,11 +38,13 @@ class SafeView extends React.Component<Props, State> {
 
   componentDidMount() {
     const {
+      activeTokens,
       addViewedSafe,
       fetchCollectibles,
       fetchCurrencyValues,
       fetchLatestMasterContractVersion,
       fetchSafe,
+      fetchTokenBalances,
       fetchTokens,
       fetchTransactions,
       loadAddressBook,
@@ -55,11 +57,12 @@ class SafeView extends React.Component<Props, State> {
         // The safe needs to be loaded before fetching the transactions
         fetchTransactions(safeUrl)
         addViewedSafe(safeUrl)
-        fetchCurrencyValues(safeUrl)
         fetchCollectibles()
       })
+    fetchTokenBalances(safeUrl, activeTokens)
     // fetch tokens there to get symbols for tokens in TXs list
     fetchTokens()
+    fetchCurrencyValues(safeUrl)
     loadAddressBook()
 
     this.intervalId = setInterval(() => {
@@ -116,8 +119,17 @@ class SafeView extends React.Component<Props, State> {
   }
 
   checkForUpdates() {
-    const { checkAndUpdateSafeOwners, fetchEtherBalance, fetchTransactions, safe, safeUrl } = this.props
+    const {
+      activeTokens,
+      checkAndUpdateSafeOwners,
+      fetchEtherBalance,
+      fetchTokenBalances,
+      fetchTransactions,
+      safe,
+      safeUrl,
+    } = this.props
     checkAndUpdateSafeOwners(safeUrl)
+    fetchTokenBalances(safeUrl, activeTokens)
     fetchEtherBalance(safe)
     fetchTransactions(safeUrl)
   }
@@ -125,14 +137,23 @@ class SafeView extends React.Component<Props, State> {
   render() {
     const { sendFunds, showReceive } = this.state
     const {
+      activateAssetsByBalance,
+      activateTokensByBalance,
+      activeTokens,
       addressBook,
+      blacklistedTokens,
       cancellationTransactions,
       createTransaction,
+      currencySelected,
+      currencyValues,
+      fetchCurrencyValues,
+      fetchTokens,
       granted,
       network,
       processTransaction,
       provider,
       safe,
+      tokens,
       transactions,
       updateAddressBookEntry,
       updateSafe,
@@ -142,9 +163,17 @@ class SafeView extends React.Component<Props, State> {
     return (
       <Page>
         <Layout
+          activateAssetsByBalance={activateAssetsByBalance}
+          activateTokensByBalance={activateTokensByBalance}
+          activeTokens={activeTokens}
           addressBook={addressBook}
+          blacklistedTokens={blacklistedTokens}
           cancellationTransactions={cancellationTransactions}
           createTransaction={createTransaction}
+          currencySelected={currencySelected}
+          currencyValues={currencyValues}
+          fetchCurrencyValues={fetchCurrencyValues}
+          fetchTokens={fetchTokens}
           granted={granted}
           hideSendFunds={this.hideSendFunds}
           network={network}
@@ -156,6 +185,7 @@ class SafeView extends React.Component<Props, State> {
           sendFunds={sendFunds}
           showReceive={showReceive}
           showSendFunds={this.showSendFunds}
+          tokens={tokens}
           transactions={transactions}
           updateAddressBookEntry={updateAddressBookEntry}
           updateSafe={updateSafe}

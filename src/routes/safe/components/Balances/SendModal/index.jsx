@@ -3,15 +3,10 @@ import CircularProgress from '@material-ui/core/CircularProgress'
 import { makeStyles } from '@material-ui/core/styles'
 import cn from 'classnames'
 import React, { Suspense, useEffect, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
 
 import Modal from '~/components/Modal'
-import activateTokensByBalance from '~/logic/tokens/store/actions/activateTokensByBalance'
 import { type Token } from '~/logic/tokens/store/model/token'
 import type { NFTToken } from '~/routes/safe/components/Balances/Collectibles/types'
-import { extendedSafeTokensSelector } from '~/routes/safe/container/selector'
-import fetchTokenBalances from '~/routes/safe/store/actions/fetchTokenBalances'
-import { safeSelector } from '~/routes/safe/store/selectors'
 
 const ChooseTxType = React.lazy(() => import('./screens/ChooseTxType'))
 
@@ -72,21 +67,8 @@ const useStyles = makeStyles({
 
 const SendModal = ({ activeScreenType, isOpen, onClose, recipientAddress, selectedToken }: Props) => {
   const classes = useStyles()
-  const dispatch = useDispatch()
-  const activeTokens = useSelector(extendedSafeTokensSelector)
-  const { address } = useSelector(safeSelector)
   const [activeScreen, setActiveScreen] = useState<ActiveScreen>(activeScreenType || 'chooseTxType')
   const [tx, setTx] = useState<TxStateType>({})
-
-  useEffect(() => {
-    dispatch(activateTokensByBalance(address))
-  }, [])
-
-  useEffect(() => {
-    if (activeTokens.size > 0) {
-      dispatch(fetchTokenBalances(address, activeTokens))
-    }
-  }, [activeTokens.size])
 
   useEffect(() => {
     setActiveScreen(activeScreenType || 'chooseTxType')
