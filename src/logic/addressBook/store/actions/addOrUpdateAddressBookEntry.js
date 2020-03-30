@@ -7,7 +7,8 @@ export const ADD_OR_UPDATE_ENTRY = 'ADD_OR_UPDATE_ENTRY'
 
 export const addOrUpdateAddressBookEntry = createAction<string, *, *>(
   ADD_OR_UPDATE_ENTRY,
-  (entry: AddressBookEntryType): AddressBookEntryType => ({
+  (entryAddress: string, entry: AddressBookEntryType): AddressBookEntryType => ({
+    entryAddress,
     entry,
   }),
 )

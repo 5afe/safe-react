@@ -132,13 +132,12 @@ const ReplaceOwner = ({
         safe,
       )
 
-      const entry = {
-        name: values.ownerName,
-        address: values.ownerAddress,
-        isOwner: false,
-      }
-
-      dispatch(addOrUpdateAddressBookEntry(entry))
+      dispatch(
+        // Needs the `address` field because we need to provide the minimum required values to ADD a new entry
+        // The reducer will update all the addressBooks stored, so we cannot decide what to do beforehand,
+        // thus, we pass the minimum required fields (name and address)
+        addOrUpdateAddressBookEntry(values.ownerAddress, { name: values.ownerName, address: values.ownerAddress }),
+      )
     } catch (error) {
       console.error('Error while removing an owner', error)
     }
