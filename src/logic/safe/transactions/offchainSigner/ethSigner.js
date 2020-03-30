@@ -35,7 +35,7 @@ export const generateEthSignature = async ({
     },
   )
 
-  return new Promise(function(resolve, reject) {
+  return new Promise(function (resolve, reject) {
     web3.currentProvider.sendAsync(
       {
         jsonrpc: '2.0',
@@ -43,7 +43,7 @@ export const generateEthSignature = async ({
         params: [sender, txHash],
         id: new Date().getTime(),
       },
-      async function(err, signature) {
+      async function (err, signature) {
         if (err) {
           return reject(err)
         }
