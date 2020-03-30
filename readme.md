@@ -1,6 +1,6 @@
-# Gnosis Team Safe
+# Gnosis Safe Multisig
 
-The most secure way to manage your crypto funds collectively
+The most trusted platform to store digital assets on Ethereum
 
 ## Getting Started
 

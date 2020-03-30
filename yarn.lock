@@ -1606,6 +1606,11 @@
   resolved "https://registry.yarnpkg.com/@redux-saga/types/-/types-1.1.0.tgz#0e81ce56b4883b4b2a3001ebe1ab298b84237204"
   integrity sha512-afmTuJrylUU/0OtqzaRkbyYFFNgCF73Bvel/sw90pvGrWIZ+vyoIJqA6eMSoA6+nb443kTmulmBtC9NerXboNg==
 
+"@restless/sanitizers@^0.2.4":
+  version "0.2.4"
+  resolved "https://registry.yarnpkg.com/@restless/sanitizers/-/sanitizers-0.2.4.tgz#726ea5607f1bf7e327df266e180b2702e3ffe587"
+  integrity sha512-BqEF+7YEPSvmM8xp5R1uM5hpf87wzVdzSK7rr323bjxM6JBQcBE2w1i6KXpYq2GEJ2Z9BIFSAbRs7jGAtgeJxw==
+
 "@samverschueren/stream-to-observable@^0.3.0":
   version "0.3.0"
   resolved "https://registry.yarnpkg.com/@samverschueren/stream-to-observable/-/stream-to-observable-0.3.0.tgz#ecdf48d532c58ea477acfcab80348424f8d0662f"
@@ -1675,22 +1680,22 @@
     "@testing-library/dom" "^6.15.0"
     "@types/testing-library__react" "^9.1.2"
 
-"@toruslabs/fetch-node-details@^2.0.2":
-  version "2.0.2"
-  resolved "https://registry.yarnpkg.com/@toruslabs/fetch-node-details/-/fetch-node-details-2.0.2.tgz#e2f1c2eb3d3e4e1ca1a5bb5baa10ddc286341373"
-  integrity sha512-kn4VZMIjZ19dJiaKPcTcd19LV4V45lDvfYl14CWwdHpxtBX1Mxkog85jU6l1mUh6cPgRfR0lcksn9rEr7kBLGQ==
+"@toruslabs/fetch-node-details@^2.0.4":
+  version "2.0.4"
+  resolved "https://registry.yarnpkg.com/@toruslabs/fetch-node-details/-/fetch-node-details-2.0.4.tgz#42ba98f00f96f7514fc1cd7ff42a451af6533309"
+  integrity sha512-s0poG7sd5EMyzHJ6Dbi0nB1GFGFnEYTgUT/sjGrPj1KleoQj9Ircfcxas/40OCMfKGUYBhHe7D20Caxbk+dENg==
   dependencies:
     web3-eth-contract "^1.2.6"
     web3-utils "^1.2.6"
 
-"@toruslabs/torus-embed@^1.1.1":
-  version "1.1.1"
-  resolved "https://registry.yarnpkg.com/@toruslabs/torus-embed/-/torus-embed-1.1.1.tgz#a6c17742310c342677ed94fc3c26f4a8944e18d8"
-  integrity sha512-tYiU854xuWkGaLhT366jDs9IHze/b/LWjjRXi43EyQpuyD556sA+cFJGkadBsdQtx8bhtTwO8NEYTGStt7RcHA==
+"@toruslabs/torus-embed@^1.2.4":
+  version "1.2.4"
+  resolved "https://registry.yarnpkg.com/@toruslabs/torus-embed/-/torus-embed-1.2.4.tgz#1c35ad5c2b2c2e55e1556ee0688f84bc0c57691a"
+  integrity sha512-8Flyb9JTICgLSmOPMUpZBcF87K7xeVyOc29ZD/v99U0DuTjfq7cYAJGFPeKnHMOZD+2EPWY2NikqrpkC+xzkog==
   dependencies:
     "@chaitanyapotti/random-id" "^1.0.3"
-    "@toruslabs/fetch-node-details" "^2.0.2"
-    "@toruslabs/torus.js" "^1.0.7"
+    "@toruslabs/fetch-node-details" "^2.0.4"
+    "@toruslabs/torus.js" "^1.0.10"
     eth-json-rpc-errors "^2.0.2"
     fast-deep-equal "^3.1.1"
     json-rpc-engine "^5.1.8"
@@ -1706,10 +1711,10 @@
     through2 "^3.0.1"
     web3 "^0.20.7"
 
-"@toruslabs/torus.js@^1.0.7":
-  version "1.0.7"
-  resolved "https://registry.yarnpkg.com/@toruslabs/torus.js/-/torus.js-1.0.7.tgz#3940cabfff0b5306568d97a3556b66b030a17ce3"
-  integrity sha512-JB2xSOgRRWTX57DRDUbGWjEJdAeNZjWUPfucg0M8RmqH3eETjwuBpA0ECi7e7gZKuZ0D34pBTn+a1TPBYLfTLA==
+"@toruslabs/torus.js@^1.0.10":
+  version "1.0.10"
+  resolved "https://registry.yarnpkg.com/@toruslabs/torus.js/-/torus.js-1.0.10.tgz#cdc5657f6206006cc7910dd1d714ec1e105cbf19"
+  integrity sha512-a3r4rkqHdawvfQaJNCDfPZFrtHDplRsrjR/7VXXlH2Z0HkqaM5SNjKFTN2Ul0KM4S4MWz3mAl1r6bo3nKEJoYA==
   dependencies:
     bn.js "^5.1.1"
     eccrypto "^1.1.3"
@@ -2170,6 +2175,14 @@
   integrity sha512-9T1auFmbPZoxHz0enUFlUuKRy3it01R+hlggyVUMtnCTQRunsQYifnSGb8hET4Xo8yiC0o0r1paW3ud5+rbURg==
   dependencies:
     "@types/yargs-parser" "*"
+
+"@unilogin/provider@^0.5.20":
+  version "0.5.20"
+  resolved "https://registry.yarnpkg.com/@unilogin/provider/-/provider-0.5.20.tgz#3bdfe542058eca5bf86cb6c509a84ac6c2e64b0b"
+  integrity sha512-lDg/rU2fblQyrUHR0Jkk8vSiRQHkBKY6pUc0pqgaeDimkQNVZJKsPK7FzbRINtIJQGQsoZpObI6a25qguO/jew==
+  dependencies:
+    "@restless/sanitizers" "^0.2.4"
+    reactive-properties "^0.1.11"
 
 "@walletconnect/browser@^1.0.0-beta.47":
   version "1.0.0-beta.47"
@@ -3760,19 +3773,20 @@ bn.js@^5.1.1:
   resolved "https://registry.yarnpkg.com/bn.js/-/bn.js-5.1.1.tgz#48efc4031a9c4041b9c99c6941d903463ab62eb5"
   integrity sha512-IUTD/REb78Z2eodka1QZyyEk66pciRcP6Sroka0aI3tG/iwIdYLrBD62RsubR7vqdt3WyX8p4jxeatzmRSphtA==
 
-bnc-onboard@1.4.0:
-  version "1.4.0"
-  resolved "https://registry.yarnpkg.com/bnc-onboard/-/bnc-onboard-1.4.0.tgz#2645b3cc940addfd856c2952d63512e1ed23fc40"
-  integrity sha512-wPoVpvHe1Y4e97FuLUps/UZ+SFmS1Bzgxvg1JS6tPfapEA9QMg69qz4ye8WpcnbIroqrnB/wivOWxjkNLlthDg==
+bnc-onboard@1.5.0:
+  version "1.5.0"
+  resolved "https://registry.yarnpkg.com/bnc-onboard/-/bnc-onboard-1.5.0.tgz#dbb3dc62d8442827d6a3eb848a90f597fbf8916c"
+  integrity sha512-dKsAVqNNe94NrBdMa7gOQr/zjjcjn7HzqEsC36wSpyLcvAsPrd2cBiFSCgHftWYu/mkfFQXgdaoyJMV4orsd+Q==
   dependencies:
     "@ledgerhq/hw-app-eth" "^5.7.0"
     "@ledgerhq/hw-transport-u2f" "^5.7.0"
     "@portis/web3" "^2.0.0-beta.42"
-    "@toruslabs/torus-embed" "^1.1.1"
+    "@toruslabs/torus-embed" "^1.2.4"
+    "@unilogin/provider" "^0.5.20"
     "@walletconnect/web3-provider" "^1.0.0-beta.45"
     authereum "^0.0.4-beta.88"
     bignumber.js "^9.0.0"
-    bnc-sdk "1.1.0"
+    bnc-sdk "2.0.0"
     bowser "^2.5.2"
     ethereumjs-tx "^2.1.2"
     ethereumjs-util "^6.2.0"
@@ -3784,11 +3798,12 @@ bnc-onboard@1.4.0:
     trezor-connect "7.0.1"
     web3-provider-engine "^15.0.4"
 
-bnc-sdk@1.1.0:
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/bnc-sdk/-/bnc-sdk-1.1.0.tgz#00a2a4387c2a507228d70cd622aaaf1423149a0a"
-  integrity sha512-H7T3982JS+h7EeokDivMuRyDmeo9riTc3kZBXCYFElflNMVm1M1sO91i+6YvCxVWi365Qv2FJcvhCwvOnyXTQQ==
+bnc-sdk@2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/bnc-sdk/-/bnc-sdk-2.0.0.tgz#90b5926a758b9c9050bcbd2854cf3502a5899aff"
+  integrity sha512-IPOtIR0qZ4MtnGlMXVsjxbShANbaIfxksVZOXh/4hjpcSRKI3Gc3N+hq+P0CqeN0nhTuDARkCavDrlq/oPKyUQ==
   dependencies:
+    crypto-es "^1.2.2"
     sturdy-websocket "^0.1.12"
 
 body-parser@1.19.0, body-parser@^1.16.0:
@@ -5033,6 +5048,11 @@ crypto-browserify@3.12.0, crypto-browserify@^3.11.0:
     public-encrypt "^4.0.0"
     randombytes "^2.0.0"
     randomfill "^1.0.3"
+
+crypto-es@^1.2.2:
+  version "1.2.2"
+  resolved "https://registry.yarnpkg.com/crypto-es/-/crypto-es-1.2.2.tgz#ed36b08af530808dff2214ffe696a2ae62497640"
+  integrity sha512-opab8M4wcsMWMDAMl+2G7inqlVyvAGNsJT8eOQRBOKNqsSFPQ8/WLP9tp0Q7bVxeNp/1e9TWn/x5GmcUVhRDUg==
 
 crypto-js@^3.1.4, crypto-js@^3.1.9-1:
   version "3.3.0"
@@ -13454,6 +13474,11 @@ react@16.13.0:
     loose-envify "^1.1.0"
     object-assign "^4.1.1"
     prop-types "^15.6.2"
+
+reactive-properties@^0.1.11:
+  version "0.1.11"
+  resolved "https://registry.yarnpkg.com/reactive-properties/-/reactive-properties-0.1.11.tgz#d8678fa5a66b964c1a520ec92a3137842b8f9d52"
+  integrity sha512-NhOEcAlNSq94ml3WdLroKdndeUo4Idj4PSEieqfaLL5BXZU4BFo+TsOY6yiasR9EVUw27mfW2sYBYhwSUNMrLw==
 
 read-pkg-up@^1.0.1:
   version "1.0.1"

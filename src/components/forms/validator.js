@@ -8,10 +8,10 @@ import { getWeb3 } from '~/logic/wallets/getWeb3'
 export const simpleMemoize = (fn: Function) => {
   let lastArg
   let lastResult
-  return (arg: any) => {
+  return (arg: any, ...args: any) => {
     if (arg !== lastArg) {
       lastArg = arg
-      lastResult = fn(arg)
+      lastResult = fn(arg, ...args)
     }
     return lastResult
   }

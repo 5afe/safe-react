@@ -11,7 +11,7 @@ import { decodeParamsFromSafeMethod } from '~/logic/contracts/methodIds'
 import { buildIncomingTxServiceUrl } from '~/logic/safe/transactions/incomingTxHistory'
 import { type TxServiceType, buildTxServiceUrl } from '~/logic/safe/transactions/txHistory'
 import { getLocalSafe } from '~/logic/safe/utils'
-import { getHumanFriendlyToken } from '~/logic/tokens/store/actions/fetchTokens'
+import { getTokenInfos } from '~/logic/tokens/store/actions/fetchTokens'
 import { ALTERNATIVE_TOKEN_ABI } from '~/logic/tokens/utils/alternativeAbi'
 import {
   DECIMALS_METHOD_HASH,
@@ -111,9 +111,9 @@ export const buildTransactionFrom = async (safeAddress: string, tx: TxServiceMod
     let refundSymbol = 'ETH'
     let decimals = 18
     if (tx.gasToken !== ZERO_ADDRESS) {
-      const gasToken = await (await getHumanFriendlyToken()).at(tx.gasToken)
-      refundSymbol = await gasToken.symbol()
-      decimals = await gasToken.decimals()
+      const gasToken = await getTokenInfos(tx.gasToken)
+      refundSymbol = gasToken.symbol
+      decimals = gasToken.decimals
     }
 
     const feeString = (tx.gasPrice * (tx.baseGas + tx.safeTxGas)).toString().padStart(decimals, 0)
@@ -131,10 +131,10 @@ export const buildTransactionFrom = async (safeAddress: string, tx: TxServiceMod
   let decimals = 18
   let decodedParams
   if (isSendTokenTx) {
-    const tokenContract = await getHumanFriendlyToken()
-    const tokenInstance = await tokenContract.at(tx.to)
+    const tokenInstance = await getTokenInfos(tx.to)
     try {
-      ;[symbol, decimals] = await Promise.all([tokenInstance.symbol(), tokenInstance.decimals()])
+      symbol = tokenInstance.symbol
+      decimals = tokenInstance.decimals
     } catch (err) {
       const alternativeTokenInstance = new web3.eth.Contract(ALTERNATIVE_TOKEN_ABI, tx.to)
       const [tokenSymbol, tokenDecimals] = await Promise.all([
@@ -230,11 +230,9 @@ export const buildIncomingTransactionFrom = async (tx: IncomingTxServiceModel) =
 
   if (tx.tokenAddress) {
     try {
-      const tokenContract = await getHumanFriendlyToken()
-      const tokenInstance = await tokenContract.at(tx.tokenAddress)
-      const [tokenSymbol, tokenDecimals] = await Promise.all([tokenInstance.symbol(), tokenInstance.decimals()])
-      symbol = tokenSymbol
-      decimals = tokenDecimals
+      const tokenInstance = await getTokenInfos(tx.tokenAddress)
+      symbol = tokenInstance.symbol
+      decimals = tokenInstance.decimals
     } catch (err) {
       try {
         const { methods } = new web3.eth.Contract(ALTERNATIVE_TOKEN_ABI, tx.tokenAddress)
@@ -269,19 +267,41 @@ export type SafeTransactionsType = {
   cancel: Map<string, List<TransactionProps>>,
 }
 
+let etagSafeTransactions = null
+let etagCachedSafeIncommingTransactions = null
 export const loadSafeTransactions = async (safeAddress: string): Promise<SafeTransactionsType> => {
   let transactions: TxServiceModel[] = addMockSafeCreationTx(safeAddress)
 
   try {
+    const config = etagSafeTransactions
+      ? {
+          headers: {
+            'If-None-Match': etagSafeTransactions,
+          },
+        }
+      : undefined
+
     const url = buildTxServiceUrl(safeAddress)
-    const response = await axios.get(url)
+    const response = await axios.get(url, config)
     if (response.data.count > 0) {
       transactions = transactions.concat(response.data.results)
+      if (etagSafeTransactions === response.headers.etag) {
+        // The txs are the same, we can return the cached ones
+        return
+      }
+      etagSafeTransactions = response.headers.etag
     }
   } catch (err) {
-    console.error(`Requests for outgoing transactions for ${safeAddress} failed with 404`, err)
+    if (err && err.response && err.response.status === 304) {
+      // NOTE: this is the expected implementation, currently the backend is not returning 304.
+      // So I check if the returned etag is the same instead (see above)
+      return
+    } else {
+      console.error(`Requests for outgoing transactions for ${safeAddress} failed with 404`, err)
+    }
   }
 
+  // In case that the etags don't match, we parse the new transactions and save them to the cache
   const txsRecord: Array<RecordInstance<TransactionProps>> = await Promise.all(
     transactions.map((tx: TxServiceModel) => buildTransactionFrom(safeAddress, tx)),
   )
@@ -297,26 +317,50 @@ export const loadSafeTransactions = async (safeAddress: string): Promise<SafeTra
 export const loadSafeIncomingTransactions = async (safeAddress: string) => {
   let incomingTransactions: IncomingTxServiceModel[] = []
   try {
+    const config = etagCachedSafeIncommingTransactions
+      ? {
+          headers: {
+            'If-None-Match': etagCachedSafeIncommingTransactions,
+          },
+        }
+      : undefined
     const url = buildIncomingTxServiceUrl(safeAddress)
-    const response = await axios.get(url)
+    const response = await axios.get(url, config)
     if (response.data.count > 0) {
       incomingTransactions = response.data.results
+      if (etagCachedSafeIncommingTransactions === response.headers.etag) {
+        // The txs are the same, we can return the cached ones
+        return
+      }
+      etagCachedSafeIncommingTransactions = response.headers.etag
     }
   } catch (err) {
-    console.error(`Requests for incoming transactions for ${safeAddress} failed with 404`, err)
+    if (err && err.response && err.response.status === 304) {
+      // We return cached transactions
+      return
+    } else {
+      console.error(`Requests for incoming transactions for ${safeAddress} failed with 404`, err)
+    }
   }
 
   const incomingTxsRecord = await Promise.all(incomingTransactions.map(buildIncomingTransactionFrom))
-
   return Map().set(safeAddress, List(incomingTxsRecord))
 }
 
 export default (safeAddress: string) => async (dispatch: ReduxDispatch<GlobalState>) => {
   web3 = await getWeb3()
 
-  const { cancel, outgoing }: SafeTransactionsType = await loadSafeTransactions(safeAddress)
-  const incomingTransactions: Map<string, List<IncomingTransaction>> = await loadSafeIncomingTransactions(safeAddress)
-  dispatch(addCancellationTransactions(cancel))
-  dispatch(addTransactions(outgoing))
-  dispatch(addIncomingTransactions(incomingTransactions))
+  const transactions: SafeTransactionsType | undefined = await loadSafeTransactions(safeAddress)
+  if (transactions) {
+    const { cancel, outgoing } = transactions
+    dispatch(addCancellationTransactions(cancel))
+    dispatch(addTransactions(outgoing))
+  }
+  const incomingTransactions: Map<string, List<IncomingTransaction>> | undefined = await loadSafeIncomingTransactions(
+    safeAddress,
+  )
+
+  if (incomingTransactions) {
+    dispatch(addIncomingTransactions(incomingTransactions))
+  }
 }

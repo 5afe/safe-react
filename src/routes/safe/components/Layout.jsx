@@ -67,6 +67,7 @@ type Props = SelectorProps &
 
 const Layout = (props: Props) => {
   const {
+    activateAssetsByBalance,
     activateTokensByBalance,
     activeTokens,
     addressBook,
@@ -313,6 +314,7 @@ const Layout = (props: Props) => {
           path={`${match.path}/balances/:assetType?`}
           render={() => (
             <Balances
+              activateAssetsByBalance={activateAssetsByBalance}
               activateTokensByBalance={activateTokensByBalance}
               activeTokens={activeTokens}
               blacklistedTokens={blacklistedTokens}

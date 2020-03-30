@@ -9,7 +9,7 @@ const fetchTokenBalanceList = (safeAddress: string) => {
 
   return axios.get(url, {
     params: {
-      limit: 300,
+      limit: 3000,
     },
   })
 }

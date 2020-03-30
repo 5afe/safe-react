@@ -98,24 +98,20 @@ const ReviewComponent = ({ classes, userAccount, values }: Props) => {
   const numOwners = getNumOwnersFrom(values)
 
   useEffect(() => {
-    let isCurrent = true
     const estimateGas = async () => {
+      if (!addresses.length || !numOwners || !userAccount) {
+        return
+      }
       const web3 = getWeb3()
       const { fromWei, toBN } = web3.utils
       const estimatedGasCosts = await estimateGasForDeployingSafe(addresses, numOwners, userAccount)
       const gasCostsAsEth = fromWei(toBN(estimatedGasCosts), 'ether')
       const formattedGasCosts = formatAmount(gasCostsAsEth)
-      if (isCurrent) {
-        setGasCosts(formattedGasCosts)
-      }
+      setGasCosts(formattedGasCosts)
     }
 
     estimateGas()
-
-    return () => {
-      isCurrent = false
-    }
-  }, [])
+  }, [addresses, numOwners, userAccount])
 
   return (
     <>
