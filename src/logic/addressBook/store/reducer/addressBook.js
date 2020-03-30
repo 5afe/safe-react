@@ -113,7 +113,7 @@ export default handleActions<State, *>(
             const entryIndex = safeAddressBook.findIndex(entryItem => sameAddress(entryItem.address, entry.address))
 
             if (entryIndex !== -1) {
-              const updatedEntriesList = safeAddressBook.set(entryIndex, entry)
+              const updatedEntriesList = safeAddressBook.update(entryIndex, currentEntry => currentEntry.merge(entry))
               map.setIn(['addressBook', safeAddress], updatedEntriesList)
             } else {
               const updatedSafeAdbkList = safeAddressBook.push(entry)
