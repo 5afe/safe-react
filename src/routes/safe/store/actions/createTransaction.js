@@ -17,7 +17,8 @@ import { SAFE_VERSION_FOR_OFFCHAIN_SIGNATURES, tryOffchainSigning } from '~/logi
 import { getCurrentSafeVersion } from '~/logic/safe/utils/safeVersion'
 import { ZERO_ADDRESS } from '~/logic/wallets/ethAddresses'
 import { EMPTY_DATA } from '~/logic/wallets/ethTransactions'
-import { isSmartContractWalletSelector, userAccountSelector } from '~/logic/wallets/store/selectors'
+import { WALLET_PROVIDER } from '~/logic/wallets/getWeb3'
+import { providerSelector } from '~/logic/wallets/store/selectors'
 import { SAFELIST_ADDRESS } from '~/routes/routes'
 import fetchTransactions from '~/routes/safe/store/actions/fetchTransactions'
 import { getLastTx, getNewTxNonce, shouldExecuteTransaction } from '~/routes/safe/store/actions/utils'
@@ -60,8 +61,8 @@ const createTransaction = ({
   const ready = await onboardUser()
   if (!ready) return
 
-  const from = userAccountSelector(state)
-  const isSmartContractWallet = isSmartContractWalletSelector(state)
+  const { account: from, name, smartContractWallet } = providerSelector(state)
+  const isLedgerWallet = name.toUpperCase() === WALLET_PROVIDER.LEDGER
   const safeInstance = await getGnosisSafeInstanceAt(safeAddress)
   const lastTx = await getLastTx(safeAddress)
   const nonce = await getNewTxNonce(txNonce, lastTx, safeInstance)
@@ -99,8 +100,13 @@ const createTransaction = ({
   try {
     // Here we're checking that safe contract version is greater or equal 1.1.1, but
     // theoretically EIP712 should also work for 1.0.0 contracts
+    // Also, offchain signatures are not working for ledger wallet because of a bug in their library:
+    // https://github.com/LedgerHQ/ledgerjs/issues/378
     const canTryOffchainSigning =
-      !isExecution && !isSmartContractWallet && semverSatisfies(safeVersion, SAFE_VERSION_FOR_OFFCHAIN_SIGNATURES)
+      !isExecution &&
+      !smartContractWallet &&
+      semverSatisfies(safeVersion, SAFE_VERSION_FOR_OFFCHAIN_SIGNATURES) &&
+      !isLedgerWallet
     if (canTryOffchainSigning) {
       const signature = await tryOffchainSigning({ ...txArgs, safeAddress })
 

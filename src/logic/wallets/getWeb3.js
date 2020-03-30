@@ -29,6 +29,7 @@ export const WALLET_PROVIDER = {
   OPERA: 'OPERA',
   DAPPER: 'DAPPER',
   AUTHEREUM: 'AUTHEREUM',
+  LEDGER: 'LEDGER',
 }
 
 export const INJECTED_PROVIDERS = [
