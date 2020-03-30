@@ -67,6 +67,7 @@ type Props = SelectorProps &
 
 const Layout = (props: Props) => {
   const {
+    activateAssetsByBalance,
     activateTokensByBalance,
     activeTokens,
     addressBook,
@@ -120,7 +121,7 @@ const Layout = (props: Props) => {
   const etherScanLink = getEtherScanLink('address', address)
   const web3Instance = getWeb3()
 
-  const openGenericModal = modalConfig => {
+  const openGenericModal = (modalConfig) => {
     setModal({ ...modalConfig, isOpen: true })
   }
 
@@ -313,6 +314,7 @@ const Layout = (props: Props) => {
           path={`${match.path}/balances/:assetType?`}
           render={() => (
             <Balances
+              activateAssetsByBalance={activateAssetsByBalance}
               activateTokensByBalance={activateTokensByBalance}
               activeTokens={activeTokens}
               blacklistedTokens={blacklistedTokens}
