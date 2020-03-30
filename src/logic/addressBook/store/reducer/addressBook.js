@@ -102,7 +102,7 @@ export default handleActions<State, *>(
       return newState
     },
     [ADD_OR_UPDATE_ENTRY]: (state: State, action: ActionType<Function>): State => {
-      const { entry } = action.payload
+      const { entry, entryAddress } = action.payload
 
       // Adds or Updates the entry to all the safes
       return state.withMutations(map => {
@@ -110,13 +110,13 @@ export default handleActions<State, *>(
         if (addressBook) {
           addressBook.keySeq().forEach(safeAddress => {
             const safeAddressBook: List<AddressBookEntry> = state.getIn(['addressBook', safeAddress])
-            const entryIndex = safeAddressBook.findIndex(entryItem => sameAddress(entryItem.address, entry.address))
+            const entryIndex = safeAddressBook.findIndex(entryItem => sameAddress(entryItem.address, entryAddress))
 
             if (entryIndex !== -1) {
               const updatedEntriesList = safeAddressBook.update(entryIndex, currentEntry => currentEntry.merge(entry))
               map.setIn(['addressBook', safeAddress], updatedEntriesList)
             } else {
-              const updatedSafeAdbkList = safeAddressBook.push(entry)
+              const updatedSafeAdbkList = safeAddressBook.push(makeAddressBookEntry(entry))
               map.setIn(['addressBook', safeAddress], updatedSafeAdbkList)
             }
           })
