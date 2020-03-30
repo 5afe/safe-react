@@ -122,13 +122,9 @@ const AddOwner = ({
     try {
       await sendAddOwner(values, safeAddress, owners, enqueueSnackbar, closeSnackbar, createTransaction, addSafeOwner)
 
-      const entry = {
-        name: values.ownerName,
-        address: values.ownerAddress,
-        isOwner: false,
-      }
-
-      dispatch(addOrUpdateAddressBookEntry(entry))
+      dispatch(
+        addOrUpdateAddressBookEntry(values.ownerAddress, { name: values.ownerName, address: values.ownerAddress }),
+      )
     } catch (error) {
       console.error('Error while removing an owner', error)
     }
