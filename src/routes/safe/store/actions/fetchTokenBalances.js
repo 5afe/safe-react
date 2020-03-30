@@ -26,7 +26,7 @@ const isStandardERC20 = (address: string): boolean => {
   return !nonStandardERC20.find(token => sameAddress(address, token.address) && sameAddress(NETWORK, token.network))
 }
 
-const getBatchBalances = (tokens: List<Token>, safeAddress: string) => {
+const getTokenBalances = (tokens: List<Token>, safeAddress: string) => {
   const web3 = getWeb3()
   const batch = new web3.BatchRequest()
 
@@ -85,7 +85,7 @@ const fetchTokenBalances = (safeAddress: string, tokens: List<Token>) => async (
     return
   }
   try {
-    const withBalances = await getBatchBalances(tokens, safeAddress)
+    const withBalances = await getTokenBalances(tokens, safeAddress)
 
     const balances = Map().withMutations(map => {
       withBalances.forEach(({ address, balance }) => {

@@ -119,14 +119,12 @@ export const getTokenInfos = async (tokenAddress: string) => {
   }
   // Otherwise we fetch it, save it to the store and return it
   const tokenContract = await getHumanFriendlyToken()
-  let tokenInstance = await tokenContract.at(tokenAddress)
+  const tokenInstance = await tokenContract.at(tokenAddress)
   const [tokenSymbol, tokenDecimals, name] = await Promise.all([
     tokenInstance.symbol(),
     tokenInstance.decimals(),
     tokenInstance.name(),
   ])
-  tokenInstance.symbol = tokenSymbol
-  tokenInstance.decimals = tokenDecimals
   const savedToken = makeToken({
     address: tokenAddress,
     name: name ? name : tokenSymbol,
@@ -137,7 +135,7 @@ export const getTokenInfos = async (tokenAddress: string) => {
   const newTokens = tokens.set(tokenAddress, savedToken)
   store.dispatch(saveTokens(newTokens))
 
-  return tokenInstance
+  return savedToken
 }
 
 export const fetchTokens = () => async (dispatch: ReduxDispatch<GlobalState>, getState: Function) => {
