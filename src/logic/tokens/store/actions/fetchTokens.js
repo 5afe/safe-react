@@ -147,7 +147,7 @@ export const fetchTokens = () => async (dispatch: ReduxDispatch<GlobalState>, ge
     } = await fetchTokenList()
 
     if (currentSavedTokens && currentSavedTokens.size === tokenList.length) {
-      return Promise.resolve
+      return
     }
 
     const tokens = List(tokenList.map((token: TokenProps) => makeToken(token)))
@@ -155,8 +155,6 @@ export const fetchTokens = () => async (dispatch: ReduxDispatch<GlobalState>, ge
     dispatch(saveTokens(tokens))
   } catch (err) {
     console.error('Error fetching token list', err)
-
-    return Promise.resolve()
   }
 }
 
