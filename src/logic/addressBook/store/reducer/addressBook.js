@@ -3,6 +3,7 @@ import { List, Map } from 'immutable'
 import { type ActionType, handleActions } from 'redux-actions'
 
 import type { AddressBook, AddressBookEntry, AddressBookProps } from '~/logic/addressBook/model/addressBook'
+import { makeAddressBookEntry } from '~/logic/addressBook/model/addressBook'
 import { ADD_ADDRESS_BOOK } from '~/logic/addressBook/store/actions/addAddressBook'
 import { ADD_ENTRY } from '~/logic/addressBook/store/actions/addAddressBookEntry'
 import { ADD_OR_UPDATE_ENTRY } from '~/logic/addressBook/store/actions/addOrUpdateAddressBookEntry'
@@ -20,7 +21,8 @@ export const buildAddressBook = (storedAdbk: AddressBook): AddressBookProps => {
   let addressBookBuilt = Map([])
   Object.entries(storedAdbk).forEach((adbkProps: Array<string, AddressBookEntry[]>) => {
     const safeAddress = adbkProps[0]
-    const adbkSafeEntries = List(adbkProps[1])
+    const adbkRecords = adbkProps[1].map(makeAddressBookEntry)
+    const adbkSafeEntries = List(adbkRecords)
     addressBookBuilt = addressBookBuilt.set(safeAddress, adbkSafeEntries)
   })
   return addressBookBuilt
