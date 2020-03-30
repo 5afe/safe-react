@@ -105,20 +105,18 @@ export default handleActions<State, *>(
       // Adds or Updates the entry to all the safes
       return state.withMutations(map => {
         const addressBook = map.get('addressBook')
-
         if (addressBook) {
           addressBook.keySeq().forEach(safeAddress => {
-            const safeAddressBook: List<AddressBookEntry> = addressBook.get(safeAddress)
-            const entryIndex = safeAddressBook.findIndex(({ address }) => sameAddress(address, entry.address))
-            let updatedAddressBook
+            const safeAddressBook: List<AddressBookEntry> = state.getIn(['addressBook', safeAddress])
+            const entryIndex = safeAddressBook.findIndex(entryItem => sameAddress(entryItem.address, entry.address))
 
             if (entryIndex !== -1) {
-              updatedAddressBook = safeAddressBook.setIn([entryIndex, 'name'], entry.name)
+              const updatedEntriesList = safeAddressBook.set(entryIndex, entry)
+              map.setIn(['addressBook', safeAddress], updatedEntriesList)
             } else {
-              updatedAddressBook = safeAddressBook.push(entry)
+              const updatedSafeAdbkList = safeAddressBook.push(entry)
+              map.setIn(['addressBook', safeAddress], updatedSafeAdbkList)
             }
-
-            map.setIn(['addressBook', safeAddress], updatedAddressBook)
           })
         }
       })
