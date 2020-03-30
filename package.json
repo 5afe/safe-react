@@ -19,9 +19,9 @@
   "postinstall": "electron-builder install-app-deps",
   "scripts": {
     "build": "REACT_APP_APP_VERSION=$npm_package_version node scripts/build.js && yarn electron-build",
-    "electron-build": "electron-builder --linux",
+    "electron-build": "electron-builder --linux --windows",
     "postinstall": "electron-builder install-app-deps",
-    "release": "yarn build && electron-builder --mac --windows --linux --publish=always",
+    "release": "yarn build && electron-builder --windows --linux --publish=always",
     "electron-dev": "concurrently \"BROWSER=none yarn start\" \"wait-on http://localhost:3000 && electron .\"",
     "preelectron-pack": "yarn build",
     "build-mainnet": "REACT_APP_NETWORK=mainnet yarn build && yarn electron-build",
@@ -54,8 +54,8 @@
     "asar": true,
     "publish": {
       "provider": "github",
-      "owner": "gnosis",
-      "repo": "safe-react"
+      "owner": "matextrem",
+      "repo": "safe-electron-multisig"
     },
     "dmg": {
       "sign": false,
@@ -100,9 +100,6 @@
       ]
     },
     "win": {
-      "publish": [
-        "github"
-      ],
       "target": [
         "nsis"
       ],
@@ -128,6 +125,8 @@
     "date-fns": "2.10.0",
     "dotenv": "^8.2.0",
     "electron-is-dev": "^1.1.0",
+    "electron-log": "^4.1.1",
+    "electron-updater": "^4.2.5",
     "ethereum-ens": "0.8.0",
     "express": "^4.17.1",
     "final-form": "4.18.7",
@@ -140,6 +139,7 @@
     "material-ui-search-bar": "^1.0.0-beta.13",
     "notistack": "https://github.com/gnosis/notistack.git#v0.9.4",
     "npm": "^6.14.4",
+    "open": "^7.0.3",
     "optimize-css-assets-webpack-plugin": "5.0.3",
     "polished": "^3.4.2",
     "qrcode.react": "1.0.0",
@@ -206,7 +206,7 @@
     "css-loader": "3.4.2",
     "detect-port": "^1.3.0",
     "dotenv-expand": "^5.1.0",
-    "electron": "6.0.11",
+    "electron": "7.1.4",
     "electron-builder": "^22.3.2",
     "electron-notarize": "^0.2.1",
     "electron-rebuild": "^1.10.1",

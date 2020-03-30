@@ -1,7 +1,10 @@
 const electron = require("electron");
 const  express = require('express');
+const open = require('open');
 const fs = require('fs');
+const dialog = electron.dialog;
 const https = require('https');
+const autoUpdater = require('./auto-updater');
 
 const url = require('url');
 const app = electron.app;
@@ -28,13 +31,9 @@ const createServer = () => {
 
 let mainWindow;
 
-require("update-electron-app")({
-  repo: "gnosis/safe-react",
-  updateInterval: "1 hour"
-});
-
 function createWindow() {
   mainWindow = new BrowserWindow({
+    show: false,
     width: 1024,
     height: 768,
     webPreferences: {
@@ -45,6 +44,10 @@ function createWindow() {
     icon: path.join(__dirname, './build/safe.png'),
   });
 
+  mainWindow.once('ready-to-show', () => {
+    mainWindow.show();
+  });
+
   mainWindow.loadURL(
     isDev
       ? "http://localhost:3000"
@@ -53,11 +56,22 @@ function createWindow() {
 
   if (isDev) {
     // Open the DevTools.
+    mainWindow.webContents.openDevTools();
     //BrowserWindow.addDevToolsExtension('<location to your react chrome extension>');
   }
 
-  mainWindow.webContents.openDevTools();
+  // Hide the menu
+  mainWindow.setMenu(null);
+  mainWindow.setMenuBarVisibility(false)
 
+  mainWindow.webContents.on('new-window', function(event, url){
+    event.preventDefault();
+    open(url);
+  });
+
+  mainWindow.webContents.on('did-finish-load', () => {
+    autoUpdater.init(mainWindow);
+  });
 
   mainWindow.on("closed", () => (mainWindow = null));
 }
