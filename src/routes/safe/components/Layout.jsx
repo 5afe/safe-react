@@ -121,7 +121,7 @@ const Layout = (props: Props) => {
   const etherScanLink = getEtherScanLink('address', address)
   const web3Instance = getWeb3()
 
-  const openGenericModal = modalConfig => {
+  const openGenericModal = (modalConfig) => {
     setModal({ ...modalConfig, isOpen: true })
   }
 

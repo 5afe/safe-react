@@ -84,7 +84,7 @@ const Collectibles = () => {
   const nftTokens: NFTTokensState = useSelector(nftTokensSelector)
   const activeAssetsList = useSelector(activeNftAssetsListSelector)
 
-  const handleItemSend = nftToken => {
+  const handleItemSend = (nftToken) => {
     setSelectedToken(nftToken)
     setSendNFTsModalOpen(true)
   }
@@ -93,7 +93,7 @@ const Collectibles = () => {
     <Card className={classes.cardOuter}>
       <div className={classes.cardInner}>
         {activeAssetsList.size ? (
-          activeAssetsList.map(nftAsset => {
+          activeAssetsList.map((nftAsset) => {
             return (
               <React.Fragment key={nftAsset.slug}>
                 <div className={classes.title}>
@@ -104,7 +104,7 @@ const Collectibles = () => {
                 <div className={classes.gridRow}>
                   {nftTokens
                     .filter(({ assetAddress }) => nftAsset.address === assetAddress)
-                    .map(nftToken => (
+                    .map((nftToken) => (
                       <Item
                         data={nftToken}
                         key={`${nftAsset.slug}_${nftToken.tokenId}`}

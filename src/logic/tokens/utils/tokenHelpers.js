@@ -26,7 +26,7 @@ export const getEthAsToken = (balance: string) => {
 }
 
 export const calculateActiveErc20TokensFrom = (tokens: List<Token>) => {
-  const activeTokens = List().withMutations(list =>
+  const activeTokens = List().withMutations((list) =>
     tokens.forEach((token: Token) => {
       const isDeactivated = isEther(token.symbol) || !token.status
       if (isDeactivated) {

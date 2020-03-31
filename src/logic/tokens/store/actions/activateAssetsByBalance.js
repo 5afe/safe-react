@@ -26,11 +26,11 @@ const activateAssetsByBalance = (safeAddress: string) => async (
 
     // active tokens by balance, excluding those already blacklisted and the `null` address
     const activeByBalance = Object.entries(availableAssets)
-      .filter(asset => {
+      .filter((asset) => {
         const { address, numberOfTokens } = asset[1]
         return address !== null && !blacklistedAssets.has(address) && numberOfTokens > 0
       })
-      .map(asset => {
+      .map((asset) => {
         return asset[0]
       })
 

@@ -1,6 +1,7 @@
 // @flow
 import { push } from 'connected-react-router'
 import type { GetState, Dispatch as ReduxDispatch } from 'redux'
+import semverSatisfies from 'semver/functions/satisfies'
 
 import { onboardUser } from '~/components/ConnectButton'
 import { getGnosisSafeInstanceAt } from '~/logic/contracts/safeContracts'
@@ -8,22 +9,22 @@ import { type NotificationsQueue, getNotificationsFromTxType, showSnackbar } fro
 import {
   CALL,
   type NotifiedTransaction,
-  TX_TYPE_CONFIRMATION,
-  TX_TYPE_EXECUTION,
   getApprovalTransaction,
   getExecutionTransaction,
   saveTxToHistory,
 } from '~/logic/safe/transactions'
+import { SAFE_VERSION_FOR_OFFCHAIN_SIGNATURES, tryOffchainSigning } from '~/logic/safe/transactions/offchainSigner'
+import { getCurrentSafeVersion } from '~/logic/safe/utils/safeVersion'
 import { ZERO_ADDRESS } from '~/logic/wallets/ethAddresses'
 import { EMPTY_DATA } from '~/logic/wallets/ethTransactions'
-import { userAccountSelector } from '~/logic/wallets/store/selectors'
+import { providerSelector } from '~/logic/wallets/store/selectors'
 import { SAFELIST_ADDRESS } from '~/routes/routes'
 import fetchTransactions from '~/routes/safe/store/actions/fetchTransactions'
 import { getLastTx, getNewTxNonce, shouldExecuteTransaction } from '~/routes/safe/store/actions/utils'
 import { type GlobalState } from '~/store'
 import { getErrorMessage } from '~/test/utils/ethereumErrors'
 
-type CreateTransactionArgs = {
+export type CreateTransactionArgs = {
   safeAddress: string,
   to: string,
   valueInWei: string,
@@ -59,11 +60,12 @@ const createTransaction = ({
   const ready = await onboardUser()
   if (!ready) return
 
-  const from = userAccountSelector(state)
+  const { account: from, hardwareWallet, smartContractWallet } = providerSelector(state)
   const safeInstance = await getGnosisSafeInstanceAt(safeAddress)
   const lastTx = await getLastTx(safeAddress)
   const nonce = await getNewTxNonce(txNonce, lastTx, safeInstance)
   const isExecution = await shouldExecuteTransaction(safeInstance, nonce, lastTx)
+  const safeVersion = await getCurrentSafeVersion(safeInstance)
 
   // https://docs.gnosis.io/safe/docs/docs5/#pre-validated-signatures
   const sigs = `0x000000000000000000000000${from.replace(
@@ -94,6 +96,33 @@ const createTransaction = ({
   }
 
   try {
+    // Here we're checking that safe contract version is greater or equal 1.1.1, but
+    // theoretically EIP712 should also work for 1.0.0 contracts
+    // Also, offchain signatures are not working for ledger wallet because of a bug in their library:
+    // https://github.com/LedgerHQ/ledgerjs/issues/378
+    const canTryOffchainSigning =
+      !isExecution &&
+      !smartContractWallet &&
+      semverSatisfies(safeVersion, SAFE_VERSION_FOR_OFFCHAIN_SIGNATURES) &&
+      !hardwareWallet
+    if (canTryOffchainSigning) {
+      const signature = await tryOffchainSigning({ ...txArgs, safeAddress })
+
+      if (signature) {
+        closeSnackbar(beforeExecutionKey)
+
+        await saveTxToHistory({
+          ...txArgs,
+          signature,
+          origin,
+        })
+        showSnackbar(notificationsQueue.afterExecution.moreConfirmationsNeeded, enqueueSnackbar, closeSnackbar)
+
+        dispatch(fetchTransactions(safeAddress))
+        return
+      }
+    }
+
     tx = isExecution ? await getExecutionTransaction(txArgs) : await getApprovalTransaction(txArgs)
 
     const sendParams = { from, value: 0 }
@@ -110,7 +139,7 @@ const createTransaction = ({
 
     await tx
       .send(sendParams)
-      .once('transactionHash', async hash => {
+      .once('transactionHash', async (hash) => {
         txHash = hash
         closeSnackbar(beforeExecutionKey)
 
@@ -120,7 +149,6 @@ const createTransaction = ({
           await saveTxToHistory({
             ...txArgs,
             txHash,
-            type: isExecution ? TX_TYPE_EXECUTION : TX_TYPE_CONFIRMATION,
             origin,
           })
           dispatch(fetchTransactions(safeAddress))
@@ -128,10 +156,10 @@ const createTransaction = ({
           console.error(err)
         }
       })
-      .on('error', error => {
+      .on('error', (error) => {
         console.error('Tx error: ', error)
       })
-      .then(receipt => {
+      .then((receipt) => {
         closeSnackbar(pendingExecutionKey)
         showSnackbar(
           isExecution

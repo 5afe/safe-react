@@ -259,9 +259,9 @@ export const safeBalancesSelector: OutputSelector<GlobalState, RouterProps, Map<
 export const getActiveTokensAddressesForAllSafes: OutputSelector<GlobalState, any, Set<string>> = createSelector(
   safesListSelector,
   (safes: List<Safe>) => {
-    const addresses = Set().withMutations(set => {
+    const addresses = Set().withMutations((set) => {
       safes.forEach((safe: Safe) => {
-        safe.activeTokens.forEach(tokenAddress => {
+        safe.activeTokens.forEach((tokenAddress) => {
           set.add(tokenAddress)
         })
       })
@@ -274,9 +274,9 @@ export const getActiveTokensAddressesForAllSafes: OutputSelector<GlobalState, an
 export const getBlacklistedTokensAddressesForAllSafes: OutputSelector<GlobalState, any, Set<string>> = createSelector(
   safesListSelector,
   (safes: List<Safe>) => {
-    const addresses = Set().withMutations(set => {
+    const addresses = Set().withMutations((set) => {
       safes.forEach((safe: Safe) => {
-        safe.blacklistedTokens.forEach(tokenAddress => {
+        safe.blacklistedTokens.forEach((tokenAddress) => {
           set.add(tokenAddress)
         })
       })

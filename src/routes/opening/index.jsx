@@ -180,7 +180,7 @@ const SafeDeployment = ({ creationTxHash, onCancel, onRetry, onSuccess, provider
     },
   ]
 
-  const onError = error => {
+  const onError = (error) => {
     setIntervalStarted(false)
     setWaitingSafeDeployed(false)
     setContinueButtonDisabled(false)
@@ -226,7 +226,7 @@ const SafeDeployment = ({ creationTxHash, onCancel, onRetry, onSuccess, provider
 
     setStepIndex(0)
     submittedPromise
-      .once('transactionHash', txHash => {
+      .once('transactionHash', (txHash) => {
         setSafeCreationTxHash(txHash)
         setStepIndex(1)
         setIntervalStarted(true)
@@ -249,7 +249,7 @@ const SafeDeployment = ({ creationTxHash, onCancel, onRetry, onSuccess, provider
       return
     }
 
-    const isTxMined = async txHash => {
+    const isTxMined = async (txHash) => {
       const web3 = getWeb3()
 
       const receipt = await web3.eth.getTransactionReceipt(txHash)
