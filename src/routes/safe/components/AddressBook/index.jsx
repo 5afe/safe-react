@@ -21,6 +21,7 @@ import Col from '~/components/layout/Col'
 import Img from '~/components/layout/Img'
 import Row from '~/components/layout/Row'
 import type { AddressBookEntry } from '~/logic/addressBook/model/addressBook'
+import { makeAddressBookEntry } from '~/logic/addressBook/model/addressBook'
 import { addAddressBookEntry } from '~/logic/addressBook/store/actions/addAddressBookEntry'
 import { removeAddressBookEntry } from '~/logic/addressBook/store/actions/removeAddressBookEntry'
 import { updateAddressBookEntry } from '~/logic/addressBook/store/actions/updateAddressBookEntry'
@@ -89,13 +90,13 @@ const AddressBookTable = ({ classes }: Props) => {
 
   const newEntryModalHandler = (entry: AddressBookEntry) => {
     setEditCreateEntryModalOpen(false)
-    dispatch(addAddressBookEntry(entry))
+    dispatch(addAddressBookEntry(makeAddressBookEntry(entry)))
   }
 
   const editEntryModalHandler = (entry: AddressBookEntry) => {
     setSelectedEntry(null)
     setEditCreateEntryModalOpen(false)
-    dispatch(updateAddressBookEntry(entry))
+    dispatch(updateAddressBookEntry(makeAddressBookEntry(entry)))
   }
 
   const deleteEntryModalHandler = () => {
