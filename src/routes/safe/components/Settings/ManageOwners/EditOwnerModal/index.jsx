@@ -53,7 +53,7 @@ const EditOwnerComponent = ({
   selectedOwnerName,
   updateAddressBookEntry,
 }: Props) => {
-  const handleSubmit = values => {
+  const handleSubmit = (values) => {
     const { ownerName } = values
     editSafeOwner({ safeAddress, ownerAddress, ownerName })
     updateAddressBookEntry(makeAddressBookEntry({ address: ownerAddress, name: ownerName }))

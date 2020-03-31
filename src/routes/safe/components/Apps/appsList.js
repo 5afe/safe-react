@@ -48,7 +48,7 @@ const appList = [
 export default appList
 
 export const getAppInfo = (appId: string) => {
-  const res = appList.find(app => app.id === appId.toString())
+  const res = appList.find((app) => app.id === appId.toString())
   if (!res) {
     return {
       id: 0,

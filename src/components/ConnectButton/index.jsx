@@ -23,7 +23,7 @@ export const onboard = new Onboard({
   dappId: BLOCKNATIVE_API_KEY,
   networkId: getNetworkId(),
   subscriptions: {
-    wallet: wallet => {
+    wallet: (wallet) => {
       if (wallet.provider) {
         // this function will intialize web3 and store it somewhere available throughout the dapp and
         // can also instantiate your contracts with the web3 instance
@@ -31,7 +31,7 @@ export const onboard = new Onboard({
         providerName = wallet.name
       }
     },
-    address: address => {
+    address: (address) => {
       if (!lastUsedAddress && address) {
         lastUsedAddress = address
         store.dispatch(fetchProvider(providerName))

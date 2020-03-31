@@ -5,7 +5,7 @@ import { ETHEREUM_NETWORK, ETHEREUM_NETWORK_IDS } from '~/logic/wallets/getWeb3'
 import type { Provider } from '~/logic/wallets/store/model/provider'
 import { PROVIDER_REDUCER_ID } from '~/logic/wallets/store/reducer/provider'
 
-const providerSelector = (state: any): Provider => state[PROVIDER_REDUCER_ID]
+export const providerSelector = (state: any): Provider => state[PROVIDER_REDUCER_ID]
 
 export const userAccountSelector = createSelector(providerSelector, (provider: Provider) => {
   const account = provider.get('account')

@@ -79,7 +79,7 @@ const AddCustomAsset = (props: Props) => {
     }
   }
 
-  const formSpyOnChangeHandler = async state => {
+  const formSpyOnChangeHandler = async (state) => {
     const { dirty, errors, submitSucceeded, validating, values } = state
     // for some reason this is called after submitting, we don't need to update the values
     // after submit

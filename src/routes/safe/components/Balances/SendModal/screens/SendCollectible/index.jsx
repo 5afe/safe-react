@@ -36,7 +36,7 @@ import { sm } from '~/theme/variables'
 type Props = {
   initialValues: Object,
   onClose: () => void,
-  onNext: any => void,
+  onNext: (any) => void,
   recipientAddress?: string,
   selectedToken?: NFTToken | {},
 }
@@ -74,7 +74,7 @@ const SendCollectible = ({ initialValues, onClose, onNext, recipientAddress, sel
     }
   }, [selectedEntry, pristine])
 
-  const handleSubmit = values => {
+  const handleSubmit = (values) => {
     // If the input wasn't modified, there was no mutation of the recipientAddress
     if (!values.recipientAddress) {
       values.recipientAddress = selectedEntry.address
@@ -110,9 +110,9 @@ const SendCollectible = ({ initialValues, onClose, onNext, recipientAddress, sel
           const formState = args[2]
           const mutators = args[3]
           const { assetAddress } = formState.values
-          const selectedNFTTokens = nftTokens.filter(nftToken => nftToken.assetAddress === assetAddress)
+          const selectedNFTTokens = nftTokens.filter((nftToken) => nftToken.assetAddress === assetAddress)
 
-          const handleScan = value => {
+          const handleScan = (value) => {
             let scannedAddress = value
 
             if (scannedAddress.startsWith('ethereum:')) {
@@ -144,7 +144,7 @@ const SendCollectible = ({ initialValues, onClose, onNext, recipientAddress, sel
                 </Row>
                 {selectedEntry && selectedEntry.address ? (
                   <div
-                    onKeyDown={e => {
+                    onKeyDown={(e) => {
                       if (e.keyCode !== 9) {
                         setSelectedEntry(null)
                       }

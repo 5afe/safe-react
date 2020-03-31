@@ -7,7 +7,7 @@ import { NOTIFICATIONS, enhanceSnackbarForAction } from '~/logic/notifications'
 import closeSnackbarAction from '~/logic/notifications/store/actions/closeSnackbar'
 import enqueueSnackbar from '~/logic/notifications/store/actions/enqueueSnackbar'
 import { getAwaitingTransactions } from '~/logic/safe/transactions/awaitingTransactions'
-import { getSafeVersion } from '~/logic/safe/utils/safeVersion'
+import { getSafeVersionInfo } from '~/logic/safe/utils/safeVersion'
 import { isUserOwner } from '~/logic/wallets/ethAddresses'
 import { userAccountSelector } from '~/logic/wallets/store/selectors'
 import { getIncomingTxAmount } from '~/routes/safe/components/Transactions/TxsTable/columns'
@@ -43,7 +43,7 @@ const sendAwaitingTransactionNotification = async (
       ? lastTimeUserLoggedInForSafes[safeAddress]
       : null
 
-  const filteredDuplicatedAwaitingTxList = awaitingTxsSubmissionDateList.filter(submissionDate => {
+  const filteredDuplicatedAwaitingTxList = awaitingTxsSubmissionDateList.filter((submissionDate) => {
     return lastTimeUserLoggedIn ? new Date(submissionDate) > new Date(lastTimeUserLoggedIn) : true
   })
 
@@ -83,7 +83,7 @@ const notificationsMiddleware = (store: Store<GlobalState>) => (next: Function) 
         )
         const awaitingTxsSubmissionDateList = awaitingTransactions
           .get(safeAddress, List([]))
-          .map(tx => tx.submissionDate)
+          .map((tx) => tx.submissionDate)
 
         const safes = safesMapSelector(state)
         const currentSafe = safes.get(safeAddress)
@@ -113,7 +113,7 @@ const notificationsMiddleware = (store: Store<GlobalState>) => (next: Function) 
           const viewedSafes = state.currentSession ? state.currentSession.get('viewedSafes') : []
           const recurringUser = viewedSafes.includes(safeAddress)
 
-          const newIncomingTransactions = incomingTransactions.filter(tx => tx.blockNumber > latestIncomingTxBlock)
+          const newIncomingTransactions = incomingTransactions.filter((tx) => tx.blockNumber > latestIncomingTxBlock)
 
           const { message, ...TX_INCOMING_MSG } = NOTIFICATIONS.TX_INCOMING_MSG
 
@@ -128,7 +128,7 @@ const notificationsMiddleware = (store: Store<GlobalState>) => (next: Function) 
                 ),
               )
             } else {
-              newIncomingTransactions.forEach(tx => {
+              newIncomingTransactions.forEach((tx) => {
                 dispatch(
                   enqueueSnackbar(
                     enhanceSnackbarForAction({
@@ -156,7 +156,7 @@ const notificationsMiddleware = (store: Store<GlobalState>) => (next: Function) 
         const state: GlobalState = store.getState()
         const currentSafeAddress = safeParamAddressFromStateSelector(state)
         const isUserOwner = grantedSelector(state)
-        const { needUpdate } = await getSafeVersion(currentSafeAddress)
+        const { needUpdate } = await getSafeVersionInfo(currentSafeAddress)
 
         const notificationKey = `${currentSafeAddress}`
         const onNotificationClicked = () => {

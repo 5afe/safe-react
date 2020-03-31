@@ -12,7 +12,7 @@ export const getAwaitingTransactions = (
     return Map({})
   }
 
-  const allAwaitingTransactions = allTransactions.map(safeTransactions => {
+  const allAwaitingTransactions = allTransactions.map((safeTransactions) => {
     const nonCancelledTransactions = safeTransactions.filter((transaction: Transaction) => {
       // If transactions are not executed, but there's a transaction with the same nonce EXECUTED later
       // it means that the transaction was cancelled (Replaced) and shouldn't get executed
@@ -27,7 +27,7 @@ export const getAwaitingTransactions = (
         // Then we check if the waiting confirmations are not from the current user, otherwise, filters this
         // transaction
         const transactionWaitingUser = transaction.confirmations.filter(
-          confirmation => confirmation.owner && confirmation.owner.address !== userAccount,
+          (confirmation) => confirmation.owner && confirmation.owner.address !== userAccount,
         )
 
         return transactionWaitingUser.size > 0

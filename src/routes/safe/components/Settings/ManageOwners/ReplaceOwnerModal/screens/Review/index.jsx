@@ -61,7 +61,7 @@ const ReviewRemoveOwner = ({
       const { fromWei, toBN } = web3.utils
       const gnosisSafe = await getGnosisSafeInstanceAt(safeAddress)
       const safeOwners = await gnosisSafe.getOwners()
-      const index = safeOwners.findIndex(owner => owner.toLowerCase() === ownerAddress.toLowerCase())
+      const index = safeOwners.findIndex((owner) => owner.toLowerCase() === ownerAddress.toLowerCase())
       const prevAddress = index === 0 ? SENTINEL_ADDRESS : safeOwners[index - 1]
       const txData = gnosisSafe.contract.methods.swapOwner(prevAddress, ownerAddress, values.ownerAddress).encodeABI()
       const estimatedGasCosts = await estimateTxGasCosts(safeAddress, safeAddress, txData)
@@ -125,7 +125,7 @@ const ReviewRemoveOwner = ({
             </Row>
             <Hairline />
             {owners.map(
-              owner =>
+              (owner) =>
                 owner.address !== ownerAddress && (
                   <React.Fragment key={owner.address}>
                     <Row className={classes.owner}>

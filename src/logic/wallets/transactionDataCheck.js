@@ -1,7 +1,7 @@
 // @flow
 function transactionDataCheck() {
   let completed = false
-  return stateAndHelpers => {
+  return (stateAndHelpers) => {
     const { wallet } = stateAndHelpers
 
     if (wallet && wallet.name === 'Ledger' && !completed) {
