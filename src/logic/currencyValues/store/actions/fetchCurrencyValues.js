@@ -18,8 +18,8 @@ export const fetchCurrencyValues = (safeAddress: string) => async (dispatch: Red
     // eslint-disable-next-line max-len
     const currencyList = List(
       tokensFetched.data
-        .filter(currencyBalance => currencyBalance.balanceUsd)
-        .map(currencyBalance => {
+        .filter((currencyBalance) => currencyBalance.balanceUsd)
+        .map((currencyBalance) => {
           const { balanceUsd, tokenAddress } = currencyBalance
           return makeBalanceCurrency({
             currencyName: balanceUsd ? AVAILABLE_CURRENCIES.USD : null,

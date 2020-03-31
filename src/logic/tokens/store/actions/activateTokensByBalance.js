@@ -44,7 +44,7 @@ const activateTokensByBalance = (safeAddress: string) => async (
     )
 
     // active tokens by balance, excluding those already blacklisted and the `null` address
-    const activeByBalance = addresses.filter(address => address !== null && !blacklistedTokens.includes(address))
+    const activeByBalance = addresses.filter((address) => address !== null && !blacklistedTokens.includes(address))
 
     // need to persist those already active tokens, despite its balances
     const activeTokens = alreadyActiveTokens.toSet().union(activeByBalance)

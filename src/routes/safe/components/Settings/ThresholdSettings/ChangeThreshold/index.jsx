@@ -60,7 +60,7 @@ const ChangeThreshold = ({ classes, onChangeThreshold, onClose, owners, safeAddr
     }
   }, [])
 
-  const handleSubmit = values => {
+  const handleSubmit = (values) => {
     const newThreshold = values[THRESHOLD_FIELD_NAME]
 
     onClose()

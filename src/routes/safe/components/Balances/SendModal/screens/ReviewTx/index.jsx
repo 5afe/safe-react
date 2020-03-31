@@ -53,7 +53,7 @@ const ReviewTx = ({ closeSnackbar, enqueueSnackbar, onClose, onPrev, tx }: Props
   const [gasCosts, setGasCosts] = useState<string>('< 0.001')
   const [data, setData] = useState('')
 
-  const txToken = tokens.find(token => token.address === tx.token)
+  const txToken = tokens.find((token) => token.address === tx.token)
   const isSendingETH = txToken.address === ETH_ADDRESS
   const txRecipient = isSendingETH ? tx.recipientAddress : txToken.address
 

@@ -2,9 +2,9 @@
 import { EMPTY_DATA } from '~/logic/wallets/ethTransactions'
 import { getWeb3 } from '~/logic/wallets/getWeb3'
 
-const ETH_SIGN_NOT_SUPPORTED_ERROR_MSG = 'ETH_SIGN_NOT_SUPPORTED_ERROR_MSG'
+const ETH_SIGN_NOT_SUPPORTED_ERROR_MSG = 'ETH_SIGN_NOT_SUPPORTED'
 
-export const generateEthSignature = async ({
+export const getEthSigner = async ({
   baseGas,
   data,
   gasPrice,

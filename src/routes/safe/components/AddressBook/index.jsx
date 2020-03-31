@@ -51,7 +51,7 @@ type Props = {
 
 const AddressBookTable = ({ classes }: Props) => {
   const columns = generateColumns()
-  const autoColumns = columns.filter(c => !c.custom)
+  const autoColumns = columns.filter((c) => !c.custom)
   const dispatch = useDispatch()
   const addressBook = useSelector(getAddressBookListSelector)
   const [selectedEntry, setSelectedEntry] = useState(null)
@@ -68,7 +68,7 @@ const AddressBookTable = ({ classes }: Props) => {
 
   useEffect(() => {
     if (entryAddressToEditOrCreateNew) {
-      const key = addressBook.findKey(entry => entry.address === entryAddressToEditOrCreateNew)
+      const key = addressBook.findKey((entry) => entry.address === entryAddressToEditOrCreateNew)
       if (key >= 0) {
         // Edit old entry
         const value = addressBook.get(key)

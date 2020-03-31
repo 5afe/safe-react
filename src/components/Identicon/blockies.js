@@ -1,11 +1,11 @@
 /* eslint-disable */
-;(function(global, factory) {
+;(function (global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined'
     ? factory(exports)
     : typeof define === 'function' && define.amd
     ? define(['exports'], factory)
     : factory((global.blockies = {}))
-})(this, function(exports) {
+})(this, function (exports) {
   'use strict'
 
   /**
@@ -40,7 +40,7 @@
     return String.fromCharCode(w & 255, (w >> 8) & 255)
   }
 
-  var PNG = function(width, height, depth) {
+  var PNG = function (width, height, depth) {
     this.width = width
     this.height = height
     this.depth = depth
@@ -115,14 +115,14 @@
     }
 
     // compute the index into a png for a given pixel
-    this.index = function(x, y) {
+    this.index = function (x, y) {
       var i = y * (this.width + 1) + x + 1
       var j = this.idat_offs + 8 + 2 + 5 * Math.floor(i / 0xffff + 1) + i
       return j
     }
 
     // convert a color and build up the palette
-    this.color = function(red, green, blue, alpha) {
+    this.color = function (red, green, blue, alpha) {
       alpha = alpha >= 0 ? alpha : 255
       var color = (((((alpha << 8) | red) << 8) | green) << 8) | blue
 
@@ -142,7 +142,7 @@
     }
 
     // output a PNG string, Base64 encoded
-    this.getBase64 = function() {
+    this.getBase64 = function () {
       var s = this.getDump()
 
       var ch = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/='
@@ -173,7 +173,7 @@
     }
 
     // output a PNG string
-    this.getDump = function() {
+    this.getDump = function () {
       // compute adler32 of output pixels + row filter bytes
       var BASE = 65521 /* largest prime smaller than 65536 */
       var NMAX = 5552 /* NMAX is the largest n such that 255n(n+1)/2 + (n+1)(BASE-1) <= 2^32-1 */
@@ -215,7 +215,7 @@
       return '\x89PNG\r\n\x1A\n' + this.buffer.join('')
     }
 
-    this.fillRect = function(x, y, w, h, color) {
+    this.fillRect = function (x, y, w, h, color) {
       for (var i = 0; i < w; i++) {
         for (var j = 0; j < h; j++) {
           this.buffer[this.index(x + i, y + j)] = color
