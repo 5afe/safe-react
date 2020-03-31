@@ -30,6 +30,7 @@ export const WALLET_PROVIDER = {
   DAPPER: 'DAPPER',
   AUTHEREUM: 'AUTHEREUM',
   LEDGER: 'LEDGER',
+  TREZOR: 'TREZOR',
 }
 
 export const INJECTED_PROVIDERS = [
@@ -105,7 +106,6 @@ export const getProviderInfo: Function = async (
 ): Promise<ProviderProps> => {
   web3 = new Web3(web3Provider)
 
-  const name = providerName
   const account = await getAccountFrom(web3)
   const network = await getNetworkIdFrom(web3)
   const smartContractWallet = await isSmartContractWallet(web3, account)
@@ -113,7 +113,7 @@ export const getProviderInfo: Function = async (
   const available = account !== null
 
   return {
-    name,
+    name: providerName,
     available,
     loaded: true,
     account,
