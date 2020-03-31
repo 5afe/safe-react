@@ -44,7 +44,7 @@ export const removeTokenFromStorage = async (safeAddress: string, token: Token) 
 
 export const removeFromActiveTokens = async (safeAddress: string, token: Token) => {
   const activeTokens = await getActiveTokens()
-  const index = activeTokens.findIndex(activeToken => activeToken.name === token.name)
+  const index = activeTokens.findIndex((activeToken) => activeToken.name === token.name)
 
   if (index !== -1) {
     await saveActiveTokens(safeAddress, activeTokens.delete(index))

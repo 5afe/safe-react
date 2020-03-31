@@ -22,7 +22,7 @@ export const safeNeedsUpdate = (currentVersion: string, latestVersion: string) =
   return latest ? semverLessThan(current, latest) : false
 }
 
-export const getCurrentSafeVersion = gnosisSafeInstance => gnosisSafeInstance.VERSION()
+export const getCurrentSafeVersion = (gnosisSafeInstance) => gnosisSafeInstance.VERSION()
 
 export const enabledFeatures = (version: string) =>
   FEATURES.reduce((acc, feature) => {

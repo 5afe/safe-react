@@ -135,7 +135,7 @@ class ManageOwners extends React.Component<Props, State> {
     } = this.state
 
     const columns = generateColumns()
-    const autoColumns = columns.filter(c => !c.custom)
+    const autoColumns = columns.filter((c) => !c.custom)
     const ownersAdbk = getOwnersWithNameFromAddressBook(addressBook, owners)
     const ownerData = getOwnerData(ownersAdbk)
 

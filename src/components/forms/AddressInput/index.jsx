@@ -20,7 +20,7 @@ type Props = {
   disabled?: boolean,
 }
 
-const isValidEnsName = name => /^([\w-]+\.)+(eth|test|xyz|luxe)$/.test(name)
+const isValidEnsName = (name) => /^([\w-]+\.)+(eth|test|xyz|luxe)$/.test(name)
 
 // an idea for second field was taken from here
 // https://github.com/final-form/react-final-form-listeners/blob/master/src/OnBlur.js
@@ -52,7 +52,7 @@ const AddressInput = ({
       validate={composeValidators(required, mustBeEthereumAddress, ...validators)}
     />
     <OnChange name={name}>
-      {async value => {
+      {async (value) => {
         if (isValidEnsName(value)) {
           try {
             const resolverAddr = await getAddressFromENS(value)

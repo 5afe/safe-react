@@ -104,7 +104,7 @@ const Details = ({ classes, errors, form }: Props) => (
     <Block className={classes.root} margin="lg">
       <AddressInput
         component={TextField}
-        fieldMutator={val => {
+        fieldMutator={(val) => {
           form.mutators.setValue(FIELD_LOAD_ADDRESS, val)
         }}
         inputAdornment={

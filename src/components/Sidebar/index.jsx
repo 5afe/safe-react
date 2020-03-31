@@ -69,7 +69,7 @@ const Sidebar = ({ children, currentSafe, defaultSafe, safes, setDefaultSafeActi
   }
 
   const toggleSidebar = () => {
-    setIsOpen(prevIsOpen => !prevIsOpen)
+    setIsOpen((prevIsOpen) => !prevIsOpen)
   }
 
   const handleFilterChange = (value: string) => {
@@ -142,7 +142,7 @@ const Sidebar = ({ children, currentSafe, defaultSafe, safes, setDefaultSafeActi
 
 export default connect<Object, Object, ?Function, ?Object>(
   // $FlowFixMe
-  state => ({
+  (state) => ({
     safes: sortedSafeListSelector(state),
     defaultSafe: defaultSafeSelector(state),
     currentSafe: safeParamAddressFromStateSelector(state),

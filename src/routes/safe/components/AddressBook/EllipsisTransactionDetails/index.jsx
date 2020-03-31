@@ -43,7 +43,7 @@ const EllipsisTransactionDetails = ({ address, knownAddress }: EllipsisTransacti
   const dispatch = useDispatch()
   const currentSafeAddress = useSelector(safeParamAddressFromStateSelector)
 
-  const handleClick = event => {
+  const handleClick = (event) => {
     setAnchorEl(event.currentTarget)
   }
 
