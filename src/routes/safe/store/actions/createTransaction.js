@@ -101,10 +101,7 @@ const createTransaction = ({
     // Also, offchain signatures are not working for ledger wallet because of a bug in their library:
     // https://github.com/LedgerHQ/ledgerjs/issues/378
     const canTryOffchainSigning =
-      !isExecution &&
-      !smartContractWallet &&
-      semverSatisfies(safeVersion, SAFE_VERSION_FOR_OFFCHAIN_SIGNATURES) &&
-      !hardwareWallet
+      !isExecution && !smartContractWallet && semverSatisfies(safeVersion, SAFE_VERSION_FOR_OFFCHAIN_SIGNATURES)
     if (canTryOffchainSigning) {
       const signature = await tryOffchainSigning({ ...txArgs, safeAddress })
 

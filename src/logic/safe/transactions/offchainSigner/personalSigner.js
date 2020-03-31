@@ -2,9 +2,9 @@
 import { EMPTY_DATA } from '~/logic/wallets/ethTransactions'
 import { getWeb3 } from '~/logic/wallets/getWeb3'
 
-const ETH_SIGN_NOT_SUPPORTED_ERROR_MSG = 'ETH_SIGN_NOT_SUPPORTED'
+const PERSONAL_SIGN_NOT_SUPPORTED_ERROR_MSG = 'PERSONAL_SIGN_NOT_SUPPORTED'
 
-export const getEthSigner = async ({
+export const getPersonalSigner = async ({
   baseGas,
   data,
   gasPrice,
@@ -39,8 +39,8 @@ export const getEthSigner = async ({
     web3.currentProvider.sendAsync(
       {
         jsonrpc: '2.0',
-        method: 'eth_sign',
-        params: [sender, txHash],
+        method: 'personal_sign',
+        params: [txHash, sender],
         id: new Date().getTime(),
       },
       async function (err, signature) {
@@ -49,7 +49,7 @@ export const getEthSigner = async ({
         }
 
         if (signature.result == null) {
-          reject(new Error(ETH_SIGN_NOT_SUPPORTED_ERROR_MSG))
+          reject(new Error(PERSONAL_SIGN_NOT_SUPPORTED_ERROR_MSG))
           return
         }
 
