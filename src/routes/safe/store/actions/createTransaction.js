@@ -17,7 +17,6 @@ import { SAFE_VERSION_FOR_OFFCHAIN_SIGNATURES, tryOffchainSigning } from '~/logi
 import { getCurrentSafeVersion } from '~/logic/safe/utils/safeVersion'
 import { ZERO_ADDRESS } from '~/logic/wallets/ethAddresses'
 import { EMPTY_DATA } from '~/logic/wallets/ethTransactions'
-import { WALLET_PROVIDER } from '~/logic/wallets/getWeb3'
 import { providerSelector } from '~/logic/wallets/store/selectors'
 import { SAFELIST_ADDRESS } from '~/routes/routes'
 import fetchTransactions from '~/routes/safe/store/actions/fetchTransactions'
@@ -61,8 +60,7 @@ const createTransaction = ({
   const ready = await onboardUser()
   if (!ready) return
 
-  const { account: from, name, smartContractWallet } = providerSelector(state)
-  const isLedgerWallet = name.toUpperCase() === WALLET_PROVIDER.LEDGER
+  const { account: from, hardwareWallet, smartContractWallet } = providerSelector(state)
   const safeInstance = await getGnosisSafeInstanceAt(safeAddress)
   const lastTx = await getLastTx(safeAddress)
   const nonce = await getNewTxNonce(txNonce, lastTx, safeInstance)
@@ -106,7 +104,7 @@ const createTransaction = ({
       !isExecution &&
       !smartContractWallet &&
       semverSatisfies(safeVersion, SAFE_VERSION_FOR_OFFCHAIN_SIGNATURES) &&
-      !isLedgerWallet
+      !hardwareWallet
     if (canTryOffchainSigning) {
       const signature = await tryOffchainSigning({ ...txArgs, safeAddress })
 

@@ -9,6 +9,7 @@ export type ProviderProps = {
   account: string,
   network: number,
   smartContractWallet: boolean,
+  hardwareWallet: boolean,
 }
 
 export const makeProvider: RecordFactory<ProviderProps> = Record({
@@ -18,6 +19,7 @@ export const makeProvider: RecordFactory<ProviderProps> = Record({
   account: '',
   network: 0,
   smartContractWallet: false,
+  hardwareWallet: false,
 })
 
 export type Provider = RecordOf<ProviderProps>

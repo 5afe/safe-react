@@ -2,6 +2,7 @@
 import ENS from 'ethereum-ens'
 import Web3 from 'web3'
 
+import { sameAddress } from './ethAddresses'
 import { EMPTY_DATA } from './ethTransactions'
 
 import { getNetwork } from '~/config/index'
@@ -94,6 +95,9 @@ export const getAccountFrom: Function = async (web3Provider): Promise<string | n
 
 export const getNetworkIdFrom = (web3Provider) => web3Provider.eth.net.getId()
 
+const isHardwareWallet = (walletName: $Values<typeof WALLET_PROVIDER>) =>
+  sameAddress(WALLET_PROVIDER.LEDGER, walletName) || sameAddress(WALLET_PROVIDER.TREZOR, walletName)
+
 const isSmartContractWallet = async (web3Provider, account) => {
   const contractCode: string = await web3Provider.eth.getCode(account)
 
@@ -109,6 +113,7 @@ export const getProviderInfo: Function = async (
   const account = await getAccountFrom(web3)
   const network = await getNetworkIdFrom(web3)
   const smartContractWallet = await isSmartContractWallet(web3, account)
+  const hardwareWallet = isHardwareWallet(providerName)
 
   const available = account !== null
 
@@ -119,6 +124,7 @@ export const getProviderInfo: Function = async (
     account,
     network,
     smartContractWallet,
+    hardwareWallet,
   }
 }
 

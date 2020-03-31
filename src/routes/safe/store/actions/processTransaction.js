@@ -13,7 +13,6 @@ import {
 } from '~/logic/safe/transactions'
 import { SAFE_VERSION_FOR_OFFCHAIN_SIGNATURES, tryOffchainSigning } from '~/logic/safe/transactions/offchainSigner'
 import { getCurrentSafeVersion } from '~/logic/safe/utils/safeVersion'
-import { WALLET_PROVIDER } from '~/logic/wallets/getWeb3'
 import { providerSelector } from '~/logic/wallets/store/selectors'
 import fetchSafe from '~/routes/safe/store/actions/fetchSafe'
 import fetchTransactions from '~/routes/safe/store/actions/fetchTransactions'
@@ -43,8 +42,7 @@ const processTransaction = ({
 }: ProcessTransactionArgs) => async (dispatch: ReduxDispatch<GlobalState>, getState: Function) => {
   const state: GlobalState = getState()
 
-  const { account: from, name, smartContractWallet } = providerSelector(state)
-  const isLedgerWallet = name.toUpperCase() === WALLET_PROVIDER.LEDGER
+  const { account: from, hardwareWallet, smartContractWallet } = providerSelector(state)
   const safeInstance = await getGnosisSafeInstanceAt(safeAddress)
   const lastTx = await getLastTx(safeAddress)
   const nonce = await getNewTxNonce(null, lastTx, safeInstance)
@@ -91,7 +89,7 @@ const processTransaction = ({
       !isExecution &&
       !smartContractWallet &&
       semverSatisfies(safeVersion, SAFE_VERSION_FOR_OFFCHAIN_SIGNATURES) &&
-      !isLedgerWallet
+      !hardwareWallet
     if (canTryOffchainSigning) {
       const signature = await tryOffchainSigning({ ...txArgs, safeAddress })
 
