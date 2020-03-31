@@ -1,5 +1,5 @@
 // @flow
-import type { RecordOf } from 'immutable'
+import { Record, type RecordFactory, type RecordOf } from 'immutable'
 
 export type AddressBookEntry = {
   address: string,
@@ -10,5 +10,11 @@ export type AddressBookEntry = {
 export type AddressBookProps = {
   addressBook: Map<string, AddressBookEntry>,
 }
+
+export const makeAddressBookEntry: RecordFactory<AddressBookEntry> = Record({
+  address: '',
+  name: '',
+  isOwner: false,
+})
 
 export type AddressBook = RecordOf<AddressBookProps>
