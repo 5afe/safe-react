@@ -30,8 +30,8 @@ function init(mainWindow) {
     dialog.showMessageBox({
       type: 'info',
       title: 'Found Updates',
-      message: 'Found updates, do you want update now?',
-      buttons: ['Sure', 'Remind me later']
+      message: 'Found updates, do you want to update now?',
+      buttons: ['Yes', 'Remind me later']
     }, (buttonIndex) => {
       if (buttonIndex === 0) {
         autoUpdater.downloadUpdate()
