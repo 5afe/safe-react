@@ -6,3 +6,4 @@ yarn-error.log
 .env*
 .idea/
 dist
+electron-builder.yml
