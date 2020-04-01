@@ -130,6 +130,4 @@ const EditOwnerComponent = ({
   )
 }
 
-const EditOwnerModal = withStyles(styles)(withSnackbar(EditOwnerComponent))
-
-export default EditOwnerModal
+export default withStyles(styles)(withSnackbar(EditOwnerComponent))

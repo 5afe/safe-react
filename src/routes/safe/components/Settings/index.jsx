@@ -4,13 +4,11 @@ import { withStyles } from '@material-ui/core/styles'
 import cn from 'classnames'
 import { List } from 'immutable'
 import * as React from 'react'
-import { connect } from 'react-redux'
 
 import ManageOwners from './ManageOwners'
 import { RemoveSafeModal } from './RemoveSafeModal'
 import SafeDetails from './SafeDetails'
 import ThresholdSettings from './ThresholdSettings'
-import actions, { type Actions } from './actions'
 import { OwnersIcon } from './assets/icons/OwnersIcon'
 import { RequiredConfirmationsIcon } from './assets/icons/RequiredConfirmationsIcon'
 import { SafeDetailsIcon } from './assets/icons/SafeDetailsIcon'
@@ -139,6 +137,4 @@ class Settings extends React.Component<Props, State> {
   }
 }
 
-const settingsComponent = withStyles(styles)(Settings)
-
-export default connect(undefined, actions)(settingsComponent)
+export default withStyles(styles)(Settings)
