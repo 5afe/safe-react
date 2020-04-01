@@ -263,6 +263,13 @@ export const safeNameSelector: OutputSelector<GlobalState, RouterProps, Map<stri
   },
 )
 
+export const safeEthBalanceSelector: OutputSelector<GlobalState, RouterProps, Map<string, string>> = createSelector(
+  safeSelector,
+  (safe: Safe) => {
+    return safe ? safe.ethBalance : undefined
+  },
+)
+
 export const safeNeedsUpdateSelector: OutputSelector<GlobalState, RouterProps, Map<string, string>> = createSelector(
   safeSelector,
   (safe: Safe) => {
