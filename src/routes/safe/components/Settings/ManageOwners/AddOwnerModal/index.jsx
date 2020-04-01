@@ -3,12 +3,14 @@ import { withStyles } from '@material-ui/core/styles'
 import { List } from 'immutable'
 import { withSnackbar } from 'notistack'
 import React, { useEffect, useState } from 'react'
+import { useDispatch } from 'react-redux'
 
 import OwnerForm from './screens/OwnerForm'
 import ReviewAddOwner from './screens/Review'
 import ThresholdForm from './screens/ThresholdForm'
 
 import Modal from '~/components/Modal'
+import { addOrUpdateAddressBookEntry } from '~/logic/addressBook/store/actions/addOrUpdateAddressBookEntry'
 import { getGnosisSafeInstanceAt } from '~/logic/contracts/safeContracts'
 import { TX_NOTIFICATION_TYPES } from '~/logic/safe/transactions'
 import { type Owner } from '~/routes/safe/store/models/owner'
@@ -77,6 +79,7 @@ const AddOwner = ({
   safeName,
   threshold,
 }: Props) => {
+  const dispatch = useDispatch()
   const [activeScreen, setActiveScreen] = useState<ActiveScreen>('selectOwner')
   const [values, setValues] = useState<Object>({})
 
@@ -115,8 +118,13 @@ const AddOwner = ({
 
   const onAddOwner = async () => {
     onClose()
+
     try {
-      sendAddOwner(values, safeAddress, owners, enqueueSnackbar, closeSnackbar, createTransaction, addSafeOwner)
+      await sendAddOwner(values, safeAddress, owners, enqueueSnackbar, closeSnackbar, createTransaction, addSafeOwner)
+
+      dispatch(
+        addOrUpdateAddressBookEntry(values.ownerAddress, { name: values.ownerName, address: values.ownerAddress }),
+      )
     } catch (error) {
       console.error('Error while removing an owner', error)
     }
