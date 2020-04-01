@@ -12,15 +12,7 @@ import type { ProviderProps } from '~/logic/wallets/store/model/provider'
 import { makeProvider } from '~/logic/wallets/store/model/provider'
 
 export const processProviderResponse = (dispatch: ReduxDispatch<*>, provider: ProviderProps) => {
-  const { account, available, loaded, name, network } = provider
-
-  const walletRecord = makeProvider({
-    name,
-    available,
-    loaded,
-    account,
-    network,
-  })
+  const walletRecord = makeProvider(provider)
 
   dispatch(addProvider(walletRecord))
 }

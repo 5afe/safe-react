@@ -16,7 +16,7 @@ const useStyles = makeStyles({
     borderRadius: '8px',
     boxShadow: '0 0 10px 0 rgba(33, 48, 77, 0.10)',
     boxSizing: 'border-box',
-    cursor: props => (props.granted ? 'pointer' : 'default'),
+    cursor: (props) => (props.granted ? 'pointer' : 'default'),
     display: 'flex',
     flexDirection: 'column',
     flexGrow: '1',
@@ -54,7 +54,7 @@ const useStyles = makeStyles({
     zIndex: '5',
   },
   image: {
-    backgroundColor: props => `#${props.backgroundColor}` || '#f0efee',
+    backgroundColor: (props) => `#${props.backgroundColor}` || '#f0efee',
     backgroundPosition: '50% 50%',
     backgroundRepeat: 'no-repeat',
     backgroundSize: 'contain',

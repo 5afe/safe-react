@@ -57,10 +57,10 @@ const SafeDetails = (props: Props) => {
   const [isModalOpen, setModalOpen] = React.useState(false)
 
   const toggleModal = () => {
-    setModalOpen(prevOpen => !prevOpen)
+    setModalOpen((prevOpen) => !prevOpen)
   }
 
-  const handleSubmit = values => {
+  const handleSubmit = (values) => {
     updateSafe({ address: safeAddress, name: values.safeName })
 
     const notification = getNotificationsFromTxType(TX_NOTIFICATION_TYPES.SAFE_NAME_CHANGE_TX)

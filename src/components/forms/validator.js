@@ -84,7 +84,7 @@ export const ADDRESS_REPEATED_ERROR = 'Address already introduced'
 
 export const uniqueAddress = (addresses: string[] | List<string>) =>
   simpleMemoize((value: string) => {
-    const addressAlreadyExists = addresses.some(address => sameAddress(value, address))
+    const addressAlreadyExists = addresses.some((address) => sameAddress(value, address))
     return addressAlreadyExists ? ADDRESS_REPEATED_ERROR : undefined
   })
 

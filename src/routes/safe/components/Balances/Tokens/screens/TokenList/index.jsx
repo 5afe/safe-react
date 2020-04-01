@@ -103,12 +103,12 @@ class Tokens extends React.Component<Props, State> {
     this.setState(() => ({ filter: '' }))
   }
 
-  onChangeSearchBar = value => {
+  onChangeSearchBar = (value) => {
     this.setState(() => ({ filter: value }))
   }
 
   onSwitch = (token: Token) => () => {
-    this.setState(prevState => {
+    this.setState((prevState) => {
       const activeTokensAddresses = prevState.activeTokensAddresses.has(token.address)
         ? prevState.activeTokensAddresses.remove(token.address)
         : prevState.activeTokensAddresses.add(token.address)

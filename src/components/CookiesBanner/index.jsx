@@ -160,7 +160,7 @@ const CookiesBanner = () => {
               disabled
               label="Necessary"
               name="Necessary"
-              onChange={() => setLocalNecessary(prev => !prev)}
+              onChange={() => setLocalNecessary((prev) => !prev)}
               value={localNecessary}
             />
           </div>
@@ -169,7 +169,7 @@ const CookiesBanner = () => {
               control={<Checkbox checked={localAnalytics} />}
               label="Analytics"
               name="Analytics"
-              onChange={() => setLocalAnalytics(prev => !prev)}
+              onChange={() => setLocalAnalytics((prev) => !prev)}
               value={localAnalytics}
             />
           </div>

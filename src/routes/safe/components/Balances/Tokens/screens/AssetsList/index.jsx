@@ -75,7 +75,7 @@ const AssetsList = (props: Props) => {
     setFilterValue(value)
   }
 
-  const getItemKey = index => {
+  const getItemKey = (index) => {
     return index
   }
 
@@ -95,7 +95,7 @@ const AssetsList = (props: Props) => {
     }
   }
 
-  const createItemData = assetsList => {
+  const createItemData = (assetsList) => {
     return {
       assets: assetsList,
       activeAssetsAddresses,

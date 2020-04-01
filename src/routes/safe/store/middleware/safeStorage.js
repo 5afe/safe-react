@@ -2,6 +2,7 @@
 import { List } from 'immutable'
 import type { Action, Store } from 'redux'
 
+import { makeAddressBookEntry } from '~/logic/addressBook/model/addressBook'
 import { addAddressBookEntry } from '~/logic/addressBook/store/actions/addAddressBookEntry'
 import { saveDefaultSafe, saveSafes } from '~/logic/safe/utils'
 import type { Token } from '~/logic/tokens/store/model/token'
@@ -35,7 +36,7 @@ const recalculateActiveTokens = (state: GlobalState): void => {
   const tokens = tokensSelector(state)
   const activeTokenAddresses = getActiveTokensAddressesForAllSafes(state)
 
-  const activeTokens: List<Token> = tokens.withMutations(map => {
+  const activeTokens: List<Token> = tokens.withMutations((map) => {
     map.forEach((token: Token) => {
       if (!activeTokenAddresses.has(token.address)) {
         map.remove(token.address)
@@ -64,8 +65,8 @@ const safeStorageMware = (store: Store<GlobalState>) => (next: Function) => asyn
         const { safe } = action.payload
         const ownersArray = safe.owners.toJS()
         // Adds the owners to the address book
-        ownersArray.forEach(owner => {
-          dispatch(addAddressBookEntry({ ...owner, isOwner: true }))
+        ownersArray.forEach((owner) => {
+          dispatch(addAddressBookEntry(makeAddressBookEntry({ ...owner, isOwner: true })))
         })
         break
       }

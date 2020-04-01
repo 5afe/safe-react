@@ -65,6 +65,6 @@ const Routes = ({ defaultSafe, location }: RoutesProps) => {
 
 // $FlowFixMe
 export default connect<Object, Object, ?Function, ?Object>(
-  state => ({ defaultSafe: defaultSafeSelector(state) }),
+  (state) => ({ defaultSafe: defaultSafeSelector(state) }),
   null,
 )(withRouter(Routes))

@@ -69,24 +69,28 @@ export const checkAndUpdateSafe = (safeAdd: string) => async (dispatch: ReduxDis
 
   const remoteOwners = await gnosisSafe.getOwners()
   // Converts from [ { address, ownerName} ] to address array
-  const localOwners = localSafe.owners.map(localOwner => localOwner.address)
+  const localOwners = localSafe.owners.map((localOwner) => localOwner.address)
+  const localThreshold = localSafe.threshold
 
   // Updates threshold values
-  const threshold = await gnosisSafe.getThreshold()
-  localSafe.threshold = threshold.toNumber()
+  const remoteThreshold = await gnosisSafe.getThreshold()
+  localSafe.threshold = remoteThreshold.toNumber()
 
-  dispatch(updateSafeThreshold({ safeAddress, threshold: threshold.toNumber() }))
+  if (localThreshold !== remoteThreshold.toNumber()) {
+    dispatch(updateSafeThreshold({ safeAddress, threshold: remoteThreshold.toNumber() }))
+  }
+
   // If the remote owners does not contain a local address, we remove that local owner
-  localOwners.forEach(localAddress => {
-    const remoteOwnerIndex = remoteOwners.findIndex(remoteAddress => sameAddress(remoteAddress, localAddress))
+  localOwners.forEach((localAddress) => {
+    const remoteOwnerIndex = remoteOwners.findIndex((remoteAddress) => sameAddress(remoteAddress, localAddress))
     if (remoteOwnerIndex === -1) {
       dispatch(removeSafeOwner({ safeAddress, ownerAddress: localAddress }))
     }
   })
 
   // If the remote has an owner that we don't have locally, we add it
-  remoteOwners.forEach(remoteAddress => {
-    const localOwnerIndex = localOwners.findIndex(localAddress => sameAddress(remoteAddress, localAddress))
+  remoteOwners.forEach((remoteAddress) => {
+    const localOwnerIndex = localOwners.findIndex((localAddress) => sameAddress(remoteAddress, localAddress))
     if (localOwnerIndex === -1) {
       dispatch(
         addSafeOwner({

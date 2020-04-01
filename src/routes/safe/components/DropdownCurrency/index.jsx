@@ -28,7 +28,7 @@ const DropdownCurrency = () => {
 
   const [searchParams, setSearchParams] = useState('')
   const classes = useDropdownStyles()
-  const currenciesListFiltered = currenciesList.filter(currency =>
+  const currenciesListFiltered = currenciesList.filter((currency) =>
     currency.toLowerCase().includes(searchParams.toLowerCase()),
   )
 
@@ -83,14 +83,14 @@ const DropdownCurrency = () => {
                   input: classes.inputInput,
                 }}
                 inputProps={{ 'aria-label': 'search' }}
-                onChange={event => setSearchParams(event.target.value)}
+                onChange={(event) => setSearchParams(event.target.value)}
                 placeholder="Search…"
                 value={searchParams}
               />
             </div>
           </MenuItem>
           <div className={classes.dropdownItemsScrollWrapper}>
-            {currenciesListFiltered.map(currencyName => (
+            {currenciesListFiltered.map((currencyName) => (
               <MenuItem
                 className={classes.listItem}
                 key={currencyName}

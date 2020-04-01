@@ -86,10 +86,10 @@ export const createSafe = (values: Object, userAccount: string): Promise<OpenSta
   const promiEvent = deploymentTxMethod.send({ from: userAccount, value: 0 })
 
   promiEvent
-    .once('transactionHash', txHash => {
+    .once('transactionHash', (txHash) => {
       saveToStorage(SAFE_PENDING_CREATION_STORAGE_KEY, { txHash, ...values })
     })
-    .then(async receipt => {
+    .then(async (receipt) => {
       await checkReceiptStatus(receipt.transactionHash)
 
       const safeAddress = receipt.events.ProxyCreation.returnValues.proxy
@@ -138,7 +138,7 @@ const Open = ({ addSafe, network, provider, userAccount }: Props) => {
     load()
   }, [])
 
-  const createSafeProxy = async formValues => {
+  const createSafeProxy = async (formValues) => {
     let values = formValues
 
     // save form values, used when the user rejects the TX and wants to retry
@@ -154,7 +154,7 @@ const Open = ({ addSafe, network, provider, userAccount }: Props) => {
     setShowProgress(true)
   }
 
-  const onSafeCreated = async safeAddress => {
+  const onSafeCreated = async (safeAddress) => {
     const pendingCreation = await loadFromStorage(SAFE_PENDING_CREATION_STORAGE_KEY)
 
     const name = getSafeNameFrom(pendingCreation)
