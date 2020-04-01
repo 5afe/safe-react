@@ -129,8 +129,9 @@ const extendedTransactionsSelector: Selector<
 
       if (!tx.isExecuted) {
         if (
-          cancellationTransactionsByNonce.get(tx.nonce) &&
-          cancellationTransactionsByNonce.get(tx.nonce).get('isExecuted')
+          (cancellationTransactionsByNonce.get(tx.nonce) &&
+            cancellationTransactionsByNonce.get(tx.nonce).get('isExecuted')) ||
+          transactions.find((safeTx) => tx.nonce === safeTx.nonce && safeTx.isExecuted)
         ) {
           extendedTx = tx.set('cancelled', true)
         }
