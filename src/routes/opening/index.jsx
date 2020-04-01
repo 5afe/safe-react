@@ -134,7 +134,7 @@ const SafeDeployment = ({ creationTxHash, onCancel, onRetry, onSuccess, provider
   const steps = [
     {
       id: '1',
-      label: 'Waiting fot transaction confirmation',
+      label: 'Waiting for transaction confirmation',
       description: undefined,
       instruction: 'Please confirm the Safe creation in your wallet',
       footer: null,
@@ -171,7 +171,7 @@ const SafeDeployment = ({ creationTxHash, onCancel, onRetry, onSuccess, provider
       id: '6',
       label: 'Success',
       description: 'Your Safe was created successfully',
-      instruction: 'Click Below to get started',
+      instruction: 'Click below to get started',
       footer: (
         <Button color="primary" disabled={continueButtonDisabled} onClick={navigateToSafe} variant="contained">
           Continue
