@@ -16,10 +16,7 @@ type State = {
 
 type Action = 'Send' | 'Receive'
 
-export type Props = Actions &
-  SelectorProps & {
-    granted: boolean,
-  }
+export type Props = Actions & SelectorProps
 
 const TIMEOUT = process.env.NODE_ENV === 'test' ? 1500 : 5000
 
@@ -136,60 +133,16 @@ class SafeView extends React.Component<Props, State> {
 
   render() {
     const { sendFunds, showReceive } = this.state
-    const {
-      activateAssetsByBalance,
-      activateTokensByBalance,
-      activeTokens,
-      addressBook,
-      blacklistedTokens,
-      cancellationTransactions,
-      createTransaction,
-      currencySelected,
-      currencyValues,
-      fetchCurrencyValues,
-      fetchTokens,
-      granted,
-      network,
-      processTransaction,
-      provider,
-      safe,
-      tokens,
-      transactions,
-      updateAddressBookEntry,
-      updateSafe,
-      userAddress,
-    } = this.props
 
     return (
       <Page>
         <Layout
-          activateAssetsByBalance={activateAssetsByBalance}
-          activateTokensByBalance={activateTokensByBalance}
-          activeTokens={activeTokens}
-          addressBook={addressBook}
-          blacklistedTokens={blacklistedTokens}
-          cancellationTransactions={cancellationTransactions}
-          createTransaction={createTransaction}
-          currencySelected={currencySelected}
-          currencyValues={currencyValues}
-          fetchCurrencyValues={fetchCurrencyValues}
-          fetchTokens={fetchTokens}
-          granted={granted}
           hideSendFunds={this.hideSendFunds}
-          network={network}
           onHide={this.onHide}
           onShow={this.onShow}
-          processTransaction={processTransaction}
-          provider={provider}
-          safe={safe}
           sendFunds={sendFunds}
           showReceive={showReceive}
           showSendFunds={this.showSendFunds}
-          tokens={tokens}
-          transactions={transactions}
-          updateAddressBookEntry={updateAddressBookEntry}
-          updateSafe={updateSafe}
-          userAddress={userAddress}
         />
       </Page>
     )

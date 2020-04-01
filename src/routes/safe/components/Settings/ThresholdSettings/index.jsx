@@ -16,6 +16,7 @@ import Paragraph from '~/components/layout/Paragraph'
 import Row from '~/components/layout/Row'
 import { getGnosisSafeInstanceAt } from '~/logic/contracts/safeContracts'
 import { TX_NOTIFICATION_TYPES } from '~/logic/safe/transactions'
+import { grantedSelector } from '~/routes/safe/container/selector'
 import createTransaction from '~/routes/safe/store/actions/createTransaction'
 import {
   safeOwnersSelector,
@@ -25,17 +26,17 @@ import {
 
 type Props = {
   classes: Object,
-  granted: boolean,
   enqueueSnackbar: Function,
   closeSnackbar: Function,
 }
 
-const ThresholdSettings = ({ classes, closeSnackbar, enqueueSnackbar, granted }: Props) => {
+const ThresholdSettings = ({ classes, closeSnackbar, enqueueSnackbar }: Props) => {
   const [isModalOpen, setModalOpen] = useState(false)
   const dispatch = useDispatch()
   const threshold = useSelector(safeThresholdSelector)
   const safeAddress = useSelector(safeParamAddressFromStateSelector)
   const owners = useSelector(safeOwnersSelector)
+  const granted = useSelector(grantedSelector)
 
   const toggleModal = () => {
     setModalOpen(prevOpen => !prevOpen)

@@ -1,6 +1,7 @@
 // @flow
 import { withSnackbar } from 'notistack'
 import React, { useCallback, useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
 
 import appsList from './appsList'
@@ -9,6 +10,13 @@ import sendTransactions from './sendTransactions'
 
 import { ListContentLayout as LCL, Loader } from '~/components-v2'
 import ButtonLink from '~/components/layout/ButtonLink'
+import { getWeb3 } from '~/logic/wallets/getWeb3'
+import { networkSelector } from '~/logic/wallets/store/selectors'
+import {
+  safeEthBalanceSelector,
+  safeNameSelector,
+  safeParamAddressFromStateSelector,
+} from '~/routes/safe/store/selectors'
 
 const StyledIframe = styled.iframe`
   width: 100%;
@@ -23,33 +31,22 @@ const operations = {
 }
 
 type Props = {
-  web3: any,
-  safeAddress: String,
-  safeName: String,
-  ethBalance: String,
-  network: String,
-  createTransaction: any,
   enqueueSnackbar: Function,
   closeSnackbar: Function,
   openModal: () => {},
   closeModal: () => {},
 }
 
-function Apps({
-  closeModal,
-  closeSnackbar,
-  createTransaction,
-  enqueueSnackbar,
-  ethBalance,
-  network,
-  openModal,
-  safeAddress,
-  safeName,
-  web3,
-}: Props) {
+function Apps({ closeModal, closeSnackbar, enqueueSnackbar, openModal }: Props) {
   const [selectedApp, setSelectedApp] = useState('1')
   const [appIsLoading, setAppIsLoading] = useState(true)
   const [iframeEl, setframeEl] = useState(null)
+  const safeName = useSelector(safeNameSelector)
+  const safeAddress = useSelector(safeParamAddressFromStateSelector)
+  const network = useSelector(networkSelector)
+  const ethBalance = useSelector(safeEthBalanceSelector)
+  const dispatch = useDispatch()
+  const web3 = getWeb3()
 
   const getSelectedApp = () => appsList.find(e => e.id === selectedApp)
 
@@ -70,7 +67,7 @@ function Apps({
 
           const txHash = await sendTransactions(
             web3,
-            createTransaction,
+            dispatch,
             safeAddress,
             data.data,
             enqueueSnackbar,

@@ -7,9 +7,8 @@ import CallMade from '@material-ui/icons/CallMade'
 import CallReceived from '@material-ui/icons/CallReceived'
 import classNames from 'classnames/bind'
 import React, { useState } from 'react'
+import { useSelector } from 'react-redux'
 import { Redirect, Route, Switch, withRouter } from 'react-router-dom'
-
-import { type Actions } from '../container/actions'
 
 import Balances from './Balances'
 import Receive from './Balances/Receive'
@@ -33,11 +32,13 @@ import Hairline from '~/components/layout/Hairline'
 import Heading from '~/components/layout/Heading'
 import Paragraph from '~/components/layout/Paragraph'
 import Row from '~/components/layout/Row'
-import { getEtherScanLink, getWeb3 } from '~/logic/wallets/getWeb3'
+import { safeNeedsUpdate } from '~/logic/safe/utils/safeVersion'
+import { providerNameSelector } from '~/logic/wallets/store/selectors'
 import AddressBookTable from '~/routes/safe/components/AddressBook'
 import SendModal from '~/routes/safe/components/Balances/SendModal'
 import TxsTable from '~/routes/safe/components/Transactions/TxsTable'
-import { type SelectorProps } from '~/routes/safe/container/selector'
+import { grantedSelector } from '~/routes/safe/container/selector'
+import { safeNameSelector, safeParamAddressFromStateSelector } from '~/routes/safe/store/selectors'
 import { border } from '~/theme/variables'
 
 export const BALANCES_TAB_BTN_TEST_ID = 'balances-tab-btn'
@@ -48,40 +49,21 @@ export const SAFE_VIEW_NAME_HEADING_TEST_ID = 'safe-name-heading'
 
 const Apps = React.lazy(() => import('./Apps'))
 
-type Props = SelectorProps &
-  Actions & {
-    classes: Object,
-    granted: boolean,
-    sendFunds: Object,
-    showReceive: boolean,
-    onShow: Function,
-    onHide: Function,
-    showSendFunds: Function,
-    hideSendFunds: Function,
-    match: Object,
-    location: Object,
-    history: Object,
-    fetchCurrencyValues: Function,
-  }
+type Props = {
+  classes: Object,
+  sendFunds: Object,
+  showReceive: boolean,
+  onShow: Function,
+  onHide: Function,
+  showSendFunds: Function,
+  hideSendFunds: Function,
+  match: Object,
+  location: Object,
+  history: Object,
+}
 
 const Layout = (props: Props) => {
-  const {
-    addressBook,
-    classes,
-    createTransaction,
-    granted,
-    hideSendFunds,
-    location,
-    match,
-    network,
-    onHide,
-    onShow,
-    provider,
-    safe,
-    sendFunds,
-    showReceive,
-    showSendFunds,
-  } = props
+  const { classes, hideSendFunds, location, match, onHide, onShow, sendFunds, showReceive, showSendFunds } = props
 
   const [modal, setModal] = useState({
     isOpen: false,
@@ -91,19 +73,21 @@ const Layout = (props: Props) => {
     onClose: null,
   })
 
+  const safeAddress = useSelector(safeParamAddressFromStateSelector)
+  const safeName = useSelector(safeNameSelector)
+  const needsUpdate = useSelector(safeNeedsUpdate)
+  const provider = useSelector(providerNameSelector)
+  const granted = useSelector(grantedSelector)
+
   const handleCallToRouter = (_, value) => {
     const { history } = props
 
     history.push(value)
   }
 
-  if (!safe) {
+  if (!safeAddress) {
     return <NoSafe provider={provider} text="Safe not found" />
   }
-
-  const { address, ethBalance, name } = safe
-  const etherScanLink = getEtherScanLink('address', address)
-  const web3Instance = getWeb3()
 
   const openGenericModal = modalConfig => {
     setModal({ ...modalConfig, isOpen: true })
@@ -143,7 +127,7 @@ const Layout = (props: Props) => {
       <Badge
         badgeContent=""
         color="error"
-        invisible={!safe.needsUpdate || !granted}
+        invisible={!needsUpdate || !granted}
         style={{ paddingRight: '10px' }}
         variant="dot"
       >
@@ -166,16 +150,7 @@ const Layout = (props: Props) => {
 
   const renderAppsTab = () => (
     <React.Suspense>
-      <Apps
-        closeModal={closeGenericModal}
-        createTransaction={createTransaction}
-        ethBalance={ethBalance}
-        network={network}
-        openModal={openGenericModal}
-        safeAddress={address}
-        safeName={name}
-        web3={web3Instance}
-      />
+      <Apps closeModal={closeGenericModal} openModal={openGenericModal} />
     </React.Suspense>
   )
 
@@ -195,20 +170,20 @@ const Layout = (props: Props) => {
     <>
       <Block className={classes.container} margin="xl">
         <Row className={classes.userInfo}>
-          <Identicon address={address} diameter={50} />
+          <Identicon address={safeAddress} diameter={50} />
           <Block className={classes.name}>
             <Row>
               <Heading className={classes.nameText} color="primary" tag="h2" testId={SAFE_VIEW_NAME_HEADING_TEST_ID}>
-                {name}
+                {safeName}
               </Heading>
               {!granted && <Block className={classes.readonly}>Read Only</Block>}
             </Row>
             <Block className={classes.user} justify="center">
               <Paragraph className={classes.address} color="disabled" noMargin size="md">
-                {address}
+                {safeAddress}
               </Paragraph>
-              <CopyBtn content={address} />
-              <EtherscanBtn type="address" value={address} />
+              <CopyBtn content={safeAddress} />
+              <EtherscanBtn type="address" value={safeAddress} />
             </Block>
           </Block>
         </Row>
@@ -298,19 +273,7 @@ const Layout = (props: Props) => {
         {process.env.REACT_APP_ENV !== 'production' && (
           <Route exact path={`${match.path}/apps`} render={renderAppsTab} />
         )}
-        <Route
-          exact
-          path={`${match.path}/settings`}
-          render={() => (
-            <Settings
-              addressBook={addressBook}
-              etherScanLink={etherScanLink}
-              granted={granted}
-              owners={safe.owners}
-              safe={safe}
-            />
-          )}
-        />
+        <Route exact path={`${match.path}/settings`} render={() => <Settings />} />
         <Route exact path={`${match.path}/address-book`} render={() => <AddressBookTable />} />
         <Redirect to={`${match.path}/balances`} />
       </Switch>
@@ -327,7 +290,7 @@ const Layout = (props: Props) => {
         paperClassName={classes.receiveModal}
         title="Receive Tokens"
       >
-        <Receive onClose={onHide('Receive')} safeAddress={address} safeName={name} />
+        <Receive onClose={onHide('Receive')} />
       </Modal>
 
       {modal.isOpen && <GenericModal {...modal} onClose={closeGenericModal} />}
