@@ -70,6 +70,17 @@ const incomingTransactionsSelector = (state: GlobalState): IncomingTransactionsS
 
 const oneTransactionSelector = (state: GlobalState, props: TransactionProps) => props.transaction
 
+export const safeParamAddressFromStateSelector = (state: GlobalState): string | null => {
+  const match = matchPath(state.router.location.pathname, { path: `${SAFELIST_ADDRESS}/:safeAddress` })
+
+  if (match) {
+    const web3 = getWeb3()
+    return web3.utils.toChecksumAddress(match.params.safeAddress)
+  }
+
+  return null
+}
+
 export const safeParamAddressSelector = (state: GlobalState, props: RouterProps) => {
   const urlAdd = props.match.params[SAFE_PARAM_ADDRESS]
   return urlAdd ? getWeb3().utils.toChecksumAddress(urlAdd) : ''
@@ -79,7 +90,7 @@ type TxSelectorType = OutputSelector<GlobalState, RouterProps, List<Transaction>
 
 export const safeTransactionsSelector: TxSelectorType = createSelector(
   transactionsSelector,
-  safeParamAddressSelector,
+  safeParamAddressFromStateSelector,
   (transactions: TransactionsState, address: string): List<Transaction> => {
     if (!transactions) {
       return List([])
@@ -105,7 +116,7 @@ export const addressBookQueryParamsSelector = (state: GlobalState): string => {
 
 export const safeCancellationTransactionsSelector: TxSelectorType = createSelector(
   cancellationTransactionsSelector,
-  safeParamAddressSelector,
+  safeParamAddressFromStateSelector,
   (cancellationTransactions: TransactionsState, address: string): List<Transaction> => {
     if (!cancellationTransactions) {
       return List([])
@@ -119,22 +130,11 @@ export const safeCancellationTransactionsSelector: TxSelectorType = createSelect
   },
 )
 
-export const safeParamAddressFromStateSelector = (state: GlobalState): string | null => {
-  const match = matchPath(state.router.location.pathname, { path: `${SAFELIST_ADDRESS}/:safeAddress` })
-
-  if (match) {
-    const web3 = getWeb3()
-    return web3.utils.toChecksumAddress(match.params.safeAddress)
-  }
-
-  return null
-}
-
 type IncomingTxSelectorType = OutputSelector<GlobalState, RouterProps, List<IncomingTransaction>>
 
 export const safeIncomingTransactionsSelector: IncomingTxSelectorType = createSelector(
   incomingTransactionsSelector,
-  safeParamAddressSelector,
+  safeParamAddressFromStateSelector,
   (incomingTransactions: IncomingTransactionsState, address: string): List<IncomingTransaction> => {
     if (!incomingTransactions) {
       return List([])
@@ -253,6 +253,27 @@ export const safeBalancesSelector: OutputSelector<GlobalState, RouterProps, Map<
     }
 
     return safe.balances
+  },
+)
+
+export const safeThresholdSelector: OutputSelector<GlobalState, RouterProps, Map<string, string>> = createSelector(
+  safeSelector,
+  (safe: Safe) => {
+    return safe ? safe.threshold : undefined
+  },
+)
+
+export const safeNonceSelector: OutputSelector<GlobalState, RouterProps, Map<string, string>> = createSelector(
+  safeSelector,
+  (safe: Safe) => {
+    return safe ? safe.nonce : undefined
+  },
+)
+
+export const safeOwnersSelector: OutputSelector<GlobalState, RouterProps, Map<string, string>> = createSelector(
+  safeSelector,
+  (safe: Safe) => {
+    return safe ? safe.owners : undefined
   },
 )
 

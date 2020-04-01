@@ -112,7 +112,7 @@ export const extendedSafeTokensSelector: Selector<GlobalState, RouterProps, List
   },
 )
 
-const extendedTransactionsSelector: Selector<
+export const extendedTransactionsSelector: Selector<
   GlobalState,
   RouterProps,
   List<Transaction | IncomingTransaction>,
