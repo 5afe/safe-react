@@ -21,6 +21,7 @@ import Col from '~/components/layout/Col'
 import Img from '~/components/layout/Img'
 import Row from '~/components/layout/Row'
 import type { AddressBookEntry } from '~/logic/addressBook/model/addressBook'
+import { makeAddressBookEntry } from '~/logic/addressBook/model/addressBook'
 import { addAddressBookEntry } from '~/logic/addressBook/store/actions/addAddressBookEntry'
 import { removeAddressBookEntry } from '~/logic/addressBook/store/actions/removeAddressBookEntry'
 import { updateAddressBookEntry } from '~/logic/addressBook/store/actions/updateAddressBookEntry'
@@ -50,7 +51,7 @@ type Props = {
 
 const AddressBookTable = ({ classes }: Props) => {
   const columns = generateColumns()
-  const autoColumns = columns.filter(c => !c.custom)
+  const autoColumns = columns.filter((c) => !c.custom)
   const dispatch = useDispatch()
   const addressBook = useSelector(getAddressBookListSelector)
   const [selectedEntry, setSelectedEntry] = useState(null)
@@ -67,7 +68,7 @@ const AddressBookTable = ({ classes }: Props) => {
 
   useEffect(() => {
     if (entryAddressToEditOrCreateNew) {
-      const key = addressBook.findKey(entry => entry.address === entryAddressToEditOrCreateNew)
+      const key = addressBook.findKey((entry) => entry.address === entryAddressToEditOrCreateNew)
       if (key >= 0) {
         // Edit old entry
         const value = addressBook.get(key)
@@ -89,13 +90,13 @@ const AddressBookTable = ({ classes }: Props) => {
 
   const newEntryModalHandler = (entry: AddressBookEntry) => {
     setEditCreateEntryModalOpen(false)
-    dispatch(addAddressBookEntry(entry))
+    dispatch(addAddressBookEntry(makeAddressBookEntry(entry)))
   }
 
   const editEntryModalHandler = (entry: AddressBookEntry) => {
     setSelectedEntry(null)
     setEditCreateEntryModalOpen(false)
-    dispatch(updateAddressBookEntry(entry))
+    dispatch(updateAddressBookEntry(makeAddressBookEntry(entry)))
   }
 
   const deleteEntryModalHandler = () => {

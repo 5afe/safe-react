@@ -36,7 +36,7 @@ import { sm } from '~/theme/variables'
 type Props = {
   initialValues: Object,
   onClose: () => void,
-  onNext: any => void,
+  onNext: (any) => void,
   recipientAddress: string,
 }
 
@@ -103,7 +103,7 @@ const SendCustomTx = ({ initialValues, onClose, onNext, recipientAddress }: Prop
             shouldDisableSubmitButton = !selectedEntry.address
           }
 
-          const handleScan = value => {
+          const handleScan = (value) => {
             let scannedAddress = value
 
             if (scannedAddress.startsWith('ethereum:')) {
@@ -128,7 +128,7 @@ const SendCustomTx = ({ initialValues, onClose, onNext, recipientAddress }: Prop
                 </Row>
                 {selectedEntry && selectedEntry.address ? (
                   <div
-                    onKeyDown={e => {
+                    onKeyDown={(e) => {
                       if (e.keyCode !== 9) {
                         setSelectedEntry(null)
                       }

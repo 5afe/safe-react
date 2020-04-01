@@ -3,6 +3,7 @@ const  express = require('express');
 const open = require('open');
 const fs = require('fs');
 const dialog = electron.dialog;
+const Menu = electron.Menu;
 const https = require('https');
 const autoUpdater = require('./auto-updater');
 
@@ -60,9 +61,9 @@ function createWindow() {
     //BrowserWindow.addDevToolsExtension('<location to your react chrome extension>');
   }
 
-  // Hide the menu
-  mainWindow.setMenu(null);
-  mainWindow.setMenuBarVisibility(false)
+
+  //mainWindow.setMenu(null);
+  //mainWindow.setMenuBarVisibility(false)
 
   mainWindow.webContents.on('new-window', function(event, url){
     event.preventDefault();
@@ -78,6 +79,8 @@ function createWindow() {
 
 app.commandLine.appendSwitch('ignore-certificate-errors');
 app.on("ready", () =>{
+  // Hide the menu
+  Menu.setApplicationMenu(null);
   if(!isDev) createServer();
   createWindow();
 });

@@ -2,6 +2,9 @@
 import ENS from 'ethereum-ens'
 import Web3 from 'web3'
 
+import { sameAddress } from './ethAddresses'
+import { EMPTY_DATA } from './ethTransactions'
+
 import { getNetwork } from '~/config/index'
 import type { ProviderProps } from '~/logic/wallets/store/model/provider'
 
@@ -27,6 +30,8 @@ export const WALLET_PROVIDER = {
   OPERA: 'OPERA',
   DAPPER: 'DAPPER',
   AUTHEREUM: 'AUTHEREUM',
+  LEDGER: 'LEDGER',
+  TREZOR: 'TREZOR',
 }
 
 export const INJECTED_PROVIDERS = [
@@ -88,7 +93,16 @@ export const getAccountFrom: Function = async (web3Provider): Promise<string | n
   return accounts && accounts.length > 0 ? accounts[0] : null
 }
 
-export const getNetworkIdFrom = web3Provider => web3Provider.eth.net.getId()
+export const getNetworkIdFrom = (web3Provider) => web3Provider.eth.net.getId()
+
+const isHardwareWallet = (walletName: $Values<typeof WALLET_PROVIDER>) =>
+  sameAddress(WALLET_PROVIDER.LEDGER, walletName) || sameAddress(WALLET_PROVIDER.TREZOR, walletName)
+
+const isSmartContractWallet = async (web3Provider, account) => {
+  const contractCode: string = await web3Provider.eth.getCode(account)
+
+  return contractCode.replace(EMPTY_DATA, '').replace(/0/g, '') !== ''
+}
 
 export const getProviderInfo: Function = async (
   web3Provider,
@@ -96,18 +110,21 @@ export const getProviderInfo: Function = async (
 ): Promise<ProviderProps> => {
   web3 = new Web3(web3Provider)
 
-  const name = providerName
   const account = await getAccountFrom(web3)
   const network = await getNetworkIdFrom(web3)
+  const smartContractWallet = await isSmartContractWallet(web3, account)
+  const hardwareWallet = isHardwareWallet(providerName)
 
   const available = account !== null
 
   return {
-    name,
+    name: providerName,
     available,
     loaded: true,
     account,
     network,
+    smartContractWallet,
+    hardwareWallet,
   }
 }
 

@@ -39,7 +39,7 @@ import { sm } from '~/theme/variables'
 type Props = {
   initialValues: Object,
   onClose: () => void,
-  onNext: any => void,
+  onNext: (any) => void,
   recipientAddress?: string,
   selectedToken: string,
 }
@@ -76,7 +76,7 @@ const SendFunds = ({ initialValues, onClose, onNext, recipientAddress, selectedT
     }
   }, [selectedEntry, pristine])
 
-  const handleSubmit = values => {
+  const handleSubmit = (values) => {
     const submitValues = values
     // If the input wasn't modified, there was no mutation of the recipientAddress
     if (!values.recipientAddress) {
@@ -110,9 +110,9 @@ const SendFunds = ({ initialValues, onClose, onNext, recipientAddress, selectedT
           const formState = args[2]
           const mutators = args[3]
           const { token: tokenAddress } = formState.values
-          const selectedTokenRecord = tokens.find(token => token.address === tokenAddress)
+          const selectedTokenRecord = tokens.find((token) => token.address === tokenAddress)
 
-          const handleScan = value => {
+          const handleScan = (value) => {
             let scannedAddress = value
 
             if (scannedAddress.startsWith('ethereum:')) {
@@ -142,7 +142,7 @@ const SendFunds = ({ initialValues, onClose, onNext, recipientAddress, selectedT
                 </Row>
                 {selectedEntry && selectedEntry.address ? (
                   <div
-                    onKeyDown={e => {
+                    onKeyDown={(e) => {
                       if (e.keyCode !== 9) {
                         setSelectedEntry(null)
                       }

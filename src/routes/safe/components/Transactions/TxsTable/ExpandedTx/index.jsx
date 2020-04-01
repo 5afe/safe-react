@@ -21,7 +21,7 @@ import Paragraph from '~/components/layout/Paragraph'
 import Row from '~/components/layout/Row'
 import Span from '~/components/layout/Span'
 import IncomingTxDescription from '~/routes/safe/components/Transactions/TxsTable/ExpandedTx/IncomingTxDescription'
-import { INCOMING_TX_TYPE } from '~/routes/safe/store/models/incomingTransaction'
+import { INCOMING_TX_TYPES } from '~/routes/safe/store/models/incomingTransaction'
 import { type Owner } from '~/routes/safe/store/models/owner'
 import { type Transaction } from '~/routes/safe/store/models/transaction'
 
@@ -58,8 +58,8 @@ const ExpandedTx = ({
   const [openModal, setOpenModal] = useState<OpenModal>(null)
   const openApproveModal = () => setOpenModal('approveTx')
   const closeModal = () => setOpenModal(null)
-  const thresholdReached = tx.type !== INCOMING_TX_TYPE && threshold <= tx.confirmations.size
-  const canExecute = tx.type !== INCOMING_TX_TYPE && nonce === tx.nonce
+  const thresholdReached = !INCOMING_TX_TYPES.includes(tx.type) && threshold <= tx.confirmations.size
+  const canExecute = !INCOMING_TX_TYPES.includes(tx.type) && nonce === tx.nonce
   const cancelThresholdReached = !!cancelTx && threshold <= cancelTx.confirmations.size
   const canExecuteCancel = nonce === tx.nonce
 
@@ -76,7 +76,9 @@ const ExpandedTx = ({
       <Block className={classes.expandedTxBlock}>
         <Row>
           <Col layout="column" xs={6}>
-            <Block className={cn(classes.txDataContainer, tx.type === INCOMING_TX_TYPE && classes.incomingTxBlock)}>
+            <Block
+              className={cn(classes.txDataContainer, INCOMING_TX_TYPES.includes(tx.type) && classes.incomingTxBlock)}
+            >
               <Block align="left" className={classes.txData}>
                 <Bold className={classes.txHash}>Hash:</Bold>
                 {tx.executionTxHash ? <EtherScanLink cut={8} type="tx" value={tx.executionTxHash} /> : 'n/a'}
@@ -89,7 +91,7 @@ const ExpandedTx = ({
                 <Bold>Fee: </Bold>
                 {tx.fee ? tx.fee : 'n/a'}
               </Paragraph>
-              {tx.type === INCOMING_TX_TYPE ? (
+              {INCOMING_TX_TYPES.includes(tx.type) ? (
                 <>
                   <Paragraph noMargin>
                     <Bold>Created: </Bold>
@@ -128,9 +130,9 @@ const ExpandedTx = ({
               )}
             </Block>
             <Hairline />
-            {tx.type === INCOMING_TX_TYPE ? <IncomingTxDescription tx={tx} /> : <TxDescription tx={tx} />}
+            {INCOMING_TX_TYPES.includes(tx.type) ? <IncomingTxDescription tx={tx} /> : <TxDescription tx={tx} />}
           </Col>
-          {tx.type !== INCOMING_TX_TYPE && (
+          {!INCOMING_TX_TYPES.includes(tx.type) && (
             <OwnersColumn
               cancelThresholdReached={cancelThresholdReached}
               cancelTx={cancelTx}

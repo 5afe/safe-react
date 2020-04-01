@@ -49,4 +49,4 @@ export const isUserOwner = (safe: Safe, userAccount: string): boolean => {
 }
 
 export const isUserOwnerOnAnySafe = (safes: List<Safe>, userAccount: string): boolean =>
-  safes.some(safe => isUserOwner(safe, userAccount))
+  safes.some((safe) => isUserOwner(safe, userAccount))

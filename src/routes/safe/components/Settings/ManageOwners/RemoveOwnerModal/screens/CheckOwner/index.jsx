@@ -28,7 +28,7 @@ type Props = {
 }
 
 const CheckOwner = ({ classes, onClose, onSubmit, ownerAddress, ownerName }: Props) => {
-  const handleSubmit = values => {
+  const handleSubmit = (values) => {
     onSubmit(values)
   }
 

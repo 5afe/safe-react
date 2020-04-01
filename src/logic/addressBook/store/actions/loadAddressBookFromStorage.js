@@ -19,7 +19,7 @@ const loadAddressBookFromStorage = () => async (dispatch: ReduxDispatch<GlobalSt
     // Fetch all the current safes, in case that we don't have a safe on the adbk, we add it
     const safes = safesListSelector(state)
     const adbkEntries = addressBook.keySeq().toArray()
-    safes.forEach(safe => {
+    safes.forEach((safe) => {
       const { address } = safe
       const found = adbkEntries.includes(address)
       if (!found) {

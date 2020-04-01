@@ -22,7 +22,7 @@ export const safeNeedsUpdate = (currentVersion: string, latestVersion: string) =
   return latest ? semverLessThan(current, latest) : false
 }
 
-export const getCurrentSafeVersion = gnosisSafeInstance => gnosisSafeInstance.VERSION()
+export const getCurrentSafeVersion = (gnosisSafeInstance) => gnosisSafeInstance.VERSION()
 
 export const enabledFeatures = (version: string) =>
   FEATURES.reduce((acc, feature) => {
@@ -57,7 +57,7 @@ export const getCurrentMasterContractLastVersion = async () => {
   return safeMasterVersion
 }
 
-export const getSafeVersion = async (safeAddress: string) => {
+export const getSafeVersionInfo = async (safeAddress: string) => {
   try {
     const safeMaster = await getGnosisSafeInstanceAt(safeAddress)
     const lastSafeVersion = await getCurrentMasterContractLastVersion()

@@ -77,17 +77,17 @@ const SendModal = ({ activeScreenType, isOpen, onClose, recipientAddress, select
 
   const scalableModalSize = activeScreen === 'chooseTxType'
 
-  const handleTxCreation = txInfo => {
+  const handleTxCreation = (txInfo) => {
     setActiveScreen('reviewTx')
     setTx(txInfo)
   }
 
-  const handleCustomTxCreation = customTxInfo => {
+  const handleCustomTxCreation = (customTxInfo) => {
     setActiveScreen('reviewCustomTx')
     setTx(customTxInfo)
   }
 
-  const handleSendCollectible = txInfo => {
+  const handleSendCollectible = (txInfo) => {
     setActiveScreen('reviewCollectible')
     setTx(txInfo)
   }

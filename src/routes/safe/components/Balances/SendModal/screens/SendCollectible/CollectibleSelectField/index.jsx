@@ -67,10 +67,10 @@ const CollectibleSelectField = ({ initialValue, tokens }: SelectFieldProps) => {
       disabled={!tokens.length}
       initialValue={initialValue}
       name="nftTokenId"
-      renderValue={nftTokenId => <SelectedCollectible tokenId={nftTokenId} tokens={tokens} />}
+      renderValue={(nftTokenId) => <SelectedCollectible tokenId={nftTokenId} tokens={tokens} />}
       validate={required}
     >
-      {tokens.map(token => (
+      {tokens.map((token) => (
         <MenuItem key={`${token.assetAddress}-${token.tokenId}`} value={token.tokenId}>
           <ListItemIcon className={classes.tokenImage}>
             <Img alt={token.name} height={28} onError={setImageToPlaceholder} src={token.image} />

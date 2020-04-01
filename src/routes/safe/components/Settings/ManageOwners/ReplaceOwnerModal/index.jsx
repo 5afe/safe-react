@@ -3,11 +3,13 @@ import { withStyles } from '@material-ui/core/styles'
 import { List } from 'immutable'
 import { withSnackbar } from 'notistack'
 import React, { useEffect, useState } from 'react'
+import { useDispatch } from 'react-redux'
 
 import OwnerForm from './screens/OwnerForm'
 import ReviewReplaceOwner from './screens/Review'
 
 import Modal from '~/components/Modal'
+import { addOrUpdateAddressBookEntry } from '~/logic/addressBook/store/actions/addOrUpdateAddressBookEntry'
 import { SENTINEL_ADDRESS, getGnosisSafeInstanceAt } from '~/logic/contracts/safeContracts'
 import { TX_NOTIFICATION_TYPES } from '~/logic/safe/transactions'
 import { type Owner } from '~/routes/safe/store/models/owner'
@@ -52,7 +54,9 @@ export const sendReplaceOwner = async (
 ) => {
   const gnosisSafe = await getGnosisSafeInstanceAt(safeAddress)
   const safeOwners = await gnosisSafe.getOwners()
-  const index = safeOwners.findIndex(ownerAddress => ownerAddress.toLowerCase() === ownerAddressToRemove.toLowerCase())
+  const index = safeOwners.findIndex(
+    (ownerAddress) => ownerAddress.toLowerCase() === ownerAddressToRemove.toLowerCase(),
+  )
   const prevAddress = index === 0 ? SENTINEL_ADDRESS : safeOwners[index - 1]
   const txData = gnosisSafe.contract.methods
     .swapOwner(prevAddress, ownerAddressToRemove, values.ownerAddress)
@@ -94,6 +98,7 @@ const ReplaceOwner = ({
   safeName,
   threshold,
 }: Props) => {
+  const dispatch = useDispatch()
   const [activeScreen, setActiveScreen] = useState<ActiveScreen>('checkOwner')
   const [values, setValues] = useState<Object>({})
 
@@ -114,10 +119,11 @@ const ReplaceOwner = ({
     setActiveScreen('reviewReplaceOwner')
   }
 
-  const onReplaceOwner = () => {
+  const onReplaceOwner = async () => {
     onClose()
+
     try {
-      sendReplaceOwner(
+      await sendReplaceOwner(
         values,
         safeAddress,
         ownerAddress,
@@ -126,6 +132,13 @@ const ReplaceOwner = ({
         createTransaction,
         replaceSafeOwner,
         safe,
+      )
+
+      dispatch(
+        // Needs the `address` field because we need to provide the minimum required values to ADD a new entry
+        // The reducer will update all the addressBooks stored, so we cannot decide what to do beforehand,
+        // thus, we pass the minimum required fields (name and address)
+        addOrUpdateAddressBookEntry(values.ownerAddress, { name: values.ownerName, address: values.ownerAddress }),
       )
     } catch (error) {
       console.error('Error while removing an owner', error)
