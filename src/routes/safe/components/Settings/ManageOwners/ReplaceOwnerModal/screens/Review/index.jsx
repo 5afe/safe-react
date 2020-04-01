@@ -3,7 +3,6 @@ import IconButton from '@material-ui/core/IconButton'
 import { withStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
 import classNames from 'classnames'
-import { List } from 'immutable'
 import React, { useEffect, useState } from 'react'
 
 import { styles } from './style'
@@ -21,22 +20,19 @@ import { SENTINEL_ADDRESS, getGnosisSafeInstanceAt } from '~/logic/contracts/saf
 import { estimateTxGasCosts } from '~/logic/safe/transactions/gasNew'
 import { formatAmount } from '~/logic/tokens/utils/formatAmount'
 import { getWeb3 } from '~/logic/wallets/getWeb3'
-import type { Owner } from '~/routes/safe/store/models/owner'
+import type { Safe } from '~/routes/safe/store/models/safe'
 
 export const REPLACE_OWNER_SUBMIT_BTN_TEST_ID = 'replace-owner-submit-btn'
 
 type Props = {
   onClose: () => void,
   classes: Object,
-  safeName: string,
-  owners: List<Owner>,
   values: Object,
   ownerAddress: string,
   ownerName: string,
   onClickBack: Function,
   onSubmit: Function,
-  threshold: string,
-  safeAddress: string,
+  safe: Safe,
 }
 
 const ReviewRemoveOwner = ({
@@ -46,13 +42,13 @@ const ReviewRemoveOwner = ({
   onSubmit,
   ownerAddress,
   ownerName,
-  owners,
-  safeAddress,
-  safeName,
-  threshold,
+  safe,
   values,
 }: Props) => {
   const [gasCosts, setGasCosts] = useState<string>('< 0.001')
+  const safeAddress = safe.address
+  const safeName = safe.name
+  const { owners, threshold } = safe
 
   useEffect(() => {
     let isCurrent = true

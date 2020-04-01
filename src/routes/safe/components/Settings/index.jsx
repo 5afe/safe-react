@@ -7,7 +7,7 @@ import * as React from 'react'
 import { connect } from 'react-redux'
 
 import ManageOwners from './ManageOwners'
-import RemoveSafeModal from './RemoveSafeModal'
+import { RemoveSafeModal } from './RemoveSafeModal'
 import SafeDetails from './SafeDetails'
 import ThresholdSettings from './ThresholdSettings'
 import actions, { type Actions } from './actions'
@@ -37,24 +37,13 @@ type State = {
 }
 
 type Props = Actions & {
-  addSafeOwner: Function,
   addressBook: AddressBook,
   classes: Object,
-  createTransaction: Function,
   editSafeOwner: Function,
   etherScanLink: string,
   granted: boolean,
-  network: string,
   owners: List<Owner>,
-  removeSafeOwner: Function,
-  replaceSafeOwner: Function,
   safe: Safe,
-  safeAddress: string,
-  safeName: string,
-  threshold: number,
-  updateAddressBookEntry: Function,
-  updateSafe: Function,
-  userAddress: string,
 }
 
 type Action = 'RemoveSafe'
@@ -83,26 +72,7 @@ class Settings extends React.Component<Props, State> {
 
   render() {
     const { menuOptionIndex, showRemoveSafe } = this.state
-    const {
-      addSafeOwner,
-      addressBook,
-      classes,
-      createTransaction,
-      editSafeOwner,
-      etherScanLink,
-      granted,
-      network,
-      owners,
-      removeSafeOwner,
-      replaceSafeOwner,
-      safe,
-      safeAddress,
-      safeName,
-      threshold,
-      updateAddressBookEntry,
-      updateSafe,
-      userAddress,
-    } = this.props
+    const { addressBook, classes, editSafeOwner, etherScanLink, granted, owners, safe } = this.props
 
     return (
       <>
@@ -111,13 +81,7 @@ class Settings extends React.Component<Props, State> {
             <Span className={classes.links}>Remove Safe</Span>
             <Img alt="Trash Icon" className={classes.removeSafeIcon} src={RemoveSafeIcon} />
           </ButtonLink>
-          <RemoveSafeModal
-            etherScanLink={etherScanLink}
-            isOpen={showRemoveSafe}
-            onClose={this.onHide('RemoveSafe')}
-            safeAddress={safeAddress}
-            safeName={safeName}
-          />
+          <RemoveSafeModal etherScanLink={etherScanLink} isOpen={showRemoveSafe} onClose={this.onHide('RemoveSafe')} />
         </Row>
         <Block className={classes.root}>
           <Col className={classes.menuWrapper} layout="column">
@@ -162,44 +126,11 @@ class Settings extends React.Component<Props, State> {
           </Col>
           <Col className={classes.contents} layout="column">
             <Block className={classes.container}>
-              {menuOptionIndex === 1 && (
-                <SafeDetails
-                  createTransaction={createTransaction}
-                  safeAddress={safeAddress}
-                  safeCurrentVersion={safe.currentVersion}
-                  safeName={safeName}
-                  safeNeedsUpdate={safe.needsUpdate}
-                  updateSafe={updateSafe}
-                />
-              )}
+              {menuOptionIndex === 1 && <SafeDetails />}
               {menuOptionIndex === 2 && (
-                <ManageOwners
-                  addressBook={addressBook}
-                  addSafeOwner={addSafeOwner}
-                  createTransaction={createTransaction}
-                  editSafeOwner={editSafeOwner}
-                  granted={granted}
-                  network={network}
-                  owners={owners}
-                  removeSafeOwner={removeSafeOwner}
-                  replaceSafeOwner={replaceSafeOwner}
-                  safe={safe}
-                  safeAddress={safeAddress}
-                  safeName={safeName}
-                  threshold={threshold}
-                  updateAddressBookEntry={updateAddressBookEntry}
-                  userAddress={userAddress}
-                />
+                <ManageOwners addressBook={addressBook} editSafeOwner={editSafeOwner} granted={granted} safe={safe} />
               )}
-              {menuOptionIndex === 3 && (
-                <ThresholdSettings
-                  createTransaction={createTransaction}
-                  granted={granted}
-                  owners={owners}
-                  safeAddress={safeAddress}
-                  threshold={threshold}
-                />
-              )}
+              {menuOptionIndex === 3 && <ThresholdSettings granted={granted} />}
             </Block>
           </Col>
         </Block>

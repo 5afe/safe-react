@@ -2,7 +2,7 @@
 import { makeStyles } from '@material-ui/core/styles'
 import { withSnackbar } from 'notistack'
 import React from 'react'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 
 import { styles } from './style'
 
@@ -21,20 +21,21 @@ import { getNotificationsFromTxType, showSnackbar } from '~/logic/notifications'
 import { TX_NOTIFICATION_TYPES } from '~/logic/safe/transactions'
 import UpdateSafeModal from '~/routes/safe/components/Settings/UpdateSafeModal'
 import { grantedSelector } from '~/routes/safe/container/selector'
-import { latestMasterContractVersionSelector } from '~/routes/safe/store/selectors'
+import updateSafe from '~/routes/safe/store/actions/updateSafe'
+import {
+  latestMasterContractVersionSelector,
+  safeCurrentVersionSelector,
+  safeNameSelector,
+  safeNeedsUpdateSelector,
+  safeParamAddressFromStateSelector,
+} from '~/routes/safe/store/selectors'
 
 export const SAFE_NAME_INPUT_TEST_ID = 'safe-name-input'
 export const SAFE_NAME_SUBMIT_BTN_TEST_ID = 'change-safe-name-btn'
 export const SAFE_NAME_UPDATE_SAFE_BTN_TEST_ID = 'update-safe-name-btn'
 
 type Props = {
-  safeAddress: string,
-  safeCurrentVersion: string,
-  safeName: string,
-  safeNeedsUpdate: boolean,
-  updateSafe: Function,
   enqueueSnackbar: Function,
-  createTransaction: Function,
   closeSnackbar: Function,
 }
 
@@ -44,24 +45,21 @@ const SafeDetails = (props: Props) => {
   const classes = useStyles()
   const isUserOwner = useSelector(grantedSelector)
   const latestMasterContractVersion = useSelector(latestMasterContractVersionSelector)
-  const {
-    closeSnackbar,
-    enqueueSnackbar,
-    safeAddress,
-    safeCurrentVersion,
-    safeName,
-    safeNeedsUpdate,
-    updateSafe,
-  } = props
+  const dispatch = useDispatch()
+  const safeName = useSelector(safeNameSelector)
+  const safeNeedsUpdate = useSelector(safeNeedsUpdateSelector)
+  const safeCurrentVersion = useSelector(safeCurrentVersionSelector)
+  const { closeSnackbar, enqueueSnackbar } = props
 
   const [isModalOpen, setModalOpen] = React.useState(false)
+  const safeAddress = useSelector(safeParamAddressFromStateSelector)
 
   const toggleModal = () => {
     setModalOpen(prevOpen => !prevOpen)
   }
 
   const handleSubmit = values => {
-    updateSafe({ address: safeAddress, name: values.safeName })
+    dispatch(updateSafe({ address: safeAddress, name: values.safeName }))
 
     const notification = getNotificationsFromTxType(TX_NOTIFICATION_TYPES.SAFE_NAME_CHANGE_TX)
     showSnackbar(notification.afterExecution.noMoreConfirmationsNeeded, enqueueSnackbar, closeSnackbar)

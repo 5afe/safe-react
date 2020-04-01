@@ -37,7 +37,6 @@ import Paragraph from '~/components/layout/Paragraph/index'
 import Row from '~/components/layout/Row'
 import type { AddressBook } from '~/logic/addressBook/model/addressBook'
 import { getOwnersWithNameFromAddressBook } from '~/logic/addressBook/utils'
-import type { Owner } from '~/routes/safe/store/models/owner'
 import type { Safe } from '~/routes/safe/store/models/safe'
 
 export const RENAME_OWNER_BTN_TEST_ID = 'rename-owner-btn'
@@ -48,21 +47,9 @@ export const OWNERS_ROW_TEST_ID = 'owners-row'
 
 type Props = {
   classes: Object,
-  safeAddress: string,
-  safeName: string,
-  owners: List<Owner>,
-  network: string,
-  threshold: number,
-  userAddress: string,
-  createTransaction: Function,
-  addSafeOwner: Function,
-  removeSafeOwner: Function,
-  replaceSafeOwner: Function,
-  editSafeOwner: Function,
-  granted: boolean,
   safe: Safe,
   addressBook: AddressBook,
-  updateAddressBookEntry: Function,
+  granted: boolean,
 }
 
 type State = {
@@ -107,24 +94,7 @@ class ManageOwners extends React.Component<Props, State> {
   }
 
   render() {
-    const {
-      addSafeOwner,
-      addressBook,
-      classes,
-      createTransaction,
-      editSafeOwner,
-      granted,
-      network,
-      owners,
-      removeSafeOwner,
-      replaceSafeOwner,
-      safe,
-      safeAddress,
-      safeName,
-      threshold,
-      updateAddressBookEntry,
-      userAddress,
-    } = this.props
+    const { addressBook, classes, granted, safe } = this.props
     const {
       selectedOwnerAddress,
       selectedOwnerName,
@@ -133,7 +103,7 @@ class ManageOwners extends React.Component<Props, State> {
       showRemoveOwner,
       showReplaceOwner,
     } = this.state
-
+    const { owners } = safe
     const columns = generateColumns()
     const autoColumns = columns.filter(c => !c.custom)
     const ownersAdbk = getOwnersWithNameFromAddressBook(addressBook, owners)
@@ -232,55 +202,24 @@ class ManageOwners extends React.Component<Props, State> {
             </Row>
           </>
         )}
-        <AddOwnerModal
-          addSafeOwner={addSafeOwner}
-          createTransaction={createTransaction}
-          isOpen={showAddOwner}
-          onClose={this.onHide('AddOwner')}
-          owners={owners}
-          safeAddress={safeAddress}
-          safeName={safeName}
-          threshold={threshold}
-          userAddress={userAddress}
-        />
+        <AddOwnerModal isOpen={showAddOwner} onClose={this.onHide('AddOwner')} />
         <RemoveOwnerModal
-          createTransaction={createTransaction}
           isOpen={showRemoveOwner}
           onClose={this.onHide('RemoveOwner')}
           ownerAddress={selectedOwnerAddress}
           ownerName={selectedOwnerName}
-          owners={owners}
-          removeSafeOwner={removeSafeOwner}
-          safe={safe}
-          safeAddress={safeAddress}
-          safeName={safeName}
-          threshold={threshold}
-          userAddress={userAddress}
         />
         <ReplaceOwnerModal
-          createTransaction={createTransaction}
           isOpen={showReplaceOwner}
-          network={network}
           onClose={this.onHide('ReplaceOwner')}
           ownerAddress={selectedOwnerAddress}
           ownerName={selectedOwnerName}
-          owners={owners}
-          replaceSafeOwner={replaceSafeOwner}
-          safe={safe}
-          safeAddress={safeAddress}
-          safeName={safeName}
-          threshold={threshold}
-          userAddress={userAddress}
         />
         <EditOwnerModal
-          editSafeOwner={editSafeOwner}
           isOpen={showEditOwner}
           onClose={this.onHide('EditOwner')}
           ownerAddress={selectedOwnerAddress}
-          owners={owners}
-          safeAddress={safeAddress}
           selectedOwnerName={selectedOwnerName}
-          updateAddressBookEntry={updateAddressBookEntry}
         />
       </>
     )

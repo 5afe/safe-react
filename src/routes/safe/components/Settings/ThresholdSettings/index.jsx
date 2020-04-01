@@ -1,8 +1,8 @@
 // @flow
 import { withStyles } from '@material-ui/core/styles'
-import { List } from 'immutable'
 import { withSnackbar } from 'notistack'
 import React, { useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 
 import ChangeThreshold from './ChangeThreshold'
 import { styles } from './style'
@@ -16,30 +16,26 @@ import Paragraph from '~/components/layout/Paragraph'
 import Row from '~/components/layout/Row'
 import { getGnosisSafeInstanceAt } from '~/logic/contracts/safeContracts'
 import { TX_NOTIFICATION_TYPES } from '~/logic/safe/transactions'
-import type { Owner } from '~/routes/safe/store/models/owner'
+import createTransaction from '~/routes/safe/store/actions/createTransaction'
+import {
+  safeOwnersSelector,
+  safeParamAddressFromStateSelector,
+  safeThresholdSelector,
+} from '~/routes/safe/store/selectors'
 
 type Props = {
-  owners: List<Owner>,
-  threshold: number,
   classes: Object,
-  createTransaction: Function,
-  safeAddress: string,
   granted: boolean,
   enqueueSnackbar: Function,
   closeSnackbar: Function,
 }
 
-const ThresholdSettings = ({
-  classes,
-  closeSnackbar,
-  createTransaction,
-  enqueueSnackbar,
-  granted,
-  owners,
-  safeAddress,
-  threshold,
-}: Props) => {
+const ThresholdSettings = ({ classes, closeSnackbar, enqueueSnackbar, granted }: Props) => {
   const [isModalOpen, setModalOpen] = useState(false)
+  const dispatch = useDispatch()
+  const threshold = useSelector(safeThresholdSelector)
+  const safeAddress = useSelector(safeParamAddressFromStateSelector)
+  const owners = useSelector(safeOwnersSelector)
 
   const toggleModal = () => {
     setModalOpen(prevOpen => !prevOpen)
@@ -49,15 +45,17 @@ const ThresholdSettings = ({
     const safeInstance = await getGnosisSafeInstanceAt(safeAddress)
     const txData = safeInstance.contract.methods.changeThreshold(newThreshold).encodeABI()
 
-    createTransaction({
-      safeAddress,
-      to: safeAddress,
-      valueInWei: 0,
-      txData,
-      notifiedTransaction: TX_NOTIFICATION_TYPES.SETTINGS_CHANGE_TX,
-      enqueueSnackbar,
-      closeSnackbar,
-    })
+    dispatch(
+      createTransaction({
+        safeAddress,
+        to: safeAddress,
+        valueInWei: 0,
+        txData,
+        notifiedTransaction: TX_NOTIFICATION_TYPES.SETTINGS_CHANGE_TX,
+        enqueueSnackbar,
+        closeSnackbar,
+      }),
+    )
   }
 
   return (

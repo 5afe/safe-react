@@ -3,8 +3,8 @@ import IconButton from '@material-ui/core/IconButton'
 import { withStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
 import classNames from 'classnames'
-import { List } from 'immutable'
 import React, { useEffect, useState } from 'react'
+import { useSelector } from 'react-redux'
 
 import { styles } from './style'
 
@@ -21,36 +21,25 @@ import { SENTINEL_ADDRESS, getGnosisSafeInstanceAt } from '~/logic/contracts/saf
 import { estimateTxGasCosts } from '~/logic/safe/transactions/gasNew'
 import { formatAmount } from '~/logic/tokens/utils/formatAmount'
 import { getWeb3 } from '~/logic/wallets/getWeb3'
-import type { Owner } from '~/routes/safe/store/models/owner'
+import { safeNameSelector, safeOwnersSelector, safeParamAddressFromStateSelector } from '~/routes/safe/store/selectors'
 
 export const REMOVE_OWNER_REVIEW_BTN_TEST_ID = 'remove-owner-review-btn'
 
 type Props = {
   onClose: () => void,
   classes: Object,
-  safeName: string,
-  owners: List<Owner>,
   values: Object,
   ownerAddress: string,
   ownerName: string,
   onClickBack: Function,
   onSubmit: Function,
-  safeAddress: string,
 }
 
-const ReviewRemoveOwner = ({
-  classes,
-  onClickBack,
-  onClose,
-  onSubmit,
-  ownerAddress,
-  ownerName,
-  owners,
-  safeAddress,
-  safeName,
-  values,
-}: Props) => {
+const ReviewRemoveOwner = ({ classes, onClickBack, onClose, onSubmit, ownerAddress, ownerName, values }: Props) => {
   const [gasCosts, setGasCosts] = useState<string>('< 0.001')
+  const safeAddress = useSelector(safeParamAddressFromStateSelector)
+  const safeName = useSelector(safeNameSelector)
+  const owners = useSelector(safeOwnersSelector)
 
   useEffect(() => {
     let isCurrent = true

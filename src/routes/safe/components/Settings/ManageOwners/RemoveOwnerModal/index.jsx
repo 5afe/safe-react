@@ -3,6 +3,7 @@ import { withStyles } from '@material-ui/core/styles'
 import { List } from 'immutable'
 import { withSnackbar } from 'notistack'
 import React, { useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 
 import CheckOwner from './screens/CheckOwner'
 import ReviewRemoveOwner from './screens/Review'
@@ -11,8 +12,14 @@ import ThresholdForm from './screens/ThresholdForm'
 import Modal from '~/components/Modal'
 import { SENTINEL_ADDRESS, getGnosisSafeInstanceAt } from '~/logic/contracts/safeContracts'
 import { TX_NOTIFICATION_TYPES } from '~/logic/safe/transactions'
+import createTransaction from '~/routes/safe/store/actions/createTransaction'
+import removeSafeOwner from '~/routes/safe/store/actions/removeSafeOwner'
 import { type Owner } from '~/routes/safe/store/models/owner'
-import type { Safe } from '~/routes/safe/store/models/safe'
+import {
+  safeOwnersSelector,
+  safeParamAddressFromStateSelector,
+  safeThresholdSelector,
+} from '~/routes/safe/store/selectors'
 
 const styles = () => ({
   biggerModalWindow: {
@@ -27,17 +34,10 @@ type Props = {
   onClose: () => void,
   classes: Object,
   isOpen: boolean,
-  safeAddress: string,
-  safeName: string,
   ownerAddress: string,
   ownerName: string,
-  owners: List<Owner>,
-  threshold: number,
-  createTransaction: Function,
-  removeSafeOwner: Function,
   enqueueSnackbar: Function,
   closeSnackbar: Function,
-  safe: Safe,
 }
 
 type ActiveScreen = 'checkOwner' | 'selectThreshold' | 'reviewRemoveOwner'
@@ -50,9 +50,8 @@ export const sendRemoveOwner = async (
   ownersOld: List<Owner>,
   enqueueSnackbar: Function,
   closeSnackbar: Function,
-  createTransaction: Function,
-  removeSafeOwner: Function,
-  safe: Safe,
+  threshold: string,
+  dispatch: Function,
 ) => {
   const gnosisSafe = await getGnosisSafeInstanceAt(safeAddress)
   const safeOwners = await gnosisSafe.getOwners()
@@ -62,39 +61,30 @@ export const sendRemoveOwner = async (
     .removeOwner(prevAddress, ownerAddressToRemove, values.threshold)
     .encodeABI()
 
-  const txHash = await createTransaction({
-    safeAddress,
-    to: safeAddress,
-    valueInWei: 0,
-    txData,
-    notifiedTransaction: TX_NOTIFICATION_TYPES.SETTINGS_CHANGE_TX,
-    enqueueSnackbar,
-    closeSnackbar,
-  })
+  const txHash = await dispatch(
+    createTransaction({
+      safeAddress,
+      to: safeAddress,
+      valueInWei: 0,
+      txData,
+      notifiedTransaction: TX_NOTIFICATION_TYPES.SETTINGS_CHANGE_TX,
+      enqueueSnackbar,
+      closeSnackbar,
+    }),
+  )
 
-  if (txHash && safe.threshold === 1) {
-    removeSafeOwner({ safeAddress, ownerAddress: ownerAddressToRemove })
+  if (txHash && threshold === 1) {
+    dispatch(removeSafeOwner({ safeAddress, ownerAddress: ownerAddressToRemove }))
   }
 }
 
-const RemoveOwner = ({
-  classes,
-  closeSnackbar,
-  createTransaction,
-  enqueueSnackbar,
-  isOpen,
-  onClose,
-  ownerAddress,
-  ownerName,
-  owners,
-  removeSafeOwner,
-  safe,
-  safeAddress,
-  safeName,
-  threshold,
-}: Props) => {
+const RemoveOwner = ({ classes, closeSnackbar, enqueueSnackbar, isOpen, onClose, ownerAddress, ownerName }: Props) => {
   const [activeScreen, setActiveScreen] = useState<ActiveScreen>('checkOwner')
   const [values, setValues] = useState<Object>({})
+  const dispatch = useDispatch()
+  const owners = useSelector(safeOwnersSelector)
+  const safeAddress = useSelector(safeParamAddressFromStateSelector)
+  const threshold = useSelector(safeThresholdSelector)
 
   useEffect(
     () => () => {
@@ -132,9 +122,8 @@ const RemoveOwner = ({
       owners,
       enqueueSnackbar,
       closeSnackbar,
-      createTransaction,
-      removeSafeOwner,
-      safe,
+      threshold,
+      dispatch,
     )
   }
 
@@ -151,13 +140,7 @@ const RemoveOwner = ({
           <CheckOwner onClose={onClose} onSubmit={ownerSubmitted} ownerAddress={ownerAddress} ownerName={ownerName} />
         )}
         {activeScreen === 'selectThreshold' && (
-          <ThresholdForm
-            onClickBack={onClickBack}
-            onClose={onClose}
-            onSubmit={thresholdSubmitted}
-            owners={owners}
-            threshold={threshold}
-          />
+          <ThresholdForm onClickBack={onClickBack} onClose={onClose} onSubmit={thresholdSubmitted} />
         )}
         {activeScreen === 'reviewRemoveOwner' && (
           <ReviewRemoveOwner
@@ -166,9 +149,6 @@ const RemoveOwner = ({
             onSubmit={onRemoveOwner}
             ownerAddress={ownerAddress}
             ownerName={ownerName}
-            owners={owners}
-            safeAddress={safeAddress}
-            safeName={safeName}
             values={values}
           />
         )}

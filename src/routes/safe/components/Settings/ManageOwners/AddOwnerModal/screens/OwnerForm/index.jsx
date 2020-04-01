@@ -2,8 +2,8 @@
 import IconButton from '@material-ui/core/IconButton'
 import { withStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
-import { List } from 'immutable'
 import React from 'react'
+import { useSelector } from 'react-redux'
 
 import { styles } from './style'
 
@@ -18,7 +18,7 @@ import Col from '~/components/layout/Col'
 import Hairline from '~/components/layout/Hairline'
 import Paragraph from '~/components/layout/Paragraph'
 import Row from '~/components/layout/Row'
-import { type Owner } from '~/routes/safe/store/models/owner'
+import { safeOwnersSelector } from '~/routes/safe/store/selectors'
 
 export const ADD_OWNER_NAME_INPUT_TEST_ID = 'add-owner-name-input'
 export const ADD_OWNER_ADDRESS_INPUT_TEST_ID = 'add-owner-address-testid'
@@ -34,13 +34,13 @@ type Props = {
   onClose: () => void,
   classes: Object,
   onSubmit: Function,
-  owners: List<Owner>,
 }
 
-const OwnerForm = ({ classes, onClose, onSubmit, owners }: Props) => {
+const OwnerForm = ({ classes, onClose, onSubmit }: Props) => {
   const handleSubmit = values => {
     onSubmit(values)
   }
+  const owners = useSelector(safeOwnersSelector)
   const ownerDoesntExist = uniqueAddress(owners.map(o => o.address))
 
   return (

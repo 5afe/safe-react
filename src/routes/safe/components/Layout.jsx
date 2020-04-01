@@ -62,7 +62,6 @@ type Props = SelectorProps &
     location: Object,
     history: Object,
     fetchCurrencyValues: Function,
-    updateAddressBookEntry: Function,
   }
 
 const Layout = (props: Props) => {
@@ -82,9 +81,6 @@ const Layout = (props: Props) => {
     sendFunds,
     showReceive,
     showSendFunds,
-    updateAddressBookEntry,
-    updateSafe,
-    userAddress,
   } = props
 
   const [modal, setModal] = useState({
@@ -308,18 +304,10 @@ const Layout = (props: Props) => {
           render={() => (
             <Settings
               addressBook={addressBook}
-              createTransaction={createTransaction}
               etherScanLink={etherScanLink}
               granted={granted}
-              network={network}
               owners={safe.owners}
               safe={safe}
-              safeAddress={address}
-              safeName={name}
-              threshold={safe.threshold}
-              updateAddressBookEntry={updateAddressBookEntry}
-              updateSafe={updateSafe}
-              userAddress={userAddress}
             />
           )}
         />
