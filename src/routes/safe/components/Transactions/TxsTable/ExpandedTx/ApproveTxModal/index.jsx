@@ -6,6 +6,7 @@ import { withStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
 import { withSnackbar } from 'notistack'
 import React, { useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 
 import { styles } from './style'
 
@@ -20,7 +21,10 @@ import { TX_NOTIFICATION_TYPES } from '~/logic/safe/transactions'
 import { estimateTxGasCosts } from '~/logic/safe/transactions/gasNew'
 import { formatAmount } from '~/logic/tokens/utils/formatAmount'
 import { getWeb3 } from '~/logic/wallets/getWeb3'
+import { userAccountSelector } from '~/logic/wallets/store/selectors'
+import processTransaction from '~/routes/safe/store/actions/processTransaction'
 import { type Transaction } from '~/routes/safe/store/models/transaction'
+import { safeParamAddressFromStateSelector, safeThresholdSelector } from '~/routes/safe/store/selectors'
 
 export const APPROVE_TX_MODAL_SUBMIT_BTN_TEST_ID = 'approve-tx-modal-submit-btn'
 export const REJECT_TX_MODAL_SUBMIT_BTN_TEST_ID = 'reject-tx-modal-submit-btn'
@@ -30,13 +34,8 @@ type Props = {
   classes: Object,
   isOpen: boolean,
   isCancelTx?: boolean,
-  processTransaction: Function,
   tx: Transaction,
-  nonce: string,
-  safeAddress: string,
-  threshold: number,
   thresholdReached: boolean,
-  userAddress: string,
   canExecute: boolean,
   enqueueSnackbar: Function,
   closeSnackbar: Function,
@@ -73,13 +72,13 @@ const ApproveTxModal = ({
   isCancelTx,
   isOpen,
   onClose,
-  processTransaction,
-  safeAddress,
-  threshold,
   thresholdReached,
   tx,
-  userAddress,
 }: Props) => {
+  const dispatch = useDispatch()
+  const userAddress = useSelector(userAccountSelector)
+  const threshold = useSelector(safeThresholdSelector)
+  const address = useSelector(safeParamAddressFromStateSelector)
   const [approveAndExecute, setApproveAndExecute] = useState<boolean>(canExecute)
   const [gasCosts, setGasCosts] = useState<string>('< 0.001')
   const { description, title } = getModalTitleAndDescription(thresholdReached, isCancelTx)
@@ -94,7 +93,7 @@ const ApproveTxModal = ({
       const { fromWei, toBN } = web3.utils
 
       const estimatedGasCosts = await estimateTxGasCosts(
-        safeAddress,
+        address,
         tx.recipient,
         tx.data,
         tx,
@@ -117,15 +116,17 @@ const ApproveTxModal = ({
   const handleExecuteCheckbox = () => setApproveAndExecute(prevApproveAndExecute => !prevApproveAndExecute)
 
   const approveTx = () => {
-    processTransaction({
-      safeAddress,
-      tx,
-      userAddress,
-      notifiedTransaction: TX_NOTIFICATION_TYPES.CONFIRMATION_TX,
-      enqueueSnackbar,
-      closeSnackbar,
-      approveAndExecute: canExecute && approveAndExecute && isTheTxReadyToBeExecuted,
-    })
+    dispatch(
+      processTransaction({
+        address,
+        tx,
+        userAddress,
+        notifiedTransaction: TX_NOTIFICATION_TYPES.CONFIRMATION_TX,
+        enqueueSnackbar,
+        closeSnackbar,
+        approveAndExecute: canExecute && approveAndExecute && isTheTxReadyToBeExecuted,
+      }),
+    )
     onClose()
   }
 

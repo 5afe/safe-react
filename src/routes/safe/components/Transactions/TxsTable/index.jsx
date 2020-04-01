@@ -8,8 +8,8 @@ import { withStyles } from '@material-ui/core/styles'
 import ExpandLess from '@material-ui/icons/ExpandLess'
 import ExpandMore from '@material-ui/icons/ExpandMore'
 import cn from 'classnames'
-import { List } from 'immutable'
 import React, { useState } from 'react'
+import { useSelector } from 'react-redux'
 
 import ExpandedTxComponent from './ExpandedTx'
 import Status from './Status'
@@ -27,9 +27,8 @@ import Table from '~/components/Table'
 import { type Column, cellWidth } from '~/components/Table/TableHead'
 import Block from '~/components/layout/Block'
 import Row from '~/components/layout/Row'
-import type { IncomingTransaction } from '~/routes/safe/store/models/incomingTransaction'
-import { type Owner } from '~/routes/safe/store/models/owner'
-import { type Transaction } from '~/routes/safe/store/models/transaction'
+import { extendedTransactionsSelector } from '~/routes/safe/container/selector'
+import { safeCancellationTransactionsSelector } from '~/routes/safe/store/selectors'
 
 export const TRANSACTION_ROW_TEST_ID = 'transaction-row'
 
@@ -40,32 +39,12 @@ const expandCellStyle = {
 
 type Props = {
   classes: Object,
-  transactions: List<Transaction | IncomingTransaction>,
-  cancellationTransactions: List<Transaction>,
-  threshold: number,
-  owners: List<Owner>,
-  userAddress: string,
-  granted: boolean,
-  safeAddress: string,
-  nonce: number,
-  createTransaction: Function,
-  processTransaction: Function,
 }
 
-const TxsTable = ({
-  cancellationTransactions,
-  classes,
-  createTransaction,
-  granted,
-  nonce,
-  owners,
-  processTransaction,
-  safeAddress,
-  threshold,
-  transactions,
-  userAddress,
-}: Props) => {
+const TxsTable = ({ classes }: Props) => {
   const [expandedTx, setExpandedTx] = useState<string | null>(null)
+  const cancellationTransactions = useSelector(safeCancellationTransactionsSelector)
+  const transactions = useSelector(extendedTransactionsSelector)
 
   const handleTxExpand = safeTxHash => {
     setExpandedTx(prevTx => (prevTx === safeTxHash ? null : safeTxHash))
@@ -156,18 +135,10 @@ const TxsTable = ({
                       <Collapse
                         cancelTx={row[TX_TABLE_RAW_CANCEL_TX_ID]}
                         component={ExpandedTxComponent}
-                        createTransaction={createTransaction}
-                        granted={granted}
                         in={expandedTx === row.tx.safeTxHash}
-                        nonce={nonce}
-                        owners={owners}
-                        processTransaction={processTransaction}
-                        safeAddress={safeAddress}
-                        threshold={threshold}
                         timeout="auto"
                         tx={row[TX_TABLE_RAW_TX_ID]}
                         unmountOnExit
-                        userAddress={userAddress}
                       />
                     </TableCell>
                   </TableRow>

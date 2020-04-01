@@ -14,7 +14,6 @@ import { type Actions } from '../container/actions'
 import Balances from './Balances'
 import Receive from './Balances/Receive'
 import Settings from './Settings'
-import Transactions from './Transactions'
 import { AddressBookIcon } from './assets/AddressBookIcon'
 import { AppsIcon } from './assets/AppsIcon'
 import { BalancesIcon } from './assets/BalancesIcon'
@@ -37,6 +36,7 @@ import Row from '~/components/layout/Row'
 import { getEtherScanLink, getWeb3 } from '~/logic/wallets/getWeb3'
 import AddressBookTable from '~/routes/safe/components/AddressBook'
 import SendModal from '~/routes/safe/components/Balances/SendModal'
+import TxsTable from '~/routes/safe/components/Transactions/TxsTable'
 import { type SelectorProps } from '~/routes/safe/container/selector'
 import { border } from '~/theme/variables'
 
@@ -68,7 +68,6 @@ type Props = SelectorProps &
 const Layout = (props: Props) => {
   const {
     addressBook,
-    cancellationTransactions,
     classes,
     createTransaction,
     granted,
@@ -78,13 +77,11 @@ const Layout = (props: Props) => {
     network,
     onHide,
     onShow,
-    processTransaction,
     provider,
     safe,
     sendFunds,
     showReceive,
     showSendFunds,
-    transactions,
     updateAddressBookEntry,
     updateSafe,
     userAddress,
@@ -301,25 +298,7 @@ const Layout = (props: Props) => {
       <Hairline color={border} style={{ marginTop: '-2px' }} />
       <Switch>
         <Route exact path={`${match.path}/balances/:assetType?`} render={() => <Balances />} />
-        <Route
-          exact
-          path={`${match.path}/transactions`}
-          render={() => (
-            <Transactions
-              cancellationTransactions={cancellationTransactions}
-              createTransaction={createTransaction}
-              currentNetwork={network}
-              granted={granted}
-              nonce={safe.nonce}
-              owners={safe.owners}
-              processTransaction={processTransaction}
-              safeAddress={address}
-              threshold={safe.threshold}
-              transactions={transactions}
-              userAddress={userAddress}
-            />
-          )}
-        />
+        <Route exact path={`${match.path}/transactions`} render={() => <TxsTable />} />
         {process.env.REACT_APP_ENV !== 'production' && (
           <Route exact path={`${match.path}/apps`} render={renderAppsTab} />
         )}
