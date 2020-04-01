@@ -7,7 +7,7 @@ import OutgoingTxIcon from './assets/outgoing.svg'
 import SettingsTxIcon from './assets/settings.svg'
 
 import { IconText } from '~/components-v2'
-import { getAppInfo } from '~/routes/safe/components/Apps/appsList'
+import { getAppInfo } from '~/routes/safe/components/Apps/staticAppsList'
 import { type TransactionType } from '~/routes/safe/store/models/transaction'
 
 const typeToIcon = {

@@ -1,11 +1,14 @@
 // @flow
+import axios from 'axios'
 import { withSnackbar } from 'notistack'
 import React, { useCallback, useEffect, useState } from 'react'
 import styled from 'styled-components'
 
-import appsList from './appsList'
+import appsIconSvg from '../Transactions/TxsTable/TxType/assets/appsIcon.svg'
+
 import confirmTransactions from './confirmTransactions'
 import sendTransactions from './sendTransactions'
+import { staticAppsList } from './staticAppsList'
 
 import { ListContentLayout as LCL, Loader } from '~/components-v2'
 import ButtonLink from '~/components/layout/ButtonLink'
@@ -13,7 +16,7 @@ import ButtonLink from '~/components/layout/ButtonLink'
 const StyledIframe = styled.iframe`
   width: 100%;
   height: 100%;
-  display: ${(props) => (props.shouldDisplay ? 'block' : 'none')};
+  display: ${props => (props.shouldDisplay ? 'block' : 'none')};
 `
 const operations = {
   SEND_TRANSACTIONS: 'sendTransactions',
@@ -47,17 +50,19 @@ function Apps({
   safeName,
   web3,
 }: Props) {
-  const [selectedApp, setSelectedApp] = useState('1')
+  const [appsList, setAppsList] = useState([])
+  const [selectedApp, setSelectedApp] = useState()
+  const [loading, setLoading] = useState(true)
   const [appIsLoading, setAppIsLoading] = useState(true)
   const [iframeEl, setframeEl] = useState(null)
 
-  const getSelectedApp = () => appsList.find((e) => e.id === selectedApp)
+  const getSelectedApp = () => appsList.find(e => e.id === selectedApp)
 
   const sendMessageToIframe = (messageId, data) => {
     iframeEl.contentWindow.postMessage({ messageId, data }, getSelectedApp().url)
   }
 
-  const handleIframeMessage = async (data) => {
+  const handleIframeMessage = async data => {
     if (!data || !data.messageId) {
       console.warn('iframe: message without messageId')
       return
@@ -109,12 +114,13 @@ function Apps({
     }
   }
 
-  const iframeRef = useCallback((node) => {
+  const iframeRef = useCallback(node => {
     if (node !== null) {
       setframeEl(node)
     }
   }, [])
 
+  // handle messages from iframe
   useEffect(() => {
     const onIframeMessage = async ({ data, origin }) => {
       if (origin === window.origin) {
@@ -135,6 +141,44 @@ function Apps({
     }
   }, [])
 
+  // Load apps list
+  useEffect(() => {
+    const loadApps = async () => {
+      const list = [...staticAppsList]
+      const apps = []
+      for (let index = 0; index < list.length; index++) {
+        try {
+          const appUrl = list[index]
+          const appInfo = await axios.get(`${appUrl}/manifest.json`)
+          const app = { id: appUrl, url: appUrl, ...appInfo.data, iconUrl: appsIconSvg }
+
+          if (appInfo.data.iconPath) {
+            try {
+              const iconInfo = await axios.get(`${appUrl}/${appInfo.data.iconPath}`)
+              if (/image\/\w/gm.test(iconInfo.headers['content-type'])) {
+                app.iconUrl = `${appUrl}/${appInfo.data.iconPath}`
+              }
+            } catch (error) {
+              console.error(error)
+            }
+          }
+
+          apps.push(app)
+        } catch (error) {
+          console.error(error)
+        }
+      }
+
+      setAppsList([...apps])
+      setLoading(false)
+    }
+
+    if (!appsList.length) {
+      loadApps()
+    }
+  }, [appsList])
+
+  // on iframe change
   useEffect(() => {
     const onIframeLoaded = () => {
       setAppIsLoading(false)
@@ -156,7 +200,7 @@ function Apps({
     }
   }, [iframeEl])
 
-  const onSelectApp = (appId) => {
+  const onSelectApp = appId => {
     setAppIsLoading(true)
     setSelectedApp(appId)
   }
@@ -175,10 +219,14 @@ function Apps({
           ref={iframeRef}
           shouldDisplay={!appIsLoading}
           src={getSelectedApp().url}
-          title="app"
+          title={getSelectedApp().name}
         />
       </>
     )
+  }
+
+  if (loading || !appsList.length) {
+    return <Loader />
   }
 
   return (
@@ -199,7 +247,7 @@ function Apps({
           size="lg"
           testId="manage-tokens-btn"
         >
-          {getSelectedApp().providedBy.name}
+          {selectedApp && getSelectedApp().providedBy.name}
         </ButtonLink>
       </LCL.Footer>
     </LCL.Wrapper>

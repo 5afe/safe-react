@@ -7,7 +7,7 @@ import { NOTIFICATIONS, type Notification } from './notificationTypes'
 
 import closeSnackbarAction from '~/logic/notifications/store/actions/closeSnackbar'
 import { TX_NOTIFICATION_TYPES } from '~/logic/safe/transactions'
-import { getAppInfo } from '~/routes/safe/components/Apps/appsList'
+import { getAppInfo } from '~/routes/safe/components/Apps/staticAppsList'
 import { store } from '~/store'
 
 export type NotificationsQueue = {
@@ -231,7 +231,7 @@ export const showSnackbar = (notification: Notification, enqueueSnackbar: Functi
   enqueueSnackbar(notification.message, {
     ...notification.options,
     // eslint-disable-next-line react/display-name
-    action: (key) => (
+    action: key => (
       <IconButton onClick={() => closeSnackbar(key)}>
         <IconClose />
       </IconButton>
