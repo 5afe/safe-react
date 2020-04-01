@@ -125,17 +125,19 @@ class SafeView extends React.Component<Props, State> {
       fetchEtherBalance,
       fetchTokenBalances,
       fetchTransactions,
+      safe,
       safeUrl,
     } = this.props
     checkAndUpdateSafeOwners(safeUrl)
     fetchTokenBalances(safeUrl, activeTokens)
-    fetchEtherBalance(safeUrl)
+    fetchEtherBalance(safe)
     fetchTransactions(safeUrl)
   }
 
   render() {
     const { sendFunds, showReceive } = this.state
     const {
+      activateAssetsByBalance,
       activateTokensByBalance,
       activeTokens,
       addressBook,
@@ -161,6 +163,7 @@ class SafeView extends React.Component<Props, State> {
     return (
       <Page>
         <Layout
+          activateAssetsByBalance={activateAssetsByBalance}
           activateTokensByBalance={activateTokensByBalance}
           activeTokens={activeTokens}
           addressBook={addressBook}

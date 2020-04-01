@@ -40,7 +40,7 @@ const textFieldInputStyle = makeStyles(() => ({
   },
 }))
 
-const filterAddressBookWithContractAddresses = async addressBook => {
+const filterAddressBookWithContractAddresses = async (addressBook) => {
   const abFlags = await Promise.all(
     addressBook.map(async ({ address }) => {
       return (await mustBeEthereumContractAddress(address)) === undefined
@@ -49,7 +49,7 @@ const filterAddressBookWithContractAddresses = async addressBook => {
   return addressBook.filter((adbkEntry, index) => abFlags[index])
 }
 
-const isValidEnsName = name => /^([\w-]+\.)+(eth|test|xyz|luxe)$/.test(name)
+const isValidEnsName = (name) => /^([\w-]+\.)+(eth|test|xyz|luxe)$/.test(name)
 
 const AddressBookInput = ({
   classes,
@@ -69,7 +69,7 @@ const AddressBookInput = ({
 
   const [inputAddValue, setInputAddValue] = useState(recipientAddress)
 
-  const onAddressInputChanged = async addressValue => {
+  const onAddressInputChanged = async (addressValue) => {
     setInputAddValue(addressValue)
     let resolvedAddress = addressValue
     let isValidText
@@ -92,7 +92,7 @@ const AddressBookInput = ({
       // First removes the entries that are not contracts if the operation is custom tx
       const adbkToFilter = isCustomTx ? await filterAddressBookWithContractAddresses(addressBook) : addressBook
       // Then Filters the entries based on the input of the user
-      const filteredADBK = adbkToFilter.filter(adbkEntry => {
+      const filteredADBK = adbkToFilter.filter((adbkEntry) => {
         const { address, name } = adbkEntry
         return (
           name.toLowerCase().includes(addressValue.toLowerCase()) ||
@@ -137,7 +137,7 @@ const AddressBookInput = ({
         closeIcon={null}
         disableOpenOnFocus
         filterOptions={(optionsArray, { inputValue }) =>
-          optionsArray.filter(item => {
+          optionsArray.filter((item) => {
             const inputLowerCase = inputValue.toLowerCase()
             const foundName = item.name.toLowerCase().includes(inputLowerCase)
             const foundAddress = item.address.toLowerCase().includes(inputLowerCase)
@@ -145,7 +145,7 @@ const AddressBookInput = ({
           })
         }
         freeSolo
-        getOptionLabel={adbkEntry => adbkEntry.address || ''}
+        getOptionLabel={(adbkEntry) => adbkEntry.address || ''}
         id="free-solo-demo"
         onChange={(event, value) => {
           let address = ''
@@ -164,7 +164,7 @@ const AddressBookInput = ({
         }}
         open={!blurred}
         options={adbkList.toArray()}
-        renderInput={params => (
+        renderInput={(params) => (
           <MuiTextField
             {...params}
             // eslint-disable-next-line
@@ -185,7 +185,7 @@ const AddressBookInput = ({
               className: statusClasses,
             }}
             label={!isValidForm ? validationText : 'Recipient'}
-            onChange={event => {
+            onChange={(event) => {
               setInputTouched(true)
               onAddressInputChanged(event.target.value)
             }}
@@ -193,7 +193,7 @@ const AddressBookInput = ({
             variant="filled"
           />
         )}
-        renderOption={adbkEntry => {
+        renderOption={(adbkEntry) => {
           const { address, name } = adbkEntry
           return (
             <div className={classes.itemOptionList}>

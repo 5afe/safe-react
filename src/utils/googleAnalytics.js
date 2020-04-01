@@ -39,7 +39,7 @@ export const withTracker = (WrappedComponent, options = {}) => {
     fetchCookiesFromStorage()
   }, [])
 
-  const trackPage = page => {
+  const trackPage = (page) => {
     if (!useAnalytics || !analyticsLoaded) {
       return
     }

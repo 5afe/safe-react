@@ -50,7 +50,7 @@ class Load extends React.Component<Props> {
 
       await loadSafe(safeName, safeAddress, owners, addSafe)
 
-      const url = `${SAFELIST_ADDRESS}/${safeAddress}/balances/`
+      const url = `${SAFELIST_ADDRESS}/${safeAddress}/balances`
       history.push(url)
     } catch (error) {
       console.error('Error while loading the Safe', error)

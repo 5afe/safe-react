@@ -77,7 +77,7 @@ const Layout = openHoc(({ classes, clickAway, open, providerDetails, providerInf
     <NetworkLabel />
     <Spacer />
     <Provider info={providerInfo} open={open} toggle={toggle}>
-      {providerRef => (
+      {(providerRef) => (
         <Popper
           anchorEl={providerRef.current}
           className={classes.popper}

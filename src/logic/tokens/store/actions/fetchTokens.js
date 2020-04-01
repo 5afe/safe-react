@@ -10,8 +10,10 @@ import saveTokens from './saveTokens'
 
 import { fetchTokenList } from '~/logic/tokens/api'
 import { type TokenProps, makeToken } from '~/logic/tokens/store/model/token'
+import { tokensSelector } from '~/logic/tokens/store/selectors'
 import { getWeb3 } from '~/logic/wallets/getWeb3'
 import { type GlobalState } from '~/store'
+import { store } from '~/store/index'
 import { ensureOnce } from '~/utils/singleton'
 
 const createStandardTokenContract = async () => {
@@ -37,11 +39,66 @@ const createERC721TokenContract = async () => {
   return erc721Token
 }
 
+const OnlyBalanceToken = {
+  contractName: 'OnlyBalanceToken',
+  abi: [
+    {
+      constant: true,
+      inputs: [
+        {
+          name: 'owner',
+          type: 'address',
+        },
+      ],
+      name: 'balanceOf',
+      outputs: [
+        {
+          name: '',
+          type: 'uint256',
+        },
+      ],
+      payable: false,
+      stateMutability: 'view',
+      type: 'function',
+    },
+    {
+      constant: true,
+      inputs: [
+        {
+          name: 'owner',
+          type: 'address',
+        },
+      ],
+      name: 'balances',
+      outputs: [
+        {
+          name: '',
+          type: 'uint256',
+        },
+      ],
+      payable: false,
+      stateMutability: 'view',
+      type: 'function',
+    },
+  ],
+}
+
+// For the `batchRequest` of balances, we're just using the `balanceOf` method call.
+// So having a simple ABI only with `balanceOf` prevents errors
+// when instantiating non-standard ERC-20 Tokens.
+const createOnlyBalanceToken = () => {
+  const web3 = getWeb3()
+  const contract = new web3.eth.Contract(OnlyBalanceToken.abi)
+  return contract
+}
+
 export const getHumanFriendlyToken = ensureOnce(createHumanFriendlyTokenContract)
 
 export const getStandardTokenContract = ensureOnce(createStandardTokenContract)
 
 export const getERC721TokenContract = ensureOnce(createERC721TokenContract)
+
+export const getOnlyBalanceToken = ensureOnce(createOnlyBalanceToken)
 
 export const containsMethodByHash = async (contractAddress: string, methodHash: string) => {
   const web3 = getWeb3()
@@ -50,19 +107,54 @@ export const containsMethodByHash = async (contractAddress: string, methodHash: 
   return byteCode.indexOf(methodHash.replace('0x', '')) !== -1
 }
 
-export const fetchTokens = () => async (dispatch: ReduxDispatch<GlobalState>) => {
+export const getTokenInfos = async (tokenAddress: string) => {
+  if (!tokenAddress) {
+    return null
+  }
+  const { tokens } = store.getState()
+  const localToken = tokens.get(tokenAddress)
+  // If the token is inside the store we return the store token
+  if (localToken) {
+    return localToken
+  }
+  // Otherwise we fetch it, save it to the store and return it
+  const tokenContract = await getHumanFriendlyToken()
+  const tokenInstance = await tokenContract.at(tokenAddress)
+  const [tokenSymbol, tokenDecimals, name] = await Promise.all([
+    tokenInstance.symbol(),
+    tokenInstance.decimals(),
+    tokenInstance.name(),
+  ])
+  const savedToken = makeToken({
+    address: tokenAddress,
+    name: name ? name : tokenSymbol,
+    symbol: tokenSymbol,
+    decimals: tokenDecimals,
+    logoUri: '',
+  })
+  const newTokens = tokens.set(tokenAddress, savedToken)
+  store.dispatch(saveTokens(newTokens))
+
+  return savedToken
+}
+
+export const fetchTokens = () => async (dispatch: ReduxDispatch<GlobalState>, getState: Function) => {
   try {
+    const currentSavedTokens = tokensSelector(getState())
+
     const {
       data: { results: tokenList },
     } = await fetchTokenList()
+
+    if (currentSavedTokens && currentSavedTokens.size === tokenList.length) {
+      return
+    }
 
     const tokens = List(tokenList.map((token: TokenProps) => makeToken(token)))
 
     dispatch(saveTokens(tokens))
   } catch (err) {
     console.error('Error fetching token list', err)
-
-    return Promise.resolve()
   }
 }
 

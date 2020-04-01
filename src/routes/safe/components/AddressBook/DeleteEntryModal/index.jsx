@@ -26,7 +26,7 @@ type Props = {
 }
 
 const DeleteEntryModalComponent = ({ classes, deleteEntryModalHandler, entryToDelete, isOpen, onClose }: Props) => {
-  const handleDeleteEntrySubmit = values => {
+  const handleDeleteEntrySubmit = (values) => {
     deleteEntryModalHandler(values, entryToDelete.index)
   }
 

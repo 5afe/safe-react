@@ -20,6 +20,7 @@ import Button from '~/components/layout/Button'
 import Hairline from '~/components/layout/Hairline'
 import Paragraph from '~/components/layout/Paragraph'
 import Row from '~/components/layout/Row'
+import { makeAddressBookEntry } from '~/logic/addressBook/model/addressBook'
 import { getNotificationsFromTxType, showSnackbar } from '~/logic/notifications'
 import { TX_NOTIFICATION_TYPES } from '~/logic/safe/transactions'
 import { sm } from '~/theme/variables'
@@ -52,10 +53,10 @@ const EditOwnerComponent = ({
   selectedOwnerName,
   updateAddressBookEntry,
 }: Props) => {
-  const handleSubmit = values => {
+  const handleSubmit = (values) => {
     const { ownerName } = values
     editSafeOwner({ safeAddress, ownerAddress, ownerName })
-    updateAddressBookEntry({ address: ownerAddress, name: ownerName })
+    updateAddressBookEntry(makeAddressBookEntry({ address: ownerAddress, name: ownerName }))
     const notification = getNotificationsFromTxType(TX_NOTIFICATION_TYPES.OWNER_NAME_CHANGE_TX)
     showSnackbar(notification.afterExecution.noMoreConfirmationsNeeded, enqueueSnackbar, closeSnackbar)
 

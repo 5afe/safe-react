@@ -65,6 +65,6 @@ const SafeListHeader = ({ safesCount }: Props) => {
 
 export default connect<Object, Object, ?Function, ?Object>(
   // $FlowFixMe
-  state => ({ safesCount: safesCountSelector(state) }),
+  (state) => ({ safesCount: safesCountSelector(state) }),
   null,
 )(SafeListHeader)

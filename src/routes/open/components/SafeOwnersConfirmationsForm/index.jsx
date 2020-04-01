@@ -74,7 +74,7 @@ const SafeOwners = (props: Props) => {
   const [qrModalOpen, setQrModalOpen] = useState<boolean>(false)
   const [scanQrForOwnerName, setScanQrForOwnerName] = useState<string | null>(null)
 
-  const openQrModal = ownerName => {
+  const openQrModal = (ownerName) => {
     setScanQrForOwnerName(ownerName)
     setQrModalOpen(true)
   }
@@ -94,7 +94,7 @@ const SafeOwners = (props: Props) => {
     setNumOwners(numOwners + 1)
   }
 
-  const handleScan = value => {
+  const handleScan = (value) => {
     let scannedAddress = value
 
     if (scannedAddress.startsWith('ethereum:')) {
@@ -144,7 +144,7 @@ const SafeOwners = (props: Props) => {
               <Col className={classes.ownerAddress} xs={6}>
                 <AddressInput
                   component={TextField}
-                  fieldMutator={val => {
+                  fieldMutator={(val) => {
                     form.mutators.setValue(addressName, val)
                   }}
                   inputAdornment={

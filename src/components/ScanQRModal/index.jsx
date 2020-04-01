@@ -72,10 +72,10 @@ const ScanQRModal = ({ classes, isOpen, onClose, onScan }: Props) => {
         ) : (
           <QrReader
             legacyMode={!hasWebcam}
-            onError={err => {
+            onError={(err) => {
               console.error(err)
             }}
-            onScan={data => {
+            onScan={(data) => {
               if (data) onScan(data)
             }}
             ref={scannerRef}

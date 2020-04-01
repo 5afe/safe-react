@@ -14,7 +14,7 @@ const loadSafesFromStorage = () => async (dispatch: ReduxDispatch<GlobalState>) 
     const safes: ?{ [key: string]: SafeProps } = await loadFromStorage(SAFES_KEY)
 
     if (safes) {
-      Object.values(safes).forEach(safeProps => {
+      Object.values(safes).forEach((safeProps) => {
         dispatch(addSafe(buildSafe(safeProps)))
       })
     }

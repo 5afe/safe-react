@@ -113,7 +113,7 @@ const ReviewAddOwner = ({ classes, onClickBack, onClose, onSubmit, owners, safeA
               </Paragraph>
             </Row>
             <Hairline />
-            {owners.map(owner => (
+            {owners.map((owner) => (
               <React.Fragment key={owner.address}>
                 <Row className={classes.owner}>
                   <Col align="center" xs={1}>
