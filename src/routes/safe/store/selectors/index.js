@@ -256,6 +256,27 @@ export const safeBalancesSelector: OutputSelector<GlobalState, RouterProps, Map<
   },
 )
 
+export const safeNameSelector: OutputSelector<GlobalState, RouterProps, Map<string, string>> = createSelector(
+  safeSelector,
+  (safe: Safe) => {
+    return safe ? safe.name : undefined
+  },
+)
+
+export const safeNeedsUpdateSelector: OutputSelector<GlobalState, RouterProps, Map<string, string>> = createSelector(
+  safeSelector,
+  (safe: Safe) => {
+    return safe ? safe.needsUpdate : undefined
+  },
+)
+
+export const safeCurrentVersionSelector: OutputSelector<GlobalState, RouterProps, Map<string, string>> = createSelector(
+  safeSelector,
+  (safe: Safe) => {
+    return safe ? safe.currentVersion : undefined
+  },
+)
+
 export const safeThresholdSelector: OutputSelector<GlobalState, RouterProps, Map<string, string>> = createSelector(
   safeSelector,
   (safe: Safe) => {
