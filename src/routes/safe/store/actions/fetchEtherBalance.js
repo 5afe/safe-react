@@ -12,7 +12,7 @@ const fetchEtherBalance = (safe: Safe) => async (dispatch: ReduxDispatch<GlobalS
     const newEthBalance = await getBalanceInEtherOf(address)
 
     if (newEthBalance !== ethBalance) {
-      dispatch(updateSafe({ address, newEthBalance }))
+      dispatch(updateSafe({ address, ethBalance: newEthBalance }))
     }
   } catch (err) {
     // eslint-disable-next-line
