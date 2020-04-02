@@ -2,7 +2,7 @@
 // It has the same sandbox as a Chrome extension.
 
 const path = require('path');
-const TransportNodeHid = require("@ledgerhq/hw-transport-node-hid")).default;
+const TransportNodeHid = require("@ledgerhq/hw-transport-node-hid").default;
 window.TransportNodeHid = TransportNodeHid;
 window.isDesktop = true;
 
