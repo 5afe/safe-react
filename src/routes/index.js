@@ -1,6 +1,6 @@
 // @flow
 import React, { useEffect, useState } from 'react'
-import { connect } from 'react-redux'
+import { useSelector } from 'react-redux'
 import { Redirect, Route, Switch, withRouter } from 'react-router-dom'
 
 import { LOAD_ADDRESS, OPEN_ADDRESS, SAFELIST_ADDRESS, SAFE_PARAM_ADDRESS, WELCOME_ADDRESS } from './routes'
@@ -19,12 +19,12 @@ const Load = React.lazy(() => import('./load/container/Load'))
 const SAFE_ADDRESS = `${SAFELIST_ADDRESS}/:${SAFE_PARAM_ADDRESS}`
 
 type RoutesProps = {
-  defaultSafe?: string,
   location: Object,
 }
 
-const Routes = ({ defaultSafe, location }: RoutesProps) => {
+const Routes = ({ location }: RoutesProps) => {
   const [isInitialLoad, setInitialLoad] = useState<boolean>(true)
+  const defaultSafe = useSelector(defaultSafeSelector)
 
   useEffect(() => {
     if (location.pathname !== '/') {
@@ -63,8 +63,4 @@ const Routes = ({ defaultSafe, location }: RoutesProps) => {
   )
 }
 
-// $FlowFixMe
-export default connect<Object, Object, ?Function, ?Object>(
-  state => ({ defaultSafe: defaultSafeSelector(state) }),
-  null,
-)(withRouter(Routes))
+export default withRouter(Routes)
