@@ -21,15 +21,22 @@ const SafeView = () => {
   const [state, setState] = useState(INITIAL_STATE)
 
   const onShow = (action: Action) => () => {
-    setState(() => ({ [`show${action}`]: true }))
+    setState({
+      ...state,
+      [`show${action}`]: true,
+    })
   }
 
   const onHide = (action: Action) => () => {
-    setState(() => ({ [`show${action}`]: false }))
+    setState({
+      ...state,
+      [`show${action}`]: false,
+    })
   }
 
   const showSendFunds = (token: Token) => {
     setState({
+      ...state,
       sendFunds: {
         isOpen: true,
         selectedToken: token,
@@ -39,6 +46,7 @@ const SafeView = () => {
 
   const hideSendFunds = () => {
     setState({
+      ...state,
       sendFunds: {
         isOpen: false,
         selectedToken: undefined,

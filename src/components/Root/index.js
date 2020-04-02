@@ -20,6 +20,7 @@ import './OnboardCustom.scss'
 
 const Root = () => {
   const [isSafeLoaded, setSafeLoaded] = useState(false)
+  const updateSafeLoadedState = (isSafeLoaded: boolean) => setSafeLoaded(isSafeLoaded)
   return (
     <Provider store={store}>
       <MuiThemeProvider theme={theme}>
@@ -27,7 +28,7 @@ const Root = () => {
           <PageFrame>
             <Suspense fallback={<Loader />}>
               {isSafeLoaded ? <AppRoutes /> : null}
-              <LoadStore setSafeLoaded={isSafeLoaded => setSafeLoaded(isSafeLoaded)} />
+              <LoadStore setSafeLoaded={updateSafeLoadedState} />
             </Suspense>
           </PageFrame>
         </ConnectedRouter>

@@ -16,7 +16,7 @@ import { providerNameSelector } from '~/logic/wallets/store/selectors'
 import SendModal from '~/routes/safe/components/Balances/SendModal'
 import LayoutHeader from '~/routes/safe/components/Layout/Header'
 import TabsComponent from '~/routes/safe/components/Layout/Tabs'
-import { safeSelector } from '~/routes/safe/store/selectors'
+import { safeParamAddressFromStateSelector } from '~/routes/safe/store/selectors'
 import { border } from '~/theme/variables'
 
 export const BALANCES_TAB_BTN_TEST_ID = 'balances-tab-btn'
@@ -55,9 +55,9 @@ const Layout = (props: Props) => {
     onClose: null,
   })
 
-  const safe = useSelector(safeSelector)
+  const safeAddress = useSelector(safeParamAddressFromStateSelector)
   const provider = useSelector(providerNameSelector)
-  if (!safe) {
+  if (!safeAddress) {
     return <NoSafe provider={provider} text="Safe not found" />
   }
 
