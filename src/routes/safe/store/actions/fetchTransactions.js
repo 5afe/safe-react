@@ -25,7 +25,7 @@ import { ZERO_ADDRESS, sameAddress } from '~/logic/wallets/ethAddresses'
 import { EMPTY_DATA } from '~/logic/wallets/ethTransactions'
 import { getWeb3 } from '~/logic/wallets/getWeb3'
 import { addCancellationTransactions } from '~/routes/safe/store/actions/addCancellationTransactions'
-import updateSafeNonce from '~/routes/safe/store/actions/updateSafeNonce'
+import updateSafe from '~/routes/safe/store/actions/updateSafe'
 import { makeConfirmation } from '~/routes/safe/store/models/confirmation'
 import { type IncomingTransaction, makeIncomingTransaction } from '~/routes/safe/store/models/incomingTransaction'
 import { makeOwner } from '~/routes/safe/store/models/owner'
@@ -387,7 +387,7 @@ export default (safeAddress: string) => async (dispatch: ReduxDispatch<GlobalSta
     batch(() => {
       dispatch(addCancellationTransactions(cancel))
       dispatch(addTransactions(outgoing))
-      dispatch(updateSafeNonce(safeAddress, nonce))
+      dispatch(updateSafe({ address: safeAddress, nonce }))
     })
   }
 

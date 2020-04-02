@@ -13,8 +13,6 @@ import { REPLACE_SAFE_OWNER } from '~/routes/safe/store/actions/replaceSafeOwner
 import { SET_DEFAULT_SAFE } from '~/routes/safe/store/actions/setDefaultSafe'
 import { SET_LATEST_MASTER_CONTRACT_VERSION } from '~/routes/safe/store/actions/setLatestMasterContractVersion'
 import { UPDATE_SAFE } from '~/routes/safe/store/actions/updateSafe'
-import { UPDATE_SAFE_NONCE } from '~/routes/safe/store/actions/updateSafeNonce'
-import { UPDATE_SAFE_THRESHOLD } from '~/routes/safe/store/actions/updateSafeThreshold'
 import { makeOwner } from '~/routes/safe/store/models/owner'
 import SafeRecord, { type SafeProps } from '~/routes/safe/store/models/safe'
 
@@ -50,6 +48,14 @@ export default handleActions<SafeReducerState, *>(
     [UPDATE_SAFE]: (state: SafeReducerState, action: ActionType<Function>): SafeReducerState => {
       const safe = action.payload
       const safeAddress = safe.address
+      const isNonceUpdate = safe.nonce !== undefined
+
+      if (isNonceUpdate && safe.nonce <= state.getIn([SAFE_REDUCER_ID, safeAddress, 'nonce'])) {
+        // update only when nonce is greater than the one already stored
+        // this will prevent undesired changes in the safe's state when
+        // txs pagination is implemented
+        return state
+      }
 
       return state.updateIn(['safes', safeAddress], (prevSafe) => prevSafe.merge(safe))
     },
@@ -125,23 +131,6 @@ export default handleActions<SafeReducerState, *>(
         const updatedOwners = prevSafe.owners.update(ownerToUpdateIndex, (owner) => owner.set('name', ownerName))
         return prevSafe.merge({ owners: updatedOwners })
       })
-    },
-    [UPDATE_SAFE_THRESHOLD]: (state: SafeReducerState, action: ActionType<Function>): SafeReducerState => {
-      const { safeAddress, threshold } = action.payload
-
-      return state.updateIn(['safes', safeAddress], (prevSafe) => prevSafe.set('threshold', threshold))
-    },
-    [UPDATE_SAFE_NONCE]: (state: SafeReducerState, action: ActionType<Function>): SafeReducerState => {
-      const { nonce, safeAddress } = action.payload
-
-      // update only when nonce is greater than the one already stored
-      // this will prevent undesired changes in the safe's state when
-      // txs pagination is implemented
-      if (nonce > state.getIn([SAFE_REDUCER_ID, safeAddress, 'nonce'])) {
-        return state.updateIn([SAFE_REDUCER_ID, safeAddress], (prevSafe) => prevSafe.set('nonce', nonce))
-      }
-
-      return state
     },
     [SET_DEFAULT_SAFE]: (state: SafeReducerState, action: ActionType<Function>): SafeReducerState =>
       state.set('defaultSafe', action.payload),
