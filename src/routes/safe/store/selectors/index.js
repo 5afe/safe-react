@@ -305,6 +305,14 @@ export const safeOwnersSelector: OutputSelector<GlobalState, RouterProps, Map<st
   },
 )
 
+export const safeFeaturesEnabledSelector: OutputSelector<
+  GlobalState,
+  RouterProps,
+  Map<string, string>,
+> = createSelector(safeSelector, (safe: Safe) => {
+  return safe ? safe.featuresEnabled : undefined
+})
+
 export const getActiveTokensAddressesForAllSafes: OutputSelector<GlobalState, any, Set<string>> = createSelector(
   safesListSelector,
   (safes: List<Safe>) => {

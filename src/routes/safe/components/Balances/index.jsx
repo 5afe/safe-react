@@ -1,7 +1,7 @@
 // @flow
 import { withStyles } from '@material-ui/core/styles'
 import React, { useEffect, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useSelector } from 'react-redux'
 
 import Receive from './Receive'
 import Tokens from './Tokens'
@@ -13,16 +13,13 @@ import Col from '~/components/layout/Col'
 import Divider from '~/components/layout/Divider'
 import Link from '~/components/layout/Link'
 import Row from '~/components/layout/Row'
-import { fetchCurrencyValues } from '~/logic/currencyValues/store/actions/fetchCurrencyValues'
-import activateAssetsByBalance from '~/logic/tokens/store/actions/activateAssetsByBalance'
-import activateTokensByBalance from '~/logic/tokens/store/actions/activateTokensByBalance'
-import { fetchTokens } from '~/logic/tokens/store/actions/fetchTokens'
 import { SAFELIST_ADDRESS } from '~/routes/routes'
 import Coins from '~/routes/safe/components/Balances/Coins'
 import Collectibles from '~/routes/safe/components/Balances/Collectibles'
+import FetchTokens from '~/routes/safe/components/Balances/FetchTokens'
 import SendModal from '~/routes/safe/components/Balances/SendModal'
 import DropdownCurrency from '~/routes/safe/components/DropdownCurrency'
-import { safeSelector } from '~/routes/safe/store/selectors'
+import { safeFeaturesEnabledSelector, safeParamAddressFromStateSelector } from '~/routes/safe/store/selectors'
 import { history } from '~/store'
 
 export const MANAGE_TOKENS_BUTTON_TEST_ID = 'manage-tokens-btn'
@@ -61,15 +58,11 @@ const INITIAL_STATUS: State = {
 
 const Balances = (props: Props) => {
   const [state, setState] = useState(INITIAL_STATUS)
-  const dispatch = useDispatch()
-  const safe = useSelector(safeSelector)
-  const { address, featuresEnabled, name } = safe
+
+  const address = useSelector(safeParamAddressFromStateSelector)
+  const featuresEnabled = useSelector(safeFeaturesEnabledSelector)
 
   useEffect(() => {
-    dispatch(fetchCurrencyValues(address))
-    dispatch(activateTokensByBalance(address))
-    dispatch(activateAssetsByBalance(address))
-
     const isCoinsLocation = /\/balances\/?$/
     const isCollectiblesLocation = /\/balances\/collectibles$/
     const showCollectibles = isCollectiblesLocation.test(history.location.pathname)
@@ -101,7 +94,6 @@ const Balances = (props: Props) => {
       erc721Enabled,
       subMenuOptions,
     })
-    dispatch(fetchTokens)
   }, [])
 
   const onShow = (action: Action) => {
@@ -214,8 +206,9 @@ const Balances = (props: Props) => {
         paperClassName={receiveModal}
         title="Receive Tokens"
       >
-        <Receive onClose={() => onHide('Receive')} safeAddress={address} safeName={name} />
+        <Receive onClose={() => onHide('Receive')} />
       </Modal>
+      <FetchTokens />
     </>
   )
 }

@@ -3,6 +3,7 @@ import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import fetchCollectibles from '~/logic/collectibles/store/actions/fetchCollectibles'
+import { extendedSafeTokensSelector } from '~/routes/safe/container/selector'
 import fetchEtherBalance from '~/routes/safe/store/actions/fetchEtherBalance'
 import { checkAndUpdateSafe } from '~/routes/safe/store/actions/fetchSafe'
 import fetchTokenBalances from '~/routes/safe/store/actions/fetchTokenBalances'
@@ -13,7 +14,8 @@ import { TIMEOUT } from '~/utils/constants'
 const CheckForUpdates = () => {
   const dispatch = useDispatch()
   const safe = useSelector(safeSelector)
-  const { activeTokens, address } = safe
+  const activeTokens = useSelector(extendedSafeTokensSelector)
+  const { address } = safe
   useEffect(() => {
     const interval = setInterval(() => {
       dispatch(checkAndUpdateSafe(address))
