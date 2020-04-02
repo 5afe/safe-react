@@ -1,18 +1,14 @@
 // @flow
 import { List, Map } from 'immutable'
-import { type Selector, createSelector, createStructuredSelector } from 'reselect'
-
-import { safeParamAddressSelector } from '../store/selectors'
+import { type Selector, createSelector } from 'reselect'
 
 import type { AddressBook } from '~/logic/addressBook/model/addressBook'
-import { getAddressBook } from '~/logic/addressBook/store/selectors'
 import type { BalanceCurrencyType } from '~/logic/currencyValues/store/model/currencyValues'
-import { currencyValuesListSelector, currentCurrencySelector } from '~/logic/currencyValues/store/selectors'
 import { type Token } from '~/logic/tokens/store/model/token'
-import { orderedTokenListSelector, tokensSelector } from '~/logic/tokens/store/selectors'
+import { tokensSelector } from '~/logic/tokens/store/selectors'
 import { getEthAsToken } from '~/logic/tokens/utils/tokenHelpers'
 import { isUserOwner } from '~/logic/wallets/ethAddresses'
-import { networkSelector, providerNameSelector, userAccountSelector } from '~/logic/wallets/store/selectors'
+import { userAccountSelector } from '~/logic/wallets/store/selectors'
 import type { IncomingTransaction } from '~/routes/safe/store/models/incomingTransaction'
 import { type Safe } from '~/routes/safe/store/models/safe'
 import { type Transaction, type TransactionStatus } from '~/routes/safe/store/models/transaction'
@@ -21,7 +17,6 @@ import {
   type SafeSelectorProps,
   safeActiveTokensSelector,
   safeBalancesSelector,
-  safeBlacklistedTokensSelector,
   safeCancellationTransactionsSelector,
   safeIncomingTransactionsSelector,
   safeSelector,
@@ -142,20 +137,3 @@ export const extendedTransactionsSelector: Selector<
     return List([...extendedTransactions, ...incomingTransactions])
   },
 )
-
-export default createStructuredSelector<Object, *>({
-  safe: safeSelector,
-  provider: providerNameSelector,
-  tokens: orderedTokenListSelector,
-  activeTokens: extendedSafeTokensSelector,
-  blacklistedTokens: safeBlacklistedTokensSelector,
-  granted: grantedSelector,
-  userAddress: userAccountSelector,
-  network: networkSelector,
-  safeUrl: safeParamAddressSelector,
-  transactions: extendedTransactionsSelector,
-  cancellationTransactions: safeCancellationTransactionsSelector,
-  currencySelected: currentCurrencySelector,
-  currencyValues: currencyValuesListSelector,
-  addressBook: getAddressBook,
-})

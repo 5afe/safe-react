@@ -3,7 +3,7 @@ import 'babel-polyfill'
 
 import { MuiThemeProvider } from '@material-ui/core/styles'
 import { ConnectedRouter } from 'connected-react-router'
-import React, { Suspense } from 'react'
+import React, { Suspense, useState } from 'react'
 import { hot } from 'react-hot-loader/root'
 import { Provider } from 'react-redux'
 
@@ -11,24 +11,29 @@ import Loader from '../Loader'
 import PageFrame from '../layout/PageFrame'
 
 import AppRoutes from '~/routes'
+import LoadStore from '~/routes/safe/container/LoadStore'
 import { history, store } from '~/store'
 import theme from '~/theme/mui'
 
 import './index.scss'
 import './OnboardCustom.scss'
 
-const Root = () => (
-  <Provider store={store}>
-    <MuiThemeProvider theme={theme}>
-      <ConnectedRouter history={history}>
-        <PageFrame>
-          <Suspense fallback={<Loader />}>
-            <AppRoutes />
-          </Suspense>
-        </PageFrame>
-      </ConnectedRouter>
-    </MuiThemeProvider>
-  </Provider>
-)
+const Root = () => {
+  const [isSafeLoaded, setSafeLoaded] = useState(false)
+  return (
+    <Provider store={store}>
+      <MuiThemeProvider theme={theme}>
+        <ConnectedRouter history={history}>
+          <PageFrame>
+            <Suspense fallback={<Loader />}>
+              {isSafeLoaded ? <AppRoutes /> : null}
+              <LoadStore setSafeLoaded={isSafeLoaded => setSafeLoaded(isSafeLoaded)} />
+            </Suspense>
+          </PageFrame>
+        </ConnectedRouter>
+      </MuiThemeProvider>
+    </Provider>
+  )
+}
 
 export default hot(Root)

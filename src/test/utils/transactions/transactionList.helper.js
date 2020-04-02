@@ -2,7 +2,7 @@
 import { fireEvent } from '@testing-library/react'
 import { sleep } from '~/utils/timer'
 import { shortVersionOf } from '~/logic/wallets/ethAddresses'
-import { TRANSACTIONS_TAB_BTN_TEST_ID } from '~/routes/safe/components/Layout'
+import { TRANSACTIONS_TAB_BTN_TEST_ID } from '~/routes/safe/components/Layout/Layout'
 import { TRANSACTION_ROW_TEST_ID } from '~/routes/safe/components/Transactions/TxsTable'
 import {
   TRANSACTIONS_DESC_ADD_OWNER_TEST_ID,

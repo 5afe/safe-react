@@ -5,7 +5,7 @@ import { aMinedSafe } from '~/test/builder/safe.redux.builder'
 import { renderSafeView } from '~/test/builder/safe.dom.utils'
 import { sleep } from '~/utils/timer'
 import '@testing-library/jest-dom/extend-expect'
-import { SETTINGS_TAB_BTN_TEST_ID, SAFE_VIEW_NAME_HEADING_TEST_ID } from '~/routes/safe/components/Layout'
+import { SETTINGS_TAB_BTN_TEST_ID, SAFE_VIEW_NAME_HEADING_TEST_ID } from '~/routes/safe/components/Layout/Layout'
 import { SAFE_NAME_INPUT_TEST_ID, SAFE_NAME_SUBMIT_BTN_TEST_ID } from '~/routes/safe/components/Settings/SafeDetails'
 
 describe('DOM > Feature > Settings - Name', () => {
