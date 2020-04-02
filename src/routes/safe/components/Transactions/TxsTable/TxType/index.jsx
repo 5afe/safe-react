@@ -1,13 +1,13 @@
 // @flow
-import * as React from 'react'
+import React, { useEffect, useState } from 'react'
 
 import CustomTxIcon from './assets/custom.svg'
 import IncomingTxIcon from './assets/incoming.svg'
 import OutgoingTxIcon from './assets/outgoing.svg'
 import SettingsTxIcon from './assets/settings.svg'
 
-import { IconText } from '~/components-v2'
-import { getAppInfo } from '~/routes/safe/components/Apps/staticAppsList'
+import { IconText, Loader } from '~/components-v2'
+import { getAppInfoFromOrigin, getAppInfoFromUrl } from '~/routes/safe/components/Apps/utils'
 import { type TransactionType } from '~/routes/safe/store/models/transaction'
 
 const typeToIcon = {
@@ -31,9 +31,29 @@ const typeToLabel = {
 }
 
 const TxType = ({ origin, txType }: { txType: TransactionType, origin: string | null }) => {
-  const iconUrl = txType === 'third-party-app' ? getAppInfo(origin).iconUrl : typeToIcon[txType]
-  const text = txType === 'third-party-app' ? getAppInfo(origin).name : typeToLabel[txType]
+  const isThirdPartyApp = txType === 'third-party-app'
+  const [loading, setLoading] = useState(true)
+  const [appInfo, setAppInfo] = useState()
 
-  return <IconText iconUrl={iconUrl} text={text} />
+  useEffect(() => {
+    const getAppInfo = async () => {
+      const parsedOrigin = getAppInfoFromOrigin(origin)
+      const appInfo = await getAppInfoFromUrl(parsedOrigin.url)
+      setAppInfo(appInfo)
+      setLoading(false)
+    }
+
+    if (!isThirdPartyApp) {
+      return
+    }
+
+    getAppInfo()
+  })
+
+  if (!isThirdPartyApp) {
+    return <IconText iconUrl={typeToIcon[txType]} text={typeToLabel[txType]} />
+  }
+
+  return loading ? <Loader centered={false} size={20} /> : <IconText iconUrl={appInfo.iconUrl} text={appInfo.name} />
 }
 export default TxType

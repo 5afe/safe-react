@@ -1,14 +1,11 @@
 // @flow
-import axios from 'axios'
 import { withSnackbar } from 'notistack'
 import React, { useCallback, useEffect, useState } from 'react'
 import styled from 'styled-components'
 
-import appsIconSvg from '../Transactions/TxsTable/TxType/assets/appsIcon.svg'
-
 import confirmTransactions from './confirmTransactions'
 import sendTransactions from './sendTransactions'
-import { staticAppsList } from './staticAppsList'
+import { GNOSIS_APPS_URL, getAppInfoFromUrl } from './utils'
 
 import { ListContentLayout as LCL, Loader } from '~/components-v2'
 import ButtonLink from '~/components/layout/ButtonLink'
@@ -134,35 +131,29 @@ function Apps({
 
       handleIframeMessage(data)
     }
+
     window.addEventListener('message', onIframeMessage)
 
     return () => {
       window.removeEventListener('message', onIframeMessage)
     }
-  }, [])
+  })
 
   // Load apps list
   useEffect(() => {
     const loadApps = async () => {
+      const appsUrl = process.env.REACT_APP_GNOSIS_APPS_URL ? process.env.REACT_APP_GNOSIS_APPS_URL : GNOSIS_APPS_URL
+      const staticAppsList = [`${appsUrl}/compound`, `${appsUrl}/uniswap`]
+
       const list = [...staticAppsList]
       const apps = []
       for (let index = 0; index < list.length; index++) {
         try {
           const appUrl = list[index]
-          const appInfo = await axios.get(`${appUrl}/manifest.json`)
-          const app = { id: appUrl, url: appUrl, ...appInfo.data, iconUrl: appsIconSvg }
+          const appInfo = await getAppInfoFromUrl(appUrl)
+          const app = { url: appUrl, ...appInfo }
 
-          if (appInfo.data.iconPath) {
-            try {
-              const iconInfo = await axios.get(`${appUrl}/${appInfo.data.iconPath}`)
-              if (/image\/\w/gm.test(iconInfo.headers['content-type'])) {
-                app.iconUrl = `${appUrl}/${appInfo.data.iconPath}`
-              }
-            } catch (error) {
-              console.error(error)
-            }
-          }
-
+          app.id = JSON.stringify({ url: app.url, name: app.name })
           apps.push(app)
         } catch (error) {
           console.error(error)

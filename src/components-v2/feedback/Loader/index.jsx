@@ -7,14 +7,22 @@ const Wrapper = styled.div`
   display: flex;
   height: 100%;
   width: 100%;
-  justify-content: center;
+  justify-content: ${({ centered }) => (centered ? 'center' : 'start')};
   align-items: center;
 `
+type Props = {
+  size?: number,
+  centered: boolean,
+}
 
-const Loader = () => (
-  <Wrapper>
-    <CircularProgress size={60} />
+const Loader = ({ centered, size }: Props) => (
+  <Wrapper centered={centered}>
+    <CircularProgress size={size || 60} />
   </Wrapper>
 )
+
+Loader.defaultProps = {
+  centered: true,
+}
 
 export default Loader
