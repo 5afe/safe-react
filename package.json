@@ -73,6 +73,12 @@
       ]
     },
     "files": [
+      "**/*",
+      "!src${/*}",
+      "!config${/*}",
+      "!contracts${/*}",
+      "!migrations${/*}",
+      "!flow-typed${/*}",
       "!apps${/*}",
       "!build${/*}",
       "!out${/*}",
@@ -83,7 +89,8 @@
       "!yarn.lock"
     ],
     "directories": {
-      "buildResources": "public/build"
+      "buildResources": "public/build",
+      "app": "./"
     },
     "mac": {
       "hardenedRuntime": true,

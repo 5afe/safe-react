@@ -61,7 +61,6 @@ function createWindow() {
     //BrowserWindow.addDevToolsExtension('<location to your react chrome extension>');
   }
 
-
   //mainWindow.setMenu(null);
   //mainWindow.setMenuBarVisibility(false)
 
