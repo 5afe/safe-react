@@ -17,7 +17,11 @@ const INITIAL_STATE = {
   showReceive: false,
 }
 
-const SafeView = () => {
+type Props = {
+  safeLoaded: boolean,
+}
+
+const SafeView = (props: Props) => {
   const [state, setState] = useState(INITIAL_STATE)
 
   const onShow = (action: Action) => () => {
@@ -57,15 +61,19 @@ const SafeView = () => {
 
   return (
     <Page>
-      <Layout
-        hideSendFunds={hideSendFunds}
-        onHide={onHide}
-        onShow={onShow}
-        sendFunds={sendFunds}
-        showReceive={showReceive}
-        showSendFunds={showSendFunds}
-      />
-      <CheckForUpdates />
+      {!props.safeLoaded ? null : (
+        <>
+          <Layout
+            hideSendFunds={hideSendFunds}
+            onHide={onHide}
+            onShow={onShow}
+            sendFunds={sendFunds}
+            showReceive={showReceive}
+            showSendFunds={showSendFunds}
+          />
+          <CheckForUpdates />
+        </>
+      )}
     </Page>
   )
 }

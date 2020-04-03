@@ -10,7 +10,7 @@ import { Provider } from 'react-redux'
 import Loader from '../Loader'
 import PageFrame from '../layout/PageFrame'
 
-import AppRoutes from '~/routes'
+const AppRoutes = React.lazy(() => import('~/routes'))
 import LoadStore from '~/routes/safe/container/LoadStore'
 import { history, store } from '~/store'
 import theme from '~/theme/mui'
@@ -19,16 +19,15 @@ import './index.scss'
 import './OnboardCustom.scss'
 
 const Root = () => {
-  const [isSafeLoaded, setSafeLoaded] = useState(false)
-  const updateSafeLoadedState = (isSafeLoaded: boolean) => setSafeLoaded(isSafeLoaded)
+  const [safeLoaded, setSafeLoaded] = useState(false)
   return (
     <Provider store={store}>
       <MuiThemeProvider theme={theme}>
         <ConnectedRouter history={history}>
           <PageFrame>
+            <LoadStore setSafeLoaded={setSafeLoaded} />
             <Suspense fallback={<Loader />}>
-              {isSafeLoaded ? <AppRoutes /> : null}
-              <LoadStore setSafeLoaded={updateSafeLoadedState} />
+              <AppRoutes safeLoaded={safeLoaded} />
             </Suspense>
           </PageFrame>
         </ConnectedRouter>
