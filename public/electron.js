@@ -39,7 +39,7 @@ function createWindow() {
     height: 768,
     webPreferences: {
       preload: path.join(__dirname, '../scripts/preload.js'),
-      nodeIntegration: true,
+      nodeIntegration: false,
       allowRunningInsecureContent: true
     },
     icon: path.join(__dirname, './build/safe.png'),
@@ -71,6 +71,11 @@ function createWindow() {
 
   mainWindow.webContents.on('did-finish-load', () => {
     autoUpdater.init(mainWindow);
+  });
+
+  mainWindow.webContents.on('crashed', () => {
+    mainWindow.destroy();
+    createWindow();
   });
 
   mainWindow.on("closed", () => (mainWindow = null));
