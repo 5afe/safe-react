@@ -37,7 +37,7 @@ import Paragraph from '~/components/layout/Paragraph/index'
 import Row from '~/components/layout/Row'
 import type { AddressBook } from '~/logic/addressBook/model/addressBook'
 import { getOwnersWithNameFromAddressBook } from '~/logic/addressBook/utils'
-import type { Safe } from '~/routes/safe/store/models/safe'
+import type { Owner } from '~/routes/safe/store/models/owner'
 
 export const RENAME_OWNER_BTN_TEST_ID = 'rename-owner-btn'
 export const REMOVE_OWNER_BTN_TEST_ID = 'remove-owner-btn'
@@ -47,7 +47,7 @@ export const OWNERS_ROW_TEST_ID = 'owners-row'
 
 type Props = {
   classes: Object,
-  safe: Safe,
+  owners: List<Owner>,
   addressBook: AddressBook,
   granted: boolean,
 }
@@ -94,7 +94,7 @@ class ManageOwners extends React.Component<Props, State> {
   }
 
   render() {
-    const { addressBook, classes, granted, safe } = this.props
+    const { addressBook, classes, granted, owners } = this.props
     const {
       selectedOwnerAddress,
       selectedOwnerName,
@@ -103,7 +103,6 @@ class ManageOwners extends React.Component<Props, State> {
       showRemoveOwner,
       showReplaceOwner,
     } = this.state
-    const { owners } = safe
     const columns = generateColumns()
     const autoColumns = columns.filter(c => !c.custom)
     const ownersAdbk = getOwnersWithNameFromAddressBook(addressBook, owners)
