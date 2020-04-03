@@ -1,6 +1,6 @@
 {
   "name": "safe-react",
-  "version": "1.9.1",
+  "version": "1.9.2",
   "description": "Allowing crypto users manage funds in a safer way",
   "homepage": "https://github.com/gnosis/safe-react#readme",
   "bugs": {
@@ -19,9 +19,9 @@
   "postinstall": "electron-builder install-app-deps",
   "scripts": {
     "build": "REACT_APP_APP_VERSION=$npm_package_version node scripts/build.js && yarn electron-build",
-    "electron-build": "electron-builder --linux",
+    "electron-build": "electron-builder --linux --mac",
     "postinstall": "electron-builder install-app-deps",
-    "release": "yarn build && electron-builder --windows --linux --publish=always",
+    "release": "GH_TOKEN=$(grep GH_TOKEN .env | cut -d '=' -f2) REACT_APP_APP_VERSION=$npm_package_version node scripts/build.js && electron-builder --linux --mac --publish=always",
     "electron-dev": "concurrently \"BROWSER=none yarn start\" \"wait-on http://localhost:3000 && electron .\"",
     "preelectron-pack": "yarn build",
     "build-mainnet": "REACT_APP_NETWORK=mainnet yarn build && yarn electron-build",
@@ -52,11 +52,13 @@
     "afterSign": "scripts/notarize.js",
     "productName": "Safe Electron",
     "asar": true,
-    "publish": {
-      "provider": "github",
-      "owner": "matextrem",
-      "repo": "safe-electron-multisig"
-    },
+    "publish": [
+      {
+        "provider": "github",
+        "owner": "matextrem",
+        "repo": "safe-electron-multisig"
+      }
+    ],
     "dmg": {
       "sign": false,
       "contents": [
