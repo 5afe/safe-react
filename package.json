@@ -19,7 +19,7 @@
   "postinstall": "electron-builder install-app-deps",
   "scripts": {
     "build": "REACT_APP_APP_VERSION=$npm_package_version node scripts/build.js && yarn electron-build",
-    "electron-build": "electron-builder --mac",
+    "electron-build": "electron-builder --linux",
     "postinstall": "electron-builder install-app-deps",
     "release": "yarn build && electron-builder --windows --linux --publish=always",
     "electron-dev": "concurrently \"BROWSER=none yarn start\" \"wait-on http://localhost:3000 && electron .\"",
@@ -106,7 +106,8 @@
         "AppImage",
         "deb",
         "zip"
-      ]
+      ],
+      "icon": "./public/build/safe.png"
     },
     "win": {
       "target": [
