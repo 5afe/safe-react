@@ -2,7 +2,7 @@
 import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
-import { loadAddressBook } from '~/logic/addressBook/store/actions/loadAddressBook'
+import loadAddressBookFromStorage from '~/logic/addressBook/store/actions/loadAddressBookFromStorage'
 import addViewedSafe from '~/logic/currentSession/store/actions/addViewedSafe'
 import fetchLatestMasterContractVersion from '~/routes/safe/store/actions/fetchLatestMasterContractVersion'
 import fetchSafe from '~/routes/safe/store/actions/fetchSafe'
@@ -28,7 +28,7 @@ const LoadStore = (props: Props) => {
           dispatch(fetchTransactions(safeUrl))
           dispatch(addViewedSafe(safeUrl))
         })
-      dispatch(loadAddressBook())
+      dispatch(loadAddressBookFromStorage())
     }
     fetchData()
   }, [])
