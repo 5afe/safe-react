@@ -63,6 +63,8 @@ export const buildTxServiceUrl = (safeAddress: string) => {
   return `${host}${base}`
 }
 
+const SUCCESS_STATUS = 201 // CREATED status
+
 export const saveTxToHistory = async ({
   baseGas,
   data,
@@ -116,7 +118,7 @@ export const saveTxToHistory = async ({
   )
   const response = await axios.post(url, body)
 
-  if (response.status !== 202) {
+  if (response.status !== SUCCESS_STATUS) {
     return Promise.reject(new Error('Error submitting the transaction'))
   }
 
