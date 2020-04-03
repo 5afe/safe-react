@@ -34,14 +34,13 @@ export const getEthSigner = async ({
       from: sender,
     },
   )
-  console.log('calling eth sign')
 
   return new Promise(function (resolve, reject) {
     web3.currentProvider.sendAsync(
       {
         jsonrpc: '2.0',
         method: 'eth_sign',
-        params: [sender, txHash.replace(EMPTY_DATA, '')],
+        params: [sender, txHash],
         id: new Date().getTime(),
       },
       async function (err, signature) {
