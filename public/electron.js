@@ -51,8 +51,9 @@ function getOpenedWindow(url,options) {
       details.requestHeaders['Origin'] = 'https://electron.trezor.io';
       callback({cancel: false, requestHeaders: details.requestHeaders});
     });
+    */
   }
- */
+
   if(url.includes('wallet.portis') || url.includes('about:blank')){
     const win = new BrowserWindow({
       width:300,
@@ -75,8 +76,8 @@ function getOpenedWindow(url,options) {
 
   return null;
 
-
 }
+
 function createWindow() {
   mainWindow = new BrowserWindow({
     show: false,

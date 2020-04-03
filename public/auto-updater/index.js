@@ -31,12 +31,13 @@ function init(mainWindow) {
       type: 'info',
       title: 'Found Updates',
       message: 'Found updates, do you want to update now?',
-      buttons: ['Yes', 'Remind me later']
-    }, (buttonIndex) => {
-      if (buttonIndex === 0) {
-        autoUpdater.downloadUpdate()
+      buttons: ['Yes', 'Remind me later'],
+      cancelId:1,
+    }).then(result => {
+      if(result.response === 0){
+        autoUpdater.downloadUpdate();
       }
-    })
+    });
   })
 
   autoUpdater.on('update-not-available', () => {
@@ -52,9 +53,10 @@ function init(mainWindow) {
       title: 'Install Updates',
       message: process.platform === 'win32' ? releaseNotes : releaseName,
       detail: 'A new version has been downloaded. Restart the application to apply the updates.',
-      buttons: ['Restart', 'Cancel']
-    }, (buttonIndex) => {
-      if (buttonIndex === 0) {
+      buttons: ['Restart', 'Cancel'],
+      cancelId:1,
+    }).then(result => {
+      if(result.response === 0){
         autoUpdater.quitAndInstall();
       }
     });
