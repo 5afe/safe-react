@@ -37,13 +37,21 @@ const buildOwnersFrom = (
 
 export const buildSafe = async (safeAdd: string, safeName: string, latestMasterContractVersion: string) => {
   const safeAddress = getWeb3().utils.toChecksumAddress(safeAdd)
-  const gnosisSafe = await getGnosisSafeInstanceAt(safeAddress)
-  const ethBalance = await getBalanceInEtherOf(safeAddress)
+  const [gnosisSafe, ethBalance] = await Promise.all([
+    getGnosisSafeInstanceAt(safeAddress),
+    getBalanceInEtherOf(safeAddress),
+  ])
 
-  const threshold = Number(await gnosisSafe.getThreshold())
-  const nonce = Number(await gnosisSafe.nonce())
-  const owners = List(buildOwnersFrom(await gnosisSafe.getOwners(), await getLocalSafe(safeAddress)))
-  const currentVersion = await gnosisSafe.VERSION()
+  const [thresholdStr, nonceStr, currentVersion, remoteOwners, localSafe] = await Promise.all([
+    gnosisSafe.getThreshold(),
+    gnosisSafe.nonce(),
+    gnosisSafe.VERSION(),
+    gnosisSafe.getOwners(),
+    getLocalSafe(safeAddress),
+  ])
+  const threshold = Number(thresholdStr)
+  const nonce = Number(nonceStr)
+  const owners = List(buildOwnersFrom(remoteOwners, localSafe))
   const needsUpdate = await safeNeedsUpdate(currentVersion, latestMasterContractVersion)
   const featuresEnabled = enabledFeatures(currentVersion)
 

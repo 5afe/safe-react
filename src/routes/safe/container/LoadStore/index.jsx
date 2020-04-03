@@ -24,11 +24,10 @@ const LoadStore = (props: Props) => {
         .then(() => dispatch(fetchSafe(safeUrl)))
         .then(() => {
           setSafeLoaded(true)
-          // The safe needs to be loaded before fetching the transactions
-          dispatch(fetchTransactions(safeUrl))
-          dispatch(addViewedSafe(safeUrl))
         })
+      dispatch(addViewedSafe(safeUrl))
       dispatch(loadAddressBookFromStorage())
+      dispatch(fetchTransactions(safeUrl))
     }
     fetchData()
   }, [])
