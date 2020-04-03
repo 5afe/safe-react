@@ -102,7 +102,10 @@ const createTransaction = ({
     // https://github.com/LedgerHQ/ledgerjs/issues/378
     // Couldn't find an issue for trezor but the error is almost the same
     const canTryOffchainSigning =
-      !isExecution && !smartContractWallet && semverSatisfies(safeVersion, SAFE_VERSION_FOR_OFFCHAIN_SIGNATURES)
+      !isExecution &&
+      !smartContractWallet &&
+      !hardwareWallet &&
+      semverSatisfies(safeVersion, SAFE_VERSION_FOR_OFFCHAIN_SIGNATURES)
     if (canTryOffchainSigning) {
       const signature = await tryOffchainSigning({ ...txArgs, safeAddress })
 
