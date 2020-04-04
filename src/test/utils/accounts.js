@@ -1,5 +1,5 @@
-// @flow
-function useTestAccountAt(index: number = 0) {
+// 
+function useTestAccountAt(index = 0) {
   window.testAccountIndex = index
 }
 

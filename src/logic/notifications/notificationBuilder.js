@@ -1,28 +1,17 @@
-// @flow
+// 
 import { IconButton } from '@material-ui/core'
 import { Close as IconClose } from '@material-ui/icons'
 import * as React from 'react'
 
-import { NOTIFICATIONS, type Notification } from './notificationTypes'
+import { NOTIFICATIONS, } from './notificationTypes'
 
 import closeSnackbarAction from '~/logic/notifications/store/actions/closeSnackbar'
 import { TX_NOTIFICATION_TYPES } from '~/logic/safe/transactions'
 import { getAppInfo } from '~/routes/safe/components/Apps/appsList'
 import { store } from '~/store'
 
-export type NotificationsQueue = {
-  beforeExecution: Notification | null,
-  pendingExecution: Notification | null,
-  waitingConfirmation?: Notification | null,
-  afterExecution: {
-    noMoreConfirmationsNeeded: Notification | null,
-    moreConfirmationsNeeded: Notification | null,
-  } | null,
-  afterExecutionError: Notification | null,
-  afterRejection: Notification | null,
-}
 
-const setNotificationOrigin = (notification: Notification, origin: string): Notification => {
+const setNotificationOrigin = (notification, origin) => {
   if (!origin) {
     return notification
   }
@@ -31,7 +20,7 @@ const setNotificationOrigin = (notification: Notification, origin: string): Noti
   return { ...notification, message: `${appInfo.name}: ${notification.message}` }
 }
 
-const getStandardTxNotificationsQueue = (origin?: string): NotificationsQueue => {
+const getStandardTxNotificationsQueue = (origin) => {
   return {
     beforeExecution: setNotificationOrigin(NOTIFICATIONS.SIGN_TX_MSG, origin),
     pendingExecution: setNotificationOrigin(NOTIFICATIONS.TX_PENDING_MSG, origin),
@@ -44,7 +33,7 @@ const getStandardTxNotificationsQueue = (origin?: string): NotificationsQueue =>
   }
 }
 
-const waitingTransactionNotificationsQueue: NotificationsQueue = {
+const waitingTransactionNotificationsQueue = {
   beforeExecution: null,
   pendingExecution: null,
   afterRejection: null,
@@ -53,7 +42,7 @@ const waitingTransactionNotificationsQueue: NotificationsQueue = {
   afterExecutionError: null,
 }
 
-const getConfirmationTxNotificationsQueue = (origin?: string): NotificationsQueue => {
+const getConfirmationTxNotificationsQueue = (origin) => {
   return {
     beforeExecution: setNotificationOrigin(NOTIFICATIONS.SIGN_TX_MSG, origin),
     pendingExecution: setNotificationOrigin(NOTIFICATIONS.TX_CONFIRMATION_PENDING_MSG, origin),
@@ -66,7 +55,7 @@ const getConfirmationTxNotificationsQueue = (origin?: string): NotificationsQueu
   }
 }
 
-const getCancellationTxNotificationsQueue = (origin?: string): NotificationsQueue => {
+const getCancellationTxNotificationsQueue = (origin) => {
   return {
     beforeExecution: setNotificationOrigin(NOTIFICATIONS.SIGN_TX_MSG, origin),
     pendingExecution: setNotificationOrigin(NOTIFICATIONS.TX_PENDING_MSG, origin),
@@ -79,7 +68,7 @@ const getCancellationTxNotificationsQueue = (origin?: string): NotificationsQueu
   }
 }
 
-const safeNameChangeNotificationsQueue: NotificationsQueue = {
+const safeNameChangeNotificationsQueue = {
   beforeExecution: null,
   pendingExecution: null,
   afterRejection: null,
@@ -90,7 +79,7 @@ const safeNameChangeNotificationsQueue: NotificationsQueue = {
   afterExecutionError: null,
 }
 
-const ownerNameChangeNotificationsQueue: NotificationsQueue = {
+const ownerNameChangeNotificationsQueue = {
   beforeExecution: null,
   pendingExecution: null,
   afterRejection: null,
@@ -101,7 +90,7 @@ const ownerNameChangeNotificationsQueue: NotificationsQueue = {
   afterExecutionError: null,
 }
 
-const settingsChangeTxNotificationsQueue: NotificationsQueue = {
+const settingsChangeTxNotificationsQueue = {
   beforeExecution: NOTIFICATIONS.SIGN_SETTINGS_CHANGE_MSG,
   pendingExecution: NOTIFICATIONS.SETTINGS_CHANGE_PENDING_MSG,
   afterRejection: NOTIFICATIONS.SETTINGS_CHANGE_REJECTED_MSG,
@@ -112,7 +101,7 @@ const settingsChangeTxNotificationsQueue: NotificationsQueue = {
   afterExecutionError: NOTIFICATIONS.SETTINGS_CHANGE_FAILED_MSG,
 }
 
-const defaultNotificationsQueue: NotificationsQueue = {
+const defaultNotificationsQueue = {
   beforeExecution: NOTIFICATIONS.SIGN_TX_MSG,
   pendingExecution: NOTIFICATIONS.TX_PENDING_MSG,
   afterRejection: NOTIFICATIONS.TX_REJECTED_MSG,
@@ -123,7 +112,7 @@ const defaultNotificationsQueue: NotificationsQueue = {
   afterExecutionError: NOTIFICATIONS.TX_FAILED_MSG,
 }
 
-const addressBookNewEntry: NotificationsQueue = {
+const addressBookNewEntry = {
   beforeExecution: null,
   pendingExecution: null,
   afterRejection: null,
@@ -135,7 +124,7 @@ const addressBookNewEntry: NotificationsQueue = {
   afterExecutionError: null,
 }
 
-const addressBookEditEntry: NotificationsQueue = {
+const addressBookEditEntry = {
   beforeExecution: null,
   pendingExecution: null,
   afterRejection: null,
@@ -147,7 +136,7 @@ const addressBookEditEntry: NotificationsQueue = {
   afterExecutionError: null,
 }
 
-const addressBookDeleteEntry: NotificationsQueue = {
+const addressBookDeleteEntry = {
   beforeExecution: null,
   pendingExecution: null,
   afterRejection: null,
@@ -159,8 +148,8 @@ const addressBookDeleteEntry: NotificationsQueue = {
   afterExecutionError: null,
 }
 
-export const getNotificationsFromTxType = (txType: string, origin?: string) => {
-  let notificationsQueue: NotificationsQueue
+export const getNotificationsFromTxType = (txType, origin) => {
+  let notificationsQueue
 
   switch (txType) {
     case TX_NOTIFICATION_TYPES.STANDARD_TX: {
@@ -212,14 +201,14 @@ export const getNotificationsFromTxType = (txType: string, origin?: string) => {
   return notificationsQueue
 }
 
-export const enhanceSnackbarForAction = (notification: Notification, key?: string, onClick?: Function) => ({
+export const enhanceSnackbarForAction = (notification, key, onClick) => ({
   ...notification,
   key,
   options: {
     ...notification.options,
     onClick,
     // eslint-disable-next-line react/display-name
-    action: (actionKey: number) => (
+    action: (actionKey) => (
       <IconButton onClick={() => store.dispatch(closeSnackbarAction({ key: actionKey }))}>
         <IconClose />
       </IconButton>
@@ -227,7 +216,7 @@ export const enhanceSnackbarForAction = (notification: Notification, key?: strin
   },
 })
 
-export const showSnackbar = (notification: Notification, enqueueSnackbar: Function, closeSnackbar: Function) =>
+export const showSnackbar = (notification, enqueueSnackbar, closeSnackbar) =>
   enqueueSnackbar(notification.message, {
     ...notification.options,
     // eslint-disable-next-line react/display-name

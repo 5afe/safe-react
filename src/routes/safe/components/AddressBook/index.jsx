@@ -1,4 +1,4 @@
-// @flow
+// 
 import TableCell from '@material-ui/core/TableCell'
 import TableContainer from '@material-ui/core/TableContainer'
 import TableRow from '@material-ui/core/TableRow'
@@ -13,14 +13,13 @@ import { useDispatch, useSelector } from 'react-redux'
 import { styles } from './style'
 
 import Table from '~/components/Table'
-import { type Column, cellWidth } from '~/components/Table/TableHead'
+import { cellWidth } from '~/components/Table/TableHead'
 import Block from '~/components/layout/Block'
 import Button from '~/components/layout/Button'
 import ButtonLink from '~/components/layout/ButtonLink'
 import Col from '~/components/layout/Col'
 import Img from '~/components/layout/Img'
 import Row from '~/components/layout/Row'
-import type { AddressBookEntry } from '~/logic/addressBook/model/addressBook'
 import { makeAddressBookEntry } from '~/logic/addressBook/model/addressBook'
 import { addAddressBookEntry } from '~/logic/addressBook/store/actions/addAddressBookEntry'
 import { removeAddressBookEntry } from '~/logic/addressBook/store/actions/removeAddressBookEntry'
@@ -40,16 +39,12 @@ import {
 import SendModal from '~/routes/safe/components/Balances/SendModal'
 import OwnerAddressTableCell from '~/routes/safe/components/Settings/ManageOwners/OwnerAddressTableCell'
 import RenameOwnerIcon from '~/routes/safe/components/Settings/ManageOwners/assets/icons/rename-owner.svg'
-import type { OwnerRow } from '~/routes/safe/components/Settings/ManageOwners/dataFetcher'
 import RemoveOwnerIcon from '~/routes/safe/components/Settings/assets/icons/bin.svg'
 import RemoveOwnerIconDisabled from '~/routes/safe/components/Settings/assets/icons/disabled-bin.svg'
 import { addressBookQueryParamsSelector, safesListSelector } from '~/routes/safe/store/selectors'
 
-type Props = {
-  classes: Object,
-}
 
-const AddressBookTable = ({ classes }: Props) => {
+const AddressBookTable = ({ classes }) => {
   const columns = generateColumns()
   const autoColumns = columns.filter((c) => !c.custom)
   const dispatch = useDispatch()
@@ -88,12 +83,12 @@ const AddressBookTable = ({ classes }: Props) => {
 
   const safesList = useSelector(safesListSelector)
 
-  const newEntryModalHandler = (entry: AddressBookEntry) => {
+  const newEntryModalHandler = (entry) => {
     setEditCreateEntryModalOpen(false)
     dispatch(addAddressBookEntry(makeAddressBookEntry(entry)))
   }
 
-  const editEntryModalHandler = (entry: AddressBookEntry) => {
+  const editEntryModalHandler = (entry) => {
     setSelectedEntry(null)
     setEditCreateEntryModalOpen(false)
     dispatch(updateAddressBookEntry(makeAddressBookEntry(entry)))
@@ -133,8 +128,8 @@ const AddressBookTable = ({ classes }: Props) => {
             label="Owners"
             size={addressBook.size}
           >
-            {(sortedData: List<OwnerRow>) =>
-              sortedData.map((row: AddressBookEntry, index: number) => {
+            {(sortedData) =>
+              sortedData.map((row, index) => {
                 const userOwner = isUserOwnerOnAnySafe(safesList, row.address)
                 const hideBorderBottom = index >= 3 && index === sortedData.size - 1 && classes.noBorderBottom
                 return (
@@ -144,7 +139,7 @@ const AddressBookTable = ({ classes }: Props) => {
                     key={index}
                     tabIndex={-1}
                   >
-                    {autoColumns.map((column: Column) => (
+                    {autoColumns.map((column) => (
                       <TableCell align={column.align} component="td" key={column.id} style={cellWidth(column.width)}>
                         {column.id === AB_ADDRESS_ID ? (
                           <OwnerAddressTableCell address={row[column.id]} showLinks />

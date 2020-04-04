@@ -1,7 +1,7 @@
-// @flow
+// 
 import * as React from 'react'
 import TestUtils from 'react-dom/test-utils'
-import { type Store } from 'redux'
+import { } from 'redux'
 import { Provider } from 'react-redux'
 import { render } from '@testing-library/react'
 import { ConnectedRouter } from 'connected-react-router'
@@ -9,7 +9,7 @@ import PageFrame from '~/components/layout/PageFrame'
 import ListItemText from '~/components/List/ListItemText/index'
 import fetchTransactions from '~/routes/safe/store/actions/fetchTransactions'
 import { sleep } from '~/utils/timer'
-import { history, type GlobalState } from '~/store'
+import { history, } from '~/store'
 import AppRoutes from '~/routes'
 import { SAFELIST_ADDRESS } from '~/routes/routes'
 import { EMPTY_DATA } from '~/logic/wallets/ethTransactions'
@@ -22,7 +22,7 @@ export const EDIT_INDEX = 4
 export const WITHDRAW_INDEX = 5
 export const LIST_TXS_INDEX = 6
 
-export const checkMinedTx = (Transaction: React.Component<any, any>, name: string) => {
+export const checkMinedTx = (Transaction, name) => {
   const paragraphs = TestUtils.scryRenderedDOMComponentsWithTag(Transaction, 'p')
 
   const status = 'Already executed'
@@ -38,9 +38,9 @@ export const checkMinedTx = (Transaction: React.Component<any, any>, name: strin
   expect(hashParagraph).toContain(EMPTY_DATA)
 }
 
-export const getListItemsFrom = (Transaction: React.Component<any, any>) => TestUtils.scryRenderedComponentsWithType(Transaction, ListItemText)
+export const getListItemsFrom = (Transaction) => TestUtils.scryRenderedComponentsWithType(Transaction, ListItemText)
 
-export const expand = async (Transaction: React.Component<any, any>) => {
+export const expand = async (Transaction) => {
   const listItems = getListItemsFrom(Transaction)
   if (listItems.length > 4) {
     return
@@ -57,10 +57,10 @@ export const expand = async (Transaction: React.Component<any, any>) => {
 }
 
 export const checkPendingTx = async (
-  Transaction: React.Component<any, any>,
-  safeThreshold: number,
-  name: string,
-  statusses: string[],
+  Transaction,
+  safeThreshold,
+  name,
+  statusses,
 ) => {
   await expand(Transaction)
   const listItems = getListItemsFrom(Transaction)
@@ -79,12 +79,12 @@ export const checkPendingTx = async (
   }
 }
 
-export const refreshTransactions = async (store: Store<GlobalState>, safeAddress: string) => {
+export const refreshTransactions = async (store, safeAddress) => {
   await store.dispatch(fetchTransactions(safeAddress))
   await sleep(1500)
 }
 
-const renderApp = (store: Store) => ({
+const renderApp = (store) => ({
   ...render(
     <Provider store={store}>
       <ConnectedRouter history={history}>
@@ -99,7 +99,7 @@ const renderApp = (store: Store) => ({
   history,
 })
 
-export const renderSafeView = (store: Store<GlobalState>, address: string) => {
+export const renderSafeView = (store, address) => {
   const app = renderApp(store)
 
   const url = `${SAFELIST_ADDRESS}/${address}/balances/`
@@ -110,7 +110,7 @@ export const renderSafeView = (store: Store<GlobalState>, address: string) => {
 
 const INTERVAL = 500
 const MAX_TIMES_EXECUTED = 30
-export const whenSafeDeployed = (): Promise<string> => new Promise((resolve, reject) => {
+export const whenSafeDeployed = () => new Promise((resolve, reject) => {
   let times = 0
   const interval = setInterval(() => {
     if (times >= MAX_TIMES_EXECUTED) {

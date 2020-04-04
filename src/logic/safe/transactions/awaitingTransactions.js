@@ -1,19 +1,18 @@
-// @flow
+// 
 import { List, Map } from 'immutable'
 
-import type { Transaction } from '~/routes/safe/store/models/transaction'
 
 export const getAwaitingTransactions = (
-  allTransactions: Map<string, List<Transaction>>,
-  cancellationTransactionsByNonce: Map<string | number, List<Transaction>>,
-  userAccount: string,
-): Map<string, List<Transaction>> => {
+  allTransactions,
+  cancellationTransactionsByNonce,
+  userAccount,
+) => {
   if (!allTransactions) {
     return Map({})
   }
 
   const allAwaitingTransactions = allTransactions.map((safeTransactions) => {
-    const nonCancelledTransactions = safeTransactions.filter((transaction: Transaction) => {
+    const nonCancelledTransactions = safeTransactions.filter((transaction) => {
       // If transactions are not executed, but there's a transaction with the same nonce EXECUTED later
       // it means that the transaction was cancelled (Replaced) and shouldn't get executed
       let isTransactionCancelled = false

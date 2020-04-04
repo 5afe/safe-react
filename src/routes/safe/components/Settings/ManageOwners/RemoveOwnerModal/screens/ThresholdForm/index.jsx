@@ -1,4 +1,4 @@
-// @flow
+// 
 import IconButton from '@material-ui/core/IconButton'
 import MenuItem from '@material-ui/core/MenuItem'
 import { withStyles } from '@material-ui/core/styles'
@@ -18,20 +18,11 @@ import Col from '~/components/layout/Col'
 import Hairline from '~/components/layout/Hairline'
 import Paragraph from '~/components/layout/Paragraph'
 import Row from '~/components/layout/Row'
-import type { Owner } from '~/routes/safe/store/models/owner'
 
 export const REMOVE_OWNER_THRESHOLD_NEXT_BTN_TEST_ID = 'remove-owner-threshold-next-btn'
 
-type Props = {
-  classes: Object,
-  onClickBack: Function,
-  onClose: () => void,
-  onSubmit: Function,
-  owners: List<Owner>,
-  threshold: number,
-}
 
-const ThresholdForm = ({ classes, onClickBack, onClose, onSubmit, owners, threshold }: Props) => {
+const ThresholdForm = ({ classes, onClickBack, onClose, onSubmit, owners, threshold }) => {
   const handleSubmit = (values) => {
     onSubmit(values)
   }
@@ -69,7 +60,7 @@ const ThresholdForm = ({ classes, onClickBack, onClose, onSubmit, owners, thresh
                     <Field
                       data-testid="threshold-select-input"
                       name="threshold"
-                      render={(props: any) => (
+                      render={(props) => (
                         <>
                           <SelectField {...props} disableError>
                             {[...Array(Number(numOptions))].map((x, index) => (

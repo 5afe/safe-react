@@ -1,4 +1,4 @@
-// @flow
+// 
 import { List } from 'immutable'
 import { Dispatch as ReduxDispatch } from 'redux'
 
@@ -6,12 +6,11 @@ import fetchCurrenciesRates from '~/logic/currencyValues/api/fetchCurrenciesRate
 import { setCurrencyBalances } from '~/logic/currencyValues/store/actions/setCurrencyBalances'
 import { AVAILABLE_CURRENCIES } from '~/logic/currencyValues/store/model/currencyValues'
 import { currencyValuesListSelector } from '~/logic/currencyValues/store/selectors'
-import type { GlobalState } from '~/store'
 
 // eslint-disable-next-line max-len
-const fetchCurrencySelectedValue = (currencyValueSelected: AVAILABLE_CURRENCIES) => async (
-  dispatch: ReduxDispatch<GlobalState>,
-  getState: Function,
+const fetchCurrencySelectedValue = (currencyValueSelected) => async (
+  dispatch,
+  getState,
 ) => {
   const state = getState()
   const currencyBalancesList = currencyValuesListSelector(state)

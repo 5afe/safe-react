@@ -1,4 +1,4 @@
-// @flow
+// 
 import { getNetwork } from '~/config'
 import { capitalize } from '~/utils/css'
 
@@ -10,72 +10,10 @@ export const INFO = 'info'
 const shortDuration = 5000
 const longDuration = 10000
 
-export type Variant = 'success' | 'error' | 'warning' | 'info'
 
-export type Notification = {
-  message: string,
-  key?: string,
-  options: {
-    variant: Variant,
-    persist: boolean,
-    autoHideDuration?: 5000 | 10000,
-    preventDuplicate?: boolean,
-  },
-}
 
-export type Notifications = {
-  // Wallet Connection
-  CONNECT_WALLET_MSG: Notification,
-  CONNECT_WALLET_READ_MODE_MSG: Notification,
-  WALLET_CONNECTED_MSG: Notification,
-  WALLET_DISCONNECTED_MSG: Notification,
-  UNLOCK_WALLET_MSG: Notification,
-  CONNECT_WALLET_ERROR_MSG: Notification,
 
-  // Regular/Custom Transactions
-  SIGN_TX_MSG: Notification,
-  TX_PENDING_MSG: Notification,
-  TX_REJECTED_MSG: Notification,
-  TX_EXECUTED_MSG: Notification,
-  TX_CANCELLATION_EXECUTED_MSG: Notification,
-  TX_EXECUTED_MORE_CONFIRMATIONS_MSG: Notification,
-  TX_FAILED_MSG: Notification,
-  TX_WAITING_MSG: Notification,
-  TX_INCOMING_MSG: Notification,
-
-  // Approval Transactions
-  TX_CONFIRMATION_PENDING_MSG: Notification,
-  TX_CONFIRMATION_EXECUTED_MSG: Notification,
-  TX_CONFIRMATION_FAILED_MSG: Notification,
-
-  // Safe Name
-  SAFE_NAME_CHANGED_MSG: Notification,
-
-  // Owner Name
-  OWNER_NAME_CHANGE_EXECUTED_MSG: Notification,
-
-  // Owners
-  SIGN_SETTINGS_CHANGE_MSG: Notification,
-  SETTINGS_CHANGE_PENDING_MSG: Notification,
-  SETTINGS_CHANGE_REJECTED_MSG: Notification,
-  SETTINGS_CHANGE_EXECUTED_MSG: Notification,
-  SETTINGS_CHANGE_EXECUTED_MORE_CONFIRMATIONS_MSG: Notification,
-  SETTINGS_CHANGE_FAILED_MSG: Notification,
-
-  // Rinkeby version
-  RINKEBY_VERSION_MSG: Notification,
-  WRONG_NETWORK_MSG: Notification,
-
-  // AddressBook
-  ADDRESS_BOOK_NEW_ENTRY_SUCCESS: Notification,
-  ADDRESS_BOOK_EDIT_ENTRY_SUCCESS: Notification,
-  ADDRESS_BOOK_DELETE_ENTRY_SUCCESS: Notification,
-
-  // Safe Version
-  SAFE_NEW_VERSION_AVAILABLE: Notification,
-}
-
-export const NOTIFICATIONS: Notifications = {
+export const NOTIFICATIONS = {
   // Wallet Connection
   CONNECT_WALLET_MSG: {
     message: 'Please connect wallet to continue',

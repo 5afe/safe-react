@@ -1,4 +1,4 @@
-// @flow
+// 
 import IconButton from '@material-ui/core/IconButton'
 import ChevronLeft from '@material-ui/icons/ChevronLeft'
 import * as React from 'react'
@@ -10,15 +10,12 @@ import Row from '~/components/layout/Row'
 import DetailsForm, { safeFieldsValidation } from '~/routes/load/components/DetailsForm'
 import OwnerList from '~/routes/load/components/OwnerList'
 import ReviewInformation from '~/routes/load/components/ReviewInformation'
-import { type SelectorProps } from '~/routes/load/container/selector'
+import { } from '~/routes/load/container/selector'
 import { history } from '~/store'
 import { secondary, sm } from '~/theme/variables'
 
 const getSteps = () => ['Name and address', 'Owners', 'Review']
 
-export type LayoutProps = SelectorProps & {
-  onLoadSafeSubmit: (values: Object) => Promise<void>,
-}
 
 const iconStyle = {
   color: secondary,
@@ -38,7 +35,7 @@ const formMutators = {
 
 const buttonLabels = ['Next', 'Review', 'Load']
 
-const Layout = ({ network, onLoadSafeSubmit, provider, userAddress }: Props) => {
+const Layout = ({ network, onLoadSafeSubmit, provider, userAddress }) => {
   const steps = getSteps()
   const initialValues = {}
 

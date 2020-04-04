@@ -1,12 +1,8 @@
-// @flow
-import { Record, type RecordFactory, type RecordOf } from 'immutable'
+// 
+import { Record, } from 'immutable'
 
-export type CurrentSessionProps = {
-  viewedSafes: Array<string>,
-}
 
-export const makeCurrentSession: RecordFactory<CurrentSessionProps> = Record({
+export const makeCurrentSession = Record({
   viewedSafes: [],
 })
 
-export type CurrentSession = RecordOf<CurrentSessionProps>

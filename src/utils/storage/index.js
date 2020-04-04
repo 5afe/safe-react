@@ -1,4 +1,4 @@
-// @flow
+// 
 import { ImmortalStorage, IndexedDbStore, LocalStorageStore } from 'immortal-db'
 
 import { getNetwork } from '~/config'
@@ -11,7 +11,7 @@ export const storage = new ImmortalStorage(stores)
 
 const PREFIX = `v2_${getNetwork()}`
 
-export const loadFromStorage = async (key: string): Promise<*> => {
+export const loadFromStorage = async (key) => {
   try {
     const stringifiedValue = await storage.get(`${PREFIX}__${key}`)
     if (stringifiedValue === null || stringifiedValue === undefined) {
@@ -25,7 +25,7 @@ export const loadFromStorage = async (key: string): Promise<*> => {
   }
 }
 
-export const saveToStorage = async (key: string, value: *): Promise<*> => {
+export const saveToStorage = async (key, value) => {
   try {
     const stringifiedValue = JSON.stringify(value)
     await storage.set(`${PREFIX}__${key}`, stringifiedValue)
@@ -34,7 +34,7 @@ export const saveToStorage = async (key: string, value: *): Promise<*> => {
   }
 }
 
-export const removeFromStorage = async (key: string): Promise<*> => {
+export const removeFromStorage = async (key) => {
   try {
     await storage.remove(`${PREFIX}__${key}`)
   } catch (err) {

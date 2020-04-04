@@ -1,9 +1,9 @@
-// @flow
+// 
 import { List } from 'immutable'
 
-import { type Owner, makeOwner } from '~/routes/safe/store/models/owner'
+import { makeOwner } from '~/routes/safe/store/models/owner'
 
-export const getAccountsFrom = (values: Object): string[] => {
+export const getAccountsFrom = (values) => {
   const accounts = Object.keys(values)
     .sort()
     .filter((key) => /^owner\d+Address$/.test(key))
@@ -11,7 +11,7 @@ export const getAccountsFrom = (values: Object): string[] => {
   return accounts.map((account) => values[account]).slice(0, values.owners)
 }
 
-export const getNamesFrom = (values: Object): string[] => {
+export const getNamesFrom = (values) => {
   const accounts = Object.keys(values)
     .sort()
     .filter((key) => /^owner\d+Name$/.test(key))
@@ -19,12 +19,12 @@ export const getNamesFrom = (values: Object): string[] => {
   return accounts.map((account) => values[account]).slice(0, values.owners)
 }
 
-export const getOwnersFrom = (names: string[], addresses: string[]): List<Owner> => {
-  const owners = names.map((name: string, index: number) => makeOwner({ name, address: addresses[index] }))
+export const getOwnersFrom = (names, addresses) => {
+  const owners = names.map((name, index) => makeOwner({ name, address: addresses[index] }))
 
   return List(owners)
 }
 
-export const getThresholdFrom = (values: Object): number => Number(values.confirmations)
+export const getThresholdFrom = (values) => Number(values.confirmations)
 
-export const getSafeNameFrom = (values: Object): string => values.name
+export const getSafeNameFrom = (values) => values.name

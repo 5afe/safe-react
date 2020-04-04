@@ -1,4 +1,4 @@
-// @flow
+// 
 import React from 'react'
 import styled from 'styled-components'
 
@@ -32,12 +32,7 @@ const Circle = styled.div`
   margin-bottom: 5px;
 `
 
-type Props = {
-  dotIndex: number,
-  currentIndex: number,
-  error?: boolean,
-}
-const DotStep = ({ currentIndex, dotIndex, error }: Props) => {
+const DotStep = ({ currentIndex, dotIndex, error }) => {
   return (
     <Circle disabled={dotIndex > currentIndex} error={error}>
       {dotIndex < currentIndex ? <IconText iconUrl={CheckIcon} /> : dotIndex + 1}

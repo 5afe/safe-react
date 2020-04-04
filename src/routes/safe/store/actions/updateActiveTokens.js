@@ -1,10 +1,9 @@
-// @flow
+// 
 import { Set } from 'immutable'
-import type { Dispatch as ReduxDispatch } from 'redux'
 
 import updateSafe from './updateSafe'
 
-import { type GlobalState } from '~/store'
+import { } from '~/store'
 
 // the selector uses ownProps argument/router props to get the address of the safe
 // so in order to use it I had to recreate the same structure
@@ -16,8 +15,8 @@ import { type GlobalState } from '~/store'
 //   },
 // })
 
-const updateActiveTokens = (safeAddress: string, activeTokens: Set<string>) => async (
-  dispatch: ReduxDispatch<GlobalState>,
+const updateActiveTokens = (safeAddress, activeTokens) => async (
+  dispatch,
 ) => {
   dispatch(updateSafe({ address: safeAddress, activeTokens }))
 }

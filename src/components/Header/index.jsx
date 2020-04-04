@@ -1,32 +1,24 @@
-// @flow
+// 
 import { withSnackbar } from 'notistack'
 import * as React from 'react'
 import { connect } from 'react-redux'
 
-import actions, { type Actions } from './actions'
+import actions, { } from './actions'
 import Layout from './components/Layout'
 import ConnectDetails from './components/ProviderDetails/ConnectDetails'
 import UserDetails from './components/ProviderDetails/UserDetails'
 import ProviderAccessible from './components/ProviderInfo/ProviderAccessible'
 import ProviderDisconnected from './components/ProviderInfo/ProviderDisconnected'
-import selector, { type SelectorProps } from './selector'
+import selector, { } from './selector'
 
 import { onboard } from '~/components/ConnectButton'
 import { NOTIFICATIONS, showSnackbar } from '~/logic/notifications'
 import { loadLastUsedProvider } from '~/logic/wallets/store/middlewares/providerWatcher'
-import { type Info, logComponentStack } from '~/utils/logBoundaries'
+import { logComponentStack } from '~/utils/logBoundaries'
 
-type Props = Actions &
-  SelectorProps & {
-    enqueueSnackbar: Function,
-    closeSnackbar: Function,
-  }
 
-type State = {
-  hasError: boolean,
-}
 
-class HeaderComponent extends React.PureComponent<Props, State> {
+class HeaderComponent extends React.PureComponent {
   constructor(props) {
     super(props)
 
@@ -45,7 +37,7 @@ class HeaderComponent extends React.PureComponent<Props, State> {
     }
   }
 
-  componentDidCatch(error: Error, info: Info) {
+  componentDidCatch(error, info) {
     const { closeSnackbar, enqueueSnackbar } = this.props
 
     this.setState({ hasError: true })

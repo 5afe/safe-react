@@ -1,27 +1,22 @@
-// @flow
-import type { Dispatch as ReduxDispatch } from 'redux'
+// 
 import { createAction } from 'redux-actions'
 
-import { type Token } from '~/logic/tokens/store/model/token'
+import { } from '~/logic/tokens/store/model/token'
 import { removeFromActiveTokens, removeTokenFromStorage } from '~/logic/tokens/utils/tokensStorage'
-import { type GlobalState } from '~/store/index'
+import { } from '~/store/index'
 
 export const REMOVE_TOKEN = 'REMOVE_TOKEN'
 
-type RemoveTokenProps = {
-  safeAddress: string,
-  token: Token,
-}
 
-export const removeToken = createAction<string, *, *>(
+export const removeToken = createAction(
   REMOVE_TOKEN,
-  (safeAddress: string, token: Token): RemoveTokenProps => ({
+  (safeAddress, token) => ({
     safeAddress,
     token,
   }),
 )
 
-const deleteToken = (safeAddress: string, token: Token) => async (dispatch: ReduxDispatch<GlobalState>) => {
+const deleteToken = (safeAddress, token) => async (dispatch) => {
   dispatch(removeToken(safeAddress, token))
 
   await removeFromActiveTokens(safeAddress, token)

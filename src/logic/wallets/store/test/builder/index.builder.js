@@ -1,30 +1,29 @@
-// @flow
-import type { Provider } from '~/logic/wallets/store/model/provider'
+// 
 import { makeProvider } from '~/logic/wallets/store/model/provider'
 
 class ProviderBuilder {
-  provider: Provider
+  provider
 
   constructor() {
     this.provider = makeProvider()
   }
 
-  withName(name: string) {
+  withName(name) {
     this.provider = this.provider.set('name', name)
     return this
   }
 
-  withLoaded(loaded: boolean) {
+  withLoaded(loaded) {
     this.provider = this.provider.set('loaded', loaded)
     return this
   }
 
-  withAvailable(available: boolean) {
+  withAvailable(available) {
     this.provider = this.provider.set('available', available)
     return this
   }
 
-  withAccount(account: string) {
+  withAccount(account) {
     this.provider = this.provider.set('account', account)
     return this
   }

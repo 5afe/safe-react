@@ -1,4 +1,4 @@
-// @flow
+// 
 import CollapseMUI from '@material-ui/core/Collapse'
 import IconButton from '@material-ui/core/IconButton'
 import ExpandLess from '@material-ui/icons/ExpandLess'
@@ -15,13 +15,8 @@ const Header = styled.div`
 
 const Title = styled.div``
 
-type Props = {
-  title: string,
-  children: React.Node,
-  description: React.Node,
-}
 
-const Collapse = ({ children, description, title }: Props) => {
+const Collapse = ({ children, description, title }) => {
   const [open, setOpen] = React.useState(false)
 
   const handleClick = () => {

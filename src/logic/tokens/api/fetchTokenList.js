@@ -1,4 +1,4 @@
-// @flow
+// 
 import axios from 'axios'
 
 import { getRelayUrl } from '~/config/index'

@@ -1,4 +1,4 @@
-// @flow
+// 
 import CircularProgress from '@material-ui/core/CircularProgress'
 import IconButton from '@material-ui/core/IconButton'
 import { withStyles } from '@material-ui/core/styles'
@@ -19,16 +19,10 @@ import Row from '~/components/layout/Row'
 
 const { useEffect, useState } = React
 
-type Props = {
-  onClose: () => void,
-  classes: Object,
-  onScan: Function,
-  isOpen: boolean,
-}
 
-const ScanQRModal = ({ classes, isOpen, onClose, onScan }: Props) => {
+const ScanQRModal = ({ classes, isOpen, onClose, onScan }) => {
   const [hasWebcam, setHasWebcam] = useState(null)
-  const scannerRef: Object = React.createRef()
+  const scannerRef = React.createRef()
   const openImageDialog = () => {
     scannerRef.current.openImageDialog()
   }

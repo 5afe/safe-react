@@ -1,4 +1,4 @@
-// @flow
+// 
 import providerReducerTests from './provider.reducer'
 import providerNameTests from './name.selector'
 import providerAccountTests from './account.selector'

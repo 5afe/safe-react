@@ -1,4 +1,4 @@
-// @flow
+// 
 import InputBase from '@material-ui/core/InputBase'
 import ListItemIcon from '@material-ui/core/ListItemIcon'
 import ListItemText from '@material-ui/core/ListItemText'
@@ -23,7 +23,7 @@ import { DropdownListTheme } from '~/theme/mui'
 const DropdownCurrency = () => {
   const currenciesList = Object.values(AVAILABLE_CURRENCIES)
   const dispatch = useDispatch()
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
+  const [anchorEl, setAnchorEl] = useState(null)
   const currencyValueSelected = useSelector(currentCurrencySelector)
 
   const [searchParams, setSearchParams] = useState('')
@@ -32,7 +32,7 @@ const DropdownCurrency = () => {
     currency.toLowerCase().includes(searchParams.toLowerCase()),
   )
 
-  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+  const handleClick = (event) => {
     setAnchorEl(event.currentTarget)
   }
 
@@ -40,7 +40,7 @@ const DropdownCurrency = () => {
     setAnchorEl(null)
   }
 
-  const onCurrentCurrencyChangedHandler = (newCurrencySelectedName: AVAILABLE_CURRENCIES) => {
+  const onCurrentCurrencyChangedHandler = (newCurrencySelectedName) => {
     dispatch(fetchCurrencySelectedValue(newCurrencySelectedName))
     dispatch(saveCurrencySelected(newCurrencySelectedName))
     handleClose()

@@ -1,4 +1,4 @@
-// @flow
+// 
 import { withStyles } from '@material-ui/core/styles'
 import { List } from 'immutable'
 import React, { useState } from 'react'
@@ -20,9 +20,8 @@ import Hairline from '~/components/layout/Hairline'
 import Img from '~/components/layout/Img'
 import Paragraph from '~/components/layout/Paragraph'
 import Row from '~/components/layout/Row'
-import type { NFTAssetsState } from '~/logic/collectibles/store/reducer/collectibles'
 import { nftAssetsListSelector } from '~/logic/collectibles/store/selectors'
-import { type Token, type TokenProps } from '~/logic/tokens/store/model/token'
+import { } from '~/logic/tokens/store/model/token'
 import {
   addressIsAssetContract,
   doesntExistInAssetsList,
@@ -34,18 +33,6 @@ export const ADD_CUSTOM_ASSET_SYMBOLS_INPUT_TEST_ID = 'add-custom-asset-symbols-
 export const ADD_CUSTOM_ASSET_DECIMALS_INPUT_TEST_ID = 'add-custom-asset-decimals-input'
 export const ADD_CUSTOM_ASSET_FORM = 'add-custom-asset-form'
 
-type Props = {
-  classes: Object,
-  addToken: Function,
-  updateActiveTokens: Function,
-  safeAddress: string,
-  activeTokens: List<TokenProps>,
-  tokens: List<Token>,
-  setActiveScreen: Function,
-  onClose: Function,
-  activateTokenForAllSafes: Function,
-  parentList: 'assetsList' | 'tokenList',
-}
 
 const INITIAL_FORM_STATE = {
   address: '',
@@ -54,17 +41,17 @@ const INITIAL_FORM_STATE = {
   logoUri: '',
 }
 
-const AddCustomAsset = (props: Props) => {
+const AddCustomAsset = (props) => {
   const { classes, onClose, parentList, setActiveScreen } = props
 
-  const nftAssetsList: NFTAssetsState = useSelector(nftAssetsListSelector)
+  const nftAssetsList = useSelector(nftAssetsListSelector)
   const [formValues, setFormValues] = useState(INITIAL_FORM_STATE)
 
   const handleSubmit = () => {
     onClose()
   }
 
-  const populateFormValuesFromAddress = async (tokenAddress: string) => {
+  const populateFormValuesFromAddress = async (tokenAddress) => {
     const tokenData = await getSymbolAndDecimalsFromContract(tokenAddress)
 
     if (tokenData.length) {

@@ -1,14 +1,13 @@
-// @flow
+// 
 import { List, Map } from 'immutable'
-import type { Dispatch as ReduxDispatch } from 'redux'
 
 import { loadAddressBook } from '~/logic/addressBook/store/actions/loadAddressBook'
 import { buildAddressBook } from '~/logic/addressBook/store/reducer/addressBook'
 import { getAddressBookFromStorage } from '~/logic/addressBook/utils'
 import { safesListSelector } from '~/routes/safe/store/selectors'
-import { type GlobalState } from '~/store/index'
+import { } from '~/store/index'
 
-const loadAddressBookFromStorage = () => async (dispatch: ReduxDispatch<GlobalState>, getState: Function) => {
+const loadAddressBookFromStorage = () => async (dispatch, getState) => {
   try {
     const state = getState()
     let addressBook = await getAddressBookFromStorage()

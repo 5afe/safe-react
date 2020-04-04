@@ -1,4 +1,4 @@
-// @flow
+// 
 import Paper from '@material-ui/core/Paper'
 import { withStyles } from '@material-ui/core/styles'
 import * as React from 'react'
@@ -17,14 +17,8 @@ const styles = () => ({
   },
 })
 
-type Props = {
-  classes: Object,
-  children: React.Node,
-  controls: React.Node,
-  padding?: boolean,
-}
 
-const OpenPaper = ({ children, classes, controls, padding = true }: Props) => (
+const OpenPaper = ({ children, classes, controls, padding = true }) => (
   <Paper className={classes.root} elevation={1}>
     <Block className={padding ? classes.padding : ''}>{children}</Block>
     {controls}

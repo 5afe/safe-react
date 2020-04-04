@@ -1,4 +1,4 @@
-// @flow
+// 
 import IconButton from '@material-ui/core/IconButton'
 import { makeStyles } from '@material-ui/core/styles'
 import ExpandLessIcon from '@material-ui/icons/ExpandLess'
@@ -35,13 +35,10 @@ const useStyles = makeStyles({
   },
 })
 
-type Props = {
-  safesCount: number,
-}
 
 const { useContext } = React
 
-const SafeListHeader = ({ safesCount }: Props) => {
+const SafeListHeader = ({ safesCount }) => {
   const classes = useStyles()
   const { isOpen, toggleSidebar } = useContext(SidebarContext)
 
@@ -63,7 +60,7 @@ const SafeListHeader = ({ safesCount }: Props) => {
   )
 }
 
-export default connect<Object, Object, ?Function, ?Object>(
+export default connect(
   // $FlowFixMe
   (state) => ({ safesCount: safesCountSelector(state) }),
   null,

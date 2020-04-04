@@ -1,4 +1,4 @@
-// @flow
+// 
 import classNames from 'classnames/bind'
 import * as React from 'react'
 
@@ -8,29 +8,6 @@ import { capitalize } from '~/utils/css'
 
 const cx = classNames.bind(styles)
 
-type Props = {
-  start?: 'xs' | 'sm' | 'md' | 'lg',
-  center?: 'xs' | 'sm' | 'md' | 'lg',
-  end?: 'xs' | 'sm' | 'md' | 'lg',
-  top?: 'xs' | 'sm' | 'md' | 'lg',
-  middle?: 'xs' | 'sm' | 'md' | 'lg',
-  bottom?: 'xs' | 'sm' | 'md' | 'lg',
-  around?: 'xs' | 'sm' | 'md' | 'lg',
-  between?: 'xs' | 'sm' | 'md' | 'lg',
-  margin?: 'sm' | 'md' | 'lg' | 'xl',
-  layout?: 'inherit' | 'block' | 'column',
-  overflow?: boolean,
-  xs?: number | boolean,
-  sm?: number | boolean,
-  md?: number | boolean,
-  lg?: number | boolean,
-  xsOffset?: number,
-  smOffset?: number,
-  mdOffset?: number,
-  lgOffset?: number,
-  className?: string,
-  children: React.Node,
-}
 
 const Col = ({
   around,
@@ -55,7 +32,7 @@ const Col = ({
   xs,
   xsOffset,
   ...props
-}: Props) => {
+}) => {
   const colClassNames = cx(
     'col',
     center ? capitalize(center, 'center') : undefined,

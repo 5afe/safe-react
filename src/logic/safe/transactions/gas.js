@@ -1,4 +1,4 @@
-// @flow
+// 
 import { BigNumber } from 'bignumber.js'
 
 import { getGnosisSafeInstanceAt } from '~/logic/contracts/safeContracts'
@@ -24,17 +24,17 @@ const estimateDataGasCosts = (data) => {
 // https://docs.gnosis.io/safe/docs/docs4/#safe-transaction-data-gas-estimation
 // https://github.com/gnosis/safe-contracts/blob/a97c6fd24f79c0b159ddd25a10a2ebd3ea2ef926/test/utils/execution.js
 export const estimateDataGas = (
-  safe: any,
-  to: string,
-  valueInWei: number,
-  from: string,
-  data: string,
-  operation: number,
-  txGasEstimate: number,
-  gasToken: number,
-  nonce: number,
-  signatureCount: number,
-  refundReceiver: number,
+  safe,
+  to,
+  valueInWei,
+  from,
+  data,
+  operation,
+  txGasEstimate,
+  gasToken,
+  nonce,
+  signatureCount,
+  refundReceiver,
 ) => {
   // numbers < 256 are 192 -> 31 * 4 + 68
   // numbers < 65k are 256 -> 30 * 4 + 2 * 68
@@ -59,12 +59,12 @@ export const estimateDataGas = (
 }
 
 export const generateTxGasEstimateFrom = async (
-  safe: any,
-  safeAddress: string,
-  data: string,
-  to: string,
-  valueInWei: number,
-  operation: number,
+  safe,
+  safeAddress,
+  data,
+  to,
+  valueInWei,
+  operation,
 ) => {
   try {
     let safeInstance = safe
@@ -89,13 +89,13 @@ export const generateTxGasEstimateFrom = async (
 }
 
 export const calculateTxFee = async (
-  safe: any,
-  safeAddress: string,
-  from: string,
-  data: string,
-  to: string,
-  valueInWei: number,
-  operation: number,
+  safe,
+  safeAddress,
+  from,
+  data,
+  to,
+  valueInWei,
+  operation,
 ) => {
   try {
     let safeInstance = safe

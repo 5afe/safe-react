@@ -1,4 +1,4 @@
-// @flow
+// 
 import IconButton from '@material-ui/core/IconButton'
 import { withStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
@@ -19,18 +19,8 @@ import { estimateTxGasCosts } from '~/logic/safe/transactions/gasNew'
 import { formatAmount } from '~/logic/tokens/utils/formatAmount'
 import { EMPTY_DATA } from '~/logic/wallets/ethTransactions'
 import { getWeb3 } from '~/logic/wallets/getWeb3'
-import { type Transaction } from '~/routes/safe/store/models/transaction'
+import { } from '~/routes/safe/store/models/transaction'
 
-type Props = {
-  onClose: () => void,
-  classes: Object,
-  isOpen: boolean,
-  createTransaction: Function,
-  tx: Transaction,
-  safeAddress: string,
-  enqueueSnackbar: Function,
-  closeSnackbar: Function,
-}
 
 const RejectTxModal = ({
   classes,
@@ -41,8 +31,8 @@ const RejectTxModal = ({
   onClose,
   safeAddress,
   tx,
-}: Props) => {
-  const [gasCosts, setGasCosts] = useState<string>('< 0.001')
+}) => {
+  const [gasCosts, setGasCosts] = useState('< 0.001')
 
   useEffect(() => {
     let isCurrent = true

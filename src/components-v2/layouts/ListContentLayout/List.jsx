@@ -1,4 +1,4 @@
-// @flow
+// 
 
 import { withStyles } from '@material-ui/core/styles'
 import cn from 'classnames'
@@ -23,18 +23,8 @@ const IconImg = styled.img`
   width: 20px;
   margin-right: 10px;
 `
-type Props = {
-  items: Array<{
-    id: string,
-    name: string,
-    iconUrl?: string,
-  }>,
-  activeItem: string,
-  onItemClick: () => void,
-  classes: Object,
-}
 
-const List = ({ activeItem, classes, items, onItemClick }: Props) => {
+const List = ({ activeItem, classes, items, onItemClick }) => {
   return (
     <Wrapper>
       {items.map((i) => (

@@ -1,5 +1,4 @@
-// @flow
-import type { RecordOf } from 'immutable'
+// 
 import { Record } from 'immutable'
 
 export const AVAILABLE_CURRENCIES = {
@@ -38,12 +37,6 @@ export const AVAILABLE_CURRENCIES = {
   MYR: 'MYR',
 }
 
-export type BalanceCurrencyType = {
-  currencyName: AVAILABLE_CURRENCIES,
-  tokenAddress: string,
-  balanceInBaseCurrency: string,
-  balanceInSelectedCurrency: string,
-}
 
 export const makeBalanceCurrency = Record({
   currencyName: '',
@@ -52,9 +45,4 @@ export const makeBalanceCurrency = Record({
   balanceInSelectedCurrency: '',
 })
 
-export type CurrencyValuesProps = {
-  currencyValueSelected: AVAILABLE_CURRENCIES,
-  currencyValuesList: BalanceCurrencyType[],
-}
 
-export type CurrencyValues = RecordOf<CurrencyValuesProps>

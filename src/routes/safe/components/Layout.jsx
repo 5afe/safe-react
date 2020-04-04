@@ -1,4 +1,4 @@
-// @flow
+// 
 import Badge from '@material-ui/core/Badge'
 import Tab from '@material-ui/core/Tab'
 import Tabs from '@material-ui/core/Tabs'
@@ -9,7 +9,7 @@ import classNames from 'classnames/bind'
 import React, { useState } from 'react'
 import { Redirect, Route, Switch, withRouter } from 'react-router-dom'
 
-import { type Actions } from '../container/actions'
+import { } from '../container/actions'
 
 import Balances from './Balances'
 import Receive from './Balances/Receive'
@@ -37,7 +37,7 @@ import Row from '~/components/layout/Row'
 import { getEtherScanLink, getWeb3 } from '~/logic/wallets/getWeb3'
 import AddressBookTable from '~/routes/safe/components/AddressBook'
 import SendModal from '~/routes/safe/components/Balances/SendModal'
-import { type SelectorProps } from '~/routes/safe/container/selector'
+import { } from '~/routes/safe/container/selector'
 import { border } from '~/theme/variables'
 
 export const BALANCES_TAB_BTN_TEST_ID = 'balances-tab-btn'
@@ -48,24 +48,8 @@ export const SAFE_VIEW_NAME_HEADING_TEST_ID = 'safe-name-heading'
 
 const Apps = React.lazy(() => import('./Apps'))
 
-type Props = SelectorProps &
-  Actions & {
-    classes: Object,
-    granted: boolean,
-    sendFunds: Object,
-    showReceive: boolean,
-    onShow: Function,
-    onHide: Function,
-    showSendFunds: Function,
-    hideSendFunds: Function,
-    match: Object,
-    location: Object,
-    history: Object,
-    fetchCurrencyValues: Function,
-    updateAddressBookEntry: Function,
-  }
 
-const Layout = (props: Props) => {
+const Layout = (props) => {
   const {
     activateAssetsByBalance,
     activateTokensByBalance,

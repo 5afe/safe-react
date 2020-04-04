@@ -1,4 +1,4 @@
-// @flow
+// 
 import IconButton from '@material-ui/core/IconButton'
 import { withStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
@@ -21,23 +21,12 @@ import { getGnosisSafeInstanceAt } from '~/logic/contracts/safeContracts'
 import { estimateTxGasCosts } from '~/logic/safe/transactions/gasNew'
 import { formatAmount } from '~/logic/tokens/utils/formatAmount'
 import { getWeb3 } from '~/logic/wallets/getWeb3'
-import type { Owner } from '~/routes/safe/store/models/owner'
 
 export const ADD_OWNER_SUBMIT_BTN_TEST_ID = 'add-owner-submit-btn'
 
-type Props = {
-  onClose: () => void,
-  classes: Object,
-  safeName: string,
-  owners: List<Owner>,
-  values: Object,
-  onClickBack: Function,
-  onSubmit: Function,
-  safeAddress: string,
-}
 
-const ReviewAddOwner = ({ classes, onClickBack, onClose, onSubmit, owners, safeAddress, safeName, values }: Props) => {
-  const [gasCosts, setGasCosts] = useState<string>('< 0.001')
+const ReviewAddOwner = ({ classes, onClickBack, onClose, onSubmit, owners, safeAddress, safeName, values }) => {
+  const [gasCosts, setGasCosts] = useState('< 0.001')
   useEffect(() => {
     let isCurrent = true
     const estimateGas = async () => {

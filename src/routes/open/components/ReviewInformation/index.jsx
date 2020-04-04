@@ -1,4 +1,4 @@
-// @flow
+// 
 import TableContainer from '@material-ui/core/TableContainer'
 import { withStyles } from '@material-ui/core/styles'
 import classNames from 'classnames'
@@ -85,14 +85,9 @@ const styles = () => ({
   },
 })
 
-type Props = {
-  values: Object,
-  classes: Object,
-  userAccount: string,
-}
 
-const ReviewComponent = ({ classes, userAccount, values }: Props) => {
-  const [gasCosts, setGasCosts] = useState<string>('< 0.001')
+const ReviewComponent = ({ classes, userAccount, values }) => {
+  const [gasCosts, setGasCosts] = useState('< 0.001')
   const names = getNamesFrom(values)
   const addresses = getAccountsFrom(values)
   const numOwners = getNumOwnersFrom(values)
@@ -189,7 +184,7 @@ const ReviewComponent = ({ classes, userAccount, values }: Props) => {
 
 const ReviewPage = withStyles(styles)(ReviewComponent)
 
-const Review = () => (controls: React.Node, { values }: Object) => (
+const Review = () => (controls, { values }) => (
   <>
     <OpenPaper controls={controls} padding={false}>
       <ReviewPage values={values} />

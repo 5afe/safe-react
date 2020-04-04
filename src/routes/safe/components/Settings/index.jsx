@@ -1,4 +1,4 @@
-// @flow
+// 
 import Badge from '@material-ui/core/Badge'
 import { withStyles } from '@material-ui/core/styles'
 import cn from 'classnames'
@@ -10,7 +10,7 @@ import ManageOwners from './ManageOwners'
 import RemoveSafeModal from './RemoveSafeModal'
 import SafeDetails from './SafeDetails'
 import ThresholdSettings from './ThresholdSettings'
-import actions, { type Actions } from './actions'
+import actions, { } from './actions'
 import { OwnersIcon } from './assets/icons/OwnersIcon'
 import { RequiredConfirmationsIcon } from './assets/icons/RequiredConfirmationsIcon'
 import { SafeDetailsIcon } from './assets/icons/SafeDetailsIcon'
@@ -25,41 +25,14 @@ import Img from '~/components/layout/Img'
 import Paragraph from '~/components/layout/Paragraph'
 import Row from '~/components/layout/Row'
 import Span from '~/components/layout/Span'
-import type { AddressBook } from '~/logic/addressBook/model/addressBook'
-import { type Owner } from '~/routes/safe/store/models/owner'
-import type { Safe } from '~/routes/safe/store/models/safe'
+import { } from '~/routes/safe/store/models/owner'
 
 export const OWNERS_SETTINGS_TAB_TEST_ID = 'owner-settings-tab'
 
-type State = {
-  showRemoveSafe: boolean,
-  menuOptionIndex: number,
-}
 
-type Props = Actions & {
-  addSafeOwner: Function,
-  addressBook: AddressBook,
-  classes: Object,
-  createTransaction: Function,
-  editSafeOwner: Function,
-  etherScanLink: string,
-  granted: boolean,
-  network: string,
-  owners: List<Owner>,
-  removeSafeOwner: Function,
-  replaceSafeOwner: Function,
-  safe: Safe,
-  safeAddress: string,
-  safeName: string,
-  threshold: number,
-  updateAddressBookEntry: Function,
-  updateSafe: Function,
-  userAddress: string,
-}
 
-type Action = 'RemoveSafe'
 
-class Settings extends React.Component<Props, State> {
+class Settings extends React.Component {
   constructor(props) {
     super(props)
 
@@ -73,11 +46,11 @@ class Settings extends React.Component<Props, State> {
     this.setState({ menuOptionIndex })
   }
 
-  onShow = (action: Action) => () => {
+  onShow = (action) => () => {
     this.setState(() => ({ [`show${action}`]: true }))
   }
 
-  onHide = (action: Action) => () => {
+  onHide = (action) => () => {
     this.setState(() => ({ [`show${action}`]: false }))
   }
 

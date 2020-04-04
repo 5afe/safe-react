@@ -1,4 +1,4 @@
-// @flow
+// 
 import { makeStyles } from '@material-ui/core/styles'
 import cn from 'classnames'
 import { List } from 'immutable'
@@ -22,23 +22,10 @@ import Row from '~/components/layout/Row'
 import Span from '~/components/layout/Span'
 import IncomingTxDescription from '~/routes/safe/components/Transactions/TxsTable/ExpandedTx/IncomingTxDescription'
 import { INCOMING_TX_TYPES } from '~/routes/safe/store/models/incomingTransaction'
-import { type Owner } from '~/routes/safe/store/models/owner'
-import { type Transaction } from '~/routes/safe/store/models/transaction'
+import { } from '~/routes/safe/store/models/owner'
+import { } from '~/routes/safe/store/models/transaction'
 
-type Props = {
-  tx: Transaction,
-  cancelTx: Transaction,
-  threshold: number,
-  owners: List<Owner>,
-  granted: boolean,
-  userAddress: string,
-  safeAddress: string,
-  createTransaction: Function,
-  processTransaction: Function,
-  nonce: number,
-}
 
-type OpenModal = 'rejectTx' | 'approveTx' | 'executeRejectTx' | null
 
 const useStyles = makeStyles(styles)
 
@@ -53,9 +40,9 @@ const ExpandedTx = ({
   threshold,
   tx,
   userAddress,
-}: Props) => {
+}) => {
   const classes = useStyles()
-  const [openModal, setOpenModal] = useState<OpenModal>(null)
+  const [openModal, setOpenModal] = useState(null)
   const openApproveModal = () => setOpenModal('approveTx')
   const closeModal = () => setOpenModal(null)
   const thresholdReached = !INCOMING_TX_TYPES.includes(tx.type) && threshold <= tx.confirmations.size

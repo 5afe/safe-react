@@ -1,4 +1,4 @@
-// @flow
+// 
 import { createMuiTheme } from '@material-ui/core/styles'
 import { rgba } from 'polished'
 
@@ -27,9 +27,6 @@ import {
   xs,
 } from './variables'
 
-export type WithStyles = {
-  classes: Object,
-}
 
 const palette = {
   primary: {

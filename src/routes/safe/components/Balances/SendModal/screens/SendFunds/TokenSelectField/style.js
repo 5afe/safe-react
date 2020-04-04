@@ -1,4 +1,4 @@
-// @flow
+// 
 import { sm } from '~/theme/variables'
 
 export const selectedTokenStyles = () => ({

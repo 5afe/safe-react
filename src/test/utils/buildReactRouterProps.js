@@ -1,7 +1,7 @@
-// @flow
-import { type Match } from 'react-router-dom'
+// 
+import { } from 'react-router-dom'
 
-export const buildMatchPropsFrom = (address: string): Match => ({
+export const buildMatchPropsFrom = (address) => ({
   params: {
     address,
   },

@@ -1,12 +1,10 @@
-// @flow
+// 
 import { List } from 'immutable'
 
-import type { Owner } from '~/routes/safe/store/models/owner'
-import type { Safe } from '~/routes/safe/store/models/safe'
 
 export const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'
 
-export const sameAddress = (firstAddress: string, secondAddress: string): boolean => {
+export const sameAddress = (firstAddress, secondAddress) => {
   if (!firstAddress) {
     return false
   }
@@ -18,7 +16,7 @@ export const sameAddress = (firstAddress: string, secondAddress: string): boolea
   return firstAddress.toLowerCase() === secondAddress.toLowerCase()
 }
 
-export const shortVersionOf = (value: string, cut: number) => {
+export const shortVersionOf = (value, cut) => {
   if (!value) {
     return 'Unknown'
   }
@@ -31,7 +29,7 @@ export const shortVersionOf = (value: string, cut: number) => {
   return `${value.substring(0, cut)}...${value.substring(final)}`
 }
 
-export const isUserOwner = (safe: Safe, userAccount: string): boolean => {
+export const isUserOwner = (safe, userAccount) => {
   if (!safe) {
     return false
   }
@@ -40,13 +38,13 @@ export const isUserOwner = (safe: Safe, userAccount: string): boolean => {
     return false
   }
 
-  const { owners }: List<Owner> = safe
+  const { owners } = safe
   if (!owners) {
     return false
   }
 
-  return owners.find((owner: Owner) => sameAddress(owner.address, userAccount)) !== undefined
+  return owners.find((owner) => sameAddress(owner.address, userAccount)) !== undefined
 }
 
-export const isUserOwnerOnAnySafe = (safes: List<Safe>, userAccount: string): boolean =>
+export const isUserOwnerOnAnySafe = (safes, userAccount) =>
   safes.some((safe) => isUserOwner(safe, userAccount))

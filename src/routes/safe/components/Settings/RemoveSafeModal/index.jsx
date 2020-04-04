@@ -1,4 +1,4 @@
-// @flow
+// 
 import IconButton from '@material-ui/core/IconButton'
 import { withStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
@@ -7,7 +7,7 @@ import classNames from 'classnames'
 import React from 'react'
 import { connect } from 'react-redux'
 
-import actions, { type Actions } from './actions'
+import actions, { } from './actions'
 import { styles } from './style'
 
 import Identicon from '~/components/Identicon'
@@ -28,16 +28,8 @@ const openIconStyle = {
   color: secondary,
 }
 
-type Props = Actions & {
-  onClose: () => void,
-  classes: Object,
-  isOpen: boolean,
-  safeAddress: string,
-  etherScanLink: string,
-  safeName: string,
-}
 
-const RemoveSafeComponent = ({ classes, etherScanLink, isOpen, onClose, removeSafe, safeAddress, safeName }: Props) => (
+const RemoveSafeComponent = ({ classes, etherScanLink, isOpen, onClose, removeSafe, safeAddress, safeName }) => (
   <Modal
     description="Remove the selected Safe"
     handleClose={onClose}

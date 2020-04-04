@@ -1,18 +1,17 @@
-// @flow
+// 
 import StandardToken from '@gnosis.pm/util-contracts/build/contracts/GnosisStandardToken.json'
 import HumanFriendlyToken from '@gnosis.pm/util-contracts/build/contracts/HumanFriendlyToken.json'
 import ERC721 from '@openzeppelin/contracts/build/contracts/ERC721'
 import { List } from 'immutable'
-import type { Dispatch as ReduxDispatch } from 'redux'
 import contract from 'truffle-contract'
 
 import saveTokens from './saveTokens'
 
 import { fetchTokenList } from '~/logic/tokens/api'
-import { type TokenProps, makeToken } from '~/logic/tokens/store/model/token'
+import { makeToken } from '~/logic/tokens/store/model/token'
 import { tokensSelector } from '~/logic/tokens/store/selectors'
 import { getWeb3 } from '~/logic/wallets/getWeb3'
-import { type GlobalState } from '~/store'
+import { } from '~/store'
 import { store } from '~/store/index'
 import { ensureOnce } from '~/utils/singleton'
 
@@ -100,14 +99,14 @@ export const getERC721TokenContract = ensureOnce(createERC721TokenContract)
 
 export const getOnlyBalanceToken = ensureOnce(createOnlyBalanceToken)
 
-export const containsMethodByHash = async (contractAddress: string, methodHash: string) => {
+export const containsMethodByHash = async (contractAddress, methodHash) => {
   const web3 = getWeb3()
   const byteCode = await web3.eth.getCode(contractAddress)
 
   return byteCode.indexOf(methodHash.replace('0x', '')) !== -1
 }
 
-export const getTokenInfos = async (tokenAddress: string) => {
+export const getTokenInfos = async (tokenAddress) => {
   if (!tokenAddress) {
     return null
   }
@@ -138,7 +137,7 @@ export const getTokenInfos = async (tokenAddress: string) => {
   return savedToken
 }
 
-export const fetchTokens = () => async (dispatch: ReduxDispatch<GlobalState>, getState: Function) => {
+export const fetchTokens = () => async (dispatch, getState) => {
   try {
     const currentSavedTokens = tokensSelector(getState())
 
@@ -150,7 +149,7 @@ export const fetchTokens = () => async (dispatch: ReduxDispatch<GlobalState>, ge
       return
     }
 
-    const tokens = List(tokenList.map((token: TokenProps) => makeToken(token)))
+    const tokens = List(tokenList.map((token) => makeToken(token)))
 
     dispatch(saveTokens(tokens))
   } catch (err) {

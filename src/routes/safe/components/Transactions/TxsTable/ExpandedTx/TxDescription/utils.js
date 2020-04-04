@@ -1,23 +1,9 @@
-// @flow
+// 
 import { getWeb3 } from '~/logic/wallets/getWeb3'
-import { type Transaction } from '~/routes/safe/store/models/transaction'
+import { } from '~/routes/safe/store/models/transaction'
 
-type DecodedTxData = {
-  action?: string,
-  recipient: string,
-  value?: string,
-  modifySettingsTx?: boolean,
-  removedOwner?: string,
-  newThreshold?: string,
-  addedOwner?: string,
-  cancellationTx?: boolean,
-  customTx?: boolean,
-  creationTx?: boolean,
-  data: string,
-  upgradeTx: boolean,
-}
 
-const getSafeVersion = (data: string) => {
+const getSafeVersion = (data) => {
   const contractAddress = data.substr(582, 40).toLowerCase()
 
   return (
@@ -27,7 +13,7 @@ const getSafeVersion = (data: string) => {
   )
 }
 
-export const getTxData = (tx: Transaction): DecodedTxData => {
+export const getTxData = (tx) => {
   const web3 = getWeb3()
   const { fromWei, toBN } = web3.utils
 

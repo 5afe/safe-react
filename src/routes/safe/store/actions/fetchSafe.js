@@ -1,6 +1,5 @@
-// @flow
+// 
 import { List } from 'immutable'
-import type { Dispatch as ReduxDispatch } from 'redux'
 
 import { getGnosisSafeInstanceAt } from '~/logic/contracts/safeContracts'
 import { getLocalSafe, getSafeName } from '~/logic/safe/utils'
@@ -12,14 +11,13 @@ import addSafeOwner from '~/routes/safe/store/actions/addSafeOwner'
 import removeSafeOwner from '~/routes/safe/store/actions/removeSafeOwner'
 import updateSafeThreshold from '~/routes/safe/store/actions/updateSafeThreshold'
 import { makeOwner } from '~/routes/safe/store/models/owner'
-import type { SafeProps } from '~/routes/safe/store/models/safe'
-import { type GlobalState } from '~/store/index'
+import { } from '~/store/index'
 
 const buildOwnersFrom = (
-  safeOwners: string[],
-  localSafe: SafeProps | {}, // eslint-disable-next-line
+  safeOwners,
+  localSafe, // eslint-disable-next-line
 ) =>
-  safeOwners.map((ownerAddress: string) => {
+  safeOwners.map((ownerAddress) => {
     if (!localSafe) {
       return makeOwner({ name: 'UNKNOWN', address: ownerAddress })
     }
@@ -35,7 +33,7 @@ const buildOwnersFrom = (
     })
   })
 
-export const buildSafe = async (safeAdd: string, safeName: string, latestMasterContractVersion: string) => {
+export const buildSafe = async (safeAdd, safeName, latestMasterContractVersion) => {
   const safeAddress = getWeb3().utils.toChecksumAddress(safeAdd)
   const gnosisSafe = await getGnosisSafeInstanceAt(safeAddress)
   const ethBalance = await getBalanceInEtherOf(safeAddress)
@@ -47,7 +45,7 @@ export const buildSafe = async (safeAdd: string, safeName: string, latestMasterC
   const needsUpdate = await safeNeedsUpdate(currentVersion, latestMasterContractVersion)
   const featuresEnabled = enabledFeatures(currentVersion)
 
-  const safe: SafeProps = {
+  const safe = {
     address: safeAddress,
     name: safeName,
     threshold,
@@ -62,7 +60,7 @@ export const buildSafe = async (safeAdd: string, safeName: string, latestMasterC
   return safe
 }
 
-export const checkAndUpdateSafe = (safeAdd: string) => async (dispatch: ReduxDispatch<*>) => {
+export const checkAndUpdateSafe = (safeAdd) => async (dispatch) => {
   const safeAddress = getWeb3().utils.toChecksumAddress(safeAdd)
   // Check if the owner's safe did change and update them
   const [gnosisSafe, localSafe] = await Promise.all([getGnosisSafeInstanceAt(safeAddress), getLocalSafe(safeAddress)])
@@ -104,12 +102,12 @@ export const checkAndUpdateSafe = (safeAdd: string) => async (dispatch: ReduxDis
 }
 
 // eslint-disable-next-line consistent-return
-export default (safeAdd: string) => async (dispatch: ReduxDispatch<GlobalState>, getState: () => GlobalState) => {
+export default (safeAdd) => async (dispatch, getState) => {
   try {
     const safeAddress = getWeb3().utils.toChecksumAddress(safeAdd)
     const safeName = (await getSafeName(safeAddress)) || 'LOADED SAFE'
     const latestMasterContractVersion = getState().safes.get('latestMasterContractVersion')
-    const safeProps: SafeProps = await buildSafe(safeAddress, safeName, latestMasterContractVersion)
+    const safeProps = await buildSafe(safeAddress, safeName, latestMasterContractVersion)
 
     dispatch(addSafe(safeProps))
   } catch (err) {

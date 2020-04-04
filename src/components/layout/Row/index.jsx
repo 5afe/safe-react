@@ -1,4 +1,4 @@
-// @flow
+// 
 import classNames from 'classnames/bind'
 import * as React from 'react'
 
@@ -8,16 +8,8 @@ import { capitalize } from '~/utils/css'
 
 const cx = classNames.bind(styles)
 
-type Props = {
-  className?: string,
-  children: React.Node,
-  margin?: 'xs' | 'sm' | 'md' | 'lg' | 'xl',
-  align?: 'center' | 'end' | 'start',
-  grow?: boolean,
-  testId?: string,
-}
 
-const Row = ({ align, children, className, grow, margin, testId = '', ...props }: Props) => {
+const Row = ({ align, children, className, grow, margin, testId = '', ...props }) => {
   const rowClassNames = cx(
     styles.row,
     margin ? capitalize(margin, 'margin') : undefined,

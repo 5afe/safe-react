@@ -1,4 +1,4 @@
-// @flow
+// 
 import TableCell from '@material-ui/core/TableCell'
 import TableContainer from '@material-ui/core/TableContainer'
 import TableRow from '@material-ui/core/TableRow'
@@ -19,14 +19,13 @@ import ReplaceOwnerIcon from './assets/icons/replace-owner.svg'
 import {
   OWNERS_TABLE_ADDRESS_ID,
   OWNERS_TABLE_NAME_ID,
-  type OwnerRow,
   generateColumns,
   getOwnerData,
 } from './dataFetcher'
 import { styles } from './style'
 
 import Table from '~/components/Table'
-import { type Column, cellWidth } from '~/components/Table/TableHead'
+import { cellWidth } from '~/components/Table/TableHead'
 import Block from '~/components/layout/Block'
 import Button from '~/components/layout/Button'
 import Col from '~/components/layout/Col'
@@ -35,10 +34,7 @@ import Heading from '~/components/layout/Heading'
 import Img from '~/components/layout/Img'
 import Paragraph from '~/components/layout/Paragraph/index'
 import Row from '~/components/layout/Row'
-import type { AddressBook } from '~/logic/addressBook/model/addressBook'
 import { getOwnersWithNameFromAddressBook } from '~/logic/addressBook/utils'
-import type { Owner } from '~/routes/safe/store/models/owner'
-import type { Safe } from '~/routes/safe/store/models/safe'
 
 export const RENAME_OWNER_BTN_TEST_ID = 'rename-owner-btn'
 export const REMOVE_OWNER_BTN_TEST_ID = 'remove-owner-btn'
@@ -46,37 +42,10 @@ export const ADD_OWNER_BTN_TEST_ID = 'add-owner-btn'
 export const REPLACE_OWNER_BTN_TEST_ID = 'replace-owner-btn'
 export const OWNERS_ROW_TEST_ID = 'owners-row'
 
-type Props = {
-  classes: Object,
-  safeAddress: string,
-  safeName: string,
-  owners: List<Owner>,
-  network: string,
-  threshold: number,
-  userAddress: string,
-  createTransaction: Function,
-  addSafeOwner: Function,
-  removeSafeOwner: Function,
-  replaceSafeOwner: Function,
-  editSafeOwner: Function,
-  granted: boolean,
-  safe: Safe,
-  addressBook: AddressBook,
-  updateAddressBookEntry: Function,
-}
 
-type State = {
-  selectedOwnerAddress?: string,
-  selectedOwnerName?: string,
-  showAddOwner: boolean,
-  showRemoveOwner: boolean,
-  showReplaceOwner: boolean,
-  showEditOwner: boolean,
-}
 
-type Action = 'AddOwner' | 'EditOwner' | 'ReplaceOwner' | 'RemoveOwner'
 
-class ManageOwners extends React.Component<Props, State> {
+class ManageOwners extends React.Component {
   constructor(props) {
     super(props)
 
@@ -90,7 +59,7 @@ class ManageOwners extends React.Component<Props, State> {
     }
   }
 
-  onShow = (action: Action, row?: Object) => () => {
+  onShow = (action, row) => () => {
     this.setState({
       [`show${action}`]: true,
       selectedOwnerAddress: row && row.address,
@@ -98,7 +67,7 @@ class ManageOwners extends React.Component<Props, State> {
     })
   }
 
-  onHide = (action: Action) => () => {
+  onHide = (action) => () => {
     this.setState({
       [`show${action}`]: false,
       selectedOwnerAddress: undefined,
@@ -160,15 +129,15 @@ class ManageOwners extends React.Component<Props, State> {
               noBorder
               size={ownerData.size}
             >
-              {(sortedData: List<OwnerRow>) =>
-                sortedData.map((row: any, index: number) => (
+              {(sortedData) =>
+                sortedData.map((row, index) => (
                   <TableRow
                     className={cn(classes.hide, index >= 3 && index === sortedData.size - 1 && classes.noBorderBottom)}
                     data-testid={OWNERS_ROW_TEST_ID}
                     key={index}
                     tabIndex={-1}
                   >
-                    {autoColumns.map((column: Column) => (
+                    {autoColumns.map((column) => (
                       <TableCell align={column.align} component="td" key={column.id} style={cellWidth(column.width)}>
                         {column.id === OWNERS_TABLE_ADDRESS_ID ? (
                           <OwnerAddressTableCell address={row[column.id]} />

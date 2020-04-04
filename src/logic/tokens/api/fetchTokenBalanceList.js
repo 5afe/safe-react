@@ -1,9 +1,9 @@
-// @flow
+// 
 import axios from 'axios'
 
 import { getTxServiceHost } from '~/config/index'
 
-const fetchTokenBalanceList = (safeAddress: string) => {
+const fetchTokenBalanceList = (safeAddress) => {
   const apiUrl = getTxServiceHost()
   const url = `${apiUrl}safes/${safeAddress}/balances/`
 

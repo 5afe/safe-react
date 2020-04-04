@@ -1,16 +1,16 @@
-// @flow
+// 
 import { List, Map } from 'immutable'
-import { type Confirmation } from '~/routes/safe/store/models/confirmation'
-import { type Transaction } from '~/routes/safe/store/models/transaction'
+import { } from '~/routes/safe/store/models/confirmation'
+import { } from '~/routes/safe/store/models/transaction'
 import { sameAddress } from '~/logic/wallets/ethAddresses'
 
-export const testSizeOfSafesWith = (transactions: Map<string, List<Transaction>>, size: number) => {
+export const testSizeOfSafesWith = (transactions, size) => {
   expect(transactions).not.toBe(undefined)
   expect(transactions).not.toBe(null)
   expect(transactions.size).toBe(size)
 }
 
-export const testSizeOfTransactions = (safeTxs: List<Transaction> | typeof undefined, size: number) => {
+export const testSizeOfTransactions = (safeTxs, size) => {
   if (!safeTxs) {
     throw new Error()
   }
@@ -20,20 +20,20 @@ export const testSizeOfTransactions = (safeTxs: List<Transaction> | typeof undef
 }
 
 export const testTransactionFrom = (
-  safeTxs: List<Transaction> | typeof undefined,
-  pos: number,
-  name: string,
-  nonce: number,
-  value: number,
-  destination: string,
-  data: string,
-  isExecuted: boolean,
-  confirmations: List<Confirmation>,
+  safeTxs,
+  pos,
+  name,
+  nonce,
+  value,
+  destination,
+  data,
+  isExecuted,
+  confirmations,
 ) => {
   if (!safeTxs) {
     throw new Error()
   }
-  const tx: Transaction | typeof undefined = safeTxs.get(pos)
+  const tx = safeTxs.get(pos)
 
   if (!tx) {
     throw new Error()

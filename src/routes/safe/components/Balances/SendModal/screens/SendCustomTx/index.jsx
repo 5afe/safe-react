@@ -1,4 +1,4 @@
-// @flow
+// 
 import IconButton from '@material-ui/core/IconButton'
 import InputAdornment from '@material-ui/core/InputAdornment'
 import { makeStyles } from '@material-ui/core/styles'
@@ -33,25 +33,19 @@ import AddressBookInput from '~/routes/safe/components/Balances/SendModal/screen
 import { safeSelector } from '~/routes/safe/store/selectors'
 import { sm } from '~/theme/variables'
 
-type Props = {
-  initialValues: Object,
-  onClose: () => void,
-  onNext: (any) => void,
-  recipientAddress: string,
-}
 
 const useStyles = makeStyles(styles)
 
-const SendCustomTx = ({ initialValues, onClose, onNext, recipientAddress }: Props) => {
+const SendCustomTx = ({ initialValues, onClose, onNext, recipientAddress }) => {
   const classes = useStyles()
   const { address: safeAddress, ethBalance, name: safeName } = useSelector(safeSelector)
-  const [qrModalOpen, setQrModalOpen] = useState<boolean>(false)
-  const [selectedEntry, setSelectedEntry] = useState<Object | null>({
+  const [qrModalOpen, setQrModalOpen] = useState(false)
+  const [selectedEntry, setSelectedEntry] = useState({
     address: recipientAddress || initialValues.recipientAddress,
     name: '',
   })
-  const [pristine, setPristine] = useState<boolean>(true)
-  const [isValidAddress, setIsValidAddress] = useState<boolean>(true)
+  const [pristine, setPristine] = useState(true)
+  const [isValidAddress, setIsValidAddress] = useState(true)
 
   React.useMemo(() => {
     if (selectedEntry === null && pristine) {
@@ -59,7 +53,7 @@ const SendCustomTx = ({ initialValues, onClose, onNext, recipientAddress }: Prop
     }
   }, [selectedEntry, pristine])
 
-  const handleSubmit = (values: Object) => {
+  const handleSubmit = (values) => {
     if (values.data || values.value) {
       onNext(values)
     }

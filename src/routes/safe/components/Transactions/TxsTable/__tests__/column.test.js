@@ -1,4 +1,4 @@
-// @flow
+// 
 import { List } from 'immutable'
 import { makeTransaction } from '~/routes/safe/store/models/transaction'
 import { getTxTableData, TX_TABLE_RAW_CANCEL_TX_ID } from '~/routes/safe/components/Transactions/TxsTable/columns'

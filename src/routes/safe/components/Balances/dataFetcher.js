@@ -1,11 +1,10 @@
-// @flow
+// 
 import { List } from 'immutable'
 
-import { type Column } from '~/components/Table/TableHead'
-import { FIXED, type SortRow, buildOrderFieldFrom } from '~/components/Table/sorting'
-import type { BalanceCurrencyType } from '~/logic/currencyValues/store/model/currencyValues'
+import { } from '~/components/Table/TableHead'
+import { FIXED, buildOrderFieldFrom } from '~/components/Table/sorting'
 import { AVAILABLE_CURRENCIES } from '~/logic/currencyValues/store/model/currencyValues'
-import { type Token } from '~/logic/tokens/store/model/token'
+import { } from '~/logic/tokens/store/model/token'
 import { formatAmount } from '~/logic/tokens/utils/formatAmount'
 import { ETH_ADDRESS } from '~/logic/tokens/utils/tokenHelpers'
 
@@ -13,19 +12,14 @@ export const BALANCE_TABLE_ASSET_ID = 'asset'
 export const BALANCE_TABLE_BALANCE_ID = 'balance'
 export const BALANCE_TABLE_VALUE_ID = 'value'
 
-type BalanceData = {
-  asset: Object,
-  balance: string,
-}
 
-export type BalanceRow = SortRow<BalanceData>
 
 // eslint-disable-next-line max-len
 const getTokenPriceInCurrency = (
-  token: Token,
-  currencySelected: typeof AVAILABLE_CURRENCIES,
-  currencyValues: List<BalanceCurrencyType>,
-): string => {
+  token,
+  currencySelected,
+  currencyValues,
+) => {
   if (!currencySelected) {
     return ''
   }
@@ -52,11 +46,11 @@ const getTokenPriceInCurrency = (
 
 // eslint-disable-next-line max-len
 export const getBalanceData = (
-  activeTokens: List<Token>,
-  currencySelected: string,
-  currencyValues: List<BalanceCurrencyType>,
-): List<BalanceRow> => {
-  const rows = activeTokens.map((token: Token) => ({
+  activeTokens,
+  currencySelected,
+  currencyValues,
+) => {
+  const rows = activeTokens.map((token) => ({
     [BALANCE_TABLE_ASSET_ID]: {
       name: token.name,
       logoUri: token.logoUri,
@@ -73,7 +67,7 @@ export const getBalanceData = (
 }
 
 export const generateColumns = () => {
-  const assetColumn: Column = {
+  const assetColumn = {
     id: BALANCE_TABLE_ASSET_ID,
     order: true,
     disablePadding: false,
@@ -82,7 +76,7 @@ export const generateColumns = () => {
     width: 250,
   }
 
-  const balanceColumn: Column = {
+  const balanceColumn = {
     id: BALANCE_TABLE_BALANCE_ID,
     align: 'right',
     order: true,
@@ -91,7 +85,7 @@ export const generateColumns = () => {
     custom: false,
   }
 
-  const actions: Column = {
+  const actions = {
     id: 'actions',
     order: false,
     disablePadding: false,
@@ -100,7 +94,7 @@ export const generateColumns = () => {
     static: true,
   }
 
-  const value: Column = {
+  const value = {
     id: BALANCE_TABLE_VALUE_ID,
     order: false,
     label: 'Value',
@@ -123,5 +117,5 @@ export const generateColumns = () => {
 }
 
 // eslint-disable-next-line max-len
-export const filterByZero = (data: List<BalanceRow>, hideZero: boolean): List<BalanceRow> =>
-  data.filter((row: BalanceRow) => (hideZero ? row[buildOrderFieldFrom(BALANCE_TABLE_BALANCE_ID)] !== 0 : true))
+export const filterByZero = (data, hideZero) =>
+  data.filter((row) => (hideZero ? row[buildOrderFieldFrom(BALANCE_TABLE_BALANCE_ID)] !== 0 : true))

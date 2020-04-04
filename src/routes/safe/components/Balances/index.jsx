@@ -1,4 +1,4 @@
-// @flow
+// 
 import { withStyles } from '@material-ui/core/styles'
 import { List } from 'immutable'
 import * as React from 'react'
@@ -13,8 +13,7 @@ import Col from '~/components/layout/Col'
 import Divider from '~/components/layout/Divider'
 import Link from '~/components/layout/Link'
 import Row from '~/components/layout/Row'
-import type { BalanceCurrencyType } from '~/logic/currencyValues/store/model/currencyValues'
-import { type Token } from '~/logic/tokens/store/model/token'
+import { } from '~/logic/tokens/store/model/token'
 import { SAFELIST_ADDRESS } from '~/routes/routes'
 import Coins from '~/routes/safe/components/Balances/Coins'
 import Collectibles from '~/routes/safe/components/Balances/Collectibles'
@@ -25,39 +24,10 @@ import { history } from '~/store'
 export const MANAGE_TOKENS_BUTTON_TEST_ID = 'manage-tokens-btn'
 export const BALANCE_ROW_TEST_ID = 'balance-row'
 
-type State = {
-  erc721Enabled: boolean,
-  subMenuOptions: string[],
-  sendFunds: Object,
-  showCoins: boolean,
-  showCollectibles: boolean,
-  showReceive: boolean,
-  showToken: boolean,
-  showManageCollectibleModal: boolean,
-}
 
-type Props = {
-  activateTokensByBalance: Function,
-  activateAssetsByBalance: Function,
-  activeTokens: List<Token>,
-  blacklistedTokens: List<Token>,
-  classes: Object,
-  createTransaction: Function,
-  currencySelected: string,
-  currencyValues: BalanceCurrencyType[],
-  ethBalance: string,
-  featuresEnabled: string[],
-  fetchCurrencyValues: Function,
-  fetchTokens: Function,
-  granted: boolean,
-  safeAddress: string,
-  safeName: string,
-  tokens: List<Token>,
-}
 
-type Action = 'Token' | 'Send' | 'Receive' | 'ManageCollectibleModal'
 
-class Balances extends React.Component<Props, State> {
+class Balances extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -79,7 +49,7 @@ class Balances extends React.Component<Props, State> {
   static isCoinsLocation = /\/balances\/?$/
   static isCollectiblesLocation = /\/balances\/collectibles$/
 
-  componentDidMount(): void {
+  componentDidMount() {
     const { activateAssetsByBalance, activateTokensByBalance, fetchCurrencyValues, safeAddress } = this.props
     fetchCurrencyValues(safeAddress)
     activateTokensByBalance(safeAddress)
@@ -117,15 +87,15 @@ class Balances extends React.Component<Props, State> {
     })
   }
 
-  onShow = (action: Action) => () => {
+  onShow = (action) => () => {
     this.setState(() => ({ [`show${action}`]: true }))
   }
 
-  onHide = (action: Action) => () => {
+  onHide = (action) => () => {
     this.setState(() => ({ [`show${action}`]: false }))
   }
 
-  showSendFunds = (tokenAddress: string) => {
+  showSendFunds = (tokenAddress) => {
     this.setState({
       sendFunds: {
         isOpen: true,

@@ -1,4 +1,4 @@
-// @flow
+// 
 import { BigNumber } from 'bignumber.js'
 import { format, getTime, parseISO } from 'date-fns'
 import { List, Map } from 'immutable'
@@ -6,11 +6,11 @@ import React from 'react'
 
 import TxType from './TxType'
 
-import { type Column } from '~/components/Table/TableHead'
-import { type SortRow, buildOrderFieldFrom } from '~/components/Table/sorting'
+import { } from '~/components/Table/TableHead'
+import { buildOrderFieldFrom } from '~/components/Table/sorting'
 import { getWeb3 } from '~/logic/wallets/getWeb3'
-import { INCOMING_TX_TYPES, type IncomingTransaction } from '~/routes/safe/store/models/incomingTransaction'
-import { type Transaction } from '~/routes/safe/store/models/transaction'
+import { INCOMING_TX_TYPES, } from '~/routes/safe/store/models/incomingTransaction'
+import { } from '~/routes/safe/store/models/transaction'
 
 export const TX_TABLE_ID = 'id'
 export const TX_TABLE_TYPE_ID = 'type'
@@ -21,24 +21,15 @@ export const TX_TABLE_RAW_TX_ID = 'tx'
 export const TX_TABLE_RAW_CANCEL_TX_ID = 'cancelTx'
 export const TX_TABLE_EXPAND_ICON = 'expand'
 
-type TxData = {
-  id: ?number,
-  type: React.ReactNode,
-  date: string,
-  dateOrder?: number,
-  amount: number | string,
-  tx: Transaction | IncomingTransaction,
-  status?: string,
-}
 
-export const formatDate = (date: string): string => format(parseISO(date), 'MMM d, yyyy - HH:mm:ss')
+export const formatDate = (date) => format(parseISO(date), 'MMM d, yyyy - HH:mm:ss')
 
-export const getIncomingTxAmount = (tx: IncomingTransaction) => {
+export const getIncomingTxAmount = (tx) => {
   const txAmount = tx.value ? `${new BigNumber(tx.value).div(`1e${tx.decimals}`).toFixed()}` : 'n/a'
   return `${txAmount} ${tx.symbol || 'n/a'}`
 }
 
-export const getTxAmount = (tx: Transaction) => {
+export const getTxAmount = (tx) => {
   const web3 = getWeb3()
   const { fromWei, toBN } = web3.utils
 
@@ -54,9 +45,8 @@ export const getTxAmount = (tx: Transaction) => {
   return txAmount
 }
 
-export type TransactionRow = SortRow<TxData>
 
-const getIncomingTxTableData = (tx: IncomingTransaction): TransactionRow => ({
+const getIncomingTxTableData = (tx) => ({
   [TX_TABLE_ID]: tx.blockNumber,
   [TX_TABLE_TYPE_ID]: <TxType txType="incoming" />,
   [TX_TABLE_DATE_ID]: formatDate(tx.executionDate),
@@ -66,7 +56,7 @@ const getIncomingTxTableData = (tx: IncomingTransaction): TransactionRow => ({
   [TX_TABLE_RAW_TX_ID]: tx,
 })
 
-const getTransactionTableData = (tx: Transaction, cancelTx: ?Transaction): TransactionRow => {
+const getTransactionTableData = (tx, cancelTx) => {
   const txDate = tx.submissionDate
 
   let txType = 'outgoing'
@@ -95,9 +85,9 @@ const getTransactionTableData = (tx: Transaction, cancelTx: ?Transaction): Trans
 }
 
 export const getTxTableData = (
-  transactions: List<Transaction | IncomingTransaction>,
-  cancelTxs: List<Transaction>,
-): List<TransactionRow> => {
+  transactions,
+  cancelTxs,
+) => {
   const cancelTxsByNonce = cancelTxs.reduce((acc, tx) => acc.set(tx.nonce, tx), Map())
 
   return transactions.map((tx) => {
@@ -113,7 +103,7 @@ export const getTxTableData = (
 }
 
 export const generateColumns = () => {
-  const nonceColumn: Column = {
+  const nonceColumn = {
     id: TX_TABLE_ID,
     disablePadding: false,
     label: 'Id',
@@ -122,7 +112,7 @@ export const generateColumns = () => {
     width: 50,
   }
 
-  const typeColumn: Column = {
+  const typeColumn = {
     id: TX_TABLE_TYPE_ID,
     order: false,
     disablePadding: false,
@@ -131,7 +121,7 @@ export const generateColumns = () => {
     width: 200,
   }
 
-  const valueColumn: Column = {
+  const valueColumn = {
     id: TX_TABLE_AMOUNT_ID,
     order: false,
     disablePadding: false,
@@ -140,7 +130,7 @@ export const generateColumns = () => {
     width: 120,
   }
 
-  const dateColumn: Column = {
+  const dateColumn = {
     id: TX_TABLE_DATE_ID,
     disablePadding: false,
     order: true,
@@ -148,7 +138,7 @@ export const generateColumns = () => {
     custom: false,
   }
 
-  const statusColumn: Column = {
+  const statusColumn = {
     id: TX_TABLE_STATUS_ID,
     order: false,
     disablePadding: false,
@@ -157,7 +147,7 @@ export const generateColumns = () => {
     align: 'right',
   }
 
-  const expandIconColumn: Column = {
+  const expandIconColumn = {
     id: TX_TABLE_EXPAND_ICON,
     order: false,
     disablePadding: true,

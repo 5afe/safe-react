@@ -1,9 +1,4 @@
-// @flow
-type ShortenTextOptionsProps = {
-  charsStart?: number,
-  charsEnd?: number,
-  ellipsis?: string,
-}
+// 
 
 /**
  * Setups `shortenText` options
@@ -13,7 +8,7 @@ type ShortenTextOptionsProps = {
  * @param {string} opts.ellipsis='...' - ellipsis characters
  * @returns {function} shortener
  */
-export const textShortener = ({ charsEnd = 10, charsStart = 10, ellipsis = '...' }: ShortenTextOptionsProps = {}) =>
+export const textShortener = ({ charsEnd = 10, charsStart = 10, ellipsis = '...' } = {}) =>
   /**
    * @function
    * @name shortener
@@ -23,7 +18,7 @@ export const textShortener = ({ charsEnd = 10, charsStart = 10, ellipsis = '...'
    * @param text
    * @returns {string|?string}
    */
-  (text: ?string = null) => {
+  (text = null) => {
     if (typeof text !== 'string') {
       throw new TypeError(` A string is required. ${typeof text} was provided instead.`)
     }

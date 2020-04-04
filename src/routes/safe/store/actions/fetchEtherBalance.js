@@ -1,12 +1,10 @@
-// @flow
-import type { Dispatch as ReduxDispatch } from 'redux'
+// 
 
 import { getBalanceInEtherOf } from '~/logic/wallets/getWeb3'
 import updateSafe from '~/routes/safe/store/actions/updateSafe'
-import type { Safe } from '~/routes/safe/store/models/safe'
-import { type GlobalState } from '~/store'
+import { } from '~/store'
 
-const fetchEtherBalance = (safe: Safe) => async (dispatch: ReduxDispatch<GlobalState>) => {
+const fetchEtherBalance = (safe) => async (dispatch) => {
   try {
     const { address, ethBalance } = safe
     const newEthBalance = await getBalanceInEtherOf(address)

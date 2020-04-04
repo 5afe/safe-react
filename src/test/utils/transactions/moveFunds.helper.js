@@ -1,13 +1,13 @@
-// @flow
+// 
 import * as React from 'react'
 import { fireEvent, waitForElement, act } from '@testing-library/react'
 import { sleep } from '~/utils/timer'
 
 export const fillAndSubmitSendFundsForm = async (
-  SafeDom: any,
-  sendButton: React.Component<any, any>,
-  value: string,
-  recipient: string,
+  SafeDom,
+  sendButton,
+  value,
+  recipient,
 ) => {
   await act(async () => {
     fireEvent.click(sendButton)

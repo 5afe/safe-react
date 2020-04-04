@@ -1,12 +1,11 @@
-// @flow
+// 
 import CircularProgress from '@material-ui/core/CircularProgress'
 import { makeStyles } from '@material-ui/core/styles'
 import cn from 'classnames'
 import React, { Suspense, useEffect, useState } from 'react'
 
 import Modal from '~/components/Modal'
-import { type Token } from '~/logic/tokens/store/model/token'
-import type { NFTToken } from '~/routes/safe/components/Balances/Collectibles/types'
+import { } from '~/logic/tokens/store/model/token'
 
 const ChooseTxType = React.lazy(() => import('./screens/ChooseTxType'))
 
@@ -22,31 +21,8 @@ const SendCustomTx = React.lazy(() => import('./screens/SendCustomTx'))
 
 const ReviewCustomTx = React.lazy(() => import('./screens/ReviewCustomTx'))
 
-type ActiveScreen =
-  | 'chooseTxType'
-  | 'sendFunds'
-  | 'reviewTx'
-  | 'sendCustomTx'
-  | 'reviewCustomTx'
-  | 'sendCollectible'
-  | 'reviewCollectible'
 
-type Props = {
-  activeScreenType: ActiveScreen,
-  isOpen: boolean,
-  onClose: () => void,
-  recipientAddress?: string,
-  selectedToken?: string | NFTToken | {},
-}
 
-type TxStateType =
-  | {
-      token: Token,
-      recipientAddress: string,
-      amount: string,
-      data: string,
-    }
-  | Object
 
 const useStyles = makeStyles({
   scalableModalWindow: {
@@ -65,10 +41,10 @@ const useStyles = makeStyles({
   },
 })
 
-const SendModal = ({ activeScreenType, isOpen, onClose, recipientAddress, selectedToken }: Props) => {
+const SendModal = ({ activeScreenType, isOpen, onClose, recipientAddress, selectedToken }) => {
   const classes = useStyles()
-  const [activeScreen, setActiveScreen] = useState<ActiveScreen>(activeScreenType || 'chooseTxType')
-  const [tx, setTx] = useState<TxStateType>({})
+  const [activeScreen, setActiveScreen] = useState(activeScreenType || 'chooseTxType')
+  const [tx, setTx] = useState({})
 
   useEffect(() => {
     setActiveScreen(activeScreenType || 'chooseTxType')

@@ -1,4 +1,4 @@
-// @flow
+// 
 import { sm, xs } from '~/theme/variables'
 
 export const styles = () => ({

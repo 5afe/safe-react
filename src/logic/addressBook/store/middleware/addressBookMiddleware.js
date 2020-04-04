@@ -1,7 +1,5 @@
-// @flow
-import type { AnyAction, Store } from 'redux'
+// 
 
-import type { AddressBookProps } from '~/logic/addressBook/model/addressBook'
 import { ADD_ENTRY } from '~/logic/addressBook/store/actions/addAddressBookEntry'
 import { ADD_OR_UPDATE_ENTRY } from '~/logic/addressBook/store/actions/addOrUpdateAddressBookEntry'
 import { REMOVE_ENTRY } from '~/logic/addressBook/store/actions/removeAddressBookEntry'
@@ -11,17 +9,17 @@ import { saveAddressBook } from '~/logic/addressBook/utils'
 import { enhanceSnackbarForAction, getNotificationsFromTxType } from '~/logic/notifications'
 import enqueueSnackbar from '~/logic/notifications/store/actions/enqueueSnackbar'
 import { TX_NOTIFICATION_TYPES } from '~/logic/safe/transactions'
-import { type GlobalState } from '~/store'
+import { } from '~/store'
 
 const watchedActions = [ADD_ENTRY, REMOVE_ENTRY, UPDATE_ENTRY, ADD_OR_UPDATE_ENTRY]
 
-const addressBookMiddleware = (store: Store<GlobalState>) => (next: Function) => async (action: AnyAction) => {
+const addressBookMiddleware = (store) => (next) => async (action) => {
   const handledAction = next(action)
 
   if (watchedActions.includes(action.type)) {
-    const state: GlobalState = store.getState()
+    const state = store.getState()
     const { dispatch } = store
-    const addressBook: AddressBookProps = addressBookMapSelector(state)
+    const addressBook = addressBookMapSelector(state)
     if (addressBook) {
       await saveAddressBook(addressBook)
     }

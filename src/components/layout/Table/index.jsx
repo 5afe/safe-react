@@ -1,4 +1,4 @@
-// @flow
+// 
 import Table from '@material-ui/core/Table'
 import TableBody from '@material-ui/core/TableBody'
 import TableCell from '@material-ui/core/TableCell'
@@ -8,12 +8,8 @@ import * as React from 'react'
 
 export { TableBody, TableCell, TableHead, TableRow }
 
-type Props = {
-  children: React.Node,
-  size?: number,
-}
 
-const buildWidthFrom = (size: number) => ({
+const buildWidthFrom = (size) => ({
   minWidth: `${size}px`,
 })
 
@@ -22,7 +18,7 @@ const overflowStyle = {
 }
 
 // see: https://css-tricks.com/responsive-data-tables/
-const GnoTable = ({ children, size }: Props) => {
+const GnoTable = ({ children, size }) => {
   const style = size ? buildWidthFrom(size) : undefined
 
   return (

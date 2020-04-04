@@ -1,4 +1,4 @@
-// @flow
+// 
 import { withStyles } from '@material-ui/core/styles'
 import * as React from 'react'
 
@@ -11,10 +11,6 @@ import Paragraph from '~/components/layout/Paragraph'
 import { FIELD_NAME } from '~/routes/open/components/fields'
 import { secondary, sm } from '~/theme/variables'
 
-type Props = {
-  classes: Object,
-  safeName?: string,
-}
 
 const styles = () => ({
   root: {
@@ -34,7 +30,7 @@ const styles = () => ({
   },
 })
 
-const SafeName = ({ classes, safeName }: Props) => (
+const SafeName = ({ classes, safeName }) => (
   <>
     <Block margin="lg">
       <Paragraph color="primary" noMargin size="md">
@@ -72,7 +68,7 @@ const SafeName = ({ classes, safeName }: Props) => (
 
 const SafeNameForm = withStyles(styles)(SafeName)
 
-const SafeNamePage = () => (controls: React.Node, { values }) => {
+const SafeNamePage = () => (controls, { values }) => {
   const { safeName } = values
   return (
     <OpenPaper controls={controls}>

@@ -1,10 +1,9 @@
-// @flow
+// 
 import TableContainer from '@material-ui/core/TableContainer'
 import { withStyles } from '@material-ui/core/styles'
 import classNames from 'classnames'
 import * as React from 'react'
 
-import type { LayoutProps } from '../Layout'
 
 import CopyBtn from '~/components/CopyBtn'
 import EtherscanBtn from '~/components/EtherscanBtn'
@@ -85,18 +84,10 @@ const styles = () => ({
   },
 })
 
-type Props = {
-  userAddress: string,
-  values: Object,
-  classes: Object,
-}
 
-type State = {
-  isOwner: boolean,
-}
 
-const checkUserAddressOwner = (values: Object, userAddress: string): boolean => {
-  let isOwner: boolean = false
+const checkUserAddressOwner = (values, userAddress) => {
+  let isOwner = false
 
   for (let i = 0; i < getNumOwnersFrom(values); i += 1) {
     if (values[getOwnerAddressBy(i)] === userAddress) {
@@ -108,7 +99,7 @@ const checkUserAddressOwner = (values: Object, userAddress: string): boolean => 
   return isOwner
 }
 
-class ReviewComponent extends React.PureComponent<Props, State> {
+class ReviewComponent extends React.PureComponent {
   render() {
     const { classes, userAddress, values } = this.props
 
@@ -207,7 +198,7 @@ class ReviewComponent extends React.PureComponent<Props, State> {
 
 const ReviewPage = withStyles(styles)(ReviewComponent)
 
-const Review = ({ network, userAddress }: LayoutProps) => (controls: React.Node, { values }: Object) => (
+const Review = ({ network, userAddress }) => (controls, { values }) => (
   <>
     <OpenPaper controls={controls} padding={false}>
       <ReviewPage network={network} userAddress={userAddress} values={values} />

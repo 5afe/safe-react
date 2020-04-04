@@ -1,4 +1,4 @@
-// @flow
+// 
 export * from './dataDisplay'
 export * from './feedback'
 export * from './layouts'

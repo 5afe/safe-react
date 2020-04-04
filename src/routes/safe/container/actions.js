@@ -1,4 +1,4 @@
-// @flow
+// 
 import loadAddressBookFromStorage from '~/logic/addressBook/store/actions/loadAddressBookFromStorage'
 import { updateAddressBookEntry } from '~/logic/addressBook/store/actions/updateAddressBookEntry'
 import fetchCollectibles from '~/logic/collectibles/store/actions/fetchCollectibles'
@@ -16,25 +16,6 @@ import fetchTransactions from '~/routes/safe/store/actions/fetchTransactions'
 import processTransaction from '~/routes/safe/store/actions/processTransaction'
 import updateSafe from '~/routes/safe/store/actions/updateSafe'
 
-export type Actions = {
-  fetchSafe: typeof fetchSafe,
-  fetchTokenBalances: typeof fetchTokenBalances,
-  createTransaction: typeof createTransaction,
-  fetchTransactions: typeof fetchTransactions,
-  updateSafe: typeof updateSafe,
-  fetchCollectibles: typeof fetchCollectibles,
-  fetchTokens: typeof fetchTokens,
-  processTransaction: typeof processTransaction,
-  fetchEtherBalance: typeof fetchEtherBalance,
-  fetchLatestMasterContractVersion: typeof fetchLatestMasterContractVersion,
-  activateTokensByBalance: typeof activateTokensByBalance,
-  activateAssetsByBalance: typeof activateAssetsByBalance,
-  checkAndUpdateSafeOwners: typeof checkAndUpdateSafe,
-  fetchCurrencyValues: typeof fetchCurrencyValues,
-  loadAddressBook: typeof loadAddressBookFromStorage,
-  updateAddressBookEntry: typeof updateAddressBookEntry,
-  addViewedSafe: typeof addViewedSafe,
-}
 
 export default {
   fetchSafe,

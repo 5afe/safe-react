@@ -1,4 +1,4 @@
-// @flow
+// 
 import ClickAwayListener from '@material-ui/core/ClickAwayListener'
 import Drawer from '@material-ui/core/Drawer'
 import SearchIcon from '@material-ui/icons/Search'
@@ -19,40 +19,29 @@ import Link from '~/components/layout/Link'
 import Row from '~/components/layout/Row'
 import { WELCOME_ADDRESS } from '~/routes/routes'
 import setDefaultSafe from '~/routes/safe/store/actions/setDefaultSafe'
-import { type Safe } from '~/routes/safe/store/models/safe'
+import { } from '~/routes/safe/store/models/safe'
 import { defaultSafeSelector, safeParamAddressFromStateSelector } from '~/routes/safe/store/selectors'
 
 const { useEffect, useMemo, useState } = React
 
-type TSidebarContext = {
-  isOpen: boolean,
-  toggleSidebar: Function,
-}
 
-export const SidebarContext = React.createContext<TSidebarContext>({
+export const SidebarContext = React.createContext({
   isOpen: false,
   toggleSidebar: () => {},
 })
 
-type SidebarProps = {
-  children: React.Node,
-  safes: List<Safe>,
-  setDefaultSafeAction: Function,
-  defaultSafe: string,
-  currentSafe: string,
-}
 
-const filterBy = (filter: string, safes: List<Safe>): List<Safe> =>
+const filterBy = (filter, safes) =>
   safes.filter(
-    (safe: Safe) =>
+    (safe) =>
       !filter ||
       safe.address.toLowerCase().includes(filter.toLowerCase()) ||
       safe.name.toLowerCase().includes(filter.toLowerCase()),
   )
 
-const Sidebar = ({ children, currentSafe, defaultSafe, safes, setDefaultSafeAction }: SidebarProps) => {
-  const [isOpen, setIsOpen] = useState<boolean>(false)
-  const [filter, setFilter] = useState<string>('')
+const Sidebar = ({ children, currentSafe, defaultSafe, safes, setDefaultSafeAction }) => {
+  const [isOpen, setIsOpen] = useState(false)
+  const [filter, setFilter] = useState('')
   const classes = useSidebarStyles()
 
   useEffect(() => {
@@ -72,7 +61,7 @@ const Sidebar = ({ children, currentSafe, defaultSafe, safes, setDefaultSafeActi
     setIsOpen((prevIsOpen) => !prevIsOpen)
   }
 
-  const handleFilterChange = (value: string) => {
+  const handleFilterChange = (value) => {
     setFilter(value)
   }
 
@@ -80,7 +69,7 @@ const Sidebar = ({ children, currentSafe, defaultSafe, safes, setDefaultSafeActi
     setFilter('')
   }
 
-  const handleEsc = (e: SyntheticKeyboardEvent<*>) => {
+  const handleEsc = (e) => {
     if (e.keyCode === 27) {
       toggleSidebar()
     }
@@ -140,7 +129,7 @@ const Sidebar = ({ children, currentSafe, defaultSafe, safes, setDefaultSafeActi
   )
 }
 
-export default connect<Object, Object, ?Function, ?Object>(
+export default connect(
   // $FlowFixMe
   (state) => ({
     safes: sortedSafeListSelector(state),

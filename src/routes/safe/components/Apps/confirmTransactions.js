@@ -1,4 +1,4 @@
-// @flow
+// 
 import React from 'react'
 import styled from 'styled-components'
 
@@ -25,14 +25,14 @@ const CollapseContent = styled.div`
 `
 
 const confirmTransactions = (
-  safeAddress: string,
-  safeName: string,
-  ethBalance: string,
-  iconApp: string,
-  txs: Array<any>,
-  openModal: () => void,
-  closeModal: () => void,
-  onConfirm: () => void,
+  safeAddress,
+  safeName,
+  ethBalance,
+  iconApp,
+  txs,
+  openModal,
+  closeModal,
+  onConfirm,
 ) => {
   const title = <ModalTitle iconUrl={iconApp} title="Compound" />
 

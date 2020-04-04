@@ -1,4 +1,4 @@
-// @flow
+// 
 import { makeStyles } from '@material-ui/core/styles'
 import { withSnackbar } from 'notistack'
 import React from 'react'
@@ -27,20 +27,10 @@ export const SAFE_NAME_INPUT_TEST_ID = 'safe-name-input'
 export const SAFE_NAME_SUBMIT_BTN_TEST_ID = 'change-safe-name-btn'
 export const SAFE_NAME_UPDATE_SAFE_BTN_TEST_ID = 'update-safe-name-btn'
 
-type Props = {
-  safeAddress: string,
-  safeCurrentVersion: string,
-  safeName: string,
-  safeNeedsUpdate: boolean,
-  updateSafe: Function,
-  enqueueSnackbar: Function,
-  createTransaction: Function,
-  closeSnackbar: Function,
-}
 
 const useStyles = makeStyles(styles)
 
-const SafeDetails = (props: Props) => {
+const SafeDetails = (props) => {
   const classes = useStyles()
   const isUserOwner = useSelector(grantedSelector)
   const latestMasterContractVersion = useSelector(latestMasterContractVersionSelector)

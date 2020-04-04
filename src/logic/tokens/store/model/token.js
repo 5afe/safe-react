@@ -1,17 +1,8 @@
-// @flow
+// 
 import { Record } from 'immutable'
-import type { RecordFactory, RecordOf } from 'immutable'
 
-export type TokenProps = {
-  address: string,
-  name: string,
-  symbol: string,
-  decimals: number,
-  logoUri: string,
-  balance: string,
-}
 
-export const makeToken: RecordFactory<TokenProps> = Record({
+export const makeToken = Record({
   address: '',
   name: '',
   symbol: '',
@@ -22,4 +13,3 @@ export const makeToken: RecordFactory<TokenProps> = Record({
 
 // balance is only set in extendedSafeTokensSelector when we display user's token balances
 
-export type Token = RecordOf<TokenProps>

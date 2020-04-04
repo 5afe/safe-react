@@ -1,4 +1,4 @@
-// @flow
+// 
 import Tooltip from '@material-ui/core/Tooltip'
 import { makeStyles } from '@material-ui/core/styles'
 import cn from 'classnames'
@@ -28,14 +28,8 @@ const useStyles = makeStyles({
   },
 })
 
-type EtherscanBtnProps = {
-  className?: any,
-  increaseZindex?: boolean,
-  type: 'tx' | 'address',
-  value: string,
-}
 
-const EtherscanBtn = ({ className, increaseZindex = false, type, value }: EtherscanBtnProps) => {
+const EtherscanBtn = ({ className, increaseZindex = false, type, value }) => {
   const classes = useStyles()
   const customClasses = increaseZindex ? { popper: classes.increasedPopperZindex } : {}
 

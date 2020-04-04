@@ -1,4 +1,4 @@
-// @flow
+// 
 import OpenSea from '~/logic/collectibles/sources/OpenSea'
 import mockedOpenSea from '~/logic/collectibles/sources/mocked_opensea'
 

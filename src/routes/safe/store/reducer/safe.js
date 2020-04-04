@@ -1,6 +1,6 @@
-// @flow
+// 
 import { Map, Set } from 'immutable'
-import { type ActionType, handleActions } from 'redux-actions'
+import { handleActions } from 'redux-actions'
 
 import { getWeb3 } from '~/logic/wallets/getWeb3'
 import { ACTIVATE_TOKEN_FOR_ALL_SAFES } from '~/routes/safe/store/actions/activateTokenForAllSafes'
@@ -15,13 +15,12 @@ import { SET_LATEST_MASTER_CONTRACT_VERSION } from '~/routes/safe/store/actions/
 import { UPDATE_SAFE } from '~/routes/safe/store/actions/updateSafe'
 import { UPDATE_SAFE_THRESHOLD } from '~/routes/safe/store/actions/updateSafeThreshold'
 import { makeOwner } from '~/routes/safe/store/models/owner'
-import SafeRecord, { type SafeProps } from '~/routes/safe/store/models/safe'
+import SafeRecord, { } from '~/routes/safe/store/models/safe'
 
 export const SAFE_REDUCER_ID = 'safes'
 
-export type SafeReducerState = Map<string, *>
 
-export const buildSafe = (storedSafe: SafeProps) => {
+export const buildSafe = (storedSafe) => {
   const names = storedSafe.owners.map((owner) => owner.name)
   const addresses = storedSafe.owners.map((owner) => getWeb3().utils.toChecksumAddress(owner.address))
   const owners = buildOwnersFrom(Array.from(names), Array.from(addresses))
@@ -31,7 +30,7 @@ export const buildSafe = (storedSafe: SafeProps) => {
   const blacklistedAssets = Set(storedSafe.blacklistedAssets)
   const balances = Map(storedSafe.balances)
 
-  const safe: SafeProps = {
+  const safe = {
     ...storedSafe,
     owners,
     balances,
@@ -44,15 +43,15 @@ export const buildSafe = (storedSafe: SafeProps) => {
   return safe
 }
 
-export default handleActions<SafeReducerState, *>(
+export default handleActions(
   {
-    [UPDATE_SAFE]: (state: SafeReducerState, action: ActionType<Function>): SafeReducerState => {
+    [UPDATE_SAFE]: (state, action) => {
       const safe = action.payload
       const safeAddress = safe.address
 
       return state.updateIn(['safes', safeAddress], (prevSafe) => prevSafe.merge(safe))
     },
-    [ACTIVATE_TOKEN_FOR_ALL_SAFES]: (state: SafeReducerState, action: ActionType<Function>): SafeReducerState => {
+    [ACTIVATE_TOKEN_FOR_ALL_SAFES]: (state, action) => {
       const tokenAddress = action.payload
 
       return state.withMutations((map) => {
@@ -67,8 +66,8 @@ export default handleActions<SafeReducerState, *>(
           })
       })
     },
-    [ADD_SAFE]: (state: SafeReducerState, action: ActionType<Function>): SafeReducerState => {
-      const { safe }: { safe: SafeProps } = action.payload
+    [ADD_SAFE]: (state, action) => {
+      const { safe } = action.payload
 
       // if you add a new Safe it needs to be set as a record
       // in case of update it shouldn't, because a record would be initialized
@@ -80,12 +79,12 @@ export default handleActions<SafeReducerState, *>(
 
       return state.setIn(['safes', safe.address], SafeRecord(safe))
     },
-    [REMOVE_SAFE]: (state: SafeReducerState, action: ActionType<Function>): SafeReducerState => {
+    [REMOVE_SAFE]: (state, action) => {
       const safeAddress = action.payload
 
       return state.deleteIn(['safes', safeAddress])
     },
-    [ADD_SAFE_OWNER]: (state: SafeReducerState, action: ActionType<Function>): SafeReducerState => {
+    [ADD_SAFE_OWNER]: (state, action) => {
       const { ownerAddress, ownerName, safeAddress } = action.payload
 
       return state.updateIn(['safes', safeAddress], (prevSafe) =>
@@ -94,7 +93,7 @@ export default handleActions<SafeReducerState, *>(
         }),
       )
     },
-    [REMOVE_SAFE_OWNER]: (state: SafeReducerState, action: ActionType<Function>): SafeReducerState => {
+    [REMOVE_SAFE_OWNER]: (state, action) => {
       const { ownerAddress, safeAddress } = action.payload
 
       return state.updateIn(['safes', safeAddress], (prevSafe) =>
@@ -103,7 +102,7 @@ export default handleActions<SafeReducerState, *>(
         }),
       )
     },
-    [REPLACE_SAFE_OWNER]: (state: SafeReducerState, action: ActionType<Function>): SafeReducerState => {
+    [REPLACE_SAFE_OWNER]: (state, action) => {
       const { oldOwnerAddress, ownerAddress, ownerName, safeAddress } = action.payload
 
       return state.updateIn(['safes', safeAddress], (prevSafe) =>
@@ -114,7 +113,7 @@ export default handleActions<SafeReducerState, *>(
         }),
       )
     },
-    [EDIT_SAFE_OWNER]: (state: SafeReducerState, action: ActionType<Function>): SafeReducerState => {
+    [EDIT_SAFE_OWNER]: (state, action) => {
       const { ownerAddress, ownerName, safeAddress } = action.payload
 
       return state.updateIn(['safes', safeAddress], (prevSafe) => {
@@ -125,14 +124,14 @@ export default handleActions<SafeReducerState, *>(
         return prevSafe.merge({ owners: updatedOwners })
       })
     },
-    [UPDATE_SAFE_THRESHOLD]: (state: SafeReducerState, action: ActionType<Function>): SafeReducerState => {
+    [UPDATE_SAFE_THRESHOLD]: (state, action) => {
       const { safeAddress, threshold } = action.payload
 
       return state.updateIn(['safes', safeAddress], (prevSafe) => prevSafe.set('threshold', threshold))
     },
-    [SET_DEFAULT_SAFE]: (state: SafeReducerState, action: ActionType<Function>): SafeReducerState =>
+    [SET_DEFAULT_SAFE]: (state, action) =>
       state.set('defaultSafe', action.payload),
-    [SET_LATEST_MASTER_CONTRACT_VERSION]: (state: SafeReducerState, action: ActionType<Function>): SafeReducerState =>
+    [SET_LATEST_MASTER_CONTRACT_VERSION]: (state, action) =>
       state.set('latestMasterContractVersion', action.payload),
   },
   Map({

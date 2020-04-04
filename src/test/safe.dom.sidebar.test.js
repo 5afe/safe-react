@@ -1,4 +1,4 @@
-// @flow
+// 
 import { act, fireEvent } from '@testing-library/react'
 import { aNewStore } from '~/store'
 import { aMinedSafe } from '~/test/builder/safe.redux.builder'
@@ -10,7 +10,7 @@ import { sleep } from '~/utils/timer'
 
 describe('DOM > Feature > Sidebar', () => {
   let store
-  let safeAddress: string
+  let safeAddress
   beforeEach(async () => {
     store = aNewStore()
     safeAddress = await aMinedSafe(store)

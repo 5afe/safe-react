@@ -1,4 +1,4 @@
-// @flow
+// 
 import appsIconSvg from '../Transactions/TxsTable/TxType/assets/appsIcon.svg'
 
 const appsUrl = process.env.REACT_APP_GNOSIS_APPS_URL
@@ -47,7 +47,7 @@ const appList = [
 
 export default appList
 
-export const getAppInfo = (appId: string) => {
+export const getAppInfo = (appId) => {
   const res = appList.find((app) => app.id === appId.toString())
   if (!res) {
     return {

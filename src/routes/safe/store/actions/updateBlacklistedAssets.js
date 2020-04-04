@@ -1,13 +1,12 @@
-// @flow
+// 
 import { Set } from 'immutable'
-import type { Dispatch as ReduxDispatch } from 'redux'
 
 import updateSafe from './updateSafe'
 
-import { type GlobalState } from '~/store'
+import { } from '~/store'
 
-const updateBlacklistedAssets = (safeAddress: string, blacklistedAssets: Set<string>) => async (
-  dispatch: ReduxDispatch<GlobalState>,
+const updateBlacklistedAssets = (safeAddress, blacklistedAssets) => async (
+  dispatch,
 ) => {
   dispatch(updateSafe({ address: safeAddress, blacklistedAssets }))
 }

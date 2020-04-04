@@ -1,4 +1,4 @@
-// @flow
+// 
 import { EMPTY_DATA } from '~/logic/wallets/ethTransactions'
 import { getWeb3 } from '~/logic/wallets/getWeb3'
 
@@ -59,9 +59,8 @@ const generateTypedDataFrom = async ({
   return typedData
 }
 
-type EIP712RpcCallVersion = 'v3' | 'v4'
 
-export const getEIP712Signer = (version: ?EIP712RpcCallVersion) => async (txArgs) => {
+export const getEIP712Signer = (version) => async (txArgs) => {
   const web3 = getWeb3()
   const typedData = await generateTypedDataFrom(txArgs)
 

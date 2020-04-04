@@ -1,4 +1,4 @@
-// @flow
+// 
 import ListItemIcon from '@material-ui/core/ListItemIcon'
 import ListItemText from '@material-ui/core/ListItemText'
 import MenuItem from '@material-ui/core/MenuItem'
@@ -12,19 +12,14 @@ import SelectField from '~/components/forms/SelectField'
 import { required } from '~/components/forms/validator'
 import Img from '~/components/layout/Img'
 import Paragraph from '~/components/layout/Paragraph'
-import type { NFTAssetsState } from '~/logic/collectibles/store/reducer/collectibles'
 import { formatAmount } from '~/logic/tokens/utils/formatAmount'
 import { setImageToPlaceholder } from '~/routes/safe/components/Balances/utils'
 import { textShortener } from '~/utils/strings'
 
-type SelectedTokenProps = {
-  assetAddress?: string,
-  assets: NFTAssetsState,
-}
 
 const useSelectedTokenStyles = makeStyles(selectedTokenStyles)
 
-const SelectedToken = ({ assetAddress, assets }: SelectedTokenProps) => {
+const SelectedToken = ({ assetAddress, assets }) => {
   const classes = useSelectedTokenStyles()
   const asset = assetAddress ? assets[assetAddress] : null
   const shortener = textShortener({ charsStart: 40, charsEnd: 0 })
@@ -51,14 +46,10 @@ const SelectedToken = ({ assetAddress, assets }: SelectedTokenProps) => {
   )
 }
 
-type SelectFieldProps = {
-  assets: NFTAssetsState,
-  initialValue: ?string,
-}
 
 const useTokenSelectFieldStyles = makeStyles(selectStyles)
 
-const TokenSelectField = ({ assets, initialValue }: SelectFieldProps) => {
+const TokenSelectField = ({ assets, initialValue }) => {
   const classes = useTokenSelectFieldStyles()
   const assetsAddresses = Object.keys(assets)
 

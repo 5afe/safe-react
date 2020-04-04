@@ -1,4 +1,4 @@
-// @flow
+// 
 import IconButton from '@material-ui/core/IconButton'
 import { withStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
@@ -22,7 +22,7 @@ import Col from '~/components/layout/Col'
 import Hairline from '~/components/layout/Hairline'
 import Paragraph from '~/components/layout/Paragraph'
 import Row from '~/components/layout/Row'
-import { type Owner } from '~/routes/safe/store/models/owner'
+import { } from '~/routes/safe/store/models/owner'
 
 export const REPLACE_OWNER_NAME_INPUT_TEST_ID = 'replace-owner-name-input'
 export const REPLACE_OWNER_ADDRESS_INPUT_TEST_ID = 'replace-owner-address-testid'
@@ -34,16 +34,8 @@ const formMutators = {
   },
 }
 
-type Props = {
-  onClose: () => void,
-  classes: Object,
-  ownerAddress: string,
-  ownerName: string,
-  onSubmit: Function,
-  owners: List<Owner>,
-}
 
-const OwnerForm = ({ classes, onClose, onSubmit, ownerAddress, ownerName, owners }: Props) => {
+const OwnerForm = ({ classes, onClose, onSubmit, ownerAddress, ownerName, owners }) => {
   const handleSubmit = (values) => {
     onSubmit(values)
   }

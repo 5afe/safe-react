@@ -1,7 +1,7 @@
-// @flow
+// 
 import { getHumanFriendlyToken } from '~/logic/tokens/store/actions/fetchTokens'
 
-export const getSymbolAndDecimalsFromContract = async (tokenAddress: string) => {
+export const getSymbolAndDecimalsFromContract = async (tokenAddress) => {
   const tokenContract = await getHumanFriendlyToken()
   const token = await tokenContract.at(tokenAddress)
   let values

@@ -1,4 +1,4 @@
-// @flow
+// 
 import OpenInNew from '@material-ui/icons/OpenInNew'
 import * as React from 'react'
 
@@ -16,10 +16,6 @@ import { marginButtonImg, secondary } from '~/theme/variables'
 const plus = require('../assets/new.svg')
 const safe = require('../assets/safe.svg')
 
-type Props = {
-  provider: string,
-  isOldMultisigMigration?: boolean,
-}
 
 const openIconStyle = {
   height: '13px',
@@ -27,16 +23,12 @@ const openIconStyle = {
   marginBottom: '-2px',
 }
 
-type SafeProps = {
-  provider: string,
-  size?: 'small' | 'medium' | 'large',
-}
 
 const buttonStyle = {
   marginLeft: marginButtonImg,
 }
 
-export const CreateSafe = ({ provider, size }: SafeProps) => (
+export const CreateSafe = ({ provider, size }) => (
   <Button
     color="primary"
     component={Link}
@@ -52,7 +44,7 @@ export const CreateSafe = ({ provider, size }: SafeProps) => (
   </Button>
 )
 
-export const LoadSafe = ({ provider, size }: SafeProps) => (
+export const LoadSafe = ({ provider, size }) => (
   <Button
     color="primary"
     component={Link}
@@ -67,7 +59,7 @@ export const LoadSafe = ({ provider, size }: SafeProps) => (
   </Button>
 )
 
-const Welcome = ({ isOldMultisigMigration, provider }: Props) => {
+const Welcome = ({ isOldMultisigMigration, provider }) => {
   const headingText = isOldMultisigMigration ? (
     <>
       We will replicate the owner structure from your existing Gnosis MultiSig

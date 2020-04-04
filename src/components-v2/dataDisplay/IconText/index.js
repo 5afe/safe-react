@@ -1,4 +1,4 @@
-// @flow
+// 
 import React from 'react'
 import styled from 'styled-components'
 
@@ -15,7 +15,7 @@ const Text = styled.span`
   height: 17px;
 `
 
-const IconText = ({ iconUrl, text }: { iconUrl: string, text?: string }) => (
+const IconText = ({ iconUrl, text }) => (
   <Wrapper>
     <Icon alt={text} src={iconUrl} />
     {text && <Text>{text}</Text>}

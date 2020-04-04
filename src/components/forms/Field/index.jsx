@@ -1,8 +1,8 @@
-// @flow
+// 
 import * as React from 'react'
 import { Field } from 'react-final-form'
 
 // $FlowFixMe
-const GnoField = ({ ...props }): React.Element<*> => <Field {...props} />
+const GnoField = ({ ...props }) => <Field {...props} />
 
 export default GnoField

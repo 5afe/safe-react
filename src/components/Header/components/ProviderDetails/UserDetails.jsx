@@ -1,4 +1,4 @@
-// @flow
+// 
 import { withStyles } from '@material-ui/core/styles'
 import Dot from '@material-ui/icons/FiberManualRecord'
 import classNames from 'classnames'
@@ -22,14 +22,6 @@ import { upperFirst } from '~/utils/css'
 const dot = require('../../assets/dotRinkeby.svg')
 const walletIcon = require('../../assets/wallet.svg')
 
-type Props = {
-  provider: string,
-  connected: boolean,
-  network: string,
-  userAddress: string,
-  classes: Object,
-  onDisconnect: Function,
-}
 
 const styles = () => ({
   container: {
@@ -92,7 +84,7 @@ const styles = () => ({
   },
 })
 
-const UserDetails = ({ classes, connected, network, onDisconnect, provider, userAddress }: Props) => {
+const UserDetails = ({ classes, connected, network, onDisconnect, provider, userAddress }) => {
   const status = connected ? 'Connected' : 'Connection error'
   const address = userAddress ? shortVersionOf(userAddress, 4) : 'Address not available'
   const identiconAddress = userAddress || 'random'

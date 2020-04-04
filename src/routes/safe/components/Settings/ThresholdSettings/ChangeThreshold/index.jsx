@@ -1,4 +1,4 @@
-// @flow
+// 
 import IconButton from '@material-ui/core/IconButton'
 import MenuItem from '@material-ui/core/MenuItem'
 import { withStyles } from '@material-ui/core/styles'
@@ -22,21 +22,12 @@ import { getGnosisSafeInstanceAt } from '~/logic/contracts/safeContracts'
 import { estimateTxGasCosts } from '~/logic/safe/transactions/gasNew'
 import { formatAmount } from '~/logic/tokens/utils/formatAmount'
 import { getWeb3 } from '~/logic/wallets/getWeb3'
-import type { Owner } from '~/routes/safe/store/models/owner'
 
-type Props = {
-  onClose: () => void,
-  classes: Object,
-  safeAddress: string,
-  threshold: number,
-  owners: List<Owner>,
-  onChangeThreshold: Function,
-}
 
 const THRESHOLD_FIELD_NAME = 'threshold'
 
-const ChangeThreshold = ({ classes, onChangeThreshold, onClose, owners, safeAddress, threshold }: Props) => {
-  const [gasCosts, setGasCosts] = useState<string>('< 0.001')
+const ChangeThreshold = ({ classes, onChangeThreshold, onClose, owners, safeAddress, threshold }) => {
+  const [gasCosts, setGasCosts] = useState('< 0.001')
 
   useEffect(() => {
     let isCurrent = true
@@ -90,7 +81,7 @@ const ChangeThreshold = ({ classes, onChangeThreshold, onClose, owners, safeAddr
                   <Field
                     data-testid="threshold-select-input"
                     name={THRESHOLD_FIELD_NAME}
-                    render={(props: Object) => (
+                    render={(props) => (
                       <>
                         <SelectField {...props} disableError>
                           {[...Array(Number(owners.size))].map((x, index) => (

@@ -1,4 +1,4 @@
-// @flow
+// 
 import MuiTextField from '@material-ui/core/TextField'
 import { withStyles } from '@material-ui/core/styles'
 import makeStyles from '@material-ui/core/styles/makeStyles'
@@ -14,15 +14,6 @@ import { mustBeEthereumAddress, mustBeEthereumContractAddress } from '~/componen
 import { getAddressBookListSelector } from '~/logic/addressBook/store/selectors'
 import { getAddressFromENS } from '~/logic/wallets/getWeb3'
 
-type Props = {
-  classes: Object,
-  fieldMutator: Function,
-  setSelectedEntry: Function,
-  setIsValidAddress: Function,
-  isCustomTx?: boolean,
-  recipientAddress?: string,
-  pristine: boolean,
-}
 
 const textFieldLabelStyle = makeStyles(() => ({
   root: {
@@ -59,7 +50,7 @@ const AddressBookInput = ({
   recipientAddress,
   setIsValidAddress,
   setSelectedEntry,
-}: Props) => {
+}) => {
   const addressBook = useSelector(getAddressBookListSelector)
   const [isValidForm, setIsValidForm] = useState(true)
   const [validationText, setValidationText] = useState(true)

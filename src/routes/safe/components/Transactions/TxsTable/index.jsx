@@ -1,4 +1,4 @@
-// @flow
+// 
 import Collapse from '@material-ui/core/Collapse'
 import IconButton from '@material-ui/core/IconButton'
 import TableCell from '@material-ui/core/TableCell'
@@ -17,19 +17,17 @@ import {
   TX_TABLE_ID,
   TX_TABLE_RAW_CANCEL_TX_ID,
   TX_TABLE_RAW_TX_ID,
-  type TransactionRow,
   generateColumns,
   getTxTableData,
 } from './columns'
 import { styles } from './style'
 
 import Table from '~/components/Table'
-import { type Column, cellWidth } from '~/components/Table/TableHead'
+import { cellWidth } from '~/components/Table/TableHead'
 import Block from '~/components/layout/Block'
 import Row from '~/components/layout/Row'
-import type { IncomingTransaction } from '~/routes/safe/store/models/incomingTransaction'
-import { type Owner } from '~/routes/safe/store/models/owner'
-import { type Transaction } from '~/routes/safe/store/models/transaction'
+import { } from '~/routes/safe/store/models/owner'
+import { } from '~/routes/safe/store/models/transaction'
 
 export const TRANSACTION_ROW_TEST_ID = 'transaction-row'
 
@@ -38,19 +36,6 @@ const expandCellStyle = {
   paddingRight: 15,
 }
 
-type Props = {
-  classes: Object,
-  transactions: List<Transaction | IncomingTransaction>,
-  cancellationTransactions: List<Transaction>,
-  threshold: number,
-  owners: List<Owner>,
-  userAddress: string,
-  granted: boolean,
-  safeAddress: string,
-  nonce: number,
-  createTransaction: Function,
-  processTransaction: Function,
-}
 
 const TxsTable = ({
   cancellationTransactions,
@@ -64,8 +49,8 @@ const TxsTable = ({
   threshold,
   transactions,
   userAddress,
-}: Props) => {
-  const [expandedTx, setExpandedTx] = useState<string | null>(null)
+}) => {
+  const [expandedTx, setExpandedTx] = useState(null)
 
   const handleTxExpand = (safeTxHash) => {
     setExpandedTx((prevTx) => (prevTx === safeTxHash ? null : safeTxHash))
@@ -113,8 +98,8 @@ const TxsTable = ({
           label="Transactions"
           size={filteredData.size}
         >
-          {(sortedData: Array<TransactionRow>) =>
-            sortedData.map((row: any, index: number) => (
+          {(sortedData) =>
+            sortedData.map((row, index) => (
               <React.Fragment key={index}>
                 <TableRow
                   className={cn(classes.row, expandedTx === row.tx.safeTxHash && classes.expandedRow)}
@@ -122,7 +107,7 @@ const TxsTable = ({
                   onClick={() => handleTxExpand(row.tx.safeTxHash)}
                   tabIndex={-1}
                 >
-                  {autoColumns.map((column: Column) => (
+                  {autoColumns.map((column) => (
                     <TableCell
                       align={column.align}
                       className={cn(classes.cell, ['cancelled', 'failed'].includes(row.status) && classes.cancelledRow)}

@@ -1,13 +1,13 @@
-// @flow
+// 
 import axios from 'axios'
 
 import { getExchangeRatesUrl } from '~/config'
 import { AVAILABLE_CURRENCIES } from '~/logic/currencyValues/store/model/currencyValues'
 
 const fetchCurrenciesRates = async (
-  baseCurrency: AVAILABLE_CURRENCIES,
-  targetCurrencyValue: AVAILABLE_CURRENCIES,
-): Promise<number> => {
+  baseCurrency,
+  targetCurrencyValue,
+) => {
   let rate = 0
   const url = `${getExchangeRatesUrl()}?base=${baseCurrency}&symbols=${targetCurrencyValue}`
 

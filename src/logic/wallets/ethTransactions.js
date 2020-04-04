@@ -1,4 +1,4 @@
-// @flow
+// 
 import axios from 'axios'
 import { BigNumber } from 'bignumber.js'
 
@@ -7,7 +7,7 @@ import { getWeb3, web3ReadOnly } from '~/logic/wallets/getWeb3'
 // const MAINNET_NETWORK = 1
 export const EMPTY_DATA = '0x'
 
-export const checkReceiptStatus = async (hash: string) => {
+export const checkReceiptStatus = async (hash) => {
   if (!hash) {
     return Promise.reject(new Error('No valid Tx hash to get receipt from'))
   }
@@ -49,7 +49,7 @@ export const calculateGasPrice = async () => {
   return new BigNumber(data.average).multipliedBy(1e8).toString()
 }
 
-export const calculateGasOf = async (data: Object, from: string, to: string) => {
+export const calculateGasOf = async (data, from, to) => {
   const web3 = getWeb3()
   try {
     const gas = await web3.eth.estimateGas({ data, from, to })

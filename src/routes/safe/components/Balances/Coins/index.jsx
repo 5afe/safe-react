@@ -1,4 +1,4 @@
-// @flow
+// 
 import TableCell from '@material-ui/core/TableCell'
 import TableContainer from '@material-ui/core/TableContainer'
 import TableRow from '@material-ui/core/TableRow'
@@ -12,14 +12,12 @@ import { useSelector } from 'react-redux'
 import { styles } from './styles'
 
 import Table from '~/components/Table'
-import type { Column } from '~/components/Table/TableHead'
 import { cellWidth } from '~/components/Table/TableHead'
 import Button from '~/components/layout/Button'
 import Row from '~/components/layout/Row'
 import { currencyValuesListSelector, currentCurrencySelector } from '~/logic/currencyValues/store/selectors'
 import { BALANCE_ROW_TEST_ID } from '~/routes/safe/components/Balances'
 import AssetTableCell from '~/routes/safe/components/Balances/AssetTableCell'
-import type { BalanceRow } from '~/routes/safe/components/Balances/dataFetcher'
 import {
   BALANCE_TABLE_ASSET_ID,
   BALANCE_TABLE_BALANCE_ID,
@@ -31,12 +29,8 @@ import { extendedSafeTokensSelector, grantedSelector } from '~/routes/safe/conta
 
 const useStyles = makeStyles(styles)
 
-type Props = {
-  showSendFunds: Function,
-  showReceiveFunds: Function,
-}
 
-const Coins = (props: Props) => {
+const Coins = (props) => {
   const { showReceiveFunds, showSendFunds } = props
   const classes = useStyles()
   const columns = generateColumns()
@@ -58,10 +52,10 @@ const Coins = (props: Props) => {
         label="Balances"
         size={filteredData.size}
       >
-        {(sortedData: Array<BalanceRow>) =>
-          sortedData.map((row: any, index: number) => (
+        {(sortedData) =>
+          sortedData.map((row, index) => (
             <TableRow className={classes.hide} data-testid={BALANCE_ROW_TEST_ID} key={index} tabIndex={-1}>
-              {autoColumns.map((column: Column) => {
+              {autoColumns.map((column) => {
                 const { align, id, width } = column
                 let cellItem
                 switch (id) {

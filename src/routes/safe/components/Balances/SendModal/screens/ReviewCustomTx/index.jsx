@@ -1,4 +1,4 @@
-// @flow
+// 
 import IconButton from '@material-ui/core/IconButton'
 import { makeStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
@@ -31,21 +31,14 @@ import createTransaction from '~/routes/safe/store/actions/createTransaction'
 import { safeSelector } from '~/routes/safe/store/selectors'
 import { sm } from '~/theme/variables'
 
-type Props = {
-  closeSnackbar: () => void,
-  enqueueSnackbar: () => void,
-  onClose: () => void,
-  onPrev: () => void,
-  tx: Object,
-}
 
 const useStyles = makeStyles(styles)
 
-const ReviewCustomTx = ({ closeSnackbar, enqueueSnackbar, onClose, onPrev, tx }: Props) => {
+const ReviewCustomTx = ({ closeSnackbar, enqueueSnackbar, onClose, onPrev, tx }) => {
   const classes = useStyles()
   const dispatch = useDispatch()
   const { address: safeAddress, ethBalance, name: safeName } = useSelector(safeSelector)
-  const [gasCosts, setGasCosts] = useState<string>('< 0.001')
+  const [gasCosts, setGasCosts] = useState('< 0.001')
 
   useEffect(() => {
     let isCurrent = true

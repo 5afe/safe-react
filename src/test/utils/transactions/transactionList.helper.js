@@ -1,4 +1,4 @@
-// @flow
+// 
 import { fireEvent } from '@testing-library/react'
 import { sleep } from '~/utils/timer'
 import { shortVersionOf } from '~/logic/wallets/ethAddresses'
@@ -10,7 +10,7 @@ import {
   TRANSACTIONS_DESC_SEND_TEST_ID,
 } from '~/routes/safe/components/Transactions/TxsTable/ExpandedTx/TxDescription'
 
-export const getLastTransaction = async (SafeDom: React.Component<any, any>) => {
+export const getLastTransaction = async (SafeDom) => {
   // Travel to transactions
   const transactionsBtn = SafeDom.getByTestId(TRANSACTIONS_TAB_BTN_TEST_ID)
   fireEvent.click(transactionsBtn)
@@ -23,10 +23,10 @@ export const getLastTransaction = async (SafeDom: React.Component<any, any>) => 
 }
 
 export const checkRegisteredTxSend = async (
-  SafeDom: React.Component<any, any>,
-  ethAmount: number | string,
-  symbol: string,
-  ethAddress: string,
+  SafeDom,
+  ethAmount,
+  symbol,
+  ethAddress,
 ) => {
   await getLastTransaction(SafeDom)
 
@@ -34,14 +34,14 @@ export const checkRegisteredTxSend = async (
   expect(txDescription).toHaveTextContent(`Send ${ethAmount} ${symbol} to:${shortVersionOf(ethAddress, 4)}`)
 }
 
-export const checkRegisteredTxAddOwner = async (SafeDom: React.Component<any, any>, ownerAddress: string) => {
+export const checkRegisteredTxAddOwner = async (SafeDom, ownerAddress) => {
   await getLastTransaction(SafeDom)
 
   const txDescription = SafeDom.getAllByTestId(TRANSACTIONS_DESC_ADD_OWNER_TEST_ID)[0]
   expect(txDescription).toHaveTextContent(`Add owner:${shortVersionOf(ownerAddress, 4)}`)
 }
 
-export const checkRegisteredTxRemoveOwner = async (SafeDom: React.Component<any, any>, ownerAddress: string) => {
+export const checkRegisteredTxRemoveOwner = async (SafeDom, ownerAddress) => {
   await getLastTransaction(SafeDom)
 
   const txDescription = SafeDom.getAllByTestId(TRANSACTIONS_DESC_REMOVE_OWNER_TEST_ID)[0]
@@ -49,9 +49,9 @@ export const checkRegisteredTxRemoveOwner = async (SafeDom: React.Component<any,
 }
 
 export const checkRegisteredTxReplaceOwner = async (
-  SafeDom: React.Component<any, any>,
-  oldOwnerAddress: string,
-  newOwnerAddress: string,
+  SafeDom,
+  oldOwnerAddress,
+  newOwnerAddress,
 ) => {
   await getLastTransaction(SafeDom)
 

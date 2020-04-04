@@ -1,15 +1,14 @@
-// @flow
+// 
 import axios from 'axios'
 import bn from 'bignumber.js'
-import { List, Map, type RecordInstance } from 'immutable'
-import type { Dispatch as ReduxDispatch } from 'redux'
+import { List, Map, } from 'immutable'
 
 import { addIncomingTransactions } from './addIncomingTransactions'
 import { addTransactions } from './addTransactions'
 
 import { decodeParamsFromSafeMethod } from '~/logic/contracts/methodIds'
 import { buildIncomingTxServiceUrl } from '~/logic/safe/transactions/incomingTxHistory'
-import { type TxServiceType, buildTxServiceUrl } from '~/logic/safe/transactions/txHistory'
+import { buildTxServiceUrl } from '~/logic/safe/transactions/txHistory'
 import { getLocalSafe } from '~/logic/safe/utils'
 import { getTokenInfos } from '~/logic/tokens/store/actions/fetchTokens'
 import { ALTERNATIVE_TOKEN_ABI } from '~/logic/tokens/utils/alternativeAbi'
@@ -25,58 +24,21 @@ import { EMPTY_DATA } from '~/logic/wallets/ethTransactions'
 import { getWeb3 } from '~/logic/wallets/getWeb3'
 import { addCancellationTransactions } from '~/routes/safe/store/actions/addCancellationTransactions'
 import { makeConfirmation } from '~/routes/safe/store/models/confirmation'
-import { type IncomingTransaction, makeIncomingTransaction } from '~/routes/safe/store/models/incomingTransaction'
+import { makeIncomingTransaction } from '~/routes/safe/store/models/incomingTransaction'
 import { makeOwner } from '~/routes/safe/store/models/owner'
-import type { TransactionProps } from '~/routes/safe/store/models/transaction'
-import { type Transaction, makeTransaction } from '~/routes/safe/store/models/transaction'
-import { type GlobalState } from '~/store'
+import { makeTransaction } from '~/routes/safe/store/models/transaction'
+import { } from '~/store'
 
 let web3
 
-type ConfirmationServiceModel = {
-  owner: string,
-  submissionDate: Date,
-  confirmationType: string,
-  transactionHash: string,
-}
 
-type TxServiceModel = {
-  to: string,
-  value: number,
-  data: ?string,
-  operation: number,
-  nonce: ?number,
-  blockNumber: ?number,
-  safeTxGas: number,
-  baseGas: number,
-  gasPrice: number,
-  gasToken: string,
-  refundReceiver: string,
-  safeTxHash: string,
-  submissionDate: ?string,
-  executor: string,
-  executionDate: ?string,
-  confirmations: ConfirmationServiceModel[],
-  isExecuted: boolean,
-  isSuccessful: boolean,
-  transactionHash: ?string,
-  creationTx?: boolean,
-}
 
-type IncomingTxServiceModel = {
-  blockNumber: number,
-  transactionHash: string,
-  to: string,
-  value: number,
-  tokenAddress: string,
-  from: string,
-}
 
-export const buildTransactionFrom = async (safeAddress: string, tx: TxServiceModel): Promise<Transaction> => {
+export const buildTransactionFrom = async (safeAddress, tx) => {
   const { owners } = await getLocalSafe(safeAddress)
 
   const confirmations = List(
-    tx.confirmations.map((conf: ConfirmationServiceModel) => {
+    tx.confirmations.map((conf) => {
       let ownerName = 'UNKNOWN'
 
       if (owners) {
@@ -89,7 +51,7 @@ export const buildTransactionFrom = async (safeAddress: string, tx: TxServiceMod
 
       return makeConfirmation({
         owner: makeOwner({ address: conf.owner, name: ownerName }),
-        type: ((conf.confirmationType.toLowerCase(): any): TxServiceType),
+        type: ((conf.confirmationType.toLowerCase())),
         hash: conf.transactionHash,
         signature: conf.signature,
       })
@@ -192,7 +154,7 @@ export const buildTransactionFrom = async (safeAddress: string, tx: TxServiceMod
   })
 }
 
-const addMockSafeCreationTx = (safeAddress): Array<TxServiceModel> => [
+const addMockSafeCreationTx = (safeAddress) => [
   {
     blockNumber: null,
     baseGas: 0,
@@ -218,7 +180,7 @@ const addMockSafeCreationTx = (safeAddress): Array<TxServiceModel> => [
   },
 ]
 
-export const buildIncomingTransactionFrom = async (tx: IncomingTxServiceModel) => {
+export const buildIncomingTransactionFrom = async (tx) => {
   let symbol = 'ETH'
   let decimals = 18
 
@@ -262,15 +224,11 @@ export const buildIncomingTransactionFrom = async (tx: IncomingTxServiceModel) =
   })
 }
 
-export type SafeTransactionsType = {
-  outgoing: Map<string, List<TransactionProps>>,
-  cancel: Map<string, List<TransactionProps>>,
-}
 
 let etagSafeTransactions = null
 let etagCachedSafeIncommingTransactions = null
-export const loadSafeTransactions = async (safeAddress: string): Promise<SafeTransactionsType> => {
-  let transactions: TxServiceModel[] = addMockSafeCreationTx(safeAddress)
+export const loadSafeTransactions = async (safeAddress) => {
+  let transactions = addMockSafeCreationTx(safeAddress)
 
   try {
     const config = etagSafeTransactions
@@ -302,8 +260,8 @@ export const loadSafeTransactions = async (safeAddress: string): Promise<SafeTra
   }
 
   // In case that the etags don't match, we parse the new transactions and save them to the cache
-  const txsRecord: Array<RecordInstance<TransactionProps>> = await Promise.all(
-    transactions.map((tx: TxServiceModel) => buildTransactionFrom(safeAddress, tx)),
+  const txsRecord = await Promise.all(
+    transactions.map((tx) => buildTransactionFrom(safeAddress, tx)),
   )
 
   const groupedTxs = List(txsRecord).groupBy((tx) => (tx.get('cancellationTx') ? 'cancel' : 'outgoing'))
@@ -314,8 +272,8 @@ export const loadSafeTransactions = async (safeAddress: string): Promise<SafeTra
   }
 }
 
-export const loadSafeIncomingTransactions = async (safeAddress: string) => {
-  let incomingTransactions: IncomingTxServiceModel[] = []
+export const loadSafeIncomingTransactions = async (safeAddress) => {
+  let incomingTransactions = []
   try {
     const config = etagCachedSafeIncommingTransactions
       ? {
@@ -347,16 +305,16 @@ export const loadSafeIncomingTransactions = async (safeAddress: string) => {
   return Map().set(safeAddress, List(incomingTxsRecord))
 }
 
-export default (safeAddress: string) => async (dispatch: ReduxDispatch<GlobalState>) => {
+export default (safeAddress) => async (dispatch) => {
   web3 = await getWeb3()
 
-  const transactions: SafeTransactionsType | undefined = await loadSafeTransactions(safeAddress)
+  const transactions = await loadSafeTransactions(safeAddress)
   if (transactions) {
     const { cancel, outgoing } = transactions
     dispatch(addCancellationTransactions(cancel))
     dispatch(addTransactions(outgoing))
   }
-  const incomingTransactions: Map<string, List<IncomingTransaction>> | undefined = await loadSafeIncomingTransactions(
+  const incomingTransactions = await loadSafeIncomingTransactions(
     safeAddress,
   )
 

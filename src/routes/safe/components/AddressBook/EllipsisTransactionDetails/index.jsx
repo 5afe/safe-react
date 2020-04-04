@@ -1,4 +1,4 @@
-// @flow
+// 
 import { Divider } from '@material-ui/core'
 import ClickAwayListener from '@material-ui/core/ClickAwayListener'
 import Menu from '@material-ui/core/Menu'
@@ -31,12 +31,8 @@ const useStyles = makeStyles({
   },
 })
 
-type EllipsisTransactionDetailsProps = {
-  knownAddress: boolean,
-  address: string,
-}
 
-const EllipsisTransactionDetails = ({ address, knownAddress }: EllipsisTransactionDetailsProps) => {
+const EllipsisTransactionDetails = ({ address, knownAddress }) => {
   const classes = useStyles()
   const [anchorEl, setAnchorEl] = React.useState(null)
 

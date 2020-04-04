@@ -1,12 +1,10 @@
-// @flow
+// 
 import React, { useEffect, useState } from 'react'
 import GoogleAnalytics from 'react-ga'
 
 import { getGoogleAnalyticsTrackingID } from '~/config'
 import { COOKIES_KEY } from '~/logic/cookies/model/cookie'
-import type { CookiesProps } from '~/logic/cookies/model/cookie'
 import { loadFromCookie } from '~/logic/cookies/utils'
-import type { RouterProps } from '~/routes/safe/store/selectors'
 
 let analyticsLoaded = false
 export const loadGoogleAnalytics = () => {
@@ -30,7 +28,7 @@ export const withTracker = (WrappedComponent, options = {}) => {
 
   useEffect(() => {
     async function fetchCookiesFromStorage() {
-      const cookiesState: CookiesProps = await loadFromCookie(COOKIES_KEY)
+      const cookiesState = await loadFromCookie(COOKIES_KEY)
       if (cookiesState) {
         const { acceptedAnalytics } = cookiesState
         setUseAnalytics(acceptedAnalytics)
@@ -50,7 +48,7 @@ export const withTracker = (WrappedComponent, options = {}) => {
     GoogleAnalytics.pageview(page)
   }
 
-  const HOC = (props: RouterProps) => {
+  const HOC = (props) => {
     // eslint-disable-next-line react/prop-types
     const { location } = props
     useEffect(() => {

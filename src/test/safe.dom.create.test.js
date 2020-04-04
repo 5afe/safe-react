@@ -1,13 +1,13 @@
-// @flow
+// 
 import * as React from 'react'
-import { type Store } from 'redux'
+import { } from 'redux'
 import { render, fireEvent, act } from '@testing-library/react'
 import { Provider } from 'react-redux'
 import { ConnectedRouter } from 'connected-react-router'
 import { sleep } from '~/utils/timer'
 import { ADD_OWNER_BUTTON } from '~/routes/open/components/SafeOwnersConfirmationsForm'
 import Open from '~/routes/open/container/Open'
-import { aNewStore, history, type GlobalState } from '~/store'
+import { aNewStore, history, } from '~/store'
 import { getProviderInfo, getWeb3 } from '~/logic/wallets/getWeb3'
 import addProvider from '~/logic/wallets/store/actions/addProvider'
 import { makeProvider } from '~/logic/wallets/store/model/provider'
@@ -30,7 +30,7 @@ afterAll(() => {
   console.error = originalError
 })
 
-const renderOpenSafeForm = async (localStore: Store<GlobalState>) => {
+const renderOpenSafeForm = async (localStore) => {
   const provider = await getProviderInfo(window.web3.currentProvider)
   const walletRecord = makeProvider(provider)
   localStore.dispatch(addProvider(walletRecord))
@@ -44,7 +44,7 @@ const renderOpenSafeForm = async (localStore: Store<GlobalState>) => {
   )
 }
 
-const deploySafe = async (createSafeForm: any, threshold: number, numOwners: number) => {
+const deploySafe = async (createSafeForm, threshold, numOwners) => {
   const web3 = getWeb3()
   const accounts = await web3.eth.getAccounts()
 
@@ -52,7 +52,7 @@ const deploySafe = async (createSafeForm: any, threshold: number, numOwners: num
   const form = createSafeForm.getByTestId('create-safe-form')
 
   // Fill Safe's name
-  const nameInput: HTMLInputElement = createSafeForm.getByPlaceholderText('Name of the new Safe')
+  const nameInput = createSafeForm.getByPlaceholderText('Name of the new Safe')
 
   await act(async () => {
     fireEvent.change(nameInput, { target: { value: 'Adolfo Safe' } })
@@ -112,8 +112,8 @@ const deploySafe = async (createSafeForm: any, threshold: number, numOwners: num
   return whenSafeDeployed()
 }
 
-const aDeployedSafe = async (specificStore: Store<GlobalState>, threshold?: number = 1, numOwners?: number = 1) => {
-  const safe: React.Component<{}> = await renderOpenSafeForm(specificStore)
+const aDeployedSafe = async (specificStore, threshold = 1, numOwners = 1) => {
+  const safe = await renderOpenSafeForm(specificStore)
   await sleep(1500)
   const safeAddress = await deploySafe(safe, threshold, numOwners)
 

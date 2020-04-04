@@ -1,4 +1,4 @@
-// @flow
+// 
 import { makeStyles } from '@material-ui/core/styles'
 import React from 'react'
 
@@ -28,13 +28,8 @@ const useStyles = makeStyles({
   },
 })
 
-type Props = {
-  safeAddress: string,
-  safeName: string,
-  ethBalance: string,
-}
 
-const SafeInfo = (props: Props) => {
+const SafeInfo = (props) => {
   const { ethBalance, safeAddress, safeName } = props
   const classes = useStyles()
 

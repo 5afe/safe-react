@@ -1,4 +1,4 @@
-// @flow
+// 
 import IconButton from '@material-ui/core/IconButton'
 import { withStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
@@ -19,15 +19,8 @@ import Row from '~/components/layout/Row'
 
 export const REMOVE_OWNER_MODAL_NEXT_BTN_TEST_ID = 'remove-owner-next-btn'
 
-type Props = {
-  onClose: () => void,
-  classes: Object,
-  ownerAddress: string,
-  ownerName: string,
-  onSubmit: Function,
-}
 
-const CheckOwner = ({ classes, onClose, onSubmit, ownerAddress, ownerName }: Props) => {
+const CheckOwner = ({ classes, onClose, onSubmit, ownerAddress, ownerName }) => {
   const handleSubmit = (values) => {
     onSubmit(values)
   }

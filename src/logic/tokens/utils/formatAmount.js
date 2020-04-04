@@ -1,4 +1,4 @@
-// @flow
+// 
 
 // This is pretty new so I'll leave the docs here
 // https://v8.dev/features/intl-numberformat
@@ -14,7 +14,7 @@ const lt100mFormatter = new Intl.NumberFormat([], { maximumFractionDigits: 0 })
 // same format for billions and trillions
 const lt1000tFormatter = new Intl.NumberFormat([], { maximumFractionDigits: 3, notation: 'compact' })
 
-export const formatAmount = (number: string | number) => {
+export const formatAmount = (number) => {
   let numberFloat = parseFloat(number)
 
   if (numberFloat === 0) {

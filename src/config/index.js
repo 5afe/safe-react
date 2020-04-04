@@ -1,4 +1,4 @@
-// @flow
+// 
 import { ensureOnce } from "~/utils/singleton"
 import { ETHEREUM_NETWORK } from "~/logic/wallets/getWeb3"
 import {
@@ -52,10 +52,10 @@ export const getTxServiceHost = () => {
   return config[TX_SERVICE_HOST]
 }
 
-export const getTxServiceUriFrom = (safeAddress: string) =>
+export const getTxServiceUriFrom = (safeAddress) =>
   `safes/${safeAddress}/transactions/`
 
-export const getIncomingTxServiceUriTo = (safeAddress: string) =>
+export const getIncomingTxServiceUriTo = (safeAddress) =>
   `safes/${safeAddress}/incoming-transactions/`
 
 export const getRelayUrl = () => getConfig()[RELAY_API_URL]

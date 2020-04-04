@@ -1,4 +1,4 @@
-// @flow
+// 
 import Onboard from 'bnc-onboard'
 import React from 'react'
 
@@ -60,12 +60,8 @@ export const onboardUser = async () => {
   return walletSelected && onboard.walletCheck()
 }
 
-type Props = {
-  enqueueSnackbar: Function,
-  closeSnackbar: Function,
-}
 
-const ConnectButton = (props: Props) => (
+const ConnectButton = (props) => (
   <Button
     color="primary"
     minWidth={140}

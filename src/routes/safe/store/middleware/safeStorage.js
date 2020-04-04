@@ -1,11 +1,9 @@
-// @flow
+// 
 import { List } from 'immutable'
-import type { Action, Store } from 'redux'
 
 import { makeAddressBookEntry } from '~/logic/addressBook/model/addressBook'
 import { addAddressBookEntry } from '~/logic/addressBook/store/actions/addAddressBookEntry'
 import { saveDefaultSafe, saveSafes } from '~/logic/safe/utils'
-import type { Token } from '~/logic/tokens/store/model/token'
 import { tokensSelector } from '~/logic/tokens/store/selectors'
 import { saveActiveTokens } from '~/logic/tokens/utils/tokensStorage'
 import { ACTIVATE_TOKEN_FOR_ALL_SAFES } from '~/routes/safe/store/actions/activateTokenForAllSafes'
@@ -18,7 +16,7 @@ import { REPLACE_SAFE_OWNER } from '~/routes/safe/store/actions/replaceSafeOwner
 import { SET_DEFAULT_SAFE } from '~/routes/safe/store/actions/setDefaultSafe'
 import { UPDATE_SAFE } from '~/routes/safe/store/actions/updateSafe'
 import { getActiveTokensAddressesForAllSafes, safesMapSelector } from '~/routes/safe/store/selectors'
-import { type GlobalState } from '~/store/'
+import { } from '~/store/'
 
 const watchedActions = [
   ADD_SAFE,
@@ -32,12 +30,12 @@ const watchedActions = [
   SET_DEFAULT_SAFE,
 ]
 
-const recalculateActiveTokens = (state: GlobalState): void => {
+const recalculateActiveTokens = (state) => {
   const tokens = tokensSelector(state)
   const activeTokenAddresses = getActiveTokensAddressesForAllSafes(state)
 
-  const activeTokens: List<Token> = tokens.withMutations((map) => {
-    map.forEach((token: Token) => {
+  const activeTokens = tokens.withMutations((map) => {
+    map.forEach((token) => {
       if (!activeTokenAddresses.has(token.address)) {
         map.remove(token.address)
       }
@@ -47,11 +45,11 @@ const recalculateActiveTokens = (state: GlobalState): void => {
   saveActiveTokens(activeTokens)
 }
 
-const safeStorageMware = (store: Store<GlobalState>) => (next: Function) => async (action: Action<*>) => {
+const safeStorageMware = (store) => (next) => async (action) => {
   const handledAction = next(action)
 
   if (watchedActions.includes(action.type)) {
-    const state: GlobalState = store.getState()
+    const state = store.getState()
     const { dispatch } = store
     const safes = safesMapSelector(state)
     await saveSafes(safes.toJSON())

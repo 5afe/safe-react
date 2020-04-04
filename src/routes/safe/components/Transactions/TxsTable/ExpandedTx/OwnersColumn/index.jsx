@@ -1,4 +1,4 @@
-// @flow
+// 
 import { withStyles } from '@material-ui/core/styles'
 import cn from 'classnames'
 import { List } from 'immutable'
@@ -17,24 +17,9 @@ import Col from '~/components/layout/Col'
 import Img from '~/components/layout/Img'
 import Paragraph from '~/components/layout/Paragraph/index'
 import { TX_TYPE_CONFIRMATION } from '~/logic/safe/transactions/send'
-import { type Owner } from '~/routes/safe/store/models/owner'
-import { type Transaction, makeTransaction } from '~/routes/safe/store/models/transaction'
+import { } from '~/routes/safe/store/models/owner'
+import { makeTransaction } from '~/routes/safe/store/models/transaction'
 
-type Props = {
-  canExecute: boolean,
-  canExecuteCancel: boolean,
-  cancelThresholdReached: boolean,
-  cancelTx: Transaction,
-  classes: Object,
-  onTxReject: Function,
-  onTxConfirm: Function,
-  onTxExecute: Function,
-  owners: List<Owner>,
-  threshold: number,
-  thresholdReached: boolean,
-  tx: Transaction,
-  userAddress: string,
-}
 
 function getOwnersConfirmations(tx, userAddress) {
   const ownersWhoConfirmed = []
@@ -82,8 +67,8 @@ const OwnersColumn = ({
   onTxReject,
   canExecute,
   canExecuteCancel,
-}: Props) => {
-  let showOlderTxAnnotation: boolean
+}) => {
+  let showOlderTxAnnotation
 
   if (tx.isExecuted || cancelTx.isExecuted) {
     showOlderTxAnnotation = false

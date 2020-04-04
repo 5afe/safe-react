@@ -1,25 +1,24 @@
-// @flow
+// 
 import { Map } from 'immutable'
-import { type ActionType, handleActions } from 'redux-actions'
+import { handleActions } from 'redux-actions'
 
 import { CLOSE_SNACKBAR } from '../actions/closeSnackbar'
 import { ENQUEUE_SNACKBAR } from '../actions/enqueueSnackbar'
 import { REMOVE_SNACKBAR } from '../actions/removeSnackbar'
 
-import { type NotificationProps, makeNotification } from '~/logic/notifications/store/models/notification'
+import { makeNotification } from '~/logic/notifications/store/models/notification'
 
 export const NOTIFICATIONS_REDUCER_ID = 'notifications'
 
-export type NotificationReducerState = Map<string, *>
 
-export default handleActions<NotificationReducerState, *>(
+export default handleActions(
   {
-    [ENQUEUE_SNACKBAR]: (state: NotificationReducerState, action: ActionType<Function>): NotificationReducerState => {
-      const notification: NotificationProps = action.payload
+    [ENQUEUE_SNACKBAR]: (state, action) => {
+      const notification = action.payload
 
       return state.set(notification.key, makeNotification(notification))
     },
-    [CLOSE_SNACKBAR]: (state: NotificationReducerState, action: ActionType<Function>): NotificationReducerState => {
+    [CLOSE_SNACKBAR]: (state, action) => {
       const { dismissAll, key } = action.payload
 
       if (key) {
@@ -35,7 +34,7 @@ export default handleActions<NotificationReducerState, *>(
 
       return state
     },
-    [REMOVE_SNACKBAR]: (state: NotificationReducerState, action: ActionType<Function>): NotificationReducerState => {
+    [REMOVE_SNACKBAR]: (state, action) => {
       const key = action.payload
 
       return state.delete(key)

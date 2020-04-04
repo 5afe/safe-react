@@ -1,7 +1,6 @@
-// @flow
+// 
 import { push } from 'connected-react-router'
 import { List, Map } from 'immutable'
-import type { Action, Store } from 'redux'
 
 import { NOTIFICATIONS, enhanceSnackbarForAction } from '~/logic/notifications'
 import closeSnackbarAction from '~/logic/notifications/store/actions/closeSnackbar'
@@ -17,17 +16,17 @@ import { ADD_SAFE } from '~/routes/safe/store/actions/addSafe'
 import { ADD_TRANSACTIONS } from '~/routes/safe/store/actions/addTransactions'
 import updateSafe from '~/routes/safe/store/actions/updateSafe'
 import { safeParamAddressFromStateSelector, safesMapSelector } from '~/routes/safe/store/selectors'
-import { type GlobalState } from '~/store/'
+import { } from '~/store/'
 import { loadFromStorage, saveToStorage } from '~/utils/storage'
 
 const watchedActions = [ADD_TRANSACTIONS, ADD_INCOMING_TRANSACTIONS, ADD_SAFE]
 
 const sendAwaitingTransactionNotification = async (
-  dispatch: Function,
-  safeAddress: string,
-  awaitingTxsSubmissionDateList: List[],
-  notificationKey: string,
-  notificationClickedCb: Function,
+  dispatch,
+  safeAddress,
+  awaitingTxsSubmissionDateList,
+  notificationKey,
+  notificationClickedCb,
 ) => {
   const LAST_TIME_USED_LOGGED_IN_ID = 'LAST_TIME_USED_LOGGED_IN_ID'
   if (!dispatch || !safeAddress || !awaitingTxsSubmissionDateList || !notificationKey) {
@@ -61,16 +60,16 @@ const sendAwaitingTransactionNotification = async (
   await saveToStorage(LAST_TIME_USED_LOGGED_IN_ID, lastTimeUserLoggedInForSafes)
 }
 
-const notificationsMiddleware = (store: Store<GlobalState>) => (next: Function) => async (action: Action<*>) => {
+const notificationsMiddleware = (store) => (next) => async (action) => {
   const handledAction = next(action)
   const { dispatch } = store
 
   if (watchedActions.includes(action.type)) {
-    const state: GlobalState = store.getState()
+    const state = store.getState()
     switch (action.type) {
       case ADD_TRANSACTIONS: {
         const transactionsList = action.payload
-        const userAddress: string = userAccountSelector(state)
+        const userAddress = userAccountSelector(state)
         const safeAddress = action.payload.keySeq().get(0)
         const cancellationTransactions = state.cancellationTransactions.get(safeAddress)
         const cancellationTransactionsByNonce = cancellationTransactions
@@ -153,7 +152,7 @@ const notificationsMiddleware = (store: Store<GlobalState>) => (next: Function) 
         break
       }
       case ADD_SAFE: {
-        const state: GlobalState = store.getState()
+        const state = store.getState()
         const currentSafeAddress = safeParamAddressFromStateSelector(state)
         const isUserOwner = grantedSelector(state)
         const { needUpdate } = await getSafeVersionInfo(currentSafeAddress)

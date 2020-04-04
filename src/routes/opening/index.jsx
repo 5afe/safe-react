@@ -1,4 +1,4 @@
-// @flow
+// 
 import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 
@@ -88,16 +88,8 @@ const BodyFooter = styled.div`
   align-items: flex-end;
 `
 
-type Props = {
-  provider: string,
-  creationTxHash: Promise<any>,
-  submittedPromise: Promise<any>,
-  onRetry: () => void,
-  onSuccess: () => void,
-  onCancel: () => void,
-}
 
-const SafeDeployment = ({ creationTxHash, onCancel, onRetry, onSuccess, provider, submittedPromise }: Props) => {
+const SafeDeployment = ({ creationTxHash, onCancel, onRetry, onSuccess, provider, submittedPromise }) => {
   const [loading, setLoading] = useState(true)
   const [stepIndex, setStepIndex] = useState()
   const [safeCreationTxHash, setSafeCreationTxHash] = useState()

@@ -1,4 +1,4 @@
-// @flow
+// 
 import { withStyles } from '@material-ui/core/styles'
 import cn from 'classnames'
 import React from 'react'
@@ -17,29 +17,13 @@ import Button from '~/components/layout/Button'
 import Img from '~/components/layout/Img'
 import Paragraph from '~/components/layout/Paragraph'
 import { getNameFromAddressBook } from '~/logic/addressBook/utils'
-import { type Owner } from '~/routes/safe/store/models/owner'
+import { } from '~/routes/safe/store/models/owner'
 
 export const CONFIRM_TX_BTN_TEST_ID = 'confirm-btn'
 export const EXECUTE_TX_BTN_TEST_ID = 'execute-btn'
 export const REJECT_TX_BTN_TEST_ID = 'reject-btn'
 export const EXECUTE_REJECT_TX_BTN_TEST_ID = 'execute-reject-btn'
 
-type OwnerProps = {
-  classes: Object,
-  confirmed?: boolean,
-  executor?: string,
-  isCancelTx?: boolean,
-  onTxReject?: Function,
-  onTxConfirm: Function,
-  onTxExecute: Function,
-  owner: Owner,
-  showRejectBtn: boolean,
-  showExecuteRejectBtn: boolean,
-  showConfirmBtn: boolean,
-  showExecuteBtn: boolean,
-  thresholdReached: boolean,
-  userAddress: string,
-}
 
 const OwnerComponent = ({
   classes,
@@ -56,7 +40,7 @@ const OwnerComponent = ({
   showRejectBtn,
   thresholdReached,
   userAddress,
-}: OwnerProps) => {
+}) => {
   const nameInAdbk = getNameFromAddressBook(owner.address)
   const ownerName = nameInAdbk || owner.name
   const [imgCircle, setImgCircle] = React.useState(ConfirmSmallGreyCircle)

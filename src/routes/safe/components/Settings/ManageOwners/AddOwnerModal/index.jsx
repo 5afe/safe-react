@@ -1,4 +1,4 @@
-// @flow
+// 
 import { withStyles } from '@material-ui/core/styles'
 import { List } from 'immutable'
 import { withSnackbar } from 'notistack'
@@ -13,7 +13,7 @@ import Modal from '~/components/Modal'
 import { addOrUpdateAddressBookEntry } from '~/logic/addressBook/store/actions/addOrUpdateAddressBookEntry'
 import { getGnosisSafeInstanceAt } from '~/logic/contracts/safeContracts'
 import { TX_NOTIFICATION_TYPES } from '~/logic/safe/transactions'
-import { type Owner } from '~/routes/safe/store/models/owner'
+import { } from '~/routes/safe/store/models/owner'
 
 const styles = () => ({
   biggerModalWindow: {
@@ -24,29 +24,15 @@ const styles = () => ({
   },
 })
 
-type Props = {
-  onClose: () => void,
-  classes: Object,
-  isOpen: boolean,
-  safeAddress: string,
-  safeName: string,
-  owners: List<Owner>,
-  threshold: number,
-  addSafeOwner: Function,
-  createTransaction: Function,
-  enqueueSnackbar: Function,
-  closeSnackbar: Function,
-}
-type ActiveScreen = 'selectOwner' | 'selectThreshold' | 'reviewAddOwner'
 
 export const sendAddOwner = async (
-  values: Object,
-  safeAddress: string,
-  ownersOld: List<Owner>,
-  enqueueSnackbar: Function,
-  closeSnackbar: Function,
-  createTransaction: Function,
-  addSafeOwner: Function,
+  values,
+  safeAddress,
+  ownersOld,
+  enqueueSnackbar,
+  closeSnackbar,
+  createTransaction,
+  addSafeOwner,
 ) => {
   const gnosisSafe = await getGnosisSafeInstanceAt(safeAddress)
   const txData = gnosisSafe.contract.methods.addOwnerWithThreshold(values.ownerAddress, values.threshold).encodeABI()
@@ -78,10 +64,10 @@ const AddOwner = ({
   safeAddress,
   safeName,
   threshold,
-}: Props) => {
+}) => {
   const dispatch = useDispatch()
-  const [activeScreen, setActiveScreen] = useState<ActiveScreen>('selectOwner')
-  const [values, setValues] = useState<Object>({})
+  const [activeScreen, setActiveScreen] = useState('selectOwner')
+  const [values, setValues] = useState({})
 
   useEffect(
     () => () => {
@@ -99,7 +85,7 @@ const AddOwner = ({
     }
   }
 
-  const ownerSubmitted = (newValues: Object) => {
+  const ownerSubmitted = (newValues) => {
     setValues((stateValues) => ({
       ...stateValues,
       ownerName: newValues.ownerName,
@@ -108,7 +94,7 @@ const AddOwner = ({
     setActiveScreen('selectThreshold')
   }
 
-  const thresholdSubmitted = (newValues: Object) => {
+  const thresholdSubmitted = (newValues) => {
     setValues((stateValues) => ({
       ...stateValues,
       threshold: newValues.threshold,

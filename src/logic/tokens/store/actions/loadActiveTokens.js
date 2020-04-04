@@ -1,18 +1,17 @@
-// @flow
+// 
 import { List, Map } from 'immutable'
-import type { Dispatch as ReduxDispatch } from 'redux'
 
 import saveTokens from './saveTokens'
 
-import { type Token, type TokenProps, makeToken } from '~/logic/tokens/store/model/token'
+import { makeToken } from '~/logic/tokens/store/model/token'
 import { getActiveTokens } from '~/logic/tokens/utils/tokensStorage'
-import { type GlobalState } from '~/store/index'
+import { } from '~/store/index'
 
-const loadActiveTokens = () => async (dispatch: ReduxDispatch<GlobalState>) => {
+const loadActiveTokens = () => async (dispatch) => {
   try {
-    const tokens: Map<string, TokenProps> = await getActiveTokens()
-    const tokenRecordsList: List<Token> = List(
-      Object.values(tokens).map((token: TokenProps): Token => makeToken(token)),
+    const tokens = await getActiveTokens()
+    const tokenRecordsList = List(
+      Object.values(tokens).map((token) => makeToken(token)),
     )
 
     dispatch(saveTokens(tokenRecordsList))

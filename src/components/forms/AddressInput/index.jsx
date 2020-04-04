@@ -1,4 +1,4 @@
-// @flow
+// 
 import * as React from 'react'
 import { Field } from 'react-final-form'
 import { OnChange } from 'react-final-form-listeners'
@@ -7,18 +7,6 @@ import TextField from '~/components/forms/TextField'
 import { composeValidators, mustBeEthereumAddress, required } from '~/components/forms/validator'
 import { getAddressFromENS } from '~/logic/wallets/getWeb3'
 
-type Props = {
-  className?: string,
-  name?: string,
-  text?: string,
-  placeholder?: string,
-  fieldMutator: Function,
-  testId?: string,
-  validators?: Function[],
-  inputAdornment?: React.Element,
-  defaultValue?: string,
-  disabled?: boolean,
-}
 
 const isValidEnsName = (name) => /^([\w-]+\.)+(eth|test|xyz|luxe)$/.test(name)
 
@@ -36,7 +24,7 @@ const AddressInput = ({
   validators = [],
   defaultValue,
   disabled,
-}: Props): React.Element<*> => (
+}) => (
   <>
     <Field
       className={className}

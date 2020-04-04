@@ -1,29 +1,20 @@
-// @flow
+// 
 import * as React from 'react'
 import { connect } from 'react-redux'
 
-import actions, { type Actions } from './actions'
-import selector, { type SelectorProps } from './selector'
+import actions, { } from './actions'
+import selector, { } from './selector'
 
 import Page from '~/components/layout/Page'
-import { type Token } from '~/logic/tokens/store/model/token'
+import { } from '~/logic/tokens/store/model/token'
 import Layout from '~/routes/safe/components/Layout'
 
-type State = {
-  showReceive: boolean,
-  sendFunds: Object,
-}
 
-type Action = 'Send' | 'Receive'
 
-export type Props = Actions &
-  SelectorProps & {
-    granted: boolean,
-  }
 
 const TIMEOUT = process.env.NODE_ENV === 'test' ? 1500 : 5000
 
-class SafeView extends React.Component<Props, State> {
+class SafeView extends React.Component {
   state = {
     sendFunds: {
       isOpen: false,
@@ -32,9 +23,9 @@ class SafeView extends React.Component<Props, State> {
     showReceive: false,
   }
 
-  intervalId: IntervalID
+  intervalId
 
-  longIntervalId: IntervalID
+  longIntervalId
 
   componentDidMount() {
     const {
@@ -92,15 +83,15 @@ class SafeView extends React.Component<Props, State> {
     clearInterval(this.longIntervalId)
   }
 
-  onShow = (action: Action) => () => {
+  onShow = (action) => () => {
     this.setState(() => ({ [`show${action}`]: true }))
   }
 
-  onHide = (action: Action) => () => {
+  onHide = (action) => () => {
     this.setState(() => ({ [`show${action}`]: false }))
   }
 
-  showSendFunds = (token: Token) => {
+  showSendFunds = (token) => {
     this.setState({
       sendFunds: {
         isOpen: true,
@@ -196,4 +187,4 @@ class SafeView extends React.Component<Props, State> {
   }
 }
 
-export default connect<Object, Object, ?Function, ?Object>(selector, actions)(SafeView)
+export default connect(selector, actions)(SafeView)

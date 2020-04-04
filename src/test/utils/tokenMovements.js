@@ -1,4 +1,4 @@
-// @flow
+// 
 import contract from 'truffle-contract'
 import { getBalanceInEtherOf, getWeb3 } from '~/logic/wallets/getWeb3'
 import { ensureOnce } from '~/utils/singleton'
@@ -7,7 +7,7 @@ import TokenOMG from '../../../build/contracts/TokenOMG'
 import TokenRDN from '../../../build/contracts/TokenRDN'
 import Token6Decimals from '../../../build/contracts/Token6Decimals.json'
 
-export const sendEtherTo = async (address: string, eth: string, fromAccountIndex: number = 0) => {
+export const sendEtherTo = async (address, eth, fromAccountIndex = 0) => {
   const web3 = getWeb3()
   const accounts = await web3.eth.getAccounts()
   const { toBN, toWei } = web3.utils
@@ -15,12 +15,12 @@ export const sendEtherTo = async (address: string, eth: string, fromAccountIndex
   return web3.eth.sendTransaction(txData)
 }
 
-export const checkBalanceOf = async (addressToTest: string, value: string) => {
+export const checkBalanceOf = async (addressToTest, value) => {
   const safeBalance = await getBalanceInEtherOf(addressToTest)
   expect(safeBalance).toBe(value)
 }
 
-const createTokenOMGContract = async (web3: any, creator: string) => {
+const createTokenOMGContract = async (web3, creator) => {
   const token = contract(TokenOMG)
   const { toBN } = web3.utils
   const amount = toBN(50000)
@@ -31,7 +31,7 @@ const createTokenOMGContract = async (web3: any, creator: string) => {
   return token.new(amount, { from: creator })
 }
 
-const createTokenRDNContract = async (web3: any, creator: string) => {
+const createTokenRDNContract = async (web3, creator) => {
   const token = contract(TokenRDN)
   const { toBN } = web3.utils
   const amount = toBN(50000)
@@ -42,7 +42,7 @@ const createTokenRDNContract = async (web3: any, creator: string) => {
   return token.new(amount, { from: creator })
 }
 
-const create6DecimalsTokenContract = async (web3: any, creator: string) => {
+const create6DecimalsTokenContract = async (web3, creator) => {
   const token = contract(Token6Decimals)
   const { toBN } = web3.utils
   const amount = toBN(50000)
@@ -57,7 +57,7 @@ export const getFirstTokenContract = ensureOnce(createTokenOMGContract)
 export const getSecondTokenContract = ensureOnce(createTokenRDNContract)
 export const get6DecimalsTokenContract = ensureOnce(create6DecimalsTokenContract)
 
-export const sendTokenTo = async (safe: string, value: string, tokenContract?: any) => {
+export const sendTokenTo = async (safe, value, tokenContract) => {
   const web3 = getWeb3()
   const accounts = await web3.eth.getAccounts()
 

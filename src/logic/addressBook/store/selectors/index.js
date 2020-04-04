@@ -1,21 +1,19 @@
 /* eslint-disable import/named */
-// @flow
+// 
 import { List, Map } from 'immutable'
 import { useSelector } from 'react-redux'
 import { Selector, createSelector } from 'reselect'
 
-import type { AddressBook } from '~/logic/addressBook/model/addressBook'
 import { ADDRESS_BOOK_REDUCER_ID } from '~/logic/addressBook/store/reducer/addressBook'
 import { safeParamAddressFromStateSelector } from '~/routes/safe/store/selectors'
-import type { GlobalState } from '~/store'
 
-export const addressBookMapSelector = (state: GlobalState): Map<string, AddressBook> =>
+export const addressBookMapSelector = (state) =>
   state[ADDRESS_BOOK_REDUCER_ID].get('addressBook')
 
-export const getAddressBook: Selector<GlobalState, AddressBook> = createSelector(
+export const getAddressBook = createSelector(
   addressBookMapSelector,
   safeParamAddressFromStateSelector,
-  (addressBook: AddressBook, safeAddress: string) => {
+  (addressBook, safeAddress) => {
     let result = Map([])
     if (addressBook) {
       result = addressBook.get(safeAddress)
@@ -24,10 +22,10 @@ export const getAddressBook: Selector<GlobalState, AddressBook> = createSelector
   },
 )
 
-export const getAddressBookListSelector: Selector<GlobalState, {}, List<AddressBook>> = createSelector(
+export const getAddressBookListSelector = createSelector(
   addressBookMapSelector,
   safeParamAddressFromStateSelector,
-  (addressBook: Map<string, AddressBook>, safeAddress: string): List<AddressBook> => {
+  (addressBook, safeAddress) => {
     let result = List([])
     if (addressBook) {
       result = List(addressBook.get(safeAddress))
@@ -36,7 +34,7 @@ export const getAddressBookListSelector: Selector<GlobalState, {}, List<AddressB
   },
 )
 
-export const getNameFromAddressBook = (userAddress: string): string | null => {
+export const getNameFromAddressBook = (userAddress) => {
   if (!userAddress) {
     return null
   }

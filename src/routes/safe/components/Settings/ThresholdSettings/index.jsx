@@ -1,4 +1,4 @@
-// @flow
+// 
 import { withStyles } from '@material-ui/core/styles'
 import { List } from 'immutable'
 import { withSnackbar } from 'notistack'
@@ -16,18 +16,7 @@ import Paragraph from '~/components/layout/Paragraph'
 import Row from '~/components/layout/Row'
 import { getGnosisSafeInstanceAt } from '~/logic/contracts/safeContracts'
 import { TX_NOTIFICATION_TYPES } from '~/logic/safe/transactions'
-import type { Owner } from '~/routes/safe/store/models/owner'
 
-type Props = {
-  owners: List<Owner>,
-  threshold: number,
-  classes: Object,
-  createTransaction: Function,
-  safeAddress: string,
-  granted: boolean,
-  enqueueSnackbar: Function,
-  closeSnackbar: Function,
-}
 
 const ThresholdSettings = ({
   classes,
@@ -38,7 +27,7 @@ const ThresholdSettings = ({
   owners,
   safeAddress,
   threshold,
-}: Props) => {
+}) => {
   const [isModalOpen, setModalOpen] = useState(false)
 
   const toggleModal = () => {

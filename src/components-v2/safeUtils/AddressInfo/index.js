@@ -1,4 +1,4 @@
-// @flow
+// 
 import React from 'react'
 import styled from 'styled-components'
 
@@ -37,13 +37,8 @@ const StyledBlock = styled(Block)`
   margin-top: ${xs};
   border-radius: 3px;
 `
-type Props = {
-  safeName: string,
-  safeAddress: string,
-  ethBalance: string,
-}
 
-const AddressInfo = ({ ethBalance, safeAddress, safeName }: Props) => {
+const AddressInfo = ({ ethBalance, safeAddress, safeName }) => {
   return (
     <Wrapper>
       <div className="icon-section">

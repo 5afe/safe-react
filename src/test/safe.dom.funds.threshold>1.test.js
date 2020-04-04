@@ -1,4 +1,4 @@
-// @flow
+// 
 import { fireEvent, waitForElement } from '@testing-library/react'
 import { aNewStore } from '~/store'
 import { aMinedSafe } from '~/test/builder/safe.redux.builder'
@@ -19,7 +19,7 @@ afterEach(resetTestAccount)
 
 describe('DOM > Feature > Sending Funds', () => {
   let store
-  let safeAddress: string
+  let safeAddress
   let accounts
   beforeEach(async () => {
     store = aNewStore()

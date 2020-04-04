@@ -1,4 +1,4 @@
-// @flow
+// 
 import { fireEvent } from '@testing-library/react'
 import { getWeb3 } from '~/logic/wallets/getWeb3'
 import { getFirstTokenContract } from '~/test/utils/tokenMovements'

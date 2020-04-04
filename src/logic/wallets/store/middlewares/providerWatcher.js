@@ -1,12 +1,11 @@
-// @flow
-import type { AnyAction, Store } from 'redux'
+// 
 
 import closeSnackbar from '~/logic/notifications/store/actions/closeSnackbar'
 import { WALLET_PROVIDER, getProviderInfo, getWeb3 } from '~/logic/wallets/getWeb3'
 import { fetchProvider } from '~/logic/wallets/store/actions'
 import { ADD_PROVIDER } from '~/logic/wallets/store/actions/addProvider'
 import { REMOVE_PROVIDER } from '~/logic/wallets/store/actions/removeProvider'
-import { type GlobalState } from '~/store/'
+import { } from '~/store/'
 import { loadFromStorage, removeFromStorage, saveToStorage } from '~/utils/storage'
 
 const watchedActions = [ADD_PROVIDER, REMOVE_PROVIDER]
@@ -21,7 +20,7 @@ export const loadLastUsedProvider = async () => {
 
 let watcherInterval = null
 
-const providerWatcherMware = (store: Store<GlobalState>) => (next: Function) => async (action: AnyAction) => {
+const providerWatcherMware = (store) => (next) => async (action) => {
   const handledAction = next(action)
 
   if (watchedActions.includes(action.type)) {

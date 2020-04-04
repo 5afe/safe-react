@@ -1,4 +1,4 @@
-// @flow
+// 
 import Modal from '@material-ui/core/Modal'
 import { withStyles } from '@material-ui/core/styles'
 import cn from 'classnames'
@@ -6,16 +6,6 @@ import * as React from 'react'
 
 import { sm } from '~/theme/variables'
 
-type Props = {
-  title: string,
-  description: string,
-  open: boolean,
-  handleClose: Function,
-  children: React.Node,
-  classes: Object,
-  modalClassName: ?string,
-  paperClassName: ?string,
-}
 
 const styles = () => ({
   root: {
@@ -49,7 +39,7 @@ const GnoModal = ({
   open,
   paperClassName,
   title,
-}: Props) => (
+}) => (
   <Modal
     aria-describedby={description}
     aria-labelledby={title}

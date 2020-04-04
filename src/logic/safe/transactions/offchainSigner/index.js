@@ -1,4 +1,4 @@
-// @flow
+// 
 
 import { getEIP712Signer } from './EIP712Signer'
 import { getEthSigner } from './ethSigner'

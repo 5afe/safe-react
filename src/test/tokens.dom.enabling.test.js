@@ -1,4 +1,4 @@
-// @flow
+// 
 import { waitForElement } from '@testing-library/react'
 import { List } from 'immutable'
 import { getWeb3 } from '~/logic/wallets/getWeb3'

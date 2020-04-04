@@ -1,4 +1,4 @@
-// @flow
+// 
 import { withStyles } from '@material-ui/core/styles'
 import { List } from 'immutable'
 import { withSnackbar } from 'notistack'
@@ -12,8 +12,7 @@ import Modal from '~/components/Modal'
 import { addOrUpdateAddressBookEntry } from '~/logic/addressBook/store/actions/addOrUpdateAddressBookEntry'
 import { SENTINEL_ADDRESS, getGnosisSafeInstanceAt } from '~/logic/contracts/safeContracts'
 import { TX_NOTIFICATION_TYPES } from '~/logic/safe/transactions'
-import { type Owner } from '~/routes/safe/store/models/owner'
-import type { Safe } from '~/routes/safe/store/models/safe'
+import { } from '~/routes/safe/store/models/owner'
 
 const styles = () => ({
   biggerModalWindow: {
@@ -24,33 +23,16 @@ const styles = () => ({
   },
 })
 
-type Props = {
-  onClose: () => void,
-  classes: Object,
-  isOpen: boolean,
-  safeAddress: string,
-  safeName: string,
-  ownerAddress: string,
-  ownerName: string,
-  owners: List<Owner>,
-  threshold: string,
-  createTransaction: Function,
-  replaceSafeOwner: Function,
-  enqueueSnackbar: Function,
-  closeSnackbar: Function,
-  safe: Safe,
-}
-type ActiveScreen = 'checkOwner' | 'reviewReplaceOwner'
 
 export const sendReplaceOwner = async (
-  values: Object,
-  safeAddress: string,
-  ownerAddressToRemove: string,
-  enqueueSnackbar: Function,
-  closeSnackbar: Function,
-  createTransaction: Function,
-  replaceSafeOwner: Function,
-  safe: Safe,
+  values,
+  safeAddress,
+  ownerAddressToRemove,
+  enqueueSnackbar,
+  closeSnackbar,
+  createTransaction,
+  replaceSafeOwner,
+  safe,
 ) => {
   const gnosisSafe = await getGnosisSafeInstanceAt(safeAddress)
   const safeOwners = await gnosisSafe.getOwners()
@@ -97,10 +79,10 @@ const ReplaceOwner = ({
   safeAddress,
   safeName,
   threshold,
-}: Props) => {
+}) => {
   const dispatch = useDispatch()
-  const [activeScreen, setActiveScreen] = useState<ActiveScreen>('checkOwner')
-  const [values, setValues] = useState<Object>({})
+  const [activeScreen, setActiveScreen] = useState('checkOwner')
+  const [values, setValues] = useState({})
 
   useEffect(
     () => () => {
@@ -112,7 +94,7 @@ const ReplaceOwner = ({
 
   const onClickBack = () => setActiveScreen('checkOwner')
 
-  const ownerSubmitted = (newValues: Object) => {
+  const ownerSubmitted = (newValues) => {
     values.ownerName = newValues.ownerName
     values.ownerAddress = newValues.ownerAddress
     setValues(values)

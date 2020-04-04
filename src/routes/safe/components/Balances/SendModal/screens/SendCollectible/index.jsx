@@ -1,4 +1,4 @@
-// @flow
+// 
 import IconButton from '@material-ui/core/IconButton'
 import { makeStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
@@ -23,9 +23,7 @@ import Hairline from '~/components/layout/Hairline'
 import Img from '~/components/layout/Img'
 import Paragraph from '~/components/layout/Paragraph'
 import Row from '~/components/layout/Row'
-import type { NFTAssetsState, NFTTokensState } from '~/logic/collectibles/store/reducer/collectibles'
 import { nftTokensSelector, safeActiveSelectorMap } from '~/logic/collectibles/store/selectors'
-import type { NFTToken } from '~/routes/safe/components/Balances/Collectibles/types'
 import SafeInfo from '~/routes/safe/components/Balances/SendModal/SafeInfo'
 import AddressBookInput from '~/routes/safe/components/Balances/SendModal/screens/AddressBookInput'
 import CollectibleSelectField from '~/routes/safe/components/Balances/SendModal/screens/SendCollectible/CollectibleSelectField'
@@ -33,13 +31,6 @@ import TokenSelectField from '~/routes/safe/components/Balances/SendModal/screen
 import { safeSelector } from '~/routes/safe/store/selectors'
 import { sm } from '~/theme/variables'
 
-type Props = {
-  initialValues: Object,
-  onClose: () => void,
-  onNext: (any) => void,
-  recipientAddress?: string,
-  selectedToken?: NFTToken | {},
-}
 
 const formMutators = {
   setMax: (args, state, utils) => {
@@ -55,18 +46,18 @@ const formMutators = {
 
 const useStyles = makeStyles(styles)
 
-const SendCollectible = ({ initialValues, onClose, onNext, recipientAddress, selectedToken = {} }: Props) => {
+const SendCollectible = ({ initialValues, onClose, onNext, recipientAddress, selectedToken = {} }) => {
   const classes = useStyles()
   const { address: safeAddress, ethBalance, name: safeName } = useSelector(safeSelector)
-  const nftAssets: NFTAssetsState = useSelector(safeActiveSelectorMap)
-  const nftTokens: NFTTokensState = useSelector(nftTokensSelector)
-  const [qrModalOpen, setQrModalOpen] = useState<boolean>(false)
-  const [selectedEntry, setSelectedEntry] = useState<Object | null>({
+  const nftAssets = useSelector(safeActiveSelectorMap)
+  const nftTokens = useSelector(nftTokensSelector)
+  const [qrModalOpen, setQrModalOpen] = useState(false)
+  const [selectedEntry, setSelectedEntry] = useState({
     address: recipientAddress || initialValues.recipientAddress,
     name: '',
   })
-  const [pristine, setPristine] = useState<boolean>(true)
-  const [isValidAddress, setIsValidAddress] = useState<boolean>(true)
+  const [pristine, setPristine] = useState(true)
+  const [isValidAddress, setIsValidAddress] = useState(true)
 
   React.useMemo(() => {
     if (selectedEntry === null && pristine) {

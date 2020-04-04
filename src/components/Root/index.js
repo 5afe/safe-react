@@ -1,4 +1,4 @@
-// @flow
+// 
 import 'babel-polyfill'
 
 import { MuiThemeProvider } from '@material-ui/core/styles'

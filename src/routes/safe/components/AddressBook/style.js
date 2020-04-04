@@ -1,4 +1,4 @@
-// @flow
+// 
 import { lg, marginButtonImg, md, sm } from '~/theme/variables'
 
 export const styles = () => ({

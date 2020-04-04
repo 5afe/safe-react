@@ -1,17 +1,13 @@
-// @flow
+// 
 import { withStyles } from '@material-ui/core/styles'
 import * as React from 'react'
 
 import CircleDot from '~/components/Header/components/CircleDot'
-import { type Open } from '~/components/hoc/OpenHoc'
+import { } from '~/components/hoc/OpenHoc'
 import Col from '~/components/layout/Col'
 import Paragraph from '~/components/layout/Paragraph'
 import { sm } from '~/theme/variables'
 
-type Props = Open & {
-  classes: Object,
-  children: Function,
-}
 
 const styles = () => ({
   network: {
@@ -31,7 +27,7 @@ const styles = () => ({
   },
 })
 
-const ProviderDisconnected = ({ classes }: Props) => (
+const ProviderDisconnected = ({ classes }) => (
   <>
     <CircleDot circleSize={35} dotRight={11} dotSize={16} dotTop={24} keySize={17} mode="error" />
     <Col className={classes.account} end="sm" layout="column" middle="xs">

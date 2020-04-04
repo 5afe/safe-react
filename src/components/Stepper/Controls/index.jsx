@@ -1,4 +1,4 @@
-// @flow
+// 
 import * as React from 'react'
 
 import Button from '~/components/layout/Button'
@@ -21,17 +21,8 @@ const secondButtonStyle = {
   fontWeight: boldFont,
 }
 
-type Props = {
-  onPrevious: () => void,
-  firstPage: boolean,
-  lastPage: boolean,
-  disabled: boolean,
-  penultimate: boolean,
-  currentStep?: number,
-  buttonLabels?: Array<string>,
-}
 
-const Controls = ({ buttonLabels, currentStep, disabled, firstPage, lastPage, onPrevious, penultimate }: Props) => {
+const Controls = ({ buttonLabels, currentStep, disabled, firstPage, lastPage, onPrevious, penultimate }) => {
   const back = firstPage ? 'Cancel' : 'Back'
 
   let next

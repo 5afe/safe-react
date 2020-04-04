@@ -1,4 +1,4 @@
-// @flow
+// 
 import InputAdornment from '@material-ui/core/InputAdornment'
 import { withStyles } from '@material-ui/core/styles'
 import CheckCircle from '@material-ui/icons/CheckCircle'
@@ -16,11 +16,6 @@ import { getWeb3 } from '~/logic/wallets/getWeb3'
 import { FIELD_LOAD_ADDRESS, FIELD_LOAD_NAME } from '~/routes/load/components/fields'
 import { secondary } from '~/theme/variables'
 
-type Props = {
-  classes: Object,
-  errors: Object,
-  form: Object,
-}
 
 const styles = () => ({
   root: {
@@ -45,7 +40,7 @@ export const SAFE_MASTERCOPY_ERROR = 'Mastercopy used by this Safe is not the sa
 // In case of an error here, it will be swallowed by final-form
 // So if you're experiencing any strang behaviours like freeze or hanging
 // Don't mind to check if everything is OK inside this function :)
-export const safeFieldsValidation = async (values: Object) => {
+export const safeFieldsValidation = async (values) => {
   const errors = {}
   const web3 = getWeb3()
   const safeAddress = values[FIELD_LOAD_ADDRESS]
@@ -80,7 +75,7 @@ export const safeFieldsValidation = async (values: Object) => {
   return errors
 }
 
-const Details = ({ classes, errors, form }: Props) => (
+const Details = ({ classes, errors, form }) => (
   <>
     <Block margin="md">
       <Paragraph color="primary" noMargin size="md">
@@ -142,7 +137,7 @@ const Details = ({ classes, errors, form }: Props) => (
 
 const DetailsForm = withStyles(styles)(Details)
 
-const DetailsPage = () => (controls: React.Node, { errors, form }: Object) => (
+const DetailsPage = () => (controls, { errors, form }) => (
   <>
     <OpenPaper controls={controls}>
       <DetailsForm errors={errors} form={form} />

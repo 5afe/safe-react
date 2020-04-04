@@ -1,4 +1,4 @@
-// @flow
+// 
 import IconButton from '@material-ui/core/IconButton'
 import { withStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
@@ -72,14 +72,8 @@ const styles = () => ({
   },
 })
 
-type Props = {
-  onClose: () => void,
-  classes: Object,
-  safeName: string,
-  safeAddress: string,
-}
 
-const Receive = ({ classes, onClose, safeAddress, safeName }: Props) => (
+const Receive = ({ classes, onClose, safeAddress, safeName }) => (
   <>
     <Row align="center" className={classes.heading} grow>
       <Paragraph className={classes.manage} noMargin size="xl" weight="bolder">

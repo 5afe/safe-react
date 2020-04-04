@@ -1,4 +1,4 @@
-// @flow
+// 
 import IconButton from '@material-ui/core/IconButton'
 import { withStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
@@ -28,18 +28,6 @@ import { sm } from '~/theme/variables'
 export const RENAME_OWNER_INPUT_TEST_ID = 'rename-owner-input'
 export const SAVE_OWNER_CHANGES_BTN_TEST_ID = 'save-owner-changes-btn'
 
-type Props = {
-  onClose: () => void,
-  classes: Object,
-  isOpen: boolean,
-  safeAddress: string,
-  ownerAddress: string,
-  selectedOwnerName: string,
-  editSafeOwner: Function,
-  enqueueSnackbar: Function,
-  closeSnackbar: Function,
-  updateAddressBookEntry: Function,
-}
 
 const EditOwnerComponent = ({
   classes,
@@ -52,7 +40,7 @@ const EditOwnerComponent = ({
   safeAddress,
   selectedOwnerName,
   updateAddressBookEntry,
-}: Props) => {
+}) => {
   const handleSubmit = (values) => {
     const { ownerName } = values
     editSafeOwner({ safeAddress, ownerAddress, ownerName })

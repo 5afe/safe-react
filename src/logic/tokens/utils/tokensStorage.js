@@ -1,7 +1,7 @@
-// @flow
+// 
 import { List, Map } from 'immutable'
 
-import { type Token, type TokenProps } from '~/logic/tokens/store/model/token'
+import { } from '~/logic/tokens/store/model/token'
 import { loadFromStorage, saveToStorage } from '~/utils/storage'
 
 export const ACTIVE_TOKENS_KEY = 'ACTIVE_TOKENS'
@@ -11,7 +11,7 @@ export const CUSTOM_TOKENS_KEY = 'CUSTOM_TOKENS'
 // to avoid iterating a large amount of data of tokens from the backend
 // Custom tokens should be saved too unless they're deleted (marking them as inactive doesn't count)
 
-export const saveActiveTokens = async (tokens: Map<string, Token>) => {
+export const saveActiveTokens = async (tokens) => {
   try {
     await saveToStorage(ACTIVE_TOKENS_KEY, tokens.toJS())
   } catch (err) {
@@ -19,20 +19,20 @@ export const saveActiveTokens = async (tokens: Map<string, Token>) => {
   }
 }
 
-export const getActiveTokens = async (): Promise<Object<string, TokenProps>> => {
+export const getActiveTokens = async () => {
   const data = await loadFromStorage(ACTIVE_TOKENS_KEY)
 
   return data || {}
 }
 
-export const getCustomTokens = async (): Promise<List<TokenProps>> => {
+export const getCustomTokens = async () => {
   const data = await loadFromStorage(CUSTOM_TOKENS_KEY)
 
   return data ? List(data) : List()
 }
 
-export const removeTokenFromStorage = async (safeAddress: string, token: Token) => {
-  const data: List<TokenProps> = await getCustomTokens()
+export const removeTokenFromStorage = async (safeAddress, token) => {
+  const data = await getCustomTokens()
 
   try {
     const index = data.indexOf(token)
@@ -42,7 +42,7 @@ export const removeTokenFromStorage = async (safeAddress: string, token: Token) 
   }
 }
 
-export const removeFromActiveTokens = async (safeAddress: string, token: Token) => {
+export const removeFromActiveTokens = async (safeAddress, token) => {
   const activeTokens = await getActiveTokens()
   const index = activeTokens.findIndex((activeToken) => activeToken.name === token.name)
 

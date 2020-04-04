@@ -1,4 +1,4 @@
-// @flow
+// 
 import InputAdornment from '@material-ui/core/InputAdornment'
 import MenuItem from '@material-ui/core/MenuItem'
 import { withStyles } from '@material-ui/core/styles'
@@ -33,19 +33,12 @@ import {
 } from '~/routes/open/components/fields'
 import { getAccountsFrom } from '~/routes/open/utils/safeDataExtractor'
 
-type Props = {
-  classes: Object,
-  otherAccounts: string[],
-  errors: Object,
-  form: Object,
-  values: Object,
-}
 
 const { useState } = React
 
 export const ADD_OWNER_BUTTON = '+ Add another owner'
 
-export const calculateValuesAfterRemoving = (index: number, notRemovedOwners: number, values: Object) => {
+export const calculateValuesAfterRemoving = (index, notRemovedOwners, values) => {
   const initialValues = { ...values }
 
   const numOwnersAfterRemoving = notRemovedOwners - 1
@@ -65,14 +58,14 @@ export const calculateValuesAfterRemoving = (index: number, notRemovedOwners: nu
   return initialValues
 }
 
-const SafeOwners = (props: Props) => {
+const SafeOwners = (props) => {
   const { classes, errors, form, otherAccounts, values } = props
 
   const validOwners = getNumOwnersFrom(values)
 
-  const [numOwners, setNumOwners] = useState<number>(validOwners)
-  const [qrModalOpen, setQrModalOpen] = useState<boolean>(false)
-  const [scanQrForOwnerName, setScanQrForOwnerName] = useState<string | null>(null)
+  const [numOwners, setNumOwners] = useState(validOwners)
+  const [qrModalOpen, setQrModalOpen] = useState(false)
+  const [scanQrForOwnerName, setScanQrForOwnerName] = useState(null)
 
   const openQrModal = (ownerName) => {
     setScanQrForOwnerName(ownerName)
@@ -83,7 +76,7 @@ const SafeOwners = (props: Props) => {
     setQrModalOpen(false)
   }
 
-  const onRemoveRow = (index: number) => () => {
+  const onRemoveRow = (index) => () => {
     const initialValues = calculateValuesAfterRemoving(index, numOwners, values)
     form.reset(initialValues)
 
@@ -220,7 +213,7 @@ const SafeOwners = (props: Props) => {
 
 const SafeOwnersForm = withStyles(styles)(withRouter(SafeOwners))
 
-const SafeOwnersPage = ({ updateInitialProps }: Object) => (controls: React.Node, { errors, form, values }: Object) => (
+const SafeOwnersPage = ({ updateInitialProps }) => (controls, { errors, form, values }) => (
   <>
     <OpenPaper controls={controls} padding={false}>
       <SafeOwnersForm

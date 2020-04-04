@@ -1,10 +1,10 @@
-// @flow
-import { type Dispatch as ReduxDispatch } from 'redux'
+// 
+import { } from 'redux'
 
 import updateViewedSafes from '~/logic/currentSession/store/actions/updateViewedSafes'
-import { type GlobalState } from '~/store'
+import { } from '~/store'
 
-const addViewedSafe = (safeAddress: string) => (dispatch: ReduxDispatch<GlobalState>) => {
+const addViewedSafe = (safeAddress) => (dispatch) => {
   dispatch(updateViewedSafes(safeAddress))
 }
 

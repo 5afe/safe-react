@@ -1,4 +1,4 @@
-// @flow
+// 
 import { withStyles } from '@material-ui/core/styles'
 import { List } from 'immutable'
 import { withSnackbar } from 'notistack'
@@ -11,8 +11,7 @@ import ThresholdForm from './screens/ThresholdForm'
 import Modal from '~/components/Modal'
 import { SENTINEL_ADDRESS, getGnosisSafeInstanceAt } from '~/logic/contracts/safeContracts'
 import { TX_NOTIFICATION_TYPES } from '~/logic/safe/transactions'
-import { type Owner } from '~/routes/safe/store/models/owner'
-import type { Safe } from '~/routes/safe/store/models/safe'
+import { } from '~/routes/safe/store/models/owner'
 
 const styles = () => ({
   biggerModalWindow: {
@@ -23,36 +22,19 @@ const styles = () => ({
   },
 })
 
-type Props = {
-  onClose: () => void,
-  classes: Object,
-  isOpen: boolean,
-  safeAddress: string,
-  safeName: string,
-  ownerAddress: string,
-  ownerName: string,
-  owners: List<Owner>,
-  threshold: number,
-  createTransaction: Function,
-  removeSafeOwner: Function,
-  enqueueSnackbar: Function,
-  closeSnackbar: Function,
-  safe: Safe,
-}
 
-type ActiveScreen = 'checkOwner' | 'selectThreshold' | 'reviewRemoveOwner'
 
 export const sendRemoveOwner = async (
-  values: Object,
-  safeAddress: string,
-  ownerAddressToRemove: string,
-  ownerNameToRemove: string,
-  ownersOld: List<Owner>,
-  enqueueSnackbar: Function,
-  closeSnackbar: Function,
-  createTransaction: Function,
-  removeSafeOwner: Function,
-  safe: Safe,
+  values,
+  safeAddress,
+  ownerAddressToRemove,
+  ownerNameToRemove,
+  ownersOld,
+  enqueueSnackbar,
+  closeSnackbar,
+  createTransaction,
+  removeSafeOwner,
+  safe,
 ) => {
   const gnosisSafe = await getGnosisSafeInstanceAt(safeAddress)
   const safeOwners = await gnosisSafe.getOwners()
@@ -94,9 +76,9 @@ const RemoveOwner = ({
   safeAddress,
   safeName,
   threshold,
-}: Props) => {
-  const [activeScreen, setActiveScreen] = useState<ActiveScreen>('checkOwner')
-  const [values, setValues] = useState<Object>({})
+}) => {
+  const [activeScreen, setActiveScreen] = useState('checkOwner')
+  const [values, setValues] = useState({})
 
   useEffect(
     () => () => {
@@ -118,7 +100,7 @@ const RemoveOwner = ({
     setActiveScreen('selectThreshold')
   }
 
-  const thresholdSubmitted = (newValues: Object) => {
+  const thresholdSubmitted = (newValues) => {
     values.threshold = newValues.threshold
     setValues(values)
     setActiveScreen('reviewRemoveOwner')

@@ -1,6 +1,5 @@
-// @flow
+// 
 import { Set } from 'immutable'
-import type { Dispatch as ReduxDispatch } from 'redux'
 
 import fetchTokenBalanceList from '~/logic/tokens/api/fetchTokenBalanceList'
 import updateActiveTokens from '~/routes/safe/store/actions/updateActiveTokens'
@@ -10,11 +9,11 @@ import {
   safeBlacklistedTokensSelectorBySafe,
   safesMapSelector,
 } from '~/routes/safe/store/selectors'
-import { type GetState, type GlobalState } from '~/store'
+import { } from '~/store'
 
-const activateTokensByBalance = (safeAddress: string) => async (
-  dispatch: ReduxDispatch<GlobalState>,
-  getState: GetState,
+const activateTokensByBalance = (safeAddress) => async (
+  dispatch,
+  getState,
 ) => {
   try {
     const result = await fetchTokenBalanceList(safeAddress)

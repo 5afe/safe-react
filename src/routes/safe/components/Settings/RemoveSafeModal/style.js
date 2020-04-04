@@ -1,4 +1,4 @@
-// @flow
+// 
 import { background, error, lg, md, sm } from '~/theme/variables'
 
 export const styles = () => ({

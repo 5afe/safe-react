@@ -1,4 +1,4 @@
-// @flow
+// 
 import Checkbox from '@material-ui/core/Checkbox'
 import FormControlLabel from '@material-ui/core/FormControlLabel'
 import { makeStyles } from '@material-ui/core/styles'
@@ -8,7 +8,6 @@ import { useDispatch, useSelector } from 'react-redux'
 
 import Button from '~/components/layout/Button'
 import Link from '~/components/layout/Link'
-import type { CookiesProps } from '~/logic/cookies/model/cookie'
 import { COOKIES_KEY } from '~/logic/cookies/model/cookie'
 import { openCookieBanner } from '~/logic/cookies/store/actions/openCookieBanner'
 import { cookieBannerOpen } from '~/logic/cookies/store/selectors'
@@ -96,7 +95,7 @@ const CookiesBanner = () => {
 
   useEffect(() => {
     async function fetchCookiesFromStorage() {
-      const cookiesState: ?CookiesProps = await loadFromCookie(COOKIES_KEY)
+      const cookiesState = await loadFromCookie(COOKIES_KEY)
       if (cookiesState) {
         const { acceptedAnalytics, acceptedNecessary } = cookiesState
         setLocalAnalytics(acceptedAnalytics)

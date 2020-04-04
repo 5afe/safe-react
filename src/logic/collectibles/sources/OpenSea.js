@@ -1,27 +1,19 @@
-// @flow
+// 
 import { RateLimit } from 'async-sema'
 
 import { ETHEREUM_NETWORK } from '~/logic/wallets/getWeb3'
-import type {
-  CollectibleMetadataSource,
-  CollectiblesInfo,
-  NFTAsset,
-  NFTAssets,
-  NFTToken,
-  OpenSeaAsset,
-} from '~/routes/safe/components/Balances/Collectibles/types'
 import NFTIcon from '~/routes/safe/components/Balances/assets/nft_icon.png'
 import { OPENSEA_API_KEY } from '~/utils/constants'
 
-class OpenSea implements CollectibleMetadataSource {
+class OpenSea {
   _rateLimit = async () => {}
 
-  _endpointsUrls: { [key: string]: string } = {
+  _endpointsUrls = {
     [ETHEREUM_NETWORK.MAINNET]: 'https://api.opensea.io/api/v1',
     [ETHEREUM_NETWORK.RINKEBY]: 'https://rinkeby-api.opensea.io/api/v1',
   }
 
-  _fetch = async (url: string) => {
+  _fetch = async (url) => {
     // eslint-disable-next-line no-underscore-dangle
     return fetch(url, {
       headers: { 'X-API-KEY': OPENSEA_API_KEY || '' },
@@ -33,13 +25,13 @@ class OpenSea implements CollectibleMetadataSource {
    * @param {object} options
    * @param {number} options.rps - requests per second
    */
-  constructor(options: { rps: number }) {
+  constructor(options) {
     // eslint-disable-next-line no-underscore-dangle
     this._rateLimit = RateLimit(options.rps, { timeUnit: 60 * 1000, uniformDistribution: true })
   }
 
-  static extractAssets(assets: OpenSeaAsset[]): NFTAssets {
-    const extractNFTAsset = (asset): NFTAsset => ({
+  static extractAssets(assets) {
+    const extractNFTAsset = (asset) => ({
       address: asset.asset_contract.address,
       assetContract: asset.asset_contract,
       collection: asset.collection,
@@ -51,7 +43,7 @@ class OpenSea implements CollectibleMetadataSource {
       symbol: asset.asset_contract.symbol,
     })
 
-    return assets.reduce((acc: NFTAssets, asset: OpenSeaAsset) => {
+    return assets.reduce((acc, asset) => {
       const address = asset.asset_contract.address
 
       if (acc[address] === undefined) {
@@ -68,8 +60,8 @@ class OpenSea implements CollectibleMetadataSource {
     }, {})
   }
 
-  static extractTokens(assets: OpenSeaAsset[]): NFTToken[] {
-    return assets.map((asset: OpenSeaAsset): NFTToken => ({
+  static extractTokens(assets) {
+    return assets.map((asset) => ({
       assetAddress: asset.asset_contract.address,
       color: asset.background_color,
       description: asset.description,
@@ -79,7 +71,7 @@ class OpenSea implements CollectibleMetadataSource {
     }))
   }
 
-  static extractCollectiblesInfo(assetResponseJson: { assets: OpenSeaAsset[] }): CollectiblesInfo {
+  static extractCollectiblesInfo(assetResponseJson) {
     return {
       nftAssets: OpenSea.extractAssets(assetResponseJson.assets),
       nftTokens: OpenSea.extractTokens(assetResponseJson.assets),
@@ -93,7 +85,7 @@ class OpenSea implements CollectibleMetadataSource {
    * @param {string} network
    * @returns {Promise<{ nftAssets: Map<string, NFTAsset>, nftTokens: Array<NFTToken> }>}
    */
-  async fetchAllUserCollectiblesByCategoryAsync(safeAddress: string, network: string) {
+  async fetchAllUserCollectiblesByCategoryAsync(safeAddress, network) {
     // eslint-disable-next-line no-underscore-dangle
     const metadataSourceUrl = this._endpointsUrls[network]
     const url = `${metadataSourceUrl}/assets/?owner=${safeAddress}`

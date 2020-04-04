@@ -1,4 +1,4 @@
-// @flow
+// 
 import GnosisSafeSol from '@gnosis.pm/safe-contracts/build/contracts/GnosisSafe.json'
 
 import { CALL } from '.'
@@ -7,15 +7,15 @@ import { generateSignaturesFromTxConfirmations } from '~/logic/safe/safeTxSigner
 import { ZERO_ADDRESS } from '~/logic/wallets/ethAddresses'
 import { calculateGasOf, calculateGasPrice } from '~/logic/wallets/ethTransactions'
 import { getAccountFrom, getWeb3 } from '~/logic/wallets/getWeb3'
-import { type Transaction } from '~/routes/safe/store/models/transaction'
+import { } from '~/routes/safe/store/models/transaction'
 
 export const estimateTxGasCosts = async (
-  safeAddress: string,
-  to: string,
-  data: string,
-  tx?: Transaction,
-  preApprovingOwner?: string,
-): Promise<number> => {
+  safeAddress,
+  to,
+  data,
+  tx,
+  preApprovingOwner,
+) => {
   try {
     const web3 = getWeb3()
     const from = await getAccountFrom(web3)

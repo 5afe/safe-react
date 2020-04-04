@@ -1,4 +1,4 @@
-// @flow
+// 
 import { ETHEREUM_NETWORK } from '~/logic/wallets/getWeb3'
 
 export const NETWORK = process.env.REACT_APP_NETWORK || ETHEREUM_NETWORK.RINKEBY
