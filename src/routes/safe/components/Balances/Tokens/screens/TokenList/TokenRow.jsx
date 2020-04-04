@@ -10,10 +10,10 @@ import React, { memo } from 'react'
 
 import { styles } from './style'
 
-import Img from '~/components/layout/Img'
-import { } from '~/logic/tokens/store/model/token'
-import { ETH_ADDRESS } from '~/logic/tokens/utils/tokenHelpers'
-import { setImageToPlaceholder } from '~/routes/safe/components/Balances/utils'
+import Img from 'components/layout/Img'
+import { } from 'logic/tokens/store/model/token'
+import { ETH_ADDRESS } from 'logic/tokens/utils/tokenHelpers'
+import { setImageToPlaceholder } from 'routes/safe/components/Balances/utils'
 
 export const TOGGLE_TOKEN_TEST_ID = 'toggle-token-btn'
 

@@ -1,13 +1,13 @@
 // 
 import * as React from 'react'
 
-import Bold from '~/components/layout/Bold'
-import Button from '~/components/layout/Button'
-import Col from '~/components/layout/Col'
-import Link from '~/components/layout/Link'
-import Paragraph from '~/components/layout/Paragraph/index'
-import Row from '~/components/layout/Row'
-import { SAFELIST_ADDRESS } from '~/routes/routes'
+import Bold from 'components/layout/Bold'
+import Button from 'components/layout/Button'
+import Col from 'components/layout/Col'
+import Link from 'components/layout/Link'
+import Paragraph from 'components/layout/Paragraph/index'
+import Row from 'components/layout/Row'
+import { SAFELIST_ADDRESS } from 'routes/routes'
 
 const NoRights = () => (
   <Row>

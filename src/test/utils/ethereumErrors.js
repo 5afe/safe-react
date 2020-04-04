@@ -1,6 +1,6 @@
 // 
 import abi from 'ethereumjs-abi'
-import { getWeb3 } from '~/logic/wallets/getWeb3'
+import { getWeb3 } from 'logic/wallets/getWeb3'
 
 /*
 console.log(`to[${to}] \n\n valieInWei[${valueInWei}] \n\n

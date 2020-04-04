@@ -5,8 +5,8 @@ import Close from '@material-ui/icons/Close'
 import React, { } from 'react'
 import styled from 'styled-components'
 
-import Modal from '~/components/Modal'
-import Hairline from '~/components/layout/Hairline'
+import Modal from 'components/Modal'
+import Hairline from 'components/layout/Hairline'
 
 const TitleSection = styled.div`
   display: flex;

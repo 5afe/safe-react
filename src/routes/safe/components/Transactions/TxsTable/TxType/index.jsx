@@ -6,9 +6,9 @@ import IncomingTxIcon from './assets/incoming.svg'
 import OutgoingTxIcon from './assets/outgoing.svg'
 import SettingsTxIcon from './assets/settings.svg'
 
-import { IconText } from '~/components-v2'
-import { getAppInfo } from '~/routes/safe/components/Apps/appsList'
-import { } from '~/routes/safe/store/models/transaction'
+import { IconText } from 'components-v2'
+import { getAppInfo } from 'routes/safe/components/Apps/appsList'
+import { } from 'routes/safe/store/models/transaction'
 
 const typeToIcon = {
   outgoing: OutgoingTxIcon,

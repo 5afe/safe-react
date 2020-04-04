@@ -1,8 +1,8 @@
 // 
 import axios from 'axios'
 
-import { getTxServiceHost, getTxServiceUriFrom } from '~/config'
-import { getWeb3 } from '~/logic/wallets/getWeb3'
+import { getTxServiceHost, getTxServiceUriFrom } from 'config'
+import { getWeb3 } from 'logic/wallets/getWeb3'
 
 
 const calculateBodyFrom = async (

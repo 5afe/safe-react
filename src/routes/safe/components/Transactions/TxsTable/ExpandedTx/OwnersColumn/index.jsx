@@ -12,13 +12,13 @@ import ConfirmLargeGreyCircle from './assets/confirm-large-grey.svg'
 import ConfirmLargeRedCircle from './assets/confirm-large-red.svg'
 import { styles } from './style'
 
-import Block from '~/components/layout/Block'
-import Col from '~/components/layout/Col'
-import Img from '~/components/layout/Img'
-import Paragraph from '~/components/layout/Paragraph/index'
-import { TX_TYPE_CONFIRMATION } from '~/logic/safe/transactions/send'
-import { } from '~/routes/safe/store/models/owner'
-import { makeTransaction } from '~/routes/safe/store/models/transaction'
+import Block from 'components/layout/Block'
+import Col from 'components/layout/Col'
+import Img from 'components/layout/Img'
+import Paragraph from 'components/layout/Paragraph/index'
+import { TX_TYPE_CONFIRMATION } from 'logic/safe/transactions/send'
+import { } from 'routes/safe/store/models/owner'
+import { makeTransaction } from 'routes/safe/store/models/transaction'
 
 
 function getOwnersConfirmations(tx, userAddress) {

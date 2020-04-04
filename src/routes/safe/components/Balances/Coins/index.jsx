@@ -11,21 +11,21 @@ import { useSelector } from 'react-redux'
 
 import { styles } from './styles'
 
-import Table from '~/components/Table'
-import { cellWidth } from '~/components/Table/TableHead'
-import Button from '~/components/layout/Button'
-import Row from '~/components/layout/Row'
-import { currencyValuesListSelector, currentCurrencySelector } from '~/logic/currencyValues/store/selectors'
-import { BALANCE_ROW_TEST_ID } from '~/routes/safe/components/Balances'
-import AssetTableCell from '~/routes/safe/components/Balances/AssetTableCell'
+import Table from 'components/Table'
+import { cellWidth } from 'components/Table/TableHead'
+import Button from 'components/layout/Button'
+import Row from 'components/layout/Row'
+import { currencyValuesListSelector, currentCurrencySelector } from 'logic/currencyValues/store/selectors'
+import { BALANCE_ROW_TEST_ID } from 'routes/safe/components/Balances'
+import AssetTableCell from 'routes/safe/components/Balances/AssetTableCell'
 import {
   BALANCE_TABLE_ASSET_ID,
   BALANCE_TABLE_BALANCE_ID,
   BALANCE_TABLE_VALUE_ID,
   generateColumns,
   getBalanceData,
-} from '~/routes/safe/components/Balances/dataFetcher'
-import { extendedSafeTokensSelector, grantedSelector } from '~/routes/safe/container/selector'
+} from 'routes/safe/components/Balances/dataFetcher'
+import { extendedSafeTokensSelector, grantedSelector } from 'routes/safe/container/selector'
 
 const useStyles = makeStyles(styles)
 

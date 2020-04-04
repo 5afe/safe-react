@@ -2,11 +2,11 @@
 import { List } from 'immutable'
 import { createAction } from 'redux-actions'
 
-import setDefaultSafe from '~/routes/safe/store/actions/setDefaultSafe'
-import { makeOwner } from '~/routes/safe/store/models/owner'
-import { } from '~/routes/safe/store/models/safe'
-import { safesListSelector } from '~/routes/safe/store/selectors'
-import { } from '~/store'
+import setDefaultSafe from 'routes/safe/store/actions/setDefaultSafe'
+import { makeOwner } from 'routes/safe/store/models/owner'
+import { } from 'routes/safe/store/models/safe'
+import { safesListSelector } from 'routes/safe/store/selectors'
+import { } from 'store'
 
 export const ADD_SAFE = 'ADD_SAFE'
 

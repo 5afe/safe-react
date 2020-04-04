@@ -6,13 +6,13 @@ import React from 'react'
 
 import { styles } from './style'
 
-import Modal from '~/components/Modal'
-import GnoForm from '~/components/forms/GnoForm'
-import Block from '~/components/layout/Block'
-import Button from '~/components/layout/Button'
-import Hairline from '~/components/layout/Hairline'
-import Paragraph from '~/components/layout/Paragraph'
-import Row from '~/components/layout/Row'
+import Modal from 'components/Modal'
+import GnoForm from 'components/forms/GnoForm'
+import Block from 'components/layout/Block'
+import Button from 'components/layout/Button'
+import Hairline from 'components/layout/Hairline'
+import Paragraph from 'components/layout/Paragraph'
+import Row from 'components/layout/Row'
 
 export const DELETE_ENTRY_BTN_ID = 'delete-entry-btn-id'
 

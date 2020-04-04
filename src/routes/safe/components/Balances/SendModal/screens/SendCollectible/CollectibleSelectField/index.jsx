@@ -7,13 +7,13 @@ import React from 'react'
 
 import { selectStyles, selectedTokenStyles } from './style'
 
-import Field from '~/components/forms/Field'
-import SelectField from '~/components/forms/SelectField'
-import { required } from '~/components/forms/validator'
-import Img from '~/components/layout/Img'
-import Paragraph from '~/components/layout/Paragraph'
-import { setImageToPlaceholder } from '~/routes/safe/components/Balances/utils'
-import { textShortener } from '~/utils/strings'
+import Field from 'components/forms/Field'
+import SelectField from 'components/forms/SelectField'
+import { required } from 'components/forms/validator'
+import Img from 'components/layout/Img'
+import Paragraph from 'components/layout/Paragraph'
+import { setImageToPlaceholder } from 'routes/safe/components/Balances/utils'
+import { textShortener } from 'utils/strings'
 
 
 const useSelectedCollectibleStyles = makeStyles(selectedTokenStyles)

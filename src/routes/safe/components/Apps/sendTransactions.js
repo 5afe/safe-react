@@ -1,5 +1,5 @@
 // 
-import { DELEGATE_CALL } from '~/logic/safe/transactions/send'
+import { DELEGATE_CALL } from 'logic/safe/transactions/send'
 
 const multiSendAddress = '0xB522a9f781924eD250A11C54105E51840B138AdD'
 const multiSendAbi = [

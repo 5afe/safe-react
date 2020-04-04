@@ -1,9 +1,9 @@
 // 
 import { handleActions } from 'redux-actions'
 
-import addProvider, { ADD_PROVIDER } from '~/logic/wallets/store/actions/addProvider'
-import { REMOVE_PROVIDER } from '~/logic/wallets/store/actions/removeProvider'
-import { makeProvider } from '~/logic/wallets/store/model/provider'
+import addProvider, { ADD_PROVIDER } from 'logic/wallets/store/actions/addProvider'
+import { REMOVE_PROVIDER } from 'logic/wallets/store/actions/removeProvider'
+import { makeProvider } from 'logic/wallets/store/model/provider'
 
 export const PROVIDER_REDUCER_ID = 'providers'
 

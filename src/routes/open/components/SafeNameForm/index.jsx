@@ -2,14 +2,14 @@
 import { withStyles } from '@material-ui/core/styles'
 import * as React from 'react'
 
-import OpenPaper from '~/components/Stepper/OpenPaper'
-import Field from '~/components/forms/Field'
-import TextField from '~/components/forms/TextField'
-import { required } from '~/components/forms/validator'
-import Block from '~/components/layout/Block'
-import Paragraph from '~/components/layout/Paragraph'
-import { FIELD_NAME } from '~/routes/open/components/fields'
-import { secondary, sm } from '~/theme/variables'
+import OpenPaper from 'components/Stepper/OpenPaper'
+import Field from 'components/forms/Field'
+import TextField from 'components/forms/TextField'
+import { required } from 'components/forms/validator'
+import Block from 'components/layout/Block'
+import Paragraph from 'components/layout/Paragraph'
+import { FIELD_NAME } from 'routes/open/components/fields'
+import { secondary, sm } from 'theme/variables'
 
 
 const styles = () => ({

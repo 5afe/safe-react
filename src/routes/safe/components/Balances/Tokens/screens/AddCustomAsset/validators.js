@@ -1,9 +1,9 @@
 // 
 import { List } from 'immutable'
 
-import { simpleMemoize } from '~/components/forms/validator'
-import { isERC721Contract } from '~/logic/tokens/utils/tokenHelpers'
-import { sameAddress } from '~/logic/wallets/ethAddresses'
+import { simpleMemoize } from 'components/forms/validator'
+import { isERC721Contract } from 'logic/tokens/utils/tokenHelpers'
+import { sameAddress } from 'logic/wallets/ethAddresses'
 
 // eslint-disable-next-line
 export const addressIsAssetContract = simpleMemoize(async (tokenAddress) => {

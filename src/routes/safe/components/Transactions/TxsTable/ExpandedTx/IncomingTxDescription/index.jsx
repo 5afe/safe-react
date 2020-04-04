@@ -2,13 +2,13 @@
 import { makeStyles } from '@material-ui/core/styles'
 import React from 'react'
 
-import EtherscanLink from '~/components/EtherscanLink'
-import Block from '~/components/layout/Block'
-import Bold from '~/components/layout/Bold'
-import { getNameFromAddressBook } from '~/logic/addressBook/utils'
-import OwnerAddressTableCell from '~/routes/safe/components/Settings/ManageOwners/OwnerAddressTableCell'
-import { getIncomingTxAmount } from '~/routes/safe/components/Transactions/TxsTable/columns'
-import { lg, md } from '~/theme/variables'
+import EtherscanLink from 'components/EtherscanLink'
+import Block from 'components/layout/Block'
+import Bold from 'components/layout/Bold'
+import { getNameFromAddressBook } from 'logic/addressBook/utils'
+import OwnerAddressTableCell from 'routes/safe/components/Settings/ManageOwners/OwnerAddressTableCell'
+import { getIncomingTxAmount } from 'routes/safe/components/Transactions/TxsTable/columns'
+import { lg, md } from 'theme/variables'
 
 export const TRANSACTIONS_DESC_INCOMING_TEST_ID = 'tx-description-incoming'
 

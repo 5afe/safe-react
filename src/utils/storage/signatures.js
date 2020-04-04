@@ -1,7 +1,7 @@
 // 
 import { Map } from 'immutable'
 
-import { loadFromStorage, saveToStorage } from '~/utils/storage'
+import { loadFromStorage, saveToStorage } from 'utils/storage'
 
 const getSignaturesKeyFrom = (safeAddress) => `TXS-SIGNATURES-${safeAddress}`
 

@@ -4,15 +4,15 @@ import { createSelector, createStructuredSelector } from 'reselect'
 
 import { safeParamAddressSelector } from '../store/selectors'
 
-import { getAddressBook } from '~/logic/addressBook/store/selectors'
-import { currencyValuesListSelector, currentCurrencySelector } from '~/logic/currencyValues/store/selectors'
-import { } from '~/logic/tokens/store/model/token'
-import { orderedTokenListSelector, tokensSelector } from '~/logic/tokens/store/selectors'
-import { getEthAsToken } from '~/logic/tokens/utils/tokenHelpers'
-import { isUserOwner } from '~/logic/wallets/ethAddresses'
-import { networkSelector, providerNameSelector, userAccountSelector } from '~/logic/wallets/store/selectors'
-import { } from '~/routes/safe/store/models/safe'
-import { } from '~/routes/safe/store/models/transaction'
+import { getAddressBook } from 'logic/addressBook/store/selectors'
+import { currencyValuesListSelector, currentCurrencySelector } from 'logic/currencyValues/store/selectors'
+import { } from 'logic/tokens/store/model/token'
+import { orderedTokenListSelector, tokensSelector } from 'logic/tokens/store/selectors'
+import { getEthAsToken } from 'logic/tokens/utils/tokenHelpers'
+import { isUserOwner } from 'logic/wallets/ethAddresses'
+import { networkSelector, providerNameSelector, userAccountSelector } from 'logic/wallets/store/selectors'
+import { } from 'routes/safe/store/models/safe'
+import { } from 'routes/safe/store/models/transaction'
 import {
   safeActiveTokensSelector,
   safeBalancesSelector,
@@ -21,8 +21,8 @@ import {
   safeIncomingTransactionsSelector,
   safeSelector,
   safeTransactionsSelector,
-} from '~/routes/safe/store/selectors'
-import { } from '~/store'
+} from 'routes/safe/store/selectors'
+import { } from 'store'
 
 
 const getTxStatus = (tx, userAddress, safe) => {

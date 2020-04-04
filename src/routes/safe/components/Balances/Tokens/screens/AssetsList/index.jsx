@@ -12,21 +12,21 @@ import { FixedSizeList } from 'react-window'
 
 import { styles } from './style'
 
-import Spacer from '~/components/Spacer'
-import Block from '~/components/layout/Block'
-import Button from '~/components/layout/Button'
-import Divider from '~/components/layout/Divider'
-import Hairline from '~/components/layout/Hairline'
-import Row from '~/components/layout/Row'
-import { nftAssetsListSelector } from '~/logic/collectibles/store/selectors'
-import AssetRow from '~/routes/safe/components/Balances/Tokens/screens/AssetsList/AssetRow'
-import updateActiveAssets from '~/routes/safe/store/actions/updateActiveAssets'
-import updateBlacklistedAssets from '~/routes/safe/store/actions/updateBlacklistedAssets'
+import Spacer from 'components/Spacer'
+import Block from 'components/layout/Block'
+import Button from 'components/layout/Button'
+import Divider from 'components/layout/Divider'
+import Hairline from 'components/layout/Hairline'
+import Row from 'components/layout/Row'
+import { nftAssetsListSelector } from 'logic/collectibles/store/selectors'
+import AssetRow from 'routes/safe/components/Balances/Tokens/screens/AssetsList/AssetRow'
+import updateActiveAssets from 'routes/safe/store/actions/updateActiveAssets'
+import updateBlacklistedAssets from 'routes/safe/store/actions/updateBlacklistedAssets'
 import {
   safeActiveAssetsListSelector,
   safeBlacklistedAssetsSelector,
   safeParamAddressFromStateSelector,
-} from '~/routes/safe/store/selectors'
+} from 'routes/safe/store/selectors'
 const useStyles = makeStyles(styles)
 
 export const ADD_CUSTOM_ASSET_BUTTON_TEST_ID = 'add-custom-asset-btn'
