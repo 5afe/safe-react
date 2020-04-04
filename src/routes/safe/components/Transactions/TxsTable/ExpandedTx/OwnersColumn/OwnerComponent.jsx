@@ -16,7 +16,7 @@ import Block from 'components/layout/Block'
 import Button from 'components/layout/Button'
 import Img from 'components/layout/Img'
 import Paragraph from 'components/layout/Paragraph'
-import { getNameFromAddressBook } from 'logic/addressBook/utils'
+import { GetNameFromAddressBook } from 'logic/addressBook/utils'
 import { } from 'routes/safe/store/models/owner'
 
 export const CONFIRM_TX_BTN_TEST_ID = 'confirm-btn'
@@ -41,7 +41,7 @@ const OwnerComponent = ({
   thresholdReached,
   userAddress,
 }) => {
-  const nameInAdbk = getNameFromAddressBook(owner.address)
+  const nameInAdbk = GetNameFromAddressBook(owner.address)
   const ownerName = nameInAdbk || owner.name
   const [imgCircle, setImgCircle] = React.useState(ConfirmSmallGreyCircle)
 

@@ -9,7 +9,7 @@ import Block from 'components/layout/Block'
 import Bold from 'components/layout/Bold'
 import LinkWithRef from 'components/layout/Link'
 import Paragraph from 'components/layout/Paragraph'
-import { getNameFromAddressBook } from 'logic/addressBook/utils'
+import { GetNameFromAddressBook } from 'logic/addressBook/utils'
 import { shortVersionOf } from 'logic/wallets/ethAddresses'
 import OwnerAddressTableCell from 'routes/safe/components/Settings/ManageOwners/OwnerAddressTableCell'
 import { getTxAmount } from 'routes/safe/components/Transactions/TxsTable/columns'
@@ -47,7 +47,7 @@ export const styles = () => ({
 
 
 const TransferDescription = ({ amount = '', recipient }) => {
-  const recipientName = getNameFromAddressBook(recipient)
+  const recipientName = GetNameFromAddressBook(recipient)
   return (
     <Block data-testid={TRANSACTIONS_DESC_SEND_TEST_ID}>
       <Bold>Send {amount} to:</Bold>
@@ -61,7 +61,7 @@ const TransferDescription = ({ amount = '', recipient }) => {
 }
 
 const RemovedOwner = ({ removedOwner }) => {
-  const ownerChangedName = getNameFromAddressBook(removedOwner)
+  const ownerChangedName = GetNameFromAddressBook(removedOwner)
 
   return (
     <Block data-testid={TRANSACTIONS_DESC_REMOVE_OWNER_TEST_ID}>
@@ -76,7 +76,7 @@ const RemovedOwner = ({ removedOwner }) => {
 }
 
 const AddedOwner = ({ addedOwner }) => {
-  const ownerChangedName = getNameFromAddressBook(addedOwner)
+  const ownerChangedName = GetNameFromAddressBook(addedOwner)
 
   return (
     <Block data-testid={TRANSACTIONS_DESC_ADD_OWNER_TEST_ID}>
@@ -140,7 +140,7 @@ const SettingsDescription = ({ action, addedOwner, newThreshold, removedOwner })
 
 const CustomDescription = ({ amount = 0, classes, data, recipient }) => {
   const [showTxData, setShowTxData] = useState(false)
-  const recipientName = getNameFromAddressBook(recipient)
+  const recipientName = GetNameFromAddressBook(recipient)
   return (
     <>
       <Block data-testid={TRANSACTIONS_DESC_CUSTOM_VALUE_TEST_ID}>

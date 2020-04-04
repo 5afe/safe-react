@@ -8,7 +8,7 @@ import Welcome from './welcome/container'
 
 import Loader from 'components/Loader'
 import { defaultSafeSelector } from 'routes/safe/store/selectors'
-import { withTracker } from 'utils/googleAnalytics'
+import { WithTracker } from 'utils/googleAnalytics'
 
 const Safe = React.lazy(() => import('./safe/container'))
 
@@ -50,10 +50,10 @@ const Routes = ({ defaultSafe, location }) => {
           return <Redirect to={WELCOME_ADDRESS} />
         }}
       />
-      <Route component={withTracker(Welcome)} exact path={WELCOME_ADDRESS} />
-      <Route component={withTracker(Open)} exact path={OPEN_ADDRESS} />
-      <Route component={withTracker(Safe)} path={SAFE_ADDRESS} />
-      <Route component={withTracker(Load)} exact path={LOAD_ADDRESS} />
+      <Route component={WithTracker(Welcome)} exact path={WELCOME_ADDRESS} />
+      <Route component={WithTracker(Open)} exact path={OPEN_ADDRESS} />
+      <Route component={WithTracker(Safe)} path={SAFE_ADDRESS} />
+      <Route component={WithTracker(Load)} exact path={LOAD_ADDRESS} />
       <Redirect to="/" />
     </Switch>
   )

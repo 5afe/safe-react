@@ -5,7 +5,7 @@ import React from 'react'
 import EtherscanLink from 'components/EtherscanLink'
 import Block from 'components/layout/Block'
 import Bold from 'components/layout/Bold'
-import { getNameFromAddressBook } from 'logic/addressBook/utils'
+import { GetNameFromAddressBook } from 'logic/addressBook/utils'
 import OwnerAddressTableCell from 'routes/safe/components/Settings/ManageOwners/OwnerAddressTableCell'
 import { getIncomingTxAmount } from 'routes/safe/components/Transactions/TxsTable/columns'
 import { lg, md } from 'theme/variables'
@@ -37,7 +37,7 @@ const TransferDescription = ({ from, txFromName, value = '' }) => (
 
 const IncomingTxDescription = ({ tx }) => {
   const classes = useStyles()
-  const txFromName = getNameFromAddressBook(tx.from)
+  const txFromName = GetNameFromAddressBook(tx.from)
   return (
     <Block className={classes.txDataContainer}>
       <TransferDescription from={tx.from} txFromName={txFromName} value={getIncomingTxAmount(tx)} />

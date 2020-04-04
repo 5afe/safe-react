@@ -31,11 +31,12 @@ const getNameFromAdbk = (addressBook, userAddress) => {
   return null
 }
 
-export const getNameFromAddressBook = (userAddress) => {
+export const GetNameFromAddressBook = (userAddress) => {
+  const addressBook = useSelector(getAddressBook)
+  
   if (!userAddress) {
     return null
   }
-  const addressBook = useSelector(getAddressBook)
   return getNameFromAdbk(addressBook, userAddress)
 }
 

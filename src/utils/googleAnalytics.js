@@ -23,7 +23,7 @@ export const loadGoogleAnalytics = () => {
   }
 }
 
-export const withTracker = (WrappedComponent, options = {}) => {
+export const WithTracker = (WrappedComponent, options = {}) => {
   const [useAnalytics, setUseAnalytics] = useState(false)
 
   useEffect(() => {

@@ -34,11 +34,12 @@ export const getAddressBookListSelector = createSelector(
   },
 )
 
-export const getNameFromAddressBook = (userAddress) => {
+export const GetNameFromAddressBook = (userAddress) => {
+  const addressBook = useSelector(getAddressBook)
+  
   if (!userAddress) {
     return null
   }
-  const addressBook = useSelector(getAddressBook)
   const result = addressBook.filter((addressBookItem) => addressBookItem.address === userAddress)
   if (result.size > 0) {
     return result.get(0).name
