@@ -8,17 +8,15 @@
     "import/extensions": [".js", ".jsx"]
   },
   "parser": "babel-eslint",
-  "plugins": ["react", "flowtype", "import", "jsx-a11y", "sort-destructure-keys", "prettier"],
+  "plugins": ["react", "import", "jsx-a11y", "sort-destructure-keys", "prettier"],
   "extends": [
     "eslint:recommended",
     "plugin:react/recommended",
-    "plugin:flowtype/recommended",
     "plugin:import/errors",
     "plugin:import/warnings",
     "plugin:jsx-a11y/recommended",
     "plugin:prettier/recommended",
-    "prettier/react",
-    "prettier/flowtype"
+    "prettier/react"
   ],
   "parserOptions": {
     "ecmaFeatures": {
@@ -56,13 +54,6 @@
       "error",
       {
         "ignoreDeclarationSort": true
-      }
-    ],
-    "flowtype/require-valid-file-annotation": [
-      2,
-      "always",
-      {
-        "annotationStyle": "line"
       }
     ],
     "import/extensions": 0,
