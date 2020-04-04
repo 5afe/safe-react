@@ -1,0 +1,91 @@
+// @flow
+import axios from 'axios';
+import bn from 'bignumber.js';
+import { List, Map, type RecordInstance } from 'immutable';
+import type { Dispatch as ReduxDispatch } from 'redux';
+import { addIncomingTransactions } from './addIncomingTransactions';
+import { addTransactions } from './addTransactions';
+import { decodeParamsFromSafeMethod } from '~/logic/contracts/methodIds';
+import { buildIncomingTxServiceUrl } from '~/logic/safe/transactions/incomingTxHistory';
+import { type TxServiceType, buildTxServiceUrl } from '~/logic/safe/transactions/txHistory';
+import { getLocalSafe } from '~/logic/safe/utils';
+import { getTokenInfos } from '~/logic/tokens/store/actions/fetchTokens';
+import { ALTERNATIVE_TOKEN_ABI } from '~/logic/tokens/utils/alternativeAbi';
+import { DECIMALS_METHOD_HASH, SAFE_TRANSFER_FROM_WITHOUT_DATA_HASH, isMultisendTransaction, isTokenTransfer, isUpgradeTransaction } from '~/logic/tokens/utils/tokenHelpers';
+import { ZERO_ADDRESS, sameAddress } from '~/logic/wallets/ethAddresses';
+import { EMPTY_DATA } from '~/logic/wallets/ethTransactions';
+import { getWeb3 } from '~/logic/wallets/getWeb3';
+import { addCancellationTransactions } from '~/routes/safe/store/actions/addCancellationTransactions';
+import { makeConfirmation } from '~/routes/safe/store/models/confirmation';
+import { type IncomingTransaction, makeIncomingTransaction } from '~/routes/safe/store/models/incomingTransaction';
+import { makeOwner } from '~/routes/safe/store/models/owner';
+import type { TransactionProps } from '~/routes/safe/store/models/transaction';
+import { type Transaction, makeTransaction } from '~/routes/safe/store/models/transaction';
+import { type GlobalState } from '~/store';
+let web3;
+type ConfirmationServiceModel = {
+  owner: string,
+  submissionDate: Date,
+  confirmationType: string,
+  transactionHash: string,
+};
+type TxServiceModel = {
+  to: string,
+  value: number,
+  data: ?string,
+  operation: number,
+  nonce: ?number,
+  blockNumber: ?number,
+  safeTxGas: number,
+  baseGas: number,
+  gasPrice: number,
+  gasToken: string,
+  refundReceiver: string,
+  safeTxHash: string,
+  submissionDate: ?string,
+  executor: string,
+  executionDate: ?string,
+  confirmations: ConfirmationServiceModel[],
+  isExecuted: boolean,
+  isSuccessful: boolean,
+  transactionHash: ?string,
+  creationTx?: boolean,
+};
+type IncomingTxServiceModel = {
+  blockNumber: number,
+  transactionHash: string,
+  to: string,
+  value: number,
+  tokenAddress: string,
+  from: string,
+};
+declare export var buildTransactionFrom: (safeAddress: string, tx: TxServiceModel) => Promise<Transaction>;
+declare var addMockSafeCreationTx: (safeAddress: any) => Array<TxServiceModel>;
+declare export var buildIncomingTransactionFrom: (tx: IncomingTxServiceModel) => any;
+export type SafeTransactionsType = {
+  outgoing: Map<string, List<TransactionProps>>,
+  cancel: Map<string, List<TransactionProps>>,
+};
+let etagSafeTransactions = null;
+let etagCachedSafeIncommingTransactions = null;
+declare export var loadSafeTransactions: (safeAddress: string) => Promise<SafeTransactionsType>;
+declare export var loadSafeIncomingTransactions: (safeAddress: string) => any;
+export default ((safeAddress: string) => async (dispatch: ReduxDispatch<GlobalState>) => {
+  web3 = await getWeb3();
+  const transactions: SafeTransactionsType | undefined = await loadSafeTransactions(safeAddress);
+
+  if (transactions) {
+    const {
+      cancel,
+      outgoing
+    } = transactions;
+    dispatch(addCancellationTransactions(cancel));
+    dispatch(addTransactions(outgoing));
+  }
+
+  const incomingTransactions: Map<string, List<IncomingTransaction>> | undefined = await loadSafeIncomingTransactions(safeAddress);
+
+  if (incomingTransactions) {
+    dispatch(addIncomingTransactions(incomingTransactions));
+  }
+});

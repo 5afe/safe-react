@@ -1,0 +1,4 @@
+// @flow
+import { List, Map } from 'immutable';
+import type { Transaction } from '~/routes/safe/store/models/transaction';
+declare export var getAwaitingTransactions: (allTransactions: Map<string, List<Transaction>>, cancellationTransactionsByNonce: Map<string | number, List<Transaction>>, userAccount: string) => Map<string, List<Transaction>>;

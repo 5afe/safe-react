@@ -1,0 +1,2 @@
+// @flow
+declare export var sleep: (ms: number) => any;

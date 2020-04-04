@@ -1,0 +1,8 @@
+// @flow
+export const FIELD_NAME: string = 'name';
+export const FIELD_CONFIRMATIONS: string = 'confirmations';
+export const FIELD_OWNERS: string = 'owners';
+export const FIELD_SAFE_NAME: string = 'safeName';
+declare export var getOwnerNameBy: (index: number) => any;
+declare export var getOwnerAddressBy: (index: number) => any;
+declare export var getNumOwnersFrom: (values: Object) => any;

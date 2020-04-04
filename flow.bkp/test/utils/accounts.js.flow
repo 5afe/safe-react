@@ -1,0 +1,4 @@
+// @flow
+declare function useTestAccountAt(index: number): any;
+declare function resetTestAccount(): any;
+export { useTestAccountAt, resetTestAccount };

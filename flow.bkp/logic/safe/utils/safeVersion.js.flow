@@ -1,0 +1,19 @@
+// @flow
+import semverLessThan from 'semver/functions/lt';
+import semverSatisfies from 'semver/functions/satisfies';
+import semverValid from 'semver/functions/valid';
+import { getSafeLastVersion } from '~/config';
+import { getGnosisSafeInstanceAt, getSafeMasterContract } from '~/logic/contracts/safeContracts';
+export const FEATURES = [{
+  name: 'ERC721',
+  validVersion: '>=1.1.1'
+}, {
+  name: 'ERC1155',
+  validVersion: '>=1.1.1'
+}];
+declare export var safeNeedsUpdate: (currentVersion: string, latestVersion: string) => any;
+declare export var getCurrentSafeVersion: (gnosisSafeInstance: any) => any;
+declare export var enabledFeatures: (version: string) => any;
+declare export var checkIfSafeNeedsUpdate: (gnosisSafeInstance: any, lastSafeVersion: any) => any;
+declare export var getCurrentMasterContractLastVersion: () => any;
+declare export var getSafeVersionInfo: (safeAddress: string) => any;

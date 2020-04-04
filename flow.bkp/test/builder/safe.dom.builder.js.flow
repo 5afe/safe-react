@@ -1,0 +1,15 @@
+// @flow
+import { type Store } from 'redux';
+import { aNewStore, type GlobalState } from '~/store';
+import { sleep } from '~/utils/timer';
+import { getWeb3 } from '~/logic/wallets/getWeb3';
+import { sendEtherTo } from '~/test/utils/tokenMovements';
+import { aMinedSafe } from '~/test/builder/safe.redux.builder';
+import { renderSafeView } from '~/test/builder/safe.dom.utils';
+export type DomSafe = {
+  address: string,
+  accounts: string[],
+  store: Store<GlobalState>,
+  SafeDom: any,
+};
+declare export var renderSafeInDom: (owners: number, threshold: number) => Promise<DomSafe>;

@@ -1,0 +1,33 @@
+// @flow
+import React from 'react';
+import styled from 'styled-components';
+import Button from '~/components/layout/Button';
+import Paragraph from '~/components/layout/Paragraph';
+import { lg } from '~/theme/variables';
+const StyledParagraph = styled(Paragraph)`
+  && {
+    font-size: ${lg};
+  }
+`;
+const IconImg = styled.img`
+  width: 20px;
+  margin-right: 10px;
+`;
+const TitleWrapper = styled.div`
+  display: flex;
+  align-items: center;
+`;
+declare export var ModalTitle: (arg0: {
+  title: string,
+  iconUrl: string,
+}) => any;
+const FooterWrapper = styled.div`
+  display: flex;
+  justify-content: space-around;
+`;
+declare export var ModalFooterConfirmation: (arg0: {
+  okText: string,
+  cancelText: string,
+  handleOk: () => void,
+  handleCancel: () => void,
+}) => any;

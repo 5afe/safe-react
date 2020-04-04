@@ -1,0 +1,3 @@
+// @flow
+import { type Match } from 'react-router-dom';
+declare export var buildMatchPropsFrom: (address: string) => Match;

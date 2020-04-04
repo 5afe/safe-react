@@ -1,0 +1,24 @@
+// @flow
+import { ensureOnce } from "~/utils/singleton";
+import { ETHEREUM_NETWORK } from "~/logic/wallets/getWeb3";
+import { RELAY_API_URL, SIGNATURES_VIA_METAMASK, TX_SERVICE_HOST } from "~/config/names";
+import devConfig from "./development";
+import testConfig from "./testing";
+import stagingConfig from "./staging";
+import prodConfig from "./production";
+import mainnetDevConfig from "./development-mainnet";
+import mainnetProdConfig from "./production-mainnet";
+import mainnetStagingConfig from "./staging-mainnet";
+declare var configuration: () => any;
+declare export var getNetwork: () => any;
+declare export var getNetworkId: () => any;
+const getConfig = ensureOnce(configuration);
+declare export var getTxServiceHost: () => any;
+declare export var getTxServiceUriFrom: (safeAddress: string) => any;
+declare export var getIncomingTxServiceUriTo: (safeAddress: string) => any;
+declare export var getRelayUrl: () => any;
+declare export var signaturesViaMetamask: () => any;
+declare export var getGoogleAnalyticsTrackingID: () => any;
+declare export var getIntercomId: () => any;
+declare export var getExchangeRatesUrl: () => any;
+declare export var getSafeLastVersion: () => any;

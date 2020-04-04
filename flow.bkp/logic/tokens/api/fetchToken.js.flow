@@ -1,0 +1,5 @@
+// @flow
+import axios from 'axios';
+import { getRelayUrl } from '~/config/index';
+declare var fetchToken: (tokenAddress: string) => any;
+export default fetchToken;

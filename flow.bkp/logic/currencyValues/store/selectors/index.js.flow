@@ -1,0 +1,6 @@
+// @flow
+import { List } from 'immutable';
+import { CURRENCY_VALUES_KEY } from '~/logic/currencyValues/store/reducer/currencyValues';
+import { type GlobalState } from '~/store';
+declare export var currencyValuesListSelector: (state: GlobalState) => any;
+declare export var currentCurrencySelector: (state: GlobalState) => any;

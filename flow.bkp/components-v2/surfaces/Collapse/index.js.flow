@@ -1,0 +1,20 @@
+// @flow
+import CollapseMUI from '@material-ui/core/Collapse';
+import IconButton from '@material-ui/core/IconButton';
+import ExpandLess from '@material-ui/icons/ExpandLess';
+import ExpandMore from '@material-ui/icons/ExpandMore';
+import React from 'react';
+import styled from 'styled-components';
+const Wrapper = styled.div``;
+const Header = styled.div`
+  display: flex;
+  align-items: center;
+`;
+const Title = styled.div``;
+type Props = {
+  title: string,
+  children: React.Node,
+  description: React.Node,
+};
+declare var Collapse: (arg0: Props) => any;
+export default Collapse;

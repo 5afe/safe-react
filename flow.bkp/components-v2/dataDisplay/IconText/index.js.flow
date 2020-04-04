@@ -1,0 +1,20 @@
+// @flow
+import React from 'react';
+import styled from 'styled-components';
+const Wrapper = styled.div`
+  display: flex;
+  align-items: center;
+`;
+const Icon = styled.img`
+  max-width: 15px;
+  max-height: 15px;
+`;
+const Text = styled.span`
+  margin-left: 5px;
+  height: 17px;
+`;
+declare var IconText: (arg0: {
+  iconUrl: string,
+  text?: string,
+}) => any;
+export default IconText;

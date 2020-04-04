@@ -1,0 +1,8 @@
+// @flow
+import { List, Map } from 'immutable';
+import { type Confirmation } from '~/routes/safe/store/models/confirmation';
+import { type Transaction } from '~/routes/safe/store/models/transaction';
+import { sameAddress } from '~/logic/wallets/ethAddresses';
+declare export var testSizeOfSafesWith: (transactions: Map<string, List<Transaction>>, size: number) => any;
+declare export var testSizeOfTransactions: (safeTxs: List<Transaction> | typeof undefined, size: number) => any;
+declare export var testTransactionFrom: (safeTxs: List<Transaction> | typeof undefined, pos: number, name: string, nonce: number, value: number, destination: string, data: string, isExecuted: boolean, confirmations: List<Confirmation>) => any;

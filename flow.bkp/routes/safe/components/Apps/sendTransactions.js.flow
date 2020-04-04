@@ -1,0 +1,17 @@
+// @flow
+import { DELEGATE_CALL } from '~/logic/safe/transactions/send';
+const multiSendAddress = '0xB522a9f781924eD250A11C54105E51840B138AdD';
+const multiSendAbi = [{
+  type: 'function',
+  name: 'multiSend',
+  constant: false,
+  payable: false,
+  stateMutability: 'nonpayable',
+  inputs: [{
+    type: 'bytes',
+    name: 'transactions'
+  }],
+  outputs: []
+}];
+declare var sendTransactions: (web3: any, createTransaction: any, safeAddress: String, txs: Array<any>, enqueueSnackbar: Function, closeSnackbar: Function, origin: string) => any;
+export default sendTransactions;

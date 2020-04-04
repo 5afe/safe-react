@@ -1,0 +1,19 @@
+// @flow
+import { getWeb3 } from '~/logic/wallets/getWeb3';
+import { type Transaction } from '~/routes/safe/store/models/transaction';
+type DecodedTxData = {
+  action?: string,
+  recipient: string,
+  value?: string,
+  modifySettingsTx?: boolean,
+  removedOwner?: string,
+  newThreshold?: string,
+  addedOwner?: string,
+  cancellationTx?: boolean,
+  customTx?: boolean,
+  creationTx?: boolean,
+  data: string,
+  upgradeTx: boolean,
+};
+declare var getSafeVersion: (data: string) => any;
+declare export var getTxData: (tx: Transaction) => DecodedTxData;

@@ -1,0 +1,8 @@
+// @flow
+import { List } from 'immutable';
+import { type Owner, makeOwner } from '~/routes/safe/store/models/owner';
+declare export var getAccountsFrom: (values: Object) => string[];
+declare export var getNamesFrom: (values: Object) => string[];
+declare export var getOwnersFrom: (names: string[], addresses: string[]) => List<Owner>;
+declare export var getThresholdFrom: (values: Object) => number;
+declare export var getSafeNameFrom: (values: Object) => string;

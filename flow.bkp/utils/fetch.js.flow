@@ -1,0 +1,2 @@
+// @flow
+declare export var enhancedFetch: (url: string, errMsg: string) => any;

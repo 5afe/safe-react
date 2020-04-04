@@ -1,0 +1,39 @@
+// @flow
+import contract from 'truffle-contract';
+import ProxyFactorySol from '@gnosis.pm/safe-contracts/build/contracts/GnosisSafeProxyFactory.json';
+import GnosisSafeSol from '@gnosis.pm/safe-contracts/build/contracts/GnosisSafe.json';
+import SafeProxy from '@gnosis.pm/safe-contracts/build/contracts/GnosisSafeProxy.json';
+import { ensureOnce } from '~/utils/singleton';
+import { simpleMemoize } from '~/components/forms/validator';
+import { getWeb3, getNetworkIdFrom } from '~/logic/wallets/getWeb3';
+import { calculateGasOf, calculateGasPrice } from '~/logic/wallets/ethTransactions';
+import { ZERO_ADDRESS } from '~/logic/wallets/ethAddresses';
+import { isProxyCode } from '~/logic/contracts/historicProxyCode';
+export const SENTINEL_ADDRESS = '0x0000000000000000000000000000000000000001';
+export const MULTI_SEND_ADDRESS = '0xB522a9f781924eD250A11C54105E51840B138AdD';
+export const SAFE_MASTER_COPY_ADDRESS = '0x34CfAC646f301356fAa8B21e94227e3583Fe3F5F';
+export const DEFAULT_FALLBACK_HANDLER_ADDRESS = '0xd5D82B6aDDc9027B22dCA772Aa68D5d74cdBdF44';
+export const SAFE_MASTER_COPY_ADDRESS_V10 = '0xb6029EA3B2c51D09a50B53CA8012FeEB05bDa35A';
+let proxyFactoryMaster;
+let safeMaster;
+declare var createGnosisSafeContract: (web3: any) => any;
+declare var createProxyFactoryContract: (web3: any, networkId: number) => any;
+export const getGnosisSafeContract = simpleMemoize(createGnosisSafeContract);
+const getCreateProxyFactoryContract = simpleMemoize(createProxyFactoryContract);
+declare var instantiateMasterCopies: () => any; // ONLY USED IN TEST ENVIRONMENT
+
+declare var createMasterCopies: () => any;
+export const initContracts = process.env.NODE_ENV === 'test' ? ensureOnce(createMasterCopies) : instantiateMasterCopies;
+declare export var getSafeMasterContract: () => any;
+declare export var getSafeDeploymentTransaction: (safeAccounts: string[], numConfirmations: number, userAccount: string) => any;
+declare export var estimateGasForDeployingSafe: (safeAccounts: string[], numConfirmations: number, userAccount: string) => any;
+declare export var getGnosisSafeInstanceAt: (safeAddress: string) => any;
+declare var cleanByteCodeMetadata: (bytecode: string) => string;
+declare export var validateProxy: (safeAddress: string) => Promise<boolean>;
+export type MultiSendTransactionInstanceType = {
+  operation: number,
+  to: string,
+  value: number,
+  data: string,
+};
+declare export var getEncodedMultiSendCallData: (txs: Array<MultiSendTransactionInstanceType>, web3: Object) => any;

@@ -1,0 +1,25 @@
+// @flow
+import { List } from 'immutable';
+import { simpleMemoize } from '~/components/forms/validator';
+import { type Token } from '~/logic/tokens/store/model/token';
+import { isAddressAToken } from '~/logic/tokens/utils/tokenHelpers';
+import { sameAddress } from '~/logic/wallets/ethAddresses'; // import { getStandardTokenContract } from '~/logic/tokens/store/actions/fetchTokens'
+// eslint-disable-next-line
+
+export const addressIsTokenContract = simpleMemoize(async (tokenAddress: string) => {
+  // SECOND APPROACH:
+  // They both seem to work the same
+  // const tokenContract = await getStandardTokenContract()
+  // try {
+  //   await tokenContract.at(tokenAddress)
+  // } catch {
+  //   return 'Not a token address'
+  // }
+  const isToken = await isAddressAToken(tokenAddress);
+
+  if (!isToken) {
+    return 'Not a token address';
+  }
+}); // eslint-disable-next-line
+
+declare export var doesntExistInTokenList: (tokenList: List<Token>) => any;

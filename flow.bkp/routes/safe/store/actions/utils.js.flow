@@ -1,0 +1,6 @@
+// @flow
+import axios from 'axios';
+import { buildTxServiceUrl } from '~/logic/safe/transactions/txHistory';
+declare export var getLastTx: (safeAddress: string) => Promise<TransactionProps>;
+declare export var getNewTxNonce: (txNonce: any, lastTx: any, safeInstance: any) => any;
+declare export var shouldExecuteTransaction: (safeInstance: any, nonce: any, lastTx: any) => any;

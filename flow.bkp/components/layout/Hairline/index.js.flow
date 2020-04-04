@@ -1,0 +1,13 @@
+// @flow
+import * as React from 'react';
+import { type Size, getSize } from '~/theme/size';
+import { border } from '~/theme/variables';
+declare var calculateStyleFrom: (color?: string, margin?: Size) => any;
+type Props = {
+  className?: string,
+  color?: string,
+  margin?: Size,
+  style?: Object,
+};
+declare var Hairline: (arg0: Props) => any;
+export default Hairline;

@@ -1,0 +1,19 @@
+// @flow
+import type { Provider } from '~/logic/wallets/store/model/provider';
+import { makeProvider } from '~/logic/wallets/store/model/provider';
+declare class ProviderBuilder {
+  provider: Provider,
+  constructor(): any,
+  withName(name: string): any,
+  withLoaded(loaded: boolean): any,
+  withAvailable(available: boolean): any,
+  withAccount(account: string): any,
+  get(): any,
+}
+declare var aProvider: () => any;
+declare export class ProviderFactory {
+  static metamaskAvailable: any,
+  static metamaskLoaded: any,
+  static noProvider: any,
+}
+export default aProvider;

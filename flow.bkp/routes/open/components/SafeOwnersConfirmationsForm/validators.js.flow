@@ -1,0 +1,3 @@
+// @flow
+import { uniqueAddress } from '~/components/forms/validator';
+declare export var getAddressValidator: (addresses: string[], position: number) => any;

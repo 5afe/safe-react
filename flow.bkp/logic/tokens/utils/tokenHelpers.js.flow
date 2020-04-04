@@ -1,0 +1,19 @@
+// @flow
+import { List } from 'immutable';
+import logo from '~/assets/icons/icon_etherTokens.svg';
+import { getStandardTokenContract } from '~/logic/tokens/store/actions/fetchTokens';
+import { type Token, makeToken } from '~/logic/tokens/store/model/token';
+import { getWeb3 } from '~/logic/wallets/getWeb3';
+export const ETH_ADDRESS = '0x000';
+export const SAFE_TRANSFER_FROM_WITHOUT_DATA_HASH = '0x42842e0e';
+export const DECIMALS_METHOD_HASH = '313ce567';
+declare export var isEther: (symbol: string) => any;
+declare export var getEthAsToken: (balance: string) => any;
+declare export var calculateActiveErc20TokensFrom: (tokens: List<Token>) => any;
+declare export var isAddressAToken: (tokenAddress: string) => any;
+declare export var isTokenTransfer: (data: string, value: number) => boolean;
+declare export var isMultisendTransaction: (data: string, value: number) => boolean; // f08a0323 - setFallbackHandler (308, 8)
+// 7de7edef - changeMasterCopy (550, 8)
+
+declare export var isUpgradeTransaction: (data: string) => any;
+declare export var isERC721Contract: (contractAddress: string) => boolean;

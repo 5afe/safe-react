@@ -1,0 +1,27 @@
+// @flow
+
+/* eslint-disable max-classes-per-file */
+import SafeRecord, { type Safe } from '~/routes/safe/store/models/safe';
+import addSafe, { buildOwnersFrom } from '~/routes/safe/store/actions/addSafe';
+import { FIELD_NAME, FIELD_CONFIRMATIONS, FIELD_OWNERS, getOwnerNameBy, getOwnerAddressBy } from '~/routes/open/components/fields';
+import { getWeb3, getProviderInfo } from '~/logic/wallets/getWeb3';
+import { createSafe, type OpenState } from '~/routes/open/container/Open';
+import { type GlobalState } from '~/store/index';
+import { makeProvider } from '~/logic/wallets/store/model/provider';
+import addProvider from '~/logic/wallets/store/actions/addProvider';
+declare class SafeBuilder {
+  safe: Safe,
+  constructor(): any,
+  withAddress(address: string): any,
+  withName(name: string): any,
+  withConfirmations(confirmations: number): any,
+  withOwner(names: string[], adresses: string[]): any,
+  get(): any,
+}
+declare var aSafe: () => any;
+declare export class SafeFactory {
+  static oneOwnerSafe: any,
+  static twoOwnersSafe: any,
+}
+declare export var aMinedSafe: (store: Store<GlobalState>, owners: number, threshold: number, name: string) => Promise<string>;
+export default aSafe;

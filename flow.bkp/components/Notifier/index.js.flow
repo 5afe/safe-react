@@ -1,0 +1,21 @@
+// @flow
+import { List } from 'immutable';
+import { withSnackbar } from 'notistack';
+import { Component } from 'react';
+import { connect } from 'react-redux';
+import actions, { type Actions } from './actions';
+import selector from './selector';
+import { type Notification } from '~/logic/notifications/store/models/notification';
+type Props = Actions & {
+  notifications: List<Notification>,
+  closeSnackbar: Function,
+  enqueueSnackbar: Function,
+};
+declare class Notifier extends Component<Props> {
+  displayed: any,
+  shouldComponentUpdate(arg0: any): any,
+  componentDidUpdate(): any,
+  storeDisplayed: any,
+  render(): any,
+}
+export default withSnackbar(connect(selector, actions)(Notifier));

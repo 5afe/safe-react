@@ -1,0 +1,12 @@
+// @flow
+import { ImmortalStorage, IndexedDbStore, LocalStorageStore } from 'immortal-db';
+import { getNetwork } from '~/config'; // Don't use sessionStorage and cookieStorage
+// https://github.com/gruns/ImmortalDB/issues/22
+// https://github.com/gruns/ImmortalDB/issues/6
+
+const stores = [IndexedDbStore, LocalStorageStore];
+export const storage = new ImmortalStorage(stores);
+const PREFIX = `v2_${getNetwork()}`;
+declare export var loadFromStorage: (key: string) => Promise<*>;
+declare export var saveToStorage: (key: string, value: *) => Promise<*>;
+declare export var removeFromStorage: (key: string) => Promise<*>;

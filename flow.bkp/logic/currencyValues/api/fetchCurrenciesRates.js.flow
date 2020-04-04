@@ -1,0 +1,6 @@
+// @flow
+import axios from 'axios';
+import { getExchangeRatesUrl } from '~/config';
+import { AVAILABLE_CURRENCIES } from '~/logic/currencyValues/store/model/currencyValues';
+declare var fetchCurrenciesRates: (baseCurrency: AVAILABLE_CURRENCIES, targetCurrencyValue: AVAILABLE_CURRENCIES) => Promise<number>;
+export default fetchCurrenciesRates;

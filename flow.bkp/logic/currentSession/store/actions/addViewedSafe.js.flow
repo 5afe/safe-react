@@ -1,0 +1,6 @@
+// @flow
+import { type Dispatch as ReduxDispatch } from 'redux';
+import updateViewedSafes from '~/logic/currentSession/store/actions/updateViewedSafes';
+import { type GlobalState } from '~/store';
+declare var addViewedSafe: (safeAddress: string) => any;
+export default addViewedSafe;

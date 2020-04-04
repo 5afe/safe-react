@@ -1,0 +1,32 @@
+// @flow
+import { List } from 'immutable';
+import type { Dispatch as ReduxDispatch } from 'redux';
+import { getGnosisSafeInstanceAt } from '~/logic/contracts/safeContracts';
+import { getLocalSafe, getSafeName } from '~/logic/safe/utils';
+import { enabledFeatures, safeNeedsUpdate } from '~/logic/safe/utils/safeVersion';
+import { sameAddress } from '~/logic/wallets/ethAddresses';
+import { getBalanceInEtherOf, getWeb3 } from '~/logic/wallets/getWeb3';
+import addSafe from '~/routes/safe/store/actions/addSafe';
+import addSafeOwner from '~/routes/safe/store/actions/addSafeOwner';
+import removeSafeOwner from '~/routes/safe/store/actions/removeSafeOwner';
+import updateSafeThreshold from '~/routes/safe/store/actions/updateSafeThreshold';
+import { makeOwner } from '~/routes/safe/store/models/owner';
+import type { SafeProps } from '~/routes/safe/store/models/safe';
+import { type GlobalState } from '~/store/index';
+declare var buildOwnersFrom: (safeOwners: string[], localSafe: SafeProps | {}) => any;
+declare export var buildSafe: (safeAdd: string, safeName: string, latestMasterContractVersion: string) => any;
+declare export var checkAndUpdateSafe: (safeAdd: string) => any; // eslint-disable-next-line consistent-return
+
+export default ((safeAdd: string) => async (dispatch: ReduxDispatch<GlobalState>, getState: (() => GlobalState)) => {
+  try {
+    const safeAddress = getWeb3().utils.toChecksumAddress(safeAdd);
+    const safeName = (await getSafeName(safeAddress)) || 'LOADED SAFE';
+    const latestMasterContractVersion = getState().safes.get('latestMasterContractVersion');
+    const safeProps: SafeProps = await buildSafe(safeAddress, safeName, latestMasterContractVersion);
+    dispatch(addSafe(safeProps));
+  } catch (err) {
+    // eslint-disable-next-line
+    console.error('Error while updating Safe information: ', err);
+    return Promise.resolve();
+  }
+});

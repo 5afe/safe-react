@@ -1,0 +1,4 @@
+// @flow
+import { COOKIES_REDUCER_ID } from '~/logic/cookies/store/reducer/cookies';
+import type { Provider } from '~/logic/wallets/store/model/provider';
+declare export var cookieBannerOpen: (state: any) => Provider;

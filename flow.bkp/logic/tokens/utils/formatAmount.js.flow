@@ -1,0 +1,29 @@
+// @flow
+// This is pretty new so I'll leave the docs here
+// https://v8.dev/features/intl-numberformat
+// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/NumberFormat
+// Locale is an empty array because we want it to use user's locale
+const lt1kFormatter = new Intl.NumberFormat([], {
+  maximumFractionDigits: 5
+});
+const lt10kFormatter = new Intl.NumberFormat([], {
+  maximumFractionDigits: 4
+});
+const lt100kFormatter = new Intl.NumberFormat([], {
+  maximumFractionDigits: 3
+});
+const lt1mFormatter = new Intl.NumberFormat([], {
+  maximumFractionDigits: 2
+});
+const lt10mFormatter = new Intl.NumberFormat([], {
+  maximumFractionDigits: 1
+});
+const lt100mFormatter = new Intl.NumberFormat([], {
+  maximumFractionDigits: 0
+}); // same format for billions and trillions
+
+const lt1000tFormatter = new Intl.NumberFormat([], {
+  maximumFractionDigits: 3,
+  notation: 'compact'
+});
+declare export var formatAmount: (number: string | number) => any;

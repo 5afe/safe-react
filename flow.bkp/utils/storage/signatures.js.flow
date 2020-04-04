@@ -1,0 +1,6 @@
+// @flow
+import { Map } from 'immutable';
+import { loadFromStorage, saveToStorage } from '~/utils/storage';
+declare var getSignaturesKeyFrom: (safeAddress: string) => any;
+declare export var storeSignature: (safeAddress: string, nonce: number, signature: string) => any;
+declare export var getSignaturesFrom: (safeAddress: string, nonce: number) => any;

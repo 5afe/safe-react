@@ -1,0 +1,16 @@
+// @flow
+type ShortenTextOptionsProps = {
+  charsStart?: number,
+  charsEnd?: number,
+  ellipsis?: string,
+};
+/**
+ * Setups `shortenText` options
+ * @param {object} opts
+ * @param {number} opts.charsStart=10 - characters to preserve from the beginning
+ * @param {number} opts.charsEnd=10 - characters to preserve at the end
+ * @param {string} opts.ellipsis='...' - ellipsis characters
+ * @returns {function} shortener
+ */
+
+declare export var textShortener: (arg0: ShortenTextOptionsProps) => any;

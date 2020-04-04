@@ -1,0 +1,9 @@
+// @flow
+import type { Dispatch as ReduxDispatch } from 'redux';
+import { createAction } from 'redux-actions';
+import { type NotificationProps } from '~/logic/notifications/store/models/notification';
+import { type GlobalState } from '~/store';
+export const ENQUEUE_SNACKBAR = 'ENQUEUE_SNACKBAR';
+const addSnackbar = createAction<string, *>(ENQUEUE_SNACKBAR);
+declare var enqueueSnackbar: (notification: NotificationProps) => any;
+export default enqueueSnackbar;

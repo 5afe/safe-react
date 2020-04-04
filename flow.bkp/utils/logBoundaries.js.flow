@@ -1,0 +1,5 @@
+// @flow
+export type Info = {
+  componentStack: string
+};
+declare export var logComponentStack: (error: Error, info: Info) => any;

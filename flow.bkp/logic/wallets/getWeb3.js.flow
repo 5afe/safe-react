@@ -1,0 +1,61 @@
+// @flow
+import ENS from 'ethereum-ens';
+import Web3 from 'web3';
+import { sameAddress } from './ethAddresses';
+import { EMPTY_DATA } from './ethTransactions';
+import { getNetwork } from '~/config/index';
+import type { ProviderProps } from '~/logic/wallets/store/model/provider';
+export const ETHEREUM_NETWORK = {
+  MAINNET: 'MAINNET',
+  MORDEN: 'MORDEN',
+  ROPSTEN: 'ROPSTEN',
+  RINKEBY: 'RINKEBY',
+  GOERLI: 'GOERLI',
+  KOVAN: 'KOVAN',
+  UNKNOWN: 'UNKNOWN'
+};
+export const WALLET_PROVIDER = {
+  SAFE: 'SAFE',
+  METAMASK: 'METAMASK',
+  REMOTE: 'REMOTE',
+  TORUS: 'TORUS',
+  PORTIS: 'PORTIS',
+  FORTMATIC: 'FORTMATIC',
+  SQUARELINK: 'SQUARELINK',
+  WALLETCONNECT: 'WALLETCONNECT',
+  OPERA: 'OPERA',
+  DAPPER: 'DAPPER',
+  AUTHEREUM: 'AUTHEREUM',
+  LEDGER: 'LEDGER',
+  TREZOR: 'TREZOR'
+};
+export const ETHEREUM_NETWORK_IDS = {
+  // $FlowFixMe
+  1: ETHEREUM_NETWORK.MAINNET,
+  // $FlowFixMe
+  2: ETHEREUM_NETWORK.MORDEN,
+  // $FlowFixMe
+  3: ETHEREUM_NETWORK.ROPSTEN,
+  // $FlowFixMe
+  4: ETHEREUM_NETWORK.RINKEBY,
+  // $FlowFixMe
+  5: ETHEREUM_NETWORK.GOERLI,
+  // $FlowFixMe
+  42: ETHEREUM_NETWORK.KOVAN
+};
+declare export var getEtherScanLink: (type: 'address' | 'tx', value: string) => any;
+declare export var getInfuraUrl: () => any; // With some wallets from web3connect you have to use their provider instance only for signing
+// And our own one to fetch data
+
+export const web3ReadOnly = process.env.NODE_ENV !== 'test' ? new Web3(new Web3.providers.HttpProvider(getInfuraUrl())) : new Web3(window.web3.currentProvider);
+let web3 = web3ReadOnly;
+declare export var getWeb3: () => any;
+declare export var resetWeb3: () => any;
+declare export var getAccountFrom: (web3Provider: any) => Promise<string | null>;
+declare export var getNetworkIdFrom: (web3Provider: any) => any;
+declare var isHardwareWallet: (walletName: $Values<typeof WALLET_PROVIDER>) => any;
+declare var isSmartContractWallet: (web3Provider: any, account: any) => any;
+declare export var getProviderInfo: (web3Provider: any, providerName: string) => Promise<ProviderProps>;
+declare export var getAddressFromENS: (name: string) => any;
+declare export var setWeb3: (provider: Object) => any;
+declare export var getBalanceInEtherOf: (safeAddress: string) => any;

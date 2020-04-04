@@ -1,0 +1,13 @@
+// @flow
+import { useSelector } from 'react-redux';
+import type { AddressBook, AddressBookProps } from '~/logic/addressBook/model/addressBook';
+import { getAddressBook } from '~/logic/addressBook/store/selectors';
+import type { Owner } from '~/routes/safe/store/models/owner';
+import { loadFromStorage, saveToStorage } from '~/utils/storage';
+const ADDRESS_BOOK_STORAGE_KEY = 'ADDRESS_BOOK_STORAGE_KEY';
+declare export var getAddressBookFromStorage: () => Promise<AddressBookProps | []>;
+declare export var saveAddressBook: (addressBook: AddressBook) => any;
+declare export var getAddressesListFromAdbk: (addressBook: AddressBook) => any;
+declare var getNameFromAdbk: (addressBook: AddressBook, userAddress: string) => string | null;
+declare export var getNameFromAddressBook: (userAddress: string) => string | null;
+declare export var getOwnersWithNameFromAddressBook: (addressBook: AddressBook, ownerList: List<Owner>) => any;

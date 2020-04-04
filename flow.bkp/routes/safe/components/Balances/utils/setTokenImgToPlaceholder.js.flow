@@ -1,0 +1,3 @@
+// @flow
+import TokenPlaceholder from '~/routes/safe/components/Balances/assets/token_placeholder.svg';
+declare export var setImageToPlaceholder: (e: any) => any;

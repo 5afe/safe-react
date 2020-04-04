@@ -1,0 +1,36 @@
+// @flow
+import { BigNumber } from 'bignumber.js';
+import { format, getTime, parseISO } from 'date-fns';
+import { List, Map } from 'immutable';
+import React from 'react';
+import TxType from './TxType';
+import { type Column } from '~/components/Table/TableHead';
+import { type SortRow, buildOrderFieldFrom } from '~/components/Table/sorting';
+import { getWeb3 } from '~/logic/wallets/getWeb3';
+import { INCOMING_TX_TYPES, type IncomingTransaction } from '~/routes/safe/store/models/incomingTransaction';
+import { type Transaction } from '~/routes/safe/store/models/transaction';
+export const TX_TABLE_ID = 'id';
+export const TX_TABLE_TYPE_ID = 'type';
+export const TX_TABLE_DATE_ID = 'date';
+export const TX_TABLE_AMOUNT_ID = 'amount';
+export const TX_TABLE_STATUS_ID = 'status';
+export const TX_TABLE_RAW_TX_ID = 'tx';
+export const TX_TABLE_RAW_CANCEL_TX_ID = 'cancelTx';
+export const TX_TABLE_EXPAND_ICON = 'expand';
+type TxData = {
+  id: ?number,
+  type: React.ReactNode,
+  date: string,
+  dateOrder?: number,
+  amount: number | string,
+  tx: Transaction | IncomingTransaction,
+  status?: string,
+};
+declare export var formatDate: (date: string) => string;
+declare export var getIncomingTxAmount: (tx: IncomingTransaction) => any;
+declare export var getTxAmount: (tx: Transaction) => any;
+export type TransactionRow = SortRow<TxData>;
+declare var getIncomingTxTableData: (tx: IncomingTransaction) => TransactionRow;
+declare var getTransactionTableData: (tx: Transaction, cancelTx: ?Transaction) => TransactionRow;
+declare export var getTxTableData: (transactions: List<Transaction | IncomingTransaction>, cancelTxs: List<Transaction>) => List<TransactionRow>;
+declare export var generateColumns: () => any;

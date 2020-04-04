@@ -1,0 +1,9 @@
+// @flow
+import type { Dispatch as ReduxDispatch } from 'redux';
+import fetchCollectibles from '~/logic/collectibles/store/actions/fetchCollectibles';
+import { nftAssetsSelector } from '~/logic/collectibles/store/selectors';
+import updateActiveAssets from '~/routes/safe/store/actions/updateActiveAssets';
+import { safeActiveAssetsSelectorBySafe, safeBlacklistedAssetsSelectorBySafe, safesMapSelector } from '~/routes/safe/store/selectors';
+import { type GetState, type GlobalState } from '~/store';
+declare var activateAssetsByBalance: (safeAddress: string) => any;
+export default activateAssetsByBalance;

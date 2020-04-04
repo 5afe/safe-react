@@ -1,0 +1,7 @@
+// @flow
+import OpenSea from '~/logic/collectibles/sources/OpenSea';
+import mockedOpenSea from '~/logic/collectibles/sources/mocked_opensea';
+declare class MockedOpenSea extends OpenSea {
+  _fetch: any
+}
+export default MockedOpenSea;

@@ -1,0 +1,23 @@
+// @flow
+import { RateLimit } from 'async-sema';
+import { ETHEREUM_NETWORK } from '~/logic/wallets/getWeb3';
+import type { CollectibleMetadataSource, CollectiblesInfo, NFTAsset, NFTAssets, NFTToken, OpenSeaAsset } from '~/routes/safe/components/Balances/Collectibles/types';
+import NFTIcon from '~/routes/safe/components/Balances/assets/nft_icon.png';
+import { OPENSEA_API_KEY } from '~/utils/constants';
+declare class OpenSea implements CollectibleMetadataSource {
+  _rateLimit: any,
+  _endpointsUrls: {
+    [key: string]: string
+  },
+  _fetch: any,
+  constructor(options: {
+    rps: number
+  }): any,
+  static extractAssets(assets: OpenSeaAsset[]): NFTAssets,
+  static extractTokens(assets: OpenSeaAsset[]): NFTToken[],
+  static extractCollectiblesInfo(assetResponseJson: {
+    assets: OpenSeaAsset[]
+  }): CollectiblesInfo,
+  fetchAllUserCollectiblesByCategoryAsync(safeAddress: string, network: string): any,
+}
+export default OpenSea;

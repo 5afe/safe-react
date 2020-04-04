@@ -1,0 +1,13 @@
+// @flow
+import { List } from 'immutable';
+export const FIXED = 'fixed';
+type Fixed = {
+  fixed?: boolean
+};
+export type SortRow<T> = T & Fixed;
+declare export var buildOrderFieldFrom: (attr: string) => any;
+declare var desc: (a: Object, b: Object, orderBy: string, orderProp: boolean) => any; // eslint-disable-next-line
+
+declare export var stableSort: (dataArray: List<any>, cmp: any, fixed: boolean) => List<any>;
+export type Order = 'asc' | 'desc';
+declare export var getSorting: (order: Order, orderBy: string, orderProp: boolean) => any;

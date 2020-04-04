@@ -1,0 +1,3 @@
+// @flow
+declare function transactionDataCheck(): any;
+export default transactionDataCheck;

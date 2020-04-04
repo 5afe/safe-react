@@ -1,0 +1,6 @@
+// @flow
+import type { CurrentSession, CurrentSessionProps } from '~/logic/currentSession/store/model/currentSession';
+import { loadFromStorage, saveToStorage } from '~/utils/storage';
+const CURRENT_SESSION_STORAGE_KEY = 'CURRENT_SESSION';
+declare export var getCurrentSessionFromStorage: () => Promise<CurrentSessionProps | *>;
+declare export var saveCurrentSessionToStorage: (currentSession: CurrentSession) => Promise<*>;

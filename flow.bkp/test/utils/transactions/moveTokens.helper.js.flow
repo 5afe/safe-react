@@ -1,0 +1,9 @@
+// @flow
+import * as React from 'react';
+import { Map } from 'immutable';
+import { checkMinedTx, checkPendingTx } from '~/test/builder/safe.dom.utils';
+import { makeToken, type Token } from '~/logic/tokens/store/model/token';
+import addTokens from '~/logic/tokens/store/actions/saveTokens';
+declare export var dispatchAddTokenToList: (store: Store, tokenAddress: string) => any;
+declare export var checkMinedMoveTokensTx: (Transaction: React.Component<any, any>, name: string) => any;
+declare export var checkPendingMoveTokensTx: (Transaction: React.Component<any, any>, safeThreshold: number, name: string, statusses: string[]) => any;

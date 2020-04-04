@@ -1,0 +1,4 @@
+// @flow
+import { getIncomingTxServiceUriTo, getTxServiceHost } from '~/config';
+import { getWeb3 } from '~/logic/wallets/getWeb3';
+declare export var buildIncomingTxServiceUrl: (safeAddress: string) => any;

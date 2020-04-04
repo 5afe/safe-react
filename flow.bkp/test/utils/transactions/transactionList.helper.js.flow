@@ -1,0 +1,12 @@
+// @flow
+import { fireEvent } from '@testing-library/react';
+import { sleep } from '~/utils/timer';
+import { shortVersionOf } from '~/logic/wallets/ethAddresses';
+import { TRANSACTIONS_TAB_BTN_TEST_ID } from '~/routes/safe/components/Layout';
+import { TRANSACTION_ROW_TEST_ID } from '~/routes/safe/components/Transactions/TxsTable';
+import { TRANSACTIONS_DESC_ADD_OWNER_TEST_ID, TRANSACTIONS_DESC_REMOVE_OWNER_TEST_ID, TRANSACTIONS_DESC_SEND_TEST_ID } from '~/routes/safe/components/Transactions/TxsTable/ExpandedTx/TxDescription';
+declare export var getLastTransaction: (SafeDom: React.Component<any, any>) => any;
+declare export var checkRegisteredTxSend: (SafeDom: React.Component<any, any>, ethAmount: number | string, symbol: string, ethAddress: string) => any;
+declare export var checkRegisteredTxAddOwner: (SafeDom: React.Component<any, any>, ownerAddress: string) => any;
+declare export var checkRegisteredTxRemoveOwner: (SafeDom: React.Component<any, any>, ownerAddress: string) => any;
+declare export var checkRegisteredTxReplaceOwner: (SafeDom: React.Component<any, any>, oldOwnerAddress: string, newOwnerAddress: string) => any;

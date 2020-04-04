@@ -1,0 +1,17 @@
+// @flow
+import contract from 'truffle-contract';
+import { getBalanceInEtherOf, getWeb3 } from '~/logic/wallets/getWeb3';
+import { ensureOnce } from '~/utils/singleton';
+import { toNative } from '~/logic/wallets/tokens';
+import TokenOMG from '../../../build/contracts/TokenOMG';
+import TokenRDN from '../../../build/contracts/TokenRDN';
+import Token6Decimals from '../../../build/contracts/Token6Decimals.json';
+declare export var sendEtherTo: (address: string, eth: string, fromAccountIndex: number) => any;
+declare export var checkBalanceOf: (addressToTest: string, value: string) => any;
+declare var createTokenOMGContract: (web3: any, creator: string) => any;
+declare var createTokenRDNContract: (web3: any, creator: string) => any;
+declare var create6DecimalsTokenContract: (web3: any, creator: string) => any;
+export const getFirstTokenContract = ensureOnce(createTokenOMGContract);
+export const getSecondTokenContract = ensureOnce(createTokenRDNContract);
+export const get6DecimalsTokenContract = ensureOnce(create6DecimalsTokenContract);
+declare export var sendTokenTo: (safe: string, value: string, tokenContract?: any) => any;

@@ -1,0 +1,9 @@
+// @flow
+import * as React from 'react';
+type Props = {
+  children: React.Node
+};
+declare class Bold extends React.PureComponent<Props> {
+  render(): any
+}
+export default Bold;

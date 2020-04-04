@@ -1,0 +1,4 @@
+// @flow
+declare export var upperFirst: (value: string) => any;
+type Value = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'center' | 'end' | 'start' | number | boolean;
+declare export var capitalize: (value: Value, prefix?: string) => any;
