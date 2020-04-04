@@ -1,5 +1,4 @@
-// 
-import 'babel-polyfill'
+
 import { BigNumber } from 'bignumber.js'
 import React from 'react'
 import ReactDOM from 'react-dom'

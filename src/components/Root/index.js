@@ -1,6 +1,3 @@
-// 
-import 'babel-polyfill'
-
 import { MuiThemeProvider } from '@material-ui/core/styles'
 import { ConnectedRouter } from 'connected-react-router'
 import React, { Suspense } from 'react'
