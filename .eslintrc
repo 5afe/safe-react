@@ -1,13 +1,11 @@
 {
   "settings": {
     "react": {
-      "flowVersion": "0.112.0",
       "pragma": "React",
       "version": "16.12.0"
     },
     "import/extensions": [".js", ".jsx"]
   },
-  "parser": "babel-eslint",
   "plugins": ["react", "import", "jsx-a11y", "sort-destructure-keys", "prettier"],
   "extends": [
     "eslint:recommended",
