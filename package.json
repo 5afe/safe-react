@@ -29,7 +29,7 @@
     "start-mainnet": "REACT_APP_NETWORK=mainnet yarn start",
     "test": "NODE_ENV=test && node scripts/test.js --env=jsdom"
   },
-  "husky": {
+  "Skiphusky": {
     "hooks": {
       "pre-commit": "lint-staged --allow-empty"
     }
