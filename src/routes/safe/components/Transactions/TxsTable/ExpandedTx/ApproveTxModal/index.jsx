@@ -78,7 +78,7 @@ const ApproveTxModal = ({
   const dispatch = useDispatch()
   const userAddress = useSelector(userAccountSelector)
   const threshold = useSelector(safeThresholdSelector)
-  const address = useSelector(safeParamAddressFromStateSelector)
+  const safeAddress = useSelector(safeParamAddressFromStateSelector)
   const [approveAndExecute, setApproveAndExecute] = useState<boolean>(canExecute)
   const [gasCosts, setGasCosts] = useState<string>('< 0.001')
   const { description, title } = getModalTitleAndDescription(thresholdReached, isCancelTx)
@@ -93,7 +93,7 @@ const ApproveTxModal = ({
       const { fromWei, toBN } = web3.utils
 
       const estimatedGasCosts = await estimateTxGasCosts(
-        address,
+        safeAddress,
         tx.recipient,
         tx.data,
         tx,
@@ -118,7 +118,7 @@ const ApproveTxModal = ({
   const approveTx = () => {
     dispatch(
       processTransaction({
-        address,
+        safeAddress,
         tx,
         userAddress,
         notifiedTransaction: TX_NOTIFICATION_TYPES.CONFIRMATION_TX,
