@@ -3,8 +3,8 @@ import { TextFieldProps } from '@material-ui/core/TextField'
 import { withStyles } from '@material-ui/core/styles'
 import React from 'react'
 
-import Field from 'components/forms/Field'
-import TextField from 'components/forms/TextField'
+import Field from '~/components/forms/Field'
+import TextField from '~/components/forms/TextField'
 
 const styles = () => ({
   textarea: {

@@ -2,9 +2,9 @@
 
 import { Dispatch as ReduxDispatch } from 'redux'
 
-import { setCurrencySelected } from 'logic/currencyValues/store/actions/setCurrencySelected'
-import { AVAILABLE_CURRENCIES } from 'logic/currencyValues/store/model/currencyValues'
-import { saveToStorage } from 'utils/storage'
+import { setCurrencySelected } from '~/logic/currencyValues/store/actions/setCurrencySelected'
+import { AVAILABLE_CURRENCIES } from '~/logic/currencyValues/store/model/currencyValues'
+import { saveToStorage } from '~/utils/storage'
 
 export const CURRENCY_SELECTED_KEY = 'CURRENCY_SELECTED_KEY'
 

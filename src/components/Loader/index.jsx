@@ -2,7 +2,7 @@
 import CircularProgress from '@material-ui/core/CircularProgress'
 import * as React from 'react'
 
-import Page from 'components/layout/Page'
+import Page from '~/components/layout/Page'
 
 const centerStyle = {
   margin: 'auto 0',

@@ -1,17 +1,17 @@
 // 
 import { List } from 'immutable'
 
-import { getGnosisSafeInstanceAt } from 'logic/contracts/safeContracts'
-import { getLocalSafe, getSafeName } from 'logic/safe/utils'
-import { enabledFeatures, safeNeedsUpdate } from 'logic/safe/utils/safeVersion'
-import { sameAddress } from 'logic/wallets/ethAddresses'
-import { getBalanceInEtherOf, getWeb3 } from 'logic/wallets/getWeb3'
-import addSafe from 'routes/safe/store/actions/addSafe'
-import addSafeOwner from 'routes/safe/store/actions/addSafeOwner'
-import removeSafeOwner from 'routes/safe/store/actions/removeSafeOwner'
-import updateSafeThreshold from 'routes/safe/store/actions/updateSafeThreshold'
-import { makeOwner } from 'routes/safe/store/models/owner'
-import { } from 'store/index'
+import { getGnosisSafeInstanceAt } from '~/logic/contracts/safeContracts'
+import { getLocalSafe, getSafeName } from '~/logic/safe/utils'
+import { enabledFeatures, safeNeedsUpdate } from '~/logic/safe/utils/safeVersion'
+import { sameAddress } from '~/logic/wallets/ethAddresses'
+import { getBalanceInEtherOf, getWeb3 } from '~/logic/wallets/getWeb3'
+import addSafe from '~/routes/safe/store/actions/addSafe'
+import addSafeOwner from '~/routes/safe/store/actions/addSafeOwner'
+import removeSafeOwner from '~/routes/safe/store/actions/removeSafeOwner'
+import updateSafeThreshold from '~/routes/safe/store/actions/updateSafeThreshold'
+import { makeOwner } from '~/routes/safe/store/models/owner'
+import { } from '~/store/index'
 
 const buildOwnersFrom = (
   safeOwners,

@@ -1,4 +1,4 @@
-import { getNewTxNonce, shouldExecuteTransaction } from 'routes/safe/store/actions/utils'
+import { getNewTxNonce, shouldExecuteTransaction } from '~/routes/safe/store/actions/utils'
 
 describe('Store actions utils > getNewTxNonce', () => {
   it(`should return txNonce if it's a valid value`, async () => {

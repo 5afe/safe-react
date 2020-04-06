@@ -1,5 +1,5 @@
 // 
-import { background, error, lg, md, sm } from 'theme/variables'
+import { background, error, lg, md, sm } from '~/theme/variables'
 
 export const styles = () => ({
   heading: {

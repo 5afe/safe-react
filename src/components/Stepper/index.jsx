@@ -8,9 +8,9 @@ import * as React from 'react'
 
 import Controls from './Controls'
 
-import GnoForm from 'components/forms/GnoForm'
-import Hairline from 'components/layout/Hairline'
-import { history } from 'store'
+import GnoForm from '~/components/forms/GnoForm'
+import Hairline from '~/components/layout/Hairline'
+import { history } from '~/store'
 
 const { useEffect, useState } = React
 

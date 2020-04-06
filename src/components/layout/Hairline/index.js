@@ -1,8 +1,8 @@
 // 
 import * as React from 'react'
 
-import { getSize } from 'theme/size'
-import { border } from 'theme/variables'
+import { getSize } from '~/theme/size'
+import { border } from '~/theme/variables'
 
 const calculateStyleFrom = (color, margin) => ({
   width: '100%',

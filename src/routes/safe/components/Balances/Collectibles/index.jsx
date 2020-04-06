@@ -6,11 +6,11 @@ import { useSelector } from 'react-redux'
 
 import Item from './components/Item'
 
-import Paragraph from 'components/layout/Paragraph'
-import { activeNftAssetsListSelector, nftTokensSelector } from 'logic/collectibles/store/selectors'
-import SendModal from 'routes/safe/components/Balances/SendModal'
-import { safeSelector } from 'routes/safe/store/selectors'
-import { fontColor, lg, screenSm, screenXs } from 'theme/variables'
+import Paragraph from '~/components/layout/Paragraph'
+import { activeNftAssetsListSelector, nftTokensSelector } from '~/logic/collectibles/store/selectors'
+import SendModal from '~/routes/safe/components/Balances/SendModal'
+import { safeSelector } from '~/routes/safe/store/selectors'
+import { fontColor, lg, screenSm, screenXs } from '~/theme/variables'
 
 const useStyles = makeStyles({
   cardInner: {

@@ -1,7 +1,7 @@
 // 
 import axios from 'axios'
 
-import { buildTxServiceUrl } from 'logic/safe/transactions/txHistory'
+import { buildTxServiceUrl } from '~/logic/safe/transactions/txHistory'
 
 export const getLastTx = async (safeAddress) => {
   try {

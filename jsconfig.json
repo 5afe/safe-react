@@ -1,0 +1,18 @@
+{
+  "compilerOptions": {
+    "target": "es2017",
+    "allowSyntheticDefaultImports": false,
+    "baseUrl": "./",
+    "paths": {
+      "~/*":["src/*"],
+      "@/*":["safe-contracts/build/contracts"]
+    }
+  },
+  "exclude": [
+    "node_modules",
+    "build_webpack",
+    "config",
+    "public",
+    "scripts"
+  ]
+}

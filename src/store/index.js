@@ -4,37 +4,37 @@ import { createHashHistory } from 'history'
 import { applyMiddleware, combineReducers, compose, createStore } from 'redux'
 import thunk from 'redux-thunk'
 
-import addressBookMiddleware from 'logic/addressBook/store/middleware/addressBookMiddleware'
-import addressBook, { ADDRESS_BOOK_REDUCER_ID } from 'logic/addressBook/store/reducer/addressBook'
+import addressBookMiddleware from '~/logic/addressBook/store/middleware/addressBookMiddleware'
+import addressBook, { ADDRESS_BOOK_REDUCER_ID } from '~/logic/addressBook/store/reducer/addressBook'
 import {
   NFT_ASSETS_REDUCER_ID,
   NFT_TOKENS_REDUCER_ID,
   nftAssetReducer,
   nftTokensReducer,
-} from 'logic/collectibles/store/reducer/collectibles'
-import cookies, { COOKIES_REDUCER_ID } from 'logic/cookies/store/reducer/cookies'
-import currencyValues, { CURRENCY_VALUES_KEY } from 'logic/currencyValues/store/reducer/currencyValues'
+} from '~/logic/collectibles/store/reducer/collectibles'
+import cookies, { COOKIES_REDUCER_ID } from '~/logic/cookies/store/reducer/cookies'
+import currencyValues, { CURRENCY_VALUES_KEY } from '~/logic/currencyValues/store/reducer/currencyValues'
 import currentSession, {
   CURRENT_SESSION_REDUCER_ID,
-} from 'logic/currentSession/store/reducer/currentSession'
+} from '~/logic/currentSession/store/reducer/currentSession'
 import notifications, {
   NOTIFICATIONS_REDUCER_ID,
-} from 'logic/notifications/store/reducer/notifications'
-import tokens, { TOKEN_REDUCER_ID, } from 'logic/tokens/store/reducer/tokens'
-import providerWatcher from 'logic/wallets/store/middlewares/providerWatcher'
-import provider, { PROVIDER_REDUCER_ID, } from 'logic/wallets/store/reducer/provider'
-import notificationsMiddleware from 'routes/safe/store/middleware/notificationsMiddleware'
-import safeStorage from 'routes/safe/store/middleware/safeStorage'
+} from '~/logic/notifications/store/reducer/notifications'
+import tokens, { TOKEN_REDUCER_ID, } from '~/logic/tokens/store/reducer/tokens'
+import providerWatcher from '~/logic/wallets/store/middlewares/providerWatcher'
+import provider, { PROVIDER_REDUCER_ID, } from '~/logic/wallets/store/reducer/provider'
+import notificationsMiddleware from '~/routes/safe/store/middleware/notificationsMiddleware'
+import safeStorage from '~/routes/safe/store/middleware/safeStorage'
 import cancellationTransactions, {
   CANCELLATION_TRANSACTIONS_REDUCER_ID,
-} from 'routes/safe/store/reducer/cancellationTransactions'
+} from '~/routes/safe/store/reducer/cancellationTransactions'
 import incomingTransactions, {
   INCOMING_TRANSACTIONS_REDUCER_ID,
-} from 'routes/safe/store/reducer/incomingTransactions'
-import safe, { SAFE_REDUCER_ID, } from 'routes/safe/store/reducer/safe'
+} from '~/routes/safe/store/reducer/incomingTransactions'
+import safe, { SAFE_REDUCER_ID, } from '~/routes/safe/store/reducer/safe'
 import transactions, {
   TRANSACTIONS_REDUCER_ID,
-} from 'routes/safe/store/reducer/transactions'
+} from '~/routes/safe/store/reducer/transactions'
 
 export const history = createHashHistory({ hashType: 'slash' })
 

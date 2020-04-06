@@ -9,9 +9,9 @@ import { push } from 'connected-react-router'
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
-import { SAFELIST_ADDRESS } from 'routes/routes'
-import { safeParamAddressFromStateSelector } from 'routes/safe/store/selectors'
-import { xs } from 'theme/variables'
+import { SAFELIST_ADDRESS } from '~/routes/routes'
+import { safeParamAddressFromStateSelector } from '~/routes/safe/store/selectors'
+import { xs } from '~/theme/variables'
 
 const useStyles = makeStyles({
   container: {

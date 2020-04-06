@@ -2,25 +2,25 @@
 import { push } from 'connected-react-router'
 import semverSatisfies from 'semver/functions/satisfies'
 
-import { onboardUser } from 'components/ConnectButton'
-import { getGnosisSafeInstanceAt } from 'logic/contracts/safeContracts'
-import { getNotificationsFromTxType, showSnackbar } from 'logic/notifications'
+import { onboardUser } from '~/components/ConnectButton'
+import { getGnosisSafeInstanceAt } from '~/logic/contracts/safeContracts'
+import { getNotificationsFromTxType, showSnackbar } from '~/logic/notifications'
 import {
   CALL,
   getApprovalTransaction,
   getExecutionTransaction,
   saveTxToHistory,
-} from 'logic/safe/transactions'
-import { SAFE_VERSION_FOR_OFFCHAIN_SIGNATURES, tryOffchainSigning } from 'logic/safe/transactions/offchainSigner'
-import { getCurrentSafeVersion } from 'logic/safe/utils/safeVersion'
-import { ZERO_ADDRESS } from 'logic/wallets/ethAddresses'
-import { EMPTY_DATA } from 'logic/wallets/ethTransactions'
-import { providerSelector } from 'logic/wallets/store/selectors'
-import { SAFELIST_ADDRESS } from 'routes/routes'
-import fetchTransactions from 'routes/safe/store/actions/fetchTransactions'
-import { getLastTx, getNewTxNonce, shouldExecuteTransaction } from 'routes/safe/store/actions/utils'
-import { } from 'store'
-import { getErrorMessage } from 'test/utils/ethereumErrors'
+} from '~/logic/safe/transactions'
+import { SAFE_VERSION_FOR_OFFCHAIN_SIGNATURES, tryOffchainSigning } from '~/logic/safe/transactions/offchainSigner'
+import { getCurrentSafeVersion } from '~/logic/safe/utils/safeVersion'
+import { ZERO_ADDRESS } from '~/logic/wallets/ethAddresses'
+import { EMPTY_DATA } from '~/logic/wallets/ethTransactions'
+import { providerSelector } from '~/logic/wallets/store/selectors'
+import { SAFELIST_ADDRESS } from '~/routes/routes'
+import fetchTransactions from '~/routes/safe/store/actions/fetchTransactions'
+import { getLastTx, getNewTxNonce, shouldExecuteTransaction } from '~/routes/safe/store/actions/utils'
+import { } from '~/store'
+import { getErrorMessage } from '~/test/utils/ethereumErrors'
 
 
 const createTransaction = ({

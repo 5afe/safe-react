@@ -1,7 +1,7 @@
 // 
 import { handleActions } from 'redux-actions'
 
-import { ADD_NFT_ASSETS, ADD_NFT_TOKENS } from 'logic/collectibles/store/actions/addCollectibles'
+import { ADD_NFT_ASSETS, ADD_NFT_TOKENS } from '~/logic/collectibles/store/actions/addCollectibles'
 
 export const NFT_ASSETS_REDUCER_ID = 'nftAssets'
 export const NFT_TOKENS_REDUCER_ID = 'nftTokens'

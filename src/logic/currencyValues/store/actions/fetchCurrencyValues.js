@@ -1,13 +1,13 @@
 // 
 import { List } from 'immutable'
 
-import fetchTokenCurrenciesBalances from 'logic/currencyValues/api/fetchTokenCurrenciesBalances'
-import fetchCurrencySelectedValue from 'logic/currencyValues/store/actions/fetchCurrencySelectedValue'
-import { CURRENCY_SELECTED_KEY } from 'logic/currencyValues/store/actions/saveCurrencySelected'
-import { setCurrencyBalances } from 'logic/currencyValues/store/actions/setCurrencyBalances'
-import { setCurrencySelected } from 'logic/currencyValues/store/actions/setCurrencySelected'
-import { AVAILABLE_CURRENCIES, makeBalanceCurrency } from 'logic/currencyValues/store/model/currencyValues'
-import { loadFromStorage } from 'utils/storage'
+import fetchTokenCurrenciesBalances from '~/logic/currencyValues/api/fetchTokenCurrenciesBalances'
+import fetchCurrencySelectedValue from '~/logic/currencyValues/store/actions/fetchCurrencySelectedValue'
+import { CURRENCY_SELECTED_KEY } from '~/logic/currencyValues/store/actions/saveCurrencySelected'
+import { setCurrencyBalances } from '~/logic/currencyValues/store/actions/setCurrencyBalances'
+import { setCurrencySelected } from '~/logic/currencyValues/store/actions/setCurrencySelected'
+import { AVAILABLE_CURRENCIES, makeBalanceCurrency } from '~/logic/currencyValues/store/model/currencyValues'
+import { loadFromStorage } from '~/utils/storage'
 
 export const fetchCurrencyValues = (safeAddress) => async (dispatch) => {
   try {

@@ -1,5 +1,5 @@
 // 
-import { md, screenSm, secondary, xs } from 'theme/variables'
+import { md, screenSm, secondary, xs } from '~/theme/variables'
 
 export const styles = () => ({
   controls: {

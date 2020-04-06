@@ -3,11 +3,11 @@ import ReactGA from 'react-ga'
 
 import addProvider from './addProvider'
 
-import { getNetwork } from 'config'
-import { NOTIFICATIONS, enhanceSnackbarForAction } from 'logic/notifications'
-import enqueueSnackbar from 'logic/notifications/store/actions/enqueueSnackbar'
-import { ETHEREUM_NETWORK, ETHEREUM_NETWORK_IDS, getProviderInfo, getWeb3 } from 'logic/wallets/getWeb3'
-import { makeProvider } from 'logic/wallets/store/model/provider'
+import { getNetwork } from '~/config'
+import { NOTIFICATIONS, enhanceSnackbarForAction } from '~/logic/notifications'
+import enqueueSnackbar from '~/logic/notifications/store/actions/enqueueSnackbar'
+import { ETHEREUM_NETWORK, ETHEREUM_NETWORK_IDS, getProviderInfo, getWeb3 } from '~/logic/wallets/getWeb3'
+import { makeProvider } from '~/logic/wallets/store/model/provider'
 
 export const processProviderResponse = (dispatch, provider) => {
   const walletRecord = makeProvider(provider)

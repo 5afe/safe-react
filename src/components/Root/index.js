@@ -7,9 +7,9 @@ import { Provider } from 'react-redux'
 import Loader from '../Loader'
 import PageFrame from '../layout/PageFrame'
 
-import AppRoutes from 'routes'
-import { history, store } from 'store'
-import theme from 'theme/mui'
+import AppRoutes from '~/routes'
+import { history, store } from '~/store'
+import theme from '~/theme/mui'
 
 import './index.scss'
 import './OnboardCustom.scss'

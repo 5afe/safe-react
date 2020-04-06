@@ -6,9 +6,9 @@ import React, { useState } from 'react'
 
 import CopyIcon from './copy.svg'
 
-import Img from 'components/layout/Img'
-import { xs } from 'theme/variables'
-import { copyToClipboard } from 'utils/clipboard'
+import Img from '~/components/layout/Img'
+import { xs } from '~/theme/variables'
+import { copyToClipboard } from '~/utils/clipboard'
 
 const useStyles = makeStyles({
   container: {

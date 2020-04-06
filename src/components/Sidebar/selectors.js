@@ -2,9 +2,9 @@
 import { List } from 'immutable'
 import { createSelector } from 'reselect'
 
-import { } from 'routes/safe/store/models/safe'
-import { safesListSelector } from 'routes/safe/store/selectors'
-import { } from 'store/index'
+import { } from '~/routes/safe/store/models/safe'
+import { safesListSelector } from '~/routes/safe/store/selectors'
+import { } from '~/store/index'
 
 export const sortedSafeListSelector = createSelector(
   safesListSelector,

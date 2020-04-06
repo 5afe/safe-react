@@ -1,5 +1,5 @@
 // 
-import addSafe from 'routes/safe/store/actions/addSafe'
+import addSafe from '~/routes/safe/store/actions/addSafe'
 
 
 
