@@ -186,28 +186,28 @@
 }
 
 @media only screen and (min-width: #{$screenSm}px) {
-  @include col($sm);
-  @include autoWidth($sm);
+  @include col(sm);
+  @include autoWidth(sm);
 }
 
 @media only screen and (min-width: #{$screenMd}px) {
-  @include col($md);
-  @include autoWidth($md);
+  @include col(md);
+  @include autoWidth(md);
 }
 
 @media only screen and (min-width: #{$screenLg}px) {
-  @include col($lg);
-  @include autoWidth($lg);
+  @include col(lg);
+  @include autoWidth(lg);
 }
 
 @media only screen and (min-width: #{$screenSm}px) {
-  @include row($sm);
+  @include row(Sm);
 }
 
 @media only screen and (min-width: #{$screenMd}px) {
-  @include row($md);
+  @include row(Md);
 }
 
 @media only screen and (min-width: #{$screenLg}px) {
-  @include row($lg);
+  @include row(Lg);
 }
