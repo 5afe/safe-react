@@ -79,7 +79,7 @@ const SafeList = ({ currentSafe, defaultSafe, onSafeClick, safes, setDefaultSafe
 
   return (
     <MuiList className={classes.list}>
-      {safes.map(safe => (
+      {safes.map((safe) => (
         <React.Fragment key={safe.address}>
           <Link
             data-testid={SIDEBAR_SAFELIST_ROW_TESTID}
@@ -113,7 +113,7 @@ const SafeList = ({ currentSafe, defaultSafe, onSafeClick, safes, setDefaultSafe
               ) : (
                 <ButtonLink
                   className={classes.makeDefaultBtn}
-                  onClick={e => {
+                  onClick={(e) => {
                     e.preventDefault()
                     e.stopPropagation()
 

@@ -34,8 +34,8 @@ const getTxStatus = (tx: Transaction, userAddress: string, safe: Safe): Transact
   } else if (!tx.confirmations.size) {
     txStatus = 'pending'
   } else {
-    const userConfirmed = tx.confirmations.filter(conf => conf.owner.address === userAddress).size === 1
-    const userIsSafeOwner = safe.owners.filter(owner => owner.address === userAddress).size === 1
+    const userConfirmed = tx.confirmations.filter((conf) => conf.owner.address === userAddress).size === 1
+    const userIsSafeOwner = safe.owners.filter((owner) => owner.address === userAddress).size === 1
     txStatus = !userConfirmed && userIsSafeOwner ? 'awaiting_your_confirmation' : 'awaiting_confirmations'
   }
 
@@ -69,7 +69,7 @@ export const extendedSafeTokensSelector: Selector<GlobalState, RouterProps, List
   tokensSelector,
   safeEthAsTokenSelector,
   (safeTokens: List<string>, balances: Map<string, string>, tokensList: Map<string, Token>, ethAsToken: Token) => {
-    const extendedTokens = Map().withMutations(map => {
+    const extendedTokens = Map().withMutations((map) => {
       safeTokens.forEach((tokenAddress: string) => {
         const baseToken = tokensList.get(tokenAddress)
         const tokenBalance = balances.get(tokenAddress)
@@ -105,8 +105,9 @@ export const extendedTransactionsSelector: Selector<
 
       if (!tx.isExecuted) {
         if (
-          cancellationTransactionsByNonce.get(tx.nonce) &&
-          cancellationTransactionsByNonce.get(tx.nonce).get('isExecuted')
+          (cancellationTransactionsByNonce.get(tx.nonce) &&
+            cancellationTransactionsByNonce.get(tx.nonce).get('isExecuted')) ||
+          transactions.find((safeTx) => tx.nonce === safeTx.nonce && safeTx.isExecuted)
         ) {
           extendedTx = tx.set('cancelled', true)
         }

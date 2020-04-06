@@ -14,7 +14,7 @@ export const nftTokensSelector = (state: GlobalState) => state[NFT_TOKENS_REDUCE
 export const nftAssetsListSelector: Selector<GlobalState, NFTAssets, List<NFTAssets>> = createSelector(
   nftAssetsSelector,
   (assets: NFTAssets) => {
-    return assets ? List(Object.entries(assets).map(item => item[1])) : List([])
+    return assets ? List(Object.entries(assets).map((item) => item[1])) : List([])
   },
 )
 
@@ -22,7 +22,7 @@ export const activeNftAssetsListSelector: Selector<GlobalState, NFTAssets, List<
   nftAssetsListSelector,
   safeActiveAssetsSelector,
   (assets: List<NFTAssets>, activeAssetsList: Set<string>) => {
-    return assets.filter(asset => activeAssetsList.has(asset.address))
+    return assets.filter((asset) => activeAssetsList.has(asset.address))
   },
 )
 
@@ -30,7 +30,7 @@ export const safeActiveSelectorMap: Selector<GlobalState, NFTAssets, List<NFTAss
   activeNftAssetsListSelector,
   (activeAssets: List<NFTAssets>) => {
     let assetsMap = {}
-    activeAssets.forEach(asset => {
+    activeAssets.forEach((asset) => {
       assetsMap[asset.address] = asset
     })
     return assetsMap

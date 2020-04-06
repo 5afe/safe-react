@@ -10,6 +10,7 @@ import ReviewAddOwner from './screens/Review'
 import ThresholdForm from './screens/ThresholdForm'
 
 import Modal from '~/components/Modal'
+import { addOrUpdateAddressBookEntry } from '~/logic/addressBook/store/actions/addOrUpdateAddressBookEntry'
 import { getGnosisSafeInstanceAt } from '~/logic/contracts/safeContracts'
 import { TX_NOTIFICATION_TYPES } from '~/logic/safe/transactions'
 import addSafeOwner from '~/routes/safe/store/actions/addSafeOwner'
@@ -87,7 +88,7 @@ const AddOwner = ({ classes, closeSnackbar, enqueueSnackbar, isOpen, onClose }: 
   }
 
   const ownerSubmitted = (newValues: Object) => {
-    setValues(stateValues => ({
+    setValues((stateValues) => ({
       ...stateValues,
       ownerName: newValues.ownerName,
       ownerAddress: newValues.ownerAddress,
@@ -96,7 +97,7 @@ const AddOwner = ({ classes, closeSnackbar, enqueueSnackbar, isOpen, onClose }: 
   }
 
   const thresholdSubmitted = (newValues: Object) => {
-    setValues(stateValues => ({
+    setValues((stateValues) => ({
       ...stateValues,
       threshold: newValues.threshold,
     }))
@@ -105,8 +106,12 @@ const AddOwner = ({ classes, closeSnackbar, enqueueSnackbar, isOpen, onClose }: 
 
   const onAddOwner = async () => {
     onClose()
+
     try {
       await sendAddOwner(values, safeAddress, owners, enqueueSnackbar, closeSnackbar, dispatch)
+      dispatch(
+        addOrUpdateAddressBookEntry(values.ownerAddress, { name: values.ownerName, address: values.ownerAddress }),
+      )
     } catch (error) {
       console.error('Error while removing an owner', error)
     }

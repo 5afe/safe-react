@@ -69,10 +69,10 @@ const TokenSelectField = ({ assets, initialValue }: SelectFieldProps) => {
       disabled={!assetsAddresses.length}
       initialValue={initialValue}
       name="assetAddress"
-      renderValue={assetAddress => <SelectedToken assetAddress={assetAddress} assets={assets} />}
+      renderValue={(assetAddress) => <SelectedToken assetAddress={assetAddress} assets={assets} />}
       validate={required}
     >
-      {assetsAddresses.map(assetAddress => {
+      {assetsAddresses.map((assetAddress) => {
         const asset = assets[assetAddress]
 
         return (

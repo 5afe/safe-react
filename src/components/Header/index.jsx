@@ -13,7 +13,6 @@ import selector, { type SelectorProps } from './selector'
 
 import { onboard } from '~/components/ConnectButton'
 import { NOTIFICATIONS, showSnackbar } from '~/logic/notifications'
-import { INJECTED_PROVIDERS } from '~/logic/wallets/getWeb3'
 import { loadLastUsedProvider } from '~/logic/wallets/store/middlewares/providerWatcher'
 import { type Info, logComponentStack } from '~/utils/logBoundaries'
 
@@ -38,7 +37,7 @@ class HeaderComponent extends React.PureComponent<Props, State> {
 
   async componentDidMount() {
     const lastUsedProvider = await loadLastUsedProvider()
-    if (INJECTED_PROVIDERS.includes(lastUsedProvider.toUpperCase()) || process.env.NODE_ENV === 'test') {
+    if (lastUsedProvider) {
       const hasSelectedWallet = await onboard.walletSelect(lastUsedProvider)
       if (hasSelectedWallet) {
         await onboard.walletCheck()

@@ -39,10 +39,10 @@ const ThresholdSettings = ({ classes, closeSnackbar, enqueueSnackbar }: Props) =
   const granted = useSelector(grantedSelector)
 
   const toggleModal = () => {
-    setModalOpen(prevOpen => !prevOpen)
+    setModalOpen((prevOpen) => !prevOpen)
   }
 
-  const onChangeThreshold = async newThreshold => {
+  const onChangeThreshold = async (newThreshold) => {
     const safeInstance = await getGnosisSafeInstanceAt(safeAddress)
     const txData = safeInstance.contract.methods.changeThreshold(newThreshold).encodeABI()
 

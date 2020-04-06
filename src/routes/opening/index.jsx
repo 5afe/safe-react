@@ -134,7 +134,7 @@ const SafeDeployment = ({ creationTxHash, onCancel, onRetry, onSuccess, provider
   const steps = [
     {
       id: '1',
-      label: 'Waiting fot transaction confirmation',
+      label: 'Waiting for transaction confirmation',
       description: undefined,
       instruction: 'Please confirm the Safe creation in your wallet',
       footer: null,
@@ -171,7 +171,7 @@ const SafeDeployment = ({ creationTxHash, onCancel, onRetry, onSuccess, provider
       id: '6',
       label: 'Success',
       description: 'Your Safe was created successfully',
-      instruction: 'Click Below to get started',
+      instruction: 'Click below to get started',
       footer: (
         <Button color="primary" disabled={continueButtonDisabled} onClick={navigateToSafe} variant="contained">
           Continue
@@ -180,7 +180,7 @@ const SafeDeployment = ({ creationTxHash, onCancel, onRetry, onSuccess, provider
     },
   ]
 
-  const onError = error => {
+  const onError = (error) => {
     setIntervalStarted(false)
     setWaitingSafeDeployed(false)
     setContinueButtonDisabled(false)
@@ -226,7 +226,7 @@ const SafeDeployment = ({ creationTxHash, onCancel, onRetry, onSuccess, provider
 
     setStepIndex(0)
     submittedPromise
-      .once('transactionHash', txHash => {
+      .once('transactionHash', (txHash) => {
         setSafeCreationTxHash(txHash)
         setStepIndex(1)
         setIntervalStarted(true)
@@ -249,7 +249,7 @@ const SafeDeployment = ({ creationTxHash, onCancel, onRetry, onSuccess, provider
       return
     }
 
-    const isTxMined = async txHash => {
+    const isTxMined = async (txHash) => {
       const web3 = getWeb3()
 
       const receipt = await web3.eth.getTransactionReceipt(txHash)
@@ -302,18 +302,25 @@ const SafeDeployment = ({ creationTxHash, onCancel, onRetry, onSuccess, provider
         const web3 = getWeb3()
         const receipt = await web3.eth.getTransactionReceipt(safeCreationTxHash)
 
-        // get the address for the just created safe
-        const events = web3.eth.abi.decodeLog(
-          [
-            {
-              type: 'address',
-              name: 'ProxyCreation',
-            },
-          ],
-          receipt.logs[0].data,
-          receipt.logs[0].topics,
-        )
-        const safeAddress = events[0]
+        let safeAddress
+
+        if (receipt.events) {
+          safeAddress = receipt.events.ProxyCreation.returnValues.proxy
+        } else {
+          // get the address for the just created safe
+          const events = web3.eth.abi.decodeLog(
+            [
+              {
+                type: 'address',
+                name: 'ProxyCreation',
+              },
+            ],
+            receipt.logs[0].data,
+            receipt.logs[0].topics,
+          )
+          safeAddress = events[0]
+        }
+
         setCreatedSafeAddress(safeAddress)
 
         interval = setInterval(async () => {

@@ -10,7 +10,7 @@ import { getBalanceInEtherOf, getWeb3 } from '~/logic/wallets/getWeb3'
 import addSafe from '~/routes/safe/store/actions/addSafe'
 import addSafeOwner from '~/routes/safe/store/actions/addSafeOwner'
 import removeSafeOwner from '~/routes/safe/store/actions/removeSafeOwner'
-import updateSafeThreshold from '~/routes/safe/store/actions/updateSafeThreshold'
+import updateSafe from '~/routes/safe/store/actions/updateSafe'
 import { makeOwner } from '~/routes/safe/store/models/owner'
 import type { SafeProps } from '~/routes/safe/store/models/safe'
 import { type GlobalState } from '~/store/index'
@@ -77,7 +77,7 @@ export const checkAndUpdateSafe = (safeAdd: string) => async (dispatch: ReduxDis
 
   const remoteOwners = await gnosisSafe.getOwners()
   // Converts from [ { address, ownerName} ] to address array
-  const localOwners = localSafe.owners.map(localOwner => localOwner.address)
+  const localOwners = localSafe.owners.map((localOwner) => localOwner.address)
   const localThreshold = localSafe.threshold
 
   // Updates threshold values
@@ -85,20 +85,20 @@ export const checkAndUpdateSafe = (safeAdd: string) => async (dispatch: ReduxDis
   localSafe.threshold = remoteThreshold.toNumber()
 
   if (localThreshold !== remoteThreshold.toNumber()) {
-    dispatch(updateSafeThreshold({ safeAddress, threshold: remoteThreshold.toNumber() }))
+    dispatch(updateSafe({ address: safeAddress, threshold: remoteThreshold.toNumber() }))
   }
 
   // If the remote owners does not contain a local address, we remove that local owner
-  localOwners.forEach(localAddress => {
-    const remoteOwnerIndex = remoteOwners.findIndex(remoteAddress => sameAddress(remoteAddress, localAddress))
+  localOwners.forEach((localAddress) => {
+    const remoteOwnerIndex = remoteOwners.findIndex((remoteAddress) => sameAddress(remoteAddress, localAddress))
     if (remoteOwnerIndex === -1) {
       dispatch(removeSafeOwner({ safeAddress, ownerAddress: localAddress }))
     }
   })
 
   // If the remote has an owner that we don't have locally, we add it
-  remoteOwners.forEach(remoteAddress => {
-    const localOwnerIndex = localOwners.findIndex(localAddress => sameAddress(remoteAddress, localAddress))
+  remoteOwners.forEach((remoteAddress) => {
+    const localOwnerIndex = localOwners.findIndex((localAddress) => sameAddress(remoteAddress, localAddress))
     if (localOwnerIndex === -1) {
       dispatch(
         addSafeOwner({

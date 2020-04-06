@@ -54,6 +54,7 @@ export const getApprovalTransaction = async ({
 
   try {
     const web3 = getWeb3()
+
     const contract = new web3.eth.Contract(GnosisSafeSol.abi, safeInstance.address)
 
     return contract.methods.approveHash(txHash)

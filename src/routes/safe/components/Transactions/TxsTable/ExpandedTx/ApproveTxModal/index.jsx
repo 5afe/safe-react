@@ -113,7 +113,7 @@ const ApproveTxModal = ({
     }
   }, [approveAndExecute])
 
-  const handleExecuteCheckbox = () => setApproveAndExecute(prevApproveAndExecute => !prevApproveAndExecute)
+  const handleExecuteCheckbox = () => setApproveAndExecute((prevApproveAndExecute) => !prevApproveAndExecute)
 
   const approveTx = () => {
     dispatch(

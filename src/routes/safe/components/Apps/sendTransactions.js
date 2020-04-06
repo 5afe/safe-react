@@ -29,7 +29,7 @@ const sendTransactions = (
   const encodeMultiSendCalldata = multiSend.methods
     .multiSend(
       `0x${txs
-        .map(tx =>
+        .map((tx) =>
           [
             web3.eth.abi.encodeParameter('uint8', 0).slice(-2),
             web3.eth.abi.encodeParameter('address', tx.to).slice(-40),

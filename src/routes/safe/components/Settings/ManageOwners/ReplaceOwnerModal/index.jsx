@@ -8,6 +8,7 @@ import OwnerForm from './screens/OwnerForm'
 import ReviewReplaceOwner from './screens/Review'
 
 import Modal from '~/components/Modal'
+import { addOrUpdateAddressBookEntry } from '~/logic/addressBook/store/actions/addOrUpdateAddressBookEntry'
 import { SENTINEL_ADDRESS, getGnosisSafeInstanceAt } from '~/logic/contracts/safeContracts'
 import { TX_NOTIFICATION_TYPES } from '~/logic/safe/transactions'
 import createTransaction from '~/routes/safe/store/actions/createTransaction'
@@ -99,10 +100,11 @@ const ReplaceOwner = ({ classes, closeSnackbar, enqueueSnackbar, isOpen, onClose
     setActiveScreen('reviewReplaceOwner')
   }
 
-  const onReplaceOwner = () => {
+  const onReplaceOwner = async () => {
     onClose()
+
     try {
-      sendReplaceOwner(
+      await sendReplaceOwner(
         values,
         safeAddress,
         ownerAddress,
@@ -111,6 +113,13 @@ const ReplaceOwner = ({ classes, closeSnackbar, enqueueSnackbar, isOpen, onClose
         replaceSafeOwner,
         threshold,
         dispatch,
+      )
+
+      dispatch(
+        // Needs the `address` field because we need to provide the minimum required values to ADD a new entry
+        // The reducer will update all the addressBooks stored, so we cannot decide what to do beforehand,
+        // thus, we pass the minimum required fields (name and address)
+        addOrUpdateAddressBookEntry(values.ownerAddress, { name: values.ownerName, address: values.ownerAddress }),
       )
     } catch (error) {
       console.error('Error while removing an owner', error)

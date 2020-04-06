@@ -64,10 +64,10 @@ const TokenSelectField = ({ classes, initialValue, isValid, tokens }: SelectFiel
     displayEmpty
     initialValue={initialValue}
     name="token"
-    renderValue={tokenAddress => <SelectedTokenStyled tokenAddress={tokenAddress} tokens={tokens} />}
+    renderValue={(tokenAddress) => <SelectedTokenStyled tokenAddress={tokenAddress} tokens={tokens} />}
     validate={required}
   >
-    {tokens.map(token => (
+    {tokens.map((token) => (
       <MenuItem key={token.address} value={token.address}>
         <ListItemIcon>
           <Img alt={token.name} height={28} onError={setImageToPlaceholder} src={token.logoUri} />

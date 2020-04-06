@@ -21,6 +21,7 @@ import Button from '~/components/layout/Button'
 import Hairline from '~/components/layout/Hairline'
 import Paragraph from '~/components/layout/Paragraph'
 import Row from '~/components/layout/Row'
+import { makeAddressBookEntry } from '~/logic/addressBook/model/addressBook'
 import { updateAddressBookEntry } from '~/logic/addressBook/store/actions/updateAddressBookEntry'
 import { getNotificationsFromTxType, showSnackbar } from '~/logic/notifications'
 import { TX_NOTIFICATION_TYPES } from '~/logic/safe/transactions'
@@ -52,10 +53,10 @@ const EditOwnerComponent = ({
   selectedOwnerName,
 }: Props) => {
   const dispatch = useDispatch()
-  const handleSubmit = values => {
+  const handleSubmit = (values) => {
     const { ownerName } = values
     dispatch(editSafeOwner({ safeAddress, ownerAddress, ownerName }))
-    dispatch(updateAddressBookEntry({ address: ownerAddress, name: ownerName }))
+    dispatch(updateAddressBookEntry(makeAddressBookEntry({ address: ownerAddress, name: ownerName })))
     const notification = getNotificationsFromTxType(TX_NOTIFICATION_TYPES.OWNER_NAME_CHANGE_TX)
     showSnackbar(notification.afterExecution.noMoreConfirmationsNeeded, enqueueSnackbar, closeSnackbar)
 

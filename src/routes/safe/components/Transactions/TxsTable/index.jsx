@@ -46,12 +46,12 @@ const TxsTable = ({ classes }: Props) => {
   const cancellationTransactions = useSelector(safeCancellationTransactionsSelector)
   const transactions = useSelector(extendedTransactionsSelector)
 
-  const handleTxExpand = safeTxHash => {
-    setExpandedTx(prevTx => (prevTx === safeTxHash ? null : safeTxHash))
+  const handleTxExpand = (safeTxHash) => {
+    setExpandedTx((prevTx) => (prevTx === safeTxHash ? null : safeTxHash))
   }
 
   const columns = generateColumns()
-  const autoColumns = columns.filter(c => !c.custom)
+  const autoColumns = columns.filter((c) => !c.custom)
   const filteredData = getTxTableData(transactions, cancellationTransactions)
     .sort((tx1, tx2) => {
       // First order by nonce

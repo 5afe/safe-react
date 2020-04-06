@@ -10,7 +10,7 @@ type Props = {
   address: string,
   showLinks?: boolean,
   knownAddress?: boolean,
-  userName?: boolean,
+  userName?: string,
 }
 
 const OwnerAddressTableCell = (props: Props) => {

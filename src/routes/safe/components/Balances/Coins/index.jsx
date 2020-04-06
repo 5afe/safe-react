@@ -40,7 +40,7 @@ const Coins = (props: Props) => {
   const { showReceiveFunds, showSendFunds } = props
   const classes = useStyles()
   const columns = generateColumns()
-  const autoColumns = columns.filter(c => !c.custom)
+  const autoColumns = columns.filter((c) => !c.custom)
   const currencySelected = useSelector(currentCurrencySelector)
   const activeTokens = useSelector(extendedSafeTokensSelector)
   const currencyValues = useSelector(currencyValuesListSelector)

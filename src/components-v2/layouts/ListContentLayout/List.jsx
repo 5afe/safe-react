@@ -37,7 +37,7 @@ type Props = {
 const List = ({ activeItem, classes, items, onItemClick }: Props) => {
   return (
     <Wrapper>
-      {items.map(i => (
+      {items.map((i) => (
         <Item
           className={cn(classes.menuOption, activeItem === i.id && classes.active)}
           key={i.id}
