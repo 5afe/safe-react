@@ -2,8 +2,6 @@
 import { List, Map } from 'immutable'
 import { type Selector, createSelector } from 'reselect'
 
-import type { AddressBook } from '~/logic/addressBook/model/addressBook'
-import type { BalanceCurrencyType } from '~/logic/currencyValues/store/model/currencyValues'
 import { type Token } from '~/logic/tokens/store/model/token'
 import { tokensSelector } from '~/logic/tokens/store/selectors'
 import { getEthAsToken } from '~/logic/tokens/utils/tokenHelpers'
@@ -14,7 +12,6 @@ import { type Safe } from '~/routes/safe/store/models/safe'
 import { type Transaction, type TransactionStatus } from '~/routes/safe/store/models/transaction'
 import {
   type RouterProps,
-  type SafeSelectorProps,
   safeActiveTokensSelector,
   safeBalancesSelector,
   safeCancellationTransactionsSelector,
@@ -23,22 +20,6 @@ import {
   safeTransactionsSelector,
 } from '~/routes/safe/store/selectors'
 import { type GlobalState } from '~/store'
-
-export type SelectorProps = {
-  safe: SafeSelectorProps,
-  provider: string,
-  tokens: List<Token>,
-  activeTokens: List<Token>,
-  blacklistedTokens: List<Token>,
-  userAddress: string,
-  network: string,
-  safeUrl: string,
-  currencySelected: string,
-  currencyValues: BalanceCurrencyType[],
-  transactions: List<Transaction | IncomingTransaction>,
-  cancellationTransactions: List<Transaction>,
-  addressBook: AddressBook,
-}
 
 const getTxStatus = (tx: Transaction, userAddress: string, safe: Safe): TransactionStatus => {
   let txStatus

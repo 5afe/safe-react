@@ -1,7 +1,7 @@
 // @flow
 import { List, Map, Set } from 'immutable'
 import { type Match, matchPath } from 'react-router-dom'
-import { type OutputSelector, createSelector, createStructuredSelector } from 'reselect'
+import { type OutputSelector, createSelector } from 'reselect'
 
 import { getWeb3 } from '~/logic/wallets/getWeb3'
 import { SAFELIST_ADDRESS, SAFE_PARAM_ADDRESS } from '~/routes/routes'
@@ -23,10 +23,6 @@ import { type GlobalState } from '~/store/index'
 
 export type RouterProps = {
   match: Match,
-}
-
-export type SafeProps = {
-  safeAddress: string,
 }
 
 type TransactionProps = {
@@ -342,9 +338,3 @@ export const getBlacklistedTokensAddressesForAllSafes: OutputSelector<GlobalStat
     return addresses
   },
 )
-
-export default createStructuredSelector<Object, *>({
-  safe: safeSelector,
-  tokens: safeActiveTokensSelector,
-  blacklistedTokens: safeBlacklistedTokensSelector,
-})
