@@ -13,7 +13,7 @@ import ButtonLink from '~/components/layout/ButtonLink'
 const StyledIframe = styled.iframe`
   width: 100%;
   height: 100%;
-  display: ${props => (props.shouldDisplay ? 'block' : 'none')};
+  display: ${(props) => (props.shouldDisplay ? 'block' : 'none')};
 `
 const operations = {
   SEND_TRANSACTIONS: 'sendTransactions',
@@ -53,13 +53,13 @@ function Apps({
   const [appIsLoading, setAppIsLoading] = useState(true)
   const [iframeEl, setframeEl] = useState(null)
 
-  const getSelectedApp = () => appsList.find(e => e.id === selectedApp)
+  const getSelectedApp = () => appsList.find((e) => e.id === selectedApp)
 
   const sendMessageToIframe = (messageId, data) => {
     iframeEl.contentWindow.postMessage({ messageId, data }, getSelectedApp().url)
   }
 
-  const handleIframeMessage = async data => {
+  const handleIframeMessage = async (data) => {
     if (!data || !data.messageId) {
       console.warn('iframe: message without messageId')
       return
@@ -111,7 +111,7 @@ function Apps({
     }
   }
 
-  const iframeRef = useCallback(node => {
+  const iframeRef = useCallback((node) => {
     if (node !== null) {
       setframeEl(node)
     }
@@ -191,7 +191,7 @@ function Apps({
     }
   }, [iframeEl])
 
-  const onSelectApp = appId => {
+  const onSelectApp = (appId) => {
     setAppIsLoading(true)
     setSelectedApp(appId)
   }

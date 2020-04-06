@@ -231,7 +231,7 @@ export const showSnackbar = (notification: Notification, enqueueSnackbar: Functi
   enqueueSnackbar(notification.message, {
     ...notification.options,
     // eslint-disable-next-line react/display-name
-    action: key => (
+    action: (key) => (
       <IconButton onClick={() => closeSnackbar(key)}>
         <IconClose />
       </IconButton>

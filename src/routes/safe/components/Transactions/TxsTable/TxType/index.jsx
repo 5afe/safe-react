@@ -48,7 +48,7 @@ const TxType = ({ origin, txType }: { txType: TransactionType, origin: string | 
     }
 
     getAppInfo()
-  })
+  }, [txType])
 
   if (!isThirdPartyApp) {
     return <IconText iconUrl={typeToIcon[txType]} text={typeToLabel[txType]} />

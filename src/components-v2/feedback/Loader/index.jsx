@@ -15,14 +15,10 @@ type Props = {
   centered: boolean,
 }
 
-const Loader = ({ centered, size }: Props) => (
+const Loader = ({ centered = true, size }: Props) => (
   <Wrapper centered={centered}>
     <CircularProgress size={size || 60} />
   </Wrapper>
 )
-
-Loader.defaultProps = {
-  centered: true,
-}
 
 export default Loader
