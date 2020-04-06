@@ -1,6 +1,6 @@
 // 
-import { getWeb3 } from '~/logic/wallets/getWeb3'
-import { } from '~/routes/safe/store/models/transaction'
+import { getWeb3 } from 'src/logic/wallets/getWeb3'
+import { } from 'src/routes/safe/store/models/transaction'
 
 
 const getSafeVersion = (data) => {

@@ -1,8 +1,8 @@
 // @flow
 import { type FieldValidator } from 'final-form';
 import { List } from 'immutable';
-import { sameAddress } from '~/logic/wallets/ethAddresses';
-import { getWeb3 } from '~/logic/wallets/getWeb3';
+import { sameAddress } from 'src/logic/wallets/ethAddresses';
+import { getWeb3 } from 'src/logic/wallets/getWeb3';
 declare export var simpleMemoize: (fn: Function) => any;
 type Field = boolean | string | null | typeof undefined;
 declare export var required: (value: Field) => any;

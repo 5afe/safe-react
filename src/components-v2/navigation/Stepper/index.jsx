@@ -7,7 +7,7 @@ import styled from 'styled-components'
 
 import DotStep from './DotStep'
 
-import { secondaryText as disabled, error as errorColor, primary, secondary } from '~/theme/variables'
+import { secondaryText as disabled, error as errorColor, primary, secondary } from 'src/theme/variables'
 
 const StyledStepper = styled(StepperMUI)`
   background-color: transparent;

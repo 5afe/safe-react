@@ -1,23 +1,23 @@
 // @flow
 import { fireEvent, waitForElement } from '@testing-library/react';
-import { aNewStore } from '~/store';
-import { aMinedSafe } from '~/test/builder/safe.redux.builder';
-import { renderSafeView } from '~/test/builder/safe.dom.utils';
-import { sleep } from '~/utils/timer';
+import { aNewStore } from 'src/store';
+import { aMinedSafe } from 'src/test/builder/safe.redux.builder';
+import { renderSafeView } from 'src/test/builder/safe.dom.utils';
+import { sleep } from 'src/utils/timer';
 import '@testing-library/jest-dom/extend-expect';
 import { checkRegisteredTxAddOwner, checkRegisteredTxRemoveOwner, checkRegisteredTxReplaceOwner } from './utils/transactions';
-import { SETTINGS_TAB_BTN_TEST_ID } from '~/routes/safe/components/Layout';
-import { OWNERS_SETTINGS_TAB_TEST_ID } from '~/routes/safe/components/Settings';
-import { RENAME_OWNER_BTN_TEST_ID, OWNERS_ROW_TEST_ID, REMOVE_OWNER_BTN_TEST_ID, ADD_OWNER_BTN_TEST_ID, REPLACE_OWNER_BTN_TEST_ID } from '~/routes/safe/components/Settings/ManageOwners';
-import { RENAME_OWNER_INPUT_TEST_ID, SAVE_OWNER_CHANGES_BTN_TEST_ID } from '~/routes/safe/components/Settings/ManageOwners/EditOwnerModal';
-import { REMOVE_OWNER_MODAL_NEXT_BTN_TEST_ID } from '~/routes/safe/components/Settings/ManageOwners/RemoveOwnerModal/screens/CheckOwner';
-import { REMOVE_OWNER_THRESHOLD_NEXT_BTN_TEST_ID } from '~/routes/safe/components/Settings/ManageOwners/RemoveOwnerModal/screens/ThresholdForm';
-import { REMOVE_OWNER_REVIEW_BTN_TEST_ID } from '~/routes/safe/components/Settings/ManageOwners/RemoveOwnerModal/screens/Review';
-import { ADD_OWNER_THRESHOLD_NEXT_BTN_TEST_ID } from '~/routes/safe/components/Settings/ManageOwners/AddOwnerModal/screens/ThresholdForm';
-import { ADD_OWNER_NAME_INPUT_TEST_ID, ADD_OWNER_ADDRESS_INPUT_TEST_ID, ADD_OWNER_NEXT_BTN_TEST_ID } from '~/routes/safe/components/Settings/ManageOwners/AddOwnerModal/screens/OwnerForm';
-import { ADD_OWNER_SUBMIT_BTN_TEST_ID } from '~/routes/safe/components/Settings/ManageOwners/AddOwnerModal/screens/Review';
-import { REPLACE_OWNER_NEXT_BTN_TEST_ID, REPLACE_OWNER_NAME_INPUT_TEST_ID, REPLACE_OWNER_ADDRESS_INPUT_TEST_ID } from '~/routes/safe/components/Settings/ManageOwners/ReplaceOwnerModal/screens/OwnerForm';
-import { REPLACE_OWNER_SUBMIT_BTN_TEST_ID } from '~/routes/safe/components/Settings/ManageOwners/ReplaceOwnerModal/screens/Review';
+import { SETTINGS_TAB_BTN_TEST_ID } from 'src/routes/safe/components/Layout';
+import { OWNERS_SETTINGS_TAB_TEST_ID } from 'src/routes/safe/components/Settings';
+import { RENAME_OWNER_BTN_TEST_ID, OWNERS_ROW_TEST_ID, REMOVE_OWNER_BTN_TEST_ID, ADD_OWNER_BTN_TEST_ID, REPLACE_OWNER_BTN_TEST_ID } from 'src/routes/safe/components/Settings/ManageOwners';
+import { RENAME_OWNER_INPUT_TEST_ID, SAVE_OWNER_CHANGES_BTN_TEST_ID } from 'src/routes/safe/components/Settings/ManageOwners/EditOwnerModal';
+import { REMOVE_OWNER_MODAL_NEXT_BTN_TEST_ID } from 'src/routes/safe/components/Settings/ManageOwners/RemoveOwnerModal/screens/CheckOwner';
+import { REMOVE_OWNER_THRESHOLD_NEXT_BTN_TEST_ID } from 'src/routes/safe/components/Settings/ManageOwners/RemoveOwnerModal/screens/ThresholdForm';
+import { REMOVE_OWNER_REVIEW_BTN_TEST_ID } from 'src/routes/safe/components/Settings/ManageOwners/RemoveOwnerModal/screens/Review';
+import { ADD_OWNER_THRESHOLD_NEXT_BTN_TEST_ID } from 'src/routes/safe/components/Settings/ManageOwners/AddOwnerModal/screens/ThresholdForm';
+import { ADD_OWNER_NAME_INPUT_TEST_ID, ADD_OWNER_ADDRESS_INPUT_TEST_ID, ADD_OWNER_NEXT_BTN_TEST_ID } from 'src/routes/safe/components/Settings/ManageOwners/AddOwnerModal/screens/OwnerForm';
+import { ADD_OWNER_SUBMIT_BTN_TEST_ID } from 'src/routes/safe/components/Settings/ManageOwners/AddOwnerModal/screens/Review';
+import { REPLACE_OWNER_NEXT_BTN_TEST_ID, REPLACE_OWNER_NAME_INPUT_TEST_ID, REPLACE_OWNER_ADDRESS_INPUT_TEST_ID } from 'src/routes/safe/components/Settings/ManageOwners/ReplaceOwnerModal/screens/OwnerForm';
+import { REPLACE_OWNER_SUBMIT_BTN_TEST_ID } from 'src/routes/safe/components/Settings/ManageOwners/ReplaceOwnerModal/screens/Review';
 const originalError = console.error;
 beforeAll(() => {
   console.error = (...args) => {

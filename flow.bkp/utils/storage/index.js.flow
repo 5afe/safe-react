@@ -1,6 +1,6 @@
 // @flow
 import { ImmortalStorage, IndexedDbStore, LocalStorageStore } from 'immortal-db';
-import { getNetwork } from '~/config'; // Don't use sessionStorage and cookieStorage
+import { getNetwork } from 'src/config'; // Don't use sessionStorage and cookieStorage
 // https://github.com/gruns/ImmortalDB/issues/22
 // https://github.com/gruns/ImmortalDB/issues/6
 

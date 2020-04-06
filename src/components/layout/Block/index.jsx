@@ -4,8 +4,8 @@ import * as React from 'react'
 
 import styles from './index.scss'
 
-import { } from '~/theme/size'
-import { capitalize } from '~/utils/css'
+import { } from 'src/theme/size'
+import { capitalize } from 'src/utils/css'
 
 const { PureComponent } = React
 

@@ -1,5 +1,5 @@
 // @flow
-import { fetchProvider, removeProvider } from '~/logic/wallets/store/actions';
+import { fetchProvider, removeProvider } from 'src/logic/wallets/store/actions';
 export type Actions = {
   fetchProvider: typeof fetchProvider,
   removeProvider: typeof removeProvider,

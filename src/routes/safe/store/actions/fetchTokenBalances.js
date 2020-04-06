@@ -4,13 +4,13 @@ import { List, Map } from 'immutable'
 
 import updateSafe from './updateSafe'
 
-import { getOnlyBalanceToken, getStandardTokenContract } from '~/logic/tokens/store/actions/fetchTokens'
-import { } from '~/logic/tokens/store/model/token'
-import { ETH_ADDRESS } from '~/logic/tokens/utils/tokenHelpers'
-import { sameAddress } from '~/logic/wallets/ethAddresses'
-import { ETHEREUM_NETWORK, getWeb3 } from '~/logic/wallets/getWeb3'
-import { } from '~/store/index'
-import { NETWORK } from '~/utils/constants'
+import { getOnlyBalanceToken, getStandardTokenContract } from 'src/logic/tokens/store/actions/fetchTokens'
+import { } from 'src/logic/tokens/store/model/token'
+import { ETH_ADDRESS } from 'src/logic/tokens/utils/tokenHelpers'
+import { sameAddress } from 'src/logic/wallets/ethAddresses'
+import { ETHEREUM_NETWORK, getWeb3 } from 'src/logic/wallets/getWeb3'
+import { } from 'src/store/index'
+import { NETWORK } from 'src/utils/constants'
 
 // List of all the non-standard ERC20 tokens
 const nonStandardERC20 = [

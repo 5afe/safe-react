@@ -1,4 +1,4 @@
 // @flow
 import { BigNumber } from 'bignumber.js';
-import { getWeb3 } from '~/logic/wallets/getWeb3';
+import { getWeb3 } from 'src/logic/wallets/getWeb3';
 declare export var toNative: (amt: string | number | BigNumber, decimal: number) => BigNumber;

@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
 import styled from 'styled-components';
-import { border } from '~/theme/variables';
+import { border } from 'src/theme/variables';
 type Props = {
   children: React.Node
 };

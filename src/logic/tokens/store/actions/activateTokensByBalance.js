@@ -1,15 +1,15 @@
 // 
 import { Set } from 'immutable'
 
-import fetchTokenBalanceList from '~/logic/tokens/api/fetchTokenBalanceList'
-import updateActiveTokens from '~/routes/safe/store/actions/updateActiveTokens'
-import updateSafe from '~/routes/safe/store/actions/updateSafe'
+import fetchTokenBalanceList from 'src/logic/tokens/api/fetchTokenBalanceList'
+import updateActiveTokens from 'src/routes/safe/store/actions/updateActiveTokens'
+import updateSafe from 'src/routes/safe/store/actions/updateSafe'
 import {
   safeActiveTokensSelectorBySafe,
   safeBlacklistedTokensSelectorBySafe,
   safesMapSelector,
-} from '~/routes/safe/store/selectors'
-import { } from '~/store'
+} from 'src/routes/safe/store/selectors'
+import { } from 'src/store'
 
 const activateTokensByBalance = (safeAddress) => async (
   dispatch,

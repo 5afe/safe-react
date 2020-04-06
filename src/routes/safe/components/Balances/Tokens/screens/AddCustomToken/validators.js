@@ -1,11 +1,11 @@
 // 
 import { List } from 'immutable'
 
-import { simpleMemoize } from '~/components/forms/validator'
-import { } from '~/logic/tokens/store/model/token'
-import { isAddressAToken } from '~/logic/tokens/utils/tokenHelpers'
-import { sameAddress } from '~/logic/wallets/ethAddresses'
-// import { getStandardTokenContract } from '~/logic/tokens/store/actions/fetchTokens'
+import { simpleMemoize } from 'src/components/forms/validator'
+import { } from 'src/logic/tokens/store/model/token'
+import { isAddressAToken } from 'src/logic/tokens/utils/tokenHelpers'
+import { sameAddress } from 'src/logic/wallets/ethAddresses'
+// import { getStandardTokenContract } from 'src/logic/tokens/store/actions/fetchTokens'
 
 // eslint-disable-next-line
 export const addressIsTokenContract = simpleMemoize(async (tokenAddress) => {

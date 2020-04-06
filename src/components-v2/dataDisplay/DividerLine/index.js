@@ -4,8 +4,8 @@ import styled from 'styled-components'
 
 import ArrowDown from './arrow-down.svg'
 
-import Hairline from '~/components/layout/Hairline'
-import { md, sm } from '~/theme/variables'
+import Hairline from 'src/components/layout/Hairline'
+import { md, sm } from 'src/theme/variables'
 
 const Wrapper = styled.div`
   display: flex;

@@ -1,6 +1,6 @@
 // @flow
 import { List } from 'immutable';
-import { type Confirmation } from '~/routes/safe/store/models/confirmation'; // https://docs.gnosis.io/safe/docs/docs5/#pre-validated-signatures
+import { type Confirmation } from 'src/routes/safe/store/models/confirmation'; // https://docs.gnosis.io/safe/docs/docs5/#pre-validated-signatures
 // https://github.com/gnosis/safe-contracts/blob/master/test/gnosisSafeTeamEdition.js#L26
 
 declare export var generateSignaturesFromTxConfirmations: (confirmations: List<Confirmation>, preApprovingOwner?: string) => any;

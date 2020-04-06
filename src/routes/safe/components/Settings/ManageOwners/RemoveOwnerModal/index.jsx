@@ -8,10 +8,10 @@ import CheckOwner from './screens/CheckOwner'
 import ReviewRemoveOwner from './screens/Review'
 import ThresholdForm from './screens/ThresholdForm'
 
-import Modal from '~/components/Modal'
-import { SENTINEL_ADDRESS, getGnosisSafeInstanceAt } from '~/logic/contracts/safeContracts'
-import { TX_NOTIFICATION_TYPES } from '~/logic/safe/transactions'
-import { } from '~/routes/safe/store/models/owner'
+import Modal from 'src/components/Modal'
+import { SENTINEL_ADDRESS, getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
+import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
+import { } from 'src/routes/safe/store/models/owner'
 
 const styles = () => ({
   biggerModalWindow: {

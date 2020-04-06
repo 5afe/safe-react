@@ -1,9 +1,9 @@
 // 
 import { BigNumber } from 'bignumber.js'
 
-import { getGnosisSafeInstanceAt } from '~/logic/contracts/safeContracts'
-import { EMPTY_DATA } from '~/logic/wallets/ethTransactions'
-import { getWeb3 } from '~/logic/wallets/getWeb3'
+import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
+import { EMPTY_DATA } from 'src/logic/wallets/ethTransactions'
+import { getWeb3 } from 'src/logic/wallets/getWeb3'
 
 const estimateDataGasCosts = (data) => {
   const reducer = (accumulator, currentValue) => {

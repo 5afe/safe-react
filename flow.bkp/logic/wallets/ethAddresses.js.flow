@@ -1,7 +1,7 @@
 // @flow
 import { List } from 'immutable';
-import type { Owner } from '~/routes/safe/store/models/owner';
-import type { Safe } from '~/routes/safe/store/models/safe';
+import type { Owner } from 'src/routes/safe/store/models/owner';
+import type { Safe } from 'src/routes/safe/store/models/safe';
 export const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000';
 declare export var sameAddress: (firstAddress: string, secondAddress: string) => boolean;
 declare export var shortVersionOf: (value: string, cut: number) => any;

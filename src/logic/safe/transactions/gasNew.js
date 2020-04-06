@@ -3,11 +3,11 @@ import GnosisSafeSol from '@gnosis.pm/safe-contracts/build/contracts/GnosisSafe.
 
 import { CALL } from '.'
 
-import { generateSignaturesFromTxConfirmations } from '~/logic/safe/safeTxSigner'
-import { ZERO_ADDRESS } from '~/logic/wallets/ethAddresses'
-import { calculateGasOf, calculateGasPrice } from '~/logic/wallets/ethTransactions'
-import { getAccountFrom, getWeb3 } from '~/logic/wallets/getWeb3'
-import { } from '~/routes/safe/store/models/transaction'
+import { generateSignaturesFromTxConfirmations } from 'src/logic/safe/safeTxSigner'
+import { ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
+import { calculateGasOf, calculateGasPrice } from 'src/logic/wallets/ethTransactions'
+import { getAccountFrom, getWeb3 } from 'src/logic/wallets/getWeb3'
+import { } from 'src/routes/safe/store/models/transaction'
 
 export const estimateTxGasCosts = async (
   safeAddress,

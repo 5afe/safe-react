@@ -2,10 +2,10 @@
 import { List, Set } from 'immutable';
 import type { Selector } from 'reselect';
 import { createSelector } from 'reselect';
-import { NFT_ASSETS_REDUCER_ID, NFT_TOKENS_REDUCER_ID } from '~/logic/collectibles/store/reducer/collectibles';
-import type { NFTAssets } from '~/routes/safe/components/Balances/Collectibles/types';
-import { safeActiveAssetsSelector } from '~/routes/safe/store/selectors';
-import type { GlobalState } from '~/store';
+import { NFT_ASSETS_REDUCER_ID, NFT_TOKENS_REDUCER_ID } from 'src/logic/collectibles/store/reducer/collectibles';
+import type { NFTAssets } from 'src/routes/safe/components/Balances/Collectibles/types';
+import { safeActiveAssetsSelector } from 'src/routes/safe/store/selectors';
+import type { GlobalState } from 'src/store';
 declare export var nftAssetsSelector: (state: GlobalState) => any;
 declare export var nftTokensSelector: (state: GlobalState) => any;
 export const nftAssetsListSelector: Selector<GlobalState, NFTAssets, List<NFTAssets>> = createSelector(nftAssetsSelector, (assets: NFTAssets) => {

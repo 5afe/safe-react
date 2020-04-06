@@ -1,8 +1,8 @@
 // @flow
 import { Map } from 'immutable';
 import { type ActionType, handleActions } from 'redux-actions';
-import type { Cookie } from '~/logic/cookies/model/cookie';
-import { OPEN_COOKIE_BANNER } from '~/logic/cookies/store/actions/openCookieBanner';
+import type { Cookie } from 'src/logic/cookies/model/cookie';
+import { OPEN_COOKIE_BANNER } from 'src/logic/cookies/store/actions/openCookieBanner';
 export const COOKIES_REDUCER_ID = 'cookies';
 export type State = Map<string, Map<string, Cookie>>;
 export default handleActions<State, *>({

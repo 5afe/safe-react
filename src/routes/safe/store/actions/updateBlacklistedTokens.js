@@ -3,7 +3,7 @@ import { Set } from 'immutable'
 
 import updateSafe from './updateSafe'
 
-import { } from '~/store'
+import { } from 'src/store'
 
 const updateBlacklistedTokens = (safeAddress, blacklistedTokens) => async (
   dispatch,

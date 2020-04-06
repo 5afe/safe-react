@@ -1,7 +1,7 @@
 // @flow
 import * as React from 'react';
-import { type Size, getSize } from '~/theme/size';
-import { border } from '~/theme/variables';
+import { type Size, getSize } from 'src/theme/size';
+import { border } from 'src/theme/variables';
 declare var calculateStyleFrom: (color?: string, margin?: Size) => any;
 type Props = {
   className?: string,

@@ -2,6 +2,6 @@
 import { Set } from 'immutable';
 import type { Dispatch as ReduxDispatch } from 'redux';
 import updateSafe from './updateSafe';
-import { type GlobalState } from '~/store';
+import { type GlobalState } from 'src/store';
 declare var updateBlacklistedTokens: (safeAddress: string, blacklistedTokens: Set<string>) => any;
 export default updateBlacklistedTokens;

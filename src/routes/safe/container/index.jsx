@@ -5,9 +5,9 @@ import { connect } from 'react-redux'
 import actions, { } from './actions'
 import selector, { } from './selector'
 
-import Page from '~/components/layout/Page'
-import { } from '~/logic/tokens/store/model/token'
-import Layout from '~/routes/safe/components/Layout'
+import Page from 'src/components/layout/Page'
+import { } from 'src/logic/tokens/store/model/token'
+import Layout from 'src/routes/safe/components/Layout'
 
 
 

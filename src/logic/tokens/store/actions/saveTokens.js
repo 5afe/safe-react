@@ -2,7 +2,7 @@
 import { Map } from 'immutable'
 import { createAction } from 'redux-actions'
 
-import { } from '~/logic/tokens/store/model/token'
+import { } from 'src/logic/tokens/store/model/token'
 
 export const ADD_TOKENS = 'ADD_TOKENS'
 

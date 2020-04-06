@@ -1,10 +1,10 @@
 // @flow
 import { List, Map } from 'immutable';
 import type { Dispatch as ReduxDispatch } from 'redux';
-import { loadAddressBook } from '~/logic/addressBook/store/actions/loadAddressBook';
-import { buildAddressBook } from '~/logic/addressBook/store/reducer/addressBook';
-import { getAddressBookFromStorage } from '~/logic/addressBook/utils';
-import { safesListSelector } from '~/routes/safe/store/selectors';
-import { type GlobalState } from '~/store/index';
+import { loadAddressBook } from 'src/logic/addressBook/store/actions/loadAddressBook';
+import { buildAddressBook } from 'src/logic/addressBook/store/reducer/addressBook';
+import { getAddressBookFromStorage } from 'src/logic/addressBook/utils';
+import { safesListSelector } from 'src/routes/safe/store/selectors';
+import { type GlobalState } from 'src/store/index';
 declare var loadAddressBookFromStorage: () => any;
 export default loadAddressBookFromStorage;

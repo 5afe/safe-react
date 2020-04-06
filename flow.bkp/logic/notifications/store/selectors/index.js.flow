@@ -1,8 +1,8 @@
 // @flow
 import { List, Map } from 'immutable';
 import { type Selector, createSelector } from 'reselect';
-import { type Notification } from '~/logic/notifications/store/models/notification';
-import { NOTIFICATIONS_REDUCER_ID } from '~/logic/notifications/store/reducer/notifications';
-import { type GlobalState } from '~/store';
+import { type Notification } from 'src/logic/notifications/store/models/notification';
+import { NOTIFICATIONS_REDUCER_ID } from 'src/logic/notifications/store/reducer/notifications';
+import { type GlobalState } from 'src/store';
 declare var notificationsMapSelector: (state: GlobalState) => Map<string, Notification>;
 export const notificationsListSelector: Selector<GlobalState, {}, List<Notification>> = createSelector(notificationsMapSelector, (notifications: Map<string, Notification>): List<Notification> => notifications.toList());

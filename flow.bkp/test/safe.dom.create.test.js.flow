@@ -4,14 +4,14 @@ import { type Store } from 'redux';
 import { render, fireEvent, act } from '@testing-library/react';
 import { Provider } from 'react-redux';
 import { ConnectedRouter } from 'connected-react-router';
-import { sleep } from '~/utils/timer';
-import { ADD_OWNER_BUTTON } from '~/routes/open/components/SafeOwnersConfirmationsForm';
-import Open from '~/routes/open/container/Open';
-import { aNewStore, history, type GlobalState } from '~/store';
-import { getProviderInfo, getWeb3 } from '~/logic/wallets/getWeb3';
-import addProvider from '~/logic/wallets/store/actions/addProvider';
-import { makeProvider } from '~/logic/wallets/store/model/provider';
-import { getGnosisSafeInstanceAt } from '~/logic/contracts/safeContracts';
+import { sleep } from 'src/utils/timer';
+import { ADD_OWNER_BUTTON } from 'src/routes/open/components/SafeOwnersConfirmationsForm';
+import Open from 'src/routes/open/container/Open';
+import { aNewStore, history, type GlobalState } from 'src/store';
+import { getProviderInfo, getWeb3 } from 'src/logic/wallets/getWeb3';
+import addProvider from 'src/logic/wallets/store/actions/addProvider';
+import { makeProvider } from 'src/logic/wallets/store/model/provider';
+import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts';
 import { whenSafeDeployed } from './builder/safe.dom.utils'; // For some reason it warns about events not wrapped in act
 // But they're wrapped :(
 

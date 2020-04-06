@@ -3,8 +3,8 @@ import ENS from 'ethereum-ens';
 import Web3 from 'web3';
 import { sameAddress } from './ethAddresses';
 import { EMPTY_DATA } from './ethTransactions';
-import { getNetwork } from '~/config/index';
-import type { ProviderProps } from '~/logic/wallets/store/model/provider';
+import { getNetwork } from 'src/config/index';
+import type { ProviderProps } from 'src/logic/wallets/store/model/provider';
 export const ETHEREUM_NETWORK = {
   MAINNET: 'MAINNET',
   MORDEN: 'MORDEN',

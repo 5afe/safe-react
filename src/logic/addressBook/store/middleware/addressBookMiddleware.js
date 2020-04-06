@@ -1,15 +1,15 @@
 // 
 
-import { ADD_ENTRY } from '~/logic/addressBook/store/actions/addAddressBookEntry'
-import { ADD_OR_UPDATE_ENTRY } from '~/logic/addressBook/store/actions/addOrUpdateAddressBookEntry'
-import { REMOVE_ENTRY } from '~/logic/addressBook/store/actions/removeAddressBookEntry'
-import { UPDATE_ENTRY } from '~/logic/addressBook/store/actions/updateAddressBookEntry'
-import { addressBookMapSelector } from '~/logic/addressBook/store/selectors'
-import { saveAddressBook } from '~/logic/addressBook/utils'
-import { enhanceSnackbarForAction, getNotificationsFromTxType } from '~/logic/notifications'
-import enqueueSnackbar from '~/logic/notifications/store/actions/enqueueSnackbar'
-import { TX_NOTIFICATION_TYPES } from '~/logic/safe/transactions'
-import { } from '~/store'
+import { ADD_ENTRY } from 'src/logic/addressBook/store/actions/addAddressBookEntry'
+import { ADD_OR_UPDATE_ENTRY } from 'src/logic/addressBook/store/actions/addOrUpdateAddressBookEntry'
+import { REMOVE_ENTRY } from 'src/logic/addressBook/store/actions/removeAddressBookEntry'
+import { UPDATE_ENTRY } from 'src/logic/addressBook/store/actions/updateAddressBookEntry'
+import { addressBookMapSelector } from 'src/logic/addressBook/store/selectors'
+import { saveAddressBook } from 'src/logic/addressBook/utils'
+import { enhanceSnackbarForAction, getNotificationsFromTxType } from 'src/logic/notifications'
+import enqueueSnackbar from 'src/logic/notifications/store/actions/enqueueSnackbar'
+import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
+import { } from 'src/store'
 
 const watchedActions = [ADD_ENTRY, REMOVE_ENTRY, UPDATE_ENTRY, ADD_OR_UPDATE_ENTRY]
 

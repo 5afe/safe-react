@@ -5,10 +5,10 @@ import ExpandLess from '@material-ui/icons/ExpandLess'
 import ExpandMore from '@material-ui/icons/ExpandMore'
 import * as React from 'react'
 
-import { } from '~/components/hoc/OpenHoc'
-import Col from '~/components/layout/Col'
-import Divider from '~/components/layout/Divider'
-import { md, screenSm, sm } from '~/theme/variables'
+import { } from 'src/components/hoc/OpenHoc'
+import Col from 'src/components/layout/Col'
+import Divider from 'src/components/layout/Divider'
+import { md, screenSm, sm } from 'src/theme/variables'
 
 
 const styles = () => ({

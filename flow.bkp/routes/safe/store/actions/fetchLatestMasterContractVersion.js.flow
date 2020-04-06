@@ -1,7 +1,7 @@
 // @flow
 import type { Dispatch as ReduxDispatch } from 'redux';
-import { getCurrentMasterContractLastVersion } from '~/logic/safe/utils/safeVersion';
-import setLatestMasterContractVersion from '~/routes/safe/store/actions/setLatestMasterContractVersion';
-import { type GlobalState } from '~/store';
+import { getCurrentMasterContractLastVersion } from 'src/logic/safe/utils/safeVersion';
+import setLatestMasterContractVersion from 'src/routes/safe/store/actions/setLatestMasterContractVersion';
+import { type GlobalState } from 'src/store';
 declare var fetchLatestMasterContractVersion: () => any;
 export default fetchLatestMasterContractVersion;

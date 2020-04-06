@@ -1,6 +1,6 @@
-import { textShortener } from '~/utils/strings'
+import { textShortener } from 'src/utils/strings'
 
-describe('Utils > strings > textShortener', () => {
+describe('src/utils > strings > textShortener', () => {
   it(`should return the original string if there's no room to shorten`, () => {
     // Given
     const text = "I'm a short string"

@@ -4,14 +4,14 @@ import * as React from 'react'
 
 import styles from './Layout.scss'
 
-import ConnectButton from '~/components/ConnectButton'
-import Block from '~/components/layout/Block'
-import Button from '~/components/layout/Button'
-import Heading from '~/components/layout/Heading'
-import Img from '~/components/layout/Img'
-import Link from '~/components/layout/Link'
-import { LOAD_ADDRESS, OPEN_ADDRESS } from '~/routes/routes'
-import { marginButtonImg, secondary } from '~/theme/variables'
+import ConnectButton from 'src/components/ConnectButton'
+import Block from 'src/components/layout/Block'
+import Button from 'src/components/layout/Button'
+import Heading from 'src/components/layout/Heading'
+import Img from 'src/components/layout/Img'
+import Link from 'src/components/layout/Link'
+import { LOAD_ADDRESS, OPEN_ADDRESS } from 'src/routes/routes'
+import { marginButtonImg, secondary } from 'src/theme/variables'
 
 const plus = require('../assets/new.svg')
 const safe = require('../assets/safe.svg')

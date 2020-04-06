@@ -1,8 +1,8 @@
 // @flow
 import { createSelector } from 'reselect';
-import { ETHEREUM_NETWORK, ETHEREUM_NETWORK_IDS } from '~/logic/wallets/getWeb3';
-import type { Provider } from '~/logic/wallets/store/model/provider';
-import { PROVIDER_REDUCER_ID } from '~/logic/wallets/store/reducer/provider';
+import { ETHEREUM_NETWORK, ETHEREUM_NETWORK_IDS } from 'src/logic/wallets/getWeb3';
+import type { Provider } from 'src/logic/wallets/store/model/provider';
+import { PROVIDER_REDUCER_ID } from 'src/logic/wallets/store/reducer/provider';
 declare export var providerSelector: (state: any) => Provider;
 export const userAccountSelector = createSelector(providerSelector, (provider: Provider) => {
   const account = provider.get('account');

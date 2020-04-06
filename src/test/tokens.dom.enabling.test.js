@@ -1,18 +1,18 @@
 // 
 import { waitForElement } from '@testing-library/react'
 import { List } from 'immutable'
-import { getWeb3 } from '~/logic/wallets/getWeb3'
-import { getFirstTokenContract, getSecondTokenContract } from '~/test/utils/tokenMovements'
-import { aNewStore } from '~/store'
-import { aMinedSafe } from '~/test/builder/safe.redux.builder'
-import { renderSafeView } from '~/test/builder/safe.dom.utils'
-import { sleep } from '~/utils/timer'
-import saveTokens from '~/logic/tokens/store/actions/saveTokens'
+import { getWeb3 } from 'src/logic/wallets/getWeb3'
+import { getFirstTokenContract, getSecondTokenContract } from 'src/test/utils/tokenMovements'
+import { aNewStore } from 'src/store'
+import { aMinedSafe } from 'src/test/builder/safe.redux.builder'
+import { renderSafeView } from 'src/test/builder/safe.dom.utils'
+import { sleep } from 'src/utils/timer'
+import saveTokens from 'src/logic/tokens/store/actions/saveTokens'
 import { clickOnManageTokens, toggleToken, closeManageTokensModal } from './utils/DOMNavigation'
-import { BALANCE_ROW_TEST_ID } from '~/routes/safe/components/Balances'
-import { makeToken } from '~/logic/tokens/store/model/token'
+import { BALANCE_ROW_TEST_ID } from 'src/routes/safe/components/Balances'
+import { makeToken } from 'src/logic/tokens/store/model/token'
 import '@testing-library/jest-dom/extend-expect'
-import { getActiveTokens } from '~/logic/tokens/utils/tokensStorage'
+import { getActiveTokens } from 'src/logic/tokens/utils/tokensStorage'
 
 describe('DOM > Feature > Enable and disable default tokens', () => {
   let web3

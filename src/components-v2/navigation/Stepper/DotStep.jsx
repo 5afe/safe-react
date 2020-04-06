@@ -2,14 +2,14 @@
 import React from 'react'
 import styled from 'styled-components'
 
-import { IconText } from '~/components-v2'
-import CheckIcon from '~/components/layout/PageFrame/assets/check.svg'
+import { IconText } from 'src/components-v2'
+import CheckIcon from 'src/components/layout/PageFrame/assets/check.svg'
 import {
   background as backgroundColor,
   secondaryText as disabledColor,
   error as errorColor,
   secondary,
-} from '~/theme/variables'
+} from 'src/theme/variables'
 
 const Circle = styled.div`
   background-color: ${({ disabled, error }) => {

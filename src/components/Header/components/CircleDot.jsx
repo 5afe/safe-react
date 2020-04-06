@@ -3,9 +3,9 @@ import { withStyles } from '@material-ui/core/styles'
 import Dot from '@material-ui/icons/FiberManualRecord'
 import * as React from 'react'
 
-import Block from '~/components/layout/Block'
-import Img from '~/components/layout/Img'
-import { border, fancy, screenSm, warning } from '~/theme/variables'
+import Block from 'src/components/layout/Block'
+import Img from 'src/components/layout/Img'
+import { border, fancy, screenSm, warning } from 'src/theme/variables'
 
 const key = require('../assets/key.svg')
 const triangle = require('../assets/triangle.svg')

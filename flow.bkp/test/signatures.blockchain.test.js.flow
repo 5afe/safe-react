@@ -1,6 +1,6 @@
 // @flow
 import { List } from 'immutable';
-import { generateSignaturesFromTxConfirmations } from '~/logic/safe/safeTxSigner';
+import { generateSignaturesFromTxConfirmations } from 'src/logic/safe/safeTxSigner';
 declare var makeMockConfirmation: (address: string) => any;
 describe('Signatures Blockchain Test', () => {
   it('generates signatures in natural order even checksumed', async () => {

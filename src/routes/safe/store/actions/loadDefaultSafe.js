@@ -2,9 +2,9 @@
 
 import setDefaultSafe from './setDefaultSafe'
 
-import { getDefaultSafe } from '~/logic/safe/utils'
-import { getWeb3 } from '~/logic/wallets/getWeb3'
-import { } from '~/store/index'
+import { getDefaultSafe } from 'src/logic/safe/utils'
+import { getWeb3 } from 'src/logic/wallets/getWeb3'
+import { } from 'src/store/index'
 
 const loadDefaultSafe = () => async (dispatch) => {
   try {

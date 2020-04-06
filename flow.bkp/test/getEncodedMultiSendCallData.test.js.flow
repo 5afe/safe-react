@@ -1,8 +1,8 @@
 // @flow
 import Web3 from 'web3';
 import GnosisSafeSol from '@gnosis.pm/safe-contracts/build/contracts/GnosisSafe.json';
-import { DEFAULT_FALLBACK_HANDLER_ADDRESS, getEncodedMultiSendCallData, SAFE_MASTER_COPY_ADDRESS } from '~/logic/contracts/safeContracts';
-import { ZERO_ADDRESS } from '~/logic/wallets/ethAddresses';
+import { DEFAULT_FALLBACK_HANDLER_ADDRESS, getEncodedMultiSendCallData, SAFE_MASTER_COPY_ADDRESS } from 'src/logic/contracts/safeContracts';
+import { ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses';
 describe('Upgrade a Safe', () => {
   it('Calls getEncodedMultiSendCallData with a list of MultiSendTransactionInstanceType and returns the multiSend data encoded', async () => {
     const safeAddress = ZERO_ADDRESS;

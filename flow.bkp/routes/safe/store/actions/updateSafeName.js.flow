@@ -1,6 +1,6 @@
 // @flow
 import type { Dispatch as ReduxDispatch } from 'redux';
 import updateSafe from './updateSafe';
-import { type GlobalState } from '~/store';
+import { type GlobalState } from 'src/store';
 declare var updateSafeName: (safeAddress: string, safeName: string) => any;
 export default updateSafeName;

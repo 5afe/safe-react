@@ -1,9 +1,9 @@
 // @flow
 import type { Dispatch as ReduxDispatch } from 'redux';
-import type { AddressBook } from '~/logic/addressBook/model/addressBook';
-import { makeAddressBookEntry } from '~/logic/addressBook/model/addressBook';
-import { updateAddressBookEntry } from '~/logic/addressBook/store/actions/updateAddressBookEntry';
-import { saveAddressBook } from '~/logic/addressBook/utils';
-import { type GlobalState } from '~/store/index';
+import type { AddressBook } from 'src/logic/addressBook/model/addressBook';
+import { makeAddressBookEntry } from 'src/logic/addressBook/model/addressBook';
+import { updateAddressBookEntry } from 'src/logic/addressBook/store/actions/updateAddressBookEntry';
+import { saveAddressBook } from 'src/logic/addressBook/utils';
+import { type GlobalState } from 'src/store/index';
 declare var saveAndUpdateAddressBook: (addressBook: AddressBook) => any;
 export default saveAndUpdateAddressBook;

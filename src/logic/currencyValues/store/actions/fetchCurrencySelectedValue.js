@@ -2,10 +2,10 @@
 import { List } from 'immutable'
 import { Dispatch as ReduxDispatch } from 'redux'
 
-import fetchCurrenciesRates from '~/logic/currencyValues/api/fetchCurrenciesRates'
-import { setCurrencyBalances } from '~/logic/currencyValues/store/actions/setCurrencyBalances'
-import { AVAILABLE_CURRENCIES } from '~/logic/currencyValues/store/model/currencyValues'
-import { currencyValuesListSelector } from '~/logic/currencyValues/store/selectors'
+import fetchCurrenciesRates from 'src/logic/currencyValues/api/fetchCurrenciesRates'
+import { setCurrencyBalances } from 'src/logic/currencyValues/store/actions/setCurrencyBalances'
+import { AVAILABLE_CURRENCIES } from 'src/logic/currencyValues/store/model/currencyValues'
+import { currencyValuesListSelector } from 'src/logic/currencyValues/store/selectors'
 
 // eslint-disable-next-line max-len
 const fetchCurrencySelectedValue = (currencyValueSelected) => async (

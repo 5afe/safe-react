@@ -2,17 +2,17 @@
 import { List, Map, Set } from 'immutable';
 import { type Match, matchPath } from 'react-router-dom';
 import { type OutputSelector, createSelector, createStructuredSelector } from 'reselect';
-import { getWeb3 } from '~/logic/wallets/getWeb3';
-import { SAFELIST_ADDRESS, SAFE_PARAM_ADDRESS } from '~/routes/routes';
-import { type Confirmation } from '~/routes/safe/store/models/confirmation';
-import type { IncomingTransaction } from '~/routes/safe/store/models/incomingTransaction';
-import { type Safe } from '~/routes/safe/store/models/safe';
-import { type Transaction } from '~/routes/safe/store/models/transaction';
-import { CANCELLATION_TRANSACTIONS_REDUCER_ID, type CancelState as CancelTransactionsState } from '~/routes/safe/store/reducer/cancellationTransactions';
-import { INCOMING_TRANSACTIONS_REDUCER_ID, type IncomingState as IncomingTransactionsState } from '~/routes/safe/store/reducer/incomingTransactions';
-import { SAFE_REDUCER_ID } from '~/routes/safe/store/reducer/safe';
-import { TRANSACTIONS_REDUCER_ID, type State as TransactionsState } from '~/routes/safe/store/reducer/transactions';
-import { type GlobalState } from '~/store/index';
+import { getWeb3 } from 'src/logic/wallets/getWeb3';
+import { SAFELIST_ADDRESS, SAFE_PARAM_ADDRESS } from 'src/routes/routes';
+import { type Confirmation } from 'src/routes/safe/store/models/confirmation';
+import type { IncomingTransaction } from 'src/routes/safe/store/models/incomingTransaction';
+import { type Safe } from 'src/routes/safe/store/models/safe';
+import { type Transaction } from 'src/routes/safe/store/models/transaction';
+import { CANCELLATION_TRANSACTIONS_REDUCER_ID, type CancelState as CancelTransactionsState } from 'src/routes/safe/store/reducer/cancellationTransactions';
+import { INCOMING_TRANSACTIONS_REDUCER_ID, type IncomingState as IncomingTransactionsState } from 'src/routes/safe/store/reducer/incomingTransactions';
+import { SAFE_REDUCER_ID } from 'src/routes/safe/store/reducer/safe';
+import { TRANSACTIONS_REDUCER_ID, type State as TransactionsState } from 'src/routes/safe/store/reducer/transactions';
+import { type GlobalState } from 'src/store/index';
 export type RouterProps = {
   match: Match
 };

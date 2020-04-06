@@ -1,6 +1,6 @@
 // @flow
 import Cookies from 'js-cookie';
-import { getNetwork } from '~/config';
+import { getNetwork } from 'src/config';
 const PREFIX = `v1_${getNetwork()}`;
 declare export var loadFromCookie: (key: string) => Promise<*>;
 declare export var saveCookie: (key: string, value: *, expirationDays: number) => Promise<*>;

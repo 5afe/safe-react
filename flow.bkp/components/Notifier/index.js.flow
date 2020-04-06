@@ -5,7 +5,7 @@ import { Component } from 'react';
 import { connect } from 'react-redux';
 import actions, { type Actions } from './actions';
 import selector from './selector';
-import { type Notification } from '~/logic/notifications/store/models/notification';
+import { type Notification } from 'src/logic/notifications/store/models/notification';
 type Props = Actions & {
   notifications: List<Notification>,
   closeSnackbar: Function,

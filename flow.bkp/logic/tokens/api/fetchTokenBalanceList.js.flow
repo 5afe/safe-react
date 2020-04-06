@@ -1,5 +1,5 @@
 // @flow
 import axios from 'axios';
-import { getTxServiceHost } from '~/config/index';
+import { getTxServiceHost } from 'src/config/index';
 declare var fetchTokenBalanceList: (safeAddress: string) => any;
 export default fetchTokenBalanceList;

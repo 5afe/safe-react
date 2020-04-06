@@ -1,8 +1,8 @@
 // @flow
 import type { Dispatch as ReduxDispatch } from 'redux';
-import { getBalanceInEtherOf } from '~/logic/wallets/getWeb3';
-import updateSafe from '~/routes/safe/store/actions/updateSafe';
-import type { Safe } from '~/routes/safe/store/models/safe';
-import { type GlobalState } from '~/store';
+import { getBalanceInEtherOf } from 'src/logic/wallets/getWeb3';
+import updateSafe from 'src/routes/safe/store/actions/updateSafe';
+import type { Safe } from 'src/routes/safe/store/models/safe';
+import { type GlobalState } from 'src/store';
 declare var fetchEtherBalance: (safe: Safe) => any;
 export default fetchEtherBalance;

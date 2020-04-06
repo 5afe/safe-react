@@ -1,3 +1,3 @@
 // @flow
-import { boldFont, disabled, error, extraSmallFontSize, lg, secondary, sm } from '~/theme/variables';
+import { boldFont, disabled, error, extraSmallFontSize, lg, secondary, sm } from 'src/theme/variables';
 declare export var styles: () => any;

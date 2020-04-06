@@ -1,8 +1,8 @@
 // @flow
 import { BigNumber } from 'bignumber.js';
-import { getGnosisSafeInstanceAt } from '~/logic/contracts/safeContracts';
-import { EMPTY_DATA } from '~/logic/wallets/ethTransactions';
-import { getWeb3 } from '~/logic/wallets/getWeb3';
+import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts';
+import { EMPTY_DATA } from 'src/logic/wallets/ethTransactions';
+import { getWeb3 } from 'src/logic/wallets/getWeb3';
 declare var estimateDataGasCosts: (data: any) => any; // https://docs.gnosis.io/safe/docs/docs4/#safe-transaction-data-gas-estimation
 // https://github.com/gnosis/safe-contracts/blob/a97c6fd24f79c0b159ddd25a10a2ebd3ea2ef926/test/utils/execution.js
 

@@ -8,11 +8,11 @@ import { useDispatch } from 'react-redux'
 import OwnerForm from './screens/OwnerForm'
 import ReviewReplaceOwner from './screens/Review'
 
-import Modal from '~/components/Modal'
-import { addOrUpdateAddressBookEntry } from '~/logic/addressBook/store/actions/addOrUpdateAddressBookEntry'
-import { SENTINEL_ADDRESS, getGnosisSafeInstanceAt } from '~/logic/contracts/safeContracts'
-import { TX_NOTIFICATION_TYPES } from '~/logic/safe/transactions'
-import { } from '~/routes/safe/store/models/owner'
+import Modal from 'src/components/Modal'
+import { addOrUpdateAddressBookEntry } from 'src/logic/addressBook/store/actions/addOrUpdateAddressBookEntry'
+import { SENTINEL_ADDRESS, getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
+import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
+import { } from 'src/routes/safe/store/models/owner'
 
 const styles = () => ({
   biggerModalWindow: {

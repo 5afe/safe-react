@@ -1,8 +1,8 @@
 // @flow
 import type { Dispatch as ReduxDispatch } from 'redux';
 import setDefaultSafe from './setDefaultSafe';
-import { getDefaultSafe } from '~/logic/safe/utils';
-import { getWeb3 } from '~/logic/wallets/getWeb3';
-import { type GlobalState } from '~/store/index';
+import { getDefaultSafe } from 'src/logic/safe/utils';
+import { getWeb3 } from 'src/logic/wallets/getWeb3';
+import { type GlobalState } from 'src/store/index';
 declare var loadDefaultSafe: () => any;
 export default loadDefaultSafe;

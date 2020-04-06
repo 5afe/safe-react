@@ -1,5 +1,5 @@
 // @flow
 import * as React from 'react';
 import { fireEvent, waitForElement, act } from '@testing-library/react';
-import { sleep } from '~/utils/timer';
+import { sleep } from 'src/utils/timer';
 declare export var fillAndSubmitSendFundsForm: (SafeDom: any, sendButton: React.Component<any, any>, value: string, recipient: string) => any;

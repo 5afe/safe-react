@@ -7,8 +7,8 @@ import appsList from './appsList'
 import confirmTransactions from './confirmTransactions'
 import sendTransactions from './sendTransactions'
 
-import { ListContentLayout as LCL, Loader } from '~/components-v2'
-import ButtonLink from '~/components/layout/ButtonLink'
+import { ListContentLayout as LCL, Loader } from 'src/components-v2'
+import ButtonLink from 'src/components/layout/ButtonLink'
 
 const StyledIframe = styled.iframe`
   width: 100%;

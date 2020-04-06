@@ -1,7 +1,7 @@
 // @flow
 import { type ActionType, handleActions } from 'redux-actions';
-import { ADD_NFT_ASSETS, ADD_NFT_TOKENS } from '~/logic/collectibles/store/actions/addCollectibles';
-import type { NFTAssets, NFTToken } from '~/routes/safe/components/Balances/Collectibles/types';
+import { ADD_NFT_ASSETS, ADD_NFT_TOKENS } from 'src/logic/collectibles/store/actions/addCollectibles';
+import type { NFTAssets, NFTToken } from 'src/routes/safe/components/Balances/Collectibles/types';
 export const NFT_ASSETS_REDUCER_ID = 'nftAssets';
 export const NFT_TOKENS_REDUCER_ID = 'nftTokens';
 export type NFTAssetsState = NFTAssets | {};

@@ -1,4 +1,4 @@
 // @flow
-import { lg, md, sm, xl, xs } from '~/theme/variables';
+import { lg, md, sm, xl, xs } from 'src/theme/variables';
 export type Size = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
 declare export var getSize: (size: Size | typeof undefined) => any;

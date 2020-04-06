@@ -1,4 +1,4 @@
 // @flow
-import { getIntercomId } from '~/config'; // eslint-disable-next-line consistent-return
+import { getIntercomId } from 'src/config'; // eslint-disable-next-line consistent-return
 
 declare export var loadIntercom: () => any;

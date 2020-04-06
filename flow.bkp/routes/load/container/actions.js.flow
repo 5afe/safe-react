@@ -1,5 +1,5 @@
 // @flow
-import addSafe from '~/routes/safe/store/actions/addSafe';
+import addSafe from 'src/routes/safe/store/actions/addSafe';
 export type Actions = {
   addSafe: Function
 };

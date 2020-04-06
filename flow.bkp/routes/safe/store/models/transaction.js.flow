@@ -1,8 +1,8 @@
 // @flow
 import { List, Record } from 'immutable';
 import type { RecordFactory, RecordOf } from 'immutable';
-import { ZERO_ADDRESS } from '~/logic/wallets/ethAddresses';
-import { type Confirmation } from '~/routes/safe/store/models/confirmation';
+import { ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses';
+import { type Confirmation } from 'src/routes/safe/store/models/confirmation';
 export const OUTGOING_TX_TYPE = 'outgoing';
 export type TransactionType = 'incoming' | 'outgoing' | 'settings' | 'custom' | 'creation' | 'cancellation' | 'third-party-app';
 export type TransactionStatus = 'awaiting_your_confirmation' | 'awaiting_confirmations' | 'success' | 'failed' | 'cancelled' | 'awaiting_execution' | 'pending' | 'third-party-app';

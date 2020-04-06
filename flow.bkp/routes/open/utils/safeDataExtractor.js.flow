@@ -1,6 +1,6 @@
 // @flow
 import { List } from 'immutable';
-import { type Owner, makeOwner } from '~/routes/safe/store/models/owner';
+import { type Owner, makeOwner } from 'src/routes/safe/store/models/owner';
 declare export var getAccountsFrom: (values: Object) => string[];
 declare export var getNamesFrom: (values: Object) => string[];
 declare export var getOwnersFrom: (names: string[], addresses: string[]) => List<Owner>;

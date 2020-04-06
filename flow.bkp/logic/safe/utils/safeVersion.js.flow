@@ -2,8 +2,8 @@
 import semverLessThan from 'semver/functions/lt';
 import semverSatisfies from 'semver/functions/satisfies';
 import semverValid from 'semver/functions/valid';
-import { getSafeLastVersion } from '~/config';
-import { getGnosisSafeInstanceAt, getSafeMasterContract } from '~/logic/contracts/safeContracts';
+import { getSafeLastVersion } from 'src/config';
+import { getGnosisSafeInstanceAt, getSafeMasterContract } from 'src/logic/contracts/safeContracts';
 export const FEATURES = [{
   name: 'ERC721',
   validVersion: '>=1.1.1'

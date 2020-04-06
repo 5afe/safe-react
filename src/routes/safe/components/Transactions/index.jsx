@@ -2,10 +2,10 @@
 import { List } from 'immutable'
 import React from 'react'
 
-import TxsTable from '~/routes/safe/components/Transactions/TxsTable'
-import { } from '~/routes/safe/store/models/incomingTransaction'
-import { } from '~/routes/safe/store/models/owner'
-import { } from '~/routes/safe/store/models/transaction'
+import TxsTable from 'src/routes/safe/components/Transactions/TxsTable'
+import { } from 'src/routes/safe/store/models/incomingTransaction'
+import { } from 'src/routes/safe/store/models/owner'
+import { } from 'src/routes/safe/store/models/transaction'
 
 
 const Transactions = ({

@@ -1,8 +1,8 @@
 // 
 import { useSelector } from 'react-redux'
 
-import { getAddressBook } from '~/logic/addressBook/store/selectors'
-import { loadFromStorage, saveToStorage } from '~/utils/storage'
+import { getAddressBook } from 'src/logic/addressBook/store/selectors'
+import { loadFromStorage, saveToStorage } from 'src/utils/storage'
 
 const ADDRESS_BOOK_STORAGE_KEY = 'ADDRESS_BOOK_STORAGE_KEY'
 

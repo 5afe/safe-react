@@ -13,12 +13,12 @@ import { useDispatch, useSelector } from 'react-redux'
 
 import CheckIcon from './img/check.svg'
 
-import fetchCurrencySelectedValue from '~/logic/currencyValues/store/actions/fetchCurrencySelectedValue'
-import saveCurrencySelected from '~/logic/currencyValues/store/actions/saveCurrencySelected'
-import { AVAILABLE_CURRENCIES } from '~/logic/currencyValues/store/model/currencyValues'
-import { currentCurrencySelector } from '~/logic/currencyValues/store/selectors'
-import { useDropdownStyles } from '~/routes/safe/components/DropdownCurrency/style'
-import { DropdownListTheme } from '~/theme/mui'
+import fetchCurrencySelectedValue from 'src/logic/currencyValues/store/actions/fetchCurrencySelectedValue'
+import saveCurrencySelected from 'src/logic/currencyValues/store/actions/saveCurrencySelected'
+import { AVAILABLE_CURRENCIES } from 'src/logic/currencyValues/store/model/currencyValues'
+import { currentCurrencySelector } from 'src/logic/currencyValues/store/selectors'
+import { useDropdownStyles } from 'src/routes/safe/components/DropdownCurrency/style'
+import { DropdownListTheme } from 'src/theme/mui'
 
 const DropdownCurrency = () => {
   const currenciesList = Object.values(AVAILABLE_CURRENCIES)

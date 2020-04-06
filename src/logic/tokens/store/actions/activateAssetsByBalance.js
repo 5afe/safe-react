@@ -1,15 +1,15 @@
 // 
 
 
-import fetchCollectibles from '~/logic/collectibles/store/actions/fetchCollectibles'
-import { nftAssetsSelector } from '~/logic/collectibles/store/selectors'
-import updateActiveAssets from '~/routes/safe/store/actions/updateActiveAssets'
+import fetchCollectibles from 'src/logic/collectibles/store/actions/fetchCollectibles'
+import { nftAssetsSelector } from 'src/logic/collectibles/store/selectors'
+import updateActiveAssets from 'src/routes/safe/store/actions/updateActiveAssets'
 import {
   safeActiveAssetsSelectorBySafe,
   safeBlacklistedAssetsSelectorBySafe,
   safesMapSelector,
-} from '~/routes/safe/store/selectors'
-import { } from '~/store'
+} from 'src/routes/safe/store/selectors'
+import { } from 'src/store'
 
 const activateAssetsByBalance = (safeAddress) => async (
   dispatch,

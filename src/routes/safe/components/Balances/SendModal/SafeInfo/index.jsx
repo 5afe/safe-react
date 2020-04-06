@@ -2,15 +2,15 @@
 import { makeStyles } from '@material-ui/core/styles'
 import React from 'react'
 
-import CopyBtn from '~/components/CopyBtn'
-import EtherscanBtn from '~/components/EtherscanBtn'
-import Identicon from '~/components/Identicon'
-import Block from '~/components/layout/Block'
-import Bold from '~/components/layout/Bold'
-import Col from '~/components/layout/Col'
-import Paragraph from '~/components/layout/Paragraph'
-import Row from '~/components/layout/Row'
-import { border, xs } from '~/theme/variables'
+import CopyBtn from 'src/components/CopyBtn'
+import EtherscanBtn from 'src/components/EtherscanBtn'
+import Identicon from 'src/components/Identicon'
+import Block from 'src/components/layout/Block'
+import Bold from 'src/components/layout/Bold'
+import Col from 'src/components/layout/Col'
+import Paragraph from 'src/components/layout/Paragraph'
+import Row from 'src/components/layout/Row'
+import { border, xs } from 'src/theme/variables'
 
 const useStyles = makeStyles({
   balanceContainer: {
