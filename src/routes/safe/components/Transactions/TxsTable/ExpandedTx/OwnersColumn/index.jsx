@@ -85,7 +85,7 @@ const OwnersColumn = ({
   } else {
     showOlderTxAnnotation = (thresholdReached && !canExecute) || (cancelThresholdReached && !canExecuteCancel)
   }
-  const { owners } = useSelector(safeOwnersSelector)
+  const owners = useSelector(safeOwnersSelector)
   const threshold = useSelector(safeThresholdSelector)
   const userAddress = useSelector(userAccountSelector)
   const [ownersWhoConfirmed, currentUserAlreadyConfirmed] = getOwnersConfirmations(tx, userAddress)
