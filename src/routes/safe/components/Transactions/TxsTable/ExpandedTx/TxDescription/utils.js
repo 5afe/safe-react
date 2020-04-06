@@ -18,7 +18,7 @@ type DecodedTxData = {
 }
 
 const getSafeVersion = (data: string) => {
-  const contractAddress = data.substr(582, 40).toLowerCase()
+  const contractAddress = data.substr(340, 40).toLowerCase()
 
   return (
     {
