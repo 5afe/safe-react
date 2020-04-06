@@ -42,7 +42,7 @@ type Props = {
 
 const useStyles = makeStyles(styles)
 
-const SendCustomTx = ({ initialValues, onClose, onNext, recipientAddress }: Props) => {
+const ContractInteraction = ({ initialValues, onClose, onNext, recipientAddress }: Props) => {
   const classes = useStyles()
   const { address: safeAddress, ethBalance, name: safeName } = useSelector(safeSelector)
   const [qrModalOpen, setQrModalOpen] = useState<boolean>(false)
@@ -86,7 +86,7 @@ const SendCustomTx = ({ initialValues, onClose, onNext, recipientAddress }: Prop
     <>
       <Row align="center" className={classes.heading} grow>
         <Paragraph className={classes.manage} noMargin weight="bolder">
-          Send custom transactions
+          Contract Interaction
         </Paragraph>
         <Paragraph className={classes.annotation}>1 of 2</Paragraph>
         <IconButton disableRipple onClick={onClose}>
@@ -261,4 +261,4 @@ const SendCustomTx = ({ initialValues, onClose, onNext, recipientAddress }: Prop
   )
 }
 
-export default SendCustomTx
+export default ContractInteraction

@@ -18,16 +18,16 @@ const ReviewCollectible = React.lazy(() => import('./screens/ReviewCollectible')
 
 const ReviewTx = React.lazy(() => import('./screens/ReviewTx'))
 
-const SendCustomTx = React.lazy(() => import('./screens/SendCustomTx'))
+const ContractInteraction = React.lazy(() => import('./screens/ContractInteraction'))
 
-const ReviewCustomTx = React.lazy(() => import('./screens/ReviewCustomTx'))
+const ContractInteractionReview = React.lazy(() => import('./screens/ContractInteractionReview'))
 
 type ActiveScreen =
   | 'chooseTxType'
   | 'sendFunds'
   | 'reviewTx'
-  | 'sendCustomTx'
-  | 'reviewCustomTx'
+  | 'contractInteraction'
+  | 'contractInteractionReview'
   | 'sendCollectible'
   | 'reviewCollectible'
 
@@ -82,9 +82,9 @@ const SendModal = ({ activeScreenType, isOpen, onClose, recipientAddress, select
     setTx(txInfo)
   }
 
-  const handleCustomTxCreation = (customTxInfo) => {
-    setActiveScreen('reviewCustomTx')
-    setTx(customTxInfo)
+  const handleContractInteractionCreation = (contractInteractionInfo) => {
+    setActiveScreen('contractInteractionReview')
+    setTx(contractInteractionInfo)
   }
 
   const handleSendCollectible = (txInfo) => {
@@ -122,16 +122,16 @@ const SendModal = ({ activeScreenType, isOpen, onClose, recipientAddress, select
         {activeScreen === 'reviewTx' && (
           <ReviewTx onClose={onClose} onPrev={() => setActiveScreen('sendFunds')} tx={tx} />
         )}
-        {activeScreen === 'sendCustomTx' && (
-          <SendCustomTx
+        {activeScreen === 'contractInteraction' && (
+          <ContractInteraction
             initialValues={tx}
             onClose={onClose}
-            onNext={handleCustomTxCreation}
+            onNext={handleContractInteractionCreation}
             recipientAddress={recipientAddress}
           />
         )}
-        {activeScreen === 'reviewCustomTx' && (
-          <ReviewCustomTx onClose={onClose} onPrev={() => setActiveScreen('sendCustomTx')} tx={tx} />
+        {activeScreen === 'contractInteractionReview' && (
+          <ContractInteractionReview onClose={onClose} onPrev={() => setActiveScreen('contractInteraction')} tx={tx} />
         )}
         {activeScreen === 'sendCollectible' && (
           <SendCollectible

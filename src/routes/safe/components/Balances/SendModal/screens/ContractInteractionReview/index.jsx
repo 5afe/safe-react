@@ -41,7 +41,7 @@ type Props = {
 
 const useStyles = makeStyles(styles)
 
-const ReviewCustomTx = ({ closeSnackbar, enqueueSnackbar, onClose, onPrev, tx }: Props) => {
+const ContractInteractionReview = ({ closeSnackbar, enqueueSnackbar, onClose, onPrev, tx }: Props) => {
   const classes = useStyles()
   const dispatch = useDispatch()
   const { address: safeAddress, ethBalance, name: safeName } = useSelector(safeSelector)
@@ -95,7 +95,7 @@ const ReviewCustomTx = ({ closeSnackbar, enqueueSnackbar, onClose, onPrev, tx }:
     <>
       <Row align="center" className={classes.heading} grow>
         <Paragraph className={classes.headingText} noMargin weight="bolder">
-          Send Custom Tx
+          Contract Interaction Review
         </Paragraph>
         <Paragraph className={classes.annotation}>2 of 2</Paragraph>
         <IconButton disableRipple onClick={onClose}>
@@ -183,4 +183,4 @@ const ReviewCustomTx = ({ closeSnackbar, enqueueSnackbar, onClose, onPrev, tx }:
   )
 }
 
-export default withSnackbar(ReviewCustomTx)
+export default withSnackbar(ContractInteractionReview)
