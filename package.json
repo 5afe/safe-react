@@ -1,6 +1,6 @@
 {
   "name": "safe-react",
-  "version": "1.9.0",
+  "version": "1.9.3",
   "description": "Allowing crypto users manage funds in a safer way",
   "homepage": "https://github.com/gnosis/safe-react#readme",
   "bugs": {
@@ -19,7 +19,7 @@
   "postinstall": "electron-builder install-app-deps",
   "scripts": {
     "build": "REACT_APP_APP_VERSION=$npm_package_version node scripts/build.js && yarn electron-build",
-    "electron-build": "electron-builder --linux",
+    "electron-build": "electron-builder --mac",
     "postinstall": "electron-builder install-app-deps",
     "release": "GH_TOKEN=$(grep GH_TOKEN .env | cut -d '=' -f2) REACT_APP_APP_VERSION=$npm_package_version node scripts/build.js && electron-builder --linux --windows --publish=always",
     "electron-dev": "concurrently \"BROWSER=none yarn start\" \"wait-on http://localhost:3000 && electron .\"",
@@ -94,6 +94,7 @@
       "buildResources": "public/build"
     },
     "mac": {
+      "category": "public.app-category.productivity",
       "hardenedRuntime": true,
       "entitlements": "public/build/entitlements.mac.plist",
       "gatekeeperAssess": false,
@@ -101,6 +102,13 @@
       "target": [
         "dmg",
         "zip"
+      ],
+      "publish": [
+        {
+          "provider": "github",
+          "owner": "matextrem",
+          "repo": "safe-electron-multisig"
+        }
       ]
     },
     "linux": {
@@ -138,7 +146,7 @@
     "dotenv": "^8.2.0",
     "electron-is-dev": "^1.1.0",
     "electron-log": "^4.1.1",
-    "electron-updater": "^4.2.5",
+    "electron-updater": "^4.2.0",
     "ethereum-ens": "0.8.0",
     "express": "^4.17.1",
     "final-form": "4.18.7",

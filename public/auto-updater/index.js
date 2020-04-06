@@ -15,6 +15,7 @@ autoUpdater.logger.transports.file.level = 'info';
 log.info('App starting...');
 
 let initialized = false;
+let downloadProgress = 0;
 
 function init(mainWindow) {
 
@@ -30,7 +31,7 @@ function init(mainWindow) {
     dialog.showMessageBox({
       type: 'info',
       title: 'Found Updates',
-      message: 'Found updates, do you want to update now?',
+      message: 'There is a newer version of the this app available. Do you want to update now?',
       buttons: ['Yes', 'Remind me later'],
       cancelId:1,
     }).then(result => {
@@ -38,7 +39,27 @@ function init(mainWindow) {
         autoUpdater.downloadUpdate();
       }
     });
-  })
+
+    autoUpdater.on('update-downloaded', (event, releaseNotes, releaseName) => {
+      autoUpdater.logger.info("Update Downloaded...");
+      dialog.showMessageBox({
+        title: 'Install Updates',
+        message: process.platform === 'win32' ? releaseNotes : releaseName,
+        detail: 'A new version has been downloaded. Restart the application to apply the updates.',
+        buttons: ['Restart', 'Cancel'],
+        cancelId:1,
+      }).then(result => {
+        if(result.response === 0){
+          autoUpdater.quitAndInstall();
+        }
+      });
+    });
+  });
+
+  autoUpdater.on("download-progress", (d) => {
+    downloadProgress = d.percent;
+    autoUpdater.logger.info(downloadProgress);
+  });
 
   autoUpdater.on('update-not-available', () => {
     dialog.showMessageBox({
@@ -48,21 +69,7 @@ function init(mainWindow) {
     })
   });
 
-  autoUpdater.on('update-downloaded', (event, releaseNotes, releaseName) => {
-    dialog.showMessageBox({
-      title: 'Install Updates',
-      message: process.platform === 'win32' ? releaseNotes : releaseName,
-      detail: 'A new version has been downloaded. Restart the application to apply the updates.',
-      buttons: ['Restart', 'Cancel'],
-      cancelId:1,
-    }).then(result => {
-      if(result.response === 0){
-        autoUpdater.quitAndInstall();
-      }
-    });
-  });
-
-  autoUpdater.checkForUpdates()
+  autoUpdater.checkForUpdates();
 }
 
 module.exports = {
