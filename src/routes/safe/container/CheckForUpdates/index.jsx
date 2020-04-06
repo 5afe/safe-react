@@ -21,9 +21,9 @@ const CheckForUpdates = () => {
       dispatch(checkAndUpdateSafe(address))
       dispatch(fetchTokenBalances(address, activeTokens))
       dispatch(fetchEtherBalance(safe))
-      dispatch(fetchTransactions(address))
     }, TIMEOUT)
     const collectiblesInterval = setInterval(() => {
+      dispatch(fetchTransactions(address))
       dispatch(fetchCollectibles)
     }, TIMEOUT * 3)
     return () => {
