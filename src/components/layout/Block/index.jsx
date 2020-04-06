@@ -2,7 +2,7 @@
 import classNames from 'classnames/bind'
 import * as React from 'react'
 
-import styles from './index.scss'
+import styles from './index.module.scss'
 
 import { } from 'src/theme/size'
 import { capitalize } from 'src/utils/css'

@@ -8,7 +8,7 @@ import AlertIcon from './assets/alert.svg'
 import CheckIcon from './assets/check.svg'
 import ErrorIcon from './assets/error.svg'
 import InfoIcon from './assets/info.svg'
-import styles from './index.scss'
+import styles from './index.module.scss'
 
 import CookiesBanner from 'src/components/CookiesBanner'
 import Footer from 'src/components/Footer'

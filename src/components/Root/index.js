@@ -11,8 +11,8 @@ import AppRoutes from 'src/routes'
 import { history, store } from 'src/store'
 import theme from 'src/theme/mui'
 
-import './index.scss'
-import './OnboardCustom.scss'
+import './index.module.scss'
+import './OnboardCustom.module.scss'
 
 const Root = () => (
   <Provider store={store}>
