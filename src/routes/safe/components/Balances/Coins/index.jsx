@@ -94,7 +94,7 @@ const Coins = (props: Props) => {
                     <Button
                       className={classes.send}
                       color="primary"
-                      onClick={() => showSendFunds(row.asset.address)}
+                      onClick={showSendFunds(row.asset.address)}
                       size="small"
                       testId="balance-send-btn"
                       variant="contained"
