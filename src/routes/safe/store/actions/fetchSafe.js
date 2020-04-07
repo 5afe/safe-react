@@ -2,7 +2,7 @@
 import { List } from 'immutable'
 import type { Dispatch as ReduxDispatch } from 'redux'
 
-import { getGnosisSafeInstanceAt } from '~/logic/contracts/safeContracts'
+import { getGnosisSafeInstanceAt, getSafeParamsBatch } from '~/logic/contracts/safeContracts'
 import { getLocalSafe, getSafeName } from '~/logic/safe/utils'
 import { enabledFeatures, safeNeedsUpdate } from '~/logic/safe/utils/safeVersion'
 import { sameAddress } from '~/logic/wallets/ethAddresses'
@@ -37,18 +37,11 @@ const buildOwnersFrom = (
 
 export const buildSafe = async (safeAdd: string, safeName: string, latestMasterContractVersion: string) => {
   const safeAddress = getWeb3().utils.toChecksumAddress(safeAdd)
-  const [gnosisSafe, ethBalance] = await Promise.all([
-    getGnosisSafeInstanceAt(safeAddress),
-    getBalanceInEtherOf(safeAddress),
-  ])
+  const [localSafe, ethBalance] = await Promise.all([getLocalSafe(safeAddress), getBalanceInEtherOf(safeAddress)])
 
-  const [thresholdStr, nonceStr, currentVersion, remoteOwners, localSafe] = await Promise.all([
-    gnosisSafe.getThreshold(),
-    gnosisSafe.nonce(),
-    gnosisSafe.VERSION(),
-    gnosisSafe.getOwners(),
-    getLocalSafe(safeAddress),
-  ])
+  const safeParams = ['getThreshold', 'nonce', 'VERSION', 'getOwners']
+  const [thresholdStr, nonceStr, currentVersion, remoteOwners] = await getSafeParamsBatch(safeAddress, safeParams)
+
   const threshold = Number(thresholdStr)
   const nonce = Number(nonceStr)
   const owners = List(buildOwnersFrom(remoteOwners, localSafe))

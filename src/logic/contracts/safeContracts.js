@@ -3,7 +3,7 @@ import contract from 'truffle-contract'
 import ProxyFactorySol from '@gnosis.pm/safe-contracts/build/contracts/GnosisSafeProxyFactory.json'
 import GnosisSafeSol from '@gnosis.pm/safe-contracts/build/contracts/GnosisSafe.json'
 import SafeProxy from '@gnosis.pm/safe-contracts/build/contracts/GnosisSafeProxy.json'
-import { ensureOnce } from '~/utils/singleton'
+import { ensureOnce, ensureOnceAsync } from '~/utils/singleton'
 import { simpleMemoize } from '~/components/forms/validator'
 import { getWeb3, getNetworkIdFrom } from '~/logic/wallets/getWeb3'
 import { calculateGasOf, calculateGasPrice } from '~/logic/wallets/ethTransactions'
@@ -96,12 +96,37 @@ export const estimateGasForDeployingSafe = async (
   return gas * parseInt(gasPrice, 10)
 }
 
-export const getGnosisSafeInstanceAt = async (safeAddress: string) => {
+export const getGnosisSafeInstanceAt = ensureOnceAsync(async (safeAddress: string) => {
   const web3 = getWeb3()
   const GnosisSafe = await getGnosisSafeContract(web3)
   const gnosisSafe = await GnosisSafe.at(safeAddress)
-
   return gnosisSafe
+})
+
+export const getGnosisSafeInstanceWeb3At = ensureOnceAsync(async (safeAddress: string) => {
+  const web3 = getWeb3()
+  return new web3.eth.Contract(GnosisSafeSol.abi, safeAddress)
+})
+
+export const getSafeParamsBatch = async (safeAddress: string, safeParams: string[]) => {
+  const web3 = getWeb3()
+  const batch = new web3.BatchRequest()
+  const gnosisSafeInstance = await getGnosisSafeInstanceWeb3At(safeAddress)
+  const safeValues = safeParams.map((method) => {
+    return new Promise((resolve) => {
+          const resolver = (error, result) => {
+            if (error) {
+              resolve(null)
+            } else {
+              resolve(result)
+            }
+          }
+      const request = gnosisSafeInstance.methods[method]().call.request(resolver)
+      batch.add(request)
+    })
+  })
+  batch.execute()
+  return Promise.all(safeValues)
 }
 
 const cleanByteCodeMetadata = (bytecode: string): string => {
