@@ -61,7 +61,7 @@ const Layout = (props: Props) => {
     return <NoSafe provider={provider} text="Safe not found" />
   }
 
-  const openGenericModal = modalConfig => {
+  const openGenericModal = (modalConfig) => {
     setModal({ ...modalConfig, isOpen: true })
   }
 
