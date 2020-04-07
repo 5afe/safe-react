@@ -19,7 +19,7 @@ const LoadStore = (props: Props) => {
 
   const { setSafeLoaded } = props
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchData = () => {
       if (safeAddress) {
         dispatch(fetchLatestMasterContractVersion())
           .then(() => dispatch(fetchSafe(safeAddress)))
