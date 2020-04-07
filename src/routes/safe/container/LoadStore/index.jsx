@@ -19,16 +19,16 @@ const LoadStore = (props: Props) => {
 
   const { setSafeLoaded } = props
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchData = () => {
       dispatch(fetchLatestMasterContractVersion())
         .then(() => dispatch(fetchSafe(safeUrl)))
         .then(() => {
           setSafeLoaded(true)
-          dispatch(addViewedSafe(safeUrl))
+          return dispatch(fetchTransactions(safeUrl))
         })
+        .then(() => dispatch(addViewedSafe(safeUrl)))
 
       dispatch(loadAddressBookFromStorage())
-      dispatch(fetchTransactions(safeUrl))
     }
     fetchData()
   }, [safeUrl])

@@ -99,10 +99,10 @@ export const buildTransactionFrom = async (safeAddress: string, tx: TxServiceMod
   )
   const modifySettingsTx = sameAddress(tx.to, safeAddress) && Number(tx.value) === 0 && !!tx.data
   const cancellationTx = sameAddress(tx.to, safeAddress) && Number(tx.value) === 0 && !tx.data
-  const code = tx.to ? await web3.eth.getCode(tx.to) : ''
+  const code = tx.data || ''
   const isERC721Token =
     code.includes(SAFE_TRANSFER_FROM_WITHOUT_DATA_HASH) ||
-    (isTokenTransfer(tx.data, Number(tx.value)) && !code.includes(DECIMALS_METHOD_HASH))
+    (isTokenTransfer(code, Number(tx.value)) && !code.includes(DECIMALS_METHOD_HASH))
   const isSendTokenTx = !isERC721Token && isTokenTransfer(tx.data, Number(tx.value))
   const isMultiSendTx = isMultisendTransaction(tx.data, Number(tx.value))
   const isUpgradeTx = isMultiSendTx && isUpgradeTransaction(tx.data)
@@ -220,36 +220,61 @@ const addMockSafeCreationTx = (safeAddress): Array<TxServiceModel> => [
   },
 ]
 
-export const buildIncomingTransactionFrom = async (tx: IncomingTxServiceModel) => {
-  let symbol = 'ETH'
-  let decimals = 18
-
-  const fee = await web3.eth
-    .getTransaction(tx.transactionHash)
-    .then(({ gas, gasPrice }) => bn(gas).div(gasPrice).toFixed())
-
-  if (tx.tokenAddress) {
-    try {
-      const tokenInstance = await getTokenInfos(tx.tokenAddress)
-      symbol = tokenInstance.symbol
-      decimals = tokenInstance.decimals
-    } catch (err) {
-      try {
-        const { methods } = new web3.eth.Contract(ALTERNATIVE_TOKEN_ABI, tx.tokenAddress)
-        const [tokenSymbol, tokenDecimals] = await Promise.all(
-          [methods.symbol, methods.decimals].map((m) => m().call()),
-        )
-        symbol = web3.utils.hexToString(tokenSymbol)
-        decimals = tokenDecimals
-      } catch (e) {
-        // this is a particular treatment for the DCD token, as it seems to lack of symbol and decimal methods
-        if (tx.tokenAddress && tx.tokenAddress.toLowerCase() === '0xe0b7927c4af23765cb51314a0e0521a9645f0e2a') {
-          symbol = 'DCD'
-          decimals = 9
+const generateIncomingTxBatchRequest = (tx: IncomingTxServiceModel, batch) => {
+  const { methods } = new web3.eth.Contract(ALTERNATIVE_TOKEN_ABI, tx.tokenAddress)
+  const values = ['symbol', 'decimals', 'txHash'].map((method) => {
+    return new Promise((resolve) => {
+      const resolver = (error, result) => {
+        if (error) {
+          resolve(null)
+        } else {
+          resolve(result)
         }
-        // if it's not DCD, then we fall to the default values
       }
-    }
+
+      try {
+        let request
+        if (method === 'txHash') {
+          request = web3.eth.getTransaction.request(tx.transactionHash, resolver)
+        } else {
+          request = methods[method]().call.request(resolver)
+        }
+        batch.add(request)
+      } catch (e) {
+        resolve(null)
+      }
+    })
+  })
+  return Promise.all([tx, ...values])
+}
+
+const batchRequestIncomingTxsData = (txs: IncomingTxServiceModel[]) => {
+  const batch = new web3.BatchRequest()
+
+  const whenTxsValues = txs.map((tx) => generateIncomingTxBatchRequest(tx, batch))
+
+  batch.execute()
+
+  return Promise.all(whenTxsValues).then((txsValues) =>
+    txsValues.map(([tx, symbol, decimals, { gas, gasPrice }]) => [
+      tx,
+      symbol === null ? 'ETH' : symbol,
+      decimals === null ? '18' : decimals,
+      bn(gas).div(gasPrice).toFixed(),
+    ]),
+  )
+}
+
+export const buildIncomingTransactionFrom = ([tx, symbol, decimals, fee]: [
+  IncomingTxServiceModel,
+  string,
+  string,
+  string,
+]) => {
+  // this is a particular treatment for the DCD token, as it seems to lack of symbol and decimal methods
+  if (tx.tokenAddress && tx.tokenAddress.toLowerCase() === '0xe0b7927c4af23765cb51314a0e0521a9645f0e2a') {
+    symbol = 'DCD'
+    decimals = '9'
   }
 
   const { transactionHash, ...incomingTx } = tx
@@ -345,7 +370,8 @@ export const loadSafeIncomingTransactions = async (safeAddress: string) => {
     }
   }
 
-  const incomingTxsRecord = await Promise.all(incomingTransactions.map(buildIncomingTransactionFrom))
+  const incomingTxsWithData = await batchRequestIncomingTxsData(incomingTransactions)
+  const incomingTxsRecord = incomingTxsWithData.map(buildIncomingTransactionFrom)
   return Map().set(safeAddress, List(incomingTxsRecord))
 }
 
