@@ -1,6 +1,6 @@
 // @flow
 import { useEffect } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { batch, useDispatch, useSelector } from 'react-redux'
 
 import fetchCollectibles from '~/logic/collectibles/store/actions/fetchCollectibles'
 import { extendedSafeTokensSelector } from '~/routes/safe/container/selector'
@@ -18,13 +18,17 @@ const CheckForUpdates = () => {
   const { address } = safe
   useEffect(() => {
     const interval = setInterval(() => {
-      dispatch(checkAndUpdateSafe(address))
-      dispatch(fetchTokenBalances(address, activeTokens))
-      dispatch(fetchEtherBalance(safe))
+      batch(() => {
+        dispatch(checkAndUpdateSafe(address))
+        dispatch(fetchTokenBalances(address, activeTokens))
+        dispatch(fetchEtherBalance(safe))
+      })
     }, TIMEOUT)
     const collectiblesInterval = setInterval(() => {
-      dispatch(fetchTransactions(address))
-      dispatch(fetchCollectibles)
+      batch(() => {
+        dispatch(fetchTransactions(address))
+        dispatch(fetchCollectibles)
+      })
     }, TIMEOUT * 3)
     return () => {
       clearInterval(interval)

@@ -31,7 +31,7 @@ const LoadStore = (props: Props) => {
       dispatch(fetchTransactions(safeUrl))
     }
     fetchData()
-  }, [])
+  }, [safeUrl])
   return null
 }
 

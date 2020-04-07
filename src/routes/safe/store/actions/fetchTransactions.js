@@ -379,23 +379,24 @@ const getLastTxNonce = (outgoingTxs) => {
 export default (safeAddress: string) => async (dispatch: ReduxDispatch<GlobalState>) => {
   web3 = await getWeb3()
 
-  const transactions: SafeTransactionsType | undefined = await loadSafeTransactions(safeAddress)
-  if (transactions) {
-    const { cancel, outgoing } = transactions
-    const nonce = getLastTxNonce(outgoing && outgoing.get(safeAddress))
+  loadSafeTransactions(safeAddress).then((transactions: SafeTransactionsType | undefined) => {
+    if (transactions) {
+      const { cancel, outgoing } = transactions
+      const nonce = getLastTxNonce(outgoing && outgoing.get(safeAddress))
 
-    batch(() => {
-      dispatch(addCancellationTransactions(cancel))
-      dispatch(addTransactions(outgoing))
-      dispatch(updateSafe({ address: safeAddress, nonce }))
-    })
-  }
+      batch(() => {
+        dispatch(addCancellationTransactions(cancel))
+        dispatch(addTransactions(outgoing))
+        dispatch(updateSafe({ address: safeAddress, nonce }))
+      })
+    }
+  })
 
-  const incomingTransactions: Map<string, List<IncomingTransaction>> | undefined = await loadSafeIncomingTransactions(
-    safeAddress,
+  loadSafeIncomingTransactions(safeAddress).then(
+    (incomingTransactions: Map<string, List<IncomingTransaction>> | undefined) => {
+      if (incomingTransactions) {
+        dispatch(addIncomingTransactions(incomingTransactions))
+      }
+    },
   )
-
-  if (incomingTransactions) {
-    dispatch(addIncomingTransactions(incomingTransactions))
-  }
 }
