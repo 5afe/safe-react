@@ -17,24 +17,26 @@ const CheckForUpdates = () => {
   const activeTokens = useSelector(extendedSafeTokensSelector)
   const { address } = safe
   useEffect(() => {
-    const interval = setInterval(() => {
-      batch(() => {
-        dispatch(checkAndUpdateSafe(address))
-        dispatch(fetchTokenBalances(address, activeTokens))
-        dispatch(fetchEtherBalance(safe))
-      })
-    }, TIMEOUT)
-    const collectiblesInterval = setInterval(() => {
-      batch(() => {
-        dispatch(fetchTransactions(address))
-        dispatch(fetchCollectibles)
-      })
-    }, TIMEOUT * 3)
-    return () => {
-      clearInterval(interval)
-      clearInterval(collectiblesInterval)
+    if (address) {
+      const interval = setInterval(() => {
+        batch(() => {
+          dispatch(checkAndUpdateSafe(address))
+          dispatch(fetchTokenBalances(address, activeTokens))
+          dispatch(fetchEtherBalance(safe))
+        })
+      }, TIMEOUT)
+      const collectiblesInterval = setInterval(() => {
+        batch(() => {
+          dispatch(fetchTransactions(address))
+          dispatch(fetchCollectibles)
+        })
+      }, TIMEOUT * 3)
+      return () => {
+        clearInterval(interval)
+        clearInterval(collectiblesInterval)
+      }
     }
-  }, [])
+  }, [address])
   return null
 }
 

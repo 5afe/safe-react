@@ -15,23 +15,25 @@ type Props = {
 
 const LoadStore = (props: Props) => {
   const dispatch = useDispatch()
-  const safeUrl = useSelector(safeParamAddressFromStateSelector)
+  const safeAddress = useSelector(safeParamAddressFromStateSelector)
 
   const { setSafeLoaded } = props
   useEffect(() => {
     const fetchData = async () => {
-      dispatch(fetchLatestMasterContractVersion())
-        .then(() => dispatch(fetchSafe(safeUrl)))
-        .then(() => {
-          setSafeLoaded(true)
-          dispatch(addViewedSafe(safeUrl))
-        })
+      if (safeAddress) {
+        dispatch(fetchLatestMasterContractVersion())
+          .then(() => dispatch(fetchSafe(safeAddress)))
+          .then(() => {
+            setSafeLoaded(true)
+            return dispatch(fetchTransactions(safeAddress))
+          })
+          .then(() => dispatch(addViewedSafe(safeAddress)))
+      }
 
       dispatch(loadAddressBookFromStorage())
-      dispatch(fetchTransactions(safeUrl))
     }
     fetchData()
-  }, [safeUrl])
+  }, [safeAddress])
   return null
 }
 
