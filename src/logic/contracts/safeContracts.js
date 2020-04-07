@@ -96,7 +96,7 @@ export const estimateGasForDeployingSafe = async (
   return gas * parseInt(gasPrice, 10)
 }
 
-export const getGnosisSafeInstanceAt = ensureOnceAsync(async (safeAddress: string) => {
+export const getGnosisSafeInstanceAt = simpleMemoize(async (safeAddress: string) => {
   const web3 = getWeb3()
   const GnosisSafe = await getGnosisSafeContract(web3)
   const gnosisSafe = await GnosisSafe.at(safeAddress)
