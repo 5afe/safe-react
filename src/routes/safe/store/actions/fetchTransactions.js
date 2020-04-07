@@ -8,6 +8,7 @@ import type { Dispatch as ReduxDispatch } from 'redux'
 import { addIncomingTransactions } from './addIncomingTransactions'
 import { addTransactions } from './addTransactions'
 
+import generateBatchRequests from '~/logic/contracts/generateBatchRequests'
 import { decodeParamsFromSafeMethod } from '~/logic/contracts/methodIds'
 import { buildIncomingTxServiceUrl } from '~/logic/safe/transactions/incomingTxHistory'
 import { type TxServiceType, buildTxServiceUrl } from '~/logic/safe/transactions/txHistory'
@@ -221,40 +222,22 @@ const addMockSafeCreationTx = (safeAddress): Array<TxServiceModel> => [
   },
 ]
 
-const generateIncomingTxBatchRequest = (tx: IncomingTxServiceModel, batch) => {
-  const { methods } = new web3.eth.Contract(ALTERNATIVE_TOKEN_ABI, tx.tokenAddress)
-  const values = ['symbol', 'decimals', 'txHash'].map((method) => {
-    return new Promise((resolve) => {
-      const resolver = (error, result) => {
-        if (error) {
-          resolve(null)
-        } else {
-          resolve(result)
-        }
-      }
+const batchRequestIncomingTxsData = (txs: IncomingTxServiceModel[]) => {
+  const web3Batch = new web3.BatchRequest()
 
-      try {
-        let request
-        if (method === 'txHash') {
-          request = web3.eth.getTransaction.request(tx.transactionHash, resolver)
-        } else {
-          request = methods[method]().call.request(resolver)
-        }
-        batch.add(request)
-      } catch (e) {
-        resolve(null)
-      }
+  const whenTxsValues = txs.map((tx) => {
+    const methods = ['symbol', 'decimals', { method: 'getTransaction', args: [tx.transactionHash], type: 'eth' }]
+
+    return generateBatchRequests({
+      abi: ALTERNATIVE_TOKEN_ABI,
+      address: tx.tokenAddress,
+      batch: web3Batch,
+      context: tx,
+      methods,
     })
   })
-  return Promise.all([tx, ...values])
-}
 
-const batchRequestIncomingTxsData = (txs: IncomingTxServiceModel[]) => {
-  const batch = new web3.BatchRequest()
-
-  const whenTxsValues = txs.map((tx) => generateIncomingTxBatchRequest(tx, batch))
-
-  batch.execute()
+  web3Batch.execute()
 
   return Promise.all(whenTxsValues).then((txsValues) =>
     txsValues.map(([tx, symbol, decimals, { gas, gasPrice }]) => [
