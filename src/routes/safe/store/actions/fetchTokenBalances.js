@@ -5,7 +5,8 @@ import type { Dispatch as ReduxDispatch } from 'redux'
 
 import updateSafe from './updateSafe'
 
-import { getOnlyBalanceToken, getStandardTokenContract } from '~/logic/tokens/store/actions/fetchTokens'
+import generateBatchRequests from '~/logic/contracts/generateBatchRequests'
+import { OnlyBalanceToken, getStandardTokenContract } from '~/logic/tokens/store/actions/fetchTokens'
 import { type Token } from '~/logic/tokens/store/model/token'
 import { ETH_ADDRESS } from '~/logic/tokens/utils/tokenHelpers'
 import { sameAddress } from '~/logic/wallets/ethAddresses'
@@ -26,39 +27,36 @@ const isStandardERC20 = (address: string): boolean => {
   return !nonStandardERC20.find((token) => sameAddress(address, token.address) && sameAddress(NETWORK, token.network))
 }
 
-const getTokenBalances = (tokens: List<Token>, safeAddress: string) => {
+const getTokensBalances = (tokens: List<Token>, safeAddress: string) => {
   const web3 = getWeb3()
-  const batch = new web3.BatchRequest()
+  const web3Batch = new web3.BatchRequest()
 
   const safeTokens = tokens.toJS().filter(({ address }) => address !== ETH_ADDRESS)
-  const safeTokensBalances = safeTokens.map(({ address, decimals }: any) => {
-    const onlyBalanceToken = getOnlyBalanceToken()
-    onlyBalanceToken.options.address = address
-
+  const whenSafeTokensBalances = safeTokens.map((token) => {
     // As a fallback, we're using `balances`
-    const method = isStandardERC20(address) ? 'balanceOf' : 'balances'
+    const method = isStandardERC20(token.address) ? 'balanceOf' : 'balances'
 
-    return new Promise((resolve) => {
-      const request = onlyBalanceToken.methods[method](safeAddress).call.request((error, balance) => {
-        if (error) {
-          // if there's no balance, we log the error, but `resolve` with a default '0'
-          console.error('No balance method found', error)
-          resolve('0')
-        } else {
-          resolve({
-            address,
-            balance: new BigNumber(balance).div(`1e${decimals}`).toFixed(),
-          })
-        }
-      })
-
-      batch.add(request)
+    return generateBatchRequests({
+      abi: OnlyBalanceToken.abi,
+      address: token.address,
+      batch: web3Batch,
+      context: token,
+      methods: [{ method, args: [safeAddress] }],
     })
   })
 
-  batch.execute()
+  web3Batch.execute()
 
-  return Promise.all(safeTokensBalances)
+  return Promise.all(whenSafeTokensBalances).then((safeTokensBalances) =>
+    safeTokensBalances.map(([token, tokenBalance]) => {
+      const balance = new BigNumber(tokenBalance).div(`1e${token.decimals}`).toFixed()
+
+      return {
+        address: token.address,
+        balance: balance === 'NaN' ? '0' : balance,
+      }
+    }),
+  )
 }
 
 export const calculateBalanceOf = async (tokenAddress: string, safeAddress: string, decimals: number = 18) => {
@@ -85,7 +83,7 @@ const fetchTokenBalances = (safeAddress: string, tokens: List<Token>) => async (
     return
   }
   try {
-    const withBalances = await getTokenBalances(tokens, safeAddress)
+    const withBalances = await getTokensBalances(tokens, safeAddress)
 
     const balances = Map().withMutations((map) => {
       withBalances.forEach(({ address, balance }) => {

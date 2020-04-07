@@ -39,7 +39,7 @@ const generateBatchRequests = ({ abi, address, batch, context, methods }) => {
         if (type !== undefined) {
           request = web3[type][method].request(...args, resolver)
         } else {
-          request = contractInstance.methods[method]().call.request(...args, resolver)
+          request = contractInstance.methods[method](...args).call.request(resolver)
         }
         batch ? batch.add(request) : localBatch.add(request)
       } catch (e) {
