@@ -18,6 +18,7 @@ import LayoutHeader from '~/routes/safe/components/Layout/Header'
 import TabsComponent from '~/routes/safe/components/Layout/Tabs'
 import { safeParamAddressFromStateSelector } from '~/routes/safe/store/selectors'
 import { border } from '~/theme/variables'
+import { wrapInSuspense } from '~/utils/wrapInSuspense'
 
 export const BALANCES_TAB_BTN_TEST_ID = 'balances-tab-btn'
 export const SETTINGS_TAB_BTN_TEST_ID = 'settings-tab-btn'
@@ -79,48 +80,23 @@ const Layout = (props: Props) => {
     })
   }
 
-  const renderAppsTab = () => (
-    <React.Suspense>
-      <Apps closeModal={closeGenericModal} openModal={openGenericModal} />
-    </React.Suspense>
-  )
-
-  const renderSettingsTab = () => (
-    <React.Suspense>
-      <Settings />
-    </React.Suspense>
-  )
-  const renderBalancesTab = () => (
-    <React.Suspense>
-      <Balances />
-    </React.Suspense>
-  )
-
-  const renderTransactionsTab = () => (
-    <React.Suspense>
-      <TxsTable />
-    </React.Suspense>
-  )
-
-  const renderAddressBookTab = () => (
-    <React.Suspense>
-      <AddressBookTable />
-    </React.Suspense>
-  )
-
   return (
     <>
       <LayoutHeader onShow={onShow} showSendFunds={showSendFunds} />
       <TabsComponent />
       <Hairline color={border} style={{ marginTop: '-2px' }} />
       <Switch>
-        <Route exact path={`${match.path}/balances/:assetType?`} render={renderBalancesTab} />
-        <Route exact path={`${match.path}/transactions`} render={renderTransactionsTab} />
+        <Route exact path={`${match.path}/balances/:assetType?`} render={() => wrapInSuspense(<Balances />)} />
+        <Route exact path={`${match.path}/transactions`} render={() => wrapInSuspense(<TxsTable />)} />
         {process.env.REACT_APP_ENV !== 'production' && (
-          <Route exact path={`${match.path}/apps`} render={renderAppsTab} />
+          <Route
+            exact
+            path={`${match.path}/apps`}
+            render={() => wrapInSuspense(<Apps closeModal={closeGenericModal} openModal={openGenericModal} />)}
+          />
         )}
-        <Route exact path={`${match.path}/settings`} render={renderSettingsTab} />
-        <Route exact path={`${match.path}/address-book`} render={renderAddressBookTab} />
+        <Route exact path={`${match.path}/settings`} render={() => wrapInSuspense(<Settings />)} />
+        <Route exact path={`${match.path}/address-book`} render={() => wrapInSuspense(<AddressBookTable />)} />
         <Redirect to={`${match.path}/balances`} />
       </Switch>
       <SendModal

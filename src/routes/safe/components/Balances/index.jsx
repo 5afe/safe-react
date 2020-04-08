@@ -14,11 +14,12 @@ import Divider from '~/components/layout/Divider'
 import Link from '~/components/layout/Link'
 import Row from '~/components/layout/Row'
 import { SAFELIST_ADDRESS } from '~/routes/routes'
-import Fetchtokens, { useFetchTokens } from '~/routes/safe/components/Balances/FetchTokens'
+import { useFetchTokens } from '~/routes/safe/components/Balances/FetchTokens'
 import SendModal from '~/routes/safe/components/Balances/SendModal'
 import DropdownCurrency from '~/routes/safe/components/DropdownCurrency'
 import { safeFeaturesEnabledSelector, safeParamAddressFromStateSelector } from '~/routes/safe/store/selectors'
 import { history } from '~/store'
+import { wrapInSuspense } from '~/utils/wrapInSuspense'
 const Collectibles = React.lazy(() => import('~/routes/safe/components/Balances/Collectibles'))
 const Coins = React.lazy(() => import('~/routes/safe/components/Balances/Coins'))
 
@@ -146,17 +147,6 @@ const Balances = (props: Props) => {
     subMenuOptions,
   } = state
 
-  const renderCollectiblesTab = () => (
-    <React.Suspense>
-      <Collectibles />
-    </React.Suspense>
-  )
-  const renderCoinsTab = () => (
-    <React.Suspense>
-      <Coins showReceiveFunds={() => onShow('Receive')} showSendFunds={showSendFunds} />
-    </React.Suspense>
-  )
-
   return (
     <>
       <Row align="center" className={controls}>
@@ -203,8 +193,8 @@ const Balances = (props: Props) => {
           </Modal>
         </Col>
       </Row>
-      {showCoins && renderCoinsTab()}
-      {erc721Enabled && showCollectibles && renderCollectiblesTab()}
+      {showCoins && wrapInSuspense(<Coins showReceiveFunds={() => onShow('Receive')} showSendFunds={showSendFunds} />)}
+      {erc721Enabled && showCollectibles && wrapInSuspense(<Collectibles />)}
       <SendModal
         activeScreenType="sendFunds"
         isOpen={sendFunds.isOpen}

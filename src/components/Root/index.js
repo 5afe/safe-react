@@ -3,7 +3,7 @@ import 'babel-polyfill'
 
 import { MuiThemeProvider } from '@material-ui/core/styles'
 import { ConnectedRouter } from 'connected-react-router'
-import React, { Suspense, useState } from 'react'
+import React, { useState } from 'react'
 import { hot } from 'react-hot-loader/root'
 import { Provider } from 'react-redux'
 
@@ -14,6 +14,7 @@ const AppRoutes = React.lazy(() => import('~/routes'))
 import LoadStore from '~/routes/safe/container/LoadStore'
 import { history, store } from '~/store'
 import theme from '~/theme/mui'
+import { wrapInSuspense } from '~/utils/wrapInSuspense'
 
 import './index.scss'
 import './OnboardCustom.scss'
@@ -26,9 +27,7 @@ const Root = () => {
         <ConnectedRouter history={history}>
           <PageFrame>
             <LoadStore setSafeLoaded={setSafeLoaded} />
-            <Suspense fallback={<Loader />}>
-              <AppRoutes safeLoaded={safeLoaded} />
-            </Suspense>
+            {wrapInSuspense(<AppRoutes safeLoaded={safeLoaded} />, <Loader />)}
           </PageFrame>
         </ConnectedRouter>
       </MuiThemeProvider>
