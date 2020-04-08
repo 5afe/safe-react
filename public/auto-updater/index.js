@@ -31,7 +31,7 @@ function init(mainWindow) {
     dialog.showMessageBox({
       type: 'info',
       title: 'Found Updates',
-      message: 'There is a newer version of the this app available. Do you want to update now?',
+      message: 'There is a newer version of this app available. Do you want to update now?',
       buttons: ['Yes', 'Remind me later'],
       cancelId:1,
     }).then(result => {
@@ -59,14 +59,6 @@ function init(mainWindow) {
   autoUpdater.on("download-progress", (d) => {
     downloadProgress = d.percent;
     autoUpdater.logger.info(downloadProgress);
-  });
-
-  autoUpdater.on('update-not-available', () => {
-    dialog.showMessageBox({
-      buttons: ["OK"],
-      title: 'No Updates',
-      message: 'Current version is up-to-date.'
-    })
   });
 
   autoUpdater.checkForUpdates();

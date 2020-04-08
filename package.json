@@ -1,6 +1,6 @@
 {
   "name": "safe-react",
-  "version": "1.9.5",
+  "version": "1.9.6",
   "description": "Allowing crypto users manage funds in a safer way",
   "homepage": "https://github.com/gnosis/safe-react#readme",
   "bugs": {
@@ -18,10 +18,10 @@
   "main": "public/electron.js",
   "postinstall": "electron-builder install-app-deps",
   "scripts": {
-    "build": "REACT_APP_APP_VERSION=$npm_package_version node scripts/build.js && yarn electron-build",
+    "build": "REACT_APP_APP_VERSION=$npm_package_version node scripts/build.js",
     "electron-build": "electron-builder --linux --windows",
     "postinstall": "electron-builder install-app-deps",
-    "release": "REACT_APP_APP_VERSION=$npm_package_version node scripts/build.js && electron-builder -mlw -p always",
+    "release": "electron-builder --mac --windows --linux -p always",
     "electron-dev": "concurrently \"BROWSER=none yarn start\" \"wait-on http://localhost:3000 && electron .\"",
     "preelectron-pack": "yarn build",
     "build-mainnet": "REACT_APP_NETWORK=mainnet yarn build && yarn electron-build",
