@@ -15,8 +15,8 @@ import { getLocalSafe } from '~/logic/safe/utils'
 import { getTokenInfos } from '~/logic/tokens/store/actions/fetchTokens'
 import { ALTERNATIVE_TOKEN_ABI } from '~/logic/tokens/utils/alternativeAbi'
 import {
-  DECIMALS_METHOD_HASH,
   SAFE_TRANSFER_FROM_WITHOUT_DATA_HASH,
+  hasDecimalsMethod,
   isMultisendTransaction,
   isTokenTransfer,
   isUpgradeTransaction,
@@ -102,7 +102,7 @@ export const buildTransactionFrom = async (safeAddress: string, tx: TxServiceMod
   const code = tx.to ? await web3.eth.getCode(tx.to) : ''
   const isERC721Token =
     code.includes(SAFE_TRANSFER_FROM_WITHOUT_DATA_HASH) ||
-    (isTokenTransfer(tx.data, Number(tx.value)) && !code.includes(DECIMALS_METHOD_HASH))
+    (isTokenTransfer(tx.data, Number(tx.value)) && !(await hasDecimalsMethod(tx.to)))
   const isSendTokenTx = !isERC721Token && isTokenTransfer(tx.data, Number(tx.value))
   const isMultiSendTx = isMultisendTransaction(tx.data, Number(tx.value))
   const isUpgradeTx = isMultiSendTx && isUpgradeTransaction(tx.data)
