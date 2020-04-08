@@ -2,6 +2,7 @@
 import axios from 'axios'
 import bn from 'bignumber.js'
 import { List, Map, type RecordInstance } from 'immutable'
+import { batch } from 'react-redux'
 import type { Dispatch as ReduxDispatch } from 'redux'
 
 import { addIncomingTransactions } from './addIncomingTransactions'
@@ -24,6 +25,7 @@ import { ZERO_ADDRESS, sameAddress } from '~/logic/wallets/ethAddresses'
 import { EMPTY_DATA } from '~/logic/wallets/ethTransactions'
 import { getWeb3 } from '~/logic/wallets/getWeb3'
 import { addCancellationTransactions } from '~/routes/safe/store/actions/addCancellationTransactions'
+import updateSafe from '~/routes/safe/store/actions/updateSafe'
 import { makeConfirmation } from '~/routes/safe/store/models/confirmation'
 import { type IncomingTransaction, makeIncomingTransaction } from '~/routes/safe/store/models/incomingTransaction'
 import { makeOwner } from '~/routes/safe/store/models/owner'
@@ -347,15 +349,48 @@ export const loadSafeIncomingTransactions = async (safeAddress: string) => {
   return Map().set(safeAddress, List(incomingTxsRecord))
 }
 
+/**
+ * Returns nonce from the last tx returned by the server or defaults to 0
+ * @param outgoingTxs
+ * @returns {number|*}
+ */
+const getLastTxNonce = (outgoingTxs) => {
+  if (!outgoingTxs) {
+    return 0
+  }
+
+  const mostRecentNonce = outgoingTxs.get(0).nonce
+
+  // if nonce is null, then we are in front of the creation-tx
+  if (mostRecentNonce === null) {
+    const tx = outgoingTxs.get(1)
+
+    if (tx) {
+      // if there's other tx than the creation one, we return its nonce
+      return tx.nonce
+    } else {
+      return 0
+    }
+  }
+
+  return mostRecentNonce
+}
+
 export default (safeAddress: string) => async (dispatch: ReduxDispatch<GlobalState>) => {
   web3 = await getWeb3()
 
   const transactions: SafeTransactionsType | undefined = await loadSafeTransactions(safeAddress)
   if (transactions) {
     const { cancel, outgoing } = transactions
-    dispatch(addCancellationTransactions(cancel))
-    dispatch(addTransactions(outgoing))
+    const nonce = getLastTxNonce(outgoing && outgoing.get(safeAddress))
+
+    batch(() => {
+      dispatch(addCancellationTransactions(cancel))
+      dispatch(addTransactions(outgoing))
+      dispatch(updateSafe({ address: safeAddress, nonce }))
+    })
   }
+
   const incomingTransactions: Map<string, List<IncomingTransaction>> | undefined = await loadSafeIncomingTransactions(
     safeAddress,
   )

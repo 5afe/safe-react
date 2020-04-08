@@ -1,19 +1,30 @@
 // @flow
 
 import { getEIP712Signer } from './EIP712Signer'
-import { getEthSigner } from './ethSigner'
+import { ethSigner } from './ethSigner'
 
 // 1. we try to sign via EIP-712 if user's wallet supports it
 // 2. If not, try to use eth_sign (Safe version has to be >1.1.1)
 // If eth_sign, doesn't work continue with the regular flow (on-chain signatures, more in createTransaction.js)
 
-const signingFuncs = [getEIP712Signer('v3'), getEIP712Signer('v4'), getEIP712Signer(), getEthSigner]
+const SIGNERS = {
+  EIP712_V3: getEIP712Signer('v3'),
+  EIP712_V4: getEIP712Signer('v4'),
+  EIP712: getEIP712Signer(),
+  ETH_SIGN: ethSigner,
+}
+
+// hardware wallets support eth_sign only
+const getSignersByWallet = (isHW: boolean): Array<$Values<SIGNERS>> =>
+  isHW ? [SIGNERS.ETH_SIGN] : [SIGNERS.EIP712_V3, SIGNERS.EIP712_V4, SIGNERS.EIP712, SIGNERS.ETH_SIGN]
 
 export const SAFE_VERSION_FOR_OFFCHAIN_SIGNATURES = '>=1.1.1'
 
-export const tryOffchainSigning = async (txArgs) => {
+export const tryOffchainSigning = async (txArgs, isHW: boolean): Promise<string> | typeof undefined => {
   let signature
-  for (let signingFunc of signingFuncs) {
+
+  const signerByWallet = getSignersByWallet(isHW)
+  for (let signingFunc of signerByWallet) {
     try {
       signature = await signingFunc(txArgs)
 

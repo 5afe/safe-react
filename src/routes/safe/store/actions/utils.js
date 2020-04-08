@@ -8,7 +8,7 @@ export const getLastTx = async (safeAddress: string): Promise<TransactionProps> 
     const url = buildTxServiceUrl(safeAddress)
     const response = await axios.get(url, { params: { limit: 1 } })
 
-    return response.data.results[0]
+    return response.data.results[0] || null
   } catch (e) {
     console.error('failed to retrieve last Tx from server', e)
     return null
