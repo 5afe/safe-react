@@ -129,7 +129,7 @@ const SettingsDescription = ({ action, addedOwner, newThreshold, removedOwner }:
     )
   }
 
-  if (action === 'changedThreshold' && newThreshold) {
+  if (action === 'changeThreshold' && newThreshold) {
     return <NewThreshold newThreshold={newThreshold} />
   }
 
