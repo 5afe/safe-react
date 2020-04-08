@@ -1,6 +1,7 @@
 const electron = require("electron");
 const  express = require('express');
 const open = require('open');
+const log = require('electron-log');
 const fs = require('fs');
 const dialog = electron.dialog;
 const Menu = electron.Menu;
@@ -86,7 +87,6 @@ function createWindow() {
     webPreferences: {
       preload: path.join(__dirname, '../scripts/preload.js'),
       allowRunningInsecureContent: true,
-      nodeIntegration: true, // dev settings to be able to use "require" in main.js, could be set to false in production build
       nativeWindowOpen: true, // need to be set in order to display modal
     },
     icon: path.join(__dirname, './build/safe.png'),
@@ -130,8 +130,8 @@ function createWindow() {
   });
 
   mainWindow.webContents.on('crashed', () => {
-    mainWindow.destroy();
-    createWindow();
+    log.info('App Crashed');
+    mainWindow.reload();
   });
 
   mainWindow.on("closed", () => (mainWindow = null));

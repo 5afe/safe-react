@@ -19,7 +19,7 @@
   "postinstall": "electron-builder install-app-deps",
   "scripts": {
     "build": "REACT_APP_APP_VERSION=$npm_package_version node scripts/build.js && yarn electron-build",
-    "electron-build": "electron-builder --mac",
+    "electron-build": "electron-builder --linux --windows",
     "postinstall": "electron-builder install-app-deps",
     "release": "REACT_APP_APP_VERSION=$npm_package_version node scripts/build.js && electron-builder -mlw -p always",
     "electron-dev": "concurrently \"BROWSER=none yarn start\" \"wait-on http://localhost:3000 && electron .\"",
