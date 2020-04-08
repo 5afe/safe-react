@@ -14,7 +14,7 @@ export const useCheckForUpdates = () => {
   const dispatch = useDispatch()
   const safe = useSelector(safeSelector)
   const activeTokens = useSelector(extendedSafeTokensSelector)
-  const { address } = safe
+  const address = safe ? safe.address : null
   useEffect(() => {
     if (address) {
       const interval = setInterval(() => {
