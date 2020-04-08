@@ -103,32 +103,6 @@ export const getGnosisSafeInstanceAt = simpleMemoize(async (safeAddress: string)
   return gnosisSafe
 })
 
-export const getGnosisSafeInstanceWeb3At = ensureOnceAsync(async (safeAddress: string) => {
-  const web3 = getWeb3()
-  return new web3.eth.Contract(GnosisSafeSol.abi, safeAddress)
-})
-
-export const getSafeParamsBatch = async (safeAddress: string, safeParams: string[]) => {
-  const web3 = getWeb3()
-  const batch = new web3.BatchRequest()
-  const gnosisSafeInstance = await getGnosisSafeInstanceWeb3At(safeAddress)
-  const safeValues = safeParams.map((method) => {
-    return new Promise((resolve) => {
-          const resolver = (error, result) => {
-            if (error) {
-              resolve(null)
-            } else {
-              resolve(result)
-            }
-          }
-      const request = gnosisSafeInstance.methods[method]().call.request(resolver)
-      batch.add(request)
-    })
-  })
-  batch.execute()
-  return Promise.all(safeValues)
-}
-
 const cleanByteCodeMetadata = (bytecode: string): string => {
   const metaData = 'a165'
   return bytecode.substring(0, bytecode.lastIndexOf(metaData))

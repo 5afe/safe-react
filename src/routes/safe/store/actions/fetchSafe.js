@@ -1,8 +1,10 @@
 // @flow
+import GnosisSafeSol from '@gnosis.pm/safe-contracts/build/contracts/GnosisSafe.json'
 import { List } from 'immutable'
 import type { Dispatch as ReduxDispatch } from 'redux'
 
-import { getGnosisSafeInstanceAt, getSafeParamsBatch } from '~/logic/contracts/safeContracts'
+import generateBatchRequests from '~/logic/contracts/generateBatchRequests'
+import { getGnosisSafeInstanceAt } from '~/logic/contracts/safeContracts'
 import { getLocalSafe, getSafeName } from '~/logic/safe/utils'
 import { enabledFeatures, safeNeedsUpdate } from '~/logic/safe/utils/safeVersion'
 import { sameAddress } from '~/logic/wallets/ethAddresses'
@@ -40,7 +42,11 @@ export const buildSafe = async (safeAdd: string, safeName: string, latestMasterC
   const [localSafe, ethBalance] = await Promise.all([getLocalSafe(safeAddress), getBalanceInEtherOf(safeAddress)])
 
   const safeParams = ['getThreshold', 'nonce', 'VERSION', 'getOwners']
-  const [thresholdStr, nonceStr, currentVersion, remoteOwners] = await getSafeParamsBatch(safeAddress, safeParams)
+  const [thresholdStr, nonceStr, currentVersion, remoteOwners] = await generateBatchRequests({
+    abi: GnosisSafeSol.abi,
+    address: safeAddress,
+    methods: safeParams,
+  })
 
   const threshold = Number(thresholdStr)
   const nonce = Number(nonceStr)
