@@ -64,10 +64,10 @@ const Balances = (props: Props) => {
   useFetchTokens()
 
   useEffect(() => {
-    const isCoinsLocation = /\/balances\/?$/
-    const isCollectiblesLocation = /\/balances\/collectibles$/
-    const showCollectibles = isCollectiblesLocation.test(history.location.pathname)
-    const showCoins = isCoinsLocation.test(history.location.pathname)
+    const COINS_LOCATION_REGEX = /\/balances\/?$/
+    const COLLECTIBLES_LOCATION_REGEX = /\/balances\/collectibles$/
+    const showCollectibles = COLLECTIBLES_LOCATION_REGEX.test(history.location.pathname)
+    const showCoins = COINS_LOCATION_REGEX.test(history.location.pathname)
 
     if (!showCollectibles && !showCoins) {
       history.replace(`${SAFELIST_ADDRESS}/${address}/balances`)

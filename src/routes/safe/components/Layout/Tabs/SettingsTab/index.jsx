@@ -10,6 +10,7 @@ import { safeNeedsUpdateSelector } from '~/routes/safe/store/selectors'
 const SettingsTab = () => {
   const needsUpdate = useSelector(safeNeedsUpdateSelector)
   const granted = useSelector(grantedSelector)
+  
   return (
     <>
       <SettingsIcon />

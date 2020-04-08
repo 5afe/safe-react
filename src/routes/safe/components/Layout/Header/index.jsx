@@ -31,7 +31,9 @@ const LayoutHeader = (props: Props) => {
   const address = useSelector(safeParamAddressFromStateSelector)
   const granted = useSelector(grantedSelector)
   const name = useSelector(safeNameSelector)
-  return !address ? null : (
+  if (!address) return null
+  
+  return (
     <Block className={classes.container} margin="xl">
       <Row className={classes.userInfo}>
         <Identicon address={address} diameter={50} />
