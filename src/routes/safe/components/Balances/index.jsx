@@ -42,7 +42,7 @@ type Props = {
 
 type Action = 'Token' | 'Send' | 'Receive' | 'ManageCollectibleModal'
 
-const INITIAL_STATUS: State = {
+const INITIAL_STATE: State = {
   erc721Enabled: false,
   subMenuOptions: [],
   showToken: false,
@@ -57,7 +57,7 @@ const INITIAL_STATUS: State = {
 }
 
 const Balances = (props: Props) => {
-  const [state, setState] = useState(INITIAL_STATUS)
+  const [state, setState] = useState(INITIAL_STATE)
 
   const address = useSelector(safeParamAddressFromStateSelector)
   const featuresEnabled = useSelector(safeFeaturesEnabledSelector)
