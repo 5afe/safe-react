@@ -14,7 +14,7 @@ import Divider from '~/components/layout/Divider'
 import Link from '~/components/layout/Link'
 import Row from '~/components/layout/Row'
 import { SAFELIST_ADDRESS } from '~/routes/routes'
-import Fetchtokens from '~/routes/safe/components/Balances/FetchTokens'
+import Fetchtokens, { useFetchTokens } from '~/routes/safe/components/Balances/FetchTokens'
 import SendModal from '~/routes/safe/components/Balances/SendModal'
 import DropdownCurrency from '~/routes/safe/components/DropdownCurrency'
 import { safeFeaturesEnabledSelector, safeParamAddressFromStateSelector } from '~/routes/safe/store/selectors'
@@ -61,6 +61,7 @@ const Balances = (props: Props) => {
 
   const address = useSelector(safeParamAddressFromStateSelector)
   const featuresEnabled = useSelector(safeFeaturesEnabledSelector)
+  useFetchTokens()
 
   useEffect(() => {
     const isCoinsLocation = /\/balances\/?$/
@@ -219,7 +220,6 @@ const Balances = (props: Props) => {
       >
         <Receive onClose={() => onHide('Receive')} />
       </Modal>
-      <Fetchtokens />
     </>
   )
 }

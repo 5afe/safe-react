@@ -1,6 +1,6 @@
 // @flow
 import { useEffect } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { batch, useDispatch, useSelector } from 'react-redux'
 
 import fetchCollectibles from '~/logic/collectibles/store/actions/fetchCollectibles'
 import { fetchCurrencyValues } from '~/logic/currencyValues/store/actions/fetchCurrencyValues'
@@ -11,20 +11,19 @@ import { extendedSafeTokensSelector } from '~/routes/safe/container/selector'
 import fetchTokenBalances from '~/routes/safe/store/actions/fetchTokenBalances'
 import { safeParamAddressFromStateSelector } from '~/routes/safe/store/selectors'
 
-const Fetchtokens = () => {
+export const useFetchTokens = () => {
   const dispatch = useDispatch()
   const address = useSelector(safeParamAddressFromStateSelector)
   const activeTokens = useSelector(extendedSafeTokensSelector)
   useEffect(() => {
-    dispatch(fetchTokenBalances(address, activeTokens))
-    dispatch(fetchCollectibles())
-    // fetch tokens there to get symbols for tokens in TXs list
-    dispatch(fetchTokens())
-    dispatch(fetchCurrencyValues(address))
-    dispatch(activateTokensByBalance(address))
-    dispatch(activateAssetsByBalance(address))
+    batch(() => {
+      dispatch(fetchTokenBalances(address, activeTokens))
+      dispatch(fetchCollectibles())
+      // fetch tokens there to get symbols for tokens in TXs list
+      dispatch(fetchTokens())
+      dispatch(fetchCurrencyValues(address))
+      dispatch(activateTokensByBalance(address))
+      dispatch(activateAssetsByBalance(address))
+    })
   }, [])
-  return null
 }
-
-export default Fetchtokens
