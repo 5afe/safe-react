@@ -4,7 +4,6 @@ import { List } from 'immutable'
 import type { Dispatch as ReduxDispatch } from 'redux'
 
 import generateBatchRequests from '~/logic/contracts/generateBatchRequests'
-import { getGnosisSafeInstanceAt } from '~/logic/contracts/safeContracts'
 import { getLocalSafe, getSafeName } from '~/logic/safe/utils'
 import { enabledFeatures, safeNeedsUpdate } from '~/logic/safe/utils/safeVersion'
 import { sameAddress } from '~/logic/wallets/ethAddresses'
@@ -15,7 +14,7 @@ import removeSafeOwner from '~/routes/safe/store/actions/removeSafeOwner'
 import updateSafe from '~/routes/safe/store/actions/updateSafe'
 import { makeOwner } from '~/routes/safe/store/models/owner'
 import type { SafeProps } from '~/routes/safe/store/models/safe'
-import { type GlobalState } from '~/store/index'
+import { type GlobalState } from '~/store'
 
 const buildOwnersFrom = (
   safeOwners: string[],
@@ -51,7 +50,7 @@ export const buildSafe = async (safeAdd: string, safeName: string, latestMasterC
   const threshold = Number(thresholdStr)
   const nonce = Number(nonceStr)
   const owners = List(buildOwnersFrom(remoteOwners, localSafe))
-  const needsUpdate = await safeNeedsUpdate(currentVersion, latestMasterContractVersion)
+  const needsUpdate = safeNeedsUpdate(currentVersion, latestMasterContractVersion)
   const featuresEnabled = enabledFeatures(currentVersion)
 
   const safe: SafeProps = {
@@ -72,15 +71,19 @@ export const buildSafe = async (safeAdd: string, safeName: string, latestMasterC
 export const checkAndUpdateSafe = (safeAdd: string) => async (dispatch: ReduxDispatch<*>) => {
   const safeAddress = getWeb3().utils.toChecksumAddress(safeAdd)
   // Check if the owner's safe did change and update them
-  const [gnosisSafe, localSafe] = await Promise.all([getGnosisSafeInstanceAt(safeAddress), getLocalSafe(safeAddress)])
+  const localSafe = await getLocalSafe(safeAddress)
+  const safeParams = ['getThreshold', 'getOwners']
+  const [remoteThreshold, remoteOwners] = await generateBatchRequests({
+    abi: GnosisSafeSol.abi,
+    address: safeAddress,
+    methods: safeParams,
+  })
 
-  const remoteOwners = await gnosisSafe.getOwners()
   // Converts from [ { address, ownerName} ] to address array
   const localOwners = localSafe.owners.map((localOwner) => localOwner.address)
   const localThreshold = localSafe.threshold
 
   // Updates threshold values
-  const remoteThreshold = await gnosisSafe.getThreshold()
   localSafe.threshold = remoteThreshold.toNumber()
 
   if (localThreshold !== remoteThreshold.toNumber()) {
