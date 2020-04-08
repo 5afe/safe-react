@@ -5,7 +5,7 @@ import { useState } from 'react'
 import Page from '~/components/layout/Page'
 import { type Token } from '~/logic/tokens/store/model/token'
 import Layout from '~/routes/safe/components/Layout'
-import CheckForUpdates from '~/routes/safe/container/CheckForUpdates'
+import { useCheckForUpdates } from '~/routes/safe/container/CheckForUpdates'
 
 type Action = 'Send' | 'Receive'
 
@@ -23,6 +23,7 @@ type Props = {
 
 const SafeView = (props: Props) => {
   const [state, setState] = useState(INITIAL_STATE)
+  useCheckForUpdates()
 
   const onShow = (action: Action) => () => {
     setState({
@@ -71,7 +72,6 @@ const SafeView = (props: Props) => {
             showReceive={showReceive}
             showSendFunds={showSendFunds}
           />
-          <CheckForUpdates />
         </>
       )}
     </Page>

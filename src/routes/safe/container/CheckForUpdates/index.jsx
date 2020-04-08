@@ -10,7 +10,7 @@ import fetchTransactions from '~/routes/safe/store/actions/fetchTransactions'
 import { safeSelector } from '~/routes/safe/store/selectors'
 import { TIMEOUT } from '~/utils/constants'
 
-const CheckForUpdates = () => {
+export const useCheckForUpdates = () => {
   const dispatch = useDispatch()
   const safe = useSelector(safeSelector)
   const activeTokens = useSelector(extendedSafeTokensSelector)
@@ -35,7 +35,4 @@ const CheckForUpdates = () => {
       }
     }
   }, [address])
-  return null
 }
-
-export default CheckForUpdates
