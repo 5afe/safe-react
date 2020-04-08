@@ -10,7 +10,6 @@ import sendTransactions from './sendTransactions'
 
 import { ListContentLayout as LCL, Loader } from '~/components-v2'
 import ButtonLink from '~/components/layout/ButtonLink'
-import { getWeb3 } from '~/logic/wallets/getWeb3'
 import { networkSelector } from '~/logic/wallets/store/selectors'
 import {
   safeEthBalanceSelector,
@@ -46,7 +45,6 @@ function Apps({ closeModal, closeSnackbar, enqueueSnackbar, openModal }: Props) 
   const network = useSelector(networkSelector)
   const ethBalance = useSelector(safeEthBalanceSelector)
   const dispatch = useDispatch()
-  const web3 = getWeb3()
 
   const getSelectedApp = () => appsList.find((e) => e.id === selectedApp)
 
@@ -66,7 +64,6 @@ function Apps({ closeModal, closeSnackbar, enqueueSnackbar, openModal }: Props) 
           closeModal()
 
           const txHash = await sendTransactions(
-            web3,
             dispatch,
             safeAddress,
             data.data,

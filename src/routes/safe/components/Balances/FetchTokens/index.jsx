@@ -11,7 +11,7 @@ import { extendedSafeTokensSelector } from '~/routes/safe/container/selector'
 import fetchTokenBalances from '~/routes/safe/store/actions/fetchTokenBalances'
 import { safeParamAddressFromStateSelector } from '~/routes/safe/store/selectors'
 
-const FetchTokens = () => {
+const Fetchtokens = () => {
   const dispatch = useDispatch()
   const address = useSelector(safeParamAddressFromStateSelector)
   const activeTokens = useSelector(extendedSafeTokensSelector)
@@ -27,4 +27,4 @@ const FetchTokens = () => {
   return null
 }
 
-export default FetchTokens
+export default Fetchtokens

@@ -14,7 +14,7 @@ import Divider from '~/components/layout/Divider'
 import Link from '~/components/layout/Link'
 import Row from '~/components/layout/Row'
 import { SAFELIST_ADDRESS } from '~/routes/routes'
-import FetchTokens from '~/routes/safe/components/Balances/FetchTokens'
+import Fetchtokens from '~/routes/safe/components/Balances/FetchTokens'
 import SendModal from '~/routes/safe/components/Balances/SendModal'
 import DropdownCurrency from '~/routes/safe/components/DropdownCurrency'
 import { safeFeaturesEnabledSelector, safeParamAddressFromStateSelector } from '~/routes/safe/store/selectors'
@@ -152,7 +152,7 @@ const Balances = (props: Props) => {
   )
   const renderCoinsTab = () => (
     <React.Suspense>
-      <Coins showReceiveFunds={() => onShow('Receive')} showSendFunds={() => showSendFunds} />
+      <Coins showReceiveFunds={() => onShow('Receive')} showSendFunds={showSendFunds} />
     </React.Suspense>
   )
 
@@ -219,7 +219,7 @@ const Balances = (props: Props) => {
       >
         <Receive onClose={() => onHide('Receive')} />
       </Modal>
-      <FetchTokens />
+      <Fetchtokens />
     </>
   )
 }
