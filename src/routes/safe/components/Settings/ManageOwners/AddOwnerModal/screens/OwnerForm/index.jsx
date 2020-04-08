@@ -37,11 +37,11 @@ type Props = {
 }
 
 const OwnerForm = ({ classes, onClose, onSubmit }: Props) => {
-  const handleSubmit = values => {
+  const handleSubmit = (values) => {
     onSubmit(values)
   }
   const owners = useSelector(safeOwnersSelector)
-  const ownerDoesntExist = uniqueAddress(owners.map(o => o.address))
+  const ownerDoesntExist = uniqueAddress(owners.map((o) => o.address))
 
   return (
     <>

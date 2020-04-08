@@ -42,7 +42,7 @@ const RemoveSafeComponent = ({ classes, isOpen, onClose }: Props) => {
   const safeName = useSelector(safeNameSelector)
   const dispatch = useDispatch()
   const etherScanLink = getEtherScanLink('address', safeAddress)
-  
+
   return (
     <Modal
       description="Remove the selected Safe"

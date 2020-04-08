@@ -32,7 +32,7 @@ type Props = {
 const ThresholdForm = ({ classes, onClickBack, onClose, onSubmit }: Props) => {
   const threshold = useSelector(safeThresholdSelector)
   const owners = useSelector(safeOwnersSelector)
-  const handleSubmit = values => {
+  const handleSubmit = (values) => {
     onSubmit(values)
   }
 

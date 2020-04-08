@@ -55,10 +55,10 @@ const SafeDetails = (props: Props) => {
   const safeAddress = useSelector(safeParamAddressFromStateSelector)
 
   const toggleModal = () => {
-    setModalOpen(prevOpen => !prevOpen)
+    setModalOpen((prevOpen) => !prevOpen)
   }
 
-  const handleSubmit = values => {
+  const handleSubmit = (values) => {
     dispatch(updateSafe({ address: safeAddress, name: values.safeName }))
 
     const notification = getNotificationsFromTxType(TX_NOTIFICATION_TYPES.SAFE_NAME_CHANGE_TX)

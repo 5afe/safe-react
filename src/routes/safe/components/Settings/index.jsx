@@ -48,7 +48,7 @@ const Settings = (props: Props) => {
   const granted = useSelector(grantedSelector)
   const addressBook = useSelector(getAddressBook)
 
-  const handleChange = menuOptionIndex => () => {
+  const handleChange = (menuOptionIndex) => () => {
     setState({ ...state, menuOptionIndex })
   }
 
