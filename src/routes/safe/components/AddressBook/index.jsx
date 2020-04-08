@@ -159,7 +159,8 @@ const AddressBookTable = ({ classes }: Props) => {
                           className={classes.editEntryButton}
                           onClick={() => {
                             setSelectedEntry({
-                              entry: { ...row.toJS(), isOwnerAddress: userOwner },
+                              entry: row,
+                              isOwnerAddress: userOwner,
                             })
                             setEditCreateEntryModalOpen(true)
                           }}
