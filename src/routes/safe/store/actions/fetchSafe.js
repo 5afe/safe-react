@@ -38,14 +38,17 @@ const buildOwnersFrom = (
 
 export const buildSafe = async (safeAdd: string, safeName: string, latestMasterContractVersion: string) => {
   const safeAddress = getWeb3().utils.toChecksumAddress(safeAdd)
-  const [localSafe, ethBalance] = await Promise.all([getLocalSafe(safeAddress), getBalanceInEtherOf(safeAddress)])
 
   const safeParams = ['getThreshold', 'nonce', 'VERSION', 'getOwners']
-  const [thresholdStr, nonceStr, currentVersion, remoteOwners] = await generateBatchRequests({
-    abi: GnosisSafeSol.abi,
-    address: safeAddress,
-    methods: safeParams,
-  })
+  const [[thresholdStr, nonceStr, currentVersion, remoteOwners], localSafe, ethBalance] = await Promise.all([
+    generateBatchRequests({
+      abi: GnosisSafeSol.abi,
+      address: safeAddress,
+      methods: safeParams,
+    }),
+    getLocalSafe(safeAddress),
+    getBalanceInEtherOf(safeAddress),
+  ])
 
   const threshold = Number(thresholdStr)
   const nonce = Number(nonceStr)
@@ -71,23 +74,24 @@ export const buildSafe = async (safeAdd: string, safeName: string, latestMasterC
 export const checkAndUpdateSafe = (safeAdd: string) => async (dispatch: ReduxDispatch<*>) => {
   const safeAddress = getWeb3().utils.toChecksumAddress(safeAdd)
   // Check if the owner's safe did change and update them
-  const localSafe = await getLocalSafe(safeAddress)
   const safeParams = ['getThreshold', 'getOwners']
-  const [remoteThreshold, remoteOwners] = await generateBatchRequests({
-    abi: GnosisSafeSol.abi,
-    address: safeAddress,
-    methods: safeParams,
-  })
+  const [[remoteThreshold, remoteOwners], localSafe] = await Promise.all([
+    generateBatchRequests({
+      abi: GnosisSafeSol.abi,
+      address: safeAddress,
+      methods: safeParams,
+    }),
+    getLocalSafe(safeAddress),
+  ])
 
   // Converts from [ { address, ownerName} ] to address array
   const localOwners = localSafe.owners.map((localOwner) => localOwner.address)
   const localThreshold = localSafe.threshold
 
   // Updates threshold values
-  localSafe.threshold = remoteThreshold.toNumber()
-
-  if (localThreshold !== remoteThreshold.toNumber()) {
-    dispatch(updateSafe({ address: safeAddress, threshold: remoteThreshold.toNumber() }))
+  localSafe.threshold = remoteThreshold
+  if (localThreshold !== remoteThreshold) {
+    dispatch(updateSafe({ address: safeAddress, threshold: remoteThreshold }))
   }
 
   // If the remote owners does not contain a local address, we remove that local owner
