@@ -74,14 +74,14 @@ type IncomingTxServiceModel = {
 }
 
 export const buildTransactionFrom = async (safeAddress: string, tx: TxServiceModel): Promise<Transaction> => {
-  const { owners } = await getLocalSafe(safeAddress)
+  const localSafe = await getLocalSafe(safeAddress)
 
   const confirmations = List(
     tx.confirmations.map((conf: ConfirmationServiceModel) => {
       let ownerName = 'UNKNOWN'
 
-      if (owners) {
-        const storedOwner = owners.find((owner) => sameAddress(conf.owner, owner.address))
+      if (localSafe && localSafe.owners) {
+        const storedOwner = localSafe.owners.find((owner) => sameAddress(conf.owner, owner.address))
 
         if (storedOwner) {
           ownerName = storedOwner.name
