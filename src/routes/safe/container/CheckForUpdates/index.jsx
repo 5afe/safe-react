@@ -5,6 +5,7 @@ import { batch, useDispatch, useSelector } from 'react-redux'
 import fetchCollectibles from '~/logic/collectibles/store/actions/fetchCollectibles'
 import { extendedSafeTokensSelector } from '~/routes/safe/container/selector'
 import fetchEtherBalance from '~/routes/safe/store/actions/fetchEtherBalance'
+import { checkAndUpdateSafe } from '~/routes/safe/store/actions/fetchSafe'
 import fetchTokenBalances from '~/routes/safe/store/actions/fetchTokenBalances'
 import fetchTransactions from '~/routes/safe/store/actions/fetchTransactions'
 import { safeSelector } from '~/routes/safe/store/selectors'
@@ -27,6 +28,7 @@ export const useCheckForUpdates = () => {
         batch(() => {
           dispatch(fetchTransactions(address))
           dispatch(fetchCollectibles)
+          dispatch(checkAndUpdateSafe(address))
         })
       }, TIMEOUT * 3)
       return () => {

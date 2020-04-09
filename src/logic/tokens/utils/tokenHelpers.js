@@ -1,4 +1,5 @@
 // @flow
+import ERC20Detailed from '@openzeppelin/contracts/build/contracts/ERC20Detailed.json'
 import { List } from 'immutable'
 
 import logo from '~/assets/icons/icon_etherTokens.svg'
@@ -56,16 +57,27 @@ export const isAddressAToken = async (tokenAddress: string) => {
   return call !== '0x'
 }
 
+export const hasDecimalsMethod = async (address: string): Promise<boolean> => {
+  try {
+    const web3 = getWeb3()
+    const token = new web3.eth.Contract(ERC20Detailed.abi, address)
+    await token.methods.decimals().call()
+    return true
+  } catch (e) {
+    return false
+  }
+}
+
 export const isTokenTransfer = (data: string, value: number): boolean =>
   !!data && data.substring(0, 10) === '0xa9059cbb' && value === 0
 
 export const isMultisendTransaction = (data: string, value: number): boolean =>
   !!data && data.substring(0, 10) === '0x8d80ff0a' && value === 0
 
-// f08a0323 - setFallbackHandler (308, 8)
-// 7de7edef - changeMasterCopy (550, 8)
+// 7de7edef - changeMasterCopy (308, 8)
+// f08a0323 - setFallbackHandler (550, 8)
 export const isUpgradeTransaction = (data: string) =>
-  !!data && data.substr(308, 8) === 'f08a0323' && data.substr(550, 8) === '7de7edef'
+  !!data && data.substr(308, 8) === '7de7edef' && data.substr(550, 8) === 'f08a0323'
 
 export const isERC721Contract = async (contractAddress: string): boolean => {
   const ERC721Token = await getStandardTokenContract()

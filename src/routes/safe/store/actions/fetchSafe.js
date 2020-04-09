@@ -74,8 +74,8 @@ export const buildSafe = async (safeAdd: string, safeName: string, latestMasterC
 export const checkAndUpdateSafe = (safeAdd: string) => async (dispatch: ReduxDispatch<*>) => {
   const safeAddress = getWeb3().utils.toChecksumAddress(safeAdd)
   // Check if the owner's safe did change and update them
-  const safeParams = ['getThreshold', 'getOwners']
-  const [[remoteThreshold, remoteOwners], localSafe] = await Promise.all([
+  const safeParams = ['getThreshold', 'nonce', 'getOwners']
+  const [[remoteThreshold, remoteNonce, remoteOwners], localSafe] = await Promise.all([
     generateBatchRequests({
       abi: GnosisSafeSol.abi,
       address: safeAddress,
@@ -85,36 +85,41 @@ export const checkAndUpdateSafe = (safeAdd: string) => async (dispatch: ReduxDis
   ])
 
   // Converts from [ { address, ownerName} ] to address array
-  const localOwners = localSafe.owners.map((localOwner) => localOwner.address)
-  const localThreshold = localSafe.threshold
+  const localOwners = localSafe ? localSafe.owners.map((localOwner) => localOwner.address) : undefined
+  const localThreshold = localSafe ? localSafe.threshold : undefined
+  const localNonce = localSafe ? localSafe.nonce : undefined
 
-  // Updates threshold values
-  localSafe.threshold = remoteThreshold
-  if (localThreshold !== remoteThreshold) {
-    dispatch(updateSafe({ address: safeAddress, threshold: remoteThreshold }))
+  if (localNonce !== remoteNonce.toNumber()) {
+    dispatch(updateSafe({ address: safeAddress, nonce: remoteNonce.toNumber() }))
+  }
+
+  if (localThreshold !== remoteThreshold.toNumber()) {
+    dispatch(updateSafe({ address: safeAddress, threshold: remoteThreshold.toNumber() }))
   }
 
   // If the remote owners does not contain a local address, we remove that local owner
-  localOwners.forEach((localAddress) => {
-    const remoteOwnerIndex = remoteOwners.findIndex((remoteAddress) => sameAddress(remoteAddress, localAddress))
-    if (remoteOwnerIndex === -1) {
-      dispatch(removeSafeOwner({ safeAddress, ownerAddress: localAddress }))
-    }
-  })
+  if (localOwners) {
+    localOwners.forEach((localAddress) => {
+      const remoteOwnerIndex = remoteOwners.findIndex((remoteAddress) => sameAddress(remoteAddress, localAddress))
+      if (remoteOwnerIndex === -1) {
+        dispatch(removeSafeOwner({ safeAddress, ownerAddress: localAddress }))
+      }
+    })
 
-  // If the remote has an owner that we don't have locally, we add it
-  remoteOwners.forEach((remoteAddress) => {
-    const localOwnerIndex = localOwners.findIndex((localAddress) => sameAddress(remoteAddress, localAddress))
-    if (localOwnerIndex === -1) {
-      dispatch(
-        addSafeOwner({
-          safeAddress,
-          ownerAddress: remoteAddress,
-          ownerName: 'UNKNOWN',
-        }),
-      )
-    }
-  })
+    // If the remote has an owner that we don't have locally, we add it
+    remoteOwners.forEach((remoteAddress) => {
+      const localOwnerIndex = localOwners.findIndex((localAddress) => sameAddress(remoteAddress, localAddress))
+      if (localOwnerIndex === -1) {
+        dispatch(
+          addSafeOwner({
+            safeAddress,
+            ownerAddress: remoteAddress,
+            ownerName: 'UNKNOWN',
+          }),
+        )
+      }
+    })
+  }
 }
 
 // eslint-disable-next-line consistent-return
