@@ -1,9 +1,6 @@
 // @flow
-import { BigNumber } from 'bignumber.js'
-
 import { getGnosisSafeInstanceAt } from '~/logic/contracts/safeContracts'
 import { EMPTY_DATA } from '~/logic/wallets/ethTransactions'
-import { getWeb3 } from '~/logic/wallets/getWeb3'
 
 const estimateDataGasCosts = (data) => {
   const reducer = (accumulator, currentValue) => {
@@ -56,36 +53,6 @@ export const estimateDataGas = (
   const dataGasEstimate = estimateDataGasCosts(payload) + signatureCost + (nonce > 0 ? 5000 : 20000) + 1500 // 1500 -> hash generation costs
 
   return dataGasEstimate + 32000 // Add aditional gas costs (e.g. base tx costs, transfer costs)
-}
-
-export const generateTxGasEstimateFrom = async (
-  safe: any,
-  safeAddress: string,
-  data: string,
-  to: string,
-  valueInWei: number,
-  operation: number,
-) => {
-  try {
-    let safeInstance = safe
-    if (!safeInstance) {
-      safeInstance = await getGnosisSafeInstanceAt(safeAddress)
-    }
-
-    const estimateData = safeInstance.contract.methods.requiredTxGas(to, valueInWei, data, operation).encodeABI()
-    const estimateResponse = await getWeb3().eth.call({
-      to: safeAddress,
-      from: safeAddress,
-      data: estimateData,
-    })
-    const txGasEstimate = new BigNumber(estimateResponse.substring(138), 16)
-
-    // Add 10k else we will fail in case of nested calls
-    return txGasEstimate.toNumber() + 10000
-  } catch (error) {
-    console.error('Error calculating tx gas estimation', error)
-    return 0
-  }
 }
 
 export const calculateTxFee = async (
