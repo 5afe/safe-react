@@ -48,14 +48,6 @@ export default handleActions<SafeReducerState, *>(
     [UPDATE_SAFE]: (state: SafeReducerState, action: ActionType<Function>): SafeReducerState => {
       const safe = action.payload
       const safeAddress = safe.address
-      const isNonceUpdate = safe.nonce !== undefined
-
-      if (isNonceUpdate && safe.nonce <= state.getIn([SAFE_REDUCER_ID, safeAddress, 'nonce'])) {
-        // update only when nonce is greater than the one already stored
-        // this will prevent undesired changes in the safe's state when
-        // txs pagination is implemented
-        return state
-      }
 
       return state.updateIn([SAFE_REDUCER_ID, safeAddress], (prevSafe) => prevSafe.merge(safe))
     },
