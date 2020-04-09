@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/matextrem/safe-electron-multisig.git"
+    "url": "https://github.com/gnosis/safe-react.git"
   },
   "license": "MIT",
   "author": {
@@ -24,7 +24,7 @@
     "release": "electron-builder --mac --windows --linux -p always",
     "electron-dev": "concurrently \"BROWSER=none yarn start\" \"wait-on http://localhost:3000 && electron .\"",
     "preelectron-pack": "yarn build",
-    "build-mainnet": "REACT_APP_NETWORK=mainnet yarn build && yarn electron-build",
+    "build-mainnet": "REACT_APP_NETWORK=mainnet yarn build",
     "flow": "flow",
     "format:staged": "lint-staged",
     "lint:check": "eslint './src/**/*.{js,jsx}'",
@@ -55,8 +55,8 @@
     "publish": [
       {
         "provider": "github",
-        "owner": "matextrem",
-        "repo": "safe-electron-multisig"
+        "owner": "gnosis",
+        "repo": "safe-react"
       }
     ],
     "dmg": {
@@ -106,8 +106,8 @@
       "publish": [
         {
           "provider": "github",
-          "owner": "matextrem",
-          "repo": "safe-electron-multisig"
+          "owner": "gnosis",
+          "repo": "safe-react"
         }
       ]
     },
