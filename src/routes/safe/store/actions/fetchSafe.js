@@ -76,6 +76,11 @@ export const checkAndUpdateSafe = (safeAdd: string) => async (dispatch: ReduxDis
   const remoteThreshold = await gnosisSafe.getThreshold()
   localSafe.threshold = remoteThreshold.toNumber()
 
+  const nonce = await gnosisSafe.nonce()
+  if (localSafe.nonce !== nonce.toNumber()) {
+    dispatch(updateSafe({ address: safeAddress, nonce: nonce.toNumber() }))
+  }
+
   if (localThreshold !== remoteThreshold.toNumber()) {
     dispatch(updateSafe({ address: safeAddress, threshold: remoteThreshold.toNumber() }))
   }
