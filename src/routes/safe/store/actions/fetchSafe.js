@@ -89,12 +89,12 @@ export const checkAndUpdateSafe = (safeAdd: string) => async (dispatch: ReduxDis
   const localThreshold = localSafe ? localSafe.threshold : undefined
   const localNonce = localSafe ? localSafe.nonce : undefined
 
-  if (localNonce !== remoteNonce.toNumber()) {
-    dispatch(updateSafe({ address: safeAddress, nonce: remoteNonce.toNumber() }))
+  if (localNonce !== Number(remoteNonce)) {
+    dispatch(updateSafe({ address: safeAddress, nonce: Number(remoteNonce) }))
   }
 
-  if (localThreshold !== remoteThreshold.toNumber()) {
-    dispatch(updateSafe({ address: safeAddress, threshold: remoteThreshold.toNumber() }))
+  if (localThreshold !== Number(remoteThreshold)) {
+    dispatch(updateSafe({ address: safeAddress, threshold: Number(remoteThreshold) }))
   }
 
   // If the remote owners does not contain a local address, we remove that local owner
