@@ -1,4 +1,5 @@
 // @flow
+import ERC20Detailed from '@openzeppelin/contracts/build/contracts/ERC20Detailed.json'
 import { List } from 'immutable'
 
 import logo from '~/assets/icons/icon_etherTokens.svg'
@@ -54,6 +55,17 @@ export const isAddressAToken = async (tokenAddress: string) => {
   const call = await web3.eth.call({ to: tokenAddress, data: web3.utils.sha3('totalSupply()') })
 
   return call !== '0x'
+}
+
+export const hasDecimalsMethod = async (address: string): Promise<boolean> => {
+  try {
+    const web3 = getWeb3()
+    const token = new web3.eth.Contract(ERC20Detailed.abi, address)
+    await token.methods.decimals().call()
+    return true
+  } catch (e) {
+    return false
+  }
 }
 
 export const isTokenTransfer = (data: string, value: number): boolean =>
