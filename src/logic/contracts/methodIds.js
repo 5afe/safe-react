@@ -39,11 +39,18 @@ import { getWeb3 } from '~/logic/wallets/getWeb3'
 //   { name: "getTransactionHash", id: "0xd8d11f78" }
 // ]
 
+export const SAFE_METHODS_NAMES = {
+  ADD_OWNER_WITH_THRESHOLD: 'addOwnerWithThreshold',
+  CHANGE_THRESHOLD: 'changeThreshold',
+  REMOVE_OWNER: 'removeOwner',
+  SWAP_OWNER: 'swapOwner',
+}
+
 const METHOD_TO_ID = {
-  '0xe318b52b': 'swapOwner',
-  '0x0d582f13': 'addOwnerWithThreshold',
-  '0xf8dc5dd9': 'removeOwner',
-  '0x694e80c3': 'changeThreshold',
+  '0xe318b52b': SAFE_METHODS_NAMES.SWAP_OWNER,
+  '0x0d582f13': SAFE_METHODS_NAMES.ADD_OWNER_WITH_THRESHOLD,
+  '0xf8dc5dd9': SAFE_METHODS_NAMES.REMOVE_OWNER,
+  '0x694e80c3': SAFE_METHODS_NAMES.CHANGE_THRESHOLD,
 }
 
 export const decodeParamsFromSafeMethod = async (data: string) => {
