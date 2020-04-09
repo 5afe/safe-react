@@ -73,9 +73,9 @@ export const checkAndUpdateSafe = (safeAdd: string) => async (dispatch: ReduxDis
     gnosisSafe.getThreshold(),
   ])
   // Converts from [ { address, ownerName} ] to address array
-  const localOwners = localSafe.owners.map((localOwner) => localOwner.address)
-  const localThreshold = localSafe.threshold
-  const localNonce = localSafe.nonce
+  const localOwners = localSafe ? localSafe.owners.map((localOwner) => localOwner.address) : undefined
+  const localThreshold = localSafe ? localSafe.threshold : undefined
+  const localNonce = localSafe ? localSafe.nonce : undefined
 
   if (localNonce !== remoteNonce.toNumber()) {
     dispatch(updateSafe({ address: safeAddress, nonce: remoteNonce.toNumber() }))
@@ -86,26 +86,28 @@ export const checkAndUpdateSafe = (safeAdd: string) => async (dispatch: ReduxDis
   }
 
   // If the remote owners does not contain a local address, we remove that local owner
-  localOwners.forEach((localAddress) => {
-    const remoteOwnerIndex = remoteOwners.findIndex((remoteAddress) => sameAddress(remoteAddress, localAddress))
-    if (remoteOwnerIndex === -1) {
-      dispatch(removeSafeOwner({ safeAddress, ownerAddress: localAddress }))
-    }
-  })
+  if (localOwners) {
+    localOwners.forEach((localAddress) => {
+      const remoteOwnerIndex = remoteOwners.findIndex((remoteAddress) => sameAddress(remoteAddress, localAddress))
+      if (remoteOwnerIndex === -1) {
+        dispatch(removeSafeOwner({ safeAddress, ownerAddress: localAddress }))
+      }
+    })
 
-  // If the remote has an owner that we don't have locally, we add it
-  remoteOwners.forEach((remoteAddress) => {
-    const localOwnerIndex = localOwners.findIndex((localAddress) => sameAddress(remoteAddress, localAddress))
-    if (localOwnerIndex === -1) {
-      dispatch(
-        addSafeOwner({
-          safeAddress,
-          ownerAddress: remoteAddress,
-          ownerName: 'UNKNOWN',
-        }),
-      )
-    }
-  })
+    // If the remote has an owner that we don't have locally, we add it
+    remoteOwners.forEach((remoteAddress) => {
+      const localOwnerIndex = localOwners.findIndex((localAddress) => sameAddress(remoteAddress, localAddress))
+      if (localOwnerIndex === -1) {
+        dispatch(
+          addSafeOwner({
+            safeAddress,
+            ownerAddress: remoteAddress,
+            ownerName: 'UNKNOWN',
+          }),
+        )
+      }
+    })
+  }
 }
 
 // eslint-disable-next-line consistent-return
