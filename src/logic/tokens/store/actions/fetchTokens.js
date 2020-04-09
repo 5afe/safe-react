@@ -137,6 +137,22 @@ export const getTokenInfos = async (tokenAddress: string) => {
   return savedToken
 }
 
+const fetchTokenDecimals = async (tokenAddress: string) => {
+  let tokenDecimals = null
+  try {
+    const tokenContract = await getHumanFriendlyToken()
+    const tokenInstance = await tokenContract.at(tokenAddress)
+    tokenDecimals = await tokenInstance.decimals()
+  } catch (error) {
+    console.error('Fetching error for', tokenAddress)
+  }
+
+  return {
+    address: tokenAddress,
+    decimals: tokenDecimals ? tokenDecimals.toNumber() : 18,
+  }
+}
+
 export const fetchTokens = () => async (dispatch: ReduxDispatch<GlobalState>, getState: Function) => {
   try {
     const currentSavedTokens = tokensSelector(getState())
@@ -149,7 +165,21 @@ export const fetchTokens = () => async (dispatch: ReduxDispatch<GlobalState>, ge
       return
     }
 
-    const tokens = List(tokenList.map((token: TokenProps) => makeToken(token)))
+    let decimalsPromises = []
+    // Fetch the decimals of the tokens from the blockchain in order to avoid the bug of wrong value with the backend
+    // Once this issue is solved in the backend we should remove this
+    tokenList.forEach(({ address }) => decimalsPromises.push(fetchTokenDecimals(address)))
+    const tokenDecimals = await Promise.all(decimalsPromises)
+
+    const tokens = List(
+      tokenList.map((token: TokenProps) => {
+        const entryFound = tokenDecimals.find(({ address }) => address === token.address)
+        return makeToken({
+          ...token,
+          decimals: entryFound.decimals,
+        })
+      }),
+    )
 
     dispatch(saveTokens(tokens))
   } catch (err) {
