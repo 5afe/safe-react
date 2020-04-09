@@ -5,6 +5,9 @@ import appsIconSvg from '~/routes/safe/components/Transactions/TxsTable/TxType/a
 
 export const GNOSIS_APPS_URL = 'https://gnosis-apps.netlify.com'
 
+const appsUrl = process.env.REACT_APP_GNOSIS_APPS_URL ? process.env.REACT_APP_GNOSIS_APPS_URL : GNOSIS_APPS_URL
+export const staticAppsList = [`${appsUrl}/compound`]
+
 export const getAppInfoFromOrigin = (origin: string) => {
   try {
     return JSON.parse(origin)

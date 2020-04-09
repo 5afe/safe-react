@@ -3,9 +3,10 @@ import { withSnackbar } from 'notistack'
 import React, { useCallback, useEffect, useState } from 'react'
 import styled from 'styled-components'
 
+import ManageApps from './ManageApps'
 import confirmTransactions from './confirmTransactions'
 import sendTransactions from './sendTransactions'
-import { GNOSIS_APPS_URL, getAppInfoFromUrl } from './utils'
+import { getAppInfoFromUrl, staticAppsList } from './utils'
 
 import { ListContentLayout as LCL, Loader } from '~/components-v2'
 import ButtonLink from '~/components/layout/ButtonLink'
@@ -142,9 +143,6 @@ function Apps({
   // Load apps list
   useEffect(() => {
     const loadApps = async () => {
-      const appsUrl = process.env.REACT_APP_GNOSIS_APPS_URL ? process.env.REACT_APP_GNOSIS_APPS_URL : GNOSIS_APPS_URL
-      const staticAppsList = [`${appsUrl}/compound`, `${appsUrl}/uniswap`]
-
       const list = [...staticAppsList]
       const apps = []
       for (let index = 0; index < list.length; index++) {
@@ -223,9 +221,7 @@ function Apps({
   return (
     <LCL.Wrapper>
       <LCL.Nav>
-        <ButtonLink onClick={() => {}} size="lg" testId="manage-tokens-btn">
-          Manage Apps
-        </ButtonLink>
+        <ManageApps />
       </LCL.Nav>
       <LCL.Menu>
         <LCL.List activeItem={selectedApp} items={appsList} onItemClick={onSelectApp} />
