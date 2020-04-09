@@ -67,18 +67,18 @@ export const checkAndUpdateSafe = (safeAdd: string) => async (dispatch: ReduxDis
   // Check if the owner's safe did change and update them
   const [gnosisSafe, localSafe] = await Promise.all([getGnosisSafeInstanceAt(safeAddress), getLocalSafe(safeAddress)])
 
-  const remoteOwners = await gnosisSafe.getOwners()
+  const [remoteOwners, remoteNonce, remoteThreshold] = await Promise.all([
+    gnosisSafe.getOwners(),
+    gnosisSafe.nonce(),
+    gnosisSafe.getThreshold(),
+  ])
   // Converts from [ { address, ownerName} ] to address array
   const localOwners = localSafe.owners.map((localOwner) => localOwner.address)
   const localThreshold = localSafe.threshold
+  const localNonce = localSafe.nonce
 
-  // Updates threshold values
-  const remoteThreshold = await gnosisSafe.getThreshold()
-  localSafe.threshold = remoteThreshold.toNumber()
-
-  const nonce = await gnosisSafe.nonce()
-  if (localSafe.nonce !== nonce.toNumber()) {
-    dispatch(updateSafe({ address: safeAddress, nonce: nonce.toNumber() }))
+  if (localNonce !== remoteNonce.toNumber()) {
+    dispatch(updateSafe({ address: safeAddress, nonce: remoteNonce.toNumber() }))
   }
 
   if (localThreshold !== remoteThreshold.toNumber()) {
