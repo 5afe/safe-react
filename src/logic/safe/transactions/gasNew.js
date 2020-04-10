@@ -7,16 +7,34 @@ import { CALL } from '.'
 import { getGnosisSafeInstanceAt } from '~/logic/contracts/safeContracts'
 import { generateSignaturesFromTxConfirmations } from '~/logic/safe/safeTxSigner'
 import { ZERO_ADDRESS } from '~/logic/wallets/ethAddresses'
-import { calculateGasOf, calculateGasPrice } from '~/logic/wallets/ethTransactions'
+import { EMPTY_DATA, calculateGasOf, calculateGasPrice } from '~/logic/wallets/ethTransactions'
 import { getAccountFrom, getWeb3 } from '~/logic/wallets/getWeb3'
 import { type Transaction } from '~/routes/safe/store/models/transaction'
 
+const estimateDataGasCosts = (data) => {
+  const reducer = (accumulator, currentValue) => {
+    if (currentValue === EMPTY_DATA) {
+      return accumulator + 0
+    }
+
+    if (currentValue === '00') {
+      return accumulator + 4
+    }
+
+    return accumulator + 68
+  }
+
+  return data.match(/.{2}/g).reduce(reducer, 0)
+}
+
 export const estimateTxGasCosts = async (
+  safe: any,
   safeAddress: string,
-  to: string,
   data: string,
-  tx?: Transaction,
-  preApprovingOwner?: string,
+  to: string,
+  valueInWei: number | string,
+  operation: number,
+  signatures: string,
 ): Promise<number> => {
   try {
     const web3 = getWeb3()
@@ -83,6 +101,46 @@ export const estimateTxGasCosts = async (
   }
 }
 
+// https://docs.gnosis.io/safe/docs/docs4/#safe-transaction-data-gas-estimation
+// https://github.com/gnosis/safe-contracts/blob/a97c6fd24f79c0b159ddd25a10a2ebd3ea2ef926/test/utils/execution.js
+type
+
+export const estimateDataGas = async (
+  safeAddress: string,
+  to: string,
+  data: string,
+  valueInWei: number | string,
+  tx?: Transaction,
+  preApprovingOwner?: string,
+) => {
+  const web3 = getWeb3()
+  const from = await getAccountFrom(web3)
+  const safeInstance = new web3.eth.Contract(GnosisSafeSol.abi, safeAddress)
+  const signatureCount = tx && tx.confirmations ? tx.confirmations.size : 1
+  const signatures =
+    tx && tx.confirmations
+      ? generateSignaturesFromTxConfirmations(tx.confirmations, preApprovingOwner)
+      : `0x000000000000000000000000${from.replace(
+          '0x',
+          '',
+        )}000000000000000000000000000000000000000000000000000000000000000001`
+  // numbers < 256 are 192 -> 31 * 4 + 68
+  // numbers < 65k are 256 -> 30 * 4 + 2 * 68
+  // For signature array length and dataGasEstimate we already calculated
+  // the 0 bytes so we just add 64 for each non-zero byte
+  const gasPrice = 0 // no need to get refund when we submit txs to metamask
+  const signatureCost = signatureCount * (68 + 2176 + 2176 + 6000) // array count (3 -> r, s, v) * signature count
+
+  const payload = safe.contract.methods
+    .execTransaction(to, valueInWei, data, operation, txGasEstimate, 0, gasPrice, gasToken, refundReceiver, signatures)
+    .encodeABI()
+
+  // eslint-disable-next-line
+  const dataGasEstimate = estimateDataGasCosts(payload) + signatureCost + (nonce > 0 ? 5000 : 20000) + 1500 // 1500 -> hash generation costs
+
+  return dataGasEstimate + 32000 // Add aditional gas costs (e.g. base tx costs, transfer costs)
+}
+
 export const estimateSafeTxGas = async (
   safe: any,
   safeAddress: string,
@@ -92,6 +150,9 @@ export const estimateSafeTxGas = async (
   operation: number,
 ) => {
   try {
+    let safeTxGas
+    let additionalGas = 10000
+    let additionalGasBatches = [10000, 20000, 40000, 80000, 160000, 320000, 640000, 1280000, 2560000, 5120000]
     let safeInstance = safe
     if (!safeInstance) {
       safeInstance = await getGnosisSafeInstanceAt(safeAddress)
