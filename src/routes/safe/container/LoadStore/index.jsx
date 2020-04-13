@@ -25,10 +25,10 @@ const LoadStore = (props: Props) => {
           .then(() => dispatch(fetchSafe(safeAddress)))
           .then(() => {
             setSafeLoaded(true)
+            dispatch(loadAddressBookFromStorage())
             return dispatch(fetchTransactions(safeAddress))
           })
           .then(() => dispatch(addViewedSafe(safeAddress)))
-        dispatch(loadAddressBookFromStorage())
       }
     }
     fetchData()
