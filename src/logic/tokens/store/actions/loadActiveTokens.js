@@ -11,6 +11,7 @@ import { type GlobalState } from '~/store/index'
 const loadActiveTokens = () => async (dispatch: ReduxDispatch<GlobalState>) => {
   try {
     const tokens: Map<string, TokenProps> = await getActiveTokens()
+    // The filter of strings was made because of the issue #751. Please see: https://github.com/gnosis/safe-react/pull/755#issuecomment-612969340
     const tokenRecordsList: List<Token> = List(
       Object.values(tokens)
         .filter((t) => typeof t.decimals !== 'string')
