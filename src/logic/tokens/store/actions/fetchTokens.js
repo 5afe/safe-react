@@ -127,6 +127,7 @@ export const getTokenInfos = async (tokenAddress: string) => {
   const savedToken = makeToken({
     address: tokenAddress,
     name: name ? name : tokenSymbol,
+    symbol: tokenSymbol,
     decimals: tokenDecimals.toNumber(),
     logoUri: '',
   })
