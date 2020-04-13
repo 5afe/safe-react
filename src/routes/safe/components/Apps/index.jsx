@@ -4,9 +4,9 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
 
-import appsList from './appsList'
 import confirmTransactions from './confirmTransactions'
 import sendTransactions from './sendTransactions'
+import { GNOSIS_APPS_URL, getAppInfoFromUrl } from './utils'
 
 import { ListContentLayout as LCL, Loader } from '~/components-v2'
 import ButtonLink from '~/components/layout/ButtonLink'
@@ -37,7 +37,9 @@ type Props = {
 }
 
 function Apps({ closeModal, closeSnackbar, enqueueSnackbar, openModal }: Props) {
-  const [selectedApp, setSelectedApp] = useState('1')
+  const [appsList, setAppsList] = useState([])
+  const [selectedApp, setSelectedApp] = useState()
+  const [loading, setLoading] = useState(true)
   const [appIsLoading, setAppIsLoading] = useState(true)
   const [iframeEl, setframeEl] = useState(null)
   const safeName = useSelector(safeNameSelector)
@@ -109,6 +111,7 @@ function Apps({ closeModal, closeSnackbar, enqueueSnackbar, openModal }: Props) 
     }
   }, [])
 
+  // handle messages from iframe
   useEffect(() => {
     const onIframeMessage = async ({ data, origin }) => {
       if (origin === window.origin) {
@@ -122,13 +125,45 @@ function Apps({ closeModal, closeSnackbar, enqueueSnackbar, openModal }: Props) 
 
       handleIframeMessage(data)
     }
+
     window.addEventListener('message', onIframeMessage)
 
     return () => {
       window.removeEventListener('message', onIframeMessage)
     }
-  }, [])
+  })
 
+  // Load apps list
+  useEffect(() => {
+    const loadApps = async () => {
+      const appsUrl = process.env.REACT_APP_GNOSIS_APPS_URL ? process.env.REACT_APP_GNOSIS_APPS_URL : GNOSIS_APPS_URL
+      const staticAppsList = [`${appsUrl}/compound`, `${appsUrl}/uniswap`]
+
+      const list = [...staticAppsList]
+      const apps = []
+      for (let index = 0; index < list.length; index++) {
+        try {
+          const appUrl = list[index]
+          const appInfo = await getAppInfoFromUrl(appUrl)
+          const app = { url: appUrl, ...appInfo }
+
+          app.id = JSON.stringify({ url: app.url, name: app.name })
+          apps.push(app)
+        } catch (error) {
+          console.error(error)
+        }
+      }
+
+      setAppsList([...apps])
+      setLoading(false)
+    }
+
+    if (!appsList.length) {
+      loadApps()
+    }
+  }, [appsList])
+
+  // on iframe change
   useEffect(() => {
     const onIframeLoaded = () => {
       setAppIsLoading(false)
@@ -169,10 +204,14 @@ function Apps({ closeModal, closeSnackbar, enqueueSnackbar, openModal }: Props) 
           ref={iframeRef}
           shouldDisplay={!appIsLoading}
           src={getSelectedApp().url}
-          title="app"
+          title={getSelectedApp().name}
         />
       </>
     )
+  }
+
+  if (loading || !appsList.length) {
+    return <Loader />
   }
 
   return (
@@ -193,7 +232,7 @@ function Apps({ closeModal, closeSnackbar, enqueueSnackbar, openModal }: Props) 
           size="lg"
           testId="manage-tokens-btn"
         >
-          {getSelectedApp().providedBy.name}
+          {selectedApp && getSelectedApp().providedBy.name}
         </ButtonLink>
       </LCL.Footer>
     </LCL.Wrapper>

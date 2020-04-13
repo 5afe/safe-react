@@ -53,7 +53,7 @@ const sendTransactions = (
       enqueueSnackbar,
       closeSnackbar,
       operation: DELEGATE_CALL,
-      navigateToTransactionsTab: false,
+      // navigateToTransactionsTab: false,
       origin,
     }),
   )
