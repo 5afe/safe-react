@@ -4,7 +4,7 @@ import { withStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
 import { withSnackbar } from 'notistack'
 import React from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 
 import { styles } from './style'
 
@@ -26,6 +26,7 @@ import { updateAddressBookEntry } from '~/logic/addressBook/store/actions/update
 import { getNotificationsFromTxType, showSnackbar } from '~/logic/notifications'
 import { TX_NOTIFICATION_TYPES } from '~/logic/safe/transactions'
 import editSafeOwner from '~/routes/safe/store/actions/editSafeOwner'
+import { safeParamAddressFromStateSelector } from '~/routes/safe/store/selectors'
 import { sm } from '~/theme/variables'
 
 export const RENAME_OWNER_INPUT_TEST_ID = 'rename-owner-input'
@@ -35,7 +36,6 @@ type Props = {
   onClose: () => void,
   classes: Object,
   isOpen: boolean,
-  safeAddress: string,
   ownerAddress: string,
   selectedOwnerName: string,
   enqueueSnackbar: Function,
@@ -49,10 +49,10 @@ const EditOwnerComponent = ({
   isOpen,
   onClose,
   ownerAddress,
-  safeAddress,
   selectedOwnerName,
 }: Props) => {
   const dispatch = useDispatch()
+  const safeAddress = useSelector(safeParamAddressFromStateSelector)
   const handleSubmit = (values) => {
     const { ownerName } = values
     dispatch(editSafeOwner({ safeAddress, ownerAddress, ownerName }))
