@@ -10,6 +10,7 @@ import Bold from '~/components/layout/Bold'
 import LinkWithRef from '~/components/layout/Link'
 import Paragraph from '~/components/layout/Paragraph'
 import { getNameFromAddressBook } from '~/logic/addressBook/utils'
+import { SAFE_METHODS_NAMES } from '~/logic/contracts/methodIds'
 import { shortVersionOf } from '~/logic/wallets/ethAddresses'
 import OwnerAddressTableCell from '~/routes/safe/components/Settings/ManageOwners/OwnerAddressTableCell'
 import { getTxAmount } from '~/routes/safe/components/Transactions/TxsTable/columns'
@@ -120,7 +121,7 @@ const NewThreshold = ({ newThreshold }: { newThreshold: string }) => (
 )
 
 const SettingsDescription = ({ action, addedOwner, newThreshold, removedOwner }: DescriptionDescProps) => {
-  if (action === 'removeOwner' && removedOwner && newThreshold) {
+  if (action === SAFE_METHODS_NAMES.REMOVE_OWNER && removedOwner && newThreshold) {
     return (
       <>
         <RemovedOwner removedOwner={removedOwner} />
@@ -129,11 +130,11 @@ const SettingsDescription = ({ action, addedOwner, newThreshold, removedOwner }:
     )
   }
 
-  if (action === 'changedThreshold' && newThreshold) {
+  if (action === SAFE_METHODS_NAMES.CHANGE_THRESHOLD && newThreshold) {
     return <NewThreshold newThreshold={newThreshold} />
   }
 
-  if (action === 'addOwnerWithThreshold' && addedOwner && newThreshold) {
+  if (action === SAFE_METHODS_NAMES.ADD_OWNER_WITH_THRESHOLD && addedOwner && newThreshold) {
     return (
       <>
         <AddedOwner addedOwner={addedOwner} />
@@ -142,7 +143,7 @@ const SettingsDescription = ({ action, addedOwner, newThreshold, removedOwner }:
     )
   }
 
-  if (action === 'swapOwner' && removedOwner && addedOwner) {
+  if (action === SAFE_METHODS_NAMES.SWAP_OWNER && removedOwner && addedOwner) {
     return (
       <>
         <RemovedOwner removedOwner={removedOwner} />
