@@ -2,6 +2,7 @@
 import axios from 'axios'
 import bn from 'bignumber.js'
 import { List, Map, type RecordInstance } from 'immutable'
+import { batch } from 'react-redux'
 import type { Dispatch as ReduxDispatch } from 'redux'
 
 import { addIncomingTransactions } from './addIncomingTransactions'
@@ -14,8 +15,8 @@ import { getLocalSafe } from '~/logic/safe/utils'
 import { getTokenInfos } from '~/logic/tokens/store/actions/fetchTokens'
 import { ALTERNATIVE_TOKEN_ABI } from '~/logic/tokens/utils/alternativeAbi'
 import {
-  DECIMALS_METHOD_HASH,
   SAFE_TRANSFER_FROM_WITHOUT_DATA_HASH,
+  hasDecimalsMethod,
   isMultisendTransaction,
   isTokenTransfer,
   isUpgradeTransaction,
@@ -73,14 +74,14 @@ type IncomingTxServiceModel = {
 }
 
 export const buildTransactionFrom = async (safeAddress: string, tx: TxServiceModel): Promise<Transaction> => {
-  const { owners } = await getLocalSafe(safeAddress)
+  const localSafe = await getLocalSafe(safeAddress)
 
   const confirmations = List(
     tx.confirmations.map((conf: ConfirmationServiceModel) => {
       let ownerName = 'UNKNOWN'
 
-      if (owners) {
-        const storedOwner = owners.find((owner) => sameAddress(conf.owner, owner.address))
+      if (localSafe && localSafe.owners) {
+        const storedOwner = localSafe.owners.find((owner) => sameAddress(conf.owner, owner.address))
 
         if (storedOwner) {
           ownerName = storedOwner.name
@@ -100,7 +101,7 @@ export const buildTransactionFrom = async (safeAddress: string, tx: TxServiceMod
   const code = tx.to ? await web3.eth.getCode(tx.to) : ''
   const isERC721Token =
     code.includes(SAFE_TRANSFER_FROM_WITHOUT_DATA_HASH) ||
-    (isTokenTransfer(tx.data, Number(tx.value)) && !code.includes(DECIMALS_METHOD_HASH))
+    (isTokenTransfer(tx.data, Number(tx.value)) && !(await hasDecimalsMethod(tx.to)))
   const isSendTokenTx = !isERC721Token && isTokenTransfer(tx.data, Number(tx.value))
   const isMultiSendTx = isMultisendTransaction(tx.data, Number(tx.value))
   const isUpgradeTx = isMultiSendTx && isUpgradeTransaction(tx.data)
@@ -170,8 +171,8 @@ export const buildTransactionFrom = async (safeAddress: string, tx: TxServiceMod
     safeTxGas: tx.safeTxGas,
     baseGas: tx.baseGas,
     gasPrice: tx.gasPrice,
-    gasToken: tx.gasToken,
-    refundReceiver: tx.refundReceiver,
+    gasToken: tx.gasToken || ZERO_ADDRESS,
+    refundReceiver: tx.refundReceiver || ZERO_ADDRESS,
     refundParams,
     isExecuted: tx.isExecuted,
     isSuccessful: tx.isSuccessful,
@@ -353,9 +354,13 @@ export default (safeAddress: string) => async (dispatch: ReduxDispatch<GlobalSta
   const transactions: SafeTransactionsType | undefined = await loadSafeTransactions(safeAddress)
   if (transactions) {
     const { cancel, outgoing } = transactions
-    dispatch(addCancellationTransactions(cancel))
-    dispatch(addTransactions(outgoing))
+
+    batch(() => {
+      dispatch(addCancellationTransactions(cancel))
+      dispatch(addTransactions(outgoing))
+    })
   }
+
   const incomingTransactions: Map<string, List<IncomingTransaction>> | undefined = await loadSafeIncomingTransactions(
     safeAddress,
   )

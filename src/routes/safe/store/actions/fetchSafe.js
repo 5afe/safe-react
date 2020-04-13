@@ -10,7 +10,7 @@ import { getBalanceInEtherOf, getWeb3 } from '~/logic/wallets/getWeb3'
 import addSafe from '~/routes/safe/store/actions/addSafe'
 import addSafeOwner from '~/routes/safe/store/actions/addSafeOwner'
 import removeSafeOwner from '~/routes/safe/store/actions/removeSafeOwner'
-import updateSafeThreshold from '~/routes/safe/store/actions/updateSafeThreshold'
+import updateSafe from '~/routes/safe/store/actions/updateSafe'
 import { makeOwner } from '~/routes/safe/store/models/owner'
 import type { SafeProps } from '~/routes/safe/store/models/safe'
 import { type GlobalState } from '~/store/index'
@@ -67,40 +67,47 @@ export const checkAndUpdateSafe = (safeAdd: string) => async (dispatch: ReduxDis
   // Check if the owner's safe did change and update them
   const [gnosisSafe, localSafe] = await Promise.all([getGnosisSafeInstanceAt(safeAddress), getLocalSafe(safeAddress)])
 
-  const remoteOwners = await gnosisSafe.getOwners()
+  const [remoteOwners, remoteNonce, remoteThreshold] = await Promise.all([
+    gnosisSafe.getOwners(),
+    gnosisSafe.nonce(),
+    gnosisSafe.getThreshold(),
+  ])
   // Converts from [ { address, ownerName} ] to address array
-  const localOwners = localSafe.owners.map((localOwner) => localOwner.address)
-  const localThreshold = localSafe.threshold
+  const localOwners = localSafe ? localSafe.owners.map((localOwner) => localOwner.address) : undefined
+  const localThreshold = localSafe ? localSafe.threshold : undefined
+  const localNonce = localSafe ? localSafe.nonce : undefined
 
-  // Updates threshold values
-  const remoteThreshold = await gnosisSafe.getThreshold()
-  localSafe.threshold = remoteThreshold.toNumber()
+  if (localNonce !== remoteNonce.toNumber()) {
+    dispatch(updateSafe({ address: safeAddress, nonce: remoteNonce.toNumber() }))
+  }
 
   if (localThreshold !== remoteThreshold.toNumber()) {
-    dispatch(updateSafeThreshold({ safeAddress, threshold: remoteThreshold.toNumber() }))
+    dispatch(updateSafe({ address: safeAddress, threshold: remoteThreshold.toNumber() }))
   }
 
   // If the remote owners does not contain a local address, we remove that local owner
-  localOwners.forEach((localAddress) => {
-    const remoteOwnerIndex = remoteOwners.findIndex((remoteAddress) => sameAddress(remoteAddress, localAddress))
-    if (remoteOwnerIndex === -1) {
-      dispatch(removeSafeOwner({ safeAddress, ownerAddress: localAddress }))
-    }
-  })
+  if (localOwners) {
+    localOwners.forEach((localAddress) => {
+      const remoteOwnerIndex = remoteOwners.findIndex((remoteAddress) => sameAddress(remoteAddress, localAddress))
+      if (remoteOwnerIndex === -1) {
+        dispatch(removeSafeOwner({ safeAddress, ownerAddress: localAddress }))
+      }
+    })
 
-  // If the remote has an owner that we don't have locally, we add it
-  remoteOwners.forEach((remoteAddress) => {
-    const localOwnerIndex = localOwners.findIndex((localAddress) => sameAddress(remoteAddress, localAddress))
-    if (localOwnerIndex === -1) {
-      dispatch(
-        addSafeOwner({
-          safeAddress,
-          ownerAddress: remoteAddress,
-          ownerName: 'UNKNOWN',
-        }),
-      )
-    }
-  })
+    // If the remote has an owner that we don't have locally, we add it
+    remoteOwners.forEach((remoteAddress) => {
+      const localOwnerIndex = localOwners.findIndex((localAddress) => sameAddress(remoteAddress, localAddress))
+      if (localOwnerIndex === -1) {
+        dispatch(
+          addSafeOwner({
+            safeAddress,
+            ownerAddress: remoteAddress,
+            ownerName: 'UNKNOWN',
+          }),
+        )
+      }
+    })
+  }
 }
 
 // eslint-disable-next-line consistent-return

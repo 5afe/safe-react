@@ -12,8 +12,7 @@ import { fetchTokenList } from '~/logic/tokens/api'
 import { type TokenProps, makeToken } from '~/logic/tokens/store/model/token'
 import { tokensSelector } from '~/logic/tokens/store/selectors'
 import { getWeb3 } from '~/logic/wallets/getWeb3'
-import { type GlobalState } from '~/store'
-import { store } from '~/store/index'
+import { type GlobalState, store } from '~/store'
 import { ensureOnce } from '~/utils/singleton'
 
 const createStandardTokenContract = async () => {
