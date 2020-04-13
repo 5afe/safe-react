@@ -2380,10 +2380,10 @@
   dependencies:
     "@types/yargs-parser" "*"
 
-"@unilogin/provider@^0.5.20":
-  version "0.5.20"
-  resolved "https://registry.yarnpkg.com/@unilogin/provider/-/provider-0.5.20.tgz#3bdfe542058eca5bf86cb6c509a84ac6c2e64b0b"
-  integrity sha512-lDg/rU2fblQyrUHR0Jkk8vSiRQHkBKY6pUc0pqgaeDimkQNVZJKsPK7FzbRINtIJQGQsoZpObI6a25qguO/jew==
+"@unilogin/provider@^0.5.21":
+  version "0.5.21"
+  resolved "https://registry.yarnpkg.com/@unilogin/provider/-/provider-0.5.21.tgz#bc3aa74750c3fcd2ddcb763279fb58d88f5bc8f5"
+  integrity sha512-HVMrFIKc6ysxj5F1dz0UFaSIvSMtqw5JBYEzomvtthsw/fNwbT8/I/mA4OCaAJcpuaI1d66X9bZhOrP5GWcwVg==
   dependencies:
     "@restless/sanitizers" "^0.2.4"
     reactive-properties "^0.1.11"
@@ -3212,10 +3212,10 @@ atob@^2.1.2:
   resolved "https://registry.yarnpkg.com/atob/-/atob-2.1.2.tgz#6d9517eb9e030d2436666651e86bd9f6f13533c9"
   integrity sha512-Wm6ukoaOGJi/73p/cl2GvLjTI5JM1k/O14isD73YML8StrH/7/lRFgmg8nICZgD3bZZvjwCGxtMOD3wWNAu8cg==
 
-authereum@^0.0.4-beta.88:
-  version "0.0.4-beta.118"
-  resolved "https://registry.yarnpkg.com/authereum/-/authereum-0.0.4-beta.118.tgz#51510c41236856db5874c6fde39370f7f6f4a1e6"
-  integrity sha512-23dsFE7qTA0Ajn1T951Ouo4JfgTowCZdwL2OH8kgRV1DpTzJzN3aUgBOVsB/an4/vQwfG8hfI0hFjEBbfztC4Q==
+authereum@^0.0.4-beta.131:
+  version "0.0.4-beta.133"
+  resolved "https://registry.yarnpkg.com/authereum/-/authereum-0.0.4-beta.133.tgz#05e04a58700519773d31401d58ee93ef52cdccc7"
+  integrity sha512-QXCOFDm4XYAicjL0eNaKTdW2NTc7Pc9YVJEi1aXSiJ0Q7KMketej+J7fbLWgChLP1lEa4CT33bjfKbdsHUIQOw==
   dependencies:
     async "^3.1.0"
     ethereum-private-key-to-address "0.0.3"
@@ -3225,9 +3225,10 @@ authereum@^0.0.4-beta.88:
     moment "^2.24.0"
     penpal "^4.1.1"
     pify "^4.0.1"
+    querystring "^0.2.0"
     rollup-plugin-commonjs "^10.1.0"
     store "^2.0.12"
-    to-hex "0.0.9"
+    to-hex "0.0.11"
     uuidv4 "^6.0.6"
     web3-provider-engine "^15.0.4"
     web3-utils "^1.2.1"
@@ -4088,18 +4089,18 @@ bn.js@^5.1.1:
   resolved "https://registry.yarnpkg.com/bn.js/-/bn.js-5.1.1.tgz#48efc4031a9c4041b9c99c6941d903463ab62eb5"
   integrity sha512-IUTD/REb78Z2eodka1QZyyEk66pciRcP6Sroka0aI3tG/iwIdYLrBD62RsubR7vqdt3WyX8p4jxeatzmRSphtA==
 
-bnc-onboard@1.5.0:
-  version "1.5.0"
-  resolved "https://registry.yarnpkg.com/bnc-onboard/-/bnc-onboard-1.5.0.tgz#dbb3dc62d8442827d6a3eb848a90f597fbf8916c"
-  integrity sha512-dKsAVqNNe94NrBdMa7gOQr/zjjcjn7HzqEsC36wSpyLcvAsPrd2cBiFSCgHftWYu/mkfFQXgdaoyJMV4orsd+Q==
+bnc-onboard@1.6.0:
+  version "1.6.0"
+  resolved "https://registry.yarnpkg.com/bnc-onboard/-/bnc-onboard-1.6.0.tgz#74fa5694f6827870c44a8f1929a9837c7ec71da5"
+  integrity sha512-LC4HfOJejE7h0n5roAWIqiDjRqQ7Nf7LA1dx19CBUvAxHfGUNjlrYt3ZqU2svDub6/0iM+ham0GpkHZ03fHpxQ==
   dependencies:
     "@ledgerhq/hw-app-eth" "^5.7.0"
     "@ledgerhq/hw-transport-u2f" "^5.7.0"
     "@portis/web3" "^2.0.0-beta.42"
     "@toruslabs/torus-embed" "^1.2.4"
-    "@unilogin/provider" "^0.5.20"
+    "@unilogin/provider" "^0.5.21"
     "@walletconnect/web3-provider" "^1.0.0-beta.45"
-    authereum "^0.0.4-beta.88"
+    authereum "^0.0.4-beta.131"
     bignumber.js "^9.0.0"
     bnc-sdk "2.0.0"
     bowser "^2.5.2"
@@ -16652,10 +16653,10 @@ to-fast-properties@^2.0.0:
   resolved "https://registry.yarnpkg.com/to-fast-properties/-/to-fast-properties-2.0.0.tgz#dc5e698cbd079265bc73e0377681a4e4e83f616e"
   integrity sha1-3F5pjL0HkmW8c+A3doGk5Og/YW4=
 
-to-hex@0.0.9:
-  version "0.0.9"
-  resolved "https://registry.yarnpkg.com/to-hex/-/to-hex-0.0.9.tgz#310ac7e35068f77b6d4c6bb09e0a3fd024a50c26"
-  integrity sha512-lc37anEf0hOPWt7EliqR+9ZoV4/foxtZPn0aUBVBa2NGhHKenmooSZOZwv+u+Ug47fNpoDKLeEBGkAmQWViGUw==
+to-hex@0.0.11:
+  version "0.0.11"
+  resolved "https://registry.yarnpkg.com/to-hex/-/to-hex-0.0.11.tgz#22355e09e5b56f5ae2b32502c493320f021171ac"
+  integrity sha512-3FSU8sfjrVc9fWowwP9xrdhxbp5Wco8uVZLhMhfsNuCFo9Fu8ecD2MgJV/2iAw+755W3AcGSQYVZGOpBmJtNcA==
   dependencies:
     normalize-hex "0.0.2"
 
@@ -18594,7 +18595,6 @@ websocket@1.0.29, "websocket@github:web3-js/WebSocket-Node#polyfill/globalThis":
   dependencies:
     debug "^2.2.0"
     es5-ext "^0.10.50"
-    gulp "^4.0.2"
     nan "^2.14.0"
     typedarray-to-buffer "^3.1.5"
     yaeti "^0.0.6"
