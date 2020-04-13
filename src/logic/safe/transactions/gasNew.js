@@ -28,13 +28,11 @@ const estimateDataGasCosts = (data) => {
 }
 
 export const estimateTxGasCosts = async (
-  safe: any,
   safeAddress: string,
-  data: string,
   to: string,
-  valueInWei: number | string,
-  operation: number,
-  signatures: string,
+  data: string,
+  tx?: Transaction,
+  preApprovingOwner?: string,
 ): Promise<number> => {
   try {
     const web3 = getWeb3()
@@ -56,33 +54,11 @@ export const estimateTxGasCosts = async (
               '',
             )}000000000000000000000000000000000000000000000000000000000000000001`
       txData = await safeInstance.methods
-        .execTransaction(
-          to,
-          tx ? tx.value : 0,
-          data,
-          CALL,
-          tx ? tx.safeTxGas : 0,
-          0,
-          0,
-          ZERO_ADDRESS,
-          ZERO_ADDRESS,
-          signatures,
-        )
+        .execTransaction(to, tx ? tx.value : 0, data, CALL, 0, 0, 0, ZERO_ADDRESS, ZERO_ADDRESS, signatures)
         .encodeABI()
     } else {
       const txHash = await safeInstance.methods
-        .getTransactionHash(
-          to,
-          tx ? tx.value : 0,
-          data,
-          CALL,
-          tx ? tx.safeTxGas : 0,
-          0,
-          0,
-          ZERO_ADDRESS,
-          ZERO_ADDRESS,
-          nonce,
-        )
+        .getTransactionHash(to, tx ? tx.value : 0, data, CALL, 0, 0, 0, ZERO_ADDRESS, ZERO_ADDRESS, nonce)
         .call({
           from,
         })
@@ -103,42 +79,35 @@ export const estimateTxGasCosts = async (
 
 // https://docs.gnosis.io/safe/docs/docs4/#safe-transaction-data-gas-estimation
 // https://github.com/gnosis/safe-contracts/blob/a97c6fd24f79c0b159ddd25a10a2ebd3ea2ef926/test/utils/execution.js
-type
 
-export const estimateDataGas = async (
-  safeAddress: string,
+export const estimateBaseGas = (
+  safeInstance: any,
   to: string,
-  data: string,
   valueInWei: number | string,
-  tx?: Transaction,
-  preApprovingOwner?: string,
+  data: string,
+  operation: number,
+  txGasEstimate: number,
+  gasToken: string,
+  refundReceiver: string,
+  signatureCount: number,
+  nonce: number,
 ) => {
-  const web3 = getWeb3()
-  const from = await getAccountFrom(web3)
-  const safeInstance = new web3.eth.Contract(GnosisSafeSol.abi, safeAddress)
-  const signatureCount = tx && tx.confirmations ? tx.confirmations.size : 1
-  const signatures =
-    tx && tx.confirmations
-      ? generateSignaturesFromTxConfirmations(tx.confirmations, preApprovingOwner)
-      : `0x000000000000000000000000${from.replace(
-          '0x',
-          '',
-        )}000000000000000000000000000000000000000000000000000000000000000001`
   // numbers < 256 are 192 -> 31 * 4 + 68
   // numbers < 65k are 256 -> 30 * 4 + 2 * 68
   // For signature array length and dataGasEstimate we already calculated
   // the 0 bytes so we just add 64 for each non-zero byte
+
   const gasPrice = 0 // no need to get refund when we submit txs to metamask
   const signatureCost = signatureCount * (68 + 2176 + 2176 + 6000) // array count (3 -> r, s, v) * signature count
 
-  const payload = safe.contract.methods
-    .execTransaction(to, valueInWei, data, operation, txGasEstimate, 0, gasPrice, gasToken, refundReceiver, signatures)
+  const payload = safeInstance.contract.methods
+    .execTransaction(to, valueInWei, data, operation, txGasEstimate, 0, gasPrice, gasToken, refundReceiver, '0x')
     .encodeABI()
 
   // eslint-disable-next-line
   const dataGasEstimate = estimateDataGasCosts(payload) + signatureCost + (nonce > 0 ? 5000 : 20000) + 1500 // 1500 -> hash generation costs
 
-  return dataGasEstimate + 32000 // Add aditional gas costs (e.g. base tx costs, transfer costs)
+  return dataGasEstimate + 32000 // Add additional gas costs (e.g. base tx costs, transfer costs)
 }
 
 export const estimateSafeTxGas = async (
@@ -150,13 +119,15 @@ export const estimateSafeTxGas = async (
   operation: number,
 ) => {
   try {
-    let safeTxGas
-    let additionalGas = 10000
     let additionalGasBatches = [10000, 20000, 40000, 80000, 160000, 320000, 640000, 1280000, 2560000, 5120000]
     let safeInstance = safe
     if (!safeInstance) {
       safeInstance = await getGnosisSafeInstanceAt(safeAddress)
     }
+
+    const web3 = await getWeb3()
+    const nonce = await safeInstance.nonce()
+    const threshold = await safeInstance.getThreshold()
 
     const estimateData = safeInstance.contract.methods.requiredTxGas(to, valueInWei, data, operation).encodeABI()
     const estimateResponse = await getWeb3().eth.call({
@@ -164,10 +135,42 @@ export const estimateSafeTxGas = async (
       from: safeAddress,
       data: estimateData,
     })
-    const txGasEstimate = new BigNumber(estimateResponse.substring(138), 16)
+    let txGasEstimation = new BigNumber(estimateResponse.substring(138), 16).toNumber() + 10000
 
-    // Add 10k else we will fail in case of nested calls
-    return txGasEstimate.toNumber() + 10000
+    const baseGasEstimation = estimateBaseGas(
+      safeInstance,
+      to,
+      valueInWei,
+      data,
+      operation,
+      txGasEstimation,
+      ZERO_ADDRESS,
+      ZERO_ADDRESS,
+      threshold,
+      nonce,
+    )
+
+    let additionalGas = 10000
+    for (let i = 0; i < 100; i++) {
+      try {
+        let estimateData = safe.contract.methods.requiredTxGas(to, valueInWei, data, operation).encodeABI()
+        let estimateResponse = await web3.eth.call({
+          to: safe.address,
+          from: safe.address,
+          data: estimateData,
+          gasPrice: 0,
+          gasLimit: txGasEstimation + baseGasEstimation + 32000,
+        })
+        console.log('    Simulate: ' + estimateResponse)
+        if (estimateResponse != '0x') break
+      } catch (e) {
+        console.error('Error calculating safeTxGas: ', e)
+      }
+      txGasEstimation += additionalGas
+      additionalGas *= 2
+    }
+
+    return txGasEstimation + 10000
   } catch (error) {
     console.error('Error calculating tx gas estimation', error)
     return 0
