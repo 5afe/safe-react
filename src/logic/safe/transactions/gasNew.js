@@ -101,7 +101,6 @@ export const estimateBaseGas = (
     .execTransaction(to, valueInWei, data, operation, txGasEstimate, 0, gasPrice, gasToken, refundReceiver, '0x')
     .encodeABI()
 
-  // eslint-disable-next-line
   const dataGasEstimate = estimateDataGasCosts(payload)
 
   return dataGasEstimate + 32000 // Add additional gas costs (e.g. base tx costs, transfer costs)
