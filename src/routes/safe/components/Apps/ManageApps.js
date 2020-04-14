@@ -74,18 +74,6 @@ const ManageApps = () => {
     setItems(copy)
   }
 
-  const onUrlEntered = (value) => {
-    if (!value || !value.length || urlValidator(value)) {
-      setAppInfo(APP_INFO)
-      return value
-    }
-    getAppInfoFromUrl(value).then((appInfo) => {
-      setAppInfo({ ...appInfo })
-    })
-
-    return value
-  }
-
   const handleSubmit = (values) => {
     return values
   }
@@ -96,7 +84,18 @@ const ManageApps = () => {
       : 'Please, provide a valid url'
   }
 
-  const onFormValid = ({ valid }) => {
+  const safeAppValidator = async (value) => {
+    const appInfo = await getAppInfoFromUrl(value)
+
+    if (appInfo.error) {
+      setAppInfo(APP_INFO)
+      return 'This is not a valid Safe app.'
+    }
+
+    setAppInfo({ ...appInfo })
+  }
+
+  const onFormStatusChange = ({ valid }) => {
     setIsSubmitDisabled(!valid || appInfo.error)
   }
 
@@ -105,7 +104,7 @@ const ManageApps = () => {
       <GnoForm
         initialValues={{
           appUrl: '',
-          agreed: false,
+          agreed: true,
         }}
         onSubmit={handleSubmit}
         testId={FORM_ID}
@@ -115,20 +114,12 @@ const ManageApps = () => {
             <StyledText size="xl">Add custom app</StyledText>
             <Field
               component={TextFieldMUI}
-              format={onUrlEntered}
-              formatOnBlur
               name="appUrl"
               placeholder="App URL*"
               text="App URL*"
               type="text"
-              validate={composeValidators(required, urlValidator)}
+              validate={composeValidators(required, urlValidator, safeAppValidator)}
             />
-
-            {appInfo.error && (
-              <Text color="error" size="md">
-                * There was not possible to load an app from the URL entered.
-              </Text>
-            )}
 
             <AppInfo>
               <Img alt="Token image" height={55} src={appInfo.iconUrl} />
@@ -136,7 +127,7 @@ const ManageApps = () => {
             </AppInfo>
 
             <FormSpy
-              onChange={onFormValid}
+              onChange={onFormStatusChange}
               subscription={{
                 valid: true,
               }}
