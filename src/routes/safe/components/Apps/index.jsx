@@ -228,14 +228,18 @@ function Apps({
       </LCL.Menu>
       <LCL.Content>{getContent()}</LCL.Content>
       <LCL.Footer>
-        This App is provided by{' '}
-        <ButtonLink
-          onClick={() => window.open(getSelectedApp().providedBy.url, '_blank')}
-          size="lg"
-          testId="manage-tokens-btn"
-        >
-          {selectedApp && getSelectedApp().providedBy.name}
-        </ButtonLink>
+        {getSelectedApp() && getSelectedApp().providedBy && (
+          <>
+            <p>This App is provided by </p>
+            <ButtonLink
+              onClick={() => window.open(getSelectedApp().providedBy.url, '_blank')}
+              size="lg"
+              testId="manage-tokens-btn"
+            >
+              {selectedApp && getSelectedApp().providedBy.name}
+            </ButtonLink>
+          </>
+        )}
       </LCL.Footer>
     </LCL.Wrapper>
   )

@@ -28,7 +28,7 @@ export const getAppInfoFromUrl = async (appUrl: string) => {
       throw Error()
     }
 
-    const res = { name: appInfo.data.name, error: false }
+    res = { ...res, ...appInfo.data, error: false }
     if (appInfo.data.iconPath) {
       try {
         const iconInfo = await axios.get(`${appUrl}/${appInfo.data.iconPath}`)
