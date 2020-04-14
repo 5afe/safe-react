@@ -21,7 +21,7 @@ const estimateDataGasCosts = (data) => {
       return accumulator + 4
     }
 
-    return accumulator + 68
+    return accumulator + 16
   }
 
   return data.match(/.{2}/g).reduce(reducer, 0)
@@ -89,8 +89,6 @@ export const estimateBaseGas = (
   txGasEstimate: number,
   gasToken: string,
   refundReceiver: string,
-  signatureCount: number,
-  nonce: number,
 ) => {
   // numbers < 256 are 192 -> 31 * 4 + 68
   // numbers < 65k are 256 -> 30 * 4 + 2 * 68
@@ -98,14 +96,13 @@ export const estimateBaseGas = (
   // the 0 bytes so we just add 64 for each non-zero byte
 
   const gasPrice = 0 // no need to get refund when we submit txs to metamask
-  const signatureCost = signatureCount * (68 + 2176 + 2176 + 6000) // array count (3 -> r, s, v) * signature count
 
   const payload = safeInstance.contract.methods
     .execTransaction(to, valueInWei, data, operation, txGasEstimate, 0, gasPrice, gasToken, refundReceiver, '0x')
     .encodeABI()
 
   // eslint-disable-next-line
-  const dataGasEstimate = estimateDataGasCosts(payload) + signatureCost + (nonce > 0 ? 5000 : 20000) + 1500 // 1500 -> hash generation costs
+  const dataGasEstimate = estimateDataGasCosts(payload)
 
   return dataGasEstimate + 32000 // Add additional gas costs (e.g. base tx costs, transfer costs)
 }
@@ -126,11 +123,8 @@ export const estimateSafeTxGas = async (
     }
 
     const web3 = await getWeb3()
-    const nonce = await safeInstance.nonce()
-    const threshold = await safeInstance.getThreshold()
-
     const estimateData = safeInstance.contract.methods.requiredTxGas(to, valueInWei, data, operation).encodeABI()
-    const estimateResponse = await getWeb3().eth.call({
+    const estimateResponse = await web3.eth.call({
       to: safeAddress,
       from: safeAddress,
       data: estimateData,
@@ -146,8 +140,6 @@ export const estimateSafeTxGas = async (
       txGasEstimation,
       ZERO_ADDRESS,
       ZERO_ADDRESS,
-      threshold,
-      nonce,
     )
 
     let additionalGas = 10000
@@ -159,7 +151,7 @@ export const estimateSafeTxGas = async (
           from: safe.address,
           data: estimateData,
           gasPrice: 0,
-          gasLimit: txGasEstimation + baseGasEstimation + 32000,
+          gasLimit: txGasEstimation + baseGasEstimation,
         })
         console.log('    Simulate: ' + estimateResponse)
         if (estimateResponse != '0x') break
