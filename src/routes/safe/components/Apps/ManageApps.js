@@ -119,9 +119,9 @@ const ManageApps = () => {
             <StyledText size="xl">Add custom app</StyledText>
             <Field
               component={TextField}
+              label="App URL"
               name="appUrl"
-              placeholder="App URL*"
-              text="App URL*"
+              placeholder="App URL"
               type="text"
               validate={composeValidators(required, urlValidator, safeAppValidator)}
             />

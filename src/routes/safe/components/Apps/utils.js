@@ -23,8 +23,16 @@ export const getAppInfoFromUrl = async (appUrl: string) => {
   try {
     const appInfo = await axios.get(`${appUrl}/manifest.json`)
 
-    // verify app aligns safe requirements
-    if (!appInfo || !appInfo.data || !appInfo.data.name) {
+    // verify imported app fulfil safe requirements
+    if (
+      !appInfo ||
+      !appInfo.data ||
+      !appInfo.data.name ||
+      !appInfo.data.description ||
+      !appInfo.data.providedBy ||
+      !appInfo.data.providedBy.name ||
+      !appInfo.data.providedBy.url
+    ) {
       throw Error()
     }
 
