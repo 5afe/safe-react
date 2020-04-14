@@ -77,35 +77,6 @@ export const estimateTxGasCosts = async (
   }
 }
 
-// https://docs.gnosis.io/safe/docs/docs4/#safe-transaction-data-gas-estimation
-// https://github.com/gnosis/safe-contracts/blob/a97c6fd24f79c0b159ddd25a10a2ebd3ea2ef926/test/utils/execution.js
-
-export const estimateBaseGas = (
-  safeInstance: any,
-  to: string,
-  valueInWei: number | string,
-  data: string,
-  operation: number,
-  txGasEstimate: number,
-  gasToken: string,
-  refundReceiver: string,
-) => {
-  // numbers < 256 are 192 -> 31 * 4 + 68
-  // numbers < 65k are 256 -> 30 * 4 + 2 * 68
-  // For signature array length and dataGasEstimate we already calculated
-  // the 0 bytes so we just add 64 for each non-zero byte
-
-  const gasPrice = 0 // no need to get refund when we submit txs to metamask
-
-  const payload = safeInstance.contract.methods
-    .execTransaction(to, valueInWei, data, operation, txGasEstimate, 0, gasPrice, gasToken, refundReceiver, '0x')
-    .encodeABI()
-
-  const dataGasEstimate = estimateDataGasCosts(payload)
-
-  return dataGasEstimate + 32000 // Add additional gas costs (e.g. base tx costs, transfer costs)
-}
-
 export const estimateSafeTxGas = async (
   safe: any,
   safeAddress: string,
@@ -130,27 +101,60 @@ export const estimateSafeTxGas = async (
     })
     let txGasEstimation = new BigNumber(estimateResponse.substring(138), 16).toNumber() + 10000
 
-    const baseGasEstimation = estimateBaseGas(
-      safeInstance,
-      to,
-      valueInWei,
-      data,
-      operation,
-      txGasEstimation,
-      ZERO_ADDRESS,
-      ZERO_ADDRESS,
-    )
+    let payload = safeInstance.contract.methods
+      .execTransaction(to, valueInWei, data, operation, txGasEstimation, 0, 0, ZERO_ADDRESS, ZERO_ADDRESS, '0x')
+      .encodeABI()
+    // 21000 - additional gas costs (e.g. base tx costs, transfer costs)
+    const dataGasEstimation = estimateDataGasCosts(payload) + 21000
 
     let additionalGas = 10000
-    for (let i = 0; i < 100; i++) {
+    for (let i = 0; i < 10; i++) {
+      // const batch = new web3.BatchRequest()
+
+      // const request = web3.eth.call.request(
+      //   {
+      //     to: safe.address,
+      //     from: safe.address,
+      //     data: estimateData,
+      //     gasPrice: 0,
+      //     gasLimit: txGasEstimation + dataGasEstimation,
+      //   },
+      //   (error, estimateResponse) => {
+      //     if (error) {
+      //       // if there's no balance, we log the error, but `resolve` with a default '0'
+      //       console.error('No balance method found', error)
+      //       resolve('0')
+      //     } else {
+      //       resolve({
+      //         address,
+      //         estimateResponse,
+      //       })
+      //     }
+      //   },
+      // )
+
+      // batch.add(request)
+
       try {
-        let estimateData = safe.contract.methods.requiredTxGas(to, valueInWei, data, operation).encodeABI()
         let estimateResponse = await web3.eth.call({
           to: safe.address,
           from: safe.address,
-          data: estimateData,
+          data: safeInstance.contract.methods
+            .execTransaction(
+              to,
+              valueInWei,
+              data,
+              operation,
+              txGasEstimation + dataGasEstimation,
+              0,
+              0,
+              ZERO_ADDRESS,
+              ZERO_ADDRESS,
+              '0x',
+            )
+            .encodeABI(),
           gasPrice: 0,
-          gasLimit: txGasEstimation + baseGasEstimation,
+          gasLimit: txGasEstimation + dataGasEstimation,
         })
         console.log('    Simulate: ' + estimateResponse)
         if (estimateResponse != '0x') break
