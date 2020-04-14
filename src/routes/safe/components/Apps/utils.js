@@ -6,7 +6,7 @@ import appsIconSvg from '~/routes/safe/components/Transactions/TxsTable/TxType/a
 export const GNOSIS_APPS_URL = 'https://gnosis-apps.netlify.com'
 
 const appsUrl = process.env.REACT_APP_GNOSIS_APPS_URL ? process.env.REACT_APP_GNOSIS_APPS_URL : GNOSIS_APPS_URL
-export const staticAppsList = [`${appsUrl}/compound`]
+export const staticAppsList = [{ url: `${appsUrl}/compound`, disabled: false }]
 
 export const getAppInfoFromOrigin = (origin: string) => {
   try {
@@ -18,7 +18,7 @@ export const getAppInfoFromOrigin = (origin: string) => {
 }
 
 export const getAppInfoFromUrl = async (appUrl: string) => {
-  let res = { url: appUrl, name: 'unknown', iconUrl: appsIconSvg, error: true }
+  let res = { id: undefined, url: appUrl, name: 'unknown', iconUrl: appsIconSvg, error: true }
 
   try {
     const appInfo = await axios.get(`${appUrl}/manifest.json`)
@@ -36,7 +36,12 @@ export const getAppInfoFromUrl = async (appUrl: string) => {
       throw Error()
     }
 
-    res = { ...res, ...appInfo.data, error: false }
+    res = {
+      ...res,
+      ...appInfo.data,
+      id: JSON.stringify({ url: appInfo.data.url, name: appInfo.data.name }),
+      error: false,
+    }
     if (appInfo.data.iconPath) {
       try {
         const iconInfo = await axios.get(`${appUrl}/${appInfo.data.iconPath}`)
@@ -47,6 +52,7 @@ export const getAppInfoFromUrl = async (appUrl: string) => {
         console.error(`It was not possible to fetch icon from app ${appUrl}`)
       }
     }
+
     return res
   } catch (error) {
     console.error(`It was not possible to fetch app from ${appUrl}`)

@@ -10,6 +10,9 @@ import { getAppInfoFromUrl, staticAppsList } from './utils'
 
 import { ListContentLayout as LCL, Loader } from '~/components-v2'
 import ButtonLink from '~/components/layout/ButtonLink'
+import { loadFromStorage, saveToStorage } from '~/utils/storage'
+
+const APPS_STORAGE_KEY = 'APPS_STORAGE_KEY'
 
 const StyledIframe = styled.iframe`
   width: 100%;
@@ -48,13 +51,13 @@ function Apps({
   safeName,
   web3,
 }: Props) {
-  const [appsList, setAppsList] = useState([])
+  const [appList, setAppList] = useState([])
   const [selectedApp, setSelectedApp] = useState()
   const [loading, setLoading] = useState(true)
   const [appIsLoading, setAppIsLoading] = useState(true)
-  const [iframeEl, setframeEl] = useState(null)
+  const [iframeEl, setIframeEl] = useState(null)
 
-  const getSelectedApp = () => appsList.find((e) => e.id === selectedApp)
+  const getSelectedApp = () => appList.find((e) => e.id === selectedApp)
 
   const sendMessageToIframe = (messageId, data) => {
     iframeEl.contentWindow.postMessage({ messageId, data }, getSelectedApp().url)
@@ -114,7 +117,7 @@ function Apps({
 
   const iframeRef = useCallback((node) => {
     if (node !== null) {
-      setframeEl(node)
+      setIframeEl(node)
     }
   }, [])
 
@@ -143,29 +146,43 @@ function Apps({
   // Load apps list
   useEffect(() => {
     const loadApps = async () => {
-      const list = [...staticAppsList]
+      const persistedAppList = (await loadFromStorage(APPS_STORAGE_KEY)) || []
+      const list = [...persistedAppList]
+
+      staticAppsList.forEach((staticApp) => {
+        if (!list.some((persistedApp) => persistedApp.url === staticApp.url)) {
+          list.push(staticApp)
+        }
+      })
+
       const apps = []
       for (let index = 0; index < list.length; index++) {
         try {
-          const appUrl = list[index]
-          const appInfo = await getAppInfoFromUrl(appUrl)
-          const app = { url: appUrl, ...appInfo }
+          const currentApp = list[index]
+          if (currentApp.disabled) {
+            continue
+          }
 
-          app.id = JSON.stringify({ url: app.url, name: app.name })
-          apps.push(app)
+          const appInfo = await getAppInfoFromUrl(currentApp.url)
+
+          if (appInfo.error) {
+            throw Error()
+          }
+
+          apps.push(appInfo)
         } catch (error) {
           console.error(error)
         }
       }
 
-      setAppsList([...apps])
+      setAppList([...apps])
       setLoading(false)
     }
 
-    if (!appsList.length) {
+    if (!appList.length) {
       loadApps()
     }
-  }, [appsList])
+  }, [appList])
 
   // on iframe change
   useEffect(() => {
@@ -214,17 +231,27 @@ function Apps({
     )
   }
 
-  if (loading || !appsList.length) {
+  const onAppAdded = (app) => {
+    const newAppList = [...appList, { url: app.url, disabled: false }].map((a) => ({
+      url: a.url,
+      disabled: a.disabled,
+    }))
+
+    saveToStorage(APPS_STORAGE_KEY, newAppList)
+    setAppList([...appList, { ...app, disabled: false }])
+  }
+
+  if (loading || !appList.length) {
     return <Loader />
   }
 
   return (
     <LCL.Wrapper>
       <LCL.Nav>
-        <ManageApps />
+        <ManageApps appList={appList} onAppAdded={onAppAdded} />
       </LCL.Nav>
       <LCL.Menu>
-        <LCL.List activeItem={selectedApp} items={appsList} onItemClick={onSelectApp} />
+        <LCL.List activeItem={selectedApp} items={appList} onItemClick={onSelectApp} />
       </LCL.Menu>
       <LCL.Content>{getContent()}</LCL.Content>
       <LCL.Footer>
