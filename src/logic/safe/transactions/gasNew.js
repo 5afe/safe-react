@@ -136,7 +136,7 @@ export const estimateSafeTxGas = async (
       // batch.add(request)
 
       try {
-        let estimateData = safe.contract.methods.requiredTxGas(to, valueInWei, data, operation).encodeABI()
+        let estimateData = safe.contract.methods.requiredTxGas(to, valueInWei, payload, operation).encodeABI()
         let estimateResponse = await web3.eth.call({
           to: safe.address,
           from: safe.address,
