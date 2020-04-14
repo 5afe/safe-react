@@ -9,7 +9,6 @@ import { getAppInfoFromUrl } from './utils'
 
 import Field from '~/components/forms/Field'
 import GnoForm from '~/components/forms/GnoForm'
-import TextFieldMUI from '~/components/forms/TextField'
 import { composeValidators, required } from '~/components/forms/validator'
 import ButtonLink from '~/components/layout/ButtonLink'
 import Img from '~/components/layout/Img'
@@ -23,7 +22,7 @@ const StyledText = styled(Text)`
 
 const StyledTextFileAppName = styled(TextField)`
   && {
-    width: 388px;
+    width: 340px;
   }
 `
 
@@ -95,8 +94,10 @@ const ManageApps = () => {
     setAppInfo({ ...appInfo })
   }
 
-  const onFormStatusChange = ({ valid }) => {
-    setIsSubmitDisabled(!valid || appInfo.error)
+  const onFormStatusChange = ({ pristine, valid }) => {
+    if (!pristine) {
+      setIsSubmitDisabled(!valid || appInfo.error)
+    }
   }
 
   const getAddAppForm = () => {
@@ -113,7 +114,7 @@ const ManageApps = () => {
           <>
             <StyledText size="xl">Add custom app</StyledText>
             <Field
-              component={TextFieldMUI}
+              component={TextField}
               name="appUrl"
               placeholder="App URL*"
               text="App URL*"
@@ -130,6 +131,7 @@ const ManageApps = () => {
               onChange={onFormStatusChange}
               subscription={{
                 valid: true,
+                pristine: true,
               }}
             />
 
