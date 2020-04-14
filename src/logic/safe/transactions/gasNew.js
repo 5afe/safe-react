@@ -101,11 +101,8 @@ export const estimateSafeTxGas = async (
     })
     let txGasEstimation = new BigNumber(estimateResponse.substring(138), 16).toNumber() + 10000
 
-    let payload = safeInstance.contract.methods
-      .execTransaction(to, valueInWei, data, operation, txGasEstimation, 0, 0, ZERO_ADDRESS, ZERO_ADDRESS, '0x')
-      .encodeABI()
     // 21000 - additional gas costs (e.g. base tx costs, transfer costs)
-    const dataGasEstimation = estimateDataGasCosts(payload) + 21000
+    const dataGasEstimation = estimateDataGasCosts(estimateData) + 21000
 
     let additionalGas = 10000
     for (let i = 0; i < 10; i++) {
@@ -136,7 +133,6 @@ export const estimateSafeTxGas = async (
       // batch.add(request)
 
       try {
-        let estimateData = safe.contract.methods.requiredTxGas(to, valueInWei, payload, operation).encodeABI()
         let estimateResponse = await web3.eth.call({
           to: safe.address,
           from: safe.address,
