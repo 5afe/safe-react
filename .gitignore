@@ -5,3 +5,5 @@ build/
 yarn-error.log
 .env*
 .idea/
+.yalc/
+yalc.lock
