@@ -33,6 +33,10 @@ const AppInfo = styled.div`
     margin-right: 10px;
   }
 `
+
+const StyledCheckbox = styled(Checkbox)`
+  margin: 0px 0px 2px 19px;
+`
 const APP_INFO = { iconUrl: appsIconSvg, name: '', error: false }
 
 const ManageApps = () => {
@@ -136,7 +140,7 @@ const ManageApps = () => {
             />
 
             <Field
-              component={Checkbox}
+              component={StyledCheckbox}
               label="I agree to use this app on my own risk"
               name="agreed"
               type="checkbox"
