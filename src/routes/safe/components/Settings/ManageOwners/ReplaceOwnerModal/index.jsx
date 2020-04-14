@@ -104,18 +104,8 @@ const ReplaceOwner = ({ classes, closeSnackbar, enqueueSnackbar, isOpen, onClose
 
   const onReplaceOwner = async () => {
     onClose()
-
     try {
-      await sendReplaceOwner(
-        values,
-        safeAddress,
-        ownerAddress,
-        enqueueSnackbar,
-        closeSnackbar,
-        replaceSafeOwner,
-        threshold,
-        dispatch,
-      )
+      await sendReplaceOwner(values, safeAddress, ownerAddress, enqueueSnackbar, closeSnackbar, threshold, dispatch)
 
       dispatch(
         // Needs the `address` field because we need to provide the minimum required values to ADD a new entry

@@ -4,6 +4,7 @@ import { withStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
 import classNames from 'classnames'
 import React, { useEffect, useState } from 'react'
+import { useSelector } from 'react-redux'
 
 import { styles } from './style'
 
@@ -21,6 +22,12 @@ import { estimateTxGasCosts } from '~/logic/safe/transactions/gasNew'
 import { formatAmount } from '~/logic/tokens/utils/formatAmount'
 import { getWeb3 } from '~/logic/wallets/getWeb3'
 import type { Safe } from '~/routes/safe/store/models/safe'
+import {
+  safeNameSelector,
+  safeOwnersSelector,
+  safeParamAddressFromStateSelector,
+  safeThresholdSelector,
+} from '~/routes/safe/store/selectors'
 
 export const REPLACE_OWNER_SUBMIT_BTN_TEST_ID = 'replace-owner-submit-btn'
 
@@ -35,20 +42,12 @@ type Props = {
   safe: Safe,
 }
 
-const ReviewRemoveOwner = ({
-  classes,
-  onClickBack,
-  onClose,
-  onSubmit,
-  ownerAddress,
-  ownerName,
-  safe,
-  values,
-}: Props) => {
+const ReviewRemoveOwner = ({ classes, onClickBack, onClose, onSubmit, ownerAddress, ownerName, values }: Props) => {
   const [gasCosts, setGasCosts] = useState<string>('< 0.001')
-  const safeAddress = safe.address
-  const safeName = safe.name
-  const { owners, threshold } = safe
+  const safeAddress = useSelector(safeParamAddressFromStateSelector)
+  const safeName = useSelector(safeNameSelector)
+  const owners = useSelector(safeOwnersSelector)
+  const threshold = useSelector(safeThresholdSelector)
 
   useEffect(() => {
     let isCurrent = true
