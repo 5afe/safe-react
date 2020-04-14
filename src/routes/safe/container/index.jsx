@@ -121,14 +121,14 @@ class SafeView extends React.Component<Props, State> {
   checkForUpdates() {
     const {
       activeTokens,
-      checkAndUpdateSafeOwners,
+      checkAndUpdateSafe,
       fetchEtherBalance,
       fetchTokenBalances,
       fetchTransactions,
       safe,
       safeUrl,
     } = this.props
-    checkAndUpdateSafeOwners(safeUrl)
+    checkAndUpdateSafe(safeUrl)
     fetchTokenBalances(safeUrl, activeTokens)
     fetchEtherBalance(safe)
     fetchTransactions(safeUrl)

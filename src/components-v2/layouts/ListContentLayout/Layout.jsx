@@ -4,7 +4,7 @@ import styled from 'styled-components'
 export const Wrapper = styled.div`
   display: grid;
   grid-template-columns: 245px auto;
-  grid-template-rows: 62px auto 25px;
+  grid-template-rows: 62px 500px 25px;
   min-height: 500px;
 
   .background {

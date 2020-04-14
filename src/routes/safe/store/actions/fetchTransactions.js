@@ -25,7 +25,6 @@ import { ZERO_ADDRESS, sameAddress } from '~/logic/wallets/ethAddresses'
 import { EMPTY_DATA } from '~/logic/wallets/ethTransactions'
 import { getWeb3 } from '~/logic/wallets/getWeb3'
 import { addCancellationTransactions } from '~/routes/safe/store/actions/addCancellationTransactions'
-import updateSafe from '~/routes/safe/store/actions/updateSafe'
 import { makeConfirmation } from '~/routes/safe/store/models/confirmation'
 import { type IncomingTransaction, makeIncomingTransaction } from '~/routes/safe/store/models/incomingTransaction'
 import { makeOwner } from '~/routes/safe/store/models/owner'
@@ -75,14 +74,14 @@ type IncomingTxServiceModel = {
 }
 
 export const buildTransactionFrom = async (safeAddress: string, tx: TxServiceModel): Promise<Transaction> => {
-  const { owners } = await getLocalSafe(safeAddress)
+  const localSafe = await getLocalSafe(safeAddress)
 
   const confirmations = List(
     tx.confirmations.map((conf: ConfirmationServiceModel) => {
       let ownerName = 'UNKNOWN'
 
-      if (owners) {
-        const storedOwner = owners.find((owner) => sameAddress(conf.owner, owner.address))
+      if (localSafe && localSafe.owners) {
+        const storedOwner = localSafe.owners.find((owner) => sameAddress(conf.owner, owner.address))
 
         if (storedOwner) {
           ownerName = storedOwner.name
@@ -172,8 +171,8 @@ export const buildTransactionFrom = async (safeAddress: string, tx: TxServiceMod
     safeTxGas: tx.safeTxGas,
     baseGas: tx.baseGas,
     gasPrice: tx.gasPrice,
-    gasToken: tx.gasToken,
-    refundReceiver: tx.refundReceiver,
+    gasToken: tx.gasToken || ZERO_ADDRESS,
+    refundReceiver: tx.refundReceiver || ZERO_ADDRESS,
     refundParams,
     isExecuted: tx.isExecuted,
     isSuccessful: tx.isSuccessful,
@@ -349,45 +348,16 @@ export const loadSafeIncomingTransactions = async (safeAddress: string) => {
   return Map().set(safeAddress, List(incomingTxsRecord))
 }
 
-/**
- * Returns nonce from the last tx returned by the server or defaults to 0
- * @param outgoingTxs
- * @returns {number|*}
- */
-const getLastTxNonce = (outgoingTxs) => {
-  if (!outgoingTxs) {
-    return 0
-  }
-
-  const mostRecentNonce = outgoingTxs.get(0).nonce
-
-  // if nonce is null, then we are in front of the creation-tx
-  if (mostRecentNonce === null) {
-    const tx = outgoingTxs.get(1)
-
-    if (tx) {
-      // if there's other tx than the creation one, we return its nonce
-      return tx.nonce
-    } else {
-      return 0
-    }
-  }
-
-  return mostRecentNonce
-}
-
 export default (safeAddress: string) => async (dispatch: ReduxDispatch<GlobalState>) => {
   web3 = await getWeb3()
 
   const transactions: SafeTransactionsType | undefined = await loadSafeTransactions(safeAddress)
   if (transactions) {
     const { cancel, outgoing } = transactions
-    const nonce = getLastTxNonce(outgoing && outgoing.get(safeAddress))
 
     batch(() => {
       dispatch(addCancellationTransactions(cancel))
       dispatch(addTransactions(outgoing))
-      dispatch(updateSafe({ address: safeAddress, nonce }))
     })
   }
 
