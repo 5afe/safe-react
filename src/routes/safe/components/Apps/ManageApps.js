@@ -1,16 +1,15 @@
 // @flow
-import { Checkbox, ManageListModal, Text, TextField } from '@gnosis/safe-react-components'
+import { ButtonLink, Checkbox, ManageListModal, Text, TextField } from '@gnosis/safe-react-components'
 import React, { useState } from 'react'
 import { FormSpy } from 'react-final-form'
 import styled from 'styled-components'
 
-//import { getAppInfoFromUrl, staticAppsList } from './utils'
 import { getAppInfoFromUrl } from './utils'
 
 import Field from '~/components/forms/Field'
+import DebounceValidationField from '~/components/forms/Field/DebounceValidationField'
 import GnoForm from '~/components/forms/GnoForm'
 import { composeValidators, required } from '~/components/forms/validator'
-import ButtonLink from '~/components/layout/ButtonLink'
 import Img from '~/components/layout/Img'
 import appsIconSvg from '~/routes/safe/components/Transactions/TxsTable/TxType/assets/appsIcon.svg'
 
@@ -39,46 +38,30 @@ const StyledCheckbox = styled(Checkbox)`
 `
 const APP_INFO = { iconUrl: appsIconSvg, name: '', error: false }
 
-const ManageApps = () => {
+type Props = {
+  appList: Array<{
+    id: string,
+    iconUrl: string,
+    name: string,
+    disabled: boolean,
+  }>,
+  onAppAdded: (app: any) => void,
+  onAppToggle: (appId: string, enabled: boolean) => void,
+}
+
+const ManageApps = ({ appList, onAppAdded, onAppToggle }: Props) => {
   const [isOpen, setIsOpen] = useState(false)
-  const [items, setItems] = useState([
-    {
-      id: '1',
-      iconUrl: 'someUrl',
-      name: 'name 1',
-      description: 'description 1',
-      checked: true,
-    },
-    {
-      id: '2',
-      iconUrl: 'someUrl2',
-      name: 'name 2',
-      description: 'description 2',
-      checked: true,
-    },
-    {
-      id: '3',
-      iconUrl: 'someUrl3',
-      name: 'name 3',
-      description: 'description 3',
-      checked: true,
-    },
-  ])
+
   const [appInfo, setAppInfo] = useState(APP_INFO)
   const [isSubmitDisabled, setIsSubmitDisabled] = useState(true)
 
   const onItemToggle = (itemId: string, checked: boolean) => {
-    const copy = [...items]
-    const localItem = copy.find((i) => i.id === itemId)
-    if (!localItem) {
-      return
-    }
-    localItem.checked = checked
-    setItems(copy)
+    onAppToggle(itemId, checked)
   }
 
-  const handleSubmit = (values) => {
-    return values
+  const handleSubmit = () => {
+    setIsOpen(false)
+    onAppAdded(appInfo)
   }
 
   const urlValidator = (value: string) => {
@@ -98,9 +81,9 @@ const ManageApps = () => {
     setAppInfo({ ...appInfo })
   }
 
-  const onFormStatusChange = ({ pristine, valid }) => {
+  const onFormStatusChange = ({ pristine, valid, validating }) => {
     if (!pristine) {
-      setIsSubmitDisabled(!valid || appInfo.error)
+      setIsSubmitDisabled(validating || !valid || appInfo.error)
     }
   }
 
@@ -117,7 +100,7 @@ const ManageApps = () => {
         {() => (
           <>
             <StyledText size="xl">Add custom app</StyledText>
-            <Field
+            <DebounceValidationField
               component={TextField}
               label="App URL"
               name="appUrl"
@@ -136,6 +119,7 @@ const ManageApps = () => {
               subscription={{
                 valid: true,
                 pristine: true,
+                validating: true,
               }}
             />
 
@@ -162,9 +146,14 @@ const ManageApps = () => {
 
   const closeModal = () => setIsOpen(false)
 
+  const getItemList = () =>
+    appList.map((a) => {
+      return { ...a, checked: !a.disabled }
+    })
+
   return (
     <>
-      <ButtonLink onClick={toggleOpen} size="lg" testId="manage-apps-btn">
+      <ButtonLink color="primary" onClick={toggleOpen}>
         Manage Apps
       </ButtonLink>
       {isOpen && (
@@ -174,7 +163,7 @@ const ManageApps = () => {
           formBody={getAddAppForm()}
           formSubmitLabel="Save"
           isSubmitFormDisabled={isSubmitDisabled}
-          itemList={items}
+          itemList={getItemList()}
           onClose={closeModal}
           onItemToggle={onItemToggle}
           onSubmitForm={onSubmitForm}

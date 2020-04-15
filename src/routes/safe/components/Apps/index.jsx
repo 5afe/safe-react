@@ -1,4 +1,5 @@
 // @flow
+import { Card, Menu, Title } from '@gnosis/safe-react-components'
 import { withSnackbar } from 'notistack'
 import React, { useCallback, useEffect, useState } from 'react'
 import styled from 'styled-components'
@@ -10,12 +11,22 @@ import { getAppInfoFromUrl, staticAppsList } from './utils'
 
 import { ListContentLayout as LCL, Loader } from '~/components-v2'
 import ButtonLink from '~/components/layout/ButtonLink'
+import { loadFromStorage, saveToStorage } from '~/utils/storage'
+
+const APPS_STORAGE_KEY = 'APPS_STORAGE_KEY'
 
 const StyledIframe = styled.iframe`
   width: 100%;
   height: 100%;
   display: ${(props) => (props.shouldDisplay ? 'block' : 'none')};
 `
+
+const Centered = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`
+
 const operations = {
   SEND_TRANSACTIONS: 'sendTransactions',
   GET_TRANSACTIONS: 'getTransactions',
@@ -48,13 +59,13 @@ function Apps({
   safeName,
   web3,
 }: Props) {
-  const [appsList, setAppsList] = useState([])
+  const [appList, setAppList] = useState([])
   const [selectedApp, setSelectedApp] = useState()
   const [loading, setLoading] = useState(true)
   const [appIsLoading, setAppIsLoading] = useState(true)
-  const [iframeEl, setframeEl] = useState(null)
+  const [iframeEl, setIframeEl] = useState(null)
 
-  const getSelectedApp = () => appsList.find((e) => e.id === selectedApp)
+  const getSelectedApp = () => appList.find((e) => e.id === selectedApp)
 
   const sendMessageToIframe = (messageId, data) => {
     iframeEl.contentWindow.postMessage({ messageId, data }, getSelectedApp().url)
@@ -114,80 +125,9 @@ function Apps({
 
   const iframeRef = useCallback((node) => {
     if (node !== null) {
-      setframeEl(node)
+      setIframeEl(node)
     }
   }, [])
-
-  // handle messages from iframe
-  useEffect(() => {
-    const onIframeMessage = async ({ data, origin }) => {
-      if (origin === window.origin) {
-        return
-      }
-
-      if (!getSelectedApp().url.includes(origin)) {
-        console.error(`Message from ${origin} is different to the App URL ${getSelectedApp().url}`)
-        return
-      }
-
-      handleIframeMessage(data)
-    }
-
-    window.addEventListener('message', onIframeMessage)
-
-    return () => {
-      window.removeEventListener('message', onIframeMessage)
-    }
-  })
-
-  // Load apps list
-  useEffect(() => {
-    const loadApps = async () => {
-      const list = [...staticAppsList]
-      const apps = []
-      for (let index = 0; index < list.length; index++) {
-        try {
-          const appUrl = list[index]
-          const appInfo = await getAppInfoFromUrl(appUrl)
-          const app = { url: appUrl, ...appInfo }
-
-          app.id = JSON.stringify({ url: app.url, name: app.name })
-          apps.push(app)
-        } catch (error) {
-          console.error(error)
-        }
-      }
-
-      setAppsList([...apps])
-      setLoading(false)
-    }
-
-    if (!appsList.length) {
-      loadApps()
-    }
-  }, [appsList])
-
-  // on iframe change
-  useEffect(() => {
-    const onIframeLoaded = () => {
-      setAppIsLoading(false)
-      sendMessageToIframe(operations.ON_SAFE_INFO, {
-        safeAddress,
-        network,
-        ethBalance,
-      })
-    }
-
-    if (!iframeEl) {
-      return
-    }
-
-    iframeEl.addEventListener('load', onIframeLoaded)
-
-    return () => {
-      iframeEl.removeEventListener('load', onIframeLoaded)
-    }
-  }, [iframeEl])
 
   const onSelectApp = (appId) => {
     setAppIsLoading(true)
@@ -214,34 +154,185 @@ function Apps({
     )
   }
 
-  if (loading || !appsList.length) {
+  const onAppAdded = (app) => {
+    const newAppList = [
+      { url: app.url, disabled: false },
+      appList.map((a) => ({
+        url: a.url,
+        disabled: a.disabled,
+      })),
+    ]
+
+    saveToStorage(APPS_STORAGE_KEY, newAppList)
+    setAppList([...appList, { ...app, disabled: false }])
+  }
+
+  const onAppToggle = async (appId: string, enabled: boolean) => {
+    // update in-memory list
+    const copyAppList = [...appList]
+
+    const app = copyAppList.find((a) => a.id === appId)
+    if (!app) {
+      return
+    }
+
+    app.disabled = !enabled
+    setAppList(copyAppList)
+
+    // update storage list
+    const persistedAppList = (await loadFromStorage(APPS_STORAGE_KEY)) || []
+    let storageApp = persistedAppList.find((a) => a.url === app.url)
+
+    if (!storageApp) {
+      storageApp = { url: app.url }
+      storageApp.disabled = !enabled
+      persistedAppList.push(storageApp)
+    } else {
+      storageApp.disabled = !enabled
+    }
+
+    saveToStorage(APPS_STORAGE_KEY, persistedAppList)
+
+    // unselect app if it was disabled
+    const selectedApp = getSelectedApp()
+    if (selectedApp && selectedApp.id === appId) {
+      const firstEnabledApp = copyAppList.find((a) => !a.disabled)
+      firstEnabledApp ? setSelectedApp(firstEnabledApp.id) : setSelectedApp()
+    }
+  }
+
+  const getEnabledApps = () => appList.filter((a) => !a.disabled)
+
+  // handle messages from iframe
+  useEffect(() => {
+    const onIframeMessage = async ({ data, origin }) => {
+      if (origin === window.origin) {
+        return
+      }
+
+      if (!getSelectedApp().url.includes(origin)) {
+        console.error(`Message from ${origin} is different to the App URL ${getSelectedApp().url}`)
+        return
+      }
+
+      handleIframeMessage(data)
+    }
+
+    window.addEventListener('message', onIframeMessage)
+
+    return () => {
+      window.removeEventListener('message', onIframeMessage)
+    }
+  })
+
+  // Load apps list
+  useEffect(() => {
+    const loadApps = async () => {
+      // recover apps from storage:
+      // * third-party apps added by the user
+      // * disabled status for both static and third-party apps
+      const persistedAppList = (await loadFromStorage(APPS_STORAGE_KEY)) || []
+      const list = [...persistedAppList]
+
+      staticAppsList.forEach((staticApp) => {
+        if (!list.some((persistedApp) => persistedApp.url === staticApp.url)) {
+          list.push(staticApp)
+        }
+      })
+
+      const apps = []
+      // using the appURL recover app info
+      for (let index = 0; index < list.length; index++) {
+        try {
+          const currentApp = list[index]
+
+          const appInfo = await getAppInfoFromUrl(currentApp.url)
+
+          if (appInfo.error) {
+            throw Error()
+          }
+
+          appInfo.disabled = currentApp.disabled === undefined ? false : currentApp.disabled
+
+          apps.push(appInfo)
+        } catch (error) {
+          console.error(error)
+        }
+      }
+
+      setAppList([...apps])
+      const firstEnabledApp = apps.find((a) => !a.disabled)
+      if (firstEnabledApp) {
+        onSelectApp(firstEnabledApp.id)
+      }
+      setLoading(false)
+    }
+
+    if (!appList.length) {
+      loadApps()
+    }
+  }, [])
+
+  // on iframe change
+  useEffect(() => {
+    const onIframeLoaded = () => {
+      setAppIsLoading(false)
+      sendMessageToIframe(operations.ON_SAFE_INFO, {
+        safeAddress,
+        network,
+        ethBalance,
+      })
+    }
+
+    if (!iframeEl) {
+      return
+    }
+
+    iframeEl.addEventListener('load', onIframeLoaded)
+
+    return () => {
+      iframeEl.removeEventListener('load', onIframeLoaded)
+    }
+  }, [iframeEl])
+
+  if (loading) {
     return <Loader />
   }
 
   return (
-    <LCL.Wrapper>
-      <LCL.Nav>
-        <ManageApps />
-      </LCL.Nav>
-      <LCL.Menu>
-        <LCL.List activeItem={selectedApp} items={appsList} onItemClick={onSelectApp} />
-      </LCL.Menu>
-      <LCL.Content>{getContent()}</LCL.Content>
-      <LCL.Footer>
-        {getSelectedApp() && getSelectedApp().providedBy && (
-          <>
-            <p>This App is provided by </p>
-            <ButtonLink
-              onClick={() => window.open(getSelectedApp().providedBy.url, '_blank')}
-              size="lg"
-              testId="manage-tokens-btn"
-            >
-              {selectedApp && getSelectedApp().providedBy.name}
-            </ButtonLink>
-          </>
-        )}
-      </LCL.Footer>
-    </LCL.Wrapper>
+    <>
+      <Menu>
+        <ManageApps appList={appList} onAppAdded={onAppAdded} onAppToggle={onAppToggle} />
+      </Menu>
+      {getEnabledApps().length ? (
+        <LCL.Wrapper>
+          <LCL.Menu>
+            <LCL.List activeItem={selectedApp} items={getEnabledApps()} onItemClick={onSelectApp} />
+          </LCL.Menu>
+          <LCL.Content>{getContent()}</LCL.Content>
+          <LCL.Footer>
+            {getSelectedApp() && getSelectedApp().providedBy && (
+              <>
+                <p>This App is provided by </p>
+                <ButtonLink
+                  onClick={() => window.open(getSelectedApp().providedBy.url, '_blank')}
+                  size="lg"
+                  testId="manage-tokens-btn"
+                >
+                  {selectedApp && getSelectedApp().providedBy.name}
+                </ButtonLink>
+              </>
+            )}
+          </LCL.Footer>
+        </LCL.Wrapper>
+      ) : (
+        <Card>
+          <Centered>
+            <Title size="xs">No Apps Enabled</Title>
+          </Centered>
+        </Card>
+      )}
+    </>
   )
 }
 
