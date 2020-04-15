@@ -98,6 +98,7 @@ export const makeTransaction: RecordFactory<TransactionProps> = Record({
   refundParams: null,
   type: 'outgoing',
   origin: null,
+  ownersWithPendingActions: [],
 })
 
 export type Transaction = RecordOf<TransactionProps>
