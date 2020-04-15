@@ -94,7 +94,7 @@ const OwnerComponent = ({
         <EtherscanLink className={classes.address} cut={4} type="address" value={owner.address} />
       </Block>
       <Block className={classes.spacer} />
-      {owner.address === userAddress && (
+      {owner.address === userAddress && !pendingAction && (
         <Block>
           {isCancelTx ? (
             <>
@@ -150,6 +150,7 @@ const OwnerComponent = ({
         </Block>
       )}
       {owner.address === executor && <Block className={classes.executor}>Executor</Block>}
+      {pendingAction ? <Block className={classes.executor}>Pending</Block> : null}
     </Block>
   )
 }
