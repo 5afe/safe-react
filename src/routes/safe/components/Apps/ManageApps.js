@@ -1,5 +1,5 @@
 // @flow
-import { Checkbox, ManageListModal, Text, TextField } from '@gnosis/safe-react-components'
+import { ButtonLink, Checkbox, ManageListModal, Text, TextField } from '@gnosis/safe-react-components'
 import React, { useState } from 'react'
 import { FormSpy } from 'react-final-form'
 import styled from 'styled-components'
@@ -10,7 +10,6 @@ import Field from '~/components/forms/Field'
 import DebounceValidationField from '~/components/forms/Field/DebounceValidationField'
 import GnoForm from '~/components/forms/GnoForm'
 import { composeValidators, required } from '~/components/forms/validator'
-import ButtonLink from '~/components/layout/ButtonLink'
 import Img from '~/components/layout/Img'
 import appsIconSvg from '~/routes/safe/components/Transactions/TxsTable/TxType/assets/appsIcon.svg'
 
@@ -43,22 +42,17 @@ type Props = {
     disabled: boolean,
   }>,
   onAppAdded: (app: any) => void,
+  onAppToggle: (appId: string, enabled: boolean) => void,
 }
 
-const ManageApps = ({ appList, onAppAdded }: Props) => {
+const ManageApps = ({ appList, onAppAdded, onAppToggle }: Props) => {
   const [isOpen, setIsOpen] = useState(false)
 
   const [appInfo, setAppInfo] = useState(APP_INFO)
   const [isSubmitDisabled, setIsSubmitDisabled] = useState(true)
 
-  const onItemToggle = (/* itemId: string, checked: boolean */) => {
-    // const copy = [...items]
-    // const localItem = copy.find((i) => i.id === itemId)
-    // if (!localItem) {
-    //   return
-    // }
-    // localItem.checked = checked
-    // setItems(copy)
+  const onItemToggle = (itemId: string, checked: boolean) => {
+    onAppToggle(itemId, checked)
   }
 
   const handleSubmit = () => {
@@ -148,11 +142,14 @@ const ManageApps = ({ appList, onAppAdded }: Props) => {
 
   const closeModal = () => setIsOpen(false)
 
-  const getItemList = () => appList.map((a) => ({ ...a, checked: !a.disabled }))
+  const getItemList = () =>
+    appList.map((a) => {
+      return { ...a, checked: !a.disabled }
+    })
 
   return (
     <>
-      <ButtonLink onClick={toggleOpen} size="lg" testId="manage-apps-btn">
+      <ButtonLink color="primary" onClick={toggleOpen}>
         Manage Apps
       </ButtonLink>
       {isOpen && (

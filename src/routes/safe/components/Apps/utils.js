@@ -39,7 +39,7 @@ export const getAppInfoFromUrl = async (appUrl: string) => {
     res = {
       ...res,
       ...appInfo.data,
-      id: JSON.stringify({ url: appInfo.data.url, name: appInfo.data.name }),
+      id: JSON.stringify({ url: appUrl, name: appInfo.data.name }),
       error: false,
     }
     if (appInfo.data.iconPath) {

@@ -1,4 +1,5 @@
 // @flow
+import { Card, Menu, Title } from '@gnosis/safe-react-components'
 import { withSnackbar } from 'notistack'
 import React, { useCallback, useEffect, useState } from 'react'
 import styled from 'styled-components'
@@ -19,6 +20,13 @@ const StyledIframe = styled.iframe`
   height: 100%;
   display: ${(props) => (props.shouldDisplay ? 'block' : 'none')};
 `
+
+const Centered = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`
+
 const operations = {
   SEND_TRANSACTIONS: 'sendTransactions',
   GET_TRANSACTIONS: 'getTransactions',
@@ -146,6 +154,9 @@ function Apps({
   // Load apps list
   useEffect(() => {
     const loadApps = async () => {
+      // recover apps from storage:
+      // * third-party apps added by the user
+      // * disabled status for both static and third-party apps
       const persistedAppList = (await loadFromStorage(APPS_STORAGE_KEY)) || []
       const list = [...persistedAppList]
 
@@ -156,18 +167,18 @@ function Apps({
       })
 
       const apps = []
+      // using the appURL recover app info
       for (let index = 0; index < list.length; index++) {
         try {
           const currentApp = list[index]
-          if (currentApp.disabled) {
-            continue
-          }
 
           const appInfo = await getAppInfoFromUrl(currentApp.url)
 
           if (appInfo.error) {
             throw Error()
           }
+
+          appInfo.disabled = currentApp.disabled === undefined ? false : currentApp.disabled
 
           apps.push(appInfo)
         } catch (error) {
@@ -182,7 +193,7 @@ function Apps({
     if (!appList.length) {
       loadApps()
     }
-  }, [appList])
+  }, [])
 
   // on iframe change
   useEffect(() => {
@@ -232,43 +243,85 @@ function Apps({
   }
 
   const onAppAdded = (app) => {
-    const newAppList = [...appList, { url: app.url, disabled: false }].map((a) => ({
-      url: a.url,
-      disabled: a.disabled,
-    }))
+    const newAppList = [
+      { url: app.url, disabled: false },
+      appList.map((a) => ({
+        url: a.url,
+        disabled: a.disabled,
+      })),
+    ]
 
     saveToStorage(APPS_STORAGE_KEY, newAppList)
     setAppList([...appList, { ...app, disabled: false }])
   }
 
-  if (loading || !appList.length) {
+  const onAppToggle = async (appId: string, enabled: boolean) => {
+    // update in-memory list
+    const copyAppList = [...appList]
+
+    const app = copyAppList.find((a) => a.id === appId)
+    if (!app) {
+      return
+    }
+
+    app.disabled = !enabled
+    setAppList(copyAppList)
+
+    // update storage list
+    const persistedAppList = (await loadFromStorage(APPS_STORAGE_KEY)) || []
+    let storageApp = persistedAppList.find((a) => a.url === app.url)
+
+    if (!storageApp) {
+      storageApp = { url: app.url }
+      storageApp.disabled = !enabled
+      persistedAppList.push(storageApp)
+    } else {
+      storageApp.disabled = !enabled
+    }
+
+    saveToStorage(APPS_STORAGE_KEY, persistedAppList)
+  }
+
+  const getEnabledApps = () => appList.filter((a) => !a.disabled)
+
+  if (loading) {
     return <Loader />
   }
 
   return (
-    <LCL.Wrapper>
-      <LCL.Nav>
-        <ManageApps appList={appList} onAppAdded={onAppAdded} />
-      </LCL.Nav>
-      <LCL.Menu>
-        <LCL.List activeItem={selectedApp} items={appList} onItemClick={onSelectApp} />
-      </LCL.Menu>
-      <LCL.Content>{getContent()}</LCL.Content>
-      <LCL.Footer>
-        {getSelectedApp() && getSelectedApp().providedBy && (
-          <>
-            <p>This App is provided by </p>
-            <ButtonLink
-              onClick={() => window.open(getSelectedApp().providedBy.url, '_blank')}
-              size="lg"
-              testId="manage-tokens-btn"
-            >
-              {selectedApp && getSelectedApp().providedBy.name}
-            </ButtonLink>
-          </>
-        )}
-      </LCL.Footer>
-    </LCL.Wrapper>
+    <>
+      <Menu>
+        <ManageApps appList={appList} onAppAdded={onAppAdded} onAppToggle={onAppToggle} />
+      </Menu>
+      {getEnabledApps().length ? (
+        <LCL.Wrapper>
+          <LCL.Menu>
+            <LCL.List activeItem={selectedApp} items={getEnabledApps()} onItemClick={onSelectApp} />
+          </LCL.Menu>
+          <LCL.Content>{getContent()}</LCL.Content>
+          <LCL.Footer>
+            {getSelectedApp() && getSelectedApp().providedBy && (
+              <>
+                <p>This App is provided by </p>
+                <ButtonLink
+                  onClick={() => window.open(getSelectedApp().providedBy.url, '_blank')}
+                  size="lg"
+                  testId="manage-tokens-btn"
+                >
+                  {selectedApp && getSelectedApp().providedBy.name}
+                </ButtonLink>
+              </>
+            )}
+          </LCL.Footer>
+        </LCL.Wrapper>
+      ) : (
+        <Card>
+          <Centered>
+            <Title size="xs">No Apps Enabled</Title>
+          </Centered>
+        </Card>
+      )}
+    </>
   )
 }
 
