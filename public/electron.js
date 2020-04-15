@@ -55,7 +55,7 @@ function getOpenedWindow(url,options) {
     */
   }
 
-  if(url.includes('wallet.portis') || url.includes('about:blank')){
+  if(url.includes('wallet.portis') || url.includes('about:blank') || url.includes('app.tor.us')){
     const win = new BrowserWindow({
       width:300,
       height:700,
@@ -136,6 +136,8 @@ function createWindow() {
 
   mainWindow.on("closed", () => (mainWindow = null));
 }
+
+app.userAgentFallback = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) old-airport-include/1.0.0 Chrome Electron/7.1.7 Safari/537.36';
 
 app.commandLine.appendSwitch('ignore-certificate-errors');
 app.on("ready", () =>{
