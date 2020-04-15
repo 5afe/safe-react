@@ -1206,9 +1206,9 @@
   dependencies:
     "@truffle/hdwallet-provider" "^1.0.27"
 
-"@gnosis/safe-react-components@https://github.com/gnosis/safe-react-components.git#9bd67d0":
+"@gnosis/safe-react-components@https://github.com/gnosis/safe-react-components.git#d8b428c":
   version "0.1.1"
-  resolved "https://github.com/gnosis/safe-react-components.git#9bd67d00b11fecf9da7669b51a0fc96748b1107b"
+  resolved "https://github.com/gnosis/safe-react-components.git#d8b428ca5961ffe7bb5704a0905551f5a729d67c"
   dependencies:
     classnames "^2.2.6"
     polished "^3.5.1"
@@ -17842,7 +17842,6 @@ websocket@1.0.29, "websocket@github:web3-js/WebSocket-Node#polyfill/globalThis":
   dependencies:
     debug "^2.2.0"
     es5-ext "^0.10.50"
-    gulp "^4.0.2"
     nan "^2.14.0"
     typedarray-to-buffer "^3.1.5"
     yaeti "^0.0.6"

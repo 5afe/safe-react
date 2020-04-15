@@ -129,94 +129,6 @@ function Apps({
     }
   }, [])
 
-  // handle messages from iframe
-  useEffect(() => {
-    const onIframeMessage = async ({ data, origin }) => {
-      if (origin === window.origin) {
-        return
-      }
-
-      if (!getSelectedApp().url.includes(origin)) {
-        console.error(`Message from ${origin} is different to the App URL ${getSelectedApp().url}`)
-        return
-      }
-
-      handleIframeMessage(data)
-    }
-
-    window.addEventListener('message', onIframeMessage)
-
-    return () => {
-      window.removeEventListener('message', onIframeMessage)
-    }
-  })
-
-  // Load apps list
-  useEffect(() => {
-    const loadApps = async () => {
-      // recover apps from storage:
-      // * third-party apps added by the user
-      // * disabled status for both static and third-party apps
-      const persistedAppList = (await loadFromStorage(APPS_STORAGE_KEY)) || []
-      const list = [...persistedAppList]
-
-      staticAppsList.forEach((staticApp) => {
-        if (!list.some((persistedApp) => persistedApp.url === staticApp.url)) {
-          list.push(staticApp)
-        }
-      })
-
-      const apps = []
-      // using the appURL recover app info
-      for (let index = 0; index < list.length; index++) {
-        try {
-          const currentApp = list[index]
-
-          const appInfo = await getAppInfoFromUrl(currentApp.url)
-
-          if (appInfo.error) {
-            throw Error()
-          }
-
-          appInfo.disabled = currentApp.disabled === undefined ? false : currentApp.disabled
-
-          apps.push(appInfo)
-        } catch (error) {
-          console.error(error)
-        }
-      }
-
-      setAppList([...apps])
-      setLoading(false)
-    }
-
-    if (!appList.length) {
-      loadApps()
-    }
-  }, [])
-
-  // on iframe change
-  useEffect(() => {
-    const onIframeLoaded = () => {
-      setAppIsLoading(false)
-      sendMessageToIframe(operations.ON_SAFE_INFO, {
-        safeAddress,
-        network,
-        ethBalance,
-      })
-    }
-
-    if (!iframeEl) {
-      return
-    }
-
-    iframeEl.addEventListener('load', onIframeLoaded)
-
-    return () => {
-      iframeEl.removeEventListener('load', onIframeLoaded)
-    }
-  }, [iframeEl])
-
   const onSelectApp = (appId) => {
     setAppIsLoading(true)
     setSelectedApp(appId)
@@ -280,9 +192,108 @@ function Apps({
     }
 
     saveToStorage(APPS_STORAGE_KEY, persistedAppList)
+
+    // unselect app if it was disabled
+    const selectedApp = getSelectedApp()
+    if (selectedApp && selectedApp.id === appId) {
+      const firstEnabledApp = copyAppList.find((a) => !a.disabled)
+      firstEnabledApp ? setSelectedApp(firstEnabledApp.id) : setSelectedApp()
+    }
   }
 
   const getEnabledApps = () => appList.filter((a) => !a.disabled)
+
+  // handle messages from iframe
+  useEffect(() => {
+    const onIframeMessage = async ({ data, origin }) => {
+      if (origin === window.origin) {
+        return
+      }
+
+      if (!getSelectedApp().url.includes(origin)) {
+        console.error(`Message from ${origin} is different to the App URL ${getSelectedApp().url}`)
+        return
+      }
+
+      handleIframeMessage(data)
+    }
+
+    window.addEventListener('message', onIframeMessage)
+
+    return () => {
+      window.removeEventListener('message', onIframeMessage)
+    }
+  })
+
+  // Load apps list
+  useEffect(() => {
+    const loadApps = async () => {
+      // recover apps from storage:
+      // * third-party apps added by the user
+      // * disabled status for both static and third-party apps
+      const persistedAppList = (await loadFromStorage(APPS_STORAGE_KEY)) || []
+      const list = [...persistedAppList]
+
+      staticAppsList.forEach((staticApp) => {
+        if (!list.some((persistedApp) => persistedApp.url === staticApp.url)) {
+          list.push(staticApp)
+        }
+      })
+
+      const apps = []
+      // using the appURL recover app info
+      for (let index = 0; index < list.length; index++) {
+        try {
+          const currentApp = list[index]
+
+          const appInfo = await getAppInfoFromUrl(currentApp.url)
+
+          if (appInfo.error) {
+            throw Error()
+          }
+
+          appInfo.disabled = currentApp.disabled === undefined ? false : currentApp.disabled
+
+          apps.push(appInfo)
+        } catch (error) {
+          console.error(error)
+        }
+      }
+
+      setAppList([...apps])
+      const firstEnabledApp = apps.find((a) => !a.disabled)
+      if (firstEnabledApp) {
+        onSelectApp(firstEnabledApp.id)
+      }
+      setLoading(false)
+    }
+
+    if (!appList.length) {
+      loadApps()
+    }
+  }, [])
+
+  // on iframe change
+  useEffect(() => {
+    const onIframeLoaded = () => {
+      setAppIsLoading(false)
+      sendMessageToIframe(operations.ON_SAFE_INFO, {
+        safeAddress,
+        network,
+        ethBalance,
+      })
+    }
+
+    if (!iframeEl) {
+      return
+    }
+
+    iframeEl.addEventListener('load', onIframeLoaded)
+
+    return () => {
+      iframeEl.removeEventListener('load', onIframeLoaded)
+    }
+  }, [iframeEl])
 
   if (loading) {
     return <Loader />
