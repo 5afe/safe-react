@@ -54,15 +54,25 @@ function getOwnersConfirmations(tx, userAddress) {
 }
 
 function getPendingOwnersConfirmations(owners, tx, userAddress) {
-  const ownersUnconfirmed = owners.filter(
+  const ownersWithNoConfirmations = owners.filter(
     (owner) => tx.confirmations.findIndex((conf) => conf.owner.address === owner.address) === -1,
   )
 
   let userIsUnconfirmedOwner = false
 
-  ownersUnconfirmed.some((owner) => {
+  ownersWithNoConfirmations.some((owner) => {
     userIsUnconfirmedOwner = owner.address === userAddress
     return userIsUnconfirmedOwner
+  })
+
+  const ownersUnconfirmed = ownersWithNoConfirmations.map((owner) => {
+    let hasPendingActions = false
+    let { ownersWithPendingActions } = tx
+    if (ownersWithPendingActions.includes(owner.address)) {
+      hasPendingActions = true
+    }
+
+    return { owner, hasPendingActions }
   })
 
   return [ownersUnconfirmed, userIsUnconfirmedOwner]

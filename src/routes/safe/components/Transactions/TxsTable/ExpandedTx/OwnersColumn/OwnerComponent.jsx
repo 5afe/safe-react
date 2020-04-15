@@ -8,6 +8,7 @@ import ConfirmSmallFilledCircle from './assets/confirm-small-filled.svg'
 import ConfirmSmallGreenCircle from './assets/confirm-small-green.svg'
 import ConfirmSmallGreyCircle from './assets/confirm-small-grey.svg'
 import ConfirmSmallRedCircle from './assets/confirm-small-red.svg'
+import PendingSmallYellowCircle from './assets/confirm-small-yellow.svg'
 import { styles } from './style'
 
 import EtherscanLink from '~/components/EtherscanLink'
@@ -39,6 +40,7 @@ type OwnerProps = {
   showExecuteBtn: boolean,
   thresholdReached: boolean,
   userAddress: string,
+  pendingAction?: boolean,
 }
 
 const OwnerComponent = ({
@@ -50,6 +52,7 @@ const OwnerComponent = ({
   onTxExecute,
   onTxReject,
   owner,
+  pendingAction,
   showConfirmBtn,
   showExecuteBtn,
   showExecuteRejectBtn,
@@ -62,9 +65,15 @@ const OwnerComponent = ({
   const [imgCircle, setImgCircle] = React.useState(ConfirmSmallGreyCircle)
 
   React.useMemo(() => {
+    if (pendingAction) {
+      setImgCircle(PendingSmallYellowCircle)
+      return
+    }
     if (confirmed) {
       setImgCircle(isCancelTx ? CancelSmallFilledCircle : ConfirmSmallFilledCircle)
-    } else if (thresholdReached || executor) {
+      return
+    }
+    if (thresholdReached || executor) {
       setImgCircle(isCancelTx ? ConfirmSmallRedCircle : ConfirmSmallGreenCircle)
     }
   }, [confirmed, thresholdReached, executor, isCancelTx])

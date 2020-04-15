@@ -30,9 +30,11 @@ type Props = {
   safeAddress: string,
   enqueueSnackbar: Function,
   closeSnackbar: Function,
+  addPendingActionToTx: Function,
 }
 
 const RejectTxModal = ({
+  addPendingActionToTx,
   classes,
   closeSnackbar,
   createTransaction,
@@ -76,6 +78,7 @@ const RejectTxModal = ({
       txNonce: tx.nonce,
       origin: tx.origin,
     })
+    addPendingActionToTx(tx)
     onClose()
   }
 

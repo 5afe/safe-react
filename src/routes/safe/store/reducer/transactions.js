@@ -16,6 +16,7 @@ export default handleActions<State, *>(
     [UPDATE_TRANSACTION]: (state: State, action: ActionType<Function>): State => {
       const { safeAddress, transaction } = action.payload
       const oldTxsList = state.get(safeAddress)
+      if (!oldTxsList) return state
       const txIndex = oldTxsList.findIndex((tx) => tx.nonce === transaction.nonce)
       return oldTxsList.updateIn([txIndex], (prevTx) => prevTx.merge(transaction))
     },

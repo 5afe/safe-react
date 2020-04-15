@@ -40,6 +40,7 @@ type Props = {
   canExecute: boolean,
   enqueueSnackbar: Function,
   closeSnackbar: Function,
+  addPendingActionToTx: Function,
 }
 
 const getModalTitleAndDescription = (thresholdReached: boolean, isCancelTx?: boolean) => {
@@ -66,6 +67,7 @@ const getModalTitleAndDescription = (thresholdReached: boolean, isCancelTx?: boo
 }
 
 const ApproveTxModal = ({
+  addPendingActionToTx,
   canExecute,
   classes,
   closeSnackbar,
@@ -126,6 +128,7 @@ const ApproveTxModal = ({
       closeSnackbar,
       approveAndExecute: canExecute && approveAndExecute && isTheTxReadyToBeExecuted,
     })
+    addPendingActionToTx(tx)
     onClose()
   }
 

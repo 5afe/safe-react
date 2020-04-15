@@ -2,6 +2,7 @@
 import { makeStyles } from '@material-ui/core/styles'
 import { List } from 'immutable'
 import React, { useState } from 'react'
+import { useDispatch } from 'react-redux'
 
 import ApproveTxModal from './ApproveTxModal'
 import OwnersColumn from './OwnersColumn'
@@ -15,6 +16,7 @@ import Hairline from '~/components/layout/Hairline'
 import Row from '~/components/layout/Row'
 import IncomingTxDescription from '~/routes/safe/components/Transactions/TxsTable/ExpandedTx/IncomingTxDescription'
 import { TxDetails } from '~/routes/safe/components/Transactions/TxsTable/ExpandedTx/TxDetails'
+import updateTransaction from '~/routes/safe/store/actions/updateTransaction'
 import { INCOMING_TX_TYPES } from '~/routes/safe/store/models/incomingTransaction'
 import { type Owner } from '~/routes/safe/store/models/owner'
 import { type Transaction } from '~/routes/safe/store/models/transaction'
@@ -50,6 +52,7 @@ const ExpandedTx = ({
 }: Props) => {
   const classes = useStyles()
   const [openModal, setOpenModal] = useState<OpenModal>(null)
+  const dispatch = useDispatch()
   const openApproveModal = () => setOpenModal('approveTx')
   const closeModal = () => setOpenModal(null)
   const thresholdReached = !INCOMING_TX_TYPES.includes(tx.type) && threshold <= tx.confirmations.size
@@ -63,6 +66,11 @@ const ExpandedTx = ({
     } else {
       setOpenModal('rejectTx')
     }
+  }
+
+  const addPendingActionToTx = () => {
+    const currentPendingActions = tx.ownersWithPendingActions.push(userAddress)
+    dispatch(updateTransaction({ safeAddress, transaction: tx.set('ownersWithPendingActions', currentPendingActions) }))
   }
 
   return (
@@ -96,6 +104,7 @@ const ExpandedTx = ({
       </Block>
       {openModal === 'approveTx' && (
         <ApproveTxModal
+          addPendingActionToTx={addPendingActionToTx}
           canExecute={canExecute}
           isOpen
           onClose={closeModal}
@@ -109,6 +118,7 @@ const ExpandedTx = ({
       )}
       {openModal === 'rejectTx' && (
         <RejectTxModal
+          addPendingActionToTx={addPendingActionToTx}
           createTransaction={createTransaction}
           isOpen
           onClose={closeModal}
@@ -118,6 +128,7 @@ const ExpandedTx = ({
       )}
       {openModal === 'executeRejectTx' && (
         <ApproveTxModal
+          addPendingActionToTx={addPendingActionToTx}
           canExecute={canExecuteCancel}
           isCancelTx
           isOpen
