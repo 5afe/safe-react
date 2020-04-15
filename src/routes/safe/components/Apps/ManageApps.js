@@ -21,7 +21,7 @@ const StyledText = styled(Text)`
 
 const StyledTextFileAppName = styled(TextField)`
   && {
-    width: 340px;
+    width: 335px;
   }
 `
 
