@@ -1,11 +1,13 @@
 name: Build/release
 
-on: push
+# this will help you specify where to run
+on:
+  push:
+    branches:
+      # this will run on the master branch
+      - master
 
 env:
-  # macOS notarization API key
-  APPLEID: ${{ secrets.apple_id }}
-  APPLEIDPASS: ${{ secrets.apple_id_pass }}
 
 jobs:
   release:
@@ -25,6 +27,10 @@ jobs:
           node-version: 10.16
 
       - name: Build/release Electron app
+        env:
+          # macOS notarization API key
+          APPLEID: ${{ secrets.apple_id }}
+          APPLEIDPASS: ${{ secrets.apple_id_pass }}
         uses: samuelmeuli/action-electron-builder@v1
         with:
           #Build scipt
