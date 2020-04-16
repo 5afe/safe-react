@@ -16,7 +16,7 @@ import Hairline from '~/components/layout/Hairline'
 import Row from '~/components/layout/Row'
 import IncomingTxDescription from '~/routes/safe/components/Transactions/TxsTable/ExpandedTx/IncomingTxDescription'
 import { TxDetails } from '~/routes/safe/components/Transactions/TxsTable/ExpandedTx/TxDetails'
-import updateTransaction from '~/routes/safe/store/actions/updateTransaction'
+import updateTransactionPendingActions from '~/routes/safe/store/actions/updateTransactionPendingActions'
 import { INCOMING_TX_TYPES } from '~/routes/safe/store/models/incomingTransaction'
 import { type Owner } from '~/routes/safe/store/models/owner'
 import { type Transaction } from '~/routes/safe/store/models/transaction'
@@ -69,8 +69,9 @@ const ExpandedTx = ({
   }
 
   const addPendingActionToTx = () => {
-    const currentPendingActions = tx.ownersWithPendingActions.push(userAddress)
-    dispatch(updateTransaction({ safeAddress, transaction: tx.set('ownersWithPendingActions', currentPendingActions) }))
+    const { ownersWithPendingActions } = tx
+    const newPendingActions = ownersWithPendingActions.push(userAddress)
+    dispatch(updateTransactionPendingActions({ safeAddress, transaction: tx, newPendingActions }))
   }
 
   return (
