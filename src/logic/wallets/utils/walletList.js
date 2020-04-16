@@ -47,7 +47,7 @@ const wallets = [
   },
   { walletName: 'authereum', desktop: false },
   { walletName: 'torus', desktop: true },
-
+  { walletName: 'unilogin', desktop: true },
   { walletName: 'coinbase', desktop: false },
   { walletName: 'opera', desktop: false },
   { walletName: 'operaTouch', desktop: false },
