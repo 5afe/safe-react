@@ -30,7 +30,7 @@ export const getAppInfoFromUrl = async (appUrl: string) => {
 
     // verify imported app fulfil safe requirements
     if (!appInfo || !appInfo.data || !appInfo.data.name || !appInfo.data.description) {
-      throw Error()
+      throw Error('The app does not fulfil the structure required.')
     }
 
     res = {
