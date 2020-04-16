@@ -86,7 +86,6 @@ export const estimateSafeTxGas = async (
   operation: number,
 ) => {
   try {
-    let additionalGasBatches = [10000, 20000, 40000, 80000, 160000, 320000, 640000, 1280000, 2560000, 5120000]
     let safeInstance = safe
     if (!safeInstance) {
       safeInstance = await getGnosisSafeInstanceAt(safeAddress)
@@ -104,52 +103,46 @@ export const estimateSafeTxGas = async (
     // 21000 - additional gas costs (e.g. base tx costs, transfer costs)
     const dataGasEstimation = estimateDataGasCosts(estimateData) + 21000
 
-    let additionalGas = 10000
+    let additionalGasBatches = [10000, 20000, 40000, 80000, 160000, 320000, 640000, 1280000, 2560000, 5120000]
     for (let i = 0; i < 10; i++) {
-      // const batch = new web3.BatchRequest()
+      const batch = new web3.BatchRequest()
 
-      // const request = web3.eth.call.request(
-      //   {
-      //     to: safe.address,
-      //     from: safe.address,
-      //     data: estimateData,
-      //     gasPrice: 0,
-      //     gasLimit: txGasEstimation + dataGasEstimation,
-      //   },
-      //   (error, estimateResponse) => {
-      //     if (error) {
-      //       // if there's no balance, we log the error, but `resolve` with a default '0'
-      //       console.error('No balance method found', error)
-      //       resolve('0')
-      //     } else {
-      //       resolve({
-      //         address,
-      //         estimateResponse,
-      //       })
-      //     }
-      //   },
-      // )
+      const estimationRequests = additionalGasBatches.map(
+        (additionalGas) =>
+          new Promise((resolve) => {
+            const request = web3.eth.call.request(
+              {
+                to: safe.address,
+                from: safe.address,
+                data: estimateData,
+                gasPrice: 0,
+                gasLimit: txGasEstimation + dataGasEstimation + additionalGas,
+              },
+              (error) => {
+                resolve({
+                  success: error ? false : true,
+                  estimation: txGasEstimation + additionalGas,
+                })
+              },
+            )
 
-      // batch.add(request)
+            batch.add(request)
+          }),
+      )
 
-      try {
-        let estimateResponse = await web3.eth.call({
-          to: safe.address,
-          from: safe.address,
-          data: estimateData,
-          gasPrice: 0,
-          gasLimit: txGasEstimation + dataGasEstimation,
-        })
-        console.log('    Simulate: ' + estimateResponse)
-        if (estimateResponse != '0x') break
-      } catch (e) {
-        console.error('Error calculating safeTxGas: ', e)
+      batch.execute()
+
+      const estimationResponses = await Promise.all(estimationRequests)
+      const firstSuccessfulRequest = estimationResponses.find((res) => res.success)
+
+      if (firstSuccessfulRequest) {
+        return firstSuccessfulRequest.estimation
       }
-      txGasEstimation += additionalGas
-      additionalGas *= 2
+
+      additionalGasBatches = additionalGasBatches.map((gas) => gas * 2)
     }
 
-    return txGasEstimation + 10000
+    return 0
   } catch (error) {
     console.error('Error calculating tx gas estimation', error)
     return 0
