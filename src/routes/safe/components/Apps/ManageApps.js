@@ -125,7 +125,7 @@ const ManageApps = ({ appList, onAppAdded, onAppToggle }: Props) => {
 
             <Field
               component={StyledCheckbox}
-              label="I agree to use this app on my own risk"
+              label="I agree to use this app at my own risk"
               name="agreed"
               type="checkbox"
               validate={(value) => (value === true ? undefined : 'Required')}
