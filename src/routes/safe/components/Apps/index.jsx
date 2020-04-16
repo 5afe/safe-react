@@ -1,7 +1,8 @@
 // @flow
-import { Card, FixedIcon, Menu, Title } from '@gnosis/safe-react-components'
+import { Card, FixedDialog, FixedIcon, IconText, Menu, Text, Title } from '@gnosis/safe-react-components'
 import { withSnackbar } from 'notistack'
 import React, { useCallback, useEffect, useState } from 'react'
+import { withRouter } from 'react-router-dom'
 import styled from 'styled-components'
 
 import ManageApps from './ManageApps'
@@ -10,22 +11,22 @@ import sendTransactions from './sendTransactions'
 import { getAppInfoFromUrl, staticAppsList } from './utils'
 
 import { ListContentLayout as LCL, Loader } from '~/components-v2'
+import { SAFELIST_ADDRESS } from '~/routes/routes'
 import { loadFromStorage, saveToStorage } from '~/utils/storage'
 
 const APPS_STORAGE_KEY = 'APPS_STORAGE_KEY'
+const APPS_LEGAL_DISCLAIMER_STORAGE_KEY = 'APPS_LEGAL_DISCLAIMER_STORAGE_KEY'
 
 const StyledIframe = styled.iframe`
   width: 100%;
   height: 100%;
   display: ${(props) => (props.shouldDisplay ? 'block' : 'none')};
 `
-
 const Centered = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
   flex-direction: column;
-  height: 476px;
 `
 
 const operations = {
@@ -40,6 +41,7 @@ type Props = {
   safeAddress: String,
   safeName: String,
   ethBalance: String,
+  history: Object,
   network: String,
   granted: Boolean,
   createTransaction: any,
@@ -56,6 +58,7 @@ function Apps({
   enqueueSnackbar,
   ethBalance,
   granted,
+  history,
   network,
   openModal,
   safeAddress,
@@ -63,6 +66,7 @@ function Apps({
   web3,
 }: Props) {
   const [appList, setAppList] = useState([])
+  const [legalDisclaimerAccepted, setLegalDisclaimerAccepted] = useState(false)
   const [selectedApp, setSelectedApp] = useState()
   const [loading, setLoading] = useState(true)
   const [appIsLoading, setAppIsLoading] = useState(true)
@@ -143,14 +147,48 @@ function Apps({
     setSelectedApp(appId)
   }
 
+  const redirectToBalance = () => history.push(`${SAFELIST_ADDRESS}/${safeAddress}/balances`)
+
+  const onAcceptLegalDisclaimer = () => {
+    setLegalDisclaimerAccepted(true)
+    saveToStorage(APPS_LEGAL_DISCLAIMER_STORAGE_KEY, true)
+  }
+
   const getContent = () => {
     if (!selectedApp) {
       return null
     }
 
+    if (!legalDisclaimerAccepted) {
+      return (
+        <FixedDialog
+          body={
+            <>
+              <Text size="md">
+                You are now accessing third-party Apps, which we do not own, control, maintain or audit. We are not
+                liable for any loss you may suffer in connection with interacting with the Apps, which is at your own
+                risk. Our Terms contain more detailed provisions binding on you in relation thereto.
+              </Text>
+              <br />
+              <Text size="md">
+                I have read, understand, and agree to the above and Gnosis’{' '}
+                <a href="https://gnosis-safe.io/terms" rel="noopener noreferrer" target="_blank">
+                  Terms
+                </a>{' '}
+                .
+              </Text>
+            </>
+          }
+          onCancel={redirectToBalance}
+          onConfirm={onAcceptLegalDisclaimer}
+          title="Legal Disclaimer"
+        />
+      )
+    }
+
     if (network === 'UNKNOWN' || !granted) {
       return (
-        <Centered>
+        <Centered style={{ height: '476px' }}>
           <FixedIcon type="notOwner" />
           <Title size="xs">To use apps, you must be an owner of this Safe</Title>
         </Centered>
@@ -248,6 +286,19 @@ function Apps({
     return () => {
       window.removeEventListener('message', onIframeMessage)
     }
+  })
+
+  // load legalDisclaimer
+  useEffect(() => {
+    const checkLegalDisclaimer = async () => {
+      const legalDisclaimer = await loadFromStorage(APPS_LEGAL_DISCLAIMER_STORAGE_KEY)
+
+      if (legalDisclaimer) {
+        setLegalDisclaimerAccepted(true)
+      }
+    }
+
+    checkLegalDisclaimer()
   })
 
   // Load apps list
@@ -348,14 +399,23 @@ function Apps({
           </LCL.Footer> */}
         </LCL.Wrapper>
       ) : (
-        <Card>
+        <Card style={{ marginBottom: '24px' }}>
           <Centered>
             <Title size="xs">No Apps Enabled</Title>
           </Centered>
         </Card>
       )}
+      <Centered>
+        <IconText
+          color="secondary"
+          iconSize="sm"
+          iconType="info"
+          text="These are third-party integrations, which means they are not owned, controlled, maintained or audited by Gnosis."
+          textSize="sm"
+        />
+      </Centered>
     </>
   )
 }
 
-export default withSnackbar(Apps)
+export default withSnackbar(withRouter(Apps))
