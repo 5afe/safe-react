@@ -48,7 +48,13 @@ export const onboard = new Onboard({
     description: 'Please select a wallet to connect to Gnosis Safe Multisig',
     wallets,
   },
-  walletCheck: [{ checkName: 'connect' }, transactionDataCheck(), { checkName: 'network' }, { checkName: 'accounts' }],
+  walletCheck: [
+    { checkName: 'derivationPath' },
+    { checkName: 'connect' },
+    transactionDataCheck(),
+    { checkName: 'network' },
+    { checkName: 'accounts' },
+  ],
 })
 
 export const onboardUser = async () => {
