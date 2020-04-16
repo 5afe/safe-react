@@ -34,7 +34,7 @@ const AppInfo = styled.div`
 `
 
 const StyledCheckbox = styled(Checkbox)`
-  margin: 0px 0px 2px 19px;
+  margin: 0;
 `
 const APP_INFO = { iconUrl: appsIconSvg, name: '', error: false }
 
