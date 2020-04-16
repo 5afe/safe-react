@@ -4,7 +4,7 @@ import styled from 'styled-components'
 export const Wrapper = styled.div`
   display: grid;
   grid-template-columns: 245px auto;
-  grid-template-rows: 500px 25px;
+  grid-template-rows: 500px;
   min-height: 525px;
 
   .background {
@@ -24,7 +24,6 @@ export const Wrapper = styled.div`
 
 export const Menu = styled.div.attrs(() => ({ className: 'background' }))`
   grid-column: 1;
-  grid-row: 1/3;
   border-right: solid 2px #e8e7e6;
   border-top-left-radius: 8px;
   border-bottom-left-radius: 8px;
@@ -33,7 +32,6 @@ export const Menu = styled.div.attrs(() => ({ className: 'background' }))`
 
 export const Content = styled.div.attrs(() => ({ className: 'background' }))`
   grid-column: 2;
-  grid-row: 1;
   border-top-right-radius: 8px;
   background-color: white;
 `
