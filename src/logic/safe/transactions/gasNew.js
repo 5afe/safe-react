@@ -103,43 +103,38 @@ export const estimateSafeTxGas = async (
     // 21000 - additional gas costs (e.g. base tx costs, transfer costs)
     const dataGasEstimation = estimateDataGasCosts(estimateData) + 21000
 
-    let additionalGasBatches = [10000, 20000, 40000, 80000, 160000, 320000, 640000, 1280000, 2560000, 5120000]
-    for (let i = 0; i < 10; i++) {
-      const batch = new web3.BatchRequest()
+    const additionalGasBatches = [10000, 20000, 40000, 80000, 160000, 320000, 640000, 1280000, 2560000, 5120000]
 
-      const estimationRequests = additionalGasBatches.map(
-        (additionalGas) =>
-          new Promise((resolve) => {
-            const request = web3.eth.call.request(
-              {
-                to: safe.address,
-                from: safe.address,
-                data: estimateData,
-                gasPrice: 0,
-                gasLimit: txGasEstimation + dataGasEstimation + additionalGas,
-              },
-              (error, res) => {
-                resolve({
-                  success: error || res === '0x' ? false : true,
-                  estimation: txGasEstimation + additionalGas,
-                })
-              },
-            )
+    const batch = new web3.BatchRequest()
+    const estimationRequests = additionalGasBatches.map(
+      (additionalGas) =>
+        new Promise((resolve) => {
+          const request = web3.eth.call.request(
+            {
+              to: safe.address,
+              from: safe.address,
+              data: estimateData,
+              gasPrice: 0,
+              gasLimit: txGasEstimation + dataGasEstimation + additionalGas,
+            },
+            (error, res) => {
+              resolve({
+                success: error || res === '0x' ? false : true,
+                estimation: txGasEstimation + additionalGas,
+              })
+            },
+          )
 
-            batch.add(request)
-          }),
-      )
+          batch.add(request)
+        }),
+    )
+    batch.execute()
 
-      batch.execute()
+    const estimationResponses = await Promise.all(estimationRequests)
+    const firstSuccessfulRequest = estimationResponses.find((res) => res.success)
 
-      const estimationResponses = await Promise.all(estimationRequests)
-      const firstSuccessfulRequest = estimationResponses.find((res) => res.success)
-
-      if (firstSuccessfulRequest) {
-        return firstSuccessfulRequest.estimation
-      }
-
-      additionalGasBatches = additionalGasBatches.map((gas) => gas * 2)
+    if (firstSuccessfulRequest) {
+      return firstSuccessfulRequest.estimation
     }
 
     return 0
