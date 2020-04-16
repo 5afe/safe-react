@@ -98,7 +98,7 @@ export const estimateSafeTxGas = async (
       from: safeAddress,
       data: estimateData,
     })
-    let txGasEstimation = new BigNumber(estimateResponse.substring(138), 16).toNumber() + 10000
+    const txGasEstimation = new BigNumber(estimateResponse.substring(138), 16).toNumber() + 10000
 
     // 21000 - additional gas costs (e.g. base tx costs, transfer costs)
     const dataGasEstimation = estimateDataGasCosts(estimateData) + 21000
