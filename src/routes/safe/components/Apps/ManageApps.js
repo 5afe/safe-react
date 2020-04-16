@@ -92,7 +92,7 @@ const ManageApps = ({ appList, onAppAdded, onAppToggle }: Props) => {
       <GnoForm
         initialValues={{
           appUrl: '',
-          agreed: true,
+          agreed: false,
         }}
         onSubmit={handleSubmit}
         testId={FORM_ID}

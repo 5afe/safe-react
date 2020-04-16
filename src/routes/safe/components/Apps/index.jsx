@@ -130,6 +130,12 @@ function Apps({
   }, [])
 
   const onSelectApp = (appId) => {
+    const selectedApp = getSelectedApp()
+
+    if (selectedApp && selectedApp.id === appId) {
+      return
+    }
+
     setAppIsLoading(true)
     setSelectedApp(appId)
   }
@@ -137,6 +143,10 @@ function Apps({
   const getContent = () => {
     if (!selectedApp) {
       return null
+    }
+
+    if (network === 'UNKNOWN') {
+      return <div>not network selected</div>
     }
 
     return (
@@ -157,14 +167,21 @@ function Apps({
   const onAppAdded = (app) => {
     const newAppList = [
       { url: app.url, disabled: false },
-      appList.map((a) => ({
+      ...appList.map((a) => ({
         url: a.url,
         disabled: a.disabled,
       })),
     ]
-
     saveToStorage(APPS_STORAGE_KEY, newAppList)
+
     setAppList([...appList, { ...app, disabled: false }])
+  }
+
+  const selectFirstApp = (apps) => {
+    const firstEnabledApp = apps.find((a) => !a.disabled)
+    if (firstEnabledApp) {
+      onSelectApp(firstEnabledApp.id)
+    }
   }
 
   const onAppToggle = async (appId: string, enabled: boolean) => {
@@ -193,11 +210,11 @@ function Apps({
 
     saveToStorage(APPS_STORAGE_KEY, persistedAppList)
 
-    // unselect app if it was disabled
+    // select app
     const selectedApp = getSelectedApp()
-    if (selectedApp && selectedApp.id === appId) {
-      const firstEnabledApp = copyAppList.find((a) => !a.disabled)
-      firstEnabledApp ? setSelectedApp(firstEnabledApp.id) : setSelectedApp()
+    if (!selectedApp || (selectedApp && selectedApp.id === appId)) {
+      setSelectedApp(undefined)
+      selectFirstApp(copyAppList)
     }
   }
 
@@ -260,12 +277,9 @@ function Apps({
         }
       }
 
-      setAppList([...apps])
-      const firstEnabledApp = apps.find((a) => !a.disabled)
-      if (firstEnabledApp) {
-        onSelectApp(firstEnabledApp.id)
-      }
+      setAppList(apps)
       setLoading(false)
+      selectFirstApp(apps)
     }
 
     if (!appList.length) {
