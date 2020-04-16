@@ -42,24 +42,26 @@ const OwnersList = ({
   userAddress,
 }: ListProps) => (
   <>
-    {ownersWhoConfirmed.map((owner) => (
-      <OwnerComponent
-        classes={classes}
-        confirmed
-        executor={executor}
-        isCancelTx={isCancelTx}
-        key={owner.address}
-        onTxExecute={onTxExecute}
-        onTxReject={onTxReject}
-        owner={owner}
-        showExecuteBtn={showExecuteBtn}
-        showExecuteRejectBtn={showExecuteRejectBtn}
-        showRejectBtn={showRejectBtn}
-        thresholdReached={thresholdReached}
-        userAddress={userAddress}
-      />
-    ))}
-    {ownersUnconfirmed.map(({ hasPendingActions, owner }) => (
+    {ownersWhoConfirmed.map((owner) => {
+      return (
+        <OwnerComponent
+          classes={classes}
+          confirmed
+          executor={executor}
+          isCancelTx={isCancelTx}
+          key={owner.address}
+          onTxExecute={onTxExecute}
+          onTxReject={onTxReject}
+          owner={owner}
+          showExecuteBtn={showExecuteBtn}
+          showExecuteRejectBtn={showExecuteRejectBtn}
+          showRejectBtn={showRejectBtn}
+          thresholdReached={thresholdReached}
+          userAddress={userAddress}
+        />
+      )
+    })}
+    {ownersUnconfirmed.map(({ hasPendingAcceptActions, hasPendingRejectActions, owner }) => (
       <OwnerComponent
         classes={classes}
         executor={executor}
@@ -69,7 +71,8 @@ const OwnersList = ({
         onTxExecute={onTxExecute}
         onTxReject={onTxReject}
         owner={owner}
-        pendingAction={hasPendingActions}
+        pendingAcceptAction={hasPendingAcceptActions}
+        pendingRejectAction={hasPendingRejectActions}
         showConfirmBtn={showConfirmBtn}
         showExecuteBtn={showExecuteBtn}
         showExecuteRejectBtn={showExecuteRejectBtn}

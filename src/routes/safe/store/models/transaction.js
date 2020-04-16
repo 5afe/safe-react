@@ -1,5 +1,5 @@
 // @flow
-import { List, Record } from 'immutable'
+import { List, Map, Record } from 'immutable'
 import type { RecordFactory, RecordOf } from 'immutable'
 
 import { ZERO_ADDRESS } from '~/logic/wallets/ethAddresses'
@@ -25,6 +25,8 @@ export type TransactionStatus =
   | 'awaiting_execution'
   | 'pending'
   | 'third-party-app'
+
+export type PendingActionType = 'Confirm' | 'Reject'
 
 export type TransactionProps = {
   nonce: ?number,
@@ -61,6 +63,7 @@ export type TransactionProps = {
   refundParams?: Object,
   type: string,
   origin: string | null,
+  ownersWithPendingActions: Map<PendingActionType, List[]>,
 }
 
 export const makeTransaction: RecordFactory<TransactionProps> = Record({
@@ -98,7 +101,10 @@ export const makeTransaction: RecordFactory<TransactionProps> = Record({
   refundParams: null,
   type: 'outgoing',
   origin: null,
-  ownersWithPendingActions: List([]),
+  ownersWithPendingActions: Map([
+    ['Confirm', List([])],
+    ['Reject', List([])],
+  ]),
 })
 
 export type Transaction = RecordOf<TransactionProps>

@@ -40,7 +40,8 @@ type OwnerProps = {
   showExecuteBtn: boolean,
   thresholdReached: boolean,
   userAddress: string,
-  pendingAction?: boolean,
+  pendingAcceptAction?: boolean,
+  pendingRejectAction?: boolean,
 }
 
 const OwnerComponent = ({
@@ -52,7 +53,8 @@ const OwnerComponent = ({
   onTxExecute,
   onTxReject,
   owner,
-  pendingAction,
+  pendingAcceptAction,
+  pendingRejectAction,
   showConfirmBtn,
   showExecuteBtn,
   showExecuteRejectBtn,
@@ -65,7 +67,7 @@ const OwnerComponent = ({
   const [imgCircle, setImgCircle] = React.useState(ConfirmSmallGreyCircle)
 
   React.useMemo(() => {
-    if (pendingAction) {
+    if (pendingAcceptAction || pendingRejectAction) {
       setImgCircle(PendingSmallYellowCircle)
       return
     }
@@ -76,16 +78,86 @@ const OwnerComponent = ({
     if (thresholdReached || executor) {
       setImgCircle(isCancelTx ? ConfirmSmallRedCircle : ConfirmSmallGreenCircle)
     }
-  }, [confirmed, thresholdReached, executor, isCancelTx, pendingAction])
+  }, [confirmed, thresholdReached, executor, isCancelTx, pendingAcceptAction, pendingRejectAction])
 
   const getTimelineLine = () => {
     if (isCancelTx) {
       return classes.verticalLineCancel
     }
-    if (pendingAction) {
+    if (pendingAcceptAction || pendingRejectAction) {
       return classes.verticalPendingAction
     }
     return classes.verticalLineDone
+  }
+
+  const confirmButton = () => {
+    if (pendingRejectAction) {
+      return null
+    }
+    if (pendingAcceptAction) {
+      return <Block className={classes.executor}>Pending</Block>
+    }
+    return (
+      <>
+        {showConfirmBtn && (
+          <Button
+            className={classes.button}
+            color="primary"
+            onClick={onTxConfirm}
+            testId={CONFIRM_TX_BTN_TEST_ID}
+            variant="contained"
+          >
+            Confirm
+          </Button>
+        )}
+        {showExecuteBtn && (
+          <Button
+            className={classes.button}
+            color="primary"
+            onClick={onTxExecute}
+            testId={EXECUTE_TX_BTN_TEST_ID}
+            variant="contained"
+          >
+            Execute
+          </Button>
+        )}
+      </>
+    )
+  }
+
+  const rejectButton = () => {
+    if (pendingRejectAction) {
+      return <Block className={classes.executor}>Pending</Block>
+    }
+    if (pendingAcceptAction) {
+      return null
+    }
+    return (
+      <>
+        {showRejectBtn && (
+          <Button
+            className={cn(classes.button, classes.lastButton)}
+            color="secondary"
+            onClick={onTxReject}
+            testId={REJECT_TX_BTN_TEST_ID}
+            variant="contained"
+          >
+            Reject
+          </Button>
+        )}
+        {showExecuteRejectBtn && (
+          <Button
+            className={cn(classes.button, classes.lastButton)}
+            color="secondary"
+            onClick={onTxReject}
+            testId={EXECUTE_REJECT_TX_BTN_TEST_ID}
+            variant="contained"
+          >
+            Execute
+          </Button>
+        )}
+      </>
+    )
   }
 
   return (
@@ -93,7 +165,8 @@ const OwnerComponent = ({
       <div
         className={cn(
           classes.verticalLine,
-          (confirmed || thresholdReached || executor || pendingAction) && getTimelineLine(),
+          (confirmed || thresholdReached || executor || pendingAcceptAction || pendingRejectAction) &&
+            getTimelineLine(),
         )}
       />
       <div className={classes.circleState}>
@@ -107,63 +180,8 @@ const OwnerComponent = ({
         <EtherscanLink className={classes.address} cut={4} type="address" value={owner.address} />
       </Block>
       <Block className={classes.spacer} />
-      {owner.address === userAddress && !pendingAction && (
-        <Block>
-          {isCancelTx ? (
-            <>
-              {showRejectBtn && (
-                <Button
-                  className={cn(classes.button, classes.lastButton)}
-                  color="secondary"
-                  onClick={onTxReject}
-                  testId={REJECT_TX_BTN_TEST_ID}
-                  variant="contained"
-                >
-                  Reject
-                </Button>
-              )}
-              {showExecuteRejectBtn && (
-                <Button
-                  className={cn(classes.button, classes.lastButton)}
-                  color="secondary"
-                  onClick={onTxReject}
-                  testId={EXECUTE_REJECT_TX_BTN_TEST_ID}
-                  variant="contained"
-                >
-                  Execute
-                </Button>
-              )}
-            </>
-          ) : (
-            <>
-              {showConfirmBtn && (
-                <Button
-                  className={classes.button}
-                  color="primary"
-                  onClick={onTxConfirm}
-                  testId={CONFIRM_TX_BTN_TEST_ID}
-                  variant="contained"
-                >
-                  Confirm
-                </Button>
-              )}
-              {showExecuteBtn && (
-                <Button
-                  className={classes.button}
-                  color="primary"
-                  onClick={onTxExecute}
-                  testId={EXECUTE_TX_BTN_TEST_ID}
-                  variant="contained"
-                >
-                  Execute
-                </Button>
-              )}
-            </>
-          )}
-        </Block>
-      )}
+      {owner.address === userAddress && <Block>{isCancelTx ? rejectButton() : confirmButton()}</Block>}
       {owner.address === executor && <Block className={classes.executor}>Executor</Block>}
-      {pendingAction ? <Block className={classes.executor}>Pending</Block> : null}
     </Block>
   )
 }

@@ -67,22 +67,29 @@ function getPendingOwnersConfirmations(owners, tx, userAddress) {
 
   const ownersUnconfirmed = ownersWithNoConfirmations
     .map((owner) => {
-      let hasPendingActions = false
+      let hasPendingAcceptActions = false
+      let hasPendingRejectActions = false
       let { ownersWithPendingActions } = tx
-      if (ownersWithPendingActions.includes(owner.address)) {
-        hasPendingActions = true
+
+      const confirmationPendingActions = ownersWithPendingActions.get('Confirm')
+      const confirmationRejectActions = ownersWithPendingActions.get('Reject')
+      if (confirmationPendingActions.includes(owner.address)) {
+        hasPendingAcceptActions = true
+      }
+      if (confirmationRejectActions.includes(owner.address)) {
+        hasPendingRejectActions = true
       }
 
-      return { owner, hasPendingActions }
+      return { owner, hasPendingRejectActions, hasPendingAcceptActions }
     })
     // Reorders the list of unconfirmed owners, owners with pendingActions should be first
     .sort((ownerA, ownerB) => {
       // If the first owner has pending actions, A should be before B
-      if (ownerA.hasPendingActions) {
+      if (ownerA.hasPendingRejectActions || ownerA.hasPendingAcceptActions) {
         return -1
       }
       // The first owner has not pending actions but the second yes, B should be before A
-      if (ownerB.hasPendingActions) {
+      if (ownerB.hasPendingRejectActions || ownerB.hasPendingAcceptActions) {
         return 1
       }
       // Otherwise do not change order
@@ -117,6 +124,7 @@ const OwnersColumn = ({
 
   const [ownersWhoConfirmed, currentUserAlreadyConfirmed] = getOwnersConfirmations(tx, userAddress)
   const [ownersUnconfirmed, userIsUnconfirmedOwner] = getPendingOwnersConfirmations(owners, tx, userAddress)
+
   const [ownersWhoConfirmedCancel, currentUserAlreadyConfirmedCancel] = getOwnersConfirmations(cancelTx, userAddress)
   const [ownersUnconfirmedCancel, userIsUnconfirmedCancelOwner] = getPendingOwnersConfirmations(
     owners,

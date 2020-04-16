@@ -19,6 +19,7 @@ import { TxDetails } from '~/routes/safe/components/Transactions/TxsTable/Expand
 import updateTransactionPendingActions from '~/routes/safe/store/actions/updateTransactionPendingActions'
 import { INCOMING_TX_TYPES } from '~/routes/safe/store/models/incomingTransaction'
 import { type Owner } from '~/routes/safe/store/models/owner'
+import type { PendingActionType } from '~/routes/safe/store/models/transaction'
 import { type Transaction } from '~/routes/safe/store/models/transaction'
 
 type Props = {
@@ -68,9 +69,12 @@ const ExpandedTx = ({
     }
   }
 
-  const addPendingActionToTx = () => {
+  const addPendingActionToTx = (actionType: PendingActionType) => {
     const { ownersWithPendingActions } = tx
-    const newPendingActions = ownersWithPendingActions.push(userAddress)
+    const oldList = ownersWithPendingActions.get(actionType)
+    const newList = oldList.push(userAddress)
+    const newPendingActions = ownersWithPendingActions.set(actionType, newList)
+
     dispatch(updateTransactionPendingActions({ safeAddress, transaction: tx, newPendingActions }))
   }
 
@@ -105,7 +109,7 @@ const ExpandedTx = ({
       </Block>
       {openModal === 'approveTx' && (
         <ApproveTxModal
-          addPendingActionToTx={addPendingActionToTx}
+          addPendingActionToTx={() => addPendingActionToTx('Confirm')}
           canExecute={canExecute}
           isOpen
           onClose={closeModal}
@@ -119,7 +123,7 @@ const ExpandedTx = ({
       )}
       {openModal === 'rejectTx' && (
         <RejectTxModal
-          addPendingActionToTx={addPendingActionToTx}
+          addPendingActionToTx={() => addPendingActionToTx('Reject')}
           createTransaction={createTransaction}
           isOpen
           onClose={closeModal}
@@ -129,7 +133,7 @@ const ExpandedTx = ({
       )}
       {openModal === 'executeRejectTx' && (
         <ApproveTxModal
-          addPendingActionToTx={addPendingActionToTx}
+          addPendingActionToTx={() => addPendingActionToTx('Reject')}
           canExecute={canExecuteCancel}
           isCancelTx
           isOpen
