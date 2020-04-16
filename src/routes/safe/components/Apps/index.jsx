@@ -1,5 +1,5 @@
 // @flow
-import { Card, Menu, Title } from '@gnosis/safe-react-components'
+import { Card, FixedIcon, Menu, Title } from '@gnosis/safe-react-components'
 import { withSnackbar } from 'notistack'
 import React, { useCallback, useEffect, useState } from 'react'
 import styled from 'styled-components'
@@ -23,8 +23,10 @@ const StyledIframe = styled.iframe`
 
 const Centered = styled.div`
   display: flex;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  height: 476px;
 `
 
 const operations = {
@@ -146,7 +148,12 @@ function Apps({
     }
 
     if (network === 'UNKNOWN') {
-      return <div>not network selected</div>
+      return (
+        <Centered>
+          <FixedIcon type="notOwner" />
+          <Title size="xs">To use apps, you must be an owner of the Safe</Title>
+        </Centered>
+      )
     }
 
     return (
