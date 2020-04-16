@@ -8,6 +8,7 @@ Object.entries(envConfig.parsed || {}).forEach(([key, value]) => {
 });
 
 module.exports = async function (params) {
+  console.log(process.env);
 
   // Only notarize the app on Mac OS only.
   if (process.platform !== "darwin") {
