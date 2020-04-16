@@ -148,11 +148,11 @@ function Apps({
       return null
     }
 
-    if (network === 'UNKNOWN') {
+    if (network === 'UNKNOWN' || !granted) {
       return (
         <Centered>
           <FixedIcon type="notOwner" />
-          <Title size="xs">To use apps, you must be an owner of the Safe</Title>
+          <Title size="xs">To use apps, you must be an owner of this Safe</Title>
         </Centered>
       )
     }
