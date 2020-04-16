@@ -118,9 +118,9 @@ export const estimateSafeTxGas = async (
                 gasPrice: 0,
                 gasLimit: txGasEstimation + dataGasEstimation + additionalGas,
               },
-              (error) => {
+              (error, res) => {
                 resolve({
-                  success: error ? false : true,
+                  success: error || res === '0x' ? false : true,
                   estimation: txGasEstimation + additionalGas,
                 })
               },
