@@ -25,7 +25,7 @@
     "electron-dev": "concurrently \"BROWSER=none yarn start\" \"wait-on http://localhost:3000 && electron .\"",
     "preelectron-pack": "yarn build",
     "build-mainnet": "REACT_APP_NETWORK=mainnet yarn build",
-    "build-desktop": "BUILD_FOR_DESKTOP=true yarn build-mainnet",
+    "build-desktop": "BUILD_FOR_DESKTOP=true yarn build-mainnet && && electron-builder --mac --windows --linux --publish always",
     "flow": "flow",
     "format:staged": "lint-staged",
     "lint:check": "eslint './src/**/*.{js,jsx}'",
