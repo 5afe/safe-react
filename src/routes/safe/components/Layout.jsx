@@ -186,6 +186,7 @@ const Layout = (props: Props) => {
         closeModal={closeGenericModal}
         createTransaction={createTransaction}
         ethBalance={ethBalance}
+        granted={granted}
         network={network}
         openModal={openGenericModal}
         safeAddress={address}

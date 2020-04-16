@@ -10,7 +10,6 @@ import sendTransactions from './sendTransactions'
 import { getAppInfoFromUrl, staticAppsList } from './utils'
 
 import { ListContentLayout as LCL, Loader } from '~/components-v2'
-import ButtonLink from '~/components/layout/ButtonLink'
 import { loadFromStorage, saveToStorage } from '~/utils/storage'
 
 const APPS_STORAGE_KEY = 'APPS_STORAGE_KEY'
@@ -42,6 +41,7 @@ type Props = {
   safeName: String,
   ethBalance: String,
   network: String,
+  granted: Boolean,
   createTransaction: any,
   enqueueSnackbar: Function,
   closeSnackbar: Function,
@@ -55,6 +55,7 @@ function Apps({
   createTransaction,
   enqueueSnackbar,
   ethBalance,
+  granted,
   network,
   openModal,
   safeAddress,
@@ -265,7 +266,7 @@ function Apps({
       })
 
       const apps = []
-      // using the appURL recover app info
+      // using the appURL to recover app info
       for (let index = 0; index < list.length; index++) {
         try {
           const currentApp = list[index]
@@ -331,7 +332,7 @@ function Apps({
             <LCL.List activeItem={selectedApp} items={getEnabledApps()} onItemClick={onSelectApp} />
           </LCL.Menu>
           <LCL.Content>{getContent()}</LCL.Content>
-          <LCL.Footer>
+          {/* <LCL.Footer>
             {getSelectedApp() && getSelectedApp().providedBy && (
               <>
                 <p>This App is provided by </p>
@@ -344,7 +345,7 @@ function Apps({
                 </ButtonLink>
               </>
             )}
-          </LCL.Footer>
+          </LCL.Footer> */}
         </LCL.Wrapper>
       ) : (
         <Card>

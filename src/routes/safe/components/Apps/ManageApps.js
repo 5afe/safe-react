@@ -81,6 +81,12 @@ const ManageApps = ({ appList, onAppAdded, onAppToggle }: Props) => {
     setAppInfo({ ...appInfo })
   }
 
+  const uniqueAppValidator = async (value) => {
+    if (appList.find((a) => a.url === value)) {
+      return 'This app is already registered.'
+    }
+  }
+
   const onFormStatusChange = ({ pristine, valid, validating }) => {
     if (!pristine) {
       setIsSubmitDisabled(validating || !valid || appInfo.error)
@@ -106,7 +112,7 @@ const ManageApps = ({ appList, onAppAdded, onAppToggle }: Props) => {
               name="appUrl"
               placeholder="App URL"
               type="text"
-              validate={composeValidators(required, urlValidator, safeAppValidator)}
+              validate={composeValidators(required, urlValidator, uniqueAppValidator, safeAppValidator)}
             />
 
             <AppInfo>
