@@ -1,5 +1,5 @@
 // @flow
-import { boldFont, border, error, primary, secondary, secondaryText, sm } from '~/theme/variables'
+import { boldFont, border, error, primary, secondary, secondaryText, sm, warning } from '~/theme/variables'
 
 export const styles = () => ({
   ownersList: {
@@ -29,6 +29,9 @@ export const styles = () => ({
   },
   verticalLineCancel: {
     backgroundColor: error,
+  },
+  verticalPendingAction: {
+    backgroundColor: warning,
   },
   icon: {
     marginRight: sm,

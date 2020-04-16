@@ -65,15 +65,29 @@ function getPendingOwnersConfirmations(owners, tx, userAddress) {
     return userIsUnconfirmedOwner
   })
 
-  const ownersUnconfirmed = ownersWithNoConfirmations.map((owner) => {
-    let hasPendingActions = false
-    let { ownersWithPendingActions } = tx
-    if (ownersWithPendingActions.includes(owner.address)) {
-      hasPendingActions = true
-    }
+  const ownersUnconfirmed = ownersWithNoConfirmations
+    .map((owner) => {
+      let hasPendingActions = false
+      let { ownersWithPendingActions } = tx
+      if (ownersWithPendingActions.includes(owner.address)) {
+        hasPendingActions = true
+      }
 
-    return { owner, hasPendingActions }
-  })
+      return { owner, hasPendingActions }
+    })
+    // Reorders the list of unconfirmed owners, owners with pendingActions should be first
+    .sort((ownerA, ownerB) => {
+      // If the first owner has pending actions, A should be before B
+      if (ownerA.hasPendingActions) {
+        return -1
+      }
+      // The first owner has not pending actions but the second yes, B should be before A
+      if (ownerB.hasPendingActions) {
+        return 1
+      }
+      // Otherwise do not change order
+      return 0
+    })
 
   return [ownersUnconfirmed, userIsUnconfirmedOwner]
 }

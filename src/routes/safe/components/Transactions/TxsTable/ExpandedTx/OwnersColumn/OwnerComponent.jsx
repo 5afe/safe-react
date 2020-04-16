@@ -76,13 +76,26 @@ const OwnerComponent = ({
     if (thresholdReached || executor) {
       setImgCircle(isCancelTx ? ConfirmSmallRedCircle : ConfirmSmallGreenCircle)
     }
-  }, [confirmed, thresholdReached, executor, isCancelTx])
+  }, [confirmed, thresholdReached, executor, isCancelTx, pendingAction])
 
-  const getTimelineLine = () => (isCancelTx ? classes.verticalLineCancel : classes.verticalLineDone)
+  const getTimelineLine = () => {
+    if (isCancelTx) {
+      return classes.verticalLineCancel
+    }
+    if (pendingAction) {
+      return classes.verticalPendingAction
+    }
+    return classes.verticalLineDone
+  }
 
   return (
     <Block className={classes.container}>
-      <div className={cn(classes.verticalLine, (confirmed || thresholdReached || executor) && getTimelineLine())} />
+      <div
+        className={cn(
+          classes.verticalLine,
+          (confirmed || thresholdReached || executor || pendingAction) && getTimelineLine(),
+        )}
+      />
       <div className={classes.circleState}>
         <Img alt="" src={imgCircle} />
       </div>
