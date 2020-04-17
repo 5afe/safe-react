@@ -6,6 +6,7 @@ import { Redirect, Route, Switch, withRouter } from 'react-router-dom'
 import { LOAD_ADDRESS, OPEN_ADDRESS, SAFELIST_ADDRESS, SAFE_PARAM_ADDRESS, WELCOME_ADDRESS } from './routes'
 
 import Loader from '~/components/Loader'
+import { useLoadStore } from '~/routes/safe/container/Hooks/useLoadStore'
 import { defaultSafeSelector } from '~/routes/safe/store/selectors'
 import { withTracker } from '~/utils/googleAnalytics'
 
@@ -21,12 +22,13 @@ const SAFE_ADDRESS = `${SAFELIST_ADDRESS}/:${SAFE_PARAM_ADDRESS}`
 
 type RoutesProps = {
   location: Object,
-  safeLoaded: boolean,
 }
 
-const Routes = ({ location, safeLoaded }: RoutesProps) => {
+const Routes = ({ location }: RoutesProps) => {
   const [isInitialLoad, setInitialLoad] = useState<boolean>(true)
   const defaultSafe = useSelector(defaultSafeSelector)
+  const [safeLoaded, setSafeLoaded] = useState(false)
+  useLoadStore(setSafeLoaded)
 
   useEffect(() => {
     if (location.pathname !== '/') {
@@ -35,37 +37,39 @@ const Routes = ({ location, safeLoaded }: RoutesProps) => {
   }, [])
 
   return (
-    <Switch>
-      <Route
-        exact
-        path="/"
-        render={() => {
-          if (!isInitialLoad) {
+    <>
+      <Switch>
+        <Route
+          exact
+          path="/"
+          render={() => {
+            if (!isInitialLoad) {
+              return <Redirect to={WELCOME_ADDRESS} />
+            }
+
+            if (typeof defaultSafe === 'undefined') {
+              return <Loader />
+            }
+
+            if (defaultSafe) {
+              return <Redirect to={`${SAFELIST_ADDRESS}/${defaultSafe}/balances`} />
+            }
+
             return <Redirect to={WELCOME_ADDRESS} />
-          }
-
-          if (typeof defaultSafe === 'undefined') {
-            return <Loader />
-          }
-
-          if (defaultSafe) {
-            return <Redirect to={`${SAFELIST_ADDRESS}/${defaultSafe}/balances`} />
-          }
-
-          return <Redirect to={WELCOME_ADDRESS} />
-        }}
-      />
-      <Route component={withTracker(Welcome)} exact path={WELCOME_ADDRESS} />
-      <Route component={withTracker(Open)} exact path={OPEN_ADDRESS} />
-      <Route
-        component={withTracker(() => (
-          <Safe safeLoaded={safeLoaded} />
-        ))}
-        path={SAFE_ADDRESS}
-      />
-      <Route component={withTracker(Load)} exact path={LOAD_ADDRESS} />
-      <Redirect to="/" />
-    </Switch>
+          }}
+        />
+        <Route component={withTracker(Welcome)} exact path={WELCOME_ADDRESS} />
+        <Route component={withTracker(Open)} exact path={OPEN_ADDRESS} />
+        <Route
+          component={withTracker(() => (
+            <Safe safeLoaded={safeLoaded} />
+          ))}
+          path={SAFE_ADDRESS}
+        />
+        <Route component={withTracker(Load)} exact path={LOAD_ADDRESS} />
+        <Redirect to="/" />
+      </Switch>
+    </>
   )
 }
 

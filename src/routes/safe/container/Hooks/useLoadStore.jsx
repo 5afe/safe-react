@@ -9,15 +9,10 @@ import fetchSafe from '~/routes/safe/store/actions/fetchSafe'
 import fetchTransactions from '~/routes/safe/store/actions/fetchTransactions'
 import { safeParamAddressFromStateSelector } from '~/routes/safe/store/selectors'
 
-type Props = {
-  setSafeLoaded: Function,
-}
-
-const LoadStore = (props: Props) => {
+export const useLoadStore = (setSafeLoaded: Function) => {
   const dispatch = useDispatch()
   const safeAddress = useSelector(safeParamAddressFromStateSelector)
 
-  const { setSafeLoaded } = props
   useEffect(() => {
     const fetchData = () => {
       if (safeAddress) {
@@ -33,7 +28,4 @@ const LoadStore = (props: Props) => {
     }
     fetchData()
   }, [safeAddress])
-  return null
 }
-
-export default LoadStore
