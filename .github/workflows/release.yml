@@ -20,7 +20,7 @@ jobs:
 
     strategy:
       matrix:
-        os: [macos-latest, ubuntu-latest, windows-2019]
+        os: [macos-latest, ubuntu-latest, windows-latest]
 
     steps:
       - name: Check out Git repository
@@ -30,6 +30,13 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: 10.16
+
+      - name: patch node gyp on windows to support Visual Studio 2019
+        if: startsWith(matrix.os, 'windows')
+        shell: powershell
+        run: |
+          npm install --global node-gyp@latest
+          npm prefix -g | % {npm config set node_gyp "$_\node_modules\node-gyp\bin\node-gyp.js"}
 
       - name: Build/release Electron app
         env:
