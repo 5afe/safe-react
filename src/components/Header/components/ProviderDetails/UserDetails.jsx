@@ -29,7 +29,7 @@ type Props = {
   userAddress: string,
   classes: Object,
   onDisconnect: Function,
-  wallet: Object,
+  openDashboard?: Function,
 }
 
 const styles = () => ({
@@ -99,7 +99,7 @@ const styles = () => ({
   },
 })
 
-const UserDetails = ({ classes, connected, network, onDisconnect, provider, userAddress, wallet }: Props) => {
+const UserDetails = ({ classes, connected, network, onDisconnect, openDashboard, provider, userAddress }: Props) => {
   const status = connected ? 'Connected' : 'Connection error'
   const address = userAddress ? shortVersionOf(userAddress, 4) : 'Address not available'
   const identiconAddress = userAddress || 'random'
@@ -161,11 +161,12 @@ const UserDetails = ({ classes, connected, network, onDisconnect, provider, user
         </Paragraph>
       </Row>
       <Hairline margin="xs" />
-      {wallet.type === 'sdk' && wallet.dashboard && (
+      {/* {wallet.type === 'sdk' && wallet.dashboard && ( */}
+      {openDashboard && (
         <Row className={classes.dashboard}>
-          <Button color="primary" fullWidth onClick={() => wallet.dashboard()} size="medium" variant="contained">
+          <Button color="primary" fullWidth onClick={() => openDashboard()} size="medium" variant="contained">
             <Paragraph className={classes.dashboardText} color="white" noMargin size="md">
-              {wallet.name} Wallet
+              {upperFirst(provider)} Wallet
             </Paragraph>
           </Button>
         </Row>
