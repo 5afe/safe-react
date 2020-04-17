@@ -55,7 +55,11 @@ const getTxStatus = (tx: Transaction, userAddress: string, safe: Safe): Transact
     txStatus = 'awaiting_execution'
   } else if (tx.creationTx) {
     txStatus = 'success'
-  } else if (!tx.confirmations.size) {
+  } else if (
+    !tx.confirmations.size ||
+    tx.ownersWithPendingActions.get('Confirm').size > 0 ||
+    tx.ownersWithPendingActions.get('Reject').size > 0
+  ) {
     txStatus = 'pending'
   } else {
     const userConfirmed = tx.confirmations.filter((conf) => conf.owner.address === userAddress).size === 1
