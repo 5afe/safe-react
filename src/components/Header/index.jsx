@@ -54,6 +54,11 @@ class HeaderComponent extends React.PureComponent<Props, State> {
     logComponentStack(error, info)
   }
 
+  getWallet = () => {
+    const { wallet } = onboard.getState()
+    return wallet
+  }
+
   onDisconnect = () => {
     const { closeSnackbar, enqueueSnackbar, removeProvider } = this.props
 
@@ -86,6 +91,7 @@ class HeaderComponent extends React.PureComponent<Props, State> {
         onDisconnect={this.onDisconnect}
         provider={provider}
         userAddress={userAddress}
+        wallet={this.getWallet()}
       />
     )
   }
