@@ -1,4 +1,5 @@
 // @flow
+import { List, Map } from 'immutable'
 import type { Dispatch as ReduxDispatch } from 'redux'
 import semverSatisfies from 'semver/functions/satisfies'
 
@@ -16,6 +17,7 @@ import { getCurrentSafeVersion } from '~/logic/safe/utils/safeVersion'
 import { providerSelector } from '~/logic/wallets/store/selectors'
 import fetchSafe from '~/routes/safe/store/actions/fetchSafe'
 import fetchTransactions from '~/routes/safe/store/actions/fetchTransactions'
+import updateTransactionPendingActions from '~/routes/safe/store/actions/updateTransactionPendingActions'
 import { getLastTx, getNewTxNonce, shouldExecuteTransaction } from '~/routes/safe/store/actions/utils'
 import { type Transaction } from '~/routes/safe/store/models/transaction'
 import { type GlobalState } from '~/store'
@@ -165,6 +167,11 @@ const processTransaction = ({
     closeSnackbar(pendingExecutionKey)
     showSnackbar(notificationsQueue.afterExecutionError, enqueueSnackbar, closeSnackbar)
 
+    const newPendingActions = Map([
+      ['Confirm', List([])],
+      ['Reject', List([])],
+    ])
+    dispatch(updateTransactionPendingActions({ safeAddress, txNonce: tx.nonce, newPendingActions }))
     const executeData = safeInstance.contract.methods.approveHash(txHash).encodeABI()
     const errMsg = await getErrorMessage(safeInstance.address, 0, executeData, from)
     console.error(`Error executing the TX: ${errMsg}`)

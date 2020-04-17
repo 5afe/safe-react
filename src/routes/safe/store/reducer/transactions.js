@@ -14,11 +14,10 @@ export default handleActions<State, *>(
   {
     [ADD_TRANSACTIONS]: (state: State, action: ActionType<Function>): State => action.payload,
     [UPDATE_TRANSACTION_PENDING_ACTIONS]: (state: State, action: ActionType<Function>): State => {
-      const { newPendingActions, safeAddress, transaction } = action.payload
-
+      const { newPendingActions, safeAddress, txNonce } = action.payload
       const oldTxsList = state.get(safeAddress)
       if (!oldTxsList) return state
-      const txIndex = oldTxsList.findIndex((tx) => tx.nonce === transaction.nonce)
+      const txIndex = oldTxsList.findIndex((tx) => tx.nonce === txNonce)
       const newTxsList = oldTxsList.updateIn([txIndex, 'ownersWithPendingActions'], () => newPendingActions)
       return state.setIn([safeAddress], newTxsList)
     },

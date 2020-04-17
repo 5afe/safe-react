@@ -1,5 +1,6 @@
 // @flow
 import { push } from 'connected-react-router'
+import { List, Map } from 'immutable'
 import type { GetState, Dispatch as ReduxDispatch } from 'redux'
 import semverSatisfies from 'semver/functions/satisfies'
 
@@ -20,6 +21,7 @@ import { EMPTY_DATA } from '~/logic/wallets/ethTransactions'
 import { providerSelector } from '~/logic/wallets/store/selectors'
 import { SAFELIST_ADDRESS } from '~/routes/routes'
 import fetchTransactions from '~/routes/safe/store/actions/fetchTransactions'
+import updateTransactionPendingActions from '~/routes/safe/store/actions/updateTransactionPendingActions'
 import { getLastTx, getNewTxNonce, shouldExecuteTransaction } from '~/routes/safe/store/actions/utils'
 import { type GlobalState } from '~/store'
 import { getErrorMessage } from '~/test/utils/ethereumErrors'
@@ -176,7 +178,11 @@ const createTransaction = ({
     closeSnackbar(beforeExecutionKey)
     closeSnackbar(pendingExecutionKey)
     showSnackbar(notificationsQueue.afterExecutionError, enqueueSnackbar, closeSnackbar)
-
+    const newPendingActions = Map([
+      ['Confirm', List([])],
+      ['Reject', List([])],
+    ])
+    dispatch(updateTransactionPendingActions({ safeAddress, txNonce, newPendingActions }))
     const executeDataUsedSignatures = safeInstance.contract.methods
       .execTransaction(to, valueInWei, txData, operation, 0, 0, 0, ZERO_ADDRESS, ZERO_ADDRESS, sigs)
       .encodeABI()
