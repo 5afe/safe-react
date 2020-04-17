@@ -77,7 +77,9 @@ const OwnerComponent = ({
     }
     if (thresholdReached || executor) {
       setImgCircle(isCancelTx ? ConfirmSmallRedCircle : ConfirmSmallGreenCircle)
+      return
     }
+    setImgCircle(ConfirmSmallGreyCircle)
   }, [confirmed, thresholdReached, executor, isCancelTx, pendingAcceptAction, pendingRejectAction])
 
   const getTimelineLine = () => {
