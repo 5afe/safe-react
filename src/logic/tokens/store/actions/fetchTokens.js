@@ -120,7 +120,7 @@ export const getTokenInfos = async (tokenAddress: string) => {
     address: tokenAddress,
     name: name ? name : tokenSymbol,
     symbol: tokenSymbol,
-    decimals: tokenDecimals,
+    decimals: tokenDecimals.toNumber(),
     logoUri: '',
   })
   const newTokens = tokens.set(tokenAddress, savedToken)

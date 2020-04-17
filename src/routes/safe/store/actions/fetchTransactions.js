@@ -103,10 +103,10 @@ export const buildTransactionFrom = async (safeAddress: string, tx: TxServiceMod
   const isERC721Token =
     code.includes(SAFE_TRANSFER_FROM_WITHOUT_DATA_HASH) ||
     (isTokenTransfer(tx.data, Number(tx.value)) && !(await hasDecimalsMethod(tx.to)))
-  const isSendTokenTx = !isERC721Token && isTokenTransfer(tx.data, Number(tx.value))
+  let isSendTokenTx = !isERC721Token && isTokenTransfer(tx.data, Number(tx.value))
   const isMultiSendTx = isMultisendTransaction(tx.data, Number(tx.value))
   const isUpgradeTx = isMultiSendTx && isUpgradeTransaction(tx.data)
-  const customTx = !sameAddress(tx.to, safeAddress) && !!tx.data && !isSendTokenTx && !isUpgradeTx && !isERC721Token
+  let customTx = !sameAddress(tx.to, safeAddress) && !!tx.data && !isSendTokenTx && !isUpgradeTx && !isERC721Token
 
   let refundParams = null
   if (tx.gasPrice > 0) {
@@ -133,19 +133,27 @@ export const buildTransactionFrom = async (safeAddress: string, tx: TxServiceMod
   let decimals = 18
   let decodedParams
   if (isSendTokenTx) {
-    const tokenInstance = await getTokenInfos(tx.to)
     try {
+      const tokenInstance = await getTokenInfos(tx.to)
       symbol = tokenInstance.symbol
       decimals = tokenInstance.decimals
     } catch (err) {
-      const alternativeTokenInstance = new web3.eth.Contract(ALTERNATIVE_TOKEN_ABI, tx.to)
-      const [tokenSymbol, tokenDecimals] = await Promise.all([
-        alternativeTokenInstance.methods.symbol().call(),
-        alternativeTokenInstance.methods.decimals().call(),
-      ])
+      try {
+        const alternativeTokenInstance = new web3.eth.Contract(ALTERNATIVE_TOKEN_ABI, tx.to)
+        const [tokenSymbol, tokenDecimals] = await Promise.all([
+          alternativeTokenInstance.methods.symbol().call(),
+          alternativeTokenInstance.methods.decimals().call(),
+        ])
 
-      symbol = web3.utils.toAscii(tokenSymbol)
-      decimals = tokenDecimals
+        symbol = web3.utils.toAscii(tokenSymbol)
+        decimals = tokenDecimals
+      } catch (e) {
+        // some contracts may implement the same methods as in ERC20 standard
+        // we may falsely treat them as tokens, so in case we get any errors when getting token info
+        // we fallback to displaying custom transaction
+        isSendTokenTx = false
+        customTx = true
+      }
     }
 
     const params = web3.eth.abi.decodeParameters(['address', 'uint256'], tx.data.slice(10))
@@ -293,11 +301,11 @@ export const loadSafeTransactions = async (safeAddress: string): Promise<SafeTra
     const url = buildTxServiceUrl(safeAddress)
     const response = await axios.get(url, config)
     if (response.data.count > 0) {
-      transactions = transactions.concat(response.data.results)
       if (etagSafeTransactions === response.headers.etag) {
         // The txs are the same, we can return the cached ones
         return
       }
+      transactions = transactions.concat(response.data.results)
       etagSafeTransactions = response.headers.etag
     }
   } catch (err) {
