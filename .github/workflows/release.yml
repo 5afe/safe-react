@@ -1,4 +1,4 @@
-name: Build/release
+name: Build/Release Desktop app
 
 # this will help you specify where to run
 on:
