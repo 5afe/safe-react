@@ -5,7 +5,7 @@ import { useState } from 'react'
 import Page from '~/components/layout/Page'
 import { type Token } from '~/logic/tokens/store/model/token'
 import Layout from '~/routes/safe/components/Layout'
-import { useCheckForUpdates } from '~/routes/safe/container/CheckForUpdates'
+import { useCheckForUpdates } from '~/routes/safe/container/Hooks/useCheckForUpdates'
 
 type Action = 'Send' | 'Receive'
 

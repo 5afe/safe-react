@@ -10,7 +10,7 @@ import { Provider } from 'react-redux'
 import Loader from '../Loader'
 import PageFrame from '../layout/PageFrame'
 
-const AppRoutes = React.lazy(() => import('~/routes'))
+import AppRoutes from '~/routes'
 import LoadStore from '~/routes/safe/container/LoadStore'
 import { history, store } from '~/store'
 import theme from '~/theme/mui'
