@@ -65,38 +65,54 @@ function getPendingOwnersConfirmations(owners, tx, userAddress) {
     return userIsUnconfirmedOwner
   })
 
-  const ownersUnconfirmed = ownersWithNoConfirmations
-    .map((owner) => {
-      let hasPendingAcceptActions = false
-      let hasPendingRejectActions = false
-      let { ownersWithPendingActions } = tx
+  const ownersUnconfirmed = ownersWithNoConfirmations.map((owner) => {
+    let hasPendingAcceptActions = false
+    let hasPendingRejectActions = false
+    let { ownersWithPendingActions } = tx
 
-      const confirmationPendingActions = ownersWithPendingActions.get('Confirm')
-      const confirmationRejectActions = ownersWithPendingActions.get('Reject')
-      if (confirmationPendingActions.includes(owner.address)) {
-        hasPendingAcceptActions = true
-      }
-      if (confirmationRejectActions.includes(owner.address)) {
-        hasPendingRejectActions = true
-      }
+    const confirmationPendingActions = ownersWithPendingActions.get('Confirm')
+    const confirmationRejectActions = ownersWithPendingActions.get('Reject')
+    if (confirmationPendingActions.includes(owner.address)) {
+      hasPendingAcceptActions = true
+    }
+    if (confirmationRejectActions.includes(owner.address)) {
+      hasPendingRejectActions = true
+    }
 
-      return { owner, hasPendingRejectActions, hasPendingAcceptActions }
-    })
-    // Reorders the list of unconfirmed owners, owners with pendingActions should be first
-    .sort((ownerA, ownerB) => {
-      // If the first owner has pending actions, A should be before B
-      if (ownerA.hasPendingRejectActions || ownerA.hasPendingAcceptActions) {
-        return -1
-      }
-      // The first owner has not pending actions but the second yes, B should be before A
-      if (ownerB.hasPendingRejectActions || ownerB.hasPendingAcceptActions) {
-        return 1
-      }
-      // Otherwise do not change order
-      return 0
-    })
+    return { owner, hasPendingRejectActions, hasPendingAcceptActions }
+  })
 
   return [ownersUnconfirmed, userIsUnconfirmedOwner]
+}
+
+// Updates the status of the cancel tx based on the real tx status
+function updatePendingActionsForCancelTx(cancelTxUnconfirmedOwners, txUnconfirmedOwners) {
+  return cancelTxUnconfirmedOwners.map((cancelOwner) => {
+    const index = txUnconfirmedOwners.findIndex(
+      (searchOwner) => searchOwner.owner.address === cancelOwner.owner.address,
+    )
+    cancelOwner.hasPendingRejectActions = txUnconfirmedOwners.get(index).hasPendingRejectActions
+    return cancelOwner
+  })
+}
+
+function sortOwnersPendingActionsBased(owners) {
+  if (!owners) {
+    return
+  }
+  // Reorders the list of unconfirmed owners, owners with pendingActions should be first
+  return owners.sort((ownerA, ownerB) => {
+    // If the first owner has pending actions, A should be before B
+    if (ownerA.hasPendingRejectActions || ownerA.hasPendingAcceptActions) {
+      return -1
+    }
+    // The first owner has not pending actions but the second yes, B should be before A
+    if (ownerB.hasPendingRejectActions || ownerB.hasPendingAcceptActions) {
+      return 1
+    }
+    // Otherwise do not change order
+    return 0
+  })
 }
 
 const OwnersColumn = ({
@@ -123,15 +139,18 @@ const OwnersColumn = ({
   }
 
   const [ownersWhoConfirmed, currentUserAlreadyConfirmed] = getOwnersConfirmations(tx, userAddress)
-  const [ownersUnconfirmed, userIsUnconfirmedOwner] = getPendingOwnersConfirmations(owners, tx, userAddress)
+  let [ownersUnconfirmed, userIsUnconfirmedOwner] = getPendingOwnersConfirmations(owners, tx, userAddress)
+  ownersUnconfirmed = sortOwnersPendingActionsBased(ownersUnconfirmed)
 
   const [ownersWhoConfirmedCancel, currentUserAlreadyConfirmedCancel] = getOwnersConfirmations(cancelTx, userAddress)
-  const [ownersUnconfirmedCancel, userIsUnconfirmedCancelOwner] = getPendingOwnersConfirmations(
+  let [ownersUnconfirmedCancel, userIsUnconfirmedCancelOwner] = getPendingOwnersConfirmations(
     owners,
     cancelTx,
     userAddress,
   )
 
+  ownersUnconfirmedCancel = updatePendingActionsForCancelTx(ownersUnconfirmedCancel, ownersUnconfirmed)
+  ownersUnconfirmedCancel = sortOwnersPendingActionsBased(ownersUnconfirmedCancel)
   let displayButtonRow = true
   if (tx.executionTxHash) {
     // One of owners already executed the tx

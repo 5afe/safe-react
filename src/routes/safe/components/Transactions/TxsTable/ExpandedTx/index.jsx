@@ -70,12 +70,23 @@ const ExpandedTx = ({
   }
 
   const addPendingActionToTx = (actionType: PendingActionType) => {
-    const { ownersWithPendingActions } = tx
+    let ownersWithPendingActions = null
+    let transaction = null
+    if (actionType === 'Reject') {
+      ownersWithPendingActions = tx.ownersWithPendingActions
+      transaction = tx
+    }
+    if (actionType === 'Confirm') {
+      ownersWithPendingActions = cancelTx.ownersWithPendingActions
+      transaction = cancelTx
+    }
+    if (!ownersWithPendingActions) {
+      return
+    }
     const oldList = ownersWithPendingActions.get(actionType)
     const newList = oldList.push(userAddress)
     const newPendingActions = ownersWithPendingActions.set(actionType, newList)
-
-    dispatch(updateTransactionPendingActions({ safeAddress, transaction: tx, newPendingActions }))
+    dispatch(updateTransactionPendingActions({ safeAddress, transaction, newPendingActions }))
   }
 
   return (
