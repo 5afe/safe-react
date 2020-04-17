@@ -12,7 +12,7 @@ export const getAppInfoFromOrigin = (origin: string) => {
   try {
     return JSON.parse(origin)
   } catch (error) {
-    console.error(`Impossible to parse TX origin: ${origin}`)
+    console.error(`Impossible to parse TX from origin: ${origin}`)
     return null
   }
 }
