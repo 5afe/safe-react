@@ -7,14 +7,7 @@ import { type Confirmation } from '~/routes/safe/store/models/confirmation'
 
 export const OUTGOING_TX_TYPE = 'outgoing'
 
-export type TransactionType =
-  | 'incoming'
-  | 'outgoing'
-  | 'settings'
-  | 'custom'
-  | 'creation'
-  | 'cancellation'
-  | 'third-party-app'
+export type TransactionType = 'incoming' | 'outgoing' | 'settings' | 'custom' | 'creation' | 'cancellation'
 
 export type TransactionStatus =
   | 'awaiting_your_confirmation'
@@ -24,7 +17,6 @@ export type TransactionStatus =
   | 'cancelled'
   | 'awaiting_execution'
   | 'pending'
-  | 'third-party-app'
 
 export type TransactionProps = {
   nonce: ?number,
