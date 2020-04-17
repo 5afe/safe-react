@@ -83,11 +83,11 @@ const OwnerComponent = ({
   }, [confirmed, thresholdReached, executor, isCancelTx, pendingAcceptAction, pendingRejectAction])
 
   const getTimelineLine = () => {
-    if (isCancelTx) {
-      return classes.verticalLineCancel
-    }
     if (pendingAcceptAction || pendingRejectAction) {
       return classes.verticalPendingAction
+    }
+    if (isCancelTx) {
+      return classes.verticalLineCancel
     }
     return classes.verticalLineDone
   }
