@@ -1,5 +1,4 @@
 // @flow
-import ClickAwayListener from '@material-ui/core/ClickAwayListener'
 import Drawer from '@material-ui/core/Drawer'
 import SearchIcon from '@material-ui/icons/Search'
 import { List } from 'immutable'
@@ -90,51 +89,49 @@ const Sidebar = ({ children, currentSafe, defaultSafe, safes, setDefaultSafeActi
 
   return (
     <SidebarContext.Provider value={{ isOpen, toggleSidebar }}>
-      <ClickAwayListener onClickAway={toggleSidebar}>
-        <Drawer
-          classes={{ paper: classes.sidebarPaper }}
-          className={classes.sidebar}
-          ModalProps={{ onBackdropClick: toggleSidebar }}
-          onKeyDown={handleEsc}
-          open={isOpen}
-        >
-          <Row align="center" className={classes.topComponents}>
-            <Row align="center" className={classes.searchWrapper}>
-              <SearchIcon className={classes.searchIcon} />
-              <SearchBar
-                classes={searchClasses}
-                onCancelSearch={handleFilterCancel}
-                onChange={handleFilterChange}
-                placeholder="Search by name or address"
-                searchIcon={<div />}
-                value={filter}
-              />
-            </Row>
-            <Divider className={classes.divider} />
-            <Spacer className={classes.spacer} />
-            <Button
-              className={classes.addSafeBtn}
-              color="primary"
-              component={Link}
-              onClick={toggleSidebar}
-              size="small"
-              to={WELCOME_ADDRESS}
-              variant="contained"
-            >
-              + Add Safe
-            </Button>
-            <Spacer />
+      <Drawer
+        classes={{ paper: classes.sidebarPaper }}
+        className={classes.sidebar}
+        ModalProps={{ onBackdropClick: toggleSidebar }}
+        onKeyDown={handleEsc}
+        open={isOpen}
+      >
+        <Row align="center" className={classes.topComponents}>
+          <Row align="center" className={classes.searchWrapper}>
+            <SearchIcon className={classes.searchIcon} />
+            <SearchBar
+              classes={searchClasses}
+              onCancelSearch={handleFilterCancel}
+              onChange={handleFilterChange}
+              placeholder="Search by name or address"
+              searchIcon={<div />}
+              value={filter}
+            />
           </Row>
-          <Hairline />
-          <SafeList
-            currentSafe={currentSafe}
-            defaultSafe={defaultSafe}
-            onSafeClick={toggleSidebar}
-            safes={filteredSafes}
-            setDefaultSafe={setDefaultSafeAction}
-          />
-        </Drawer>
-      </ClickAwayListener>
+          <Divider className={classes.divider} />
+          <Spacer className={classes.spacer} />
+          <Button
+            className={classes.addSafeBtn}
+            color="primary"
+            component={Link}
+            onClick={toggleSidebar}
+            size="small"
+            to={WELCOME_ADDRESS}
+            variant="contained"
+          >
+            + Add Safe
+          </Button>
+          <Spacer />
+        </Row>
+        <Hairline />
+        <SafeList
+          currentSafe={currentSafe}
+          defaultSafe={defaultSafe}
+          onSafeClick={toggleSidebar}
+          safes={filteredSafes}
+          setDefaultSafe={setDefaultSafeAction}
+        />
+      </Drawer>
       {children}
     </SidebarContext.Provider>
   )
