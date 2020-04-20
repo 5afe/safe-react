@@ -36,7 +36,14 @@ jobs:
         shell: powershell
         run: |
           npm install --global --production windows-build-tools --vs2015
-          && npm config set msvs_version 2015
+          npm config set msvs_version 2015
+
+      - name: Install node-gyp
+      if: startsWith(matrix.os, 'windows')
+      shell: powershell
+      run: |
+        npm install --global node-gyp
+        npm prefix -g | % {npm config set node_gyp "$_\node_modules\node-gyp\bin\node-gyp.js"}
 
       - name: Build/Release Desktop App
         env:
