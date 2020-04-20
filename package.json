@@ -131,6 +131,9 @@
       "icon": "public/build/icon.ico"
     }
   },
+  "resolutions": {
+    "node-gyp": "5.0.3"
+  },
   "dependencies": {
     "@gnosis.pm/safe-contracts": "1.1.1-dev.2",
     "@gnosis.pm/util-contracts": "2.0.6",

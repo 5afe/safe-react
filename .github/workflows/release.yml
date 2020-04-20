@@ -42,8 +42,7 @@ jobs:
         if: startsWith(matrix.os, 'windows')
         shell: powershell
         run: |
-          yarn global add node-gyp@latest
-          yarn global cwd | % {yarn config set node_gyp "$_\node_modules\node-gyp\bin\node-gyp.js"}
+          yarn global add node-gyp@5.0.3
 
       - name: Build/Release Desktop App
         env:
