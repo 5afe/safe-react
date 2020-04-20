@@ -132,7 +132,7 @@
     }
   },
   "resolutions": {
-    "node-gyp": "5.0.3"
+    "node-gyp": "^5.1.0"
   },
   "dependencies": {
     "@gnosis.pm/safe-contracts": "1.1.1-dev.2",

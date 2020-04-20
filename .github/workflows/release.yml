@@ -19,6 +19,8 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     strategy:
+      fail-fast: false
+      max-parallel: 15
       matrix:
         os: [windows-latest]
 
@@ -35,14 +37,14 @@ jobs:
         if: startsWith(matrix.os, 'windows')
         shell: powershell
         run: |
-          yarn global add --production windows-build-tools --vs2015
-          yarn config set msvs_version 2015
+          yarn global add --production windows-build-tools
+          yarn config set msvs_version 2017
 
       - name: Install node-gyp
         if: startsWith(matrix.os, 'windows')
         shell: powershell
         run: |
-          yarn global add node-gyp@5.0.3
+          yarn global add node-gyp@latest
 
       - name: Build/Release Desktop App
         env:
