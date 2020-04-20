@@ -83,7 +83,6 @@ export const estimateGasForDeployingSafe = async (
   numConfirmations: number,
   userAccount: string,
 ) => {
-  console.log(proxyFactoryMaster)
   const gnosisSafeData = await safeMaster.contract.methods
     .setup(safeAccounts, numConfirmations, ZERO_ADDRESS, '0x', DEFAULT_FALLBACK_HANDLER_ADDRESS, ZERO_ADDRESS, 0, ZERO_ADDRESS)
     .encodeABI()
