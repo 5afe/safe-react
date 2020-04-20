@@ -1,7 +1,12 @@
 // @flow
 import { push } from 'connected-react-router'
+import { List } from 'immutable'
 import type { GetState, Dispatch as ReduxDispatch } from 'redux'
 import semverSatisfies from 'semver/functions/satisfies'
+
+import { makeConfirmation } from '../models/confirmation'
+
+import updateTransaction from './updateTransaction'
 
 import { onboardUser } from '~/components/ConnectButton'
 import { getGnosisSafeInstanceAt } from '~/logic/contracts/safeContracts'
@@ -105,7 +110,7 @@ const createTransaction = ({
     // Couldn't find an issue for trezor but the error is almost the same
     const canTryOffchainSigning =
       !isExecution && !smartContractWallet && semverSatisfies(safeVersion, SAFE_VERSION_FOR_OFFCHAIN_SIGNATURES)
-    if (canTryOffchainSigning) {
+    if (false) {
       const signature = await tryOffchainSigning({ ...txArgs, safeAddress }, hardwareWallet)
 
       if (signature) {
@@ -151,7 +156,7 @@ const createTransaction = ({
             txHash,
             origin,
           })
-          dispatch(fetchTransactions(safeAddress))
+          await dispatch(fetchTransactions(safeAddress))
         } catch (err) {
           console.error(err)
         }
@@ -160,7 +165,27 @@ const createTransaction = ({
         console.error('Tx error: ', error)
       })
       .then((receipt) => {
+        console.log(receipt)
         closeSnackbar(pendingExecutionKey)
+        const safeTxHash = isExecution ? 'lol' : receipt.events.ApproveHash.returnValues[0]
+
+        dispatch(
+          updateTransaction({
+            safeAddress,
+            transaction: {
+              safeTxHash,
+              confirmations: List([
+                makeConfirmation({
+                  type: 'confirmation',
+                  hash: receipt.transactionHash,
+                  signature: sigs,
+                  owner: { address: '0x000', name: 'Test' },
+                }),
+              ]),
+            },
+          }),
+        )
+
         showSnackbar(
           isExecution
             ? notificationsQueue.afterExecution.noMoreConfirmationsNeeded
