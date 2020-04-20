@@ -28,6 +28,12 @@ jobs:
       - name: Check out Git repository
         uses: actions/checkout@v2
 
+        - name: Set MS build path
+        if: startsWith(matrix.os, 'windows')
+        shell: powershell
+        run: |
+         yarn config set msbuild_path "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\MSBuild\Current\Bin\MSBuild.exe"
+
       - name: Install Node.js, NPM and Yarn
         uses: actions/setup-node@v1
         with:
