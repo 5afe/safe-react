@@ -31,7 +31,7 @@ jobs:
       - name: Install Node.js, NPM and Yarn
         uses: actions/setup-node@v1
         with:
-          node-version: 12.13.0
+          node-version: 10.16.3
 
       - name: Patch node gyp on windows to support Visual Studio 2019
         if: startsWith(matrix.os, 'windows')
@@ -43,6 +43,7 @@ jobs:
         shell: powershell
         run: |
           yarn global add node-gyp
+          yarn config set node_gyp "$_\node_modules\node-gyp\bin\node-gyp.js"
 
       - name: Build/Release Desktop App
         env:
