@@ -20,7 +20,7 @@ jobs:
 
     strategy:
       matrix:
-        os: [macos-latest, ubuntu-latest, windows-latest]
+        os: [windows-latest]
 
     steps:
       - name: Check out Git repository
@@ -35,9 +35,9 @@ jobs:
         if: startsWith(matrix.os, 'windows')
         shell: powershell
         run: |
+          npm install --global --production windows-build-tools
           npm install --global node-gyp@latest
           npm prefix -g | % {npm config set node_gyp "$_\node_modules\node-gyp\bin\node-gyp.js"}
-          npm install --global --production windows-build-tools
 
       - name: Build/Release Desktop App
         env:
