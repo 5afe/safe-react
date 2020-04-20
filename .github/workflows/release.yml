@@ -36,8 +36,6 @@ jobs:
         shell: powershell
         run: |
           npm install --global windows-build-tools@4.0.0
-          npm install --global node-gyp@latest
-          npm prefix -g | % {npm config set node_gyp "$_\node_modules\node-gyp\bin\node-gyp.js"}
 
       - name: Build/Release Desktop App
         env:
