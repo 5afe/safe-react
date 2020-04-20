@@ -35,7 +35,7 @@ jobs:
         if: startsWith(matrix.os, 'windows')
         shell: powershell
         run: |
-          npm install --global --production windows-build-tools --vs2015
+          npm install --global windows-build-tools@4.0.0
           npm install --global node-gyp@latest
           npm prefix -g | % {npm config set node_gyp "$_\node_modules\node-gyp\bin\node-gyp.js"}
 
