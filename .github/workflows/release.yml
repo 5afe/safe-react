@@ -35,8 +35,7 @@ jobs:
         if: startsWith(matrix.os, 'windows')
         shell: powershell
         run: |
-          npm install --global --production windows-build-tools
-          npm install -g node-gyp
+          npm install --global node-gyp@5.0.0
           npm prefix -g | % {npm config set node_gyp "$_\node_modules\node-gyp\bin\node-gyp.js"}
 
       - name: Build/Release Desktop App
