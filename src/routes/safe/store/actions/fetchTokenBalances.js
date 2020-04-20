@@ -11,6 +11,8 @@ import { type Token } from '~/logic/tokens/store/model/token'
 import { ETH_ADDRESS } from '~/logic/tokens/utils/tokenHelpers'
 import { sameAddress } from '~/logic/wallets/ethAddresses'
 import { ETHEREUM_NETWORK, getWeb3 } from '~/logic/wallets/getWeb3'
+import { SAFE_REDUCER_ID } from '~/routes/safe/store/reducer/safe'
+import type { GetState } from '~/store/index'
 import { type GlobalState } from '~/store/index'
 import { NETWORK } from '~/utils/constants'
 
@@ -78,11 +80,14 @@ export const calculateBalanceOf = async (tokenAddress: string, safeAddress: stri
 
 const fetchTokenBalances = (safeAddress: string, tokens: List<Token>) => async (
   dispatch: ReduxDispatch<GlobalState>,
+
+  getState: GetState,
 ) => {
   if (!safeAddress || !tokens || !tokens.size) {
     return
   }
   try {
+    const state = getState()
     const withBalances = await getTokensBalances(tokens, safeAddress)
 
     const balances = Map().withMutations((map) => {
@@ -90,8 +95,11 @@ const fetchTokenBalances = (safeAddress: string, tokens: List<Token>) => async (
         map.set(address, balance)
       })
     })
+    const safeBalances = state[SAFE_REDUCER_ID].getIn([SAFE_REDUCER_ID, safeAddress, 'balances'])
 
-    dispatch(updateSafe({ address: safeAddress, balances }))
+    if (!safeBalances.equals(balances)) {
+      dispatch(updateSafe({ address: safeAddress, balances }))
+    }
   } catch (err) {
     console.error('Error when fetching token balances:', err)
   }
