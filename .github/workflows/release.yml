@@ -38,7 +38,7 @@ jobs:
         shell: powershell
         run: |
           yarn global add --production windows-build-tools
-          yarn config set msvs_version 2017
+          yarn config set msvs_version 2019
 
       - name: Install node-gyp
         if: startsWith(matrix.os, 'windows')
