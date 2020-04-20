@@ -6,7 +6,6 @@ import Page from '~/components/layout/Page'
 import { type Token } from '~/logic/tokens/store/model/token'
 import Layout from '~/routes/safe/components/Layout'
 import { useCheckForUpdates } from '~/routes/safe/container/Hooks/useCheckForUpdates'
-import { useLoadStore } from '~/routes/safe/container/Hooks/useLoadStore'
 
 type Action = 'Send' | 'Receive'
 
@@ -18,10 +17,12 @@ const INITIAL_STATE = {
   showReceive: false,
 }
 
-const SafeView = () => {
+type Props = {
+  safeLoaded: boolean,
+}
+
+const SafeView = (props: Props) => {
   const [state, setState] = useState(INITIAL_STATE)
-  const [safeLoaded, setSafeLoaded] = useState(false)
-  useLoadStore(setSafeLoaded)
   useCheckForUpdates()
 
   const onShow = (action: Action) => () => {
@@ -61,7 +62,7 @@ const SafeView = () => {
 
   return (
     <Page>
-      {!safeLoaded ? null : (
+      {!props.safeLoaded ? null : (
         <>
           <Layout
             hideSendFunds={hideSendFunds}
