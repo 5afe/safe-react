@@ -31,7 +31,7 @@ jobs:
       - name: Install Node.js, NPM and Yarn
         uses: actions/setup-node@v1
         with:
-          node-version: 10.16.3
+          node-version: 12.13.0
 
       - name: Patch node gyp on windows to support Visual Studio 2019
         if: startsWith(matrix.os, 'windows')
@@ -53,7 +53,7 @@ jobs:
         uses: samuelmeuli/action-electron-builder@v1
         with:
           #Build scipt
-          build_script_name: build-desktop
+          build_script_name: build-mainnet
 
           # GitHub token, automatically provided to the action
           # (No need to define this secret in the repo settings)
