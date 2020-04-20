@@ -6,7 +6,6 @@ import { Redirect, Route, Switch, withRouter } from 'react-router-dom'
 import { LOAD_ADDRESS, OPEN_ADDRESS, SAFELIST_ADDRESS, SAFE_PARAM_ADDRESS, WELCOME_ADDRESS } from './routes'
 
 import Loader from '~/components/Loader'
-import { useLoadStore } from '~/routes/safe/container/Hooks/useLoadStore'
 import { defaultSafeSelector } from '~/routes/safe/store/selectors'
 import { withTracker } from '~/utils/googleAnalytics'
 
@@ -27,8 +26,6 @@ type RoutesProps = {
 const Routes = ({ location }: RoutesProps) => {
   const [isInitialLoad, setInitialLoad] = useState<boolean>(true)
   const defaultSafe = useSelector(defaultSafeSelector)
-  const [safeLoaded, setSafeLoaded] = useState(false)
-  useLoadStore(setSafeLoaded)
 
   useEffect(() => {
     if (location.pathname !== '/') {
@@ -62,7 +59,7 @@ const Routes = ({ location }: RoutesProps) => {
         <Route component={withTracker(Open)} exact path={OPEN_ADDRESS} />
         <Route
           component={withTracker(() => (
-            <Safe safeLoaded={safeLoaded} />
+            <Safe />
           ))}
           path={SAFE_ADDRESS}
         />
