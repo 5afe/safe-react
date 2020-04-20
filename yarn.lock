@@ -1207,9 +1207,9 @@
   dependencies:
     "@truffle/hdwallet-provider" "^1.0.27"
 
-"@gnosis/safe-react-components@https://github.com/gnosis/safe-react-components.git#c2fa438":
+"@gnosis/safe-react-components@https://github.com/gnosis/safe-react-components.git#71e6fed":
   version "0.1.1"
-  resolved "https://github.com/gnosis/safe-react-components.git#c2fa4384f9af9b1e5b3cd13bd0b33b1d825b90ad"
+  resolved "https://github.com/gnosis/safe-react-components.git#71e6fed337271b0b536c1ae8128d32d49fc74947"
   dependencies:
     classnames "^2.2.6"
     polished "^3.5.1"

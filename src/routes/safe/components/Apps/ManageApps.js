@@ -64,6 +64,8 @@ const ManageApps = ({ appList, onAppAdded, onAppToggle }: Props) => {
     onAppAdded(appInfo)
   }
 
+  const cleanAppInfo = () => setAppInfo(APP_INFO)
+
   const urlValidator = (value: string) => {
     return /(?:^|[ \t])((https?:\/\/)?(?:localhost|[\w-]+(?:\.[\w-]+)+)(:\d+)?(\/\S*)?)/gm.test(value)
       ? undefined
@@ -81,10 +83,9 @@ const ManageApps = ({ appList, onAppAdded, onAppToggle }: Props) => {
     setAppInfo({ ...appInfo })
   }
 
-  const uniqueAppValidator = async (value) => {
-    if (appList.find((a) => a.url === value)) {
-      return 'This app is already registered.'
-    }
+  const uniqueAppValidator = (value) => {
+    const exists = appList.find((a) => a.url === value.trim())
+    return exists ? 'This app is already registered.' : undefined
   }
 
   const onFormStatusChange = ({ pristine, valid, validating }) => {
@@ -112,7 +113,7 @@ const ManageApps = ({ appList, onAppAdded, onAppToggle }: Props) => {
               name="appUrl"
               placeholder="App URL"
               type="text"
-              validate={composeValidators(required, urlValidator, uniqueAppValidator, safeAppValidator)}
+              validate={composeValidators(cleanAppInfo, required, urlValidator, uniqueAppValidator, safeAppValidator)}
             />
 
             <AppInfo>

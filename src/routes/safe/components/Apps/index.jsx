@@ -30,10 +30,8 @@ const Centered = styled.div`
 `
 
 const operations = {
-  SEND_TRANSACTIONS: 'sendTransactions',
-  GET_TRANSACTIONS: 'getTransactions',
-  ON_SAFE_INFO: 'onSafeInfo',
-  ON_TX_UPDATE: 'onTransactionUpdate',
+  SEND_TRANSACTIONS: 'SEND_TRANSACTIONS',
+  ON_SAFE_INFO: 'ON_SAFE_INFO',
 }
 
 type Props = {
@@ -80,7 +78,7 @@ function Apps({
 
   const handleIframeMessage = async (data) => {
     if (!data || !data.messageId) {
-      console.warn('iframe: message without messageId')
+      console.error('ThirdPartyApp: A message was received without message id.')
       return
     }
 
@@ -89,7 +87,7 @@ function Apps({
         const onConfirm = async () => {
           closeModal()
 
-          const txHash = await sendTransactions(
+          await sendTransactions(
             web3,
             createTransaction,
             safeAddress,
@@ -98,13 +96,6 @@ function Apps({
             closeSnackbar,
             getSelectedApp().id,
           )
-
-          if (txHash) {
-            sendMessageToIframe(operations.ON_TX_UPDATE, {
-              txHash,
-              status: 'pending',
-            })
-          }
         }
 
         confirmTransactions(
@@ -120,11 +111,9 @@ function Apps({
 
         break
       }
-      case operations.GET_TRANSACTIONS:
-        break
 
       default: {
-        console.warn(`Iframe:${data.messageId} unkown`)
+        console.error(`ThirdPartyApp: A message was received with an unknown message id ${data.messageId}.`)
         break
       }
     }
@@ -274,7 +263,7 @@ function Apps({
       }
 
       if (!getSelectedApp().url.includes(origin)) {
-        console.error(`Message from ${origin} is different to the App URL ${getSelectedApp().url}`)
+        console.error(`ThirdPartyApp: A message from was received from an unknown origin ${origin}`)
         return
       }
 

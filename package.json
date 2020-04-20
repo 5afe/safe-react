@@ -43,7 +43,7 @@
   "dependencies": {
     "@gnosis.pm/safe-contracts": "1.1.1-dev.1",
     "@gnosis.pm/util-contracts": "2.0.6",
-    "@gnosis/safe-react-components": "https://github.com/gnosis/safe-react-components.git#c2fa438",
+    "@gnosis/safe-react-components": "https://github.com/gnosis/safe-react-components.git#71e6fed",
     "@material-ui/core": "4.9.10",
     "@material-ui/icons": "4.9.1",
     "@material-ui/lab": "4.0.0-alpha.39",
