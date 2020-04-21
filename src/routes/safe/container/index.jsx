@@ -102,4 +102,4 @@ const SafeView = () => {
   )
 }
 
-export default React.memo(SafeView)
+export default SafeView
