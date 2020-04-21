@@ -193,7 +193,7 @@ function Apps({
           id="iframeId"
           ref={iframeRef}
           shouldDisplay={!appIsLoading}
-          src={`${getSelectedApp().url}?timestamp=${Date.now()}`}
+          src={getSelectedApp().url}
           title={getSelectedApp().name}
         />
       </>
