@@ -1,7 +1,7 @@
 // @flow
 import 'babel-polyfill'
 
-import { theme as styledTheme } from '@gnosis/safe-react-components'
+import { theme as styledTheme } from '@gnosis.pm/safe-react-components'
 import { MuiThemeProvider } from '@material-ui/core/styles'
 import { ConnectedRouter } from 'connected-react-router'
 import React, { Suspense } from 'react'
