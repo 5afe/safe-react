@@ -94,6 +94,13 @@ const ManageApps = ({ appList, onAppAdded, onAppToggle }: Props) => {
     }
   }
 
+  const customRequiredValidator = (value) => {
+    if (!value || !value.length) {
+      setAppInfo(APP_INFO)
+      return 'Required'
+    }
+  }
+
   const getAddAppForm = () => {
     return (
       <GnoForm
@@ -113,7 +120,7 @@ const ManageApps = ({ appList, onAppAdded, onAppToggle }: Props) => {
               name="appUrl"
               placeholder="App URL"
               type="text"
-              validate={composeValidators(cleanAppInfo, required, urlValidator, uniqueAppValidator, safeAppValidator)}
+              validate={composeValidators(customRequiredValidator, urlValidator, uniqueAppValidator, safeAppValidator)}
             />
 
             <AppInfo>
@@ -132,7 +139,11 @@ const ManageApps = ({ appList, onAppAdded, onAppToggle }: Props) => {
 
             <Field
               component={StyledCheckbox}
-              label="This app is not a Gnosis product and I agree to use this app at my own risk."
+              label={
+                <p>
+                  This app is not a Gnosis product and I agree to use this app <br /> at my own risk.
+                </p>
+              }
               name="agreed"
               type="checkbox"
               validate={required}
@@ -151,7 +162,10 @@ const ManageApps = ({ appList, onAppAdded, onAppToggle }: Props) => {
 
   const toggleOpen = () => setIsOpen(!isOpen)
 
-  const closeModal = () => setIsOpen(false)
+  const closeModal = () => {
+    setIsOpen(false)
+    cleanAppInfo()
+  }
 
   const getItemList = () =>
     appList.map((a) => {
