@@ -86,17 +86,17 @@ const Layout = (props: Props) => {
       <TabsComponent />
       <Hairline color={border} style={{ marginTop: '-2px' }} />
       <Switch>
-        <Route exact path={`${match.path}/balances/:assetType?`} render={() => wrapInSuspense(<Balances />)} />
-        <Route exact path={`${match.path}/transactions`} render={() => wrapInSuspense(<TxsTable />)} />
+        <Route exact path={`${match.path}/balances/:assetType?`} render={() => wrapInSuspense(<Balances />, null)} />
+        <Route exact path={`${match.path}/transactions`} render={() => wrapInSuspense(<TxsTable />, null)} />
         {process.env.REACT_APP_ENV !== 'production' && (
           <Route
             exact
             path={`${match.path}/apps`}
-            render={() => wrapInSuspense(<Apps closeModal={closeGenericModal} openModal={openGenericModal} />)}
+            render={() => wrapInSuspense(<Apps closeModal={closeGenericModal} openModal={openGenericModal} />, null)}
           />
         )}
-        <Route exact path={`${match.path}/settings`} render={() => wrapInSuspense(<Settings />)} />
-        <Route exact path={`${match.path}/address-book`} render={() => wrapInSuspense(<AddressBookTable />)} />
+        <Route exact path={`${match.path}/settings`} render={() => wrapInSuspense(<Settings />, null)} />
+        <Route exact path={`${match.path}/address-book`} render={() => wrapInSuspense(<AddressBookTable />, null)} />
         <Redirect to={`${match.path}/balances`} />
       </Switch>
       <SendModal

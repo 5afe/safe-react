@@ -6,9 +6,8 @@ import { Redirect, Route, Switch, withRouter } from 'react-router-dom'
 import { LOAD_ADDRESS, OPEN_ADDRESS, SAFELIST_ADDRESS, SAFE_PARAM_ADDRESS, WELCOME_ADDRESS } from './routes'
 
 import Loader from '~/components/Loader'
-import { useLoadStore } from '~/routes/safe/container/Hooks/useLoadStore'
 import { defaultSafeSelector } from '~/routes/safe/store/selectors'
-import { withTracker } from '~/utils/googleAnalytics'
+import { useAnalytics } from '~/utils/googleAnalytics'
 
 const Welcome = React.lazy(() => import('./welcome/container'))
 
@@ -27,14 +26,18 @@ type RoutesProps = {
 const Routes = ({ location }: RoutesProps) => {
   const [isInitialLoad, setInitialLoad] = useState<boolean>(true)
   const defaultSafe = useSelector(defaultSafeSelector)
-  const [safeLoaded, setSafeLoaded] = useState(false)
-  useLoadStore(setSafeLoaded)
+  const { trackPage } = useAnalytics()
 
   useEffect(() => {
     if (location.pathname !== '/') {
       setInitialLoad(false)
     }
   }, [])
+
+  useEffect(() => {
+    const page = location.pathname + location.search
+    trackPage(page)
+  }, [location.pathname, trackPage])
 
   return (
     <Switch>
@@ -57,15 +60,10 @@ const Routes = ({ location }: RoutesProps) => {
           return <Redirect to={WELCOME_ADDRESS} />
         }}
       />
-      <Route component={withTracker(Welcome)} exact path={WELCOME_ADDRESS} />
-      <Route component={withTracker(Open)} exact path={OPEN_ADDRESS} />
-      <Route
-        component={withTracker(() => (
-          <Safe safeLoaded={safeLoaded} />
-        ))}
-        path={SAFE_ADDRESS}
-      />
-      <Route component={withTracker(Load)} exact path={LOAD_ADDRESS} />
+      <Route component={Welcome} exact path={WELCOME_ADDRESS} />
+      <Route component={Open} exact path={OPEN_ADDRESS} />
+      <Route component={Safe} path={SAFE_ADDRESS} />
+      <Route component={Load} exact path={LOAD_ADDRESS} />
       <Redirect to="/" />
     </Switch>
   )
