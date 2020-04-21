@@ -350,9 +350,7 @@ const Layout = (props: Props) => {
             />
           )}
         />
-        {process.env.REACT_APP_ENV !== 'production' && (
-          <Route exact path={`${match.path}/apps`} render={renderAppsTab} />
-        )}
+        <Route exact path={`${match.path}/apps`} render={renderAppsTab} />
         <Route
           exact
           path={`${match.path}/settings`}
