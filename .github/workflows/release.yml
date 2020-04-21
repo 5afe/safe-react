@@ -5,7 +5,7 @@ on:
   push:
     branches:
       # this will run on the specified branch
-      - feature/desktop-app
+      - master
 
 env:
   REACT_APP_BLOCKNATIVE_KEY: ${{ secrets.REACT_APP_BLOCKNATIVE_KEY }}
