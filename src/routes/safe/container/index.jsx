@@ -7,7 +7,7 @@ import Page from '~/components/layout/Page'
 import { type Token } from '~/logic/tokens/store/model/token'
 import Layout from '~/routes/safe/components/Layout'
 import { useCheckForUpdates } from '~/routes/safe/container/Hooks/useCheckForUpdates'
-import { useLoadStore } from '~/routes/safe/container/Hooks/useLoadStore'
+import { useLoadSafe } from '~/routes/safe/container/Hooks/useLoadSafe'
 import { safeParamAddressFromStateSelector } from '~/routes/safe/store/selectors'
 
 type Action = 'Send' | 'Receive'
@@ -22,10 +22,9 @@ const INITIAL_STATE = {
 
 const SafeView = () => {
   const [state, setState] = useState(INITIAL_STATE)
-  const [safeLoaded, setSafeLoaded] = useState(false)
   const safeAddress = useSelector(safeParamAddressFromStateSelector)
 
-  useLoadStore({ setSafeLoaded, safeAddress })
+  const { safeLoaded } = useLoadSafe(safeAddress)
   useCheckForUpdates()
 
   const onShow = (action: Action) => () => {

@@ -1,5 +1,5 @@
 // @flow
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 
 import loadAddressBookFromStorage from '~/logic/addressBook/store/actions/loadAddressBookFromStorage'
@@ -8,13 +8,10 @@ import fetchLatestMasterContractVersion from '~/routes/safe/store/actions/fetchL
 import fetchSafe from '~/routes/safe/store/actions/fetchSafe'
 import fetchTransactions from '~/routes/safe/store/actions/fetchTransactions'
 
-type Props = {
-  setSafeLoaded: Function,
-  safeAddress: string,
-}
-
-export const useLoadStore = ({ safeAddress, setSafeLoaded }: Props) => {
+export const useLoadSafe = (safeAddress: ?string) => {
+  const [safeLoaded, setSafeLoaded] = useState(false)
   const dispatch = useDispatch()
+
   useEffect(() => {
     const fetchData = () => {
       if (safeAddress) {
@@ -30,4 +27,8 @@ export const useLoadStore = ({ safeAddress, setSafeLoaded }: Props) => {
     }
     fetchData()
   }, [safeAddress])
+
+  return {
+    safeLoaded,
+  }
 }
