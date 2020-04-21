@@ -36,6 +36,16 @@ export const getAddressBookListSelector: Selector<GlobalState, {}, List<AddressB
   },
 )
 
+export const nameFromAddressBookSelector = createSelector(
+  addressBookMapSelector,
+  safeParamAddressFromStateSelector,
+  (addressBook, address): string => {
+    const adbkEntry = addressBook.find((entry) => entry.address === address)
+
+    return adbkEntry ? adbkEntry.name : 'UNKNOWN'
+  },
+)
+
 export const getNameFromAddressBook = (userAddress: string): string | null => {
   if (!userAddress) {
     return null

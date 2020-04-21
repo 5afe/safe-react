@@ -1549,10 +1549,10 @@
   resolved "https://registry.yarnpkg.com/@nodelib/fs.stat/-/fs.stat-1.1.3.tgz#2b5a3ab3f918cca48a8c754c08168e3f03eba61b"
   integrity sha512-shAmDyaQC4H92APFoIaVDHCx5bStIocgvbwQyxPRrbUY20V1EYTbSDchWbuwlMG3V17cprZhA6+78JfB+3DTPw==
 
-"@openzeppelin/contracts@^2.5.0":
-  version "2.5.0"
-  resolved "https://registry.yarnpkg.com/@openzeppelin/contracts/-/contracts-2.5.0.tgz#e327a98ba1d26b7756ff62885a0aa0967a375449"
-  integrity sha512-t3jm8FrhL9tkkJTofkznTqo/XXdHi21w5yXwalEnaMOp22ZwZ0f/mmKdlgMMLPFa6bSVHbY88mKESwJT/7m5Lg==
+"@openzeppelin/contracts@3.0.0":
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/@openzeppelin/contracts/-/contracts-3.0.0.tgz#89bc0d32fc9eb257cf6499f2497a1b4a6715f186"
+  integrity sha512-u7oATjUK6jffDOoIjVQ7vJ2fnFKlfDS1CJzrMpp+YtGQ2fhdSk0kXjZTxk8Pj1SPVZRNES3yo0r144v8BsuRhQ==
 
 "@portis/eth-json-rpc-middleware@^4.1.2":
   version "4.1.2"
@@ -1713,10 +1713,10 @@
     lodash "^4.17.15"
     redent "^3.0.0"
 
-"@testing-library/react@10.0.2":
-  version "10.0.2"
-  resolved "https://registry.yarnpkg.com/@testing-library/react/-/react-10.0.2.tgz#8eca7aa52d810cf7150048a2829fdc487162006d"
-  integrity sha512-YT6Mw0oJz7R6vlEkmo1FlUD+K15FeXApOB5Ffm9zooFVnrwkt00w18dUJFMOh1yRp9wTdVRonbor7o4PIpFCmA==
+"@testing-library/react@10.0.3":
+  version "10.0.3"
+  resolved "https://registry.yarnpkg.com/@testing-library/react/-/react-10.0.3.tgz#7781adc75cce172f8cda28faa77be29c6270ab43"
+  integrity sha512-EVmd3ghDFBEjOSLnISUdi7OcLdP6tsqjmTprpMaBz5TreoM8jnxGKIPkLD579CE0LYGqK01iffQiy6wwW/RUig==
   dependencies:
     "@babel/runtime" "^7.9.2"
     "@testing-library/dom" "^7.1.0"
@@ -3410,6 +3410,13 @@ babel-plugin-check-es2015-constants@^6.22.0:
   integrity sha1-NRV7EBQm/S/9PaP3XH0ekYNbv4o=
   dependencies:
     babel-runtime "^6.22.0"
+
+babel-plugin-dynamic-import-node@2.3.2:
+  version "2.3.2"
+  resolved "https://registry.yarnpkg.com/babel-plugin-dynamic-import-node/-/babel-plugin-dynamic-import-node-2.3.2.tgz#14fb5accb300f9aac0151949f6192259f1403c4a"
+  integrity sha512-yvczAMjbc73xira9yTyF1XnEmkX8QwlUhmxuhimeMUeAaA6s7busTPRVDzhVG7eeBdNcRiZ/mAwFrJ9It4vQcg==
+  dependencies:
+    object.assign "^4.1.0"
 
 babel-plugin-dynamic-import-node@^2.3.0:
   version "2.3.0"

@@ -9,6 +9,7 @@ import { makeConfirmation } from '../models/confirmation'
 import updateTransaction from './updateTransaction'
 
 import { onboardUser } from '~/components/ConnectButton'
+import { nameFromAddressBookSelector } from '~/logic/addressBook/store/selectors/index'
 import { getGnosisSafeInstanceAt } from '~/logic/contracts/safeContracts'
 import { type NotificationsQueue, getNotificationsFromTxType, showSnackbar } from '~/logic/notifications'
 import {
@@ -167,19 +168,25 @@ const createTransaction = ({
       .then((receipt) => {
         console.log(receipt)
         closeSnackbar(pendingExecutionKey)
-        const safeTxHash = isExecution ? 'lol' : receipt.events.ApproveHash.returnValues[0]
+        const safeTxHash = isExecution
+          ? receipt.events.ExecutionSuccess.returnValues[0]
+          : receipt.events.ApproveHash.returnValues[0]
 
         dispatch(
           updateTransaction({
             safeAddress,
             transaction: {
               safeTxHash,
+              isExecuted: isExecution,
+              isSuccessful: isExecution ? true : null,
+              executionTxHash: isExecution ? receipt.transactionHash : null,
+              executor: isExecution ? from : null,
               confirmations: List([
                 makeConfirmation({
                   type: 'confirmation',
                   hash: receipt.transactionHash,
                   signature: sigs,
-                  owner: { address: '0x000', name: 'Test' },
+                  owner: { address: from, name: nameFromAddressBookSelector(state, from) },
                 }),
               ]),
             },
