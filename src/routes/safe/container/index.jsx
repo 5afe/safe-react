@@ -24,7 +24,7 @@ const SafeView = () => {
   const [state, setState] = useState(INITIAL_STATE)
   const safeAddress = useSelector(safeParamAddressFromStateSelector)
 
-  const { safeLoaded } = useLoadSafe(safeAddress)
+  useLoadSafe(safeAddress)
   useCheckForUpdates()
 
   const onShow = (action: Action) => () => {
@@ -64,18 +64,14 @@ const SafeView = () => {
 
   return (
     <Page>
-      {!safeLoaded ? null : (
-        <>
-          <Layout
-            hideSendFunds={hideSendFunds}
-            onHide={onHide}
-            onShow={onShow}
-            sendFunds={sendFunds}
-            showReceive={showReceive}
-            showSendFunds={showSendFunds}
-          />
-        </>
-      )}
+      <Layout
+        hideSendFunds={hideSendFunds}
+        onHide={onHide}
+        onShow={onShow}
+        sendFunds={sendFunds}
+        showReceive={showReceive}
+        showSendFunds={showSendFunds}
+      />
     </Page>
   )
 }
