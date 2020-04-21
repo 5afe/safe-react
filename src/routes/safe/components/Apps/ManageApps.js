@@ -49,6 +49,12 @@ type Props = {
   onAppToggle: (appId: string, enabled: boolean) => void,
 }
 
+const urlValidator = (value: string) => {
+  return /(?:^|[ \t])((https?:\/\/)?(?:localhost|[\w-]+(?:\.[\w-]+)+)(:\d+)?(\/\S*)?)/gm.test(value)
+    ? undefined
+    : 'Please, provide a valid url'
+}
+
 const ManageApps = ({ appList, onAppAdded, onAppToggle }: Props) => {
   const [isOpen, setIsOpen] = useState(false)
 
@@ -65,12 +71,6 @@ const ManageApps = ({ appList, onAppAdded, onAppToggle }: Props) => {
   }
 
   const cleanAppInfo = () => setAppInfo(APP_INFO)
-
-  const urlValidator = (value: string) => {
-    return /(?:^|[ \t])((https?:\/\/)?(?:localhost|[\w-]+(?:\.[\w-]+)+)(:\d+)?(\/\S*)?)/gm.test(value)
-      ? undefined
-      : 'Please, provide a valid url'
-  }
 
   const safeAppValidator = async (value) => {
     const appInfo = await getAppInfoFromUrl(value)
@@ -132,10 +132,10 @@ const ManageApps = ({ appList, onAppAdded, onAppToggle }: Props) => {
 
             <Field
               component={StyledCheckbox}
-              label="I agree to use this app at my own risk"
+              label="This app is not a Gnosis product and I agree to use this app at my own risk."
               name="agreed"
               type="checkbox"
-              validate={(value) => (value === true ? undefined : 'Required')}
+              validate={required}
             />
           </>
         )}
