@@ -23,7 +23,7 @@ const Root = () => {
     <Provider store={store}>
       <MuiThemeProvider theme={theme}>
         <ConnectedRouter history={history}>
-          <PageFrame>{wrapInSuspense(<AppRoutes safeLoaded={true} />, <Loader />)}</PageFrame>
+          <PageFrame>{wrapInSuspense(<AppRoutes />, <Loader />)}</PageFrame>
         </ConnectedRouter>
       </MuiThemeProvider>
     </Provider>
