@@ -154,23 +154,24 @@ function Apps({
           body={
             <>
               <Text size="md">
-                You are now accessing third-party Apps, which we do not own, control, maintain or audit. We are not
-                liable for any loss you may suffer in connection with interacting with the Apps, which is at your own
-                risk. Our Terms contain more detailed provisions binding on you in relation thereto.
+                You are now accessing third-party apps, which we do not own, control, maintain or audit. We are not
+                liable for any loss you may suffer in connection with interacting with the apps, which is at your own
+                risk. You must read our Terms, which contain more detailed provisions binding on you relating to the
+                apps.
               </Text>
               <br />
               <Text size="md">
-                I have read, understand, and agree to the above and Gnosis’{' '}
+                I have read and understood the{' '}
                 <a href="https://gnosis-safe.io/terms" rel="noopener noreferrer" target="_blank">
                   Terms
                 </a>{' '}
-                .
+                and this Disclaimer, and agree to be bound by .
               </Text>
             </>
           }
           onCancel={redirectToBalance}
           onConfirm={onAcceptLegalDisclaimer}
-          title="Legal Disclaimer"
+          title="Disclaimer"
         />
       )
     }
@@ -192,7 +193,7 @@ function Apps({
           id="iframeId"
           ref={iframeRef}
           shouldDisplay={!appIsLoading}
-          src={getSelectedApp().url}
+          src={`${getSelectedApp().url}?timestamp=${Date.now()}`}
           title={getSelectedApp().name}
         />
       </>
@@ -399,7 +400,7 @@ function Apps({
           color="secondary"
           iconSize="sm"
           iconType="info"
-          text="These are third-party integrations, which means they are not owned, controlled, maintained or audited by Gnosis."
+          text="These are third-party apps, which means they are not owned, controlled, maintained or audited by Gnosis. Interacting with the apps is at your own risk."
           textSize="sm"
         />
       </Centered>
