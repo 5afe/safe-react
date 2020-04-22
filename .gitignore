@@ -7,3 +7,5 @@ yarn-error.log
 .idea/
 dist
 electron-builder.yml
+.yalc/
+yalc.lock
