@@ -4,6 +4,7 @@ import type { Dispatch as ReduxDispatch } from 'redux'
 
 import fetchCurrencySelectedValue from '~/logic/currencyValues/store/actions/fetchCurrencySelectedValue'
 import { CURRENCY_SELECTED_KEY } from '~/logic/currencyValues/store/actions/saveCurrencySelected'
+import { setCurrencyRate } from '~/logic/currencyValues/store/actions/setCurrencyRate'
 import { setCurrencySelected } from '~/logic/currencyValues/store/actions/setCurrencySelected'
 import { AVAILABLE_CURRENCIES } from '~/logic/currencyValues/store/model/currencyValues'
 import type { GlobalState } from '~/store'
@@ -14,7 +15,10 @@ export const fetchCurrencyValues = () => async (dispatch: ReduxDispatch<GlobalSt
     const currencyStored = await loadFromStorage(CURRENCY_SELECTED_KEY)
 
     if (!currencyStored) {
-      return dispatch(setCurrencySelected(AVAILABLE_CURRENCIES.USD))
+      return batch(() => {
+        dispatch(setCurrencySelected(AVAILABLE_CURRENCIES.USD))
+        dispatch(setCurrencyRate(1))
+      })
     }
 
     const { currencyValueSelected } = currencyStored

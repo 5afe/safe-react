@@ -54,7 +54,7 @@ export const makeBalanceCurrency = Record({
 
 export type CurrencyValuesProps = {
   currencyValueSelected: $Keys<typeof AVAILABLE_CURRENCIES>,
-  currencyRate: '1',
+  currencyRate: string,
   currencyValuesList: BalanceCurrencyType[],
 }
 
