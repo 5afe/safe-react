@@ -77,7 +77,7 @@ const Balances = (props: Props) => {
       history.replace(`${SAFELIST_ADDRESS}/${address}/balances`)
     }
 
-    const erc721Enabled = featuresEnabled.includes('ERC721')
+    const erc721Enabled = featuresEnabled && featuresEnabled.includes('ERC721')
 
     if (erc721Enabled) {
       subMenuOptions.push({
@@ -98,7 +98,7 @@ const Balances = (props: Props) => {
       erc721Enabled,
       subMenuOptions,
     }))
-  }, [history.location.pathname])
+  }, [history.location.pathname, featuresEnabled])
 
   const onShow = (action: Action) => {
     setState((prevState) => ({ ...prevState, [`show${action}`]: true }))
