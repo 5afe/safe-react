@@ -1,5 +1,5 @@
 // @flow
-import { withStyles } from '@material-ui/core/styles'
+import { makeStyles } from '@material-ui/core/styles'
 import React, { useState } from 'react'
 import { useSelector } from 'react-redux'
 import { Redirect, Route, Switch, withRouter } from 'react-router-dom'
@@ -45,8 +45,11 @@ type Props = {
   history: Object,
 }
 
+const useStyles = makeStyles(styles)
+
 const Layout = (props: Props) => {
-  const { classes, hideSendFunds, match, onHide, onShow, sendFunds, showReceive, showSendFunds } = props
+  const classes = useStyles()
+  const { hideSendFunds, match, onHide, onShow, sendFunds, showReceive, showSendFunds } = props
 
   const [modal, setModal] = useState({
     isOpen: false,
@@ -120,4 +123,4 @@ const Layout = (props: Props) => {
   )
 }
 
-export default withStyles(styles)(withRouter(Layout))
+export default withRouter(Layout)

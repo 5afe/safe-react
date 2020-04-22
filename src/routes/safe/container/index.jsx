@@ -28,37 +28,37 @@ const SafeView = () => {
   useCheckForUpdates()
 
   const onShow = (action: Action) => () => {
-    setState({
-      ...state,
+    setState((prevState) => ({
+      ...prevState,
       [`show${action}`]: true,
-    })
+    }))
   }
 
   const onHide = (action: Action) => () => {
-    setState({
-      ...state,
+    setState((prevState) => ({
+      ...prevState,
       [`show${action}`]: false,
-    })
+    }))
   }
 
   const showSendFunds = (token: Token) => {
-    setState({
-      ...state,
+    setState((prevState) => ({
+      ...prevState,
       sendFunds: {
         isOpen: true,
         selectedToken: token,
       },
-    })
+    }))
   }
 
   const hideSendFunds = () => {
-    setState({
-      ...state,
+    setState((prevState) => ({
+      ...prevState,
       sendFunds: {
         isOpen: false,
         selectedToken: undefined,
       },
-    })
+    }))
   }
   const { sendFunds, showReceive } = state
 
