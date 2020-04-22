@@ -15,7 +15,7 @@ import Hairline from '~/components/layout/Hairline'
 import Paragraph from '~/components/layout/Paragraph'
 import Row from '~/components/layout/Row'
 import { upgradeSafeToLatestVersion } from '~/logic/safe/utils/upgradeSafe'
-import createTransaction from '~/routes/safe/store/actions/createTransaction'
+import createTransaction from '~/routes/safe/store/actions/transactions/createTransaction'
 
 type Props = {
   onClose: Function,

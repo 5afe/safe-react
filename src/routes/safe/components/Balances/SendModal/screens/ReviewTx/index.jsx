@@ -31,7 +31,7 @@ import { getWeb3 } from '~/logic/wallets/getWeb3'
 import SafeInfo from '~/routes/safe/components/Balances/SendModal/SafeInfo'
 import { setImageToPlaceholder } from '~/routes/safe/components/Balances/utils'
 import { extendedSafeTokensSelector } from '~/routes/safe/container/selector'
-import createTransaction from '~/routes/safe/store/actions/createTransaction'
+import createTransaction from '~/routes/safe/store/actions/transactions/createTransaction'
 import { safeSelector } from '~/routes/safe/store/selectors'
 import { sm } from '~/theme/variables'
 

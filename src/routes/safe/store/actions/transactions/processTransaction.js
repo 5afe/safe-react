@@ -1,104 +1,81 @@
 // @flow
-import { push } from 'connected-react-router'
-import { List } from 'immutable'
-import type { GetState, Dispatch as ReduxDispatch } from 'redux'
+import type { Dispatch as ReduxDispatch } from 'redux'
 import semverSatisfies from 'semver/functions/satisfies'
 
-import { makeConfirmation } from '../models/confirmation'
-
-import updateTransaction from './updateTransaction'
-
-import { onboardUser } from '~/components/ConnectButton'
-import { nameFromAddressBookSelector } from '~/logic/addressBook/store/selectors/index'
 import { getGnosisSafeInstanceAt } from '~/logic/contracts/safeContracts'
 import { type NotificationsQueue, getNotificationsFromTxType, showSnackbar } from '~/logic/notifications'
+import { generateSignaturesFromTxConfirmations } from '~/logic/safe/safeTxSigner'
 import {
-  CALL,
   type NotifiedTransaction,
   getApprovalTransaction,
   getExecutionTransaction,
   saveTxToHistory,
 } from '~/logic/safe/transactions'
-import { estimateSafeTxGas } from '~/logic/safe/transactions/gasNew'
 import { SAFE_VERSION_FOR_OFFCHAIN_SIGNATURES, tryOffchainSigning } from '~/logic/safe/transactions/offchainSigner'
 import { getCurrentSafeVersion } from '~/logic/safe/utils/safeVersion'
-import { ZERO_ADDRESS } from '~/logic/wallets/ethAddresses'
-import { EMPTY_DATA } from '~/logic/wallets/ethTransactions'
 import { providerSelector } from '~/logic/wallets/store/selectors'
-import { SAFELIST_ADDRESS } from '~/routes/routes'
-import fetchTransactions from '~/routes/safe/store/actions/fetchTransactions'
+import fetchSafe from '~/routes/safe/store/actions/fetchSafe'
+import fetchTransactions from '~/routes/safe/store/actions/transactions/fetchTransactions'
 import { getLastTx, getNewTxNonce, shouldExecuteTransaction } from '~/routes/safe/store/actions/utils'
+import { type Transaction } from '~/routes/safe/store/models/transaction'
 import { type GlobalState } from '~/store'
 import { getErrorMessage } from '~/test/utils/ethereumErrors'
 
-export type CreateTransactionArgs = {
+type ProcessTransactionArgs = {
   safeAddress: string,
-  to: string,
-  valueInWei: string,
-  txData: string,
-  notifiedTransaction: $Values<NotifiedTransaction>,
+  tx: Transaction,
+  userAddress: string,
+  notifiedTransaction: NotifiedTransaction,
   enqueueSnackbar: Function,
   closeSnackbar: Function,
-  txNonce?: number,
-  operation?: 0 | 1,
-  navigateToTransactionsTab?: boolean,
-  origin?: string | null,
+  approveAndExecute?: boolean,
 }
 
-const createTransaction = ({
-  safeAddress,
-  to,
-  valueInWei,
-  txData = EMPTY_DATA,
-  notifiedTransaction,
-  enqueueSnackbar,
+const processTransaction = ({
+  approveAndExecute,
   closeSnackbar,
-  txNonce,
-  operation = CALL,
-  navigateToTransactionsTab = true,
-  origin = null,
-}: CreateTransactionArgs) => async (dispatch: ReduxDispatch<GlobalState>, getState: GetState<GlobalState>) => {
+  enqueueSnackbar,
+  notifiedTransaction,
+  safeAddress,
+  tx,
+  userAddress,
+}: ProcessTransactionArgs) => async (dispatch: ReduxDispatch<GlobalState>, getState: Function) => {
   const state: GlobalState = getState()
-
-  if (navigateToTransactionsTab) {
-    dispatch(push(`${SAFELIST_ADDRESS}/${safeAddress}/transactions`))
-  }
-
-  const ready = await onboardUser()
-  if (!ready) return
 
   const { account: from, hardwareWallet, smartContractWallet } = providerSelector(state)
   const safeInstance = await getGnosisSafeInstanceAt(safeAddress)
   const lastTx = await getLastTx(safeAddress)
-  const nonce = await getNewTxNonce(txNonce, lastTx, safeInstance)
-  const isExecution = await shouldExecuteTransaction(safeInstance, nonce, lastTx)
+  const nonce = await getNewTxNonce(null, lastTx, safeInstance)
+  const isExecution = approveAndExecute || (await shouldExecuteTransaction(safeInstance, nonce, lastTx))
   const safeVersion = await getCurrentSafeVersion(safeInstance)
-  const safeTxGas = await estimateSafeTxGas(safeInstance, safeAddress, txData, to, valueInWei, operation)
 
+  let sigs = generateSignaturesFromTxConfirmations(tx.confirmations, approveAndExecute && userAddress)
   // https://docs.gnosis.io/safe/docs/docs5/#pre-validated-signatures
-  const sigs = `0x000000000000000000000000${from.replace(
-    '0x',
-    '',
-  )}000000000000000000000000000000000000000000000000000000000000000001`
+  if (!sigs) {
+    sigs = `0x000000000000000000000000${from.replace(
+      '0x',
+      '',
+    )}000000000000000000000000000000000000000000000000000000000000000001`
+  }
 
-  const notificationsQueue: NotificationsQueue = getNotificationsFromTxType(notifiedTransaction, origin)
+  const notificationsQueue: NotificationsQueue = getNotificationsFromTxType(notifiedTransaction, tx.origin)
   const beforeExecutionKey = showSnackbar(notificationsQueue.beforeExecution, enqueueSnackbar, closeSnackbar)
   let pendingExecutionKey
 
   let txHash
-  let tx
+  let transaction
   const txArgs = {
     safeInstance,
-    to,
-    valueInWei,
-    data: txData,
-    operation,
-    nonce,
-    safeTxGas,
-    baseGas: 0,
-    gasPrice: 0,
-    gasToken: ZERO_ADDRESS,
-    refundReceiver: ZERO_ADDRESS,
+    to: tx.recipient,
+    valueInWei: tx.value,
+    data: tx.data,
+    operation: tx.operation,
+    nonce: tx.nonce,
+    safeTxGas: tx.safeTxGas,
+    baseGas: tx.baseGas,
+    gasPrice: tx.gasPrice || '0',
+    gasToken: tx.gasToken,
+    refundReceiver: tx.refundReceiver,
     sender: from,
     sigs,
   }
@@ -111,7 +88,7 @@ const createTransaction = ({
     // Couldn't find an issue for trezor but the error is almost the same
     const canTryOffchainSigning =
       !isExecution && !smartContractWallet && semverSatisfies(safeVersion, SAFE_VERSION_FOR_OFFCHAIN_SIGNATURES)
-    if (false) {
+    if (canTryOffchainSigning) {
       const signature = await tryOffchainSigning({ ...txArgs, safeAddress }, hardwareWallet)
 
       if (signature) {
@@ -129,7 +106,7 @@ const createTransaction = ({
       }
     }
 
-    tx = isExecution ? await getExecutionTransaction(txArgs) : await getApprovalTransaction(txArgs)
+    transaction = isExecution ? await getExecutionTransaction(txArgs) : await getApprovalTransaction(txArgs)
 
     const sendParams = { from, value: 0 }
 
@@ -143,7 +120,7 @@ const createTransaction = ({
       sendParams.gas = '7000000'
     }
 
-    await tx
+    await transaction
       .send(sendParams)
       .once('transactionHash', async (hash) => {
         txHash = hash
@@ -155,43 +132,17 @@ const createTransaction = ({
           await saveTxToHistory({
             ...txArgs,
             txHash,
-            origin,
           })
-          await dispatch(fetchTransactions(safeAddress))
+          dispatch(fetchTransactions(safeAddress))
         } catch (err) {
           console.error(err)
         }
       })
       .on('error', (error) => {
-        console.error('Tx error: ', error)
+        console.error('Processing transaction error: ', error)
       })
       .then((receipt) => {
-        console.log(receipt)
         closeSnackbar(pendingExecutionKey)
-        const safeTxHash = isExecution
-          ? receipt.events.ExecutionSuccess.returnValues[0]
-          : receipt.events.ApproveHash.returnValues[0]
-
-        dispatch(
-          updateTransaction({
-            safeAddress,
-            transaction: {
-              safeTxHash,
-              isExecuted: isExecution,
-              isSuccessful: isExecution ? true : null,
-              executionTxHash: isExecution ? receipt.transactionHash : null,
-              executor: isExecution ? from : null,
-              confirmations: List([
-                makeConfirmation({
-                  type: 'confirmation',
-                  hash: receipt.transactionHash,
-                  signature: sigs,
-                  owner: { address: from, name: nameFromAddressBookSelector(state, from) },
-                }),
-              ]),
-            },
-          }),
-        )
 
         showSnackbar(
           isExecution
@@ -200,8 +151,11 @@ const createTransaction = ({
           enqueueSnackbar,
           closeSnackbar,
         )
-
         dispatch(fetchTransactions(safeAddress))
+
+        if (isExecution) {
+          dispatch(fetchSafe(safeAddress))
+        }
 
         return receipt.transactionHash
       })
@@ -211,14 +165,12 @@ const createTransaction = ({
     closeSnackbar(pendingExecutionKey)
     showSnackbar(notificationsQueue.afterExecutionError, enqueueSnackbar, closeSnackbar)
 
-    const executeDataUsedSignatures = safeInstance.contract.methods
-      .execTransaction(to, valueInWei, txData, operation, 0, 0, 0, ZERO_ADDRESS, ZERO_ADDRESS, sigs)
-      .encodeABI()
-    const errMsg = await getErrorMessage(safeInstance.address, 0, executeDataUsedSignatures, from)
-    console.error(`Error creating the TX: ${errMsg}`)
+    const executeData = safeInstance.contract.methods.approveHash(txHash).encodeABI()
+    const errMsg = await getErrorMessage(safeInstance.address, 0, executeData, from)
+    console.error(`Error executing the TX: ${errMsg}`)
   }
 
   return txHash
 }
 
-export default createTransaction
+export default processTransaction
