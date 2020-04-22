@@ -8,6 +8,9 @@ import fetchTokenCurrenciesBalances from '~/logic/currencyValues/api/fetchTokenC
 import { setCurrencyBalances } from '~/logic/currencyValues/store/actions/setCurrencyBalances'
 import { AVAILABLE_CURRENCIES, makeBalanceCurrency } from '~/logic/currencyValues/store/model/currencyValues'
 import { CURRENCY_VALUES_KEY } from '~/logic/currencyValues/store/reducer/currencyValues'
+import addTokens from '~/logic/tokens/store/actions/saveTokens'
+import { makeToken } from '~/logic/tokens/store/model/token'
+import { TOKEN_REDUCER_ID } from '~/logic/tokens/store/reducer/tokens'
 import updateSafe from '~/routes/safe/store/actions/updateSafe'
 import { SAFE_REDUCER_ID } from '~/routes/safe/store/reducer/safe'
 import { type GetState, type GlobalState } from '~/store'
@@ -21,6 +24,12 @@ const fetchSafeTokens = (safeAddress: string) => async (dispatch: ReduxDispatch<
     const result = await fetchTokenCurrenciesBalances(safeAddress)
     const state = getState()
     const safe = state[SAFE_REDUCER_ID].getIn([SAFE_REDUCER_ID, safeAddress])
+    const currentTokens = state[TOKEN_REDUCER_ID]
+
+    if (!safe) {
+      return
+    }
+
     const currentEthBalance = safe.get('ethBalance')
     const safeBalances = safe.get('balances')
     const alreadyActiveTokens = safe.get('activeTokens')
@@ -28,12 +37,16 @@ const fetchSafeTokens = (safeAddress: string) => async (dispatch: ReduxDispatch<
     const currencyValues = state[CURRENCY_VALUES_KEY]
     const storedCurrencyBalances = currencyValues.get('currencyBalances')
 
-    const { balances, currencyList, ethBalance } = result.data.reduce(
+    const { balances, currencyList, ethBalance, tokens } = result.data.reduce(
       (acc, { balance, balanceUsd, token, tokenAddress }) => {
         if (tokenAddress === null) {
           acc.ethBalance = humanReadableBalance(balance, 18)
         } else {
           acc.balances = acc.balances.merge({ [tokenAddress]: humanReadableBalance(balance, token.decimals) })
+
+          if (currentTokens && !currentTokens.get(tokenAddress)) {
+            acc.tokens = acc.tokens.push(makeToken({ address: tokenAddress, ...token }))
+          }
         }
 
         acc.currencyList = acc.currencyList.push(
@@ -51,6 +64,7 @@ const fetchSafeTokens = (safeAddress: string) => async (dispatch: ReduxDispatch<
         balances: Map(),
         currencyList: List(),
         ethBalance: '0',
+        tokens: List(),
       },
     )
 
@@ -67,11 +81,14 @@ const fetchSafeTokens = (safeAddress: string) => async (dispatch: ReduxDispatch<
 
     const updateCurrencies = currencyList.equals(storedCurrencyBalances) ? noFunc : setCurrencyBalances(currencyList)
 
+    const updateTokens = tokens.size === 0 ? noFunc : addTokens(tokens)
+
     batch(() => {
       dispatch(updateActiveTokens)
       dispatch(updateBalances)
       dispatch(updateEthBalance)
       dispatch(updateCurrencies)
+      dispatch(updateTokens)
     })
   } catch (err) {
     console.error('Error fetching active token list', err)
