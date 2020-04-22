@@ -15,7 +15,7 @@ export const Wrapper = styled.div`
 export const Nav = styled.div`
   grid-column: 1/3;
   grid-row: 1;
-  margin: 8px 0;
+  margin: 0;
   padding: 16px 0;
   box-sizing: border-box;
   display: flex;
