@@ -53,8 +53,8 @@ const METHOD_TO_ID = {
   '0x694e80c3': SAFE_METHODS_NAMES.CHANGE_THRESHOLD,
 }
 
-export const decodeParamsFromSafeMethod = async (data: string) => {
-  const web3 = await getWeb3()
+export const decodeParamsFromSafeMethod = (data: string) => {
+  const web3 = getWeb3()
   const [methodId, params] = [data.slice(0, 10), data.slice(10)]
 
   switch (methodId) {
