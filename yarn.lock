@@ -1708,7 +1708,7 @@
     web3-eth-contract "^1.2.6"
     web3-utils "^1.2.6"
 
-"@toruslabs/torus-embed@^1.2.4":
+"@toruslabs/torus-embed@^1.3.0":
   version "1.3.0"
   resolved "https://registry.yarnpkg.com/@toruslabs/torus-embed/-/torus-embed-1.3.0.tgz#46c7b4b0198a4acad1aa924cfb4c00cbd3b59244"
   integrity sha512-oZO7pFYjQCAXD/MvnhBEYPFf3rKt6eabT3l6f3OOlvOMW3LUxYOGnILgRx4sNwL9RR2YfU2qN5NbtQ3nUJcNFA==
@@ -3996,15 +3996,15 @@ bn.js@^5.1.1:
   resolved "https://registry.yarnpkg.com/bn.js/-/bn.js-5.1.1.tgz#48efc4031a9c4041b9c99c6941d903463ab62eb5"
   integrity sha512-IUTD/REb78Z2eodka1QZyyEk66pciRcP6Sroka0aI3tG/iwIdYLrBD62RsubR7vqdt3WyX8p4jxeatzmRSphtA==
 
-bnc-onboard@1.7.5:
-  version "1.7.5"
-  resolved "https://registry.yarnpkg.com/bnc-onboard/-/bnc-onboard-1.7.5.tgz#e45ae51101e66b29935c16696e1d23478f5a5c4a"
-  integrity sha512-cxxsMPN2yy4EzaWXJk5TS9A7YYtolE4cuoxjB40Rm9nuP6k03zp1RST3pMMHn7zTXKGfofv99Q+YDJtYrOyCKg==
+bnc-onboard@1.7.6:
+  version "1.7.6"
+  resolved "https://registry.yarnpkg.com/bnc-onboard/-/bnc-onboard-1.7.6.tgz#2eb87a824342fe1a3da08798e30f5ce08b7a1b6d"
+  integrity sha512-8YMaMBzCYWrkNwZEt1zIZ1Yco9kYCXvn2tQlRRoz+m0LSXvXYmf6FlTB9KF30VtbXWTa+agebcoJzjYkwTrREA==
   dependencies:
     "@ledgerhq/hw-app-eth" "^5.7.0"
     "@ledgerhq/hw-transport-u2f" "^5.7.0"
     "@portis/web3" "^2.0.0-beta.42"
-    "@toruslabs/torus-embed" "^1.2.4"
+    "@toruslabs/torus-embed" "^1.3.0"
     "@unilogin/provider" "^0.5.21"
     "@walletconnect/web3-provider" "^1.0.0-beta.75"
     authereum "^0.0.4-beta.131"
