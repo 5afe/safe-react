@@ -16,6 +16,7 @@ import { SafeDetailsIcon } from './assets/icons/SafeDetailsIcon'
 import RemoveSafeIcon from './assets/icons/bin.svg'
 import { styles } from './style'
 
+import Loader from '~/components/Loader'
 import Block from '~/components/layout/Block'
 import ButtonLink from '~/components/layout/ButtonLink'
 import Col from '~/components/layout/Col'
@@ -49,20 +50,23 @@ const Settings = (props: Props) => {
   const addressBook = useSelector(getAddressBook)
 
   const handleChange = (menuOptionIndex) => () => {
-    setState({ ...state, menuOptionIndex })
+    setState((prevState) => ({ ...prevState, menuOptionIndex }))
   }
 
   const onShow = (action: Action) => () => {
-    setState(() => ({ ...state, [`show${action}`]: true }))
+    setState((prevState) => ({ ...prevState, [`show${action}`]: true }))
   }
 
   const onHide = (action: Action) => () => {
-    setState(() => ({ ...state, [`show${action}`]: false }))
+    setState((prevState) => ({ ...prevState, [`show${action}`]: false }))
   }
 
   const { menuOptionIndex, showRemoveSafe } = state
   const { classes } = props
-  return (
+
+  return !owners ? (
+    <Loader />
+  ) : (
     <>
       <Row className={classes.message}>
         <ButtonLink className={classes.removeSafeBtn} color="error" onClick={onShow('RemoveSafe')} size="lg">
