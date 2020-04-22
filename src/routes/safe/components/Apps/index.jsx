@@ -1,5 +1,5 @@
 // @flow
-import { Card, FixedDialog, FixedIcon, IconText, Menu, Text, Title } from '@gnosis.pm/safe-react-components'
+import { Card, FixedDialog, FixedIcon, IconText, Menu, Text, Title } from '@gnosis.pm/ui-components'
 import { withSnackbar } from 'notistack'
 import React, { useCallback, useEffect, useState } from 'react'
 import { withRouter } from 'react-router-dom'

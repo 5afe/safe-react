@@ -1,5 +1,5 @@
 // @flow
-import { ButtonLink, Checkbox, ManageListModal, Text, TextField } from '@gnosis.pm/safe-react-components'
+import { ButtonLink, Checkbox, ManageListModal, Text, TextField } from '@gnosis.pm/ui-components'
 import React, { useState } from 'react'
 import { FormSpy } from 'react-final-form'
 import styled from 'styled-components'
