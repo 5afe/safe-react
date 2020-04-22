@@ -229,12 +229,6 @@ export const safeBlacklistedAssetsSelector: OutputSelector<GlobalState, RouterPr
   },
 )
 
-export const safeActiveTokensSelectorBySafe = (safeAddress: string, safes: Map<string, Safe>): List<string> =>
-  safes.get(safeAddress).get('activeTokens')
-
-export const safeBlacklistedTokensSelectorBySafe = (safeAddress: string, safes: Map<string, Safe>): List<string> =>
-  safes.get(safeAddress).get('blacklistedTokens')
-
 export const safeActiveAssetsSelectorBySafe = (safeAddress: string, safes: Map<string, Safe>): List<string> =>
   safes.get(safeAddress).get('activeAssets')
 

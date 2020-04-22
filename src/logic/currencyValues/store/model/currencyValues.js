@@ -39,7 +39,7 @@ export const AVAILABLE_CURRENCIES = {
 }
 
 export type BalanceCurrencyType = {
-  currencyName: AVAILABLE_CURRENCIES,
+  currencyName: $Keys<typeof AVAILABLE_CURRENCIES>,
   tokenAddress: string,
   balanceInBaseCurrency: string,
   balanceInSelectedCurrency: string,
@@ -53,7 +53,8 @@ export const makeBalanceCurrency = Record({
 })
 
 export type CurrencyValuesProps = {
-  currencyValueSelected: AVAILABLE_CURRENCIES,
+  currencyValueSelected: $Keys<typeof AVAILABLE_CURRENCIES>,
+  currencyRate: '1',
   currencyValuesList: BalanceCurrencyType[],
 }
 
