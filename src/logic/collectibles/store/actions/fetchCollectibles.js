@@ -1,4 +1,5 @@
 // @flow
+import { batch } from 'react-redux'
 import type { Dispatch } from 'redux'
 
 import { getNetwork } from '~/config'
@@ -13,8 +14,10 @@ const fetchCollectibles = () => async (dispatch: Dispatch<GlobalState>, getState
   const source = getConfiguredSource()
   const collectibles = await source.fetchAllUserCollectiblesByCategoryAsync(safeAddress, network)
 
-  dispatch(addNftAssets(collectibles.nftAssets))
-  dispatch(addNftTokens(collectibles.nftTokens))
+  batch(() => {
+    dispatch(addNftAssets(collectibles.nftAssets))
+    dispatch(addNftTokens(collectibles.nftTokens))
+  })
 }
 
 export default fetchCollectibles

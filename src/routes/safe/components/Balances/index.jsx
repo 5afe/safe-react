@@ -57,8 +57,8 @@ const INITIAL_STATE: State = {
   showReceive: false,
 }
 
-const COINS_LOCATION_REGEX = /\/balances\/?$/
-const COLLECTIBLES_LOCATION_REGEX = /\/balances\/collectibles$/
+export const COINS_LOCATION_REGEX = /\/balances\/?$/
+export const COLLECTIBLES_LOCATION_REGEX = /\/balances\/collectibles$/
 
 const Balances = (props: Props) => {
   const [state, setState] = useState(INITIAL_STATE)
