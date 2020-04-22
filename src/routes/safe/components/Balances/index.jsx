@@ -57,24 +57,26 @@ const INITIAL_STATE: State = {
   showReceive: false,
 }
 
+const COINS_LOCATION_REGEX = /\/balances\/?$/
+const COLLECTIBLES_LOCATION_REGEX = /\/balances\/collectibles$/
+
 const Balances = (props: Props) => {
   const [state, setState] = useState(INITIAL_STATE)
 
   const address = useSelector(safeParamAddressFromStateSelector)
   const featuresEnabled = useSelector(safeFeaturesEnabledSelector)
+
   useFetchTokens()
 
   useEffect(() => {
-    const COINS_LOCATION_REGEX = /\/balances\/?$/
-    const COLLECTIBLES_LOCATION_REGEX = /\/balances\/collectibles$/
     const showCollectibles = COLLECTIBLES_LOCATION_REGEX.test(history.location.pathname)
     const showCoins = COINS_LOCATION_REGEX.test(history.location.pathname)
+    const subMenuOptions = [{ enabled: showCoins, legend: 'Coins', url: `${SAFELIST_ADDRESS}/${address}/balances` }]
 
     if (!showCollectibles && !showCoins) {
       history.replace(`${SAFELIST_ADDRESS}/${address}/balances`)
     }
 
-    const subMenuOptions = [{ enabled: showCoins, legend: 'Coins', url: `${SAFELIST_ADDRESS}/${address}/balances` }]
     const erc721Enabled = featuresEnabled.includes('ERC721')
 
     if (erc721Enabled) {
@@ -89,41 +91,41 @@ const Balances = (props: Props) => {
       }
     }
 
-    setState({
-      ...state,
+    setState((prevState) => ({
+      ...prevState,
       showCoins,
       showCollectibles,
       erc721Enabled,
       subMenuOptions,
-    })
-  }, [])
+    }))
+  }, [history.location.pathname])
 
   const onShow = (action: Action) => {
-    setState({ ...state, [`show${action}`]: true })
+    setState((prevState) => ({ ...prevState, [`show${action}`]: true }))
   }
 
   const onHide = (action: Action) => {
-    setState(() => ({ ...state, [`show${action}`]: false }))
+    setState((prevState) => ({ ...prevState, [`show${action}`]: false }))
   }
 
   const showSendFunds = (tokenAddress: string) => {
-    setState({
-      ...state,
+    setState((prevState) => ({
+      ...prevState,
       sendFunds: {
         isOpen: true,
         selectedToken: tokenAddress,
       },
-    })
+    }))
   }
 
   const hideSendFunds = () => {
-    setState({
-      ...state,
+    setState((prevState) => ({
+      ...prevState,
       sendFunds: {
         isOpen: false,
         selectedToken: undefined,
       },
-    })
+    }))
   }
 
   const {
