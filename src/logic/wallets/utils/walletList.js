@@ -16,6 +16,7 @@ const wallets = [
     preferred: true,
     infuraKey: process.env.REACT_APP_INFURA_TOKEN,
     desktop: true,
+    bridge: 'https://safe-walletconnect.gnosis.io/',
   },
   {
     walletName: 'trezor',
