@@ -56,6 +56,7 @@ deploy:
   skip_cleanup: true
   local_dir: build_webpack
   upload-dir: current/app
+  region: $AWS_DEFAULT_REGION
   on:
     branch: master
 
@@ -67,6 +68,7 @@ deploy:
   skip_cleanup: true
   local_dir: build_webpack
   upload-dir: releases/$TRAVIS_TAG
+  region: $AWS_DEFAULT_REGION
   on:
     tags: true
 - provider: script
