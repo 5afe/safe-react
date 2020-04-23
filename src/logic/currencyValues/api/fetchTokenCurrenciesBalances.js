@@ -10,7 +10,11 @@ const fetchTokenCurrenciesBalances = (safeAddress: string) => {
   const apiUrl = getTxServiceHost()
   const url = `${apiUrl}safes/${safeAddress}/balances/usd/`
 
-  return axios.get(url)
+  return axios.get(url, {
+    params: {
+      limit: 3000,
+    },
+  })
 }
 
 export default fetchTokenCurrenciesBalances

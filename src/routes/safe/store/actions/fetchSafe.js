@@ -1,8 +1,9 @@
 // @flow
+import GnosisSafeSol from '@gnosis.pm/safe-contracts/build/contracts/GnosisSafe.json'
 import { List } from 'immutable'
 import type { Dispatch as ReduxDispatch } from 'redux'
 
-import { getGnosisSafeInstanceAt } from '~/logic/contracts/safeContracts'
+import generateBatchRequests from '~/logic/contracts/generateBatchRequests'
 import { getLocalSafe, getSafeName } from '~/logic/safe/utils'
 import { enabledFeatures, safeNeedsUpdate } from '~/logic/safe/utils/safeVersion'
 import { sameAddress } from '~/logic/wallets/ethAddresses'
@@ -13,7 +14,7 @@ import removeSafeOwner from '~/routes/safe/store/actions/removeSafeOwner'
 import updateSafe from '~/routes/safe/store/actions/updateSafe'
 import { makeOwner } from '~/routes/safe/store/models/owner'
 import type { SafeProps } from '~/routes/safe/store/models/safe'
-import { type GlobalState } from '~/store/index'
+import { type GlobalState } from '~/store'
 
 const buildOwnersFrom = (
   safeOwners: string[],
@@ -37,14 +38,22 @@ const buildOwnersFrom = (
 
 export const buildSafe = async (safeAdd: string, safeName: string, latestMasterContractVersion: string) => {
   const safeAddress = getWeb3().utils.toChecksumAddress(safeAdd)
-  const gnosisSafe = await getGnosisSafeInstanceAt(safeAddress)
-  const ethBalance = await getBalanceInEtherOf(safeAddress)
 
-  const threshold = Number(await gnosisSafe.getThreshold())
-  const nonce = Number(await gnosisSafe.nonce())
-  const owners = List(buildOwnersFrom(await gnosisSafe.getOwners(), await getLocalSafe(safeAddress)))
-  const currentVersion = await gnosisSafe.VERSION()
-  const needsUpdate = await safeNeedsUpdate(currentVersion, latestMasterContractVersion)
+  const safeParams = ['getThreshold', 'nonce', 'VERSION', 'getOwners']
+  const [[thresholdStr, nonceStr, currentVersion, remoteOwners], localSafe, ethBalance] = await Promise.all([
+    generateBatchRequests({
+      abi: GnosisSafeSol.abi,
+      address: safeAddress,
+      methods: safeParams,
+    }),
+    getLocalSafe(safeAddress),
+    getBalanceInEtherOf(safeAddress),
+  ])
+
+  const threshold = Number(thresholdStr)
+  const nonce = Number(nonceStr)
+  const owners = List(buildOwnersFrom(remoteOwners, localSafe))
+  const needsUpdate = safeNeedsUpdate(currentVersion, latestMasterContractVersion)
   const featuresEnabled = enabledFeatures(currentVersion)
 
   const safe: SafeProps = {
@@ -65,24 +74,27 @@ export const buildSafe = async (safeAdd: string, safeName: string, latestMasterC
 export const checkAndUpdateSafe = (safeAdd: string) => async (dispatch: ReduxDispatch<*>) => {
   const safeAddress = getWeb3().utils.toChecksumAddress(safeAdd)
   // Check if the owner's safe did change and update them
-  const [gnosisSafe, localSafe] = await Promise.all([getGnosisSafeInstanceAt(safeAddress), getLocalSafe(safeAddress)])
-
-  const [remoteOwners, remoteNonce, remoteThreshold] = await Promise.all([
-    gnosisSafe.getOwners(),
-    gnosisSafe.nonce(),
-    gnosisSafe.getThreshold(),
+  const safeParams = ['getThreshold', 'nonce', 'getOwners']
+  const [[remoteThreshold, remoteNonce, remoteOwners], localSafe] = await Promise.all([
+    generateBatchRequests({
+      abi: GnosisSafeSol.abi,
+      address: safeAddress,
+      methods: safeParams,
+    }),
+    getLocalSafe(safeAddress),
   ])
+
   // Converts from [ { address, ownerName} ] to address array
   const localOwners = localSafe ? localSafe.owners.map((localOwner) => localOwner.address) : undefined
   const localThreshold = localSafe ? localSafe.threshold : undefined
   const localNonce = localSafe ? localSafe.nonce : undefined
 
-  if (localNonce !== remoteNonce.toNumber()) {
-    dispatch(updateSafe({ address: safeAddress, nonce: remoteNonce.toNumber() }))
+  if (localNonce !== Number(remoteNonce)) {
+    dispatch(updateSafe({ address: safeAddress, nonce: Number(remoteNonce) }))
   }
 
-  if (localThreshold !== remoteThreshold.toNumber()) {
-    dispatch(updateSafe({ address: safeAddress, threshold: remoteThreshold.toNumber() }))
+  if (localThreshold !== Number(remoteThreshold)) {
+    dispatch(updateSafe({ address: safeAddress, threshold: Number(remoteThreshold) }))
   }
 
   // If the remote owners does not contain a local address, we remove that local owner

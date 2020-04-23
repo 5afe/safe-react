@@ -4,6 +4,7 @@ import { withStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
 import QRCode from 'qrcode.react'
 import * as React from 'react'
+import { useSelector } from 'react-redux'
 
 import CopyBtn from '~/components/CopyBtn'
 import EtherscanBtn from '~/components/EtherscanBtn'
@@ -14,6 +15,7 @@ import Col from '~/components/layout/Col'
 import Hairline from '~/components/layout/Hairline'
 import Paragraph from '~/components/layout/Paragraph'
 import Row from '~/components/layout/Row'
+import { safeNameSelector, safeParamAddressFromStateSelector } from '~/routes/safe/store/selectors'
 import { lg, md, screenSm, secondaryText, sm } from '~/theme/variables'
 import { copyToClipboard } from '~/utils/clipboard'
 
@@ -75,53 +77,55 @@ const styles = () => ({
 type Props = {
   onClose: () => void,
   classes: Object,
-  safeName: string,
-  safeAddress: string,
 }
 
-const Receive = ({ classes, onClose, safeAddress, safeName }: Props) => (
-  <>
-    <Row align="center" className={classes.heading} grow>
-      <Paragraph className={classes.manage} noMargin size="xl" weight="bolder">
-        Receive funds
-      </Paragraph>
-      <IconButton disableRipple onClick={onClose}>
-        <Close className={classes.close} />
-      </IconButton>
-    </Row>
-    <Hairline />
-    <Paragraph className={classes.annotation} noMargin size="lg">
-      This is the address of your Safe. Deposit funds by scanning the QR code or copying the address below. Only send
-      ETH and ERC-20 tokens to this address!
-    </Paragraph>
-    <Col layout="column" middle="xs">
-      <Paragraph className={classes.safeName} noMargin size="lg" weight="bold">
-        {safeName}
-      </Paragraph>
-      <Block className={classes.qrContainer}>
-        <QRCode size={135} value={safeAddress} />
-      </Block>
-      <Block className={classes.addressContainer} justify="center">
-        <Identicon address={safeAddress} diameter={32} />
-        <Paragraph
-          className={classes.address}
-          onClick={() => {
-            copyToClipboard(safeAddress)
-          }}
-        >
-          {safeAddress}
+const Receive = ({ classes, onClose }: Props) => {
+  const safeAddress = useSelector(safeParamAddressFromStateSelector)
+  const safeName = useSelector(safeNameSelector)
+  return (
+    <>
+      <Row align="center" className={classes.heading} grow>
+        <Paragraph className={classes.manage} noMargin size="xl" weight="bolder">
+          Receive funds
         </Paragraph>
-        <CopyBtn content={safeAddress} />
-        <EtherscanBtn type="address" value={safeAddress} />
-      </Block>
-    </Col>
-    <Hairline />
-    <Row align="center" className={classes.buttonRow}>
-      <Button color="primary" minWidth={130} onClick={onClose} variant="contained">
-        Done
-      </Button>
-    </Row>
-  </>
-)
+        <IconButton disableRipple onClick={onClose}>
+          <Close className={classes.close} />
+        </IconButton>
+      </Row>
+      <Hairline />
+      <Paragraph className={classes.annotation} noMargin size="lg">
+        This is the address of your Safe. Deposit funds by scanning the QR code or copying the address below. Only send
+        ETH and ERC-20 tokens to this address!
+      </Paragraph>
+      <Col layout="column" middle="xs">
+        <Paragraph className={classes.safeName} noMargin size="lg" weight="bold">
+          {safeName}
+        </Paragraph>
+        <Block className={classes.qrContainer}>
+          <QRCode size={135} value={safeAddress} />
+        </Block>
+        <Block className={classes.addressContainer} justify="center">
+          <Identicon address={safeAddress} diameter={32} />
+          <Paragraph
+            className={classes.address}
+            onClick={() => {
+              copyToClipboard(safeAddress)
+            }}
+          >
+            {safeAddress}
+          </Paragraph>
+          <CopyBtn content={safeAddress} />
+          <EtherscanBtn type="address" value={safeAddress} />
+        </Block>
+      </Col>
+      <Hairline />
+      <Row align="center" className={classes.buttonRow}>
+        <Button color="primary" minWidth={130} onClick={onClose} variant="contained">
+          Done
+        </Button>
+      </Row>
+    </>
+  )
+}
 
 export default withStyles(styles)(Receive)
