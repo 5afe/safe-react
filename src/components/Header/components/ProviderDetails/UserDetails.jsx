@@ -166,7 +166,7 @@ const UserDetails = ({ classes, connected, network, onDisconnect, openDashboard,
       <Hairline margin="xs" />
       {openDashboard && (
         <Row className={classes.dashboard}>
-          <Button color="primary" fullWidth onClick={() => openDashboard()} size="medium" variant="contained">
+          <Button color="primary" fullWidth onClick={openDashboard} size="medium" variant="contained">
             <Paragraph className={classes.dashboardText} color="white" noMargin size="md">
               {upperFirst(provider)} Wallet
             </Paragraph>
