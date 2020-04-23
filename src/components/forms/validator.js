@@ -88,7 +88,10 @@ export const uniqueAddress = (addresses: string[] | List<string>) =>
     return addressAlreadyExists ? ADDRESS_REPEATED_ERROR : undefined
   })
 
-export const composeValidators = (...validators: Function[]): FieldValidator => (value: Field, values, meta) => {
+export const composeValidators = (...validators: Function[]): FieldValidator => (value: Field) =>
+  validators.reduce((error, validator) => error || validator(value), undefined)
+
+export const composeValidatorsApps = (...validators: Function[]): FieldValidator => (value: Field, values, meta) => {
   if (!meta.modified) {
     return
   }

@@ -9,7 +9,7 @@ import { getAppInfoFromUrl } from './utils'
 import Field from '~/components/forms/Field'
 import DebounceValidationField from '~/components/forms/Field/DebounceValidationField'
 import GnoForm from '~/components/forms/GnoForm'
-import { composeValidators, required } from '~/components/forms/validator'
+import { composeValidatorsApps, required } from '~/components/forms/validator'
 import Img from '~/components/layout/Img'
 import appsIconSvg from '~/routes/safe/components/Transactions/TxsTable/TxType/assets/appsIcon.svg'
 
@@ -120,7 +120,12 @@ const ManageApps = ({ appList, onAppAdded, onAppToggle }: Props) => {
               name="appUrl"
               placeholder="App URL"
               type="text"
-              validate={composeValidators(customRequiredValidator, urlValidator, uniqueAppValidator, safeAppValidator)}
+              validate={composeValidatorsApps(
+                customRequiredValidator,
+                urlValidator,
+                uniqueAppValidator,
+                safeAppValidator,
+              )}
             />
 
             <AppInfo>
