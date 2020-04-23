@@ -122,22 +122,10 @@ const extendedTransactionsSelector: Selector<
   safeTransactionsSelector,
   safeCancellationTransactionsSelector,
   safeIncomingTransactionsSelector,
-  getAddressBook,
-  (safe, userAddress, transactions, cancellationTransactions, incomingTransactions, addressBook) => {
+  (safe, userAddress, transactions, cancellationTransactions, incomingTransactions) => {
     const cancellationTransactionsByNonce = cancellationTransactions.reduce((acc, tx) => acc.set(tx.nonce, tx), Map())
     const extendedTransactions = transactions.map((tx: Transaction) => {
       let extendedTx = tx
-
-      // add owner names to confirmations
-      const txConfirmations = tx.get('confirmations').map((confirmation) => {
-        const confirmationOwnerAdbkEntry = addressBook.find((adbkEntry) => adbkEntry.address === confirmation.owner)
-
-        return confirmation.set(
-          'ownerName',
-          (confirmationOwnerAdbkEntry && confirmationOwnerAdbkEntry.name) || 'UNKNOWN',
-        )
-      })
-      extendedTx = tx.set('confirmations', txConfirmations)
 
       if (!tx.isExecuted) {
         if (
