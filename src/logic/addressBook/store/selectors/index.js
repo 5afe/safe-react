@@ -39,14 +39,11 @@ export const getNameFromAddressBook = createSelector(
   getAddressBookListSelector,
   (_, address) => address,
   (addressBook: Map<string, AddressBook>, address: string) => {
-    if (!address) {
-      return 'UNKNOWN'
-    }
-
     const adbkEntry = addressBook.find((addressBookItem) => addressBookItem.address === address)
     if (adbkEntry) {
       return adbkEntry.name
     }
+
     return 'UNKNOWN'
   },
 )
