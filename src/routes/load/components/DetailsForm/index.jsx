@@ -8,7 +8,7 @@ import OpenPaper from '~/components/Stepper/OpenPaper'
 import AddressInput from '~/components/forms/AddressInput'
 import Field from '~/components/forms/Field'
 import TextField from '~/components/forms/TextField'
-import { composeValidators, mustBeEthereumAddress, noErrorsOn, required } from '~/components/forms/validator'
+import { mustBeEthereumAddress, noErrorsOn, required } from '~/components/forms/validator'
 import Block from '~/components/layout/Block'
 import Paragraph from '~/components/layout/Paragraph'
 import { SAFE_MASTER_COPY_ADDRESS_V10, getSafeMasterContract, validateProxy } from '~/logic/contracts/safeContracts'
@@ -120,7 +120,6 @@ const Details = ({ classes, errors, form }: Props) => (
         placeholder="Safe Address*"
         text="Safe Address"
         type="text"
-        validate={composeValidators(required, mustBeEthereumAddress)}
       />
     </Block>
     <Block margin="sm">
