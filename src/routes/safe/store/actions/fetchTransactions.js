@@ -133,24 +133,26 @@ export const buildTransactionFrom = async (
   let symbol = txTokenSymbol || 'ETH'
   let decimals = txTokenDecimals || 18
   let decodedParams
-  if (isSendTokenTx && (txTokenSymbol === null || txTokenDecimals === null)) {
-    try {
-      const [tokenSymbol, tokenDecimals] = await Promise.all(
-        generateBatchRequests({
-          abi: ALTERNATIVE_TOKEN_ABI,
-          address: tx.to,
-          methods: ['symbol', 'decimals'],
-        }),
-      )
+  if (isSendTokenTx) {
+    if (txTokenSymbol === null || txTokenDecimals === null) {
+      try {
+        const [tokenSymbol, tokenDecimals] = await Promise.all(
+          generateBatchRequests({
+            abi: ALTERNATIVE_TOKEN_ABI,
+            address: tx.to,
+            methods: ['symbol', 'decimals'],
+          }),
+        )
 
-      symbol = tokenSymbol
-      decimals = tokenDecimals
-    } catch (e) {
-      // some contracts may implement the same methods as in ERC20 standard
-      // we may falsely treat them as tokens, so in case we get any errors when getting token info
-      // we fallback to displaying custom transaction
-      isSendTokenTx = false
-      customTx = true
+        symbol = tokenSymbol
+        decimals = tokenDecimals
+      } catch (e) {
+        // some contracts may implement the same methods as in ERC20 standard
+        // we may falsely treat them as tokens, so in case we get any errors when getting token info
+        // we fallback to displaying custom transaction
+        isSendTokenTx = false
+        customTx = true
+      }
     }
 
     const params = web3.eth.abi.decodeParameters(['address', 'uint256'], tx.data.slice(10))
