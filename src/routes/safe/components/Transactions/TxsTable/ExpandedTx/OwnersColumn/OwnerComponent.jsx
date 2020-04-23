@@ -57,8 +57,7 @@ const OwnerComponent = ({
   thresholdReached,
   userAddress,
 }: OwnerProps) => {
-  const nameInAdbk = useSelector(getNameFromAddressBook(owner))
-  const ownerName = nameInAdbk || 'UNKNOWN'
+  const nameInAdbk = useSelector((state) => getNameFromAddressBook(state, owner))
   const [imgCircle, setImgCircle] = React.useState(ConfirmSmallGreyCircle)
 
   React.useMemo(() => {
@@ -80,7 +79,7 @@ const OwnerComponent = ({
       <Identicon address={owner} className={classes.icon} diameter={32} />
       <Block>
         <Paragraph className={classes.name} noMargin>
-          {ownerName}
+          {nameInAdbk}
         </Paragraph>
         <EtherscanLink className={classes.address} cut={4} type="address" value={owner} />
       </Block>
@@ -140,7 +139,7 @@ const OwnerComponent = ({
           )}
         </Block>
       )}
-      {owner.address === executor && <Block className={classes.executor}>Executor</Block>}
+      {owner === executor && <Block className={classes.executor}>Executor</Block>}
     </Block>
   )
 }

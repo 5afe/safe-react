@@ -47,7 +47,7 @@ const TransferDescription = ({ from, txFromName, value = '' }: TransferDescProps
 
 const IncomingTxDescription = ({ tx }: Props) => {
   const classes = useStyles()
-  const txFromName = useSelector(getNameFromAddressBook(tx.from))
+  const txFromName = useSelector((state) => getNameFromAddressBook(state, tx.from))
   return (
     <Block className={classes.txDataContainer}>
       <TransferDescription from={tx.from} txFromName={txFromName} value={getIncomingTxAmount(tx)} />

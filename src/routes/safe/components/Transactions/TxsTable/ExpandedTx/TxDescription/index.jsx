@@ -69,7 +69,7 @@ type CustomDescProps = {
 }
 
 const TransferDescription = ({ amount = '', recipient }: TransferDescProps) => {
-  const recipientName = useSelector(getNameFromAddressBook(recipient))
+  const recipientName = useSelector((state) => getNameFromAddressBook(state, recipient))
   return (
     <Block data-testid={TRANSACTIONS_DESC_SEND_TEST_ID}>
       <Bold>Send {amount} to:</Bold>
@@ -83,7 +83,7 @@ const TransferDescription = ({ amount = '', recipient }: TransferDescProps) => {
 }
 
 const RemovedOwner = ({ removedOwner }: { removedOwner: string }) => {
-  const ownerChangedName = useSelector(getNameFromAddressBook(removedOwner))
+  const ownerChangedName = useSelector((state) => getNameFromAddressBook(state, removedOwner))
 
   return (
     <Block data-testid={TRANSACTIONS_DESC_REMOVE_OWNER_TEST_ID}>
@@ -98,7 +98,7 @@ const RemovedOwner = ({ removedOwner }: { removedOwner: string }) => {
 }
 
 const AddedOwner = ({ addedOwner }: { addedOwner: string }) => {
-  const ownerChangedName = useSelector(getNameFromAddressBook(addedOwner))
+  const ownerChangedName = useSelector((state) => getNameFromAddressBook(state, addedOwner))
 
   return (
     <Block data-testid={TRANSACTIONS_DESC_ADD_OWNER_TEST_ID}>
@@ -162,7 +162,7 @@ const SettingsDescription = ({ action, addedOwner, newThreshold, removedOwner }:
 
 const CustomDescription = ({ amount = 0, classes, data, recipient }: CustomDescProps) => {
   const [showTxData, setShowTxData] = useState(false)
-  const recipientName = useSelector(getNameFromAddressBook(recipient))
+  const recipientName = useSelector((state) => getNameFromAddressBook(state, recipient))
   return (
     <>
       <Block data-testid={TRANSACTIONS_DESC_CUSTOM_VALUE_TEST_ID}>
