@@ -17,7 +17,6 @@ const activateAssetsByBalance = (safeAddress: string) => async (
   getState: GetState,
 ) => {
   try {
-    await dispatch(fetchCollectibles())
     const state = getState()
     const safes = safesMapSelector(state)
 
@@ -25,6 +24,7 @@ const activateAssetsByBalance = (safeAddress: string) => async (
       return
     }
 
+    await dispatch(fetchCollectibles())
     const availableAssets = nftAssetsSelector(state)
     const alreadyActiveAssets = safeActiveAssetsSelectorBySafe(safeAddress, safes)
     const blacklistedAssets = safeBlacklistedAssetsSelectorBySafe(safeAddress, safes)

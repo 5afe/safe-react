@@ -21,7 +21,6 @@ const updateSafeValue = (address) => (valueToUpdate) => updateSafe({ address, ..
 
 const fetchSafeTokens = (safeAddress: string) => async (dispatch: ReduxDispatch<GlobalState>, getState: GetState) => {
   try {
-    const result = await fetchTokenCurrenciesBalances(safeAddress)
     const state = getState()
     const safe = state[SAFE_REDUCER_ID].getIn([SAFE_REDUCER_ID, safeAddress])
     const currentTokens = state[TOKEN_REDUCER_ID]
@@ -30,6 +29,7 @@ const fetchSafeTokens = (safeAddress: string) => async (dispatch: ReduxDispatch<
       return
     }
 
+    const result = await fetchTokenCurrenciesBalances(safeAddress)
     const currentEthBalance = safe.get('ethBalance')
     const safeBalances = safe.get('balances')
     const alreadyActiveTokens = safe.get('activeTokens')
