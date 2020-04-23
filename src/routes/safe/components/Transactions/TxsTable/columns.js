@@ -46,7 +46,7 @@ export const getTxAmount = (tx: Transaction) => {
 
   if (tx.isTokenTransfer && tx.decodedParams) {
     const tokenDecimals = tx.decimals.toNumber ? tx.decimals.toNumber() : tx.decimals
-    txAmount = `${new BigNumber(tx.decodedParams.value).div(10 ** tokenDecimals).toString()} ${tx.symbol}`
+    txAmount = `${new BigNumber(tx.decodedParams.value).div(10 ** tokenDecimals).toFixed()} ${tx.symbol}`
   } else if (Number(tx.value) > 0) {
     txAmount = `${fromWei(toBN(tx.value), 'ether')} ${tx.symbol}`
   }
