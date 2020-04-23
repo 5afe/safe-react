@@ -4,8 +4,9 @@ import { List } from 'immutable'
 import type { GetState, Dispatch as ReduxDispatch } from 'redux'
 import semverSatisfies from 'semver/functions/satisfies'
 
-import { makeConfirmation } from '../models/confirmation'
+import { makeConfirmation } from '../../models/confirmation'
 
+import fetchTransactions from './fetchTransactions'
 import updateTransaction from './updateTransaction'
 
 import { onboardUser } from '~/components/ConnectButton'
@@ -26,7 +27,6 @@ import { ZERO_ADDRESS } from '~/logic/wallets/ethAddresses'
 import { EMPTY_DATA } from '~/logic/wallets/ethTransactions'
 import { providerSelector } from '~/logic/wallets/store/selectors'
 import { SAFELIST_ADDRESS } from '~/routes/routes'
-import fetchTransactions from '~/routes/safe/store/actions/transactionsfetchTransactions'
 import { getLastTx, getNewTxNonce, shouldExecuteTransaction } from '~/routes/safe/store/actions/utils'
 import { type GlobalState } from '~/store'
 import { getErrorMessage } from '~/test/utils/ethereumErrors'

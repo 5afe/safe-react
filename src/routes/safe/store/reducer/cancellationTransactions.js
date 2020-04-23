@@ -2,7 +2,7 @@
 import { List, Map } from 'immutable'
 import { type ActionType, handleActions } from 'redux-actions'
 
-import { ADD_CANCELLATION_TRANSACTIONS } from '~/routes/safe/store/actions/addCancellationTransactions'
+import { ADD_CANCELLATION_TRANSACTIONS } from '~/routes/safe/store/actions/transactions/addCancellationTransactions'
 import { type Transaction } from '~/routes/safe/store/models/transaction'
 
 export const CANCELLATION_TRANSACTIONS_REDUCER_ID = 'cancellationTransactions'

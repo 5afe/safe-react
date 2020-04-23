@@ -24,7 +24,7 @@ import {
 import { ZERO_ADDRESS, sameAddress } from '~/logic/wallets/ethAddresses'
 import { EMPTY_DATA } from '~/logic/wallets/ethTransactions'
 import { getWeb3 } from '~/logic/wallets/getWeb3'
-import { addCancellationTransactions } from '~/routes/safe/store/actions/addCancellationTransactions'
+import { addCancellationTransactions } from '~/routes/safe/store/actions/transactions/addCancellationTransactions'
 import { makeConfirmation } from '~/routes/safe/store/models/confirmation'
 import { type IncomingTransaction, makeIncomingTransaction } from '~/routes/safe/store/models/incomingTransaction'
 import { makeOwner } from '~/routes/safe/store/models/owner'
