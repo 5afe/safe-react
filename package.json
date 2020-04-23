@@ -148,7 +148,7 @@
     "async-sema": "^3.1.0",
     "axios": "0.19.2",
     "bignumber.js": "9.0.0",
-    "bnc-onboard": "1.7.5",
+    "bnc-onboard": "1.7.6",
     "connected-react-router": "6.8.0",
     "cross-env": "^7.0.2",
     "currency-flags": "^2.1.1",

@@ -3,7 +3,7 @@ import contract from 'truffle-contract'
 import ProxyFactorySol from '@gnosis.pm/safe-contracts/build/contracts/GnosisSafeProxyFactory.json'
 import GnosisSafeSol from '@gnosis.pm/safe-contracts/build/contracts/GnosisSafe.json'
 import SafeProxy from '@gnosis.pm/safe-contracts/build/contracts/GnosisSafeProxy.json'
-import { ensureOnce } from '~/utils/singleton'
+import { ensureOnce, ensureOnceAsync } from '~/utils/singleton'
 import { simpleMemoize } from '~/components/forms/validator'
 import { getWeb3, getNetworkIdFrom } from '~/logic/wallets/getWeb3'
 import { calculateGasOf, calculateGasPrice } from '~/logic/wallets/ethTransactions'
@@ -95,13 +95,12 @@ export const estimateGasForDeployingSafe = async (
   return gas * parseInt(gasPrice, 10)
 }
 
-export const getGnosisSafeInstanceAt = async (safeAddress: string) => {
+export const getGnosisSafeInstanceAt = simpleMemoize(async (safeAddress: string) => {
   const web3 = getWeb3()
   const GnosisSafe = await getGnosisSafeContract(web3)
   const gnosisSafe = await GnosisSafe.at(safeAddress)
-
   return gnosisSafe
-}
+})
 
 const cleanByteCodeMetadata = (bytecode: string): string => {
   const metaData = 'a165'

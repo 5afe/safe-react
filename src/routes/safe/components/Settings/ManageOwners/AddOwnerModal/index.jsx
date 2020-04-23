@@ -3,7 +3,7 @@ import { withStyles } from '@material-ui/core/styles'
 import { List } from 'immutable'
 import { withSnackbar } from 'notistack'
 import React, { useEffect, useState } from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 
 import OwnerForm from './screens/OwnerForm'
 import ReviewAddOwner from './screens/Review'
@@ -13,7 +13,10 @@ import Modal from '~/components/Modal'
 import { addOrUpdateAddressBookEntry } from '~/logic/addressBook/store/actions/addOrUpdateAddressBookEntry'
 import { getGnosisSafeInstanceAt } from '~/logic/contracts/safeContracts'
 import { TX_NOTIFICATION_TYPES } from '~/logic/safe/transactions'
+import addSafeOwner from '~/routes/safe/store/actions/addSafeOwner'
+import createTransaction from '~/routes/safe/store/actions/createTransaction'
 import { type Owner } from '~/routes/safe/store/models/owner'
+import { safeOwnersSelector, safeParamAddressFromStateSelector } from '~/routes/safe/store/selectors'
 
 const styles = () => ({
   biggerModalWindow: {
@@ -28,12 +31,6 @@ type Props = {
   onClose: () => void,
   classes: Object,
   isOpen: boolean,
-  safeAddress: string,
-  safeName: string,
-  owners: List<Owner>,
-  threshold: number,
-  addSafeOwner: Function,
-  createTransaction: Function,
   enqueueSnackbar: Function,
   closeSnackbar: Function,
 }
@@ -45,43 +42,34 @@ export const sendAddOwner = async (
   ownersOld: List<Owner>,
   enqueueSnackbar: Function,
   closeSnackbar: Function,
-  createTransaction: Function,
-  addSafeOwner: Function,
+  dispatch: Function,
 ) => {
   const gnosisSafe = await getGnosisSafeInstanceAt(safeAddress)
   const txData = gnosisSafe.contract.methods.addOwnerWithThreshold(values.ownerAddress, values.threshold).encodeABI()
 
-  const txHash = await createTransaction({
-    safeAddress,
-    to: safeAddress,
-    valueInWei: 0,
-    txData,
-    notifiedTransaction: TX_NOTIFICATION_TYPES.SETTINGS_CHANGE_TX,
-    enqueueSnackbar,
-    closeSnackbar,
-  })
+  const txHash = await dispatch(
+    createTransaction({
+      safeAddress,
+      to: safeAddress,
+      valueInWei: 0,
+      txData,
+      notifiedTransaction: TX_NOTIFICATION_TYPES.SETTINGS_CHANGE_TX,
+      enqueueSnackbar,
+      closeSnackbar,
+    }),
+  )
 
   if (txHash) {
-    addSafeOwner({ safeAddress, ownerName: values.ownerName, ownerAddress: values.ownerAddress })
+    dispatch(addSafeOwner({ safeAddress, ownerName: values.ownerName, ownerAddress: values.ownerAddress }))
   }
 }
 
-const AddOwner = ({
-  addSafeOwner,
-  classes,
-  closeSnackbar,
-  createTransaction,
-  enqueueSnackbar,
-  isOpen,
-  onClose,
-  owners,
-  safeAddress,
-  safeName,
-  threshold,
-}: Props) => {
-  const dispatch = useDispatch()
+const AddOwner = ({ classes, closeSnackbar, enqueueSnackbar, isOpen, onClose }: Props) => {
   const [activeScreen, setActiveScreen] = useState<ActiveScreen>('selectOwner')
   const [values, setValues] = useState<Object>({})
+  const dispatch = useDispatch()
+  const safeAddress = useSelector(safeParamAddressFromStateSelector)
+  const owners = useSelector(safeOwnersSelector)
 
   useEffect(
     () => () => {
@@ -120,8 +108,7 @@ const AddOwner = ({
     onClose()
 
     try {
-      await sendAddOwner(values, safeAddress, owners, enqueueSnackbar, closeSnackbar, createTransaction, addSafeOwner)
-
+      await sendAddOwner(values, safeAddress, owners, enqueueSnackbar, closeSnackbar, dispatch)
       dispatch(
         addOrUpdateAddressBookEntry(values.ownerAddress, { name: values.ownerName, address: values.ownerAddress }),
       )
@@ -139,26 +126,12 @@ const AddOwner = ({
       title="Add owner to Safe"
     >
       <>
-        {activeScreen === 'selectOwner' && <OwnerForm onClose={onClose} onSubmit={ownerSubmitted} owners={owners} />}
+        {activeScreen === 'selectOwner' && <OwnerForm onClose={onClose} onSubmit={ownerSubmitted} />}
         {activeScreen === 'selectThreshold' && (
-          <ThresholdForm
-            onClickBack={onClickBack}
-            onClose={onClose}
-            onSubmit={thresholdSubmitted}
-            owners={owners}
-            threshold={threshold}
-          />
+          <ThresholdForm onClickBack={onClickBack} onClose={onClose} onSubmit={thresholdSubmitted} />
         )}
         {activeScreen === 'reviewAddOwner' && (
-          <ReviewAddOwner
-            onClickBack={onClickBack}
-            onClose={onClose}
-            onSubmit={onAddOwner}
-            owners={owners}
-            safeAddress={safeAddress}
-            safeName={safeName}
-            values={values}
-          />
+          <ReviewAddOwner onClickBack={onClickBack} onClose={onClose} onSubmit={onAddOwner} values={values} />
         )}
       </>
     </Modal>

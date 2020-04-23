@@ -1,7 +1,7 @@
 // @flow
 export const styles = () => ({
   container: {
-    marginTop: '70px',
+    marginTop: '56px',
   },
   row: {
     cursor: 'pointer',

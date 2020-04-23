@@ -12,15 +12,15 @@ export const Wrapper = styled.div`
     background-color: white;
   }
 `
-// export const Nav = styled.div`
-//   grid-column: 1/3;
-//   grid-row: 1;
-//   margin: 8px 0;
-//   padding: 16px 0;
-//   box-sizing: border-box;
-//   display: flex;
-//   justify-content: flex-end;
-// `
+export const Nav = styled.div`
+  grid-column: 1/3;
+  grid-row: 1;
+  margin: 0;
+  padding: 16px 0;
+  box-sizing: border-box;
+  display: flex;
+  justify-content: flex-end;
+`
 
 export const Menu = styled.div.attrs(() => ({ className: 'background' }))`
   grid-column: 1;

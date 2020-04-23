@@ -4,6 +4,7 @@ import { withStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
 import { withSnackbar } from 'notistack'
 import React, { useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 
 import { styles } from './style'
 
@@ -19,31 +20,23 @@ import { estimateTxGasCosts } from '~/logic/safe/transactions/gasNew'
 import { formatAmount } from '~/logic/tokens/utils/formatAmount'
 import { EMPTY_DATA } from '~/logic/wallets/ethTransactions'
 import { getWeb3 } from '~/logic/wallets/getWeb3'
+import createTransaction from '~/routes/safe/store/actions/createTransaction'
 import { type Transaction } from '~/routes/safe/store/models/transaction'
+import { safeParamAddressFromStateSelector } from '~/routes/safe/store/selectors'
 
 type Props = {
   onClose: () => void,
   classes: Object,
   isOpen: boolean,
-  createTransaction: Function,
   tx: Transaction,
-  safeAddress: string,
   enqueueSnackbar: Function,
   closeSnackbar: Function,
 }
 
-const RejectTxModal = ({
-  classes,
-  closeSnackbar,
-  createTransaction,
-  enqueueSnackbar,
-  isOpen,
-  onClose,
-  safeAddress,
-  tx,
-}: Props) => {
+const RejectTxModal = ({ classes, closeSnackbar, enqueueSnackbar, isOpen, onClose, tx }: Props) => {
   const [gasCosts, setGasCosts] = useState<string>('< 0.001')
-
+  const dispatch = useDispatch()
+  const safeAddress = useSelector(safeParamAddressFromStateSelector)
   useEffect(() => {
     let isCurrent = true
     const estimateGasCosts = async () => {
@@ -66,16 +59,18 @@ const RejectTxModal = ({
   }, [])
 
   const sendReplacementTransaction = () => {
-    createTransaction({
-      safeAddress,
-      to: safeAddress,
-      valueInWei: 0,
-      notifiedTransaction: TX_NOTIFICATION_TYPES.CANCELLATION_TX,
-      enqueueSnackbar,
-      closeSnackbar,
-      txNonce: tx.nonce,
-      origin: tx.origin,
-    })
+    dispatch(
+      createTransaction({
+        safeAddress,
+        to: safeAddress,
+        valueInWei: 0,
+        notifiedTransaction: TX_NOTIFICATION_TYPES.CANCELLATION_TX,
+        enqueueSnackbar,
+        closeSnackbar,
+        txNonce: tx.nonce,
+        origin: tx.origin,
+      }),
+    )
     onClose()
   }
 
