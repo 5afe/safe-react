@@ -3,10 +3,7 @@ import axios from 'axios'
 
 import appsIconSvg from '~/routes/safe/components/Transactions/TxsTable/TxType/assets/appsIcon.svg'
 
-export const GNOSIS_APPS_URL = 'https://gnosis-apps.netlify.app'
-
-const appsUrl = process.env.REACT_APP_GNOSIS_APPS_URL ? process.env.REACT_APP_GNOSIS_APPS_URL : GNOSIS_APPS_URL
-export const staticAppsList = [{ url: `${appsUrl}/compound`, disabled: false }]
+export const staticAppsList = [{ url: `${process.env.REACT_APP_GNOSIS_APPS_URL}/compound`, disabled: false }]
 
 export const getAppInfoFromOrigin = (origin: string) => {
   try {
