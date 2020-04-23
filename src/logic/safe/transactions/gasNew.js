@@ -119,8 +119,11 @@ export const estimateSafeTxGas = async (
             },
             (error, res) => {
               // res.data check is for OpenEthereum/Parity revert messages format
+              const isOpenEthereumRevertMsg = res && typeof res.data === 'string'
+
               const isEstimationSuccessful =
-                !error && (res !== '0x' || (res.data === 'string' && res.slice(9) !== '0x'))
+                !error &&
+                ((typeof res === 'string' && res !== '0x') || (isOpenEthereumRevertMsg && res.slice(9) !== '0x'))
 
               resolve({
                 success: isEstimationSuccessful,
