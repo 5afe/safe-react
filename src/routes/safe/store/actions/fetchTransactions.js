@@ -339,7 +339,7 @@ export const loadSafeTransactions = async (safeAddress: string, getState: GetSta
   const txsWithData = await batchRequestTxsData(transactions)
   // In case that the etags don't match, we parse the new transactions and save them to the cache
   const txsRecord: Array<RecordInstance<TransactionProps>> = await Promise.all(
-    txsWithData.map(([tx: TxServiceModel, decimals, symbol, name, code]) =>
+    txsWithData.map(([tx: TxServiceModel, decimals, code, symbol, name]) =>
       buildTransactionFrom(safeAddress, tx, knownTokens, decimals, symbol, name, code),
     ),
   )
