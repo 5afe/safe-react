@@ -9,5 +9,5 @@ export const SET_CURRENT_CURRENCY = 'SET_CURRENT_CURRENCY'
 // eslint-disable-next-line max-len
 export const setCurrencySelected = createAction<string, *>(
   SET_CURRENT_CURRENCY,
-  (currencyValueSelected: AVAILABLE_CURRENCIES): CurrencyValuesProps => ({ currencyValueSelected }),
+  (currencyValueSelected: $Keys<typeof AVAILABLE_CURRENCIES>): CurrencyValuesProps => ({ currencyValueSelected }),
 )

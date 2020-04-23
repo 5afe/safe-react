@@ -1,8 +1,8 @@
 // @flow
 import { makeStyles } from '@material-ui/core/styles'
 import cn from 'classnames'
-import { List } from 'immutable'
 import React, { useState } from 'react'
+import { useSelector } from 'react-redux'
 
 import { formatDate } from '../columns'
 
@@ -22,39 +22,22 @@ import Row from '~/components/layout/Row'
 import Span from '~/components/layout/Span'
 import IncomingTxDescription from '~/routes/safe/components/Transactions/TxsTable/ExpandedTx/IncomingTxDescription'
 import { INCOMING_TX_TYPES } from '~/routes/safe/store/models/incomingTransaction'
-import { type Owner } from '~/routes/safe/store/models/owner'
 import { type Transaction } from '~/routes/safe/store/models/transaction'
+import { safeNonceSelector, safeThresholdSelector } from '~/routes/safe/store/selectors'
 
 type Props = {
   tx: Transaction,
   cancelTx: Transaction,
-  threshold: number,
-  owners: List<Owner>,
-  granted: boolean,
-  userAddress: string,
-  safeAddress: string,
-  createTransaction: Function,
-  processTransaction: Function,
-  nonce: number,
 }
 
 type OpenModal = 'rejectTx' | 'approveTx' | 'executeRejectTx' | null
 
 const useStyles = makeStyles(styles)
 
-const ExpandedTx = ({
-  cancelTx,
-  createTransaction,
-  granted,
-  nonce,
-  owners,
-  processTransaction,
-  safeAddress,
-  threshold,
-  tx,
-  userAddress,
-}: Props) => {
+const ExpandedTx = ({ cancelTx, tx }: Props) => {
   const classes = useStyles()
+  const nonce = useSelector(safeNonceSelector)
+  const threshold = useSelector(safeThresholdSelector)
   const [openModal, setOpenModal] = useState<OpenModal>(null)
   const openApproveModal = () => setOpenModal('approveTx')
   const closeModal = () => setOpenModal(null)
@@ -138,16 +121,11 @@ const ExpandedTx = ({
               cancelTx={cancelTx}
               canExecute={canExecute}
               canExecuteCancel={canExecuteCancel}
-              granted={granted}
               onTxConfirm={openApproveModal}
               onTxExecute={openApproveModal}
               onTxReject={openRejectModal}
-              owners={owners}
-              safeAddress={safeAddress}
-              threshold={threshold}
               thresholdReached={thresholdReached}
               tx={tx}
-              userAddress={userAddress}
             />
           )}
         </Row>
@@ -157,35 +135,19 @@ const ExpandedTx = ({
           canExecute={canExecute}
           isOpen
           onClose={closeModal}
-          processTransaction={processTransaction}
-          safeAddress={safeAddress}
-          threshold={threshold}
           thresholdReached={thresholdReached}
           tx={tx}
-          userAddress={userAddress}
         />
       )}
-      {openModal === 'rejectTx' && (
-        <RejectTxModal
-          createTransaction={createTransaction}
-          isOpen
-          onClose={closeModal}
-          safeAddress={safeAddress}
-          tx={tx}
-        />
-      )}
+      {openModal === 'rejectTx' && <RejectTxModal isOpen onClose={closeModal} tx={tx} />}
       {openModal === 'executeRejectTx' && (
         <ApproveTxModal
           canExecute={canExecuteCancel}
           isCancelTx
           isOpen
           onClose={closeModal}
-          processTransaction={processTransaction}
-          safeAddress={safeAddress}
-          threshold={threshold}
           thresholdReached={cancelThresholdReached}
           tx={cancelTx}
-          userAddress={userAddress}
         />
       )}
     </>
