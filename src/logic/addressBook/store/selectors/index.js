@@ -1,7 +1,6 @@
 /* eslint-disable import/named */
 // @flow
 import { List, Map } from 'immutable'
-import { useSelector } from 'react-redux'
 import { Selector, createSelector } from 'reselect'
 
 import type { AddressBook } from '~/logic/addressBook/model/addressBook'
@@ -36,14 +35,15 @@ export const getAddressBookListSelector: Selector<GlobalState, {}, List<AddressB
   },
 )
 
-export const getNameFromAddressBook = (userAddress: string): string | null => {
-  if (!userAddress) {
-    return null
-  }
-  const addressBook = useSelector(getAddressBook)
-  const result = addressBook.filter((addressBookItem) => addressBookItem.address === userAddress)
-  if (result.size > 0) {
-    return result.get(0).name
-  }
-  return null
-}
+export const getNameFromAddressBook = (userAddress: string): string | null =>
+  createSelector(getAddressBook, (addressBook: AddressBook, address: string) => {
+    if (!address) {
+      return 'UNKNOWN'
+    }
+
+    const adbkEntry = addressBook.find((addressBookItem) => addressBookItem.address === userAddress)
+    if (adbkEntry) {
+      return adbkEntry.name
+    }
+    return 'UNKNOWN'
+  })

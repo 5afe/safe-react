@@ -1,11 +1,12 @@
 // @flow
 import { makeStyles } from '@material-ui/core/styles'
 import React from 'react'
+import { useSelector } from 'react-redux'
 
 import EtherscanLink from '~/components/EtherscanLink'
 import Block from '~/components/layout/Block'
 import Bold from '~/components/layout/Bold'
-import { getNameFromAddressBook } from '~/logic/addressBook/utils'
+import { getNameFromAddressBook } from '~/logic/addressBook/store/selectors'
 import OwnerAddressTableCell from '~/routes/safe/components/Settings/ManageOwners/OwnerAddressTableCell'
 import { getIncomingTxAmount } from '~/routes/safe/components/Transactions/TxsTable/columns'
 import type { IncomingTransaction } from '~/routes/safe/store/models/incomingTransaction'
@@ -46,7 +47,7 @@ const TransferDescription = ({ from, txFromName, value = '' }: TransferDescProps
 
 const IncomingTxDescription = ({ tx }: Props) => {
   const classes = useStyles()
-  const txFromName = getNameFromAddressBook(tx.from)
+  const txFromName = useSelector(getNameFromAddressBook(tx.from))
   return (
     <Block className={classes.txDataContainer}>
       <TransferDescription from={tx.from} txFromName={txFromName} value={getIncomingTxAmount(tx)} />

@@ -58,7 +58,7 @@ const getTxStatus = (tx: Transaction, userAddress: string, safe: Safe): Transact
   } else if (!tx.confirmations.size) {
     txStatus = 'pending'
   } else {
-    const userConfirmed = tx.confirmations.filter((conf) => conf.owner.address === userAddress).size === 1
+    const userConfirmed = tx.confirmations.filter((conf) => conf.owner === userAddress).size === 1
     const userIsSafeOwner = safe.owners.filter((owner) => owner.address === userAddress).size === 1
     txStatus = !userConfirmed && userIsSafeOwner ? 'awaiting_your_confirmation' : 'awaiting_confirmations'
   }
@@ -122,10 +122,22 @@ const extendedTransactionsSelector: Selector<
   safeTransactionsSelector,
   safeCancellationTransactionsSelector,
   safeIncomingTransactionsSelector,
-  (safe, userAddress, transactions, cancellationTransactions, incomingTransactions) => {
+  getAddressBook,
+  (safe, userAddress, transactions, cancellationTransactions, incomingTransactions, addressBook) => {
     const cancellationTransactionsByNonce = cancellationTransactions.reduce((acc, tx) => acc.set(tx.nonce, tx), Map())
     const extendedTransactions = transactions.map((tx: Transaction) => {
       let extendedTx = tx
+
+      // add owner names to confirmations
+      const txConfirmations = tx.get('confirmations').map((confirmation) => {
+        const confirmationOwnerAdbkEntry = addressBook.find((adbkEntry) => adbkEntry.address === confirmation.owner)
+
+        return confirmation.set(
+          'ownerName',
+          (confirmationOwnerAdbkEntry && confirmationOwnerAdbkEntry.name) || 'UNKNOWN',
+        )
+      })
+      extendedTx = tx.set('confirmations', txConfirmations)
 
       if (!tx.isExecuted) {
         if (

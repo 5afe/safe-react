@@ -1,6 +1,7 @@
 // @flow
 import { withStyles } from '@material-ui/core/styles'
 import React, { useState } from 'react'
+import { useSelector } from 'react-redux'
 
 import { getTxData } from './utils'
 
@@ -9,7 +10,7 @@ import Block from '~/components/layout/Block'
 import Bold from '~/components/layout/Bold'
 import LinkWithRef from '~/components/layout/Link'
 import Paragraph from '~/components/layout/Paragraph'
-import { getNameFromAddressBook } from '~/logic/addressBook/utils'
+import { getNameFromAddressBook } from '~/logic/addressBook/store/selectors'
 import { SAFE_METHODS_NAMES } from '~/logic/contracts/methodIds'
 import { shortVersionOf } from '~/logic/wallets/ethAddresses'
 import OwnerAddressTableCell from '~/routes/safe/components/Settings/ManageOwners/OwnerAddressTableCell'
@@ -68,7 +69,7 @@ type CustomDescProps = {
 }
 
 const TransferDescription = ({ amount = '', recipient }: TransferDescProps) => {
-  const recipientName = getNameFromAddressBook(recipient)
+  const recipientName = useSelector(getNameFromAddressBook(recipient))
   return (
     <Block data-testid={TRANSACTIONS_DESC_SEND_TEST_ID}>
       <Bold>Send {amount} to:</Bold>
@@ -82,7 +83,7 @@ const TransferDescription = ({ amount = '', recipient }: TransferDescProps) => {
 }
 
 const RemovedOwner = ({ removedOwner }: { removedOwner: string }) => {
-  const ownerChangedName = getNameFromAddressBook(removedOwner)
+  const ownerChangedName = useSelector(getNameFromAddressBook(removedOwner))
 
   return (
     <Block data-testid={TRANSACTIONS_DESC_REMOVE_OWNER_TEST_ID}>
@@ -97,7 +98,7 @@ const RemovedOwner = ({ removedOwner }: { removedOwner: string }) => {
 }
 
 const AddedOwner = ({ addedOwner }: { addedOwner: string }) => {
-  const ownerChangedName = getNameFromAddressBook(addedOwner)
+  const ownerChangedName = useSelector(getNameFromAddressBook(addedOwner))
 
   return (
     <Block data-testid={TRANSACTIONS_DESC_ADD_OWNER_TEST_ID}>
@@ -161,7 +162,7 @@ const SettingsDescription = ({ action, addedOwner, newThreshold, removedOwner }:
 
 const CustomDescription = ({ amount = 0, classes, data, recipient }: CustomDescProps) => {
   const [showTxData, setShowTxData] = useState(false)
-  const recipientName = getNameFromAddressBook(recipient)
+  const recipientName = useSelector(getNameFromAddressBook(recipient))
   return (
     <>
       <Block data-testid={TRANSACTIONS_DESC_CUSTOM_VALUE_TEST_ID}>
