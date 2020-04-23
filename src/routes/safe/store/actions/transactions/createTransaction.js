@@ -133,11 +133,6 @@ const createTransaction = ({
 
     const sendParams = { from, value: 0 }
 
-    // TODO find a better solution for this in dev and production.
-    if (process.env.REACT_APP_ENV !== 'production') {
-      sendParams.gasLimit = 1000000
-    }
-
     // if not set owner management tests will fail on ganache
     if (process.env.NODE_ENV === 'test') {
       sendParams.gas = '7000000'
