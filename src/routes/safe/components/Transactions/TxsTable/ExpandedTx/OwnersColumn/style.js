@@ -19,7 +19,7 @@ export const styles = () => ({
     position: 'absolute',
     top: '-27px',
     width: '2px',
-    zIndex: '10',
+    zIndex: '12',
   },
   verticalLinePending: {
     backgroundColor: secondaryText,
@@ -78,7 +78,7 @@ export const styles = () => ({
     justifyContent: 'center',
     marginRight: '18px',
     width: '20px',
-    zIndex: '100',
+    zIndex: '13',
 
     '& > img': {
       display: 'block',

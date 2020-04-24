@@ -1,5 +1,5 @@
 // @flow
-import { screenSm, secondary, secondaryText, sm, smallFontSize, xs } from '~/theme/variables'
+import { screenSm, secondaryText, sm, smallFontSize, xs } from '~/theme/variables'
 
 export const styles = () => ({
   container: {
@@ -33,19 +33,6 @@ export const styles = () => ({
   },
   user: {
     justifyContent: 'left',
-  },
-  receiveModal: {
-    height: 'auto',
-    maxWidth: 'calc(100% - 30px)',
-    minHeight: '544px',
-    overflow: 'hidden',
-  },
-  open: {
-    paddingLeft: sm,
-    width: 'auto',
-    '&:hover': {
-      cursor: 'pointer',
-    },
   },
   readonly: {
     backgroundColor: secondaryText,
@@ -98,22 +85,6 @@ export const styles = () => ({
   },
   leftIcon: {
     marginRight: sm,
-  },
-  tabWrapper: {
-    display: 'flex',
-    flexDirection: 'row',
-    '& svg': {
-      display: 'block',
-      marginRight: '5px',
-    },
-    '& .fill': {
-      fill: 'rgba(0, 0, 0, 0.54)',
-    },
-  },
-  tabWrapperSelected: {
-    '& .fill': {
-      fill: secondary,
-    },
   },
   nameText: {
     overflowWrap: 'break-word',

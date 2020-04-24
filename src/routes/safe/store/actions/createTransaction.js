@@ -13,6 +13,7 @@ import {
   getExecutionTransaction,
   saveTxToHistory,
 } from '~/logic/safe/transactions'
+import { estimateSafeTxGas } from '~/logic/safe/transactions/gasNew'
 import { SAFE_VERSION_FOR_OFFCHAIN_SIGNATURES, tryOffchainSigning } from '~/logic/safe/transactions/offchainSigner'
 import { getCurrentSafeVersion } from '~/logic/safe/utils/safeVersion'
 import { ZERO_ADDRESS } from '~/logic/wallets/ethAddresses'
@@ -66,6 +67,7 @@ const createTransaction = ({
   const nonce = await getNewTxNonce(txNonce, lastTx, safeInstance)
   const isExecution = await shouldExecuteTransaction(safeInstance, nonce, lastTx)
   const safeVersion = await getCurrentSafeVersion(safeInstance)
+  const safeTxGas = await estimateSafeTxGas(safeInstance, safeAddress, txData, to, valueInWei, operation)
 
   // https://docs.gnosis.io/safe/docs/docs5/#pre-validated-signatures
   const sigs = `0x000000000000000000000000${from.replace(
@@ -86,7 +88,7 @@ const createTransaction = ({
     data: txData,
     operation,
     nonce,
-    safeTxGas: 0,
+    safeTxGas,
     baseGas: 0,
     gasPrice: 0,
     gasToken: ZERO_ADDRESS,
@@ -124,11 +126,6 @@ const createTransaction = ({
     tx = isExecution ? await getExecutionTransaction(txArgs) : await getApprovalTransaction(txArgs)
 
     const sendParams = { from, value: 0 }
-
-    // TODO find a better solution for this in dev and production.
-    if (process.env.REACT_APP_ENV !== 'production') {
-      sendParams.gasLimit = 1000000
-    }
 
     // if not set owner management tests will fail on ganache
     if (process.env.NODE_ENV === 'test') {

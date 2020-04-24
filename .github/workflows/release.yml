@@ -1,0 +1,69 @@
+name: Build/Release Desktop app
+
+# this will help you specify where to run
+on:
+  push:
+    branches:
+      # this will run on the specified branch
+      - master
+
+env:
+  REACT_APP_BLOCKNATIVE_KEY: ${{ secrets.REACT_APP_BLOCKNATIVE_KEY }}
+  REACT_APP_FORTMATIC_KEY: ${{ secrets.REACT_APP_FORTMATIC_KEY }}
+  REACT_APP_GOOGLE_ANALYTICS_ID_MAINNET: ${{ secrets.REACT_APP_GOOGLE_ANALYTICS_ID_MAINNET }}
+  REACT_APP_INFURA_TOKEN: ${{ secrets.REACT_APP_INFURA_TOKEN }}
+  REACT_APP_PORTIS_ID: ${{ secrets.REACT_APP_PORTIS_ID }}
+
+jobs:
+  release:
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      fail-fast: false
+      max-parallel: 15
+      matrix:
+        os: [macos-latest, windows-latest, ubuntu-latest]
+
+    steps:
+      - name: Check out Git repository
+        uses: actions/checkout@v2
+
+      - name: Install Node.js, NPM and Yarn
+        uses: actions/setup-node@v1
+        with:
+          node-version: 10.16
+
+      - name: Patch node gyp on windows to support Visual Studio 2019
+        if: startsWith(matrix.os, 'windows')
+        shell: powershell
+        run: |
+          yarn global add --production windows-build-tools --vs2015 --msvs_version=2015
+      - name: Install node-gyp
+        if: startsWith(matrix.os, 'windows')
+        shell: powershell
+        run: |
+          yarn global add node-gyp
+          yarn config set node_gyp "$_\node_modules\node-gyp\bin\node-gyp.js"
+
+      - name: Build/Release Desktop App
+        env:
+          # macOS notarization API key
+          APPLEID: ${{ secrets.APPLE_ID }}
+          APPLEIDPASS: ${{ secrets.APPLE_ID_PASS }}
+        uses: samuelmeuli/action-electron-builder@v1
+        with:
+          #Build scipt
+          build_script_name: build-desktop
+
+          # GitHub token, automatically provided to the action
+          # (No need to define this secret in the repo settings)
+
+          github_token: ${{ secrets.github_token }}
+
+          # macOS code signing certificate
+          mac_certs: ${{ secrets.MAC_CERTS }}
+          mac_certs_password: ${{ secrets.MAC_CERTS_PASSWORD }}
+
+          # If the commit is tagged with a version (e.g. "v1.0.0"),
+          # release the app after building
+          release: ${{ startsWith(github.ref, 'refs/tags/v') }}

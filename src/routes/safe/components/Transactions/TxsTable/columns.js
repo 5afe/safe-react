@@ -8,6 +8,7 @@ import TxType from './TxType'
 
 import { type Column } from '~/components/Table/TableHead'
 import { type SortRow, buildOrderFieldFrom } from '~/components/Table/sorting'
+import { formatAmount } from '~/logic/tokens/utils/formatAmount'
 import { getWeb3 } from '~/logic/wallets/getWeb3'
 import { INCOMING_TX_TYPES, type IncomingTransaction } from '~/routes/safe/store/models/incomingTransaction'
 import { type Transaction } from '~/routes/safe/store/models/transaction'
@@ -46,7 +47,11 @@ export const getTxAmount = (tx: Transaction) => {
 
   if (tx.isTokenTransfer && tx.decodedParams) {
     const tokenDecimals = tx.decimals.toNumber ? tx.decimals.toNumber() : tx.decimals
-    txAmount = `${new BigNumber(tx.decodedParams.value).div(10 ** tokenDecimals).toString()} ${tx.symbol}`
+    txAmount = `${formatAmount(
+      BigNumber(tx.decodedParams.value)
+        .div(10 ** tokenDecimals)
+        .toString(),
+    )} ${tx.symbol}`
   } else if (Number(tx.value) > 0) {
     txAmount = `${fromWei(toBN(tx.value), 'ether')} ${tx.symbol}`
   }
@@ -75,7 +80,7 @@ const getTransactionTableData = (tx: Transaction, cancelTx: ?Transaction): Trans
   } else if (tx.cancellationTx) {
     txType = 'cancellation'
   } else if (tx.customTx) {
-    txType = tx.origin ? 'third-party-app' : 'custom'
+    txType = 'custom'
   } else if (tx.creationTx) {
     txType = 'creation'
   } else if (tx.upgradeTx) {

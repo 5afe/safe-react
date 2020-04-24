@@ -23,7 +23,7 @@ export const ALTERNATIVE_TOKEN_ABI = [
     outputs: [
       {
         name: '',
-        type: 'bytes32',
+        type: 'string',
       },
     ],
     payable: false,
