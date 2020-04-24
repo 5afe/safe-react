@@ -4,6 +4,7 @@ import { withStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
 import { withSnackbar } from 'notistack'
 import React from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 
 import { styles } from './style'
 
@@ -21,8 +22,11 @@ import Hairline from '~/components/layout/Hairline'
 import Paragraph from '~/components/layout/Paragraph'
 import Row from '~/components/layout/Row'
 import { makeAddressBookEntry } from '~/logic/addressBook/model/addressBook'
+import { updateAddressBookEntry } from '~/logic/addressBook/store/actions/updateAddressBookEntry'
 import { getNotificationsFromTxType, showSnackbar } from '~/logic/notifications'
 import { TX_NOTIFICATION_TYPES } from '~/logic/safe/transactions'
+import editSafeOwner from '~/routes/safe/store/actions/editSafeOwner'
+import { safeParamAddressFromStateSelector } from '~/routes/safe/store/selectors'
 import { sm } from '~/theme/variables'
 
 export const RENAME_OWNER_INPUT_TEST_ID = 'rename-owner-input'
@@ -32,31 +36,27 @@ type Props = {
   onClose: () => void,
   classes: Object,
   isOpen: boolean,
-  safeAddress: string,
   ownerAddress: string,
   selectedOwnerName: string,
-  editSafeOwner: Function,
   enqueueSnackbar: Function,
   closeSnackbar: Function,
-  updateAddressBookEntry: Function,
 }
 
 const EditOwnerComponent = ({
   classes,
   closeSnackbar,
-  editSafeOwner,
   enqueueSnackbar,
   isOpen,
   onClose,
   ownerAddress,
-  safeAddress,
   selectedOwnerName,
-  updateAddressBookEntry,
 }: Props) => {
+  const dispatch = useDispatch()
+  const safeAddress = useSelector(safeParamAddressFromStateSelector)
   const handleSubmit = (values) => {
     const { ownerName } = values
-    editSafeOwner({ safeAddress, ownerAddress, ownerName })
-    updateAddressBookEntry(makeAddressBookEntry({ address: ownerAddress, name: ownerName }))
+    dispatch(editSafeOwner({ safeAddress, ownerAddress, ownerName }))
+    dispatch(updateAddressBookEntry(makeAddressBookEntry({ address: ownerAddress, name: ownerName })))
     const notification = getNotificationsFromTxType(TX_NOTIFICATION_TYPES.OWNER_NAME_CHANGE_TX)
     showSnackbar(notification.afterExecution.noMoreConfirmationsNeeded, enqueueSnackbar, closeSnackbar)
 
@@ -131,6 +131,4 @@ const EditOwnerComponent = ({
   )
 }
 
-const EditOwnerModal = withStyles(styles)(withSnackbar(EditOwnerComponent))
-
-export default EditOwnerModal
+export default withStyles(styles)(withSnackbar(EditOwnerComponent))

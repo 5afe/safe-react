@@ -2,7 +2,8 @@
 import { Card, FixedDialog, FixedIcon, IconText, Menu, Text, Title } from '@gnosis.pm/safe-react-components'
 import { withSnackbar } from 'notistack'
 import React, { useCallback, useEffect, useState } from 'react'
-import { withRouter } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux'
+import { useHistory } from 'react-router-dom'
 import styled from 'styled-components'
 
 import ManageApps from './ManageApps'
@@ -11,7 +12,14 @@ import sendTransactions from './sendTransactions'
 import { getAppInfoFromUrl, staticAppsList } from './utils'
 
 import { ListContentLayout as LCL, Loader } from '~/components-v2'
+import { networkSelector } from '~/logic/wallets/store/selectors'
 import { SAFELIST_ADDRESS } from '~/routes/routes'
+import { grantedSelector } from '~/routes/safe/container/selector'
+import {
+  safeEthBalanceSelector,
+  safeNameSelector,
+  safeParamAddressFromStateSelector,
+} from '~/routes/safe/store/selectors'
 import { loadFromStorage, saveToStorage } from '~/utils/storage'
 
 const APPS_STORAGE_KEY = 'APPS_STORAGE_KEY'
@@ -35,40 +43,26 @@ const operations = {
 }
 
 type Props = {
-  web3: any,
-  safeAddress: String,
-  safeName: String,
-  ethBalance: String,
-  history: Object,
-  network: String,
-  granted: Boolean,
-  createTransaction: any,
   enqueueSnackbar: Function,
   closeSnackbar: Function,
   openModal: () => {},
   closeModal: () => {},
 }
 
-function Apps({
-  closeModal,
-  closeSnackbar,
-  createTransaction,
-  enqueueSnackbar,
-  ethBalance,
-  granted,
-  history,
-  network,
-  openModal,
-  safeAddress,
-  safeName,
-  web3,
-}: Props) {
+function Apps({ closeModal, closeSnackbar, enqueueSnackbar, openModal }: Props) {
   const [appList, setAppList] = useState([])
   const [legalDisclaimerAccepted, setLegalDisclaimerAccepted] = useState(false)
   const [selectedApp, setSelectedApp] = useState()
   const [loading, setLoading] = useState(true)
   const [appIsLoading, setAppIsLoading] = useState(true)
   const [iframeEl, setIframeEl] = useState(null)
+  const history = useHistory()
+  const granted = useSelector(grantedSelector)
+  const safeName = useSelector(safeNameSelector)
+  const safeAddress = useSelector(safeParamAddressFromStateSelector)
+  const network = useSelector(networkSelector)
+  const ethBalance = useSelector(safeEthBalanceSelector)
+  const dispatch = useDispatch()
 
   const getSelectedApp = () => appList.find((e) => e.id === selectedApp)
 
@@ -87,15 +81,7 @@ function Apps({
         const onConfirm = async () => {
           closeModal()
 
-          await sendTransactions(
-            web3,
-            createTransaction,
-            safeAddress,
-            data.data,
-            enqueueSnackbar,
-            closeSnackbar,
-            getSelectedApp().id,
-          )
+          await sendTransactions(dispatch, safeAddress, data.data, enqueueSnackbar, closeSnackbar, getSelectedApp().id)
         }
 
         confirmTransactions(
@@ -362,6 +348,10 @@ function Apps({
     return <Loader />
   }
 
+  if (loading || !appList.length) {
+    return <Loader />
+  }
+
   return (
     <>
       <Menu>
@@ -408,4 +398,4 @@ function Apps({
   )
 }
 
-export default withSnackbar(withRouter(Apps))
+export default withSnackbar(Apps)

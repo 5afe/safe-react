@@ -13,6 +13,7 @@ import { history, type GlobalState } from '~/store'
 import AppRoutes from '~/routes'
 import { SAFELIST_ADDRESS } from '~/routes/routes'
 import { EMPTY_DATA } from '~/logic/wallets/ethTransactions'
+import { wrapInSuspense } from '~/utils/wrapInSuspense'
 
 export const EXPAND_BALANCE_INDEX = 0
 export const EXPAND_OWNERS_INDEX = 1
@@ -89,9 +90,7 @@ const renderApp = (store: Store) => ({
     <Provider store={store}>
       <ConnectedRouter history={history}>
         <PageFrame>
-          <React.Suspense fallback={<div />}>
-            <AppRoutes />
-          </React.Suspense>
+            {wrapInSuspense(<AppRoutes />, <div />)}
         </PageFrame>
       </ConnectedRouter>
     </Provider>,

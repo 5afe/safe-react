@@ -3,7 +3,7 @@ import { lg, marginButtonImg, md, sm } from '~/theme/variables'
 
 export const styles = () => ({
   formContainer: {
-    minHeight: '420px',
+    minHeight: '250px',
   },
   title: {
     padding: lg,
@@ -52,7 +52,6 @@ export const styles = () => ({
     cursor: 'default',
   },
   message: {
-    margin: `${sm} 0`,
     padding: `${md} 0`,
     maxHeight: '54px',
     boxSizing: 'border-box',

@@ -56,7 +56,7 @@ export const getTxServiceUriFrom = (safeAddress: string) =>
   `safes/${safeAddress}/transactions/`
 
 export const getIncomingTxServiceUriTo = (safeAddress: string) =>
-  `safes/${safeAddress}/incoming-transactions/`
+  `safes/${safeAddress}/incoming-transfers/`
 
 export const getRelayUrl = () => getConfig()[RELAY_API_URL]
 

@@ -63,36 +63,6 @@ const AddressInput = ({
         }
       }}
     </OnChange>
-    {/* onBlur - didn't work because of the complex validation
-    (if you submit before it gets the address, breaks everything) */}
-    {/* <Field
-      name={name}
-      subscription={{ active: true, value: true }}
-      render={({ meta, input }) => {
-        const [prevActive, setPrevActive] = useState<boolean>(!!meta.active)
-
-        useEffect(() => {
-          async function setAddressFromENS() {
-            if (isValidEnsName(input.value)) {
-              try {
-                const resolverAddr = await getAddressFromENS(input.value)
-                fieldMutator(resolverAddr)
-              } catch (err) {
-                console.error('Error when trying to fetch address for ENS name: ', err)
-              }
-            }
-          }
-
-          if (prevActive && !meta.active) {
-            setAddressFromENS()
-          } else if (prevActive !== meta.active) {
-            setPrevActive(meta.active)
-          }
-        }, [meta.active])
-
-        return null
-      }}
-    /> */}
   </>
 )
 

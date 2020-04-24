@@ -53,12 +53,13 @@ const AddressBookTable = ({ classes }: Props) => {
   const columns = generateColumns()
   const autoColumns = columns.filter((c) => !c.custom)
   const dispatch = useDispatch()
+  const safesList = useSelector(safesListSelector)
+  const entryAddressToEditOrCreateNew = useSelector(addressBookQueryParamsSelector)
   const addressBook = useSelector(getAddressBookListSelector)
   const [selectedEntry, setSelectedEntry] = useState(null)
   const [editCreateEntryModalOpen, setEditCreateEntryModalOpen] = useState(false)
   const [deleteEntryModalOpen, setDeleteEntryModalOpen] = useState(false)
   const [sendFundsModalOpen, setSendFundsModalOpen] = useState(false)
-  const entryAddressToEditOrCreateNew = useSelector(addressBookQueryParamsSelector)
 
   useEffect(() => {
     if (entryAddressToEditOrCreateNew) {
@@ -85,8 +86,6 @@ const AddressBookTable = ({ classes }: Props) => {
       }
     }
   }, [addressBook])
-
-  const safesList = useSelector(safesListSelector)
 
   const newEntryModalHandler = (entry: AddressBookEntry) => {
     setEditCreateEntryModalOpen(false)
@@ -160,7 +159,8 @@ const AddressBookTable = ({ classes }: Props) => {
                           className={classes.editEntryButton}
                           onClick={() => {
                             setSelectedEntry({
-                              entry: { ...row, isOwnerAddress: userOwner },
+                              entry: row,
+                              isOwnerAddress: userOwner,
                             })
                             setEditCreateEntryModalOpen(true)
                           }}

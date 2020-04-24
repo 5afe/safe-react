@@ -38,7 +38,7 @@ export const getNameFromAddressBook = (userAddress: string): string | null => {
     return null
   }
   const addressBook = useSelector(getAddressBook)
-  return getNameFromAdbk(addressBook, userAddress)
+  return addressBook ? getNameFromAdbk(addressBook, userAddress) : null
 }
 
 export const getOwnersWithNameFromAddressBook = (addressBook: AddressBook, ownerList: List<Owner>) => {

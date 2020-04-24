@@ -1,5 +1,6 @@
 // @flow
 import { ButtonLink, Checkbox, ManageListModal, Text, TextField } from '@gnosis.pm/safe-react-components'
+import type { FieldValidator } from 'final-form'
 import React, { useState } from 'react'
 import { FormSpy } from 'react-final-form'
 import styled from 'styled-components'
@@ -53,6 +54,13 @@ const urlValidator = (value: string) => {
   return /(?:^|[ \t])((https?:\/\/)?(?:localhost|[\w-]+(?:\.[\w-]+)+)(:\d+)?(\/\S*)?)/gm.test(value)
     ? undefined
     : 'Please, provide a valid url'
+}
+
+const composeValidatorsApps = (...validators: Function[]): FieldValidator => (value: Field, values, meta) => {
+  if (!meta.modified) {
+    return
+  }
+  return composeValidators(validators)
 }
 
 const ManageApps = ({ appList, onAppAdded, onAppToggle }: Props) => {
@@ -120,7 +128,12 @@ const ManageApps = ({ appList, onAppAdded, onAppToggle }: Props) => {
               name="appUrl"
               placeholder="App URL"
               type="text"
-              validate={composeValidators(customRequiredValidator, urlValidator, uniqueAppValidator, safeAppValidator)}
+              validate={composeValidatorsApps(
+                customRequiredValidator,
+                urlValidator,
+                uniqueAppValidator,
+                safeAppValidator,
+              )}
             />
 
             <AppInfo>

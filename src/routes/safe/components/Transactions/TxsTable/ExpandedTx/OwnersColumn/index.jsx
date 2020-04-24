@@ -1,8 +1,8 @@
 // @flow
 import { withStyles } from '@material-ui/core/styles'
 import cn from 'classnames'
-import { List } from 'immutable'
 import React from 'react'
+import { useSelector } from 'react-redux'
 
 import OwnersList from './OwnersList'
 import CheckLargeFilledGreenCircle from './assets/check-large-filled-green.svg'
@@ -17,8 +17,9 @@ import Col from '~/components/layout/Col'
 import Img from '~/components/layout/Img'
 import Paragraph from '~/components/layout/Paragraph/index'
 import { TX_TYPE_CONFIRMATION } from '~/logic/safe/transactions/send'
-import { type Owner } from '~/routes/safe/store/models/owner'
+import { userAccountSelector } from '~/logic/wallets/store/selectors'
 import { type Transaction, makeTransaction } from '~/routes/safe/store/models/transaction'
+import { safeOwnersSelector, safeThresholdSelector } from '~/routes/safe/store/selectors'
 
 type Props = {
   canExecute: boolean,
@@ -29,11 +30,8 @@ type Props = {
   onTxReject: Function,
   onTxConfirm: Function,
   onTxExecute: Function,
-  owners: List<Owner>,
-  threshold: number,
   thresholdReached: boolean,
   tx: Transaction,
-  userAddress: string,
 }
 
 function getOwnersConfirmations(tx, userAddress) {
@@ -71,10 +69,7 @@ function getPendingOwnersConfirmations(owners, tx, userAddress) {
 const OwnersColumn = ({
   tx,
   cancelTx = makeTransaction(),
-  owners,
   classes,
-  threshold,
-  userAddress,
   thresholdReached,
   cancelThresholdReached,
   onTxConfirm,
@@ -90,7 +85,9 @@ const OwnersColumn = ({
   } else {
     showOlderTxAnnotation = (thresholdReached && !canExecute) || (cancelThresholdReached && !canExecuteCancel)
   }
-
+  const owners = useSelector(safeOwnersSelector)
+  const threshold = useSelector(safeThresholdSelector)
+  const userAddress = useSelector(userAccountSelector)
   const [ownersWhoConfirmed, currentUserAlreadyConfirmed] = getOwnersConfirmations(tx, userAddress)
   const [ownersUnconfirmed, userIsUnconfirmedOwner] = getPendingOwnersConfirmations(owners, tx, userAddress)
   const [ownersWhoConfirmedCancel, currentUserAlreadyConfirmedCancel] = getOwnersConfirmations(cancelTx, userAddress)

@@ -119,7 +119,6 @@ export const styles = () => ({
     position: 'relative',
   },
   message: {
-    margin: `${sm} 0`,
     padding: `${md} 0`,
     maxHeight: '54px', // to make it the same as row in Balances component
     boxSizing: 'border-box',

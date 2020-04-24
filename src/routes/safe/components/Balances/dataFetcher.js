@@ -1,4 +1,5 @@
 // @flow
+import { BigNumber } from 'bignumber.js'
 import { List } from 'immutable'
 
 import { type Column } from '~/components/Table/TableHead'
@@ -23,38 +24,38 @@ export type BalanceRow = SortRow<BalanceData>
 // eslint-disable-next-line max-len
 const getTokenPriceInCurrency = (
   token: Token,
-  currencySelected: typeof AVAILABLE_CURRENCIES,
+  currencySelected: $Keys<typeof AVAILABLE_CURRENCIES>,
   currencyValues: List<BalanceCurrencyType>,
+  currencyRate: string,
 ): string => {
   if (!currencySelected) {
     return ''
   }
 
-  // eslint-disable-next-line no-restricted-syntax
-  for (const tokenPriceIterator of currencyValues) {
-    const { balanceInSelectedCurrency, currencyName, tokenAddress } = tokenPriceIterator
-    if (token.address === tokenAddress && currencySelected === currencyName) {
-      const balance = balanceInSelectedCurrency
-        ? parseFloat(balanceInSelectedCurrency, 10).toFixed(2)
-        : balanceInSelectedCurrency
-      return `${balance} ${currencySelected}`
-    }
-    // ETH token
+  const currencyValue = currencyValues.find(({ tokenAddress }) => {
     if (token.address === ETH_ADDRESS && !tokenAddress) {
-      const balance = balanceInSelectedCurrency
-        ? parseFloat(balanceInSelectedCurrency, 10).toFixed(2)
-        : balanceInSelectedCurrency
-      return `${balance} ${currencySelected}`
+      return true
     }
+
+    return token.address === tokenAddress
+  })
+
+  if (!currencyValue) {
+    return ''
   }
-  return null
+
+  const { balanceInBaseCurrency } = currencyValue
+  const balance = BigNumber(balanceInBaseCurrency).times(currencyRate).toFixed(2)
+
+  return `${balance} ${currencySelected}`
 }
 
 // eslint-disable-next-line max-len
 export const getBalanceData = (
   activeTokens: List<Token>,
-  currencySelected: string,
+  currencySelected: $Keys<typeof AVAILABLE_CURRENCIES>,
   currencyValues: List<BalanceCurrencyType>,
+  currencyRate: string,
 ): List<BalanceRow> => {
   const rows = activeTokens.map((token: Token) => ({
     [BALANCE_TABLE_ASSET_ID]: {
@@ -66,7 +67,7 @@ export const getBalanceData = (
     [BALANCE_TABLE_BALANCE_ID]: `${formatAmount(token.balance)} ${token.symbol}`,
     [buildOrderFieldFrom(BALANCE_TABLE_BALANCE_ID)]: Number(token.balance),
     [FIXED]: token.get('symbol') === 'ETH',
-    [BALANCE_TABLE_VALUE_ID]: getTokenPriceInCurrency(token, currencySelected, currencyValues),
+    [BALANCE_TABLE_VALUE_ID]: getTokenPriceInCurrency(token, currencySelected, currencyValues, currencyRate),
   }))
 
   return rows
