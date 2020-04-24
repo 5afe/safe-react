@@ -1,11 +1,11 @@
-name: Build/Release Desktop app
+name: Build/release
 
 # this will help you specify where to run
 on:
   push:
     branches:
       # this will run on the specified branch
-      - master
+      - feature/desktop-app
 
 env:
   REACT_APP_BLOCKNATIVE_KEY: ${{ secrets.REACT_APP_BLOCKNATIVE_KEY }}
@@ -19,33 +19,19 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     strategy:
-      fail-fast: false
-      max-parallel: 15
       matrix:
-        os: [macos-latest, windows-latest, ubuntu-latest]
+        os: [macos-latest, ubuntu-latest]
 
     steps:
       - name: Check out Git repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v1
 
       - name: Install Node.js, NPM and Yarn
         uses: actions/setup-node@v1
         with:
           node-version: 10.16
 
-      - name: Patch node gyp on windows to support Visual Studio 2019
-        if: startsWith(matrix.os, 'windows')
-        shell: powershell
-        run: |
-          yarn global add --production windows-build-tools --vs2015 --msvs_version=2015
-      - name: Install node-gyp
-        if: startsWith(matrix.os, 'windows')
-        shell: powershell
-        run: |
-          yarn global add node-gyp
-          yarn config set node_gyp "$_\node_modules\node-gyp\bin\node-gyp.js"
-
-      - name: Build/Release Desktop App
+      - name: Build/release Electron app
         env:
           # macOS notarization API key
           APPLEID: ${{ secrets.APPLE_ID }}

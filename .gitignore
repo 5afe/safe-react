@@ -1,9 +1,11 @@
 node_modules/
 build_webpack/
 .DS_Store
-build/
+./build
 yarn-error.log
 .env*
 .idea/
+dist
+electron-builder.yml
 .yalc/
 yalc.lock
