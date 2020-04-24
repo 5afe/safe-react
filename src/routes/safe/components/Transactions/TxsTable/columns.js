@@ -9,7 +9,6 @@ import TxType from './TxType'
 import { type Column } from '~/components/Table/TableHead'
 import { type SortRow, buildOrderFieldFrom } from '~/components/Table/sorting'
 import { formatAmount } from '~/logic/tokens/utils/formatAmount'
-import { getWeb3 } from '~/logic/wallets/getWeb3'
 import { INCOMING_TX_TYPES, type IncomingTransaction } from '~/routes/safe/store/models/incomingTransaction'
 import { type Transaction } from '~/routes/safe/store/models/transaction'
 
@@ -34,29 +33,35 @@ type TxData = {
 
 export const formatDate = (date: string): string => format(parseISO(date), 'MMM d, yyyy - HH:mm:ss')
 
-export const getIncomingTxAmount = (tx: IncomingTransaction) => {
-  const txAmount = tx.value ? `${new BigNumber(tx.value).div(`1e${tx.decimals}`).toFixed()}` : 'n/a'
-  return `${txAmount} ${tx.symbol || 'n/a'}`
+type TxValues = {
+  value?: string | number,
+  decimals?: string | number,
+  symbol?: string,
 }
 
-export const getTxAmount = (tx: Transaction) => {
-  const web3 = getWeb3()
-  const { fromWei, toBN } = web3.utils
+const NOT_AVAILABLE = 'n/a'
 
-  let txAmount = 'n/a'
+const getAmountWithSymbol = ({ decimals = 0, symbol = NOT_AVAILABLE, value }: TxValues, useFormatAmount = false) => {
+  const nonFormattedValue = BigNumber(value).times(`1e-${decimals}`).toFixed()
+  const finalValue = useFormatAmount ? formatAmount(nonFormattedValue).toString() : nonFormattedValue
+  const txAmount = finalValue === 'NaN' ? NOT_AVAILABLE : finalValue
 
-  if (tx.isTokenTransfer && tx.decodedParams) {
-    const tokenDecimals = tx.decimals.toNumber ? tx.decimals.toNumber() : tx.decimals
-    txAmount = `${formatAmount(
-      BigNumber(tx.decodedParams.value)
-        .div(10 ** tokenDecimals)
-        .toString(),
-    )} ${tx.symbol}`
-  } else if (Number(tx.value) > 0) {
-    txAmount = `${fromWei(toBN(tx.value), 'ether')} ${tx.symbol}`
+  return `${txAmount} ${symbol}`
+}
+
+export const getIncomingTxAmount = (tx: IncomingTransaction, useFormatAmount: boolean = true) => {
+  return getAmountWithSymbol(tx, useFormatAmount)
+}
+
+export const getTxAmount = (tx: Transaction, useFormatAmount: boolean = true) => {
+  const { decodedParams, isTokenTransfer, symbol } = tx
+  const { decimals = 18, value } = isTokenTransfer && decodedParams && decodedParams.value ? decodedParams : tx
+
+  if (!isTokenTransfer && !(Number(value) > 0)) {
+    return NOT_AVAILABLE
   }
 
-  return txAmount
+  return getAmountWithSymbol({ decimals, symbol, value }, useFormatAmount)
 }
 
 export type TransactionRow = SortRow<TxData>
