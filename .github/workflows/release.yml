@@ -28,24 +28,25 @@ jobs:
     steps:
       - name: Check out Git repository
         uses: actions/checkout@v2
-
-      - name: Install Node.js, NPM and Yarn
-        uses: actions/setup-node@v1
-        with:
-          node-version: 10.16
-      - run: yarn install --network-concurrency 1
-
+        
       - name: Patch node gyp on windows to support Visual Studio 2019
         if: startsWith(matrix.os, 'windows')
         shell: powershell
         run: |
           yarn global add --production windows-build-tools --vs2015 --msvs_version=2015
+          
       - name: Install node-gyp
         if: startsWith(matrix.os, 'windows')
         shell: powershell
         run: |
           yarn global add node-gyp
           yarn config set node_gyp "$_\node_modules\node-gyp\bin\node-gyp.js"
+
+      - name: Install Node.js, NPM and Yarn
+        uses: actions/setup-node@v1
+        with:
+          node-version: 10.16
+      - run: yarn install --network-concurrency 1
 
       - name: Build/Release Desktop App
         env:
