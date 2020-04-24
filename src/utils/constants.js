@@ -13,3 +13,4 @@ export const LATEST_SAFE_VERSION = process.env.REACT_APP_LATEST_SAFE_VERSION || 
 export const APP_VERSION = process.env.REACT_APP_APP_VERSION || 'not-defined'
 export const OPENSEA_API_KEY = process.env.REACT_APP_OPENSEA_API_KEY || ''
 export const COLLECTIBLES_SOURCE = process.env.REACT_APP_COLLECTIBLES_SOURCE || 'OpenSea'
+export const TIMEOUT = process.env.NODE_ENV === 'test' ? 1500 : 5000

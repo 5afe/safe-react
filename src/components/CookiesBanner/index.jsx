@@ -30,7 +30,7 @@ const useStyles = makeStyles({
     padding: '27px 15px',
     position: 'fixed',
     width: '100%',
-    zIndex: '5',
+    zIndex: '15',
   },
   content: {
     maxWidth: '100%',

@@ -1,12 +1,11 @@
 // @flow
-import React, { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import GoogleAnalytics from 'react-ga'
 
 import { getGoogleAnalyticsTrackingID } from '~/config'
 import { COOKIES_KEY } from '~/logic/cookies/model/cookie'
 import type { CookiesProps } from '~/logic/cookies/model/cookie'
 import { loadFromCookie } from '~/logic/cookies/utils'
-import type { RouterProps } from '~/routes/safe/store/selectors'
 
 let analyticsLoaded = false
 export const loadGoogleAnalytics = () => {
@@ -25,22 +24,22 @@ export const loadGoogleAnalytics = () => {
   }
 }
 
-export const withTracker = (WrappedComponent, options = {}) => {
-  const [useAnalytics, setUseAnalytics] = useState(false)
+export const useAnalytics = () => {
+  const [analyticsAllowed, setAnalyticsAllowed] = useState(false)
 
   useEffect(() => {
     async function fetchCookiesFromStorage() {
       const cookiesState: CookiesProps = await loadFromCookie(COOKIES_KEY)
       if (cookiesState) {
         const { acceptedAnalytics } = cookiesState
-        setUseAnalytics(acceptedAnalytics)
+        setAnalyticsAllowed(acceptedAnalytics)
       }
     }
     fetchCookiesFromStorage()
   }, [])
 
-  const trackPage = (page) => {
-    if (!useAnalytics || !analyticsLoaded) {
+  const trackPage = useCallback((page, options = {}) => {
+    if (!analyticsAllowed || !analyticsLoaded) {
       return
     }
     GoogleAnalytics.set({
@@ -48,17 +47,7 @@ export const withTracker = (WrappedComponent, options = {}) => {
       ...options,
     })
     GoogleAnalytics.pageview(page)
-  }
+  }, [])
 
-  const HOC = (props: RouterProps) => {
-    // eslint-disable-next-line react/prop-types
-    const { location } = props
-    useEffect(() => {
-      const page = location.pathname + location.search
-      trackPage(page)
-    }, [location.pathname])
-    return <WrappedComponent {...props} />
-  }
-
-  return HOC
+  return { trackPage }
 }

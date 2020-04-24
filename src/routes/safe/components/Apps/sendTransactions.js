@@ -1,5 +1,7 @@
 // @flow
 import { DELEGATE_CALL } from '~/logic/safe/transactions/send'
+import { getWeb3 } from '~/logic/wallets/getWeb3'
+import createTransaction from '~/routes/safe/store/actions/createTransaction'
 
 const multiSendAddress = '0xB522a9f781924eD250A11C54105E51840B138AdD'
 const multiSendAbi = [
@@ -15,14 +17,14 @@ const multiSendAbi = [
 ]
 
 const sendTransactions = (
-  web3: any,
-  createTransaction: any,
+  dispatch: Function,
   safeAddress: String,
   txs: Array<any>,
   enqueueSnackbar: Function,
   closeSnackbar: Function,
   origin: string,
 ) => {
+  const web3 = getWeb3()
   const multiSend = new web3.eth.Contract(multiSendAbi, multiSendAddress)
 
   const encodeMultiSendCalldata = multiSend.methods
@@ -41,17 +43,19 @@ const sendTransactions = (
     )
     .encodeABI()
 
-  return createTransaction({
-    safeAddress,
-    to: multiSendAddress,
-    valueInWei: 0,
-    txData: encodeMultiSendCalldata,
-    notifiedTransaction: 'STANDARD_TX',
-    enqueueSnackbar,
-    closeSnackbar,
-    operation: DELEGATE_CALL,
-    // navigateToTransactionsTab: false,
-    origin,
-  })
+  return dispatch(
+    createTransaction({
+      safeAddress,
+      to: multiSendAddress,
+      valueInWei: 0,
+      txData: encodeMultiSendCalldata,
+      notifiedTransaction: 'STANDARD_TX',
+      enqueueSnackbar,
+      closeSnackbar,
+      operation: DELEGATE_CALL,
+      // navigateToTransactionsTab: false,
+      origin,
+    }),
+  )
 }
 export default sendTransactions

@@ -6,6 +6,7 @@ import { makeStyles } from '@material-ui/core/styles'
 import CallMade from '@material-ui/icons/CallMade'
 import CallReceived from '@material-ui/icons/CallReceived'
 import classNames from 'classnames/bind'
+import { List } from 'immutable'
 import React from 'react'
 import { useSelector } from 'react-redux'
 
@@ -16,7 +17,11 @@ import type { Column } from '~/components/Table/TableHead'
 import { cellWidth } from '~/components/Table/TableHead'
 import Button from '~/components/layout/Button'
 import Row from '~/components/layout/Row'
-import { currencyValuesListSelector, currentCurrencySelector } from '~/logic/currencyValues/store/selectors'
+import {
+  currencyRateSelector,
+  currencyValuesListSelector,
+  currentCurrencySelector,
+} from '~/logic/currencyValues/store/selectors'
 import { BALANCE_ROW_TEST_ID } from '~/routes/safe/components/Balances'
 import AssetTableCell from '~/routes/safe/components/Balances/AssetTableCell'
 import type { BalanceRow } from '~/routes/safe/components/Balances/dataFetcher'
@@ -42,10 +47,15 @@ const Coins = (props: Props) => {
   const columns = generateColumns()
   const autoColumns = columns.filter((c) => !c.custom)
   const currencySelected = useSelector(currentCurrencySelector)
+  const currencyRate = useSelector(currencyRateSelector)
   const activeTokens = useSelector(extendedSafeTokensSelector)
   const currencyValues = useSelector(currencyValuesListSelector)
   const granted = useSelector(grantedSelector)
-  const filteredData = getBalanceData(activeTokens, currencySelected, currencyValues)
+  const [filteredData, setFilteredData] = React.useState(List())
+
+  React.useMemo(() => {
+    setFilteredData(getBalanceData(activeTokens, currencySelected, currencyValues, currencyRate))
+  }, [currencySelected, currencyRate, activeTokens.hashCode(), currencyValues.hashCode()])
 
   return (
     <TableContainer>

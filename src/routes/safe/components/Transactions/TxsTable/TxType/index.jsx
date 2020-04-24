@@ -31,26 +31,30 @@ const typeToLabel = {
 }
 
 const TxType = ({ origin, txType }: { txType: TransactionType, origin: string | null }) => {
-  const isThirdPartyApp = txType === 'third-party-app'
   const [loading, setLoading] = useState(true)
   const [appInfo, setAppInfo] = useState()
+  const [forceCustom, setForceCustom] = useState(false)
 
   useEffect(() => {
     const getAppInfo = async () => {
       const parsedOrigin = getAppInfoFromOrigin(origin)
+      if (!parsedOrigin) {
+        setForceCustom(true)
+        return
+      }
       const appInfo = await getAppInfoFromUrl(parsedOrigin.url)
       setAppInfo(appInfo)
       setLoading(false)
     }
 
-    if (!isThirdPartyApp) {
+    if (!origin) {
       return
     }
 
     getAppInfo()
   }, [txType])
 
-  if (!isThirdPartyApp) {
+  if (forceCustom || !origin) {
     return <IconText iconUrl={typeToIcon[txType]} text={typeToLabel[txType]} />
   }
 
