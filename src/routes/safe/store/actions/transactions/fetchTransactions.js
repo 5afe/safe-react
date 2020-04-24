@@ -13,7 +13,6 @@ import generateBatchRequests from '~/logic/contracts/generateBatchRequests'
 import { decodeParamsFromSafeMethod } from '~/logic/contracts/methodIds'
 import { buildIncomingTxServiceUrl } from '~/logic/safe/transactions/incomingTxHistory'
 import { type TxServiceType, buildTxServiceUrl } from '~/logic/safe/transactions/txHistory'
-import { getLocalSafe } from '~/logic/safe/utils'
 import { TOKEN_REDUCER_ID } from '~/logic/tokens/store/reducer/tokens'
 import { ALTERNATIVE_TOKEN_ABI } from '~/logic/tokens/utils/alternativeAbi'
 import {
@@ -28,7 +27,6 @@ import { getWeb3 } from '~/logic/wallets/getWeb3'
 import { addCancellationTransactions } from '~/routes/safe/store/actions/transactions/addCancellationTransactions'
 import { makeConfirmation } from '~/routes/safe/store/models/confirmation'
 import { type IncomingTransaction, makeIncomingTransaction } from '~/routes/safe/store/models/incomingTransaction'
-import { makeOwner } from '~/routes/safe/store/models/owner'
 import type { TransactionProps } from '~/routes/safe/store/models/transaction'
 import { type Transaction, makeTransaction } from '~/routes/safe/store/models/transaction'
 import { type GlobalState } from '~/store'
@@ -83,27 +81,15 @@ export const buildTransactionFrom = async (
   txTokenName,
   code,
 ): Promise<Transaction> => {
-  const localSafe = await getLocalSafe(safeAddress)
-
   const confirmations = List(
-    tx.confirmations.map((conf: ConfirmationServiceModel) => {
-      let ownerName = 'UNKNOWN'
-
-      if (localSafe && localSafe.owners) {
-        const storedOwner = localSafe.owners.find((owner) => sameAddress(conf.owner, owner.address))
-
-        if (storedOwner) {
-          ownerName = storedOwner.name
-        }
-      }
-
-      return makeConfirmation({
-        owner: makeOwner({ address: conf.owner, name: ownerName }),
+    tx.confirmations.map((conf: ConfirmationServiceModel) =>
+      makeConfirmation({
+        owner: conf.owner,
         type: ((conf.confirmationType.toLowerCase(): any): TxServiceType),
         hash: conf.transactionHash,
         signature: conf.signature,
-      })
-    }),
+      }),
+    ),
   )
   const modifySettingsTx = sameAddress(tx.to, safeAddress) && Number(tx.value) === 0 && !!tx.data
   const cancellationTx = sameAddress(tx.to, safeAddress) && Number(tx.value) === 0 && !tx.data
@@ -133,24 +119,26 @@ export const buildTransactionFrom = async (
   let symbol = txTokenSymbol || 'ETH'
   let decimals = txTokenDecimals || 18
   let decodedParams
-  if (isSendTokenTx && (txTokenSymbol === null || txTokenDecimals === null)) {
-    try {
-      const [tokenSymbol, tokenDecimals] = await Promise.all(
-        generateBatchRequests({
-          abi: ALTERNATIVE_TOKEN_ABI,
-          address: tx.to,
-          methods: ['symbol', 'decimals'],
-        }),
-      )
+  if (isSendTokenTx) {
+    if (txTokenSymbol === null || txTokenDecimals === null) {
+      try {
+        const [tokenSymbol, tokenDecimals] = await Promise.all(
+          generateBatchRequests({
+            abi: ALTERNATIVE_TOKEN_ABI,
+            address: tx.to,
+            methods: ['symbol', 'decimals'],
+          }),
+        )
 
-      symbol = tokenSymbol
-      decimals = tokenDecimals
-    } catch (e) {
-      // some contracts may implement the same methods as in ERC20 standard
-      // we may falsely treat them as tokens, so in case we get any errors when getting token info
-      // we fallback to displaying custom transaction
-      isSendTokenTx = false
-      customTx = true
+        symbol = tokenSymbol
+        decimals = tokenDecimals
+      } catch (e) {
+        // some contracts may implement the same methods as in ERC20 standard
+        // we may falsely treat them as tokens, so in case we get any errors when getting token info
+        // we fallback to displaying custom transaction
+        isSendTokenTx = false
+        customTx = true
+      }
     }
 
     const params = web3.eth.abi.decodeParameters(['address', 'uint256'], tx.data.slice(10))
@@ -339,7 +327,7 @@ export const loadSafeTransactions = async (safeAddress: string, getState: GetSta
   const txsWithData = await batchRequestTxsData(transactions)
   // In case that the etags don't match, we parse the new transactions and save them to the cache
   const txsRecord: Array<RecordInstance<TransactionProps>> = await Promise.all(
-    txsWithData.map(([tx: TxServiceModel, decimals, symbol, name, code]) =>
+    txsWithData.map(([tx: TxServiceModel, decimals, code, symbol, name]) =>
       buildTransactionFrom(safeAddress, tx, knownTokens, decimals, symbol, name, code),
     ),
   )
