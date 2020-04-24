@@ -75,7 +75,7 @@ const getTransactionTableData = (tx: Transaction, cancelTx: ?Transaction): Trans
   } else if (tx.cancellationTx) {
     txType = 'cancellation'
   } else if (tx.customTx) {
-    txType = tx.origin ? 'third-party-app' : 'custom'
+    txType = 'custom'
   } else if (tx.creationTx) {
     txType = 'creation'
   } else if (tx.upgradeTx) {
