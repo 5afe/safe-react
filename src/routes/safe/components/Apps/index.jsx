@@ -348,6 +348,10 @@ function Apps({ closeModal, closeSnackbar, enqueueSnackbar, openModal }: Props) 
     return <Loader />
   }
 
+  if (loading || !appList.length) {
+    return <Loader />
+  }
+
   return (
     <>
       <Menu>
