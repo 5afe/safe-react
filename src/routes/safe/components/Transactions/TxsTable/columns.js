@@ -50,6 +50,11 @@ const getAmountWithSymbol = ({ decimals = 0, symbol = NOT_AVAILABLE, value }: Tx
 }
 
 export const getIncomingTxAmount = (tx: IncomingTransaction, useFormatAmount: boolean = true) => {
+  // simple workaround to avoid displaying unexpected values for incoming NFT transfer
+  if (INCOMING_TX_TYPES[tx.type] === INCOMING_TX_TYPES.ERC721_TRANSFER) {
+    return `1 ${tx.symbol}`
+  }
+
   return getAmountWithSymbol(tx, useFormatAmount)
 }
 
