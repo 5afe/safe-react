@@ -1,5 +1,6 @@
 // @flow
 import { ButtonLink, Checkbox, ManageListModal, Text, TextField } from '@gnosis.pm/safe-react-components'
+import type { FieldValidator } from 'final-form'
 import React, { useState } from 'react'
 import { FormSpy } from 'react-final-form'
 import styled from 'styled-components'
@@ -9,7 +10,7 @@ import { getAppInfoFromUrl } from './utils'
 import Field from '~/components/forms/Field'
 import DebounceValidationField from '~/components/forms/Field/DebounceValidationField'
 import GnoForm from '~/components/forms/GnoForm'
-import { composeValidatorsApps, required } from '~/components/forms/validator'
+import { composeValidators, required } from '~/components/forms/validator'
 import Img from '~/components/layout/Img'
 import appsIconSvg from '~/routes/safe/components/Transactions/TxsTable/TxType/assets/appsIcon.svg'
 
@@ -53,6 +54,13 @@ const urlValidator = (value: string) => {
   return /(?:^|[ \t])((https?:\/\/)?(?:localhost|[\w-]+(?:\.[\w-]+)+)(:\d+)?(\/\S*)?)/gm.test(value)
     ? undefined
     : 'Please, provide a valid url'
+}
+
+const composeValidatorsApps = (...validators: Function[]): FieldValidator => (value: Field, values, meta) => {
+  if (!meta.modified) {
+    return
+  }
+  return composeValidators(validators)
 }
 
 const ManageApps = ({ appList, onAppAdded, onAppToggle }: Props) => {

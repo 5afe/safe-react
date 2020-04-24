@@ -91,13 +91,6 @@ export const uniqueAddress = (addresses: string[] | List<string>) =>
 export const composeValidators = (...validators: Function[]): FieldValidator => (value: Field) =>
   validators.reduce((error, validator) => error || validator(value), undefined)
 
-export const composeValidatorsApps = (...validators: Function[]): FieldValidator => (value: Field, values, meta) => {
-  if (!meta.modified) {
-    return
-  }
-  return composeValidators(validators)
-}
-
 export const inLimit = (limit: number, base: number, baseText: string, symbol: string = 'ETH') => (value: string) => {
   const amount = Number(value)
   const max = limit - base
