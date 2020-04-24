@@ -13,15 +13,16 @@ import { useDispatch, useSelector } from 'react-redux'
 
 import CheckIcon from './img/check.svg'
 
-import fetchCurrencySelectedValue from '~/logic/currencyValues/store/actions/fetchCurrencySelectedValue'
-import saveCurrencySelected from '~/logic/currencyValues/store/actions/saveCurrencySelected'
+import { setCurrencySelected } from '~/logic/currencyValues/store/actions/setCurrencySelected'
 import { AVAILABLE_CURRENCIES } from '~/logic/currencyValues/store/model/currencyValues'
 import { currentCurrencySelector } from '~/logic/currencyValues/store/selectors'
 import { useDropdownStyles } from '~/routes/safe/components/DropdownCurrency/style'
+import { safeParamAddressFromStateSelector } from '~/routes/safe/store/selectors'
 import { DropdownListTheme } from '~/theme/mui'
 
 const DropdownCurrency = () => {
   const currenciesList = Object.values(AVAILABLE_CURRENCIES)
+  const safeAddress = useSelector(safeParamAddressFromStateSelector)
   const dispatch = useDispatch()
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
   const currencyValueSelected = useSelector(currentCurrencySelector)
@@ -41,8 +42,7 @@ const DropdownCurrency = () => {
   }
 
   const onCurrentCurrencyChangedHandler = (newCurrencySelectedName: AVAILABLE_CURRENCIES) => {
-    dispatch(fetchCurrencySelectedValue(newCurrencySelectedName))
-    dispatch(saveCurrencySelected(newCurrencySelectedName))
+    dispatch(setCurrencySelected(safeAddress, newCurrencySelectedName))
     handleClose()
   }
 

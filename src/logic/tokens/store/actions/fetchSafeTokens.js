@@ -79,7 +79,9 @@ const fetchSafeTokens = (safeAddress: string) => async (dispatch: ReduxDispatch<
     const updateBalances = balances.equals(safeBalances) ? noFunc : update({ balances })
     const updateEthBalance = ethBalance === currentEthBalance ? noFunc : update({ ethBalance })
 
-    const updateCurrencies = currencyList.equals(storedCurrencyBalances) ? noFunc : setCurrencyBalances(currencyList)
+    const updateCurrencies = currencyList.equals(storedCurrencyBalances)
+      ? noFunc
+      : setCurrencyBalances(safeAddress, currencyList)
 
     const updateTokens = tokens.size === 0 ? noFunc : addTokens(tokens)
 

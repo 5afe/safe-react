@@ -7,15 +7,16 @@ import { AVAILABLE_CURRENCIES } from '~/logic/currencyValues/store/model/currenc
 import type { GlobalState } from '~/store'
 
 // eslint-disable-next-line max-len
-const fetchCurrencySelectedValue = (currencyValueSelected: $Keys<typeof AVAILABLE_CURRENCIES>) => async (
-  dispatch: ReduxDispatch<GlobalState>,
-) => {
+const fetchCurrencySelectedValue = (
+  safeAddress: string,
+  currencyValueSelected: $Keys<typeof AVAILABLE_CURRENCIES>,
+) => async (dispatch: ReduxDispatch<GlobalState>) => {
   if (AVAILABLE_CURRENCIES.USD === currencyValueSelected) {
-    return dispatch(setCurrencyRate('1'))
+    return dispatch(setCurrencyRate(safeAddress, '1'))
   }
 
   const selectedCurrencyRateInBaseCurrency = await fetchCurrenciesRates(AVAILABLE_CURRENCIES.USD, currencyValueSelected)
-  dispatch(setCurrencyRate(selectedCurrencyRateInBaseCurrency))
+  dispatch(setCurrencyRate(safeAddress, selectedCurrencyRateInBaseCurrency))
 }
 
 export default fetchCurrencySelectedValue

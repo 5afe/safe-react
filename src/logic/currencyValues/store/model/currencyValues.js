@@ -1,5 +1,5 @@
 // @flow
-import type { RecordOf } from 'immutable'
+import type { RecordFactory, RecordOf } from 'immutable'
 import { Record } from 'immutable'
 
 export const AVAILABLE_CURRENCIES = {
@@ -45,17 +45,22 @@ export type BalanceCurrencyType = {
   balanceInSelectedCurrency: string,
 }
 
-export const makeBalanceCurrency = Record({
+export const makeBalanceCurrency: RecordFactory<BalanceCurrencyType> = Record({
   currencyName: '',
   tokenAddress: '',
   balanceInBaseCurrency: '',
   balanceInSelectedCurrency: '',
 })
 
-export type CurrencyValuesProps = {
+export type CurrencyValuesEntry = {
   currencyValueSelected: $Keys<typeof AVAILABLE_CURRENCIES>,
-  currencyRate: string,
+  currencyRate: number,
   currencyValuesList: BalanceCurrencyType[],
+}
+
+export type CurrencyValuesProps = {
+  // Map safe address to currency values entry
+  currencyValues: Map<string, CurrencyValuesEntry>,
 }
 
 export type CurrencyValues = RecordOf<CurrencyValuesProps>

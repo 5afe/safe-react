@@ -55,7 +55,7 @@ const Coins = (props: Props) => {
 
   React.useMemo(() => {
     setFilteredData(getBalanceData(activeTokens, currencySelected, currencyValues, currencyRate))
-  }, [currencySelected, currencyRate, activeTokens.hashCode(), currencyValues.hashCode()])
+  }, [currencySelected, currencyRate, activeTokens.hashCode(), currencyValues])
 
   return (
     <TableContainer>
