@@ -1,5 +1,5 @@
 // @flow
-import { Card, FixedDialog, FixedIcon, IconText, Menu, Text, Title } from '@gnosis.pm/ui-components'
+import { Card, FixedDialog, FixedIcon, IconText, Menu, Text, Title } from '@gnosis.pm/safe-react-components'
 import { withSnackbar } from 'notistack'
 import React, { useCallback, useEffect, useState } from 'react'
 import { withRouter } from 'react-router-dom'
@@ -18,6 +18,7 @@ const APPS_STORAGE_KEY = 'APPS_STORAGE_KEY'
 const APPS_LEGAL_DISCLAIMER_STORAGE_KEY = 'APPS_LEGAL_DISCLAIMER_STORAGE_KEY'
 
 const StyledIframe = styled.iframe`
+  margin: 24px 0 0 24px;
   width: 100%;
   height: 100%;
   display: ${(props) => (props.shouldDisplay ? 'block' : 'none')};
@@ -28,7 +29,6 @@ const Centered = styled.div`
   justify-content: center;
   flex-direction: column;
 `
-
 const operations = {
   SEND_TRANSACTIONS: 'SEND_TRANSACTIONS',
   ON_SAFE_INFO: 'ON_SAFE_INFO',

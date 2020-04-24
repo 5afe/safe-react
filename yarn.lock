@@ -1200,9 +1200,9 @@
     solc "^0.5.9"
     truffle-hdwallet-provider "0.0.7-beta.1"
 
-"@gnosis.pm/safe-react-components@https://github.com/gnosis/safe-react-components.git#71e6fed":
+"@gnosis.pm/safe-react-components@https://github.com/gnosis/safe-react-components.git#a057248":
   version "0.1.1"
-  resolved "https://github.com/gnosis/safe-react-components.git#71e6fed337271b0b536c1ae8128d32d49fc74947"
+  resolved "https://github.com/gnosis/safe-react-components.git#a05724802f5fc74dd759ba8d9c916eb82cf67ef0"
   dependencies:
     classnames "^2.2.6"
     polished "^3.5.1"

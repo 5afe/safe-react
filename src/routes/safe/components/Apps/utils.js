@@ -3,7 +3,12 @@ import axios from 'axios'
 
 import appsIconSvg from '~/routes/safe/components/Transactions/TxsTable/TxType/assets/appsIcon.svg'
 
-export const staticAppsList = [{ url: `${process.env.REACT_APP_GNOSIS_APPS_URL}/compound`, disabled: false }]
+export const staticAppsList = [
+  { url: `${process.env.REACT_APP_GNOSIS_APPS_URL}/compound`, disabled: false },
+  { url: `${process.env.REACT_APP_GNOSIS_APPS_URL}/uniswap`, disabled: false },
+  { url: `${process.env.REACT_APP_GNOSIS_APPS_URL}/nexus-mutual`, disabled: false },
+  { url: `${process.env.REACT_APP_GNOSIS_APPS_URL}/ens`, disabled: false },
+]
 
 export const getAppInfoFromOrigin = (origin: string) => {
   try {
