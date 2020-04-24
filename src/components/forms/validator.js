@@ -95,7 +95,7 @@ export const composeValidatorsApps = (...validators: Function[]): FieldValidator
   if (!meta.modified) {
     return
   }
-  return validators.reduce((error, validator) => error || validator(value), undefined)
+  return composeValidators(validators)
 }
 
 export const inLimit = (limit: number, base: number, baseText: string, symbol: string = 'ETH') => (value: string) => {
