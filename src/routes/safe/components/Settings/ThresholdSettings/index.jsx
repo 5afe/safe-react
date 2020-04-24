@@ -17,7 +17,7 @@ import Row from '~/components/layout/Row'
 import { getGnosisSafeInstanceAt } from '~/logic/contracts/safeContracts'
 import { TX_NOTIFICATION_TYPES } from '~/logic/safe/transactions'
 import { grantedSelector } from '~/routes/safe/container/selector'
-import createTransaction from '~/routes/safe/store/actions/createTransaction'
+import createTransaction from '~/routes/safe/store/actions/transactions/createTransaction'
 import {
   safeOwnersSelector,
   safeParamAddressFromStateSelector,

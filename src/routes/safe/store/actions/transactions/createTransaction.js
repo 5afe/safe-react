@@ -10,7 +10,6 @@ import fetchTransactions from './fetchTransactions'
 import updateTransaction from './updateTransaction'
 
 import { onboardUser } from '~/components/ConnectButton'
-import { nameFromAddressBookSelector } from '~/logic/addressBook/store/selectors/index'
 import { getGnosisSafeInstanceAt } from '~/logic/contracts/safeContracts'
 import { type NotificationsQueue, getNotificationsFromTxType, showSnackbar } from '~/logic/notifications'
 import {
@@ -161,7 +160,6 @@ const createTransaction = ({
         console.error('Tx error: ', error)
       })
       .then((receipt) => {
-        console.log(receipt)
         closeSnackbar(pendingExecutionKey)
         const safeTxHash = isExecution
           ? receipt.events.ExecutionSuccess.returnValues[0]
@@ -181,7 +179,7 @@ const createTransaction = ({
                   type: 'confirmation',
                   hash: receipt.transactionHash,
                   signature: sigs,
-                  owner: { address: from, name: nameFromAddressBookSelector(state, from) },
+                  owner: from,
                 }),
               ]),
             },

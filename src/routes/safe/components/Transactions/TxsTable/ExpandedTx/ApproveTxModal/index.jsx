@@ -22,7 +22,7 @@ import { estimateTxGasCosts } from '~/logic/safe/transactions/gasNew'
 import { formatAmount } from '~/logic/tokens/utils/formatAmount'
 import { getWeb3 } from '~/logic/wallets/getWeb3'
 import { userAccountSelector } from '~/logic/wallets/store/selectors'
-import processTransaction from '~/routes/safe/store/actions/processTransaction'
+import processTransaction from '~/routes/safe/store/actions/transactions/processTransaction'
 import { type Transaction } from '~/routes/safe/store/models/transaction'
 import { safeParamAddressFromStateSelector, safeThresholdSelector } from '~/routes/safe/store/selectors'
 

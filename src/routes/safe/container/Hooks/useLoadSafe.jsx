@@ -7,7 +7,7 @@ import addViewedSafe from '~/logic/currentSession/store/actions/addViewedSafe'
 import fetchSafeTokens from '~/logic/tokens/store/actions/fetchSafeTokens'
 import fetchLatestMasterContractVersion from '~/routes/safe/store/actions/fetchLatestMasterContractVersion'
 import fetchSafe from '~/routes/safe/store/actions/fetchSafe'
-import fetchTransactions from '~/routes/safe/store/actions/fetchTransactions'
+import fetchTransactions from '~/routes/safe/store/actions/transactions/fetchTransactions'
 
 export const useLoadSafe = (safeAddress: ?string) => {
   const dispatch = useDispatch()

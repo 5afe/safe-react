@@ -11,8 +11,8 @@ import Modal from '~/components/Modal'
 import { addOrUpdateAddressBookEntry } from '~/logic/addressBook/store/actions/addOrUpdateAddressBookEntry'
 import { SENTINEL_ADDRESS, getGnosisSafeInstanceAt } from '~/logic/contracts/safeContracts'
 import { TX_NOTIFICATION_TYPES } from '~/logic/safe/transactions'
-import createTransaction from '~/routes/safe/store/actions/createTransaction'
 import replaceSafeOwner from '~/routes/safe/store/actions/replaceSafeOwner'
+import createTransaction from '~/routes/safe/store/actions/transactions/createTransaction'
 import { safeParamAddressFromStateSelector, safeThresholdSelector } from '~/routes/safe/store/selectors'
 
 const styles = () => ({
