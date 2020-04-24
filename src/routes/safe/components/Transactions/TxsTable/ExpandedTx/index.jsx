@@ -66,10 +66,12 @@ const ExpandedTx = ({ cancelTx, tx }: Props) => {
                 <Bold className={classes.txHash}>Hash:</Bold>
                 {tx.executionTxHash ? <EtherScanLink cut={8} type="tx" value={tx.executionTxHash} /> : 'n/a'}
               </Block>
-              <Paragraph noMargin>
-                <Bold>Nonce: </Bold>
-                <Span>{tx.nonce}</Span>
-              </Paragraph>
+              {INCOMING_TX_TYPES.includes(tx.type) ? null : (
+                <Paragraph noMargin>
+                  <Bold>Nonce: </Bold>
+                  <Span>{tx.nonce}</Span>
+                </Paragraph>
+              )}
               <Paragraph noMargin>
                 <Bold>Fee: </Bold>
                 {tx.fee ? tx.fee : 'n/a'}
