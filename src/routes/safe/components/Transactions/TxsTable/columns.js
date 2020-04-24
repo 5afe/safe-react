@@ -111,7 +111,7 @@ export const getTxTableData = (
   const cancelTxsByNonce = cancelTxs.reduce((acc, tx) => acc.set(tx.nonce, tx), Map())
 
   return transactions.map((tx) => {
-    if (INCOMING_TX_TYPES.includes(tx.type)) {
+    if (INCOMING_TX_TYPES[tx.type]) {
       return getIncomingTxTableData(tx)
     }
 
