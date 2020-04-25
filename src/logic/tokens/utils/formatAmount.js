@@ -18,7 +18,7 @@ export const formatAmount = (number: string | number) => {
   let numberFloat = parseFloat(number)
 
   if (numberFloat === 0) {
-    numberFloat = '0.000'
+    numberFloat = '0'
   } else if (numberFloat < 0.001) {
     numberFloat = '< 0.001'
   } else if (numberFloat < 1000) {
