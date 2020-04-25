@@ -76,12 +76,12 @@ type IncomingTxServiceModel = {
 
 export const buildTransactionFrom = async (
   safeAddress: string,
-  tx: TxServiceModel,
   knownTokens,
+  tx: TxServiceModel,
+  txTokenCode,
   txTokenDecimals,
-  txTokenSymbol,
   txTokenName,
-  code,
+  txTokenSymbol,
 ): Promise<Transaction> => {
   const localSafe = await getLocalSafe(safeAddress)
 
@@ -108,7 +108,7 @@ export const buildTransactionFrom = async (
   const modifySettingsTx = sameAddress(tx.to, safeAddress) && Number(tx.value) === 0 && !!tx.data
   const cancellationTx = sameAddress(tx.to, safeAddress) && Number(tx.value) === 0 && !tx.data
   const isERC721Token =
-    (code && code.includes(SAFE_TRANSFER_FROM_WITHOUT_DATA_HASH)) ||
+    (txTokenCode && txTokenCode.includes(SAFE_TRANSFER_FROM_WITHOUT_DATA_HASH)) ||
     (isTokenTransfer(tx.data, Number(tx.value)) && !knownTokens.get(tx.to) && txTokenDecimals !== null)
   let isSendTokenTx = !isERC721Token && isTokenTransfer(tx.data, Number(tx.value))
   const isMultiSendTx = isMultisendTransaction(tx.data, Number(tx.value))
@@ -231,7 +231,7 @@ const batchRequestTxsData = (txs: any[]) => {
   const web3Batch = new web3.BatchRequest()
 
   const whenTxsValues = txs.map((tx) => {
-    const methods = ['decimals', { method: 'getCode', type: 'eth', args: [tx.to] }, 'symbol', 'name']
+    const methods = [{ method: 'getCode', type: 'eth', args: [tx.to] }, 'decimals', 'name', 'symbol']
     return generateBatchRequests({
       abi: ERC20Detailed.abi,
       address: tx.to,
@@ -341,9 +341,15 @@ export const loadSafeTransactions = async (safeAddress: string, getState: GetSta
   const txsWithData = await batchRequestTxsData(transactions)
   // In case that the etags don't match, we parse the new transactions and save them to the cache
   const txsRecord: Array<RecordInstance<TransactionProps>> = await Promise.all(
-    txsWithData.map(([tx: TxServiceModel, decimals, code, symbol, name]) =>
-      buildTransactionFrom(safeAddress, tx, knownTokens, decimals, symbol, name, code),
-    ),
+    txsWithData.map(([tx: TxServiceModel, code, decimals, name, symbol]) => {
+      const knownToken = knownTokens.get(tx.to)
+
+      if (knownToken) {
+        ;({ decimals, name, symbol } = knownToken)
+      }
+
+      return buildTransactionFrom(safeAddress, knownTokens, tx, code, decimals, name, symbol)
+    }),
   )
 
   const groupedTxs = List(txsRecord).groupBy((tx) => (tx.get('cancellationTx') ? 'cancel' : 'outgoing'))
