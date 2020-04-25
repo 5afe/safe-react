@@ -59,8 +59,8 @@ export const getIncomingTxAmount = (tx: IncomingTransaction, useFormatAmount: bo
 }
 
 export const getTxAmount = (tx: Transaction, useFormatAmount: boolean = true) => {
-  const { decodedParams, isTokenTransfer, symbol } = tx
-  const { decimals = 18, value } = isTokenTransfer && decodedParams && decodedParams.value ? decodedParams : tx
+  const { decimals = 18, decodedParams, isTokenTransfer, symbol } = tx
+  const { value } = isTokenTransfer && decodedParams && decodedParams.value ? decodedParams : tx
 
   if (!isTokenTransfer && !(Number(value) > 0)) {
     return NOT_AVAILABLE
