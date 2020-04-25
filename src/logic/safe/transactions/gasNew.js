@@ -123,7 +123,7 @@ export const estimateSafeTxGas = async (
 
               const isEstimationSuccessful =
                 !error &&
-                ((typeof res === 'string' && res !== '0x') || (isOpenEthereumRevertMsg && res.slice(9) !== '0x'))
+                ((typeof res === 'string' && res !== '0x') || (isOpenEthereumRevertMsg && res.data.slice(9) !== '0x'))
 
               resolve({
                 success: isEstimationSuccessful,
