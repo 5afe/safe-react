@@ -118,7 +118,7 @@ export const buildTransactionFrom = async (
   let refundParams = null
   if (tx.gasPrice > 0) {
     const refundSymbol = txTokenSymbol || 'ETH'
-    const decimals = txTokenName || 18
+    const decimals = txTokenDecimals || 18
     const feeString = (tx.gasPrice * (tx.baseGas + tx.safeTxGas)).toString().padStart(decimals, 0)
     const whole = feeString.slice(0, feeString.length - decimals) || '0'
     const fraction = feeString.slice(feeString.length - decimals)
