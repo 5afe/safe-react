@@ -4,7 +4,7 @@ import styled from 'styled-components'
 export const Wrapper = styled.div`
   display: grid;
   grid-template-columns: 245px auto;
-  grid-template-rows: 500px;
+  grid-template-rows: 514px;
   min-height: 525px;
 
   .background {
@@ -33,6 +33,7 @@ export const Menu = styled.div.attrs(() => ({ className: 'background' }))`
 export const Content = styled.div.attrs(() => ({ className: 'background' }))`
   grid-column: 2;
   border-top-right-radius: 8px;
+  border-bottom-right-radius: 8px;
   background-color: white;
 `
 

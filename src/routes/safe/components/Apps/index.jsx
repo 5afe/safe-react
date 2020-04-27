@@ -26,7 +26,8 @@ const APPS_STORAGE_KEY = 'APPS_STORAGE_KEY'
 const APPS_LEGAL_DISCLAIMER_STORAGE_KEY = 'APPS_LEGAL_DISCLAIMER_STORAGE_KEY'
 
 const StyledIframe = styled.iframe`
-  margin: 24px 0 0 24px;
+  padding: 24px;
+  box-sizing: border-box;
   width: 100%;
   height: 100%;
   display: ${(props) => (props.shouldDisplay ? 'block' : 'none')};
