@@ -41,24 +41,24 @@ type TxValues = {
 
 const NOT_AVAILABLE = 'n/a'
 
-const getAmountWithSymbol = ({ decimals = 0, symbol = NOT_AVAILABLE, value }: TxValues, precise = false) => {
+const getAmountWithSymbol = ({ decimals = 0, symbol = NOT_AVAILABLE, value }: TxValues, usePrecise = false) => {
   const nonFormattedValue = BigNumber(value).times(`1e-${decimals}`).toFixed()
-  const finalValue = precise ? formatAmount(nonFormattedValue).toString() : nonFormattedValue
+  const finalValue = usePrecise ? formatAmount(nonFormattedValue).toString() : nonFormattedValue
   const txAmount = finalValue === 'NaN' ? NOT_AVAILABLE : finalValue
 
   return `${txAmount} ${symbol}`
 }
 
-export const getIncomingTxAmount = (tx: IncomingTransaction, precise: boolean = true) => {
+export const getIncomingTxAmount = (tx: IncomingTransaction, usePrecise: boolean = true) => {
   // simple workaround to avoid displaying unexpected values for incoming NFT transfer
   if (INCOMING_TX_TYPES[tx.type] === INCOMING_TX_TYPES.ERC721_TRANSFER) {
     return `1 ${tx.symbol}`
   }
 
-  return getAmountWithSymbol(tx, precise)
+  return getAmountWithSymbol(tx, usePrecise)
 }
 
-export const getTxAmount = (tx: Transaction, precise: boolean = true) => {
+export const getTxAmount = (tx: Transaction, usePrecise: boolean = true) => {
   const { decimals = 18, decodedParams, isTokenTransfer, symbol } = tx
   const { value } = isTokenTransfer && decodedParams && decodedParams.value ? decodedParams : tx
 
@@ -66,7 +66,7 @@ export const getTxAmount = (tx: Transaction, precise: boolean = true) => {
     return NOT_AVAILABLE
   }
 
-  return getAmountWithSymbol({ decimals, symbol, value }, precise)
+  return getAmountWithSymbol({ decimals, symbol, value }, usePrecise)
 }
 
 export type TransactionRow = SortRow<TxData>
