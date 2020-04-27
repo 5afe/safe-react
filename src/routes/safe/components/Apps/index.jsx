@@ -300,9 +300,8 @@ function Apps({ closeModal, closeSnackbar, enqueueSnackbar, openModal }: Props) 
           const currentApp = list[index]
 
           const appInfo = await getAppInfoFromUrl(currentApp.url)
-
           if (appInfo.error) {
-            throw Error()
+            throw Error(`There was a problem trying to load app ${currentApp.url}`)
           }
 
           appInfo.disabled = currentApp.disabled === undefined ? false : currentApp.disabled
