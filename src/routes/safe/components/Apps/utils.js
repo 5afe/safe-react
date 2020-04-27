@@ -20,7 +20,7 @@ export const getAppInfoFromOrigin = (origin: string) => {
 }
 
 export const getAppInfoFromUrl = async (appUrl: string) => {
-  let res = { id: undefined, url: cleanedUpAppUrl, name: 'unknown', iconUrl: appsIconSvg, error: true }
+  let res = { id: undefined, url: appUrl, name: 'unknown', iconUrl: appsIconSvg, error: true }
 
   if (!appUrl) {
     return res
@@ -29,6 +29,7 @@ export const getAppInfoFromUrl = async (appUrl: string) => {
   let cleanedUpAppUrl = appUrl.trim()
   if (cleanedUpAppUrl.substr(-1) === '/') {
     cleanedUpAppUrl = cleanedUpAppUrl.substr(0, cleanedUpAppUrl.length - 1)
+    res.url = cleanedUpAppUrl
   }
 
   try {
