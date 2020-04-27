@@ -49,7 +49,7 @@ const IncomingTxDescription = ({ tx }: Props) => {
   const txFromName = getNameFromAddressBook(tx.from)
   return (
     <Block className={classes.txDataContainer}>
-      <TransferDescription from={tx.from} txFromName={txFromName} value={getIncomingTxAmount(tx)} />
+      <TransferDescription from={tx.from} txFromName={txFromName} value={getIncomingTxAmount(tx, false)} />
     </Block>
   )
 }
