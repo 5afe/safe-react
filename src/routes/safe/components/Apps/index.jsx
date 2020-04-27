@@ -151,7 +151,7 @@ function Apps({ closeModal, closeSnackbar, enqueueSnackbar, openModal }: Props) 
                 <a href="https://gnosis-safe.io/terms" rel="noopener noreferrer" target="_blank">
                   Terms
                 </a>{' '}
-                and this Disclaimer, and agree to be bound by .
+                and this Disclaimer, and agree to be bound by them.
               </Text>
             </>
           }
