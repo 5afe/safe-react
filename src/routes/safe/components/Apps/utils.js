@@ -3,10 +3,12 @@ import axios from 'axios'
 
 import appsIconSvg from '~/routes/safe/components/Transactions/TxsTable/TxType/assets/appsIcon.svg'
 
-export const GNOSIS_APPS_URL = 'https://gnosis-apps.netlify.app'
-
-const appsUrl = process.env.REACT_APP_GNOSIS_APPS_URL ? process.env.REACT_APP_GNOSIS_APPS_URL : GNOSIS_APPS_URL
-export const staticAppsList = [{ url: `${appsUrl}/compound`, disabled: false }]
+export const staticAppsList = [
+  { url: `${process.env.REACT_APP_GNOSIS_APPS_URL}/compound`, disabled: false },
+  { url: `${process.env.REACT_APP_GNOSIS_APPS_URL}/uniswap`, disabled: false },
+  { url: `${process.env.REACT_APP_GNOSIS_APPS_URL}/nexus-mutual`, disabled: false },
+  { url: `${process.env.REACT_APP_GNOSIS_APPS_URL}/ens`, disabled: false },
+]
 
 export const getAppInfoFromOrigin = (origin: string) => {
   try {
@@ -18,12 +20,16 @@ export const getAppInfoFromOrigin = (origin: string) => {
 }
 
 export const getAppInfoFromUrl = async (appUrl: string) => {
+  let res = { id: undefined, url: cleanedUpAppUrl, name: 'unknown', iconUrl: appsIconSvg, error: true }
+
+  if (!appUrl) {
+    return res
+  }
+
   let cleanedUpAppUrl = appUrl.trim()
   if (cleanedUpAppUrl.substr(-1) === '/') {
     cleanedUpAppUrl = cleanedUpAppUrl.substr(0, cleanedUpAppUrl.length - 1)
   }
-
-  let res = { id: undefined, url: cleanedUpAppUrl, name: 'unknown', iconUrl: appsIconSvg, error: true }
 
   try {
     const appInfo = await axios.get(`${cleanedUpAppUrl}/manifest.json`)
