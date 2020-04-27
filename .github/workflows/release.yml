@@ -13,6 +13,7 @@ env:
   REACT_APP_GOOGLE_ANALYTICS_ID_MAINNET: ${{ secrets.REACT_APP_GOOGLE_ANALYTICS_ID_MAINNET }}
   REACT_APP_INFURA_TOKEN: ${{ secrets.REACT_APP_INFURA_TOKEN }}
   REACT_APP_PORTIS_ID: ${{ secrets.REACT_APP_PORTIS_ID }}
+  REACT_APP_GNOSIS_APPS_URL: ${{ secrets.REACT_APP_GNOSIS_APPS_URL }}
 
 jobs:
   release:
@@ -32,6 +33,7 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: 10.16
+      - run: yarn install --network-concurrency 1
 
       - name: Patch node gyp on windows to support Visual Studio 2019
         if: startsWith(matrix.os, 'windows')
