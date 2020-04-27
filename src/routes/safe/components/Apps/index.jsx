@@ -26,6 +26,8 @@ const APPS_STORAGE_KEY = 'APPS_STORAGE_KEY'
 const APPS_LEGAL_DISCLAIMER_STORAGE_KEY = 'APPS_LEGAL_DISCLAIMER_STORAGE_KEY'
 
 const StyledIframe = styled.iframe`
+  padding: 24px;
+  box-sizing: border-box;
   width: 100%;
   height: 100%;
   display: ${(props) => (props.shouldDisplay ? 'block' : 'none')};
@@ -36,7 +38,6 @@ const Centered = styled.div`
   justify-content: center;
   flex-direction: column;
 `
-
 const operations = {
   SEND_TRANSACTIONS: 'SEND_TRANSACTIONS',
   ON_SAFE_INFO: 'ON_SAFE_INFO',
@@ -151,7 +152,7 @@ function Apps({ closeModal, closeSnackbar, enqueueSnackbar, openModal }: Props) 
                 <a href="https://gnosis-safe.io/terms" rel="noopener noreferrer" target="_blank">
                   Terms
                 </a>{' '}
-                and this Disclaimer, and agree to be bound by .
+                and this Disclaimer, and agree to be bound by them.
               </Text>
             </>
           }

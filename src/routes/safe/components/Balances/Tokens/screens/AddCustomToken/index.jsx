@@ -21,6 +21,7 @@ import Img from '~/components/layout/Img'
 import Paragraph from '~/components/layout/Paragraph'
 import Row from '~/components/layout/Row'
 import { type Token, type TokenProps } from '~/logic/tokens/store/model/token'
+import { getWeb3 } from '~/logic/wallets/getWeb3'
 import TokenPlaceholder from '~/routes/safe/components/Balances/assets/token_placeholder.svg'
 
 export const ADD_CUSTOM_TOKEN_ADDRESS_INPUT_TEST_ID = 'add-custom-token-address-input'
@@ -64,8 +65,9 @@ const AddCustomToken = (props: Props) => {
   const [formValues, setFormValues] = useState(INITIAL_FORM_STATE)
 
   const handleSubmit = (values) => {
+    const address = getWeb3().utils.toChecksumAddress(values.address)
     const token = {
-      address: values.address,
+      address,
       decimals: values.decimals,
       symbol: values.symbol,
       name: values.symbol,

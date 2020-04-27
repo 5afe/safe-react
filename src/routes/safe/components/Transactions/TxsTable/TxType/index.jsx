@@ -40,6 +40,7 @@ const TxType = ({ origin, txType }: { txType: TransactionType, origin: string | 
       const parsedOrigin = getAppInfoFromOrigin(origin)
       if (!parsedOrigin) {
         setForceCustom(true)
+        setLoading(false)
         return
       }
       const appInfo = await getAppInfoFromUrl(parsedOrigin.url)
@@ -52,7 +53,7 @@ const TxType = ({ origin, txType }: { txType: TransactionType, origin: string | 
     }
 
     getAppInfo()
-  }, [txType])
+  }, [origin, txType])
 
   if (forceCustom || !origin) {
     return <IconText iconUrl={typeToIcon[txType]} text={typeToLabel[txType]} />
