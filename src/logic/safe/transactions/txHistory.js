@@ -60,7 +60,7 @@ export const buildTxServiceUrl = (safeAddress: string) => {
   const host = getTxServiceHost()
   const address = getWeb3().utils.toChecksumAddress(safeAddress)
   const base = getTxServiceUriFrom(address)
-  return `${host}${base}`
+  return `${host}${base}?has_confirmations=True`
 }
 
 const SUCCESS_STATUS = 201 // CREATED status

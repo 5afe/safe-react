@@ -105,9 +105,6 @@ const createTransaction = ({
   try {
     // Here we're checking that safe contract version is greater or equal 1.1.1, but
     // theoretically EIP712 should also work for 1.0.0 contracts
-    // Also, offchain signatures are not working for ledger/trezor wallet because of a bug in their library:
-    // https://github.com/LedgerHQ/ledgerjs/issues/378
-    // Couldn't find an issue for trezor but the error is almost the same
     const canTryOffchainSigning =
       !isExecution && !smartContractWallet && semverSatisfies(safeVersion, SAFE_VERSION_FOR_OFFCHAIN_SIGNATURES)
     if (false) {

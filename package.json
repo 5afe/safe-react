@@ -44,7 +44,7 @@
     "@gnosis.pm/safe-contracts": "1.1.1-dev.1",
     "@gnosis.pm/safe-react-components": "https://github.com/gnosis/safe-react-components.git#71e6fed",
     "@gnosis.pm/util-contracts": "2.0.6",
-    "@material-ui/core": "4.9.11",
+    "@material-ui/core": "4.9.12",
     "@material-ui/icons": "4.9.1",
     "@material-ui/lab": "4.0.0-alpha.39",
     "@openzeppelin/contracts": "3.0.0",
@@ -89,7 +89,7 @@
     "reselect": "^4.0.0",
     "semver": "7.3.2",
     "styled-components": "^5.0.1",
-    "web3": "1.2.6"
+    "web3": "1.2.7"
   },
   "devDependencies": {
     "@babel/cli": "7.8.4",
@@ -155,8 +155,8 @@
     "postcss-simple-vars": "^5.0.2",
     "prettier": "2.0.5",
     "run-with-testrpc": "0.3.1",
-    "style-loader": "1.1.4",
-    "terser-webpack-plugin": "2.3.5",
+    "style-loader": "1.2.0",
+    "terser-webpack-plugin": "2.3.6",
     "truffle": "5.1.23",
     "truffle-contract": "4.0.31",
     "truffle-solidity-loader": "0.1.32",
