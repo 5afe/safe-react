@@ -230,7 +230,7 @@ const addMockSafeCreationTx = (safeAddress): Array<TxServiceModel> => [
 const batchRequestTxsData = (txs: any[]) => {
   const web3Batch = new web3.BatchRequest()
 
-  const whenTxsValues = txs.map((tx) => {
+  const txsTokenInfo = txs.map((tx) => {
     const methods = [{ method: 'getCode', type: 'eth', args: [tx.to] }, 'decimals', 'name', 'symbol']
     return generateBatchRequests({
       abi: ERC20Detailed.abi,
@@ -243,7 +243,7 @@ const batchRequestTxsData = (txs: any[]) => {
 
   web3Batch.execute()
 
-  return Promise.all(whenTxsValues)
+  return Promise.all(txsTokenInfo)
 }
 
 const batchRequestIncomingTxsData = (txs: IncomingTxServiceModel[]) => {
