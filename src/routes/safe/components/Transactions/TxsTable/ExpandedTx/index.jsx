@@ -41,8 +41,9 @@ const ExpandedTx = ({ cancelTx, tx }: Props) => {
   const [openModal, setOpenModal] = useState<OpenModal>(null)
   const openApproveModal = () => setOpenModal('approveTx')
   const closeModal = () => setOpenModal(null)
-  const thresholdReached = !INCOMING_TX_TYPES[tx.type] && threshold <= tx.confirmations.size
-  const canExecute = !INCOMING_TX_TYPES[tx.type] && nonce === tx.nonce
+  const isIncomingTx = !!INCOMING_TX_TYPES[tx.type]
+  const thresholdReached = !isIncomingTx && threshold <= tx.confirmations.size
+  const canExecute = !isIncomingTx && nonce === tx.nonce
   const cancelThresholdReached = !!cancelTx && threshold <= cancelTx.confirmations.size
   const canExecuteCancel = nonce === tx.nonce
 
@@ -59,12 +60,12 @@ const ExpandedTx = ({ cancelTx, tx }: Props) => {
       <Block className={classes.expandedTxBlock}>
         <Row>
           <Col layout="column" xs={6}>
-            <Block className={cn(classes.txDataContainer, INCOMING_TX_TYPES[tx.type] && classes.incomingTxBlock)}>
+            <Block className={cn(classes.txDataContainer, isIncomingTx && classes.incomingTxBlock)}>
               <Block align="left" className={classes.txData}>
                 <Bold className={classes.txHash}>Hash:</Bold>
                 {tx.executionTxHash ? <EtherScanLink cut={8} type="tx" value={tx.executionTxHash} /> : 'n/a'}
               </Block>
-              {INCOMING_TX_TYPES[tx.type] ? null : (
+              {!isIncomingTx && (
                 <Paragraph noMargin>
                   <Bold>Nonce: </Bold>
                   <Span>{tx.nonce}</Span>
@@ -74,7 +75,7 @@ const ExpandedTx = ({ cancelTx, tx }: Props) => {
                 <Bold>Fee: </Bold>
                 {tx.fee ? tx.fee : 'n/a'}
               </Paragraph>
-              {INCOMING_TX_TYPES[tx.type] ? (
+              {isIncomingTx ? (
                 <>
                   <Paragraph noMargin>
                     <Bold>Created: </Bold>
@@ -113,9 +114,9 @@ const ExpandedTx = ({ cancelTx, tx }: Props) => {
               )}
             </Block>
             <Hairline />
-            {INCOMING_TX_TYPES[tx.type] ? <IncomingTxDescription tx={tx} /> : <TxDescription tx={tx} />}
+            {isIncomingTx ? <IncomingTxDescription tx={tx} /> : <TxDescription tx={tx} />}
           </Col>
-          {!INCOMING_TX_TYPES[tx.type] && (
+          {!isIncomingTx && (
             <OwnersColumn
               cancelThresholdReached={cancelThresholdReached}
               cancelTx={cancelTx}
