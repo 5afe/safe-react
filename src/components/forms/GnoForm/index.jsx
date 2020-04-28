@@ -1,5 +1,5 @@
 // @flow
-import { type FormApi } from 'final-form'
+import { type Decorator, type FormApi } from 'final-form'
 import * as React from 'react'
 import { Form } from 'react-final-form'
 
@@ -12,6 +12,7 @@ export type OnSubmit = (
 type Props = {
   onSubmit: OnSubmit,
   children: Function,
+  decorators?: Decorator<{ [string]: any }>[],
   padding?: number,
   validation?: (values: Object) => Object | Promise<Object>,
   initialValues?: Object,
@@ -25,8 +26,18 @@ const stylesBasedOn = (padding: number): $Shape<CSSStyleDeclaration> => ({
   flex: '1 0 auto',
 })
 
-const GnoForm = ({ children, formMutators, initialValues, onSubmit, padding = 0, testId = '', validation }: Props) => (
+const GnoForm = ({
+  children,
+  decorators,
+  formMutators,
+  initialValues,
+  onSubmit,
+  padding = 0,
+  testId = '',
+  validation,
+}: Props) => (
   <Form
+    decorators={decorators}
     initialValues={initialValues}
     mutators={formMutators}
     onSubmit={onSubmit}
