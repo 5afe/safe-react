@@ -3,11 +3,14 @@ import axios from 'axios'
 
 import appsIconSvg from '~/routes/safe/components/Transactions/TxsTable/TxType/assets/appsIcon.svg'
 
+const gnosisAppsUrl = process.env.REACT_APP_GNOSIS_APPS_URL
 export const staticAppsList = [
-  { url: `${process.env.REACT_APP_GNOSIS_APPS_URL}/compound`, disabled: false },
-  { url: `${process.env.REACT_APP_GNOSIS_APPS_URL}/uniswap`, disabled: false },
-  { url: `${process.env.REACT_APP_GNOSIS_APPS_URL}/nexus-mutual`, disabled: false },
-  { url: `${process.env.REACT_APP_GNOSIS_APPS_URL}/ens`, disabled: false },
+  { url: `${gnosisAppsUrl}/compound`, disabled: false },
+  { url: `${gnosisAppsUrl}/aave`, disabled: false },
+  { url: `${gnosisAppsUrl}/pool-together`, disabled: false },
+  { url: `${gnosisAppsUrl}/open-zeppelin`, disabled: false },
+  { url: `${gnosisAppsUrl}/request`, disabled: false },
+  { url: `${gnosisAppsUrl}/synthetix`, disabled: false },
 ]
 
 export const getAppInfoFromOrigin = (origin: string) => {
