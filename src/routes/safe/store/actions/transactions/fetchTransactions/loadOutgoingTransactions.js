@@ -49,7 +49,7 @@ export type TxServiceModel = {
   creationTx?: boolean,
 }
 
-type SafeTransactionsType = {
+export type SafeTransactionsType = {
   outgoing: Map<string, List<TransactionProps>>,
   cancel: Map<string, List<TransactionProps>>,
 }

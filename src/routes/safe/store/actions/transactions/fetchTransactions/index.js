@@ -1,18 +1,19 @@
 // @flow
-import { List, Map, type RecordInstance } from 'immutable'
+import { List, Map } from 'immutable'
 import { batch } from 'react-redux'
 import type { Dispatch as ReduxDispatch } from 'redux'
 
-import { addIncomingTransactions } from './addIncomingTransactions'
-import { addTransactions } from './addTransactions'
-import { TxServiceModel } from './loadOutgoingTransactions'
+import { addIncomingTransactions } from '../addIncomingTransactions'
+import { addTransactions } from '../addTransactions'
+
+import { type SafeTransactionsType, TxServiceModel, loadOutgoingTransactions } from './loadOutgoingTransactions'
 
 import { addCancellationTransactions } from '~/routes/safe/store/actions/transactions/addCancellationTransactions'
 import { type IncomingTransaction } from '~/routes/safe/store/models/incomingTransaction'
 import { type GlobalState } from '~/store'
 
 export default (safeAddress: string) => async (dispatch: ReduxDispatch<GlobalState>, getState: GetState) => {
-  const transactions: SafeTransactionsType | typeof undefined = await loadSafeTransactions(safeAddress, getState)
+  const transactions: SafeTransactionsType | typeof undefined = await loadOutgoingTransactions(safeAddress, getState)
   if (transactions) {
     const { cancel, outgoing } = transactions
 
