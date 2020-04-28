@@ -44,6 +44,7 @@ import Row from '~/components/layout/Row'
 import { getNetwork } from '~/config'
 import { getConfiguredSource } from '~/logic/contractInteraction/sources'
 import EtherscanService from '~/logic/contractInteraction/sources/EtherscanService'
+import { getWeb3 } from '~/logic/wallets/getWeb3'
 import SafeInfo from '~/routes/safe/components/Balances/SendModal/SafeInfo'
 import CheckIcon from '~/routes/safe/components/DropdownCurrency/img/check.svg'
 import { useDropdownStyles } from '~/routes/safe/components/DropdownCurrency/style'
@@ -81,10 +82,13 @@ const formMutators = {
   setContractAddress: (args, state, utils) => {
     utils.changeValue(state, 'contractAddress', () => args[0])
   },
+  setSelectedMethod: (args, state, utils) => {
+    utils.changeValue(state, 'selectedMethod', () => args[0])
+  },
 }
 
 const MENU_WIDTH = '452px'
-const MethodsDropdown = ({ abi }: { abi: ?string }) => {
+const MethodsDropdown = ({ abi, onChange }: { abi: ?string, onChange: (any) => void }) => {
   const classes = useDropdownStyles({ buttonWidth: MENU_WIDTH })
   const [methodSelected, setMethodSelected] = useState('')
   const [methodsList, setMethodsList] = useState([])
@@ -116,6 +120,7 @@ const MethodsDropdown = ({ abi }: { abi: ?string }) => {
 
   const onMethodSelectedChanged = (newMethodSelected) => {
     setMethodSelected(newMethodSelected)
+    onChange(methodsList.find(({ name }) => name === newMethodSelected))
     handleClose()
   }
 
@@ -171,7 +176,7 @@ const MethodsDropdown = ({ abi }: { abi: ?string }) => {
               >
                 <ListItemText primary={name} />
                 <ListItemIcon className={classes.iconRight}>
-                  {name === methodSelected ? <img alt="checked" src={CheckIcon} /> : null}
+                  {name === methodSelected ? <img alt="checked" src={CheckIcon} /> : <span />}
                 </ListItemIcon>
                 <ListItemIcon className={classes.iconRight}>
                   <div>{action}</div>
@@ -183,6 +188,48 @@ const MethodsDropdown = ({ abi }: { abi: ?string }) => {
       </>
     </MuiThemeProvider>
   )
+}
+
+const RenderOutputParams = ({ method, result }) => {
+  const multipleResults = method.outputs.length > 1
+
+  return method.outputs.map(({ name, type }, index) => {
+    const placeholder = name ? `${name} (${type})` : type
+    const key = `${method.name}_${index}_${type}`
+
+    return (
+      <Field
+        component={TextField}
+        disabled
+        initialValue={multipleResults ? result[index] : result}
+        key={key}
+        name={key}
+        placeholder={placeholder}
+        testId={`methodCallResult-${key}`}
+        text={placeholder}
+        type="text"
+      />
+    )
+  })
+}
+
+const RenderReadCallResult = ({ contractAddress, method }: { contractAddress: string, method: any }) => {
+  const [callResult, setCallResult] = React.useState(null)
+  const web3 = getWeb3()
+
+  React.useMemo(() => {
+    setCallResult(null)
+
+    const call = async () => {
+      const contract = new web3.eth.Contract([method], contractAddress)
+      const result = await contract.methods[method.name]().call()
+      setCallResult(result)
+    }
+
+    call()
+  }, [method, contractAddress])
+
+  return callResult ? <RenderOutputParams method={method} result={callResult} /> : null
 }
 
 const ContractInteraction = ({ contractAddress, initialValues, onClose, onNext }: Props) => {
@@ -322,7 +369,24 @@ const ContractInteraction = ({ contractAddress, initialValues, onClose, onNext }
                 <Row margin="sm">
                   <Col>
                     <Field name="interactWithABI" subscription={{ value: true }}>
-                      {({ input: { value } }) => (value === true ? <MethodsDropdown abi={rest.values.abi} /> : null)}
+                      {({ input: { value } }) =>
+                        value === true ? (
+                          <MethodsDropdown abi={rest.values.abi} onChange={mutators.setSelectedMethod} />
+                        ) : null
+                      }
+                    </Field>
+                  </Col>
+                </Row>
+                <Row margin="sm">
+                  <Col>
+                    <Field name="selectedMethod" subscription={{ value: true }}>
+                      {({ input: { value } }) => {
+                        if (!!value && value.action === 'read' && value.inputs.length === 0) {
+                          return <RenderReadCallResult contractAddress={rest.values.contractAddress} method={value} />
+                        }
+
+                        return null
+                      }}
                     </Field>
                   </Col>
                 </Row>
