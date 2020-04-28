@@ -1,4 +1,7 @@
 // @flow
+
+import { buildTransactionFrom } from '../fetchTransactions'
+
 // type TxServiceModel = {
 //   blockNumber: ?number,
 //   safeTxHash: string,
