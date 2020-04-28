@@ -34,8 +34,7 @@ const fetchSafeTokens = (safeAddress: string) => async (dispatch: ReduxDispatch<
     const safeBalances = safe.get('balances')
     const alreadyActiveTokens = safe.get('activeTokens')
     const blacklistedTokens = safe.get('blacklistedTokens')
-    const currencyValues = state[CURRENCY_VALUES_KEY]
-    const storedCurrencyBalances = currencyValues.get('currencyBalances')
+    const currencyValues = state[CURRENCY_VALUES_KEY].get('currencyValues')
 
     const { balances, currencyList, ethBalance, tokens } = result.data.reduce(
       (acc, { balance, balanceUsd, token, tokenAddress }) => {
@@ -78,6 +77,10 @@ const fetchSafeTokens = (safeAddress: string) => async (dispatch: ReduxDispatch<
     const updateActiveTokens = activeTokens.equals(alreadyActiveTokens) ? noFunc : update({ activeTokens })
     const updateBalances = balances.equals(safeBalances) ? noFunc : update({ balances })
     const updateEthBalance = ethBalance === currentEthBalance ? noFunc : update({ ethBalance })
+    const storedCurrencyBalances =
+      currencyValues && currencyValues.get(safeAddress)
+        ? currencyValues.get(safeAddress).get('currencyBalances')
+        : undefined
 
     const updateCurrencies = currencyList.equals(storedCurrencyBalances)
       ? noFunc
