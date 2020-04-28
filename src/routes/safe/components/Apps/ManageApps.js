@@ -10,7 +10,7 @@ import { getAppInfoFromUrl } from './utils'
 import Field from '~/components/forms/Field'
 import DebounceValidationField from '~/components/forms/Field/DebounceValidationField'
 import GnoForm from '~/components/forms/GnoForm'
-import { composeValidators, required } from '~/components/forms/validator'
+import { required } from '~/components/forms/validator'
 import Img from '~/components/layout/Img'
 import appsIconSvg from '~/routes/safe/components/Transactions/TxsTable/TxType/assets/appsIcon.svg'
 
@@ -60,7 +60,7 @@ const composeValidatorsApps = (...validators: Function[]): FieldValidator => (va
   if (!meta.modified) {
     return
   }
-  return composeValidators(validators)
+  return validators.reduce((error, validator) => error || validator(value), undefined)
 }
 
 const ManageApps = ({ appList, onAppAdded, onAppToggle }: Props) => {
