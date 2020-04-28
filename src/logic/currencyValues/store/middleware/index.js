@@ -18,14 +18,19 @@ const currencyValuesStorageMiddleware = (store: Store<GlobalState>) => (next: Fu
   if (watchedActions.includes(action.type)) {
     const state: GlobalState = store.getState()
     const { dispatch } = store
-    const currencyValues = currencyValuesSelector(state)
-    await saveCurrencyValues(currencyValues)
     switch (action.type) {
       case SET_CURRENT_CURRENCY: {
         const { currencyValueSelected, safeAddress } = action.payload
         dispatch(fetchCurrencySelectedValue(safeAddress, currencyValueSelected))
         break
       }
+      case SET_CURRENCY_RATE:
+      case SET_CURRENCY_BALANCES: {
+        const currencyValues = currencyValuesSelector(state)
+        await saveCurrencyValues(currencyValues)
+        break
+      }
+
       default:
         break
     }

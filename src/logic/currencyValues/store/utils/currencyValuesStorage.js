@@ -13,7 +13,6 @@ export const saveCurrencyValues = async (currencyValues: Map<string, CurrencyVal
   }
 }
 
-export const loadCurrencyValues = async (safeAddress: string) => {
-  const storedCurrencyValues = (await loadFromStorage(CURRENCY_VALUES_STORAGE_KEY)) || {}
-  return storedCurrencyValues[safeAddress]
+export const loadCurrencyValues = async () => {
+  return (await loadFromStorage(CURRENCY_VALUES_STORAGE_KEY)) || {}
 }
