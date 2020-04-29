@@ -29,14 +29,14 @@ export const getAppInfoFromUrl = async (appUrl: string) => {
     return res
   }
 
-  let cleanedUpAppUrl = appUrl.trim()
-  res.url = cleanedUpAppUrl
-  if (cleanedUpAppUrl.substr(-1) === '/') {
-    cleanedUpAppUrl = cleanedUpAppUrl.substr(0, cleanedUpAppUrl.length - 1)
+  res.url = appUrl.trim()
+  let noTrailingSlashUrl = res.url
+  if (noTrailingSlashUrl.substr(-1) === '/') {
+    noTrailingSlashUrl = noTrailingSlashUrl.substr(0, noTrailingSlashUrl.length - 1)
   }
 
   try {
-    const appInfo = await axios.get(`${cleanedUpAppUrl}/manifest.json`)
+    const appInfo = await axios.get(`${noTrailingSlashUrl}/manifest.json`)
 
     // verify imported app fulfil safe requirements
     if (!appInfo || !appInfo.data || !appInfo.data.name || !appInfo.data.description) {
@@ -46,23 +46,23 @@ export const getAppInfoFromUrl = async (appUrl: string) => {
     res = {
       ...res,
       ...appInfo.data,
-      id: JSON.stringify({ url: cleanedUpAppUrl, name: appInfo.data.name }),
+      id: JSON.stringify({ url: res.url, name: appInfo.data.name }),
       error: false,
     }
     if (appInfo.data.iconPath) {
       try {
-        const iconInfo = await axios.get(`${cleanedUpAppUrl}/${appInfo.data.iconPath}`)
+        const iconInfo = await axios.get(`${noTrailingSlashUrl}/${appInfo.data.iconPath}`)
         if (/image\/\w/gm.test(iconInfo.headers['content-type'])) {
-          res.iconUrl = `${cleanedUpAppUrl}/${appInfo.data.iconPath}`
+          res.iconUrl = `${noTrailingSlashUrl}/${appInfo.data.iconPath}`
         }
       } catch (error) {
-        console.error(`It was not possible to fetch icon from app ${cleanedUpAppUrl}`)
+        console.error(`It was not possible to fetch icon from app ${res.url}`)
       }
     }
 
     return res
   } catch (error) {
-    console.error(`It was not possible to fetch app from ${cleanedUpAppUrl}: ${error.message}`)
+    console.error(`It was not possible to fetch app from ${res.url}: ${error.message}`)
     return res
   }
 }
