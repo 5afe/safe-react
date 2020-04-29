@@ -6,7 +6,7 @@ import type { Dispatch as ReduxDispatch } from 'redux'
 import { addIncomingTransactions } from '../addIncomingTransactions'
 import { addTransactions } from '../addTransactions'
 
-import { type SafeTransactionsType, TxServiceModel, loadOutgoingTransactions } from './loadOutgoingTransactions'
+import { type SafeTransactionsType, loadOutgoingTransactions } from './loadOutgoingTransactions'
 
 import { addCancellationTransactions } from '~/routes/safe/store/actions/transactions/addCancellationTransactions'
 import { type IncomingTransaction } from '~/routes/safe/store/models/incomingTransaction'
