@@ -17,7 +17,7 @@ import { SAFELIST_ADDRESS } from '~/routes/routes'
 import SendModal from '~/routes/safe/components/Balances/SendModal'
 import DropdownCurrency from '~/routes/safe/components/DropdownCurrency'
 import { useFetchTokens } from '~/routes/safe/container/Hooks/useFetchTokens'
-import { safeFeaturesEnabledSelector, safeParamAddressFromStateSelector } from '~/routes/safe/store/selectors'
+import { safeEnabledFeaturesSelector, safeParamAddressFromStateSelector } from '~/routes/safe/store/selectors'
 import { history } from '~/store'
 import { wrapInSuspense } from '~/utils/wrapInSuspense'
 const Collectibles = React.lazy(() => import('~/routes/safe/components/Balances/Collectibles'))
@@ -64,7 +64,7 @@ const Balances = (props: Props) => {
   const [state, setState] = useState(INITIAL_STATE)
 
   const address = useSelector(safeParamAddressFromStateSelector)
-  const featuresEnabled = useSelector(safeFeaturesEnabledSelector)
+  const featuresEnabled = useSelector(safeEnabledFeaturesSelector)
 
   useFetchTokens()
 

@@ -150,8 +150,8 @@ export const safeSelector: OutputSelector<GlobalState, RouterProps, SafeSelector
     if (!address) {
       return undefined
     }
-    const checksumed = getWeb3().utils.toChecksumAddress(address)
-    const safe = safes.get(checksumed)
+    const checksummed = getWeb3().utils.toChecksumAddress(address)
+    const safe = safes.get(checksummed)
 
     return safe
   },
@@ -276,7 +276,7 @@ export const safeOwnersSelector: OutputSelector<GlobalState, RouterProps, Map<st
   },
 )
 
-export const safeFeaturesEnabledSelector: OutputSelector<
+export const safeEnabledFeaturesSelector: OutputSelector<
   GlobalState,
   RouterProps,
   Map<string, string>,
