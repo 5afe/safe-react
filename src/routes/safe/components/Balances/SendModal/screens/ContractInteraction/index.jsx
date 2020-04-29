@@ -20,7 +20,6 @@ import { styles } from './style'
 
 import QRIcon from '~/assets/icons/qrcode.svg'
 import ScanQRModal from '~/components/ScanQRModal'
-import GnoCheckbox from '~/components/forms/Checkbox'
 import Field from '~/components/forms/Field'
 import GnoForm from '~/components/forms/GnoForm'
 import TextField from '~/components/forms/TextField'
@@ -85,6 +84,18 @@ const formMutators = {
   setSelectedMethod: (args, state, utils) => {
     utils.changeValue(state, 'selectedMethod', () => args[0])
   },
+}
+
+const mustBeValidABI = (abi: string) => {
+  try {
+    const parsedABI = EtherscanService.extractUsefulMethods(JSON.parse(abi))
+
+    if (parsedABI.length === 0) {
+      return 'no data'
+    }
+  } catch (e) {
+    return e.message
+  }
 }
 
 const MENU_WIDTH = '452px'
@@ -351,45 +362,40 @@ const ContractInteraction = ({ contractAddress, initialValues, onClose, onNext }
                 </Row>
                 <Row margin="sm">
                   <Col>
-                    <TextareaField name="abi" placeholder="ABI*" text="ABI*" type="text" />
+                    <TextareaField name="abi" placeholder="ABI*" text="ABI*" type="text" validate={mustBeValidABI} />
                   </Col>
                 </Row>
-                <Row margin="sm">
-                  <Col end="sm">
-                    <Field name="abi" subscription={{ value: true }}>
-                      {({ input: { value } }) => (
-                        <label htmlFor="interactWithABI">
-                          Interact with Contract?{' '}
-                          <Field component={GnoCheckbox} disabled={!value} name="interactWithABI" type="checkbox" />
-                        </label>
-                      )}
-                    </Field>
-                  </Col>
-                </Row>
-                <Row margin="sm">
-                  <Col>
-                    <Field name="interactWithABI" subscription={{ value: true }}>
-                      {({ input: { value } }) =>
-                        value === true ? (
-                          <MethodsDropdown abi={rest.values.abi} onChange={mutators.setSelectedMethod} />
-                        ) : null
-                      }
-                    </Field>
-                  </Col>
-                </Row>
-                <Row margin="sm">
-                  <Col>
-                    <Field name="selectedMethod" subscription={{ value: true }}>
-                      {({ input: { value } }) => {
-                        if (!!value && value.action === 'read' && value.inputs.length === 0) {
-                          return <RenderReadCallResult contractAddress={rest.values.contractAddress} method={value} />
-                        }
+                <Field name="abi" subscription={{ value: true, valid: true }}>
+                  {({ input: { value }, meta: { valid } }) =>
+                    !valid || !value || value === 'no contract' ? null : (
+                      <>
+                        <Row margin="sm">
+                          <Col>
+                            <MethodsDropdown abi={rest.values.abi} onChange={mutators.setSelectedMethod} />
+                          </Col>
+                        </Row>
+                        <Row margin="sm">
+                          <Col>
+                            <Field name="selectedMethod" subscription={{ value: true }}>
+                              {({ input: { value: method } }) => {
+                                if (!!method && method.action === 'read' && method.inputs.length === 0) {
+                                  return (
+                                    <RenderReadCallResult
+                                      contractAddress={rest.values.contractAddress}
+                                      method={method}
+                                    />
+                                  )
+                                }
 
-                        return null
-                      }}
-                    </Field>
-                  </Col>
-                </Row>
+                                return null
+                              }}
+                            </Field>
+                          </Col>
+                        </Row>
+                      </>
+                    )
+                  }
+                </Field>
               </Block>
               <Hairline />
               <Row align="center" className={classes.buttonRow}>

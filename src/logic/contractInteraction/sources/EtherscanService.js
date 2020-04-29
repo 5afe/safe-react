@@ -51,7 +51,7 @@ class EtherscanService {
 
   static extractUsefulMethods(abi: ABI): ExtendedABI {
     return abi
-      .filter(({ type }) => type === 'function')
+      .filter(({ constant, name, type }) => type === 'function' && !!name && typeof constant === 'boolean')
       .map((method) => ({
         action: method.constant ? 'read' : 'write',
         ...method,
