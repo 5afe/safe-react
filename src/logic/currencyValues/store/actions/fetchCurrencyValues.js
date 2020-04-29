@@ -23,7 +23,7 @@ export const fetchCurrencyValues = (safeAddress: string) => async (dispatch: Red
       })
     }
     // Loads the stored state on redux
-    Object.entries(storedCurrency).forEach((kv) => {
+    Object.entries(storedCurrencies).forEach((kv) => {
       const safeAddr = kv[0]
       const value = kv[1]
       const { currencyBalances, currencyRate, currencyValueSelected } = value
