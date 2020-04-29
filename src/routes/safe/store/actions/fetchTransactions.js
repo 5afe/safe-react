@@ -74,12 +74,12 @@ type IncomingTxServiceModel = {
 
 export const buildTransactionFrom = async (
   safeAddress: string,
-  tx: TxServiceModel,
   knownTokens,
+  tx: TxServiceModel,
+  txTokenCode,
   txTokenDecimals,
-  txTokenSymbol,
   txTokenName,
-  code,
+  txTokenSymbol,
 ): Promise<Transaction> => {
   const confirmations = List(
     tx.confirmations.map((conf: ConfirmationServiceModel) =>
@@ -94,7 +94,7 @@ export const buildTransactionFrom = async (
   const modifySettingsTx = sameAddress(tx.to, safeAddress) && Number(tx.value) === 0 && !!tx.data
   const cancellationTx = sameAddress(tx.to, safeAddress) && Number(tx.value) === 0 && !tx.data
   const isERC721Token =
-    (code && code.includes(SAFE_TRANSFER_FROM_WITHOUT_DATA_HASH)) ||
+    (txTokenCode && txTokenCode.includes(SAFE_TRANSFER_FROM_WITHOUT_DATA_HASH)) ||
     (isTokenTransfer(tx.data, Number(tx.value)) && !knownTokens.get(tx.to) && txTokenDecimals !== null)
   let isSendTokenTx = !isERC721Token && isTokenTransfer(tx.data, Number(tx.value))
   const isMultiSendTx = isMultisendTransaction(tx.data, Number(tx.value))
@@ -104,7 +104,7 @@ export const buildTransactionFrom = async (
   let refundParams = null
   if (tx.gasPrice > 0) {
     const refundSymbol = txTokenSymbol || 'ETH'
-    const decimals = txTokenName || 18
+    const decimals = txTokenDecimals || 18
     const feeString = (tx.gasPrice * (tx.baseGas + tx.safeTxGas)).toString().padStart(decimals, 0)
     const whole = feeString.slice(0, feeString.length - decimals) || '0'
     const fraction = feeString.slice(feeString.length - decimals)
@@ -216,8 +216,8 @@ const addMockSafeCreationTx = (safeAddress): Array<TxServiceModel> => [
 const batchRequestTxsData = (txs: any[]) => {
   const web3Batch = new web3.BatchRequest()
 
-  const whenTxsValues = txs.map((tx) => {
-    const methods = ['decimals', { method: 'getCode', type: 'eth', args: [tx.to] }, 'symbol', 'name']
+  const txsTokenInfo = txs.map((tx) => {
+    const methods = [{ method: 'getCode', type: 'eth', args: [tx.to] }, 'decimals', 'name', 'symbol']
     return generateBatchRequests({
       abi: ERC20Detailed.abi,
       address: tx.to,
@@ -229,7 +229,7 @@ const batchRequestTxsData = (txs: any[]) => {
 
   web3Batch.execute()
 
-  return Promise.all(whenTxsValues)
+  return Promise.all(txsTokenInfo)
 }
 
 const batchRequestIncomingTxsData = (txs: IncomingTxServiceModel[]) => {
@@ -327,9 +327,15 @@ export const loadSafeTransactions = async (safeAddress: string, getState: GetSta
   const txsWithData = await batchRequestTxsData(transactions)
   // In case that the etags don't match, we parse the new transactions and save them to the cache
   const txsRecord: Array<RecordInstance<TransactionProps>> = await Promise.all(
-    txsWithData.map(([tx: TxServiceModel, decimals, code, symbol, name]) =>
-      buildTransactionFrom(safeAddress, tx, knownTokens, decimals, symbol, name, code),
-    ),
+    txsWithData.map(([tx: TxServiceModel, code, decimals, name, symbol]) => {
+      const knownToken = knownTokens.get(tx.to)
+
+      if (knownToken) {
+        ;({ decimals, name, symbol } = knownToken)
+      }
+
+      return buildTransactionFrom(safeAddress, knownTokens, tx, code, decimals, name, symbol)
+    }),
   )
 
   const groupedTxs = List(txsRecord).groupBy((tx) => (tx.get('cancellationTx') ? 'cancel' : 'outgoing'))

@@ -9,7 +9,7 @@ import { type Token, makeToken } from '~/logic/tokens/store/model/token'
 
 export const TOKEN_REDUCER_ID = 'tokens'
 
-export type State = Map<string, Map<string, Token>>
+export type State = Map<string, Token>
 
 export default handleActions<State, *>(
   {
