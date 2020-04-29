@@ -30,9 +30,9 @@ export const getAppInfoFromUrl = async (appUrl: string) => {
   }
 
   let cleanedUpAppUrl = appUrl.trim()
+  res.url = cleanedUpAppUrl
   if (cleanedUpAppUrl.substr(-1) === '/') {
     cleanedUpAppUrl = cleanedUpAppUrl.substr(0, cleanedUpAppUrl.length - 1)
-    res.url = cleanedUpAppUrl
   }
 
   try {
