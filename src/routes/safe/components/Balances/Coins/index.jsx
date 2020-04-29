@@ -19,8 +19,8 @@ import Button from '~/components/layout/Button'
 import Row from '~/components/layout/Row'
 import {
   currencyRateSelector,
-  currencyValuesListSelector,
   currentCurrencySelector,
+  safeFiatBalancesListSelector,
 } from '~/logic/currencyValues/store/selectors'
 import { BALANCE_ROW_TEST_ID } from '~/routes/safe/components/Balances'
 import AssetTableCell from '~/routes/safe/components/Balances/AssetTableCell'
@@ -46,16 +46,16 @@ const Coins = (props: Props) => {
   const classes = useStyles()
   const columns = generateColumns()
   const autoColumns = columns.filter((c) => !c.custom)
-  const currencySelected = useSelector(currentCurrencySelector)
+  const selectedCurrency = useSelector(currentCurrencySelector)
   const currencyRate = useSelector(currencyRateSelector)
   const activeTokens = useSelector(extendedSafeTokensSelector)
-  const currencyValues = useSelector(currencyValuesListSelector)
+  const currencyValues = useSelector(safeFiatBalancesListSelector)
   const granted = useSelector(grantedSelector)
   const [filteredData, setFilteredData] = React.useState(List())
 
   React.useMemo(() => {
-    setFilteredData(getBalanceData(activeTokens, currencySelected, currencyValues, currencyRate))
-  }, [currencySelected, currencyRate, activeTokens.hashCode(), currencyValues])
+    setFilteredData(getBalanceData(activeTokens, selectedCurrency, currencyValues, currencyRate))
+  }, [selectedCurrency, currencyRate, activeTokens.hashCode(), currencyValues])
 
   return (
     <TableContainer>

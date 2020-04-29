@@ -1,5 +1,4 @@
 // @flow
-1
 import { createAction } from 'redux-actions'
 
 import type { CurrencyValues, CurrencyValuesProps } from '~/logic/currencyValues/store/model/currencyValues'

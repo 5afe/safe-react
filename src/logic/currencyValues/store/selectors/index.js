@@ -20,7 +20,7 @@ export const currencyValuesMapSelector: OutputSelector<GlobalState> = createSele
   },
 )
 
-export const currencyValuesListSelector: OutputSelector<GlobalState> = createSelector(
+export const safeFiatBalancesListSelector: OutputSelector<GlobalState> = createSelector(
   currencyValuesMapSelector,
   (currencyValuesMap: CurrencyValuesProps) => {
     if (!currencyValuesMap) return

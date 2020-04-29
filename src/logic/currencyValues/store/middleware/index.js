@@ -1,10 +1,10 @@
 // @flow
 import { Action, Store } from 'redux'
 
-import fetchCurrencySelectedValue from '~/logic/currencyValues/store/actions/fetchCurrencySelectedValue'
+import fetchCurrencyRate from '~/logic/currencyValues/store/actions/fetchCurrencyRate'
 import { SET_CURRENCY_BALANCES } from '~/logic/currencyValues/store/actions/setCurrencyBalances'
 import { SET_CURRENCY_RATE } from '~/logic/currencyValues/store/actions/setCurrencyRate'
-import { SET_CURRENT_CURRENCY } from '~/logic/currencyValues/store/actions/setCurrencySelected'
+import { SET_CURRENT_CURRENCY } from '~/logic/currencyValues/store/actions/setSelectedCurrency'
 import { currencyValuesSelector } from '~/logic/currencyValues/store/selectors'
 import { saveCurrencyValues } from '~/logic/currencyValues/store/utils/currencyValuesStorage'
 import type { GlobalState } from '~/routes/safe/store/middleware/safeStorage'
@@ -21,7 +21,7 @@ const currencyValuesStorageMiddleware = (store: Store<GlobalState>) => (next: Fu
     switch (action.type) {
       case SET_CURRENT_CURRENCY: {
         const { currencyValueSelected, safeAddress } = action.payload
-        dispatch(fetchCurrencySelectedValue(safeAddress, currencyValueSelected))
+        dispatch(fetchCurrencyRate(safeAddress, currencyValueSelected))
         break
       }
       case SET_CURRENCY_RATE:

@@ -4,7 +4,7 @@ import { type ActionType, handleActions } from 'redux-actions'
 
 import { SET_CURRENCY_BALANCES } from '~/logic/currencyValues/store/actions/setCurrencyBalances'
 import { SET_CURRENCY_RATE } from '~/logic/currencyValues/store/actions/setCurrencyRate'
-import { SET_CURRENT_CURRENCY } from '~/logic/currencyValues/store/actions/setCurrencySelected'
+import { SET_CURRENT_CURRENCY } from '~/logic/currencyValues/store/actions/setSelectedCurrency'
 import type { State } from '~/logic/tokens/store/reducer/tokens'
 
 export const CURRENCY_VALUES_KEY = 'currencyValues'
