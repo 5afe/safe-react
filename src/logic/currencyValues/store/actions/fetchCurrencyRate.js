@@ -11,7 +11,7 @@ const fetchCurrencyRate = (safeAddress: string, selectedCurrency: $Keys<typeof A
   dispatch: ReduxDispatch<GlobalState>,
 ) => {
   if (AVAILABLE_CURRENCIES.USD === selectedCurrency) {
-    return dispatch(setCurrencyRate(safeAddress, '1'))
+    return dispatch(setCurrencyRate(safeAddress, 1))
   }
 
   const selectedCurrencyRateInBaseCurrency = await fetchCurrenciesRates(AVAILABLE_CURRENCIES.USD, selectedCurrency)
