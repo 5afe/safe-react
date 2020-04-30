@@ -12,6 +12,7 @@ import SearchIcon from '@material-ui/icons/Search'
 import classNames from 'classnames'
 import createDecorator from 'final-form-calculate'
 import React, { useState } from 'react'
+import { useField } from 'react-final-form'
 import { useSelector } from 'react-redux'
 
 import ArrowDown from '../assets/arrow-down.svg'
@@ -63,8 +64,12 @@ const useStyles = makeStyles(styles)
 const abiExtractor = createDecorator({
   field: 'contractAddress',
   updates: {
-    abi: (contractAddress) => {
-      if (!contractAddress) {
+    abi: async (contractAddress) => {
+      if (
+        !contractAddress ||
+        mustBeEthereumAddress(contractAddress) ||
+        (await mustBeEthereumContractAddress(contractAddress))
+      ) {
         return 'no contract'
       }
       const network = getNetwork()
@@ -82,7 +87,17 @@ const formMutators = {
     utils.changeValue(state, 'contractAddress', () => args[0])
   },
   setSelectedMethod: (args, state, utils) => {
+    const modified =
+      state.lastFormState.values.selectedMethod && state.lastFormState.values.selectedMethod.name !== args[0].name
+
+    if (modified) {
+      utils.changeValue(state, 'callResults', () => '')
+    }
+
     utils.changeValue(state, 'selectedMethod', () => args[0])
+  },
+  setCallResults: (args, state, utils) => {
+    utils.changeValue(state, 'callResults', () => args[0])
   },
 }
 
@@ -106,6 +121,10 @@ const MethodsDropdown = ({ abi, onChange }: { abi: ?string, onChange: (any) => v
   const [methodsListFiltered, setMethodsListFiltered] = useState([])
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
   const [searchParams, setSearchParams] = useState('')
+  const {
+    input: { value },
+    meta: { valid },
+  } = useField('abi', { value: true, valid: true })
 
   React.useEffect(() => {
     if (abi) {
@@ -135,116 +154,149 @@ const MethodsDropdown = ({ abi, onChange }: { abi: ?string, onChange: (any) => v
     handleClose()
   }
 
-  return (
-    <MuiThemeProvider theme={DropdownListTheme}>
-      <>
-        <button className={classes.button} onClick={handleClick} type="button">
-          <span className={classNames(classes.buttonInner, anchorEl && classes.openMenuButton)}>{methodSelected}</span>
-        </button>
-        <Menu
-          anchorEl={anchorEl}
-          anchorOrigin={{
-            horizontal: 'center',
-            vertical: 'bottom',
-          }}
-          elevation={0}
-          getContentAnchorEl={null}
-          id="customizedMenu"
-          keepMounted
-          onClose={handleClose}
-          open={!!anchorEl}
-          PaperProps={{ style: { width: MENU_WIDTH } }}
-          rounded={0}
-          transformOrigin={{
-            horizontal: 'center',
-            vertical: 'top',
-          }}
-        >
-          <MenuItem className={classes.listItemSearch} key="0">
-            <div className={classes.search}>
-              <div className={classes.searchIcon}>
-                <SearchIcon />
-              </div>
-              <InputBase
-                classes={{
-                  root: classes.inputRoot,
-                  input: classes.inputInput,
-                }}
-                inputProps={{ 'aria-label': 'search' }}
-                onChange={(event) => setSearchParams(event.target.value)}
-                placeholder="Search…"
-                value={searchParams}
-              />
-            </div>
-          </MenuItem>
-          <div className={classes.dropdownItemsScrollWrapper}>
-            {methodsListFiltered.map(({ action, name }) => (
-              <MenuItem
-                className={classes.listItem}
-                key={name}
-                onClick={() => onMethodSelectedChanged(name)}
-                value={name}
-              >
-                <ListItemText primary={name} />
-                <ListItemIcon className={classes.iconRight}>
-                  {name === methodSelected ? <img alt="checked" src={CheckIcon} /> : <span />}
-                </ListItemIcon>
-                <ListItemIcon className={classes.iconRight}>
-                  <div>{action}</div>
-                </ListItemIcon>
+  return !valid || !value || value === 'no contract' ? null : (
+    <Row margin="sm">
+      <Col>
+        <MuiThemeProvider theme={DropdownListTheme}>
+          <>
+            <button className={classes.button} onClick={handleClick} type="button">
+              <span className={classNames(classes.buttonInner, anchorEl && classes.openMenuButton)}>
+                {methodSelected}
+              </span>
+            </button>
+            <Menu
+              anchorEl={anchorEl}
+              anchorOrigin={{
+                horizontal: 'center',
+                vertical: 'bottom',
+              }}
+              elevation={0}
+              getContentAnchorEl={null}
+              id="customizedMenu"
+              keepMounted
+              onClose={handleClose}
+              open={!!anchorEl}
+              PaperProps={{ style: { width: MENU_WIDTH } }}
+              rounded={0}
+              transformOrigin={{
+                horizontal: 'center',
+                vertical: 'top',
+              }}
+            >
+              <MenuItem className={classes.listItemSearch} key="0">
+                <div className={classes.search}>
+                  <div className={classes.searchIcon}>
+                    <SearchIcon />
+                  </div>
+                  <InputBase
+                    classes={{
+                      root: classes.inputRoot,
+                      input: classes.inputInput,
+                    }}
+                    inputProps={{ 'aria-label': 'search' }}
+                    onChange={(event) => setSearchParams(event.target.value)}
+                    placeholder="Search…"
+                    value={searchParams}
+                  />
+                </div>
               </MenuItem>
-            ))}
-          </div>
-        </Menu>
-      </>
-    </MuiThemeProvider>
+              <div className={classes.dropdownItemsScrollWrapper}>
+                {methodsListFiltered.map(({ action, name }) => (
+                  <MenuItem
+                    className={classes.listItem}
+                    key={name}
+                    onClick={() => onMethodSelectedChanged(name)}
+                    value={name}
+                  >
+                    <ListItemText primary={name} />
+                    <ListItemIcon className={classes.iconRight}>
+                      {name === methodSelected ? <img alt="checked" src={CheckIcon} /> : <span />}
+                    </ListItemIcon>
+                    <ListItemIcon className={classes.iconRight}>
+                      <div>{action}</div>
+                    </ListItemIcon>
+                  </MenuItem>
+                ))}
+              </div>
+            </Menu>
+          </>
+        </MuiThemeProvider>
+      </Col>
+    </Row>
   )
 }
 
-const RenderOutputParams = ({ method, result }) => {
-  const multipleResults = method.outputs.length > 1
-
-  return method.outputs.map(({ name, type }, index) => {
-    const placeholder = name ? `${name} (${type})` : type
-    const key = `${method.name}_${index}_${type}`
-
-    return (
-      <Field
-        component={TextField}
-        disabled
-        initialValue={multipleResults ? result[index] : result}
-        key={key}
-        name={key}
-        placeholder={placeholder}
-        testId={`methodCallResult-${key}`}
-        text={placeholder}
-        type="text"
-      />
-    )
-  })
-}
-
-const RenderReadCallResult = ({ contractAddress, method }: { contractAddress: string, method: any }) => {
-  const [callResult, setCallResult] = React.useState(null)
-  const web3 = getWeb3()
+const RenderInputParams = () => {
+  const {
+    meta: { valid: validABI },
+  } = useField('abi', { value: true, valid: true })
+  const {
+    input: { value: method },
+  } = useField('selectedMethod', { value: true })
+  const [renderInputs, setRenderInputs] = React.useState(false)
 
   React.useMemo(() => {
-    setCallResult(null)
+    setRenderInputs(validABI && !!method && method.inputs.length)
+  }, [method, validABI])
 
-    const call = async () => {
-      const contract = new web3.eth.Contract([method], contractAddress)
-      const result = await contract.methods[method.name]().call()
-      setCallResult(result)
-    }
+  return !renderInputs
+    ? null
+    : method.inputs.map(({ name, type }, index) => {
+        const placeholder = name ? `${name} (${type})` : type
+        const key = `methodInput-${method.name}_${index}_${type}`
 
-    call()
-  }, [method, contractAddress])
+        return (
+          <Row key={key} margin="sm">
+            <Col>
+              <Field
+                component={TextField}
+                name={key}
+                placeholder={placeholder}
+                testId={key}
+                text={placeholder}
+                type="text"
+              />
+            </Col>
+          </Row>
+        )
+      })
+}
 
-  return callResult ? <RenderOutputParams method={method} result={callResult} /> : null
+const RenderOutputParams = () => {
+  const {
+    input: { value: method },
+  } = useField('selectedMethod', { value: true })
+  const {
+    input: { value: results },
+  } = useField('callResults', { value: true })
+  const multipleResults = !!method && method.outputs.length > 1
+
+  return results
+    ? method.outputs.map(({ name, type }, index) => {
+        const placeholder = name ? `${name} (${type})` : type
+        const key = `methodCallResult-${method.name}_${index}_${type}`
+        const value = multipleResults ? results[index] : results
+
+        return (
+          <Row key={key} margin="sm">
+            <Col>
+              <TextField
+                disabled
+                input={{ name: key, value, placeholder, type: 'text' }}
+                meta={{ valid: true }}
+                testId={key}
+                text={placeholder}
+              />
+            </Col>
+          </Row>
+        )
+      })
+    : null
 }
 
 const ContractInteraction = ({ contractAddress, initialValues, onClose, onNext }: Props) => {
   const classes = useStyles()
+  const web3 = getWeb3()
   const { address: safeAddress, ethBalance, name: safeName } = useSelector(safeSelector)
   const [qrModalOpen, setQrModalOpen] = useState<boolean>(false)
 
@@ -287,8 +339,9 @@ const ContractInteraction = ({ contractAddress, initialValues, onClose, onNext }
         onSubmit={handleSubmit}
       >
         {(submitting, validating, rest) => {
-          const { form, valid } = rest
+          const { form, valid, values } = rest
           const { mutators } = form
+          const { contractAddress, selectedMethod: method } = values
 
           const handleScan = (value) => {
             let scannedAddress = value
@@ -299,6 +352,15 @@ const ContractInteraction = ({ contractAddress, initialValues, onClose, onNext }
 
             mutators.setContractAddress(scannedAddress)
             closeQrModal()
+          }
+
+          const handleCallSubmit = async () => {
+            const contract = new web3.eth.Contract([method], contractAddress)
+            const { inputs, name } = method
+            const args = inputs.map(({ type }, index) => values[`methodInput-${name}_${index}_${type}`])
+            const results = await contract.methods[name](...args).call()
+
+            mutators.setCallResults(results)
           }
 
           return (
@@ -365,54 +427,40 @@ const ContractInteraction = ({ contractAddress, initialValues, onClose, onNext }
                     <TextareaField name="abi" placeholder="ABI*" text="ABI*" type="text" validate={mustBeValidABI} />
                   </Col>
                 </Row>
-                <Field name="abi" subscription={{ value: true, valid: true }}>
-                  {({ input: { value }, meta: { valid } }) =>
-                    !valid || !value || value === 'no contract' ? null : (
-                      <>
-                        <Row margin="sm">
-                          <Col>
-                            <MethodsDropdown abi={rest.values.abi} onChange={mutators.setSelectedMethod} />
-                          </Col>
-                        </Row>
-                        <Row margin="sm">
-                          <Col>
-                            <Field name="selectedMethod" subscription={{ value: true }}>
-                              {({ input: { value: method } }) => {
-                                if (!!method && method.action === 'read' && method.inputs.length === 0) {
-                                  return (
-                                    <RenderReadCallResult
-                                      contractAddress={rest.values.contractAddress}
-                                      method={method}
-                                    />
-                                  )
-                                }
-
-                                return null
-                              }}
-                            </Field>
-                          </Col>
-                        </Row>
-                      </>
-                    )
-                  }
-                </Field>
+                <MethodsDropdown abi={rest.values.abi} onChange={mutators.setSelectedMethod} />
+                <RenderInputParams />
+                <RenderOutputParams />
               </Block>
               <Hairline />
               <Row align="center" className={classes.buttonRow}>
                 <Button minWidth={140} onClick={onClose}>
                   Cancel
                 </Button>
-                <Button
-                  className={classes.submitButton}
-                  color="primary"
-                  data-testid="review-tx-btn"
-                  disabled={submitting || validating || !valid}
-                  minWidth={140}
-                  type="submit"
-                  variant="contained"
-                >
-                  Review
-                </Button>
+                {method && method.action === 'read' ? (
+                  <Button
+                    className={classes.submitButton}
+                    color="primary"
+                    data-testid="review-tx-btn"
+                    disabled={validating || !valid}
+                    minWidth={140}
+                    onClick={() => handleCallSubmit(rest.values)}
+                    variant="contained"
+                  >
+                    Call
+                  </Button>
+                ) : (
+                  <Button
+                    className={classes.submitButton}
+                    color="primary"
+                    data-testid="review-tx-btn"
+                    disabled={submitting || validating || !valid || !method || method.action === 'read'}
+                    minWidth={140}
+                    type="submit"
+                    variant="contained"
+                  >
+                    Review
+                  </Button>
+                )}
               </Row>
               {qrModalOpen && <ScanQRModal isOpen={qrModalOpen} onClose={closeQrModal} onScan={handleScan} />}
             </>
