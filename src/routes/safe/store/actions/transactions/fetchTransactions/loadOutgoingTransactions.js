@@ -5,7 +5,7 @@ import { List, Map, type RecordInstance } from 'immutable'
 
 import generateBatchRequests from '~/logic/contracts/generateBatchRequests'
 import { decodeParamsFromSafeMethod } from '~/logic/contracts/methodIds'
-import { buildTxServiceUrl } from '~/logic/safe/transactions/txHistory'
+import { type TxServiceType, buildTxServiceUrl } from '~/logic/safe/transactions/txHistory'
 import { TOKEN_REDUCER_ID } from '~/logic/tokens/store/reducer/tokens'
 import {
   SAFE_TRANSFER_FROM_WITHOUT_DATA_HASH,
@@ -22,7 +22,7 @@ import { type Transaction, makeTransaction } from '~/routes/safe/store/models/tr
 type ConfirmationServiceModel = {
   owner: string,
   submissionDate: Date,
-  signature: string,
+  confirmationType: string,
   transactionHash: string,
 }
 
@@ -67,12 +67,14 @@ export const buildTransactionFrom = async (
     tx.confirmations.map((conf: ConfirmationServiceModel) =>
       makeConfirmation({
         owner: conf.owner,
+        type: ((conf.confirmationType.toLowerCase(): any): TxServiceType),
         hash: conf.transactionHash,
         signature: conf.signature,
       }),
     ),
   )
-
+  const modifySettingsTx = sameAddress(tx.to, safeAddress) && Number(tx.value) === 0 && !!tx.data
+  const cancellationTx = sameAddress(tx.to, safeAddress) && Number(tx.value) === 0 && !tx.data
   const isERC721Token =
     (code && code.includes(SAFE_TRANSFER_FROM_WITHOUT_DATA_HASH)) ||
     (isTokenTransfer(tx.data, Number(tx.value)) && !knownTokens.get(tx.to) && txTokenDecimals !== null)
@@ -159,7 +161,9 @@ export const buildTransactionFrom = async (
     multiSendTx: isMultiSendTx,
     upgradeTx: isUpgradeTx,
     decodedParams,
+    modifySettingsTx,
     customTx,
+    cancellationTx,
     creationTx: tx.creationTx,
     origin: tx.origin,
   })
@@ -184,18 +188,18 @@ const batchTxTokenRequest = (txs: any[]) => {
   return Promise.all(whenTxsValues)
 }
 
-let prevOutgoingTxsEtag = null
+let prevSaveTransactionsEtag = null
 export const loadOutgoingTransactions = async (
   safeAddress: string,
   getState: GetState,
 ): Promise<SafeTransactionsType> => {
-  let transactions: TxServiceModel[] = []
+  let transactions: TxServiceModel[] = addMockSafeCreationTx(safeAddress)
 
   try {
-    const config = prevOutgoingTxsEtag
+    const config = prevSaveTransactionsEtag
       ? {
           headers: {
-            'If-None-Match': prevOutgoingTxsEtag,
+            'If-None-Match': prevSaveTransactionsEtag,
           },
         }
       : undefined
@@ -203,12 +207,12 @@ export const loadOutgoingTransactions = async (
     const url = buildTxServiceUrl(safeAddress)
     const response = await axios.get(url, config)
     if (response.data.count > 0) {
-      if (prevOutgoingTxsEtag === response.headers.etag) {
+      if (prevSaveTransactionsEtag === response.headers.etag) {
         // The txs are the same as we currently have, we don't have to proceed
         return
       }
       transactions = transactions.concat(response.data.results)
-      prevOutgoingTxsEtag = response.headers.etag
+      prevSaveTransactionsEtag = response.headers.etag
     }
   } catch (err) {
     if (err && err.response && err.response.status === 304) {

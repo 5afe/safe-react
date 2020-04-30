@@ -4,6 +4,7 @@ import axios from 'axios'
 import { getTxServiceHost, getTxServiceUriFrom } from '~/config'
 import { getWeb3 } from '~/logic/wallets/getWeb3'
 
+export type TxServiceType = 'confirmation' | 'execution' | 'initialised'
 export type Operation = 0 | 1 | 2
 
 const calculateBodyFrom = async (
