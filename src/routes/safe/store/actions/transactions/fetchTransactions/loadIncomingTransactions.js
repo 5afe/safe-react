@@ -71,7 +71,7 @@ const batchIncomingTxsTokenDataRequest = (txs: IncomingTxServiceModel[]) => {
 }
 
 let prevIncomingTxsEtag = null
-export const loadSafeIncomingTransactions = async (safeAddress: string) => {
+export const loadIncomingTransactions = async (safeAddress: string) => {
   let incomingTransactions: IncomingTxServiceModel[] = []
   try {
     const config = prevIncomingTxsEtag

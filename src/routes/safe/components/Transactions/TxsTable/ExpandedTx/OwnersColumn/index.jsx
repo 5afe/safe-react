@@ -16,7 +16,6 @@ import Block from '~/components/layout/Block'
 import Col from '~/components/layout/Col'
 import Img from '~/components/layout/Img'
 import Paragraph from '~/components/layout/Paragraph/index'
-import { TX_TYPE_CONFIRMATION } from '~/logic/safe/transactions/send'
 import { userAccountSelector } from '~/logic/wallets/store/selectors'
 import { type Transaction, makeTransaction } from '~/routes/safe/store/models/transaction'
 import { safeOwnersSelector, safeThresholdSelector } from '~/routes/safe/store/selectors'
@@ -43,9 +42,7 @@ function getOwnersConfirmations(tx, userAddress) {
       currentUserAlreadyConfirmed = true
     }
 
-    if (conf.type === TX_TYPE_CONFIRMATION) {
-      ownersWhoConfirmed.push(conf.owner)
-    }
+    ownersWhoConfirmed.push(conf.owner)
   })
 
   return [ownersWhoConfirmed, currentUserAlreadyConfirmed]
