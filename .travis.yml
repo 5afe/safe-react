@@ -16,9 +16,11 @@ matrix:
   - env:
     - REACT_APP_NETWORK='mainnet'
     - STAGING_BUCKET_NAME=${STAGING_MAINNET_BUCKET_NAME}
+    - REACT_APP_GNOSIS_APPS_URL=${REACT_APP_GNOSIS_APPS_URL_PROD}
     if: (branch = master AND NOT type = pull_request) OR tag IS present
   - env:
     - REACT_APP_NETWORK='rinkeby'
+    - REACT_APP_GNOSIS_APPS_URL=${REACT_APP_GNOSIS_APPS_URL_STAGING}
 before_install:
   # Needed to deploy pull request and releases
   - sudo apt-get update
