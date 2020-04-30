@@ -27,7 +27,15 @@ const currencyValuesStorageMiddleware = (store: Store<GlobalState>) => (next: Fu
       case SET_CURRENCY_RATE:
       case SET_CURRENCY_BALANCES: {
         const currencyValues = currencyValuesSelector(state)
-        await saveCurrencyValues(currencyValues)
+        const currencyValuesWithoutBalances = currencyValues.map((currencyValue) => {
+          const currencyRate = currencyValue.get('currencyRate')
+          const currencyValueSelected = currencyValue.get('currencyValueSelected')
+          return {
+            currencyRate,
+            currencyValueSelected,
+          }
+        })
+        await saveCurrencyValues(currencyValuesWithoutBalances)
         break
       }
 

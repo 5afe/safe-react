@@ -9,6 +9,7 @@ import { setCurrencyRate } from '~/logic/currencyValues/store/actions/setCurrenc
 import { setSelectedCurrency } from '~/logic/currencyValues/store/actions/setSelectedCurrency'
 import { AVAILABLE_CURRENCIES } from '~/logic/currencyValues/store/model/currencyValues'
 import { loadCurrencyValues } from '~/logic/currencyValues/store/utils/currencyValuesStorage'
+import fetchSafeTokens from '~/logic/tokens/store/actions/fetchSafeTokens'
 import type { GlobalState } from '~/store'
 
 export const fetchCurrencyValues = (safeAddress: string) => async (dispatch: ReduxDispatch<GlobalState>) => {
@@ -26,12 +27,12 @@ export const fetchCurrencyValues = (safeAddress: string) => async (dispatch: Red
     Object.entries(storedCurrencies).forEach((kv) => {
       const safeAddr = kv[0]
       const value = kv[1]
-      const { currencyBalances, currencyRate, currencyValueSelected } = value
+      const { currencyRate, currencyValueSelected } = value
       batch(() => {
         dispatch(setSelectedCurrency(safeAddr, currencyValueSelected))
-        dispatch(setCurrencyBalances(safeAddr, currencyBalances))
         dispatch(setCurrencyRate(safeAddr, currencyRate))
         dispatch(fetchCurrencyRate(safeAddr, currencyValueSelected))
+        dispatch(fetchSafeTokens(safeAddress))
       })
     })
   } catch (err) {
