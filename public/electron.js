@@ -144,7 +144,7 @@ app.userAgentFallback = process.platform ==='win32' ?
 app.commandLine.appendSwitch('ignore-certificate-errors');
 app.on("ready", () =>{
   // Hide the menu
-  //Menu.setApplicationMenu(null);
+  Menu.setApplicationMenu(null);
   if(!isDev) createServer();
   createWindow();
 });
