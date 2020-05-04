@@ -21,6 +21,7 @@ import {
   safeParamAddressFromStateSelector,
 } from '~/routes/safe/store/selectors'
 import { loadFromStorage, saveToStorage } from '~/utils/storage'
+import { isSameHref } from '~/utils/url'
 
 const APPS_STORAGE_KEY = 'APPS_STORAGE_KEY'
 const APPS_LEGAL_DISCLAIMER_STORAGE_KEY = 'APPS_LEGAL_DISCLAIMER_STORAGE_KEY'
@@ -68,7 +69,8 @@ function Apps({ closeModal, closeSnackbar, enqueueSnackbar, openModal }: Props) 
   const getSelectedApp = () => appList.find((e) => e.id === selectedApp)
 
   const sendMessageToIframe = (messageId, data) => {
-    iframeEl.contentWindow.postMessage({ messageId, data }, getSelectedApp().url)
+    const app = getSelectedApp()
+    iframeEl.contentWindow.postMessage({ messageId, data }, app.url)
   }
 
   const handleIframeMessage = async (data) => {
@@ -172,6 +174,8 @@ function Apps({ closeModal, closeSnackbar, enqueueSnackbar, openModal }: Props) 
       )
     }
 
+    const app = getSelectedApp()
+
     return (
       <>
         {appIsLoading && <Loader />}
@@ -180,8 +184,8 @@ function Apps({ closeModal, closeSnackbar, enqueueSnackbar, openModal }: Props) 
           id="iframeId"
           ref={iframeRef}
           shouldDisplay={!appIsLoading}
-          src={getSelectedApp().url}
-          title={getSelectedApp().name}
+          src={app.url}
+          title={app.name}
         />
       </>
     )
@@ -333,7 +337,8 @@ function Apps({ closeModal, closeSnackbar, enqueueSnackbar, openModal }: Props) 
       })
     }
 
-    if (!iframeEl) {
+    const app = getSelectedApp()
+    if (!iframeEl || !selectedApp || !isSameHref(iframeEl.src, app.url)) {
       return
     }
 
@@ -342,7 +347,7 @@ function Apps({ closeModal, closeSnackbar, enqueueSnackbar, openModal }: Props) 
     return () => {
       iframeEl.removeEventListener('load', onIframeLoaded)
     }
-  }, [iframeEl])
+  }, [iframeEl, selectedApp])
 
   if (loading) {
     return <Loader />
