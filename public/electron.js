@@ -129,13 +129,17 @@ function createWindow() {
     autoUpdater.init(mainWindow);
   });
 
-  mainWindow.webContents.on('crashed', () => {
-    log.info('App Crashed');
+  mainWindow.webContents.on('crashed', (event) => {
+    log.info(`App Crashed: ${event}`);
     mainWindow.reload();
   });
 
   mainWindow.on("closed", () => (mainWindow = null));
 }
+
+process.on('uncaughtException',function(error){
+  log.error(error);
+});
 
 app.userAgentFallback = process.platform ==='win32' ?
 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.100 Safari/537.36' :
