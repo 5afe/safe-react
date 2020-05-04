@@ -48,7 +48,7 @@ const useStyles = makeStyles(styles)
 const ReviewTx = ({ closeSnackbar, enqueueSnackbar, onClose, onPrev, tx }: Props) => {
   const classes = useStyles()
   const dispatch = useDispatch()
-  const { address: safeAddress, ethBalance, name: safeName } = useSelector(safeSelector)
+  const { address: safeAddress } = useSelector(safeSelector)
   const tokens = useSelector(extendedSafeTokensSelector)
   const [gasCosts, setGasCosts] = useState<string>('< 0.001')
   const [data, setData] = useState('')
@@ -125,7 +125,7 @@ const ReviewTx = ({ closeSnackbar, enqueueSnackbar, onClose, onPrev, tx }: Props
       </Row>
       <Hairline />
       <Block className={classes.container}>
-        <SafeInfo ethBalance={ethBalance} safeAddress={safeAddress} safeName={safeName} />
+        <SafeInfo />
         <Row margin="md">
           <Col xs={1}>
             <img alt="Arrow Down" src={ArrowDown} style={{ marginLeft: sm }} />

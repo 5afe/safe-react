@@ -33,7 +33,6 @@ import SafeInfo from '~/routes/safe/components/Balances/SendModal/SafeInfo'
 import AddressBookInput from '~/routes/safe/components/Balances/SendModal/screens/AddressBookInput'
 import TokenSelectField from '~/routes/safe/components/Balances/SendModal/screens/SendFunds/TokenSelectField'
 import { extendedSafeTokensSelector } from '~/routes/safe/container/selector'
-import { safeSelector } from '~/routes/safe/store/selectors'
 import { sm } from '~/theme/variables'
 
 type Props = {
@@ -60,7 +59,6 @@ const useStyles = makeStyles(styles)
 
 const SendFunds = ({ initialValues, onClose, onNext, recipientAddress, selectedToken = '' }: Props) => {
   const classes = useStyles()
-  const { address: safeAddress, ethBalance, name: safeName } = useSelector(safeSelector)
   const tokens: Token = useSelector(extendedSafeTokensSelector)
   const [qrModalOpen, setQrModalOpen] = useState<boolean>(false)
   const [selectedEntry, setSelectedEntry] = useState<Object | null>({
@@ -131,7 +129,7 @@ const SendFunds = ({ initialValues, onClose, onNext, recipientAddress, selectedT
           return (
             <>
               <Block className={classes.formContainer}>
-                <SafeInfo ethBalance={ethBalance} safeAddress={safeAddress} safeName={safeName} />
+                <SafeInfo />
                 <Row margin="md">
                   <Col xs={1}>
                     <img alt="Arrow Down" src={ArrowDown} style={{ marginLeft: sm }} />

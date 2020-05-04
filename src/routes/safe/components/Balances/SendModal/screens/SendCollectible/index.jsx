@@ -30,7 +30,6 @@ import SafeInfo from '~/routes/safe/components/Balances/SendModal/SafeInfo'
 import AddressBookInput from '~/routes/safe/components/Balances/SendModal/screens/AddressBookInput'
 import CollectibleSelectField from '~/routes/safe/components/Balances/SendModal/screens/SendCollectible/CollectibleSelectField'
 import TokenSelectField from '~/routes/safe/components/Balances/SendModal/screens/SendCollectible/TokenSelectField'
-import { safeSelector } from '~/routes/safe/store/selectors'
 import { sm } from '~/theme/variables'
 
 type Props = {
@@ -57,7 +56,6 @@ const useStyles = makeStyles(styles)
 
 const SendCollectible = ({ initialValues, onClose, onNext, recipientAddress, selectedToken = {} }: Props) => {
   const classes = useStyles()
-  const { address: safeAddress, ethBalance, name: safeName } = useSelector(safeSelector)
   const nftAssets: NFTAssetsState = useSelector(safeActiveSelectorMap)
   const nftTokens: NFTTokensState = useSelector(nftTokensSelector)
   const [qrModalOpen, setQrModalOpen] = useState<boolean>(false)
@@ -133,7 +131,7 @@ const SendCollectible = ({ initialValues, onClose, onNext, recipientAddress, sel
             <>
               <WhenFieldChanges field="assetAddress" set="nftTokenId" to={''} />
               <Block className={classes.formContainer}>
-                <SafeInfo ethBalance={ethBalance} safeAddress={safeAddress} safeName={safeName} />
+                <SafeInfo />
                 <Row margin="md">
                   <Col xs={1}>
                     <img alt="Arrow Down" src={ArrowDown} style={{ marginLeft: sm }} />
