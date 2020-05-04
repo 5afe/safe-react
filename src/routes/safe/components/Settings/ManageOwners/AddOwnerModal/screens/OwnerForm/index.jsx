@@ -7,6 +7,7 @@ import { useSelector } from 'react-redux'
 
 import { styles } from './style'
 
+import { ScanQRWrapper } from '~/components/ScanQRModal/ScanQRWrapper'
 import AddressInput from '~/components/forms/AddressInput'
 import Field from '~/components/forms/Field'
 import GnoForm from '~/components/forms/GnoForm'
@@ -59,6 +60,17 @@ const OwnerForm = ({ classes, onClose, onSubmit }: Props) => {
         {(...args) => {
           const mutators = args[3]
 
+          const handleScan = (value) => {
+            let scannedAddress = value
+
+            if (scannedAddress.startsWith('ethereum:')) {
+              scannedAddress = scannedAddress.replace('ethereum:', '')
+            }
+
+            mutators.setRecipient(scannedAddress)
+            //  closeQrModal()
+          }
+
           return (
             <>
               <Block className={classes.formContainer}>
@@ -90,6 +102,9 @@ const OwnerForm = ({ classes, onClose, onSubmit }: Props) => {
                       text="Owner address*"
                       validators={[ownerDoesntExist]}
                     />
+                  </Col>
+                  <Col center="xs" className={classes} middle="xs" xs={1}>
+                    <ScanQRWrapper handleScan={handleScan} />
                   </Col>
                 </Row>
               </Block>

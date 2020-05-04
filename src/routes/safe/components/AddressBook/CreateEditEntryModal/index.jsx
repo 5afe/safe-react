@@ -8,6 +8,7 @@ import { useSelector } from 'react-redux'
 import { styles } from './style'
 
 import Modal from '~/components/Modal'
+import { ScanQRWrapper } from '~/components/ScanQRModal/ScanQRWrapper'
 import AddressInput from '~/components/forms/AddressInput'
 import Field from '~/components/forms/Field'
 import GnoForm from '~/components/forms/GnoForm'
@@ -15,6 +16,7 @@ import TextField from '~/components/forms/TextField'
 import { composeValidators, minMaxLength, required, uniqueAddress } from '~/components/forms/validator'
 import Block from '~/components/layout/Block'
 import Button from '~/components/layout/Button'
+import Col from '~/components/layout/Col'
 import Hairline from '~/components/layout/Hairline'
 import Paragraph from '~/components/layout/Paragraph'
 import Row from '~/components/layout/Row'
@@ -81,34 +83,53 @@ const CreateEditEntryModalComponent = ({
       <GnoForm formMutators={formMutators} onSubmit={onFormSubmitted}>
         {(...args) => {
           const mutators = args[3]
+          const handleScan = (value) => {
+            let scannedAddress = value
+
+            if (scannedAddress.startsWith('ethereum:')) {
+              scannedAddress = scannedAddress.replace('ethereum:', '')
+            }
+
+            mutators.setRecipient(scannedAddress)
+            // closeQrModal()
+          }
           return (
             <>
               <Block className={classes.container}>
                 <Row margin="md">
-                  <Field
-                    className={classes.addressInput}
-                    component={TextField}
-                    defaultValue={entryToEdit ? entryToEdit.entry.name : undefined}
-                    name="name"
-                    placeholder={entryToEdit ? 'Entry name' : 'New entry'}
-                    testId={CREATE_ENTRY_INPUT_NAME_ID}
-                    text={entryToEdit ? 'Entry*' : 'New entry*'}
-                    type="text"
-                    validate={composeValidators(required, minMaxLength(1, 50))}
-                  />
+                  <Col xs={11}>
+                    <Field
+                      className={classes.addressInput}
+                      component={TextField}
+                      defaultValue={entryToEdit ? entryToEdit.entry.name : undefined}
+                      name="name"
+                      placeholder={entryToEdit ? 'Entry name' : 'New entry'}
+                      testId={CREATE_ENTRY_INPUT_NAME_ID}
+                      text={entryToEdit ? 'Entry*' : 'New entry*'}
+                      type="text"
+                      validate={composeValidators(required, minMaxLength(1, 50))}
+                    />
+                  </Col>
                 </Row>
                 <Row margin="md">
-                  <AddressInput
-                    className={classes.addressInput}
-                    defaultValue={entryToEdit ? entryToEdit.entry.address : undefined}
-                    disabled={!!entryToEdit}
-                    fieldMutator={mutators.setOwnerAddress}
-                    name="address"
-                    placeholder="Owner address*"
-                    testId={CREATE_ENTRY_INPUT_ADDRESS_ID}
-                    text="Owner address*"
-                    validators={entryToEdit ? undefined : [entryDoesntExist]}
-                  />
+                  <Col xs={11}>
+                    <AddressInput
+                      className={classes.addressInput}
+                      defaultValue={entryToEdit ? entryToEdit.entry.address : undefined}
+                      disabled={!!entryToEdit}
+                      fieldMutator={mutators.setOwnerAddress}
+                      name="address"
+                      placeholder="Owner address*"
+                      testId={CREATE_ENTRY_INPUT_ADDRESS_ID}
+                      text="Owner address*"
+                      validators={entryToEdit ? undefined : [entryDoesntExist]}
+                    />
+                  </Col>
+                  {!entryToEdit ? (
+                    <Col center="xs" className={classes} middle="xs" xs={1}>
+                      <ScanQRWrapper handleScan={handleScan} />
+                    </Col>
+                  ) : null}
                 </Row>
               </Block>
               <Hairline />

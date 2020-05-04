@@ -11,11 +11,10 @@ import ArrowDown from '../assets/arrow-down.svg'
 
 import { styles } from './style'
 
-import QRIcon from '~/assets/icons/qrcode.svg'
 import CopyBtn from '~/components/CopyBtn'
 import EtherscanBtn from '~/components/EtherscanBtn'
 import Identicon from '~/components/Identicon'
-import ScanQRModal from '~/components/ScanQRModal'
+import { ScanQRWrapper } from '~/components/ScanQRModal/ScanQRWrapper'
 import Field from '~/components/forms/Field'
 import GnoForm from '~/components/forms/GnoForm'
 import TextField from '~/components/forms/TextField'
@@ -25,7 +24,6 @@ import Button from '~/components/layout/Button'
 import ButtonLink from '~/components/layout/ButtonLink'
 import Col from '~/components/layout/Col'
 import Hairline from '~/components/layout/Hairline'
-import Img from '~/components/layout/Img'
 import Paragraph from '~/components/layout/Paragraph'
 import Row from '~/components/layout/Row'
 import { type Token } from '~/logic/tokens/store/model/token'
@@ -62,7 +60,6 @@ const SendFunds = ({ initialValues, onClose, onNext, recipientAddress, selectedT
   const classes = useStyles()
   const { address: safeAddress, ethBalance, name: safeName } = useSelector(safeSelector)
   const tokens: Token = useSelector(extendedSafeTokensSelector)
-  const [qrModalOpen, setQrModalOpen] = useState<boolean>(false)
   const [selectedEntry, setSelectedEntry] = useState<Object | null>({
     address: recipientAddress || initialValues.recipientAddress,
     name: '',
@@ -83,14 +80,6 @@ const SendFunds = ({ initialValues, onClose, onNext, recipientAddress, selectedT
       submitValues.recipientAddress = selectedEntry.address
     }
     onNext(submitValues)
-  }
-
-  const openQrModal = () => {
-    setQrModalOpen(true)
-  }
-
-  const closeQrModal = () => {
-    setQrModalOpen(false)
   }
 
   return (
@@ -120,7 +109,7 @@ const SendFunds = ({ initialValues, onClose, onNext, recipientAddress, selectedT
             }
 
             mutators.setRecipient(scannedAddress)
-            closeQrModal()
+            //closeQrModal()
           }
 
           let shouldDisableSubmitButton = !isValidAddress
@@ -198,16 +187,7 @@ const SendFunds = ({ initialValues, onClose, onNext, recipientAddress, selectedT
                         />
                       </Col>
                       <Col center="xs" className={classes} middle="xs" xs={1}>
-                        <Img
-                          alt="Scan QR"
-                          className={classes.qrCodeBtn}
-                          height={20}
-                          onClick={() => {
-                            openQrModal()
-                          }}
-                          role="button"
-                          src={QRIcon}
-                        />
+                        <ScanQRWrapper handleScan={handleScan} />
                       </Col>
                     </Row>
                   </>
@@ -276,7 +256,6 @@ const SendFunds = ({ initialValues, onClose, onNext, recipientAddress, selectedT
                   Review
                 </Button>
               </Row>
-              {qrModalOpen && <ScanQRModal isOpen={qrModalOpen} onClose={closeQrModal} onScan={handleScan} />}
             </>
           )
         }}
