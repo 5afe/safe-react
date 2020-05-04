@@ -1,4 +1,5 @@
 // @flow
+import CircularProgress from '@material-ui/core/CircularProgress'
 import { makeStyles } from '@material-ui/core/styles'
 import { withSnackbar } from 'notistack'
 import React, { useEffect, useState } from 'react'
@@ -56,12 +57,14 @@ const ContractInteractionReview = ({ closeSnackbar, enqueueSnackbar, onClose, on
       }
     }
 
-    estimateGas()
+    if (tx) {
+      estimateGas()
+    }
 
     return () => {
       isCurrent = false
     }
-  }, [])
+  }, [tx])
 
   const submitTx = async () => {
     const web3 = getWeb3()
@@ -82,6 +85,14 @@ const ContractInteractionReview = ({ closeSnackbar, enqueueSnackbar, onClose, on
     )
 
     onClose()
+  }
+
+  if (!tx) {
+    return (
+      <div className={classes.loaderStyle}>
+        <CircularProgress size={40} />
+      </div>
+    )
   }
 
   return (

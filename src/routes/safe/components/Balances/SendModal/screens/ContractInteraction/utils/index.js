@@ -21,7 +21,6 @@ export const abiExtractor = createDecorator({
       const source = getConfiguredSource()
       return source.getContractABI(contractAddress, network)
     },
-    selectedMethod: () => null,
   },
 })
 
