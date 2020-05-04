@@ -10,14 +10,15 @@ export type OnSubmit = (
 ) => ?Object | Promise<?Object> | void
 
 type Props = {
-  onSubmit: OnSubmit,
   children: Function,
   decorators?: Decorator<{ [string]: any }>[],
-  padding?: number,
-  validation?: (values: Object) => Object | Promise<Object>,
-  initialValues?: Object,
   formMutators?: Object,
+  initialValues?: Object,
+  onSubmit: OnSubmit,
+  subscription?: Object,
+  padding?: number,
   testId?: string,
+  validation?: (values: Object) => Object | Promise<Object>,
 }
 
 const stylesBasedOn = (padding: number): $Shape<CSSStyleDeclaration> => ({
@@ -33,6 +34,7 @@ const GnoForm = ({
   initialValues,
   onSubmit,
   padding = 0,
+  subscription,
   testId = '',
   validation,
 }: Props) => (
@@ -41,11 +43,13 @@ const GnoForm = ({
     initialValues={initialValues}
     mutators={formMutators}
     onSubmit={onSubmit}
+    // debug={console.log}
     render={({ handleSubmit, ...rest }) => (
       <form data-testid={testId} onSubmit={handleSubmit} style={stylesBasedOn(padding)}>
         {children(rest.submitting, rest.validating, rest, rest.form.mutators)}
       </form>
     )}
+    subscription={subscription}
     validate={validation}
   />
 )

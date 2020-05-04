@@ -12,7 +12,7 @@ import SearchIcon from '@material-ui/icons/Search'
 import classNames from 'classnames'
 import createDecorator from 'final-form-calculate'
 import React, { useState } from 'react'
-import { useField } from 'react-final-form'
+import { useField, useFormState } from 'react-final-form'
 import { useSelector } from 'react-redux'
 
 import ArrowDown from '../assets/arrow-down.svg'
@@ -114,7 +114,7 @@ const mustBeValidABI = (abi: string) => {
 }
 
 const MENU_WIDTH = '452px'
-const MethodsDropdown = ({ abi, onChange }: { abi: ?string, onChange: (any) => void }) => {
+const MethodsDropdown = ({ onChange }: { onChange: (any) => void }) => {
   const classes = useDropdownStyles({ buttonWidth: MENU_WIDTH })
   const [methodSelected, setMethodSelected] = useState('')
   const [methodsList, setMethodsList] = useState([])
@@ -122,7 +122,7 @@ const MethodsDropdown = ({ abi, onChange }: { abi: ?string, onChange: (any) => v
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
   const [searchParams, setSearchParams] = useState('')
   const {
-    input: { value },
+    input: { value: abi },
     meta: { valid },
   } = useField('abi', { value: true, valid: true })
 
@@ -154,7 +154,7 @@ const MethodsDropdown = ({ abi, onChange }: { abi: ?string, onChange: (any) => v
     handleClose()
   }
 
-  return !valid || !value || value === 'no contract' ? null : (
+  return !valid || !abi || abi === 'no contract' ? null : (
     <Row margin="sm">
       <Col>
         <MuiThemeProvider theme={DropdownListTheme}>
@@ -229,21 +229,18 @@ const MethodsDropdown = ({ abi, onChange }: { abi: ?string, onChange: (any) => v
 const RenderInputParams = () => {
   const {
     meta: { valid: validABI },
-  } = useField('abi', { value: true, valid: true })
+  } = useField('abi', { valid: true })
   const {
     input: { value: method },
   } = useField('selectedMethod', { value: true })
-  const [renderInputs, setRenderInputs] = React.useState(false)
-
-  React.useMemo(() => {
-    setRenderInputs(validABI && !!method && method.inputs.length)
-  }, [method, validABI])
+  const renderInputs = validABI && !!method && method.inputs.length
 
   return !renderInputs
     ? null
     : method.inputs.map(({ name, type }, index) => {
         const placeholder = name ? `${name} (${type})` : type
         const key = `methodInput-${method.name}_${index}_${type}`
+        const validate = type === 'address' ? composeValidators(required, mustBeEthereumAddress) : required
 
         return (
           <Row key={key} margin="sm">
@@ -255,6 +252,7 @@ const RenderInputParams = () => {
                 testId={key}
                 text={placeholder}
                 type="text"
+                validate={validate}
               />
             </Col>
           </Row>
@@ -294,11 +292,124 @@ const RenderOutputParams = () => {
     : null
 }
 
+const ContractAddress = ({ onScannedValue }: { onScannedValue: () => void }) => {
+  const classes = useStyles()
+  const [qrModalOpen, setQrModalOpen] = useState<boolean>(false)
+
+  const openQrModal = () => {
+    setQrModalOpen(true)
+  }
+
+  const closeQrModal = () => {
+    setQrModalOpen(false)
+  }
+
+  const handleScan = (value) => {
+    let scannedAddress = value
+
+    if (scannedAddress.startsWith('ethereum:')) {
+      scannedAddress = scannedAddress.replace('ethereum:', '')
+    }
+
+    onScannedValue(scannedAddress)
+    closeQrModal()
+  }
+
+  return (
+    <>
+      <Row margin="md">
+        <Col xs={11}>
+          <Field
+            component={TextField}
+            name="contractAddress"
+            placeholder="Contract Address*"
+            testId="contractInteraction-contractAddress"
+            text="Contract Address*"
+            type="text"
+            validate={composeValidators(required, mustBeEthereumAddress, mustBeEthereumContractAddress)}
+          />
+        </Col>
+        <Col center="xs" className={classes} middle="xs" xs={1}>
+          <Img
+            alt="Scan QR"
+            className={classes.qrCodeBtn}
+            height={20}
+            onClick={openQrModal}
+            role="button"
+            src={QRIcon}
+          />
+        </Col>
+      </Row>
+      {qrModalOpen && <ScanQRModal isOpen={qrModalOpen} onClose={closeQrModal} onScan={handleScan} />}
+    </>
+  )
+}
+
+const ContractInteractionButtons = ({
+  onCallSubmit,
+  onClose,
+}: {
+  onCallSubmit: (string) => void,
+  onClose: () => void,
+}) => {
+  const web3 = getWeb3()
+  const classes = useStyles()
+  const {
+    input: { value: method },
+  } = useField('selectedMethod', { value: true })
+  const {
+    input: { value: contractAddress },
+  } = useField('contractAddress', { valid: true })
+  const { submitting, valid, validating, values } = useFormState({
+    subscription: { submitting: true, valid: true, values: true, validating: true },
+  })
+
+  const handleCallSubmit = async () => {
+    const contract = new web3.eth.Contract([method], contractAddress)
+    const { inputs, name } = method
+    const args = inputs.map(({ type }, index) => values[`methodInput-${name}_${index}_${type}`])
+    const results = await contract.methods[name](...args).call()
+
+    onCallSubmit(results)
+  }
+
+  return (
+    <Row align="center" className={classes.buttonRow}>
+      <Button minWidth={140} onClick={onClose}>
+        Cancel
+      </Button>
+      {method && method.action === 'read' ? (
+        <Button
+          className={classes.submitButton}
+          color="primary"
+          data-testid="review-tx-btn"
+          disabled={validating || !valid}
+          minWidth={140}
+          onClick={handleCallSubmit}
+          variant="contained"
+        >
+          Call
+        </Button>
+      ) : (
+        <Button
+          className={classes.submitButton}
+          color="primary"
+          data-testid="review-tx-btn"
+          disabled={submitting || validating || !valid || !method || method.action === 'read'}
+          minWidth={140}
+          type="submit"
+          variant="contained"
+        >
+          Review
+        </Button>
+      )}
+    </Row>
+  )
+}
+
 const ContractInteraction = ({ contractAddress, initialValues, onClose, onNext }: Props) => {
   const classes = useStyles()
-  const web3 = getWeb3()
   const { address: safeAddress, ethBalance, name: safeName } = useSelector(safeSelector)
-  const [qrModalOpen, setQrModalOpen] = useState<boolean>(false)
 
   React.useMemo(() => {
     if (contractAddress) {
@@ -310,14 +421,6 @@ const ContractInteraction = ({ contractAddress, initialValues, onClose, onNext }
     if (value || (methodCalled && methodArguments)) {
       onNext({ contractAddress, value, methodCalled, methodArguments })
     }
-  }
-
-  const openQrModal = () => {
-    setQrModalOpen(true)
-  }
-
-  const closeQrModal = () => {
-    setQrModalOpen(false)
   }
 
   return (
@@ -337,32 +440,9 @@ const ContractInteraction = ({ contractAddress, initialValues, onClose, onNext }
         formMutators={formMutators}
         initialValues={initialValues}
         onSubmit={handleSubmit}
+        subscription={{ submitting: true, pristine: true }}
       >
-        {(submitting, validating, rest) => {
-          const { form, valid, values } = rest
-          const { mutators } = form
-          const { contractAddress, selectedMethod: method } = values
-
-          const handleScan = (value) => {
-            let scannedAddress = value
-
-            if (scannedAddress.startsWith('ethereum:')) {
-              scannedAddress = scannedAddress.replace('ethereum:', '')
-            }
-
-            mutators.setContractAddress(scannedAddress)
-            closeQrModal()
-          }
-
-          const handleCallSubmit = async () => {
-            const contract = new web3.eth.Contract([method], contractAddress)
-            const { inputs, name } = method
-            const args = inputs.map(({ type }, index) => values[`methodInput-${name}_${index}_${type}`])
-            const results = await contract.methods[name](...args).call()
-
-            mutators.setCallResults(results)
-          }
-
+        {(submitting, validating, rest, mutators) => {
           return (
             <>
               <Block className={classes.formContainer}>
@@ -375,29 +455,7 @@ const ContractInteraction = ({ contractAddress, initialValues, onClose, onNext }
                     <Hairline />
                   </Col>
                 </Row>
-                <Row margin="md">
-                  <Col xs={11}>
-                    <Field
-                      component={TextField}
-                      name="contractAddress"
-                      placeholder="Contract Address*"
-                      testId="contractInteraction-contractAddress"
-                      text="Contract Address*"
-                      type="text"
-                      validate={composeValidators(required, mustBeEthereumAddress, mustBeEthereumContractAddress)}
-                    />
-                  </Col>
-                  <Col center="xs" className={classes} middle="xs" xs={1}>
-                    <Img
-                      alt="Scan QR"
-                      className={classes.qrCodeBtn}
-                      height={20}
-                      onClick={openQrModal}
-                      role="button"
-                      src={QRIcon}
-                    />
-                  </Col>
-                </Row>
+                <ContractAddress onScannedValue={mutators.setContractAddress} />
                 <Row className={classes.fullWidth} margin="xs">
                   <Paragraph color="disabled" noMargin size="md" style={{ letterSpacing: '-0.5px' }}>
                     Value
@@ -427,42 +485,12 @@ const ContractInteraction = ({ contractAddress, initialValues, onClose, onNext }
                     <TextareaField name="abi" placeholder="ABI*" text="ABI*" type="text" validate={mustBeValidABI} />
                   </Col>
                 </Row>
-                <MethodsDropdown abi={rest.values.abi} onChange={mutators.setSelectedMethod} />
+                <MethodsDropdown onChange={mutators.setSelectedMethod} />
                 <RenderInputParams />
                 <RenderOutputParams />
               </Block>
               <Hairline />
-              <Row align="center" className={classes.buttonRow}>
-                <Button minWidth={140} onClick={onClose}>
-                  Cancel
-                </Button>
-                {method && method.action === 'read' ? (
-                  <Button
-                    className={classes.submitButton}
-                    color="primary"
-                    data-testid="review-tx-btn"
-                    disabled={validating || !valid}
-                    minWidth={140}
-                    onClick={() => handleCallSubmit(rest.values)}
-                    variant="contained"
-                  >
-                    Call
-                  </Button>
-                ) : (
-                  <Button
-                    className={classes.submitButton}
-                    color="primary"
-                    data-testid="review-tx-btn"
-                    disabled={submitting || validating || !valid || !method || method.action === 'read'}
-                    minWidth={140}
-                    type="submit"
-                    variant="contained"
-                  >
-                    Review
-                  </Button>
-                )}
-              </Row>
-              {qrModalOpen && <ScanQRModal isOpen={qrModalOpen} onClose={closeQrModal} onScan={handleScan} />}
+              <ContractInteractionButtons onCallSubmit={mutators.setCallResults} onClose={onClose} />
             </>
           )
         }}
