@@ -83,7 +83,9 @@ export const safeFieldsValidation = async (values: Object) => {
 }
 
 const Details = ({ classes, errors, form }: Props) => {
-  const handleScan = () => {}
+  const handleScan = (value, closeQrModal) => {
+    closeQrModal()
+  }
   return (
     <>
       <Block margin="md">

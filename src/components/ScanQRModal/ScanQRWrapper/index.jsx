@@ -29,6 +29,10 @@ export const ScanQRWrapper = (props: Props) => {
     setQrModalOpen(false)
   }
 
+  const onScanFinished = (value) => {
+    props.handleScan(value, closeQrModal)
+  }
+
   return (
     <>
       <Img
@@ -41,9 +45,7 @@ export const ScanQRWrapper = (props: Props) => {
         role="button"
         src={QRIcon}
       />
-      {qrModalOpen && (
-        <ScanQRModal isOpen={qrModalOpen} onClose={closeQrModal} onScan={(value) => props.handleScan(value)} />
-      )}
+      {qrModalOpen && <ScanQRModal isOpen={qrModalOpen} onClose={closeQrModal} onScan={onScanFinished} />}
     </>
   )
 }

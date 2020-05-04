@@ -101,7 +101,7 @@ const SendFunds = ({ initialValues, onClose, onNext, recipientAddress, selectedT
           const { token: tokenAddress } = formState.values
           const selectedTokenRecord = tokens.find((token) => token.address === tokenAddress)
 
-          const handleScan = (value) => {
+          const handleScan = (value, closeQrModal) => {
             let scannedAddress = value
 
             if (scannedAddress.startsWith('ethereum:')) {
@@ -109,7 +109,7 @@ const SendFunds = ({ initialValues, onClose, onNext, recipientAddress, selectedT
             }
 
             mutators.setRecipient(scannedAddress)
-            //closeQrModal()
+            closeQrModal()
           }
 
           let shouldDisableSubmitButton = !isValidAddress

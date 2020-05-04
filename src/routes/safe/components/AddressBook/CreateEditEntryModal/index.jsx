@@ -83,7 +83,7 @@ const CreateEditEntryModalComponent = ({
       <GnoForm formMutators={formMutators} onSubmit={onFormSubmitted}>
         {(...args) => {
           const mutators = args[3]
-          const handleScan = (value) => {
+          const handleScan = (value, closeQrModal) => {
             let scannedAddress = value
 
             if (scannedAddress.startsWith('ethereum:')) {
@@ -91,7 +91,7 @@ const CreateEditEntryModalComponent = ({
             }
 
             mutators.setRecipient(scannedAddress)
-            // closeQrModal()
+            closeQrModal()
           }
           return (
             <>

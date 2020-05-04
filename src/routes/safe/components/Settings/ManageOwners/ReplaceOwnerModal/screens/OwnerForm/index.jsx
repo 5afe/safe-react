@@ -66,7 +66,7 @@ const OwnerForm = ({ classes, onClose, onSubmit, ownerAddress, ownerName }: Prop
         {(...args) => {
           const mutators = args[3]
 
-          const handleScan = (value) => {
+          const handleScan = (value, closeQrModal) => {
             let scannedAddress = value
 
             if (scannedAddress.startsWith('ethereum:')) {
@@ -74,7 +74,7 @@ const OwnerForm = ({ classes, onClose, onSubmit, ownerAddress, ownerName }: Prop
             }
 
             mutators.setRecipient(scannedAddress)
-            //  closeQrModal()
+            closeQrModal()
           }
 
           return (
