@@ -20,7 +20,7 @@ const ReviewTx = React.lazy(() => import('./screens/ReviewTx'))
 
 const ContractInteraction = React.lazy(() => import('./screens/ContractInteraction'))
 
-const ContractInteractionReview = React.lazy(() => import('./screens/ContractInteractionReview'))
+const ContractInteractionReview = React.lazy(() => import('./screens/ContractInteraction/Review'))
 
 type ActiveScreen =
   | 'chooseTxType'
@@ -83,8 +83,8 @@ const SendModal = ({ activeScreenType, isOpen, onClose, recipientAddress, select
   }
 
   const handleContractInteractionCreation = (contractInteractionInfo) => {
-    setActiveScreen('contractInteractionReview')
     setTx(contractInteractionInfo)
+    setActiveScreen('contractInteractionReview')
   }
 
   const handleSendCollectible = (txInfo) => {
@@ -124,10 +124,10 @@ const SendModal = ({ activeScreenType, isOpen, onClose, recipientAddress, select
         )}
         {activeScreen === 'contractInteraction' && (
           <ContractInteraction
+            contractAddress={recipientAddress}
             initialValues={tx}
             onClose={onClose}
             onNext={handleContractInteractionCreation}
-            recipientAddress={recipientAddress}
           />
         )}
         {activeScreen === 'contractInteractionReview' && (
