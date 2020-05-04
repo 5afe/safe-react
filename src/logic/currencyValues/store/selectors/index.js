@@ -11,7 +11,7 @@ import { type GlobalState } from '~/store'
 export const currencyValuesSelector = (state: GlobalState): CurrencyValuesEntry =>
   state[CURRENCY_VALUES_KEY].get('currencyValues')
 
-export const currencyValuesMapSelector: OutputSelector<GlobalState> = createSelector(
+export const safeFiatBalancesSelector: OutputSelector<GlobalState> = createSelector(
   currencyValuesSelector,
   safeParamAddressFromStateSelector,
   (currencyValues: CurrencyValuesProps, safeAddress: string) => {
@@ -21,7 +21,7 @@ export const currencyValuesMapSelector: OutputSelector<GlobalState> = createSele
 )
 
 export const safeFiatBalancesListSelector: OutputSelector<GlobalState> = createSelector(
-  currencyValuesMapSelector,
+  safeFiatBalancesSelector,
   (currencyValuesMap: CurrencyValuesProps) => {
     if (!currencyValuesMap) return
     return currencyValuesMap.get('currencyBalances') ? currencyValuesMap.get('currencyBalances') : List([])
@@ -29,12 +29,12 @@ export const safeFiatBalancesListSelector: OutputSelector<GlobalState> = createS
 )
 
 export const currentCurrencySelector: OutputSelector<GlobalState> = createSelector(
-  currencyValuesMapSelector,
+  safeFiatBalancesSelector,
   (currencyValuesMap?: CurrencyValuesProps) =>
     currencyValuesMap ? currencyValuesMap.get('currencyValueSelected') : null,
 )
 
 export const currencyRateSelector: OutputSelector<GlobalState> = createSelector(
-  currencyValuesMapSelector,
+  safeFiatBalancesSelector,
   (currencyValuesMap: CurrencyValuesProps) => (currencyValuesMap ? currencyValuesMap.get('currencyRate') : null),
 )
