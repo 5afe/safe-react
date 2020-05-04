@@ -90,7 +90,7 @@ const CreateEditEntryModalComponent = ({
               scannedAddress = scannedAddress.replace('ethereum:', '')
             }
 
-            mutators.setRecipient(scannedAddress)
+            mutators.setOwnerAddress(scannedAddress)
             closeQrModal()
           }
           return (

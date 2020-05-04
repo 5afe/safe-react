@@ -73,7 +73,7 @@ const OwnerForm = ({ classes, onClose, onSubmit, ownerAddress, ownerName }: Prop
               scannedAddress = scannedAddress.replace('ethereum:', '')
             }
 
-            mutators.setRecipient(scannedAddress)
+            mutators.setOwnerAddress(scannedAddress)
             closeQrModal()
           }
 
