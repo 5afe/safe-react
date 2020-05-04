@@ -1,28 +1,12 @@
 // @flow
 import { RateLimit } from 'async-sema'
+import memoize from 'lodash.memoize'
 
+import ABIService from '~/logic/contractInteraction/sources/ABIService'
 import { ETHEREUM_NETWORK } from '~/logic/wallets/getWeb3'
 import { ETHERSCAN_API_KEY } from '~/utils/constants'
 
-type InterfaceParams = {
-  internalType: string,
-  name: string,
-  type: string,
-}
-type ContractInterface = {|
-  constant: boolean,
-  inputs: InterfaceParams[],
-  name: string,
-  outputs: InterfaceParams[],
-  payable: boolean,
-  stateMutability: string,
-  type: string,
-|}
-type ExtendedContractInterface = {| ...ContractInterface, action: string |}
-type ABI = ContractInterface[]
-type ExtendedABI = ExtendedContractInterface[]
-
-class EtherscanService {
+class EtherscanService extends ABIService {
   _rateLimit = async () => {}
 
   _endpointsUrls: { [key: string]: string } = {
@@ -30,48 +14,42 @@ class EtherscanService {
     [ETHEREUM_NETWORK.RINKEBY]: 'https://api-rinkeby.etherscan.io/api',
   }
 
-  _fetch = async (url: string, contractAddress: string) => {
-    let params = {
-      module: 'contract',
-      action: 'getAbi',
-      address: contractAddress,
-    }
+  _fetch = memoize(
+    async (url: string, contractAddress: string) => {
+      let params = {
+        module: 'contract',
+        action: 'getAbi',
+        address: contractAddress,
+      }
 
-    if (ETHERSCAN_API_KEY) {
-      const apiKey = ETHERSCAN_API_KEY
-      params = { ...params, apiKey }
-    }
+      if (ETHERSCAN_API_KEY) {
+        const apiKey = ETHERSCAN_API_KEY
+        params = { ...params, apiKey }
+      }
 
-    return fetch(`${url}?${new URLSearchParams(params)}`)
-  }
+      const response = await fetch(`${url}?${new URLSearchParams(params)}`)
+
+      if (!response.ok) {
+        return { status: 0, result: [] }
+      }
+
+      return response.json()
+    },
+    (url, contractAddress) => `${url}_${contractAddress}`,
+  )
 
   constructor(options: { rps: number }) {
+    super()
     this._rateLimit = RateLimit(options.rps)
-  }
-
-  static extractUsefulMethods(abi: ABI): ExtendedABI {
-    return abi
-      .filter(({ constant, name, type }) => type === 'function' && !!name && typeof constant === 'boolean')
-      .map((method) => ({
-        action: method.constant ? 'read' : 'write',
-        ...method,
-      }))
-      .sort(({ name: a }, { name: b }) => (a.toLowerCase() > b.toLowerCase() ? 1 : -1))
   }
 
   async getContractABI(contractAddress: string, network: string) {
     const etherscanUrl = this._endpointsUrls[network]
     try {
-      const response = await this._fetch(etherscanUrl, contractAddress)
-
-      if (!response.ok) {
-        return undefined
-      }
-
-      const { result, status } = await response.json()
+      const { result, status } = await this._fetch(etherscanUrl, contractAddress)
 
       if (status === '0') {
-        return ''
+        return []
       }
 
       return result
