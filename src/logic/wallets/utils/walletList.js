@@ -43,7 +43,6 @@ const wallets = [
   {
     walletName: 'portis',
     apiKey: PORTIS_DAPP_ID,
-    label: 'Login with Email',
     desktop: true,
   },
   { walletName: 'authereum', desktop: false },
