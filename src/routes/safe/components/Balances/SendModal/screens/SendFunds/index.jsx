@@ -26,6 +26,9 @@ import Col from '~/components/layout/Col'
 import Hairline from '~/components/layout/Hairline'
 import Paragraph from '~/components/layout/Paragraph'
 import Row from '~/components/layout/Row'
+import type { AddressBook } from '~/logic/addressBook/model/addressBook'
+import { getAddressBook } from '~/logic/addressBook/store/selectors'
+import { getNameFromAdbk } from '~/logic/addressBook/utils'
 import { type Token } from '~/logic/tokens/store/model/token'
 import SafeInfo from '~/routes/safe/components/Balances/SendModal/SafeInfo'
 import AddressBookInput from '~/routes/safe/components/Balances/SendModal/screens/AddressBookInput'
@@ -60,6 +63,7 @@ const SendFunds = ({ initialValues, onClose, onNext, recipientAddress, selectedT
   const classes = useStyles()
   const { address: safeAddress, ethBalance, name: safeName } = useSelector(safeSelector)
   const tokens: Token = useSelector(extendedSafeTokensSelector)
+  const addressBook: AddressBook = useSelector(getAddressBook)
   const [selectedEntry, setSelectedEntry] = useState<Object | null>({
     address: recipientAddress || initialValues.recipientAddress,
     name: '',
@@ -107,8 +111,12 @@ const SendFunds = ({ initialValues, onClose, onNext, recipientAddress, selectedT
             if (scannedAddress.startsWith('ethereum:')) {
               scannedAddress = scannedAddress.replace('ethereum:', '')
             }
-
+            const scannedName = addressBook ? getNameFromAdbk(addressBook, scannedAddress) : ''
             mutators.setRecipient(scannedAddress)
+            setSelectedEntry({
+              name: scannedName,
+              address: scannedAddress,
+            })
             closeQrModal()
           }
 
