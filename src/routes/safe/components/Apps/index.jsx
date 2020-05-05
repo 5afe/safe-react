@@ -21,6 +21,7 @@ import {
   safeParamAddressFromStateSelector,
 } from '~/routes/safe/store/selectors'
 import { loadFromStorage, saveToStorage } from '~/utils/storage'
+import { isSameHref } from '~/utils/url'
 
 const APPS_STORAGE_KEY = 'APPS_STORAGE_KEY'
 const APPS_LEGAL_DISCLAIMER_STORAGE_KEY = 'APPS_LEGAL_DISCLAIMER_STORAGE_KEY'
@@ -30,7 +31,6 @@ const StyledIframe = styled.iframe`
   box-sizing: border-box;
   width: 100%;
   height: 100%;
-  display: ${(props) => (props.shouldDisplay ? 'block' : 'none')};
 `
 const Centered = styled.div`
   display: flex;
@@ -68,7 +68,8 @@ function Apps({ closeModal, closeSnackbar, enqueueSnackbar, openModal }: Props) 
   const getSelectedApp = () => appList.find((e) => e.id === selectedApp)
 
   const sendMessageToIframe = (messageId, data) => {
-    iframeEl.contentWindow.postMessage({ messageId, data }, getSelectedApp().url)
+    const app = getSelectedApp()
+    iframeEl.contentWindow.postMessage({ messageId, data }, app.url)
   }
 
   const handleIframeMessage = async (data) => {
@@ -89,6 +90,7 @@ function Apps({ closeModal, closeSnackbar, enqueueSnackbar, openModal }: Props) 
           safeAddress,
           safeName,
           ethBalance,
+          getSelectedApp().name,
           getSelectedApp().iconUrl,
           data.data,
           openModal,
@@ -172,16 +174,18 @@ function Apps({ closeModal, closeSnackbar, enqueueSnackbar, openModal }: Props) 
       )
     }
 
+    const app = getSelectedApp()
+
     return (
       <>
         {appIsLoading && <Loader />}
         <StyledIframe
           frameBorder="0"
-          id="iframeId"
+          id={`iframe-${app.name}`}
           ref={iframeRef}
           shouldDisplay={!appIsLoading}
-          src={getSelectedApp().url}
-          title={getSelectedApp().name}
+          src={app.url}
+          title={app.name}
         />
       </>
     )
@@ -250,8 +254,9 @@ function Apps({ closeModal, closeSnackbar, enqueueSnackbar, openModal }: Props) 
         return
       }
 
-      if (!getSelectedApp().url.includes(origin)) {
-        console.error(`ThirdPartyApp: A message from was received from an unknown origin ${origin}`)
+      const app = getSelectedApp()
+      if (!app.url.includes(origin)) {
+        console.error(`ThirdPartyApp: A message was received from an unknown origin ${origin}`)
         return
       }
 
@@ -263,7 +268,7 @@ function Apps({ closeModal, closeSnackbar, enqueueSnackbar, openModal }: Props) 
     return () => {
       window.removeEventListener('message', onIframeMessage)
     }
-  })
+  }, [selectedApp])
 
   // load legalDisclaimer
   useEffect(() => {
@@ -276,7 +281,7 @@ function Apps({ closeModal, closeSnackbar, enqueueSnackbar, openModal }: Props) 
     }
 
     checkLegalDisclaimer()
-  })
+  }, [])
 
   // Load apps list
   useEffect(() => {
@@ -333,7 +338,8 @@ function Apps({ closeModal, closeSnackbar, enqueueSnackbar, openModal }: Props) 
       })
     }
 
-    if (!iframeEl) {
+    const app = getSelectedApp()
+    if (!iframeEl || !selectedApp || !isSameHref(iframeEl.src, app.url)) {
       return
     }
 
@@ -342,7 +348,7 @@ function Apps({ closeModal, closeSnackbar, enqueueSnackbar, openModal }: Props) 
     return () => {
       iframeEl.removeEventListener('load', onIframeLoaded)
     }
-  }, [iframeEl])
+  }, [iframeEl, selectedApp])
 
   if (loading) {
     return <Loader />

@@ -54,6 +54,10 @@ class HeaderComponent extends React.PureComponent<Props, State> {
     logComponentStack(error, info)
   }
 
+  getOpenDashboard = () => {
+    const { wallet } = onboard.getState()
+    return wallet.type === 'sdk' && wallet.dashboard
+  }
   onDisconnect = () => {
     const { closeSnackbar, enqueueSnackbar, removeProvider } = this.props
 
@@ -84,6 +88,7 @@ class HeaderComponent extends React.PureComponent<Props, State> {
         connected={available}
         network={network}
         onDisconnect={this.onDisconnect}
+        openDashboard={this.getOpenDashboard()}
         provider={provider}
         userAddress={userAddress}
       />
