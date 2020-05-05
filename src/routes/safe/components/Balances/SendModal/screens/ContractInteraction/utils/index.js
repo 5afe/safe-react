@@ -37,6 +37,7 @@ export const formMutators = {
 
     if (modified) {
       utils.changeValue(state, 'callResults', () => '')
+      utils.changeValue(state, 'value', () => '')
     }
 
     utils.changeValue(state, 'selectedMethod', () => args[0])

@@ -2,6 +2,7 @@
 import InputAdornment from '@material-ui/core/InputAdornment'
 import { makeStyles } from '@material-ui/core/styles'
 import React from 'react'
+import { useField } from 'react-final-form'
 import { useSelector } from 'react-redux'
 
 import Field from '~/components/forms/Field'
@@ -11,6 +12,7 @@ import ButtonLink from '~/components/layout/ButtonLink'
 import Col from '~/components/layout/Col'
 import Paragraph from '~/components/layout/Paragraph'
 import Row from '~/components/layout/Row'
+import ABIService from '~/logic/contractInteraction/sources/ABIService'
 import { styles } from '~/routes/safe/components/Balances/SendModal/screens/ContractInteraction/style'
 import { safeSelector } from '~/routes/safe/store/selectors'
 
@@ -19,6 +21,10 @@ const useStyles = makeStyles(styles)
 const EthValue = ({ onSetMax }: { onSetMax: (string) => void }) => {
   const classes = useStyles()
   const { ethBalance } = useSelector(safeSelector)
+  const {
+    input: { value: method },
+  } = useField('selectedMethod', { value: true })
+  const disabled = !ABIService.isPayable(method)
 
   return (
     <>
@@ -26,7 +32,11 @@ const EthValue = ({ onSetMax }: { onSetMax: (string) => void }) => {
         <Paragraph color="disabled" noMargin size="md" style={{ letterSpacing: '-0.5px' }}>
           Value
         </Paragraph>
-        <ButtonLink onClick={() => onSetMax(ethBalance)} weight="bold">
+        <ButtonLink
+          color={disabled ? 'disabled' : 'secondary'}
+          onClick={() => !disabled && onSetMax(ethBalance)}
+          weight="bold"
+        >
           Send max
         </ButtonLink>
       </Row>
@@ -35,14 +45,16 @@ const EthValue = ({ onSetMax }: { onSetMax: (string) => void }) => {
           <Field
             className={classes.addressInput}
             component={TextField}
+            disabled={disabled}
             inputAdornment={{
               endAdornment: <InputAdornment position="end">ETH</InputAdornment>,
+              disabled,
             }}
             name="value"
             placeholder="Value"
             text="Value"
             type="text"
-            validate={composeValidators(mustBeFloat, maxValue(ethBalance))}
+            validate={!disabled && composeValidators(mustBeFloat, maxValue(ethBalance))}
           />
         </Col>
       </Row>

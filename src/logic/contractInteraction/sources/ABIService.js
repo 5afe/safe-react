@@ -1,5 +1,10 @@
 // @flow
-import type { ABI, ExtendedABI } from '~/logic/contractInteraction/sources/types'
+import type {
+  ABI,
+  ContractInterface,
+  ExtendedABI,
+  ExtendedContractInterface,
+} from '~/logic/contractInteraction/sources/types'
 
 class ABIService {
   static extractUsefulMethods(abi: ABI): ExtendedABI {
@@ -10,6 +15,10 @@ class ABIService {
         ...method,
       }))
       .sort(({ name: a }, { name: b }) => (a.toLowerCase() > b.toLowerCase() ? 1 : -1))
+  }
+
+  static isPayable(method: ContractInterface | ExtendedContractInterface): boolean {
+    return method.payable
   }
 }
 
