@@ -28,6 +28,22 @@ export const Menu = styled.div.attrs(() => ({ className: 'background' }))`
   border-top-left-radius: 8px;
   border-bottom-left-radius: 8px;
   background-color: white;
+  overflow-y: auto;
+
+  ::-webkit-scrollbar {
+    width: 0.7em !important;
+    scroll-behavior: smooth !important;
+  }
+
+  ::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3) !important;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background-color: darkgrey !important;
+    outline: 1px solid slategrey !important;
+    border-radius: 10px !important;
+  }
 `
 
 export const Content = styled.div.attrs(() => ({ className: 'background' }))`
