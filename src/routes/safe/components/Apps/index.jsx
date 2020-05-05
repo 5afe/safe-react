@@ -253,7 +253,8 @@ function Apps({ closeModal, closeSnackbar, enqueueSnackbar, openModal }: Props) 
         return
       }
 
-      if (!getSelectedApp().url.includes(origin)) {
+      const app = getSelectedApp()
+      if (!app.url.includes(origin)) {
         console.error(`ThirdPartyApp: A message was received from an unknown origin ${origin}`)
         return
       }
@@ -266,7 +267,7 @@ function Apps({ closeModal, closeSnackbar, enqueueSnackbar, openModal }: Props) 
     return () => {
       window.removeEventListener('message', onIframeMessage)
     }
-  }, [])
+  }, [selectedApp])
 
   // load legalDisclaimer
   useEffect(() => {
