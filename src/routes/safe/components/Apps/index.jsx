@@ -90,6 +90,7 @@ function Apps({ closeModal, closeSnackbar, enqueueSnackbar, openModal }: Props) 
           safeAddress,
           safeName,
           ethBalance,
+          getSelectedApp().name,
           getSelectedApp().iconUrl,
           data.data,
           openModal,
