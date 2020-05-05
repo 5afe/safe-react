@@ -31,7 +31,6 @@ const StyledIframe = styled.iframe`
   box-sizing: border-box;
   width: 100%;
   height: 100%;
-  display: ${(props) => (props.shouldDisplay ? 'block' : 'none')};
 `
 const Centered = styled.div`
   display: flex;
@@ -181,7 +180,7 @@ function Apps({ closeModal, closeSnackbar, enqueueSnackbar, openModal }: Props) 
         {appIsLoading && <Loader />}
         <StyledIframe
           frameBorder="0"
-          id="iframeId"
+          id={`iframe-${app.name}`}
           ref={iframeRef}
           shouldDisplay={!appIsLoading}
           src={app.url}
@@ -255,7 +254,7 @@ function Apps({ closeModal, closeSnackbar, enqueueSnackbar, openModal }: Props) 
       }
 
       if (!getSelectedApp().url.includes(origin)) {
-        console.error(`ThirdPartyApp: A message from was received from an unknown origin ${origin}`)
+        console.error(`ThirdPartyApp: A message was received from an unknown origin ${origin}`)
         return
       }
 
@@ -267,7 +266,7 @@ function Apps({ closeModal, closeSnackbar, enqueueSnackbar, openModal }: Props) 
     return () => {
       window.removeEventListener('message', onIframeMessage)
     }
-  })
+  }, [])
 
   // load legalDisclaimer
   useEffect(() => {
@@ -280,7 +279,7 @@ function Apps({ closeModal, closeSnackbar, enqueueSnackbar, openModal }: Props) 
     }
 
     checkLegalDisclaimer()
-  })
+  }, [])
 
   // Load apps list
   useEffect(() => {
