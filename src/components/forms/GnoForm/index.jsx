@@ -43,7 +43,6 @@ const GnoForm = ({
     initialValues={initialValues}
     mutators={formMutators}
     onSubmit={onSubmit}
-    // debug={console.log}
     render={({ handleSubmit, ...rest }) => (
       <form data-testid={testId} onSubmit={handleSubmit} style={stylesBasedOn(padding)}>
         {children(rest.submitting, rest.validating, rest, rest.form.mutators)}

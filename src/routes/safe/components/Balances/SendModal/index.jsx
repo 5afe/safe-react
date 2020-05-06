@@ -83,8 +83,8 @@ const SendModal = ({ activeScreenType, isOpen, onClose, recipientAddress, select
   }
 
   const handleContractInteractionCreation = (contractInteractionInfo) => {
-    setActiveScreen('contractInteractionReview')
     setTx(contractInteractionInfo)
+    setActiveScreen('contractInteractionReview')
   }
 
   const handleSendCollectible = (txInfo) => {
@@ -130,7 +130,7 @@ const SendModal = ({ activeScreenType, isOpen, onClose, recipientAddress, select
             onNext={handleContractInteractionCreation}
           />
         )}
-        {activeScreen === 'contractInteractionReview' && (
+        {activeScreen === 'contractInteractionReview' && tx && (
           <ContractInteractionReview onClose={onClose} onPrev={() => setActiveScreen('contractInteraction')} tx={tx} />
         )}
         {activeScreen === 'sendCollectible' && (
