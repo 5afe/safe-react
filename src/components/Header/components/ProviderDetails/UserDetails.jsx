@@ -29,6 +29,7 @@ type Props = {
   userAddress: string,
   classes: Object,
   onDisconnect: Function,
+  openDashboard?: Function,
 }
 
 const styles = () => ({
@@ -72,6 +73,15 @@ const styles = () => ({
   },
   disconnect: {
     padding: `${md} ${lg}`,
+    '& button': {
+      background: '#f02525',
+    },
+  },
+  dashboard: {
+    padding: `${md} ${lg} ${xs}`,
+  },
+  dashboardText: {
+    letterSpacing: '1px',
   },
   disconnectText: {
     letterSpacing: '1px',
@@ -92,7 +102,7 @@ const styles = () => ({
   },
 })
 
-const UserDetails = ({ classes, connected, network, onDisconnect, provider, userAddress }: Props) => {
+const UserDetails = ({ classes, connected, network, onDisconnect, openDashboard, provider, userAddress }: Props) => {
   const status = connected ? 'Connected' : 'Connection error'
   const address = userAddress ? shortVersionOf(userAddress, 4) : 'Address not available'
   const identiconAddress = userAddress || 'random'
@@ -154,6 +164,15 @@ const UserDetails = ({ classes, connected, network, onDisconnect, provider, user
         </Paragraph>
       </Row>
       <Hairline margin="xs" />
+      {openDashboard && (
+        <Row className={classes.dashboard}>
+          <Button color="primary" fullWidth onClick={openDashboard} size="medium" variant="contained">
+            <Paragraph className={classes.dashboardText} color="white" noMargin size="md">
+              {upperFirst(provider)} Wallet
+            </Paragraph>
+          </Button>
+        </Row>
+      )}
       <Row className={classes.disconnect}>
         <Button color="primary" fullWidth onClick={onDisconnect} size="medium" variant="contained">
           <Paragraph className={classes.disconnectText} color="white" noMargin size="md">
