@@ -2,7 +2,6 @@
 
 import type { Dispatch as ReduxDispatch } from 'redux'
 
-import fetchCollectibles from '~/logic/collectibles/store/actions/fetchCollectibles'
 import { nftAssetsSelector } from '~/logic/collectibles/store/selectors'
 import updateActiveAssets from '~/routes/safe/store/actions/updateActiveAssets'
 import {
@@ -24,7 +23,6 @@ const activateAssetsByBalance = (safeAddress: string) => async (
       return
     }
 
-    await dispatch(fetchCollectibles())
     const availableAssets = nftAssetsSelector(state)
     const alreadyActiveAssets = safeActiveAssetsSelectorBySafe(safeAddress, safes)
     const blacklistedAssets = safeBlacklistedAssetsSelectorBySafe(safeAddress, safes)

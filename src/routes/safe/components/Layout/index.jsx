@@ -91,7 +91,7 @@ const Layout = (props: Props) => {
       <Switch>
         <Route exact path={`${match.path}/balances/:assetType?`} render={() => wrapInSuspense(<Balances />, null)} />
         <Route exact path={`${match.path}/transactions`} render={() => wrapInSuspense(<TxsTable />, null)} />
-        {process.env.REACT_APP_ENV !== 'production' && (
+        {process.env.REACT_APP_APPS_DISABLED !== 'true' && (
           <Route
             exact
             path={`${match.path}/apps`}
