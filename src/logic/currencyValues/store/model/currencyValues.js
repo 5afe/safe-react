@@ -53,7 +53,7 @@ export const makeBalanceCurrency: RecordFactory<BalanceCurrencyType> = Record({
 })
 
 export type CurrencyValuesEntry = {
-  currencyValueSelected: $Keys<typeof AVAILABLE_CURRENCIES>,
+  selectedCurrency: $Keys<typeof AVAILABLE_CURRENCIES>,
   currencyRate: number,
   currencyValuesList: BalanceCurrencyType[],
 }

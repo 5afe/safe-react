@@ -27,11 +27,11 @@ export const fetchCurrencyValues = (safeAddress: string) => async (dispatch: Red
     Object.entries(storedCurrencies).forEach((kv) => {
       const safeAddr = kv[0]
       const value = kv[1]
-      const { currencyRate, currencyValueSelected } = value
+      const { currencyRate, selectedCurrency } = value
       batch(() => {
-        dispatch(setSelectedCurrency(safeAddr, currencyValueSelected))
+        dispatch(setSelectedCurrency(safeAddr, selectedCurrency))
         dispatch(setCurrencyRate(safeAddr, currencyRate))
-        dispatch(fetchCurrencyRate(safeAddr, currencyValueSelected))
+        dispatch(fetchCurrencyRate(safeAddr, selectedCurrency))
         dispatch(fetchSafeTokens(safeAddress))
       })
     })

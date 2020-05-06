@@ -14,17 +14,17 @@ export default handleActions<State, *>(
     [SET_CURRENCY_RATE]: (state: State, action: ActionType<Function>): State => {
       const { currencyRate, safeAddress } = action.payload
 
-      return state.setIn(['currencyValues', safeAddress, 'currencyRate'], currencyRate)
+      return state.setIn([safeAddress, 'currencyRate'], currencyRate)
     },
     [SET_CURRENCY_BALANCES]: (state: State, action: ActionType<Function>): State => {
       const { currencyBalances, safeAddress } = action.payload
 
-      return state.setIn(['currencyValues', safeAddress, 'currencyBalances'], currencyBalances)
+      return state.setIn([safeAddress, 'currencyBalances'], currencyBalances)
     },
     [SET_CURRENT_CURRENCY]: (state: State, action: ActionType<Function>): State => {
-      const { currencyValueSelected, safeAddress } = action.payload
+      const { safeAddress, selectedCurrency } = action.payload
 
-      return state.setIn(['currencyValues', safeAddress, 'currencyValueSelected'], currencyValueSelected)
+      return state.setIn([safeAddress, 'selectedCurrency'], selectedCurrency)
     },
   },
   Map(),
