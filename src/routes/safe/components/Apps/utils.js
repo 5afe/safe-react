@@ -43,15 +43,21 @@ export const getAppInfoFromUrl = async (appUrl: string) => {
       throw Error('The app does not fulfil the structure required.')
     }
 
+    // the DB origin field has a limit of 100 characters
+    const originFieldSize = 100
+    const jsonDataLength = 20
+    const remainingSpace = originFieldSize - res.url.length - jsonDataLength
+
     res = {
       ...res,
       ...appInfo.data,
-      id: JSON.stringify({ url: res.url, name: appInfo.data.name }),
+      id: JSON.stringify({ url: res.url, name: appInfo.data.name.substring(0, remainingSpace) }),
       error: false,
     }
+
     if (appInfo.data.iconPath) {
       try {
-        const iconInfo = await axios.get(`${noTrailingSlashUrl}/${appInfo.data.iconPath}`)
+        const iconInfo = await axios.get(`${noTrailingSlashUrl}/${appInfo.data.iconPath}`, { timeout: 1000 * 10 })
         if (/image\/\w/gm.test(iconInfo.headers['content-type'])) {
           res.iconUrl = `${noTrailingSlashUrl}/${appInfo.data.iconPath}`
         }
@@ -59,7 +65,6 @@ export const getAppInfoFromUrl = async (appUrl: string) => {
         console.error(`It was not possible to fetch icon from app ${res.url}`)
       }
     }
-
     return res
   } catch (error) {
     console.error(`It was not possible to fetch app from ${res.url}: ${error.message}`)
