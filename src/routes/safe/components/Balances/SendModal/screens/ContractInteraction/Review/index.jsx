@@ -102,18 +102,28 @@ const ContractInteractionReview = ({ closeSnackbar, enqueueSnackbar, onClose, on
             Value
           </Paragraph>
         </Row>
-        <Row align="center" margin="sm">
+        <Row align="center" margin="md">
           <Col xs={1}>
             <Img alt="Ether" height={28} onError={setImageToPlaceholder} src={getEthAsToken('0').logoUri} />
           </Col>
           <Col layout="column" xs={11}>
             <Block justify="left">
-              <Paragraph className={classes.value} noMargin size="md">
+              <Paragraph className={classes.value} noMargin size="md" style={{ margin: 0 }}>
                 {tx.value || 0}
                 {' ETH'}
               </Paragraph>
             </Block>
           </Col>
+        </Row>
+        <Row margin="xs">
+          <Paragraph color="disabled" noMargin size="md" style={{ letterSpacing: '-0.5px' }}>
+            Method
+          </Paragraph>
+        </Row>
+        <Row align="center" margin="md">
+          <Paragraph className={classes.value} size="md" style={{ margin: 0 }}>
+            {tx.selectedMethod.name}
+          </Paragraph>
         </Row>
         {tx.selectedMethod.inputs.map(({ name, type }, index) => {
           const key = `methodInput-${tx.selectedMethod.name}_${index}_${type}`
@@ -126,7 +136,7 @@ const ContractInteractionReview = ({ closeSnackbar, enqueueSnackbar, onClose, on
                 </Paragraph>
               </Row>
               <Row align="center" margin="md">
-                <Paragraph className={classes.value} noMargin size="md">
+                <Paragraph className={classes.value} noMargin size="md" style={{ margin: 0 }}>
                   {tx[key]}
                 </Paragraph>
               </Row>
