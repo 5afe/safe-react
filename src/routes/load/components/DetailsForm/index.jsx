@@ -84,6 +84,7 @@ export const safeFieldsValidation = async (values: Object) => {
 
 const Details = ({ classes, errors, form }: Props) => {
   const handleScan = (value, closeQrModal) => {
+    form.mutators.setValue(FIELD_LOAD_ADDRESS, value)
     closeQrModal()
   }
   return (
