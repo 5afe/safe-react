@@ -20,8 +20,8 @@ const currencyValuesStorageMiddleware = (store: Store<GlobalState>) => (next: Fu
     const { dispatch } = store
     switch (action.type) {
       case SET_CURRENT_CURRENCY: {
-        const { currencyValueSelected, safeAddress } = action.payload
-        dispatch(fetchCurrencyRate(safeAddress, currencyValueSelected))
+        const { safeAddress, selectedCurrencyValue } = action.payload
+        dispatch(fetchCurrencyRate(safeAddress, selectedCurrencyValue))
         break
       }
       case SET_CURRENCY_RATE:
@@ -29,10 +29,10 @@ const currencyValuesStorageMiddleware = (store: Store<GlobalState>) => (next: Fu
         const currencyValues = currencyValuesSelector(state)
         const currencyValuesWithoutBalances = currencyValues.map((currencyValue) => {
           const currencyRate = currencyValue.get('currencyRate')
-          const currencyValueSelected = currencyValue.get('currencyValueSelected')
+          const selectedCurrencyValue = currencyValue.get('selectedCurrencyValue')
           return {
             currencyRate,
-            currencyValueSelected,
+            selectedCurrencyValue,
           }
         })
         await saveCurrencyValues(currencyValuesWithoutBalances)

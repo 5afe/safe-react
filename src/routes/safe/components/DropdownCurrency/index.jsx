@@ -25,7 +25,7 @@ const DropdownCurrency = () => {
   const safeAddress = useSelector(safeParamAddressFromStateSelector)
   const dispatch = useDispatch()
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
-  const currencyValueSelected = useSelector(currentCurrencySelector)
+  const selectedCurrencyValue = useSelector(currentCurrencySelector)
 
   const [searchParams, setSearchParams] = useState('')
   const classes = useDropdownStyles()
@@ -46,12 +46,12 @@ const DropdownCurrency = () => {
     handleClose()
   }
 
-  return !currencyValueSelected ? null : (
+  return !selectedCurrencyValue ? null : (
     <MuiThemeProvider theme={DropdownListTheme}>
       <>
         <button className={classes.button} onClick={handleClick} type="button">
           <span className={classNames(classes.buttonInner, anchorEl && classes.openMenuButton)}>
-            {currencyValueSelected}
+            {selectedCurrencyValue}
           </span>
         </button>
         <Menu
@@ -108,7 +108,7 @@ const DropdownCurrency = () => {
                   />
                 </ListItemIcon>
                 <ListItemText primary={currencyName} />
-                {currencyName === currencyValueSelected ? (
+                {currencyName === selectedCurrencyValue ? (
                   <ListItemIcon className={classes.iconRight}>
                     <img alt="checked" src={CheckIcon} />
                   </ListItemIcon>

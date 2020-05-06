@@ -31,7 +31,7 @@ export const safeFiatBalancesListSelector: OutputSelector<GlobalState> = createS
 export const currentCurrencySelector: OutputSelector<GlobalState> = createSelector(
   safeFiatBalancesSelector,
   (currencyValuesMap?: CurrencyValuesProps) =>
-    currencyValuesMap ? currencyValuesMap.get('currencyValueSelected') : null,
+    currencyValuesMap ? currencyValuesMap.get('selectedCurrencyValue') : null,
 )
 
 export const currencyRateSelector: OutputSelector<GlobalState> = createSelector(

@@ -22,9 +22,9 @@ export default handleActions<State, *>(
       return state.setIn(['currencyValues', safeAddress, 'currencyBalances'], currencyBalances)
     },
     [SET_CURRENT_CURRENCY]: (state: State, action: ActionType<Function>): State => {
-      const { currencyValueSelected, safeAddress } = action.payload
+      const { safeAddress, selectedCurrencyValue } = action.payload
 
-      return state.setIn(['currencyValues', safeAddress, 'currencyValueSelected'], currencyValueSelected)
+      return state.setIn(['currencyValues', safeAddress, 'selectedCurrencyValue'], selectedCurrencyValue)
     },
   },
   Map(),
