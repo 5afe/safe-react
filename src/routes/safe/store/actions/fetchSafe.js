@@ -21,18 +21,19 @@ const buildOwnersFrom = (
   localSafe: SafeProps | {}, // eslint-disable-next-line
 ) =>
   safeOwners.map((ownerAddress: string) => {
+    const checksumAddress = getWeb3().utils.toChecksumAddress(ownerAddress)
     if (!localSafe) {
-      return makeOwner({ name: 'UNKNOWN', address: ownerAddress })
+      return makeOwner({ name: 'UNKNOWN', address: checksumAddress })
     }
 
-    const storedOwner = localSafe.owners.find(({ address }) => sameAddress(address, ownerAddress))
+    const storedOwner = localSafe.owners.find(({ address }) => sameAddress(address, checksumAddress))
     if (!storedOwner) {
-      return makeOwner({ name: 'UNKNOWN', address: ownerAddress })
+      return makeOwner({ name: 'UNKNOWN', address: checksumAddress })
     }
 
     return makeOwner({
       name: storedOwner.name || 'UNKNOWN',
-      address: ownerAddress,
+      address: checksumAddress,
     })
   })
 
