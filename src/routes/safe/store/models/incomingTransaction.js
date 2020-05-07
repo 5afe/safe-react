@@ -2,7 +2,12 @@
 import { Record } from 'immutable'
 import type { RecordFactory, RecordOf } from 'immutable'
 
-export const INCOMING_TX_TYPES = ['INCOMING', 'ERC721_TRANSFER', 'ERC20_TRANSFER', 'ETHER_TRANSFER']
+export const INCOMING_TX_TYPES = {
+  INCOMING: 'INCOMING',
+  ERC721_TRANSFER: 'ERC721_TRANSFER',
+  ERC20_TRANSFER: 'ERC20_TRANSFER',
+  ETHER_TRANSFER: 'ETHER_TRANSFER',
+}
 
 export type IncomingTransactionProps = {
   blockNumber: number,

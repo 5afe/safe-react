@@ -8,7 +8,7 @@ import TxType from './TxType'
 
 import { type Column } from '~/components/Table/TableHead'
 import { type SortRow, buildOrderFieldFrom } from '~/components/Table/sorting'
-import { getWeb3 } from '~/logic/wallets/getWeb3'
+import { formatAmount } from '~/logic/tokens/utils/formatAmount'
 import { INCOMING_TX_TYPES, type IncomingTransaction } from '~/routes/safe/store/models/incomingTransaction'
 import { type Transaction } from '~/routes/safe/store/models/transaction'
 
@@ -33,25 +33,40 @@ type TxData = {
 
 export const formatDate = (date: string): string => format(parseISO(date), 'MMM d, yyyy - HH:mm:ss')
 
-export const getIncomingTxAmount = (tx: IncomingTransaction) => {
-  const txAmount = tx.value ? `${new BigNumber(tx.value).div(`1e${tx.decimals}`).toFixed()}` : 'n/a'
-  return `${txAmount} ${tx.symbol || 'n/a'}`
+type TxValues = {
+  value?: string | number,
+  decimals?: string | number,
+  symbol?: string,
 }
 
-export const getTxAmount = (tx: Transaction) => {
-  const web3 = getWeb3()
-  const { fromWei, toBN } = web3.utils
+const NOT_AVAILABLE = 'n/a'
 
-  let txAmount = 'n/a'
+const getAmountWithSymbol = ({ decimals = 0, symbol = NOT_AVAILABLE, value }: TxValues, formatted = false) => {
+  const nonFormattedValue = BigNumber(value).times(`1e-${decimals}`).toFixed()
+  const finalValue = formatted ? formatAmount(nonFormattedValue).toString() : nonFormattedValue
+  const txAmount = finalValue === 'NaN' ? NOT_AVAILABLE : finalValue
 
-  if (tx.isTokenTransfer && tx.decodedParams) {
-    const tokenDecimals = tx.decimals.toNumber ? tx.decimals.toNumber() : tx.decimals
-    txAmount = `${new BigNumber(tx.decodedParams.value).div(10 ** tokenDecimals).toFixed()} ${tx.symbol}`
-  } else if (Number(tx.value) > 0) {
-    txAmount = `${fromWei(toBN(tx.value), 'ether')} ${tx.symbol}`
+  return `${txAmount} ${symbol}`
+}
+
+export const getIncomingTxAmount = (tx: IncomingTransaction, formatted: boolean = true) => {
+  // simple workaround to avoid displaying unexpected values for incoming NFT transfer
+  if (INCOMING_TX_TYPES[tx.type] === INCOMING_TX_TYPES.ERC721_TRANSFER) {
+    return `1 ${tx.symbol}`
   }
 
-  return txAmount
+  return getAmountWithSymbol(tx, formatted)
+}
+
+export const getTxAmount = (tx: Transaction, formatted: boolean = true) => {
+  const { decimals = 18, decodedParams, isTokenTransfer, symbol } = tx
+  const { value } = isTokenTransfer && decodedParams && decodedParams.value ? decodedParams : tx
+
+  if (!isTokenTransfer && !(Number(value) > 0)) {
+    return NOT_AVAILABLE
+  }
+
+  return getAmountWithSymbol({ decimals, symbol, value }, formatted)
 }
 
 export type TransactionRow = SortRow<TxData>
@@ -101,7 +116,7 @@ export const getTxTableData = (
   const cancelTxsByNonce = cancelTxs.reduce((acc, tx) => acc.set(tx.nonce, tx), Map())
 
   return transactions.map((tx) => {
-    if (INCOMING_TX_TYPES.includes(tx.type)) {
+    if (INCOMING_TX_TYPES[tx.type]) {
       return getIncomingTxTableData(tx)
     }
 

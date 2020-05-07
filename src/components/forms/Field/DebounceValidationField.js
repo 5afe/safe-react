@@ -7,7 +7,7 @@ import { Field } from 'react-final-form'
 
 type Props = {
   validate: () => void,
-  debounce: number,
+  debounce?: number,
 }
 
 const DebounceValidationField = ({ debounce = 1000, validate, ...rest }: Props) => {

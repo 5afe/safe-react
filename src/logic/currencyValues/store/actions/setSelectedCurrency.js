@@ -7,7 +7,10 @@ import { AVAILABLE_CURRENCIES } from '~/logic/currencyValues/store/model/currenc
 export const SET_CURRENT_CURRENCY = 'SET_CURRENT_CURRENCY'
 
 // eslint-disable-next-line max-len
-export const setCurrencySelected = createAction<string, *>(
+export const setSelectedCurrency = createAction<string, *>(
   SET_CURRENT_CURRENCY,
-  (currencyValueSelected: $Keys<typeof AVAILABLE_CURRENCIES>): CurrencyValuesProps => ({ currencyValueSelected }),
+  (safeAddress: string, selectedCurrency: $Keys<typeof AVAILABLE_CURRENCIES>): CurrencyValuesProps => ({
+    safeAddress,
+    selectedCurrency,
+  }),
 )

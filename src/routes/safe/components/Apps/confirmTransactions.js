@@ -1,4 +1,5 @@
 // @flow
+import { BigNumber } from 'bignumber.js'
 import React from 'react'
 import styled from 'styled-components'
 
@@ -7,6 +8,8 @@ import Bold from '~/components/layout/Bold'
 import Heading from '~/components/layout/Heading'
 import Img from '~/components/layout/Img'
 import { getEthAsToken } from '~/logic/tokens/utils/tokenHelpers'
+
+const humanReadableBalance = (balance, decimals) => BigNumber(balance).times(`1e-${decimals}`).toFixed()
 
 const Wrapper = styled.div`
   margin-bottom: 15px;
@@ -28,13 +31,14 @@ const confirmTransactions = (
   safeAddress: string,
   safeName: string,
   ethBalance: string,
+  nameApp: string,
   iconApp: string,
   txs: Array<any>,
   openModal: () => void,
   closeModal: () => void,
   onConfirm: () => void,
 ) => {
-  const title = <ModalTitle iconUrl={iconApp} title="Compound" />
+  const title = <ModalTitle iconUrl={iconApp} title={nameApp} />
 
   const body = (
     <>
@@ -49,7 +53,7 @@ const confirmTransactions = (
                   <Heading tag="h3">Value</Heading>
                   <div className="value-section">
                     <Img alt="Ether" height={40} src={getEthAsToken('0').logoUri} />
-                    <Bold>{tx.value} ETH</Bold>
+                    <Bold>{humanReadableBalance(tx.value, 18)} ETH</Bold>
                   </div>
                 </div>
                 <div className="section">

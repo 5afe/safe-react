@@ -50,7 +50,7 @@ const IncomingTxDescription = ({ tx }: Props) => {
   const txFromName = useSelector((state) => getNameFromAddressBook(state, tx.from))
   return (
     <Block className={classes.txDataContainer}>
-      <TransferDescription from={tx.from} txFromName={txFromName} value={getIncomingTxAmount(tx)} />
+      <TransferDescription from={tx.from} txFromName={txFromName} value={getIncomingTxAmount(tx, false)} />
     </Block>
   )
 }

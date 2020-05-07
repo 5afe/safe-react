@@ -223,7 +223,7 @@ const TxDescription = ({ classes, tx }: Props) => {
     removedOwner,
     upgradeTx,
   } = getTxData(tx)
-  const amount = getTxAmount(tx)
+  const amount = getTxAmount(tx, false)
   return (
     <Block className={classes.txDataContainer}>
       {modifySettingsTx && action && (

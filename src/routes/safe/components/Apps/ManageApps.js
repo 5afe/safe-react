@@ -1,5 +1,6 @@
 // @flow
 import { ButtonLink, Checkbox, ManageListModal, Text, TextField } from '@gnosis.pm/safe-react-components'
+import type { FieldValidator } from 'final-form'
 import React, { useState } from 'react'
 import { FormSpy } from 'react-final-form'
 import styled from 'styled-components'
@@ -9,9 +10,10 @@ import { getAppInfoFromUrl } from './utils'
 import Field from '~/components/forms/Field'
 import DebounceValidationField from '~/components/forms/Field/DebounceValidationField'
 import GnoForm from '~/components/forms/GnoForm'
-import { composeValidators, required } from '~/components/forms/validator'
+import { required } from '~/components/forms/validator'
 import Img from '~/components/layout/Img'
 import appsIconSvg from '~/routes/safe/components/Transactions/TxsTable/TxType/assets/appsIcon.svg'
+import { isValid as isURLValid } from '~/utils/url'
 
 const FORM_ID = 'add-apps-form'
 
@@ -50,9 +52,14 @@ type Props = {
 }
 
 const urlValidator = (value: string) => {
-  return /(?:^|[ \t])((https?:\/\/)?(?:localhost|[\w-]+(?:\.[\w-]+)+)(:\d+)?(\/\S*)?)/gm.test(value)
-    ? undefined
-    : 'Please, provide a valid url'
+  return isURLValid(value) ? undefined : 'Please, provide a valid url'
+}
+
+const composeValidatorsApps = (...validators: Function[]): FieldValidator => (value: Field, values, meta) => {
+  if (!meta.modified) {
+    return
+  }
+  return validators.reduce((error, validator) => error || validator(value), undefined)
 }
 
 const ManageApps = ({ appList, onAppAdded, onAppToggle }: Props) => {
@@ -84,7 +91,15 @@ const ManageApps = ({ appList, onAppAdded, onAppToggle }: Props) => {
   }
 
   const uniqueAppValidator = (value) => {
-    const exists = appList.find((a) => a.url === value.trim())
+    const exists = appList.find((a) => {
+      try {
+        const currentUrl = new URL(a.url)
+        const newUrl = new URL(value)
+        return currentUrl.href === newUrl.href
+      } catch (error) {
+        return 'There was a problem trying to validate the URL existence.'
+      }
+    })
     return exists ? 'This app is already registered.' : undefined
   }
 
@@ -120,7 +135,12 @@ const ManageApps = ({ appList, onAppAdded, onAppToggle }: Props) => {
               name="appUrl"
               placeholder="App URL"
               type="text"
-              validate={composeValidators(customRequiredValidator, urlValidator, uniqueAppValidator, safeAppValidator)}
+              validate={composeValidatorsApps(
+                customRequiredValidator,
+                urlValidator,
+                uniqueAppValidator,
+                safeAppValidator,
+              )}
             />
 
             <AppInfo>

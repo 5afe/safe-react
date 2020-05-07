@@ -129,8 +129,15 @@ export const estimateSafeTxGas = async (
               gasLimit: txGasEstimation + dataGasEstimation + additionalGas,
             },
             (error, res) => {
+              // res.data check is for OpenEthereum/Parity revert messages format
+              const isOpenEthereumRevertMsg = res && typeof res.data === 'string'
+
+              const isEstimationSuccessful =
+                !error &&
+                ((typeof res === 'string' && res !== '0x') || (isOpenEthereumRevertMsg && res.data.slice(9) !== '0x'))
+
               resolve({
-                success: error || res === '0x' ? false : true,
+                success: isEstimationSuccessful,
                 estimation: txGasEstimation + additionalGas,
               })
             },
