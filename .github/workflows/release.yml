@@ -70,9 +70,24 @@ jobs:
           # release the app after building
           release: ${{ startsWith(github.ref, 'refs/tags/v') }}
 
-      - name: 'Upload Artifacts'
-        if: contains(github.ref, 'development')
+      - name: 'Upload Artifacts OSX'
+        if: contains(github.ref, 'development') && startsWith(matrix.os, 'macos')
         uses: actions/upload-artifact@v2
         with:
-          name: desktop-artifacts
-          path: ./dist/Safe[ ]Multisig*.*
+          name: Desktop OSX
+          path: ./dist/Safe[ ]Multisig*.dmg
+
+      - name: 'Upload Artifacts Linux'
+        if: contains(github.ref, 'development') && startsWith(matrix.os, 'ubuntu')
+        uses: actions/upload-artifact@v2
+        with:
+          name: Desktop Linux
+          path: ./dist/Safe[ ]Multisig*.AppImage
+
+      - name: 'Upload Artifacts Windows'
+        if: contains(github.ref, 'development') && startsWith(matrix.os, 'windows')
+        uses: actions/upload-artifact@v2
+        with:
+          name: Desktop Windows
+          path: ./dist/Safe[ ]Multisig*.exe
+
