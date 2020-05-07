@@ -6,6 +6,7 @@ on:
     branches:
       # this will run on the specified branch
       - master
+      - development
 
 env:
   REACT_APP_BLOCKNATIVE_KEY: ${{ secrets.REACT_APP_BLOCKNATIVE_KEY }}
@@ -34,14 +35,12 @@ jobs:
         shell: powershell
         run: |
           yarn global add --production windows-build-tools --vs2015 --msvs_version=2015
-
       - name: Install node-gyp
         if: startsWith(matrix.os, 'windows')
         shell: powershell
         run: |
           yarn global add node-gyp
           yarn config set node_gyp "$_\node_modules\node-gyp\bin\node-gyp.js"
-
       - name: Install Node.js, NPM and Yarn
         uses: actions/setup-node@v1
         with:
@@ -70,3 +69,10 @@ jobs:
           # If the commit is tagged with a version (e.g. "v1.0.0"),
           # release the app after building
           release: ${{ startsWith(github.ref, 'refs/tags/v') }}
+
+      - name: 'Upload Artifacts'
+        if: contains(github.ref, "development")
+        uses: actions/upload-artifact@v2
+        with:
+          name: desktop-artifacts
+          path: ./dist/Safe[ ]Multisig*.*
