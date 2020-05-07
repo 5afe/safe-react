@@ -1,8 +1,7 @@
 // @flow
-
 import axios from 'axios'
 import bn from 'bignumber.js'
-import { List, Map, type RecordInstance } from 'immutable'
+import { List, Map } from 'immutable'
 
 import generateBatchRequests from '~/logic/contracts/generateBatchRequests'
 import { buildIncomingTxServiceUrl } from '~/logic/safe/transactions/incomingTxHistory'
@@ -102,5 +101,5 @@ export const loadIncomingTransactions = async (safeAddress: string) => {
 
   const incomingTxsWithData = await batchIncomingTxsTokenDataRequest(incomingTransactions)
   const incomingTxsRecord = incomingTxsWithData.map(buildIncomingTransactionFrom)
-  return Map({ safeAddress: List(incomingTxsRecord) })
+  return Map({ [safeAddress]: List(incomingTxsRecord) })
 }
