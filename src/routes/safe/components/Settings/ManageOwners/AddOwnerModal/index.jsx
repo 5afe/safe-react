@@ -13,6 +13,7 @@ import Modal from '~/components/Modal'
 import { addOrUpdateAddressBookEntry } from '~/logic/addressBook/store/actions/addOrUpdateAddressBookEntry'
 import { getGnosisSafeInstanceAt } from '~/logic/contracts/safeContracts'
 import { TX_NOTIFICATION_TYPES } from '~/logic/safe/transactions'
+import { getWeb3 } from '~/logic/wallets/getWeb3'
 import addSafeOwner from '~/routes/safe/store/actions/addSafeOwner'
 import createTransaction from '~/routes/safe/store/actions/createTransaction'
 import { type Owner } from '~/routes/safe/store/models/owner'
@@ -91,7 +92,7 @@ const AddOwner = ({ classes, closeSnackbar, enqueueSnackbar, isOpen, onClose }: 
     setValues((stateValues) => ({
       ...stateValues,
       ownerName: newValues.ownerName,
-      ownerAddress: newValues.ownerAddress,
+      ownerAddress: getWeb3().utils.toChecksumAddress(newValues.ownerAddress),
     }))
     setActiveScreen('selectThreshold')
   }
