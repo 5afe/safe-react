@@ -17,6 +17,8 @@ import { mainFontFamily, md, primary, screenSm } from '~/theme/variables'
 import { loadGoogleAnalytics } from '~/utils/googleAnalytics'
 import { loadIntercom } from '~/utils/intercom'
 
+const isDesktop = process.env.REACT_APP_BUILD_FOR_DESKTOP
+
 const useStyles = makeStyles({
   container: {
     backgroundColor: '#fff',
@@ -111,14 +113,18 @@ const CookiesBanner = () => {
     fetchCookiesFromStorage()
   }, [showBanner])
 
+  useEffect(() => {
+    if (isDesktop && showBanner) acceptCookiesHandler()
+  }, [isDesktop, showBanner])
+
   const acceptCookiesHandler = async () => {
     const newState = {
       acceptedNecessary: true,
-      acceptedAnalytics: true,
+      acceptedAnalytics: !isDesktop,
     }
     await saveCookie(COOKIES_KEY, newState, 365)
     dispatch(openCookieBanner(false))
-    setShowAnalytics(true)
+    setShowAnalytics(!isDesktop)
   }
 
   const closeCookiesBannerHandler = async () => {
@@ -193,8 +199,9 @@ const CookiesBanner = () => {
     loadIntercom()
     loadGoogleAnalytics()
   }
+  if (isDesktop) loadIntercom()
 
-  return showBanner ? cookieBannerContent : null
+  return showBanner && !isDesktop ? cookieBannerContent : null
 }
 
 export default CookiesBanner

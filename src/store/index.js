@@ -15,6 +15,7 @@ import {
   nftTokensReducer,
 } from '~/logic/collectibles/store/reducer/collectibles'
 import cookies, { COOKIES_REDUCER_ID } from '~/logic/cookies/store/reducer/cookies'
+import currencyValuesStorageMiddleware from '~/logic/currencyValues/store/middleware'
 import currencyValues, { CURRENCY_VALUES_KEY } from '~/logic/currencyValues/store/reducer/currencyValues'
 import currentSession, {
   CURRENT_SESSION_REDUCER_ID,
@@ -55,6 +56,7 @@ const finalCreateStore = composeEnhancers(
     providerWatcher,
     notificationsMiddleware,
     addressBookMiddleware,
+    currencyValuesStorageMiddleware,
   ),
 )
 
