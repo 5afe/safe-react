@@ -15,7 +15,12 @@ export type ContractInterface = {|
   type: string,
 |}
 
-export type ExtendedContractInterface = {| ...ContractInterface, action: string |}
+export type ExtendedContractInterface = {|
+  ...ContractInterface,
+  action: string,
+  signature: string,
+  signatureHash: string,
+|}
 
 export type ABI = ContractInterface[]
 

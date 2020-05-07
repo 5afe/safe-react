@@ -26,9 +26,9 @@ const MethodsDropdown = ({ onChange }: { onChange: (any) => void }) => {
     meta: { valid },
   } = useField('abi', { value: true, valid: true })
   const {
-    initialValues: { selectedMethod },
+    initialValues: { selectedMethod: selectedMethodByDefault },
   } = useFormState({ subscription: { initialValues: true } })
-  const [methodSelected, setMethodSelected] = React.useState(selectedMethod ? selectedMethod.name : '')
+  const [selectedMethod, setSelectedMethod] = React.useState(selectedMethodByDefault ? selectedMethodByDefault : {})
   const [methodsList, setMethodsList] = React.useState([])
   const [methodsListFiltered, setMethodsListFiltered] = React.useState([])
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null)
@@ -56,9 +56,9 @@ const MethodsDropdown = ({ onChange }: { onChange: (any) => void }) => {
     setAnchorEl(null)
   }
 
-  const onMethodSelectedChanged = (newMethodSelected) => {
-    setMethodSelected(newMethodSelected)
-    onChange(methodsList.find(({ name }) => name === newMethodSelected))
+  const onMethodSelectedChanged = (chosenMethod) => {
+    setSelectedMethod(chosenMethod)
+    onChange(chosenMethod)
     handleClose()
   }
 
@@ -69,7 +69,7 @@ const MethodsDropdown = ({ onChange }: { onChange: (any) => void }) => {
           <>
             <button className={classes.button} onClick={handleClick} type="button">
               <span className={classNames(classes.buttonInner, anchorEl && classes.openMenuButton)}>
-                {methodSelected}
+                {selectedMethod.name}
               </span>
             </button>
             <Menu
@@ -109,22 +109,30 @@ const MethodsDropdown = ({ onChange }: { onChange: (any) => void }) => {
                 </div>
               </MenuItem>
               <div className={classes.dropdownItemsScrollWrapper}>
-                {methodsListFiltered.map(({ action, name }) => (
-                  <MenuItem
-                    className={classes.listItem}
-                    key={name}
-                    onClick={() => onMethodSelectedChanged(name)}
-                    value={name}
-                  >
-                    <ListItemText primary={name} />
-                    <ListItemIcon className={classes.iconRight}>
-                      {name === methodSelected ? <img alt="checked" src={CheckIcon} /> : <span />}
-                    </ListItemIcon>
-                    <ListItemIcon className={classes.iconRight}>
-                      <div>{action}</div>
-                    </ListItemIcon>
-                  </MenuItem>
-                ))}
+                {methodsListFiltered.map((method) => {
+                  const { action, name, signatureHash } = method
+
+                  return (
+                    <MenuItem
+                      className={classes.listItem}
+                      key={signatureHash}
+                      onClick={() => onMethodSelectedChanged(method)}
+                      value={signatureHash}
+                    >
+                      <ListItemText primary={name} />
+                      <ListItemIcon className={classes.iconRight}>
+                        {signatureHash === selectedMethod.signatureHash ? (
+                          <img alt="checked" src={CheckIcon} />
+                        ) : (
+                          <span />
+                        )}
+                      </ListItemIcon>
+                      <ListItemIcon className={classes.iconRight}>
+                        <div>{action}</div>
+                      </ListItemIcon>
+                    </MenuItem>
+                  )
+                })}
               </div>
             </Menu>
           </>
