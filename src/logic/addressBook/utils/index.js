@@ -25,7 +25,7 @@ export const saveAddressBook = async (addressBook: AddressBook) => {
 export const getAddressesListFromAdbk = (addressBook: AddressBook) =>
   Array.from(addressBook).map((entry) => entry.address)
 
-const getNameFromAdbk = (addressBook: AddressBook, userAddress: string): string | null => {
+export const getNameFromAdbk = (addressBook: AddressBook, userAddress: string): string | null => {
   const entry = addressBook.find((addressBookItem) => addressBookItem.address === userAddress)
   if (entry) {
     return entry.name
