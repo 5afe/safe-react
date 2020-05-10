@@ -13,6 +13,7 @@ import GnoForm from '~/components/forms/GnoForm'
 import { required } from '~/components/forms/validator'
 import Img from '~/components/layout/Img'
 import appsIconSvg from '~/routes/safe/components/Transactions/TxsTable/TxType/assets/appsIcon.svg'
+import { isValid as isURLValid } from '~/utils/url'
 
 const FORM_ID = 'add-apps-form'
 
@@ -51,9 +52,7 @@ type Props = {
 }
 
 const urlValidator = (value: string) => {
-  return /(?:^|[ \t])((https?:\/\/)?(?:localhost|[\w-]+(?:\.[\w-]+)+)(:\d+)?(\/\S*)?)/gm.test(value)
-    ? undefined
-    : 'Please, provide a valid url'
+  return isURLValid(value) ? undefined : 'Please, provide a valid url'
 }
 
 const composeValidatorsApps = (...validators: Function[]): FieldValidator => (value: Field, values, meta) => {
@@ -92,7 +91,15 @@ const ManageApps = ({ appList, onAppAdded, onAppToggle }: Props) => {
   }
 
   const uniqueAppValidator = (value) => {
-    const exists = appList.find((a) => a.url === value.trim())
+    const exists = appList.find((a) => {
+      try {
+        const currentUrl = new URL(a.url)
+        const newUrl = new URL(value)
+        return currentUrl.href === newUrl.href
+      } catch (error) {
+        return 'There was a problem trying to validate the URL existence.'
+      }
+    })
     return exists ? 'This app is already registered.' : undefined
   }
 
