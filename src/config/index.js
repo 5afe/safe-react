@@ -1,6 +1,6 @@
 // @flow
 import { ensureOnce } from "~/utils/singleton"
-import { ETHEREUM_NETWORK } from "~/logic/wallets/getWeb3"
+import { ETHEREUM_NETWORK, getWeb3 } from '~/logic/wallets/getWeb3'
 import {
   RELAY_API_URL,
   SIGNATURES_VIA_METAMASK,
@@ -58,6 +58,8 @@ export const getTxServiceUriFrom = (safeAddress: string) =>
 export const getIncomingTxServiceUriTo = (safeAddress: string) =>
   `safes/${safeAddress}/incoming-transfers/`
 
+export const getSafeCreationTxUri = (safeAddress: string) => `safes/${safeAddress}/creation/`
+
 export const getRelayUrl = () => getConfig()[RELAY_API_URL]
 
 export const signaturesViaMetamask = () => {
@@ -79,3 +81,11 @@ export const getIntercomId = () =>
 export const getExchangeRatesUrl = () => 'https://api.exchangeratesapi.io/latest'
 
 export const getSafeLastVersion = () => process.env.REACT_APP_LATEST_SAFE_VERSION  || '1.1.1'
+
+export const buildSafeCreationTxUrl = (safeAddress: string) => {
+  const host = getTxServiceHost()
+  const address = getWeb3().utils.toChecksumAddress(safeAddress)
+  const base = getSafeCreationTxUri(address)
+
+  return `${host}${base}`
+}

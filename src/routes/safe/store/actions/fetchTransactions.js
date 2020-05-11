@@ -9,6 +9,7 @@ import type { Dispatch as ReduxDispatch } from 'redux'
 import { addIncomingTransactions } from './addIncomingTransactions'
 import { addTransactions } from './addTransactions'
 
+import { buildSafeCreationTxUrl } from '~/config'
 import generateBatchRequests from '~/logic/contracts/generateBatchRequests'
 import { decodeParamsFromSafeMethod } from '~/logic/contracts/methodIds'
 import { buildIncomingTxServiceUrl } from '~/logic/safe/transactions/incomingTxHistory'
@@ -31,6 +32,7 @@ import { type IncomingTransaction, makeIncomingTransaction } from '~/routes/safe
 import { makeOwner } from '~/routes/safe/store/models/owner'
 import type { TransactionProps } from '~/routes/safe/store/models/transaction'
 import { type Transaction, makeTransaction } from '~/routes/safe/store/models/transaction'
+import type { GetState } from '~/store'
 import { type GlobalState } from '~/store'
 
 let web3
@@ -74,6 +76,15 @@ type IncomingTxServiceModel = {
   from: string,
 }
 
+type CreationTxServiceModel = {
+  created: string,
+  creator: string,
+  factoryAddress: string,
+  masterCopy: string,
+  setupData: string,
+  transactionHash: string,
+}
+
 export const buildTransactionFrom = async (
   safeAddress: string,
   knownTokens,
@@ -84,6 +95,21 @@ export const buildTransactionFrom = async (
   txTokenSymbol,
 ): Promise<Transaction> => {
   const localSafe = await getLocalSafe(safeAddress)
+
+  if (tx.creationTx) {
+    const { created, creationTx, creator, factoryAddress, masterCopy, setupData, transactionHash, type } = tx
+    const txType = type || 'creation'
+    return makeTransaction({
+      created,
+      creator,
+      factoryAddress,
+      masterCopy,
+      setupData,
+      creationTx,
+      executionTxHash: transactionHash,
+      type: txType,
+    })
+  }
 
   const confirmations = List(
     tx.confirmations.map((conf: ConfirmationServiceModel) => {
@@ -201,31 +227,16 @@ export const buildTransactionFrom = async (
   })
 }
 
-const addMockSafeCreationTx = (safeAddress): Array<TxServiceModel> => [
-  {
-    blockNumber: null,
-    baseGas: 0,
-    confirmations: [],
-    data: null,
-    executionDate: null,
-    gasPrice: 0,
-    gasToken: '0x0000000000000000000000000000000000000000',
-    isExecuted: true,
-    nonce: null,
-    operation: 0,
-    refundReceiver: '0x0000000000000000000000000000000000000000',
-    safe: safeAddress,
-    safeTxGas: 0,
-    safeTxHash: '',
-    signatures: null,
-    submissionDate: null,
-    executor: '',
-    to: '',
-    transactionHash: null,
-    value: 0,
-    creationTx: true,
-  },
-]
+const addMockSafeCreationTx = async (safeAddress): Array<CreationTxServiceModel> => {
+  const url = buildSafeCreationTxUrl(safeAddress)
+  const response = await axios.get(url)
+  return [
+    {
+      ...response.data,
+      creationTx: true,
+    },
+  ]
+}
 
 const batchRequestTxsData = (txs: any[]) => {
   const web3Batch = new web3.BatchRequest()
@@ -305,7 +316,7 @@ export type SafeTransactionsType = {
 let etagSafeTransactions = null
 let etagCachedSafeIncommingTransactions = null
 export const loadSafeTransactions = async (safeAddress: string, getState: GetState): Promise<SafeTransactionsType> => {
-  let transactions: TxServiceModel[] = addMockSafeCreationTx(safeAddress)
+  let transactions: TxServiceModel[] = await addMockSafeCreationTx(safeAddress)
 
   try {
     const config = etagSafeTransactions
