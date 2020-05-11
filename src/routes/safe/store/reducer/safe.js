@@ -2,7 +2,6 @@
 import { Map, Set } from 'immutable'
 import { type ActionType, handleActions } from 'redux-actions'
 
-import { getWeb3 } from '~/logic/wallets/getWeb3'
 import { ACTIVATE_TOKEN_FOR_ALL_SAFES } from '~/routes/safe/store/actions/activateTokenForAllSafes'
 import { ADD_SAFE, buildOwnersFrom } from '~/routes/safe/store/actions/addSafe'
 import { ADD_SAFE_OWNER } from '~/routes/safe/store/actions/addSafeOwner'
@@ -15,6 +14,7 @@ import { SET_LATEST_MASTER_CONTRACT_VERSION } from '~/routes/safe/store/actions/
 import { UPDATE_SAFE } from '~/routes/safe/store/actions/updateSafe'
 import { makeOwner } from '~/routes/safe/store/models/owner'
 import SafeRecord, { type SafeProps } from '~/routes/safe/store/models/safe'
+import { checksumAddress } from '~/utils/checksumAddress'
 
 export const SAFE_REDUCER_ID = 'safes'
 
@@ -22,7 +22,7 @@ export type SafeReducerState = Map<string, *>
 
 export const buildSafe = (storedSafe: SafeProps) => {
   const names = storedSafe.owners.map((owner) => owner.name)
-  const addresses = storedSafe.owners.map((owner) => getWeb3().utils.toChecksumAddress(owner.address))
+  const addresses = storedSafe.owners.map((owner) => checksumAddress(owner.address))
   const owners = buildOwnersFrom(Array.from(names), Array.from(addresses))
   const activeTokens = Set(storedSafe.activeTokens)
   const activeAssets = Set(storedSafe.activeAssets)
