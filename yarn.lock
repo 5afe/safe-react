@@ -1230,9 +1230,10 @@
     solc "0.5.14"
     truffle "^5.1.21"
 
-"@gnosis.pm/safe-react-components@https://github.com/gnosis/safe-react-components.git#a057248":
-  version "0.1.1"
-  resolved "https://github.com/gnosis/safe-react-components.git#a05724802f5fc74dd759ba8d9c916eb82cf67ef0"
+"@gnosis.pm/safe-react-components@^0.1.0":
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/@gnosis.pm/safe-react-components/-/safe-react-components-0.1.0.tgz#3ff7e3d974cf301ed6c1d898c442c081ff7da675"
+  integrity sha512-ehDBaAgNFqbXx/eqjLivTtHlXvy/4XPH05r0IZ/+9idDjY3eh9eOjAewS9DFtPqLicp/92tVQOzmcEbTNGJ8JQ==
   dependencies:
     classnames "^2.2.6"
     polished "^3.5.1"
@@ -14872,11 +14873,11 @@ polished@3.5.1:
     "@babel/runtime" "^7.8.7"
 
 polished@^3.5.1:
-  version "3.5.2"
-  resolved "https://registry.yarnpkg.com/polished/-/polished-3.5.2.tgz#ca132b8cd68f7ffa95ae9d423f03e7a14fda1062"
-  integrity sha512-vWoRDg3gY5RQBtUfcj9MRN10VCIf4EkdUikGxyXItg2Hnwk+eIVtdBiLajN0ldFeT3Vq4r/QNbjrQdhqBKrTug==
+  version "3.6.3"
+  resolved "https://registry.yarnpkg.com/polished/-/polished-3.6.3.tgz#68f4fe7ffad46530733029b939dd12978200cb59"
+  integrity sha512-QJ0q0b6gX1+0OJtPMfgVJxV0vg5XTa4im+Rca989dAtmsd/fEky3X+0A+V+OUXq1nyiDGplJwqD853dTS0gkPg==
   dependencies:
-    "@babel/runtime" "^7.8.7"
+    "@babel/runtime" "^7.9.2"
 
 popper.js@^1.16.1-lts:
   version "1.16.1"
