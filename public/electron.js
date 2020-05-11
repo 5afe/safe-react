@@ -46,18 +46,16 @@ function getOpenedWindow(url,options) {
 
   options.webPreferences.affinity = 'main-window';
 
-  if(url.includes('about:blank')){
-    /*
+  if(url.includes('trezor')){
     session.defaultSession.webRequest.onBeforeSendHeaders(filter, (details, callback) => {
-      details.requestHeaders['Origin'] = 'https://electron.trezor.io';
+      details.requestHeaders['Origin'] = 'https://connect.trezor.io';
       callback({cancel: false, requestHeaders: details.requestHeaders});
     });
-    */
   }
 
-  if(url.includes('wallet.portis') || url.includes('about:blank') || url.includes('app.tor.us')){
+  if(url.includes('wallet.portis') || url.includes('trezor') || url.includes('app.tor.us')){
     const win = new BrowserWindow({
-      width:300,
+      width:350,
       height:700,
       x: width - 1300,
       parent:mainWindow,
@@ -66,7 +64,10 @@ function getOpenedWindow(url,options) {
       fullscreen: false,
       show: false,
     });
-
+    win.webContents.on('new-window', function(event, url){
+      if(url.includes('trezor') && url.includes('bridge'))
+        open(url);
+    });
     win.once('ready-to-show', () => win.show());
 
     if(!options.webPreferences){
