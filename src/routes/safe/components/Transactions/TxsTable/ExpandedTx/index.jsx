@@ -42,6 +42,8 @@ const ExpandedTx = ({ cancelTx, tx }: Props) => {
   const openApproveModal = () => setOpenModal('approveTx')
   const closeModal = () => setOpenModal(null)
   const isIncomingTx = !!INCOMING_TX_TYPES[tx.type]
+  const isCreationTx = tx.type === 'creation'
+
   const thresholdReached = !isIncomingTx && threshold <= tx.confirmations.size
   const canExecute = !isIncomingTx && nonce === tx.nonce
   const cancelThresholdReached = !!cancelTx && threshold <= cancelTx.confirmations.size
@@ -55,68 +57,109 @@ const ExpandedTx = ({ cancelTx, tx }: Props) => {
     }
   }
 
+  const RenderIncomingTx = ({ tx }) => {
+    if (!tx || !isIncomingTx) return null
+    return (
+      <>
+        <Paragraph noMargin>
+          <Bold>Created: </Bold>
+          {formatDate(tx.executionDate)}
+        </Paragraph>
+      </>
+    )
+  }
+
+  const RenderOutgoingTx = ({ tx }) => {
+    if (!tx || !(tx.type === 'outgoing')) return null
+    return (
+      <>
+        <Paragraph noMargin>
+          <Bold>Created: </Bold>
+          {formatDate(tx.submissionDate)}
+        </Paragraph>
+        {tx.executionDate && (
+          <Paragraph noMargin>
+            <Bold>Executed: </Bold>
+            {formatDate(tx.executionDate)}
+          </Paragraph>
+        )}
+        {tx.refundParams && (
+          <Paragraph noMargin>
+            <Bold>Refund: </Bold>
+            max. {tx.refundParams.fee} {tx.refundParams.symbol}
+          </Paragraph>
+        )}
+        {tx.operation === 1 && (
+          <Paragraph noMargin>
+            <Bold>Delegate Call</Bold>
+          </Paragraph>
+        )}
+        {tx.operation === 2 && (
+          <Paragraph noMargin>
+            <Bold>Contract Creation</Bold>
+          </Paragraph>
+        )}
+      </>
+    )
+  }
+
+  const RenderCreationTx = ({ tx }) => {
+    if (!tx || !isCreationTx) return null
+
+    return (
+      <>
+        <Paragraph noMargin>
+          <Bold>Created: </Bold>
+          {formatDate(tx.created)}
+        </Paragraph>
+        <Paragraph noMargin>
+          <Bold>Creator: </Bold>
+          {tx.creator}
+        </Paragraph>
+        <Paragraph noMargin>
+          <Bold>Factory: </Bold>
+          {tx.factoryAddress}
+        </Paragraph>
+        <Paragraph noMargin>
+          <Bold>Mastercopy: </Bold>
+          {tx.masterCopy}
+        </Paragraph>
+      </>
+    )
+  }
+
   return (
     <>
       <Block className={classes.expandedTxBlock}>
         <Row>
           <Col layout="column" xs={6}>
-            <Block className={cn(classes.txDataContainer, isIncomingTx && classes.incomingTxBlock)}>
+            <Block className={cn(classes.txDataContainer, (isIncomingTx || isCreationTx) && classes.incomingTxBlock)}>
               <Block align="left" className={classes.txData}>
                 <Bold className={classes.txHash}>Hash:</Bold>
                 {tx.executionTxHash ? <EtherScanLink cut={8} type="tx" value={tx.executionTxHash} /> : 'n/a'}
               </Block>
-              {!isIncomingTx && (
+              {!isIncomingTx && !isCreationTx && (
                 <Paragraph noMargin>
                   <Bold>Nonce: </Bold>
                   <Span>{tx.nonce}</Span>
                 </Paragraph>
               )}
-              <Paragraph noMargin>
-                <Bold>Fee: </Bold>
-                {tx.fee ? tx.fee : 'n/a'}
-              </Paragraph>
-              {isIncomingTx ? (
-                <>
-                  <Paragraph noMargin>
-                    <Bold>Created: </Bold>
-                    {formatDate(tx.executionDate)}
-                  </Paragraph>
-                </>
-              ) : (
-                <>
-                  <Paragraph noMargin>
-                    <Bold>Created: </Bold>
-                    {formatDate(tx.submissionDate)}
-                  </Paragraph>
-                  {tx.executionDate && (
-                    <Paragraph noMargin>
-                      <Bold>Executed: </Bold>
-                      {formatDate(tx.executionDate)}
-                    </Paragraph>
-                  )}
-                  {tx.refundParams && (
-                    <Paragraph noMargin>
-                      <Bold>Refund: </Bold>
-                      max. {tx.refundParams.fee} {tx.refundParams.symbol}
-                    </Paragraph>
-                  )}
-                  {tx.operation === 1 && (
-                    <Paragraph noMargin>
-                      <Bold>Delegate Call</Bold>
-                    </Paragraph>
-                  )}
-                  {tx.operation === 2 && (
-                    <Paragraph noMargin>
-                      <Bold>Contract Creation</Bold>
-                    </Paragraph>
-                  )}
-                </>
-              )}
+              {!isCreationTx ? (
+                <Paragraph noMargin>
+                  <Bold>Fee: </Bold>
+                  {tx.fee ? tx.fee : 'n/a'}
+                </Paragraph>
+              ) : null}
+              <RenderCreationTx tx={tx} />
+              <RenderIncomingTx tx={tx} />
+              <RenderOutgoingTx tx={tx} />
             </Block>
             <Hairline />
-            {isIncomingTx ? <IncomingTxDescription tx={tx} /> : <TxDescription tx={tx} />}
+            {isIncomingTx && <IncomingTxDescription tx={tx} />}
+            {!isIncomingTx && !isCreationTx && <TxDescription tx={tx} />}
+            {isCreationTx && <Block className={classes.emptyRowDataContainer} />}
           </Col>
-          {!isIncomingTx && (
+          {!isIncomingTx && !isCreationTx && (
             <OwnersColumn
               cancelThresholdReached={cancelThresholdReached}
               cancelTx={cancelTx}

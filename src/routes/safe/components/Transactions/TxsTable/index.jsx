@@ -143,6 +143,24 @@ const TxsTable = ({ classes }: Props) => {
                     </TableCell>
                   </TableRow>
                 )}
+                {row.tx.creationTx && (
+                  <TableRow>
+                    <TableCell
+                      className={classes.extendedTxContainer}
+                      colSpan={6}
+                      style={{ paddingBottom: 0, paddingTop: 0 }}
+                    >
+                      <Collapse
+                        cancelTx={row[TX_TABLE_RAW_CANCEL_TX_ID]}
+                        component={ExpandedTxComponent}
+                        in={expandedTx === row.tx.safeTxHash}
+                        timeout="auto"
+                        tx={row[TX_TABLE_RAW_TX_ID]}
+                        unmountOnExit
+                      />
+                    </TableCell>
+                  </TableRow>
+                )}
               </React.Fragment>
             ))
           }
