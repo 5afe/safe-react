@@ -12,7 +12,7 @@ import { REMOVE_ENTRY } from '~/logic/addressBook/store/actions/removeAddressBoo
 import { UPDATE_ENTRY } from '~/logic/addressBook/store/actions/updateAddressBookEntry'
 import { getAddressesListFromAdbk } from '~/logic/addressBook/utils'
 import { sameAddress } from '~/logic/wallets/ethAddresses'
-import { getWeb3 } from '~/logic/wallets/getWeb3'
+import { checksumAddress } from '~/utils/checksumAddress'
 
 export const ADDRESS_BOOK_REDUCER_ID = 'addressBook'
 
@@ -21,7 +21,7 @@ export type State = Map<string, Map<string, AddressBookEntry>>
 export const buildAddressBook = (storedAdbk: AddressBook): AddressBookProps => {
   let addressBookBuilt = Map([])
   Object.entries(storedAdbk).forEach((adbkProps: Array<string, AddressBookEntry[]>) => {
-    const safeAddress = getWeb3().utils.toChecksumAddress(adbkProps[0])
+    const safeAddress = checksumAddress(adbkProps[0])
     const adbkRecords = adbkProps[1].map(makeAddressBookEntry)
     const adbkSafeEntries = List(adbkRecords)
     addressBookBuilt = addressBookBuilt.set(safeAddress, adbkSafeEntries)

@@ -27,7 +27,6 @@ import { removeAddressBookEntry } from '~/logic/addressBook/store/actions/remove
 import { updateAddressBookEntry } from '~/logic/addressBook/store/actions/updateAddressBookEntry'
 import { getAddressBookListSelector } from '~/logic/addressBook/store/selectors'
 import { isUserOwnerOnAnySafe } from '~/logic/wallets/ethAddresses'
-import { getWeb3 } from '~/logic/wallets/getWeb3'
 import CreateEditEntryModal from '~/routes/safe/components/AddressBook/CreateEditEntryModal'
 import DeleteEntryModal from '~/routes/safe/components/AddressBook/DeleteEntryModal'
 import {
@@ -45,6 +44,7 @@ import type { OwnerRow } from '~/routes/safe/components/Settings/ManageOwners/da
 import RemoveOwnerIcon from '~/routes/safe/components/Settings/assets/icons/bin.svg'
 import RemoveOwnerIconDisabled from '~/routes/safe/components/Settings/assets/icons/disabled-bin.svg'
 import { addressBookQueryParamsSelector, safesListSelector } from '~/routes/safe/store/selectors'
+import { checksumAddress } from '~/utils/checksumAddress'
 
 type Props = {
   classes: Object,
@@ -70,7 +70,7 @@ const AddressBookTable = ({ classes }: Props) => {
 
   useEffect(() => {
     if (entryAddressToEditOrCreateNew) {
-      const checksumEntryAdd = getWeb3().utils.toChecksumAddress(entryAddressToEditOrCreateNew)
+      const checksumEntryAdd = checksumAddress(entryAddressToEditOrCreateNew)
       const key = addressBook.findKey((entry) => entry.address === checksumEntryAdd)
       if (key >= 0) {
         // Edit old entry
@@ -93,7 +93,7 @@ const AddressBookTable = ({ classes }: Props) => {
     setEditCreateEntryModalOpen(false)
     const checksumEntries = {
       ...entry,
-      address: getWeb3().utils.toChecksumAddress(entry.address),
+      address: checksumAddress(entry.address),
     }
     dispatch(addAddressBookEntry(makeAddressBookEntry(checksumEntries)))
   }
@@ -103,13 +103,13 @@ const AddressBookTable = ({ classes }: Props) => {
     setEditCreateEntryModalOpen(false)
     const checksumEntries = {
       ...entry,
-      address: getWeb3().utils.toChecksumAddress(entry.address),
+      address: checksumAddress(entry.address),
     }
     dispatch(updateAddressBookEntry(makeAddressBookEntry(checksumEntries)))
   }
 
   const deleteEntryModalHandler = () => {
-    const entryAddress = getWeb3().utils.toChecksumAddress(selectedEntry.entry.address)
+    const entryAddress = checksumAddress(selectedEntry.entry.address)
     setSelectedEntry(null)
     setDeleteEntryModalOpen(false)
     dispatch(removeAddressBookEntry(entryAddress))
