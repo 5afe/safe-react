@@ -5,7 +5,6 @@ import { type OutputSelector, createSelector } from 'reselect'
 
 import { getWeb3 } from '~/logic/wallets/getWeb3'
 import { SAFELIST_ADDRESS, SAFE_PARAM_ADDRESS } from '~/routes/routes'
-import { type Confirmation } from '~/routes/safe/store/models/confirmation'
 import type { IncomingTransaction } from '~/routes/safe/store/models/incomingTransaction'
 import { type Safe } from '~/routes/safe/store/models/safe'
 import { type Transaction } from '~/routes/safe/store/models/transaction'
@@ -26,8 +25,8 @@ export type RouterProps = {
   match: Match,
 }
 
-type TransactionProps = {
-  transaction: Transaction,
+export type SafeProps = {
+  safeAddress: string,
 }
 
 const safesStateSelector = (state: GlobalState): Map<string, *> => state[SAFE_REDUCER_ID]
@@ -64,8 +63,6 @@ const cancellationTransactionsSelector = (state: GlobalState): CancelTransaction
 
 const incomingTransactionsSelector = (state: GlobalState): IncomingTransactionsState =>
   state[INCOMING_TRANSACTIONS_REDUCER_ID]
-
-const oneTransactionSelector = (state: GlobalState, props: TransactionProps) => props.transaction
 
 export const safeParamAddressFromStateSelector = (state: GlobalState): string | null => {
   const match = matchPath(state.router.location.pathname, { path: `${SAFELIST_ADDRESS}/:safeAddress` })
@@ -142,22 +139,6 @@ export const safeIncomingTransactionsSelector: IncomingTxSelectorType = createSe
     }
 
     return incomingTransactions.get(address) || List([])
-  },
-)
-
-export const confirmationsTransactionSelector: OutputSelector<GlobalState, TransactionProps, number> = createSelector(
-  oneTransactionSelector,
-  (tx: Transaction) => {
-    if (!tx) {
-      return 0
-    }
-
-    const confirmations: List<Confirmation> = tx.get('confirmations')
-    if (!confirmations) {
-      return 0
-    }
-
-    return confirmations.filter((confirmation: Confirmation) => confirmation.get('type') === 'confirmation').count()
   },
 )
 
