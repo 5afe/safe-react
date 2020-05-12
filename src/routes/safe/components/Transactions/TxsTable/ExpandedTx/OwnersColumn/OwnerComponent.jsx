@@ -2,6 +2,7 @@
 import { withStyles } from '@material-ui/core/styles'
 import cn from 'classnames'
 import React from 'react'
+import { useSelector } from 'react-redux'
 
 import CancelSmallFilledCircle from './assets/cancel-small-filled.svg'
 import ConfirmSmallFilledCircle from './assets/confirm-small-filled.svg'
@@ -16,8 +17,7 @@ import Block from '~/components/layout/Block'
 import Button from '~/components/layout/Button'
 import Img from '~/components/layout/Img'
 import Paragraph from '~/components/layout/Paragraph'
-import { getNameFromAddressBook } from '~/logic/addressBook/utils'
-import { type Owner } from '~/routes/safe/store/models/owner'
+import { getNameFromAddressBook } from '~/logic/addressBook/store/selectors'
 
 export const CONFIRM_TX_BTN_TEST_ID = 'confirm-btn'
 export const EXECUTE_TX_BTN_TEST_ID = 'execute-btn'
@@ -32,7 +32,7 @@ type OwnerProps = {
   onTxReject?: Function,
   onTxConfirm: Function,
   onTxExecute: Function,
-  owner: Owner,
+  owner: string,
   showRejectBtn: boolean,
   showExecuteRejectBtn: boolean,
   showConfirmBtn: boolean,
@@ -57,8 +57,7 @@ const OwnerComponent = ({
   thresholdReached,
   userAddress,
 }: OwnerProps) => {
-  const nameInAdbk = getNameFromAddressBook(owner.address)
-  const ownerName = nameInAdbk || owner.name
+  const nameInAdbk = useSelector((state) => getNameFromAddressBook(state, owner))
   const [imgCircle, setImgCircle] = React.useState(ConfirmSmallGreyCircle)
 
   React.useMemo(() => {
@@ -77,15 +76,15 @@ const OwnerComponent = ({
       <div className={classes.circleState}>
         <Img alt="" src={imgCircle} />
       </div>
-      <Identicon address={owner.address} className={classes.icon} diameter={32} />
+      <Identicon address={owner} className={classes.icon} diameter={32} />
       <Block>
         <Paragraph className={classes.name} noMargin>
-          {ownerName}
+          {nameInAdbk}
         </Paragraph>
-        <EtherscanLink className={classes.address} cut={4} type="address" value={owner.address} />
+        <EtherscanLink className={classes.address} cut={4} type="address" value={owner} />
       </Block>
       <Block className={classes.spacer} />
-      {owner.address === userAddress && (
+      {owner === userAddress && (
         <Block>
           {isCancelTx ? (
             <>
@@ -140,7 +139,7 @@ const OwnerComponent = ({
           )}
         </Block>
       )}
-      {owner.address === executor && <Block className={classes.executor}>Executor</Block>}
+      {owner === executor && <Block className={classes.executor}>Executor</Block>}
     </Block>
   )
 }
