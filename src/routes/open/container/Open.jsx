@@ -120,7 +120,7 @@ const Open = ({ addSafe, network, provider, userAccount }: Props) => {
         threshold,
       })
     }
-  })
+  }, [])
 
   // check if there is a safe being created
   useEffect(() => {
