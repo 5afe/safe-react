@@ -30,6 +30,7 @@ import { makeConfirmation } from '~/routes/safe/store/models/confirmation'
 import { type IncomingTransaction, makeIncomingTransaction } from '~/routes/safe/store/models/incomingTransaction'
 import type { TransactionProps } from '~/routes/safe/store/models/transaction'
 import { type Transaction, makeTransaction } from '~/routes/safe/store/models/transaction'
+import { creationTxSelector } from '~/routes/safe/store/selectors'
 import type { GetState } from '~/store'
 import { type GlobalState } from '~/store'
 
@@ -216,12 +217,11 @@ export const buildTransactionFrom = async (
 const getCreationTx = async (safeAddress): Array<CreationTxServiceModel> => {
   const url = buildSafeCreationTxUrl(safeAddress)
   const response = await axios.get(url)
-  return [
-    {
-      ...response.data,
-      creationTx: true,
-    },
-  ]
+  return {
+    ...response.data,
+    creationTx: true,
+    nonce: null,
+  }
 }
 
 const batchRequestTxsData = (txs: any[]) => {
@@ -302,7 +302,14 @@ export type SafeTransactionsType = {
 let etagSafeTransactions = null
 let etagCachedSafeIncommingTransactions = null
 export const loadSafeTransactions = async (safeAddress: string, getState: GetState): Promise<SafeTransactionsType> => {
-  let transactions: TxServiceModel[] = await getCreationTx(safeAddress)
+  const creationTx = creationTxSelector(getState())
+  let transactions: TxServiceModel[] = []
+  if (creationTx) {
+    transactions.push(creationTx)
+  } else {
+    const creationTx = await getCreationTx(safeAddress)
+    transactions.push(creationTx)
+  }
 
   try {
     const config = etagSafeTransactions
