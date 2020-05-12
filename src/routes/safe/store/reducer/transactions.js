@@ -24,7 +24,7 @@ export default handleActions<State, *>(
 
       const storedTransactionIndex = transactionList.findIndex((tx) => tx.safeTxHash === transaction.safeTxHash)
 
-      if (!storedTransactionIndex < 0) {
+      if (storedTransactionIndex === -1) {
         return state
       }
 
