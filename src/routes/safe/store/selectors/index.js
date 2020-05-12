@@ -19,6 +19,7 @@ import {
 import { SAFE_REDUCER_ID } from '~/routes/safe/store/reducer/safe'
 import { TRANSACTIONS_REDUCER_ID, type State as TransactionsState } from '~/routes/safe/store/reducer/transactions'
 import { type GlobalState } from '~/store/index'
+import { checksumAddress } from '~/utils/checksumAddress'
 
 export type RouterProps = {
   match: Match,
@@ -76,7 +77,7 @@ export const safeParamAddressFromStateSelector = (state: GlobalState): string | 
 
 export const safeParamAddressSelector = (state: GlobalState, props: RouterProps) => {
   const urlAdd = props.match.params[SAFE_PARAM_ADDRESS]
-  return urlAdd ? getWeb3().utils.toChecksumAddress(urlAdd) : ''
+  return urlAdd ? checksumAddress(urlAdd) : ''
 }
 
 type TxSelectorType = OutputSelector<GlobalState, RouterProps, List<Transaction>>
@@ -150,7 +151,7 @@ export const safeSelector: OutputSelector<GlobalState, RouterProps, SafeSelector
     if (!address) {
       return undefined
     }
-    const checksumed = getWeb3().utils.toChecksumAddress(address)
+    const checksumed = checksumAddress(address)
     const safe = safes.get(checksumed)
 
     return safe
