@@ -5,6 +5,7 @@ import React from 'react'
 import styled from 'styled-components'
 
 import { AddressInfo, Collapse, DividerLine, ModalTitle, TextBox } from '~/components-v2'
+import { mustBeEthereumAddress } from '~/components/forms/validator'
 import Bold from '~/components/layout/Bold'
 import Heading from '~/components/layout/Heading'
 import Img from '~/components/layout/Img'
@@ -48,20 +49,24 @@ const confirmTransactions = (
   closeModal: () => void,
   onConfirm: () => void,
 ) => {
-  const isTxError = txs.some((t) => {
+  const areTxsMalformed = (t) => {
+    const isValidAddress = mustBeEthereumAddress(t.to) === undefined
     return (
       !t.to ||
       typeof t.to !== 'string' ||
+      !isValidAddress ||
       t.value === undefined ||
       typeof t.value !== 'number' ||
       !t.data ||
       typeof t.data !== 'string'
     )
-  })
+  }
+
+  const areTxsValid = !txs.some(areTxsMalformed)
 
   const title = <ModalTitle iconUrl={iconApp} title={nameApp} />
 
-  const body = isTxError ? (
+  const body = !areTxsValid ? (
     <>
       <IconText>
         <Icon color="error" size="md" type="info" />
@@ -105,7 +110,7 @@ const confirmTransactions = (
       cancelText="Cancel"
       handleCancel={closeModal}
       handleOk={onConfirm}
-      okDisabled={isTxError}
+      okDisabled={!areTxsValid}
       okText="Submit"
     />
   )
