@@ -10,6 +10,7 @@ import { decodeParamsFromSafeMethod } from '~/logic/contracts/methodIds'
 import { buildTxServiceUrl } from '~/logic/safe/transactions/txHistory'
 import { getTokenInfos } from '~/logic/tokens/store/actions/fetchTokens'
 import { TOKEN_REDUCER_ID } from '~/logic/tokens/store/reducer/tokens'
+import { ALTERNATIVE_TOKEN_ABI } from '~/logic/tokens/utils/alternativeAbi'
 import {
   SAFE_TRANSFER_FROM_WITHOUT_DATA_HASH,
   isMultisendTransaction,
@@ -179,7 +180,7 @@ export const buildTransactionFrom = async (
   })
 }
 
-const batchTxTokenRequest = (txs: any[]) => {
+export const batchTxTokenRequest = (txs: any[]) => {
   const batch = new web3ReadOnly.BatchRequest()
 
   const whenTxsValues = txs.map((tx) => {
