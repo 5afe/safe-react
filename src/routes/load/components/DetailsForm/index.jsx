@@ -4,12 +4,14 @@ import { withStyles } from '@material-ui/core/styles'
 import CheckCircle from '@material-ui/icons/CheckCircle'
 import * as React from 'react'
 
+import { ScanQRWrapper } from '~/components/ScanQRModal/ScanQRWrapper'
 import OpenPaper from '~/components/Stepper/OpenPaper'
 import AddressInput from '~/components/forms/AddressInput'
 import Field from '~/components/forms/Field'
 import TextField from '~/components/forms/TextField'
 import { mustBeEthereumAddress, noErrorsOn, required } from '~/components/forms/validator'
 import Block from '~/components/layout/Block'
+import Col from '~/components/layout/Col'
 import Paragraph from '~/components/layout/Paragraph'
 import { SAFE_MASTER_COPY_ADDRESS_V10, getSafeMasterContract, validateProxy } from '~/logic/contracts/safeContracts'
 import { getWeb3 } from '~/logic/wallets/getWeb3'
@@ -80,64 +82,77 @@ export const safeFieldsValidation = async (values: Object) => {
   return errors
 }
 
-const Details = ({ classes, errors, form }: Props) => (
-  <>
-    <Block margin="md">
-      <Paragraph color="primary" noMargin size="md">
-        You are about to load an existing Gnosis Safe. First, choose a name and enter the Safe address. The name is only
-        stored locally and will never be shared with Gnosis or any third parties.
-        <br />
-        Your connected wallet does not have to be the owner of this Safe. In this case, the interface will provide you a
-        read-only view.
-      </Paragraph>
-    </Block>
-    <Block className={classes.root}>
-      <Field
-        component={TextField}
-        name={FIELD_LOAD_NAME}
-        placeholder="Name of the Safe"
-        text="Safe name"
-        type="text"
-        validate={required}
-      />
-    </Block>
-    <Block className={classes.root} margin="lg">
-      <AddressInput
-        component={TextField}
-        fieldMutator={(val) => {
-          form.mutators.setValue(FIELD_LOAD_ADDRESS, val)
-        }}
-        inputAdornment={
-          noErrorsOn(FIELD_LOAD_ADDRESS, errors) && {
-            endAdornment: (
-              <InputAdornment position="end">
-                <CheckCircle className={classes.check} />
-              </InputAdornment>
-            ),
-          }
-        }
-        name={FIELD_LOAD_ADDRESS}
-        placeholder="Safe Address*"
-        text="Safe Address"
-        type="text"
-      />
-    </Block>
-    <Block margin="sm">
-      <Paragraph className={classes.links} color="primary" noMargin size="md">
-        By continuing you consent with the{' '}
-        <a href="https://safe.gnosis.io/terms" rel="noopener noreferrer" target="_blank">
-          terms of use
-        </a>{' '}
-        and{' '}
-        <a href="https://safe.gnosis.io/privacy" rel="noopener noreferrer" target="_blank">
-          privacy policy
-        </a>
-        . Most importantly, you confirm that your funds are held securely in the Gnosis Safe, a smart contract on the
-        Ethereum blockchain. These funds cannot be accessed by Gnosis at any point.
-      </Paragraph>
-    </Block>
-  </>
-)
+const Details = ({ classes, errors, form }: Props) => {
+  const handleScan = (value, closeQrModal) => {
+    form.mutators.setValue(FIELD_LOAD_ADDRESS, value)
+    closeQrModal()
+  }
+  return (
+    <>
+      <Block margin="md">
+        <Paragraph color="primary" noMargin size="md">
+          You are about to load an existing Gnosis Safe. First, choose a name and enter the Safe address. The name is
+          only stored locally and will never be shared with Gnosis or any third parties.
+          <br />
+          Your connected wallet does not have to be the owner of this Safe. In this case, the interface will provide you
+          a read-only view.
+        </Paragraph>
+      </Block>
+      <Block className={classes.root}>
+        <Col xs={11}>
+          <Field
+            component={TextField}
+            name={FIELD_LOAD_NAME}
+            placeholder="Name of the Safe"
+            text="Safe name"
+            type="text"
+            validate={required}
+          />
+        </Col>
+      </Block>
+      <Block className={classes.root} margin="lg">
+        <Col xs={11}>
+          <AddressInput
+            component={TextField}
+            fieldMutator={(val) => {
+              form.mutators.setValue(FIELD_LOAD_ADDRESS, val)
+            }}
+            inputAdornment={
+              noErrorsOn(FIELD_LOAD_ADDRESS, errors) && {
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <CheckCircle className={classes.check} />
+                  </InputAdornment>
+                ),
+              }
+            }
+            name={FIELD_LOAD_ADDRESS}
+            placeholder="Safe Address*"
+            text="Safe Address"
+            type="text"
+          />
+        </Col>
+        <Col center="xs" className={classes} middle="xs" xs={1}>
+          <ScanQRWrapper handleScan={handleScan} />
+        </Col>
+      </Block>
+      <Block margin="sm">
+        <Paragraph className={classes.links} color="primary" noMargin size="md">
+          By continuing you consent with the{' '}
+          <a href="https://safe.gnosis.io/terms" rel="noopener noreferrer" target="_blank">
+            terms of use
+          </a>{' '}
+          and{' '}
+          <a href="https://safe.gnosis.io/privacy" rel="noopener noreferrer" target="_blank">
+            privacy policy
+          </a>
+          . Most importantly, you confirm that your funds are held securely in the Gnosis Safe, a smart contract on the
+          Ethereum blockchain. These funds cannot be accessed by Gnosis at any point.
+        </Paragraph>
+      </Block>
+    </>
+  )
+}
 
 const DetailsForm = withStyles(styles)(Details)
 

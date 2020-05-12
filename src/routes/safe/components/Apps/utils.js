@@ -3,7 +3,14 @@ import axios from 'axios'
 
 import appsIconSvg from '~/routes/safe/components/Transactions/TxsTable/TxType/assets/appsIcon.svg'
 
-const gnosisAppsUrl = process.env.REACT_APP_GNOSIS_APPS_URL
+const removeLastTrailingSlash = (url: string) => {
+  if (url.substr(-1) === '/') {
+    return url.substr(0, url.length - 1)
+  }
+  return url
+}
+
+const gnosisAppsUrl = removeLastTrailingSlash(process.env.REACT_APP_GNOSIS_APPS_URL)
 export const staticAppsList = [
   { url: `${gnosisAppsUrl}/compound`, disabled: false },
   { url: `${gnosisAppsUrl}/aave`, disabled: false },
@@ -30,10 +37,7 @@ export const getAppInfoFromUrl = async (appUrl: string) => {
   }
 
   res.url = appUrl.trim()
-  let noTrailingSlashUrl = res.url
-  if (noTrailingSlashUrl.substr(-1) === '/') {
-    noTrailingSlashUrl = noTrailingSlashUrl.substr(0, noTrailingSlashUrl.length - 1)
-  }
+  let noTrailingSlashUrl = removeLastTrailingSlash(res.url)
 
   try {
     const appInfo = await axios.get(`${noTrailingSlashUrl}/manifest.json`)

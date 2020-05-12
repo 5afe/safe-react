@@ -34,3 +34,16 @@ export const getAddressBookListSelector: Selector<GlobalState, {}, List<AddressB
     return result
   },
 )
+
+export const getNameFromAddressBook = createSelector(
+  getAddressBookListSelector,
+  (_, address) => address,
+  (addressBook: Map<string, AddressBook>, address: string) => {
+    const adbkEntry = addressBook.find((addressBookItem) => addressBookItem.address === address)
+    if (adbkEntry) {
+      return adbkEntry.name
+    }
+
+    return 'UNKNOWN'
+  },
+)

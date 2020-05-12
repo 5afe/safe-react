@@ -48,7 +48,7 @@ const OwnersList = ({
         confirmed
         executor={executor}
         isCancelTx={isCancelTx}
-        key={owner.address}
+        key={owner}
         onTxExecute={onTxExecute}
         onTxReject={onTxReject}
         owner={owner}
@@ -64,7 +64,7 @@ const OwnersList = ({
         classes={classes}
         executor={executor}
         isCancelTx={isCancelTx}
-        key={owner.address}
+        key={owner}
         onTxConfirm={onTxConfirm}
         onTxExecute={onTxExecute}
         onTxReject={onTxReject}
