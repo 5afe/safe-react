@@ -12,6 +12,7 @@ import { type SafeTransactionsType, loadOutgoingTransactions } from './loadOutgo
 import { addCancellationTransactions } from '~/routes/safe/store/actions/transactions/addCancellationTransactions'
 import { type IncomingTransaction } from '~/routes/safe/store/models/incomingTransaction'
 import { type GlobalState } from '~/store'
+
 export default (safeAddress: string) => async (dispatch: ReduxDispatch<GlobalState>, getState: GetState) => {
   const transactions: SafeTransactionsType | typeof undefined = await loadOutgoingTransactions(safeAddress, getState)
   if (transactions) {

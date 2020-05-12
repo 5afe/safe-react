@@ -27,8 +27,8 @@ import Table from '~/components/Table'
 import { type Column, cellWidth } from '~/components/Table/TableHead'
 import Block from '~/components/layout/Block'
 import Row from '~/components/layout/Row'
-import { extendedTransactionsSelector } from '~/routes/safe/container/selector'
 import { safeCancellationTransactionsSelector } from '~/routes/safe/store/selectors'
+import { extendedTransactionsSelector } from '~/routes/safe/store/selectors/transactions'
 
 export const TRANSACTION_ROW_TEST_ID = 'transaction-row'
 
