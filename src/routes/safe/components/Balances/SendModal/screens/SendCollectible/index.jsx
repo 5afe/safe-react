@@ -9,20 +9,21 @@ import ArrowDown from '../assets/arrow-down.svg'
 
 import { styles } from './style'
 
-import QRIcon from '~/assets/icons/qrcode.svg'
 import CopyBtn from '~/components/CopyBtn'
 import EtherscanBtn from '~/components/EtherscanBtn'
 import Identicon from '~/components/Identicon'
-import ScanQRModal from '~/components/ScanQRModal'
+import { ScanQRWrapper } from '~/components/ScanQRModal/ScanQRWrapper'
 import WhenFieldChanges from '~/components/WhenFieldChanges'
 import GnoForm from '~/components/forms/GnoForm'
 import Block from '~/components/layout/Block'
 import Button from '~/components/layout/Button'
 import Col from '~/components/layout/Col'
 import Hairline from '~/components/layout/Hairline'
-import Img from '~/components/layout/Img'
 import Paragraph from '~/components/layout/Paragraph'
 import Row from '~/components/layout/Row'
+import type { AddressBook } from '~/logic/addressBook/model/addressBook'
+import { getAddressBook } from '~/logic/addressBook/store/selectors'
+import { getNameFromAdbk } from '~/logic/addressBook/utils'
 import type { NFTAssetsState, NFTTokensState } from '~/logic/collectibles/store/reducer/collectibles'
 import { nftTokensSelector, safeActiveSelectorMap } from '~/logic/collectibles/store/selectors'
 import type { NFTToken } from '~/routes/safe/components/Balances/Collectibles/types'
@@ -60,7 +61,7 @@ const SendCollectible = ({ initialValues, onClose, onNext, recipientAddress, sel
   const { address: safeAddress, ethBalance, name: safeName } = useSelector(safeSelector)
   const nftAssets: NFTAssetsState = useSelector(safeActiveSelectorMap)
   const nftTokens: NFTTokensState = useSelector(nftTokensSelector)
-  const [qrModalOpen, setQrModalOpen] = useState<boolean>(false)
+  const addressBook: AddressBook = useSelector(getAddressBook)
   const [selectedEntry, setSelectedEntry] = useState<Object | null>({
     address: recipientAddress || initialValues.recipientAddress,
     name: '',
@@ -85,14 +86,6 @@ const SendCollectible = ({ initialValues, onClose, onNext, recipientAddress, sel
     onNext(values)
   }
 
-  const openQrModal = () => {
-    setQrModalOpen(true)
-  }
-
-  const closeQrModal = () => {
-    setQrModalOpen(false)
-  }
-
   return (
     <>
       <Row align="center" className={classes.heading} grow>
@@ -112,14 +105,18 @@ const SendCollectible = ({ initialValues, onClose, onNext, recipientAddress, sel
           const { assetAddress } = formState.values
           const selectedNFTTokens = nftTokens.filter((nftToken) => nftToken.assetAddress === assetAddress)
 
-          const handleScan = (value) => {
+          const handleScan = (value, closeQrModal) => {
             let scannedAddress = value
 
             if (scannedAddress.startsWith('ethereum:')) {
               scannedAddress = scannedAddress.replace('ethereum:', '')
             }
-
+            const scannedName = addressBook ? getNameFromAdbk(addressBook, scannedAddress) : ''
             mutators.setRecipient(scannedAddress)
+            setSelectedEntry({
+              name: scannedName,
+              address: scannedAddress,
+            })
             closeQrModal()
           }
 
@@ -200,16 +197,7 @@ const SendCollectible = ({ initialValues, onClose, onNext, recipientAddress, sel
                         />
                       </Col>
                       <Col center="xs" className={classes} middle="xs" xs={1}>
-                        <Img
-                          alt="Scan QR"
-                          className={classes.qrCodeBtn}
-                          height={20}
-                          onClick={() => {
-                            openQrModal()
-                          }}
-                          role="button"
-                          src={QRIcon}
-                        />
+                        <ScanQRWrapper handleScan={handleScan} />
                       </Col>
                     </Row>
                   </>
@@ -256,7 +244,6 @@ const SendCollectible = ({ initialValues, onClose, onNext, recipientAddress, sel
                   Review
                 </Button>
               </Row>
-              {qrModalOpen && <ScanQRModal isOpen={qrModalOpen} onClose={closeQrModal} onScan={handleScan} />}
             </>
           )
         }}

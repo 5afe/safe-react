@@ -6,6 +6,7 @@ on:
     branches:
       # this will run on the specified branch
       - master
+      - development
 
 env:
   REACT_APP_BLOCKNATIVE_KEY: ${{ secrets.REACT_APP_BLOCKNATIVE_KEY }}
@@ -14,7 +15,7 @@ env:
   REACT_APP_INFURA_TOKEN: ${{ secrets.REACT_APP_INFURA_TOKEN }}
   REACT_APP_PORTIS_ID: ${{ secrets.REACT_APP_PORTIS_ID }}
   REACT_APP_GNOSIS_APPS_URL: ${{ secrets.REACT_APP_GNOSIS_APPS_URL }}
-
+  REACT_APP_INTERCOM_ID: ${{ secrets.REACT_APP_INTERCOM_ID }}
 jobs:
   release:
     runs-on: ${{ matrix.os }}
@@ -28,20 +29,18 @@ jobs:
     steps:
       - name: Check out Git repository
         uses: actions/checkout@v2
-        
+
       - name: Patch node gyp on windows to support Visual Studio 2019
         if: startsWith(matrix.os, 'windows')
         shell: powershell
         run: |
           yarn global add --production windows-build-tools --vs2015 --msvs_version=2015
-          
       - name: Install node-gyp
         if: startsWith(matrix.os, 'windows')
         shell: powershell
         run: |
           yarn global add node-gyp
           yarn config set node_gyp "$_\node_modules\node-gyp\bin\node-gyp.js"
-
       - name: Install Node.js, NPM and Yarn
         uses: actions/setup-node@v1
         with:
@@ -70,3 +69,25 @@ jobs:
           # If the commit is tagged with a version (e.g. "v1.0.0"),
           # release the app after building
           release: ${{ startsWith(github.ref, 'refs/tags/v') }}
+
+      - name: 'Upload Artifacts OSX'
+        if: contains(github.ref, 'development') && startsWith(matrix.os, 'macos')
+        uses: actions/upload-artifact@v2
+        with:
+          name: Desktop OSX
+          path: ./dist/Safe[ ]Multisig*.dmg
+
+      - name: 'Upload Artifacts Linux'
+        if: contains(github.ref, 'development') && startsWith(matrix.os, 'ubuntu')
+        uses: actions/upload-artifact@v2
+        with:
+          name: Desktop Linux
+          path: ./dist/Safe[ ]Multisig*.AppImage
+
+      - name: 'Upload Artifacts Windows'
+        if: contains(github.ref, 'development') && startsWith(matrix.os, 'windows')
+        uses: actions/upload-artifact@v2
+        with:
+          name: Desktop Windows
+          path: ./dist/Safe[ ]Multisig*.exe
+

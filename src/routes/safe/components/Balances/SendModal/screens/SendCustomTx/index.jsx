@@ -10,11 +10,10 @@ import ArrowDown from '../assets/arrow-down.svg'
 
 import { styles } from './style'
 
-import QRIcon from '~/assets/icons/qrcode.svg'
 import CopyBtn from '~/components/CopyBtn'
 import EtherscanBtn from '~/components/EtherscanBtn'
 import Identicon from '~/components/Identicon'
-import ScanQRModal from '~/components/ScanQRModal'
+import { ScanQRWrapper } from '~/components/ScanQRModal/ScanQRWrapper'
 import Field from '~/components/forms/Field'
 import GnoForm from '~/components/forms/GnoForm'
 import TextField from '~/components/forms/TextField'
@@ -25,9 +24,11 @@ import Button from '~/components/layout/Button'
 import ButtonLink from '~/components/layout/ButtonLink'
 import Col from '~/components/layout/Col'
 import Hairline from '~/components/layout/Hairline'
-import Img from '~/components/layout/Img'
 import Paragraph from '~/components/layout/Paragraph'
 import Row from '~/components/layout/Row'
+import type { AddressBook } from '~/logic/addressBook/model/addressBook'
+import { getAddressBook } from '~/logic/addressBook/store/selectors'
+import { getNameFromAdbk } from '~/logic/addressBook/utils'
 import SafeInfo from '~/routes/safe/components/Balances/SendModal/SafeInfo'
 import AddressBookInput from '~/routes/safe/components/Balances/SendModal/screens/AddressBookInput'
 import { safeSelector } from '~/routes/safe/store/selectors'
@@ -45,13 +46,13 @@ const useStyles = makeStyles(styles)
 const SendCustomTx = ({ initialValues, onClose, onNext, recipientAddress }: Props) => {
   const classes = useStyles()
   const { address: safeAddress, ethBalance, name: safeName } = useSelector(safeSelector)
-  const [qrModalOpen, setQrModalOpen] = useState<boolean>(false)
   const [selectedEntry, setSelectedEntry] = useState<Object | null>({
     address: recipientAddress || initialValues.recipientAddress,
     name: '',
   })
   const [pristine, setPristine] = useState<boolean>(true)
   const [isValidAddress, setIsValidAddress] = useState<boolean>(true)
+  const addressBook: AddressBook = useSelector(getAddressBook)
 
   React.useMemo(() => {
     if (selectedEntry === null && pristine) {
@@ -63,14 +64,6 @@ const SendCustomTx = ({ initialValues, onClose, onNext, recipientAddress }: Prop
     if (values.data || values.value) {
       onNext(values)
     }
-  }
-
-  const openQrModal = () => {
-    setQrModalOpen(true)
-  }
-
-  const closeQrModal = () => {
-    setQrModalOpen(false)
   }
 
   const formMutators = {
@@ -103,14 +96,18 @@ const SendCustomTx = ({ initialValues, onClose, onNext, recipientAddress }: Prop
             shouldDisableSubmitButton = !selectedEntry.address
           }
 
-          const handleScan = (value) => {
+          const handleScan = (value, closeQrModal) => {
             let scannedAddress = value
 
             if (scannedAddress.startsWith('ethereum:')) {
               scannedAddress = scannedAddress.replace('ethereum:', '')
             }
-
+            const scannedName = addressBook ? getNameFromAdbk(addressBook, scannedAddress) : ''
             mutators.setRecipient(scannedAddress)
+            setSelectedEntry({
+              name: scannedName,
+              address: scannedAddress,
+            })
             closeQrModal()
           }
 
@@ -184,16 +181,7 @@ const SendCustomTx = ({ initialValues, onClose, onNext, recipientAddress }: Prop
                         />
                       </Col>
                       <Col center="xs" className={classes} middle="xs" xs={1}>
-                        <Img
-                          alt="Scan QR"
-                          className={classes.qrCodeBtn}
-                          height={20}
-                          onClick={() => {
-                            openQrModal()
-                          }}
-                          role="button"
-                          src={QRIcon}
-                        />
+                        <ScanQRWrapper handleScan={handleScan} />
                       </Col>
                     </Row>
                   </>
@@ -252,7 +240,6 @@ const SendCustomTx = ({ initialValues, onClose, onNext, recipientAddress }: Prop
                   Review
                 </Button>
               </Row>
-              {qrModalOpen && <ScanQRModal isOpen={qrModalOpen} onClose={closeQrModal} onScan={handleScan} />}
             </>
           )
         }}

@@ -14,6 +14,7 @@ import { TX_NOTIFICATION_TYPES } from '~/logic/safe/transactions'
 import createTransaction from '~/routes/safe/store/actions/createTransaction'
 import replaceSafeOwner from '~/routes/safe/store/actions/replaceSafeOwner'
 import { safeParamAddressFromStateSelector, safeThresholdSelector } from '~/routes/safe/store/selectors'
+import { checksumAddress } from '~/utils/checksumAddress'
 
 const styles = () => ({
   biggerModalWindow: {
@@ -96,8 +97,10 @@ const ReplaceOwner = ({ classes, closeSnackbar, enqueueSnackbar, isOpen, onClose
   const onClickBack = () => setActiveScreen('checkOwner')
 
   const ownerSubmitted = (newValues: Object) => {
-    values.ownerName = newValues.ownerName
-    values.ownerAddress = newValues.ownerAddress
+    const { ownerAddress, ownerName } = newValues
+    const checksumAddr = checksumAddress(ownerAddress)
+    values.ownerName = ownerName
+    values.ownerAddress = checksumAddr
     setValues(values)
     setActiveScreen('reviewReplaceOwner')
   }

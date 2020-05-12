@@ -1,6 +1,5 @@
 // @flow
-import { Divider } from '@material-ui/core'
-import ClickAwayListener from '@material-ui/core/ClickAwayListener'
+import { ClickAwayListener, Divider } from '@material-ui/core'
 import Menu from '@material-ui/core/Menu'
 import MenuItem from '@material-ui/core/MenuItem'
 import { makeStyles } from '@material-ui/core/styles'
@@ -25,6 +24,7 @@ const useStyles = makeStyles({
     '&:hover': {
       backgroundColor: '#F0EFEE',
     },
+    outline: 'none',
   },
   increasedPopperZindex: {
     zIndex: 2001,
@@ -43,9 +43,7 @@ const EllipsisTransactionDetails = ({ address, knownAddress }: EllipsisTransacti
   const dispatch = useDispatch()
   const currentSafeAddress = useSelector(safeParamAddressFromStateSelector)
 
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget)
-  }
+  const handleClick = (event) => setAnchorEl(event.currentTarget)
 
   const closeMenuHandler = () => setAnchorEl(null)
 
@@ -56,8 +54,8 @@ const EllipsisTransactionDetails = ({ address, knownAddress }: EllipsisTransacti
 
   return (
     <ClickAwayListener onClickAway={closeMenuHandler}>
-      <div className={classes.container} onClick={handleClick} onKeyDown={handleClick} role="menu" tabIndex={0}>
-        <MoreHorizIcon />
+      <div className={classes.container} role="menu" tabIndex={0}>
+        <MoreHorizIcon onClick={handleClick} onKeyDown={handleClick} />
         <Menu anchorEl={anchorEl} id="simple-menu" keepMounted onClose={closeMenuHandler} open={Boolean(anchorEl)}>
           <MenuItem disabled onClick={closeMenuHandler}>
             Send Again

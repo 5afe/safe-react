@@ -13,18 +13,19 @@ import { useDispatch, useSelector } from 'react-redux'
 
 import CheckIcon from './img/check.svg'
 
-import fetchCurrencySelectedValue from '~/logic/currencyValues/store/actions/fetchCurrencySelectedValue'
-import saveCurrencySelected from '~/logic/currencyValues/store/actions/saveCurrencySelected'
+import { setSelectedCurrency } from '~/logic/currencyValues/store/actions/setSelectedCurrency'
 import { AVAILABLE_CURRENCIES } from '~/logic/currencyValues/store/model/currencyValues'
 import { currentCurrencySelector } from '~/logic/currencyValues/store/selectors'
 import { useDropdownStyles } from '~/routes/safe/components/DropdownCurrency/style'
+import { safeParamAddressFromStateSelector } from '~/routes/safe/store/selectors'
 import { DropdownListTheme } from '~/theme/mui'
 
 const DropdownCurrency = () => {
   const currenciesList = Object.values(AVAILABLE_CURRENCIES)
+  const safeAddress = useSelector(safeParamAddressFromStateSelector)
   const dispatch = useDispatch()
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
-  const currencyValueSelected = useSelector(currentCurrencySelector)
+  const selectedCurrency = useSelector(currentCurrencySelector)
 
   const [searchParams, setSearchParams] = useState('')
   const classes = useDropdownStyles()
@@ -41,17 +42,16 @@ const DropdownCurrency = () => {
   }
 
   const onCurrentCurrencyChangedHandler = (newCurrencySelectedName: AVAILABLE_CURRENCIES) => {
-    dispatch(fetchCurrencySelectedValue(newCurrencySelectedName))
-    dispatch(saveCurrencySelected(newCurrencySelectedName))
+    dispatch(setSelectedCurrency(safeAddress, newCurrencySelectedName))
     handleClose()
   }
 
-  return !currencyValueSelected ? null : (
+  return !selectedCurrency ? null : (
     <MuiThemeProvider theme={DropdownListTheme}>
       <>
         <button className={classes.button} onClick={handleClick} type="button">
           <span className={classNames(classes.buttonInner, anchorEl && classes.openMenuButton)}>
-            {currencyValueSelected}
+            {selectedCurrency}
           </span>
         </button>
         <Menu
@@ -108,7 +108,7 @@ const DropdownCurrency = () => {
                   />
                 </ListItemIcon>
                 <ListItemText primary={currencyName} />
-                {currencyName === currencyValueSelected ? (
+                {currencyName === selectedCurrency ? (
                   <ListItemIcon className={classes.iconRight}>
                     <img alt="checked" src={CheckIcon} />
                   </ListItemIcon>

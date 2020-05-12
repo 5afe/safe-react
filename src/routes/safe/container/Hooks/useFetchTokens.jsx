@@ -2,6 +2,7 @@
 import { useMemo } from 'react'
 import { batch, useDispatch, useSelector } from 'react-redux'
 
+import fetchCollectibles from '~/logic/collectibles/store/actions/fetchCollectibles'
 import { fetchCurrencyValues } from '~/logic/currencyValues/store/actions/fetchCurrencyValues'
 import activateAssetsByBalance from '~/logic/tokens/store/actions/activateAssetsByBalance'
 import fetchSafeTokens from '~/logic/tokens/store/actions/fetchSafeTokens'
@@ -24,7 +25,11 @@ export const useFetchTokens = () => {
     }
 
     if (COLLECTIBLES_LOCATION_REGEX.test(history.location.pathname)) {
-      dispatch(activateAssetsByBalance(address))
+      batch(() => {
+        dispatch(fetchCollectibles()).then(() => {
+          dispatch(activateAssetsByBalance(address))
+        })
+      })
     }
   }, [history.location.pathname])
 }
