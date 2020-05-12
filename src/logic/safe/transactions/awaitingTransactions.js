@@ -27,9 +27,7 @@ export const getAwaitingTransactions = (
       if (!transaction.executionTxHash && !isTransactionCancelled) {
         // Then we check if the waiting confirmations are not from the current user, otherwise, filters this
         // transaction
-        const transactionWaitingUser = transaction.confirmations.filter(
-          (confirmation) => confirmation.owner && confirmation.owner.address !== userAccount,
-        )
+        const transactionWaitingUser = transaction.confirmations.filter(({ owner }) => owner !== userAccount)
 
         return transactionWaitingUser.size > 0
       }
