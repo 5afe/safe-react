@@ -227,7 +227,7 @@ export const buildTransactionFrom = async (
   })
 }
 
-const addMockSafeCreationTx = async (safeAddress): Array<CreationTxServiceModel> => {
+const getCreationTx = async (safeAddress): Array<CreationTxServiceModel> => {
   const url = buildSafeCreationTxUrl(safeAddress)
   const response = await axios.get(url)
   return [
@@ -316,7 +316,7 @@ export type SafeTransactionsType = {
 let etagSafeTransactions = null
 let etagCachedSafeIncommingTransactions = null
 export const loadSafeTransactions = async (safeAddress: string, getState: GetState): Promise<SafeTransactionsType> => {
-  let transactions: TxServiceModel[] = await addMockSafeCreationTx(safeAddress)
+  let transactions: TxServiceModel[] = await getCreationTx(safeAddress)
 
   try {
     const config = etagSafeTransactions
