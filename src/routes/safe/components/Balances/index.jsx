@@ -15,7 +15,7 @@ import Link from '~/components/layout/Link'
 import Row from '~/components/layout/Row'
 import { SAFELIST_ADDRESS } from '~/routes/routes'
 import SendModal from '~/routes/safe/components/Balances/SendModal'
-import DropdownCurrency from '~/routes/safe/components/DropdownCurrency'
+import CurrencyDropdown from '~/routes/safe/components/CurrencyDropdown'
 import { useFetchTokens } from '~/routes/safe/container/Hooks/useFetchTokens'
 import { safeFeaturesEnabledSelector, safeParamAddressFromStateSelector } from '~/routes/safe/store/selectors'
 import { history } from '~/store'
@@ -170,7 +170,7 @@ const Balances = (props: Props) => {
             ))}
         </Col>
         <Col className={tokenControls} end="sm" sm={6} xs={12}>
-          {showCoins && <DropdownCurrency />}
+          {showCoins && <CurrencyDropdown />}
           <ButtonLink
             className={manageTokensButton}
             onClick={erc721Enabled && showCollectibles ? () => onShow('ManageCollectibleModal') : () => onShow('Token')}

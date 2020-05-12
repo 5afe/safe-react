@@ -26,13 +26,9 @@ export const fetchCurrencyValues = (safeAddress: string) => async (dispatch: Red
       const safeAddr = kv[0]
       const value = kv[1]
 
-      if (!Object.keys(value).length) {
-        return
-      }
-
       const { currencyRate, selectedCurrency } = value
       batch(() => {
-        dispatch(setSelectedCurrency(safeAddr, selectedCurrency))
+        dispatch(setSelectedCurrency(safeAddr, selectedCurrency || AVAILABLE_CURRENCIES.USD))
         dispatch(setCurrencyRate(safeAddr, currencyRate))
       })
     })
