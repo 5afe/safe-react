@@ -22,19 +22,19 @@ const buildOwnersFrom = (
   localSafe: SafeProps | {}, // eslint-disable-next-line
 ) =>
   safeOwners.map((ownerAddress: string) => {
-    const checksumAddress = checksumAddress(ownerAddress)
+    const convertedAdd = checksumAddress(ownerAddress)
     if (!localSafe) {
-      return makeOwner({ name: 'UNKNOWN', address: checksumAddress })
+      return makeOwner({ name: 'UNKNOWN', address: convertedAdd })
     }
 
-    const storedOwner = localSafe.owners.find(({ address }) => sameAddress(address, checksumAddress))
+    const storedOwner = localSafe.owners.find(({ address }) => sameAddress(address, convertedAdd))
     if (!storedOwner) {
-      return makeOwner({ name: 'UNKNOWN', address: checksumAddress })
+      return makeOwner({ name: 'UNKNOWN', address: convertedAdd })
     }
 
     return makeOwner({
       name: storedOwner.name || 'UNKNOWN',
-      address: checksumAddress,
+      address: convertedAdd,
     })
   })
 
