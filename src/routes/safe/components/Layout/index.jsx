@@ -33,7 +33,6 @@ const TxsTable = React.lazy(() => import('~/routes/safe/components/Transactions/
 const AddressBookTable = React.lazy(() => import('~/routes/safe/components/AddressBook'))
 
 type Props = {
-  classes: Object,
   sendFunds: Object,
   showReceive: boolean,
   onShow: Function,
