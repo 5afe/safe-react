@@ -49,24 +49,24 @@ const confirmTransactions = (
   closeModal: () => void,
   onConfirm: () => void,
 ) => {
-  const areTxsMalformed = (t) => {
+  const isTxValid = (t) => {
     const isValidAddress = mustBeEthereumAddress(t.to) === undefined
     return (
-      !t.to ||
-      typeof t.to !== 'string' ||
-      !isValidAddress ||
-      t.value === undefined ||
-      typeof t.value !== 'number' ||
-      !t.data ||
-      typeof t.data !== 'string'
+      t.to &&
+      typeof t.to === 'string' &&
+      isValidAddress &&
+      t.value !== undefined &&
+      typeof t.value === 'number' &&
+      t.data &&
+      typeof t.data === 'string'
     )
   }
 
-  const areTxsValid = !txs.some(areTxsMalformed)
+  const areTxsMalformed = txs.some((t) => !isTxValid(t))
 
   const title = <ModalTitle iconUrl={iconApp} title={nameApp} />
 
-  const body = !areTxsValid ? (
+  const body = areTxsMalformed ? (
     <>
       <IconText>
         <Icon color="error" size="md" type="info" />
@@ -110,7 +110,7 @@ const confirmTransactions = (
       cancelText="Cancel"
       handleCancel={closeModal}
       handleOk={onConfirm}
-      okDisabled={!areTxsValid}
+      okDisabled={areTxsMalformed}
       okText="Submit"
     />
   )
