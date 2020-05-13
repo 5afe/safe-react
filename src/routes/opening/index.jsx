@@ -90,7 +90,7 @@ const BodyFooter = styled.div`
 
 const BackButton = styled(Button)`
   grid-column: 2;
-  width: 140px;
+  /* width: 140px; */
   margin: 20px auto 0;
 `
 
