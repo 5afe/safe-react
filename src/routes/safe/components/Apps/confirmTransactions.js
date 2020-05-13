@@ -37,6 +37,10 @@ const IconText = styled.div`
     margin-right: 4px;
   }
 `
+const isTxValid = (t) => {
+  const isAddressValid = mustBeEthereumAddress(t.to) === undefined
+  return isAddressValid && t.value !== undefined && typeof t.value === 'number' && t.data && typeof t.data === 'string'
+}
 
 const confirmTransactions = (
   safeAddress: string,
@@ -49,19 +53,6 @@ const confirmTransactions = (
   closeModal: () => void,
   onConfirm: () => void,
 ) => {
-  const isTxValid = (t) => {
-    const isValidAddress = mustBeEthereumAddress(t.to) === undefined
-    return (
-      t.to &&
-      typeof t.to === 'string' &&
-      isValidAddress &&
-      t.value !== undefined &&
-      typeof t.value === 'number' &&
-      t.data &&
-      typeof t.data === 'string'
-    )
-  }
-
   const areTxsMalformed = txs.some((t) => !isTxValid(t))
 
   const title = <ModalTitle iconUrl={iconApp} title={nameApp} />
