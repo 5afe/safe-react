@@ -1,5 +1,4 @@
 // @flow
-import ENS from 'ethereum-ens'
 import Web3 from 'web3'
 
 import { sameAddress } from './ethAddresses'
@@ -122,8 +121,12 @@ export const getProviderInfo: Function = async (
 }
 
 export const getAddressFromENS = async (name: string) => {
-  const ens = new ENS(web3)
-  return await ens.resolver(name).addr()
+  return await web3.eth.ens.getAddress(name)
+}
+
+export const getContentFromENS = async (name: string) => {
+  // https://github.com/ethereum/web3.js/issues/3392
+  return await web3.eth.ens.getContenthash(name)
 }
 
 export const setWeb3 = (provider: Object) => {
