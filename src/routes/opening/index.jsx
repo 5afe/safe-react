@@ -7,6 +7,7 @@ import { isConfirmationStep, steps } from './steps'
 
 import { Loader, Stepper } from '~/components-v2'
 import LoaderDots from '~/components-v2/feedback/Loader-dots/assets/loader-dots.svg'
+import Button from '~/components/layout/Button'
 import Heading from '~/components/layout/Heading'
 import Img from '~/components/layout/Img'
 import Paragraph from '~/components/layout/Paragraph'
@@ -85,6 +86,12 @@ const BodyFooter = styled.div`
   display: flex;
   justify-content: center;
   align-items: flex-end;
+`
+
+const BackButton = styled(Button)`
+  grid-column: 2;
+  width: 140px;
+  margin: 20px auto 0;
 `
 
 type Props = {
@@ -331,6 +338,9 @@ const SafeDeployment = ({ creationTxHash, onCancel, onRetry, onSuccess, provider
           ) : null}
         </BodyFooter>
       </Body>
+      <BackButton color="primary" minWidth={140} onClick={onCancel}>
+        Back
+      </BackButton>
     </Wrapper>
   )
 }
