@@ -7,6 +7,7 @@ import addViewedSafe from '~/logic/currentSession/store/actions/addViewedSafe'
 import fetchSafeTokens from '~/logic/tokens/store/actions/fetchSafeTokens'
 import fetchLatestMasterContractVersion from '~/routes/safe/store/actions/fetchLatestMasterContractVersion'
 import fetchSafe from '~/routes/safe/store/actions/fetchSafe'
+import fetchSafeCreationTx from '~/routes/safe/store/actions/fetchSafeCreationTx'
 import fetchTransactions from '~/routes/safe/store/actions/fetchTransactions'
 
 export const useLoadSafe = (safeAddress: ?string) => {
@@ -20,6 +21,7 @@ export const useLoadSafe = (safeAddress: ?string) => {
           .then(() => {
             dispatch(fetchSafeTokens(safeAddress))
             dispatch(loadAddressBookFromStorage())
+            dispatch(fetchSafeCreationTx(safeAddress))
             return dispatch(fetchTransactions(safeAddress))
           })
           .then(() => dispatch(addViewedSafe(safeAddress)))

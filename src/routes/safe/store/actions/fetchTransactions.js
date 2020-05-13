@@ -7,9 +7,7 @@ import { batch } from 'react-redux'
 import type { Dispatch as ReduxDispatch } from 'redux'
 
 import { addIncomingTransactions } from './addIncomingTransactions'
-import { addTransactions } from './addTransactions'
 
-import { buildSafeCreationTxUrl } from '~/config'
 import generateBatchRequests from '~/logic/contracts/generateBatchRequests'
 import { decodeParamsFromSafeMethod } from '~/logic/contracts/methodIds'
 import { buildIncomingTxServiceUrl } from '~/logic/safe/transactions/incomingTxHistory'
@@ -26,11 +24,11 @@ import { ZERO_ADDRESS, sameAddress } from '~/logic/wallets/ethAddresses'
 import { EMPTY_DATA } from '~/logic/wallets/ethTransactions'
 import { getWeb3 } from '~/logic/wallets/getWeb3'
 import { addCancellationTransactions } from '~/routes/safe/store/actions/addCancellationTransactions'
+import { addOrUpdateTransactions } from '~/routes/safe/store/actions/transactions/addOrUpdateTransactions'
 import { makeConfirmation } from '~/routes/safe/store/models/confirmation'
 import { type IncomingTransaction, makeIncomingTransaction } from '~/routes/safe/store/models/incomingTransaction'
 import type { TransactionProps } from '~/routes/safe/store/models/transaction'
 import { type Transaction, makeTransaction } from '~/routes/safe/store/models/transaction'
-import { creationTxSelector } from '~/routes/safe/store/selectors'
 import type { GetState } from '~/store'
 import { type GlobalState } from '~/store'
 
@@ -43,7 +41,7 @@ type ConfirmationServiceModel = {
   transactionHash: string,
 }
 
-type TxServiceModel = {
+export type TxServiceModel = {
   to: string,
   value: number,
   data: ?string,
@@ -75,15 +73,6 @@ type IncomingTxServiceModel = {
   from: string,
 }
 
-type CreationTxServiceModel = {
-  created: string,
-  creator: string,
-  factoryAddress: string,
-  masterCopy: string,
-  setupData: string,
-  transactionHash: string,
-}
-
 export const buildTransactionFrom = async (
   safeAddress: string,
   knownTokens,
@@ -93,21 +82,6 @@ export const buildTransactionFrom = async (
   txTokenName,
   txTokenSymbol,
 ): Promise<Transaction> => {
-  if (tx.creationTx) {
-    const { created, creationTx, creator, factoryAddress, masterCopy, setupData, transactionHash, type } = tx
-    const txType = type || 'creation'
-    return makeTransaction({
-      created,
-      creator,
-      factoryAddress,
-      masterCopy,
-      setupData,
-      creationTx,
-      executionTxHash: transactionHash,
-      type: txType,
-    })
-  }
-
   const confirmations = List(
     tx.confirmations.map((conf: ConfirmationServiceModel) =>
       makeConfirmation({
@@ -214,16 +188,6 @@ export const buildTransactionFrom = async (
   })
 }
 
-const getCreationTx = async (safeAddress): Array<CreationTxServiceModel> => {
-  const url = buildSafeCreationTxUrl(safeAddress)
-  const response = await axios.get(url)
-  return {
-    ...response.data,
-    creationTx: true,
-    nonce: null,
-  }
-}
-
 const batchRequestTxsData = (txs: any[]) => {
   const web3Batch = new web3.BatchRequest()
 
@@ -300,16 +264,9 @@ export type SafeTransactionsType = {
 }
 
 let etagSafeTransactions = null
-let etagCachedSafeIncommingTransactions = null
+let etagCachedSafeIncomingTransactions = null
 export const loadSafeTransactions = async (safeAddress: string, getState: GetState): Promise<SafeTransactionsType> => {
-  const creationTx = creationTxSelector(getState())
   let transactions: TxServiceModel[] = []
-  if (creationTx) {
-    transactions.push(creationTx)
-  } else {
-    const creationTx = await getCreationTx(safeAddress)
-    transactions.push(creationTx)
-  }
 
   try {
     const config = etagSafeTransactions
@@ -359,7 +316,7 @@ export const loadSafeTransactions = async (safeAddress: string, getState: GetSta
   const groupedTxs = List(txsRecord).groupBy((tx) => (tx.get('cancellationTx') ? 'cancel' : 'outgoing'))
 
   return {
-    outgoing: Map().set(safeAddress, groupedTxs.get('outgoing')),
+    outgoing: groupedTxs.get('outgoing'),
     cancel: Map().set(safeAddress, groupedTxs.get('cancel')),
   }
 }
@@ -367,10 +324,10 @@ export const loadSafeTransactions = async (safeAddress: string, getState: GetSta
 export const loadSafeIncomingTransactions = async (safeAddress: string) => {
   let incomingTransactions: IncomingTxServiceModel[] = []
   try {
-    const config = etagCachedSafeIncommingTransactions
+    const config = etagCachedSafeIncomingTransactions
       ? {
           headers: {
-            'If-None-Match': etagCachedSafeIncommingTransactions,
+            'If-None-Match': etagCachedSafeIncomingTransactions,
           },
         }
       : undefined
@@ -378,11 +335,11 @@ export const loadSafeIncomingTransactions = async (safeAddress: string) => {
     const response = await axios.get(url, config)
     if (response.data.count > 0) {
       incomingTransactions = response.data.results
-      if (etagCachedSafeIncommingTransactions === response.headers.etag) {
+      if (etagCachedSafeIncomingTransactions === response.headers.etag) {
         // The txs are the same, we can return the cached ones
         return
       }
-      etagCachedSafeIncommingTransactions = response.headers.etag
+      etagCachedSafeIncomingTransactions = response.headers.etag
     }
   } catch (err) {
     if (err && err.response && err.response.status === 304) {
@@ -407,7 +364,7 @@ export default (safeAddress: string) => async (dispatch: ReduxDispatch<GlobalSta
 
     batch(() => {
       dispatch(addCancellationTransactions(cancel))
-      dispatch(addTransactions(outgoing))
+      dispatch(addOrUpdateTransactions({ safeAddress, transactions: outgoing }))
     })
   }
 

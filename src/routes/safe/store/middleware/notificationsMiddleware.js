@@ -14,13 +14,13 @@ import { getIncomingTxAmount } from '~/routes/safe/components/Transactions/TxsTa
 import { grantedSelector } from '~/routes/safe/container/selector'
 import { ADD_INCOMING_TRANSACTIONS } from '~/routes/safe/store/actions/addIncomingTransactions'
 import { ADD_SAFE } from '~/routes/safe/store/actions/addSafe'
-import { ADD_TRANSACTIONS } from '~/routes/safe/store/actions/addTransactions'
+import { ADD_OR_UPDATE_TRANSACTIONS } from '~/routes/safe/store/actions/transactions/addOrUpdateTransactions'
 import updateSafe from '~/routes/safe/store/actions/updateSafe'
 import { safeParamAddressFromStateSelector, safesMapSelector } from '~/routes/safe/store/selectors'
 import { type GlobalState } from '~/store/'
 import { loadFromStorage, saveToStorage } from '~/utils/storage'
 
-const watchedActions = [ADD_TRANSACTIONS, ADD_INCOMING_TRANSACTIONS, ADD_SAFE]
+const watchedActions = [ADD_OR_UPDATE_TRANSACTIONS, ADD_INCOMING_TRANSACTIONS, ADD_SAFE]
 
 const sendAwaitingTransactionNotification = async (
   dispatch: Function,
@@ -68,19 +68,14 @@ const notificationsMiddleware = (store: Store<GlobalState>) => (next: Function) 
   if (watchedActions.includes(action.type)) {
     const state: GlobalState = store.getState()
     switch (action.type) {
-      case ADD_TRANSACTIONS: {
-        const transactionsList = action.payload
+      case ADD_OR_UPDATE_TRANSACTIONS: {
+        const { safeAddress, transactions } = action.payload
         const userAddress: string = userAccountSelector(state)
-        const safeAddress = action.payload.keySeq().get(0)
         const cancellationTransactions = state.cancellationTransactions.get(safeAddress)
         const cancellationTransactionsByNonce = cancellationTransactions
           ? cancellationTransactions.reduce((acc, tx) => acc.set(tx.nonce, tx), Map())
           : Map()
-        const awaitingTransactions = getAwaitingTransactions(
-          transactionsList,
-          cancellationTransactionsByNonce,
-          userAddress,
-        )
+        const awaitingTransactions = getAwaitingTransactions(transactions, cancellationTransactionsByNonce, userAddress)
         const awaitingTxsSubmissionDateList = awaitingTransactions
           .get(safeAddress, List([]))
           .map((tx) => tx.submissionDate)
