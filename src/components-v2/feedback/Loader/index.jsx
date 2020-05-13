@@ -12,12 +12,12 @@ const Wrapper = styled.div`
 `
 type Props = {
   size?: number,
-  centered: boolean,
+  centered?: boolean,
 }
 
-const Loader = ({ centered = true, size }: Props) => (
+const Loader = ({ centered = true, size = 60 }: Props) => (
   <Wrapper centered={centered}>
-    <CircularProgress size={size || 60} />
+    <CircularProgress size={size} />
   </Wrapper>
 )
 
