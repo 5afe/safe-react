@@ -48,4 +48,7 @@ export const styles = () => ({
   selectAddress: {
     cursor: 'pointer',
   },
+  fullWidth: {
+    justifyContent: 'space-between',
+  },
 })

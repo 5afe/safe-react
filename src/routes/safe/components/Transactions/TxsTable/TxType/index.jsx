@@ -23,7 +23,7 @@ const typeToIcon = {
 const typeToLabel = {
   outgoing: 'Outgoing transfer',
   incoming: 'Incoming transfer',
-  custom: 'Custom transaction',
+  custom: 'Contract Interaction',
   settings: 'Modify settings',
   creation: 'Safe created',
   cancellation: 'Cancellation transaction',
