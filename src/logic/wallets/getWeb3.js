@@ -125,7 +125,6 @@ export const getAddressFromENS = async (name: string) => {
 }
 
 export const getContentFromENS = async (name: string) => {
-  // https://github.com/ethereum/web3.js/issues/3392
   return await web3.eth.ens.getContenthash(name)
 }
 
