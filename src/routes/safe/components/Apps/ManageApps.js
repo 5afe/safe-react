@@ -12,6 +12,7 @@ import DebounceValidationField from '~/components/forms/Field/DebounceValidation
 import GnoForm from '~/components/forms/GnoForm'
 import { required } from '~/components/forms/validator'
 import Img from '~/components/layout/Img'
+import { getContentFromENS } from '~/logic/wallets/getWeb3'
 import appsIconSvg from '~/routes/safe/components/Transactions/TxsTable/TxType/assets/appsIcon.svg'
 import { isValid as isURLValid } from '~/utils/url'
 
@@ -51,10 +52,6 @@ type Props = {
   onAppToggle: (appId: string, enabled: boolean) => void,
 }
 
-const urlValidator = (value: string) => {
-  return isURLValid(value) ? undefined : 'Please, provide a valid url'
-}
-
 const composeValidatorsApps = (...validators: Function[]): FieldValidator => (value: Field, values, meta) => {
   if (!meta.modified) {
     return
@@ -64,7 +61,6 @@ const composeValidatorsApps = (...validators: Function[]): FieldValidator => (va
 
 const ManageApps = ({ appList, onAppAdded, onAppToggle }: Props) => {
   const [isOpen, setIsOpen] = useState(false)
-
   const [appInfo, setAppInfo] = useState(APP_INFO)
   const [isSubmitDisabled, setIsSubmitDisabled] = useState(true)
 
@@ -79,15 +75,23 @@ const ManageApps = ({ appList, onAppAdded, onAppToggle }: Props) => {
 
   const cleanAppInfo = () => setAppInfo(APP_INFO)
 
-  const safeAppValidator = async (value) => {
-    const appInfo = await getAppInfoFromUrl(value)
-
-    if (appInfo.error) {
+  const customRequiredValidator = (value) => {
+    if (!value || !value.length) {
       setAppInfo(APP_INFO)
-      return 'This is not a valid Safe app.'
+      return 'Required'
     }
+  }
 
-    setAppInfo({ ...appInfo })
+  const getIpfsLinkFromEns = async (name) => {
+    try {
+      const content = await getContentFromENS(name)
+      if (content && content.protocolType === 'ipfs') {
+        return `https://ipfs.io/ipfs/${content.decoded}/`
+      }
+    } catch (error) {
+      console.error(error)
+      return undefined
+    }
   }
 
   const uniqueAppValidator = (value) => {
@@ -103,20 +107,38 @@ const ManageApps = ({ appList, onAppAdded, onAppToggle }: Props) => {
     return exists ? 'This app is already registered.' : undefined
   }
 
+  const safeAppValidator = async (value: string) => {
+    const isUrlValid = isURLValid(value)
+    const ensContent = await getIpfsLinkFromEns(value)
+
+    if (!isUrlValid && ensContent === undefined) {
+      return 'Provide a valid url or ENS name.'
+    }
+
+    const url = isUrlValid ? value : ensContent
+
+    const uniqueRes = uniqueAppValidator(url)
+    if (uniqueRes) {
+      return uniqueRes
+    }
+
+    const appInfo = await getAppInfoFromUrl(url)
+
+    if (appInfo.error) {
+      setAppInfo(APP_INFO)
+      return 'This is not a valid Safe app.'
+    }
+
+    setAppInfo({ ...appInfo })
+  }
+
   const onFormStatusChange = ({ pristine, valid, validating }) => {
     if (!pristine) {
       setIsSubmitDisabled(validating || !valid || appInfo.error)
     }
   }
 
-  const customRequiredValidator = (value) => {
-    if (!value || !value.length) {
-      setAppInfo(APP_INFO)
-      return 'Required'
-    }
-  }
-
-  const getAddAppForm = () => {
+  const getForm = () => {
     return (
       <GnoForm
         initialValues={{
@@ -135,12 +157,7 @@ const ManageApps = ({ appList, onAppAdded, onAppToggle }: Props) => {
               name="appUrl"
               placeholder="App URL"
               type="text"
-              validate={composeValidatorsApps(
-                customRequiredValidator,
-                urlValidator,
-                uniqueAppValidator,
-                safeAppValidator,
-              )}
+              validate={composeValidatorsApps(customRequiredValidator, safeAppValidator)}
             />
 
             <AppInfo>
@@ -201,7 +218,7 @@ const ManageApps = ({ appList, onAppAdded, onAppToggle }: Props) => {
         <ManageListModal
           addButtonLabel="Add custom app"
           defaultIconUrl={appsIconSvg}
-          formBody={getAddAppForm()}
+          formBody={getForm()}
           formSubmitLabel="Save"
           isSubmitFormDisabled={isSubmitDisabled}
           itemList={getItemList()}
