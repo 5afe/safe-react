@@ -75,7 +75,12 @@ const notificationsMiddleware = (store: Store<GlobalState>) => (next: Function) 
         const cancellationTransactionsByNonce = cancellationTransactions
           ? cancellationTransactions.reduce((acc, tx) => acc.set(tx.nonce, tx), Map())
           : Map()
-        const awaitingTransactions = getAwaitingTransactions(transactions, cancellationTransactionsByNonce, userAddress)
+
+        const awaitingTransactions = getAwaitingTransactions(
+          Map().set(safeAddress, transactions),
+          cancellationTransactionsByNonce,
+          userAddress,
+        )
         const awaitingTxsSubmissionDateList = awaitingTransactions
           .get(safeAddress, List([]))
           .map((tx) => tx.submissionDate)
