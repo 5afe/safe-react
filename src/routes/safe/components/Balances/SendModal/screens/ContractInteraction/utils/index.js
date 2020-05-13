@@ -6,6 +6,8 @@ import { getNetwork } from '~/config'
 import { getConfiguredSource } from '~/logic/contractInteraction/sources'
 import { getWeb3 } from '~/logic/wallets/getWeb3'
 
+export const NO_CONTRACT = 'no contract'
+
 export const abiExtractor = createDecorator({
   field: 'contractAddress',
   updates: {
@@ -15,7 +17,7 @@ export const abiExtractor = createDecorator({
         mustBeEthereumAddress(contractAddress) ||
         (await mustBeEthereumContractAddress(contractAddress))
       ) {
-        return 'no contract'
+        return NO_CONTRACT
       }
       const network = getNetwork()
       const source = getConfiguredSource()

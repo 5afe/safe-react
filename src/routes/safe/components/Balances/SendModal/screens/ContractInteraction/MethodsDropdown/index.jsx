@@ -13,6 +13,7 @@ import { useField, useFormState } from 'react-final-form'
 import Col from '~/components/layout/Col'
 import Row from '~/components/layout/Row'
 import EtherscanService from '~/logic/contractInteraction/sources/EtherscanService'
+import { NO_CONTRACT } from '~/routes/safe/components/Balances/SendModal/screens/ContractInteraction/utils'
 import CheckIcon from '~/routes/safe/components/DropdownCurrency/img/check.svg'
 import { useDropdownStyles } from '~/routes/safe/components/DropdownCurrency/style'
 import { DropdownListTheme } from '~/theme/mui'
@@ -62,7 +63,7 @@ const MethodsDropdown = ({ onChange }: { onChange: (any) => void }) => {
     handleClose()
   }
 
-  return !valid || !abi || abi === 'no contract' ? null : (
+  return !valid || !abi || abi === NO_CONTRACT ? null : (
     <Row margin="sm">
       <Col>
         <MuiThemeProvider theme={DropdownListTheme}>
