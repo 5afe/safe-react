@@ -7,7 +7,7 @@ import generateBatchRequests from '~/logic/contracts/generateBatchRequests'
 import { getLocalSafe, getSafeName } from '~/logic/safe/utils'
 import { enabledFeatures, safeNeedsUpdate } from '~/logic/safe/utils/safeVersion'
 import { sameAddress } from '~/logic/wallets/ethAddresses'
-import { getBalanceInEtherOf, getWeb3 } from '~/logic/wallets/getWeb3'
+import { getBalanceInEtherOf } from '~/logic/wallets/getWeb3'
 import addSafe from '~/routes/safe/store/actions/addSafe'
 import addSafeOwner from '~/routes/safe/store/actions/addSafeOwner'
 import removeSafeOwner from '~/routes/safe/store/actions/removeSafeOwner'
@@ -15,29 +15,31 @@ import updateSafe from '~/routes/safe/store/actions/updateSafe'
 import { makeOwner } from '~/routes/safe/store/models/owner'
 import type { SafeProps } from '~/routes/safe/store/models/safe'
 import { type GlobalState } from '~/store'
+import { checksumAddress } from '~/utils/checksumAddress'
 
 const buildOwnersFrom = (
   safeOwners: string[],
   localSafe: SafeProps | {}, // eslint-disable-next-line
 ) =>
   safeOwners.map((ownerAddress: string) => {
+    const convertedAdd = checksumAddress(ownerAddress)
     if (!localSafe) {
-      return makeOwner({ name: 'UNKNOWN', address: ownerAddress })
+      return makeOwner({ name: 'UNKNOWN', address: convertedAdd })
     }
 
-    const storedOwner = localSafe.owners.find(({ address }) => sameAddress(address, ownerAddress))
+    const storedOwner = localSafe.owners.find(({ address }) => sameAddress(address, convertedAdd))
     if (!storedOwner) {
-      return makeOwner({ name: 'UNKNOWN', address: ownerAddress })
+      return makeOwner({ name: 'UNKNOWN', address: convertedAdd })
     }
 
     return makeOwner({
       name: storedOwner.name || 'UNKNOWN',
-      address: ownerAddress,
+      address: convertedAdd,
     })
   })
 
 export const buildSafe = async (safeAdd: string, safeName: string, latestMasterContractVersion: string) => {
-  const safeAddress = getWeb3().utils.toChecksumAddress(safeAdd)
+  const safeAddress = checksumAddress(safeAdd)
 
   const safeParams = ['getThreshold', 'nonce', 'VERSION', 'getOwners']
   const [[thresholdStr, nonceStr, currentVersion, remoteOwners], localSafe, ethBalance] = await Promise.all([
@@ -72,7 +74,7 @@ export const buildSafe = async (safeAdd: string, safeName: string, latestMasterC
 }
 
 export const checkAndUpdateSafe = (safeAdd: string) => async (dispatch: ReduxDispatch<*>) => {
-  const safeAddress = getWeb3().utils.toChecksumAddress(safeAdd)
+  const safeAddress = checksumAddress(safeAdd)
   // Check if the owner's safe did change and update them
   const safeParams = ['getThreshold', 'nonce', 'getOwners']
   const [[remoteThreshold, remoteNonce, remoteOwners], localSafe] = await Promise.all([
@@ -125,7 +127,7 @@ export const checkAndUpdateSafe = (safeAdd: string) => async (dispatch: ReduxDis
 // eslint-disable-next-line consistent-return
 export default (safeAdd: string) => async (dispatch: ReduxDispatch<GlobalState>, getState: () => GlobalState) => {
   try {
-    const safeAddress = getWeb3().utils.toChecksumAddress(safeAdd)
+    const safeAddress = checksumAddress(safeAdd)
     const safeName = (await getSafeName(safeAddress)) || 'LOADED SAFE'
     const latestMasterContractVersion = getState().safes.get('latestMasterContractVersion')
     const safeProps: SafeProps = await buildSafe(safeAddress, safeName, latestMasterContractVersion)

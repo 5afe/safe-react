@@ -252,12 +252,17 @@ const SafeDeployment = ({ creationTxHash, onCancel, onRetry, onSuccess, provider
     const isTxMined = async (txHash) => {
       const web3 = getWeb3()
 
+      const txResult = await web3.eth.getTransaction(txHash)
+      if (txResult.blockNumber === null) {
+        return false
+      }
+
       const receipt = await web3.eth.getTransactionReceipt(txHash)
       if (!receipt.status) {
         throw Error('TX status reverted')
       }
-      const txResult = await web3.eth.getTransaction(txHash)
-      return txResult.blockNumber !== null
+
+      return true
     }
 
     let interval = setInterval(async () => {

@@ -2,8 +2,7 @@
 import { makeStyles } from '@material-ui/core/styles'
 import React from 'react'
 
-import QRIcon from '~/assets/icons/qrcode.svg'
-import ScanQRModal from '~/components/ScanQRModal'
+import { ScanQRWrapper } from '~/components/ScanQRModal/ScanQRWrapper'
 import Field from '~/components/forms/Field'
 import TextField from '~/components/forms/TextField'
 import {
@@ -13,7 +12,6 @@ import {
   required,
 } from '~/components/forms/validator'
 import Col from '~/components/layout/Col'
-import Img from '~/components/layout/Img'
 import Row from '~/components/layout/Row'
 import { styles } from '~/routes/safe/components/Balances/SendModal/screens/ContractInteraction/style'
 
@@ -23,25 +21,16 @@ type Props = {
   isContract?: boolean,
   isRequired?: boolean,
   name: string,
-  onScannedValue: () => void,
+  onScannedValue: (string) => void,
   text: string,
 }
 
 const EthAddressInput = ({ isContract = true, isRequired = true, name, onScannedValue, text }: Props) => {
   const classes = useStyles()
-  const [qrModalOpen, setQrModalOpen] = React.useState<boolean>(false)
   const validatorsList = [isRequired && required, mustBeEthereumAddress, isContract && mustBeEthereumContractAddress]
   const validate = composeValidators(...validatorsList.filter((_) => _))
 
-  const openQrModal = () => {
-    setQrModalOpen(true)
-  }
-
-  const closeQrModal = () => {
-    setQrModalOpen(false)
-  }
-
-  const handleScan = (value) => {
+  const handleScan = (value, closeQrModal) => {
     let scannedAddress = value
 
     if (scannedAddress.startsWith('ethereum:')) {
@@ -67,17 +56,9 @@ const EthAddressInput = ({ isContract = true, isRequired = true, name, onScanned
           />
         </Col>
         <Col center="xs" className={classes} middle="xs" xs={1}>
-          <Img
-            alt="Scan QR"
-            className={classes.qrCodeBtn}
-            height={20}
-            onClick={openQrModal}
-            role="button"
-            src={QRIcon}
-          />
+          <ScanQRWrapper handleScan={handleScan} />
         </Col>
       </Row>
-      {qrModalOpen && <ScanQRModal isOpen={qrModalOpen} onClose={closeQrModal} onScan={handleScan} />}
     </>
   )
 }

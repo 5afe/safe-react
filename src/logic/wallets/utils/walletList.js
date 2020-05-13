@@ -23,7 +23,7 @@ const wallets = [
     appUrl: 'gnosis-safe.io',
     preferred: true,
     email: 'safe@gnosis.io',
-    desktop: true,
+    desktop: false,
     rpcUrl: infuraUrl,
   },
   {

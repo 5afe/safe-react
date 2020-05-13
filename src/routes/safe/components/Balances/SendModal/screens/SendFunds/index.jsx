@@ -11,11 +11,10 @@ import ArrowDown from '../assets/arrow-down.svg'
 
 import { styles } from './style'
 
-import QRIcon from '~/assets/icons/qrcode.svg'
 import CopyBtn from '~/components/CopyBtn'
 import EtherscanBtn from '~/components/EtherscanBtn'
 import Identicon from '~/components/Identicon'
-import ScanQRModal from '~/components/ScanQRModal'
+import { ScanQRWrapper } from '~/components/ScanQRModal/ScanQRWrapper'
 import Field from '~/components/forms/Field'
 import GnoForm from '~/components/forms/GnoForm'
 import TextField from '~/components/forms/TextField'
@@ -25,9 +24,11 @@ import Button from '~/components/layout/Button'
 import ButtonLink from '~/components/layout/ButtonLink'
 import Col from '~/components/layout/Col'
 import Hairline from '~/components/layout/Hairline'
-import Img from '~/components/layout/Img'
 import Paragraph from '~/components/layout/Paragraph'
 import Row from '~/components/layout/Row'
+import type { AddressBook } from '~/logic/addressBook/model/addressBook'
+import { getAddressBook } from '~/logic/addressBook/store/selectors'
+import { getNameFromAdbk } from '~/logic/addressBook/utils'
 import { type Token } from '~/logic/tokens/store/model/token'
 import SafeInfo from '~/routes/safe/components/Balances/SendModal/SafeInfo'
 import AddressBookInput from '~/routes/safe/components/Balances/SendModal/screens/AddressBookInput'
@@ -60,7 +61,7 @@ const useStyles = makeStyles(styles)
 const SendFunds = ({ initialValues, onClose, onNext, recipientAddress, selectedToken = '' }: Props) => {
   const classes = useStyles()
   const tokens: Token = useSelector(extendedSafeTokensSelector)
-  const [qrModalOpen, setQrModalOpen] = useState<boolean>(false)
+  const addressBook: AddressBook = useSelector(getAddressBook)
   const [selectedEntry, setSelectedEntry] = useState<Object | null>({
     address: recipientAddress || initialValues.recipientAddress,
     name: '',
@@ -83,14 +84,6 @@ const SendFunds = ({ initialValues, onClose, onNext, recipientAddress, selectedT
     onNext(submitValues)
   }
 
-  const openQrModal = () => {
-    setQrModalOpen(true)
-  }
-
-  const closeQrModal = () => {
-    setQrModalOpen(false)
-  }
-
   return (
     <>
       <Row align="center" className={classes.heading} grow>
@@ -110,14 +103,18 @@ const SendFunds = ({ initialValues, onClose, onNext, recipientAddress, selectedT
           const { token: tokenAddress } = formState.values
           const selectedTokenRecord = tokens.find((token) => token.address === tokenAddress)
 
-          const handleScan = (value) => {
+          const handleScan = (value, closeQrModal) => {
             let scannedAddress = value
 
             if (scannedAddress.startsWith('ethereum:')) {
               scannedAddress = scannedAddress.replace('ethereum:', '')
             }
-
+            const scannedName = addressBook ? getNameFromAdbk(addressBook, scannedAddress) : ''
             mutators.setRecipient(scannedAddress)
+            setSelectedEntry({
+              name: scannedName,
+              address: scannedAddress,
+            })
             closeQrModal()
           }
 
@@ -196,16 +193,7 @@ const SendFunds = ({ initialValues, onClose, onNext, recipientAddress, selectedT
                         />
                       </Col>
                       <Col center="xs" className={classes} middle="xs" xs={1}>
-                        <Img
-                          alt="Scan QR"
-                          className={classes.qrCodeBtn}
-                          height={20}
-                          onClick={() => {
-                            openQrModal()
-                          }}
-                          role="button"
-                          src={QRIcon}
-                        />
+                        <ScanQRWrapper handleScan={handleScan} />
                       </Col>
                     </Row>
                   </>
@@ -274,7 +262,6 @@ const SendFunds = ({ initialValues, onClose, onNext, recipientAddress, selectedT
                   Review
                 </Button>
               </Row>
-              {qrModalOpen && <ScanQRModal isOpen={qrModalOpen} onClose={closeQrModal} onScan={handleScan} />}
             </>
           )
         }}
