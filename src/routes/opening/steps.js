@@ -1,6 +1,8 @@
 // @flow
 import { ContinueFooter, GenericFooter } from './components/Footer'
 
+export const isConfirmationStep = (stepIndex?: number) => stepIndex === 0
+
 export const steps = [
   {
     id: '1',

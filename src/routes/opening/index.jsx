@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 
 import { ErrorFooter } from './components/Footer'
-import { steps } from './steps'
+import { isConfirmationStep, steps } from './steps'
 
 import { Loader, Stepper } from '~/components-v2'
 import LoaderDots from '~/components-v2/feedback/Loader-dots/assets/loader-dots.svg'
@@ -13,7 +13,7 @@ import Paragraph from '~/components/layout/Paragraph'
 import { initContracts } from '~/logic/contracts/safeContracts'
 import { EMPTY_DATA } from '~/logic/wallets/ethTransactions'
 import { getWeb3 } from '~/logic/wallets/getWeb3'
-import { background } from '~/theme/variables'
+import { background, connected } from '~/theme/variables'
 
 const successSvg = require('./assets/success.svg')
 const vaultErrorSvg = require('./assets/vault-error.svg')
@@ -54,10 +54,13 @@ const CardTitle = styled.div`
   font-size: 20px;
 `
 const FullParagraph = styled(Paragraph)`
-  background-color: ${background};
+  background-color: ${(p) => (p.inverseColors ? connected : background)};
+  color: ${(p) => (p.inverseColors ? background : connected)};
   padding: 24px;
   font-size: 16px;
   margin-bottom: 16px;
+
+  transition: color 0.3s ease-in-out, background-color 0.3s ease-in-out;
 `
 
 const BodyImage = styled.div`
@@ -103,6 +106,8 @@ const SafeDeployment = ({ creationTxHash, onCancel, onRetry, onSuccess, provider
   const [intervalStarted, setIntervalStarted] = useState(false)
   const [waitingSafeDeployed, setWaitingSafeDeployed] = useState(false)
   const [continueButtonDisabled, setContinueButtonDisabled] = useState(false)
+
+  const confirmationStep = isConfirmationStep(stepIndex)
 
   const navigateToSafe = () => {
     setContinueButtonDisabled(true)
@@ -308,7 +313,7 @@ const SafeDeployment = ({ creationTxHash, onCancel, onRetry, onSuccess, provider
         <BodyLoader>{!error && stepIndex <= 4 && <Img alt="LoaderDots" src={LoaderDots} />}</BodyLoader>
 
         <BodyInstruction>
-          <FullParagraph color="primary" noMargin size="md">
+          <FullParagraph color="primary" inverseColors={confirmationStep} noMargin size="md">
             {error ? 'You can Cancel or Retry the Safe creation process.' : steps[stepIndex].instruction}
           </FullParagraph>
         </BodyInstruction>
