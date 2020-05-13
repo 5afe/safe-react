@@ -1,6 +1,7 @@
 // @flow
 import queryString from 'query-string'
 import React, { useEffect, useState } from 'react'
+import ReactGA from 'react-ga'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
 
@@ -162,6 +163,12 @@ const Open = ({ addSafe, network, provider, userAccount }: Props) => {
     const ownerAddresses = getAccountsFrom(pendingCreation)
     const safeProps = await getSafeProps(safeAddress, name, ownersNames, ownerAddresses)
     addSafe(safeProps)
+
+    ReactGA.event({
+      category: 'User',
+      action: 'Created a safe',
+      value: safeAddress,
+    })
 
     removeFromStorage(SAFE_PENDING_CREATION_STORAGE_KEY)
     const url = {
