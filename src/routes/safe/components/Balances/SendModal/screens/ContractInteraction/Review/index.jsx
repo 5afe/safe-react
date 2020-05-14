@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from 'react-redux'
 
 import { styles } from './style'
 
-import AddressInfo from '~/components-v2/safeUtils/AddressInfo'
+import AddressInfo from '~/components/AddressInfo'
 import Block from '~/components/layout/Block'
 import Button from '~/components/layout/Button'
 import Col from '~/components/layout/Col'

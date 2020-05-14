@@ -1,16 +1,10 @@
 // @flow
-import {
-  AddressInfo,
-  Collapse,
-  DividerLine,
-  ModalFooterConfirmation,
-  ModalTitle,
-  TextBox,
-} from '@gnosis.pm/safe-react-components'
+import { Collapse, DividerLine, ModalFooterConfirmation, ModalTitle, TextBox } from '@gnosis.pm/safe-react-components'
 import { BigNumber } from 'bignumber.js'
 import React from 'react'
 import styled from 'styled-components'
 
+import AddressInfo from '~/components/AddressInfo'
 import Bold from '~/components/layout/Bold'
 import Heading from '~/components/layout/Heading'
 import Img from '~/components/layout/Img'
