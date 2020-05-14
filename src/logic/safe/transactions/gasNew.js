@@ -44,6 +44,7 @@ export const estimateTxGasCosts = async (
     const isExecution = (tx && tx.confirmations.size === threshold) || !!preApprovingOwner || threshold === '1'
 
     let txData
+    let gas
     if (isExecution) {
       // https://docs.gnosis.io/safe/docs/docs5/#pre-validated-signatures
       const signatures =
@@ -56,6 +57,7 @@ export const estimateTxGasCosts = async (
       txData = await safeInstance.methods
         .execTransaction(to, tx ? tx.value : 0, data, CALL, 0, 0, 0, ZERO_ADDRESS, ZERO_ADDRESS, signatures)
         .encodeABI()
+      gas = await calculateGasOf(txData, from)
     } else {
       const txHash = await safeInstance.methods
         .getTransactionHash(to, tx ? tx.value : 0, data, CALL, 0, 0, 0, ZERO_ADDRESS, ZERO_ADDRESS, nonce)
@@ -63,11 +65,10 @@ export const estimateTxGasCosts = async (
           from,
         })
       txData = await safeInstance.methods.approveHash(txHash).encodeABI()
+      gas = await calculateGasOf(txData, from, safeAddress)
     }
 
-    const gas = await calculateGasOf(txData, from, safeAddress)
     const gasPrice = await calculateGasPrice()
-
     return gas * parseInt(gasPrice, 10)
   } catch (err) {
     console.error('Error while estimating transaction execution gas costs:')
