@@ -6,7 +6,6 @@ import classNames from 'classnames/bind'
 import * as React from 'react'
 import { useSelector } from 'react-redux'
 
-import Code from '../assets/code.svg'
 import Collectible from '../assets/collectibles.svg'
 import Token from '../assets/token.svg'
 
@@ -17,6 +16,7 @@ import Hairline from '~/components/layout/Hairline'
 import Img from '~/components/layout/Img'
 import Paragraph from '~/components/layout/Paragraph'
 import Row from '~/components/layout/Row'
+import ContractInteractionIcon from '~/routes/safe/components/Transactions/TxsTable/TxType/assets/custom.svg'
 import { safeSelector } from '~/routes/safe/store/selectors'
 import { lg, md, sm } from '~/theme/variables'
 
@@ -71,13 +71,13 @@ const ChooseTxType = ({ onClose, recipientAddress, setActiveScreen }: Props) => 
   const classes = useStyles()
   const { featuresEnabled } = useSelector(safeSelector)
   const erc721Enabled = featuresEnabled.includes('ERC721')
-  const [disableCustomTx, setDisableCustomTx] = React.useState(!!recipientAddress)
+  const [disableContractInteraction, setDisableContractInteraction] = React.useState(!!recipientAddress)
 
   React.useEffect(() => {
     let isCurrent = true
     const isContract = async () => {
       if (recipientAddress && isCurrent) {
-        setDisableCustomTx(!!(await mustBeEthereumContractAddress(recipientAddress)))
+        setDisableContractInteraction(!!(await mustBeEthereumContractAddress(recipientAddress)))
       }
     }
 
@@ -140,14 +140,18 @@ const ChooseTxType = ({ onClose, recipientAddress, setActiveScreen }: Props) => 
           )}
           <Button
             color="primary"
-            disabled={disableCustomTx}
+            disabled={disableContractInteraction}
             minHeight={52}
             minWidth={260}
-            onClick={() => setActiveScreen('sendCustomTx')}
+            onClick={() => setActiveScreen('contractInteraction')}
             variant="outlined"
           >
-            <Img alt="Send custom transaction" className={classNames(classes.leftIcon, classes.iconSmall)} src={Code} />
-            Send custom transaction
+            <Img
+              alt="Contract Interaction"
+              className={classNames(classes.leftIcon, classes.iconSmall)}
+              src={ContractInteractionIcon}
+            />
+            Contract Interaction
           </Button>
         </Col>
       </Row>

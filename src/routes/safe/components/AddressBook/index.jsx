@@ -44,6 +44,7 @@ import type { OwnerRow } from '~/routes/safe/components/Settings/ManageOwners/da
 import RemoveOwnerIcon from '~/routes/safe/components/Settings/assets/icons/bin.svg'
 import RemoveOwnerIconDisabled from '~/routes/safe/components/Settings/assets/icons/disabled-bin.svg'
 import { addressBookQueryParamsSelector, safesListSelector } from '~/routes/safe/store/selectors'
+import { checksumAddress } from '~/utils/checksumAddress'
 
 type Props = {
   classes: Object,
@@ -69,7 +70,8 @@ const AddressBookTable = ({ classes }: Props) => {
 
   useEffect(() => {
     if (entryAddressToEditOrCreateNew) {
-      const key = addressBook.findKey((entry) => entry.address === entryAddressToEditOrCreateNew)
+      const checksumEntryAdd = checksumAddress(entryAddressToEditOrCreateNew)
+      const key = addressBook.findKey((entry) => entry.address === checksumEntryAdd)
       if (key >= 0) {
         // Edit old entry
         const value = addressBook.get(key)
@@ -79,7 +81,7 @@ const AddressBookTable = ({ classes }: Props) => {
         setSelectedEntry({
           entry: {
             name: '',
-            address: entryAddressToEditOrCreateNew,
+            address: checksumEntryAdd,
             isNew: true,
           },
         })
@@ -89,17 +91,25 @@ const AddressBookTable = ({ classes }: Props) => {
 
   const newEntryModalHandler = (entry: AddressBookEntry) => {
     setEditCreateEntryModalOpen(false)
-    dispatch(addAddressBookEntry(makeAddressBookEntry(entry)))
+    const checksumEntries = {
+      ...entry,
+      address: checksumAddress(entry.address),
+    }
+    dispatch(addAddressBookEntry(makeAddressBookEntry(checksumEntries)))
   }
 
   const editEntryModalHandler = (entry: AddressBookEntry) => {
     setSelectedEntry(null)
     setEditCreateEntryModalOpen(false)
-    dispatch(updateAddressBookEntry(makeAddressBookEntry(entry)))
+    const checksumEntries = {
+      ...entry,
+      address: checksumAddress(entry.address),
+    }
+    dispatch(updateAddressBookEntry(makeAddressBookEntry(checksumEntries)))
   }
 
   const deleteEntryModalHandler = () => {
-    const entryAddress = selectedEntry.entry.address
+    const entryAddress = checksumAddress(selectedEntry.entry.address)
     setSelectedEntry(null)
     setDeleteEntryModalOpen(false)
     dispatch(removeAddressBookEntry(entryAddress))

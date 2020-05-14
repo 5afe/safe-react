@@ -53,7 +53,7 @@ const ReviewCollectible = ({ closeSnackbar, enqueueSnackbar, onClose, onPrev, tx
   const classes = useStyles()
   const shortener = textShortener()
   const dispatch = useDispatch()
-  const { address: safeAddress, ethBalance, name: safeName } = useSelector(safeSelector)
+  const { address: safeAddress } = useSelector(safeSelector)
   const nftTokens: NFTTokensState = useSelector(nftTokensSelector)
   const [gasCosts, setGasCosts] = useState<string>('< 0.001')
   const txToken = nftTokens.find(
@@ -121,7 +121,7 @@ const ReviewCollectible = ({ closeSnackbar, enqueueSnackbar, onClose, onPrev, tx
       </Row>
       <Hairline />
       <Block className={classes.container}>
-        <SafeInfo ethBalance={ethBalance} safeAddress={safeAddress} safeName={safeName} />
+        <SafeInfo />
         <Row margin="md">
           <Col xs={1}>
             <img alt="Arrow Down" src={ArrowDown} style={{ marginLeft: sm }} />
