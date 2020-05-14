@@ -1,6 +1,15 @@
 // @flow
-import { Card, FixedDialog, FixedIcon, IconText, Menu, Text, Title } from '@gnosis.pm/safe-react-components'
-import { ListContentLayout as LCL, Loader } from '@gnosis.pm/safe-react-components'
+import {
+  Card,
+  FixedDialog,
+  FixedIcon,
+  IconText,
+  ListContentLayout as LCL,
+  Loader,
+  Menu,
+  Text,
+  Title,
+} from '@gnosis.pm/safe-react-components'
 import { withSnackbar } from 'notistack'
 import React, { useCallback, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
