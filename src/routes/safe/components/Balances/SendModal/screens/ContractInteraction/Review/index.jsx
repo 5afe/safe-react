@@ -1,18 +1,12 @@
 // @flow
-import IconButton from '@material-ui/core/IconButton'
 import { makeStyles } from '@material-ui/core/styles'
-import Close from '@material-ui/icons/Close'
 import { withSnackbar } from 'notistack'
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
-import ArrowDown from '../assets/arrow-down.svg'
-
 import { styles } from './style'
 
-import CopyBtn from '~/components/CopyBtn'
-import EtherscanBtn from '~/components/EtherscanBtn'
-import Identicon from '~/components/Identicon'
+import AddressInfo from '~/components-v2/safeUtils/AddressInfo'
 import Block from '~/components/layout/Block'
 import Button from '~/components/layout/Button'
 import Col from '~/components/layout/Col'
@@ -25,11 +19,10 @@ import { estimateTxGasCosts } from '~/logic/safe/transactions/gasNew'
 import { formatAmount } from '~/logic/tokens/utils/formatAmount'
 import { getEthAsToken } from '~/logic/tokens/utils/tokenHelpers'
 import { getWeb3 } from '~/logic/wallets/getWeb3'
-import SafeInfo from '~/routes/safe/components/Balances/SendModal/SafeInfo'
+import Header from '~/routes/safe/components/Balances/SendModal/screens/ContractInteraction/Header'
 import { setImageToPlaceholder } from '~/routes/safe/components/Balances/utils'
 import createTransaction from '~/routes/safe/store/actions/createTransaction'
 import { safeSelector } from '~/routes/safe/store/selectors'
-import { sm } from '~/theme/variables'
 
 type Props = {
   closeSnackbar: () => void,
@@ -41,10 +34,10 @@ type Props = {
 
 const useStyles = makeStyles(styles)
 
-const ReviewCustomTx = ({ closeSnackbar, enqueueSnackbar, onClose, onPrev, tx }: Props) => {
+const ContractInteractionReview = ({ closeSnackbar, enqueueSnackbar, onClose, onPrev, tx }: Props) => {
   const classes = useStyles()
   const dispatch = useDispatch()
-  const { address: safeAddress, ethBalance, name: safeName } = useSelector(safeSelector)
+  const { address: safeAddress } = useSelector(safeSelector)
   const [gasCosts, setGasCosts] = useState<string>('< 0.001')
 
   useEffect(() => {
@@ -54,7 +47,7 @@ const ReviewCustomTx = ({ closeSnackbar, enqueueSnackbar, onClose, onPrev, tx }:
       const { fromWei, toBN } = getWeb3().utils
       const txData = tx.data ? tx.data.trim() : ''
 
-      const estimatedGasCosts = await estimateTxGasCosts(safeAddress, tx.recipientAddress, txData)
+      const estimatedGasCosts = await estimateTxGasCosts(safeAddress, tx.contractAddress, txData)
       const gasCostsAsEth = fromWei(toBN(estimatedGasCosts), 'ether')
       const formattedGasCosts = formatAmount(gasCostsAsEth)
 
@@ -72,7 +65,7 @@ const ReviewCustomTx = ({ closeSnackbar, enqueueSnackbar, onClose, onPrev, tx }:
 
   const submitTx = async () => {
     const web3 = getWeb3()
-    const txRecipient = tx.recipientAddress
+    const txRecipient = tx.contractAddress
     const txData = tx.data ? tx.data.trim() : ''
     const txValue = tx.value ? web3.utils.toWei(tx.value, 'ether') : '0'
 
@@ -93,44 +86,16 @@ const ReviewCustomTx = ({ closeSnackbar, enqueueSnackbar, onClose, onPrev, tx }:
 
   return (
     <>
-      <Row align="center" className={classes.heading} grow>
-        <Paragraph className={classes.headingText} noMargin weight="bolder">
-          Send Custom Tx
-        </Paragraph>
-        <Paragraph className={classes.annotation}>2 of 2</Paragraph>
-        <IconButton disableRipple onClick={onClose}>
-          <Close className={classes.closeIcon} />
-        </IconButton>
-      </Row>
+      <Header onClose={onClose} subTitle="2 of 2" title="Contract Interaction" />
       <Hairline />
       <Block className={classes.container}>
-        <SafeInfo ethBalance={ethBalance} safeAddress={safeAddress} safeName={safeName} />
-        <Row margin="md">
-          <Col xs={1}>
-            <img alt="Arrow Down" src={ArrowDown} style={{ marginLeft: sm }} />
-          </Col>
-          <Col center="xs" layout="column" xs={11}>
-            <Hairline />
-          </Col>
-        </Row>
         <Row margin="xs">
           <Paragraph color="disabled" noMargin size="md" style={{ letterSpacing: '-0.5px' }}>
-            Recipient
+            Contract Address
           </Paragraph>
         </Row>
         <Row align="center" margin="md">
-          <Col xs={1}>
-            <Identicon address={tx.recipientAddress} diameter={32} />
-          </Col>
-          <Col layout="column" xs={11}>
-            <Block justify="left">
-              <Paragraph className={classes.address} noMargin weight="bolder">
-                {tx.recipientAddress}
-              </Paragraph>
-              <CopyBtn content={tx.recipientAddress} />
-              <EtherscanBtn type="address" value={tx.recipientAddress} />
-            </Block>
-          </Col>
+          <AddressInfo safeAddress={tx.contractAddress} />
         </Row>
         <Row margin="xs">
           <Paragraph color="disabled" noMargin size="md" style={{ letterSpacing: '-0.5px' }}>
@@ -138,12 +103,46 @@ const ReviewCustomTx = ({ closeSnackbar, enqueueSnackbar, onClose, onPrev, tx }:
           </Paragraph>
         </Row>
         <Row align="center" margin="md">
-          <Img alt="Ether" height={28} onError={setImageToPlaceholder} src={getEthAsToken('0').logoUri} />
-          <Paragraph className={classes.value} noMargin size="md">
-            {tx.value || 0}
-            {' ETH'}
+          <Col xs={1}>
+            <Img alt="Ether" height={28} onError={setImageToPlaceholder} src={getEthAsToken('0').logoUri} />
+          </Col>
+          <Col layout="column" xs={11}>
+            <Block justify="left">
+              <Paragraph className={classes.value} noMargin size="md" style={{ margin: 0 }}>
+                {tx.value || 0}
+                {' ETH'}
+              </Paragraph>
+            </Block>
+          </Col>
+        </Row>
+        <Row margin="xs">
+          <Paragraph color="disabled" noMargin size="md" style={{ letterSpacing: '-0.5px' }}>
+            Method
           </Paragraph>
         </Row>
+        <Row align="center" margin="md">
+          <Paragraph className={classes.value} size="md" style={{ margin: 0 }}>
+            {tx.selectedMethod.name}
+          </Paragraph>
+        </Row>
+        {tx.selectedMethod.inputs.map(({ name, type }, index) => {
+          const key = `methodInput-${tx.selectedMethod.name}_${index}_${type}`
+
+          return (
+            <React.Fragment key={key}>
+              <Row margin="xs">
+                <Paragraph color="disabled" noMargin size="md" style={{ letterSpacing: '-0.5px' }}>
+                  {name} ({type})
+                </Paragraph>
+              </Row>
+              <Row align="center" margin="md">
+                <Paragraph className={classes.value} noMargin size="md" style={{ margin: 0 }}>
+                  {tx[key]}
+                </Paragraph>
+              </Row>
+            </React.Fragment>
+          )
+        })}
         <Row margin="xs">
           <Paragraph color="disabled" noMargin size="md" style={{ letterSpacing: '-0.5px' }}>
             Data (hex encoded)
@@ -183,4 +182,4 @@ const ReviewCustomTx = ({ closeSnackbar, enqueueSnackbar, onClose, onPrev, tx }:
   )
 }
 
-export default withSnackbar(ReviewCustomTx)
+export default withSnackbar(ContractInteractionReview)

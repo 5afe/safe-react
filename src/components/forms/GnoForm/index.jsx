@@ -1,5 +1,5 @@
 // @flow
-import { type FormApi } from 'final-form'
+import { type Decorator, type FormApi } from 'final-form'
 import * as React from 'react'
 import { Form } from 'react-final-form'
 
@@ -10,13 +10,15 @@ export type OnSubmit = (
 ) => ?Object | Promise<?Object> | void
 
 type Props = {
-  onSubmit: OnSubmit,
   children: Function,
-  padding?: number,
-  validation?: (values: Object) => Object | Promise<Object>,
-  initialValues?: Object,
+  decorators?: Decorator<{ [string]: any }>[],
   formMutators?: Object,
+  initialValues?: Object,
+  onSubmit: OnSubmit,
+  subscription?: Object,
+  padding?: number,
   testId?: string,
+  validation?: (values: Object) => Object | Promise<Object>,
 }
 
 const stylesBasedOn = (padding: number): $Shape<CSSStyleDeclaration> => ({
@@ -25,8 +27,19 @@ const stylesBasedOn = (padding: number): $Shape<CSSStyleDeclaration> => ({
   flex: '1 0 auto',
 })
 
-const GnoForm = ({ children, formMutators, initialValues, onSubmit, padding = 0, testId = '', validation }: Props) => (
+const GnoForm = ({
+  children,
+  decorators,
+  formMutators,
+  initialValues,
+  onSubmit,
+  padding = 0,
+  subscription,
+  testId = '',
+  validation,
+}: Props) => (
   <Form
+    decorators={decorators}
     initialValues={initialValues}
     mutators={formMutators}
     onSubmit={onSubmit}
@@ -35,6 +48,7 @@ const GnoForm = ({ children, formMutators, initialValues, onSubmit, padding = 0,
         {children(rest.submitting, rest.validating, rest, rest.form.mutators)}
       </form>
     )}
+    subscription={subscription}
     validate={validation}
   />
 )
