@@ -1,9 +1,11 @@
 // @flow
+import { Icon, ModalFooterConfirmation, Text, Title } from '@gnosis.pm/safe-react-components'
 import { BigNumber } from 'bignumber.js'
 import React from 'react'
 import styled from 'styled-components'
 
-import { AddressInfo, Collapse, DividerLine, ModalFooterConfirmation, ModalTitle, TextBox } from '~/components-v2'
+import { AddressInfo, Collapse, DividerLine, ModalTitle, TextBox } from '~/components-v2'
+import { mustBeEthereumAddress } from '~/components/forms/validator'
 import Bold from '~/components/layout/Bold'
 import Heading from '~/components/layout/Heading'
 import Img from '~/components/layout/Img'
@@ -27,6 +29,19 @@ const CollapseContent = styled.div`
   }
 `
 
+const IconText = styled.div`
+  display: flex;
+  align-items: center;
+
+  span {
+    margin-right: 4px;
+  }
+`
+const isTxValid = (t) => {
+  const isAddressValid = mustBeEthereumAddress(t.to) === undefined
+  return isAddressValid && t.value !== undefined && typeof t.value === 'number' && t.data && typeof t.data === 'string'
+}
+
 const confirmTransactions = (
   safeAddress: string,
   safeName: string,
@@ -38,9 +53,22 @@ const confirmTransactions = (
   closeModal: () => void,
   onConfirm: () => void,
 ) => {
+  const areTxsMalformed = txs.some((t) => !isTxValid(t))
+
   const title = <ModalTitle iconUrl={iconApp} title={nameApp} />
 
-  const body = (
+  const body = areTxsMalformed ? (
+    <>
+      <IconText>
+        <Icon color="error" size="md" type="info" />
+        <Title size="xs">Transaction error</Title>
+      </IconText>
+      <Text size="lg">
+        This Safe App initiated a transaction which cannot be processed. Please get in touch with the developer of this
+        Safe App for more information.
+      </Text>
+    </>
+  ) : (
     <>
       <AddressInfo ethBalance={ethBalance} safeAddress={safeAddress} safeName={safeName} />
       <DividerLine withArrow />
@@ -67,8 +95,15 @@ const confirmTransactions = (
       })}
     </>
   )
+
   const footer = (
-    <ModalFooterConfirmation cancelText="Cancel" handleCancel={closeModal} handleOk={onConfirm} okText="Submit" />
+    <ModalFooterConfirmation
+      cancelText="Cancel"
+      handleCancel={closeModal}
+      handleOk={onConfirm}
+      okDisabled={areTxsMalformed}
+      okText="Submit"
+    />
   )
 
   openModal({
