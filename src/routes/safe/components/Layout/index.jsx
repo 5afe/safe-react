@@ -1,4 +1,5 @@
 // @flow
+import { GenericModal } from '@gnosis.pm/safe-react-components'
 import { makeStyles } from '@material-ui/core/styles'
 import React, { useState } from 'react'
 import { useSelector } from 'react-redux'
@@ -8,7 +9,6 @@ import Receive from '../Balances/Receive'
 
 import { styles } from './style'
 
-import { GenericModal } from '~/components-v2'
 import Modal from '~/components/Modal'
 import NoSafe from '~/components/NoSafe'
 import Hairline from '~/components/layout/Hairline'

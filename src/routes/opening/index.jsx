@@ -1,12 +1,11 @@
 // @flow
+import { Loader, Stepper } from '@gnosis.pm/safe-react-components'
 import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 
 import { ErrorFooter } from './components/Footer'
 import { isConfirmationStep, steps } from './steps'
 
-import { Loader, Stepper } from '~/components-v2'
-import LoaderDots from '~/components-v2/feedback/Loader-dots/assets/loader-dots.svg'
 import Button from '~/components/layout/Button'
 import Heading from '~/components/layout/Heading'
 import Img from '~/components/layout/Img'
@@ -16,6 +15,7 @@ import { EMPTY_DATA } from '~/logic/wallets/ethTransactions'
 import { getWeb3 } from '~/logic/wallets/getWeb3'
 import { background, connected } from '~/theme/variables'
 
+const loaderDotsSvg = require('./assets/loader-dots.svg')
 const successSvg = require('./assets/success.svg')
 const vaultErrorSvg = require('./assets/vault-error.svg')
 const vaultSvg = require('./assets/vault.svg')
@@ -316,7 +316,7 @@ const SafeDeployment = ({ creationTxHash, onCancel, onRetry, onSuccess, provider
           <CardTitle>{steps[stepIndex].description || steps[stepIndex].label}</CardTitle>
         </BodyDescription>
 
-        <BodyLoader>{!error && stepIndex <= 4 && <Img alt="LoaderDots" src={LoaderDots} />}</BodyLoader>
+        <BodyLoader>{!error && stepIndex <= 4 && <Img alt="Loader dots" src={loaderDotsSvg} />}</BodyLoader>
 
         <BodyInstruction>
           <FullParagraph color="primary" inverseColors={confirmationStep} noMargin size="md">

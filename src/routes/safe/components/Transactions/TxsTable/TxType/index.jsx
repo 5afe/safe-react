@@ -1,4 +1,5 @@
 // @flow
+import { IconText, Loader } from '@gnosis.pm/safe-react-components'
 import React, { useEffect, useState } from 'react'
 
 import CustomTxIcon from './assets/custom.svg'
@@ -6,7 +7,6 @@ import IncomingTxIcon from './assets/incoming.svg'
 import OutgoingTxIcon from './assets/outgoing.svg'
 import SettingsTxIcon from './assets/settings.svg'
 
-import { IconText, Loader } from '~/components-v2'
 import { getAppInfoFromOrigin, getAppInfoFromUrl } from '~/routes/safe/components/Apps/utils'
 import { type TransactionType } from '~/routes/safe/store/models/transaction'
 

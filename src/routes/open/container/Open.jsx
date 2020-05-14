@@ -1,4 +1,5 @@
 // @flow
+import { Loader } from '@gnosis.pm/safe-react-components'
 import queryString from 'query-string'
 import React, { useEffect, useState } from 'react'
 import ReactGA from 'react-ga'
@@ -11,7 +12,6 @@ import Layout from '../components/Layout'
 import actions, { type Actions } from './actions'
 import selector from './selector'
 
-import { Loader } from '~/components-v2'
 import Page from '~/components/layout/Page'
 import { getSafeDeploymentTransaction } from '~/logic/contracts/safeContracts'
 import { checkReceiptStatus } from '~/logic/wallets/ethTransactions'
