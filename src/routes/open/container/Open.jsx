@@ -198,7 +198,7 @@ const Open = ({ addSafe, network, provider, userAccount }: Props) => {
   }
 
   if (loading || showProgress === undefined) {
-    return <Loader />
+    return <Loader size="md" />
   }
 
   return (
