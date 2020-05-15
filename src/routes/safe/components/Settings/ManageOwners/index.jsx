@@ -140,7 +140,7 @@ class ManageOwners extends React.Component<Props, State> {
                     {autoColumns.map((column: Column) => (
                       <TableCell align={column.align} component="td" key={column.id} style={cellWidth(column.width)}>
                         {column.id === OWNERS_TABLE_ADDRESS_ID ? (
-                          <OwnerAddressTableCell address={row[column.id]} />
+                          <OwnerAddressTableCell address={row[column.id]} showLinks />
                         ) : (
                           row[column.id]
                         )}
