@@ -1,4 +1,4 @@
-// 
+//
 import Backdrop from '@material-ui/core/Backdrop'
 import { makeStyles } from '@material-ui/core/styles'
 import React from 'react'
@@ -11,11 +11,11 @@ const useStyles = makeStyles({
 })
 
 const BackdropLayout = ({ isOpen = false }) => {
+  const classes = useStyles()
+
   if (!isOpen) {
     return null
   }
-
-  const classes = useStyles()
 
   return ReactDOM.createPortal(<Backdrop classes={{ root: classes.root }} open />, document.body)
 }

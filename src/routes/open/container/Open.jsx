@@ -96,7 +96,7 @@ const Open = ({ addSafe, network, provider, userAccount }) => {
 
   useEffect(() => {
     // #122: Allow to migrate an old Multisig by passing the parameters to the URL.
-    const query = queryString.parse(location.search, { arrayFormat: 'comma' })
+    const query = queryString.parse(window.location.search, { arrayFormat: 'comma' })
     const { name, owneraddresses, ownernames, threshold } = query
     if (validateQueryParams(owneraddresses, ownernames, threshold, name)) {
       setSafePropsFromUrl({
