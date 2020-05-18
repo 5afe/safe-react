@@ -68,6 +68,13 @@ type CustomDescProps = {
   classes: Object,
 }
 
+type TxDataProps = {
+  data: string,
+  showTxData: boolean,
+  classes: Object,
+  setShowTxData: Function,
+}
+
 const TransferDescription = ({ amount = '', recipient }: TransferDescProps) => {
   const recipientName = useSelector((state) => getNameFromAddressBook(state, recipient))
   return (
@@ -160,22 +167,13 @@ const SettingsDescription = ({ action, addedOwner, newThreshold, removedOwner }:
   )
 }
 
-const CustomDescription = ({ amount = 0, classes, data, recipient }: CustomDescProps) => {
-  const [showTxData, setShowTxData] = useState(false)
-  const recipientName = useSelector((state) => getNameFromAddressBook(state, recipient))
+const TxData = (props: TxDataProps) => {
+  const { classes, data, setShowTxData, showTxData } = props
+  const showLongData = data.length > 20
   return (
-    <>
-      <Block data-testid={TRANSACTIONS_DESC_CUSTOM_VALUE_TEST_ID}>
-        <Bold>Send {amount} to:</Bold>
-        {recipientName ? (
-          <OwnerAddressTableCell address={recipient} knownAddress showLinks userName={recipientName} />
-        ) : (
-          <EtherscanLink knownAddress={false} type="address" value={recipient} />
-        )}
-      </Block>
-      <Block className={classes.txData} data-testid={TRANSACTIONS_DESC_CUSTOM_DATA_TEST_ID}>
-        <Bold>Data (hex encoded):</Bold>
-        <Paragraph className={classes.txDataParagraph} noMargin size="md">
+    <Paragraph className={classes.txDataParagraph} noMargin size="md">
+      {showLongData ? (
+        <>
           {showTxData ? (
             <>
               {data}{' '}
@@ -203,7 +201,30 @@ const CustomDescription = ({ amount = 0, classes, data, recipient }: CustomDescP
               </LinkWithRef>
             </>
           )}
-        </Paragraph>
+        </>
+      ) : (
+        data
+      )}
+    </Paragraph>
+  )
+}
+
+const CustomDescription = ({ amount = 0, classes, data, recipient }: CustomDescProps) => {
+  const [showTxData, setShowTxData] = useState(false)
+  const recipientName = useSelector((state) => getNameFromAddressBook(state, recipient))
+  return (
+    <>
+      <Block data-testid={TRANSACTIONS_DESC_CUSTOM_VALUE_TEST_ID}>
+        <Bold>Send {amount} to:</Bold>
+        {recipientName ? (
+          <OwnerAddressTableCell address={recipient} knownAddress showLinks userName={recipientName} />
+        ) : (
+          <EtherscanLink knownAddress={false} type="address" value={recipient} />
+        )}
+      </Block>
+      <Block className={classes.txData} data-testid={TRANSACTIONS_DESC_CUSTOM_DATA_TEST_ID}>
+        <Bold>Data (hex encoded):</Bold>
+        <TxData classes={classes} data={data} setShowTxData={setShowTxData} showTxData={showTxData} />
       </Block>
     </>
   )
