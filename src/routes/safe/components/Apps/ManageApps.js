@@ -59,6 +59,18 @@ const composeValidatorsApps = (...validators: Function[]): FieldValidator => (va
   return validators.reduce((error, validator) => error || validator(value), undefined)
 }
 
+const getIpfsLinkFromEns = async (name) => {
+  try {
+    const content = await getContentFromENS(name)
+    if (content && content.protocolType === 'ipfs') {
+      return `${process.env.REACT_APP_IPFS_NODE}/${content.decoded}/`
+    }
+  } catch (error) {
+    console.error(error)
+    return undefined
+  }
+}
+
 const ManageApps = ({ appList, onAppAdded, onAppToggle }: Props) => {
   const [isOpen, setIsOpen] = useState(false)
   const [appInfo, setAppInfo] = useState(APP_INFO)
@@ -82,18 +94,6 @@ const ManageApps = ({ appList, onAppAdded, onAppToggle }: Props) => {
     }
   }
 
-  const getIpfsLinkFromEns = async (name) => {
-    try {
-      const content = await getContentFromENS(name)
-      if (content && content.protocolType === 'ipfs') {
-        return `https://ipfs.io/ipfs/${content.decoded}/`
-      }
-    } catch (error) {
-      console.error(error)
-      return undefined
-    }
-  }
-
   const uniqueAppValidator = (value) => {
     const exists = appList.find((a) => {
       try {
@@ -109,7 +109,11 @@ const ManageApps = ({ appList, onAppAdded, onAppToggle }: Props) => {
 
   const safeAppValidator = async (value: string) => {
     const isUrlValid = isURLValid(value)
-    const ensContent = await getIpfsLinkFromEns(value)
+
+    let ensContent
+    if (!isUrlValid) {
+      ensContent = await getIpfsLinkFromEns(value)
+    }
 
     if (!isUrlValid && ensContent === undefined) {
       return 'Provide a valid url or ENS name.'
