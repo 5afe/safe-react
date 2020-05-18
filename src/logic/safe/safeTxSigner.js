@@ -1,8 +1,3 @@
-// 
-import { List } from 'immutable'
-
-import { } from 'src/routes/safe/store/models/confirmation'
-
 // https://docs.gnosis.io/safe/docs/docs5/#pre-validated-signatures
 // https://github.com/gnosis/safe-contracts/blob/master/test/gnosisSafeTeamEdition.js#L26
 export const generateSignaturesFromTxConfirmations = (

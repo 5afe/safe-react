@@ -1,9 +1,8 @@
-// 
 import contract from 'truffle-contract'
 import ProxyFactorySol from '@gnosis.pm/safe-contracts/build/contracts/GnosisSafeProxyFactory.json'
 import GnosisSafeSol from '@gnosis.pm/safe-contracts/build/contracts/GnosisSafe.json'
 import SafeProxy from '@gnosis.pm/safe-contracts/build/contracts/GnosisSafeProxy.json'
-import { ensureOnce, ensureOnceAsync } from 'src/utils/singleton'
+import { ensureOnce } from 'src/utils/singleton'
 import { simpleMemoize } from 'src/components/forms/validator'
 import { getWeb3, getNetworkIdFrom } from 'src/logic/wallets/getWeb3'
 import { calculateGasOf, calculateGasPrice } from 'src/logic/wallets/ethTransactions'

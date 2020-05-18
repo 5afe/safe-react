@@ -1,6 +1,3 @@
-// 
-import { List } from 'immutable'
-
 import { simpleMemoize } from 'src/components/forms/validator'
 import { isERC721Contract } from 'src/logic/tokens/utils/tokenHelpers'
 import { sameAddress } from 'src/logic/wallets/ethAddresses'

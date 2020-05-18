@@ -1,9 +1,7 @@
-// 
 import IconButton from '@material-ui/core/IconButton'
 import MenuItem from '@material-ui/core/MenuItem'
 import { withStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
-import { List } from 'immutable'
 import React, { useEffect, useState } from 'react'
 
 import { styles } from './style'

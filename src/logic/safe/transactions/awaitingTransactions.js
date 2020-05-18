@@ -1,6 +1,4 @@
-// 
-import { List, Map } from 'immutable'
-
+import { Map } from 'immutable'
 
 export const getAwaitingTransactions = (
   allTransactions,

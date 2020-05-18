@@ -1,7 +1,7 @@
 // 
 import { handleActions } from 'redux-actions'
 
-import addProvider, { ADD_PROVIDER } from 'src/logic/wallets/store/actions/addProvider'
+import { ADD_PROVIDER } from 'src/logic/wallets/store/actions/addProvider'
 import { REMOVE_PROVIDER } from 'src/logic/wallets/store/actions/removeProvider'
 import { makeProvider } from 'src/logic/wallets/store/model/provider'
 

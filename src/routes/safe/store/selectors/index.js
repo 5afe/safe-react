@@ -1,5 +1,4 @@
-// 
-import { List, Map, Set } from 'immutable'
+import { List, Set } from 'immutable'
 import { matchPath } from 'react-router-dom'
 import { createSelector } from 'reselect'
 

@@ -1,7 +1,7 @@
 /* eslint-disable import/named */
 // 
 import { List, Map } from 'immutable'
-import { Selector, createSelector } from 'reselect'
+import { createSelector } from 'reselect'
 
 import { ADDRESS_BOOK_REDUCER_ID } from 'src/logic/addressBook/store/reducer/addressBook'
 import { safeParamAddressFromStateSelector } from 'src/routes/safe/store/selectors'

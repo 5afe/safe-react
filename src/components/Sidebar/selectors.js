@@ -1,5 +1,3 @@
-// 
-import { List } from 'immutable'
 import { createSelector } from 'reselect'
 
 import { } from 'src/routes/safe/store/models/safe'

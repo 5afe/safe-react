@@ -1,10 +1,8 @@
-// 
 import CircularProgress from '@material-ui/core/CircularProgress'
 import Table from '@material-ui/core/Table'
 import TableBody from '@material-ui/core/TableBody'
 import TablePagination from '@material-ui/core/TablePagination'
 import { withStyles } from '@material-ui/core/styles'
-import { List } from 'immutable'
 import * as React from 'react'
 
 import TableHead, { } from 'src/components/Table/TableHead'

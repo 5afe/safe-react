@@ -1,8 +1,7 @@
-// 
 import IconButton from '@material-ui/core/IconButton'
 import { withStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
-import { List } from 'immutable'
+
 import React, { useState } from 'react'
 import { connect, useSelector } from 'react-redux'
 

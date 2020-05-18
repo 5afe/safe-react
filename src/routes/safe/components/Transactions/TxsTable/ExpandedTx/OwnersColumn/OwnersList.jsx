@@ -1,6 +1,5 @@
 // 
 import { withStyles } from '@material-ui/core/styles'
-import { List } from 'immutable'
 import React from 'react'
 
 import OwnerComponent from './OwnerComponent'

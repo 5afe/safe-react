@@ -1,6 +1,3 @@
-// 
-import { List } from 'immutable'
-
 import { makeAddressBookEntry } from 'src/logic/addressBook/model/addressBook'
 import { addAddressBookEntry } from 'src/logic/addressBook/store/actions/addAddressBookEntry'
 import { saveDefaultSafe, saveSafes } from 'src/logic/safe/utils'

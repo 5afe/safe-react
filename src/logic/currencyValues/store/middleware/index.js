@@ -1,6 +1,3 @@
-// 
-import { Action, Store } from 'redux'
-
 import fetchCurrencyRate from 'src/logic/currencyValues/store/actions/fetchCurrencyRate'
 import { SET_CURRENCY_BALANCES } from 'src/logic/currencyValues/store/actions/setCurrencyBalances'
 import { SET_CURRENCY_RATE } from 'src/logic/currencyValues/store/actions/setCurrencyRate'

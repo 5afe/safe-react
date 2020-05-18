@@ -1,10 +1,8 @@
-// 
 import TableCell from '@material-ui/core/TableCell'
 import TableContainer from '@material-ui/core/TableContainer'
 import TableRow from '@material-ui/core/TableRow'
 import { withStyles } from '@material-ui/core/styles'
 import cn from 'classnames'
-import { List } from 'immutable'
 import React from 'react'
 
 import RemoveOwnerIcon from '../assets/icons/bin.svg'

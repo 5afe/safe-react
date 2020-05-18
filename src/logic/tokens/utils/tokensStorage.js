@@ -1,5 +1,5 @@
 // 
-import { List, Map } from 'immutable'
+import { List } from 'immutable'
 
 import { } from 'src/logic/tokens/store/model/token'
 import { loadFromStorage, saveToStorage } from 'src/utils/storage'

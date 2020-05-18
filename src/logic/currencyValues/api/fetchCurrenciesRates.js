@@ -1,8 +1,6 @@
-// 
 import axios from 'axios'
 
 import { getExchangeRatesUrl } from 'src/config'
-import { AVAILABLE_CURRENCIES } from 'src/logic/currencyValues/store/model/currencyValues'
 
 const fetchCurrenciesRates = async (
   baseCurrency,

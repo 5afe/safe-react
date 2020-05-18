@@ -1,5 +1,4 @@
-// 
-import { List, Map } from 'immutable'
+import { List } from 'immutable'
 
 import saveTokens from './saveTokens'
 

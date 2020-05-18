@@ -1,10 +1,9 @@
-// 
 import CircularProgress from '@material-ui/core/CircularProgress'
 import MuiList from '@material-ui/core/List'
 import { withStyles } from '@material-ui/core/styles'
 import Search from '@material-ui/icons/Search'
 import cn from 'classnames'
-import { List, Set } from 'immutable'
+import { Set } from 'immutable'
 import SearchBar from 'material-ui-search-bar'
 import * as React from 'react'
 import { FixedSizeList } from 'react-window'

@@ -1,10 +1,8 @@
-// 
 import MuiList from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
 import ListItemIcon from '@material-ui/core/ListItemIcon'
 import ListItemText from '@material-ui/core/ListItemText'
 import { makeStyles } from '@material-ui/core/styles'
-import { List } from 'immutable'
 import * as React from 'react'
 
 import DefaultBadge from './DefaultBadge'

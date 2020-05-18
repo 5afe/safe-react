@@ -1,5 +1,4 @@
-// 
-import { List, Map } from 'immutable'
+import { Map } from 'immutable'
 import { handleActions } from 'redux-actions'
 
 import { ADD_CANCELLATION_TRANSACTIONS } from 'src/routes/safe/store/actions/addCancellationTransactions'

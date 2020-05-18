@@ -1,7 +1,6 @@
 // 
 import Drawer from '@material-ui/core/Drawer'
 import SearchIcon from '@material-ui/icons/Search'
-import { List } from 'immutable'
 import SearchBar from 'material-ui-search-bar'
 import * as React from 'react'
 import { connect } from 'react-redux'

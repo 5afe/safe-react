@@ -1,6 +1,3 @@
-// 
-import { Dispatch as ReduxDispatch } from 'redux'
-
 import fetchCurrenciesRates from 'src/logic/currencyValues/api/fetchCurrenciesRates'
 import { setCurrencyRate } from 'src/logic/currencyValues/store/actions/setCurrencyRate'
 import { AVAILABLE_CURRENCIES } from 'src/logic/currencyValues/store/model/currencyValues'

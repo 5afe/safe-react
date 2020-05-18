@@ -1,5 +1,3 @@
-// 
-import { List, Map } from 'immutable'
 import { createSelector } from 'reselect'
 
 import { } from 'src/logic/tokens/store/model/token'

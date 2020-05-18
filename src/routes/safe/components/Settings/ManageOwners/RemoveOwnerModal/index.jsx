@@ -1,6 +1,4 @@
-// 
 import { withStyles } from '@material-ui/core/styles'
-import { List } from 'immutable'
 import { withSnackbar } from 'notistack'
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'

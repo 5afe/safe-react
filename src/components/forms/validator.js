@@ -1,7 +1,3 @@
-// 
-import { } from 'final-form'
-import { List } from 'immutable'
-
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
 import { getWeb3 } from 'src/logic/wallets/getWeb3'
 

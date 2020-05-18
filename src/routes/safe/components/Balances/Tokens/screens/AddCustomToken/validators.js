@@ -1,6 +1,3 @@
-// 
-import { List } from 'immutable'
-
 import { simpleMemoize } from 'src/components/forms/validator'
 import { } from 'src/logic/tokens/store/model/token'
 import { isAddressAToken } from 'src/logic/tokens/utils/tokenHelpers'
