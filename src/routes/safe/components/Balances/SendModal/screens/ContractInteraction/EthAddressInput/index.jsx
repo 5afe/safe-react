@@ -2,18 +2,18 @@
 import { makeStyles } from '@material-ui/core/styles'
 import React from 'react'
 
-import { ScanQRWrapper } from '~/components/ScanQRModal/ScanQRWrapper'
-import Field from '~/components/forms/Field'
-import TextField from '~/components/forms/TextField'
+import { ScanQRWrapper } from 'src/components/ScanQRModal/ScanQRWrapper'
+import Field from 'src/components/forms/Field'
+import TextField from 'src/components/forms/TextField'
 import {
   composeValidators,
   mustBeEthereumAddress,
   mustBeEthereumContractAddress,
   required,
-} from '~/components/forms/validator'
-import Col from '~/components/layout/Col'
-import Row from '~/components/layout/Row'
-import { styles } from '~/routes/safe/components/Balances/SendModal/screens/ContractInteraction/style'
+} from 'src/components/forms/validator'
+import Col from 'src/components/layout/Col'
+import Row from 'src/components/layout/Row'
+import { styles } from 'src/routes/safe/components/Balances/SendModal/screens/ContractInteraction/style'
 
 const useStyles = makeStyles(styles)
 

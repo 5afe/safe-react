@@ -1,7 +1,7 @@
 // 
 import { makeStyles } from '@material-ui/core/styles'
 
-import { headerHeight, md, mediumFontSize, screenSm, secondaryText, xs } from '~/theme/variables'
+import { headerHeight, md, mediumFontSize, screenSm, secondaryText, xs } from 'src/theme/variables'
 
 const sidebarWidth = '400px'
 const sidebarMarginLeft = '12px'

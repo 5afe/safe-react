@@ -2,16 +2,16 @@
 import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 
-import { Loader, Stepper } from '~/components-v2'
-import LoaderDots from '~/components-v2/feedback/Loader-dots/assets/loader-dots.svg'
-import Button from '~/components/layout/Button'
-import Heading from '~/components/layout/Heading'
-import Img from '~/components/layout/Img'
-import Paragraph from '~/components/layout/Paragraph'
-import { initContracts } from '~/logic/contracts/safeContracts'
-import { EMPTY_DATA } from '~/logic/wallets/ethTransactions'
-import { getEtherScanLink, getWeb3 } from '~/logic/wallets/getWeb3'
-import { background, connected } from '~/theme/variables'
+import { Loader, Stepper } from 'src/components-v2'
+import LoaderDots from 'src/components-v2/feedback/Loader-dots/assets/loader-dots.svg'
+import Button from 'src/components/layout/Button'
+import Heading from 'src/components/layout/Heading'
+import Img from 'src/components/layout/Img'
+import Paragraph from 'src/components/layout/Paragraph'
+import { initContracts } from 'src/logic/contracts/safeContracts'
+import { EMPTY_DATA } from 'src/logic/wallets/ethTransactions'
+import { getEtherScanLink, getWeb3 } from 'src/logic/wallets/getWeb3'
+import { background, connected } from 'src/theme/variables'
 
 const successSvg = require('./assets/success.svg')
 const vaultErrorSvg = require('./assets/vault-error.svg')

@@ -2,10 +2,10 @@
 import { Map } from 'immutable'
 import { handleActions } from 'redux-actions'
 
-import { ADD_TOKEN } from '~/logic/tokens/store/actions/addToken'
-import { REMOVE_TOKEN } from '~/logic/tokens/store/actions/removeToken'
-import { ADD_TOKENS } from '~/logic/tokens/store/actions/saveTokens'
-import { makeToken } from '~/logic/tokens/store/model/token'
+import { ADD_TOKEN } from 'src/logic/tokens/store/actions/addToken'
+import { REMOVE_TOKEN } from 'src/logic/tokens/store/actions/removeToken'
+import { ADD_TOKENS } from 'src/logic/tokens/store/actions/saveTokens'
+import { makeToken } from 'src/logic/tokens/store/model/token'
 
 export const TOKEN_REDUCER_ID = 'tokens'
 

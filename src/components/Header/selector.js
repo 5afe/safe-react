@@ -7,7 +7,7 @@ import {
   networkSelector,
   providerNameSelector,
   userAccountSelector,
-} from '~/logic/wallets/store/selectors'
+} from 'src/logic/wallets/store/selectors'
 
 
 export default createStructuredSelector({

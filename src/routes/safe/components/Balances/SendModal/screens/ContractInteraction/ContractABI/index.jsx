@@ -1,10 +1,10 @@
 // 
 import React from 'react'
 
-import TextareaField from '~/components/forms/TextareaField'
-import Col from '~/components/layout/Col'
-import Row from '~/components/layout/Row'
-import EtherscanService from '~/logic/contractInteraction/sources/EtherscanService'
+import TextareaField from 'src/components/forms/TextareaField'
+import Col from 'src/components/layout/Col'
+import Row from 'src/components/layout/Row'
+import EtherscanService from 'src/logic/contractInteraction/sources/EtherscanService'
 
 export const NO_DATA = 'no data'
 

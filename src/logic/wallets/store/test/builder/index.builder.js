@@ -1,5 +1,5 @@
 // 
-import { makeProvider } from '~/logic/wallets/store/model/provider'
+import { makeProvider } from 'src/logic/wallets/store/model/provider'
 
 class ProviderBuilder {
   provider

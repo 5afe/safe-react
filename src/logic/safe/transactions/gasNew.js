@@ -4,12 +4,12 @@ import { BigNumber } from 'bignumber.js'
 
 import { CALL } from '.'
 
-import { getGnosisSafeInstanceAt } from '~/logic/contracts/safeContracts'
-import { generateSignaturesFromTxConfirmations } from '~/logic/safe/safeTxSigner'
-import { ZERO_ADDRESS } from '~/logic/wallets/ethAddresses'
-import { EMPTY_DATA, calculateGasOf, calculateGasPrice } from '~/logic/wallets/ethTransactions'
-import { getAccountFrom, getWeb3 } from '~/logic/wallets/getWeb3'
-import { } from '~/routes/safe/store/models/transaction'
+import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
+import { generateSignaturesFromTxConfirmations } from 'src/logic/safe/safeTxSigner'
+import { ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
+import { EMPTY_DATA, calculateGasOf, calculateGasPrice } from 'src/logic/wallets/ethTransactions'
+import { getAccountFrom, getWeb3 } from 'src/logic/wallets/getWeb3'
+import { } from 'src/routes/safe/store/models/transaction'
 
 const estimateDataGasCosts = (data) => {
   const reducer = (accumulator, currentValue) => {

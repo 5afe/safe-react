@@ -1,4 +1,4 @@
-import { textShortener } from '~/utils/strings'
+import { textShortener } from 'src/utils/strings'
 
 describe('Utils > strings > textShortener', () => {
   it(`should return the original string if there's no room to shorten`, () => {

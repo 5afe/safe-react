@@ -2,10 +2,10 @@
 import { makeStyles } from '@material-ui/core/styles'
 import * as React from 'react'
 
-import Col from '~/components/layout/Col'
-import Paragraph from '~/components/layout/Paragraph'
-import { getNetwork } from '~/config'
-import { border, md, screenSm, sm, xs } from '~/theme/variables'
+import Col from 'src/components/layout/Col'
+import Paragraph from 'src/components/layout/Paragraph'
+import { getNetwork } from 'src/config'
+import { border, md, screenSm, sm, xs } from 'src/theme/variables'
 
 const network = getNetwork()
 const formattedNetwork = network[0].toUpperCase() + network.substring(1).toLowerCase()

@@ -22,12 +22,12 @@ import {
 } from './columns'
 import { styles } from './style'
 
-import Table from '~/components/Table'
-import { cellWidth } from '~/components/Table/TableHead'
-import Block from '~/components/layout/Block'
-import Row from '~/components/layout/Row'
-import { extendedTransactionsSelector } from '~/routes/safe/container/selector'
-import { safeCancellationTransactionsSelector } from '~/routes/safe/store/selectors'
+import Table from 'src/components/Table'
+import { cellWidth } from 'src/components/Table/TableHead'
+import Block from 'src/components/layout/Block'
+import Row from 'src/components/layout/Row'
+import { extendedTransactionsSelector } from 'src/routes/safe/container/selector'
+import { safeCancellationTransactionsSelector } from 'src/routes/safe/store/selectors'
 
 export const TRANSACTION_ROW_TEST_ID = 'transaction-row'
 

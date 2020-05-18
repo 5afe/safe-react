@@ -1,5 +1,5 @@
 // 
-import { screenSm, secondaryText, sm, smallFontSize, xs } from '~/theme/variables'
+import { screenSm, secondaryText, sm, smallFontSize, xs } from 'src/theme/variables'
 
 export const styles = () => ({
   container: {

@@ -1,5 +1,5 @@
 // 
-import EtherscanService from '~/logic/contractInteraction/sources/EtherscanService'
+import EtherscanService from 'src/logic/contractInteraction/sources/EtherscanService'
 
 const sources = {
   etherscan: new EtherscanService({ rps: 4 }),

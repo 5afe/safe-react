@@ -11,17 +11,17 @@ import confirmTransactions from './confirmTransactions'
 import sendTransactions from './sendTransactions'
 import { getAppInfoFromUrl, staticAppsList } from './utils'
 
-import { ListContentLayout as LCL, Loader } from '~/components-v2'
-import { networkSelector } from '~/logic/wallets/store/selectors'
-import { SAFELIST_ADDRESS } from '~/routes/routes'
-import { grantedSelector } from '~/routes/safe/container/selector'
+import { ListContentLayout as LCL, Loader } from 'src/components-v2'
+import { networkSelector } from 'src/logic/wallets/store/selectors'
+import { SAFELIST_ADDRESS } from 'src/routes/routes'
+import { grantedSelector } from 'src/routes/safe/container/selector'
 import {
   safeEthBalanceSelector,
   safeNameSelector,
   safeParamAddressFromStateSelector,
-} from '~/routes/safe/store/selectors'
-import { loadFromStorage, saveToStorage } from '~/utils/storage'
-import { isSameHref } from '~/utils/url'
+} from 'src/routes/safe/store/selectors'
+import { loadFromStorage, saveToStorage } from 'src/utils/storage'
+import { isSameHref } from 'src/utils/url'
 
 const APPS_STORAGE_KEY = 'APPS_STORAGE_KEY'
 const APPS_LEGAL_DISCLAIMER_STORAGE_KEY = 'APPS_LEGAL_DISCLAIMER_STORAGE_KEY'

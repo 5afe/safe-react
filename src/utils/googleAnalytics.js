@@ -2,9 +2,9 @@
 import { useCallback, useEffect, useState } from 'react'
 import GoogleAnalytics from 'react-ga'
 
-import { getGoogleAnalyticsTrackingID } from '~/config'
-import { COOKIES_KEY } from '~/logic/cookies/model/cookie'
-import { loadFromCookie } from '~/logic/cookies/utils'
+import { getGoogleAnalyticsTrackingID } from 'src/config'
+import { COOKIES_KEY } from 'src/logic/cookies/model/cookie'
+import { loadFromCookie } from 'src/logic/cookies/utils'
 
 let analyticsLoaded = false
 export const loadGoogleAnalytics = () => {

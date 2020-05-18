@@ -1,5 +1,5 @@
 // 
-import { getGnosisSafeInstanceAt } from '~/logic/contracts/safeContracts'
+import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
 
 export const calculateTxFee = async (
   safe,

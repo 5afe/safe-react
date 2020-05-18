@@ -2,12 +2,12 @@
 import { BigNumber } from 'bignumber.js'
 import { List } from 'immutable'
 
-import { } from '~/components/Table/TableHead'
-import { FIXED, buildOrderFieldFrom } from '~/components/Table/sorting'
-import { AVAILABLE_CURRENCIES } from '~/logic/currencyValues/store/model/currencyValues'
-import { } from '~/logic/tokens/store/model/token'
-import { formatAmount } from '~/logic/tokens/utils/formatAmount'
-import { ETH_ADDRESS } from '~/logic/tokens/utils/tokenHelpers'
+import { } from 'src/components/Table/TableHead'
+import { FIXED, buildOrderFieldFrom } from 'src/components/Table/sorting'
+import { AVAILABLE_CURRENCIES } from 'src/logic/currencyValues/store/model/currencyValues'
+import { } from 'src/logic/tokens/store/model/token'
+import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
+import { ETH_ADDRESS } from 'src/logic/tokens/utils/tokenHelpers'
 
 export const BALANCE_TABLE_ASSET_ID = 'asset'
 export const BALANCE_TABLE_BALANCE_ID = 'balance'

@@ -1,8 +1,8 @@
 // 
 import { createStructuredSelector } from 'reselect'
 
-import { networkSelector, providerNameSelector, userAccountSelector } from '~/logic/wallets/store/selectors'
-import { } from '~/store'
+import { networkSelector, providerNameSelector, userAccountSelector } from 'src/logic/wallets/store/selectors'
+import { } from 'src/store'
 
 
 const structuredSelector = createStructuredSelector({

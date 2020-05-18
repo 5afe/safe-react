@@ -1,12 +1,12 @@
 // 
 import { Action, Store } from 'redux'
 
-import fetchCurrencyRate from '~/logic/currencyValues/store/actions/fetchCurrencyRate'
-import { SET_CURRENCY_BALANCES } from '~/logic/currencyValues/store/actions/setCurrencyBalances'
-import { SET_CURRENCY_RATE } from '~/logic/currencyValues/store/actions/setCurrencyRate'
-import { SET_CURRENT_CURRENCY } from '~/logic/currencyValues/store/actions/setSelectedCurrency'
-import { currencyValuesSelector } from '~/logic/currencyValues/store/selectors'
-import { saveCurrencyValues } from '~/logic/currencyValues/store/utils/currencyValuesStorage'
+import fetchCurrencyRate from 'src/logic/currencyValues/store/actions/fetchCurrencyRate'
+import { SET_CURRENCY_BALANCES } from 'src/logic/currencyValues/store/actions/setCurrencyBalances'
+import { SET_CURRENCY_RATE } from 'src/logic/currencyValues/store/actions/setCurrencyRate'
+import { SET_CURRENT_CURRENCY } from 'src/logic/currencyValues/store/actions/setSelectedCurrency'
+import { currencyValuesSelector } from 'src/logic/currencyValues/store/selectors'
+import { saveCurrencyValues } from 'src/logic/currencyValues/store/utils/currencyValuesStorage'
 
 const watchedActions = [SET_CURRENT_CURRENCY, SET_CURRENCY_RATE, SET_CURRENCY_BALANCES]
 

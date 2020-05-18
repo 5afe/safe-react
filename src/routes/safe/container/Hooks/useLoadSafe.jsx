@@ -2,12 +2,12 @@
 import { useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 
-import loadAddressBookFromStorage from '~/logic/addressBook/store/actions/loadAddressBookFromStorage'
-import addViewedSafe from '~/logic/currentSession/store/actions/addViewedSafe'
-import fetchSafeTokens from '~/logic/tokens/store/actions/fetchSafeTokens'
-import fetchLatestMasterContractVersion from '~/routes/safe/store/actions/fetchLatestMasterContractVersion'
-import fetchSafe from '~/routes/safe/store/actions/fetchSafe'
-import fetchTransactions from '~/routes/safe/store/actions/fetchTransactions'
+import loadAddressBookFromStorage from 'src/logic/addressBook/store/actions/loadAddressBookFromStorage'
+import addViewedSafe from 'src/logic/currentSession/store/actions/addViewedSafe'
+import fetchSafeTokens from 'src/logic/tokens/store/actions/fetchSafeTokens'
+import fetchLatestMasterContractVersion from 'src/routes/safe/store/actions/fetchLatestMasterContractVersion'
+import fetchSafe from 'src/routes/safe/store/actions/fetchSafe'
+import fetchTransactions from 'src/routes/safe/store/actions/fetchTransactions'
 
 export const useLoadSafe = (safeAddress) => {
   const dispatch = useDispatch()

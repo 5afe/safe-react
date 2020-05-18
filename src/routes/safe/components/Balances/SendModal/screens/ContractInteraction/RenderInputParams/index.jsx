@@ -2,11 +2,11 @@
 import React from 'react'
 import { useField } from 'react-final-form'
 
-import Field from '~/components/forms/Field'
-import TextField from '~/components/forms/TextField'
-import { composeValidators, mustBeEthereumAddress, required } from '~/components/forms/validator'
-import Col from '~/components/layout/Col'
-import Row from '~/components/layout/Row'
+import Field from 'src/components/forms/Field'
+import TextField from 'src/components/forms/TextField'
+import { composeValidators, mustBeEthereumAddress, required } from 'src/components/forms/validator'
+import Col from 'src/components/layout/Col'
+import Row from 'src/components/layout/Row'
 
 const RenderInputParams = () => {
   const {

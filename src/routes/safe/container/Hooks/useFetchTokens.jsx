@@ -2,14 +2,14 @@
 import { useMemo } from 'react'
 import { batch, useDispatch, useSelector } from 'react-redux'
 
-import fetchCollectibles from '~/logic/collectibles/store/actions/fetchCollectibles'
-import { fetchCurrencyValues } from '~/logic/currencyValues/store/actions/fetchCurrencyValues'
-import activateAssetsByBalance from '~/logic/tokens/store/actions/activateAssetsByBalance'
-import fetchSafeTokens from '~/logic/tokens/store/actions/fetchSafeTokens'
-import { fetchTokens } from '~/logic/tokens/store/actions/fetchTokens'
-import { COINS_LOCATION_REGEX, COLLECTIBLES_LOCATION_REGEX } from '~/routes/safe/components/Balances'
-import { safeParamAddressFromStateSelector } from '~/routes/safe/store/selectors'
-import { history } from '~/store'
+import fetchCollectibles from 'src/logic/collectibles/store/actions/fetchCollectibles'
+import { fetchCurrencyValues } from 'src/logic/currencyValues/store/actions/fetchCurrencyValues'
+import activateAssetsByBalance from 'src/logic/tokens/store/actions/activateAssetsByBalance'
+import fetchSafeTokens from 'src/logic/tokens/store/actions/fetchSafeTokens'
+import { fetchTokens } from 'src/logic/tokens/store/actions/fetchTokens'
+import { COINS_LOCATION_REGEX, COLLECTIBLES_LOCATION_REGEX } from 'src/routes/safe/components/Balances'
+import { safeParamAddressFromStateSelector } from 'src/routes/safe/store/selectors'
+import { history } from 'src/store'
 
 export const useFetchTokens = () => {
   const dispatch = useDispatch()

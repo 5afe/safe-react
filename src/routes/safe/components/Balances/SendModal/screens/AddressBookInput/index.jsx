@@ -9,10 +9,10 @@ import { useSelector } from 'react-redux'
 
 import { styles } from './style'
 
-import Identicon from '~/components/Identicon'
-import { mustBeEthereumAddress, mustBeEthereumContractAddress } from '~/components/forms/validator'
-import { getAddressBookListSelector } from '~/logic/addressBook/store/selectors'
-import { getAddressFromENS } from '~/logic/wallets/getWeb3'
+import Identicon from 'src/components/Identicon'
+import { mustBeEthereumAddress, mustBeEthereumContractAddress } from 'src/components/forms/validator'
+import { getAddressBookListSelector } from 'src/logic/addressBook/store/selectors'
+import { getAddressFromENS } from 'src/logic/wallets/getWeb3'
 
 
 const textFieldLabelStyle = makeStyles(() => ({

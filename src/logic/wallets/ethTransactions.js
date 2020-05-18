@@ -2,7 +2,7 @@
 import axios from 'axios'
 import { BigNumber } from 'bignumber.js'
 
-import { getWeb3, web3ReadOnly } from '~/logic/wallets/getWeb3'
+import { getWeb3, web3ReadOnly } from 'src/logic/wallets/getWeb3'
 
 // const MAINNET_NETWORK = 1
 export const EMPTY_DATA = '0x'

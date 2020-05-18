@@ -1,8 +1,8 @@
 // 
 import { createAction } from 'redux-actions'
 
-import { } from '~/logic/notifications/store/models/notification'
-import { } from '~/store'
+import { } from 'src/logic/notifications/store/models/notification'
+import { } from 'src/store'
 
 export const ENQUEUE_SNACKBAR = 'ENQUEUE_SNACKBAR'
 

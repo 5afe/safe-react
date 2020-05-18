@@ -7,14 +7,14 @@ import React from 'react'
 
 import { selectStyles, selectedTokenStyles } from './style'
 
-import Field from '~/components/forms/Field'
-import SelectField from '~/components/forms/SelectField'
-import { required } from '~/components/forms/validator'
-import Img from '~/components/layout/Img'
-import Paragraph from '~/components/layout/Paragraph'
-import { formatAmount } from '~/logic/tokens/utils/formatAmount'
-import { setImageToPlaceholder } from '~/routes/safe/components/Balances/utils'
-import { textShortener } from '~/utils/strings'
+import Field from 'src/components/forms/Field'
+import SelectField from 'src/components/forms/SelectField'
+import { required } from 'src/components/forms/validator'
+import Img from 'src/components/layout/Img'
+import Paragraph from 'src/components/layout/Paragraph'
+import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
+import { setImageToPlaceholder } from 'src/routes/safe/components/Balances/utils'
+import { textShortener } from 'src/utils/strings'
 
 
 const useSelectedTokenStyles = makeStyles(selectedTokenStyles)

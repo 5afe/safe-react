@@ -2,8 +2,8 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
 
-import { AddressInfo } from '~/components-v2'
-import { safeSelector } from '~/routes/safe/store/selectors'
+import { AddressInfo } from 'src/components-v2'
+import { safeSelector } from 'src/routes/safe/store/selectors'
 
 const SafeInfo = () => {
   const { address: safeAddress = '', ethBalance, name: safeName } = useSelector(safeSelector)

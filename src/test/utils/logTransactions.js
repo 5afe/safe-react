@@ -2,8 +2,8 @@
 import React from 'react'
 import Stepper from '@material-ui/core/Stepper'
 import TestUtils from 'react-dom/test-utils'
-import { getGnosisSafeInstanceAt } from '~/logic/contracts/safeContracts'
-import GnoStepper from '~/components/Stepper'
+import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
+import GnoStepper from 'src/components/Stepper'
 
 export const printOutApprove = async (
   subject,

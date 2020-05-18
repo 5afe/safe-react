@@ -1,8 +1,8 @@
 // 
 import { } from 'redux'
 
-import updateViewedSafes from '~/logic/currentSession/store/actions/updateViewedSafes'
-import { } from '~/store'
+import updateViewedSafes from 'src/logic/currentSession/store/actions/updateViewedSafes'
+import { } from 'src/store'
 
 const addViewedSafe = (safeAddress) => (dispatch) => {
   dispatch(updateViewedSafes(safeAddress))
