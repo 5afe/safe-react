@@ -2,9 +2,9 @@
 import React from 'react'
 import styled from 'styled-components'
 
-import Button from '~/components/layout/Button'
-import Paragraph from '~/components/layout/Paragraph'
-import { lg } from '~/theme/variables'
+import Button from 'components/layout/Button'
+import Paragraph from 'components/layout/Paragraph'
+import { lg } from 'theme/variables'
 
 const StyledParagraph = styled(Paragraph)`
   && {

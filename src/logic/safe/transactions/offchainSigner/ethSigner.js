@@ -1,6 +1,6 @@
 // 
-import { EMPTY_DATA } from '~/logic/wallets/ethTransactions'
-import { getWeb3 } from '~/logic/wallets/getWeb3'
+import { EMPTY_DATA } from 'logic/wallets/ethTransactions'
+import { getWeb3 } from 'logic/wallets/getWeb3'
 
 const ETH_SIGN_NOT_SUPPORTED_ERROR_MSG = 'ETH_SIGN_NOT_SUPPORTED'
 

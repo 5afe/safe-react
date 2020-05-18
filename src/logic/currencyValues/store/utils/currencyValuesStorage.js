@@ -1,7 +1,7 @@
 // 
 import { Map } from 'immutable'
 
-import { loadFromStorage, saveToStorage } from '~/utils/storage'
+import { loadFromStorage, saveToStorage } from 'utils/storage'
 
 const CURRENCY_VALUES_STORAGE_KEY = 'CURRENCY_VALUES_STORAGE_KEY'
 export const saveCurrencyValues = async (currencyValues) => {

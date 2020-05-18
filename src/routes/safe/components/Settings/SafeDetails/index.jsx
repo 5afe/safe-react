@@ -6,29 +6,29 @@ import { useDispatch, useSelector } from 'react-redux'
 
 import { styles } from './style'
 
-import Modal from '~/components/Modal'
-import Field from '~/components/forms/Field'
-import GnoForm from '~/components/forms/GnoForm'
-import TextField from '~/components/forms/TextField'
-import { composeValidators, minMaxLength, required } from '~/components/forms/validator'
-import Block from '~/components/layout/Block'
-import Button from '~/components/layout/Button'
-import Col from '~/components/layout/Col'
-import Heading from '~/components/layout/Heading'
-import Paragraph from '~/components/layout/Paragraph'
-import Row from '~/components/layout/Row'
-import { getNotificationsFromTxType, showSnackbar } from '~/logic/notifications'
-import { TX_NOTIFICATION_TYPES } from '~/logic/safe/transactions'
-import UpdateSafeModal from '~/routes/safe/components/Settings/UpdateSafeModal'
-import { grantedSelector } from '~/routes/safe/container/selector'
-import updateSafe from '~/routes/safe/store/actions/updateSafe'
+import Modal from 'components/Modal'
+import Field from 'components/forms/Field'
+import GnoForm from 'components/forms/GnoForm'
+import TextField from 'components/forms/TextField'
+import { composeValidators, minMaxLength, required } from 'components/forms/validator'
+import Block from 'components/layout/Block'
+import Button from 'components/layout/Button'
+import Col from 'components/layout/Col'
+import Heading from 'components/layout/Heading'
+import Paragraph from 'components/layout/Paragraph'
+import Row from 'components/layout/Row'
+import { getNotificationsFromTxType, showSnackbar } from 'logic/notifications'
+import { TX_NOTIFICATION_TYPES } from 'logic/safe/transactions'
+import UpdateSafeModal from 'routes/safe/components/Settings/UpdateSafeModal'
+import { grantedSelector } from 'routes/safe/container/selector'
+import updateSafe from 'routes/safe/store/actions/updateSafe'
 import {
   latestMasterContractVersionSelector,
   safeCurrentVersionSelector,
   safeNameSelector,
   safeNeedsUpdateSelector,
   safeParamAddressFromStateSelector,
-} from '~/routes/safe/store/selectors'
+} from 'routes/safe/store/selectors'
 
 export const SAFE_NAME_INPUT_TEST_ID = 'safe-name-input'
 export const SAFE_NAME_SUBMIT_BTN_TEST_ID = 'change-safe-name-btn'

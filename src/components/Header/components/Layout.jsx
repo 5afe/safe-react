@@ -11,13 +11,13 @@ import NetworkLabel from './NetworkLabel'
 import Provider from './Provider'
 import SafeListHeader from './SafeListHeader'
 
-import Spacer from '~/components/Spacer'
-import openHoc, { } from '~/components/hoc/OpenHoc'
-import Col from '~/components/layout/Col'
-import Divider from '~/components/layout/Divider'
-import Img from '~/components/layout/Img'
-import Row from '~/components/layout/Row'
-import { border, headerHeight, md, screenSm, sm } from '~/theme/variables'
+import Spacer from 'components/Spacer'
+import openHoc, { } from 'components/hoc/OpenHoc'
+import Col from 'components/layout/Col'
+import Divider from 'components/layout/Divider'
+import Img from 'components/layout/Img'
+import Row from 'components/layout/Row'
+import { border, headerHeight, md, screenSm, sm } from 'theme/variables'
 
 const logo = require('../assets/gnosis-safe-multisig-logo.svg')
 

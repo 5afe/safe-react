@@ -8,17 +8,17 @@ import Receive from '../Balances/Receive'
 
 import { styles } from './style'
 
-import { GenericModal } from '~/components-v2'
-import Modal from '~/components/Modal'
-import NoSafe from '~/components/NoSafe'
-import Hairline from '~/components/layout/Hairline'
-import { providerNameSelector } from '~/logic/wallets/store/selectors'
-import SendModal from '~/routes/safe/components/Balances/SendModal'
-import LayoutHeader from '~/routes/safe/components/Layout/Header'
-import TabsComponent from '~/routes/safe/components/Layout/Tabs'
-import { safeParamAddressFromStateSelector } from '~/routes/safe/store/selectors'
-import { border } from '~/theme/variables'
-import { wrapInSuspense } from '~/utils/wrapInSuspense'
+import { GenericModal } from 'components-v2'
+import Modal from 'components/Modal'
+import NoSafe from 'components/NoSafe'
+import Hairline from 'components/layout/Hairline'
+import { providerNameSelector } from 'logic/wallets/store/selectors'
+import SendModal from 'routes/safe/components/Balances/SendModal'
+import LayoutHeader from 'routes/safe/components/Layout/Header'
+import TabsComponent from 'routes/safe/components/Layout/Tabs'
+import { safeParamAddressFromStateSelector } from 'routes/safe/store/selectors'
+import { border } from 'theme/variables'
+import { wrapInSuspense } from 'utils/wrapInSuspense'
 
 export const BALANCES_TAB_BTN_TEST_ID = 'balances-tab-btn'
 export const SETTINGS_TAB_BTN_TEST_ID = 'settings-tab-btn'
@@ -29,8 +29,8 @@ export const SAFE_VIEW_NAME_HEADING_TEST_ID = 'safe-name-heading'
 const Apps = React.lazy(() => import('../Apps'))
 const Settings = React.lazy(() => import('../Settings'))
 const Balances = React.lazy(() => import('../Balances'))
-const TxsTable = React.lazy(() => import('~/routes/safe/components/Transactions/TxsTable'))
-const AddressBookTable = React.lazy(() => import('~/routes/safe/components/AddressBook'))
+const TxsTable = React.lazy(() => import('routes/safe/components/Transactions/TxsTable'))
+const AddressBookTable = React.lazy(() => import('routes/safe/components/AddressBook'))
 
 
 const useStyles = makeStyles(styles)

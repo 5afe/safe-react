@@ -2,11 +2,11 @@
 import { makeStyles } from '@material-ui/core/styles'
 import * as React from 'react'
 
-import HomeIcon from '~/assets/icons/shape.svg'
-import Block from '~/components/layout/Block'
-import Img from '~/components/layout/Img'
-import Paragraph from '~/components/layout/Paragraph'
-import { md, primary, secondaryBackground } from '~/theme/variables'
+import HomeIcon from 'assets/icons/shape.svg'
+import Block from 'components/layout/Block'
+import Img from 'components/layout/Img'
+import Paragraph from 'components/layout/Paragraph'
+import { md, primary, secondaryBackground } from 'theme/variables'
 
 const useStyles = makeStyles({
   container: {

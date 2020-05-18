@@ -1,5 +1,5 @@
 // 
-import { lg, md } from '~/theme/variables'
+import { lg, md } from 'theme/variables'
 
 export const styles = () => ({
   title: {

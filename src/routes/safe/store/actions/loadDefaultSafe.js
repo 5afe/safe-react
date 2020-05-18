@@ -2,9 +2,9 @@
 
 import setDefaultSafe from './setDefaultSafe'
 
-import { getDefaultSafe } from '~/logic/safe/utils'
-import { } from '~/store/index'
-import { checksumAddress } from '~/utils/checksumAddress'
+import { getDefaultSafe } from 'logic/safe/utils'
+import { } from 'store/index'
+import { checksumAddress } from 'utils/checksumAddress'
 
 const loadDefaultSafe = () => async (dispatch) => {
   try {

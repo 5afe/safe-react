@@ -3,9 +3,9 @@ import { makeStyles } from '@material-ui/core/styles'
 import { useState } from 'react'
 import * as React from 'react'
 
-import QRIcon from '~/assets/icons/qrcode.svg'
-import ScanQRModal from '~/components/ScanQRModal'
-import Img from '~/components/layout/Img'
+import QRIcon from 'assets/icons/qrcode.svg'
+import ScanQRModal from 'components/ScanQRModal'
+import Img from 'components/layout/Img'
 
 
 const useStyles = makeStyles({

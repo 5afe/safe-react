@@ -9,13 +9,13 @@ import QrReader from 'react-qr-reader'
 import { styles } from './style'
 import { checkWebcam } from './utils'
 
-import Modal from '~/components/Modal'
-import Block from '~/components/layout/Block'
-import Button from '~/components/layout/Button'
-import Col from '~/components/layout/Col'
-import Hairline from '~/components/layout/Hairline'
-import Paragraph from '~/components/layout/Paragraph'
-import Row from '~/components/layout/Row'
+import Modal from 'components/Modal'
+import Block from 'components/layout/Block'
+import Button from 'components/layout/Button'
+import Col from 'components/layout/Col'
+import Hairline from 'components/layout/Hairline'
+import Paragraph from 'components/layout/Paragraph'
+import Row from 'components/layout/Row'
 
 const { useEffect, useState } = React
 

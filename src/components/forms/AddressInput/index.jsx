@@ -3,9 +3,9 @@ import * as React from 'react'
 import { Field } from 'react-final-form'
 import { OnChange } from 'react-final-form-listeners'
 
-import TextField from '~/components/forms/TextField'
-import { composeValidators, mustBeEthereumAddress, required } from '~/components/forms/validator'
-import { getAddressFromENS } from '~/logic/wallets/getWeb3'
+import TextField from 'components/forms/TextField'
+import { composeValidators, mustBeEthereumAddress, required } from 'components/forms/validator'
+import { getAddressFromENS } from 'logic/wallets/getWeb3'
 
 
 const isValidEnsName = (name) => /^([\w-]+\.)+(eth|test|xyz|luxe)$/.test(name)

@@ -3,20 +3,20 @@ import { List, Map, Set } from 'immutable'
 import { matchPath } from 'react-router-dom'
 import { createSelector } from 'reselect'
 
-import { getWeb3 } from '~/logic/wallets/getWeb3'
-import { SAFELIST_ADDRESS, SAFE_PARAM_ADDRESS } from '~/routes/routes'
-import { } from '~/routes/safe/store/models/safe'
-import { } from '~/routes/safe/store/models/transaction'
+import { getWeb3 } from 'logic/wallets/getWeb3'
+import { SAFELIST_ADDRESS, SAFE_PARAM_ADDRESS } from 'routes/routes'
+import { } from 'routes/safe/store/models/safe'
+import { } from 'routes/safe/store/models/transaction'
 import {
   CANCELLATION_TRANSACTIONS_REDUCER_ID,
-} from '~/routes/safe/store/reducer/cancellationTransactions'
+} from 'routes/safe/store/reducer/cancellationTransactions'
 import {
   INCOMING_TRANSACTIONS_REDUCER_ID,
-} from '~/routes/safe/store/reducer/incomingTransactions'
-import { SAFE_REDUCER_ID } from '~/routes/safe/store/reducer/safe'
-import { TRANSACTIONS_REDUCER_ID, } from '~/routes/safe/store/reducer/transactions'
-import { } from '~/store/index'
-import { checksumAddress } from '~/utils/checksumAddress'
+} from 'routes/safe/store/reducer/incomingTransactions'
+import { SAFE_REDUCER_ID } from 'routes/safe/store/reducer/safe'
+import { TRANSACTIONS_REDUCER_ID, } from 'routes/safe/store/reducer/transactions'
+import { } from 'store/index'
+import { checksumAddress } from 'utils/checksumAddress'
 
 
 

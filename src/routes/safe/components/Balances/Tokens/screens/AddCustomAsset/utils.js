@@ -1,5 +1,5 @@
 // 
-import { getHumanFriendlyToken } from '~/logic/tokens/store/actions/fetchTokens'
+import { getHumanFriendlyToken } from 'logic/tokens/store/actions/fetchTokens'
 
 export const getSymbolAndDecimalsFromContract = async (tokenAddress) => {
   const tokenContract = await getHumanFriendlyToken()

@@ -1,7 +1,7 @@
 // 
-import { SAFE_METHODS_NAMES } from '~/logic/contracts/methodIds'
-import { getWeb3 } from '~/logic/wallets/getWeb3'
-import { } from '~/routes/safe/store/models/transaction'
+import { SAFE_METHODS_NAMES } from 'logic/contracts/methodIds'
+import { getWeb3 } from 'logic/wallets/getWeb3'
+import { } from 'routes/safe/store/models/transaction'
 
 
 const getSafeVersion = (data) => {

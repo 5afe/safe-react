@@ -1,10 +1,10 @@
 // 
 import createDecorator from 'final-form-calculate'
 
-import { mustBeEthereumAddress, mustBeEthereumContractAddress } from '~/components/forms/validator'
-import { getNetwork } from '~/config'
-import { getConfiguredSource } from '~/logic/contractInteraction/sources'
-import { getWeb3 } from '~/logic/wallets/getWeb3'
+import { mustBeEthereumAddress, mustBeEthereumContractAddress } from 'components/forms/validator'
+import { getNetwork } from 'config'
+import { getConfiguredSource } from 'logic/contractInteraction/sources'
+import { getWeb3 } from 'logic/wallets/getWeb3'
 
 export const NO_CONTRACT = 'no contract'
 

@@ -5,10 +5,10 @@ import * as React from 'react'
 
 import { NOTIFICATIONS, } from './notificationTypes'
 
-import closeSnackbarAction from '~/logic/notifications/store/actions/closeSnackbar'
-import { TX_NOTIFICATION_TYPES } from '~/logic/safe/transactions'
-import { getAppInfoFromOrigin } from '~/routes/safe/components/Apps/utils'
-import { store } from '~/store'
+import closeSnackbarAction from 'logic/notifications/store/actions/closeSnackbar'
+import { TX_NOTIFICATION_TYPES } from 'logic/safe/transactions'
+import { getAppInfoFromOrigin } from 'routes/safe/components/Apps/utils'
+import { store } from 'store'
 
 
 const setNotificationOrigin = (notification, origin) => {

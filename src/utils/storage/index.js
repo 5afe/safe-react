@@ -1,7 +1,7 @@
 // 
 import { ImmortalStorage, IndexedDbStore, LocalStorageStore } from 'immortal-db'
 
-import { getNetwork } from '~/config'
+import { getNetwork } from 'config'
 
 // Don't use sessionStorage and cookieStorage
 // https://github.com/gruns/ImmortalDB/issues/22

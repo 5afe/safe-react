@@ -10,21 +10,21 @@ import Layout from '../components/Layout'
 import actions, { } from './actions'
 import selector from './selector'
 
-import { Loader } from '~/components-v2'
-import Page from '~/components/layout/Page'
-import { getSafeDeploymentTransaction } from '~/logic/contracts/safeContracts'
-import { checkReceiptStatus } from '~/logic/wallets/ethTransactions'
+import { Loader } from 'components-v2'
+import Page from 'components/layout/Page'
+import { getSafeDeploymentTransaction } from 'logic/contracts/safeContracts'
+import { checkReceiptStatus } from 'logic/wallets/ethTransactions'
 import {
   getAccountsFrom,
   getNamesFrom,
   getOwnersFrom,
   getSafeNameFrom,
   getThresholdFrom,
-} from '~/routes/open/utils/safeDataExtractor'
-import { SAFELIST_ADDRESS, WELCOME_ADDRESS } from '~/routes/routes'
-import { buildSafe } from '~/routes/safe/store/actions/fetchSafe'
-import { history } from '~/store'
-import { loadFromStorage, removeFromStorage, saveToStorage } from '~/utils/storage'
+} from 'routes/open/utils/safeDataExtractor'
+import { SAFELIST_ADDRESS, WELCOME_ADDRESS } from 'routes/routes'
+import { buildSafe } from 'routes/safe/store/actions/fetchSafe'
+import { history } from 'store'
+import { loadFromStorage, removeFromStorage, saveToStorage } from 'utils/storage'
 
 const SAFE_PENDING_CREATION_STORAGE_KEY = 'SAFE_PENDING_CREATION_STORAGE_KEY'
 

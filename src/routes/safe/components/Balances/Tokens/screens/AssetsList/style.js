@@ -1,5 +1,5 @@
 // 
-import { md, mediumFontSize, secondaryText, sm, xs } from '~/theme/variables'
+import { md, mediumFontSize, secondaryText, sm, xs } from 'theme/variables'
 
 export const styles = () => ({
   root: {

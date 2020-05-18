@@ -1,7 +1,7 @@
 // 
 import axios from 'axios'
 
-import appsIconSvg from '~/routes/safe/components/Transactions/TxsTable/TxType/assets/appsIcon.svg'
+import appsIconSvg from 'routes/safe/components/Transactions/TxsTable/TxType/assets/appsIcon.svg'
 
 const removeLastTrailingSlash = (url) => {
   if (url.substr(-1) === '/') {

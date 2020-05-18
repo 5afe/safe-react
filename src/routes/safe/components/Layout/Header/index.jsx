@@ -8,17 +8,17 @@ import { useSelector } from 'react-redux'
 
 import { styles } from './style'
 
-import CopyBtn from '~/components/CopyBtn'
-import EtherscanBtn from '~/components/EtherscanBtn'
-import Identicon from '~/components/Identicon'
-import Block from '~/components/layout/Block'
-import Button from '~/components/layout/Button'
-import Heading from '~/components/layout/Heading'
-import Paragraph from '~/components/layout/Paragraph'
-import Row from '~/components/layout/Row'
-import { SAFE_VIEW_NAME_HEADING_TEST_ID } from '~/routes/safe/components/Layout'
-import { grantedSelector } from '~/routes/safe/container/selector'
-import { safeNameSelector, safeParamAddressFromStateSelector } from '~/routes/safe/store/selectors'
+import CopyBtn from 'components/CopyBtn'
+import EtherscanBtn from 'components/EtherscanBtn'
+import Identicon from 'components/Identicon'
+import Block from 'components/layout/Block'
+import Button from 'components/layout/Button'
+import Heading from 'components/layout/Heading'
+import Paragraph from 'components/layout/Paragraph'
+import Row from 'components/layout/Row'
+import { SAFE_VIEW_NAME_HEADING_TEST_ID } from 'routes/safe/components/Layout'
+import { grantedSelector } from 'routes/safe/container/selector'
+import { safeNameSelector, safeParamAddressFromStateSelector } from 'routes/safe/store/selectors'
 
 
 const LayoutHeader = (props) => {

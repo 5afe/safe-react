@@ -4,12 +4,12 @@ import { BigNumber } from 'bignumber.js'
 import React from 'react'
 import styled from 'styled-components'
 
-import { AddressInfo, Collapse, DividerLine, ModalTitle, TextBox } from '~/components-v2'
-import { mustBeEthereumAddress } from '~/components/forms/validator'
-import Bold from '~/components/layout/Bold'
-import Heading from '~/components/layout/Heading'
-import Img from '~/components/layout/Img'
-import { getEthAsToken } from '~/logic/tokens/utils/tokenHelpers'
+import { AddressInfo, Collapse, DividerLine, ModalTitle, TextBox } from 'components-v2'
+import { mustBeEthereumAddress } from 'components/forms/validator'
+import Bold from 'components/layout/Bold'
+import Heading from 'components/layout/Heading'
+import Img from 'components/layout/Img'
+import { getEthAsToken } from 'logic/tokens/utils/tokenHelpers'
 
 const humanReadableBalance = (balance, decimals) => BigNumber(balance).times(`1e-${decimals}`).toFixed()
 

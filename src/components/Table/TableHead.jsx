@@ -6,7 +6,7 @@ import TableSortLabel from '@material-ui/core/TableSortLabel'
 import { List } from 'immutable'
 import * as React from 'react'
 
-import { } from '~/components/Table/sorting'
+import { } from 'components/Table/sorting'
 
 
 export const cellWidth = (width) => {

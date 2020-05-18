@@ -5,9 +5,9 @@ import { Redirect, Route, Switch, withRouter } from 'react-router-dom'
 
 import { LOAD_ADDRESS, OPEN_ADDRESS, SAFELIST_ADDRESS, SAFE_PARAM_ADDRESS, WELCOME_ADDRESS } from './routes'
 
-import Loader from '~/components/Loader'
-import { defaultSafeSelector } from '~/routes/safe/store/selectors'
-import { useAnalytics } from '~/utils/googleAnalytics'
+import Loader from 'components/Loader'
+import { defaultSafeSelector } from 'routes/safe/store/selectors'
+import { useAnalytics } from 'utils/googleAnalytics'
 
 const Welcome = React.lazy(() => import('./welcome/container'))
 

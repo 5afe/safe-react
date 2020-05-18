@@ -1,10 +1,10 @@
 // 
 import * as React from 'react'
 
-import Block from '~/components/layout/Block'
-import Img from '~/components/layout/Img'
-import Paragraph from '~/components/layout/Paragraph'
-import { setImageToPlaceholder } from '~/routes/safe/components/Balances/utils'
+import Block from 'components/layout/Block'
+import Img from 'components/layout/Img'
+import Paragraph from 'components/layout/Paragraph'
+import { setImageToPlaceholder } from 'routes/safe/components/Balances/utils'
 
 
 const AssetTableCell = (props) => {

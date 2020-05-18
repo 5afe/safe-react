@@ -2,12 +2,12 @@
 import { withStyles } from '@material-ui/core/styles'
 import * as React from 'react'
 
-import ConnectButton from '~/components/ConnectButton'
-import CircleDot from '~/components/Header/components/CircleDot'
-import Block from '~/components/layout/Block'
-import Paragraph from '~/components/layout/Paragraph'
-import Row from '~/components/layout/Row'
-import { lg, md } from '~/theme/variables'
+import ConnectButton from 'components/ConnectButton'
+import CircleDot from 'components/Header/components/CircleDot'
+import Block from 'components/layout/Block'
+import Paragraph from 'components/layout/Paragraph'
+import Row from 'components/layout/Row'
+import { lg, md } from 'theme/variables'
 
 
 const styles = () => ({

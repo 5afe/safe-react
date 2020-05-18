@@ -6,13 +6,13 @@ import styled from 'styled-components'
 
 import { getAppInfoFromUrl } from './utils'
 
-import Field from '~/components/forms/Field'
-import DebounceValidationField from '~/components/forms/Field/DebounceValidationField'
-import GnoForm from '~/components/forms/GnoForm'
-import { required } from '~/components/forms/validator'
-import Img from '~/components/layout/Img'
-import appsIconSvg from '~/routes/safe/components/Transactions/TxsTable/TxType/assets/appsIcon.svg'
-import { isValid as isURLValid } from '~/utils/url'
+import Field from 'components/forms/Field'
+import DebounceValidationField from 'components/forms/Field/DebounceValidationField'
+import GnoForm from 'components/forms/GnoForm'
+import { required } from 'components/forms/validator'
+import Img from 'components/layout/Img'
+import appsIconSvg from 'routes/safe/components/Transactions/TxsTable/TxType/assets/appsIcon.svg'
+import { isValid as isURLValid } from 'utils/url'
 
 const FORM_ID = 'add-apps-form'
 

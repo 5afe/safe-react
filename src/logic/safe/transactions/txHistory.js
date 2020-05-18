@@ -1,8 +1,8 @@
 // 
 import axios from 'axios'
 
-import { getTxServiceHost, getTxServiceUriFrom } from '~/config'
-import { checksumAddress } from '~/utils/checksumAddress'
+import { getTxServiceHost, getTxServiceUriFrom } from 'config'
+import { checksumAddress } from 'utils/checksumAddress'
 
 
 const calculateBodyFrom = async (

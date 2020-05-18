@@ -10,7 +10,7 @@ import {
   secondary,
   sm,
   xs,
-} from '~/theme/variables'
+} from 'theme/variables'
 
 export const styles = () => ({
   root: {

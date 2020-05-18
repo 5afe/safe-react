@@ -1,6 +1,6 @@
 // 
 import prodConfig from './production'
-import { TX_SERVICE_HOST, RELAY_API_URL } from '~/config/names'
+import { TX_SERVICE_HOST, RELAY_API_URL } from 'config/names'
 
 const prodMainnetConfig = {
   ...prodConfig,

@@ -1,9 +1,9 @@
 // 
 import * as React from 'react'
 import { Map } from 'immutable'
-import { checkMinedTx, checkPendingTx } from '~/test/builder/safe.dom.utils'
-import { makeToken, } from '~/logic/tokens/store/model/token'
-import addTokens from '~/logic/tokens/store/actions/saveTokens'
+import { checkMinedTx, checkPendingTx } from 'test/builder/safe.dom.utils'
+import { makeToken, } from 'logic/tokens/store/model/token'
+import addTokens from 'logic/tokens/store/actions/saveTokens'
 
 export const dispatchAddTokenToList = async (store, tokenAddress) => {
   const fetchTokensMock = jest.fn()
