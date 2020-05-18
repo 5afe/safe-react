@@ -63,7 +63,7 @@ const getIpfsLinkFromEns = async (name) => {
   try {
     const content = await getContentFromENS(name)
     if (content && content.protocolType === 'ipfs') {
-      return `${process.env.REACT_APP_IPFS_NODE}/${content.decoded}/`
+      return `${process.env.REACT_APP_IPFS_GATEWAY}/${content.decoded}/`
     }
   } catch (error) {
     console.error(error)
