@@ -217,6 +217,8 @@
     "@types/node": "^13.11.0",
     "@types/react": "^16.9.32",
     "@types/react-dom": "^16.9.6",
+    "@typescript-eslint/eslint-plugin": "^2.34.0",
+    "@typescript-eslint/parser": "^2.34.0",
     "autoprefixer": "9.7.6",
     "classnames": "^2.2.6",
     "concurrently": "4.1.2",
