@@ -1,7 +1,7 @@
 // 
 import axios from 'axios'
 
-import { getRelayUrl } from 'config/index'
+import { getRelayUrl } from '~/config/index'
 
 const fetchToken = (tokenAddress) => {
   const apiUrl = getRelayUrl()

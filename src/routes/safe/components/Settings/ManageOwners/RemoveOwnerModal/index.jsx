@@ -9,17 +9,17 @@ import CheckOwner from './screens/CheckOwner'
 import ReviewRemoveOwner from './screens/Review'
 import ThresholdForm from './screens/ThresholdForm'
 
-import Modal from 'components/Modal'
-import { SENTINEL_ADDRESS, getGnosisSafeInstanceAt } from 'logic/contracts/safeContracts'
-import { TX_NOTIFICATION_TYPES } from 'logic/safe/transactions'
-import createTransaction from 'routes/safe/store/actions/createTransaction'
-import removeSafeOwner from 'routes/safe/store/actions/removeSafeOwner'
-import { } from 'routes/safe/store/models/owner'
+import Modal from '~/components/Modal'
+import { SENTINEL_ADDRESS, getGnosisSafeInstanceAt } from '~/logic/contracts/safeContracts'
+import { TX_NOTIFICATION_TYPES } from '~/logic/safe/transactions'
+import createTransaction from '~/routes/safe/store/actions/createTransaction'
+import removeSafeOwner from '~/routes/safe/store/actions/removeSafeOwner'
+import { } from '~/routes/safe/store/models/owner'
 import {
   safeOwnersSelector,
   safeParamAddressFromStateSelector,
   safeThresholdSelector,
-} from 'routes/safe/store/selectors'
+} from '~/routes/safe/store/selectors'
 
 const styles = () => ({
   biggerModalWindow: {

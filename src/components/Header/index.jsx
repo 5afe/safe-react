@@ -11,10 +11,10 @@ import ProviderAccessible from './components/ProviderInfo/ProviderAccessible'
 import ProviderDisconnected from './components/ProviderInfo/ProviderDisconnected'
 import selector, { } from './selector'
 
-import { onboard } from 'components/ConnectButton'
-import { NOTIFICATIONS, showSnackbar } from 'logic/notifications'
-import { loadLastUsedProvider } from 'logic/wallets/store/middlewares/providerWatcher'
-import { logComponentStack } from 'utils/logBoundaries'
+import { onboard } from '~/components/ConnectButton'
+import { NOTIFICATIONS, showSnackbar } from '~/logic/notifications'
+import { loadLastUsedProvider } from '~/logic/wallets/store/middlewares/providerWatcher'
+import { logComponentStack } from '~/utils/logBoundaries'
 
 
 

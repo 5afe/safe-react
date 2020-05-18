@@ -1,6 +1,6 @@
 // 
 
-import { getWeb3 } from 'logic/wallets/getWeb3'
+import { getWeb3 } from '~/logic/wallets/getWeb3'
 
 class ABIService {
   static extractUsefulMethods(abi) {

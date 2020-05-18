@@ -1,6 +1,6 @@
 // 
 import { List } from 'immutable'
-import { generateSignaturesFromTxConfirmations } from 'logic/safe/safeTxSigner'
+import { generateSignaturesFromTxConfirmations } from '~/logic/safe/safeTxSigner'
 
 const makeMockConfirmation = (address) => ({ owner: { address } })
 

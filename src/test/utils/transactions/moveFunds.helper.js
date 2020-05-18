@@ -1,7 +1,7 @@
 // 
 import * as React from 'react'
 import { fireEvent, waitForElement, act } from '@testing-library/react'
-import { sleep } from 'utils/timer'
+import { sleep } from '~/utils/timer'
 
 export const fillAndSubmitSendFundsForm = async (
   SafeDom,

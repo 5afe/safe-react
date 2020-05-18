@@ -3,10 +3,10 @@ import { makeStyles } from '@material-ui/core/styles'
 import React from 'react'
 import { useField, useFormState } from 'react-final-form'
 
-import Button from 'components/layout/Button'
-import Row from 'components/layout/Row'
-import { styles } from 'routes/safe/components/Balances/SendModal/screens/ContractInteraction/style'
-import { createTxObject } from 'routes/safe/components/Balances/SendModal/screens/ContractInteraction/utils'
+import Button from '~/components/layout/Button'
+import Row from '~/components/layout/Row'
+import { styles } from '~/routes/safe/components/Balances/SendModal/screens/ContractInteraction/style'
+import { createTxObject } from '~/routes/safe/components/Balances/SendModal/screens/ContractInteraction/utils'
 
 const useStyles = makeStyles(styles)
 

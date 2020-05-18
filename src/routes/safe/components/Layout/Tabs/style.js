@@ -1,5 +1,5 @@
 // 
-import { secondary } from 'theme/variables'
+import { secondary } from '~/theme/variables'
 
 export const styles = () => ({
   tabWrapper: {

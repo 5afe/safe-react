@@ -2,13 +2,13 @@
 import React from 'react'
 import styled from 'styled-components'
 
-import CopyBtn from 'components/CopyBtn'
-import EtherscanBtn from 'components/EtherscanBtn'
-import Identicon from 'components/Identicon'
-import Block from 'components/layout/Block'
-import Bold from 'components/layout/Bold'
-import Paragraph from 'components/layout/Paragraph'
-import { border, xs } from 'theme/variables'
+import CopyBtn from '~/components/CopyBtn'
+import EtherscanBtn from '~/components/EtherscanBtn'
+import Identicon from '~/components/Identicon'
+import Block from '~/components/layout/Block'
+import Bold from '~/components/layout/Bold'
+import Paragraph from '~/components/layout/Paragraph'
+import { border, xs } from '~/theme/variables'
 
 const Wrapper = styled.div`
   display: flex;

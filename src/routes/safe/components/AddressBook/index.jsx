@@ -12,22 +12,22 @@ import { useDispatch, useSelector } from 'react-redux'
 
 import { styles } from './style'
 
-import Table from 'components/Table'
-import { cellWidth } from 'components/Table/TableHead'
-import Block from 'components/layout/Block'
-import Button from 'components/layout/Button'
-import ButtonLink from 'components/layout/ButtonLink'
-import Col from 'components/layout/Col'
-import Img from 'components/layout/Img'
-import Row from 'components/layout/Row'
-import { makeAddressBookEntry } from 'logic/addressBook/model/addressBook'
-import { addAddressBookEntry } from 'logic/addressBook/store/actions/addAddressBookEntry'
-import { removeAddressBookEntry } from 'logic/addressBook/store/actions/removeAddressBookEntry'
-import { updateAddressBookEntry } from 'logic/addressBook/store/actions/updateAddressBookEntry'
-import { getAddressBookListSelector } from 'logic/addressBook/store/selectors'
-import { isUserOwnerOnAnySafe } from 'logic/wallets/ethAddresses'
-import CreateEditEntryModal from 'routes/safe/components/AddressBook/CreateEditEntryModal'
-import DeleteEntryModal from 'routes/safe/components/AddressBook/DeleteEntryModal'
+import Table from '~/components/Table'
+import { cellWidth } from '~/components/Table/TableHead'
+import Block from '~/components/layout/Block'
+import Button from '~/components/layout/Button'
+import ButtonLink from '~/components/layout/ButtonLink'
+import Col from '~/components/layout/Col'
+import Img from '~/components/layout/Img'
+import Row from '~/components/layout/Row'
+import { makeAddressBookEntry } from '~/logic/addressBook/model/addressBook'
+import { addAddressBookEntry } from '~/logic/addressBook/store/actions/addAddressBookEntry'
+import { removeAddressBookEntry } from '~/logic/addressBook/store/actions/removeAddressBookEntry'
+import { updateAddressBookEntry } from '~/logic/addressBook/store/actions/updateAddressBookEntry'
+import { getAddressBookListSelector } from '~/logic/addressBook/store/selectors'
+import { isUserOwnerOnAnySafe } from '~/logic/wallets/ethAddresses'
+import CreateEditEntryModal from '~/routes/safe/components/AddressBook/CreateEditEntryModal'
+import DeleteEntryModal from '~/routes/safe/components/AddressBook/DeleteEntryModal'
 import {
   AB_ADDRESS_ID,
   ADDRESS_BOOK_ROW_ID,
@@ -35,14 +35,14 @@ import {
   REMOVE_ENTRY_BUTTON,
   SEND_ENTRY_BUTTON,
   generateColumns,
-} from 'routes/safe/components/AddressBook/columns'
-import SendModal from 'routes/safe/components/Balances/SendModal'
-import OwnerAddressTableCell from 'routes/safe/components/Settings/ManageOwners/OwnerAddressTableCell'
-import RenameOwnerIcon from 'routes/safe/components/Settings/ManageOwners/assets/icons/rename-owner.svg'
-import RemoveOwnerIcon from 'routes/safe/components/Settings/assets/icons/bin.svg'
-import RemoveOwnerIconDisabled from 'routes/safe/components/Settings/assets/icons/disabled-bin.svg'
-import { addressBookQueryParamsSelector, safesListSelector } from 'routes/safe/store/selectors'
-import { checksumAddress } from 'utils/checksumAddress'
+} from '~/routes/safe/components/AddressBook/columns'
+import SendModal from '~/routes/safe/components/Balances/SendModal'
+import OwnerAddressTableCell from '~/routes/safe/components/Settings/ManageOwners/OwnerAddressTableCell'
+import RenameOwnerIcon from '~/routes/safe/components/Settings/ManageOwners/assets/icons/rename-owner.svg'
+import RemoveOwnerIcon from '~/routes/safe/components/Settings/assets/icons/bin.svg'
+import RemoveOwnerIconDisabled from '~/routes/safe/components/Settings/assets/icons/disabled-bin.svg'
+import { addressBookQueryParamsSelector, safesListSelector } from '~/routes/safe/store/selectors'
+import { checksumAddress } from '~/utils/checksumAddress'
 
 
 const AddressBookTable = ({ classes }) => {

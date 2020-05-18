@@ -1,7 +1,7 @@
 // 
 import * as React from 'react'
 
-import { border } from 'theme/variables'
+import { border } from '~/theme/variables'
 
 
 const style = {

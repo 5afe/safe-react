@@ -5,9 +5,9 @@ import {
   SAFE_MASTER_COPY_ADDRESS,
   getEncodedMultiSendCallData,
   getGnosisSafeInstanceAt,
-} from 'logic/contracts/safeContracts'
-import { DELEGATE_CALL } from 'logic/safe/transactions'
-import { getWeb3 } from 'logic/wallets/getWeb3'
+} from '~/logic/contracts/safeContracts'
+import { DELEGATE_CALL } from '~/logic/safe/transactions'
+import { getWeb3 } from '~/logic/wallets/getWeb3'
 
 export const upgradeSafeToLatestVersion = async (safeAddress, createTransaction) => {
   const sendTransactions = async (txs) => {

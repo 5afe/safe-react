@@ -2,7 +2,7 @@
 import React from 'react'
 import { OnChange } from 'react-final-form-listeners'
 
-import GnoField from 'components/forms/Field'
+import GnoField from '~/components/forms/Field'
 
 const WhenFieldChanges = ({ field, set, to }) => (
   <GnoField name={set} subscription={{}}>

@@ -7,10 +7,10 @@ import { withStyles } from '@material-ui/core/styles'
 import { List } from 'immutable'
 import * as React from 'react'
 
-import TableHead, { } from 'components/Table/TableHead'
-import { getSorting, stableSort } from 'components/Table/sorting'
-import Row from 'components/layout/Row'
-import { sm, xl, xxl } from 'theme/variables'
+import TableHead, { } from '~/components/Table/TableHead'
+import { getSorting, stableSort } from '~/components/Table/sorting'
+import Row from '~/components/layout/Row'
+import { sm, xl, xxl } from '~/theme/variables'
 
 
 

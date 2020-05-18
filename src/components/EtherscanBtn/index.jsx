@@ -6,9 +6,9 @@ import React from 'react'
 
 import EtherscanOpenIcon from './img/etherscan-open.svg'
 
-import Img from 'components/layout/Img'
-import { getEtherScanLink } from 'logic/wallets/getWeb3'
-import { xs } from 'theme/variables'
+import Img from '~/components/layout/Img'
+import { getEtherScanLink } from '~/logic/wallets/getWeb3'
+import { xs } from '~/theme/variables'
 
 const useStyles = makeStyles({
   container: {

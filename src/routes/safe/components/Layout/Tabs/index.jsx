@@ -12,12 +12,12 @@ import {
   BALANCES_TAB_BTN_TEST_ID,
   SETTINGS_TAB_BTN_TEST_ID,
   TRANSACTIONS_TAB_BTN_TEST_ID,
-} from 'routes/safe/components/Layout'
-import SettingsTab from 'routes/safe/components/Layout/Tabs/SettingsTab'
-import { AddressBookIcon } from 'routes/safe/components/assets/AddressBookIcon'
-import { AppsIcon } from 'routes/safe/components/assets/AppsIcon'
-import { BalancesIcon } from 'routes/safe/components/assets/BalancesIcon'
-import { TransactionsIcon } from 'routes/safe/components/assets/TransactionsIcon'
+} from '~/routes/safe/components/Layout'
+import SettingsTab from '~/routes/safe/components/Layout/Tabs/SettingsTab'
+import { AddressBookIcon } from '~/routes/safe/components/assets/AddressBookIcon'
+import { AppsIcon } from '~/routes/safe/components/assets/AppsIcon'
+import { BalancesIcon } from '~/routes/safe/components/assets/BalancesIcon'
+import { TransactionsIcon } from '~/routes/safe/components/assets/TransactionsIcon'
 
 
 const TabsComponent = (props) => {

@@ -1,11 +1,11 @@
 // 
 import { } from 'redux'
-import { aNewStore, } from 'store'
-import { sleep } from 'utils/timer'
-import { getWeb3 } from 'logic/wallets/getWeb3'
-import { sendEtherTo } from 'test/utils/tokenMovements'
-import { aMinedSafe } from 'test/builder/safe.redux.builder'
-import { renderSafeView } from 'test/builder/safe.dom.utils'
+import { aNewStore, } from '~/store'
+import { sleep } from '~/utils/timer'
+import { getWeb3 } from '~/logic/wallets/getWeb3'
+import { sendEtherTo } from '~/test/utils/tokenMovements'
+import { aMinedSafe } from '~/test/builder/safe.redux.builder'
+import { renderSafeView } from '~/test/builder/safe.dom.utils'
 
 
 export const renderSafeInDom = async (owners = 1, threshold = 1) => {

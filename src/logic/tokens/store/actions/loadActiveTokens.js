@@ -3,9 +3,9 @@ import { List, Map } from 'immutable'
 
 import saveTokens from './saveTokens'
 
-import { makeToken } from 'logic/tokens/store/model/token'
-import { getActiveTokens } from 'logic/tokens/utils/tokensStorage'
-import { } from 'store/index'
+import { makeToken } from '~/logic/tokens/store/model/token'
+import { getActiveTokens } from '~/logic/tokens/utils/tokensStorage'
+import { } from '~/store/index'
 
 const loadActiveTokens = () => async (dispatch) => {
   try {

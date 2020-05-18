@@ -1,5 +1,5 @@
 // 
-import { getIntercomId } from 'config'
+import { getIntercomId } from '~/config'
 
 // eslint-disable-next-line consistent-return
 export const loadIntercom = () => {

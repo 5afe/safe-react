@@ -9,29 +9,29 @@ import { withRouter } from 'react-router-dom'
 import { styles } from './style'
 import { getAddressValidator } from './validators'
 
-import QRIcon from 'assets/icons/qrcode.svg'
-import trash from 'assets/icons/trash.svg'
-import ScanQRModal from 'components/ScanQRModal'
-import OpenPaper from 'components/Stepper/OpenPaper'
-import AddressInput from 'components/forms/AddressInput'
-import Field from 'components/forms/Field'
-import SelectField from 'components/forms/SelectField'
-import TextField from 'components/forms/TextField'
-import { composeValidators, minValue, mustBeInteger, noErrorsOn, required } from 'components/forms/validator'
-import Block from 'components/layout/Block'
-import Button from 'components/layout/Button'
-import Col from 'components/layout/Col'
-import Hairline from 'components/layout/Hairline'
-import Img from 'components/layout/Img'
-import Paragraph from 'components/layout/Paragraph'
-import Row from 'components/layout/Row'
+import QRIcon from '~/assets/icons/qrcode.svg'
+import trash from '~/assets/icons/trash.svg'
+import ScanQRModal from '~/components/ScanQRModal'
+import OpenPaper from '~/components/Stepper/OpenPaper'
+import AddressInput from '~/components/forms/AddressInput'
+import Field from '~/components/forms/Field'
+import SelectField from '~/components/forms/SelectField'
+import TextField from '~/components/forms/TextField'
+import { composeValidators, minValue, mustBeInteger, noErrorsOn, required } from '~/components/forms/validator'
+import Block from '~/components/layout/Block'
+import Button from '~/components/layout/Button'
+import Col from '~/components/layout/Col'
+import Hairline from '~/components/layout/Hairline'
+import Img from '~/components/layout/Img'
+import Paragraph from '~/components/layout/Paragraph'
+import Row from '~/components/layout/Row'
 import {
   FIELD_CONFIRMATIONS,
   getNumOwnersFrom,
   getOwnerAddressBy,
   getOwnerNameBy,
-} from 'routes/open/components/fields'
-import { getAccountsFrom } from 'routes/open/utils/safeDataExtractor'
+} from '~/routes/open/components/fields'
+import { getAccountsFrom } from '~/routes/open/utils/safeDataExtractor'
 
 
 const { useState } = React
