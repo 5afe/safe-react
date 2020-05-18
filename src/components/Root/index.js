@@ -13,8 +13,8 @@ import { wrapInSuspense } from 'utils/wrapInSuspense'
 import Loader from '../Loader'
 import PageFrame from '../layout/PageFrame'
 
-import './index.scss'
-import './OnboardCustom.scss'
+import './index.module.scss'
+import './OnboardCustom.module.scss'
 
 const Root = () => (
   <ThemeProvider theme={styledTheme}>

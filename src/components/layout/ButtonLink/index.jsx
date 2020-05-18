@@ -3,7 +3,7 @@
 import cn from 'classnames/bind'
 import * as React from 'react'
 
-import styles from './index.scss'
+import styles from './index.module.scss'
 
 const cx = cn.bind(styles)
 

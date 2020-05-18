@@ -2,7 +2,7 @@
 import OpenInNew from '@material-ui/icons/OpenInNew'
 import * as React from 'react'
 
-import styles from './Layout.scss'
+import styles from './Layout.module.scss'
 
 import ConnectButton from 'components/ConnectButton'
 import Block from 'components/layout/Block'
