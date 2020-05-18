@@ -1,11 +1,11 @@
-// @flow
+// 
 import { Map } from 'immutable'
 
 import { loadFromStorage, saveToStorage } from '~/utils/storage'
 
-const getSubjectKeyFrom = (safeAddress: string) => `TXS-SUBJECTS-${safeAddress}`
+const getSubjectKeyFrom = (safeAddress) => `TXS-SUBJECTS-${safeAddress}`
 
-export const storeSubject = async (safeAddress: string, nonce: number, subject: string) => {
+export const storeSubject = async (safeAddress, nonce, subject) => {
   const key = getSubjectKeyFrom(safeAddress)
   const subjects = Map(await loadFromStorage(key)) || Map()
 

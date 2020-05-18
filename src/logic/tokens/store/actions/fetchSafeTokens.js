@@ -1,8 +1,7 @@
-// @flow
+// 
 import { BigNumber } from 'bignumber.js'
 import { List, Map } from 'immutable'
 import { batch } from 'react-redux'
-import type { Dispatch as ReduxDispatch } from 'redux'
 
 import fetchTokenCurrenciesBalances from '~/logic/currencyValues/api/fetchTokenCurrenciesBalances'
 import { setCurrencyBalances } from '~/logic/currencyValues/store/actions/setCurrencyBalances'
@@ -13,13 +12,13 @@ import { makeToken } from '~/logic/tokens/store/model/token'
 import { TOKEN_REDUCER_ID } from '~/logic/tokens/store/reducer/tokens'
 import updateSafe from '~/routes/safe/store/actions/updateSafe'
 import { SAFE_REDUCER_ID } from '~/routes/safe/store/reducer/safe'
-import { type GetState, type GlobalState } from '~/store'
+import { } from '~/store'
 
 const humanReadableBalance = (balance, decimals) => BigNumber(balance).times(`1e-${decimals}`).toFixed()
 const noFunc = () => {}
 const updateSafeValue = (address) => (valueToUpdate) => updateSafe({ address, ...valueToUpdate })
 
-const fetchSafeTokens = (safeAddress: string) => async (dispatch: ReduxDispatch<GlobalState>, getState: GetState) => {
+const fetchSafeTokens = (safeAddress) => async (dispatch, getState) => {
   try {
     const state = getState()
     const safe = state[SAFE_REDUCER_ID].getIn([SAFE_REDUCER_ID, safeAddress])

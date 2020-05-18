@@ -1,4 +1,4 @@
-// @flow
+// 
 import { Card, FixedDialog, FixedIcon, IconText, Menu, Text, Title } from '@gnosis.pm/safe-react-components'
 import { withSnackbar } from 'notistack'
 import React, { useCallback, useEffect, useState } from 'react'
@@ -43,14 +43,8 @@ const operations = {
   ON_SAFE_INFO: 'ON_SAFE_INFO',
 }
 
-type Props = {
-  enqueueSnackbar: Function,
-  closeSnackbar: Function,
-  openModal: () => {},
-  closeModal: () => {},
-}
 
-function Apps({ closeModal, closeSnackbar, enqueueSnackbar, openModal }: Props) {
+function Apps({ closeModal, closeSnackbar, enqueueSnackbar, openModal }) {
   const [appList, setAppList] = useState([])
   const [legalDisclaimerAccepted, setLegalDisclaimerAccepted] = useState(false)
   const [selectedApp, setSelectedApp] = useState()
@@ -211,7 +205,7 @@ function Apps({ closeModal, closeSnackbar, enqueueSnackbar, openModal }: Props) 
     }
   }
 
-  const onAppToggle = async (appId: string, enabled: boolean) => {
+  const onAppToggle = async (appId, enabled) => {
     // update in-memory list
     const copyAppList = [...appList]
 

@@ -1,4 +1,4 @@
-// @flow
+// 
 import IconButton from '@material-ui/core/IconButton'
 import { withStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
@@ -6,13 +6,13 @@ import { List } from 'immutable'
 import React, { useState } from 'react'
 import { connect, useSelector } from 'react-redux'
 
-import actions, { type Actions } from './actions'
+import actions, { } from './actions'
 import { styles } from './style'
 
 import Hairline from '~/components/layout/Hairline'
 import Paragraph from '~/components/layout/Paragraph'
 import Row from '~/components/layout/Row'
-import { type Token } from '~/logic/tokens/store/model/token'
+import { } from '~/logic/tokens/store/model/token'
 import { orderedTokenListSelector } from '~/logic/tokens/store/selectors'
 import AddCustomAssetComponent from '~/routes/safe/components/Balances/Tokens/screens/AddCustomAsset'
 import AddCustomToken from '~/routes/safe/components/Balances/Tokens/screens/AddCustomToken'
@@ -23,19 +23,9 @@ import { safeBlacklistedTokensSelector } from '~/routes/safe/store/selectors'
 
 export const MANAGE_TOKENS_MODAL_CLOSE_BUTTON_TEST_ID = 'manage-tokens-close-modal-btn'
 
-type ActiveScreen = 'tokenList' | 'addCustomToken' | 'assetsList' | 'addCustomAsset'
 
-type Props = Actions & {
-  onClose: () => void,
-  classes: Object,
-  tokens: List<Token>,
-  safeAddress: string,
-  activeTokens: List<Token>,
-  blacklistedTokens: List<Token>,
-  modalScreen: ActiveScreen,
-}
 
-const Tokens = (props: Props) => {
+const Tokens = (props) => {
   const {
     activateTokenForAllSafes,
     addToken,
@@ -50,7 +40,7 @@ const Tokens = (props: Props) => {
   const tokens = useSelector(orderedTokenListSelector)
   const activeTokens = useSelector(extendedSafeTokensSelector)
   const blacklistedTokens = useSelector(safeBlacklistedTokensSelector)
-  const [activeScreen, setActiveScreen] = useState<ActiveScreen>(modalScreen)
+  const [activeScreen, setActiveScreen] = useState(modalScreen)
 
   return (
     <>

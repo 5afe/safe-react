@@ -1,4 +1,4 @@
-// @flow
+// 
 import IconButton from '@material-ui/core/IconButton'
 import { withStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
@@ -21,20 +21,12 @@ import { formatAmount } from '~/logic/tokens/utils/formatAmount'
 import { EMPTY_DATA } from '~/logic/wallets/ethTransactions'
 import { getWeb3 } from '~/logic/wallets/getWeb3'
 import createTransaction from '~/routes/safe/store/actions/createTransaction'
-import { type Transaction } from '~/routes/safe/store/models/transaction'
+import { } from '~/routes/safe/store/models/transaction'
 import { safeParamAddressFromStateSelector } from '~/routes/safe/store/selectors'
 
-type Props = {
-  onClose: () => void,
-  classes: Object,
-  isOpen: boolean,
-  tx: Transaction,
-  enqueueSnackbar: Function,
-  closeSnackbar: Function,
-}
 
-const RejectTxModal = ({ classes, closeSnackbar, enqueueSnackbar, isOpen, onClose, tx }: Props) => {
-  const [gasCosts, setGasCosts] = useState<string>('< 0.001')
+const RejectTxModal = ({ classes, closeSnackbar, enqueueSnackbar, isOpen, onClose, tx }) => {
+  const [gasCosts, setGasCosts] = useState('< 0.001')
   const dispatch = useDispatch()
   const safeAddress = useSelector(safeParamAddressFromStateSelector)
   useEffect(() => {

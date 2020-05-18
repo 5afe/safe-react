@@ -1,4 +1,4 @@
-// @flow
+// 
 import React from 'react'
 
 import TextareaField from '~/components/forms/TextareaField'
@@ -8,7 +8,7 @@ import EtherscanService from '~/logic/contractInteraction/sources/EtherscanServi
 
 export const NO_DATA = 'no data'
 
-const mustBeValidABI = (abi: string) => {
+const mustBeValidABI = (abi) => {
   try {
     const parsedABI = EtherscanService.extractUsefulMethods(JSON.parse(abi))
 

@@ -1,4 +1,4 @@
-// @flow
+// 
 import semverLessThan from 'semver/functions/lt'
 import semverSatisfies from 'semver/functions/satisfies'
 import semverValid from 'semver/functions/valid'
@@ -11,7 +11,7 @@ export const FEATURES = [
   { name: 'ERC1155', validVersion: '>=1.1.1' },
 ]
 
-export const safeNeedsUpdate = (currentVersion: string, latestVersion: string) => {
+export const safeNeedsUpdate = (currentVersion, latestVersion) => {
   if (!currentVersion || !latestVersion) {
     return false
   }
@@ -24,7 +24,7 @@ export const safeNeedsUpdate = (currentVersion: string, latestVersion: string) =
 
 export const getCurrentSafeVersion = (gnosisSafeInstance) => gnosisSafeInstance.VERSION()
 
-export const enabledFeatures = (version: string) =>
+export const enabledFeatures = (version) =>
   FEATURES.reduce((acc, feature) => {
     if (semverSatisfies(version, feature.validVersion)) {
       acc.push(feature.name)
@@ -57,7 +57,7 @@ export const getCurrentMasterContractLastVersion = async () => {
   return safeMasterVersion
 }
 
-export const getSafeVersionInfo = async (safeAddress: string) => {
+export const getSafeVersionInfo = async (safeAddress) => {
   try {
     const safeMaster = await getGnosisSafeInstanceAt(safeAddress)
     const lastSafeVersion = await getCurrentMasterContractLastVersion()

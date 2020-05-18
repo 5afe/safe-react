@@ -1,4 +1,4 @@
-// @flow
+// 
 import stagingConfig from './staging'
 import { TX_SERVICE_HOST, RELAY_API_URL } from '~/config/names'
 

@@ -1,4 +1,4 @@
-// @flow
+// 
 export * from './addProvider'
 export * from './fetchProvider'
 export * from './removeProvider'

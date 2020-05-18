@@ -1,4 +1,4 @@
-// @flow
+// 
 import { makeStyles } from '@material-ui/core/styles'
 import React, { useState } from 'react'
 import { useSelector } from 'react-redux'
@@ -32,22 +32,10 @@ const Balances = React.lazy(() => import('../Balances'))
 const TxsTable = React.lazy(() => import('~/routes/safe/components/Transactions/TxsTable'))
 const AddressBookTable = React.lazy(() => import('~/routes/safe/components/AddressBook'))
 
-type Props = {
-  classes: Object,
-  sendFunds: Object,
-  showReceive: boolean,
-  onShow: Function,
-  onHide: Function,
-  showSendFunds: Function,
-  hideSendFunds: Function,
-  match: Object,
-  location: Object,
-  history: Object,
-}
 
 const useStyles = makeStyles(styles)
 
-const Layout = (props: Props) => {
+const Layout = (props) => {
   const classes = useStyles()
   const { hideSendFunds, match, onHide, onShow, sendFunds, showReceive, showSendFunds } = props
 

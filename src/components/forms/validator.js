@@ -1,14 +1,14 @@
-// @flow
-import { type FieldValidator } from 'final-form'
+// 
+import { } from 'final-form'
 import { List } from 'immutable'
 
 import { sameAddress } from '~/logic/wallets/ethAddresses'
 import { getWeb3 } from '~/logic/wallets/getWeb3'
 
-export const simpleMemoize = (fn: Function) => {
+export const simpleMemoize = (fn) => {
   let lastArg
   let lastResult
-  return (arg: any, ...args: any) => {
+  return (arg, ...args) => {
     if (arg !== lastArg) {
       lastArg = arg
       lastResult = fn(arg, ...args)
@@ -17,16 +17,15 @@ export const simpleMemoize = (fn: Function) => {
   }
 }
 
-type Field = boolean | string | null | typeof undefined
 
-export const required = (value: Field) => (value ? undefined : 'Required')
+export const required = (value) => (value ? undefined : 'Required')
 
-export const mustBeInteger = (value: string) =>
+export const mustBeInteger = (value) =>
   !Number.isInteger(Number(value)) || value.includes('.') ? 'Must be an integer' : undefined
 
-export const mustBeFloat = (value: number) => (value && Number.isNaN(Number(value)) ? 'Must be a number' : undefined)
+export const mustBeFloat = (value) => (value && Number.isNaN(Number(value)) ? 'Must be a number' : undefined)
 
-export const greaterThan = (min: number) => (value: string) => {
+export const greaterThan = (min) => (value) => {
   if (Number.isNaN(Number(value)) || Number.parseFloat(value) > Number(min)) {
     return undefined
   }
@@ -36,7 +35,7 @@ export const greaterThan = (min: number) => (value: string) => {
 
 const regexQuery = /^(?:(?:https?|ftp):\/\/)(?:\S+(?::\S*)?@)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,}))\.?)(?::\d{2,5})?(?:[/?#]\S*)?$/i
 const url = new RegExp(regexQuery)
-export const mustBeUrl = (value: string) => {
+export const mustBeUrl = (value) => {
   if (url.test(value)) {
     return undefined
   }
@@ -44,7 +43,7 @@ export const mustBeUrl = (value: string) => {
   return 'Please, provide a valid url'
 }
 
-export const minValue = (min: number) => (value: string) => {
+export const minValue = (min) => (value) => {
   if (Number.isNaN(Number(value)) || Number.parseFloat(value) >= Number(min)) {
     return undefined
   }
@@ -52,7 +51,7 @@ export const minValue = (min: number) => (value: string) => {
   return `Should be at least ${min}`
 }
 
-export const maxValue = (max: number | string) => (value: string) => {
+export const maxValue = (max) => (value) => {
   if (Number.isNaN(Number(value)) || parseFloat(value, 10) <= parseFloat(max, 10)) {
     return undefined
   }
@@ -62,36 +61,36 @@ export const maxValue = (max: number | string) => (value: string) => {
 
 export const ok = () => undefined
 
-export const mustBeEthereumAddress = simpleMemoize((address: string) => {
+export const mustBeEthereumAddress = simpleMemoize((address) => {
   const startsWith0x = address.startsWith('0x')
-  const isAddress: boolean = getWeb3().utils.isAddress(address)
+  const isAddress = getWeb3().utils.isAddress(address)
 
   return startsWith0x && isAddress ? undefined : 'Address should be a valid Ethereum address or ENS name'
 })
 
-export const mustBeEthereumContractAddress = simpleMemoize(async (address: string) => {
-  const contractCode: string = await getWeb3().eth.getCode(address)
+export const mustBeEthereumContractAddress = simpleMemoize(async (address) => {
+  const contractCode = await getWeb3().eth.getCode(address)
 
   return !contractCode || contractCode.replace('0x', '').replace(/0/g, '') === ''
     ? 'Address should be a valid Ethereum contract address or ENS name'
     : undefined
 })
 
-export const minMaxLength = (minLen: string | number, maxLen: string | number) => (value: string) =>
+export const minMaxLength = (minLen, maxLen) => (value) =>
   value.length >= +minLen && value.length <= +maxLen ? undefined : `Should be ${minLen} to ${maxLen} symbols`
 
 export const ADDRESS_REPEATED_ERROR = 'Address already introduced'
 
-export const uniqueAddress = (addresses: string[] | List<string>) =>
-  simpleMemoize((value: string) => {
+export const uniqueAddress = (addresses) =>
+  simpleMemoize((value) => {
     const addressAlreadyExists = addresses.some((address) => sameAddress(value, address))
     return addressAlreadyExists ? ADDRESS_REPEATED_ERROR : undefined
   })
 
-export const composeValidators = (...validators: Function[]): FieldValidator => (value: Field) =>
+export const composeValidators = (...validators) => (value) =>
   validators.reduce((error, validator) => error || validator(value), undefined)
 
-export const inLimit = (limit: number, base: number, baseText: string, symbol: string = 'ETH') => (value: string) => {
+export const inLimit = (limit, base, baseText, symbol = 'ETH') => (value) => {
   const amount = Number(value)
   const max = limit - base
   if (amount <= max) {
@@ -101,7 +100,7 @@ export const inLimit = (limit: number, base: number, baseText: string, symbol: s
   return `Should not exceed ${max} ${symbol} (amount to reach ${baseText})`
 }
 
-export const differentFrom = (diffValue: string | number) => (value: string) => {
+export const differentFrom = (diffValue) => (value) => {
   if (value === diffValue.toString()) {
     return `Value should be different than ${value}`
   }
@@ -109,4 +108,4 @@ export const differentFrom = (diffValue: string | number) => (value: string) => 
   return undefined
 }
 
-export const noErrorsOn = (name: string, errors: Object) => errors[name] === undefined
+export const noErrorsOn = (name, errors) => errors[name] === undefined

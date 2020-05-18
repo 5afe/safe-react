@@ -1,4 +1,4 @@
-// @flow
+// 
 import Badge from '@material-ui/core/Badge'
 import { withStyles } from '@material-ui/core/styles'
 import cn from 'classnames'
@@ -32,17 +32,13 @@ import { safeOwnersSelector } from '~/routes/safe/store/selectors'
 
 export const OWNERS_SETTINGS_TAB_TEST_ID = 'owner-settings-tab'
 
-type Props = {
-  classes: Object,
-}
 const INITIAL_STATE = {
   showRemoveSafe: false,
   menuOptionIndex: 1,
 }
 
-type Action = 'RemoveSafe'
 
-const Settings = (props: Props) => {
+const Settings = (props) => {
   const [state, setState] = useState(INITIAL_STATE)
   const owners = useSelector(safeOwnersSelector)
   const needsUpdate = useSelector(safeNeedsUpdate)
@@ -53,11 +49,11 @@ const Settings = (props: Props) => {
     setState((prevState) => ({ ...prevState, menuOptionIndex }))
   }
 
-  const onShow = (action: Action) => () => {
+  const onShow = (action) => () => {
     setState((prevState) => ({ ...prevState, [`show${action}`]: true }))
   }
 
-  const onHide = (action: Action) => () => {
+  const onHide = (action) => () => {
     setState((prevState) => ({ ...prevState, [`show${action}`]: false }))
   }
 

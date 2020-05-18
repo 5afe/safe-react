@@ -1,8 +1,7 @@
-// @flow
+// 
 import { List, Map } from 'immutable'
-import { type ActionType, handleActions } from 'redux-actions'
+import { handleActions } from 'redux-actions'
 
-import type { AddressBook, AddressBookEntry, AddressBookProps } from '~/logic/addressBook/model/addressBook'
 import { makeAddressBookEntry } from '~/logic/addressBook/model/addressBook'
 import { ADD_ADDRESS_BOOK } from '~/logic/addressBook/store/actions/addAddressBook'
 import { ADD_ENTRY } from '~/logic/addressBook/store/actions/addAddressBookEntry'
@@ -16,11 +15,10 @@ import { checksumAddress } from '~/utils/checksumAddress'
 
 export const ADDRESS_BOOK_REDUCER_ID = 'addressBook'
 
-export type State = Map<string, Map<string, AddressBookEntry>>
 
-export const buildAddressBook = (storedAdbk: AddressBook): AddressBookProps => {
+export const buildAddressBook = (storedAdbk) => {
   let addressBookBuilt = Map([])
-  Object.entries(storedAdbk).forEach((adbkProps: Array<string, AddressBookEntry[]>) => {
+  Object.entries(storedAdbk).forEach((adbkProps) => {
     const safeAddress = checksumAddress(adbkProps[0])
     const adbkRecords = adbkProps[1].map(makeAddressBookEntry)
     const adbkSafeEntries = List(adbkRecords)
@@ -29,13 +27,13 @@ export const buildAddressBook = (storedAdbk: AddressBook): AddressBookProps => {
   return addressBookBuilt
 }
 
-export default handleActions<State, *>(
+export default handleActions(
   {
-    [LOAD_ADDRESS_BOOK]: (state: State, action: ActionType<Function>): State => {
+    [LOAD_ADDRESS_BOOK]: (state, action) => {
       const { addressBook } = action.payload
       return state.set('addressBook', addressBook)
     },
-    [ADD_ADDRESS_BOOK]: (state: State, action: ActionType<Function>): State => {
+    [ADD_ADDRESS_BOOK]: (state, action) => {
       const { addressBook, safeAddress } = action.payload
       // Adds the address book if it does not exists
       const found = state.getIn(['addressBook', safeAddress])
@@ -44,7 +42,7 @@ export default handleActions<State, *>(
       }
       return state
     },
-    [ADD_ENTRY]: (state: State, action: ActionType<Function>): State => {
+    [ADD_ENTRY]: (state, action) => {
       const { entry } = action.payload
 
       // Adds the entry to all the safes (if it does not already exists)
@@ -68,7 +66,7 @@ export default handleActions<State, *>(
       })
       return newState
     },
-    [UPDATE_ENTRY]: (state: State, action: ActionType<Function>): State => {
+    [UPDATE_ENTRY]: (state, action) => {
       const { entry } = action.payload
 
       // Updates the entry from all the safes
@@ -77,7 +75,7 @@ export default handleActions<State, *>(
           .get('addressBook')
           .keySeq()
           .forEach((safeAddress) => {
-            const entriesList: List<AddressBookEntry> = state.getIn(['addressBook', safeAddress])
+            const entriesList = state.getIn(['addressBook', safeAddress])
             const entryIndex = entriesList.findIndex((entryItem) => sameAddress(entryItem.address, entry.address))
             const updatedEntriesList = entriesList.set(entryIndex, entry)
             map.setIn(['addressBook', safeAddress], updatedEntriesList)
@@ -86,7 +84,7 @@ export default handleActions<State, *>(
 
       return newState
     },
-    [REMOVE_ENTRY]: (state: State, action: ActionType<Function>): State => {
+    [REMOVE_ENTRY]: (state, action) => {
       const { entryAddress } = action.payload
       // Removes the entry from all the safes
       const newState = state.withMutations((map) => {
@@ -102,7 +100,7 @@ export default handleActions<State, *>(
       })
       return newState
     },
-    [ADD_OR_UPDATE_ENTRY]: (state: State, action: ActionType<Function>): State => {
+    [ADD_OR_UPDATE_ENTRY]: (state, action) => {
       const { entry, entryAddress } = action.payload
 
       // Adds or Updates the entry to all the safes
@@ -110,7 +108,7 @@ export default handleActions<State, *>(
         const addressBook = map.get('addressBook')
         if (addressBook) {
           addressBook.keySeq().forEach((safeAddress) => {
-            const safeAddressBook: List<AddressBookEntry> = state.getIn(['addressBook', safeAddress])
+            const safeAddressBook = state.getIn(['addressBook', safeAddress])
             const entryIndex = safeAddressBook.findIndex((entryItem) => sameAddress(entryItem.address, entryAddress))
 
             if (entryIndex !== -1) {

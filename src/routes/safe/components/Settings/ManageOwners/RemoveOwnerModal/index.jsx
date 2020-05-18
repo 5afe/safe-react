@@ -1,4 +1,4 @@
-// @flow
+// 
 import { withStyles } from '@material-ui/core/styles'
 import { List } from 'immutable'
 import { withSnackbar } from 'notistack'
@@ -14,7 +14,7 @@ import { SENTINEL_ADDRESS, getGnosisSafeInstanceAt } from '~/logic/contracts/saf
 import { TX_NOTIFICATION_TYPES } from '~/logic/safe/transactions'
 import createTransaction from '~/routes/safe/store/actions/createTransaction'
 import removeSafeOwner from '~/routes/safe/store/actions/removeSafeOwner'
-import { type Owner } from '~/routes/safe/store/models/owner'
+import { } from '~/routes/safe/store/models/owner'
 import {
   safeOwnersSelector,
   safeParamAddressFromStateSelector,
@@ -30,28 +30,18 @@ const styles = () => ({
   },
 })
 
-type Props = {
-  onClose: () => void,
-  classes: Object,
-  isOpen: boolean,
-  ownerAddress: string,
-  ownerName: string,
-  enqueueSnackbar: Function,
-  closeSnackbar: Function,
-}
 
-type ActiveScreen = 'checkOwner' | 'selectThreshold' | 'reviewRemoveOwner'
 
 export const sendRemoveOwner = async (
-  values: Object,
-  safeAddress: string,
-  ownerAddressToRemove: string,
-  ownerNameToRemove: string,
-  ownersOld: List<Owner>,
-  enqueueSnackbar: Function,
-  closeSnackbar: Function,
-  threshold: string,
-  dispatch: Function,
+  values,
+  safeAddress,
+  ownerAddressToRemove,
+  ownerNameToRemove,
+  ownersOld,
+  enqueueSnackbar,
+  closeSnackbar,
+  threshold,
+  dispatch,
 ) => {
   const gnosisSafe = await getGnosisSafeInstanceAt(safeAddress)
   const safeOwners = await gnosisSafe.getOwners()
@@ -80,9 +70,9 @@ export const sendRemoveOwner = async (
   }
 }
 
-const RemoveOwner = ({ classes, closeSnackbar, enqueueSnackbar, isOpen, onClose, ownerAddress, ownerName }: Props) => {
-  const [activeScreen, setActiveScreen] = useState<ActiveScreen>('checkOwner')
-  const [values, setValues] = useState<Object>({})
+const RemoveOwner = ({ classes, closeSnackbar, enqueueSnackbar, isOpen, onClose, ownerAddress, ownerName }) => {
+  const [activeScreen, setActiveScreen] = useState('checkOwner')
+  const [values, setValues] = useState({})
   const dispatch = useDispatch()
   const owners = useSelector(safeOwnersSelector)
   const safeAddress = useSelector(safeParamAddressFromStateSelector)
@@ -108,7 +98,7 @@ const RemoveOwner = ({ classes, closeSnackbar, enqueueSnackbar, isOpen, onClose,
     setActiveScreen('selectThreshold')
   }
 
-  const thresholdSubmitted = (newValues: Object) => {
+  const thresholdSubmitted = (newValues) => {
     values.threshold = newValues.threshold
     setValues(values)
     setActiveScreen('reviewRemoveOwner')

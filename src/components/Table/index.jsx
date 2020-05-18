@@ -1,4 +1,4 @@
-// @flow
+// 
 import CircularProgress from '@material-ui/core/CircularProgress'
 import Table from '@material-ui/core/Table'
 import TableBody from '@material-ui/core/TableBody'
@@ -7,35 +7,12 @@ import { withStyles } from '@material-ui/core/styles'
 import { List } from 'immutable'
 import * as React from 'react'
 
-import TableHead, { type Column } from '~/components/Table/TableHead'
-import { type Order, getSorting, stableSort } from '~/components/Table/sorting'
+import TableHead, { } from '~/components/Table/TableHead'
+import { getSorting, stableSort } from '~/components/Table/sorting'
 import Row from '~/components/layout/Row'
 import { sm, xl, xxl } from '~/theme/variables'
 
-type Props<K> = {
-  label: string,
-  defaultOrderBy: string,
-  columns: List<Column>,
-  data: Array<K>,
-  classes: Object,
-  children: Function,
-  size: number,
-  defaultFixed: boolean,
-  defaultRowsPerPage: number,
-  defaultOrder: 'desc' | 'asc',
-  noBorder: boolean,
-  disablePagination: boolean,
-  disableLoadingOnEmptyTable?: boolean,
-}
 
-type State = {
-  page: number,
-  order?: Order,
-  orderBy?: string,
-  orderProp: boolean,
-  rowsPerPage?: number,
-  fixed?: boolean,
-}
 
 const styles = {
   root: {
@@ -73,7 +50,7 @@ const nextProps = {
   'aria-label': 'Next Page',
 }
 
-class GnoTable<K> extends React.Component<Props<K>, State> {
+class GnoTable extends React.Component {
   constructor(props) {
     super(props)
 
@@ -101,7 +78,7 @@ class GnoTable<K> extends React.Component<Props<K>, State> {
     }
   }
 
-  onSort = (newOrderBy: string, orderProp: boolean) => {
+  onSort = (newOrderBy, orderProp) => {
     const { order, orderBy } = this.state
     const { defaultOrder } = this.props
     let newOrder = 'desc'
@@ -122,7 +99,7 @@ class GnoTable<K> extends React.Component<Props<K>, State> {
     }))
   }
 
-  getEmptyStyle = (emptyRows: number) => ({
+  getEmptyStyle = (emptyRows) => ({
     height: FIXED_HEIGHT * emptyRows,
     borderTopRightRadius: sm,
     borderTopLeftRadius: sm,
@@ -133,11 +110,11 @@ class GnoTable<K> extends React.Component<Props<K>, State> {
     alignItems: 'center',
   })
 
-  handleChangePage = (e: SyntheticInputEvent<HTMLInputElement>, page: number) => {
+  handleChangePage = (e, page) => {
     this.setState({ page })
   }
 
-  handleChangeRowsPerPage = (e: SyntheticInputEvent<HTMLInputElement>) => {
+  handleChangeRowsPerPage = (e) => {
     const rowsPerPage = Number(e.target.value)
     this.setState({ rowsPerPage })
   }

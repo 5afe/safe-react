@@ -1,4 +1,4 @@
-// @flow
+// 
 import contract from 'truffle-contract'
 import ProxyFactorySol from '@gnosis.pm/safe-contracts/build/contracts/GnosisSafeProxyFactory.json'
 import GnosisSafeSol from '@gnosis.pm/safe-contracts/build/contracts/GnosisSafe.json'
@@ -20,14 +20,14 @@ export const SAFE_MASTER_COPY_ADDRESS_V10 = '0xb6029EA3B2c51D09a50B53CA8012FeEB0
 let proxyFactoryMaster
 let safeMaster
 
-const createGnosisSafeContract = (web3: any) => {
+const createGnosisSafeContract = (web3) => {
   const gnosisSafe = contract(GnosisSafeSol)
   gnosisSafe.setProvider(web3.currentProvider)
 
   return gnosisSafe
 }
 
-const createProxyFactoryContract = (web3: any, networkId: number) => {
+const createProxyFactoryContract = (web3, networkId) => {
   const contractAddress = ProxyFactorySol.networks[networkId].address
   const proxyFactory = new web3.eth.Contract(ProxyFactorySol.abi, contractAddress)
 
@@ -70,7 +70,7 @@ export const getSafeMasterContract = async () => {
   return safeMaster
 }
 
-export const getSafeDeploymentTransaction = (safeAccounts: string[], numConfirmations: number, userAccount: string) => {
+export const getSafeDeploymentTransaction = (safeAccounts, numConfirmations, userAccount) => {
   const gnosisSafeData = safeMaster.contract.methods
     .setup(safeAccounts, numConfirmations, ZERO_ADDRESS, '0x', DEFAULT_FALLBACK_HANDLER_ADDRESS, ZERO_ADDRESS, 0, ZERO_ADDRESS)
     .encodeABI()  
@@ -79,9 +79,9 @@ export const getSafeDeploymentTransaction = (safeAccounts: string[], numConfirma
 }
 
 export const estimateGasForDeployingSafe = async (
-  safeAccounts: string[],
-  numConfirmations: number,
-  userAccount: string,
+  safeAccounts,
+  numConfirmations,
+  userAccount,
 ) => {
   const gnosisSafeData = await safeMaster.contract.methods
     .setup(safeAccounts, numConfirmations, ZERO_ADDRESS, '0x', DEFAULT_FALLBACK_HANDLER_ADDRESS, ZERO_ADDRESS, 0, ZERO_ADDRESS)
@@ -95,19 +95,19 @@ export const estimateGasForDeployingSafe = async (
   return gas * parseInt(gasPrice, 10)
 }
 
-export const getGnosisSafeInstanceAt = simpleMemoize(async (safeAddress: string) => {
+export const getGnosisSafeInstanceAt = simpleMemoize(async (safeAddress) => {
   const web3 = getWeb3()
   const GnosisSafe = await getGnosisSafeContract(web3)
   const gnosisSafe = await GnosisSafe.at(safeAddress)
   return gnosisSafe
 })
 
-const cleanByteCodeMetadata = (bytecode: string): string => {
+const cleanByteCodeMetadata = (bytecode) => {
   const metaData = 'a165'
   return bytecode.substring(0, bytecode.lastIndexOf(metaData))
 }
 
-export const validateProxy = async (safeAddress: string): Promise<boolean> => {
+export const validateProxy = async (safeAddress) => {
   // https://solidity.readthedocs.io/en/latest/metadata.html#usage-for-source-code-verification
   const web3 = getWeb3()
   const code = await web3.eth.getCode(safeAddress)
@@ -126,14 +126,8 @@ export const validateProxy = async (safeAddress: string): Promise<boolean> => {
   return isProxyCode(codeWithoutMetadata)
 }
 
-export type MultiSendTransactionInstanceType = {
-    operation: number,
-    to: string,
-    value: number,
-    data: string,
-}
 
-export const getEncodedMultiSendCallData = (txs: Array<MultiSendTransactionInstanceType>, web3: Object) => {
+export const getEncodedMultiSendCallData = (txs, web3) => {
   const multiSendAbi = [
     {
       type: 'function',

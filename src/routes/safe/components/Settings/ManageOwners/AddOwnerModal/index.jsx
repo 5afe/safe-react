@@ -1,4 +1,4 @@
-// @flow
+// 
 import { withStyles } from '@material-ui/core/styles'
 import { List } from 'immutable'
 import { withSnackbar } from 'notistack'
@@ -15,7 +15,7 @@ import { getGnosisSafeInstanceAt } from '~/logic/contracts/safeContracts'
 import { TX_NOTIFICATION_TYPES } from '~/logic/safe/transactions'
 import addSafeOwner from '~/routes/safe/store/actions/addSafeOwner'
 import createTransaction from '~/routes/safe/store/actions/createTransaction'
-import { type Owner } from '~/routes/safe/store/models/owner'
+import { } from '~/routes/safe/store/models/owner'
 import { safeOwnersSelector, safeParamAddressFromStateSelector } from '~/routes/safe/store/selectors'
 import { checksumAddress } from '~/utils/checksumAddress'
 
@@ -28,22 +28,14 @@ const styles = () => ({
   },
 })
 
-type Props = {
-  onClose: () => void,
-  classes: Object,
-  isOpen: boolean,
-  enqueueSnackbar: Function,
-  closeSnackbar: Function,
-}
-type ActiveScreen = 'selectOwner' | 'selectThreshold' | 'reviewAddOwner'
 
 export const sendAddOwner = async (
-  values: Object,
-  safeAddress: string,
-  ownersOld: List<Owner>,
-  enqueueSnackbar: Function,
-  closeSnackbar: Function,
-  dispatch: Function,
+  values,
+  safeAddress,
+  ownersOld,
+  enqueueSnackbar,
+  closeSnackbar,
+  dispatch,
 ) => {
   const gnosisSafe = await getGnosisSafeInstanceAt(safeAddress)
   const txData = gnosisSafe.contract.methods.addOwnerWithThreshold(values.ownerAddress, values.threshold).encodeABI()
@@ -65,9 +57,9 @@ export const sendAddOwner = async (
   }
 }
 
-const AddOwner = ({ classes, closeSnackbar, enqueueSnackbar, isOpen, onClose }: Props) => {
-  const [activeScreen, setActiveScreen] = useState<ActiveScreen>('selectOwner')
-  const [values, setValues] = useState<Object>({})
+const AddOwner = ({ classes, closeSnackbar, enqueueSnackbar, isOpen, onClose }) => {
+  const [activeScreen, setActiveScreen] = useState('selectOwner')
+  const [values, setValues] = useState({})
   const dispatch = useDispatch()
   const safeAddress = useSelector(safeParamAddressFromStateSelector)
   const owners = useSelector(safeOwnersSelector)
@@ -88,7 +80,7 @@ const AddOwner = ({ classes, closeSnackbar, enqueueSnackbar, isOpen, onClose }: 
     }
   }
 
-  const ownerSubmitted = (newValues: Object) => {
+  const ownerSubmitted = (newValues) => {
     setValues((stateValues) => ({
       ...stateValues,
       ownerName: newValues.ownerName,
@@ -97,7 +89,7 @@ const AddOwner = ({ classes, closeSnackbar, enqueueSnackbar, isOpen, onClose }: 
     setActiveScreen('selectThreshold')
   }
 
-  const thresholdSubmitted = (newValues: Object) => {
+  const thresholdSubmitted = (newValues) => {
     setValues((stateValues) => ({
       ...stateValues,
       threshold: newValues.threshold,

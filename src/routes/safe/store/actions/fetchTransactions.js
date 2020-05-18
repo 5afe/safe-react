@@ -1,10 +1,9 @@
-// @flow
+// 
 import ERC20Detailed from '@openzeppelin/contracts/build/contracts/ERC20Detailed.json'
 import axios from 'axios'
 import bn from 'bignumber.js'
-import { List, Map, type RecordInstance } from 'immutable'
+import { List, Map, } from 'immutable'
 import { batch } from 'react-redux'
-import type { Dispatch as ReduxDispatch } from 'redux'
 
 import { addIncomingTransactions } from './addIncomingTransactions'
 import { addTransactions } from './addTransactions'
@@ -12,7 +11,7 @@ import { addTransactions } from './addTransactions'
 import generateBatchRequests from '~/logic/contracts/generateBatchRequests'
 import { decodeParamsFromSafeMethod } from '~/logic/contracts/methodIds'
 import { buildIncomingTxServiceUrl } from '~/logic/safe/transactions/incomingTxHistory'
-import { type TxServiceType, buildTxServiceUrl } from '~/logic/safe/transactions/txHistory'
+import { buildTxServiceUrl } from '~/logic/safe/transactions/txHistory'
 import { TOKEN_REDUCER_ID } from '~/logic/tokens/store/reducer/tokens'
 import { ALTERNATIVE_TOKEN_ABI } from '~/logic/tokens/utils/alternativeAbi'
 import {
@@ -26,66 +25,29 @@ import { EMPTY_DATA } from '~/logic/wallets/ethTransactions'
 import { getWeb3 } from '~/logic/wallets/getWeb3'
 import { addCancellationTransactions } from '~/routes/safe/store/actions/addCancellationTransactions'
 import { makeConfirmation } from '~/routes/safe/store/models/confirmation'
-import { type IncomingTransaction, makeIncomingTransaction } from '~/routes/safe/store/models/incomingTransaction'
-import type { TransactionProps } from '~/routes/safe/store/models/transaction'
-import { type Transaction, makeTransaction } from '~/routes/safe/store/models/transaction'
-import { type GlobalState } from '~/store'
+import { makeIncomingTransaction } from '~/routes/safe/store/models/incomingTransaction'
+import { makeTransaction } from '~/routes/safe/store/models/transaction'
+import { } from '~/store'
 
 let web3
 
-type ConfirmationServiceModel = {
-  owner: string,
-  submissionDate: Date,
-  confirmationType: string,
-  transactionHash: string,
-}
 
-type TxServiceModel = {
-  to: string,
-  value: number,
-  data: ?string,
-  operation: number,
-  nonce: ?number,
-  blockNumber: ?number,
-  safeTxGas: number,
-  baseGas: number,
-  gasPrice: number,
-  gasToken: string,
-  refundReceiver: string,
-  safeTxHash: string,
-  submissionDate: ?string,
-  executor: string,
-  executionDate: ?string,
-  confirmations: ConfirmationServiceModel[],
-  isExecuted: boolean,
-  isSuccessful: boolean,
-  transactionHash: ?string,
-  creationTx?: boolean,
-}
 
-type IncomingTxServiceModel = {
-  blockNumber: number,
-  transactionHash: string,
-  to: string,
-  value: number,
-  tokenAddress: string,
-  from: string,
-}
 
 export const buildTransactionFrom = async (
-  safeAddress: string,
+  safeAddress,
   knownTokens,
-  tx: TxServiceModel,
+  tx,
   txTokenCode,
   txTokenDecimals,
   txTokenName,
   txTokenSymbol,
-): Promise<Transaction> => {
+) => {
   const confirmations = List(
-    tx.confirmations.map((conf: ConfirmationServiceModel) =>
+    tx.confirmations.map((conf) =>
       makeConfirmation({
         owner: conf.owner,
-        type: ((conf.confirmationType.toLowerCase(): any): TxServiceType),
+        type: ((conf.confirmationType.toLowerCase())),
         hash: conf.transactionHash,
         signature: conf.signature,
       }),
@@ -187,7 +149,7 @@ export const buildTransactionFrom = async (
   })
 }
 
-const addMockSafeCreationTx = (safeAddress): Array<TxServiceModel> => [
+const addMockSafeCreationTx = (safeAddress) => [
   {
     blockNumber: null,
     baseGas: 0,
@@ -213,7 +175,7 @@ const addMockSafeCreationTx = (safeAddress): Array<TxServiceModel> => [
   },
 ]
 
-const batchRequestTxsData = (txs: any[]) => {
+const batchRequestTxsData = (txs) => {
   const web3Batch = new web3.BatchRequest()
 
   const txsTokenInfo = txs.map((tx) => {
@@ -232,7 +194,7 @@ const batchRequestTxsData = (txs: any[]) => {
   return Promise.all(txsTokenInfo)
 }
 
-const batchRequestIncomingTxsData = (txs: IncomingTxServiceModel[]) => {
+const batchRequestIncomingTxsData = (txs) => {
   const web3Batch = new web3.BatchRequest()
 
   const whenTxsValues = txs.map((tx) => {
@@ -259,12 +221,7 @@ const batchRequestIncomingTxsData = (txs: IncomingTxServiceModel[]) => {
   )
 }
 
-export const buildIncomingTransactionFrom = ([tx, symbol, decimals, fee]: [
-  IncomingTxServiceModel,
-  string,
-  string,
-  string,
-]) => {
+export const buildIncomingTransactionFrom = ([tx, symbol, decimals, fee]) => {
   // this is a particular treatment for the DCD token, as it seems to lack of symbol and decimal methods
   if (tx.tokenAddress && tx.tokenAddress.toLowerCase() === '0xe0b7927c4af23765cb51314a0e0521a9645f0e2a') {
     symbol = 'DCD'
@@ -283,15 +240,11 @@ export const buildIncomingTransactionFrom = ([tx, symbol, decimals, fee]: [
   })
 }
 
-export type SafeTransactionsType = {
-  outgoing: Map<string, List<TransactionProps>>,
-  cancel: Map<string, List<TransactionProps>>,
-}
 
 let etagSafeTransactions = null
 let etagCachedSafeIncommingTransactions = null
-export const loadSafeTransactions = async (safeAddress: string, getState: GetState): Promise<SafeTransactionsType> => {
-  let transactions: TxServiceModel[] = addMockSafeCreationTx(safeAddress)
+export const loadSafeTransactions = async (safeAddress, getState) => {
+  let transactions = addMockSafeCreationTx(safeAddress)
 
   try {
     const config = etagSafeTransactions
@@ -326,8 +279,8 @@ export const loadSafeTransactions = async (safeAddress: string, getState: GetSta
   const knownTokens = state[TOKEN_REDUCER_ID]
   const txsWithData = await batchRequestTxsData(transactions)
   // In case that the etags don't match, we parse the new transactions and save them to the cache
-  const txsRecord: Array<RecordInstance<TransactionProps>> = await Promise.all(
-    txsWithData.map(([tx: TxServiceModel, code, decimals, name, symbol]) => {
+  const txsRecord = await Promise.all(
+    txsWithData.map(([tx, code, decimals, name, symbol]) => {
       const knownToken = knownTokens.get(tx.to)
 
       if (knownToken) {
@@ -346,8 +299,8 @@ export const loadSafeTransactions = async (safeAddress: string, getState: GetSta
   }
 }
 
-export const loadSafeIncomingTransactions = async (safeAddress: string) => {
-  let incomingTransactions: IncomingTxServiceModel[] = []
+export const loadSafeIncomingTransactions = async (safeAddress) => {
+  let incomingTransactions = []
   try {
     const config = etagCachedSafeIncommingTransactions
       ? {
@@ -380,10 +333,10 @@ export const loadSafeIncomingTransactions = async (safeAddress: string) => {
   return Map().set(safeAddress, List(incomingTxsRecord))
 }
 
-export default (safeAddress: string) => async (dispatch: ReduxDispatch<GlobalState>, getState: GetState) => {
+export default (safeAddress) => async (dispatch, getState) => {
   web3 = await getWeb3()
 
-  const transactions: SafeTransactionsType | undefined = await loadSafeTransactions(safeAddress, getState)
+  const transactions = await loadSafeTransactions(safeAddress, getState)
   if (transactions) {
     const { cancel, outgoing } = transactions
 
@@ -393,7 +346,7 @@ export default (safeAddress: string) => async (dispatch: ReduxDispatch<GlobalSta
     })
   }
 
-  const incomingTransactions: Map<string, List<IncomingTransaction>> | undefined = await loadSafeIncomingTransactions(
+  const incomingTransactions = await loadSafeIncomingTransactions(
     safeAddress,
   )
 

@@ -1,4 +1,4 @@
-// @flow
+// 
 import queryString from 'query-string'
 import React, { useEffect, useState } from 'react'
 import { connect } from 'react-redux'
@@ -7,7 +7,7 @@ import { withRouter } from 'react-router-dom'
 import Opening from '../../opening'
 import Layout from '../components/Layout'
 
-import actions, { type Actions } from './actions'
+import actions, { } from './actions'
 import selector from './selector'
 
 import { Loader } from '~/components-v2'
@@ -28,28 +28,14 @@ import { loadFromStorage, removeFromStorage, saveToStorage } from '~/utils/stora
 
 const SAFE_PENDING_CREATION_STORAGE_KEY = 'SAFE_PENDING_CREATION_STORAGE_KEY'
 
-type Props = Actions & {
-  provider: string,
-  userAccount: string,
-  network: string,
-}
 
-export type OpenState = {
-  safeAddress: string,
-}
 
-export type SafePropsType = {
-  name: string,
-  ownerAddresses: string[],
-  ownerNames: string[],
-  threshold: string,
-}
 
 const validateQueryParams = (
-  ownerAddresses?: string[],
-  ownerNames?: string[],
-  threshold?: string,
-  safeName?: string,
+  ownerAddresses,
+  ownerNames,
+  threshold,
+  safeName,
 ) => {
   if (!ownerAddresses || !ownerNames || !threshold || !safeName) {
     return false
@@ -75,7 +61,7 @@ export const getSafeProps = async (safeAddress, safeName, ownersNames, ownerAddr
   return safeProps
 }
 
-export const createSafe = (values: Object, userAccount: string): Promise<OpenState> => {
+export const createSafe = (values, userAccount) => {
   const confirmations = getThresholdFrom(values)
   const name = getSafeNameFrom(values)
   const ownersNames = getNamesFrom(values)
@@ -101,7 +87,7 @@ export const createSafe = (values: Object, userAccount: string): Promise<OpenSta
   return promiEvent
 }
 
-const Open = ({ addSafe, network, provider, userAccount }: Props) => {
+const Open = ({ addSafe, network, provider, userAccount }) => {
   const [loading, setLoading] = useState(false)
   const [showProgress, setShowProgress] = useState()
   const [creationTxPromise, setCreationTxPromise] = useState()
@@ -110,7 +96,7 @@ const Open = ({ addSafe, network, provider, userAccount }: Props) => {
 
   useEffect(() => {
     // #122: Allow to migrate an old Multisig by passing the parameters to the URL.
-    const query: SafePropsType = queryString.parse(location.search, { arrayFormat: 'comma' })
+    const query = queryString.parse(location.search, { arrayFormat: 'comma' })
     const { name, owneraddresses, ownernames, threshold } = query
     if (validateQueryParams(owneraddresses, ownernames, threshold, name)) {
       setSafePropsFromUrl({

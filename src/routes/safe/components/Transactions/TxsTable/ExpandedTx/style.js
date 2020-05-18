@@ -1,4 +1,4 @@
-// @flow
+// 
 import { border, connected, disabled, error, lg, md } from '~/theme/variables'
 
 export const styles = () => ({

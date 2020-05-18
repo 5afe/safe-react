@@ -1,4 +1,4 @@
-// @flow
+// 
 import { makeStyles } from '@material-ui/core/styles'
 import React from 'react'
 
@@ -17,15 +17,8 @@ import { styles } from '~/routes/safe/components/Balances/SendModal/screens/Cont
 
 const useStyles = makeStyles(styles)
 
-type Props = {
-  isContract?: boolean,
-  isRequired?: boolean,
-  name: string,
-  onScannedValue: (string) => void,
-  text: string,
-}
 
-const EthAddressInput = ({ isContract = true, isRequired = true, name, onScannedValue, text }: Props) => {
+const EthAddressInput = ({ isContract = true, isRequired = true, name, onScannedValue, text }) => {
   const classes = useStyles()
   const validatorsList = [isRequired && required, mustBeEthereumAddress, isContract && mustBeEthereumContractAddress]
   const validate = composeValidators(...validatorsList.filter((_) => _))

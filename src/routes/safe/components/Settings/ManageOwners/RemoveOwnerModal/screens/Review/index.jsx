@@ -1,4 +1,4 @@
-// @flow
+// 
 import IconButton from '@material-ui/core/IconButton'
 import { withStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
@@ -25,18 +25,9 @@ import { safeNameSelector, safeOwnersSelector, safeParamAddressFromStateSelector
 
 export const REMOVE_OWNER_REVIEW_BTN_TEST_ID = 'remove-owner-review-btn'
 
-type Props = {
-  onClose: () => void,
-  classes: Object,
-  values: Object,
-  ownerAddress: string,
-  ownerName: string,
-  onClickBack: Function,
-  onSubmit: Function,
-}
 
-const ReviewRemoveOwner = ({ classes, onClickBack, onClose, onSubmit, ownerAddress, ownerName, values }: Props) => {
-  const [gasCosts, setGasCosts] = useState<string>('< 0.001')
+const ReviewRemoveOwner = ({ classes, onClickBack, onClose, onSubmit, ownerAddress, ownerName, values }) => {
+  const [gasCosts, setGasCosts] = useState('< 0.001')
   const safeAddress = useSelector(safeParamAddressFromStateSelector)
   const safeName = useSelector(safeNameSelector)
   const owners = useSelector(safeOwnersSelector)

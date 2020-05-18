@@ -1,17 +1,15 @@
-// @flow
+// 
 import { List, Map } from 'immutable'
-import { type Selector, createSelector } from 'reselect'
+import { createSelector } from 'reselect'
 
-import { type Token } from '~/logic/tokens/store/model/token'
+import { } from '~/logic/tokens/store/model/token'
 import { tokensSelector } from '~/logic/tokens/store/selectors'
 import { getEthAsToken } from '~/logic/tokens/utils/tokenHelpers'
 import { isUserOwner } from '~/logic/wallets/ethAddresses'
 import { userAccountSelector } from '~/logic/wallets/store/selectors'
-import type { IncomingTransaction } from '~/routes/safe/store/models/incomingTransaction'
-import { type Safe } from '~/routes/safe/store/models/safe'
-import { type Transaction, type TransactionStatus } from '~/routes/safe/store/models/transaction'
+import { } from '~/routes/safe/store/models/safe'
+import { } from '~/routes/safe/store/models/transaction'
 import {
-  type RouterProps,
   safeActiveTokensSelector,
   safeBalancesSelector,
   safeCancellationTransactionsSelector,
@@ -19,9 +17,9 @@ import {
   safeSelector,
   safeTransactionsSelector,
 } from '~/routes/safe/store/selectors'
-import { type GlobalState } from '~/store'
+import { } from '~/store'
 
-const getTxStatus = (tx: Transaction, userAddress: string, safe: Safe): TransactionStatus => {
+const getTxStatus = (tx, userAddress, safe) => {
   let txStatus
   if (tx.executionTxHash) {
     txStatus = 'success'
@@ -46,15 +44,15 @@ const getTxStatus = (tx: Transaction, userAddress: string, safe: Safe): Transact
   return txStatus
 }
 
-export const grantedSelector: Selector<GlobalState, RouterProps, boolean> = createSelector(
+export const grantedSelector = createSelector(
   userAccountSelector,
   safeSelector,
-  (userAccount: string, safe: Safe | typeof undefined): boolean => isUserOwner(safe, userAccount),
+  (userAccount, safe) => isUserOwner(safe, userAccount),
 )
 
-const safeEthAsTokenSelector: Selector<GlobalState, RouterProps, ?Token> = createSelector(
+const safeEthAsTokenSelector = createSelector(
   safeSelector,
-  (safe: Safe) => {
+  (safe) => {
     if (!safe) {
       return undefined
     }
@@ -63,14 +61,14 @@ const safeEthAsTokenSelector: Selector<GlobalState, RouterProps, ?Token> = creat
   },
 )
 
-export const extendedSafeTokensSelector: Selector<GlobalState, RouterProps, List<Token>> = createSelector(
+export const extendedSafeTokensSelector = createSelector(
   safeActiveTokensSelector,
   safeBalancesSelector,
   tokensSelector,
   safeEthAsTokenSelector,
-  (safeTokens: List<string>, balances: Map<string, string>, tokensList: Map<string, Token>, ethAsToken: Token) => {
+  (safeTokens, balances, tokensList, ethAsToken) => {
     const extendedTokens = Map().withMutations((map) => {
-      safeTokens.forEach((tokenAddress: string) => {
+      safeTokens.forEach((tokenAddress) => {
         const baseToken = tokensList.get(tokenAddress)
         const tokenBalance = balances.get(tokenAddress)
 
@@ -88,11 +86,7 @@ export const extendedSafeTokensSelector: Selector<GlobalState, RouterProps, List
   },
 )
 
-export const extendedTransactionsSelector: Selector<
-  GlobalState,
-  RouterProps,
-  List<Transaction | IncomingTransaction>,
-> = createSelector(
+export const extendedTransactionsSelector = createSelector(
   safeSelector,
   userAccountSelector,
   safeTransactionsSelector,
@@ -100,7 +94,7 @@ export const extendedTransactionsSelector: Selector<
   safeIncomingTransactionsSelector,
   (safe, userAddress, transactions, cancellationTransactions, incomingTransactions) => {
     const cancellationTransactionsByNonce = cancellationTransactions.reduce((acc, tx) => acc.set(tx.nonce, tx), Map())
-    const extendedTransactions = transactions.map((tx: Transaction) => {
+    const extendedTransactions = transactions.map((tx) => {
       let extendedTx = tx
 
       if (!tx.isExecuted) {

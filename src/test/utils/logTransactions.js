@@ -1,4 +1,4 @@
-// @flow
+// 
 import React from 'react'
 import Stepper from '@material-ui/core/Stepper'
 import TestUtils from 'react-dom/test-utils'
@@ -6,11 +6,11 @@ import { getGnosisSafeInstanceAt } from '~/logic/contracts/safeContracts'
 import GnoStepper from '~/components/Stepper'
 
 export const printOutApprove = async (
-  subject: string,
-  address: string,
-  owners: string[],
-  data: string,
-  nonce: number,
+  subject,
+  address,
+  owners,
+  data,
+  nonce,
 ) => {
   // eslint-disable-next-line
   console.log(subject)
@@ -34,11 +34,8 @@ export const printOutApprove = async (
 const MAX_TIMES_EXECUTED = 35
 const INTERVAL = 500
 
-type FinsihedTx = {
-  finishedTransaction: boolean,
-}
 
-export const whenExecuted = (SafeDom: React.Component<any, any>, ParentComponent: React.ElementType): Promise<void> => new Promise((resolve, reject) => {
+export const whenExecuted = (SafeDom, ParentComponent) => new Promise((resolve, reject) => {
   let times = 0
   const interval = setInterval(() => {
     if (times >= MAX_TIMES_EXECUTED) {
@@ -48,9 +45,8 @@ export const whenExecuted = (SafeDom: React.Component<any, any>, ParentComponent
 
     // $FlowFixMe
     const SafeComponent = TestUtils.findRenderedComponentWithType(SafeDom, ParentComponent)
-      type GnoStepperType = React.Component<FinsihedTx, any>
       // $FlowFixMe
-      const StepperComponent: GnoStepperType = TestUtils.findRenderedComponentWithType(SafeComponent, GnoStepper)
+      const StepperComponent = TestUtils.findRenderedComponentWithType(SafeComponent, GnoStepper)
 
       if (StepperComponent.props.finishedTransaction === true) {
         clearInterval(interval)
@@ -60,15 +56,12 @@ export const whenExecuted = (SafeDom: React.Component<any, any>, ParentComponent
   }, INTERVAL)
 })
 
-type MiddleStep = {
-  activeStep: number,
-}
 
 export const whenOnNext = (
-  SafeDom: React.Component<any, any>,
-  ParentComponent: React.ElementType,
-  position: number,
-): Promise<void> => new Promise((resolve, reject) => {
+  SafeDom,
+  ParentComponent,
+  position,
+) => new Promise((resolve, reject) => {
   let times = 0
   const interval = setInterval(() => {
     if (times >= MAX_TIMES_EXECUTED) {
@@ -78,9 +71,8 @@ export const whenOnNext = (
 
     // $FlowFixMe
     const SafeComponent = TestUtils.findRenderedComponentWithType(SafeDom, ParentComponent)
-      type StepperType = React.Component<MiddleStep, any>
       // $FlowFixMe
-      const StepperComponent: StepperType = TestUtils.findRenderedComponentWithType(SafeComponent, Stepper)
+      const StepperComponent = TestUtils.findRenderedComponentWithType(SafeComponent, Stepper)
       if (StepperComponent.props.activeStep === position) {
         clearInterval(interval)
         resolve()

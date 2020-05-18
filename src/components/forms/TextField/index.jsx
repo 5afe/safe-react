@@ -1,4 +1,4 @@
-// @flow
+// 
 import MuiTextField, { TextFieldProps } from '@material-ui/core/TextField'
 import { withStyles } from '@material-ui/core/styles'
 import React from 'react'
@@ -19,7 +19,7 @@ const styles = () => ({
   },
 })
 
-class TextField extends React.PureComponent<TextFieldProps> {
+class TextField extends React.PureComponent {
   render() {
     const {
       classes,

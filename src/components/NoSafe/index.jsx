@@ -1,4 +1,4 @@
-// @flow
+// 
 import * as React from 'react'
 
 import Bold from '~/components/layout/Bold'
@@ -7,12 +7,8 @@ import Paragraph from '~/components/layout/Paragraph/index'
 import Row from '~/components/layout/Row'
 import { CreateSafe } from '~/routes/welcome/components/Layout'
 
-type Props = {
-  text: string,
-  provider: string,
-}
 
-const NoSafe = ({ provider, text }: Props) => (
+const NoSafe = ({ provider, text }) => (
   <Row>
     <Col center="xs" margin="md" sm={10} smOffset={2} start="sm" xs={12}>
       <Paragraph size="lg">

@@ -1,4 +1,4 @@
-// @flow
+// 
 import ListItemIcon from '@material-ui/core/ListItemIcon'
 import ListItemText from '@material-ui/core/ListItemText'
 import MenuItem from '@material-ui/core/MenuItem'
@@ -13,24 +13,13 @@ import SelectField from '~/components/forms/SelectField'
 import { required } from '~/components/forms/validator'
 import Img from '~/components/layout/Img'
 import Paragraph from '~/components/layout/Paragraph'
-import { type Token } from '~/logic/tokens/store/model/token'
+import { } from '~/logic/tokens/store/model/token'
 import { formatAmount } from '~/logic/tokens/utils/formatAmount'
 import { setImageToPlaceholder } from '~/routes/safe/components/Balances/utils'
 
-type SelectFieldProps = {
-  classes: Object,
-  initialValue: string,
-  isValid: boolean,
-  tokens: List<Token>,
-}
 
-type SelectedTokenProps = {
-  classes: Object,
-  tokenAddress?: string,
-  tokens: List<Token>,
-}
 
-const SelectedToken = ({ classes, tokenAddress, tokens }: SelectedTokenProps) => {
+const SelectedToken = ({ classes, tokenAddress, tokens }) => {
   const token = tokens.find(({ address }) => address === tokenAddress)
 
   return (
@@ -56,7 +45,7 @@ const SelectedToken = ({ classes, tokenAddress, tokens }: SelectedTokenProps) =>
 }
 const SelectedTokenStyled = withStyles(selectedTokenStyles)(SelectedToken)
 
-const TokenSelectField = ({ classes, initialValue, isValid, tokens }: SelectFieldProps) => (
+const TokenSelectField = ({ classes, initialValue, isValid, tokens }) => (
   <Field
     classes={{ selectMenu: classes.selectMenu }}
     className={isValid ? 'isValid' : 'isInvalid'}

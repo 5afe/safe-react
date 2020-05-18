@@ -1,4 +1,4 @@
-// @flow
+// 
 import classNames from 'classnames/bind'
 import * as React from 'react'
 import { Link } from 'react-router-dom'
@@ -9,16 +9,8 @@ import { capitalize } from '~/utils/css'
 
 const cx = classNames.bind(styles)
 
-type Props = {
-  padding?: 'xs' | 'sm' | 'md',
-  to: string,
-  children: React.Node,
-  color?: 'regular' | 'white',
-  className?: string,
-  innerRef?: React.ElementRef<any>,
-}
 
-const GnosisLink = ({ children, className, color, innerRef, padding, to, ...props }: Props) => {
+const GnosisLink = ({ children, className, color, innerRef, padding, to, ...props }) => {
   const internal = /^\/(?!\/)/.test(to)
   const classes = cx(styles.link, color || 'regular', padding ? capitalize(padding, 'padding') : undefined, className)
   const LinkElement = internal ? Link : 'a'
@@ -36,6 +28,6 @@ const GnosisLink = ({ children, className, color, innerRef, padding, to, ...prop
 }
 
 // https://material-ui.com/guides/composition/#caveat-with-refs
-const LinkWithRef = React.forwardRef<Props, typeof GnosisLink>((props, ref) => <GnosisLink {...props} innerRef={ref} />)
+const LinkWithRef = React.forwardRef((props, ref) => <GnosisLink {...props} innerRef={ref} />)
 
 export default LinkWithRef

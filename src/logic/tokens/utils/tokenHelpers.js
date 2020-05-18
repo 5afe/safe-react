@@ -1,19 +1,19 @@
-// @flow
+// 
 import ERC20Detailed from '@openzeppelin/contracts/build/contracts/ERC20Detailed.json'
 import { List } from 'immutable'
 
 import logo from '~/assets/icons/icon_etherTokens.svg'
 import { getStandardTokenContract } from '~/logic/tokens/store/actions/fetchTokens'
-import { type Token, makeToken } from '~/logic/tokens/store/model/token'
+import { makeToken } from '~/logic/tokens/store/model/token'
 import { getWeb3 } from '~/logic/wallets/getWeb3'
 
 export const ETH_ADDRESS = '0x000'
 export const SAFE_TRANSFER_FROM_WITHOUT_DATA_HASH = '0x42842e0e'
 export const DECIMALS_METHOD_HASH = '313ce567'
 
-export const isEther = (symbol: string) => symbol === 'ETH'
+export const isEther = (symbol) => symbol === 'ETH'
 
-export const getEthAsToken = (balance: string) => {
+export const getEthAsToken = (balance) => {
   const eth = makeToken({
     address: ETH_ADDRESS,
     name: 'Ether',
@@ -26,9 +26,9 @@ export const getEthAsToken = (balance: string) => {
   return eth
 }
 
-export const calculateActiveErc20TokensFrom = (tokens: List<Token>) => {
+export const calculateActiveErc20TokensFrom = (tokens) => {
   const activeTokens = List().withMutations((list) =>
-    tokens.forEach((token: Token) => {
+    tokens.forEach((token) => {
       const isDeactivated = isEther(token.symbol) || !token.status
       if (isDeactivated) {
         return
@@ -41,7 +41,7 @@ export const calculateActiveErc20TokensFrom = (tokens: List<Token>) => {
   return activeTokens
 }
 
-export const isAddressAToken = async (tokenAddress: string) => {
+export const isAddressAToken = async (tokenAddress) => {
   // SECOND APPROACH:
   // They both seem to work the same
   // const tokenContract = await getStandardTokenContract()
@@ -57,7 +57,7 @@ export const isAddressAToken = async (tokenAddress: string) => {
   return call !== '0x'
 }
 
-export const hasDecimalsMethod = async (address: string): Promise<boolean> => {
+export const hasDecimalsMethod = async (address) => {
   try {
     const web3 = getWeb3()
     const token = new web3.eth.Contract(ERC20Detailed.abi, address)
@@ -68,18 +68,18 @@ export const hasDecimalsMethod = async (address: string): Promise<boolean> => {
   }
 }
 
-export const isTokenTransfer = (data: string, value: number): boolean =>
+export const isTokenTransfer = (data, value) =>
   !!data && data.substring(0, 10) === '0xa9059cbb' && value === 0
 
-export const isMultisendTransaction = (data: string, value: number): boolean =>
+export const isMultisendTransaction = (data, value) =>
   !!data && data.substring(0, 10) === '0x8d80ff0a' && value === 0
 
 // 7de7edef - changeMasterCopy (308, 8)
 // f08a0323 - setFallbackHandler (550, 8)
-export const isUpgradeTransaction = (data: string) =>
+export const isUpgradeTransaction = (data) =>
   !!data && data.substr(308, 8) === '7de7edef' && data.substr(550, 8) === 'f08a0323'
 
-export const isERC721Contract = async (contractAddress: string): boolean => {
+export const isERC721Contract = async (contractAddress) => {
   const ERC721Token = await getStandardTokenContract()
   let isERC721 = false
   try {

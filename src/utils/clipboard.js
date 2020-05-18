@@ -1,11 +1,11 @@
-// @flow
+// 
 
-export const copyToClipboard = (text: string): void => {
+export const copyToClipboard = (text) => {
   const range = document.createRange()
   range.selectNodeContents(document.body)
   document.getSelection().addRange(range)
 
-  function listener(e: ClipboardEvent) {
+  function listener(e) {
     e.clipboardData.setData('text/plain', text)
     e.preventDefault()
   }

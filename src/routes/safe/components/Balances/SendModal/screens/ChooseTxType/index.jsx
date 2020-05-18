@@ -1,4 +1,4 @@
-// @flow
+// 
 import IconButton from '@material-ui/core/IconButton'
 import { makeStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
@@ -61,13 +61,8 @@ const useStyles = makeStyles({
   },
 })
 
-type Props = {
-  onClose: () => void,
-  recipientAddress?: string,
-  setActiveScreen: Function,
-}
 
-const ChooseTxType = ({ onClose, recipientAddress, setActiveScreen }: Props) => {
+const ChooseTxType = ({ onClose, recipientAddress, setActiveScreen }) => {
   const classes = useStyles()
   const { featuresEnabled } = useSelector(safeSelector)
   const erc721Enabled = featuresEnabled.includes('ERC721')

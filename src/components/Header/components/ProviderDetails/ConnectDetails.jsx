@@ -1,4 +1,4 @@
-// @flow
+// 
 import { withStyles } from '@material-ui/core/styles'
 import * as React from 'react'
 
@@ -9,9 +9,6 @@ import Paragraph from '~/components/layout/Paragraph'
 import Row from '~/components/layout/Row'
 import { lg, md } from '~/theme/variables'
 
-type Props = {
-  classes: Object,
-}
 
 const styles = () => ({
   container: {
@@ -37,7 +34,7 @@ const styles = () => ({
   },
 })
 
-const ConnectDetails = ({ classes }: Props) => (
+const ConnectDetails = ({ classes }) => (
   <>
     <div className={classes.container}>
       <Row align="center" margin="lg">

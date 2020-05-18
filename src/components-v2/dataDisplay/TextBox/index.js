@@ -1,12 +1,9 @@
-// @flow
+// 
 import React from 'react'
 import styled from 'styled-components'
 
 import { border } from '~/theme/variables'
 
-type Props = {
-  children: React.Node,
-}
 
 const Box = styled.p`
   padding: 10px;
@@ -14,7 +11,7 @@ const Box = styled.p`
   border: solid 2px ${border};
 `
 
-const TextBox = ({ children }: Props) => {
+const TextBox = ({ children }) => {
   return <Box>{children}</Box>
 }
 

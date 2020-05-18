@@ -1,6 +1,5 @@
-// @flow
+// 
 
-import type { Dispatch as ReduxDispatch } from 'redux'
 
 import { nftAssetsSelector } from '~/logic/collectibles/store/selectors'
 import updateActiveAssets from '~/routes/safe/store/actions/updateActiveAssets'
@@ -9,11 +8,11 @@ import {
   safeBlacklistedAssetsSelectorBySafe,
   safesMapSelector,
 } from '~/routes/safe/store/selectors'
-import { type GetState, type GlobalState } from '~/store'
+import { } from '~/store'
 
-const activateAssetsByBalance = (safeAddress: string) => async (
-  dispatch: ReduxDispatch<GlobalState>,
-  getState: GetState,
+const activateAssetsByBalance = (safeAddress) => async (
+  dispatch,
+  getState,
 ) => {
   try {
     const state = getState()

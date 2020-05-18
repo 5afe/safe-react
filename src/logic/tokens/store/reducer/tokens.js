@@ -1,19 +1,18 @@
-// @flow
+// 
 import { Map } from 'immutable'
-import { type ActionType, handleActions } from 'redux-actions'
+import { handleActions } from 'redux-actions'
 
 import { ADD_TOKEN } from '~/logic/tokens/store/actions/addToken'
 import { REMOVE_TOKEN } from '~/logic/tokens/store/actions/removeToken'
 import { ADD_TOKENS } from '~/logic/tokens/store/actions/saveTokens'
-import { type Token, makeToken } from '~/logic/tokens/store/model/token'
+import { makeToken } from '~/logic/tokens/store/model/token'
 
 export const TOKEN_REDUCER_ID = 'tokens'
 
-export type State = Map<string, Token>
 
-export default handleActions<State, *>(
+export default handleActions(
   {
-    [ADD_TOKENS]: (state: State, action: ActionType<Function>): State => {
+    [ADD_TOKENS]: (state, action) => {
       const { tokens } = action.payload
 
       const newState = state.withMutations((map) => {
@@ -24,13 +23,13 @@ export default handleActions<State, *>(
 
       return newState
     },
-    [ADD_TOKEN]: (state: State, action: ActionType<Function>): State => {
+    [ADD_TOKEN]: (state, action) => {
       const { token } = action.payload
       const { address: tokenAddress } = token
 
       return state.set(tokenAddress, makeToken(token))
     },
-    [REMOVE_TOKEN]: (state: State, action: ActionType<Function>): State => {
+    [REMOVE_TOKEN]: (state, action) => {
       const { token } = action.payload
       const { address: tokenAddress } = token
 

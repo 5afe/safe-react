@@ -1,10 +1,9 @@
-// @flow
+// 
 import { useCallback, useEffect, useState } from 'react'
 import GoogleAnalytics from 'react-ga'
 
 import { getGoogleAnalyticsTrackingID } from '~/config'
 import { COOKIES_KEY } from '~/logic/cookies/model/cookie'
-import type { CookiesProps } from '~/logic/cookies/model/cookie'
 import { loadFromCookie } from '~/logic/cookies/utils'
 
 let analyticsLoaded = false
@@ -29,7 +28,7 @@ export const useAnalytics = () => {
 
   useEffect(() => {
     async function fetchCookiesFromStorage() {
-      const cookiesState: CookiesProps = await loadFromCookie(COOKIES_KEY)
+      const cookiesState = await loadFromCookie(COOKIES_KEY)
       if (cookiesState) {
         const { acceptedAnalytics } = cookiesState
         setAnalyticsAllowed(acceptedAnalytics)

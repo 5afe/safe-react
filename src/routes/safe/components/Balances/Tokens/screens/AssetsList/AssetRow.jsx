@@ -1,4 +1,4 @@
-// @flow
+// 
 
 import ListItem from '@material-ui/core/ListItem'
 import ListItemIcon from '@material-ui/core/ListItemIcon'
@@ -13,26 +13,15 @@ import { styles } from './style'
 
 import Img from '~/components/layout/Img'
 import { ETH_ADDRESS } from '~/logic/tokens/utils/tokenHelpers'
-import type { NFTAsset } from '~/routes/safe/components/Balances/Collectibles/types'
 import { setImageToPlaceholder } from '~/routes/safe/components/Balances/utils'
 
 export const TOGGLE_ASSET_TEST_ID = 'toggle-asset-btn'
 
-type Props = {
-  data: {
-    activeAssetsAddresses: Set<string>,
-    assets: List<NFTAsset>,
-    onSwitch: Function,
-  },
-  style: Object,
-  index: number,
-  classes: Object,
-}
 
 // eslint-disable-next-line react/display-name
-const AssetRow = memo(({ classes, data, index, style }: Props) => {
+const AssetRow = memo(({ classes, data, index, style }) => {
   const { activeAssetsAddresses, assets, onSwitch } = data
-  const asset: NFTAsset = assets.get(index)
+  const asset = assets.get(index)
   const { address, image, name, symbol } = asset
   const isActive = activeAssetsAddresses.has(asset.address)
 

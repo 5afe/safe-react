@@ -1,4 +1,4 @@
-// @flow
+// 
 import { withStyles } from '@material-ui/core/styles'
 import Dot from '@material-ui/icons/FiberManualRecord'
 import * as React from 'react'
@@ -34,28 +34,16 @@ const styles = () => ({
   },
 })
 
-type Mode = 'error' | 'warning'
 
-type Props = {
-  classes: Object,
-  keySize: number,
-  circleSize: number,
-  dotSize: number,
-  dotTop: number,
-  dotRight: number,
-  mode: Mode,
-  center?: boolean,
-  hideDot?: boolean,
-}
 
-const buildKeyStyleFrom = (size: number, center: boolean, dotSize: number) => ({
+const buildKeyStyleFrom = (size, center, dotSize) => ({
   width: `${size}px`,
   height: `${size}px`,
   marginLeft: center ? `${dotSize}px` : 'none',
   borderRadius: `${size}px`,
 })
 
-const buildDotStyleFrom = (size: number, top: number, right: number, mode: Mode) => ({
+const buildDotStyleFrom = (size, top, right, mode) => ({
   width: `${size}px`,
   height: `${size}px`,
   borderRadius: `${size}px`,
@@ -74,7 +62,7 @@ const KeyRing = ({
   hideDot = false,
   keySize,
   mode,
-}: Props) => {
+}) => {
   const keyStyle = buildKeyStyleFrom(circleSize, center, dotSize)
   const dotStyle = buildDotStyleFrom(dotSize, dotTop, dotRight, mode)
   const isWarning = mode === 'warning'

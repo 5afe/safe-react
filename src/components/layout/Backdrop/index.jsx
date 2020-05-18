@@ -1,4 +1,4 @@
-// @flow
+// 
 import Backdrop from '@material-ui/core/Backdrop'
 import { makeStyles } from '@material-ui/core/styles'
 import React from 'react'
@@ -10,7 +10,7 @@ const useStyles = makeStyles({
   },
 })
 
-const BackdropLayout = ({ isOpen = false }: { isOpen: boolean }) => {
+const BackdropLayout = ({ isOpen = false }) => {
   if (!isOpen) {
     return null
   }

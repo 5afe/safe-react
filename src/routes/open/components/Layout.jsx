@@ -1,4 +1,4 @@
-// @flow
+// 
 import IconButton from '@material-ui/core/IconButton'
 import ChevronLeft from '@material-ui/icons/ChevronLeft'
 import * as React from 'react'
@@ -17,7 +17,6 @@ import {
   getOwnerAddressBy,
   getOwnerNameBy,
 } from '~/routes/open/components/fields'
-import type { SafePropsType } from '~/routes/open/container/Open'
 import Welcome from '~/routes/welcome/components/Layout'
 import { history } from '~/store'
 import { secondary, sm } from '~/theme/variables'
@@ -26,7 +25,7 @@ const { useEffect } = React
 
 const getSteps = () => ['Name', 'Owners and confirmations', 'Review']
 
-const initialValuesFrom = (userAccount: string, safeProps?: SafePropsType) => {
+const initialValuesFrom = (userAccount, safeProps) => {
   if (!safeProps) {
     return {
       [getOwnerNameBy(0)]: 'My Wallet',
@@ -52,13 +51,6 @@ const initialValuesFrom = (userAccount: string, safeProps?: SafePropsType) => {
   }
 }
 
-type Props = {
-  provider: string,
-  userAccount: string,
-  network: string,
-  onCallSafeContractSubmit: (values: Object) => Promise<void>,
-  safeProps?: SafePropsType,
-}
 
 const iconStyle = {
   color: secondary,
@@ -76,7 +68,7 @@ const formMutators = {
   },
 }
 
-const Layout = (props: Props) => {
+const Layout = (props) => {
   const { network, onCallSafeContractSubmit, provider, safeProps, userAccount } = props
 
   useEffect(() => {

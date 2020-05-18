@@ -1,4 +1,4 @@
-// @flow
+// 
 import { makeStyles } from '@material-ui/core/styles'
 import React from 'react'
 import { useField, useFormState } from 'react-final-form'
@@ -10,7 +10,7 @@ import { createTxObject } from '~/routes/safe/components/Balances/SendModal/scre
 
 const useStyles = makeStyles(styles)
 
-const Buttons = ({ onCallSubmit, onClose }: { onCallSubmit: (string) => void, onClose: () => void }) => {
+const Buttons = ({ onCallSubmit, onClose }) => {
   const classes = useStyles()
   const {
     input: { value: method },

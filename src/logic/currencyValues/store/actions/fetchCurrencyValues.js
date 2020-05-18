@@ -1,7 +1,6 @@
-// @flow
+// 
 import { List } from 'immutable'
 import { batch } from 'react-redux'
-import type { Dispatch as ReduxDispatch } from 'redux'
 
 import fetchCurrencyRate from '~/logic/currencyValues/store/actions/fetchCurrencyRate'
 import { setCurrencyBalances } from '~/logic/currencyValues/store/actions/setCurrencyBalances'
@@ -10,9 +9,8 @@ import { setSelectedCurrency } from '~/logic/currencyValues/store/actions/setSel
 import { AVAILABLE_CURRENCIES } from '~/logic/currencyValues/store/model/currencyValues'
 import { loadCurrencyValues } from '~/logic/currencyValues/store/utils/currencyValuesStorage'
 import fetchSafeTokens from '~/logic/tokens/store/actions/fetchSafeTokens'
-import type { GlobalState } from '~/store'
 
-export const fetchCurrencyValues = (safeAddress: string) => async (dispatch: ReduxDispatch<GlobalState>) => {
+export const fetchCurrencyValues = (safeAddress) => async (dispatch) => {
   try {
     const storedCurrencies = await loadCurrencyValues()
     const storedCurrency = storedCurrencies[safeAddress]

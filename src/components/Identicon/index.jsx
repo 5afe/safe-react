@@ -1,24 +1,18 @@
-// @flow
+// 
 import * as React from 'react'
 
 import { toDataUrl } from './blockies'
 
-type Props = {
-  address: string,
-  diameter: number,
-  className?: string,
-}
 
-type IdenticonRef = { current: null | HTMLDivElement }
 
-export default class Identicon extends React.PureComponent<Props> {
+export default class Identicon extends React.PureComponent {
   static defaultProps = {
     className: '',
   }
 
-  identicon: IdenticonRef
+  identicon
 
-  constructor(props: Props) {
+  constructor(props) {
     super(props)
 
     this.identicon = React.createRef()
@@ -48,12 +42,12 @@ export default class Identicon extends React.PureComponent<Props> {
     this.identicon.current.appendChild(image)
   }
 
-  getStyleFrom = (diameter: number) => ({
+  getStyleFrom = (diameter) => ({
     width: diameter,
     height: diameter,
   })
 
-  generateBlockieIdenticon = (address: string, diameter: number) => {
+  generateBlockieIdenticon = (address, diameter) => {
     const image = new window.Image()
     image.src = toDataUrl(address)
     image.height = diameter

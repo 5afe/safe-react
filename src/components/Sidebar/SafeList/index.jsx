@@ -1,4 +1,4 @@
-// @flow
+// 
 import MuiList from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
 import ListItemIcon from '@material-ui/core/ListItemIcon'
@@ -19,18 +19,11 @@ import Paragraph from '~/components/layout/Paragraph'
 import { formatAmount } from '~/logic/tokens/utils/formatAmount'
 import { sameAddress, shortVersionOf } from '~/logic/wallets/ethAddresses'
 import { SAFELIST_ADDRESS } from '~/routes/routes'
-import { type Safe } from '~/routes/safe/store/models/safe'
+import { } from '~/routes/safe/store/models/safe'
 import { disabled, md, mediumFontSize, primary, sm } from '~/theme/variables'
 
 export const SIDEBAR_SAFELIST_ROW_TESTID = 'SIDEBAR_SAFELIST_ROW_TESTID'
 
-type SafeListProps = {
-  safes: List<Safe>,
-  currentSafe: string,
-  onSafeClick: Function,
-  setDefaultSafe: Function,
-  defaultSafe: string,
-}
 
 const useStyles = makeStyles({
   icon: {
@@ -74,7 +67,7 @@ const useStyles = makeStyles({
   },
 })
 
-const SafeList = ({ currentSafe, defaultSafe, onSafeClick, safes, setDefaultSafe }: SafeListProps) => {
+const SafeList = ({ currentSafe, defaultSafe, onSafeClick, safes, setDefaultSafe }) => {
   const classes = useStyles()
 
   return (

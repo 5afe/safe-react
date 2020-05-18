@@ -1,4 +1,4 @@
-// @flow
+// 
 import { getIntercomId } from '~/config'
 
 // eslint-disable-next-line consistent-return

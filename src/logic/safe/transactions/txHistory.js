@@ -1,28 +1,26 @@
-// @flow
+// 
 import axios from 'axios'
 
 import { getTxServiceHost, getTxServiceUriFrom } from '~/config'
 import { checksumAddress } from '~/utils/checksumAddress'
 
-export type TxServiceType = 'confirmation' | 'execution' | 'initialised'
-export type Operation = 0 | 1 | 2
 
 const calculateBodyFrom = async (
-  safeInstance: any,
-  to: string,
-  valueInWei: number | string,
-  data: string,
-  operation: Operation,
-  nonce: string | number,
-  safeTxGas: string | number,
-  baseGas: string | number,
-  gasPrice: string | number,
-  gasToken: string,
-  refundReceiver: string,
-  transactionHash: string | null,
-  sender: string,
-  origin: string | null,
-  signature: ?string,
+  safeInstance,
+  to,
+  valueInWei,
+  data,
+  operation,
+  nonce,
+  safeTxGas,
+  baseGas,
+  gasPrice,
+  gasToken,
+  refundReceiver,
+  transactionHash,
+  sender,
+  origin,
+  signature,
 ) => {
   const contractTransactionHash = await safeInstance.getTransactionHash(
     to,
@@ -56,7 +54,7 @@ const calculateBodyFrom = async (
   }
 }
 
-export const buildTxServiceUrl = (safeAddress: string) => {
+export const buildTxServiceUrl = (safeAddress) => {
   const host = getTxServiceHost()
   const address = checksumAddress(safeAddress)
   const base = getTxServiceUriFrom(address)
@@ -81,22 +79,6 @@ export const saveTxToHistory = async ({
   to,
   txHash,
   valueInWei,
-}: {
-  safeInstance: any,
-  to: string,
-  valueInWei: number | string,
-  data: string,
-  operation: Operation,
-  nonce: number | string,
-  safeTxGas: string | number,
-  baseGas: string | number,
-  gasPrice: string | number,
-  gasToken: string,
-  refundReceiver: string,
-  txHash: string | null,
-  sender: string,
-  origin: string | null,
-  signature: ?string,
 }) => {
   const url = buildTxServiceUrl(safeInstance.address)
   const body = await calculateBodyFrom(

@@ -1,4 +1,4 @@
-// @flow
+// 
 import CircularProgress from '@material-ui/core/CircularProgress'
 import MuiList from '@material-ui/core/List'
 import { withStyles } from '@material-ui/core/styles'
@@ -18,31 +18,15 @@ import Button from '~/components/layout/Button'
 import Divider from '~/components/layout/Divider'
 import Hairline from '~/components/layout/Hairline'
 import Row from '~/components/layout/Row'
-import { type Token } from '~/logic/tokens/store/model/token'
+import { } from '~/logic/tokens/store/model/token'
 
 export const ADD_CUSTOM_TOKEN_BUTTON_TEST_ID = 'add-custom-token-btn'
 
-type Props = {
-  classes: Object,
-  tokens: List<Token>,
-  safeAddress: string,
-  activeTokens: List<Token>,
-  blacklistedTokens: List<Token>,
-  updateActiveTokens: Function,
-  updateBlacklistedTokens: Function,
-  setActiveScreen: Function,
-}
 
-type State = {
-  filter: string,
-  activeTokensAddresses: Set<string>,
-  initialActiveTokensAddresses: Set<string>,
-  blacklistedTokensAddresses: Set<string>,
-}
 
-const filterBy = (filter: string, tokens: List<Token>): List<Token> =>
+const filterBy = (filter, tokens) =>
   tokens.filter(
-    (token: Token) =>
+    (token) =>
       !filter ||
       token.symbol.toLowerCase().includes(filter.toLowerCase()) ||
       token.name.toLowerCase().includes(filter.toLowerCase()),
@@ -53,7 +37,7 @@ const filterBy = (filter: string, tokens: List<Token>): List<Token> =>
 // After user closes modal, dispatch an action so we don't have 100500 actions
 // And selectors don't recalculate
 
-class Tokens extends React.Component<Props, State> {
+class Tokens extends React.Component {
   renderCount = 0
 
   state = {
@@ -107,7 +91,7 @@ class Tokens extends React.Component<Props, State> {
     this.setState(() => ({ filter: value }))
   }
 
-  onSwitch = (token: Token) => () => {
+  onSwitch = (token) => () => {
     this.setState((prevState) => {
       const activeTokensAddresses = prevState.activeTokensAddresses.has(token.address)
         ? prevState.activeTokensAddresses.remove(token.address)
@@ -131,7 +115,7 @@ class Tokens extends React.Component<Props, State> {
   })
 
   getItemKey = (index, { tokens }) => {
-    const token: Token = tokens.get(index)
+    const token = tokens.get(index)
 
     return token.address
   }

@@ -1,9 +1,9 @@
-// @flow
+// 
 import axios from 'axios'
 
 import { buildTxServiceUrl } from '~/logic/safe/transactions/txHistory'
 
-export const getLastTx = async (safeAddress: string): Promise<TransactionProps> => {
+export const getLastTx = async (safeAddress) => {
   try {
     const url = buildTxServiceUrl(safeAddress)
     const response = await axios.get(url, { params: { limit: 1 } })

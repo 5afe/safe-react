@@ -1,6 +1,6 @@
-// @flow
+// 
 /* eslint-disable max-classes-per-file */
-import SafeRecord, { type Safe } from '~/routes/safe/store/models/safe'
+import SafeRecord, { } from '~/routes/safe/store/models/safe'
 import addSafe, { buildOwnersFrom } from '~/routes/safe/store/actions/addSafe'
 import {
   FIELD_NAME,
@@ -10,34 +10,34 @@ import {
   getOwnerAddressBy,
 } from '~/routes/open/components/fields'
 import { getWeb3, getProviderInfo } from '~/logic/wallets/getWeb3'
-import { createSafe, type OpenState } from '~/routes/open/container/Open'
-import { type GlobalState } from '~/store/index'
+import { createSafe, } from '~/routes/open/container/Open'
+import { } from '~/store/index'
 import { makeProvider } from '~/logic/wallets/store/model/provider'
 import addProvider from '~/logic/wallets/store/actions/addProvider'
 
 class SafeBuilder {
-  safe: Safe
+  safe
 
   constructor() {
     this.safe = SafeRecord()
   }
 
-  withAddress(address: string) {
+  withAddress(address) {
     this.safe = this.safe.set('address', address)
     return this
   }
 
-  withName(name: string) {
+  withName(name) {
     this.safe = this.safe.set('name', name)
     return this
   }
 
-  withConfirmations(confirmations: number) {
+  withConfirmations(confirmations) {
     this.safe = this.safe.set('threshold', confirmations)
     return this
   }
 
-  withOwner(names: string[], adresses: string[]) {
+  withOwner(names, adresses) {
     const owners = buildOwnersFrom(names, adresses)
     this.safe = this.safe.set('owners', owners)
     return this
@@ -51,7 +51,7 @@ class SafeBuilder {
 const aSafe = () => new SafeBuilder()
 
 export class SafeFactory {
-  static oneOwnerSafe = (ownerAddress: string = '0x03db1a8b26d08df23337e9276a36b474510f0023') => aSafe()
+  static oneOwnerSafe = (ownerAddress = '0x03db1a8b26d08df23337e9276a36b474510f0023') => aSafe()
     .withAddress('0x03db1a8b26d08df23337e9276a36b474510f0025')
     .withName('Adol ICO Safe')
     .withConfirmations(1)
@@ -59,8 +59,8 @@ export class SafeFactory {
     .get()
 
   static twoOwnersSafe = (
-    firstOwner: string = '0x03db1a8b26d08df23337e9276a36b474510f0023',
-    secondOwner: string = '0x03db1a8b26d08df23337e9276a36b474510f0024',
+    firstOwner = '0x03db1a8b26d08df23337e9276a36b474510f0023',
+    secondOwner = '0x03db1a8b26d08df23337e9276a36b474510f0024',
   ) => aSafe()
     .withAddress('0x03db1a8b26d08df23337e9276a36b474510f0026')
     .withName('Adol & Tobias Safe')
@@ -70,11 +70,11 @@ export class SafeFactory {
 }
 
 export const aMinedSafe = async (
-  store: Store<GlobalState>,
-  owners: number = 1,
-  threshold: number = 1,
-  name: string = 'Safe Name',
-): Promise<string> => {
+  store,
+  owners = 1,
+  threshold = 1,
+  name = 'Safe Name',
+) => {
   const provider = await getProviderInfo(window.web3.currentProvider)
   const walletRecord = makeProvider(provider)
   store.dispatch(addProvider(walletRecord))
@@ -91,8 +91,8 @@ export const aMinedSafe = async (
     form[getOwnerAddressBy(i)] = accounts[i]
   }
 
-  const addSafeFn: any = (...args) => store.dispatch(addSafe(...args))
-  const openSafeProps: OpenState = await createSafe(form, accounts[0], addSafeFn)
+  const addSafeFn = (...args) => store.dispatch(addSafe(...args))
+  const openSafeProps = await createSafe(form, accounts[0], addSafeFn)
 
   return openSafeProps.safeAddress
 }

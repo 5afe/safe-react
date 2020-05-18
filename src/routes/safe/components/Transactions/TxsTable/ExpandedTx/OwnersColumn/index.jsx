@@ -1,4 +1,4 @@
-// @flow
+// 
 import { withStyles } from '@material-ui/core/styles'
 import cn from 'classnames'
 import React from 'react'
@@ -18,21 +18,9 @@ import Img from '~/components/layout/Img'
 import Paragraph from '~/components/layout/Paragraph/index'
 import { TX_TYPE_CONFIRMATION } from '~/logic/safe/transactions/send'
 import { userAccountSelector } from '~/logic/wallets/store/selectors'
-import { type Transaction, makeTransaction } from '~/routes/safe/store/models/transaction'
+import { makeTransaction } from '~/routes/safe/store/models/transaction'
 import { safeOwnersSelector, safeThresholdSelector } from '~/routes/safe/store/selectors'
 
-type Props = {
-  canExecute: boolean,
-  canExecuteCancel: boolean,
-  cancelThresholdReached: boolean,
-  cancelTx: Transaction,
-  classes: Object,
-  onTxReject: Function,
-  onTxConfirm: Function,
-  onTxExecute: Function,
-  thresholdReached: boolean,
-  tx: Transaction,
-}
 
 function getOwnersConfirmations(tx, userAddress) {
   const ownersWhoConfirmed = []
@@ -79,8 +67,8 @@ const OwnersColumn = ({
   onTxReject,
   canExecute,
   canExecuteCancel,
-}: Props) => {
-  let showOlderTxAnnotation: boolean
+}) => {
+  let showOlderTxAnnotation
 
   if (tx.isExecuted || cancelTx.isExecuted) {
     showOlderTxAnnotation = false

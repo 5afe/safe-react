@@ -1,4 +1,4 @@
-// @flow
+// 
 import {
   DEFAULT_FALLBACK_HANDLER_ADDRESS,
   MULTI_SEND_ADDRESS,
@@ -6,12 +6,11 @@ import {
   getEncodedMultiSendCallData,
   getGnosisSafeInstanceAt,
 } from '~/logic/contracts/safeContracts'
-import type { MultiSendTransactionInstanceType } from '~/logic/contracts/safeContracts'
 import { DELEGATE_CALL } from '~/logic/safe/transactions'
 import { getWeb3 } from '~/logic/wallets/getWeb3'
 
-export const upgradeSafeToLatestVersion = async (safeAddress: string, createTransaction: Function) => {
-  const sendTransactions = async (txs: Array<MultiSendTransactionInstanceType>) => {
+export const upgradeSafeToLatestVersion = async (safeAddress, createTransaction) => {
+  const sendTransactions = async (txs) => {
     const web3 = getWeb3()
     const encodeMultiSendCallData = getEncodedMultiSendCallData(txs, web3)
     createTransaction({

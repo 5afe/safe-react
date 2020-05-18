@@ -1,12 +1,10 @@
-// @flow
-import type { Dispatch as ReduxDispatch } from 'redux'
+// 
 import semverSatisfies from 'semver/functions/satisfies'
 
 import { getGnosisSafeInstanceAt } from '~/logic/contracts/safeContracts'
-import { type NotificationsQueue, getNotificationsFromTxType, showSnackbar } from '~/logic/notifications'
+import { getNotificationsFromTxType, showSnackbar } from '~/logic/notifications'
 import { generateSignaturesFromTxConfirmations } from '~/logic/safe/safeTxSigner'
 import {
-  type NotifiedTransaction,
   getApprovalTransaction,
   getExecutionTransaction,
   saveTxToHistory,
@@ -17,19 +15,10 @@ import { providerSelector } from '~/logic/wallets/store/selectors'
 import fetchSafe from '~/routes/safe/store/actions/fetchSafe'
 import fetchTransactions from '~/routes/safe/store/actions/fetchTransactions'
 import { getLastTx, getNewTxNonce, shouldExecuteTransaction } from '~/routes/safe/store/actions/utils'
-import { type Transaction } from '~/routes/safe/store/models/transaction'
-import { type GlobalState } from '~/store'
+import { } from '~/routes/safe/store/models/transaction'
+import { } from '~/store'
 import { getErrorMessage } from '~/test/utils/ethereumErrors'
 
-type ProcessTransactionArgs = {
-  safeAddress: string,
-  tx: Transaction,
-  userAddress: string,
-  notifiedTransaction: NotifiedTransaction,
-  enqueueSnackbar: Function,
-  closeSnackbar: Function,
-  approveAndExecute?: boolean,
-}
 
 const processTransaction = ({
   approveAndExecute,
@@ -39,8 +28,8 @@ const processTransaction = ({
   safeAddress,
   tx,
   userAddress,
-}: ProcessTransactionArgs) => async (dispatch: ReduxDispatch<GlobalState>, getState: Function) => {
-  const state: GlobalState = getState()
+}) => async (dispatch, getState) => {
+  const state = getState()
 
   const { account: from, hardwareWallet, smartContractWallet } = providerSelector(state)
   const safeInstance = await getGnosisSafeInstanceAt(safeAddress)
@@ -58,7 +47,7 @@ const processTransaction = ({
     )}000000000000000000000000000000000000000000000000000000000000000001`
   }
 
-  const notificationsQueue: NotificationsQueue = getNotificationsFromTxType(notifiedTransaction, tx.origin)
+  const notificationsQueue = getNotificationsFromTxType(notifiedTransaction, tx.origin)
   const beforeExecutionKey = showSnackbar(notificationsQueue.beforeExecution, enqueueSnackbar, closeSnackbar)
   let pendingExecutionKey
 

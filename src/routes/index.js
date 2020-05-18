@@ -1,4 +1,4 @@
-// @flow
+// 
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { Redirect, Route, Switch, withRouter } from 'react-router-dom'
@@ -19,12 +19,9 @@ const Load = React.lazy(() => import('./load/container/Load'))
 
 const SAFE_ADDRESS = `${SAFELIST_ADDRESS}/:${SAFE_PARAM_ADDRESS}`
 
-type RoutesProps = {
-  location: Object,
-}
 
-const Routes = ({ location }: RoutesProps) => {
-  const [isInitialLoad, setInitialLoad] = useState<boolean>(true)
+const Routes = ({ location }) => {
+  const [isInitialLoad, setInitialLoad] = useState(true)
   const defaultSafe = useSelector(defaultSafeSelector)
   const { trackPage } = useAnalytics()
 

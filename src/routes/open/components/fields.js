@@ -1,13 +1,13 @@
-// @flow
-export const FIELD_NAME: string = 'name'
-export const FIELD_CONFIRMATIONS: string = 'confirmations'
-export const FIELD_OWNERS: string = 'owners'
-export const FIELD_SAFE_NAME: string = 'safeName'
+// 
+export const FIELD_NAME = 'name'
+export const FIELD_CONFIRMATIONS = 'confirmations'
+export const FIELD_OWNERS = 'owners'
+export const FIELD_SAFE_NAME = 'safeName'
 
-export const getOwnerNameBy = (index: number) => `owner${index}Name`
-export const getOwnerAddressBy = (index: number) => `owner${index}Address`
+export const getOwnerNameBy = (index) => `owner${index}Name`
+export const getOwnerAddressBy = (index) => `owner${index}Address`
 
-export const getNumOwnersFrom = (values: Object) => {
+export const getNumOwnersFrom = (values) => {
   const accounts = Object.keys(values)
     .sort()
     .filter((key) => /^owner\d+Address$/.test(key) && !!values[key])

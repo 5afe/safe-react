@@ -1,4 +1,4 @@
-// @flow
+// 
 import 'babel-polyfill'
 
 import { theme as styledTheme } from '@gnosis.pm/safe-react-components'

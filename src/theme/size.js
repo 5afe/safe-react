@@ -1,9 +1,8 @@
-// @flow
+// 
 import { lg, md, sm, xl, xs } from '~/theme/variables'
 
-export type Size = 'xs' | 'sm' | 'md' | 'lg' | 'xl'
 
-export const getSize = (size: Size | typeof undefined) => {
+export const getSize = (size) => {
   switch (size) {
     case 'xs':
       return xs

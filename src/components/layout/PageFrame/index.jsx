@@ -1,4 +1,4 @@
-// @flow
+// 
 import { withStyles } from '@material-ui/core/styles'
 import { SnackbarProvider } from 'notistack'
 import * as React from 'react'
@@ -36,15 +36,10 @@ const notificationStyles = {
   },
 }
 
-type Props = {
-  children: React.Node,
-  classes: Object,
-  currentNetwork: string,
-}
 
 const desiredNetwork = getNetwork()
 
-const PageFrame = ({ children, classes, currentNetwork }: Props) => {
+const PageFrame = ({ children, classes, currentNetwork }) => {
   const isWrongNetwork = currentNetwork !== ETHEREUM_NETWORK.UNKNOWN && currentNetwork !== desiredNetwork
 
   return (

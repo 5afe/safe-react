@@ -1,14 +1,14 @@
-// @flow
+// 
 import { List } from 'immutable'
 
 import { simpleMemoize } from '~/components/forms/validator'
-import { type Token } from '~/logic/tokens/store/model/token'
+import { } from '~/logic/tokens/store/model/token'
 import { isAddressAToken } from '~/logic/tokens/utils/tokenHelpers'
 import { sameAddress } from '~/logic/wallets/ethAddresses'
 // import { getStandardTokenContract } from '~/logic/tokens/store/actions/fetchTokens'
 
 // eslint-disable-next-line
-export const addressIsTokenContract = simpleMemoize(async (tokenAddress: string) => {
+export const addressIsTokenContract = simpleMemoize(async (tokenAddress) => {
   // SECOND APPROACH:
   // They both seem to work the same
   // const tokenContract = await getStandardTokenContract()
@@ -26,8 +26,8 @@ export const addressIsTokenContract = simpleMemoize(async (tokenAddress: string)
 })
 
 // eslint-disable-next-line
-export const doesntExistInTokenList = (tokenList: List<Token>) =>
-  simpleMemoize((tokenAddress: string) => {
+export const doesntExistInTokenList = (tokenList) =>
+  simpleMemoize((tokenAddress) => {
     const tokenIndex = tokenList.findIndex(({ address }) => sameAddress(address, tokenAddress))
 
     if (tokenIndex !== -1) {

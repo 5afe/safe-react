@@ -1,4 +1,4 @@
-// @flow
+// 
 import { makeStyles } from '@material-ui/core/styles'
 import React from 'react'
 
@@ -23,16 +23,10 @@ import {
   formMutators,
 } from '~/routes/safe/components/Balances/SendModal/screens/ContractInteraction/utils'
 
-type Props = {
-  initialValues: Object,
-  onClose: () => void,
-  onNext: (any) => void,
-  contractAddress?: string,
-}
 
 const useStyles = makeStyles(styles)
 
-const ContractInteraction = ({ contractAddress, initialValues, onClose, onNext }: Props) => {
+const ContractInteraction = ({ contractAddress, initialValues, onClose, onNext }) => {
   const classes = useStyles()
 
   React.useMemo(() => {
@@ -41,7 +35,7 @@ const ContractInteraction = ({ contractAddress, initialValues, onClose, onNext }
     }
   }, [contractAddress])
 
-  const handleSubmit = async ({ contractAddress, selectedMethod, value, ...values }: {}) => {
+  const handleSubmit = async ({ contractAddress, selectedMethod, value, ...values }) => {
     if (value || (contractAddress && selectedMethod)) {
       const data = await createTxObject(selectedMethod, contractAddress, values).encodeABI()
       onNext({ contractAddress, data, selectedMethod, value, ...values })

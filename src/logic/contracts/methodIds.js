@@ -1,4 +1,4 @@
-// @flow
+// 
 import { getWeb3 } from '~/logic/wallets/getWeb3'
 
 // SAFE METHODS TO ITS ID
@@ -53,7 +53,7 @@ const METHOD_TO_ID = {
   '0x694e80c3': SAFE_METHODS_NAMES.CHANGE_THRESHOLD,
 }
 
-export const decodeParamsFromSafeMethod = (data: string) => {
+export const decodeParamsFromSafeMethod = (data) => {
   const web3 = getWeb3()
   const [methodId, params] = [data.slice(0, 10), data.slice(10)]
 

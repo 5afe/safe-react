@@ -1,13 +1,13 @@
-// @flow
+// 
 import * as React from 'react'
 import { Map } from 'immutable'
 import { checkMinedTx, checkPendingTx } from '~/test/builder/safe.dom.utils'
-import { makeToken, type Token } from '~/logic/tokens/store/model/token'
+import { makeToken, } from '~/logic/tokens/store/model/token'
 import addTokens from '~/logic/tokens/store/actions/saveTokens'
 
-export const dispatchAddTokenToList = async (store: Store, tokenAddress: string) => {
+export const dispatchAddTokenToList = async (store, tokenAddress) => {
   const fetchTokensMock = jest.fn()
-  const tokens: Map<string, Token> = Map().set(
+  const tokens = Map().set(
     'TKN',
     makeToken({
       address: tokenAddress,
@@ -23,15 +23,15 @@ export const dispatchAddTokenToList = async (store: Store, tokenAddress: string)
   fetchTokensMock.mockRestore()
 }
 
-export const checkMinedMoveTokensTx = (Transaction: React.Component<any, any>, name: string) => {
+export const checkMinedMoveTokensTx = (Transaction, name) => {
   checkMinedTx(Transaction, name)
 }
 
 export const checkPendingMoveTokensTx = async (
-  Transaction: React.Component<any, any>,
-  safeThreshold: number,
-  name: string,
-  statusses: string[],
+  Transaction,
+  safeThreshold,
+  name,
+  statusses,
 ) => {
   await checkPendingTx(Transaction, safeThreshold, name, statusses)
 }

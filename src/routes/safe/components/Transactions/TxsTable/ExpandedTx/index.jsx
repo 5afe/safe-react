@@ -1,4 +1,4 @@
-// @flow
+// 
 import { makeStyles } from '@material-ui/core/styles'
 import cn from 'classnames'
 import React, { useState } from 'react'
@@ -22,23 +22,18 @@ import Row from '~/components/layout/Row'
 import Span from '~/components/layout/Span'
 import IncomingTxDescription from '~/routes/safe/components/Transactions/TxsTable/ExpandedTx/IncomingTxDescription'
 import { INCOMING_TX_TYPES } from '~/routes/safe/store/models/incomingTransaction'
-import { type Transaction } from '~/routes/safe/store/models/transaction'
+import { } from '~/routes/safe/store/models/transaction'
 import { safeNonceSelector, safeThresholdSelector } from '~/routes/safe/store/selectors'
 
-type Props = {
-  tx: Transaction,
-  cancelTx: Transaction,
-}
 
-type OpenModal = 'rejectTx' | 'approveTx' | 'executeRejectTx' | null
 
 const useStyles = makeStyles(styles)
 
-const ExpandedTx = ({ cancelTx, tx }: Props) => {
+const ExpandedTx = ({ cancelTx, tx }) => {
   const classes = useStyles()
   const nonce = useSelector(safeNonceSelector)
   const threshold = useSelector(safeThresholdSelector)
-  const [openModal, setOpenModal] = useState<OpenModal>(null)
+  const [openModal, setOpenModal] = useState(null)
   const openApproveModal = () => setOpenModal('approveTx')
   const closeModal = () => setOpenModal(null)
   const isIncomingTx = !!INCOMING_TX_TYPES[tx.type]

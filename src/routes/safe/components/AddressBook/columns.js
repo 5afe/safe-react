@@ -1,7 +1,7 @@
-// @flow
+// 
 import { List } from 'immutable'
 
-import { type Column } from '~/components/Table/TableHead'
+import { } from '~/components/Table/TableHead'
 
 export const ADDRESS_BOOK_ROW_ID = 'address-book-row'
 export const TX_TABLE_ADDRESS_BOOK_ID = 'idAddressBook'
@@ -13,7 +13,7 @@ export const REMOVE_ENTRY_BUTTON = 'remove-entry-btn'
 export const SEND_ENTRY_BUTTON = 'send-entry-btn'
 
 export const generateColumns = () => {
-  const nameColumn: Column = {
+  const nameColumn = {
     id: AB_NAME_ID,
     order: false,
     disablePadding: false,
@@ -23,7 +23,7 @@ export const generateColumns = () => {
     align: 'left',
   }
 
-  const addressColumn: Column = {
+  const addressColumn = {
     id: AB_ADDRESS_ID,
     order: false,
     disablePadding: false,
@@ -32,7 +32,7 @@ export const generateColumns = () => {
     align: 'left',
   }
 
-  const actionsColumn: Column = {
+  const actionsColumn = {
     id: AB_ADDRESS_ACTIONS_ID,
     order: false,
     disablePadding: false,

@@ -1,4 +1,4 @@
-// @flow
+// 
 import IconButton from '@material-ui/core/IconButton'
 import { withStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
@@ -20,7 +20,6 @@ import Col from '~/components/layout/Col'
 import Hairline from '~/components/layout/Hairline'
 import Paragraph from '~/components/layout/Paragraph'
 import Row from '~/components/layout/Row'
-import type { AddressBookEntry } from '~/logic/addressBook/model/addressBook'
 import { getAddressBookListSelector } from '~/logic/addressBook/store/selectors'
 import { getAddressesListFromAdbk } from '~/logic/addressBook/utils'
 
@@ -28,14 +27,6 @@ export const CREATE_ENTRY_INPUT_NAME_ID = 'create-entry-input-name'
 export const CREATE_ENTRY_INPUT_ADDRESS_ID = 'create-entry-input-address'
 export const SAVE_NEW_ENTRY_BTN_ID = 'save-new-entry-btn-id'
 
-type Props = {
-  onClose: () => void,
-  classes: Object,
-  isOpen: boolean,
-  newEntryModalHandler: Function,
-  editEntryModalHandler: Function,
-  entryToEdit?: AddressBookEntry,
-}
 
 const CreateEditEntryModalComponent = ({
   classes,
@@ -44,7 +35,7 @@ const CreateEditEntryModalComponent = ({
   isOpen,
   newEntryModalHandler,
   onClose,
-}: Props) => {
+}) => {
   const onFormSubmitted = (values) => {
     if (entryToEdit && !entryToEdit.entry.isNew) {
       editEntryModalHandler(values)

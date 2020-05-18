@@ -1,12 +1,12 @@
-// @flow
+// 
 import * as React from 'react'
 import { connect } from 'react-redux'
 
 import Layout from '../components/Layout'
 import { FIELD_LOAD_ADDRESS, FIELD_LOAD_NAME } from '../components/fields'
 
-import actions, { type Actions } from './actions'
-import selector, { type SelectorProps } from './selector'
+import actions, { } from './actions'
+import selector, { } from './selector'
 
 import Page from '~/components/layout/Page'
 import { getGnosisSafeInstanceAt } from '~/logic/contracts/safeContracts'
@@ -18,9 +18,8 @@ import { buildSafe } from '~/routes/safe/store/actions/fetchSafe'
 import { history } from '~/store'
 import { loadFromStorage } from '~/utils/storage'
 
-type Props = SelectorProps & Actions
 
-export const loadSafe = async (safeName: string, safeAddress: string, owners: Array<*>, addSafe: Function) => {
+export const loadSafe = async (safeName, safeAddress, owners, addSafe) => {
   const safeProps = await buildSafe(safeAddress, safeName)
   safeProps.owners = owners
 
@@ -32,8 +31,8 @@ export const loadSafe = async (safeName: string, safeAddress: string, owners: Ar
   saveSafes(storedSafes)
 }
 
-class Load extends React.Component<Props> {
-  onLoadSafeSubmit = async (values: Object) => {
+class Load extends React.Component {
+  onLoadSafeSubmit = async (values) => {
     try {
       const { addSafe } = this.props
       const web3 = getWeb3()
@@ -73,4 +72,4 @@ class Load extends React.Component<Props> {
   }
 }
 
-export default connect<Object, Object, ?Function, ?Object>(selector, actions)(Load)
+export default connect(selector, actions)(Load)

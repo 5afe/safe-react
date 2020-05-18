@@ -1,4 +1,4 @@
-// @flow
+// 
 import { makeStyles } from '@material-ui/core/styles'
 import { withSnackbar } from 'notistack'
 import React, { useEffect, useState } from 'react'
@@ -24,21 +24,14 @@ import { setImageToPlaceholder } from '~/routes/safe/components/Balances/utils'
 import createTransaction from '~/routes/safe/store/actions/createTransaction'
 import { safeSelector } from '~/routes/safe/store/selectors'
 
-type Props = {
-  closeSnackbar: () => void,
-  enqueueSnackbar: () => void,
-  onClose: () => void,
-  onPrev: () => void,
-  tx: Object,
-}
 
 const useStyles = makeStyles(styles)
 
-const ContractInteractionReview = ({ closeSnackbar, enqueueSnackbar, onClose, onPrev, tx }: Props) => {
+const ContractInteractionReview = ({ closeSnackbar, enqueueSnackbar, onClose, onPrev, tx }) => {
   const classes = useStyles()
   const dispatch = useDispatch()
   const { address: safeAddress } = useSelector(safeSelector)
-  const [gasCosts, setGasCosts] = useState<string>('< 0.001')
+  const [gasCosts, setGasCosts] = useState('< 0.001')
 
   useEffect(() => {
     let isCurrent = true

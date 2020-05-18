@@ -1,4 +1,4 @@
-// @flow
+// 
 import ListItemIcon from '@material-ui/core/ListItemIcon'
 import ListItemText from '@material-ui/core/ListItemText'
 import MenuItem from '@material-ui/core/MenuItem'
@@ -12,18 +12,13 @@ import SelectField from '~/components/forms/SelectField'
 import { required } from '~/components/forms/validator'
 import Img from '~/components/layout/Img'
 import Paragraph from '~/components/layout/Paragraph'
-import type { NFTTokensState } from '~/logic/collectibles/store/reducer/collectibles'
 import { setImageToPlaceholder } from '~/routes/safe/components/Balances/utils'
 import { textShortener } from '~/utils/strings'
 
-type SelectedCollectibleProps = {
-  tokens: NFTTokensState,
-  tokenId: string | number,
-}
 
 const useSelectedCollectibleStyles = makeStyles(selectedTokenStyles)
 
-const SelectedCollectible = ({ tokenId, tokens }: SelectedCollectibleProps) => {
+const SelectedCollectible = ({ tokenId, tokens }) => {
   const classes = useSelectedCollectibleStyles()
   const token = tokenId && tokens ? tokens.find(({ tokenId: id }) => tokenId === id) : null
   const shortener = textShortener({ charsStart: 40, charsEnd: 0 })
@@ -50,14 +45,10 @@ const SelectedCollectible = ({ tokenId, tokens }: SelectedCollectibleProps) => {
   )
 }
 
-type SelectFieldProps = {
-  initialValue: string,
-  tokens: NFTTokensState,
-}
 
 const useCollectibleSelectFieldStyles = makeStyles(selectStyles)
 
-const CollectibleSelectField = ({ initialValue, tokens }: SelectFieldProps) => {
+const CollectibleSelectField = ({ initialValue, tokens }) => {
   const classes = useCollectibleSelectFieldStyles()
 
   return (

@@ -1,4 +1,4 @@
-// @flow
+// 
 import InputBase from '@material-ui/core/InputBase'
 import ListItemIcon from '@material-ui/core/ListItemIcon'
 import ListItemText from '@material-ui/core/ListItemText'
@@ -20,7 +20,7 @@ import { DropdownListTheme } from '~/theme/mui'
 
 const MENU_WIDTH = '452px'
 
-const MethodsDropdown = ({ onChange }: { onChange: (any) => void }) => {
+const MethodsDropdown = ({ onChange }) => {
   const classes = useDropdownStyles({ buttonWidth: MENU_WIDTH })
   const {
     input: { value: abi },
@@ -32,7 +32,7 @@ const MethodsDropdown = ({ onChange }: { onChange: (any) => void }) => {
   const [selectedMethod, setSelectedMethod] = React.useState(selectedMethodByDefault ? selectedMethodByDefault : {})
   const [methodsList, setMethodsList] = React.useState([])
   const [methodsListFiltered, setMethodsListFiltered] = React.useState([])
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null)
+  const [anchorEl, setAnchorEl] = React.useState(null)
   const [searchParams, setSearchParams] = React.useState('')
 
   React.useEffect(() => {
@@ -49,7 +49,7 @@ const MethodsDropdown = ({ onChange }: { onChange: (any) => void }) => {
     setMethodsListFiltered(methodsList.filter(({ name }) => name.toLowerCase().includes(searchParams.toLowerCase())))
   }, [methodsList, searchParams])
 
-  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+  const handleClick = (event) => {
     setAnchorEl(event.currentTarget)
   }
 

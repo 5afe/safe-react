@@ -1,4 +1,4 @@
-// @flow
+// 
 import { withStyles } from '@material-ui/core/styles'
 import React, { useState } from 'react'
 import { useSelector } from 'react-redux'
@@ -15,7 +15,7 @@ import { SAFE_METHODS_NAMES } from '~/logic/contracts/methodIds'
 import { shortVersionOf } from '~/logic/wallets/ethAddresses'
 import OwnerAddressTableCell from '~/routes/safe/components/Settings/ManageOwners/OwnerAddressTableCell'
 import { getTxAmount } from '~/routes/safe/components/Transactions/TxsTable/columns'
-import { type Transaction } from '~/routes/safe/store/models/transaction'
+import { } from '~/routes/safe/store/models/transaction'
 import { lg, md } from '~/theme/variables'
 
 export const TRANSACTIONS_DESC_ADD_OWNER_TEST_ID = 'tx-description-add-owner'
@@ -44,31 +44,11 @@ export const styles = () => ({
   },
 })
 
-type Props = {
-  classes: Object,
-  tx: Transaction,
-}
 
-type TransferDescProps = {
-  amount: string,
-  recipient: string,
-}
 
-type DescriptionDescProps = {
-  action: string,
-  addedOwner?: string,
-  newThreshold?: string,
-  removedOwner?: string,
-}
 
-type CustomDescProps = {
-  amount: string,
-  recipient: string,
-  data: string,
-  classes: Object,
-}
 
-const TransferDescription = ({ amount = '', recipient }: TransferDescProps) => {
+const TransferDescription = ({ amount = '', recipient }) => {
   const recipientName = useSelector((state) => getNameFromAddressBook(state, recipient))
   return (
     <Block data-testid={TRANSACTIONS_DESC_SEND_TEST_ID}>
@@ -82,7 +62,7 @@ const TransferDescription = ({ amount = '', recipient }: TransferDescProps) => {
   )
 }
 
-const RemovedOwner = ({ removedOwner }: { removedOwner: string }) => {
+const RemovedOwner = ({ removedOwner }) => {
   const ownerChangedName = useSelector((state) => getNameFromAddressBook(state, removedOwner))
 
   return (
@@ -97,7 +77,7 @@ const RemovedOwner = ({ removedOwner }: { removedOwner: string }) => {
   )
 }
 
-const AddedOwner = ({ addedOwner }: { addedOwner: string }) => {
+const AddedOwner = ({ addedOwner }) => {
   const ownerChangedName = useSelector((state) => getNameFromAddressBook(state, addedOwner))
 
   return (
@@ -112,7 +92,7 @@ const AddedOwner = ({ addedOwner }: { addedOwner: string }) => {
   )
 }
 
-const NewThreshold = ({ newThreshold }: { newThreshold: string }) => (
+const NewThreshold = ({ newThreshold }) => (
   <Block data-testid={TRANSACTIONS_DESC_CHANGE_THRESHOLD_TEST_ID}>
     <Bold>Change required confirmations:</Bold>
     <Paragraph noMargin size="md">
@@ -121,7 +101,7 @@ const NewThreshold = ({ newThreshold }: { newThreshold: string }) => (
   </Block>
 )
 
-const SettingsDescription = ({ action, addedOwner, newThreshold, removedOwner }: DescriptionDescProps) => {
+const SettingsDescription = ({ action, addedOwner, newThreshold, removedOwner }) => {
   if (action === SAFE_METHODS_NAMES.REMOVE_OWNER && removedOwner && newThreshold) {
     return (
       <>
@@ -160,7 +140,7 @@ const SettingsDescription = ({ action, addedOwner, newThreshold, removedOwner }:
   )
 }
 
-const CustomDescription = ({ amount = 0, classes, data, recipient }: CustomDescProps) => {
+const CustomDescription = ({ amount = 0, classes, data, recipient }) => {
   const [showTxData, setShowTxData] = useState(false)
   const recipientName = useSelector((state) => getNameFromAddressBook(state, recipient))
   return (
@@ -209,7 +189,7 @@ const CustomDescription = ({ amount = 0, classes, data, recipient }: CustomDescP
   )
 }
 
-const TxDescription = ({ classes, tx }: Props) => {
+const TxDescription = ({ classes, tx }) => {
   const {
     action,
     addedOwner,

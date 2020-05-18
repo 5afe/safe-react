@@ -1,4 +1,4 @@
-// @flow
+// 
 import { useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 
@@ -9,7 +9,7 @@ import fetchLatestMasterContractVersion from '~/routes/safe/store/actions/fetchL
 import fetchSafe from '~/routes/safe/store/actions/fetchSafe'
 import fetchTransactions from '~/routes/safe/store/actions/fetchTransactions'
 
-export const useLoadSafe = (safeAddress: ?string) => {
+export const useLoadSafe = (safeAddress) => {
   const dispatch = useDispatch()
 
   useEffect(() => {

@@ -1,8 +1,8 @@
-// @flow
+// 
 import FormControl from '@material-ui/core/FormControl'
 import FormHelperText from '@material-ui/core/FormHelperText'
 import InputLabel from '@material-ui/core/InputLabel'
-import Select, { type SelectFieldProps } from '@material-ui/core/Select'
+import Select, { } from '@material-ui/core/Select'
 import React from 'react'
 
 const style = {
@@ -18,7 +18,7 @@ const SelectInput = ({
   meta,
   renderValue,
   ...rest
-}: SelectFieldProps) => {
+}) => {
   const showError = ((meta.submitError && !meta.dirtySinceLastSubmit) || meta.error) && meta.touched && !disableError
   const inputProps = {
     ...restInput,

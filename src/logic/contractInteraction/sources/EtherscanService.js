@@ -1,4 +1,4 @@
-// @flow
+// 
 import { RateLimit } from 'async-sema'
 import memoize from 'lodash.memoize'
 
@@ -9,13 +9,13 @@ import { ETHERSCAN_API_KEY } from '~/utils/constants'
 class EtherscanService extends ABIService {
   _rateLimit = async () => {}
 
-  _endpointsUrls: { [key: string]: string } = {
+  _endpointsUrls = {
     [ETHEREUM_NETWORK.MAINNET]: 'https://api.etherscan.io/api',
     [ETHEREUM_NETWORK.RINKEBY]: 'https://api-rinkeby.etherscan.io/api',
   }
 
   _fetch = memoize(
-    async (url: string, contractAddress: string) => {
+    async (url, contractAddress) => {
       let params = {
         module: 'contract',
         action: 'getAbi',
@@ -38,12 +38,12 @@ class EtherscanService extends ABIService {
     (url, contractAddress) => `${url}_${contractAddress}`,
   )
 
-  constructor(options: { rps: number }) {
+  constructor(options) {
     super()
     this._rateLimit = RateLimit(options.rps)
   }
 
-  async getContractABI(contractAddress: string, network: string) {
+  async getContractABI(contractAddress, network) {
     const etherscanUrl = this._endpointsUrls[network]
     try {
       const { result, status } = await this._fetch(etherscanUrl, contractAddress)

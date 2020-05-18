@@ -1,4 +1,4 @@
-// @flow
+// 
 import { DELEGATE_CALL } from '~/logic/safe/transactions/send'
 import { getWeb3 } from '~/logic/wallets/getWeb3'
 import createTransaction from '~/routes/safe/store/actions/createTransaction'
@@ -17,12 +17,12 @@ const multiSendAbi = [
 ]
 
 const sendTransactions = (
-  dispatch: Function,
-  safeAddress: String,
-  txs: Array<any>,
-  enqueueSnackbar: Function,
-  closeSnackbar: Function,
-  origin: string,
+  dispatch,
+  safeAddress,
+  txs,
+  enqueueSnackbar,
+  closeSnackbar,
+  origin,
 ) => {
   const web3 = getWeb3()
   const multiSend = new web3.eth.Contract(multiSendAbi, multiSendAddress)

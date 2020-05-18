@@ -1,4 +1,4 @@
-// @flow
+// 
 import IconButton from '@material-ui/core/IconButton'
 import { withStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
@@ -74,12 +74,8 @@ const styles = () => ({
   },
 })
 
-type Props = {
-  onClose: () => void,
-  classes: Object,
-}
 
-const Receive = ({ classes, onClose }: Props) => {
+const Receive = ({ classes, onClose }) => {
   const safeAddress = useSelector(safeParamAddressFromStateSelector)
   const safeName = useSelector(safeNameSelector)
   return (

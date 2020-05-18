@@ -1,4 +1,4 @@
-// @flow
+// 
 import { withStyles } from '@material-ui/core/styles'
 import CallMade from '@material-ui/icons/CallMade'
 import CallReceived from '@material-ui/icons/CallReceived'
@@ -20,13 +20,8 @@ import { SAFE_VIEW_NAME_HEADING_TEST_ID } from '~/routes/safe/components/Layout'
 import { grantedSelector } from '~/routes/safe/container/selector'
 import { safeNameSelector, safeParamAddressFromStateSelector } from '~/routes/safe/store/selectors'
 
-type Props = {
-  classes: Object,
-  showSendFunds: Function,
-  onShow: Function,
-}
 
-const LayoutHeader = (props: Props) => {
+const LayoutHeader = (props) => {
   const { classes, onShow, showSendFunds } = props
   const address = useSelector(safeParamAddressFromStateSelector)
   const granted = useSelector(grantedSelector)

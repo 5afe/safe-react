@@ -1,4 +1,4 @@
-// @flow
+// 
 import CircularProgress from '@material-ui/core/CircularProgress'
 import MuiList from '@material-ui/core/List'
 import { makeStyles } from '@material-ui/core/styles'
@@ -18,9 +18,7 @@ import Button from '~/components/layout/Button'
 import Divider from '~/components/layout/Divider'
 import Hairline from '~/components/layout/Hairline'
 import Row from '~/components/layout/Row'
-import type { NFTAssetsState } from '~/logic/collectibles/store/reducer/collectibles'
 import { nftAssetsListSelector } from '~/logic/collectibles/store/selectors'
-import type { NFTAsset } from '~/routes/safe/components/Balances/Collectibles/types'
 import AssetRow from '~/routes/safe/components/Balances/Tokens/screens/AssetsList/AssetRow'
 import updateActiveAssets from '~/routes/safe/store/actions/updateActiveAssets'
 import updateBlacklistedAssets from '~/routes/safe/store/actions/updateBlacklistedAssets'
@@ -32,20 +30,17 @@ import {
 const useStyles = makeStyles(styles)
 
 export const ADD_CUSTOM_ASSET_BUTTON_TEST_ID = 'add-custom-asset-btn'
-type Props = {
-  setActiveScreen: Function,
-}
 
-const filterBy = (filter: string, nfts: List<NFTAsset>): List<NFTAsset> =>
+const filterBy = (filter, nfts) =>
   nfts.filter(
-    (asset: NFTAsset) =>
+    (asset) =>
       !filter ||
       asset.description.toLowerCase().includes(filter.toLowerCase()) ||
       asset.name.toLowerCase().includes(filter.toLowerCase()) ||
       asset.symbol.toLowerCase().includes(filter.toLowerCase()),
   )
 
-const AssetsList = (props: Props) => {
+const AssetsList = (props) => {
   const classes = useStyles()
   const searchClasses = {
     input: classes.searchInput,
@@ -60,7 +55,7 @@ const AssetsList = (props: Props) => {
   const [filterValue, setFilterValue] = useState('')
   const [activeAssetsAddresses, setActiveAssetsAddresses] = useState(activeAssetsList)
   const [blacklistedAssetsAddresses, setBlacklistedAssetsAddresses] = useState(blacklistedAssets)
-  const nftAssetsList: NFTAssetsState = useSelector(nftAssetsListSelector)
+  const nftAssetsList = useSelector(nftAssetsListSelector)
 
   useEffect(() => {
     dispatch(updateActiveAssets(safeAddress, activeAssetsAddresses))
@@ -71,7 +66,7 @@ const AssetsList = (props: Props) => {
     setFilterValue('')
   }
 
-  const onChangeSearchBar = (value: string) => {
+  const onChangeSearchBar = (value) => {
     setFilterValue(value)
   }
 
@@ -79,7 +74,7 @@ const AssetsList = (props: Props) => {
     return index
   }
 
-  const onSwitch = (asset: NFTAsset) => () => {
+  const onSwitch = (asset) => () => {
     const { address } = asset
     const activeAssetsAddressesResult = activeAssetsAddresses.contains(address)
       ? activeAssetsAddresses.remove(address)

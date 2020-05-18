@@ -1,8 +1,7 @@
-// @flow
+// 
 import { combineReducers, createStore, applyMiddleware, compose } from 'redux'
 import thunk from 'redux-thunk'
 import providerReducer, { PROVIDER_REDUCER_ID } from '~/logic/wallets/store/reducer/provider'
-import type { ProviderProps } from '~/logic/wallets/store/model/provider'
 import { makeProvider } from '~/logic/wallets/store/model/provider'
 import { processProviderResponse } from '../actions/fetchProvider'
 
@@ -20,7 +19,7 @@ const providerReducerTests = () => {
 
     it('reducer should return default Provider record when no provider is loaded', () => {
       // GIVEN
-      const emptyProvider: ProviderProps = {
+      const emptyProvider = {
         name: '',
         loaded: false,
         available: false,
@@ -38,7 +37,7 @@ const providerReducerTests = () => {
 
     it('reducer should return avaiable with its default value when is loaded but not available', () => {
       // GIVEN
-      const providerLoaded: ProviderProps = {
+      const providerLoaded = {
         name: 'SAFE',
         loaded: true,
         available: false,
@@ -56,7 +55,7 @@ const providerReducerTests = () => {
 
     it('reducer should return provider when it is loaded and available', () => {
       // GIVEN
-      const providerLoaded: ProviderProps = {
+      const providerLoaded = {
         name: 'SAFE',
         loaded: true,
         available: true,

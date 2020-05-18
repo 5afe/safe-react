@@ -1,4 +1,4 @@
-// @flow
+// 
 import IconButton from '@material-ui/core/IconButton'
 import { withStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
@@ -25,16 +25,9 @@ import { safeNameSelector, safeOwnersSelector, safeParamAddressFromStateSelector
 
 export const ADD_OWNER_SUBMIT_BTN_TEST_ID = 'add-owner-submit-btn'
 
-type Props = {
-  onClose: () => void,
-  classes: Object,
-  values: Object,
-  onClickBack: Function,
-  onSubmit: Function,
-}
 
-const ReviewAddOwner = ({ classes, onClickBack, onClose, onSubmit, values }: Props) => {
-  const [gasCosts, setGasCosts] = useState<string>('< 0.001')
+const ReviewAddOwner = ({ classes, onClickBack, onClose, onSubmit, values }) => {
+  const [gasCosts, setGasCosts] = useState('< 0.001')
   const safeAddress = useSelector(safeParamAddressFromStateSelector)
   const safeName = useSelector(safeNameSelector)
   const owners = useSelector(safeOwnersSelector)

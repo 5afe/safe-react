@@ -1,4 +1,4 @@
-// @flow
+// 
 import { getInfuraUrl } from '../getWeb3'
 
 const isMainnet = process.env.REACT_APP_NETWORK === 'mainnet'

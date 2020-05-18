@@ -1,4 +1,4 @@
-// @flow
+// 
 import IconButton from '@material-ui/core/IconButton'
 import Close from '@material-ui/icons/Close'
 import { withStyles } from '@material-ui/styles'
@@ -17,13 +17,8 @@ import Row from '~/components/layout/Row'
 import { upgradeSafeToLatestVersion } from '~/logic/safe/utils/upgradeSafe'
 import createTransaction from '~/routes/safe/store/actions/createTransaction'
 
-type Props = {
-  onClose: Function,
-  classes: Object,
-  safeAddress: string,
-}
 
-const UpdateSafeModal = ({ classes, onClose, safeAddress }: Props) => {
+const UpdateSafeModal = ({ classes, onClose, safeAddress }) => {
   const dispatch = useDispatch()
   const handleSubmit = async () => {
     // Call the update safe method

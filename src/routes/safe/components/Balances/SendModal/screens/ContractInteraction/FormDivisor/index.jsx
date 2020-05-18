@@ -1,4 +1,4 @@
-// @flow
+// 
 import React from 'react'
 
 import Col from '~/components/layout/Col'

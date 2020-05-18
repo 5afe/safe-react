@@ -1,4 +1,4 @@
-// @flow
+// 
 import TableContainer from '@material-ui/core/TableContainer'
 import { withStyles } from '@material-ui/core/styles'
 import React, { useEffect, useState } from 'react'
@@ -70,13 +70,8 @@ const styles = () => ({
   },
 })
 
-type Props = {
-  values: Object,
-  classes: Object,
-  updateInitialProps: (initialValues: Object) => void,
-}
 
-const calculateSafeValues = (owners: Array<string>, threshold: Number, values: Object) => {
+const calculateSafeValues = (owners, threshold, values) => {
   const initialValues = { ...values }
   for (let i = 0; i < owners.length; i += 1) {
     initialValues[getOwnerAddressBy(i)] = owners[i]
@@ -85,8 +80,8 @@ const calculateSafeValues = (owners: Array<string>, threshold: Number, values: O
   return initialValues
 }
 
-const OwnerListComponent = (props: Props) => {
-  const [owners, setOwners] = useState<Array<string>>([])
+const OwnerListComponent = (props) => {
+  const [owners, setOwners] = useState([])
   const { classes, updateInitialProps, values } = props
 
   useEffect(() => {
@@ -162,7 +157,7 @@ const OwnerListComponent = (props: Props) => {
 
 const OwnerListPage = withStyles(styles)(OwnerListComponent)
 
-const OwnerList = ({ updateInitialProps }: Object, network: string) => (controls: React$Node, { values }: Object) => (
+const OwnerList = ({ updateInitialProps }, network) => (controls, { values }) => (
   <>
     <OpenPaper controls={controls} padding={false}>
       <OwnerListPage network={network} updateInitialProps={updateInitialProps} values={values} />

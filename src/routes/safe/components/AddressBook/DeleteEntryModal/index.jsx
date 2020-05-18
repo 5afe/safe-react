@@ -1,4 +1,4 @@
-// @flow
+// 
 import IconButton from '@material-ui/core/IconButton'
 import { withStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
@@ -13,19 +13,11 @@ import Button from '~/components/layout/Button'
 import Hairline from '~/components/layout/Hairline'
 import Paragraph from '~/components/layout/Paragraph'
 import Row from '~/components/layout/Row'
-import type { AddressBookEntryType } from '~/logic/addressBook/model/addressBook'
 
 export const DELETE_ENTRY_BTN_ID = 'delete-entry-btn-id'
 
-type Props = {
-  onClose: () => void,
-  classes: Object,
-  isOpen: boolean,
-  deleteEntryModalHandler: Function,
-  entryToDelete: AddressBookEntryType,
-}
 
-const DeleteEntryModalComponent = ({ classes, deleteEntryModalHandler, entryToDelete, isOpen, onClose }: Props) => {
+const DeleteEntryModalComponent = ({ classes, deleteEntryModalHandler, entryToDelete, isOpen, onClose }) => {
   const handleDeleteEntrySubmit = (values) => {
     deleteEntryModalHandler(values, entryToDelete.index)
   }

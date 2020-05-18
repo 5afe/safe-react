@@ -1,4 +1,4 @@
-// @flow
-export const FIELD_LOAD_NAME: string = 'name'
-export const FIELD_LOAD_ADDRESS: string = 'address'
-export const THRESHOLD: string = 'threshold'
+// 
+export const FIELD_LOAD_NAME = 'name'
+export const FIELD_LOAD_ADDRESS = 'address'
+export const THRESHOLD = 'threshold'

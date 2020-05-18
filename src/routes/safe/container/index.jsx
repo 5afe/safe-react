@@ -1,16 +1,15 @@
-// @flow
+// 
 import * as React from 'react'
 import { useState } from 'react'
 import { useSelector } from 'react-redux'
 
 import Page from '~/components/layout/Page'
-import { type Token } from '~/logic/tokens/store/model/token'
+import { } from '~/logic/tokens/store/model/token'
 import Layout from '~/routes/safe/components/Layout'
 import { useCheckForUpdates } from '~/routes/safe/container/Hooks/useCheckForUpdates'
 import { useLoadSafe } from '~/routes/safe/container/Hooks/useLoadSafe'
 import { safeParamAddressFromStateSelector } from '~/routes/safe/store/selectors'
 
-type Action = 'Send' | 'Receive'
 
 const INITIAL_STATE = {
   sendFunds: {
@@ -27,21 +26,21 @@ const SafeView = () => {
   useLoadSafe(safeAddress)
   useCheckForUpdates()
 
-  const onShow = (action: Action) => () => {
+  const onShow = (action) => () => {
     setState((prevState) => ({
       ...prevState,
       [`show${action}`]: true,
     }))
   }
 
-  const onHide = (action: Action) => () => {
+  const onHide = (action) => () => {
     setState((prevState) => ({
       ...prevState,
       [`show${action}`]: false,
     }))
   }
 
-  const showSendFunds = (token: Token) => {
+  const showSendFunds = (token) => {
     setState((prevState) => ({
       ...prevState,
       sendFunds: {

@@ -1,4 +1,4 @@
-// @flow
+// 
 import React from 'react'
 import styled from 'styled-components'
 
@@ -20,7 +20,7 @@ const TitleWrapper = styled.div`
   align-items: center;
 `
 
-export const ModalTitle = ({ iconUrl, title }: { title: string, iconUrl: string }) => {
+export const ModalTitle = ({ iconUrl, title }) => {
   return (
     <TitleWrapper>
       {iconUrl && <IconImg alt={title} src={iconUrl} />}
@@ -41,11 +41,6 @@ export const ModalFooterConfirmation = ({
   handleCancel,
   handleOk,
   okText,
-}: {
-  okText: string,
-  cancelText: string,
-  handleOk: () => void,
-  handleCancel: () => void,
 }) => {
   return (
     <FooterWrapper>

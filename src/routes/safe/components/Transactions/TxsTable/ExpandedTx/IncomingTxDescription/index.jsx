@@ -1,4 +1,4 @@
-// @flow
+// 
 import { makeStyles } from '@material-ui/core/styles'
 import React from 'react'
 import { useSelector } from 'react-redux'
@@ -9,7 +9,6 @@ import Bold from '~/components/layout/Bold'
 import { getNameFromAddressBook } from '~/logic/addressBook/store/selectors'
 import OwnerAddressTableCell from '~/routes/safe/components/Settings/ManageOwners/OwnerAddressTableCell'
 import { getIncomingTxAmount } from '~/routes/safe/components/Transactions/TxsTable/columns'
-import type { IncomingTransaction } from '~/routes/safe/store/models/incomingTransaction'
 import { lg, md } from '~/theme/variables'
 
 export const TRANSACTIONS_DESC_INCOMING_TEST_ID = 'tx-description-incoming'
@@ -23,17 +22,9 @@ const useStyles = makeStyles({
   },
 })
 
-type Props = {
-  tx: IncomingTransaction,
-}
 
-type TransferDescProps = {
-  value: string,
-  from: string,
-  txFromName?: string,
-}
 
-const TransferDescription = ({ from, txFromName, value = '' }: TransferDescProps) => (
+const TransferDescription = ({ from, txFromName, value = '' }) => (
   <Block data-testid={TRANSACTIONS_DESC_INCOMING_TEST_ID}>
     <Bold>Received {value} from:</Bold>
     <br />
@@ -45,7 +36,7 @@ const TransferDescription = ({ from, txFromName, value = '' }: TransferDescProps
   </Block>
 )
 
-const IncomingTxDescription = ({ tx }: Props) => {
+const IncomingTxDescription = ({ tx }) => {
   const classes = useStyles()
   const txFromName = useSelector((state) => getNameFromAddressBook(state, tx.from))
   return (

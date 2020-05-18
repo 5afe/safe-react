@@ -1,25 +1,18 @@
-// @flow
+// 
 import classNames from 'classnames/bind'
 import * as React from 'react'
 
 import styles from './index.scss'
 
-import { type Size } from '~/theme/size'
+import { } from '~/theme/size'
 import { capitalize } from '~/utils/css'
 
 const { PureComponent } = React
 
 const cx = classNames.bind(styles)
 
-type Props = {
-  margin?: Size,
-  padding?: Size,
-  justify?: 'center' | 'right' | 'left' | 'space-around',
-  children?: React.Node,
-  className?: string,
-}
 
-class Block extends PureComponent<Props> {
+class Block extends PureComponent {
   render() {
     const { children, className, justify, margin, padding, ...props } = this.props
 

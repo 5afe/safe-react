@@ -1,9 +1,9 @@
-// @flow
+// 
 import axios from 'axios'
 
 import appsIconSvg from '~/routes/safe/components/Transactions/TxsTable/TxType/assets/appsIcon.svg'
 
-const removeLastTrailingSlash = (url: string) => {
+const removeLastTrailingSlash = (url) => {
   if (url.substr(-1) === '/') {
     return url.substr(0, url.length - 1)
   }
@@ -20,7 +20,7 @@ export const staticAppsList = [
   { url: `${gnosisAppsUrl}/synthetix`, disabled: false },
 ]
 
-export const getAppInfoFromOrigin = (origin: string) => {
+export const getAppInfoFromOrigin = (origin) => {
   try {
     return JSON.parse(origin)
   } catch (error) {
@@ -29,7 +29,7 @@ export const getAppInfoFromOrigin = (origin: string) => {
   }
 }
 
-export const getAppInfoFromUrl = async (appUrl: string) => {
+export const getAppInfoFromUrl = async (appUrl) => {
   let res = { id: undefined, url: appUrl, name: 'unknown', iconUrl: appsIconSvg, error: true }
 
   if (!appUrl) {

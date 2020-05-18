@@ -1,7 +1,7 @@
-// @flow
-import { type Token } from '~/logic/tokens/store/model/token'
+// 
+import { } from '~/logic/tokens/store/model/token'
 
-export const testToken = (token: Token | typeof undefined, symbol: string) => {
+export const testToken = (token, symbol) => {
   if (!token) throw new Error()
   expect(token.get('symbol')).toBe(symbol)
 }

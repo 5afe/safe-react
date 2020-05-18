@@ -1,4 +1,4 @@
-// @flow
+// 
 export const styles = () => ({
   container: {
     marginTop: '56px',

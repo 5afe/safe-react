@@ -1,4 +1,4 @@
-// @flow
+// 
 import { waitForElement } from '@testing-library/react'
 import { Set, Map } from 'immutable'
 import { aNewStore } from '~/store'
@@ -16,7 +16,7 @@ import { getBalanceInEtherOf } from '~/logic/wallets/getWeb3'
 
 describe('DOM > Feature > Balances', () => {
   let store
-  let safeAddress: string
+  let safeAddress
   beforeEach(async () => {
     store = aNewStore()
     safeAddress = await aMinedSafe(store)

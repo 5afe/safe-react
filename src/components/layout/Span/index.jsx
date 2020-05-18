@@ -1,11 +1,8 @@
-// @flow
+// 
 import * as React from 'react'
 
-type Props = {
-  children: React.Node,
-}
 
-class Span extends React.PureComponent<Props> {
+class Span extends React.PureComponent {
   render() {
     const { children, ...props } = this.props
 

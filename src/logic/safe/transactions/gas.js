@@ -1,14 +1,14 @@
-// @flow
+// 
 import { getGnosisSafeInstanceAt } from '~/logic/contracts/safeContracts'
 
 export const calculateTxFee = async (
-  safe: any,
-  safeAddress: string,
-  from: string,
-  data: string,
-  to: string,
-  valueInWei: number,
-  operation: number,
+  safe,
+  safeAddress,
+  from,
+  data,
+  to,
+  valueInWei,
+  operation,
 ) => {
   try {
     let safeInstance = safe

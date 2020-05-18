@@ -1,4 +1,4 @@
-// @flow
+// 
 import Card from '@material-ui/core/Card'
 import { makeStyles } from '@material-ui/core/styles'
 import React from 'react'
@@ -7,7 +7,6 @@ import { useSelector } from 'react-redux'
 import Item from './components/Item'
 
 import Paragraph from '~/components/layout/Paragraph'
-import type { NFTTokensState } from '~/logic/collectibles/store/reducer/collectibles'
 import { activeNftAssetsListSelector, nftTokensSelector } from '~/logic/collectibles/store/selectors'
 import SendModal from '~/routes/safe/components/Balances/SendModal'
 import { safeSelector } from '~/routes/safe/store/selectors'
@@ -81,7 +80,7 @@ const Collectibles = () => {
   const [selectedToken, setSelectedToken] = React.useState({})
   const [sendNFTsModalOpen, setSendNFTsModalOpen] = React.useState(false)
   const { address, ethBalance, name } = useSelector(safeSelector)
-  const nftTokens: NFTTokensState = useSelector(nftTokensSelector)
+  const nftTokens = useSelector(nftTokensSelector)
   const activeAssetsList = useSelector(activeNftAssetsListSelector)
 
   const handleItemSend = (nftToken) => {

@@ -1,13 +1,13 @@
-// @flow
+// 
 import { List } from 'immutable'
 
-import { type Confirmation } from '~/routes/safe/store/models/confirmation'
+import { } from '~/routes/safe/store/models/confirmation'
 
 // https://docs.gnosis.io/safe/docs/docs5/#pre-validated-signatures
 // https://github.com/gnosis/safe-contracts/blob/master/test/gnosisSafeTeamEdition.js#L26
 export const generateSignaturesFromTxConfirmations = (
-  confirmations: List<Confirmation>,
-  preApprovingOwner?: string,
+  confirmations,
+  preApprovingOwner,
 ) => {
   // The constant parts need to be sorted so that the recovered signers are sorted ascending
   // (natural order) by address (not checksummed).

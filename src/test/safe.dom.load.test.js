@@ -1,11 +1,11 @@
-// @flow
+// 
 import * as React from 'react'
-import { type Store } from 'redux'
+import { } from 'redux'
 import { Provider } from 'react-redux'
 import { render, fireEvent, act } from '@testing-library/react'
 import { ConnectedRouter } from 'connected-react-router'
 import Load from '~/routes/load/container/Load'
-import { aNewStore, history, type GlobalState } from '~/store'
+import { aNewStore, history, } from '~/store'
 import { sleep } from '~/utils/timer'
 import { getProviderInfo } from '~/logic/wallets/getWeb3'
 import addProvider from '~/logic/wallets/store/actions/addProvider'
@@ -28,7 +28,7 @@ afterAll(() => {
   console.error = originalError
 })
 
-const renderLoadSafe = async (localStore: Store<GlobalState>) => {
+const renderLoadSafe = async (localStore) => {
   const provider = await getProviderInfo(window.web3.currentProvider)
   const walletRecord = makeProvider(provider)
   localStore.dispatch(addProvider(walletRecord))

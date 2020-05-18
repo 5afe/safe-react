@@ -1,7 +1,6 @@
-// @flow
+// 
 import GnosisSafeSol from '@gnosis.pm/safe-contracts/build/contracts/GnosisSafe.json'
 import { List } from 'immutable'
-import type { Dispatch as ReduxDispatch } from 'redux'
 
 import generateBatchRequests from '~/logic/contracts/generateBatchRequests'
 import { getLocalSafe, getSafeName } from '~/logic/safe/utils'
@@ -13,15 +12,14 @@ import addSafeOwner from '~/routes/safe/store/actions/addSafeOwner'
 import removeSafeOwner from '~/routes/safe/store/actions/removeSafeOwner'
 import updateSafe from '~/routes/safe/store/actions/updateSafe'
 import { makeOwner } from '~/routes/safe/store/models/owner'
-import type { SafeProps } from '~/routes/safe/store/models/safe'
-import { type GlobalState } from '~/store'
+import { } from '~/store'
 import { checksumAddress } from '~/utils/checksumAddress'
 
 const buildOwnersFrom = (
-  safeOwners: string[],
-  localSafe: SafeProps | {}, // eslint-disable-next-line
+  safeOwners,
+  localSafe, // eslint-disable-next-line
 ) =>
-  safeOwners.map((ownerAddress: string) => {
+  safeOwners.map((ownerAddress) => {
     const convertedAdd = checksumAddress(ownerAddress)
     if (!localSafe) {
       return makeOwner({ name: 'UNKNOWN', address: convertedAdd })
@@ -38,7 +36,7 @@ const buildOwnersFrom = (
     })
   })
 
-export const buildSafe = async (safeAdd: string, safeName: string, latestMasterContractVersion: string) => {
+export const buildSafe = async (safeAdd, safeName, latestMasterContractVersion) => {
   const safeAddress = checksumAddress(safeAdd)
 
   const safeParams = ['getThreshold', 'nonce', 'VERSION', 'getOwners']
@@ -58,7 +56,7 @@ export const buildSafe = async (safeAdd: string, safeName: string, latestMasterC
   const needsUpdate = safeNeedsUpdate(currentVersion, latestMasterContractVersion)
   const featuresEnabled = enabledFeatures(currentVersion)
 
-  const safe: SafeProps = {
+  const safe = {
     address: safeAddress,
     name: safeName,
     threshold,
@@ -73,7 +71,7 @@ export const buildSafe = async (safeAdd: string, safeName: string, latestMasterC
   return safe
 }
 
-export const checkAndUpdateSafe = (safeAdd: string) => async (dispatch: ReduxDispatch<*>) => {
+export const checkAndUpdateSafe = (safeAdd) => async (dispatch) => {
   const safeAddress = checksumAddress(safeAdd)
   // Check if the owner's safe did change and update them
   const safeParams = ['getThreshold', 'nonce', 'getOwners']
@@ -125,12 +123,12 @@ export const checkAndUpdateSafe = (safeAdd: string) => async (dispatch: ReduxDis
 }
 
 // eslint-disable-next-line consistent-return
-export default (safeAdd: string) => async (dispatch: ReduxDispatch<GlobalState>, getState: () => GlobalState) => {
+export default (safeAdd) => async (dispatch, getState) => {
   try {
     const safeAddress = checksumAddress(safeAdd)
     const safeName = (await getSafeName(safeAddress)) || 'LOADED SAFE'
     const latestMasterContractVersion = getState().safes.get('latestMasterContractVersion')
-    const safeProps: SafeProps = await buildSafe(safeAddress, safeName, latestMasterContractVersion)
+    const safeProps = await buildSafe(safeAddress, safeName, latestMasterContractVersion)
 
     dispatch(addSafe(safeProps))
   } catch (err) {

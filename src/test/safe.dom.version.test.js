@@ -1,4 +1,4 @@
-// @flow
+// 
 import Web3 from 'web3'
 import GnosisSafeSol from '@gnosis.pm/safe-contracts/build/contracts/GnosisSafe.json'
 import { checkIfSafeNeedsUpdate } from '~/logic/safe/utils/safeVersion'

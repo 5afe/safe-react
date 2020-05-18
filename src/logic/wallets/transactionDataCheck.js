@@ -1,4 +1,4 @@
-// @flow
+// 
 function transactionDataCheck() {
   let completed = false
   return (stateAndHelpers) => {

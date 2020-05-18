@@ -1,4 +1,4 @@
-// @flow
+// 
 import Tab from '@material-ui/core/Tab'
 import Tabs from '@material-ui/core/Tabs'
 import { withStyles } from '@material-ui/core/styles'
@@ -19,14 +19,8 @@ import { AppsIcon } from '~/routes/safe/components/assets/AppsIcon'
 import { BalancesIcon } from '~/routes/safe/components/assets/BalancesIcon'
 import { TransactionsIcon } from '~/routes/safe/components/assets/TransactionsIcon'
 
-type Props = {
-  classes: Object,
-  match: Object,
-  history: Object,
-  location: Object,
-}
 
-const TabsComponent = (props: Props) => {
+const TabsComponent = (props) => {
   const { classes, location, match } = props
 
   const handleCallToRouter = (_, value) => {

@@ -1,4 +1,4 @@
-// @flow
+// 
 import { withStyles } from '@material-ui/core/styles'
 import cn from 'classnames'
 import React from 'react'
@@ -24,22 +24,6 @@ export const EXECUTE_TX_BTN_TEST_ID = 'execute-btn'
 export const REJECT_TX_BTN_TEST_ID = 'reject-btn'
 export const EXECUTE_REJECT_TX_BTN_TEST_ID = 'execute-reject-btn'
 
-type OwnerProps = {
-  classes: Object,
-  confirmed?: boolean,
-  executor?: string,
-  isCancelTx?: boolean,
-  onTxReject?: Function,
-  onTxConfirm: Function,
-  onTxExecute: Function,
-  owner: string,
-  showRejectBtn: boolean,
-  showExecuteRejectBtn: boolean,
-  showConfirmBtn: boolean,
-  showExecuteBtn: boolean,
-  thresholdReached: boolean,
-  userAddress: string,
-}
 
 const OwnerComponent = ({
   classes,
@@ -56,7 +40,7 @@ const OwnerComponent = ({
   showRejectBtn,
   thresholdReached,
   userAddress,
-}: OwnerProps) => {
+}) => {
   const nameInAdbk = useSelector((state) => getNameFromAddressBook(state, owner))
   const [imgCircle, setImgCircle] = React.useState(ConfirmSmallGreyCircle)
 

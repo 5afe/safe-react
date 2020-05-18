@@ -1,4 +1,4 @@
-// @flow
+// 
 import { lg, sm } from '~/theme/variables'
 
 export const styles = () => ({

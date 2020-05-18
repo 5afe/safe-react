@@ -1,18 +1,7 @@
-// @flow
+// 
 
-export type NotifiedTransaction = {
-  STANDARD_TX: string,
-  CONFIRMATION_TX: string,
-  CANCELLATION_TX: string,
-  WAITING_TX: string,
-  SETTINGS_CHANGE_TX: string,
-  SAFE_NAME_CHANGE_TX: string,
-  OWNER_NAME_CHANGE_TX: string,
-  ADDRESSBOOK_NEW_ENTRY: string,
-  ADDRESSBOOK_DELETE_ENTRY: string,
-}
 
-export const TX_NOTIFICATION_TYPES: NotifiedTransaction = {
+export const TX_NOTIFICATION_TYPES = {
   STANDARD_TX: 'STANDARD_TX',
   CONFIRMATION_TX: 'CONFIRMATION_TX',
   CANCELLATION_TX: 'CANCELLATION_TX',

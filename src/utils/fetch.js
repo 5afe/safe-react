@@ -1,6 +1,6 @@
-// @flow
+// 
 
-export const enhancedFetch = async (url: string, errMsg: string) => {
+export const enhancedFetch = async (url, errMsg) => {
   const header = new Headers({
     'Access-Control-Allow-Origin': '*',
   })

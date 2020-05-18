@@ -1,4 +1,4 @@
-// @flow
+// 
 import TableCell from '@material-ui/core/TableCell'
 import TableHead from '@material-ui/core/TableHead'
 import TableRow from '@material-ui/core/TableRow'
@@ -6,21 +6,10 @@ import TableSortLabel from '@material-ui/core/TableSortLabel'
 import { List } from 'immutable'
 import * as React from 'react'
 
-import { type Order } from '~/components/Table/sorting'
+import { } from '~/components/Table/sorting'
 
-export type Column = {
-  id: string,
-  align?: string,
-  order: boolean, // If data for sorting will be provided in a different attr
-  disablePadding: boolean,
-  label: string,
-  custom: boolean, // If content will be rendered by user manually
-  width?: number,
-  static?: boolean, // If content can't be sorted by values in the column
-  style?: Object, // if you want to add some custom styling to the column
-}
 
-export const cellWidth = (width: number | typeof undefined) => {
+export const cellWidth = (width) => {
   if (!width) {
     return undefined
   }
@@ -30,15 +19,9 @@ export const cellWidth = (width: number | typeof undefined) => {
   }
 }
 
-type Props = {
-  columns: List<Column>,
-  orderBy: string, // id of one of the described columns
-  order: Order,
-  onSort: (property: string, orderAttr: boolean) => void,
-}
 
-class GnoTableHead extends React.PureComponent<Props> {
-  changeSort = (property: string, orderAttr: boolean) => () => {
+class GnoTableHead extends React.PureComponent {
+  changeSort = (property, orderAttr) => () => {
     const { onSort } = this.props
 
     onSort(property, orderAttr)
@@ -50,7 +33,7 @@ class GnoTableHead extends React.PureComponent<Props> {
     return (
       <TableHead>
         <TableRow>
-          {columns.map((column: Column) => (
+          {columns.map((column) => (
             <TableCell
               align={column.align}
               key={column.id}

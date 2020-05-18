@@ -1,6 +1,5 @@
-// @flow
+// 
 import ReactGA from 'react-ga'
-import type { Dispatch as ReduxDispatch } from 'redux'
 
 import addProvider from './addProvider'
 
@@ -8,16 +7,15 @@ import { getNetwork } from '~/config'
 import { NOTIFICATIONS, enhanceSnackbarForAction } from '~/logic/notifications'
 import enqueueSnackbar from '~/logic/notifications/store/actions/enqueueSnackbar'
 import { ETHEREUM_NETWORK, ETHEREUM_NETWORK_IDS, getProviderInfo, getWeb3 } from '~/logic/wallets/getWeb3'
-import type { ProviderProps } from '~/logic/wallets/store/model/provider'
 import { makeProvider } from '~/logic/wallets/store/model/provider'
 
-export const processProviderResponse = (dispatch: ReduxDispatch<*>, provider: ProviderProps) => {
+export const processProviderResponse = (dispatch, provider) => {
   const walletRecord = makeProvider(provider)
 
   dispatch(addProvider(walletRecord))
 }
 
-const handleProviderNotification = (provider: ProviderProps, dispatch: Function) => {
+const handleProviderNotification = (provider, dispatch) => {
   const { available, loaded, network } = provider
 
   if (!loaded) {
@@ -50,9 +48,9 @@ const handleProviderNotification = (provider: ProviderProps, dispatch: Function)
   }
 }
 
-export default (providerName?: string) => async (dispatch: ReduxDispatch<*>) => {
+export default (providerName) => async (dispatch) => {
   const web3 = getWeb3()
-  const providerInfo: ProviderProps = await getProviderInfo(web3, providerName)
+  const providerInfo = await getProviderInfo(web3, providerName)
   await handleProviderNotification(providerInfo, dispatch)
   processProviderResponse(dispatch, providerInfo)
 }

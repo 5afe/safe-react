@@ -1,4 +1,4 @@
-// @flow
+// 
 import FormStep from '@material-ui/core/Step'
 import StepContent from '@material-ui/core/StepContent'
 import StepLabel from '@material-ui/core/StepLabel'
@@ -16,22 +16,7 @@ const { useEffect, useState } = React
 
 export { default as Step } from './Step'
 
-type Props = {
-  steps: string[],
-  onSubmit: (values: Object) => Promise<void>,
-  children: React.Node,
-  classes: Object,
-  buttonLabels: Array<string>,
-  initialValues?: Object,
-  disabledWhenValidating?: boolean,
-  mutators?: Object,
-  testId?: string,
-}
 
-type PageProps = {
-  children: Function,
-  prepareNextInitialProps?: (values: Object) => {},
-}
 
 const transitionProps = {
   timeout: {
@@ -40,11 +25,11 @@ const transitionProps = {
   },
 }
 
-export const StepperPage = ({ children }: PageProps) => children
+export const StepperPage = ({ children }) => children
 
-const GnoStepper = (props: Props) => {
-  const [page, setPage] = useState<number>(0)
-  const [values, setValues] = useState<Object>({})
+const GnoStepper = (props) => {
+  const [page, setPage] = useState(0)
+  const [values, setValues] = useState({})
 
   useEffect(() => {
     if (props.initialValues) {
@@ -52,27 +37,27 @@ const GnoStepper = (props: Props) => {
     }
   }, [])
 
-  const getPageProps = (pages: React.Node): PageProps => React.Children.toArray(pages)[page].props
+  const getPageProps = (pages) => React.Children.toArray(pages)[page].props
 
   const updateInitialProps = (newInitialProps) => {
     setValues(newInitialProps)
   }
 
-  const getActivePageFrom = (pages: React.Node) => {
+  const getActivePageFrom = (pages) => {
     const activePageProps = getPageProps(pages)
     const { children, ...restProps } = activePageProps
 
     return children({ ...restProps, updateInitialProps })
   }
 
-  const validate = (valuesToValidate: Object) => {
+  const validate = (valuesToValidate) => {
     const { children } = props
 
     const activePage = React.Children.toArray(children)[page]
     return activePage.props.validate ? activePage.props.validate(valuesToValidate) : {}
   }
 
-  const next = async (formValues: Object) => {
+  const next = async (formValues) => {
     const { children } = props
     const activePageProps = getPageProps(children)
     const { prepareNextInitialProps } = activePageProps
@@ -97,7 +82,7 @@ const GnoStepper = (props: Props) => {
     return setPage(Math.max(page - 1, 0))
   }
 
-  const handleSubmit = async (formValues: Object) => {
+  const handleSubmit = async (formValues) => {
     const { children, onSubmit } = props
     const isLastPage = page === React.Children.count(children) - 1
     if (isLastPage) {
@@ -127,7 +112,7 @@ const GnoStepper = (props: Props) => {
         testId={testId}
         validation={validate}
       >
-        {(submitting: boolean, validating: boolean, ...rest: any) => {
+        {(submitting, validating, ...rest) => {
           const disabled = disabledWhenValidating ? submitting || validating : submitting
           const controls = (
             <>

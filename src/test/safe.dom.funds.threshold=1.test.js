@@ -1,4 +1,4 @@
-// @flow
+// 
 import { fireEvent } from '@testing-library/react'
 import { Map, Set, List } from 'immutable'
 import { aNewStore } from '~/store'
@@ -19,7 +19,7 @@ import { BALANCE_ROW_TEST_ID } from '~/routes/safe/components/Balances'
 
 describe('DOM > Feature > Sending Funds', () => {
   let store
-  let safeAddress: string
+  let safeAddress
   let accounts
   beforeEach(async () => {
     store = aNewStore()

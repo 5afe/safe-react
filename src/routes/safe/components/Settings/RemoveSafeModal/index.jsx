@@ -1,4 +1,4 @@
-// @flow
+// 
 import IconButton from '@material-ui/core/IconButton'
 import { withStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
@@ -7,7 +7,7 @@ import classNames from 'classnames'
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
-import { type Actions } from './actions'
+import { } from './actions'
 import { styles } from './style'
 
 import Identicon from '~/components/Identicon'
@@ -31,13 +31,8 @@ const openIconStyle = {
   color: secondary,
 }
 
-type Props = Actions & {
-  onClose: () => void,
-  classes: Object,
-  isOpen: boolean,
-}
 
-const RemoveSafeComponent = ({ classes, isOpen, onClose }: Props) => {
+const RemoveSafeComponent = ({ classes, isOpen, onClose }) => {
   const safeAddress = useSelector(safeParamAddressFromStateSelector)
   const safeName = useSelector(safeNameSelector)
   const dispatch = useDispatch()

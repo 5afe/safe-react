@@ -1,4 +1,4 @@
-// @flow
+// 
 import ListItem from '@material-ui/core/ListItem'
 import ListItemIcon from '@material-ui/core/ListItemIcon'
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction'
@@ -11,27 +11,17 @@ import React, { memo } from 'react'
 import { styles } from './style'
 
 import Img from '~/components/layout/Img'
-import { type Token } from '~/logic/tokens/store/model/token'
+import { } from '~/logic/tokens/store/model/token'
 import { ETH_ADDRESS } from '~/logic/tokens/utils/tokenHelpers'
 import { setImageToPlaceholder } from '~/routes/safe/components/Balances/utils'
 
 export const TOGGLE_TOKEN_TEST_ID = 'toggle-token-btn'
 
-type Props = {
-  data: {
-    activeTokensAddresses: Set<string>,
-    tokens: List<Token>,
-    onSwitch: Function,
-  },
-  style: Object,
-  index: number,
-  classes: Object,
-}
 
 // eslint-disable-next-line react/display-name
-const TokenRow = memo(({ classes, data, index, style }: Props) => {
+const TokenRow = memo(({ classes, data, index, style }) => {
   const { activeTokensAddresses, onSwitch, tokens } = data
-  const token: Token = tokens.get(index)
+  const token = tokens.get(index)
   const isActive = activeTokensAddresses.has(token.address)
 
   return (

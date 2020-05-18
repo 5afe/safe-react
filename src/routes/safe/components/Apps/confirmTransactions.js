@@ -1,4 +1,4 @@
-// @flow
+// 
 import { Icon, ModalFooterConfirmation, Text, Title } from '@gnosis.pm/safe-react-components'
 import { BigNumber } from 'bignumber.js'
 import React from 'react'
@@ -43,15 +43,15 @@ const isTxValid = (t) => {
 }
 
 const confirmTransactions = (
-  safeAddress: string,
-  safeName: string,
-  ethBalance: string,
-  nameApp: string,
-  iconApp: string,
-  txs: Array<any>,
-  openModal: () => void,
-  closeModal: () => void,
-  onConfirm: () => void,
+  safeAddress,
+  safeName,
+  ethBalance,
+  nameApp,
+  iconApp,
+  txs,
+  openModal,
+  closeModal,
+  onConfirm,
 ) => {
   const areTxsMalformed = txs.some((t) => !isTxValid(t))
 

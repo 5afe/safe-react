@@ -1,4 +1,4 @@
-// @flow
+// 
 import IconButton from '@material-ui/core/IconButton'
 import { makeStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
@@ -20,7 +20,6 @@ import Hairline from '~/components/layout/Hairline'
 import Img from '~/components/layout/Img'
 import Paragraph from '~/components/layout/Paragraph'
 import Row from '~/components/layout/Row'
-import type { NFTTokensState } from '~/logic/collectibles/store/reducer/collectibles'
 import { nftTokensSelector } from '~/logic/collectibles/store/selectors'
 import { TX_NOTIFICATION_TYPES } from '~/logic/safe/transactions'
 import { estimateTxGasCosts } from '~/logic/safe/transactions/gasNew'
@@ -41,21 +40,14 @@ import { textShortener } from '~/utils/strings'
 
 const useStyles = makeStyles(styles)
 
-type Props = {
-  closeSnackbar: Function,
-  enqueueSnackbar: Function,
-  onClose: () => void,
-  onPrev: () => void,
-  tx: Object,
-}
 
-const ReviewCollectible = ({ closeSnackbar, enqueueSnackbar, onClose, onPrev, tx }: Props) => {
+const ReviewCollectible = ({ closeSnackbar, enqueueSnackbar, onClose, onPrev, tx }) => {
   const classes = useStyles()
   const shortener = textShortener()
   const dispatch = useDispatch()
   const { address: safeAddress } = useSelector(safeSelector)
-  const nftTokens: NFTTokensState = useSelector(nftTokensSelector)
-  const [gasCosts, setGasCosts] = useState<string>('< 0.001')
+  const nftTokens = useSelector(nftTokensSelector)
+  const [gasCosts, setGasCosts] = useState('< 0.001')
   const txToken = nftTokens.find(
     ({ assetAddress, tokenId }) => assetAddress === tx.assetAddress && tokenId === tx.nftTokenId,
   )

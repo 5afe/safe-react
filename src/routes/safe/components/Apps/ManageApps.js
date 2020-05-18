@@ -1,6 +1,5 @@
-// @flow
+// 
 import { ButtonLink, Checkbox, ManageListModal, Text, TextField } from '@gnosis.pm/safe-react-components'
-import type { FieldValidator } from 'final-form'
 import React, { useState } from 'react'
 import { FormSpy } from 'react-final-form'
 import styled from 'styled-components'
@@ -40,35 +39,25 @@ const StyledCheckbox = styled(Checkbox)`
 `
 const APP_INFO = { iconUrl: appsIconSvg, name: '', error: false }
 
-type Props = {
-  appList: Array<{
-    id: string,
-    iconUrl: string,
-    name: string,
-    disabled: boolean,
-  }>,
-  onAppAdded: (app: any) => void,
-  onAppToggle: (appId: string, enabled: boolean) => void,
-}
 
-const urlValidator = (value: string) => {
+const urlValidator = (value) => {
   return isURLValid(value) ? undefined : 'Please, provide a valid url'
 }
 
-const composeValidatorsApps = (...validators: Function[]): FieldValidator => (value: Field, values, meta) => {
+const composeValidatorsApps = (...validators) => (value, values, meta) => {
   if (!meta.modified) {
     return
   }
   return validators.reduce((error, validator) => error || validator(value), undefined)
 }
 
-const ManageApps = ({ appList, onAppAdded, onAppToggle }: Props) => {
+const ManageApps = ({ appList, onAppAdded, onAppToggle }) => {
   const [isOpen, setIsOpen] = useState(false)
 
   const [appInfo, setAppInfo] = useState(APP_INFO)
   const [isSubmitDisabled, setIsSubmitDisabled] = useState(true)
 
-  const onItemToggle = (itemId: string, checked: boolean) => {
+  const onItemToggle = (itemId, checked) => {
     onAppToggle(itemId, checked)
   }
 

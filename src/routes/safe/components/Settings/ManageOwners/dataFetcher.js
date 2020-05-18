@@ -1,23 +1,17 @@
-// @flow
+// 
 import { List } from 'immutable'
 
-import { type Column } from '~/components/Table/TableHead'
-import { type SortRow } from '~/components/Table/sorting'
-import type { Owner } from '~/routes/safe/store/models/owner'
+import { } from '~/components/Table/TableHead'
+import { } from '~/components/Table/sorting'
 
 export const OWNERS_TABLE_NAME_ID = 'name'
 export const OWNERS_TABLE_ADDRESS_ID = 'address'
 export const OWNERS_TABLE_ACTIONS_ID = 'actions'
 
-type OwnerData = {
-  name: string,
-  address: string,
-}
 
-export type OwnerRow = SortRow<OwnerData>
 
-export const getOwnerData = (owners: List<Owner>): List<OwnerRow> => {
-  const rows = owners.map((owner: Owner) => ({
+export const getOwnerData = (owners) => {
+  const rows = owners.map((owner) => ({
     [OWNERS_TABLE_NAME_ID]: owner.name,
     [OWNERS_TABLE_ADDRESS_ID]: owner.address,
   }))
@@ -26,7 +20,7 @@ export const getOwnerData = (owners: List<Owner>): List<OwnerRow> => {
 }
 
 export const generateColumns = () => {
-  const nameColumn: Column = {
+  const nameColumn = {
     id: OWNERS_TABLE_NAME_ID,
     order: false,
     disablePadding: false,
@@ -36,7 +30,7 @@ export const generateColumns = () => {
     align: 'left',
   }
 
-  const addressColumn: Column = {
+  const addressColumn = {
     id: OWNERS_TABLE_ADDRESS_ID,
     order: false,
     disablePadding: false,
@@ -45,7 +39,7 @@ export const generateColumns = () => {
     align: 'left',
   }
 
-  const actionsColumn: Column = {
+  const actionsColumn = {
     id: OWNERS_TABLE_ACTIONS_ID,
     order: false,
     disablePadding: false,

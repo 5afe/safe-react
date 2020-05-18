@@ -1,4 +1,4 @@
-// @flow
+// 
 import React from 'react'
 import styled from 'styled-components'
 
@@ -17,11 +17,8 @@ const Wrapper = styled.div`
   }
 `
 
-type Props = {
-  withArrow: boolean,
-}
 
-const DividerLine = ({ withArrow }: Props) => (
+const DividerLine = ({ withArrow }) => (
   <Wrapper>
     {withArrow && <img alt="Arrow Down" src={ArrowDown} />}
     <Hairline />

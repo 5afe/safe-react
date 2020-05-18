@@ -1,4 +1,4 @@
-// @flow
+// 
 import { TX_SERVICE_HOST, SIGNATURES_VIA_METAMASK, RELAY_API_URL } from '~/config/names'
 
 const testConfig = {

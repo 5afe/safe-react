@@ -1,4 +1,4 @@
-// @flow
+// 
 import abi from 'ethereumjs-abi'
 import { getWeb3 } from '~/logic/wallets/getWeb3'
 
@@ -12,7 +12,7 @@ const txData =
   await gnosisSafe.contract.execTransactionIfApproved.getData(address, 0, tx.get('data'), 0, tx.get('nonce'))
 const err = await getErrorMessage(address, 0, txData, accounts[2])
 */
-export const getErrorMessage = async (to: string, value: number, data: string, from: string) => {
+export const getErrorMessage = async (to, value, data, from) => {
   const web3 = getWeb3()
   const returnData = await web3.eth.call({
     to,

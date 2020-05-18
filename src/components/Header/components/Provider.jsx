@@ -1,21 +1,15 @@
-// @flow
+// 
 import IconButton from '@material-ui/core/IconButton'
 import { withStyles } from '@material-ui/core/styles'
 import ExpandLess from '@material-ui/icons/ExpandLess'
 import ExpandMore from '@material-ui/icons/ExpandMore'
 import * as React from 'react'
 
-import { type Open } from '~/components/hoc/OpenHoc'
+import { } from '~/components/hoc/OpenHoc'
 import Col from '~/components/layout/Col'
 import Divider from '~/components/layout/Divider'
 import { md, screenSm, sm } from '~/theme/variables'
 
-type Props = Open & {
-  classes: Object,
-  popupDetails: React.Node,
-  info: React.Node,
-  children: Function,
-}
 
 const styles = () => ({
   root: {
@@ -45,12 +39,11 @@ const styles = () => ({
   },
 })
 
-type ProviderRef = { current: null | HTMLDivElement }
 
-class Provider extends React.Component<Props> {
-  myRef: ProviderRef
+class Provider extends React.Component {
+  myRef
 
-  constructor(props: Props) {
+  constructor(props) {
     super(props)
 
     this.myRef = React.createRef()

@@ -1,4 +1,4 @@
-// @flow
+// 
 import { TextFieldProps } from '@material-ui/core/TextField'
 import { withStyles } from '@material-ui/core/styles'
 import React from 'react'
@@ -23,7 +23,7 @@ const styles = () => ({
   },
 })
 
-const TextareaField = ({ classes, ...props }: TextFieldProps) => (
+const TextareaField = ({ classes, ...props }) => (
   <Field {...props} className={classes.textarea} component={TextField} multiline rows="5" />
 )
 

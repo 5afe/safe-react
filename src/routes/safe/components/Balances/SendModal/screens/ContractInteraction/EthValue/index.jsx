@@ -1,4 +1,4 @@
-// @flow
+// 
 import InputAdornment from '@material-ui/core/InputAdornment'
 import { makeStyles } from '@material-ui/core/styles'
 import React from 'react'
@@ -18,7 +18,7 @@ import { safeSelector } from '~/routes/safe/store/selectors'
 
 const useStyles = makeStyles(styles)
 
-const EthValue = ({ onSetMax }: { onSetMax: (string) => void }) => {
+const EthValue = ({ onSetMax }) => {
   const classes = useStyles()
   const { ethBalance } = useSelector(safeSelector)
   const {

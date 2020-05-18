@@ -1,4 +1,4 @@
-// @flow
+// 
 import * as React from 'react'
 import { connect } from 'react-redux'
 
@@ -8,11 +8,8 @@ import selector from './selector'
 
 import Page from '~/components/layout/Page'
 
-type Props = {
-  provider: string,
-}
 
-const Welcome = ({ provider }: Props) => (
+const Welcome = ({ provider }) => (
   <Page align="center">
     <Layout provider={provider} />
   </Page>

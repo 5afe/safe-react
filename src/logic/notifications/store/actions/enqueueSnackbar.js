@@ -1,15 +1,14 @@
-// @flow
-import type { Dispatch as ReduxDispatch } from 'redux'
+// 
 import { createAction } from 'redux-actions'
 
-import { type NotificationProps } from '~/logic/notifications/store/models/notification'
-import { type GlobalState } from '~/store'
+import { } from '~/logic/notifications/store/models/notification'
+import { } from '~/store'
 
 export const ENQUEUE_SNACKBAR = 'ENQUEUE_SNACKBAR'
 
-const addSnackbar = createAction<string, *>(ENQUEUE_SNACKBAR)
+const addSnackbar = createAction(ENQUEUE_SNACKBAR)
 
-const enqueueSnackbar = (notification: NotificationProps) => (dispatch: ReduxDispatch<GlobalState>) => {
+const enqueueSnackbar = (notification) => (dispatch) => {
   const newNotification = {
     ...notification,
     key: notification.key || new Date().getTime(),

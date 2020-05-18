@@ -1,17 +1,15 @@
-// @flow
-import type { AddressBook, AddressBookProps } from '~/logic/addressBook/model/addressBook'
-import type { Owner } from '~/routes/safe/store/models/owner'
+// 
 import { loadFromStorage, saveToStorage } from '~/utils/storage'
 
 const ADDRESS_BOOK_STORAGE_KEY = 'ADDRESS_BOOK_STORAGE_KEY'
 
-export const getAddressBookFromStorage = async (): Promise<AddressBookProps | []> => {
+export const getAddressBookFromStorage = async () => {
   const data = await loadFromStorage(ADDRESS_BOOK_STORAGE_KEY)
 
   return data || []
 }
 
-export const saveAddressBook = async (addressBook: AddressBook) => {
+export const saveAddressBook = async (addressBook) => {
   try {
     await saveToStorage(ADDRESS_BOOK_STORAGE_KEY, addressBook.toJSON())
   } catch (err) {
@@ -19,10 +17,10 @@ export const saveAddressBook = async (addressBook: AddressBook) => {
   }
 }
 
-export const getAddressesListFromAdbk = (addressBook: AddressBook) =>
+export const getAddressesListFromAdbk = (addressBook) =>
   Array.from(addressBook).map((entry) => entry.address)
 
-export const getNameFromAdbk = (addressBook: AddressBook, userAddress: string): string | null => {
+export const getNameFromAdbk = (addressBook, userAddress) => {
   const entry = addressBook.find((addressBookItem) => addressBookItem.address === userAddress)
   if (entry) {
     return entry.name
@@ -30,7 +28,7 @@ export const getNameFromAdbk = (addressBook: AddressBook, userAddress: string): 
   return null
 }
 
-export const getOwnersWithNameFromAddressBook = (addressBook: AddressBook, ownerList: List<Owner>) => {
+export const getOwnersWithNameFromAddressBook = (addressBook, ownerList) => {
   if (!ownerList) {
     return []
   }

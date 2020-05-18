@@ -1,4 +1,4 @@
-// @flow
+// 
 import { withStyles } from '@material-ui/core/styles'
 import { List } from 'immutable'
 import React, { useState } from 'react'
@@ -20,7 +20,7 @@ import Hairline from '~/components/layout/Hairline'
 import Img from '~/components/layout/Img'
 import Paragraph from '~/components/layout/Paragraph'
 import Row from '~/components/layout/Row'
-import { type Token, type TokenProps } from '~/logic/tokens/store/model/token'
+import { } from '~/logic/tokens/store/model/token'
 import TokenPlaceholder from '~/routes/safe/components/Balances/assets/token_placeholder.svg'
 import { checksumAddress } from '~/utils/checksumAddress'
 
@@ -29,18 +29,6 @@ export const ADD_CUSTOM_TOKEN_SYMBOLS_INPUT_TEST_ID = 'add-custom-token-symbols-
 export const ADD_CUSTOM_TOKEN_DECIMALS_INPUT_TEST_ID = 'add-custom-token-decimals-input'
 export const ADD_CUSTOM_TOKEN_FORM = 'add-custom-token-form'
 
-type Props = {
-  classes: Object,
-  addToken: Function,
-  updateActiveTokens: Function,
-  safeAddress: string,
-  activeTokens: List<TokenProps>,
-  tokens: List<Token>,
-  setActiveScreen: Function,
-  onClose: Function,
-  activateTokenForAllSafes: Function,
-  parentList: 'assetsList' | 'tokenList',
-}
 
 const INITIAL_FORM_STATE = {
   address: '',
@@ -49,7 +37,7 @@ const INITIAL_FORM_STATE = {
   logoUri: '',
 }
 
-const AddCustomToken = (props: Props) => {
+const AddCustomToken = (props) => {
   const {
     activateTokenForAllSafes,
     activeTokens,
@@ -84,7 +72,7 @@ const AddCustomToken = (props: Props) => {
     onClose()
   }
 
-  const populateFormValuesFromAddress = async (tokenAddress: string) => {
+  const populateFormValuesFromAddress = async (tokenAddress) => {
     const tokenData = await getSymbolAndDecimalsFromContract(tokenAddress)
 
     if (tokenData.length) {

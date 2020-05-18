@@ -1,4 +1,4 @@
-// @flow
+// 
 import { getWeb3 } from '~/logic/wallets/getWeb3'
 
 /**

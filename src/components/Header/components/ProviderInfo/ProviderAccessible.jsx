@@ -1,4 +1,4 @@
-// @flow
+// 
 import { withStyles } from '@material-ui/core/styles'
 import Dot from '@material-ui/icons/FiberManualRecord'
 import * as React from 'react'
@@ -10,13 +10,6 @@ import Paragraph from '~/components/layout/Paragraph'
 import { shortVersionOf } from '~/logic/wallets/ethAddresses'
 import { connected as connectedBg, screenSm, sm } from '~/theme/variables'
 
-type Props = {
-  provider: string,
-  network: string,
-  classes: Object,
-  userAddress: string,
-  connected: boolean,
-}
 
 const styles = () => ({
   network: {
@@ -55,7 +48,7 @@ const styles = () => ({
   },
 })
 
-const ProviderInfo = ({ classes, connected, network, provider, userAddress }: Props) => {
+const ProviderInfo = ({ classes, connected, network, provider, userAddress }) => {
   const providerText = `${provider} [${network}]`
   const cutAddress = connected ? shortVersionOf(userAddress, 4) : 'Connection Error'
   const color = connected ? 'primary' : 'warning'

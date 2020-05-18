@@ -1,4 +1,4 @@
-// @flow
+// 
 import Tooltip from '@material-ui/core/Tooltip'
 import { makeStyles } from '@material-ui/core/styles'
 import cn from 'classnames'
@@ -28,14 +28,9 @@ const useStyles = makeStyles({
   },
 })
 
-type CopyBtnProps = {
-  className?: any,
-  content: string,
-  increaseZindex?: boolean,
-}
 
-const CopyBtn = ({ className, content, increaseZindex = false }: CopyBtnProps) => {
-  const [clicked, setClicked] = useState<boolean>(false)
+const CopyBtn = ({ className, content, increaseZindex = false }) => {
+  const [clicked, setClicked] = useState(false)
   const classes = useStyles()
   const customClasses = increaseZindex ? { popper: classes.increasedPopperZindex } : {}
 

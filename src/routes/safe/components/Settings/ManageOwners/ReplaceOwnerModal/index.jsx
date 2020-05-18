@@ -1,4 +1,4 @@
-// @flow
+// 
 import { withStyles } from '@material-ui/core/styles'
 import { withSnackbar } from 'notistack'
 import React, { useEffect, useState } from 'react'
@@ -25,25 +25,15 @@ const styles = () => ({
   },
 })
 
-type Props = {
-  onClose: () => void,
-  classes: Object,
-  isOpen: boolean,
-  enqueueSnackbar: Function,
-  closeSnackbar: Function,
-  ownerAddress: string,
-  ownerName: string,
-}
-type ActiveScreen = 'checkOwner' | 'reviewReplaceOwner'
 
 export const sendReplaceOwner = async (
-  values: Object,
-  safeAddress: string,
-  ownerAddressToRemove: string,
-  enqueueSnackbar: Function,
-  closeSnackbar: Function,
-  threshold: string,
-  dispatch: Function,
+  values,
+  safeAddress,
+  ownerAddressToRemove,
+  enqueueSnackbar,
+  closeSnackbar,
+  threshold,
+  dispatch,
 ) => {
   const gnosisSafe = await getGnosisSafeInstanceAt(safeAddress)
   const safeOwners = await gnosisSafe.getOwners()
@@ -79,9 +69,9 @@ export const sendReplaceOwner = async (
   }
 }
 
-const ReplaceOwner = ({ classes, closeSnackbar, enqueueSnackbar, isOpen, onClose, ownerAddress, ownerName }: Props) => {
-  const [activeScreen, setActiveScreen] = useState<ActiveScreen>('checkOwner')
-  const [values, setValues] = useState<Object>({})
+const ReplaceOwner = ({ classes, closeSnackbar, enqueueSnackbar, isOpen, onClose, ownerAddress, ownerName }) => {
+  const [activeScreen, setActiveScreen] = useState('checkOwner')
+  const [values, setValues] = useState({})
   const dispatch = useDispatch()
   const safeAddress = useSelector(safeParamAddressFromStateSelector)
   const threshold = useSelector(safeThresholdSelector)
@@ -96,7 +86,7 @@ const ReplaceOwner = ({ classes, closeSnackbar, enqueueSnackbar, isOpen, onClose
 
   const onClickBack = () => setActiveScreen('checkOwner')
 
-  const ownerSubmitted = (newValues: Object) => {
+  const ownerSubmitted = (newValues) => {
     const { ownerAddress, ownerName } = newValues
     const checksumAddr = checksumAddress(ownerAddress)
     values.ownerName = ownerName

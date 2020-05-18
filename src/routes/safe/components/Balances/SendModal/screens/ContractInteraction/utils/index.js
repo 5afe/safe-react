@@ -1,4 +1,4 @@
-// @flow
+// 
 import createDecorator from 'final-form-calculate'
 
 import { mustBeEthereumAddress, mustBeEthereumContractAddress } from '~/components/forms/validator'

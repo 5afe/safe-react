@@ -1,4 +1,4 @@
-// @flow
+// 
 import EtherscanService from '~/logic/contractInteraction/sources/EtherscanService'
 
 const sources = {

@@ -1,4 +1,4 @@
-// @flow
+// 
 import { secondaryText } from '~/theme/variables'
 
 export const styles = () => ({

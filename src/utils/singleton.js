@@ -1,5 +1,5 @@
-// @flow
-export const ensureOnce = (fn: Function): Function => {
+// 
+export const ensureOnce = (fn) => {
   let executed = false
   let response
 
@@ -16,7 +16,7 @@ export const ensureOnce = (fn: Function): Function => {
   }
 }
 
-export const ensureOnceAsync = (fn: Function): Function => {
+export const ensureOnceAsync = (fn) => {
   let executed = false
   let response
 

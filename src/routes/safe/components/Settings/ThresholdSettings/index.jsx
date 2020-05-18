@@ -1,4 +1,4 @@
-// @flow
+// 
 import { withStyles } from '@material-ui/core/styles'
 import { withSnackbar } from 'notistack'
 import React, { useState } from 'react'
@@ -24,13 +24,8 @@ import {
   safeThresholdSelector,
 } from '~/routes/safe/store/selectors'
 
-type Props = {
-  classes: Object,
-  enqueueSnackbar: Function,
-  closeSnackbar: Function,
-}
 
-const ThresholdSettings = ({ classes, closeSnackbar, enqueueSnackbar }: Props) => {
+const ThresholdSettings = ({ classes, closeSnackbar, enqueueSnackbar }) => {
   const [isModalOpen, setModalOpen] = useState(false)
   const dispatch = useDispatch()
   const threshold = useSelector(safeThresholdSelector)

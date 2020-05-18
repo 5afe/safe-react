@@ -1,4 +1,4 @@
-// @flow
+// 
 import ClickAwayListener from '@material-ui/core/ClickAwayListener'
 import Grow from '@material-ui/core/Grow'
 import List from '@material-ui/core/List'
@@ -12,7 +12,7 @@ import Provider from './Provider'
 import SafeListHeader from './SafeListHeader'
 
 import Spacer from '~/components/Spacer'
-import openHoc, { type Open } from '~/components/hoc/OpenHoc'
+import openHoc, { } from '~/components/hoc/OpenHoc'
 import Col from '~/components/layout/Col'
 import Divider from '~/components/layout/Divider'
 import Img from '~/components/layout/Img'
@@ -21,11 +21,6 @@ import { border, headerHeight, md, screenSm, sm } from '~/theme/variables'
 
 const logo = require('../assets/gnosis-safe-multisig-logo.svg')
 
-type Props = Open & {
-  classes: Object,
-  providerDetails: React.Node,
-  providerInfo: React.Node,
-}
 
 const styles = () => ({
   root: {
@@ -64,7 +59,7 @@ const styles = () => ({
   },
 })
 
-const Layout = openHoc(({ classes, clickAway, open, providerDetails, providerInfo, toggle }: Props) => (
+const Layout = openHoc(({ classes, clickAway, open, providerDetails, providerInfo, toggle }) => (
   <Row className={classes.summary}>
     <Col className={classes.logo} middle="xs" start="xs">
       <Link to="/">

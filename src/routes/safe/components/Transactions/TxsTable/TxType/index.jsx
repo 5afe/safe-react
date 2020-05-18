@@ -1,4 +1,4 @@
-// @flow
+// 
 import React, { useEffect, useState } from 'react'
 
 import CustomTxIcon from './assets/custom.svg'
@@ -8,7 +8,7 @@ import SettingsTxIcon from './assets/settings.svg'
 
 import { IconText, Loader } from '~/components-v2'
 import { getAppInfoFromOrigin, getAppInfoFromUrl } from '~/routes/safe/components/Apps/utils'
-import { type TransactionType } from '~/routes/safe/store/models/transaction'
+import { } from '~/routes/safe/store/models/transaction'
 
 const typeToIcon = {
   outgoing: OutgoingTxIcon,
@@ -30,7 +30,7 @@ const typeToLabel = {
   upgrade: 'Contract Upgrade',
 }
 
-const TxType = ({ origin, txType }: { txType: TransactionType, origin: string | null }) => {
+const TxType = ({ origin, txType }) => {
   const [loading, setLoading] = useState(true)
   const [appInfo, setAppInfo] = useState()
   const [forceCustom, setForceCustom] = useState(false)

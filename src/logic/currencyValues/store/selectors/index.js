@@ -1,38 +1,37 @@
-// @flow
+// 
 
 import { List } from 'immutable'
-import { type OutputSelector, createSelector } from 'reselect'
+import { createSelector } from 'reselect'
 
-import type { CurrencyValuesEntry, CurrencyValuesProps } from '~/logic/currencyValues/store/model/currencyValues'
 import { CURRENCY_VALUES_KEY } from '~/logic/currencyValues/store/reducer/currencyValues'
 import { safeParamAddressFromStateSelector } from '~/routes/safe/store/selectors'
-import { type GlobalState } from '~/store'
+import { } from '~/store'
 
-export const currencyValuesSelector = (state: GlobalState): CurrencyValuesEntry => state[CURRENCY_VALUES_KEY]
+export const currencyValuesSelector = (state) => state[CURRENCY_VALUES_KEY]
 
-export const safeFiatBalancesSelector: OutputSelector<GlobalState> = createSelector(
+export const safeFiatBalancesSelector = createSelector(
   currencyValuesSelector,
   safeParamAddressFromStateSelector,
-  (currencyValues: CurrencyValuesProps, safeAddress: string) => {
+  (currencyValues, safeAddress) => {
     if (!currencyValues) return
     return currencyValues.get(safeAddress)
   },
 )
 
-export const safeFiatBalancesListSelector: OutputSelector<GlobalState> = createSelector(
+export const safeFiatBalancesListSelector = createSelector(
   safeFiatBalancesSelector,
-  (currencyValuesMap: CurrencyValuesProps) => {
+  (currencyValuesMap) => {
     if (!currencyValuesMap) return
     return currencyValuesMap.get('currencyBalances') ? currencyValuesMap.get('currencyBalances') : List([])
   },
 )
 
-export const currentCurrencySelector: OutputSelector<GlobalState> = createSelector(
+export const currentCurrencySelector = createSelector(
   safeFiatBalancesSelector,
-  (currencyValuesMap?: CurrencyValuesProps) => (currencyValuesMap ? currencyValuesMap.get('selectedCurrency') : null),
+  (currencyValuesMap) => (currencyValuesMap ? currencyValuesMap.get('selectedCurrency') : null),
 )
 
-export const currencyRateSelector: OutputSelector<GlobalState> = createSelector(
+export const currencyRateSelector = createSelector(
   safeFiatBalancesSelector,
-  (currencyValuesMap: CurrencyValuesProps) => (currencyValuesMap ? currencyValuesMap.get('currencyRate') : null),
+  (currencyValuesMap) => (currencyValuesMap ? currencyValuesMap.get('currencyRate') : null),
 )

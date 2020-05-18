@@ -1,4 +1,4 @@
-// @flow
+// 
 
 import { getEIP712Signer } from './EIP712Signer'
 import { ethSigner } from './ethSigner'
@@ -15,12 +15,12 @@ const SIGNERS = {
 }
 
 // hardware wallets support eth_sign only
-const getSignersByWallet = (isHW: boolean): Array<$Values<SIGNERS>> =>
+const getSignersByWallet = (isHW) =>
   isHW ? [SIGNERS.ETH_SIGN] : [SIGNERS.EIP712_V3, SIGNERS.EIP712_V4, SIGNERS.EIP712, SIGNERS.ETH_SIGN]
 
 export const SAFE_VERSION_FOR_OFFCHAIN_SIGNATURES = '>=1.1.1'
 
-export const tryOffchainSigning = async (txArgs, isHW: boolean): Promise<string> | typeof undefined => {
+export const tryOffchainSigning = async (txArgs, isHW) => {
   let signature
 
   const signerByWallet = getSignersByWallet(isHW)

@@ -1,4 +1,4 @@
-// @flow
+// 
 import IconButton from '@material-ui/core/IconButton'
 import { makeStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
@@ -35,22 +35,15 @@ import createTransaction from '~/routes/safe/store/actions/createTransaction'
 import { safeSelector } from '~/routes/safe/store/selectors'
 import { sm } from '~/theme/variables'
 
-type Props = {
-  closeSnackbar: Function,
-  enqueueSnackbar: Function,
-  onClose: () => void,
-  onPrev: () => void,
-  tx: Object,
-}
 
 const useStyles = makeStyles(styles)
 
-const ReviewTx = ({ closeSnackbar, enqueueSnackbar, onClose, onPrev, tx }: Props) => {
+const ReviewTx = ({ closeSnackbar, enqueueSnackbar, onClose, onPrev, tx }) => {
   const classes = useStyles()
   const dispatch = useDispatch()
   const { address: safeAddress } = useSelector(safeSelector)
   const tokens = useSelector(extendedSafeTokensSelector)
-  const [gasCosts, setGasCosts] = useState<string>('< 0.001')
+  const [gasCosts, setGasCosts] = useState('< 0.001')
   const [data, setData] = useState('')
 
   const txToken = tokens.find((token) => token.address === tx.token)

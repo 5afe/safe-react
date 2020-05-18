@@ -1,4 +1,4 @@
-// @flow
+// 
 import { withStyles } from '@material-ui/core/styles'
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
@@ -26,24 +26,10 @@ const Coins = React.lazy(() => import('~/routes/safe/components/Balances/Coins')
 export const MANAGE_TOKENS_BUTTON_TEST_ID = 'manage-tokens-btn'
 export const BALANCE_ROW_TEST_ID = 'balance-row'
 
-type State = {
-  erc721Enabled: boolean,
-  subMenuOptions: string[],
-  sendFunds: Object,
-  showCoins: boolean,
-  showCollectibles: boolean,
-  showReceive: boolean,
-  showToken: boolean,
-  showManageCollectibleModal: boolean,
-}
 
-type Props = {
-  classes: Object,
-}
 
-type Action = 'Token' | 'Send' | 'Receive' | 'ManageCollectibleModal'
 
-const INITIAL_STATE: State = {
+const INITIAL_STATE = {
   erc721Enabled: false,
   subMenuOptions: [],
   showToken: false,
@@ -60,7 +46,7 @@ const INITIAL_STATE: State = {
 export const COINS_LOCATION_REGEX = /\/balances\/?$/
 export const COLLECTIBLES_LOCATION_REGEX = /\/balances\/collectibles$/
 
-const Balances = (props: Props) => {
+const Balances = (props) => {
   const [state, setState] = useState(INITIAL_STATE)
 
   const address = useSelector(safeParamAddressFromStateSelector)
@@ -100,15 +86,15 @@ const Balances = (props: Props) => {
     }))
   }, [history.location.pathname, featuresEnabled])
 
-  const onShow = (action: Action) => {
+  const onShow = (action) => {
     setState((prevState) => ({ ...prevState, [`show${action}`]: true }))
   }
 
-  const onHide = (action: Action) => {
+  const onHide = (action) => {
     setState((prevState) => ({ ...prevState, [`show${action}`]: false }))
   }
 
-  const showSendFunds = (tokenAddress: string) => {
+  const showSendFunds = (tokenAddress) => {
     setState((prevState) => ({
       ...prevState,
       sendFunds: {

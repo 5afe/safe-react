@@ -1,4 +1,4 @@
-// @flow
+// 
 import { screenSm, sm } from '~/theme/variables'
 
 export const styles = () => ({

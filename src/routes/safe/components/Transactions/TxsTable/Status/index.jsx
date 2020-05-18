@@ -1,4 +1,4 @@
-// @flow
+// 
 import CircularProgress from '@material-ui/core/CircularProgress'
 import { withStyles } from '@material-ui/core/styles'
 import * as React from 'react'
@@ -11,12 +11,8 @@ import { styles } from './style'
 import Block from '~/components/layout/Block'
 import Img from '~/components/layout/Img'
 import Paragraph from '~/components/layout/Paragraph/'
-import { type TransactionStatus } from '~/routes/safe/store/models/transaction'
+import { } from '~/routes/safe/store/models/transaction'
 
-type Props = {
-  classes: Object,
-  status: TransactionStatus,
-}
 
 const statusToIcon = {
   success: OkIcon,
@@ -43,7 +39,7 @@ const statusIconStyle = {
   width: '14px',
 }
 
-const Status = ({ classes, status }: Props) => {
+const Status = ({ classes, status }) => {
   const Icon = statusToIcon[status]
 
   return (

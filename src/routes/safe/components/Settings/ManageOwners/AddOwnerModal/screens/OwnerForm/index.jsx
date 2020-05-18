@@ -1,4 +1,4 @@
-// @flow
+// 
 import IconButton from '@material-ui/core/IconButton'
 import { withStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
@@ -31,13 +31,8 @@ const formMutators = {
   },
 }
 
-type Props = {
-  onClose: () => void,
-  classes: Object,
-  onSubmit: Function,
-}
 
-const OwnerForm = ({ classes, onClose, onSubmit }: Props) => {
+const OwnerForm = ({ classes, onClose, onSubmit }) => {
   const handleSubmit = (values) => {
     onSubmit(values)
   }

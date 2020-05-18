@@ -1,16 +1,12 @@
-// @flow
+// 
 import { List } from 'immutable'
 
 export const FIXED = 'fixed'
-type Fixed = {
-  fixed?: boolean,
-}
 
-export type SortRow<T> = T & Fixed
 
-export const buildOrderFieldFrom = (attr: string) => `${attr}Order`
+export const buildOrderFieldFrom = (attr) => `${attr}Order`
 
-const desc = (a: Object, b: Object, orderBy: string, orderProp: boolean) => {
+const desc = (a, b, orderBy, orderProp) => {
   const order = orderProp ? buildOrderFieldFrom(orderBy) : orderBy
 
   if (b[order] < a[order]) {
@@ -24,9 +20,9 @@ const desc = (a: Object, b: Object, orderBy: string, orderProp: boolean) => {
 }
 
 // eslint-disable-next-line
-export const stableSort = (dataArray: List<any>, cmp: any, fixed: boolean): List<any> => {
-  const fixedElems: List<any> = fixed ? dataArray.filter((elem: any) => elem.fixed) : List([])
-  const data: List<any> = fixed ? dataArray.filter((elem: any) => !elem[FIXED]) : dataArray
+export const stableSort = (dataArray, cmp, fixed) => {
+  const fixedElems = fixed ? dataArray.filter((elem) => elem.fixed) : List([])
+  const data = fixed ? dataArray.filter((elem) => !elem[FIXED]) : dataArray
   let stabilizedThis = data.map((el, index) => [el, index])
 
   stabilizedThis = stabilizedThis.sort((a, b) => {
@@ -39,14 +35,13 @@ export const stableSort = (dataArray: List<any>, cmp: any, fixed: boolean): List
     return a[1] - b[1]
   })
 
-  const sortedElems: List<any> = stabilizedThis.map((el) => el[0])
+  const sortedElems = stabilizedThis.map((el) => el[0])
 
   return fixedElems.concat(sortedElems)
 }
 
-export type Order = 'asc' | 'desc'
 
-export const getSorting = (order: Order, orderBy: string, orderProp: boolean) =>
+export const getSorting = (order, orderBy, orderProp) =>
   order === 'desc'
-    ? (a: any, b: any) => desc(a, b, orderBy, orderProp)
-    : (a: any, b: any) => -desc(a, b, orderBy, orderProp)
+    ? (a, b) => desc(a, b, orderBy, orderProp)
+    : (a, b) => -desc(a, b, orderBy, orderProp)

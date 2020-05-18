@@ -1,4 +1,4 @@
-// @flow
+// 
 import IconButton from '@material-ui/core/IconButton'
 import InputAdornment from '@material-ui/core/InputAdornment'
 import { makeStyles } from '@material-ui/core/styles'
@@ -26,23 +26,15 @@ import Col from '~/components/layout/Col'
 import Hairline from '~/components/layout/Hairline'
 import Paragraph from '~/components/layout/Paragraph'
 import Row from '~/components/layout/Row'
-import type { AddressBook } from '~/logic/addressBook/model/addressBook'
 import { getAddressBook } from '~/logic/addressBook/store/selectors'
 import { getNameFromAdbk } from '~/logic/addressBook/utils'
-import { type Token } from '~/logic/tokens/store/model/token'
+import { } from '~/logic/tokens/store/model/token'
 import SafeInfo from '~/routes/safe/components/Balances/SendModal/SafeInfo'
 import AddressBookInput from '~/routes/safe/components/Balances/SendModal/screens/AddressBookInput'
 import TokenSelectField from '~/routes/safe/components/Balances/SendModal/screens/SendFunds/TokenSelectField'
 import { extendedSafeTokensSelector } from '~/routes/safe/container/selector'
 import { sm } from '~/theme/variables'
 
-type Props = {
-  initialValues: Object,
-  onClose: () => void,
-  onNext: (any) => void,
-  recipientAddress?: string,
-  selectedToken: string,
-}
 
 const formMutators = {
   setMax: (args, state, utils) => {
@@ -58,16 +50,16 @@ const formMutators = {
 
 const useStyles = makeStyles(styles)
 
-const SendFunds = ({ initialValues, onClose, onNext, recipientAddress, selectedToken = '' }: Props) => {
+const SendFunds = ({ initialValues, onClose, onNext, recipientAddress, selectedToken = '' }) => {
   const classes = useStyles()
-  const tokens: Token = useSelector(extendedSafeTokensSelector)
-  const addressBook: AddressBook = useSelector(getAddressBook)
-  const [selectedEntry, setSelectedEntry] = useState<Object | null>({
+  const tokens = useSelector(extendedSafeTokensSelector)
+  const addressBook = useSelector(getAddressBook)
+  const [selectedEntry, setSelectedEntry] = useState({
     address: recipientAddress || initialValues.recipientAddress,
     name: '',
   })
-  const [pristine, setPristine] = useState<boolean>(true)
-  const [isValidAddress, setIsValidAddress] = useState<boolean>(true)
+  const [pristine, setPristine] = useState(true)
+  const [isValidAddress, setIsValidAddress] = useState(true)
 
   React.useMemo(() => {
     if (selectedEntry === null && pristine) {

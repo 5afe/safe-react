@@ -1,4 +1,4 @@
-// @flow
+// 
 import { withStyles } from '@material-ui/core/styles'
 import cn from 'classnames'
 import React from 'react'
@@ -12,15 +12,8 @@ import Span from '~/components/layout/Span'
 import { shortVersionOf } from '~/logic/wallets/ethAddresses'
 import EllipsisTransactionDetails from '~/routes/safe/components/AddressBook/EllipsisTransactionDetails'
 
-type EtherscanLinkProps = {
-  classes: Object,
-  cut?: number,
-  knownAddress?: boolean,
-  type: 'tx' | 'address',
-  value: string,
-}
 
-const EtherscanLink = ({ classes, cut, knownAddress, type, value }: EtherscanLinkProps) => (
+const EtherscanLink = ({ classes, cut, knownAddress, type, value }) => (
   <Block className={classes.etherscanLink}>
     <Span className={cn(knownAddress && classes.addressParagraph, classes.address)} size="md">
       {cut ? shortVersionOf(value, cut) : value}
