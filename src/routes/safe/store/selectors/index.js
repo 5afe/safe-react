@@ -98,25 +98,6 @@ export const safeTransactionsSelector: TxSelectorType = createSelector(
   },
 )
 
-export const creationTxSelector: TxSelectorType = createSelector(
-  safeTransactionsSelector,
-  (transactions: List<Transaction>): Transaction => {
-    if (!transactions.size > 0) {
-      return null
-    }
-
-    const creationTx = transactions.filter((tx) => {
-      return tx.nonce === 0
-    })
-
-    if (!(creationTx.size > 0)) {
-      return null
-    }
-
-    return creationTx.get(0)
-  },
-)
-
 export const addressBookQueryParamsSelector = (state: GlobalState): string => {
   const { location } = state.router
   let entryAddressToEditOrCreateNew = null
