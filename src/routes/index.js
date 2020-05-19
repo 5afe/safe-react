@@ -25,10 +25,10 @@ const Routes = ({ location }) => {
   const { trackPage } = useAnalytics()
 
   useEffect(() => {
-    if (location.pathname !== '/') {
+    if (isInitialLoad && location.pathname !== '/') {
       setInitialLoad(false)
     }
-  }, [location.pathname])
+  }, [location.pathname, isInitialLoad])
 
   useEffect(() => {
     const page = location.pathname + location.search

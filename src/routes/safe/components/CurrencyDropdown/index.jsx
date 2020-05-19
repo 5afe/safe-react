@@ -13,14 +13,14 @@ import { useDispatch, useSelector } from 'react-redux'
 
 import CheckIcon from './img/check.svg'
 
-import { setSelectedCurrency } from 'src/logic/currencyValues/store/actions/setSelectedCurrency'
-import { AVAILABLE_CURRENCIES } from 'src/logic/currencyValues/store/model/currencyValues'
-import { currentCurrencySelector } from 'src/logic/currencyValues/store/selectors'
-import { useDropdownStyles } from 'src/routes/safe/components/DropdownCurrency/style'
-import { safeParamAddressFromStateSelector } from 'src/routes/safe/store/selectors'
-import { DropdownListTheme } from 'src/theme/mui'
+import { setSelectedCurrency } from '~/logic/currencyValues/store/actions/setSelectedCurrency'
+import { AVAILABLE_CURRENCIES } from '~/logic/currencyValues/store/model/currencyValues'
+import { currentCurrencySelector } from '~/logic/currencyValues/store/selectors'
+import { useDropdownStyles } from '~/routes/safe/components/CurrencyDropdown/style'
+import { safeParamAddressFromStateSelector } from '~/routes/safe/store/selectors'
+import { DropdownListTheme } from '~/theme/mui'
 
-const DropdownCurrency = () => {
+const CurrencyDropdown = () => {
   const currenciesList = Object.values(AVAILABLE_CURRENCIES)
   const safeAddress = useSelector(safeParamAddressFromStateSelector)
   const dispatch = useDispatch()
@@ -122,4 +122,4 @@ const DropdownCurrency = () => {
   )
 }
 
-export default DropdownCurrency
+export default CurrencyDropdown

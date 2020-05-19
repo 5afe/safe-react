@@ -1,4 +1,4 @@
-//
+import { GenericModal } from '@gnosis.pm/safe-react-components'
 import { makeStyles } from '@material-ui/core/styles'
 import React, { useState } from 'react'
 import { useSelector } from 'react-redux'
@@ -8,17 +8,16 @@ import Receive from '../Balances/Receive'
 
 import { styles } from './style'
 
-import { GenericModal } from 'src/components-v2'
-import Modal from 'src/components/Modal'
-import NoSafe from 'src/components/NoSafe'
-import Hairline from 'src/components/layout/Hairline'
-import { providerNameSelector } from 'src/logic/wallets/store/selectors'
-import SendModal from 'src/routes/safe/components/Balances/SendModal'
-import LayoutHeader from 'src/routes/safe/components/Layout/Header'
-import TabsComponent from 'src/routes/safe/components/Layout/Tabs'
-import { safeParamAddressFromStateSelector } from 'src/routes/safe/store/selectors'
-import { border } from 'src/theme/variables'
-import { wrapInSuspense } from 'src/utils/wrapInSuspense'
+import Modal from '~/components/Modal'
+import NoSafe from '~/components/NoSafe'
+import Hairline from '~/components/layout/Hairline'
+import { providerNameSelector } from '~/logic/wallets/store/selectors'
+import SendModal from '~/routes/safe/components/Balances/SendModal'
+import LayoutHeader from '~/routes/safe/components/Layout/Header'
+import TabsComponent from '~/routes/safe/components/Layout/Tabs'
+import { safeParamAddressFromStateSelector } from '~/routes/safe/store/selectors'
+import { border } from '~/theme/variables'
+import { wrapInSuspense } from '~/utils/wrapInSuspense'
 
 export const BALANCES_TAB_BTN_TEST_ID = 'balances-tab-btn'
 export const SETTINGS_TAB_BTN_TEST_ID = 'settings-tab-btn'
@@ -29,12 +28,24 @@ export const SAFE_VIEW_NAME_HEADING_TEST_ID = 'safe-name-heading'
 const Apps = React.lazy(() => import('../Apps'))
 const Settings = React.lazy(() => import('../Settings'))
 const Balances = React.lazy(() => import('../Balances'))
-const TxsTable = React.lazy(() => import('src/routes/safe/components/Transactions/TxsTable'))
-const AddressBookTable = React.lazy(() => import('src/routes/safe/components/AddressBook'))
+const TxsTable = React.lazy(() => import('~/routes/safe/components/Transactions/TxsTable'))
+const AddressBookTable = React.lazy(() => import('~/routes/safe/components/AddressBook'))
+
+interface Props {
+  sendFunds: Record<string, any>;
+  showReceive: boolean;
+  onShow: Function;
+  onHide: Function;
+  showSendFunds: Function;
+  hideSendFunds: Function;
+  match: Record<string, any>;
+  location: Record<string, any>;
+  history: Record<string, any>;
+}
 
 const useStyles = makeStyles(styles)
 
-const Layout = (props) => {
+const Layout = (props: Props) => {
   const classes = useStyles()
   const { hideSendFunds, match, onHide, onShow, sendFunds, showReceive, showSendFunds } = props
 

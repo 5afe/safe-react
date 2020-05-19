@@ -1,6 +1,6 @@
-import fetchCurrenciesRates from 'src/logic/currencyValues/api/fetchCurrenciesRates'
-import { setCurrencyRate } from 'src/logic/currencyValues/store/actions/setCurrencyRate'
-import { AVAILABLE_CURRENCIES } from 'src/logic/currencyValues/store/model/currencyValues'
+import fetchCurrenciesRates from '~/logic/currencyValues/api/fetchCurrenciesRates'
+import { setCurrencyRate } from '~/logic/currencyValues/store/actions/setCurrencyRate'
+import { AVAILABLE_CURRENCIES } from '~/logic/currencyValues/store/model/currencyValues'
 
 // eslint-disable-next-line max-len
 const fetchCurrencyRate = (safeAddress, selectedCurrency) => async (dispatch) => {

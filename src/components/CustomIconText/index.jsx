@@ -1,4 +1,3 @@
-//
 import React from 'react'
 import styled from 'styled-components'
 
@@ -15,11 +14,11 @@ const Text = styled.span`
   height: 17px;
 `
 
-const IconText = ({ iconUrl, text }) => (
+const CustomIconText = ({ iconUrl, text }: { iconUrl: string, text?: string }) => (
   <Wrapper>
     <Icon alt={text} src={iconUrl} />
     {text && <Text>{text}</Text>}
   </Wrapper>
 )
 
-export default IconText
+export default CustomIconText

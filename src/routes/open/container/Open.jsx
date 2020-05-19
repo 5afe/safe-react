@@ -1,6 +1,7 @@
-//
+import { Loader } from '@gnosis.pm/safe-react-components'
 import queryString from 'query-string'
 import React, { useEffect, useState } from 'react'
+import ReactGA from 'react-ga'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
 
@@ -10,10 +11,9 @@ import Layout from '../components/Layout'
 import actions from './actions'
 import selector from './selector'
 
-import { Loader } from 'src/components-v2'
-import Page from 'src/components/layout/Page'
-import { getSafeDeploymentTransaction } from 'src/logic/contracts/safeContracts'
-import { checkReceiptStatus } from 'src/logic/wallets/ethTransactions'
+import Page from '~/components/layout/Page'
+import { getSafeDeploymentTransaction } from '~/logic/contracts/safeContracts'
+import { checkReceiptStatus } from '~/logic/wallets/ethTransactions'
 import {
   getAccountsFrom,
   getNamesFrom,
@@ -141,6 +141,12 @@ const Open = ({ addSafe, network, provider, userAccount }) => {
     const safeProps = await getSafeProps(safeAddress, name, ownersNames, ownerAddresses)
     addSafe(safeProps)
 
+    ReactGA.event({
+      category: 'User',
+      action: 'Created a safe',
+      value: safeAddress,
+    })
+
     removeFromStorage(SAFE_PENDING_CREATION_STORAGE_KEY)
     const url = {
       pathname: `${SAFELIST_ADDRESS}/${safeProps.address}/balances`,
@@ -169,7 +175,7 @@ const Open = ({ addSafe, network, provider, userAccount }) => {
   }
 
   if (loading || showProgress === undefined) {
-    return <Loader />
+    return <Loader size="md" />
   }
 
   return (

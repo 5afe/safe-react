@@ -1,4 +1,3 @@
-//
 import { withStyles } from '@material-ui/core/styles'
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
@@ -7,21 +6,21 @@ import Receive from './Receive'
 import Tokens from './Tokens'
 import { styles } from './style'
 
-import Modal from 'src/components/Modal'
-import ButtonLink from 'src/components/layout/ButtonLink'
-import Col from 'src/components/layout/Col'
-import Divider from 'src/components/layout/Divider'
-import Link from 'src/components/layout/Link'
-import Row from 'src/components/layout/Row'
-import { SAFELIST_ADDRESS } from 'src/routes/routes'
-import SendModal from 'src/routes/safe/components/Balances/SendModal'
-import DropdownCurrency from 'src/routes/safe/components/DropdownCurrency'
-import { useFetchTokens } from 'src/routes/safe/container/Hooks/useFetchTokens'
-import { safeFeaturesEnabledSelector, safeParamAddressFromStateSelector } from 'src/routes/safe/store/selectors'
-import { history } from 'src/store'
-import { wrapInSuspense } from 'src/utils/wrapInSuspense'
-const Collectibles = React.lazy(() => import('src/routes/safe/components/Balances/Collectibles'))
-const Coins = React.lazy(() => import('src/routes/safe/components/Balances/Coins'))
+import Modal from '~/components/Modal'
+import ButtonLink from '~/components/layout/ButtonLink'
+import Col from '~/components/layout/Col'
+import Divider from '~/components/layout/Divider'
+import Link from '~/components/layout/Link'
+import Row from '~/components/layout/Row'
+import { SAFELIST_ADDRESS } from '~/routes/routes'
+import SendModal from '~/routes/safe/components/Balances/SendModal'
+import CurrencyDropdown from '~/routes/safe/components/CurrencyDropdown'
+import { useFetchTokens } from '~/routes/safe/container/Hooks/useFetchTokens'
+import { safeFeaturesEnabledSelector, safeParamAddressFromStateSelector } from '~/routes/safe/store/selectors'
+import { history } from '~/store'
+import { wrapInSuspense } from '~/utils/wrapInSuspense'
+const Collectibles = React.lazy(() => import('~/routes/safe/components/Balances/Collectibles'))
+const Coins = React.lazy(() => import('~/routes/safe/components/Balances/Coins'))
 
 export const MANAGE_TOKENS_BUTTON_TEST_ID = 'manage-tokens-btn'
 export const BALANCE_ROW_TEST_ID = 'balance-row'
@@ -153,7 +152,7 @@ const Balances = (props) => {
             ))}
         </Col>
         <Col className={tokenControls} end="sm" sm={6} xs={12}>
-          {showCoins && <DropdownCurrency />}
+          {showCoins && <CurrencyDropdown />}
           <ButtonLink
             className={manageTokensButton}
             onClick={erc721Enabled && showCollectibles ? () => onShow('ManageCollectibleModal') : () => onShow('Token')}

@@ -1,4 +1,3 @@
-//
 import React from 'react'
 import styled from 'styled-components'
 
@@ -37,8 +36,13 @@ const StyledBlock = styled(Block)`
   margin-top: ${xs};
   border-radius: 3px;
 `
+interface Props {
+  safeName?: string;
+  safeAddress: string;
+  ethBalance?: string;
+}
 
-const AddressInfo = ({ ethBalance, safeAddress, safeName }) => {
+const AddressInfo = ({ ethBalance, safeAddress, safeName }: Props) => {
   return (
     <Wrapper>
       <div className="icon-section">
