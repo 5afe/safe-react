@@ -13,7 +13,6 @@ import generateBatchRequests from '~/logic/contracts/generateBatchRequests'
 import { decodeParamsFromSafeMethod } from '~/logic/contracts/methodIds'
 import { buildIncomingTxServiceUrl } from '~/logic/safe/transactions/incomingTxHistory'
 import { type TxServiceType, buildTxServiceUrl } from '~/logic/safe/transactions/txHistory'
-import { getLocalSafe } from '~/logic/safe/utils'
 import { TOKEN_REDUCER_ID } from '~/logic/tokens/store/reducer/tokens'
 import { ALTERNATIVE_TOKEN_ABI } from '~/logic/tokens/utils/alternativeAbi'
 import {
@@ -28,7 +27,6 @@ import { getWeb3 } from '~/logic/wallets/getWeb3'
 import { addCancellationTransactions } from '~/routes/safe/store/actions/addCancellationTransactions'
 import { makeConfirmation } from '~/routes/safe/store/models/confirmation'
 import { type IncomingTransaction, makeIncomingTransaction } from '~/routes/safe/store/models/incomingTransaction'
-import { makeOwner } from '~/routes/safe/store/models/owner'
 import type { TransactionProps } from '~/routes/safe/store/models/transaction'
 import { type Transaction, makeTransaction } from '~/routes/safe/store/models/transaction'
 import { type GlobalState } from '~/store'
@@ -83,27 +81,15 @@ export const buildTransactionFrom = async (
   txTokenName,
   txTokenSymbol,
 ): Promise<Transaction> => {
-  const localSafe = await getLocalSafe(safeAddress)
-
   const confirmations = List(
-    tx.confirmations.map((conf: ConfirmationServiceModel) => {
-      let ownerName = 'UNKNOWN'
-
-      if (localSafe && localSafe.owners) {
-        const storedOwner = localSafe.owners.find((owner) => sameAddress(conf.owner, owner.address))
-
-        if (storedOwner) {
-          ownerName = storedOwner.name
-        }
-      }
-
-      return makeConfirmation({
-        owner: makeOwner({ address: conf.owner, name: ownerName }),
+    tx.confirmations.map((conf: ConfirmationServiceModel) =>
+      makeConfirmation({
+        owner: conf.owner,
         type: ((conf.confirmationType.toLowerCase(): any): TxServiceType),
         hash: conf.transactionHash,
         signature: conf.signature,
-      })
-    }),
+      }),
+    ),
   )
   const modifySettingsTx = sameAddress(tx.to, safeAddress) && Number(tx.value) === 0 && !!tx.data
   const cancellationTx = sameAddress(tx.to, safeAddress) && Number(tx.value) === 0 && !tx.data

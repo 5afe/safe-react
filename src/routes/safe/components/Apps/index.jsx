@@ -1,5 +1,5 @@
 // @flow
-import { Card, FixedDialog, FixedIcon, IconText, Menu, Text, Title } from '@gnosis.pm/safe-react-components'
+import { Card, FixedDialog, FixedIcon, IconText, Loader, Menu, Text, Title } from '@gnosis.pm/safe-react-components'
 import { withSnackbar } from 'notistack'
 import React, { useCallback, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
@@ -11,7 +11,7 @@ import confirmTransactions from './confirmTransactions'
 import sendTransactions from './sendTransactions'
 import { getAppInfoFromUrl, staticAppsList } from './utils'
 
-import { ListContentLayout as LCL, Loader } from '~/components-v2'
+import LCL from '~/components/ListContentLayout'
 import { networkSelector } from '~/logic/wallets/store/selectors'
 import { SAFELIST_ADDRESS } from '~/routes/routes'
 import { grantedSelector } from '~/routes/safe/container/selector'

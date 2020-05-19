@@ -26,6 +26,34 @@ type Props = {
   location: Object,
 }
 
+const BalancesLabel = (
+  <>
+    <BalancesIcon />
+    Assets
+  </>
+)
+
+const AddressBookLabel = (
+  <>
+    <AddressBookIcon />
+    Address Book
+  </>
+)
+
+const AppsLabel = (
+  <>
+    <AppsIcon />
+    Apps
+  </>
+)
+
+const TransactionsLabel = (
+  <>
+    <TransactionsIcon />
+    Transactions
+  </>
+)
+
 const TabsComponent = (props: Props) => {
   const { classes, location, match } = props
 
@@ -47,33 +75,6 @@ const TabsComponent = (props: Props) => {
     return pathname
   }
 
-  const labelBalances = (
-    <>
-      <BalancesIcon />
-      Assets
-    </>
-  )
-
-  const labelAddressBook = (
-    <>
-      <AddressBookIcon />
-      Address Book
-    </>
-  )
-
-  const labelApps = (
-    <>
-      <AppsIcon />
-      Apps
-    </>
-  )
-
-  const labelTransactions = (
-    <>
-      <TransactionsIcon />
-      Transactions
-    </>
-  )
   return (
     <Tabs
       indicatorColor="secondary"
@@ -88,7 +89,7 @@ const TabsComponent = (props: Props) => {
           wrapper: classes.tabWrapper,
         }}
         data-testid={BALANCES_TAB_BTN_TEST_ID}
-        label={labelBalances}
+        label={BalancesLabel}
         value={`${match.url}/balances`}
       />
       <Tab
@@ -97,7 +98,7 @@ const TabsComponent = (props: Props) => {
           wrapper: classes.tabWrapper,
         }}
         data-testid={TRANSACTIONS_TAB_BTN_TEST_ID}
-        label={labelTransactions}
+        label={TransactionsLabel}
         value={`${match.url}/transactions`}
       />
       {process.env.REACT_APP_APPS_DISABLED !== 'true' && (
@@ -107,7 +108,7 @@ const TabsComponent = (props: Props) => {
             wrapper: classes.tabWrapper,
           }}
           data-testid={TRANSACTIONS_TAB_BTN_TEST_ID}
-          label={labelApps}
+          label={AppsLabel}
           value={`${match.url}/apps`}
         />
       )}
@@ -117,7 +118,7 @@ const TabsComponent = (props: Props) => {
           wrapper: classes.tabWrapper,
         }}
         data-testid={ADDRESS_BOOK_TAB_BTN_TEST_ID}
-        label={labelAddressBook}
+        label={AddressBookLabel}
         value={`${match.url}/address-book`}
       />
       <Tab

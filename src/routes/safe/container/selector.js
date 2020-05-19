@@ -34,7 +34,7 @@ const getTxStatus = (tx: Transaction, userAddress: string, safe: Safe): Transact
   } else if (!tx.confirmations.size) {
     txStatus = 'pending'
   } else {
-    const userConfirmed = tx.confirmations.filter((conf) => conf.owner.address === userAddress).size === 1
+    const userConfirmed = tx.confirmations.filter((conf) => conf.owner === userAddress).size === 1
     const userIsSafeOwner = safe.owners.filter((owner) => owner.address === userAddress).size === 1
     txStatus = !userConfirmed && userIsSafeOwner ? 'awaiting_your_confirmation' : 'awaiting_confirmations'
   }

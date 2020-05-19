@@ -39,7 +39,7 @@ function getOwnersConfirmations(tx, userAddress) {
   let currentUserAlreadyConfirmed = false
 
   tx.confirmations.forEach((conf) => {
-    if (conf.owner.address === userAddress) {
+    if (conf.owner === userAddress) {
       currentUserAlreadyConfirmed = true
     }
 
@@ -52,18 +52,20 @@ function getOwnersConfirmations(tx, userAddress) {
 }
 
 function getPendingOwnersConfirmations(owners, tx, userAddress) {
-  const ownersUnconfirmed = owners.filter(
-    (owner) => tx.confirmations.findIndex((conf) => conf.owner.address === owner.address) === -1,
-  )
+  const ownersNotConfirmed = []
+  let currentUserNotConfirmed = true
 
-  let userIsUnconfirmedOwner = false
-
-  ownersUnconfirmed.some((owner) => {
-    userIsUnconfirmedOwner = owner.address === userAddress
-    return userIsUnconfirmedOwner
+  owners.forEach((owner) => {
+    const confirmationsEntry = tx.confirmations.find((conf) => conf.owner === owner.address)
+    if (!confirmationsEntry) {
+      ownersNotConfirmed.push(owner.address)
+    }
+    if (confirmationsEntry && confirmationsEntry.owner === userAddress) {
+      currentUserNotConfirmed = false
+    }
   })
 
-  return [ownersUnconfirmed, userIsUnconfirmedOwner]
+  return [ownersNotConfirmed, currentUserNotConfirmed]
 }
 
 const OwnersColumn = ({

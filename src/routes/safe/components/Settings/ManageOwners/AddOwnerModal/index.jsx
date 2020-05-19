@@ -17,6 +17,7 @@ import addSafeOwner from '~/routes/safe/store/actions/addSafeOwner'
 import createTransaction from '~/routes/safe/store/actions/createTransaction'
 import { type Owner } from '~/routes/safe/store/models/owner'
 import { safeOwnersSelector, safeParamAddressFromStateSelector } from '~/routes/safe/store/selectors'
+import { checksumAddress } from '~/utils/checksumAddress'
 
 const styles = () => ({
   biggerModalWindow: {
@@ -91,7 +92,7 @@ const AddOwner = ({ classes, closeSnackbar, enqueueSnackbar, isOpen, onClose }: 
     setValues((stateValues) => ({
       ...stateValues,
       ownerName: newValues.ownerName,
-      ownerAddress: newValues.ownerAddress,
+      ownerAddress: checksumAddress(newValues.ownerAddress),
     }))
     setActiveScreen('selectThreshold')
   }

@@ -1,8 +1,5 @@
 // @flow
-import { useSelector } from 'react-redux'
-
 import type { AddressBook, AddressBookProps } from '~/logic/addressBook/model/addressBook'
-import { getAddressBook } from '~/logic/addressBook/store/selectors'
 import type { Owner } from '~/routes/safe/store/models/owner'
 import { loadFromStorage, saveToStorage } from '~/utils/storage'
 
@@ -31,14 +28,6 @@ export const getNameFromAdbk = (addressBook: AddressBook, userAddress: string): 
     return entry.name
   }
   return null
-}
-
-export const getNameFromAddressBook = (userAddress: string): string | null => {
-  if (!userAddress) {
-    return null
-  }
-  const addressBook = useSelector(getAddressBook)
-  return addressBook ? getNameFromAdbk(addressBook, userAddress) : null
 }
 
 export const getOwnersWithNameFromAddressBook = (addressBook: AddressBook, ownerList: List<Owner>) => {

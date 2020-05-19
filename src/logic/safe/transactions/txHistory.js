@@ -2,7 +2,7 @@
 import axios from 'axios'
 
 import { getTxServiceHost, getTxServiceUriFrom } from '~/config'
-import { getWeb3 } from '~/logic/wallets/getWeb3'
+import { checksumAddress } from '~/utils/checksumAddress'
 
 export type TxServiceType = 'confirmation' | 'execution' | 'initialised'
 export type Operation = 0 | 1 | 2
@@ -38,7 +38,7 @@ const calculateBodyFrom = async (
   )
 
   return {
-    to: getWeb3().utils.toChecksumAddress(to),
+    to: checksumAddress(to),
     value: valueInWei,
     data,
     operation,
@@ -50,7 +50,7 @@ const calculateBodyFrom = async (
     refundReceiver,
     contractTransactionHash,
     transactionHash,
-    sender: getWeb3().utils.toChecksumAddress(sender),
+    sender: checksumAddress(sender),
     origin,
     signature,
   }
@@ -58,7 +58,7 @@ const calculateBodyFrom = async (
 
 export const buildTxServiceUrl = (safeAddress: string) => {
   const host = getTxServiceHost()
-  const address = getWeb3().utils.toChecksumAddress(safeAddress)
+  const address = checksumAddress(safeAddress)
   const base = getTxServiceUriFrom(address)
   return `${host}${base}`
 }
