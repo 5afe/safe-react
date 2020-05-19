@@ -1,4 +1,4 @@
-// 
+//
 import { createStructuredSelector } from 'reselect'
 
 import { networkSelector, providerNameSelector, userAccountSelector } from 'src/logic/wallets/store/selectors'

@@ -1,4 +1,4 @@
-// 
+//
 import InputAdornment from '@material-ui/core/InputAdornment'
 import MenuItem from '@material-ui/core/MenuItem'
 import { withStyles } from '@material-ui/core/styles'
@@ -32,7 +32,6 @@ import {
   getOwnerNameBy,
 } from 'src/routes/open/components/fields'
 import { getAccountsFrom } from 'src/routes/open/utils/safeDataExtractor'
-
 
 const { useState } = React
 

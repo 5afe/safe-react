@@ -1,4 +1,4 @@
-// 
+//
 import axios from 'axios'
 
 import appsIconSvg from 'src/routes/safe/components/Transactions/TxsTable/TxType/assets/appsIcon.svg'
@@ -37,7 +37,7 @@ export const getAppInfoFromUrl = async (appUrl) => {
   }
 
   res.url = appUrl.trim()
-  let noTrailingSlashUrl = removeLastTrailingSlash(res.url)
+  const noTrailingSlashUrl = removeLastTrailingSlash(res.url)
 
   try {
     const appInfo = await axios.get(`${noTrailingSlashUrl}/manifest.json`)

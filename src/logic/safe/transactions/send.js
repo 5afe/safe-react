@@ -1,14 +1,13 @@
-// 
+//
 import GnosisSafeSol from '@gnosis.pm/safe-contracts/build/contracts/GnosisSafe.json'
 
-import { } from 'src/logic/safe/transactions'
+import {} from 'src/logic/safe/transactions'
 import { getWeb3 } from 'src/logic/wallets/getWeb3'
 
 export const CALL = 0
 export const DELEGATE_CALL = 1
 export const TX_TYPE_EXECUTION = 'execution'
 export const TX_TYPE_CONFIRMATION = 'confirmation'
-
 
 export const getApprovalTransaction = async ({
   baseGas,

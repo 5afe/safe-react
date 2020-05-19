@@ -1,4 +1,4 @@
-// 
+//
 import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 
@@ -87,7 +87,6 @@ const BodyFooter = styled.div`
   justify-content: center;
   align-items: flex-end;
 `
-
 
 const SafeDeployment = ({ creationTxHash, onCancel, onRetry, onSuccess, provider, submittedPromise }) => {
   const [loading, setLoading] = useState(true)
@@ -257,7 +256,7 @@ const SafeDeployment = ({ creationTxHash, onCancel, onRetry, onSuccess, provider
       return true
     }
 
-    let interval = setInterval(async () => {
+    const interval = setInterval(async () => {
       if (stepIndex < 4) {
         setStepIndex(stepIndex + 1)
       }
@@ -340,7 +339,7 @@ const SafeDeployment = ({ creationTxHash, onCancel, onRetry, onSuccess, provider
     return () => {
       clearInterval(interval)
     }
-  }, [waitingSafeDeployed])
+  }, [safeCreationTxHash, waitingSafeDeployed])
 
   if (loading || stepIndex === undefined) {
     return <Loader />

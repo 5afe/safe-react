@@ -1,4 +1,4 @@
-// 
+//
 import ClickAwayListener from '@material-ui/core/ClickAwayListener'
 import Grow from '@material-ui/core/Grow'
 import List from '@material-ui/core/List'
@@ -12,7 +12,7 @@ import Provider from './Provider'
 import SafeListHeader from './SafeListHeader'
 
 import Spacer from 'src/components/Spacer'
-import openHoc, { } from 'src/components/hoc/OpenHoc'
+import openHoc from 'src/components/hoc/OpenHoc'
 import Col from 'src/components/layout/Col'
 import Divider from 'src/components/layout/Divider'
 import Img from 'src/components/layout/Img'
@@ -20,7 +20,6 @@ import Row from 'src/components/layout/Row'
 import { border, headerHeight, md, screenSm, sm } from 'src/theme/variables'
 
 const logo = require('../assets/gnosis-safe-multisig-logo.svg')
-
 
 const styles = () => ({
   root: {

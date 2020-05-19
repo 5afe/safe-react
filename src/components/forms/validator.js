@@ -13,7 +13,6 @@ export const simpleMemoize = (fn) => {
   }
 }
 
-
 export const required = (value) => (value ? undefined : 'Required')
 
 export const mustBeInteger = (value) =>

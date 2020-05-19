@@ -21,7 +21,6 @@ import { estimateTxGasCosts } from 'src/logic/safe/transactions/gasNew'
 import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
 import { getWeb3 } from 'src/logic/wallets/getWeb3'
 
-
 const THRESHOLD_FIELD_NAME = 'threshold'
 
 const ChangeThreshold = ({ classes, onChangeThreshold, onClose, owners, safeAddress, threshold }) => {
@@ -47,7 +46,7 @@ const ChangeThreshold = ({ classes, onChangeThreshold, onClose, owners, safeAddr
     return () => {
       isCurrent = false
     }
-  }, [])
+  }, [safeAddress])
 
   const handleSubmit = (values) => {
     const newThreshold = values[THRESHOLD_FIELD_NAME]

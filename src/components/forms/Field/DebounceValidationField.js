@@ -1,10 +1,9 @@
-// 
+//
 
 // source: https://github.com/final-form/react-final-form/issues/369#issuecomment-439823584
 
 import React from 'react'
 import { Field } from 'react-final-form'
-
 
 const DebounceValidationField = ({ debounce = 1000, validate, ...rest }) => {
   let clearTimeout

@@ -1,4 +1,4 @@
-// 
+//
 import { withStyles } from '@material-ui/core/styles'
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
@@ -25,9 +25,6 @@ const Coins = React.lazy(() => import('src/routes/safe/components/Balances/Coins
 
 export const MANAGE_TOKENS_BUTTON_TEST_ID = 'manage-tokens-btn'
 export const BALANCE_ROW_TEST_ID = 'balance-row'
-
-
-
 
 const INITIAL_STATE = {
   erc721Enabled: false,
@@ -84,7 +81,7 @@ const Balances = (props) => {
       erc721Enabled,
       subMenuOptions,
     }))
-  }, [history.location.pathname, featuresEnabled])
+  }, [featuresEnabled, address])
 
   const onShow = (action) => {
     setState((prevState) => ({ ...prevState, [`show${action}`]: true }))

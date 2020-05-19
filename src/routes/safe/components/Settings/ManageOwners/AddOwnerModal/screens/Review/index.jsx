@@ -1,4 +1,4 @@
-// 
+//
 import IconButton from '@material-ui/core/IconButton'
 import { withStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
@@ -21,10 +21,13 @@ import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
 import { estimateTxGasCosts } from 'src/logic/safe/transactions/gasNew'
 import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
 import { getWeb3 } from 'src/logic/wallets/getWeb3'
-import { safeNameSelector, safeOwnersSelector, safeParamAddressFromStateSelector } from 'src/routes/safe/store/selectors'
+import {
+  safeNameSelector,
+  safeOwnersSelector,
+  safeParamAddressFromStateSelector,
+} from 'src/routes/safe/store/selectors'
 
 export const ADD_OWNER_SUBMIT_BTN_TEST_ID = 'add-owner-submit-btn'
-
 
 const ReviewAddOwner = ({ classes, onClickBack, onClose, onSubmit, values }) => {
   const [gasCosts, setGasCosts] = useState('< 0.001')
@@ -55,7 +58,7 @@ const ReviewAddOwner = ({ classes, onClickBack, onClose, onSubmit, values }) => 
     return () => {
       isCurrent = false
     }
-  }, [])
+  }, [safeAddress, values.ownerAddress, values.threshold])
 
   const handleSubmit = () => {
     onSubmit()

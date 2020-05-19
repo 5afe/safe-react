@@ -1,6 +1,5 @@
-// 
+//
 import { Record } from 'immutable'
-
 
 export const makeProvider = Record({
   name: '',
@@ -11,6 +10,5 @@ export const makeProvider = Record({
   smartContractWallet: false,
   hardwareWallet: false,
 })
-
 
 // Useage const someProvider: Provider = makeProvider({ name: 'METAMASK', loaded: false, available: false })

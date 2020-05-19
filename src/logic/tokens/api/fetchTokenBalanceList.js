@@ -1,4 +1,4 @@
-// 
+//
 import axios from 'axios'
 
 import { getTxServiceHost } from 'src/config/index'

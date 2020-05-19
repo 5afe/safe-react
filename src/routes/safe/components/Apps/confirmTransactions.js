@@ -1,4 +1,4 @@
-// 
+//
 import { Icon, ModalFooterConfirmation, Text, Title } from '@gnosis.pm/safe-react-components'
 import { BigNumber } from 'bignumber.js'
 import React from 'react'

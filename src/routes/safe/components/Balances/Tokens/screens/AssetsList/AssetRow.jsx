@@ -14,7 +14,6 @@ import { setImageToPlaceholder } from 'src/routes/safe/components/Balances/utils
 
 export const TOGGLE_ASSET_TEST_ID = 'toggle-asset-btn'
 
-
 // eslint-disable-next-line react/display-name
 const AssetRow = memo(({ classes, data, index, style }) => {
   const { activeAssetsAddresses, assets, onSwitch } = data

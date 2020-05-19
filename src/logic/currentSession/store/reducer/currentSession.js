@@ -1,4 +1,4 @@
-// 
+//
 import { Map } from 'immutable'
 import { handleActions } from 'redux-actions'
 
@@ -7,7 +7,6 @@ import { UPDATE_VIEWED_SAFES } from 'src/logic/currentSession/store/actions/upda
 import { saveCurrentSessionToStorage } from 'src/logic/currentSession/utils'
 
 export const CURRENT_SESSION_REDUCER_ID = 'currentSession'
-
 
 export default handleActions(
   {

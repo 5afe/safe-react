@@ -1,4 +1,4 @@
-// 
+//
 import { withStyles } from '@material-ui/core/styles'
 import * as React from 'react'
 
@@ -10,7 +10,6 @@ import Block from 'src/components/layout/Block'
 import Paragraph from 'src/components/layout/Paragraph'
 import { FIELD_NAME } from 'src/routes/open/components/fields'
 import { secondary, sm } from 'src/theme/variables'
-
 
 const styles = () => ({
   root: {

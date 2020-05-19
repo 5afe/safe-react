@@ -1,4 +1,4 @@
-// 
+//
 import { Map, Set } from 'immutable'
 import { handleActions } from 'redux-actions'
 
@@ -13,11 +13,10 @@ import { SET_DEFAULT_SAFE } from 'src/routes/safe/store/actions/setDefaultSafe'
 import { SET_LATEST_MASTER_CONTRACT_VERSION } from 'src/routes/safe/store/actions/setLatestMasterContractVersion'
 import { UPDATE_SAFE } from 'src/routes/safe/store/actions/updateSafe'
 import { makeOwner } from 'src/routes/safe/store/models/owner'
-import SafeRecord, { } from 'src/routes/safe/store/models/safe'
+import SafeRecord from 'src/routes/safe/store/models/safe'
 import { checksumAddress } from 'src/utils/checksumAddress'
 
 export const SAFE_REDUCER_ID = 'safes'
-
 
 export const buildSafe = (storedSafe) => {
   const names = storedSafe.owners.map((owner) => owner.name)
@@ -123,10 +122,8 @@ export default handleActions(
         return prevSafe.merge({ owners: updatedOwners })
       })
     },
-    [SET_DEFAULT_SAFE]: (state, action) =>
-      state.set('defaultSafe', action.payload),
-    [SET_LATEST_MASTER_CONTRACT_VERSION]: (state, action) =>
-      state.set('latestMasterContractVersion', action.payload),
+    [SET_DEFAULT_SAFE]: (state, action) => state.set('defaultSafe', action.payload),
+    [SET_LATEST_MASTER_CONTRACT_VERSION]: (state, action) => state.set('latestMasterContractVersion', action.payload),
   },
   Map({
     // $FlowFixMe

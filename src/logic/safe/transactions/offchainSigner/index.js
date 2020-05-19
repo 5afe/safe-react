@@ -1,4 +1,4 @@
-// 
+//
 
 import { getEIP712Signer } from './EIP712Signer'
 import { ethSigner } from './ethSigner'
@@ -24,7 +24,7 @@ export const tryOffchainSigning = async (txArgs, isHW) => {
   let signature
 
   const signerByWallet = getSignersByWallet(isHW)
-  for (let signingFunc of signerByWallet) {
+  for (const signingFunc of signerByWallet) {
     try {
       signature = await signingFunc(txArgs)
 

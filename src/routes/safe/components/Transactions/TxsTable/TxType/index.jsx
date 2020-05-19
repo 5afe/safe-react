@@ -1,4 +1,4 @@
-// 
+//
 import React, { useEffect, useState } from 'react'
 
 import CustomTxIcon from './assets/custom.svg'
@@ -8,7 +8,7 @@ import SettingsTxIcon from './assets/settings.svg'
 
 import { IconText, Loader } from 'src/components-v2'
 import { getAppInfoFromOrigin, getAppInfoFromUrl } from 'src/routes/safe/components/Apps/utils'
-import { } from 'src/routes/safe/store/models/transaction'
+import {} from 'src/routes/safe/store/models/transaction'
 
 const typeToIcon = {
   outgoing: OutgoingTxIcon,

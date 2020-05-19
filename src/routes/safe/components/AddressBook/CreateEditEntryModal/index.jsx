@@ -1,4 +1,4 @@
-// 
+//
 import IconButton from '@material-ui/core/IconButton'
 import { withStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
@@ -26,7 +26,6 @@ import { getAddressesListFromAdbk } from 'src/logic/addressBook/utils'
 export const CREATE_ENTRY_INPUT_NAME_ID = 'create-entry-input-name'
 export const CREATE_ENTRY_INPUT_ADDRESS_ID = 'create-entry-input-address'
 export const SAVE_NEW_ENTRY_BTN_ID = 'save-new-entry-btn-id'
-
 
 const CreateEditEntryModalComponent = ({
   classes,

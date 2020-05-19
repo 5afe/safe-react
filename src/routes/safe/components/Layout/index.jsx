@@ -1,4 +1,4 @@
-// 
+//
 import { makeStyles } from '@material-ui/core/styles'
 import React, { useState } from 'react'
 import { useSelector } from 'react-redux'
@@ -31,7 +31,6 @@ const Settings = React.lazy(() => import('../Settings'))
 const Balances = React.lazy(() => import('../Balances'))
 const TxsTable = React.lazy(() => import('src/routes/safe/components/Transactions/TxsTable'))
 const AddressBookTable = React.lazy(() => import('src/routes/safe/components/AddressBook'))
-
 
 const useStyles = makeStyles(styles)
 

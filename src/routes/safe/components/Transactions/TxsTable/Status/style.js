@@ -1,4 +1,4 @@
-// 
+//
 import { boldFont, disabled, error, extraSmallFontSize, lg, secondary, sm } from 'src/theme/variables'
 
 export const styles = () => ({

@@ -1,4 +1,4 @@
-// 
+//
 import { createAction } from 'redux-actions'
 
 export const UPDATE_VIEWED_SAFES = 'UPDATE_VIEWED_SAFES'

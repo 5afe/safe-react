@@ -1,4 +1,4 @@
-// 
+//
 import { useCallback, useEffect, useState } from 'react'
 import GoogleAnalytics from 'react-ga'
 
@@ -37,16 +37,19 @@ export const useAnalytics = () => {
     fetchCookiesFromStorage()
   }, [])
 
-  const trackPage = useCallback((page, options = {}) => {
-    if (!analyticsAllowed || !analyticsLoaded) {
-      return
-    }
-    GoogleAnalytics.set({
-      page,
-      ...options,
-    })
-    GoogleAnalytics.pageview(page)
-  }, [])
+  const trackPage = useCallback(
+    (page, options = {}) => {
+      if (!analyticsAllowed || !analyticsLoaded) {
+        return
+      }
+      GoogleAnalytics.set({
+        page,
+        ...options,
+      })
+      GoogleAnalytics.pageview(page)
+    },
+    [analyticsAllowed],
+  )
 
   return { trackPage }
 }

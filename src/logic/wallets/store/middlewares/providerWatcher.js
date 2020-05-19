@@ -1,11 +1,11 @@
-// 
+//
 
 import closeSnackbar from 'src/logic/notifications/store/actions/closeSnackbar'
 import { WALLET_PROVIDER, getProviderInfo, getWeb3 } from 'src/logic/wallets/getWeb3'
 import { fetchProvider } from 'src/logic/wallets/store/actions'
 import { ADD_PROVIDER } from 'src/logic/wallets/store/actions/addProvider'
 import { REMOVE_PROVIDER } from 'src/logic/wallets/store/actions/removeProvider'
-import { } from 'src/store/'
+import {} from 'src/store/'
 import { loadFromStorage, removeFromStorage, saveToStorage } from 'src/utils/storage'
 
 const watchedActions = [ADD_PROVIDER, REMOVE_PROVIDER]

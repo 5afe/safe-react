@@ -1,6 +1,5 @@
-// 
+//
 import * as React from 'react'
-
 
 const style = {
   flexGrow: 1,

@@ -1,5 +1,5 @@
-// 
-import Checkbox, { } from '@material-ui/core/Checkbox'
+//
+import Checkbox from '@material-ui/core/Checkbox'
 import React from 'react'
 
 class GnoCheckbox extends React.PureComponent {

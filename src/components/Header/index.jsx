@@ -1,22 +1,20 @@
-// 
+//
 import { withSnackbar } from 'notistack'
 import * as React from 'react'
 import { connect } from 'react-redux'
 
-import actions, { } from './actions'
+import actions from './actions'
 import Layout from './components/Layout'
 import ConnectDetails from './components/ProviderDetails/ConnectDetails'
 import UserDetails from './components/ProviderDetails/UserDetails'
 import ProviderAccessible from './components/ProviderInfo/ProviderAccessible'
 import ProviderDisconnected from './components/ProviderInfo/ProviderDisconnected'
-import selector, { } from './selector'
+import selector from './selector'
 
 import { onboard } from 'src/components/ConnectButton'
 import { NOTIFICATIONS, showSnackbar } from 'src/logic/notifications'
 import { loadLastUsedProvider } from 'src/logic/wallets/store/middlewares/providerWatcher'
 import { logComponentStack } from 'src/utils/logBoundaries'
-
-
 
 class HeaderComponent extends React.PureComponent {
   constructor(props) {

@@ -1,4 +1,4 @@
-// 
+//
 import { Map } from 'immutable'
 import { handleActions } from 'redux-actions'
 
@@ -9,7 +9,6 @@ import { REMOVE_SNACKBAR } from '../actions/removeSnackbar'
 import { makeNotification } from 'src/logic/notifications/store/models/notification'
 
 export const NOTIFICATIONS_REDUCER_ID = 'notifications'
-
 
 export default handleActions(
   {

@@ -1,4 +1,4 @@
-// 
+//
 import { createSelector } from 'reselect'
 
 import { ETHEREUM_NETWORK, ETHEREUM_NETWORK_IDS } from 'src/logic/wallets/getWeb3'

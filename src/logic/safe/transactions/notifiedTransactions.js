@@ -1,5 +1,4 @@
-// 
-
+//
 
 export const TX_NOTIFICATION_TYPES = {
   STANDARD_TX: 'STANDARD_TX',

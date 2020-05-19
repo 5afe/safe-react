@@ -1,4 +1,4 @@
-// 
+//
 import { ImmortalStorage, IndexedDbStore, LocalStorageStore } from 'immortal-db'
 
 import { getNetwork } from 'src/config'

@@ -1,4 +1,4 @@
-// 
+//
 import { withStyles } from '@material-ui/core/styles'
 import cn from 'classnames'
 import React from 'react'
@@ -11,7 +11,6 @@ import Block from 'src/components/layout/Block'
 import Span from 'src/components/layout/Span'
 import { shortVersionOf } from 'src/logic/wallets/ethAddresses'
 import EllipsisTransactionDetails from 'src/routes/safe/components/AddressBook/EllipsisTransactionDetails'
-
 
 const EtherscanLink = ({ classes, cut, knownAddress, type, value }) => (
   <Block className={classes.etherscanLink}>

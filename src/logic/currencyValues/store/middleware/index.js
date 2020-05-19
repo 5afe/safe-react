@@ -7,9 +7,7 @@ import { saveCurrencyValues } from 'src/logic/currencyValues/store/utils/currenc
 
 const watchedActions = [SET_CURRENT_CURRENCY, SET_CURRENCY_RATE, SET_CURRENCY_BALANCES]
 
-const currencyValuesStorageMiddleware = (store) => (next) => async (
-  action,
-) => {
+const currencyValuesStorageMiddleware = (store) => (next) => async (action) => {
   const handledAction = next(action)
   if (watchedActions.includes(action.type)) {
     const state = store.getState()

@@ -1,4 +1,4 @@
-// 
+//
 
 export const logComponentStack = (error, info) => {
   // eslint-disable-next-line

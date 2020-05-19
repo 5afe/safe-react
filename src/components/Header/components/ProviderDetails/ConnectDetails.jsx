@@ -1,4 +1,4 @@
-// 
+//
 import { withStyles } from '@material-ui/core/styles'
 import * as React from 'react'
 
@@ -8,7 +8,6 @@ import Block from 'src/components/layout/Block'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import { lg, md } from 'src/theme/variables'
-
 
 const styles = () => ({
   container: {

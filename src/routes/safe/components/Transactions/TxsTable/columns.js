@@ -1,4 +1,4 @@
-// 
+//
 import { BigNumber } from 'bignumber.js'
 import { format, getTime, parseISO } from 'date-fns'
 import { List, Map } from 'immutable'
@@ -6,11 +6,11 @@ import React from 'react'
 
 import TxType from './TxType'
 
-import { } from 'src/components/Table/TableHead'
+import {} from 'src/components/Table/TableHead'
 import { buildOrderFieldFrom } from 'src/components/Table/sorting'
 import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
-import { INCOMING_TX_TYPES, } from 'src/routes/safe/store/models/incomingTransaction'
-import { } from 'src/routes/safe/store/models/transaction'
+import { INCOMING_TX_TYPES } from 'src/routes/safe/store/models/incomingTransaction'
+import {} from 'src/routes/safe/store/models/transaction'
 
 export const TX_TABLE_ID = 'id'
 export const TX_TABLE_TYPE_ID = 'type'
@@ -21,9 +21,7 @@ export const TX_TABLE_RAW_TX_ID = 'tx'
 export const TX_TABLE_RAW_CANCEL_TX_ID = 'cancelTx'
 export const TX_TABLE_EXPAND_ICON = 'expand'
 
-
 export const formatDate = (date) => format(parseISO(date), 'MMM d, yyyy - HH:mm:ss')
-
 
 const NOT_AVAILABLE = 'n/a'
 
@@ -54,7 +52,6 @@ export const getTxAmount = (tx, formatted = true) => {
 
   return getAmountWithSymbol({ decimals, symbol, value }, formatted)
 }
-
 
 const getIncomingTxTableData = (tx) => ({
   [TX_TABLE_ID]: tx.blockNumber,
@@ -94,10 +91,7 @@ const getTransactionTableData = (tx, cancelTx) => {
   }
 }
 
-export const getTxTableData = (
-  transactions,
-  cancelTxs,
-) => {
+export const getTxTableData = (transactions, cancelTxs) => {
   const cancelTxsByNonce = cancelTxs.reduce((acc, tx) => acc.set(tx.nonce, tx), Map())
 
   return transactions.map((tx) => {

@@ -1,4 +1,4 @@
-// 
+//
 import IconButton from '@material-ui/core/IconButton'
 import { withStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
@@ -21,9 +21,8 @@ import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
 import { EMPTY_DATA } from 'src/logic/wallets/ethTransactions'
 import { getWeb3 } from 'src/logic/wallets/getWeb3'
 import createTransaction from 'src/routes/safe/store/actions/createTransaction'
-import { } from 'src/routes/safe/store/models/transaction'
+import {} from 'src/routes/safe/store/models/transaction'
 import { safeParamAddressFromStateSelector } from 'src/routes/safe/store/selectors'
-
 
 const RejectTxModal = ({ classes, closeSnackbar, enqueueSnackbar, isOpen, onClose, tx }) => {
   const [gasCosts, setGasCosts] = useState('< 0.001')
@@ -48,7 +47,7 @@ const RejectTxModal = ({ classes, closeSnackbar, enqueueSnackbar, isOpen, onClos
     return () => {
       isCurrent = false
     }
-  }, [])
+  }, [safeAddress])
 
   const sendReplacementTransaction = () => {
     dispatch(

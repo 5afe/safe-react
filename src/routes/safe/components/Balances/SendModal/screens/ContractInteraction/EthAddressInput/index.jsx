@@ -1,4 +1,4 @@
-// 
+//
 import { makeStyles } from '@material-ui/core/styles'
 import React from 'react'
 
@@ -16,7 +16,6 @@ import Row from 'src/components/layout/Row'
 import { styles } from 'src/routes/safe/components/Balances/SendModal/screens/ContractInteraction/style'
 
 const useStyles = makeStyles(styles)
-
 
 const EthAddressInput = ({ isContract = true, isRequired = true, name, onScannedValue, text }) => {
   const classes = useStyles()

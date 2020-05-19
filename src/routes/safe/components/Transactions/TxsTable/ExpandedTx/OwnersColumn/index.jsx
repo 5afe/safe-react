@@ -1,4 +1,4 @@
-// 
+//
 import { withStyles } from '@material-ui/core/styles'
 import cn from 'classnames'
 import React from 'react'
@@ -20,7 +20,6 @@ import { TX_TYPE_CONFIRMATION } from 'src/logic/safe/transactions/send'
 import { userAccountSelector } from 'src/logic/wallets/store/selectors'
 import { makeTransaction } from 'src/routes/safe/store/models/transaction'
 import { safeOwnersSelector, safeThresholdSelector } from 'src/routes/safe/store/selectors'
-
 
 function getOwnersConfirmations(tx, userAddress) {
   const ownersWhoConfirmed = []

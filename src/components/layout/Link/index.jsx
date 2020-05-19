@@ -1,4 +1,4 @@
-// 
+//
 import classNames from 'classnames/bind'
 import * as React from 'react'
 import { Link } from 'react-router-dom'
@@ -8,7 +8,6 @@ import styles from './index.module.scss'
 import { capitalize } from 'src/utils/css'
 
 const cx = classNames.bind(styles)
-
 
 const GnosisLink = ({ children, className, color, innerRef, padding, to, ...props }) => {
   const internal = /^\/(?!\/)/.test(to)

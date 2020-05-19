@@ -1,10 +1,6 @@
 import { Map } from 'immutable'
 
-export const getAwaitingTransactions = (
-  allTransactions,
-  cancellationTransactionsByNonce,
-  userAccount,
-) => {
+export const getAwaitingTransactions = (allTransactions, cancellationTransactionsByNonce, userAccount) => {
   if (!allTransactions) {
     return Map({})
   }

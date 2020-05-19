@@ -1,4 +1,4 @@
-// 
+//
 import { border, connected, disabled, error, lg, md } from 'src/theme/variables'
 
 export const styles = () => ({

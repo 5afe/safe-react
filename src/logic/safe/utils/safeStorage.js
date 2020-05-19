@@ -1,4 +1,4 @@
-// 
+//
 import { loadFromStorage, saveToStorage } from 'src/utils/storage'
 
 export const SAFES_KEY = 'SAFES'

@@ -1,4 +1,4 @@
-// 
+//
 import { error, lg, md } from 'src/theme/variables'
 
 export const styles = () => ({

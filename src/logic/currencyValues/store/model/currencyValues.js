@@ -1,4 +1,4 @@
-// 
+//
 import { Record } from 'immutable'
 
 export const AVAILABLE_CURRENCIES = {
@@ -37,13 +37,9 @@ export const AVAILABLE_CURRENCIES = {
   MYR: 'MYR',
 }
 
-
 export const makeBalanceCurrency = Record({
   currencyName: '',
   tokenAddress: '',
   balanceInBaseCurrency: '',
   balanceInSelectedCurrency: '',
 })
-
-
-

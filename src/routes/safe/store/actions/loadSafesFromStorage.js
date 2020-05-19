@@ -1,11 +1,11 @@
-// 
+//
 
 import { addSafe } from './addSafe'
 
 import { SAFES_KEY } from 'src/logic/safe/utils'
-import { } from 'src/routes/safe/store/models/safe'
+import {} from 'src/routes/safe/store/models/safe'
 import { buildSafe } from 'src/routes/safe/store/reducer/safe'
-import { } from 'src/store/index'
+import {} from 'src/store/index'
 import { loadFromStorage } from 'src/utils/storage'
 
 const loadSafesFromStorage = () => async (dispatch) => {

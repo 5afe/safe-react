@@ -1,4 +1,4 @@
-// 
+//
 import IconButton from '@material-ui/core/IconButton'
 import { withStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
@@ -15,7 +15,6 @@ import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 
 export const DELETE_ENTRY_BTN_ID = 'delete-entry-btn-id'
-
 
 const DeleteEntryModalComponent = ({ classes, deleteEntryModalHandler, entryToDelete, isOpen, onClose }) => {
   const handleDeleteEntrySubmit = (values) => {

@@ -1,9 +1,8 @@
-// 
+//
 import axios from 'axios'
 
 import { getTxServiceHost, getTxServiceUriFrom } from 'src/config'
 import { checksumAddress } from 'src/utils/checksumAddress'
-
 
 const calculateBodyFrom = async (
   safeInstance,

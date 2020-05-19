@@ -10,9 +10,7 @@ import updateSafe from './updateSafe'
 //   },
 // })
 
-const updateActiveAssets = (safeAddress, activeAssets) => async (
-  dispatch,
-) => {
+const updateActiveAssets = (safeAddress, activeAssets) => async (dispatch) => {
   dispatch(updateSafe({ address: safeAddress, activeAssets }))
 }
 

@@ -1,4 +1,4 @@
-// 
+//
 
 import { getWeb3 } from 'src/logic/wallets/getWeb3'
 
@@ -19,9 +19,7 @@ class ABIService {
     return ABIService.getSignatureHash(signature)
   }
 
-  static getMethodSignatureAndSignatureHash(
-    method,
-  ) {
+  static getMethodSignatureAndSignatureHash(method) {
     const signature = ABIService.getMethodSignature(method)
     const signatureHash = ABIService.getSignatureHash(signature)
     return { signature, signatureHash }

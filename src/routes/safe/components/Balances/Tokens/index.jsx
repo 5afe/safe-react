@@ -5,13 +5,13 @@ import Close from '@material-ui/icons/Close'
 import React, { useState } from 'react'
 import { connect, useSelector } from 'react-redux'
 
-import actions, { } from './actions'
+import actions from './actions'
 import { styles } from './style'
 
 import Hairline from 'src/components/layout/Hairline'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
-import { } from 'src/logic/tokens/store/model/token'
+import {} from 'src/logic/tokens/store/model/token'
 import { orderedTokenListSelector } from 'src/logic/tokens/store/selectors'
 import AddCustomAssetComponent from 'src/routes/safe/components/Balances/Tokens/screens/AddCustomAsset'
 import AddCustomToken from 'src/routes/safe/components/Balances/Tokens/screens/AddCustomToken'
@@ -21,8 +21,6 @@ import { extendedSafeTokensSelector } from 'src/routes/safe/container/selector'
 import { safeBlacklistedTokensSelector } from 'src/routes/safe/store/selectors'
 
 export const MANAGE_TOKENS_MODAL_CLOSE_BUTTON_TEST_ID = 'manage-tokens-close-modal-btn'
-
-
 
 const Tokens = (props) => {
   const {

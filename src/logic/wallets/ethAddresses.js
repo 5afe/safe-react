@@ -42,5 +42,4 @@ export const isUserOwner = (safe, userAccount) => {
   return owners.find((owner) => sameAddress(owner.address, userAccount)) !== undefined
 }
 
-export const isUserOwnerOnAnySafe = (safes, userAccount) =>
-  safes.some((safe) => isUserOwner(safe, userAccount))
+export const isUserOwnerOnAnySafe = (safes, userAccount) => safes.some((safe) => isUserOwner(safe, userAccount))

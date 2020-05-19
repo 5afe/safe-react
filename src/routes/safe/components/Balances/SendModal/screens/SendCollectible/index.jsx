@@ -1,4 +1,4 @@
-// 
+//
 import IconButton from '@material-ui/core/IconButton'
 import { makeStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
@@ -29,7 +29,6 @@ import AddressBookInput from 'src/routes/safe/components/Balances/SendModal/scre
 import CollectibleSelectField from 'src/routes/safe/components/Balances/SendModal/screens/SendCollectible/CollectibleSelectField'
 import TokenSelectField from 'src/routes/safe/components/Balances/SendModal/screens/SendCollectible/TokenSelectField'
 import { sm } from 'src/theme/variables'
-
 
 const formMutators = {
   setMax: (args, state, utils) => {

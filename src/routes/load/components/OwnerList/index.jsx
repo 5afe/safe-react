@@ -1,4 +1,4 @@
-// 
+//
 import TableContainer from '@material-ui/core/TableContainer'
 import { withStyles } from '@material-ui/core/styles'
 import React, { useEffect, useState } from 'react'
@@ -70,7 +70,6 @@ const styles = () => ({
   },
 })
 
-
 const calculateSafeValues = (owners, threshold, values) => {
   const initialValues = { ...values }
   for (let i = 0; i < owners.length; i += 1) {
@@ -106,7 +105,7 @@ const OwnerListComponent = (props) => {
     return () => {
       isCurrent = false
     }
-  }, [])
+  }, [owners, updateInitialProps, values])
 
   return (
     <>

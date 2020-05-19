@@ -1,9 +1,8 @@
-// 
+//
 import TableContainer from '@material-ui/core/TableContainer'
 import { withStyles } from '@material-ui/core/styles'
 import classNames from 'classnames'
 import * as React from 'react'
-
 
 import CopyBtn from 'src/components/CopyBtn'
 import EtherscanBtn from 'src/components/EtherscanBtn'
@@ -83,8 +82,6 @@ const styles = () => ({
     marginRight: sm,
   },
 })
-
-
 
 const checkUserAddressOwner = (values, userAddress) => {
   let isOwner = false

@@ -1,4 +1,4 @@
-// 
+//
 import GnosisSafeSol from '@gnosis.pm/safe-contracts/build/contracts/GnosisSafe.json'
 import { BigNumber } from 'bignumber.js'
 
@@ -9,7 +9,7 @@ import { generateSignaturesFromTxConfirmations } from 'src/logic/safe/safeTxSign
 import { ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
 import { EMPTY_DATA, calculateGasOf, calculateGasPrice } from 'src/logic/wallets/ethTransactions'
 import { getAccountFrom, getWeb3 } from 'src/logic/wallets/getWeb3'
-import { } from 'src/routes/safe/store/models/transaction'
+import {} from 'src/routes/safe/store/models/transaction'
 
 const estimateDataGasCosts = (data) => {
   const reducer = (accumulator, currentValue) => {
@@ -27,13 +27,7 @@ const estimateDataGasCosts = (data) => {
   return data.match(/.{2}/g).reduce(reducer, 0)
 }
 
-export const estimateTxGasCosts = async (
-  safeAddress,
-  to,
-  data,
-  tx,
-  preApprovingOwner,
-) => {
+export const estimateTxGasCosts = async (safeAddress, to, data, tx, preApprovingOwner) => {
   try {
     const web3 = getWeb3()
     const from = await getAccountFrom(web3)
@@ -77,14 +71,7 @@ export const estimateTxGasCosts = async (
   }
 }
 
-export const estimateSafeTxGas = async (
-  safe,
-  safeAddress,
-  data,
-  to,
-  valueInWei,
-  operation,
-) => {
+export const estimateSafeTxGas = async (safe, safeAddress, data, to, valueInWei, operation) => {
   try {
     let safeInstance = safe
     if (!safeInstance) {

@@ -1,4 +1,4 @@
-// 
+//
 import TableContainer from '@material-ui/core/TableContainer'
 import { withStyles } from '@material-ui/core/styles'
 import classNames from 'classnames'
@@ -84,7 +84,6 @@ const styles = () => ({
     },
   },
 })
-
 
 const ReviewComponent = ({ classes, userAccount, values }) => {
   const [gasCosts, setGasCosts] = useState('< 0.001')

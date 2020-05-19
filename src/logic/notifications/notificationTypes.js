@@ -1,4 +1,4 @@
-// 
+//
 import { getNetwork } from 'src/config'
 import { capitalize } from 'src/utils/css'
 
@@ -9,9 +9,6 @@ export const INFO = 'info'
 
 const shortDuration = 5000
 const longDuration = 10000
-
-
-
 
 export const NOTIFICATIONS = {
   // Wallet Connection

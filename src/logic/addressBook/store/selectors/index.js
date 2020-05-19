@@ -1,13 +1,10 @@
-/* eslint-disable import/named */
-// 
 import { List, Map } from 'immutable'
 import { createSelector } from 'reselect'
 
 import { ADDRESS_BOOK_REDUCER_ID } from 'src/logic/addressBook/store/reducer/addressBook'
 import { safeParamAddressFromStateSelector } from 'src/routes/safe/store/selectors'
 
-export const addressBookMapSelector = (state) =>
-  state[ADDRESS_BOOK_REDUCER_ID].get('addressBook')
+export const addressBookMapSelector = (state) => state[ADDRESS_BOOK_REDUCER_ID].get('addressBook')
 
 export const getAddressBook = createSelector(
   addressBookMapSelector,

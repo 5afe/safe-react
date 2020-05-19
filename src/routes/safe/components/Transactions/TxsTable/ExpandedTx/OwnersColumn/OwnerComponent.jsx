@@ -1,4 +1,4 @@
-// 
+//
 import { withStyles } from '@material-ui/core/styles'
 import cn from 'classnames'
 import React from 'react'
@@ -23,7 +23,6 @@ export const CONFIRM_TX_BTN_TEST_ID = 'confirm-btn'
 export const EXECUTE_TX_BTN_TEST_ID = 'execute-btn'
 export const REJECT_TX_BTN_TEST_ID = 'reject-btn'
 export const EXECUTE_REJECT_TX_BTN_TEST_ID = 'execute-reject-btn'
-
 
 const OwnerComponent = ({
   classes,

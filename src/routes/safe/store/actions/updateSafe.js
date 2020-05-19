@@ -1,4 +1,4 @@
-// 
+//
 import { createAction } from 'redux-actions'
 
 export const UPDATE_SAFE = 'UPDATE_SAFE'

@@ -1,4 +1,4 @@
-// 
+//
 import ReactGA from 'react-ga'
 
 import addProvider from './addProvider'

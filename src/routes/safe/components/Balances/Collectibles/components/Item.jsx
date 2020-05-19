@@ -1,4 +1,4 @@
-// 
+//
 import { makeStyles } from '@material-ui/core/styles'
 import CallMade from '@material-ui/icons/CallMade'
 import cn from 'classnames'
@@ -98,7 +98,6 @@ const useStyles = makeStyles({
     },
   },
 })
-
 
 const Item = ({ data, onSend }) => {
   const granted = useSelector(grantedSelector)

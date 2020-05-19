@@ -1,4 +1,4 @@
-// 
+//
 import { Map } from 'immutable'
 
 import { loadFromStorage, saveToStorage } from 'src/utils/storage'

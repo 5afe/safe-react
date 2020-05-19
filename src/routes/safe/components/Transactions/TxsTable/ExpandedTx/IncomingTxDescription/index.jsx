@@ -1,4 +1,4 @@
-// 
+//
 import { makeStyles } from '@material-ui/core/styles'
 import React from 'react'
 import { useSelector } from 'react-redux'
@@ -21,8 +21,6 @@ const useStyles = makeStyles({
     borderRight: '2px solid rgb(232, 231, 230)',
   },
 })
-
-
 
 const TransferDescription = ({ from, txFromName, value = '' }) => (
   <Block data-testid={TRANSACTIONS_DESC_INCOMING_TEST_ID}>

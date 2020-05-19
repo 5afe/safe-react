@@ -10,9 +10,7 @@ import updateSafe from './updateSafe'
 //   },
 // })
 
-const updateActiveTokens = (safeAddress, activeTokens) => async (
-  dispatch,
-) => {
+const updateActiveTokens = (safeAddress, activeTokens) => async (dispatch) => {
   dispatch(updateSafe({ address: safeAddress, activeTokens }))
 }
 

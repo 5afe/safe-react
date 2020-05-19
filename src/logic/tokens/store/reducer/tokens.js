@@ -1,4 +1,4 @@
-// 
+//
 import { Map } from 'immutable'
 import { handleActions } from 'redux-actions'
 
@@ -8,7 +8,6 @@ import { ADD_TOKENS } from 'src/logic/tokens/store/actions/saveTokens'
 import { makeToken } from 'src/logic/tokens/store/model/token'
 
 export const TOKEN_REDUCER_ID = 'tokens'
-
 
 export default handleActions(
   {

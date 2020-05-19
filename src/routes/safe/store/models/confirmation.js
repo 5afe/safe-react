@@ -1,8 +1,7 @@
-// 
+//
 import { Record } from 'immutable'
 
-import { } from 'src/logic/safe/transactions/txHistory'
-
+import {} from 'src/logic/safe/transactions/txHistory'
 
 export const makeConfirmation = Record({
   owner: '',
@@ -10,4 +9,3 @@ export const makeConfirmation = Record({
   hash: '',
   signature: null,
 })
-

@@ -1,8 +1,6 @@
-// 
-import { Record, } from 'immutable'
-
+//
+import { Record } from 'immutable'
 
 export const makeCurrentSession = Record({
   viewedSafes: [],
 })
-

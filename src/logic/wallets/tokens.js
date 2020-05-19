@@ -1,6 +1,3 @@
-// 
-import { BigNumber } from 'bignumber.js'
-
 import { getWeb3 } from 'src/logic/wallets/getWeb3'
 
 export const toNative = (amt, decimal) => {

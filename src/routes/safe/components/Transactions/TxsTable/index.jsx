@@ -1,4 +1,4 @@
-// 
+//
 import Collapse from '@material-ui/core/Collapse'
 import IconButton from '@material-ui/core/IconButton'
 import TableCell from '@material-ui/core/TableCell'
@@ -13,13 +13,7 @@ import { useSelector } from 'react-redux'
 
 import ExpandedTxComponent from './ExpandedTx'
 import Status from './Status'
-import {
-  TX_TABLE_ID,
-  TX_TABLE_RAW_CANCEL_TX_ID,
-  TX_TABLE_RAW_TX_ID,
-  generateColumns,
-  getTxTableData,
-} from './columns'
+import { TX_TABLE_ID, TX_TABLE_RAW_CANCEL_TX_ID, TX_TABLE_RAW_TX_ID, generateColumns, getTxTableData } from './columns'
 import { styles } from './style'
 
 import Table from 'src/components/Table'
@@ -35,7 +29,6 @@ const expandCellStyle = {
   paddingLeft: 0,
   paddingRight: 15,
 }
-
 
 const TxsTable = ({ classes }) => {
   const [expandedTx, setExpandedTx] = useState(null)

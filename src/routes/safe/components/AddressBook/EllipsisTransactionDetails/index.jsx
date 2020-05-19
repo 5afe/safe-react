@@ -1,4 +1,4 @@
-// 
+//
 import { ClickAwayListener, Divider } from '@material-ui/core'
 import Menu from '@material-ui/core/Menu'
 import MenuItem from '@material-ui/core/MenuItem'
@@ -30,7 +30,6 @@ const useStyles = makeStyles({
     zIndex: 2001,
   },
 })
-
 
 const EllipsisTransactionDetails = ({ address, knownAddress }) => {
   const classes = useStyles()

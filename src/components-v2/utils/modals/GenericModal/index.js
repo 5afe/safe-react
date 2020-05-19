@@ -1,8 +1,8 @@
-// 
+//
 import IconButton from '@material-ui/core/IconButton'
 import { createStyles, makeStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
-import React, { } from 'react'
+import React from 'react'
 import styled from 'styled-components'
 
 import Modal from 'src/components/Modal'
@@ -37,7 +37,6 @@ const useStyles = makeStyles(() =>
     },
   }),
 )
-
 
 const GenericModal = ({ body, footer, onClose, title }) => {
   const classes = useStyles()

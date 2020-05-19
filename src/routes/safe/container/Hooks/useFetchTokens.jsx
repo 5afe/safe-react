@@ -1,4 +1,4 @@
-// 
+//
 import { useMemo } from 'react'
 import { batch, useDispatch, useSelector } from 'react-redux'
 
@@ -31,5 +31,5 @@ export const useFetchTokens = () => {
         })
       })
     }
-  }, [history.location.pathname])
+  }, [address, dispatch])
 }

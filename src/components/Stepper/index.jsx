@@ -1,4 +1,4 @@
-// 
+//
 import FormStep from '@material-ui/core/Step'
 import StepContent from '@material-ui/core/StepContent'
 import StepLabel from '@material-ui/core/StepLabel'
@@ -15,8 +15,6 @@ import { history } from 'src/store'
 const { useEffect, useState } = React
 
 export { default as Step } from './Step'
-
-
 
 const transitionProps = {
   timeout: {
@@ -35,7 +33,7 @@ const GnoStepper = (props) => {
     if (props.initialValues) {
       setValues(props.initialValues)
     }
-  }, [])
+  }, [props.initialValues])
 
   const getPageProps = (pages) => React.Children.toArray(pages)[page].props
 

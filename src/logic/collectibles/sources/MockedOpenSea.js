@@ -1,4 +1,4 @@
-// 
+//
 import OpenSea from 'src/logic/collectibles/sources/OpenSea'
 import mockedOpenSea from 'src/logic/collectibles/sources/mocked_opensea'
 

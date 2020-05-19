@@ -1,6 +1,5 @@
-// 
+//
 import { Record } from 'immutable'
-
 
 export const makeToken = Record({
   address: '',
@@ -12,4 +11,3 @@ export const makeToken = Record({
 })
 
 // balance is only set in extendedSafeTokensSelector when we display user's token balances
-

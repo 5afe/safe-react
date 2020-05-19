@@ -19,7 +19,7 @@ import Img from 'src/components/layout/Img'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import { nftAssetsListSelector } from 'src/logic/collectibles/store/selectors'
-import { } from 'src/logic/tokens/store/model/token'
+import {} from 'src/logic/tokens/store/model/token'
 import {
   addressIsAssetContract,
   doesntExistInAssetsList,
@@ -30,7 +30,6 @@ export const ADD_CUSTOM_ASSET_ADDRESS_INPUT_TEST_ID = 'add-custom-asset-address-
 export const ADD_CUSTOM_ASSET_SYMBOLS_INPUT_TEST_ID = 'add-custom-asset-symbols-input'
 export const ADD_CUSTOM_ASSET_DECIMALS_INPUT_TEST_ID = 'add-custom-asset-decimals-input'
 export const ADD_CUSTOM_ASSET_FORM = 'add-custom-asset-form'
-
 
 const INITIAL_FORM_STATE = {
   address: '',

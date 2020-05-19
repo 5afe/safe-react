@@ -1,4 +1,4 @@
-// 
+//
 import { createAction } from 'redux-actions'
 
 export const CLOSE_SNACKBAR = 'CLOSE_SNACKBAR'

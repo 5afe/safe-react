@@ -1,4 +1,4 @@
-// 
+//
 import IconButton from '@material-ui/core/IconButton'
 import { makeStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
@@ -34,7 +34,6 @@ import { extendedSafeTokensSelector } from 'src/routes/safe/container/selector'
 import createTransaction from 'src/routes/safe/store/actions/createTransaction'
 import { safeSelector } from 'src/routes/safe/store/selectors'
 import { sm } from 'src/theme/variables'
-
 
 const useStyles = makeStyles(styles)
 
@@ -82,7 +81,7 @@ const ReviewTx = ({ closeSnackbar, enqueueSnackbar, onClose, onPrev, tx }) => {
     return () => {
       isCurrent = false
     }
-  }, [])
+  }, [isSendingETH, safeAddress, tx.amount, tx.recipientAddress, txRecipient, txToken.address])
 
   const submitTx = async () => {
     const web3 = getWeb3()

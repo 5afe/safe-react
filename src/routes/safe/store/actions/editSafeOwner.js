@@ -1,4 +1,4 @@
-// 
+//
 import { createAction } from 'redux-actions'
 
 export const EDIT_SAFE_OWNER = 'EDIT_SAFE_OWNER'

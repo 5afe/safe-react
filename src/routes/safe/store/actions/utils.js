@@ -1,4 +1,4 @@
-// 
+//
 import axios from 'axios'
 
 import { buildTxServiceUrl } from 'src/logic/safe/transactions/txHistory'

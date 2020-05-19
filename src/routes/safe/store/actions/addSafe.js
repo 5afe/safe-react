@@ -1,12 +1,12 @@
-// 
+//
 import { List } from 'immutable'
 import { createAction } from 'redux-actions'
 
 import setDefaultSafe from 'src/routes/safe/store/actions/setDefaultSafe'
 import { makeOwner } from 'src/routes/safe/store/models/owner'
-import { } from 'src/routes/safe/store/models/safe'
+import {} from 'src/routes/safe/store/models/safe'
 import { safesListSelector } from 'src/routes/safe/store/selectors'
-import { } from 'src/store'
+import {} from 'src/store'
 
 export const ADD_SAFE = 'ADD_SAFE'
 
@@ -15,7 +15,6 @@ export const buildOwnersFrom = (names, addresses) => {
 
   return List(owners)
 }
-
 
 export const addSafe = createAction(ADD_SAFE, (safe) => ({
   safe,

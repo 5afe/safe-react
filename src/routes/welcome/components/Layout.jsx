@@ -1,4 +1,4 @@
-// 
+//
 import OpenInNew from '@material-ui/icons/OpenInNew'
 import * as React from 'react'
 
@@ -16,13 +16,11 @@ import { marginButtonImg, secondary } from 'src/theme/variables'
 const plus = require('../assets/new.svg')
 const safe = require('../assets/safe.svg')
 
-
 const openIconStyle = {
   height: '13px',
   color: secondary,
   marginBottom: '-2px',
 }
-
 
 const buttonStyle = {
   marginLeft: marginButtonImg,

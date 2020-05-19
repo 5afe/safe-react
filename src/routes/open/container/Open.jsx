@@ -1,4 +1,4 @@
-// 
+//
 import queryString from 'query-string'
 import React, { useEffect, useState } from 'react'
 import { connect } from 'react-redux'
@@ -7,7 +7,7 @@ import { withRouter } from 'react-router-dom'
 import Opening from '../../opening'
 import Layout from '../components/Layout'
 
-import actions, { } from './actions'
+import actions from './actions'
 import selector from './selector'
 
 import { Loader } from 'src/components-v2'
@@ -28,15 +28,7 @@ import { loadFromStorage, removeFromStorage, saveToStorage } from 'src/utils/sto
 
 const SAFE_PENDING_CREATION_STORAGE_KEY = 'SAFE_PENDING_CREATION_STORAGE_KEY'
 
-
-
-
-const validateQueryParams = (
-  ownerAddresses,
-  ownerNames,
-  threshold,
-  safeName,
-) => {
+const validateQueryParams = (ownerAddresses, ownerNames, threshold, safeName) => {
   if (!ownerAddresses || !ownerNames || !threshold || !safeName) {
     return false
   }
@@ -106,7 +98,7 @@ const Open = ({ addSafe, network, provider, userAccount }) => {
         threshold,
       })
     }
-  })
+  }, [])
 
   // check if there is a safe being created
   useEffect(() => {

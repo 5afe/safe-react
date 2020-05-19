@@ -1,4 +1,4 @@
-// 
+//
 import CollapseMUI from '@material-ui/core/Collapse'
 import IconButton from '@material-ui/core/IconButton'
 import ExpandLess from '@material-ui/icons/ExpandLess'
@@ -14,7 +14,6 @@ const Header = styled.div`
 `
 
 const Title = styled.div``
-
 
 const Collapse = ({ children, description, title }) => {
   const [open, setOpen] = React.useState(false)

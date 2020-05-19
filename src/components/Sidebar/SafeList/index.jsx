@@ -17,11 +17,10 @@ import Paragraph from 'src/components/layout/Paragraph'
 import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
 import { sameAddress, shortVersionOf } from 'src/logic/wallets/ethAddresses'
 import { SAFELIST_ADDRESS } from 'src/routes/routes'
-import { } from 'src/routes/safe/store/models/safe'
+import {} from 'src/routes/safe/store/models/safe'
 import { disabled, md, mediumFontSize, primary, sm } from 'src/theme/variables'
 
 export const SIDEBAR_SAFELIST_ROW_TESTID = 'SIDEBAR_SAFELIST_ROW_TESTID'
-
 
 const useStyles = makeStyles({
   icon: {

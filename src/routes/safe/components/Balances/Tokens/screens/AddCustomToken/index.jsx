@@ -1,4 +1,4 @@
-// 
+//
 import { withStyles } from '@material-ui/core/styles'
 import React, { useState } from 'react'
 import { FormSpy } from 'react-final-form'
@@ -19,7 +19,7 @@ import Hairline from 'src/components/layout/Hairline'
 import Img from 'src/components/layout/Img'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
-import { } from 'src/logic/tokens/store/model/token'
+import {} from 'src/logic/tokens/store/model/token'
 import TokenPlaceholder from 'src/routes/safe/components/Balances/assets/token_placeholder.svg'
 import { checksumAddress } from 'src/utils/checksumAddress'
 
@@ -27,7 +27,6 @@ export const ADD_CUSTOM_TOKEN_ADDRESS_INPUT_TEST_ID = 'add-custom-token-address-
 export const ADD_CUSTOM_TOKEN_SYMBOLS_INPUT_TEST_ID = 'add-custom-token-symbols-input'
 export const ADD_CUSTOM_TOKEN_DECIMALS_INPUT_TEST_ID = 'add-custom-token-decimals-input'
 export const ADD_CUSTOM_TOKEN_FORM = 'add-custom-token-form'
-
 
 const INITIAL_FORM_STATE = {
   address: '',

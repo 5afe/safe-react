@@ -1,4 +1,4 @@
-// 
+//
 import * as React from 'react'
 
 import Button from 'src/components/layout/Button'
@@ -20,7 +20,6 @@ const firstButtonStyle = {
 const secondButtonStyle = {
   fontWeight: boldFont,
 }
-
 
 const Controls = ({ buttonLabels, currentStep, disabled, firstPage, lastPage, onPrevious, penultimate }) => {
   const back = firstPage ? 'Cancel' : 'Back'

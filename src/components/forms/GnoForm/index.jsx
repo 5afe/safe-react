@@ -1,9 +1,7 @@
-// 
-import { } from 'final-form'
+//
+import {} from 'final-form'
 import * as React from 'react'
 import { Form } from 'react-final-form'
-
-
 
 const stylesBasedOn = (padding) => ({
   padding: `0 ${padding}%`,

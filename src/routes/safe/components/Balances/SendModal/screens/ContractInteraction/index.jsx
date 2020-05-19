@@ -1,4 +1,4 @@
-// 
+//
 import { makeStyles } from '@material-ui/core/styles'
 import React from 'react'
 
@@ -23,7 +23,6 @@ import {
   formMutators,
 } from 'src/routes/safe/components/Balances/SendModal/screens/ContractInteraction/utils'
 
-
 const useStyles = makeStyles(styles)
 
 const ContractInteraction = ({ contractAddress, initialValues, onClose, onNext }) => {
@@ -33,7 +32,7 @@ const ContractInteraction = ({ contractAddress, initialValues, onClose, onNext }
     if (contractAddress) {
       initialValues.contractAddress = contractAddress
     }
-  }, [contractAddress])
+  }, [contractAddress, initialValues.contractAddress])
 
   const handleSubmit = async ({ contractAddress, selectedMethod, value, ...values }) => {
     if (value || (contractAddress && selectedMethod)) {

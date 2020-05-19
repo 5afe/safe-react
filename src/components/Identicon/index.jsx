@@ -1,9 +1,7 @@
-// 
+//
 import * as React from 'react'
 
 import { toDataUrl } from './blockies'
-
-
 
 export default class Identicon extends React.PureComponent {
   static defaultProps = {

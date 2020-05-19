@@ -1,8 +1,8 @@
-// 
+//
 import ERC20Detailed from '@openzeppelin/contracts/build/contracts/ERC20Detailed.json'
 import axios from 'axios'
 import bn from 'bignumber.js'
-import { List, Map, } from 'immutable'
+import { List, Map } from 'immutable'
 import { batch } from 'react-redux'
 
 import { addIncomingTransactions } from './addIncomingTransactions'
@@ -27,12 +27,9 @@ import { addCancellationTransactions } from 'src/routes/safe/store/actions/addCa
 import { makeConfirmation } from 'src/routes/safe/store/models/confirmation'
 import { makeIncomingTransaction } from 'src/routes/safe/store/models/incomingTransaction'
 import { makeTransaction } from 'src/routes/safe/store/models/transaction'
-import { } from 'src/store'
+import {} from 'src/store'
 
 let web3
-
-
-
 
 export const buildTransactionFrom = async (
   safeAddress,
@@ -47,7 +44,7 @@ export const buildTransactionFrom = async (
     tx.confirmations.map((conf) =>
       makeConfirmation({
         owner: conf.owner,
-        type: ((conf.confirmationType.toLowerCase())),
+        type: conf.confirmationType.toLowerCase(),
         hash: conf.transactionHash,
         signature: conf.signature,
       }),
@@ -240,7 +237,6 @@ export const buildIncomingTransactionFrom = ([tx, symbol, decimals, fee]) => {
   })
 }
 
-
 let etagSafeTransactions = null
 let etagCachedSafeIncommingTransactions = null
 export const loadSafeTransactions = async (safeAddress, getState) => {
@@ -346,9 +342,7 @@ export default (safeAddress) => async (dispatch, getState) => {
     })
   }
 
-  const incomingTransactions = await loadSafeIncomingTransactions(
-    safeAddress,
-  )
+  const incomingTransactions = await loadSafeIncomingTransactions(safeAddress)
 
   if (incomingTransactions) {
     dispatch(addIncomingTransactions(incomingTransactions))

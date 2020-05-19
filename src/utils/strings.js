@@ -1,4 +1,4 @@
-// 
+//
 
 /**
  * Setups `shortenText` options

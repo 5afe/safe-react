@@ -1,4 +1,4 @@
-// 
+//
 export const FIELD_NAME = 'name'
 export const FIELD_CONFIRMATIONS = 'confirmations'
 export const FIELD_OWNERS = 'owners'

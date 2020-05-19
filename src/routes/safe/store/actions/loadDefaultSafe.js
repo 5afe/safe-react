@@ -1,9 +1,9 @@
-// 
+//
 
 import setDefaultSafe from './setDefaultSafe'
 
 import { getDefaultSafe } from 'src/logic/safe/utils'
-import { } from 'src/store/index'
+import {} from 'src/store/index'
 import { checksumAddress } from 'src/utils/checksumAddress'
 
 const loadDefaultSafe = () => async (dispatch) => {

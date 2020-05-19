@@ -1,4 +1,4 @@
-// 
+//
 import { Card, FixedDialog, FixedIcon, IconText, Menu, Text, Title } from '@gnosis.pm/safe-react-components'
 import { withSnackbar } from 'notistack'
 import React, { useCallback, useEffect, useState } from 'react'
@@ -43,7 +43,6 @@ const operations = {
   ON_SAFE_INFO: 'ON_SAFE_INFO',
 }
 
-
 function Apps({ closeModal, closeSnackbar, enqueueSnackbar, openModal }) {
   const [appList, setAppList] = useState([])
   const [legalDisclaimerAccepted, setLegalDisclaimerAccepted] = useState(false)
@@ -59,7 +58,7 @@ function Apps({ closeModal, closeSnackbar, enqueueSnackbar, openModal }) {
   const ethBalance = useSelector(safeEthBalanceSelector)
   const dispatch = useDispatch()
 
-  const getSelectedApp = () => appList.find((e) => e.id === selectedApp)
+  const getSelectedApp = useCallback(() => appList.find((e) => e.id === selectedApp))
 
   const sendMessageToIframe = (messageId, data) => {
     const app = getSelectedApp()
@@ -198,12 +197,12 @@ function Apps({ closeModal, closeSnackbar, enqueueSnackbar, openModal }) {
     setAppList([...appList, { ...app, disabled: false }])
   }
 
-  const selectFirstApp = (apps) => {
+  const selectFirstApp = useCallback((apps) => {
     const firstEnabledApp = apps.find((a) => !a.disabled)
     if (firstEnabledApp) {
       onSelectApp(firstEnabledApp.id)
     }
-  }
+  })
 
   const onAppToggle = async (appId, enabled) => {
     // update in-memory list
@@ -262,7 +261,7 @@ function Apps({ closeModal, closeSnackbar, enqueueSnackbar, openModal }) {
     return () => {
       window.removeEventListener('message', onIframeMessage)
     }
-  }, [selectedApp])
+  }, [getSelectedApp, handleIframeMessage, selectedApp])
 
   // load legalDisclaimer
   useEffect(() => {
@@ -319,7 +318,7 @@ function Apps({ closeModal, closeSnackbar, enqueueSnackbar, openModal }) {
     if (!appList.length) {
       loadApps()
     }
-  }, [])
+  }, [appList.length, selectFirstApp])
 
   // on iframe change
   useEffect(() => {
@@ -342,7 +341,7 @@ function Apps({ closeModal, closeSnackbar, enqueueSnackbar, openModal }) {
     return () => {
       iframeEl.removeEventListener('load', onIframeLoaded)
     }
-  }, [iframeEl, selectedApp])
+  }, [ethBalance, getSelectedApp, iframeEl, network, safeAddress, selectedApp, sendMessageToIframe])
 
   if (loading) {
     return <Loader />

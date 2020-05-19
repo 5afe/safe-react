@@ -1,14 +1,14 @@
-// 
+//
 import { List, Map } from 'immutable'
 import { createSelector } from 'reselect'
 
-import { } from 'src/logic/tokens/store/model/token'
+import {} from 'src/logic/tokens/store/model/token'
 import { tokensSelector } from 'src/logic/tokens/store/selectors'
 import { getEthAsToken } from 'src/logic/tokens/utils/tokenHelpers'
 import { isUserOwner } from 'src/logic/wallets/ethAddresses'
 import { userAccountSelector } from 'src/logic/wallets/store/selectors'
-import { } from 'src/routes/safe/store/models/safe'
-import { } from 'src/routes/safe/store/models/transaction'
+import {} from 'src/routes/safe/store/models/safe'
+import {} from 'src/routes/safe/store/models/transaction'
 import {
   safeActiveTokensSelector,
   safeBalancesSelector,
@@ -17,7 +17,7 @@ import {
   safeSelector,
   safeTransactionsSelector,
 } from 'src/routes/safe/store/selectors'
-import { } from 'src/store'
+import {} from 'src/store'
 
 const getTxStatus = (tx, userAddress, safe) => {
   let txStatus
@@ -44,22 +44,17 @@ const getTxStatus = (tx, userAddress, safe) => {
   return txStatus
 }
 
-export const grantedSelector = createSelector(
-  userAccountSelector,
-  safeSelector,
-  (userAccount, safe) => isUserOwner(safe, userAccount),
+export const grantedSelector = createSelector(userAccountSelector, safeSelector, (userAccount, safe) =>
+  isUserOwner(safe, userAccount),
 )
 
-const safeEthAsTokenSelector = createSelector(
-  safeSelector,
-  (safe) => {
-    if (!safe) {
-      return undefined
-    }
+const safeEthAsTokenSelector = createSelector(safeSelector, (safe) => {
+  if (!safe) {
+    return undefined
+  }
 
-    return getEthAsToken(safe.ethBalance)
-  },
-)
+  return getEthAsToken(safe.ethBalance)
+})
 
 export const extendedSafeTokensSelector = createSelector(
   safeActiveTokensSelector,

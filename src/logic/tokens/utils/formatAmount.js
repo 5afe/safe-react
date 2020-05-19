@@ -1,4 +1,4 @@
-// 
+//
 
 // This is pretty new so I'll leave the docs here
 // https://v8.dev/features/intl-numberformat

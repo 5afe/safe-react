@@ -14,12 +14,7 @@ import RemoveOwnerModal from './RemoveOwnerModal'
 import ReplaceOwnerModal from './ReplaceOwnerModal'
 import RenameOwnerIcon from './assets/icons/rename-owner.svg'
 import ReplaceOwnerIcon from './assets/icons/replace-owner.svg'
-import {
-  OWNERS_TABLE_ADDRESS_ID,
-  OWNERS_TABLE_NAME_ID,
-  generateColumns,
-  getOwnerData,
-} from './dataFetcher'
+import { OWNERS_TABLE_ADDRESS_ID, OWNERS_TABLE_NAME_ID, generateColumns, getOwnerData } from './dataFetcher'
 import { styles } from './style'
 
 import Table from 'src/components/Table'
@@ -39,9 +34,6 @@ export const REMOVE_OWNER_BTN_TEST_ID = 'remove-owner-btn'
 export const ADD_OWNER_BTN_TEST_ID = 'add-owner-btn'
 export const REPLACE_OWNER_BTN_TEST_ID = 'replace-owner-btn'
 export const OWNERS_ROW_TEST_ID = 'owners-row'
-
-
-
 
 class ManageOwners extends React.Component {
   constructor(props) {

@@ -1,4 +1,4 @@
-// 
+//
 import { withStyles } from '@material-ui/core/styles'
 import { SnackbarProvider } from 'notistack'
 import * as React from 'react'
@@ -35,7 +35,6 @@ const notificationStyles = {
     background: '#fff',
   },
 }
-
 
 const desiredNetwork = getNetwork()
 

@@ -1,4 +1,4 @@
-// 
+//
 import Checkbox from '@material-ui/core/Checkbox'
 import FormControlLabel from '@material-ui/core/FormControlLabel'
 import IconButton from '@material-ui/core/IconButton'
@@ -23,12 +23,11 @@ import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
 import { getWeb3 } from 'src/logic/wallets/getWeb3'
 import { userAccountSelector } from 'src/logic/wallets/store/selectors'
 import processTransaction from 'src/routes/safe/store/actions/processTransaction'
-import { } from 'src/routes/safe/store/models/transaction'
+import {} from 'src/routes/safe/store/models/transaction'
 import { safeParamAddressFromStateSelector, safeThresholdSelector } from 'src/routes/safe/store/selectors'
 
 export const APPROVE_TX_MODAL_SUBMIT_BTN_TEST_ID = 'approve-tx-modal-submit-btn'
 export const REJECT_TX_MODAL_SUBMIT_BTN_TEST_ID = 'reject-tx-modal-submit-btn'
-
 
 const getModalTitleAndDescription = (thresholdReached, isCancelTx) => {
   const modalInfo = {
@@ -100,7 +99,7 @@ const ApproveTxModal = ({
     return () => {
       isCurrent = false
     }
-  }, [approveAndExecute])
+  }, [approveAndExecute, safeAddress, tx, userAddress])
 
   const handleExecuteCheckbox = () => setApproveAndExecute((prevApproveAndExecute) => !prevApproveAndExecute)
 

@@ -1,16 +1,11 @@
-// 
+//
 import { push } from 'connected-react-router'
 import semverSatisfies from 'semver/functions/satisfies'
 
 import { onboardUser } from 'src/components/ConnectButton'
 import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
 import { getNotificationsFromTxType, showSnackbar } from 'src/logic/notifications'
-import {
-  CALL,
-  getApprovalTransaction,
-  getExecutionTransaction,
-  saveTxToHistory,
-} from 'src/logic/safe/transactions'
+import { CALL, getApprovalTransaction, getExecutionTransaction, saveTxToHistory } from 'src/logic/safe/transactions'
 import { estimateSafeTxGas } from 'src/logic/safe/transactions/gasNew'
 import { SAFE_VERSION_FOR_OFFCHAIN_SIGNATURES, tryOffchainSigning } from 'src/logic/safe/transactions/offchainSigner'
 import { getCurrentSafeVersion } from 'src/logic/safe/utils/safeVersion'
@@ -20,9 +15,8 @@ import { providerSelector } from 'src/logic/wallets/store/selectors'
 import { SAFELIST_ADDRESS } from 'src/routes/routes'
 import fetchTransactions from 'src/routes/safe/store/actions/fetchTransactions'
 import { getLastTx, getNewTxNonce, shouldExecuteTransaction } from 'src/routes/safe/store/actions/utils'
-import { } from 'src/store'
+import {} from 'src/store'
 import { getErrorMessage } from 'src/test/utils/ethereumErrors'
-
 
 const createTransaction = ({
   safeAddress,

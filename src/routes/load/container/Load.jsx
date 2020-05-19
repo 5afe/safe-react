@@ -1,12 +1,12 @@
-// 
+//
 import * as React from 'react'
 import { connect } from 'react-redux'
 
 import Layout from '../components/Layout'
 import { FIELD_LOAD_ADDRESS, FIELD_LOAD_NAME } from '../components/fields'
 
-import actions, { } from './actions'
-import selector, { } from './selector'
+import actions from './actions'
+import selector from './selector'
 
 import Page from 'src/components/layout/Page'
 import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
@@ -17,7 +17,6 @@ import { SAFELIST_ADDRESS } from 'src/routes/routes'
 import { buildSafe } from 'src/routes/safe/store/actions/fetchSafe'
 import { history } from 'src/store'
 import { loadFromStorage } from 'src/utils/storage'
-
 
 export const loadSafe = async (safeName, safeAddress, owners, addSafe) => {
   const safeProps = await buildSafe(safeAddress, safeName)

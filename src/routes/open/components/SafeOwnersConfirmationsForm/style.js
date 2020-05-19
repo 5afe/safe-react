@@ -1,4 +1,4 @@
-// 
+//
 import { disabled, extraSmallFontSize, lg, md, screenSm, sm } from 'src/theme/variables'
 
 export const styles = () => ({

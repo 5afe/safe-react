@@ -1,9 +1,9 @@
-// 
+//
 
 import { makeAddressBookEntry } from 'src/logic/addressBook/model/addressBook'
 import { updateAddressBookEntry } from 'src/logic/addressBook/store/actions/updateAddressBookEntry'
 import { saveAddressBook } from 'src/logic/addressBook/utils'
-import { } from 'src/store/index'
+import {} from 'src/store/index'
 
 const saveAndUpdateAddressBook = (addressBook) => async (dispatch) => {
   try {

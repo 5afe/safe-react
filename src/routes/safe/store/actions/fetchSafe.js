@@ -1,4 +1,4 @@
-// 
+//
 import GnosisSafeSol from '@gnosis.pm/safe-contracts/build/contracts/GnosisSafe.json'
 import { List } from 'immutable'
 
@@ -12,7 +12,7 @@ import addSafeOwner from 'src/routes/safe/store/actions/addSafeOwner'
 import removeSafeOwner from 'src/routes/safe/store/actions/removeSafeOwner'
 import updateSafe from 'src/routes/safe/store/actions/updateSafe'
 import { makeOwner } from 'src/routes/safe/store/models/owner'
-import { } from 'src/store'
+import {} from 'src/store'
 import { checksumAddress } from 'src/utils/checksumAddress'
 
 const buildOwnersFrom = (

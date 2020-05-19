@@ -10,12 +10,7 @@ export const BALANCE_TABLE_BALANCE_ID = 'balance'
 export const BALANCE_TABLE_VALUE_ID = 'value'
 
 // eslint-disable-next-line max-len
-const getTokenPriceInCurrency = (
-  token,
-  currencySelected,
-  currencyValues,
-  currencyRate,
-) => {
+const getTokenPriceInCurrency = (token, currencySelected, currencyValues, currencyRate) => {
   if (!currencySelected) {
     return ''
   }
@@ -39,12 +34,7 @@ const getTokenPriceInCurrency = (
 }
 
 // eslint-disable-next-line max-len
-export const getBalanceData = (
-  activeTokens,
-  currencySelected,
-  currencyValues,
-  currencyRate,
-) => {
+export const getBalanceData = (activeTokens, currencySelected, currencyValues, currencyRate) => {
   const rows = activeTokens.map((token) => ({
     [BALANCE_TABLE_ASSET_ID]: {
       name: token.name,

@@ -1,4 +1,4 @@
-// 
+//
 import Drawer from '@material-ui/core/Drawer'
 import SearchIcon from '@material-ui/icons/Search'
 import SearchBar from 'material-ui-search-bar'
@@ -17,17 +17,15 @@ import Link from 'src/components/layout/Link'
 import Row from 'src/components/layout/Row'
 import { WELCOME_ADDRESS } from 'src/routes/routes'
 import setDefaultSafe from 'src/routes/safe/store/actions/setDefaultSafe'
-import { } from 'src/routes/safe/store/models/safe'
+import {} from 'src/routes/safe/store/models/safe'
 import { defaultSafeSelector, safeParamAddressFromStateSelector } from 'src/routes/safe/store/selectors'
 
 const { useEffect, useMemo, useState } = React
-
 
 export const SidebarContext = React.createContext({
   isOpen: false,
   toggleSidebar: () => {},
 })
-
 
 const filterBy = (filter, safes) =>
   safes.filter(

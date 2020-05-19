@@ -1,7 +1,5 @@
-// 
+//
 import { List, Map, Record, Set } from 'immutable'
-
-
 
 const SafeRecord = Record({
   name: '',
@@ -21,6 +19,5 @@ const SafeRecord = Record({
   needsUpdate: false,
   featuresEnabled: [],
 })
-
 
 export default SafeRecord

@@ -1,4 +1,4 @@
-// 
+//
 import IconButton from '@material-ui/core/IconButton'
 import { withStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
@@ -30,7 +30,6 @@ const formMutators = {
     utils.changeValue(state, 'ownerAddress', () => args[0])
   },
 }
-
 
 const OwnerForm = ({ classes, onClose, onSubmit }) => {
   const handleSubmit = (values) => {

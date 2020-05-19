@@ -1,4 +1,4 @@
-// 
+//
 import Paper from '@material-ui/core/Paper'
 import { withStyles } from '@material-ui/core/styles'
 import * as React from 'react'
@@ -16,7 +16,6 @@ const styles = () => ({
     padding: lg,
   },
 })
-
 
 const OpenPaper = ({ children, classes, controls, padding = true }) => (
   <Paper className={classes.root} elevation={1}>

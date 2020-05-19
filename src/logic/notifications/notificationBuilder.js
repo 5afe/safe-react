@@ -1,15 +1,14 @@
-// 
+//
 import { IconButton } from '@material-ui/core'
 import { Close as IconClose } from '@material-ui/icons'
 import * as React from 'react'
 
-import { NOTIFICATIONS, } from './notificationTypes'
+import { NOTIFICATIONS } from './notificationTypes'
 
 import closeSnackbarAction from 'src/logic/notifications/store/actions/closeSnackbar'
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
 import { getAppInfoFromOrigin } from 'src/routes/safe/components/Apps/utils'
 import { store } from 'src/store'
-
 
 const setNotificationOrigin = (notification, origin) => {
   if (!origin) {

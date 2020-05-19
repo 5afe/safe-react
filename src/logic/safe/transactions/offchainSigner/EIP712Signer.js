@@ -1,4 +1,4 @@
-// 
+//
 import { EMPTY_DATA } from 'src/logic/wallets/ethTransactions'
 import { getWeb3 } from 'src/logic/wallets/getWeb3'
 
@@ -58,7 +58,6 @@ const generateTypedDataFrom = async ({
 
   return typedData
 }
-
 
 export const getEIP712Signer = (version) => async (txArgs) => {
   const web3 = getWeb3()

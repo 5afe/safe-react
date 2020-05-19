@@ -1,4 +1,4 @@
-// 
+//
 import { useEffect } from 'react'
 import { batch, useDispatch, useSelector } from 'react-redux'
 
@@ -28,5 +28,5 @@ export const useCheckForUpdates = () => {
         clearInterval(collectiblesInterval)
       }
     }
-  }, [safeAddress])
+  }, [dispatch, safeAddress])
 }

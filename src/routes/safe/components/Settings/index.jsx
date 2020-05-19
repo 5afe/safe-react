@@ -1,4 +1,4 @@
-// 
+//
 import Badge from '@material-ui/core/Badge'
 import { withStyles } from '@material-ui/core/styles'
 import cn from 'classnames'
@@ -36,7 +36,6 @@ const INITIAL_STATE = {
   showRemoveSafe: false,
   menuOptionIndex: 1,
 }
-
 
 const Settings = (props) => {
   const [state, setState] = useState(INITIAL_STATE)

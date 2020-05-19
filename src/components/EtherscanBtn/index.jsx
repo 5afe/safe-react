@@ -1,4 +1,4 @@
-// 
+//
 import Tooltip from '@material-ui/core/Tooltip'
 import { makeStyles } from '@material-ui/core/styles'
 import cn from 'classnames'
@@ -27,7 +27,6 @@ const useStyles = makeStyles({
     zIndex: 2001,
   },
 })
-
 
 const EtherscanBtn = ({ className, increaseZindex = false, type, value }) => {
   const classes = useStyles()

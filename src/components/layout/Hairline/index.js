@@ -1,4 +1,4 @@
-// 
+//
 import * as React from 'react'
 
 import { getSize } from 'src/theme/size'
@@ -11,7 +11,6 @@ const calculateStyleFrom = (color, margin) => ({
   backgroundColor: color || border,
   margin: `${getSize(margin)} 0px`,
 })
-
 
 const Hairline = ({ className, color, margin, style }) => {
   const calculatedStyles = calculateStyleFrom(color, margin)

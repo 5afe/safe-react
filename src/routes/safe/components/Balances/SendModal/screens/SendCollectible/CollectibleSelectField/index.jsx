@@ -1,4 +1,4 @@
-// 
+//
 import ListItemIcon from '@material-ui/core/ListItemIcon'
 import ListItemText from '@material-ui/core/ListItemText'
 import MenuItem from '@material-ui/core/MenuItem'
@@ -14,7 +14,6 @@ import Img from 'src/components/layout/Img'
 import Paragraph from 'src/components/layout/Paragraph'
 import { setImageToPlaceholder } from 'src/routes/safe/components/Balances/utils'
 import { textShortener } from 'src/utils/strings'
-
 
 const useSelectedCollectibleStyles = makeStyles(selectedTokenStyles)
 
@@ -44,7 +43,6 @@ const SelectedCollectible = ({ tokenId, tokens }) => {
     </MenuItem>
   )
 }
-
 
 const useCollectibleSelectFieldStyles = makeStyles(selectStyles)
 

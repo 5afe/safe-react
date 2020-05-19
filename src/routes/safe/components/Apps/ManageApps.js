@@ -1,4 +1,4 @@
-// 
+//
 import { ButtonLink, Checkbox, ManageListModal, Text, TextField } from '@gnosis.pm/safe-react-components'
 import React, { useState } from 'react'
 import { FormSpy } from 'react-final-form'
@@ -38,7 +38,6 @@ const StyledCheckbox = styled(Checkbox)`
   margin: 0;
 `
 const APP_INFO = { iconUrl: appsIconSvg, name: '', error: false }
-
 
 const urlValidator = (value) => {
   return isURLValid(value) ? undefined : 'Please, provide a valid url'

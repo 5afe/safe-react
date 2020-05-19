@@ -1,4 +1,4 @@
-// 
+//
 import Onboard from 'bnc-onboard'
 import React from 'react'
 
@@ -65,7 +65,6 @@ export const onboardUser = async () => {
   const walletSelected = web3 ? true : await onboard.walletSelect()
   return walletSelected && onboard.walletCheck()
 }
-
 
 const ConnectButton = (props) => (
   <Button

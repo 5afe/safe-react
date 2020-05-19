@@ -1,4 +1,4 @@
-// 
+//
 const background = '#f7f5f5'
 const border = '#e8e7e6'
 const connectedColor = '#008C73'

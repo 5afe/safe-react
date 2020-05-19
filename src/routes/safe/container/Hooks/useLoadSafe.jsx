@@ -1,4 +1,4 @@
-// 
+//
 import { useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 
@@ -26,5 +26,5 @@ export const useLoadSafe = (safeAddress) => {
       }
     }
     fetchData()
-  }, [safeAddress])
+  }, [dispatch, safeAddress])
 }

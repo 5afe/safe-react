@@ -1,15 +1,7 @@
-// 
+//
 import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
 
-export const calculateTxFee = async (
-  safe,
-  safeAddress,
-  from,
-  data,
-  to,
-  valueInWei,
-  operation,
-) => {
+export const calculateTxFee = async (safe, safeAddress, from, data, to, valueInWei, operation) => {
   try {
     let safeInstance = safe
     if (!safeInstance) {

@@ -1,4 +1,4 @@
-// 
+//
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { Redirect, Route, Switch, withRouter } from 'react-router-dom'
@@ -19,7 +19,6 @@ const Load = React.lazy(() => import('./load/container/Load'))
 
 const SAFE_ADDRESS = `${SAFELIST_ADDRESS}/:${SAFE_PARAM_ADDRESS}`
 
-
 const Routes = ({ location }) => {
   const [isInitialLoad, setInitialLoad] = useState(true)
   const defaultSafe = useSelector(defaultSafeSelector)
@@ -29,12 +28,12 @@ const Routes = ({ location }) => {
     if (location.pathname !== '/') {
       setInitialLoad(false)
     }
-  }, [])
+  }, [location.pathname])
 
   useEffect(() => {
     const page = location.pathname + location.search
     trackPage(page)
-  }, [location.pathname, trackPage])
+  }, [location.pathname, location.search, trackPage])
 
   return (
     <Switch>

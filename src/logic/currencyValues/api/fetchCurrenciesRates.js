@@ -2,10 +2,7 @@ import axios from 'axios'
 
 import { getExchangeRatesUrl } from 'src/config'
 
-const fetchCurrenciesRates = async (
-  baseCurrency,
-  targetCurrencyValue,
-) => {
+const fetchCurrenciesRates = async (baseCurrency, targetCurrencyValue) => {
   let rate = 0
   const url = `${getExchangeRatesUrl()}?base=${baseCurrency}&symbols=${targetCurrencyValue}`
 

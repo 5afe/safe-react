@@ -1,4 +1,4 @@
-// 
+//
 /* eslint-disable react/button-has-type  */
 import cn from 'classnames/bind'
 import * as React from 'react'
@@ -6,7 +6,6 @@ import * as React from 'react'
 import styles from './index.module.scss'
 
 const cx = cn.bind(styles)
-
 
 const GnoButtonLink = ({
   className = '',

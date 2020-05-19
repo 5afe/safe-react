@@ -1,4 +1,4 @@
-// 
+//
 import { border, lg, md, sm } from 'src/theme/variables'
 
 export const styles = () => ({

@@ -1,4 +1,4 @@
-// 
+//
 import IconButton from '@material-ui/core/IconButton'
 import MenuItem from '@material-ui/core/MenuItem'
 import { withStyles } from '@material-ui/core/styles'
@@ -21,7 +21,6 @@ import Row from 'src/components/layout/Row'
 import { safeOwnersSelector, safeThresholdSelector } from 'src/routes/safe/store/selectors'
 
 export const ADD_OWNER_THRESHOLD_NEXT_BTN_TEST_ID = 'add-owner-threshold-next-btn'
-
 
 const ThresholdForm = ({ classes, onClickBack, onClose, onSubmit }) => {
   const threshold = useSelector(safeThresholdSelector)

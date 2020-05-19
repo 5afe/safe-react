@@ -1,4 +1,4 @@
-// 
+//
 import Tab from '@material-ui/core/Tab'
 import Tabs from '@material-ui/core/Tabs'
 import { withStyles } from '@material-ui/core/styles'
@@ -18,7 +18,6 @@ import { AddressBookIcon } from 'src/routes/safe/components/assets/AddressBookIc
 import { AppsIcon } from 'src/routes/safe/components/assets/AppsIcon'
 import { BalancesIcon } from 'src/routes/safe/components/assets/BalancesIcon'
 import { TransactionsIcon } from 'src/routes/safe/components/assets/TransactionsIcon'
-
 
 const TabsComponent = (props) => {
   const { classes, location, match } = props

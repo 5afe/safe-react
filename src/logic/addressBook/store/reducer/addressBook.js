@@ -1,4 +1,4 @@
-// 
+//
 import { List, Map } from 'immutable'
 import { handleActions } from 'redux-actions'
 
@@ -14,7 +14,6 @@ import { sameAddress } from 'src/logic/wallets/ethAddresses'
 import { checksumAddress } from 'src/utils/checksumAddress'
 
 export const ADDRESS_BOOK_REDUCER_ID = 'addressBook'
-
 
 export const buildAddressBook = (storedAdbk) => {
   let addressBookBuilt = Map([])

@@ -1,4 +1,4 @@
-// 
+//
 import StepMUI from '@material-ui/core/Step'
 import StepLabelMUI from '@material-ui/core/StepLabel'
 import StepperMUI from '@material-ui/core/Stepper'
@@ -32,7 +32,6 @@ const StyledStepLabel = styled.p`
     }};
   }
 `
-
 
 const Stepper = ({ activeStepIndex, error, orientation, steps }) => {
   return (

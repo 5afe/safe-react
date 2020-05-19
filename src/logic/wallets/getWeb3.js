@@ -1,4 +1,4 @@
-// 
+//
 import ENS from 'ethereum-ens'
 import Web3 from 'web3'
 
@@ -96,10 +96,7 @@ const isSmartContractWallet = async (web3Provider, account) => {
   return contractCode.replace(EMPTY_DATA, '').replace(/0/g, '') !== ''
 }
 
-export const getProviderInfo = async (
-  web3Provider,
-  providerName = 'Wallet',
-) => {
+export const getProviderInfo = async (web3Provider, providerName = 'Wallet') => {
   web3 = new Web3(web3Provider)
 
   const account = await getAccountFrom(web3)

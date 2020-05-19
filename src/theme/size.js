@@ -1,6 +1,5 @@
-// 
+//
 import { lg, md, sm, xl, xs } from 'src/theme/variables'
-
 
 export const getSize = (size) => {
   switch (size) {

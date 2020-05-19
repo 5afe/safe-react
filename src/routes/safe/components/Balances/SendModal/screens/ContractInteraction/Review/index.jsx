@@ -1,4 +1,4 @@
-// 
+//
 import { makeStyles } from '@material-ui/core/styles'
 import { withSnackbar } from 'notistack'
 import React, { useEffect, useState } from 'react'
@@ -23,7 +23,6 @@ import Header from 'src/routes/safe/components/Balances/SendModal/screens/Contra
 import { setImageToPlaceholder } from 'src/routes/safe/components/Balances/utils'
 import createTransaction from 'src/routes/safe/store/actions/createTransaction'
 import { safeSelector } from 'src/routes/safe/store/selectors'
-
 
 const useStyles = makeStyles(styles)
 
@@ -54,7 +53,7 @@ const ContractInteractionReview = ({ closeSnackbar, enqueueSnackbar, onClose, on
     return () => {
       isCurrent = false
     }
-  }, [])
+  }, [safeAddress, tx.contractAddress, tx.data])
 
   const submitTx = async () => {
     const web3 = getWeb3()

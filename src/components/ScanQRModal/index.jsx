@@ -1,4 +1,4 @@
-// 
+//
 import CircularProgress from '@material-ui/core/CircularProgress'
 import IconButton from '@material-ui/core/IconButton'
 import { withStyles } from '@material-ui/core/styles'
@@ -19,13 +19,12 @@ import Row from 'src/components/layout/Row'
 
 const { useEffect, useState } = React
 
-
 const ScanQRModal = ({ classes, isOpen, onClose, onScan }) => {
   const [hasWebcam, setHasWebcam] = useState(null)
   const scannerRef = React.createRef()
-  const openImageDialog = () => {
+  const openImageDialog = useCallback(() => {
     scannerRef.current.openImageDialog()
-  }
+  })
 
   useEffect(() => {
     checkWebcam(
@@ -45,7 +44,7 @@ const ScanQRModal = ({ classes, isOpen, onClose, onScan }) => {
     if (hasWebcam === false) {
       openImageDialog()
     }
-  }, [hasWebcam])
+  }, [hasWebcam, openImageDialog])
 
   return (
     <Modal description="Receive Tokens Form" handleClose={onClose} open={isOpen} title="Receive Tokens">

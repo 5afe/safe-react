@@ -37,7 +37,7 @@
     "start": "react-scripts start",
     "test": "NODE_ENV=test && react-scripts test --env=jsdom"
   },
-  "skip-husky": {
+  "husky": {
     "hooks": {
       "pre-commit": "lint-staged --allow-empty"
     }

@@ -1,4 +1,4 @@
-// 
+//
 import IconButton from '@material-ui/core/IconButton'
 import { withStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
@@ -21,10 +21,13 @@ import { SENTINEL_ADDRESS, getGnosisSafeInstanceAt } from 'src/logic/contracts/s
 import { estimateTxGasCosts } from 'src/logic/safe/transactions/gasNew'
 import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
 import { getWeb3 } from 'src/logic/wallets/getWeb3'
-import { safeNameSelector, safeOwnersSelector, safeParamAddressFromStateSelector } from 'src/routes/safe/store/selectors'
+import {
+  safeNameSelector,
+  safeOwnersSelector,
+  safeParamAddressFromStateSelector,
+} from 'src/routes/safe/store/selectors'
 
 export const REMOVE_OWNER_REVIEW_BTN_TEST_ID = 'remove-owner-review-btn'
-
 
 const ReviewRemoveOwner = ({ classes, onClickBack, onClose, onSubmit, ownerAddress, ownerName, values }) => {
   const [gasCosts, setGasCosts] = useState('< 0.001')
@@ -56,7 +59,7 @@ const ReviewRemoveOwner = ({ classes, onClickBack, onClose, onSubmit, ownerAddre
     return () => {
       isCurrent = false
     }
-  }, [])
+  }, [ownerAddress, safeAddress, values.threshold])
 
   return (
     <>

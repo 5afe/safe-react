@@ -1,11 +1,11 @@
-// 
+//
 import CircularProgress from '@material-ui/core/CircularProgress'
 import { makeStyles } from '@material-ui/core/styles'
 import cn from 'classnames'
 import React, { Suspense, useEffect, useState } from 'react'
 
 import Modal from 'src/components/Modal'
-import { } from 'src/logic/tokens/store/model/token'
+import {} from 'src/logic/tokens/store/model/token'
 
 const ChooseTxType = React.lazy(() => import('./screens/ChooseTxType'))
 
@@ -20,9 +20,6 @@ const ReviewTx = React.lazy(() => import('./screens/ReviewTx'))
 const ContractInteraction = React.lazy(() => import('./screens/ContractInteraction'))
 
 const ContractInteractionReview = React.lazy(() => import('./screens/ContractInteraction/Review'))
-
-
-
 
 const useStyles = makeStyles({
   scalableModalWindow: {
@@ -49,7 +46,7 @@ const SendModal = ({ activeScreenType, isOpen, onClose, recipientAddress, select
   useEffect(() => {
     setActiveScreen(activeScreenType || 'chooseTxType')
     setTx({})
-  }, [isOpen])
+  }, [activeScreenType, isOpen])
 
   const scalableModalSize = activeScreen === 'chooseTxType'
 

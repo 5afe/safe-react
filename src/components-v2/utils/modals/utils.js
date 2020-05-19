@@ -1,4 +1,4 @@
-// 
+//
 import React from 'react'
 import styled from 'styled-components'
 
@@ -36,12 +36,7 @@ const FooterWrapper = styled.div`
   justify-content: space-around;
 `
 
-export const ModalFooterConfirmation = ({
-  cancelText,
-  handleCancel,
-  handleOk,
-  okText,
-}) => {
+export const ModalFooterConfirmation = ({ cancelText, handleCancel, handleOk, okText }) => {
   return (
     <FooterWrapper>
       <Button minWidth={130} onClick={handleCancel}>

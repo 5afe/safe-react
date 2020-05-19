@@ -1,15 +1,14 @@
-// 
+//
 import IconButton from '@material-ui/core/IconButton'
 import { withStyles } from '@material-ui/core/styles'
 import ExpandLess from '@material-ui/icons/ExpandLess'
 import ExpandMore from '@material-ui/icons/ExpandMore'
 import * as React from 'react'
 
-import { } from 'src/components/hoc/OpenHoc'
+import {} from 'src/components/hoc/OpenHoc'
 import Col from 'src/components/layout/Col'
 import Divider from 'src/components/layout/Divider'
 import { md, screenSm, sm } from 'src/theme/variables'
-
 
 const styles = () => ({
   root: {
@@ -38,7 +37,6 @@ const styles = () => ({
     width: '30px',
   },
 })
-
 
 class Provider extends React.Component {
   myRef

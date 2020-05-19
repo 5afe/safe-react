@@ -9,12 +9,11 @@ import React, { memo } from 'react'
 import { styles } from './style'
 
 import Img from 'src/components/layout/Img'
-import { } from 'src/logic/tokens/store/model/token'
+import {} from 'src/logic/tokens/store/model/token'
 import { ETH_ADDRESS } from 'src/logic/tokens/utils/tokenHelpers'
 import { setImageToPlaceholder } from 'src/routes/safe/components/Balances/utils'
 
 export const TOGGLE_TOKEN_TEST_ID = 'toggle-token-btn'
-
 
 // eslint-disable-next-line react/display-name
 const TokenRow = memo(({ classes, data, index, style }) => {

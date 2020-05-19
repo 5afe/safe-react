@@ -1,4 +1,4 @@
-// 
+//
 import InputAdornment from '@material-ui/core/InputAdornment'
 import { withStyles } from '@material-ui/core/styles'
 import CheckCircle from '@material-ui/icons/CheckCircle'
@@ -17,7 +17,6 @@ import { SAFE_MASTER_COPY_ADDRESS_V10, getSafeMasterContract, validateProxy } fr
 import { getWeb3 } from 'src/logic/wallets/getWeb3'
 import { FIELD_LOAD_ADDRESS, FIELD_LOAD_NAME } from 'src/routes/load/components/fields'
 import { secondary } from 'src/theme/variables'
-
 
 const styles = () => ({
   root: {

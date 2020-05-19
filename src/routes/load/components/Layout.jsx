@@ -1,4 +1,4 @@
-// 
+//
 import IconButton from '@material-ui/core/IconButton'
 import ChevronLeft from '@material-ui/icons/ChevronLeft'
 import * as React from 'react'
@@ -10,12 +10,11 @@ import Row from 'src/components/layout/Row'
 import DetailsForm, { safeFieldsValidation } from 'src/routes/load/components/DetailsForm'
 import OwnerList from 'src/routes/load/components/OwnerList'
 import ReviewInformation from 'src/routes/load/components/ReviewInformation'
-import { } from 'src/routes/load/container/selector'
+import {} from 'src/routes/load/container/selector'
 import { history } from 'src/store'
 import { secondary, sm } from 'src/theme/variables'
 
 const getSteps = () => ['Name and address', 'Owners', 'Review']
-
 
 const iconStyle = {
   color: secondary,

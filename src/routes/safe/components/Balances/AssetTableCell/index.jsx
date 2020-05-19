@@ -1,11 +1,10 @@
-// 
+//
 import * as React from 'react'
 
 import Block from 'src/components/layout/Block'
 import Img from 'src/components/layout/Img'
 import Paragraph from 'src/components/layout/Paragraph'
 import { setImageToPlaceholder } from 'src/routes/safe/components/Balances/utils'
-
 
 const AssetTableCell = (props) => {
   const { asset } = props

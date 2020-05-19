@@ -1,4 +1,4 @@
-// 
+//
 import React from 'react'
 
 import Col from 'src/components/layout/Col'

@@ -1,7 +1,7 @@
-// 
+//
 import { createAction } from 'redux-actions'
 
-import { } from 'src/logic/wallets/store/model/provider'
+import {} from 'src/logic/wallets/store/model/provider'
 
 export const ADD_PROVIDER = 'ADD_PROVIDER'
 

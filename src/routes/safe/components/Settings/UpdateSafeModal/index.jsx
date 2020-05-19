@@ -1,4 +1,4 @@
-// 
+//
 import IconButton from '@material-ui/core/IconButton'
 import Close from '@material-ui/icons/Close'
 import { withStyles } from '@material-ui/styles'
@@ -16,7 +16,6 @@ import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import { upgradeSafeToLatestVersion } from 'src/logic/safe/utils/upgradeSafe'
 import createTransaction from 'src/routes/safe/store/actions/createTransaction'
-
 
 const UpdateSafeModal = ({ classes, onClose, safeAddress }) => {
   const dispatch = useDispatch()

@@ -1,4 +1,4 @@
-// 
+//
 import {
   background,
   bolderFont,

@@ -42,7 +42,6 @@ import RemoveOwnerIconDisabled from 'src/routes/safe/components/Settings/assets/
 import { addressBookQueryParamsSelector, safesListSelector } from 'src/routes/safe/store/selectors'
 import { checksumAddress } from 'src/utils/checksumAddress'
 
-
 const AddressBookTable = ({ classes }) => {
   const columns = generateColumns()
   const autoColumns = columns.filter((c) => !c.custom)
@@ -59,7 +58,7 @@ const AddressBookTable = ({ classes }) => {
     if (entryAddressToEditOrCreateNew) {
       setEditCreateEntryModalOpen(true)
     }
-  }, [])
+  }, [entryAddressToEditOrCreateNew])
 
   useEffect(() => {
     if (entryAddressToEditOrCreateNew) {
@@ -80,7 +79,7 @@ const AddressBookTable = ({ classes }) => {
         })
       }
     }
-  }, [addressBook])
+  }, [addressBook, entryAddressToEditOrCreateNew])
 
   const newEntryModalHandler = (entry) => {
     setEditCreateEntryModalOpen(false)

@@ -1,4 +1,4 @@
-// 
+//
 import TableCell from '@material-ui/core/TableCell'
 import TableContainer from '@material-ui/core/TableContainer'
 import TableRow from '@material-ui/core/TableRow'
@@ -34,7 +34,6 @@ import { extendedSafeTokensSelector, grantedSelector } from 'src/routes/safe/con
 
 const useStyles = makeStyles(styles)
 
-
 const Coins = (props) => {
   const { showReceiveFunds, showSendFunds } = props
   const classes = useStyles()
@@ -49,7 +48,7 @@ const Coins = (props) => {
 
   React.useMemo(() => {
     setFilteredData(getBalanceData(activeTokens, selectedCurrency, currencyValues, currencyRate))
-  }, [selectedCurrency, currencyRate, activeTokens.hashCode(), currencyValues])
+  }, [activeTokens, selectedCurrency, currencyValues, currencyRate])
 
   return (
     <TableContainer>

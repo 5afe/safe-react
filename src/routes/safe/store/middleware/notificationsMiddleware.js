@@ -1,4 +1,4 @@
-// 
+//
 import { push } from 'connected-react-router'
 import { List, Map } from 'immutable'
 
@@ -16,7 +16,7 @@ import { ADD_SAFE } from 'src/routes/safe/store/actions/addSafe'
 import { ADD_TRANSACTIONS } from 'src/routes/safe/store/actions/addTransactions'
 import updateSafe from 'src/routes/safe/store/actions/updateSafe'
 import { safeParamAddressFromStateSelector, safesMapSelector } from 'src/routes/safe/store/selectors'
-import { } from 'src/store/'
+import {} from 'src/store/'
 import { loadFromStorage, saveToStorage } from 'src/utils/storage'
 
 const watchedActions = [ADD_TRANSACTIONS, ADD_INCOMING_TRANSACTIONS, ADD_SAFE]
@@ -37,7 +37,7 @@ const sendAwaitingTransactionNotification = async (
   }
 
   let lastTimeUserLoggedInForSafes = (await loadFromStorage(LAST_TIME_USED_LOGGED_IN_ID)) || []
-  let lastTimeUserLoggedIn =
+  const lastTimeUserLoggedIn =
     lastTimeUserLoggedInForSafes && lastTimeUserLoggedInForSafes[safeAddress]
       ? lastTimeUserLoggedInForSafes[safeAddress]
       : null

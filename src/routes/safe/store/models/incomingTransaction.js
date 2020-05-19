@@ -1,4 +1,4 @@
-// 
+//
 import { Record } from 'immutable'
 
 export const INCOMING_TX_TYPES = {
@@ -7,7 +7,6 @@ export const INCOMING_TX_TYPES = {
   ERC20_TRANSFER: 'ERC20_TRANSFER',
   ETHER_TRANSFER: 'ETHER_TRANSFER',
 }
-
 
 export const makeIncomingTransaction = Record({
   blockNumber: 0,
@@ -45,4 +44,3 @@ export const makeIncomingTransaction = Record({
   decodedParams: null,
   refundParams: null,
 })
-

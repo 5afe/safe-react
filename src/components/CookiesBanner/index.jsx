@@ -1,4 +1,3 @@
-// 
 import Checkbox from '@material-ui/core/Checkbox'
 import FormControlLabel from '@material-ui/core/FormControlLabel'
 import { makeStyles } from '@material-ui/core/styles'
@@ -95,6 +94,16 @@ const CookiesBanner = () => {
   const [localAnalytics, setLocalAnalytics] = useState(false)
   const showBanner = useSelector(cookieBannerOpen)
 
+  const acceptCookiesHandler = useCallback(async () => {
+    const newState = {
+      acceptedNecessary: true,
+      acceptedAnalytics: !isDesktop,
+    }
+    await saveCookie(COOKIES_KEY, newState, 365)
+    dispatch(openCookieBanner(false))
+    setShowAnalytics(!isDesktop)
+  })
+
   useEffect(() => {
     async function fetchCookiesFromStorage() {
       const cookiesState = await loadFromCookie(COOKIES_KEY)
@@ -110,21 +119,11 @@ const CookiesBanner = () => {
       }
     }
     fetchCookiesFromStorage()
-  }, [showBanner])
+  }, [dispatch, showBanner])
 
   useEffect(() => {
     if (isDesktop && showBanner) acceptCookiesHandler()
-  }, [isDesktop, showBanner])
-
-  const acceptCookiesHandler = async () => {
-    const newState = {
-      acceptedNecessary: true,
-      acceptedAnalytics: !isDesktop,
-    }
-    await saveCookie(COOKIES_KEY, newState, 365)
-    dispatch(openCookieBanner(false))
-    setShowAnalytics(!isDesktop)
-  }
+  }, [acceptCookiesHandler, showBanner])
 
   const closeCookiesBannerHandler = async () => {
     const newState = {

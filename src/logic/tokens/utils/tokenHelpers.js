@@ -1,4 +1,4 @@
-// 
+//
 import ERC20Detailed from '@openzeppelin/contracts/build/contracts/ERC20Detailed.json'
 import { List } from 'immutable'
 
@@ -68,11 +68,9 @@ export const hasDecimalsMethod = async (address) => {
   }
 }
 
-export const isTokenTransfer = (data, value) =>
-  !!data && data.substring(0, 10) === '0xa9059cbb' && value === 0
+export const isTokenTransfer = (data, value) => !!data && data.substring(0, 10) === '0xa9059cbb' && value === 0
 
-export const isMultisendTransaction = (data, value) =>
-  !!data && data.substring(0, 10) === '0x8d80ff0a' && value === 0
+export const isMultisendTransaction = (data, value) => !!data && data.substring(0, 10) === '0x8d80ff0a' && value === 0
 
 // 7de7edef - changeMasterCopy (308, 8)
 // f08a0323 - setFallbackHandler (550, 8)

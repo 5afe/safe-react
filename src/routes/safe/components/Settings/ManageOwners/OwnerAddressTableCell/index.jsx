@@ -1,11 +1,10 @@
-// 
+//
 import * as React from 'react'
 
 import EtherScanLink from 'src/components/EtherscanLink'
 import Identicon from 'src/components/Identicon'
 import Block from 'src/components/layout/Block'
 import Paragraph from 'src/components/layout/Paragraph'
-
 
 const OwnerAddressTableCell = (props) => {
   const { address, knownAddress, showLinks, userName } = props

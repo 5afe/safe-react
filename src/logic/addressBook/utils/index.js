@@ -1,4 +1,4 @@
-// 
+//
 import { loadFromStorage, saveToStorage } from 'src/utils/storage'
 
 const ADDRESS_BOOK_STORAGE_KEY = 'ADDRESS_BOOK_STORAGE_KEY'
@@ -17,8 +17,7 @@ export const saveAddressBook = async (addressBook) => {
   }
 }
 
-export const getAddressesListFromAdbk = (addressBook) =>
-  Array.from(addressBook).map((entry) => entry.address)
+export const getAddressesListFromAdbk = (addressBook) => Array.from(addressBook).map((entry) => entry.address)
 
 export const getNameFromAdbk = (addressBook, userAddress) => {
   const entry = addressBook.find((addressBookItem) => addressBookItem.address === userAddress)

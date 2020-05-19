@@ -3,9 +3,7 @@ import { setCurrencyRate } from 'src/logic/currencyValues/store/actions/setCurre
 import { AVAILABLE_CURRENCIES } from 'src/logic/currencyValues/store/model/currencyValues'
 
 // eslint-disable-next-line max-len
-const fetchCurrencyRate = (safeAddress, selectedCurrency) => async (
-  dispatch,
-) => {
+const fetchCurrencyRate = (safeAddress, selectedCurrency) => async (dispatch) => {
   if (AVAILABLE_CURRENCIES.USD === selectedCurrency) {
     return dispatch(setCurrencyRate(safeAddress, 1))
   }

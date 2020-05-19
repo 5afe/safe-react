@@ -1,4 +1,4 @@
-// 
+//
 
 export const isValid = (url, protocolsAllowed = ['https:', 'http:']) => {
   try {

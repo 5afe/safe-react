@@ -1,4 +1,4 @@
-// 
+//
 import { md, screenSm, secondary, xs } from 'src/theme/variables'
 
 export const styles = () => ({

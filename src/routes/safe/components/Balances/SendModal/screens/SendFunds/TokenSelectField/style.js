@@ -1,4 +1,4 @@
-// 
+//
 import { sm } from 'src/theme/variables'
 
 export const selectedTokenStyles = () => ({
