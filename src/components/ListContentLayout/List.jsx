@@ -34,23 +34,21 @@ type Props = {
   classes: Object,
 }
 
-const List = ({ activeItem, classes, items, onItemClick }: Props) => {
-  return (
-    <Wrapper>
-      {items.map((i) => (
-        <Item
-          className={cn(classes.menuOption, activeItem === i.id && classes.active)}
-          key={i.id}
-          onClick={() => onItemClick(i.id)}
-        >
-          <div className="container">
-            {i.iconUrl && <IconImg alt={i.name} src={i.iconUrl} />}
-            <span>{i.name}</span>
-          </div>
-        </Item>
-      ))}
-    </Wrapper>
-  )
-}
+const List = ({ activeItem, classes, items, onItemClick }: Props) => (
+  <Wrapper>
+    {items.map((i) => (
+      <Item
+        className={cn(classes.menuOption, activeItem === i.id && classes.active)}
+        key={i.id}
+        onClick={() => onItemClick(i.id)}
+      >
+        <div className="container">
+          {i.iconUrl && <IconImg alt={i.name} src={i.iconUrl} />}
+          <span>{i.name}</span>
+        </div>
+      </Item>
+    ))}
+  </Wrapper>
+)
 
 export default withStyles(styles)(List)

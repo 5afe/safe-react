@@ -38,9 +38,9 @@ const StyledBlock = styled(Block)`
   border-radius: 3px;
 `
 type Props = {
-  safeName: string,
+  safeName?: string,
   safeAddress: string,
-  ethBalance: string,
+  ethBalance?: string,
 }
 
 const AddressInfo = ({ ethBalance, safeAddress, safeName }: Props) => {
