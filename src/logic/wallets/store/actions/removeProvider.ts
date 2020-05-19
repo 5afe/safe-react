@@ -1,4 +1,3 @@
-//
 import { createAction } from 'redux-actions'
 
 import { onboard } from 'components/ConnectButton'

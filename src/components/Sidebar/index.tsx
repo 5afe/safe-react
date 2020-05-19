@@ -17,7 +17,7 @@ import Link from 'components/layout/Link'
 import Row from 'components/layout/Row'
 import { WELCOME_ADDRESS } from 'routes/routes'
 import setDefaultSafe from 'routes/safe/store/actions/setDefaultSafe'
-import {} from 'routes/safe/store/models/safe'
+
 import { defaultSafeSelector, safeParamAddressFromStateSelector } from 'routes/safe/store/selectors'
 
 const { useEffect, useMemo, useState } = React

@@ -21,7 +21,7 @@ import { formatAmount } from 'logic/tokens/utils/formatAmount'
 import { EMPTY_DATA } from 'logic/wallets/ethTransactions'
 import { getWeb3 } from 'logic/wallets/getWeb3'
 import createTransaction from 'routes/safe/store/actions/createTransaction'
-import {} from 'routes/safe/store/models/transaction'
+
 import { safeParamAddressFromStateSelector } from 'routes/safe/store/selectors'
 
 const RejectTxModal = ({ classes, closeSnackbar, enqueueSnackbar, isOpen, onClose, tx }) => {

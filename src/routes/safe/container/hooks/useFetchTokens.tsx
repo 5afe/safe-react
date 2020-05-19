@@ -9,7 +9,7 @@ import fetchSafeTokens from 'logic/tokens/store/actions/fetchSafeTokens'
 import { fetchTokens } from 'logic/tokens/store/actions/fetchTokens'
 import { COINS_LOCATION_REGEX, COLLECTIBLES_LOCATION_REGEX } from 'routes/safe/components/Balances'
 import { safeParamAddressFromStateSelector } from 'routes/safe/store/selectors'
-import { history } from 'store'
+import { history } from 'store/index'
 
 export const useFetchTokens = () => {
   const dispatch = useDispatch()

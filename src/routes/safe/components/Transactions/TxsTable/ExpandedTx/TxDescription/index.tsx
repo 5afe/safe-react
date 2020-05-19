@@ -15,7 +15,7 @@ import { SAFE_METHODS_NAMES } from 'logic/contracts/methodIds'
 import { shortVersionOf } from 'logic/wallets/ethAddresses'
 import OwnerAddressTableCell from 'routes/safe/components/Settings/ManageOwners/OwnerAddressTableCell'
 import { getTxAmount } from 'routes/safe/components/Transactions/TxsTable/columns'
-import {} from 'routes/safe/store/models/transaction'
+
 import { lg, md } from 'theme/variables'
 
 export const TRANSACTIONS_DESC_ADD_OWNER_TEST_ID = 'tx-description-add-owner'

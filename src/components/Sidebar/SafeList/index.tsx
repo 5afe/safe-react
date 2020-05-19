@@ -17,7 +17,7 @@ import Paragraph from 'components/layout/Paragraph'
 import { formatAmount } from 'logic/tokens/utils/formatAmount'
 import { sameAddress, shortVersionOf } from 'logic/wallets/ethAddresses'
 import { SAFELIST_ADDRESS } from 'routes/routes'
-import {} from 'routes/safe/store/models/safe'
+
 import { disabled, md, mediumFontSize, primary, sm } from 'theme/variables'
 
 export const SIDEBAR_SAFELIST_ROW_TESTID = 'SIDEBAR_SAFELIST_ROW_TESTID'

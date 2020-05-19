@@ -19,7 +19,7 @@ import Img from 'components/layout/Img'
 import Paragraph from 'components/layout/Paragraph'
 import Row from 'components/layout/Row'
 import { nftAssetsListSelector } from 'logic/collectibles/store/selectors'
-import {} from 'logic/tokens/store/model/token'
+
 import {
   addressIsAssetContract,
   doesntExistInAssetsList,

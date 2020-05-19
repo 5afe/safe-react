@@ -7,7 +7,6 @@ import classNames from 'classnames'
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
-import {} from './actions'
 import { styles } from './style'
 
 import Identicon from 'components/Identicon'
@@ -23,7 +22,7 @@ import { getEtherScanLink } from 'logic/wallets/getWeb3'
 import { SAFELIST_ADDRESS } from 'routes/routes'
 import removeSafe from 'routes/safe/store/actions/removeSafe'
 import { safeNameSelector, safeParamAddressFromStateSelector } from 'routes/safe/store/selectors'
-import { history } from 'store'
+import { history } from 'store/index'
 import { md, secondary } from 'theme/variables'
 
 const openIconStyle = {

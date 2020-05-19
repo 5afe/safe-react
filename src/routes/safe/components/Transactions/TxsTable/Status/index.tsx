@@ -11,7 +11,6 @@ import { styles } from './style'
 import Block from 'components/layout/Block'
 import Img from 'components/layout/Img'
 import Paragraph from 'components/layout/Paragraph/'
-import {} from 'routes/safe/store/models/transaction'
 
 const statusToIcon = {
   success: OkIcon,

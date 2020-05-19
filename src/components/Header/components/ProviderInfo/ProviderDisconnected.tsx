@@ -3,7 +3,6 @@ import { withStyles } from '@material-ui/core/styles'
 import * as React from 'react'
 
 import CircleDot from 'components/Header/components/CircleDot'
-import {} from 'components/hoc/OpenHoc'
 import Col from 'components/layout/Col'
 import Paragraph from 'components/layout/Paragraph'
 import { sm } from 'theme/variables'

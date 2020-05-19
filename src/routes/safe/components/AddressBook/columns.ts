@@ -1,8 +1,6 @@
 //
 import { List } from 'immutable'
 
-import {} from 'components/Table/TableHead'
-
 export const ADDRESS_BOOK_ROW_ID = 'address-book-row'
 export const TX_TABLE_ADDRESS_BOOK_ID = 'idAddressBook'
 export const AB_NAME_ID = 'name'

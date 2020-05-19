@@ -3,7 +3,6 @@
 import { makeAddressBookEntry } from 'logic/addressBook/model/addressBook'
 import { updateAddressBookEntry } from 'logic/addressBook/store/actions/updateAddressBookEntry'
 import { saveAddressBook } from 'logic/addressBook/utils'
-import {} from 'store/index'
 
 const saveAndUpdateAddressBook = (addressBook) => async (dispatch) => {
   try {

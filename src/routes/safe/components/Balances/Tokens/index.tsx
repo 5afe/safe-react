@@ -11,7 +11,7 @@ import { styles } from './style'
 import Hairline from 'components/layout/Hairline'
 import Paragraph from 'components/layout/Paragraph'
 import Row from 'components/layout/Row'
-import {} from 'logic/tokens/store/model/token'
+
 import { orderedTokenListSelector } from 'logic/tokens/store/selectors'
 import AddCustomAssetComponent from 'routes/safe/components/Balances/Tokens/screens/AddCustomAsset'
 import AddCustomToken from 'routes/safe/components/Balances/Tokens/screens/AddCustomToken'

@@ -22,7 +22,7 @@ import Row from 'components/layout/Row'
 import Span from 'components/layout/Span'
 import IncomingTxDescription from 'routes/safe/components/Transactions/TxsTable/ExpandedTx/IncomingTxDescription'
 import { INCOMING_TX_TYPES } from 'routes/safe/store/models/incomingTransaction'
-import {} from 'routes/safe/store/models/transaction'
+
 import { safeNonceSelector, safeThresholdSelector } from 'routes/safe/store/selectors'
 
 const useStyles = makeStyles(styles)

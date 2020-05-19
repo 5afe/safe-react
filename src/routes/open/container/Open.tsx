@@ -23,7 +23,7 @@ import {
 } from 'routes/open/utils/safeDataExtractor'
 import { SAFELIST_ADDRESS, WELCOME_ADDRESS } from 'routes/routes'
 import { buildSafe } from 'routes/safe/store/actions/fetchSafe'
-import { history } from 'store'
+import { history } from 'store/index'
 import { loadFromStorage, removeFromStorage, saveToStorage } from 'utils/storage'
 
 const SAFE_PENDING_CREATION_STORAGE_KEY = 'SAFE_PENDING_CREATION_STORAGE_KEY'

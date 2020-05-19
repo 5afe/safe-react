@@ -2,7 +2,6 @@
 import { List, Record } from 'immutable'
 
 import { ZERO_ADDRESS } from 'logic/wallets/ethAddresses'
-import {} from 'routes/safe/store/models/confirmation'
 
 export const OUTGOING_TX_TYPE = 'outgoing'
 

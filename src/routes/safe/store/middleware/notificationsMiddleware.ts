@@ -16,7 +16,7 @@ import { ADD_SAFE } from 'routes/safe/store/actions/addSafe'
 import { ADD_TRANSACTIONS } from 'routes/safe/store/actions/addTransactions'
 import updateSafe from 'routes/safe/store/actions/updateSafe'
 import { safeParamAddressFromStateSelector, safesMapSelector } from 'routes/safe/store/selectors'
-import {} from 'store/'
+
 import { loadFromStorage, saveToStorage } from 'utils/storage'
 
 const watchedActions = [ADD_TRANSACTIONS, ADD_INCOMING_TRANSACTIONS, ADD_SAFE]

@@ -11,14 +11,9 @@ import { initContracts } from 'logic/contracts/safeContracts'
 import Review from 'routes/open/components/ReviewInformation'
 import SafeNameField from 'routes/open/components/SafeNameForm'
 import SafeOwnersFields from 'routes/open/components/SafeOwnersConfirmationsForm'
-import {
-  FIELD_CONFIRMATIONS,
-  FIELD_SAFE_NAME,
-  getOwnerAddressBy,
-  getOwnerNameBy,
-} from 'routes/open/components/fields'
+import { FIELD_CONFIRMATIONS, FIELD_SAFE_NAME, getOwnerAddressBy, getOwnerNameBy } from 'routes/open/components/fields'
 import Welcome from 'routes/welcome/components/Layout'
-import { history } from 'store'
+import { history } from 'store/index'
 import { secondary, sm } from 'theme/variables'
 
 const { useEffect } = React

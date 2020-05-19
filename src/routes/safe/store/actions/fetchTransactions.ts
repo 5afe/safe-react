@@ -27,7 +27,6 @@ import { addCancellationTransactions } from 'routes/safe/store/actions/addCancel
 import { makeConfirmation } from 'routes/safe/store/models/confirmation'
 import { makeIncomingTransaction } from 'routes/safe/store/models/incomingTransaction'
 import { makeTransaction } from 'routes/safe/store/models/transaction'
-import {} from 'store'
 
 let web3
 

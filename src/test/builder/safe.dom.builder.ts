@@ -1,6 +1,6 @@
 // 
 import { } from 'redux'
-import { aNewStore, } from 'store'
+import { aNewStore, } from 'store/index'
 import { sleep } from 'utils/timer'
 import { getWeb3 } from 'logic/wallets/getWeb3'
 import { sendEtherTo } from 'test/utils/tokenMovements'

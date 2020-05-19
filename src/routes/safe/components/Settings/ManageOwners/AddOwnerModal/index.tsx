@@ -13,7 +13,7 @@ import { getGnosisSafeInstanceAt } from 'logic/contracts/safeContracts'
 import { TX_NOTIFICATION_TYPES } from 'logic/safe/transactions'
 import addSafeOwner from 'routes/safe/store/actions/addSafeOwner'
 import createTransaction from 'routes/safe/store/actions/createTransaction'
-import {} from 'routes/safe/store/models/owner'
+
 import { safeOwnersSelector, safeParamAddressFromStateSelector } from 'routes/safe/store/selectors'
 import { checksumAddress } from 'utils/checksumAddress'
 

@@ -11,7 +11,7 @@ import { fetchTokenList } from 'logic/tokens/api'
 import { makeToken } from 'logic/tokens/store/model/token'
 import { tokensSelector } from 'logic/tokens/store/selectors'
 import { getWeb3 } from 'logic/wallets/getWeb3'
-import { store } from 'store'
+import { store } from 'store/index'
 import { ensureOnce } from 'utils/singleton'
 
 const createStandardTokenContract = async () => {

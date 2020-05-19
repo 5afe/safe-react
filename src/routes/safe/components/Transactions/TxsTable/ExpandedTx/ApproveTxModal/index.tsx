@@ -23,7 +23,7 @@ import { formatAmount } from 'logic/tokens/utils/formatAmount'
 import { getWeb3 } from 'logic/wallets/getWeb3'
 import { userAccountSelector } from 'logic/wallets/store/selectors'
 import processTransaction from 'routes/safe/store/actions/processTransaction'
-import {} from 'routes/safe/store/models/transaction'
+
 import { safeParamAddressFromStateSelector, safeThresholdSelector } from 'routes/safe/store/selectors'
 
 export const APPROVE_TX_MODAL_SUBMIT_BTN_TEST_ID = 'approve-tx-modal-submit-btn'

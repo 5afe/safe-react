@@ -10,7 +10,7 @@ import Loader from '../Loader'
 import PageFrame from '../layout/PageFrame'
 
 import AppRoutes from 'routes'
-import { history, store } from 'store'
+import { history, store } from 'store/index'
 import theme from 'theme/mui'
 import { wrapInSuspense } from 'utils/wrapInSuspense'
 

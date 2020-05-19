@@ -10,8 +10,8 @@ import Row from 'components/layout/Row'
 import DetailsForm, { safeFieldsValidation } from 'routes/load/components/DetailsForm'
 import OwnerList from 'routes/load/components/OwnerList'
 import ReviewInformation from 'routes/load/components/ReviewInformation'
-import {} from 'routes/load/container/selector'
-import { history } from 'store'
+
+import { history } from 'store/index'
 import { secondary, sm } from 'theme/variables'
 
 const getSteps = () => ['Name and address', 'Owners', 'Review']

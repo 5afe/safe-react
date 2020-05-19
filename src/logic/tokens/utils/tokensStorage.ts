@@ -1,7 +1,6 @@
 //
 import { List } from 'immutable'
 
-import {} from 'logic/tokens/store/model/token'
 import { loadFromStorage, saveToStorage } from 'utils/storage'
 
 export const ACTIVE_TOKENS_KEY = 'ACTIVE_TOKENS'

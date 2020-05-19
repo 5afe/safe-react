@@ -12,7 +12,6 @@ import { makeToken } from 'logic/tokens/store/model/token'
 import { TOKEN_REDUCER_ID } from 'logic/tokens/store/reducer/tokens'
 import updateSafe from 'routes/safe/store/actions/updateSafe'
 import { SAFE_REDUCER_ID } from 'routes/safe/store/reducer/safe'
-import {} from 'store'
 
 const humanReadableBalance = (balance, decimals) => BigNumber(balance).times(`1e-${decimals}`).toFixed()
 const noFunc = () => {}

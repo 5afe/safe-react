@@ -3,9 +3,9 @@
 import { addSafe } from './addSafe'
 
 import { SAFES_KEY } from 'logic/safe/utils'
-import {} from 'routes/safe/store/models/safe'
+
 import { buildSafe } from 'routes/safe/store/reducer/safe'
-import {} from 'store/index'
+
 import { loadFromStorage } from 'utils/storage'
 
 const loadSafesFromStorage = () => async (dispatch) => {

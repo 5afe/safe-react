@@ -7,7 +7,6 @@ import {
   safeBlacklistedAssetsSelectorBySafe,
   safesMapSelector,
 } from 'routes/safe/store/selectors'
-import {} from 'store'
 
 const activateAssetsByBalance = (safeAddress) => async (dispatch, getState) => {
   try {

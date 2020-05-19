@@ -1,5 +1,5 @@
 import { simpleMemoize } from 'components/forms/validator'
-import {} from 'logic/tokens/store/model/token'
+
 import { isAddressAToken } from 'logic/tokens/utils/tokenHelpers'
 import { sameAddress } from 'logic/wallets/ethAddresses'
 // import { getStandardTokenContract } from 'logic/tokens/store/actions/fetchTokens'

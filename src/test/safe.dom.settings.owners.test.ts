@@ -1,6 +1,6 @@
 // 
 import { fireEvent, waitForElement } from '@testing-library/react'
-import { aNewStore } from 'store'
+import { aNewStore } from 'store/index'
 import { aMinedSafe } from 'test/builder/safe.redux.builder'
 import { renderSafeView } from 'test/builder/safe.dom.utils'
 import { sleep } from 'utils/timer'

@@ -15,7 +15,7 @@ import { getWeb3 } from 'logic/wallets/getWeb3'
 import { getNamesFrom, getOwnersFrom } from 'routes/open/utils/safeDataExtractor'
 import { SAFELIST_ADDRESS } from 'routes/routes'
 import { buildSafe } from 'routes/safe/store/actions/fetchSafe'
-import { history } from 'store'
+import { history } from 'store/index'
 import { loadFromStorage } from 'utils/storage'
 
 export const loadSafe = async (safeName, safeAddress, owners, addSafe) => {

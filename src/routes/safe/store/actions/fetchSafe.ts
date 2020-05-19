@@ -12,7 +12,7 @@ import addSafeOwner from 'routes/safe/store/actions/addSafeOwner'
 import removeSafeOwner from 'routes/safe/store/actions/removeSafeOwner'
 import updateSafe from 'routes/safe/store/actions/updateSafe'
 import { makeOwner } from 'routes/safe/store/models/owner'
-import {} from 'store'
+
 import { checksumAddress } from 'utils/checksumAddress'
 
 const buildOwnersFrom = (

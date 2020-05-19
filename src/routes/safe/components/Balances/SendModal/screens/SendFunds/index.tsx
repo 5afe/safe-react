@@ -28,7 +28,7 @@ import Paragraph from 'components/layout/Paragraph'
 import Row from 'components/layout/Row'
 import { getAddressBook } from 'logic/addressBook/store/selectors'
 import { getNameFromAdbk } from 'logic/addressBook/utils'
-import {} from 'logic/tokens/store/model/token'
+
 import SafeInfo from 'routes/safe/components/Balances/SendModal/SafeInfo'
 import AddressBookInput from 'routes/safe/components/Balances/SendModal/screens/AddressBookInput'
 import TokenSelectField from 'routes/safe/components/Balances/SendModal/screens/SendFunds/TokenSelectField'

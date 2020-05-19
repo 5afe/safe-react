@@ -5,7 +5,6 @@ import { createSelector } from 'reselect'
 
 import { CURRENCY_VALUES_KEY } from 'logic/currencyValues/store/reducer/currencyValues'
 import { safeParamAddressFromStateSelector } from 'routes/safe/store/selectors'
-import {} from 'store'
 
 export const currencyValuesSelector = (state) => state[CURRENCY_VALUES_KEY]
 
