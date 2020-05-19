@@ -90,9 +90,8 @@ export const aMinedSafe = async (
     form[getOwnerNameBy(i)] = `Adol ${i + 1} Eth Account`
     form[getOwnerAddressBy(i)] = accounts[i]
   }
-
-  const addSafeFn = (...args) => store.dispatch(addSafe(...args))
-  const openSafeProps = await createSafe(form, accounts[0], addSafeFn)
+  
+  const openSafeProps = await createSafe(form, accounts[0])
 
   return openSafeProps.safeAddress
 }

@@ -12,7 +12,7 @@ import { fillAndSubmitSendFundsForm } from './utils/transactions'
 import { TRANSACTIONS_TAB_BTN_TEST_ID } from 'src/routes/safe/components/Layout/index'
 import { TRANSACTION_ROW_TEST_ID } from 'src/routes/safe/components/Transactions/TxsTable'
 import { useTestAccountAt, resetTestAccount } from './utils/accounts'
-import { CONFIRM_TX_BTN_TEST_ID } from 'src/routes/safe/components/Transactions/TxsTable/ExpandedTx/OwnersColumn/ButtonRow'
+//import { CONFIRM_TX_BTN_TEST_ID } from 'src/routes/safe/components/Transactions/TxsTable/ExpandedTx/OwnersColumn/ButtonRow'
 import { APPROVE_TX_MODAL_SUBMIT_BTN_TEST_ID } from 'src/routes/safe/components/Transactions/TxsTable/ExpandedTx/ApproveTxModal'
 
 afterEach(resetTestAccount)
@@ -57,8 +57,8 @@ describe('DOM > Feature > Sending Funds', () => {
 
     fireEvent.click(txRows[0])
 
-    const confirmBtn = await waitForElement(() => SafeDom.getByTestId(CONFIRM_TX_BTN_TEST_ID))
-    fireEvent.click(confirmBtn)
+    //const confirmBtn = await waitForElement(() => SafeDom.getByTestId(CONFIRM_TX_BTN_TEST_ID))
+    //fireEvent.click(confirmBtn)
 
     // Travel confirm modal
     const approveTxBtn = await waitForElement(() => SafeDom.getByTestId(APPROVE_TX_MODAL_SUBMIT_BTN_TEST_ID))

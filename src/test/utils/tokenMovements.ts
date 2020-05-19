@@ -1,4 +1,3 @@
-// 
 import contract from 'truffle-contract'
 import { getBalanceInEtherOf, getWeb3 } from 'src/logic/wallets/getWeb3'
 import { ensureOnce } from 'src/utils/singleton'
@@ -11,7 +10,7 @@ export const sendEtherTo = async (address, eth, fromAccountIndex = 0) => {
   const web3 = getWeb3()
   const accounts = await web3.eth.getAccounts()
   const { toBN, toWei } = web3.utils
-  const txData = { from: accounts[fromAccountIndex], to: address, value: toBN(toWei(eth, 'ether')) }
+  const txData = { from: accounts[fromAccountIndex], to: address, value: toBN(toWei(eth, 'ether')as any)  }
   return web3.eth.sendTransaction(txData)
 }
 
@@ -57,7 +56,7 @@ export const getFirstTokenContract = ensureOnce(createTokenOMGContract)
 export const getSecondTokenContract = ensureOnce(createTokenRDNContract)
 export const get6DecimalsTokenContract = ensureOnce(create6DecimalsTokenContract)
 
-export const sendTokenTo = async (safe, value, tokenContract) => {
+export const sendTokenTo = async (safe, value, tokenContract?: any) => {
   const web3 = getWeb3()
   const accounts = await web3.eth.getAccounts()
 

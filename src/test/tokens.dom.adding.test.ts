@@ -47,7 +47,7 @@ describe('DOM > Feature > Add custom ERC 20 Tokens', () => {
     // GIVEN
     const store = aNewStore()
     const safeAddress = await aMinedSafe(store)
-    await store.dispatch(fetchTokensModule.fetchTokens())
+    await store.dispatch(fetchTokensModule.fetchTokens() as any)
     const TokensDom = renderSafeView(store, safeAddress)
     await sleep(400)
 
@@ -63,8 +63,8 @@ describe('DOM > Feature > Add custom ERC 20 Tokens', () => {
     await sleep(500)
 
     // Check if it loaded symbol/decimals correctly
-    const symbolInput = TokensDom.getByTestId(ADD_CUSTOM_TOKEN_SYMBOLS_INPUT_TEST_ID)
-    const decimalsInput = TokensDom.getByTestId(ADD_CUSTOM_TOKEN_DECIMALS_INPUT_TEST_ID)
+    const symbolInput: any = TokensDom.getByTestId(ADD_CUSTOM_TOKEN_SYMBOLS_INPUT_TEST_ID)
+    const decimalsInput: any = TokensDom.getByTestId(ADD_CUSTOM_TOKEN_DECIMALS_INPUT_TEST_ID)
 
     const tokenSymbol = await erc20Token.symbol()
     const tokenDecimals = await erc20Token.decimals()

@@ -31,7 +31,7 @@ afterAll(() => {
 })
 
 const renderOpenSafeForm = async (localStore) => {
-  const provider = await getProviderInfo(window.web3.currentProvider)
+  const provider = await getProviderInfo((window as any).web3.currentProvider)
   const walletRecord = makeProvider(provider)
   localStore.dispatch(addProvider(walletRecord))
 

@@ -1,4 +1,3 @@
-// 
 import React from 'react'
 import Stepper from '@material-ui/core/Stepper'
 import TestUtils from 'react-dom/test-utils'
@@ -46,7 +45,7 @@ export const whenExecuted = (SafeDom, ParentComponent) => new Promise((resolve, 
     // $FlowFixMe
     const SafeComponent = TestUtils.findRenderedComponentWithType(SafeDom, ParentComponent)
       // $FlowFixMe
-      const StepperComponent = TestUtils.findRenderedComponentWithType(SafeComponent, GnoStepper)
+      const StepperComponent = TestUtils.findRenderedComponentWithType(SafeComponent, GnoStepper as any)
 
       if (StepperComponent.props.finishedTransaction === true) {
         clearInterval(interval)
@@ -72,7 +71,7 @@ export const whenOnNext = (
     // $FlowFixMe
     const SafeComponent = TestUtils.findRenderedComponentWithType(SafeDom, ParentComponent)
       // $FlowFixMe
-      const StepperComponent = TestUtils.findRenderedComponentWithType(SafeComponent, Stepper)
+      const StepperComponent = TestUtils.findRenderedComponentWithType(SafeComponent, Stepper as any)
       if (StepperComponent.props.activeStep === position) {
         clearInterval(interval)
         resolve()

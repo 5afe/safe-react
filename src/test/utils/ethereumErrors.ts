@@ -14,7 +14,7 @@ const err = await getErrorMessage(address, 0, txData, accounts[2])
 */
 export const getErrorMessage = async (to, value, data, from) => {
   const web3 = getWeb3()
-  const returnData = await web3.eth.call({
+  const returnData: any = await web3.eth.call({
     to,
     from,
     value,

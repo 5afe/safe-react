@@ -19,7 +19,7 @@ export const addSafe = createAction(ADD_SAFE, (safe) => ({
   safe,
 }))
 
-const saveSafe = (safe) => (dispatch, getState) => {
+const saveSafe = (safe: any) => (dispatch, getState) => {
   const state = getState()
   const safeList = safesListSelector(state)
 

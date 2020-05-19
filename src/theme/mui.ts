@@ -419,7 +419,7 @@ const theme = createMuiTheme({
     },
   },
   palette,
-})
+} as any)
 
 export default theme
 

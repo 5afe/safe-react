@@ -1,10 +1,10 @@
 // 
 function useTestAccountAt(index = 0) {
-  window.testAccountIndex = index
+  (window as any).testAccountIndex = index
 }
 
 function resetTestAccount() {
-  delete window.testAccountIndex
+  delete (window as any).testAccountIndex
 }
 
 export { useTestAccountAt, resetTestAccount }
