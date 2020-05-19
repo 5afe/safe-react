@@ -3,7 +3,7 @@ import { withStyles } from '@material-ui/core/styles'
 import cn from 'classnames'
 import React from 'react'
 
-import { styles } from './style.js'
+import { styles } from './style'
 
 import CopyBtn from 'components/CopyBtn'
 import EtherscanBtn from 'components/EtherscanBtn'

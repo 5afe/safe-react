@@ -17,13 +17,9 @@ if (process.env.NODE_ENV !== 'production') {
   whyDidYouRender(React)
 }
 
-// $FlowFixMe
 store.dispatch(loadActiveTokens())
-// $FlowFixMe
 store.dispatch(loadSafesFromStorage())
-// $FlowFixMe
 store.dispatch(loadDefaultSafe())
-// $FlowFixMe
 store.dispatch(loadCurrentSessionFromStorage())
 
 const root = document.getElementById('root')
