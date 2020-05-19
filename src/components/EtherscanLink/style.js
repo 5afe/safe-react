@@ -1,5 +1,5 @@
 //
-import { secondaryText } from 'src/theme/variables'
+import { secondaryText } from 'theme/variables'
 
 export const styles = () => ({
   etherscanLink: {

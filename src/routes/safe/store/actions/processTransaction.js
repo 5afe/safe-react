@@ -1,19 +1,19 @@
 //
 import semverSatisfies from 'semver/functions/satisfies'
 
-import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
-import { getNotificationsFromTxType, showSnackbar } from 'src/logic/notifications'
-import { generateSignaturesFromTxConfirmations } from 'src/logic/safe/safeTxSigner'
-import { getApprovalTransaction, getExecutionTransaction, saveTxToHistory } from 'src/logic/safe/transactions'
-import { SAFE_VERSION_FOR_OFFCHAIN_SIGNATURES, tryOffchainSigning } from 'src/logic/safe/transactions/offchainSigner'
-import { getCurrentSafeVersion } from 'src/logic/safe/utils/safeVersion'
-import { providerSelector } from 'src/logic/wallets/store/selectors'
-import fetchSafe from 'src/routes/safe/store/actions/fetchSafe'
-import fetchTransactions from 'src/routes/safe/store/actions/fetchTransactions'
-import { getLastTx, getNewTxNonce, shouldExecuteTransaction } from 'src/routes/safe/store/actions/utils'
-import {} from 'src/routes/safe/store/models/transaction'
-import {} from 'src/store'
-import { getErrorMessage } from 'src/test/utils/ethereumErrors'
+import { getGnosisSafeInstanceAt } from 'logic/contracts/safeContracts'
+import { getNotificationsFromTxType, showSnackbar } from 'logic/notifications'
+import { generateSignaturesFromTxConfirmations } from 'logic/safe/safeTxSigner'
+import { getApprovalTransaction, getExecutionTransaction, saveTxToHistory } from 'logic/safe/transactions'
+import { SAFE_VERSION_FOR_OFFCHAIN_SIGNATURES, tryOffchainSigning } from 'logic/safe/transactions/offchainSigner'
+import { getCurrentSafeVersion } from 'logic/safe/utils/safeVersion'
+import { providerSelector } from 'logic/wallets/store/selectors'
+import fetchSafe from 'routes/safe/store/actions/fetchSafe'
+import fetchTransactions from 'routes/safe/store/actions/fetchTransactions'
+import { getLastTx, getNewTxNonce, shouldExecuteTransaction } from 'routes/safe/store/actions/utils'
+import {} from 'routes/safe/store/models/transaction'
+import {} from 'store'
+import { getErrorMessage } from 'test/utils/ethereumErrors'
 
 const processTransaction = ({
   approveAndExecute,

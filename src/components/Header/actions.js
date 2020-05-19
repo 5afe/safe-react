@@ -1,5 +1,5 @@
 //
-import { fetchProvider, removeProvider } from 'src/logic/wallets/store/actions'
+import { fetchProvider, removeProvider } from 'logic/wallets/store/actions'
 
 export default {
   fetchProvider,

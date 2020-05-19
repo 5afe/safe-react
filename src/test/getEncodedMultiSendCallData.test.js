@@ -5,8 +5,8 @@ import {
   DEFAULT_FALLBACK_HANDLER_ADDRESS,
   getEncodedMultiSendCallData,
   SAFE_MASTER_COPY_ADDRESS,
-} from 'src/logic/contracts/safeContracts'
-import { ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
+} from 'logic/contracts/safeContracts'
+import { ZERO_ADDRESS } from 'logic/wallets/ethAddresses'
 
 
 describe('Upgrade a Safe', () => {

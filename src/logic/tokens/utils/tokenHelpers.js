@@ -2,10 +2,10 @@
 import ERC20Detailed from '@openzeppelin/contracts/build/contracts/ERC20Detailed.json'
 import { List } from 'immutable'
 
-import logo from 'src/assets/icons/icon_etherTokens.svg'
-import { getStandardTokenContract } from 'src/logic/tokens/store/actions/fetchTokens'
-import { makeToken } from 'src/logic/tokens/store/model/token'
-import { getWeb3 } from 'src/logic/wallets/getWeb3'
+import logo from 'assets/icons/icon_etherTokens.svg'
+import { getStandardTokenContract } from 'logic/tokens/store/actions/fetchTokens'
+import { makeToken } from 'logic/tokens/store/model/token'
+import { getWeb3 } from 'logic/wallets/getWeb3'
 
 export const ETH_ADDRESS = '0x000'
 export const SAFE_TRANSFER_FROM_WITHOUT_DATA_HASH = '0x42842e0e'

@@ -1,7 +1,7 @@
 //
 import { Record } from 'immutable'
 
-import {} from 'src/logic/safe/transactions/txHistory'
+import {} from 'logic/safe/transactions/txHistory'
 
 export const makeConfirmation = Record({
   owner: '',

@@ -1,7 +1,7 @@
 //
 import * as React from 'react'
 
-import { border } from 'src/theme/variables'
+import { border } from 'theme/variables'
 
 const style = {
   borderRight: `solid 2px ${border}`,

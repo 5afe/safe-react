@@ -5,7 +5,7 @@ import React from 'react'
 import OwnerComponent from './OwnerComponent'
 import { styles } from './style'
 
-import {} from 'src/routes/safe/store/models/owner'
+import {} from 'routes/safe/store/models/owner'
 
 const OwnersList = ({
   classes,

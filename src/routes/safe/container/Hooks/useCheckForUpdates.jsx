@@ -2,13 +2,13 @@
 import { useEffect } from 'react'
 import { batch, useDispatch, useSelector } from 'react-redux'
 
-import fetchCollectibles from 'src/logic/collectibles/store/actions/fetchCollectibles'
-import fetchSafeTokens from 'src/logic/tokens/store/actions/fetchSafeTokens'
-import fetchEtherBalance from 'src/routes/safe/store/actions/fetchEtherBalance'
-import { checkAndUpdateSafe } from 'src/routes/safe/store/actions/fetchSafe'
-import fetchTransactions from 'src/routes/safe/store/actions/fetchTransactions'
-import { safeParamAddressFromStateSelector } from 'src/routes/safe/store/selectors'
-import { TIMEOUT } from 'src/utils/constants'
+import fetchCollectibles from 'logic/collectibles/store/actions/fetchCollectibles'
+import fetchSafeTokens from 'logic/tokens/store/actions/fetchSafeTokens'
+import fetchEtherBalance from 'routes/safe/store/actions/fetchEtherBalance'
+import { checkAndUpdateSafe } from 'routes/safe/store/actions/fetchSafe'
+import fetchTransactions from 'routes/safe/store/actions/fetchTransactions'
+import { safeParamAddressFromStateSelector } from 'routes/safe/store/selectors'
+import { TIMEOUT } from 'utils/constants'
 
 export const useCheckForUpdates = () => {
   const dispatch = useDispatch()

@@ -1,5 +1,5 @@
 // 
-import { TX_SERVICE_HOST, SIGNATURES_VIA_METAMASK, RELAY_API_URL } from 'src/config/names'
+import { TX_SERVICE_HOST, SIGNATURES_VIA_METAMASK, RELAY_API_URL } from 'config/names'
 
 const prodConfig = {
   [TX_SERVICE_HOST]: 'https://safe-transaction.rinkeby.gnosis.io/api/v1/',

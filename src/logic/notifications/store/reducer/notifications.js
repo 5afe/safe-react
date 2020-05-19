@@ -6,7 +6,7 @@ import { CLOSE_SNACKBAR } from '../actions/closeSnackbar'
 import { ENQUEUE_SNACKBAR } from '../actions/enqueueSnackbar'
 import { REMOVE_SNACKBAR } from '../actions/removeSnackbar'
 
-import { makeNotification } from 'src/logic/notifications/store/models/notification'
+import { makeNotification } from 'logic/notifications/store/models/notification'
 
 export const NOTIFICATIONS_REDUCER_ID = 'notifications'
 

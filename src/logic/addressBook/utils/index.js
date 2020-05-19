@@ -1,5 +1,5 @@
 //
-import { loadFromStorage, saveToStorage } from 'src/utils/storage'
+import { loadFromStorage, saveToStorage } from 'utils/storage'
 
 const ADDRESS_BOOK_STORAGE_KEY = 'ADDRESS_BOOK_STORAGE_KEY'
 

@@ -1,7 +1,7 @@
 //
 import axios from 'axios'
 
-import { getTxServiceHost } from 'src/config'
+import { getTxServiceHost } from 'config'
 
 const fetchTokenCurrenciesBalances = (safeAddress) => {
   if (!safeAddress) {

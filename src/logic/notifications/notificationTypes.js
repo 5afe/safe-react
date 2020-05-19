@@ -1,6 +1,6 @@
 //
-import { getNetwork } from 'src/config'
-import { capitalize } from 'src/utils/css'
+import { getNetwork } from 'config'
+import { capitalize } from 'utils/css'
 
 export const SUCCESS = 'success'
 export const ERROR = 'error'

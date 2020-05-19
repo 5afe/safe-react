@@ -1,5 +1,5 @@
 //
-import { sm } from 'src/theme/variables'
+import { sm } from 'theme/variables'
 
 export const selectedTokenStyles = () => ({
   container: {

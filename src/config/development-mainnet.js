@@ -1,6 +1,6 @@
 // 
 import devConfig from './development'
-import { TX_SERVICE_HOST, RELAY_API_URL } from 'src/config/names'
+import { TX_SERVICE_HOST, RELAY_API_URL } from 'config/names'
 
 const devMainnetConfig = {
   ...devConfig,

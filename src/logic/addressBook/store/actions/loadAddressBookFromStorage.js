@@ -1,11 +1,11 @@
 //
 import { List, Map } from 'immutable'
 
-import { loadAddressBook } from 'src/logic/addressBook/store/actions/loadAddressBook'
-import { buildAddressBook } from 'src/logic/addressBook/store/reducer/addressBook'
-import { getAddressBookFromStorage } from 'src/logic/addressBook/utils'
-import { safesListSelector } from 'src/routes/safe/store/selectors'
-import {} from 'src/store/index'
+import { loadAddressBook } from 'logic/addressBook/store/actions/loadAddressBook'
+import { buildAddressBook } from 'logic/addressBook/store/reducer/addressBook'
+import { getAddressBookFromStorage } from 'logic/addressBook/utils'
+import { safesListSelector } from 'routes/safe/store/selectors'
+import {} from 'store/index'
 
 const loadAddressBookFromStorage = () => async (dispatch, getState) => {
   try {

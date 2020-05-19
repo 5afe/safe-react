@@ -1,5 +1,5 @@
 //
-import { loadFromStorage, saveToStorage } from 'src/utils/storage'
+import { loadFromStorage, saveToStorage } from 'utils/storage'
 
 export const SAFES_KEY = 'SAFES'
 export const TX_KEY = 'TX'

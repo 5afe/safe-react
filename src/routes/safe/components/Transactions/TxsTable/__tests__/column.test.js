@@ -1,7 +1,7 @@
 // 
 import { List } from 'immutable'
-import { makeTransaction } from 'src/routes/safe/store/models/transaction'
-import { getTxTableData, TX_TABLE_RAW_CANCEL_TX_ID } from 'src/routes/safe/components/Transactions/TxsTable/columns'
+import { makeTransaction } from 'routes/safe/store/models/transaction'
+import { getTxTableData, TX_TABLE_RAW_CANCEL_TX_ID } from 'routes/safe/components/Transactions/TxsTable/columns'
 
 describe('TxsTable Columns > getTxTableData', () => {
   it('should include CancelTx object inside TxTableData', () => {

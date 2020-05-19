@@ -1,8 +1,8 @@
 //
 import { List } from 'immutable'
 
-import {} from 'src/components/Table/TableHead'
-import {} from 'src/components/Table/sorting'
+import {} from 'components/Table/TableHead'
+import {} from 'components/Table/sorting'
 
 export const OWNERS_TABLE_NAME_ID = 'name'
 export const OWNERS_TABLE_ADDRESS_ID = 'address'

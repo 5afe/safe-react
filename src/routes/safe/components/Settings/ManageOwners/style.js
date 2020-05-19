@@ -1,5 +1,5 @@
 //
-import { lg, sm } from 'src/theme/variables'
+import { lg, sm } from 'theme/variables'
 
 export const styles = () => ({
   formContainer: {

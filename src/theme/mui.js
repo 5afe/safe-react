@@ -45,7 +45,7 @@ const palette = {
 }
 
 // see https://material-ui-next.com/customization/themes/
-// see https://github.com/mui-org/material-ui/blob/v1-beta/src/styles/createMuiTheme.js
+// see https://github.com/mui-org/material-ui/blob/v1-beta/styles/createMuiTheme.js
 const theme = createMuiTheme({
   typography: {
     fontFamily: mainFontFamily,

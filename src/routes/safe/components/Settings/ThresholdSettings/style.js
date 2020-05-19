@@ -1,5 +1,5 @@
 //
-import { border, fontColor, lg, secondaryText, smallFontSize, xl } from 'src/theme/variables'
+import { border, fontColor, lg, secondaryText, smallFontSize, xl } from 'theme/variables'
 
 export const styles = () => ({
   ownersText: {

@@ -8,26 +8,26 @@ import { batch } from 'react-redux'
 import { addIncomingTransactions } from './addIncomingTransactions'
 import { addTransactions } from './addTransactions'
 
-import generateBatchRequests from 'src/logic/contracts/generateBatchRequests'
-import { decodeParamsFromSafeMethod } from 'src/logic/contracts/methodIds'
-import { buildIncomingTxServiceUrl } from 'src/logic/safe/transactions/incomingTxHistory'
-import { buildTxServiceUrl } from 'src/logic/safe/transactions/txHistory'
-import { TOKEN_REDUCER_ID } from 'src/logic/tokens/store/reducer/tokens'
-import { ALTERNATIVE_TOKEN_ABI } from 'src/logic/tokens/utils/alternativeAbi'
+import generateBatchRequests from 'logic/contracts/generateBatchRequests'
+import { decodeParamsFromSafeMethod } from 'logic/contracts/methodIds'
+import { buildIncomingTxServiceUrl } from 'logic/safe/transactions/incomingTxHistory'
+import { buildTxServiceUrl } from 'logic/safe/transactions/txHistory'
+import { TOKEN_REDUCER_ID } from 'logic/tokens/store/reducer/tokens'
+import { ALTERNATIVE_TOKEN_ABI } from 'logic/tokens/utils/alternativeAbi'
 import {
   SAFE_TRANSFER_FROM_WITHOUT_DATA_HASH,
   isMultisendTransaction,
   isTokenTransfer,
   isUpgradeTransaction,
-} from 'src/logic/tokens/utils/tokenHelpers'
-import { ZERO_ADDRESS, sameAddress } from 'src/logic/wallets/ethAddresses'
-import { EMPTY_DATA } from 'src/logic/wallets/ethTransactions'
-import { getWeb3 } from 'src/logic/wallets/getWeb3'
-import { addCancellationTransactions } from 'src/routes/safe/store/actions/addCancellationTransactions'
-import { makeConfirmation } from 'src/routes/safe/store/models/confirmation'
-import { makeIncomingTransaction } from 'src/routes/safe/store/models/incomingTransaction'
-import { makeTransaction } from 'src/routes/safe/store/models/transaction'
-import {} from 'src/store'
+} from 'logic/tokens/utils/tokenHelpers'
+import { ZERO_ADDRESS, sameAddress } from 'logic/wallets/ethAddresses'
+import { EMPTY_DATA } from 'logic/wallets/ethTransactions'
+import { getWeb3 } from 'logic/wallets/getWeb3'
+import { addCancellationTransactions } from 'routes/safe/store/actions/addCancellationTransactions'
+import { makeConfirmation } from 'routes/safe/store/models/confirmation'
+import { makeIncomingTransaction } from 'routes/safe/store/models/incomingTransaction'
+import { makeTransaction } from 'routes/safe/store/models/transaction'
+import {} from 'store'
 
 let web3
 

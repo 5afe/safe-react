@@ -8,24 +8,20 @@ import { useSelector } from 'react-redux'
 
 import { styles } from './style'
 
-import CopyBtn from 'src/components/CopyBtn'
-import EtherscanBtn from 'src/components/EtherscanBtn'
-import Identicon from 'src/components/Identicon'
-import Block from 'src/components/layout/Block'
-import Button from 'src/components/layout/Button'
-import Col from 'src/components/layout/Col'
-import Hairline from 'src/components/layout/Hairline'
-import Paragraph from 'src/components/layout/Paragraph'
-import Row from 'src/components/layout/Row'
-import { SENTINEL_ADDRESS, getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
-import { estimateTxGasCosts } from 'src/logic/safe/transactions/gasNew'
-import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
-import { getWeb3 } from 'src/logic/wallets/getWeb3'
-import {
-  safeNameSelector,
-  safeOwnersSelector,
-  safeParamAddressFromStateSelector,
-} from 'src/routes/safe/store/selectors'
+import CopyBtn from 'components/CopyBtn'
+import EtherscanBtn from 'components/EtherscanBtn'
+import Identicon from 'components/Identicon'
+import Block from 'components/layout/Block'
+import Button from 'components/layout/Button'
+import Col from 'components/layout/Col'
+import Hairline from 'components/layout/Hairline'
+import Paragraph from 'components/layout/Paragraph'
+import Row from 'components/layout/Row'
+import { SENTINEL_ADDRESS, getGnosisSafeInstanceAt } from 'logic/contracts/safeContracts'
+import { estimateTxGasCosts } from 'logic/safe/transactions/gasNew'
+import { formatAmount } from 'logic/tokens/utils/formatAmount'
+import { getWeb3 } from 'logic/wallets/getWeb3'
+import { safeNameSelector, safeOwnersSelector, safeParamAddressFromStateSelector } from 'routes/safe/store/selectors'
 
 export const REMOVE_OWNER_REVIEW_BTN_TEST_ID = 'remove-owner-review-btn'
 

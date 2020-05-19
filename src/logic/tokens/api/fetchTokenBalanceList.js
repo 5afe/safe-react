@@ -1,7 +1,7 @@
 //
 import axios from 'axios'
 
-import { getTxServiceHost } from 'src/config/index'
+import { getTxServiceHost } from 'config/index'
 
 const fetchTokenBalanceList = (safeAddress) => {
   const apiUrl = getTxServiceHost()

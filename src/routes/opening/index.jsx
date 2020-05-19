@@ -5,14 +5,14 @@ import styled from 'styled-components'
 import { ErrorFooter } from './components/Footer'
 import { isConfirmationStep, steps } from './steps'
 
-import Button from '~/components/layout/Button'
-import Heading from '~/components/layout/Heading'
-import Img from '~/components/layout/Img'
-import Paragraph from '~/components/layout/Paragraph'
-import { initContracts } from '~/logic/contracts/safeContracts'
-import { EMPTY_DATA } from '~/logic/wallets/ethTransactions'
-import { getWeb3 } from '~/logic/wallets/getWeb3'
-import { background, connected } from '~/theme/variables'
+import Button from 'components/layout/Button'
+import Heading from 'components/layout/Heading'
+import Img from 'components/layout/Img'
+import Paragraph from 'components/layout/Paragraph'
+import { initContracts } from 'logic/contracts/safeContracts'
+import { EMPTY_DATA } from 'logic/wallets/ethTransactions'
+import { getWeb3 } from 'logic/wallets/getWeb3'
+import { background, connected } from 'theme/variables'
 
 const loaderDotsSvg = require('./assets/loader-dots.svg')
 const successSvg = require('./assets/success.svg')

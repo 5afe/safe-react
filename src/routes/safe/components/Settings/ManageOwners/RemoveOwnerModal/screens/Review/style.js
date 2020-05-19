@@ -1,5 +1,5 @@
 //
-import { background, border, lg, secondaryText, sm } from 'src/theme/variables'
+import { background, border, lg, secondaryText, sm } from 'theme/variables'
 
 export const styles = () => ({
   root: {

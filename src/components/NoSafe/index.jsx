@@ -1,11 +1,11 @@
 //
 import * as React from 'react'
 
-import Bold from 'src/components/layout/Bold'
-import Col from 'src/components/layout/Col'
-import Paragraph from 'src/components/layout/Paragraph/index'
-import Row from 'src/components/layout/Row'
-import { CreateSafe } from 'src/routes/welcome/components/Layout'
+import Bold from 'components/layout/Bold'
+import Col from 'components/layout/Col'
+import Paragraph from 'components/layout/Paragraph/index'
+import Row from 'components/layout/Row'
+import { CreateSafe } from 'routes/welcome/components/Layout'
 
 const NoSafe = ({ provider, text }) => (
   <Row>

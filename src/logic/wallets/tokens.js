@@ -1,4 +1,4 @@
-import { getWeb3 } from 'src/logic/wallets/getWeb3'
+import { getWeb3 } from 'logic/wallets/getWeb3'
 
 export const toNative = (amt, decimal) => {
   const web3 = getWeb3()

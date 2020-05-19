@@ -1,5 +1,5 @@
 //
-import { loadFromStorage, saveToStorage } from 'src/utils/storage'
+import { loadFromStorage, saveToStorage } from 'utils/storage'
 
 const CURRENT_SESSION_STORAGE_KEY = 'CURRENT_SESSION'
 

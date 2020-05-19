@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-import { getExchangeRatesUrl } from 'src/config'
+import { getExchangeRatesUrl } from 'config'
 import { AVAILABLE_CURRENCIES } from '../store/model/currencyValues'
 
 type Currency = keyof typeof AVAILABLE_CURRENCIES

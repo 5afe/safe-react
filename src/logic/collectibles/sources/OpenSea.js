@@ -1,9 +1,9 @@
 //
 import { RateLimit } from 'async-sema'
 
-import { ETHEREUM_NETWORK } from 'src/logic/wallets/getWeb3'
-import NFTIcon from 'src/routes/safe/components/Balances/assets/nft_icon.png'
-import { OPENSEA_API_KEY } from 'src/utils/constants'
+import { ETHEREUM_NETWORK } from 'logic/wallets/getWeb3'
+import NFTIcon from 'routes/safe/components/Balances/assets/nft_icon.png'
+import { OPENSEA_API_KEY } from 'utils/constants'
 
 class OpenSea {
   _rateLimit = async () => {}

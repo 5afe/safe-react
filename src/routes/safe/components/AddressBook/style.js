@@ -1,5 +1,5 @@
 //
-import { lg, marginButtonImg, md, sm } from 'src/theme/variables'
+import { lg, marginButtonImg, md, sm } from 'theme/variables'
 
 export const styles = () => ({
   formContainer: {

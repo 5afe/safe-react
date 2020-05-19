@@ -4,24 +4,24 @@ import React from 'react'
 
 import { styles } from './style'
 
-import GnoForm from 'src/components/forms/GnoForm'
-import Block from 'src/components/layout/Block'
-import Hairline from 'src/components/layout/Hairline'
-import SafeInfo from 'src/routes/safe/components/Balances/SendModal/SafeInfo'
-import Buttons from 'src/routes/safe/components/Balances/SendModal/screens/ContractInteraction/Buttons'
-import ContractABI from 'src/routes/safe/components/Balances/SendModal/screens/ContractInteraction/ContractABI'
-import EthAddressInput from 'src/routes/safe/components/Balances/SendModal/screens/ContractInteraction/EthAddressInput'
-import EthValue from 'src/routes/safe/components/Balances/SendModal/screens/ContractInteraction/EthValue'
-import FormDivisor from 'src/routes/safe/components/Balances/SendModal/screens/ContractInteraction/FormDivisor'
-import Header from 'src/routes/safe/components/Balances/SendModal/screens/ContractInteraction/Header'
-import MethodsDropdown from 'src/routes/safe/components/Balances/SendModal/screens/ContractInteraction/MethodsDropdown'
-import RenderInputParams from 'src/routes/safe/components/Balances/SendModal/screens/ContractInteraction/RenderInputParams'
-import RenderOutputParams from 'src/routes/safe/components/Balances/SendModal/screens/ContractInteraction/RenderOutputParams'
+import GnoForm from 'components/forms/GnoForm'
+import Block from 'components/layout/Block'
+import Hairline from 'components/layout/Hairline'
+import SafeInfo from 'routes/safe/components/Balances/SendModal/SafeInfo'
+import Buttons from 'routes/safe/components/Balances/SendModal/screens/ContractInteraction/Buttons'
+import ContractABI from 'routes/safe/components/Balances/SendModal/screens/ContractInteraction/ContractABI'
+import EthAddressInput from 'routes/safe/components/Balances/SendModal/screens/ContractInteraction/EthAddressInput'
+import EthValue from 'routes/safe/components/Balances/SendModal/screens/ContractInteraction/EthValue'
+import FormDivisor from 'routes/safe/components/Balances/SendModal/screens/ContractInteraction/FormDivisor'
+import Header from 'routes/safe/components/Balances/SendModal/screens/ContractInteraction/Header'
+import MethodsDropdown from 'routes/safe/components/Balances/SendModal/screens/ContractInteraction/MethodsDropdown'
+import RenderInputParams from 'routes/safe/components/Balances/SendModal/screens/ContractInteraction/RenderInputParams'
+import RenderOutputParams from 'routes/safe/components/Balances/SendModal/screens/ContractInteraction/RenderOutputParams'
 import {
   abiExtractor,
   createTxObject,
   formMutators,
-} from 'src/routes/safe/components/Balances/SendModal/screens/ContractInteraction/utils'
+} from 'routes/safe/components/Balances/SendModal/screens/ContractInteraction/utils'
 
 const useStyles = makeStyles(styles)
 

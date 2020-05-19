@@ -3,7 +3,7 @@ import MuiListItemText from '@material-ui/core/ListItemText'
 import { withStyles } from '@material-ui/core/styles'
 import * as React from 'react'
 
-import {} from 'src/theme/mui'
+import {} from 'theme/mui'
 
 const styles = {
   itemTextSecondary: {

@@ -1,8 +1,8 @@
 // 
 import contract from 'truffle-contract'
-import { getBalanceInEtherOf, getWeb3 } from 'src/logic/wallets/getWeb3'
-import { ensureOnce } from 'src/utils/singleton'
-import { toNative } from 'src/logic/wallets/tokens'
+import { getBalanceInEtherOf, getWeb3 } from 'logic/wallets/getWeb3'
+import { ensureOnce } from 'utils/singleton'
+import { toNative } from 'logic/wallets/tokens'
 import TokenOMG from '../../../build/contracts/TokenOMG'
 import TokenRDN from '../../../build/contracts/TokenRDN'
 import Token6Decimals from '../../../build/contracts/Token6Decimals.json'

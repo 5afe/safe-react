@@ -5,9 +5,9 @@ import cn from 'classnames'
 import * as React from 'react'
 import { useSelector } from 'react-redux'
 
-import Button from 'src/components/layout/Button'
-import { grantedSelector } from 'src/routes/safe/container/selector'
-import { fontColor, sm, xs } from 'src/theme/variables'
+import Button from 'components/layout/Button'
+import { grantedSelector } from 'routes/safe/container/selector'
+import { fontColor, sm, xs } from 'theme/variables'
 
 const useStyles = makeStyles({
   item: {

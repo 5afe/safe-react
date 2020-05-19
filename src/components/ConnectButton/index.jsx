@@ -2,13 +2,13 @@
 import Onboard from 'bnc-onboard'
 import React from 'react'
 
-import Button from 'src/components/layout/Button'
-import { getNetworkId } from 'src/config'
-import { getWeb3, setWeb3 } from 'src/logic/wallets/getWeb3'
-import { fetchProvider } from 'src/logic/wallets/store/actions'
-import transactionDataCheck from 'src/logic/wallets/transactionDataCheck'
-import { getSupportedWallets } from 'src/logic/wallets/utils/walletList'
-import { store } from 'src/store'
+import Button from 'components/layout/Button'
+import { getNetworkId } from 'config'
+import { getWeb3, setWeb3 } from 'logic/wallets/getWeb3'
+import { fetchProvider } from 'logic/wallets/store/actions'
+import transactionDataCheck from 'logic/wallets/transactionDataCheck'
+import { getSupportedWallets } from 'logic/wallets/utils/walletList'
+import { store } from 'store'
 
 const isMainnet = process.env.REACT_APP_NETWORK === 'mainnet'
 

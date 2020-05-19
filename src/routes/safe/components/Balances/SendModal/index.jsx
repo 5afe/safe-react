@@ -4,8 +4,8 @@ import { makeStyles } from '@material-ui/core/styles'
 import cn from 'classnames'
 import React, { Suspense, useEffect, useState } from 'react'
 
-import Modal from 'src/components/Modal'
-import {} from 'src/logic/tokens/store/model/token'
+import Modal from 'components/Modal'
+import {} from 'logic/tokens/store/model/token'
 
 const ChooseTxType = React.lazy(() => import('./screens/ChooseTxType'))
 

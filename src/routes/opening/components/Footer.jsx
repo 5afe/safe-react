@@ -2,9 +2,9 @@
 import React from 'react'
 import styled from 'styled-components'
 
-import Button from '~/components/layout/Button'
-import { getEtherScanLink } from '~/logic/wallets/getWeb3'
-import { connected } from '~/theme/variables'
+import Button from 'components/layout/Button'
+import { getEtherScanLink } from 'logic/wallets/getWeb3'
+import { connected } from 'theme/variables'
 
 const EtherScanLink = styled.a`
   color: ${connected};

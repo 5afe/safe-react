@@ -1,5 +1,5 @@
-import { sameAddress } from 'src/logic/wallets/ethAddresses'
-import { getWeb3 } from 'src/logic/wallets/getWeb3'
+import { sameAddress } from 'logic/wallets/ethAddresses'
+import { getWeb3 } from 'logic/wallets/getWeb3'
 
 export const simpleMemoize = (fn) => {
   let lastArg

@@ -1,5 +1,5 @@
 //
-import { ETHEREUM_NETWORK } from 'src/logic/wallets/getWeb3'
+import { ETHEREUM_NETWORK } from 'logic/wallets/getWeb3'
 
 export const NETWORK = process.env.REACT_APP_NETWORK || ETHEREUM_NETWORK.RINKEBY
 export const GOOGLE_ANALYTICS_ID_RINKEBY = process.env.REACT_APP_GOOGLE_ANALYTICS_ID_RINKEBY
