@@ -1,4 +1,3 @@
-//
 import { Record } from 'immutable'
 
 export const INCOMING_TX_TYPES = {

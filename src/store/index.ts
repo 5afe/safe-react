@@ -1,4 +1,3 @@
-//
 import { connectRouter, routerMiddleware } from 'connected-react-router'
 import { createHashHistory } from 'history'
 import { applyMiddleware, combineReducers, compose, createStore } from 'redux'

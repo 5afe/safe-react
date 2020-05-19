@@ -1,4 +1,3 @@
-//
 import ClickAwayListener from '@material-ui/core/ClickAwayListener'
 import Grow from '@material-ui/core/Grow'
 import List from '@material-ui/core/List'

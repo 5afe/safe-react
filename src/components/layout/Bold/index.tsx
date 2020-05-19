@@ -1,4 +1,3 @@
-//
 import * as React from 'react'
 
 class Bold extends React.PureComponent<any> {

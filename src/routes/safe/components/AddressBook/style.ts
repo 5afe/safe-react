@@ -1,4 +1,3 @@
-//
 import { lg, marginButtonImg, md, sm } from 'src/theme/variables'
 
 export const styles = () => ({

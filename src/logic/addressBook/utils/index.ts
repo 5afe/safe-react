@@ -1,4 +1,3 @@
-//
 import { loadFromStorage, saveToStorage } from 'src/utils/storage'
 
 const ADDRESS_BOOK_STORAGE_KEY = 'ADDRESS_BOOK_STORAGE_KEY'

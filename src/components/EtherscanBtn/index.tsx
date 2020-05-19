@@ -1,4 +1,3 @@
-//
 import Tooltip from '@material-ui/core/Tooltip'
 import { makeStyles } from '@material-ui/core/styles'
 import cn from 'classnames'

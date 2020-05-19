@@ -1,4 +1,3 @@
-//
 import { List } from 'immutable'
 import { withSnackbar } from 'notistack'
 import { Component } from 'react'

@@ -1,4 +1,3 @@
-//
 import { batch } from 'react-redux'
 
 import { getNetwork } from 'src/config'

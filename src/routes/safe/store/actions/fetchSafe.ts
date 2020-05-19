@@ -1,4 +1,3 @@
-//
 import GnosisSafeSol from '@gnosis.pm/safe-contracts/build/contracts/GnosisSafe.json'
 import { List } from 'immutable'
 
@@ -36,7 +35,7 @@ const buildOwnersFrom = (
     })
   })
 
-export const buildSafe = async (safeAdd, safeName, latestMasterContractVersion) => {
+export const buildSafe = async (safeAdd, safeName, latestMasterContractVersion?: any) => {
   const safeAddress = checksumAddress(safeAdd)
 
   const safeParams = ['getThreshold', 'nonce', 'VERSION', 'getOwners']
@@ -45,7 +44,7 @@ export const buildSafe = async (safeAdd, safeName, latestMasterContractVersion) 
       abi: GnosisSafeSol.abi,
       address: safeAddress,
       methods: safeParams,
-    }),
+    } as any),
     getLocalSafe(safeAddress),
     getBalanceInEtherOf(safeAddress),
   ])

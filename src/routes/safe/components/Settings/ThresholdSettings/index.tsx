@@ -1,4 +1,3 @@
-//
 import { withStyles } from '@material-ui/core/styles'
 import { withSnackbar } from 'notistack'
 import React, { useState } from 'react'

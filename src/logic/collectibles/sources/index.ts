@@ -1,4 +1,3 @@
-//
 import MockedOpenSea from 'src/logic/collectibles/sources/MockedOpenSea'
 import OpenSea from 'src/logic/collectibles/sources/OpenSea'
 import { COLLECTIBLES_SOURCE } from 'src/utils/constants'

@@ -1,4 +1,3 @@
-//
 import * as React from 'react'
 
 class Span extends React.PureComponent<any> {

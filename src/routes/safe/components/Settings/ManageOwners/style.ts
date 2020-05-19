@@ -1,4 +1,3 @@
-//
 import { lg, sm } from 'src/theme/variables'
 
 export const styles = () => ({

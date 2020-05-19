@@ -1,4 +1,3 @@
-//
 import IconButton from '@material-ui/core/IconButton'
 import Close from '@material-ui/icons/Close'
 import { withStyles } from '@material-ui/styles'

@@ -1,4 +1,3 @@
-//
 import { handleActions } from 'redux-actions'
 
 import { ADD_PROVIDER } from 'src/logic/wallets/store/actions/addProvider'

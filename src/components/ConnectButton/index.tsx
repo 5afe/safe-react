@@ -1,4 +1,3 @@
-//
 import Onboard from 'bnc-onboard'
 import React from 'react'
 

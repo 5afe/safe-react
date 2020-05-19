@@ -1,4 +1,3 @@
-//
 import { makeStyles } from '@material-ui/core/styles'
 
 const buttonWidth = '140px'

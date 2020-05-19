@@ -1,4 +1,3 @@
-//
 import StandardToken from '@gnosis.pm/util-contracts/build/contracts/GnosisStandardToken.json'
 import HumanFriendlyToken from '@gnosis.pm/util-contracts/build/contracts/HumanFriendlyToken.json'
 import ERC721 from '@openzeppelin/contracts/build/contracts/ERC721'

@@ -1,4 +1,3 @@
-//
 
 import { makeAddressBookEntry } from 'src/logic/addressBook/model/addressBook'
 import { updateAddressBookEntry } from 'src/logic/addressBook/store/actions/updateAddressBookEntry'

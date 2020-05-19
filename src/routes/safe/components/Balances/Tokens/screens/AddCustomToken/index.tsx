@@ -1,4 +1,3 @@
-//
 import { withStyles } from '@material-ui/core/styles'
 import React, { useState } from 'react'
 import { FormSpy } from 'react-final-form'

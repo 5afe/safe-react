@@ -1,4 +1,3 @@
-//
 
 import { getWeb3 } from 'src/logic/wallets/getWeb3'
 

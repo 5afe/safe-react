@@ -1,4 +1,3 @@
-//
 import { List } from 'immutable'
 
 import {} from 'src/logic/tokens/store/model/token'
@@ -47,6 +46,6 @@ export const removeFromActiveTokens = async (safeAddress, token) => {
   const index = activeTokens.findIndex((activeToken) => activeToken.name === token.name)
 
   if (index !== -1) {
-    await saveActiveTokens(safeAddress, activeTokens.delete(index))
+    await saveActiveTokens(safeAddress)
   }
 }

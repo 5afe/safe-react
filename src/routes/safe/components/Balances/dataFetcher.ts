@@ -28,7 +28,7 @@ const getTokenPriceInCurrency = (token, currencySelected, currencyValues, curren
   }
 
   const { balanceInBaseCurrency } = currencyValue
-  const balance = BigNumber(balanceInBaseCurrency).times(currencyRate).toFixed(2)
+  const balance = new BigNumber(balanceInBaseCurrency).times(currencyRate).toFixed(2)
 
   return `${balance} ${currencySelected}`
 }

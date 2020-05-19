@@ -1,4 +1,3 @@
-//
 import { List } from 'immutable'
 import { batch } from 'react-redux'
 

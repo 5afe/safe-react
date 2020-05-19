@@ -1,4 +1,3 @@
-//
 import { List } from 'immutable'
 
 import {} from 'src/components/Table/TableHead'

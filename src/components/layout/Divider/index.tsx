@@ -1,4 +1,3 @@
-//
 import * as React from 'react'
 
 import { border } from 'src/theme/variables'

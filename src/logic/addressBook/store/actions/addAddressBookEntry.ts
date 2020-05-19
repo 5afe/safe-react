@@ -1,4 +1,3 @@
-//
 import { createAction } from 'redux-actions'
 
 export const ADD_ENTRY = 'ADD_ENTRY'

@@ -1,4 +1,3 @@
-//
 import { screenSm, secondaryText, sm, smallFontSize, xs } from 'src/theme/variables'
 
 export const styles = () => ({

@@ -1,4 +1,3 @@
-//
 import * as LayoutComponents from './Layout'
 import List from './List'
 

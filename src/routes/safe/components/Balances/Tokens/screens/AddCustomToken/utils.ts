@@ -1,4 +1,3 @@
-//
 import { getHumanFriendlyToken } from 'src/logic/tokens/store/actions/fetchTokens'
 
 export const getSymbolAndDecimalsFromContract = async (tokenAddress) => {

@@ -1,4 +1,3 @@
-//
 import OpenInNew from '@material-ui/icons/OpenInNew'
 import * as React from 'react'
 

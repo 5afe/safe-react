@@ -1,4 +1,3 @@
-//
 import EtherscanService from 'src/logic/contractInteraction/sources/EtherscanService'
 
 const sources = {

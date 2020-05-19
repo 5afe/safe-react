@@ -1,4 +1,3 @@
-//
 import InputBase from '@material-ui/core/InputBase'
 import ListItemIcon from '@material-ui/core/ListItemIcon'
 import ListItemText from '@material-ui/core/ListItemText'

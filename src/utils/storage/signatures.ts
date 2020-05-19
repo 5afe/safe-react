@@ -1,4 +1,3 @@
-//
 import { Map } from 'immutable'
 
 import { loadFromStorage, saveToStorage } from 'src/utils/storage'
@@ -24,7 +23,7 @@ export const getSignaturesFrom = (safeAddress, nonce) => {
   const key = getSignaturesKeyFrom(safeAddress)
   const data = loadFromStorage(key)
 
-  const signatures = data ? Map(data) : Map()
+  const signatures = data ? Map(data as any) : Map()
   const txSigs = signatures.get(String(nonce)) || ''
 
   return `0x${txSigs}`

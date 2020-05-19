@@ -1,4 +1,3 @@
-//
 import { withStyles } from '@material-ui/core/styles'
 import CallMade from '@material-ui/icons/CallMade'
 import CallReceived from '@material-ui/icons/CallReceived'

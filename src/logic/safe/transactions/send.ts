@@ -1,4 +1,3 @@
-//
 import GnosisSafeSol from '@gnosis.pm/safe-contracts/build/contracts/GnosisSafe.json'
 
 import {} from 'src/logic/safe/transactions'

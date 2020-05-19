@@ -2,9 +2,9 @@ import TableCell from '@material-ui/core/TableCell'
 import TableContainer from '@material-ui/core/TableContainer'
 import TableRow from '@material-ui/core/TableRow'
 import { withStyles } from '@material-ui/core/styles'
-import CallMade from '@material-ui/icons/CallMade'
+// import CallMade from '@material-ui/icons/CallMade'
 import cn from 'classnames'
-import classNames from 'classnames/bind'
+// import classNames from 'classnames/bind'
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
@@ -145,7 +145,7 @@ const AddressBookTable = ({ classes }) => {
                     key={index}
                     tabIndex={-1}
                   >
-                    {autoColumns.map((column) => (
+                    {autoColumns.map((column: any) => (
                       <TableCell align={column.align} component="td" key={column.id} style={cellWidth(column.width)}>
                         {column.id === AB_ADDRESS_ID ? (
                           <OwnerAddressTableCell address={row[column.id]} showLinks />
@@ -192,10 +192,10 @@ const AddressBookTable = ({ classes }) => {
                           testId={SEND_ENTRY_BUTTON}
                           variant="contained"
                         >
-                          <CallMade
+                          {/* <CallMade
                             alt="Send Transaction"
                             className={classNames(classes.leftIcon, classes.iconSmall)}
-                          />
+                          /> */}
                           Send
                         </Button>
                       </Row>

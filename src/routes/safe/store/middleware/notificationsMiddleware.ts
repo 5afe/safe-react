@@ -1,4 +1,3 @@
-//
 import { push } from 'connected-react-router'
 import { List, Map } from 'immutable'
 

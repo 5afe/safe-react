@@ -1,4 +1,3 @@
-//
 import { List, Map, Record, Set } from 'immutable'
 
 const SafeRecord = Record({

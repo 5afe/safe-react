@@ -1,4 +1,3 @@
-//
 import CircularProgress from '@material-ui/core/CircularProgress'
 import { withStyles } from '@material-ui/core/styles'
 import * as React from 'react'

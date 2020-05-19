@@ -1,4 +1,3 @@
-//
 
 import { getCurrentMasterContractLastVersion } from 'src/logic/safe/utils/safeVersion'
 import setLatestMasterContractVersion from 'src/routes/safe/store/actions/setLatestMasterContractVersion'

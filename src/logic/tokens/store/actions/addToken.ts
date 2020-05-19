@@ -1,4 +1,3 @@
-//
 import { createAction } from 'redux-actions'
 
 import {} from 'src/logic/tokens/store/model/token'

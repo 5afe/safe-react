@@ -1,4 +1,3 @@
-//
 import { List } from 'immutable'
 
 import { makeOwner } from 'src/routes/safe/store/models/owner'

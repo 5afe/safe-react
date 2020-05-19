@@ -1,4 +1,3 @@
-//
 import { sm, xs } from 'src/theme/variables'
 
 export const styles = () => ({

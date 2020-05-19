@@ -1,4 +1,3 @@
-//
 import { DELEGATE_CALL } from 'src/logic/safe/transactions/send'
 import { getWeb3 } from 'src/logic/wallets/getWeb3'
 import createTransaction from 'src/routes/safe/store/actions/createTransaction'

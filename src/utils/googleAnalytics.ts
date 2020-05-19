@@ -1,4 +1,3 @@
-//
 import { useCallback, useEffect, useState } from 'react'
 import GoogleAnalytics from 'react-ga'
 

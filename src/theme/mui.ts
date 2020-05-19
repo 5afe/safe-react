@@ -1,4 +1,3 @@
-//
 import { createMuiTheme } from '@material-ui/core/styles'
 import { rgba } from 'polished'
 

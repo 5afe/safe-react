@@ -1,4 +1,3 @@
-//
 import Modal from '@material-ui/core/Modal'
 import { withStyles } from '@material-ui/core/styles'
 import cn from 'classnames'

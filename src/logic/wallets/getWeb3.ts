@@ -1,4 +1,3 @@
-//
 import ENS from 'ethereum-ens'
 import Web3 from 'web3'
 
@@ -66,7 +65,7 @@ export const getInfuraUrl = () => {
 export const web3ReadOnly =
   process.env.NODE_ENV !== 'test'
     ? new Web3(new Web3.providers.HttpProvider(getInfuraUrl()))
-    : new Web3(window.web3.currentProvider)
+    : new Web3((window as any).web3.currentProvider)
 
 let web3 = web3ReadOnly
 export const getWeb3 = () => web3
@@ -78,8 +77,8 @@ export const resetWeb3 = () => {
 export const getAccountFrom = async (web3Provider) => {
   const accounts = await web3Provider.eth.getAccounts()
 
-  if (process.env.NODE_ENV === 'test' && window.testAccountIndex) {
-    return accounts[window.testAccountIndex]
+  if (process.env.NODE_ENV === 'test' && (window as any).testAccountIndex) {
+    return accounts[(window as any).testAccountIndex]
   }
 
   return accounts && accounts.length > 0 ? accounts[0] : null

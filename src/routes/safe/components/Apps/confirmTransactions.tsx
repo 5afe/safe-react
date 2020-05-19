@@ -1,13 +1,4 @@
-import {
-  Collapse,
-  DividerLine,
-  Icon,
-  ModalFooterConfirmation,
-  ModalTitle,
-  Text,
-  TextBox,
-  Title,
-} from '@gnosis.pm/safe-react-components'
+import { Icon, ModalFooterConfirmation, Text, Title } from '@gnosis.pm/safe-react-components'
 import { BigNumber } from 'bignumber.js'
 import React from 'react'
 import styled from 'styled-components'
@@ -19,7 +10,7 @@ import Heading from 'src/components/layout/Heading'
 import Img from 'src/components/layout/Img'
 import { getEthAsToken } from 'src/logic/tokens/utils/tokenHelpers'
 
-const humanReadableBalance = (balance, decimals) => BigNumber(balance).times(`1e-${decimals}`).toFixed()
+const humanReadableBalance = (balance, decimals) => new BigNumber(balance).times(`1e-${decimals}`).toFixed()
 
 const Wrapper = styled.div`
   margin-bottom: 15px;

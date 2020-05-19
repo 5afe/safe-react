@@ -1,4 +1,3 @@
-//
 import { uniqueAddress } from 'src/components/forms/validator'
 
 export const getAddressValidator = (addresses, position) => {

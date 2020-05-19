@@ -1,4 +1,3 @@
-//
 import { List } from 'immutable'
 import { createAction } from 'redux-actions'
 

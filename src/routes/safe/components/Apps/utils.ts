@@ -1,4 +1,3 @@
-//
 import axios from 'axios'
 
 import appsIconSvg from 'src/routes/safe/components/Transactions/TxsTable/TxType/assets/appsIcon.svg'

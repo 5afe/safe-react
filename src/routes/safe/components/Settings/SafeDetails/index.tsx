@@ -1,4 +1,3 @@
-//
 import { makeStyles } from '@material-ui/core/styles'
 import { withSnackbar } from 'notistack'
 import React from 'react'

@@ -1,4 +1,3 @@
-//
 import { List } from 'immutable'
 
 export const FIXED = 'fixed'

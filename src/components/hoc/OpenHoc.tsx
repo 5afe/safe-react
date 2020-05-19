@@ -1,4 +1,3 @@
-//
 import { withStateHandlers } from 'recompose'
 
 export default withStateHandlers(() => ({ open: false }), {

@@ -1,4 +1,3 @@
-//
 import { boldFont, border, error, primary, secondary, secondaryText, sm } from 'src/theme/variables'
 
 export const styles = () => ({

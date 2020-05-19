@@ -1,4 +1,3 @@
-//
 import Paper from '@material-ui/core/Paper'
 import { withStyles } from '@material-ui/core/styles'
 import * as React from 'react'

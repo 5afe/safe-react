@@ -1,4 +1,3 @@
-//
 import Checkbox from '@material-ui/core/Checkbox'
 import React from 'react'
 

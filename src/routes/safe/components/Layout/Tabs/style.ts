@@ -1,4 +1,3 @@
-//
 import { secondary } from 'src/theme/variables'
 
 export const styles = () => ({

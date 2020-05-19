@@ -1,4 +1,3 @@
-//
 import { createAction } from 'redux-actions'
 
 export const SET_CURRENCY_BALANCES = 'SET_CURRENCY_BALANCES'

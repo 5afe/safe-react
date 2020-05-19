@@ -1,4 +1,3 @@
-//
 import React from 'react'
 
 import TextareaField from 'src/components/forms/TextareaField'

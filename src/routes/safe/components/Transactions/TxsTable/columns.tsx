@@ -1,4 +1,3 @@
-//
 import { BigNumber } from 'bignumber.js'
 import { format, getTime, parseISO } from 'date-fns'
 import { List, Map } from 'immutable'
@@ -26,7 +25,7 @@ export const formatDate = (date) => format(parseISO(date), 'MMM d, yyyy - HH:mm:
 const NOT_AVAILABLE = 'n/a'
 
 const getAmountWithSymbol = ({ decimals = 0, symbol = NOT_AVAILABLE, value }, formatted = false) => {
-  const nonFormattedValue = BigNumber(value).times(`1e-${decimals}`).toFixed()
+  const nonFormattedValue = new BigNumber(value).times(`1e-${decimals}`).toFixed()
   const finalValue = formatted ? formatAmount(nonFormattedValue).toString() : nonFormattedValue
   const txAmount = finalValue === 'NaN' ? NOT_AVAILABLE : finalValue
 

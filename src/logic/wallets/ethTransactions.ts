@@ -1,4 +1,3 @@
-//
 import axios from 'axios'
 import { BigNumber } from 'bignumber.js'
 
@@ -14,7 +13,7 @@ export const checkReceiptStatus = async (hash) => {
 
   const txReceipt = await web3ReadOnly.eth.getTransactionReceipt(hash)
 
-  const { status } = txReceipt
+  const { status }: any = txReceipt
   if (!status) {
     return Promise.reject(new Error('No status found on this transaction receipt'))
   }
@@ -43,8 +42,8 @@ export const calculateGasPrice = async () => {
   }
 
   const url = 'https://ethgasstation.info/json/ethgasAPI.json'
-  const errMsg = 'Error querying gas station'
-  const { data } = await axios.get(url, errMsg)
+  // const errMsg = 'Error querying gas station'
+  const { data } = await axios.get(url)
 
   return new BigNumber(data.average).multipliedBy(1e8).toString()
 }

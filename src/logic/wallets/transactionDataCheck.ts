@@ -1,4 +1,3 @@
-//
 function transactionDataCheck(): any {
   let completed = false
   return (stateAndHelpers) => {

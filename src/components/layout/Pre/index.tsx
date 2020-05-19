@@ -1,4 +1,3 @@
-//
 import classNames from 'classnames/bind'
 import * as React from 'react'
 

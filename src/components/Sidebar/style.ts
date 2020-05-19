@@ -1,4 +1,3 @@
-//
 import { makeStyles } from '@material-ui/core/styles'
 
 import { headerHeight, md, mediumFontSize, screenSm, secondaryText, xs } from 'src/theme/variables'

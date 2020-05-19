@@ -1,4 +1,3 @@
-//
 
 import { getEIP712Signer } from './EIP712Signer'
 import { ethSigner } from './ethSigner'

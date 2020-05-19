@@ -92,16 +92,16 @@ const BackButton = styled(Button)`
   margin: 20px auto 0;
 `
 
-type Props = {
-  provider: string
-  creationTxHash: Promise<any>
-  submittedPromise: Promise<any>
-  onRetry: () => void
-  onSuccess: () => void
-  onCancel: () => void
-}
+// type Props = {
+//   provider: string
+//   creationTxHash: Promise<any>
+//   submittedPromise: Promise<any>
+//   onRetry: () => void
+//   onSuccess: () => void
+//   onCancel: () => void
+// }
 
-const SafeDeployment = ({ creationTxHash, onCancel, onRetry, onSuccess, provider, submittedPromise }: Props) => {
+const SafeDeployment = ({ creationTxHash, onCancel, onRetry, onSuccess, provider, submittedPromise }: any) => {
   const [loading, setLoading] = useState(true)
   const [stepIndex, setStepIndex] = useState()
   const [safeCreationTxHash, setSafeCreationTxHash] = useState()
@@ -290,7 +290,7 @@ const SafeDeployment = ({ creationTxHash, onCancel, onRetry, onSuccess, provider
   }, [safeCreationTxHash, waitingSafeDeployed])
 
   if (loading || stepIndex === undefined) {
-    return <Loader />
+    return <Loader size="sm"/>
   }
 
   let FooterComponent = null

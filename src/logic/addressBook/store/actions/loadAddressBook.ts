@@ -1,4 +1,3 @@
-//
 import { createAction } from 'redux-actions'
 
 export const LOAD_ADDRESS_BOOK = 'LOAD_ADDRESS_BOOK'

@@ -1,4 +1,3 @@
-//
 import { push } from 'connected-react-router'
 import semverSatisfies from 'semver/functions/satisfies'
 

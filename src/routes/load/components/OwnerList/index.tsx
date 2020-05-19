@@ -1,4 +1,3 @@
-//
 import TableContainer from '@material-ui/core/TableContainer'
 import { withStyles } from '@material-ui/core/styles'
 import React, { useEffect, useState } from 'react'

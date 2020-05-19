@@ -1,4 +1,3 @@
-//
 
 import updateSafe from './updateSafe'
 

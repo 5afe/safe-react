@@ -1,4 +1,3 @@
-//
 import { Record } from 'immutable'
 
 export const makeToken = Record({

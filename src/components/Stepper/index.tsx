@@ -22,7 +22,7 @@ const transitionProps = {
   },
 }
 
-export const StepperPage = ({ children }) => children
+export const StepperPage = ({ children }: any) => children
 
 const GnoStepper = (props: any) => {
   const [page, setPage] = useState(0)

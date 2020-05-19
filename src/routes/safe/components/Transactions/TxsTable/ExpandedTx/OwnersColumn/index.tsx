@@ -1,4 +1,3 @@
-//
 import { withStyles } from '@material-ui/core/styles'
 import cn from 'classnames'
 import React from 'react'

@@ -1,4 +1,3 @@
-//
 import { createAction } from 'redux-actions'
 
 export const ADD_NFT_ASSETS = 'ADD_NFT_ASSETS'

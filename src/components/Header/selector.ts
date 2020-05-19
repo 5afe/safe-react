@@ -1,4 +1,3 @@
-//
 import { createStructuredSelector } from 'reselect'
 
 import {

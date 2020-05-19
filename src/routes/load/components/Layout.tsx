@@ -1,4 +1,3 @@
-//
 import IconButton from '@material-ui/core/IconButton'
 import ChevronLeft from '@material-ui/icons/ChevronLeft'
 import * as React from 'react'

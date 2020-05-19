@@ -1,4 +1,3 @@
-//
 import { Record } from 'immutable'
 
 import {} from 'src/logic/safe/transactions/txHistory'

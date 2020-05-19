@@ -12,7 +12,7 @@ const loadActiveTokens = () => async (dispatch) => {
     // The filter of strings was made because of the issue #751. Please see: https://github.com/gnosis/safe-react/pull/755#issuecomment-612969340
     const tokenRecordsList = List(
       Object.values(tokens)
-        .filter((t) => typeof t.decimals !== 'string')
+        .filter((t: any) => typeof t.decimals !== 'string')
         .map((token) => makeToken(token)),
     )
 

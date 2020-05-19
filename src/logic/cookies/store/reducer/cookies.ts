@@ -1,4 +1,3 @@
-//
 import { Map } from 'immutable'
 import { handleActions } from 'redux-actions'
 

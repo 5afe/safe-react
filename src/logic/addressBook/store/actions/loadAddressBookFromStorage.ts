@@ -1,4 +1,3 @@
-//
 import { List, Map } from 'immutable'
 
 import { loadAddressBook } from 'src/logic/addressBook/store/actions/loadAddressBook'

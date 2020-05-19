@@ -1,4 +1,3 @@
-//
 import { getIncomingTxServiceUriTo, getTxServiceHost } from 'src/config'
 import { checksumAddress } from 'src/utils/checksumAddress'
 

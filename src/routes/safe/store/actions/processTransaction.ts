@@ -1,4 +1,3 @@
-//
 import semverSatisfies from 'semver/functions/satisfies'
 
 import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'

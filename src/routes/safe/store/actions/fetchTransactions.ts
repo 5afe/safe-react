@@ -1,4 +1,3 @@
-//
 import ERC20Detailed from '@openzeppelin/contracts/build/contracts/ERC20Detailed.json'
 import axios from 'axios'
 import bn from 'bignumber.js'

@@ -1,4 +1,3 @@
-//
 import Drawer from '@material-ui/core/Drawer'
 import SearchIcon from '@material-ui/icons/Search'
 import SearchBar from 'material-ui-search-bar'

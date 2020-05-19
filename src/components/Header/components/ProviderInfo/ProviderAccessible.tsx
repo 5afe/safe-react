@@ -1,4 +1,3 @@
-//
 import { withStyles } from '@material-ui/core/styles'
 import Dot from '@material-ui/icons/FiberManualRecord'
 import * as React from 'react'

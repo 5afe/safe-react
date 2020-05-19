@@ -1,4 +1,3 @@
-//
 import CircularProgress from '@material-ui/core/CircularProgress'
 import MuiList from '@material-ui/core/List'
 import { makeStyles } from '@material-ui/core/styles'

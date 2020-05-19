@@ -1,4 +1,3 @@
-//
 import { getNetwork } from 'src/config'
 import { capitalize } from 'src/utils/css'
 

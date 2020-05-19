@@ -1,4 +1,3 @@
-//
 export const ensureOnce = (fn) => {
   let executed = false
   let response

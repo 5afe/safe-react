@@ -1,4 +1,3 @@
-//
 import { getIntercomId } from 'src/config'
 
 // eslint-disable-next-line consistent-return
@@ -17,7 +16,7 @@ export const loadIntercom = () => {
   x.parentNode.insertBefore(s, x)
 
   s.onload = () => {
-    window.Intercom('boot', {
+    (window as any).Intercom('boot', {
       app_id: APP_ID,
       consent: true,
     })

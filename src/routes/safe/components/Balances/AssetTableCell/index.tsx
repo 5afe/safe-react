@@ -1,4 +1,3 @@
-//
 import * as React from 'react'
 
 import Block from 'src/components/layout/Block'

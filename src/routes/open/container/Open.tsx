@@ -32,7 +32,7 @@ const validateQueryParams = (ownerAddresses, ownerNames, threshold, safeName) =>
   if (!ownerAddresses || !ownerNames || !threshold || !safeName) {
     return false
   }
-  if (!ownerAddresses.length === 0 || ownerNames.length === 0) {
+  if (!ownerAddresses.length || ownerNames.length === 0) {
     return false
   }
 
@@ -96,7 +96,7 @@ const Open = ({ addSafe, network, provider, userAccount }) => {
         ownerAddresses: owneraddresses,
         ownerNames: ownernames,
         threshold,
-      })
+      } as any)
     }
   }, [])
 
@@ -116,7 +116,7 @@ const Open = ({ addSafe, network, provider, userAccount }) => {
     load()
   }, [])
 
-  const createSafeProxy = async (formValues) => {
+  const createSafeProxy = async (formValues?: any) => {
     let values = formValues
 
     // save form values, used when the user rejects the TX and wants to retry
@@ -127,7 +127,7 @@ const Open = ({ addSafe, network, provider, userAccount }) => {
       values = await loadFromStorage(SAFE_PENDING_CREATION_STORAGE_KEY)
     }
 
-    const promiEvent = createSafe(values, userAccount, addSafe)
+    const promiEvent = createSafe(values, userAccount)
     setCreationTxPromise(promiEvent)
     setShowProgress(true)
   }
@@ -185,7 +185,7 @@ const Open = ({ addSafe, network, provider, userAccount }) => {
           creationTxHash={safeCreationPendingInfo ? safeCreationPendingInfo.txHash : undefined}
           onCancel={onCancel}
           onRetry={onRetry}
-          onSuccess={onSafeCreated}
+          onSuccess={onSafeCreated as any}
           provider={provider}
           submittedPromise={creationTxPromise}
         />

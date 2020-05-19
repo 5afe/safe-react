@@ -1,4 +1,3 @@
-//
 
 import setDefaultSafe from './setDefaultSafe'
 

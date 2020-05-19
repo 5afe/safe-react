@@ -1,4 +1,3 @@
-//
 import axios from 'axios'
 
 import { getRelayUrl } from 'src/config/index'

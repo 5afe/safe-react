@@ -1,4 +1,3 @@
-//
 // https://github.com/ethers-io/ethers.js/issues/527
 
 export const ALTERNATIVE_TOKEN_ABI = [

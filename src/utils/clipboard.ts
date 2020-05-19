@@ -1,4 +1,3 @@
-//
 
 export const copyToClipboard = (text) => {
   const range = document.createRange()

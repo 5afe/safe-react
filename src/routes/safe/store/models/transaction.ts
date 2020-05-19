@@ -1,4 +1,3 @@
-//
 import { List, Record } from 'immutable'
 
 import { ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'

@@ -1,4 +1,3 @@
-//
 import { getInfuraUrl } from '../getWeb3'
 
 const isMainnet = process.env.REACT_APP_NETWORK === 'mainnet'
@@ -31,7 +30,7 @@ const wallets = [
     desktop: true,
     preferred: true,
     rpcUrl: infuraUrl,
-    LedgerTransport: window.TransportNodeHid,
+    LedgerTransport: (window as any).TransportNodeHid,
   },
   { walletName: 'trust', preferred: true, desktop: false },
   { walletName: 'dapper', desktop: false },
@@ -54,7 +53,7 @@ const wallets = [
 ]
 
 export const getSupportedWallets = () => {
-  const { isDesktop } = window
+  const { isDesktop } = (window as any)
   /* eslint-disable no-unused-vars */
 
   if (isDesktop) return wallets.filter((wallet) => wallet.desktop).map(({ desktop, ...rest }) => rest)
