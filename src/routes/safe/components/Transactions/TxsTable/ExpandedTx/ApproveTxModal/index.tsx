@@ -61,7 +61,7 @@ const ApproveTxModal = ({
   onClose,
   thresholdReached,
   tx,
-}) => {
+}: any) => {
   const dispatch = useDispatch()
   const userAddress = useSelector(userAccountSelector)
   const threshold = useSelector(safeThresholdSelector)

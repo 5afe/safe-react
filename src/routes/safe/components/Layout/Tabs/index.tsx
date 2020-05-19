@@ -79,7 +79,7 @@ const TabsComponent = (props: Props) => {
       indicatorColor="secondary"
       onChange={handleCallToRouter}
       textColor="secondary"
-      value={tabsValue(match)}
+      value={tabsValue()}
       variant="scrollable"
     >
       <Tab

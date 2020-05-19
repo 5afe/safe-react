@@ -38,7 +38,7 @@ const OwnerComponent = ({
   showRejectBtn,
   thresholdReached,
   userAddress,
-}) => {
+}: any) => {
   const nameInAdbk = useSelector((state) => getNameFromAddressBook(state, owner))
   const [imgCircle, setImgCircle] = React.useState(ConfirmSmallGreyCircle)
 

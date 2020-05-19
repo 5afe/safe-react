@@ -21,7 +21,7 @@ const OwnersList = ({
   showRejectBtn,
   thresholdReached,
   userAddress,
-}) => (
+}: any) => (
   <>
     {ownersWhoConfirmed.map((owner) => (
       <OwnerComponent

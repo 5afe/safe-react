@@ -135,7 +135,7 @@ const SettingsDescription = ({ action, addedOwner, newThreshold, removedOwner })
   )
 }
 
-const CustomDescription = ({ amount = 0, classes, data, recipient }) => {
+const CustomDescription = ({ amount = 0, classes, data, recipient }: any) => {
   const [showTxData, setShowTxData] = useState(false)
   const recipientName = useSelector((state) => getNameFromAddressBook(state, recipient))
   return (
@@ -197,7 +197,7 @@ const TxDescription = ({ classes, tx }) => {
     recipient,
     removedOwner,
     upgradeTx,
-  } = getTxData(tx)
+  }: any = getTxData(tx)
   const amount = getTxAmount(tx, false)
   return (
     <Block className={classes.txDataContainer}>

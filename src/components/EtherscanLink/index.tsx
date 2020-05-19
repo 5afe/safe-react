@@ -11,7 +11,7 @@ import Span from 'src/components/layout/Span'
 import { shortVersionOf } from 'src/logic/wallets/ethAddresses'
 import EllipsisTransactionDetails from 'src/routes/safe/components/AddressBook/EllipsisTransactionDetails'
 
-const EtherscanLink = ({ classes, cut, knownAddress, type, value }) => (
+const EtherscanLink = ({ classes, cut, knownAddress, type, value }: any) => (
   <Block className={classes.etherscanLink}>
     <Span className={cn(knownAddress && classes.addressParagraph, classes.address)} size="md">
       {cut ? shortVersionOf(value, cut) : value}

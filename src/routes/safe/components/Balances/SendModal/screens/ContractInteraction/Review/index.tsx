@@ -23,17 +23,9 @@ import { setImageToPlaceholder } from 'src/routes/safe/components/Balances/utils
 import createTransaction from 'src/routes/safe/store/actions/createTransaction'
 import { safeSelector } from 'src/routes/safe/store/selectors'
 
-interface Props {
-  closeSnackbar: () => void
-  enqueueSnackbar: () => void
-  onClose: () => void
-  onPrev: () => void
-  tx: Record<string, any>
-}
-
 const useStyles = makeStyles(styles as any)
 
-const ContractInteractionReview = ({ closeSnackbar, enqueueSnackbar, onClose, onPrev, tx }: Props) => {
+const ContractInteractionReview = ({ closeSnackbar, enqueueSnackbar, onClose, onPrev, tx }: any) => {
   const classes = useStyles()
   const dispatch = useDispatch()
   const { address: safeAddress } = useSelector(safeSelector)
@@ -77,7 +69,7 @@ const ContractInteractionReview = ({ closeSnackbar, enqueueSnackbar, onClose, on
         notifiedTransaction: TX_NOTIFICATION_TYPES.STANDARD_TX,
         enqueueSnackbar,
         closeSnackbar,
-      }),
+      } as any),
     )
 
     onClose()
@@ -181,4 +173,4 @@ const ContractInteractionReview = ({ closeSnackbar, enqueueSnackbar, onClose, on
   )
 }
 
-export default withSnackbar(ContractInteractionReview)
+export default withSnackbar(ContractInteractionReview as any)

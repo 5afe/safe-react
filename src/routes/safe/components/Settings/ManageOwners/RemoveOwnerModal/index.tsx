@@ -58,7 +58,7 @@ export const sendRemoveOwner = async (
       notifiedTransaction: TX_NOTIFICATION_TYPES.SETTINGS_CHANGE_TX,
       enqueueSnackbar,
       closeSnackbar,
-    }),
+    } as any),
   )
 
   if (txHash && threshold === 1) {
@@ -68,7 +68,7 @@ export const sendRemoveOwner = async (
 
 const RemoveOwner = ({ classes, closeSnackbar, enqueueSnackbar, isOpen, onClose, ownerAddress, ownerName }) => {
   const [activeScreen, setActiveScreen] = useState('checkOwner')
-  const [values, setValues] = useState({})
+  const [values, setValues] = useState<any>({})
   const dispatch = useDispatch()
   const owners = useSelector(safeOwnersSelector)
   const safeAddress = useSelector(safeParamAddressFromStateSelector)

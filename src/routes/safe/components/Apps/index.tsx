@@ -106,16 +106,19 @@ function Apps({ closeModal, closeSnackbar, enqueueSnackbar, openModal }) {
     }
   }, [])
 
-  const onSelectApp = useCallback((appId) => {
-    const selectedApp = getSelectedApp()
+  const onSelectApp = useCallback(
+    (appId) => {
+      const selectedApp = getSelectedApp()
 
-    if (selectedApp && selectedApp.id === appId) {
-      return
-    }
+      if (selectedApp && selectedApp.id === appId) {
+        return
+      }
 
-    setAppIsLoading(true)
-    setSelectedApp(appId)
-  })
+      setAppIsLoading(true)
+      setSelectedApp(appId)
+    },
+    [getSelectedApp],
+  )
 
   const redirectToBalance = () => history.push(`${SAFELIST_ADDRESS}/${safeAddress}/balances`)
 

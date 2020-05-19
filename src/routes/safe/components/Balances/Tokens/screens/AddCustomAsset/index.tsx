@@ -59,7 +59,7 @@ const AddCustomAsset = (props) => {
         symbol,
         decimals,
         name: symbol,
-      })
+      } as any)
     }
   }
 

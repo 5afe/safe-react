@@ -35,7 +35,7 @@ export const ADD_OWNER_BTN_TEST_ID = 'add-owner-btn'
 export const REPLACE_OWNER_BTN_TEST_ID = 'replace-owner-btn'
 export const OWNERS_ROW_TEST_ID = 'owners-row'
 
-class ManageOwners extends React.Component<any> {
+class ManageOwners extends React.Component<any, any> {
   constructor(props) {
     super(props)
 
@@ -49,7 +49,7 @@ class ManageOwners extends React.Component<any> {
     }
   }
 
-  onShow = (action, row) => () => {
+  onShow = (action, row?: any) => () => {
     this.setState({
       [`show${action}`]: true,
       selectedOwnerAddress: row && row.address,
@@ -109,7 +109,7 @@ class ManageOwners extends React.Component<any> {
                     key={index}
                     tabIndex={-1}
                   >
-                    {autoColumns.map((column) => (
+                    {autoColumns.map((column: any) => (
                       <TableCell align={column.align} component="td" key={column.id} style={cellWidth(column.width)}>
                         {column.id === OWNERS_TABLE_ADDRESS_ID ? (
                           <OwnerAddressTableCell address={row[column.id]} showLinks />

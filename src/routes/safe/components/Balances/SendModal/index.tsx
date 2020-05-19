@@ -18,7 +18,7 @@ const ReviewTx = React.lazy(() => import('./screens/ReviewTx'))
 
 const ContractInteraction = React.lazy(() => import('./screens/ContractInteraction'))
 
-const ContractInteractionReview = React.lazy(() => import('./screens/ContractInteraction/Review'))
+const ContractInteractionReview: any = React.lazy(() => import('./screens/ContractInteraction/Review'))
 
 const useStyles = makeStyles({
   scalableModalWindow: {

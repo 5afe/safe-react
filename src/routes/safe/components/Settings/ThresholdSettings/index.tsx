@@ -48,7 +48,7 @@ const ThresholdSettings = ({ classes, closeSnackbar, enqueueSnackbar }) => {
         notifiedTransaction: TX_NOTIFICATION_TYPES.SETTINGS_CHANGE_TX,
         enqueueSnackbar,
         closeSnackbar,
-      }),
+      } as any),
     )
   }
 

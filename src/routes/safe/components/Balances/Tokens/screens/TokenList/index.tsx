@@ -89,7 +89,7 @@ class Tokens extends React.Component<any> {
   }
 
   onSwitch = (token) => () => {
-    this.setState((prevState) => {
+    this.setState((prevState: any) => {
       const activeTokensAddresses = prevState.activeTokensAddresses.has(token.address)
         ? prevState.activeTokensAddresses.remove(token.address)
         : prevState.activeTokensAddresses.add(token.address)

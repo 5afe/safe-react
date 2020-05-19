@@ -133,7 +133,7 @@ const SendCollectible = ({ initialValues, onClose, onNext, recipientAddress, sel
                       }
                     }}
                     role="listbox"
-                    tabIndex="0"
+                    tabIndex={0}
                   >
                     <Row margin="xs">
                       <Paragraph color="disabled" noMargin size="md" style={{ letterSpacing: '-0.5px' }}>
@@ -197,7 +197,7 @@ const SendCollectible = ({ initialValues, onClose, onNext, recipientAddress, sel
                 </Row>
                 <Row margin="sm">
                   <Col>
-                    <TokenSelectField assets={nftAssets} initialValue={selectedToken.assetAddress} />
+                    <TokenSelectField assets={nftAssets} initialValue={(selectedToken as any).assetAddress} />
                   </Col>
                 </Row>
                 <Row margin="xs">
@@ -209,7 +209,7 @@ const SendCollectible = ({ initialValues, onClose, onNext, recipientAddress, sel
                 </Row>
                 <Row margin="md">
                   <Col>
-                    <CollectibleSelectField initialValue={selectedToken.tokenId} tokens={selectedNFTTokens} />
+                    <CollectibleSelectField initialValue={(selectedToken as any).tokenId} tokens={selectedNFTTokens} />
                   </Col>
                 </Row>
               </Block>

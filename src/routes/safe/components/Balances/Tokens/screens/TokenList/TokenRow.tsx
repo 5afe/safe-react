@@ -16,7 +16,7 @@ import { setImageToPlaceholder } from 'src/routes/safe/components/Balances/utils
 export const TOGGLE_TOKEN_TEST_ID = 'toggle-token-btn'
 
 // eslint-disable-next-line react/display-name
-const TokenRow = memo(({ classes, data, index, style }) => {
+const TokenRow = memo(({ classes, data, index, style }: any) => {
   const { activeTokensAddresses, onSwitch, tokens } = data
   const token = tokens.get(index)
   const isActive = activeTokensAddresses.has(token.address)
@@ -32,7 +32,7 @@ const TokenRow = memo(({ classes, data, index, style }) => {
           <ListItemSecondaryAction>
             <Switch
               checked={isActive}
-              inputProps={{ 'data-testid': `${token.symbol}_${TOGGLE_TOKEN_TEST_ID}` }}
+              inputProps={{ 'data-testid': `${token.symbol}_${TOGGLE_TOKEN_TEST_ID}` } as any}
               onChange={onSwitch(token)}
             />
           </ListItemSecondaryAction>

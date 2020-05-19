@@ -65,7 +65,6 @@ const CurrencyDropdown = () => {
           keepMounted
           onClose={handleClose}
           open={Boolean(anchorEl)}
-          rounded={0}
           transformOrigin={{
             horizontal: 'center',
             vertical: 'top',

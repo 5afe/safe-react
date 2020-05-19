@@ -133,7 +133,7 @@ const SendFunds = ({ initialValues, onClose, onNext, recipientAddress, selectedT
                       }
                     }}
                     role="listbox"
-                    tabIndex="0"
+                    tabIndex={0}
                   >
                     <Row margin="xs">
                       <Paragraph color="disabled" noMargin size="md" style={{ letterSpacing: '-0.5px' }}>

@@ -48,7 +48,7 @@ const AddressBookInput = ({
   recipientAddress,
   setIsValidAddress,
   setSelectedEntry,
-}) => {
+}: any) => {
   const addressBook = useSelector(getAddressBookListSelector)
   const [isValidForm, setIsValidForm] = useState(true)
   const [validationText, setValidationText] = useState<any>(true)

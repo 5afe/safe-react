@@ -80,7 +80,7 @@ const AddCustomToken = (props) => {
         symbol,
         decimals,
         name: symbol,
-      })
+      } as any)
     }
   }
 

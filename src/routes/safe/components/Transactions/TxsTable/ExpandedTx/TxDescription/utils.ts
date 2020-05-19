@@ -16,7 +16,7 @@ export const getTxData = (tx) => {
   const web3 = getWeb3()
   const { fromWei, toBN } = web3.utils
 
-  const txData = {}
+  const txData: any = {}
 
   if (tx.isTokenTransfer && tx.decodedParams) {
     txData.recipient = tx.decodedParams.recipient

@@ -39,7 +39,7 @@ export const sendAddOwner = async (values, safeAddress, ownersOld, enqueueSnackb
       notifiedTransaction: TX_NOTIFICATION_TYPES.SETTINGS_CHANGE_TX,
       enqueueSnackbar,
       closeSnackbar,
-    }),
+    } as any),
   )
 
   if (txHash) {
@@ -49,7 +49,7 @@ export const sendAddOwner = async (values, safeAddress, ownersOld, enqueueSnackb
 
 const AddOwner = ({ classes, closeSnackbar, enqueueSnackbar, isOpen, onClose }) => {
   const [activeScreen, setActiveScreen] = useState('selectOwner')
-  const [values, setValues] = useState({})
+  const [values, setValues] = useState<any>({})
   const dispatch = useDispatch()
   const safeAddress = useSelector(safeParamAddressFromStateSelector)
   const owners = useSelector(safeOwnersSelector)

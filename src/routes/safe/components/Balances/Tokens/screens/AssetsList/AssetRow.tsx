@@ -15,7 +15,7 @@ import { setImageToPlaceholder } from 'src/routes/safe/components/Balances/utils
 export const TOGGLE_ASSET_TEST_ID = 'toggle-asset-btn'
 
 // eslint-disable-next-line react/display-name
-const AssetRow = memo(({ classes, data, index, style }) => {
+const AssetRow = memo(({ classes, data, index, style }: any) => {
   const { activeAssetsAddresses, assets, onSwitch } = data
   const asset = assets.get(index)
   const { address, image, name, symbol } = asset
@@ -32,7 +32,7 @@ const AssetRow = memo(({ classes, data, index, style }) => {
           <ListItemSecondaryAction>
             <Switch
               checked={isActive}
-              inputProps={{ 'data-testid': `${symbol}_${TOGGLE_ASSET_TEST_ID}` }}
+              inputProps={{ 'data-testid': `${symbol}_${TOGGLE_ASSET_TEST_ID}` } as any}
               onChange={onSwitch(asset)}
             />
           </ListItemSecondaryAction>

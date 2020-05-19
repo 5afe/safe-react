@@ -93,7 +93,7 @@ const ReviewCollectible = ({ closeSnackbar, enqueueSnackbar, onClose, onPrev, tx
         notifiedTransaction: TX_NOTIFICATION_TYPES.STANDARD_TX,
         enqueueSnackbar,
         closeSnackbar,
-      }),
+      } as any),
     )
     onClose()
   }

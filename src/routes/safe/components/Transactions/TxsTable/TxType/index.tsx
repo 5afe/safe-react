@@ -29,7 +29,7 @@ const typeToLabel = {
   upgrade: 'Contract Upgrade',
 }
 
-const TxType = ({ origin, txType }) => {
+const TxType = ({ origin, txType }: any) => {
   const [loading, setLoading] = useState(true)
   const [appInfo, setAppInfo] = useState<any>()
   const [forceCustom, setForceCustom] = useState(false)
