@@ -205,4 +205,4 @@ const OwnersColumn = ({
   )
 }
 
-export default withStyles(styles)(OwnersColumn)
+export default withStyles(styles as any)(OwnersColumn)

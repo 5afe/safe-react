@@ -28,7 +28,7 @@ const useStyles = makeStyles({
   },
 })
 
-const EtherscanBtn = ({ className, increaseZindex = false, type, value }) => {
+const EtherscanBtn = ({ className = '', increaseZindex = false, type, value }) => {
   const classes = useStyles()
   const customClasses = increaseZindex ? { popper: classes.increasedPopperZindex } : {}
 

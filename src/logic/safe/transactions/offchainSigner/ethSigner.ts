@@ -18,7 +18,7 @@ export const ethSigner = async ({
   to,
   valueInWei,
 }) => {
-  const web3 = await getWeb3()
+  const web3: any = await getWeb3()
   const txHash = await safeInstance.getTransactionHash(
     to,
     valueInWei,

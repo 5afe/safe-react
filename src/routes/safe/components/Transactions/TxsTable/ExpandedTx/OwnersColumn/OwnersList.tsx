@@ -62,4 +62,4 @@ const OwnersList = ({
   </>
 )
 
-export default withStyles(styles)(OwnersList)
+export default withStyles(styles as any)(OwnersList)

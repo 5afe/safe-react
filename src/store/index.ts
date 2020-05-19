@@ -64,6 +64,6 @@ const reducers = combineReducers({
   [CURRENT_SESSION_REDUCER_ID]: currentSession,
 })
 
-export const store = createStore(reducers, finalCreateStore)
+export const store: any = createStore(reducers, finalCreateStore)
 
 export const aNewStore = (localState) => createStore(reducers, localState, finalCreateStore)

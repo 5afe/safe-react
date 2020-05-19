@@ -81,4 +81,4 @@ const CheckOwner = ({ classes, onClose, onSubmit, ownerAddress, ownerName }) => 
   )
 }
 
-export default withStyles(styles)(CheckOwner)
+export default withStyles(styles as any)(CheckOwner)

@@ -8,7 +8,10 @@ const fetchCurrencyRate = (safeAddress, selectedCurrency) => async (dispatch) =>
     return dispatch(setCurrencyRate(safeAddress, 1))
   }
 
-  const selectedCurrencyRateInBaseCurrency = await fetchCurrenciesRates(AVAILABLE_CURRENCIES.USD, selectedCurrency)
+  const selectedCurrencyRateInBaseCurrency = await fetchCurrenciesRates(
+    AVAILABLE_CURRENCIES.USD as any,
+    selectedCurrency as any,
+  )
   dispatch(setCurrencyRate(safeAddress, selectedCurrencyRateInBaseCurrency))
 }
 

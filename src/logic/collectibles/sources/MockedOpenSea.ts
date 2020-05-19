@@ -1,9 +1,9 @@
 //
 import OpenSea from 'src/logic/collectibles/sources/OpenSea'
-import mockedOpenSea from 'src/logic/collectibles/sources/mocked_opensea'
+import mockedOpenSea from './mocked_opensea.json'
 
 class MockedOpenSea extends OpenSea {
-  _fetch = async () => {
+  _fetch: any = async () => {
     await this._rateLimit()
     return { json: () => mockedOpenSea }
   }

@@ -105,4 +105,4 @@ const RemoveSafeComponent = ({ classes, isOpen, onClose }) => {
   )
 }
 
-export const RemoveSafeModal = withStyles(styles)(RemoveSafeComponent)
+export const RemoveSafeModal = withStyles(styles as any)(RemoveSafeComponent)

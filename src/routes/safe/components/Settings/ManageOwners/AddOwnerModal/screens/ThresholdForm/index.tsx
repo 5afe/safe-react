@@ -107,4 +107,4 @@ const ThresholdForm = ({ classes, onClickBack, onClose, onSubmit }) => {
   )
 }
 
-export default withStyles(styles)(ThresholdForm)
+export default withStyles(styles as any)(ThresholdForm)

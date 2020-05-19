@@ -217,4 +217,4 @@ const ReviewRemoveOwner = ({ classes, onClickBack, onClose, onSubmit, ownerAddre
   )
 }
 
-export default withStyles(styles)(ReviewRemoveOwner)
+export default withStyles(styles as any)(ReviewRemoveOwner)

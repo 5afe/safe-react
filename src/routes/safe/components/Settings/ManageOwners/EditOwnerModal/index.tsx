@@ -121,4 +121,4 @@ const EditOwnerComponent = ({
   )
 }
 
-export default withStyles(styles)(withSnackbar(EditOwnerComponent))
+export default withStyles(styles as any)(withSnackbar(EditOwnerComponent))

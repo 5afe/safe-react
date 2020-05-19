@@ -1,5 +1,5 @@
 //
-function transactionDataCheck() {
+function transactionDataCheck(): any {
   let completed = false
   return (stateAndHelpers) => {
     const { wallet } = stateAndHelpers

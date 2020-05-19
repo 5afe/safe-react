@@ -230,4 +230,4 @@ const AddressBookTable = ({ classes }) => {
   )
 }
 
-export default withStyles(styles)(AddressBookTable)
+export default withStyles(styles as any)(AddressBookTable)

@@ -65,7 +65,7 @@ const SafeName = ({ classes, safeName }) => (
   </>
 )
 
-const SafeNameForm = withStyles(styles)(SafeName)
+const SafeNameForm = withStyles(styles as any)(SafeName)
 
 const SafeNamePage = () => (controls, { values }) => {
   const { safeName } = values

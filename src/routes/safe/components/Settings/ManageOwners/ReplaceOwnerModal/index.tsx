@@ -137,4 +137,4 @@ const ReplaceOwner = ({ classes, closeSnackbar, enqueueSnackbar, isOpen, onClose
   )
 }
 
-export default withStyles(styles)(withSnackbar(ReplaceOwner))
+export default withStyles(styles as any)(withSnackbar(ReplaceOwner))

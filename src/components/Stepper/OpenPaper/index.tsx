@@ -24,4 +24,4 @@ const OpenPaper = ({ children, classes, controls, padding = true }) => (
   </Paper>
 )
 
-export default withStyles(styles)(OpenPaper)
+export default withStyles(styles as any)(OpenPaper)

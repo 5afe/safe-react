@@ -24,7 +24,7 @@ export const fetchCurrencyValues = (safeAddress) => async (dispatch) => {
       const safeAddr = kv[0]
       const value = kv[1]
 
-      const { currencyRate, selectedCurrency } = value
+      const { currencyRate, selectedCurrency }: any = value
       batch(() => {
         dispatch(setSelectedCurrency(safeAddr, selectedCurrency || AVAILABLE_CURRENCIES.USD))
         dispatch(setCurrencyRate(safeAddr, currencyRate))

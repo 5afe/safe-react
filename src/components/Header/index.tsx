@@ -16,7 +16,7 @@ import { NOTIFICATIONS, showSnackbar } from 'src/logic/notifications'
 import { loadLastUsedProvider } from 'src/logic/wallets/store/middlewares/providerWatcher'
 import { logComponentStack } from 'src/utils/logBoundaries'
 
-class HeaderComponent extends React.PureComponent {
+class HeaderComponent extends React.PureComponent<any, any> {
   constructor(props) {
     super(props)
 

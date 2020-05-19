@@ -27,7 +27,7 @@ const AddressInput = ({
   <>
     <Field
       className={className}
-      component={TextField}
+      component={TextField as any}
       defaultValue={defaultValue}
       disabled={disabled}
       inputAdornment={inputAdornment}

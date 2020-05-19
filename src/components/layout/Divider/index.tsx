@@ -8,6 +8,6 @@ const style = {
   height: '100%',
 }
 
-const Divider = ({ className }) => <div className={className} style={style} />
+const Divider = ({ className }: any) => <div className={className} style={style} />
 
 export default Divider

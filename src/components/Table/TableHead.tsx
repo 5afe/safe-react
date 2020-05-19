@@ -16,7 +16,7 @@ export const cellWidth = (width) => {
   }
 }
 
-class GnoTableHead extends React.PureComponent {
+class GnoTableHead extends React.PureComponent<any> {
   changeSort = (property, orderAttr) => () => {
     const { onSort } = this.props
 

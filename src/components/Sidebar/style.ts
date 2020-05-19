@@ -99,6 +99,6 @@ const useSidebarStyles = makeStyles({
       backgroundColor: 'transparent !important',
     },
   },
-})
+} as any)
 
 export default useSidebarStyles

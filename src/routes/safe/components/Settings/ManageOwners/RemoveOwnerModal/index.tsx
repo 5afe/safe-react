@@ -145,4 +145,4 @@ const RemoveOwner = ({ classes, closeSnackbar, enqueueSnackbar, isOpen, onClose,
   )
 }
 
-export default withStyles(styles)(withSnackbar(RemoveOwner))
+export default withStyles(styles as any)(withSnackbar(RemoveOwner))

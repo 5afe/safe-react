@@ -198,4 +198,4 @@ const Balances = (props) => {
   )
 }
 
-export default withStyles(styles)(Balances)
+export default withStyles(styles as any)(Balances)

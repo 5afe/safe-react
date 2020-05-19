@@ -1,7 +1,7 @@
 //
 import * as React from 'react'
 
-class Span extends React.PureComponent {
+class Span extends React.PureComponent<any> {
   render() {
     const { children, ...props } = this.props
 

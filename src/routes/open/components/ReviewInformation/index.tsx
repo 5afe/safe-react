@@ -181,7 +181,7 @@ const ReviewComponent = ({ classes, userAccount, values }) => {
   )
 }
 
-const ReviewPage = withStyles(styles)(ReviewComponent)
+const ReviewPage = withStyles(styles as any)(ReviewComponent)
 
 const Review = () => (controls, { values }) => (
   <>

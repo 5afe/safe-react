@@ -221,4 +221,4 @@ const TxDescription = ({ classes, tx }) => {
   )
 }
 
-export default withStyles(styles)(TxDescription)
+export default withStyles(styles as any)(TxDescription)

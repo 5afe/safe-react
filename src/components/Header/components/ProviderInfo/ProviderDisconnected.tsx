@@ -40,4 +40,4 @@ const ProviderDisconnected = ({ classes }) => (
   </>
 )
 
-export default withStyles(styles)(ProviderDisconnected)
+export default withStyles(styles as any)(ProviderDisconnected)

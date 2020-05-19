@@ -96,7 +96,7 @@ const checkUserAddressOwner = (values, userAddress) => {
   return isOwner
 }
 
-class ReviewComponent extends React.PureComponent {
+class ReviewComponent extends React.PureComponent<any> {
   render() {
     const { classes, userAddress, values } = this.props
 
@@ -193,7 +193,7 @@ class ReviewComponent extends React.PureComponent {
   }
 }
 
-const ReviewPage = withStyles(styles)(ReviewComponent)
+const ReviewPage = withStyles(styles as any)(ReviewComponent)
 
 const Review = ({ network, userAddress }) => (controls, { values }) => (
   <>

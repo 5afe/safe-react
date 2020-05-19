@@ -9,8 +9,8 @@ import selector from './selector'
 
 import {} from 'src/logic/notifications/store/models/notification'
 
-class Notifier extends Component {
-  displayed = []
+class Notifier extends Component<any> {
+  displayed: any = []
 
   shouldComponentUpdate({ notifications: newSnacks = List() }) {
     const { closeSnackbar, notifications: currentSnacks, removeSnackbar } = this.props

@@ -6,4 +6,4 @@ const style = {
 }
 
 // eslint-disable-next-line react/display-name
-export default ({ className }) => <div className={className} style={style} />
+export default ({ className }: any) => <div className={className} style={style} />

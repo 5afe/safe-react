@@ -19,7 +19,7 @@ const styles = () => ({
   },
 })
 
-class TextField extends React.PureComponent {
+class TextField extends React.PureComponent<any> {
   render() {
     const {
       classes,
@@ -70,4 +70,4 @@ class TextField extends React.PureComponent {
   }
 }
 
-export default withStyles(styles)(TextField)
+export default withStyles(styles as any)(TextField)

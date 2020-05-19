@@ -46,7 +46,13 @@ const nextProps = {
   'aria-label': 'Next Page',
 }
 
-class GnoTable extends React.Component {
+class GnoTable extends React.Component<any, any> {
+  static defaultProps = {
+    defaultOrder: 'asc',
+    disablePagination: false,
+    defaultRowsPerPage: 5,
+  }
+
   constructor(props) {
     super(props)
 
@@ -130,7 +136,7 @@ class GnoTable extends React.Component {
       label,
       noBorder,
       size,
-    } = this.props
+    }: any = this.props
     const { fixed, order, orderBy, orderProp, page, rowsPerPage } = this.state
     const orderByParam = orderBy || defaultOrderBy
     const orderParam = order || defaultOrder
@@ -184,10 +190,4 @@ class GnoTable extends React.Component {
   }
 }
 
-GnoTable.defaultProps = {
-  defaultOrder: 'asc',
-  disablePagination: false,
-  defaultRowsPerPage: 5,
-}
-
-export default withStyles(styles)(GnoTable)
+export default withStyles(styles as any)(GnoTable)

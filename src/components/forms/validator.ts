@@ -47,7 +47,7 @@ export const minValue = (min) => (value) => {
 }
 
 export const maxValue = (max) => (value) => {
-  if (Number.isNaN(Number(value)) || parseFloat(value, 10) <= parseFloat(max, 10)) {
+  if (Number.isNaN(Number(value)) || parseFloat(value) <= parseFloat(max)) {
     return undefined
   }
 

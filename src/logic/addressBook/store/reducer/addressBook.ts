@@ -17,7 +17,7 @@ export const ADDRESS_BOOK_REDUCER_ID = 'addressBook'
 
 export const buildAddressBook = (storedAdbk) => {
   let addressBookBuilt = Map([])
-  Object.entries(storedAdbk).forEach((adbkProps) => {
+  Object.entries(storedAdbk).forEach((adbkProps: any) => {
     const safeAddress = checksumAddress(adbkProps[0])
     const adbkRecords = adbkProps[1].map(makeAddressBookEntry)
     const adbkSafeEntries = List(adbkRecords)

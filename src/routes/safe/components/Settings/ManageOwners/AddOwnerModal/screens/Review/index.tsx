@@ -191,4 +191,4 @@ const ReviewAddOwner = ({ classes, onClickBack, onClose, onSubmit, values }) => 
   )
 }
 
-export default withStyles(styles)(ReviewAddOwner)
+export default withStyles(styles as any)(ReviewAddOwner)

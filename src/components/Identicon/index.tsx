@@ -3,7 +3,7 @@ import * as React from 'react'
 
 import { toDataUrl } from './blockies'
 
-export default class Identicon extends React.PureComponent {
+export default class Identicon extends React.PureComponent<any> {
   static defaultProps = {
     className: '',
   }

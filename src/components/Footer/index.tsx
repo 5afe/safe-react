@@ -41,7 +41,7 @@ const useStyles = makeStyles({
   buttonLink: {
     padding: '0',
   },
-})
+} as any)
 
 const appVersion = process.env.REACT_APP_APP_VERSION ? `v${process.env.REACT_APP_APP_VERSION} ` : 'Versions'
 

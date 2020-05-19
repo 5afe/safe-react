@@ -73,4 +73,4 @@ const LayoutHeader = (props) => {
     </Block>
   )
 }
-export default withStyles(styles)(LayoutHeader)
+export default withStyles(styles as any)(LayoutHeader)

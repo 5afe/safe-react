@@ -112,4 +112,4 @@ const RejectTxModal = ({ classes, closeSnackbar, enqueueSnackbar, isOpen, onClos
   )
 }
 
-export default withStyles(styles)(withSnackbar(RejectTxModal))
+export default withStyles(styles as any)(withSnackbar(RejectTxModal))

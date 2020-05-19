@@ -60,7 +60,7 @@ export const isAddressAToken = async (tokenAddress) => {
 export const hasDecimalsMethod = async (address) => {
   try {
     const web3 = getWeb3()
-    const token = new web3.eth.Contract(ERC20Detailed.abi, address)
+    const token = new web3.eth.Contract(ERC20Detailed.abi as any, address)
     await token.methods.decimals().call()
     return true
   } catch (e) {

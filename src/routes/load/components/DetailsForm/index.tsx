@@ -148,7 +148,7 @@ const Details = ({ classes, errors, form }) => {
   )
 }
 
-const DetailsForm = withStyles(styles)(Details)
+const DetailsForm = withStyles(styles as any)(Details)
 
 const DetailsPage = () => (controls, { errors, form }) => (
   <>

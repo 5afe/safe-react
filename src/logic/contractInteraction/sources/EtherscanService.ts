@@ -16,7 +16,7 @@ class EtherscanService extends ABIService {
 
   _fetch = memoize(
     async (url, contractAddress) => {
-      let params = {
+      let params: any = {
         module: 'contract',
         action: 'getAbi',
         address: contractAddress,

@@ -127,4 +127,4 @@ const OwnerComponent = ({
   )
 }
 
-export default withStyles(styles)(OwnerComponent)
+export default withStyles(styles as any)(OwnerComponent)

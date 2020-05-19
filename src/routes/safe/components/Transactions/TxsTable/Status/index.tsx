@@ -51,4 +51,4 @@ const Status = ({ classes, status }) => {
   )
 }
 
-export default withStyles(styles)(Status)
+export default withStyles(styles as any)(Status)

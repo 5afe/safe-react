@@ -84,4 +84,4 @@ const KeyRing = ({
   )
 }
 
-export default withStyles(styles)(KeyRing)
+export default withStyles(styles as any)(KeyRing)

@@ -141,4 +141,4 @@ const TxsTable = ({ classes }) => {
   )
 }
 
-export default withStyles(styles)(TxsTable)
+export default withStyles(styles as any)(TxsTable)

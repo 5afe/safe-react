@@ -210,7 +210,7 @@ const SafeOwners = (props) => {
   )
 }
 
-const SafeOwnersForm = withStyles(styles)(withRouter(SafeOwners))
+const SafeOwnersForm = withStyles(styles as any)(withRouter(SafeOwners))
 
 const SafeOwnersPage = ({ updateInitialProps }) => (controls, { errors, form, values }) => (
   <>

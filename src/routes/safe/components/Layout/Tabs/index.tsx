@@ -20,10 +20,10 @@ import { BalancesIcon } from 'src/routes/safe/components/assets/BalancesIcon'
 import { TransactionsIcon } from 'src/routes/safe/components/assets/TransactionsIcon'
 
 interface Props {
-  classes: Record<string, any>;
-  match: Record<string, any>;
-  history: Record<string, any>;
-  location: Record<string, any>;
+  classes: Record<string, any>
+  match: Record<string, any>
+  history: Record<string, any>
+  location: Record<string, any>
 }
 
 const BalancesLabel = (
@@ -133,4 +133,4 @@ const TabsComponent = (props: Props) => {
     </Tabs>
   )
 }
-export default withStyles(styles)(withRouter(TabsComponent))
+export default withStyles(styles as any)(withRouter(TabsComponent))

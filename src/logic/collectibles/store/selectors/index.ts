@@ -16,13 +16,13 @@ export const activeNftAssetsListSelector = createSelector(
   nftAssetsListSelector,
   safeActiveAssetsSelector,
   (assets, activeAssetsList) => {
-    return assets.filter((asset) => activeAssetsList.has(asset.address))
+    return assets.filter((asset: any) => activeAssetsList.has(asset.address))
   },
 )
 
 export const safeActiveSelectorMap = createSelector(activeNftAssetsListSelector, (activeAssets) => {
   const assetsMap = {}
-  activeAssets.forEach((asset) => {
+  activeAssets.forEach((asset: any) => {
     assetsMap[asset.address] = asset
   })
   return assetsMap

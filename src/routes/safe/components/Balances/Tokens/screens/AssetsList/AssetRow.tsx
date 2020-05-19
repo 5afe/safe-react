@@ -42,4 +42,4 @@ const AssetRow = memo(({ classes, data, index, style }) => {
   )
 })
 
-export default withStyles(styles)(AssetRow)
+export default withStyles(styles as any)(AssetRow)

@@ -42,4 +42,4 @@ const TokenRow = memo(({ classes, data, index, style }) => {
   )
 })
 
-export default withStyles(styles)(TokenRow)
+export default withStyles(styles as any)(TokenRow)

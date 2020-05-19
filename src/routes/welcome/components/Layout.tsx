@@ -26,7 +26,7 @@ const buttonStyle = {
   marginLeft: marginButtonImg,
 }
 
-export const CreateSafe = ({ provider, size }) => (
+export const CreateSafe = ({ provider, size }: any) => (
   <Button
     color="primary"
     component={Link}

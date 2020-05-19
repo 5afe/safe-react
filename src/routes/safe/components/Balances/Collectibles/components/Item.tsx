@@ -97,7 +97,7 @@ const useStyles = makeStyles({
       fontSize: '14px',
     },
   },
-})
+} as any)
 
 const Item = ({ data, onSend }) => {
   const granted = useSelector(grantedSelector)

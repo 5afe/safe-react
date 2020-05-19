@@ -191,6 +191,6 @@ const AddCustomToken = (props) => {
   )
 }
 
-const AddCustomTokenComponent = withStyles(styles)(AddCustomToken)
+const AddCustomTokenComponent = withStyles(styles as any)(AddCustomToken)
 
 export default AddCustomTokenComponent

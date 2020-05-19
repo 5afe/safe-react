@@ -31,7 +31,7 @@ const Col = ({
   xs,
   xsOffset,
   ...props
-}) => {
+}: any) => {
   const colClassNames = cx(
     'col',
     center ? capitalize(center, 'center') : undefined,

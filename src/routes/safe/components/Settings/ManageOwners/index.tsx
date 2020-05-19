@@ -35,7 +35,7 @@ export const ADD_OWNER_BTN_TEST_ID = 'add-owner-btn'
 export const REPLACE_OWNER_BTN_TEST_ID = 'replace-owner-btn'
 export const OWNERS_ROW_TEST_ID = 'owners-row'
 
-class ManageOwners extends React.Component {
+class ManageOwners extends React.Component<any> {
   constructor(props) {
     super(props)
 
@@ -197,4 +197,4 @@ class ManageOwners extends React.Component {
   }
 }
 
-export default withStyles(styles)(ManageOwners)
+export default withStyles(styles as any)(ManageOwners)

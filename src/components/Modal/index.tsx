@@ -29,7 +29,16 @@ const styles = () => ({
   },
 })
 
-const GnoModal = ({ children, classes, description, handleClose, modalClassName, open, paperClassName, title }) => (
+const GnoModal = ({
+  children,
+  classes,
+  description,
+  handleClose,
+  modalClassName,
+  open,
+  paperClassName,
+  title,
+}: any) => (
   <Modal
     aria-describedby={description}
     aria-labelledby={title}
@@ -41,4 +50,4 @@ const GnoModal = ({ children, classes, description, handleClose, modalClassName,
   </Modal>
 )
 
-export default withStyles(styles)(GnoModal)
+export default withStyles(styles as any)(GnoModal)

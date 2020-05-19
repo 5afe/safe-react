@@ -30,7 +30,7 @@ export const loadSafe = async (safeName, safeAddress, owners, addSafe) => {
   saveSafes(storedSafes)
 }
 
-class Load extends React.Component {
+class Load extends React.Component<any> {
   onLoadSafeSubmit = async (values) => {
     try {
       const { addSafe } = this.props

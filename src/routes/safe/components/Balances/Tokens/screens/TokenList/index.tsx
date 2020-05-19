@@ -34,7 +34,7 @@ const filterBy = (filter, tokens) =>
 // After user closes modal, dispatch an action so we don't have 100500 actions
 // And selectors don't recalculate
 
-class Tokens extends React.Component {
+class Tokens extends React.Component<any> {
   renderCount = 0
 
   state = {
@@ -186,6 +186,6 @@ class Tokens extends React.Component {
   }
 }
 
-const TokenComponent = withStyles(styles)(Tokens)
+const TokenComponent = withStyles(styles as any)(Tokens)
 
 export default TokenComponent

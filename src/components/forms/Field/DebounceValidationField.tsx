@@ -3,7 +3,7 @@
 import React from 'react'
 import { Field } from 'react-final-form'
 
-const DebounceValidationField = ({ debounce = 1000, validate, ...rest }) => {
+const DebounceValidationField = ({ debounce = 1000, validate, ...rest }: any) => {
   let clearTimeout
 
   const localValidation = (value, values, fieldState) => {

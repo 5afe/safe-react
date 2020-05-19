@@ -74,4 +74,4 @@ const ProviderInfo = ({ classes, connected, network, provider, userAddress }) =>
   )
 }
 
-export default withStyles(styles)(ProviderInfo)
+export default withStyles(styles as any)(ProviderInfo)

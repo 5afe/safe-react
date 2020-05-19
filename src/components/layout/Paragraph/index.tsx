@@ -6,7 +6,7 @@ import styles from './index.module.scss'
 
 const cx = classNames.bind(styles)
 
-class Paragraph extends React.PureComponent {
+class Paragraph extends React.PureComponent<any> {
   render() {
     const { align, children, className, color, dot, noMargin, size, transform, weight, ...props } = this.props
 

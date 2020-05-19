@@ -1,7 +1,7 @@
 //
 import * as React from 'react'
 
-class Bold extends React.PureComponent {
+class Bold extends React.PureComponent<any> {
   render() {
     const { children, ...props } = this.props
 

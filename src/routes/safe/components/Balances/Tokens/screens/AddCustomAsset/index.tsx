@@ -169,6 +169,6 @@ const AddCustomAsset = (props) => {
   )
 }
 
-const AddCustomAssetComponent = withStyles(styles)(AddCustomAsset)
+const AddCustomAssetComponent = withStyles(styles as any)(AddCustomAsset)
 
 export default AddCustomAssetComponent

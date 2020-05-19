@@ -83,6 +83,6 @@ const Tokens = (props) => {
   )
 }
 
-const TokenComponent = withStyles(styles)(Tokens)
+const TokenComponent = withStyles(styles as any)(Tokens)
 
 export default connect(undefined, actions)(TokenComponent)

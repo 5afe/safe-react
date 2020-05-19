@@ -51,4 +51,4 @@ const ConnectDetails = ({ classes }) => (
   </>
 )
 
-export default withStyles(styles)(ConnectDetails)
+export default withStyles(styles as any)(ConnectDetails)

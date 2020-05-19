@@ -31,7 +31,7 @@ export const estimateTxGasCosts = async (safeAddress, to, data, tx, preApproving
   try {
     const web3 = getWeb3()
     const from = await getAccountFrom(web3)
-    const safeInstance = new web3.eth.Contract(GnosisSafeSol.abi, safeAddress)
+    const safeInstance = new web3.eth.Contract(GnosisSafeSol.abi as any, safeAddress)
     const nonce = await safeInstance.methods.nonce().call()
     const threshold = await safeInstance.methods.getThreshold().call()
 
@@ -78,9 +78,9 @@ export const estimateSafeTxGas = async (safe, safeAddress, data, to, valueInWei,
       safeInstance = await getGnosisSafeInstanceAt(safeAddress)
     }
 
-    const web3 = await getWeb3()
+    const web3: any = await getWeb3()
     const estimateData = safeInstance.contract.methods.requiredTxGas(to, valueInWei, data, operation).encodeABI()
-    const estimateResponse = await web3.eth.call({
+    const estimateResponse: any = await web3.eth.call({
       to: safeAddress,
       from: safeAddress,
       data: estimateData,
@@ -125,7 +125,7 @@ export const estimateSafeTxGas = async (safe, safeAddress, data, to, valueInWei,
     batch.execute()
 
     const estimationResponses = await Promise.all(estimationRequests)
-    const firstSuccessfulRequest = estimationResponses.find((res) => res.success)
+    const firstSuccessfulRequest: any = estimationResponses.find((res: any) => res.success)
 
     if (firstSuccessfulRequest) {
       return firstSuccessfulRequest.estimation

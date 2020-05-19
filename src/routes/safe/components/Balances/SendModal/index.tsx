@@ -38,7 +38,7 @@ const useStyles = makeStyles({
   },
 })
 
-const SendModal = ({ activeScreenType, isOpen, onClose, recipientAddress, selectedToken }) => {
+const SendModal = ({ activeScreenType, isOpen, onClose, recipientAddress, selectedToken }: any) => {
   const classes = useStyles()
   const [activeScreen, setActiveScreen] = useState(activeScreenType || 'chooseTxType')
   const [tx, setTx] = useState({})

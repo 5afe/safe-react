@@ -12,7 +12,7 @@ const calculateStyleFrom = (color, margin) => ({
   margin: `${getSize(margin)} 0px`,
 })
 
-const Hairline = ({ className, color, margin, style }) => {
+const Hairline = ({ className, color, margin, style }: any) => {
   const calculatedStyles = calculateStyleFrom(color, margin)
   const mergedStyles = { ...calculatedStyles, ...(style || {}) }
 

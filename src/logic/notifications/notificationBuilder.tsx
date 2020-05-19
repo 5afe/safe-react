@@ -147,7 +147,7 @@ const addressBookDeleteEntry = {
   afterExecutionError: null,
 }
 
-export const getNotificationsFromTxType = (txType, origin) => {
+export const getNotificationsFromTxType: any = (txType, origin) => {
   let notificationsQueue
 
   switch (txType) {
@@ -200,7 +200,7 @@ export const getNotificationsFromTxType = (txType, origin) => {
   return notificationsQueue
 }
 
-export const enhanceSnackbarForAction = (notification, key, onClick) => ({
+export const enhanceSnackbarForAction: any = (notification, key, onClick) => ({
   ...notification,
   key,
   options: {
@@ -215,7 +215,7 @@ export const enhanceSnackbarForAction = (notification, key, onClick) => ({
   },
 })
 
-export const showSnackbar = (notification, enqueueSnackbar, closeSnackbar) =>
+export const showSnackbar: any = (notification, enqueueSnackbar, closeSnackbar) =>
   enqueueSnackbar(notification.message, {
     ...notification.options,
     // eslint-disable-next-line react/display-name

@@ -205,4 +205,4 @@ const AddressBookInput = ({
   )
 }
 
-export default withStyles(styles)(AddressBookInput)
+export default withStyles(styles as any)(AddressBookInput)

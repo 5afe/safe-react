@@ -1,4 +1,3 @@
-//
 import FormStep from '@material-ui/core/Step'
 import StepContent from '@material-ui/core/StepContent'
 import StepLabel from '@material-ui/core/StepLabel'
@@ -25,7 +24,7 @@ const transitionProps = {
 
 export const StepperPage = ({ children }) => children
 
-const GnoStepper = (props) => {
+const GnoStepper = (props: any) => {
   const [page, setPage] = useState(0)
   const [values, setValues] = useState({})
 
@@ -35,7 +34,10 @@ const GnoStepper = (props) => {
     }
   }, [props.initialValues])
 
-  const getPageProps = (pages) => React.Children.toArray(pages)[page].props
+  const getPageProps: any = (pages) => {
+    const aux: any = React.Children.toArray(pages)[page]
+    return aux.props
+  }
 
   const updateInitialProps = (newInitialProps) => {
     setValues(newInitialProps)
@@ -51,7 +53,7 @@ const GnoStepper = (props) => {
   const validate = (valuesToValidate) => {
     const { children } = props
 
-    const activePage = React.Children.toArray(children)[page]
+    const activePage: any = React.Children.toArray(children)[page]
     return activePage.props.validate ? activePage.props.validate(valuesToValidate) : {}
   }
 
@@ -130,7 +132,7 @@ const GnoStepper = (props) => {
           return (
             <Stepper activeStep={page} classes={{ root: classes.root }} orientation="vertical">
               {steps.map((label, index) => {
-                const labelProps = {}
+                const labelProps: any = {}
                 const isClickable = index < page
 
                 if (isClickable) {
@@ -170,4 +172,4 @@ const styles = {
   },
 }
 
-export default withStyles(styles)(GnoStepper)
+export default withStyles(styles as any)(GnoStepper)

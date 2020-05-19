@@ -121,4 +121,4 @@ const AddOwner = ({ classes, closeSnackbar, enqueueSnackbar, isOpen, onClose }) 
   )
 }
 
-export default withStyles(styles)(withSnackbar(AddOwner))
+export default withStyles(styles as any)(withSnackbar(AddOwner))

@@ -15,7 +15,7 @@ const GnoButtonLink = ({
   type = 'button',
   weight = 'regular',
   ...props
-}) => (
+}: any) => (
   <button className={cx(styles.btnLink, size, color, weight, className)} data-testid={testId} type={type} {...props} />
 )
 

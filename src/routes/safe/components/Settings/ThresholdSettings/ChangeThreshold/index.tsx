@@ -125,4 +125,4 @@ const ChangeThreshold = ({ classes, onChangeThreshold, onClose, owners, safeAddr
   )
 }
 
-export default withStyles(styles)(ChangeThreshold)
+export default withStyles(styles as any)(ChangeThreshold)

@@ -96,4 +96,4 @@ const Layout = openHoc(({ classes, clickAway, open, providerDetails, providerInf
   </Row>
 ))
 
-export default withStyles(styles)(Layout)
+export default withStyles(styles as any)(Layout)

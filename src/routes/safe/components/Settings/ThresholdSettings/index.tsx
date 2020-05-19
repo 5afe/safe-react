@@ -93,4 +93,4 @@ const ThresholdSettings = ({ classes, closeSnackbar, enqueueSnackbar }) => {
   )
 }
 
-export default withStyles(styles)(withSnackbar(ThresholdSettings))
+export default withStyles(styles as any)(withSnackbar(ThresholdSettings))

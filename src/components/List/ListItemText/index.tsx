@@ -13,7 +13,7 @@ const styles = {
   },
 }
 
-class ListItemText extends React.PureComponent {
+class ListItemText extends React.PureComponent<any> {
   render() {
     const { classes, cut = false, primary, secondary } = this.props
 
@@ -27,4 +27,4 @@ class ListItemText extends React.PureComponent {
   }
 }
 
-export default withStyles(styles)(ListItemText)
+export default withStyles(styles as any)(ListItemText)

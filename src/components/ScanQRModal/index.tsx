@@ -20,11 +20,11 @@ import Row from 'src/components/layout/Row'
 const { useEffect, useState } = React
 
 const ScanQRModal = ({ classes, isOpen, onClose, onScan }) => {
-  const [hasWebcam, setHasWebcam] = useState(null)
-  const scannerRef = React.createRef()
-  const openImageDialog = useCallback(() => {
+  const [hasWebcam, setHasWebcam] = useState<any>(null)
+  const scannerRef: any = React.createRef()
+  const openImageDialog = React.useCallback(() => {
     scannerRef.current.openImageDialog()
-  })
+  }, [scannerRef])
 
   useEffect(() => {
     checkWebcam(
@@ -101,4 +101,4 @@ const ScanQRModal = ({ classes, isOpen, onClose, onScan }) => {
   )
 }
 
-export default withStyles(styles)(ScanQRModal)
+export default withStyles(styles as any)(ScanQRModal)

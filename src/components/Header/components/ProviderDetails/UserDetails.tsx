@@ -174,4 +174,4 @@ const UserDetails = ({ classes, connected, network, onDisconnect, openDashboard,
   )
 }
 
-export default withStyles(styles)(UserDetails)
+export default withStyles(styles as any)(UserDetails)

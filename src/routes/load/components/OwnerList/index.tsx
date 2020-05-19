@@ -154,7 +154,7 @@ const OwnerListComponent = (props) => {
   )
 }
 
-const OwnerListPage = withStyles(styles)(OwnerListComponent)
+const OwnerListPage = withStyles(styles as any)(OwnerListComponent)
 
 const OwnerList = ({ updateInitialProps }, network) => (controls, { values }) => (
   <>

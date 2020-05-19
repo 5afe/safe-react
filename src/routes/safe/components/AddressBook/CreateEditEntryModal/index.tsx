@@ -146,4 +146,4 @@ const CreateEditEntryModalComponent = ({
   )
 }
 
-export default withStyles(styles)(CreateEditEntryModalComponent)
+export default withStyles(styles as any)(CreateEditEntryModalComponent)

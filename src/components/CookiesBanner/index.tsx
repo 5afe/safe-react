@@ -83,7 +83,7 @@ const useStyles = makeStyles({
       textDecoration: 'none',
     },
   },
-})
+} as any)
 
 const CookiesBanner = () => {
   const classes = useStyles()
@@ -102,7 +102,7 @@ const CookiesBanner = () => {
     await saveCookie(COOKIES_KEY, newState, 365)
     dispatch(openCookieBanner(false))
     setShowAnalytics(!isDesktop)
-  })
+  }, [dispatch])
 
   useEffect(() => {
     async function fetchCookiesFromStorage() {
@@ -143,7 +143,7 @@ const CookiesBanner = () => {
         onClick={closeCookiesBannerHandler}
         onKeyDown={closeCookiesBannerHandler}
         role="button"
-        tabIndex="0"
+        tabIndex={0}
       >
         Accept preferences &gt;
       </span>

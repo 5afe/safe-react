@@ -1,7 +1,7 @@
 //
 export const upperFirst = (value) => value.charAt(0).toUpperCase() + value.toLowerCase().slice(1)
 
-export const capitalize = (value, prefix) => {
+export const capitalize = (value: any, prefix?: any) => {
   if (!value) {
     return undefined
   }

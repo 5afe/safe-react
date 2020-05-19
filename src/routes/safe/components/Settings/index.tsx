@@ -117,4 +117,4 @@ const Settings = (props) => {
   )
 }
 
-export default withStyles(styles)(Settings)
+export default withStyles(styles as any)(Settings)

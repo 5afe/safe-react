@@ -22,7 +22,7 @@ const IconImg = styled.img`
   margin-right: 10px;
 `
 
-const List = ({ activeItem, classes, items, onItemClick }: Props) => (
+const List = ({ activeItem, classes, items, onItemClick }: any) => (
   <Wrapper>
     {items.map((i) => (
       <Item
@@ -39,4 +39,4 @@ const List = ({ activeItem, classes, items, onItemClick }: Props) => (
   </Wrapper>
 )
 
-export default withStyles(styles)(List)
+export default withStyles(styles as any)(List)

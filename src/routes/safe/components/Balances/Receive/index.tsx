@@ -123,4 +123,4 @@ const Receive = ({ classes, onClose }) => {
   )
 }
 
-export default withStyles(styles)(Receive)
+export default withStyles(styles as any)(Receive)

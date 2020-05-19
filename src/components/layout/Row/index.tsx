@@ -8,7 +8,7 @@ import { capitalize } from 'src/utils/css'
 
 const cx = classNames.bind(styles)
 
-const Row = ({ align, children, className, grow, margin, testId = '', ...props }) => {
+const Row = ({ align, children, className, grow, margin, testId = '', ...props }: any) => {
   const rowClassNames = cx(
     styles.row,
     margin ? capitalize(margin, 'margin') : undefined,

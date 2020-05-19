@@ -23,4 +23,4 @@ const EtherscanLink = ({ classes, cut, knownAddress, type, value }) => (
   </Block>
 )
 
-export default withStyles(styles)(EtherscanLink)
+export default withStyles(styles as any)(EtherscanLink)

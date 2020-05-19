@@ -181,4 +181,4 @@ const ApproveTxModal = ({
   )
 }
 
-export default withStyles(styles)(withSnackbar(ApproveTxModal))
+export default withStyles(styles as any)(withSnackbar(ApproveTxModal))

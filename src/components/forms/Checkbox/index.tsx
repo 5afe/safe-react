@@ -2,7 +2,7 @@
 import Checkbox from '@material-ui/core/Checkbox'
 import React from 'react'
 
-class GnoCheckbox extends React.PureComponent {
+class GnoCheckbox extends React.PureComponent<any> {
   render() {
     const {
       input: { checked, name, onChange, ...restInput },

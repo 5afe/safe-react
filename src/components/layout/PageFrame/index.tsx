@@ -60,12 +60,14 @@ const PageFrame = ({ children, classes, currentNetwork }) => {
         }}
         maxSnack={5}
       >
-        <Notifier />
-        <SidebarProvider>
-          <Header />
-          {children}
-          <Footer />
-        </SidebarProvider>
+        <>
+          <Notifier />
+          <SidebarProvider>
+            <Header />
+            {children}
+            <Footer />
+          </SidebarProvider>
+        </>
       </SnackbarProvider>
       <CookiesBanner />
     </div>

@@ -59,8 +59,8 @@ const generateTypedDataFrom = async ({
   return typedData
 }
 
-export const getEIP712Signer = (version) => async (txArgs) => {
-  const web3 = getWeb3()
+export const getEIP712Signer = (version?: string) => async (txArgs) => {
+  const web3: any = getWeb3()
   const typedData = await generateTypedDataFrom(txArgs)
 
   let method = 'eth_signTypedData_v3'

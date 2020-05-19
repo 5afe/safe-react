@@ -25,4 +25,4 @@ const TextareaField = ({ classes, ...props }) => (
   <Field {...props} className={classes.textarea} component={TextField} multiline rows="5" />
 )
 
-export default withStyles(styles)(TextareaField)
+export default withStyles(styles as any)(TextareaField)

@@ -19,7 +19,7 @@ let providerName
 
 const wallets = getSupportedWallets()
 
-export const onboard = new Onboard({
+export const onboard = Onboard({
   dappId: BLOCKNATIVE_API_KEY,
   networkId: getNetworkId(),
   subscriptions: {

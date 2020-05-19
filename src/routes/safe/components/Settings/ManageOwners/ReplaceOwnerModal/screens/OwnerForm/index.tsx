@@ -159,4 +159,4 @@ const OwnerForm = ({ classes, onClose, onSubmit, ownerAddress, ownerName }) => {
   )
 }
 
-export default withStyles(styles)(OwnerForm)
+export default withStyles(styles as any)(OwnerForm)

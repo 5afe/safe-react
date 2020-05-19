@@ -7,7 +7,7 @@ const calculateStyleBased = (minWidth, minHeight) => ({
   minHeight: minHeight && `${minHeight}px`,
 })
 
-const GnoButton = ({ minWidth, minHeight = 35, testId = '', style = {}, ...props }) => {
+const GnoButton = ({ minWidth, minHeight = 35, testId = '', style = {}, ...props }: any) => {
   const calculatedStyle = calculateStyleBased(minWidth, minHeight)
 
   return <Button data-testid={testId} style={{ ...calculatedStyle, ...style }} {...props} />

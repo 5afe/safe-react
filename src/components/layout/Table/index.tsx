@@ -12,7 +12,7 @@ const buildWidthFrom = (size) => ({
   minWidth: `${size}px`,
 })
 
-const overflowStyle = {
+const overflowStyle: any = {
   overflowX: 'auto',
 }
 

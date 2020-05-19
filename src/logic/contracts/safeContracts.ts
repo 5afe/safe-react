@@ -28,7 +28,7 @@ const createGnosisSafeContract = (web3) => {
 
 const createProxyFactoryContract = (web3, networkId) => {
   const contractAddress = ProxyFactorySol.networks[networkId].address
-  const proxyFactory = new web3.eth.Contract(ProxyFactorySol.abi, contractAddress)
+  const proxyFactory = new web3.eth.Contract(ProxyFactorySol.abi as any, contractAddress)
 
   return proxyFactory
 }

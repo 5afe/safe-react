@@ -17,14 +17,14 @@ const GnoForm = ({
   subscription,
   testId = '',
   validation,
-}) => (
+}: any) => (
   <Form
     decorators={decorators}
     initialValues={initialValues}
     mutators={formMutators}
     onSubmit={onSubmit}
     render={({ handleSubmit, ...rest }) => (
-      <form data-testid={testId} onSubmit={handleSubmit} style={stylesBasedOn(padding)}>
+      <form data-testid={testId} onSubmit={handleSubmit} style={stylesBasedOn(padding) as any}>
         {children(rest.submitting, rest.validating, rest, rest.form.mutators)}
       </form>
     )}

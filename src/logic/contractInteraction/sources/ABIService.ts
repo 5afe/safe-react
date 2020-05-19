@@ -32,7 +32,7 @@ class ABIService {
 
   static getSignatureHash(signature) {
     const web3 = getWeb3()
-    return web3.utils.keccak256(signature).toString(2, 10)
+    return web3.utils.keccak256(signature).toString()
   }
 
   static isPayable(method) {

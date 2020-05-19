@@ -74,4 +74,4 @@ const UpdateSafeModal = ({ classes, onClose, safeAddress }) => {
   )
 }
 
-export default withStyles(styles)(UpdateSafeModal)
+export default withStyles(styles as any)(UpdateSafeModal)

@@ -10,7 +10,7 @@ import { ethSigner } from './ethSigner'
 const SIGNERS = {
   EIP712_V3: getEIP712Signer('v3'),
   EIP712_V4: getEIP712Signer('v4'),
-  EIP712: getEIP712Signer(),
+  EIP712: getEIP712Signer() as any,
   ETH_SIGN: ethSigner,
 }
 

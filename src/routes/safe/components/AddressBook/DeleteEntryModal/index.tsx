@@ -70,6 +70,6 @@ const DeleteEntryModalComponent = ({ classes, deleteEntryModalHandler, entryToDe
   )
 }
 
-const DeleteEntryModal = withStyles(styles)(DeleteEntryModalComponent)
+const DeleteEntryModal = withStyles(styles as any)(DeleteEntryModalComponent)
 
 export default DeleteEntryModal
