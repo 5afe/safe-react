@@ -25,7 +25,7 @@ import {
   safeBlacklistedAssetsSelector,
   safeParamAddressFromStateSelector,
 } from 'src/routes/safe/store/selectors'
-const useStyles = makeStyles(styles)
+const useStyles = makeStyles(styles as any)
 
 export const ADD_CUSTOM_ASSET_BUTTON_TEST_ID = 'add-custom-asset-btn'
 

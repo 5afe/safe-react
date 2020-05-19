@@ -179,17 +179,18 @@ const ManageApps = ({ appList, onAppAdded, onAppToggle }) => {
       return { ...a, checked: !a.disabled }
     })
 
+  const ButtonLinkAux: any = ButtonLink
+
   return (
     <>
-      <ButtonLink color="primary" onClick={toggleOpen}>
+      <ButtonLinkAux color="primary" onClick={toggleOpen as any}>
         Manage Apps
-      </ButtonLink>
+      </ButtonLinkAux>
       {isOpen && (
         <ManageListModal
           addButtonLabel="Add custom app"
           defaultIconUrl={appsIconSvg}
           formBody={getAddAppForm()}
-          formSubmitLabel="Save"
           isSubmitFormDisabled={isSubmitDisabled}
           itemList={getItemList()}
           onClose={closeModal}

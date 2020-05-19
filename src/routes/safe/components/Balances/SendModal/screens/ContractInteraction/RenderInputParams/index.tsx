@@ -10,10 +10,10 @@ import Row from 'src/components/layout/Row'
 const RenderInputParams = () => {
   const {
     meta: { valid: validABI },
-  } = useField('abi', { valid: true })
+  } = useField('abi', { valid: true } as any)
   const {
     input: { value: method },
-  } = useField('selectedMethod', { value: true })
+  }: any = useField('selectedMethod', { value: true })
   const renderInputs = validABI && !!method && method.inputs.length
 
   return !renderInputs

@@ -7,7 +7,7 @@ import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import { styles } from 'src/routes/safe/components/Balances/SendModal/screens/ContractInteraction/style'
 
-const useStyles = makeStyles(styles)
+const useStyles = makeStyles(styles as any)
 
 const Header = ({ onClose, subTitle, title }) => {
   const classes = useStyles()

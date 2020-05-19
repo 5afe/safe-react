@@ -15,7 +15,7 @@ import ABIService from 'src/logic/contractInteraction/sources/ABIService'
 import { styles } from 'src/routes/safe/components/Balances/SendModal/screens/ContractInteraction/style'
 import { safeSelector } from 'src/routes/safe/store/selectors'
 
-const useStyles = makeStyles(styles)
+const useStyles = makeStyles(styles as any)
 
 const EthValue = ({ onSetMax }) => {
   const classes = useStyles()

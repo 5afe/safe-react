@@ -2,9 +2,9 @@ import TableCell from '@material-ui/core/TableCell'
 import TableContainer from '@material-ui/core/TableContainer'
 import TableRow from '@material-ui/core/TableRow'
 import { makeStyles } from '@material-ui/core/styles'
-import CallMade from '@material-ui/icons/CallMade'
-import CallReceived from '@material-ui/icons/CallReceived'
-import classNames from 'classnames/bind'
+//import CallMade from '@material-ui/icons/CallMade'
+//import CallReceived from '@material-ui/icons/CallReceived'
+//import classNames from 'classnames/bind'
 import { List } from 'immutable'
 import React from 'react'
 import { useSelector } from 'react-redux'
@@ -31,7 +31,7 @@ import {
 } from 'src/routes/safe/components/Balances/dataFetcher'
 import { extendedSafeTokensSelector, grantedSelector } from 'src/routes/safe/container/selector'
 
-const useStyles = makeStyles(styles)
+const useStyles = makeStyles(styles as any)
 
 const Coins = (props) => {
   const { showReceiveFunds, showSendFunds } = props
@@ -64,7 +64,7 @@ const Coins = (props) => {
           sortedData.map((row, index) => (
             <TableRow className={classes.hide} data-testid={BALANCE_ROW_TEST_ID} key={index} tabIndex={-1}>
               {autoColumns.map((column) => {
-                const { align, id, width } = column
+                const { align, id, width }: any = column
                 let cellItem
                 switch (id) {
                   case BALANCE_TABLE_ASSET_ID: {
@@ -101,7 +101,7 @@ const Coins = (props) => {
                       testId="balance-send-btn"
                       variant="contained"
                     >
-                      <CallMade alt="Send Transaction" className={classNames(classes.leftIcon, classes.iconSmall)} />
+                      {/* <CallMade alt="Send Transaction" className={classNames(classes.leftIcon, classes.iconSmall)} /> */}
                       Send
                     </Button>
                   )}
@@ -112,10 +112,10 @@ const Coins = (props) => {
                     size="small"
                     variant="contained"
                   >
-                    <CallReceived
+                    {/* <CallReceived
                       alt="Receive Transaction"
                       className={classNames(classes.leftIcon, classes.iconSmall)}
-                    />
+                    /> */}
                     Receive
                   </Button>
                 </Row>

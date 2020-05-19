@@ -26,7 +26,7 @@ const estimateDataGasCosts = (data) => {
   return data.match(/.{2}/g).reduce(reducer, 0)
 }
 
-export const estimateTxGasCosts = async (safeAddress, to, data, tx, preApprovingOwner) => {
+export const estimateTxGasCosts = async (safeAddress, to, data, tx?: any, preApprovingOwner?: any) => {
   try {
     const web3 = getWeb3()
     const from = await getAccountFrom(web3)

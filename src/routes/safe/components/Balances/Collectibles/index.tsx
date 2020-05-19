@@ -72,7 +72,7 @@ const useStyles = makeStyles({
     fontSize: lg,
     textAlign: 'center',
   },
-})
+} as any)
 
 const Collectibles = () => {
   const classes = useStyles()

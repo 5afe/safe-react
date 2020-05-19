@@ -24,7 +24,7 @@ import { INCOMING_TX_TYPES } from 'src/routes/safe/store/models/incomingTransact
 import {} from 'src/routes/safe/store/models/transaction'
 import { safeNonceSelector, safeThresholdSelector } from 'src/routes/safe/store/selectors'
 
-const useStyles = makeStyles(styles)
+const useStyles = makeStyles(styles as any)
 
 const ExpandedTx = ({ cancelTx, tx }) => {
   const classes = useStyles()

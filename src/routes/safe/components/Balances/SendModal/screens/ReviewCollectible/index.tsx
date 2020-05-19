@@ -37,7 +37,7 @@ import { safeSelector } from 'src/routes/safe/store/selectors'
 import { sm } from 'src/theme/variables'
 import { textShortener } from 'src/utils/strings'
 
-const useStyles = makeStyles(styles)
+const useStyles = makeStyles(styles as any)
 
 const ReviewCollectible = ({ closeSnackbar, enqueueSnackbar, onClose, onPrev, tx }) => {
   const classes = useStyles()

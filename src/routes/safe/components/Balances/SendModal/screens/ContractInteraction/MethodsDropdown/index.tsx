@@ -24,7 +24,7 @@ const MethodsDropdown = ({ onChange }) => {
   const {
     input: { value: abi },
     meta: { valid },
-  } = useField('abi', { value: true, valid: true })
+  } = useField('abi', { value: true, valid: true } as any)
   const {
     initialValues: { selectedMethod: selectedMethodByDefault },
   } = useFormState({ subscription: { initialValues: true } })
@@ -85,7 +85,6 @@ const MethodsDropdown = ({ onChange }) => {
               onClose={handleClose}
               open={!!anchorEl}
               PaperProps={{ style: { width: MENU_WIDTH } }}
-              rounded={0}
               transformOrigin={{
                 horizontal: 'center',
                 vertical: 'top',

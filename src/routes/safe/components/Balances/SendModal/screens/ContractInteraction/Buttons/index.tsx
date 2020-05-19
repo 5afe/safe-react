@@ -7,7 +7,7 @@ import Row from 'src/components/layout/Row'
 import { styles } from 'src/routes/safe/components/Balances/SendModal/screens/ContractInteraction/style'
 import { createTxObject } from 'src/routes/safe/components/Balances/SendModal/screens/ContractInteraction/utils'
 
-const useStyles = makeStyles(styles)
+const useStyles = makeStyles(styles as any)
 
 const Buttons = ({ onCallSubmit, onClose }) => {
   const classes = useStyles()
@@ -16,7 +16,7 @@ const Buttons = ({ onCallSubmit, onClose }) => {
   } = useField('selectedMethod', { value: true })
   const {
     input: { value: contractAddress },
-  } = useField('contractAddress', { valid: true })
+  } = useField('contractAddress', { valid: true } as any)
   const { submitting, valid, validating, values } = useFormState({
     subscription: { submitting: true, valid: true, values: true, validating: true },
   })
@@ -31,7 +31,7 @@ const Buttons = ({ onCallSubmit, onClose }) => {
       <Button minWidth={140} onClick={onClose}>
         Cancel
       </Button>
-      {method && method.action === 'read' ? (
+      {method && (method as any).action === 'read' ? (
         <Button
           className={classes.submitButton}
           color="primary"
@@ -48,7 +48,7 @@ const Buttons = ({ onCallSubmit, onClose }) => {
           className={classes.submitButton}
           color="primary"
           data-testid="review-tx-btn"
-          disabled={submitting || validating || !valid || !method || method.action === 'read'}
+          disabled={submitting || validating || !valid || !method || (method as any).action === 'read'}
           minWidth={140}
           type="submit"
           variant="contained"

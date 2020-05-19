@@ -22,7 +22,7 @@ import {
   formMutators,
 } from 'src/routes/safe/components/Balances/SendModal/screens/ContractInteraction/utils'
 
-const useStyles = makeStyles(styles)
+const useStyles = makeStyles(styles as any)
 
 const ContractInteraction = ({ contractAddress, initialValues, onClose, onNext }) => {
   const classes = useStyles()

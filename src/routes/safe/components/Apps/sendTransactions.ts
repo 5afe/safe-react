@@ -17,7 +17,7 @@ const multiSendAbi = [
 
 const sendTransactions = (dispatch, safeAddress, txs, enqueueSnackbar, closeSnackbar, origin) => {
   const web3 = getWeb3()
-  const multiSend = new web3.eth.Contract(multiSendAbi, multiSendAddress)
+  const multiSend = new web3.eth.Contract(multiSendAbi as any, multiSendAddress)
 
   const joinedTxs = txs
     .map((tx) =>
@@ -45,7 +45,7 @@ const sendTransactions = (dispatch, safeAddress, txs, enqueueSnackbar, closeSnac
       operation: DELEGATE_CALL,
       // navigateToTransactionsTab: false,
       origin,
-    }),
+    } as any),
   )
 }
 export default sendTransactions

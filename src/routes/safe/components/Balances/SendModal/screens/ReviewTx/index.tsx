@@ -34,7 +34,7 @@ import createTransaction from 'src/routes/safe/store/actions/createTransaction'
 import { safeSelector } from 'src/routes/safe/store/selectors'
 import { sm } from 'src/theme/variables'
 
-const useStyles = makeStyles(styles)
+const useStyles = makeStyles(styles as any)
 
 const ReviewTx = ({ closeSnackbar, enqueueSnackbar, onClose, onPrev, tx }) => {
   const classes = useStyles()

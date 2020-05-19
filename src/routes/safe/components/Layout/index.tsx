@@ -43,7 +43,7 @@ interface Props {
   history: Record<string, any>
 }
 
-const useStyles = makeStyles(styles)
+const useStyles = makeStyles(styles as any)
 
 const Layout = (props: Props) => {
   const classes = useStyles()

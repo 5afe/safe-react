@@ -57,7 +57,7 @@ function Apps({ closeModal, closeSnackbar, enqueueSnackbar, openModal }) {
   const ethBalance = useSelector(safeEthBalanceSelector)
   const dispatch = useDispatch()
 
-  const getSelectedApp = useCallback(() => appList.find((e) => e.id === selectedApp))
+  const getSelectedApp = useCallback(() => appList.find((e) => e.id === selectedApp), [appList, selectedApp])
 
   const sendMessageToIframe = (messageId, data) => {
     const app = getSelectedApp()
@@ -106,7 +106,7 @@ function Apps({ closeModal, closeSnackbar, enqueueSnackbar, openModal }) {
     }
   }, [])
 
-  const onSelectApp = (appId) => {
+  const onSelectApp = useCallback((appId) => {
     const selectedApp = getSelectedApp()
 
     if (selectedApp && selectedApp.id === appId) {
@@ -115,7 +115,7 @@ function Apps({ closeModal, closeSnackbar, enqueueSnackbar, openModal }) {
 
     setAppIsLoading(true)
     setSelectedApp(appId)
-  }
+  })
 
   const redirectToBalance = () => history.push(`${SAFELIST_ADDRESS}/${safeAddress}/balances`)
 
@@ -170,7 +170,7 @@ function Apps({ closeModal, closeSnackbar, enqueueSnackbar, openModal }) {
 
     return (
       <>
-        {appIsLoading && <Loader />}
+        {appIsLoading && <Loader size="md" />}
         <StyledIframe
           frameBorder="0"
           id={`iframe-${app.name}`}
@@ -196,12 +196,15 @@ function Apps({ closeModal, closeSnackbar, enqueueSnackbar, openModal }) {
     setAppList([...appList, { ...app, disabled: false }])
   }
 
-  const selectFirstApp = useCallback((apps) => {
-    const firstEnabledApp = apps.find((a) => !a.disabled)
-    if (firstEnabledApp) {
-      onSelectApp(firstEnabledApp.id)
-    }
-  })
+  const selectFirstApp = useCallback(
+    (apps) => {
+      const firstEnabledApp = apps.find((a) => !a.disabled)
+      if (firstEnabledApp) {
+        onSelectApp(firstEnabledApp.id)
+      }
+    },
+    [onSelectApp],
+  )
 
   const onAppToggle = async (appId, enabled) => {
     // update in-memory list
@@ -296,7 +299,7 @@ function Apps({ closeModal, closeSnackbar, enqueueSnackbar, openModal }) {
         try {
           const currentApp = list[index]
 
-          const appInfo = await getAppInfoFromUrl(currentApp.url)
+          const appInfo: any = await getAppInfoFromUrl(currentApp.url)
           if (appInfo.error) {
             throw Error(`There was a problem trying to load app ${currentApp.url}`)
           }
@@ -343,11 +346,11 @@ function Apps({ closeModal, closeSnackbar, enqueueSnackbar, openModal }) {
   }, [ethBalance, getSelectedApp, iframeEl, network, safeAddress, selectedApp, sendMessageToIframe])
 
   if (loading) {
-    return <Loader />
+    return <Loader size="md" />
   }
 
   if (loading || !appList.length) {
-    return <Loader />
+    return <Loader size="md" />
   }
 
   return (

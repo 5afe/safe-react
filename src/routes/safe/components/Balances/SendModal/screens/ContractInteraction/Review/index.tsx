@@ -31,7 +31,7 @@ interface Props {
   tx: Record<string, any>
 }
 
-const useStyles = makeStyles(styles)
+const useStyles = makeStyles(styles as any)
 
 const ContractInteractionReview = ({ closeSnackbar, enqueueSnackbar, onClose, onPrev, tx }: Props) => {
   const classes = useStyles()

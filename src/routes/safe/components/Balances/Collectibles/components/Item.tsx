@@ -1,5 +1,5 @@
 import { makeStyles } from '@material-ui/core/styles'
-import CallMade from '@material-ui/icons/CallMade'
+// import CallMade from '@material-ui/icons/CallMade'
 import cn from 'classnames'
 import * as React from 'react'
 import { useSelector } from 'react-redux'
@@ -122,7 +122,8 @@ const Item = ({ data, onSend }) => {
       {granted && (
         <div className={cn(classes.extraContent, 'showOnHover')}>
           <Button className={classes.sendButton} color="primary" onClick={onSend} size="small" variant="contained">
-            <CallMade alt="Send" className={classes.buttonIcon} /> Send
+            {/* <CallMade alt="Send" className={classes.buttonIcon} />  */}
+            Send
           </Button>
         </div>
       )}

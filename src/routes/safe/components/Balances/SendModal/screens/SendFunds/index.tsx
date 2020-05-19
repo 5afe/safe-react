@@ -46,7 +46,7 @@ const formMutators = {
   },
 }
 
-const useStyles = makeStyles(styles)
+const useStyles = makeStyles(styles as any)
 
 const SendFunds = ({ initialValues, onClose, onNext, recipientAddress, selectedToken = '' }) => {
   const classes = useStyles()
