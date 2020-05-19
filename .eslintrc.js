@@ -22,6 +22,7 @@ module.exports = {
     '@typescript-eslint/camelcase': 'off',
     '@typescript-eslint/no-var-requires': 'off',
     '@typescript-eslint/no-empty-function': 'off',
+    '@typescript-eslint/no-explicit-any': 'off',
   },
   settings: {
     react: {
