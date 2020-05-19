@@ -11,9 +11,9 @@ import Layout from '../components/Layout'
 import actions from './actions'
 import selector from './selector'
 
-import Page from '~/components/layout/Page'
-import { getSafeDeploymentTransaction } from '~/logic/contracts/safeContracts'
-import { checkReceiptStatus } from '~/logic/wallets/ethTransactions'
+import Page from 'src/components/layout/Page'
+import { getSafeDeploymentTransaction } from 'src/logic/contracts/safeContracts'
+import { checkReceiptStatus } from 'src/logic/wallets/ethTransactions'
 import {
   getAccountsFrom,
   getNamesFrom,

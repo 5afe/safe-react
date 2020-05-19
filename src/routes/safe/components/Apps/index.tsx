@@ -10,10 +10,10 @@ import confirmTransactions from './confirmTransactions'
 import sendTransactions from './sendTransactions'
 import { getAppInfoFromUrl, staticAppsList } from './utils'
 
-import LCL from '~/components/ListContentLayout'
-import { networkSelector } from '~/logic/wallets/store/selectors'
-import { SAFELIST_ADDRESS } from '~/routes/routes'
-import { grantedSelector } from '~/routes/safe/container/selector'
+import LCL from 'src/components/ListContentLayout'
+import { networkSelector } from 'src/logic/wallets/store/selectors'
+import { SAFELIST_ADDRESS } from 'src/routes/routes'
+import { grantedSelector } from 'src/routes/safe/container/selector'
 import {
   safeEthBalanceSelector,
   safeNameSelector,

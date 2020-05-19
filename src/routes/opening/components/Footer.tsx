@@ -2,9 +2,9 @@
 import React from 'react'
 import styled from 'styled-components'
 
-import Button from '~/components/layout/Button'
-import { getEtherScanLink } from '~/logic/wallets/getWeb3'
-import { connected } from '~/theme/variables'
+import Button from 'src/components/layout/Button'
+import { getEtherScanLink } from 'src/logic/wallets/getWeb3'
+import { connected } from 'src/theme/variables'
 
 const EtherScanLink = styled.a`
   color: ${connected};
@@ -36,15 +36,15 @@ export const ContinueFooter = ({
   continueButtonDisabled,
   onContinue,
 }: {
-  continueButtonDisabled: boolean,
-  onContinue: Function,
+  continueButtonDisabled: boolean
+  onContinue: Function
 }) => (
   <Button color="primary" disabled={continueButtonDisabled} onClick={onContinue} variant="contained">
     Continue
   </Button>
 )
 
-export const ErrorFooter = ({ onCancel, onRetry }: { onCancel: Function, onRetry: Function }) => (
+export const ErrorFooter = ({ onCancel, onRetry }: { onCancel: Function; onRetry: Function }) => (
   <>
     <ButtonWithMargin onClick={onCancel} variant="contained">
       Cancel

@@ -1,4 +1,4 @@
-import { IconText, Loader } from '@gnosis.pm/safe-react-components'
+import { Loader } from '@gnosis.pm/safe-react-components'
 import React, { useEffect, useState } from 'react'
 
 import CustomTxIcon from './assets/custom.svg'
@@ -6,8 +6,8 @@ import IncomingTxIcon from './assets/incoming.svg'
 import OutgoingTxIcon from './assets/outgoing.svg'
 import SettingsTxIcon from './assets/settings.svg'
 
-import CustomIconText from '~/components/CustomIconText'
-import { getAppInfoFromOrigin, getAppInfoFromUrl } from '~/routes/safe/components/Apps/utils'
+import CustomIconText from 'src/components/CustomIconText'
+import { getAppInfoFromOrigin, getAppInfoFromUrl } from 'src/routes/safe/components/Apps/utils'
 
 const typeToIcon = {
   outgoing: OutgoingTxIcon,
@@ -31,7 +31,7 @@ const typeToLabel = {
 
 const TxType = ({ origin, txType }) => {
   const [loading, setLoading] = useState(true)
-  const [appInfo, setAppInfo] = useState()
+  const [appInfo, setAppInfo] = useState<any>()
   const [forceCustom, setForceCustom] = useState(false)
 
   useEffect(() => {
@@ -58,6 +58,6 @@ const TxType = ({ origin, txType }) => {
     return <CustomIconText iconUrl={typeToIcon[txType]} text={typeToLabel[txType]} />
   }
 
-  return loading ? <Loader size="md" /> : <IconText iconUrl={appInfo.iconUrl} text={appInfo.name} />
+  return loading ? <Loader size="sm" /> : <CustomIconText iconUrl={appInfo!.iconUrl} text={appInfo!.name} />
 }
 export default TxType

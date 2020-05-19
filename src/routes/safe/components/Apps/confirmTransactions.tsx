@@ -12,12 +12,12 @@ import { BigNumber } from 'bignumber.js'
 import React from 'react'
 import styled from 'styled-components'
 
-import AddressInfo from '~/components/AddressInfo'
-import { mustBeEthereumAddress } from '~/components/forms/validator'
-import Bold from '~/components/layout/Bold'
-import Heading from '~/components/layout/Heading'
-import Img from '~/components/layout/Img'
-import { getEthAsToken } from '~/logic/tokens/utils/tokenHelpers'
+import AddressInfo from 'src/components/AddressInfo'
+import { mustBeEthereumAddress } from 'src/components/forms/validator'
+import Bold from 'src/components/layout/Bold'
+import Heading from 'src/components/layout/Heading'
+import Img from 'src/components/layout/Img'
+import { getEthAsToken } from 'src/logic/tokens/utils/tokenHelpers'
 
 const humanReadableBalance = (balance, decimals) => BigNumber(balance).times(`1e-${decimals}`).toFixed()
 

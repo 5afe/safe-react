@@ -5,14 +5,14 @@ import styled from 'styled-components'
 import { ErrorFooter } from './components/Footer'
 import { isConfirmationStep, steps } from './steps'
 
-import Button from '~/components/layout/Button'
-import Heading from '~/components/layout/Heading'
-import Img from '~/components/layout/Img'
-import Paragraph from '~/components/layout/Paragraph'
-import { initContracts } from '~/logic/contracts/safeContracts'
-import { EMPTY_DATA } from '~/logic/wallets/ethTransactions'
-import { getWeb3 } from '~/logic/wallets/getWeb3'
-import { background, connected } from '~/theme/variables'
+import Button from 'src/components/layout/Button'
+import Heading from 'src/components/layout/Heading'
+import Img from 'src/components/layout/Img'
+import Paragraph from 'src/components/layout/Paragraph'
+import { initContracts } from 'src/logic/contracts/safeContracts'
+import { EMPTY_DATA } from 'src/logic/wallets/ethTransactions'
+import { getWeb3 } from 'src/logic/wallets/getWeb3'
+import { background, connected } from 'src/theme/variables'
 
 const loaderDotsSvg = require('./assets/loader-dots.svg')
 const successSvg = require('./assets/success.svg')
@@ -93,12 +93,12 @@ const BackButton = styled(Button)`
 `
 
 type Props = {
-  provider: string,
-  creationTxHash: Promise<any>,
-  submittedPromise: Promise<any>,
-  onRetry: () => void,
-  onSuccess: () => void,
-  onCancel: () => void,
+  provider: string
+  creationTxHash: Promise<any>
+  submittedPromise: Promise<any>
+  onRetry: () => void
+  onSuccess: () => void
+  onCancel: () => void
 }
 
 const SafeDeployment = ({ creationTxHash, onCancel, onRetry, onSuccess, provider, submittedPromise }: Props) => {
