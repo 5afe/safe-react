@@ -24,6 +24,8 @@ import { safeCancellationTransactionsSelector } from 'src/routes/safe/store/sele
 
 export const TRANSACTION_ROW_TEST_ID = 'transaction-row'
 
+const CollapseAux: any = Collapse
+
 const expandCellStyle = {
   paddingLeft: 0,
   paddingRight: 15,
@@ -120,7 +122,7 @@ const TxsTable = ({ classes }) => {
                       colSpan={6}
                       style={{ paddingBottom: 0, paddingTop: 0 }}
                     >
-                      <Collapse
+                      <CollapseAux
                         cancelTx={row[TX_TABLE_RAW_CANCEL_TX_ID]}
                         component={ExpandedTxComponent}
                         in={expandedTx === row.tx.safeTxHash}

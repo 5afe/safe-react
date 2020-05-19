@@ -1,10 +1,9 @@
-
 export const enhancedFetch = async (url, errMsg) => {
   const header = new Headers({
     'Access-Control-Allow-Origin': '*',
   })
 
-  const sentData = {
+  const sentData: any = {
     mode: 'cors',
     header,
   }

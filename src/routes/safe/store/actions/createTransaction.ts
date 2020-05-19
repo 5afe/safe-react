@@ -93,7 +93,7 @@ const createTransaction = ({
           ...txArgs,
           signature,
           origin,
-        })
+        } as any)
         showSnackbar(notificationsQueue.afterExecution.moreConfirmationsNeeded, enqueueSnackbar, closeSnackbar)
 
         dispatch(fetchTransactions(safeAddress))
@@ -103,7 +103,7 @@ const createTransaction = ({
 
     tx = isExecution ? await getExecutionTransaction(txArgs) : await getApprovalTransaction(txArgs)
 
-    const sendParams = { from, value: 0 }
+    const sendParams: any = { from, value: 0 }
 
     // if not set owner management tests will fail on ganache
     if (process.env.NODE_ENV === 'test') {
@@ -123,7 +123,7 @@ const createTransaction = ({
             ...txArgs,
             txHash,
             origin,
-          })
+          } as any)
           dispatch(fetchTransactions(safeAddress))
         } catch (err) {
           console.error(err)

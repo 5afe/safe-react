@@ -39,7 +39,7 @@ export const checkMinedTx = (Transaction, name) => {
   expect(hashParagraph).toContain(EMPTY_DATA)
 }
 
-export const getListItemsFrom = (Transaction) => TestUtils.scryRenderedComponentsWithType(Transaction, ListItemText)
+export const getListItemsFrom = (Transaction) => TestUtils.scryRenderedComponentsWithType(Transaction, ListItemText as any)
 
 export const expand = async (Transaction) => {
   const listItems = getListItemsFrom(Transaction)

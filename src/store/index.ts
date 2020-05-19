@@ -33,7 +33,7 @@ import transactions, { TRANSACTIONS_REDUCER_ID } from 'src/routes/safe/store/red
 export const history = createHashHistory({ hashType: 'slash' })
 
 // eslint-disable-next-line
-const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
+const composeEnhancers = (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
 const finalCreateStore = composeEnhancers(
   applyMiddleware(
     thunk,
@@ -65,4 +65,4 @@ const reducers = combineReducers({
 
 export const store: any = createStore(reducers, finalCreateStore)
 
-export const aNewStore = (localState) => createStore(reducers, localState, finalCreateStore)
+export const aNewStore = (localState?: any) => createStore(reducers, localState, finalCreateStore)

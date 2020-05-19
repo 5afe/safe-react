@@ -79,7 +79,7 @@ export const checkAndUpdateSafe = (safeAdd) => async (dispatch) => {
       abi: GnosisSafeSol.abi,
       address: safeAddress,
       methods: safeParams,
-    }),
+    } as any),
     getLocalSafe(safeAddress),
   ])
 

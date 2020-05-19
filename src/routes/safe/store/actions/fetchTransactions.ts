@@ -63,7 +63,7 @@ export const buildTransactionFrom = async (
   if (tx.gasPrice > 0) {
     const refundSymbol = txTokenSymbol || 'ETH'
     const decimals = txTokenDecimals || 18
-    const feeString = (tx.gasPrice * (tx.baseGas + tx.safeTxGas)).toString().padStart(decimals, 0)
+    const feeString = (tx.gasPrice * (tx.baseGas + tx.safeTxGas)).toString().padStart(decimals, '0')
     const whole = feeString.slice(0, feeString.length - decimals) || '0'
     const fraction = feeString.slice(feeString.length - decimals)
 
@@ -212,7 +212,7 @@ const batchRequestIncomingTxsData = (txs) => {
       tx,
       symbol === null ? 'ETH' : symbol,
       decimals === null ? '18' : decimals,
-      bn(gas).div(gasPrice).toFixed(),
+      new bn(gas).div(gasPrice).toFixed(),
     ]),
   )
 }

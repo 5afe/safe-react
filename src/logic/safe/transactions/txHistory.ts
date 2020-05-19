@@ -77,7 +77,7 @@ export const saveTxToHistory = async ({
   to,
   txHash,
   valueInWei,
-}) => {
+}: any) => {
   const url = buildTxServiceUrl(safeInstance.address)
   const body = await calculateBodyFrom(
     safeInstance,

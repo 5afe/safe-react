@@ -11,7 +11,7 @@ import { getWeb3 } from 'src/logic/wallets/getWeb3'
  * @param {array<{ args: [any], method: string, type: 'eth'|undefined } | string>} args.methods - methods to be called
  * @returns {Promise<[*]>}
  */
-const generateBatchRequests = ({ abi, address, batch, context, methods }) => {
+const generateBatchRequests = ({ abi, address, batch, context, methods }: any): any => {
   const web3 = getWeb3()
   const contractInstance = new web3.eth.Contract(abi, address)
   const localBatch = batch ? null : new web3.BatchRequest()

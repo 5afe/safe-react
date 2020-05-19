@@ -56,7 +56,7 @@ export const LoadSafe = ({ provider, size }) => (
   </Button>
 )
 
-const Welcome = ({ isOldMultisigMigration, provider }) => {
+const Welcome = ({ isOldMultisigMigration, provider }: any) => {
   const headingText = isOldMultisigMigration ? (
     <>
       We will replicate the owner structure from your existing Gnosis MultiSig
