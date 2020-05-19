@@ -3,7 +3,7 @@ import MuiTextField from '@material-ui/core/TextField'
 import { withStyles } from '@material-ui/core/styles'
 import React from 'react'
 
-import { lg } from 'theme/variables'
+import { lg } from 'src/theme/variables'
 
 // Neded for solving a fix in Windows browsers
 const overflowStyle = {

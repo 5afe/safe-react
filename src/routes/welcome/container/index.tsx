@@ -6,7 +6,7 @@ import Layout from '../components/Layout'
 
 import selector from './selector'
 
-import Page from 'components/layout/Page'
+import Page from 'src/components/layout/Page'
 
 const Welcome = ({ provider }) => (
   <Page align="center">

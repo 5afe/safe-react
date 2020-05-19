@@ -3,8 +3,8 @@ import Paper from '@material-ui/core/Paper'
 import { withStyles } from '@material-ui/core/styles'
 import * as React from 'react'
 
-import Block from 'components/layout/Block'
-import { lg } from 'theme/variables'
+import Block from 'src/components/layout/Block'
+import { lg } from 'src/theme/variables'
 
 const styles = () => ({
   root: {

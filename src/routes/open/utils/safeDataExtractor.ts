@@ -1,7 +1,7 @@
 //
 import { List } from 'immutable'
 
-import { makeOwner } from 'routes/safe/store/models/owner'
+import { makeOwner } from 'src/routes/safe/store/models/owner'
 
 export const getAccountsFrom = (values) => {
   const accounts = Object.keys(values)

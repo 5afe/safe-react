@@ -12,14 +12,14 @@ import ConfirmLargeGreyCircle from './assets/confirm-large-grey.svg'
 import ConfirmLargeRedCircle from './assets/confirm-large-red.svg'
 import { styles } from './style'
 
-import Block from 'components/layout/Block'
-import Col from 'components/layout/Col'
-import Img from 'components/layout/Img'
-import Paragraph from 'components/layout/Paragraph/index'
-import { TX_TYPE_CONFIRMATION } from 'logic/safe/transactions/send'
-import { userAccountSelector } from 'logic/wallets/store/selectors'
-import { makeTransaction } from 'routes/safe/store/models/transaction'
-import { safeOwnersSelector, safeThresholdSelector } from 'routes/safe/store/selectors'
+import Block from 'src/components/layout/Block'
+import Col from 'src/components/layout/Col'
+import Img from 'src/components/layout/Img'
+import Paragraph from 'src/components/layout/Paragraph/index'
+import { TX_TYPE_CONFIRMATION } from 'src/logic/safe/transactions/send'
+import { userAccountSelector } from 'src/logic/wallets/store/selectors'
+import { makeTransaction } from 'src/routes/safe/store/models/transaction'
+import { safeOwnersSelector, safeThresholdSelector } from 'src/routes/safe/store/selectors'
 
 function getOwnersConfirmations(tx, userAddress) {
   const ownersWhoConfirmed = []

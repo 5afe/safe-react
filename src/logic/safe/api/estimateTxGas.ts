@@ -1,7 +1,7 @@
 //
 import axios from 'axios'
 
-import { getRelayUrl } from 'config/index'
+import { getRelayUrl } from 'src/config/index'
 
 export const estimateTxGas = (safeAddress, to, value, data, operation = 0) => {
   const apiUrl = getRelayUrl()

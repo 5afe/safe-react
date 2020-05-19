@@ -6,11 +6,11 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
 import * as React from 'react'
 import { connect } from 'react-redux'
 
-import { SidebarContext } from 'components/Sidebar'
-import Col from 'components/layout/Col'
-import Paragraph from 'components/layout/Paragraph'
-import { safesCountSelector } from 'routes/safe/store/selectors'
-import { border, md, screenSm, sm, xs } from 'theme/variables'
+import { SidebarContext } from 'src/components/Sidebar'
+import Col from 'src/components/layout/Col'
+import Paragraph from 'src/components/layout/Paragraph'
+import { safesCountSelector } from 'src/routes/safe/store/selectors'
+import { border, md, screenSm, sm, xs } from 'src/theme/variables'
 
 export const TOGGLE_SIDEBAR_BTN_TESTID = 'TOGGLE_SIDEBAR_BTN'
 

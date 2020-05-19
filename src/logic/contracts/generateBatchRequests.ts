@@ -1,5 +1,5 @@
 // 
-import { getWeb3 } from 'logic/wallets/getWeb3'
+import { getWeb3 } from 'src/logic/wallets/getWeb3'
 
 /**
  * Generates a batch request for grouping RPC calls

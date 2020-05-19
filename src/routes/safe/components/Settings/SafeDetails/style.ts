@@ -1,5 +1,5 @@
 //
-import { boldFont, border, lg, sm } from 'theme/variables'
+import { boldFont, border, lg, sm } from 'src/theme/variables'
 
 export const styles = () => ({
   formContainer: {

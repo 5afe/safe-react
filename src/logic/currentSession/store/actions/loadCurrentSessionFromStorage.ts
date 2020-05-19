@@ -1,8 +1,9 @@
 //
 
-import loadCurrentSession from 'logic/currentSession/store/actions/loadCurrentSession'
-import { makeCurrentSession } from 'logic/currentSession/store/model/currentSession'
-import { getCurrentSessionFromStorage } from 'logic/currentSession/utils'
+import loadCurrentSession from 'src/logic/currentSession/store/actions/loadCurrentSession'
+import { makeCurrentSession } from 'src/logic/currentSession/store/model/currentSession'
+import { getCurrentSessionFromStorage } from 'src/logic/currentSession/utils'
+import {} from 'src/store'
 
 const loadCurrentSessionFromStorage = () => async (dispatch) => {
   const currentSession = await getCurrentSessionFromStorage()

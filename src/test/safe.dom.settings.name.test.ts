@@ -1,12 +1,12 @@
 // 
 import { fireEvent } from '@testing-library/react'
-import { aNewStore } from 'store/index'
-import { aMinedSafe } from 'test/builder/safe.redux.builder'
-import { renderSafeView } from 'test/builder/safe.dom.utils'
-import { sleep } from 'utils/timer'
+import { aNewStore } from 'src/store'
+import { aMinedSafe } from 'src/test/builder/safe.redux.builder'
+import { renderSafeView } from 'src/test/builder/safe.dom.utils'
+import { sleep } from 'src/utils/timer'
 import '@testing-library/jest-dom/extend-expect'
-import { SETTINGS_TAB_BTN_TEST_ID, SAFE_VIEW_NAME_HEADING_TEST_ID } from 'routes/safe/components/Layout/index'
-import { SAFE_NAME_INPUT_TEST_ID, SAFE_NAME_SUBMIT_BTN_TEST_ID } from 'routes/safe/components/Settings/SafeDetails'
+import { SETTINGS_TAB_BTN_TEST_ID, SAFE_VIEW_NAME_HEADING_TEST_ID } from 'src/routes/safe/components/Layout/index'
+import { SAFE_NAME_INPUT_TEST_ID, SAFE_NAME_SUBMIT_BTN_TEST_ID } from 'src/routes/safe/components/Settings/SafeDetails'
 
 describe('DOM > Feature > Settings - Name', () => {
   let store

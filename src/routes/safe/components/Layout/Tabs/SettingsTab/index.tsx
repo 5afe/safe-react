@@ -3,9 +3,9 @@ import Badge from '@material-ui/core/Badge'
 import React from 'react'
 import { useSelector } from 'react-redux'
 
-import { SettingsIcon } from 'routes/safe/components/assets/SettingsIcon'
-import { grantedSelector } from 'routes/safe/container/selector'
-import { safeNeedsUpdateSelector } from 'routes/safe/store/selectors'
+import { SettingsIcon } from 'src/routes/safe/components/assets/SettingsIcon'
+import { grantedSelector } from 'src/routes/safe/container/selector'
+import { safeNeedsUpdateSelector } from 'src/routes/safe/store/selectors'
 
 const SettingsTab = () => {
   const needsUpdate = useSelector(safeNeedsUpdateSelector)

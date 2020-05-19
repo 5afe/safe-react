@@ -1,6 +1,6 @@
 //
-import OpenSea from 'logic/collectibles/sources/OpenSea'
-import mockedOpenSea from 'logic/collectibles/sources/mocked_opensea'
+import OpenSea from 'src/logic/collectibles/sources/OpenSea'
+import mockedOpenSea from 'src/logic/collectibles/sources/mocked_opensea'
 
 class MockedOpenSea extends OpenSea {
   _fetch = async () => {

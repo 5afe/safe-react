@@ -1,6 +1,6 @@
 //
-import { getIncomingTxServiceUriTo, getTxServiceHost } from 'config'
-import { checksumAddress } from 'utils/checksumAddress'
+import { getIncomingTxServiceUriTo, getTxServiceHost } from 'src/config'
+import { checksumAddress } from 'src/utils/checksumAddress'
 
 export const buildIncomingTxServiceUrl = (safeAddress) => {
   const host = getTxServiceHost()

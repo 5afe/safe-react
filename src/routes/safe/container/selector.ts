@@ -2,11 +2,13 @@
 import { List, Map } from 'immutable'
 import { createSelector } from 'reselect'
 
-import { tokensSelector } from 'logic/tokens/store/selectors'
-import { getEthAsToken } from 'logic/tokens/utils/tokenHelpers'
-import { isUserOwner } from 'logic/wallets/ethAddresses'
-import { userAccountSelector } from 'logic/wallets/store/selectors'
-
+import {} from 'src/logic/tokens/store/model/token'
+import { tokensSelector } from 'src/logic/tokens/store/selectors'
+import { getEthAsToken } from 'src/logic/tokens/utils/tokenHelpers'
+import { isUserOwner } from 'src/logic/wallets/ethAddresses'
+import { userAccountSelector } from 'src/logic/wallets/store/selectors'
+import {} from 'src/routes/safe/store/models/safe'
+import {} from 'src/routes/safe/store/models/transaction'
 import {
   safeActiveTokensSelector,
   safeBalancesSelector,
@@ -14,7 +16,8 @@ import {
   safeIncomingTransactionsSelector,
   safeSelector,
   safeTransactionsSelector,
-} from 'routes/safe/store/selectors'
+} from 'src/routes/safe/store/selectors'
+import {} from 'src/store'
 
 const getTxStatus = (tx, userAddress, safe) => {
   let txStatus

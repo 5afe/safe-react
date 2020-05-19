@@ -7,12 +7,12 @@ import contract from 'truffle-contract'
 
 import saveTokens from './saveTokens'
 
-import { fetchTokenList } from 'logic/tokens/api'
-import { makeToken } from 'logic/tokens/store/model/token'
-import { tokensSelector } from 'logic/tokens/store/selectors'
-import { getWeb3 } from 'logic/wallets/getWeb3'
-import { store } from 'store/index'
-import { ensureOnce } from 'utils/singleton'
+import { fetchTokenList } from 'src/logic/tokens/api'
+import { makeToken } from 'src/logic/tokens/store/model/token'
+import { tokensSelector } from 'src/logic/tokens/store/selectors'
+import { getWeb3 } from 'src/logic/wallets/getWeb3'
+import { store } from 'src/store'
+import { ensureOnce } from 'src/utils/singleton'
 
 const createStandardTokenContract = async () => {
   const web3 = getWeb3()

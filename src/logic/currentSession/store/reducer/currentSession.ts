@@ -2,9 +2,9 @@
 import { Map } from 'immutable'
 import { handleActions } from 'redux-actions'
 
-import { LOAD_CURRENT_SESSION } from 'logic/currentSession/store/actions/loadCurrentSession'
-import { UPDATE_VIEWED_SAFES } from 'logic/currentSession/store/actions/updateViewedSafes'
-import { saveCurrentSessionToStorage } from 'logic/currentSession/utils'
+import { LOAD_CURRENT_SESSION } from 'src/logic/currentSession/store/actions/loadCurrentSession'
+import { UPDATE_VIEWED_SAFES } from 'src/logic/currentSession/store/actions/updateViewedSafes'
+import { saveCurrentSessionToStorage } from 'src/logic/currentSession/utils'
 
 export const CURRENT_SESSION_REDUCER_ID = 'currentSession'
 

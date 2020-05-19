@@ -1,5 +1,5 @@
 // 
-import { getWeb3 } from 'logic/wallets/getWeb3'
+import { getWeb3 } from 'src/logic/wallets/getWeb3'
 
 // SAFE METHODS TO ITS ID
 // https://github.com/gnosis/safe-contracts/blob/development/test/safeMethodNaming.js

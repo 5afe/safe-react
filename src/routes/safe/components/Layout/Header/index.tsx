@@ -8,17 +8,17 @@ import { useSelector } from 'react-redux'
 
 import { styles } from './style'
 
-import CopyBtn from 'components/CopyBtn'
-import EtherscanBtn from 'components/EtherscanBtn'
-import Identicon from 'components/Identicon'
-import Block from 'components/layout/Block'
-import Button from 'components/layout/Button'
-import Heading from 'components/layout/Heading'
-import Paragraph from 'components/layout/Paragraph'
-import Row from 'components/layout/Row'
-import { SAFE_VIEW_NAME_HEADING_TEST_ID } from 'routes/safe/components/Layout'
-import { grantedSelector } from 'routes/safe/container/selector'
-import { safeNameSelector, safeParamAddressFromStateSelector } from 'routes/safe/store/selectors'
+import CopyBtn from 'src/components/CopyBtn'
+import EtherscanBtn from 'src/components/EtherscanBtn'
+import Identicon from 'src/components/Identicon'
+import Block from 'src/components/layout/Block'
+import Button from 'src/components/layout/Button'
+import Heading from 'src/components/layout/Heading'
+import Paragraph from 'src/components/layout/Paragraph'
+import Row from 'src/components/layout/Row'
+import { SAFE_VIEW_NAME_HEADING_TEST_ID } from 'src/routes/safe/components/Layout'
+import { grantedSelector } from 'src/routes/safe/container/selector'
+import { safeNameSelector, safeParamAddressFromStateSelector } from 'src/routes/safe/store/selectors'
 
 const LayoutHeader = (props) => {
   const { classes, onShow, showSendFunds } = props

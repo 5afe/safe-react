@@ -7,22 +7,22 @@ import { useDispatch, useSelector } from 'react-redux'
 import ChangeThreshold from './ChangeThreshold'
 import { styles } from './style'
 
-import Modal from 'components/Modal'
-import Block from 'components/layout/Block'
-import Bold from 'components/layout/Bold'
-import Button from 'components/layout/Button'
-import Heading from 'components/layout/Heading'
-import Paragraph from 'components/layout/Paragraph'
-import Row from 'components/layout/Row'
-import { getGnosisSafeInstanceAt } from 'logic/contracts/safeContracts'
-import { TX_NOTIFICATION_TYPES } from 'logic/safe/transactions'
-import { grantedSelector } from 'routes/safe/container/selector'
-import createTransaction from 'routes/safe/store/actions/createTransaction'
+import Modal from 'src/components/Modal'
+import Block from 'src/components/layout/Block'
+import Bold from 'src/components/layout/Bold'
+import Button from 'src/components/layout/Button'
+import Heading from 'src/components/layout/Heading'
+import Paragraph from 'src/components/layout/Paragraph'
+import Row from 'src/components/layout/Row'
+import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
+import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
+import { grantedSelector } from 'src/routes/safe/container/selector'
+import createTransaction from 'src/routes/safe/store/actions/createTransaction'
 import {
   safeOwnersSelector,
   safeParamAddressFromStateSelector,
   safeThresholdSelector,
-} from 'routes/safe/store/selectors'
+} from 'src/routes/safe/store/selectors'
 
 const ThresholdSettings = ({ classes, closeSnackbar, enqueueSnackbar }) => {
   const [isModalOpen, setModalOpen] = useState(false)

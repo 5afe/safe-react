@@ -2,8 +2,9 @@ import { List } from 'immutable'
 
 import saveTokens from './saveTokens'
 
-import { makeToken } from 'logic/tokens/store/model/token'
-import { getActiveTokens } from 'logic/tokens/utils/tokensStorage'
+import { makeToken } from 'src/logic/tokens/store/model/token'
+import { getActiveTokens } from 'src/logic/tokens/utils/tokensStorage'
+import {} from 'src/store/index'
 
 const loadActiveTokens = () => async (dispatch) => {
   try {

@@ -5,10 +5,10 @@ import TablePagination from '@material-ui/core/TablePagination'
 import { withStyles } from '@material-ui/core/styles'
 import * as React from 'react'
 
-import TableHead from 'components/Table/TableHead'
-import { getSorting, stableSort } from 'components/Table/sorting'
-import Row from 'components/layout/Row'
-import { sm, xl, xxl } from 'theme/variables'
+import TableHead from 'src/components/Table/TableHead'
+import { getSorting, stableSort } from 'src/components/Table/sorting'
+import Row from 'src/components/layout/Row'
+import { sm, xl, xxl } from 'src/theme/variables'
 
 const styles = {
   root: {

@@ -3,16 +3,16 @@ import IconButton from '@material-ui/core/IconButton'
 import ChevronLeft from '@material-ui/icons/ChevronLeft'
 import * as React from 'react'
 
-import Stepper, { StepperPage } from 'components/Stepper'
-import Block from 'components/layout/Block'
-import Heading from 'components/layout/Heading'
-import Row from 'components/layout/Row'
-import DetailsForm, { safeFieldsValidation } from 'routes/load/components/DetailsForm'
-import OwnerList from 'routes/load/components/OwnerList'
-import ReviewInformation from 'routes/load/components/ReviewInformation'
-
-import { history } from 'store/index'
-import { secondary, sm } from 'theme/variables'
+import Stepper, { StepperPage } from 'src/components/Stepper'
+import Block from 'src/components/layout/Block'
+import Heading from 'src/components/layout/Heading'
+import Row from 'src/components/layout/Row'
+import DetailsForm, { safeFieldsValidation } from 'src/routes/load/components/DetailsForm'
+import OwnerList from 'src/routes/load/components/OwnerList'
+import ReviewInformation from 'src/routes/load/components/ReviewInformation'
+import {} from 'src/routes/load/container/selector'
+import { history } from 'src/store'
+import { secondary, sm } from 'src/theme/variables'
 
 const getSteps = () => ['Name and address', 'Owners', 'Review']
 

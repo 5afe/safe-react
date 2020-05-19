@@ -2,13 +2,16 @@ import { List, Set } from 'immutable'
 import { matchPath } from 'react-router-dom'
 import { createSelector } from 'reselect'
 
-import { getWeb3 } from 'logic/wallets/getWeb3'
-import { SAFELIST_ADDRESS, SAFE_PARAM_ADDRESS } from 'routes/routes'
-import { CANCELLATION_TRANSACTIONS_REDUCER_ID } from 'routes/safe/store/reducer/cancellationTransactions'
-import { INCOMING_TRANSACTIONS_REDUCER_ID } from 'routes/safe/store/reducer/incomingTransactions'
-import { SAFE_REDUCER_ID } from 'routes/safe/store/reducer/safe'
-import { TRANSACTIONS_REDUCER_ID } from 'routes/safe/store/reducer/transactions'
-import { checksumAddress } from 'utils/checksumAddress'
+import { getWeb3 } from 'src/logic/wallets/getWeb3'
+import { SAFELIST_ADDRESS, SAFE_PARAM_ADDRESS } from 'src/routes/routes'
+import {} from 'src/routes/safe/store/models/safe'
+import {} from 'src/routes/safe/store/models/transaction'
+import { CANCELLATION_TRANSACTIONS_REDUCER_ID } from 'src/routes/safe/store/reducer/cancellationTransactions'
+import { INCOMING_TRANSACTIONS_REDUCER_ID } from 'src/routes/safe/store/reducer/incomingTransactions'
+import { SAFE_REDUCER_ID } from 'src/routes/safe/store/reducer/safe'
+import { TRANSACTIONS_REDUCER_ID } from 'src/routes/safe/store/reducer/transactions'
+import {} from 'src/store/index'
+import { checksumAddress } from 'src/utils/checksumAddress'
 
 const safesStateSelector = (state) => state[SAFE_REDUCER_ID]
 

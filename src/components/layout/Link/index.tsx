@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom'
 
 import styles from './index.module.scss'
 
-import { capitalize } from 'utils/css'
+import { capitalize } from 'src/utils/css'
 
 const cx = classNames.bind(styles)
 

@@ -1,7 +1,7 @@
 //
 import Cookies from 'js-cookie'
 
-import { getNetwork } from 'config'
+import { getNetwork } from 'src/config'
 
 const PREFIX = `v1_${getNetwork()}`
 

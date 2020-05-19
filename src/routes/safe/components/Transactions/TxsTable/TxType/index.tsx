@@ -6,8 +6,8 @@ import IncomingTxIcon from './assets/incoming.svg'
 import OutgoingTxIcon from './assets/outgoing.svg'
 import SettingsTxIcon from './assets/settings.svg'
 
-import CustomIconText from 'components/CustomIconText'
-import { getAppInfoFromOrigin, getAppInfoFromUrl } from 'routes/safe/components/Apps/utils'
+import CustomIconText from '~/components/CustomIconText'
+import { getAppInfoFromOrigin, getAppInfoFromUrl } from '~/routes/safe/components/Apps/utils'
 
 const typeToIcon = {
   outgoing: OutgoingTxIcon,

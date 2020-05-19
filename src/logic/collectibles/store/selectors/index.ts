@@ -2,8 +2,8 @@
 import { List } from 'immutable'
 import { createSelector } from 'reselect'
 
-import { NFT_ASSETS_REDUCER_ID, NFT_TOKENS_REDUCER_ID } from 'logic/collectibles/store/reducer/collectibles'
-import { safeActiveAssetsSelector } from 'routes/safe/store/selectors'
+import { NFT_ASSETS_REDUCER_ID, NFT_TOKENS_REDUCER_ID } from 'src/logic/collectibles/store/reducer/collectibles'
+import { safeActiveAssetsSelector } from 'src/routes/safe/store/selectors'
 
 export const nftAssetsSelector = (state) => state[NFT_ASSETS_REDUCER_ID]
 export const nftTokensSelector = (state) => state[NFT_TOKENS_REDUCER_ID]

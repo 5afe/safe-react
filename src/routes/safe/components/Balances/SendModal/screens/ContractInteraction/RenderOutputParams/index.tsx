@@ -2,9 +2,9 @@
 import React from 'react'
 import { useField } from 'react-final-form'
 
-import TextField from 'components/forms/TextField'
-import Col from 'components/layout/Col'
-import Row from 'components/layout/Row'
+import TextField from 'src/components/forms/TextField'
+import Col from 'src/components/layout/Col'
+import Row from 'src/components/layout/Row'
 
 const RenderOutputParams = () => {
   const {

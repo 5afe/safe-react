@@ -1,7 +1,9 @@
 //
 import { createAction } from 'redux-actions'
 
-import { removeFromActiveTokens, removeTokenFromStorage } from 'logic/tokens/utils/tokensStorage'
+import {} from 'src/logic/tokens/store/model/token'
+import { removeFromActiveTokens, removeTokenFromStorage } from 'src/logic/tokens/utils/tokensStorage'
+import {} from 'src/store/index'
 
 export const REMOVE_TOKEN = 'REMOVE_TOKEN'
 

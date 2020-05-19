@@ -3,14 +3,14 @@ import * as React from 'react'
 import { Field } from 'react-final-form'
 import { OnChange } from 'react-final-form-listeners'
 
-import TextField from 'components/forms/TextField'
-import { composeValidators, mustBeEthereumAddress, required } from 'components/forms/validator'
-import { getAddressFromENS } from 'logic/wallets/getWeb3'
+import TextField from 'src/components/forms/TextField'
+import { composeValidators, mustBeEthereumAddress, required } from 'src/components/forms/validator'
+import { getAddressFromENS } from 'src/logic/wallets/getWeb3'
 
 const isValidEnsName = (name) => /^([\w-]+\.)+(eth|test|xyz|luxe)$/.test(name)
 
 // an idea for second field was taken from here
-// https://github.com/final-form/react-final-form-listeners/blob/master/OnBlur.js
+// https://github.com/final-form/react-final-form-listeners/blob/master/src/OnBlur.js
 
 const AddressInput = ({
   className = '',

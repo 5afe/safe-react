@@ -1,5 +1,5 @@
 //
-import { lg, md, secondaryText } from 'theme/variables'
+import { lg, md, secondaryText } from 'src/theme/variables'
 
 export const styles = () => ({
   heading: {

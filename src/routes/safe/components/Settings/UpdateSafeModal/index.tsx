@@ -8,14 +8,14 @@ import { bindActionCreators } from 'redux'
 
 import { styles } from './style'
 
-import GnoForm from 'components/forms/GnoForm'
-import Block from 'components/layout/Block'
-import Button from 'components/layout/Button'
-import Hairline from 'components/layout/Hairline'
-import Paragraph from 'components/layout/Paragraph'
-import Row from 'components/layout/Row'
-import { upgradeSafeToLatestVersion } from 'logic/safe/utils/upgradeSafe'
-import createTransaction from 'routes/safe/store/actions/createTransaction'
+import GnoForm from 'src/components/forms/GnoForm'
+import Block from 'src/components/layout/Block'
+import Button from 'src/components/layout/Button'
+import Hairline from 'src/components/layout/Hairline'
+import Paragraph from 'src/components/layout/Paragraph'
+import Row from 'src/components/layout/Row'
+import { upgradeSafeToLatestVersion } from 'src/logic/safe/utils/upgradeSafe'
+import createTransaction from 'src/routes/safe/store/actions/createTransaction'
 
 const UpdateSafeModal = ({ classes, onClose, safeAddress }) => {
   const dispatch = useDispatch()

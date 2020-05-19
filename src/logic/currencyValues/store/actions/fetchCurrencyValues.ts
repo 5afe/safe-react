@@ -2,11 +2,11 @@
 import { List } from 'immutable'
 import { batch } from 'react-redux'
 
-import { setCurrencyBalances } from 'logic/currencyValues/store/actions/setCurrencyBalances'
-import { setCurrencyRate } from 'logic/currencyValues/store/actions/setCurrencyRate'
-import { setSelectedCurrency } from 'logic/currencyValues/store/actions/setSelectedCurrency'
-import { AVAILABLE_CURRENCIES } from 'logic/currencyValues/store/model/currencyValues'
-import { loadCurrencyValues } from 'logic/currencyValues/store/utils/currencyValuesStorage'
+import { setCurrencyBalances } from '~/logic/currencyValues/store/actions/setCurrencyBalances'
+import { setCurrencyRate } from '~/logic/currencyValues/store/actions/setCurrencyRate'
+import { setSelectedCurrency } from '~/logic/currencyValues/store/actions/setSelectedCurrency'
+import { AVAILABLE_CURRENCIES } from '~/logic/currencyValues/store/model/currencyValues'
+import { loadCurrencyValues } from '~/logic/currencyValues/store/utils/currencyValuesStorage'
 
 export const fetchCurrencyValues = (safeAddress) => async (dispatch) => {
   try {

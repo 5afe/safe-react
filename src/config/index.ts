@@ -1,11 +1,11 @@
 // 
-import { ensureOnce } from "utils/singleton"
-import { ETHEREUM_NETWORK } from "logic/wallets/getWeb3"
+import { ensureOnce } from "src/utils/singleton"
+import { ETHEREUM_NETWORK } from "src/logic/wallets/getWeb3"
 import {
   RELAY_API_URL,
   SIGNATURES_VIA_METAMASK,
   TX_SERVICE_HOST
-} from "config/names"
+} from "src/config/names"
 import devConfig from "./development"
 import testConfig from "./testing"
 import stagingConfig from "./staging"

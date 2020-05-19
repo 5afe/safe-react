@@ -1,5 +1,5 @@
 //
-import { uniqueAddress } from 'components/forms/validator'
+import { uniqueAddress } from 'src/components/forms/validator'
 
 export const getAddressValidator = (addresses, position) => {
   // thanks Rich Harris

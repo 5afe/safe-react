@@ -10,7 +10,7 @@ import {
   secondary,
   sm,
   xs,
-} from 'theme/variables'
+} from 'src/theme/variables'
 
 const styles = () => ({
   menuOption: {

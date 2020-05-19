@@ -1,19 +1,19 @@
 // 
 /* eslint-disable max-classes-per-file */
-import SafeRecord, { } from 'routes/safe/store/models/safe'
-import addSafe, { buildOwnersFrom } from 'routes/safe/store/actions/addSafe'
+import SafeRecord, { } from 'src/routes/safe/store/models/safe'
+import addSafe, { buildOwnersFrom } from 'src/routes/safe/store/actions/addSafe'
 import {
   FIELD_NAME,
   FIELD_CONFIRMATIONS,
   FIELD_OWNERS,
   getOwnerNameBy,
   getOwnerAddressBy,
-} from 'routes/open/components/fields'
-import { getWeb3, getProviderInfo } from 'logic/wallets/getWeb3'
-import { createSafe, } from 'routes/open/container/Open'
-import { } from 'store/index'
-import { makeProvider } from 'logic/wallets/store/model/provider'
-import addProvider from 'logic/wallets/store/actions/addProvider'
+} from 'src/routes/open/components/fields'
+import { getWeb3, getProviderInfo } from 'src/logic/wallets/getWeb3'
+import { createSafe, } from 'src/routes/open/container/Open'
+import { } from 'src/store/index'
+import { makeProvider } from 'src/logic/wallets/store/model/provider'
+import addProvider from 'src/logic/wallets/store/actions/addProvider'
 
 class SafeBuilder {
   safe

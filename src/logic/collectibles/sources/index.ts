@@ -1,7 +1,7 @@
 //
-import MockedOpenSea from 'logic/collectibles/sources/MockedOpenSea'
-import OpenSea from 'logic/collectibles/sources/OpenSea'
-import { COLLECTIBLES_SOURCE } from 'utils/constants'
+import MockedOpenSea from 'src/logic/collectibles/sources/MockedOpenSea'
+import OpenSea from 'src/logic/collectibles/sources/OpenSea'
+import { COLLECTIBLES_SOURCE } from 'src/utils/constants'
 
 const sources = {
   opensea: new OpenSea({ rps: 4 }),

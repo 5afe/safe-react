@@ -3,12 +3,12 @@ import { withStyles } from '@material-ui/core/styles'
 import Dot from '@material-ui/icons/FiberManualRecord'
 import * as React from 'react'
 
-import CircleDot from 'components/Header/components/CircleDot'
-import Identicon from 'components/Identicon'
-import Col from 'components/layout/Col'
-import Paragraph from 'components/layout/Paragraph'
-import { shortVersionOf } from 'logic/wallets/ethAddresses'
-import { connected as connectedBg, screenSm, sm } from 'theme/variables'
+import CircleDot from 'src/components/Header/components/CircleDot'
+import Identicon from 'src/components/Identicon'
+import Col from 'src/components/layout/Col'
+import Paragraph from 'src/components/layout/Paragraph'
+import { shortVersionOf } from 'src/logic/wallets/ethAddresses'
+import { connected as connectedBg, screenSm, sm } from 'src/theme/variables'
 
 const styles = () => ({
   network: {

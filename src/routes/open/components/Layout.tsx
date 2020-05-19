@@ -3,18 +3,23 @@ import IconButton from '@material-ui/core/IconButton'
 import ChevronLeft from '@material-ui/icons/ChevronLeft'
 import * as React from 'react'
 
-import Stepper, { StepperPage } from 'components/Stepper'
-import Block from 'components/layout/Block'
-import Heading from 'components/layout/Heading'
-import Row from 'components/layout/Row'
-import { initContracts } from 'logic/contracts/safeContracts'
-import Review from 'routes/open/components/ReviewInformation'
-import SafeNameField from 'routes/open/components/SafeNameForm'
-import SafeOwnersFields from 'routes/open/components/SafeOwnersConfirmationsForm'
-import { FIELD_CONFIRMATIONS, FIELD_SAFE_NAME, getOwnerAddressBy, getOwnerNameBy } from 'routes/open/components/fields'
-import Welcome from 'routes/welcome/components/Layout'
-import { history } from 'store/index'
-import { secondary, sm } from 'theme/variables'
+import Stepper, { StepperPage } from 'src/components/Stepper'
+import Block from 'src/components/layout/Block'
+import Heading from 'src/components/layout/Heading'
+import Row from 'src/components/layout/Row'
+import { initContracts } from 'src/logic/contracts/safeContracts'
+import Review from 'src/routes/open/components/ReviewInformation'
+import SafeNameField from 'src/routes/open/components/SafeNameForm'
+import SafeOwnersFields from 'src/routes/open/components/SafeOwnersConfirmationsForm'
+import {
+  FIELD_CONFIRMATIONS,
+  FIELD_SAFE_NAME,
+  getOwnerAddressBy,
+  getOwnerNameBy,
+} from 'src/routes/open/components/fields'
+import Welcome from 'src/routes/welcome/components/Layout'
+import { history } from 'src/store'
+import { secondary, sm } from 'src/theme/variables'
 
 const { useEffect } = React
 

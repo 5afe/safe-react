@@ -1,8 +1,9 @@
 //
 
-import { getBalanceInEtherOf } from 'logic/wallets/getWeb3'
-import updateSafe from 'routes/safe/store/actions/updateSafe'
-import { SAFE_REDUCER_ID } from 'routes/safe/store/reducer/safe'
+import { getBalanceInEtherOf } from 'src/logic/wallets/getWeb3'
+import updateSafe from 'src/routes/safe/store/actions/updateSafe'
+import { SAFE_REDUCER_ID } from 'src/routes/safe/store/reducer/safe'
+import {} from 'src/store'
 
 const fetchEtherBalance = (safeAddress) => async (dispatch, getState) => {
   try {

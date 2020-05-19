@@ -4,10 +4,10 @@ import cn from 'classnames'
 import * as React from 'react'
 import { useDispatch } from 'react-redux'
 
-import GnoButtonLink from 'components/layout/ButtonLink'
-import Link from 'components/layout/Link'
-import { openCookieBanner } from 'logic/cookies/store/actions/openCookieBanner'
-import { screenSm, secondary, sm } from 'theme/variables'
+import GnoButtonLink from 'src/components/layout/ButtonLink'
+import Link from 'src/components/layout/Link'
+import { openCookieBanner } from 'src/logic/cookies/store/actions/openCookieBanner'
+import { screenSm, secondary, sm } from 'src/theme/variables'
 
 const useStyles = makeStyles({
   footer: {

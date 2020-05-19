@@ -7,6 +7,8 @@ import { connect } from 'react-redux'
 import actions from './actions'
 import selector from './selector'
 
+import {} from 'src/logic/notifications/store/models/notification'
+
 class Notifier extends Component {
   displayed = []
 

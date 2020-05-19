@@ -1,5 +1,5 @@
 //
-import { screenSm, sm } from 'theme/variables'
+import { screenSm, sm } from 'src/theme/variables'
 
 export const styles = () => ({
   receiveModal: {

@@ -3,12 +3,12 @@ import * as React from 'react'
 import { useState } from 'react'
 import { useSelector } from 'react-redux'
 
-import Page from 'components/layout/Page'
-
-import Layout from 'routes/safe/components/Layout'
-import { useCheckForUpdates } from 'routes/safe/container/hooks/useCheckForUpdates'
-import { useLoadSafe } from 'routes/safe/container/hooks/useLoadSafe'
-import { safeParamAddressFromStateSelector } from 'routes/safe/store/selectors'
+import Page from 'src/components/layout/Page'
+import {} from 'src/logic/tokens/store/model/token'
+import Layout from 'src/routes/safe/components/Layout'
+import { useCheckForUpdates } from 'src/routes/safe/container/Hooks/useCheckForUpdates'
+import { useLoadSafe } from 'src/routes/safe/container/Hooks/useLoadSafe'
+import { safeParamAddressFromStateSelector } from 'src/routes/safe/store/selectors'
 
 const INITIAL_STATE = {
   sendFunds: {

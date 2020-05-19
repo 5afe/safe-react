@@ -5,7 +5,7 @@ import Web3 from 'web3'
 import { sameAddress } from './ethAddresses'
 import { EMPTY_DATA } from './ethTransactions'
 
-import { getNetwork } from 'config/index'
+import { getNetwork } from 'src/config/index'
 
 export const ETHEREUM_NETWORK = {
   MAINNET: 'MAINNET',

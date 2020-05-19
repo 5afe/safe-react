@@ -1,5 +1,5 @@
 //
-import { lg, md, sm, xl, xs } from 'theme/variables'
+import { lg, md, sm, xl, xs } from 'src/theme/variables'
 
 export const getSize = (size) => {
   switch (size) {

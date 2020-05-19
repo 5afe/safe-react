@@ -1,6 +1,6 @@
 //
-import { EMPTY_DATA } from 'logic/wallets/ethTransactions'
-import { getWeb3 } from 'logic/wallets/getWeb3'
+import { EMPTY_DATA } from 'src/logic/wallets/ethTransactions'
+import { getWeb3 } from 'src/logic/wallets/getWeb3'
 
 const EIP712_NOT_SUPPORTED_ERROR_MSG = "EIP712 is not supported by user's wallet"
 
