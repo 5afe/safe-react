@@ -23,7 +23,7 @@
     "preelectron-pack": "yarn build",
     "postinstall": "electron-builder install-app-deps",
     "release": "electron-builder --mac --linux --windows -p always",
-    "build": "REACT_APP_APP_VERSION=$npm_package_version react-scripts build --max_old_space_size=8192",
+    "build": "REACT_APP_APP_VERSION=$npm_package_version react-scripts build --max-old-space-size=8192",
     "build-mainnet": "cross-env REACT_APP_NETWORK=mainnet yarn build",
     "build-desktop": "cross-env REACT_APP_BUILD_FOR_DESKTOP=true REACT_APP_ENV=production yarn build-mainnet",
     "format:staged": "lint-staged",
