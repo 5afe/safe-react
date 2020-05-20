@@ -24,4 +24,7 @@ export const styles = () => ({
   versionNumber: {
     height: '21px',
   },
+  link: {
+    color: '#001428',
+  },
 })

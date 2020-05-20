@@ -1,5 +1,6 @@
 // @flow
 import { makeStyles } from '@material-ui/core/styles'
+import cn from 'classnames'
 import { withSnackbar } from 'notistack'
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
@@ -15,6 +16,7 @@ import Block from '~/components/layout/Block'
 import Button from '~/components/layout/Button'
 import Col from '~/components/layout/Col'
 import Heading from '~/components/layout/Heading'
+import Link from '~/components/layout/Link'
 import Paragraph from '~/components/layout/Paragraph'
 import Row from '~/components/layout/Row'
 import { getNotificationsFromTxType, showSnackbar } from '~/logic/notifications'
@@ -78,8 +80,15 @@ const SafeDetails = (props: Props) => {
               <Heading tag="h2">Safe Version</Heading>
               <Row align="end" grow>
                 <Paragraph className={classes.versionNumber}>
-                  {safeCurrentVersion}
-                  {safeNeedsUpdate && ` (there's a newer version: ${latestMasterContractVersion})`}
+                  <Link
+                    className={cn(classes.item, classes.link)}
+                    color="black"
+                    target="_blank"
+                    to="https://github.com/gnosis/safe-contracts/releases"
+                  >
+                    {safeCurrentVersion}
+                    {safeNeedsUpdate && ` (there's a newer version: ${latestMasterContractVersion})`}
+                  </Link>
                 </Paragraph>
               </Row>
               {safeNeedsUpdate && isUserOwner ? (
