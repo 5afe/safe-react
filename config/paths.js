@@ -35,7 +35,7 @@ module.exports = {
   appBuild: resolveApp('build_webpack'),
   appPublic: resolveApp('public'),
   appHtml: resolveApp('public/index.html'),
-  appIndexJs: resolveApp('src/index.js'),
+  appIndexJs: resolveApp('src/index.tsx'),
   appPackageJson: resolveApp('package.json'),
   appSrc: resolveApp('src'),
   appContracts: resolveApp('safe-contracts/build/contracts'),
