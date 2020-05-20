@@ -3,7 +3,7 @@ import { useState } from 'react'
 import { useSelector } from 'react-redux'
 
 import Page from 'src/components/layout/Page'
-import {} from 'src/logic/tokens/store/model/token'
+
 import Layout from 'src/routes/safe/components/Layout'
 import { useCheckForUpdates } from 'src/routes/safe/container/Hooks/useCheckForUpdates'
 import { useLoadSafe } from 'src/routes/safe/container/Hooks/useLoadSafe'

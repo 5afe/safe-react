@@ -1,10 +1,8 @@
-
 import { List } from 'immutable'
 import { createSelector } from 'reselect'
 
 import { CURRENCY_VALUES_KEY } from 'src/logic/currencyValues/store/reducer/currencyValues'
 import { safeParamAddressFromStateSelector } from 'src/routes/safe/store/selectors'
-import {} from 'src/store'
 
 export const currencyValuesSelector = (state) => state[CURRENCY_VALUES_KEY]
 

@@ -4,7 +4,6 @@ import cn from 'classnames'
 import React, { Suspense, useEffect, useState } from 'react'
 
 import Modal from 'src/components/Modal'
-import {} from 'src/logic/tokens/store/model/token'
 
 const ChooseTxType = React.lazy(() => import('./screens/ChooseTxType'))
 

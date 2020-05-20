@@ -12,7 +12,7 @@ import { SENTINEL_ADDRESS, getGnosisSafeInstanceAt } from 'src/logic/contracts/s
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
 import createTransaction from 'src/routes/safe/store/actions/createTransaction'
 import removeSafeOwner from 'src/routes/safe/store/actions/removeSafeOwner'
-import {} from 'src/routes/safe/store/models/owner'
+
 import {
   safeOwnersSelector,
   safeParamAddressFromStateSelector,

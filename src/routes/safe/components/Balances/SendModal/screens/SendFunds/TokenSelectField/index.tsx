@@ -11,7 +11,7 @@ import SelectField from 'src/components/forms/SelectField'
 import { required } from 'src/components/forms/validator'
 import Img from 'src/components/layout/Img'
 import Paragraph from 'src/components/layout/Paragraph'
-import {} from 'src/logic/tokens/store/model/token'
+
 import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
 import { setImageToPlaceholder } from 'src/routes/safe/components/Balances/utils'
 

@@ -17,7 +17,6 @@ import Button from 'src/components/layout/Button'
 import Divider from 'src/components/layout/Divider'
 import Hairline from 'src/components/layout/Hairline'
 import Row from 'src/components/layout/Row'
-import {} from 'src/logic/tokens/store/model/token'
 
 export const ADD_CUSTOM_TOKEN_BUTTON_TEST_ID = 'add-custom-token-btn'
 

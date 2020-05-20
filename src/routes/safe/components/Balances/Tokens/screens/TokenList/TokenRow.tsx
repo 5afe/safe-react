@@ -9,7 +9,7 @@ import React, { memo } from 'react'
 import { styles } from './style'
 
 import Img from 'src/components/layout/Img'
-import {} from 'src/logic/tokens/store/model/token'
+
 import { ETH_ADDRESS } from 'src/logic/tokens/utils/tokenHelpers'
 import { setImageToPlaceholder } from 'src/routes/safe/components/Balances/utils'
 

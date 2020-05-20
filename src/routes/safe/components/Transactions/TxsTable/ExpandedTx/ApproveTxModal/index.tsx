@@ -22,7 +22,7 @@ import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
 import { getWeb3 } from 'src/logic/wallets/getWeb3'
 import { userAccountSelector } from 'src/logic/wallets/store/selectors'
 import processTransaction from 'src/routes/safe/store/actions/processTransaction'
-import {} from 'src/routes/safe/store/models/transaction'
+
 import { safeParamAddressFromStateSelector, safeThresholdSelector } from 'src/routes/safe/store/selectors'
 
 export const APPROVE_TX_MODAL_SUBMIT_BTN_TEST_ID = 'approve-tx-modal-submit-btn'
@@ -141,7 +141,7 @@ const ApproveTxModal = ({
               <Paragraph color="error">
                 Approving this transaction executes it right away.
                 {!isCancelTx &&
-                  ' If you want approve but execute the transaction manually later, click on the ' + 'checkbox below.'}
+                  ' If you want approve but execute the transaction manually later, click on the checkbox below.'}
               </Paragraph>
               {!isCancelTx && (
                 <FormControlLabel

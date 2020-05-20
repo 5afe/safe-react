@@ -9,7 +9,7 @@ import Row from 'src/components/layout/Row'
 import DetailsForm, { safeFieldsValidation } from 'src/routes/load/components/DetailsForm'
 import OwnerList from 'src/routes/load/components/OwnerList'
 import ReviewInformation from 'src/routes/load/components/ReviewInformation'
-import {} from 'src/routes/load/container/selector'
+
 import { history } from 'src/store'
 import { secondary, sm } from 'src/theme/variables'
 

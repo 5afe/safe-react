@@ -8,7 +8,6 @@ import { generateSignaturesFromTxConfirmations } from 'src/logic/safe/safeTxSign
 import { ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
 import { EMPTY_DATA, calculateGasOf, calculateGasPrice } from 'src/logic/wallets/ethTransactions'
 import { getAccountFrom, getWeb3 } from 'src/logic/wallets/getWeb3'
-import {} from 'src/routes/safe/store/models/transaction'
 
 const estimateDataGasCosts = (data) => {
   const reducer = (accumulator, currentValue) => {
