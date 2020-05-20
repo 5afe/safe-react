@@ -2,6 +2,8 @@ import * as React from 'react'
 import { toDataUrl } from './blockies'
 
 export default class Identicon extends React.PureComponent<any> {
+  private identicon: React.RefObject<HTMLImageElement>
+
   static defaultProps = {
     className: '',
   }
@@ -9,7 +11,7 @@ export default class Identicon extends React.PureComponent<any> {
   constructor(props) {
     super(props)
 
-    this.identicon = React.createRef()
+    this.identicon = React.createRef<HTMLImageElement>()
   }
 
   componentDidMount = () => {
