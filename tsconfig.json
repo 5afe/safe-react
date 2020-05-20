@@ -20,6 +20,6 @@
   "paths": {
     "src/*": ["./*"]
   },
-  "include": ["src"],
-  "exclude": ["node_modules", "src/components/Identicon/blockies.js"]
+  "include": ["src/**/*"],
+  "exclude": ["node_modules"]
 }
