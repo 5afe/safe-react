@@ -1,4 +1,3 @@
-
 const navigatorCp: any = navigator
 
 navigatorCp.getMedia =

@@ -1,4 +1,3 @@
-
 import closeSnackbar from 'src/logic/notifications/store/actions/closeSnackbar'
 import { WALLET_PROVIDER, getProviderInfo, getWeb3 } from 'src/logic/wallets/getWeb3'
 import { fetchProvider } from 'src/logic/wallets/store/actions'
@@ -32,7 +31,7 @@ const providerWatcherMware = (store) => (next) => async (action) => {
         }
 
         if (currentProviderProps.name.toUpperCase() === WALLET_PROVIDER.METAMASK && (window as any).ethereum) {
-          (window as any).ethereum.autoRefreshOnNetworkChange = false
+          ;(window as any).ethereum.autoRefreshOnNetworkChange = false
         }
         saveToStorage(LAST_USED_PROVIDER_KEY, currentProviderProps.name)
 

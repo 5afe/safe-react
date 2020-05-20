@@ -16,7 +16,7 @@ export const loadIntercom = () => {
   x.parentNode.insertBefore(s, x)
 
   s.onload = () => {
-    (window as any).Intercom('boot', {
+    ;(window as any).Intercom('boot', {
       app_id: APP_ID,
       consent: true,
     })

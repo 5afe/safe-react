@@ -37,9 +37,9 @@ const StyledBlock = styled(Block)`
   border-radius: 3px;
 `
 interface Props {
-  safeName?: string;
-  safeAddress: string;
-  ethBalance?: string;
+  safeName?: string
+  safeAddress: string
+  ethBalance?: string
 }
 
 const AddressInfo = ({ ethBalance, safeAddress, safeName }: Props) => {

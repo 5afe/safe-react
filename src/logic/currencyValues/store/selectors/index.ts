@@ -1,4 +1,3 @@
-
 import { List } from 'immutable'
 import { createSelector } from 'reselect'
 

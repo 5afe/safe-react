@@ -1,4 +1,3 @@
-
 /**
  * Setups `shortenText` options
  * @param {object} opts

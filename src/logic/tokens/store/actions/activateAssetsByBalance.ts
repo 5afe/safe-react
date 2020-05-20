@@ -1,4 +1,3 @@
-
 import { nftAssetsSelector } from 'src/logic/collectibles/store/selectors'
 import updateActiveAssets from 'src/routes/safe/store/actions/updateActiveAssets'
 import {

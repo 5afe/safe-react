@@ -290,7 +290,7 @@ const SafeDeployment = ({ creationTxHash, onCancel, onRetry, onSuccess, provider
   }, [safeCreationTxHash, waitingSafeDeployed])
 
   if (loading || stepIndex === undefined) {
-    return <Loader size="sm"/>
+    return <Loader size="sm" />
   }
 
   let FooterComponent = null

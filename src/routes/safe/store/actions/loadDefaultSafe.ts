@@ -1,4 +1,3 @@
-
 import setDefaultSafe from './setDefaultSafe'
 
 import { getDefaultSafe } from 'src/logic/safe/utils'
