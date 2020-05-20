@@ -1,6 +1,6 @@
 import * as React from 'react'
 
-import { toDataUrl } from './blockies'
+const blockies = require('./blockies')
 
 export default class Identicon extends React.PureComponent<any> {
   static defaultProps = {
@@ -46,7 +46,7 @@ export default class Identicon extends React.PureComponent<any> {
 
   generateBlockieIdenticon = (address, diameter) => {
     const image = new window.Image()
-    image.src = toDataUrl(address)
+    image.src = blockies.toDataUrl(address)
     image.height = diameter
     image.width = diameter
     image.style.borderRadius = `${diameter / 2}px`
