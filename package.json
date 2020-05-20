@@ -18,24 +18,24 @@
   "main": "public/electron.js",
   "postinstall": "electron-builder install-app-deps",
   "scripts": {
-    "electron-dev": "concurrently \"BROWSER=none yarn start\" \"wait-on http://localhost:3000 && electron .\"",
-    "electron-build": "electron-builder --mac --windows --linux",
-    "preelectron-pack": "yarn build",
-    "postinstall": "electron-builder install-app-deps",
-    "release": "electron-builder --mac --linux --windows -p always",
-    "build": "REACT_APP_APP_VERSION=$npm_package_version react-scripts --max-old-space-size=8192 build",
-    "build-mainnet": "cross-env REACT_APP_NETWORK=mainnet yarn build",
     "build-desktop": "cross-env REACT_APP_BUILD_FOR_DESKTOP=true REACT_APP_ENV=production yarn build-mainnet",
+    "build-mainnet": "cross-env REACT_APP_NETWORK=mainnet yarn build",
+    "build": "REACT_APP_APP_VERSION=$npm_package_version react-app-rewired --max-old-space-size=8192 build",
+    "eject": "react-app-rewired eject",
+    "electron-build": "electron-builder --mac --windows --linux",
+    "electron-dev": "concurrently \"BROWSER=none yarn start\" \"wait-on http://localhost:3000 && electron .\"",
     "format:staged": "lint-staged",
     "lint:check": "eslint './src/**/*.{js,jsx,ts,tsx}'",
     "lint:fix": "yarn lint:check --fix",
-    "prettier": "prettier './src/**/*.{js,jsx,ts,tsx}'",
+    "postinstall": "electron-builder install-app-deps",
+    "preelectron-pack": "yarn build",
     "prettier:check": "yarn prettier --check",
     "prettier:fix": "yarn prettier --write",
-    "eject": "react-scripts eject",
-    "start": "react-scripts start",
+    "prettier": "prettier './src/**/*.{js,jsx,ts,tsx}'",
+    "release": "electron-builder --mac --linux --windows -p always",
     "start-mainnet": "REACT_APP_NETWORK=mainnet yarn start",
-    "test": "NODE_ENV=test && react-scripts test --env=jsdom"
+    "start": "react-app-rewired start",
+    "test": "NODE_ENV=test && react-app-rewired test --env=jsdom"
   },
   "husky": {
     "hooks": {
@@ -206,6 +206,7 @@
     "reselect": "^4.0.0",
     "semver": "7.3.2",
     "styled-components": "^5.0.1",
+    "truffle-contract": "4.0.31",
     "wait-on": "5.0.0",
     "web3": "1.2.7"
   },
@@ -243,9 +244,9 @@
     "json-loader": "^0.5.7",
     "node-sass": "^4.14.1",
     "prettier": "2.0.5",
+    "react-app-rewired": "^2.1.6",
     "run-with-testrpc": "0.3.1",
     "truffle": "5.1.23",
-    "truffle-contract": "4.0.31",
     "truffle-solidity-loader": "0.1.32",
     "typescript": "~3.7.2"
   }
