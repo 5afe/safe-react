@@ -46,7 +46,7 @@ class Provider extends React.Component<any> {
   }
 
   render() {
-    const { children, classes, info, open, toggle } = this.props
+    const { render, classes, info, open, toggle } = this.props
 
     return (
       <>
@@ -60,7 +60,7 @@ class Provider extends React.Component<any> {
           </Col>
           <Divider />
         </div>
-        {children}
+        {render(this.myRef)}
       </>
     )
   }

@@ -69,8 +69,11 @@ const Layout = openHoc(({ classes, clickAway, open, providerDetails, providerInf
     <Divider />
     <NetworkLabel />
     <Spacer />
-    <Provider info={providerInfo} open={open} toggle={toggle}>
-      {(providerRef) => (
+    <Provider
+      info={providerInfo}
+      open={open}
+      toggle={toggle}
+      render={(providerRef) => (
         <Popper
           anchorEl={providerRef.current}
           className={classes.popper}
@@ -91,7 +94,7 @@ const Layout = openHoc(({ classes, clickAway, open, providerDetails, providerInf
           )}
         </Popper>
       )}
-    </Provider>
+    />
   </Row>
 ))
 

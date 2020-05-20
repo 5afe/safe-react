@@ -59,47 +59,6 @@ function Apps({ closeModal, closeSnackbar, enqueueSnackbar, openModal }) {
 
   const getSelectedApp = useCallback(() => appList.find((e) => e.id === selectedApp), [appList, selectedApp])
 
-  const sendMessageToIframe = (messageId, data) => {
-    const app = getSelectedApp()
-    iframeEl.contentWindow.postMessage({ messageId, data }, app.url)
-  }
-
-  const handleIframeMessage = async (data) => {
-    if (!data || !data.messageId) {
-      console.error('ThirdPartyApp: A message was received without message id.')
-      return
-    }
-
-    switch (data.messageId) {
-      case operations.SEND_TRANSACTIONS: {
-        const onConfirm = async () => {
-          closeModal()
-
-          await sendTransactions(dispatch, safeAddress, data.data, enqueueSnackbar, closeSnackbar, getSelectedApp().id)
-        }
-
-        confirmTransactions(
-          safeAddress,
-          safeName,
-          ethBalance,
-          getSelectedApp().name,
-          getSelectedApp().iconUrl,
-          data.data,
-          openModal,
-          closeModal,
-          onConfirm,
-        )
-
-        break
-      }
-
-      default: {
-        console.error(`ThirdPartyApp: A message was received with an unknown message id ${data.messageId}.`)
-        break
-      }
-    }
-  }
-
   const iframeRef = useCallback((node) => {
     if (node !== null) {
       setIframeEl(node)
@@ -247,6 +206,49 @@ function Apps({ closeModal, closeSnackbar, enqueueSnackbar, openModal }) {
 
   // handle messages from iframe
   useEffect(() => {
+    const handleIframeMessage = (data) => {
+      if (!data || !data.messageId) {
+        console.error('ThirdPartyApp: A message was received without message id.')
+        return
+      }
+
+      switch (data.messageId) {
+        case operations.SEND_TRANSACTIONS: {
+          const onConfirm = async () => {
+            closeModal()
+
+            await sendTransactions(
+              dispatch,
+              safeAddress,
+              data.data,
+              enqueueSnackbar,
+              closeSnackbar,
+              getSelectedApp().id,
+            )
+          }
+
+          confirmTransactions(
+            safeAddress,
+            safeName,
+            ethBalance,
+            getSelectedApp().name,
+            getSelectedApp().iconUrl,
+            data.data,
+            openModal,
+            closeModal,
+            onConfirm,
+          )
+
+          break
+        }
+
+        default: {
+          console.error(`ThirdPartyApp: A message was received with an unknown message id ${data.messageId}.`)
+          break
+        }
+      }
+    }
+
     const onIframeMessage = async ({ data, origin }) => {
       if (origin === window.origin) {
         return
@@ -266,7 +268,7 @@ function Apps({ closeModal, closeSnackbar, enqueueSnackbar, openModal }) {
     return () => {
       window.removeEventListener('message', onIframeMessage)
     }
-  }, [getSelectedApp, handleIframeMessage, selectedApp])
+  })
 
   // load legalDisclaimer
   useEffect(() => {
@@ -327,6 +329,10 @@ function Apps({ closeModal, closeSnackbar, enqueueSnackbar, openModal }) {
 
   // on iframe change
   useEffect(() => {
+    const sendMessageToIframe = (messageId, data) => {
+      const app = getSelectedApp()
+      iframeEl.contentWindow.postMessage({ messageId, data }, app.url)
+    }
     const onIframeLoaded = () => {
       setAppIsLoading(false)
       sendMessageToIframe(operations.ON_SAFE_INFO, {
@@ -346,7 +352,7 @@ function Apps({ closeModal, closeSnackbar, enqueueSnackbar, openModal }) {
     return () => {
       iframeEl.removeEventListener('load', onIframeLoaded)
     }
-  }, [ethBalance, getSelectedApp, iframeEl, network, safeAddress, selectedApp, sendMessageToIframe])
+  }, [ethBalance, getSelectedApp, iframeEl, network, safeAddress, selectedApp])
 
   if (loading) {
     return <Loader size="md" />
