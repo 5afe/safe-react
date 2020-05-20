@@ -236,7 +236,7 @@ function hue2rgb(p, q, t) {
   return p
 }
 
-function hsl2rgb(h, s, l) {
+function hsl2rgb(h?: any, s?: any, l?: any) {
   let r, g, b
 
   if (s === 0) {
@@ -339,9 +339,7 @@ function toDataUrl(address: string) {
 
   const p = new PNG(opts.size * opts.scale, opts.size * opts.scale, 3)
 
-  // @ts-ignore
   const color = p.color(...hsl2rgb(...opts.color))
-  // @ts-ignore
   const spotcolor = p.color(...hsl2rgb(...opts.spotcolor))
 
   for (let i = 0; i < imageData.length; i++) {
