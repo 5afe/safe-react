@@ -21,7 +21,7 @@ import Row from 'src/components/layout/Row'
 import Span from 'src/components/layout/Span'
 import IncomingTxDescription from 'src/routes/safe/components/Transactions/TxsTable/ExpandedTx/IncomingTxDescription'
 import { INCOMING_TX_TYPES } from 'src/routes/safe/store/models/incomingTransaction'
-import {} from 'src/routes/safe/store/models/transaction'
+
 import { safeNonceSelector, safeThresholdSelector } from 'src/routes/safe/store/selectors'
 
 const useStyles = makeStyles(styles as any)

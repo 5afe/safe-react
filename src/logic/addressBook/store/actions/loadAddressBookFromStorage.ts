@@ -4,7 +4,6 @@ import { loadAddressBook } from 'src/logic/addressBook/store/actions/loadAddress
 import { buildAddressBook } from 'src/logic/addressBook/store/reducer/addressBook'
 import { getAddressBookFromStorage } from 'src/logic/addressBook/utils'
 import { safesListSelector } from 'src/routes/safe/store/selectors'
-import {} from 'src/store/index'
 
 const loadAddressBookFromStorage = () => async (dispatch, getState) => {
   try {

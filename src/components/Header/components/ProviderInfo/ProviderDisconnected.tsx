@@ -2,7 +2,7 @@ import { withStyles } from '@material-ui/core/styles'
 import * as React from 'react'
 
 import CircleDot from 'src/components/Header/components/CircleDot'
-import {} from 'src/components/hoc/OpenHoc'
+
 import Col from 'src/components/layout/Col'
 import Paragraph from 'src/components/layout/Paragraph'
 import { sm } from 'src/theme/variables'

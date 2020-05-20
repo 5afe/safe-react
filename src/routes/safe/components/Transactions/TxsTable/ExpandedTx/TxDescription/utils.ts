@@ -1,6 +1,5 @@
 import { SAFE_METHODS_NAMES } from 'src/logic/contracts/methodIds'
 import { getWeb3 } from 'src/logic/wallets/getWeb3'
-import {} from 'src/routes/safe/store/models/transaction'
 
 const getSafeVersion = (data) => {
   const contractAddress = data.substr(340, 40).toLowerCase()

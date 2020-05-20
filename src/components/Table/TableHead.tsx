@@ -4,8 +4,6 @@ import TableRow from '@material-ui/core/TableRow'
 import TableSortLabel from '@material-ui/core/TableSortLabel'
 import * as React from 'react'
 
-import {} from 'src/components/Table/sorting'
-
 export const cellWidth = (width) => {
   if (!width) {
     return undefined

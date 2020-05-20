@@ -18,7 +18,7 @@ import Hairline from 'src/components/layout/Hairline'
 import Img from 'src/components/layout/Img'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
-import {} from 'src/logic/tokens/store/model/token'
+
 import TokenPlaceholder from 'src/routes/safe/components/Balances/assets/token_placeholder.svg'
 import { checksumAddress } from 'src/utils/checksumAddress'
 

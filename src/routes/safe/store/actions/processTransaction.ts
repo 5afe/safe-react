@@ -10,8 +10,7 @@ import { providerSelector } from 'src/logic/wallets/store/selectors'
 import fetchSafe from 'src/routes/safe/store/actions/fetchSafe'
 import fetchTransactions from 'src/routes/safe/store/actions/fetchTransactions'
 import { getLastTx, getNewTxNonce, shouldExecuteTransaction } from 'src/routes/safe/store/actions/utils'
-import {} from 'src/routes/safe/store/models/transaction'
-import {} from 'src/store'
+
 import { getErrorMessage } from 'src/test/utils/ethereumErrors'
 
 const processTransaction = ({

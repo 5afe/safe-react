@@ -3,9 +3,8 @@ import { createAction } from 'redux-actions'
 
 import setDefaultSafe from 'src/routes/safe/store/actions/setDefaultSafe'
 import { makeOwner } from 'src/routes/safe/store/models/owner'
-import {} from 'src/routes/safe/store/models/safe'
+
 import { safesListSelector } from 'src/routes/safe/store/selectors'
-import {} from 'src/store'
 
 export const ADD_SAFE = 'ADD_SAFE'
 

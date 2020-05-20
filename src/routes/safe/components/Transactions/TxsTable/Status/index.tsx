@@ -10,7 +10,6 @@ import { styles } from './style'
 import Block from 'src/components/layout/Block'
 import Img from 'src/components/layout/Img'
 import Paragraph from 'src/components/layout/Paragraph/'
-import {} from 'src/routes/safe/store/models/transaction'
 
 const statusToIcon = {
   success: OkIcon,

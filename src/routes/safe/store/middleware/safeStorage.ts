@@ -13,7 +13,6 @@ import { REPLACE_SAFE_OWNER } from 'src/routes/safe/store/actions/replaceSafeOwn
 import { SET_DEFAULT_SAFE } from 'src/routes/safe/store/actions/setDefaultSafe'
 import { UPDATE_SAFE } from 'src/routes/safe/store/actions/updateSafe'
 import { getActiveTokensAddressesForAllSafes, safesMapSelector } from 'src/routes/safe/store/selectors'
-import {} from 'src/store/'
 
 const watchedActions = [
   ADD_SAFE,

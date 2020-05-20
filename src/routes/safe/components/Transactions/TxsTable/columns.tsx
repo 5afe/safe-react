@@ -5,11 +5,9 @@ import React from 'react'
 
 import TxType from './TxType'
 
-import {} from 'src/components/Table/TableHead'
 import { buildOrderFieldFrom } from 'src/components/Table/sorting'
 import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
 import { INCOMING_TX_TYPES } from 'src/routes/safe/store/models/incomingTransaction'
-import {} from 'src/routes/safe/store/models/transaction'
 
 export const TX_TABLE_ID = 'id'
 export const TX_TABLE_TYPE_ID = 'type'

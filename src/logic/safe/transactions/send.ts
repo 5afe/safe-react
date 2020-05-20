@@ -1,6 +1,5 @@
 import GnosisSafeSol from '@gnosis.pm/safe-contracts/build/contracts/GnosisSafe.json'
 
-import {} from 'src/logic/safe/transactions'
 import { getWeb3 } from 'src/logic/wallets/getWeb3'
 
 export const CALL = 0

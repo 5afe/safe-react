@@ -7,7 +7,6 @@ import { saveAddressBook } from 'src/logic/addressBook/utils'
 import { enhanceSnackbarForAction, getNotificationsFromTxType } from 'src/logic/notifications'
 import enqueueSnackbar from 'src/logic/notifications/store/actions/enqueueSnackbar'
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
-import {} from 'src/store'
 
 const watchedActions = [ADD_ENTRY, REMOVE_ENTRY, UPDATE_ENTRY, ADD_OR_UPDATE_ENTRY]
 

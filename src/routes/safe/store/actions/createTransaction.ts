@@ -14,7 +14,7 @@ import { providerSelector } from 'src/logic/wallets/store/selectors'
 import { SAFELIST_ADDRESS } from 'src/routes/routes'
 import fetchTransactions from 'src/routes/safe/store/actions/fetchTransactions'
 import { getLastTx, getNewTxNonce, shouldExecuteTransaction } from 'src/routes/safe/store/actions/utils'
-import {} from 'src/store'
+
 import { getErrorMessage } from 'src/test/utils/ethereumErrors'
 
 const createTransaction = ({
