@@ -6,8 +6,6 @@ export default class Identicon extends React.PureComponent<any> {
     className: '',
   }
 
-  identicon
-
   constructor(props) {
     super(props)
 
