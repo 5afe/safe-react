@@ -16,6 +16,7 @@ export const TOGGLE_SIDEBAR_BTN_TESTID = 'TOGGLE_SIDEBAR_BTN'
 const useStyles = makeStyles({
   container: {
     flexGrow: 0,
+    alignItems: 'center',
     padding: `0 ${sm}`,
     [`@media (min-width: ${screenSm}px)`]: {
       paddingLeft: md,
