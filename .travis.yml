@@ -44,7 +44,7 @@ deploy:
     access_key_id: $AWS_ACCESS_KEY_ID
     secret_access_key: $AWS_SECRET_ACCESS_KEY
     skip_cleanup: true
-    local_dir: build_webpack
+    local_dir: build
     upload-dir: app
     region: $AWS_DEFAULT_REGION
     on:
@@ -56,7 +56,7 @@ deploy:
     access_key_id: $AWS_ACCESS_KEY_ID
     secret_access_key: $AWS_SECRET_ACCESS_KEY
     skip_cleanup: true
-    local_dir: build_webpack
+    local_dir: build
     upload-dir: current/app
     region: $AWS_DEFAULT_REGION
     on:
@@ -68,7 +68,7 @@ deploy:
     secret_access_key: $AWS_SECRET_ACCESS_KEY
     access_key_id: $AWS_ACCESS_KEY_ID
     skip_cleanup: true
-    local_dir: build_webpack
+    local_dir: build
     upload-dir: releases/$TRAVIS_TAG
     region: $AWS_DEFAULT_REGION
     on:
