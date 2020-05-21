@@ -152,7 +152,8 @@ const notificationsMiddleware = (store) => (next) => async (action) => {
       }
       case ADD_SAFE: {
         const state = store.getState()
-        const currentSafeAddress = safeParamAddressFromStateSelector(state)
+        const { safe } = action.payload
+        const currentSafeAddress = safeParamAddressFromStateSelector(state) || safe.address
         if (!currentSafeAddress) {
           break
         }
