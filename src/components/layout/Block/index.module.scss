@@ -1,0 +1,67 @@
+@import "src/theme/variables.scss";
+
+.block {
+}
+
+.xs {
+  margin-bottom: $xs;
+}
+
+.sm {
+  margin-bottom: $sm;
+}
+
+.md {
+  margin-bottom: $md;
+}
+
+.lg {
+  margin-bottom: $lg;
+}
+
+.xl {
+  margin-bottom: $xl;
+}
+
+.paddingXs {
+  padding-top: $xs;
+}
+
+.paddingSm {
+  padding-top: $sm;
+}
+
+.paddingMd {
+  padding-top: $md;
+}
+
+.paddingLg {
+  padding-top: $lg;
+}
+
+.paddingXl {
+  padding-top: $xl;
+}
+
+.center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.left {
+  display: flex;
+  align-items: center;
+}
+
+.space-around {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+}
+
+.right {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
