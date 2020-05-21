@@ -1,5 +1,5 @@
 !.eslintrc.js
-build_webpack
+build
 config
 contracts
 flow-typed
