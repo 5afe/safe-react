@@ -153,6 +153,9 @@ const notificationsMiddleware = (store) => (next) => async (action) => {
       case ADD_SAFE: {
         const state = store.getState()
         const currentSafeAddress = safeParamAddressFromStateSelector(state)
+        if (!currentSafeAddress) {
+          break
+        }
         const isUserOwner = grantedSelector(state)
         const { needUpdate } = await getSafeVersionInfo(currentSafeAddress)
 
