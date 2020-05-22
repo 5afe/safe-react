@@ -1,25 +1,32 @@
 import { batch } from 'react-redux'
 
 import { addIncomingTransactions } from '../../addIncomingTransactions'
-import { addTransactions } from '../../addTransactions'
 
 import { loadIncomingTransactions } from './loadIncomingTransactions'
 import { loadOutgoingTransactions } from './loadOutgoingTransactions'
 
-import { addCancellationTransaction } from '../addCancellationTransaction'
+import { addOrUpdateCancellationTransactions } from 'src/routes/safe/store/actions/transactions/addOrUpdateCancellationTransactions'
+import { addOrUpdateTransactions } from 'src/routes/safe/store/actions/transactions/addOrUpdateTransactions'
 
-export default (safeAddress: string) => async (dispatch, getState) => {
-  const transactions: any | typeof undefined = await loadOutgoingTransactions(safeAddress, getState)
+const noFunc = () => {}
+
+export default (safeAddress: string) => async (dispatch) => {
+  const transactions = await loadOutgoingTransactions(safeAddress)
+
   if (transactions) {
     const { cancel, outgoing } = transactions
+    const updateCancellationTxs = cancel.size
+      ? addOrUpdateCancellationTransactions({ safeAddress, transactions: cancel })
+      : noFunc
+    const updateOutgoingTxs = outgoing.size ? addOrUpdateTransactions({ safeAddress, transactions: outgoing }) : noFunc
 
     batch(() => {
-      dispatch(addCancellationTransaction(cancel))
-      dispatch(addTransactions(outgoing))
+      dispatch(updateCancellationTxs)
+      dispatch(updateOutgoingTxs)
     })
   }
 
-  const incomingTransactions: any | typeof undefined = await loadIncomingTransactions(safeAddress)
+  const incomingTransactions = await loadIncomingTransactions(safeAddress)
 
   if (incomingTransactions) {
     dispatch(addIncomingTransactions(incomingTransactions))

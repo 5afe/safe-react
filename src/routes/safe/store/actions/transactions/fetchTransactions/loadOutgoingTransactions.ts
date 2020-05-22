@@ -1,195 +1,110 @@
-import ERC20Detailed from '@openzeppelin/contracts/build/contracts/ERC20Detailed.json'
-import axios from 'axios'
-import { List, Map, Record } from 'immutable'
-
-import addMockSafeCreationTx from '../utils/addMockSafeCreationTx'
+import { List, Map, fromJS } from 'immutable'
 
 import generateBatchRequests from 'src/logic/contracts/generateBatchRequests'
-import { decodeParamsFromSafeMethod } from 'src/logic/contracts/methodIds'
-import { buildTxServiceUrl } from 'src/logic/safe/transactions/txHistory'
-import { getTokenInfos } from 'src/logic/tokens/store/actions/fetchTokens'
 import { TOKEN_REDUCER_ID } from 'src/logic/tokens/store/reducer/tokens'
-import { ALTERNATIVE_TOKEN_ABI } from 'src/logic/tokens/utils/alternativeAbi'
-import {
-  SAFE_TRANSFER_FROM_WITHOUT_DATA_HASH,
-  isMultisendTransaction,
-  isTokenTransfer,
-  isUpgradeTransaction,
-} from 'src/logic/tokens/utils/tokenHelpers'
-import { ZERO_ADDRESS, sameAddress } from 'src/logic/wallets/ethAddresses'
-import { EMPTY_DATA } from 'src/logic/wallets/ethTransactions'
 import { web3ReadOnly } from 'src/logic/wallets/getWeb3'
-import { makeConfirmation } from 'src/routes/safe/store/models/confirmation'
-import { makeTransaction } from 'src/routes/safe/store/models/transaction'
+import { PROVIDER_REDUCER_ID } from 'src/logic/wallets/store/reducer/provider'
+import FetchTransactions from 'src/routes/safe/store/actions/transactions/fetchTransactions/FetchTransactions'
+import { buildTx, isCancelTransaction } from 'src/routes/safe/store/actions/transactions/utils/transactionHelpers'
+import { SAFE_REDUCER_ID } from 'src/routes/safe/store/reducer/safe'
+import { store } from 'src/store'
 
-type ConfirmationServiceModel = {
+export type ConfirmationServiceModel = {
   owner: string
   submissionDate: Date
   signature: string
   transactionHash: string
 }
 
+export type DecodedData = {
+  [key: string]: Array<{ [key: string]: string | number }>
+}
+
 export type TxServiceModel = {
-  origin: null
-  to: string
-  value: number
-  data?: string | null
-  operation: number
-  nonce?: number | null
-  blockNumber?: number | null
-  safeTxGas: number
   baseGas: number
+  blockNumber?: number | null
+  confirmations: ConfirmationServiceModel[]
+  creationTx?: boolean | null
+  data?: string | null
+  dataDecoded?: DecodedData | null
+  executionDate?: string | null
+  executor: string
   gasPrice: number
   gasToken: string
-  refundReceiver: string
-  safeTxHash: string
-  submissionDate?: string | null
-  executor: string
-  executionDate?: string | null
-  confirmations: ConfirmationServiceModel[]
   isExecuted: boolean
   isSuccessful: boolean
+  nonce?: number | null
+  operation: number
+  origin?: string | null
+  refundReceiver: string
+  safeTxGas: number
+  safeTxHash: string
+  submissionDate?: string | null
+  to: string
   transactionHash?: string | null
-  creationTx?: boolean
+  value: number
 }
 
 export type SafeTransactionsType = {
-  outgoing: Map<string, List<any>>
-  cancel: Map<string, List<any>>
+  cancel: any
+  outgoing: any
 }
 
-export const buildTransactionFrom = async (
-  safeAddress: string,
-  tx: TxServiceModel,
-  knownTokens,
-  code,
-): Promise<any> => {
-  const confirmations = List(
-    tx.confirmations.map((conf: ConfirmationServiceModel) =>
-      makeConfirmation({
-        owner: conf.owner,
-        hash: conf.transactionHash,
-        signature: conf.signature,
-      }),
-    ),
-  )
-  const modifySettingsTx = sameAddress(tx.to, safeAddress) && Number(tx.value) === 0 && !!tx.data
-  const cancellationTx = sameAddress(tx.to, safeAddress) && Number(tx.value) === 0 && !tx.data
-  const isERC721Token =
-    (code && code.includes(SAFE_TRANSFER_FROM_WITHOUT_DATA_HASH)) ||
-    (isTokenTransfer(tx.data, Number(tx.value)) && !knownTokens.get(tx.to))
-  let isSendTokenTx = !isERC721Token && isTokenTransfer(tx.data, Number(tx.value))
-  const isMultiSendTx = isMultisendTransaction(tx.data, Number(tx.value))
-  const isUpgradeTx = isMultiSendTx && isUpgradeTransaction(tx.data)
-  let customTx = !sameAddress(tx.to, safeAddress) && !!tx.data && !isSendTokenTx && !isUpgradeTx && !isERC721Token
+export type OutgoingTxs = {
+  cancellationTxs: any
+  outgoingTxs: any
+}
 
-  let refundParams = null
-  if (tx.gasPrice > 0) {
-    let refundSymbol = 'ETH'
-    let refundDecimals = 18
-    if (tx.gasToken !== ZERO_ADDRESS) {
-      const gasToken = await getTokenInfos(tx.gasToken)
-      refundSymbol = gasToken.symbol
-      refundDecimals = gasToken.decimals
-    }
-    const feeString = (tx.gasPrice * (tx.baseGas + tx.safeTxGas)).toString().padStart(refundDecimals, '0')
-    const whole = feeString.slice(0, feeString.length - refundDecimals) || '0'
-    const fraction = feeString.slice(feeString.length - refundDecimals)
+export type BatchProcessTxsProps = OutgoingTxs & {
+  currentUser?: string
+  knownTokens: any
+  safe: any
+}
 
-    const formattedFee = `${whole}.${fraction}`
-    refundParams = {
-      fee: formattedFee,
-      symbol: refundSymbol,
-    }
-  }
-
-  let symbol = 'ETH'
-  let decimals = 18
-  let decodedParams
-  if (isSendTokenTx) {
-    try {
-      const token = await getTokenInfos(tx.to)
-
-      symbol = token.symbol
-      decimals = token.decimals
-    } catch (e) {
-      try {
-        const [tokenSymbol, tokenDecimals] = await Promise.all(
-          generateBatchRequests({
-            abi: ALTERNATIVE_TOKEN_ABI,
-            address: tx.to,
-            methods: ['symbol', 'decimals'],
-          }),
-        )
-
-        symbol = tokenSymbol as string
-        decimals = tokenDecimals as number
-      } catch (err) {
-        // some contracts may implement the same methods as in ERC20 standard
-        // we may falsely treat them as tokens, so in case we get any errors when getting token info
-        // we fallback to displaying custom transaction
-        isSendTokenTx = false
-        customTx = true
+/**
+ * Differentiates outgoing transactions from its cancel ones and returns a split map
+ * @param {string} safeAddress - safe's Ethereum Address
+ * @param {TxServiceModel[]} outgoingTxs - collection of transactions (usually, returned by the /transactions service)
+ * @returns {any|{cancellationTxs: {}, outgoingTxs: []}}
+ */
+const extractCancelAndOutgoingTxs = (safeAddress: string, outgoingTxs: TxServiceModel[]): OutgoingTxs => {
+  return outgoingTxs.reduce(
+    (acc, transaction) => {
+      if (isCancelTransaction(transaction, safeAddress)) {
+        if (!isNaN(Number(transaction.nonce))) {
+          acc.cancellationTxs[transaction.nonce] = transaction
+        }
+      } else {
+        acc.outgoingTxs = [...acc.outgoingTxs, transaction]
       }
-    }
-
-    const params = web3ReadOnly.eth.abi.decodeParameters(['address', 'uint256'], tx.data.slice(10))
-    decodedParams = {
-      recipient: params[0],
-      value: params[1],
-    }
-  } else if (modifySettingsTx && tx.data) {
-    decodedParams = decodeParamsFromSafeMethod(tx.data)
-  } else if (customTx && tx.data) {
-    decodedParams = decodeParamsFromSafeMethod(tx.data)
-  }
-
-  return makeTransaction({
-    symbol,
-    nonce: tx.nonce,
-    blockNumber: tx.blockNumber,
-    value: tx.value.toString(),
-    confirmations,
-    decimals,
-    recipient: tx.to,
-    data: tx.data ? tx.data : EMPTY_DATA,
-    operation: tx.operation,
-    safeTxGas: tx.safeTxGas,
-    baseGas: tx.baseGas,
-    gasPrice: tx.gasPrice,
-    gasToken: tx.gasToken || ZERO_ADDRESS,
-    refundReceiver: tx.refundReceiver || ZERO_ADDRESS,
-    refundParams,
-    isExecuted: tx.isExecuted,
-    isSuccessful: tx.isSuccessful,
-    submissionDate: tx.submissionDate,
-    executor: tx.executor,
-    executionDate: tx.executionDate,
-    executionTxHash: tx.transactionHash,
-    safeTxHash: tx.safeTxHash,
-    isTokenTransfer: isSendTokenTx,
-    multiSendTx: isMultiSendTx,
-    upgradeTx: isUpgradeTx,
-    decodedParams,
-    modifySettingsTx,
-    customTx,
-    cancellationTx,
-    creationTx: tx.creationTx,
-    origin: tx.origin,
-  })
+      return acc
+    },
+    {
+      cancellationTxs: {},
+      outgoingTxs: [],
+    },
+  )
 }
 
-export const batchTxTokenRequest = (txs: any[]) => {
+/**
+ * Requests Contract's code for all the Contracts the Safe has interacted with
+ * @param transactions
+ * @returns {Promise<[Promise<*[]>, Promise<*[]>, Promise<*[]>, Promise<*[]>, Promise<*[]>, Promise<*[]>, Promise<*[]>, Promise<*[]>, Promise<*[]>, Promise<*[]>]>}
+ */
+const batchRequestContractCode = (transactions: any[]): Promise<any[]> => {
+  if (!transactions || !Array.isArray(transactions)) {
+    throw new Error('`transactions` must be provided in order to lookup information')
+  }
+
   const batch = new web3ReadOnly.BatchRequest()
 
-  const whenTxsValues = txs.map((tx) => {
-    const methods = [{ method: 'getCode', type: 'eth', args: [tx.to] }]
+  const whenTxsValues = transactions.map((tx) => {
     return generateBatchRequests({
-      abi: ERC20Detailed.abi,
+      abi: [],
       address: tx.to,
       batch,
       context: tx,
-      methods,
+      methods: [{ method: 'getCode', type: 'eth', args: [tx.to] }],
     })
   })
 
@@ -198,51 +113,101 @@ export const batchTxTokenRequest = (txs: any[]) => {
   return Promise.all(whenTxsValues)
 }
 
-let prevSaveTransactionsEtag = null
-export const loadOutgoingTransactions = async (safeAddress: string, getState: any): Promise<any> => {
-  let transactions: any = addMockSafeCreationTx(safeAddress)
+/**
+ * Receives a list of outgoing and its cancellation transactions and builds the tx object that will be store
+ * @param cancellationTxs
+ * @param currentUser
+ * @param knownTokens
+ * @param outgoingTxs
+ * @param safe
+ * @returns {Promise<{cancel: {}, outgoing: []}>}
+ */
+const batchProcessOutgoingTransactions = async ({
+  cancellationTxs,
+  currentUser,
+  knownTokens,
+  outgoingTxs,
+  safe,
+}: BatchProcessTxsProps): Promise<{
+  cancel: any
+  outgoing: any
+}> => {
+  // cancellation transactions
+  const cancelTxsValues = Object.values(cancellationTxs)
+  const cancellationTxsWithData = cancelTxsValues.length ? await batchRequestContractCode(cancelTxsValues) : []
 
-  try {
-    const config = prevSaveTransactionsEtag
-      ? {
-          headers: {
-            'If-None-Match': prevSaveTransactionsEtag,
-          },
-        }
-      : undefined
-
-    const url = buildTxServiceUrl(safeAddress)
-    const response = await axios.get(url, config)
-    if (response.data.count > 0) {
-      if (prevSaveTransactionsEtag === response.headers.etag) {
-        // The txs are the same as we currently have, we don't have to proceed
-        return
-      }
-      transactions = transactions.concat(response.data.results)
-      prevSaveTransactionsEtag = response.headers.etag
-    }
-  } catch (err) {
-    if (err && err.response && err.response.status === 304) {
-      // NOTE: this is the expected implementation, currently the backend is not returning 304.
-      // So I check if the returned etag is the same instead (see above)
-      return
-    } else {
-      console.error(`Requests for outgoing transactions for ${safeAddress} failed with 404`, err)
-    }
+  const cancel = {}
+  for (const [tx, txCode] of cancellationTxsWithData) {
+    cancel[`${tx.nonce}`] = await buildTx({
+      cancellationTxs,
+      currentUser,
+      knownTokens,
+      outgoingTxs,
+      safe,
+      tx,
+      txCode,
+    })
   }
 
-  const state = getState()
-  const knownTokens = state[TOKEN_REDUCER_ID]
-  const txsWithData = await batchTxTokenRequest(transactions)
-  // In case that the etags don't match, we parse the new transactions and save them to the cache
-  const txsRecord: Array<Record<any>> = await Promise.all(
-    txsWithData.map(([tx, code]) => buildTransactionFrom(safeAddress, tx, knownTokens, code)),
-  )
+  // outgoing transactions
+  const outgoingTxsWithData = outgoingTxs.length ? await batchRequestContractCode(outgoingTxs) : []
 
-  const groupedTxs = List(txsRecord).groupBy((tx) => (tx.get('cancellationTx') ? 'cancel' : 'outgoing'))
+  const outgoing = []
+  for (const [tx, txCode] of outgoingTxsWithData) {
+    outgoing.push(
+      await buildTx({
+        cancellationTxs,
+        currentUser,
+        knownTokens,
+        outgoingTxs,
+        safe,
+        tx,
+        txCode,
+      }),
+    )
+  }
+
+  return { cancel, outgoing }
+}
+
+let fetchOutgoingTxs: FetchTransactions | null = null
+export const loadOutgoingTransactions = async (safeAddress: string): Promise<SafeTransactionsType> => {
+  const defaultResponse = {
+    cancel: Map(),
+    outgoing: List(),
+  }
+  const state = store.getState()
+
+  if (!safeAddress) {
+    return defaultResponse
+  }
+
+  const knownTokens = state[TOKEN_REDUCER_ID]
+  const currentUser = state[PROVIDER_REDUCER_ID].get('account')
+  const safe = state[SAFE_REDUCER_ID].getIn([SAFE_REDUCER_ID, safeAddress])
+
+  if (!safe) {
+    return defaultResponse
+  }
+
+  fetchOutgoingTxs =
+    !fetchOutgoingTxs || fetchOutgoingTxs.getSafeAddress() !== safeAddress
+      ? new FetchTransactions(safeAddress, 'outgoing')
+      : fetchOutgoingTxs
+  const outgoingTransactions: TxServiceModel[] = await fetchOutgoingTxs.fetch()
+  const { cancellationTxs, outgoingTxs } = extractCancelAndOutgoingTxs(safeAddress, outgoingTransactions)
+
+  // this should be only used for the initial load or when paginating
+  const { cancel, outgoing } = await batchProcessOutgoingTransactions({
+    cancellationTxs,
+    currentUser,
+    knownTokens,
+    outgoingTxs,
+    safe,
+  })
 
   return {
-    outgoing: Map().set(safeAddress, groupedTxs.get('outgoing')),
-    cancel: Map().set(safeAddress, groupedTxs.get('cancel')),
+    cancel: fromJS(cancel),
+    outgoing: fromJS(outgoing),
   }
 }
