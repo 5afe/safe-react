@@ -1,4 +1,4 @@
-import { boldFont, border, lg, sm } from 'src/theme/variables'
+import { boldFont, border, lg, sm, fontColor } from 'src/theme/variables'
 
 export const styles = () => ({
   formContainer: {
@@ -24,7 +24,7 @@ export const styles = () => ({
     height: '21px',
   },
   link: {
-    color: '#001428',
-    borderBottom: '1px solid #001428',
+    color: `${fontColor}`,
+    borderBottom: `1px solid ${fontColor}`,
   },
 })
