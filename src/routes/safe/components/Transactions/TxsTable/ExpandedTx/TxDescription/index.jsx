@@ -168,11 +168,12 @@ const SettingsDescription = ({ action, addedOwner, newThreshold, removedOwner }:
 }
 
 const TxData = (props: TxDataProps) => {
-  const { classes, data, setShowTxData, showTxData } = props
-  const showLongData = data.length > 20
+  const { classes, data } = props
+  const [showTxData, setShowTxData] = useState(false)
+  const showExpandBtn = data.length > 20
   return (
     <Paragraph className={classes.txDataParagraph} noMargin size="md">
-      {showLongData ? (
+      {showExpandBtn ? (
         <>
           {showTxData ? (
             <>
@@ -210,7 +211,6 @@ const TxData = (props: TxDataProps) => {
 }
 
 const CustomDescription = ({ amount = 0, classes, data, recipient }: CustomDescProps) => {
-  const [showTxData, setShowTxData] = useState(false)
   const recipientName = useSelector((state) => getNameFromAddressBook(state, recipient))
   return (
     <>
@@ -224,7 +224,7 @@ const CustomDescription = ({ amount = 0, classes, data, recipient }: CustomDescP
       </Block>
       <Block className={classes.txData} data-testid={TRANSACTIONS_DESC_CUSTOM_DATA_TEST_ID}>
         <Bold>Data (hex encoded):</Bold>
-        <TxData classes={classes} data={data} setShowTxData={setShowTxData} showTxData={showTxData} />
+        <TxData classes={classes} data={data} />
       </Block>
     </>
   )
