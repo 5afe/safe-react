@@ -2,7 +2,6 @@ import { theme as styledTheme } from '@gnosis.pm/safe-react-components'
 import { MuiThemeProvider } from '@material-ui/core/styles'
 import { ConnectedRouter } from 'connected-react-router'
 import React from 'react'
-import { hot } from 'react-hot-loader/root'
 import { Provider } from 'react-redux'
 import { ThemeProvider } from 'styled-components'
 
@@ -29,4 +28,4 @@ const Root = () => (
   </ThemeProvider>
 )
 
-export default hot(Root)
+export default Root
