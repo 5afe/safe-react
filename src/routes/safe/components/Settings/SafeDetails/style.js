@@ -26,5 +26,6 @@ export const styles = () => ({
   },
   link: {
     color: '#001428',
+    borderBottom: '1px solid #001428',
   },
 })
