@@ -50,7 +50,7 @@ export const formMutators = {
 
 export const createTxObject = (method, contractAddress, values) => {
   const web3 = getWeb3()
-  const contract = new web3.eth.Contract([method], contractAddress)
+  const contract: any = new web3.eth.Contract([method], contractAddress)
   const { inputs, name } = method
   const args = inputs.map(({ type }, index) => values[`methodInput-${name}_${index}_${type}`])
 
