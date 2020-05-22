@@ -1,5 +1,7 @@
 import { BigNumber } from 'bignumber.js'
-import { format, getTime, parseISO } from 'date-fns'
+import format from 'date-fns/format'
+import getTime from 'date-fns/getTime'
+import parseISO from 'date-fns/parseISO'
 import { List, Map } from 'immutable'
 import React from 'react'
 
