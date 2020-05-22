@@ -1,4 +1,5 @@
 import { push } from 'connected-react-router'
+import { List, Map, fromJS } from 'immutable'
 import semverSatisfies from 'semver/functions/satisfies'
 
 import { onboardUser } from 'src/components/ConnectButton'
@@ -12,10 +13,41 @@ import { ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
 import { EMPTY_DATA } from 'src/logic/wallets/ethTransactions'
 import { providerSelector } from 'src/logic/wallets/store/selectors'
 import { SAFELIST_ADDRESS } from 'src/routes/routes'
-import fetchTransactions from 'src/routes/safe/store/actions/fetchTransactions'
+import { addOrUpdateCancellationTransactions } from 'src/routes/safe/store/actions/transactions/addOrUpdateCancellationTransactions'
+import { addOrUpdateTransactions } from 'src/routes/safe/store/actions/transactions/addOrUpdateTransactions'
+import { removeCancellationTransaction } from 'src/routes/safe/store/actions/transactions/removeCancellationTransaction'
+import { removeTransaction } from 'src/routes/safe/store/actions/transactions/removeTransaction'
+import { mockTransaction } from 'src/routes/safe/store/actions/transactions/utils/transactionHelpers'
 import { getLastTx, getNewTxNonce, shouldExecuteTransaction } from 'src/routes/safe/store/actions/utils'
-
 import { getErrorMessage } from 'src/test/utils/ethereumErrors'
+import { makeConfirmation } from '../models/confirmation'
+import fetchTransactions from './transactions/fetchTransactions'
+
+export const removeTxFromStore = (tx, safeAddress, dispatch) => {
+  if (tx.isCancellationTx) {
+    dispatch(removeCancellationTransaction({ safeAddress, transaction: tx }))
+  } else {
+    dispatch(removeTransaction({ safeAddress, transaction: tx }))
+  }
+}
+
+export const storeTx = async (tx, safeAddress, dispatch) => {
+  if (tx.isCancellationTx) {
+    dispatch(
+      addOrUpdateCancellationTransactions({
+        safeAddress,
+        transactions: Map({ [`${tx.nonce}`]: tx }),
+      }),
+    )
+  } else {
+    dispatch(
+      addOrUpdateTransactions({
+        safeAddress,
+        transactions: List([tx]),
+      }),
+    )
+  }
+}
 
 const createTransaction = ({
   safeAddress,
@@ -42,7 +74,7 @@ const createTransaction = ({
   const { account: from, hardwareWallet, smartContractWallet } = providerSelector(state)
   const safeInstance = await getGnosisSafeInstanceAt(safeAddress)
   const lastTx = await getLastTx(safeAddress)
-  const nonce = await getNewTxNonce(txNonce, lastTx, safeInstance)
+  const nonce = Number(await getNewTxNonce(txNonce, lastTx, safeInstance))
   const isExecution = await shouldExecuteTransaction(safeInstance, nonce, lastTx)
   const safeVersion = await getCurrentSafeVersion(safeInstance)
   const safeTxGas = await estimateSafeTxGas(safeInstance, safeAddress, txData, to, valueInWei, operation)
@@ -78,9 +110,6 @@ const createTransaction = ({
   try {
     // Here we're checking that safe contract version is greater or equal 1.1.1, but
     // theoretically EIP712 should also work for 1.0.0 contracts
-    // Also, offchain signatures are not working for ledger/trezor wallet because of a bug in their library:
-    // https://github.com/LedgerHQ/ledgerjs/issues/378
-    // Couldn't find an issue for trezor but the error is almost the same
     const canTryOffchainSigning =
       !isExecution && !smartContractWallet && semverSatisfies(safeVersion, SAFE_VERSION_FOR_OFFCHAIN_SIGNATURES)
     if (canTryOffchainSigning) {
@@ -89,11 +118,7 @@ const createTransaction = ({
       if (signature) {
         closeSnackbar(beforeExecutionKey)
 
-        await saveTxToHistory({
-          ...txArgs,
-          signature,
-          origin,
-        } as any)
+        await saveTxToHistory({ ...txArgs, signature, origin })
         showSnackbar(notificationsQueue.afterExecution.moreConfirmationsNeeded, enqueueSnackbar, closeSnackbar)
 
         dispatch(fetchTransactions(safeAddress))
@@ -110,36 +135,63 @@ const createTransaction = ({
       sendParams.gas = '7000000'
     }
 
+    const txToMock = {
+      ...txArgs,
+      confirmations: [], // this is used to determine if a tx is pending or not. See `calculateTransactionStatus` helper
+      value: txArgs.valueInWei,
+    }
+    const mockedTx = await mockTransaction(txToMock, safeAddress, state)
+
     await tx
       .send(sendParams)
       .once('transactionHash', async (hash) => {
-        txHash = hash
-        closeSnackbar(beforeExecutionKey)
-
-        pendingExecutionKey = showSnackbar(notificationsQueue.pendingExecution, enqueueSnackbar, closeSnackbar)
-
         try {
-          await saveTxToHistory({
-            ...txArgs,
-            txHash,
-            origin,
-          } as any)
+          txHash = hash
+          closeSnackbar(beforeExecutionKey)
+
+          pendingExecutionKey = showSnackbar(notificationsQueue.pendingExecution, enqueueSnackbar, closeSnackbar)
+
+          await saveTxToHistory({ ...txArgs, txHash, origin })
+          await storeTx(mockedTx, safeAddress, dispatch)
           dispatch(fetchTransactions(safeAddress))
-        } catch (err) {
-          console.error(err)
+        } catch (e) {
+          removeTxFromStore(mockedTx, safeAddress, dispatch)
         }
       })
       .on('error', (error) => {
+        closeSnackbar(pendingExecutionKey)
+        removeTxFromStore(mockedTx, safeAddress, dispatch)
         console.error('Tx error: ', error)
       })
-      .then((receipt) => {
-        closeSnackbar(pendingExecutionKey)
+      .then(async (receipt) => {
+        if (pendingExecutionKey) {
+          closeSnackbar(pendingExecutionKey)
+        }
+
         showSnackbar(
           isExecution
             ? notificationsQueue.afterExecution.noMoreConfirmationsNeeded
             : notificationsQueue.afterExecution.moreConfirmationsNeeded,
           enqueueSnackbar,
           closeSnackbar,
+        )
+
+        const toStoreTx = isExecution
+          ? mockedTx.withMutations((record) => {
+              record
+                .set('executionTxHash', receipt.events.ExecutionSuccess.transactionHash)
+                .set('safeTxHash', receipt.events.ExecutionSuccess.returnValues.txHash)
+                .set('executor', from)
+                .set('isExecuted', true)
+                .set('isSuccessful', true)
+                .set('status', 'success')
+            })
+          : mockedTx.set('status', 'awaiting_confirmations')
+
+        await storeTx(
+          toStoreTx.set('confirmations', fromJS([makeConfirmation({ owner: from })])),
+          safeAddress,
+          dispatch,
         )
 
         dispatch(fetchTransactions(safeAddress))
@@ -149,7 +201,11 @@ const createTransaction = ({
   } catch (err) {
     console.error(err)
     closeSnackbar(beforeExecutionKey)
-    closeSnackbar(pendingExecutionKey)
+
+    if (pendingExecutionKey) {
+      closeSnackbar(pendingExecutionKey)
+    }
+
     showSnackbar(notificationsQueue.afterExecutionError, enqueueSnackbar, closeSnackbar)
 
     const executeDataUsedSignatures = safeInstance.contract.methods
