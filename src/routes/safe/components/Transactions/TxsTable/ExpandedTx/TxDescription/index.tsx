@@ -135,22 +135,14 @@ const SettingsDescription = ({ action, addedOwner, newThreshold, removedOwner })
   )
 }
 
-const CustomDescription = ({ amount = 0, classes, data, recipient }: any) => {
+const TxData = (props) => {
+  const { classes, data } = props
   const [showTxData, setShowTxData] = useState(false)
-  const recipientName = useSelector((state) => getNameFromAddressBook(state, recipient))
+  const showExpandBtn = data.length > 20
   return (
-    <>
-      <Block data-testid={TRANSACTIONS_DESC_CUSTOM_VALUE_TEST_ID}>
-        <Bold>Send {amount} to:</Bold>
-        {recipientName ? (
-          <OwnerAddressTableCell address={recipient} knownAddress showLinks userName={recipientName} />
-        ) : (
-          <EtherscanLink knownAddress={false} type="address" value={recipient} />
-        )}
-      </Block>
-      <Block className={classes.txData} data-testid={TRANSACTIONS_DESC_CUSTOM_DATA_TEST_ID}>
-        <Bold>Data (hex encoded):</Bold>
-        <Paragraph className={classes.txDataParagraph} noMargin size="md">
+    <Paragraph className={classes.txDataParagraph} noMargin size="md">
+      {showExpandBtn ? (
+        <>
           {showTxData ? (
             <>
               {data}{' '}
@@ -178,7 +170,29 @@ const CustomDescription = ({ amount = 0, classes, data, recipient }: any) => {
               </LinkWithRef>
             </>
           )}
-        </Paragraph>
+        </>
+      ) : (
+        data
+      )}
+    </Paragraph>
+  )
+}
+
+const CustomDescription = ({ amount = 0, classes, data, recipient }: any) => {
+  const recipientName = useSelector((state) => getNameFromAddressBook(state, recipient))
+  return (
+    <>
+      <Block data-testid={TRANSACTIONS_DESC_CUSTOM_VALUE_TEST_ID}>
+        <Bold>Send {amount} to:</Bold>
+        {recipientName ? (
+          <OwnerAddressTableCell address={recipient} knownAddress showLinks userName={recipientName} />
+        ) : (
+          <EtherscanLink knownAddress={false} type="address" value={recipient} />
+        )}
+      </Block>
+      <Block className={classes.txData} data-testid={TRANSACTIONS_DESC_CUSTOM_DATA_TEST_ID}>
+        <Bold>Data (hex encoded):</Bold>
+        <TxData classes={classes} data={data} />
       </Block>
     </>
   )

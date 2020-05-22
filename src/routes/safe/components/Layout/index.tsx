@@ -89,13 +89,11 @@ const Layout = (props: Props) => {
       <Switch>
         <Route exact path={`${match.path}/balances/:assetType?`} render={() => wrapInSuspense(<Balances />, null)} />
         <Route exact path={`${match.path}/transactions`} render={() => wrapInSuspense(<TxsTable />, null)} />
-        {process.env.REACT_APP_APPS_DISABLED !== 'true' && (
-          <Route
-            exact
-            path={`${match.path}/apps`}
-            render={() => wrapInSuspense(<Apps closeModal={closeGenericModal} openModal={openGenericModal} />, null)}
-          />
-        )}
+        <Route
+          exact
+          path={`${match.path}/apps`}
+          render={() => wrapInSuspense(<Apps closeModal={closeGenericModal} openModal={openGenericModal} />, null)}
+        />
         <Route exact path={`${match.path}/settings`} render={() => wrapInSuspense(<Settings />, null)} />
         <Route exact path={`${match.path}/address-book`} render={() => wrapInSuspense(<AddressBookTable />, null)} />
         <Redirect to={`${match.path}/balances`} />
