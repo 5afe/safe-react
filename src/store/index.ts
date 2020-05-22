@@ -38,9 +38,9 @@ const finalCreateStore = composeEnhancers(
   applyMiddleware(
     thunk,
     routerMiddleware(history),
+    notificationsMiddleware,
     safeStorage,
     providerWatcher,
-    notificationsMiddleware,
     addressBookMiddleware,
     currencyValuesStorageMiddleware,
   ),

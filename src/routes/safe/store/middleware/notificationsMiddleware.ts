@@ -1,5 +1,4 @@
 import { push } from 'connected-react-router'
-import { List, Map } from 'immutable'
 
 import { NOTIFICATIONS, enhanceSnackbarForAction } from 'src/logic/notifications'
 import closeSnackbarAction from 'src/logic/notifications/store/actions/closeSnackbar'
@@ -12,13 +11,14 @@ import { getIncomingTxAmount } from 'src/routes/safe/components/Transactions/Txs
 import { grantedSelector } from 'src/routes/safe/container/selector'
 import { ADD_INCOMING_TRANSACTIONS } from 'src/routes/safe/store/actions/addIncomingTransactions'
 import { ADD_SAFE } from 'src/routes/safe/store/actions/addSafe'
-import { ADD_TRANSACTIONS } from 'src/routes/safe/store/actions/addTransactions'
+import { ADD_OR_UPDATE_TRANSACTIONS } from 'src/routes/safe/store/actions/transactions/addOrUpdateTransactions'
 import updateSafe from 'src/routes/safe/store/actions/updateSafe'
+import { CANCELLATION_TRANSACTIONS_REDUCER_ID } from 'src/routes/safe/store/reducer/cancellationTransactions'
 import { safeParamAddressFromStateSelector, safesMapSelector } from 'src/routes/safe/store/selectors'
 
 import { loadFromStorage, saveToStorage } from 'src/utils/storage'
 
-const watchedActions = [ADD_TRANSACTIONS, ADD_INCOMING_TRANSACTIONS, ADD_SAFE]
+const watchedActions = [ADD_OR_UPDATE_TRANSACTIONS, ADD_INCOMING_TRANSACTIONS, ADD_SAFE]
 
 const sendAwaitingTransactionNotification = async (
   dispatch,
@@ -59,48 +59,41 @@ const sendAwaitingTransactionNotification = async (
   await saveToStorage(LAST_TIME_USED_LOGGED_IN_ID, lastTimeUserLoggedInForSafes)
 }
 
+const onNotificationClicked = (dispatch, notificationKey, safeAddress) => () => {
+  dispatch(closeSnackbarAction({ key: notificationKey }))
+  dispatch(push(`/safes/${safeAddress}/transactions`))
+}
+
 const notificationsMiddleware = (store) => (next) => async (action) => {
   const handledAction = next(action)
   const { dispatch } = store
 
   if (watchedActions.includes(action.type)) {
     const state = store.getState()
+
     switch (action.type) {
-      case ADD_TRANSACTIONS: {
-        const transactionsList = action.payload
-        const userAddress = userAccountSelector(state)
-        const safeAddress = action.payload.keySeq().get(0)
-        const cancellationTransactions = state.cancellationTransactions.get(safeAddress)
-        const cancellationTransactionsByNonce = cancellationTransactions
-          ? cancellationTransactions.reduce((acc, tx) => acc.set(tx.nonce, tx), Map())
-          : Map()
-        const awaitingTransactions = getAwaitingTransactions(
-          transactionsList,
-          cancellationTransactionsByNonce,
-          userAddress,
-        )
-        const awaitingTxsSubmissionDateList = awaitingTransactions
-          .get(safeAddress, List([]))
-          .map((tx) => tx.submissionDate)
+      case ADD_OR_UPDATE_TRANSACTIONS: {
+        const { safeAddress, transactions } = action.payload
+        const userAddress: string = userAccountSelector(state)
+        const cancellationTransactions = state[CANCELLATION_TRANSACTIONS_REDUCER_ID].get(safeAddress)
+        const awaitingTransactions = getAwaitingTransactions(transactions, cancellationTransactions, userAddress)
+        const awaitingTxsSubmissionDateList = awaitingTransactions.map((tx) => tx.submissionDate)
 
         const safes = safesMapSelector(state)
         const currentSafe = safes.get(safeAddress)
 
-        if (!isUserOwner(currentSafe, userAddress) || awaitingTxsSubmissionDateList.size === 0) {
+        if (!isUserOwner(currentSafe, userAddress) || awaitingTransactions.size === 0) {
           break
         }
+
         const notificationKey = `${safeAddress}-awaiting`
-        const onNotificationClicked = () => {
-          dispatch(closeSnackbarAction({ key: notificationKey }))
-          dispatch(push(`/safes/${safeAddress}/transactions`))
-        }
 
         await sendAwaitingTransactionNotification(
           dispatch,
           safeAddress,
           awaitingTxsSubmissionDateList,
           notificationKey,
-          onNotificationClicked,
+          onNotificationClicked(dispatch, notificationKey, safeAddress),
         )
 
         break
