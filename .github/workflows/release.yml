@@ -3,10 +3,9 @@ name: Build/Release Desktop app
 # this will help you specify where to run
 on:
   push:
-    branches:
-      # this will run on the specified branch
-      - master
-      - development
+    branches-ignore:
+      # Temporary disable action
+      - '**'
 
 env:
   REACT_APP_BLOCKNATIVE_KEY: ${{ secrets.REACT_APP_BLOCKNATIVE_KEY }}

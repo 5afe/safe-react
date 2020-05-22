@@ -1,0 +1,103 @@
+@import "src/theme/variables.scss";
+
+.heading {
+  font-weight: normal;
+  line-height: normal;  
+  margin: 0;
+}
+
+.h1 {
+  line-height: 36px;
+  font-weight: $extraBoldFont;
+  letter-spacing: 1.13px;
+  font-size: #{$fontSizeHeadingLg};
+}
+
+.h2 {
+  line-height: 26px;
+  letter-spacing: normal;
+  line-height: 1.3;
+  font-size: #{fontSizeHeadingMd};
+}
+
+.h3 {
+  line-height: 21px;
+  font-weight: $bolderFont;
+  letter-spacing: -0.5px;
+  font-size: #{fontSizeHeadingSm};
+}
+
+.h4 {
+  line-height: 21px;
+  font-size: #{fontSizeHeadingXs};
+}
+
+.center {
+  text-align: center;
+}
+
+.right {
+  text-align: right;
+}
+
+.truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.marginSm {
+    margin: 0 0 $sm 0;
+}
+
+.marginMd {
+    margin: 0 0 $md 0;
+}
+
+.marginLg {
+    margin: 0 0 $lg 0;
+}
+
+.marginXl {
+  margin: 0 0 $xl 0;
+}
+
+.soft {
+  color: #888888;
+}
+
+.medium {
+  color: #686868;
+}
+
+.dark {
+  color: black;
+}
+
+.fancy {
+  color: $fancy;
+}
+
+.warning {
+  color: $warning;
+}
+
+.primary {
+  color: $fontColor;
+}
+
+.secondary {
+  color: $secondary;
+}
+
+.disabled {
+  color: $disabled;
+}
+
+.error {
+  color: $error;
+}
+
+.white {
+  color: white;
+}
