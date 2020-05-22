@@ -26,7 +26,7 @@ const PORT = 5000;
 
 const createServer = () => {
   const app = express();
-  const staticRoute = path.join(__dirname, '../build_webpack');
+  const staticRoute = path.join(__dirname, '../build');
   app.use(express.static(staticRoute));
   https.createServer(options, app).listen(PORT);
 }
