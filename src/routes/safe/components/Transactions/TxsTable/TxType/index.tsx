@@ -11,6 +11,8 @@ import { getAppInfoFromOrigin, getAppInfoFromUrl } from 'src/routes/safe/compone
 
 const typeToIcon = {
   outgoing: OutgoingTxIcon,
+  token: OutgoingTxIcon,
+  collectible: OutgoingTxIcon,
   incoming: IncomingTxIcon,
   custom: CustomTxIcon,
   settings: SettingsTxIcon,
@@ -21,6 +23,8 @@ const typeToIcon = {
 
 const typeToLabel = {
   outgoing: 'Outgoing transfer',
+  token: 'Outgoing transfer',
+  collectible: 'Outgoing transfer',
   incoming: 'Incoming transfer',
   custom: 'Contract Interaction',
   settings: 'Modify settings',
