@@ -119,7 +119,7 @@ export const getAddressFromENS = async (name: string) => {
   return await web3.eth.ens.getAddress(name)
 }
 
-export const getContentFromENS = async (name: string) => {
+export const getContentFromENS = async (name: string): Promise<any> => {
   return await web3.eth.ens.getContenthash(name)
 }
 

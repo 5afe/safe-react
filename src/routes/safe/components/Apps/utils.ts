@@ -31,7 +31,7 @@ export const getAppInfoFromOrigin = (origin) => {
 export const getAppInfoFromUrl = async (appUrl) => {
   let res = { id: undefined, url: appUrl, name: 'unknown', iconUrl: appsIconSvg, error: true }
 
-  if (!appUrl) {
+  if (!appUrl || !appUrl.length) {
     return res
   }
 

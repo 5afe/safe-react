@@ -69,6 +69,50 @@ const getIpfsLinkFromEns = async (name) => {
   }
 }
 
+const getUrlFromFormValue = async (value: string) => {
+  const isUrlValid = isURLValid(value)
+  let ensContent
+  if (!isUrlValid) {
+    ensContent = await getIpfsLinkFromEns(value)
+  }
+
+  if (!isUrlValid && ensContent === undefined) {
+    return undefined
+  }
+  return isUrlValid ? value : ensContent
+}
+
+const uniqueAppValidator = (appList, value) => {
+  const exists = appList.find((a) => {
+    try {
+      const currentUrl = new URL(a.url)
+      const newUrl = new URL(value)
+      return currentUrl.href === newUrl.href
+    } catch (error) {
+      return 'There was a problem trying to validate the URL existence.'
+    }
+  })
+  return exists ? 'This app is already registered.' : undefined
+}
+
+const curriedSafeAppValidator = (appList) => async (value: string) => {
+  const url = await getUrlFromFormValue(value)
+
+  if (!url) {
+    return 'Provide a valid url or ENS name.'
+  }
+
+  const resUniqueValidator = uniqueAppValidator(appList, url)
+  if (resUniqueValidator) {
+    return resUniqueValidator
+  }
+
+  const appInfo = await getAppInfoFromUrl(url)
+  if (appInfo.error) {
+    return 'This is not a valid Safe app.'
+  }
+}
+
 const ManageApps = ({ appList, onAppAdded, onAppToggle }: Props) => {
   const [isOpen, setIsOpen] = useState(false)
   const [appInfo, setAppInfo] = useState(APP_INFO)
@@ -85,60 +129,26 @@ const ManageApps = ({ appList, onAppAdded, onAppToggle }: Props) => {
 
   const cleanAppInfo = () => setAppInfo(APP_INFO)
 
-  const customRequiredValidator = (value) => {
-    if (!value || !value.length) {
+  const onFormStatusChange = async ({ pristine, valid, validating, values, errors }) => {
+    if (!pristine) {
+      setIsSubmitDisabled(validating || !valid)
+    }
+
+    if (validating) {
+      return
+    }
+
+    if (!values.appUrl || !values.appUrl.length || errors.appUrl) {
       setAppInfo(APP_INFO)
-      return 'Required'
-    }
-  }
-
-  const uniqueAppValidator = (value) => {
-    const exists = appList.find((a) => {
-      try {
-        const currentUrl = new URL(a.url)
-        const newUrl = new URL(value)
-        return currentUrl.href === newUrl.href
-      } catch (error) {
-        return 'There was a problem trying to validate the URL existence.'
-      }
-    })
-    return exists ? 'This app is already registered.' : undefined
-  }
-
-  const safeAppValidator = async (value: string) => {
-    const isUrlValid = isURLValid(value)
-
-    let ensContent
-    if (!isUrlValid) {
-      ensContent = await getIpfsLinkFromEns(value)
+      return
     }
 
-    if (!isUrlValid && ensContent === undefined) {
-      return 'Provide a valid url or ENS name.'
-    }
-
-    const url = isUrlValid ? value : ensContent
-
-    const uniqueRes = uniqueAppValidator(url)
-    if (uniqueRes) {
-      return uniqueRes
-    }
-
+    const url = await getUrlFromFormValue(values.appUrl)
     const appInfo = await getAppInfoFromUrl(url)
-
-    if (appInfo.error) {
-      setAppInfo(APP_INFO)
-      return 'This is not a valid Safe app.'
-    }
-
     setAppInfo({ ...appInfo })
   }
 
-  const onFormStatusChange = ({ pristine, valid, validating }) => {
-    if (!pristine) {
-      setIsSubmitDisabled(validating || !valid || appInfo.error)
-    }
-  }
+  const safeAppValidator = curriedSafeAppValidator(appList)
 
   const getForm = () => {
     return (
@@ -159,7 +169,7 @@ const ManageApps = ({ appList, onAppAdded, onAppToggle }: Props) => {
               name="appUrl"
               placeholder="App URL"
               type="text"
-              validate={composeValidatorsApps(customRequiredValidator, safeAppValidator)}
+              validate={composeValidatorsApps(required, safeAppValidator)}
             />
 
             <AppInfo>
@@ -170,7 +180,9 @@ const ManageApps = ({ appList, onAppAdded, onAppToggle }: Props) => {
             <FormSpy
               onChange={onFormStatusChange}
               subscription={{
+                values: true,
                 valid: true,
+                errors: true,
                 pristine: true,
                 validating: true,
               }}
