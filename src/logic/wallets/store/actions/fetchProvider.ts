@@ -26,7 +26,7 @@ export const processProviderResponse = (dispatch, provider) => {
       addOrUpdateTransactions({
         safeAddress,
         transactions: transactions.withMutations((list) =>
-          list.map((tx) => tx.set('status', calculateTransactionStatus(tx, safe, provider.account))),
+          list.map((tx) => tx.set('status', calculateTransactionStatus(tx, safe, walletRecord.account))),
         ),
       }),
     )
