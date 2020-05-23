@@ -1,4 +1,4 @@
-import { List, Set } from 'immutable'
+import { List, Map, Set } from 'immutable'
 import { matchPath } from 'react-router-dom'
 import { createSelector } from 'reselect'
 
@@ -79,14 +79,14 @@ export const safeCancellationTransactionsSelector = createSelector(
   safeParamAddressFromStateSelector,
   (cancellationTransactions, address) => {
     if (!cancellationTransactions) {
-      return List([])
+      return Map()
     }
 
     if (!address) {
-      return List([])
+      return Map()
     }
 
-    return cancellationTransactions.get(address) || List([])
+    return cancellationTransactions.get(address) || Map({})
   },
 )
 

@@ -151,8 +151,7 @@ const createTransaction = ({
 
           pendingExecutionKey = showSnackbar(notificationsQueue.pendingExecution, enqueueSnackbar, closeSnackbar)
 
-          await saveTxToHistory({ ...txArgs, txHash, origin })
-          await storeTx(mockedTx, safeAddress, dispatch)
+          await Promise.all([saveTxToHistory({ ...txArgs, txHash, origin }), storeTx(mockedTx, safeAddress, dispatch)])
           dispatch(fetchTransactions(safeAddress))
         } catch (e) {
           removeTxFromStore(mockedTx, safeAddress, dispatch)

@@ -30,7 +30,7 @@ export default handleActions(
                   // as we assume that this is the newest tx returned by the server
                   txsList.update(storedTxIndex, () => updateTx)
                 } else {
-                  // if there's no confirmations, we assume this is a mocked tx
+                  // if there are no confirmations, we assume this is a mocked tx
                   // as txs without confirmation are not being returned by the server (?has_confirmations=true)
                   txsList.update(storedTxIndex, (storedTx) => storedTx.mergeDeep(updateTx))
                 }
