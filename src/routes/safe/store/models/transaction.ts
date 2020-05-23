@@ -1,4 +1,4 @@
-import { List, Record } from 'immutable'
+import { List, Map, Record } from 'immutable'
 
 import { ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
 
@@ -21,6 +21,8 @@ export type TransactionStatus =
   | 'cancelled'
   | 'awaiting_execution'
   | 'pending'
+
+export type PendingActionType = 'Confirm' | 'Reject'
 
 export type TransactionProps = {
   baseGas: number
@@ -48,6 +50,7 @@ export type TransactionProps = {
   nonce?: number | null
   operation: number
   origin: string | null
+  ownersWithPendingActions: Map<PendingActionType, List<any>>
   recipient: string
   refundParams: any
   refundReceiver: string
@@ -86,6 +89,7 @@ export const makeTransaction = Record({
   nonce: 0,
   operation: 0,
   origin: null,
+  ownersWithPendingActions: Map({ confirm: List([]), reject: List([]) }),
   recipient: '',
   refundParams: null,
   refundReceiver: ZERO_ADDRESS,

@@ -34,20 +34,43 @@ function getOwnersConfirmations(tx, userAddress) {
 }
 
 function getPendingOwnersConfirmations(owners, tx, userAddress) {
-  const ownersNotConfirmed = []
+  const ownersWithNoConfirmations = []
   let currentUserNotConfirmed = true
 
   owners.forEach((owner) => {
     const confirmationsEntry = tx.confirmations.find((conf) => conf.owner === owner.address)
     if (!confirmationsEntry) {
-      ownersNotConfirmed.push(owner.address)
+      ownersWithNoConfirmations.push(owner.address)
     }
     if (confirmationsEntry && confirmationsEntry.owner === userAddress) {
       currentUserNotConfirmed = false
     }
   })
 
-  return [ownersNotConfirmed, currentUserNotConfirmed]
+  const confirmationPendingActions = tx.ownersWithPendingActions.get('confirm')
+  const confirmationRejectActions = tx.ownersWithPendingActions.get('reject')
+
+  const ownersWithNoConfirmationsSorted = ownersWithNoConfirmations
+    .map((owner) => ({
+      hasPendingAcceptActions: confirmationPendingActions.includes(owner),
+      hasPendingRejectActions: confirmationRejectActions.includes(owner),
+      owner,
+    }))
+    // Reorders the list of unconfirmed owners, owners with pendingActions should be first
+    .sort((ownerA, ownerB) => {
+      // If the first owner has pending actions, A should be before B
+      if (ownerA.hasPendingRejectActions || ownerA.hasPendingAcceptActions) {
+        return -1
+      }
+      // The first owner has not pending actions but the second yes, B should be before A
+      if (ownerB.hasPendingRejectActions || ownerB.hasPendingAcceptActions) {
+        return 1
+      }
+      // Otherwise do not change order
+      return 0
+    })
+
+  return [ownersWithNoConfirmationsSorted, currentUserNotConfirmed]
 }
 
 const OwnersColumn = ({

@@ -117,18 +117,28 @@ const processTransaction = ({
         pendingExecutionKey = showSnackbar(notificationsQueue.pendingExecution, enqueueSnackbar, closeSnackbar)
 
         try {
-          await saveTxToHistory({ ...txArgs, txHash })
-          await storeTx(mockedTx, safeAddress, dispatch)
+          await Promise.all([
+            saveTxToHistory({ ...txArgs, txHash }),
+            storeTx(
+              mockedTx.updateIn(
+                ['ownersWithPendingActions', mockedTx.isCancellationTx ? 'reject' : 'confirm'],
+                (previous) => previous.push(from),
+              ),
+              safeAddress,
+              dispatch,
+              state,
+            ),
+          ])
           dispatch(fetchTransactions(safeAddress))
         } catch (e) {
           closeSnackbar(pendingExecutionKey)
-          await storeTx(tx, safeAddress, dispatch)
+          await storeTx(tx, safeAddress, dispatch, state)
           console.error(e)
         }
       })
       .on('error', (error) => {
         closeSnackbar(pendingExecutionKey)
-        storeTx(mockedTx.set('isSuccessful', false), safeAddress, dispatch)
+        storeTx(tx, safeAddress, dispatch, state)
         console.error('Processing transaction error: ', error)
       })
       .then(async (receipt) => {
@@ -159,9 +169,16 @@ const processTransaction = ({
           : mockedTx.set('status', 'awaiting_confirmations')
 
         await storeTx(
-          toStoreTx.set('confirmations', fromJS([...tx.confirmations, makeConfirmation({ owner: from })])),
+          toStoreTx.withMutations((record) => {
+            record
+              .set('confirmations', fromJS([...tx.confirmations, makeConfirmation({ owner: from })]))
+              .updateIn(['ownersWithPendingActions', toStoreTx.isCancellationTx ? 'reject' : 'confirm'], (previous) =>
+                previous.pop(from),
+              )
+          }),
           safeAddress,
           dispatch,
+          state,
         )
 
         dispatch(fetchTransactions(safeAddress))

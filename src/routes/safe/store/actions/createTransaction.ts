@@ -1,5 +1,6 @@
 import { push } from 'connected-react-router'
-import { List, Map, fromJS } from 'immutable'
+import { List, Map } from 'immutable'
+import { batch } from 'react-redux'
 import semverSatisfies from 'semver/functions/satisfies'
 
 import { onboardUser } from 'src/components/ConnectButton'
@@ -22,30 +23,41 @@ import { getLastTx, getNewTxNonce, shouldExecuteTransaction } from 'src/routes/s
 import { getErrorMessage } from 'src/test/utils/ethereumErrors'
 import { makeConfirmation } from '../models/confirmation'
 import fetchTransactions from './transactions/fetchTransactions'
+import { safeTransactionsSelector } from 'src/routes/safe/store/selectors'
 
-export const removeTxFromStore = (tx, safeAddress, dispatch) => {
+export const removeTxFromStore = (tx, safeAddress, dispatch, state) => {
   if (tx.isCancellationTx) {
-    dispatch(removeCancellationTransaction({ safeAddress, transaction: tx }))
+    const newTxStatus = 'awaiting_confirmations'
+    const transactions = safeTransactionsSelector(state)
+    const txsToUpdate = transactions
+      .filter((transaction) => Number(transaction.nonce) === Number(tx.nonce))
+      .withMutations((list) => list.map((tx) => tx.set('status', newTxStatus)))
+
+    batch(() => {
+      dispatch(addOrUpdateTransactions({ safeAddress, transactions: txsToUpdate }))
+      dispatch(removeCancellationTransaction({ safeAddress, transaction: tx }))
+    })
   } else {
     dispatch(removeTransaction({ safeAddress, transaction: tx }))
   }
 }
 
-export const storeTx = async (tx, safeAddress, dispatch) => {
+export const storeTx = async (tx, safeAddress, dispatch, state) => {
   if (tx.isCancellationTx) {
-    dispatch(
-      addOrUpdateCancellationTransactions({
-        safeAddress,
-        transactions: Map({ [`${tx.nonce}`]: tx }),
-      }),
-    )
+    const newTxStatus = tx.isExecuted ? 'cancelled' : tx.status === 'pending' ? 'pending' : 'awaiting_confirmations'
+    const transactions = safeTransactionsSelector(state)
+    const txsToUpdate = transactions
+      .filter((transaction) => Number(transaction.nonce) === Number(tx.nonce))
+      .withMutations((list) =>
+        list.map((tx) => tx.set('status', newTxStatus).set('cancelled', newTxStatus === 'cancelled')),
+      )
+
+    batch(() => {
+      dispatch(addOrUpdateCancellationTransactions({ safeAddress, transactions: Map({ [`${tx.nonce}`]: tx }) }))
+      dispatch(addOrUpdateTransactions({ safeAddress, transactions: txsToUpdate }))
+    })
   } else {
-    dispatch(
-      addOrUpdateTransactions({
-        safeAddress,
-        transactions: List([tx]),
-      }),
-    )
+    dispatch(addOrUpdateTransactions({ safeAddress, transactions: List([tx]) }))
   }
 }
 
@@ -151,15 +163,26 @@ const createTransaction = ({
 
           pendingExecutionKey = showSnackbar(notificationsQueue.pendingExecution, enqueueSnackbar, closeSnackbar)
 
-          await Promise.all([saveTxToHistory({ ...txArgs, txHash, origin }), storeTx(mockedTx, safeAddress, dispatch)])
+          await Promise.all([
+            saveTxToHistory({ ...txArgs, txHash, origin }),
+            storeTx(
+              mockedTx.updateIn(
+                ['ownersWithPendingActions', mockedTx.isCancellationTx ? 'reject' : 'confirm'],
+                (previous) => previous.push(from),
+              ),
+              safeAddress,
+              dispatch,
+              state,
+            ),
+          ])
           dispatch(fetchTransactions(safeAddress))
         } catch (e) {
-          removeTxFromStore(mockedTx, safeAddress, dispatch)
+          removeTxFromStore(mockedTx, safeAddress, dispatch, state)
         }
       })
       .on('error', (error) => {
         closeSnackbar(pendingExecutionKey)
-        removeTxFromStore(mockedTx, safeAddress, dispatch)
+        removeTxFromStore(mockedTx, safeAddress, dispatch, state)
         console.error('Tx error: ', error)
       })
       .then(async (receipt) => {
@@ -188,9 +211,16 @@ const createTransaction = ({
           : mockedTx.set('status', 'awaiting_confirmations')
 
         await storeTx(
-          toStoreTx.set('confirmations', fromJS([makeConfirmation({ owner: from })])),
+          toStoreTx.withMutations((record) => {
+            record
+              .set('confirmations', List([makeConfirmation({ owner: from })]))
+              .updateIn(['ownersWithPendingActions', toStoreTx.isCancellationTx ? 'reject' : 'confirm'], (previous) =>
+                previous.pop(from),
+              )
+          }),
           safeAddress,
           dispatch,
+          state,
         )
 
         dispatch(fetchTransactions(safeAddress))
