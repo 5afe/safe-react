@@ -1,4 +1,4 @@
-// 
+//
 import { fireEvent } from '@testing-library/react'
 import { aNewStore } from 'src/store'
 import { aMinedSafe } from 'src/test/builder/safe.redux.builder'
