@@ -1,5 +1,4 @@
 import ReactGA from 'react-ga'
-import { batch } from 'react-redux'
 
 import addProvider from './addProvider'
 
@@ -8,29 +7,12 @@ import { NOTIFICATIONS, enhanceSnackbarForAction } from 'src/logic/notifications
 import enqueueSnackbar from 'src/logic/notifications/store/actions/enqueueSnackbar'
 import { ETHEREUM_NETWORK, ETHEREUM_NETWORK_IDS, getProviderInfo, getWeb3 } from 'src/logic/wallets/getWeb3'
 import { makeProvider } from 'src/logic/wallets/store/model/provider'
-import { addOrUpdateTransactions } from 'src/routes/safe/store/actions/transactions/addOrUpdateTransactions'
-import { store } from 'src/store'
-import { safeSelector, safeTransactionsSelector } from 'src/routes/safe/store/selectors'
-import { calculateTransactionStatus } from 'src/routes/safe/store/actions/transactions/utils/transactionHelpers'
+import { updateStoredTransactionsStatus } from 'src/routes/safe/store/actions/transactions/utils/transactionHelpers'
 
 export const processProviderResponse = (dispatch, provider) => {
   const walletRecord = makeProvider(provider)
-  const state = store.getState()
-  const safe = safeSelector(state)
-  const safeAddress = safe.address
-  const transactions = safeTransactionsSelector(state)
-
-  batch(() => {
-    dispatch(addProvider(walletRecord))
-    dispatch(
-      addOrUpdateTransactions({
-        safeAddress,
-        transactions: transactions.withMutations((list) =>
-          list.map((tx) => tx.set('status', calculateTransactionStatus(tx, safe, walletRecord.account))),
-        ),
-      }),
-    )
-  })
+  dispatch(addProvider(walletRecord))
+  updateStoredTransactionsStatus(dispatch, walletRecord)
 }
 
 const handleProviderNotification = (provider, dispatch) => {

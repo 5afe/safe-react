@@ -14,6 +14,9 @@ import { makeTransaction } from 'src/routes/safe/store/models/transaction'
 import { CANCELLATION_TRANSACTIONS_REDUCER_ID } from 'src/routes/safe/store/reducer/cancellationTransactions'
 import { SAFE_REDUCER_ID } from 'src/routes/safe/store/reducer/safe'
 import { TRANSACTIONS_REDUCER_ID } from 'src/routes/safe/store/reducer/transactions'
+import { store } from 'src/store'
+import { safeSelector, safeTransactionsSelector } from 'src/routes/safe/store/selectors'
+import { addOrUpdateTransactions } from 'src/routes/safe/store/actions/transactions/addOrUpdateTransactions'
 
 export const isEmptyData = (data?: string | null) => {
   return !data || data === EMPTY_DATA
@@ -285,4 +288,21 @@ export const mockTransaction = (tx, safeAddress: string, state): Promise<any> =>
     tx: transactionStructure,
     txCode: EMPTY_DATA,
   })
+}
+
+export const updateStoredTransactionsStatus = (dispatch, walletRecord) => {
+  const state = store.getState()
+  const safe = safeSelector(state)
+  if (safe) {
+    const safeAddress = safe.address
+    const transactions = safeTransactionsSelector(state)
+    dispatch(
+      addOrUpdateTransactions({
+        safeAddress,
+        transactions: transactions.withMutations((list) =>
+          list.map((tx) => tx.set('status', calculateTransactionStatus(tx, safe, walletRecord.account))),
+        ),
+      }),
+    )
+  }
 }
