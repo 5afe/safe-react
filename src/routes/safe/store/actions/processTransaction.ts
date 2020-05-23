@@ -163,8 +163,11 @@ const processTransaction = ({
                 .set('executionDate', record.submissionDate)
                 .set('executor', from)
                 .set('isExecuted', true)
-                .set('isSuccessful', true)
-                .set('status', isCancelTransaction(record, safeAddress) ? 'cancelled' : 'success')
+                .set('isSuccessful', receipt.status)
+                .set(
+                  'status',
+                  receipt.status ? (isCancelTransaction(record, safeAddress) ? 'cancelled' : 'success') : 'failed',
+                )
             })
           : mockedTx.set('status', 'awaiting_confirmations')
 

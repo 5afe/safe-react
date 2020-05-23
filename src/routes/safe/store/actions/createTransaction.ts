@@ -205,8 +205,8 @@ const createTransaction = ({
                 .set('safeTxHash', receipt.events.ExecutionSuccess.returnValues.txHash)
                 .set('executor', from)
                 .set('isExecuted', true)
-                .set('isSuccessful', true)
-                .set('status', 'success')
+                .set('isSuccessful', receipt.status)
+                .set('status', receipt.status ? 'success' : 'failed')
             })
           : mockedTx.set('status', 'awaiting_confirmations')
 
