@@ -13,14 +13,14 @@ export const simpleMemoize = (fn) => {
   }
 }
 
-export const required = (value) => (value ? undefined : 'Required')
+export const required = (value?: string) => (value && value.trim() !== '' ? undefined : 'Required')
 
-export const mustBeInteger = (value) =>
+export const mustBeInteger = (value: string) =>
   !Number.isInteger(Number(value)) || value.includes('.') ? 'Must be an integer' : undefined
 
-export const mustBeFloat = (value) => (value && Number.isNaN(Number(value)) ? 'Must be a number' : undefined)
+export const mustBeFloat = (value: string) => (value && Number.isNaN(Number(value)) ? 'Must be a number' : undefined)
 
-export const greaterThan = (min) => (value) => {
+export const greaterThan = (min: number | string) => (value: string) => {
   if (Number.isNaN(Number(value)) || Number.parseFloat(value) > Number(min)) {
     return undefined
   }
@@ -30,7 +30,7 @@ export const greaterThan = (min) => (value) => {
 
 const regexQuery = /^(?:(?:https?|ftp):\/\/)(?:\S+(?::\S*)?@)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,}))\.?)(?::\d{2,5})?(?:[/?#]\S*)?$/i
 const url = new RegExp(regexQuery)
-export const mustBeUrl = (value) => {
+export const mustBeUrl = (value: string) => {
   if (url.test(value)) {
     return undefined
   }
@@ -38,7 +38,7 @@ export const mustBeUrl = (value) => {
   return 'Please, provide a valid url'
 }
 
-export const minValue = (min) => (value) => {
+export const minValue = (min: number | string) => (value: string) => {
   if (Number.isNaN(Number(value)) || Number.parseFloat(value) >= Number(min)) {
     return undefined
   }
@@ -46,8 +46,8 @@ export const minValue = (min) => (value) => {
   return `Should be at least ${min}`
 }
 
-export const maxValue = (max) => (value) => {
-  if (Number.isNaN(Number(value)) || parseFloat(value) <= parseFloat(max)) {
+export const maxValue = (max: number | string) => (value: string) => {
+  if (Number.isNaN(Number(value)) || parseFloat(value) <= parseFloat(max.toString())) {
     return undefined
   }
 
@@ -56,14 +56,14 @@ export const maxValue = (max) => (value) => {
 
 export const ok = () => undefined
 
-export const mustBeEthereumAddress = simpleMemoize((address) => {
+export const mustBeEthereumAddress = simpleMemoize((address: string) => {
   const startsWith0x = address.startsWith('0x')
   const isAddress = getWeb3().utils.isAddress(address)
 
   return startsWith0x && isAddress ? undefined : 'Address should be a valid Ethereum address or ENS name'
 })
 
-export const mustBeEthereumContractAddress = simpleMemoize(async (address) => {
+export const mustBeEthereumContractAddress = simpleMemoize(async (address: string) => {
   const contractCode = await getWeb3().eth.getCode(address)
 
   return !contractCode || contractCode.replace('0x', '').replace(/0/g, '') === ''
@@ -76,8 +76,8 @@ export const minMaxLength = (minLen, maxLen) => (value) =>
 
 export const ADDRESS_REPEATED_ERROR = 'Address already introduced'
 
-export const uniqueAddress = (addresses) =>
-  simpleMemoize((value) => {
+export const uniqueAddress = (addresses: string[]) =>
+  simpleMemoize((value: string[]) => {
     const addressAlreadyExists = addresses.some((address) => sameAddress(value, address))
     return addressAlreadyExists ? ADDRESS_REPEATED_ERROR : undefined
   })
@@ -95,7 +95,7 @@ export const inLimit = (limit, base, baseText, symbol = 'ETH') => (value) => {
   return `Should not exceed ${max} ${symbol} (amount to reach ${baseText})`
 }
 
-export const differentFrom = (diffValue) => (value) => {
+export const differentFrom = (diffValue: number | string) => (value: string) => {
   if (value === diffValue.toString()) {
     return `Value should be different than ${value}`
   }
