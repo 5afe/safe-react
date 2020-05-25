@@ -100,17 +100,15 @@ const TabsComponent = (props: Props) => {
         label={TransactionsLabel}
         value={`${match.url}/transactions`}
       />
-      {process.env.REACT_APP_APPS_DISABLED !== 'true' && (
-        <Tab
-          classes={{
-            selected: classes.tabWrapperSelected,
-            wrapper: classes.tabWrapper,
-          }}
-          data-testid={TRANSACTIONS_TAB_BTN_TEST_ID}
-          label={AppsLabel}
-          value={`${match.url}/apps`}
-        />
-      )}
+      <Tab
+        classes={{
+          selected: classes.tabWrapperSelected,
+          wrapper: classes.tabWrapper,
+        }}
+        data-testid={TRANSACTIONS_TAB_BTN_TEST_ID}
+        label={AppsLabel}
+        value={`${match.url}/apps`}
+      />
       <Tab
         classes={{
           selected: classes.tabWrapperSelected,

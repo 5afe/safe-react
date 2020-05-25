@@ -5,9 +5,10 @@ import { useSelector } from 'react-redux'
 import Page from 'src/components/layout/Page'
 
 import Layout from 'src/routes/safe/components/Layout'
-import { useCheckForUpdates } from 'src/routes/safe/container/hooks/useCheckForUpdates'
-import { useLoadSafe } from 'src/routes/safe/container/hooks/useLoadSafe'
+
 import { safeParamAddressFromStateSelector } from 'src/routes/safe/store/selectors'
+import { useCheckForUpdates } from './hooks/useCheckForUpdates'
+import { useLoadSafe } from './hooks/useLoadSafe'
 
 const INITIAL_STATE = {
   sendFunds: {

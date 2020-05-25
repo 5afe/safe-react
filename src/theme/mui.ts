@@ -108,6 +108,7 @@ const theme = createMuiTheme({
     MuiStepper: {
       root: {
         padding: `${lg} 0 0 15px`,
+        background: 'transparent',
       },
     },
     MuiIconButton: {
