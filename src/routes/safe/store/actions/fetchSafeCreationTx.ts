@@ -40,6 +40,7 @@ const fetchSafeCreationTx = (safeAddress) => async (dispatch) => {
     creationTx,
     executionTxHash: transactionHash,
     type: txType,
+    submissionDate: created,
   })
 
   dispatch(addOrUpdateTransactions({ safeAddress, transactions: List([creationTxAsRecord]) }))
