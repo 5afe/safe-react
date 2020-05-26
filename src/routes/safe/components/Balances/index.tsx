@@ -47,12 +47,13 @@ const Balances = (props) => {
 
   const address = useSelector(safeParamAddressFromStateSelector)
   const featuresEnabled = useSelector(safeFeaturesEnabledSelector)
+  const currentPath = history.location.pathname
 
   useFetchTokens()
 
   useEffect(() => {
-    const showCollectibles = COLLECTIBLES_LOCATION_REGEX.test(history.location.pathname)
-    const showCoins = COINS_LOCATION_REGEX.test(history.location.pathname)
+    const showCollectibles = COLLECTIBLES_LOCATION_REGEX.test(currentPath)
+    const showCoins = COINS_LOCATION_REGEX.test(currentPath)
     const subMenuOptions = [{ enabled: showCoins, legend: 'Coins', url: `${SAFELIST_ADDRESS}/${address}/balances` }]
 
     if (!showCollectibles && !showCoins) {
@@ -80,7 +81,7 @@ const Balances = (props) => {
       erc721Enabled,
       subMenuOptions,
     }))
-  }, [featuresEnabled, address])
+  }, [featuresEnabled, address, currentPath])
 
   const onShow = (action) => {
     setState((prevState) => ({ ...prevState, [`show${action}`]: true }))
