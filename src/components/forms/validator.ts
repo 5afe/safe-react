@@ -13,7 +13,19 @@ export const simpleMemoize = (fn) => {
   }
 }
 
-export const required = (value?: string) => (value && value.trim() !== '' ? undefined : 'Required')
+export const required = (value?: string) => {
+  const required = 'Required'
+
+  if (typeof value === 'string' && !value.trim().length) {
+    return required
+  }
+
+  if (!value) {
+    return required
+  }
+
+  return undefined
+}
 
 export const mustBeInteger = (value: string) =>
   !Number.isInteger(Number(value)) || value.includes('.') ? 'Must be an integer' : undefined
