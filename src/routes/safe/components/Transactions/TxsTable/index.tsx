@@ -20,14 +20,9 @@ import Block from 'src/components/layout/Block'
 import Row from 'src/components/layout/Row'
 import { extendedTransactionsSelector } from 'src/routes/safe/container/selector'
 import { safeCancellationTransactionsSelector } from 'src/routes/safe/store/selectors'
-import Collapse from '../../../../../components/Collapse'
+import { Collapse } from '@material-ui/core'
 
 export const TRANSACTION_ROW_TEST_ID = 'transaction-row'
-
-const expandCellStyle = {
-  paddingLeft: 0,
-  paddingRight: 15,
-}
 
 const TxsTable = ({ classes }) => {
   const [expandedTx, setExpandedTx] = useState(null)
@@ -105,7 +100,7 @@ const TxsTable = ({ classes }) => {
                       <Status status={row.status} />
                     </Row>
                   </TableCell>
-                  <TableCell style={expandCellStyle}>
+                  <TableCell className={classes.expandCellStyle}>
                     {!row.tx.creationTx && (
                       <IconButton disableRipple>
                         {expandedTx === row.safeTxHash ? <ExpandLess /> : <ExpandMore />}
@@ -121,11 +116,11 @@ const TxsTable = ({ classes }) => {
                       style={{ paddingBottom: 0, paddingTop: 0 }}
                     >
                       <Collapse
-                        cancelTx={row[TX_TABLE_RAW_CANCEL_TX_ID]}
-                        component={ExpandedTxComponent}
+                        component={() => (
+                          <ExpandedTxComponent cancelTx={row[TX_TABLE_RAW_CANCEL_TX_ID]} tx={row[TX_TABLE_RAW_TX_ID]} />
+                        )}
                         in={expandedTx === row.tx.safeTxHash}
                         timeout="auto"
-                        tx={row[TX_TABLE_RAW_TX_ID]}
                         unmountOnExit
                       />
                     </TableCell>
@@ -139,11 +134,11 @@ const TxsTable = ({ classes }) => {
                       style={{ paddingBottom: 0, paddingTop: 0 }}
                     >
                       <Collapse
-                        cancelTx={row[TX_TABLE_RAW_CANCEL_TX_ID]}
-                        component={ExpandedTxComponent}
+                        component={() => (
+                          <ExpandedTxComponent cancelTx={row[TX_TABLE_RAW_CANCEL_TX_ID]} tx={row[TX_TABLE_RAW_TX_ID]} />
+                        )}
                         in={expandedTx === row.tx.safeTxHash}
                         timeout="auto"
-                        tx={row[TX_TABLE_RAW_TX_ID]}
                         unmountOnExit
                       />
                     </TableCell>
