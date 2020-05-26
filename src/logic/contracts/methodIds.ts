@@ -1,4 +1,4 @@
-import { web3ReadOnly } from 'src/logic/wallets/getWeb3'
+import { web3ReadOnly as web3 } from 'src/logic/wallets/getWeb3'
 
 // SAFE METHODS TO ITS ID
 // https://github.com/gnosis/safe-contracts/blob/development/test/safeMethodNaming.js
@@ -53,7 +53,6 @@ const METHOD_TO_ID = {
 }
 
 export const decodeParamsFromSafeMethod = (data) => {
-  const web3 = web3ReadOnly
   const [methodId, params] = [data.slice(0, 10), data.slice(10)]
 
   switch (methodId) {
@@ -110,7 +109,6 @@ const isSafeMethod = (methodId: string) => {
 }
 
 export const decodeMethods = (data: string) => {
-  const web3 = web3ReadOnly
   const [methodId, params] = [data.slice(0, 10), data.slice(10)]
 
   if (isSafeMethod(methodId)) {

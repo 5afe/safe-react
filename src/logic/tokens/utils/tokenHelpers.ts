@@ -3,7 +3,7 @@ import generateBatchRequests from 'src/logic/contracts/generateBatchRequests'
 import { getStandardTokenContract, getTokenInfos } from 'src/logic/tokens/store/actions/fetchTokens'
 import { makeToken } from 'src/logic/tokens/store/model/token'
 import { ALTERNATIVE_TOKEN_ABI } from 'src/logic/tokens/utils/alternativeAbi'
-import { web3ReadOnly } from 'src/logic/wallets/getWeb3'
+import { web3ReadOnly as web3 } from 'src/logic/wallets/getWeb3'
 import { isEmptyData } from 'src/routes/safe/store/actions/transactions/utils/transactionHelpers'
 
 export const ETH_ADDRESS = '0x000'
@@ -29,8 +29,6 @@ export const isAddressAToken = async (tokenAddress) => {
   // } catch {
   //   return 'Not a token address'
   // }
-
-  const web3 = web3ReadOnly
   const call = await web3.eth.call({ to: tokenAddress, data: web3.utils.sha3('totalSupply()') })
 
   return call !== '0x'
