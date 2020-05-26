@@ -2,6 +2,8 @@ import axios from 'axios'
 
 import appsIconSvg from 'src/routes/safe/components/Transactions/TxsTable/TxType/assets/appsIcon.svg'
 
+import { SafeApp } from './types'
+
 const removeLastTrailingSlash = (url) => {
   if (url.substr(-1) === '/') {
     return url.substr(0, url.length - 1)
@@ -10,7 +12,7 @@ const removeLastTrailingSlash = (url) => {
 }
 
 const gnosisAppsUrl = removeLastTrailingSlash(process.env.REACT_APP_GNOSIS_APPS_URL)
-export const staticAppsList = [
+export const staticAppsList: Array<{ url: string; disabled: boolean }> = [
   { url: `${gnosisAppsUrl}/compound`, disabled: false },
   { url: `${gnosisAppsUrl}/aave`, disabled: false },
   { url: `${gnosisAppsUrl}/pool-together`, disabled: false },
@@ -28,7 +30,7 @@ export const getAppInfoFromOrigin = (origin) => {
   }
 }
 
-export const getAppInfoFromUrl = async (appUrl) => {
+export const getAppInfoFromUrl = async (appUrl: string): Promise<SafeApp> => {
   let res = { id: undefined, url: appUrl, name: 'unknown', iconUrl: appsIconSvg, error: true }
 
   if (!appUrl || !appUrl.length) {
