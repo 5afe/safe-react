@@ -26,4 +26,8 @@ export const styles = () => ({
     display: 'flex',
     justifyContent: 'flex-end',
   },
+  expandCellStyle: {
+    paddingLeft: 0,
+    paddingRight: 15,
+  },
 })
