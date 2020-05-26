@@ -13,8 +13,11 @@ import { ADD_INCOMING_TRANSACTIONS } from 'src/routes/safe/store/actions/addInco
 import { ADD_SAFE } from 'src/routes/safe/store/actions/addSafe'
 import { ADD_OR_UPDATE_TRANSACTIONS } from 'src/routes/safe/store/actions/transactions/addOrUpdateTransactions'
 import updateSafe from 'src/routes/safe/store/actions/updateSafe'
-import { CANCELLATION_TRANSACTIONS_REDUCER_ID } from 'src/routes/safe/store/reducer/cancellationTransactions'
-import { safeParamAddressFromStateSelector, safesMapSelector } from 'src/routes/safe/store/selectors'
+import {
+  safeParamAddressFromStateSelector,
+  safesMapSelector,
+  safeCancellationTransactionsSelector,
+} from 'src/routes/safe/store/selectors'
 
 import { loadFromStorage, saveToStorage } from 'src/utils/storage'
 
@@ -75,7 +78,7 @@ const notificationsMiddleware = (store) => (next) => async (action) => {
       case ADD_OR_UPDATE_TRANSACTIONS: {
         const { safeAddress, transactions } = action.payload
         const userAddress: string = userAccountSelector(state)
-        const cancellationTransactions = state[CANCELLATION_TRANSACTIONS_REDUCER_ID].get(safeAddress)
+        const cancellationTransactions = safeCancellationTransactionsSelector(state)
         const awaitingTransactions = getAwaitingTransactions(transactions, cancellationTransactions, userAddress)
         const awaitingTxsSubmissionDateList = awaitingTransactions.map((tx) => tx.submissionDate)
 
