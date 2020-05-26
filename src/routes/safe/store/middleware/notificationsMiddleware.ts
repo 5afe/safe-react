@@ -12,13 +12,13 @@ import { getIncomingTxAmount } from 'src/routes/safe/components/Transactions/Txs
 import { grantedSelector } from 'src/routes/safe/container/selector'
 import { ADD_INCOMING_TRANSACTIONS } from 'src/routes/safe/store/actions/addIncomingTransactions'
 import { ADD_SAFE } from 'src/routes/safe/store/actions/addSafe'
-import { ADD_TRANSACTIONS } from 'src/routes/safe/store/actions/addTransactions'
 import updateSafe from 'src/routes/safe/store/actions/updateSafe'
 import { safeParamAddressFromStateSelector, safesMapSelector } from 'src/routes/safe/store/selectors'
 
 import { loadFromStorage, saveToStorage } from 'src/utils/storage'
+import { ADD_OR_UPDATE_TRANSACTIONS } from '../actions/transactions/addOrUpdateTransactions'
 
-const watchedActions = [ADD_TRANSACTIONS, ADD_INCOMING_TRANSACTIONS, ADD_SAFE]
+const watchedActions = [ADD_OR_UPDATE_TRANSACTIONS, ADD_INCOMING_TRANSACTIONS, ADD_SAFE]
 
 const sendAwaitingTransactionNotification = async (
   dispatch,
@@ -66,16 +66,16 @@ const notificationsMiddleware = (store) => (next) => async (action) => {
   if (watchedActions.includes(action.type)) {
     const state = store.getState()
     switch (action.type) {
-      case ADD_TRANSACTIONS: {
-        const transactionsList = action.payload
-        const userAddress = userAccountSelector(state)
-        const safeAddress = action.payload.keySeq().get(0)
+      case ADD_OR_UPDATE_TRANSACTIONS: {
+        const { safeAddress, transactions } = action.payload
+        const userAddress: string = userAccountSelector(state)
         const cancellationTransactions = state.cancellationTransactions.get(safeAddress)
         const cancellationTransactionsByNonce = cancellationTransactions
           ? cancellationTransactions.reduce((acc, tx) => acc.set(tx.nonce, tx), Map())
           : Map()
+
         const awaitingTransactions = getAwaitingTransactions(
-          transactionsList,
+          Map().set(safeAddress, transactions),
           cancellationTransactionsByNonce,
           userAddress,
         )
