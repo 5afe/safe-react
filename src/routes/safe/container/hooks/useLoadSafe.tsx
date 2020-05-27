@@ -15,8 +15,10 @@ export const useLoadSafe = (safeAddress) => {
     const fetchData = () => {
       if (safeAddress) {
         dispatch(fetchLatestMasterContractVersion())
-          .then(() => dispatch(fetchSafe(safeAddress)))
-          .then(() => dispatch(fetchSafeTokens(safeAddress)))
+          .then(() => {
+            dispatch(fetchSafe(safeAddress))
+            return dispatch(fetchSafeTokens(safeAddress))
+          })
           .then(() => {
             dispatch(loadAddressBookFromStorage())
             dispatch(fetchTransactions(safeAddress))
