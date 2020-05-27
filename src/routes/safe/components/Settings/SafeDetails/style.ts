@@ -1,4 +1,4 @@
-import { boldFont, border, lg, sm } from 'src/theme/variables'
+import { boldFont, border, lg, sm, connected } from 'src/theme/variables'
 
 export const styles = () => ({
   formContainer: {
@@ -24,6 +24,10 @@ export const styles = () => ({
     height: '21px',
   },
   link: {
-    textDecoration: 'underline',
+    color: `${connected}`,
+    textDecoration: 'none',
+    '&:hover': {
+      textDecoration: 'underline',
+    },
   },
 })
