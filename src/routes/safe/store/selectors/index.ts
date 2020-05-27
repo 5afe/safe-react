@@ -167,37 +167,23 @@ export const safeBalancesSelector = createSelector(safeSelector, (safe) => {
   return safe.balances
 })
 
-export const safeNameSelector = createSelector(safeSelector, (safe) => {
-  return safe ? safe.name : undefined
-})
+export const safeFieldSelector = (field) => (safe) => safe?.[field]
 
-export const safeEthBalanceSelector = createSelector(safeSelector, (safe) => {
-  return safe ? safe.ethBalance : undefined
-})
+export const safeNameSelector = createSelector(safeSelector, safeFieldSelector('name'))
 
-export const safeNeedsUpdateSelector = createSelector(safeSelector, (safe) => {
-  return safe ? safe.needsUpdate : undefined
-})
+export const safeEthBalanceSelector = createSelector(safeSelector, safeFieldSelector('ethBalance'))
 
-export const safeCurrentVersionSelector = createSelector(safeSelector, (safe) => {
-  return safe ? safe.currentVersion : undefined
-})
+export const safeNeedsUpdateSelector = createSelector(safeSelector, safeFieldSelector('needsUpdate'))
 
-export const safeThresholdSelector = createSelector(safeSelector, (safe) => {
-  return safe ? safe.threshold : undefined
-})
+export const safeCurrentVersionSelector = createSelector(safeSelector, safeFieldSelector('currentVersion'))
 
-export const safeNonceSelector = createSelector(safeSelector, (safe) => {
-  return safe ? safe.nonce : undefined
-})
+export const safeThresholdSelector = createSelector(safeSelector, safeFieldSelector('threshold'))
 
-export const safeOwnersSelector = createSelector(safeSelector, (safe) => {
-  return safe ? safe.owners : undefined
-})
+export const safeNonceSelector = createSelector(safeSelector, safeFieldSelector('nonce'))
 
-export const safeFeaturesEnabledSelector = createSelector(safeSelector, (safe) => {
-  return safe ? safe.featuresEnabled : undefined
-})
+export const safeOwnersSelector = createSelector(safeSelector, safeFieldSelector('owners'))
+
+export const safeFeaturesEnabledSelector = createSelector(safeSelector, safeFieldSelector('featuresEnabled'))
 
 export const getActiveTokensAddressesForAllSafes = createSelector(safesListSelector, (safes) => {
   const addresses = Set().withMutations((set) => {
