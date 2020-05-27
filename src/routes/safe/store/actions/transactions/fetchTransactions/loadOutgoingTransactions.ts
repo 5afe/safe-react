@@ -8,6 +8,7 @@ import FetchTransactions from 'src/routes/safe/store/actions/transactions/fetchT
 import { buildTx, isCancelTransaction } from 'src/routes/safe/store/actions/transactions/utils/transactionHelpers'
 import { SAFE_REDUCER_ID } from 'src/routes/safe/store/reducer/safe'
 import { store } from 'src/store'
+import { DecodedMethods } from 'src/logic/contracts/methodIds'
 
 export type ConfirmationServiceModel = {
   owner: string
@@ -16,17 +17,13 @@ export type ConfirmationServiceModel = {
   transactionHash: string
 }
 
-export type DecodedData = {
-  [key: string]: Array<{ [key: string]: string | number }>
-}
-
 export type TxServiceModel = {
   baseGas: number
   blockNumber?: number | null
   confirmations: ConfirmationServiceModel[]
   creationTx?: boolean | null
   data?: string | null
-  dataDecoded?: DecodedData | null
+  dataDecoded?: DecodedMethods
   executionDate?: string | null
   executor: string
   gasPrice: number

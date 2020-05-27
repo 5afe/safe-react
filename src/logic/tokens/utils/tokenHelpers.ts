@@ -1,15 +1,16 @@
 import logo from 'src/assets/icons/icon_etherTokens.svg'
 import generateBatchRequests from 'src/logic/contracts/generateBatchRequests'
 import { getStandardTokenContract, getTokenInfos } from 'src/logic/tokens/store/actions/fetchTokens'
-import { makeToken } from 'src/logic/tokens/store/model/token'
+import { makeToken, Token } from 'src/logic/tokens/store/model/token'
 import { ALTERNATIVE_TOKEN_ABI } from 'src/logic/tokens/utils/alternativeAbi'
 import { web3ReadOnly as web3 } from 'src/logic/wallets/getWeb3'
 import { isEmptyData } from 'src/routes/safe/store/actions/transactions/utils/transactionHelpers'
+import { TxServiceModel } from 'src/routes/safe/store/actions/transactions/fetchTransactions/loadOutgoingTransactions'
 
 export const ETH_ADDRESS = '0x000'
 export const SAFE_TRANSFER_FROM_WITHOUT_DATA_HASH = '42842e0e'
 
-export const getEthAsToken = (balance: string) => {
+export const getEthAsToken = (balance: string): Token => {
   return makeToken({
     address: ETH_ADDRESS,
     name: 'Ether',
@@ -20,7 +21,7 @@ export const getEthAsToken = (balance: string) => {
   })
 }
 
-export const isAddressAToken = async (tokenAddress) => {
+export const isAddressAToken = async (tokenAddress): Promise<boolean> => {
   // SECOND APPROACH:
   // They both seem to work the same
   // const tokenContract = await getStandardTokenContract()
@@ -45,7 +46,9 @@ export const isSendERC721Transaction = (tx: any, txCode: string, knownTokens: an
   )
 }
 
-export const getERC20DecimalsAndSymbol = async (tokenAddress: string): Promise<any> => {
+export const getERC20DecimalsAndSymbol = async (
+  tokenAddress: string,
+): Promise<{ decimals: number; symbol: string }> => {
   const tokenInfos = await getTokenInfos(tokenAddress)
 
   if (tokenInfos === null) {
@@ -61,7 +64,11 @@ export const getERC20DecimalsAndSymbol = async (tokenAddress: string): Promise<a
   return { decimals: Number(tokenInfos.decimals), symbol: tokenInfos.symbol }
 }
 
-export const isSendERC20Transaction = async (tx: any, txCode: string, knownTokens: any) => {
+export const isSendERC20Transaction = async (
+  tx: TxServiceModel,
+  txCode: string,
+  knownTokens: any,
+): Promise<boolean> => {
   let isSendTokenTx = !isSendERC721Transaction(tx, txCode, knownTokens) && isTokenTransfer(tx)
 
   if (isSendTokenTx) {

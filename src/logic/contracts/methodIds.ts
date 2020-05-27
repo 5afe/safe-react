@@ -52,8 +52,26 @@ const METHOD_TO_ID = {
   '0x694e80c3': SAFE_METHODS_NAMES.CHANGE_THRESHOLD,
 }
 
-export const decodeParamsFromSafeMethod = (data) => {
-  const [methodId, params] = [data.slice(0, 10), data.slice(10)]
+type SafeMethods = typeof SAFE_METHODS_NAMES[keyof typeof SAFE_METHODS_NAMES]
+type TokenMethods = 'transfer' | 'transferFrom' | 'safeTransferFrom'
+
+type DecodedValues = Array<{
+  name: string
+  value: string
+}>
+
+type SafeDecodedParams = {
+  [key in SafeMethods]?: DecodedValues
+}
+
+type TokenDecodedParams = {
+  [key in TokenMethods]?: DecodedValues
+}
+
+export type DecodedMethods = SafeDecodedParams | TokenDecodedParams | null
+
+export const decodeParamsFromSafeMethod = (data: string): SafeDecodedParams | null => {
+  const [methodId, params] = [data.slice(0, 10) as keyof typeof METHOD_TO_ID | string, data.slice(10)]
 
   switch (methodId) {
     // swapOwner
@@ -104,11 +122,11 @@ export const decodeParamsFromSafeMethod = (data) => {
   }
 }
 
-const isSafeMethod = (methodId: string) => {
+const isSafeMethod = (methodId: string): boolean => {
   return !!METHOD_TO_ID[methodId]
 }
 
-export const decodeMethods = (data: string) => {
+export const decodeMethods = (data: string): DecodedMethods => {
   const [methodId, params] = [data.slice(0, 10), data.slice(10)]
 
   if (isSafeMethod(methodId)) {
