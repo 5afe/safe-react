@@ -231,7 +231,7 @@ export const buildTx = async ({
   const refundParams = await getRefundParams(tx, getERC20DecimalsAndSymbol)
   const decodedParams = getDecodedParams(tx)
   const confirmations = getConfirmations(tx)
-  const { decimals = null, symbol = null } = isSendERC20Tx ? await getERC20DecimalsAndSymbol(tx.to) : {}
+  const { decimals = 18, symbol = 'ETH' } = isSendERC20Tx ? await getERC20DecimalsAndSymbol(tx.to) : {}
 
   const txToStore: Transaction = makeTransaction({
     baseGas: tx.baseGas,
