@@ -46,8 +46,8 @@ const StyledCheckbox = styled(Checkbox)`
   margin: 0;
 `
 
-const appExistsValidator = memoize((appList, value) => {
-  const exists = appList.find((a) => {
+const uniqueAppValidator = memoize((appList, value) => {
+  const exists = appList.some((a) => {
     try {
       const currentUrl = new URL(a.url)
       const newUrl = new URL(value)
@@ -91,7 +91,7 @@ const curriedSafeAppValidator = memoize((appList) => async (value: string) => {
     return 'Provide a valid url or ENS name.'
   }
 
-  const appExistsRes = appExistsValidator(appList, url)
+  const appExistsRes = uniqueAppValidator(appList, url)
   if (appExistsRes) {
     return appExistsRes
   }

@@ -17,8 +17,6 @@ const ManageApps = ({ appList, onAppAdded, onAppToggle }: Props) => {
   const [isOpen, setIsOpen] = useState(false)
   const [isSubmitDisabled, setIsSubmitDisabled] = useState(true)
 
-  //const cleanAppInfo = () => setAppInfo(APP_INFO)
-
   const onSubmitForm = () => {
     // This sucks, but it's the way the docs suggest
     // https://github.com/final-form/react-final-form/blob/master/docs/faq.md#via-documentgetelementbyid

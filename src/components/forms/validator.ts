@@ -16,11 +16,11 @@ export const simpleMemoize = (fn) => {
 export const required = (value?: string) => {
   const required = 'Required'
 
-  if (typeof value === 'string' && !value.trim().length) {
+  if (!value) {
     return required
   }
 
-  if (!value) {
+  if (typeof value === 'string' && !value.trim().length) {
     return required
   }
 
