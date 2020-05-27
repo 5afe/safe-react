@@ -1,14 +1,15 @@
-import { List, Map, fromJS } from 'immutable'
+import { fromJS, List, Map } from 'immutable'
 
 import generateBatchRequests from 'src/logic/contracts/generateBatchRequests'
 import { TOKEN_REDUCER_ID } from 'src/logic/tokens/store/reducer/tokens'
 import { web3ReadOnly } from 'src/logic/wallets/getWeb3'
 import { PROVIDER_REDUCER_ID } from 'src/logic/wallets/store/reducer/provider'
-import FetchTransactions from 'src/routes/safe/store/actions/transactions/fetchTransactions/FetchTransactions'
 import { buildTx, isCancelTransaction } from 'src/routes/safe/store/actions/transactions/utils/transactionHelpers'
 import { SAFE_REDUCER_ID } from 'src/routes/safe/store/reducer/safe'
 import { store } from 'src/store'
 import { DecodedMethods } from 'src/logic/contracts/methodIds'
+import fetchTransactions from 'src/routes/safe/store/actions/transactions/fetchTransactions/fetchTransactions'
+import { TransactionTypes } from 'src/routes/safe/store/models/types/transaction'
 
 export type ConfirmationServiceModel = {
   owner: string
@@ -167,7 +168,7 @@ const batchProcessOutgoingTransactions = async ({
   return { cancel, outgoing }
 }
 
-let fetchOutgoingTxs: FetchTransactions | null = null
+let previousETag = null
 export const loadOutgoingTransactions = async (safeAddress: string): Promise<SafeTransactionsType> => {
   const defaultResponse = {
     cancel: Map(),
@@ -187,12 +188,13 @@ export const loadOutgoingTransactions = async (safeAddress: string): Promise<Saf
     return defaultResponse
   }
 
-  fetchOutgoingTxs =
-    !fetchOutgoingTxs || fetchOutgoingTxs.getSafeAddress() !== safeAddress
-      ? new FetchTransactions(safeAddress, 'outgoing')
-      : fetchOutgoingTxs
-  const outgoingTransactions: TxServiceModel[] = await fetchOutgoingTxs.fetch()
-  const { cancellationTxs, outgoingTxs } = extractCancelAndOutgoingTxs(safeAddress, outgoingTransactions)
+  const { eTag, results }: { eTag: string | null; results: TxServiceModel[] } = await fetchTransactions(
+    TransactionTypes.OUTGOING,
+    safeAddress,
+    previousETag,
+  )
+  previousETag = eTag
+  const { cancellationTxs, outgoingTxs } = extractCancelAndOutgoingTxs(safeAddress, results)
 
   // this should be only used for the initial load or when paginating
   const { cancel, outgoing } = await batchProcessOutgoingTransactions({

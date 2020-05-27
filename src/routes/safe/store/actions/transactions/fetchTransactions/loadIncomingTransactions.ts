@@ -1,14 +1,14 @@
-import axios from 'axios'
 import bn from 'bignumber.js'
 import { List, Map } from 'immutable'
 
 import generateBatchRequests from 'src/logic/contracts/generateBatchRequests'
-import { buildIncomingTxServiceUrl } from 'src/logic/safe/transactions/incomingTxHistory'
 import { ALTERNATIVE_TOKEN_ABI } from 'src/logic/tokens/utils/alternativeAbi'
 import { web3ReadOnly } from 'src/logic/wallets/getWeb3'
 import { makeIncomingTransaction } from 'src/routes/safe/store/models/incomingTransaction'
+import fetchTransactions from 'src/routes/safe/store/actions/transactions/fetchTransactions/fetchTransactions'
+import { TransactionTypes } from 'src/routes/safe/store/models/types/transaction'
 
-type IncomingTxServiceModel = {
+export type IncomingTxServiceModel = {
   blockNumber: number
   transactionHash: string
   to: string
@@ -68,37 +68,12 @@ const batchIncomingTxsTokenDataRequest = (txs: IncomingTxServiceModel[]) => {
   )
 }
 
-let prevIncomingTxsEtag = null
+let previousETag = null
 export const loadIncomingTransactions = async (safeAddress: string) => {
-  let incomingTransactions: IncomingTxServiceModel[] = []
-  try {
-    const config = prevIncomingTxsEtag
-      ? {
-          headers: {
-            'If-None-Match': prevIncomingTxsEtag,
-          },
-        }
-      : undefined
-    const url = buildIncomingTxServiceUrl(safeAddress)
-    const response = await axios.get(url, config)
-    if (response.data.count > 0) {
-      incomingTransactions = response.data.results
-      if (prevIncomingTxsEtag === response.headers.etag) {
-        // The txs are the same as we currently have, we don't have to proceed
-        return
-      }
-      prevIncomingTxsEtag = response.headers.etag
-    }
-  } catch (err) {
-    if (err && err.response && err.response.status === 304) {
-      // We return cached transactions
-      return
-    } else {
-      console.error(`Requests for incoming transactions for ${safeAddress} failed with 404`, err)
-    }
-  }
+  const { eTag, results } = await fetchTransactions(TransactionTypes.INCOMING, safeAddress, previousETag)
+  previousETag = eTag
 
-  const incomingTxsWithData = await batchIncomingTxsTokenDataRequest(incomingTransactions)
+  const incomingTxsWithData = await batchIncomingTxsTokenDataRequest(results)
   const incomingTxsRecord = incomingTxsWithData.map(buildIncomingTransactionFrom)
   return Map({ [safeAddress]: List(incomingTxsRecord) })
 }

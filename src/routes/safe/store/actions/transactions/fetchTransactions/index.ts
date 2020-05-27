@@ -28,7 +28,7 @@ export default (safeAddress: string) => async (dispatch) => {
 
   const incomingTransactions = await loadIncomingTransactions(safeAddress)
 
-  if (incomingTransactions) {
+  if (incomingTransactions.get(safeAddress).size) {
     dispatch(addIncomingTransactions(incomingTransactions))
   }
 }
