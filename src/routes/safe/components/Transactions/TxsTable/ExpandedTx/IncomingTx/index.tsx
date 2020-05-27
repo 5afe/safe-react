@@ -1,8 +1,8 @@
 import React from 'react'
-import { INCOMING_TX_TYPES } from '../../../../../store/models/incomingTransaction'
-import { formatDate } from '../../columns'
-import Bold from '../../../../../../../components/layout/Bold'
-import Paragraph from '../../../../../../../components/layout/Paragraph'
+import { INCOMING_TX_TYPES } from 'src/routes/safe/store/models/incomingTransaction'
+import { formatDate } from 'src/routes/safe/components/Transactions/TxsTable/columns'
+import Bold from 'src/components/layout/Bold'
+import Paragraph from 'src/components/layout/Paragraph'
 
 export const IncomingTx = (props) => {
   const { tx } = props

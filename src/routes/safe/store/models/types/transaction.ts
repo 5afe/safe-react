@@ -33,6 +33,8 @@ export type TransactionProps = {
   blockNumber?: number | null
   cancelled?: boolean
   confirmations: import('immutable').List<any>
+  created: boolean
+  creator: string
   creationTx: boolean
   customTx: boolean
   data?: string | null
@@ -41,6 +43,7 @@ export type TransactionProps = {
   executionDate?: string | null
   executionTxHash?: string | null
   executor: string
+  factoryAddress: string
   gasPrice: number
   gasToken: string
   isCancellationTx: boolean
@@ -49,6 +52,7 @@ export type TransactionProps = {
   isPending?: boolean
   isSuccessful: boolean
   isTokenTransfer: boolean
+  masterCopy: string
   modifySettingsTx: boolean
   multiSendTx: boolean
   nonce?: number | null
@@ -60,9 +64,11 @@ export type TransactionProps = {
   refundReceiver: string
   safeTxGas: number
   safeTxHash: string
+  setupData: string
   status?: TransactionStatus
   submissionDate?: string | null
   symbol?: string | null
+  transactionHash: string
   type: TransactionTypes
   upgradeTx: boolean
   value: string
