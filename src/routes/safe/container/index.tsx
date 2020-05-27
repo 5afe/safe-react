@@ -7,8 +7,8 @@ import Page from 'src/components/layout/Page'
 import Layout from 'src/routes/safe/components/Layout'
 
 import { safeParamAddressFromStateSelector } from 'src/routes/safe/store/selectors'
-import { useCheckForUpdates } from './hooks/useCheckForUpdates'
 import { useLoadSafe } from './hooks/useLoadSafe'
+import { useCheckForUpdates } from './hooks/useCheckForUpdates'
 
 const INITIAL_STATE = {
   sendFunds: {

@@ -19,25 +19,18 @@ import Table from 'src/components/Table'
 import { cellWidth } from 'src/components/Table/TableHead'
 import Block from 'src/components/layout/Block'
 import Row from 'src/components/layout/Row'
+import { extendedTransactionsSelector } from 'src/routes/safe/container/selector'
 import { safeCancellationTransactionsSelector } from 'src/routes/safe/store/selectors'
-import { extendedTransactionsSelector } from '../../../store/selectors/transactions'
 
 export const TRANSACTION_ROW_TEST_ID = 'transaction-row'
-
-const CollapseAux: any = Collapse
-
-const expandCellStyle = {
-  paddingLeft: 0,
-  paddingRight: 15,
-}
 
 const TxsTable = ({ classes }) => {
   const [expandedTx, setExpandedTx] = useState(null)
   const cancellationTransactions = useSelector(safeCancellationTransactionsSelector)
   const transactions = useSelector(extendedTransactionsSelector)
 
-  const handleTxExpand = (rowCombinedId) => {
-    setExpandedTx((prevId) => (prevId === rowCombinedId ? null : rowCombinedId))
+  const handleTxExpand = (safeTxHash) => {
+    setExpandedTx((prevTx) => (prevTx === safeTxHash ? null : safeTxHash))
   }
 
   const columns = generateColumns()
@@ -83,65 +76,76 @@ const TxsTable = ({ classes }) => {
           size={filteredData.size}
         >
           {(sortedData) =>
-            sortedData.map((row, index) => {
-              const rowCombinedId = `${row.tx.nonce + row.tx.data}`
-
-              return (
-                <React.Fragment key={index}>
-                  <TableRow
-                    className={cn(classes.row, expandedTx === rowCombinedId && classes.expandedRow)}
-                    data-testid={TRANSACTION_ROW_TEST_ID}
-                    onClick={() => handleTxExpand(rowCombinedId)}
-                    tabIndex={-1}
-                  >
-                    {autoColumns.map((column: any) => (
-                      <TableCell
-                        align={column.align}
-                        className={cn(
-                          classes.cell,
-                          ['cancelled', 'failed'].includes(row.status) && classes.cancelledRow,
-                        )}
-                        component="td"
-                        key={column.id}
-                        style={cellWidth(column.width)}
-                      >
-                        {row[column.id]}
-                      </TableCell>
-                    ))}
-                    <TableCell component="td">
-                      <Row align="end" className={classes.actions}>
-                        <Status status={row.status} />
-                      </Row>
+            sortedData.map((row, index) => (
+              <React.Fragment key={index}>
+                <TableRow
+                  className={cn(classes.row, expandedTx === row.tx.safeTxHash && classes.expandedRow)}
+                  data-testid={TRANSACTION_ROW_TEST_ID}
+                  onClick={() => handleTxExpand(row.tx.safeTxHash)}
+                  tabIndex={-1}
+                >
+                  {autoColumns.map((column: any) => (
+                    <TableCell
+                      align={column.align}
+                      className={cn(classes.cell, ['cancelled', 'failed'].includes(row.status) && classes.cancelledRow)}
+                      component="td"
+                      key={column.id}
+                      style={cellWidth(column.width)}
+                    >
+                      {row[column.id]}
                     </TableCell>
-                    <TableCell style={expandCellStyle}>
-                      {!row.tx.creationTx && (
-                        <IconButton disableRipple>
-                          {expandedTx === rowCombinedId ? <ExpandLess /> : <ExpandMore />}
-                        </IconButton>
-                      )}
+                  ))}
+                  <TableCell component="td">
+                    <Row align="end" className={classes.actions}>
+                      <Status status={row.status} />
+                    </Row>
+                  </TableCell>
+                  <TableCell className={classes.expandCellStyle}>
+                    {!row.tx.creationTx && (
+                      <IconButton disableRipple>
+                        {expandedTx === row.safeTxHash ? <ExpandLess /> : <ExpandMore />}
+                      </IconButton>
+                    )}
+                  </TableCell>
+                </TableRow>
+                {!row.tx.creationTx && (
+                  <TableRow>
+                    <TableCell
+                      className={classes.extendedTxContainer}
+                      colSpan={6}
+                      style={{ paddingBottom: 0, paddingTop: 0 }}
+                    >
+                      <Collapse
+                        component={() => (
+                          <ExpandedTxComponent cancelTx={row[TX_TABLE_RAW_CANCEL_TX_ID]} tx={row[TX_TABLE_RAW_TX_ID]} />
+                        )}
+                        in={expandedTx === row.tx.safeTxHash}
+                        timeout="auto"
+                        unmountOnExit
+                      />
                     </TableCell>
                   </TableRow>
-                  {!row.tx.creationTx && (
-                    <TableRow>
-                      <TableCell
-                        className={classes.extendedTxContainer}
-                        colSpan={6}
-                        style={{ paddingBottom: 0, paddingTop: 0 }}
-                      >
-                        <CollapseAux
-                          cancelTx={row[TX_TABLE_RAW_CANCEL_TX_ID]}
-                          component={ExpandedTxComponent}
-                          in={expandedTx === rowCombinedId}
-                          timeout="auto"
-                          tx={row[TX_TABLE_RAW_TX_ID]}
-                          unmountOnExit
-                        />
-                      </TableCell>
-                    </TableRow>
-                  )}
-                </React.Fragment>
-              )
-            })
+                )}
+                {row.tx.creationTx && (
+                  <TableRow>
+                    <TableCell
+                      className={classes.extendedTxContainer}
+                      colSpan={6}
+                      style={{ paddingBottom: 0, paddingTop: 0 }}
+                    >
+                      <Collapse
+                        component={() => (
+                          <ExpandedTxComponent cancelTx={row[TX_TABLE_RAW_CANCEL_TX_ID]} tx={row[TX_TABLE_RAW_TX_ID]} />
+                        )}
+                        in={expandedTx === row.tx.safeTxHash}
+                        timeout="auto"
+                        unmountOnExit
+                      />
+                    </TableCell>
+                  </TableRow>
+                )}
+              </React.Fragment>
+            ))
           }
         </Table>
       </TableContainer>
