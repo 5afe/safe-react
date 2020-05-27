@@ -51,6 +51,13 @@ export const containsMethodByHash = async (contractAddress, methodHash) => {
   return byteCode.indexOf(methodHash.replace('0x', '')) !== -1
 }
 
+const getTokenValues = (tokenAddress) =>
+  generateBatchRequests({
+    abi: ERC20Detailed.abi,
+    address: tokenAddress,
+    methods: ['decimals', 'name', 'symbol'],
+  })
+
 export const getTokenInfos = async (tokenAddress) => {
   if (!tokenAddress) {
     return null
@@ -65,11 +72,7 @@ export const getTokenInfos = async (tokenAddress) => {
   }
 
   // Otherwise we fetch it, save it to the store and return it
-  const [tokenDecimals, tokenName, tokenSymbol] = await generateBatchRequests({
-    abi: ERC20Detailed.abi,
-    address: tokenAddress,
-    methods: ['decimals', 'name', 'symbol'],
-  })
+  const [tokenDecimals, tokenName, tokenSymbol] = await getTokenValues(tokenAddress)
 
   if (tokenDecimals === null) {
     return null
