@@ -49,7 +49,7 @@ function Apps({ closeModal, closeSnackbar, enqueueSnackbar, openModal }) {
   const [selectedApp, setSelectedApp] = useState<string>()
   const [loading, setLoading] = useState(true)
   const [appIsLoading, setAppIsLoading] = useState(true)
-  const [iframeEl, setIframeEl] = useState<HTMLIFrameElement>(null)
+  const [iframeEl, setIframeEl] = useState<HTMLIFrameElement | null>(null)
 
   const history = useHistory()
   const granted = useSelector(grantedSelector)
