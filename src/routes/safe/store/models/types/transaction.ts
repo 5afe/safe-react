@@ -75,3 +75,19 @@ export type TransactionProps = {
 }
 
 export type Transaction = import('immutable').RecordOf<TransactionProps>
+
+export type TxArgs = {
+  data: any
+  baseGas: number
+  gasToken: string
+  safeInstance: any
+  nonce: number
+  valueInWei: any
+  safeTxGas: number
+  refundReceiver: string
+  sender: any
+  sigs: string
+  to: any
+  operation: any
+  gasPrice: number
+}

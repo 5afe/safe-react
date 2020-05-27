@@ -18,6 +18,7 @@ import {
   TransactionStatusValues,
   TransactionTypes,
   TransactionTypeValues,
+  TxArgs,
 } from 'src/routes/safe/store/models/types/transaction'
 import { CANCELLATION_TRANSACTIONS_REDUCER_ID } from 'src/routes/safe/store/reducer/cancellationTransactions'
 import { SAFE_REDUCER_ID } from 'src/routes/safe/store/reducer/safe'
@@ -26,6 +27,7 @@ import { store } from 'src/store'
 import { safeSelector, safeTransactionsSelector } from 'src/routes/safe/store/selectors'
 import { addOrUpdateTransactions } from 'src/routes/safe/store/actions/transactions/addOrUpdateTransactions'
 import { TxServiceModel } from 'src/routes/safe/store/actions/transactions/fetchTransactions/loadOutgoingTransactions'
+import { TypedDataUtils } from 'eth-sig-util'
 
 export const isEmptyData = (data?: string | null): boolean => {
   return !data || data === EMPTY_DATA
@@ -331,4 +333,43 @@ export const updateStoredTransactionsStatus = (dispatch, walletRecord): void => 
       }),
     )
   }
+}
+
+export function generateSafeTxHash(safeAddress: string, txArgs: TxArgs): string {
+  const typedData = {
+    types: {
+      EIP712Domain: [{ type: 'address', name: 'verifyingContract' }],
+      SafeTx: [
+        { type: 'address', name: 'to' },
+        { type: 'uint256', name: 'value' },
+        { type: 'bytes', name: 'data' },
+        { type: 'uint8', name: 'operation' },
+        { type: 'uint256', name: 'safeTxGas' },
+        { type: 'uint256', name: 'baseGas' },
+        { type: 'uint256', name: 'gasPrice' },
+        { type: 'address', name: 'gasToken' },
+        { type: 'address', name: 'refundReceiver' },
+        { type: 'uint256', name: 'nonce' },
+      ],
+    },
+    domain: {
+      verifyingContract: safeAddress,
+    },
+    primaryType: 'SafeTx',
+    message: {
+      to: txArgs.to,
+      value: txArgs.valueInWei,
+      data: txArgs.data,
+      operation: txArgs.operation,
+      safeTxGas: txArgs.safeTxGas,
+      baseGas: txArgs.baseGas,
+      gasPrice: txArgs.gasPrice,
+      gasToken: txArgs.gasToken,
+      refundReceiver: txArgs.refundReceiver,
+      nonce: txArgs.nonce,
+    },
+  }
+
+  // @ts-ignore
+  return `0x${TypedDataUtils.sign(typedData).toString('hex')}`
 }

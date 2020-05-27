@@ -6,9 +6,15 @@ import semverSatisfies from 'semver/functions/satisfies'
 import { onboardUser } from 'src/components/ConnectButton'
 import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
 import { getNotificationsFromTxType, showSnackbar } from 'src/logic/notifications'
-import { CALL, getApprovalTransaction, getExecutionTransaction, saveTxToHistory } from 'src/logic/safe/transactions'
+import {
+  CALL,
+  getApprovalTransaction,
+  getExecutionTransaction,
+  SAFE_VERSION_FOR_OFFCHAIN_SIGNATURES,
+  saveTxToHistory,
+  tryOffchainSigning,
+} from 'src/logic/safe/transactions'
 import { estimateSafeTxGas } from 'src/logic/safe/transactions/gasNew'
-import { SAFE_VERSION_FOR_OFFCHAIN_SIGNATURES, tryOffchainSigning } from 'src/logic/safe/transactions/offchainSigner'
 import { getCurrentSafeVersion } from 'src/logic/safe/utils/safeVersion'
 import { ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
 import { EMPTY_DATA } from 'src/logic/wallets/ethTransactions'
@@ -18,7 +24,10 @@ import { addOrUpdateCancellationTransactions } from 'src/routes/safe/store/actio
 import { addOrUpdateTransactions } from 'src/routes/safe/store/actions/transactions/addOrUpdateTransactions'
 import { removeCancellationTransaction } from 'src/routes/safe/store/actions/transactions/removeCancellationTransaction'
 import { removeTransaction } from 'src/routes/safe/store/actions/transactions/removeTransaction'
-import { mockTransaction } from 'src/routes/safe/store/actions/transactions/utils/transactionHelpers'
+import {
+  generateSafeTxHash,
+  mockTransaction,
+} from 'src/routes/safe/store/actions/transactions/utils/transactionHelpers'
 import { getLastTx, getNewTxNonce, shouldExecuteTransaction } from 'src/routes/safe/store/actions/utils'
 import { getErrorMessage } from 'src/test/utils/ethereumErrors'
 import { makeConfirmation } from '../models/confirmation'
@@ -151,6 +160,7 @@ const createTransaction = ({
       ...txArgs,
       confirmations: [], // this is used to determine if a tx is pending or not. See `calculateTransactionStatus` helper
       value: txArgs.valueInWei,
+      safeTxHash: generateSafeTxHash(safeAddress, txArgs),
     }
     const mockedTx = await mockTransaction(txToMock, safeAddress, state)
 
