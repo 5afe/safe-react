@@ -33,10 +33,11 @@ import { getErrorMessage } from 'src/test/utils/ethereumErrors'
 import { makeConfirmation } from '../models/confirmation'
 import fetchTransactions from './transactions/fetchTransactions'
 import { safeTransactionsSelector } from 'src/routes/safe/store/selectors'
+import { TransactionStatus } from 'src/routes/safe/store/models/types/transaction'
 
 export const removeTxFromStore = (tx, safeAddress, dispatch, state) => {
   if (tx.isCancellationTx) {
-    const newTxStatus = 'awaiting_confirmations'
+    const newTxStatus = TransactionStatus.AWAITING_YOUR_CONFIRMATION
     const transactions = safeTransactionsSelector(state)
     const txsToUpdate = transactions
       .filter((transaction) => Number(transaction.nonce) === Number(tx.nonce))
@@ -53,12 +54,19 @@ export const removeTxFromStore = (tx, safeAddress, dispatch, state) => {
 
 export const storeTx = async (tx, safeAddress, dispatch, state) => {
   if (tx.isCancellationTx) {
-    const newTxStatus = tx.isExecuted ? 'cancelled' : tx.status === 'pending' ? 'pending' : 'awaiting_confirmations'
+    let newTxStatus: TransactionStatus = TransactionStatus.AWAITING_YOUR_CONFIRMATION
+
+    if (tx.isExecuted) {
+      newTxStatus = TransactionStatus.CANCELLED
+    } else if (tx.status === TransactionStatus.PENDING) {
+      newTxStatus = tx.status
+    }
+
     const transactions = safeTransactionsSelector(state)
     const txsToUpdate = transactions
       .filter((transaction) => Number(transaction.nonce) === Number(tx.nonce))
       .withMutations((list) =>
-        list.map((tx) => tx.set('status', newTxStatus).set('cancelled', newTxStatus === 'cancelled')),
+        list.map((tx) => tx.set('status', newTxStatus).set('cancelled', newTxStatus === TransactionStatus.CANCELLED)),
       )
 
     batch(() => {
