@@ -29,7 +29,7 @@ export const estimateTxGasCosts = async (safeAddress, to, data, tx?: any, preApp
   try {
     const web3 = getWeb3()
     const from = await getAccountFrom(web3)
-    const safeInstance = new web3.eth.Contract(GnosisSafeSol.abi as any, safeAddress)
+    const safeInstance: any = new web3.eth.Contract(GnosisSafeSol.abi as any, safeAddress)
     const nonce = await safeInstance.methods.nonce().call()
     const threshold = await safeInstance.methods.getThreshold().call()
 

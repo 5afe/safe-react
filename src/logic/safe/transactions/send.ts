@@ -40,7 +40,7 @@ export const getApprovalTransaction = async ({
   try {
     const web3 = getWeb3()
 
-    const contract = new web3.eth.Contract(GnosisSafeSol.abi as any, safeInstance.address)
+    const contract: any = new web3.eth.Contract(GnosisSafeSol.abi as any, safeInstance.address)
 
     return contract.methods.approveHash(txHash)
   } catch (err) {
@@ -64,7 +64,7 @@ export const getExecutionTransaction = async ({
 }) => {
   try {
     const web3 = getWeb3()
-    const contract = new web3.eth.Contract(GnosisSafeSol.abi as any, safeInstance.address)
+    const contract: any = new web3.eth.Contract(GnosisSafeSol.abi as any, safeInstance.address)
 
     return contract.methods.execTransaction(
       to,
