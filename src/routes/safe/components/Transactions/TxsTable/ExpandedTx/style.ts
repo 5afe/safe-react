@@ -33,4 +33,10 @@ export const styles = () => ({
   incomingTxBlock: {
     borderRight: '2px solid rgb(232, 231, 230)',
   },
+  emptyRowDataContainer: {
+    paddingTop: lg,
+    paddingLeft: md,
+    paddingBottom: md,
+    borderRight: '2px solid rgb(232, 231, 230)',
+  },
 })

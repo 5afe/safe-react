@@ -39,4 +39,10 @@ export const makeTransaction = Record({
   refundParams: null,
   type: 'outgoing',
   origin: null,
+  created: false,
+  creator: '',
+  factoryAddress: '',
+  masterCopy: '',
+  setupData: '',
+  transactionHash: '',
 })

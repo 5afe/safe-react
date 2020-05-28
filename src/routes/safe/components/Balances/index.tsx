@@ -19,6 +19,7 @@ import { safeFeaturesEnabledSelector, safeParamAddressFromStateSelector } from '
 import { history } from 'src/store/index'
 import { wrapInSuspense } from 'src/utils/wrapInSuspense'
 import { useFetchTokens } from '../../container/hooks/useFetchTokens'
+
 const Collectibles = React.lazy(() => import('src/routes/safe/components/Balances/Collectibles'))
 const Coins = React.lazy(() => import('src/routes/safe/components/Balances/Coins'))
 

@@ -5,7 +5,6 @@ import { List, Map } from 'immutable'
 import { batch } from 'react-redux'
 
 import { addIncomingTransactions } from './addIncomingTransactions'
-import { addTransactions } from './addTransactions'
 
 import generateBatchRequests from 'src/logic/contracts/generateBatchRequests'
 import { decodeParamsFromSafeMethod } from 'src/logic/contracts/methodIds'
@@ -25,7 +24,8 @@ import { getWeb3 } from 'src/logic/wallets/getWeb3'
 import { addCancellationTransactions } from 'src/routes/safe/store/actions/addCancellationTransactions'
 import { makeConfirmation } from 'src/routes/safe/store/models/confirmation'
 import { makeIncomingTransaction } from 'src/routes/safe/store/models/incomingTransaction'
-import { makeTransaction } from 'src/routes/safe/store/models/transaction'
+import { addOrUpdateTransactions } from './transactions/addOrUpdateTransactions'
+import { makeTransaction } from '../models/transaction'
 
 let web3
 
@@ -144,33 +144,7 @@ export const buildTransactionFrom = async (
   })
 }
 
-const addMockSafeCreationTx = (safeAddress) => [
-  {
-    blockNumber: null,
-    baseGas: 0,
-    confirmations: [],
-    data: null,
-    executionDate: null,
-    gasPrice: 0,
-    gasToken: '0x0000000000000000000000000000000000000000',
-    isExecuted: true,
-    nonce: null,
-    operation: 0,
-    refundReceiver: '0x0000000000000000000000000000000000000000',
-    safe: safeAddress,
-    safeTxGas: 0,
-    safeTxHash: '',
-    signatures: null,
-    submissionDate: null,
-    executor: '',
-    to: '',
-    transactionHash: null,
-    value: 0,
-    creationTx: true,
-  },
-]
-
-const batchRequestTxsData = (txs) => {
+const batchRequestTxsData = (txs: any[]) => {
   const web3Batch = new web3.BatchRequest()
 
   const txsTokenInfo = txs.map((tx) => {
@@ -236,9 +210,9 @@ export const buildIncomingTransactionFrom = ([tx, symbol, decimals, fee]) => {
 }
 
 let etagSafeTransactions = null
-let etagCachedSafeIncommingTransactions = null
+let etagCachedSafeIncomingTransactions = null
 export const loadSafeTransactions = async (safeAddress, getState) => {
-  let transactions = addMockSafeCreationTx(safeAddress)
+  let transactions = []
 
   try {
     const config = etagSafeTransactions
@@ -288,7 +262,7 @@ export const loadSafeTransactions = async (safeAddress, getState) => {
   const groupedTxs = List(txsRecord).groupBy((tx) => (tx.get('cancellationTx') ? 'cancel' : 'outgoing'))
 
   return {
-    outgoing: Map().set(safeAddress, groupedTxs.get('outgoing')),
+    outgoing: groupedTxs.get('outgoing'),
     cancel: Map().set(safeAddress, groupedTxs.get('cancel')),
   }
 }
@@ -296,10 +270,10 @@ export const loadSafeTransactions = async (safeAddress, getState) => {
 export const loadSafeIncomingTransactions = async (safeAddress) => {
   let incomingTransactions = []
   try {
-    const config = etagCachedSafeIncommingTransactions
+    const config = etagCachedSafeIncomingTransactions
       ? {
           headers: {
-            'If-None-Match': etagCachedSafeIncommingTransactions,
+            'If-None-Match': etagCachedSafeIncomingTransactions,
           },
         }
       : undefined
@@ -307,11 +281,11 @@ export const loadSafeIncomingTransactions = async (safeAddress) => {
     const response = await axios.get(url, config)
     if (response.data.count > 0) {
       incomingTransactions = response.data.results
-      if (etagCachedSafeIncommingTransactions === response.headers.etag) {
+      if (etagCachedSafeIncomingTransactions === response.headers.etag) {
         // The txs are the same, we can return the cached ones
         return
       }
-      etagCachedSafeIncommingTransactions = response.headers.etag
+      etagCachedSafeIncomingTransactions = response.headers.etag
     }
   } catch (err) {
     if (err && err.response && err.response.status === 304) {
@@ -336,7 +310,7 @@ export default (safeAddress) => async (dispatch, getState) => {
 
     batch(() => {
       dispatch(addCancellationTransactions(cancel))
-      dispatch(addTransactions(outgoing))
+      dispatch(addOrUpdateTransactions({ safeAddress, transactions: outgoing }))
     })
   }
 
