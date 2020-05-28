@@ -6,10 +6,6 @@ export const getAwaitingTransactions = (allTransactions, cancellationTransaction
   }
 
   const allAwaitingTransactions = allTransactions.map((safeTransactions) => {
-    if (!safeTransactions) {
-      return []
-    }
-
     const nonCancelledTransactions = safeTransactions.filter((transaction) => {
       // If transactions are not executed, but there's a transaction with the same nonce EXECUTED later
       // it means that the transaction was cancelled (Replaced) and shouldn't get executed
