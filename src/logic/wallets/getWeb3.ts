@@ -119,8 +119,17 @@ export const getAddressFromENS = async (name: string) => {
   return await web3.eth.ens.getAddress(name)
 }
 
-export const getContentFromENS = async (name: string): Promise<any> => {
-  return await web3.eth.ens.getContenthash(name)
+export const getContentFromENS = async (
+  name: string,
+): Promise<{
+  protocolType: string
+  decoded: string
+}> => {
+  const res: any = await web3.eth.ens.getContenthash(name)
+  return {
+    protocolType: res.protocolType,
+    decoded: res.decoded,
+  }
 }
 
 export const setWeb3 = (provider) => {
