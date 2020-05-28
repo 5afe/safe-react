@@ -18,6 +18,7 @@ import Paragraph from 'src/components/layout/Paragraph/index'
 import { userAccountSelector } from 'src/logic/wallets/store/selectors'
 import { makeTransaction } from 'src/routes/safe/store/models/transaction'
 import { safeOwnersSelector, safeThresholdSelector } from 'src/routes/safe/store/selectors'
+import { TransactionStatus } from 'src/routes/safe/store/models/types/transaction'
 
 function getOwnersConfirmations(tx, userAddress) {
   const ownersWhoConfirmed = []
@@ -75,7 +76,7 @@ function getPendingOwnersConfirmations(owners, tx, userAddress) {
 
 const OwnersColumn = ({
   tx,
-  cancelTx = makeTransaction(),
+  cancelTx = makeTransaction({ isCancellationTx: true, status: TransactionStatus.AWAITING_YOUR_CONFIRMATION }),
   classes,
   thresholdReached,
   cancelThresholdReached,
@@ -118,6 +119,7 @@ const OwnersColumn = ({
   const showConfirmBtn =
     !tx.isExecuted &&
     tx.status !== 'pending' &&
+    cancelTx.status !== 'pending' &&
     !tx.cancelled &&
     userIsUnconfirmedOwner &&
     !currentUserAlreadyConfirmed &&
@@ -128,6 +130,7 @@ const OwnersColumn = ({
   const showRejectBtn =
     !cancelTx.isExecuted &&
     !tx.isExecuted &&
+    tx.status !== 'pending' &&
     cancelTx.status !== 'pending' &&
     userIsUnconfirmedCancelOwner &&
     !currentUserAlreadyConfirmedCancel &&
