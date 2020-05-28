@@ -168,6 +168,7 @@ const processTransaction = ({
                   'status',
                   receipt.status ? (isCancelTransaction(record, safeAddress) ? 'cancelled' : 'success') : 'failed',
                 )
+                .updateIn(['ownersWithPendingActions', 'reject'], (prev) => prev.clear())
             })
           : mockedTx.set('status', 'awaiting_confirmations')
 
@@ -194,13 +195,20 @@ const processTransaction = ({
       })
   } catch (err) {
     console.error(err)
-    closeSnackbar(beforeExecutionKey)
-    closeSnackbar(pendingExecutionKey)
-    showSnackbar(notificationsQueue.afterExecutionError, enqueueSnackbar, closeSnackbar)
 
-    const executeData = safeInstance.contract.methods.approveHash(txHash).encodeABI()
-    const errMsg = await getErrorMessage(safeInstance.address, 0, executeData, from)
-    console.error(`Error executing the TX: ${errMsg}`)
+    if (txHash !== undefined) {
+      closeSnackbar(beforeExecutionKey)
+
+      if (pendingExecutionKey) {
+        closeSnackbar(pendingExecutionKey)
+      }
+
+      showSnackbar(notificationsQueue.afterExecutionError, enqueueSnackbar, closeSnackbar)
+
+      const executeData = safeInstance.contract.methods.approveHash(txHash).encodeABI()
+      const errMsg = await getErrorMessage(safeInstance.address, 0, executeData, from)
+      console.error(`Error executing the TX: ${errMsg}`)
+    }
   }
 
   return txHash
