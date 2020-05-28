@@ -1,4 +1,3 @@
-//
 import { web3ReadOnly as web3 } from 'src/logic/wallets/getWeb3'
 
 /**
@@ -12,7 +11,7 @@ import { web3ReadOnly as web3 } from 'src/logic/wallets/getWeb3'
  * @returns {Promise<[*]>}
  */
 const generateBatchRequests = ({ abi, address, batch, context, methods }: any): any => {
-  const contractInstance = new web3.eth.Contract(abi, address)
+  const contractInstance: any = new web3.eth.Contract(abi, address)
   const localBatch = batch ? null : new web3.BatchRequest()
 
   const values = methods.map((methodObject) => {

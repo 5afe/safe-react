@@ -21,6 +21,7 @@ import {
 } from 'src/routes/safe/store/selectors'
 import { loadFromStorage, saveToStorage } from 'src/utils/storage'
 import { isSameHref } from 'src/utils/url'
+import { SafeApp } from './types'
 
 const APPS_STORAGE_KEY = 'APPS_STORAGE_KEY'
 const APPS_LEGAL_DISCLAIMER_STORAGE_KEY = 'APPS_LEGAL_DISCLAIMER_STORAGE_KEY'
@@ -43,12 +44,13 @@ const operations = {
 }
 
 function Apps({ closeModal, closeSnackbar, enqueueSnackbar, openModal }) {
-  const [appList, setAppList] = useState([])
+  const [appList, setAppList] = useState<Array<SafeApp>>([])
   const [legalDisclaimerAccepted, setLegalDisclaimerAccepted] = useState(false)
-  const [selectedApp, setSelectedApp] = useState()
+  const [selectedApp, setSelectedApp] = useState<string>()
   const [loading, setLoading] = useState(true)
   const [appIsLoading, setAppIsLoading] = useState(true)
-  const [iframeEl, setIframeEl] = useState(null)
+  const [iframeEl, setIframeEl] = useState<HTMLIFrameElement | null>(null)
+
   const history = useHistory()
   const granted = useSelector(grantedSelector)
   const safeName = useSelector(safeNameSelector)
@@ -145,7 +147,7 @@ function Apps({ closeModal, closeSnackbar, enqueueSnackbar, openModal }) {
     )
   }
 
-  const onAppAdded = (app) => {
+  const onAppAdded = (app: SafeApp) => {
     const newAppList = [
       { url: app.url, disabled: false },
       ...appList.map((a) => ({

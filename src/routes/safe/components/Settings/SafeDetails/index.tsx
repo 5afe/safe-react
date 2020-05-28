@@ -1,4 +1,5 @@
 import { makeStyles } from '@material-ui/core/styles'
+import cn from 'classnames'
 import { withSnackbar } from 'notistack'
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
@@ -21,6 +22,7 @@ import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
 import UpdateSafeModal from 'src/routes/safe/components/Settings/UpdateSafeModal'
 import { grantedSelector } from 'src/routes/safe/container/selector'
 import updateSafe from 'src/routes/safe/store/actions/updateSafe'
+import Link from 'src/components/layout/Link'
 import {
   latestMasterContractVersionSelector,
   safeCurrentVersionSelector,
@@ -72,8 +74,15 @@ const SafeDetails = (props) => {
               <Heading tag="h2">Safe Version</Heading>
               <Row align="end" grow>
                 <Paragraph className={classes.versionNumber}>
-                  {safeCurrentVersion}
-                  {safeNeedsUpdate && ` (there's a newer version: ${latestMasterContractVersion})`}
+                  <Link
+                    className={cn(classes.item, classes.link)}
+                    color="black"
+                    target="_blank"
+                    to="https://github.com/gnosis/safe-contracts/releases"
+                  >
+                    {safeCurrentVersion}
+                    {safeNeedsUpdate && ` (there's a newer version: ${latestMasterContractVersion})`}
+                  </Link>
                 </Paragraph>
               </Row>
               {safeNeedsUpdate && isUserOwner ? (

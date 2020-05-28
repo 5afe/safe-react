@@ -1,7 +1,7 @@
 import { withStyles } from '@material-ui/core/styles'
-// import CallMade from '@material-ui/icons/CallMade'
-// import CallReceived from '@material-ui/icons/CallReceived'
-// import classNames from 'classnames/bind'
+import CallMade from '@material-ui/icons/CallMade'
+import CallReceived from '@material-ui/icons/CallReceived'
+import classNames from 'classnames/bind'
 import React from 'react'
 import { useSelector } from 'react-redux'
 
@@ -55,7 +55,11 @@ const LayoutHeader = (props) => {
           size="small"
           variant="contained"
         >
-          {/* <CallMade alt="Send Transaction" className={classNames(classes.leftIcon, classes.iconSmall)} /> */}
+          <CallMade
+            alt="Send Transaction"
+            className={classNames(classes.leftIcon, classes.iconSmall)}
+            component={undefined}
+          />
           Send
         </Button>
         <Button
@@ -65,7 +69,11 @@ const LayoutHeader = (props) => {
           size="small"
           variant="contained"
         >
-          {/* <CallReceived alt="Receive Transaction" className={classNames(classes.leftIcon, classes.iconSmall)} /> */}
+          <CallReceived
+            alt="Receive Transaction"
+            className={classNames(classes.leftIcon, classes.iconSmall)}
+            component={undefined}
+          />
           Receive
         </Button>
       </Block>
