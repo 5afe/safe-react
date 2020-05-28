@@ -115,22 +115,9 @@ export const getProviderInfo = async (web3Provider, providerName = 'Wallet') => 
   }
 }
 
-export const getAddressFromENS = async (name: string) => {
-  return await web3.eth.ens.getAddress(name)
-}
+export const getAddressFromENS = (name: string) => web3.eth.ens.getAddress(name)
 
-export const getContentFromENS = async (
-  name: string,
-): Promise<{
-  protocolType: string
-  decoded: string
-}> => {
-  const res: any = await web3.eth.ens.getContenthash(name)
-  return {
-    protocolType: res.protocolType,
-    decoded: res.decoded,
-  }
-}
+export const getContentFromENS = (name: string) => web3.eth.ens.getContenthash(name)
 
 export const setWeb3 = (provider) => {
   web3 = new Web3(provider)
