@@ -19,7 +19,7 @@ import { safeFeaturesEnabledSelector, safeParamAddressFromStateSelector } from '
 
 import { wrapInSuspense } from 'src/utils/wrapInSuspense'
 import { useFetchTokens } from '../../container/hooks/useFetchTokens'
-import { Route, Switch, NavLink } from 'react-router-dom'
+import { Route, Switch, NavLink, Redirect } from 'react-router-dom'
 
 const Collectibles = React.lazy(() => import('src/routes/safe/components/Balances/Collectibles'))
 const Coins = React.lazy(() => import('src/routes/safe/components/Balances/Coins'))
@@ -111,47 +111,51 @@ const Balances = (props) => {
           >
             Coins
           </NavLink>
-          <Divider className={assetDivider} />
-          <NavLink
-            to={`${SAFELIST_ADDRESS}/${address}/balances/collectibles`}
-            activeClassName={assetTabActive}
-            className={assetTab}
-            data-testid={'collectibles-assets-btn'}
-            exact
-          >
-            Collectibles
-          </NavLink>
+          {erc721Enabled ? (
+            <>
+              <Divider className={assetDivider} />
+              <NavLink
+                to={`${SAFELIST_ADDRESS}/${address}/balances/collectibles`}
+                activeClassName={assetTabActive}
+                className={assetTab}
+                data-testid={'collectibles-assets-btn'}
+                exact
+              >
+                Collectibles
+              </NavLink>
+            </>
+          ) : null}
         </Col>
         <Switch>
           <Route
             path={`${SAFELIST_ADDRESS}/${address}/balances/collectibles`}
             exact
             render={() => {
-              return (
-                <>
-                  <Col className={tokenControls} end="sm" sm={6} xs={12}>
-                    <ButtonLink
-                      className={manageTokensButton}
-                      onClick={() => onShow('ManageCollectibleModal')}
-                      size="lg"
-                      testId="manage-tokens-btn"
-                    >
-                      Manage List
-                    </ButtonLink>
-                    <Modal
-                      description={'Enable and disable tokens to be listed'}
-                      handleClose={() => onHide('ManageCollectibleModal')}
-                      open={showManageCollectibleModal}
-                      title="Manage List"
-                    >
-                      <Tokens
-                        modalScreen={'assetsList'}
-                        onClose={() => onHide('ManageCollectibleModal')}
-                        safeAddress={address}
-                      />
-                    </Modal>
-                  </Col>
-                </>
+              return !erc721Enabled ? (
+                <Redirect to={`${SAFELIST_ADDRESS}/${address}/balances`} />
+              ) : (
+                <Col className={tokenControls} end="sm" sm={6} xs={12}>
+                  <ButtonLink
+                    className={manageTokensButton}
+                    onClick={() => onShow('ManageCollectibleModal')}
+                    size="lg"
+                    testId="manage-tokens-btn"
+                  >
+                    Manage List
+                  </ButtonLink>
+                  <Modal
+                    description={'Enable and disable tokens to be listed'}
+                    handleClose={() => onHide('ManageCollectibleModal')}
+                    open={showManageCollectibleModal}
+                    title="Manage List"
+                  >
+                    <Tokens
+                      modalScreen={'assetsList'}
+                      onClose={() => onHide('ManageCollectibleModal')}
+                      safeAddress={address}
+                    />
+                  </Modal>
+                </Col>
               )
             }}
           />
