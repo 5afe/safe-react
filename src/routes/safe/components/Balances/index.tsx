@@ -19,7 +19,7 @@ import { safeFeaturesEnabledSelector, safeParamAddressFromStateSelector } from '
 
 import { wrapInSuspense } from 'src/utils/wrapInSuspense'
 import { useFetchTokens } from '../../container/hooks/useFetchTokens'
-import { Route, Switch, NavLink, Redirect } from 'react-router-dom'
+import { Route, Switch, NavLink } from 'react-router-dom'
 
 const Collectibles = React.lazy(() => import('src/routes/safe/components/Balances/Collectibles'))
 const Coins = React.lazy(() => import('src/routes/safe/components/Balances/Coins'))
@@ -204,7 +204,6 @@ const Balances = (props) => {
             return wrapInSuspense(<Coins showReceiveFunds={() => onShow('Receive')} showSendFunds={showSendFunds} />)
           }}
         />
-        <Redirect to={`${SAFELIST_ADDRESS}/${address}/balances`} />
       </Switch>
       <SendModal
         activeScreenType="sendFunds"
