@@ -262,7 +262,7 @@ export const loadSafeTransactions = async (safeAddress, getState) => {
   const groupedTxs = List(txsRecord).groupBy((tx) => (tx.get('cancellationTx') ? 'cancel' : 'outgoing'))
 
   return {
-    outgoing: groupedTxs.get('outgoing'),
+    outgoing: groupedTxs.get('outgoing') || List([]),
     cancel: Map().set(safeAddress, groupedTxs.get('cancel')),
   }
 }
