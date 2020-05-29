@@ -26,34 +26,37 @@ export const getTxData = (tx) => {
       txData.tokenId = value
       txData.isCollectibleTransfer = true
     }
+    if (tx.modifySettingsTx) {
+      txData.recipient = tx.recipient
+      txData.modifySettingsTx = true
+
+      if (tx.decodedParams[SAFE_METHODS_NAMES.REMOVE_OWNER]) {
+        const { _threshold, owner } = tx.decodedParams[SAFE_METHODS_NAMES.REMOVE_OWNER]
+        txData.action = SAFE_METHODS_NAMES.REMOVE_OWNER
+        txData.removedOwner = owner
+        txData.newThreshold = _threshold
+      } else if (tx.decodedParams[SAFE_METHODS_NAMES.CHANGE_THRESHOLD]) {
+        const { _threshold } = tx.decodedParams[SAFE_METHODS_NAMES.CHANGE_THRESHOLD]
+        txData.action = SAFE_METHODS_NAMES.CHANGE_THRESHOLD
+        txData.newThreshold = _threshold
+      } else if (tx.decodedParams[SAFE_METHODS_NAMES.ADD_OWNER_WITH_THRESHOLD]) {
+        const { _threshold, owner } = tx.decodedParams[SAFE_METHODS_NAMES.ADD_OWNER_WITH_THRESHOLD]
+        txData.action = SAFE_METHODS_NAMES.ADD_OWNER_WITH_THRESHOLD
+        txData.addedOwner = owner
+        txData.newThreshold = _threshold
+      } else if (tx.decodedParams[SAFE_METHODS_NAMES.SWAP_OWNER]) {
+        const { newOwner, oldOwner } = tx.decodedParams[SAFE_METHODS_NAMES.SWAP_OWNER]
+        txData.action = SAFE_METHODS_NAMES.SWAP_OWNER
+        txData.removedOwner = oldOwner
+        txData.addedOwner = newOwner
+      }
+    }
   } else if (tx.customTx) {
     txData.recipient = tx.recipient
     txData.data = tx.data
     txData.customTx = true
   } else if (Number(tx.value) > 0) {
     txData.recipient = tx.recipient
-  } else if (tx.modifySettingsTx) {
-    txData.recipient = tx.recipient
-    txData.modifySettingsTx = true
-
-    if (tx.decodedParams) {
-      if (tx.decodedParams[SAFE_METHODS_NAMES.REMOVE_OWNER]) {
-        const { _threshold, owner } = tx.decodedParams[SAFE_METHODS_NAMES.REMOVE_OWNER]
-        txData.removedOwner = owner
-        txData.newThreshold = _threshold
-      } else if (tx.decodedParams[SAFE_METHODS_NAMES.CHANGE_THRESHOLD]) {
-        const { _threshold } = tx.decodedParams[SAFE_METHODS_NAMES.CHANGE_THRESHOLD]
-        txData.newThreshold = _threshold
-      } else if (tx.decodedParams[SAFE_METHODS_NAMES.ADD_OWNER_WITH_THRESHOLD]) {
-        const { _threshold, owner } = tx.decodedParams[SAFE_METHODS_NAMES.ADD_OWNER_WITH_THRESHOLD]
-        txData.addedOwner = owner
-        txData.newThreshold = _threshold
-      } else if (tx.decodedParams[SAFE_METHODS_NAMES.SWAP_OWNER]) {
-        const { newOwner, oldOwner } = tx.decodedParams[SAFE_METHODS_NAMES.SWAP_OWNER]
-        txData.removedOwner = oldOwner
-        txData.addedOwner = newOwner
-      }
-    }
   } else if (tx.isCancellationTx) {
     txData.cancellationTx = true
   } else if (tx.creationTx) {

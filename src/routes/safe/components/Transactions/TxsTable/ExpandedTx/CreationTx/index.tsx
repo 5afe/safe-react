@@ -22,13 +22,16 @@ const useStyles = makeStyles({
   },
 })
 
-export const CreationTx = (props) => {
-  const { tx } = props
+export const CreationTx = ({ tx }) => {
   const classes = useStyles()
-  if (!tx) return null
+
+  if (!tx) {
+    return null
+  }
+
   const isCreationTx = tx.type === TransactionTypes.CREATION
 
-  return !isCreationTx ? null : (
+  return isCreationTx ? (
     <>
       <Paragraph noMargin>
         <Bold>Created: </Bold>
@@ -47,5 +50,5 @@ export const CreationTx = (props) => {
         {tx.masterCopy ? <EtherscanLink cut={8} type="address" value={tx.masterCopy} /> : 'n/a'}
       </Block>
     </>
-  )
+  ) : null
 }

@@ -3,11 +3,23 @@ import React from 'react'
 import { formatDate } from 'src/routes/safe/components/Transactions/TxsTable/columns'
 import Bold from 'src/components/layout/Bold'
 import Paragraph from 'src/components/layout/Paragraph'
+import { TransactionTypes } from 'src/routes/safe/store/models/types/transaction'
 
-export const OutgoingTx = (props) => {
-  const { tx } = props
-  if (!tx || !(tx.type === 'outgoing')) return null
-  return (
+export const OutgoingTx = ({ tx }) => {
+  if (!tx) {
+    return null
+  }
+
+  const isOutgoingTx = [
+    TransactionTypes.OUTGOING,
+    TransactionTypes.UPGRADE,
+    TransactionTypes.CUSTOM,
+    TransactionTypes.SETTINGS,
+    TransactionTypes.COLLECTIBLE,
+    TransactionTypes.TOKEN,
+  ].includes(tx.type)
+
+  return isOutgoingTx ? (
     <>
       <Paragraph noMargin>
         <Bold>Created: </Bold>
@@ -36,5 +48,5 @@ export const OutgoingTx = (props) => {
         </Paragraph>
       )}
     </>
-  )
+  ) : null
 }
