@@ -13,8 +13,9 @@ import { history } from 'src/store'
 export const useFetchTokens = () => {
   const dispatch = useDispatch()
   const address = useSelector(safeParamAddressFromStateSelector)
+  const { pathname } = history.location
   useMemo(() => {
-    if (COINS_LOCATION_REGEX.test(history.location.pathname)) {
+    if (COINS_LOCATION_REGEX.test(pathname)) {
       batch(() => {
         // fetch tokens there to get symbols for tokens in TXs list
         dispatch(fetchTokens())
@@ -23,12 +24,12 @@ export const useFetchTokens = () => {
       })
     }
 
-    if (COLLECTIBLES_LOCATION_REGEX.test(history.location.pathname)) {
+    if (COLLECTIBLES_LOCATION_REGEX.test(pathname)) {
       batch(() => {
         dispatch(fetchCollectibles()).then(() => {
           dispatch(activateAssetsByBalance(address))
         })
       })
     }
-  }, [address, dispatch])
+  }, [address, dispatch, pathname])
 }
