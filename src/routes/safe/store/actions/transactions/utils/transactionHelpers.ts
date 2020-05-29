@@ -336,26 +336,29 @@ export const updateStoredTransactionsStatus = (dispatch, walletRecord): void => 
 }
 
 export function generateSafeTxHash(safeAddress: string, txArgs: TxArgs): string {
+  const messageTypes = {
+    EIP712Domain: [{ type: 'address', name: 'verifyingContract' }],
+    SafeTx: [
+      { type: 'address', name: 'to' },
+      { type: 'uint256', name: 'value' },
+      { type: 'bytes', name: 'data' },
+      { type: 'uint8', name: 'operation' },
+      { type: 'uint256', name: 'safeTxGas' },
+      { type: 'uint256', name: 'baseGas' },
+      { type: 'uint256', name: 'gasPrice' },
+      { type: 'address', name: 'gasToken' },
+      { type: 'address', name: 'refundReceiver' },
+      { type: 'uint256', name: 'nonce' },
+    ],
+  }
+  const primaryType: 'SafeTx' = 'SafeTx'
+
   const typedData = {
-    types: {
-      EIP712Domain: [{ type: 'address', name: 'verifyingContract' }],
-      SafeTx: [
-        { type: 'address', name: 'to' },
-        { type: 'uint256', name: 'value' },
-        { type: 'bytes', name: 'data' },
-        { type: 'uint8', name: 'operation' },
-        { type: 'uint256', name: 'safeTxGas' },
-        { type: 'uint256', name: 'baseGas' },
-        { type: 'uint256', name: 'gasPrice' },
-        { type: 'address', name: 'gasToken' },
-        { type: 'address', name: 'refundReceiver' },
-        { type: 'uint256', name: 'nonce' },
-      ],
-    },
+    types: messageTypes,
     domain: {
       verifyingContract: safeAddress,
     },
-    primaryType: 'SafeTx',
+    primaryType,
     message: {
       to: txArgs.to,
       value: txArgs.valueInWei,
@@ -370,6 +373,5 @@ export function generateSafeTxHash(safeAddress: string, txArgs: TxArgs): string 
     },
   }
 
-  // @ts-ignore
-  return `0x${TypedDataUtils.sign(typedData).toString('hex')}`
+  return `0x${TypedDataUtils.sign<typeof messageTypes>(typedData).toString('hex')}`
 }
