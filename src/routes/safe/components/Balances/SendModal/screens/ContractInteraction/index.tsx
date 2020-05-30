@@ -1,26 +1,23 @@
 import { makeStyles } from '@material-ui/core/styles'
+import { FORM_ERROR } from 'final-form'
 import React from 'react'
 
 import { styles } from './style'
-
 import GnoForm from 'src/components/forms/GnoForm'
 import Block from 'src/components/layout/Block'
 import Hairline from 'src/components/layout/Hairline'
 import SafeInfo from 'src/routes/safe/components/Balances/SendModal/SafeInfo'
-import Buttons from 'src/routes/safe/components/Balances/SendModal/screens/ContractInteraction/Buttons'
-import ContractABI from 'src/routes/safe/components/Balances/SendModal/screens/ContractInteraction/ContractABI'
-import EthAddressInput from 'src/routes/safe/components/Balances/SendModal/screens/ContractInteraction/EthAddressInput'
-import EthValue from 'src/routes/safe/components/Balances/SendModal/screens/ContractInteraction/EthValue'
-import FormDivisor from 'src/routes/safe/components/Balances/SendModal/screens/ContractInteraction/FormDivisor'
-import Header from 'src/routes/safe/components/Balances/SendModal/screens/ContractInteraction/Header'
-import MethodsDropdown from 'src/routes/safe/components/Balances/SendModal/screens/ContractInteraction/MethodsDropdown'
-import RenderInputParams from 'src/routes/safe/components/Balances/SendModal/screens/ContractInteraction/RenderInputParams'
-import RenderOutputParams from 'src/routes/safe/components/Balances/SendModal/screens/ContractInteraction/RenderOutputParams'
-import {
-  abiExtractor,
-  createTxObject,
-  formMutators,
-} from 'src/routes/safe/components/Balances/SendModal/screens/ContractInteraction/utils'
+import Buttons from './Buttons'
+import ContractABI from './ContractABI'
+import EthAddressInput from './EthAddressInput'
+import EthValue from './EthValue'
+import FormDivisor from './FormDivisor'
+import FormErrorMessage from './FormErrorMessage'
+import Header from './Header'
+import MethodsDropdown from './MethodsDropdown'
+import RenderInputParams from './RenderInputParams'
+import RenderOutputParams from './RenderOutputParams'
+import { abiExtractor, createTxObject, formMutators } from './utils'
 
 const useStyles = makeStyles(styles as any)
 
@@ -35,8 +32,21 @@ const ContractInteraction = ({ contractAddress, initialValues, onClose, onNext }
 
   const handleSubmit = async ({ contractAddress, selectedMethod, value, ...values }) => {
     if (value || (contractAddress && selectedMethod)) {
-      const data = await createTxObject(selectedMethod, contractAddress, values).encodeABI()
-      onNext({ contractAddress, data, selectedMethod, value, ...values })
+      try {
+        const txObject = createTxObject(selectedMethod, contractAddress, values)
+        const data = txObject.encodeABI()
+        await txObject.estimateGas()
+        onNext({ contractAddress, data, selectedMethod, value, ...values })
+      } catch (e) {
+        for (const key in values) {
+          if (values.hasOwnProperty(key) && values[key] === e.value) {
+            return { [key]: e.reason }
+          }
+        }
+
+        // .estimateGas() failed
+        return { [FORM_ERROR]: e.message }
+      }
     }
   }
 
@@ -62,11 +72,12 @@ const ContractInteraction = ({ contractAddress, initialValues, onClose, onNext }
                   onScannedValue={mutators.setContractAddress}
                   text="Contract Address*"
                 />
-                <EthValue onSetMax={mutators.setMax} />
                 <ContractABI />
                 <MethodsDropdown onChange={mutators.setSelectedMethod} />
+                <EthValue onSetMax={mutators.setMax} />
                 <RenderInputParams />
                 <RenderOutputParams />
+                <FormErrorMessage />
               </Block>
               <Hairline />
               <Buttons onCallSubmit={mutators.setCallResults} onClose={onClose} />

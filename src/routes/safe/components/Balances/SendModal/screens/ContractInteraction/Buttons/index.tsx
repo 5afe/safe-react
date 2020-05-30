@@ -17,8 +17,15 @@ const Buttons = ({ onCallSubmit, onClose }) => {
   const {
     input: { value: contractAddress },
   } = useField('contractAddress', { valid: true } as any)
-  const { submitting, valid, validating, values } = useFormState({
-    subscription: { submitting: true, valid: true, values: true, validating: true },
+  const { modifiedSinceLastSubmit, submitError, submitting, valid, validating, values } = useFormState({
+    subscription: {
+      modifiedSinceLastSubmit: true,
+      submitError: true,
+      submitting: true,
+      valid: true,
+      values: true,
+      validating: true,
+    },
   })
 
   const handleCallSubmit = async () => {
@@ -48,7 +55,13 @@ const Buttons = ({ onCallSubmit, onClose }) => {
           className={classes.submitButton}
           color="primary"
           data-testid="review-tx-btn"
-          disabled={submitting || validating || !valid || !method || (method as any).action === 'read'}
+          disabled={
+            submitting ||
+            validating ||
+            ((!valid || !!submitError) && !modifiedSinceLastSubmit) ||
+            !method ||
+            (method as any).action === 'read'
+          }
           minWidth={140}
           type="submit"
           variant="contained"
