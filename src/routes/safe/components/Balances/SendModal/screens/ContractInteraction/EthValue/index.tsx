@@ -25,7 +25,7 @@ const EthValue = ({ onSetMax }) => {
   } = useField('selectedMethod', { value: true })
   const disabled = !ABIService.isPayable(method)
 
-  return (
+  return disabled ? null : (
     <>
       <Row className={classes.fullWidth} margin="xs">
         <Paragraph color="disabled" noMargin size="md" style={{ letterSpacing: '-0.5px' }}>
