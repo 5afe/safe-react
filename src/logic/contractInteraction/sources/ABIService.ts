@@ -18,9 +18,9 @@ class ABIService {
   }
 
   static getMethodSignatureAndSignatureHash(method) {
-    const signature = ABIService.getMethodSignature(method)
-    const signatureHash = ABIService.getSignatureHash(signature)
-    return { signature, signatureHash }
+    const methodSignature = ABIService.getMethodSignature(method)
+    const signatureHash = ABIService.getSignatureHash(methodSignature)
+    return { methodSignature, signatureHash }
   }
 
   static getMethodSignature({ inputs, name }) {
