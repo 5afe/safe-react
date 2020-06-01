@@ -203,7 +203,6 @@ const Balances = (props) => {
         />
         <Route
           path={`${SAFELIST_ADDRESS}/${address}/balances`}
-          exact
           render={() => {
             return wrapInSuspense(<Coins showReceiveFunds={() => onShow('Receive')} showSendFunds={showSendFunds} />)
           }}
