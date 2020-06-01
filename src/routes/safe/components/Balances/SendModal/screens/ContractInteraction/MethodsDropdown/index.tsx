@@ -44,7 +44,7 @@ const MethodsDropdown = ({ onChange }) => {
     }
   }, [abi])
 
-  React.useMemo(() => {
+  React.useEffect(() => {
     setMethodsListFiltered(methodsList.filter(({ name }) => name.toLowerCase().includes(searchParams.toLowerCase())))
   }, [methodsList, searchParams])
 
