@@ -17,7 +17,10 @@ import { safeSelector } from 'src/routes/safe/store/selectors'
 
 const useStyles = makeStyles(styles)
 
-const EthValue = ({ onSetMax }) => {
+interface EthValueProps {
+  onSetMax: (ethBalance: string) => void
+}
+const EthValue = ({ onSetMax }: EthValueProps) => {
   const classes = useStyles()
   const { ethBalance } = useSelector(safeSelector)
   const {

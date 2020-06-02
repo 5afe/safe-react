@@ -22,7 +22,21 @@ import { abiExtractor, createTxObject, formMutators, handleSubmitError, isReadMe
 
 const useStyles = makeStyles(styles)
 
-const ContractInteraction = ({ contractAddress, initialValues, onClose, onNext }) => {
+export interface CreatedTx {
+  contractAddress: string
+  data: string
+  selectedMethod: {}
+  value: string | number
+}
+
+export interface ContractInteractionProps {
+  contractAddress: string
+  initialValues: { contractAddress?: string }
+  onClose: () => void
+  onNext: ({}: CreatedTx) => void
+}
+
+const ContractInteraction = ({ contractAddress, initialValues, onClose, onNext }: ContractInteractionProps) => {
   const classes = useStyles()
   const { address: safeAddress = '' } = useSelector(safeSelector)
   let setCallResults

@@ -9,7 +9,11 @@ import { isReadMethod } from 'src/routes/safe/components/Balances/SendModal/scre
 
 const useStyles = makeStyles(styles)
 
-const Buttons = ({ onClose }) => {
+export interface ButtonProps {
+  onClose: () => void
+}
+
+const Buttons = ({ onClose }: ButtonProps) => {
   const classes = useStyles()
   const {
     input: { value: method },

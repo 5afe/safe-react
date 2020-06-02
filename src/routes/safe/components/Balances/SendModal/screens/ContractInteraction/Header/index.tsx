@@ -9,7 +9,13 @@ import { styles } from 'src/routes/safe/components/Balances/SendModal/screens/Co
 
 const useStyles = makeStyles(styles)
 
-const Header = ({ onClose, subTitle, title }) => {
+interface HeaderProps {
+  onClose: () => void
+  subTitle: string
+  title: string
+}
+
+const Header = ({ onClose, subTitle, title }: HeaderProps) => {
   const classes = useStyles()
 
   return (

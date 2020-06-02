@@ -19,7 +19,11 @@ import { extractUsefulMethods } from 'src/logic/contractInteraction/sources/ABIS
 
 const MENU_WIDTH = '452px'
 
-const MethodsDropdown = ({ onChange }) => {
+interface MethodsDropdownProps {
+  onChange: ({}) => void
+}
+
+const MethodsDropdown = ({ onChange }: MethodsDropdownProps) => {
   const classes = useDropdownStyles({ buttonWidth: MENU_WIDTH })
   const {
     input: { value: abi },

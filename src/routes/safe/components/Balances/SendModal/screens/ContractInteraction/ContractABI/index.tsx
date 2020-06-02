@@ -7,7 +7,7 @@ import { extractUsefulMethods } from 'src/logic/contractInteraction/sources/ABIS
 
 export const NO_DATA = 'no data'
 
-const mustBeValidABI = (abi) => {
+const mustBeValidABI = (abi: string): undefined | string => {
   try {
     const parsedABI = extractUsefulMethods(JSON.parse(abi))
 
@@ -15,7 +15,7 @@ const mustBeValidABI = (abi) => {
       return NO_DATA
     }
   } catch (e) {
-    return []
+    return NO_DATA
   }
 }
 
