@@ -53,6 +53,7 @@
   "build": {
     "appId": "io.gnosis.safe.macos",
     "afterSign": "scripts/notarize.js",
+    "extends": null,
     "productName": "Safe Multisig",
     "asar": true,
     "publish": [
@@ -85,7 +86,6 @@
       "!migrations${/*}",
       "!flow-typed${/*}",
       "!apps${/*}",
-      "!build${/*}",
       "!out${/*}",
       "!.editorconfig",
       "!.gitignore",
@@ -159,8 +159,9 @@
     "async-sema": "^3.1.0",
     "axios": "0.19.2",
     "bignumber.js": "9.0.0",
-    "bnc-onboard": "1.9.0",
+    "bnc-onboard": "1.9.1",
     "classnames": "^2.2.6",
+    "concurrently": "^5.2.0",
     "connected-react-router": "6.8.0",
     "currency-flags": "2.1.2",
     "date-fns": "2.13.0",
