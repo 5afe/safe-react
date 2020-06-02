@@ -140,11 +140,14 @@ const AddCustomAsset = (props) => {
                     text="Token decimals*"
                     type="text"
                   />
-                  <Block justify="left">
-                    <Field className={classes.checkbox} component={Checkbox} name="showForAllSafes" type="checkbox" />
-                    <Paragraph className={classes.checkboxLabel} size="md" weight="bolder">
-                      Activate assets for all Safes
-                    </Paragraph>
+                  <Block justify="center">
+                    <Field
+                      className={classes.checkbox}
+                      component={Checkbox}
+                      name="showForAllSafes"
+                      type="checkbox"
+                      label="Activate assets for all Safes"
+                    />
                   </Block>
                 </Col>
                 <Col align="center" layout="column" xs={6}>
