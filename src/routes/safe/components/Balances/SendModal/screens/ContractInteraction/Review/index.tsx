@@ -23,9 +23,9 @@ import { setImageToPlaceholder } from 'src/routes/safe/components/Balances/utils
 import createTransaction from 'src/routes/safe/store/actions/createTransaction'
 import { safeSelector } from 'src/routes/safe/store/selectors'
 
-const useStyles = makeStyles(styles as any)
+const useStyles = makeStyles(styles)
 
-const ContractInteractionReview = ({ closeSnackbar, enqueueSnackbar, onClose, onPrev, tx }: any) => {
+const ContractInteractionReview = ({ closeSnackbar, enqueueSnackbar, onClose, onPrev, tx }) => {
   const classes = useStyles()
   const dispatch = useDispatch()
   const { address: safeAddress } = useSelector(safeSelector)
@@ -118,6 +118,10 @@ const ContractInteractionReview = ({ closeSnackbar, enqueueSnackbar, onClose, on
         </Row>
         {tx.selectedMethod.inputs.map(({ name, type }, index) => {
           const key = `methodInput-${tx.selectedMethod.name}_${index}_${type}`
+          let value = tx[key]
+          if (type === 'bool') {
+            value = tx[key] ? String(tx[key]) : 'false'
+          }
 
           return (
             <React.Fragment key={key}>
@@ -128,7 +132,7 @@ const ContractInteractionReview = ({ closeSnackbar, enqueueSnackbar, onClose, on
               </Row>
               <Row align="center" margin="md">
                 <Paragraph className={classes.value} noMargin size="md" style={{ margin: 0 }}>
-                  {tx[key]}
+                  {value}
                 </Paragraph>
               </Row>
             </React.Fragment>
@@ -173,4 +177,4 @@ const ContractInteractionReview = ({ closeSnackbar, enqueueSnackbar, onClose, on
   )
 }
 
-export default withSnackbar(ContractInteractionReview as any)
+export default withSnackbar(ContractInteractionReview)
