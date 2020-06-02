@@ -33,7 +33,7 @@ export interface ContractInteractionProps {
   contractAddress: string
   initialValues: { contractAddress?: string }
   onClose: () => void
-  onNext: ({}: CreatedTx) => void
+  onNext: (tx: CreatedTx) => void
 }
 
 const ContractInteraction = ({ contractAddress, initialValues, onClose, onNext }: ContractInteractionProps) => {

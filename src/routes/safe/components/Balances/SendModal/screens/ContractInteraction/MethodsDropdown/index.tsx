@@ -16,11 +16,12 @@ import CheckIcon from 'src/routes/safe/components/CurrencyDropdown/img/check.svg
 import { useDropdownStyles } from 'src/routes/safe/components/CurrencyDropdown/style'
 import { DropdownListTheme } from 'src/theme/mui'
 import { extractUsefulMethods } from 'src/logic/contractInteraction/sources/ABIService'
+import { MethodInterface } from 'src/logic/contractInteraction/sources/ABIService/types'
 
 const MENU_WIDTH = '452px'
 
 interface MethodsDropdownProps {
-  onChange: ({}) => void
+  onChange: (method: MethodInterface) => void
 }
 
 const MethodsDropdown = ({ onChange }: MethodsDropdownProps) => {
@@ -60,7 +61,7 @@ const MethodsDropdown = ({ onChange }: MethodsDropdownProps) => {
     setAnchorEl(null)
   }
 
-  const onMethodSelectedChanged = (chosenMethod) => {
+  const onMethodSelectedChanged = (chosenMethod: MethodInterface) => {
     setSelectedMethod(chosenMethod)
     onChange(chosenMethod)
     handleClose()

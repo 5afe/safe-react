@@ -4,7 +4,7 @@ export interface InterfaceParams {
   type: string
 }
 
-export interface ContractInterface {
+export interface MethodInterface {
   constant: boolean
   inputs: InterfaceParams[]
   name: string
@@ -14,12 +14,12 @@ export interface ContractInterface {
   type: string
 }
 
-export interface ExtendedContractInterface extends ContractInterface {
+export interface ExtendedContractInterface extends MethodInterface {
   action: string
   methodSignature: string
   signatureHash: string
 }
 
-export type ABI = ContractInterface[]
+export type ABI = MethodInterface[]
 
 export type ExtendedABI = ExtendedContractInterface[]
