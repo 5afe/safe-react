@@ -11,7 +11,7 @@ import Checkbox from 'src/components/forms/Checkbox'
 const RenderInputParams = () => {
   const {
     meta: { valid: validABI },
-  } = useField('abi', { valid: true } as any)
+  } = useField('abi', { valid: true } as Record<string, boolean>)
   const {
     input: { value: method },
   }: any = useField('selectedMethod', { value: true })
