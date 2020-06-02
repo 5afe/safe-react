@@ -17,7 +17,7 @@ const FormErrorMessage = () => {
   const hasNewSubmitError = !!submitError && !modifiedSinceLastSubmit
   return hasNewSubmitError ? (
     <Row align="center" className={classes.fullWidth} margin="xs">
-      <Paragraph color="error" noMargin size="md" style={{ letterSpacing: '-0.5px' }}>
+      <Paragraph color="error" noMargin size="md" style={{ letterSpacing: '-0.5px', overflowWrap: 'anywhere' }}>
         {submitError}
       </Paragraph>
     </Row>
