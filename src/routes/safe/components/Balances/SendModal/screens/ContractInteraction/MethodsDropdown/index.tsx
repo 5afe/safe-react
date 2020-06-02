@@ -11,11 +11,11 @@ import { useField, useFormState } from 'react-final-form'
 
 import Col from 'src/components/layout/Col'
 import Row from 'src/components/layout/Row'
-import EtherscanService from 'src/logic/contractInteraction/sources/EtherscanService'
 import { NO_CONTRACT } from 'src/routes/safe/components/Balances/SendModal/screens/ContractInteraction/utils'
 import CheckIcon from 'src/routes/safe/components/CurrencyDropdown/img/check.svg'
 import { useDropdownStyles } from 'src/routes/safe/components/CurrencyDropdown/style'
 import { DropdownListTheme } from 'src/theme/mui'
+import { extractUsefulMethods } from 'src/logic/contractInteraction/sources/ABIService'
 
 const MENU_WIDTH = '452px'
 
@@ -37,7 +37,7 @@ const MethodsDropdown = ({ onChange }) => {
   React.useEffect(() => {
     if (abi) {
       try {
-        setMethodsList(EtherscanService.extractUsefulMethods(JSON.parse(abi)))
+        setMethodsList(extractUsefulMethods(JSON.parse(abi)))
       } catch (e) {
         setMethodsList([])
       }

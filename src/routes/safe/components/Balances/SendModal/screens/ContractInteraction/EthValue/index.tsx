@@ -11,7 +11,7 @@ import ButtonLink from 'src/components/layout/ButtonLink'
 import Col from 'src/components/layout/Col'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
-import ABIService from 'src/logic/contractInteraction/sources/ABIService'
+import { isPayable } from 'src/logic/contractInteraction/sources/ABIService'
 import { styles } from 'src/routes/safe/components/Balances/SendModal/screens/ContractInteraction/style'
 import { safeSelector } from 'src/routes/safe/store/selectors'
 
@@ -23,7 +23,7 @@ const EthValue = ({ onSetMax }) => {
   const {
     input: { value: method },
   } = useField('selectedMethod', { value: true })
-  const disabled = !ABIService.isPayable(method)
+  const disabled = !isPayable(method)
 
   return disabled ? null : (
     <>
