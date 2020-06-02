@@ -38,9 +38,9 @@ const ContractInteraction = ({ contractAddress, initialValues, onClose, onNext }
       try {
         const txObject = createTxObject(selectedMethod, contractAddress, values)
         const data = txObject.encodeABI()
-        const result = await txObject.call({ from: safeAddress })
 
         if (isReadMethod(selectedMethod)) {
+          const result = await txObject.call({ from: safeAddress })
           setCallResults(result)
 
           // this was a read method, so we won't go to the 'review' screen
