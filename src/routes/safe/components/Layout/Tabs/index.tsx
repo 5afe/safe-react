@@ -3,6 +3,7 @@ import Tabs from '@material-ui/core/Tabs'
 import { withStyles } from '@material-ui/core/styles'
 import React from 'react'
 import { withRouter } from 'react-router-dom'
+import { useSelector } from 'react-redux'
 
 import { styles } from './style'
 
@@ -17,6 +18,7 @@ import { AddressBookIcon } from 'src/routes/safe/components/assets/AddressBookIc
 import { AppsIcon } from 'src/routes/safe/components/assets/AppsIcon'
 import { BalancesIcon } from 'src/routes/safe/components/assets/BalancesIcon'
 import { TransactionsIcon } from 'src/routes/safe/components/assets/TransactionsIcon'
+import { safeFeaturesEnabledSelector } from '../../../store/selectors'
 
 interface Props {
   classes: Record<string, any>
@@ -55,6 +57,8 @@ const TransactionsLabel = (
 
 const TabsComponent = (props: Props) => {
   const { classes, location, match } = props
+  const featuresEnabled = useSelector(safeFeaturesEnabledSelector)
+  const erc721Enabled = featuresEnabled && featuresEnabled.includes('ERC721')
 
   const handleCallToRouter = (_, value) => {
     const { history } = props
@@ -100,15 +104,17 @@ const TabsComponent = (props: Props) => {
         label={TransactionsLabel}
         value={`${match.url}/transactions`}
       />
-      <Tab
-        classes={{
-          selected: classes.tabWrapperSelected,
-          wrapper: classes.tabWrapper,
-        }}
-        data-testid={TRANSACTIONS_TAB_BTN_TEST_ID}
-        label={AppsLabel}
-        value={`${match.url}/apps`}
-      />
+      {erc721Enabled ? (
+        <Tab
+          classes={{
+            selected: classes.tabWrapperSelected,
+            wrapper: classes.tabWrapper,
+          }}
+          data-testid={TRANSACTIONS_TAB_BTN_TEST_ID}
+          label={AppsLabel}
+          value={`${match.url}/apps`}
+        />
+      ) : null}
       <Tab
         classes={{
           selected: classes.tabWrapperSelected,

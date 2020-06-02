@@ -15,7 +15,7 @@ import { providerNameSelector } from 'src/logic/wallets/store/selectors'
 import SendModal from 'src/routes/safe/components/Balances/SendModal'
 import LayoutHeader from 'src/routes/safe/components/Layout/Header'
 import TabsComponent from 'src/routes/safe/components/Layout/Tabs'
-import { safeParamAddressFromStateSelector } from 'src/routes/safe/store/selectors'
+import { safeFeaturesEnabledSelector, safeParamAddressFromStateSelector } from 'src/routes/safe/store/selectors'
 import { border } from 'src/theme/variables'
 import { wrapInSuspense } from 'src/utils/wrapInSuspense'
 
@@ -59,6 +59,9 @@ const Layout = (props: Props) => {
 
   const safeAddress = useSelector(safeParamAddressFromStateSelector)
   const provider = useSelector(providerNameSelector)
+  const featuresEnabled = useSelector(safeFeaturesEnabledSelector)
+  const erc721Enabled = featuresEnabled && featuresEnabled.includes('ERC721')
+
   if (!safeAddress) {
     return <NoSafe provider={provider} text="Safe not found" />
   }
@@ -89,11 +92,13 @@ const Layout = (props: Props) => {
       <Switch>
         <Route exact path={`${match.path}/balances/:assetType?`} render={() => wrapInSuspense(<Balances />, null)} />
         <Route exact path={`${match.path}/transactions`} render={() => wrapInSuspense(<TxsTable />, null)} />
-        <Route
-          exact
-          path={`${match.path}/apps`}
-          render={() => wrapInSuspense(<Apps closeModal={closeGenericModal} openModal={openGenericModal} />, null)}
-        />
+        {erc721Enabled ? (
+          <Route
+            exact
+            path={`${match.path}/apps`}
+            render={() => wrapInSuspense(<Apps closeModal={closeGenericModal} openModal={openGenericModal} />, null)}
+          />
+        ) : null}
         <Route exact path={`${match.path}/settings`} render={() => wrapInSuspense(<Settings />, null)} />
         <Route exact path={`${match.path}/address-book`} render={() => wrapInSuspense(<AddressBookTable />, null)} />
         <Redirect to={`${match.path}/balances`} />
