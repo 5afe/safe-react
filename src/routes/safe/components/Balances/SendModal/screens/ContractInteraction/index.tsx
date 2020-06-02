@@ -1,12 +1,13 @@
 import { makeStyles } from '@material-ui/core/styles'
-import { FORM_ERROR } from 'final-form'
 import React from 'react'
+import { useSelector } from 'react-redux'
 
 import { styles } from './style'
 import GnoForm from 'src/components/forms/GnoForm'
 import Block from 'src/components/layout/Block'
 import Hairline from 'src/components/layout/Hairline'
 import SafeInfo from 'src/routes/safe/components/Balances/SendModal/SafeInfo'
+import { safeSelector } from 'src/routes/safe/store/selectors'
 import Buttons from './Buttons'
 import ContractABI from './ContractABI'
 import EthAddressInput from './EthAddressInput'
@@ -17,12 +18,14 @@ import Header from './Header'
 import MethodsDropdown from './MethodsDropdown'
 import RenderInputParams from './RenderInputParams'
 import RenderOutputParams from './RenderOutputParams'
-import { abiExtractor, createTxObject, formMutators } from './utils'
+import { abiExtractor, createTxObject, formMutators, handleSubmitError, isReadMethod } from './utils'
 
 const useStyles = makeStyles(styles as any)
 
 const ContractInteraction = ({ contractAddress, initialValues, onClose, onNext }) => {
   const classes = useStyles()
+  const { address: safeAddress = '' } = useSelector(safeSelector)
+  let setCallResults
 
   React.useMemo(() => {
     if (contractAddress) {
@@ -35,17 +38,18 @@ const ContractInteraction = ({ contractAddress, initialValues, onClose, onNext }
       try {
         const txObject = createTxObject(selectedMethod, contractAddress, values)
         const data = txObject.encodeABI()
-        await txObject.estimateGas()
-        onNext({ contractAddress, data, selectedMethod, value, ...values })
-      } catch (e) {
-        for (const key in values) {
-          if (values.hasOwnProperty(key) && values[key] === e.value) {
-            return { [key]: e.reason }
-          }
+        const result = await txObject.call({ from: safeAddress })
+
+        if (isReadMethod(selectedMethod)) {
+          setCallResults(result)
+
+          // this was a read method, so we won't go to the 'review' screen
+          return
         }
 
-        // .estimateGas() failed
-        return { [FORM_ERROR]: e.message }
+        onNext({ contractAddress, data, selectedMethod, value, ...values })
+      } catch (error) {
+        return handleSubmitError(error, values)
       }
     }
   }
@@ -62,6 +66,8 @@ const ContractInteraction = ({ contractAddress, initialValues, onClose, onNext }
         subscription={{ submitting: true, pristine: true }}
       >
         {(submitting, validating, rest, mutators) => {
+          setCallResults = mutators.setCallResults
+
           return (
             <>
               <Block className={classes.formContainer}>
@@ -80,7 +86,7 @@ const ContractInteraction = ({ contractAddress, initialValues, onClose, onNext }
                 <FormErrorMessage />
               </Block>
               <Hairline />
-              <Buttons onCallSubmit={mutators.setCallResults} onClose={onClose} />
+              <Buttons onClose={onClose} />
             </>
           )
         }}

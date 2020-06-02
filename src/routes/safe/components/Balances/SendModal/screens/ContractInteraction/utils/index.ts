@@ -1,3 +1,4 @@
+import { FORM_ERROR } from 'final-form'
 import createDecorator from 'final-form-calculate'
 
 import { mustBeEthereumAddress, mustBeEthereumContractAddress } from 'src/components/forms/validator'
@@ -48,6 +49,17 @@ export const formMutators = {
   },
 }
 
+export const handleSubmitError = (error, values) => {
+  for (const key in values) {
+    if (values.hasOwnProperty(key) && values[key] === error.value) {
+      return { [key]: error.reason }
+    }
+  }
+
+  // .call() failed and we're logging a generic error
+  return { [FORM_ERROR]: error.message }
+}
+
 export const createTxObject = (method, contractAddress, values) => {
   const web3 = getWeb3()
   const contract: any = new web3.eth.Contract([method], contractAddress)
@@ -56,3 +68,5 @@ export const createTxObject = (method, contractAddress, values) => {
 
   return contract.methods[name](...args)
 }
+
+export const isReadMethod = (method: any) => method && method.action === 'read'
