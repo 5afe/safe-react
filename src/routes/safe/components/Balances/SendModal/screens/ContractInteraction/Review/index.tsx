@@ -22,6 +22,7 @@ import Header from 'src/routes/safe/components/Balances/SendModal/screens/Contra
 import { setImageToPlaceholder } from 'src/routes/safe/components/Balances/utils'
 import createTransaction from 'src/routes/safe/store/actions/createTransaction'
 import { safeSelector } from 'src/routes/safe/store/selectors'
+import { getValueFromTxInputs } from '../utils'
 
 const useStyles = makeStyles(styles)
 
@@ -118,10 +119,7 @@ const ContractInteractionReview = ({ closeSnackbar, enqueueSnackbar, onClose, on
         </Row>
         {tx.selectedMethod.inputs.map(({ name, type }, index) => {
           const key = `methodInput-${tx.selectedMethod.name}_${index}_${type}`
-          let value = tx[key]
-          if (type === 'bool') {
-            value = tx[key] ? String(tx[key]) : 'false'
-          }
+          const value = getValueFromTxInputs(key, type, tx)
 
           return (
             <React.Fragment key={key}>
