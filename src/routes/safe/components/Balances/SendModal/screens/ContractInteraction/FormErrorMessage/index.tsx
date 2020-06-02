@@ -6,7 +6,7 @@ import Row from 'src/components/layout/Row'
 import Paragraph from 'src/components/layout/Paragraph'
 import { styles } from 'src/routes/safe/components/Balances/SendModal/screens/ContractInteraction/style'
 
-const useStyles = makeStyles(styles as any)
+const useStyles = makeStyles(styles)
 
 const FormErrorMessage = () => {
   const classes = useStyles()

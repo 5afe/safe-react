@@ -20,7 +20,7 @@ import RenderInputParams from './RenderInputParams'
 import RenderOutputParams from './RenderOutputParams'
 import { abiExtractor, createTxObject, formMutators, handleSubmitError, isReadMethod } from './utils'
 
-const useStyles = makeStyles(styles as any)
+const useStyles = makeStyles(styles)
 
 const ContractInteraction = ({ contractAddress, initialValues, onClose, onNext }) => {
   const classes = useStyles()

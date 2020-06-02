@@ -14,7 +14,7 @@ import Col from 'src/components/layout/Col'
 import Row from 'src/components/layout/Row'
 import { styles } from 'src/routes/safe/components/Balances/SendModal/screens/ContractInteraction/style'
 
-const useStyles = makeStyles(styles as any)
+const useStyles = makeStyles(styles)
 
 const EthAddressInput = ({ isContract = true, isRequired = true, name, onScannedValue, text }) => {
   const classes = useStyles()

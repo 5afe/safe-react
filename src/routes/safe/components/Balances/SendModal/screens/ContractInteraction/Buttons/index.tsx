@@ -7,7 +7,7 @@ import Row from 'src/components/layout/Row'
 import { styles } from 'src/routes/safe/components/Balances/SendModal/screens/ContractInteraction/style'
 import { isReadMethod } from 'src/routes/safe/components/Balances/SendModal/screens/ContractInteraction/utils'
 
-const useStyles = makeStyles(styles as any)
+const useStyles = makeStyles(styles)
 
 const Buttons = ({ onClose }) => {
   const classes = useStyles()

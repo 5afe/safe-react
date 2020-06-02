@@ -1,6 +1,7 @@
-import { lg, md } from 'src/theme/variables'
+import { lg, md, secondaryText, sm, border } from 'src/theme/variables'
+import { createStyles } from '@material-ui/core'
 
-export const styles = () => ({
+export const styles = createStyles({
   heading: {
     padding: `${md} ${lg}`,
     justifyContent: 'flex-start',
@@ -9,11 +10,11 @@ export const styles = () => ({
   },
   annotation: {
     letterSpacing: '-1px',
-    color: '#a2a8ba',
+    color: secondaryText,
     marginRight: 'auto',
     marginLeft: '20px',
   },
-  manage: {
+  headingText: {
     fontSize: lg,
   },
   closeIcon: {
@@ -25,6 +26,25 @@ export const styles = () => ({
   },
   formContainer: {
     padding: `${md} ${lg}`,
+  },
+  value: {
+    marginLeft: sm,
+  },
+  outerData: {
+    borderRadius: '5px',
+    border: `1px solid ${border}`,
+    padding: '11px',
+    minHeight: '21px',
+  },
+  data: {
+    wordBreak: 'break-all',
+    overflow: 'auto',
+    fontSize: '14px',
+    fontFamily: 'Averta',
+    maxHeight: '100px',
+    letterSpacing: 'normal',
+    fontStretch: 'normal',
+    lineHeight: '1.43',
   },
   buttonRow: {
     height: '84px',
