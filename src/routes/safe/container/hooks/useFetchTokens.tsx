@@ -1,5 +1,6 @@
 import { useMemo } from 'react'
 import { batch, useDispatch, useSelector } from 'react-redux'
+import { useLocation } from 'react-router-dom'
 
 import fetchCollectibles from 'src/logic/collectibles/store/actions/fetchCollectibles'
 import { fetchCurrencyValues } from 'src/logic/currencyValues/store/actions/fetchCurrencyValues'
@@ -8,12 +9,12 @@ import fetchSafeTokens from 'src/logic/tokens/store/actions/fetchSafeTokens'
 import { fetchTokens } from 'src/logic/tokens/store/actions/fetchTokens'
 import { COINS_LOCATION_REGEX, COLLECTIBLES_LOCATION_REGEX } from 'src/routes/safe/components/Balances'
 import { safeParamAddressFromStateSelector } from 'src/routes/safe/store/selectors'
-import { history } from 'src/store'
 
 export const useFetchTokens = () => {
   const dispatch = useDispatch()
   const address = useSelector(safeParamAddressFromStateSelector)
-  const { pathname } = history.location
+  const { pathname } = useLocation()
+
   useMemo(() => {
     if (COINS_LOCATION_REGEX.test(pathname)) {
       batch(() => {
