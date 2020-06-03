@@ -6,7 +6,7 @@ import MenuItem from '@material-ui/core/MenuItem'
 import { MuiThemeProvider } from '@material-ui/core/styles'
 import SearchIcon from '@material-ui/icons/Search'
 import classNames from 'classnames'
-import style from 'currency-flags/dist/currency-flags.min.css'
+import 'currency-flags/dist/currency-flags.min.css'
 import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
@@ -99,9 +99,9 @@ const CurrencyDropdown = () => {
                   <div
                     className={classNames(
                       classes.localFlag,
-                      style['currency-flag'],
-                      style['currency-flag-lg'],
-                      style[`currency-flag-${currencyName.toLowerCase()}`],
+                      'currency-flag',
+                      'currency-flag-lg',
+                      `currency-flag-${currencyName.toLowerCase()}`,
                     )}
                   />
                 </ListItemIcon>

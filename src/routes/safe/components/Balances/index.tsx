@@ -10,15 +10,16 @@ import Modal from 'src/components/Modal'
 import ButtonLink from 'src/components/layout/ButtonLink'
 import Col from 'src/components/layout/Col'
 import Divider from 'src/components/layout/Divider'
-import Link from 'src/components/layout/Link'
+
 import Row from 'src/components/layout/Row'
 import { SAFELIST_ADDRESS } from 'src/routes/routes'
 import SendModal from 'src/routes/safe/components/Balances/SendModal'
 import CurrencyDropdown from 'src/routes/safe/components/CurrencyDropdown'
 import { safeFeaturesEnabledSelector, safeParamAddressFromStateSelector } from 'src/routes/safe/store/selectors'
-import { history } from 'src/store/index'
+
 import { wrapInSuspense } from 'src/utils/wrapInSuspense'
 import { useFetchTokens } from '../../container/hooks/useFetchTokens'
+import { Route, Switch, NavLink, Redirect } from 'react-router-dom'
 
 const Collectibles = React.lazy(() => import('src/routes/safe/components/Balances/Collectibles'))
 const Coins = React.lazy(() => import('src/routes/safe/components/Balances/Coins'))
@@ -28,15 +29,12 @@ export const BALANCE_ROW_TEST_ID = 'balance-row'
 
 const INITIAL_STATE = {
   erc721Enabled: false,
-  subMenuOptions: [],
   showToken: false,
   showManageCollectibleModal: false,
   sendFunds: {
     isOpen: false,
     selectedToken: undefined,
   },
-  showCoins: true,
-  showCollectibles: false,
   showReceive: false,
 }
 
@@ -52,36 +50,13 @@ const Balances = (props) => {
   useFetchTokens()
 
   useEffect(() => {
-    const showCollectibles = COLLECTIBLES_LOCATION_REGEX.test(history.location.pathname)
-    const showCoins = COINS_LOCATION_REGEX.test(history.location.pathname)
-    const subMenuOptions = [{ enabled: showCoins, legend: 'Coins', url: `${SAFELIST_ADDRESS}/${address}/balances` }]
-
-    if (!showCollectibles && !showCoins) {
-      history.replace(`${SAFELIST_ADDRESS}/${address}/balances`)
-    }
-
     const erc721Enabled = featuresEnabled && featuresEnabled.includes('ERC721')
-
-    if (erc721Enabled) {
-      subMenuOptions.push({
-        enabled: showCollectibles,
-        legend: 'Collectibles',
-        url: `${SAFELIST_ADDRESS}/${address}/balances/collectibles`,
-      })
-    } else {
-      if (showCollectibles) {
-        history.replace(subMenuOptions[0].url)
-      }
-    }
 
     setState((prevState) => ({
       ...prevState,
-      showCoins,
-      showCollectibles,
       erc721Enabled,
-      subMenuOptions,
     }))
-  }, [featuresEnabled, address])
+  }, [featuresEnabled])
 
   const onShow = (action) => {
     setState((prevState) => ({ ...prevState, [`show${action}`]: true }))
@@ -121,65 +96,118 @@ const Balances = (props) => {
     receiveModal,
     tokenControls,
   } = props.classes
-  const {
-    erc721Enabled,
-    sendFunds,
-    showCoins,
-    showCollectibles,
-    showManageCollectibleModal,
-    showReceive,
-    showToken,
-    subMenuOptions,
-  } = state
+  const { erc721Enabled, sendFunds, showManageCollectibleModal, showReceive, showToken } = state
 
   return (
     <>
       <Row align="center" className={controls}>
         <Col className={assetTabs} sm={6} start="sm" xs={12}>
-          {subMenuOptions.length > 1 &&
-            subMenuOptions.map(({ enabled, legend, url }, index) => (
-              <React.Fragment key={`legend-${index}`}>
-                {index > 0 && <Divider className={assetDivider} />}
-                <Link
-                  className={enabled ? assetTabActive : assetTab}
-                  data-testid={`${legend.toLowerCase()}'-assets-btn'`}
-                  size="md"
-                  to={url}
-                  weight={enabled ? 'bold' : 'regular'}
-                >
-                  {legend}
-                </Link>
-              </React.Fragment>
-            ))}
-        </Col>
-        <Col className={tokenControls} end="sm" sm={6} xs={12}>
-          {showCoins && <CurrencyDropdown />}
-          <ButtonLink
-            className={manageTokensButton}
-            onClick={erc721Enabled && showCollectibles ? () => onShow('ManageCollectibleModal') : () => onShow('Token')}
-            size="lg"
-            testId="manage-tokens-btn"
+          <NavLink
+            to={`${SAFELIST_ADDRESS}/${address}/balances`}
+            activeClassName={assetTabActive}
+            className={assetTab}
+            data-testid={'coins-assets-btn'}
+            exact
           >
-            Manage List
-          </ButtonLink>
-          <Modal
-            description={
-              erc721Enabled ? 'Enable and disables assets to be listed' : 'Enable and disable tokens to be listed'
-            }
-            handleClose={showManageCollectibleModal ? () => onHide('ManageCollectibleModal') : () => onHide('Token')}
-            open={showToken || showManageCollectibleModal}
-            title="Manage List"
-          >
-            <Tokens
-              modalScreen={showManageCollectibleModal ? 'assetsList' : 'tokenList'}
-              onClose={showManageCollectibleModal ? () => onHide('ManageCollectibleModal') : () => onHide('Token')}
-              safeAddress={address}
-            />
-          </Modal>
+            Coins
+          </NavLink>
+          {erc721Enabled ? (
+            <>
+              <Divider className={assetDivider} />
+              <NavLink
+                to={`${SAFELIST_ADDRESS}/${address}/balances/collectibles`}
+                activeClassName={assetTabActive}
+                className={assetTab}
+                data-testid={'collectibles-assets-btn'}
+                exact
+              >
+                Collectibles
+              </NavLink>
+            </>
+          ) : null}
         </Col>
+        <Switch>
+          <Route
+            path={`${SAFELIST_ADDRESS}/${address}/balances/collectibles`}
+            exact
+            render={() => {
+              return !erc721Enabled ? (
+                <Redirect to={`${SAFELIST_ADDRESS}/${address}/balances`} />
+              ) : (
+                <Col className={tokenControls} end="sm" sm={6} xs={12}>
+                  <ButtonLink
+                    className={manageTokensButton}
+                    onClick={() => onShow('ManageCollectibleModal')}
+                    size="lg"
+                    testId="manage-tokens-btn"
+                  >
+                    Manage List
+                  </ButtonLink>
+                  <Modal
+                    description={'Enable and disable tokens to be listed'}
+                    handleClose={() => onHide('ManageCollectibleModal')}
+                    open={showManageCollectibleModal}
+                    title="Manage List"
+                  >
+                    <Tokens
+                      modalScreen={'assetsList'}
+                      onClose={() => onHide('ManageCollectibleModal')}
+                      safeAddress={address}
+                    />
+                  </Modal>
+                </Col>
+              )
+            }}
+          />
+          <Route
+            path={`${SAFELIST_ADDRESS}/${address}/balances`}
+            exact
+            render={() => {
+              return (
+                <>
+                  <Col className={tokenControls} end="sm" sm={6} xs={12}>
+                    <CurrencyDropdown />
+                    <ButtonLink
+                      className={manageTokensButton}
+                      onClick={() => onShow('Token')}
+                      size="lg"
+                      testId="manage-tokens-btn"
+                    >
+                      Manage List
+                    </ButtonLink>
+                    <Modal
+                      description={'Enable and disable tokens to be listed'}
+                      handleClose={() => onHide('Token')}
+                      open={showToken}
+                      title="Manage List"
+                    >
+                      <Tokens modalScreen={'tokenList'} onClose={() => onHide('Token')} safeAddress={address} />
+                    </Modal>
+                  </Col>
+                </>
+              )
+            }}
+          />
+        </Switch>
       </Row>
-      {showCoins && wrapInSuspense(<Coins showReceiveFunds={() => onShow('Receive')} showSendFunds={showSendFunds} />)}
-      {erc721Enabled && showCollectibles && wrapInSuspense(<Collectibles />)}
+      <Switch>
+        <Route
+          path={`${SAFELIST_ADDRESS}/${address}/balances/collectibles`}
+          exact
+          render={() => {
+            if (erc721Enabled) {
+              return wrapInSuspense(<Collectibles />)
+            }
+            return null
+          }}
+        />
+        <Route
+          path={`${SAFELIST_ADDRESS}/${address}/balances`}
+          render={() => {
+            return wrapInSuspense(<Coins showReceiveFunds={() => onShow('Receive')} showSendFunds={showSendFunds} />)
+          }}
+        />
+      </Switch>
       <SendModal
         activeScreenType="sendFunds"
         isOpen={sendFunds.isOpen}
