@@ -12,8 +12,8 @@ import { safeParamAddressFromStateSelector } from 'src/routes/safe/store/selecto
 
 export const useFetchTokens = () => {
   const dispatch = useDispatch()
-  const address = useSelector(safeParamAddressFromStateSelector)
-  const { pathname } = useLocation()
+  const address: string | null = useSelector(safeParamAddressFromStateSelector)
+  const { pathname }: Record<string, string> = useLocation()
 
   useMemo(() => {
     if (COINS_LOCATION_REGEX.test(pathname)) {
