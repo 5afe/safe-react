@@ -1,9 +1,11 @@
 import { FORM_ERROR } from 'final-form'
 import createDecorator from 'final-form-calculate'
+import { AbiItem } from 'web3-utils'
 
 import { mustBeEthereumAddress, mustBeEthereumContractAddress } from 'src/components/forms/validator'
 import { getNetwork } from 'src/config'
 import { getConfiguredSource } from 'src/logic/contractInteraction/sources'
+import { AbiItemExtended } from 'src/logic/contractInteraction/sources/ABIService'
 import { getWeb3 } from 'src/logic/wallets/getWeb3'
 
 export const NO_CONTRACT = 'no contract'
@@ -60,7 +62,7 @@ export const handleSubmitError = (error, values) => {
   return { [FORM_ERROR]: error.message }
 }
 
-export const createTxObject = (method, contractAddress, values) => {
+export const createTxObject = (method: AbiItem, contractAddress: string, values) => {
   const web3 = getWeb3()
   const contract: any = new web3.eth.Contract([method], contractAddress)
   const { inputs, name } = method
@@ -69,4 +71,4 @@ export const createTxObject = (method, contractAddress, values) => {
   return contract.methods[name](...args)
 }
 
-export const isReadMethod = (method: any) => method && method.action === 'read'
+export const isReadMethod = (method: AbiItemExtended): boolean => method && method.action === 'read'

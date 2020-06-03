@@ -8,6 +8,7 @@ import SearchIcon from '@material-ui/icons/Search'
 import classNames from 'classnames'
 import React from 'react'
 import { useField, useFormState } from 'react-final-form'
+import { AbiItem } from 'web3-utils'
 
 import Col from 'src/components/layout/Col'
 import Row from 'src/components/layout/Row'
@@ -16,12 +17,11 @@ import CheckIcon from 'src/routes/safe/components/CurrencyDropdown/img/check.svg
 import { useDropdownStyles } from 'src/routes/safe/components/CurrencyDropdown/style'
 import { DropdownListTheme } from 'src/theme/mui'
 import { extractUsefulMethods } from 'src/logic/contractInteraction/sources/ABIService'
-import { MethodInterface } from 'src/logic/contractInteraction/sources/ABIService/types'
 
 const MENU_WIDTH = '452px'
 
 interface MethodsDropdownProps {
-  onChange: (method: MethodInterface) => void
+  onChange: (method: AbiItem) => void
 }
 
 const MethodsDropdown = ({ onChange }: MethodsDropdownProps) => {
@@ -29,7 +29,7 @@ const MethodsDropdown = ({ onChange }: MethodsDropdownProps) => {
   const {
     input: { value: abi },
     meta: { valid },
-  } = useField('abi', { value: true, valid: true } as any)
+  } = useField('abi', { subscription: { value: true, valid: true } })
   const {
     initialValues: { selectedMethod: selectedMethodByDefault },
   } = useFormState({ subscription: { initialValues: true } })
@@ -61,7 +61,7 @@ const MethodsDropdown = ({ onChange }: MethodsDropdownProps) => {
     setAnchorEl(null)
   }
 
-  const onMethodSelectedChanged = (chosenMethod: MethodInterface) => {
+  const onMethodSelectedChanged = (chosenMethod: AbiItem) => {
     setSelectedMethod(chosenMethod)
     onChange(chosenMethod)
     handleClose()

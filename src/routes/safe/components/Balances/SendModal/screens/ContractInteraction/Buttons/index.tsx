@@ -17,7 +17,7 @@ const Buttons = ({ onClose }: ButtonProps) => {
   const classes = useStyles()
   const {
     input: { value: method },
-  } = useField('selectedMethod', { value: true })
+  } = useField('selectedMethod', { subscription: { value: true } })
   const { modifiedSinceLastSubmit, submitError, submitting, valid, validating } = useFormState({
     subscription: {
       modifiedSinceLastSubmit: true,

@@ -9,10 +9,10 @@ import Row from 'src/components/layout/Row'
 const RenderOutputParams = () => {
   const {
     input: { value: method },
-  }: any = useField('selectedMethod', { value: true })
+  }: any = useField('selectedMethod', { subscription: { value: true } })
   const {
     input: { value: results },
-  }: any = useField('callResults', { value: true })
+  }: any = useField('callResults', { subscription: { value: true } })
   const multipleResults = !!method && method.outputs.length > 1
 
   return results ? (

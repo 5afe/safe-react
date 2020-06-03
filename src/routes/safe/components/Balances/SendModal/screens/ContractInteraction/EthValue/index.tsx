@@ -25,7 +25,7 @@ const EthValue = ({ onSetMax }: EthValueProps) => {
   const { ethBalance } = useSelector(safeSelector)
   const {
     input: { value: method },
-  } = useField('selectedMethod', { value: true })
+  } = useField('selectedMethod', { subscription: { value: true } })
   const disabled = !isPayable(method)
 
   return disabled ? null : (
