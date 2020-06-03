@@ -2,10 +2,10 @@ import React from 'react'
 
 import Col from 'src/components/layout/Col'
 import Field from 'src/components/forms/Field'
-import Checkbox from 'src/components/forms/Checkbox'
 import TextField from 'src/components/forms/TextField'
 
 import { composeValidators, mustBeEthereumAddress, required } from 'src/components/forms/validator'
+import { Checkbox } from '@gnosis.pm/safe-react-components'
 
 type Props = {
   type: string

@@ -6,7 +6,6 @@ import { styles } from './style'
 import { getSymbolAndDecimalsFromContract } from './utils'
 import { addressIsTokenContract, doesntExistInTokenList } from './validators'
 
-import Checkbox from 'src/components/forms/Checkbox'
 import Field from 'src/components/forms/Field'
 import GnoForm from 'src/components/forms/GnoForm'
 import TextField from 'src/components/forms/TextField'
@@ -21,6 +20,7 @@ import Row from 'src/components/layout/Row'
 
 import TokenPlaceholder from 'src/routes/safe/components/Balances/assets/token_placeholder.svg'
 import { checksumAddress } from 'src/utils/checksumAddress'
+import { Checkbox } from '@gnosis.pm/safe-react-components'
 
 export const ADD_CUSTOM_TOKEN_ADDRESS_INPUT_TEST_ID = 'add-custom-token-address-input'
 export const ADD_CUSTOM_TOKEN_SYMBOLS_INPUT_TEST_ID = 'add-custom-token-symbols-input'
