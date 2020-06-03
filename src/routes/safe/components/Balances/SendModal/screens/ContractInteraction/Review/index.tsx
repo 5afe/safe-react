@@ -1,5 +1,5 @@
 import { makeStyles } from '@material-ui/core/styles'
-import { withSnackbar } from 'notistack'
+import { useSnackbar } from 'notistack'
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
@@ -26,7 +26,14 @@ import { getValueFromTxInputs } from '../utils'
 
 const useStyles = makeStyles(styles)
 
-const ContractInteractionReview = ({ closeSnackbar, enqueueSnackbar, onClose, onPrev, tx }) => {
+type Props = {
+  onClose: () => void
+  onPrev: () => void
+  tx: any
+}
+
+const ContractInteractionReview = ({ onClose, onPrev, tx }: Props) => {
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar()
   const classes = useStyles()
   const dispatch = useDispatch()
   const { address: safeAddress } = useSelector(safeSelector)
@@ -175,4 +182,4 @@ const ContractInteractionReview = ({ closeSnackbar, enqueueSnackbar, onClose, on
   )
 }
 
-export default withSnackbar(ContractInteractionReview)
+export default ContractInteractionReview
