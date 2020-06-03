@@ -1,13 +1,11 @@
 import React from 'react'
-import Col from '../../../../../../../../../components/layout/Col'
-import Field from '../../../../../../../../../components/forms/Field'
-import Checkbox from '../../../../../../../../../components/forms/Checkbox'
-import TextField from '../../../../../../../../../components/forms/TextField'
-import {
-  composeValidators,
-  mustBeEthereumAddress,
-  required,
-} from '../../../../../../../../../components/forms/validator'
+
+import Col from 'src/components/layout/Col'
+import Field from 'src/components/forms/Field'
+import Checkbox from 'src/components/forms/Checkbox'
+import TextField from 'src/components/forms/TextField'
+
+import { composeValidators, mustBeEthereumAddress, required } from 'src/components/forms/validator'
 
 type Props = {
   type: string

@@ -119,7 +119,7 @@ const ContractInteractionReview = ({ closeSnackbar, enqueueSnackbar, onClose, on
         </Row>
         {tx.selectedMethod.inputs.map(({ name, type }, index) => {
           const key = `methodInput-${tx.selectedMethod.name}_${index}_${type}`
-          const value = getValueFromTxInputs(key, type, tx)
+          const value: string = getValueFromTxInputs(key, type, tx)
 
           return (
             <React.Fragment key={key}>

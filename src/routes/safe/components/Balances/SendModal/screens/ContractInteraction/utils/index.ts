@@ -57,7 +57,7 @@ export const createTxObject = (method, contractAddress, values) => {
   return contract.methods[name](...args)
 }
 
-export const getValueFromTxInputs = (key, type, tx) => {
+export const getValueFromTxInputs = (key: string, type: string, tx: string): string => {
   let value = tx[key]
   if (type === 'bool') {
     value = tx[key] ? String(tx[key]) : 'false'
