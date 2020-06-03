@@ -61,7 +61,7 @@ const ContractInteraction = ({ contractAddress, initialValues, onClose, onNext }
           return
         }
 
-        onNext({ contractAddress, data, selectedMethod, value, ...values })
+        onNext({ ...values, contractAddress, data, selectedMethod, value })
       } catch (error) {
         return handleSubmitError(error, values)
       }
