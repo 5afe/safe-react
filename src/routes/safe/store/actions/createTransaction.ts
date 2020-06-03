@@ -219,8 +219,7 @@ const createTransaction = ({
         const toStoreTx = isExecution
           ? mockedTx.withMutations((record) => {
               record
-                .set('executionTxHash', receipt.events.ExecutionSuccess.transactionHash)
-                .set('safeTxHash', receipt.events.ExecutionSuccess.returnValues.txHash)
+                .set('executionTxHash', receipt.transactionHash)
                 .set('executor', from)
                 .set('isExecuted', true)
                 .set('isSuccessful', receipt.status)
