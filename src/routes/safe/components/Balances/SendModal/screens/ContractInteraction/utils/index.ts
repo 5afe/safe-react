@@ -6,8 +6,9 @@ import { mustBeEthereumAddress, mustBeEthereumContractAddress } from 'src/compon
 import { getNetwork } from 'src/config'
 import { getConfiguredSource } from 'src/logic/contractInteraction/sources'
 import { AbiItemExtended } from 'src/logic/contractInteraction/sources/ABIService'
-import { getWeb3 } from 'src/logic/wallets/getWeb3'
+import { getAddressFromENS, getWeb3 } from 'src/logic/wallets/getWeb3'
 import { TransactionReviewType } from '../Review'
+import { isValidEnsName } from 'src/logic/wallets/ethAddresses'
 
 export const NO_CONTRACT = 'no contract'
 
@@ -25,6 +26,26 @@ export const abiExtractor = createDecorator({
       const network = getNetwork()
       const source = getConfiguredSource()
       return source.getContractABI(contractAddress, network)
+    },
+  },
+})
+
+export const ensResolver = createDecorator({
+  field: 'contractAddress',
+  updates: {
+    contractAddress: async (contractAddress) => {
+      try {
+        const resolvedAddress = isValidEnsName(contractAddress) && (await getAddressFromENS(contractAddress))
+
+        if (resolvedAddress) {
+          return resolvedAddress
+        }
+      } catch (e) {
+        console.error(e.message)
+        return contractAddress
+      }
+
+      return contractAddress
     },
   },
 })
