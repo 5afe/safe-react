@@ -26,10 +26,25 @@ import { getValueFromTxInputs } from '../utils'
 
 const useStyles = makeStyles(styles)
 
+export type TransactionReviewType = {
+  abi?: string
+  contractAddress?: string
+  data?: string
+  value?: string
+  selectedMethod?: {
+    action: string
+    signature: string
+    signatureHash: string
+    constant: boolean
+    inputs: []
+    name: string
+  }
+}
+
 type Props = {
   onClose: () => void
   onPrev: () => void
-  tx: any
+  tx: TransactionReviewType
 }
 
 const ContractInteractionReview = ({ onClose, onPrev, tx }: Props) => {
