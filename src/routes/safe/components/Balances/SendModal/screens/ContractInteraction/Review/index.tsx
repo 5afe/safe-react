@@ -1,5 +1,5 @@
 import { makeStyles } from '@material-ui/core/styles'
-import { withSnackbar } from 'notistack'
+import { useSnackbar } from 'notistack'
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
@@ -22,10 +22,33 @@ import Header from 'src/routes/safe/components/Balances/SendModal/screens/Contra
 import { setImageToPlaceholder } from 'src/routes/safe/components/Balances/utils'
 import createTransaction from 'src/routes/safe/store/actions/createTransaction'
 import { safeSelector } from 'src/routes/safe/store/selectors'
+import { getValueFromTxInputs } from '../utils'
 
-const useStyles = makeStyles(styles as any)
+const useStyles = makeStyles(styles)
 
-const ContractInteractionReview = ({ closeSnackbar, enqueueSnackbar, onClose, onPrev, tx }: any) => {
+export type TransactionReviewType = {
+  abi?: string
+  contractAddress?: string
+  data?: string
+  value?: string
+  selectedMethod?: {
+    action: string
+    signature: string
+    signatureHash: string
+    constant: boolean
+    inputs: []
+    name: string
+  }
+}
+
+type Props = {
+  onClose: () => void
+  onPrev: () => void
+  tx: TransactionReviewType
+}
+
+const ContractInteractionReview = ({ onClose, onPrev, tx }: Props) => {
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar()
   const classes = useStyles()
   const dispatch = useDispatch()
   const { address: safeAddress } = useSelector(safeSelector)
@@ -118,6 +141,7 @@ const ContractInteractionReview = ({ closeSnackbar, enqueueSnackbar, onClose, on
         </Row>
         {tx.selectedMethod.inputs.map(({ name, type }, index) => {
           const key = `methodInput-${tx.selectedMethod.name}_${index}_${type}`
+          const value: string = getValueFromTxInputs(key, type, tx)
 
           return (
             <React.Fragment key={key}>
@@ -128,7 +152,7 @@ const ContractInteractionReview = ({ closeSnackbar, enqueueSnackbar, onClose, on
               </Row>
               <Row align="center" margin="md">
                 <Paragraph className={classes.value} noMargin size="md" style={{ margin: 0 }}>
-                  {tx[key]}
+                  {value}
                 </Paragraph>
               </Row>
             </React.Fragment>
@@ -173,4 +197,4 @@ const ContractInteractionReview = ({ closeSnackbar, enqueueSnackbar, onClose, on
   )
 }
 
-export default withSnackbar(ContractInteractionReview as any)
+export default ContractInteractionReview

@@ -81,9 +81,9 @@ export const createSafe = (values, userAccount) => {
 
 const Open = ({ addSafe, network, provider, userAccount }) => {
   const [loading, setLoading] = useState(false)
-  const [showProgress, setShowProgress] = useState()
+  const [showProgress, setShowProgress] = useState(false)
   const [creationTxPromise, setCreationTxPromise] = useState()
-  const [safeCreationPendingInfo, setSafeCreationPendingInfo] = useState()
+  const [safeCreationPendingInfo, setSafeCreationPendingInfo] = useState<any>()
   const [safePropsFromUrl, setSafePropsFromUrl] = useState()
 
   useEffect(() => {
@@ -182,7 +182,7 @@ const Open = ({ addSafe, network, provider, userAccount }) => {
     <Page>
       {showProgress ? (
         <Opening
-          creationTxHash={safeCreationPendingInfo ? safeCreationPendingInfo.txHash : undefined}
+          creationTxHash={safeCreationPendingInfo?.txHash}
           onCancel={onCancel}
           onRetry={onRetry}
           onSuccess={onSafeCreated as any}

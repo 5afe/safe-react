@@ -4,6 +4,7 @@ import { mustBeEthereumAddress, mustBeEthereumContractAddress } from 'src/compon
 import { getNetwork } from 'src/config'
 import { getConfiguredSource } from 'src/logic/contractInteraction/sources'
 import { getWeb3 } from 'src/logic/wallets/getWeb3'
+import { TransactionReviewType } from '../Review'
 
 export const NO_CONTRACT = 'no contract'
 
@@ -55,4 +56,12 @@ export const createTxObject = (method, contractAddress, values) => {
   const args = inputs.map(({ type }, index) => values[`methodInput-${name}_${index}_${type}`])
 
   return contract.methods[name](...args)
+}
+
+export const getValueFromTxInputs = (key: string, type: string, tx: TransactionReviewType): string => {
+  let value = tx[key]
+  if (type === 'bool') {
+    value = tx[key] ? String(tx[key]) : 'false'
+  }
+  return value
 }
