@@ -32,7 +32,7 @@ const cancellationTransactionsSelector = (state) => state[CANCELLATION_TRANSACTI
 
 const incomingTransactionsSelector = (state) => state[INCOMING_TRANSACTIONS_REDUCER_ID]
 
-export const safeParamAddressFromStateSelector = (state) => {
+export const safeParamAddressFromStateSelector = (state): string | null => {
   const match = matchPath(state.router.location.pathname, { path: `${SAFELIST_ADDRESS}/:safeAddress` })
 
   if (match) {
