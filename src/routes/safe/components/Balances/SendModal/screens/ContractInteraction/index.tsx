@@ -36,7 +36,7 @@ const ContractInteraction = ({ contractAddress, initialValues, onClose, onNext }
   const handleSubmit = async ({ contractAddress, selectedMethod, value, ...values }) => {
     if (value || (contractAddress && selectedMethod)) {
       const data = await createTxObject(selectedMethod, contractAddress, values).encodeABI()
-      onNext({ contractAddress, data, selectedMethod, value, ...values })
+      onNext({ ...values, contractAddress, data, selectedMethod, value })
     }
   }
 
