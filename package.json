@@ -234,7 +234,7 @@
     "prettier": "2.0.5",
     "react-app-rewired": "^2.1.6",
     "truffle": "5.1.28",
-    "typescript": "3.9.2",
+    "typescript": "3.9.3",
     "wait-on": "5.0.0"
   }
 }
