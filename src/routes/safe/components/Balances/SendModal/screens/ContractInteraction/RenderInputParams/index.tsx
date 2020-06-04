@@ -1,11 +1,9 @@
 import React from 'react'
 import { useField } from 'react-final-form'
 
-import Field from 'src/components/forms/Field'
-import TextField from 'src/components/forms/TextField'
-import { composeValidators, mustBeEthereumAddress, required } from 'src/components/forms/validator'
-import Col from 'src/components/layout/Col'
 import Row from 'src/components/layout/Row'
+
+import InputComponent from './InputComponent'
 
 const RenderInputParams = () => {
   const {
@@ -21,21 +19,10 @@ const RenderInputParams = () => {
     : method.inputs.map(({ name, type }, index) => {
         const placeholder = name ? `${name} (${type})` : type
         const key = `methodInput-${method.name}_${index}_${type}`
-        const validate = type === 'address' ? composeValidators(required, mustBeEthereumAddress) : required
 
         return (
           <Row key={key} margin="sm">
-            <Col>
-              <Field
-                component={TextField}
-                name={key}
-                placeholder={placeholder}
-                testId={key}
-                text={placeholder}
-                type="text"
-                validate={validate}
-              />
-            </Col>
+            <InputComponent type={type} keyValue={key} placeholder={placeholder} />
           </Row>
         )
       })

@@ -74,7 +74,7 @@ const MethodsDropdown = ({ onChange }: MethodsDropdownProps) => {
           <>
             <button className={classes.button} onClick={handleClick} type="button">
               <span className={classNames(classes.buttonInner, anchorEl && classes.openMenuButton)}>
-                {selectedMethod.name}
+                {(selectedMethod as Record<string, string>).name}
               </span>
             </button>
             <Menu
@@ -125,7 +125,7 @@ const MethodsDropdown = ({ onChange }: MethodsDropdownProps) => {
                     >
                       <ListItemText primary={name} />
                       <ListItemIcon className={classes.iconRight}>
-                        {signatureHash === selectedMethod.signatureHash ? (
+                        {signatureHash === (selectedMethod as Record<string, string>).signatureHash ? (
                           <img alt="checked" src={CheckIcon} />
                         ) : (
                           <span />

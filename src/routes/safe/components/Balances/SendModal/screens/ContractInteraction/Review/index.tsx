@@ -1,5 +1,5 @@
 import { makeStyles } from '@material-ui/core/styles'
-import { withSnackbar } from 'notistack'
+import { useSnackbar } from 'notistack'
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
@@ -11,6 +11,7 @@ import Hairline from 'src/components/layout/Hairline'
 import Img from 'src/components/layout/Img'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
+import { AbiItemExtended } from 'src/logic/contractInteraction/sources/ABIService'
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
 import { estimateTxGasCosts } from 'src/logic/safe/transactions/gasNew'
 import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
@@ -21,10 +22,26 @@ import Header from 'src/routes/safe/components/Balances/SendModal/screens/Contra
 import { setImageToPlaceholder } from 'src/routes/safe/components/Balances/utils'
 import createTransaction from 'src/routes/safe/store/actions/createTransaction'
 import { safeSelector } from 'src/routes/safe/store/selectors'
+import { getValueFromTxInputs } from '../utils'
 
 const useStyles = makeStyles(styles)
 
-const ContractInteractionReview = ({ closeSnackbar, enqueueSnackbar, onClose, onPrev, tx }: any) => {
+export type TransactionReviewType = {
+  abi?: string
+  contractAddress?: string
+  data?: string
+  value?: string
+  selectedMethod?: AbiItemExtended
+}
+
+type Props = {
+  onClose: () => void
+  onPrev: () => void
+  tx: TransactionReviewType
+}
+
+const ContractInteractionReview = ({ onClose, onPrev, tx }: Props) => {
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar()
   const classes = useStyles()
   const dispatch = useDispatch()
   const { address: safeAddress } = useSelector(safeSelector)
@@ -117,6 +134,7 @@ const ContractInteractionReview = ({ closeSnackbar, enqueueSnackbar, onClose, on
         </Row>
         {tx.selectedMethod.inputs.map(({ name, type }, index) => {
           const key = `methodInput-${tx.selectedMethod.name}_${index}_${type}`
+          const value: string = getValueFromTxInputs(key, type, tx)
 
           return (
             <React.Fragment key={key}>
@@ -127,7 +145,7 @@ const ContractInteractionReview = ({ closeSnackbar, enqueueSnackbar, onClose, on
               </Row>
               <Row align="center" margin="md">
                 <Paragraph className={classes.value} noMargin size="md" style={{ margin: 0 }}>
-                  {tx[key]}
+                  {value}
                 </Paragraph>
               </Row>
             </React.Fragment>
@@ -172,4 +190,4 @@ const ContractInteractionReview = ({ closeSnackbar, enqueueSnackbar, onClose, on
   )
 }
 
-export default withSnackbar(ContractInteractionReview as any)
+export default ContractInteractionReview

@@ -21,6 +21,8 @@ matrix:
     - env:
         - REACT_APP_NETWORK='rinkeby'
         - REACT_APP_GNOSIS_APPS_URL=${REACT_APP_GNOSIS_APPS_URL_STAGING}
+cache:
+  yarn: true
 before_install:
   # Needed to deploy pull request and releases
   - sudo apt-get update

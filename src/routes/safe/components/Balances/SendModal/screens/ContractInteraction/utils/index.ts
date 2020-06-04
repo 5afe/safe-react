@@ -7,6 +7,7 @@ import { getNetwork } from 'src/config'
 import { getConfiguredSource } from 'src/logic/contractInteraction/sources'
 import { AbiItemExtended } from 'src/logic/contractInteraction/sources/ABIService'
 import { getWeb3 } from 'src/logic/wallets/getWeb3'
+import { TransactionReviewType } from '../Review'
 
 export const NO_CONTRACT = 'no contract'
 
@@ -72,3 +73,11 @@ export const createTxObject = (method: AbiItem, contractAddress: string, values)
 }
 
 export const isReadMethod = (method: AbiItemExtended): boolean => method && method.action === 'read'
+
+export const getValueFromTxInputs = (key: string, type: string, tx: TransactionReviewType): string => {
+  let value = tx[key]
+  if (type === 'bool') {
+    value = tx[key] ? String(tx[key]) : 'false'
+  }
+  return value
+}
