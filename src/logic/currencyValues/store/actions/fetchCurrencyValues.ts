@@ -23,9 +23,16 @@ export const fetchCurrencyValues = (safeAddress: string) => async (dispatch) => 
       const safeAddr = kv[0]
       const value = kv[1]
 
-      const { currencyRate, selectedCurrency }: CurrencyRateValue = value
+      let { currencyRate, selectedCurrency }: CurrencyRateValue = value
+
+      // Fallback for users that got an undefined saved on localStorage
+      if (!selectedCurrency || selectedCurrency === AVAILABLE_CURRENCIES.USD) {
+        currencyRate = 1
+        selectedCurrency = AVAILABLE_CURRENCIES.USD
+      }
+
       batch(() => {
-        dispatch(setSelectedCurrency(safeAddr, selectedCurrency || AVAILABLE_CURRENCIES.USD))
+        dispatch(setSelectedCurrency(safeAddr, selectedCurrency))
         dispatch(setCurrencyRate(safeAddr, currencyRate))
       })
     })
