@@ -1,14 +1,12 @@
 const electron = require("electron");
-const  express = require('express');
+const express = require('express');
 const open = require('open');
 const log = require('electron-log');
 const fs = require('fs');
-const dialog = electron.dialog;
 const Menu = electron.Menu;
 const https = require('https');
 const autoUpdater = require('./auto-updater');
 
-const url = require('url');
 const app = electron.app;
 const session = electron.session;
 const BrowserWindow = electron.BrowserWindow;
