@@ -4,12 +4,12 @@ import { batch } from 'react-redux'
 import { setCurrencyBalances } from 'src/logic/currencyValues/store/actions/setCurrencyBalances'
 import { setCurrencyRate } from 'src/logic/currencyValues/store/actions/setCurrencyRate'
 import { setSelectedCurrency } from 'src/logic/currencyValues/store/actions/setSelectedCurrency'
-import { AVAILABLE_CURRENCIES } from 'src/logic/currencyValues/store/model/currencyValues'
+import { AVAILABLE_CURRENCIES, CurrencyRateValue } from 'src/logic/currencyValues/store/model/currencyValues'
 import { loadCurrencyValues } from 'src/logic/currencyValues/store/utils/currencyValuesStorage'
 
-export const fetchCurrencyValues = (safeAddress) => async (dispatch) => {
+export const fetchCurrencyValues = (safeAddress: string) => async (dispatch) => {
   try {
-    const storedCurrencies = await loadCurrencyValues()
+    const storedCurrencies: Map<string, CurrencyRateValue> | {} = await loadCurrencyValues()
     const storedCurrency = storedCurrencies[safeAddress]
     if (!storedCurrency) {
       return batch(() => {
@@ -23,7 +23,7 @@ export const fetchCurrencyValues = (safeAddress) => async (dispatch) => {
       const safeAddr = kv[0]
       const value = kv[1]
 
-      const { currencyRate, selectedCurrency }: any = value
+      const { currencyRate, selectedCurrency }: CurrencyRateValue = value
       batch(() => {
         dispatch(setSelectedCurrency(safeAddr, selectedCurrency || AVAILABLE_CURRENCIES.USD))
         dispatch(setCurrencyRate(safeAddr, currencyRate))

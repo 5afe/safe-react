@@ -4,6 +4,7 @@ import { SET_CURRENCY_RATE } from 'src/logic/currencyValues/store/actions/setCur
 import { SET_CURRENT_CURRENCY } from 'src/logic/currencyValues/store/actions/setSelectedCurrency'
 import { currencyValuesSelector } from 'src/logic/currencyValues/store/selectors'
 import { saveCurrencyValues } from 'src/logic/currencyValues/store/utils/currencyValuesStorage'
+import { Currency, CurrencyRateValue } from '../model/currencyValues'
 
 const watchedActions = [SET_CURRENT_CURRENCY, SET_CURRENCY_RATE, SET_CURRENCY_BALANCES]
 
@@ -21,9 +22,9 @@ const currencyValuesStorageMiddleware = (store) => (next) => async (action) => {
       case SET_CURRENCY_RATE:
       case SET_CURRENCY_BALANCES: {
         const currencyValues = currencyValuesSelector(state)
-        const currencyValuesWithoutBalances = currencyValues.map((currencyValue) => {
-          const currencyRate = currencyValue.get('currencyRate')
-          const selectedCurrency = currencyValue.get('selectedCurrency')
+        const currencyValuesWithoutBalances: Map<string, CurrencyRateValue> = currencyValues.map((currencyValue) => {
+          const currencyRate: number = currencyValue.get('currencyRate')
+          const selectedCurrency: Currency = currencyValue.get('selectedCurrency')
           return {
             currencyRate,
             selectedCurrency,
