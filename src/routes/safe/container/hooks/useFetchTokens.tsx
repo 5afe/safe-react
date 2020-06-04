@@ -10,13 +10,13 @@ import { fetchTokens } from 'src/logic/tokens/store/actions/fetchTokens'
 import { COINS_LOCATION_REGEX, COLLECTIBLES_LOCATION_REGEX } from 'src/routes/safe/components/Balances'
 import { safeParamAddressFromStateSelector } from 'src/routes/safe/store/selectors'
 
-export const useFetchTokens = () => {
+export const useFetchTokens = (): void => {
   const dispatch = useDispatch()
   const address: string | null = useSelector(safeParamAddressFromStateSelector)
-  const { pathname }: Record<string, string> = useLocation()
+  const location = useLocation()
 
   useMemo(() => {
-    if (COINS_LOCATION_REGEX.test(pathname)) {
+    if (COINS_LOCATION_REGEX.test(location.pathname)) {
       batch(() => {
         // fetch tokens there to get symbols for tokens in TXs list
         dispatch(fetchTokens())
@@ -25,12 +25,12 @@ export const useFetchTokens = () => {
       })
     }
 
-    if (COLLECTIBLES_LOCATION_REGEX.test(pathname)) {
+    if (COLLECTIBLES_LOCATION_REGEX.test(location.pathname)) {
       batch(() => {
         dispatch(fetchCollectibles()).then(() => {
           dispatch(activateAssetsByBalance(address))
         })
       })
     }
-  }, [address, dispatch, pathname])
+  }, [address, dispatch, location])
 }
