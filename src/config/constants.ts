@@ -1,0 +1,15 @@
+export const SAFE_APPS_URL_PROD = 'https://apps.gnosis-safe.io'
+export const SAFE_APPS_URL_STG = 'https://safe-apps.staging.gnosisdev.com'
+export const SAFE_APPS_URL_DEV = 'https://safe-apps.dev.gnosisdev.com/'
+export const SAFE_APPS_URL_LOCAL = 'http://localhost:3002/'
+
+export const TX_SERVICE_HOST_MAINNET ='https://safe-transaction.mainnet.gnosis.io/api/v1/'
+export const TX_SERVICE_HOST_MAINNET_STG = 'https://safe-transaction.mainnet.staging.gnosisdev.com/api/v1/'                                   
+export const TX_SERVICE_HOST_STG = 'https://safe-transaction.staging.gnosisdev.com/api/v1/'                                   
+export const TX_SERVICE_HOST_RINKEBY = 'https://safe-transaction.rinkeby.gnosis.io/api/v1/'
+export const TX_SERVICE_HOST_LOCAL = 'http://localhost:8000/api/v1/'
+
+export const RELAY_API_URL_STG = 'https://safe-relay.staging.gnosisdev.com/api/v1/'
+export const RELAY_API_URL_MAINNET_STG = 'https://safe-relay.mainnet.staging.gnosisdev.com/api/v1/'
+export const RELAY_API_URL_MAINNET ='https://safe-relay.gnosis.io/api/v1/'
+export const RELAY_API_URL_RINKEBY ='https://safe-relay.rinkeby.gnosis.io/api/v1/'

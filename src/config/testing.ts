@@ -1,10 +1,11 @@
-// 
-import { TX_SERVICE_HOST, SIGNATURES_VIA_METAMASK, RELAY_API_URL } from 'src/config/names'
+import { TX_SERVICE_HOST, SIGNATURES_VIA_METAMASK, RELAY_API_URL, SAFE_APPS_URL } from 'src/config/names'
+import { RELAY_API_URL_STG, SAFE_APPS_URL_LOCAL, TX_SERVICE_HOST_LOCAL } from './constants'
 
 const testConfig = {
-  [TX_SERVICE_HOST]: 'http://localhost:8000/api/v1/',
-  [SIGNATURES_VIA_METAMASK]: false,
-  [RELAY_API_URL]: 'https://safe-relay.staging.gnosisdev.com/api/v1',
+  [TX_SERVICE_HOST]: TX_SERVICE_HOST_LOCAL,
+  [RELAY_API_URL]: RELAY_API_URL_STG,
+  [SAFE_APPS_URL]: SAFE_APPS_URL_LOCAL,
+  [SIGNATURES_VIA_METAMASK]: false
 }
 
 export default testConfig

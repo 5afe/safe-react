@@ -1,10 +1,11 @@
-// 
-import { TX_SERVICE_HOST, SIGNATURES_VIA_METAMASK, RELAY_API_URL } from 'src/config/names'
+import { TX_SERVICE_HOST, SIGNATURES_VIA_METAMASK, RELAY_API_URL, SAFE_APPS_URL } from 'src/config/names'
+import { SAFE_APPS_URL_PROD, TX_SERVICE_HOST_RINKEBY, RELAY_API_URL_RINKEBY } from './constants'
 
 const prodConfig = {
-  [TX_SERVICE_HOST]: 'https://safe-transaction.rinkeby.gnosis.io/api/v1/',
+  [TX_SERVICE_HOST]: TX_SERVICE_HOST_RINKEBY,
+  [RELAY_API_URL]: RELAY_API_URL_RINKEBY,
+  [SAFE_APPS_URL]: SAFE_APPS_URL_PROD,
   [SIGNATURES_VIA_METAMASK]: false,
-  [RELAY_API_URL]: 'https://safe-relay.rinkeby.gnosis.io/api/v1/',
 }
 
 export default prodConfig

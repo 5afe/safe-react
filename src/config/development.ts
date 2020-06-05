@@ -1,10 +1,11 @@
-// 
-import { TX_SERVICE_HOST, SIGNATURES_VIA_METAMASK, RELAY_API_URL } from 'src/config/names'
+import { TX_SERVICE_HOST, SIGNATURES_VIA_METAMASK, RELAY_API_URL, SAFE_APPS_URL } from 'src/config/names'
+import { SAFE_APPS_URL_DEV, TX_SERVICE_HOST_STG, RELAY_API_URL_STG } from './constants'
 
 const devConfig = {
-  [TX_SERVICE_HOST]: 'https://safe-transaction.staging.gnosisdev.com/api/v1/',
-  [SIGNATURES_VIA_METAMASK]: false,
-  [RELAY_API_URL]: 'https://safe-relay.staging.gnosisdev.com/api/v1/',
+  [TX_SERVICE_HOST]: TX_SERVICE_HOST_STG,
+  [RELAY_API_URL]: RELAY_API_URL_STG,
+  [SAFE_APPS_URL]: SAFE_APPS_URL_DEV,
+  [SIGNATURES_VIA_METAMASK]: false
 }
 
 export default devConfig
