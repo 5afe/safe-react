@@ -1,6 +1,7 @@
 import { Record } from 'immutable'
+import { ConfirmationProps } from './types/confirmation'
 
-export const makeConfirmation = Record({
+export const makeConfirmation = Record<ConfirmationProps>({
   owner: '',
   type: 'initialised',
   hash: '',

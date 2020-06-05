@@ -1,6 +1,5 @@
-// @flow
 class LocalStorageMock {
-  store: Object
+  store
 
   constructor() {
     this.store = {}

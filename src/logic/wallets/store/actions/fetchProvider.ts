@@ -7,11 +7,12 @@ import { NOTIFICATIONS, enhanceSnackbarForAction } from 'src/logic/notifications
 import enqueueSnackbar from 'src/logic/notifications/store/actions/enqueueSnackbar'
 import { ETHEREUM_NETWORK, ETHEREUM_NETWORK_IDS, getProviderInfo, getWeb3 } from 'src/logic/wallets/getWeb3'
 import { makeProvider } from 'src/logic/wallets/store/model/provider'
+import { updateStoredTransactionsStatus } from 'src/routes/safe/store/actions/transactions/utils/transactionHelpers'
 
 export const processProviderResponse = (dispatch, provider) => {
   const walletRecord = makeProvider(provider)
-
   dispatch(addProvider(walletRecord))
+  updateStoredTransactionsStatus(dispatch, walletRecord)
 }
 
 const handleProviderNotification = (provider, dispatch) => {

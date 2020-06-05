@@ -1,4 +1,4 @@
-import { List, Map } from 'immutable'
+import { Map } from 'immutable'
 import { createSelector } from 'reselect'
 
 import { tokensSelector } from 'src/logic/tokens/store/selectors'
@@ -6,39 +6,7 @@ import { getEthAsToken } from 'src/logic/tokens/utils/tokenHelpers'
 import { isUserOwner } from 'src/logic/wallets/ethAddresses'
 import { userAccountSelector } from 'src/logic/wallets/store/selectors'
 
-import {
-  safeActiveTokensSelector,
-  safeBalancesSelector,
-  safeCancellationTransactionsSelector,
-  safeIncomingTransactionsSelector,
-  safeSelector,
-  safeTransactionsSelector,
-} from 'src/routes/safe/store/selectors'
-
-const getTxStatus = (tx, userAddress, safe) => {
-  let txStatus
-  if (tx.executionTxHash) {
-    txStatus = 'success'
-  } else if (tx.cancelled) {
-    txStatus = 'cancelled'
-  } else if (tx.confirmations.size === safe.threshold) {
-    txStatus = 'awaiting_execution'
-  } else if (tx.creationTx) {
-    txStatus = 'success'
-  } else if (!tx.confirmations.size) {
-    txStatus = 'pending'
-  } else {
-    const userConfirmed = tx.confirmations.filter((conf) => conf.owner === userAddress).size === 1
-    const userIsSafeOwner = safe.owners.filter((owner) => owner.address === userAddress).size === 1
-    txStatus = !userConfirmed && userIsSafeOwner ? 'awaiting_your_confirmation' : 'awaiting_confirmations'
-  }
-
-  if (tx.isSuccessful === false) {
-    txStatus = 'failed'
-  }
-
-  return txStatus
-}
+import { safeActiveTokensSelector, safeBalancesSelector, safeSelector } from 'src/routes/safe/store/selectors'
 
 export const grantedSelector = createSelector(userAccountSelector, safeSelector, (userAccount, safe) =>
   isUserOwner(safe, userAccount),
@@ -74,33 +42,5 @@ export const extendedSafeTokensSelector = createSelector(
     }
 
     return extendedTokens.toList()
-  },
-)
-
-export const extendedTransactionsSelector = createSelector(
-  safeSelector,
-  userAccountSelector,
-  safeTransactionsSelector,
-  safeCancellationTransactionsSelector,
-  safeIncomingTransactionsSelector,
-  (safe, userAddress, transactions, cancellationTransactions, incomingTransactions) => {
-    const cancellationTransactionsByNonce = cancellationTransactions.reduce((acc, tx) => acc.set(tx.nonce, tx), Map())
-    const extendedTransactions = transactions.map((tx) => {
-      let extendedTx = tx
-
-      if (!tx.isExecuted) {
-        if (
-          (cancellationTransactionsByNonce.get(tx.nonce) &&
-            cancellationTransactionsByNonce.get(tx.nonce).get('isExecuted')) ||
-          transactions.find((safeTx) => tx.nonce === safeTx.nonce && safeTx.isExecuted)
-        ) {
-          extendedTx = tx.set('cancelled', true)
-        }
-      }
-
-      return extendedTx.set('status', getTxStatus(extendedTx, userAddress, safe))
-    })
-
-    return List([...extendedTransactions, ...incomingTransactions])
   },
 )
