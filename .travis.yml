@@ -19,8 +19,13 @@ matrix:
         - REACT_APP_GNOSIS_APPS_URL=${REACT_APP_GNOSIS_APPS_URL_PROD}
       if: (branch = master AND NOT type = pull_request) OR tag IS present
     - env:
-        - REACT_APP_NETWORK='rinkeby'
-        - REACT_APP_GNOSIS_APPS_URL=${REACT_APP_GNOSIS_APPS_URL_STAGING}
+      - REACT_APP_NETWORK='rinkeby'
+      - REACT_APP_GNOSIS_APPS_URL=${REACT_APP_GNOSIS_APPS_URL_STAGING}        
+      if: (branch = master)
+    - env:
+      - REACT_APP_NETWORK='rinkeby'
+      - REACT_APP_GNOSIS_APPS_URL=${REACT_APP_GNOSIS_APPS_URL}
+      if: (branch = development)  
 cache:
   yarn: true
 before_install:
